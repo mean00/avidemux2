@@ -147,6 +147,11 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
                                 _frame->linesize[2] = 0;//w >> 1;
                                 _frame->format=AV_PIX_FMT_RGB32;
                                 _context->pix_fmt =AV_PIX_FMT_RGB32;break;
+        case ADM_COLOR_RGB24:   _frame->linesize[0] = w*3;
+                                _frame->linesize[1] = 0;
+                                _frame->linesize[2] = 0;
+                                _frame->format = AV_PIX_FMT_RGB24;
+                                _context->pix_fmt = AV_PIX_FMT_RGB24;break;
         default: ADM_assert(0);
 
     }
@@ -212,6 +217,8 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     aprintf("Codec> real pts=%" PRIu64", internal pts=%" PRId64"\n",p,_frame->pts);
     //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame->pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
+    int w=getWidth();
+    int h=getHeight();
     switch(targetColorSpace)
     {
         case ADM_COLOR_YV12:
@@ -222,9 +229,6 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 
         case ADM_COLOR_YUV422P:
         {
-              int w=getWidth();
-              int h=getHeight();
-
                 if(!colorSpace->convertImage(image,rgbByteBuffer.at(0)))
                 {
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
@@ -236,7 +240,25 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
                 break;
         }
         case ADM_COLOR_RGB32A:
-                if(!colorSpace->convertImage(image,rgbByteBuffer.at(0)))
+        case ADM_COLOR_RGB24:
+        {
+                ADMImageRefWrittable swap(w,h);
+                int strides[3];
+                uint8_t *ptr[3];
+
+                image->GetPitches(strides);
+                image->GetReadPlanes(ptr);
+
+                swap._planes[0] = ptr[0];
+                swap._planeStride[0] = strides[0];
+
+                swap._planes[1] = ptr[2];
+                swap._planeStride[1] = strides[2];
+
+                swap._planes[2] = ptr[1];
+                swap._planeStride[2] = strides[1];
+
+                if(!colorSpace->convertImage(&swap,rgbByteBuffer.at(0)))
                 {
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
                     return false;
@@ -245,6 +267,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
                 _frame->data[2] = NULL;
                 _frame->data[1] = NULL;
                 break;
+        }
         default:
                 ADM_assert(0);
     }

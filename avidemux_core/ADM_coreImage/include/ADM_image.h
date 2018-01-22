@@ -132,6 +132,7 @@ protected:
                                     ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type);
                     bool            saveAsBmpInternal(const char *filename);
                     bool            saveAsJpgInternal(const char *filename);
+                    bool            saveAsPngInternal(const char *filename);
 public:
                      bool            hwIncRefCount(void);
                      bool            hwDecRefCount(void);
@@ -163,8 +164,8 @@ public:
         bool    copyLeftSideTo(ADMImage *dest);
         /* Some utilitarian functions */
         bool    saveAsBmp(const char *filename);
-
         bool    saveAsJpg(const char *filename);
+        bool    saveAsPng(const char *filename);
         bool    printString(uint32_t x,uint32_t y, const char *strng);
 static  bool    copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane);
 

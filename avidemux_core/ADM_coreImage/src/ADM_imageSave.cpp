@@ -178,7 +178,7 @@ AVCodecContext   *context=NULL;
 AVFrame          *frame=NULL;
 bool             result=false;
 AVCodec          *codec=NULL;
-int              sz=0,r=0;
+int              r=0;
 ADM_byteBuffer   byteBuffer;
 
     frame=av_frame_alloc();
@@ -282,6 +282,135 @@ jpgCleanup:
     return result;
 }
 
+/**
+    \fn saveAsPngInternal
+    \brief save current image into filename in PNG format
+*/
+bool ADMImage::saveAsPngInternal(const char *filename)
+{
+    AVCodecContext *context=NULL;
+    AVFrame *frame=NULL;
+    AVCodec *codec=NULL;
+    bool result=false;
+    int sz=_width*_height*3, r=0;
+    uint8_t *out;
+    int xss[3], xds[3];
+    uint8_t *xsp[3], *xdp[3];
+    ADMColorScalerSimple converter(_width, _height, ADM_COLOR_YV12, ADM_COLOR_RGB24);
+    ADM_byteBuffer byteBuffer;
+
+    frame=av_frame_alloc();
+    if(!frame)
+    {
+        ADM_error("Cannot allocate frame\n");
+        goto __cleanup;
+    }
+
+    codec=avcodec_find_encoder(AV_CODEC_ID_PNG);
+    if(!codec)
+    {
+        ADM_error("Cannot allocate codec\n");
+        goto __cleanup;
+    }
+
+    context=avcodec_alloc_context3(codec);
+    if(!context)
+    {
+        ADM_error("Cannot allocate context\n");
+        goto __cleanup;
+    }
+
+    context->pix_fmt=AV_PIX_FMT_RGB24;
+    context->strict_std_compliance = -1;
+    context->time_base.den=1;
+    context->time_base.num=1;
+    context->width=_width;
+    context->height=_height;
+
+    r=avcodec_open2(context, codec, NULL);
+    if(r<0)
+    {
+        ADM_error("Cannot combine codec and context\n");
+        ADM_dealloc(context);
+        return false;
+    }
+
+    // swap U & V planes first
+    out=(uint8_t *)ADM_alloc(sz);
+    xss[0] = this->GetPitch(PLANAR_Y);
+    xss[1] = this->GetPitch(PLANAR_V);
+    xss[2] = this->GetPitch(PLANAR_U);
+    xsp[0] = this->GetReadPtr(PLANAR_Y);
+    xsp[1] = this->GetReadPtr(PLANAR_V);
+    xsp[2] = this->GetReadPtr(PLANAR_U);
+    xds[0] = _width*3;
+    xds[1] = xds[2] = 0;
+    xdp[0] = out;
+    xdp[1] = xdp[2] = NULL;
+
+    // convert colorspace
+    converter.convertPlanes(xss,xds,xsp,xdp);
+
+    // setup AVFrame
+    frame->width = _width;
+    frame->height = _height;
+    frame->format = AV_PIX_FMT_RGB24;
+
+    frame->linesize[0] = _width*3;
+    frame->linesize[1] = 0;
+    frame->linesize[2] = 0;
+
+    frame->data[0] = out;
+    frame->data[1] = NULL;
+    frame->data[2] = NULL;
+
+    // Grab a temp buffer
+    byteBuffer.setSize(sz);
+
+    // Encode
+    AVPacket pkt;
+    av_init_packet(&pkt);
+    int gotSomething;
+    pkt.size=sz;
+    pkt.data=byteBuffer.at(0);
+    r=avcodec_encode_video2(context,&pkt,frame,&gotSomething);
+    if(r || !gotSomething)
+    {
+        ADM_error("Error %d encoding image\n",r);
+        goto __cleanup;
+    }
+
+    // Ok now write our file...
+    {
+        FILE *f=ADM_fopen(filename,"wb");
+        if(f)
+        {
+            fwrite(byteBuffer.at(0),pkt.size,1,f);
+            fclose(f);
+            result=true;
+        }else
+        {
+            ADM_error("Cannot open %s for writing!\n",filename);
+        }
+    }
+
+__cleanup:
+    // Cleanup
+    if(context)
+    {
+        avcodec_close(context);
+        av_free(context);
+        context=NULL;
+    }
+
+    if(frame)
+    {
+        av_frame_free(&frame);
+        frame=NULL;
+    }
+
+    return result;
+}
 
 /**
     \fn saveAsJpg
@@ -298,4 +427,21 @@ bool  ADMImage::saveAsJpg(const char *filename)
     clone.hwDownloadFromRef();
     return clone.saveAsJpgInternal(filename);
     
+}
+
+/**
+    \fn saveAsPng
+    \brief save current image into filename in PNG format
+*/
+bool ADMImage::saveAsPng(const char *filename)
+{
+    if(refType==ADM_HW_NONE)
+        return saveAsPngInternal(filename);
+
+    ADMImageDefault clone(_width, _height);
+
+    clone.duplicateFull(this);
+    clone.hwDownloadFromRef();
+    return clone.saveAsPngInternal(filename);
+
 }

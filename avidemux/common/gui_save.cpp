@@ -112,7 +112,13 @@ void HandleAction_Save(Action action)
       const char *defaultExtension="jpg";
       GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select JPEG to Save"),defaultExtension,(SELFILE_CB *)A_saveJpg); // A_saveJpg);
     }
-      	break;
+        break;
+    case ACT_SAVE_PNG:
+    {
+        const char *defaultExtension="png";
+        GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select PNG to Save"),defaultExtension,(SELFILE_CB *)A_savePng);
+    }
+        break;
 //----------------------test-----------------------
     case ACT_SAVE_VIDEO:
     {
@@ -504,6 +510,36 @@ int A_saveBunchJpg(const char *name)
     admPreview::deferDisplay(false);
     return success;
 }
+
+/**
+    \fn A_savePng
+    \brief Save a PNG image from current display buffer or from filter chain
+*/
+bool A_savePng (const char *name)
+{
+    bool result=true;
+    bool fromDisplayBuffer=false;
+    if(getPreviewMode()==ADM_PREVIEW_NONE)
+        fromDisplayBuffer=true;
+    ADMImage *image;
+    image=NULL;
+    if(fromDisplayBuffer)
+        image=admPreview::getBuffer();
+    else
+        image=getCurrentFilteredImage();
+    if(!image || !image->saveAsPng(name))
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","PNG"),QT_TRANSLATE_NOOP("adm","Failed to save as PNG"));
+        result=false;
+    }
+    if(!fromDisplayBuffer)
+    {
+        delete image;
+        image=NULL;
+    }
+    return result;
+}
+
 /**
       \fn A_saveImg
       \brief Save current displayed image as a BMP file
