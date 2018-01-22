@@ -17,7 +17,11 @@
 #include "ADM_coreJobs.h"
 #include "DIA_coreToolkit.h"
 #include <QtCore/QDir>
+#include "../../ADM_userInterfaces/translator.cpp"
 
+extern void loadTranslator(void);
+extern void initTranslator(void);
+extern void destroyTranslator(void);
 
 static QTableWidgetItem *fromText(const string &t,int id)
 {
@@ -202,13 +206,14 @@ bool        jobWindow::popup(const char *errorMessage)
 */
 bool jobRun(int ac,char **av)
 {
-
+    initTranslator();
     QApplication *app=new QApplication(ac,av,0);
     Q_INIT_RESOURCE(jobs);
+    loadTranslator();
     jobWindow *jWindow=new jobWindow();
 
-
     jWindow->exec();
+    destroyTranslator();
     delete jWindow;
     delete app;
     return true;
