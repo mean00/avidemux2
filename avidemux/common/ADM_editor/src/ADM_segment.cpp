@@ -956,6 +956,9 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
         newSegs.push_back(s);
     }
     segments=newSegs;
+    // If a video doesn't start at zero and we paste to its first frame,
+    // we end up with an empty segment at the beginning. Remove it.
+    removeEmptySegments();
     updateStartTime();
     dump();
     return true;
