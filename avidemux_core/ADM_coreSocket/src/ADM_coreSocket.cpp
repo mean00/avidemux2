@@ -169,9 +169,9 @@ bool ADM_socket::create(void)
 }
 /**
     \fn createBindAndAccept
-    \brief bind to any port and accept incoming packets
+    \brief try to bind to the port specified by the caller and accept incoming packets
 */
-bool     ADM_socket::createBindAndAccept(uint32_t *port)
+bool ADM_socket::createBindAndAccept(uint32_t *port)
 {
     if(!create())
     {
@@ -179,45 +179,43 @@ bool     ADM_socket::createBindAndAccept(uint32_t *port)
         return false;
     }
 #ifndef _WIN32
-int enable = 1;
-if (setsockopt(mySocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
-    ADM_error("Oops : setsockopt(SO_REUSEADDR) failed\n");
+    int enable = 1;
+    if (setsockopt(mySocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+        ADM_error("Oops : setsockopt(SO_REUSEADDR) failed\n");
 #endif
 
-  ADM_info("Binding on %s:%" PRIu32"\n",BIND_ADR,*port);
-  sockaddr_in service;
-  service.sin_family = AF_INET;
-  service.sin_addr.s_addr = inet_addr(BIND_ADR);
-  service.sin_port = htons(*port); // bind to any port
+    ADM_info("Binding on %s:%" PRIu32"\n",BIND_ADR,*port);
+    sockaddr_in service;
+    service.sin_family = AF_INET;
+    service.sin_addr.s_addr = inet_addr(BIND_ADR);
+    service.sin_port = htons(*port); // if *port = 0, bind to any port
 
-  if (bind( mySocket,  (SADDR *)&service, sizeof(service))) 
-  {
-		ADM_error("bind() failed  \n");
-		fflush(stdout);
-		close();
-		return false;
-  }
-   // Get port 
+    if (bind( mySocket, (SADDR *)&service, sizeof(service)))
+    {
+        ADM_error("bind() failed\n");
+        fflush(stdout);
+        close();
+        return false;
+    }
+    // Get port
     SSOCKLEN len=sizeof( service);
-    if ( getsockname ( mySocket, (SADDR *)& service, &len ) < 0 ) 
+    if ( getsockname ( mySocket, (SADDR *)& service, &len ) < 0 )
     {
         ADM_error("Getsockname failed\n");
         fflush(stdout);
         close();
         return false;
     }
-    *port= ntohs ( ((SADDR_IN *)&service)->sin_port ); 
-     
-   // Set high buffer + low delay
+    *port= ntohs ( ((SADDR_IN *)&service)->sin_port );
     ADM_info("Socket bound to port %" PRIu32"\n",*port);
 
     int er=listen(mySocket,1);
-	if(er)
-	{
-		ADM_error("Error in listen\n");
-		fflush(stdout);
+    if(er)
+    {
+        ADM_error("Error in listen\n");
+        fflush(stdout);
         return false;
-	}
+    }
 
     return true;
 }
