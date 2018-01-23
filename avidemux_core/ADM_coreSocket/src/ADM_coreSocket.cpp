@@ -108,8 +108,20 @@ bool ADM_socket::close(void)
     if(mySocket)
     {
         int er;
-		er=shutdown(mySocket,SCLOSE);
-        if(er) ADM_error("[ADMSocket]Error when socket shutdown  %d (socket %d)\n",er,mySocket);
+        er=shutdown(mySocket,SCLOSE);
+        if(er)
+        {
+#ifdef _WIN32
+            ADM_error("Error %d on socket shutdown (socket %d)\n",er,mySocket);
+#else
+#ifdef __APPLE__
+            if(errno==ENOTCONN)
+                ADM_info("Ignoring ENOTCONN on socket shutdown on macOS\n");
+            else
+#endif
+            ADM_error("Error %d on socket shutdown (socket %d)\n",errno,mySocket);
+#endif
+        }
         mySocket=0;
     }
     return 1;
