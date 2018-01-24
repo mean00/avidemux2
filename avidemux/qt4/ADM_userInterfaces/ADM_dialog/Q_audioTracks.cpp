@@ -297,8 +297,8 @@ bool  audioTrackQt4::updateActive(void)
     for(int i=0;i<NB_MENU;i++)
     {
         if(window->enabled[i]->checkState()!=Qt::Checked) continue;
-            ADM_info("Checking input %d for track %d\n",i);
             int trackIndex=window->inputs[i]->currentIndex();
+            ADM_info("Checking input %d for track %d\n",trackIndex,i);
             if(trackIndex>=_pool->size()) 
             {
                 ADM_warning("Referencing a non existing track in pool (%d/%d)\n",trackIndex,_pool->size());
@@ -484,6 +484,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
     // -- language --
     // now add codecs
     int nbAud=audioEncoderGetNumberOfEncoders();
+    window->codec[dex]->clear();
     window->codec[dex]->addItem(QString(QT_TRANSLATE_NOOP("qaudiotracks","copy")));
 	for(uint32_t i=1;i<nbAud;i++)
 	{
