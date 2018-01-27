@@ -130,6 +130,7 @@ protected:
 public slots:
         void updateAvailableSlot(int version, std::string date, std::string url);
         void dragTimerTimeout(void);
+        void setRefreshCap(void);
         void actionSlot(Action a)
         {
             if(a==ACT_PlayAvi) // ugly

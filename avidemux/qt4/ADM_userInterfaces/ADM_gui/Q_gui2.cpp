@@ -255,9 +255,11 @@ void MainWindow::sliderReleased(void)
  * \fn sliderPressed
  */
 void MainWindow::sliderPressed(void)
-{ 
-  dragTimer.stop();
-  dragState=dragState_Active;
+{
+    if(playing)
+        sendAction(ACT_PlayAvi); // stop playback
+    dragTimer.stop();
+    dragState=dragState_Active;
 //  ADM_info("Pressed\n");
 }
 /**
@@ -348,6 +350,17 @@ void MainWindow::currentTimeToClipboard(void)
 }
 
 /**
+    \fn setRefreshCap
+*/
+void MainWindow::setRefreshCap(void)
+{
+    refreshCapEnabled=false;
+    refreshCapValue=0;
+    prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
+    prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
+}
+
+/**
     \fn ctor
 */
 MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEngines(scriptEngines), QMainWindow()
@@ -356,9 +369,6 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     qtRegisterDialog(this);
     ui.setupUi(this);
     dragState=dragState_Normal;
-    refreshCapEnabled=false;
-    prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
-    prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
     recentFiles = NULL;
     recentProjects = NULL;
 
@@ -1702,6 +1712,7 @@ void UI_applySettings(void)
 {
     ((MainWindow *)QuiMainWindows)->updateActionShortcuts();
     ((MainWindow *)QuiMainWindows)->volumeWidgetOperational();
+    ((MainWindow *)QuiMainWindows)->setRefreshCap();
 }
 /**
     \fn UI_getCurrentPreview
