@@ -51,7 +51,9 @@ class GUIPlayback
 {
 private:
         AUDMAudioFilter *playbackAudio;
-        Clock           ticktock;
+        Clock           ticktock,tocktick;
+        bool            refreshCapEnabled;
+        uint32_t        refreshCapValue;
         uint32_t        nbSamplesSent ;
         float           *wavbuf ;
         uint64_t        firstPts,lastPts;
@@ -208,6 +210,11 @@ bool GUIPlayback::cleanup(void)
 */
 bool GUIPlayback::initialize(void)
 {
+    refreshCapEnabled=false;
+    refreshCapValue=0;
+    prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
+    prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
+
     firstPts=admPreview::getCurrentPts();
     if(getPreviewMode()==ADM_PREVIEW_NONE) // copy
     {
@@ -249,6 +256,7 @@ bool GUIPlayback::run(void)
     bool gotAudio=true;
     int refreshCounter=0;
     ticktock.reset();
+    tocktick.reset();
     vuMeterPts=0;
     ADMImage *previewBuffer=admPreview::getBuffer();
     ADM_HW_IMAGE hwImageFormat=admPreview::getPreferedHwImageFormat();
@@ -256,8 +264,18 @@ bool GUIPlayback::run(void)
     do
     {
 
-        admPreview::displayNow();;
-        GUI_setCurrentFrameAndTime(firstPts);
+        admPreview::displayNow();
+        if(refreshCapEnabled)
+        {
+            if(stop_req || tocktick.getElapsedMS()>refreshCapValue)
+            {
+                GUI_setCurrentFrameAndTime(firstPts);
+                tocktick.reset();
+            }
+        }else
+        {
+            GUI_setCurrentFrameAndTime(firstPts);
+        }
         lastPts=admPreview::getCurrentPts();
         if(false==videoFilter->getNextFrameAs(hwImageFormat,&fn,previewBuffer))
         {
