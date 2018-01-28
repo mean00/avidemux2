@@ -31,13 +31,27 @@
 
 static ADM_Qvumeter *vuWidget = NULL;
 
+//  #warning Assume rgb bbuffer is 32bits aligned...
+#define GREEN  0xFF00FF00
+#define YELLOW 0xFFA0C000
+#define RED    0xFFFF0000
+#define BLACK  0xFF000000
+
 ADM_Qvumeter::ADM_Qvumeter(QWidget *z, int width, int height) : QWidget(z)
 {
 	this->resize(width, height);
 	z->resize(width + 2, height + 2);
 
 	rgbDataBuffer = new uint8_t[width * height * 4];
-	memset(rgbDataBuffer, 0, width * height * 4);
+    for(int i=0;i<64;i++)
+    {
+        uint8_t *ptr = rgbDataBuffer + (width * i * 4);
+        uint32_t *data = (uint32_t *)ptr;
+        for(int j=0;j<64;j++)
+        {
+            *data++=BLACK;
+        }
+    }
 }
 
 ADM_Qvumeter::~ADM_Qvumeter()
@@ -67,14 +81,8 @@ bool UI_InitVUMeter(QFrame *host)
     \fn UI_vuUpdate
     \brief Update vumeter, input is volume per channel between 0 & 255
 */
-//  #warning Assume rgb bbuffer is 32bits aligned...
-#define GREEN  0x0000FF00
-#define YELLOW 0x00A0C000
-#define RED    0x00FF0000
-
 bool UI_vuUpdate(uint32_t volume[6])
 {
-	  memset(vuWidget->rgbDataBuffer, 0, vuWidget->width() * vuWidget->height() * 4);
       // Draw lines
       for(int i=0;i<6;i++)
       {
@@ -92,7 +100,7 @@ bool UI_vuUpdate(uint32_t volume[6])
             }
             for(int j=vol;j<64;j++)
             {
-                *data++=0;
+                *data++=BLACK;
             }
       }
 #if 0
