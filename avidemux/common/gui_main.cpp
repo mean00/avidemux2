@@ -1570,6 +1570,8 @@ uint8_t GUI_close(void)
         setPreviewMode(ADM_PREVIEW_NONE);
       }
       UI_setNeedsResizingFlag(false);
+      uint32_t zero[6]={0};
+      UI_setVUMeter(zero);
       delete avifileinfo;
       //delete wavinfo;
       admPreview::destroy();
