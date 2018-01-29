@@ -45,7 +45,7 @@ uint8_t    flyBlacken::processRgb(uint8_t *imageIn, uint8_t *imageOut)
                         *in++=0xff;
                         
                         *in++=0;
-                        *in++=0;
+                        *in++=0xff;
                 }
         }
         // bottom
@@ -59,7 +59,7 @@ uint8_t    flyBlacken::processRgb(uint8_t *imageIn, uint8_t *imageOut)
                         
                         *in++=0xff;
                         *in++=0;
-                        *in++=0;
+                        *in++=0xff;
                 }
         }
         // left
@@ -74,7 +74,7 @@ uint8_t    flyBlacken::processRgb(uint8_t *imageIn, uint8_t *imageOut)
                         
                         *(in+4*x+1)=0xff;
                         *(in+4*x+2)=0;
-                        *(in+4*x+3)=0;
+                        *(in+4*x+3)=0xff;
                 }
                 for(x=0;x<right;x++)
                 {
@@ -83,7 +83,7 @@ uint8_t    flyBlacken::processRgb(uint8_t *imageIn, uint8_t *imageOut)
                         
                         *(in-4*x+stride-3)=0xff;
                         *(in-4*x+stride-2)=0;
-                        *(in-4*x+stride-1)=0;
+                        *(in-4*x+stride-1)=0xff;
                         
                 }
                 in+=4*w;
