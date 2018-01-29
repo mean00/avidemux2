@@ -41,6 +41,24 @@ void ADM_QRubberBand::paintEvent(QPaintEvent *event)
     QBrush brush = QBrush(color, Qt::DiagCrossPattern);
     adjustedRect = adjustedRect.adjusted(1,1,-1,-1);
     painter.fillRect(adjustedRect, brush);
+#ifdef __APPLE__
+    QPainterPath topLeft;
+    topLeft.moveTo(4,4);
+    topLeft.lineTo(12,4);
+    topLeft.lineTo(4,12);
+    topLeft.lineTo(4,4);
+
+    QPainterPath bottomRight;
+    bottomRight.moveTo(width()-4,height()-4);
+    bottomRight.lineTo(width()-12,height()-4);
+    bottomRight.lineTo(width()-4,height()-12);
+    bottomRight.lineTo(width()-4,height()-4);
+
+    painter.setPen(Qt::NoPen);
+    QBrush solid = QBrush(Qt::red, Qt::SolidPattern);
+    painter.fillPath(topLeft, solid);
+    painter.fillPath(bottomRight, solid);
+#endif
     painter.end();
 }
 
