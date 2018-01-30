@@ -404,19 +404,27 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
  */
 uint8_t                       MP4Header::parseElst(void *ztom,uint32_t trackType)
 {
-    uint32_t editDuration;
-    uint32_t mediaTime;
+    int64_t editDuration;
+    int64_t mediaTime;
     uint32_t playbackSpeed;
     adm_atom *tom=(adm_atom *)ztom;
-    tom->skipBytes(4);
+    int version=tom->read();
+    tom->skipBytes(3);
     uint32_t nb=tom->read32();
-    ADM_info("Found %" PRIu32" entries in list:\n",nb);
+    ADM_info("[ELST] Found %" PRIu32" entries in list, version=%d\n",nb,version);
     for(int i=0;i<nb;i++)
       {
-          editDuration=tom->read32();
-          mediaTime=tom->read32();
+        if(1==version)
+        {
+          editDuration=(int64_t)tom->read64();
+          mediaTime=(int64_t)tom->read64();
+        }else
+        {
+          editDuration=(int32_t)tom->read32();
+          mediaTime=(int32_t)tom->read32();
+        }
           playbackSpeed=tom->read32();
-          ADM_info("Duration : %" PRIu32", mediaTime:%" PRIu32" speed=%" PRIu32"\n",editDuration,mediaTime,playbackSpeed);
+          ADM_info("Duration : %d, mediaTime:%d speed=%d \n",(int)editDuration,(int)mediaTime,(int)playbackSpeed);
       } 
      if(trackType==TRACK_VIDEO && nb==1 && mediaTime>0 && _videoScale )
      {
@@ -426,8 +434,6 @@ uint8_t                       MP4Header::parseElst(void *ztom,uint32_t trackType
          d*=1000000.;
          delayRelativeToVideo=(uint64_t)d;
          ADM_info("** Computed delay =%s \n",ADM_us2plain(delayRelativeToVideo));
-         
-         
      }
     return 1;
 }
