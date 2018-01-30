@@ -1670,9 +1670,9 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 #else
         ADM_info("OpenGL: Not enabled at built time.\n");
 #endif
-    
-    
-    
+
+    admPreview::setMainDimension(0,0,ZOOM_1_1);
+
     return 1;
 }
 /**
