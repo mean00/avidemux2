@@ -875,6 +875,9 @@ void MainWindow::setMenuItemsEnabledState(void)
         ui.checkBox_TimeShift->setEnabled(false);
         ui.spinBox_TimeValue->setEnabled(false);
 
+        if(getPreviewMode()!=ADM_PREVIEW_NONE)
+            slider->setEnabled(false);
+
         return;
     }
 
@@ -927,6 +930,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     ui.menuRecent->actions().back()->setEnabled(haveRecentItems);
 
     ui.selectionDuration->setEnabled(vid);
+    slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
     // actions performed by the code above may result in a window resize event,
