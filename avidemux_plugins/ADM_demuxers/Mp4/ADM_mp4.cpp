@@ -572,13 +572,18 @@ bool MP4Header::checkDuplicatedPts(void)
  */
 bool MP4Header::adjustElstDelay()
 {
-    if(this->delayRelativeToVideo)
+    int xmin=1000000;
+    for(int i=0;i<1+nbAudioTrack;i++)
+        if(_tracks[i].delay<xmin)
+            xmin=_tracks[i].delay<xmin;
+    ADM_info("Elst minimum = %d us\n",xmin);
+    for(int i=0;i<1+nbAudioTrack;i++)
     {
-        ADM_info("Compensating for a/v delay\n");
-        shiftAudioTimeBy(this->delayRelativeToVideo);
+        int d=_tracks[i].delay-xmin;
+        if(d)
+            shiftTrackByTime(i,d);
     }
     return true;
-
 }
         
     
@@ -602,25 +607,37 @@ bool MP4Header::shiftTimeBy(uint64_t shift)
             pts+=shift;
             VDEO.index[i].pts=pts;
         }
-
-        shiftAudioTimeBy(shift);
+        for(int i=1;i<nbAudioTrack;i++)            
+            shiftTrackByTime(i,shift);
         return true;        
 }
-bool MP4Header::shiftAudioTimeBy(uint64_t shift)
+/**
+ * 
+ * @param dex
+ * @param shift
+ * @return 
+ */
+bool MP4Header::shiftTrackByTime(int dex,uint64_t shift)
 {
-    int nb;
-      for(int audioTrack=0;audioTrack<nbAudioTrack;audioTrack++)
-        {
-            nb=(int)_tracks[1+audioTrack].nbIndex;
-            for(int i=0;i<nb;i++)
-            {
-                     uint64_t dts;
-                        dts=_tracks[audioTrack+1].index[i].dts;
-                        if(dts==ADM_COMPRESSED_NO_PTS) continue;
-                        dts+=shift;
-                        _tracks[audioTrack+1].index[i].dts=dts;
-             }
-        }
+    int nb=(int)_tracks[dex].nbIndex;
+    MP4Index *myIndex=_tracks[dex].index;
+    for(int i=0;i<nb;i++)
+    {
+             uint64_t dts,pts;
+                dts=myIndex[i].dts;
+                pts=myIndex[i].pts;
+                if(dts!=ADM_COMPRESSED_NO_PTS)
+                {
+                    dts+=shift;
+                }
+                if(pts!=ADM_COMPRESSED_NO_PTS)
+                {
+                    pts+=shift;
+                }
+                myIndex[i].dts=dts;
+                myIndex[i].pts=pts;
+     }
+
     return true;
 }
 

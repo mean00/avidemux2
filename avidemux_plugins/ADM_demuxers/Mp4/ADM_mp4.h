@@ -226,7 +226,7 @@ protected:
         uint32_t                      nbAudioTrack;
         bool                          refineAudio(WAVHeader *head,uint32_t extraLen, uint8_t *extra);
         bool                          shiftTimeBy(uint64_t shift);
-        bool                          shiftAudioTimeBy(uint64_t shift);
+        bool                          shiftTrackByTime(int dex,uint64_t shift);
         bool                          checkDuplicatedPts(void);
          /*********************************/
 	uint32_t                         readPackedLen(adm_atom *tom );
