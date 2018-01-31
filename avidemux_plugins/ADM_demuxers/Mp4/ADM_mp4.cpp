@@ -575,7 +575,7 @@ bool MP4Header::adjustElstDelay()
     int xmin=1000000;
     for(int i=0;i<1+nbAudioTrack;i++)
         if(_tracks[i].delay<xmin)
-            xmin=_tracks[i].delay<xmin;
+            xmin=_tracks[i].delay;
     ADM_info("Elst minimum = %d us\n",xmin);
     for(int i=0;i<1+nbAudioTrack;i++)
     {
