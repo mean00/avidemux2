@@ -67,7 +67,7 @@ class mp4Fragment;
  */
 class MP4Track
 {
-public:
+public:    
     MP4Index   *index;
     uint32_t    id;
     uint32_t    scale;
@@ -75,6 +75,7 @@ public:
     uint32_t    extraDataSize;
     uint8_t     *extraData;
     WAVHeader   _rdWav;
+    uint64_t    delay;
     std::vector <mp4Fragment>     fragments;
                 MP4Track(void);
                 ~MP4Track();
@@ -199,6 +200,7 @@ protected:
           bool                          refineFps(void);
           bool                          adjustElstDelay(void);
           uint32_t                      _videoScale;
+          uint32_t                      _movieScale;
           int64_t			_movieDuration; // in ms
           uint32_t                      _videoFound;
           bool                          processAudio( MP4Track *track,  uint32_t trackScale,  

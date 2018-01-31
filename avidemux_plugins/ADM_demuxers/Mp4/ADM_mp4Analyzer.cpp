@@ -178,20 +178,20 @@ void MP4Header::parseMvhd(void *ztom)
     int scale = tom->read32();
     uint64_t duration = (version == 1) ? tom->read64() : tom->read32();
 
-    _videoScale = scale;
+    _movieScale = scale;
 
-    printf("Warning: scale is not in ms %" PRIu32"!\n", _videoScale);
+    ADM_info("Warning: movie scale is %d\n", (int)_movieScale);
 
-    if (_videoScale)
+    if (_movieScale)
     {
         duration = 1000 * duration; // In ms
-        duration /= _videoScale;
+        duration /= _movieScale;
     }
     else
-        _videoScale = 1000;
+        _movieScale = 1000;
 
     //printf("Movie duration: %s\n", ms2timedisplay(duration));
-
+    _videoScale=_movieScale;
     _movieDuration = duration;
 }
 
@@ -404,37 +404,63 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
  */
 uint8_t                       MP4Header::parseElst(void *ztom,uint32_t trackType)
 {
-    int64_t editDuration;
-    int64_t mediaTime;
     uint32_t playbackSpeed;
     adm_atom *tom=(adm_atom *)ztom;
     int version=tom->read();
     tom->skipBytes(3);
     uint32_t nb=tom->read32();
+    int64_t *editDuration=new int64_t[nb];
+    int64_t *mediaTime=new int64_t[nb];
+    
     ADM_info("[ELST] Found %" PRIu32" entries in list, version=%d\n",nb,version);
     for(int i=0;i<nb;i++)
-      {
+    {
         if(1==version)
         {
-          editDuration=(int64_t)tom->read64();
-          mediaTime=(int64_t)tom->read64();
+          editDuration[i]=(int64_t)tom->read64();
+          mediaTime[i]=(int64_t)tom->read64();
         }else
         {
-          editDuration=(int32_t)tom->read32();
-          mediaTime=(int32_t)tom->read32();
+          editDuration[i]=(int32_t)tom->read32();
+          mediaTime[i]=(int32_t)tom->read32();
         }
           playbackSpeed=tom->read32();
-          ADM_info("Duration : %d, mediaTime:%d speed=%d \n",(int)editDuration,(int)mediaTime,(int)playbackSpeed);
-      } 
-     if(trackType==TRACK_VIDEO && nb==1 && mediaTime>0 && _videoScale )
-     {
-         ADM_info("** Audio Tracks need to be delayed , %d vs trackscale %d \n",(int)mediaTime,(int)_videoScale);
-         double d=mediaTime;
-         d/=_videoScale;
+          ADM_info("Duration : %d, mediaTime:%d speed=%d \n",(int)editDuration[i],(int)mediaTime[i],(int)playbackSpeed);
+    } 
+    int64_t delay=0;
+    switch(nb)
+    {
+            case 1:
+                if(mediaTime[0]>0)
+                    delay=mediaTime[0];
+                break;
+            case 2:
+                if(mediaTime[0]==-1)
+                {
+                    delay=editDuration[0];
+                }
+                break;
+            default:
+                break;        
+    }
+    if(delay)
+    {       
+        // Nb  : The unit is movie timescale
+
+         int dex=0;
+         double d=delay;
+         d/=_movieScale;
          d*=1000000.;
-         delayRelativeToVideo=(uint64_t)d;
-         ADM_info("** Computed delay =%s \n",ADM_us2plain(delayRelativeToVideo));
+         uint64_t delayUs=(uint64_t)d;
+         ADM_info("** Computed delay =%d ticks, %s us, _movieScale=%d\n",delay,ADM_us2plain(delayUs),_movieScale);
+         // convert delay to us
+         
+         if(trackType!=TRACK_VIDEO)
+             dex= 1+nbAudioTrack;
+        _tracks[dex].delay=delayUs;
      }
+    delete [] editDuration;
+    delete [] mediaTime;
     return 1;
 }
 /**
