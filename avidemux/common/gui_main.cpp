@@ -1563,24 +1563,24 @@ uint8_t GUI_close(void)
   if (avifileinfo)        // already opened ?
     {                // delete everything
       // if preview is on
-      admPreview::setMainDimension(0, 0, ZOOM_1_1);
       if(getPreviewMode()!=ADM_PREVIEW_NONE)
       {
         admPreview::stop();
         setPreviewMode(ADM_PREVIEW_NONE);
       }
+      admPreview::setMainDimension(0, 0, ZOOM_1_1); // destroy preview
       UI_setNeedsResizingFlag(false);
       uint32_t zero[6]={0};
       UI_setVUMeter(zero);
       delete avifileinfo;
       //delete wavinfo;
-      admPreview::destroy();
       avifileinfo = NULL;
       video_body->clearUndoQueue();
       video_body->cleanup ();
       UI_setTimeShift(false,0);
 //      filterCleanUp ();
       UI_setTitle(NULL);
+      UI_setDecoderName("XXXX");
 
     A_ResetMarkers();
     ReSync();
