@@ -105,7 +105,7 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
       uint32_t total=0;
       for(int i=0;i<track->nbIndex;i++)
           total+=track->index[i].size;
-      printf("After split, we have %u bytes across %d blocks\n",total,w);
+      ADM_info("After split, we have %u bytes across %d blocks\n",total,w);
       
       return true;
 }
@@ -127,13 +127,13 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     uint32_t totalBytes=info->SzIndentical*info->nbSz;
     uint32_t totalSamples=0;
     double   skewFactor=1;
-    printf("All the same size: %u (total size %u bytes)\n",info->SzIndentical,totalBytes);
-    printf("Byte per frame =%d\n",(int)info->bytePerFrame);
-    printf("SttsC[0] = %d, sttsN[0]=%d\n",info->SttsC[0],info->SttsN[0]);
+    ADM_info("All the same size: %u (total size %u bytes)\n",info->SzIndentical,totalBytes);
+    ADM_info("Byte per frame =%d\n",(int)info->bytePerFrame);
+    ADM_info("SttsC[0] = %d, sttsN[0]=%d\n",info->SttsC[0],info->SttsN[0]);
     
     if(info->nbStts!=1) 
     {
-        printf("WARNING: Same size, different duration\n");
+        ADM_info("WARNING: Same size, different duration\n");
         return 1;
     }
     
@@ -162,8 +162,8 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
         total+=samplePerChunk[i];
     }
 
-    printf("Total size in sample : %u\n",total);
-    printf("Sample size          : %u\n",info->SzIndentical);
+    ADM_info("Total size in sample : %u\n",total);
+    ADM_info("Sample size          : %u\n",info->SzIndentical);
     
       if(info->SttsN[0]!=total)
       {
@@ -203,7 +203,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     free(samplePerChunk);
     if(info->nbCo)
         track->index[0].pts=0;
-    printf("Found %u bytes, spread over %d blocks\n",totalBytes,info->nbCo);
+    ADM_info("Found %u bytes, spread over %d blocks\n",totalBytes,info->nbCo);
     //
     // split large chunk into smaller ones if needed
     splitAudio(track,info, trackScale);
@@ -228,8 +228,8 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
       }
       if(info->bytePerPacket!=info->samplePerPacket)
       {
-          printf("xx Byte per packet =%d\n",info->bytePerPacket);
-          printf("xx Sample per packet =%d\n",info->samplePerPacket);
+          ADM_info("xx Byte per packet =%d\n",info->bytePerPacket);
+          ADM_info("xx Sample per packet =%d\n",info->samplePerPacket);
       }
       for(int i=0;i< track->nbIndex;i++)
       {     
@@ -246,7 +246,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
             aprintf("Block %d, size=%d, dts=%d\n",i,track->index[i].size,track->index[i].dts);
       }
      // track->index[0].dts=0;
-    printf("Index done (sample same size)\n");
+    ADM_info("Index done (sample same size)\n");
     return 1;
 }
 /**
@@ -322,6 +322,7 @@ uint32_t i,j,cur;
         aprintf("# of chunks %d, max # of samples %d\n",info->nbCo, totalchunk);
 
         uint32_t *chunkCount = new uint32_t[totalchunk+1];
+#if 0
 	for(i=0;i<info->nbSc;i++)
 	{
 		for(j=info->Sc[i]-1;j<info->nbCo;j++)
@@ -331,10 +332,28 @@ uint32_t i,j,cur;
 		}
 		aprintf("(%d) sc: %lu sn:%lu\n",i,info->Sc[i],info->Sn[i]);
 	}
-/*			for(j=0;j<nbSc;j++)
-			{
-				aprintf("\n count number : %d - %lu\n",j,Sn[j]);
-			}*/
+#else
+      	for(i=0;i<info->nbSc-1;i++)
+	{
+            int mn=info->Sc[i]-1;
+            int mx=info->Sc[i+1]-1;
+            for(j=mn;j<mx;j++)
+            {
+                    chunkCount[j]=info->Sn[i];
+                    ADM_assert(j<=totalchunk);
+            }
+            aprintf("(%d) sc: %lu sn:%lu\n",i,info->Sc[i],info->Sn[i]);
+	}
+        // Last one
+        for(j=info->Sc[info->nbSc-1]-1;j<info->nbCo;j++)
+        {
+            chunkCount[j]=info->Sn[i];
+            ADM_assert(j<=totalchunk);
+        }
+  
+        
+#endif
+
 	// now we have for each chunk the number of sample in it
 	cur=0;
 	for(j=0;j<info->nbCo;j++)
@@ -428,7 +447,7 @@ uint32_t i,j,cur;
           //GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4demuxer","No stts table"), NULL);
           return false;
 	}
-        printf("Index done\n");
+        ADM_info("Index done\n");
 	return true;
 }
 /**
