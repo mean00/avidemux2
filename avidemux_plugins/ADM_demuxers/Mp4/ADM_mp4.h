@@ -186,7 +186,7 @@ protected:
           uint8_t                       lookupMainAtoms(void *tom);
           void                          parseMvhd(void *tom);
           uint8_t                       parseTrack(void *ztom);
-          uint8_t                       parseElst(void *tom,uint32_t trackType);
+          int64_t                       parseElst(void *tom);
           bool                          parseMoof(adm_atom &son);
           bool                          parseTraf(adm_atom &son,uint64_t moofStart);
           int                           lookupIndex(int desc)          ;
@@ -219,6 +219,7 @@ protected:
         MP4Track                      _tracks[_3GP_MAX_TRACKS];
         int64_t                       _audioDuration;
         uint32_t                      _currentAudioTrack;
+        int64_t                       _currentDelay;
         Mp4Flavor                     _flavor;
         uint8_t                       parseAtomTree(adm_atom *atom);
         ADM_mp4AudioAccess            *audioAccess[_3GP_MAX_TRACKS-1];

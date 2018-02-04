@@ -572,16 +572,27 @@ bool MP4Header::checkDuplicatedPts(void)
  */
 bool MP4Header::adjustElstDelay()
 {
-    int xmin=1000000;
+    int xmin=10000000;
+    int xscaledDelay[_3GP_MAX_TRACKS];
     for(int i=0;i<1+nbAudioTrack;i++)
-        if(_tracks[i].delay<xmin)
-            xmin=_tracks[i].delay;
+    {
+        double scaledDelay=_tracks[i].delay;
+        scaledDelay=scaledDelay/(double)_tracks[i].scale;
+        scaledDelay*=1000000;
+        xscaledDelay[i]=scaledDelay;
+        ADM_info("Delay for track %d : raw = %d, scaled  = %d with scale=%d\n",i,_tracks[i].delay,xscaledDelay[i],_tracks[i].scale);
+        if(scaledDelay<xmin)
+            xmin=scaledDelay;
+    }
     ADM_info("Elst minimum = %d us\n",xmin);
     for(int i=0;i<1+nbAudioTrack;i++)
     {
-        int d=_tracks[i].delay-xmin;
+        int d=xscaledDelay[i]-xmin;
         if(d)
+        {
+            ADM_info("    Shifting track %d by %s\n",d,ADM_us2plain(d));
             shiftTrackByTime(i,d);
+        }
     }
     return true;
 }

@@ -94,7 +94,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
   bool success=true;
   ADMAtoms id;
   uint32_t container;
-  printf("Analyzing file and atoms\n");
+  ADM_info("Analyzing file and atoms\n");
   
   if(!ADM_mp4SimpleSearchAtom(tom, ADM_MP4_MOOV,&moov))
   {
@@ -117,7 +117,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
         case ADM_MP4_TRACK:
             if(!parseTrack(&son))
             {
-                printf("Parse Track failed\n");
+                ADM_info("Parse Track failed\n");
                 success=false;
             } ;
             break;
@@ -156,7 +156,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
    }
   }
   
-  printf("Done finding main atoms\n");
+  ADM_info("Done finding main atoms\n");
   return success;
 }
 /**
@@ -192,6 +192,7 @@ void MP4Header::parseMvhd(void *ztom)
 
     //printf("Movie duration: %s\n", ms2timedisplay(duration));
     _videoScale=_movieScale;
+    _tracks[0].scale=_videoScale;
     _movieDuration = duration;
 }
 
@@ -206,8 +207,8 @@ uint8_t MP4Header::parseTrack(void *ztom)
   uint32_t container;
   uint32_t w,h;
   uint32_t trackType=TRACK_OTHER;
-
-  printf("Parsing Track\n");
+  _currentDelay=0;
+  ADM_info("Parsing Track\n");
    while(!tom->isDone())
   {
      adm_atom son(tom);
@@ -279,7 +280,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
   uint64_t trackDuration;
   *trackType=TRACK_OTHER;
   uint8_t r=0;
-  printf("<<Parsing Mdia>>\n");
+  ADM_info("<<Parsing Mdia>>\n");
   while(!tom->isDone())
   {
      adm_atom son(tom);
@@ -331,17 +332,20 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
                 {
                 default:
                        *trackType=TRACK_OTHER;
-                       printf("Found other type track\n");
+                       ADM_info("Found other type track\n");
                        break;
                 case MKFCCR('v','i','d','e')://'vide':
                         *trackType=TRACK_VIDEO;
-                        printf("hdlr video found \n ");
+                        _tracks[0].delay=_currentDelay;
+                        ADM_info("hdlr video found \n ");
                         _movieDuration=trackDuration;
                         _videoScale=trackScale;
+                        _tracks[0].scale=_videoScale;
                         break;
                 case MKFCCR('s','o','u','n'): //'soun':
+                        _tracks[1+nbAudioTrack].delay=_currentDelay;
                         *trackType=TRACK_AUDIO;
-                        printf("hdlr audio found \n ");
+                        ADM_info("hdlr audio found \n ");
                         break;
                 case MKFCCR('u','r','l',' ')://'url ':
                     {
@@ -353,7 +357,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
                         char *str=new char[s+1];
                         son.readPayload((uint8_t *)str,s);
                         str[s]=0;
-                        printf("Url : <%s>\n",str);
+                        ADM_info("Url : <%s>\n",str);
                         delete [] str;
                       }
                       break;
@@ -378,7 +382,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
               {
                    if(! parseStbl(&grandson,*trackType, w, h,trackScale))
                    {
-                      printf("STBL failed\n");
+                      ADM_info("STBL failed\n");
                       return 0;
                    }
                    r=1;
@@ -402,7 +406,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
  * @param tom
  * @return 
  */
-uint8_t                       MP4Header::parseElst(void *ztom,uint32_t trackType)
+int64_t                       MP4Header::parseElst(void *ztom)
 {
     uint32_t playbackSpeed;
     adm_atom *tom=(adm_atom *)ztom;
@@ -411,6 +415,7 @@ uint8_t                       MP4Header::parseElst(void *ztom,uint32_t trackType
     uint32_t nb=tom->read32();
     int64_t *editDuration=new int64_t[nb];
     int64_t *mediaTime=new int64_t[nb];
+    int64_t delay=0;
     
     ADM_info("[ELST] Found %" PRIu32" entries in list, version=%d\n",nb,version);
     for(int i=0;i<nb;i++)
@@ -427,7 +432,7 @@ uint8_t                       MP4Header::parseElst(void *ztom,uint32_t trackType
           playbackSpeed=tom->read32();
           ADM_info("Duration : %d, mediaTime:%d speed=%d \n",(int)editDuration[i],(int)mediaTime[i],(int)playbackSpeed);
     } 
-    int64_t delay=0;
+    
     switch(nb)
     {
             case 1:
@@ -443,25 +448,12 @@ uint8_t                       MP4Header::parseElst(void *ztom,uint32_t trackType
             default:
                 break;        
     }
-    if(delay)
-    {       
-        // Nb  : The unit is movie timescale
-
-         int dex=0;
-         double d=delay;
-         d/=_movieScale;
-         d*=1000000.;
-         uint64_t delayUs=(uint64_t)d;
-         ADM_info("** Computed delay =%d ticks, %s us, _movieScale=%d\n",delay,ADM_us2plain(delayUs),_movieScale);
-         // convert delay to us
-         
-         if(trackType!=TRACK_VIDEO)
-             dex= 1+nbAudioTrack;
-        _tracks[dex].delay=delayUs;
-     }
+    // Nb  : The unit is movie timescale
+    ADM_info("**  Computed delay =%d\n",delay);
+    
     delete [] editDuration;
     delete [] mediaTime;
-    return 1;
+    return delay;
 }
 /**
         \fn parseEdts
@@ -473,7 +465,7 @@ uint8_t       MP4Header::parseEdts(void *ztom,uint32_t trackType)
   ADMAtoms id;
   uint32_t container;
 
-  ADM_info("Parsing Edts>>\n");
+  ADM_info("Parsing Edts, trackType=%d\n",trackType);
   while(!tom->isDone())
   {
      adm_atom son(tom);
@@ -488,7 +480,7 @@ uint8_t       MP4Header::parseEdts(void *ztom,uint32_t trackType)
        case ADM_MP4_ELST:
        {
               ADM_info("ELST atom found\n");
-              parseElst(&son,trackType);
+              _currentDelay=parseElst(&son);
               son.skipAtom();
               break;
         
@@ -517,7 +509,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
   memset(&info,0,sizeof(info));
 
 
-  printf("<<Parsing Stbl>>\n");
+  ADM_info("<<Parsing Stbl>>\n");
   while(!tom->isDone())
   {
      adm_atom son(tom);
@@ -533,7 +525,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
        {
           son.read32();
           info.nbSync=son.read32();
-          printf("Stss:%u\n",info.nbSync);
+          ADM_info("Stss:%u\n",info.nbSync);
           if(info.nbSync)
           {
                   info.Sync=new uint32_t[info.nbSync];
@@ -547,10 +539,10 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
        }
        case ADM_MP4_STTS:
             {
-                printf("stts:%" PRIu32"\n",son.read32()); // version & flags
+                ADM_info("stts:%" PRIu32"\n",son.read32()); // version & flags
                 info.nbStts=son.read32();
-                printf("Time stts atom found (%" PRIu32")\n",info.nbStts);
-                printf("Using myscale %" PRIu32"\n",trackScale);
+                ADM_info("Time stts atom found (%" PRIu32")\n",info.nbStts);
+                ADM_info("Using myscale %" PRIu32"\n",trackScale);
                 info.SttsN=new uint32_t[info.nbStts];
                 info.SttsC=new uint32_t[info.nbStts];
                 //double dur;
@@ -589,7 +581,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
               n=son.read32();
               info.nbSz=son.read32();
               info.SzIndentical=0;
-              printf("%" PRIu32" frames /%" PRIu32" nbsz..\n",n,info.nbSz);
+              ADM_info("%" PRIu32" frames /%" PRIu32" nbsz..\n",n,info.nbSz);
               if(n)
                       {
                             aprintf("\t\t%" PRIu32" frames of the same size %" PRIu32" , n=%" PRIu32"\n",
@@ -611,7 +603,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
             {
                 uint32_t n,i,j,k,v;
 
-                  printf("ctts:%" PRIu32"\n",son.read32()); // version & flags
+                  ADM_info("ctts:%" PRIu32"\n",son.read32()); // version & flags
                   n=son.read32();
                   if(n==1) // all the same , ignore
                   {
@@ -649,10 +641,10 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                 {
                     delete [] info.Ctts;
                     info.Ctts=NULL;
-                    printf("Destroying Ctts, seems invalid\n");
+                    ADM_info("Destroying Ctts, seems invalid\n");
                 }
                 ADM_assert(info.nbCtts<sum+1);
-                printf("Found %u elements\n",info.nbCtts);
+                ADM_info("Found %u elements\n",info.nbCtts);
             }
             break;
        case ADM_MP4_STCO:
@@ -660,7 +652,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
            son.skipBytes(4);
 
            info.nbCo = son.read32();
-           printf("\t\tnbCo: %u\n", info.nbCo);
+           ADM_info("\t\tnbCo: %u\n", info.nbCo);
 
            info.Co = new uint64_t[info.nbCo];
 
@@ -676,7 +668,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
            son.skipBytes(4);
 
            info.nbCo = son.read32();
-           printf("\t\tnbCo: %u\n", info.nbCo);
+           ADM_info("\t\tnbCo: %u\n", info.nbCo);
 
            info.Co = new uint64_t[info.nbCo];
 
@@ -701,8 +693,8 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                    if(i || (trackType==TRACK_VIDEO && _videoFound) || (trackType==TRACK_OTHER))
                    {
                     son.skipBytes(left);
-                    printf("[STSD] ignoring %s, size %u\n",fourCC::tostringBE(entryName),entrySize);
-                    if(trackType==TRACK_OTHER) printf("[STSD] because track=other\n");
+                    ADM_info("[STSD] ignoring %s, size %u\n",fourCC::tostringBE(entryName),entrySize);
+                    if(trackType==TRACK_OTHER) ADM_info("[STSD] because track=other\n");
                     continue;
                    }
                    switch(trackType)
@@ -710,7 +702,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                      case TRACK_VIDEO:
                      {
                           uint32_t lw=0,lh=0;
-                                printf("[STSD] VIDEO %s, size %u\n",fourCC::tostringBE(entryName),entrySize);
+                                ADM_info("[STSD] VIDEO %s, size %u\n",fourCC::tostringBE(entryName),entrySize);
                                 son.skipBytes(8);  // reserved etc..
                                 left-=8;
                                 son.read32(); // version/revision
@@ -1283,7 +1275,7 @@ nextAtom:
             }
 #endif
             r=indexify(&(_tracks[1+nbAudioTrack]),trackScale,&info,1,&nbo);
-            printf("Indexed audio, nb blocks:%u\n",nbo);
+            ADM_info("Indexed audio, nb blocks:%u\n",nbo);
             if(r)
             {
                 nbo=_tracks[1+nbAudioTrack].nbIndex;
@@ -1291,7 +1283,7 @@ nextAtom:
                     _tracks[1+nbAudioTrack].nbIndex=nbo;
                 else
                     _tracks[1+nbAudioTrack].nbIndex=info.nbSz;
-                printf("Indexed audio, nb blocks:%u (final)\n",_tracks[1+nbAudioTrack].nbIndex);
+                ADM_info("Indexed audio, nb blocks:%u (final)\n",_tracks[1+nbAudioTrack].nbIndex);
                 _tracks[1+nbAudioTrack].scale=trackScale;
                 nbAudioTrack++;
             }
