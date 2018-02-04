@@ -195,12 +195,13 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h, float zoom)
             {
                 renderer->stop();
                 delete renderer;
+                renderer=NULL;
             }
-            renderer=NULL;
             phyW=w;
             phyH=h;
             lastZoom=zoom;
-            spawnRenderer();
+            if(w && h)
+                spawnRenderer();
         }else // only zoom changed
         {
               renderer->changeZoom(zoom);
@@ -208,7 +209,8 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h, float zoom)
          // Resize widget to be the same as input after zoom
          lastZoom=zoom;
         MUI_updateDrawWindowSize(draw,(uint32_t)((float)w*zoom),(uint32_t)((float)h*zoom));
-        renderCompleteRedrawRequest();
+        if(w && h)
+            renderCompleteRedrawRequest();
         UI_purge();
         return 1;
 }

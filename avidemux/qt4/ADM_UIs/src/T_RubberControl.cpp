@@ -15,6 +15,32 @@
 #include "ADM_default.h"
 #include "DIA_flyDialogQt4.h"
 
+class transparentSizeGrip : public QSizeGrip
+{
+public:
+    transparentSizeGrip(QWidget *parent) : QSizeGrip(parent) { };
+    ~transparentSizeGrip() { };
+private:
+    void paintEvent(QPaintEvent *event);
+};
+
+/**
+    \fn paintEvent
+*/
+void transparentSizeGrip::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    painter.setPen(Qt::NoPen);
+    QColor color(Qt::black);
+    color.setAlpha(0);
+    QBrush invisible = QBrush(color, Qt::SolidPattern);
+    painter.fillRect(rect(),invisible);
+    painter.end();
+}
+
+/**
+
+*/
 ADM_QRubberBand::ADM_QRubberBand(QWidget *parent) : QRubberBand(QRubberBand::Rectangle, parent)
 {
 }
@@ -37,11 +63,11 @@ void ADM_QRubberBand::paintEvent(QPaintEvent *event)
     painter.setPen(pen);
     QRect adjustedRect = rect().adjusted(1,1,-1,-1);
     painter.drawRect(adjustedRect);
-    color.setAlpha(80);
+    color.setAlpha(50);
     QBrush brush = QBrush(color, Qt::DiagCrossPattern);
     adjustedRect = adjustedRect.adjusted(1,1,-1,-1);
     painter.fillRect(adjustedRect, brush);
-#ifdef __APPLE__
+
     QPainterPath topLeft;
     topLeft.moveTo(4,4);
     topLeft.lineTo(12,4);
@@ -58,7 +84,7 @@ void ADM_QRubberBand::paintEvent(QPaintEvent *event)
     QBrush solid = QBrush(Qt::red, Qt::SolidPattern);
     painter.fillPath(topLeft, solid);
     painter.fillPath(bottomRight, solid);
-#endif
+
     painter.end();
 }
 
@@ -73,13 +99,10 @@ ADM_rubberControl::ADM_rubberControl(ADM_flyDialog *fly, QWidget *parent) : QWid
     setWindowFlags(Qt::SubWindow);
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
-    QSizeGrip *grip1 = new QSizeGrip(this);
-    QSizeGrip *grip2 = new QSizeGrip(this);
-#ifdef __APPLE__
-    // work around grips not shown on macOS
+    transparentSizeGrip *grip1 = new transparentSizeGrip(this);
+    transparentSizeGrip *grip2 = new transparentSizeGrip(this);
     grip1->setFixedSize(10,10);
     grip2->setFixedSize(10,10);
-#endif
     grip1->setVisible(true);
     grip2->setVisible(true);
     layout->addWidget(grip1, 0, Qt::AlignLeft | Qt::AlignTop);

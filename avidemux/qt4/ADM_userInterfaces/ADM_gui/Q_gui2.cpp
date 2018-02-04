@@ -1379,11 +1379,14 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                         threshold = 0;
                 }
 
-                blockResizing = true;
-                admPreview::setMainDimension(w,h,zoom);
-                actZoomCalled = false;
-                admPreview::samePicture(); // required at least for VDPAU
-                blockResizing = false;
+                if(zoom > oldzoom + .001 || zoom < oldzoom - .001)
+                {
+                    blockResizing = true;
+                    admPreview::setMainDimension(w,h,zoom);
+                    actZoomCalled = false;
+                    admPreview::samePicture(); // required at least for VDPAU
+                    blockResizing = false;
+                }
             }
             if (watched == ui.sliderPlaceHolder)
             {

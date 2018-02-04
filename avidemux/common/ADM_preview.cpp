@@ -88,7 +88,14 @@ ADM_HW_IMAGE admPreview::getPreferedHwImageFormat(void)
 
 void admPreview::setMainDimension(uint32_t w, uint32_t h, float nzoom)
 {
-  if(rdrImage) delete rdrImage;
+    destroy();
+    if(!w || !h)
+    {
+        renderDisplayResize(0,0,ZOOM_1_1);
+        UI_setDisplayName("XXXX");
+        return;
+    }
+
   rdrImage=new ADMImageDefault(w,h);
   rdrPhysicalW=w;
   rdrPhysicalH=h;
