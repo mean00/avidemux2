@@ -212,9 +212,13 @@ uint8_t mkvHeader::open(const char *name)
                 vid->index[i].Dts=lastDts;
                 continue;
             }
-            uint64_t limitDts=vid->index[i].Pts-ptsdtsdelta;
+            uint64_t limitDts=0;
+            if(vid->index[i].Pts>ptsdtsdelta)
+                limitDts=vid->index[i].Pts-ptsdtsdelta;
             if(  lastDts<limitDts)
             {
+                if(limitDts-lastDts>1000) // not just a rounding error
+                    ADM_warning("Bumping DTS by %" PRIu64" ms to keep PTS/DTS delta within limits for frame %d\n",(limitDts-lastDts)/1000,i);
                 lastDts=limitDts;
             }
             vid->index[i].Dts=lastDts;
@@ -232,6 +236,10 @@ uint8_t mkvHeader::open(const char *name)
         if(enforePtsGreaterThanDts)
         {
                 ADM_info("Have to delay by %" PRIu64" us so that PTS>DTS\n",enforePtsGreaterThanDts);
+                if(enforePtsGreaterThanDts>ptsdtsdelta)
+                {
+                    ADM_warning("The delay is implausibly high. The calculated frame rate is probably too low.\n");
+                }
                 for(int i=0;i<_nbAudioTrack+1;i++)
                 delayTrack(i,&(_tracks[i]),enforePtsGreaterThanDts);
         }
@@ -361,7 +369,6 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     int64_t delta,maxDelta=0;
     int64_t minDelta=100000000;
     *bFramePresent=false;
-    int nbValidDts=0;
 
 
 
@@ -394,8 +401,6 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         // the maximum will give us the max PTS-DTS delta so that we can compute DTS
         for(int i=0;i<nb-1;i++)
         {
-            if(track->index[i].Dts!=ADM_NO_PTS)
-                nbValidDts++;
             if(track->index[i].flags==AVI_B_FRAME) nbBFrame++;
             if(track->index[i+1].Pts==ADM_NO_PTS || track->index[i].Pts==ADM_NO_PTS)
                 continue;
@@ -519,9 +524,6 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         minDelta=100000000;
         for(int i=0;i<nb-1;i++)
         {
-            if(track->index[i].Dts!=ADM_NO_PTS)
-                nbValidDts++;
-            if(track->index[i].flags==AVI_B_FRAME) nbBFrame++;
             if(track->index[i+1].Pts==ADM_NO_PTS || track->index[i].Pts==ADM_NO_PTS)
                 continue;
 
@@ -558,34 +560,6 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     ADM_info("First frame pts     %" PRId64" us\n",track->index[0].Pts);
 
-    if(nbValidDts<3)
-    {
-            ADM_warning("Not enough valid DTS (%d)\n",(int)nbValidDts);
-            *minDeltaX=minDelta;
-            *maxDeltaX=0;
-            return false;
-    }
-
-
-    uint64_t adj=0;
-    int limit=32;
-    if(limit>nb) limit=nb;
-    // Pts must be >= maxDelta for all frames, the first 32 will do
-    for(int i=0;i<limit;i++)
-    {
-        if(maxDelta>track->index[i].Pts)
-        {
-            uint64_t newAdj=maxDelta-track->index[i].Pts;
-            if(newAdj>adj) adj=newAdj;
-        }
-    }
-    if(adj) // need to correct
-    {
-        ADM_info("Delaying video by %" PRIu64" us\n",adj);
-        ADM_info("[mkv] Delaying audio by %" PRIu64" us\n",adj);
-        for(int i=0;i<_nbAudioTrack+1;i++)
-            delayTrack(i,&(_tracks[i]),adj);
-    }
     *maxDeltaX=maxDelta;
     *minDeltaX=minDelta;
     return true;
