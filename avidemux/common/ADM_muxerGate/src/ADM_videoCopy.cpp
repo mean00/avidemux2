@@ -53,22 +53,27 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
         ptsStart=dtsStart=startTime;
     }else   
     {
+        uint64_t delta=0;
+        video_body->getPtsDtsDelta(ptsStart,&delta);
+        ADM_info("PTS/DTS delta=%" PRIu64" us\n",delta);
         // Do we have non droppable b frame ?
         uint32_t bframeDelay;
         if(true==video_body->getNonClosedGopDelay(ptsStart,&bframeDelay) && bframeDelay)
         {
-            ADM_info("Some B-frames are not droppable, increasing delay by %d us\n",bframeDelay);
-            videoDelay+=bframeDelay;
-        }
-        else
+            if(bframeDelay+2*frameIncrement>delta) // i.e. delta is wrong
+            {
+                bframeDelay+=2*(int)frameIncrement-(int)delta;
+                ADM_info("Some B-frames are not droppable, increasing delay by %d us\n",bframeDelay);
+                videoDelay+=bframeDelay;
+            }else
+            {
+                ADM_info("Some B-frames are not droppable, but PTS delay is sufficient\n");
+            }
+        }else
         {
             videoDelay=0;
         }
-        
-        uint64_t delta=0;
-        video_body->getPtsDtsDelta(ptsStart,&delta);
 
-        ADM_info("PTS/DTS delta=%" PRIu64" us\n",delta);
         //videoDelay
         if(delta>ptsStart)
         {
