@@ -8252,7 +8252,7 @@ Installation mismatch</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+471"/>
         <source>Indexing</source>
-        <translation type="unfinished">Indeksowanie</translation>
+        <translation>Indeksowanie</translation>
     </message>
 </context>
 <context>
@@ -8301,42 +8301,42 @@ Installation mismatch</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+171"/>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="unfinished">Plik z _napisami (ASS/SSA):</translation>
+        <translation>Plik z _napisami (ASS/SSA):</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Select Subtitle file</source>
-        <translation type="unfinished">Wybierz plik z napisami</translation>
+        <translation>Wybierz plik z napisami</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Line spacing:</source>
-        <translation type="unfinished">Odstęp pomiędzy _liniami:</translation>
+        <translation>Odstęp pomiędzy _liniami:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Font scale:</source>
-        <translation type="unfinished">Skalowanie _czcionki</translation>
+        <translation>Skalowanie _czcionki</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Top margin:</source>
-        <translation type="unfinished">Margines _górny</translation>
+        <translation>Margines _górny</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Botto_m margin</source>
-        <translation type="unfinished">Margines _dolny:</translation>
+        <translation>Margines _dolny:</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>ASS</source>
-        <translation type="unfinished">ASS</translation>
+        <translation>ASS</translation>
     </message>
     <message>
         <location line="-112"/>
         <source>SSA/ASS/SRT</source>
-        <translation type="unfinished"></translation>
+        <translation>SSA/ASS/SRT</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8351,39 +8351,39 @@ Installation mismatch</source>
     <message>
         <location line="+0"/>
         <source>Are you sure this is an ass file ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Czy na pewno jest to plik ASS?</translation>
     </message>
     <message>
         <location line="+56"/>
         <source>This is a srt file. Convert to SSA ?</source>
-        <translation type="unfinished"></translation>
+        <translation>To jest plik SRT. Przekonwertować na SSA?</translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+5"/>
         <location line="+8"/>
         <source>Error</source>
-        <translation type="unfinished">Błąd</translation>
+        <translation>Błąd</translation>
     </message>
     <message>
         <location line="-13"/>
         <source>Cannot load this srt file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można wczytać tego pliku SRT.</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Cannot convert to ssa.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można przekonwertować na SSA.</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Cannot save converted file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można zapisać skonwertowanego pliku.</translation>
     </message>
     <message>
         <location line="+55"/>
         <source>Fonts</source>
-        <translation type="unfinished"></translation>
+        <translation>Czcionki</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -8394,7 +8394,7 @@ This message will not be displayed again.</source>
     <message>
         <location line="+27"/>
         <source>SSA Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Błąd SSA</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -8430,7 +8430,7 @@ This message will not be displayed again.</source>
     <message>
         <location line="+0"/>
         <source>Cannot create AVI file</source>
-        <translation type="unfinished">Nie można utworzyć pliku AVI</translation>
+        <translation>Nie można utworzyć pliku AVI</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerAvi/muxerAviConfig.cpp" line="+25"/>
@@ -9066,7 +9066,7 @@ Czy chcesz go wczytać ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="+56"/>
         <source>Crop</source>
-        <translation type="unfinished"></translation>
+        <translation>Kadrowanie</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9098,7 +9098,7 @@ Czy chcesz go wczytać ?
         <location line="+146"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+146"/>
         <source>Auto Crop</source>
-        <translation type="unfinished">Automatyczne kadrowanie</translation>
+        <translation>Automatyczne kadrowanie</translation>
     </message>
     <message>
         <location line="-108"/>
@@ -12579,7 +12579,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="-121"/>
         <source>Aspect Ratio:</source>
-        <translation type="unfinished">Proporcje obrazu:</translation>
+        <translation>Proporcje obrazu:</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -12919,17 +12919,17 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location line="+4"/>
         <source> Project</source>
-        <translation type="unfinished"></translation>
+        <translation>Projekt</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>&amp;Run Project...</source>
-        <translation type="unfinished"></translation>
+        <translation>U&amp;ruchom projekt...</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>&amp;Debug Project...</source>
-        <translation type="unfinished"></translation>
+        <translation>Debuguj projekt...</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -12939,12 +12939,12 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location line="+20"/>
         <source>Scripting Shell</source>
-        <translation type="unfinished"></translation>
+        <translation>Powłoka skryptowa</translation>
     </message>
     <message>
         <location line="+4"/>
         <source> Shell</source>
-        <translation type="unfinished"></translation>
+        <translation>Powłoka</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -13422,7 +13422,7 @@ Ready.
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resize/qt4/Q_resize.cpp" line="+251"/>
         <source>Width and height cannot be odd</source>
-        <translation type="unfinished">Szerokość i wysokość nie mogą być nieparzyste</translation>
+        <translation>Szerokość i wysokość nie mogą być nieparzyste</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resize/swScaleResize.cpp" line="+80"/>
@@ -13450,7 +13450,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+13"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+13"/>
         <source>Resize</source>
-        <translation type="unfinished">Zmień rozmiar</translation>
+        <translation>Zmień rozmiar</translation>
     </message>
     <message>
         <location line="+50"/>
@@ -13476,7 +13476,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+50"/>
         <location line="+42"/>
         <source>1:1</source>
-        <translation type="unfinished">1:1</translation>
+        <translation>1:1</translation>
     </message>
     <message>
         <location line="-37"/>
@@ -13502,7 +13502,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="-37"/>
         <location line="+42"/>
         <source>4:3</source>
-        <translation type="unfinished">4:3</translation>
+        <translation>4:3</translation>
     </message>
     <message>
         <location line="-37"/>
@@ -13528,7 +13528,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="-37"/>
         <location line="+42"/>
         <source>16:9</source>
-        <translation type="unfinished">16:9</translation>
+        <translation>16:9</translation>
     </message>
     <message>
         <location line="+172"/>
@@ -13543,7 +13543,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+172"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+172"/>
         <source>1%</source>
-        <translation type="unfinished">1%</translation>
+        <translation>1%</translation>
     </message>
     <message>
         <location line="+40"/>
@@ -13558,7 +13558,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+40"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+40"/>
         <source>200%</source>
-        <translation type="unfinished">200%</translation>
+        <translation>200%</translation>
     </message>
     <message>
         <location line="+116"/>
@@ -13603,7 +13603,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="-423"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="-423"/>
         <source>Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Proporcje obrazu</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -13618,7 +13618,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+12"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+12"/>
         <source>Lock Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Zablokuj proporcje obrazu</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -13633,7 +13633,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+18"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+18"/>
         <source>Source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Źródło:</translation>
     </message>
     <message>
         <location line="+42"/>
@@ -13648,7 +13648,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+42"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+42"/>
         <source>Destination:</source>
-        <translation type="unfinished"></translation>
+        <translation>Cel:</translation>
     </message>
     <message>
         <location line="+44"/>
@@ -13678,7 +13678,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+20"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+20"/>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Szerokość:</translation>
     </message>
     <message>
         <location line="+36"/>
@@ -13693,7 +13693,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+36"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+36"/>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wysokość:</translation>
     </message>
     <message>
         <location line="+35"/>
@@ -13723,7 +13723,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+75"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+75"/>
         <source>Percent</source>
-        <translation type="unfinished"></translation>
+        <translation>Procent</translation>
     </message>
     <message>
         <location line="+70"/>
@@ -13753,7 +13753,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+7"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+7"/>
         <source>0.00 / 0.00</source>
-        <translation type="unfinished"></translation>
+        <translation>0.00 / 0.00</translation>
     </message>
     <message>
         <location line="+51"/>
@@ -14037,7 +14037,7 @@ Ready.
     <message>
         <location line="+1"/>
         <source>PAL/SECAM</source>
-        <translation type="unfinished">PAL/SECAM</translation>
+        <translation>PAL/SECAM</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -14538,7 +14538,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="+331"/>
         <source>VBR</source>
-        <translation type="unfinished">VBR</translation>
+        <translation>VBR</translation>
     </message>
     <message>
         <location line="+1"/>
