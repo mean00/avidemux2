@@ -17,4 +17,4 @@ avidemux/oldFiles/
 myBuild*
 oprofile_data
 avidemux/winInstaller/AvidemuxVersion.nsh
-avidemux/qt4/i18n/avidemux_pl.qm
+avidemux/qt4/i18n/*.qm
