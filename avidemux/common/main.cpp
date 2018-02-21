@@ -309,6 +309,11 @@ int startAvidemux(int argc, char *argv[])
     PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder,admLibVa_exitCleanup)
 #endif
 
+#if defined (USE_VIDEOTOOLBOX)
+    extern bool admVideoToolbox_exitCleanup(void);
+    PROBE_HW_ACCEL(videotoolboxProbe,VideoToolbox,initVideoToolboxDecoder,admVideoToolbox_exitCleanup)
+#endif
+
 #endif // !CLI
 
 #ifdef USE_SDL

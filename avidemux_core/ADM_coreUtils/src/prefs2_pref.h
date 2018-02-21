@@ -25,6 +25,7 @@ static optionDesc myOptions[]={
 { FEATURES_VDPAU,"features.vdpau"                                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_XVBA,"features.xvba"                                       ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_LIBVA,"features.libva"                                     ,ADM_param_bool    	,"0",	0,	1},
+{ FEATURES_VIDEOTOOLBOX,"features.videotoolbox"                       ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_ENABLE_OPENGL,"features.enable_opengl"                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_CAP_REFRESH_ENABLED,"features.cap_refresh_enabled"         ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_CAP_REFRESH_VALUE,"features.cap_refresh_value"             ,ADM_param_uint32_t	,"100",	10,	1000},
