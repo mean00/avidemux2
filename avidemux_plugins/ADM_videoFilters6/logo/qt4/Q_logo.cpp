@@ -178,6 +178,7 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         myLogo->param.y=param->y;
         myLogo->param.alpha=param->alpha;
         myLogo->param.logoImageFile=std::string("");
+        myLogo->param.fade=param->fade;
         myLogo->_cookie=this;
         
         myLogo->setPreview(false);
@@ -186,21 +187,26 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         SPINENTRY(spinY)->setMaximum(height);
         SPINENTRY(spinAlpha)->setMaximum(255);
         SPINENTRY(spinAlpha)->setMinimum(0);
+        SPINENTRY(spinFadeInOut)->setDecimals(1);
+        SPINENTRY(spinFadeInOut)->setSuffix(QT_TRANSLATE_NOOP("logo"," s"));
+        SPINENTRY(spinFadeInOut)->setSingleStep(.1);
+        SPINENTRY(spinFadeInOut)->setMaximum(10.);
+        SPINENTRY(spinFadeInOut)->setMinimum(0.);
         SPINENTRY(spinX)->setSingleStep(1);
         SPINENTRY(spinY)->setSingleStep(1);
-        
-        myLogo->upload();
-        myLogo->sliderChanged();
+
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect( ui.pushButtonSelect,SIGNAL(pressed()),this,SLOT(imageSelect()));
-#define SPINNER(x) connect( ui.x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
-        SPINNER(spinX);
-        SPINNER(spinY);
-        SPINNER(spinAlpha);
+#define SPINNER(x,y) connect(ui.x,SIGNAL(valueChanged(y)),this,SLOT(valueChanged(y)));
+        SPINNER(spinX,int);
+        SPINNER(spinY,int);
+        SPINNER(spinAlpha,int);
+        SPINNER(spinFadeInOut,double);
         connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
-        myLogo->sameImage();
-        
+
         myLogo->addControl(ui.toolboxLayout);
+        myLogo->upload();
+        myLogo->sliderChanged();
 
         setModal(true);
         show();
@@ -224,8 +230,8 @@ void Ui_logoWindow::gather(logo *param)
     DUPE(x)
     DUPE(y)
     DUPE(alpha)
+    DUPE(fade)
     param->logoImageFile=imageName;
-    
 }
 /**
     \fn dtor
@@ -243,6 +249,18 @@ Ui_logoWindow::~Ui_logoWindow()
 */
 
 void Ui_logoWindow::valueChanged( int f )
+{
+    if(lock) return;
+    lock++;
+    myLogo->download();
+    myLogo->sameImage();
+    lock--;
+}
+
+/**
+    \fn valueChanged
+*/
+void Ui_logoWindow::valueChanged(double f)
 {
     if(lock) return;
     lock++;
@@ -299,6 +317,15 @@ void Ui_logoWindow::resizeEvent(QResizeEvent *event)
 }
 
 /**
+    \fn flyLogo ctor
+*/
+flyLogo::flyLogo (QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in, ADM_QCanvas *canvas, ADM_QSlider *slider)
+    : ADM_flyDialogYuv(parent,width,height,in,canvas,slider,RESIZE_AUTO)
+{
+    in->getTimeRange(&startOffset,&endOffset);
+}
+
+/**
  * 
  * @param x
  * @param y
@@ -327,7 +354,8 @@ uint8_t flyLogo::upload(void)
 #define MYSPIN(x) parent->ui.x
     MYSPIN(spinX)->setValue(param.x);
     MYSPIN(spinY)->setValue(param.y);
-    MYSPIN(spinAlpha)->setValue(param.alpha);   
+    MYSPIN(spinAlpha)->setValue(param.alpha);
+    MYSPIN(spinFadeInOut)->setValue((double)(param.fade)/1000);
     parent->ui.labelImage->setText(parent->imageName.c_str());
     return 1;
 }
@@ -340,6 +368,7 @@ uint8_t flyLogo::download(void)
     param.x= MYSPIN(spinX)->value();
     param.y= MYSPIN(spinY)->value();
     param.alpha= MYSPIN(spinAlpha)->value();
+    param.fade=(uint32_t)(MYSPIN(spinFadeInOut)->value() * 1000);
     return true;
 }
 
@@ -349,6 +378,7 @@ uint8_t flyLogo::download(void)
 uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
 {
     out->duplicate(in);
+    uint64_t pts=in->Pts;
     Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
     if(!parent->image)
         return true;
@@ -363,10 +393,39 @@ uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
         return true;
 
     ADMImage *myImage=parent->image;
+    double a=(double)param.alpha;
+    uint64_t transition=param.fade*1000LL;
+    uint64_t duration=endOffset-startOffset;
+
+    if(transition && duration)
+    {
+        if(transition*2 > duration)
+            transition=duration/2;
+        if(pts < startOffset || pts >= endOffset)
+        {
+            a = 0.;
+        }else
+        {
+            pts -= startOffset;
+            if(pts < transition)
+            {
+                a /= (double)transition;
+                a *= pts;
+            }
+            if(pts > duration-transition)
+            {
+                a /= (double)transition;
+                a *= duration-pts;
+            }
+        }
+        if(a > 255.)
+            a = 255.;
+    }
+
     if(myImage->GetReadPtr(PLANAR_ALPHA))
-        myImage->copyWithAlphaChannel(out,param.x,param.y,param.alpha);
+        myImage->copyWithAlphaChannel(out,param.x,param.y,(uint32_t)a);
     else
-        myImage->copyToAlpha(out,param.x,param.y,param.alpha);
+        myImage->copyToAlpha(out,param.x,param.y,(uint32_t)a);
     return true;
 }
 

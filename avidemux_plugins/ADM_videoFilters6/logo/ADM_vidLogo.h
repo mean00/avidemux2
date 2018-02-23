@@ -30,6 +30,9 @@ protected:
                 ADMImage    *myImage;
                 logo        configuration;
                 bool        reloadImage(void);
+                uint64_t    from;
+                uint64_t    startOffset;
+                uint64_t    endOffset;
 public:
                     addLogopFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
                     ~addLogopFilter();
