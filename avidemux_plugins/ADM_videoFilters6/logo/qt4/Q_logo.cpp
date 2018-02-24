@@ -156,7 +156,6 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         _in=in;
         
         image=NULL;;
-        alpha=param->alpha;
         admCoreUtils::getLastReadFolder(lastFolder);
         if(param->logoImageFile.size())
         {
@@ -172,16 +171,8 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         height=in->getInfo()->height;
 
         canvas=new ADM_LogoCanvas(ui.graphicsView,width,height);
-        
         myLogo=new flyLogo(this, width, height,in,canvas,ui.horizontalSlider);
-        myLogo->param.x=param->x;
-        myLogo->param.y=param->y;
-        myLogo->param.alpha=param->alpha;
-        myLogo->param.logoImageFile=std::string("");
-        myLogo->param.fade=param->fade;
-        myLogo->_cookie=this;
-        
-        myLogo->setPreview(false);
+
 #define SPINENTRY(x) ui.x
         SPINENTRY(spinX)->setMaximum(width);        
         SPINENTRY(spinY)->setMaximum(height);
@@ -195,6 +186,15 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         SPINENTRY(spinX)->setSingleStep(1);
         SPINENTRY(spinY)->setSingleStep(1);
 
+        myLogo->param.x=param->x;
+        myLogo->param.y=param->y;
+        myLogo->param.alpha=param->alpha;
+        myLogo->param.logoImageFile=param->logoImageFile;
+        myLogo->param.fade=param->fade;
+        myLogo->_cookie=this;
+        myLogo->upload();
+        myLogo->setPreview(false);
+
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect( ui.pushButtonSelect,SIGNAL(pressed()),this,SLOT(imageSelect()));
 #define SPINNER(x,y) connect(ui.x,SIGNAL(valueChanged(y)),this,SLOT(valueChanged(y)));
@@ -205,7 +205,6 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
 
         myLogo->addControl(ui.toolboxLayout);
-        myLogo->upload();
         myLogo->sliderChanged();
 
         setModal(true);
@@ -368,7 +367,8 @@ uint8_t flyLogo::download(void)
     param.x= MYSPIN(spinX)->value();
     param.y= MYSPIN(spinY)->value();
     param.alpha= MYSPIN(spinAlpha)->value();
-    param.fade=(uint32_t)(MYSPIN(spinFadeInOut)->value() * 1000);
+#define ROUNDUP 100
+    param.fade=(((uint32_t)(MYSPIN(spinFadeInOut)->value() * 1000.) + ROUNDUP/2)/ROUNDUP)*ROUNDUP;
     return true;
 }
 

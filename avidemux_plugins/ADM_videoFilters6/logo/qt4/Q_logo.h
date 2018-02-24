@@ -42,7 +42,6 @@ protected:
 public:
         ADMImage            *image;
         int                 imageWidth,imageHeight;
-        int                 alpha;
 
 public:
 	
