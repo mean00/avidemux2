@@ -398,7 +398,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
         ADM_mwNavSlider *qslider=(ADM_mwNavSlider *)slider;
     slider->setMinimum(0);
     slider->setMaximum(ADM_LARGE_SCALE);
-#if !(defined(__APPLE__) && QT_VERSION == QT_VERSION_CHECK(5,10,0))
+#if !(defined(__APPLE__) && QT_VERSION >= QT_VERSION_CHECK(5,10,0))
         slider->setTickInterval(ADM_SCALE_INCREMENT);
         slider->setTickPosition(QSlider::TicksBothSides);
 #endif
