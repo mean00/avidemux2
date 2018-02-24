@@ -74,7 +74,7 @@ public:
         virtual bool         getCoupledConf(CONFcouple **couples) ;     /// Return the current filter configuration
         virtual void         setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void); /// Start graphical user interface
-        virtual bool         getTimeRange(uint64_t *start, uint64_t *end);
+        virtual bool         getRange(uint64_t *start, uint64_t *end);
         virtual bool         goToTime(uint64_t usSeek);
         static  void         reconfigureCallback(void *cookie);
                 void         reconfigureSon();
@@ -243,10 +243,10 @@ bool partialFilter::isInRange(uint64_t tme)
 }
 
 /**
-    \fn getTimeRange
+    \fn getRange
     \fn Get the time a partialized filter should be active
 */
-bool partialFilter::getTimeRange(uint64_t *startTme, uint64_t *endTme)
+bool partialFilter::getRange(uint64_t *startTme, uint64_t *endTme)
 {
     *startTme=1000LL*configuration.startBlack;
     *endTme=1000LL*configuration.endBlack;
@@ -385,7 +385,7 @@ uint64_t          partialFilter::trampolineFilter::getAbsoluteStartTime()
 
 bool partialFilter::trampolineFilter::getTimeRange(uint64_t *start, uint64_t *end)
 {
-    return previousFilter->getTimeRange(start,end);
+    return ((partialFilter *)previousFilter)->getRange(start,end);
 }
 
 bool partialFilter::trampolineFilter::goToTime(uint64_t usSeek)
