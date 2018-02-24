@@ -118,7 +118,7 @@
          <item>
           <widget class="QLabel" name="label_6">
            <property name="text">
-            <string>Fade in/out</string>
+            <string>Fade-in/out</string>
            </property>
            <property name="textFormat">
             <enum>Qt::PlainText</enum>
