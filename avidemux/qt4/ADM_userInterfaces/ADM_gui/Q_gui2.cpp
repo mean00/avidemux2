@@ -2228,6 +2228,19 @@ bool UI_setVUMeter( uint32_t volume[6])
     UI_vuUpdate( volume);
     return true;
 }
+
+/**
+    \fn UI_setVolume
+*/
+bool UI_setVolume(void)
+{
+    if(WIDGET(toolButtonAudioToggle)->isChecked())
+        ((MainWindow *)QuiMainWindows)->volumeChange(0);
+    else
+        AVDM_setVolume(0);
+    return true;
+}
+
 /**
     \fn UI_setDecoderName
 */
