@@ -146,7 +146,12 @@ void addLogopFilter::setCoupledConf(CONFcouple *couples)
 */
 const char *addLogopFilter::getConfiguration(void)
 {
-    return "Add logo.";
+    static char c[2560];
+    snprintf(c,2559,"X: %d; Y: %d; Alpha: %d; Fade-in/out: %d ms;\nimage: %s",
+            configuration.x,configuration.y,configuration.alpha,configuration.fade,
+            configuration.logoImageFile.c_str());
+    return c;
+
 }
 
 /**
