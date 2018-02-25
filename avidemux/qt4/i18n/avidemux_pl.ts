@@ -11738,12 +11738,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/license.ui" line="+16"/>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Licencja</translation>
     </message>
     <message>
         <location line="+46"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -12510,22 +12510,22 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../common/ADM_videoFilter2/src/ADM_vidPartial.cpp" line="+307"/>
         <source>Start time (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation>Czas początkowy (ms):</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>End time (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation>Czas końcowy (ms):</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Configure filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfiguruj filtr</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Partial Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtr częściowy</translation>
     </message>
 </context>
 <context>
@@ -12603,7 +12603,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+14"/>
         <source>Codec 4CC:</source>
-        <translation type="unfinished">Kod 4CC kodeka:</translation>
+        <translation>Kod 4CC kodeka:</translation>
     </message>
     <message>
         <source>Global Motion Compensation:</source>
