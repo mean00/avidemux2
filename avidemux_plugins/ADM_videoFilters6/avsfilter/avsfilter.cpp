@@ -651,6 +651,16 @@ std::string pAvsScript=std::string(param.avs_script);
  return 0;
 }
 
+/**
+    \fn getTimeRange
+*/
+bool getTimeRange(uint64_t *startTime, uint64_t *endTime)
+{
+    *startTime = 0;
+    *endTime = info.totalDuration;
+    return true;
+}
+
 //#define SET_AVS(i,x,y,z) {wine_loader->avs_pipes[i].pipename = x; wine_loader->avs_pipes[i].hpipe = y; wine_loader->avs_pipes[i].flags = z;}
 
 bool avsfilter::SetParameters(avsfilter_config *newparam)
