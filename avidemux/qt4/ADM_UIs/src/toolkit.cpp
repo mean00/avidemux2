@@ -12,12 +12,30 @@ void qtRegisterDialog(QWidget *dialog)
 {
     if (widgetStack.count())
     {
-        if (dialog->parentWidget() != widgetStack.top() || !(dialog->windowFlags() & Qt::Dialog))
+        Qt::WindowFlags flags = dialog->windowFlags();
+        bool reparent = false;
+        bool isDialog = false;
+        if (dialog->parentWidget() != widgetStack.top())
+            reparent = true;
+        if (flags & Qt::Dialog)
+            isDialog = true;
+#if defined(__APPLE__) && QT_VERSION == QT_VERSION_CHECK(5,10,1)
+        if (reparent || isDialog)
+        {
+            ADM_info("Working around Qt bug introduced in 5.10.1 resulting in non-resizable dialogs with Cocoa\n");
+            dialog->setWindowFlag(Qt::Dialog, false);
+            dialog->setParent(widgetStack.top(), Qt::Window);
+            dialog->setWindowModality(Qt::ApplicationModal);
+            dialog->show();
+        }
+#else
+        if (reparent || !isDialog)
         {
             ADM_info("reparenting widget %s\n",dialog->objectName().toUtf8().constData());
             dialog->setParent(widgetStack.top(), Qt::Dialog);
             dialog->show(); // reparenting makes the widget invisible
         }
+#endif
     }
     widgetStack.push(dialog);
 }
