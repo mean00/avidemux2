@@ -338,9 +338,9 @@ void partialFilter::reconfigureSon(void)
 */
 bool partialFilter::configure( void)
 {
-        uint32_t mx=9*3600*1000;
-        diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","Start time (ms):"),0,mx);
-        diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","End time (ms):"),0,mx);
+        uint32_t mx=(uint32_t)(previousFilter->getInfo()->totalDuration/1000);
+        diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","_Start time:"),0,mx);
+        diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","_End time:"),0,mx);
         diaElemButton    son(QT_TRANSLATE_NOOP("partial", "Configure filter"), partialFilter::reconfigureCallback,this);
 
         diaElem *elems[3]={&start,&end,&son};
