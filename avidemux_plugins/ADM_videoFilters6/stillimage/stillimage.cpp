@@ -242,8 +242,8 @@ bool stillimage::configure(void)
     uint32_t dur=(uint32_t)(previousFilter->getInfo()->totalDuration/1000LL);
     uint32_t max9h=9*3600*1000;
 
-    diaElemTimeStamp start(&params.start,QT_TRANSLATE_NOOP("stillimage","Start time:"),0,dur);
-    diaElemTimeStamp duration(&params.duration,QT_TRANSLATE_NOOP("stillimage","Duration:"),0,max9h);
+    diaElemTimeStamp start(&params.start,QT_TRANSLATE_NOOP("stillimage","_Start time:"),0,dur);
+    diaElemTimeStamp duration(&params.duration,QT_TRANSLATE_NOOP("stillimage","_Duration:"),0,max9h);
 
     diaElem *elems[2]={&start,&duration};
     bool r=diaFactoryRun(QT_TRANSLATE_NOOP("stillimage","Still Image"),2,elems);
