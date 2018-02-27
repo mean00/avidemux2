@@ -73,15 +73,15 @@ void ADM_QTimeStamp::updateRange(int i)
     ms2time(_min,&hh1,&mm1,&ss1,&msec1);
     ms2time(_max,&hh2,&mm2,&ss2,&msec2);
 
-    uint32_t hh=myTWidget->hours->value();
-    uint32_t mm=myTWidget->minutes->value();
-    uint32_t ss=myTWidget->seconds->value();
-    uint32_t ms=myTWidget->mseconds->value();
-
     myTWidget->hours->setRange(hh1,hh2);
     myTWidget->minutes->setRange(0,59);
     myTWidget->seconds->setRange(0,59);
     myTWidget->mseconds->setRange(0,999);
+
+    uint32_t hh=myTWidget->hours->value();
+    uint32_t mm=myTWidget->minutes->value();
+    uint32_t ss=myTWidget->seconds->value();
+    uint32_t ms=myTWidget->mseconds->value();
 
     if(hh==hh2)
     {
@@ -180,14 +180,16 @@ ADM_QTimeStamp::ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid
 
     uint32_t hh,mm,ss,msec;
     ms2time(time,&hh,&mm,&ss,&msec);
+
+    _min=min;
+    _max=max;
+    updateRange(0);
+
     myTWidget->hours->setValue(hh);
     myTWidget->minutes->setValue(mm);
     myTWidget->seconds->setValue(ss);
     myTWidget->mseconds->setValue(msec);
 
-    _min=min;
-    _max=max;
-    updateRange(0);
     setSelection();
 
     QObject::connect(myTWidget->hours, SIGNAL(valueChanged(int)), this, SLOT(updateRange(int)));
