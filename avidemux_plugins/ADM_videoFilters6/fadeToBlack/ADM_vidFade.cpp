@@ -71,11 +71,10 @@ bool  AVDM_Fade::configure()
 while(1)
 {
     uint32_t eInOut=(uint32_t)param.inOut;
-    
-    uint32_t mx=9*3600*1000;
+
     diaElemMenu     menu(&(eInOut),QT_TRANSLATE_NOOP("fadeToBlack","_Fade type:"), 2,menuE);
-    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeToBlack","_Start time:"),0,mx);
-    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeToBlack","_End time:"),0,mx);
+    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeToBlack","_Start time:"),0,max);
+    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeToBlack","_End time:"),0,max);
     diaElem *elems[3]={&menu,&start,&end};
   
     if( diaFactoryRun(QT_TRANSLATE_NOOP("fadeToBlack","Fade to black"),3+0*1,elems))
