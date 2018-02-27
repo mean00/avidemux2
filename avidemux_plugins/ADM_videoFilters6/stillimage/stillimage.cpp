@@ -239,7 +239,6 @@ bool stillimage::updateTimingInfo(void)
 */
 bool stillimage::configure(void)
 {
-    // Setting max value doesn't work for diaElemTimeStamp, to be fixed in toolkit.
     uint32_t dur=(uint32_t)(previousFilter->getInfo()->totalDuration/1000LL);
     uint32_t max9h=9*3600*1000;
 

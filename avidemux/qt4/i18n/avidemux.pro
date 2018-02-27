@@ -282,6 +282,7 @@ HEADERS = \
 ../../../avidemux/qt4/ADM_UIs/src/T_notch.h \ 
 ../../../avidemux/qt4/ADM_UIs/src/T_slider.h \ 
 ../../../avidemux/qt4/ADM_UIs/src/T_threadCount.h \ 
+../../../avidemux/qt4/ADM_UIs/src/T_timeStamp.h \ 
 ../../../avidemux/qt4/ADM_UIs/src/T_toggle.h \ 
 ../../../avidemux/qt4/ADM_update/include/ADM_update.h \ 
 ../../../avidemux/qt4/ADM_update/private_inc/ADM_updateImpl.h \ 
@@ -966,7 +967,6 @@ SOURCES = \
 ../../../avidemux/qt4/ADM_UIs/src/FAC_matrix.cpp \ 
 ../../../avidemux/qt4/ADM_UIs/src/FAC_notch.cpp \ 
 ../../../avidemux/qt4/ADM_UIs/src/FAC_readOnlyText.cpp \ 
-../../../avidemux/qt4/ADM_UIs/src/FAC_timeStamp.cpp \ 
 ../../../avidemux/qt4/ADM_UIs/src/T_bitrate.cpp \ 
 ../../../avidemux/qt4/ADM_UIs/src/T_button.cpp \ 
 ../../../avidemux/qt4/ADM_UIs/src/T_dialogFactory.cpp \ 
@@ -980,6 +980,7 @@ SOURCES = \
 ../../../avidemux/qt4/ADM_UIs/src/T_RubberControl.cpp \ 
 ../../../avidemux/qt4/ADM_UIs/src/T_slider.cpp \ 
 ../../../avidemux/qt4/ADM_UIs/src/T_threadCount.cpp \ 
+../../../avidemux/qt4/ADM_UIs/src/T_timeStamp.cpp \ 
 ../../../avidemux/qt4/ADM_UIs/src/T_toggle.cpp \ 
 ../../../avidemux/qt4/ADM_UIs/src/toolkit.cpp \ 
 ../../../avidemux/qt4/ADM_update/src/ADM_update.cpp \ 
