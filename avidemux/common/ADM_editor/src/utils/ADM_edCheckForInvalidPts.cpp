@@ -74,7 +74,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     {
 #ifdef WORK_AROUND_BAD_PTS
         if(!GUI_Question(QT_TRANSLATE_NOOP("ADM_Composer",
-                "This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonously increasing. "
+                "This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonically increasing. "
                 "Avidemux can try to reconstruct correct PTS by decoding the entire video. "
                 "This may take a lot of time. Proceed?")))
         {
