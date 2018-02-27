@@ -654,7 +654,7 @@ std::string pAvsScript=std::string(param.avs_script);
 /**
     \fn getTimeRange
 */
-bool getTimeRange(uint64_t *startTime, uint64_t *endTime)
+bool avsfilter::getTimeRange(uint64_t *startTime, uint64_t *endTime)
 {
     *startTime = 0;
     *endTime = info.totalDuration;
