@@ -85,13 +85,26 @@ void ADM_QTimeStamp::updateRange(int i)
 
     if(hh==hh2)
     {
-        myTWidget->minutes->setRange(mm1,mm2);
-        if(mm==mm2)
+        myTWidget->minutes->setMaximum(mm2);
+        if(mm>=mm2)
         {
-            myTWidget->seconds->setRange(ss1,ss2);
-            if(ss==ss2)
+            myTWidget->seconds->setMaximum(ss2);
+            if(ss>=ss2)
             {
-                myTWidget->mseconds->setRange(msec1,msec2);
+                myTWidget->mseconds->setMaximum(msec2);
+            }
+        }
+    }
+
+    if(hh==hh1)
+    {
+        myTWidget->minutes->setMinimum(mm1);
+        if(mm<=mm1)
+        {
+            myTWidget->seconds->setMinimum(ss1);
+            if(ss<=ss1)
+            {
+                myTWidget->mseconds->setMinimum(msec1);
             }
         }
     }
@@ -178,12 +191,12 @@ ADM_QTimeStamp::ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid
     text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     text->setBuddy(myTWidget->hours);
 
-    uint32_t hh,mm,ss,msec;
-    ms2time(time,&hh,&mm,&ss,&msec);
-
     _min=min;
     _max=max;
     updateRange(0);
+
+    uint32_t hh,mm,ss,msec;
+    ms2time(time,&hh,&mm,&ss,&msec);
 
     myTWidget->hours->setValue(hh);
     myTWidget->minutes->setValue(mm);
