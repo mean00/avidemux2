@@ -2,6 +2,7 @@
 #define T_TIMESTAMP_H
 
 #include <QSpinBox>
+#include <QLabel>
 #include <QGridLayout>
 
 #include "DIA_factory.h"
@@ -50,7 +51,7 @@ protected :
     uint32_t        _min;
     uint32_t        _max;
     myTimeWidget    *myTWidget;
-    void            setSelection(void);
+    void            setSelectionAndBuddy(QLabel *label);
 
 public:
                     ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid, uint32_t min, uint32_t max, uint32_t time, uint32_t line);

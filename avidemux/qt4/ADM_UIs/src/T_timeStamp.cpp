@@ -13,8 +13,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QLabel>
-
 #include "ADM_default.h"
 #include "ADM_vidMisc.h"
 #include "T_timeStamp.h"
@@ -133,27 +131,32 @@ void ADM_QTimeStamp::updateRange(int i)
 }
 
 /**
-    \fn setSelection
+    \fn setSelectionAndBuddy
 */
-void ADM_QTimeStamp::setSelection(void)
+void ADM_QTimeStamp::setSelectionAndBuddy(QLabel *label)
 {
+#define BUDDY(x) if(label) label->setBuddy(myTWidget->x);
     if(myTWidget->hours->isEnabled())
     {
+        BUDDY(hours)
         myTWidget->hours->selectAll();
     }else
     {
         if(myTWidget->minutes->isEnabled())
         {
+            BUDDY(minutes)
             myTWidget->minutes->selectAll();
         }else
         {
             if(myTWidget->seconds->isEnabled())
             {
+                BUDDY(seconds)
                 myTWidget->seconds->selectAll();
             }else
             {
                 if(myTWidget->mseconds->isEnabled())
                 {
+                    BUDDY(mseconds)
                     myTWidget->mseconds->selectAll();
                 }
             }
@@ -189,7 +192,6 @@ ADM_QTimeStamp::ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid
 
     QLabel *text=new QLabel(title, dialog);
     text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    text->setBuddy(myTWidget->hours);
 
     _min=min;
     _max=max;
@@ -203,7 +205,7 @@ ADM_QTimeStamp::ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid
     myTWidget->seconds->setValue(ss);
     myTWidget->mseconds->setValue(msec);
 
-    setSelection();
+    setSelectionAndBuddy(text);
 
     QObject::connect(myTWidget->hours, SIGNAL(valueChanged(int)), this, SLOT(updateRange(int)));
     QObject::connect(myTWidget->minutes, SIGNAL(valueChanged(int)), this, SLOT(updateRange(int)));
