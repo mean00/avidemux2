@@ -107,27 +107,30 @@ void ADM_QTimeStamp::updateRange(int i)
         }
     }
 
-    myTWidget->hours->setEnabled(true);
-    myTWidget->minutes->setEnabled(true);
-    myTWidget->seconds->setEnabled(true);
-    myTWidget->mseconds->setEnabled(true);
+    bool hoursEnabled, minutesEnabled, secondsEnabled, msecondsEnabled;
+    hoursEnabled=minutesEnabled=secondsEnabled=msecondsEnabled=true;
 
     if(!hh2)
     {
-        myTWidget->hours->setEnabled(false);
+        hoursEnabled=false;
         if(!mm2)
         {
-            myTWidget->minutes->setEnabled(false);
+            minutesEnabled=false;
             if(!ss2)
             {
-                myTWidget->seconds->setEnabled(false);
+                secondsEnabled=false;
                 if(!msec2)
                 {
-                    myTWidget->mseconds->setEnabled(false);
+                    msecondsEnabled=false;
                 }
             }
         }
     }
+
+    myTWidget->hours->setEnabled(hoursEnabled);
+    myTWidget->minutes->setEnabled(minutesEnabled);
+    myTWidget->seconds->setEnabled(secondsEnabled);
+    myTWidget->mseconds->setEnabled(msecondsEnabled);
 }
 
 /**
