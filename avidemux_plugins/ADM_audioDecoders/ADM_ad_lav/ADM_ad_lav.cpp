@@ -77,8 +77,8 @@ static  ad_supportedFormat Formats[]={
         {WAV_MP2,AD_MEDIUM_QUAL},
         {WAV_FLAC,AD_MEDIUM_QUAL},
         {WAV_AC3,AD_LOW_QUAL},   // liba52 preferred ???
-        {WAV_AAC,AD_LOW_QUAL},   // libfaad preferred ???
-        {0x706D,AD_LOW_QUAL},
+        {WAV_AAC,AD_MEDIUM_QUAL},
+        {0x706D,AD_MEDIUM_QUAL},
         {WAV_EAC3,AD_MEDIUM_QUAL},
         {WAV_OGG_VORBIS,AD_HIGH_QUAL},
 };
