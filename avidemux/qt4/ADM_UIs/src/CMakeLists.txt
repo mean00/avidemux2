@@ -2,14 +2,14 @@ include(admOpenGl)
 SET(ADM_LIB ADM_UI${QT_LIBRARY_EXTENSION}6)
 
 ADM_QT_WRAP_CPP(${ADM_LIB}_source
-	T_bitrate.h  T_button.h  T_dialogFactory.h  T_filesel.h  T_menu.h  T_slider.h
-	T_threadCount.h  T_toggle.h  T_notch.h
+        T_bitrate.h  T_button.h  T_dialogFactory.h  T_filesel.h  T_menu.h  T_slider.h
+        T_threadCount.h  T_timeStamp.h  T_toggle.h  T_notch.h
         ../include/DIA_flyDialogQt4.h
 )
 
 SET(${ADM_LIB}_T
-	T_bitrate.cpp  T_button.cpp  T_dialogFactory.cpp  T_filesel.cpp  T_menu.cpp
-	T_slider.cpp  T_threadCount.cpp  T_toggle.cpp  T_notch.cpp
+        T_bitrate.cpp  T_button.cpp  T_dialogFactory.cpp  T_filesel.cpp  T_menu.cpp
+        T_slider.cpp  T_threadCount.cpp  T_timeStamp.cpp  T_toggle.cpp  T_notch.cpp
         DIA_flyDialog.cpp
         T_QCanvas.cpp
         T_qtFactory.cpp
@@ -22,9 +22,9 @@ if(USE_OPENGL)
 endif(USE_OPENGL)
 
 SET(${ADM_LIB}_SRCS
-	FAC_bar.cpp    FAC_frame.cpp  FAC_integer.cpp  FAC_aspectRatio.cpp
-	FAC_float.cpp  FAC_hex.cpp    FAC_readOnlyText.cpp  toolkit.cpp FAC_timeStamp.cpp
-	FAC_matrix.cpp  DIA_none.cpp  ${${ADM_LIB}_source}  ${${ADM_LIB}_T})
+        FAC_bar.cpp    FAC_frame.cpp  FAC_integer.cpp  FAC_aspectRatio.cpp
+        FAC_float.cpp  FAC_hex.cpp    FAC_readOnlyText.cpp  toolkit.cpp
+        FAC_matrix.cpp  DIA_none.cpp  ${${ADM_LIB}_source}  ${${ADM_LIB}_T})
 
 add_compiler_export_flags()
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${QT_INCLUDE_DIR})

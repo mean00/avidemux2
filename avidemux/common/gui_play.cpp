@@ -54,7 +54,6 @@ private:
         Clock           ticktock,tocktick;
         bool            refreshCapEnabled;
         uint32_t        refreshCapValue;
-        uint32_t        nbSamplesSent ;
         float           *wavbuf ;
         uint64_t        firstPts,lastPts;
         uint64_t        vuMeterPts;
@@ -382,7 +381,6 @@ bool  GUIPlayback::audioPump(bool wait)
              }
             errorMet=false;
             AVDM_AudioPlay(wavbuf, oaf);
-            nbSamplesSent += oaf/channels;
             load+=oaf;
     }
     updateVu();
@@ -440,6 +438,7 @@ bool  GUIPlayback::initializeAudio(void)
           cleanupAudio();
           return false;
       }
+    UI_setVolume();
     while(fill<preload)
     {
       if (!(small_ = playbackAudio->fill(preload-fill, wavbuf+fill,&status)))
@@ -448,7 +447,6 @@ bool  GUIPlayback::initializeAudio(void)
       }
       fill+=small_;
     }
-    nbSamplesSent = fill/channels;  // In sample
     AVDM_AudioPlay(wavbuf, fill);
     // Let audio latency sets in...
     ticktock.reset();

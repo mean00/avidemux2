@@ -45,6 +45,7 @@ class partialFilter : public  ADM_coreVideoFilter
        virtual void         setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;                          /// Start graphical user interface
        virtual uint64_t     getAbsoluteStartTime(void)   ;              /// Return the absolute offset of the current frame. Used to display time of for filter
+       virtual bool         getTimeRange(uint64_t *start, uint64_t *end); // Get the time a partialized filter is active
        virtual bool         goToTime(uint64_t usSeek); // needed for seekable preview when reconfiguring a partialized filter
     };
         friend class trampolineFilter;
@@ -72,11 +73,11 @@ public:
         virtual bool         getNextFrameForSon(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;     /// Return the current filter configuration
         virtual void         setCoupledConf(CONFcouple *couples);
-        virtual bool         configure(void);
-        virtual bool         goToTime(uint64_t usSeek);   /// Start graphical user interface
+        virtual bool         configure(void); /// Start graphical user interface
+        virtual bool         getRange(uint64_t *start, uint64_t *end);
+        virtual bool         goToTime(uint64_t usSeek);
         static  void         reconfigureCallback(void *cookie);
                 void         reconfigureSon();
-
 };
 
 // Add the hook to make it valid plugin
@@ -124,6 +125,15 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
       {
         ADM_assert(0);
       }
+    // sanity check
+    if(configuration.endBlack < configuration.startBlack)
+    {
+        uint32_t swap=configuration.startBlack;
+        configuration.startBlack=configuration.endBlack;
+        configuration.endBlack=swap;
+    }
+    if(configuration.endBlack > info.totalDuration)
+        configuration.endBlack=info.totalDuration;
     // Ok, create trampoline & son
     trampoline=new trampolineFilter(this,NULL);
     // Create swallowed filter
@@ -221,12 +231,28 @@ bool partialFilter::getNextFrame(uint32_t *fn,ADMImage *image)
  */
 bool partialFilter::isInRange(uint64_t tme)
 {
-   if(tme<(1000LL*configuration.startBlack) || (tme>configuration.endBlack*1000LL))
-   {
-     return false;
-   }
-   return true;
+    uint64_t first=previousFilter->getAbsoluteStartTime();
+    uint64_t from=1000LL*configuration.startBlack;
+    uint64_t to=1000LL*configuration.endBlack;
+
+    if(tme+first<from || tme+first>to)
+    {
+        return false;
+    }
+    return true;
 }
+
+/**
+    \fn getRange
+    \fn Get the time a partialized filter should be active
+*/
+bool partialFilter::getRange(uint64_t *startTme, uint64_t *endTme)
+{
+    *startTme=1000LL*configuration.startBlack;
+    *endTme=1000LL*configuration.endBlack;
+    return true;
+}
+
 /**
  */
 bool         partialFilter::goToTime(uint64_t usSeek)
@@ -248,6 +274,15 @@ bool         partialFilter::getCoupledConf(CONFcouple **couples)
     sonFilter->getCoupledConf(&newParam);
     if(newParam)
     {
+        if(configuration.startBlack > configuration.endBlack)
+        {
+            uint32_t swap=configuration.startBlack;
+            configuration.startBlack=configuration.endBlack;
+            configuration.endBlack=swap;
+        }
+        if(configuration.endBlack > info.totalDuration)
+            configuration.endBlack=info.totalDuration;
+
         *couples=new CONFcouple(newParam->getSize()+3);
         (*couples)->writeAsString("filterName",configuration.filterName.c_str());
         (*couples)->writeAsUint32("startBlack",configuration.startBlack);
@@ -303,9 +338,9 @@ void partialFilter::reconfigureSon(void)
 */
 bool partialFilter::configure( void)
 {
-        uint32_t mx=9*3600*1000;
-        diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","Start time (ms):"),0,mx);
-        diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","End time (ms):"),0,mx);
+        uint32_t mx=(uint32_t)(previousFilter->getInfo()->totalDuration/1000);
+        diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","_Start time:"),0,mx);
+        diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","_End time:"),0,mx);
         diaElemButton    son(QT_TRANSLATE_NOOP("partial", "Configure filter"), partialFilter::reconfigureCallback,this);
 
         diaElem *elems[3]={&start,&end,&son};
@@ -346,6 +381,11 @@ bool          partialFilter::trampolineFilter::configure()
 uint64_t          partialFilter::trampolineFilter::getAbsoluteStartTime()
 {
     return previousFilter->getAbsoluteStartTime(); // never called
+}
+
+bool partialFilter::trampolineFilter::getTimeRange(uint64_t *start, uint64_t *end)
+{
+    return ((partialFilter *)previousFilter)->getRange(start,end);
 }
 
 bool partialFilter::trampolineFilter::goToTime(uint64_t usSeek)

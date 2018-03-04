@@ -49,6 +49,7 @@ public:
                             {
                                     return startTime;
                             }
+       virtual bool         getTimeRange(uint64_t *start, uint64_t *end) { *start=startTime; *end=endTime; return true; }
        bool                 rewind(void);
 
 };

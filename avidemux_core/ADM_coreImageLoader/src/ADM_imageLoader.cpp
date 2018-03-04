@@ -104,6 +104,10 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
             }
             swap=true;
         }
+
+        if(ADM_COLOR_RGB24==sourceFormat)
+            swap=true;
+
         ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);     
         converter.convertImage(source,image); 
         

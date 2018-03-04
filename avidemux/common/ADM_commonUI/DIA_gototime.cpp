@@ -15,6 +15,7 @@
 #include "ADM_default.h"
 #include "DIA_factory.h"
 #include "ADM_vidMisc.h"
+#include "avi_vars.h"
 /**
  * \fn DIA_gotoTime
  * \brief Popup a display to enter hour/minutes/seconds/ms
@@ -27,8 +28,9 @@
 uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms)
 {
 uint32_t v=(*hh)*3600*1000+(*mm)*60*1000+(*ss)*1000+*ms;
+uint32_t max=(uint32_t)(video_body->getVideoDuration()/1000);
 
-diaElemTimeStamp   eh(&v,QT_TRANSLATE_NOOP("adm","TimeStamp:"),0,24);
+diaElemTimeStamp eh(&v,QT_TRANSLATE_NOOP("adm","TimeStamp:"),0,max);
 diaElem *allWidgets[]={&eh};
 
   if(!diaFactoryRun(QT_TRANSLATE_NOOP("adm","Go to Time"),1,allWidgets)) return 0;

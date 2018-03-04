@@ -446,7 +446,7 @@ bool admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int nu
     }
      if(ADM_FAILED(hr))
      {
-         ADM_warning("Cannot allocate D3D9 surfaces");
+         ADM_warning("Cannot allocate D3D9 surfaces\n");
          return false;
      }
      ADM_info("Allocated surface %p with shared handle=%p\n",surfaces,sh);

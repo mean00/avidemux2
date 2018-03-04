@@ -19,6 +19,7 @@ struct  {
 	bool vdpau;
 	bool xvba;
 	bool libva;
+	bool videotoolbox;
 	bool enable_opengl;
 	bool cap_refresh_enabled;
 	uint32_t cap_refresh_value;

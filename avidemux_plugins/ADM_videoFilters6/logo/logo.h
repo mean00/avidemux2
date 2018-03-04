@@ -6,4 +6,5 @@ uint32_t x;
 uint32_t y;
 uint32_t alpha;
 std::string logoImageFile;
+uint32_t fade;
 }logo;

@@ -23,7 +23,7 @@
 extern "C" void wine_tmp_path (AVS_PIPES *avsp, int num)
 {
   WCHAR path[MAX_PATH];
-  GetTempPathW(sizeof(path), path);
+  GetTempPathW(sizeof(path)/sizeof(path[0]), path);
   LPSTR (*wine_get_unix_file_name_ptr)(LPCWSTR) = NULL;
   wine_get_unix_file_name_ptr = (char *(__cdecl *)(const unsigned short *))
       GetProcAddress(GetModuleHandle("KERNEL32"),
