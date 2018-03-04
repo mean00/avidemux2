@@ -113,6 +113,8 @@ bool ADM_Composer::checkCutIsOnIntra(uint64_t time)
     _SEGMENT *seg=_segments.getSegment(segNo);
     _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
     vidHeader *demuxer=vid->_aviheader;
+    uint32_t oldSeg=_currentSegment;
+    uint32_t oldFrame=vid->lastSentFrame;
 
     if(switchToSegment(segNo,true))
     {
@@ -141,6 +143,8 @@ bool ADM_Composer::checkCutIsOnIntra(uint64_t time)
     }
     delete [] buffer;
     buffer=NULL;
+    _currentSegment=oldSeg;
+    vid->lastSentFrame=oldFrame;
     return !fail;
 }
 /**
