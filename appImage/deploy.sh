@@ -69,7 +69,7 @@ cp ${QT_HOME}/lib/libQt5XcbQpa.so.5  ../lib/qt5 || failQtXcb
 
 cp -Rap -t ../lib/qt5/plugins ${QT_HOME}/plugins/platforms  || fail qtplugins
 # Support libs
-for i in libffi.so.5  libsqlite3.so.0 libpng12.so.0 libgobject-2.0.so.0 libgthread-2.0.so.0 
+for i in libffi.so.6  libsqlite3.so.0 libpng12.so.0 libgobject-2.0.so.0 libgthread-2.0.so.0 
 do
         cpyX86 $i
 done
@@ -77,7 +77,7 @@ done
 cp -t ../lib /lib/x86_64-linux-gnu/libpcre.so.3 || fail pcre
 cp -t ../lib /lib/x86_64-linux-gnu/libglib-2.0.so.0 || fail glib
 cp -t ../lib /lib/x86_64-linux-gnu/libjson.so.0 || fail json
-cpyRootx86Lib libudev.so.0
+cpyRootx86Lib libudev.so.1
 
 # audio plugins
 for i in libfaad.so.2 libfaac.so.0 libmp3lame.so.0 libvorbis.so.0 libvorbisenc.so.2 libaften.so.0 libogg.so.0
@@ -85,13 +85,13 @@ do
         cpyX86 $i
 done
 
-cpyLib libopus.so.0 
+cpyX86 libopus.so.0 
 # Audio device
 cpyX86 libpulse-simple.so.0
 cpyX86 libpulse.so.0
 cpyX86 libfdk-aac.so.0
 cp -Rap /usr/lib/x86_64-linux-gnu/pulseaudio ../lib/ || fail pulsecommon_folder
-cp -t ../lib /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-2.0.so || fail pulsecommon
+cp -t ../lib /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-5.0.so || fail pulsecommon
  
 # subtitles
 for i in libfreetype.so.6 libfribidi.so.0 libfontconfig.so.1 
@@ -100,18 +100,18 @@ do
 done
 cpyRootx86Lib libexpat.so.1
 # x264
-cpyLib libx264.so.148
-cpyLib libx265.so.79
+cpyLib libx264.so.152
+cpyLib libx265.so.130
 # Display lib
 cpyX86 libvdpau.so.1
 cpyX86 libXv.so.1
-cpyLib libva.so.1
-cpyLib libva-x11.so.1
+cpyX86 libva.so.1
+cpyX86 libva-x11.so.1
 
-cp -t ../lib /usr/lib/dri/nvidia_drv_video.so || fail nvidia_drv_video
-cp -t ../lib /usr/lib/dri/i965_drv_video.so  || fail intel_drv_video
+cp -t ../lib /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so || fail nvidia_drv_video
+cp -t ../lib /usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so  || fail intel_drv_video
 # patch
-sed -i -e 's|/usr/lib/dri|././/././lib|g'   ../lib/libva.so.1
+sed -i -e 's|/usr/lib/x86_64-linux-gnu/dri|././/././lib|g'   ../lib/libva.so.1
 sed -i -e 's|/usr/lib/x86_64-linux-gnu/dri|././././././/./././././/./lib|g'  ../lib/libva.so.1
 
 #intel, not sure it works
