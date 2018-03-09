@@ -478,7 +478,11 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     this->setFocus(Qt::OtherFocusReason);
 
     setAcceptDrops(true);
-        setWindowIcon(QIcon(MKICON(avidemux_icon_small)));
+#ifndef __APPLE__
+    setWindowIcon(QIcon(MKICON(avidemux_icon_small)));
+#else
+    setWindowIcon(QIcon(MKOSXICON(avidemux)));
+#endif
 
     // Hook also the toolbar
     connect(ui.toolBar,  SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
@@ -1625,7 +1629,11 @@ int UI_Init(int nargc, char **nargv)
     myApplication=new myQApplication (global_argc, global_argv);
     myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
     myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
+#ifdef __APPLE__
+    Q_INIT_RESOURCE(avidemux_osx);
+#else
     Q_INIT_RESOURCE(avidemux);
+#endif
     Q_INIT_RESOURCE(filter);
 
     loadTranslator();
