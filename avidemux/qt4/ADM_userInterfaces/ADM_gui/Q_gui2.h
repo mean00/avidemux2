@@ -2,6 +2,7 @@
 #define Q_gui2_h
 
 #define MKICON(x) ":/new/prefix1/pics/"#x".png"
+#define MKOSXICON(x) ":/new/prefix1/pics/"#x".icns"
 
 #include <vector>
 #include <QtCore/QUrl>
