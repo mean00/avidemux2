@@ -101,7 +101,7 @@ done
 cpyRootx86Lib libexpat.so.1
 # x264
 cpyLib libx264.so.152
-cpyLib libx265.so.130
+cpyLib libx265.so.146
 # Display lib
 cpyX86 libvdpau.so.1
 cpyX86 libXv.so.1
