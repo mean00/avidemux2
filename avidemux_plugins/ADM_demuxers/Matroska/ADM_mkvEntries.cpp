@@ -24,7 +24,7 @@
 #include "ADM_mkv.h"
 
 #include "mkv_tags.h"
-
+#include "ADM_aacinfo.h"
 class entryDesc
 {
   public:
@@ -281,13 +281,36 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
             }
         }
         //**
-                  if(entry.fcc==WAV_AAC && !entry.extraDataLen)
-                  {
-                      ADM_info("Recreating aac extradata..\n");
-                      entry.extraData = new uint8_t[5];
-                      createAACExtraData(entry.codecId.c_str(),&entry);
-                  }
-        
+        if(entry.fcc==WAV_AAC)
+        {
+            if(!entry.extraDataLen)
+            {
+                ADM_info("Recreating aac extradata..\n");
+                entry.extraData = new uint8_t[5];
+                createAACExtraData(entry.codecId.c_str(),&entry);
+            }else
+            {
+                // check AAC infoata
+                 AacAudioInfo info;
+                if(ADM_getAacInfoFromConfig(entry.extraDataLen,entry.extraData,info))
+                {
+                    ADM_info("Decoding AAC extra data gives :\n");
+                    ADM_info("Fq= %d\n",info.frequency);
+                    ADM_info("channels= %d\n",info.channels);
+                    ADM_info("SBR= %d\n",info.sbr);
+                    entry.chan=info.channels;
+                    if(info.sbr)
+                    {
+                        entry.fq=info.frequency*2;
+                    }
+                    else
+                    {
+                        entry.fq=info.frequency;
+                    }
+                }
+                 
+            }
+        }
         //**
          t->language=entry.language;
          t->wavHeader.encoding=entry.fcc;
