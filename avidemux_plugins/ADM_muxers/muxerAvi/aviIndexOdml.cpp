@@ -109,6 +109,7 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin )
     for(int j=0;j<ADM_AVI_MAX_AUDIO_TRACK+1;j++)
     {
         uint32_t trackFcc=superIndex.trackIndeces[j].fcc;
+        bool gotit=false;
         for(int i=0;i<n;i++)
         {
             IdxEntry trx=cousin->myIndex[i];            
@@ -118,6 +119,12 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin )
                 odmIndexEntry ix;
                 ix.flags=trx.flags;
                 ix.offset=trx.offset;
+                if(!gotit)
+                {
+                    ADM_info("Setting base offset for track %d to %" PRIu64"\n",j,ix.offset);
+                    indexes[j].baseOffset=ix.offset;
+                    gotit=true;
+                }
                 ix.size=trx.len;
                 indexes[j].listOfChunks.push_back(ix);
                 convertIndex(indexes+j,j);
