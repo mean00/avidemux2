@@ -3536,12 +3536,14 @@ Soll ein Index erstellt werden ?</translation>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatenate them together</source>
-        <translation type="unfinished"></translation>
+        <translation>Unterschiedliche Auflösungen können nicht vermischt werden. Spätere abschnittsweise Anwendung eines Videofilters wird das Problem nicht beheben. Abhilfe:
+1) Mit &quot;Größe ändern&quot; / &quot;Rand hinzufügen&quot; / &quot;Zuschneiden&quot; die Auflösung aller Videos angleichen.
+2) Die so bearbeiteten Videos zusammenfügen.</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+57"/>
         <source>Checking if timestamps are valid..</source>
-        <translation type="unfinished"></translation>
+        <translation>Prüfe Gültigkeit der Zeitstempel...</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -3551,7 +3553,7 @@ Soll ein Index erstellt werden ?</translation>
     <message>
         <location line="+32"/>
         <source>Decoding video...</source>
-        <translation type="unfinished"></translation>
+        <translation>Dekodiere Video...</translation>
     </message>
     <message>
         <location line="+117"/>
@@ -9659,24 +9661,28 @@ Nichtübereinstimmende Installation</translation>
         <source>Decode time stamp (DTS) collision affecting a keyframe at %s detected.
 Dropping a keyframe will result in severely corrupted video.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeitstempelkonflikt (DTS) festgestellt, das betroffene Keyframe bei %s wird übersprungen.
+Dies wird zu schweren Bildstörungen im gespeicherten Video führen.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Decode time stamp (DTS) collision affecting a frame at %s detected.
 Dropping a frame may result in some video corruption.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeitstempelkonflikt (DTS) festgestellt, das betroffene Frame bei %s wird übersprungen.
+Dies kann zu Bildstörungen im gespeicherten Video führen.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Do not warn again and drop frames silently while saving this video?</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht mehr über übersprungene Frames beim Speichern dieses Videos warnen?</translation>
     </message>
     <message>
         <location line="+65"/>
         <source>While saving, some video frames prior to %s had to be delayed, resulting in temporary loss of A/V sync. Would you like to continue nevertheless?</source>
-        <translation type="unfinished"></translation>
+        <translation>Einige Frames vor %s mussten verzögert werden, was zum vorübergehenden Verlust der Bild-Ton-Synchronität führte. Trotzdem fortsetzen?</translation>
     </message>
 </context>
 <context>
