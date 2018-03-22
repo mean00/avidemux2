@@ -3694,24 +3694,54 @@ Chcesz go zindeksować?</translation>
         <translation>Nie można znaleźć demuksera dla %s</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+58"/>
+        <source>width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>%sheight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source> and </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>%sdifferent between first and this video stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source> are </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source> is </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatenate them together</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+57"/>
+        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+59"/>
         <source>Checking if timestamps are valid..</source>
         <translation>Sprawdzanie, czy znaczniki czasu są prawidłowe...</translation>
     </message>
     <message>
-        <location line="+19"/>
+        <location line="+26"/>
         <source>This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonically increasing. Avidemux can try to reconstruct correct PTS by decoding the entire video. This may take a lot of time. Proceed?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+31"/>
         <source>Decoding video...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6727,7 +6757,7 @@ Spodziewaj się problemów.</translation>
         <translation>Główna ścieżka dźwiękowa</translation>
     </message>
     <message>
-        <location line="+260"/>
+        <location line="+261"/>
         <source>AvsProxy</source>
         <translation>AvsProxy</translation>
     </message>
@@ -6843,7 +6873,7 @@ Czy jest on uruchomiony?</translation>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+138"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-246"/>
+        <location filename="../../common/gui_main.cpp" line="-247"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -7652,7 +7682,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+292"/>
+        <location line="+293"/>
         <source>Oops</source>
         <translation>Oops</translation>
     </message>
@@ -8326,7 +8356,7 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+424"/>
+        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+444"/>
         <source>Decode time stamp (DTS) collision affecting a keyframe at %s detected.
 Dropping a keyframe will result in severely corrupted video.
 Proceed anyway?</source>
@@ -8345,7 +8375,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+65"/>
+        <location line="+76"/>
         <source>While saving, some video frames prior to %s had to be delayed, resulting in temporary loss of A/V sync. Would you like to continue nevertheless?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13162,7 +13192,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Ostatnie projekty</translation>
     </message>
     <message>
-        <location line="+642"/>
+        <location line="+646"/>
         <source>Play/Stop</source>
         <translation>Odtwórz/Zatrzymaj</translation>
     </message>
@@ -13227,7 +13257,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Do przodu jedna minuta</translation>
     </message>
     <message>
-        <location line="+610"/>
+        <location line="+614"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>Aplikacja napotkała fatalny problem!
@@ -14535,7 +14565,7 @@ Ready.
 <context>
     <name>timestamp</name>
     <message>
-        <location filename="../ADM_UIs/src/T_timeStamp.cpp" line="+184"/>
+        <location filename="../ADM_UIs/src/T_timeStamp.cpp" line="+187"/>
         <source> h</source>
         <translation type="unfinished"></translation>
     </message>

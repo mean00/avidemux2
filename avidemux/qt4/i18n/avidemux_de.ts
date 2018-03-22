@@ -3532,7 +3532,37 @@ Soll ein Index erstellt werden ?</translation>
         <translation>Kann Demuxer für %s nicht finden</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+58"/>
+        <source>width</source>
+        <translation>Breite</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>%sheight</source>
+        <translation>%sHöhe</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source> and </source>
+        <translation> und </translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>%sdifferent between first and this video stream</source>
+        <translation> des ersten und dieses Videos unterscheide%s sich</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source> are </source>
+        <translation>n</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source> is </source>
+        <translation>t</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatenate them together</source>
@@ -3541,17 +3571,17 @@ Soll ein Index erstellt werden ?</translation>
 2) Die so bearbeiteten Videos zusammenfügen.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+57"/>
+        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+59"/>
         <source>Checking if timestamps are valid..</source>
         <translation>Prüfe Gültigkeit der Zeitstempel...</translation>
     </message>
     <message>
-        <location line="+19"/>
+        <location line="+26"/>
         <source>This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonically increasing. Avidemux can try to reconstruct correct PTS by decoding the entire video. This may take a lot of time. Proceed?</source>
         <translation>Dieses Video enthält B-Frames, aber Presentation Timestamps (PTS) entweder fehlen oder monoton ansteigen. Avidemux kann durch Dekodierung des ganzen Videos die korrekten PTS zu rekonstruieren versuchen. Das kann viel Zeit in Anspruch nehmen. Fortfahren?</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+31"/>
         <source>Decoding video...</source>
         <translation>Dekodiere Video...</translation>
     </message>
@@ -8194,7 +8224,7 @@ Expect problems.</source>
         <translation type="unfinished">Haupt-Tonspur</translation>
     </message>
     <message>
-        <location line="+260"/>
+        <location line="+261"/>
         <source>AvsProxy</source>
         <translation type="unfinished">Avs-Proxy</translation>
     </message>
@@ -8300,7 +8330,7 @@ Läuft er?</translation>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+138"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-246"/>
+        <location filename="../../common/gui_main.cpp" line="-247"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -9000,7 +9030,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+503"/>
+        <location line="+504"/>
         <source>Oops</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9657,7 +9687,7 @@ Nichtübereinstimmende Installation</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+424"/>
+        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+444"/>
         <source>Decode time stamp (DTS) collision affecting a keyframe at %s detected.
 Dropping a keyframe will result in severely corrupted video.
 Proceed anyway?</source>
@@ -9680,7 +9710,7 @@ Trotzdem fortsetzen?</translation>
         <translation>Nicht mehr über übersprungene Frames beim Speichern dieses Videos warnen?</translation>
     </message>
     <message>
-        <location line="+65"/>
+        <location line="+76"/>
         <source>While saving, some video frames prior to %s had to be delayed, resulting in temporary loss of A/V sync. Would you like to continue nevertheless?</source>
         <translation>Einige Frames vor %s mussten verzögert werden, was zum vorübergehenden Verlust der Bild-Ton-Synchronität führte. Trotzdem fortsetzen?</translation>
     </message>
@@ -14589,7 +14619,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Zuletzt verwendete &amp;Projekte</translation>
     </message>
     <message>
-        <location line="+642"/>
+        <location line="+646"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14654,17 +14684,17 @@ Please delete the idx2 file and reopen.</source>
         <translation>Eine Minute vor</translation>
     </message>
     <message>
-        <location line="+1206"/>
+        <location line="+1210"/>
         <source> (%d track(s))</source>
         <translation> (%d Tonspur(en))</translation>
     </message>
     <message>
-        <location line="-2145"/>
+        <location line="-2153"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation>&lt;b&gt;Neue Version verfügbar&lt;/b&gt;&lt;br&gt;Version %1&lt;br&gt;Freigegeben am %2.&lt;br&gt;Das Update kann hier heruntergeladen werden:&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Sie können automatische Überprüfung auf Updates in Einstellungen deaktivieren.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+1549"/>
+        <location line="+1557"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>Die Anwendung hat ein schwerwiegendes Problem festgestellt.
@@ -15998,7 +16028,7 @@ Ready.
 <context>
     <name>timestamp</name>
     <message>
-        <location filename="../ADM_UIs/src/T_timeStamp.cpp" line="+184"/>
+        <location filename="../ADM_UIs/src/T_timeStamp.cpp" line="+187"/>
         <source> h</source>
         <translation type="unfinished"></translation>
     </message>

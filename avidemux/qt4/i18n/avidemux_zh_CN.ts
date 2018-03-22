@@ -4,17 +4,17 @@
 <context>
     <name>ADM_Composer</name>
     <message>
-        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+57"/>
+        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+59"/>
         <source>Checking if timestamps are valid..</source>
         <translation>检查时间戳是否有效。</translation>
     </message>
     <message>
-        <location line="+19"/>
+        <location line="+26"/>
         <source>This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonically increasing. Avidemux can try to reconstruct correct PTS by decoding the entire video. This may take a lot of time. Proceed?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+31"/>
         <source>Decoding video...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -24,7 +24,37 @@
         <translation>尝试开启 %s 失败!</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="+22"/>
+        <source>width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>%sheight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source> and </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>%sdifferent between first and this video stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source> are </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source> is </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatenate them together</source>
@@ -48,7 +78,7 @@ Drop timing informations ?</source>
 </translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="-62"/>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="-71"/>
         <source>Cannot find a demuxer for %s</source>
         <translation>找不到为分离器 %s</translation>
     </message>
@@ -1278,7 +1308,7 @@ Drop timing informations ?</source>
         <translation>QDM2</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="+1764"/>
+        <location filename="../../common/gui_main.cpp" line="+1765"/>
         <source>Oops</source>
         <translation>Oops</translation>
     </message>
@@ -1400,7 +1430,7 @@ It is needed to create FLV  video.</source>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+138"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-356"/>
+        <location filename="../../common/gui_main.cpp" line="-357"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -1584,7 +1614,7 @@ Installation mismatch</source>
         <translation>不能安装复合器</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="+516"/>
+        <location filename="../../common/gui_main.cpp" line="+517"/>
         <source>This function is disabled or no longer valid</source>
         <translation>此功能被禁用或不再有效</translation>
     </message>
@@ -1625,7 +1655,7 @@ Installation mismatch</source>
         <translation>__未知__</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1583"/>
+        <location filename="../../common/gui_main.cpp" line="-1584"/>
         <source>Select script to run</source>
         <translation>选择脚本去执行</translation>
     </message>
@@ -1722,7 +1752,7 @@ Proceed anyway?</source>
         <translation>当增加时某些事情失败</translation>
     </message>
     <message>
-        <location line="+617"/>
+        <location line="+618"/>
         <source>Failed to connect to avsproxy.
 Is it running ?</source>
         <translation type="unfinished"></translation>
@@ -1795,7 +1825,7 @@ Warning, the settings must be close.</source>
         <translation>高于一般</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1423"/>
+        <location filename="../../common/gui_main.cpp" line="-1424"/>
         <source>Select script to save</source>
         <translation>选择脚本去保存</translation>
     </message>
@@ -1921,7 +1951,7 @@ Installation mismatch</source>
         <translation>发现没有 AAC 音频编码器插件。</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="+810"/>
+        <location filename="../../common/gui_main.cpp" line="+811"/>
         <source>Frame Hex Dump</source>
         <translation>帧十六进制转储</translation>
     </message>
@@ -1946,7 +1976,7 @@ Installation mismatch</source>
         <translation>AMR-NB</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-864"/>
+        <location filename="../../common/gui_main.cpp" line="-865"/>
         <source>Permission error</source>
         <translation>权限许可错误</translation>
     </message>
@@ -2362,7 +2392,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="vanished">_大文件自动分割每个 MPEG 档为(MB):</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="+858"/>
+        <location filename="../../common/gui_main.cpp" line="+859"/>
         <source>Frame size:</source>
         <translation>帧大小:</translation>
     </message>
@@ -2400,7 +2430,7 @@ Do you want to continue anyway ?</source>
         <translation>这个视频是在复制模式，但剪切的点不是在关键帧(I帧)上，该视频将被保存，但会有缺陷在切割点。</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-857"/>
+        <location filename="../../common/gui_main.cpp" line="-858"/>
         <source>File error</source>
         <translation>文件错误</translation>
     </message>
@@ -3061,7 +3091,7 @@ Install lame plugin</source>
         <translation>转到上一帧</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="+224"/>
+        <location filename="../../common/gui_main.cpp" line="+225"/>
         <source>AvsProxy</source>
         <translation>AvsProxy</translation>
     </message>
@@ -3107,7 +3137,7 @@ Install lame plugin</source>
         <translation>2通</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-769"/>
+        <location filename="../../common/gui_main.cpp" line="-770"/>
         <source>Could not open the file</source>
         <translation>无法开启此文件</translation>
     </message>
@@ -3229,7 +3259,7 @@ Expect problems.</source>
         <translation>确定吗?</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+424"/>
+        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+444"/>
         <source>Decode time stamp (DTS) collision affecting a keyframe at %s detected.
 Dropping a keyframe will result in severely corrupted video.
 Proceed anyway?</source>
@@ -3248,7 +3278,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+65"/>
+        <location line="+76"/>
         <source>While saving, some video frames prior to %s had to be delayed, resulting in temporary loss of A/V sync. Would you like to continue nevertheless?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7477,17 +7507,17 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qgui2</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+2022"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+2030"/>
         <source>%c-%s (%02d)</source>
         <translation>%c-%s (%02d)</translation>
     </message>
     <message>
-        <location line="-908"/>
+        <location line="-912"/>
         <source>Set start marker</source>
         <translation>设置开始标记</translation>
     </message>
     <message>
-        <location line="-903"/>
+        <location line="-907"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7497,17 +7527,17 @@ Please delete the idx2 file and reopen.</source>
         <translation>最近使用的 项目</translation>
     </message>
     <message>
-        <location line="+651"/>
+        <location line="+655"/>
         <source>Go to previous keyframe</source>
         <translation>转到上一帧(关键帧或I帧)</translation>
     </message>
     <message>
-        <location line="-652"/>
+        <location line="-656"/>
         <source>Recent Files</source>
         <translation>最近使用的 文件</translation>
     </message>
     <message>
-        <location line="+655"/>
+        <location line="+659"/>
         <source>Go to next keyframe</source>
         <translation>转到下一帧(关键帧或I帧)</translation>
     </message>
@@ -7562,7 +7592,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>转到上一帧</translation>
     </message>
     <message>
-        <location line="+658"/>
+        <location line="+662"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
@@ -7573,7 +7603,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation> (%d 轨(s))</translation>
     </message>
     <message>
-        <location line="-1251"/>
+        <location line="-1255"/>
         <source>Go to next frame</source>
         <translation>转到下一帧</translation>
     </message>
@@ -8798,7 +8828,7 @@ Ready.
 <context>
     <name>timestamp</name>
     <message>
-        <location filename="../ADM_UIs/src/T_timeStamp.cpp" line="+184"/>
+        <location filename="../ADM_UIs/src/T_timeStamp.cpp" line="+187"/>
         <source> h</source>
         <translation type="unfinished"></translation>
     </message>
