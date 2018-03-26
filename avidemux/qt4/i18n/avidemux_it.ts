@@ -8579,7 +8579,7 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <location filename="../../common/gui_save.cpp" line="+289"/>
         <location line="+21"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+408"/>
+        <location filename="../../common/gui_savenew.cpp" line="+409"/>
         <source>Audio</source>
         <translation>Audio</translation>
     </message>
@@ -10587,6 +10587,26 @@ Proceed anyway?</source>
     <message>
         <location line="+76"/>
         <source>While saving, some video frames prior to %s had to be delayed, resulting in temporary loss of A/V sync. Would you like to continue nevertheless?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+226"/>
+        <source>Permission Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Cannot open script &quot;%s&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>File Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Script &quot;%s&quot; does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -6,12 +6,12 @@
     <message>
         <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+85"/>
         <source>This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonically increasing. Avidemux can try to reconstruct correct PTS by decoding the entire video. This may take a lot of time. Proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>Denne video indeholder B-frames, men præsentationstidsstemplerne (PTS) findes enten ikke eller øges monotont. Avidemux kan forsøge at rekonstruere de korrekte PTS'er ved at dekodere hele videoen. Dette kan tage lang tid. Fortsæt?</translation>
     </message>
     <message>
         <location line="+31"/>
         <source>Decoding video...</source>
-        <translation type="unfinished"></translation>
+        <translation>Dekoderer video...</translation>
     </message>
     <message>
         <location line="+117"/>
@@ -26,7 +26,7 @@ Drop timing informations ?</source>
 Det sker ved nogle optager-software.
 Hvis du genkoder video bør vi droppe disse informationer,
  ellers kan det forårsage mistede billeder/hakkende video.
-Hvis du blot kopiér videoen uden genkodning,
+Hvis du blot kopierer videoen uden genkodning,
  bør du beholde dem.
 Drop timinginformationer?</translation>
     </message>
@@ -43,32 +43,32 @@ Drop timinginformationer?</translation>
     <message>
         <location line="+22"/>
         <source>width</source>
-        <translation type="unfinished"></translation>
+        <translation>bredden</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>%sheight</source>
-        <translation type="unfinished"></translation>
+        <translation>%shøjden</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> and </source>
-        <translation type="unfinished"></translation>
+        <translation> og </translation>
     </message>
     <message>
         <location line="+3"/>
         <source>%sdifferent between first and this video stream</source>
-        <translation type="unfinished"></translation>
+        <translation>%sforskellig mellem den første og denne video</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> are </source>
-        <translation type="unfinished"></translation>
+        <translation> er </translation>
     </message>
     <message>
         <location line="+0"/>
         <source> is </source>
-        <translation type="unfinished"></translation>
+        <translation> er </translation>
     </message>
     <message>
         <location line="+2"/>
@@ -82,7 +82,7 @@ Drop timinginformationer?</translation>
     <message>
         <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="-174"/>
         <source>Checking if timestamps are valid..</source>
-        <translation>Tjekker om tidsstempler er gyldige..</translation>
+        <translation>Tjekker om tidsstempler er gyldige...</translation>
     </message>
 </context>
 <context>
@@ -1568,7 +1568,7 @@ Drop timinginformationer?</translation>
         <location filename="../../common/gui_save.cpp" line="-320"/>
         <location line="+21"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+408"/>
+        <location filename="../../common/gui_savenew.cpp" line="+409"/>
         <source>Audio</source>
         <translation>Lyd</translation>
     </message>
@@ -3294,6 +3294,26 @@ Proceed anyway?</source>
         <location line="+76"/>
         <source>While saving, some video frames prior to %s had to be delayed, resulting in temporary loss of A/V sync. Would you like to continue nevertheless?</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+226"/>
+        <source>Permission Error</source>
+        <translation>Tilladelsesfejl</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Cannot open script &quot;%s&quot;.</source>
+        <translation>Kan ikke åbne script &quot;%s&quot;.</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>File Error</source>
+        <translation>Filfejl</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Script &quot;%s&quot; does not exist.</source>
+        <translation>Script &quot;%s&quot; eksisterer ikke.</translation>
     </message>
 </context>
 <context>
