@@ -174,69 +174,79 @@ static bool bFrameDroppable(uint32_t fcc)
  */
 bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
 {
-  aviInfo    info;
-  uint32_t   segNo;
-  uint64_t   segTime;
+    aviInfo info;
+    int found;
+    uint32_t startSegNo;
+    uint64_t segTime;
     *delay=0;
-    if(!_segments.convertLinearTimeToSeg(time,&segNo,&segTime))
-      {
+    if(!_segments.convertLinearTimeToSeg(time,&startSegNo,&segTime))
+    {
         ADM_warning("Cannot navigate to get nonclosedgop\n");
         return false;
-      }
-   _SEGMENT *seg=_segments.getSegment(segNo);
-    ADM_assert(seg);
-   _VIDEOS *vid=_segments.getRefVideo(seg->_reference);   
-   uint64_t pts,dts;
-   
-    vid->_aviheader->getVideoInfo (&info);
-    //
-    if(bFrameDroppable(info.fcc))
-    {
-        return true; // no need to add extra delay
     }
-    // Look ahead to see if we have some late bframe in the past
-    int nb=vid->_aviheader->getMainHeader ()->dwTotalFrames;
-    int found=-1;
-    if(!segTime)
+
+    for(uint32_t segNo=startSegNo; segNo < _segments.getNbSegments(); segNo++)
     {
-      found=0;
-       vid->_aviheader->getPtsDts(0,&pts,&dts);
-    }
-    else
-        for(int i=0;i<nb;i++)
+        _SEGMENT *seg=_segments.getSegment(segNo);
+        ADM_assert(seg);
+        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+        uint64_t pts,dts;
+
+        vid->_aviheader->getVideoInfo (&info);
+        if(bFrameDroppable(info.fcc))
         {
-            vid->_aviheader->getPtsDts (i,&pts,&dts);
-            if(pts==segTime)
-              {
+            return true; // no need to add extra delay
+        }
+        // Look ahead to see if we have some late bframe in the past
+        int nb=vid->_aviheader->getMainHeader ()->dwTotalFrames;
+        if(segNo > startSegNo)
+            segTime=0;
+        uint64_t refTime=segTime+seg->_refStartTimeUs;
+        found=-1;
+        if(!refTime)
+        {
+            found=0;
+            vid->_aviheader->getPtsDts(0,&pts,&dts);
+        }else
+        {
+            for(int i=0;i<nb;i++)
+            {
+                vid->_aviheader->getPtsDts (i,&pts,&dts);
+                if(pts==refTime)
+                {
                     found=i;
                     break;
-              }
+                }
+            }
         }
-    if(found==-1)
-      {
-        ADM_warning("Cannot find the frame\n");
-        return false;
-      }
-    for(int i=found+1;i<found+16;i++)
-    {
+        if(found==-1)
+        {
+            ADM_warning("Cannot find the frame for segment %" PRIu32"\n");
+            continue;
+        }
+        for(int i=found+1;i<found+16;i++)
+        {
             uint32_t flags;
             vid->_aviheader->getFlags(i,&flags);
             if(!(flags & AVI_B_FRAME))
             {
                 ADM_info("Not a bframe, stopping (%d)\n",i-found);
-              break;
+                break;
             }
             vid->_aviheader->getPtsDts(i,&pts,&dts);
-            if(pts<segTime)
-              {
+            if(pts<refTime)
+            {
                 ADM_info("frame %d is early \n",i);
-                uint32_t delta=segTime-pts;
+                uint32_t delta=refTime-pts;
                 if(delta>*delay) *delay=delta;
-              }else
-                {
-                    ADM_info("Pts delta = %d\n",(int)(pts-segTime));
-                }
+            }else
+            {
+                ADM_info("Pts delta = %d\n",(int)(pts-refTime));
+            }
+        }
     }
+    if(found==-1)
+        return false;
     ADM_info("Found maximum non closed gop delay = %d\n",*delay);
     return true;
 }
@@ -349,12 +359,14 @@ againGet:
    // ADM_info("Frame : Flags :%X, DTS:%"PRId64" PTS=%"PRId64" nextDts=%"PRId64" tail=%"PRId64"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,_nextFrameDts,tail);
     if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) 
     {
-        aprintf("DTS is too late, switching (%s)\n",ADM_us2plain(img->demuxerDts));
+        std::string tailAsString=std::string(ADM_us2plain(tail));
+        ADM_info("DTS is too late, switching segment (%s vs %s)\n",ADM_us2plain(img->demuxerDts),tailAsString.c_str());
         goto nextSeg;
     }
     if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) 
     {
-        aprintf("PTS is too late, switching (%s)\n",ADM_us2plain(img->demuxerDts));
+        std::string tailAsString=std::string(ADM_us2plain(tail));
+        ADM_info("PTS is too late, switching segment (%s vs %s)\n",ADM_us2plain(img->demuxerPts),tailAsString.c_str());
         goto nextSeg;
     }
     
@@ -362,8 +374,10 @@ againGet:
     // so the caller can delay everything but recalibrate will clamp the value
     // so we use correctedDts so that the value is ok
     if(img->demuxerDts==ADM_NO_PTS)
+    {
+            aprintf("DTS unset for frame %" PRIu32"\n",vid->lastSentFrame-1);
             signedDts=ADM_NO_PTS;
-    else
+    }else
     {
             signedDts=(int64_t)img->demuxerDts;
             signedDts+=totalExtraDelay;
@@ -372,8 +386,10 @@ againGet:
     }
 
     if(img->demuxerPts==ADM_NO_PTS)
+    {
+            aprintf("PTS unset for frame %" PRIu32"\n",vid->lastSentFrame-1);
             signedPts=ADM_NO_PTS;
-    else
+    }else
     {
             signedPts=(int64_t)img->demuxerPts;
             signedPts+=totalExtraDelay;
@@ -507,6 +523,17 @@ againGet:
     aprintf("Final Pts=%s ",ADM_us2plain(img->demuxerPts));
     aprintf("Final Dts=%s ",ADM_us2plain(img->demuxerDts));    
     aprintf("Delay=%s\n",ADM_us2plain(videoDelay));
+#if 0
+    {
+    std::string ptsAsString,dtsAsString,frameTypeAsString;
+    ptsAsString=std::string(ADM_us2plain(img->demuxerPts));
+    dtsAsString=std::string(ADM_us2plain(img->demuxerDts));
+    frameTypeAsString="P";
+    if(img->flags & AVI_KEY_FRAME) frameTypeAsString="I";
+    if(img->flags & AVI_B_FRAME) frameTypeAsString="B";
+    printf("Frame %" PRIu32", DTS=%s, PTS=%s, type: %s\n",vid->lastSentFrame-1,dtsAsString.c_str(),ptsAsString.c_str(),frameTypeAsString.c_str());
+    }
+#endif
     if(MAX_EXTRA_DELAY && totalExtraDelay>DESYNC_THRESHOLD && desyncScore>=0)
     {
         desyncScore+=(vid->timeIncrementInUs)*totalExtraDelay/MAX_EXTRA_DELAY;
@@ -545,7 +572,6 @@ nextSeg:
     thisseg->_dropBframes=_SEGMENT::ADM_DROP_MAYBE_AFER_SWITCH;
     ADM_info("Retrying for next segment\n");
     return getCompressedPicture(videoDelay,sanitize,img);
-   
 }
 
 /**
