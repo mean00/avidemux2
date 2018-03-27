@@ -15,6 +15,7 @@
  ***************************************************************************/
 
 #include <math.h>
+#include <errno.h>
 #include "ADM_cpp.h"
 #include "ADM_assert.h"
 #include "avi_vars.h"
