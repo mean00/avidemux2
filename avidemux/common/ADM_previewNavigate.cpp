@@ -82,6 +82,9 @@ bool admPreview::seekToTime(uint64_t timeframe)
 
 bool admPreview::seekToIntraPts(uint64_t timeframe)
 {
+    uint64_t pts=getCurrentPts();
+    if(timeframe==pts)
+        return true;
     if(!video_body->goToIntraTimeVideo(timeframe)) 
     {
         ADM_warning(" seeking for frame at %" PRIu64" ms failed\n",timeframe/1000LL);
