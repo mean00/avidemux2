@@ -21,7 +21,6 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#include "loadsurface_yuv.h"
 
 static int scale_2dimage(unsigned char *src_img, int src_imgw, int src_imgh,
                          unsigned char *dst_img, int dst_imgw, int dst_imgh)
@@ -38,110 +37,6 @@ static int scale_2dimage(unsigned char *src_img, int src_imgw, int src_imgh,
 }
 
 
-static int YUV_blend_with_pic(int width, int height,
-                              unsigned char *Y_start, int Y_pitch,
-                              unsigned char *U_start, int U_pitch,
-                              unsigned char *V_start, int V_pitch,
-                              unsigned int fourcc, int fixed_alpha)
-{
-    /* PIC YUV format */
-    unsigned char *pic_y_old = yuvga_pic;
-    unsigned char *pic_u_old = pic_y_old + 640*480;
-    unsigned char *pic_v_old = pic_u_old + 640*480/4;
-    unsigned char *pic_y, *pic_u, *pic_v;
-
-    int alpha_values[] = {100,90,80,70,60,50,40,30,20,30,40,50,60,70,80,90};
-    
-    static int alpha_idx = 0;
-    int alpha;
-    int allocated = 0;
-    
-    int row, col;
-
-    if (fixed_alpha == 0) {
-        alpha = alpha_values[alpha_idx % 16 ];
-        alpha_idx ++;
-    } else
-        alpha = fixed_alpha;
-
-    //alpha = 0;
-    
-    pic_y = pic_y_old;
-    pic_u = pic_u_old;
-    pic_v = pic_v_old;
-    
-    if (width != 640 || height != 480) { /* need to scale the pic */
-        pic_y = (unsigned char *)malloc(width * height);
-        pic_u = (unsigned char *)malloc(width * height/4);
-        pic_v = (unsigned char *)malloc(width * height/4);
-
-        allocated = 1;
-        
-        scale_2dimage(pic_y_old, 640, 480,
-                      pic_y, width, height);
-        scale_2dimage(pic_u_old, 320, 240,
-                      pic_u, width/2, height/2);
-        scale_2dimage(pic_v_old, 320, 240,
-                      pic_v, width/2, height/2);
-    }
-
-    /* begin blend */
-
-    /* Y plane */
-    int Y_pixel_stride = 1;
-    if (fourcc == VA_FOURCC_YUY2) 
-        Y_pixel_stride = 2;
-         
-    for (row=0; row<height; row++) {
-        unsigned char *p = Y_start + row * Y_pitch;
-        unsigned char *q = pic_y + row * width;
-        for (col=0; col<width; col++, q++) {
-            *p  = *p * (100 - alpha) / 100 + *q * alpha/100;
-            p += Y_pixel_stride;
-        }
-    }
-
-    /* U/V plane */
-    int U_pixel_stride = 0, V_pixel_stride = 0;
-    int v_factor_to_nv12 = 1;
-    switch (fourcc) {
-    case VA_FOURCC_YV12:
-        U_pixel_stride = V_pixel_stride = 1;
-        break;
-    case VA_FOURCC_NV12:
-        U_pixel_stride = V_pixel_stride = 2;
-        break;
-    case VA_FOURCC_YUY2:
-        U_pixel_stride = V_pixel_stride = 4;
-        v_factor_to_nv12 = 2;
-        break;
-    default:
-        break;
-    }
-    for (row=0; row<height/2*v_factor_to_nv12; row++) {
-        unsigned char *pU = U_start + row * U_pitch;
-        unsigned char *pV = V_start + row * V_pitch;
-        unsigned char *qU = pic_u + row/v_factor_to_nv12 * width/2;
-        unsigned char *qV = pic_v + row/v_factor_to_nv12 * width/2;
-            
-        for (col=0; col<width/2; col++, qU++, qV++) {
-            *pU  = *pU * (100 - alpha) / 100 + *qU * alpha/100;
-            *pV  = *pV * (100 - alpha) / 100 + *qV * alpha/100;
-
-            pU += U_pixel_stride;
-            pV += V_pixel_stride;
-        }
-    }
-        
-    
-    if (allocated) {
-        free(pic_y);
-        free(pic_u);
-        free(pic_v);
-    }
-    
-    return 0;
-}
 
 static int yuvgen_planar(int width, int height,
                          unsigned char *Y_start, int Y_pitch,
@@ -210,19 +105,6 @@ static int yuvgen_planar(int width, int height,
         }
     }
 
-    if (getenv("AUTO_NOUV"))
-        return 0;
-
-    if (getenv("AUTO_ALPHA"))
-        alpha = 0;
-    else
-        alpha = 70;
-    
-    YUV_blend_with_pic(width,height,
-                       Y_start, Y_pitch,
-                       U_start, U_pitch,
-                       V_start, V_pitch,
-                       fourcc, alpha);
     
     return 0;
 }
