@@ -257,10 +257,11 @@ bool partialFilter::getRange(uint64_t *startTme, uint64_t *endTme)
  */
 bool         partialFilter::goToTime(uint64_t usSeek)
 {
-  bool r=previousFilter->goToTime(usSeek);
-  sonFilter->goToTime(usSeek);
-  byPass=!isInRange(usSeek);
-  return r;
+    bool r=previousFilter->goToTime(usSeek);
+    byPass=!isInRange(usSeek);
+    if(!byPass)
+        sonFilter->goToTime(usSeek);
+    return r;
 }
 
 /**
