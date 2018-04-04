@@ -73,9 +73,9 @@ swapUv::~swapUv()
     \fn getCoupledConf
     \brief Return our current configuration as couple name=value
 */
-bool         swapUv::getCoupledConf(CONFcouple **couples)
+bool swapUv::getCoupledConf(CONFcouple **couples)
 {
-    *couples=NULL;
+    *couples=new CONFcouple(0); // Even if we dont have configuration we must allocate one
     return true;
 }
 
