@@ -109,8 +109,7 @@ void printInfoFilter::setCoupledConf(CONFcouple *couples)
 */
 const char *printInfoFilter::getConfiguration(void)
 {
-    
-    return "Dummy Filter.";
+    return "Print Info.";
 }
 // Normally not needed :virtual FilterInfo  *getInfo(void)
 //EOF
