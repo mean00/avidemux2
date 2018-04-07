@@ -22,6 +22,15 @@
 #include "mkv_muxer.h"
 extern mkv_muxer mkvMuxerConfig;
 
+typedef enum
+{
+    OTHER,
+    STANDARD,
+    WIDE,
+    UNI,
+    CINEMA
+}MKV_MUXER_DAR;
+
 class muxerMkv : public muxerFFmpeg
 {
 protected:

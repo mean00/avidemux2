@@ -18,20 +18,29 @@
 #include "muxerMkv.h"
 #define ADM_MINIMAL_UI_INTERFACE
 #include "DIA_factory.h"
-#include "fourcc.h" 
 bool mkvConfigure(void)
 {
         bool force=mkvMuxerConfig.forceDisplayWidth;
-        uint32_t displayWidth=(uint32_t)mkvMuxerConfig.displayWidth;
+        uint32_t displayWidth=mkvMuxerConfig.displayWidth;
+        uint32_t dar=mkvMuxerConfig.displayAspectRatio;
+        if(dar)
+            force=false;
 
         diaElemToggle   alternate(&force,QT_TRANSLATE_NOOP("mkvmuxer","Force display width"));
         diaElemUInteger dWidth(&displayWidth,QT_TRANSLATE_NOOP("mkvmuxer","Display width"),16,65535);
+        diaMenuEntry    aspect[]={{OTHER,"----"},{STANDARD,"4:3"},{WIDE,"16:9"},{UNI,"18:9"},{CINEMA,"64:27"}};
+        diaElemMenu     menuAspect(&dar,QT_TRANSLATE_NOOP("mkvmuxer","Force Aspect Ratio (DAR)"),5,aspect,"");
 
-        diaElem *tabs[]={&alternate,&dWidth};
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("mkvmuxer","MKV Muxer"),2,tabs))
+        alternate.link(1,&dWidth);
+        alternate.link(0,&menuAspect);
+        menuAspect.link(aspect,1,&alternate);
+
+        diaElem *tabs[]={&alternate,&dWidth,&menuAspect};
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("mkvmuxer","MKV Muxer"),3,tabs))
         {
-            mkvMuxerConfig.forceDisplayWidth=(bool)force;
+            mkvMuxerConfig.forceDisplayWidth=force;
             mkvMuxerConfig.displayWidth=displayWidth;
+            mkvMuxerConfig.displayAspectRatio=dar;
             return true;
         }
         return false;

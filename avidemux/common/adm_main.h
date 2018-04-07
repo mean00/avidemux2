@@ -12,9 +12,9 @@ extern "C" {
 #endif
 extern uint8_t GUI_close(void);
 static bool setPrefsDefault(void);
-extern bool  vdpauProbe(void);
 extern bool  libvaProbe(void);
 extern bool  dxva2Probe(void);
+extern bool videotoolboxProbe(void);
 
 extern void registerVideoFilters( void );
 extern void filterCleanUp( void );
@@ -75,6 +75,9 @@ extern bool initLIBVADecoder(void);
 #endif
 #ifdef USE_DXVA2
 extern bool initDXVA2Decoder(void);
+#endif
+#ifdef USE_VIDEOTOOLBOX
+extern bool initVideoToolboxDecoder(void);
 #endif
 
 #define PROBE_HW_ACCEL(probe,name,initFunc,cleanupFunc) {   \

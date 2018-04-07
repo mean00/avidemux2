@@ -64,6 +64,9 @@ uint32_t type,value;
   markerAPts = 0;
   markerBPts = 0;
   stats.reset();
+
+    totalExtraDelay=0;
+    desyncScore=0;
 }
 /**
 	Remap 1:1 video to segments
@@ -244,13 +247,22 @@ bool ADM_Composer::addFile (const char *name)
         {
          char str[512+1];
          str[0] = '\0';
+         int both=-1;
          if( info0.width != infox.width )
-            strcpy(str,"width");
+         {
+            both++;
+            strcpy(str,QT_TRANSLATE_NOOP("ADM_Composer","width"));
+         }
          if( info0.height != infox.height )
+         {
+            both++;
             snprintf(str+strlen(str),512-strlen(str),
-              "%sheight%sdifferent between first and this video stream",
-                 (strlen(str)?" and ":""),
-                 (strlen(str)?" are ":" is ") );
+                QT_TRANSLATE_NOOP("ADM_Composer","%sheight"),
+                (both? QT_TRANSLATE_NOOP("ADM_Composer"," and ") : ""));
+         }
+         snprintf(str+strlen(str),512-strlen(str),
+            QT_TRANSLATE_NOOP("ADM_Composer","%sdifferent between first and this video stream"),
+            (both? QT_TRANSLATE_NOOP("ADM_Composer"," are ") : QT_TRANSLATE_NOOP("ADM_Composer"," is ")));
          str[512] = '\0';
          GUI_Error_HIG(str,QT_TRANSLATE_NOOP("ADM_Composer","You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:\n1.) \"resize\" / \"add border\" / \"crop\" each stream to the same resolution\n2.) concatenate them together"));
          delete video._aviheader;

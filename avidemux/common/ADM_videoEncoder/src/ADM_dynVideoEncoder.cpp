@@ -242,6 +242,7 @@ bool                  videoEncoder6_SetCurrentEncoder(uint32_t index)
       int nb=ListOfEncoders.size();
       if(index>=nb) return false;
       currentVideoCodec=index;
+      ADM_info("%s selected\n",ListOfEncoders[currentVideoCodec]->desc->encoderName);
       return true;
 }
 /**

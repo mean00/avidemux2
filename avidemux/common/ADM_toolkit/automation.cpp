@@ -15,6 +15,7 @@
  ***************************************************************************/
 
 #include <math.h>
+#include <errno.h>
 #include "ADM_cpp.h"
 #include "ADM_assert.h"
 #include "avi_vars.h"
@@ -217,27 +218,41 @@ int searchReactionTable(char *string)
  */
 void call_scriptEngine(const char *scriptFile)
 {
-    std::vector<IScriptEngine*> engines = getScriptEngines();
-    
-    std::string root,ext;
-    ADM_PathSplit(std::string(scriptFile),root,ext);
-  
-    if (engines.size() == 1)
+    char *fullpath=ADM_PathCanonize(scriptFile);
+    FILE *fd=ADM_fopen(fullpath,"r");
+    if(!fd)
     {
-            A_parseScript(engines[0], scriptFile);
-            if(avifileinfo)
-            {
-            A_Rewind();
-                UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
-            }
-            return;
+        if(errno == EACCES)
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm", "Permission Error"), QT_TRANSLATE_NOOP("adm", "Cannot open script \"%s\"."), fullpath);
+        }
+        if(errno == ENOENT)
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm", "File Error"), QT_TRANSLATE_NOOP("adm", "Script \"%s\" does not exist."), fullpath);
+        }
+        return;
     }
-    
+
+    std::vector<IScriptEngine*> engines = getScriptEngines();
+    std::string root,ext;
+    ADM_PathSplit(std::string(fullpath),root,ext);
+  
+    if(engines.size() == 1)
+    {
+        A_parseScript(engines[0],fullpath);
+        if(avifileinfo)
+        {
+            A_Rewind();
+            UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
+        }
+        return;
+    }
+
     for (int i = 0; i < engines.size(); i++)
     {
         if (!engines[i]->defaultFileExtension().compare(ext))
         {
-            A_parseScript(engines[i], scriptFile);
+            A_parseScript(engines[i],fullpath);
             A_Rewind();
             UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
             return;

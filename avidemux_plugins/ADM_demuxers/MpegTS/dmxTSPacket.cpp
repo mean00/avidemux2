@@ -362,7 +362,7 @@ bool        tsPacket::getNextPES(TS_PESpacket *pes)
 #if 1
 #define zprintf(...) {}
 #else
-#define zprintf printf
+#define zprintf ADM_info
 #endif
     TSpacketInfo pkt;
     pes->fresh=false;
@@ -425,7 +425,7 @@ nextPack3:
         goto nextPack3;
 
     //
-    zprintf("[Ts Demuxer] Found PES of len %d\n",pes->payloadSize);  
+    zprintf("[Ts Demuxer] Found PES of len %d, offset=%d\n",pes->payloadSize, pes->offset);  
     pes->fresh=true;
     
     return true;
@@ -433,7 +433,7 @@ nextPack3:
 /**
     \fn decodePesHeader
 */
-#define fail(x) {printf("[Ts Demuxer]*********" x"*******\n");return false;}
+#define fail(x) {ADM_warning("[Ts Demuxer]*********" x"*******\n");return false;}
 bool tsPacket::decodePesHeader(TS_PESpacket *pes)
 {
     uint8_t  *start=pes->payload+6;
@@ -448,7 +448,7 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
 
     if(pes->payloadSize<(4+2+1+2)) 
     {
-            printf("[Ts] Pes size too small\n");
+            ADM_warning("[Ts] Pes size too small\n");
             return false;
     }
     while(*start==0xff && start<end) start++; // Padding
@@ -523,14 +523,20 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
             {
                 tail=sizeCheck-packLen;
                 pes->payloadSize-=tail; 
-                printf("[TS Packet]extra crap at the end %d\n",tail);
+                ADM_warning("[TS Packet]extra crap at the end %d\n",tail);
             }
             else
                 if(packLen>sizeCheck)
                 {
-                    printf("[TS Packet] PackLen=%d, avalailble=%d\n",packLen,sizeCheck);
+                    ADM_warning("[TS Packet] PackLen=%d, avalailble=%d\n",packLen,sizeCheck);
                     fail("Pes too long");
                 }   
+        }
+        zprintf("[decodePesHeader] payloadSize=%d, offset=%d \n",pes->payloadSize,pes->offset);
+        if(pes->offset>pes->payloadSize)
+        {
+            ADM_warning("[decodePesHeader] Inconsistent size, dropping\n");
+            return false;
         }
         return true;
 }

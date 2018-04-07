@@ -1577,6 +1577,7 @@ uint8_t GUI_close(void)
       avifileinfo = NULL;
       video_body->clearUndoQueue();
       video_body->cleanup ();
+      UI_setAudioTrackCount(0);
       UI_setTimeShift(false,0);
 //      filterCleanUp ();
       UI_setTitle(NULL);

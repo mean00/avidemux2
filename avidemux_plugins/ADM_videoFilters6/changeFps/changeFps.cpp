@@ -60,6 +60,7 @@ public:
                             changeFps(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~changeFps();
         bool                goToTime(uint64_t usSeek);
+        virtual bool        getTimeRange(uint64_t *start, uint64_t *end);
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
@@ -126,6 +127,17 @@ bool         changeFps::goToTime(uint64_t usSeek)
     timing*=configuration.newFpsNum;
     timing*=configuration.oldFpsDen;
     return  previousFilter->goToTime((uint64_t)timing);
+}
+
+/**
+    \fn getTimeRange
+    \brief Report updated time range to the next filter
+*/
+bool changeFps::getTimeRange(uint64_t *start, uint64_t *end)
+{
+    *start=0;
+    *end=info.totalDuration;
+    return true;
 }
 
 /**

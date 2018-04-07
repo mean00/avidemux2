@@ -74,6 +74,7 @@ bool     bdxva2=false;
 bool     bvdpau=false;
 bool     bxvba=false;
 bool     blibva=false;
+bool     bvideotoolbox=false;
 bool     hzd,vzd,dring;
 bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
 bool     hasOpenGl=false;
@@ -149,6 +150,10 @@ std::string currentSdlDriver=getSdlDriverName();
         prefs->get(FEATURES_XVBA,&bxvba);
         // libva
         prefs->get(FEATURES_LIBVA,&blibva);
+        // VideoToolbox
+#ifdef USE_VIDEOTOOLBOX
+        prefs->get(FEATURES_VIDEOTOOLBOX,&bvideotoolbox);
+#endif
         // Alternate mp3 tag (haali)
         prefs->get(FEATURES_ALTERNATE_MP3_TAG,&balternate_mp3_tag);
 
@@ -215,10 +220,13 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU (NVIDIA)"));
         diaElemToggle useXvba(&bxvba,QT_TRANSLATE_NOOP("adm","Decode video using XVBA (AMD)"));
         diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
+#ifdef USE_VIDEOTOOLBOX
+        diaElemToggle useVideoToolbox(&bvideotoolbox,QT_TRANSLATE_NOOP("adm","Decode video using VideoToolbox (macOS)"));
+#endif
         diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
-
+#ifndef USE_VIDEOTOOLBOX
         diaElemReadOnlyText hwAccelText(NULL,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"),NULL);
-
+#endif
 
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
         diaElemToggle resetEncoder(&loadDefault,QT_TRANSLATE_NOOP("adm","_Revert to saved default output settings on video load"));
@@ -472,8 +480,13 @@ std::string currentSdlDriver=getSdlDriverName();
 #endif
         diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),sizeof(diaVideo)/sizeof(diaElem *),(diaElem **)diaVideo);
         /* HW accel */
+#ifdef USE_VIDEOTOOLBOX
+        diaElem *diaHwDecoding[]={&useVideoToolbox};
+        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),1,(diaElem **)diaHwDecoding);
+#else
         diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA,&useDxva2,&hwAccelText};
         diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),5,(diaElem **)diaHwDecoding);
+#endif
 
         /* CPU tab */
         diaElem *diaCpu[]={&frameSimd};
@@ -498,24 +511,25 @@ std::string currentSdlDriver=getSdlDriverName();
        void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),8,tabs);
 
 // Now we can disable stuff if needed
-  
-#ifndef USE_DXVA2
-       useDxva2.enable(false);       
+#ifndef USE_VIDEOTOOLBOX
+    #ifndef USE_DXVA2
+       useDxva2.enable(false);
+    #endif
+    #ifndef USE_VDPAU
+        useVdpau.enable(false);
+    #endif
+    #ifndef USE_XVBA
+        useXvba.enable(false);
+    #endif
+    #ifndef USE_LIBVA
+        useLibVA.enable(false);
+    #endif
 #endif
 
-#ifndef USE_VDPAU       
-        useVdpau.enable(false);              
-#endif
-#ifndef USE_XVBA
-        useXvba.enable(false);              
-#endif
-#ifndef USE_LIBVA
-        useLibVA.enable(false);              
-#endif
-      
-#ifndef  USE_OPENGL
+#ifndef USE_OPENGL
         useOpenGl.enable(false);
 #endif
+
         if( diaFactoryRunTabsFinish(factoryCookiez))
 	{
         	//
@@ -612,6 +626,10 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_XVBA,bxvba);
             // LIBVA
             prefs->set(FEATURES_LIBVA,blibva);
+            // VideoToolbox
+#ifdef USE_VIDEOTOOLBOX
+            prefs->set(FEATURES_VIDEOTOOLBOX,bvideotoolbox);
+#endif
             // Alternate mp3 tag (haali)
             prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
             // Make users happy who prefer the output dir to be the same as the input dir

@@ -110,26 +110,6 @@ static VADisplay   getDisplay();
  * \class admLibVAEnc
  */
 class ADMBitstream;
-class ADM_vaEncodingBuffer;
-class ADM_vaEncodingContext
-{
-friend class ADM_vaEncodingBuffer;
-protected:   
-        int             width16;
-        int             height16;
-        VAContextID     contextId;
-        ADM_vaSurface   *internalSurface[2];
-        uint8_t         *extraData;
-        int              extraDataSize;
-        bool             firstPic;
-        int              toggle;
-public:
-                    ADM_vaEncodingContext();
-        bool        init(int width, int height, int surfaceCount, ADM_vaSurface **surfaces); 
-        bool        createExtraData();
-                    ~ADM_vaEncodingContext();
-        bool        encode(ADM_vaSurface *src, ADMBitstream *out,ADM_vaEncodingBuffer *encodingBuffer);
-};
 /**
  * \class ADM_vaSurface
  */
@@ -151,18 +131,6 @@ public:
     
     static ADM_vaSurface *allocateWithSurface(int w,int h,int fmt=VA_RT_FORMAT_YUV420);
     
-};
-/**
- * \class ADM_vaEncodingBuffer
- */
-
-class ADM_vaEncodingBuffer
-{
-public:
-    VABufferID          bufferId;
-    ADM_vaEncodingBuffer(ADM_vaEncodingContext *context,int bufferSize);
-    ~ADM_vaEncodingBuffer();
-    bool   readBuffers(int maxSize, uint8_t *to, uint32_t *sizeOut);
 };
 #endif
 #endif

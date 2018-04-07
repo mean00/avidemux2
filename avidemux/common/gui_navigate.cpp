@@ -516,7 +516,20 @@ bool GUI_GoToTime(uint64_t time)
 bool GUI_infiniteForward(uint64_t pts)
 {
     admPreview::deferDisplay(1);
-    GUI_GoToTime(pts);
+    if(false==video_body->goToTimeVideo(pts))
+    {
+        ADM_warning("Seek to %s failed, retrying from the previous keyframe\n",ADM_us2plain(pts));
+        // work around a possible inability to decode keyframe at pts
+        uint64_t tmp=pts;
+        if(!video_body->getPKFramePTS(&tmp))
+            return false;
+        ADM_info("Retrying from keyframe at %s\n",ADM_us2plain(tmp));
+        if(false==video_body->goToTimeVideo(tmp))
+        {
+            ADM_error("Seek to the penultimate keyframe failed as well, giving up\n",ADM_us2plain(tmp));
+            return false;
+        }
+    }
     while(admPreview::nextPicture())
     {
     }

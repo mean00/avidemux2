@@ -85,7 +85,15 @@ protected:
 public:
                         decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
         virtual         ~ decoderFF ();
-            bool        setHwDecoder(ADM_acceleratedDecoderFF *h) {hwDecoder=h;return true;}
+            bool        setHwDecoder(ADM_acceleratedDecoderFF *h)
+                        {
+                            if(h)
+                            {
+                                hwDecoder=h;
+                                return true;
+                            }
+                            return false;
+                        }
             ADM_acceleratedDecoderFF    *getHwDecoder() {return hwDecoder;}
         virtual bool    dontcopy (void)
         {    

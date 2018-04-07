@@ -7,22 +7,30 @@
 </head>
 <body>
     <div id="inner">
-        <h1>Changes in Avidemux v2.6.20/21 – v2.7.0</h1>
+        <h1>Changes in Avidemux v2.7.0 – v2.7.1</h1>
         <table>
-            <tr><td>Core:</td><td>FFmpeg switched to the 3.3.x branch</td></tr>
-            <tr><td>Editing:</td><td>Fixed frame computation bug that led to bad cutting (euma)</td></tr>
-            <tr><td>i18n:</td><td>Korean translation (sheppaul)</td></tr>
-            <tr><td>win32:</td><td>Put log files into the local folder (achim71)</td></tr>
-            <tr><td>Jobs:</td><td>Fix name of the executable search</td></tr>
-            <tr><td>UI:</td><td>Steplessly zoom paused video when the window is resized (euma)</td></tr>
-            <tr><td>UI:</td><td>Added Ctrl+Shift+C shortcut to copy the current PTS to clipboard (euma)</td></tr>
-            <tr><td>Filter:</td><td>eq2: UI improvements (euma)</td></tr>
-            <tr><td>Decoding:</td><td>Fix VP9 decoding</td></tr>
-            <tr><td>Filter:</td><td>Using rubber bands for crop too (me+euma)</td></tr>
-            <tr><td>Build:</td><td>Redone packaging on macOS</td></tr>
-            <tr><td>Decoding:</td><td>HEVC decoding via DXVA2 blacklisted on win32, active on win64</td></tr>
-            <tr><td>New Filter:</td><td>ADM ivtc</td></tr>
-            <tr><td>Audio:</td><td>Distinguish between AC3 and EAC3 when importing</td></tr>
+            <tr><td>Decoder:</td><td>Fix last frames of video not retrieved from decoder</td></tr>
+            <tr><td>Decoder:</td><td>Implement hardware accelerated decoding of H.264 on macOS</td></tr>
+            <tr><td>Demuxer:</td><td>Fix crash in the Matroska demuxer with high bitrate audio</td></tr>
+            <tr><td>Demuxer:</td><td>Fix too short duration reported for MKV and MP4 with B-frames</td></tr>
+            <tr><td>Demuxer:</td><td>Fix PTS delay calculation in the Matroska demuxer</td></tr>
+            <tr><td>Demuxer:</td><td>Fix audio delay ignored by the Mp4 demuxer</td></tr>
+            <tr><td>Muxer:</td><td>Improve resilience of FFmpeg based muxers against decode timestamps irregularities</td></tr>
+            <tr><td>Muxer:</td><td>Allow to force display aspect ratio in the configuration of the MP4 muxer</td></tr>
+            <tr><td>Muxer:</td><td>Fix crash in the AVI muxer on switch to OpenDML</td></tr>
+            <tr><td>Images:</td><td>Add PNG export, fix wrong colors with some colorspaces</td></tr>
+            <tr><td>Images:</td><td>Add feature to export selection as JPEG images</td></tr>
+            <tr><td>Editor:</td><td>Fix AVI with H.264 / HEVC without B-frames being not seekable</td></tr>
+            <tr><td>Editor:</td><td>Make AVI with H.264 / HEVC containing B-frames seekable by decoding the entire video</td></tr>
+            <tr><td>New Filter:</td><td>Still Image: generate video of specified duration out of a single image</td></tr>
+            <tr><td>Filter:</td><td>Make eq2 video filter partializable</td></tr>
+            <tr><td>Filter:</td><td>Implement fade-in / fade-out transition for "Add logo"</td></tr>
+            <tr><td>UI:</td><td>Display selection duration in the UI, move filter preview toggle to the toolbar</td></tr>
+            <tr><td>UI:</td><td>Warn right away if an edit would result in cuts being not on keyframes</td></tr>
+            <tr><td>UI:</td><td>Improve time chooser dialog</td></tr>
+            <tr><td>Audio:</td><td>Add Opus encoder</td></tr>
+            <tr><td>Audio:</td><td>Allow LPCM in FFmpeg-based muxers</td></tr>
+            <tr><td>Miscellaneous:</td><td>Improved overall polish and stability</td></tr>
         </ul>
     </div>
 </body>

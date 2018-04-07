@@ -23,6 +23,10 @@ IF(USE_DXVA2)
         ADD_CORE_INCLUDE(ADM_coreDxva2)
         ADD_IF_ENABLED(USE_LIBVA ADM_ffmpeg_dxva2.cpp)
 ENDIF(USE_DXVA2)
-                 
+IF(USE_VIDEOTOOLBOX)
+        ADD_CORE_INCLUDE(ADM_coreVideoToolbox)
+        ADD_IF_ENABLED(USE_VIDEOTOOLBOX ADM_ffmpeg_videotoolbox.cpp)
+ENDIF(USE_VIDEOTOOLBOX)
+
 ADD_LIBRARY(ADM_videocodec6 STATIC ${ADM_videoCodec_SRCS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)

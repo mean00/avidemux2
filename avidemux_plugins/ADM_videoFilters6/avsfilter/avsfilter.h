@@ -76,6 +76,7 @@ public:
   virtual ~avsfilter();
   virtual bool getNextFrame(uint32_t *fn, ADMImage *image);
   virtual bool configure(void);
+  virtual bool getTimeRange(uint64_t *startTime, uint64_t *endTime);
   virtual bool getCoupledConf( CONFcouple **couples);
   virtual void setCoupledConf( CONFcouple *couples);
   virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string

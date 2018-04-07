@@ -32,7 +32,8 @@
 mkv_muxer mkvMuxerConfig=
 {
     false,  // Force
-    1280    // Display width
+    1280,   // Display width
+    0       // Display aspect ratio (any)
 };
 
 
@@ -83,16 +84,44 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         video_st->avg_frame_rate.num =c->time_base.den;
         c->gop_size=15;
         
-        if(true==mkvMuxerConfig.forceDisplayWidth && mkvMuxerConfig.displayWidth)
+        if((mkvMuxerConfig.forceDisplayWidth && mkvMuxerConfig.displayWidth) || mkvMuxerConfig.displayAspectRatio)
         {
+            float h=(float)(s->getHeight());
+            float w=h;
+            switch (mkvMuxerConfig.displayAspectRatio)
+            {
+                case 1:
+                    w*=4.;
+                    w/=3.;
+                    break;
+                case 2:
+                    w*=16.;
+                    w/=9.;
+                    break;
+                case 3:
+                    w*=2.;
+                    break;
+                case 4:
+                    w*=64.;
+                    w/=27.;
+                    break;
+                default:break;
+            }
+
             //sar=display/code  
             int num=1,den=1;
-            av_reduce(&num, &den, mkvMuxerConfig.displayWidth, s->getWidth(),65535);
+            if(mkvMuxerConfig.forceDisplayWidth)
+                av_reduce(&num, &den, mkvMuxerConfig.displayWidth, s->getWidth(),65535);
+            else
+                av_reduce(&num, &den, (uint32_t)w, s->getWidth(),65535);
             par->sample_aspect_ratio.num=num;
             par->sample_aspect_ratio.den=den;
             video_st->sample_aspect_ratio.num=num;
             video_st->sample_aspect_ratio.den=den;
-            ADM_info("Forcing display width of %d\n",(int)mkvMuxerConfig.displayWidth);
+            int dw=(int)w;
+            if(mkvMuxerConfig.forceDisplayWidth)
+                dw=(int)mkvMuxerConfig.displayWidth;
+            ADM_info("Forcing display width of %d (pixel aspect ratio %d:%d)\n",dw,num,den);
         }
 
         if(initAudio(nbAudioTrack,a)==false)

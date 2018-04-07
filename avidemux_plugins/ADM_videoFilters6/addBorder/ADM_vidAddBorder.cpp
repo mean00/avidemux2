@@ -144,15 +144,14 @@ bool addBorders::getNextFrame(uint32_t *fn,ADMImage *image)
     // Left
     blackenHz(param.left,image->_height,ptr,stride);
     // Right
-    uint32_t pWidth=previousFilter->getInfo()->width;
-    ptr[0]+=param.left+pWidth;
-    ptr[1]+=(param.left+pWidth)/2;
-    ptr[2]+=(param.left+pWidth)/2;
+    ptr[0]+=param.left+smallWidth;
+    ptr[1]+=(param.left+smallWidth)/2;
+    ptr[2]+=(param.left+smallWidth)/2;
     blackenHz(param.right,image->_height,ptr,stride);
     // Bottom
     image->GetPitches(stride);
     image->GetWritePlanes(ptr);
-    uint32_t offsetLine=previousFilter->getInfo()->height+param.top;
+    uint32_t offsetLine=smallHeight+param.top;
     ptr[0]+=offsetLine*stride[0];
     ptr[1]+=(offsetLine/2)*stride[1];
     ptr[2]+=(offsetLine/2)*stride[2];
@@ -179,10 +178,12 @@ bool addBorders::configure(void)
           width=previousFilter->getInfo()->width;
           height=previousFilter->getInfo()->height;
 
-          diaElemUInteger dleft(&left,QT_TRANSLATE_NOOP("addBorder", "_Left border:"),       0,width);
-          diaElemUInteger dright(&right,QT_TRANSLATE_NOOP("addBorder", "_Right border:"),    0,width);
-          diaElemUInteger dtop(&(top),QT_TRANSLATE_NOOP("addBorder", "_Top border:"),          0,height);
-          diaElemUInteger dbottom(&(bottom),QT_TRANSLATE_NOOP("addBorder", "_Bottom border:"), 0,height);
+#define BORDER_MAX_WIDTH 2160
+
+          diaElemUInteger dleft(&left,QT_TRANSLATE_NOOP("addBorder", "_Left border:"),        0,BORDER_MAX_WIDTH);
+          diaElemUInteger dright(&right,QT_TRANSLATE_NOOP("addBorder", "_Right border:"),     0,BORDER_MAX_WIDTH);
+          diaElemUInteger dtop(&(top),QT_TRANSLATE_NOOP("addBorder", "_Top border:"),         0,BORDER_MAX_WIDTH);
+          diaElemUInteger dbottom(&(bottom),QT_TRANSLATE_NOOP("addBorder", "_Bottom border:"),0,BORDER_MAX_WIDTH);
 
           diaElem *elems[4]={&dleft,&dright,&dtop,&dbottom};
           if(diaFactoryRun(QT_TRANSLATE_NOOP("addBorder", "Add Borders"),4,elems))

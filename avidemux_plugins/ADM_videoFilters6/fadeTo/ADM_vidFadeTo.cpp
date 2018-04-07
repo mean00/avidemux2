@@ -68,16 +68,20 @@ bool  AVDM_FadeTo::configure()
   
 while(1)
 {
-    
-    uint32_t mx=9*3600*1000;
-  
-    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeTo","_Start time (ms):"),0,mx);
-    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeTo","_End time (ms):"),0,mx);
+    uint32_t mx=(uint32_t)(previousFilter->getInfo()->totalDuration/1000);
+
+    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeTo","_Start time:"),0,mx);
+    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeTo","_End time:"),0,mx);
     diaElem *elems[2]={&start,&end};
   
     if( diaFactoryRun(QT_TRANSLATE_NOOP("fadeTo","Fade"),2+0*1,elems))
     {
-        
+        if(param.startFade > param.endFade)
+        {
+            uint32_t swap=param.startFade;
+            param.startFade=param.endFade;
+            param.endFade=swap;
+        }
         buildLut();
         return 1;
     }else

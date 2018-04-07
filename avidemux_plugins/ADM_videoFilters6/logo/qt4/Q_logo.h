@@ -42,7 +42,6 @@ protected:
 public:
         ADMImage            *image;
         int                 imageWidth,imageHeight;
-        int                 alpha;
 
 public:
 	
@@ -59,6 +58,7 @@ public slots:
 private slots:
 	void                sliderUpdate(int foo);
 	void                valueChanged(int foo);
+        void                valueChanged(double foo);
         void                moved(int x,int y);
         void                preview(int x);
         void                imageSelect();

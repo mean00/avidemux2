@@ -26,6 +26,7 @@
 
 #include "fourcc.h"
 #include "ADM_edit.hxx"
+#include "ADM_edPtsDts.h"
 #include "DIA_coreToolkit.h"
 #include "prefs.h"
 
@@ -50,7 +51,8 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     goToTimeVideo(from);
     vid->lastSentFrame=0;
     vid->dontTrustBFramePts=false;
-    
+    uint64_t inc=vid->timeIncrementInUs;
+
     stats.reset();
     ADM_info("Checking file for broken PTS...\n");
     ADM_info("Checking %d frames out of %d.\n",checkRange,totalFrames);
@@ -70,11 +72,18 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     INFO(  nbNoImage);
     INFO(  nbPtsgoingBack);
     ADM_info("-------- /Stats ----------\n");
+
+    if(!stats.nbBFrames && hdr->providePts()==false)
+    {
+        ADM_info("No B-frames and no PTS, setting PTS equal DTS\n");
+        return setPtsEqualDts(hdr,inc);
+    }
+
     if(stats.nbPtsgoingBack>1 || (stats.nbBFrames && hdr->providePts()==false))
     {
 #ifdef WORK_AROUND_BAD_PTS
         if(!GUI_Question(QT_TRANSLATE_NOOP("ADM_Composer",
-                "This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonously increasing. "
+                "This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonically increasing. "
                 "Avidemux can try to reconstruct correct PTS by decoding the entire video. "
                 "This may take a lot of time. Proceed?")))
         {
@@ -85,7 +94,6 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
             std::vector<uint64_t> ListOfPts; // identify the frame for a PTS from above
             goToTimeVideo(from);
             vid->lastSentFrame=0;
-            uint64_t inc=vid->timeIncrementInUs;
             uint64_t bfdelay=2*inc; // FIXME B-frame delay
             for(uint32_t i=0;i<totalFrames;i++)
             {

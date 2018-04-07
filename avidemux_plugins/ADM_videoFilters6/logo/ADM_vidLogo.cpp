@@ -43,7 +43,10 @@ addLogopFilter::addLogopFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : AD
         configuration.y=0;
         configuration.alpha=255;
         configuration.logoImageFile=std::string("");
+        configuration.fade=0;
     }
+    in->getTimeRange(&startOffset,&endOffset);
+    from=in->getAbsoluteStartTime();
     myName="logo";
     reloadImage();
 }
@@ -87,10 +90,39 @@ bool addLogopFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     }
     if(myImage)
     {
+        double a=(double)configuration.alpha;
+        uint64_t pts=image->Pts;
+        pts+=from;
+        uint64_t transition=configuration.fade*1000LL;
+        uint64_t duration=endOffset-startOffset;
+        if(transition && duration)
+        {
+            if(transition*2 > duration)
+                transition=duration/2;
+            if(pts < startOffset || pts >= endOffset)
+            {
+                a = 0.;
+            }else
+            {
+                pts -= startOffset;
+                if(pts < transition)
+                {
+                    a /= (double)transition;
+                    a *= pts;
+                }
+                if(pts > duration-transition)
+                {
+                    a /= (double)transition;
+                    a *= duration-pts;
+                }
+            }
+            if(a > 255.)
+                a = 255.;
+        }
         if(myImage->GetReadPtr(PLANAR_ALPHA))
-            myImage->copyWithAlphaChannel(image,configuration.x,configuration.y,configuration.alpha);
+            myImage->copyWithAlphaChannel(image,configuration.x,configuration.y,(uint32_t)a);
         else
-            myImage->copyToAlpha(image,configuration.x,configuration.y,configuration.alpha);
+            myImage->copyToAlpha(image,configuration.x,configuration.y,(uint32_t)a);
     }
     return true;
 }
@@ -114,7 +146,12 @@ void addLogopFilter::setCoupledConf(CONFcouple *couples)
 */
 const char *addLogopFilter::getConfiguration(void)
 {
-    return "Add logo.";
+    static char c[2560];
+    snprintf(c,2559,"X: %d; Y: %d; Alpha: %d; Fade-in/out: %d ms;\nimage: %s",
+            configuration.x,configuration.y,configuration.alpha,configuration.fade,
+            configuration.logoImageFile.c_str());
+    return c;
+
 }
 
 /**
@@ -122,7 +159,9 @@ const char *addLogopFilter::getConfiguration(void)
 */
 bool addLogopFilter::configure( void)
 {
-    return DIA_getLogo(&configuration, this->previousFilter);
+    bool r=DIA_getLogo(&configuration, this->previousFilter);
+    reloadImage();
+    return r;
 }
 
 

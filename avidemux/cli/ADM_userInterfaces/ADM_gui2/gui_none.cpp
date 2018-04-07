@@ -162,6 +162,10 @@ bool UI_setVUMeter(uint32_t volume[6])
 {
     return true;
 }
+bool UI_setVolume(void)
+{
+    return true;
+}
 bool UI_askAvisynthPort(uint32_t &port)
 {
 	return false;
