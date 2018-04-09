@@ -3696,39 +3696,41 @@ Chcesz go zindeksować?</translation>
     <message>
         <location line="+58"/>
         <source>width</source>
-        <translation type="unfinished"></translation>
+        <translation>szerokość</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>%sheight</source>
-        <translation type="unfinished"></translation>
+        <translation>%swysokość</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> and </source>
-        <translation type="unfinished"></translation>
+        <translation> i </translation>
     </message>
     <message>
         <location line="+3"/>
         <source>%sdifferent between first and this video stream</source>
-        <translation type="unfinished"></translation>
+        <translation>%sróżne w pierwszym i tym strumieniu obrazu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> are </source>
-        <translation type="unfinished"></translation>
+        <translation> są </translation>
     </message>
     <message>
         <location line="+0"/>
         <source> is </source>
-        <translation type="unfinished"></translation>
+        <translation> jest </translation>
     </message>
     <message>
         <location line="+2"/>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatenate them together</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie możesz jeszcze łączyć różnych wymiarów wideo. Korzystanie z częściowego filtra wideo później nie obejdzie tego problemu. Rozwiązaniem jest:
+1) Sprowadzenie wszystkich strumieni do tych samych wymiarów, używając filtra &quot;kadrowanie&quot; / &quot;dodaj obramowanie&quot; lub &quot;zmiana rozmiaru&quot;
+2) połączenie ich razem</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+59"/>
@@ -3743,7 +3745,7 @@ Chcesz go zindeksować?</translation>
     <message>
         <location line="+31"/>
         <source>Decoding video...</source>
-        <translation type="unfinished"></translation>
+        <translation>Dekodowanie wideo...</translation>
     </message>
     <message>
         <location line="+117"/>
@@ -4553,7 +4555,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+7"/>
         <source>Skip All</source>
-        <translation type="unfinished"></translation>
+        <translation>Pomiń wszystko</translation>
     </message>
     <message>
         <location line="+52"/>
@@ -4581,7 +4583,7 @@ Drop timing informations ?</source>
     <message>
         <location line="-67"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Okno dialogowe</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -4596,7 +4598,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+14"/>
         <source>ProcessImages</source>
-        <translation type="unfinished"></translation>
+        <translation>Przetwarzanie obrazów</translation>
     </message>
     <message>
         <location line="+34"/>
@@ -4663,7 +4665,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/fdk-aac/ae_fdk.cpp" line="+433"/>
         <source>_Profile::</source>
-        <translation>Profil:</translation>
+        <translation>_Profil:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5059,7 +5061,7 @@ chcesz kontynuować mimo to?</translation>
     <message>
         <location line="+5"/>
         <source>&amp;Recent</source>
-        <translation>Ostatnie</translation>
+        <translation>Os&amp;tatnie</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -5243,7 +5245,7 @@ chcesz kontynuować mimo to?</translation>
     <message>
         <location line="-25"/>
         <source>Selection: 000000</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaznaczenie: 000000</translation>
     </message>
     <message>
         <location line="+114"/>
@@ -5646,7 +5648,7 @@ chcesz kontynuować mimo to?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+254"/>
         <source>_Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Przepływność:</translation>
     </message>
 </context>
 <context>
@@ -5809,7 +5811,7 @@ chcesz kontynuować mimo to?</translation>
     <message>
         <location line="+11"/>
         <source>Port to use: </source>
-        <translation type="unfinished"></translation>
+        <translation>Użyj port:</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -6618,31 +6620,35 @@ chcesz kontynuować mimo to?</translation>
     <message>
         <location line="+48"/>
         <source>It is impossible to cut out the entire video. Please recheck the position of markers A and B.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można wyciąć całego wideo. Proszę sprawdzić pozycję znaczników A i B.</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Deleting</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuwanie</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>It is impossible to delete the entire video. Please recheck the position of markers A and B.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można usunąć całego wideo. Proszę sprawdzić pozycję znaczników A i B.</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>The end point of the cut is not on a keyframe.
 Video saved in copy mode will be corrupted at this point.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Punkt końcowy wycięcia nie znajduje się na klatce kluczowej.
+Wideo zapisane w trybie kopiowania będzie uszkodzone w tym miejscu.
+Czy kontynuować mimo to?</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>The end point of the deletion is not on a keyframe.
 Video saved in copy mode will be corrupted at this point.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Punkt końcowy usunięcia nie znajduje się na klatce kluczowej.
+Wideo zapisane w trybie kopiowania będzie uszkodzone w tym miejscu.
+Czy kontynuować mimo to?</translation>
     </message>
     <message>
         <location line="+100"/>
@@ -9298,7 +9304,7 @@ Czy chcesz go wczytać ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/DIA_flyCrop.cpp" line="+324"/>
         <source>Size: </source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar: </translation>
     </message>
 </context>
 <context>
@@ -9348,7 +9354,7 @@ Czy chcesz go wczytać ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+58"/>
         <source>Size: </source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar: </translation>
     </message>
     <message>
         <location line="+26"/>
@@ -9849,7 +9855,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="+64"/>
         <source>MPlayer eq2</source>
-        <translation type="unfinished">MPlayer eq2</translation>
+        <translation>MPlayer eq2</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9924,17 +9930,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/faac/audioencoder_faac.cpp" line="+292"/>
         <source>_Bitrate:</source>
-        <translation type="unfinished">_Przepływność:</translation>
+        <translation>_Przepływność:</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Faac Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfiguracja Faac</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+6"/>
         <source>Opus Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfiguracja Opus</translation>
     </message>
 </context>
 <context>
@@ -11647,7 +11653,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+3"/>
         <source>use Qt version</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">użyj wersję Qt</translation>
     </message>
     <message>
         <source>use QT4 version</source>
@@ -11875,12 +11881,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="+310"/>
         <source>CBR</source>
-        <translation type="unfinished">CBR</translation>
+        <translation>CBR</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>ABR</source>
-        <translation type="unfinished">ABR</translation>
+        <translation>ABR</translation>
     </message>
     <message>
         <location line="+2"/>
