@@ -22,7 +22,7 @@
 #include "string"
 
 
-#define ADM_UNKNOWN_LANGUAGE std::string("unknown")
+#define ADM_UNKNOWN_LANGUAGE std::string("und")
 
 /**
         \fn      ADM_audioAccess
