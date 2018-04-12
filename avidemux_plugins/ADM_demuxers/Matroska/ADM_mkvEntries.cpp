@@ -419,7 +419,15 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
                  father.readString(s,len);
                  if(!strlen(s))
                      strcpy(s,"eng"); // english is default
-                 ADM_info("Found language  = %s\n",s);
+                 if(!strcmp(s,"unknown")) // we were using "unknown", which is not a valid ISO 639 code
+                 {
+                     memset(s,'\0',100);
+                     strcpy(s,"und");
+                     ADM_info("Found 'unknown' as laguage code, replacing it with 'und'\n");
+                 }else
+                 {
+                     ADM_info("Found language  = %s\n",s);
+                 }
                  entry->language=std::string(s);
                 }
             break;

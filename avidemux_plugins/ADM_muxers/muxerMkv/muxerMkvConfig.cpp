@@ -31,10 +31,9 @@ bool mkvConfigure(void)
         diaMenuEntry    aspect[]={{OTHER,"----"},{STANDARD,"4:3"},{WIDE,"16:9"},{UNI,"18:9"},{CINEMA,"64:27"}};
         diaElemMenu     menuAspect(&dar,QT_TRANSLATE_NOOP("mkvmuxer","Force Aspect Ratio (DAR)"),5,aspect,"");
 
-        alternate.link(!force,&dWidth);
-        alternate.link(force,&menuAspect);
+        alternate.link(1,&dWidth);
+        alternate.link(0,&menuAspect);
         menuAspect.link(aspect,1,&alternate);
-        menuAspect.link(aspect,1,&dWidth);
 
         diaElem *tabs[]={&alternate,&dWidth,&menuAspect};
         if( diaFactoryRun(QT_TRANSLATE_NOOP("mkvmuxer","MKV Muxer"),3,tabs))
