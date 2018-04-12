@@ -22,9 +22,9 @@
 void resetConfigurationData() {}
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_libvaEncoder);
-ADM_DECLARE_VIDEO_ENCODER_MAIN("LibVaEncoder (HW)",
-                               "Mpeg4 AVC (VA/HW)",
-                               "Simple Libva Encoder (c) 2013 Mean",
+ADM_DECLARE_VIDEO_ENCODER_MAIN("LibVaEncoder (HW) VAN",
+                               "Mpeg4 AVC (VA/HW) VAN",
+                               "VAN Libva Encoder (c) 2013 Mean",
                                 NULL, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0,

@@ -15,21 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef OS_LINUX
+#ifdef __MINGW32__
 #define uint32_t DWORD
-
-typedef struct
- {
-   uint32_t width;
-   uint32_t height;
-   uint32_t nb_frames;
-   uint32_t encoding;
-   uint32_t codec;
-   uint32_t fps1000;
-   uint32_t orgFrame;
-}ADV_Info;
-
 #endif
+
 typedef enum
 {
   LOAD_AVS_SCRIPT = 1,
@@ -47,6 +36,17 @@ typedef enum
 
 typedef struct
 {
+   uint32_t width;
+   uint32_t height;
+   uint32_t nb_frames;
+   uint32_t encoding;
+   uint32_t codec;
+   uint32_t fps1000;
+   uint32_t orgFrame;
+} ADV_Info;
+
+typedef struct
+{
   AVS_CMD avs_cmd;
   int sz;
 } PIPE_MSG_HEADER;
@@ -57,6 +57,7 @@ typedef struct
  PUT_FRAME - frame and frame_data[] set to corresponding value
  */
 typedef struct 
+
 {
   uint32_t frame;
   unsigned char frame_data[0];
@@ -70,7 +71,7 @@ typedef struct
 }PITCH_DATA;
 
 bool send_cmd(int hw, AVS_CMD cmd,
-              void *data, int sz);
+              const void *data, int sz);
 
 bool send_cmd_by_two_part(int hw, AVS_CMD cmd,
                           void *data1, int sz1,
@@ -87,7 +88,7 @@ bool receive_data(int hr, PIPE_MSG_HEADER *msg,
 bool receive_data_by_size(int hr, void *data, int size);
 
 int ppread(int h, void *data, int sz);
-int ppwrite(int h, const void *data, int sz);
+int ppwrite(int h, void *data, int sz);
 
 #define PIPE_MAX_TRANSFER_SZ 65536/2
 #define MAGIC_ADV_PROTOCOL_VAL 0xADBACEED
