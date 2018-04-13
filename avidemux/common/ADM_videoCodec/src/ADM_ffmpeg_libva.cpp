@@ -41,6 +41,7 @@ extern "C" {
 
 
 static bool         libvaWorking=true;
+static bool         libvaEncoderWorking=false;
 static admMutex     imageMutex;
 static int  ADM_LIBVAgetBuffer(AVCodecContext *avctx, AVFrame *pic);
 static void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
@@ -102,7 +103,10 @@ bool libvaUsable(void)
 {    
     bool v=true;
     if(!libvaWorking) return false;
-    if(!prefs->get(FEATURES_LIBVA,&v)) v=false;
+    if(!prefs->get(FEATURES_LIBVA,&v)) 
+    {
+        v=false;
+    }
     return v;
 }
 
@@ -127,6 +131,7 @@ static ADM_vaSurface *allocateADMVaSurface(AVCodecContext *ctx)
     \fn libvaProbe
     \brief Try loading vaapi...
 */
+extern bool ADM_initLibVAEncoder(void);
 bool libvaProbe(void)
 {
     GUI_WindowInfo xinfo;
@@ -141,6 +146,14 @@ bool libvaProbe(void)
 
     if(false==admLibVA::init(&xinfo)) return false;
     libvaWorking=true;
+#if 0
+    { // Only check encoder if decoder is working
+       libvaEncoderWorking = ADM_initLibVAEncoder();
+        if(libvaEncoderWorking) ADM_info("LIBVA HW encoder is working\n");
+        else ADM_info("LIBVA HW encoder is *NOT* working\n");
+        
+    }
+#endif
     return true;
 }
 
@@ -645,7 +658,7 @@ static ADM_hwAccelEntryLibVA libvaEntry;
  */
 bool initLIBVADecoder(void)
 {
-    ADM_info("Registering LIBVA hw decocer\n");
+    ADM_info("Registering LIBVA hw decoder\n");
     ADM_hwAccelManager::registerDecoder(&libvaEntry);
     return true;
 }

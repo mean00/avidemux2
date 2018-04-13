@@ -67,7 +67,7 @@ static  VADisplay va_dpy;
 
     
 //----
-static int init_va(void);
+bool ADM_initLibVAEncoder(void);
 
 //---
 #define CHECK_VASTATUS(va_status,func)                                  \

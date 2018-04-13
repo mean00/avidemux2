@@ -55,7 +55,7 @@
 
 
 
-static bool  init_va(void);
+bool  ADM_initLibVAEncoder(void);
 static bool initDone=false;
 
 namespace ADM_VA_Global
@@ -118,7 +118,7 @@ static bool  lookupSupportedFormat(VAProfile profile)
  * 
  * @return 
  */
-bool init_vaEnc(void)
+bool ADM_initLibVAEncoder(void)
 {
     ADM_info("initializing VA encoder\n");
     if(lookupSupportedFormat(VAProfileH264High))
