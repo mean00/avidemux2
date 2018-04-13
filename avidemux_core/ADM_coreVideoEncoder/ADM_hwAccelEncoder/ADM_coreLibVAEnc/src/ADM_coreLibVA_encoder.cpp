@@ -47,12 +47,11 @@
 #include <sys/mman.h>
 
 
-#include "ADM_libvaEncoder.h"
+#include "ADM_coreLibVA_encoder.h"
 #include "va/va.h"
 #include "va/va_enc_h264.h"
-#include "ADM_coreLibVaBuffer.h"
-#include "vaDefines.h"
-#include "ADM_libVaEncodingContext.h"
+#include "ADM_coreLibVA_buffer.h"
+#include "ADM_coreLibVA_encodingContext.h"
 // setup once
 static  VADisplay va_dpy;
 
@@ -66,22 +65,9 @@ static  VADisplay va_dpy;
 #define MAX(a, b) ((a)>(b)?(a):(b))
 
 
-#define SRC_SURFACE_IN_ENCODING 0
-#define SRC_SURFACE_IN_STORAGE  1
-static  int srcsurface_status[SURFACE_NUM];
-static  int encode_syncmode = 1; // not mt
-
-
     
 //----
 static int init_va(void);
-static int render_packedsequence(void);
-static int render_packedpicture(void);
-static void render_packedsei(void);
-static int render_picture(void);
-static int render_slice(void);
-static int update_ReferenceFrames(void);
-static int save_codeddata(unsigned long long display_order, unsigned long long encode_order);
 
 //---
 #define CHECK_VASTATUS(va_status,func)                                  \
@@ -112,6 +98,7 @@ ADM_libvaEncoder::ADM_libvaEncoder(ADM_coreVideoFilter *src,bool globalHeader) :
  * 
  * @return 
  */
+#if 0
 bool         ADM_libvaEncoder::setup(void)
 {
     ADM_info("[LibVAEncoder] Setting up.\n");
@@ -125,6 +112,7 @@ bool         ADM_libvaEncoder::setup(void)
     vaContext->generateExtraData(&(this->extraDataSize),&(this->extraData));
     return true;
 }
+#endif
 /** 
     \fn ~ADM_libvaEncoder
 */

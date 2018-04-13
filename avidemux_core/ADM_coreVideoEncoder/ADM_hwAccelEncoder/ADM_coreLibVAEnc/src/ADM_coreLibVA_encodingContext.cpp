@@ -49,7 +49,7 @@
 #include "va/va.h"
 #include "va/va_enc_h264.h"
 #include "ADM_coreLibVA_buffer.h"
-#include "ADM_libVaEncodingContext.h"
+#include "ADM_coreLibVA_encodingContext.h"
 //#include "ADM_libVaEncodingContextH264.h"
 
 
@@ -118,7 +118,7 @@ static bool  lookupSupportedFormat(VAProfile profile)
  * 
  * @return 
  */
-bool init_va(void)
+bool init_vaEnc(void)
 {
     ADM_info("initializing VA encoder\n");
     if(lookupSupportedFormat(VAProfileH264High))
@@ -180,5 +180,6 @@ bool init_va(void)
     ADM_info("/initializing VA encoder\n");
     return true;
 }
+// EOF
 
 

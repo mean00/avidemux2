@@ -1,9 +1,6 @@
 
 SET(ADM_libva_SRCS
 ADM_coreLibVA.cpp
-ADM_coreLibVA_encoder.cpp
-ADM_coreLibVA_buffer.cpp
-ADM_libVaEncodingContext.cpp
 )
 
 INCLUDE_DIRECTORIES(${LIBVA_INCLUDE_DIR})	

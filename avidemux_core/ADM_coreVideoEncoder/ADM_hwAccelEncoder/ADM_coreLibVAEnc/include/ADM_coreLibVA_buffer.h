@@ -38,88 +38,27 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "ADM_h264_tag.h"
 #pragma once
-
-
-#define CHECK_VA_STATUS_BOOL(x)     {VAStatus status=x; if(status!=VA_STATUS_SUCCESS) \
-            { ADM_warning("%s failed at line %d function %s, err code=%d\n",#x,__LINE__,__func__,(int)status);return false;}}
-#include <vector>
-class ADMImage;
-class ADM_vaSurface;
-class ADMBitstream;
+#include "va/va.h"
+#include "ADM_coreLibVA.h"
 
 /**
  * 
- * @param codec
- * @param alignedWidth
- * @param alignedHeight
- * @param knownSurfaces
+ * @param context
+ * @param size
  * @return 
  */
-class ADM_vaEncodingContext
+class ADM_vaEncodingBuffers
 {
 public:
-                ADM_vaEncodingContext() {}
-    virtual      ~ADM_vaEncodingContext() {}
-    static       ADM_vaEncodingContext *allocate(int codec, int width, int height, int frameInc,std::vector<ADM_vaSurface *>knownSurfaces);
-    virtual bool encode(ADMImage *in, ADMBitstream *out)=0;
-    virtual bool generateExtraData(int *size, uint8_t **data)=0;
-};
-
-
-/**
- * 
- * @param profile
- */
-class vaAttributes
-{
-public:
-        vaAttributes(VAProfile profile)
-        {            
-            for (int i = 0; i < VAConfigAttribTypeMax; i++)
-                attrib[i].type = (VAConfigAttribType)i;
-            ADM_assert(VA_STATUS_SUCCESS==vaGetConfigAttributes(admLibVA::getDisplay(), profile, VAEntrypointEncSlice,  &attrib[0], VAConfigAttribTypeMax));
-        }
-        bool isSet(int attribute, int mask)
-        {
-            return attrib[attribute].value & mask;
-        }
-        uint32_t get(VAConfigAttribType key)
-        {
-            return attrib[key].value;
-        }
-
+        static ADM_vaEncodingBuffers *allocate(VAContextID context, int size);
+        
+        VABufferID  getId() {return _bufferId;}
+                    ~ADM_vaEncodingBuffers();
+                    int read(uint8_t *to, int sizeMax); // return # of bytes, <0 on error
 protected:
-        VAConfigAttrib attrib[VAConfigAttribTypeMax];
-      
+                    ADM_vaEncodingBuffers();
+        bool        setup(VAContextID ctx, int size);
+        VABufferID _bufferId;
 };
-/**
- * 
- */
-class vaSetAttributes
-{
-    
-public:
-    vaSetAttributes()
-    {
-        xindex=0;
-    }
-    void add(VAConfigAttribType key, int value)
-    {
-        attrib[xindex].type=key;
-        attrib[xindex].value=value;
-        xindex++;
-    }
-    void clean(void)
-    {
-      xindex=0;
-    }
-    int count() {return xindex;};
-    VAConfigAttrib *getPointer() {return &attrib[0];}
-
-protected:
-        VAConfigAttrib attrib[VAConfigAttribTypeMax];    
-        int xindex;
-};
+// EOF

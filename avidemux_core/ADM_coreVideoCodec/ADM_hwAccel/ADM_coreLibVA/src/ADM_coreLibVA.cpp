@@ -1379,5 +1379,4 @@ bool        admLibVA::destroyFilterConfig(VAConfigID &id)
 }
 
 
-#include "ADM_coreLibVA_encoder.cpp"
 #endif
