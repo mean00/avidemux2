@@ -146,14 +146,12 @@ bool libvaProbe(void)
 
     if(false==admLibVA::init(&xinfo)) return false;
     libvaWorking=true;
-#if 0
     { // Only check encoder if decoder is working
        libvaEncoderWorking = ADM_initLibVAEncoder();
         if(libvaEncoderWorking) ADM_info("LIBVA HW encoder is working\n");
         else ADM_info("LIBVA HW encoder is *NOT* working\n");
         
     }
-#endif
     return true;
 }
 
