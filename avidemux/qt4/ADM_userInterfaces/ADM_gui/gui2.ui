@@ -109,7 +109,7 @@
      <x>0</x>
      <y>0</y>
      <width>858</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -540,22 +540,6 @@
         </spacer>
        </item>
        <item>
-        <spacer name="verticalSpacer_9">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>13</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QLabel" name="label_5">
@@ -587,6 +571,22 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_9">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>13</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
         <layout class="QHBoxLayout" name="AudioLayout">
@@ -1736,12 +1736,12 @@
    </property>
   </action>
   <action name="actionPlayFiltered">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="avidemux.qrc">
      <normaloff>:/new/prefix1/pics/play_filtered.png</normaloff>:/new/prefix1/pics/play_filtered.png</iconset>
-   </property>
-   <property name="checkable">
-    <bool>true</bool>
    </property>
    <property name="text">
     <string>Play filtered</string>
