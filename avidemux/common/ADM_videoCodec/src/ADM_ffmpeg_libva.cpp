@@ -134,6 +134,7 @@ static ADM_vaSurface *allocateADMVaSurface(AVCodecContext *ctx)
 extern bool ADM_initLibVAEncoder(void);
 bool libvaProbe(void)
 {
+    ADM_info("Probing for libVA support...\n");
     GUI_WindowInfo xinfo;
     void *draw;
     draw=UI_getDrawWidget();
@@ -142,16 +143,19 @@ bool libvaProbe(void)
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Core has been compiled without LIBVA support, but the application has been compiled with it.\nInstallation mismatch"));
         libvaWorking=false;
+        return false;
     }
 
     if(false==admLibVA::init(&xinfo)) return false;
     libvaWorking=true;
     { // Only check encoder if decoder is working
        libvaEncoderWorking = ADM_initLibVAEncoder();
-        if(libvaEncoderWorking) ADM_info("LIBVA HW encoder is working\n");
-        else ADM_info("LIBVA HW encoder is *NOT* working\n");
         
     }
+    if(libvaEncoderWorking) 
+        ADM_info("LIBVA HW encoder is working\n");
+    else 
+        ADM_info("LIBVA HW encoder is *NOT* working\n");
     return true;
 }
 
