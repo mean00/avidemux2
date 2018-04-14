@@ -59,7 +59,7 @@ protected:
 public:
                             ADM_coreVideoEncoder(ADM_coreVideoFilter *src);
 virtual                     ~ADM_coreVideoEncoder();
-virtual        bool         setup(void) {return true;}    /// Call once before using            
+virtual        bool         setup(void) {ADM_info("[videoEncoder] Using default setup , i.e. no setup.\n");return true;}    /// Call once before using            
 virtual        bool         encode (ADMBitstream * out)=0;
 
 virtual        bool         isDualPass(void) {return false;}

@@ -3,7 +3,7 @@ SET(ADM_libvaEnc_SRCS
 ADM_coreLibVA_buffer.cpp
 ADM_coreLibVA_encodingContext.cpp
 ADM_coreLibVA_buffer.cpp
-ADM_coreLibVA_encoder.cpp
+#ADM_coreLibVA_encoder.cpp
 ADM_coreLibVA_bitstream.cpp
 )
 
