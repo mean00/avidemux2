@@ -17,7 +17,7 @@
  ***************************************************************************/
 #ifndef ADM_CORE_VIDEO_ENCODER_H
 #define ADM_CORE_VIDEO_ENCODER_H
-
+#include "ADM_default.h"
 #include "ADM_coreVideoEncoder6_export.h"
 #include "ADM_coreVideoFilter.h"
 #include "ADM_bitstream.h"
