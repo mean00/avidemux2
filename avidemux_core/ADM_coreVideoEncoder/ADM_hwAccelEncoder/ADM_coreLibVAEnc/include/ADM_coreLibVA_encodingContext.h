@@ -116,8 +116,11 @@ public:
     {
       xindex=0;
     }
-    int count() {return xindex;};
-    VAConfigAttrib *getPointer() {return &attrib[0];}
+    int count() const {return xindex;};
+    const VAConfigAttrib *getPointer() const 
+    {
+      return &attrib[0];
+    }
 
 protected:
         VAConfigAttrib attrib[VAConfigAttribTypeMax];    

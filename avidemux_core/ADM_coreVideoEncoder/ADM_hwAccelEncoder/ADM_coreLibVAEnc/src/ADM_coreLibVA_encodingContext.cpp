@@ -50,24 +50,15 @@
 #include "va/va_enc_h264.h"
 #include "ADM_coreLibVA_buffer.h"
 #include "ADM_coreLibVA_encodingContext.h"
-
+#include "ADM_coreLibVA_h264Encoding.h"
 
 
 
 bool  ADM_initLibVAEncoder(void);
 static bool initDone=false;
 
-namespace ADM_VA_Global
-{
-  VAProfile      h264_profile = VAProfileNone ; // High = (1 << 3), main = (1 << 1)
-  int            ip_period = 1;
-  vaSetAttributes newAttributes;
-  int            h264_packedheader = 0; /* support pack header? */
-  int            h264_maxref_p0 = 1;
-  int            h264_maxref_p1 = 1;
-};
-
-using namespace ADM_VA_Global;
+ADM_VA_GlobalH264 globalH264Caps;
+const ADM_VA_GlobalH264 *vaGetH264EncoderProfile() {return &globalH264Caps;};
 
 #if 0
 
@@ -123,12 +114,12 @@ bool ADM_initLibVAEncoder(void)
     if(lookupSupportedFormat(VAProfileH264High))
     {
         ADM_info("H264 High is supported\n");
-        h264_profile=VAProfileH264High;        
+        globalH264Caps.profile=VAProfileH264High;        
     }else
     if(lookupSupportedFormat(VAProfileH264Main))
     {
         ADM_info("H264 Main is supported\n");
-        h264_profile=VAProfileH264Main;
+        globalH264Caps.profile=VAProfileH264Main;
 
     }
     else
@@ -137,14 +128,14 @@ bool ADM_initLibVAEncoder(void)
         return false;
     }
     
-    vaAttributes attributes(h264_profile);
+    vaAttributes attributes(globalH264Caps.profile);
     if(!attributes.isSet(VAConfigAttribRTFormat,VA_RT_FORMAT_YUV420))
     {
         ADM_warning("YUV420 not supported, bailing\n");
         return false;
     }
-    newAttributes.clean();
-    newAttributes.add(VAConfigAttribRTFormat,VA_RT_FORMAT_YUV420);
+    globalH264Caps.newAttributes.clean();
+    globalH264Caps.newAttributes.add(VAConfigAttribRTFormat,VA_RT_FORMAT_YUV420);
   
     uint32_t pack=attributes.get(VAConfigAttribEncPackedHeaders);
     if(pack!=VA_ATTRIB_NOT_SUPPORTED)
@@ -160,21 +151,21 @@ bool ADM_initLibVAEncoder(void)
         CHECK_PACK(VA_ENC_PACKED_HEADER_SLICE)
         CHECK_PACK(VA_ENC_PACKED_HEADER_MISC)
 #endif                
-        h264_packedheader = new_value;
-        newAttributes.add(VAConfigAttribEncPackedHeaders,new_value);
+        globalH264Caps.packedHeaderCapabilities=new_value;
+        globalH264Caps.newAttributes.add(VAConfigAttribEncPackedHeaders,new_value);
     }
 
     int ilaced=attributes.get(VAConfigAttribEncInterlaced);
     if(ilaced!=VA_ATTRIB_NOT_SUPPORTED)
     {
-        newAttributes.add(VAConfigAttribEncInterlaced,VA_ENC_INTERLACED_NONE);
+        globalH264Caps.newAttributes.add(VAConfigAttribEncInterlaced,VA_ENC_INTERLACED_NONE);
     }
     int h264_maxref_tmp=attributes.get(VAConfigAttribEncMaxRefFrames);
     if(h264_maxref_tmp!=VA_ATTRIB_NOT_SUPPORTED)
     {    
-        h264_maxref_p0 = h264_maxref_tmp&0xffff;
-        h264_maxref_p1 = h264_maxref_tmp>>16;
-        ADM_info("Max ref frame is p0:%d/p1:%d\n",h264_maxref_p0,h264_maxref_p1);
+        globalH264Caps.h264_maxref_p0 = h264_maxref_tmp&0xffff;
+        globalH264Caps.h264_maxref_p1 = h264_maxref_tmp>>16;
+        ADM_info("Max ref frame is p0:%d/p1:%d\n",globalH264Caps.h264_maxref_p0,globalH264Caps.h264_maxref_p1);
     }
     ADM_info("/initializing VA encoder\n");
     return true;
