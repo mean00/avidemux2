@@ -1,0 +1,5 @@
+Name    : libva
+URL     : https://github.com/gbeauchesne/libva
+License : PD
+Version : Does not matter, only the sample code is used as starting point
+
