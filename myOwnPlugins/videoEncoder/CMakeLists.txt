@@ -6,12 +6,17 @@ MESSAGE("")
 
 SET(ADM_PROJECT vaEnc)
 #
+ADD_DEFINITIONS("-g")
+SET(CMAKE_BUILD_TYPE Debug)
+#
 #
 SET(PLUGINS TRUE)
 SET(DO_COMMON TRUE)
 SET(AVIDEMUX_VERSION 2.7)                 # important !
 SET(AVIDEMUX_EXTERNAL_BUILD True)         # important !
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0 FATAL_ERROR)
+# Needed for Clang, does not hurt others (?)
+#ADD_DEFINITIONS(-std=c++11)
 ######################################################
 # Try to locate & setup avidemux development files
 ######################################################
@@ -56,7 +61,7 @@ LINK_DIRECTORIES("${AVIDEMUX_SEARCH_LIB_DIR}")
 INCLUDE_DIRECTORIES(${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/${AVIDEMUX_VERSION}/)
 
 IF (FRESH_BUILD)
-	MESSAGE("")
+    MESSAGE("")
 ENDIF (FRESH_BUILD)
 
 ########################################
@@ -73,10 +78,19 @@ INCLUDE(ve_plugin)
 include(admConfigSummary)
 include(admCheckLibVA)
 checkLibVA()
-ADD_VIDEO_ENCODER(ADM_ve_vanilla  ADM_libvaEncoder.cpp  libvaencPlugin.cpp)
+include_directories(${ADM_HEADER_DIR}/ADM_coreLibVA)        
+include_directories(${ADM_HEADER_DIR}/ADM_coreLibVAEnc/)
+ADD_VIDEO_ENCODER(ADM_ve_libva  
+                libvaencPlugin.cpp 
+                ADM_libVaEncodingContextH264_misc.cpp
+                ADM_libVaEncodingContextH264_render.cpp
+                ADM_libVaEncodingContextH264_packed.cpp
+                ADM_libvaEncoder.cpp  
+                ADM_libVaEncodingContextH264.cpp
+                    )
 
-TARGET_LINK_LIBRARIES(ADM_ve_vanilla ADM_coreLibVA6 va)
-INIT_VIDEO_ENCODER(ADM_ve_vanilla)
-INSTALL_VIDEO_ENCODER(ADM_ve_vanilla)
+TARGET_LINK_LIBRARIES(ADM_ve_libva ADM_coreLibVAEnc6 ADM_coreLibVA6 va)
+INIT_VIDEO_ENCODER(ADM_ve_libva)
+INSTALL_VIDEO_ENCODER(ADM_ve_libva)
 SET(ADM_vf_logo_SRCS ADM_vidLogo.cpp)
 
