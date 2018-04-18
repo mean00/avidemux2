@@ -114,7 +114,7 @@ extern void ADM_ExitCleanup(void);
 static bool uiRunning=false;
 static bool uiIsMaximized=false;
 
-bool needsResizing=false;
+static bool needsResizing=false;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -1453,6 +1453,9 @@ void MainWindow::changeEvent(QEvent *event)
             UI_resize(w,h);
             UI_setNeedsResizingFlag(false);
         }
+        // Always adjust zoom on maximize
+        if (ev->oldState() != Qt::WindowMaximized && QuiMainWindows->isMaximized())
+            ignoreResizeEvent = false;
     }
     QWidget::changeEvent(event);
 }
