@@ -506,7 +506,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     threshold = RESIZE_THRESHOLD;
     actZoomCalled = false;
-    ignoreResizeEvent = false;
+    ignoreResizeEvent = true;
     blockResizing = false;
     blockZoomChanges = true;
 
