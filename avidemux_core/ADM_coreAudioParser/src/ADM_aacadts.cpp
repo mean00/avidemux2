@@ -87,8 +87,8 @@ int ADM_adts2aac::getFrequency(void)
 {
     if(!hasExtra)
     {
-            ADM_error("No extradata in aac! using default of 48 kHz");
-            return 48000;
+        ADM_error("No extradata in aac! using default of 48 kHz\n");
+        return 48000;
     }
     uint8_t *p=extra;
     int dex=((p[0]&7)<<1)+(p[1]>>7);
@@ -102,8 +102,8 @@ int ADM_adts2aac::getChannels(void)
 {
     if(!hasExtra)
     {
-            ADM_error("No extradata in aac! using default of 2 channels");
-            return 2;
+        ADM_error("No extradata in aac! using default of 2 channels\n");
+        return 2;
     }
     uint8_t *p=extra;
     int dex=((p[1]>>3)&0xf);
@@ -144,7 +144,7 @@ bool  ADM_adts2aac::addData(int incomingLen,const uint8_t *inData)
     {
         ADM_error("Head=%d tail=%d bufferSize=%d\n",head,tail,ADTS_BUFFER_SIZE*2);
         ADM_error("Adts buffer overflow\n");
-        ADM_assert(0);
+        return false;
     }
     memcpy(buffer.at(head),inData,incomingLen);
     head+=incomingLen;
@@ -276,8 +276,11 @@ again:
 ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,const uint8_t *inData,int *outLen,uint8_t *out)
 {
     *outLen=0;
+    bool r=false;
     if(incomingLen)
-        addData(incomingLen,inData);
+        r=addData(incomingLen,inData);
+    if(!r)
+        return ADTS_ERROR;
     return getAACFrame(outLen,out);
 }
 //EOF
