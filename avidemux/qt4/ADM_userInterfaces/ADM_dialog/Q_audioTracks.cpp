@@ -154,7 +154,19 @@ void audioTrackQt4::inputChanged(int signal)
         if(!ext)
         {
             GUI_Error_HIG(QT_TRANSLATE_NOOP("qaudiotracks","Error"),QT_TRANSLATE_NOOP("qaudiotracks","Cannot use that file as audio track"));
-            return ;
+            if(thisIndex>0)
+            {
+                me->blockSignals(true);
+                me->setCurrentIndex(thisIndex-1);
+                me->blockSignals(false);
+            }else
+            {
+                me->blockSignals(true);
+                me->setCurrentIndex(-1);
+                me->blockSignals(false);
+                disable(dex);
+            }
+            return;
         }
         int poolIndex=_pool->size();
         _pool->addInternalTrack(ext);
