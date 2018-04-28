@@ -85,25 +85,9 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
         ui.LabelExtraData->clear();
 
     //------------------------------------
-    duration=0;
     WAVHeader *wavinfo=NULL;
     ADM_audioStream *st;
     video_body->getDefaultAudioTrack(&st);
-    EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
-    if(ed)
-    {
-        ADM_EDAUDIO_TRACK_TYPE type=ed->edTrack->getTrackType();
-        switch (type)
-        {
-            case ADM_EDAUDIO_FROM_VIDEO:
-                duration=ed->edTrack->castToTrackFromVideo()->getDurationInUs();
-                break;
-            case ADM_EDAUDIO_EXTERNAL:
-                duration=ed->edTrack->castToExternal()->getDurationInUs();
-                break;
-            default:break;
-        }
-    }
     if(st)
         wavinfo=st->getInfo();
     if(wavinfo)
@@ -132,6 +116,22 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 
         FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), wavinfo->frequency);
 
+        duration=0;
+        EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+        if(ed)
+        {
+            ADM_EDAUDIO_TRACK_TYPE type=ed->edTrack->getTrackType();
+            switch (type)
+            {
+                case ADM_EDAUDIO_FROM_VIDEO:
+                    duration=ed->edTrack->castToTrackFromVideo()->getDurationInUs();
+                    break;
+                case ADM_EDAUDIO_EXTERNAL:
+                    duration=ed->edTrack->castToExternal()->getDurationInUs();
+                    break;
+                default:break;
+            }
+        }
         ms2time(duration/1000,&hh,&mm,&ss,&ms);
         sprintf(text, QT_TRANSLATE_NOOP("qprops","%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
         FILLQT_TRANSLATE_NOOP("qprops",labelAudioDuration);
