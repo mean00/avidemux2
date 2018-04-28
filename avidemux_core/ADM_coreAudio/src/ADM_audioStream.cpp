@@ -33,13 +33,9 @@ ADM_audioStream::ADM_audioStream(WAVHeader *header,ADM_audioAccess *access)
     lastDts=ADM_AUDIO_NO_DTS;
     lastDtsBase=0;
     sampleElapsed=0;
-    if(access)
-    {
-        if(access->canGetDuration()==true)
-                durationInUs=access->getDurationInUs();
-        else
-                durationInUs=0;
-    }
+    durationInUs=0;
+    if(access && access->canGetDuration())
+        durationInUs=access->getDurationInUs();
     language=ADM_UNKNOWN_LANGUAGE;
 }
 /**
@@ -179,7 +175,6 @@ bool    ADM_audioStream::advanceDtsByCustomSample(uint32_t samples,uint32_t fq)
 */
 ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *access,bool makeTimeMap)
 {
-uint32_t size;
     switch(wavheader->encoding)
     {
         case WAV_EAC3:
