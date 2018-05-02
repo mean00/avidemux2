@@ -199,7 +199,11 @@ static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t 
     for(int i=0;i<2;i++)
     {
         ADM_info("\t pass %d\n",i);
+        size2-=info.frameSizeInBytes+syncOffset;
+        ADM_assert(size2>0);
+        tmp+=syncOffset+info.frameSizeInBytes;
         const uint8_t *data2=(uint8_t *)tmp;
+
         if( !ADM_EAC3GetInfo(data2, size2, &syncOffset, &info2, false))
         {
             ADM_info("Cannot sync (pass %d)\n",i);
@@ -226,9 +230,6 @@ static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t 
             r=false;
             break;
         }
-        size2-=info.frameSizeInBytes+syncOffset;
-        ADM_assert(size2>0);
-        tmp+=syncOffset+info.frameSizeInBytes;
     }
     if(r)
     {
@@ -268,7 +269,11 @@ static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t &
     for(int i=0;i<2;i++)
     {
         ADM_info("\t pass %d\n",i);
+        size2-=info.frameSizeInBytes+syncOffset;
+        ADM_assert(size2>0);
+        tmp+=syncOffset+info.frameSizeInBytes;
         const uint8_t *data2=(uint8_t *)tmp;
+
         if( !ADM_EAC3GetInfo(data2, size2, &syncOffset, &info2, true))
         {
             ADM_info("Cannot sync (pass %d)\n",i);
@@ -286,9 +291,6 @@ static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t &
             r=false;
             break;
         }
-        size2-=info.frameSizeInBytes+syncOffset;
-        ADM_assert(size2>0);
-        tmp+=syncOffset+info.frameSizeInBytes;
     }
     if(r)
     {
