@@ -493,8 +493,10 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
                     DOIT(FRONT_RIGHT,FRONT_RIGHT);
                     DOIT(FRONT_CENTER,FRONT_CENTER);
                     DOIT(LOW_FREQUENCY,LFE);
-                    DOIT(SIDE_LEFT,REAR_LEFT);
-                    DOIT(SIDE_RIGHT,REAR_RIGHT); // AV_CH_SIDE_LEFT
+                    DOIT(SIDE_LEFT,SIDE_LEFT)
+                    DOIT(SIDE_RIGHT,SIDE_RIGHT)
+                    DOIT(BACK_LEFT,REAR_LEFT)
+                    DOIT(BACK_RIGHT,REAR_RIGHT)
             }
 
         return 1;
