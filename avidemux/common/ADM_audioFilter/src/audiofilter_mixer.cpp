@@ -68,12 +68,6 @@ AUDMAudioFilterMixer::AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CON
 			outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
 			outputChannelMapping[2] = ADM_CH_REAR_LEFT;
 			outputChannelMapping[3] = ADM_CH_REAR_RIGHT;
-		case CHANNEL_2F_2S:
-			_wavHeader.channels = 4;
-			outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
-			outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
-			outputChannelMapping[2] = ADM_CH_SIDE_LEFT;
-			outputChannelMapping[3] = ADM_CH_SIDE_RIGHT;
 		break;
 		case CHANNEL_3F_2R:
 			_wavHeader.channels = 5;
@@ -82,13 +76,6 @@ AUDMAudioFilterMixer::AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CON
 			outputChannelMapping[2] = ADM_CH_REAR_LEFT;
 			outputChannelMapping[3] = ADM_CH_REAR_RIGHT;
 			outputChannelMapping[4] = ADM_CH_FRONT_CENTER;
-		case CHANNEL_3F_2S:
-			_wavHeader.channels = 5;
-			outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
-			outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
-			outputChannelMapping[2] = ADM_CH_SIDE_LEFT;
-			outputChannelMapping[3] = ADM_CH_SIDE_RIGHT;
-			outputChannelMapping[4] = ADM_CH_FRONT_CENTER;
 		break;
 		case CHANNEL_3F_2R_LFE:
 			_wavHeader.channels = 6;
@@ -96,14 +83,6 @@ AUDMAudioFilterMixer::AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CON
 			outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
 			outputChannelMapping[2] = ADM_CH_REAR_LEFT;
 			outputChannelMapping[3] = ADM_CH_REAR_RIGHT;
-			outputChannelMapping[4] = ADM_CH_FRONT_CENTER;
-			outputChannelMapping[5] = ADM_CH_LFE;
-		case CHANNEL_3F_2S_LFE:
-			_wavHeader.channels = 6;
-			outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
-			outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
-			outputChannelMapping[2] = ADM_CH_SIDE_LEFT;
-			outputChannelMapping[3] = ADM_CH_SIDE_RIGHT;
 			outputChannelMapping[4] = ADM_CH_FRONT_CENTER;
 			outputChannelMapping[5] = ADM_CH_LFE;
 		break;

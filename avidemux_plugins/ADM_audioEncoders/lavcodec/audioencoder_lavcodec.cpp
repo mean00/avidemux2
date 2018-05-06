@@ -424,8 +424,6 @@ bool AUDMEncoder_Lavcodec::computeChannelLayout(void)
               CHANMIX(FRONT_CENTER,FRONT_CENTER)
               CHANMIX(REAR_LEFT,BACK_LEFT)
               CHANMIX(REAR_RIGHT,BACK_RIGHT)
-              CHANMIX(SIDE_LEFT,SIDE_LEFT)
-              CHANMIX(SIDE_RIGHT,SIDE_RIGHT)
                 default:
                     ADM_warning("Channel no mapped : %s\n");
                     *o++=ADM_CH_FRONT_LEFT;
