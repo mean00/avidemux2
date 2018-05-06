@@ -493,8 +493,11 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
                     DOIT(FRONT_RIGHT,FRONT_RIGHT);
                     DOIT(FRONT_CENTER,FRONT_CENTER);
                     DOIT(LOW_FREQUENCY,LFE);
-                    DOIT(SIDE_LEFT,REAR_LEFT);
-                    DOIT(SIDE_RIGHT,REAR_RIGHT); // AV_CH_SIDE_LEFT
+                    DOIT(SIDE_LEFT,REAR_LEFT) // see https://trac.ffmpeg.org/ticket/3160
+                    DOIT(SIDE_RIGHT,REAR_RIGHT)
+                    // as long as we don't support 7.1, we map both side and back channels to ADM_CH_REAR_*
+                    DOIT(BACK_LEFT,REAR_LEFT)
+                    DOIT(BACK_RIGHT,REAR_RIGHT)
             }
 
         return 1;
