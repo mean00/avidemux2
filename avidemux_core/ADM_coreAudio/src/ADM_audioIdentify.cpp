@@ -55,7 +55,7 @@ static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
                     ADM_info("\t no sync\n");
                     return false;
             }
-            if(INVALID_OFFSET==offset) offset=syncoff;
+            if(INVALID_OFFSET==offset || syncoff>offset) offset=syncoff;
           // Skip this packet
             int next=probeIndex+syncoff+mp2info.size;
             len=limit-next;
