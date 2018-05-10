@@ -18132,8 +18132,8 @@ Voleu continuar?</translation>
     </message>
     <message>
         <location line="-2343"/>
-        <source>10 (Best)</source>
-        <translation type="unfinished">9 (Millor) {10 ?}</translation>
+        <source>11 (Best)</source>
+        <translation type="unfinished">11 (Millor)</translation>
     </message>
     <message>
         <location line="+563"/>

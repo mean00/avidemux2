@@ -1086,7 +1086,7 @@
                   <item>
                    <widget class="QLabel" name="label_37">
                     <property name="text">
-                     <string>10 (Best)</string>
+                     <string>11 (Best)</string>
                     </property>
                    </widget>
                   </item>

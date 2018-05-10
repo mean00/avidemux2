@@ -9766,8 +9766,8 @@ Hvis det er en systemprofil, så vil den blive genskabt næste gang.</translatio
     </message>
     <message>
         <location line="+20"/>
-        <source>10 (Best)</source>
-        <translation>10 (bedste)</translation>
+        <source>11 (Best)</source>
+        <translation>11 (bedste)</translation>
     </message>
     <message>
         <location line="+78"/>

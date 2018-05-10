@@ -15457,8 +15457,8 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     </message>
     <message>
         <location line="-2567"/>
-        <source>10 (Best)</source>
-        <translation>10 (Najlepiej)</translation>
+        <source>11 (Best)</source>
+        <translation>11 (Najlepiej)</translation>
     </message>
     <message>
         <location line="+1745"/>

@@ -9748,8 +9748,8 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location line="-354"/>
-        <source>10 (Best)</source>
-        <translation>10 (最好)</translation>
+        <source>11 (Best)</source>
+        <translation>11 (最好)</translation>
     </message>
     <message>
         <location line="-40"/>

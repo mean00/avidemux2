@@ -16871,16 +16871,12 @@ Wenn dies eine mitgelieferte Konfiguration ist, wird sie nach Neustart der Anwen
     <message>
         <location line="+42"/>
         <source>1 (Fast)</source>
-        <translation type="unfinished">1 (Schnell)</translation>
+        <translation type="unfinished">1 (schnell)</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Subpixel Refinement</source>
-        <translation type="unfinished">viertelpixelgenaue Suchverfeinerung [subme]</translation>
-    </message>
-    <message>
-        <source>9 (Best)</source>
-        <translation type="obsolete">9 (am Besten)</translation>
+        <translation type="unfinished">  Viertelpixelgenaue Suchverfeinerung [subme]  </translation>
     </message>
     <message>
         <location line="+98"/>
@@ -17301,8 +17297,8 @@ Wenn dies eine mitgelieferte Konfiguration ist, wird sie nach Neustart der Anwen
     </message>
     <message>
         <location line="+411"/>
-        <source>10 (Best)</source>
-        <translation type="unfinished">9 (am Besten) {10 ?}</translation>
+        <source>11 (Best)</source>
+        <translation type="unfinished">11 (am besten)</translation>
     </message>
     <message>
         <location line="+436"/>
