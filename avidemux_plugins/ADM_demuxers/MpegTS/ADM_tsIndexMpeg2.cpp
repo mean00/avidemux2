@@ -96,6 +96,9 @@ bool bAppend=false;
     bool keepRunning=true;
 #define likely(x) x
 #define unlikely(x) x
+    int lastStartCode=0xb3;
+
+#define REMEMBER() { lastStartCode=startCode;}   
       while(keepRunning)
       {
         startCode=pkt->findStartCode();
@@ -105,6 +108,7 @@ bool bAppend=false;
                   {
 // B2: User Data
                   case 0xB3: // sequence start
+                          REMEMBER()
                           if(seq_found)
                           {
                                 decodingImage=false;
@@ -139,36 +143,49 @@ bool bAppend=false;
                           continue;
                           break;
 //#warning FIXME, update pic field info.... It triggers a end-of-pic message as it is
-#if 0
+
                     case 0xB5: //  extension
-                                { 
-                                    uint8_t id=pkt->readi8()>>4;  // +1
-                                    uint8_t two;
-                                    switch(id)
+                        {                             
+                            uint8_t id=pkt->readi16()>>12;  // +1
+                            switch(id)
+                            {
+                                case 1: // Sequence extension
+                                    REMEMBER()
+                                    val=(val>>3)&1; // gop type progressive, unreliable, not used
+                                    break;
+                                case 8: // picture coding extension (mpeg2)
+                                {
+                                    if(lastStartCode!=0)
                                     {
-                                        case 1: // Sequence extension
-                                            val=(val>>3)&1; // gop type progressive, unreliable, not used
-                                            break;
-                                        case 8: // picture coding extension (mpeg2)
-                                        {
-                                            // skip motion vector
-                                            uint8_t picture_structure;
-                                            pkt->forward(1); // 4*4 bits   // +1
-                                            two=pkt->readi8();             // +1
-                                            picture_structure=(two)&3;
-                                            
-                                            //printf("Picture type %02x struct:%x\n",two,picture_structure);
-                                            updatePicStructure(video,picture_structure);
-                                            pkt->getInfo(&thisUnit.packetInfo);
-                                            thisUnit.consumedSoFar=pkt->getConsumed();
-                                            addUnit(data,unitTypePicInfo,thisUnit,4+1+1+1);
-                                        }
-                                        default:break;
+                                        ADM_warning("Picture coding extension not following picture (%x)\n",lastStartCode);
+                                        continue;
                                     }
+                                    REMEMBER()
+                                    int one, two,three;
+                                    one=pkt->readi8();             // +1
+                                    two=pkt->readi8();             // +1
+                                    three=pkt->readi8();
+                                    
+                                    int picture_structure=one&3;// 1=TOP, 2=BOTTOM, 3=FRAME
+                                    bool tff=!!(two&0x80);;
+                                    bool progressive_frame=!!(three&0x80);;
+                                    updateLastUnitStructure(picture_structure);
+#if 0                                                                                
+                                    printf("structure %d progressive=%d tff=%d (%x:%x:%x)\n",picture_structure,progressive_frame,tff,one,two,three);
+
+                                    //printf("Picture type %02x struct:%x\n",two,picture_structure);
+                                    updatePicStructure(video,picture_structure);
+                                    pkt->getInfo(&thisUnit.packetInfo);
+                                    thisUnit.consumedSoFar=pkt->getConsumed();
+                                    addUnit(data,unitTypePicInfo,thisUnit,4+1+1+1);
+#endif                                            
                                 }
-                                break;
-#endif
+                                default:break;
+                            }
+                        }
+                        break;
                   case 0xb8: // GOP
+                        REMEMBER()
                           // Update ui                        
                           if(!seq_found) continue;
 
@@ -176,7 +193,7 @@ bool bAppend=false;
                           thisUnit.consumedSoFar=pkt->getConsumed();
                           if(!addUnit(data,unitTypeSps,thisUnit,4))
                               keepRunning=false;
-                          break;
+                          break;                                            
                   case 0x00 : // picture
                         {
                           int type;
@@ -190,6 +207,7 @@ bool bAppend=false;
                           
                           temporal_ref=val>>6;
                           type=7 & (val>>3);
+                          REMEMBER()
                           if( type<1 ||  type>3)
                           {
                                   printf("[Indexer]Met illegal pic at %" PRIx64" + %" PRIx32"\n",

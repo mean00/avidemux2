@@ -248,8 +248,9 @@ bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxP
                 case unitTypeSps: mustFlush=true;;break;
                 case unitTypePic: 
                             picIndex=i;
+                            pictStruct=listOfUnits[i].imageStructure;
                             if(listOfUnits[i].imageType==1 || listOfUnits[i].imageType==4)
-                            mustFlush=true;
+                                mustFlush=true;
                             break;
                 case unitTypeSei:
                             pictStruct=listOfUnits[i].imageStructure;
@@ -335,6 +336,30 @@ bool TsIndexerBase::addUnit(indexerData &data,int unitType2,const H264Unit &unit
         listOfUnits.push_back(myUnit);
         return true;
 }
+
+bool    TsIndexerBase::updateLastUnitStructure(int t)
+{
+    int n=listOfUnits.size();
+    if(!n)
+    {
+        ADM_error("Cannot update last pic, we have none.");
+        return false;
+    }
+    H264Unit &lastUnit=listOfUnits[n-1];
+    switch(t)
+    {
+        case 3: 
+                lastUnit.imageStructure=pictureFrame;
+                break;
+        case 1:  lastUnit.imageStructure=pictureTopField;
+                 break;
+        case 2:  lastUnit.imageStructure=pictureBottomField;
+                 break;
+        default: ADM_warning("frame type 0 met, this is illegal\n");
+    }
+    return true;
+}
+
 /********************************************************************************************/
 /********************************************************************************************/
 /********************************************************************************************/

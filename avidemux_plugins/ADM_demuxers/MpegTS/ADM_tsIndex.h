@@ -148,6 +148,7 @@ virtual bool    run(const char *file,ADM_TS_TRACK *videoTrac)=0;
         bool    writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append=false);
+        bool    updateLastUnitStructure(int structure);
         bool    updatePicStructure(TSVideo &video,const uint32_t t)
                         {
                                             switch(t)
