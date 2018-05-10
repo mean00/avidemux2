@@ -18,6 +18,7 @@
 #include <math.h>
 #include "ADM_cpp.h"
 #include "ADM_default.h"
+#include "ADM_vidMisc.h"
 #include "ADM_edit.hxx"
 
 #if 0
@@ -238,7 +239,23 @@ uint64_t tail;
                 maxPts=seg->_refStartTimeUs+seg->_durationUs;
             if(false== nextPictureInternal(seg->_reference,image,maxPts))
             {
-                goto np_nextSeg;
+                uint64_t nkfPts=maxPts;
+                uint32_t frame=0;
+                if(searchNextKeyFrameInRef(seg->_reference,refPts,&nkfPts) && nkfPts<maxPts)
+                {
+                    frame=_segments.intraTimeToFrame(seg->_reference,nkfPts);
+                    ADM_warning("Trying to skip to the next keyframe %" PRIu32" at %s in ref\n",frame,ADM_us2plain(nkfPts));
+                }
+                if(frame && DecodePictureUpToIntra(seg->_reference,frame))
+                {
+                    ADM_info("Successfully skipped to the next keyframe\n");
+                    cached=vid->_videoCache->getByPts(nkfPts);
+                    if(cached)
+                        image->duplicate(cached);
+                }else
+                {
+                    goto np_nextSeg;
+                }
             }
         }
         // Got it, update timing
