@@ -40,6 +40,7 @@ class ADM_AudiocodecAC3 : public     ADM_Audiocodec
                 bool init();
                 bool clean();
                 bool doChannelMapping(int flags);
+                bool downmix;
 
 	public:
 		ADM_AudiocodecAC3(uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraDatab);
@@ -95,7 +96,7 @@ bool ADM_AudiocodecAC3::init()
         ADM_warning("Cannot init a52 sample\n");
         ADM_assert(0);
     }
-
+    downmix=false;
    return true;      
 }
 /**
@@ -212,6 +213,20 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
         {
             // not enough data
             break;
+        }
+
+        if(chan == 2 && (flags & A52_CHANNEL_MASK) == A52_3F2R)
+        {
+            // enforce stereo downmix, if initially two channels detected and later 5.0/5.1 occurs
+            flags = A52_STEREO;
+            if(!downmix)
+            {
+                ADM_warning("[a52] Downmixing to stereo after switch to 5.0/5.1\n");
+                downmix = true;
+            }
+        }else
+        {
+            downmix = false;
         }
 
         if(!done)
