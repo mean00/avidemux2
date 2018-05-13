@@ -22355,8 +22355,8 @@ Chcete pokračovat?</translation>
     </message>
     <message>
         <location line="-2187"/>
-        <source>10 (Best)</source>
-        <translation type="unfinished">9 (nejlepší) {10 ?}</translation>
+        <source>11 (Best)</source>
+        <translation type="unfinished">11 (nejlepší)</translation>
     </message>
     <message>
         <location line="+563"/>

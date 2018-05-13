@@ -16,6 +16,8 @@
 
 #include "Q_props.h"
 #include "avi_vars.h"
+#include "ADM_edAudioTrackExternal.h"
+#include "ADM_edAudioTrackFromVideo.h"
 #include "ADM_vidMisc.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_coreUtils.h"
@@ -114,10 +116,26 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 
         FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), wavinfo->frequency);
 
-        duration=st->getDurationInUs();
+        duration=0;
+        EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+        if(ed)
+        {
+            ADM_EDAUDIO_TRACK_TYPE type=ed->edTrack->getTrackType();
+            switch (type)
+            {
+                case ADM_EDAUDIO_FROM_VIDEO:
+                    duration=ed->edTrack->castToTrackFromVideo()->getDurationInUs();
+                    break;
+                case ADM_EDAUDIO_EXTERNAL:
+                    duration=ed->edTrack->castToExternal()->getDurationInUs();
+                    break;
+                default:break;
+            }
+        }
         ms2time(duration/1000,&hh,&mm,&ss,&ms);
         sprintf(text, QT_TRANSLATE_NOOP("qprops","%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
         FILLQT_TRANSLATE_NOOP("qprops",labelAudioDuration);
+        ui.labelAudioDuration->setEnabled(!!duration);
 
 //                SET_YES(labelVBR,currentaudiostream->isVBR());
     } else

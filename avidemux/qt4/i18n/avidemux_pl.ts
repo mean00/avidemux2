@@ -8666,7 +8666,7 @@ Czy pomimo tego chcesz kontynuować?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="+598"/>
         <source>_wine app file:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">plik aplikacji _wine:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8676,22 +8676,22 @@ Czy pomimo tego chcesz kontynuować?</translation>
     <message>
         <location line="+2"/>
         <source>_loader file:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">plik _loadera:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Select loader filename[avsload.exe]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wybierz plik loadera [avsload.exe]</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_avs file:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">plik _avs:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Select avs filename[*.avs]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wybierz plik avs [*.avs]</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9402,7 +9402,7 @@ Czy chcesz go wczytać ?
     <message>
         <location line="+2"/>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="unfinished">Średni (pełna luminancja, brak chrominancji)</translation>
+        <translation>Średni (pełna luminancja, brak chrominancji)</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -11898,12 +11898,12 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+18"/>
         <source>_Bitrate:</source>
-        <translation type="unfinished">_Przepływność:</translation>
+        <translation>_Przepływność:</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_Quality:</source>
-        <translation type="unfinished">_Jakość:</translation>
+        <translation>_Jakość:</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -15103,7 +15103,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="+176"/>
         <source>none</source>
-        <translation type="unfinished"></translation>
+        <translation>brak</translation>
     </message>
     <message>
         <location line="+33"/>
@@ -15119,32 +15119,32 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <location line="+1"/>
         <location line="+19"/>
         <source>kbit/s</source>
-        <translation type="unfinished">kbit/s</translation>
+        <translation>kbit/s</translation>
     </message>
     <message>
         <location line="-15"/>
         <source>Quantiser:</source>
-        <translation type="unfinished">Kwantyzator:</translation>
+        <translation>Kwantyzator:</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Quality:</source>
-        <translation type="unfinished">Jakość:</translation>
+        <translation>Jakość:</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Target Video Size:</source>
-        <translation type="unfinished">Rozmiar docelowego obrazu wideo:</translation>
+        <translation>Rozmiar docelowego wideo:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>MB</source>
-        <translation type="unfinished">MB</translation>
+        <translation>MB</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Average Bitrate:</source>
-        <translation type="unfinished">Średnia przepływność:</translation>
+        <translation>Średnia przepływność:</translation>
     </message>
     <message>
         <location line="+68"/>
@@ -15165,63 +15165,64 @@ Do you wish to continue?</source>
         <location line="+69"/>
         <location line="+14"/>
         <source>Error</source>
-        <translation type="unfinished">Błąd</translation>
+        <translation>Błąd</translation>
     </message>
     <message>
         <location line="-83"/>
         <source>Cannot load preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można wczytać ustawień</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Save Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapisz profil</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>my profile</source>
-        <translation type="unfinished"></translation>
+        <translation>mój profil</translation>
     </message>
     <message>
         <location line="+34"/>
         <source>Overwrite</source>
-        <translation type="unfinished"></translation>
+        <translation>Zastąp</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Replace the following preset ?:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zastąpić następujące ustawienie?:</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Cannot save preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można zapisać ustawień</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Cannot delete custom profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można usunąć własnego profilu</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Do you really want to delete the </source>
-        <translation type="unfinished"></translation>
+        <translation>Na pewno chcesz usunąć profil &quot;</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> profile ?.
 If it is a system profile it will be recreated next time.</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;?
+Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuń ustawienie</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Delete</source>
-        <translation type="unfinished">Usuń</translation>
+        <translation>Usuń</translation>
     </message>
 </context>
 <context>
@@ -15296,7 +15297,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="-2840"/>
         <source>Rate Control</source>
-        <translation type="unfinished">Kontrola przepływności</translation>
+        <translation>Kontrola przepływności</translation>
     </message>
     <message>
         <location line="+169"/>
@@ -15345,124 +15346,124 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="-2158"/>
         <source>Fast</source>
-        <translation type="unfinished">Szybki</translation>
+        <translation>Szybko</translation>
     </message>
     <message>
         <location line="+1598"/>
         <source>Output</source>
-        <translation type="unfinished">Wyjscie</translation>
+        <translation>Wyjście</translation>
     </message>
     <message>
         <location line="-3165"/>
         <location line="+669"/>
         <source>1</source>
-        <translation type="unfinished">1</translation>
+        <translation>1</translation>
     </message>
     <message>
         <location line="-664"/>
         <source>1.1</source>
-        <translation type="unfinished">1.1</translation>
+        <translation>1.1</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>1.2</source>
-        <translation type="unfinished">1.2</translation>
+        <translation>1.2</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>1.3</source>
-        <translation type="unfinished">1.3</translation>
+        <translation>1.3</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>2</source>
-        <translation type="unfinished">2</translation>
+        <translation>2</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>2.1</source>
-        <translation type="unfinished">2.1</translation>
+        <translation>2.1</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>2.2</source>
-        <translation type="unfinished">2.2</translation>
+        <translation>2.2</translation>
     </message>
     <message>
         <location line="+5"/>
         <location line="+639"/>
         <source>3</source>
-        <translation type="unfinished">3</translation>
+        <translation>3</translation>
     </message>
     <message>
         <location line="-634"/>
         <source>3.1</source>
-        <translation type="unfinished">3.1</translation>
+        <translation>3.1</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>3.2</source>
-        <translation type="unfinished">3.2</translation>
+        <translation>3.2</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>4</source>
-        <translation type="unfinished">4</translation>
+        <translation>4</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>4.1</source>
-        <translation type="unfinished">4.1</translation>
+        <translation>4.1</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>4.2</source>
-        <translation type="unfinished">4.2</translation>
+        <translation>4.2</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>5</source>
-        <translation type="unfinished">5</translation>
+        <translation>5</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>5.1</source>
-        <translation type="unfinished">5.1</translation>
+        <translation>5.1</translation>
     </message>
     <message>
         <location line="+594"/>
         <source>0</source>
-        <translation type="unfinished">0</translation>
+        <translation>0</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>7</source>
-        <translation type="unfinished">7</translation>
+        <translation>7</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>15</source>
-        <translation type="unfinished">15</translation>
+        <translation>15</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>31</source>
-        <translation type="unfinished">31</translation>
+        <translation>31</translation>
     </message>
     <message>
         <location line="+2738"/>
         <source>Crop</source>
-        <translation type="unfinished">Kadrowanie</translation>
+        <translation>Kadruj</translation>
     </message>
     <message>
         <location line="-2567"/>
-        <source>10 (Best)</source>
-        <translation type="unfinished">9 (Najlepszy) {10 ?}</translation>
+        <source>11 (Best)</source>
+        <translation>11 (Najlepiej)</translation>
     </message>
     <message>
         <location line="+1745"/>
         <source>Normal</source>
-        <translation type="unfinished">Zwykły</translation>
+        <translation>Zwykły</translation>
     </message>
     <message>
         <location line="+1125"/>
@@ -15553,7 +15554,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+5"/>
         <source>Constant Rate Factor (Single Pass)</source>
-        <translation>Stały współczynnik jakości (jeden przebieg)</translation>
+        <translation>Stały współczynnik szybkości CRF (jeden przebieg)</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -15590,12 +15591,12 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+6"/>
         <source>Advanced Rate Control</source>
-        <translation type="unfinished"></translation>
+        <translation>Advanced Rate Control</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Maximum Constant Rate Factor</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Maksymalny stały współczynnik szybkości (CRF)</translation>
     </message>
     <message>
         <location line="+158"/>
@@ -15651,7 +15652,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+47"/>
         <source>1 (Fast)</source>
-        <translation type="unfinished"></translation>
+        <translation>1 (Szybko)</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -15661,7 +15662,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+98"/>
         <source>Motion Vector</source>
-        <translation type="unfinished"></translation>
+        <translation>Wektory ruchu</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -15681,7 +15682,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+12"/>
         <source>Prediction</source>
-        <translation type="unfinished"></translation>
+        <translation>Przewidywanie</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -15696,27 +15697,27 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+23"/>
         <source>Direct Prediction Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezpośredni tryb przewidywania:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Weighted Prediction for P-frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ważone przewidywanie dla klatek P:</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Spatial</source>
-        <translation type="unfinished"></translation>
+        <translation>Przestrzenny</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Temporal</source>
-        <translation type="unfinished"></translation>
+        <translation>Czasowy</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>Weighted Prediction for B-frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Ważone przewidywanie dla klatek B</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -15726,7 +15727,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+24"/>
         <source>Partition</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Partycje</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -15736,7 +15737,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+8"/>
         <source>8x8 DCT Spatial Transform</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">8x8 DCT transformacja przestrzenna</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -15766,33 +15767,33 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+26"/>
         <source>Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Klatka</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Frame Encoding</source>
-        <translation type="unfinished"></translation>
+        <translation>Kodowanie klatek</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>CABAC</source>
-        <translation type="unfinished"></translation>
+        <translation>CABAC</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Loop Filter:</source>
-        <translation type="unfinished"></translation>
+        <translation>Loop Filter (de-blocking):</translation>
     </message>
     <message>
         <location line="+12"/>
         <location line="+1328"/>
         <source>Strength:</source>
-        <translation type="unfinished"></translation>
+        <translation>Natężenie:</translation>
     </message>
     <message>
         <location line="-1289"/>
         <source>Threshold:</source>
-        <translation type="unfinished"></translation>
+        <translation>Próg:</translation>
     </message>
     <message>
         <location line="+35"/>
@@ -15802,92 +15803,92 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+13"/>
         <source>Normal Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Tryb normalny</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Blu-ray Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Tryb Blu-ray</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Interlaced:</source>
-        <translation type="unfinished"></translation>
+        <translation>Z przeplotem:</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Bottom Field First</source>
-        <translation type="unfinished"></translation>
+        <translation>Najpierw półobraz dolny</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Top Field First</source>
-        <translation type="unfinished"></translation>
+        <translation>Najpierw półobraz górny</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>Maximum Reference Frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksymalna liczba klatek odniesienia:</translation>
     </message>
     <message>
         <location line="+39"/>
         <source>B-frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Kodowanie dwukierunkowe (B-frames)</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>B-frames as References:</source>
-        <translation type="unfinished"></translation>
+        <translation>Klatki B jako referencje:</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Strictly Hierarchical Pyramid</source>
-        <translation type="unfinished"></translation>
+        <translation>Ograniczone (Strictly Hierarchical Pyramid)</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Non-strict (Not Blu-ray Compatible)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bez ograniczeń (Nie kompatybilne z Blu-ray)</translation>
     </message>
     <message>
         <location line="+36"/>
         <source>Optimal</source>
-        <translation type="unfinished"></translation>
+        <translation>Optymalnie</translation>
     </message>
     <message>
         <location line="+74"/>
         <source>B-frame Bias:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wpływ klatek B:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Maximum Consecutive B-frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksymalna liczba kolejnych klatek B:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Adaptive B-frame Decision:</source>
-        <translation type="unfinished"></translation>
+        <translation>Adaptacyjny wybór klatek B:</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>I-frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Kodowanie wewnątrzobrazowe (I-frames)</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>GOP Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar GOP:</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Minimum:</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimalny:</translation>
     </message>
     <message>
         <location line="+33"/>
         <source>Maximum:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksymalny:</translation>
     </message>
     <message>
         <location line="+32"/>
@@ -15903,7 +15904,7 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+24"/>
         <location line="+6"/>
         <source>Analysis</source>
-        <translation type="unfinished"></translation>
+        <translation>Analiza</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -15918,22 +15919,22 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+9"/>
         <source>Trellis Quantization:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kwantyzacja Trellis:</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Final Macroblock Only</source>
-        <translation type="unfinished"></translation>
+        <translation>Tylko ostatni makroblok</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Always On</source>
-        <translation type="unfinished"></translation>
+        <translation>Zawsze włączona</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Fast Skip Detection on P-frames</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Szybkie pomijanie detekcji na klatkach P</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -15953,7 +15954,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+37"/>
         <source>Noise Reduction:</source>
-        <translation type="unfinished"></translation>
+        <translation>Redukcja szumów:</translation>
     </message>
     <message>
         <location line="+36"/>
@@ -15973,7 +15974,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+66"/>
         <source>Quantisation Matrix</source>
-        <translation type="unfinished"></translation>
+        <translation>Matryca kwantyzacji</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -15983,28 +15984,28 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+10"/>
         <source>JVT Matrix</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Matryca JVT</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Custom Matrix</source>
-        <translation type="unfinished"></translation>
+        <translation>Własna matryca</translation>
     </message>
     <message>
         <location line="+10"/>
         <location line="+856"/>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Edycja</translation>
     </message>
     <message>
         <location line="-809"/>
         <source>Quantiser Control</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontrola kwantyzera</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Maximum Quantiser:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksymalny kwantyzer:</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -16016,12 +16017,12 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+179"/>
         <location line="+302"/>
         <source>%</source>
-        <translation type="unfinished"></translation>
+        <translation>%</translation>
     </message>
     <message>
         <location line="-459"/>
         <source>Maximum Quantiser Step:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksymalny krok kwantyzera:</translation>
     </message>
     <message>
         <location line="+34"/>
@@ -16041,7 +16042,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+34"/>
         <source>Minimum Quantiser:</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimalny kwantyzer:</translation>
     </message>
     <message>
         <location line="+48"/>
@@ -16066,7 +16067,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+12"/>
         <source>Adaptive Quantisation</source>
-        <translation type="unfinished"></translation>
+        <translation>Adaptacyjna kwantyzacja (AQ)</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -16081,17 +16082,17 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+91"/>
         <source>Advanced 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaawansowane 1</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Video Buffer Verifier</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Video Buffer Verifier</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Maximum VBV Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Maksymalny bitrate VBV:</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -16101,12 +16102,12 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+16"/>
         <source>kbit</source>
-        <translation type="unfinished"></translation>
+        <translation>kbit</translation>
     </message>
     <message>
         <location line="+87"/>
         <source>VBV Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar bufora VBV:</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -16146,7 +16147,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+42"/>
         <source>Advanced 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaawansowane 2</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -16177,7 +16178,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+59"/>
         <source>Output 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyjście 1</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -16187,73 +16188,73 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+7"/>
         <source>BluRay compatibility</source>
-        <translation type="unfinished"></translation>
+        <translation>Kompatybilność z BluRay</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Generate fake interlaced</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Generuj fałszywy przeplot</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Pixel Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Współczynik proporcji pikseli</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Custom:</source>
         <comment>PAR</comment>
-        <translation type="unfinished"></translation>
+        <translation>Własny:</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>As Input</source>
-        <translation type="unfinished"></translation>
+        <translation>Jak wejście</translation>
     </message>
     <message>
         <location line="+49"/>
         <source>:</source>
-        <translation type="unfinished"></translation>
+        <translation>:</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Predefined Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zdefiniowany współczynnik proporcji:</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>16:15 (PAL 4:3)</source>
-        <translation type="unfinished"></translation>
+        <translation>16:15 (PAL 4:3)</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>64:45 (PAL 16:9)</source>
-        <translation type="unfinished"></translation>
+        <translation>64:45 (PAL 16:9)</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>8:9 (NTSC 4:3)</source>
-        <translation type="unfinished"></translation>
+        <translation>8:9 (NTSC 4:3)</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>32:27 (NTSC 16:9)</source>
-        <translation type="unfinished"></translation>
+        <translation>32:27 (NTSC 16:9)</translation>
     </message>
     <message>
         <location line="+42"/>
         <source>Output 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyjście 2</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Video Usability Information</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Informacje o użyteczności wideo</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>These settings are only suggestions for the playback equipment.  Use at your own risk.</source>
-        <translation type="unfinished"></translation>
+        <translation>Te ustawienia stanowią jedynie sugestie dla sprzętu odtwarzającego. Używaj na własne ryzyko.</translation>
     </message>
     <message>
         <location line="+28"/>
@@ -16277,32 +16278,32 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+28"/>
         <source>Video Format:</source>
-        <translation type="unfinished"></translation>
+        <translation>Format wideo:</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Component</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Component</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>PAL</source>
-        <translation type="unfinished"></translation>
+        <translation>PAL</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>NTSC</source>
-        <translation type="unfinished"></translation>
+        <translation>NTSC</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>SECAM</source>
-        <translation type="unfinished"></translation>
+        <translation>SECAM</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>MAC</source>
-        <translation type="unfinished"></translation>
+        <translation>MAC</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -16375,27 +16376,27 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+28"/>
         <source>Colour Matrix:</source>
-        <translation type="unfinished"></translation>
+        <translation>Matryca kolorów:</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>FCC</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">FCC</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>GBR</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GBR</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>YCgCo</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">YCgCo</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>HRD Parameters:</source>
-        <translation type="unfinished"></translation>
+        <translation>Parametry HDR:</translation>
     </message>
     <message>
         <location line="+43"/>
@@ -16425,7 +16426,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/x264CustomMatrixDialog.ui" line="+16"/>
         <source>x264 Custom Matrix</source>
-        <translation type="unfinished"></translation>
+        <translation>Własna matryca x265</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -16583,7 +16584,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="-15"/>
         <source>Quantiser:</source>
-        <translation type="unfinished">Kwantyzator:</translation>
+        <translation>Kwantyzator:</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -16593,7 +16594,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+5"/>
         <source>Target Video Size:</source>
-        <translation type="unfinished">Rozmiar docelowego obrazu wideo:</translation>
+        <translation>Rozmiar docelowego wideo:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -16603,7 +16604,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+4"/>
         <source>Average Bitrate:</source>
-        <translation type="unfinished">Średnia przepływność:</translation>
+        <translation>Średnia przepływność:</translation>
     </message>
     <message>
         <location line="+101"/>
@@ -16624,7 +16625,7 @@ Do you wish to continue?</source>
         <location line="+69"/>
         <location line="+14"/>
         <source>Error</source>
-        <translation type="unfinished">Błąd</translation>
+        <translation>Błąd</translation>
     </message>
     <message>
         <location line="-83"/>
@@ -16884,7 +16885,7 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+213"/>
         <location line="+1274"/>
         <source>Quantiser</source>
-        <translation>Kwantyzator</translation>
+        <translation>Kwantyzacja</translation>
     </message>
     <message>
         <location line="-1464"/>
@@ -17716,7 +17717,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/qt4/x265CustomMatrixDialog.ui" line="+14"/>
         <source>x265 Custom Matrix</source>
-        <translation type="unfinished"></translation>
+        <translation>Własna matryca x265</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -18003,12 +18004,12 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="+83"/>
         <source>Yadif</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Yadif</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Yadif, port of avisynth version (c) Fizick.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Yadif, przeniesione z wersji avisynth (c) Fizick.</translation>
     </message>
     <message>
         <location line="+53"/>
@@ -18033,17 +18034,17 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+3"/>
         <source>Bottom field first</source>
-        <translation type="unfinished">Najpierw obszar dolny</translation>
+        <translation>Najpierw półobraz dolny</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Top field first</source>
-        <translation type="unfinished">Najpierw obszar górny</translation>
+        <translation>Najpierw półobraz górny</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>_Mode:</source>
-        <translation type="unfinished">_Tryb:</translation>
+        <translation>_Tryb:</translation>
     </message>
     <message>
         <location line="+1"/>

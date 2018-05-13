@@ -38,6 +38,10 @@ do_plugins=1
 do_rebuild=0
 debug=0
 create_app_bundle=1
+external_libass=0
+external_liba52=0
+external_libmad=0
+external_libmp4v2=0
 #
 test -f $HOME/myCC  && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
 
@@ -128,21 +132,25 @@ usage()
 {
         echo "Bootstrap avidemux ${API_VERSION}:"
         echo "***********************"
-        echo "  --help            : Print usage"
-        echo "  --tgz             : Build tgz packages"
-        echo "  --nopkg           : Don't create macOS app bundle"
-        echo "  --debug           : Switch debugging on"
-        echo "  --rebuild         : Preserve existing build directories"
-        echo "  --output=NAME     : Specify a custom basename for dmg"
-        echo "  --version=STRING  : Specify a custom Avidemux version string"
-        echo "  --with-core       : Build core (default)"
-        echo "  --without-core    : Don't build core"
-        echo "  --with-cli        : Build cli (default)"
-        echo "  --without-cli     : Don't build cli"
-        echo "  --with-qt         : Build qt (default)"
-        echo "  --without-qt      : Don't build qt"
-        echo "  --with-plugins    : Build plugins (default)"
-        echo "  --without-plugins : Don't build plugins"
+        echo "  --help                : Print usage"
+        echo "  --tgz                 : Build tgz packages"
+        echo "  --nopkg               : Don't create macOS app bundle"
+        echo "  --debug               : Switch debugging on"
+        echo "  --rebuild             : Preserve existing build directories"
+        echo "  --output=NAME         : Specify a custom basename for dmg"
+        echo "  --version=STRING      : Specify a custom Avidemux version string"
+        echo "  --with-core           : Build core (default)"
+        echo "  --without-core        : Don't build core"
+        echo "  --with-cli            : Build cli (default)"
+        echo "  --without-cli         : Don't build cli"
+        echo "  --with-qt             : Build qt (default)"
+        echo "  --without-qt          : Don't build qt"
+        echo "  --with-plugins        : Build plugins (default)"
+        echo "  --without-plugins     : Don't build plugins"
+        echo "  --with-system-libass  : Use system libass instead of the bundled one"
+        echo "  --with-system-liba52  : Use system liba52 (a52dec) instead of the bundled one"
+        echo "  --with-system-libmad  : Use system libmad instead of the bundled one"
+        echo "  --with-system-libmp4v2: Use system libmp4v2 instead of the bundled one"
         config
 }
 option_value()
@@ -219,6 +227,18 @@ while [ $# != 0 ] ;do
          --with-core)
                 do_core=1
              ;;
+         --with-system-libass)
+                external_libass=1
+             ;;
+         --with-system-liba52)
+                external_liba52=1
+             ;;
+         --with-system-libmad)
+                external_libmad=1
+             ;;
+         --with-system-libmp4v2)
+                external_libmp4v2=1
+             ;;
         *)
                 echo "unknown parameter $config_option"
                 usage
@@ -236,6 +256,18 @@ export POSTFIX=""
 echo "Top dir : $TOP"
 if [ "x$debug" = "x1" ] ; then echo
 POSTFIX="_debug"
+fi
+if [ "x$external_libass" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBASS=true $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$external_liba52" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBA52=true $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$external_libmad" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBMAD=true $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$external_libmp4v2" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_MP4V2=true $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$create_app_bundle" = "x1" ] ; then
     export DO_BUNDLE="-DCREATE_BUNDLE=true"
@@ -260,17 +292,22 @@ fi
 if [ "x$do_plugins" = "x1" ] ; then
         echo "** Plugins **"
         cd $TOP
-        Process buildPluginsCommon ../avidemux_plugins -DPLUGIN_UI=COMMON
+        Process buildPluginsCommon ../avidemux_plugins "-DPLUGIN_UI=COMMON $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_qt4" = "x1" ] ; then
         echo "** Plugins Qt **"
         cd $TOP
-        Process buildPlugins${qt_ext} ../avidemux_plugins -DPLUGIN_UI=QT4
+        Process buildPlugins${qt_ext} ../avidemux_plugins "-DPLUGIN_UI=QT4 EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
         echo "** Plugins CLI **"
         cd $TOP
-        Process buildPluginsCLI ../avidemux_plugins -DPLUGIN_UI=CLI
+        Process buildPluginsCLI ../avidemux_plugins "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$do_plugins" = "x1" ] ; then
+        echo "** Plugins Settings **"
+        cd $TOP
+        Process buildPluginsSettings ../avidemux_plugins "-DPLUGIN_UI=SETTINGS $EXTRA_CMAKE_DEFS"
 fi
 # 
 cd $TOP

@@ -9728,8 +9728,8 @@ If it is a system profile it will be recreated next time.</source>
     </message>
     <message>
         <location line="+20"/>
-        <source>10 (Best)</source>
-        <translation>10 (최고)</translation>
+        <source>11 (Best)</source>
+        <translation>11 (최고)</translation>
     </message>
     <message>
         <location line="+78"/>

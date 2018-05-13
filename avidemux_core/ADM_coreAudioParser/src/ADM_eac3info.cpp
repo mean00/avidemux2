@@ -20,12 +20,10 @@ extern "C"
 /**
     \fn ADM_EAC3GetInfo
 */
-bool     ADM_EAC3GetInfo(const uint8_t *buf, uint32_t len, uint32_t *syncoff,ADM_EAC3_INFO *info)
+bool ADM_EAC3GetInfo(const uint8_t *buf, uint32_t len, uint32_t *syncoff, ADM_EAC3_INFO *info, bool plainAC3)
 {
-uint32_t l;
-uint32_t of=0;
-
-    *syncoff=of=0;
+    uint32_t of=0;
+    *syncoff=0;
     //	printf("\n Syncing on %d \n",len);
     // Search for startcode
     // 0x0b 0x77
@@ -33,15 +31,15 @@ uint32_t of=0;
     {
         if(len<7)
         {
-               printf("Not enough info to find a52 syncword\n");
-               return 0;
+            ADM_warning("Not enough info to find a52 syncword\n");
+            return false;
         }
         if( *buf!=0x0b || *(buf+1)!=0x77)
         {
-               len--;
-               buf++;
-               of++;
-               continue;
+            len--;
+            buf++;
+            of++;
+            continue;
         }
         AC3HeaderInfo *hdr=NULL;
         GetBitContext gb;
@@ -51,13 +49,23 @@ uint32_t of=0;
             len--;
             buf++;
             of++;
-            printf("Sync failed..continuing\n");
+            ADM_info("Sync failed... continuing\n");
             continue;
         }
-        if(hdr->bitstream_id<=10) // this is not EAC3 but plain ac3
+        if(!plainAC3 && hdr->bitstream_id<=10) // this is not EAC3 but plain ac3
+        {
+            ADM_info("Bitstream ID = %d: not EAC3\n",hdr->bitstream_id);
+            av_free(hdr);
+            hdr=NULL;
             return false;
-        
-        
+        }
+        if(plainAC3 && hdr->bitstream_id>10) // this is not AC3 but EAC3
+        {
+            ADM_info("Bitstream ID = %d: not AC3\n",hdr->bitstream_id);
+            av_free(hdr);
+            hdr=NULL;
+            return false;
+        }
 //            printf("Sync found at offset %"PRIu32"\n",of);
         *syncoff=of;
         info->frequency=(uint32_t)hdr->sample_rate;
@@ -67,7 +75,7 @@ uint32_t of=0;
         info->samples=265*6; // ??
         av_free(hdr);
         hdr=NULL;
-        return 1;
+        return true;
     }
-    return 1;	
+    return true;
 }

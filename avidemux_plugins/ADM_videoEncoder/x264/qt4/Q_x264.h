@@ -40,7 +40,9 @@ private slots:
         void loopFilterCheckBox_toggled(bool checked);
         void mbTreeCheckBox_toggled(bool checked);
         void aqVarianceCheckBox_toggled(bool checked);
-	
+        void trellisCheckBox_toggled(bool checked);
+        void trellisComboBox_currentIndexChanged(int index);
+
         void configurationComboBox_currentIndexChanged(int index);
         void saveAsButton_pressed(void);
         void deleteButton_pressed(void);

@@ -317,9 +317,14 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
         if(s)
         {
             language=std::string(s);
-            printf("Language=%s\n",s);
+            if(language==std::string("unknown")) // we were using "unknown", which is not a valid ISO 639 code
+            {
+                language=ADM_UNKNOWN_LANGUAGE;
+                printf("Found 'unknown' as language code, replacing it with '%s'\n",language.c_str());
+            }
+            printf("Language=%s\n",language.c_str());
         }
-        
+
         WAVHeader hdr;
             hdr.frequency=fq;
             hdr.byterate=br;

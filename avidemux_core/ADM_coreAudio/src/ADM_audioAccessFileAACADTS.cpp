@@ -32,7 +32,7 @@ bool ADM_audioAccessFileAACADTS::init(void)
     if(n<=0) return false;
     fseek(_fd,0,SEEK_SET);
     ADM_info("Probing AAC/ADTS with %d bytes\n",n);
-    aac->addData(n,buffer);
+    if(!aac->addData(n,buffer)) return false;
     if(ADM_adts2aac::ADTS_OK!=aac->getAACFrame(NULL,NULL))
     {
         ADM_warning("Cannot sync\n");
@@ -125,7 +125,8 @@ bool ADM_audioAccessFileAACADTS::refill(void)
     int n=fread(tmp,1,4024,_fd);
     if(n<1) return false;
     // feed
-    aac->addData(n,tmp);
+    if(!aac->addData(n,tmp))
+        return false;
     return true;
 }
 /**

@@ -14,7 +14,7 @@
 #include "Q_audioTrackClass.h"
 #include "ADM_audioFilterInterface.h"
 #include "DIA_fileSel.h"
-
+#include "ADM_last.h"
 
 /**
     \fn audioTrackQt4
@@ -129,9 +129,18 @@ void audioTrackQt4::inputChanged(int signal)
         // start fileselector
         #define MAX_SOURCE_LENGTH 1024
         char fileName[MAX_SOURCE_LENGTH];
-        if(!FileSel_SelectRead(QT_TRANSLATE_NOOP("qaudiotracks","Select audio file"),fileName,MAX_SOURCE_LENGTH-1,NULL))
+        std::string lastFolder;
+        admCoreUtils::getLastReadFolder(lastFolder);
+        if(!FileSel_SelectRead(QT_TRANSLATE_NOOP("qaudiotracks","Select audio file"),fileName,MAX_SOURCE_LENGTH-1,lastFolder.c_str()))
         {
             ADM_info("No file selected as audioTrack\n");
+            if(thisIndex>0)
+            {
+                me->blockSignals(true);
+                me->setCurrentIndex(thisIndex-1);
+                me->blockSignals(false);
+                return;
+            }
             // deactivate me
             me->blockSignals(true);
             me->setCurrentIndex(-1);
@@ -139,12 +148,25 @@ void audioTrackQt4::inputChanged(int signal)
             disable(dex); // just to be on the safe side..
             return;
         }
+        admCoreUtils::setLastReadFolder(std::string(fileName));
 
         ADM_edAudioTrackExternal *ext=create_edAudioExternal(fileName);
         if(!ext)
         {
             GUI_Error_HIG(QT_TRANSLATE_NOOP("qaudiotracks","Error"),QT_TRANSLATE_NOOP("qaudiotracks","Cannot use that file as audio track"));
-            return ;
+            if(thisIndex>0)
+            {
+                me->blockSignals(true);
+                me->setCurrentIndex(thisIndex-1);
+                me->blockSignals(false);
+            }else
+            {
+                me->blockSignals(true);
+                me->setCurrentIndex(-1);
+                me->blockSignals(false);
+                disable(dex);
+            }
+            return;
         }
         int poolIndex=_pool->size();
         _pool->addInternalTrack(ext);

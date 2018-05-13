@@ -87,8 +87,8 @@ int ADM_adts2aac::getFrequency(void)
 {
     if(!hasExtra)
     {
-            ADM_error("No extradata in aac! using default of 48 kHz");
-            return 48000;
+        ADM_error("No extradata in aac! using default of 48 kHz\n");
+        return 48000;
     }
     uint8_t *p=extra;
     int dex=((p[0]&7)<<1)+(p[1]>>7);
@@ -102,8 +102,8 @@ int ADM_adts2aac::getChannels(void)
 {
     if(!hasExtra)
     {
-            ADM_error("No extradata in aac! using default of 2 channels");
-            return 2;
+        ADM_error("No extradata in aac! using default of 2 channels\n");
+        return 2;
     }
     uint8_t *p=extra;
     int dex=((p[1]>>3)&0xf);
@@ -144,7 +144,7 @@ bool  ADM_adts2aac::addData(int incomingLen,const uint8_t *inData)
     {
         ADM_error("Head=%d tail=%d bufferSize=%d\n",head,tail,ADTS_BUFFER_SIZE*2);
         ADM_error("Adts buffer overflow\n");
-        ADM_assert(0);
+        return false;
     }
     memcpy(buffer.at(head),inData,incomingLen);
     head+=incomingLen;
@@ -160,11 +160,8 @@ bool  ADM_adts2aac::addData(int incomingLen,const uint8_t *inData)
  */
 ADM_adts2aac::ADTS_STATE ADM_adts2aac::getAACFrame(int *outLen,uint8_t *out,int *offset)
 {
-    bool r=false;
     if(outLen)
         *outLen=0;
-    // ok , done
-    aprintf("********** LOOP (incoming =%d)*******\n",incomingLen);
 again:
     aprintf("[ADTS] *** head=%d tail=%d size=%d***\n",head,tail,head-tail);
     if(tail+7>head) // we neeed at least 7 bytes...
@@ -191,7 +188,7 @@ again:
         {
             crc=true;
         }
-        if(nbFrames!=1) continue;
+        if(!packetLen || nbFrames!=1) continue;
         aprintf("[ADTS] Packet len=%d, nbframes=%d\n",packetLen,nbFrames);
         aprintf("[ADTS] Found sync at offset %d, buffer size=%d\n",(int)(p-buffer.at(0)),(int)(head-tail));
         aprintf("[ADTS] Dropping %d bytes\n",(int)(p-buffer.at(0)-tail));
@@ -203,7 +200,7 @@ again:
         }
         if(match+packetLen+2>head && match+packetLen!=head)
         {
-            aprintf("[ADTS]** not enough data, r=%d **\n",(int)r);
+            aprintf("[ADTS]** not enough data **\n");
             return ADTS_MORE_DATA_NEEDED;
         }
         // do we have sync at the end ?
@@ -250,7 +247,7 @@ again:
     }
     //
     //---------
-    if(!produced)
+    if(produced<1)
     {
         tail=match+1;
         aprintf("[ADTS] No data produced\n");
@@ -278,10 +275,12 @@ again:
 
 ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,const uint8_t *inData,int *outLen,uint8_t *out)
 {
-    bool r=false;
     *outLen=0;
+    bool r=false;
     if(incomingLen)
-        addData(incomingLen,inData);
+        r=addData(incomingLen,inData);
+    if(!r)
+        return ADTS_ERROR;
     return getAACFrame(outLen,out);
 }
 //EOF

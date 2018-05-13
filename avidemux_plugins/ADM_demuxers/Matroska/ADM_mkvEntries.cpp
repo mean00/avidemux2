@@ -422,8 +422,9 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
                  if(!strcmp(s,"unknown")) // we were using "unknown", which is not a valid ISO 639 code
                  {
                      memset(s,'\0',100);
-                     strcpy(s,"und");
-                     ADM_info("Found 'unknown' as laguage code, replacing it with 'und'\n");
+                     std::string und=ADM_UNKNOWN_LANGUAGE;
+                     strcpy(s,und.c_str());
+                     ADM_info("Found 'unknown' as language code, replacing it with '%s'\n",und.c_str());
                  }else
                  {
                      ADM_info("Found language  = %s\n",s);

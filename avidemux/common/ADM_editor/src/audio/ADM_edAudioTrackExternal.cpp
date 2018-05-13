@@ -133,6 +133,11 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
         ADM_warning("Cannot identify external audio track\n");
         return NULL;
     }
+    if(!hdr.channels)
+    {
+        ADM_error("Got zero channels, the audio file must have been misidentified!\n");
+        return NULL;
+    }
     // Try to create an access for the file...
     ADM_audioAccess *access=NULL;
     switch(hdr.encoding)
@@ -156,7 +161,7 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
     }
     if(!access)
     {
-        ADM_warning("Cannot initialize access for audio track");
+        ADM_warning("Cannot initialize access for audio track\n");
         return NULL;
     }
     // create ADM_edAudioTrack
@@ -247,7 +252,7 @@ bool            ADM_edAudioTrackExternal::goToTime(uint64_t nbUs)
 {
         if(codec)
         {
-            ADM_info("Resetting audio track");
+            ADM_info("Resetting audio track\n");
             codec->resetAfterSeek();
         }
         lastDts=ADM_NO_PTS;

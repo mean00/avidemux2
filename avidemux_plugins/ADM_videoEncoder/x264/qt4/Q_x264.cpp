@@ -128,6 +128,8 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.loopFilterCheckBox, SIGNAL(toggled(bool)), this, SLOT(loopFilterCheckBox_toggled(bool)));
         connect(ui.mbTreeCheckBox, SIGNAL(toggled(bool)), this, SLOT(mbTreeCheckBox_toggled(bool)));
         connect(ui.aqVarianceCheckBox, SIGNAL(toggled(bool)), this, SLOT(aqVarianceCheckBox_toggled(bool)));
+        connect(ui.trellisCheckBox, SIGNAL(toggled(bool)), this, SLOT(trellisCheckBox_toggled(bool)));
+        connect(ui.trellisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(trellisComboBox_currentIndexChanged(int)));
 #if 0
         connect(ui.maxCrfSlider, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSlider_valueChanged(int)));
         connect(ui.maxCrfSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSpinBox_valueChanged(int)));
@@ -672,7 +674,13 @@ void x264Dialog::quantiserSlider_valueChanged(int value)
 
 void x264Dialog::meSlider_valueChanged(int value)
 {
-        ui.meSpinBox->setValue(value);
+    ui.meSpinBox->setValue(value);
+    if(value>9)
+    {
+        ui.aqVarianceCheckBox->setChecked(true);
+        ui.trellisCheckBox->setChecked(true);
+        ui.trellisComboBox->setCurrentIndex(1);
+    }
 }
 void x264Dialog::quantiserSpinBox_valueChanged(int value)
 {
@@ -718,11 +726,31 @@ void x264Dialog::aqVarianceCheckBox_toggled(bool checked)
         {
                  QString st=QT_TRANSLATE_NOOP("x264","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?");
                 if (GUI_Question(st.toUtf8().constData()))
+                {
                         ui.mbTreeCheckBox->setChecked(false);
-                else
+                        if(ui.meSpinBox->value()>9)
+                                ui.meSpinBox->setValue(9);
+                }else
                         ui.aqVarianceCheckBox->setChecked(true);
         }
 }
+
+void x264Dialog::trellisCheckBox_toggled(bool checked)
+{
+    if(!checked && ui.meSpinBox->value()>9)
+    {
+        ui.meSpinBox->setValue(9);
+    }
+}
+
+void x264Dialog::trellisComboBox_currentIndexChanged(int index)
+{
+    if(index<1 && ui.meSpinBox->value()>9)
+    {
+        ui.meSpinBox->setValue(9);
+    }
+}
+
 #if 0
 void x264Dialog::maxCrfSlider_valueChanged(int value)
 {

@@ -66,9 +66,6 @@ bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
    aacAdtsSeek  start;
    int offset;
 
-   int      beginningOfBuffer=0;
-   int      endOfBuffer=0;
-   
    start.dts=0;
    start.position=0;
    seekPoints.push_back(start); // initial start
@@ -106,9 +103,8 @@ bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
                int n=fread(buffer,1,CHUNK_SIZE,f);
                if(n<=0)
                    return true;
-               beginningOfBuffer=endOfBuffer;
-               endOfBuffer+=n;
-               aac.addData(n,buffer);
+               if(!aac.addData(n,buffer))
+                   return true;
                break;
            }
            default:

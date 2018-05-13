@@ -18896,8 +18896,8 @@ Continuare?</translation>
     </message>
     <message>
         <location line="-928"/>
-        <source>10 (Best)</source>
-        <translation type="unfinished">10 (migliore)</translation>
+        <source>11 (Best)</source>
+        <translation type="unfinished">11 (migliore)</translation>
     </message>
     <message>
         <location line="+221"/>
