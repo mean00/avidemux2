@@ -304,6 +304,11 @@ if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
         cd $TOP
         Process buildPluginsCLI ../avidemux_plugins "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
 fi
+if [ "x$do_plugins" = "x1" ] ; then
+        echo "** Plugins Settings **"
+        cd $TOP
+        Process buildPluginsSettings ../avidemux_plugins "-DPLUGIN_UI=SETTINGS $EXTRA_CMAKE_DEFS"
+fi
 # 
 cd $TOP
 if [ "x$create_app_bundle" = "x1" ] ; then
