@@ -100,21 +100,56 @@ bool pyNextFrame(IEditor *editor)
 
 int pyPrintTiming(IEditor *editor, int framenumber)
 {
-	uint32_t flags;
-	uint64_t pts, dts;
+    uint32_t flags;
+    uint64_t pts, dts;
 
-	if (editor->getVideoPtsDts(framenumber, &flags, &pts, &dts))
-	{
-		int64_t delta = 0;
+    if (editor->getVideoPtsDts(framenumber, &flags, &pts, &dts))
+    {
+        int64_t delta = 0;
+        if (pts != ADM_NO_PTS && dts != ADM_NO_PTS)
+            delta = (int64_t)pts - (int64_t)dts;
+        const char *frameType;
+        switch (flags & AVI_FRAME_TYPE_MASK)
+        {
+            case AVI_KEY_FRAME:
+                frameType = "I";
+                break;
+            case AVI_P_FRAME:
+                frameType = "P";
+                break;
+            case AVI_B_FRAME:
+                frameType = "B";
+                break;
+            default:
+                frameType = "?";
+                break;
+        }
+        const char *structureType;
+        switch (flags & AVI_STRUCTURE_TYPE_MASK)
+        {
+            case AVI_TOP_FIELD:
+                structureType = "T";
+                break;
+            case AVI_BOTTOM_FIELD:
+                structureType = "B";
+                break;
+            case AVI_FIELD_STRUCTURE:
+                structureType = "S";
+                break;
+            case AVI_FRAME_STRUCTURE:
+                structureType = "F";
+                break;
+            default:
+                structureType = "?";
+                break;
+        }
+        printf("Frame %05d",(int)framenumber);
+        printf(" Flags %04x (%s/%s)",(int)flags,frameType,structureType);
+        printf(" DTS %s",ADM_us2plain(dts));
+        printf(" PTS %s\n",ADM_us2plain(pts));
+    }
 
-		if (pts != ADM_NO_PTS && dts != ADM_NO_PTS) delta = (int64_t)pts - (int64_t)dts;
-                printf("Frame  %05d",(int)framenumber);
-                printf(" Flags %04x",(int)flags);
-                printf(" DTS %s",ADM_us2plain(dts));
-                printf(" PTS %s\n",ADM_us2plain(pts));
-	}
-
-	return 0;
+    return 0;
 }
 /**
     \fn pyGetPts
