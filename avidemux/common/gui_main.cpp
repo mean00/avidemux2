@@ -502,7 +502,6 @@ void HandleAction (Action action)
         video_body->addToUndoQueue();
         A_ResetMarkers();
         A_Resync();
-        GUI_setCurrentFrameAndTime();
         break;
     }
     case ACT_Copy:
