@@ -127,14 +127,11 @@ int pyPrintTiming(IEditor *editor, int framenumber)
         const char *structureType;
         switch (flags & AVI_STRUCTURE_TYPE_MASK)
         {
-            case AVI_TOP_FIELD:
+            case AVI_FIELD_STRUCTURE+AVI_TOP_FIELD:
                 structureType = "T";
                 break;
-            case AVI_BOTTOM_FIELD:
+            case AVI_FIELD_STRUCTURE+AVI_BOTTOM_FIELD:
                 structureType = "B";
-                break;
-            case AVI_FIELD_STRUCTURE:
-                structureType = "S";
                 break;
             case AVI_FRAME_STRUCTURE:
                 structureType = "F";
