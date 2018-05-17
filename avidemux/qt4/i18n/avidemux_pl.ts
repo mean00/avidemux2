@@ -4545,7 +4545,7 @@ Drop timing informations ?</source>
     <message>
         <location line="-103"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Okno dialogowe</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -7811,7 +7811,7 @@ Czy kontynuować mimo to?</translation>
     <message>
         <location line="+67"/>
         <source>Cannot get tinyPÿ script engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można uzyskać silnika skryptów tinyPÿ</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -7822,12 +7822,13 @@ Czy kontynuować mimo to?</translation>
         <location filename="../../common/gui_savenew.cpp" line="-196"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ponownie użyć poprzednich danych pierwszego przebiegu?
+Ostrzeżenie: ustawienia muszą być zbliżone.</translation>
     </message>
     <message>
         <location line="+160"/>
         <source>Cannot instantiate video chain</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można utworzyć instancji łańcucha wideo</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -7843,7 +7844,7 @@ Warning, the settings must be close.</source>
     <message>
         <location line="+45"/>
         <source>Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można ustawić kodera audio! Upewnij się, że Twój strumień jest zgodny z koderem audio (liczba kanałów, bitrate, format)</translation>
     </message>
     <message>
         <location line="+30"/>
@@ -7859,13 +7860,13 @@ Czy kontynuować mimo to?</translation>
         <location line="+255"/>
         <location line="+26"/>
         <source>Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>Mukser</translation>
     </message>
     <message>
         <location line="-281"/>
         <location line="+255"/>
         <source>Cannot instantiate muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można utworzyć instancji muksera</translation>
     </message>
     <message>
         <location line="+26"/>
@@ -7925,7 +7926,7 @@ Czy kontynuować mimo to?</translation>
     <message>
         <location line="+1"/>
         <source>Ultra High</source>
-        <translation type="unfinished"></translation>
+        <translation>Ultra wysoka</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7935,7 +7936,7 @@ Czy kontynuować mimo to?</translation>
     <message>
         <location line="+3"/>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyłączone</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7945,17 +7946,17 @@ Czy kontynuować mimo to?</translation>
     <message>
         <location line="+1"/>
         <source>Limited Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Ograniczone wyszukiwanie</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Medium Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Średnie wyszukiwanie</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Wide Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Szerokie wyszukiwanie</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7965,12 +7966,12 @@ Czy kontynuować mimo to?</translation>
     <message>
         <location line="+4"/>
         <source>Max B Frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Maks klatek B</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Quarter Pixel</source>
-        <translation type="unfinished"></translation>
+        <translation>Ćwierć piksela</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8010,17 +8011,17 @@ Czy kontynuować mimo to?</translation>
     <message>
         <location line="+5"/>
         <source>Min Gop Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimalny rozmiar GOP</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Max Gop Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksymalny rozmiar GOP</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>GOP Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar GOP</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -8668,7 +8669,7 @@ Czy pomimo tego chcesz kontynuować?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="+598"/>
         <source>_wine app file:</source>
-        <translation type="unfinished">plik aplikacji _wine:</translation>
+        <translation>plik aplikacji _wine:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8678,22 +8679,22 @@ Czy pomimo tego chcesz kontynuować?</translation>
     <message>
         <location line="+2"/>
         <source>_loader file:</source>
-        <translation type="unfinished">plik _loadera:</translation>
+        <translation>plik _loadera:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Select loader filename[avsload.exe]</source>
-        <translation type="unfinished">Wybierz plik loadera [avsload.exe]</translation>
+        <translation>Wybierz plik loadera [avsload.exe]</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_avs file:</source>
-        <translation type="unfinished">plik _avs:</translation>
+        <translation>plik _avs:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Select avs filename[*.avs]</source>
-        <translation type="unfinished">Wybierz plik avs [*.avs]</translation>
+        <translation>Wybierz plik avs [*.avs]</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8703,7 +8704,7 @@ Czy pomimo tego chcesz kontynuować?</translation>
     <message>
         <location line="+4"/>
         <source>AvsFilter config</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfiguracja AvsFilter</translation>
     </message>
 </context>
 <context>
@@ -10655,17 +10656,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+1"/>
         <source>GOP Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar GOP:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Maximum Consecutive B-Frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksymalna liczba kolejnych klatek B:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rate Control</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontrola jakości</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10675,17 +10676,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+9"/>
         <source>NVENC H.264 configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfiguracja NVENC H.264</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+4"/>
         <source>libavcodec MPEG-4 configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfiguracja libavcodec MPEG-4</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+4"/>
         <source>nvEnc HEVC  configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfiguracja NVENC HEVC</translation>
     </message>
 </context>
 <context>
@@ -10809,7 +10810,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+5"/>
         <source>TS Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>Mukser TS</translation>
     </message>
 </context>
 <context>
@@ -10832,12 +10833,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+5"/>
         <source>Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Profil:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>GOP Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar GOP:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13040,7 +13041,7 @@ I will assume it has and try to continue</source>
         <location line="+14"/>
         <location line="+14"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation>Etykieta</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -13079,7 +13080,8 @@ I will assume it has and try to continue</source>
         <location line="+0"/>
         <source>This file&apos;s index has been created with an older version of avidemux.
 Please delete the idx2 file and reopen.</source>
-        <translation type="unfinished"></translation>
+        <translation>Indeks dla tego pliku został utworzony w starszej wersji avidemux.
+Proszę usunąć plik idx2 i otworzyć ponownie.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_psIndex.cpp" line="+159"/>
@@ -13089,7 +13091,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+41"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Istnieje kilka plików z sekwencyjnymi nazwami plików. Czy wszystkie powinny być załadowane?</translation>
     </message>
 </context>
 <context>
@@ -13713,47 +13715,47 @@ Ready.
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="+151"/>
         <source>Process luma plane</source>
-        <translation type="unfinished">Przetwarzaj obszar luminancji</translation>
+        <translation>Przetwórz poziom luminancji</translation>
     </message>
     <message>
         <location line="-106"/>
         <source>Remove  Plane</source>
-        <translation type="unfinished">Usuń poziomy</translation>
+        <translation>Usuń poziomy</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Remove Y,U or V plane (used mainly to debug other filters).</source>
-        <translation type="unfinished">Usuń poziom Y, U lub V (używany głównie do debugowania innych filtrów).</translation>
+        <translation>Usuń poziom Y, U lub V (używany głównie do debugowania innych filtrów).</translation>
     </message>
     <message>
         <location line="+105"/>
         <source>Keep Y Plane</source>
-        <translation type="unfinished">Zachowaj poziom Y</translation>
+        <translation>Zachowaj poziom Y</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Keep U Plane</source>
-        <translation type="unfinished">Zachowaj poziom U</translation>
+        <translation>Zachowaj poziom U</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Process chromaU plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Przetwórz poziom chromaU</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Keep V Plane</source>
-        <translation type="unfinished">Zachowaj poziom V</translation>
+        <translation>Zachowaj poziom V</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Process chromaV plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Przetwórz poziom chromaV</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Remove plane</source>
-        <translation type="unfinished">Usuń poziomy</translation>
+        <translation>Usuń poziomy</translation>
     </message>
 </context>
 <context>
@@ -14762,57 +14764,57 @@ Proszę usunąć plik idx2 i otworzyć ponownie.</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="+131"/>
         <source>vdpauDeint</source>
-        <translation type="unfinished"></translation>
+        <translation>vdpauDeint</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>VDPAU deinterlacer (+resize).</source>
-        <translation type="unfinished"></translation>
+        <translation>VDPAU usuwanie przeplotu (+zmiana rozmiaru).</translation>
     </message>
     <message>
         <location line="+185"/>
         <source>Keep Top Field</source>
-        <translation type="unfinished"></translation>
+        <translation>Zachowaj półobraz górny</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Keep Bottom Field</source>
-        <translation type="unfinished"></translation>
+        <translation>Zachowaj półobraz dolny</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Double framerate</source>
-        <translation type="unfinished"></translation>
+        <translation>Podwój liczbę klatek/s</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>_Ivtc:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Ivtc:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Resize:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zmiana _rozmiaru:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Deint Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tryb usuwania przeplotu:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Width :</source>
-        <translation type="unfinished"></translation>
+        <translation>Szerokość:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Height :</source>
-        <translation type="unfinished"></translation>
+        <translation>Wysokość:</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>vdpau</source>
-        <translation type="unfinished"></translation>
+        <translation>vdpau</translation>
     </message>
 </context>
 <context>
@@ -14820,27 +14822,27 @@ Proszę usunąć plik idx2 i otworzyć ponownie.</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="+69"/>
         <source>vdpau: Resize</source>
-        <translation type="unfinished"></translation>
+        <translation>vdpau: Zmiana rozmiaru</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>vdpau: Resize image using vdpau.</source>
-        <translation type="unfinished"></translation>
+        <translation>vdpau: Zmień rozmiar obrazu używając vdpau.</translation>
     </message>
     <message>
         <location line="+133"/>
         <source>Width :</source>
-        <translation type="unfinished"></translation>
+        <translation>Szerokość:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Height :</source>
-        <translation type="unfinished"></translation>
+        <translation>Wysokość:</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>vdpau</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -14991,7 +14993,7 @@ Proszę usunąć plik idx2 i otworzyć ponownie.</translation>
     <message>
         <location line="+1"/>
         <source>Quality based</source>
-        <translation type="unfinished">Na podstawie jakości</translation>
+        <translation>Na podstawie jakości</translation>
     </message>
     <message>
         <location line="+2"/>
