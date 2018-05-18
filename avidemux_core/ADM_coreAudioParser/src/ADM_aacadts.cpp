@@ -279,8 +279,9 @@ ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,const uint8_t *i
     bool r=false;
     if(incomingLen)
         r=addData(incomingLen,inData);
-    if(!r)
+    ADTS_STATE state=getAACFrame(outLen,out);
+    if(!r && state==ADTS_MORE_DATA_NEEDED)
         return ADTS_ERROR;
-    return getAACFrame(outLen,out);
+    return state;
 }
 //EOF
