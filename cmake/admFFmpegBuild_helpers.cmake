@@ -75,7 +75,15 @@ MACRO(ADM_FF_PATCH_IF_NEEDED)
                 patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
         endforeach(patchFile)
 
-      #
+    message("")
+
+      # upstream patches
+        file(GLOB patchFiles "${FFMPEG_PATCH_DIR}/upstream/*.patch")
+        foreach(patchFile ${patchFiles})
+                get_filename_component(short ${patchFile}  NAME)
+                MESSAGE(STATUS "-- Upstream, applying patch <${short}> --")
+                patch_file_p1("${FFMPEG_SOURCE_DIR}" "${patchFile}")
+        endforeach(patchFile)
       message("")
     endif (FFMPEG_PERFORM_PATCH)
 ENDMACRO(ADM_FF_PATCH_IF_NEEDED)
