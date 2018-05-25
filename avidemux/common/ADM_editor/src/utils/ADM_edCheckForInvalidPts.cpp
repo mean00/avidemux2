@@ -18,11 +18,7 @@
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "A_functions.h"
-#include "ADM_audioFilterInterface.h"
-#include "audioEncoderApi.h"
-#include "ADM_muxerProto.h"
 #include "GUI_ui.h"
-#include "ADM_coreVideoFilterFunc.h"
 
 #include "fourcc.h"
 #include "ADM_edit.hxx"
@@ -48,7 +44,11 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     uint64_t from=seg->_startTimeUs;
     if(!seg->_refStartTimeUs && vid->firstFramePts)
         from+=vid->firstFramePts;
-    goToTimeVideo(from);
+    if(!goToTimeVideo(from))
+    {
+        ADM_warning("Cannot navigate, cannot check file for broken PTS.\n");
+        return false;
+    }
     vid->lastSentFrame=0;
     vid->dontTrustBFramePts=false;
     uint64_t inc=vid->timeIncrementInUs;
@@ -127,9 +127,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
 
                 EditorCache *cache;
                 uint64_t pts,dts;
-                uint32_t flags;
                 hdr->getPtsDts(i,&pts,&dts);
-                hdr->getFlags(i,&flags);
                 ListOfDts.push_back(dts);
                 //printf("adding %" PRIu64" ms to the list of DTS\n",dts/1000);
 
