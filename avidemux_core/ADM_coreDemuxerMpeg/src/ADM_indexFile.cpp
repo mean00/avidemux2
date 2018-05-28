@@ -181,13 +181,10 @@ bool indexFile::readSection(const char *section)
         if(!tail) 
         {
             if(buffer[0]=='#') // Comment
-            {
-
-            }else   
-            {
-                printf("[psIndexer]Weird line :%s\n",buffer.at(0));
+                continue;
+            if(buffer[0]=='\0')
                 break;
-            }
+            printf("[psIndexer] Weird line :%s\n",buffer.at(0));
         }else
         {
             *tail=0;
