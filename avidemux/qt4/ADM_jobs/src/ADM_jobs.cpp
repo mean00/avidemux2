@@ -21,6 +21,7 @@
 #include "ADM_memsupport.h"
 #include "ADM_crashdump.h"
 #include "ADM_win32.h"
+#include <QAction>
 
 void onexit( void );
 

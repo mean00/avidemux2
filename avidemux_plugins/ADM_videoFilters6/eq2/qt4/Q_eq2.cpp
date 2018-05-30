@@ -17,6 +17,7 @@
 #include "Q_eq2.h"
 #include "ADM_toolkitQt.h"
 #include <QSignalMapper>
+#include <QAction>
 
 //
 //	Video is in YV12 Colorspace

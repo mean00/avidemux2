@@ -17,6 +17,7 @@
 #include "ADM_coreJobs.h"
 #include "DIA_coreToolkit.h"
 #include <QtCore/QDir>
+#include <QAction>
 
 extern void loadTranslator(void);
 extern void initTranslator(void);
