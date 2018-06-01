@@ -96,7 +96,7 @@ bool         ADM_audioStreamMP3::goToTime(uint64_t nbUs)
     // if VBR use our time map
     if(!seekPoints.size())
     {
-        ADM_error("VBR MP2/MP3 stream with no time map, cannot seek");
+        ADM_error("VBR MP2/MP3 stream with no time map, cannot seek\n");
         return false;
     }
     if(nbUs<=seekPoints[0]->timeStamp) // too early
@@ -120,7 +120,7 @@ bool         ADM_audioStreamMP3::goToTime(uint64_t nbUs)
             return true;
         }
     }
-    ADM_error("VBR MP2/MP3 request for time outside of time map, cannot seek");
+    ADM_error("VBR MP2/MP3 request for time outside of time map, cannot seek\n");
     return false;
 }
 /**
@@ -200,7 +200,7 @@ DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("adm","Building time map")
     
     ADM_assert(access->canSeekOffset()==true);
     access->setPos(0);
-    printf("[audioStreamMP3] Starting time map\n");
+    ADM_info("Starting MP3 time map\n");
     rewind();
     Clock *clk=new Clock();
     clk->reset();
@@ -271,7 +271,7 @@ DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("adm","Building time map")
     delete work;
     delete clk;
     access->setPos(0);
-    printf("[audioStreamMP3] Ending time map\n");
+    ADM_info("Finishing MP3 time map\n");
     return true;
 }
   
