@@ -151,7 +151,7 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
   // Hysteresis
   if((_tail-_head)<(AUD_PROCESS_BUFFER_SIZE>>2)) // Less than 1/4 full
   {
-
+    int ratelimit=0;
     while ((  _tail < (3*AUD_PROCESS_BUFFER_SIZE)/5)) // Fill up to 3/5--3/4
     {
       // don't ask too much front.
@@ -173,9 +173,18 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
       
       if(dts!=ADM_NO_PTS && endDts < _startTimeUs)
       {
-          ADM_info("Packet too early, dropping it... :%s",ADM_us2plain(dts));
-          ADM_info("\n start is at :%s\n",ADM_us2plain(_startTimeUs));
+          if(ratelimit<8)
+          {
+              printf("[fillIncomingBuffer] Packet too early, dropping it... :%s",ADM_us2plain(dts));
+              printf("\n start is at :%s\n",ADM_us2plain(_startTimeUs));
+          }
+          ratelimit++;
           continue;
+      }
+      if(ratelimit>=8)
+      {
+          ADM_info("%d consecutive 'packet too early' messages suppressed.\n",ratelimit-7);
+          ratelimit=0;
       }
       got*=_wavHeader.channels; // sample->float
       if (!got )
