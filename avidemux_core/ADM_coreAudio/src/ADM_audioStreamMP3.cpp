@@ -47,6 +47,9 @@ ADM_audioStreamMP3::ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access
         if(true==createMap)
         {
             buildTimeMap();
+            uint32_t nb=seekPoints.size();
+            if(nb)
+                durationInUs=seekPoints[nb-1]->timeStamp;
             return;
         }
     }
