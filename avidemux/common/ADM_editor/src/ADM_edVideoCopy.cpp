@@ -288,6 +288,8 @@ againGet:
     vidHeader *demuxer=vid->_aviheader;
     ADM_assert(demuxer);
 
+    // Prepare to deal with field-encoded streams
+    uint64_t timeIncrement=vid->timeIncrementInUs;
     // Get next pic?
     if(false==demuxer->getFrame (vid->lastSentFrame,img))
     {
@@ -396,6 +398,9 @@ againGet:
             recalibrateSigned(&(signedPts),seg);
             aprintf("Signed Pts=%s\n",ADM_us2plain(signedPts));
     }
+    // Halve timeIncrement for field-encoded MPEG-2 streams...
+    if(isMpeg12Compatible(info.fcc) && img->flags & (AVI_STRUCTURE_TYPE_MASK+AVI_FIELD_STRUCTURE))
+        timeIncrement/=2;
     // From here we are in linear time, guess DTS if missing...
     if(signedDts==ADM_NO_PTS)
     {
@@ -416,7 +421,7 @@ againGet:
 // we add a bit of timeIncrement to compensate for rounding
         if(sanitize && _nextFrameDts!=ADM_NO_PTS)
         {
-            if(_nextFrameDts>(signedDts+(int64_t)(vid->timeIncrementInUs/3)))
+            if(_nextFrameDts>(signedDts+(int64_t)(timeIncrement/3)))
             {
                 double delta=_nextFrameDts-signedDts;
                 delta=fabs(delta);
@@ -435,7 +440,7 @@ againGet:
                           (_nextFrameDts));
                     ADM_error("and got %s : %d, timeIncrement=%d us, delta=%d\n",
                           ADM_us2plain(signedDts),
-                          signedDts,(int)vid->timeIncrementInUs,
+                          signedDts,(int)timeIncrement,
                           (int)delta);
                     uint64_t linearTime=img->demuxerPts-seg->_refStartTimeUs+seg->_startTimeUs;
                     char msg[512+1];
@@ -481,7 +486,7 @@ againGet:
     }
     // Increase for next one
     if(ADM_NO_PTS!=_nextFrameDts)
-        _nextFrameDts+=vid->timeIncrementInUs;
+        _nextFrameDts+=timeIncrement;
     // Check the DTS is not too late compared to next seg beginning...
     if(_currentSegment+1<_segments.getNbSegments() && img->demuxerDts!=ADM_NO_PTS)
     {
