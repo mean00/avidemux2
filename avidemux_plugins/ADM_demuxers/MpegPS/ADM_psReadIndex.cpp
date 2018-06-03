@@ -35,8 +35,8 @@ bool firstAudio=true;
       
         while(1)
         {
-            if(!index->readString(2000,(uint8_t *)buffer)) return true;
-            if(buffer[0]=='[') return true;
+            if(!index->readString(2000,(uint8_t *)buffer)) break;
+            if(buffer[0]=='[') break;
             if(buffer[0]==0xa || buffer[0]==0xd) continue; // blank line
             // Now split the line
             if(!strncmp(buffer,"Video ",6))
@@ -51,6 +51,29 @@ bool firstAudio=true;
                     processAudioIndex(buffer+6);
             }
         }
+
+    // Work around picture structure off-by-one
+    uint32_t nbImage=ListOfFrames.size();
+    if(nbImage>2)
+    {
+        ADM_info("Applying workaround for picture structure entries off-by-one.\n");
+        uint32_t next=0;
+        for(int i=0;i<nbImage-1;i++)
+        {
+            next=ListOfFrames[i+1]->pictureType;
+            ListOfFrames[i]->pictureType=next;
+        }
+        // We don't know the picture structure for the last image, but if it is a field,
+        // swapping top and bottom is a reasonable guess.
+        switch(next & AVI_FIELD_STRUCTURE)
+        {
+            case AVI_TOP_FIELD:
+                ListOfFrames[nbImage-1]->pictureType=AVI_FIELD_STRUCTURE+AVI_BOTTOM_FIELD; break;
+            case AVI_BOTTOM_FIELD:
+                ListOfFrames[nbImage-1]->pictureType=AVI_FIELD_STRUCTURE+AVI_TOP_FIELD; break;
+            default:break;
+        }
+    }
     return true;
 }
 /**
@@ -165,7 +188,7 @@ bool psHeader::processVideoIndex(char *buffer)
                 }
                 switch(picStruct)
                 {
-                        default: ADM_warning("Unknown picture structure %c\n",picStruct);
+                        default:  frame->pictureType=0;ADM_warning("Unknown picture structure %c\n",picStruct);break;
                         case 'F': frame->pictureType=AVI_FRAME_STRUCTURE;break;
                         case 'T': frame->pictureType=AVI_FIELD_STRUCTURE+AVI_TOP_FIELD;break;
                         case 'B': frame->pictureType=AVI_FIELD_STRUCTURE+AVI_BOTTOM_FIELD;break;
