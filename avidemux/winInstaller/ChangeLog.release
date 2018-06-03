@@ -9,6 +9,7 @@
     <div id="inner">
         <h1>Changes in Avidemux v2.7.0 – v2.7.1</h1>
         <table>
+            <tr><td>Encoder:</td><td>Add LibVA based HW accelerated H.264 encoder (Intel/Linux)</td></tr>
             <tr><td>Decoder:</td><td>Fix last frames of video not retrieved from decoder</td></tr>
             <tr><td>Decoder:</td><td>Implement hardware accelerated decoding of H.264 on macOS</td></tr>
             <tr><td>Decoder:</td><td>Fix keyframe-based navigation in field-encoded MPEG-2 video</td></tr>
