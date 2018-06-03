@@ -11,6 +11,7 @@
         <table>
             <tr><td>Decoder:</td><td>Fix last frames of video not retrieved from decoder</td></tr>
             <tr><td>Decoder:</td><td>Implement hardware accelerated decoding of H.264 on macOS</td></tr>
+            <tr><td>Decoder:</td><td>Fix keyframe-based navigation in field-encoded MPEG-2 video</td></tr>
             <tr><td>Demuxer:</td><td>Fix crash in the Matroska demuxer with high bitrate audio</td></tr>
             <tr><td>Demuxer:</td><td>Fix too short duration reported for MKV and MP4 with B-frames</td></tr>
             <tr><td>Demuxer:</td><td>Fix PTS delay calculation in the Matroska demuxer</td></tr>
@@ -30,6 +31,7 @@
             <tr><td>UI:</td><td>Improve time chooser dialog</td></tr>
             <tr><td>Audio:</td><td>Add Opus encoder</td></tr>
             <tr><td>Audio:</td><td>Allow LPCM in FFmpeg-based muxers</td></tr>
+            <tr><td>Audio:</td><td>Show duration for external audio tracks</td></tr>
             <tr><td>Miscellaneous:</td><td>Improved overall polish and stability</td></tr>
         </ul>
     </div>
