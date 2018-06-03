@@ -1,11 +1,10 @@
 [Desktop Entry]
-Encoding=UTF-8
-Name=avidemux2
+Name=Avidemux
 GenericName=Video Editor
 Comment=Multiplatform video editor
-Exec=avidemux2_gtk
+Exec=avidemux3_qt5
 MimeType=video/mpeg;video/quicktime;video/x-msvideo;video/x-anim;audio/x-mp3;audio/x-mp2;
 Icon=avidemux
 Terminal=false
 Type=Application
-Categories=Application;AudioVideo
+Categories=AudioVideo
