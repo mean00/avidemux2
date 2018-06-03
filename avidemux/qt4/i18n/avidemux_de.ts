@@ -3441,7 +3441,7 @@ der Halbbilder (deinterlaceing)</translation>
         <translation type="obsolete">Es bezieht sich vielleicht auf eine alte Index-Datei.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+229"/>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+232"/>
         <source>Attempt to open %s failed!</source>
         <translation>Der Versuch, %s zu öffnen, ist fehlgeschlagen!</translation>
     </message>
@@ -3586,7 +3586,7 @@ Soll ein Index erstellt werden ?</translation>
         <translation>Dekodiere Video...</translation>
     </message>
     <message>
-        <location line="+117"/>
+        <location line="+115"/>
         <source>Some timing information are incorrect.
 It happens with some capture software.
 If you re encode video we should drop these informations,
@@ -5869,7 +5869,7 @@ Drop timing informations ?</source>
         <translation type="unfinished">&lt;b&gt;Video-Codec&lt;/b&gt;</translation>
     </message>
     <message>
-        <location line="+176"/>
+        <location line="+160"/>
         <source>&lt;b&gt;Audio Output&lt;/b&gt;</source>
         <translation type="unfinished">&lt;b&gt;Audio-Codec&lt;/b&gt;</translation>
     </message>
@@ -5879,7 +5879,7 @@ Drop timing informations ?</source>
         <translation type="unfinished"> (0 Tonspur(en))</translation>
     </message>
     <message>
-        <location line="+196"/>
+        <location line="+212"/>
         <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
         <translation type="unfinished">&lt;b&gt;Ausgabeformat&lt;/b&gt;</translation>
     </message>
@@ -7209,12 +7209,7 @@ Drop timing informations ?</source>
         <translation type="unfinished">Eine plattformunabhängige Videoschnittsoftware</translation>
     </message>
     <message>
-        <location line="+10"/>
-        <source>© 2001 - 2017  Mean</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+84"/>
+        <location line="+94"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
@@ -7224,7 +7219,12 @@ Drop timing informations ?</source>
         <translation type="unfinished">http://www.avidemux.org</translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="-19"/>
+        <source>© 2001 - 2018  Mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+64"/>
         <source>&amp;License</source>
         <translation type="unfinished">&amp;Lizenz</translation>
     </message>
@@ -8085,7 +8085,7 @@ Drop timing informations ?</source>
         <translation type="obsolete">AVI-Datei auswählen zum Anhängen...</translation>
     </message>
     <message>
-        <location line="+252"/>
+        <location line="+251"/>
         <source>Are you sure?</source>
         <translation type="unfinished">Sind Sie sicher?</translation>
     </message>
@@ -8327,7 +8327,7 @@ Läuft er?</translation>
         <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+632"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
-        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+138"/>
+        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
         <location filename="../../common/gui_main.cpp" line="-247"/>
@@ -8645,7 +8645,7 @@ Läuft er?</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1103"/>
+        <location filename="../../common/gui_main.cpp" line="-1102"/>
         <location line="+68"/>
         <source>Select Video File...</source>
         <translation>Videodatei wählen...</translation>
@@ -8656,7 +8656,7 @@ Läuft er?</translation>
         <translation>Videodatei zum Anfügen wählen...</translation>
     </message>
     <message>
-        <location line="+942"/>
+        <location line="+941"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation type="unfinished">Ungültige Liste der Tonspuren</translation>
@@ -8672,7 +8672,7 @@ Läuft er?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1231"/>
+        <location filename="../../common/gui_main.cpp" line="-1230"/>
         <source>Select script/project to run</source>
         <translation>Skript/Projekt zum Ausführen wählen</translation>
     </message>
@@ -8702,7 +8702,7 @@ Läuft er?</translation>
         <translation>tinyPy wurde beim Kompilieren nicht aktiviert</translation>
     </message>
     <message>
-        <location line="+161"/>
+        <location line="+160"/>
         <source>The cut points of the pasted video are not on keyframes.
 Video saved in copy mode will be corrupted at these points.
 Proceed anyway?</source>
@@ -8904,7 +8904,7 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+15"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+216"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+211"/>
         <source>PCM</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9019,12 +9019,12 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1283"/>
+        <location filename="../../common/gui_main.cpp" line="-1282"/>
         <source>Select script to save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1072"/>
+        <location line="+1071"/>
         <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
         <source>Something bad happened</source>
         <translation type="unfinished"></translation>
@@ -9540,7 +9540,7 @@ Trotzdem fortsetzen?</translation>
         <translation type="unfinished">Unbekannter Codec</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStreamMP3.cpp" line="+196"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStreamMP3.cpp" line="+199"/>
         <source>Building time map</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9687,7 +9687,7 @@ Nichtübereinstimmende Installation</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+444"/>
+        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+449"/>
         <source>Decode time stamp (DTS) collision affecting a keyframe at %s detected.
 Dropping a keyframe will result in severely corrupted video.
 Proceed anyway?</source>
@@ -9715,7 +9715,7 @@ Trotzdem fortsetzen?</translation>
         <translation>Einige Frames vor %s mussten verzögert werden, was zum vorübergehenden Verlust der Bild-Ton-Synchronität führte. Trotzdem fortsetzen?</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+226"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+227"/>
         <source>Permission Error</source>
         <translation>Berechtigungsfehler</translation>
     </message>
@@ -11092,7 +11092,7 @@ Soll dieses jetzt geladen werden ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/Q_eq2.cpp" line="+51"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/Q_eq2.cpp" line="+52"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13762,12 +13762,12 @@ der Halbbilder (deinterlaceing)</translation>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+139"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+168"/>
         <source>Saving Mkv</source>
         <translation type="unfinished">Speichere MKV</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkvConfig.cpp" line="+27"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkvConfig.cpp" line="+29"/>
         <source>Force display width</source>
         <translation>Anzeigebreite erzwingen</translation>
     </message>
@@ -13777,7 +13777,12 @@ der Halbbilder (deinterlaceing)</translation>
         <translation>Anzeigebreite</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+2"/>
+        <source>Force Aspect Ratio (DAR)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
         <source>MKV Muxer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14132,12 +14137,12 @@ der Halbbilder (deinterlaceing)</translation>
         <translation>Kann nicht zum vorhergehenden Keyframe wechseln</translation>
     </message>
     <message>
-        <location line="+192"/>
+        <location line="+188"/>
         <source>Seek</source>
         <translation type="unfinished">Navigation</translation>
     </message>
     <message>
-        <location line="+65"/>
+        <location line="+78"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
@@ -14247,7 +14252,7 @@ der Halbbilder (deinterlaceing)</translation>
 <context>
     <name>partial</name>
     <message>
-        <location filename="../../common/ADM_videoFilter2/src/ADM_vidPartial.cpp" line="+342"/>
+        <location filename="../../common/ADM_videoFilter2/src/ADM_vidPartial.cpp" line="+343"/>
         <source>_Start time:</source>
         <translation type="unfinished">_Beginn:</translation>
     </message>
@@ -14515,23 +14520,23 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qaudiotracks</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_audioTracks.cpp" line="+132"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_audioTracks.cpp" line="+134"/>
         <source>Select audio file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+14"/>
-        <location line="+140"/>
+        <location line="+22"/>
+        <location line="+152"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
     <message>
-        <location line="-140"/>
+        <location line="-152"/>
         <source>Cannot use that file as audio track</source>
         <translation type="unfinished">Kann diese Datei nicht als Tonspur verwenden</translation>
     </message>
     <message>
-        <location line="+140"/>
+        <location line="+152"/>
         <source>Some tracks are used multiple times</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14704,17 +14709,17 @@ Please delete the idx2 file and reopen.</source>
         <translation>Eine Minute vor</translation>
     </message>
     <message>
-        <location line="+1210"/>
+        <location line="+1213"/>
         <source> (%d track(s))</source>
         <translation> (%d Tonspur(en))</translation>
     </message>
     <message>
-        <location line="-2153"/>
+        <location line="-2156"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation>&lt;b&gt;Neue Version verfügbar&lt;/b&gt;&lt;br&gt;Version %1&lt;br&gt;Freigegeben am %2.&lt;br&gt;Das Update kann hier heruntergeladen werden:&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Sie können automatische Überprüfung auf Updates in Einstellungen deaktivieren.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+1557"/>
+        <location line="+1560"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>Die Anwendung hat ein schwerwiegendes Problem festgestellt.
@@ -14945,7 +14950,7 @@ Der letzte Bearbeitungsstand wurde gespeichert und wird beim nächsten Anwendung
 <context>
     <name>qprops</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="+24"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="+26"/>
         <source>No</source>
         <translation type="unfinished">Nein</translation>
     </message>
@@ -14965,7 +14970,7 @@ Der letzte Bearbeitungsstand wurde gespeichert und wird beim nächsten Anwendung
         <translation type="unfinished">Stereo</translation>
     </message>
     <message>
-        <location line="+46"/>
+        <location line="+62"/>
         <source>Video</source>
         <translation type="unfinished"></translation>
     </message>
@@ -15041,18 +15046,18 @@ Der letzte Bearbeitungsstand wurde gespeichert und wird beim nächsten Anwendung
         <translation>Kein Ton</translation>
     </message>
     <message>
-        <location line="-132"/>
+        <location line="-148"/>
         <source>%2.3f fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+59"/>
+        <location line="+74"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation>%02d:%02d:%02d,%03d</translation>
     </message>
     <message>
-        <location line="-65"/>
+        <location line="-80"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -16158,6 +16163,27 @@ Bitte die idx2-Datei löschen und das Video erneut öffnen.</translation>
     </message>
 </context>
 <context>
+    <name>vaEncH264</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/directVaEnc/libvaencPlugin.cpp" line="+77"/>
+        <source>vaH264 Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vaH264</name>
+    <message>
+        <location line="-4"/>
+        <source>_IDR Period:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>_Bitrate(kbps)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>vaapiResize</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vaapiFilters/ADM_vidVaapiFilter.cpp" line="+67"/>
@@ -16187,24 +16213,6 @@ Bitte die idx2-Datei löschen und das Video erneut öffnen.</translation>
     <message>
         <location line="+4"/>
         <source>vaapi</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>vaenc</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/vaEnc/ADM_ffVaEnc.cpp" line="+247"/>
-        <source>Bitrate (kbps):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Max Bitrate (kbps):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>VAAPI H264 Encoder</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -16562,7 +16570,7 @@ Nur Vorbis und Opus sind zulässig.</translation>
         <translation type="unfinished">Dieser Modus ist nicht implementiert</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="+176"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="+178"/>
         <source>none</source>
         <translation>Kein Tuning</translation>
     </message>
@@ -16608,7 +16616,7 @@ Nur Vorbis und Opus sind zulässig.</translation>
         <translation type="unfinished">Durchschnittliche Bitrate:</translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+74"/>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
 
 Do you wish to continue?</source>
@@ -16626,7 +16634,7 @@ Do you wish to continue?</source>
 Möchten Sie fortfahren?</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+61"/>
         <location line="+69"/>
         <location line="+14"/>
         <source>Error</source>

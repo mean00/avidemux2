@@ -4,7 +4,7 @@
 <context>
     <name>ADM_Composer</name>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+193"/>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+196"/>
         <source>Cannot find a demuxer for %s</source>
         <translation>%s용 디먹서를 찾을 수 없습니다</translation>
     </message>
@@ -68,7 +68,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+117"/>
+        <location line="+115"/>
         <source>Some timing information are incorrect.
 It happens with some capture software.
 If you re encode video we should drop these informations,
@@ -586,7 +586,7 @@ Drop timing informations ?</source>
         <translation>필터</translation>
     </message>
     <message>
-        <location line="-112"/>
+        <location line="-128"/>
         <source>&lt;b&gt;Audio Output&lt;/b&gt;</source>
         <translation>&lt;b&gt;오디오 출력&lt;/b&gt;</translation>
     </message>
@@ -596,7 +596,7 @@ Drop timing informations ?</source>
         <translation>   (0 트랙)</translation>
     </message>
     <message>
-        <location line="+129"/>
+        <location line="+145"/>
         <source>&amp;Shift:</source>
         <translation>이동(&amp;S):</translation>
     </message>
@@ -1001,8 +1001,12 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+10"/>
+        <source>© 2001 - 2018  Mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>© 2001 - 2017  Mean</source>
-        <translation>© 2001 - 2018  Mean</translation>
+        <translation type="vanished">© 2001 - 2018  Mean</translation>
     </message>
     <message>
         <source>© 2001 - 2016  Mean</source>
@@ -1871,7 +1875,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+5"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+216"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+211"/>
         <source>PCM</source>
         <translation>PCM</translation>
     </message>
@@ -2077,10 +2081,10 @@ Drop timing informations ?</source>
         <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+632"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
-        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+138"/>
+        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="+1408"/>
+        <location filename="../../common/gui_main.cpp" line="+1407"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -2183,7 +2187,7 @@ It is needed to create PSP compatible video.</source>
         <translation>FAAC 코덱이 없습니다! PSP 호환 비디오를 만들 때 필요합니다.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1314"/>
+        <location filename="../../common/gui_main.cpp" line="-1313"/>
         <source>Select script/project to run</source>
         <translation>실행할 스크립트/프로젝트 선택</translation>
     </message>
@@ -2234,7 +2238,7 @@ It is needed to create PSP compatible video.</source>
         <translation>덧붙일 비디오 파일 선택...</translation>
     </message>
     <message>
-        <location line="+115"/>
+        <location line="+114"/>
         <source>The cut points of the pasted video are not on keyframes.
 Video saved in copy mode will be corrupted at these points.
 Proceed anyway?</source>
@@ -3103,7 +3107,7 @@ Do you want to continue anyway ?</source>
         <translation>알 수 없는 코덱</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStreamMP3.cpp" line="+196"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStreamMP3.cpp" line="+199"/>
         <source>Building time map</source>
         <translation>시간 맵 빌드 중</translation>
     </message>
@@ -3254,7 +3258,7 @@ Installation mismatch</source>
         <translation>쉐이더를 컴파일할 수 없습니다</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+444"/>
+        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+449"/>
         <source>Decode time stamp (DTS) collision affecting a keyframe at %s detected.
 Dropping a keyframe will result in severely corrupted video.
 Proceed anyway?</source>
@@ -3278,7 +3282,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+226"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+227"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4546,7 +4550,7 @@ Do you want to load it  ?
         <translation>대비, 밝기, 채도와 감마를 조정합니다.</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/Q_eq2.cpp" line="+51"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/Q_eq2.cpp" line="+52"/>
         <source>Reset</source>
         <translation>초기화</translation>
     </message>
@@ -6830,12 +6834,12 @@ I will assume it has and try to continue</source>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+139"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+168"/>
         <source>Saving Mkv</source>
         <translation>Mkv 저장 중</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkvConfig.cpp" line="+27"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkvConfig.cpp" line="+29"/>
         <source>Force display width</source>
         <translation>출력 너비 강제</translation>
     </message>
@@ -6845,7 +6849,12 @@ I will assume it has and try to continue</source>
         <translation>출력 너비</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+2"/>
+        <source>Force Aspect Ratio (DAR)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
         <source>MKV Muxer</source>
         <translation>MKV 먹서</translation>
     </message>
@@ -7176,12 +7185,12 @@ I will assume it has and try to continue</source>
         <translation>이전 키프레임으로 이동할 수 없습니다</translation>
     </message>
     <message>
-        <location line="+192"/>
+        <location line="+188"/>
         <source>Seek</source>
         <translation>탐색</translation>
     </message>
     <message>
-        <location line="+65"/>
+        <location line="+78"/>
         <source>Error</source>
         <translation>오류</translation>
     </message>
@@ -7257,7 +7266,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>partial</name>
     <message>
-        <location filename="../../common/ADM_videoFilter2/src/ADM_vidPartial.cpp" line="+342"/>
+        <location filename="../../common/ADM_videoFilter2/src/ADM_vidPartial.cpp" line="+343"/>
         <source>_Start time:</source>
         <translation>시작 시간:</translation>
     </message>
@@ -7421,23 +7430,23 @@ idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
 <context>
     <name>qaudiotracks</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_audioTracks.cpp" line="+132"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_audioTracks.cpp" line="+134"/>
         <source>Select audio file</source>
         <translation>오디오 파일 선택</translation>
     </message>
     <message>
-        <location line="+14"/>
-        <location line="+140"/>
+        <location line="+22"/>
+        <location line="+152"/>
         <source>Error</source>
         <translation>오류</translation>
     </message>
     <message>
-        <location line="-140"/>
+        <location line="-152"/>
         <source>Cannot use that file as audio track</source>
         <translation>그 파일을 오디오 트랙으로 사용할 수 없습니다</translation>
     </message>
     <message>
-        <location line="+140"/>
+        <location line="+152"/>
         <source>Some tracks are used multiple times</source>
         <translation>몇몇 트랙이 중복 사용되었습니다</translation>
     </message>
@@ -7615,7 +7624,7 @@ idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
         <translation>1분 앞으로</translation>
     </message>
     <message>
-        <location line="+614"/>
+        <location line="+617"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>프로그램에서 치명적인 문제가 발생했습니다
@@ -7851,7 +7860,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qprops</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="+24"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="+26"/>
         <source>No</source>
         <translation>아니오</translation>
     </message>
@@ -7867,12 +7876,12 @@ The current editing has been saved and will be reloaded at next start</source>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+59"/>
+        <location line="+74"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation>%02d:%02d:%02d.%03d</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+30"/>
         <source>Video</source>
         <translation>비디오</translation>
     </message>
@@ -7948,7 +7957,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>오디오 없음</translation>
     </message>
     <message>
-        <location line="-134"/>
+        <location line="-150"/>
         <source>%s (%u:%u)</source>
         <translation>%s (%u:%u)</translation>
     </message>
@@ -8965,6 +8974,27 @@ idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
     </message>
 </context>
 <context>
+    <name>vaEncH264</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/directVaEnc/libvaencPlugin.cpp" line="+77"/>
+        <source>vaH264 Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vaH264</name>
+    <message>
+        <location line="-4"/>
+        <source>_IDR Period:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>_Bitrate(kbps)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>vaapiResize</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vaapiFilters/ADM_vidVaapiFilter.cpp" line="+67"/>
@@ -9000,19 +9030,16 @@ idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
 <context>
     <name>vaenc</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/vaEnc/ADM_ffVaEnc.cpp" line="+247"/>
         <source>Bitrate (kbps):</source>
-        <translation>비트레이트 (kbps):</translation>
+        <translation type="vanished">비트레이트 (kbps):</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Max Bitrate (kbps):</source>
-        <translation>최대 비트레이트 (kbps):</translation>
+        <translation type="vanished">최대 비트레이트 (kbps):</translation>
     </message>
     <message>
-        <location line="+4"/>
         <source>VAAPI H264 Encoder</source>
-        <translation>vaapi H264 인코더</translation>
+        <translation type="vanished">vaapi H264 인코더</translation>
     </message>
 </context>
 <context>
@@ -9267,7 +9294,7 @@ VP8/VP9 비디오와 Vorbis/Opus 오디오만 지원합니다</translation>
         <translation>이 모드는 구현되지 않았습니다</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="+176"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="+178"/>
         <source>none</source>
         <translation>없음</translation>
     </message>
@@ -9313,7 +9340,7 @@ VP8/VP9 비디오와 Vorbis/Opus 오디오만 지원합니다</translation>
         <translation>평균 비트레이트:</translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+74"/>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
 
 Do you wish to continue?</source>
@@ -9331,7 +9358,7 @@ Do you wish to continue?</source>
 계속할까요?</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+61"/>
         <location line="+69"/>
         <location line="+14"/>
         <source>Error</source>
