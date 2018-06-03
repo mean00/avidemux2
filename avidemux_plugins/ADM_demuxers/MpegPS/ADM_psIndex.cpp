@@ -335,11 +335,14 @@ bool bAppend=false;
 
                             }
 
+#define PREAMBLE qfprintf(index,"[Data]\n"); \
+                 qfprintf(index,"# Warning, picture structure markers F/T/B are shifted one image to the right.\n"); \
+                 qfprintf(index,"# To compensate for that, they are shifted one image to the left in readIndex.");
+
                           if(!seq_found) continue;
                           if(headerDumped==false)
                           {
-                               
-                                qfprintf(index,"[Data]");
+                                PREAMBLE
                                 headerDumped=true;
                           }
                           if(data.state==idx_startAtGopOrSeq) 
@@ -361,8 +364,7 @@ bool bAppend=false;
                           }
                           if(headerDumped==false)
                           {
-                               
-                                qfprintf(index,"[Data]");
+                                PREAMBLE
                                 headerDumped=true;
                           }
                           val=pkt->readi16();
