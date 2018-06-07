@@ -3740,7 +3740,7 @@ Chcesz go zindeksować?</translation>
     <message>
         <location line="+26"/>
         <source>This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonically increasing. Avidemux can try to reconstruct correct PTS by decoding the entire video. This may take a lot of time. Proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ten film wideo zawiera klatki B, ale znaczniki czasu prezentacji (PTS) są albo nieobecne, albo rosną monotonicznie. Avidemux może spróbować zrekonstruować poprawne PTS przez dekodowanie całego wideo. To może zająć dużo czasu. Kontynuować?</translation>
     </message>
     <message>
         <location line="+31"/>
@@ -3756,7 +3756,13 @@ If you re encode video we should drop these informations,
 If you just copy the video without reencoding,
  you should keep them.
 Drop timing informations ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Niektóre informacje dotyczące czasu są nieprawidłowe.
+Dzieje się tak w przypadku niektórych programów do przechwytywania.
+Jeśli ponownie kodujesz wideo, zaleca się porzucić te informacje,
+w przeciwnym razie spowoduje to pominięcie klatki/drgania wideo.
+Jeśli tylko kopiujesz wideo bez ponownego kodowania,
+zalecamy je pozostawić.
+Porzucić informacje dotyczące czasu?</translation>
     </message>
 </context>
 <context>
@@ -8910,17 +8916,17 @@ Czy pomimo tego chcesz kontynuować?</translation>
     <message>
         <location filename="../../common/gui_blackframes.cpp" line="+105"/>
         <source>BlackFrame</source>
-        <translation type="unfinished"></translation>
+        <translation>Czarna klatka</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>This function is unsupported at the moment</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta funkcja nie jest wspierana w tej chwili</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Searching black frame..</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyszukiwanie czarnej klatki...</translation>
     </message>
 </context>
 <context>
@@ -9400,7 +9406,7 @@ Czy chcesz go wczytać ?
     <message>
         <location line="+3"/>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="unfinished">Najszybszy (brak chrominancji, częściowa luminancja)</translation>
+        <translation>Najszybszy (brak chrominancji, częściowa luminancja)</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -9440,12 +9446,12 @@ Czy chcesz go wczytać ?
     <message>
         <location line="-39"/>
         <source>Decomb decimate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Decomb decimate</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Donald Graft decimate. Remove duplicate after telecide.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Donald Graft decimate. Usuń duplikat po telecide.</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -10287,7 +10293,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+1"/>
         <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
+        <translation>EPZS</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -10382,7 +10388,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+2"/>
         <source>4_MV</source>
-        <translation type="unfinished"></translation>
+        <translation>4_MV</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10460,7 +10466,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+1"/>
         <source>Full</source>
-        <translation type="unfinished">Pełny</translation>
+        <translation>Pełny</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -15535,7 +15541,7 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     <message>
         <location line="+7"/>
         <source>Zero Latency</source>
-        <translation type="unfinished"></translation>
+        <translation>Zerowe opóźnienie</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -15804,7 +15810,7 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     <message>
         <location line="+35"/>
         <source>Open GOP:</source>
-        <translation type="unfinished">Open GOP:</translation>
+        <translation>Open GOP:</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -15899,7 +15905,7 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     <message>
         <location line="+32"/>
         <source>I-frame Threshold:</source>
-        <translation type="unfinished">Próg dla klatek I:</translation>
+        <translation>Próg dla klatek I:</translation>
     </message>
     <message>
         <location line="+36"/>
@@ -15915,12 +15921,12 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     <message>
         <location line="+6"/>
         <source>Mixed References</source>
-        <translation type="unfinished">Mieszane referencje</translation>
+        <translation>Mieszane referencje</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Chroma Motion Estimation</source>
-        <translation type="unfinished"></translation>
+        <translation>Szacowanie ruchu chrominancji</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -15945,17 +15951,17 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     <message>
         <location line="+7"/>
         <source>DCT Decimation on P-frames</source>
-        <translation type="unfinished">Pomijanie mało istotnych bloków klatek P (DCT Decimation)</translation>
+        <translation>Pomijanie mało istotnych bloków klatek P (DCT Decimation)</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Psychovisual Rate Distortion Optimisation:</source>
-        <translation type="unfinished">Wskaźnik optymalizacji dystorsji psycho-wizualnej (RDO):</translation>
+        <translation>Wskaźnik optymalizacji dystorsji psycho-wizualnej (RDO):</translation>
     </message>
     <message>
         <location line="+37"/>
         <source>Psychovisual Trellis:</source>
-        <translation type="unfinished">Natężenie psycho-wizualne Trellis:</translation>
+        <translation>Natężenie psycho-wizualne Trellis:</translation>
     </message>
     <message>
         <location line="+37"/>
@@ -15965,17 +15971,17 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     <message>
         <location line="+36"/>
         <source>Luma Quantisation Deadzone</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Martwa strefa kwantyzacji luminancji</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Intra Luma Quantisation Deadzone:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Martwa strefa kwantyzacji luminancji Intra:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Inter Luma Quantisation Deadzone:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Martwa strefa kwantyzacji luminancji Inter:</translation>
     </message>
     <message>
         <location line="+66"/>
@@ -16437,7 +16443,7 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     <message>
         <location line="+16"/>
         <source>Intra 4x4</source>
-        <translation type="unfinished"></translation>
+        <translation>Intra 4x4</translation>
     </message>
     <message>
         <location line="+28"/>
@@ -16456,17 +16462,17 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     <message>
         <location line="-238"/>
         <source>Inter 4x4</source>
-        <translation type="unfinished"></translation>
+        <translation>Inter 4x4</translation>
     </message>
     <message>
         <location line="+446"/>
         <source>Intra 8x8</source>
-        <translation type="unfinished"></translation>
+        <translation>Intra 8x8</translation>
     </message>
     <message>
         <location line="+703"/>
         <source>Inter 8x8</source>
-        <translation type="unfinished"></translation>
+        <translation>Inter 8x8</translation>
     </message>
     <message>
         <location line="+727"/>
@@ -16564,12 +16570,13 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
         <location line="+0"/>
         <source>this mode has not been implemented
 </source>
-        <translation type="unfinished"></translation>
+        <translation>ten tryb nie został zaimplementowany
+</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/qt4/Q_x265.cpp" line="+184"/>
         <source>none</source>
-        <translation type="unfinished"></translation>
+        <translation>brak</translation>
     </message>
     <message>
         <location line="+33"/>
@@ -16579,7 +16586,7 @@ Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translat
     <message>
         <location line="+361"/>
         <source>Target Bitrate:</source>
-        <translation type="unfinished">Przepływność docelowa:</translation>
+        <translation>Docelowa przepływność:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -16636,53 +16643,54 @@ Do you wish to continue?</source>
     <message>
         <location line="-83"/>
         <source>Cannot load preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można wczytać ustawień</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Save Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapisz profil</translation>
     </message>
     <message>
         <location line="+45"/>
         <source>Overwrite</source>
-        <translation type="unfinished"></translation>
+        <translation>Zastąp</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Replace the following preset ?:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zastąpić następujące ustawienie?:</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Cannot save preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można zapisać ustawień</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Cannot delete custom profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można usunąć własnego profilu</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Do you really want to delete the </source>
-        <translation type="unfinished"></translation>
+        <translation>Na pewno chcesz usunąć profil &quot;</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> profile ?.
 If it is a system profile it will be recreated next time.</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;?
+Jeśli jest to profil systemowy, zostanie odtworzony następnym razem.</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuń ustawienie</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Delete</source>
-        <translation type="unfinished">Usuń</translation>
+        <translation>Usuń</translation>
     </message>
 </context>
 <context>
@@ -16838,7 +16846,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+28"/>
         <source>Rate Control</source>
-        <translation type="unfinished">Kontrola przepływności</translation>
+        <translation>Kontrola jakości</translation>
     </message>
     <message>
         <location line="+21"/>
@@ -16912,12 +16920,12 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+6"/>
         <source>Advanced Rate Control</source>
-        <translation type="unfinished"></translation>
+        <translation>Advanced Rate Control</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Maximum Constant Rate Factor</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksymalny stały współczynnik jakości (CRF)</translation>
     </message>
     <message>
         <location line="+158"/>
@@ -16978,27 +16986,27 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+13"/>
         <source>Diamond Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Diamond Search</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Hexagonal Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Hexagonal Search</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Uneven Multi-hexagonal Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Uneven Multi-hexagonal Search</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Star Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Star Search</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Exhaustive Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Exhaustive Search</translation>
     </message>
     <message>
         <location line="+42"/>
@@ -17023,7 +17031,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+35"/>
         <source>Maximum Motion Vector Search Range:</source>
-        <translation type="unfinished">Maksymalny zakres wyszukiwania wektorów ruchu:</translation>
+        <translation>Maksymalny zakres wyszukiwania wektorów ruchu:</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -17033,7 +17041,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+6"/>
         <source>Weighted Prediction for B-frames</source>
-        <translation type="unfinished">Ważone przewidywanie dla klatek B</translation>
+        <translation>Ważone przewidywanie dla klatek B</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -17043,19 +17051,19 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+9"/>
         <source>Weighted Prediction for P-frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ważone przewidywanie dla klatek P:</translation>
     </message>
     <message>
         <location line="+10"/>
         <location line="+217"/>
         <location line="+36"/>
         <source>Disabled</source>
-        <translation type="unfinished">Wyłączony</translation>
+        <translation>Wyłączone</translation>
     </message>
     <message>
         <location line="-248"/>
         <source>Weighted References</source>
-        <translation type="unfinished"></translation>
+        <translation>Ważone referencje</translation>
     </message>
     <message>
         <location line="+5"/>
