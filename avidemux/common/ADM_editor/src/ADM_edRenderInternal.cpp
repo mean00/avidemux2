@@ -442,7 +442,11 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
     // in case of field encoding, only the 2nd field might be
     // flagged as intra
     uint32_t twoFlags=flags | flagsNext;
-    ADM_assert(twoFlags&AVI_KEY_FRAME);
+    if(!(twoFlags&AVI_KEY_FRAME))
+    {
+        ADM_error("Neither the target frame nor the next one is flagged as intra, aborting.\n");
+        return false;
+    }
 
     bool found=false;
     vid->lastSentFrame=frame;
