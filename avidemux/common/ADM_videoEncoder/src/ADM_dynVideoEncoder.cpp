@@ -26,8 +26,8 @@
 static int currentVideoCodec=0;
 
 ADM_videoEncoderDesc copyDesc={
-        "Copy",
-        "Copy",
+        QT_TRANSLATE_NOOP("MainWindow", "Copy"), // name
+        QT_TRANSLATE_NOOP("MainWindow", "Copy"), // tag - unused i guess
         "Copy encoder",
         ADM_VIDEO_ENCODER_API_VERSION, //uint32_t     apiVersion;            // const
 
