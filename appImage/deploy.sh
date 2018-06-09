@@ -77,6 +77,7 @@ done
 cp -t ../lib /lib/x86_64-linux-gnu/libpcre.so.3 || fail pcre
 cp -t ../lib /lib/x86_64-linux-gnu/libglib-2.0.so.0 || fail glib
 cp -t ../lib /lib/x86_64-linux-gnu/libjson.so.0 || fail json
+cp -t ../lib /lib/x86_64-linux-gnu/libjson-c.so.2 || fail json
 cpyRootx86Lib libudev.so.1
 
 # audio plugins
