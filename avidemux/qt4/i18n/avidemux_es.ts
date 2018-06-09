@@ -7368,7 +7368,7 @@ Is it running ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="-19"/>
         <source>FreeType 2</source>
-        <translation type="unfinished">j</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
