@@ -93,14 +93,13 @@ bool   asfAudioAccess::setPos(uint64_t newoffset)
 
 bool   asfAudioAccess::goToTime(uint64_t dts_us) // PTS!
 {
-    dts_us+=_father->getShift();
-    // Search
     int size=_seekPoints->size();
+    if(!size)
+        return false;
+    dts_us+=_father->getShift();
     if(dts_us<=(*_seekPoints)[0].pts || size<2)
-    {
-          return setPos( 0);
-    }
-
+        return _packet->goToPacket((*_seekPoints)[0].packetNb);
+    // Search
     for(int i=size-2;i>=0;i--)
     {
         if(dts_us>=(*_seekPoints)[i].pts && dts_us<(*_seekPoints)[i+1].pts)
