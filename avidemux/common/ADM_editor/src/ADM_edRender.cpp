@@ -229,6 +229,7 @@ uint64_t tail;
             {
                 // Got it
                 image->duplicate(cached);
+                vid->lastReadPts=cached->Pts;
             }else
                 goto np_nextSeg;
         }else 
