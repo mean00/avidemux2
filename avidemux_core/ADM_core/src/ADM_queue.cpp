@@ -24,7 +24,7 @@ ADM_queue::~ADM_queue()
 {
   if(head)
   {
-    printf(">>>>>>>>Warning queue is not empty\n<<<<<<<"); 
+    ADM_warning(">>>>>>> Warning queue is not empty <<<<<<<\n");
   }
 }
 uint8_t ADM_queue::isEmpty(void)

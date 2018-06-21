@@ -38,7 +38,7 @@ typedef struct queueElem
             {
                  if(head)
                 {
-                  ADM_warning(">>>>>>>>Warning queue is not empty\n<<<<<<<"); 
+                  ADM_warning(">>>>>>> Warning queue is not empty <<<<<<<\n");
                 }
             }
     bool isEmpty(void)
