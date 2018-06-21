@@ -376,7 +376,7 @@ nextPack3:
     zprintf("Mark=%x\n",code);
     if(!pkt.payloadStart && !mark)
     {
-        printf("[Ts Demuxer] Pes for Pid =0x%d does not contain payload start\n",pes->pid);
+        printf("[Ts Demuxer] Pes for Pid = 0x%x (%d) does not contain payload start\n",pes->pid,pes->pid);
         goto nextPack3;
     }
     //____________________
@@ -620,7 +620,7 @@ bool tsPacketLinear::refill(void)
         oldBufferLen=pesPacket->payloadSize;
         if(false==getNextPES(pesPacket))
         {
-                printf("[tsPacketLinear] Refill failed for pid :%x\n",pesPacket->pid);
+                printf("[tsPacketLinear] Refill failed for pid : 0x%x (%d)\n",pesPacket->pid,pesPacket->pid);
                 return false;
         }
         return true;
