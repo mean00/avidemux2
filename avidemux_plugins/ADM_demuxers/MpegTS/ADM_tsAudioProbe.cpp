@@ -112,7 +112,7 @@ again:
                 case ADM_TS_AAC_LATM:
                 {
                     ADM_latm2aac latm;
-                    ADM_info("Looking up LATM info");
+                    ADM_info("Looking up LATM info\n");
                     retries=20;
                     while(retries)
                     {
@@ -159,7 +159,7 @@ again:
                     adts.getExtraData(&eLen,&eData);
                     if( eLen!=2) 
                     {
-                        ADM_error("%d bytes of extradata, expecting 2");
+                        ADM_error("%d bytes of extradata, expecting 2\n");
                         return false;
                     }
                     trackInfo->extraDataLen=eLen;
@@ -180,7 +180,7 @@ again:
         int rd=PROBE_ANALYZE_SIZE;
         if(!p->read(PROBE_ANALYZE_SIZE,audioBuffer))
         {
-            printf("[tsAudioProbe] Cannot get info about pid %d 0x%x\n",trackInfo->esId,trackInfo->esId);
+            ADM_error("Cannot get info about pid %d 0x%x\n",trackInfo->esId,trackInfo->esId);
             return false;
         }
         uint32_t fq,br,chan,off;
@@ -190,7 +190,7 @@ again:
                             {
                                 if(! tsCheckMp2Audio(&(trackInfo->wav),audioBuffer,rd))
                                 {
-                                    printf("[PsProbeAudio] Failed to get info on track :%x (MP2)\n",trackInfo->esId);
+                                    ADM_error("Failed to get info on track : 0x%x (MP2)\n",trackInfo->esId);
                                     goto er;
                                 }
                             }
@@ -207,8 +207,8 @@ again:
                                 trackInfo->wav.encoding=WAV_AC3;
                                 if(!ADM_AC3GetInfo(audioBuffer, rd, &fq, &br, &chan,&off))
                                 {
-                                        printf("[PsProbeAudio] Failed to get info on track :%x\n",trackInfo->esId);
-                                        goto er;
+                                    ADM_error("Failed to get info on track : 0x%x (AC3)\n",trackInfo->esId);
+                                    goto er;
                                 }
                                 trackInfo->wav.frequency=fq;
                                 trackInfo->wav.channels=chan;
@@ -221,8 +221,8 @@ again:
                                 ADM_EAC3_INFO info;
                                 if(!ADM_EAC3GetInfo(audioBuffer, rd, &off,&info))
                                 {
-                                        printf("[PsProbeAudio] Failed to get info on track :%x\n",trackInfo->esId);
-                                        goto er;
+                                    ADM_error("Failed to get info on track : 0x%x (EAC3)\n",trackInfo->esId);
+                                    goto er;
                                 }
                                 trackInfo->wav.frequency=info.frequency;
                                 trackInfo->wav.channels=info.channels;
@@ -231,7 +231,7 @@ again:
                             }
                             
             default:
-                        printf("[tsAudioProbe] Unsupported audio format pid %d 0x%x\n",trackInfo->esId,trackInfo->esId);
+                        ADM_error("Unsupported audio format pid %d (0x%x)\n",trackInfo->esId,trackInfo->esId);
                         return false;
 
         }
