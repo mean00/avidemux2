@@ -16,6 +16,12 @@
 #include "ADM_tsIndex.h"
 #include "ADM_h265_tag.h"
 #include "ADM_vidMisc.h"
+
+#if 1
+#define aprintf(...) {}
+#else
+#define aprintf printf
+#endif
 /**
  * 
  * @param sc
@@ -108,7 +114,7 @@ static bool findGivenStartCode(tsPacketLinearTracker *pkt,int match, const char 
       {
           return false;
       }     
-      printf("Match %x %d\n",startCode,((startCode>>1)&0x3f));
+      aprintf("Match %x %d\n",startCode,((startCode>>1)&0x3f));
       startCode=((startCode>>1)&0x3f);  
       
       if(startCode!=match && match) 
@@ -136,7 +142,7 @@ static uint8_t * findGivenStartCodeInBuffer(uint8_t *start, uint8_t *end,int mat
         if(!start[0]&&!start[1] && start[2]==0x01)
         {
             uint8_t code=(start[3]>>1)&0x3f;
-            printf(" Matcho = %d\n",code);
+            aprintf(" Matcho = %d\n",code);
             if(code==match || !match) return start;
         }
         start++;
@@ -243,11 +249,11 @@ int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
             segmentFlag=bits.get(1);
         }
         int address=bits.get(info.address_coding_length); //  log2 ( width*height/64*64)
-        printf("Adr=%d / %d\n",address,64*34);
+        aprintf("Adr=%d / %d\n",address,64*34);
     }
     if(segmentFlag)
     {
-        printf("Nope\n");
+        aprintf("Nope\n");
         return -1; 
     }
     
@@ -269,7 +275,7 @@ int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
                 ADM_warning("Unknown slice type %d \n",sliceType);
                 break;
     }
-    printf("SliceType==> %d xxx\n",slice);
+    aprintf("SliceType==> %d xxx\n",slice);
     return slice;
 }
 /**
@@ -291,7 +297,7 @@ bool bAppend=false;
     beginConsuming=0;
     listOfUnits.clear();
 
-    printf("Starting H264 indexer\n");
+    printf("Starting H265 indexer\n");
     if(!videoTrac) return false;
     if(videoTrac[0].trackType!=ADM_TS_H265 
        )
@@ -309,7 +315,7 @@ bool bAppend=false;
 
     if(!index)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
+        printf("[TsIndexerH265] Cannot create %s\n",indexName.c_str());
         return false;
     }
 
@@ -369,7 +375,7 @@ resume:
         {
           dmxPacketInfo packetInfo;
           pkt->getInfo(&packetInfo);
-          printf("Startcode =%d:%s, decoding image=%d,%s\n",startCode,startCodeToString(startCode),decodingImage,ADM_us2plain(packetInfo.dts));
+          aprintf("Startcode =%d:%s, decoding image=%d,%s\n",startCode,startCodeToString(startCode),decodingImage,ADM_us2plain(packetInfo.dts));
         }
 #define NON_IDR_PRE_READ 32 
 
