@@ -128,7 +128,6 @@ AVDM_Fade::AVDM_Fade(ADM_coreVideoFilter *in,CONFcouple *setup) :  ADM_coreVideo
  */
 void AVDM_Fade::setCoupledConf(CONFcouple *couples)
 {
-    boundsCheck();
     ADM_paramLoad(couples, fade_param, &param);
 }
 
@@ -139,7 +138,6 @@ void AVDM_Fade::setCoupledConf(CONFcouple *couples)
  */
 bool         AVDM_Fade::getCoupledConf(CONFcouple **couples)
 {
-    boundsCheck();
     return ADM_paramSave(couples, fade_param,&param);
 }
 
