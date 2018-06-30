@@ -39,6 +39,7 @@ const ffVideoCodec ffCodec[]=
   {"MJPB",  AV_CODEC_ID_MJPEGB,    false, false,    false},
   {"FPS1",  AV_CODEC_ID_FRAPS,     false, false,    false},
   {"cvid",  AV_CODEC_ID_CINEPAK,   false, false,    false},
+  {"FICV",  AV_CODEC_ID_FIC,       false, false,    false},
 // Need extradata
   {"WMV2", AV_CODEC_ID_WMV2,       true, false,    false},
   {"WMV1", AV_CODEC_ID_WMV1,       true, false,    false},

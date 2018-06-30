@@ -441,6 +441,17 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     _context->reordered_opaque=(int64_t)in->demuxerPts;
   }
   out->_qStride = 0;		//Default = no quant
+
+    // Don't trust the FICV decoder to set frame type and PTS
+    if(codecId == AV_CODEC_ID_FIC)
+    {
+        if(in->flags&AVI_KEY_FRAME)
+            _frame->pict_type=AV_PICTURE_TYPE_I;
+        else
+            _frame->pict_type=AV_PICTURE_TYPE_P;
+        _frame->reordered_opaque=(int64_t)in->demuxerPts;
+    }
+
 #if 0
   if (0 > ret && !hurryUp)
     {
