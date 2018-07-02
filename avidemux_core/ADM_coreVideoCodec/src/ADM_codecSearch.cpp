@@ -67,7 +67,10 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
     {
       return (decoders *) (new decoderFF_ffhuff (w,h,fcc,extraLen,extraData,bpp));
     }
- 
+  if (fourCC::check (fcc, (uint8_t *) "FICV"))
+    {
+      return (decoders *) (new decoderFFficv (w,h,fcc,extraLen,extraData,bpp));
+    }
 
   if (isH264Compatible (fcc))
     {
