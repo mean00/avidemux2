@@ -577,10 +577,10 @@ bool MP4Header::adjustElstDelay()
     for(int i=0;i<1+nbAudioTrack;i++)
     {
         double scaledDelay=_tracks[i].delay;
-        scaledDelay=scaledDelay/(double)_tracks[i].scale;
+        scaledDelay=scaledDelay/(double)_movieScale;
         scaledDelay*=1000000;
         xscaledDelay[i]=scaledDelay;
-        ADM_info("Delay for track %d : raw = %d, scaled  = %d with scale=%d\n",i,_tracks[i].delay,xscaledDelay[i],_tracks[i].scale);
+        ADM_info("Delay for track %d : raw = %d, scaled  = %d with scale=%d\n",i,_tracks[i].delay,xscaledDelay[i],_movieScale);
         if(scaledDelay<xmin)
             xmin=scaledDelay;
     }
@@ -590,7 +590,7 @@ bool MP4Header::adjustElstDelay()
         int d=xscaledDelay[i]-xmin;
         if(d)
         {
-            ADM_info("    Shifting track %d by %s\n",d,ADM_us2plain(d));
+            ADM_info("    Shifting track %d by %s\n",i,ADM_us2plain(d));
             shiftTrackByTime(i,d);
         }
     }
