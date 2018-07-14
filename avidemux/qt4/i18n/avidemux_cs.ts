@@ -9376,7 +9376,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="+25"/>
         <source>Track 1</source>
-        <translation type="unfinished">2. stopa: {1?}</translation>
+        <translation>Stopa 1</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -9393,17 +9393,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="-105"/>
         <source>Track 2</source>
-        <translation type="unfinished">2. stopa: {2?}</translation>
+        <translation>Stopa 2</translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Track 3</source>
-        <translation type="unfinished">2. stopa: {3?}</translation>
+        <translation>Stopa 3</translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Track 4</source>
-        <translation type="unfinished">2. stopa: {4?}</translation>
+        <translation>Stopa 4</translation>
     </message>
     <message>
         <location line="-93"/>
@@ -9416,7 +9416,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="-164"/>
         <source>Audio Tracks Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení zvukových stop</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -9424,7 +9424,7 @@ p, li { white-space: pre-wrap; }
         <location line="+41"/>
         <location line="+41"/>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Povolena</translation>
     </message>
 </context>
 <context>
@@ -9710,7 +9710,7 @@ p, li { white-space: pre-wrap; }
         <location line="-3"/>
         <location line="+5"/>
         <source>FDK-AAC Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení FDK-AAC</translation>
     </message>
 </context>
 <context>
@@ -10148,7 +10148,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+27"/>
         <source>&amp;Shift:</source>
-        <translation type="unfinished">&amp;Posun:</translation>
+        <translation>Po&amp;sun:</translation>
     </message>
     <message>
         <source>&lt;b&gt;Format&lt;/b&gt;</source>
@@ -10226,12 +10226,12 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+5"/>
         <source>Vi&amp;deo</source>
-        <translation type="unfinished">&amp;Video</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+46"/>
         <source>&amp;Audio</source>
-        <translation type="unfinished">&amp;Audio</translation>
+        <translation>&amp;Zvuk</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -10249,7 +10249,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="-10"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished">&amp;Nástroje</translation>
+        <translation>Nás&amp;troje</translation>
     </message>
     <message>
         <location line="-36"/>
@@ -10702,7 +10702,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="-1650"/>
         <source>&lt;b&gt;Video Decoder&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Video dekodér&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+1126"/>
@@ -10800,22 +10800,22 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="-1378"/>
         <source>&amp;Toolbars</source>
-        <translation type="unfinished"></translation>
+        <translation>Nás&amp;trojové lišty</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>&amp;Auto</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Automaticky</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>&amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>N&amp;edávné</translation>
     </message>
     <message>
         <location line="+46"/>
         <source>Codec O&amp;ptions</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti &amp;kodeku</translation>
     </message>
     <message>
         <location line="+108"/>
@@ -10826,28 +10826,28 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+57"/>
         <source>&lt;b&gt;Video Output&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Video výstup&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+160"/>
         <source>&lt;b&gt;Audio Output&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Zvukový výstup&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>   (0 track(s))</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">   (0 stopa(y))</translation>
     </message>
     <message>
         <location line="+212"/>
         <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Výstupní formát&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+114"/>
         <location line="+946"/>
         <source>&amp;Navigation</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Navigace</translation>
     </message>
     <message>
         <location line="-871"/>
@@ -10862,62 +10862,62 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+26"/>
         <source>Go to previous frame [LEFT]</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejít na předchozí snímek [VLEVO]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to next frame [RIGHT]</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejít na další snímek [VPRAVO]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to previous keyframe [DOWN]</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejít na předchozí klíčový snímek [DOLŮ]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to next keyframe [UP]</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejít na další klíčový snímek [NAHORU]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Set start marker [CTRL+PAGEUP]</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit počáteční značku [CTRL+PAGEUP]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Set end marker [CTRL+PAGEDOWN]</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit koncovou značku [CTRL+PAGEDOWN]</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>Search previous black frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Hledat předchozí černý snímek</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Search next black frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Hledat další černý snímek</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to first frame [HOME]</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejít na první snímek [HOME]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to last frame [END]</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejít na poslední snímek [END]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Backward one minute [CTRL+DOWN]</source>
-        <translation type="unfinished"></translation>
+        <translation>Zpět o jednu minutu [CTRL+DOWN]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Forward one minute [CTRL+UP]</source>
-        <translation type="unfinished"></translation>
+        <translation>Vpřed o jednu minutu [CTRL+UP]</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -10927,7 +10927,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+179"/>
         <source>Se&amp;lection</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Výběr</translation>
     </message>
     <message>
         <location line="+87"/>
@@ -10947,7 +10947,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="-172"/>
         <source>Vol&amp;ume</source>
-        <translation type="unfinished"></translation>
+        <translation>Hlas&amp;itost</translation>
     </message>
     <message>
         <location line="-25"/>
@@ -10957,12 +10957,12 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+114"/>
         <source>Audio &amp;Metre</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Měřič zvuku</translation>
     </message>
     <message>
         <location line="+44"/>
         <source>Open Video</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít video</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -10977,7 +10977,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+38"/>
         <source>&amp;Codec Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti &amp;kodeku</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -10992,7 +10992,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+11"/>
         <source>&amp;Selection</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Výběr</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -11002,7 +11002,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+11"/>
         <source>&amp;Volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Hlas&amp;itost</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -11012,7 +11012,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+11"/>
         <source>&amp;Audio Metre</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Měřič zvuku</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -12589,7 +12589,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+23"/>
         <source>Copy</source>
-        <translation type="unfinished">Kopie</translation>
+        <translation>Kopírovat</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -12730,7 +12730,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+13"/>
         <source>Audio Filters</source>
-        <translation type="unfinished">Audio filtry</translation>
+        <translation>Zvukové filtry</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="-16"/>
@@ -12825,12 +12825,12 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+7"/>
         <source>Audio Encoder Plugins</source>
-        <translation type="unfinished">Zásuvné moduly audio kodérů</translation>
+        <translation>Zásuvné moduly zvukového kodéru</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Audio Encoders</source>
-        <translation type="unfinished">Audio kodéry</translation>
+        <translation>Zvukové kodéry</translation>
     </message>
     <message>
         <location line="+64"/>
@@ -12845,7 +12845,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+0"/>
         <source>An audio track is necessary to create such file</source>
-        <translation type="unfinished">Pro vytvoření takovéhoto souboru je zvuková stopa nutná.</translation>
+        <translation>Pro vytvoření takového souboru je zvuková stopa nutná</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -13089,27 +13089,27 @@ Je spuštěno?</translation>
     <message>
         <location line="+8"/>
         <source>Select File to Save Audio</source>
-        <translation type="unfinished">Zvolte soubor k uložení zvuku</translation>
+        <translation>Vybrat soubor k uložení zvuku</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Select JPEG Sequence to Save</source>
-        <translation type="unfinished">Vyberte sled JPEG souborů k uložení</translation>
+        <translation>Vybrat sled JPEG souborů k uložení</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Select BMP to Save</source>
-        <translation type="unfinished">Vyberte BMP soubor k uložení</translation>
+        <translation>Vybrat BMP soubor k uložení</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Select JPEG to Save</source>
-        <translation type="unfinished">Vyberte JPEG soubor k uložení</translation>
+        <translation>Vybrat JPEG soubor k uložení</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Select File to Save</source>
-        <translation type="unfinished">Zvolte soubor k uložení</translation>
+        <translation>Vybrat soubor k uložení</translation>
     </message>
     <message>
         <location line="+62"/>
@@ -13682,7 +13682,7 @@ Je spuštěno?</translation>
         <location line="+25"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="-85"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>Nic</translation>
     </message>
     <message>
         <location line="-14"/>
@@ -13698,12 +13698,12 @@ Je spuštěno?</translation>
     <message>
         <location line="+5"/>
         <source>Manual (dB)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ruční (dB)</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Gain</source>
-        <translation type="unfinished"></translation>
+        <translation>Zisk</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -13713,12 +13713,12 @@ Je spuštěno?</translation>
     <message>
         <location line="+3"/>
         <source>Mixer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mixér</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Shift audio:</source>
-        <translation type="unfinished"></translation>
+        <translation>Posun zvuku:</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -13738,32 +13738,32 @@ Je spuštěno?</translation>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="-144"/>
         <source>Video Decoder Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Zásuvné moduly video dekodéru</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>Video Decoder</source>
-        <translation type="unfinished"></translation>
+        <translation>Video dekodér</translation>
     </message>
     <message>
         <location line="+63"/>
         <source>Demuxer Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Zásuvné moduly demultiplexeru</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Demuxers</source>
-        <translation type="unfinished"></translation>
+        <translation>Demultiplexery</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Muxer Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Zásuvné moduly multiplexeru</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Muxers</source>
-        <translation type="unfinished"></translation>
+        <translation>Multiplexery</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-147"/>
@@ -13841,12 +13841,12 @@ Je spuštěno?</translation>
     <message>
         <location line="+60"/>
         <source>System language</source>
-        <translation type="unfinished"></translation>
+        <translation>Systémový jazyk</translation>
     </message>
     <message>
         <location line="+25"/>
         <source>_Language</source>
-        <translation type="unfinished"></translation>
+        <translation>_Jazyk</translation>
     </message>
     <message>
         <location line="+34"/>
@@ -13887,39 +13887,39 @@ Je spuštěno?</translation>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-96"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Append</source>
-        <translation type="unfinished"></translation>
+        <translation>Připojit</translation>
     </message>
     <message>
         <location line="+2"/>
         <location filename="../../common/gui_save.cpp" line="+14"/>
         <location line="+10"/>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Fronta</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save as Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit jako obrázek</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save as BMP</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit jako BMP</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save as PNG</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit jako PNG</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save as JPEG</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit jako JPEG</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13929,79 +13929,79 @@ Je spuštěno?</translation>
     <message>
         <location line="+3"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Informace</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ukončit</translation>
     </message>
     <message>
         <location line="+8"/>
         <location line="+2"/>
         <source>Clear recent items</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vymazat nedávné položky</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Undo</source>
-        <translation type="unfinished"></translation>
+        <translation>Zpět</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Redo</source>
-        <translation type="unfinished"></translation>
+        <translation>Znovu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Reset Edit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vrátit úpravu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cut</source>
-        <translation type="unfinished"></translation>
+        <translation>Vyjmout</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>Vložit</translation>
     </message>
     <message>
         <location line="+2"/>
         <location line="+2"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Smazat</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Reset Markers</source>
-        <translation type="unfinished"></translation>
+        <translation>Resetovat značky</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Pr&amp;eferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Př&amp;edvolby</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Save current settings as default</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit aktuální nastavení jako výchozí</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Load saved settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Načíst uložené nastavení</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Decoder Option</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení dekodéru</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>PostProcessing</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodatečné zpracování</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -14011,22 +14011,22 @@ Je spuštěno?</translation>
     <message>
         <location line="+6"/>
         <source>Select Track</source>
-        <translation type="unfinished"></translation>
+        <translation>Vybrat stopu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit zvuk</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Build Option</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti sestavení</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Zásuvné moduly</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -14046,42 +14046,42 @@ Je spuštěno?</translation>
     <message>
         <location line="+3"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>O aplikaci</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Previous Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Předchozí snímek</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Následující snímek</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>First Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>První snímek</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Last Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Poslední snímek</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Go To Marker A</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejít na značku A</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Go To Marker B</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejít na značku B</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Go To Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejít na čas</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -14157,7 +14157,7 @@ Install lame plugin</source>
     <message>
         <location line="+24"/>
         <source>Select script to run</source>
-        <translation type="unfinished"></translation>
+        <translation>Vybrat skript ke spuštění</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -14167,7 +14167,7 @@ Install lame plugin</source>
     <message>
         <location line="+4"/>
         <source>Select script to save</source>
-        <translation type="unfinished"></translation>
+        <translation>Vybrat skript k uložení</translation>
     </message>
     <message>
         <location line="+67"/>
@@ -14178,7 +14178,7 @@ Install lame plugin</source>
         <location line="+112"/>
         <location line="+68"/>
         <source>Select Video File...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vybrat video soubor...</translation>
     </message>
     <message>
         <location line="-43"/>
@@ -14297,17 +14297,17 @@ Proceed anyway?</source>
     <message>
         <location line="+6"/>
         <source>Output file</source>
-        <translation type="unfinished"></translation>
+        <translation>Výstupní soubor</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Job name</source>
-        <translation type="unfinished"></translation>
+        <translation>Název úlohy</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Queue job to jobList</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat úlohu na seznam</translation>
     </message>
     <message>
         <location line="+45"/>
@@ -14605,7 +14605,7 @@ Do you want to continue anyway ?</source>
     <message>
         <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+6"/>
         <source>Too short</source>
-        <translation type="unfinished"></translation>
+        <translation>Příliš krátké</translation>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
@@ -15006,13 +15006,14 @@ This message will not be displayed again.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerAvi/muxerAvi.cpp" line="+74"/>
         <source>Bad Idea</source>
-        <translation type="unfinished"></translation>
+        <translation>Špatný nápad</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Using H264/H265 in AVI is a bad idea, MKV is better for that.
  Do you want to continue anyway ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Použít H264/H265 v AVI je špatný nápad, MKV je pro to lepší.
+Nicméně chcete pokračovat?</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -15022,17 +15023,17 @@ This message will not be displayed again.</source>
     <message>
         <location line="+0"/>
         <source>Cannot create AVI file</source>
-        <translation type="unfinished"></translation>
+        <translation>Nelze vytvořit AVI soubor</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerAvi/muxerAviConfig.cpp" line="+25"/>
         <source>Muxing Format</source>
-        <translation type="unfinished"></translation>
+        <translation>Formát multiplexeru</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Avi Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>Avi multiplexer</translation>
     </message>
 </context>
 <context>
@@ -15550,13 +15551,13 @@ This message will not be displayed again.</source>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="+64"/>
         <location line="+90"/>
         <source>Contrast</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontrast</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="-89"/>
         <location line="+90"/>
         <source>Brightness</source>
-        <translation type="unfinished"></translation>
+        <translation>Jas</translation>
     </message>
 </context>
 <context>
@@ -15565,7 +15566,7 @@ This message will not be displayed again.</source>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/contrast.ui" line="+14"/>
         <location line="+19"/>
         <source>Contrast</source>
-        <translation type="unfinished">Contrast</translation>
+        <translation>Kontrast</translation>
     </message>
     <message>
         <source>Contrast:</source>
@@ -15653,14 +15654,16 @@ This message will not be displayed again.</source>
     <message>
         <location line="+0"/>
         <source>Crash file</source>
-        <translation type="unfinished">Uložený soubor po havárii</translation>
+        <translation>Soubor po havárii</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>I have detected a crash file. 
 Do you want to load it  ?
 (It will be deleted in all cases, you should save it if you want to keep it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Byl nalezen soubor po havárii. 
+Chcete ho nahrát?
+(V každém případě bude smazán, chcelte-li ho zachovat, měli byste ho uložit)</translation>
     </message>
 </context>
 <context>
@@ -15758,7 +15761,7 @@ Do you want to load it  ?
     <message>
         <location line="+6"/>
         <source>DcaEnc Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení DcaEnc</translation>
     </message>
 </context>
 <context>
@@ -16009,7 +16012,7 @@ Do you want to load it  ?
     <message>
         <location line="-21"/>
         <source>Audio Codec:</source>
-        <translation type="unfinished">Audio kodek:</translation>
+        <translation>Zvukový kodek:</translation>
     </message>
     <message>
         <location line="+141"/>
@@ -16137,7 +16140,7 @@ Do you want to load it  ?
     <message>
         <location line="-33"/>
         <source>Minimize to Tray</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimalizovat</translation>
     </message>
 </context>
 <context>
@@ -16255,7 +16258,7 @@ Do you want to load it  ?
         <location line="-194"/>
         <location line="+88"/>
         <source>Contrast</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontrast</translation>
     </message>
 </context>
 <context>
@@ -16268,7 +16271,7 @@ Do you want to load it  ?
     <message>
         <location line="+6"/>
         <source>Faac Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení Faac</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+6"/>
@@ -17115,7 +17118,7 @@ Do you want to load it  ?
     <message>
         <location line="+13"/>
         <source>Mpeg PS Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>Mpeg PS multiplexer</translation>
     </message>
 </context>
 <context>
@@ -17138,7 +17141,7 @@ Do you want to load it  ?
     <message>
         <location line="+5"/>
         <source>TS Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>TS multiplexer</translation>
     </message>
 </context>
 <context>
@@ -17848,12 +17851,12 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+9"/>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ:</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>HuffYUV Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení HuffYUV</translation>
     </message>
 </context>
 <context>
@@ -18134,7 +18137,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+4"/>
         <source>Mjpeg Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení Mjpeg</translation>
     </message>
 </context>
 <context>
@@ -18782,12 +18785,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Matroska/ADM_mkvIndexer.cpp" line="+48"/>
         <source>Matroska Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Matroska obrázky</translation>
     </message>
     <message>
         <location line="+426"/>
         <source>Matroska clusters</source>
-        <translation type="unfinished"></translation>
+        <translation>Matroska klastry</translation>
     </message>
 </context>
 <context>
@@ -18892,22 +18895,22 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkvConfig.cpp" line="+29"/>
         <source>Force display width</source>
-        <translation type="unfinished"></translation>
+        <translation>Vynutit šířku obrazu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Display width</source>
-        <translation type="unfinished"></translation>
+        <translation>Šířka obrazu</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Force Aspect Ratio (DAR)</source>
-        <translation type="unfinished"></translation>
+        <translation>Vynutit poměr stran (DAR)</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>MKV Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>MKV multiplexer</translation>
     </message>
 </context>
 <context>
@@ -19032,27 +19035,27 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+29"/>
         <source>Muxing Format</source>
-        <translation type="unfinished"></translation>
+        <translation>Formát multiplexeru</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Use alternate MP3 tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Použít alternativní MP3 značky</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Force aspect ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Vynutit poměr stran</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Aspect Ratio (DAR)</source>
-        <translation type="unfinished"></translation>
+        <translation>Poměr stran (DAR)</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>MP4 Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>MP4 multiplexer</translation>
     </message>
 </context>
 <context>
@@ -19060,12 +19063,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4v2/muxerMp4v2.cpp" line="+180"/>
         <source>Audio</source>
-        <translation type="unfinished">Audio</translation>
+        <translation>Zvuk</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Audio format not supported, only AAC/MP3/AC3</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvukový formát není podporován, pouze AAC/MP3/AC3</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -19111,17 +19114,17 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4v2/muxerMp4v2Config.cpp" line="+31"/>
         <source>Optimize for streaming (SLOW)</source>
-        <translation type="unfinished"></translation>
+        <translation>Optimalizovat pro proudový přenos (POMALÉ)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Add ipod metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>Přidat ipod metadata</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>MP4V2 Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení MP4V2</translation>
     </message>
 </context>
 <context>
@@ -19591,7 +19594,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+165"/>
         <source>Copy to Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kopírovat do schránky</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -19684,7 +19687,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_audioTracks.cpp" line="+134"/>
         <source>Select audio file</source>
-        <translation type="unfinished"></translation>
+        <translation>Vybrat zvukový soubor</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -19695,37 +19698,37 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="-152"/>
         <source>Cannot use that file as audio track</source>
-        <translation type="unfinished"></translation>
+        <translation>Tento soubor nelze použít jako zvuková stopa</translation>
     </message>
     <message>
         <location line="+152"/>
         <source>Some tracks are used multiple times</source>
-        <translation type="unfinished"></translation>
+        <translation>Některé stopy jsou použity vícekrát</translation>
     </message>
     <message>
         <location line="+126"/>
         <source>Track </source>
-        <translation type="unfinished"></translation>
+        <translation>Stopa </translation>
     </message>
     <message>
         <location line="+0"/>
         <source> from video</source>
-        <translation type="unfinished"></translation>
+        <translation> z videa</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>File </source>
-        <translation type="unfinished"></translation>
+        <translation>Soubor </translation>
     </message>
     <message>
         <location line="+34"/>
         <source>.... Add audio track</source>
-        <translation type="unfinished"></translation>
+        <translation>.... Přidat zvukovou stopu</translation>
     </message>
     <message>
         <location line="+34"/>
         <source>copy</source>
-        <translation type="unfinished"></translation>
+        <translation>kopie</translation>
     </message>
 </context>
 <context>
@@ -19755,7 +19758,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+3"/>
         <source>Encoding...</source>
-        <translation type="unfinished"></translation>
+        <translation>Probíhá kódování...</translation>
     </message>
     <message>
         <location line="+188"/>
@@ -19790,7 +19793,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="-68"/>
         <source>Overwrite file </source>
-        <translation type="unfinished"></translation>
+        <translation>Přepsat soubor </translation>
     </message>
 </context>
 <context>
@@ -19803,7 +19806,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+245"/>
         <source>Recent Files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nedávné soubory</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -19889,7 +19892,7 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location line="+334"/>
         <source> (%d track(s))</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> (%d stopa(y))</translation>
     </message>
 </context>
 <context>
@@ -19897,7 +19900,7 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2_menu.cpp" line="+51"/>
         <source>Project Script</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Skript projektu</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -19907,7 +19910,7 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location line="+6"/>
         <source>&amp;Run Project...</source>
-        <translation type="unfinished"></translation>
+        <translation>Spustit p&amp;rojekt...</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -19917,7 +19920,7 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location line="+5"/>
         <source>Save &amp;As Project...</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit j&amp;ako projekt...</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -21615,7 +21618,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+1"/>
         <source>Quality based</source>
-        <translation type="unfinished">Režim kvality</translation>
+        <translation>Dle kvality</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -21635,7 +21638,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+7"/>
         <source>Vorbis Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení Vorbis</translation>
     </message>
 </context>
 <context>
@@ -21673,17 +21676,17 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerWebm/muxerWebmConfig.cpp" line="+27"/>
         <source>Force display width</source>
-        <translation type="unfinished"></translation>
+        <translation>Vynutit šířku obrazu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Display width</source>
-        <translation type="unfinished"></translation>
+        <translation>Šířka obrazu</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Webm Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>Webm multiplexer</translation>
     </message>
 </context>
 <context>
@@ -22882,12 +22885,12 @@ Chcete pokračovat?</translation>
     <message>
         <location line="-3525"/>
         <source>Basic</source>
-        <translation type="unfinished"></translation>
+        <translation>Základní</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Use advanced configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Použít pokročilé nastavení</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -24728,7 +24731,7 @@ Chcete pokračovat?</translation>
     <message>
         <location line="+15"/>
         <source>Xvid4 MPEG-4 ASP configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení Xvid4 MPEG-4 ASP</translation>
     </message>
 </context>
 <context>
