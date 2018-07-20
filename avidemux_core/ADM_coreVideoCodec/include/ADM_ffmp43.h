@@ -22,6 +22,7 @@
 extern "C" 
 {
 #include "libavcodec/avcodec.h"
+#include "libavutil/mem.h"
 }
 #include "ADM_hwAccel.h"
 
@@ -48,7 +49,6 @@ public:
             typedef struct 
              {
                      bool swapUv;
-                     bool showMv;
              } decoderFF_param_t;    
 
 protected:
@@ -165,8 +165,6 @@ FF_SIMPLE_DECLARE(decoderFFH265,
                                 )
 
 
-#define FF_SHOW		(FF_DEBUG_VIS_MV_P_FOR+	FF_DEBUG_VIS_MV_B_FOR+FF_DEBUG_VIS_MV_B_BACK)
-
 #define WRAP_Open_Template(funcz,argz,display,codecid,extra) \
 {\
 AVCodec *codec=funcz(argz);\
@@ -178,8 +176,6 @@ if(!codec) {GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("ad
   _context->width = _w;\
   _context->height = _h;\
   _context->pix_fmt = AV_PIX_FMT_YUV420P;\
-  _context->debug_mv |= FF_SHOW;\
-  _context->debug |= FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP;\
   _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
   _context->error_concealment=3; \
   _context->opaque=this; \
