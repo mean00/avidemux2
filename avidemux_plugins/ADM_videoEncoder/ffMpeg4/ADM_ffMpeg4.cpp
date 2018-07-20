@@ -57,7 +57,7 @@ bool ADM_ffMpeg4Encoder::configureContext(void)
             break;
       case COMPRESS_SAME:
       case COMPRESS_CQ:
-            _context->flags |= CODEC_FLAG_QSCALE;
+            _context->flags |= AV_CODEC_FLAG_QSCALE;
             _context->bit_rate = 0;
             break;
       case COMPRESS_CBR:
@@ -183,15 +183,6 @@ bool         ADM_ffMpeg4Encoder::isDualPass(void)
 
 bool         ffMpeg4Configure(void)
 {
-diaMenuEntry meE[]={
-  {1,QT_TRANSLATE_NOOP("ffmpeg4","None")},
-  {2,QT_TRANSLATE_NOOP("ffmpeg4","Full")},
-  {3,QT_TRANSLATE_NOOP("ffmpeg4","Log")},
-  {4,QT_TRANSLATE_NOOP("ffmpeg4","Phods")},
-  {5,QT_TRANSLATE_NOOP("ffmpeg4","EPZS")},
-  {6,QT_TRANSLATE_NOOP("ffmpeg4","X1")}
-};
-
 diaMenuEntry qzE[]={
   {0,QT_TRANSLATE_NOOP("ffmpeg4","H.263")},
   {1,QT_TRANSLATE_NOOP("ffmpeg4","MPEG")}
@@ -212,11 +203,9 @@ diaMenuEntry threads[]={
 
         FFcodecSettings *conf=&Mp4Settings;
 
-uint32_t me=(uint32_t)conf->lavcSettings.me_method;
 #define PX(x) &(conf->lavcSettings.x)
 
          diaElemBitrate   bitrate(&(Mp4Settings.params),NULL);
-         diaElemMenu      meM(&me,QT_TRANSLATE_NOOP("ffmpeg4","Matrices"),4,meE);
          diaElemMenu      threadM(PX(MultiThreaded),QT_TRANSLATE_NOOP("ffmpeg4","Threading"),4,threads);
          diaElemUInteger  qminM(PX(qmin),QT_TRANSLATE_NOOP("ffmpeg4","Mi_n. quantizer:"),1,31);
          diaElemUInteger  qmaxM(PX(qmax),QT_TRANSLATE_NOOP("ffmpeg4","Ma_x. quantizer:"),1,31);
@@ -226,8 +215,6 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TRANSLATE_NOOP("ffmpeg4","_Trellis quantization"));
 
          diaElemToggle    qpel(PX(_QPEL),QT_TRANSLATE_NOOP("ffmpeg4","_Quarter pixel"));
-         diaElemToggle    gmc(PX(_GMC),QT_TRANSLATE_NOOP("ffmpeg4","_GMC"));
-
 
          diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TRANSLATE_NOOP("ffmpeg4","_Number of B frames:"),0,32);
          diaElemMenu     qzM(PX(mpeg_quant),QT_TRANSLATE_NOOP("ffmpeg4","_Quantization type:"),2,qzE);
@@ -249,7 +236,6 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
 
         frameMe.swallow(&max_b_frames);
         frameMe.swallow(&qpel);
-        frameMe.swallow(&gmc);
 
         diaElem *diaME[]={&fourMv,&frameMe};
         diaElemTabs tabME(QT_TRANSLATE_NOOP("ffmpeg4","Motion Estimation"),2,diaME);
@@ -266,7 +252,6 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElemTabs *tabs[]={&tabMode,&tabME,&tabQz,&tabRC};
         if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("ffmpeg4","libavcodec MPEG-4 configuration"),4,tabs))
         {
-          conf->lavcSettings.me_method=(Motion_Est_ID)me;
           return true;
         }
          return false;

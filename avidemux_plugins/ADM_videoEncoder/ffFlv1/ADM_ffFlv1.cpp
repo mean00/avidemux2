@@ -55,7 +55,7 @@ bool ADM_ffFlv1Encoder::configureContext(void)
             }
             break;
       case COMPRESS_CQ:
-            _context->flags |= CODEC_FLAG_QSCALE;
+            _context->flags |= AV_CODEC_FLAG_QSCALE;
             _context->bit_rate = 0;
             break;
       case COMPRESS_CBR:
@@ -127,7 +127,7 @@ again:
             printf("[ffFlv1] Unsupported encoding mode\n");
             return false;
     }
-    aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
+    aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,AV_CODEC_FLAG_QSCALE,
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);     
     
     _frame->reordered_opaque=image->Pts;
@@ -158,15 +158,6 @@ bool         ADM_ffFlv1Encoder::isDualPass(void)
 
 bool         ffFlv1Configure(void)
 {         
-diaMenuEntry meE[]={
-  {1,QT_TRANSLATE_NOOP("flv1","None")},
-  {2,QT_TRANSLATE_NOOP("flv1","Full")},
-  {3,QT_TRANSLATE_NOOP("flv1","Log")},
-  {4,QT_TRANSLATE_NOOP("flv1","Phods")},
-  {5,QT_TRANSLATE_NOOP("flv1","EPZS")},
-  {6,QT_TRANSLATE_NOOP("flv1","X1")}
-};       
-
 diaMenuEntry qzE[]={
   {0,QT_TRANSLATE_NOOP("flv1","H.263")},
   {1,QT_TRANSLATE_NOOP("flv1","MPEG")}
@@ -180,7 +171,6 @@ diaMenuEntry rdE[]={
 
         FFcodecSettings *conf=&Flv1Settings;
 
-uint32_t me=(uint32_t)conf->lavcSettings.me_method;  
 #define PX(x) &(conf->lavcSettings.x)
 
          diaElemBitrate   bitrate(&(Flv1Settings.params),NULL);
@@ -211,7 +201,6 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElemTabs *tabs[]={&tabMode,&tabQz,&tabRC};
         if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("flv1","libavcodec FLV1 configuration"),3,tabs))
         {
-          conf->lavcSettings.me_method=(Motion_Est_ID)me;
           return true;
         }
          return false;

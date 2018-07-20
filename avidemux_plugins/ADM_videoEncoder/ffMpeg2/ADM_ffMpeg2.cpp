@@ -58,7 +58,7 @@ bool ADM_ffMpeg2Encoder::configureContext(void)
             break;
       case COMPRESS_SAME:
       case COMPRESS_CQ:
-            _context->flags |= CODEC_FLAG_QSCALE;
+            _context->flags |= AV_CODEC_FLAG_QSCALE;
             _context->bit_rate = 0;
             break;
       case COMPRESS_CBR:
@@ -175,7 +175,7 @@ again:
             printf("[ffMpeg2] Unsupported encoding mode\n");
             return false;
     }
-    aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
+    aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,AV_CODEC_FLAG_QSCALE,
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);     
     
     _frame->reordered_opaque=image->Pts;
@@ -249,7 +249,6 @@ diaMenuEntry foE[]={
 
         mpeg2_encoder *conf=&Mp2Settings;
 
-uint32_t me=(uint32_t)conf->lavcSettings.me_method;  
 #define PX(x) &(conf->lavcSettings.x)
 
          diaElemBitrate   bitrate(&(Mp2Settings.params),NULL);
@@ -305,7 +304,6 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElemTabs *tabs[]={&tabMode,&tabAdv,&tabInter,&tabQz,&tabRC};
         if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("ffmpeg2","libavcodec MPEG-2 configuration"),5,tabs))
         {
-          conf->lavcSettings.me_method=(Motion_Est_ID)me;
           conf->lavcSettings.widescreen= widescreen;
           conf->lavcSettings.interlaced= iinterlaced;
           conf->lavcSettings.bff= bff;

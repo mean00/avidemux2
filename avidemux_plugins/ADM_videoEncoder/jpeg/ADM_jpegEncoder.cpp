@@ -55,7 +55,7 @@ ADM_jpegEncoder::~ADM_jpegEncoder()
 bool         ADM_jpegEncoder::encode (ADMBitstream * out)
 {
     if(false==preEncode()) return false;
-    _context->flags |= CODEC_FLAG_QSCALE;
+    _context->flags |= AV_CODEC_FLAG_QSCALE;
     _frame->quality = (int) floor (FF_QP2LAMBDA * jpegConf.quantizer+ 0.5);
     
     if(false==preEncode()) 
