@@ -182,7 +182,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
         c->rc_buffer_size=8*1024*224;
         c->rc_max_rate=9500*1000;
         c->rc_min_rate=0;
-        c->flags=CODEC_FLAG_QSCALE;
+        c->flags=AV_CODEC_FLAG_QSCALE;
 
         uint32_t fcc=stream->getFCC();
 
@@ -282,7 +282,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
             if(videoExtraDataSize)
             {
                 ADM_info("Video has extradata and muxer requires globalHeader, assuming it is done so.\n");
-                c->flags|=CODEC_FLAG_GLOBAL_HEADER;
+                c->flags|=AV_CODEC_FLAG_GLOBAL_HEADER;
             }else
             {
                 ADM_warning("Video has no extradata but muxer requires globalHeader.\n");
@@ -387,7 +387,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
             if(audioextraSize)
             {
                 ADM_info("Audio has extradata and muxer requires globalHeader, assuming it is done so.\n");
-                c->flags|=CODEC_FLAG_GLOBAL_HEADER;
+                c->flags|=AV_CODEC_FLAG_GLOBAL_HEADER;
             }else
             {
                 ADM_warning("Audio has no extradata but muxer requires globalHeader.\n");
