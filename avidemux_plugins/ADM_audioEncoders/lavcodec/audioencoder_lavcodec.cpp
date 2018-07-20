@@ -184,7 +184,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   if(true==_globalHeader)
   {
     ADM_info("Configuring audio codec to use global headers\n");
-    CONTEXT->flags|=CODEC_FLAG_GLOBAL_HEADER;
+    CONTEXT->flags|=AV_CODEC_FLAG_GLOBAL_HEADER;
   }
   
     computeChannelLayout();
@@ -467,7 +467,7 @@ again:
               // Flush
                ADM_info("[Lav] Flush\n");
               _state=AudioEncoderStopped;
-              if(CONTEXT->codec->capabilities & CODEC_CAP_DELAY)
+              if(CONTEXT->codec->capabilities & AV_CODEC_CAP_DELAY)
               {
                   if(false==encodeBlock(0,dest,sz))
                   {
