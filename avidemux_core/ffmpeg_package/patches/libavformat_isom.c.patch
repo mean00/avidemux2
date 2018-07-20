@@ -1,6 +1,6 @@
---- libavformat/isom.c.org	2016-05-09 07:51:11.864152543 +0200
-+++ libavformat/isom.c	2016-05-09 07:53:00.998025020 +0200
-@@ -292,8 +292,13 @@
+--- libavformat/isom.c.orig	2017-10-15 17:59:38.000000000 +0200
++++ libavformat/isom.c	2017-10-20 21:57:43.612220521 +0200
+@@ -330,8 +330,13 @@
      { AV_CODEC_ID_MACE3,           MKTAG('M', 'A', 'C', '3') },
      { AV_CODEC_ID_MACE6,           MKTAG('M', 'A', 'C', '6') },
      { AV_CODEC_ID_MP1,             MKTAG('.', 'm', 'p', '1') },
@@ -15,4 +15,4 @@
 +// /MEANX
      { AV_CODEC_ID_MP3,             0x6D730055                },
      { AV_CODEC_ID_NELLYMOSER,      MKTAG('n', 'm', 'o', 's') }, /* Flash Media Server */
-     { AV_CODEC_ID_PCM_ALAW,        MKTAG('a', 'l', 'a', 'w') },
+     { AV_CODEC_ID_NELLYMOSER,      MKTAG('N', 'E', 'L', 'L') }, /* Perian */

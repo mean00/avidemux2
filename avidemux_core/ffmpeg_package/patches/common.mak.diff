@@ -1,11 +1,11 @@
---- common.mak.org	2012-10-08 21:46:12.701137958 +0200
-+++ common.mak	2012-10-08 22:01:03.413149631 +0200
-@@ -82,7 +82,7 @@
- FFLIBS    := $(FFLIBS-yes) $(FFLIBS)
+--- ffbuild/common.mak.orig	2018-07-16 20:30:17.679881436 +0200
++++ ffbuild/common.mak	2018-07-16 20:34:01.408202315 +0200
+@@ -118,7 +118,7 @@
+ FFLIBS    := $($(NAME)_FFLIBS) $(FFLIBS-yes) $(FFLIBS)
  TESTPROGS += $(TESTPROGS-yes)
  
 -LDLIBS       = $(FFLIBS:%=%$(BUILDSUF))
 +LDLIBS       = $(FFLIBS:%=ADM6%$(BUILDSUF))
- FFEXTRALIBS := $(LDLIBS:%=$(LD_LIB)) $(EXTRALIBS)
+ FFEXTRALIBS := $(LDLIBS:%=$(LD_LIB)) $(foreach lib,EXTRALIBS-$(NAME) $(FFLIBS:%=EXTRALIBS-%),$($(lib))) $(EXTRALIBS)
  
- EXAMPLES  := $(EXAMPLES:%=$(SUBDIR)%-example$(EXESUF))
+ OBJS      := $(sort $(OBJS:%=$(SUBDIR)%))
