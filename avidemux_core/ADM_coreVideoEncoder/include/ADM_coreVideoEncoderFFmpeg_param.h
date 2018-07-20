@@ -19,7 +19,7 @@
 #define ADM_CORE_VIDEO_ENCODER_FF_PARAM_H
 
 
-#define ADM_AVCODEC_SETTING_VERSION 2
+#define ADM_AVCODEC_SETTING_VERSION 3
 extern "C" 
 {
 #include "libavcodec/avcodec.h"

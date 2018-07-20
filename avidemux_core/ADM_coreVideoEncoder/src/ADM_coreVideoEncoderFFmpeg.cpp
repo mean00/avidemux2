@@ -327,7 +327,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
     if(_globalHeader)
     {
                 ADM_info("Codec configured to use global header\n");
-                _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
+                _context->flags|=AV_CODEC_FLAG_GLOBAL_HEADER;
     }
    prolog(image);
     uint64_t inc=source->getInfo()->frameIncrement;
@@ -531,7 +531,6 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 
 #define SETX(x) _context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);
 
-      SETX (me_method);
       SETX (qmin);
       SETX (qmax);
       SETX (max_b_frames);
@@ -554,10 +553,6 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 #undef SETX
 #undef SETX_COND
 
-#define SETX(x) if(set->lavcSettings.x){ _context->flags|=CODEC_FLAG##x;printf("[LAVCODEC]"#x" is set\n");}
-      SETX (_GMC);
-
-
     switch (set->lavcSettings.mb_eval)
 	{
         case 0:
@@ -573,6 +568,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
           ADM_assert (0);
 	}
 
+#define SETX(x) if(set->lavcSettings.x){ _context->flags|=AV_CODEC_FLAG##x;printf("[LAVCODEC]"#x" is set\n");}
       SETX (_4MV);
       SETX (_QPEL);
       if(set->lavcSettings._TRELLIS_QUANT) _context->trellis=1;
@@ -589,7 +585,6 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 #undef SETX
   _context->bit_rate_tolerance = 8000000;
   _context->b_quant_factor = 1.25;
-  _context->rc_strategy = 2;
   _context->b_frame_strategy = 0;
   _context->b_quant_offset = 1.25;
   _context->rtp_payload_size = 0;
@@ -666,7 +661,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
         {
                 case 1:
                     printf("[ffMpeg4] Setup-ing Pass 1\n");
-                    _context->flags |= CODEC_FLAG_PASS1;
+                    _context->flags |= AV_CODEC_FLAG_PASS1;
                     // Open stat file
                     statFile=ADM_fopen(statFileName,"wt");
                     if(!statFile)
@@ -677,7 +672,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
                     break;
                 case 2:
                     printf("[ffMpeg4] Setup-ing Pass 2\n");
-                    _context->flags |= CODEC_FLAG_PASS2;
+                    _context->flags |= AV_CODEC_FLAG_PASS2;
                     if(false==loadStatFile(statFileName))
                     {
                         printf("[ffmpeg4] Cannot load stat file\n");
