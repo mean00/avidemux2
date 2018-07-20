@@ -20,16 +20,16 @@
  ***************************************************************************/
 #pragma once
 #include "ADM_hwAccel.h"
+#include "ADM_coreVdpau.h"
 #include <vector>
 /**
  */
 struct AVVDPAUContext;
-/**
- */
+
 typedef struct 
 {
-        std::vector <vdpau_render_state *>freeQueue;
-        std::vector <vdpau_render_state *>fullQueue;
+        std::vector <ADM_vdpauRenderState *>freeQueue;
+        std::vector <ADM_vdpauRenderState *>fullQueue;
 }vdpauContext;
 
 /**
@@ -41,12 +41,11 @@ class decoderFFVDPAU:public ADM_acceleratedDecoderFF
 protected:
                     bool            alive;
                     vdpauContext    vdpau;
-                    AVVDPAUContext *avVdCtx;
 protected:
                     bool        initVdpContext();
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
-                    void        releaseBuffer(struct vdpau_render_state *rdr);
+                    void        releaseBuffer(struct ADM_vdpauRenderState *rdr);
                     bool        initFail(void) {alive=false;return true;}
 public:
             // public API
