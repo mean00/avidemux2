@@ -34,6 +34,7 @@ extern "C"
 #include "libavcodec/hevc_ps.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
+#include "libavutil/mem.h"
 }
 
 extern "C"
@@ -76,7 +77,7 @@ protected:
 H265Parser::H265Parser  (int len,uint8_t *data)
 {
     originalLength=len;
-    myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
+    myLen=len+AV_INPUT_BUFFER_PADDING_SIZE;
     myData=new uint8_t[myLen];
     memset(myData,0x2,myLen);
     memcpy(myData,data,len);
@@ -211,9 +212,10 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
    spsinfo-> num_extra_slice_header_bits=0;
    if(sps)
    {
-        printf("Coded width=%d x %d\n",sps->output_width,sps->output_height);
-        spsinfo->width=sps->output_width;
-        spsinfo->height=sps->output_height;
+        HEVCWindow *ow=&sps->output_window;
+        printf("Coded dimensions = %d x %d\n",sps->width-ow->left_offset-ow->right_offset,sps->height-ow->top_offset-ow->bottom_offset);
+        spsinfo->width=sps->width-ow->left_offset-ow->right_offset;
+        spsinfo->height=sps->height-ow->top_offset-ow->bottom_offset;
         spsinfo->fps1000=23976;
         spsinfo->dependent_slice_segments_enabled_flag=0;
         spsinfo->address_coding_length=bitsNeeded(sps->ctb_width*sps->ctb_height);

@@ -23,6 +23,7 @@ extern "C"
 #include "libavcodec/parser.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
+#include "libavutil/mem.h"
 extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 }
 
@@ -704,7 +705,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
     bool closeCodec=false;
 
     // duplicate
-    int myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
+    int myLen=len+AV_INPUT_BUFFER_PADDING_SIZE;
     uint8_t *myData=new uint8_t[myLen];
     memset(myData,0x2,myLen);
     memcpy(myData,data,len);
