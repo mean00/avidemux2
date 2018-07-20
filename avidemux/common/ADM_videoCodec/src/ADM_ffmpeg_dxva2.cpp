@@ -251,6 +251,7 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of DXVA2 decoder
+#if 0 // The lavc functions we rely on in ADM_acceleratedDecoderFF::parseHwAccel are no more
     const AVHWAccel *accel=ADM_acceleratedDecoderFF::parseHwAccel(outPix,id,AV_PIX_FMT_DXVA2_VLD);
     if(accel)
     {
@@ -259,6 +260,8 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         return AV_PIX_FMT_DXVA2_VLD;
     }
     return AV_PIX_FMT_NONE;
+#endif
+    return AV_PIX_FMT_DXVA2_VLD;
 }
 }
 /**

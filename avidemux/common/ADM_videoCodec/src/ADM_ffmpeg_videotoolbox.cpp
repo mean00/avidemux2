@@ -69,6 +69,7 @@ static enum AVPixelFormat ADM_VT_getFormat(struct AVCodecContext *avctx, const e
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of VideoToolbox decoder
+#if 0 // The lavc functions we rely on in ADM_acceleratedDecoderFF::parseHwAccel are no more
     const AVHWAccel *accel=ADM_acceleratedDecoderFF::parseHwAccel(outPix,id,AV_PIX_FMT_VIDEOTOOLBOX);
     if(accel)
     {
@@ -77,6 +78,8 @@ static enum AVPixelFormat ADM_VT_getFormat(struct AVCodecContext *avctx, const e
         return AV_PIX_FMT_VIDEOTOOLBOX;
     }
     return AV_PIX_FMT_NONE;
+#endif
+    return AV_PIX_FMT_VIDEOTOOLBOX;
 }
 }
 

@@ -347,6 +347,7 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of LIBVA decoder
+#if 0 // The lavc functions we rely on in ADM_acceleratedDecoderFF::parseHwAccel are no more
     const AVHWAccel *accel=ADM_acceleratedDecoderFF::parseHwAccel(outPix,id,AV_PIX_FMT_VAAPI_VLD);
     if(accel)
     {
@@ -355,6 +356,8 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
         return AV_PIX_FMT_VAAPI_VLD;
     }
     return AV_PIX_FMT_NONE;
+#endif
+    return AV_PIX_FMT_VAAPI_VLD;
 }
 }
 
