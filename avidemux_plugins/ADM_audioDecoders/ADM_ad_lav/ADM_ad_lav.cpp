@@ -18,7 +18,6 @@
 
 extern "C" {
 #include "libavcodec/avcodec.h"
-#include "libavcodec/audioconvert.h"
 }
 
 #include "ADM_ad_plugin.h"
