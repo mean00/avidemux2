@@ -10231,7 +10231,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+46"/>
         <source>&amp;Audio</source>
-        <translation>&amp;Zvuk</translation>
+        <translation>Z&amp;vuk</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -10810,7 +10810,7 @@ Má se znovu použít log soubor?</translation>
     <message>
         <location line="+30"/>
         <source>&amp;Recent</source>
-        <translation>N&amp;edávné</translation>
+        <translation type="unfinished">&amp;Nedávné</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -21809,12 +21809,12 @@ Chcete pokračovat?</translation>
     <message>
         <location line="+15"/>
         <source>Save Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit profil</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>my profile</source>
-        <translation type="unfinished"></translation>
+        <translation>můj profil</translation>
     </message>
     <message>
         <location line="+34"/>
@@ -22930,17 +22930,17 @@ Chcete pokračovat?</translation>
     <message>
         <location line="+319"/>
         <source>Advanced RC</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokročilé RC</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Advanced Rate Control</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokročilé řízení datového toku</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Maximum Constant Rate Factor</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximální faktor konstantního toku</translation>
     </message>
     <message>
         <location line="+205"/>
@@ -23030,7 +23030,7 @@ Chcete pokračovat?</translation>
     <message>
         <location line="+91"/>
         <source>Advanced 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokročilé 1</translation>
     </message>
     <message>
         <location line="+142"/>
@@ -23055,7 +23055,7 @@ Chcete pokračovat?</translation>
     <message>
         <location line="+120"/>
         <source>Advanced 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokročilé 2</translation>
     </message>
     <message>
         <location line="+77"/>
@@ -23070,7 +23070,7 @@ Chcete pokračovat?</translation>
     <message>
         <location line="+59"/>
         <source>Output 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Výstup 1</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -23090,7 +23090,7 @@ Chcete pokračovat?</translation>
     <message>
         <location line="+182"/>
         <source>Output 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Výstup 2</translation>
     </message>
     <message>
         <location line="+144"/>
@@ -23360,7 +23360,7 @@ Chcete pokračovat?</translation>
     <message>
         <location line="+15"/>
         <source>Save Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit profil</translation>
     </message>
     <message>
         <location line="+45"/>
@@ -23409,7 +23409,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/qt4/x265ConfigDialog.ui" line="+15"/>
         <source>x265 Configuraton</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení x265</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -23425,7 +23425,7 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+7"/>
         <location line="+2738"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstranit</translation>
     </message>
     <message>
         <location line="-2696"/>
@@ -23435,12 +23435,12 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+6"/>
         <source>Basic</source>
-        <translation type="unfinished"></translation>
+        <translation>Základní</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Use advanced configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Použít pokročilé nastavení</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -23626,17 +23626,17 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+42"/>
         <source>Advanced RC</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokročilé RC</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Advanced Rate Control</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokročilé řízení datového toku</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Maximum Constant Rate Factor</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximální faktor konstantního toku</translation>
     </message>
     <message>
         <location line="+158"/>
@@ -24078,7 +24078,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+65"/>
         <source>Advanced 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokročilé 1</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -24148,7 +24148,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+42"/>
         <source>Advanced 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokročilé 2</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -24189,7 +24189,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+59"/>
         <source>Output 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Výstup 1</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -24250,7 +24250,7 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+42"/>
         <source>Output 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Výstup 2</translation>
     </message>
     <message>
         <location line="+6"/>
