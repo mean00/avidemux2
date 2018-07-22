@@ -962,6 +962,8 @@ void  updateLoaded (bool resetMarker)
 //___________________________________________
 int A_appendVideo (const char *name)
 {
+    if(playing)
+        return 0;
     bool markerChanged=false;
     // Check if A or B was changed
     uint64_t beginPts=0,beginDts;
@@ -986,9 +988,8 @@ int A_appendVideo (const char *name)
                 markerChanged=true;
     }
 
-    if (playing)
-        return 0;
     video_body->addToUndoQueue();
+    uint64_t currentPts=admPreview::getCurrentPts();
     if (!video_body->addFile (name))
     {
       GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something failed when appending"), NULL);
@@ -1006,6 +1007,7 @@ int A_appendVideo (const char *name)
         video_body->setMarkerBPts(video_body->getVideoDuration() );
         ADM_info("Extending marker B to the end (%s)\n",ADM_us2plain(video_body->getMarkerBPts()));
     }  
+    admPreview::seekToTime(currentPts);
     ReSync();
     GUI_setCurrentFrameAndTime();
     UI_setMarkers (video_body->getMarkerAPts(),video_body->getMarkerBPts());
