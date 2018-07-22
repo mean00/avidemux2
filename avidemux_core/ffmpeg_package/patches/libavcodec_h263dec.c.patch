@@ -2,7 +2,7 @@ diff --git libavcodec/h263dec.c libavcodec/h263dec.c
 index 15f073a..cf4a100 100644
 --- libavcodec/h263dec.c
 +++ libavcodec/h263dec.c
-@@ -151,6 +151,25 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
+@@ -152,6 +152,25 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
  
      return 0;
  }
