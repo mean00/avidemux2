@@ -23,8 +23,6 @@
 #include "dmxTSPacket.h"
 #include "dmx_mpegstartcode.h"
 
-#define TS_PES_MAX_LIMIT (1024*1024*2)
-
 #include "ADM_getbits.h"
 #include "ADM_tsCrc.cpp"
 

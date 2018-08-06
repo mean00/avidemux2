@@ -17,7 +17,9 @@ using std::vector;
 #define TS_MARKER       0x47
 #define TS_PACKET_LEN   188
 #define TS_PSI_MAX_LEN  1024
-#define TS_PES_MAX_LEN  (10*1024)
+// TS_PES_MAX_LIMIT represents an arbitrarily chosen payload size limit.
+// The largest size seen in the wild has been 2637792 in a 4k HEVC stream so far.
+#define TS_PES_MAX_LIMIT (1024*1024*3)
 /**
     \class TSpacketInfo
 */
