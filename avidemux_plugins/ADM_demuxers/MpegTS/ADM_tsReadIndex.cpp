@@ -37,7 +37,6 @@ extern uint8_t  mk_hex(uint8_t a, uint8_t b);;
 bool    tsHeader::readIndex(indexFile *index)
 {
 char buffer[TS_MAX_LINE];
-bool firstAudio=true;
         printf("[TsDemuxerer] Reading index\n");
         if(!index->goToSection("Data")) return false;
       
@@ -53,10 +52,7 @@ bool firstAudio=true;
             }
             if(!strncmp(buffer,"Audio ",6))
             {
-                if(firstAudio) 
-                    firstAudio=false; // Ignore first line
-                else
-                    processAudioIndex(buffer+6);
+                processAudioIndex(buffer+6);
             }
         }
     return true;
