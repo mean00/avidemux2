@@ -65,7 +65,7 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
 default:break;
     }
 #endif
-    int err = av_hwdevice_ctx_create(&(_context->hw_frames_ctx), AV_HWDEVICE_TYPE_VAAPI,   "", NULL, 0);
+    int err = av_hwdevice_ctx_create(&(_context->hw_frames_ctx), AV_HWDEVICE_TYPE_VAAPI, NULL, NULL, 0);
     if(err)        
     {
         ADM_warning("Cannot initialize VAAPI hwdevice (%d)\n",err);
@@ -75,7 +75,35 @@ default:break;
     _context->bit_rate=VaEncSettings.bitrate*1000;
     _context->rc_max_rate=VaEncSettings.max_bitrate*1000;
     _context->pix_fmt =AV_PIX_FMT_VAAPI;
-    
+
+    AVBufferRef *hwFramesRef;
+    AVHWFramesContext *hwFramesCtx = NULL;
+    hwFramesRef = av_hwframe_ctx_alloc(_context->hw_frames_ctx);
+    if(!hwFramesRef)
+    {
+        ADM_error("Cannot create VAAPI frame context.\n");
+        return false;
+    }
+    hwFramesCtx=(AVHWFramesContext*)(hwFramesRef->data);
+    hwFramesCtx->format=AV_PIX_FMT_VAAPI;
+    hwFramesCtx->sw_format=AV_PIX_FMT_YUV420P;
+    hwFramesCtx->width=source->getInfo()->width;
+    hwFramesCtx->height=source->getInfo()->height;
+    hwFramesCtx->initial_pool_size=20;
+    err = av_hwframe_ctx_init(hwFramesRef);
+    if(err<0)
+    {
+        ADM_error("Cannot initialize VAAPI frame context (%d)\n",err);
+        av_buffer_unref(&hwFramesRef);
+        return false;
+    }
+    _context->hw_frames_ctx = av_buffer_ref(hwFramesRef);
+    if(!_context->hw_frames_ctx)
+    {
+        ADM_error("hw_frames_ctx is NULL!\n");
+        return false;
+    }
+    av_buffer_unref(&hwFramesRef);
     _frame->format=AV_PIX_FMT_VAAPI;
     return true;
 }
@@ -168,10 +196,11 @@ again:
         sz=encodeWrapper(NULL,out);
         if (sz<= 0)
         {
-            ADM_info("[ffnvenc] Error %d encoding video\n",sz);
+            if(sz<0)
+                ADM_info("[ffVAEncH264] Error %d encoding video\n",sz);
             return false;
         }
-        ADM_info("[ffnvenc] Popping delayed bframes (%d)\n",sz);
+        ADM_info("[ffVAEncH264] Popping delayed bframes (%d)\n",sz);
         goto link;
         return false;
     }
@@ -188,7 +217,9 @@ again:
     sz=encodeWrapper(_frame,out);
     if(sz<0)
     {
-        ADM_warning("[ffnvenc] Error %d encoding video\n",sz);
+        char buf[AV_ERROR_MAX_STRING_SIZE]={0};
+        av_make_error_string(buf,AV_ERROR_MAX_STRING_SIZE,sz);
+        ADM_warning("[ffVAEncH264] Error %d (%s) encoding video\n",sz,buf);
         return false;
     }
 
