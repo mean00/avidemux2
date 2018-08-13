@@ -45,6 +45,59 @@ int      A_Save(const char *name);
 extern   ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime);
 
 /**
+    \fn audioSavePrepare
+    \brief Check whether we have an audio track to save and get the default file name extension when possible
+*/
+static bool audioSavePrepare(std::string *audioFileExtension)
+{
+    ADM_audioStream *stream;
+    if(false==video_body->getDefaultAudioTrack(&stream))
+    {
+        ADM_error("Cannot get the default audio track.\n");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Audio"),QT_TRANSLATE_NOOP("adm","No audio track"));
+        return false;
+    }
+    uint32_t type;
+    if(audioProcessMode(0))
+    {
+        EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+        if(ed->encoderIndex >= ListOfAudioEncoder.size())
+        {
+            ADM_error("Illegal encoder index: %d\n",ed->encoderIndex);
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Audio"),QT_TRANSLATE_NOOP("adm","Audio encoder index out of bounds"));
+            return false;
+        }
+        type=ListOfAudioEncoder[ed->encoderIndex]->wavTag;
+    }else
+    {
+        type=stream->getInfo()->encoding;
+    }
+    switch(type)
+    {
+        case WAV_PCM:
+        case WAV_LPCM:
+            *audioFileExtension="wav";
+            break;
+        case WAV_MP3:
+            *audioFileExtension="mp3";
+            break;
+        case WAV_MP2:
+            *audioFileExtension="mp2";
+            break;
+        case WAV_AC3:
+        case WAV_EAC3:
+            *audioFileExtension="ac3";
+            break;
+        case WAV_AAC:
+        case WAV_AAC_HE:
+            *audioFileExtension="aac";
+            break;
+        default: break;
+    };
+    return true;
+}
+
+/**
     \fn HandleAction_Navigate
 
 */
@@ -93,10 +146,16 @@ void HandleAction_Save(Action action)
       break;
 #endif
     case ACT_SAVE_AUDIO:
-      	{
-          GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select File to Save Audio"),(SELFILE_CB *)A_audioSave);
-        }
-      break;
+    {
+        std:string ext;
+        if(false==audioSavePrepare(&ext))
+            break;
+        if(ext.size())
+            GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select File to Save Audio"),ext.c_str(),(SELFILE_CB *)A_audioSave);
+        else
+            GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select File to Save Audio"),(SELFILE_CB *)A_audioSave);
+    }
+    break;
 
     case ACT_SAVE_BUNCH_OF_JPG:
       GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select JPEG Sequence to Save"), (SELFILE_CB *)A_saveBunchJpg);
@@ -242,9 +301,6 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
 */
 int A_saveAudioCopy (const char *name)
 {
-  uint32_t written, max;
-  uint64_t dts;
-
 #define ONE_STRIKE (64*1024)
   ADM_audioStream *stream;
   if(false==video_body->getDefaultAudioTrack( &stream))
@@ -291,8 +347,6 @@ int A_saveAudioProcessed (const char *name)
 #else
 
   uint64_t timeEnd,timeStart;
-  uint32_t hold,len,sample;
-  uint64_t tgt_sample,cur_sample;
   double   duration;
    timeStart=video_body->getMarkerAPts ();
    timeEnd=video_body->getMarkerBPts ();
