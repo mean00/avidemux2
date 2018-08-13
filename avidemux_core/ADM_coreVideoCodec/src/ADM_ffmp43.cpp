@@ -20,6 +20,12 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_hwAccel.h"
 
+#ifdef ADM_DEBUG
+    #define LAV_VERBOSITY_LEVEL AV_LOG_DEBUG
+#else
+    #define LAV_VERBOSITY_LEVEL AV_LOG_INFO
+#endif
+
 extern "C"
 {
     static void ADM_releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
@@ -751,10 +757,7 @@ void ADM_lavInit(void)
     avcodec_register_all();
     av_log_set_callback(adm_lavLogCallback);
     av_setFatalHandler(ffFatalError);
-#ifdef ADM_DEBUG
-    av_log_set_level(AV_LOG_DEBUG);
-#endif
-
+    av_log_set_level(LAV_VERBOSITY_LEVEL);
 }
 void adm_lavLogCallback(void  *instance, int level, const char* fmt, va_list list)
 {
@@ -762,7 +765,7 @@ void adm_lavLogCallback(void  *instance, int level, const char* fmt, va_list lis
     char buf[256];
 
     vsnprintf(buf, sizeof(buf), fmt, list);
-    if(buf[0] != '\0' && level<=AV_LOG_INFO)
+    if(buf[0] != '\0' && level<=LAV_VERBOSITY_LEVEL)
         ADM_info("[lavc] %s",buf);
 }
 

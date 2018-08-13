@@ -11,6 +11,9 @@ ADM_ffVp9.cpp
 )
 
 add_compiler_export_flags()
+IF(${ADM_DEBUG})
+    ADD_DEFINITIONS(-DADM_DEBUG)
+ENDIF(${ADM_DEBUG})
 ADM_ADD_SHARED_LIBRARY(ADM_coreVideoCodec6 ${ADM_codecs_SRCS})
 TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6 
                                           ADM_core6
