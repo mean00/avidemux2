@@ -19,7 +19,7 @@
     </categories>
     <url type="homepage">https://www.avidemux.org/</url>
     <provides>
-        <binary>avidemux2_gtk</binary>
+        <binary>avidemux3_qt5</binary>
     </provides>
     <project_license>GPL-2.0+</project_license>
     <update_contact>Avidemux team -- avidemux.org/smif/</update_contact>

@@ -31,18 +31,20 @@ extern "C"
 {
     #include "libavutil/opt.h"
 #include "libavutil/hwcontext.h"
+#include "libavutil/hwcontext_vaapi.h"
 }
 
-ffvaenc_encoder VaEncSettings;
+ffvaenc_encoder VaEncSettings = VAENC_CONF_DEFAULT;
 
 /**
         \fn ADM_ffVaEncEncoder
 */
 ADM_ffVAEncH264Encoder::ADM_ffVAEncH264Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src,NULL,globalHeader)
 {
-    //targetColorSpace=ADM_COLOR_YUV422P;
-    ADM_info("[ADM_ffVAEncH264Encoder] Creating.\n");
-    surface=NULL;
+    ADM_info("Creating.\n");
+    hwDeviceCtx=NULL;
+    swFrame=NULL;
+    hwFrame=NULL;
 }
 
 /**
@@ -51,34 +53,45 @@ ADM_ffVAEncH264Encoder::ADM_ffVAEncH264Encoder(ADM_coreVideoFilter *src,bool glo
 bool ADM_ffVAEncH264Encoder::configureContext(void)
 {
     ADM_info("Configuring context for VAAPI encoder\n");
-#if 0
-    switch(VaEncSettings.preset)
+    ADM_info("Our display: %#x\n",admLibVA::getDisplay());
+    switch(VaEncSettings.profile)
     {
-#define MIAOU(x,y) case NV_FF_PRESET_##x: ADM_assert(!av_opt_set(_context->priv_data,"preset",y, 0));break;
+#define SAY(x) case FF_PROFILE_H264_##x: _context->profile=FF_PROFILE_H264_##x; break;
+        SAY(CONSTRAINED_BASELINE)
+        SAY(MAIN)
+        SAY(HIGH)
+        default:break;
+#undef SAY
+    };
 
-     MIAOU(HP,"hp")
-     MIAOU(BD,"bd")
-     MIAOU(LL,"ll")
-     MIAOU(LLHP,"llhp")
-     MIAOU(LLHQ,"llhq")
-     MIAOU(HQ,"hq")
-default:break;
-    }
-#endif
-    int err = av_hwdevice_ctx_create(&(_context->hw_frames_ctx), AV_HWDEVICE_TYPE_VAAPI, NULL, NULL, 0);
-    if(err)        
-    {
-        ADM_warning("Cannot initialize VAAPI hwdevice (%d)\n",err);
-        return false;
-    }    
-    //
     _context->bit_rate=VaEncSettings.bitrate*1000;
     _context->rc_max_rate=VaEncSettings.max_bitrate*1000;
+    _context->max_b_frames=VaEncSettings.bframes;
     _context->pix_fmt =AV_PIX_FMT_VAAPI;
 
-    AVBufferRef *hwFramesRef;
+#define CLEARTEXT(x) char buf[AV_ERROR_MAX_STRING_SIZE]={0}; av_make_error_string(buf,AV_ERROR_MAX_STRING_SIZE,x);
+    hwDeviceCtx = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
+    if(!hwDeviceCtx)
+    {
+        ADM_error("Cannot allocate hw device context.\n");
+        return false;
+    }
+
+    AVHWDeviceContext *hwctx = (AVHWDeviceContext *)hwDeviceCtx->data;
+    AVVAAPIDeviceContext *vactx = (AVVAAPIDeviceContext *)hwctx->hwctx;
+    vactx->display = admLibVA::getDisplay();
+
+    int err = av_hwdevice_ctx_init(hwDeviceCtx);
+    if(err)
+    {
+        CLEARTEXT(err)
+        ADM_warning("Cannot initialize VAAPI hwdevice (%d, %s)\n",err,buf);
+        return false;
+    }
+
+    AVBufferRef *hwFramesRef = NULL;
     AVHWFramesContext *hwFramesCtx = NULL;
-    hwFramesRef = av_hwframe_ctx_alloc(_context->hw_frames_ctx);
+    hwFramesRef = av_hwframe_ctx_alloc(hwDeviceCtx);
     if(!hwFramesRef)
     {
         ADM_error("Cannot create VAAPI frame context.\n");
@@ -86,14 +99,15 @@ default:break;
     }
     hwFramesCtx=(AVHWFramesContext*)(hwFramesRef->data);
     hwFramesCtx->format=AV_PIX_FMT_VAAPI;
-    hwFramesCtx->sw_format=AV_PIX_FMT_YUV420P;
+    hwFramesCtx->sw_format=AV_PIX_FMT_NV12;
     hwFramesCtx->width=source->getInfo()->width;
     hwFramesCtx->height=source->getInfo()->height;
     hwFramesCtx->initial_pool_size=20;
     err = av_hwframe_ctx_init(hwFramesRef);
     if(err<0)
     {
-        ADM_error("Cannot initialize VAAPI frame context (%d)\n",err);
+        CLEARTEXT(err)
+        ADM_error("Cannot initialize VAAPI frame context (%d, %s)\n",err,buf);
         av_buffer_unref(&hwFramesRef);
         return false;
     }
@@ -104,7 +118,6 @@ default:break;
         return false;
     }
     av_buffer_unref(&hwFramesRef);
-    _frame->format=AV_PIX_FMT_VAAPI;
     return true;
 }
 
@@ -113,13 +126,6 @@ default:break;
 */
 bool ADM_ffVAEncH264Encoder::setup(void)
 {
-//nvenc
-    surface=ADM_vaSurface::allocateWithSurface(source->getInfo()->width, source->getInfo()->height);
-    if(!surface)
-    {
-        ADM_warning("ffVaEnc : Cannot allocate surface\n");
-        return false;
-    }
     if(false== ADM_coreVideoEncoderFFmpeg::setupByName("h264_vaapi"))
     {
         ADM_info("[ffMpeg] Setup failed\n");
@@ -137,13 +143,35 @@ bool ADM_ffVAEncH264Encoder::setup(void)
 */
 ADM_ffVAEncH264Encoder::~ADM_ffVAEncH264Encoder()
 {
-    ADM_info("[ffVaEncEncoder] Destroying.\n");
-    if(surface)
+    ADM_info("[ffVAEncH264] Destroying.\n");
+    if(swFrame)
     {
-        delete surface;
-        surface=NULL;
+        av_frame_free(&swFrame);
+        swFrame=NULL;
+    }
+    if(hwFrame)
+    {
+        av_frame_free(&hwFrame);
+        hwFrame=NULL;
+    }
+    if(hwDeviceCtx)
+    {
+        av_buffer_unref(&hwDeviceCtx);
+        hwDeviceCtx=NULL;
     }
 }
+
+/**
+    \fn getEncoderDelay
+*/
+uint64_t ADM_ffVAEncH264Encoder::getEncoderDelay(void)
+{
+    uint64_t inc=source->getInfo()->frameIncrement;
+    if(VaEncSettings.profile && VaEncSettings.bframes)
+        return inc*2;
+    return 0;
+}
+
 /**
  */
 bool             ADM_ffVAEncH264Encoder::preEncode(void)
@@ -151,38 +179,107 @@ bool             ADM_ffVAEncH264Encoder::preEncode(void)
     uint32_t nb;
     if(source->getNextFrame(&nb,image)==false)
     {
-        printf("[ff] Cannot get next image\n");
+        ADM_warning("[ffVAEncH264] Cannot get next image\n");
         return false;
     }
-    prolog(image);
+
+    swFrame=av_frame_alloc();
+    if(!swFrame)
+    {
+        ADM_error("Could not allocate sw frame\n");
+        return false;
+    }
+
+    swFrame->width=source->getInfo()->width;
+    swFrame->height=source->getInfo()->height;
+    swFrame->format=AV_PIX_FMT_NV12;
+
+    int err=av_frame_get_buffer(swFrame, 32);
+    if(err<0)
+    {
+        CLEARTEXT(err)
+        ADM_warning("get buffer for sw frame failed with error code %d (%s)\n",err,buf);
+        return false;
+    }
+
+    swFrame->linesize[0] = swFrame->linesize[1] = image->GetPitch(PLANAR_Y);
+    swFrame->linesize[2] = 0;
+    swFrame->data[2] = NULL;
+    image->convertToNV12(swFrame->data[0],swFrame->data[1],swFrame->linesize[0],swFrame->linesize[1]);
+
+    if(hwFrame)
+    {
+        av_frame_free(&hwFrame);
+        hwFrame=NULL;
+    }
+    hwFrame=av_frame_alloc();
+    if(!hwFrame)
+    {
+        ADM_error("Could not allocate hw frame\n");
+        return false;
+    }
+
+    hwFrame->width=source->getInfo()->width;
+    hwFrame->height=source->getInfo()->height;
+    hwFrame->format=AV_PIX_FMT_VAAPI;
+
+    err=av_hwframe_get_buffer(_context->hw_frames_ctx,hwFrame,0);
+    if(err<0)
+    {
+        CLEARTEXT(err)
+        ADM_warning("get buffer for hw frame failed with error code %d (%s)\n",err,buf);
+        return false;
+    }
+
+    err=av_hwframe_transfer_data(hwFrame, swFrame, 0);
+    if(err<0)
+    {
+        CLEARTEXT(err)
+        ADM_warning("data transfer to the hw frame failed with error code %d (%s)\n",err,buf);
+        return false;
+    }
 
     uint64_t p=image->Pts;
     queueOfDts.push_back(p);
     aprintf("Incoming frame PTS=%" PRIu64", delay=%" PRIu64"\n",p,getEncoderDelay());
     p+=getEncoderDelay();
-    _frame->pts= timingToLav(p);    //
-    if(!_frame->pts) _frame->pts=AV_NOPTS_VALUE;
+    hwFrame->pts=timingToLav(p);
+    if(!hwFrame->pts)
+        hwFrame->pts=AV_NOPTS_VALUE;
 
     ADM_timeMapping map; // Store real PTS <->lav value mapping
     map.realTS=p;
-    map.internalTS=_frame->pts;
+    map.internalTS=hwFrame->pts;
     mapper.push_back(map);
 
-    aprintf("Codec> incoming pts=%" PRIu64"\n",image->Pts);
-    //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame->pts,image->Pts,_context->time_base.num,_context->time_base.den);
-    
-    if(!surface->fromAdmImage(image))
-    {
-        ADM_warning("Cannot upload to vaSurface\n");
-        return false;
-    }
-    
-    _frame->data[0] = _frame->data[1] = _frame->data[2] = NULL;
-    _frame->data[3]=(uint8_t *)surface->surface;
-    
-  
+    av_frame_free(&swFrame);
+    swFrame=NULL;
     return true;
 }
+
+/**
+ * \fn encodeWrapper
+ */
+int ADM_ffVAEncH264Encoder::encodeWrapper(AVFrame *in,ADMBitstream *out)
+{
+    int r,gotData;
+    AVPacket pkt;
+    av_init_packet(&pkt);
+
+    r = avcodec_encode_video2(_context,&pkt,in,&gotData);
+    if(r<0)
+        return r;
+    if(!gotData)
+    {
+        ADM_warning("Encoder produced no data\n");
+        return 0;
+    }
+    lavPtsFromPacket=pkt.pts;
+    packetFlags=pkt.flags;
+    memcpy(out->data,pkt.data,pkt.size);
+    return pkt.size;
+}
+
 /**
     \fn encode
 */
@@ -204,27 +301,30 @@ again:
         goto link;
         return false;
     }
+
     q=image->_Qp;
-
     if(!q) q=2;
-    aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
-                                     _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);
+    aprintf("[CODEC] Flags=%#x, QSCALE=%x, bit_rate=%d, quality=%d, qz=%d, incoming qz=%d\n",
+        _context->flags,
+        AV_CODEC_FLAG_QSCALE,
+        _context->bit_rate,
+        hwFrame->quality,
+        hwFrame->quality / FF_QP2LAMBDA,
+        q);
 
-    _frame->reordered_opaque=image->Pts;
-    _frame->width=image->GetWidth(PLANAR_Y);
-    _frame->height=image->GetHeight(PLANAR_Y);
+    hwFrame->reordered_opaque=image->Pts;
 
-    sz=encodeWrapper(_frame,out);
+    sz=encodeWrapper(hwFrame,out);
     if(sz<0)
     {
-        char buf[AV_ERROR_MAX_STRING_SIZE]={0};
-        av_make_error_string(buf,AV_ERROR_MAX_STRING_SIZE,sz);
+        CLEARTEXT(sz)
         ADM_warning("[ffVAEncH264] Error %d (%s) encoding video\n",sz,buf);
         return false;
     }
 
     if(sz==0) // no pic, probably pre filling, try again
         goto again;
+    aprintf("[ffVAEncH264] encoder produces %d bytes\n",sz);
 link:
     return postEncode(out,sz);
 }
@@ -239,39 +339,47 @@ bool         ADM_ffVAEncH264Encoder::isDualPass(void)
 }
 
 /**
-    \fn jpegConfigure
-    \brief UI configuration for jpeg encoder
+    \fn ffVAEncConfigure
+    \brief UI configuration for ffVAEncH264 encoder
 */
 
 bool         ffVAEncConfigure(void)
 {
-#if 0
-diaMenuEntry mePreset[]={
-  {NV_FF_PRESET_HP,QT_TRANSLATE_NOOP("ffnvenc","Low Quality")},
-  {NV_FF_PRESET_HQ,QT_TRANSLATE_NOOP("ffnvenc","High Quality")},
-  {NV_FF_PRESET_BD,QT_TRANSLATE_NOOP("ffnvenc","BluRay")},
-  {NV_FF_PRESET_LL,QT_TRANSLATE_NOOP("ffnvenc","Low Latency")},
-  {NV_FF_PRESET_LLHP,QT_TRANSLATE_NOOP("ffnvenc","Low Latency (LQ)")},
-  {NV_FF_PRESET_LLHQ,QT_TRANSLATE_NOOP("ffnvenc","Low Latency (HQ)")}
-};
+    ffvaenc_encoder *conf=&VaEncSettings;
 
-        ffnvenc_encoder *conf=&NvEncSettings;
+    diaMenuEntry h264Profile[]={
+        {FF_PROFILE_H264_CONSTRAINED_BASELINE,QT_TRANSLATE_NOOP("ffVAEncH264","Baseline")},
+        {FF_PROFILE_H264_MAIN,QT_TRANSLATE_NOOP("ffVAEncH264","Main")},
+        {FF_PROFILE_H264_HIGH,QT_TRANSLATE_NOOP("ffVAEncH264","High")}
+    };
 
 #define PX(x) &(conf->x)
 
-        diaElemMenu      qzPreset(PX(preset),QT_TRANSLATE_NOOP("ffnvenc","Preset:"),6,mePreset);
-        diaElemUInteger  bitrate(PX(bitrate),QT_TRANSLATE_NOOP("ffnvenc","Bitrate (kbps):"),1,50000);
-        diaElemUInteger  maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,50000);
-          /* First Tab : encoding mode */
-        diaElem *diamode[]={&qzPreset,&bitrate,&maxBitrate};
+    diaElemMenu profile(PX(profile),QT_TRANSLATE_NOOP("ffVAEncH264","Profile:"),3,h264Profile);
+    diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffVAEncH264","GOP Size:"),1,250);
 
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("ffnvenc","libavcodec MPEG-4 configuration"),3,diamode))
-        {
+    if(conf->profile==FF_PROFILE_H264_CONSTRAINED_BASELINE)
+        conf->bframes=0;
 
-          return true;
-        }
-         return false;
-#endif
-return true;
+    diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffVAEncH264","Maximum Consecutive B-Frames:"),0,4);
+    diaElemUInteger bitrate(PX(bitrate), QT_TRANSLATE_NOOP("ffVAEncH264","Bitrate (kbps):"),1,50000);
+    diaElemUInteger maxBitrate(PX(max_bitrate), QT_TRANSLATE_NOOP("ffVAEncH264","Max Bitrate (kbps):"),1,50000);
+    diaElemFrame rateControl(QT_TRANSLATE_NOOP("ffVAEncH264","Rate Control"));
+    diaElemFrame frameControl(QT_TRANSLATE_NOOP("ffVAEncH264","Frame Control"));
+
+    rateControl.swallow(&bitrate);
+    rateControl.swallow(&maxBitrate);
+    frameControl.swallow(&gopSize);
+    frameControl.swallow(&maxBframes);
+
+    profile.link(h264Profile,0,&maxBframes);
+
+    diaElem *diamode[] = {&profile,&rateControl,&frameControl};
+
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("ffVAEncH264","FFmpeg VA-API H.264 Encoder Configuration"),3,diamode))
+    {
+        return true;
+    }
+    return false;
 }
 // EOF
