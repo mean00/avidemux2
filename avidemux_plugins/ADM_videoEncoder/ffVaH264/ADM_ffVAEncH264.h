@@ -24,10 +24,12 @@
 
 #define VAENC_CONF_DEFAULT \
 { \
-		0, \
-                10000, \
-                20000,\
-	}
+    FF_PROFILE_H264_HIGH, \
+    100, \
+    2, \
+    4000, \
+    8000 \
+}
 
 
 
@@ -48,11 +50,13 @@ virtual        bool        configureContext(void);
 virtual        bool        setup(void);
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "H264";}
-
+virtual        uint64_t    getEncoderDelay(void);
 virtual        bool        isDualPass(void) ;
 
 protected:
-                ADM_vaSurface *surface;
+                AVBufferRef *hwDeviceCtx;
+                AVFrame    *swFrame;
+                AVFrame    *hwFrame;
                 bool       preEncode(void);
-
+                int        encodeWrapper(AVFrame *in, ADMBitstream *out);
 };
