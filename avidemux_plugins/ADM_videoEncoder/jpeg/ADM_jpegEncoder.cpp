@@ -31,6 +31,16 @@ ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src,bool globalHeader) : A
     printf("[jpegEncoder] Creating.\n");
     targetColorSpace=(ADM_colorspace)jpegConf.colorSpace;
 }
+
+/**
+    \fn configureContext
+*/
+bool ADM_jpegEncoder::configureContext(void)
+{
+    _context->flags |= CODEC_FLAG_QSCALE;
+    return true;
+}
+
 /**
     \fn setup
 */
@@ -55,11 +65,8 @@ ADM_jpegEncoder::~ADM_jpegEncoder()
 bool         ADM_jpegEncoder::encode (ADMBitstream * out)
 {
     if(false==preEncode()) return false;
-    _context->flags |= CODEC_FLAG_QSCALE;
-    _frame->quality = (int) floor (FF_QP2LAMBDA * jpegConf.quantizer+ 0.5);
-    
-    if(false==preEncode()) 
-        return false;
+    _frame->quality = (int)jpegConf.quantizer * FF_QP2LAMBDA;
+
     int sz=0,r,gotData;
     r=encodeWrapper(_frame,out);
     if(r<0)
