@@ -31,12 +31,10 @@
 extern jpeg_encoder jpegConf;
 class ADM_jpegEncoder : public ADM_coreVideoEncoderFFmpeg
 {
-protected:
-               int              plane;
 public:
-
                            ADM_jpegEncoder(ADM_coreVideoFilter *src,bool globalHeader);
                            ~ADM_jpegEncoder();
+virtual        bool        configureContext(void);
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "MJPG";}
