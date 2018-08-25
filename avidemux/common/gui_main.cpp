@@ -260,9 +260,17 @@ void HandleAction (Action action)
                     prefs->save();
                     UI_updateRecentProjectMenu();
                     UI_updateRecentMenu(); // the order matters here
+#define LAST_SESSION_FILE ADM_getBaseDir()+std::string("lastEdit.py")
+                    std::string f=LAST_SESSION_FILE;
+                    if(ADM_fileExist(f.c_str()))
+                    {
+                        int err=remove(f.c_str());
+                        if(err)
+                            ADM_warning("Error %d deleting last editing state %s\n",err,f.c_str());
+                    }
                 }
+                return;
             }
-            return;
     case ACT_VIDEO_CODEC_CONFIGURE:
             videoEncoder6Configure();
             return;
@@ -330,10 +338,17 @@ void HandleAction (Action action)
               GUI_PlayAvi();
           }
           ADM_info("Closing ui\n");
-      UI_closeGui();
-          
-          return;
-      break;
+        UI_closeGui();
+        if(video_body && video_body->canUndo())
+        {
+            A_saveSession();
+            video_body->clearUndoQueue();
+        }
+        return;
+    case ACT_RESTORE_SESSION:
+        if(playing) break;
+        A_checkSavedSession(true);
+        return;
     default:
       break;
 
@@ -1088,7 +1103,7 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
         video_body->setProjectName(longname);
     }
 
-    if (std::string(longname) != DEFAULT_SETTINGS_FILE)
+    if (std::string(longname) != DEFAULT_SETTINGS_FILE && std::string(longname) != LAST_SESSION_FILE)
     {
         prefs->set_lastprojectfile(longname);
         UI_updateRecentProjectMenu();
@@ -1196,7 +1211,55 @@ bool A_loadDefaultSettings(void)
     }
     return false;
 }
-/*
+/**
+ * \fn A_saveSession
+ */
+bool A_saveSession(void)
+{
+    IScriptEngine *engine=getPythonScriptEngine();
+    if(!engine)
+        return false;
+    ADM_info("Saving the current state of editing\n");
+    std::string where=LAST_SESSION_FILE;
+    if(ADM_fileExist(where.c_str()))
+    {
+        std::string tmp=ADM_getBaseDir()+std::string("lastEdit.tmp");
+        A_saveScript(engine, tmp.c_str());
+        if(remove(where.c_str()))
+        {
+            ADM_warning("Could not delete the old saved session (%s)\n",where.c_str());
+            remove(tmp.c_str());
+            return false;
+        }
+        return !!rename(tmp.c_str(), where.c_str());
+    }
+    A_saveScript(engine, where.c_str());
+    return true;
+}
+/**
+ * \fn A_checkSavedSession
+ */
+bool A_checkSavedSession(bool load)
+{
+    std::string where=LAST_SESSION_FILE;
+    bool exists=ADM_fileExist(where.c_str());
+    if(!load)
+        return exists;
+    bool r=false;
+    if(exists)
+    {
+        IScriptEngine *engine=getPythonScriptEngine();
+        if(engine)
+        {
+            ADM_info("Restoring the last editing state from %s\n",where.c_str());
+            r=A_parseScript(engine,where.c_str());
+            A_Resync();
+            remove(where.c_str());
+        }
+    }
+    return r;
+}
+/**
     Unpack all frames without displaying them to check for error
 
 */
@@ -1573,6 +1636,8 @@ uint8_t GUI_close(void)
       UI_setNeedsResizingFlag(false);
       uint32_t zero[6]={0};
       UI_setVUMeter(zero);
+      if(video_body->canUndo())
+        A_saveSession();
       delete avifileinfo;
       //delete wavinfo;
       avifileinfo = NULL;

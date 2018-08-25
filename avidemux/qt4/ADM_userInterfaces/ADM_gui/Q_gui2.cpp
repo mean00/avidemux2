@@ -77,6 +77,7 @@ extern const char *encoderGetIndexedName (uint32_t i);
 uint32_t audioEncoderGetNumberOfEncoders(void);
 const char  *audioEncoderGetDisplayName(int i);
 extern void checkCrashFile(void);
+extern bool A_checkSavedSession(bool load);
 extern void UI_QT4VideoWidget(QFrame *frame);
 extern void loadTranslator(void);
 extern void initTranslator(void);
@@ -714,9 +715,9 @@ void MainWindow::buildActionLists(void)
 
     ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(9)); // "Information"
 
-    for(int i=3;i<11;i++)
+    for(int i=3;i<12;i++)
     {
-        if(i==5 || i==7 || i==11 || i==13) continue;
+        if(i==5 || i==8) continue;
         ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
     }
 
@@ -773,8 +774,8 @@ void MainWindow::buildActionLists(void)
 #define PUSH_ALWAYS_AVAILABLE(menu,entry)   ActionsAlwaysAvailable.push_back( ui.menu->actions().at(entry));
 
     PUSH_ALWAYS_AVAILABLE(menuFile,0)
-    PUSH_ALWAYS_AVAILABLE(menuFile,7)
-    PUSH_ALWAYS_AVAILABLE(menuFile,11)
+    PUSH_ALWAYS_AVAILABLE(menuFile,8)
+    PUSH_ALWAYS_AVAILABLE(menuFile,12)
 
     PUSH_ALWAYS_AVAILABLE(menuEdit,12)
     PUSH_ALWAYS_AVAILABLE(menuEdit,14)
@@ -885,7 +886,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         return;
     }
 
-    bool vid=false, undo=false, redo=false, paste=false;
+    bool vid, undo, redo, paste, restore;
+    vid=undo=redo=paste=restore=false;
     if(avifileinfo)
         vid=true; // a video is loaded
 
@@ -912,11 +914,13 @@ void MainWindow::setMenuItemsEnabledState(void)
     ui.menuEdit->actions().at(1)->setEnabled(redo); // menu item "Redo"
     if(!vid || (!undo && !redo)) // if no edits have been performed, disable "Reset Edit" menu item
     {
+        restore=A_checkSavedSession(false);
         ui.menuEdit->actions().at(2)->setEnabled(false);
     }else
     {
         ui.menuEdit->actions().at(2)->setEnabled(true);
     }
+    ui.menuFile->actions().at(7)->setEnabled(restore); // "Restore session"
     ui.menuEdit->actions().at(5)->setEnabled(paste); // "Paste"
 
     n=ActionsAlwaysAvailable.size();
