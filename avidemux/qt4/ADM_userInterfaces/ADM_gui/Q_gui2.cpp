@@ -713,11 +713,11 @@ void MainWindow::buildActionLists(void)
     for(int i=1;i<6;i++)
         ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(i));        
 
-    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(9)); // "Information"
+    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(11)); // "Information"
 
-    for(int i=3;i<12;i++)
+    for(int i=3;i<13;i++)
     {
-        if(i==5 || i==8) continue;
+        if(i==5 || i==7 || i==9) continue;
         ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
     }
 
@@ -774,8 +774,8 @@ void MainWindow::buildActionLists(void)
 #define PUSH_ALWAYS_AVAILABLE(menu,entry)   ActionsAlwaysAvailable.push_back( ui.menu->actions().at(entry));
 
     PUSH_ALWAYS_AVAILABLE(menuFile,0)
-    PUSH_ALWAYS_AVAILABLE(menuFile,8)
-    PUSH_ALWAYS_AVAILABLE(menuFile,12)
+    PUSH_ALWAYS_AVAILABLE(menuFile,9)
+    PUSH_ALWAYS_AVAILABLE(menuFile,13)
 
     PUSH_ALWAYS_AVAILABLE(menuEdit,12)
     PUSH_ALWAYS_AVAILABLE(menuEdit,14)
