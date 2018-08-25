@@ -25,6 +25,8 @@ bool    A_runPythonScript(const std::string &name);
 void    A_saveScript(IScriptEngine* engine, const char* name);
 void    A_saveDefaultSettings(); // Save default settings
 bool    A_loadDefaultSettings(void);
+bool    A_saveSession(void);
+bool    A_checkSavedSession(bool load);
 //uint8_t A_autoDrive(Action action);
 bool    A_TimeShift(void);
 void    A_ResetMarkers(void);
