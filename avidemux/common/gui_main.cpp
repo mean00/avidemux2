@@ -344,6 +344,7 @@ void HandleAction (Action action)
             A_saveSession();
             video_body->clearUndoQueue();
         }
+        autolock.unlock();
         return;
     case ACT_RESTORE_SESSION:
         if(playing) break;
