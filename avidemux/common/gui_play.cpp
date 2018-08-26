@@ -39,7 +39,8 @@
 #define EVEN(x) (x&0xffffffe)
 //___________________________________
 
-uint8_t stop_req;
+static uint8_t stop_req;
+static bool exiting;
 
 extern ADM_Composer *video_body;
 static uint32_t originalPriority;
@@ -105,8 +106,17 @@ GUIPlayback::~GUIPlayback()
     \brief      MainLoop for internal movie playback
 
 */
-void GUI_PlayAvi(void)
+void GUI_PlayAvi(bool quit)
 {
+    exiting = quit;
+    // check we got everything...
+    if (!video_body->getNbSegment())
+        return;
+    if (playing)
+    {
+        stop_req = 1;
+        return;
+    }
 
     uint32_t framelen,flags;
     uint32_t max,err;
@@ -115,13 +125,6 @@ void GUI_PlayAvi(void)
     float oldZoom=admPreview::getCurrentZoom();
     video_body->getVideoInfo(&info);
 
-    // check we got everything...
-    if (!video_body->getNbSegment())	return;
-    if (playing)
-      {
-        stop_req = 1;
-        return;
-      }
     oldTimeFrame=admPreview::getCurrentPts();
 	uint32_t priorityLevel;
 
@@ -143,6 +146,9 @@ void GUI_PlayAvi(void)
     newTimeFrame=oldTimeFrame+playLoop->getLastPts();
     delete playLoop;
     playing = 0;
+
+    // Don't touch display on application exit
+    if(exiting) return;
 
    admPreview::deferDisplay(false);
    // Resize the output window to original size...
