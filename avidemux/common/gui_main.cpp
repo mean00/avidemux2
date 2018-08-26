@@ -335,9 +335,9 @@ void HandleAction (Action action)
           if(playing)
           {
               ADM_info("Stopping playback...\n");
-              GUI_PlayAvi();
+              GUI_PlayAvi(true);
           }
-          ADM_info("Closing ui\n");
+        ADM_info("Closing ui\n");
         UI_closeGui();
         if(video_body && video_body->canUndo())
         {

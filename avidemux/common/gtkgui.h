@@ -28,7 +28,7 @@ void GUI_NextBlackFrame( ) ;
 void GUI_NextPrevBlackFrame( int ) ;
 void GUI_PreviousKeyFrame( void );
 uint8_t A_ListAllBlackFrames( char *name);
-void GUI_PlayAvi( void );
+void GUI_PlayAvi(bool quit = false);
 uint32_t GUI_GetScale( void );
 void     GUI_SetScale( uint32_t scale );
 void GUI_detransient(void );
