@@ -38,15 +38,6 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
 
                 fileMenu.insert(fileMenu.begin() + i, separatorEntry);
                 i++;
-                // add session restore entry with a separator below
-                string restoreSessionEntryName = QT_TRANSLATE_NOOP("qgui2menu","Restore previous session");
-                MenuEntry restoreSessionEntry = {MENU_ACTION, restoreSessionEntryName, NULL, ACT_RESTORE_SESSION, NULL, NULL};
-                fileMenu.insert(fileMenu.begin() + i, restoreSessionEntry);
-                i++;
-
-                MenuEntry separatorBelow = {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL};
-                fileMenu.insert(fileMenu.begin() + i, separatorBelow);
-                i++;
             }
 
             for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
@@ -285,3 +276,29 @@ void MainWindow::searchRecentProjects(QAction * action)
 {
 	this->searchRecentFiles(action, this->recentProjectAction, ACT_RECENT_PROJECT0);
 }
+
+/**
+ * \fn addSessionRestoreToRecentMenu
+ */
+void MainWindow::addSessionRestoreToRecentMenu(vector<MenuEntry>& menu)
+{
+    for (int i = 0; i < menu.size(); i++)
+    {
+        if (menu[i].type == MENU_SEPARATOR)
+        {
+            if (this->_scriptEngines.size())
+            {
+                vector<MenuEntry>::iterator it = menu.begin() + i;
+                // add session restore menu entry
+                string restoreSessionEntryName = QT_TRANSLATE_NOOP("qgui2menu","Restore previous session");
+                MenuEntry restoreSessionEntry = {MENU_ACTION, restoreSessionEntryName, NULL, ACT_RESTORE_SESSION, NULL, NULL};
+                it = menu.insert(it + 1, restoreSessionEntry);
+                // add separator
+                MenuEntry separatorEntry = {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL};
+                menu.insert(it + 1, separatorEntry);
+            }
+            break;
+        }
+    }
+}
+//EOF

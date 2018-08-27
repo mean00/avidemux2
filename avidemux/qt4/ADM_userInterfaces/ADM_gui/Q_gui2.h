@@ -207,6 +207,7 @@ protected:
 	void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
 	void addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu);
 	void addScriptReferencesToHelpMenu();
+        void addSessionRestoreToRecentMenu(vector<MenuEntry>& menu);
         bool buildMyMenu(void);
         bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
 	void buildRecentMenu(QMenu *menu,std::vector<std::string>files, QAction **actions);

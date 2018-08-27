@@ -464,6 +464,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(this->recentFiles, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentFiles(QAction*)));
     connect(this->recentProjects, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentProjects(QAction*)));
 
+    addSessionRestoreToRecentMenu(myMenuRecent);
+
     buildMyMenu();
     buildCustomMenu(); // action lists are populated (i.e. buildActionLists() called) within buildCustomMenu()
     buildButtonLists();
@@ -711,13 +713,13 @@ void MainWindow::buildActionLists(void)
     // Make a list of the items that are enabled/disabled depending if video is loaded or  not
     //-----------------------------------------------------------------------------------
     for(int i=1;i<6;i++)
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(i));        
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(i));
 
-    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(11)); // "Information"
+    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(this->_scriptEngines.size()*2+7)); // "Information"
 
-    for(int i=3;i<13;i++)
+    for(int i=3;i<11;i++)
     {
-        if(i==5 || i==7 || i==9) continue;
+        if(i==5 || i==7) continue;
         ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
     }
 
@@ -774,8 +776,8 @@ void MainWindow::buildActionLists(void)
 #define PUSH_ALWAYS_AVAILABLE(menu,entry)   ActionsAlwaysAvailable.push_back( ui.menu->actions().at(entry));
 
     PUSH_ALWAYS_AVAILABLE(menuFile,0)
-    PUSH_ALWAYS_AVAILABLE(menuFile,9)
-    PUSH_ALWAYS_AVAILABLE(menuFile,13)
+    PUSH_ALWAYS_AVAILABLE(menuFile,7)
+    PUSH_ALWAYS_AVAILABLE(menuFile,11)
 
     PUSH_ALWAYS_AVAILABLE(menuEdit,12)
     PUSH_ALWAYS_AVAILABLE(menuEdit,14)
@@ -920,7 +922,6 @@ void MainWindow::setMenuItemsEnabledState(void)
     {
         ui.menuEdit->actions().at(2)->setEnabled(true);
     }
-    ui.menuFile->actions().at(7)->setEnabled(restore); // "Restore session"
     ui.menuEdit->actions().at(5)->setEnabled(paste); // "Paste"
 
     n=ActionsAlwaysAvailable.size();
@@ -936,6 +937,14 @@ void MainWindow::setMenuItemsEnabledState(void)
     if(recentProjects && recentProjects->actions().size())
         haveRecentItems=true;
     ui.menuRecent->actions().back()->setEnabled(haveRecentItems);
+
+    n=0;
+    if(recentFiles)
+        n++;
+    if(recentProjects)
+        n++;
+    if(ui.menuRecent->actions().size()>(n+2)) // "Restore session" entry exists
+        ui.menuRecent->actions().at(n+1)->setEnabled(restore);
 
     ui.selectionDuration->setEnabled(vid);
     slider->setEnabled(vid);
