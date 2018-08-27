@@ -171,12 +171,12 @@ int pySetFilm2Pal(IEditor *editor, int dex,int onoff)
 
 int pyGetNormalizeMode(IEditor *editor,int dex)
 {
-	ADM_GAINMode m;
-	uint32_t gain;
+    ADM_GAINMode m;
+    int32_t gain, level;
 
-	editor->getAudioFilterNormalise(dex,&m, &gain);
+    editor->getAudioFilterNormalise(dex, &m, &gain, &level);
 
-	return m;
+    return m;
 }
 /**
     \fn
@@ -185,28 +185,43 @@ int pyGetNormalizeMode(IEditor *editor,int dex)
 
 int pyGetNormalizeValue(IEditor *editor,int dex)
 {
-	ADM_GAINMode m;
-	uint32_t gain;
+    ADM_GAINMode m;
+    int32_t gain, level;
 
-	editor->getAudioFilterNormalise(dex,&m, &gain);
+    editor->getAudioFilterNormalise(dex, &m, &gain, &level);
 
-	return (int)gain;
+    return (int)gain;
 }
 /**
     \fn
     \brief
 */
 
-int pySetNormalize(IEditor *editor, int dex,int mode,int value)
+int pyGetNormalizeLevel(IEditor *editor,int dex)
 {
-	ADM_GAINMode m;
-	uint32_t gain;
+    ADM_GAINMode m;
+    int32_t gain, level;
+
+    editor->getAudioFilterNormalise(dex, &m, &gain, &level);
+
+    return (int)level;
+}
+/**
+    \fn
+    \brief
+*/
+
+int pySetNormalize(IEditor *editor, int dex, int mode, int value, int level)
+{
+    ADM_GAINMode m;
+    int32_t gain, max;
     // 1 - set mode
-	editor->getAudioFilterNormalise(dex,&m, &gain);
-	m = (ADM_GAINMode)mode;
+    editor->getAudioFilterNormalise(dex, &m, &gain, &max);
+    m = (ADM_GAINMode)mode;
     // 2- set value
-    gain = (uint32_t)value;
-	return editor->setAudioFilterNormalise(dex,m, gain);
+    gain = (int32_t)value;
+    max = (int32_t)level;
+    return editor->setAudioFilterNormalise(dex,m,gain,max);
 }
 
 /**
@@ -216,13 +231,13 @@ int pySetNormalize(IEditor *editor, int dex,int mode,int value)
 
 int pySetNormalizeMode(IEditor *editor, int dex,int mode)
 {
-	ADM_GAINMode m;
-	uint32_t gain;
+    ADM_GAINMode m;
+    int32_t gain, level;
 
-	editor->getAudioFilterNormalise(dex,&m, &gain);
-	m = (ADM_GAINMode)mode;
-	editor->setAudioFilterNormalise(dex,m, gain);
-        return true;
+    editor->getAudioFilterNormalise(dex, &m, &gain, &level);
+    m = (ADM_GAINMode)mode;
+    editor->setAudioFilterNormalise(dex,m,gain,level);
+    return true;
 }
 /**
     \fn
@@ -231,13 +246,28 @@ int pySetNormalizeMode(IEditor *editor, int dex,int mode)
 
 int pySetNormalizeValue(IEditor *editor, int dex,int value)
 {
-	ADM_GAINMode m;
-	uint32_t gain;
+    ADM_GAINMode m;
+    int32_t gain, level;
 
-	editor->getAudioFilterNormalise(dex,&m, &gain);
-	gain = (uint32_t)value;
-	editor->setAudioFilterNormalise(dex,m, gain);
-        return true;
+    editor->getAudioFilterNormalise(dex, &m, &gain, &level);
+    gain = (int32_t)value;
+    editor->setAudioFilterNormalise(dex,m,gain,level);
+    return true;
+}
+/**
+    \fn
+    \brief
+*/
+
+int pySetNormalizeLevel(IEditor *editor, int dex, int level)
+{
+    ADM_GAINMode m;
+    int32_t gain, max;
+
+    editor->getAudioFilterNormalise(dex, &m, &gain, &max);
+    max = (int32_t)level;
+    editor->setAudioFilterNormalise(dex,m,gain,max);
+    return true;
 }
 /**
     \fn

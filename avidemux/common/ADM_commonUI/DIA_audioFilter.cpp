@@ -28,6 +28,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   int32_t  vShift=config->shiftInMs;
   uint32_t bShiftEnabled=config->shiftEnabled;
   ELEM_TYPE_FLOAT vGainValue=config->gainParam.gain10/10;
+  ELEM_TYPE_FLOAT vGainMaxLevel=config->gainParam.maxlevel10/10.;
 
 #define PX(x) (&(config->x))
    diaElemToggleUint eResample(PX(resamplerEnabled),QT_TRANSLATE_NOOP("adm","R_esampling (Hz):"),PX(resamplerFrequency),QT_TRANSLATE_NOOP("adm","Resampling frequency (Hz)"),6000,64000);
@@ -60,16 +61,19 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
 //*************************
   diaMenuEntry menuGain[]={
   {ADM_NO_GAIN,       QT_TRANSLATE_NOOP("adm","None")},
-  {ADM_GAIN_AUTOMATIC,QT_TRANSLATE_NOOP("adm","Automatic (max -3 dB)")},
+  {ADM_GAIN_AUTOMATIC,QT_TRANSLATE_NOOP("adm","Automatic")},
   {ADM_GAIN_MANUAL,   QT_TRANSLATE_NOOP("adm","Manual (dB)")}};
   
   diaElemFrame  frameGain(QT_TRANSLATE_NOOP("adm","Gain"));
   diaElemMenu   eGain(&vGainMode,QT_TRANSLATE_NOOP("adm","_Gain mode:"),3,menuGain);   
   diaElemFloat  eGainValue(&vGainValue,QT_TRANSLATE_NOOP("adm","G_ain value:"),-10,40);
+  diaElemFloat  eGainMaxLevel(&vGainMaxLevel,QT_TRANSLATE_NOOP("adm","_Maximum value:"),-10,0);
   
   eGain.link(&(menuGain[2]),1,&eGainValue);
+  eGain.link(&(menuGain[1]),1,&eGainMaxLevel);
   frameGain.swallow(&eGain);
   frameGain.swallow(&eGainValue);
+  frameGain.swallow(&eGainMaxLevel);
   //****************************
 
  diaElemMenu      eMixer(&vChan,QT_TRANSLATE_NOOP("adm","_Mixer:"),11,menuMixer);
@@ -91,6 +95,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
         config->film2pal=(FILMCONV)vFilm;
         config->gainParam.mode=(ADM_GAINMode)vGainMode;
         config->gainParam.gain10=vGainValue*10;
+        config->gainParam.maxlevel10=vGainMaxLevel*10;
         config->mixerEnabled=bMixer;
 	config->shiftInMs=vShift;
         config->shiftEnabled=bShiftEnabled;

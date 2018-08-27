@@ -40,11 +40,13 @@ void pySetPal2Film(IEditor *editor, int32_t rate);
 void pySetFilm2Pal(IEditor *editor, int32_t rate);
 int pyGetNormalizeMode(IEditor *editor);
 int pyGetNormalizeValue(IEditor *editor);
+int pyGetNormalizeLevel(IEditor *editor);
 void pySetNormalizeMode(IEditor *editor, int mode);
 void pySetNormalizeValue(IEditor *editor, int value);
+void pySetNormalizeLevel(IEditor *editor, int level);
+int pySetNormalize(IEditor *, int track, int mode, int gain100, int maxlevel);
 int pySetFilm2Pal(IEditor *,int track,int onoff);
 int pySetPal2Film(IEditor *,int track,int onoff);
-int pySetNormalize(IEditor *,int track,int mode,int gain100);
 /* Info */
 int pyGetFps1000(IEditor *editor);
 int pyGetWidth(IEditor *editor);

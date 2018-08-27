@@ -336,7 +336,7 @@ public:
         bool        setAudioCodec(int dex,const char *codec, CONFcouple *c);
         int         setAudioMixer(int dex,const char *s);
         void        resetAudioFilter(int dex);
-        bool        setAudioFilterNormalise(int dex,ADM_GAINMode mode, uint32_t gain);
+        bool        setAudioFilterNormalise(int dex, ADM_GAINMode mode, int32_t gain, int32_t maxlevel);
         uint32_t    getAudioResample(int dex);
         void        setAudioResample(int dex,uint32_t newfq);
         bool        setAudioDrc(int track, bool mode);
@@ -344,7 +344,7 @@ public:
         bool        setAudioShift(int track, bool mode,int32_t value);
         bool        getAudioShift(int track, bool *mode,int32_t *value);
         int         saveAudio(int dex,const char *name);
-        bool 		getAudioFilterNormalise(int dex,ADM_GAINMode *mode, uint32_t *gain);
+        bool        getAudioFilterNormalise(int dex, ADM_GAINMode *mode, int32_t *gain, int32_t *maxlevel);
         FILMCONV 	getAudioFilterFrameRate(int dex);
         bool 		setAudioFilterFrameRate(int dex,FILMCONV conf);
         EditableAudioTrack *getEditableAudioTrackAt(int i);

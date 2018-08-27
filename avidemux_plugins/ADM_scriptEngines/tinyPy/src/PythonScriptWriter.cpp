@@ -84,9 +84,9 @@ void PythonScriptWriter::loadVideo(const char* path)
     *(this->_stream) << "adm.loadVideo(\"" << path << "\")" << std::endl;
 }
 
-void PythonScriptWriter::setAudioGain(int trackIndex, ADM_GAINMode gainMode, uint32_t gainValue)
+void PythonScriptWriter::setAudioGain(int trackIndex, ADM_GAINMode gainMode, int32_t gainValue, int32_t maxLevel)
 {
-    *(this->_stream) << "adm.audioSetNormalize(" << trackIndex << ", " << gainMode << ", " << gainValue << ")" << std::endl;
+    *(this->_stream) << "adm.audioSetNormalize(" << trackIndex << ", " << gainMode << ", " << gainValue << ", " << maxLevel << ")" << std::endl;
 }
 
 void PythonScriptWriter::setAudioMixer(int trackIndex, CHANNEL_CONF mixer)
