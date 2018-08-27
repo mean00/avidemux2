@@ -27,7 +27,7 @@ public:
     virtual void connectStream(std::iostream& stream) = 0;
     virtual void disconnectStream() = 0;
     virtual void loadVideo(const char* path) = 0;
-    virtual void setAudioGain(int trackIndex, ADM_GAINMode gainMode, uint32_t gainValue) = 0;
+    virtual void setAudioGain(int trackIndex, ADM_GAINMode gainMode, int32_t gainValue, int32_t maxLevel) = 0;
     virtual void setAudioMixer(int trackIndex, CHANNEL_CONF mixer) = 0;
     virtual void setAudioResample(int trackIndex, uint32_t resample) = 0;
     virtual void setMarkers(uint64_t markerA, uint64_t markerB) = 0;

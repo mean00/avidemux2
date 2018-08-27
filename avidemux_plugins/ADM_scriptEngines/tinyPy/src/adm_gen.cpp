@@ -414,7 +414,7 @@ static tp_obj zzpy_appendVideo(TP)
   int r =   editor->appendFile(p0); 
   return tp_number(r);
 }
-// audioSetNormalize -> int pySetNormalize (IEditor int int int ) 
+// audioSetNormalize -> int pySetNormalize (IEditor int int int int)
 static tp_obj zzpy_audioSetNormalize(TP)
  {
   tp_obj self = tp_getraw(tp);
@@ -427,7 +427,8 @@ static tp_obj zzpy_audioSetNormalize(TP)
   int p1 = pm.asInt();
   int p2 = pm.asInt();
   int p3 = pm.asInt();
-  int r =   pySetNormalize(p0,p1,p2,p3); 
+  int p4 = pm.asInt();
+  int r =   pySetNormalize(p0,p1,p2,p3,p4);
   return tp_number(r);
 }
 // audioSetDrc -> int pySetDrc (IEditor int int ) 

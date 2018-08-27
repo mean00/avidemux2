@@ -89,7 +89,7 @@ public:
     virtual bool addExternalAudioTrack(const char *fileName) = 0; /// add an external audio track to the pool
     virtual bool setAudioCodec(int dex, const char *codec, CONFcouple *c) = 0;
     virtual bool setAudioFilterFrameRate(int dex, FILMCONV conf) = 0;
-    virtual bool setAudioFilterNormalise(int dex, ADM_GAINMode mode, uint32_t gain) = 0;
+    virtual bool setAudioFilterNormalise(int dex, ADM_GAINMode mode, int32_t gain, int32_t maxvalue) = 0;
     virtual int setAudioMixer(int dex, const char *s) = 0;
     virtual bool setAudioDrc(int track, bool mode) = 0;
     virtual bool getAudioDrc(int track) = 0;
@@ -97,7 +97,7 @@ public:
     virtual bool getAudioShift(int track, bool *mode, int32_t *value) = 0;
     virtual void setAudioResample(int dex, uint32_t newfq) = 0;
     virtual FILMCONV getAudioFilterFrameRate(int dex) = 0;
-    virtual bool getAudioFilterNormalise(int dex, ADM_GAINMode *mode, uint32_t *gain) = 0;
+    virtual bool getAudioFilterNormalise(int dex, ADM_GAINMode *mode, int32_t *gain, int32_t *maxvalue) = 0;
     virtual uint32_t getAudioResample(int dex) = 0;
     virtual void resetAudioFilter(int dex) = 0;
     virtual int saveAudio(int dex, const char *name) = 0;

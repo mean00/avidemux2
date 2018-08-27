@@ -143,13 +143,13 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorTy
 
                     // --------- Normalize ----------------
             ADM_GAINMode mode;
-            uint32_t gain;
+            int32_t gain, maxlevel;
 
-            track->audioEncodingConfig.audioFilterGetNormalize(&mode, &gain);
+            track->audioEncodingConfig.audioFilterGetNormalize(&mode, &gain, &maxlevel);
 
             if (mode != ADM_NO_GAIN)
             {
-                            this->_scriptWriter->setAudioGain(i, mode, gain);
+                            this->_scriptWriter->setAudioGain(i, mode, gain, maxlevel);
             }
         }
     }
