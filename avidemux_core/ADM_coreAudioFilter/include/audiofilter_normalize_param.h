@@ -24,6 +24,7 @@ typedef struct GAINparam
 {
   ADM_GAINMode mode;
   int32_t gain10;
+  int32_t maxlevel10;
 }GAINparam;
 
 #endif

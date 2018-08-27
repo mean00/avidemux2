@@ -45,6 +45,7 @@ public    :
                         film2pal    =FILMCONV_NONE;
                         gainParam.mode=ADM_NO_GAIN;
                         gainParam.gain10=10;
+                        gainParam.maxlevel10=-30;
                         drcEnabled=false;
                         drcConf=drcConfDefault;
 			shiftEnabled=false;
@@ -80,8 +81,8 @@ public: // accessor
     FILMCONV        audioFilterGetFrameRate(void);
     bool            audioFilterSetShift( bool enabled ,int32_t shift);
     bool            audioFilterGetShift( bool *enabled,int32_t *shift);
-    bool            audioFilterSetNormalize( ADM_GAINMode mode,uint32_t gain);
-    bool            audioFilterGetNormalize( ADM_GAINMode *mode,uint32_t *gain);
+    bool            audioFilterSetNormalize( ADM_GAINMode mode, int32_t gain, int32_t maxlevel);
+    bool            audioFilterGetNormalize( ADM_GAINMode *mode, int32_t *gain, int32_t *maxlevel);
 
     bool            audioFilterSetMixer(CHANNEL_CONF conf); // Invalid to disable
     CHANNEL_CONF    audioFilterGetMixer(void); // Invalid to disable

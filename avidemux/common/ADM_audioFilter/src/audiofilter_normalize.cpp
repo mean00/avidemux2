@@ -41,6 +41,8 @@
 #define LINEAR_TO_DB(x) (20.*log10(x))
 #define DB_TO_LINEAR(x) (POW10((x/20.)))
 
+static int32_t max_level_x10;
+
 /**
         \fn Ctor
 **/
@@ -52,7 +54,12 @@ AUDMAudioFilterNormalize::AUDMAudioFilterNormalize(AUDMAudioFilter * instream,GA
   switch(param->mode)
   {
     case ADM_NO_GAIN: _ratio=1;_scanned=1;ADM_info("[Gain] Gain of 1.0\n");break; 
-    case ADM_GAIN_AUTOMATIC: _ratio=1;_scanned=0;ADM_info("[Gain] Automatic gain\n");break;
+    case ADM_GAIN_AUTOMATIC:
+                _ratio=1;
+                _scanned=0;
+                max_level_x10 = param->maxlevel10;
+                ADM_info("[Gain] Automatic gain, max level %.1f\n",max_level_x10/10.0);
+                break;
     case ADM_GAIN_MANUAL: 
                 _scanned=1;
                 db_out =  param->gain10/10.0; // Dbout is in 10*DB (!)
@@ -139,7 +146,7 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
         ADM_info("[Normalize] maximum found for channel %d : %f\n", chan,max[chan]);
     }
     ADM_info("[Normalize] Using : %0.4f as max value \n", mx);
-    double db_in, db_out=-3;
+    double db_in, db_out=max_level_x10/10.0;
 
     if (mx>0.001)
       db_in = LINEAR_TO_DB(mx);

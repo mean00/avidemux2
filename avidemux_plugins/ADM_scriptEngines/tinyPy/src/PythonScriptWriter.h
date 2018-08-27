@@ -23,7 +23,7 @@ public:
     void connectStream(std::iostream& stream);
     void disconnectStream();
     void loadVideo(const char* path);
-    void setAudioGain(int trackIndex, ADM_GAINMode gainMode, uint32_t gainValue);
+    void setAudioGain(int trackIndex, ADM_GAINMode gainMode, int32_t gainValue, int32_t maxLevel);
     void setAudioMixer(int trackIndex, CHANNEL_CONF mixer);
     void setAudioResample(int trackIndex, uint32_t resample);
     void setMarkers(uint64_t markerA, uint64_t markerB);

@@ -356,20 +356,20 @@ bool ADM_Composer::setAudioCodec(int dex,const char *codec, CONFcouple *c)
 /**
     \fn setAudioFilterNormalise
 */
-bool ADM_Composer::setAudioFilterNormalise(int dex,ADM_GAINMode mode, uint32_t gain)
+bool ADM_Composer::setAudioFilterNormalise(int dex, ADM_GAINMode mode, int32_t gain, int32_t maxlevel)
 {
     EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
     if(!ed) return false;
-    return ed->audioEncodingConfig.audioFilterSetNormalize(mode,gain);
+    return ed->audioEncodingConfig.audioFilterSetNormalize(mode,gain,maxlevel);
 }
 /**
     \fn getAudioFilterNormalise
 */
-bool ADM_Composer::getAudioFilterNormalise(int dex,ADM_GAINMode *mode, uint32_t *gain)
+bool ADM_Composer::getAudioFilterNormalise(int dex, ADM_GAINMode *mode, int32_t *gain, int32_t *maxlevel)
 {
     EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
     if(!ed) return false;
-    return ed->audioEncodingConfig.audioFilterGetNormalize(mode,gain);
+    return ed->audioEncodingConfig.audioFilterGetNormalize(mode,gain,maxlevel);
 }
 /**
     \fn getAudioFilterFrameRate
