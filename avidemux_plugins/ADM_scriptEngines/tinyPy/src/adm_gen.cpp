@@ -12,6 +12,19 @@ static tp_obj zzpy_saveBmp(TP)
   int r =   editor->saveImageBmp(p0); 
   return tp_number(r);
 }
+// saveBmp -> int editor->saveImagePng (str ) 
+static tp_obj zzpy_savePng(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  const char *p0 = pm.asString();
+  int r =   editor->saveImagePng(p0); 
+  return tp_number(r);
+}
 // loadVideo -> int editor->openFile (str ) 
 static tp_obj zzpy_loadVideo(TP)
  {
@@ -595,6 +608,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_saveBmp);
   }
+  if (!strcmp(key, "savePng"))
+  {
+     return tp_method(vm, self, zzpy_savePng);
+  }
   if (!strcmp(key, "loadVideo"))
   {
      return tp_method(vm, self, zzpy_loadVideo);
@@ -799,6 +816,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "saveBmp(str)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "savePng(str)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "loadVideo(str)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPARWidth(void)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "clearSegments(void)\n");

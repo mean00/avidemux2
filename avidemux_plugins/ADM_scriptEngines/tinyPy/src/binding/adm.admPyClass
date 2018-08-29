@@ -57,6 +57,7 @@
 /* METHOD */ int editor->saveFile:save(str) 
 /* METHOD */ int editor->saveImageJpg:saveJpeg(str) 
 /* METHOD */ int editor->saveImageBmp:saveBmp(str) 
+/* METHOD */ int editor->saveImagePng:savePng(str)
 #
 #
 # Seek
