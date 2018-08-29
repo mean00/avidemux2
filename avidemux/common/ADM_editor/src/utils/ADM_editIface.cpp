@@ -251,6 +251,11 @@ int ADM_Composer::saveImageJpg(const char *filename)
 {
 	return A_saveJpg(filename);
 }
+
+int ADM_Composer::saveImagePng(const char *filename)
+{
+    return A_savePng(filename);
+}
 //----------------------------------AUDIO-------------------------
 /**
     \fn setAudioMixer

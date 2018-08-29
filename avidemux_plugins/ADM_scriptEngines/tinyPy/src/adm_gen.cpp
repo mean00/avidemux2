@@ -12,6 +12,19 @@ static tp_obj zzpy_saveBmp(TP)
   int r =   editor->saveImageBmp(p0); 
   return tp_number(r);
 }
+// saveBmp -> int editor->saveImagePng (str ) 
+static tp_obj zzpy_savePng(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  const char *p0 = pm.asString();
+  int r =   editor->saveImagePng(p0); 
+  return tp_number(r);
+}
 // loadVideo -> int editor->openFile (str ) 
 static tp_obj zzpy_loadVideo(TP)
  {
@@ -414,7 +427,7 @@ static tp_obj zzpy_appendVideo(TP)
   int r =   editor->appendFile(p0); 
   return tp_number(r);
 }
-// audioSetNormalize -> int pySetNormalize (IEditor int int int int)
+// audioSetNormalize -> int pySetNormalize (IEditor int int int) 
 static tp_obj zzpy_audioSetNormalize(TP)
  {
   tp_obj self = tp_getraw(tp);
@@ -427,8 +440,24 @@ static tp_obj zzpy_audioSetNormalize(TP)
   int p1 = pm.asInt();
   int p2 = pm.asInt();
   int p3 = pm.asInt();
+  int r =   pySetNormalize(p0,p1,p2,p3);
+  return tp_number(r);
+}
+// audioSetNormalize2 -> int pySetNormalize2 (IEditor int int int int) 
+static tp_obj zzpy_audioSetNormalize2(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int p2 = pm.asInt();
+  int p3 = pm.asInt();
   int p4 = pm.asInt();
-  int r =   pySetNormalize(p0,p1,p2,p3,p4);
+  int r =   pySetNormalize2(p0,p1,p2,p3,p4);
   return tp_number(r);
 }
 // audioSetDrc -> int pySetDrc (IEditor int int ) 
@@ -579,6 +608,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_saveBmp);
   }
+  if (!strcmp(key, "savePng"))
+  {
+     return tp_method(vm, self, zzpy_savePng);
+  }
   if (!strcmp(key, "loadVideo"))
   {
      return tp_method(vm, self, zzpy_loadVideo);
@@ -699,6 +732,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_audioSetNormalize);
   }
+  if (!strcmp(key, "audioSetNormalize2"))
+  {
+     return tp_method(vm, self, zzpy_audioSetNormalize2);
+  }
   if (!strcmp(key, "audioSetDrc"))
   {
      return tp_method(vm, self, zzpy_audioSetDrc);
@@ -779,6 +816,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "saveBmp(str)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "savePng(str)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "loadVideo(str)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPARWidth(void)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "clearSegments(void)\n");
@@ -809,6 +847,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioEncoding(IEditor, int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "appendVideo(str)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetNormalize(IEditor,int,int,int)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetNormalize2(IEditor,int,int,int,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetDrc(IEditor,int,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "videoCodec(str, couples)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetMixer(int,str)\n");

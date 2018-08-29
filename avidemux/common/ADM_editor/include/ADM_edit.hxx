@@ -208,6 +208,7 @@ virtual                         ~ADM_Composer();
 					int 		saveFile(const char *name);
 					int 		saveImageBmp(const char *filename);
 					int 		saveImageJpg(const char *filename);
+                    int         saveImagePng(const char *filename);
                     uint8_t 	cleanup( void);
                     bool        isMultiSeg( void);
 /************************************* Markers *****************************/
