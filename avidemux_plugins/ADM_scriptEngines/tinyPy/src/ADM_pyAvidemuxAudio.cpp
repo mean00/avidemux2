@@ -211,7 +211,7 @@ int pyGetNormalizeLevel(IEditor *editor,int dex)
     \brief
 */
 
-int pySetNormalize(IEditor *editor, int dex, int mode, int value, int level)
+int pySetNormalize2(IEditor *editor, int dex, int mode, int value, int level)
 {
     ADM_GAINMode m;
     int32_t gain, max;
@@ -223,7 +223,15 @@ int pySetNormalize(IEditor *editor, int dex, int mode, int value, int level)
     max = (int32_t)level;
     return editor->setAudioFilterNormalise(dex,m,gain,max);
 }
+/**
+    \fn pySetNormalize
+    \brief preserve compatibility to project scripts created by older versions
+*/
 
+int pySetNormalize(IEditor *editor, int dex, int mode, int value)
+{
+    return pySetNormalize2(editor, dex, mode, value, -30);
+}
 /**
     \fn
     \brief
