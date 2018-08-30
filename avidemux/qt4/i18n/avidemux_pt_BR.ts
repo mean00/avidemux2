@@ -1131,7 +1131,7 @@ Drop timing informations ?</source>
         <translation type="unfinished">Saida</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="+37"/>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="+38"/>
         <location line="+25"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="+43"/>
         <source>None</source>
@@ -1225,7 +1225,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+4"/>
-        <source>Automatic (max -3 dB)</source>
+        <source>Automatic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1249,7 +1249,12 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+1"/>
+        <source>_Maximum value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <source>_Mixer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1374,8 +1379,10 @@ Drop timing informations ?</source>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-43"/>
         <location line="+3"/>
         <location line="+5"/>
-        <location filename="../../common/gui_save.cpp" line="+289"/>
-        <location line="+21"/>
+        <location filename="../../common/gui_save.cpp" line="+57"/>
+        <location line="+10"/>
+        <location line="+278"/>
+        <location line="+19"/>
         <location line="+7"/>
         <location filename="../../common/gui_savenew.cpp" line="+409"/>
         <source>Audio</source>
@@ -2121,13 +2128,13 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+632"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="+1407"/>
+        <location filename="../../common/gui_main.cpp" line="+1473"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -2169,6 +2176,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="+48"/>
+        <location filename="../../common/gui_save.cpp" line="-497"/>
         <source>No audio track</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2227,7 +2235,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1313"/>
+        <location filename="../../common/gui_main.cpp" line="-1379"/>
         <source>Select script/project to run</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2252,7 +2260,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+101"/>
+        <location line="+117"/>
         <source>Not coded in this version</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2350,7 +2358,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+49"/>
+        <location line="+36"/>
         <source>Cannot open project using the video loader.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2365,7 +2373,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+55"/>
         <source>Multiple Audio Tracks</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2376,25 +2384,25 @@ Go to Audio-&gt;MainTrack to select the active one.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+105"/>
+        <location line="+106"/>
         <source>Something failed when appending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+268"/>
+        <location line="+317"/>
         <source>Something bad happened (II)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-151"/>
+        <location line="-199"/>
         <location line="+43"/>
         <source>The tinypy plugin is missing.
 Expect problems.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+100"/>
         <source>Checking video</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2471,7 +2479,7 @@ Expect problems.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+141"/>
+        <location line="+143"/>
         <source>AvsProxy</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2512,12 +2520,12 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+437"/>
+        <location filename="../../common/gui_play.cpp" line="+443"/>
         <source>Trouble initializing audio device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-445"/>
+        <location filename="../../common/gui_save.cpp" line="+51"/>
         <source>No</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2557,7 +2565,8 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+12"/>
+        <location line="+2"/>
         <source>Select File to Save Audio</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2592,13 +2601,13 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+99"/>
+        <location line="+96"/>
         <source>Function not implemented
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+19"/>
         <source>Cannot create stream</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2654,7 +2663,12 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-83"/>
+        <location line="-568"/>
+        <source>Audio encoder index out of bounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+485"/>
         <source>Saved %d images.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3241,7 +3255,7 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+172"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
         <location line="+32"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
@@ -4704,6 +4718,64 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
+    <name>ffVAEncH264</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+351"/>
+        <source>Baseline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Main</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Profile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Maximum Consecutive B-Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Max Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Frame Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>FFmpeg VA-API H.264 Encoder Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ffmpeg2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+217"/>
@@ -5216,43 +5288,37 @@ Do you want to load it  ?
     <name>ffnvenc</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEnc/ADM_ffNvEnc.cpp" line="+218"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+193"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+219"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+192"/>
         <source>Low Quality</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>High Quality</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>BluRay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Low Latency</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Low Latency (LQ)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Low Latency (HQ)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5274,7 +5340,6 @@ Do you want to load it  ?
     <message>
         <location line="+7"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+7"/>
         <source>Preset:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5286,14 +5351,12 @@ Do you want to load it  ?
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Bitrate (kbps):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Max Bitrate (kbps):</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5320,11 +5383,6 @@ Do you want to load it  ?
     <message>
         <location line="+9"/>
         <source>NVENC H.264 configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+4"/>
-        <source>libavcodec MPEG-4 configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6313,7 +6371,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>jpeg</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="+83"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="+90"/>
         <source>YUV422</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7542,7 +7600,7 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qgui2</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+211"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+212"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7557,7 +7615,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+646"/>
+        <location line="+658"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7683,6 +7741,11 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location line="+4"/>
         <source> Reference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+172"/>
+        <source>Restore previous session</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -8890,7 +8953,7 @@ Please delete the idx2 file and reopen.</source>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+186"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+323"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+329"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+83"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
