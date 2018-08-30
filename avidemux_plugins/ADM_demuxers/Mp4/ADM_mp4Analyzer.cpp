@@ -838,6 +838,9 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                   case MKFCCR('A','V','D','J'): //'jpeg':
                                           commonPart(MJPG);
                                           break;
+                                  case MKFCCR('A','V','d','n'): // DNxHD
+                                          commonPart(AVdn);
+                                          break;
 //
                                  case MKFCCR('h','e','v','1'): // hev1 / hevc
                                  case MKFCCR('h','v','c','1'): // hev1 / hevc
