@@ -72,6 +72,7 @@ public:
     virtual bool rewind(void) = 0;
     virtual int saveImageBmp(const char *filename) = 0;
     virtual int saveImageJpg(const char *filename) = 0;
+    virtual int saveImagePng(const char *filename) = 0;
     virtual int saveFile(const char *name) = 0;
     virtual ADM_dynMuxer* getCurrentMuxer() = 0;
     virtual bool setContainer(const char *cont, CONFcouple *c) = 0;

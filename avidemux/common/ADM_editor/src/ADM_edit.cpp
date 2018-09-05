@@ -376,16 +376,22 @@ bool ADM_Composer::addFile (const char *name)
   printf ("[Editor] Decoder FCC: ");
   fourCC::print (info.fcc);
   printf("\n");
-  // ugly hack
-  if (info.fps1000 > 2000 * 1000)
+
+    // ugly hack
+    bool fpsTooHigh=false;
+    // we switch to 25 fps hardcoded in addReferenceVideo and update info here
+    if (info.fps1000 > 2000 * 1000)
     {
-      printf ("[Editor] FPS too high, switching to 25 fps hardcoded\n");
-      info.fps1000 = 25 * 1000;
-      updateVideoInfo (&info);
+        ADM_warning("FPS too high, switching to 25 fps hardcoded\n");
+        fpsTooHigh=true;
+        info.fps1000 = 25 * 1000;
     }
-    
+
     _segments.addReferenceVideo(&video);
-    
+
+    if(fpsTooHigh)
+        updateVideoInfo(&info);
+
     // we only try if we got everything needed...
     // Verify DTS is monotonous
     ADM_verifyDts(video._aviheader,video.timeIncrementInUs);

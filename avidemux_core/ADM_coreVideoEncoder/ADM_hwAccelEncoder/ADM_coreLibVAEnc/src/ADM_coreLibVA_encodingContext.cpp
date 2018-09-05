@@ -51,14 +51,16 @@
 #include "ADM_coreLibVA_buffer.h"
 #include "ADM_coreLibVA_encodingContext.h"
 #include "ADM_coreLibVA_h264Encoding.h"
-
+#include "ADM_coreLibVA_hevcEncoding.h"
 
 
 bool  ADM_initLibVAEncoder(void);
 static bool initDone=false;
 
 ADM_VA_GlobalH264 globalH264Caps;
+ADM_VA_GlobalHEVC globalHevcCaps;
 const ADM_VA_GlobalH264 *vaGetH264EncoderProfile() {return &globalH264Caps;};
+const ADM_VA_GlobalHEVC *vaGetHevcEncoderProfile() {return &globalHevcCaps;};
 
 #if 0
 
@@ -111,6 +113,11 @@ static bool  lookupSupportedFormat(VAProfile profile)
 bool ADM_initLibVAEncoder(void)
 {
     ADM_info("initializing VA encoder\n");
+    if(lookupSupportedFormat(VAProfileHEVCMain))
+    {
+        ADM_info("HEVC Main is supported\n");
+        globalHevcCaps.profile=VAProfileHEVCMain;
+    }
     if(lookupSupportedFormat(VAProfileH264High))
     {
         ADM_info("H264 High is supported\n");

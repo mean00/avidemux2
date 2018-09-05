@@ -85,8 +85,9 @@ ADM_mpgAudioSeekPoint s;
 */
 uint32_t  ADM_tsAccess::getLength(void)
 {
-  return (seekPoints[seekPoints.size()-1].size);
-
+    if(seekPoints.size())
+        return (seekPoints[seekPoints.size()-1].size);
+    return 0;
 }
 /**
     \fn getDurationInUs
@@ -115,8 +116,10 @@ uint64_t  ADM_tsAccess::getDurationInUs(void)
 */                              
 bool      ADM_tsAccess::goToTime(uint64_t timeUs)
 {
-    // Convert time in us to scaled 90 kHz tick
     latm.flush();
+    if(!seekPoints.size())
+        return false;
+
     if(timeUs<seekPoints[0].dts)
     {
             aprintf("[PsAudio] Requested %" PRIu32" tick before 1st seek point at :%" PRIu32"\n",(uint32_t)timeUs/1000,(uint32_t)seekPoints[0].dts/1000);
