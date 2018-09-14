@@ -164,22 +164,14 @@ bool ADM_vaEncodingContextH264Base::setup( int width, int height, int frameInc,s
         int outAttrib=0;
         VAConfigAttrib *ttrib=new VAConfigAttrib[nAttrib+1];
         const VAConfigAttrib *old=h264->newAttributes.getPointer();
+        memcpy(ttrib,old,nAttrib*sizeof(VAConfigAttrib));
         
-        for(int i=0;i<nAttrib;i++)
-        {
-            ttrib[outAttrib]=old[i];
-            if(ttrib[outAttrib].type==VAConfigAttribEncPackedHeaders) // remove packed
-                ttrib[outAttrib].value=getPackedAttributes();
-            outAttrib++;
-            
-        }        
         // add rate control, it is per instance
         ttrib[outAttrib].type=VAConfigAttribRateControl;
         ttrib[outAttrib].value=VA_RC_CBR;
         outAttrib++;
         
         CHECK_VA_STATUS_BOOL( vaCreateConfig(admLibVA::getDisplay(), h264->profile, VAEntrypointEncSlice, ttrib, outAttrib, &config_id));
-        
 
         int n=knownSurfaces.size();                    
         VASurfaceID *tmp_surfaceId = new VASurfaceID[n];
