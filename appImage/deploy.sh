@@ -20,6 +20,11 @@ cpyX86()
         cp -t ../lib  /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
 
 }
+cpyX86Optional()
+{
+        cp -t ../../opt/lib  /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
+
+}
 cpyX86Rename()
 {
         cp -t ../lib/$2  /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
@@ -56,6 +61,7 @@ cd install/usr/bin
 cp avidemux3_qt5 avidemux3_portable
 mkdir -p ../lib/qt5
 mkdir -p ../lib/qt5/plugins
+mkdir -p ../../opt/lib
 # libz
 #cpyRootx86Lib libz.so.1
 
@@ -97,7 +103,7 @@ cp -t ../lib /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-5.0.so || fail 
 # subtitles
 for i in libfreetype.so.6 libfribidi.so.0 libfontconfig.so.1 
 do 
-        cpyX86 $i
+        cpyX86Optional $i
 done
 cpyRootx86Lib libexpat.so.1
 # x264
