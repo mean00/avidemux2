@@ -21,6 +21,13 @@ IF (USE_FREETYPE AND USE_FRIBIDI)
         # We force the use of fontconfig
         ADD_DEFINITIONS("-DUSE_FONTCONFIG")
         TARGET_LINK_LIBRARIES(ADM_vf_ssa ${FONTCONFIG_LDFLAGS})
+        # Add a simple probe program, only on linux/bsd/...
+        IF(WIN32 OR APPLE)
+        ELSE(WIN32 OR APPLE)
+            ADD_DEFINITIONS(${FREETYPE2_CFLAGS} ${FRIBIDI_CFLAGS})
+            ADD_EXECUTABLE(freetype_probe probe.cpp)
+            TARGET_LINK_LIBRARIES(freetype_probe ${FREETYPE2_LDFLAGS} ${FRIBIDI_LDFLAGS} )
+        ENDIF(WIN32 OR APPLE)
     ENDIF(DO_COMMON)
 
     INIT_VIDEO_FILTER(ADM_vf_ssa)
