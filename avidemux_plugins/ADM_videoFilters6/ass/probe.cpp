@@ -30,6 +30,8 @@ int main(int a, char **b)
     int fcMin=(fcVersion-fcMaj*10000)/100;
 
   printf("Fontconfig version %d :%d.%d\n",fcVersion,fcMaj,fcMin);
-    // Add check here
+  // fontconfig >= 2.13 configuration is not backward compatible
+  if(fcVersion>=21300)
+    return 1;
   return 0;
 }

@@ -141,6 +141,13 @@ cp appImage/AppRun install
 cp appImage/avidemux.png install
 cp appImage/avidemux.desktop install
 
+FT_PROBE_EXE_NAME="freetype_probe"
+FT_PROBE_LOCATION="buildPluginsCommon/ADM_videoFilters6/ass"
+if [ -e "${FT_PROBE_LOCATION}/${FT_PROBE_EXE_NAME}" ]; then
+    cp "${FT_PROBE_LOCATION}/${FT_PROBE_EXE_NAME}" install
+    chmod +x "install/${FT_PROBE_EXE_NAME}"
+fi
+
 cd $ORG
 AppImageAssistant  install $APP_NAME
 
