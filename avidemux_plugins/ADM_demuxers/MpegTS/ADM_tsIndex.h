@@ -44,7 +44,7 @@ using std::string;
 static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
 static const char Type[5]={'X','I','P','B','D'};
 #define VC1_MAX_SEQ_SIZE 64
-#if 0
+#if 1
 #define ASK_APPEND_SEQUENCED
 #endif
 class TSVideo
