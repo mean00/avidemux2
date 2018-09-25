@@ -502,6 +502,29 @@ bool ADM_probeSequencedFile(const char *fileName)
      if(false==ADM_splitSequencedFile(fileName, &left, &right,&nbDigit,&base))
             return false;
 
+    // check whether the filesize approx. matches 2^n GiB, the usual
+    // threshold for automatically split streams
+    bool success=false;
+    uint64_t fileSize,threshold,tolerance;
+    threshold=tolerance=2;
+    threshold<<=30; // we start with 1 GiB
+    tolerance<<=20; // 1 MiB
+    int64_t sz=ADM_fileSize(fileName);
+    if(sz<0)
+        return false;
+    fileSize=sz;
+    for(int i=0;i<3;i++)
+    {
+        if(fileSize >= threshold-tolerance && fileSize <= threshold+tolerance)
+        {
+            success=true;
+            break;
+        }
+        threshold<<=1;
+    }
+    if(!success)
+        return false;
+
     // check if at least one sequence exists...
     std::string aLeft(left);
     std::string aRight(right);

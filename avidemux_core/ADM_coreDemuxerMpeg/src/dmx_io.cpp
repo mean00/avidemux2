@@ -124,6 +124,10 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         uint32_t current=base;
         _curFd = 0;
         uint64_t total=0;
+        uint64_t threshold,tolerance;
+        threshold=tolerance=2;
+        threshold<<=30;
+        tolerance<<=20;
         
         // build match string
         char match[16];
@@ -159,6 +163,13 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 fdIo myFd;
                 myFd.file=f;
                 myFd.fileSize=ADM_fileSize(outName.c_str());
+                // check whether the file likely belongs to a different stream
+                if(count && myFd.fileSize > threshold+tolerance)
+                {
+                    ADM_fclose(myFd.file);
+                    break;
+                }
+
                 myFd.fileSizeCumul = total;
                 total+=  myFd.fileSize;
 
@@ -166,6 +177,19 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                                             myFd.fileSize );
 
                 listOfFd.append(myFd);
+                // append only if all files but the last one are of ~ equal size: 1, 2 or 4 GiB,
+                // the usual threshold for automatically split streams
+                if(myFd.fileSize < threshold-tolerance)
+                    break;
+                if(!count)
+                {
+                    for(int i=0;i<3;i++)
+                    {
+                        if(myFd.fileSize >= threshold-tolerance && myFd.fileSize <= threshold+tolerance)
+                            break;
+                        threshold<<=1;
+                    }
+                }
                 count++;
                 current++;
         } 
