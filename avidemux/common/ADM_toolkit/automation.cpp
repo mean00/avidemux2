@@ -159,6 +159,12 @@ static two_arg_type two;
                       continue;
                 }
                 // else it begins with --
+                if(!strcmp(argv[cur]+2,"portable")) // portable mode switch has been already taken care of, ignore
+                {
+                    cur++;
+                    myargc--;
+                    continue;
+                }
                 index= searchReactionTable(argv[cur]+2);
                 if(index==-1) // not found
                 {
