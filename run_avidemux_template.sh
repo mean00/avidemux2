@@ -12,6 +12,18 @@ TOPSRCDIR="${HOME}/avidemux2"
 PREFIX="/usr"
 
 HERE="${TOPSRCDIR}/install${PREFIX}"
-export LD_LIBRARY_PATH="${HERE}/lib64:${LD_LIBRARY_PATH}"
+CORECONFIG=$(find install -name ADM_coreConfig.h)
+if [ "x$?" = "x0" ]; then
+    LIBDIR=$(grep ADM_RELATIVE_LIB_DIR ${CORECONFIG} | cut -f 3 -d " " | sed 's/\"//g')
+else
+    echo "ADM_coreConfig.h not found, can't determine the relative library directory. Aborting."
+    exit 1
+fi
+
+if ! [ -z "${LIBDIR}" ] && ! [ -e "${HERE}/lib" ] && ! [ "x${LIBDIR}" = "xlib" ]; then
+    ln -s "${HERE}/${LIBDIR}" "${HERE}/lib"
+fi
+
+export LD_LIBRARY_PATH="${HERE}/${LIBDIR}:${LD_LIBRARY_PATH}"
 "${HERE}/bin/avidemux3_qt5" --portable "$@"
 
