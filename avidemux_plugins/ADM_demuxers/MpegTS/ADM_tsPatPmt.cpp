@@ -88,6 +88,10 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
 
     tsPacket *t=new tsPacket();
     t->open(file,FP_PROBE);
+    uint64_t offset=0;
+again:
+    if(offset)
+        ADM_info("Retrying at offset 0x%" PRIx64" (%" PRIu64").\n",offset,offset);
     // 1 search the pat...
     if(t->getNextPSI(0,&psi)==true)
     {
@@ -104,18 +108,26 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
                 listOfPmt.push_back(pid);
         }
         int size=listOfPmt.size();
+        uint64_t consumed=t->getPos();
         if(size)
         {
             for(int i=0;i<size;i++) // First PMT is PCR lock ?
             {
                 printf("<<< PMT : %d/%d>>>\n",i,size);
                 uint32_t pid=listOfPmt[i];
-                t->setPos(0); // Make sure we can have the very first one
+                t->setPos(offset); // Make sure we can have the very first one
                 TS_scanPmt(t,pid,&list);
             }
-
+            if(offset) // retry only once
+                goto conclusion;
+            if(list.empty())
+            {
+                offset+=consumed;
+                goto again;
+            }
         }
     }
+conclusion:
     // List now contains a list of elementary tracks
 
     // TODO: Look deeper to see if there is actual content
