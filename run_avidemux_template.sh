@@ -11,16 +11,26 @@ TOPSRCDIR="${HOME}/avidemux2"
 # default when no prefix specified: /usr
 PREFIX="/usr"
 
-HERE="${TOPSRCDIR}/install${PREFIX}"
-CORECONFIG=$(find install -name ADM_coreConfig.h)
-if [ "x$?" = "x0" ]; then
-    LIBDIR=$(grep ADM_RELATIVE_LIB_DIR ${CORECONFIG} | cut -f 3 -d " " | sed 's/\"//g')
-else
-    echo "ADM_coreConfig.h not found, can't determine the relative library directory. Aborting."
+# Avidemux version
+MAJOR="2"
+MINOR="7"
+
+fail()
+{
+    echo "$1. Aborting."
     exit 1
+}
+HERE="${TOPSRCDIR}/install${PREFIX}"
+CORECONFIG="${HERE}/include/avidemux/${MAJOR}.${MINOR}/ADM_coreConfig.h"
+if ! [ -e "${CORECONFIG}" ]; then
+    fail "${CORECONFIG} not found, can't determine the relative library directory"
+fi
+LIBDIR=$(grep ADM_RELATIVE_LIB_DIR "${CORECONFIG}" | cut -f 3 -d " " | sed -e 's/^"//' -e 's/"$//')
+if [ -z "${LIBDIR}" ]; then
+    fail "ADM_RELATIVE_LIB_DIR empty or not set in ${CORECONFIG}"
 fi
 
-if ! [ -z "${LIBDIR}" ] && ! [ -e "${HERE}/lib" ] && ! [ "x${LIBDIR}" = "xlib" ]; then
+if ! [ -e "${HERE}/lib" ]; then
     ln -s "${HERE}/${LIBDIR}" "${HERE}/lib"
 fi
 
