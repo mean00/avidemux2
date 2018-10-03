@@ -186,14 +186,14 @@ protected:
           uint8_t                       lookupMainAtoms(void *tom);
           void                          parseMvhd(void *tom);
           uint8_t                       parseTrack(void *ztom);
-          int64_t                       parseElst(void *tom);
+          int64_t                       parseElst(void *tom,bool *inTrackTimescale);
           bool                          parseMoof(adm_atom &son);
           bool                          parseTraf(adm_atom &son,uint64_t moofStart);
           int                           lookupIndex(int desc)          ;
           bool                          parseTrun(int trackNo,adm_atom &son,const mp4TrafInfo &info);
           uint8_t                       decodeVideoAtom(void *ztom);
-          uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h);
-          uint8_t                       parseEdts(void *ztom,uint32_t trackType);
+          uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h,bool delayInTrackTimescale);
+          uint8_t                       parseEdts(void *ztom,uint32_t trackType,bool *delayInTrackTimescale);
           uint8_t                       parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint32_t h,uint32_t trackScale);
           uint8_t                       decodeEsds(void *ztom,uint32_t trackType);
           uint8_t                       updateCtts(MPsampleinfo *info );
