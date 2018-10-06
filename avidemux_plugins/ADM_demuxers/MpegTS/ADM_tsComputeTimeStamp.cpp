@@ -26,7 +26,7 @@
 TODO / FIXME : Handle wrap
 TODO / FIXME : Handle PTS reordering 
 */
-uint64_t wrapIt(uint64_t val, uint64_t start)
+static uint64_t wrapIt(uint64_t val, uint64_t start)
 {
     if(val==ADM_NO_PTS) return val;
     if(val>=start) return val-start;
@@ -159,13 +159,12 @@ bool tsHeader::updatePtsDts(void)
                 }
             }else    // We got both, use them  
 #endif
-            {
-                
+            if(i) // We may not modify the dts of the first frame yet.
                 frame->dts=lastDts=timeConvert(frame->dts);
-                frame->pts=lastPts=timeConvert(frame->pts);
-            }
-
+            frame->pts=lastPts=timeConvert(frame->pts);
         }
+        // Now take care of the first frame dts.
+        ListOfFrames[0]->dts=0;
         // convert to us for Audio tracks (seek points)
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
