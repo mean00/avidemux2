@@ -126,6 +126,8 @@ bool tsHeader::updatePtsDts(void)
         // We are sure to have both PTS & DTS for 1st image
         // Guess missing DTS/PTS for video
         int noUpdate=0;
+        startDts=ListOfFrames[0]->dts;
+        ListOfFrames[0]->dts=0;
         for(int i=0;i<ListOfFrames.size();i++)
         {
             dmxFrame *frame=ListOfFrames[i];
@@ -159,12 +161,14 @@ bool tsHeader::updatePtsDts(void)
                 }
             }else    // We got both, use them  
 #endif
-            if(i) // We may not modify the dts of the first frame yet.
-                frame->dts=lastDts=timeConvert(frame->dts);
-            frame->pts=lastPts=timeConvert(frame->pts);
+            {
+                if(i) // We may not modify the dts of the first frame yet.
+                    frame->dts=lastDts=timeConvert(frame->dts);
+                frame->pts=lastPts=timeConvert(frame->pts);
+            }
         }
         // Now take care of the first frame dts.
-        ListOfFrames[0]->dts=0;
+        ListOfFrames[0]->dts=timeConvert(startDts);
         // convert to us for Audio tracks (seek points)
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
