@@ -586,7 +586,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     if(audioTrack->dts!=ADM_NO_PTS)
                     {
                         //printf("Audio PTS:%"PRId64", limit=%"PRId64"\n",audioTrack->dts,lastVideoDts+videoIncrement);
-                        if(audioTrack->dts>lastVideoDts+videoIncrement) break; // This packet is in the future
+                        if(audioTrack->dts>lastVideoDts+videoIncrement+audioDelay) break; // This packet is in the future
                     }
                     // Write...
                     AVPacket pkt;
