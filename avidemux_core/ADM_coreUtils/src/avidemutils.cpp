@@ -55,32 +55,37 @@ void mixDump(uint8_t * ptr, uint32_t len)
     *str = *str2 = 0;
 
     for (i = 0; i < len; i++)
-      {
-	  			if (*ptr < 32)
-			    {
-						strcat(str, ".");
-				  } else
-			    {
-						sprintf(tiny, "%c", *ptr);
-						strcat(str, tiny);
-			    }
+    {
+        if (*ptr < 32 || *ptr > 126)
+        {
+            strcat(str, ".");
+        } else
+        {
+            sprintf(tiny, "%c", *ptr);
+            strcat(str, tiny);
+        }
 
-	  	sprintf(tiny, " %02x", *ptr);
-		  strcat(str2, tiny);
-		  ptr++;
+        sprintf(tiny, " %02x", *ptr);
+        strcat(str2, tiny);
+        ptr++;
 
-		  if ((i % 16) == 15)
-		    {
-					printf("\n %04" PRIx32" : %s %s", (i >> 4) << 4, str, str2);
-					*str = 0;
-					*str2 = 0;
-		    }
-      }
-	// left over
-	if(len%16!=0)
-	{
-		 printf("\n %04" PRIx32" : %s %s", (len >> 4) << 4, str, str2);
-	}
+        if ((i % 16) == 15)
+        {
+            printf("\n %04" PRIx32" : %s  %s", (i >> 4) << 4, str, str2);
+            *str = 0;
+            *str2 = 0;
+        }
+    }
+    // left over
+    uint32_t leftover = len % 16;
+    if (leftover)
+    {
+        for (i = 0; i < 16 - leftover; i++)
+        {
+            strcat(str, " ");
+        }
+        printf("\n %04" PRIx32" : %s  %s", (len >> 4) << 4, str, str2);
+    }
     printf("\n");
 }
 /*
