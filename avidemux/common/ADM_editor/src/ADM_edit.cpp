@@ -160,11 +160,11 @@ bool ADM_Composer::setProjectName(const std::string &pj)
     \brief	Load or append a file.	The file type is determined automatically and the ad-hoc video decoder is spawned
 
     @param name: filename
-    @return 1 on success, 0 on failure
+    @return 1 on success, 0 on failure, ADM_IGN when cancelled by user.
 
 
 */
-bool ADM_Composer::addFile (const char *name)
+uint8_t ADM_Composer::addFile (const char *name)
 {
 
   uint8_t    ret =    0;
@@ -235,6 +235,12 @@ bool ADM_Composer::addFile (const char *name)
       video._aviheader=NULL;
       return false;
    }
+
+    if(ret==ADM_IGN)
+    {
+        ADM_info("Cancelled by user\n");
+        return ret;
+    }
 
    /* check for resolution */
    if( _segments.getNbRefVideos())
