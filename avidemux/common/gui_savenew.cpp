@@ -282,26 +282,26 @@ bool abort=false;
 ADM_videoStreamCopy *admSaver::dealWithH26x(bool isAnnexB)
 {
     ADM_videoStreamCopy *copy=NULL;
-    if(muxer->preferH264AnnexB())
+    int matrix=muxer->preferH264AnnexB()+ 2*(isAnnexB);
+    
+    switch(matrix)
     {
-        ADM_info("The video stream is a flavor of H264\n");
-        ADM_info("The muxer prefers AnnexB H264 bitstream\n");
-        if(!isAnnexB)
-        {
-            // Need to do mp4 to annexB    
-            ADM_info("Input is probably MP4 bitstream\n");
-            copy=new ADM_videoStreamCopyToAnnexB(markerA,markerB);
-        }
-    }else
-    {
-        ADM_info("The video stream is a flavor of H264\n");
-        ADM_info("The muxer prefers MP4 style H264 bitstream\n");
-        if(isAnnexB)
-        {
-            ADM_info("Input is probably AnnexB bitstream\n");
-            copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
-        }
-    }
+            default:
+            case 0:  // Both source and target are mp4 , nothing to do
+                ADM_info("Input and output are mp4 style, nothing to do\n");
+                break;
+            case 1:  // source is mp4, target is annexB
+                ADM_info("Input is probably MP4 bitstream\n");
+                copy=new ADM_videoStreamCopyToAnnexB(markerA,markerB);
+                break;
+            case 2: // source is annexB target is mp4
+                ADM_info("Input is probably AnnexB bitstream, convert it to mp4\n");
+                copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
+                break;
+            case 3: // source and target are both annexB, remove AUD
+                ADM_info("Input and output are annexB style, remove AUD\n");
+                break;
+    }    
     return copy;
 }
 /**
