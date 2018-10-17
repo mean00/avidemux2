@@ -49,6 +49,7 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 
 #define MAX_NALU_PER_CHUNK 60
 
+int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeLen);
 
 /**
     \fn ADM_getH264SpsPpsFromExtraData
@@ -941,7 +942,7 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
     \fn ADM_splitNalu
     \brief split a nalu annexb size into a list of nalu descriptor
 */
-int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
+int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeLen)
 {
 bool first=true;
 uint8_t *head=start;
@@ -959,7 +960,7 @@ int index=0;
             }
         if(index>=maxNalu) return 0;
         desc[index].start=head;
-        desc[index].size=offset-START_CODE_LEN;
+        desc[index].size=offset-startCodeLen;
         desc[index].nalu=oldStartCode;
         index++;
         head+=offset;
@@ -971,6 +972,14 @@ int index=0;
     desc[index].nalu=oldStartCode;
     index++;
     return index;
+}
+/**
+    \fn ADM_splitNalu
+    \brief split a nalu annexb size into a list of nalu descriptor
+*/
+int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
+{
+    return ADM_splitNalu_internal(start,end,maxNalu,desc,START_CODE_LEN);
 }
 
 /**
