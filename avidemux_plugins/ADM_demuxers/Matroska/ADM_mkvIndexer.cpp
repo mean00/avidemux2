@@ -46,6 +46,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
 
    parser->seek(0);
    DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska Images"));
+   uint8_t res=1;
 
    readBufferSize=200*1024;
    readBuffer=new uint8_t[readBufferSize];
@@ -66,6 +67,11 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
    int thiscluster=0;
    while(!cluster.finished())
    {
+      if(!work->isAlive())
+      {
+        res=ADM_IGN;
+        break;
+      }
       work->update(clusters,nbClusters);
       cluster.readElemId(&id,&len);
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
@@ -125,7 +131,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
      delete work;
      delete [] readBuffer;
      readBuffer=NULL;
-     return 1;
+     return (res==ADM_IGN)? res : !!VIDEO.index.size();
 }
 /**
       \fn indexBlock
@@ -451,6 +457,7 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
   const char *ss;
   uint64_t time;
   uint64_t pos;
+  uint8_t res=1;
 
     mkvIndex tmpCluster;
 
@@ -474,7 +481,11 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
    DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska clusters"));
    while(segment.simplefind(MKV_CLUSTER,&alen,0))
    {
-
+     if(!work->isAlive())
+     {
+        res=ADM_IGN;
+        break;
+     }
      // UI update
      work->update(segment.tell()>>10,fileSize>>10);
      tmpCluster.pos=segment.tell();
@@ -512,7 +523,7 @@ tryAgain:
    }
    delete work;
    ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
-   return 1;
+   return res;
 }
 /**
  * \fn updateFlagsWithCue
