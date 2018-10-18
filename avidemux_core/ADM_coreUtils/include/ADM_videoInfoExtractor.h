@@ -85,6 +85,7 @@ typedef struct
     uint32_t size;   // size of payload excluding nalu type
     uint8_t  nalu;
 }NALU_descriptor;
+ADM_COREUTILS6_EXPORT int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeSize);
 ADM_COREUTILS6_EXPORT int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc);
 ADM_COREUTILS6_EXPORT int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
 ADM_COREUTILS6_EXPORT int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize, uint8_t *outData,uint32_t outMaxSize);

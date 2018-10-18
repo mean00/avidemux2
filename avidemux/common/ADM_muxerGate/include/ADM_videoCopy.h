@@ -91,7 +91,7 @@ protected:
 class ADM_videoStreamCopyAudRemover : public ADM_videoStreamCopy
 {
 protected:
-
+        bool             h265;
 public:
                         ADM_videoStreamCopyAudRemover(uint64_t startTime,uint64_t endTime);
         virtual         ~ADM_videoStreamCopyAudRemover();
