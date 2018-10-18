@@ -291,7 +291,7 @@ ADM_videoStreamCopy *admSaver::dealWithH26x(bool isAnnexB)
                 ADM_info("Input and output are mp4 style, nothing to do\n");
                 break;
             case 1:  // source is mp4, target is annexB
-                ADM_info("Input is probably MP4 bitstream\n");
+                ADM_info("Input is probably MP4 bitstream, target is annexB\n");
                 copy=new ADM_videoStreamCopyToAnnexB(markerA,markerB);
                 break;
             case 2: // source is annexB target is mp4
@@ -299,7 +299,8 @@ ADM_videoStreamCopy *admSaver::dealWithH26x(bool isAnnexB)
                 copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
                 break;
             case 3: // source and target are both annexB, remove AUD
-                ADM_info("Input and output are annexB style, remove AUD\n");
+                ADM_info("Input and output are annexB style, remove AUDs\n");
+                copy=new ADM_videoStreamCopyAudRemover(markerA,markerB);
                 break;
     }    
     return copy;

@@ -84,4 +84,17 @@ protected:
         bool extractExtraDataH264();
         bool extractExtraDataH265();
 };
+/**
+        \fn ADM_videoStreamCopyAudRemover
+        \brief  Remove AUD Nalu units
+*/
+class ADM_videoStreamCopyAudRemover : public ADM_videoStreamCopy
+{
+protected:
+
+public:
+                        ADM_videoStreamCopyAudRemover(uint64_t startTime,uint64_t endTime);
+        virtual         ~ADM_videoStreamCopyAudRemover();
+        virtual bool    getPacket(ADMBitstream *out);
+};
 #endif
