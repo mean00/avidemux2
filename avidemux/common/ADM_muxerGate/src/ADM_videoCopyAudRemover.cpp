@@ -99,7 +99,7 @@ bool  ADM_videoStreamCopyAudRemover::getPacket(ADMBitstream *out)
             continue;
         }
         //
-        if(head==d->start) // nothing to do, already at the right place
+        if(head==d->start-size) // nothing to do, already at the right place
         {
             head+=d->size+size;
             continue;
