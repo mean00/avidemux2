@@ -243,7 +243,7 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 
     // a random frame: need to rewind first, then seek forward
     uint32_t startPoint=frame;
-    while(startPoint && !ListOfFrames[startPoint]->startAt)
+    while(startPoint && ListOfFrames[startPoint]->type!=1)
         startPoint--;
     printf("[psDemux] Wanted frame %" PRIu32", going back to frame %" PRIu32", last frame was %" PRIu32",\n",frame,startPoint,lastFrame);
     pk=ListOfFrames[startPoint];
@@ -263,8 +263,8 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
             lastFrame=0xffffffff;
             return false;
         }
-        startPoint++;
         lastFrame=startPoint;
+        startPoint++;
     }
     pk=ListOfFrames[frame];
     lastFrame++;
