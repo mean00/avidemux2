@@ -53,6 +53,12 @@ ADM_videoStreamCopyAudRemover::~ADM_videoStreamCopyAudRemover()
 
 }
 
+#if 1
+    #define aprintf ADM_info
+#else
+    #define aprintf(...) {}
+#endif
+
 /**
     \fn getPacket
 */
@@ -62,7 +68,7 @@ bool  ADM_videoStreamCopyAudRemover::getPacket(ADMBitstream *out)
         return false;
     //return true;
     // Remove AUDs in place
-    NALU_descriptor desc[51];
+    static NALU_descriptor desc[51]; // Only one instance max, no risk of simulatenous access
     int size=4;
     if(h265) size=5;
     
@@ -73,21 +79,43 @@ bool  ADM_videoStreamCopyAudRemover::getPacket(ADMBitstream *out)
     for(int i=0;i<nbNalu;i++)
     {
         bool copy=true;
-        if(!h265 && desc[i].nalu==NAL_AU_DELIMITER) copy=false;
-        if(h265 && desc[i].nalu==NAL_H265_AUD) copy=false;
+        NALU_descriptor *d=desc+i;
         
-        if(copy==false) continue;
-        //
-        if(head==desc[i].start) // nothing to do, already at the right place
+        if(h265)
         {
-            head+=desc[i].size+size;
+            if(((d->nalu>>1)&0x3f)==NAL_H265_AUD)
+            {
+                 copy=false;
+            }
+        }else
+        {
+            if((d->nalu&0x1f)==NAL_AU_DELIMITER) 
+            {
+                copy=false;
+            }
+        }
+        if(copy==false) 
+        {
+            continue;
+        }
+        //
+        if(head==d->start) // nothing to do, already at the right place
+        {
+            head+=d->size+size;
             continue;
         }
         // Else copy
-        memmove(head,desc[i].start-size,desc[i].size+size); // also copy NAL header
-        head+=desc[i].size+size;
+        memmove(head,d->start-size,d->size+size); // also copy NAL header
+        head+=d->size+size;
     }
+    uint64_t org=out->len;
     out->len=(intptr_t)head-(intptr_t)out->data;
+    
+    if(out->len!=org)
+    {
+        aprintf("Saved %d bytes\n",(int)(org-out->len));
+    }
+    
     return true;
 }
 
