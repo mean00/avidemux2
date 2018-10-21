@@ -26,75 +26,20 @@ ADM_DEMUXER_BEGIN( psHeader, 10,
                 );
 
 static bool detectPs(const char *file);
-uint8_t   psIndexer(const char *file);
+
 /**
     \fn Probe
 */
 
-extern "C" ADM_PLUGIN_EXPORT uint32_t         probe(uint32_t magic, const char *fileName)
+extern "C" ADM_PLUGIN_EXPORT uint32_t probe(uint32_t magic, const char *fileName)
 {
-char *index=(char *)malloc(strlen(fileName)+6);
-int count=0;
     if(!detectPs(fileName))
     {
         printf(" [PS Demuxer] Not a ps file\n");
-	free(index);
         return false;
     }
 
-    sprintf(index,"%s.idx2",fileName);
-again:    
-    if(ADM_fileExist(index)) 
-    {
-        printf(" [PS Demuxer] There is an index for that file \n");
-        FILE *f=ADM_fopen(index,"rt");
-        char signature[10];
-        fread(signature,4,1,f);
-        signature[4]=0;
-        fclose(f);
-        if(!strcmp(signature,"PSD1")) 
-        {
-              indexFile indexFile;
-             char *type;
-             if(!indexFile.open(index))
-             {
-                printf("[psDemux] Cannot open index file %s\n",index);
-                indexFile.close();
-                free(index);
-                return false;
-              }
-             if(!indexFile.readSection("System"))
-            {
-                printf("[psDemux] Cannot read system section\n");
-                indexFile.close();
-                free(index);
-                return false;
-            }
-            type=indexFile.getAsString("Type");
-            if(!type || type[0]!='P')
-                {
-                    printf("[psDemux] Incorrect or not found type\n");
-                    indexFile.close();
-                    free(index);
-                    return false;
-                }
-            free(index);
-            return 50;
-        }
-        printf("[PsDemuxer] Not a valid index\n");
-        return false;
-    }
-    if(count) 
-    {
-        free(index);
-        return false;
-    }
-    printf("[PSDemuxer] Creating index..\n");
-    count++;
-    if(true==psIndexer(fileName)) goto again;
-    printf("[PSDemuxer] Failed..\n");
-    free(index);
-   return 0;
+    return 50;
 }
 #define PROBE_SIZE (1024*1024)
 /**
