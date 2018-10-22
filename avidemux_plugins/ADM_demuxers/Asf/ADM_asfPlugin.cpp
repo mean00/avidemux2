@@ -33,9 +33,9 @@ extern "C"  ADM_PLUGIN_EXPORT uint32_t         probe(uint32_t magic, const char 
 
     if (fourCC::check (magic, signature))
     {
-	  printf (" [asfHeader] FLV file detected...\n");
+	  ADM_info("[asfHeader] ASF/WMV file detected...\n");
 	  return 100;
     }
-    printf (" [asfHeader] Cannot open that\n");
+    ADM_info("[asfHeader] Cannot open that\n");
     return 0;
 }
