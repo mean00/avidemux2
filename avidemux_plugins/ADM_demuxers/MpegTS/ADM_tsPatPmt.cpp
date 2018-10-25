@@ -156,7 +156,7 @@ again:
         if(videoIndex==-1)
         {
             if(failed) // Retry only once if search for PAT fails.
-                goto conclusion;
+                goto _failTs;
             failed++;
             offset=consumed;
             goto again;
