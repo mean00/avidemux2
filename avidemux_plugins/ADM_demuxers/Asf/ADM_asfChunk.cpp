@@ -64,8 +64,8 @@ static const chunky nochunk=
  asfChunk::asfChunk(FILE *f)
 {
   _fd=f;
-  _chunkStart=ftello(f);;
-  printf("Chunk created at %x\n",_chunkStart);
+  _chunkStart=ftello(f);
+  printf("Chunk created at %" PRIx64"\n",_chunkStart);
   ADM_assert(_fd);
   chunkLen=0;
 }
@@ -74,13 +74,14 @@ static const chunky nochunk=
 }
 uint8_t   asfChunk::readChunkPayload(uint8_t *data, uint32_t *dataLen)
 {
-  uint32_t remaining;
+  uint64_t remaining;
   
   remaining=ftello(_fd);
   remaining-=_chunkStart;
+  ADM_assert(chunkLen>=remaining);
   remaining=chunkLen-remaining;
-  fread(data,remaining,1,_fd);
-  *dataLen=remaining;
+  fread(data,(uint32_t)remaining,1,_fd);
+  *dataLen=(uint32_t)remaining;
   return 1;
 }
 uint8_t   asfChunk::skip(uint32_t skip)
@@ -113,19 +114,19 @@ uint8_t   asfChunk::nextChunk(int shortChunk)
   chunkLen=high;
   chunkLen<<=32;
   chunkLen+=low;
-  
-  printf("Next chunk from %" PRIx32" +%" PRIx64" to %" PRIx64"\n",_chunkStart,chunkLen,chunkLen+_chunkStart);
-  
+
+  printf("Next chunk from 0x%" PRIx64" + 0x%" PRIx64" to 0x%" PRIx64"\n",_chunkStart,chunkLen,chunkLen+_chunkStart);
+
   return 1;
   
 }
 uint8_t   asfChunk::skipChunk(void)
 {
-  uint32_t go;
+  uint64_t go;
   go=_chunkStart+ chunkLen;
   printf("Pos 0x%" PRIx64"\n",ftello(_fd));
   fseeko(_fd,go,SEEK_SET);
-  printf("Skipping to 0x%" PRIx32"\n",go);
+  printf("Skipping to 0x%" PRIx64"\n",go);
   
   return 1; 
 }
@@ -182,8 +183,8 @@ uint8_t   asfChunk::dump(void)
   const chunky *id;
   id=chunkId();
   printf("Chunk type  : <<<<%s>>>>\n",id->name);
-  printf("Chunk Start : %" PRIx32"\n",_chunkStart);
-  printf("Chunk Len   : %" PRIu32"\n",(uint32_t)chunkLen);
+  printf("Chunk Start : %" PRIx64"\n",_chunkStart);
+  printf("Chunk Len   : %" PRIu64"\n",chunkLen);
   printf("%02x%02x%02x%02x-%02x%02x-xxxx",guId[3],guId[2],guId[1],guId[0],guId[5],guId[4]);
   for(int i=0;i<16;i++) printf("%02x ",guId[i]);
   printf("\n");

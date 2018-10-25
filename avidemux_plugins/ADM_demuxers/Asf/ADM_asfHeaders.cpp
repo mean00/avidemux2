@@ -412,11 +412,10 @@ uint8_t asfHeader::loadVideo(asfChunk *s)
 */
 uint8_t asfHeader::buildIndex(void)
 {
-  uint32_t fSize;
+  uint64_t fSize,len;
   const chunky *id;
   uint32_t chunkFound;
   uint32_t r=5;
-  uint32_t len;
   
   fseeko(_fd,0,SEEK_END);
   fSize=ftello(_fd);
@@ -444,30 +443,27 @@ uint8_t asfHeader::buildIndex(void)
   h.read32();
   h.read32();
   h.read32();
-  _nbPackets=(uint32_t) h.read64();
+  _nbPackets=h.read64();
   h.read16();
   
   len=h.chunkLen-16-8-2-24;
   
-  printf("[ASF] nbPacket  : %u\n",_nbPackets);
-  printf("[ASF] len to go : %u\n",len);
+  printf("[ASF] nbPacket  : %" PRIu64"\n",_nbPackets);
+  printf("[ASF] len to go : %" PRIu64"\n",len);
   printf("[ASF] scanning data\n");
   _dataStartOffset=ftello(_fd);
   
   // Here we go
   asfPacket *aPacket=new asfPacket(_fd,_nbPackets,_packetSize,
                                    &readQueue,&storageQueue,_dataStartOffset);
-  uint32_t packet=0;
-#define MAXIMAGE (_nbPackets)
   uint32_t sequence=0;
-  uint32_t ceilImage=MAXIMAGE;
-
   nbImage=0;
   
   len=0;
   asfIndex indexEntry;
   memset(&indexEntry,0,sizeof(indexEntry));
   bool first=true;
+  bool cancelled=false;
   DIA_workingBase *progressBar=createWorking(QT_TRANSLATE_NOOP("asfdemuxer","Indexing"));
   uint32_t fileSizeMB=(uint32_t)(fSize>>10);
 
@@ -477,7 +473,7 @@ uint8_t asfHeader::buildIndex(void)
         lastDts[i]=0;
   }
 
-
+  uint64_t packet=0;
   while(packet<_nbPackets)
   {
     while(readQueue.size())
@@ -498,7 +494,7 @@ uint8_t asfHeader::buildIndex(void)
         aprintf("** PDTS=%s\n",ADM_us2plain(pts));
       if(bit->stream==_videoStreamId)
       {
-          aprintf(">found video packet of size=%d off=%d seq %d, while curseq =%d, dts=%s",
+          aprintf(">found video packet of size=%d off=%" PRIu64" seq %d, while curseq =%d, dts=%s",
                         bit->len,bit->offset,  bit->sequence,curSeq, ADM_us2plain(dts));
           aprintf(" pts=%s\n",ADM_us2plain(pts));
           if(bit->sequence!=sequence || first==true)
@@ -580,7 +576,12 @@ uint8_t asfHeader::buildIndex(void)
       bit->data=NULL;
       storageQueue.push_back(bit);
     }
-    //working->update(packet,_nbPackets);
+    // allow to cancel indexing
+    if(!progressBar->isAlive())
+    {
+        cancelled=true;
+        break;
+    }
 
     packet++;
     aPacket->nextPacket(0xff); // All packets
@@ -592,12 +593,12 @@ uint8_t asfHeader::buildIndex(void)
   /* Compact index */
   
   fseeko(_fd,_dataStartOffset,SEEK_SET);
-  printf("[ASF] %u images found\n",nbImage);
+  if(cancelled) return ADM_IGN;
   printf("[ASF] ******** End of buildindex *******\n");
-
-  nbImage=_index.size();;
+  nbImage=_index.size();
+  printf("[ASF] %u images found\n",nbImage);
   if(!nbImage) return 0;
-  
+
   uint64_t shift=60*1000*1000;
   bool canShift=false;
   uint64_t tPts;

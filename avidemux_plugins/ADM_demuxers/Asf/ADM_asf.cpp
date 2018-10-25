@@ -167,7 +167,18 @@ uint8_t asfHeader::open(const char *name)
   for(int i=0;i<_nbAudioTrack;i++)
     ADM_info("Stream Audio: index=%d, sid=%d\n",
                 (int)_allAudioTracks[i].streamIndex,(int)_allAudioTracks[i].streamIndex);
-  buildIndex();
+  uint8_t r=buildIndex();
+  switch(r)
+  {
+      case 0:
+          ADM_error("No images found \n");
+          return r;
+      case ADM_IGN:
+          ADM_warning("Indexing cancelled by user after %" PRIu32" images\n",nbImage);
+          return r;
+      default:
+          break;
+  }
   fseeko(_fd,_dataStartOffset,SEEK_SET);
   _packet=new asfPacket(_fd,_nbPackets,_packetSize,&readQueue,&storageQueue,_dataStartOffset);
   curSeq=1;
@@ -176,11 +187,6 @@ uint8_t asfHeader::open(const char *name)
         _audioAccess[i]=new asfAudioAccess(this,i);
         _audioStreams[i]=ADM_audioCreateStream(&(_allAudioTracks[i].wavHeader), _audioAccess[i]);
   }
-  if(!nbImage)
-    {
-        ADM_error("No image found \n");
-        return 0;
-    }
   return 1;
 }
 /**

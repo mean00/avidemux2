@@ -22,7 +22,7 @@
 #include "ADM_tsPatPmt.h"
 #include "fourcc.h"
 
-typedef vector <ADM_TS_TRACK> listOfTsTracks;
+typedef std::vector <ADM_TS_TRACK> listOfTsTracks;
 
 /**
     \fn scanPmt
@@ -80,18 +80,25 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
     uint32_t len;
     TS_PSIpacketInfo psi;
     listOfTsTracks   list;
-    vector <uint32_t>listOfPmt;
+    std::vector <uint32_t> listOfPmt;
     ADM_TS_TRACK *tracks=NULL;
     *outTracks=NULL;
     *nbTracks=0;
-    uint32_t nb=0;
+    uint32_t nb,counter,failed,start,match;
+    nb=counter=failed=start=match=0;
 
     tsPacket *t=new tsPacket();
     t->open(file,FP_PROBE);
+    int videoIndex=-1;
+    int vidPidToMatch=-1;
+    ADM_TS_TRACK_TYPE vidTypeToMatch=ADM_TS_UNKNOWN;
     uint64_t offset=0;
+    bool result=false;
 again:
+    listOfPmt.clear();
     if(offset)
         ADM_info("Retrying at offset 0x%" PRIx64" (%" PRIu64").\n",offset,offset);
+    t->setPos(offset);
     // 1 search the pat...
     if(t->getNextPSI(0,&psi)==true)
     {
@@ -107,6 +114,7 @@ again:
             if(prg) // if prg==0, it is network Pid, dont need it
                 listOfPmt.push_back(pid);
         }
+        start=list.size();
         int size=listOfPmt.size();
         uint64_t consumed=t->getPos();
         if(size)
@@ -115,18 +123,59 @@ again:
             {
                 printf("<<< PMT : %d/%d>>>\n",i,size);
                 uint32_t pid=listOfPmt[i];
-                t->setPos(offset); // Make sure we can have the very first one
-                TS_scanPmt(t,pid,&list);
-            }
-            if(offset) // retry only once
-                goto conclusion;
-            if(list.empty())
-            {
-                offset+=consumed;
-                goto again;
+                t->setPos(offset); // Seek back to the position where we started to look for PAT
+                if(false==TS_scanPmt(t,pid,&list))
+                    continue;
+                if(list.empty())
+                    continue;
+                // Search the video track...
+                for(int j=start;j<list.size();j++)
+                {
+                    ADM_TS_TRACK_TYPE type=list[j].trackType;
+                    if(type==ADM_TS_MPEG2 || type==ADM_TS_H264 || type==ADM_TS_VC1 || type==ADM_TS_H265)
+                    {
+                        videoIndex=j-start;
+                        if(vidPidToMatch==list[j].trackPid && vidTypeToMatch==type)
+                        {
+                            match++;
+                        }else
+                        {
+                            match=0;
+                            vidPidToMatch=list[j].trackPid;
+                            vidTypeToMatch=type;
+                        }
+                        if(start)
+                            list.erase(list.begin(),list.begin()+start);
+                        start=list.size();
+                        break;
+                    }
+                }
+                if(videoIndex!=-1) break;
             }
         }
+        if(videoIndex==-1)
+        {
+            if(failed) // Retry only once if search for PAT fails.
+                goto conclusion;
+            failed++;
+            offset=consumed;
+            goto again;
+        }
+        counter++;
+        // We want 3 consecutive matching PATs, max. 5 tries.
+        if(match<2 && counter<5)
+        {
+            offset=consumed;
+            goto again;
+        }
     }
+    if(videoIndex==-1)
+    {
+        printf("[TS_scanForPrograms] Cannot find a video track\n");
+        goto _failTs;
+    }
+    if(!match)
+        printf("[TS_scanForPrograms] PAT mismatch!\n");
 conclusion:
     // List now contains a list of elementary tracks
 
@@ -134,26 +183,9 @@ conclusion:
     // Some channels advertsise languages that they may have
     // but dont actually exists in the file
     // Allocate output files, max size=list.size
-    
-    printf("[TS Demuxer] Found %u interesting tracks\n",(unsigned int)list.size());
-    
-    // Search the video track...
-    bool result=false;
-    int videoIndex=-1;
-    for(int i=0;i<list.size();i++)
-    {
-        ADM_TS_TRACK_TYPE type=list[i].trackType;
-        if(type==ADM_TS_MPEG2 || type==ADM_TS_H264 || type==ADM_TS_VC1 || type==ADM_TS_H265)
-        {
-            videoIndex=i;
-            break;
-        }
-    }
-    if(videoIndex==-1)
-    {
-        printf("[Ts Demuxer] Cannot find a video track\n");
-        goto _failTs;
-    }
+
+    printf("[TS_scanForPrograms] Found %u interesting tracks\n",(unsigned int)list.size());
+
     {
         //
  
@@ -195,14 +227,11 @@ conclusion:
 _failTs:
     delete t;
     // Delete the list
-    if(list.size())
-        list.erase(list.begin(),list.end()-1);
-    if(result==true)
-    {
-        printf("[T Demuxer] Kept %d tracks\n",*nbTracks);
-    }
-    printf("[TS Demuxer] Probed...\n");
-    
+    list.clear();
+    if(result)
+        printf("[TS_scanForPrograms] Kept %d tracks\n",*nbTracks);
+    printf("[TS_scanForPrograms] Probed...\n");
+
     return result;
 }
 /**

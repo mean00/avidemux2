@@ -25,7 +25,7 @@
 typedef struct 
 {
   uint32_t sequence;
-  uint32_t offset;
+  uint64_t offset;
   uint32_t len;
   uint32_t stream;
   uint32_t packet;
@@ -45,33 +45,33 @@ class asfPacket
 {
   protected:
     uint32_t        readVCL(uint32_t bitwise,uint32_t defaultValue);
-    uint8_t         pushPacket(uint32_t flags,uint32_t packetnb,
-                                uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,
+    uint8_t         pushPacket(uint32_t flags,uint64_t packetnb,
+                                uint64_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,
                                 uint64_t dtsus,uint64_t ptsus);
     uint8_t         skip( uint32_t how);
     FILE            *_fd;
-    uint32_t        packetStart;
+    uint64_t        packetStart;
     uint8_t         segmentId;
     uint32_t        pakSize;
     queueOfAsfBits  *queue;
     queueOfAsfBits  *storage;
     uint32_t        _offset;
-    uint32_t        currentPacket;
-    uint32_t        _startDataOffset;
-    uint32_t        _nbPackets;
+    uint64_t        currentPacket;
+    uint64_t        _startDataOffset;
+    uint64_t        _nbPackets;
     uint64_t        readPtsFromReplica(int sz);
   public:
     
-    asfPacket(FILE *f,uint32_t nbElem,uint32_t pSize,queueOfAsfBits *q,queueOfAsfBits *s,uint32_t startDataOffset);
+    asfPacket(FILE *f,uint64_t nbElem,uint32_t pSize,queueOfAsfBits *q,queueOfAsfBits *s,uint64_t startDataOffset);
     ~asfPacket();
     uint8_t   dump(void);
     
-    uint8_t   goToPacket(uint32_t packet);
+    uint8_t   goToPacket(uint64_t packet);
   
     uint8_t   nextPacket(uint8_t streamWanted);
     uint8_t   skipPacket(void);
     
-    uint32_t  getPos(void);
+    uint64_t  getPos(void);
     uint32_t  getPayloadLen(void);
 #ifdef ASF_INLINE
     #include "ADM_asfIo.h"
