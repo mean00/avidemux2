@@ -126,8 +126,8 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         uint64_t total=0;
         uint64_t threshold,tolerance;
         threshold=tolerance=2;
-        threshold<<=30;
-        tolerance<<=20;
+        threshold<<=29;
+        tolerance<<=19;
         
         // build match string
         char match[16];
