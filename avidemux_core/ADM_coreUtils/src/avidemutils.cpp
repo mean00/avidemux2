@@ -511,9 +511,9 @@ bool ADM_probeSequencedFile(const char *fileName)
     // threshold for automatically split streams
     bool success=false;
     uint64_t fileSize,threshold,tolerance;
-    threshold=tolerance=2;
-    threshold<<=29; // we start with 1 GiB
-    tolerance<<=19; // 1 MiB
+    threshold=tolerance=1;
+    threshold<<=30; // we start with 1 GiB
+    tolerance<<=20; // 1 MiB
     int64_t sz=ADM_fileSize(fileName);
     if(sz<0)
         return false;
