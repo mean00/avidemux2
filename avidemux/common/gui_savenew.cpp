@@ -299,7 +299,7 @@ ADM_videoStreamCopy *admSaver::dealWithH26x(bool isAnnexB)
                 copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
                 break;
             case 3: // source and target are both annexB, remove AUD
-                ADM_info("Input and output are annexB style, remove AUDs\n");
+                ADM_info("Input and output are annexB style, remove AUDs \n");
                 copy=new ADM_videoStreamCopyAudRemover(markerA,markerB);
                 break;
     }    
@@ -323,7 +323,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         video_body->getExtraHeaderData(&extraLen,&extra);
 //#warning do something better
         ADM_videoStreamCopy *copy=NULL;        
-        if(isH264Compatible(info.fcc) || isH265Compatible(info.fcc))
+        if(isH264Compatible(info.fcc)) // H264 only for now || isH265Compatible(info.fcc))
         {
             copy=dealWithH26x(!extraLen);      
          }
