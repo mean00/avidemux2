@@ -164,7 +164,7 @@ void GUI_PlayAvi(bool quit)
     else
     {
         if(false==admPreview::seekToTime(newTimeFrame))
-            admPreview::samePicture();
+            admPreview::nextPicture();
     }
     UI_purge();
     GUI_setCurrentFrameAndTime();
