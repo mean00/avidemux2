@@ -24,6 +24,7 @@ public:
                 getBits(const getBits &source);
                 getBits(int bufferSizeInBytes, uint8_t *buffer);
                 ~getBits();
+            int show(int nb);
             int get(int nb);
             int getUEG(void);
             int getSEG(void);
