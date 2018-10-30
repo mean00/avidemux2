@@ -61,7 +61,10 @@ static int getMp4AudioSampleRateIndex(getBits *bit)
 {
     int index=bit->get(4);
     if(index==15)
+    {
         index=bit->get(24);
+        return -index; // index is the real sample rate
+    }
     return index;
 }
 
@@ -135,7 +138,7 @@ bool MP4Header::refineAudio(WAVHeader *header,uint32_t extraLen,uint8_t *extraDa
         ADM_warning("Can't get sample rate from extradata.\n");
         return true;
     }
-    int sampleRate=aacSampleRates[fqIndex];
+    int sampleRate=(fqIndex<0)? -fqIndex : aacSampleRates[fqIndex];
     if(header->frequency!=sampleRate)
     {
         ADM_warning("Sample rate mismatch, mp4 says %d, AAC says %d, updating...\n",header->frequency,sampleRate);
