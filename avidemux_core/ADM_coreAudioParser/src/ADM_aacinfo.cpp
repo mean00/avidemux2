@@ -37,15 +37,32 @@ static const int aacChannels[8]=
 8 // 7: 8 channels: front-center, front-left, front-right, side-left, side-right, back-left, back-right, LFE-channel
 };
 
-static 	uint32_t aacSampleRate[16]=
+static int aacSampleRate[16]=
 {
-	96000, 88200, 64000, 48000,
-	44100, 32000, 24000, 22050,
-	16000, 12000, 11025,  8000,
-	0,     0,     0,     0 
+    96000, 88200, 64000, 48000,
+    44100, 32000, 24000, 22050,
+    16000, 12000, 11025,  8000,
+    7350,  0,     0,     0
 };
 
 #define xdebug(...) {}
+
+static int getAudioObjectType(getBits *bit)
+{
+    int type=bit->get(5);
+    if(type==31)
+        type=32+bit->get(6);
+    return type;
+}
+
+static int getSamplingFrequency(getBits *bit)
+{
+    int index=bit->get(4);
+    if(index==0xf)
+        return bit->get(24);
+    return aacSampleRate[index];
+}
+
 /**
     \fn ADM_getAacInfoFromConfig
 */
@@ -57,27 +74,12 @@ bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info)
         return false;
     }
     getBits bits(size,data); // get a copy, needed to extract extra data
-   
-    int audioObjectType=bits.get(5); // warning
-    if(audioObjectType==31)
-    {
-        ADM_error("Unsupported AAC audioObject Type\n");
-        return false;
-    }
-    int samplingFrequencyIndex=bits.get(4);
-    int fq=0;
-    if(samplingFrequencyIndex==0xf)
-    {
-            fq=(bits.get(8)<<16)+bits.get(16);
-    }else
-    {
-        fq=aacSampleRate[samplingFrequencyIndex];
-    }
+    int audioObjectType=getAudioObjectType(&bits);
+    int fq=getSamplingFrequency(&bits);
     int channelConfiguration=bits.get(4);
-    int channels=aacChannels[channelConfiguration];
     bool sbrPresent=false;
-    xdebug("ObjectType=%d\n",audioObjectType);    
-  
+    xdebug("ObjectType=%d\n",audioObjectType);
+#if 0
     switch(audioObjectType)
     {
         case 2: // GASpecificConfig
@@ -102,27 +104,39 @@ bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info)
                 ADM_error("AudoObjecttype =%d not handled\n",audioObjectType);
                 return false;
     }
-    int consumed=bits.getConsumedBits();
-    if(size*8-consumed>=16) // extensionAudioObjectType
+#endif
+
+    if(audioObjectType==5 || (audioObjectType==29 && !(bits.show(3) & 0x03 && !(bits.show(9) & 0x3f)))) // SBR or PS
     {
-        int syncExtensionType=bits.get(11);
-        if(syncExtensionType==0x2b7)
+        sbrPresent=true;
+        fq=getSamplingFrequency(&bits);
+        audioObjectType=getAudioObjectType(&bits);
+        if(audioObjectType==22)
+            channelConfiguration=bits.get(4);
+    }else
+    {
+        int max=size*8-16;
+        while(bits.getConsumedBits()<max)
         {
-            int extensionAdioObjectType=bits.get(5);
-             if(extensionAdioObjectType==31)
+            if(bits.show(11)==0x2b7)
+            {
+                bits.skip(11);
+                if(getAudioObjectType(&bits)==5)
                 {
-                    ADM_error("Unsupported AAC audioObject Type\n");
-                    return false;
+                    sbrPresent=true;
+                    bits.skip(1);
+                    fq=getSamplingFrequency(&bits);
                 }
-             if(extensionAdioObjectType==5) 
-             {
-                    sbrPresent=bits.get(1);
-             }
-            
+                break;
+            }else
+            {
+                bits.skip(1);
+            }
         }
     }
+
     info.frequency=fq;
-    info.channels=channels;
+    info.channels=aacChannels[channelConfiguration];
     info.sbr=sbrPresent;
 
     return true;
