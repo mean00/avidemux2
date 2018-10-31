@@ -23,10 +23,10 @@
 #include "fourcc.h"
 #include "ADM_mp4.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_getbits.h"
 #include "ADM_coreUtils.h"
 #include "ADM_mp4Tree.h"
 #include "ADM_vidMisc.h"
+#include "ADM_aacinfo.h"
 
 #if 1
 #define aprintf(...) {}
@@ -49,25 +49,6 @@ typedef enum
 
 //extern char* ms2timedisplay(uint32_t ms);
 
-static int getMp4AudioObjectType(getBits *bit)
-{
-    int type=bit->get(5);
-    if(type==31)
-        type=32+bit->get(6);
-    return type;
-}
-
-static int getMp4AudioSampleRateIndex(getBits *bit)
-{
-    int index=bit->get(4);
-    if(index==15)
-    {
-        index=bit->get(24);
-        return -index; // index is the real sample rate
-    }
-    return index;
-}
-
 /**
     \fn refineAudio
     \brief update track descriptor with additional info. For example # of channels...
@@ -77,72 +58,33 @@ bool MP4Header::refineAudio(WAVHeader *header,uint32_t extraLen,uint8_t *extraDa
     if(header->encoding!=WAV_AAC || extraLen<2)
         return true;
 
-    const uint8_t aacChannels[8] = { 0, 1, 2, 3, 4, 5, 6, 8 };
-    const int aacSampleRates[16] = { 96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350 };
-
     ADM_info("Audio track is AAC, checking it...\n");
 
-    getBits bits(extraLen,extraData);
-    int objType=getMp4AudioObjectType(&bits);
-    int fqIndex=getMp4AudioSampleRateIndex(&bits);
-    int channels=bits.get(4);
-    if(channels>7)
+    AacAudioInfo info;
+    ADM_getAacInfoFromConfig(extraLen,extraData,info);
+
+    if(info.channels>8)
     {
-        ADM_warning("Channel index is too big..\n");
+        ADM_warning("Invalid channel index = %" PRIu32"\n",info.channels);
         return false;
     }
 
-    int chanIdxFromExt=0;
-    int extObjType=0;
-
-    if(objType==5 || (objType==29 && !(bits.show(3) & 0x03 && !(bits.show(9) & 0x3f))))
+    if(header->channels!=info.channels)
     {
-        extObjType=5;
-        fqIndex=getMp4AudioSampleRateIndex(&bits);
-        objType=getMp4AudioObjectType(&bits);
-        if(objType==22)
-            chanIdxFromExt=bits.get(4);
-    }
-    if(extObjType!=5)
-    {
-        int max=extraLen*8-16;
-        while(bits.getConsumedBits()<max)
-        {
-            if(bits.show(11)==0x2b7)
-            {
-                bits.skip(11);
-                extObjType=getMp4AudioObjectType(&bits);
-                if(extObjType==5)
-                {
-                    bits.skip(1);
-                    fqIndex=getMp4AudioSampleRateIndex(&bits);
-                }
-                break;
-            }else
-            {
-                bits.skip(1);
-            }
-        }
+        ADM_warning("Channel mismatch, mp4 says %d, AAC says %d, updating...\n",header->channels,info.channels);
+        header->channels=info.channels;
     }
 
-    if(chanIdxFromExt && chanIdxFromExt<7)
-        channels=chanIdxFromExt;
-    int nbChannels=aacChannels[channels];
-    if(header->channels!=nbChannels)
+    if(!info.frequency)
     {
-        ADM_warning("Channel mismatch, mp4 says %d, AAC says %d, updating...\n",header->channels,nbChannels);
-        header->channels=nbChannels;
+        ADM_warning("Invalid sampling frequency = 0\n");
+        return false;
     }
-    if(fqIndex>12)
+
+    if(header->frequency!=info.frequency)
     {
-        ADM_warning("Can't get sample rate from extradata.\n");
-        return true;
-    }
-    int sampleRate=(fqIndex<0)? -fqIndex : aacSampleRates[fqIndex];
-    if(header->frequency!=sampleRate)
-    {
-        ADM_warning("Sample rate mismatch, mp4 says %d, AAC says %d, updating...\n",header->frequency,sampleRate);
-        header->frequency=sampleRate;
+        ADM_warning("Sample rate mismatch, mp4 says %d, AAC says %d, updating...\n",header->frequency,info.frequency);
+        header->frequency=info.frequency;
     }
     return true;
 }
