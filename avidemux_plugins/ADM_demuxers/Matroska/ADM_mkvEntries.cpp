@@ -299,16 +299,8 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                     ADM_info("channels= %d\n",info.channels);
                     ADM_info("SBR= %d\n",info.sbr);
                     entry.chan=info.channels;
-                    if(info.sbr)
-                    {
-                        entry.fq=info.frequency*2;
-                    }
-                    else
-                    {
-                        entry.fq=info.frequency;
-                    }
+                    entry.fq=info.frequency;
                 }
-                 
             }
         }
         //**
