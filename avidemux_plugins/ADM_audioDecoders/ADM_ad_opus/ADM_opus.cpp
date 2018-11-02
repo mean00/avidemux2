@@ -50,6 +50,8 @@ ADM_AudiocodecOpus::ADM_AudiocodecOpus(uint32_t fourcc, WAVHeader *info, uint32_
     ADM_assert(fourcc==WAV_OPUS);
     opus_handle=NULL;
     int er;
+    if(info->channels>2) // max. 2 channels are supported, do not trust the demuxer
+        info->channels=2;
     opus_handle=opus_decoder_create(info->frequency,info->channels,&er);
     if(!opus_handle)
     {
