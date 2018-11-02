@@ -193,6 +193,13 @@ ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *a
         case WAV_WMA:
             return new ADM_audioStreamConstantChunk(wavheader,access);
 #endif
+        case WAV_OPUS:
+            if(wavheader->channels>2)
+            {
+                ADM_warning("Invalid # of channels %d for opus, setting it to 2.\n",wavheader->channels);
+                wavheader->channels=2;
+            }
+            return new ADM_audioStream(wavheader,access);
         default:
             return new ADM_audioStream(wavheader,access);
     }
