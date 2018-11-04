@@ -17,13 +17,15 @@
 #include <math.h>
 #include "ADM_default.h"
 #include "ADM_ad_plugin.h"
-#include "opus/opus.h"
+#include "opus/opus_multistream.h"
 /**
  */
 class ADM_AudiocodecOpus : public     ADM_Audiocodec
 {
-	protected:
-		OpusDecoder     *opus_handle;
+protected:
+    OpusDecoder     *opus_handle;
+    OpusMSDecoder   *opus_multistream_handle;
+    int             framesize;
 
 	public:
 		ADM_AudiocodecOpus(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
@@ -43,20 +45,54 @@ DECLARE_AUDIO_DECODER(ADM_AudiocodecOpus,						// Class
 
 			"libOpus decoder plugin for avidemux (c) Mean\n"); 	// Desc
    //********************************************************
+
+#define OPUS_HEADER_SIZE 19
+
 ADM_AudiocodecOpus::ADM_AudiocodecOpus(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d) : 
   ADM_Audiocodec(fourcc,*info)
 {
-    int flags=0;
     ADM_assert(fourcc==WAV_OPUS);
     opus_handle=NULL;
-    int er;
-    if(info->channels>2) // max. 2 channels are supported, do not trust the demuxer
-        info->channels=2;
-    opus_handle=opus_decoder_create(info->frequency,info->channels,&er);
-    if(!opus_handle)
+    opus_multistream_handle=NULL;
+    int er,nbStreams,nbCoupled;
+    uint8_t *mapping;
+    framesize=5760;
+    if(info->channels>2)
     {
-        ADM_warning("Cannot init libopus, error=%d \n");
+        if(l>=OPUS_HEADER_SIZE+2+info->channels)
+        {
+            nbStreams=d[OPUS_HEADER_SIZE];
+            nbCoupled=d[OPUS_HEADER_SIZE+1];
+            if((nbStreams+nbCoupled) != info->channels)
+                ADM_warning("Inconsistent channel mapping: %d streams, %d coupled, but %d channels.\n",nbStreams,nbCoupled,info->channels);
+            mapping=d+OPUS_HEADER_SIZE+2;
+        }else
+        {
+            ADM_error("We have more than 2 channels, but not enough opus extradata (%d), crashing.\n",l);
+            ADM_assert(0);
+        }
+        opus_multistream_handle=opus_multistream_decoder_create(info->frequency,info->channels,nbStreams,nbCoupled,mapping,&er);
+        if(opus_multistream_handle)
+            ADM_info("Created opus decoder for %d streams (%d coupled), %d channels, mapping = %d\n",nbStreams,nbCoupled,info->channels,(int)(*mapping));
+    }else
+    {
+        opus_handle=opus_decoder_create(info->frequency,info->channels,&er);
+    }
+    if(!opus_handle && !opus_multistream_handle)
+    {
+        ADM_error("Cannot init libopus, error=%d\n",er);
         ADM_assert(0);   
+    }
+    CHANNEL_TYPE *p_ch_type = channelMapping;
+#define DOIT(y) *(p_ch_type++)=ADM_CH_##y;
+    if(info->channels>=5)
+    {
+        DOIT(FRONT_LEFT)
+        DOIT(FRONT_CENTER)
+        DOIT(FRONT_RIGHT)
+        DOIT(REAR_LEFT)
+        DOIT(REAR_RIGHT)
+        DOIT(LFE)
     }
 }
 /**
@@ -68,23 +104,28 @@ ADM_AudiocodecOpus::~ADM_AudiocodecOpus( )
         opus_decoder_destroy(opus_handle);
         opus_handle=NULL;
     }
+    if(opus_multistream_handle)
+    {
+        opus_multistream_decoder_destroy(opus_multistream_handle);
+        opus_multistream_handle=NULL;
+    }
 }
 
 /**
  */
 uint8_t ADM_AudiocodecOpus::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)
 {
-    uint32_t avail;
-    uint32_t length,syncoff;
-    int flags = 0, samprate = 0, bitrate = 0, frame_length;
-    uint8_t chan = wavHeader.channels;
     *nbOut=0;
+    int err;
 
-
-    int err=opus_decode_float(opus_handle,inptr,nbIn,outptr,5760,false); //??
+    if(opus_handle)
+        err=opus_decode_float(opus_handle,inptr,nbIn,outptr,framesize,false); //??
+    else
+        err=opus_multistream_decode_float(opus_multistream_handle,inptr,nbIn,outptr,framesize,false);
     //ADM_info("Incoming = %d bytes, out samples=%d\n",nbIn,err);
     if(err>0)
     {
+        framesize=err;
         *nbOut=err*wavHeader.channels;
         return 1;
     }
