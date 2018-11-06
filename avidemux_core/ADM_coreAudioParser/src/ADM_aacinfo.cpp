@@ -121,11 +121,14 @@ bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info)
             if(bits.show(11)==0x2b7)
             {
                 bits.skip(11);
-                if(getAudioObjectType(&bits)==5)
+                if(getAudioObjectType(&bits)==5 && bits.get(1)==1)
                 {
-                    sbrPresent=true;
-                    bits.skip(1);
-                    fq=getSamplingFrequency(&bits);
+                    int extFq=getSamplingFrequency(&bits);
+                    if(extFq && extFq!=fq)
+                    {
+                        sbrPresent=true;
+                        fq=extFq;
+                    }
                 }
                 break;
             }else
