@@ -25,7 +25,6 @@ class ADM_AudiocodecOpus : public     ADM_Audiocodec
 protected:
     OpusDecoder     *opus_handle;
     OpusMSDecoder   *opus_multistream_handle;
-    int             framesize;
 
 	public:
 		ADM_AudiocodecOpus(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
@@ -56,7 +55,6 @@ ADM_AudiocodecOpus::ADM_AudiocodecOpus(uint32_t fourcc, WAVHeader *info, uint32_
     opus_multistream_handle=NULL;
     int er,nbStreams,nbCoupled;
     uint8_t *mapping;
-    framesize=5760;
     if(info->channels>2)
     {
         if(l>=OPUS_HEADER_SIZE+2+info->channels)
@@ -117,15 +115,15 @@ uint8_t ADM_AudiocodecOpus::run(uint8_t *inptr, uint32_t nbIn, float *outptr, ui
 {
     *nbOut=0;
     int err;
+    const int framesize=5760;
 
     if(opus_handle)
-        err=opus_decode_float(opus_handle,inptr,nbIn,outptr,framesize,false); //??
+        err=opus_decode_float(opus_handle,inptr,nbIn,outptr,framesize,false);
     else
         err=opus_multistream_decode_float(opus_multistream_handle,inptr,nbIn,outptr,framesize,false);
     //ADM_info("Incoming = %d bytes, out samples=%d\n",nbIn,err);
     if(err>0)
     {
-        framesize=err;
         *nbOut=err*wavHeader.channels;
         return 1;
     }
