@@ -347,11 +347,11 @@ theEnd:
 bool ADM_computeMP124MissingPtsDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
 {
     aviInfo info;
-    uint32_t flags;
+    uint32_t flags,previousFlags=0;
     hdr->getVideoInfo(&info);
     uint32_t nDts=0,nPts=0;
-    uint32_t nbB=0;
-    uint64_t pts,dts;
+    uint32_t nbB=0,ooo=0;
+    uint64_t pts,dts,previousPts=ADM_NO_PTS;
     uint32_t nbFields=0,nbFrames=0;
     // Look how much bframes + how much valid PTS/DTS we have....
     for(int i=0;i<info.nb_frames;i++)
@@ -371,24 +371,37 @@ bool ADM_computeMP124MissingPtsDts(vidHeader *hdr,uint64_t timeIncrementUs,uint6
             nPts++;
         if(dts!=ADM_NO_PTS)
             nDts++;
+        if(pts!=ADM_NO_PTS && previousPts!=ADM_NO_PTS && (flags & AVI_B_FRAME) && !(previousFlags & AVI_B_FRAME))
+        {
+            if(pts>previousPts)
+                ooo++;
+        }
+        previousPts=pts;
+        previousFlags=flags;
     }
 next:
         ADM_info("Out of %" PRIi32" frames, we have %" PRIi32" valid DTS and %" PRIi32" valid PTS\n",info.nb_frames,nDts,nPts);
         ADM_info("We also have %" PRIi32" bframes\n",nbB);
+        if(ooo)
+            ADM_info("Unreliable PTS detected\n");
         ADM_info("We have %" PRIu32" fields and %" PRIu32" frames\n",nbFields,nbFrames);
         if(nbFields>2)
         {
             ADM_info("Cannot recompute PTS/DTS for field encoded picture.\n");
             return true;
         }
-        
         // Case 1 : We have both, nothing to do
         if(nDts>=info.nb_frames-2 && nPts>=info.nb_frames-2)
-         {
-                ADM_info("Nothing to do\n");
-                *delay=0;
-                return true;
-         }
+        {
+            if(ooo)
+            {
+                ADM_info("Trying to correct out-of-order PTS\n");
+                return setPtsFromDts(hdr,timeIncrementUs,delay);
+            }
+            ADM_info("Nothing to do\n");
+            *delay=0;
+            return true;
+        }
         // Case 2: We have PTS but not DTS
         if(nPts>=info.nb_frames-2 )
         {
