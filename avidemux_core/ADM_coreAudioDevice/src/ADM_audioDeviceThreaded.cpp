@@ -81,6 +81,25 @@ uint8_t audioDeviceThreaded::init(uint32_t channel, uint32_t fq ,CHANNEL_TYPE *c
     // Allocate buffer
     memcpy(incomingMapping,channelMapping,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
     _channels=channel;
+
+    char incoming[200];
+    char outgoing[200];
+    char chnl[20];
+    char *str1=incoming;
+    char *str2=outgoing;
+    *str1=*str2=0;
+    const CHANNEL_TYPE *outgoingMapping=getWantedChannelMapping(_channels);
+    for(int i=0;i<_channels;i++)
+    {
+        sprintf(chnl,"    %s\n",ADM_printChannel(incomingMapping[i]));
+        strcat(str1,chnl);
+        sprintf(chnl,"    %s\n",ADM_printChannel(*outgoingMapping));
+        strcat(str2,chnl);
+        outgoingMapping++;
+    }
+    ADM_info("Incoming channel map:\n%s",str1);
+    ADM_info("Outgoing channel map:\n%s",str2);
+
     _frequency=fq;
     sizeOf10ms=(_channels*_frequency*2)/100;
     sizeOf10ms&=~15; // make sure it is a multiple of 16
