@@ -1,6 +1,6 @@
 --- libavformat/isom.c.orig	2017-10-15 17:59:38.000000000 +0200
 +++ libavformat/isom.c	2017-10-20 21:57:43.612220521 +0200
-@@ -330,8 +330,13 @@
+@@ -331,8 +331,13 @@
      { AV_CODEC_ID_MACE3,           MKTAG('M', 'A', 'C', '3') },
      { AV_CODEC_ID_MACE6,           MKTAG('M', 'A', 'C', '6') },
      { AV_CODEC_ID_MP1,             MKTAG('.', 'm', 'p', '1') },
