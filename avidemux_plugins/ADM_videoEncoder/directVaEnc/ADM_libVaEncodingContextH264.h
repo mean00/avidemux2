@@ -160,10 +160,11 @@ virtual bool render_slice(int frameNumber,vaFrameType frameType);
 
 class ADM_vaEncodingContextH264AnnexB: public ADM_vaEncodingContextH264Base
 {
+private:
+            bool    extraDataNeeded;
 public:
-                    ADM_vaEncodingContextH264AnnexB()   ;             
+                    ADM_vaEncodingContextH264AnnexB(bool needExtraData);
     virtual         ~ADM_vaEncodingContextH264AnnexB();
-    virtual bool    setup( int width, int height, int frameInc, std::vector<ADM_vaSurface *>knownSurfaces);
     virtual bool    encode(ADMImage *in, ADMBitstream *out);
     virtual bool    generateExtraData(int *size, uint8_t **data);
     

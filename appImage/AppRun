@@ -2,8 +2,20 @@
 HERE="$(dirname "$(readlink -f "${0}")")"
 cd "${HERE}/usr/"
 export QT_STYLE_OVERRIDE="fusion"
+FT_PROBE_EXE_NAME="freetype_probe"
+if [ -z "${ADM_APPIMAGE_USE_SYSTEM_FONT_LIBS}"] && [ -e "${HERE}/${FT_PROBE_EXE_NAME}" ]; then
+    "${HERE}/${FT_PROBE_EXE_NAME}"
+    ADM_APPIMAGE_USE_SYSTEM_FONT_LIBS=$?
+fi
+if [ "x${ADM_APPIMAGE_USE_SYSTEM_FONT_LIBS}" != "x1" ]
+then
+    echo -e "Using bundled freetype, fontconfig and fribidi. Export ADM_APPIMAGE_USE_SYSTEM_FONT_LIBS=1 to use the system ones instead.\nThis is recommended for systems with fontconfig >= 2.13"
+    LD_LIBRARY_PATH="${HERE}/opt/lib:${LD_LIBRARY_PATH}"
+else
+    echo "Using system freetype, fontconfig and fribidi."
+fi
 export LD_LIBRARY_PATH="${HERE}/usr/lib/:${HERE}/usr/lib/qt5:${LD_LIBRARY_PATH}"
 export PATH="${HERE}/usr/bin:${PATH}"
-${HERE}/usr/bin/avidemux3_portable "$@"
+"${HERE}/usr/bin/avidemux3_portable" "$@"
 cd -
 

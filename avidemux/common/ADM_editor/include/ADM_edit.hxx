@@ -200,7 +200,7 @@ virtual                         ~ADM_Composer();
                     bool        pasteFromClipBoard(uint64_t currentTime);
                     bool        appendFromClipBoard(void);
                     bool        clipboardEmpty(void);
-                    bool     	addFile (const char *name);
+                    uint8_t     addFile(const char *name);
 					int         appendFile(const char *name);
 					void		closeFile(void);
 					bool		isFileOpen(void);

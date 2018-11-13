@@ -73,6 +73,12 @@ getBits::~getBits()
     delete c;
     ctx=NULL;
 }
+int getBits::show(int nb)
+{
+    if(nb<1 || nb>32) return 0;
+    if(nb<25) return show_bits((GetBitContext *)ctx,nb);
+    return show_bits_long((GetBitContext *)ctx,nb);
+}
 int getBits::get(int nb)
 {
     if(nb>15) return get_bits_long((GetBitContext *)ctx,nb);

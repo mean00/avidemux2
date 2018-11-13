@@ -122,7 +122,7 @@ protected:
 public:
                 PsIndexer(void);
                 ~PsIndexer();
-        bool    run(const char *file);
+        uint8_t run(const char *file);
         bool    writeVideo(PSVideo *video);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
@@ -141,7 +141,7 @@ public:
 */
 uint8_t   psIndexer(const char *file)
 {
-bool r;
+uint8_t r;
     PsIndexer *dx=new PsIndexer;
     r=dx->run(file);
     delete dx;
@@ -176,11 +176,12 @@ PsIndexer::~PsIndexer()
 /**
     \fn run
 */  
-bool PsIndexer::run(const char *file)
+uint8_t PsIndexer::run(const char *file)
 {
 uint32_t temporal_ref,val;
 uint64_t fullSize;
 uint8_t buffer[50*1024];
+uint8_t res=1;
 bool seq_found=false;
 
 PSVideo video;
@@ -234,7 +235,11 @@ bool bAppend=false;
     fullSize=pkt->getSize();
       while(1)
       {
-        
+        if(!ui->isAlive())
+        {
+            res=ADM_IGN;
+            break;
+        }
         uint8_t startCode=pkt->findStartCode();
         if(!pkt->stillOk()) break;
         pkt->getInfo(&info);
@@ -406,6 +411,7 @@ bool bAppend=false;
                     break;
                   }
       }
+      if(res==ADM_IGN) goto cleanup;
 theEnd:    
         printf("\n");
         // Dump progressive/frame gop
@@ -421,6 +427,7 @@ theEnd:
         writeAudio();
         writeScrReset();
         qfprintf(index,"\n[End]\n");
+cleanup:
         qfclose(index);
         index=NULL;
         if(audioTracks) DestroyListOfPsAudioTracks( audioTracks);
@@ -428,7 +435,7 @@ theEnd:
         delete pkt;
         pkt=NULL;
 	free(indexName);
-        return 1; 
+        return res;
 }
 /**
     \fn   Mark

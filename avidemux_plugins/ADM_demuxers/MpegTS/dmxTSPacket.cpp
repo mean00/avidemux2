@@ -284,12 +284,20 @@ bool        tsPacket::updateStats(uint8_t *data)
 #endif
 bool tsPacket::getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi)
 {
+    int multiPacketPsi=0;
+    int nbRetries=0;
+    uint64_t startOffset=0;
     TSpacketInfo pkt;
 nextPack2:
-
+    if(nbRetries && pkt.startAt-startOffset>(1<<25)) // max. 32 MiB
+    {
+        ADM_warning("Giving up after %d retries, consumed %" PRId64" bytes\n",nbRetries,pkt.startAt-startOffset);
+        return false;
+    }
     if(false==getNextPacket_NoHeader(pid,&pkt,true)) return false;    
-
-    
+    if(!nbRetries)
+        startOffset=pkt.startAt;
+    nbRetries++;
     uint32_t tableId;
     uint32_t sectionLength=0;
     uint32_t transportStreamId=0;
@@ -299,21 +307,28 @@ nextPack2:
 
     DUMMY(tableId,8);
     int section_syntax_indicator=bits.get(1);
-    if(section_syntax_indicator)
-        ADM_warning("Section Syntax is set to private\n");
-    if(bits.get(1))             // Marker
+#ifdef VERBOSE_PSI
+    if(!section_syntax_indicator)
+        ADM_warning("Syntax section indicator not set\n");
+#endif
+    if(bits.get(1)) // Private bit
     {
-          printf("[MpegTs] getNextPSI Missing 0 marker\n");
-          goto nextPack2;
+        ADM_warning("Section syntax is set to private\n");
+        goto nextPack2;
     }
-    bits.get(2);
-    sectionLength=bits.get(12);    // Section Length
+    bits.get(2); // 2 Reserved bits
+    sectionLength=bits.get(12); // Section Length
 #if 1
     if(sectionLength+3>pkt.payloadSize) 
     {
-        ADM_warning("[MpegTs] Multi Packet PSI ? sectionLength=%d, len=%d\n",sectionLength,pkt.payloadSize);
+        if(!multiPacketPsi)
+            ADM_warning("[MpegTs] Multi Packet PSI ? sectionLength=%d, len=%d\n",sectionLength,pkt.payloadSize);
+        multiPacketPsi++;
         goto nextPack2;
     }
+    if(multiPacketPsi>1)
+        ADM_warning("Multi packet PSI warning repeated %d times\n",multiPacketPsi);
+    multiPacketPsi=0;
 #endif
     transportStreamId=bits.get(16);// transportStreamId
 #ifdef VERBOSE_PSI
@@ -362,11 +377,22 @@ bool        tsPacket::getNextPES(TS_PESpacket *pes)
 #else
 #define zprintf ADM_info
 #endif
+    int nbRetries=0,counter=0;
+    uint64_t startOffset=0;
     TSpacketInfo pkt;
+    pkt.startAt=0;
     pes->fresh=false;
 nextPack3:
+    if(pkt.startAt-startOffset>(1<<25)) // max. 32 MiB
+    {
+        ADM_warning("Giving up after %d retries, consumed %" PRId64" bytes\n",nbRetries,pkt.startAt-startOffset);
+        return false;
+    }
     // Sync at source
-    if(false==getNextPacket_NoHeader(pes->pid,&pkt,false)) return false;    
+    if(false==getNextPacket_NoHeader(pes->pid,&pkt,false)) return false;
+    if(!nbRetries)
+        startOffset=pkt.startAt;
+    nbRetries++;
     // If it does not contain a payload start continue
     bool mark=false;
     uint32_t code=(pkt.payload[0]<<24)+(pkt.payload[1]<<16)+(pkt.payload[2]<<8)+pkt.payload[3];
@@ -374,9 +400,15 @@ nextPack3:
     zprintf("Mark=%x\n",code);
     if(!pkt.payloadStart && !mark)
     {
+#if 0
         printf("[Ts Demuxer] Pes for Pid = 0x%x (%d) does not contain payload start\n",pes->pid,pes->pid);
+#endif
+        counter++;
         goto nextPack3;
     }
+    if(counter>1)
+        zprintf("Payload start for Pid = 0x%x (%d) found after %d retries\n",pes->pid,pes->pid,counter);
+    counter=0;
     //____________________
     //____________________
     // 1- Start Headers
@@ -385,10 +417,14 @@ nextPack3:
     zprintf("[TS Demuxer] Code=0x%x pid=0x%x\n",code,pes->pid);
     if((code&0xffffff00)!=0x100)
     {
+#if 0
         printf("[Ts Demuxer] No PES startcode at 0x%" PRIx64"\n",pkt.startAt);
         printf("0x:%02x %02x %02x %02x\n",pkt.payload[4],pkt.payload[5],pkt.payload[6],pkt.payload[7]);
+#endif
         goto nextPack3;
     }
+    if(nbRetries>1)
+        ADM_info("PES startcode found at 0x%" PRIx64" after %d retries\n",pkt.startAt,nbRetries);
     //mixDump(pkt.payload,pkt.payloadSize);
     uint32_t pesPacketLen=(pkt.payload[4]<<8)+(pkt.payload[5]);
     zprintf("[TS Demuxer] Pes Packet Len=%d\n",pesPacketLen);

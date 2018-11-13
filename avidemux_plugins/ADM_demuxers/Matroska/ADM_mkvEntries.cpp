@@ -108,16 +108,15 @@ static void createAACExtraData(const char *codec,entryDesc *entry)
     entry->extraDataLen=2;
     if(hasNeedle(codec,"SBR"))
     {
-        entry->extraDataLen=5;    
-        sampleRateIndex=aac_get_sample_rate_index(entry->fq*2);
+        entry->extraDataLen=5;
+        entry->fq*=2;
+        sampleRateIndex=aac_get_sample_rate_index(entry->fq);
         e[2] = AAC_SYNC_EXTENSION_TYPE >> 3;
         e[3] = ((AAC_SYNC_EXTENSION_TYPE & 0x07) << 5) | 5;
         e[4] = (1 << 7) | (sampleRateIndex << 3);
     }
-    ADM_info("Created %d bytes ",entry->extraDataLen);
-    for(int i=0;i<entry->extraDataLen;i++)
-        ADM_info(" %02x",entry->extraData[i]);
-    ADM_info("\n");
+    ADM_info("Created %d bytes\n",entry->extraDataLen);
+    mixDump(entry->extraData,entry->extraDataLen);
 }
 
 /**
@@ -248,6 +247,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
       {
          uint32_t  streamIndex;
          mkvTrak *t=&(_tracks[1+_nbAudioTrack]);
+        t->extraDataLen=entry.extraDataLen;
         ADM_info("This track has %d bytes of  extradata\n",t->extraDataLen);
         // MS/ACM : ACMX
         if(0x100001==entry.fcc)
@@ -299,16 +299,8 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                     ADM_info("channels= %d\n",info.channels);
                     ADM_info("SBR= %d\n",info.sbr);
                     entry.chan=info.channels;
-                    if(info.sbr)
-                    {
-                        entry.fq=info.frequency*2;
-                    }
-                    else
-                    {
-                        entry.fq=info.frequency;
-                    }
+                    entry.fq=info.frequency;
                 }
-                 
             }
         }
         //**

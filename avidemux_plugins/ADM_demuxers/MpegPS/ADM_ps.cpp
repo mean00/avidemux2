@@ -25,6 +25,7 @@
 #include "ADM_coreDemuxerMpegTemplate.cpp.h"
 
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
+uint8_t psIndexer(const char *file);
 
 /**
       \fn open
@@ -34,14 +35,33 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 uint8_t psHeader::open(const char *name)
 {
     char *idxName=(char *)malloc(strlen(name)+6);
-    bool r=false;
+    uint8_t r=1;
+
+    sprintf(idxName,"%s.idx2",name);
+    if(!ADM_fileExist(idxName))
+        r=psIndexer(name);
+    if(r==ADM_IGN)
+    {
+        ADM_warning("Indexing cancelled by the user, deleting the index file. Bye.\n");
+        remove(idxName);
+        free(idxName);
+        return r;
+    }
+    if(!r)
+    {
+        ADM_error("Indexing of %s failed, aborting\n",name);
+        // Currently, indexer returns 0 only if it can't create the .idx2 file, nothing to remove.
+        free(idxName);
+        return r;
+    }
+
     FP_TYPE appendType=FP_DONT_APPEND;
     char *type;
     uint64_t startDts;
     uint32_t version=0;
-
-    sprintf(idxName,"%s.idx2",name);
     indexFile index;
+    r=0;
+
     if(!index.open(idxName))
     {
         printf("[psDemux] Cannot open index file %s\n",idxName);
@@ -127,7 +147,7 @@ uint8_t psHeader::open(const char *name)
         printf("psDemux] Cannot psPacket open the file\n");
         goto abt;
     }
-    r=true;
+    r=1;
     for(int i=0;i<listOfAudioTracks.size();i++)
     {
         ADM_psTrackDescriptor *desc=listOfAudioTracks[i];
@@ -143,7 +163,10 @@ uint8_t psHeader::open(const char *name)
 abt:
     index.close();
     free(idxName);
-    printf("[psDemuxer] Loaded %d\n",r);
+    if(r)
+        ADM_info("Loaded %s successfully\n",name);
+    else
+        ADM_warning("Loading %s failed\n",name);
     return r;
 }
 
@@ -243,7 +266,7 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 
     // a random frame: need to rewind first, then seek forward
     uint32_t startPoint=frame;
-    while(startPoint && !ListOfFrames[startPoint]->startAt)
+    while(startPoint && ListOfFrames[startPoint]->type!=1)
         startPoint--;
     printf("[psDemux] Wanted frame %" PRIu32", going back to frame %" PRIu32", last frame was %" PRIu32",\n",frame,startPoint,lastFrame);
     pk=ListOfFrames[startPoint];
@@ -263,8 +286,8 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
             lastFrame=0xffffffff;
             return false;
         }
-        startPoint++;
         lastFrame=startPoint;
+        startPoint++;
     }
     pk=ListOfFrames[frame];
     lastFrame++;

@@ -51,13 +51,13 @@ bool freeQueue(queueOfAsfBits *q)
 /**
     \fn asfPacket ctor
 */ 
-asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,queueOfAsfBits *q,queueOfAsfBits *s,uint32_t startDataOffset)
+asfPacket::asfPacket(FILE *f,uint64_t nb,uint32_t pSize,queueOfAsfBits *q,queueOfAsfBits *s,uint64_t startDataOffset)
  {
    _fd=f;
    pakSize=pSize;
    ADM_assert(pakSize);
-   packetStart=ftello(f);;
-   aprintf("Packet created at %x\n",packetStart);
+   packetStart=ftello(f);
+   aprintf("Packet created at %" PRIx64"\n",packetStart);
    ADM_assert(_fd);
    queue=q;
    storage=s;
@@ -76,9 +76,10 @@ asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,queueOfAsfBits *q,queueO
  /**
     \fn goToPacket
 */
- uint8_t asfPacket::goToPacket(uint32_t packet)
+ uint8_t asfPacket::goToPacket(uint64_t packet)
  {
-   uint32_t offset=_startDataOffset+packet*pakSize;
+   uint64_t offset=_startDataOffset+packet*pakSize;
+   aprintf("[asfPacket::goToPacket] offset = %" PRIu64", packet = %" PRIu64", packet size = %" PRIu32"\n",offset,packet,pakSize);
    fseeko(_fd,offset,SEEK_SET);
    currentPacket=packet;
    purge();
@@ -98,7 +99,7 @@ uint64_t   asfPacket::readPtsFromReplica(int replica)
      if(replica>=8)
      {
         read32(); // size
-        pts=read32()*1000; // PTS
+        pts=(uint64_t)read32()*1000; // PTS
         skip(replica-8);
      }
      else
@@ -133,7 +134,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    uint64_t dts;
    uint32_t aduration,nbSeg,payloadLengthType=0x80;
    uint32_t sequenceLen,len,streamId;
-   int32_t   packetLen=0;
+   int64_t   packetLen=0;
    uint32_t  paddingLen;
    int   lengthTypeFlags,propertyFlags,multiplePayloadPresent;
    int sequenceType,sequence,offsetLenType,replicaLenType,streamNumberLenType,mediaObjectNumberLenType;
@@ -145,11 +146,11 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    int r82=read8();
    if(r82!=0x82) 
    {
-     printf("[ASF PACKET]At pos 0x%" PRIx64" \n",(uint64_t)ftello(_fd));
-     printf("[ASF PACKET]not a 82 packet but 0x%x\n",r82);
+     printf("[asfPacket::nextPacket] At pos 0x%" PRIx64" ",packetStart);
+     printf("not a 82 packet but 0x%" PRIu64"\n",r82);
      return 0;
    }
-   
+
    aprintf("============== New packet ===============\n");
    read16();          // Always 0 ????
 
@@ -180,7 +181,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    streamNumberLenType=(propertyFlags>>6)&3;
    
    // Send time
-   dts=1000*read32(); // Send time (ms)
+   dts=1000*(uint64_t)read32(); // Send time (ms)
    aduration=read16(); // Duration (ms)
    aprintf(":: Time 1 %s\n",ADM_us2plain(dts));
    if(!packetLen)
@@ -231,7 +232,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          }
          if(remaining<payloadLen)
          {
-           ADM_warning("** WARNING too big %d %d\n", remaining,packetLen);
+           ADM_warning("** WARNING too big %d %d\n", remaining,payloadLen);
            payloadLen=remaining;
          }
            // else we read "payloadLen" bytes and put them at offset "offset"
@@ -273,7 +274,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          }
          if(remaining<payloadLen)
          {
-           ADM_warning("** WARNING too big %d %d\n", remaining,packetLen);
+           ADM_warning("** WARNING too big %d %d\n", remaining,payloadLen);
            payloadLen=remaining;
          }
            // else we read "payloadLen" bytes and put them at offset "offset"
@@ -306,8 +307,8 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  
  */
 
- uint8_t asfPacket::pushPacket(uint32_t keyframe,uint32_t packetnb,
-                uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,
+ uint8_t asfPacket::pushPacket(uint32_t keyframe,uint64_t packetnb,
+                uint64_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,
                 uint64_t dts,uint64_t pts)
  {
 
@@ -324,7 +325,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
 		delete [] bit->data;
     }
 
-   aprintf("Pushing packet stream=%d len=%d offset=%d seq=%d packet=%d dts=%s \n",
+   aprintf("Pushing packet stream=%d len=%d offset=%" PRIu64" seq=%d packet=%" PRIu64" dts=%s \n",
                 stream,payloadLen,offset,sequence,packetnb,ADM_us2plain(dts));
    bit->sequence=sequence;
    bit->offset=offset;
@@ -366,11 +367,11 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
 */
  uint8_t   asfPacket::skipPacket(void)
  {
-   uint32_t go;
+   uint64_t go;
    go=packetStart+ pakSize;
    aprintf("Pos 0x%" PRIx64"\n",(uint64_t)ftello(_fd));
    fseeko(_fd,go,SEEK_SET);
-   aprintf("Skipping to %x\n",go);
+   aprintf("Skipping to 0x%" PRIx64"\n",go);
   
    return 1; 
  }

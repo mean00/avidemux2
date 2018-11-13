@@ -74,6 +74,9 @@ protected:
         int                   nbAudioTracks;
         Clock                ticktock;
         
+        ADM_videoStreamCopy  *dealWithH26x(bool isAnnexB);
+        
+        
 public:
                               admSaver(const char *out);
                               ~admSaver();
@@ -272,6 +275,37 @@ bool abort=false;
     return pass2;
 }
 /**
+ *  \fn dealWithH26x
+ *  \brief Manage to/from annexB conversion + remove AUD 
+ * @return 
+ */
+ADM_videoStreamCopy *admSaver::dealWithH26x(bool isAnnexB)
+{
+    ADM_videoStreamCopy *copy=NULL;
+    int matrix=muxer->preferH264AnnexB()+ 2*(isAnnexB);
+    
+    switch(matrix)
+    {
+            default:
+            case 0:  // Both source and target are mp4 , nothing to do
+                ADM_info("Input and output are mp4 style, nothing to do\n");
+                break;
+            case 1:  // source is mp4, target is annexB
+                ADM_info("Input is probably MP4 bitstream, target is annexB\n");
+                copy=new ADM_videoStreamCopyToAnnexB(markerA,markerB);
+                break;
+            case 2: // source is annexB target is mp4
+                ADM_info("Input is probably AnnexB bitstream, convert it to mp4\n");
+                copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
+                break;
+            case 3: // source and target are both annexB, remove AUD
+                ADM_info("Input and output are annexB style, remove AUDs \n");
+                copy=new ADM_videoStreamCopyAudRemover(markerA,markerB);
+                break;
+    }    
+    return copy;
+}
+/**
     \fn setupVideo
     \brief prepare video (copy or process)
 */
@@ -289,29 +323,9 @@ ADM_videoStream *admSaver::setupVideo(void)
         video_body->getExtraHeaderData(&extraLen,&extra);
 //#warning do something better
         ADM_videoStreamCopy *copy=NULL;        
-        if(isH264Compatible(info.fcc) || isH265Compatible(info.fcc))
+        if(isH264Compatible(info.fcc)) // H264 only for now || isH265Compatible(info.fcc))
         {
-            bool isAnnexB=!extraLen; // this is not very good
-            if(muxer->preferH264AnnexB())
-            {
-                ADM_info("The video stream is a flavor of H264\n");
-                ADM_info("The muxer prefers AnnexB H264 bitstream\n");
-                if(!isAnnexB)
-                {
-                    // Need to do mp4 to annexB    
-                    ADM_info("Input is probably MP4 bitstream\n");
-                    copy=new ADM_videoStreamCopyToAnnexB(markerA,markerB);
-                }
-            }else
-            {
-                ADM_info("The video stream is a flavor of H264\n");
-                ADM_info("The muxer prefers MP4 style H264 bitstream\n");
-                if(isAnnexB)
-                {
-                    ADM_info("Input is probably AnnexB bitstream\n");
-                    copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
-                }
-            }
+            copy=dealWithH26x(!extraLen);      
          }
         
         if(!copy)

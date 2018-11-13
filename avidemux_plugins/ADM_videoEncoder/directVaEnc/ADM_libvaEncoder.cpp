@@ -83,13 +83,7 @@ bool         ADM_libvaEncoder::setup(void)
 #else
      // Allocate a new one
     ADM_vaEncodingContextH264Base *ctx;
-    if(globalHeader)
-    {
-        ctx=new ADM_vaEncodingContextH264Base;
-    }else
-    {
-        ctx=new ADM_vaEncodingContextH264AnnexB;
-    }
+    ctx=new ADM_vaEncodingContextH264AnnexB(globalHeader);
     if(!ctx->setup(w,   h, getFrameIncrement(), xNone))
     {
         delete ctx;

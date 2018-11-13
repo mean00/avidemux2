@@ -6,7 +6,7 @@ MACRO(checkOpusDec)
 		MESSAGE(STATUS "*****************")
 
 		IF (OPUS)
-                        FIND_HEADER_AND_LIB(LIBOPUS opus/opus.h opus opus_decoder_init ${LIBOPUS_REQUIRED_FLAGS})
+                        FIND_HEADER_AND_LIB(LIBOPUS opus/opus_multistream.h opus opus_multistream_decoder_init ${LIBOPUS_REQUIRED_FLAGS})
 	                IF (LIBOPUS_FOUND)
 				SET(LIBOPUS_FOUND 1)
 				SET(USE_LIBOPUS True CACHE BOOL "")

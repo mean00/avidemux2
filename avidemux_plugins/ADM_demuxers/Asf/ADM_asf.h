@@ -34,7 +34,7 @@ typedef BVector <asfAudioSeekPoint> listOfAudioSeekPoint;
 
 typedef struct 
 {
-  uint32_t packetNb;
+  uint64_t packetNb;
   uint32_t frameLen;
   uint32_t segNb;
   uint32_t flags;
@@ -79,7 +79,7 @@ class asfChunk
     
     
   public:
-  uint32_t  _chunkStart;
+  uint64_t  _chunkStart;
             asfChunk(FILE *f);
             ~asfChunk();
   uint8_t   dump(void);
@@ -196,13 +196,13 @@ class asfHeader         :public vidHeader
     uint32_t                nbImage;
     AsfVectorIndex          _index;
     uint32_t                _packetSize;
-    uint32_t                _dataStartOffset;
+    uint64_t                _dataStartOffset;
     uint32_t                _nbAudioTrack;
     listOfAudioSeekPoint    audioSeekPoints[ASF_MAX_AUDIO_TRACK];
     asfAudioAccess          *_audioAccess[ASF_MAX_AUDIO_TRACK];
     asfAudioTrak             _allAudioTracks[ASF_MAX_AUDIO_TRACK];
     ADM_audioStream         *_audioStreams[ASF_MAX_AUDIO_TRACK];
-    uint32_t                 _nbPackets;
+    uint64_t                 _nbPackets;
     uint64_t                 _shiftUs;
     uint64_t                 getShift(void) { return _shiftUs;}
     

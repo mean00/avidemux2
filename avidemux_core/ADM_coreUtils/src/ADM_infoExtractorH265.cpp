@@ -300,34 +300,10 @@ NALU_descriptor *ADM_findNaluH265(uint32_t nalu,uint32_t maxNalu,NALU_descriptor
     \fn ADM_splitNalu
     \brief split a nalu annexb size into a list of nalu descriptor
 */
+extern int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeLen);
+
 int ADM_splitNaluH265(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
 {
-bool first=true;
-uint8_t *head=start;
-uint32_t offset;
-uint8_t startCode,oldStartCode=0xff;
-int index=0;
-      while(true==SearchStartCode(head,end,&startCode,&offset))
-      {
-            if(true==first)
-            {
-                head+=offset;
-                first=false;
-                oldStartCode=startCode;
-                continue;
-            }
-        if(index>=maxNalu) return 0;
-        desc[index].start=head;
-        desc[index].size=offset-5; // FOR h265 assume long start code
-        desc[index].nalu=oldStartCode;
-        index++;
-        head+=offset;
-        oldStartCode=startCode;
-      }
-    // leftover
-    desc[index].start=head;
-    desc[index].size=(uint32_t)(end-head);
-    desc[index].nalu=oldStartCode;
-    index++;
-    return index;
+    return ADM_splitNalu_internal(start,end,maxNalu,desc,5); //  FOR h265 assume long start code
 }
+// EOF

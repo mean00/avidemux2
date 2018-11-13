@@ -2,6 +2,7 @@
 #  ADM_BIG_ENDIAN  - big endian CPU detected
 #  ADM_BSD_FAMILY  - BSD family operating system was detected
 #  ADM_CPU_ARMEL   - ARM (min ARCH5) el
+#  ADM_CPU_ARM64   - ARM v8 CPU was detected
 #  ADM_CPU_64BIT   - 64-bit CPU was detected
 #  ADM_CPU_X86     - x86 CPU architecture was detected
 #  ADM_CPU_X86_32  - x86 32-bit CPU architecture was detected
@@ -70,13 +71,19 @@ IF(NOT MSVC)
                         PERFORM_SYSTEM_TEST(cpu_armel_check.cpp "ARM EL" ARMEL_SUPPORTED)
                         IF(ARMEL_SUPPORTED)
                                 SET(ADM_CPU_ARMEL 1)
+                        ELSE (ARMEL_SUPPORTED)
+                                PERFORM_SYSTEM_TEST(cpu_arm64_check.cpp "ARM64" ARM64_SUPPORTED)
+
+                                IF(ARM64_SUPPORTED)
+                                        set(adm_cpu_arm64 1)
+                                endif(ARM64_SUPPORTED)
                         ENDIF(ARMEL_SUPPORTED)
 	        ENDIF (X86_32_SUPPORTED)
         ENDIF (X86_64_SUPPORTED)
 
-        IF (NOT ADM_CPU_X86_32 AND NOT ADM_CPU_X86_64 AND NOT ADM_CPU_ARMEL)
+        IF (NOT ADM_CPU_X86_32 AND NOT ADM_CPU_X86_64 AND NOT ADM_CPU_ARMEL AND NOT ADM_CPU_ARM64)
 	        MESSAGE(FATAL_ERROR "CPU not supported")
-        ENDIF (NOT ADM_CPU_X86_32 AND NOT ADM_CPU_X86_64 AND NOT ADM_CPU_ARMEL)
+        ENDIF (NOT ADM_CPU_X86_32 AND NOT ADM_CPU_X86_64 AND NOT ADM_CPU_ARMEL AND NOT ADM_CPU_ARM64)
 
         TEST_BIG_ENDIAN(CMAKE_WORDS_BIGENDIAN)
 

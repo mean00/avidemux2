@@ -86,7 +86,7 @@ bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANN
 
 		for (int i = 0; i < nb; i++) 
         {
-			memcpy(tmp, data, sizeof(tmp));
+			memcpy(tmp, data, sizeof(float)*channels);
 			for (int c = 0; c < channels; c++)
 				*data++ = tmp[reorder[c]];
 		}

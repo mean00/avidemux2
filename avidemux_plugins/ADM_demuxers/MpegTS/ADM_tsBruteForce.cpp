@@ -254,7 +254,7 @@ TS_PESpacket pes2(pid);
         uint8_t *ptr=pes.payload;
         uint32_t len=pes.payloadSize;
 
-        ADM_info("PES start : %02x%02x%02x%02x\n",ptr[0],ptr[1],ptr[2],ptr[3]);
+        ADM_info("PES start : %02x %02x %02x %02x\n",ptr[0],ptr[1],ptr[2],ptr[3]);
         if(!ptr[0] && !ptr[1] && ptr[2]==1 && (ptr[3]&0xe0)==0xe0) // probably video
         {
           return idContentE0(pid,ts,trackType);
@@ -353,7 +353,7 @@ uint8_t  mp2Buffer[MP2_PROBE_SIZE*2];
             memcpy(mp2Buffer+limit,pes.payload+pes.offset,left);
             limit+=left;
         }
-        ADM_info("\t read % bytes\n",limit);
+        ADM_info("\t read %d bytes\n",limit);
         // Now read buffer until we have 3 correctly decoded packet
         int probeIndex=0;
         while(probeIndex<limit)
