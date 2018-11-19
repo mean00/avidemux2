@@ -62,7 +62,7 @@ void DIA_processingQt4 :: postCtor( void )
         _slotIndex=0;
         setWindowModality(Qt::ApplicationModal);        
         
-        connect( ui->cancelButton,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
+        connect(ui->buttonBox,&QDialogButtonBox::rejected,this,&QDialog::reject);
         ui->labelTimeLeft->setText(QString(QT_TRANSLATE_NOOP("qprocessing", "Unknown")));
         ui->progressBar->setValue((int)0);        
         show();
@@ -154,7 +154,7 @@ DIA_processingBase *createProcessing(const char *title,uint64_t totalToProcess)
  * \fn stop
  * @param a
  */
-void            DIA_processingQt4::stop(bool a)
+void DIA_processingQt4::reject(void)
 {
     ADM_info("Stop Request\n");
      if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("qprocessing", "_Resume"), 

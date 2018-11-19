@@ -22,7 +22,10 @@ protected:
         int                     _slots[PROC_NB_SLOTS];
         int                     _slotIndex;
         bool                    _first;
-        
+        void                    closeEvent(QCloseEvent *event)
+        {
+            reject();
+        }
 public:
                                 DIA_processingQt4( const char *title, uint64_t totalToProcess );
         virtual		        ~DIA_processingQt4();
@@ -30,8 +33,7 @@ public:
         virtual bool            update(uint32_t frames,uint64_t processed);
 
 public slots:
-        void                    stop(bool a);
-       
+        void                    reject(void);
 };
 }
 
