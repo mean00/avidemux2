@@ -147,7 +147,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    if(r82!=0x82) 
    {
      printf("[asfPacket::nextPacket] At pos 0x%" PRIx64" ",packetStart);
-     printf("not a 82 packet but 0x%" PRIu64"\n",r82);
+     printf("not a 82 packet but 0x%x\n",r82);
      return 0;
    }
 
@@ -170,10 +170,20 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    multiplePayloadPresent=lengthTypeFlags&1;
    // Read packetLen
    packetLen=readVCL(lengthTypeFlags>>5,pakSize);
+   if(!packetLen || packetLen>pakSize)
+   {
+        ADM_error("Invalid packet length at 0x%" PRIx64" (packet start at 0x%" PRIx64").\n",ftello(_fd),packetStart);
+        goto _abort;
+   }
    // Sequence len
    sequenceLen=readVCL(lengthTypeFlags>>1,0);
    // Read padding size (padding):
    paddingLen=readVCL(lengthTypeFlags>>3,0);
+   if(paddingLen>=packetLen)
+   {
+        ADM_error("Invalid padding length at 0x%" PRIx64" (packet start at 0x%" PRIx64").\n",ftello(_fd),packetStart);
+        goto _abort;
+   }
    //
    replicaLenType=(propertyFlags>>0)&3;
    offsetLenType=(propertyFlags>>2)&3;
@@ -184,12 +194,14 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    dts=1000*(uint64_t)read32(); // Send time (ms)
    aduration=read16(); // Duration (ms)
    aprintf(":: Time 1 %s\n",ADM_us2plain(dts));
+#if 0
    if(!packetLen)
    {
      // Padding (relative) size
      packetLen=pakSize-_offset;
      packetLen=packetLen-paddingLen;
    }
+#endif
    int mediaObjectNumber, offset,replica,r;
    int32_t remaining;
    uint32_t payloadLen;
@@ -220,7 +232,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          replica=readVCL(replicaLenType,0);
          pts=readPtsFromReplica(replica);
          payloadLen=readVCL(payloadLengthType,0);
-         remaining=pakSize-_offset;
+         remaining=packetLen-_offset;
          remaining=remaining-paddingLen;
          if(remaining<=0) 
          {
@@ -262,7 +274,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          offset=readVCL(offsetLenType,0);
          replica=readVCL(replicaLenType,0);
          pts=readPtsFromReplica(replica);
-         remaining=pakSize-_offset;
+         remaining=packetLen-_offset;
          remaining=remaining-paddingLen;
          if(remaining<=0) 
          {
@@ -296,7 +308,10 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    }
    currentPacket++;
    return 1;
-  
+_abort:
+    skipPacket();
+    currentPacket++;
+    return 1;
  }
  /**
     \fn pushPacket
