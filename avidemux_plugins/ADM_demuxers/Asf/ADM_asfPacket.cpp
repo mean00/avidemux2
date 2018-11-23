@@ -94,7 +94,7 @@ uint64_t   asfPacket::readPtsFromReplica(int replica)
     uint64_t pts=ADM_NO_PTS;
     if(replica==1) 
     {
-        ADM_error("Replica==1 : Compressed data!\n");
+        read8(); // time delta
      }else
      if(replica>=8)
      {
@@ -232,11 +232,22 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          replica=readVCL(replicaLenType,0);
          pts=readPtsFromReplica(replica);
          payloadLen=readVCL(payloadLengthType,0);
+         if(replica==1)
+         {
+            aprintf("replica==1:  packet %" PRIu64", segment %d of %d\n",currentPacket,seg+1,nbSeg);
+            r=read8(); // fragment size, unreliable
+            if(payloadLen>1)
+                payloadLen--;
+            else
+                payloadLen=r;
+            offset=0;
+         }
          remaining=packetLen-_offset;
          remaining=remaining-paddingLen;
          if(remaining<=0) 
          {
            ADM_warning("** Err: No data left (%d)\n",remaining); 
+           goto _abort;
          }
          if(!payloadLen)
          {
@@ -279,6 +290,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          if(remaining<=0) 
          {
            ADM_warning("** Err: No data left (%d)\n",remaining); 
+           goto _abort;
          }
          if(!payloadLen)
          {
