@@ -617,19 +617,26 @@ uint8_t asfHeader::buildIndex(void)
         {
             ADM_info("audio track : %d, no seek\n",i);
             canShift=false;
-            continue;
         }
-        tPts=audioSeekPoints[i][0].pts;
-        ADM_info("audio track : %d, %s\n",i,ADM_us2plain(tPts));
-        if(tPts<shift) shift=tPts;
     }
     if(canShift)
     {
-            ADM_info("Shifting a/v raw=%s\n",ADM_us2plain(shift));
+        for(int i=0;i<_nbAudioTrack;i++)
+        {
+            uint64_t a=shift;
+            for(int j=0;j<audioSeekPoints[i].size();j++)
+            {
+                if(audioSeekPoints[i][j].pts>shift)
+                    break;
+                a=audioSeekPoints[i][j].pts;
+            }
+            shift=a;
+        }
+        ADM_info("Shifting a/v raw=%s\n",ADM_us2plain(shift));
     }else
     {
-            ADM_info("Can t shift\n");
-            shift=0;
+        ADM_info("Can't shift\n");
+        shift=0;
     }
   _videostream.dwLength=_mainaviheader.dwTotalFrames=nbImage;
   
