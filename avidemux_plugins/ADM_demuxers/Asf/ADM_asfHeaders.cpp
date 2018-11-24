@@ -65,6 +65,7 @@ bool asfHeader::shiftAudioVideoBy(uint64_t s)
         }
 */
     }
+    _duration-=s;
     _shiftUs=s;
     return true;
 }
