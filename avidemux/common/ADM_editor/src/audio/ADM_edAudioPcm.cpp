@@ -38,8 +38,6 @@ Todo:
 #define abs(x) _abs64(x)
 #endif
 
-#define ADM_ALLOWED_DRIFT_US 40000 // Allow 4b0 ms jitter on audio
-
 #if 1
 #define vprintf(...) {}
 #else
@@ -74,6 +72,7 @@ bool ADM_edAudioTrackFromVideo::getPCMPacket(float  *dest, uint32_t sizeMax, uin
 uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
 uint32_t inSize;
 bool drop=false;
+bool checkDts;
 static bool fail=false;
 uint32_t outFrequency=getCurrentTrack()->codec->getOutputFrequency();
  vprintf("[PCMPacket]  request TRK %d:%x\n",myTrackNumber,(long int)getCurrentTrack());
@@ -81,6 +80,7 @@ again:
     *samples=0;
     ADM_audioStreamTrack *trk=getCurrentTrack();
     if(!trk) return false;
+    checkDts=trk->stream->constantSamplesPerPacket();
     // Do we already have a packet ?
     if(!packetBufferSize)
     {
@@ -93,12 +93,12 @@ again:
         }
     }
     // We do now
-    vprintf("[PCMPacket]  TRK %d Got %d samples, time code %08lu  lastDts=%08lu delta =%08ld\n",
+    vprintf("[PCMPacket]  TRK %d Got %d samples, time code %08" PRIu64"  lastDts=%08" PRIu64" delta =%" PRId64"\n",
                 myTrackNumber,packetBufferSamples,packetBufferDts,lastDts,packetBufferDts-lastDts);
     fail=false;
 
     // Check if the Dts matches
-    if(lastDts!=ADM_AUDIO_NO_DTS &&packetBufferDts!=ADM_AUDIO_NO_DTS)
+    if(checkDts && lastDts!=ADM_AUDIO_NO_DTS &&packetBufferDts!=ADM_AUDIO_NO_DTS)
     {
         if(labs((int64_t)lastDts-(int64_t)packetBufferDts)>ADM_ALLOWED_DRIFT_US)
         {
@@ -162,7 +162,7 @@ again:
     decodedSample/=trk->wavheader.channels;
     if(!decodedSample) goto again;
 #define ADM_MAX_JITTER 5000  // in samples, due to clock accuracy, it can be +er, -er, + er, -er etc etc
-    if(labs((int64_t)decodedSample-(int64_t)packetBufferSamples)>ADM_MAX_JITTER)
+    if(checkDts && labs((int64_t)decodedSample-(int64_t)packetBufferSamples)>ADM_MAX_JITTER)
     {
         ADM_warning("[Composer::getPCMPacket] Track %d:%x Demuxer was wrong %d vs %d samples!\n",
                     myTrackNumber,trk,packetBufferSamples,decodedSample);
@@ -178,8 +178,8 @@ again:
     *samples=(decodedSample);
     *odts=lastDts;
     advanceDtsByCustomSample(decodedSample,outFrequency);
-    vprintf("[Composer::getPCMPacket] Track %d:%x Adding %u decoded, Adding %u filler sample, dts is now %lu\n",
-                    myTrackNumber,(long int)trk,  decodedSample,fillerSample,lastDts);
+    vprintf("[Composer::getPCMPacket] Track %d:%p Adding %u decoded, Adding %u filler sample, dts is now %" PRIu64", fq: %d\n",
+                    myTrackNumber,trk,decodedSample,fillerSample,lastDts,outFrequency);
     ADM_assert(sizeMax>=(fillerSample+decodedSample)*trk->wavheader.channels);
     return true;
 }
