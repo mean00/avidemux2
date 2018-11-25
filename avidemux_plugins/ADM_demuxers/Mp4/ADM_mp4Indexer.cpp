@@ -337,6 +337,11 @@ uint32_t i,j,cur;
 	{
             int mn=info->Sc[i]-1;
             int mx=info->Sc[i+1]-1;
+            if(mn<0 || mx>0 || mn>totalchunk || mx > totalchunk || mx<mn)
+            {
+                ADM_warning("Corrupted file\n");
+                return false;
+            }
             for(j=mn;j<mx;j++)
             {
                     chunkCount[j]=info->Sn[i];
