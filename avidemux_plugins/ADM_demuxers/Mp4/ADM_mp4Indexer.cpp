@@ -333,30 +333,31 @@ uint32_t i,j,cur;
 		aprintf("(%d) sc: %lu sn:%lu\n",i,info->Sc[i],info->Sn[i]);
 	}
 #else
-      	for(i=0;i<info->nbSc-1;i++)
-	{
-            int mn=info->Sc[i]-1;
-            int mx=info->Sc[i+1]-1;
-            if(mn<0 || mx>0 || mn>totalchunk || mx > totalchunk || mx<mn)
-            {
-                ADM_warning("Corrupted file\n");
-                return false;
-            }
-            for(j=mn;j<mx;j++)
-            {
-                    chunkCount[j]=info->Sn[i];
-                    ADM_assert(j<=totalchunk);
-            }
-            aprintf("(%d) sc: %lu sn:%lu\n",i,info->Sc[i],info->Sn[i]);
-	}
-        // Last one
-        for(j=info->Sc[info->nbSc-1]-1;j<info->nbCo;j++)
+        if(info->nbSc)
         {
-            chunkCount[j]=info->Sn[i];
-            ADM_assert(j<=totalchunk);
+            for(i=0;i<info->nbSc-1;i++)
+            {
+                int mn=info->Sc[i]-1;
+                int mx=info->Sc[i+1]-1;
+                if(mn<0 || mx>0 || mn>totalchunk || mx > totalchunk || mx<mn)
+                {
+                    ADM_warning("Corrupted file\n");
+                    return false;
+                }
+                for(j=mn;j<mx;j++)
+                {
+                        chunkCount[j]=info->Sn[i];
+                        ADM_assert(j<=totalchunk);
+                }
+                aprintf("(%d) sc: %lu sn:%lu\n",i,info->Sc[i],info->Sn[i]);
+            }
+            // Last one
+            for(j=info->Sc[info->nbSc-1]-1;j<info->nbCo;j++)
+            {
+                chunkCount[j]=info->Sn[i];
+                ADM_assert(j<=totalchunk);
+            }        
         }
-  
-        
 #endif
 
 	// now we have for each chunk the number of sample in it
