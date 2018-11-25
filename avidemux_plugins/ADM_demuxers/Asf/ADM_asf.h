@@ -149,8 +149,8 @@ class asfAudioAccess : public ADM_audioAccess
     virtual uint32_t  getLength(void) {return _track->length;}
     virtual bool      goToTime(uint64_t timeUs) ;
     virtual bool      isCBR(void) {return true;};
-    
-    
+    virtual bool      constantSamplesPerPacket(void) {return false;}
+
     virtual uint64_t  getPos(void);
     virtual bool      setPos(uint64_t pos);
     virtual uint64_t  getDurationInUs(void) ;
