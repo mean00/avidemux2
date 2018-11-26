@@ -308,16 +308,23 @@ VBRext   mp3vbr;
 	case WAV_WMA:
           {
             memset(extra,0,12);
+#if 0
             extra[16-16]=0x0a;
             extra[19-16]=0x08;
             extra[22-16]=0x01;
             extra[24-16]=0x74;
             extra[25-16]=01;
+#endif
 			header->dwScale 	    = wav->blockalign;
 			header->dwSampleSize 	= wav->blockalign;
 			header->dwInitialFrames =1;
 			header->dwSuggestedBufferSize=10*wav->blockalign;
 			*extraLen=12;
+            uint32_t aLen;
+            uint8_t *aData;
+            stream->getExtraData(&aLen,&aData);
+            extra[0]=0x0a;
+            memcpy(extra+2,aData,(aLen<10)? aLen : 10);
           }
 		  break;
     case WAV_PCM:
