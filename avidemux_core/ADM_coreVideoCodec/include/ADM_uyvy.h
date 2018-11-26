@@ -25,6 +25,12 @@ public:
   {
   };
   virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+  bool dontcopy (void) { return 1; }
+  
+   virtual const char *getDecoderName(void)
+  {
+    return "UYVY";
+  }
 };
 class decoderYUY2:decoders
 {
@@ -39,5 +45,10 @@ public:
   {
   };
   virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+  virtual const char *getDecoderName(void)
+  {
+    return "YUY2";
+  }
+  bool dontcopy (void) { return 1; }
 };
 #endif

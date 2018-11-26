@@ -89,6 +89,7 @@ static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
     case ADM_COLOR_YUV444: return AV_PIX_FMT_YUV444P;
     case ADM_COLOR_YUV411: return AV_PIX_FMT_YUV411P;
     case ADM_COLOR_YUV422: return AV_PIX_FMT_YUYV422;
+    case ADM_COLOR_UYVY422: return AV_PIX_FMT_UYVY422;
     case ADM_COLOR_YV12: return AV_PIX_FMT_YUV420P;
     case ADM_COLOR_YUV422P: return AV_PIX_FMT_YUV422P;
     case ADM_COLOR_RGB555: return AV_PIX_FMT_RGB555LE;
@@ -153,13 +154,14 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcStride[2]=width>>1;
             break;
     case  ADM_COLOR_YUV422:
+    case  ADM_COLOR_UYVY422:        
             srcData[0]=from;
             srcData[1]=NULL;
             srcData[2]=NULL;
             srcStride[0]=width*2;
             srcStride[1]=0;
             srcStride[2]=0;
-            break;
+            break;            
     case  ADM_COLOR_YUV422P:
             srcData[0]=from;
             srcData[1]=from+width*height;
@@ -199,6 +201,8 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
   
   getStrideAndPointers(false,from,fromColor,srcData,srcStride);
   getStrideAndPointers(true,to,toColor,dstData,dstStride);
+ 
+  
   sws_scale(CONTEXT,srcData,srcStride,0,srcHeight,dstData,dstStride);
   if(toColor==ADM_COLOR_BGR32A)
   {
