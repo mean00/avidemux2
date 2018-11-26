@@ -43,6 +43,8 @@ public:
                 virtual           ~ADM_audioAccess() {}
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
                 virtual bool      isCBR(void) { return true;}
+                                    /// Return true if we can expect constant nb of samples per packet
+                virtual bool      constantSamplesPerPacket(void) {return true;};
                                     /// Return true if the demuxer can seek in time
                 virtual bool      canSeekTime(void) {return false;};
                                     /// Return true if the demuxer can seek by offser
@@ -115,6 +117,11 @@ virtual bool            isCBR()
                             {
                                 if(!access) return false;
                                 return access->isCBR();
+                            }
+virtual bool            constantSamplesPerPacket(void)
+                            {
+                                if(!access) return true;
+                                return access->constantSamplesPerPacket();
                             }
 virtual        const std::string &getLanguage() {return language;}
 virtual        void              setLanguage(const std::string &lan) {language=lan;}
