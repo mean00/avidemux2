@@ -21,6 +21,26 @@
 #include "ADM_image.h"
 #include "DIA_flyBlackenBorders.h"
 
+/**
+ * 
+ * @param block
+ * @return 
+ */
+bool        flyBlacken::blockChanges(bool block)
+{
+    return true;
+}
+
+/**
+ */
+flyBlacken::flyBlacken (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
+                                    ADM_QCanvas *canvas, ADM_QSlider *slider)
+                : ADM_flyDialogRgb(parent,width, height,in,canvas, slider,RESIZE_LAST) 
+  {
+    rubber=new ADM_rubberControl(this,canvas);
+    rubber->resize(width,height);
+  }
+
 
 /**
     \fn process

@@ -25,6 +25,7 @@ private slots:
 	void sliderUpdate(int foo);
 	void valueChanged(int foo);
 	void reset(bool f);
+        //void toggleRubber(int checkState);
 
 private:
         void resizeEvent(QResizeEvent *event);
