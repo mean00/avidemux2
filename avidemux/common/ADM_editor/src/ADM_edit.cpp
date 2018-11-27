@@ -409,7 +409,8 @@ uint8_t ADM_Composer::addFile (const char *name)
         if(video.decoder->bFramePossible())
         {
             printf("[Editor] B- frame possible with that codec \n");
-            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || isVC1Compatible(info.fcc))
+#define FCC_MATCHES(x) fourCC::check(info.fcc,(uint8_t *)x)
+            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || isVC1Compatible(info.fcc) || FCC_MATCHES("WMV3"))
             {
                 ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");
                 uint64_t delay;
