@@ -286,7 +286,7 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
   // Seeking ?
   if(_index[framenum].segNb!=curSeq || _index[framenum].segNb==1)
   {
-    printf("Seeking.. curseq:%u wanted seq:%u packet=%d\n",curSeq,_index[framenum].segNb,_index[framenum].packetNb);
+    aprintf("Seeking.. curseq:%u wanted seq:%u packet=%" PRIu64"\n",curSeq,_index[framenum].segNb,_index[framenum].packetNb);
     if(!_packet->goToPacket(_index[framenum].packetNb))
     {
       printf("[ASF] Cannot seek to frame %u\n",framenum);
@@ -366,6 +366,7 @@ gotcha:
   img->dataLength=len;
   img->demuxerDts=_index[framenum].dts;
   img->demuxerPts=_index[framenum].pts;
+  img->flags=_index[framenum].flags;
   if(len!=_index[framenum].frameLen)
   {
     ADM_error("[ASF] Frame=%u :-> Mismatch found len : %u expected %u\n",framenum,len, _index[framenum].frameLen);
