@@ -259,6 +259,7 @@ bool GUIPlayback::run(void)
     uint32_t systemTime;
     uint32_t fn;
     bool gotAudio=true;
+    bool first=true;
     int refreshCounter=0;
     ticktock.reset();
     tocktick.reset();
@@ -268,8 +269,10 @@ bool GUIPlayback::run(void)
 
     do
     {
-
-        admPreview::displayNow();
+        if(!first)
+            admPreview::displayNow();
+        else
+            first=false;
         if(refreshCapEnabled)
         {
             if(stop_req || tocktick.getElapsedMS()>refreshCapValue)
