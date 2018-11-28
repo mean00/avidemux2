@@ -106,7 +106,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   ref->_aviheader->getVideoInfo (&info);
   ref->_aviheader->getExtraHeaderData (&l, &d);
   ref->decoder = ADM_getDecoder (info.fcc,  info.width, info.height, l, d,info.bpp);
-  ref->_videoCache   =   new EditorCache(8,info.width,info.height) ;
+  ref->_videoCache = new EditorCache(16,info.width,info.height);
 
   // discard implausibly high fps, hardcode the value to 25 fps
   if (info.fps1000 > 2000 * 1000)
