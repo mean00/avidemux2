@@ -96,7 +96,7 @@ Page custom InstallOptionsPage
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_FUNCTION RunAvidemux
 !define MUI_FINISHPAGE_RUN_TEXT "Run ${PRODUCT_NAME} now"
-!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR/ChangeLog.html"
+!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\ChangeLog.html"
 !define MUI_FINISHPAGE_SHOWREADME_TEXT "View Change Log now"
 !define MUI_FINISHPAGE_LINK "Visit the Avidemux website"
 !define MUI_FINISHPAGE_LINK_LOCATION "http://www.avidemux.org"
@@ -164,7 +164,7 @@ Function GetAfterChar
     Pop $1
     Exch $0 ; output
 FunctionEnd
-##################################################################### 
+#####################################################################Â©
 !define StrReplace '!insertmacro "_Name"'
 
 ##########################
