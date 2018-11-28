@@ -79,8 +79,10 @@ void Ui_blackenWindow::valueChanged( int f )
 {
   if(lock) return;
   lock++;
+  myBlacken->rubber->nestedIgnore++;
   myBlacken->download();
   myBlacken->sameImage();
+  myBlacken->rubber->nestedIgnore--;
   lock--;
 }
 
@@ -104,17 +106,48 @@ void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
     myBlacken->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myBlacken->adjustCanvasPosition();
+    
+     int x=(int)((double)myBlacken->left*myBlacken->_zoom);
+    int y=(int)((double)myBlacken->top*myBlacken->_zoom);
+    int w=(int)((double)(myBlacken->_w-(myBlacken->left+myBlacken->right))*myBlacken->_zoom);
+    int h=(int)((double)(myBlacken->_h-(myBlacken->top+myBlacken->bottom))*myBlacken->_zoom);
+
+    myBlacken->blockChanges(true);
+    myBlacken->rubber->nestedIgnore++;
+    myBlacken->rubber->move(x,y);
+    myBlacken->rubber->resize(w,h);
+    myBlacken->rubber->nestedIgnore--;
+    myBlacken->blockChanges(false);
+    
 }
 
 //************************
-uint8_t flyBlacken::upload(void)
+uint8_t flyBlacken::upload(bool redraw, bool toRubber)
 {
 Ui_blackenDialog *w=(Ui_blackenDialog *)_cookie;
+
+    if(!redraw)
+    {
+        blockChanges(true);
+    }
+
 
     w->spinBoxLeft->setValue(left);
     w->spinBoxRight->setValue(right);
     w->spinBoxTop->setValue(top);
     w->spinBoxBottom->setValue(bottom);
+    if(toRubber)
+    {
+        rubber->nestedIgnore++;
+        rubber->move(_zoom*(float)left,_zoom*(float)top);
+        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+        rubber->nestedIgnore--;
+    }
+    if(!redraw)
+    {
+        blockChanges(false);
+    }
+    
     return 1;
 }
 uint8_t flyBlacken::download(void)
@@ -146,7 +179,16 @@ uint8_t flyBlacken::download(void)
                 }
         if(reject)
                 upload();
-        return true;
+        else
+           {
+               blockChanges(true);
+               rubber->nestedIgnore++;
+               rubber->move(_zoom*(float)left,_zoom*(float)top);
+               rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+               rubber->nestedIgnore--;
+               blockChanges(false);
+           }        
+               return true;
 }
 
 /**
