@@ -548,6 +548,8 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
             case ADM_COLOR_RGB24:
             case ADM_COLOR_BGR24:
             case ADM_COLOR_RGB555:
+            case ADM_COLOR_YUV422:
+            case ADM_COLOR_UYVY422:
                 needToSwapUV=true;
             default:break;
         }

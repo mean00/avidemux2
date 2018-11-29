@@ -27,12 +27,11 @@ public:
     Ui_workingDialog    *ui;
     bool                active;
 public slots:
-    void                stop(bool a);
+    void                reject(void);
 protected:
     void                closeEvent(QCloseEvent *event)
     {
-        stop(true);
+        reject();
     }
-      
 };
 

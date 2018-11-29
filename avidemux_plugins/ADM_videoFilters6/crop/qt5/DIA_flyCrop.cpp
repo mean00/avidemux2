@@ -89,7 +89,7 @@ uint8_t flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
  * @param imageOut
  * @return 
  */
-int bound(int val, int other, int maxx)
+static int bound(int val, int other, int maxx)
 {
    int r=(int)maxx-(int)(val+other);
    if(r<0) 

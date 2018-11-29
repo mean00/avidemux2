@@ -9,9 +9,17 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef ADM_YUYV_H
-#define ADM_YUYV_H
+#pragma once
 #include "ADM_codec.h"
+/**
+ * 
+ * @param w
+ * @param h
+ * @param fcc
+ * @param extraDataLen
+ * @param extraData
+ * @param bpp
+ */
 class decoderUYVY:decoders
 {
 protected:
@@ -25,7 +33,22 @@ public:
   {
   };
   virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+  bool dontcopy (void) { return 1; }
+  
+   virtual const char *getDecoderName(void)
+  {
+    return "UYVY";
+  }
 };
+/**
+ * 
+ * @param w
+ * @param h
+ * @param fcc
+ * @param extraDataLen
+ * @param extraData
+ * @param bpp
+ */
 class decoderYUY2:decoders
 {
 protected:
@@ -39,5 +62,10 @@ public:
   {
   };
   virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+  virtual const char *getDecoderName(void)
+  {
+    return "YUY2";
+  }
+  bool dontcopy (void) { return 1; }
 };
-#endif
+// EOF

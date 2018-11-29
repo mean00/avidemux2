@@ -267,7 +267,12 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         if(d>255) d=255;
         raw[i]=(uint32_t)d;
     }
-    
+    // Assign mono to front center
+    if(_channels==1)
+    {
+        vol[1]=raw[0];
+        return true;
+    }
     // Move channels around so that they fit Left/Right/Center/Rear Left, Rear Right,LFE
     const CHANNEL_TYPE *chans=this->getWantedChannelMapping(_channels);
     static const CHANNEL_TYPE output[6]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_CENTER,ADM_CH_FRONT_RIGHT,

@@ -26,9 +26,10 @@ workWindow::workWindow(QWidget *parent) : QDialog(parent)
      ui->setupUi(this);
      active=true;
      setWindowModality(Qt::ApplicationModal);
-     connect( ui->buttonCancel,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
+     connect(ui->buttonBox,&QDialogButtonBox::rejected,this,&QDialog::reject);
  }
- void workWindow::stop(bool a) 
+
+void workWindow::reject(void)
 {
     ADM_info("Stop Request\n");
     active=false;

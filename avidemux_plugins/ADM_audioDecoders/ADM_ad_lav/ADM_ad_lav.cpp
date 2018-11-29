@@ -94,6 +94,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
 */
    bool ADM_AudiocoderLavcodec::resetAfterSeek( void )
    {
+            avcodec_flush_buffers(_context);
             _tail=_head=0;
             return 1;
    };

@@ -233,7 +233,10 @@ ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audi
   }
   ADM_info("Creating audio stream copy with compensation : startTime=%s\n",ADM_us2plain(startTime));
   ADM_info("and shift =%s\n",ADM_us2plain(shift));
-  if(needPerfectAudio )
+  bool canRelyOnAudioDts=true;
+  if(input->getInfo()->encoding==WAV_WMA)
+        canRelyOnAudioDts=false;
+  if(needPerfectAudio && canRelyOnAudioDts)
         return new ADM_audioStreamCopyPerfect(input,startTime,shift);
   else
         return new ADM_audioStreamCopy(input,startTime,shift);

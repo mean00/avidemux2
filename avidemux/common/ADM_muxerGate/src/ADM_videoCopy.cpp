@@ -88,7 +88,7 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
         // Now search the DTS associated with it...
     }
     eofMet=false;
-
+    currentFrame=0;
     sanitizeDts=false;
     prefs->get(FEATURES_COPY_MODE_SANITIZE_DTS, &sanitizeDts);
 

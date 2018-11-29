@@ -31,8 +31,7 @@ namespace ADM_Qt4CoreUIToolkit
 /**
  * \fn ctor
  * @param title
- * @param fps1000
- * @param duration
+ * @param duration or file size
  */
 DIA_processingQt4::DIA_processingQt4(const char *title,uint64_t totalToProcess) : DIA_processingBase(title,totalToProcess)
 {
@@ -62,7 +61,7 @@ void DIA_processingQt4 :: postCtor( void )
         _slotIndex=0;
         setWindowModality(Qt::ApplicationModal);        
         
-        connect( ui->cancelButton,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
+        connect(ui->buttonBox,&QDialogButtonBox::rejected,this,&QDialog::reject);
         ui->labelTimeLeft->setText(QString(QT_TRANSLATE_NOOP("qprocessing", "Unknown")));
         ui->progressBar->setValue((int)0);        
         show();
@@ -70,7 +69,8 @@ void DIA_processingQt4 :: postCtor( void )
 
 /**
  * \fn update
- * @param percent
+ * @param nb of units processed since the last call
+ * @param the position reached so far
  * @return true if processing should be stopped
  */
 bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
@@ -144,17 +144,16 @@ DIA_processingQt4::~DIA_processingQt4()
 
 
 /**
-    \fn createWorking
+    \fn createProcessing
 */
 DIA_processingBase *createProcessing(const char *title,uint64_t totalToProcess)
 {
     return new DIA_processingQt4(title,totalToProcess);
-}   
+}
 /**
- * \fn stop
- * @param a
+ * \fn reject
  */
-void            DIA_processingQt4::stop(bool a)
+void DIA_processingQt4::reject(void)
 {
     ADM_info("Stop Request\n");
      if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("qprocessing", "_Resume"), 
