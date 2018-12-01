@@ -25,7 +25,7 @@ extern "C" {
 #include "libavutil/pixdesc.h"
 #include "libavutil/hwcontext_dxva2.h"
 #define CONFIG_DXVA2 1
-#include "libavcodec/dxva2_internal.h"
+//#include "libavcodec/dxva2_internal.h"
 #include "libavcodec/dxva2.h"
 }
 
