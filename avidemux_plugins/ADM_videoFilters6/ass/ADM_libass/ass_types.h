@@ -34,6 +34,10 @@ typedef struct render_priv ASS_RenderPriv;
 typedef struct parser_priv ASS_ParserPriv;
 typedef struct ass_library ASS_Library;
 
+#ifdef _MSC_VER 
+	#define strncasecmp(x,y,z) _strnicmp(x,y,z)
+#endif
+
 /* ASS Style: line */
 typedef struct ass_style {
     char *Name;
