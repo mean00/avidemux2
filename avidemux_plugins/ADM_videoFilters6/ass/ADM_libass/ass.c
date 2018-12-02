@@ -21,12 +21,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
+//#include <strings.h>
 #include <assert.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifndef _MSC_VER // MEANX
 #include <unistd.h>
+#endif
+
 #include <inttypes.h>
 #include <ctype.h>
 
