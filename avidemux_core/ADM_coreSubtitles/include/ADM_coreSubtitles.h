@@ -9,6 +9,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "ADM_coreSubtitles_export.h"
 typedef std::vector<std::string> ListOfText;
 /**
  * \class subtitleTextEntry
@@ -24,7 +25,7 @@ typedef std::vector<subtitleTextEntry> ListOfSubtitleLines;
 /**
  *      \class ADM_subtitle
  */
-class ADM_subtitle
+class ADM_CORESUBTITLES6_EXPORT ADM_subtitle
 {
     typedef enum
     {
