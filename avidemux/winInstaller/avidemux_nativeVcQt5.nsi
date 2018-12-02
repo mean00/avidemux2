@@ -13,10 +13,10 @@ Section "Avidemux Core" SecCore
     ${File} "ChangeLog.html"
 
     ${File} ${BINARY_FOLDER}\aften.dll
-    ${File} ${BINARY_FOLDER}\avcodec-57.dll
-    ${File} ${BINARY_FOLDER}\avdevice-57.dll
-    ${File} ${BINARY_FOLDER}\avformat-57.dll
-    ${File} ${BINARY_FOLDER}\avutil-55.dll
+    ${File} ${BINARY_FOLDER}\avcodec-58.dll
+    ${File} ${BINARY_FOLDER}\avdevice-58.dll
+    ${File} ${BINARY_FOLDER}\avformat-58.dll
+    ${File} ${BINARY_FOLDER}\avutil-56.dll
     ${File} ${BINARY_FOLDER}\fdk-aac-1.dll
     ${File} ${BINARY_FOLDER}\libwinpthread-1.dll
     ${File} ${BINARY_FOLDER}\libx264-146.dll
@@ -24,7 +24,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}\libz-1.dll
     ${File} ${BINARY_FOLDER}\msvcp140.dll
     ${File} ${BINARY_FOLDER}\opus.dll
-    ${File} ${BINARY_FOLDER}\postproc-54.dll
+    ${File} ${BINARY_FOLDER}\postproc-55.dll
     ${File} ${BINARY_FOLDER}\Qt5Core.dll
     ${File} ${BINARY_FOLDER}\Qt5Gui.dll
     ${File} ${BINARY_FOLDER}\Qt5Network.dll
@@ -32,7 +32,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}\Qt5Widgets.dll
     ${File} ${BINARY_FOLDER}\Qt5WinExtras.dll
     ${File} ${BINARY_FOLDER}\sqlite3.dll
-    ${File} ${BINARY_FOLDER}\swscale-4.dll
+    ${File} ${BINARY_FOLDER}\swscale-5.dll
     ${File} ${BINARY_FOLDER}\twolame.dll
     ${File} ${BINARY_FOLDER}\vcruntime140.dll
     ${File} ${BINARY_FOLDER}\zlibd.dll
