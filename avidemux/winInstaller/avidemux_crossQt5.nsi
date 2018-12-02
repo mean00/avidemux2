@@ -369,7 +369,7 @@ Section "SDK (to write plugins)" SecGrpDev
         !insertmacro InstallDev ADM_coreScript
         !insertmacro InstallDev ADM_coreSocket
         !insertmacro InstallDev ADM_coreSqlLight3
-        !insertmacro InstallDev ADM_coreSubtitles
+        !insertmacro InstallDev ADM_coreSubtitle
         !insertmacro InstallDev ADM_coreUI
         !insertmacro InstallDev ADM_coreUtils
         !insertmacro InstallDev ADM_coreVideoCodec
