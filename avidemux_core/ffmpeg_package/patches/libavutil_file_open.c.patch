@@ -1,0 +1,13 @@
+--- libavutil/file_open.c	2018-12-02 15:01:27.570412023 +0100
++++ libavutil/file_open.c	2018-12-02 14:59:47.483523875 +0100
+@@ -39,6 +39,10 @@
+ #include <errno.h>
+ #include "wchar_filename.h"
+ 
++#ifdef _MSC_VER
++#undef HAVE_MKSTEMP // MEANX
++#endif
++
+ static int win32_open(const char *filename_utf8, int oflag, int pmode)
+ {
+     int fd;
