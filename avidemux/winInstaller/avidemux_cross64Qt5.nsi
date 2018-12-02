@@ -68,7 +68,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}/libADM_coreVideoCodec6.dll
     ${File} ${BINARY_FOLDER}/libADM_coreVideoEncoder6.dll
     ${File} ${BINARY_FOLDER}/libADM_coreVideoFilter6.dll
-    ${File} ${BINARY_FOLDER}/libADM_coreSubtitle.dll
+    ${File} ${BINARY_FOLDER}/libADM_coreSubtitles6.dll
     ${File} ${SOURCE_FOLDER}/AUTHORS.
     ${File} ${SOURCE_FOLDER}/COPYING.
     ${File} ${SOURCE_FOLDER}/README.

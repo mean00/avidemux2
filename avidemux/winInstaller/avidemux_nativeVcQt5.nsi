@@ -66,7 +66,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}\ADM_coreScript.dll
     ${File} ${BINARY_FOLDER}\ADM_coreSocket6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreSqlLight3.dll
-    ${File} ${BINARY_FOLDER}\ADM_coreSubtitle.dll
+    ${File} ${BINARY_FOLDER}\ADM_coreSubtitles6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreUI6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreUtils6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreVideoCodec6.dll
