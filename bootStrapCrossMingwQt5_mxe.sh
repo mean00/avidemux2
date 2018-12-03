@@ -190,6 +190,9 @@ create_release_package()
     if [ ! -e ${TARGETDIR}/platforms ]; then
         mkdir ${TARGETDIR}/platforms;
     fi
+    if [ ! -e ${TARGETDIR}/styles ]; then
+        mkdir ${TARGETDIR}/styles;
+    fi
     cd ${MINGW}/bin
     if [ "x${external_liba52}" = "x1" ]; then
         cp -v liba52-*.dll $TARGETDIR
@@ -202,6 +205,7 @@ create_release_package()
     fi
     cp -v \
     libbz2.dll \
+    libcrypto-*.dll \
     libeay32.dll \
     libexpat-*.dll \
     libfaad-*.dll \
@@ -222,7 +226,9 @@ create_release_package()
     libpcre2-16-*.dll \
     libpcre-*.dll \
     libpng16-*.dll \
+    libsamplerate-*.dll \
     libsqlite3-*.dll \
+    libssl-*.dll \
     libstdc++-*.dll \
     libvorbis-*.dll \
     libvorbisenc-*.dll \
@@ -248,6 +254,9 @@ create_release_package()
     plugins/platforms/qminimal.dll \
     plugins/platforms/qwindows.dll \
     ${TARGETDIR}/platforms/;
+    cp -v \
+    plugins/styles/qwindowsvistastyle.dll \
+    ${TARGETDIR}/styles/;
     mkdir ${TARGETDIR}/etc
     cp -rvL ${MINGW}/etc/fonts ${TARGETDIR}/etc
     cd $TARGETDIR
