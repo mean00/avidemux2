@@ -8,8 +8,8 @@ export INSTALLER_FOLDER="${TOP_FOLDER}/avidemux/winInstaller"
 mkdir -p install
 rm -f install/*
 # Except 
-export tmp="/tmp/tmp.$$"
-export tmp2="/tmp/tmp2.$$"
+export tmp="tmp.$$"
+export tmp2="tmp2.$$"
 cat ${INSTALLER_FOLDER}/avidemux_crossQt5.nsi  
 cat ${INSTALLER_FOLDER}/avidemux_crossQt5.nsi  | sed 's/\//\\/g'  | sed 's/\\SOLID/\/SOLID/g' | sed 's/dll\.a/lib/g' > $tmp
 cat $tmp | sed 's/^.*autoScripts.*$//g' | sed 's/^.*etc.fonts.*$//g' > $tmp2
