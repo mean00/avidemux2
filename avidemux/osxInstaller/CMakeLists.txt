@@ -55,9 +55,12 @@ makeLink("Resources/lib"  "." ${BUNDLE}/Contents/)
 MESSAGE(STATUS "* Copying plugins *")
 #
 FILE(COPY  "${QT_PLUGINS_DIR}/platforms" DESTINATION "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/PlugIns/")
+IF(EXISTS "${QT_PLUGINS_DIR}/styles")
+        FILE(COPY "${QT_PLUGINS_DIR}/styles" DESTINATION "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/PlugIns/")
+ENDIF(EXISTS "${QT_PLUGINS_DIR}/styles")
 # Update Qt plugins
 #
-file(GLOB  pluginList "${BUNDLE}/Contents/PlugIns/platforms/*.dylib")
+file(GLOB  pluginList "${BUNDLE}/Contents/PlugIns/platforms/*.dylib" "${BUNDLE}/Contents/PlugIns/styles/*.dylib")
 MESSAGE(STATUS "List of plugins ${pluginList}")
 FOREACH(plugin ${pluginList})
         MESSAGE(STATUS "=> ${plugin}")
