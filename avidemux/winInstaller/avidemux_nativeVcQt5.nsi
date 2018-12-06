@@ -32,7 +32,10 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}\sqlite3.dll
     ${File} ${BINARY_FOLDER}\vcruntime140.dll
 	
+	${File} ${BINARY_FOLDER}\freetype.dll
+	${File} ${BINARY_FOLDER}\fribidi.dll
 	${File} ${BINARY_FOLDER}\opus.dll
+
     ${File} ${BINARY_FOLDER}\twolame.dll
     
 	${File} ${BINARY_FOLDER}\fdk-aac-1.dll
