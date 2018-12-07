@@ -48,6 +48,7 @@ Section "Avidemux Core" SecCore
 	${File} ${BINARY_FOLDER}\libvorbisfile.dll
     ${File} ${BINARY_FOLDER}\libx264-146.dll
     ${File} ${BINARY_FOLDER}\libx265.dll
+    ${File} ${BINARY_FOLDER}\xvidcore.dll
 
 # QT
     ${File} ${BINARY_FOLDER}\Qt5Core.dll
