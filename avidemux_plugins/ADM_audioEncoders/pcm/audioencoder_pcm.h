@@ -11,9 +11,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef AUDMaudioPCM
-#define AUDMaudioPCM
-
+#pragma once
 /*!
     \class AUDMEncoder_PCM
     This class is the float->PCM encoder.
@@ -34,4 +32,4 @@ class AUDMEncoder_PCM : public ADM_AudioEncoder
    virtual bool         initialize(void);
 };
 
-#endif
+
