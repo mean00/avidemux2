@@ -482,7 +482,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     setAcceptDrops(true);
 #ifndef __APPLE__
-    setWindowIcon(QIcon(MKICON(avidemux_icon_small)));
+    setWindowIcon(QIcon(MKICON(avidemux-icon)));
 #else
     setWindowIcon(QIcon(MKOSXICON(avidemux)));
 #endif
@@ -1647,6 +1647,8 @@ int UI_Init(int nargc, char **nargv)
     myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
 #ifdef __APPLE__
     Q_INIT_RESOURCE(avidemux_osx);
+#elif defined(_WIN32)
+    Q_INIT_RESOURCE(avidemux_win32);
 #else
     Q_INIT_RESOURCE(avidemux);
 #endif
