@@ -98,6 +98,9 @@ Section "Avidemux Core" SecCore
     ${File} ${NSIDIR}\..\..\AUTHORS.
     ${File} ${NSIDIR}\..\..\COPYING.
     ${File} ${NSIDIR}\..\..\README.
+    # Avs
+    ${File} d:\avsProxy\avsproxy32.exe 
+    ${File} d:\avsProxy\avsproxy64.exe 
    
 
 	WriteRegStr HKLM "${REGKEY}" CreateDesktopIcon $CreateDesktopIcon
