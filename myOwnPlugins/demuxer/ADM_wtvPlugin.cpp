@@ -27,7 +27,7 @@ ADM_DEMUXER_BEGIN( wtvHeader, 50,
     \fn Probe
 */
 
-extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
+extern "C"  uint32_t    ADM_PLUGIN_EXPORT     probe(uint32_t magic, const char *fileName)
 {
     const uint8_t signature[16]= {0xB7,0xD8,0x00,0x20,0x37,0x49,0xDA,0x11,0xA6,0x4E,0x00,0x07,0xE9,0x5E,0xAD,0x8D};
 
