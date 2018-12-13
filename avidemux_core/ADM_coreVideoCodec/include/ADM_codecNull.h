@@ -26,6 +26,7 @@ public:
   virtual ~ decoderNull ()
   {
   };
+  virtual const char *getDecoderName(void) {return "YV12";}
   virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)
   {
     for(int i=PLANAR_Y;i<PLANAR_LAST;i++)
