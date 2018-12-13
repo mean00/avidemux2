@@ -2448,7 +2448,7 @@ It is needed to create FLV  video.</source>
     <message>
         <location line="+22"/>
         <source>Demuxers</source>
-        <translation>Lecteur</translation>
+        <translation>Demuxers</translation>
     </message>
     <message>
         <location line="+8"/>
