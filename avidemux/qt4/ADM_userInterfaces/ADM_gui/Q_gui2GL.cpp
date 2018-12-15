@@ -74,6 +74,8 @@ void UI_Qt4InitGl(void)
     }else
         ADM_warning("OpenGL: Not enough ARB extension found\n");
 
+    topGlWidgetRoot->context()->makeCurrent();
+
 	printf("[GL Render] OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
 	printf("[GL Render] OpenGL Renderer: %s\n", glGetString(GL_RENDERER));
 	printf("[GL Render] OpenGL Version: %s\n", glGetString(GL_VERSION));
