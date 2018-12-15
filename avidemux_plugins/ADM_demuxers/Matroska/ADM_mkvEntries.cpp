@@ -84,7 +84,7 @@ static int aac_get_sample_rate_index(uint32_t sample_rate)
  * @param needle
  * @return 
  */
-static bool hasNeedle(const char *haystack, char *needle)
+static bool hasNeedle(const char *haystack, const char *needle)
 {
     if(NULL!=strstr( (char *)(haystack+12),needle)) return true;
     return false;
