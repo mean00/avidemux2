@@ -15,8 +15,9 @@
 
 #include "GUI_ui.h"
 #include "ADM_colorspace.h"
+#include "ADM_muxerProto.h"
 
-static uint32_t cliFormat=0;
+static int cliFormat=-1;
 static int audioCodec=0;
 static int videoCodec=0;
  
@@ -142,7 +143,12 @@ uint8_t UI_arrow_disabled(void)
 
 int UI_GetCurrentFormat( void )
 {
-	return cliFormat;
+    if(cliFormat == -1)
+    {
+        ADM_warning("Output format not specified or invalid. Trying MKV as fallback.\n");
+        return ADM_MuxerIndexFromName("MKV");
+    }
+    return cliFormat;
 }
 void UI_SetCurrentFormat( uint32_t f )
 {
