@@ -17,7 +17,6 @@ endmacro(COPY_QT5_DLL module)
 
 COPY_QT5_DLL(Core)
 COPY_QT5_DLL(Gui)
-COPY_QT5_DLL(OpenGL)
 COPY_QT5_DLL(Widgets)
 COPY_QT5_DLL(Network)
 COPY_QT5_DLL(WinExtras)
