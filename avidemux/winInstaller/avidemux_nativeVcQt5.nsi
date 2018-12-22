@@ -26,7 +26,6 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}\Qt5Core.dll
     ${File} ${BINARY_FOLDER}\Qt5Gui.dll
     ${File} ${BINARY_FOLDER}\Qt5Network.dll
-    ${File} ${BINARY_FOLDER}\Qt5OpenGL.dll
     ${File} ${BINARY_FOLDER}\Qt5Widgets.dll
     ${File} ${BINARY_FOLDER}\Qt5WinExtras.dll
     ${File} ${BINARY_FOLDER}\sqlite3.dll
