@@ -15,21 +15,13 @@
 #include "config.h"
 #ifdef USE_OPENGL
 
-#include "ADM_inttype.h"
-
-#include <QtCore/QFileInfo>
-#include <QtCore/QUrl>
-#include <QtGui/QKeyEvent>
-#include <QGraphicsView>
-
-#include <QtOpenGL/QGLWidget>
+#include <QOpenGLWidget>
 #include "Q_dummyWidget.h"
-
 
 #include "T_openGLFilter.h"
 #include "ADM_default.h"
-dummyGLWidget *topGlWidget=NULL;
-dummyGLWidget *topGlWidgetRoot=NULL;
+
+static dummyGLWidget *topGlWidgetRoot=NULL;
 extern QWidget *VuMeter;
 
 /**
@@ -51,10 +43,9 @@ void UI_Qt4InitGl(void)
         ADM_error("Cannot get context\n");
         return;
     }
-    void  *func;
-    
+    void *func;
 
-    #define PROBE_GL_EXT(funcName, meth)     func=(void *)topGlWidgetRoot->context()->getProcAddress(QLatin1String(#funcName));   \
+    #define PROBE_GL_EXT(funcName, meth) func=(void *)topGlWidgetRoot->context()->getProcAddress(QByteArray(#funcName)); \
              ADM_glExt::meth(func); \
              if(!func) ADM_warning("Extension "#funcName" missing\n"); \
              else ADM_info("Extension "#funcName" found\n");

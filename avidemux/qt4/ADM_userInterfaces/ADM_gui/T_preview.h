@@ -43,18 +43,16 @@ public:
         }
         void useExternalRedraw(bool external)
         {
+#ifndef __APPLE__
                 setAttribute( Qt::WA_PaintOnScreen, external );
+#endif
         }
         void  setADMSize(int width,int height)
         {
              _width=width;
              _height=height;
              hostFrame->setFixedSize(_width,_height);
-             hostFrame->adjustSize();
-             hostFrame->updateGeometry();
              setFixedSize(_width,_height);
-             this->adjustSize();
-             this->updateGeometry();
         }
         QSize sizeHint() const
         {

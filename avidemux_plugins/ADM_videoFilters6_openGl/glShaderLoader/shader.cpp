@@ -40,7 +40,7 @@ protected:
                 bool         genQuad(void);
 
 protected:
-                bool        render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
+                bool        render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo);
                 bool        loadShader(const char *src);
                 bool        reload( void);
     static      void        cb(void *c);
@@ -105,7 +105,7 @@ bool shaderLoader::loadShader(const char *src)
         delete glProgramY;
         glProgramY=NULL;
     }
-    glProgramY =    createShaderFromSource(QGLShader::Fragment,(char *)buffer);
+    glProgramY =    createShaderFromSource(QOpenGLShader::Fragment,(char *)buffer);
     if(!glProgramY)
     {
         ADM_error("Shader compiling failed\n");
@@ -299,7 +299,7 @@ bool shaderLoader::genQuad(void)
 /**
     \fn render
 */
-bool shaderLoader::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo)
+bool shaderLoader::render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo)
 {
     int width=image->GetWidth(plane);
     int height=image->GetHeight(plane);

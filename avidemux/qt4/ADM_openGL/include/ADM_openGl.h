@@ -39,7 +39,10 @@ typedef void (* PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, cons
 #	include <GL/glext.h>
 #endif
 
-#include <QtOpenGL/QtOpenGL>
+#include <QOpenGLWidget>
+#include <QOpenGLContext>
+#include <QOpenGLFramebufferObject>
+#include <QOpenGLShaderProgram>
 #include "ADM_image.h"
 /**
     \class ADM_glExt
@@ -78,8 +81,8 @@ class  ADM_OPENGL6_EXPORT ADM_coreQtGl
 {
 protected:
                             
-                            QGLWidget            *_parentQGL;
-                    const   QGLContext           *_context;
+                            QOpenGLWidget         *_parentQGL;
+                    const   QOpenGLContext        *_context;
                             int                   firstRun;
                             GLuint                texName[3];
 protected:
@@ -87,18 +90,18 @@ protected:
                             void uploadAllPlanes(ADMImage *image);
                             void uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum );
                             
-                            bool downloadTexture(ADMImage *image, ADM_PLANE plane,  QGLFramebufferObject *fbo);
-                            bool downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo,GLuint bufferArb);
-                            bool downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *fbo,GLuint bufferArb);
-                            bool downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fbo);
+                            bool downloadTexture(ADMImage *image, ADM_PLANE plane, QOpenGLFramebufferObject *fbo);
+                            bool downloadTextures(ADMImage *image, QOpenGLFramebufferObject *fbo,GLuint bufferArb);
+                            bool downloadTexturesDma(ADMImage *image, QOpenGLFramebufferObject *fbo,GLuint bufferArb);
+                            bool downloadTexturesQt(ADMImage *image, QOpenGLFramebufferObject *fbo);
 
 public:
-                            ADM_coreQtGl(QGLWidget *parentWidget);
+                            ADM_coreQtGl(QOpenGLWidget *parentWidget, bool delayedInit=false);
        virtual             ~ADM_coreQtGl();
 
         
                             static bool checkGlError(const char *op);
-protected:
+                            bool initTextures(void);
 };
 
 

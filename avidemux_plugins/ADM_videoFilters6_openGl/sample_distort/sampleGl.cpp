@@ -38,7 +38,7 @@ protected:
                         GLuint  glList;
                         bool    buildVertex(int phase);
 protected:
-                        bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
+                        bool render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo);
 public:
                              openGlDistort(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~openGlDistort();
@@ -74,7 +74,7 @@ UNUSED_ARG(setup);
         // vertex shader 
        
         // frag shader
-        glProgramY =    createShaderFromSource(QGLShader::Fragment,myShaderY);
+        glProgramY =    createShaderFromSource(QOpenGLShader::Fragment,myShaderY);
         if(!glProgramY)
         {
             ADM_error("Cannot setup shader\n");
@@ -225,7 +225,7 @@ bool openGlDistort::buildVertex(int phase)
 /**
     \fn render
 */
-bool openGlDistort::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo)
+bool openGlDistort::render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo)
 {
     int width=image->GetWidth(plane);
     int height=image->GetHeight(plane);

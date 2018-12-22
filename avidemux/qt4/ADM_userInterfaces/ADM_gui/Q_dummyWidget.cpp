@@ -1,7 +1,7 @@
 
 #include "config.h"
 #ifdef USE_OPENGL
-#include <QtOpenGL/QGLWidget>
+#include <QOpenGLWidget>
 #include "Q_dummyWidget.h"
 #include "ADM_default.h"
 
@@ -12,7 +12,7 @@ void dummyGLWidget::paintGL()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 }
-dummyGLWidget::dummyGLWidget(QWidget *parent, QGLWidget *shared)  : QGLWidget(parent,shared)
+dummyGLWidget::dummyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
 
 }

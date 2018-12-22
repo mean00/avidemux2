@@ -20,7 +20,6 @@
 #include "ADM_assert.h"
 #include "ADM_render/GUI_render.h"
 
-
 #include "DIA_factory.h"
 #ifdef USE_VDPAU
 #include "ADM_coreVdpau/ADM_coreVdpau.h"

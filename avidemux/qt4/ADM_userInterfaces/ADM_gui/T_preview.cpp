@@ -120,7 +120,7 @@ ADM_Qvideo::~ADM_Qvideo()
  */
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {	    
-    printf("Paint event\n");
+    //printf("Paint event\n");
     if(drawer)
     {
          drawer->draw(this,ev);
@@ -217,8 +217,8 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
         xinfo->systemWindowId=videoWindow->winId();
 #elif defined(__APPLE__)
     #if defined(ADM_CPU_X86_64)
-        xinfo->display = (void*)videoWindow->winId();
-        xinfo->systemWindowId=videoWindow->winId();
+        xinfo->display = NULL; // we may not call winId() on a QWidget on macOS, it breaks OpenGL
+        xinfo->systemWindowId=0;
     #else
         xinfo->display = HIViewGetWindow(HIViewRef(widget->winId()));
         xinfo->systemWindowId= HIViewGetWindow(HIViewRef(widget->winId()));
