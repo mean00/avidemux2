@@ -43,6 +43,7 @@ typedef void (* PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, cons
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLShaderProgram>
+#include <math.h>
 #include "ADM_image.h"
 /**
     \class ADM_glExt
