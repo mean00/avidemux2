@@ -135,20 +135,16 @@ bool ADM_glHasARB(void)
  * 
  * @param parent
  */
-ADM_coreQtGl::ADM_coreQtGl(QGLWidget *parent)
+ADM_coreQtGl::ADM_coreQtGl(QOpenGLWidget *parent, bool delayedInit)
 {
-        _parentQGL=parent;
+    _parentQGL=parent;
+    firstRun=0;
+    if(!delayedInit)
+    {
         _parentQGL->makeCurrent();
-        firstRun=0;
-        ADM_info("Gl : Allocating context and frameBufferObjects\n");
-        _context=QGLContext::currentContext();
-        ADM_assert(_context);
-        glGenTextures(3,texName);
-        checkGlError("GenTex");
-        checkGlError("GenBuffer");
+        ADM_assert(initTextures());
         _parentQGL->doneCurrent();
-
-    
+    }
 }
 ADM_coreQtGl::~ADM_coreQtGl()
 {
@@ -159,7 +155,20 @@ ADM_coreQtGl::~ADM_coreQtGl()
     //if(widget) delete widget;       
 }
 
-
+/**
+    \fn initTextures
+*/
+bool ADM_coreQtGl::initTextures(void)
+{
+    ADM_info("Gl : Allocating context and frameBufferObjects\n");
+    _context=QOpenGLContext::currentContext();
+    if(!_context)
+        return false;
+    glGenTextures(3,texName);
+    checkGlError("GenTex");
+    checkGlError("GenBuffer");
+    return true;
+}
 /**
     \fn uploadTexture
 */

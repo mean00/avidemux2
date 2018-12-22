@@ -13,8 +13,8 @@
 #ifndef GUI_QTGLRENDER_H
 #define GUI_QTGLRENDER_H
 
-#include <QtOpenGL/QGLWidget>
-#include <QtOpenGL/QGLShader>
+#include <QOpenGLWidget>
+#include <QOpenGLShader>
 
 #include "GUI_render.h"
 #include "GUI_accelRender.h"
@@ -24,7 +24,7 @@
     \class QtGlAccelWidget
 */
 class QtGlRender;
-class QtGlAccelWidget : public QGLWidget, public ADM_coreQtGl
+class QtGlAccelWidget : public QOpenGLWidget, public ADM_coreQtGl
 {
 private:
         int             imageWidth, imageHeight;
@@ -32,10 +32,8 @@ private:
         
 
 
-        QGLShaderProgram *glProgram;
+        QOpenGLShaderProgram *glProgram;
         bool             renderFirstRun;
-        
-        
 
 protected:
         void initializeGL();

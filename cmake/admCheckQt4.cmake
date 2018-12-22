@@ -14,9 +14,6 @@ MACRO(checkQt4)
                         	SET(OPENGL_INCLUDE_DIR "/opt/mac/SDKs/MacOSX10.6.sdk/Library/Frameworks/")
                         	SET(QT_HEADERS_DIR "${QT_INCLUDE_DIR}")
                         	SET(QT_INCLUDES "-I${QT_INCLUDE_DIR}")
-
-                        	SET(QT_QTOPENGL_LIBRARY "-framework QtOpenGL")
-                        	SET(QT_QTOPENGL_INCLUDE_DIR "/opt/mac/SDKs/MacOSX10.6.sdk/Library/Frameworks/Qt4/QtOpenGL")
                         	SET(QT_LIBRARY_DIR ${QT_HOME}/lib)
 
                         	SET(QT_QTCORE_LIBRARY "-framework QtCore")
@@ -24,12 +21,7 @@ MACRO(checkQt4)
 
                         	MESSAGE(STATUS "[QT4IncludeDir] ${QT_INCLUDE_DIR}")
 			ELSE(APPLE) # WIN32/64 cross
-                        	SET(QT_QTOPENGL_FOUND 1)
                         	SET(QT_VERSION_MINOR 7)
-	
-                        	SET(QT_QTOPENGL_LIBRARY ${QT_HOME}/lib/libQtOpenGl4.a)
-                        	SET(QT_QTOPENGL_INCLUDE_DIR ${QT_HOME}/include/QtOpenGl)
-
                         	SET(QT_HEADERS_DIR   ${QT_HOME}/include/  ${QT_HOME}/include/QtGui)
                         	SET(QT_INCLUDES    -I${QT_HOME}/include -I${QT_HOME}/include/QtGui)
                         	SET(QT_INCLUDE_DIR   ${QT_HEADERS_DIR})

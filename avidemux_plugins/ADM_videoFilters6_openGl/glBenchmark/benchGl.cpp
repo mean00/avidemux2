@@ -39,7 +39,7 @@ class openGlBenchmark : public  ADM_coreVideoFilterQtGl
 protected:
 
 protected:
-                        bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
+                        bool render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo);
 
 public:
                              openGlBenchmark(ADM_coreVideoFilter *previous,CONFcouple *conf);
@@ -73,7 +73,7 @@ UNUSED_ARG(setup);
     _parentQGL->makeCurrent();
     fboY->bind();
     ADM_info("Compiling shader \n");
-    glProgramY =    createShaderFromSource(QGLShader::Fragment,myShaderY);
+    glProgramY =    createShaderFromSource(QOpenGLShader::Fragment,myShaderY);
     if(!glProgramY)
     {
         ADM_error("Cannot setup shader\n");
@@ -197,7 +197,7 @@ const char *openGlBenchmark::getConfiguration(void)
 /**
     \fn render
 */
-bool openGlBenchmark::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo)
+bool openGlBenchmark::render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo)
 {
     int width=image->GetWidth(plane);
     int height=image->GetHeight(plane);

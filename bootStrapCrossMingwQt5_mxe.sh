@@ -246,7 +246,6 @@ create_release_package()
     bin/Qt5Core.dll \
     bin/Qt5Gui.dll \
     bin/Qt5Network.dll \
-    bin/Qt5OpenGL.dll \
     bin/Qt5Widgets.dll \
     bin/Qt5WinExtras.dll \
     $TARGETDIR;

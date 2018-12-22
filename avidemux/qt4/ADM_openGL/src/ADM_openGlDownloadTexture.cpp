@@ -117,7 +117,7 @@ static inline void glYUV444_C_withChroma(const uint8_t *src, uint8_t *dstY,uint8
     \fn downloadTexture
     \brief Download YUVA texture into a YV12 image
 */
-bool ADM_coreQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fbo)
+bool ADM_coreQtGl::downloadTexturesQt(ADMImage *image, QOpenGLFramebufferObject *fbo)
 {
 
     QImage qimg(fbo->toImage()); // this is slow ! ~ 15 ms for a 720 picture (Y only).
@@ -178,7 +178,7 @@ bool ADM_coreQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fb
     \brief Download YUVA texture into a YV12 image
  TODO FIXME : Make same optimisation as Qt version
 */
-bool ADM_coreQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *fbo,GLuint bufferARB   )
+bool ADM_coreQtGl::downloadTexturesDma(ADMImage *image, QOpenGLFramebufferObject *fbo, GLuint bufferARB)
 {
     bool r=true;
     int width=image->GetWidth(PLANAR_Y);
@@ -258,8 +258,7 @@ bool ADM_coreQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *f
 /**
     \fn downloadTexture
 */
-bool ADM_coreQtGl::downloadTexture(ADMImage *image, ADM_PLANE plane,
-        QGLFramebufferObject *fbo)
+bool ADM_coreQtGl::downloadTexture(ADMImage *image, ADM_PLANE plane, QOpenGLFramebufferObject *fbo)
 {
 #ifdef BENCH_READTEXTURE
     {
@@ -313,7 +312,7 @@ bool ADM_coreQtGl::downloadTexture(ADMImage *image, ADM_PLANE plane,
 /**
  * \fn downloadTextures
  */
-bool ADM_coreQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo,GLuint bufferArb )
+bool ADM_coreQtGl::downloadTextures(ADMImage *image, QOpenGLFramebufferObject *fbo, GLuint bufferArb)
 {
 #if 1 // With QT5, download QT is faster ..    
     if(ADM_glHasARB())

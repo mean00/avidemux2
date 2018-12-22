@@ -36,7 +36,7 @@ protected:
                 GLuint       glList;
                 bool         genQuad(void);
 protected:
-                        bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
+                        bool render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo);
 public:
                              rotateGl(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~rotateGl();
@@ -76,7 +76,7 @@ UNUSED_ARG(setup);
         fboY->bind();
         printf("Compiling shader \n");
         
-        glProgramY =    createShaderFromSource(QGLShader::Fragment,myShaderY);
+        glProgramY =    createShaderFromSource(QOpenGLShader::Fragment,myShaderY);
         if(!glProgramY)
         {
             ADM_error("Cannot setup shader\n");
@@ -247,7 +247,7 @@ bool rotateGl::genQuad(void)
 /**
     \fn render
 */
-bool rotateGl::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo)
+bool rotateGl::render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo)
 {
     int width=image->GetWidth(plane);
     int height=image->GetHeight(plane);

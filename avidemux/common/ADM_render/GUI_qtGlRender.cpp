@@ -12,8 +12,6 @@
 ***************************************************************************///
 #define GL_GLEXT_PROTOTYPES
 
-#include <QPainter>
-
 #define ADM_LEGACY_PROGGY // Dont clash with free/malloc etc..
 #include "ADM_default.h"
 #include "GUI_render.h"
@@ -54,41 +52,26 @@ static const char *yuvToRgb =
 
 static bool initedOnced=false;
 static bool initedValue=false;
-/**
-    \fn checkGlError
-*/
-static bool checkGlError(const char *op)
-{
-#if 1
-    GLenum er=glGetError();
-    if(!er) return true;
-    ADM_error("[GLERROR]%s: %d => %s\n",op,er,gluErrorString(er));
-    return false;
-#else
-
-    return true;
-#endif
-}          
-
 
 /**
     \fn initOnce
 */
-static bool initOnce(QGLWidget *widget)
+static bool initOnce(QOpenGLWidget *widget)
 {
     if(initedOnced) return initedValue;  
     initedOnced=initedValue=true;
     ADM_info("[GL Render] OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
     ADM_info("[GL Render] OpenGL Renderer: %s\n", glGetString(GL_RENDERER));
     ADM_info("[GL Render] OpenGL Version: %s\n", glGetString(GL_VERSION));
-    ADM_info("[GL Render] OpenGL Extensions: %s\n", glGetString(GL_EXTENSIONS));
+    ADM_info("[GL Render] OpenGL Extensions:\n");
+    printf("%s\n",(const char *)glGetString(GL_EXTENSIONS)); // too long for ADM_info
     return true;
 }
 /**
     \fn ctor
 */
 
-QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h,QtGlRender *glRender) : QGLWidget(parent), ADM_coreQtGl(this)
+QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h,QtGlRender *glRender) : QOpenGLWidget(parent), ADM_coreQtGl(this,true)
 {
     ADM_info("[QTGL]\t Creating glWidget\n");
 
@@ -150,16 +133,16 @@ void QtGlAccelWidget::initializeGL()
 {
     int success = 1;
 
-    if(!initOnce(this))
+    if(!initTextures() || !initOnce(this))
     {
         ADM_warning("No QtGl support\n");
         success=false;
         return;
-        
     }
-    glProgram = new QGLShaderProgram(this);
 
-    if (success && !glProgram->addShaderFromSourceCode(QGLShader::Fragment, yuvToRgb))
+    glProgram = new QOpenGLShaderProgram(this);
+
+    if (success && !glProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, yuvToRgb))
     {
         success = 0;
         ADM_info("[GL Render] Fragment log: %s\n", glProgram->log().toUtf8().constData());
@@ -195,11 +178,9 @@ void QtGlAccelWidget::updateTexture(ADMImage *pic)
         glLoadIdentity();
         glOrtho(0, width(), 0, height(), -1, 1);
         glProgram->setUniformValue("height", (float)imageHeight);
+        renderFirstRun=false;
     }
     uploadAllPlanes(pic);
-    renderFirstRun=false;
-
-    
 }
 /**
     \fn paintGL
@@ -224,7 +205,6 @@ void QtGlAccelWidget::paintGL()
     glVertex2i(0, height());
     glEnd();
     checkGlError("draw");
-    
 }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 /**
@@ -269,33 +249,22 @@ bool QtGlRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoo
     ADM_info("[GL Render] Initialising renderer\n");
     baseInit(w,h,zoom);
     glWidget=NULL;
+#if 0
     if(false==QGLFormat::hasOpenGL())
     {
         ADM_warning("This platform has no openGL support \n");
         return false;
     }
+#endif
     glWidget = new QtGlAccelWidget((QWidget*)window->widget, w, h,this);
-#if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
-    glWidget->makeCurrent();
-#endif
-    bool status= QGLShaderProgram::hasOpenGLShaderPrograms(glWidget->context());
-    if(false==status)
-    {
-#if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
-        glWidget->doneCurrent();
-#endif
-        delete glWidget;
-        glWidget=NULL;
-        ADM_warning("[GL Render] Init failed : OpenGL Shader Program support\n");
-        return false;
-    }
     ADM_info("[GL Render] Setting widget display size to %d x %d\n",imageWidth,imageHeight);
     glWidget->setDisplaySize(displayWidth,displayHeight);
     glWidget->show();
-#if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
+    bool status = QOpenGLShaderProgram::hasOpenGLShaderPrograms(glWidget->context());
+    if(!status)
+        ADM_warning("[GL Render] Init failed : OpenGL Shader Program support\n");
     glWidget->doneCurrent();
-#endif    
-    return true;
+    return status;
 }
 /**
     \fn displayImage
@@ -305,7 +274,7 @@ bool QtGlRender::displayImage(ADMImage *pic)
     //printf("Gl paint\n");
     glWidget->makeCurrent();
     glWidget->setImage(pic);
-    glWidget->repaint();
+    glWidget->update();
     glWidget->doneCurrent();
     return true;
 }
@@ -319,7 +288,7 @@ bool QtGlRender::changeZoom(float newZoom)
     calcDisplayFromZoom(newZoom);
     currentZoom=newZoom;
     glWidget->setDisplaySize(displayWidth,displayHeight);
-    glWidget->repaint();
+    glWidget->update();
     glWidget->doneCurrent();
     return true;
 }
@@ -329,7 +298,7 @@ bool QtGlRender::changeZoom(float newZoom)
 bool    QtGlRender::refresh(void)   
 {
     //printf("Gl refresh\n");
-    glWidget->repaint();
+    glWidget->update();
     return true;
 }
 /* Hook */

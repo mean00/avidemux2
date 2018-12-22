@@ -1,14 +1,10 @@
 
-class dummyGLWidget : public QGLWidget
+class dummyGLWidget : public QOpenGLWidget
 {
 public:
-    dummyGLWidget(QWidget *parent,QGLWidget *sharing=NULL);
+    dummyGLWidget(QWidget *parent);
     ~dummyGLWidget();
     void initializeGL();
     //void resizeGL(int w, int h);
     void paintGL();
-    
-
-private:
-  
 };

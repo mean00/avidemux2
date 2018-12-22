@@ -7,26 +7,24 @@
 #include "T_openGLFilter.h"
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
-static QGLWidget *thisWidget=NULL;
-     
+static QOpenGLWidget *thisWidget=NULL;
 
 #define CHECK(x) if(!x) {GUI_Error_HIG("Missing extension "#x,#x" not defined");ADM_assert(0);}
 
 /**
 
 */
-bool ADM_setGlWidget(QGLWidget *w)
+bool ADM_setGlWidget(QOpenGLWidget *w)
 {
-        thisWidget=w;
-        return true;
+    thisWidget=w;
+    return true;
 }
 /**
 
 */
-QGLWidget *ADM_getGlWidget(void)
+QOpenGLWidget *ADM_getGlWidget(void)
 {
-        return thisWidget;
-        
+    return thisWidget;
 }
 
 /**
@@ -43,9 +41,9 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
     glProgramUV=NULL;
     fboY=NULL;
     fboUV=NULL;
-    fboY = new QGLFramebufferObject(info.width,info.height);
+    fboY = new QOpenGLFramebufferObject(info.width,info.height);
     ADM_assert(fboY);
-    fboUV = new QGLFramebufferObject(info.width/2,info.height/2);
+    fboUV = new QOpenGLFramebufferObject(info.width/2,info.height/2);
     ADM_assert(fboUV);
     _parentQGL->doneCurrent();
 }
@@ -56,7 +54,7 @@ bool ADM_coreVideoFilterQtGl::resizeFBO(uint32_t w,uint32_t h)
 {
     _parentQGL->makeCurrent();
     if(fboY) delete fboY;
-    fboY=new QGLFramebufferObject(w,h);
+    fboY=new QOpenGLFramebufferObject(w,h);
     _parentQGL->doneCurrent();
     checkGlError("resizeFBO");
     return true;
@@ -86,9 +84,9 @@ ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
  * @param proggy
  * @return 
  */
-QGLShaderProgram *ADM_coreVideoFilterQtGl::createShaderFromSource(QGLShader::ShaderType type,const char *proggy)
+QOpenGLShaderProgram *ADM_coreVideoFilterQtGl::createShaderFromSource(QOpenGLShader::ShaderType type,const char *proggy)
 {
-    QGLShaderProgram *glProg = new QGLShaderProgram(_context);
+    QOpenGLShaderProgram *glProg = new QOpenGLShaderProgram(NULL);
     ADM_assert(glProg);
     if ( !glProg->addShaderFromSourceCode(type, proggy))
     {

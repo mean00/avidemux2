@@ -45,7 +45,7 @@ protected:
 protected:
                 ADMImage    *original;
                 gl_resize    configuration;
-                        bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
+                        bool render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo);
 public:
                              openGlResize(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~openGlResize();
@@ -88,7 +88,7 @@ UNUSED_ARG(setup);
         _parentQGL->makeCurrent();
         fboY->bind();
         printf("Compiling shader \n");
-        glProgramY =    createShaderFromSource(QGLShader::Fragment,myShaderY);
+        glProgramY =    createShaderFromSource(QOpenGLShader::Fragment,myShaderY);
         if ( !glProgramY)
         {
             ADM_error("[GL Render] Cannot compile shader\n");            
@@ -175,7 +175,7 @@ const char *openGlResize::getConfiguration(void)
 /**
     \fn render
 */
-bool openGlResize::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo)
+bool openGlResize::render(ADMImage *image,ADM_PLANE plane,QOpenGLFramebufferObject *fbo)
 {
     int width=image->GetWidth(plane);
     int height=image->GetHeight(plane);

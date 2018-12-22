@@ -27,23 +27,23 @@
 class ADM_UIQT46_EXPORT ADM_coreVideoFilterQtGl:  public ADM_coreVideoFilter,public ADM_coreQtGl
 {
 protected:
-        GLuint                bufferARB   ;
-        QGLFramebufferObject *fboY;
-        QGLFramebufferObject *fboUV;
-        QGLShaderProgram     *glProgramY;
-        QGLShaderProgram     *glProgramUV;
+        GLuint                      bufferARB;
+        QOpenGLFramebufferObject    *fboY;
+        QOpenGLFramebufferObject    *fboUV;
+        QOpenGLShaderProgram        *glProgramY;
+        QOpenGLShaderProgram        *glProgramUV;
 
         bool                  resizeFBO(uint32_t w,uint32_t h);
 protected:
-        bool downloadTextures(ADMImage *image, QGLFramebufferObject *fbo)
+        bool downloadTextures(ADMImage *image, QOpenGLFramebufferObject *fbo)
         {
-            return ADM_coreQtGl::downloadTextures(image, fbo,bufferARB);                                
+            return ADM_coreQtGl::downloadTextures(image, fbo,bufferARB);
         }
-        bool downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *fbo)
+        bool downloadTexturesDma(ADMImage *image, QOpenGLFramebufferObject *fbo)
         {
-             return ADM_coreQtGl::downloadTexturesDma(image, fbo,bufferARB);           
+             return ADM_coreQtGl::downloadTexturesDma(image, fbo,bufferARB);
         }
-        QGLShaderProgram *createShaderFromSource(QGLShader::ShaderType type,const char *proggy);
+        QOpenGLShaderProgram *createShaderFromSource(QOpenGLShader::ShaderType type,const char *proggy);
 
 public:
           ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
@@ -52,6 +52,6 @@ public:
 };
 // Hooks
 // Get our top widget
-ADM_UIQT46_EXPORT bool ADM_setGlWidget(QGLWidget *w);
-ADM_UIQT46_EXPORT QGLWidget *ADM_getGlWidget(void);
+ADM_UIQT46_EXPORT bool ADM_setGlWidget(QOpenGLWidget *w);
+ADM_UIQT46_EXPORT QOpenGLWidget *ADM_getGlWidget(void);
 
