@@ -37,19 +37,19 @@ IScriptEnvironment*     env=NULL;
 
 /**
 */
-bool coldInit(void)
+static bool coldInit(void)
 {
-	if (!env)
-	{
-		env = CreateScriptEnvironment(AVISYNTH_INTERFACE_VERSION);
-		if (!env)
-		{
-			ADM_warning("Cannot open avisynth dll env\n");
-			return false;
-		}
-		AVS_linkage = env->GetAVSLinkage();
-	}
-	return true;
+        if (!env)
+        {
+                env = CreateScriptEnvironment(AVISYNTH_INTERFACE_VERSION);
+                if (!env)
+                {
+                        ADM_warning("Cannot open avisynth dll env\n");
+                        return false;
+                }
+                AVS_linkage = env->GetAVSLinkage();
+        }
+        return true;
 }
 
 /**
@@ -57,6 +57,8 @@ bool coldInit(void)
 */
 WAVHeader *nativeAvsHeader::getAudioInfo(uint32_t i )
 {
+	if (audioAccess)
+		return &audioInfo;
   return NULL;
 
 }
@@ -65,13 +67,20 @@ WAVHeader *nativeAvsHeader::getAudioInfo(uint32_t i )
 */
 uint8_t    nativeAvsHeader::getAudioStream(uint32_t i,ADM_audioStream  **audio)
 {
-    return 0;
+	if (audioAccess && !i)
+	{
+		*audio = audioStream;
+		return true;
+	}
+	return false;
 }
 /**
     \fn getNbAudioStreams
 */
 uint8_t                 nativeAvsHeader::getNbAudioStreams(void)
 {
+	if (audioAccess)
+		return 1;
     return 0;
 }
 
@@ -91,16 +100,22 @@ void nativeAvsHeader::Dump(void)
 
 uint8_t nativeAvsHeader::close(void)
 {
-	if (clip)
-	{
-		delete clip;
-		clip = NULL;
-	}
-	if(env)
-	{
-		env=NULL;
-	}
-	return 1;
+        if (clip)
+        {
+                delete clip;
+                clip = NULL;
+        }     
+		if (audioStream)
+		{
+			delete audioStream;
+			audioStream = NULL;
+		}
+		if (audioAccess)
+		{
+			delete audioAccess;
+			audioAccess = NULL;
+		}
+        return 1;
 }
 /**
     \fn nativeAvsHeader
@@ -111,6 +126,8 @@ uint8_t nativeAvsHeader::close(void)
 {
    env=NULL;
    clip = NULL;
+   audioAccess = NULL;
+   audioStream = NULL;
 }
 /**
     \fn ~ nativeAvsHeader
@@ -119,6 +136,7 @@ uint8_t nativeAvsHeader::close(void)
  nativeAvsHeader::~nativeAvsHeader(  )
 {
   close();
+  audioAccess = NULL; // need to delete it ?
 }
 /**
     \fn open
@@ -126,11 +144,11 @@ uint8_t nativeAvsHeader::close(void)
 
 uint8_t nativeAvsHeader::open(const char *name)
 {
-	if (!coldInit())
-		return false;
+        if (!coldInit())
+                return false;
 
 try{
-       
+
         AVSValue arg(name);
         AVSValue res = env->Invoke("Import", AVSValue(&arg, 1));
         if (!res.IsClip()) 
@@ -139,30 +157,72 @@ try{
             return 0;
         }
 #if 0
-		if (res.GetVersion() < 5)
-		{
-			ADM_warning(" avisynth.dll version is too old (%d)\n", res.GetVersion());
-			return 0;
-		}
+                if (res.AsClip()->GetVersion() < 5)
+                {
+                        ADM_warning(" avisynth.dll version is too old (%d)\n", res.GetVersion());
+                        return 0;
+                }
 #endif
 
-		clip = new PClip;
+        clip = new PClip;
         (*clip) = res.AsClip();
         // Collect informations...
         VideoInfo inf = (*clip)->GetVideoInfo();
         //
         _isaudiopresent = 0;	
         _isvideopresent = 1;	
-        _videostream.dwScale = inf.fps_numerator;
-        _videostream.dwRate = inf.fps_denominator;
+        _videostream.dwRate = inf.fps_numerator;
+        _videostream.dwScale = inf.fps_denominator;
         _mainaviheader.dwMicroSecPerFrame = 40000;;	// 25 fps hard coded
-        _videostream.fccHandler = fourCC::get((uint8_t *) "YV12");
-		_video_bih.biCompression=_videostream.fccHandler;
+        
+        if(inf.IsYV12())
+        {
+            colorSpace=ADM_COLOR_YV12;
+            _videostream.fccHandler = fourCC::get((uint8_t *) "YV12");
+        }else
+            if(inf.IsYUY2())
+            {
+                colorSpace=ADM_COLOR_YUV422;
+                _videostream.fccHandler = fourCC::get((uint8_t *) "YUY2");
+            }
+            else
+                return 0;
+        
+        
+        _video_bih.biCompression=_videostream.fccHandler;
         _videostream.dwLength = _mainaviheader.dwTotalFrames = inf.num_frames;
         _videostream.dwInitialFrames = 0;
         _videostream.dwStart = 0;
         _video_bih.biWidth = _mainaviheader.dwWidth = inf.width;
         _video_bih.biHeight = _mainaviheader.dwHeight = inf.height;
+        
+        // Do we have audio ?
+        if(inf.SamplesPerSecond()) // 0 means no audio
+        {
+			audioInfo.frequency=inf.SamplesPerSecond(),
+			audioInfo.channels=inf.AudioChannels();
+			audioInfo.encoding = WAV_PCM;
+			audioInfo.byterate = audioInfo.channels*audioInfo.frequency;
+			if(audioInfo.frequency)
+			{
+                int sampleType = inf.SampleType();
+				if(sampleType == SAMPLE_INT16 || sampleType == SAMPLE_FLOAT)
+                        {
+                                
+								audioAccess=new nativeAvsAudio(this,&audioInfo, sampleType,getVideoDuration());
+								audioStream = ADM_audioCreateStream(&audioInfo, audioAccess);
+								if (audioStream)
+								{
+									ADM_info("Created audio stream\n");
+									_isaudiopresent = 1;
+								}
+                        }
+                        else
+						{
+							ADM_warning("Only int16 for audio and not %d!\n",(int)inf.SampleType());
+						}
+			}
+        }
     }
     catch(AvisynthError err) 
     {
@@ -214,7 +274,7 @@ uint64_t                   nativeAvsHeader::getTime(uint32_t frameNum)
 
 uint64_t                   nativeAvsHeader::getVideoDuration(void)
 {
-    return 01000000LL;
+        return frameNum2PTS(_mainaviheader.dwTotalFrames+1);
 }
 /**
     \fn getTime
@@ -261,38 +321,60 @@ uint8_t  nativeAvsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
         ADM_warning("No video frame\n");
         return false;
   }
-    // Pack
+  // Pack
     int w= _video_bih.biWidth ;
     int h=  _video_bih.biHeight;
     int plane= w*h;
-	uint8_t *source;
-	uint8_t *dst;
-	int     sourcePitch;	
-
-    // Y
-	source= (uint8_t *)Aframe->GetReadPtr(AVS_PLANAR_Y);
-	sourcePitch = Aframe->GetPitch(AVS_PLANAR_Y);
-    dst=img->data;
-    BitBlit(dst,w,source,sourcePitch,w,h);
-    // U
-    source=(uint8_t *)Aframe->GetReadPtr(AVS_PLANAR_U);
-    sourcePitch= Aframe->GetPitch(AVS_PLANAR_U);
-    dst=img->data+ (plane * 5) / 4; 
-    BitBlit(dst,w>>1,source,sourcePitch,w>>1,h>>1);
-    // V
-    source= (uint8_t *)Aframe->GetReadPtr(AVS_PLANAR_V);
-    sourcePitch= Aframe->GetPitch(AVS_PLANAR_V);
-	dst = img->data + (plane);
-    BitBlit(dst,w>>1,source,sourcePitch,w>>1,h>>1);
-    // misc infos 
+    uint8_t *source;
+    uint8_t *dst;
+    int     sourcePitch;	
+    switch(colorSpace)
+   {
+    
+    case ADM_COLOR_YV12:
+        {
+            // Y
+            source= (uint8_t *)Aframe->GetReadPtr(AVS_PLANAR_Y);
+            sourcePitch = Aframe->GetPitch(AVS_PLANAR_Y);
+            dst=img->data;
+            BitBlit(dst,w,source,sourcePitch,w,h);
+            // U
+            source=(uint8_t *)Aframe->GetReadPtr(AVS_PLANAR_U);
+            sourcePitch= Aframe->GetPitch(AVS_PLANAR_U);
+            dst=img->data+ (plane * 5) / 4; 
+            BitBlit(dst,w>>1,source,sourcePitch,w>>1,h>>1);
+            // V
+            source= (uint8_t *)Aframe->GetReadPtr(AVS_PLANAR_V);
+            sourcePitch= Aframe->GetPitch(AVS_PLANAR_V);
+            dst = img->data + (plane);
+            BitBlit(dst,w>>1,source,sourcePitch,w>>1,h>>1);
+            // misc infos            
+            img->dataLength=(plane*3)>>1;
+            
+        }
+        break;
+    case ADM_COLOR_YUV422:
+        {
+            source= (uint8_t *)Aframe->GetReadPtr();
+            sourcePitch = Aframe->GetPitch();
+            dst=img->data;
+            BitBlit(dst,w*2,source,sourcePitch,w*2,h);
+            img->dataLength=(plane*2);
+        }
+        break;
+    default:
+        Aframe=NULL;
+        return false;
+        break;
+      
+  }
+    // done
     img->flags=AVI_KEY_FRAME;
-    img->dataLength=(plane*3)>>1;
     img->demuxerFrameNo=framenum;
     img->demuxerPts=frameNum2PTS(framenum);
     img->demuxerDts=frameNum2PTS(framenum);
-    // done
-  Aframe=NULL;
-  return true;
+    Aframe=NULL;
+    return true;
 }
 /**
 
@@ -300,10 +382,26 @@ uint8_t  nativeAvsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
 uint64_t              nativeAvsHeader::frameNum2PTS(int frameNumber)
 {
     if(!frameNumber)
-    {
         return 0;
-    }
-    return ADM_NO_PTS;
+        double d = _videostream.dwScale ;
+        d *= (double)frameNumber;
+        d /= (double)_videostream.dwRate;
+        d *= 1000000.;
+    return (uint64_t)d;
 }
-
+/**
+*/
+bool  nativeAvsHeader::getAudioPacket(uint64_t sample,uint8_t *buffer, uint32_t size)
+{
+    try
+    {
+        (*clip)->GetAudio(buffer, sample, size, env);
+        return true;
+    }
+    catch (AvisynthError err)
+    {
+        ADM_warning("Avisynth Audio error:\n%s\n", err.msg);
+        return false;
+    }
+}
 //EOF

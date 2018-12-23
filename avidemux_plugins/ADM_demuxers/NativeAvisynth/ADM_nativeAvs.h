@@ -20,6 +20,40 @@ using std::vector;
 #include "ADM_Video.h"
 #include "avisynth.h"
 
+class nativeAvsHeader;
+/**
+\fn nativeAvsAudio
+*/
+class nativeAvsAudio : public ADM_audioAccess
+{
+protected:
+
+	WAVHeader        *wavHeader;
+	uint64_t         duration;
+	uint64_t         nextSample;
+	uint64_t         sampleToTime(uint64_t sample);
+	void             increment(uint64_t sample);
+	nativeAvsHeader  *avs;
+    int              sampleType;
+public:
+	                  nativeAvsAudio(nativeAvsHeader *net, WAVHeader *wav, int sampleType, uint64_t duration);
+	virtual           ~nativeAvsAudio();
+	/// Hint, the stream is pure CBR (AC3,MP2,MP3)
+	virtual bool      isCBR(void) { return true; }
+	/// Return true if the demuxer can seek in time
+	virtual bool      canSeekTime(void) { return true; };
+	/// Return true if the demuxer can seek by offser
+	virtual bool      canSeekOffset(void) { return false; };
+	/// Return true if we can have the audio duration
+	virtual bool      canGetDuration(void) { return true; };
+	/// Returns audio duration in us
+	virtual uint64_t  getDurationInUs(void);
+	/// Go to a given time
+	virtual bool      goToTime(uint64_t timeUs);
+	virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize, uint64_t *dts);
+	bool              getExtraData(uint32_t *l, uint8_t **d) { *l = 0; *d = NULL; return true; };
+};
+
 /**
     \class nativeAvsHeader
     \brief Asf Demuxer
@@ -65,9 +99,15 @@ class nativeAvsHeader         :public vidHeader
     virtual   bool                       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
     virtual   bool                       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
 
+			PClip						*getClip() { return clip; }
+            bool                        getAudioPacket(uint64_t sample, uint8_t *buffer, uint32_t size);
+
 protected:
               uint64_t                   frameNum2PTS(int frameNumber);
-
+              ADM_colorspace             colorSpace;
+			  WAVHeader					 audioInfo;
+			  nativeAvsAudio			 *audioAccess;
+			  ADM_audioStream            *audioStream;
 };
 
 

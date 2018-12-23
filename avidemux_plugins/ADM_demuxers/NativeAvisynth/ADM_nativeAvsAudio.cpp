@@ -1,6 +1,7 @@
 /***************************************************************************
-    copyright            : (C) 2006 by mean
-    email                : fixounet@free.fr
+    \file       ADM_nativeAvsAudio.cpp
+    \author (C) 2018 by mean  fixounet@free.fr
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -12,73 +13,119 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #include "ADM_default.h"
-#include "ADM_Video.h"
+#include "fourcc.h"
+#include "DIA_coreToolkit.h"
 
 #include "fourcc.h"
-#include "ADM_wtv.h"
+#include "ADM_nativeAvs.h"
+/**
+    \fn ADM_avsAccess
+*/
+nativeAvsAudio::nativeAvsAudio(nativeAvsHeader *avsh, WAVHeader *wav,int sampleT,uint64_t duration)
+{
+    this->avs=avsh;
+    this->wavHeader=wav;
+    this->duration=duration;
+    nextSample=0;
+    sampleType = sampleT;    
+}
+/**
+    \fn ~ADM_avsAccess
+*/
+
+nativeAvsAudio::~nativeAvsAudio()
+{   
+	avs = NULL;
+	wavHeader = NULL;
+}
 /**
     \fn getDurationInUs
 */
-uint64_t  wtvAudioAccess::getDurationInUs(void)
+uint64_t  nativeAvsAudio::getDurationInUs(void)
 {
-    return 0;
+    return duration;
 }
-/**
-    \fn wtvAudioAccess
-*/
-
-wtvAudioAccess::~wtvAudioAccess()
-{
-	printf("[asfAudio] Destroying track\n");
-
-	fclose(_fd);
-	_fd = NULL;
-}
-
-/**
-    \fn wtvAudioAccess
-*/
-
-wtvAudioAccess::wtvAudioAccess(wtvHeader *father,uint32_t myRank)
-{
-
-}
-
-uint64_t  wtvAudioAccess::getPos(void)
-{
-    return 0;
-}
-
-/**
-    \fn setPos
-*/
-
-bool   wtvAudioAccess::setPos(uint64_t newoffset)
-{
-
-  return 1;
-}
-
 /**
     \fn goToTime
 */
-
-bool   wtvAudioAccess::goToTime(uint64_t dts_us)
+bool      nativeAvsAudio::goToTime(uint64_t timeUs)
 {
-
-    return false;
+    // convert us to sample
+    float f=timeUs;
+    f*=wavHeader->frequency;
+    f/=1000000.;
+    nextSample=(uint32_t )f;
+    return true;
 }
-
+/**
+    \fn sampleToTime
+*/
+uint64_t nativeAvsAudio::sampleToTime(uint64_t sample)
+{
+    float f=sample;
+    f/=wavHeader->frequency;
+    f*=1000000;
+    f /= wavHeader->channels; 
+    return (uint64_t)f;
+}
+/**
+    \fn increment
+*/
+void nativeAvsAudio::increment(uint64_t sample)
+{
+    nextSample+=sample;
+}
 /**
     \fn getPacket
-
 */
-bool  wtvAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,uint64_t *dts)
+bool      nativeAvsAudio::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
+    uint32_t sizeInSample;
 
+    switch (sampleType)
+    {
+        case SAMPLE_INT16:
+                        sizeInSample = maxSize / 2;
+                        break;
+        case SAMPLE_FLOAT:
+                        sizeInSample = maxSize / 4;
+                        break;
+        default:
+            return false;
+    }
 
-  return 0;
-}
+    
+    if (!avs->getAudioPacket(nextSample, buffer, sizeInSample))
+    {
+        ADM_warning("Error getPacket\n");
+        return false;
+    }
+    switch (sampleType)
+    {
+        case SAMPLE_FLOAT: // FIXME !
+            {
+
+                float *p = (float *)buffer;
+                int16_t *n = (int16_t *)buffer;
+                for (int i = 0; i < sizeInSample; i++)
+                {
+                    float v = p[i];
+                    v *= 32000.; // FIXME ALSO !
+                    n[i] = (int16_t)v;
+                }
+            }
+
+            *size = sizeInSample*2;
+            break;
+        default:
+            *size = sizeInSample*2;
+            break;
+    }
+
+    *dts = sampleToTime(nextSample);    
+    increment(sizeInSample);
+    return true;
+};
 //EOF
+
