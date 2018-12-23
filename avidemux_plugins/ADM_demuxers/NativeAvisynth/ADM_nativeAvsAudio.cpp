@@ -22,7 +22,8 @@
 /**
     \fn ADM_avsAccess
 */
-nativeAvsAudio::nativeAvsAudio(nativeAvsHeader *avsh, WAVHeader *wav,int sampleT,uint64_t duration)
+nativeAvsAudio::nativeAvsAudio(nativeAvsHeader *avsh, WAVHeader *wav,int sampleT,uint64_t duration):
+            clock(wav->frequency)
 {
     this->avs=avsh;
     this->wavHeader=wav;
@@ -53,28 +54,11 @@ bool      nativeAvsAudio::goToTime(uint64_t timeUs)
 {
     // convert us to sample
     float f=timeUs;
-    f*=wavHeader->frequency;
+    f*=wavHeader->frequency;    
     f/=1000000.;
     nextSample=(uint32_t )f;
+    clock.setTimeUs(timeUs);
     return true;
-}
-/**
-    \fn sampleToTime
-*/
-uint64_t nativeAvsAudio::sampleToTime(uint64_t sample)
-{
-    float f=sample;
-    f/=wavHeader->frequency;
-    f*=1000000;
-    f /= wavHeader->channels; 
-    return (uint64_t)f;
-}
-/**
-    \fn increment
-*/
-void nativeAvsAudio::increment(uint64_t sample)
-{
-    nextSample+=sample;
 }
 /**
     \fn getPacket
@@ -86,10 +70,10 @@ bool      nativeAvsAudio::getPacket(uint8_t *buffer, uint32_t *size, uint32_t ma
     switch (sampleType)
     {
         case SAMPLE_INT16:
-                        sizeInSample = maxSize / 2;
+                        sizeInSample = maxSize / (2*wavHeader->channels);
                         break;
         case SAMPLE_FLOAT:
-                        sizeInSample = maxSize / 4;
+                        sizeInSample = maxSize / (4 * wavHeader->channels);
                         break;
         default:
             return false;
@@ -101,6 +85,10 @@ bool      nativeAvsAudio::getPacket(uint8_t *buffer, uint32_t *size, uint32_t ma
         ADM_warning("Error getPacket\n");
         return false;
     }
+    *dts = clock.getTimeUs();
+    clock.advanceBySample(sizeInSample );
+    
+
     switch (sampleType)
     {
         case SAMPLE_FLOAT: // FIXME !
@@ -108,23 +96,25 @@ bool      nativeAvsAudio::getPacket(uint8_t *buffer, uint32_t *size, uint32_t ma
 
                 float *p = (float *)buffer;
                 int16_t *n = (int16_t *)buffer;
-                for (int i = 0; i < sizeInSample; i++)
+                for (int i = 0; i < sizeInSample*wavHeader->channels; i++)
                 {
                     float v = p[i];
-                    v *= 32000.; // FIXME ALSO !
+                    v *= 32700.; // FIXME ALSO !
                     n[i] = (int16_t)v;
                 }
             }
 
-            *size = sizeInSample*2;
+            *size = sizeInSample*wavHeader->channels *2;
             break;
         default:
-            *size = sizeInSample*2;
+            *size = sizeInSample*wavHeader->channels*2;
             break;
     }
 
-    *dts = sampleToTime(nextSample);    
-    increment(sizeInSample);
+    nextSample += sizeInSample;
+    
+    if (!*size)
+        return false;
     return true;
 };
 //EOF

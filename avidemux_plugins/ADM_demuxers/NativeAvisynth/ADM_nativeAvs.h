@@ -18,6 +18,7 @@
 #include <vector>
 using std::vector;
 #include "ADM_Video.h"
+#include "ADM_audioClock.h"
 #include "avisynth.h"
 
 class nativeAvsHeader;
@@ -27,12 +28,10 @@ class nativeAvsHeader;
 class nativeAvsAudio : public ADM_audioAccess
 {
 protected:
-
+    audioClock       clock;
 	WAVHeader        *wavHeader;
 	uint64_t         duration;
 	uint64_t         nextSample;
-	uint64_t         sampleToTime(uint64_t sample);
-	void             increment(uint64_t sample);
 	nativeAvsHeader  *avs;
     int              sampleType;
 public:
