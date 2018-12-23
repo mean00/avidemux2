@@ -71,7 +71,7 @@ OPTION(VERBOSE "" OFF)
 
 include(dm_plugin)
 SET(ADM_nativeAvs_SRCS 
-	    #ADM_nativeAvsAudio.cpp
+	    ADM_nativeAvsAudio.cpp
         ADM_nativeAvs.cpp  
         ADM_nativeAvsPlugin.cpp
 )
