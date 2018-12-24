@@ -34,6 +34,10 @@ ADM_Audiocodec *out = NULL;
 
     switch(fourcc)
     {
+        case WAV_PCM_FLOAT:
+                    ADM_info("[audioCodec] Float PCM codec\n");
+                    out= (ADM_Audiocodec *)new ADM_AudiocodecPcmFloat(fourcc,*info);
+                    break;
         case WAV_PCM:
                     ADM_info("[audioCodec] Audio codec:  WAV\n");
 #ifdef ADM_BIG_ENDIAN
