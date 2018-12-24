@@ -18,6 +18,8 @@
 #define ADMAUDIOCODEC
 #include "ADM_audiodef.h"
 
+/**
+*/
 
 //#define  ADMAC_BUFFER (48000*4)
 class ADM_Audiocodec
@@ -44,7 +46,9 @@ class ADM_Audiocodec
  };
 
 ADM_Audiocodec	*getAudioCodec(uint32_t fourcc, WAVHeader *info, uint32_t extra=0, uint8_t *extraData=NULL);
+/**
 
+*/
 class ADM_AudiocodecWav : public     ADM_Audiocodec
 {
 	public:
@@ -53,7 +57,19 @@ class ADM_AudiocodecWav : public     ADM_Audiocodec
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t * nbOut);
 		virtual	uint8_t isCompressed(void);
 };
+/**
+*/
+class ADM_AudiocodecPcmFloat : public     ADM_Audiocodec
+{
+	public:
+		ADM_AudiocodecPcmFloat(uint32_t fourcc,const WAVHeader &info);
+		virtual	~ADM_AudiocodecPcmFloat();
+		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t * nbOut);
+		virtual	uint8_t isCompressed(void);
+};
 
+/**
+*/
 class ADM_AudiocodecWavSwapped : public     ADM_Audiocodec
 {
 	public:
@@ -63,6 +79,8 @@ class ADM_AudiocodecWavSwapped : public     ADM_Audiocodec
 		virtual	uint8_t isCompressed(void);
 
    };
+/**
+*/
 
 class ADM_AudiocodecUnknown : public     ADM_Audiocodec
 {
@@ -74,6 +92,8 @@ class ADM_AudiocodecUnknown : public     ADM_Audiocodec
         bool    isDummy(void) {return true;}
 };
 
+/**
+*/
 
 
 class ADM_Audiocodec8Bits : public     ADM_Audiocodec
