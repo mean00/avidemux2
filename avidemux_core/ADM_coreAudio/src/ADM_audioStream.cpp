@@ -177,6 +177,8 @@ ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *a
 {
     switch(wavheader->encoding)
     {
+        case WAV_PCM_FLOAT:
+            return new ADM_audioStreamFloatPCM(wavheader,access);            
         case WAV_EAC3:
             return new ADM_audioStreamEAC3(wavheader,access);
         case WAV_AC3:
@@ -218,6 +220,7 @@ const char *getStrFromAudioCodec( uint32_t codec)
               case WAV_OPUS:  return QT_TRANSLATE_NOOP("adm","OPUS");
               case WAV_FLAC:  return QT_TRANSLATE_NOOP("adm","FLAC");
               case WAV_EAC3:  return QT_TRANSLATE_NOOP("adm","E-AC3");
+              case WAV_PCM_FLOAT:  return QT_TRANSLATE_NOOP("adm","Float PCM");
               case WAV_OGG_VORBIS: return QT_TRANSLATE_NOOP("adm","Ogg Vorbis");
               case WAV_MP4: return QT_TRANSLATE_NOOP("adm","MP4");
               case WAV_AAC: return QT_TRANSLATE_NOOP("adm","AAC");

@@ -13,15 +13,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_audioStreamPCM_H
-#define ADM_audioStreamPCM_H
-
+#pragma once
 #include "ADM_audioStreamBuffered.h"
 
 
 /**
-        \fn ADM_audioStreamAC3
-        \brief Class to handle AC3/AC3 streams
+        \fn ADM_audioStreamPCM
+        \brief Class to handle OCL streams
 
 */
 class ADM_audioStreamPCM : public ADM_audioStream
@@ -40,6 +38,24 @@ virtual bool            goToTime(uint64_t nbUs);
 /// Returns or compute duration. If the access cannot provide it, it will be computed here
         uint64_t        getDurationInUs(void) {return durationInUs;}
 };
-#endif
+
+
+/**
+        \fn ADM_audioStreamFloatPCM
+        \brief Class to handle float PCM streams
+
+*/
+class ADM_audioStreamFloatPCM : public ADM_audioStreamPCM
+{
+public:
+                   ADM_audioStreamFloatPCM(WAVHeader *header,ADM_audioAccess *access) : ADM_audioStreamPCM(header,access)
+                   {
+                       
+                   }
+///  Get a packet
+virtual uint8_t    getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,
+                                uint32_t *nbSample,uint64_t *dts);
+};
+
 // EOF
 
