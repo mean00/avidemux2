@@ -201,14 +201,20 @@ try{
         {
 			audioInfo.frequency=inf.SamplesPerSecond(),
 			audioInfo.channels=inf.AudioChannels();
-			audioInfo.encoding = WAV_PCM;
+			
 			audioInfo.byterate = audioInfo.channels*audioInfo.frequency;
 			if(audioInfo.frequency)
 			{
                 int sampleType = inf.SampleType();
 				if(sampleType == SAMPLE_INT16 || sampleType == SAMPLE_FLOAT)
                         {
-                                
+                                switch (sampleType)
+                                {
+                                    case SAMPLE_INT16: audioInfo.encoding = WAV_PCM; break;
+                                    case SAMPLE_FLOAT: audioInfo.encoding = WAV_PCM_FLOAT; break;
+                                    default:
+                                        return false;
+                                }
 								audioAccess=new nativeAvsAudio(this,&audioInfo, sampleType,getVideoDuration());
 								audioStream = ADM_audioCreateStream(&audioInfo, audioAccess);
 								if (audioStream)

@@ -66,19 +66,19 @@ bool      nativeAvsAudio::goToTime(uint64_t timeUs)
 bool      nativeAvsAudio::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
     uint32_t sizeInSample;
-
+    int multiply;
     switch (sampleType)
     {
         case SAMPLE_INT16:
-                        sizeInSample = maxSize / (2*wavHeader->channels);
+                        multiply = (2 * wavHeader->channels);                        
                         break;
         case SAMPLE_FLOAT:
-                        sizeInSample = maxSize / (4 * wavHeader->channels);
+                        multiply = (4 * wavHeader->channels);                        
                         break;
         default:
             return false;
     }
-
+    sizeInSample = maxSize / multiply;
     
     if (!avs->getAudioPacket(nextSample, buffer, sizeInSample))
     {
@@ -88,29 +88,7 @@ bool      nativeAvsAudio::getPacket(uint8_t *buffer, uint32_t *size, uint32_t ma
     *dts = clock.getTimeUs();
     clock.advanceBySample(sizeInSample );
     
-
-    switch (sampleType)
-    {
-        case SAMPLE_FLOAT: // FIXME !
-            {
-
-                float *p = (float *)buffer;
-                int16_t *n = (int16_t *)buffer;
-                for (int i = 0; i < sizeInSample*wavHeader->channels; i++)
-                {
-                    float v = p[i];
-                    v *= 32700.; // FIXME ALSO !
-                    n[i] = (int16_t)v;
-                }
-            }
-
-            *size = sizeInSample*wavHeader->channels *2;
-            break;
-        default:
-            *size = sizeInSample*wavHeader->channels*2;
-            break;
-    }
-
+    *size = sizeInSample*multiply;
     nextSample += sizeInSample;
     
     if (!*size)
