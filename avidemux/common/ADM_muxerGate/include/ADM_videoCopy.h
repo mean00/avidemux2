@@ -46,6 +46,7 @@ protected:
         uint8_t         *myExtra;
         uint32_t        myExtraLen;
         bool            _init;
+        bool            h265;
         bool            compactNalus(ADMBitstream *out);
         int             convertFromAnnexB(uint8_t *inData,uint32_t inSize,
                                                       uint8_t *outData,uint32_t outMaxSize);

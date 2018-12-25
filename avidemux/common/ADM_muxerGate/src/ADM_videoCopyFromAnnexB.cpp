@@ -281,6 +281,7 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
 {
     ADM_info("AnnexB to iso filter\n");
     _init=false;
+    h265=false;
     aviInfo info;
     video_body->getVideoInfo(&info);
     if(isH264Compatible(info.fcc) )
@@ -293,6 +294,7 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
     else
     if(isH265Compatible(info.fcc))
     {
+        h265=true;
         if(!extractExtraDataH265())
             ADM_warning("H265: Extract MP4 header from annexB failed\n");        
         else
@@ -338,7 +340,11 @@ bool    ADM_videoStreamCopyFromAnnexB::getPacket(ADMBitstream *out)
     aprintf("-------%d--------\n",(int)currentFrame);
     if(false==ADM_videoStreamCopy::getPacket(myBitstream)) return false;
     
-    int size=ADM_convertFromAnnexBToMP4(myBitstream->data,myBitstream->len,out->data,out->bufferSize);
+    int size;
+    if(h265)
+        size=ADM_convertFromAnnexBToMP4H265(myBitstream->data,myBitstream->len,out->data,out->bufferSize);
+    else
+        size=ADM_convertFromAnnexBToMP4(myBitstream->data,myBitstream->len,out->data,out->bufferSize);
     out->len=size;
     out->dts=myBitstream->dts;
     out->pts=myBitstream->pts;
