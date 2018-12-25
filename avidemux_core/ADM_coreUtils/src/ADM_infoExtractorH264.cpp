@@ -1003,15 +1003,15 @@ static void writeBE32(uint8_t *p, uint32_t size)
     p[3]=(size>>0)&0xff;
 }
 /**
-    \fn ADM_convertFromAnnexBToMP4
+    \fn ADM_convertFromAnnexBToMP4_internal
     \brief convert annexB startcode (00 00 00 0 xx) to NALU
 */
-int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize,
-                                                      uint8_t *outData,uint32_t outMaxSize)
+int ADM_convertFromAnnexBToMP4_internal(uint8_t *inData, uint32_t inSize,
+                                        uint8_t *outData,uint32_t outMaxSize, int startCodeLen)
 {
     uint8_t *tgt=outData;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK+1];
-    int nbNalu=ADM_splitNalu(inData,inData+inSize, MAX_NALU_PER_CHUNK,desc);
+    int nbNalu=ADM_splitNalu_internal(inData,inData+inSize,MAX_NALU_PER_CHUNK,desc,startCodeLen);
     int nalHeaderSize=4;
     int outputSize=0;
 
@@ -1035,5 +1035,14 @@ int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize,
         ADM_assert(outputSize<outMaxSize);
     }
     return outputSize;
+}
+
+/**
+    \fn ADM_convertFromAnnexBToMP4
+    \brief convert annexB startcode (00 00 00 0 xx) to NALU
+*/
+int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize,uint8_t *outData,uint32_t outMaxSize)
+{
+    return ADM_convertFromAnnexBToMP4_internal(inData,inSize,outData,outMaxSize,4);
 }
 //EOF

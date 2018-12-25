@@ -304,4 +304,13 @@ int ADM_splitNaluH265(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descri
 {
     return ADM_splitNalu_internal(start,end,maxNalu,desc,5); //  FOR h265 assume long start code
 }
+
+/**
+    \fn ADM_convertFromAnnexBToMP4H265
+    \brief convert annexB startcode (00 00 00 0 xx) to NALU
+*/
+int ADM_convertFromAnnexBToMP4H265(uint8_t *inData, uint32_t inSize, uint8_t *outData, uint32_t outMaxSize)
+{
+    return ADM_convertFromAnnexBToMP4_internal(inData,inSize,outData,outMaxSize,5);
+}
 // EOF
