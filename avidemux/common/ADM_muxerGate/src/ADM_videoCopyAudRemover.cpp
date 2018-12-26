@@ -26,7 +26,7 @@ using std::string;
 #include "ADM_h265_tag.h"
 extern ADM_Composer *video_body; // Fixme!
 
-#if 1
+#if 0
 #define aprintf ADM_info
 #else
 #define aprintf(...) {}
@@ -38,6 +38,7 @@ extern ADM_Composer *video_body; // Fixme!
 ADM_videoStreamCopyAudRemover::ADM_videoStreamCopyAudRemover(uint64_t startTime,uint64_t endTime) : ADM_videoStreamCopy(startTime,endTime)
 {
     ADM_info("AUD Remover created\n");
+    carryover=0;
     aviInfo info;
     video_body->getVideoInfo(&info);
     if(isH264Compatible( info.fcc)) h265=false; //=4;
@@ -53,7 +54,7 @@ ADM_videoStreamCopyAudRemover::~ADM_videoStreamCopyAudRemover()
 
 }
 
-#if 1
+#if 0
     #define aprintf ADM_info
 #else
     #define aprintf(...) {}
@@ -66,39 +67,68 @@ bool  ADM_videoStreamCopyAudRemover::getPacket(ADMBitstream *out)
 {
     if(!ADM_videoStreamCopy::getPacket(out)) 
         return false;
-    //return true;
     // Remove AUDs in place
     static NALU_descriptor desc[51]; // Only one instance max, no risk of simulatenous access
+    uint8_t *head=out->data;
+    bool removeLeadingAud=false;
+    // If the current packet is a keyframe, we might be at a cut,
+    // the stuff from the previous packet doesn't belong here.
+    // Else copy it to the start of the data.
+    if(carryover && !(out->flags & AVI_KEY_FRAME))
+    {
+        if(out->len+carryover>out->bufferSize) // no space
+        {
+            ADM_warning("Buffer size insufficient to reconstruct frame!\n");
+            carryover=0;
+        }else
+        {
+            memmove(head+carryover,head,out->len);
+            memcpy(head,scratchpad,carryover);
+            head+=carryover;
+            carryover=0;
+            removeLeadingAud=true;
+        }
+    }
+
     int size=4;
     if(h265) size=5;
-    
-    int nbNalu=ADM_splitNalu_internal(out->data, out->data+out->len,50,desc,size);
+
+    int nbNalu=ADM_splitNalu_internal(head,head+out->len,50,desc,size);
     if(!nbNalu) return true;
-    
-    uint8_t *head=out->data;
+
+    bool copyToScratchpad=false;
+
     for(int i=0;i<nbNalu;i++)
     {
-        bool copy=true;
         NALU_descriptor *d=desc+i;
-        
+
         if(h265)
         {
             if(((d->nalu>>1)&0x3f)==NAL_H265_AUD)
             {
-                 copy=false;
+                if(i)
+                {
+                    if(copyToScratchpad) break; // We've already got what we wanted, stop here.
+                    // NALUs starting with this AUD up to the next one belong to the next frame.
+                    copyToScratchpad=true;
+                }else if(removeLeadingAud)
+                {
+                    removeLeadingAud=false;
+                    continue;
+                }
             }
         }else
         {
-            if((d->nalu&0x1f)==NAL_AU_DELIMITER) 
-            {
-                copy=false;
-            }
+            if(i && (d->nalu&0x1f)==NAL_AU_DELIMITER) break;
         }
-        if(copy==false) 
+
+        if(copyToScratchpad)
         {
+            memcpy(scratchpad+carryover,d->start-size,d->size+size);
+            carryover+=d->size+size;
             continue;
         }
-        //
+
         if(head==d->start-size) // nothing to do, already at the right place
         {
             head+=d->size+size;

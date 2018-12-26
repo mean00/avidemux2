@@ -92,7 +92,9 @@ protected:
 class ADM_videoStreamCopyAudRemover : public ADM_videoStreamCopy
 {
 protected:
-        bool             h265;
+        bool            h265;
+        int             carryover;
+        uint8_t         scratchpad[ADM_COPY_FROM_ANNEX_B_SIZE];
 public:
                         ADM_videoStreamCopyAudRemover(uint64_t startTime,uint64_t endTime);
         virtual         ~ADM_videoStreamCopyAudRemover();
