@@ -14,10 +14,12 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_MUXER_RAW
-#define ADM_MUXER_RAW
+#pragma once
 
 #include "ADM_muxer.h"
+#include "raw_muxer.h"
+
+extern raw_muxer muxerConfig;
 
 class muxerRaw : public ADM_muxer
 {
@@ -29,7 +31,6 @@ public:
         virtual bool open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a);
         virtual bool save(void) ;
         virtual bool close(void) ;
-
+        virtual bool preferH264AnnexB(void) { return muxerConfig.requestAnnexB; }
 };
 
-#endif

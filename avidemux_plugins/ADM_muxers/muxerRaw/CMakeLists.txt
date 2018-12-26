@@ -1,6 +1,7 @@
 include(mx_plugin)
 SET(ADM_raw_SRCS 
 	muxerRaw.cpp
+	muxerRawConfig.cpp
 	muxerRawPlugin.cpp
 )
 
