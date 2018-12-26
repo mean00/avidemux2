@@ -279,28 +279,19 @@ int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
     return slice;
 }
 /**
-    \fn runH264
-    \brief Index H264 stream
+    \fn run
+    \brief Index H265 stream
 */
 bool TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
 {
+    TSVideo video;
+    indexerData data;
 
-bool    seq_found=false;
-bool    firstSps=true;
-TS_PESpacket SEI_nal(0);
-TSVideo video;
-indexerData  data;
-
-bool result=false;
-bool bAppend=false;
-
-    beginConsuming=0;
     listOfUnits.clear();
 
     printf("Starting H265 indexer\n");
     if(!videoTrac) return false;
-    if(videoTrac[0].trackType!=ADM_TS_H265 
-       )
+    if(videoTrac[0].trackType!=ADM_TS_H265)
     {
         printf("[Ts Indexer] Only H265 video supported\n");
         return false;
@@ -319,6 +310,13 @@ bool bAppend=false;
         return false;
     }
 
+    bool result=false;
+    bool bAppend=false;
+    bool seq_found=false;
+    bool firstSps=true;
+    uint64_t lastAudOffset=0;
+    int audCount=0;
+    dmxPacketInfo packetInfo;
 
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
 
@@ -351,109 +349,120 @@ bool bAppend=false;
             break;
     }    
     if(!seq_found) goto the_end;
-
-    
-
     
      decodingImage=false;
     //******************
     // 2 Index
     //******************
-      bool fourBytes;
-      while(keepRunning)
-      {
-          fourBytes=false;
+    bool fourBytes;
+    while(keepRunning)
+    {
+        fourBytes=false;
         int startCode=pkt->findStartCode2(fourBytes);
-resume:
         if(!pkt->stillOk()) break;
 
         int startCodeLength=4;
         if(fourBytes==true) startCodeLength++;
 
         startCode=((startCode>>1)&0x3f);   
-        
-        {
-          dmxPacketInfo packetInfo;
-          pkt->getInfo(&packetInfo);
-          aprintf("Startcode =%d:%s, decoding image=%d,%s\n",startCode,startCodeToString(startCode),decodingImage,ADM_us2plain(packetInfo.dts));
-        }
+
+#if 0
+        pkt->getInfo(&packetInfo);
+        aprintf("Startcode =%d:%s, decoding image=%d,%s\n",startCode,startCodeToString(startCode),decodingImage,ADM_us2plain(packetInfo.dts));
+#endif
 #define NON_IDR_PRE_READ 32 
 
-          switch(startCode)
-                  {
-                  case NAL_H265_AUD:
-                        {
-                          aprintf("AU DELIMITER\n");
-                          decodingImage = false;
-                        }
-                          break;
-                case NAL_H265_TRAIL_R:
-                case NAL_H265_TRAIL_N:
-                case NAL_H265_TSA_N:
-                case NAL_H265_TSA_R:
-                case NAL_H265_STSA_N:
-                case NAL_H265_STSA_R:
-                case NAL_H265_BLA_W_LP:
-                case NAL_H265_BLA_W_RADL:
-                case NAL_H265_BLA_N_LP:
-                case NAL_H265_IDR_W_RADL:
-                case NAL_H265_IDR_N_LP:
-                case NAL_H265_CRA_NUT:
-                case NAL_H265_RADL_N:
-                case NAL_H265_RADL_R:
-                case NAL_H265_RASL_N:
-                case NAL_H265_RASL_R:
+        switch(startCode)
+        {
+            case NAL_H265_AUD:
+            {
+                aprintf("AU DELIMITER\n");
+                decodingImage = false;
+                pkt->getInfo(&packetInfo);
+                lastAudOffset=pkt->getConsumed();
+                audCount++;
+                break;
+            }
+            case NAL_H265_TRAIL_R:
+            case NAL_H265_TRAIL_N:
+            case NAL_H265_TSA_N:
+            case NAL_H265_TSA_R:
+            case NAL_H265_STSA_N:
+            case NAL_H265_STSA_R:
+            case NAL_H265_BLA_W_LP:
+            case NAL_H265_BLA_W_RADL:
+            case NAL_H265_BLA_N_LP:
+            case NAL_H265_IDR_W_RADL:
+            case NAL_H265_IDR_N_LP:
+            case NAL_H265_CRA_NUT:
+            case NAL_H265_RADL_N:
+            case NAL_H265_RADL_R:
+            case NAL_H265_RASL_N:
+            case NAL_H265_RASL_R:
+            {
+                uint8_t buffer[NON_IDR_PRE_READ],header[NON_IDR_PRE_READ];
+                int preRead=NON_IDR_PRE_READ;
+                if(!audCount)
                 {
-#if 0
-                    if(decodingImage)
-                        continue;
-#endif                    
-                    uint8_t buffer[NON_IDR_PRE_READ],header[NON_IDR_PRE_READ];
-                    int preRead=NON_IDR_PRE_READ;
-                    dmxPacketInfo packetInfo;
-                        pkt->getInfo(&packetInfo,startCodeLength);
-                        thisUnit.consumedSoFar=pkt->getConsumed();
-                        
-                        // Read the beginning of the picture to get its type...
-                        pkt->read(preRead,buffer);
-                        ADM_unescapeH264(preRead,buffer,header);
-                        //
-                        getBits bits(preRead,header);
-                        // Try to see if we have a valid beginning of image
-                        int picType=decodePictureTypeH265(startCode,bits);
-                        if(picType!=-1)
-                        {
-                            data.nbPics++;
-                            decodingImage=true;
-                            thisUnit.packetInfo=packetInfo;
-                            thisUnit.imageType=picType;
-                            thisUnit.unitType=unitTypePic;
-                            if(!addUnit(data,unitTypePic,thisUnit,startCodeLength))
-                                keepRunning=false;
-                            // reset to default
-                            thisUnit.imageStructure=pictureFrame;
-                            thisUnit.recoveryCount=0xff;
-                            pkt->invalidatePtsDts();
-                        }
+                    pkt->getInfo(&packetInfo,startCodeLength);
+                    thisUnit.consumedSoFar=pkt->getConsumed();
+                }else
+                {
+                    thisUnit.consumedSoFar=lastAudOffset;
                 }
-                    break;
-                  case NAL_H265_VPS:
-                        decodingImage=false;
-                        pkt->getInfo(&thisUnit.packetInfo,startCodeLength);
-                        if(firstSps)
-                        {
-                            pkt->setConsumed(startCodeLength); // reset consume counter
-                            firstSps=false;
-                        }
-                        thisUnit.consumedSoFar=pkt->getConsumed();
-                        if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
-                            keepRunning=false;
-                        break;      
-                  default:
-                      break;
-          }
-      } // End while
-      result=true;
+                // Read the beginning of the picture to get its type...
+                pkt->read(preRead,buffer);
+                ADM_unescapeH264(preRead,buffer,header);
+                getBits bits(preRead,header);
+                // Try to see if we have a valid beginning of image
+                int picType=decodePictureTypeH265(startCode,bits);
+                if(picType!=-1)
+                {
+                    data.nbPics++;
+                    decodingImage=true;
+                    thisUnit.packetInfo=packetInfo;
+                    thisUnit.imageType=picType;
+                    thisUnit.unitType=unitTypePic;
+                    if(!addUnit(data,unitTypePic,thisUnit,startCodeLength))
+                        keepRunning=false;
+                    // reset to default
+                    thisUnit.imageStructure=pictureFrame;
+                    thisUnit.recoveryCount=0xff;
+                    pkt->invalidatePtsDts();
+                    audCount=0;
+                }
+                break;
+            }
+            case NAL_H265_VPS:
+            {
+                decodingImage=false;
+                if(!audCount)
+                    pkt->getInfo(&packetInfo,startCodeLength);
+                thisUnit.packetInfo=packetInfo;
+                if(firstSps)
+                {
+                    uint64_t pos=startCodeLength;
+                    if(audCount)
+                    {
+                        pos+=pkt->getConsumed();
+                        pos-=lastAudOffset;
+                    }
+                    pkt->setConsumed(pos); // reset consume counter
+                    thisUnit.consumedSoFar=pos;
+                    firstSps=false;
+                }else
+                {
+                    thisUnit.consumedSoFar=lastAudOffset;
+                }
+                if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
+                    keepRunning=false;
+                break;
+            }
+            default:
+                break;
+        }
+    } // End while
+    result=true;
 the_end:
         printf("\n");
         qfprintf(index,"\n[End]\n");
