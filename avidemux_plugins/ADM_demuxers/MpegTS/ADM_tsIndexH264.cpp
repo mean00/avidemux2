@@ -176,6 +176,10 @@ bool bAppend=false;
         return false;
     }
 
+    uint64_t lastAudOffset=0;
+    int audCount=0;
+    int audStartCodeLen=5;
+    dmxPacketInfo packetInfo;
 
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
 
@@ -250,10 +254,24 @@ resume:
                         {
                           aprintf("AU DELIMITER\n");
                           decodingImage = false;
+                          pkt->getInfo(&packetInfo,startCodeLength);
+                          lastAudOffset=pkt->getConsumed();
+                          audStartCodeLen=startCodeLength;
+                          audCount++;
                         }
                           break;
                   case NAL_SEI:
                         {
+                            if(!audCount)
+                            {
+                                pkt->getInfo(&packetInfo,startCodeLength);
+                                thisUnit.consumedSoFar=pkt->getConsumed();
+                            }else
+                            {
+                                thisUnit.consumedSoFar=lastAudOffset;
+                                startCodeLength=audStartCodeLen;
+                            }
+                            thisUnit.packetInfo=packetInfo;
                         // Load the whole NAL
                             SEI_nal.empty();
                             uint32_t code=0xffff+0xffff0000;
@@ -273,9 +291,7 @@ resume:
                             startCode=pkt->readi8();
 
                             decodingImage=false;
-                            pkt->getInfo(&thisUnit.packetInfo);
-                            thisUnit.consumedSoFar=pkt->getConsumed();
-                            if(!addUnit(data,unitTypeSei,thisUnit,startCodeLength+SEI_nal.payloadSize+1))
+                            if(!addUnit(data,unitTypeSei,thisUnit,startCodeLength))
                                 keepRunning=false;
                             fourBytes=true;
                             goto resume;
@@ -284,13 +300,33 @@ resume:
 
                   case NAL_SPS:
                                 decodingImage=false;
-                                pkt->getInfo(&thisUnit.packetInfo);
+                                if(!audCount)
+                                    pkt->getInfo(&packetInfo,startCodeLength);
+                                thisUnit.packetInfo=packetInfo;
                                 if(firstSps)
                                 {
-                                    pkt->setConsumed(startCodeLength); // reset consume counter
+                                    uint64_t pos=0;
+                                    if(audCount) // Currently always false because we don't rewind after findH264SPS()
+                                    {
+                                        pos+=pkt->getConsumed();
+                                        pos-=lastAudOffset;
+                                        startCodeLength=audStartCodeLen;
+                                    }
+                                    pos+=startCodeLength;
+                                    pkt->setConsumed(pos); // reset consume counter
+                                    thisUnit.consumedSoFar=pos;
                                     firstSps=false;
+                                }else
+                                {
+                                    if(audCount)
+                                    {
+                                        thisUnit.consumedSoFar=lastAudOffset;
+                                        startCodeLength=audStartCodeLen;
+                                    }else
+                                    {
+                                        thisUnit.consumedSoFar=pkt->getConsumed();
+                                    }
                                 }
-                                thisUnit.consumedSoFar=pkt->getConsumed();
                                 if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
                                     keepRunning=false;
                           break;
@@ -298,6 +334,16 @@ resume:
                   case NAL_IDR:
                   case NAL_NON_IDR:
                     {
+                      if(!audCount)
+                      {
+                          pkt->getInfo(&packetInfo,startCodeLength);
+                          thisUnit.consumedSoFar=pkt->getConsumed();
+                      }else
+                      {
+                          thisUnit.consumedSoFar=lastAudOffset;
+                          startCodeLength=audStartCodeLen;
+                      }
+                      thisUnit.packetInfo=packetInfo;
 #define NON_IDR_PRE_READ 8
                       aprintf("Pic start last ref:%d cur ref:%d nb=%d\n",lastRefIdc,ref,data.nbPics);
                       lastRefIdc=ref;
@@ -334,14 +380,10 @@ resume:
                                 thisUnit.imageType=4; //I  + Recovery=0 = IDR!
 
                       data.nbPics++;
-
-
-
                       decodingImage=true;
-                      pkt->getInfo(&thisUnit.packetInfo);
-                      thisUnit.consumedSoFar=pkt->getConsumed();
+                      audCount=0;
 
-                      if(!addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ))
+                      if(!addUnit(data,unitTypePic,thisUnit,startCodeLength))
                           keepRunning=false;
                         // reset to default
                       thisUnit.imageStructure=pictureFrame;
