@@ -40,7 +40,10 @@ extern ADM_Composer *video_body; // Fixme!
 #define check(...) {}
 #endif
 
+#ifdef MAX_NALU_PER_CHUNK
+#undef MAX_NALU_PER_CHUNK
 #define MAX_NALU_PER_CHUNK 20
+#endif
 
 static uint32_t readBE32(uint8_t *p)
 {
@@ -93,8 +96,7 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264()
     myBitstream->len=img.dataLength;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK];
     //mixDump(img.data,img.dataLength);
-    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
-                            MAX_NALU_PER_CHUNK,desc);
+    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,MAX_NALU_PER_CHUNK,desc);
     // search sps
     uint8_t *spsStart,*ppsStart;
     uint32_t spsLen=0, ppsLen=0;
@@ -205,8 +207,8 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     mixDump(img.data, 48);
     myBitstream->len=img.dataLength;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK];
-   
-    int nbNalu=ADM_splitNaluH265(myBitstream->data,myBitstream->data+myBitstream->len,   MAX_NALU_PER_CHUNK,desc);
+
+    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len, MAX_NALU_PER_CHUNK,desc);
     
     // The list of NALU we are interested in...
     NALU_descriptor *vpsNalu,*ppsNalu,*spsNalu;
@@ -320,6 +322,8 @@ ADM_videoStreamCopyFromAnnexB::~ADM_videoStreamCopyFromAnnexB()
     delete myBitstream;
     myBitstream=NULL;
 }
+
+#define START_CODE_LEN 5
 
 static void parseNalu(uint8_t *head, uint8_t *tail)
 {

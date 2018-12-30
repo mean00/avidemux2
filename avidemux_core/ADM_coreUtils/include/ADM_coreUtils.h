@@ -18,7 +18,7 @@
 #include "ADM_image.h"
 
 ADM_COREUTILS6_EXPORT bool        ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
-ADM_COREUTILS6_EXPORT bool        ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
+ADM_COREUTILS6_EXPORT bool        ADM_findAnnexBStartCode(uint8_t *start, uint8_t *end, uint8_t *outstartcode, uint32_t *offset, bool *zerobyte);
 char        *ADM_escape(const ADM_filename *incoming);
 uint32_t    ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInMB);
 ADM_COREUTILS6_EXPORT uint32_t    ADM_UsecFromFps1000(uint32_t fps1000);

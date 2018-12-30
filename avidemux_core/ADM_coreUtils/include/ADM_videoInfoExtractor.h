@@ -77,31 +77,22 @@ ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265(uint8_t *data, uint32_t len,ADM
 
 
 
-
+#define MAX_NALU_PER_CHUNK 60
 
 typedef struct
 {
     uint8_t  *start;
     uint32_t size;   // size of payload excluding nalu type
     uint8_t  nalu;
+    bool     zerobyte; // is the startcode prefix preceded by zero byte (long startcode)?
 }NALU_descriptor;
-ADM_COREUTILS6_EXPORT int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeSize);
-ADM_COREUTILS6_EXPORT int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc);
+
+ADM_COREUTILS6_EXPORT int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu, NALU_descriptor *desc);
 ADM_COREUTILS6_EXPORT int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
-ADM_COREUTILS6_EXPORT int ADM_convertFromAnnexBToMP4_internal(uint8_t *inData, uint32_t inSize, uint8_t *outData, uint32_t outMaxSize, int startCodeSize);
 ADM_COREUTILS6_EXPORT int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize, uint8_t *outData,uint32_t outMaxSize);
 ADM_COREUTILS6_EXPORT int ADM_convertFromAnnexBToMP4H265(uint8_t *inData, uint32_t inSize, uint8_t *outData, uint32_t outMaxSize);
-ADM_COREUTILS6_EXPORT int     ADM_splitNaluH265(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc);
 ADM_COREUTILS6_EXPORT NALU_descriptor *ADM_findNaluH265(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
-#define SHORT_START_CODE
 
-#ifdef SHORT_START_CODE
-    #define SearchStartCode ADM_findMpegStartCode
-    #define START_CODE_LEN 4
-#else
-    #define SearchStartCode ADM_findH264StartCode
-    #define START_CODE_LEN 5
-#endif
 /**
     \struct ADM_vopS
     \brief describe a vop inside a bitstream (mpeg4 SP/ASP)
