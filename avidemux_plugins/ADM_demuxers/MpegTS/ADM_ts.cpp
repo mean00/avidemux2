@@ -298,7 +298,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     // Random frame
     // Need to rewind, then forward
     int startPoint=frame;
-    while(startPoint && (ListOfFrames[startPoint]->type!=1 || ListOfFrames[startPoint]->type!=4)) startPoint--;
+    while(startPoint && ListOfFrames[startPoint]->type!=1 && ListOfFrames[startPoint]->type!=4) startPoint--;
     printf("[tsDemux] Wanted frame %" PRIu32", going back to frame %" PRIu32", last frame was %" PRIu32",\n",frame,startPoint,lastFrame);
     pk=ListOfFrames[startPoint];
     if(!tsPacket->seek(pk->startAt,pk->index)) 
