@@ -1,8 +1,8 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-
-      See lavformat/flv[dec/env].c for detail
+    
+      
  ***************************************************************************/
 
 /***************************************************************************
@@ -14,20 +14,26 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_muxerInternal.h"
-#include "muxerRaw.h"
-#include "raw_muxer_desc.cpp"
+#include "raw_muxer.h"
+#include "DIA_factory.h"
 
-extern bool rawConfigure(void);
+raw_muxer muxerConfig={0};
 
-ADM_MUXER_BEGIN( "raw",muxerRaw,
-                    1,0,0,
-                    "RAW",    // Internal name
-                    "RAW muxer plugin (c) Mean 2008",
-                    "Video Only", // DIsplay name
-                    rawConfigure,
-                    raw_muxer_param,
-                    &muxerConfig,
-                    sizeof(muxerConfig)
-                );
+/**
+    \fn rawConfigure
+*/
+bool rawConfigure(void)
+{
+    bool annexb=(bool)muxerConfig.requestAnnexB;
 
+    diaElemToggle chkbox(&annexb,QT_TRANSLATE_NOOP("rawmuxer","Prefer Annex B type stream"));
+
+    diaElem *tab[]={&chkbox};
+    if(diaFactoryRun(QT_TRANSLATE_NOOP("rawmuxer","Video Only Muxer Settings"),1,tab))
+    {
+        muxerConfig.requestAnnexB=annexb;
+        return true;
+    }
+    return false;
+}
+// EOF

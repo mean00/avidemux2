@@ -48,10 +48,6 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 #define check(...) {}
 #endif
 
-#define MAX_NALU_PER_CHUNK 60
-
-int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeLen);
-
 /**
     \fn ADM_getH264SpsPpsFromExtraData
     \brief Returns a copy of PPS/SPS extracted from extrdata
@@ -92,8 +88,8 @@ bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
     return true;
 }
 
-bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
-                uint8_t * outstartcode, uint32_t * offset);
+extern bool ADM_findAnnexBStartCode(uint8_t *start, uint8_t *end, uint8_t *outstartcode,
+                uint32_t *offset, bool *fivebytes);
 /**
     \fn ADM_escapeH264
     \brief Add escape stuff
@@ -943,46 +939,44 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
     \fn ADM_splitNalu
     \brief split a nalu annexb size into a list of nalu descriptor
 */
-int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeLen)
+int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
 {
-bool first=true;
-uint8_t *head=start;
-uint32_t offset;
-uint8_t startCode,oldStartCode=0xff;
-int index=0;
-      while(true==SearchStartCode(head,end,&startCode,&offset))
-      {
-            if(true==first)
-            {
-                head+=offset;
-                first=false;
-                oldStartCode=startCode;
-                continue;
-            }
+    bool first=true;
+    uint8_t *head=start;
+    uint32_t offset;
+    uint8_t startCode,oldStartCode=0xff;
+    bool zeroBytePrefixed,oldZbp=false;
+    const uint32_t startCodePrefixLen=4;
+    int index=0;
+
+    while(true==ADM_findAnnexBStartCode(head,end,&startCode,&offset,&zeroBytePrefixed))
+    {
+        if(true==first)
+        {
+            head+=offset;
+            first=false;
+            oldStartCode=startCode;
+            oldZbp=zeroBytePrefixed;
+            continue;
+        }
         if(index>=maxNalu) return 0;
         desc[index].start=head;
-        desc[index].size=offset-startCodeLen;
+        desc[index].size=offset-zeroBytePrefixed-startCodePrefixLen;
         desc[index].nalu=oldStartCode;
+        desc[index].zerobyte=oldZbp;
         index++;
         head+=offset;
         oldStartCode=startCode;
-      }
+        oldZbp=zeroBytePrefixed;
+    }
     // leftover
     desc[index].start=head;
     desc[index].size=(uint32_t)(end-head);
     desc[index].nalu=oldStartCode;
+    desc[index].zerobyte=oldZbp;
     index++;
     return index;
 }
-/**
-    \fn ADM_splitNalu
-    \brief split a nalu annexb size into a list of nalu descriptor
-*/
-int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
-{
-    return ADM_splitNalu_internal(start,end,maxNalu,desc,START_CODE_LEN);
-}
-
 /**
     \fn ADM_findNalu
     \brief lookup for a specific NALU in the given buffer
@@ -1004,16 +998,16 @@ static void writeBE32(uint8_t *p, uint32_t size)
     p[3]=(size>>0)&0xff;
 }
 /**
-    \fn ADM_convertFromAnnexBToMP4
+    \fn ADM_convertFromAnnexBToMP4_internal
     \brief convert annexB startcode (00 00 00 0 xx) to NALU
 */
-int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize,
-                                                      uint8_t *outData,uint32_t outMaxSize)
+int ADM_convertFromAnnexBToMP4(uint8_t *inData, uint32_t inSize,
+                               uint8_t *outData,uint32_t outMaxSize)
 {
     uint8_t *tgt=outData;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK+1];
-    int nbNalu=ADM_splitNalu(inData,inData+inSize, MAX_NALU_PER_CHUNK,desc);
-    int nalHeaderSize=4;
+    int nbNalu=ADM_splitNalu(inData,inData+inSize,MAX_NALU_PER_CHUNK,desc);
+    const int nalHeaderSize=4;
     int outputSize=0;
 
 

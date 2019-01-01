@@ -46,6 +46,7 @@ protected:
         uint8_t         *myExtra;
         uint32_t        myExtraLen;
         bool            _init;
+        bool            h265;
         bool            compactNalus(ADMBitstream *out);
         int             convertFromAnnexB(uint8_t *inData,uint32_t inSize,
                                                       uint8_t *outData,uint32_t outMaxSize);
@@ -91,7 +92,9 @@ protected:
 class ADM_videoStreamCopyAudRemover : public ADM_videoStreamCopy
 {
 protected:
-        bool             h265;
+        bool            h265;
+        int             carryover;
+        uint8_t         scratchpad[ADM_COPY_FROM_ANNEX_B_SIZE];
 public:
                         ADM_videoStreamCopyAudRemover(uint64_t startTime,uint64_t endTime);
         virtual         ~ADM_videoStreamCopyAudRemover();

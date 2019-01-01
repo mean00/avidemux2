@@ -48,12 +48,6 @@ extern  HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *parser);
 
 #include "../include/ADM_h265_tag.h"
 
-extern bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
-                                    uint32_t *outLen, uint8_t *outData);
-extern bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
-                uint8_t * outstartcode, uint32_t * offset);
-
-
 /**
  */
 class H265Parser
@@ -283,7 +277,7 @@ bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSinfoH265 *spsinfo)
 }
 
 /**
-    \fn ADM_findNalu
+    \fn ADM_findNaluH265
     \brief lookup for a specific NALU in the given buffer
 */
 NALU_descriptor *ADM_findNaluH265(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc)
@@ -297,13 +291,47 @@ NALU_descriptor *ADM_findNaluH265(uint32_t nalu,uint32_t maxNalu,NALU_descriptor
 }
 
 /**
-    \fn ADM_splitNalu
-    \brief split a nalu annexb size into a list of nalu descriptor
+    \fn writeBE32
 */
-extern int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeLen);
-
-int ADM_splitNaluH265(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
+static void writeBE32(uint8_t *p, uint32_t size)
 {
-    return ADM_splitNalu_internal(start,end,maxNalu,desc,5); //  FOR h265 assume long start code
+    p[0]=size>>24;
+    p[1]=(size>>16)&0xff;
+    p[2]=(size>>8)&0xff;
+    p[3]=(size>>0)&0xff;
+}
+
+/**
+    \fn ADM_convertFromAnnexBToMP4H265
+    \brief convert annexB startcode (00 00 00 0 xx) to NALU
+*/
+int ADM_convertFromAnnexBToMP4H265(uint8_t *inData, uint32_t inSize, uint8_t *outData, uint32_t outMaxSize)
+{
+    uint8_t *tgt=outData;
+    NALU_descriptor desc[MAX_NALU_PER_CHUNK+1];
+    int nbNalu=ADM_splitNalu(inData,inData+inSize,MAX_NALU_PER_CHUNK,desc);
+    const int nalHeaderSize=4;
+    int outputSize=0;
+
+    for(int i=0;i<nbNalu;i++)
+    {
+        NALU_descriptor *d=desc+i;
+        aprintf("%d/%d : Nalu :0x%x size=%d\n",i,nbNalu,d->nalu,d->size);
+        switch((d->nalu>>1)&0x3f)
+        {
+            case NAL_H265_FD_NUT:
+            case NAL_H265_AUD:
+                break;
+            default:
+                writeBE32(tgt,1+d->size);
+                tgt[nalHeaderSize]=d->nalu;
+                memcpy(tgt+1+nalHeaderSize,d->start,d->size);
+                tgt+=d->size+1+nalHeaderSize;
+                break;
+        }
+        outputSize=tgt-outData;
+        ADM_assert(outputSize<outMaxSize);
+    }
+    return outputSize;
 }
 // EOF
