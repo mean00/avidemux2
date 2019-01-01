@@ -13,6 +13,11 @@ Section "Avidemux Core" SecCore
     ${File} "./Build Info.txt"
     ${File} "./ChangeLog.html"
     ${File} "./change.css"
+
+    ${File} ${BINARY_FOLDER}/libcrypto-1_1.dll
+    ${File} ${BINARY_FOLDER}/libssl-1_1.dll
+    ${File} ${BINARY_FOLDER}/libpcre2-16-0.dll
+
     ${File} ${BINARY_FOLDER}/libexpat-1.dll
     ${File} ${BINARY_FOLDER}/libffi-6.dll
     ${File} ${BINARY_FOLDER}/libglib-2.0-0.dll
@@ -48,7 +53,7 @@ Section "Avidemux Core" SecCore
     #${File} ${BINARY_FOLDER}/icutu56.dll  
     #${File} ${BINARY_FOLDER}/icuuc56.dll
     ${File} ${BINARY_FOLDER}/libintl-8.dll
-# SSL
+# SSL still needed ?
     ${File} ${BINARY_FOLDER}/libeay32.dll
     ${File} ${BINARY_FOLDER}/ssleay32.dll
         
