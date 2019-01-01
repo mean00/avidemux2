@@ -40,7 +40,10 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}/Qt5Widgets.dll
     ${File} ${BINARY_FOLDER}/Qt5Network.dll
     ${File} ${BINARY_FOLDER}/Qt5WinExtras.dll
-    #${File} ${BINARY_FOLDER}/libicudt51.dll 
+    SetOutPath $INSTDIR\styles
+    ${File} ${BINARY_FOLDER}/styles/qwindowsvistastyle.dll
+    SetOutPath $INSTDIR
+#${File} ${BINARY_FOLDER}/libicudt51.dll 
     #${File} ${BINARY_FOLDER}/libicuin51.dll  
     #${File} ${BINARY_FOLDER}/libicuio51.dll  
     #${File} ${BINARY_FOLDER}/libicule51.dll  
