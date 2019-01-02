@@ -59,6 +59,9 @@ Section "Avidemux Core" SecCore
     SetOutPath $INSTDIR\platforms
     ${File} ${BINARY_FOLDER}\platforms\qminimal.dll  
     ${File} ${BINARY_FOLDER}\platforms\qwindows.dll
+    SetOutPath $INSTDIR\styles
+    ${File} ${BINARY_FOLDER}\styles\qwindowsvistastyle.dll
+
     SetOutPath $INSTDIR
 # adm
     ${File} ${BINARY_FOLDER}\ADM_audioParser6.dll
