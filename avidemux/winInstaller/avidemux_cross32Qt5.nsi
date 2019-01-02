@@ -10,7 +10,7 @@ Section "Avidemux Core" SecCore
     SectionIn 1 2 RO
     SetOutPath $INSTDIR
     SetOverwrite on
-    ${File} "./Build Info.txt"
+    ${File} "./Build-Info.txt"
     ${File} "./ChangeLog.html"
     ${File} "./change.css"
 

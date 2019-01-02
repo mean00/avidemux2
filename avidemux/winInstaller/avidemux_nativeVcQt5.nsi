@@ -8,9 +8,9 @@ Section "Avidemux Core" SecCore
     SectionIn 1 2 RO
     SetOutPath $INSTDIR
     SetOverwrite on
-    ${File} "Build Info.txt"
-    ${File} "change.css"
-    ${File} "ChangeLog.html"
+    ${File} .\Build-Info.txt
+    ${File} .\change.css
+    ${File} .\ChangeLog.html
 
     
     ${File} ${BINARY_FOLDER}\avcodec-58.dll
