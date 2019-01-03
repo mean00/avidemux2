@@ -1,7 +1,8 @@
 /** *************************************************************************
     \file       ADM_nativeAv.cpp
     \brief      Native AVISynth demuxer
-    copyright            : (C) 2018 by mean
+                contains code derived from Avs2YUV by Loren Merritt
+    copyright            : (C) 2019 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
