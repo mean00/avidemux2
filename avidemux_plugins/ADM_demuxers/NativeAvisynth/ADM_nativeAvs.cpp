@@ -25,31 +25,64 @@
 
 /**
 */
-const AVS_Linkage *AVS_linkage = 0;
-IScriptEnvironment*     env=NULL;
+const AVS_Linkage   *AVS_linkage = 0;
+static IScriptEnvironment  *env=NULL;
+static bool        tried = false;
 #if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
 #endif
-
 #define nbImage _videostream.dwLength 
 
+typedef IScriptEnvironment * __stdcall DLLFUNC(int);
+
+/**
+*/
+static bool tryColdInit(void)
+{
+    DLLFUNC *CreateScriptEnvironment = NULL;    
+    ADM_info("Loading Avisynth.dll \n");
+    HMODULE instance = LoadLibrary("avisynth.dll");
+    if (!instance)
+    {
+        ADM_warning("Cannot load avisynth dll\n");
+        return false;
+    }
+    ADM_info("Avisynth.dll loaded\n");
+    CreateScriptEnvironment = (DLLFUNC *)GetProcAddress(instance, "CreateScriptEnvironment");
+    if (!CreateScriptEnvironment)
+    {
+        ADM_warning("failed to load CreateScriptEnvironment()\n");
+        return false;
+    }
+    try
+    {
+        env = CreateScriptEnvironment(AVISYNTH_INTERFACE_VERSION);
+        if (!env)
+        {
+            ADM_warning("Create Env failed\n");
+            return false;
+        }
+        AVS_linkage = env->GetAVSLinkage();
+    }
+    catch (AvisynthError err)
+    {
+        ADM_warning("Avisynth error:\n%s\n", err.msg);
+        return false;
+    }
+    return true;
+}
 /**
 */
 static bool coldInit(void)
 {
-        if (!env)
-        {
-                env = CreateScriptEnvironment(AVISYNTH_INTERFACE_VERSION);
-                if (!env)
-                {
-                        ADM_warning("Cannot open avisynth dll env\n");
-                        return false;
-                }
-                AVS_linkage = env->GetAVSLinkage();
-        }
-        return true;
+    if (!tried)
+    {
+        tried = true;
+        return tryColdInit();
+    }
+    return env!=NULL;
 }
 
 /**
@@ -123,8 +156,7 @@ uint8_t nativeAvsHeader::close(void)
 
 
  nativeAvsHeader::nativeAvsHeader( void ) : vidHeader()
-{
-   env=NULL;
+{ 
    clip = NULL;
    audioAccess = NULL;
    audioStream = NULL;
