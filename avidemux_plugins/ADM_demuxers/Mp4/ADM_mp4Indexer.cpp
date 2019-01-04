@@ -265,6 +265,7 @@ uint8_t	MP4Header::indexify(
 uint32_t i,j,cur;
 
         ADM_info("Build Track index\n");
+        track->index=NULL;
 	*outNbChunk=0;
 	aprintf("+_+_+_+_+_+\n");
 	aprintf("co : %lu sz: %lu sc: %lu co[0] %" PRIu64"\n",info->nbCo,info->nbSz,info->nbSc,info->Co[0]);
@@ -286,26 +287,25 @@ uint32_t i,j,cur;
         }
 	// We have different packet size
 	// Probably video
-        track->index=new MP4Index[info->nbSz];
-        memset(track->index,0,info->nbSz*sizeof(MP4Index));
-
-        if(info->SzIndentical) // Video, all same size (DV ?)
+        if(!isAudio || info->nbStts>1 || info->SttsC[0]!=1)
         {
-            aprintf("\t size for all %u frames : %u\n",info->nbSz,info->SzIndentical);
-            for(i=0;i<info->nbSz;i++)
+            track->index=new MP4Index[info->nbSz];
+            memset(track->index,0,info->nbSz*sizeof(MP4Index));
+
+            if(info->SzIndentical) // Video, all same size (DV ?)
             {
+                aprintf("\t size for all %u frames : %u\n",info->nbSz,info->SzIndentical);
+                for(i=0;i<info->nbSz;i++)
                     track->index[i].size=info->SzIndentical;
-                    
-            }
-          }
-          else // Different size
-          {
-            for(i=0;i<info->nbSz;i++)
+            }else // Different size
             {
+                for(i=0;i<info->nbSz;i++)
+                {
                     track->index[i].size=info->Sz[i];
                     aprintf("\t size : %d : %u\n",i,info->Sz[i]);
+                }
             }
-          }
+        }
 	// if no sample to chunk we map directly
 	// first build the # of sample per chunk table
         uint32_t totalchunk=0;
@@ -362,8 +362,10 @@ uint32_t i,j,cur;
 
 	// now we have for each chunk the number of sample in it
 	cur=0;
-	for(j=0;j<info->nbCo;j++)
+	if(track->index)
 	{
+	    for(j=0;j<info->nbCo;j++)
+	    {
 		int tail=0;
 		aprintf("--starting at %lu , %lu to go\n",info->Co[j],chunkCount[j]);
 		for(uint32_t k=0;k<chunkCount[j];k++)
@@ -374,8 +376,7 @@ uint32_t i,j,cur;
 			aprintf("Tail : %lu\n",tail);
 			cur++;
 		}
-
-
+            }
 	}
 
 	delete [] chunkCount;
@@ -411,8 +412,11 @@ uint32_t i,j,cur;
                         // All same duration
                         if(isAudio)
                         {
-                                 delete [] track->index;
-                                 track->index=NULL;
+                                 if(track->index)
+                                 {
+                                     delete [] track->index;
+                                     track->index=NULL;
+                                 }
                                  processAudio(track,trackScale,info,outNbChunk);
                                  return true;
                          } // video
