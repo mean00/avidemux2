@@ -190,7 +190,7 @@ MP4Index *idx=&(VDEO.index[framenum]);
     }
     if(!fread(img->data, (size_t)idx->size, 1, _fd))
     {
-        ADM_info("Incomplete frame %" PRIu32". Broken index?\n");
+        ADM_error("Incomplete frame %" PRIu32". Broken index?\n",framenum);
         return 0;
     }
     img->dataLength=idx->size;
