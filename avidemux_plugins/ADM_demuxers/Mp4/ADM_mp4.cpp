@@ -183,8 +183,16 @@ MP4Index *idx=&(VDEO.index[framenum]);
     uint64_t offset=idx->offset; //+_mdatOffset;
 
 
-    fseeko(_fd,offset,SEEK_SET);
-    fread(img->data, idx->size, 1, _fd);
+    if(fseeko(_fd,offset,SEEK_SET))
+    {
+        ADM_error("Seeking past the end of the file! Broken index?\n");
+        return 0;
+    }
+    if(!fread(img->data, (size_t)idx->size, 1, _fd))
+    {
+        ADM_info("Incomplete frame %" PRIu32". Broken index?\n");
+        return 0;
+    }
     img->dataLength=idx->size;
 	img->flags = idx->intra;
 
