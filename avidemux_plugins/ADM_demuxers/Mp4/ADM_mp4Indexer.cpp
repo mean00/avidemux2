@@ -366,7 +366,7 @@ uint32_t i,j,cur;
 	{
 	    for(j=0;j<info->nbCo;j++)
 	    {
-		int tail=0;
+		uint64_t tail=0;
 		aprintf("--starting at %lu , %lu to go\n",info->Co[j],chunkCount[j]);
 		for(uint32_t k=0;k<chunkCount[j];k++)
 		{
