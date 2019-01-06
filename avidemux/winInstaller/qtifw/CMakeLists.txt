@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.7)
 project(QTIFW)
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake" "${CMAKE_MODULE_PATH}")
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake/avidemuxVersion.cmake)
