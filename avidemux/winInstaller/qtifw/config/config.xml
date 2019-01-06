@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Avidemux VC++ 64 bits</Name>
+    <Version>2.7.2</Version>
+    <Title>Avidemux VC++ 64 bits -Installer</Title>
+    <Watermark>watermark.png</Watermark>
+    <Publisher>Mean</Publisher>
+    <StartMenuDir>Avidemux VC++ 64 bits</StartMenuDir>
+    <TargetDir>@ApplicationsDirX64@/Avidemux VC++ 64 bits</TargetDir>
+    <MaintenanceToolName>Uninstall Avidemux VC++</MaintenanceToolName>
+</Installer>
