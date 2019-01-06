@@ -1,0 +1,7 @@
+SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
+SET(ADM_VERSION "${CPACK_PACKAGE_VERSION_PATCH}")
+SET(ADM_FLAVOR "VC 64bits")
+SET(ApplicationsDirX64 "@ApplicationsDirX64@")
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config/config.xml.in ${CMAKE_BINARY_DIR}/config/config.xml @ONLY)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/packages/org.avidemux.run/meta/package.xml.in ${CMAKE_BINARY_DIR}/packages/org.avidemux.run/meta/package.xml @ONLY)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/packages/org.avidemux.dev/meta/package.xml.in ${CMAKE_BINARY_DIR}/packages/org.avidemux.dev/meta/package.xml @ONLY)
