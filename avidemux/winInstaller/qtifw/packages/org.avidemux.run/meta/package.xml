@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<Package>
-    <DisplayName>Avidemux VC++</DisplayName>
-    <Description>Main files</Description>
-    <Version>1.0.1</Version>
-    <ReleaseDate>2014-12-19</ReleaseDate>
-    <Default>true</Default>
-    <Script>installscript.js</Script>
-</Package>

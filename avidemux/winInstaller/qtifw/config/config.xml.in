@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
-    <Name>Avidemux VC++ 64 bits</Name>
-    <Version>2.7.2</Version>
-    <Title>Avidemux VC++ 64 bits -Installer</Title>
+    <Name>Avidemux @ADM_FLAVOR@</Name>
+    <Version>@ADM_VERSION@</Version>
+    <Title>Avidemux @ADM_FLAVOR@</Title>
     <Watermark>watermark.png</Watermark>
     <Publisher>Mean</Publisher>
-    <StartMenuDir>Avidemux VC++ 64 bits</StartMenuDir>
-    <TargetDir>@ApplicationsDirX64@/Avidemux VC++ 64 bits</TargetDir>
-    <MaintenanceToolName>Uninstall Avidemux VC++</MaintenanceToolName>
+    <StartMenuDir>Avidemux @ADM_FLAVOR@</StartMenuDir>
+    <TargetDir>@ApplicationsDirX64@/Avidemux @ADM_FLAVOR@</TargetDir>
+    <MaintenanceToolName>Uninstall Avidemux @ADM_FLAVOR@</MaintenanceToolName>
 </Installer>
