@@ -1,7 +1,7 @@
 #/bin/bash
 export src_path=$1
-export run_path="runtime"
-export dev_path="dev" 
+export run_path="packages/org.avidemux.run/data/"
+export dev_path="packages/org.avidemux.dev/data/" 
 
 if [ ! -d "$src_path" ]; then
 	echo "Source path does not exist"
