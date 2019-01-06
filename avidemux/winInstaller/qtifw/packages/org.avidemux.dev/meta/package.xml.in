@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Package>
-    <DisplayName>Dev files</DisplayName>
-    <Description>Avidemux development files, if you want to write plugins</Description>
-    <Version>@ADM_VERSION@</Version>
-    <ReleaseDate>2010-09-21</ReleaseDate>
-</Package>
