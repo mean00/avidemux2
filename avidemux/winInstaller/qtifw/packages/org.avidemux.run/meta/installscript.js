@@ -34,5 +34,16 @@ Component.prototype.createOperationsForArchive = function(archive)
 {
     // don't use the default operation
     component.createOperationsForArchive(archive);
-
+	component.addOperation("CreateShortcut",
+                "@TargetDir@/avidemux.exe",
+                "@StartMenuDir@/avidemux.lnk",
+                "workingDirectory=@TargetDir@");
+	component.addOperation("CreateShortcut",
+                "@TargetDir@/avidemux_jobs.exe",
+                "@StartMenuDir@/avidemux_jobs.lnk",
+                "workingDirectory=@TargetDir@");	
+	component.addOperation("CreateShortcut",
+                "@TargetDir@/@MaintenanceToolName@.exe",
+                "@StartMenuDir@/@MaintenanceToolName@.lnk",
+                "workingDirectory=@TargetDir@");	
 }

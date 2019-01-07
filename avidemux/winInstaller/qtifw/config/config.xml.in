@@ -5,7 +5,10 @@
     <Title>Avidemux @ADM_FLAVOR@</Title>
     <Watermark>watermark.png</Watermark>
     <Publisher>Mean</Publisher>
-    <StartMenuDir>Avidemux @ADM_FLAVOR@</StartMenuDir>
-    <TargetDir>@ApplicationsDirX64@/Avidemux @ADM_FLAVOR@</TargetDir>
+	<WizardStyle>Modern</WizardStyle>	
+	 <InstallerWindowIcon>avidemux</InstallerWindowIcon>
+    <InstallerApplicationIcon>avidemux</InstallerApplicationIcon>
+    <StartMenuDir>Avidemux @ADM_MENU_VERSION@ @ADM_FLAVOR@</StartMenuDir>
+    <TargetDir>@ApplicationsDirX64@/Avidemux @ADM_MENU_VERSION@ @ADM_FLAVOR@</TargetDir>
     <MaintenanceToolName>Uninstall Avidemux @ADM_FLAVOR@</MaintenanceToolName>
 </Installer>
