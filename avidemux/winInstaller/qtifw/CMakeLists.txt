@@ -34,6 +34,6 @@ ELSE(MSVC)
 ENDIF(MSVC)
 
 INSTALL(CODE "MESSAGE(STATUS \"Creating qt installer\")"
-        CODE "execute_process (COMMAND ${PREFIX_CMD} ${ACTUAL_CMD} -c config/config.xml  -p packages \"Avidemux ${ADM_FLAVOR} ${ADM_VERSION} ${ADM_EXTRA}\"
+        CODE "execute_process (COMMAND ${PREFIX_CMD} ${ACTUAL_CMD} -c config/config.xml  -p packages \"Avidemux_${ADM_VERSION} ${ADM_FLAVOR} ${ADM_EXTRA}\"
                             RESULT_VARIABLE result ERROR_VARIABLE error_var)"
     )
