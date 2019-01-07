@@ -265,7 +265,6 @@ uint8_t	MP4Header::indexify(
 uint32_t i,j,cur;
 
         ADM_info("Build Track index\n");
-        track->index=NULL;
 	*outNbChunk=0;
 	aprintf("+_+_+_+_+_+\n");
 	aprintf("co : %lu sz: %lu sc: %lu co[0] %" PRIu64"\n",info->nbCo,info->nbSz,info->nbSc,info->Co[0]);
@@ -278,32 +277,26 @@ uint32_t i,j,cur;
         {
           ADM_assert(info->Sz);
         }
-        //*********************************************************
-	// in that case they are all the same size, i.e.audio
-        //*********************************************************
-	if(info->SzIndentical && isAudio)// in that case they are all the same size, i.e.audio
-	{
-           //return  processAudio(track,trackScale,info,outNbChunk);
-        }
-	// We have different packet size
-	// Probably video
-        if(!isAudio || info->nbStts>1 || info->SttsC[0]!=1)
-        {
-            track->index=new MP4Index[info->nbSz];
-            memset(track->index,0,info->nbSz*sizeof(MP4Index));
 
-            if(info->SzIndentical) // Video, all same size (DV ?)
+        // Audio with all samples of the same size and regular
+        if(info->SzIndentical && isAudio && info->nbStts==1 && info->SttsC[0]==1)
+            return processAudio(track,trackScale,info,outNbChunk);
+
+        // Audio with variable sample size or video
+        track->index=new MP4Index[info->nbSz];
+        memset(track->index,0,info->nbSz*sizeof(MP4Index));
+
+        if(info->SzIndentical) // Video, all same size (DV ?)
+        {
+            aprintf("\t size for all %u frames : %u\n",info->nbSz,info->SzIndentical);
+            for(i=0;i<info->nbSz;i++)
+                track->index[i].size=info->SzIndentical;
+        }else // Different size
+        {
+            for(i=0;i<info->nbSz;i++)
             {
-                aprintf("\t size for all %u frames : %u\n",info->nbSz,info->SzIndentical);
-                for(i=0;i<info->nbSz;i++)
-                    track->index[i].size=info->SzIndentical;
-            }else // Different size
-            {
-                for(i=0;i<info->nbSz;i++)
-                {
-                    track->index[i].size=info->Sz[i];
-                    aprintf("\t size : %d : %u\n",i,info->Sz[i]);
-                }
+                track->index[i].size=info->Sz[i];
+                aprintf("\t size : %d : %u\n",i,info->Sz[i]);
             }
         }
 	// if no sample to chunk we map directly
@@ -362,22 +355,19 @@ uint32_t i,j,cur;
 
 	// now we have for each chunk the number of sample in it
 	cur=0;
-	if(track->index)
-	{
-	    for(j=0;j<info->nbCo;j++)
-	    {
-		uint64_t tail=0;
-		aprintf("--starting at %lu , %lu to go\n",info->Co[j],chunkCount[j]);
-		for(uint32_t k=0;k<chunkCount[j];k++)
-		{
-                        track->index[cur].offset=info->Co[j]+tail;
-                        tail+=track->index[cur].size;
-                        aprintf(" sample : %d offset : %lu\n",cur,track->index[cur].offset);
-			aprintf("Tail : %lu\n",tail);
-			cur++;
-		}
+        for(j=0;j<info->nbCo;j++)
+        {
+            uint64_t tail=0;
+            aprintf("--starting at %lu , %lu to go\n",info->Co[j],chunkCount[j]);
+            for(uint32_t k=0;k<chunkCount[j];k++)
+            {
+                track->index[cur].offset=info->Co[j]+tail;
+                tail+=track->index[cur].size;
+                aprintf(" sample : %d offset : %lu\n",cur,track->index[cur].offset);
+                aprintf("Tail : %lu\n",tail);
+                cur++;
             }
-	}
+        }
 
 	delete [] chunkCount;
         
@@ -389,74 +379,54 @@ uint32_t i,j,cur;
 	// the unit is us FIXME, probably said in header
 	// we put each sample duration in the time entry
 	// then sum them up to get the absolute time position
+        if(!info->nbStts)
+        {
+            ADM_warning("No time-to-sample table (stts) found.\n");
+            return 0;
+        }
 
         uint32_t nbChunk=track->nbIndex;
-	if(info->nbStts )		//uint32_t nbStts,	uint32_t *SttsN,uint32_t SttsC,
-	{
-		uint32_t start=0;
-		if(info->nbStts>1 ||  info->SttsC[0]!=1)
-		{
-			for(uint32_t i=0;i<info->nbStts;i++)
-			{
-				for(uint32_t j=0;j<info->SttsN[i];j++)
-				{
-                                        track->index[start].dts=(uint64_t)info->SttsC[i];
-                                        track->index[start].pts=ADM_COMPRESSED_NO_PTS;
-					start++;
-					ADM_assert(start<=nbChunk);
-				}	
-			}
-		}
-		else
-		{
-                        // All same duration
-                        if(isAudio)
-                        {
-                                 if(track->index)
-                                 {
-                                     delete [] track->index;
-                                     track->index=NULL;
-                                 }
-                                 processAudio(track,trackScale,info,outNbChunk);
-                                 return true;
-                         } // video
-                         {
+        uint32_t start=0;
+        if(info->nbStts>1 || info->SttsC[0]!=1)
+        {
+            for(uint32_t i=0;i<info->nbStts;i++)
+            {
+                for(uint32_t j=0;j<info->SttsN[i];j++)
+                {
+                    track->index[start].dts=(uint64_t)info->SttsC[i];
+                    track->index[start].pts=ADM_COMPRESSED_NO_PTS;
+                    start++;
+                    ADM_assert(start<=nbChunk);
+                }
+            }
+        }else // All same duration
+        {
+            for(uint32_t i=0;i<nbChunk;i++)
+            {
+                track->index[i].dts=(uint64_t)info->SttsC[0]; // this is not an error!
+                track->index[i].pts=ADM_COMPRESSED_NO_PTS;
+            }
+        }
 
-                            for(uint32_t i=0;i<nbChunk;i++)
-                            {
-                                track->index[i].dts=(uint64_t)info->SttsC[0]; // this is not an error!
-                                track->index[i].pts=ADM_COMPRESSED_NO_PTS;
-                            }
-                         }
-		
-		}
-                if(isAudio)
-                     splitAudio(track,info, trackScale);
-		// now collapse
-		uint64_t total=0;
-		double   ftot;
-		uint32_t thisone;
-		
-		for(uint32_t i=0;i<nbChunk;i++)
-		{
-                        thisone=track->index[i].dts;
-			ftot=total;
-			ftot*=1000.*1000.;
-			ftot/=trackScale;
-                        track->index[i].dts=(uint64_t)floor(ftot);
-                        track->index[i].pts=ADM_COMPRESSED_NO_PTS;
-			total+=thisone;
-                        aprintf("Audio chunk : %lu time :%lu\n",i,track->index[i].dts);
-		}
-		// Time is now built, it is in us
-	
-	
-	}
-	else // there is not ssts
-	{
-          //GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4demuxer","No stts table"), NULL);
-          return false;
-	}
+        if(isAudio)
+            splitAudio(track,info, trackScale);
+        // now collapse
+        uint64_t total=0;
+        double   ftot;
+        uint32_t thisone;
+
+        for(uint32_t i=0;i<nbChunk;i++)
+        {
+            thisone=track->index[i].dts;
+            ftot=total;
+            ftot*=1000.*1000.;
+            ftot/=trackScale;
+            track->index[i].dts=(uint64_t)floor(ftot);
+            track->index[i].pts=ADM_COMPRESSED_NO_PTS;
+            total+=thisone;
+            aprintf("Audio chunk : %lu time :%lu\n",i,track->index[i].dts);
+        }
+        // Time is now built, it is in us
         ADM_info("Index done\n");
 	return true;
 }
