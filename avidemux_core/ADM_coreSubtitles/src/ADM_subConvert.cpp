@@ -26,11 +26,13 @@ static char buffer[256];
 uint32_t ms=(uint32_t)(ams/1000);
     uint32_t hh,mm,ss,mms;
     if(ams==ADM_NO_PTS)
-        sprintf(buffer,"xx:xx:xx.xxx");
+        sprintf(buffer,"xx:xx:xx.xx");
     else    
     {
+        ms+=5;
         ms2time(ms,&hh,&mm,&ss,&mms);
-        sprintf(buffer,"%01" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,mms);
+        mms/=10;
+        sprintf(buffer,"%01" PRIu32":%02" PRIu32":%02" PRIu32".%02" PRIu32,hh,mm,ss,mms);
     }
     return buffer;
 
