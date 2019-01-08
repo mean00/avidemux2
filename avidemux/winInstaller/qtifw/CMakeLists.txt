@@ -4,12 +4,23 @@ SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake" "${CMAKE_MODU
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake/avidemuxVersion.cmake)
 SET(ADM_VERSION "${AVIDEMUX_VERSION}")
 SET(ADM_MENU_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}")
-SET(ADM_FLAVOR "VC++ 64bits")
+IF (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    SET(ADM_FLAVOR "64bits")
+    SET(ApplicationsDirX64 "@ApplicationsDirX64@")
+ELSE (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    SET(ADM_FLAVOR "32bits")
+    SET(ApplicationsDirX64 "@ApplicationsDir@")
+ENDIF (CMAKE_SIZEOF_VOID_P EQUAL 8)
+
+IF(MSVC)
+    SET(ADM_FLAVOR "VC++ ${ADM_FLAVOR}")
+ELSE(MSVC)
+ENDIF(MSVC)
+
 IF(NOT RELEASE)
     ADM_TIMESTAMP(date)
     SET(ADM_EXTRA "${date}")
 ENDIF(NOT RELEASE)
-SET(ApplicationsDirX64 "@ApplicationsDirX64@")
 
 MESSAGE(STATUS "Creating installer framework for ${ADM_FLAVOR}, version ${ADM_VERSION}")
 
