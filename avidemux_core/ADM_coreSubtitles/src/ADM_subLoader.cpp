@@ -66,7 +66,11 @@ static bool splitSrtTiming(const char *str,uint64_t &start,uint64_t &end )
     int n=sscanf(str,"%d:%d:%d,%d --> %d:%d:%d,%d",&h1,&m1,&s1,&ms1,&h2,&m2,&s2,&ms2);
     if(n!=8)
     {
-        return false;
+        n=sscanf(str,"%d:%d:%d.%d --> %d:%d:%d.%d",&h1,&m1,&s1,&ms1,&h2,&m2,&s2,&ms2);
+        if(n==8)
+            ADM_warning("Wrong decimal separator in .srt file, should be comma, not period.\n");
+        else
+            return false;
     }
     start=split2us(h1,m1,s1,ms1);
     end=split2us(h2,m2,s2,ms2);
@@ -117,6 +121,8 @@ bool loadSrt(const char *file,ListOfSubtitleLines &lines)
     {
         if(!fgets(buffer,1023,fd)) 
         {
+            if(entry.texts.size())
+                lines.push_back(entry);
             break;
         }
         int length=strlen(buffer);
@@ -125,14 +131,11 @@ bool loadSrt(const char *file,ListOfSubtitleLines &lines)
         while((*p=='\n' || *p=='\r')&& (p>buffer)) p--;
         p[1]=0;
         length=strlen(buffer);
-        
-        int lineno;
-        printf("%d\n",state);
+        // printf("%d\n",state);
         switch(state)
         {
             case STATE_LINENO: 
                         if(!length) continue;
-                        lineno=atoi(buffer);
                         state=STATE_TIMING;
                         break;
             case STATE_TIMING:
@@ -160,8 +163,8 @@ bool loadSrt(const char *file,ListOfSubtitleLines &lines)
                             lines.push_back(entry);
                             entry.texts.clear();
                             state=STATE_LINENO;
+                            break;
                         }
-                        
                         entry.texts.push_back(std::string(buffer));
                         break;
             case STATE_IDLE: break;                        
