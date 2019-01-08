@@ -65,6 +65,13 @@ void initTranslator(void)
 }
 
 #define HIDE_STRING_FROM_QT(domainname, msgid)  QApplication::translate(domainname, msgid) // to hide string from lupdate so a true test can be conducted
+static std::string flavor=std::string(
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+        "qt4"
+#else
+        "qt5"
+#endif
+);
 
 void loadTranslator(void)
 {
@@ -84,11 +91,6 @@ void loadTranslator(void)
         ADM_info("Language forced \n");
     }
     ADM_info("Initializing language %s\n",lang.c_str());
-#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
-        const std::string flavor="qt4";
-#else
-        const std::string flavor="qt5";
-#endif
     std::string i18nFolder=ADM_getI8NDir(flavor);
     ADM_info("Translation folder is <%s>\n",i18nFolder.c_str());
     QString appdir = QString(i18nFolder.c_str());
