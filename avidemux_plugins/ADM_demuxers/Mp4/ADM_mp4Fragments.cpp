@@ -128,7 +128,7 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                             info.baseOffset=moofStart;
                             aprintf("base is moof at %llx\n",(long long int)info.baseOffset);
                     }
-                    trackIndex=lookupIndex(info.sampleDesc);
+                    trackIndex=lookupIndex((!info.trackID)? 0 : info.trackID-1);
                     if(-1==trackIndex)
                     {
                         ADM_warning("Cannot find track for %d\n",info.sampleDesc);
