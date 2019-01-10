@@ -7,5 +7,6 @@ extern const ADM_paramList ass_ssa_param[]={
  {"extractEmbeddedFonts",offsetof(ass_ssa,extractEmbeddedFonts),"uint32_t",ADM_param_uint32_t},
  {"topMargin",offsetof(ass_ssa,topMargin),"uint32_t",ADM_param_uint32_t},
  {"bottomMargin",offsetof(ass_ssa,bottomMargin),"uint32_t",ADM_param_uint32_t},
+ {"displayAspectRatio",offsetof(ass_ssa,displayAspectRatio),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };
