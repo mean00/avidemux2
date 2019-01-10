@@ -75,7 +75,7 @@ bool srt2ssa(subtitleTextEntry &in,subtitleTextEntry &out)
         strcpy(buffer2,in.texts[0].c_str());
         for(int i=1;i<m;i++)
         {
-               strcat(buffer2,"\\n") ;
+               strcat(buffer2,"\\N") ;
                strcat(buffer2,in.texts[i].c_str());
         }
     
