@@ -104,9 +104,10 @@ bool       ADM_subtitle::srt2ssa()
     ADM_info("Converted %d entries\n",_list.size());
     return true;
 }
-static void writeSSAHeader(FILE *f)
+static void writeSSAHeader(FILE *f, int w, int h)
 {
 #define W(x) fprintf(f,x"\n");
+#define WINT(x,y) fprintf(f,x"\n",y);
 W("[Script Info]");
 W("Title:");
 W("Original Script:");
@@ -118,15 +119,28 @@ W("Script Updated By:");
 W("Update Details:");
 W("ScriptType: v4.00+");
 W("Collisions: Normal");
-W("PlayResY:");
-W("PlayResX:");
+
+#define LIBASS_DEFAULT_WIDTH 384
+#define LIBASS_DEFAULT_HEIGHT 288
+
+    // sanity check
+    if(w < LIBASS_DEFAULT_WIDTH)
+        W("PlayResX:")
+    else
+        WINT("PlayResX: %d",w)
+
+    if(h < LIBASS_DEFAULT_HEIGHT)
+        W("PlayResY:")
+    else
+        WINT("PlayResY: %d",h)
+
 W("PlayDepth:");
 W("Timer: 100.0000");
 W("WrapStyle:");
 W("");
 W("[V4+ Styles]");
 W("Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding");
-W("Style: Default,Arial,18,&H00ffffff,&H0000ffff,&H00000000,&H00000000,0,0,0,0,100,100,0,0.00,1,2,2,2,30,30,10,0");
+W("Style: Default,Arial,30,&H00ffffff,&H0000ffff,&H00000000,&H00000000,0,0,0,0,100,100,0,0.00,1,2,2,2,30,30,10,0");
 W("");
 W("[Events]");
 W("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text")
@@ -135,7 +149,7 @@ W("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Te
 /**
  *      \fn saveAsSSA
  */
-bool       ADM_subtitle::saveAsSSA(const char *out)
+bool       ADM_subtitle::saveAsSSA(const char *out, int width, int height)
 {
     ListOfSubtitleLines converted;
     if(_type!=SUB_TYPE_SSA)
@@ -150,7 +164,7 @@ bool       ADM_subtitle::saveAsSSA(const char *out)
         ADM_warning("Cannot create <%s>\n",out);
         return false;
     }
-    writeSSAHeader(file);
+    writeSSAHeader(file,width,height);
     for(int i=0;i<n;i++)
     {
         subtitleTextEntry &in=_list[i];
