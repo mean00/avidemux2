@@ -1087,6 +1087,7 @@ void cleanUp (void)
  * @return 
  */
 #define DEFAULT_SETTINGS_FILE ADM_getBaseDir()+std::string("defaultSettings.py")
+#define CRASH_RECOVERY_FILE ADM_getBaseDir()+std::string("crash.py")
 bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode)
 {
     bool ret;
@@ -1104,7 +1105,9 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
         video_body->setProjectName(longname);
     }
 
-    if (std::string(longname) != DEFAULT_SETTINGS_FILE && std::string(longname) != LAST_SESSION_FILE)
+    if (std::string(longname) != DEFAULT_SETTINGS_FILE &&
+        std::string(longname) != LAST_SESSION_FILE &&
+        std::string(longname) != CRASH_RECOVERY_FILE)
     {
         prefs->set_lastprojectfile(longname);
         UI_updateRecentProjectMenu();
