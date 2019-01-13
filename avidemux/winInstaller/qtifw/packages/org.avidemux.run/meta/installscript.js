@@ -26,9 +26,105 @@
 **
 **************************************************************************/
 
-function Component()
+// Derived from dynamic page example
+
+var ComponentSelectionPage = null;
+var update=false;
+
+function Controller()
 {
+ installer.setMessageBoxAutomaticAnswer("OverwriteTargetDirectory", QMessageBox.Yes);
 }
+var Dir = new function () {
+    this.toNativeSparator = function (path) {
+        if (systemInfo.productType === "windows")
+            return path.replace(/\//g, '\\');
+        return path;
+    }
+};
+
+function Component() 
+{
+	console.log("xxxxxxxxxxxx");
+    if (installer.isInstaller()) 
+	{		
+		update=false;
+        component.loaded.connect(this, Component.prototype.installerLoaded);
+        ComponentSelectionPage = gui.pageById(QInstaller.ComponentSelection);
+		
+		var text=installer.value( "TargetDir");
+		if (installer.fileExists(text + "/components.xml")) 
+		{							
+			update=true;
+		}        
+
+        installer.setDefaultPageVisible(QInstaller.TargetDirectory, !update);
+        installer.setDefaultPageVisible(QInstaller.ComponentSelection, !update);
+        installer.setDefaultPageVisible(QInstaller.LicenseCheck, !update);
+        if (systemInfo.productType === "windows")
+            installer.setDefaultPageVisible(QInstaller.StartMenuSelection, !update);
+        installer.setDefaultPageVisible(QInstaller.ReadyForInstallation, false);
+    }
+}
+Component.prototype.installerLoaded = function () 
+{
+/*
+	if(update==true)
+	{	
+		QMessageBox.question("quit.question","zzz" , text, QMessageBox.Yes);     
+	}
+	*/
+/*
+	 if (installer.addWizardPage(component, "TargetWidget", QInstaller.TargetDirectory)) 
+	 {
+        var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
+        if (widget != null) {
+            widget.targetChooser.clicked.connect(this, Component.prototype.chooseTarget);
+            widget.targetDirectory.textChanged.connect(this, Component.prototype.targetChanged);
+
+            widget.windowTitle = "Installation Folder";
+            widget.targetDirectory.text = Dir.toNativeSparator(installer.value("TargetDir"));
+        }
+    }
+	*/
+}
+Component.prototype.targetChanged = function (text) {
+/*
+    var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
+	 
+    if (widget != null && text != "") 
+	{
+	   if (installer.fileExists(text + "/components.xml")) 
+		{				
+			QMessageBox.question("quit.question","zzz" , text, QMessageBox.Yes);     
+			installer.setValue("TargetDir", text);
+			update=true;
+			widget.complete = true;
+		}    
+    }
+	if(update==false)
+	{
+		installer.setDefaultPageVisible(QInstaller.ComponentSelection, true);
+        installer.setDefaultPageVisible(QInstaller.LicenseCheck, true);
+        if (systemInfo.productType === "windows")
+            installer.setDefaultPageVisible(QInstaller.StartMenuSelection, true);
+	}else
+	{
+	  gui.clickButton(buttons.NextButton); 
+	}
+	*/
+}
+
+Component.prototype.chooseTarget = function () {
+	QMessageBox.question("quit.question", "chooseTarget",  QMessageBox.Yes);
+    var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
+    if (widget != null) {
+        var newTarget = QFileDialog.getExistingDirectory("Choose your target directory.", widget.targetDirectory.text);
+        if (newTarget != "")
+            widget.targetDirectory.text = Dir.toNativeSparator(newTarget);
+    }
+}
+
 
 Component.prototype.createOperationsForArchive = function(archive)
 {

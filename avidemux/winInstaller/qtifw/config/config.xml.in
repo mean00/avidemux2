@@ -11,4 +11,5 @@
     <StartMenuDir>Avidemux @ADM_MENU_VERSION@ @ADM_FLAVOR@</StartMenuDir>
     <TargetDir>@ApplicationsDirX64@/Avidemux @ADM_MENU_VERSION@ @ADM_FLAVOR@</TargetDir>
     <MaintenanceToolName>Uninstall Avidemux @ADM_FLAVOR@</MaintenanceToolName>
+
 </Installer>

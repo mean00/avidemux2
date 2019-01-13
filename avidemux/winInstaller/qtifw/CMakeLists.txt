@@ -34,6 +34,7 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/packages/org.avidemux.dev/meta/packag
 #
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/packages/org.avidemux.run/meta/license.txt ${CMAKE_BINARY_DIR}/packages/org.avidemux.run/meta/license.txt  COPYONLY)
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/packages/org.avidemux.run/meta/installscript.js  ${CMAKE_BINARY_DIR}/packages/org.avidemux.run/meta/installscript.js   COPYONLY)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/packages/org.avidemux.run/meta/targetwidget.ui  ${CMAKE_BINARY_DIR}/packages/org.avidemux.run/meta/targetwidget.ui   COPYONLY)
 #
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/packages/org.avidemux.dev/meta/installscript.qs ${CMAKE_BINARY_DIR}/packages/org.avidemux.dev/meta/installscript.qs  COPYONLY)
 
