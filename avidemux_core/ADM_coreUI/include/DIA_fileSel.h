@@ -24,7 +24,7 @@ typedef void SELFILE_CB(const char *);
 typedef void    DIA_FILE_SEL_CB(const char *label,SELFILE_CB *cb);
 typedef void    DIA_FILE_SEL_CB_EXTENSION(const char *label,const char *extension,SELFILE_CB *cb);
 typedef void    DIA_FILE_SEL_NAME(const char *label, char * * name);
-typedef uint8_t DIA_FILE_SELECT(const char *title,char *target,uint32_t max, const char *source);
+typedef uint8_t DIA_FILE_SELECT(const char *title,char *target,uint32_t max, const char *source, const char *extension);
 typedef void	DIA_FILE_INIT(void);
 
 // Old FileSel interface
@@ -37,8 +37,8 @@ ADM_COREUI6_EXPORT void GUI_FileSelWrite(const char *label, char * * name);
 
 
 // New FileSel interface, the receiving buffer is allocated by the caller
-ADM_COREUI6_EXPORT uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const char *source);
-ADM_COREUI6_EXPORT uint8_t FileSel_SelectRead(const char *title,char *target,uint32_t max, const char *source);
+ADM_COREUI6_EXPORT uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const char *source, const char *extension=NULL);
+ADM_COREUI6_EXPORT uint8_t FileSel_SelectRead(const char *title,char *target,uint32_t max, const char *source, const char *extension=NULL);
 ADM_COREUI6_EXPORT uint8_t FileSel_SelectDir(const char *title,char *target,uint32_t max, const char *source);
 ADM_COREUI6_EXPORT void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *actual_workbench_file);
 

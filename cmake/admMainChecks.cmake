@@ -165,10 +165,12 @@ IF(NOT PLUGINS)
 INCLUDE(admCheckMiscLibs)
 INCLUDE(FindThreads)
 
-INCLUDE(admCheckNvEnc)
+    if (NOT APPLE)
+        INCLUDE(admCheckNvEnc)
+        checkNvEnc()
+    endif (NOT APPLE)
 #INCLUDE(admCheckXvba)
 #checkXvba()
-checkNvEnc()
 ENDIF(NOT PLUGINS)
 
 ########################################

@@ -9,4 +9,5 @@ std::string fontDirectory;
 uint32_t extractEmbeddedFonts;
 uint32_t topMargin;
 uint32_t bottomMargin;
+uint32_t displayAspectRatio;
 }ass_ssa;
