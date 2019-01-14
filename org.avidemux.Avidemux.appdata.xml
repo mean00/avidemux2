@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2017 Adrien Vergé -->
 <component type="desktop-application">
-    <id>avidemux2.desktop</id>
+    <id>org.avidemux.Avidemux</id>
     <metadata_license>CC0</metadata_license>
     <name>Avidemux</name>
     <summary>Multi-purpose video editing and processing software</summary>
