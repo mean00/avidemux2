@@ -9,7 +9,7 @@
         <translation>A %s megnyitása sikertelen!</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+28"/>
         <source>width</source>
         <translation type="unfinished"></translation>
     </message>
@@ -66,20 +66,12 @@ ezek megmaradnak.
 Eldobjuk ezeket az időszinkron adatokat ?</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="-69"/>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="-75"/>
         <source>Cannot find a demuxer for %s</source>
         <translation>Nem található szétbontó ehhez: %s</translation>
     </message>
     <message>
-        <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
-1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
-2.) concatinate them together</source>
-        <translation type="vanished">Egyelőre a különböző videó méreteket nem lehet keverni. A részleges videó szűrő használata nem megoldás erre a problémára. A megoldás a következő:
-1) &quot;Átméretezés&quot;/ &quot; Keret hozzáadása&quot;/ &quot; Vágás &quot; minden műsor ugyanazzal a felbontással
-2) Összefűzni őket</translation>
-    </message>
-    <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatenate them together</source>
@@ -89,121 +81,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="-172"/>
         <source>Checking if timestamps are valid..</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4CoreUIToolkit</name>
-    <message>
-        <source>Alert</source>
-        <translation type="vanished">Figyelem</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation type="vanished">Információ</translation>
-    </message>
-    <message>
-        <source>Confirmation</source>
-        <translation type="vanished">Megerősítés</translation>
-    </message>
-    <message>
-        <source>Question</source>
-        <translation type="vanished">Kérdés</translation>
-    </message>
-    <message>
-        <source>Question?</source>
-        <translation type="vanished">Kérdés?</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4Factory::ADM_Qbitrate</name>
-    <message>
-        <source>Constant Bitrate</source>
-        <translation type="vanished">Konstans bitsebesség</translation>
-    </message>
-    <message>
-        <source>Constant Quantiser</source>
-        <translation type="vanished">Konstans kvantáló</translation>
-    </message>
-    <message>
-        <source>Same Quantiser as Input</source>
-        <translation type="vanished">Forráséval azonos kvantáló</translation>
-    </message>
-    <message>
-        <source>Constant Rate Factor</source>
-        <translation type="vanished">Konstans sebesség faktor</translation>
-    </message>
-    <message>
-        <source>Two Pass - Video Size</source>
-        <translation type="vanished">Adott videó méret 2 menettel</translation>
-    </message>
-    <message>
-        <source>Two Pass - Average Bitrate</source>
-        <translation type="vanished">átlagos bitsebesség 2 menettel</translation>
-    </message>
-    <message>
-        <source>Encoding mode</source>
-        <translation type="vanished">Kódolási mód</translation>
-    </message>
-    <message>
-        <source>Bitrate</source>
-        <translation type="vanished">Bitsebesség</translation>
-    </message>
-    <message>
-        <source>Target bitrate (kb/s)</source>
-        <translation type="vanished">cél bitsebesség (kb/s)</translation>
-    </message>
-    <message>
-        <source>Target video size (MB)</source>
-        <translation type="vanished">Cél videó mérete (MB)</translation>
-    </message>
-    <message>
-        <source>Average bitrate (kb/s)</source>
-        <translation type="vanished">átlagos bitsebesség (kb/s)</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="vanished">-</translation>
-    </message>
-    <message>
-        <source>Quantizer</source>
-        <translation type="vanished">Kvantáló</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_QthreadCount</name>
-    <message>
-        <source>Disabled</source>
-        <translation type="obsolete">Tiltva</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Automatikus felismerés</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">Egyéni</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qt4Factory::ADM_QthreadCount</name>
-    <message>
-        <source>Disabled</source>
-        <translation type="vanished">Tiltva</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="vanished">Automatikus felismerés</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="vanished">Egyéni</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtray</name>
-    <message>
-        <source>Open Avidemux</source>
-        <translation type="vanished">Avidemux megnyitása</translation>
     </message>
 </context>
 <context>
@@ -369,25 +246,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
     </message>
 </context>
 <context>
-    <name>DIA_encodingQt4</name>
-    <message>
-        <source>Shutting down</source>
-        <translation type="vanished">Leállítás</translation>
-    </message>
-    <message>
-        <source>The encoding is paused. Do you want to resume or abort?</source>
-        <translation type="vanished">A kódolás szünetel. Folytassuk, vagy hagyjuk abba??</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="vanished">Folytatás</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="vanished">Megszakítás</translation>
-    </message>
-</context>
-<context>
     <name>Dialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="+64"/>
@@ -419,10 +277,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <location line="+41"/>
         <source>Configure</source>
         <translation>Beállítás</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="vanished">Hangszűrők</translation>
     </message>
     <message>
         <location line="-105"/>
@@ -527,37 +381,32 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation type="unfinished">Párbeszédablak</translation>
     </message>
     <message>
-        <location line="+19"/>
-        <source>Cancel</source>
-        <translation type="unfinished">Mégsem</translation>
-    </message>
-    <message>
-        <location line="+7"/>
+        <location line="+33"/>
         <source>TimeLeft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-21"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+42"/>
         <source>ProcessImages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="-35"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+28"/>
         <source>Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-7"/>
         <source>0 fps</source>
         <translation type="unfinished"></translation>
     </message>
@@ -622,24 +471,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
     </message>
 </context>
 <context>
-    <name>GUIPlayback</name>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="vanished">Probléma a hangeszköz inicializálásánál</translation>
-    </message>
-</context>
-<context>
-    <name>MP4Header</name>
-    <message>
-        <source>Problem reading SVQ3 headers</source>
-        <translation type="vanished">Probléma a SVQ3 fejek olvasásánál</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="vanished">Nincs STTS tábla</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="+15"/>
@@ -647,7 +478,7 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation>Avidemux</translation>
     </message>
     <message>
-        <location line="+470"/>
+        <location line="+460"/>
         <location line="+169"/>
         <source>Copy</source>
         <translation>Másolás</translation>
@@ -708,10 +539,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <location line="+42"/>
         <source>?</source>
         <translation>?</translation>
-    </message>
-    <message>
-        <source>Selection</source>
-        <translation type="vanished">Kijelölés</translation>
     </message>
     <message>
         <location line="+128"/>
@@ -893,14 +720,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation>Nem&amp;régi</translation>
     </message>
     <message>
-        <source>Codec Options</source>
-        <translation type="vanished">Kódoló beállítás</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation type="vanished">&lt;b&gt;Videó dekódoló&lt;b&gt;</translation>
-    </message>
-    <message>
         <location line="+154"/>
         <location line="+7"/>
         <source>XXXX</source>
@@ -925,22 +744,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <location line="+212"/>
         <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
         <translation>&lt;b&gt;Kimeneti formátum&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Navigation</source>
-        <translation type="vanished">Navigálás</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Selection&lt;/b&gt;</source>
-        <translation type="vanished">&lt;b&gt;Kijelölés&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Volume</source>
-        <translation type="vanished">Hangerő</translation>
-    </message>
-    <message>
-        <source>Audio Metre</source>
-        <translation type="vanished">Hang méter</translation>
     </message>
     <message>
         <location line="+1046"/>
@@ -1110,29 +913,11 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
     </message>
 </context>
 <context>
-    <name>OpenDMLHeader</name>
-    <message>
-        <source>Malformed header</source>
-        <translation type="vanished">Hibás formátumú fejléc</translation>
-    </message>
-    <message>
-        <source>Unpacking bitstream</source>
-        <translation type="vanished">Bitsream kicsomagolása</translation>
-    </message>
-</context>
-<context>
     <name>Opus</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+254"/>
         <source>_Bitrate:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Question</source>
-        <translation type="vanished">Kérdés</translation>
     </message>
 </context>
 <context>
@@ -1156,128 +941,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <location line="+3"/>
         <source>Ctrl+Return</source>
         <translation>Ctrl+Return</translation>
-    </message>
-</context>
-<context>
-    <name>Telecide</name>
-    <message>
-        <source>No strategy</source>
-        <translation type="vanished">Nincs stratégia</translation>
-    </message>
-    <message>
-        <source>3:2 pulldown</source>
-        <translation type="vanished">3:2 pulldown</translation>
-    </message>
-    <message>
-        <source>PAL/SECAM</source>
-        <translation type="vanished">PAL/SECAM</translation>
-    </message>
-    <message>
-        <source>NTSC converted from PAL</source>
-        <translation type="vanished">PAL-ból konvertélt NTSC</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="vanished">Fent</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="vanished">Lent</translation>
-    </message>
-    <message>
-        <source>Never</source>
-        <translation type="vanished">Soha</translation>
-    </message>
-    <message>
-        <source>If still combed</source>
-        <translation type="vanished">Ha még összefésült</translation>
-    </message>
-    <message>
-        <source>Always</source>
-        <translation type="vanished">Mindig</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="vanished">Nincs</translation>
-    </message>
-    <message>
-        <source>None but compute</source>
-        <translation type="vanished">Nincs, de számítsa</translation>
-    </message>
-    <message>
-        <source>Postproc on best match</source>
-        <translation type="vanished">Utómunkálatok a legjobb egyezőségért</translation>
-    </message>
-    <message>
-        <source>Postproc and show zones (debug)</source>
-        <translation type="vanished">Utómunkálatok és zónák megjelenítése (hibakeresés)</translation>
-    </message>
-    <message>
-        <source>Process image (not fields)</source>
-        <translation type="vanished">Képfeldolgozás (mezők nem)</translation>
-    </message>
-    <message>
-        <source>Process image (not fields), debug</source>
-        <translation type="vanished">Képfeldolgozás (mezők nem), hibakeresés</translation>
-    </message>
-    <message>
-        <source>_Strategy:</source>
-        <translation type="vanished">Stratégia:</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="vanished">Mező sorrend:</translation>
-    </message>
-    <message>
-        <source>_Postprocessing:</source>
-        <translation type="vanished">Utómunkálatok:</translation>
-    </message>
-    <message>
-        <source>_Try backward:</source>
-        <translation type="vanished">Próbálja visszafelé:</translation>
-    </message>
-    <message>
-        <source>_Direct threshold:</source>
-        <translation type="vanished">Közvetlen határérték:</translation>
-    </message>
-    <message>
-        <source>_Backward threshold:</source>
-        <translation type="vanished">Visszafelé határértéke:</translation>
-    </message>
-    <message>
-        <source>_Noise threshold:</source>
-        <translation type="vanished">Zaj határérték:</translation>
-    </message>
-    <message>
-        <source>Postp_rocessing threshold:</source>
-        <translation type="vanished">Utómunkálatok határértéke:</translation>
-    </message>
-    <message>
-        <source>_Use chroma to decide</source>
-        <translation type="vanished">Színesség használata a döntéshez</translation>
-    </message>
-    <message>
-        <source>Sho_w info</source>
-        <translation type="vanished">Infó megjelenítése</translation>
-    </message>
-    <message>
-        <source>Debu_g</source>
-        <translation type="vanished">Hibakeresés</translation>
-    </message>
-    <message>
-        <source>Bl_end</source>
-        <translation type="vanished">Vegyítés</translation>
-    </message>
-    <message>
-        <source>Decomb Telecide</source>
-        <translation type="vanished">Decomb Telecide</translation>
-    </message>
-</context>
-<context>
-    <name>Ui_vobsubWindow</name>
-    <message>
-        <source>Select Idx File</source>
-        <translation type="vanished">Idx fájl kiválasztása</translation>
     </message>
 </context>
 <context>
@@ -1321,7 +984,12 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation>Videószerkesztő több rendszerhez</translation>
     </message>
     <message>
-        <location line="+94"/>
+        <location line="+10"/>
+        <source>© 2001 - 2019  Mean / Eumagga0x2a</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+84"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -1331,12 +999,7 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation>http://www.avidemux.org</translation>
     </message>
     <message>
-        <location line="-19"/>
-        <source>© 2001 - 2018  Mean</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+64"/>
+        <location line="+45"/>
         <source>&amp;License</source>
         <translation>&amp;Licensz</translation>
     </message>
@@ -1344,14 +1007,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <location line="-93"/>
         <source>Avidemux </source>
         <translation>Avidemux</translation>
-    </message>
-    <message>
-        <source>© 2001 - 2012  Mean</source>
-        <translation type="vanished">© 2001-2012  Mean</translation>
-    </message>
-    <message>
-        <source>© 2001 - 2016  Mean</source>
-        <translation type="obsolete">© 2001-2012  Mean {2001 ?} {2016 ?}</translation>
     </message>
 </context>
 <context>
@@ -1401,22 +1056,14 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
 <context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+219"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+218"/>
         <source>Decode video using DXVA2 (windows)</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Use systray while encoding</source>
-        <translation type="vanished">Tálca (panel) használata a kódolás alatt</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>_Accept non-standard audio frequency for DVD</source>
         <translation>Nem szabványos DVD hangsáv frekvencia elfogadása</translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="vanished">OpenDML fájlok létrehozása</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1654,7 +1301,7 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <location line="+278"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+409"/>
+        <location filename="../../common/gui_savenew.cpp" line="+423"/>
         <source>Audio</source>
         <translation>Hang</translation>
     </message>
@@ -2059,10 +1706,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="vanished">Automatikus (max -3 dB)</translation>
-    </message>
-    <message>
         <location line="+1"/>
         <source>Manual (dB)</source>
         <translation>Kézi (dB)</translation>
@@ -2248,10 +1891,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation>Bővítmények infó</translation>
     </message>
     <message>
-        <source>Decode video using VDPAU</source>
-        <translation type="vanished">Videó dekódolása VDPAU -val</translation>
-    </message>
-    <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-285"/>
         <source>Enable openGl support</source>
         <translation>OpenGL engedélyezés</translation>
@@ -2269,10 +1908,6 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation>Alacsony</translation>
     </message>
     <message>
-        <source>_Split MPEG files every (MB):</source>
-        <translation type="vanished">MPEG fájlok darabolandó mérete (MB):</translation>
-    </message>
-    <message>
         <location line="+21"/>
         <source>VDPAU (best)</source>
         <translation>VDPAU (legjobb)</translation>
@@ -2283,21 +1918,18 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation>OpenGL (legjobb)</translation>
     </message>
     <message>
-        <source>MS Windows GDI (SDL)</source>
-        <translation type="vanished">SDL (MS Windows GDI)</translation>
-    </message>
-    <message>
-        <source>MS Windows DirectX (SDL)</source>
-        <translation type="vanished">SDL (MS Windows DirectX)</translation>
-    </message>
-    <message>
         <location line="+49"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+211"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+213"/>
         <source>PCM</source>
         <translation>PCM</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+38"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+26"/>
+        <source>The options above are effective only for MPEG and DivX with software decoding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+29"/>
         <source>_Horizontal deblocking</source>
         <translation>Vízszintes blokkbontás</translation>
@@ -2307,6 +1939,11 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+1"/>
         <source>_Vertical deblocking</source>
         <translation>Függőleges blokkbontás</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>De_interlacing (ffmpegdeint)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+2"/>
@@ -2365,10 +2002,6 @@ FLV  videóhoz szükséges.</translation>
         <translation>FLV1 kódoló nem választható.</translation>
     </message>
     <message>
-        <source>Cannot select mpeg4 sp codec.</source>
-        <translation type="vanished">Nem választható mpeg4 sp kódoló.</translation>
-    </message>
-    <message>
         <location line="+63"/>
         <source>You don&apos;t have FAAC!.
 It is needed to create PSP compatible video.</source>
@@ -2384,14 +2017,6 @@ A PSP kompatibilis videóhoz szükséges.</translation>
         <location line="+184"/>
         <source>Not coded in this version</source>
         <translation>Nem kódolt ebben a verzióban</translation>
-    </message>
-    <message>
-        <source>Select AVI File...</source>
-        <translation type="vanished">AVI fájl kiválasztása...</translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="vanished">AVI fájl kiválasztása hozzáfűzésre...</translation>
     </message>
     <message>
         <location line="+251"/>
@@ -2481,7 +2106,7 @@ Nyissa meg az &apos;Hang&apos; -&gt; &apos;Fő hangsáv&apos; menüt és válass
     </message>
     <message>
         <location line="+5"/>
-        <location line="+317"/>
+        <location line="+320"/>
         <source>Something bad happened (II)</source>
         <translation>Valami rossz történt (II)</translation>
     </message>
@@ -2524,7 +2149,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
         <source>Something bad happened</source>
         <translation>Valami rossz történt</translation>
     </message>
@@ -2581,17 +2206,12 @@ El lett indítva ?</translation>
         <translation>Időpontra ugrás</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-12"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-15"/>
         <source>_Filter strength:</source>
         <translation>Szűrő erőssége:</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_Swap U and V</source>
-        <translation>U és V csere</translation>
-    </message>
-    <message>
-        <location line="+12"/>
+        <location line="+14"/>
         <source>_Deringing</source>
         <translation>Deringing</translation>
     </message>
@@ -2657,22 +2277,6 @@ El lett indítva ?</translation>
         <translation>Jpeg</translation>
     </message>
     <message>
-        <source>Fail to save as jpeg</source>
-        <translation type="vanished">JPEG mentés sikertelen</translation>
-    </message>
-    <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="vanished">mentés JPEG csoportként</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="vanished">Képkocka nem dekódolható</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="vanished">Megszakítva.</translation>
-    </message>
-    <message>
         <location line="+97"/>
         <location line="+83"/>
         <source>Done</source>
@@ -2701,10 +2305,6 @@ El lett indítva ?</translation>
         <translation>Hiba</translation>
     </message>
     <message>
-        <source>Could not save all images.</source>
-        <translation type="vanished">Nem lehetett menteni az összes képet.</translation>
-    </message>
-    <message>
         <location filename="../../common/gui_save.cpp" line="+61"/>
         <source>BMP op failed</source>
         <translation>BMP művelet sikertelen</translation>
@@ -2730,14 +2330,6 @@ El lett indítva ?</translation>
         <translation>A %s fájl mentése NEM hibátlan.</translation>
     </message>
     <message>
-        <source>Recent Files</source>
-        <translation type="vanished">Legutóbbi fájlok</translation>
-    </message>
-    <message>
-        <source>Recent Projects</source>
-        <translation type="vanished">Legutóbbi projektek</translation>
-    </message>
-    <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="+54"/>
         <source>Quantization</source>
         <translation>Kvantálás</translation>
@@ -2751,26 +2343,6 @@ El lett indítva ?</translation>
         <location line="-20"/>
         <source>Medium</source>
         <translation>Közepes</translation>
-    </message>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="vanished">A szűrő már részleges</translation>
-    </message>
-    <message>
-        <source>Partial Start Frame:</source>
-        <translation type="vanished">Rész kezdő képkocka :</translation>
-    </message>
-    <message>
-        <source>Partial End Frame:</source>
-        <translation type="vanished">Rész utolsó képkocka :</translation>
-    </message>
-    <message>
-        <source>Configure child</source>
-        <translation type="vanished">Keletkező beállítása</translation>
-    </message>
-    <message>
-        <source>Partial Video Filter</source>
-        <translation type="vanished">Részleges videó szűrő</translation>
     </message>
     <message>
         <location line="-12"/>
@@ -2993,66 +2565,6 @@ El lett indítva ?</translation>
         <translation>Xvid4 beállítás</translation>
     </message>
     <message>
-        <source>Ready</source>
-        <translation type="vanished">Kész</translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="vanished">Sikerült</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="vanished">Törölve</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="vanished">Fut</translation>
-    </message>
-    <message>
-        <source>Job Name</source>
-        <translation type="vanished">Feladatnév</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation type="vanished">Állapot</translation>
-    </message>
-    <message>
-        <source>Start Time</source>
-        <translation type="vanished">Kezdési idő</translation>
-    </message>
-    <message>
-        <source>End Time</source>
-        <translation type="vanished">Befejezési idő</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="vanished">Biztos!</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="vanished">Feladat törlése</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %s job?</source>
-        <translation type="vanished">Biztos, hogy törli a(z) %s feladatot ?</translation>
-    </message>
-    <message>
-        <source>Delete *all* job</source>
-        <translation type="vanished">Összes feladat förlése</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="vanished">Biztos, hogy törölni akarja az összes feladatot ?</translation>
-    </message>
-    <message>
-        <source>Already done</source>
-        <translation type="vanished">Már kész</translation>
-    </message>
-    <message>
-        <source>This script has already been successfully executed.</source>
-        <translation type="vanished">Ez a szkript már eredményesen lefutott.</translation>
-    </message>
-    <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="-25"/>
         <source>Gain</source>
         <translation type="unfinished"></translation>
@@ -3190,7 +2702,7 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1379"/>
+        <location filename="../../common/gui_main.cpp" line="-1382"/>
         <source>Select script/project to run</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3249,7 +2761,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+754"/>
+        <location line="+757"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation type="unfinished"></translation>
@@ -3290,7 +2802,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+443"/>
+        <location filename="../../common/gui_play.cpp" line="+446"/>
         <source>Trouble initializing audio device</source>
         <translation type="unfinished">Probléma a hangeszköz inicializálásánál</translation>
     </message>
@@ -3381,13 +2893,13 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_savenew.cpp" line="-196"/>
+        <location filename="../../common/gui_savenew.cpp" line="-207"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+160"/>
+        <location line="+171"/>
         <source>Cannot instantiate video chain</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3415,15 +2927,15 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-244"/>
-        <location line="+255"/>
+        <location line="-255"/>
+        <location line="+266"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-281"/>
-        <location line="+255"/>
+        <location line="-292"/>
+        <location line="+266"/>
         <source>Cannot instantiate muxer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3519,6 +3031,11 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Float PCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Ogg Vorbis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3594,7 +3111,7 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+385"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+374"/>
         <source>Unknown</source>
         <translation type="unfinished">Ismeretlen</translation>
     </message>
@@ -3685,8 +3202,8 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished">1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
-        <location line="+32"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
+        <location line="+30"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -3738,7 +3255,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+227"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3811,7 +3328,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+471"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+468"/>
         <source>Indexing</source>
         <translation type="unfinished">Indexelés</translation>
     </message>
@@ -3860,17 +3377,13 @@ Proceed anyway?</source>
 <context>
     <name>ass</name>
     <message>
-        <source>SSA.</source>
-        <translation type="vanished">SSA.</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+171"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation>Felirat fájl (ASS/SSA):</translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Select Subtitle file</source>
+        <source>Select Subtitle File</source>
         <translation>Felirat fájl kiválasztása</translation>
     </message>
     <message>
@@ -3890,63 +3403,73 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Botto_m margin</source>
-        <translation>Alsó margó</translation>
+        <source>Botto_m margin:</source>
+        <translation>Alsó margó:</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>ASS</source>
         <translation>ASS</translation>
     </message>
     <message>
-        <location line="-112"/>
+        <location line="-114"/>
         <source>SSA/ASS/SRT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Hardcode ass/ssa/srt subtitles using libass.</source>
+        <source>Hardcode ASS/SSA/SRT subtitles using libass.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+63"/>
         <source>Format ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Are you sure this is an ass file ?</source>
+        <source>Are you sure this is an ASS/SSA file ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+56"/>
-        <source>This is a srt file. Convert to SSA ?</source>
+        <location line="+45"/>
+        <source>Do not adjust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust for display aspect ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>This is a SRT file. Convert to SSA ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+5"/>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Error</source>
         <translation type="unfinished">Hiba</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Cannot load this srt file.</source>
+        <location line="-14"/>
+        <source>Cannot load this SRT file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
-        <source>Cannot convert to ssa.</source>
+        <source>Cannot convert to SSA.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Cannot save converted file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+56"/>
         <source>Fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3957,13 +3480,13 @@ This message will not be displayed again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+52"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Cannot read_file for *%s*</source>
+        <source>ass_read_file() failed for %s</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4144,33 +3667,9 @@ This message will not be displayed again.</source>
 <context>
     <name>blacken</name>
     <message>
-        <source>_Left border:</source>
-        <translation type="vanished">Balszegély:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="vanished">Jobbszegély:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="vanished">Felső szegély:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="vanished">Alsó szegély:</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.h" line="+41"/>
         <source>Blacken Borders</source>
         <translation>Fekete szegélyek</translation>
-    </message>
-    <message>
-        <source>Incorrect parameters</source>
-        <translation type="vanished">Helytelen paraméter</translation>
-    </message>
-    <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="vanished">Minden paraméter hatókörön belül kell hogy legyen.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -4182,31 +3681,37 @@ This message will not be displayed again.</source>
     <name>blackenDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt4/blackenBorders.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+14"/>
         <source>Blacken Borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+38"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+38"/>
         <source>Right:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Top:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+43"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+43"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+21"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+21"/>
         <source>Bottom:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Left:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4305,17 +3810,6 @@ This message will not be displayed again.</source>
         <location line="+160"/>
         <source>Error</source>
         <translation type="unfinished">Hiba</translation>
-    </message>
-</context>
-<context>
-    <name>changefps</name>
-    <message>
-        <source>Change FPS</source>
-        <translation type="vanished">Fps valtas</translation>
-    </message>
-    <message>
-        <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
-        <translation type="vanished">Az fps valtas gyorsitja/lassítja a filmet.</translation>
     </message>
 </context>
 <context>
@@ -4475,26 +3969,6 @@ This message will not be displayed again.</source>
 <context>
     <name>contrast</name>
     <message>
-        <source>U :</source>
-        <translation type="vanished">U:</translation>
-    </message>
-    <message>
-        <source>V :</source>
-        <translation type="vanished">V:</translation>
-    </message>
-    <message>
-        <source>L :</source>
-        <translation type="vanished">L:</translation>
-    </message>
-    <message>
-        <source>Offset :</source>
-        <translation type="vanished">Eltolás:</translation>
-    </message>
-    <message>
-        <source>Coef :</source>
-        <translation type="vanished">Együttható:</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="+35"/>
         <source>Adjust contrast, brightness and colors.</source>
         <translation>Kontraszt, fényerő és színek beállítása.</translation>
@@ -4609,14 +4083,6 @@ Be akarja tölteni?
 </context>
 <context>
     <name>crop</name>
-    <message>
-        <source>crop</source>
-        <translation type="vanished">Peremet leszed</translation>
-    </message>
-    <message>
-        <source>crop filter</source>
-        <translation type="vanished">A peremeket leszedi</translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="+56"/>
         <source>Crop</source>
@@ -4734,10 +4200,6 @@ Be akarja tölteni?
         <location line="+1"/>
         <source>Replace (interpolate)</source>
         <translation>Kicserél (interpolate)</translation>
-    </message>
-    <message>
-        <source>Discard longer dupe (animÃ©s)</source>
-        <translation type="vanished">Discard longer dupe (animés)</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -5063,17 +4525,6 @@ Be akarja tölteni?
     </message>
 </context>
 <context>
-    <name>encodingWindow</name>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="vanished">Jogosultság szükséges</translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="vanished">Root jogosultság szükséges a művelet végrehajtásához.</translation>
-    </message>
-</context>
-<context>
     <name>eq2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="+64"/>
@@ -5156,49 +4607,6 @@ Be akarja tölteni?
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+6"/>
         <source>Opus Configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>fade</name>
-    <message>
-        <source>Fade</source>
-        <translation type="vanished">Elhalvanyodas</translation>
-    </message>
-    <message>
-        <source>Fade in/out.</source>
-        <translation type="vanished">Atmenet, eltunes/feltunes.</translation>
-    </message>
-    <message>
-        <source>Out</source>
-        <translation type="vanished">Ki</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="vanished">Elhalványodás</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation type="vanished">Be</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="vanished">Fokozatos megjelenítés</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="vanished">Átmenet típusa:</translation>
-    </message>
-    <message>
-        <source>_Start time:</source>
-        <translation type="vanished">Kezdet (ms):</translation>
-    </message>
-    <message>
-        <source>_End time:</source>
-        <translation type="vanished">Vég (ms):</translation>
-    </message>
-    <message>
-        <source>Fade to black</source>
-        <translation type="vanished">Eltűnés feketébe</translation>
     </message>
 </context>
 <context>
@@ -5333,6 +4741,44 @@ Be akarja tölteni?
     </message>
 </context>
 <context>
+    <name>ffVAEncHEVC</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaHEVC/ADM_ffVAEncHEVC.cpp" line="+343"/>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Maximum Consecutive B-Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Max Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Frame Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>FFmpeg VA-API HEVC Encoder Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ffmpeg2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+217"/>
@@ -5420,7 +4866,7 @@ Be akarja tölteni?
         <translation>Alsó mező először</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+9"/>
         <source>Threading</source>
         <translation>Szálak</translation>
     </message>
@@ -5539,36 +4985,6 @@ Be akarja tölteni?
     <name>ffmpeg4</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
-        <source>None</source>
-        <translation>Nincs</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation>Teljes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation>Napló</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation>Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation>EPZS</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>X1</source>
-        <translation>X1</translation>
-    </message>
-    <message>
-        <location line="+4"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
@@ -5613,12 +5029,7 @@ Be akarja tölteni?
         <translation>Automata (#cpu)</translation>
     </message>
     <message>
-        <location line="+10"/>
-        <source>Matrices</source>
-        <translation>Mátrixok</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+9"/>
         <source>Threading</source>
         <translation>Szálak</translation>
     </message>
@@ -5653,12 +5064,7 @@ Be akarja tölteni?
         <translation>Negyed Pixel</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_GMC</source>
-        <translation>GMC</translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Number of B frames:</source>
         <translation>B Képkockák száma:</translation>
     </message>
@@ -5703,7 +5109,7 @@ Be akarja tölteni?
         <translation>Advanced Simple Profile</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+6"/>
         <source>Motion Estimation</source>
         <translation>Mozgásbecslés</translation>
     </message>
@@ -5941,10 +5347,6 @@ Be akarja tölteni?
         <location line="+9"/>
         <source>NVENC H.264 configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>libavcodec MPEG-4 configuration</source>
-        <translation type="obsolete">libavcodec MPEG-4 beállítása</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+4"/>
@@ -6198,36 +5600,6 @@ Do you want to replace it?</source>
     <name>flv1</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
-        <source>None</source>
-        <translation>Nincs</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation>Teljes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation>Napló</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation>Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation>EPZS</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>X1</source>
-        <translation>X1</translation>
-    </message>
-    <message>
-        <location line="+4"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
@@ -6252,7 +5624,7 @@ Do you want to replace it?</source>
         <translation>Sebességtorzulás</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>Mi_n. quantizer:</source>
         <translation>Min. kvantáló:</translation>
     </message>
@@ -7117,11 +6489,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">U és V csere</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>Show motion _vectors</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location line="+2"/>
         <source>Decoder Options</source>
         <translation type="unfinished"></translation>
@@ -7200,30 +6567,6 @@ I will assume it has and try to continue</source>
 </context>
 <context>
     <name>logo</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="vanished">Logó (jpg fájl):</translation>
-    </message>
-    <message>
-        <source>Select JPEG file</source>
-        <translation type="vanished">JPEG fájl kiválasztása</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="vanished">X Pozíció:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="vanished">Y Pozíció:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="vanished">Alfa:</translation>
-    </message>
-    <message>
-        <source>Logo</source>
-        <translation type="vanished">Logó</translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="+22"/>
         <source>Add logo</source>
@@ -7315,30 +6658,6 @@ I will assume it has and try to continue</source>
         <translation>&lt;big&gt;&lt;b&gt;Aktív szűrők:&lt;/b&gt;&lt;/big&gt;</translation>
     </message>
     <message>
-        <source>C&amp;onfigure</source>
-        <translation type="vanished">Beállítás&amp;ok</translation>
-    </message>
-    <message>
-        <source>P&amp;artial</source>
-        <translation type="vanished">R&amp;észleges</translation>
-    </message>
-    <message>
-        <source>Down</source>
-        <translation type="vanished">Lefelé</translation>
-    </message>
-    <message>
-        <source>Up</source>
-        <translation type="vanished">Fel</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation type="vanished">Eltávolítás</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation type="vanished">Hozzáadás</translation>
-    </message>
-    <message>
         <location line="+119"/>
         <source>Transform</source>
         <translation>Átalakítás</translation>
@@ -7402,7 +6721,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+426"/>
+        <location line="+433"/>
         <source>Matroska clusters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7458,13 +6777,6 @@ I will assume it has and try to continue</source>
         <location line="+4"/>
         <source>mcDeinterlace</source>
         <translation>mcDeinterlace</translation>
-    </message>
-</context>
-<context>
-    <name>meadian</name>
-    <message>
-        <source>3x3 convolution filter :median.</source>
-        <translation type="vanished">3x3 convolution filter :median.</translation>
     </message>
 </context>
 <context>
@@ -7567,14 +6879,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Luma _Temporal strength:</source>
-        <translation type="vanished">Ideiglenes fényesség erőssége:</translation>
-    </message>
-    <message>
-        <source>MPlayer denoise3d</source>
-        <translation type="vanished">MPlayer denoise3d</translation>
-    </message>
-    <message>
         <location line="-39"/>
         <source>Reduce noise, smooth image, increase compressibility. HQ Version.</source>
         <translation type="unfinished"></translation>
@@ -7608,10 +6912,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>MPlayer denoise3d</source>
-        <translation type="vanished">MPlayer denoise3d</translation>
-    </message>
-    <message>
         <location line="-38"/>
         <source>Reduce noise, smooth image, increase compressibility.</source>
         <translation type="unfinished"></translation>
@@ -7620,13 +6920,9 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+815"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Probléma a SVQ3 fejek olvasásánál</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="obsolete">Nincs STTS tábla</translation>
     </message>
 </context>
 <context>
@@ -7809,26 +7105,6 @@ I will assume it has and try to continue</source>
 <context>
     <name>msharpen</name>
     <message>
-        <source>_Mask</source>
-        <translation type="vanished">Maszk</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="vanished">Kiváló M</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="vanished">Küszöbszint:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="vanished">Erősség:</translation>
-    </message>
-    <message>
-        <source>MSharpen</source>
-        <translation type="vanished">MSharpen</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="+48"/>
         <source>Msharpen</source>
         <translation>MSharpen</translation>
@@ -7865,31 +7141,6 @@ I will assume it has and try to continue</source>
         <location line="+10"/>
         <source>HighQuality</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>muxerMP4</name>
-    <message>
-        <source>Saving mp4</source>
-        <translation type="vanished">mp4 mentés</translation>
-    </message>
-    <message>
-        <source>Saving PSP</source>
-        <translation type="vanished">PSP mentés</translation>
-    </message>
-</context>
-<context>
-    <name>muxerffPS</name>
-    <message>
-        <source>Saving mpeg PS (ff)</source>
-        <translation type="vanished">mpeg PS (ff) mentés</translation>
-    </message>
-</context>
-<context>
-    <name>muxerffTS</name>
-    <message>
-        <source>Saving mpeg TS (ff)</source>
-        <translation type="vanished">mpeg TS (ff) mentés</translation>
     </message>
 </context>
 <context>
@@ -7966,21 +7217,6 @@ I will assume it has and try to continue</source>
         <location line="+4"/>
         <source>Nvidia H264 Encoder configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>openGlResize</name>
-    <message>
-        <source>Width :</source>
-        <translation type="vanished">Szélesség:</translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="vanished">Magasság:</translation>
-    </message>
-    <message>
-        <source>glResize</source>
-        <translation type="vanished">GL átméretezés</translation>
     </message>
 </context>
 <context>
@@ -8140,7 +7376,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>psdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+80"/>
         <source>Error</source>
         <translation type="unfinished">Hiba</translation>
     </message>
@@ -8156,7 +7392,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Indexelés</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+42"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8258,19 +7494,19 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qfile</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+50"/>
-        <location line="+139"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+45"/>
+        <location line="+141"/>
         <source>All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-54"/>
-        <location line="+96"/>
+        <location line="-58"/>
+        <location line="+105"/>
         <source> files (*.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-68"/>
+        <location line="-81"/>
         <source>Overwrite file </source>
         <translation type="unfinished"></translation>
     </message>
@@ -8293,7 +7529,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Legutóbbi projektek</translation>
     </message>
     <message>
-        <location line="+658"/>
+        <location line="+660"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8358,7 +7594,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+617"/>
+        <location line="+619"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
@@ -8575,7 +7811,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qprocessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+66"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+65"/>
         <source>Unknown</source>
         <translation type="unfinished">Ismeretlen</translation>
     </message>
@@ -8772,6 +8008,19 @@ Ready.
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="+88"/>
         <source>Select Idx File</source>
         <translation type="unfinished">Idx fájl kiválasztása</translation>
+    </message>
+</context>
+<context>
+    <name>rawmuxer</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerRaw/muxerRawConfig.cpp" line="+29"/>
+        <source>Prefer Annex B type stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Video Only Muxer Settings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9258,13 +8507,6 @@ Ready.
     </message>
 </context>
 <context>
-    <name>resizeWindow</name>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="vanished">A szélesség és magasság nem lehet páratlan szám</translation>
-    </message>
-</context>
-<context>
     <name>rotate</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="+52"/>
@@ -9288,26 +8530,14 @@ Ready.
         <translation>90 fok</translation>
     </message>
     <message>
-        <source>90Â°</source>
-        <translation type="vanished">90 Grad</translation>
-    </message>
-    <message>
         <location line="+1"/>
         <source>180 degrees</source>
         <translation>180 fok</translation>
     </message>
     <message>
-        <source>180Â°</source>
-        <translation type="vanished">180 Grad</translation>
-    </message>
-    <message>
         <location line="+1"/>
         <source>270 degrees</source>
         <translation>270 fok</translation>
-    </message>
-    <message>
-        <source>270Â°</source>
-        <translation type="vanished">270 Grad</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -9331,30 +8561,11 @@ Ready.
     </message>
 </context>
 <context>
-    <name>rotateGl</name>
-    <message>
-        <source>Angle (Â°):</source>
-        <translation type="vanished">Forgatás szöge:</translation>
-    </message>
-    <message>
-        <source>glRotate</source>
-        <translation type="vanished">GL forgatás</translation>
-    </message>
-</context>
-<context>
     <name>seekablePreviewDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="+20"/>
         <source>Preview</source>
         <translation>Előnézet</translation>
-    </message>
-    <message>
-        <source>00:00:00.000</source>
-        <translation type="vanished">00:00:00.000</translation>
-    </message>
-    <message>
-        <source>next</source>
-        <translation type="vanished">következő</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
@@ -9661,8 +8872,8 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+186"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+329"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+188"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+327"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+83"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
@@ -9795,37 +9006,6 @@ Please delete the idx2 file and reopen.</source>
     </message>
 </context>
 <context>
-    <name>vdpauVideoFilterDeint</name>
-    <message>
-        <source>Keep Top Field</source>
-        <translation type="vanished">Felső mező megtartása</translation>
-    </message>
-    <message>
-        <source>Keep Bottom Field</source>
-        <translation type="vanished">Alsó mező megtartása</translation>
-    </message>
-    <message>
-        <source>Double framerate</source>
-        <translation type="vanished">Kétszeres képsebesség</translation>
-    </message>
-    <message>
-        <source>_Resize:</source>
-        <translation type="vanished">Átméretezés:</translation>
-    </message>
-    <message>
-        <source>Width :</source>
-        <translation type="vanished">Szélesség:</translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="vanished">Magasság:</translation>
-    </message>
-    <message>
-        <source>vdpau</source>
-        <translation type="vanished">vdpau</translation>
-    </message>
-</context>
-<context>
     <name>vdpaudeint</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="+131"/>
@@ -9881,56 +9061,6 @@ Please delete the idx2 file and reopen.</source>
         <location line="+4"/>
         <source>vdpau</source>
         <translation type="unfinished">vdpau</translation>
-    </message>
-</context>
-<context>
-    <name>vdpaufilter</name>
-    <message>
-        <source>Keep Top Field</source>
-        <translation type="vanished">Felső mező megtartása</translation>
-    </message>
-    <message>
-        <source>Keep Bottom Field</source>
-        <translation type="vanished">Alsó mező megtartása</translation>
-    </message>
-    <message>
-        <source>Double framerate</source>
-        <translation type="vanished">Kétszeres képsebesség</translation>
-    </message>
-    <message>
-        <source>_Resize:</source>
-        <translation type="vanished">Átméretezés:</translation>
-    </message>
-    <message>
-        <source>_Deint Mode:</source>
-        <translation type="vanished">Csíktalanítás:</translation>
-    </message>
-    <message>
-        <source>Width :</source>
-        <translation type="vanished">Szélesség:</translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="vanished">Magasság:</translation>
-    </message>
-    <message>
-        <source>vdpau</source>
-        <translation type="vanished">vdpau</translation>
-    </message>
-</context>
-<context>
-    <name>vdpaufilter2</name>
-    <message>
-        <source>Width :</source>
-        <translation type="vanished">Szélesség:</translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="vanished">Magasság:</translation>
-    </message>
-    <message>
-        <source>vdpau</source>
-        <translation type="vanished">vdpau</translation>
     </message>
 </context>
 <context>
@@ -10091,24 +9221,19 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <translation>Feldolgozás</translation>
     </message>
     <message>
-        <location line="+64"/>
+        <location line="+6"/>
         <source>Elapsed:</source>
         <translation>eltelt:</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+20"/>
         <source>Time Remaining:</source>
         <translation>Hátralévő idő:</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="-7"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
-    </message>
-    <message>
-        <location line="+87"/>
-        <source>Cancel</source>
-        <translation>Mégsem</translation>
     </message>
 </context>
 <context>
@@ -11451,53 +10576,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+10"/>
         <source>Cancel</source>
         <translation type="unfinished">Mégsem</translation>
-    </message>
-</context>
-<context>
-    <name>x264Dialog</name>
-    <message>
-        <source>Target Bitrate:</source>
-        <translation type="vanished">Cél bitsebesség:</translation>
-    </message>
-    <message>
-        <source>kbit/s</source>
-        <translation type="vanished">kbit/s</translation>
-    </message>
-    <message>
-        <source>Quantiser:</source>
-        <translation type="vanished">Kvantáló:</translation>
-    </message>
-    <message>
-        <source>Quality:</source>
-        <translation type="vanished">Minőség:</translation>
-    </message>
-    <message>
-        <source>Target Video Size:</source>
-        <translation type="vanished">Cél videó méret (MB):</translation>
-    </message>
-    <message>
-        <source>MB</source>
-        <translation type="vanished">MB</translation>
-    </message>
-    <message>
-        <source>Average Bitrate:</source>
-        <translation type="vanished">Átlagos bitsebesség:</translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
-
-Do you wish to continue?</source>
-        <translation type="vanished">A Makroblokk-Tree optimatizálás adaptív kvantáló algoritmust (VAQ) igényel, ezért a VAQ engedélyezve lesz.
-
-Továbblépjünk?</translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
-
-Do you wish to continue?</source>
-        <translation type="vanished">A VAQ a Makroblokk-Tree optimatizáláshoz kel, ezért az MB-Tree is ki lesz kapcsolva.
-
-Továbblépjünk?</translation>
     </message>
 </context>
 <context>

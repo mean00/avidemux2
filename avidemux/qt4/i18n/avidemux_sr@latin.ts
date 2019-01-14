@@ -2,2361 +2,11 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
-    <name></name>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">0</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Bez izmene</translation>
-    </message>
-    <message>
-        <source>Cannot initialize the video stream</source>
-        <translation type="obsolete">Ne mogu da pokrenem video tok</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Pokretanje filtera neuspelo</translation>
-    </message>
-    <message>
-        <source>Error while encoding</source>
-        <translation type="obsolete">Greška pri kodiranju</translation>
-    </message>
-    <message>
-        <source>KeyFrame error</source>
-        <translation type="obsolete">Greška u ključnom kadru</translation>
-    </message>
-    <message>
-        <source>The beginning frame is not a key frame.
-Please move the A marker.</source>
-        <translation type="obsolete">Početni kadar nije ključni kadar.
-Pomerite A graničnik.</translation>
-    </message>
-    <message>
-        <source>_Use systray while encoding</source>
-        <translation type="obsolete">Smesti u o_baveštajnu zonu panela prilikom kodiranja</translation>
-    </message>
-    <message>
-        <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">_Dozvoli nestandardne učestanosti zvuka za DVD</translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="obsolete">Napravi OpenDML _datoteke</translation>
-    </message>
-    <message>
-        <source>Automatically _index MPEG files</source>
-        <translation type="obsolete">_Automatski napravi indeks MPEG datoteka</translation>
-    </message>
-    <message>
-        <source>Automatically _swap A and B if A&gt;B</source>
-        <translation type="obsolete">Automatski _izokreni  A i B ako je A&gt;B</translation>
-    </message>
-    <message>
-        <source>_Disable NUV audio sync</source>
-        <translation type="obsolete">_Onemogući NUV zvučnu sinhronizaciju</translation>
-    </message>
-    <message>
-        <source>Automatically _build VBR map</source>
-        <translation type="obsolete">Napravi VBR _mapu bez pitanja</translation>
-    </message>
-    <message>
-        <source>Automatically _rebuild index</source>
-        <translation type="obsolete">Re-izgradi _indeks bez pitanja</translation>
-    </message>
-    <message>
-        <source>Automatically remove _packed bitstream</source>
-        <translation type="obsolete">Automatski ukloni pakovani _bitski tok</translation>
-    </message>
-    <message>
-        <source>SIMD</source>
-        <translation type="obsolete">SIMD</translation>
-    </message>
-    <message>
-        <source>Enable all SIMD</source>
-        <translation type="obsolete">Omogući sve SIMD</translation>
-    </message>
-    <message>
-        <source>Enable MMX</source>
-        <translation type="obsolete">Omogući MMX</translation>
-    </message>
-    <message>
-        <source>Enable MMXEXT</source>
-        <translation type="obsolete">Omogući MMXEXT</translation>
-    </message>
-    <message>
-        <source>Enable 3DNOW</source>
-        <translation type="obsolete">Omogući 3DNOW</translation>
-    </message>
-    <message>
-        <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">Omogući 3DNOWEXT</translation>
-    </message>
-    <message>
-        <source>Enable SSE</source>
-        <translation type="obsolete">Omogući SSE</translation>
-    </message>
-    <message>
-        <source>Enable SSE2</source>
-        <translation type="obsolete">Omogući SSE2</translation>
-    </message>
-    <message>
-        <source>Enable SSE3</source>
-        <translation type="obsolete">Omogući SSE3</translation>
-    </message>
-    <message>
-        <source>Enable SSSE3</source>
-        <translation type="obsolete">Omogući SSSE3</translation>
-    </message>
-    <message>
-        <source>_lavc threads:</source>
-        <translation type="obsolete">lavc _niti:</translation>
-    </message>
-    <message>
-        <source>Multi-threading</source>
-        <translation type="obsolete">Podrška za više niti</translation>
-    </message>
-    <message>
-        <source>Above normal</source>
-        <translation type="obsolete">Iznad normalnog</translation>
-    </message>
-    <message>
-        <source>Below normal</source>
-        <translation type="obsolete">Ispod normalnog</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">Nisko</translation>
-    </message>
-    <message>
-        <source>_Encoding priority:</source>
-        <translation type="obsolete">Prioritet _kodiranja:</translation>
-    </message>
-    <message>
-        <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">Prioritet _indeksiranja/raspakovanja:</translation>
-    </message>
-    <message>
-        <source>_Playback priority:</source>
-        <translation type="obsolete">Prioritet _reprodukcije:</translation>
-    </message>
-    <message>
-        <source>Prioritisation</source>
-        <translation type="obsolete">Postavljanje prioriteta</translation>
-    </message>
-    <message>
-        <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">Koristi _alternativni tag za MP3 u .mp4</translation>
-    </message>
-    <message>
-        <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (najbolje)</translation>
-    </message>
-    <message>
-        <source>SDL (good)</source>
-        <translation type="obsolete">SDL (dobro)</translation>
-    </message>
-    <message>
-        <source>Video _display:</source>
-        <translation type="obsolete">Video _ekran:</translation>
-    </message>
-    <message>
-        <source>No alerts</source>
-        <translation type="obsolete">Bez upozorenja</translation>
-    </message>
-    <message>
-        <source>Display only error alerts</source>
-        <translation type="obsolete">Prikaži samo upozorenja o greškama</translation>
-    </message>
-    <message>
-        <source>Display all alerts</source>
-        <translation type="obsolete">Prikaži sva upozorenja</translation>
-    </message>
-    <message>
-        <source>_Message level:</source>
-        <translation type="obsolete">Nivo _obaveštavanja:</translation>
-    </message>
-    <message>
-        <source>Master</source>
-        <translation type="obsolete">Glavni</translation>
-    </message>
-    <message>
-        <source>_Volume control:</source>
-        <translation type="obsolete">Kontrola _jačine zvuka:</translation>
-    </message>
-    <message>
-        <source>No downmixing</source>
-        <translation type="obsolete">Bez smanjenja avučnih kanala</translation>
-    </message>
-    <message>
-        <source>Pro Logic</source>
-        <translation type="obsolete">Pro Logic</translation>
-    </message>
-    <message>
-        <source>Pro Logic II</source>
-        <translation type="obsolete">Pro Logic II</translation>
-    </message>
-    <message>
-        <source>_Local playback downmixing:</source>
-        <translation type="obsolete">_Smanjenje avučnih kanala pri reprodukciji:</translation>
-    </message>
-    <message>
-        <source>De_ringing</source>
-        <translation type="obsolete">_Deringind</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Jačina :</translation>
-    </message>
-    <message>
-        <source>Default Postprocessing</source>
-        <translation type="obsolete">Podrazumevana naknadna obrada</translation>
-    </message>
-    <message>
-        <source>Use _Global GlyphSet</source>
-        <translation type="obsolete">Koristi _globalni set karaktera</translation>
-    </message>
-    <message>
-        <source>Gl_yphSet:</source>
-        <translation type="obsolete">_Set karaktera:</translation>
-    </message>
-    <message>
-        <source>Automation</source>
-        <translation type="obsolete">Automatizacija</translation>
-    </message>
-    <message>
-        <source>Input</source>
-        <translation type="obsolete">Ulaz</translation>
-    </message>
-    <message>
-        <source>Output</source>
-        <translation type="obsolete">Izlaz</translation>
-    </message>
-    <message>
-        <source>Video</source>
-        <translation type="obsolete">Video</translation>
-    </message>
-    <message>
-        <source>Threading</source>
-        <translation type="obsolete">Više niti</translation>
-    </message>
-    <message>
-        <source>Global GlyphSet</source>
-        <translation type="obsolete">Globalni set karaktera</translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">Postavke</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">Visoko</translation>
-    </message>
-    <message>
-        <source>_Background Image:</source>
-        <translation type="obsolete">_Pozadinska slika:</translation>
-    </message>
-    <message>
-        <source>Vignette _Width:</source>
-        <translation type="obsolete">_Širina slike:</translation>
-    </message>
-    <message>
-        <source>Vignette _Height:</source>
-        <translation type="obsolete">_Visina slike:</translation>
-    </message>
-    <message>
-        <source>Vignette frame number</source>
-        <translation type="obsolete">Broj kadra slike</translation>
-    </message>
-    <message>
-        <source>Timecode:</source>
-        <translation type="obsolete">Vremenski kod:</translation>
-    </message>
-    <message>
-        <source>_Dynamic range compression</source>
-        <translation type="obsolete">Kompresija _dinamičkog opsega</translation>
-    </message>
-    <message>
-        <source>_Time shift (ms):</source>
-        <translation type="obsolete">_Vremenski pomeraj (ms):</translation>
-    </message>
-    <message>
-        <source>Time shift value (ms)</source>
-        <translation type="obsolete">Vrednost vremenskog pomeraja (ms)</translation>
-    </message>
-    <message>
-        <source>R_esampling (Hz):</source>
-        <translation type="obsolete">_Prevesti (Hz):</translation>
-    </message>
-    <message>
-        <source>Resampling frequency (Hz)</source>
-        <translation type="obsolete">Učestanost prevedenog (Hz)</translation>
-    </message>
-    <message>
-        <source>Film to PAL</source>
-        <translation type="obsolete">Film u PAL</translation>
-    </message>
-    <message>
-        <source>PAL to Film</source>
-        <translation type="obsolete">PAL u Film</translation>
-    </message>
-    <message>
-        <source>_Frame rate change:</source>
-        <translation type="obsolete">Promena _učestanosti kadrova:</translation>
-    </message>
-    <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="obsolete">Automatski (najviše do -3 dB)</translation>
-    </message>
-    <message>
-        <source>Manual</source>
-        <translation type="obsolete">Ručni režim</translation>
-    </message>
-    <message>
-        <source>_Gain mode:</source>
-        <translation type="obsolete">_režim pojačavanja:</translation>
-    </message>
-    <message>
-        <source>G_ain value:</source>
-        <translation type="obsolete">_Nivo pojačanja:</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">Pojačaj</translation>
-    </message>
-    <message>
-        <source>No change</source>
-        <translation type="obsolete">Bez izmena</translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">Mono</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">Stereo</translation>
-    </message>
-    <message>
-        <source>Stereo+surround</source>
-        <translation type="obsolete">Stereo + saraund</translation>
-    </message>
-    <message>
-        <source>Stereo+center</source>
-        <translation type="obsolete">Stereo + centralni</translation>
-    </message>
-    <message>
-        <source>Stereo+center+surround</source>
-        <translation type="obsolete">Stereo + centar + saraund</translation>
-    </message>
-    <message>
-        <source>Stereo front+stereo rear</source>
-        <translation type="obsolete">Stereo napred + stereo pozadi</translation>
-    </message>
-    <message>
-        <source>5 channels</source>
-        <translation type="obsolete">5 kanala</translation>
-    </message>
-    <message>
-        <source>5.1</source>
-        <translation type="obsolete">5+1 kanala</translation>
-    </message>
-    <message>
-        <source>Dolby Pro Logic</source>
-        <translation type="obsolete">Dolby Pro Logic</translation>
-    </message>
-    <message>
-        <source>Dolby Pro Logic II</source>
-        <translation type="obsolete">Dolby Pro Logic II</translation>
-    </message>
-    <message>
-        <source>_Mixer:</source>
-        <translation type="obsolete">_Mikseta:</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">Zvučni filteri</translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">_Bitski protok:</translation>
-    </message>
-    <message>
-        <source>No data</source>
-        <translation type="obsolete">Nema podataka</translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">Histogram bitskog protoka</translation>
-    </message>
-    <message>
-        <source>Fontconfig</source>
-        <translation type="obsolete">Fontconfig</translation>
-    </message>
-    <message>
-        <source>SDL</source>
-        <translation type="obsolete">SDL</translation>
-    </message>
-    <message>
-        <source>XVideo</source>
-        <translation type="obsolete">XVideo</translation>
-    </message>
-    <message>
-        <source>AltiVec</source>
-        <translation type="obsolete">AltiVec</translation>
-    </message>
-    <message>
-        <source>PowerPC</source>
-        <translation type="obsolete">PowerPC</translation>
-    </message>
-    <message>
-        <source>x86</source>
-        <translation type="obsolete">x86</translation>
-    </message>
-    <message>
-        <source>x86-64</source>
-        <translation type="obsolete">x86-64</translation>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <translation type="obsolete">Biblioteke</translation>
-    </message>
-    <message>
-        <source>CPU</source>
-        <translation type="obsolete">Procesori</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">Podržani su</translation>
-    </message>
-    <message>
-        <source>_Hours:</source>
-        <translation type="obsolete">_Sata:</translation>
-    </message>
-    <message>
-        <source>_Minutes:</source>
-        <translation type="obsolete">_Minuta:</translation>
-    </message>
-    <message>
-        <source>_Seconds:</source>
-        <translation type="obsolete">_Sekundi:</translation>
-    </message>
-    <message>
-        <source>_Job name:</source>
-        <translation type="obsolete">_Ime zadatka:</translation>
-    </message>
-    <message>
-        <source>Save Job</source>
-        <translation type="obsolete">Sačuvaj zadatak</translation>
-    </message>
-    <message>
-        <source>_Swap U and V</source>
-        <translation type="obsolete">_Zameni U i V</translation>
-    </message>
-    <message>
-        <source>Show motion _vectors</source>
-        <translation type="obsolete">Prikaži _vektore pokreta</translation>
-    </message>
-    <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">Opcije dekodera</translation>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="obsolete">Korisničko okruženje</translation>
-    </message>
-    <message>
-        <source>Joint stereo</source>
-        <translation type="obsolete">Pridruženi stereo</translation>
-    </message>
-    <message>
-        <source>C_hannel mode:</source>
-        <translation type="obsolete">Broj kanala:</translation>
-    </message>
-    <message>
-        <source>CBR</source>
-        <translation type="obsolete">CBR</translation>
-    </message>
-    <message>
-        <source>ABR</source>
-        <translation type="obsolete">ABR</translation>
-    </message>
-    <message>
-        <source>Extreme</source>
-        <translation type="obsolete">Ekstremno</translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">Bit_ski protok:</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">_Kvalitet:</translation>
-    </message>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">_Jačina filtera:</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">_Horizontalno uklanjanje blokova</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">_Vertikalno uklanjanje blokova</translation>
-    </message>
-    <message>
-        <source>_Deringing</source>
-        <translation type="obsolete">_Deringing</translation>
-    </message>
-    <message>
-        <source>_Shrink Factor:</source>
-        <translation type="obsolete">Faktor _suženja:</translation>
-    </message>
-    <message>
-        <source>NTSC 4:3</source>
-        <translation type="obsolete">NTSC 4:3</translation>
-    </message>
-    <message>
-        <source>NTSC 16:9</source>
-        <translation type="obsolete">NTSC 16:9</translation>
-    </message>
-    <message>
-        <source>PAL 4:3</source>
-        <translation type="obsolete">PAL 4:3</translation>
-    </message>
-    <message>
-        <source>PAL 16:9</source>
-        <translation type="obsolete">PAL 16:9</translation>
-    </message>
-    <message>
-        <source>1:1</source>
-        <translation type="obsolete">1:1</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation type="obsolete">Nepoznato</translation>
-    </message>
-    <message>
-        <source>Auto (might not work)</source>
-        <translation type="obsolete">Automatski (možda ne radi)</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">Najpre gornja polja</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">Najpre donja polja</translation>
-    </message>
-    <message>
-        <source>Bottom field (keep top)</source>
-        <translation type="obsolete">Donja polja (sačuvaj gornja)</translation>
-    </message>
-    <message>
-        <source>Top field (keep bottom)</source>
-        <translation type="obsolete">Gornja polja (sačuvaj donja)</translation>
-    </message>
-    <message>
-        <source>Cubic interpolation</source>
-        <translation type="obsolete">Kvadratno umetanje</translation>
-    </message>
-    <message>
-        <source>Modified ELA</source>
-        <translation type="obsolete">Izmenjeni ELA</translation>
-    </message>
-    <message>
-        <source>Kernel interpolation</source>
-        <translation type="obsolete">Kernelsko umetanje</translation>
-    </message>
-    <message>
-        <source>Modified ELA-2</source>
-        <translation type="obsolete">Izmenjeni ELA-2</translation>
-    </message>
-    <message>
-        <source>4 fields check</source>
-        <translation type="obsolete">Provera na 4 polja</translation>
-    </message>
-    <message>
-        <source>5 fields check</source>
-        <translation type="obsolete">Porvera na 5 polja</translation>
-    </message>
-    <message>
-        <source>4 fields check (no avg)</source>
-        <translation type="obsolete">Provera na 4 polja (bez proseka)</translation>
-    </message>
-    <message>
-        <source>5 fields check (no avg)</source>
-        <translation type="obsolete">Provera na 4 polja (bez proseka)</translation>
-    </message>
-    <message>
-        <source>No link</source>
-        <translation type="obsolete">Bez veze</translation>
-    </message>
-    <message>
-        <source>Full link</source>
-        <translation type="obsolete">Puna veza</translation>
-    </message>
-    <message>
-        <source>Y to UV</source>
-        <translation type="obsolete">Y u UV</translation>
-    </message>
-    <message>
-        <source>UV to Y</source>
-        <translation type="obsolete">UV u Y</translation>
-    </message>
-    <message>
-        <source>1</source>
-        <translation type="obsolete">1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="obsolete">2</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">_Redosled polja:</translation>
-    </message>
-    <message>
-        <source>_Interpolate:</source>
-        <translation type="obsolete">_Umetanje:</translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">_Tip:</translation>
-    </message>
-    <message>
-        <source>_MntMode:</source>
-        <translation type="obsolete">_Mnt režim:</translation>
-    </message>
-    <message>
-        <source>_Link:</source>
-        <translation type="obsolete">_Veza:</translation>
-    </message>
-    <message>
-        <source>_AP type:</source>
-        <translation type="obsolete">_AP tip:</translation>
-    </message>
-    <message>
-        <source>Use ch_roma to evalute</source>
-        <translation type="obsolete">Koristi _hroma signal za procenu</translation>
-    </message>
-    <message>
-        <source>Try _weave</source>
-        <translation type="obsolete">Pravi _talas</translation>
-    </message>
-    <message>
-        <source>_Denoise</source>
-        <translation type="obsolete">Umanjenje _šuma</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">O_štro:</translation>
-    </message>
-    <message>
-        <source>_Evalute all frames</source>
-        <translation type="obsolete">_Proceni sve kadrove</translation>
-    </message>
-    <message>
-        <source>Motion threshold, l_uma:</source>
-        <translation type="obsolete">Osetljivost na pokret, _luma:</translation>
-    </message>
-    <message>
-        <source>Motion threshold, c_hroma:</source>
-        <translation type="obsolete">Osetljivost na pokret, _hroma:</translation>
-    </message>
-    <message>
-        <source>Area com_bing threshold:</source>
-        <translation type="obsolete">Kombinovana osetljivost _područja:</translation>
-    </message>
-    <message>
-        <source>Combe_d threshold:</source>
-        <translation type="obsolete">_Kombinovana osetljivost</translation>
-    </message>
-    <message>
-        <source>Artefact _protection threshold:</source>
-        <translation type="obsolete">Nivo zaštite od _artefakta:</translation>
-    </message>
-    <message>
-        <source>Debug:</source>
-        <translation type="obsolete">Uklanjanje _grešaka:</translation>
-    </message>
-    <message>
-        <source>TDeint</source>
-        <translation type="obsolete">TDeint (T rasplitanje)</translation>
-    </message>
-    <message>
-        <source>_VOB file(s):</source>
-        <translation type="obsolete">VOB _datoteka(e):</translation>
-    </message>
-    <message>
-        <source>_IFO file:</source>
-        <translation type="obsolete">IFO _datoteka:</translation>
-    </message>
-    <message>
-        <source>VOB to VobSub</source>
-        <translation type="obsolete">VOB u VobSub</translation>
-    </message>
-    <message>
-        <source>The selected vobfile does not exist</source>
-        <translation type="obsolete">Izabrana vob datoteka ne postoji</translation>
-    </message>
-    <message>
-        <source>Please select a correct VobSub path/dir</source>
-        <translation type="obsolete">Izaberite ispravnu VobSub stazu/direktorijum</translation>
-    </message>
-    <message>
-        <source>Select ECMAScript to Run</source>
-        <translation type="obsolete">Izaberi ECMA skriptu za pokretanje</translation>
-    </message>
-    <message>
-        <source>Obsolete</source>
-        <translation type="obsolete">Zastarelo</translation>
-    </message>
-    <message>
-        <source>Not coded in this version</source>
-        <translation type="obsolete">Nije kodirano u ovoj verziji</translation>
-    </message>
-    <message>
-        <source>Select Workbench to Save</source>
-        <translation type="obsolete">Izaberi datoteku da sačuvam tezgu</translation>
-    </message>
-    <message>
-        <source>Select Raw File to Save</source>
-        <translation type="obsolete">Izaberi datoteku da sačuvam raw</translation>
-    </message>
-    <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">Izaberi AVI datoteku...</translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">Izaberi datoteku da dodam...</translation>
-    </message>
-    <message>
-        <source>Select File to Save Audio</source>
-        <translation type="obsolete">Izaberi datoteku da sačuvam zvuk</translation>
-    </message>
-    <message>
-        <source>Select JPEG Sequence to Save</source>
-        <translation type="obsolete">Izaberi koju JPEG sekvencu da sačuvam</translation>
-    </message>
-    <message>
-        <source>Select BMP to Save</source>
-        <translation type="obsolete">Izaberi BMP za čuvanje</translation>
-    </message>
-    <message>
-        <source>Select JPEG to Save</source>
-        <translation type="obsolete">Izaberi BMP za čuvanje</translation>
-    </message>
-    <message>
-        <source>Select File to Save</source>
-        <translation type="obsolete">Izaberi datoteku za čuvanje</translation>
-    </message>
-    <message>
-        <source>Select MP3 to Load</source>
-        <translation type="obsolete">Izaberi MP3 za učitavanje</translation>
-    </message>
-    <message>
-        <source>Select AC3 to Load</source>
-        <translation type="obsolete">Izaberi AC3 za učitavanje</translation>
-    </message>
-    <message>
-        <source>Select WAV to Load</source>
-        <translation type="obsolete">Izaberi WAV za učitavanje</translation>
-    </message>
-    <message>
-        <source>Out of bounds</source>
-        <translation type="obsolete">Nema više granica</translation>
-    </message>
-    <message>
-        <source>Marker A &gt; B</source>
-        <translation type="obsolete">Graničnik A &gt; B</translation>
-    </message>
-    <message>
-        <source>Cannot copy.</source>
-        <translation type="obsolete">Ne mogu da umnožim.</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II))</source>
-        <translation type="obsolete">Nešto se desilo (II))</translation>
-    </message>
-    <message>
-        <source>Are you sure?</source>
-        <translation type="obsolete">Da li si siguran?</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">Učestanost kadrova </translation>
-    </message>
-    <message>
-        <source>Width is not a multiple of 8</source>
-        <translation type="obsolete">Širina nije umnožak osmice</translation>
-    </message>
-    <message>
-        <source>This will make trouble for AVI files.</source>
-        <translation type="obsolete">Ovo će praviti problema sa AVI datotekama.</translation>
-    </message>
-    <message>
-        <source>Rebuild all Keyframes?</source>
-        <translation type="obsolete">Re-izgradi sve ključne kadrove?</translation>
-    </message>
-    <message>
-        <source>Permission error</source>
-        <translation type="obsolete">Greška sa dozvolama</translation>
-    </message>
-    <message>
-        <source>&quot;%s&quot; does not exist.</source>
-        <translation type="obsolete">„%s“ ne postoji.</translation>
-    </message>
-    <message>
-        <source>Cannot open project using the video loader.</source>
-        <translation type="obsolete">Ne mogu da otvorim projekat koristeći video čitač.</translation>
-    </message>
-    <message>
-        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
-        <translation type="obsolete">Probajte „Datoteka -&gt; Učitaj/Pokreni projekat...“</translation>
-    </message>
-    <message>
-        <source>Could not open the file</source>
-        <translation type="obsolete">Ne mogu da otvorim datoteku</translation>
-    </message>
-    <message>
-        <source>Multiple Audio Tracks</source>
-        <translation type="obsolete">Više zvučnih staza</translation>
-    </message>
-    <message>
-        <source>The file you just loaded contains several audio tracks.
-Go to Audio-&gt;MainTrack to select the active one.</source>
-        <translation type="obsolete">Datoteka koju ste upravo učitali sadrži nekoliko zvučnih staza.
-Idite u „Zvuk -&gt; Glavna staza“ i izaberite jednu aktivnu stazu.</translation>
-    </message>
-    <message>
-        <source>No audio decoder found for this file</source>
-        <translation type="obsolete">Nije pronađen zvučni dekoder za ovu datoteku</translation>
-    </message>
-    <message>
-        <source>Save (A+V) will generate bad AVI. Save audio will work.</source>
-        <translation type="obsolete">Snimanje (aud + vid) će napraviti loš AVI. Snimanje zvuka će uspeti.</translation>
-    </message>
-    <message>
-        <source>Something failed when appending</source>
-        <translation type="obsolete">Nešto nije uspelo prilikom dodavanja</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II)</source>
-        <translation type="obsolete">Nešto loše se desilo (II)</translation>
-    </message>
-    <message>
-        <source>Cannot save the audio in copy mode</source>
-        <translation type="obsolete">Ne mogu da sačuvam zvuk u režimu „bez izmene“</translation>
-    </message>
-    <message>
-        <source>Select WAV PCM as the audio codec, otherwise the audio file would be raw PCM.</source>
-        <translation type="obsolete">Izaberi WAV PCM kao zvučni kodek, u suprotnom, zvučna datoteka će biti raw PCM.</translation>
-    </message>
-    <message>
-        <source>Saving audio</source>
-        <translation type="obsolete">Snimam zvuk</translation>
-    </message>
-    <message>
-        <source>Get Frame</source>
-        <translation type="obsolete">Uzmi kadar</translation>
-    </message>
-    <message>
-        <source>Cannot get this frame to save</source>
-        <translation type="obsolete">Ne mogu da uzmem ovaj kadar za snimanje</translation>
-    </message>
-    <message>
-        <source>Mark A &gt; B</source>
-        <translation type="obsolete">Oznaka A &gt; B</translation>
-    </message>
-    <message>
-        <source>Set your markers correctly.</source>
-        <translation type="obsolete">Postavite ispravno graničnike.</translation>
-    </message>
-    <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="obsolete">Snimanje kao set JPEG slika neuspelo.</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="obsolete">Ne mogu da dekodiram kadar</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="obsolete">Obustavljam.</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation type="obsolete">Završeno</translation>
-    </message>
-    <message>
-        <source>Saved %d images.</source>
-        <translation type="obsolete">Sačuvano %d slika.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">Greška</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="obsolete">Ne mogu da sačuvam sve slike</translation>
-    </message>
-    <message>
-        <source>Saved &quot;%s&quot;.</source>
-        <translation type="obsolete">Sačuvano „%s“</translation>
-    </message>
-    <message>
-        <source>BMP op failed</source>
-        <translation type="obsolete">Rad nad BMP neuspeo</translation>
-    </message>
-    <message>
-        <source>Saving %s as a BMP file failed.</source>
-        <translation type="obsolete">Snimanje %s u BMP datoteku neuspelo.</translation>
-    </message>
-    <message>
-        <source>Failed to open the file</source>
-        <translation type="obsolete">Neuspelo otvaranje datoteke</translation>
-    </message>
-    <message>
-        <source>Not a WAV file?</source>
-        <translation type="obsolete">Nije WAV datoteka?</translation>
-    </message>
-    <message>
-        <source>WAV open file failed...</source>
-        <translation type="obsolete">Otvaranje WAV datoteke neuspelo...</translation>
-    </message>
-    <message>
-        <source>Cannot decompress audio frame</source>
-        <translation type="obsolete">Ne mogu da raspakujem zvučni kadar.</translation>
-    </message>
-    <message>
-        <source>Memory Error</source>
-        <translation type="obsolete">Greška sa memorijom</translation>
-    </message>
-    <message>
-        <source>No frames to encode</source>
-        <translation type="obsolete">Nema kadrova za kodiranje</translation>
-    </message>
-    <message>
-        <source>Please check markers. Is &quot;A&gt;&quot; == &quot;&gt;B&quot;?</source>
-        <translation type="obsolete">Proverite graničnike. Da li je „A&gt;“ == „&gt;B“?</translation>
-    </message>
-    <message>
-        <source>Saving raw video stream</source>
-        <translation type="obsolete">Snimam raw video tok</translation>
-    </message>
-    <message>
-        <source>Checking video</source>
-        <translation type="obsolete">Proveravam video</translation>
-    </message>
-    <message>
-        <source>No error found</source>
-        <translation type="obsolete">Nisu nađene greške</translation>
-    </message>
-    <message>
-        <source>Errors found in %u frames</source>
-        <translation type="obsolete">Nađene greške u %u kadrovima</translation>
-    </message>
-    <message>
-        <source>Cannot decompress the audio stream</source>
-        <translation type="obsolete">Ne mogu da raspakujem zvučni tok.</translation>
-    </message>
-    <message>
-        <source>Switch audio codec to Copy.</source>
-        <translation type="obsolete">Odaberi „bez izmene“ kao zvučni kodek.</translation>
-    </message>
-    <message>
-        <source>Cannot delete the selection.</source>
-        <translation type="obsolete">Ne mogu da obrišem izabrano.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t remove all frames</source>
-        <translation type="obsolete">Ne možete da uklonite sve kadrove</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">Nešto loše se desilo</translation>
-    </message>
-    <message>
-        <source>Could not get tracks info</source>
-        <translation type="obsolete">Ne mogu da nađem informacije o stazama</translation>
-    </message>
-    <message>
-        <source>Take audio from video file</source>
-        <translation type="obsolete">Uzmi zvuk iz video datoteke</translation>
-    </message>
-    <message>
-        <source>No audio</source>
-        <translation type="obsolete">Bez audia</translation>
-    </message>
-    <message>
-        <source>External AC3</source>
-        <translation type="obsolete">Spoljašnji AC3</translation>
-    </message>
-    <message>
-        <source>Take audio from external AC3 file</source>
-        <translation type="obsolete">Uzmi zvuk iz spoljašnje AC3 datoteke</translation>
-    </message>
-    <message>
-        <source>External MP3</source>
-        <translation type="obsolete">Spoljašnji MP3</translation>
-    </message>
-    <message>
-        <source>Take audio from external MP3 file</source>
-        <translation type="obsolete">Uzmi zvuk iz spoljašnje MP3 datoteke</translation>
-    </message>
-    <message>
-        <source>External WAV</source>
-        <translation type="obsolete">Spoljašnji WAV</translation>
-    </message>
-    <message>
-        <source>Take audio from external WAV file</source>
-        <translation type="obsolete">Uzmi zvuk iz spoljašnje WAV datoteke</translation>
-    </message>
-    <message>
-        <source>_Audio source:</source>
-        <translation type="obsolete">Izvor _zvuka:</translation>
-    </message>
-    <message>
-        <source>_External file:</source>
-        <translation type="obsolete">_Spoljnja datoteka:</translation>
-    </message>
-    <message>
-        <source>_Track from video:</source>
-        <translation type="obsolete">_Uzmi zvuk iz video datoteke:</translation>
-    </message>
-    <message>
-        <source>Main Audio Track</source>
-        <translation type="obsolete">Glavna zvučna staza</translation>
-    </message>
-    <message>
-        <source>Cannot load</source>
-        <translation type="obsolete">Ne mogu da učitam</translation>
-    </message>
-    <message>
-        <source>The selected audio file does not exist.</source>
-        <translation type="obsolete">Izabrana zvučna daoteka ne postoji</translation>
-    </message>
-    <message>
-        <source>Second Audio Track</source>
-        <translation type="obsolete">Druga zvučna staza</translation>
-    </message>
-    <message>
-        <source>Error loading the MP3 file</source>
-        <translation type="obsolete">Greška pri učitavanju MP3 datoteke</translation>
-    </message>
-    <message>
-        <source>Second track loaded</source>
-        <translation type="obsolete">Druga staza učitana</translation>
-    </message>
-    <message>
-        <source>Error loading the AC3 file</source>
-        <translation type="obsolete">Greška pri učitavanju AC3 datoteke</translation>
-    </message>
-    <message>
-        <source>Error loading the WAV file</source>
-        <translation type="obsolete">Greška pri učitavanju WAV datoteke</translation>
-    </message>
-    <message>
-        <source>Saving failed</source>
-        <translation type="obsolete">Greška pri snimanju</translation>
-    </message>
-    <message>
-        <source>Saving the job failed. Maybe you have permission issue with ~/.avidemux</source>
-        <translation type="obsolete">Snimanje zadatka neuspelo. Možda nemate dozvole nad ~/.avidemux</translation>
-    </message>
-    <message>
-        <source>File %s has been successfully saved.</source>
-        <translation type="obsolete">Datoteka %s je uspešno sačuvana.</translation>
-    </message>
-    <message>
-        <source>File %s was NOT saved correctly.</source>
-        <translation type="obsolete">Datoteka %s nije pravilno sačuvana.</translation>
-    </message>
-    <message>
-        <source>AvsProxy</source>
-        <translation type="obsolete">AvsProxy</translation>
-    </message>
-    <message>
-        <source>Failed to connect to avsproxy.
-Is it running ?</source>
-        <translation type="obsolete">Neuspelo povezivanje na avsproxy.
-Da li je on pokrenut ?</translation>
-    </message>
-    <message>
-        <source>avsproxy</source>
-        <translation type="obsolete">avsproxy</translation>
-    </message>
-    <message>
-        <source>Frame type:</source>
-        <translation type="obsolete">Tip kadra:</translation>
-    </message>
-    <message>
-        <source>Frame size:</source>
-        <translation type="obsolete">Veličina kadra:</translation>
-    </message>
-    <message>
-        <source>Frame Hex Dump</source>
-        <translation type="obsolete">Baci heksadekadni kadar</translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">Umanjenje šuma</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">Rotiraj</translation>
-    </message>
-    <message>
-        <source>Subtitler</source>
-        <translation type="obsolete">Ubacivanje titla</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <translation type="obsolete">Normano</translation>
-    </message>
-    <message>
-        <source>Mux every N video frames</source>
-        <translation type="obsolete">Multipleksiraj svaki N video kadar</translation>
-    </message>
-    <message>
-        <source>Mux by packet size</source>
-        <translation type="obsolete">Multipleksiranje po veličini paketa</translation>
-    </message>
-    <message>
-        <source>Muxing _type:</source>
-        <translation type="obsolete">_Tip multipleksiranja:</translation>
-    </message>
-    <message>
-        <source>_Split every MB:</source>
-        <translation type="obsolete">_Podeli svakih MB:</translation>
-    </message>
-    <message>
-        <source>Mux _every x video frames:</source>
-        <translation type="obsolete">Multipleksiraj svaki h-ti video kadar:</translation>
-    </message>
-    <message>
-        <source>Mux in _blocks of x bytes:</source>
-        <translation type="obsolete">Multipleksiraj blokove od h bajtova:</translation>
-    </message>
-    <message>
-        <source>AVI Muxer Options</source>
-        <translation type="obsolete">Podešavanja AVI multipleksera</translation>
-    </message>
-    <message>
-        <source>PCM</source>
-        <translation type="obsolete">PCM</translation>
-    </message>
-    <message>
-        <source>MP2</source>
-        <translation type="obsolete">MP2</translation>
-    </message>
-    <message>
-        <source>MP3</source>
-        <translation type="obsolete">MP3</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">Neuspelo</translation>
-    </message>
-    <message>
-        <source>Codec Error</source>
-        <translation type="obsolete">Greška u kodecima</translation>
-    </message>
-    <message>
-        <source>The number of channels is greater than what the selected audio codec can do.
-Either change codec or use the mixer filter to have less channels.</source>
-        <translation type="obsolete">Broj zvučnih kanala je veći nego što izabrani zvučni kodek podržava.
-Ili odaberite drugi kodek ili koristite filter da smanjite broj kanala.</translation>
-    </message>
-    <message>
-        <source>Internal error finding codec</source>
-        <translation type="obsolete">Unutarnja greška u nalaženju kodeka</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Greška sa datotekom</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot;.</source>
-        <translation type="obsolete">Ne mogu da otvorim „%s“</translation>
-    </message>
-    <message>
-        <source>Cannot write the file</source>
-        <translation type="obsolete">Ne mogu da pišem u datoteku</translation>
-    </message>
-    <message>
-        <source>No write access to &quot;%s&quot;.</source>
-        <translation type="obsolete">Nemam dozvole za pisanje u „%s“</translation>
-    </message>
-    <message>
-        <source>AVI</source>
-        <translation type="obsolete">AVI</translation>
-    </message>
-    <message>
-        <source>AVI, dual audio</source>
-        <translation type="obsolete">AVI dve zvučne staze</translation>
-    </message>
-    <message>
-        <source>AVI, pack VOP</source>
-        <translation type="obsolete">AVI pakovani VOP</translation>
-    </message>
-    <message>
-        <source>AVI, unpack VOP</source>
-        <translation type="obsolete">AVI raspakovani VOP</translation>
-    </message>
-    <message>
-        <source>MPEG-PS (A+V)</source>
-        <translation type="obsolete">MPEG PS (aud + vid)</translation>
-    </message>
-    <message>
-        <source>MPEG-TS (A+V)</source>
-        <translation type="obsolete">MPEG TS (aud + vid)</translation>
-    </message>
-    <message>
-        <source>MPEG video</source>
-        <translation type="obsolete">MPEG video</translation>
-    </message>
-    <message>
-        <source>MP4</source>
-        <translation type="obsolete">MP4</translation>
-    </message>
-    <message>
-        <source>OGM</source>
-        <translation type="obsolete">OGM</translation>
-    </message>
-    <message>
-        <source>FLV</source>
-        <translation type="obsolete">FLV (Fleš video)</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation type="obsolete">MKV (Matroska)</translation>
-    </message>
-    <message>
-        <source>DUMMY</source>
-        <translation type="obsolete">DUMMY</translation>
-    </message>
-    <message>
-        <source>Partial</source>
-        <translation type="obsolete">Polovično</translation>
-    </message>
-    <message>
-        <source>Problem reading XML filters</source>
-        <translation type="obsolete">Problem pri čitanju XML filtera</translation>
-    </message>
-    <message>
-        <source>No filter found</source>
-        <translation type="obsolete">Nisu nađeni filteri</translation>
-    </message>
-    <message>
-        <source>Could not find a filter</source>
-        <translation type="obsolete">Ne mogu da nađem filter</translation>
-    </message>
-    <message>
-        <source>No tag found</source>
-        <translation type="obsolete">Nisu nađeni tagovi</translation>
-    </message>
-    <message>
-        <source>Node not found</source>
-        <translation type="obsolete">Čvor nije nađen</translation>
-    </message>
-    <message>
-        <source>There is several mpeg file, append them ?</source>
-        <translation type="obsolete">Ima nekoliko MPEG datoteka, da ih dodam ?</translation>
-    </message>
-    <message>
-        <source>Can&apos;t determine aspect ratio</source>
-        <translation type="obsolete">Ne mogu da odredim razmeru</translation>
-    </message>
-    <message>
-        <source>Wrong Colorspace</source>
-        <translation type="obsolete">Pogrešno okruženje boja</translation>
-    </message>
-    <message>
-        <source>Only YV12/I420 or YUY2/I422 JPegs are supported</source>
-        <translation type="obsolete">Samo YV12/I420 ili YUY2/I422 JPEG slike su podržane</translation>
-    </message>
-    <message>
-        <source>Output file error</source>
-        <translation type="obsolete">Greška u izlaznoj datoteci</translation>
-    </message>
-    <message>
-        <source>Could not open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Ne mogu da otvorim „%s“ za upis.</translation>
-    </message>
-    <message>
-        <source>Problem loading sub</source>
-        <translation type="obsolete">Problem pri učitavanju SUB datoteke</translation>
-    </message>
-    <message>
-        <source>Ifo error</source>
-        <translation type="obsolete">IFO greška</translation>
-    </message>
-    <message>
-        <source>Error reading ifo file, aborting.</source>
-        <translation type="obsolete">Greška pri čitanju IFO datoteke, prekidam.</translation>
-    </message>
-    <message>
-        <source>Cannot write .idx</source>
-        <translation type="obsolete">Ne mogu da upišem .IDX</translation>
-    </message>
-    <message>
-        <source>Cannot write .sub</source>
-        <translation type="obsolete">Ne mogu da upišem .SUB</translation>
-    </message>
-    <message>
-        <source>Problem opening the mpeg files</source>
-        <translation type="obsolete">Problem pri otvaranju MPEG datoteke.</translation>
-    </message>
-    <message>
-        <source>Generating VobSub file</source>
-        <translation type="obsolete">Generišem VobSub datoteku</translation>
-    </message>
-    <message>
-        <source>Could not write the file</source>
-        <translation type="obsolete">Ne mogu da pišem u datoteku</translation>
-    </message>
-    <message>
-        <source>Could not read &quot;%s&quot;.</source>
-        <translation type="obsolete">Ne mogu da čitam „%s“.</translation>
-    </message>
-    <message>
-        <source>Load it</source>
-        <translation type="obsolete">Učitaj ga</translation>
-    </message>
-    <message>
-        <source>Crash file</source>
-        <translation type="obsolete">Datoteka sa padovima programa</translation>
-    </message>
-    <message>
-        <source>I have detected a crash file. 
-Do you want to load it  ?
-(It will be deleted in all cases, you should save it if you want to keep it)</source>
-        <translation type="obsolete">Primećena je datoteka sa padom programa. 
-Da li želite da je učitate ?
-(Ona će biti obrisana u svakom slučaju, 
-trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
-    </message>
-    <message>
-        <source>Unsupported video</source>
-        <translation type="obsolete">Nepodržan video</translation>
-    </message>
-    <message>
-        <source>Only FLV1 and VP6 video are supported</source>
-        <translation type="obsolete">Samo FLV1 i VP6 video je podržan</translation>
-    </message>
-    <message>
-        <source>Unsupported audio</source>
-        <translation type="obsolete">Nepodržan zvuk</translation>
-    </message>
-    <message>
-        <source>Audio must be mp3 for flv output.</source>
-        <translation type="obsolete">Zvuk mora biti mp3 za flv izlaz</translation>
-    </message>
-    <message>
-        <source>Frequency must be 44100, 22050 or 11025 Hz.</source>
-        <translation type="obsolete">Učestanost mora biti 44100, 22050 ili 11025 Hz.</translation>
-    </message>
-    <message>
-        <source>Cannot initialize the audio stream</source>
-        <translation type="obsolete">Ne mogu da pokrenem zvučni tok</translation>
-    </message>
-    <message>
-        <source>PSP</source>
-        <translation type="obsolete">PSP (Plej stejšn)</translation>
-    </message>
-    <message>
-        <source>This is not MPEG compatible</source>
-        <translation type="obsolete">MPEG ne podržava ovo</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use the Copy codec.</source>
-        <translation type="obsolete">Ne možete da koristite „bez izmene“ kao kodek.</translation>
-    </message>
-    <message>
-        <source>There is no audio track</source>
-        <translation type="obsolete">Ne postoji zvučna staza</translation>
-    </message>
-    <message>
-        <source>The first frame is not intra frame</source>
-        <translation type="obsolete">Prvi kadar nije intra kadar</translation>
-    </message>
-    <message>
-        <source>Use the &amp;lt;&amp;lt; and the &amp;gt;&amp;gt; buttons to move using Intra frames.</source>
-        <translation type="obsolete">Koristi &amp;lt;&amp;lt; i &amp;gt;&amp;gt; dugmad za kretanje koristeći Intra kadrove.</translation>
-    </message>
-    <message>
-        <source>Audio track is not suitable</source>
-        <translation type="obsolete">Zvučna staza nije odgovarajuća</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2(stereo), AC3, DTS or LPCM (stereo).</source>
-        <translation type="obsolete">Za DVD zvuk mora biti 48 kHz MP2 (stereo), AC3, DTS ili LPCM (stereo).</translation>
-    </message>
-    <message>
-        <source>For VCD, audio must be 44.1 kHz MP2.</source>
-        <translation type="obsolete">Za VCD zvuk mora biti 44.1 kHz MP2.</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2, AC3 or LPCM.</source>
-        <translation type="obsolete">Za DVD zvuk mora biti 48 kHz MP2, AC3 or LPCM.</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Ne mogu da otvorim „%s“ za upis.</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="obsolete">Izaberi direktorijum</translation>
-    </message>
-    <message>
-        <source>Uinteger</source>
-        <translation type="obsolete">Necelo</translation>
-    </message>
-    <message>
-        <source>Float</source>
-        <translation type="obsolete">Lebdeći</translation>
-    </message>
-    <message>
-        <source>Toggle</source>
-        <translation type="obsolete">Promeni</translation>
-    </message>
-    <message>
-        <source>No Strategy</source>
-        <translation type="obsolete">Bez strategije</translation>
-    </message>
-    <message>
-        <source>3:2 Pulldown</source>
-        <translation type="obsolete">3:2 puldaun</translation>
-    </message>
-    <message>
-        <source>Pal/Secam</source>
-        <translation type="obsolete">Pal/Secam</translation>
-    </message>
-    <message>
-        <source>NTSC converted from PAL</source>
-        <translation type="obsolete">NTSC prekodiran iz PAL</translation>
-    </message>
-    <message>
-        <source>menu</source>
-        <translation type="obsolete">meni</translation>
-    </message>
-    <message>
-        <source>Select idx file:</source>
-        <translation type="obsolete">Izaberite idx datoteku:</translation>
-    </message>
-    <message>
-        <source>Output SRT file</source>
-        <translation type="obsolete">Izlazna SRT datoteka:</translation>
-    </message>
-    <message>
-        <source>Select input and ouput files</source>
-        <translation type="obsolete">Izaberite ulazne i izlazne datoteke</translation>
-    </message>
-    <message>
-        <source>The idx/sub file does not exist.</source>
-        <translation type="obsolete">idx/sub datoteka ne postoji</translation>
-    </message>
-    <message>
-        <source>Please Select a valid output SRT file.</source>
-        <translation type="obsolete">Izaberite ispravnu SRT datoteku.</translation>
-    </message>
-    <message>
-        <source>Cannot load the glyphset file.</source>
-        <translation type="obsolete">Ne mogu da učitam datoteku sa setom karaktera.</translation>
-    </message>
-    <message>
-        <source>Save Glyph</source>
-        <translation type="obsolete">Sačuvaj karakter</translation>
-    </message>
-    <message>
-        <source>Input TS:</source>
-        <translation type="obsolete">Ulazni TS</translation>
-    </message>
-    <message>
-        <source>Subtitle PID:</source>
-        <translation type="obsolete">PID titla</translation>
-    </message>
-    <message>
-        <source>Please Select a valid TS file.</source>
-        <translation type="obsolete">Izaberite ispravnu TS datoteku.</translation>
-    </message>
-    <message>
-        <source>Audio</source>
-        <translation type="obsolete">Zvuk</translation>
-    </message>
-    <message>
-        <source>Oops</source>
-        <translation type="obsolete">Ups...</translation>
-    </message>
-    <message>
-        <source>Something very wrong happened when building joblist.</source>
-        <translation type="obsolete">Nešto veoma loše se desilo prilikom pravljenja liste zadataka</translation>
-    </message>
-    <message>
-        <source>There are no jobs stored</source>
-        <translation type="obsolete">Nema sačuvanih zadataka.</translation>
-    </message>
-    <message>
-        <source>Decompressing error</source>
-        <translation type="obsolete">Greška pri raspakovanju</translation>
-    </message>
-    <message>
-        <source>Cannot decode next frame.</source>
-        <translation type="obsolete">Ne mogu da dekodiram naredni kadar</translation>
-    </message>
-    <message>
-        <source>Cannot decode keyframe.</source>
-        <translation type="obsolete">Ne mogu da dekodiram ključni kadar</translation>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="obsolete">Pretraživanje</translation>
-    </message>
-    <message>
-        <source>Finding black frames</source>
-        <translation type="obsolete">Tražim crne kadrove</translation>
-    </message>
-    <message>
-        <source>Cannot decode the frame.</source>
-        <translation type="obsolete">Ne mogu da dekodiram kadar</translation>
-    </message>
-    <message>
-        <source>Dual audio can only be used in copy mode</source>
-        <translation type="obsolete">Dve zvučne staze mogu biti korišćene samo u režimu za umnožavanje.</translation>
-    </message>
-    <message>
-        <source>Select Copy as the video codec.</source>
-        <translation type="obsolete">Izaberi „bez izmene“ kao video kodek.</translation>
-    </message>
-    <message>
-        <source>Incompatible output format</source>
-        <translation type="obsolete">Nekompatibilan izlazni format</translation>
-    </message>
-    <message>
-        <source>There is no second track</source>
-        <translation type="obsolete">Ne postoji druga staza</translation>
-    </message>
-    <message>
-        <source>Select a second audio track in the Audio menu.</source>
-        <translation type="obsolete">Izaberite drugu zvučnu stazu iz „Zvuk“ menija</translation>
-    </message>
-    <message>
-        <source>Select dual audio AVI to write</source>
-        <translation type="obsolete">Izaberite AVI datoteku sa dva zvučna kanala za upis </translation>
-    </message>
-    <message>
-        <source>This cannot have packed VOP</source>
-        <translation type="obsolete">Ono ne možete pakovati u VOP</translation>
-    </message>
-    <message>
-        <source>It is not MPEG-4 video. File will not be saved.</source>
-        <translation type="obsolete">Ovo nije MPEG-4 video. Datoteka neće biti sačuvana.</translation>
-    </message>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">Problemi pri pokretanju zvučne kartice</translation>
-    </message>
-    <message>
-        <source>VBR</source>
-        <translation type="obsolete">VBR</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">Bazirano na kvalitetu</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Režim:</translation>
-    </message>
-    <message>
-        <source>Resize</source>
-        <translation type="obsolete">Promeni veličinu</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be 0</source>
-        <translation type="obsolete">Širina i visina ne mogu biti 0</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Visina i širina ne mogu biti neparni brojevi</translation>
-    </message>
-    <message>
-        <source>Chroma U</source>
-        <translation type="obsolete">Hroma U</translation>
-    </message>
-    <message>
-        <source>Chroma V</source>
-        <translation type="obsolete">Hroma V</translation>
-    </message>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">Kontrast</translation>
-    </message>
-    <message>
-        <source>MPlayer eq2</source>
-        <translation type="obsolete">MPlayer ekvilajzer 2</translation>
-    </message>
-    <message>
-        <source>_Subtitle file:</source>
-        <translation type="obsolete">Datoteka sa _titlom:</translation>
-    </message>
-    <message>
-        <source>_Font (TTF):</source>
-        <translation type="obsolete">_Slovni lik (TTF):</translation>
-    </message>
-    <message>
-        <source>_Encoding:</source>
-        <translation type="obsolete">_Kodiranje:</translation>
-    </message>
-    <message>
-        <source>S_elect C_olor</source>
-        <translation type="obsolete">Odaberi _boju</translation>
-    </message>
-    <message>
-        <source>Set Size and _Position</source>
-        <translation type="obsolete">Odaberi veličinu i po_ziciju</translation>
-    </message>
-    <message>
-        <source>_Auto split</source>
-        <translation type="obsolete">_Automatski podeli</translation>
-    </message>
-    <message>
-        <source>_Delay (ms):</source>
-        <translation type="obsolete">_Trajanje (ms):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMImage</name>
-    <message>
-        <source>Memory error</source>
-        <translation type="obsolete">Greška u memoriji</translation>
-    </message>
-    <message>
-        <source>Error converting to BMP</source>
-        <translation type="obsolete">Greška pri prebacivanju u BMP</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">Nešto loše se desilo</translation>
-    </message>
-    <message>
-        <source>Cannot encode the frame</source>
-        <translation type="obsolete">Ne mogu da kodiram kadar</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Greška sa datotekom</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Ne mogu da otvorim „%s“ za upis.</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoComputeAverage</name>
-    <message>
-        <source>_Start Frame (first frame # to include in average):</source>
-        <translation type="obsolete">Po_četni kadar (prvi kadar # uključen u prosek):</translation>
-    </message>
-    <message>
-        <source>_End Frame (last frame # to include), -1 = last:</source>
-        <translation type="obsolete">Po_slednji kadar (poslednji kadar # za uključenje), -1 = poslednji:</translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">Izlazna _datoteka:</translation>
-    </message>
-    <message>
-        <source>_Bias (only for display; use 0 for average, 128 for frame minus average):</source>
-        <translation type="obsolete">_Neravnoteža (samo za ekran; koristi 0 za prosek, 128 za kadar minus prosek):</translation>
-    </message>
-    <message>
-        <source>Current frame minus average so far</source>
-        <translation type="obsolete">Trenutni kadar minus dosadašnji prosek</translation>
-    </message>
-    <message>
-        <source>Average so far</source>
-        <translation type="obsolete">Prosek do sada</translation>
-    </message>
-    <message>
-        <source>Display nothing (fast for batch processing)</source>
-        <translation type="obsolete">Ne prikazuj ništa (brzo za grupnu obradu)</translation>
-    </message>
-    <message>
-        <source>Display _Mode:</source>
-        <translation type="obsolete">Način _prikaza:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDenoise</name>
-    <message>
-        <source>_Luma lock:</source>
-        <translation type="obsolete">_Luma zaključavanje:</translation>
-    </message>
-    <message>
-        <source>C_hroma lock:</source>
-        <translation type="obsolete">_Hroma zaključavanje:</translation>
-    </message>
-    <message>
-        <source>L_uma threshold:</source>
-        <translation type="obsolete">L_uma osetljivost:</translation>
-    </message>
-    <message>
-        <source>Ch_roma threshold:</source>
-        <translation type="obsolete">H_roma osetljivost:</translation>
-    </message>
-    <message>
-        <source>_Scene change:</source>
-        <translation type="obsolete">_Promena scene:</translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">Umanjenje šuma</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDropOut</name>
-    <message>
-        <source>DropOut Threshold</source>
-        <translation type="obsolete">Odbačena osetljivost</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoEraser</name>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">Postavke _traženja brešaka (bitova):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoForcedPP</name>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">_Jačina filtera:</translation>
-    </message>
-    <message>
-        <source>_Quantizer:</source>
-        <translation type="obsolete">_Kvantizer:</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">_Horizontalno uklanjanje blokova</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">_Vertikalno uklanjanje blokova</translation>
-    </message>
-    <message>
-        <source>_Deringing</source>
-        <translation type="obsolete">_Deringing</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoKernelDeint</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Iznad</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Dno</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">_Redosled polja:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Osetljivost:</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Manja vrednost više raspliće</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">O_štro:</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">Izoštriva_č:</translation>
-    </message>
-    <message>
-        <source>T_woway</source>
-        <translation type="obsolete">Dva _načina</translation>
-    </message>
-    <message>
-        <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">Bolja ekstrapolacija (bolje ne koristi)</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">_Mapa</translation>
-    </message>
-    <message>
-        <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">Prikaži prepletena područja (samo za testiranje!)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLavPPDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>Linear blend</source>
-        <translation type="obsolete">Linearno stapanje</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">Linearno umetanje</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Kvadratno umetanje</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Usrednjeno umetanje</translation>
-    </message>
-    <message>
-        <source>FFmpeg deint</source>
-        <translation type="obsolete">FFmpeg rasplitanje</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">_Rasplitanje:</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">_Automatski nivo :</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLogo</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">_Logotip (jpg datoteka)</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">X _pozicija:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">Y p_ozicija:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">_Alfa:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3D</name>
-    <message>
-        <source>_Spatial luma strength:</source>
-        <translation type="obsolete">Prostorna _luma jačina:</translation>
-    </message>
-    <message>
-        <source>S_patial chroma strength:</source>
-        <translation type="obsolete">Prostorna _hroma jačina:</translation>
-    </message>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">_Temporalna jačina:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3Dlow</name>
-    <message>
-        <source>_Spatial luma strength:</source>
-        <translation type="obsolete">Prostorna _luma jačina:</translation>
-    </message>
-    <message>
-        <source>S_patial chroma strength:</source>
-        <translation type="obsolete">Prostorna _hroma jačina:</translation>
-    </message>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">_Temporalna jačina:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMaskedSoften</name>
-    <message>
-        <source>_Luma threshold:</source>
-        <translation type="obsolete">_Luma osetljivost:</translation>
-    </message>
-    <message>
-        <source>C_hroma threshold:</source>
-        <translation type="obsolete">_Hroma osetljivost:</translation>
-    </message>
-    <message>
-        <source>_Radius:</source>
-        <translation type="obsolete">_Prečnik:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMosaic</name>
-    <message>
-        <source>_Horizontal stacking:</source>
-        <translation type="obsolete">Horizontalni udeo:</translation>
-    </message>
-    <message>
-        <source>_Vertical stacking:</source>
-        <translation type="obsolete">Vertikalni udeo:</translation>
-    </message>
-    <message>
-        <source>_Shrink factor:</source>
-        <translation type="obsolete">Faktor _suženja:</translation>
-    </message>
-    <message>
-        <source>Show _frame</source>
-        <translation type="obsolete">Prikaži _kadar</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoPalShift</name>
-    <message>
-        <source>_Try reverse</source>
-        <translation type="obsolete">Pokušaj _obrnuto</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoParticle</name>
-    <message>
-        <source>New format, preferred, good for Tracker3D</source>
-        <translation type="obsolete">Novi format, poželjno, dobro za Tracker3D</translation>
-    </message>
-    <message>
-        <source>Old format that Tracker3D can&apos;t read directly</source>
-        <translation type="obsolete">Stari format koga Tracker3D ne može da čita direktno</translation>
-    </message>
-    <message>
-        <source>Mi_nimum area for a particle to be detected:</source>
-        <translation type="obsolete">Naj_manja oblast za nalaženje delića:</translation>
-    </message>
-    <message>
-        <source>Ma_ximum area for a particle to be detected:</source>
-        <translation type="obsolete">Naj_veća oblast za nalaženje delića:</translation>
-    </message>
-    <message>
-        <source>_Left side crop (ignore particles in):</source>
-        <translation type="obsolete">Odsecanje _leve strane (zanemari deliće u):</translation>
-    </message>
-    <message>
-        <source>_Right side crop (ignore particles in):</source>
-        <translation type="obsolete">Odsecanje _desne strane (zanemari deliće u):</translation>
-    </message>
-    <message>
-        <source>_Top crop (ignore particles in):</source>
-        <translation type="obsolete">Odsecanje _gore (zanemari deliće u):</translation>
-    </message>
-    <message>
-        <source>_Bottom crop (ignore particles in):</source>
-        <translation type="obsolete">Odsecanje _dole (zanemari deliće u):</translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">Izlazna _datoteka:</translation>
-    </message>
-    <message>
-        <source>_Camera number:</source>
-        <translation type="obsolete">Broj _kamere:</translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">Postavke _traženja brešaka (bitova):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoResampleFPS</name>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Nova učestanost kadrova:</translation>
-    </message>
-    <message>
-        <source>_Blend</source>
-        <translation type="obsolete">_Stopi</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoRotate</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 stepeni</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 stepeni</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 stepeni</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">_Ugao:</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">Rotiraj</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoStabilize</name>
-    <message>
-        <source>Stabilize Threshold</source>
-        <translation type="obsolete">Stabilizuj osetljivost</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubASS</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">Datoteka sa _titlom (ASS/SSA):</translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">_Širina linije:</translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">_Rastezanje slovnog lika:</translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">_Gornja granica:</translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">_Donja granica:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubtitle</name>
-    <message>
-        <source>Could not open subtitle file</source>
-        <translation type="obsolete">Ne mogu da otvorima datoteku sa titlom</translation>
-    </message>
-    <message>
-        <source>Cannot identify subtitle format</source>
-        <translation type="obsolete">Ne mogu da prepoznam datoteku sa titlom</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSwissArmyKnife</name>
-    <message>
-        <source>P&apos; = A</source>
-        <translation type="obsolete">P&apos; = A</translation>
-    </message>
-    <message>
-        <source>P&apos; = P</source>
-        <translation type="obsolete">P&apos; = P</translation>
-    </message>
-    <message>
-        <source>P&apos; = P - A</source>
-        <translation type="obsolete">P&apos; = P - A</translation>
-    </message>
-    <message>
-        <source>P&apos; = A - P</source>
-        <translation type="obsolete">P&apos; = A - P</translation>
-    </message>
-    <message>
-        <source>P&apos; = P + A</source>
-        <translation type="obsolete">P&apos; = P + A</translation>
-    </message>
-    <message>
-        <source>P&apos; = P * A</source>
-        <translation type="obsolete">P&apos; = P * A</translation>
-    </message>
-    <message>
-        <source>P&apos; = P / A</source>
-        <translation type="obsolete">P&apos; = P / A</translation>
-    </message>
-    <message>
-        <source>P&apos; = A / P</source>
-        <translation type="obsolete">P&apos; = A / P</translation>
-    </message>
-    <message>
-        <source>P&apos; = min (P, A)</source>
-        <translation type="obsolete">P&apos; = min (P, A)</translation>
-    </message>
-    <message>
-        <source>P&apos; = max (P, A)</source>
-        <translation type="obsolete">P&apos; = maks (P, A)</translation>
-    </message>
-    <message>
-        <source>A = convolve(P); Load convolution kernel from file</source>
-        <translation type="obsolete">A = uvijen(P); Učitaj uvojak kernela iz datoteke</translation>
-    </message>
-    <message>
-        <source>A = pixel from image file as float; Load image from file</source>
-        <translation type="obsolete">A = piksel iz slike kao uzorak; Učitaj sliku iz datoteke</translation>
-    </message>
-    <message>
-        <source>A = pixel from image file as integer; Load image from file</source>
-        <translation type="obsolete">A = piksel iz slike kao celobrojna vrednost; Učitaj sliku iz datoteke</translation>
-    </message>
-    <message>
-        <source>A = floating point constant value</source>
-        <translation type="obsolete">A = stalna vrednost uzorkovane tačke</translation>
-    </message>
-    <message>
-        <source>A = rolling average of pixel: A = A*(1-alpha)+(P*alpha)</source>
-        <translation type="obsolete">A = po proseku piksela: A = A*(1-alfa)+(P*alfa)</translation>
-    </message>
-    <message>
-        <source>Select _Operation on each pixel P and input A:</source>
-        <translation type="obsolete">Izaberi _radnju za svaki piksel P i ulaz A:</translation>
-    </message>
-    <message>
-        <source>Input _Type:</source>
-        <translation type="obsolete">Ulazni _tip:</translation>
-    </message>
-    <message>
-        <source>Input _File (image or convolution kernel):</source>
-        <translation type="obsolete">Ulazna datoteka (slika ili uvojak kernela)</translation>
-    </message>
-    <message>
-        <source>_Load Bias (added to each pixel
-in file image when loaded):</source>
-        <translation type="obsolete">Učitaj _pomeraj (dodato na svaki piksel
-odrazu datoteke pri učitavanju):</translation>
-    </message>
-    <message>
-        <source>Load _Multiplier (each pixel in
-file image mult. by this when loaded):</source>
-        <translation type="obsolete">Učitaj _umnožilac (svaki piksel u
-)odrazu slike se umnožava za ovu
-vrednost pri učitavanju):</translation>
-    </message>
-    <message>
-        <source>Input _Constant:</source>
-        <translation type="obsolete">_Konstanta ulaza:</translation>
-    </message>
-    <message>
-        <source>Init _Start Frame (first frame # to use for head start):</source>
-        <translation type="obsolete">Počni _prvi kadar (prvi kadar # koji se koristi za početak zaglavlja):</translation>
-    </message>
-    <message>
-        <source>Init _End Frame (last frame # to use for head start):</source>
-        <translation type="obsolete">Počni _zadnji kadar (poslednji kadar # koji se koristi za početak zaglavlja):</translation>
-    </message>
-    <message>
-        <source>Init By _Rolling (compute head start using a rolling average rather than a straight average)</source>
-        <translation type="obsolete">Počni po _okretu (izračunaj početak zaglavlja po proseku okreta pre nego po proseku snage):</translation>
-    </message>
-    <message>
-        <source>_Bias (will be added to result):</source>
-        <translation type="obsolete">_Bias (biće dodato na rezultat):</translation>
-    </message>
-    <message>
-        <source>_Histogram every N frames (0 to disable):</source>
-        <translation type="obsolete">_Histogram svakih n kadrova (0 za onemogućeno):</translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">Postavke _traženja brešaka (bitova):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoTIsophote</name>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Srednje</translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">_Tip:</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Manja vrednost više raspliće</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoThreshold</name>
-    <message>
-        <source>Mi_nimum value to be in-range:</source>
-        <translation type="obsolete">Najmanja vrednost za _uključenje u opseg</translation>
-    </message>
-    <message>
-        <source>Ma_ximum value to be in-range:</source>
-        <translation type="obsolete">Najveća vrednost za ostanak u opsegu:</translation>
-    </message>
-    <message>
-        <source>In-range values go white, out-of-range go black</source>
-        <translation type="obsolete">Vrednosti unutar opsega postaju bele, van njega crne</translation>
-    </message>
-    <message>
-        <source>In-range values go black, out-of-range go white</source>
-        <translation type="obsolete">Vrednosti unutar opsega postaju crne, van njega bele</translation>
-    </message>
-    <message>
-        <source>Output values:</source>
-        <translation type="obsolete">Izlazne vrednosti:</translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">Postavke _traženja brešaka (bitova):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoYadif</name>
-    <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">Temporalna i spatialna provera</translation>
-    </message>
-    <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">Bob, temporalna i spatialna provera</translation>
-    </message>
-    <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="obsolete">Preskoči spatialnu temporalnu proveru</translation>
-    </message>
-    <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">Bob, preskoči spatialnu temporalnu proveru</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">Najpre donja polja</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">Najpre gornja polja</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Režim:</translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">_Redosled:</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_AudiocodecWMA</name>
-    <message>
-        <source>Internal error</source>
-        <translation type="obsolete">Unutarnja greška</translation>
-    </message>
-    <message>
-        <source>Cannot open WMA2 codec.</source>
-        <translation type="obsolete">Ne mogu da otvorim WMA2 kodek.</translation>
-    </message>
-</context>
-<context>
     <name>ADM_Composer</name>
-    <message>
-        <source>No video loaded</source>
-        <translation type="obsolete">Nema učitanog videa</translation>
-    </message>
-    <message>
-        <source>Not indexable</source>
-        <translation type="obsolete">Nemoguće napraviti indeks</translation>
-    </message>
-    <message>
-        <source>DivX 5 + packed?</source>
-        <translation type="obsolete">Da li je zapakovano u DivX 5 +?</translation>
-    </message>
-    <message>
-        <source>Rebuilding Frames</source>
-        <translation type="obsolete">Ponovno građenje kadrova</translation>
-    </message>
-    <message>
-        <source>Aborted</source>
-        <translation type="obsolete">Prekinuto</translation>
-    </message>
-    <message>
-        <source>Unsupported</source>
-        <translation type="obsolete">Nije podržano</translation>
-    </message>
-    <message>
-        <source>Old format project file</source>
-        <translation type="obsolete">Stari format datoteke sa projektom</translation>
-    </message>
-    <message>
-        <source>No more supported.</source>
-        <translation type="obsolete">Više nije podržano.</translation>
-    </message>
-    <message>
-        <source>File type identified but no loader support detected...</source>
-        <translation type="obsolete">Tip datoteke prepoznat, ali ne postoji podrška za učitavanje...</translation>
-    </message>
-    <message>
-        <source>May be related to an old index file.</source>
-        <translation type="obsolete">Možda se odnosi na neku staru datoteku sa indeksom.</translation>
-    </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+232"/>
         <source>Attempt to open %s failed!</source>
         <translation type="unfinished">Pokušaj da otvorim %s nije uspeo!</translation>
-    </message>
-    <message>
-        <source>Build Time Map</source>
-        <translation type="obsolete">Izgradi vremensku mapu</translation>
-    </message>
-    <message>
-        <source>Build VBR time map?</source>
-        <translation type="obsolete">Da izgradim VBR vremensku mapu?</translation>
-    </message>
-    <message>
-        <source>Packed Bitstream detected</source>
-        <translation type="obsolete">Pronađen pakovani bitski tok</translation>
-    </message>
-    <message>
-        <source>Do you want me to unpack it ?</source>
-        <translation type="obsolete">Da li želite da ga raspakujete ?</translation>
-    </message>
-    <message>
-        <source>Could not unpack the video</source>
-        <translation type="obsolete">Ne mogu da raspakujem video</translation>
-    </message>
-    <message>
-        <source>Using backup decoder - not frame accurate.</source>
-        <translation type="obsolete">Koristim rezervni dekoder - manja preciznost kadrova.</translation>
-    </message>
-    <message>
-        <source>Weird</source>
-        <translation type="obsolete">Čudno</translation>
-    </message>
-    <message>
-        <source>The unpacking succeedeed but the index is still not up to date.</source>
-        <translation type="obsolete">Uspešno raspakovano ali indeks još uvek nije ažuran.</translation>
-    </message>
-    <message>
-        <source>Index is not up to date</source>
-        <translation type="obsolete">Indeks nije ažuran.</translation>
-    </message>
-    <message>
-        <source>You should use Tool-&gt;Rebuild frame. Do it now ?</source>
-        <translation type="obsolete">Trebalo bi da koristite Alati -&gt; Re-izgradi kadrove. Da uradim to sada ?</translation>
-    </message>
-    <message>
-        <source>This looks like mpeg
- Do you want to index it?</source>
-        <translation type="obsolete">Ovo izgleda kao MPEG
-Da li želite da napravite njegov indeks?</translation>
-    </message>
-    <message>
-        <source>Indexing failed</source>
-        <translation type="obsolete">Pravljenje indeksa neuspelo</translation>
     </message>
     <message>
         <location line="-36"/>
@@ -2364,7 +14,7 @@ Da li želite da napravite njegov indeks?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+64"/>
         <source>width</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2425,191 +75,6 @@ If you just copy the video without reencoding,
  you should keep them.
 Drop timing informations ?</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4CoreUIToolkit</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">Uzbuna</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4Factory::ADM_Qbitrate</name>
-    <message>
-        <source>Bitrate</source>
-        <translation type="obsolete">Bitski protok</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="obsolete">-</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_QthreadCount</name>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Nađi sam</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">Proizvoljno</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWrite</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Bez izmene</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Greška sa datotekom</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Ne mogu da otvorim „%s“ za upis.</translation>
-    </message>
-    <message>
-        <source>OGM</source>
-        <translation type="obsolete">OGM</translation>
-    </message>
-    <message>
-        <source>Could not initialize video</source>
-        <translation type="obsolete">Ne mogu da pustim video</translation>
-    </message>
-    <message>
-        <source>Could not initialize audio</source>
-        <translation type="obsolete">Ne mogu da pustim zvuk</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Bez izmene</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteProcess</name>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Pokretanje filtera neuspelo</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qt4Factory::ADM_QthreadCount</name>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Nađi sam</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">Proizvoljno</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMGenericAudioStream</name>
-    <message>
-        <source>Building VBR map</source>
-        <translation type="obsolete">Pravim VBR vremensku mapu?</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoMCDeint</name>
-    <message>
-        <source>Fast</source>
-        <translation type="obsolete">Brzo</translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Srednje</translation>
-    </message>
-    <message>
-        <source>Slow iterative motion search</source>
-        <translation type="obsolete">Spora upitna pretraga pokreta</translation>
-    </message>
-    <message>
-        <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="obsolete">Izuzetno sporo (isto kao 3 + više vezanih kadrova)</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Iznad</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Dno</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Režim:</translation>
-    </message>
-    <message>
-        <source>_Field dominance:</source>
-        <translation type="obsolete">_Dominacija polja:</translation>
-    </message>
-    <message>
-        <source>_Qp:</source>
-        <translation type="obsolete">_Četvrt piksela:</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoVlad</name>
-    <message>
-        <source>_Luma temporal threshold:</source>
-        <translation type="obsolete">_Luma temporalna osetljivost:</translation>
-    </message>
-    <message>
-        <source>Ch_roma temporal threshold:</source>
-        <translation type="obsolete">_Hroma temporalna osetljivost:</translation>
-    </message>
-</context>
-<context>
-    <name>AVDM_Fade</name>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">Izlaz</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="obsolete">Bledi izlaz</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation type="obsolete">Ulaz</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="obsolete">Bledi ulaz</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">Tip _izbleđivanja:</translation>
-    </message>
-    <message>
-        <source>_Start frame:</source>
-        <translation type="obsolete">_Početni kadar:</translation>
-    </message>
-    <message>
-        <source>_End frame:</source>
-        <translation type="obsolete">_Krajnji kadar:</translation>
-    </message>
-    <message>
-        <source>Fade to _black</source>
-        <translation type="obsolete">Izbledi do crnog</translation>
-    </message>
-    <message>
-        <source>Parameter Error</source>
-        <translation type="obsolete">Greška u parametrima</translation>
-    </message>
-    <message>
-        <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="obsolete">Početak mora biti nakon kraja o oba unutar videa # od kadrova.</translation>
     </message>
 </context>
 <context>
@@ -2775,168 +240,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Cnr2Dialog</name>
-    <message>
-        <source>Narrow</source>
-        <translation type="obsolete">Suženje</translation>
-    </message>
-    <message>
-        <source>Sensibility</source>
-        <translation type="obsolete">Osetljivost</translation>
-    </message>
-</context>
-<context>
-    <name>ColorYuvDialog</name>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">Kontrast</translation>
-    </message>
-    <message>
-        <source>Brightness</source>
-        <translation type="obsolete">Osvetljenost</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">Pojačaj</translation>
-    </message>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">Gama</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>Rec.709</source>
-        <translation type="obsolete">Rec.709</translation>
-    </message>
-    <message>
-        <source>Coring</source>
-        <translation type="obsolete">Koring</translation>
-    </message>
-</context>
-<context>
-    <name>DGbob</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Iznad</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Dno</translation>
-    </message>
-    <message>
-        <source>Keep nb of frames and fps</source>
-        <translation type="obsolete">Zadrži broj kadrova i br. kadrova u sek.</translation>
-    </message>
-    <message>
-        <source>Double nb of frames and fps</source>
-        <translation type="obsolete">Udvostruči broj kadrova i kadrova po sekindi</translation>
-    </message>
-    <message>
-        <source>Double nb of frames (slow motion)</source>
-        <translation type="obsolete">Udvostruči broj kadrova (usporen snimak)</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">_Redosled polja:</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Režim:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Osetljivost:</translation>
-    </message>
-    <message>
-        <source>_Extra</source>
-        <translation type="obsolete">_Dodatno</translation>
-    </message>
-    <message>
-        <source>Extra check, avoid using it</source>
-        <translation type="obsolete">Dodatna provera, izbegni da koristiš</translation>
-    </message>
-</context>
-<context>
-    <name>DIA_encodingQt4</name>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">Gasim računar</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">Nastavi</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">Prekini</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">Potrebna ovlašćenja</translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">Administratorska ovlašćenja su potrebna za izvršavanje ove operacije.</translation>
-    </message>
-</context>
-<context>
-    <name>DVEncoder</name>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">Neusaglašene postavke</translation>
-    </message>
-</context>
-<context>
-    <name>Decimate</name>
-    <message>
-        <source>Discard closer</source>
-        <translation type="obsolete">Zanemari bliže</translation>
-    </message>
-    <message>
-        <source>Replace (interpolate)</source>
-        <translation type="obsolete">Zameni (umetni)</translation>
-    </message>
-    <message>
-        <source>Pulldown dupe removal</source>
-        <translation type="obsolete">Uklanjanje puldaun prevara</translation>
-    </message>
-    <message>
-        <source>Fastest (no chroma, partial luma)</source>
-        <translation type="obsolete">Najbrže (polovično luma, bez hroma)</translation>
-    </message>
-    <message>
-        <source>Fast (partial luma and chroma)</source>
-        <translation type="obsolete">Brzo (polovično luma i hroma)</translation>
-    </message>
-    <message>
-        <source>Medium (full luma, no chroma)</source>
-        <translation type="obsolete">Srednje (polovično hroma, pun luma)</translation>
-    </message>
-    <message>
-        <source>Slow (full luma and chroma)</source>
-        <translation type="obsolete">Sporo (pun luma i hroma)</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Režim:</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">_Kvalitet:</translation>
-    </message>
-    <message>
-        <source>_Threshold 1:</source>
-        <translation type="obsolete">Osetljivost _1:</translation>
-    </message>
-    <message>
-        <source>T_hreshold 2:</source>
-        <translation type="obsolete">Osetljivost _2:</translation>
-    </message>
-</context>
-<context>
     <name>Dialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="+64"/>
@@ -2963,10 +266,6 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <source>Configure</source>
         <translation type="unfinished">Postavke</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">Zvučni filteri</translation>
     </message>
     <message>
         <location line="-116"/>
@@ -3071,42 +370,37 @@ Drop timing informations ?</source>
 <context>
     <name>DialogProcessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+47"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+26"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="+34"/>
+        <location line="+7"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location line="-67"/>
+        <location line="-19"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+19"/>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
+        <location line="+33"/>
         <source>TimeLeft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+21"/>
         <source>ProcessImages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+34"/>
+        <location line="-7"/>
         <source>Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-7"/>
         <source>0 fps</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3137,13 +431,6 @@ Drop timing informations ?</source>
         <location line="+7"/>
         <source>...</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>EncoderCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Bez izmene</translation>
     </message>
 </context>
 <context>
@@ -3178,184 +465,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>FLV1Encoder</name>
-    <message>
-        <source>_Bitrate (kb/s):</source>
-        <translation type="obsolete">_Bitski protok (kb/s)</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">_Veličina slovnog lika:</translation>
-    </message>
-</context>
-<context>
-    <name>GUIPlayback</name>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">Problemi pri pokretanju zvučne kartice</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSave</name>
-    <message>
-        <source>Error initalizing audio filters</source>
-        <translation type="obsolete">Ne mogu da pokrenem zvučne filtere</translation>
-    </message>
-    <message>
-        <source>Error initalizing video filters</source>
-        <translation type="obsolete">Ne mogu da pokrenem video filtere</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Bez izmene</translation>
-    </message>
-    <message>
-        <source>AVI</source>
-        <translation type="obsolete">AVI</translation>
-    </message>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Ne mogu da započnem snimanje</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopy</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Ne mogu da započnem snimanje</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyPack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Ne mogu da započnem snimanje</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyUnpack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Ne mogu da započnem snimanje</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveProcess</name>
-    <message>
-        <source>Width is not a multiple of 8
- continue anyway ?</source>
-        <translation type="obsolete">Širina filma nije osmi umnožak dužine.
-Da nastavim?</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Pokretanje filtera neuspelo</translation>
-    </message>
-    <message>
-        <source>Aborting</source>
-        <translation type="obsolete">Obustavljam</translation>
-    </message>
-</context>
-<context>
-    <name>GlyphEditorDialog</name>
-    <message>
-        <source>Prev. Empty</source>
-        <translation type="obsolete">Prethodni prazan</translation>
-    </message>
-    <message>
-        <source>Next Empty</source>
-        <translation type="obsolete">Naredni prazan</translation>
-    </message>
-</context>
-<context>
-    <name>GlyphEditorWindow</name>
-    <message>
-        <source>Head reached</source>
-        <translation type="obsolete">Dosegnut početak</translation>
-    </message>
-    <message>
-        <source>No more glyphs</source>
-        <translation type="obsolete">Nema više karaktera</translation>
-    </message>
-    <message>
-        <source>End reached</source>
-        <translation type="obsolete">Kraj dosegnut</translation>
-    </message>
-    <message>
-        <source>String</source>
-        <translation type="obsolete">Karakter</translation>
-    </message>
-    <message>
-        <source>Search string</source>
-        <translation type="obsolete">Traži karakter</translation>
-    </message>
-    <message>
-        <source>Select GlyphFile to edit</source>
-        <translation type="obsolete">Izaberi datoteku sa karakterima za uređivanje</translation>
-    </message>
-</context>
-<context>
-    <name>H263Encoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">Potpuno</translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">Dnevnik izmena</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">Phods</translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">H.263</translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Procena pokreta</translation>
-    </message>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">Neusaglašene postavke</translation>
-    </message>
-</context>
-<context>
-    <name>IndexDialog</name>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">Pravim indeks</translation>
-    </message>
-</context>
-<context>
-    <name>MP4Header</name>
-    <message>
-        <source>Problem reading SVQ3 headers</source>
-        <translation type="obsolete">Problem pri čitanju SVQ3 zaglavlja</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="obsolete">Ne postoji stts tabela</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="+15"/>
@@ -3363,11 +472,7 @@ Da nastavim?</translation>
         <translation type="unfinished">Video koder</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Video&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Video&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <location line="+470"/>
+        <location line="+460"/>
         <location line="+169"/>
         <source>Copy</source>
         <translation type="unfinished">Bez izmene</translation>
@@ -3392,22 +497,6 @@ Da nastavim?</translation>
         <translation type="unfinished">Filteri</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Audio&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Zvuk&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Format&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Format&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">0</translation>
-    </message>
-    <message>
-        <source>/ 0</source>
-        <translation type="obsolete">/ 0</translation>
-    </message>
-    <message>
         <location line="+648"/>
         <source>00:00:00.000</source>
         <translation type="unfinished">00:00:00.000</translation>
@@ -3424,18 +513,6 @@ Da nastavim?</translation>
         <translation type="unfinished">000000</translation>
     </message>
     <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">Opcije dekodera</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">Učestanost kadrova </translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">Histogram bitskog protoka</translation>
-    </message>
-    <message>
         <location line="-27"/>
         <source>A:</source>
         <translation type="unfinished">A:</translation>
@@ -3444,10 +521,6 @@ Da nastavim?</translation>
         <location line="+7"/>
         <source>B:</source>
         <translation type="unfinished">B:</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">Podržani su</translation>
     </message>
     <message>
         <location line="-131"/>
@@ -3834,255 +907,11 @@ Da nastavim?</translation>
     </message>
 </context>
 <context>
-    <name>Mpeg1Encoder</name>
-    <message>
-        <source>4:3</source>
-        <translation type="obsolete">4:3</translation>
-    </message>
-    <message>
-        <source>16:9</source>
-        <translation type="obsolete">16:9</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Podrazumevano</translation>
-    </message>
-    <message>
-        <source>TMPGEnc</source>
-        <translation type="obsolete">TMPG koder</translation>
-    </message>
-    <message>
-        <source>Anime</source>
-        <translation type="obsolete">Anime</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">Progresivni</translation>
-    </message>
-    <message>
-        <source>Interlaced BFF</source>
-        <translation type="obsolete">Prepleten BFF</translation>
-    </message>
-    <message>
-        <source>Interlaced TFF</source>
-        <translation type="obsolete">Prepleten TFF</translation>
-    </message>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">Naj_veći bitski protok:</translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">Naj_manji bitski protok:</translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">_Koristi Xvid kontrolu protoka</translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">Veličina _međumemorije:</translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">Ra_zmera:</translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">_Matrice:</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">_Veličina slovnog lika:</translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">_Preplitanje:</translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg2Encoder</name>
-    <message>
-        <source>4:3</source>
-        <translation type="obsolete">4:3</translation>
-    </message>
-    <message>
-        <source>16:9</source>
-        <translation type="obsolete">16:9</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Podrazumevano</translation>
-    </message>
-    <message>
-        <source>TMPGEnc</source>
-        <translation type="obsolete">TMPG koder</translation>
-    </message>
-    <message>
-        <source>Anime</source>
-        <translation type="obsolete">Anime</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">Progresivni</translation>
-    </message>
-    <message>
-        <source>Interlaced BFF</source>
-        <translation type="obsolete">Prepleten BFF</translation>
-    </message>
-    <message>
-        <source>Interlaced TFF</source>
-        <translation type="obsolete">Prepleten TFF</translation>
-    </message>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">Naj_veći bitski protok:</translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">Naj_manji bitski protok:</translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">_Koristi Xvid kontrolu protoka</translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">Veličina _međumemorije:</translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">Ra_zmera:</translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">_Matrice:</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">_Veličina slovnog lika:</translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">_Preplitanje:</translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg4aspEncoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">Potpuno</translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">Dnevnik izmena</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">Phods</translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">H.263</translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Procena pokreta</translation>
-    </message>
-</context>
-<context>
-    <name>MpegMuxer</name>
-    <message>
-        <source>Incompatible audio</source>
-        <translation type="obsolete">Nepodržan zvuk</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be MP2 or AC3.</source>
-        <translation type="obsolete">Za DVD, zvuk mora da bude MP2 ili AC3</translation>
-    </message>
-    <message>
-        <source>lvemux init failed</source>
-        <translation type="obsolete">neuspelo pokretanje lvemux</translation>
-    </message>
-</context>
-<context>
-    <name>Msharpen</name>
-    <message>
-        <source>_Mask</source>
-        <translation type="obsolete">_Maska</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="obsolete">_Vikok Q</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Osetljivost:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Jačina :</translation>
-    </message>
-</context>
-<context>
-    <name>Msmooth</name>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Osetljivost:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Jačina :</translation>
-    </message>
-</context>
-<context>
-    <name>OpenDMLHeader</name>
-    <message>
-        <source>Malformed header</source>
-        <translation type="obsolete">Neispravno zaglavlje</translation>
-    </message>
-    <message>
-        <source>Unpacking bitstream</source>
-        <translation type="obsolete">Raspakujem bitski tok</translation>
-    </message>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">Pravim indeks</translation>
-    </message>
-</context>
-<context>
     <name>Opus</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+254"/>
         <source>_Bitrate:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">Uzbuna</translation>
     </message>
 </context>
 <context>
@@ -4106,117 +935,6 @@ Da nastavim?</translation>
         <location line="+3"/>
         <source>Ctrl+Return</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Telecide</name>
-    <message>
-        <source>No strategy</source>
-        <translation type="obsolete">Bez strategije</translation>
-    </message>
-    <message>
-        <source>3:2 pulldown</source>
-        <translation type="obsolete">3:2 puldaun</translation>
-    </message>
-    <message>
-        <source>PAL/SECAM</source>
-        <translation type="obsolete">PAL/SECAM</translation>
-    </message>
-    <message>
-        <source>NTSC converted from PAL</source>
-        <translation type="obsolete">NTSC prekodiran iz PAL</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Iznad</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Dno</translation>
-    </message>
-    <message>
-        <source>Never</source>
-        <translation type="obsolete">Nikada</translation>
-    </message>
-    <message>
-        <source>If still combed</source>
-        <translation type="obsolete">Ukoliko je zaspleteno</translation>
-    </message>
-    <message>
-        <source>Always</source>
-        <translation type="obsolete">Uvek</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>None but compute</source>
-        <translation type="obsolete">Ništa, ali proračunaj</translation>
-    </message>
-    <message>
-        <source>Postproc on best match</source>
-        <translation type="obsolete">Naknadno procesiranje na najboljem poklapanju</translation>
-    </message>
-    <message>
-        <source>Postproc and show zones (debug)</source>
-        <translation type="obsolete">Naknadno procesiranje i prikaz zona (nalaženje grešaka)</translation>
-    </message>
-    <message>
-        <source>Process image (not fields)</source>
-        <translation type="obsolete">Obradi slike (ne polja)</translation>
-    </message>
-    <message>
-        <source>Process image (not fields), debug</source>
-        <translation type="obsolete">Obradi slike (ne polja), nalaženje grešaka</translation>
-    </message>
-    <message>
-        <source>_Strategy:</source>
-        <translation type="obsolete">_Strategija:</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">_Redosled polja:</translation>
-    </message>
-    <message>
-        <source>_Postprocessing:</source>
-        <translation type="obsolete">_Naknadna obrada:</translation>
-    </message>
-    <message>
-        <source>_Try backward:</source>
-        <translation type="obsolete">Probaj _unazad:</translation>
-    </message>
-    <message>
-        <source>_Direct threshold:</source>
-        <translation type="obsolete">_Direktna osetljivost:</translation>
-    </message>
-    <message>
-        <source>_Backward threshold:</source>
-        <translation type="obsolete">_Povratna osetljivost:</translation>
-    </message>
-    <message>
-        <source>_Noise threshold:</source>
-        <translation type="obsolete">Osetljivost na _šum:</translation>
-    </message>
-    <message>
-        <source>Postp_rocessing threshold:</source>
-        <translation type="obsolete">Osetljivost naknadne obrade:</translation>
-    </message>
-    <message>
-        <source>_Use chroma to decide</source>
-        <translation type="obsolete">Koristi _hroma za procenu</translation>
-    </message>
-    <message>
-        <source>Sho_w info</source>
-        <translation type="obsolete">Prikaži _informacije</translation>
-    </message>
-    <message>
-        <source>Debu_g</source>
-        <translation type="obsolete">Nalaženje _grešaka</translation>
-    </message>
-    <message>
-        <source>Bl_end</source>
-        <translation type="obsolete">_Stopi</translation>
     </message>
 </context>
 <context>
@@ -4248,49 +966,6 @@ Da nastavim?</translation>
     </message>
 </context>
 <context>
-    <name>XvidConfigDialog</name>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">Kontrola protoka</translation>
-    </message>
-    <message>
-        <source>Pixel Aspect Ratio</source>
-        <translation type="obsolete">Razmera piksela</translation>
-    </message>
-    <message>
-        <source>:</source>
-        <translation type="obsolete">:</translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="obsolete">Onemogući</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Nađi sam</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Procena pokreta</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">Nisko</translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Srednje</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">Visoko</translation>
-    </message>
-    <message>
-        <source>Turbo Mode</source>
-        <translation type="obsolete">Brzi režim</translation>
-    </message>
-</context>
-<context>
     <name>aboutDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+155"/>
@@ -4314,7 +989,7 @@ Da nastavim?</translation>
     </message>
     <message>
         <location line="+10"/>
-        <source>© 2001 - 2018  Mean</source>
+        <source>© 2001 - 2019  Mean / Eumagga0x2a</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4373,43 +1048,16 @@ Da nastavim?</translation>
     </message>
 </context>
 <context>
-    <name>addLogopFilter</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">_Logotip (jpg datoteka)</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">X _pozicija:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">Y p_ozicija:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">_Alfa:</translation>
-    </message>
-</context>
-<context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+219"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+218"/>
         <source>Decode video using DXVA2 (windows)</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Use systray while encoding</source>
-        <translation type="obsolete">Smesti u o_baveštajnu zonu panela prilikom kodiranja</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>_Accept non-standard audio frequency for DVD</source>
         <translation type="unfinished">_Dozvoli nestandardne učestanosti zvuka za DVD</translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="obsolete">Napravi OpenDML _datoteke</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -4590,7 +1238,7 @@ Da nastavim?</translation>
     </message>
     <message>
         <location line="+5"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+211"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+213"/>
         <source>PCM</source>
         <translation type="unfinished">PCM</translation>
     </message>
@@ -4631,7 +1279,12 @@ Da nastavim?</translation>
         <translation type="unfinished">_Smanjenje avučnih kanala pri reprodukciji:</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+38"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+26"/>
+        <source>The options above are effective only for MPEG and DivX with software decoding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+17"/>
         <source>_Horizontal deblocking</source>
         <translation type="unfinished">_Horizontalno uklanjanje blokova</translation>
@@ -4641,6 +1294,11 @@ Da nastavim?</translation>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+1"/>
         <source>_Vertical deblocking</source>
         <translation type="unfinished">_Vertikalno uklanjanje blokova</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>De_interlacing (ffmpegdeint)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+1"/>
@@ -4677,7 +1335,7 @@ Da nastavim?</translation>
         <location line="+278"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+409"/>
+        <location filename="../../common/gui_savenew.cpp" line="+423"/>
         <source>Audio</source>
         <translation type="unfinished">Zvuk</translation>
     </message>
@@ -4806,10 +1464,6 @@ Da nastavim?</translation>
         <translation type="unfinished">Dolby Pro Logic II</translation>
     </message>
     <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="obsolete">Automatski (najviše do -3 dB)</translation>
-    </message>
-    <message>
         <location line="+11"/>
         <source>_Gain mode:</source>
         <translation type="unfinished">_režim pojačavanja:</translation>
@@ -4889,14 +1543,6 @@ Da nastavim?</translation>
         <location filename="../../common/gui_main.cpp" line="+373"/>
         <source>Not coded in this version</source>
         <translation type="unfinished">Nije kodirano u ovoj verziji</translation>
-    </message>
-    <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">Izaberi AVI datoteku...</translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">Izaberi datoteku da dodam...</translation>
     </message>
     <message>
         <location line="+251"/>
@@ -4986,7 +1632,7 @@ Idite u „Zvuk -&gt; Glavna staza“ i izaberite jednu aktivnu stazu.</translat
     </message>
     <message>
         <location line="+5"/>
-        <location line="+317"/>
+        <location line="+320"/>
         <source>Something bad happened (II)</source>
         <translation type="unfinished">Nešto loše se desilo (II)</translation>
     </message>
@@ -5029,7 +1675,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
         <source>Something bad happened</source>
         <translation type="unfinished">Nešto loše se desilo</translation>
     </message>
@@ -5076,17 +1722,12 @@ Da li je on pokrenut ?</translation>
         <translation type="unfinished">Baci heksadekadni kadar</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-12"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-15"/>
         <source>_Filter strength:</source>
         <translation type="unfinished">_Jačina filtera:</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_Swap U and V</source>
-        <translation type="unfinished">_Zameni U i V</translation>
-    </message>
-    <message>
-        <location line="+12"/>
+        <location line="+14"/>
         <source>_Deringing</source>
         <translation type="unfinished">_Deringing</translation>
     </message>
@@ -5127,18 +1768,6 @@ Da li je on pokrenut ?</translation>
         <translation type="unfinished">Snimam zvuk</translation>
     </message>
     <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="obsolete">Snimanje kao set JPEG slika neuspelo.</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="obsolete">Ne mogu da dekodiram kadar</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="obsolete">Obustavljam.</translation>
-    </message>
-    <message>
         <location line="+303"/>
         <location line="+83"/>
         <source>Done</source>
@@ -5165,10 +1794,6 @@ Da li je on pokrenut ?</translation>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_quota.cpp" line="+68"/>
         <source>Error</source>
         <translation type="unfinished">Greška</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="obsolete">Ne mogu da sačuvam sve slike</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="+61"/>
@@ -5201,125 +1826,9 @@ Da li je on pokrenut ?</translation>
         <translation type="unfinished">Proizvoljno</translation>
     </message>
     <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Režim:</translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Nova učestanost kadrova:</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Podrazumevano</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">Progresivni</translation>
-    </message>
-    <message>
-        <source>Interlacing</source>
-        <translation type="obsolete">Preplitanje</translation>
-    </message>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">Kontrola protoka</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">Potpuno</translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">Dnevnik izmena</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">Phods</translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">H.263</translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Procena pokreta</translation>
-    </message>
-    <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="+3"/>
         <source>Medium</source>
         <translation type="unfinished">Srednje</translation>
-    </message>
-    <message>
-        <source>VBR</source>
-        <translation type="obsolete">VBR</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">Bazirano na kvalitetu</translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">_Bitski protok:</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">_Kvalitet:</translation>
-    </message>
-    <message>
-        <source>_Quantizer:</source>
-        <translation type="obsolete">_Kvantizer:</translation>
-    </message>
-    <message>
-        <source>CBR</source>
-        <translation type="obsolete">CBR</translation>
-    </message>
-    <message>
-        <source>ABR</source>
-        <translation type="obsolete">ABR</translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">Bit_ski protok:</translation>
-    </message>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">Filter je već polovičan</translation>
-    </message>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">Spremno</translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">Uspešno</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">Uklonjeno</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">U toku</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">Sigurno!</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">Ukloni zadatak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="-25"/>
@@ -5927,7 +2436,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1379"/>
+        <location filename="../../common/gui_main.cpp" line="-1382"/>
         <source>Select script/project to run</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5991,7 +2500,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+754"/>
+        <location line="+757"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation type="unfinished"></translation>
@@ -6032,7 +2541,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+443"/>
+        <location filename="../../common/gui_play.cpp" line="+446"/>
         <source>Trouble initializing audio device</source>
         <translation type="unfinished">Problemi pri pokretanju zvučne kartice</translation>
     </message>
@@ -6148,13 +2657,13 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_savenew.cpp" line="-196"/>
+        <location filename="../../common/gui_savenew.cpp" line="-207"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+160"/>
+        <location line="+171"/>
         <source>Cannot instantiate video chain</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6182,15 +2691,15 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-244"/>
-        <location line="+255"/>
+        <location line="-255"/>
+        <location line="+266"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-281"/>
-        <location line="+255"/>
+        <location line="-292"/>
+        <location line="+266"/>
         <source>Cannot instantiate muxer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6511,6 +3020,11 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Float PCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Ogg Vorbis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6586,7 +3100,7 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+385"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+374"/>
         <source>Unknown</source>
         <translation type="unfinished">Nepoznato</translation>
     </message>
@@ -6677,8 +3191,8 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished">1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
-        <location line="+32"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
+        <location line="+30"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -6730,7 +3244,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+227"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6803,7 +3317,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+471"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+468"/>
         <source>Indexing</source>
         <translation type="unfinished">Pravim indeks</translation>
     </message>
@@ -6852,7 +3366,7 @@ Proceed anyway?</source>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+171"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation type="unfinished">Datoteka sa _titlom (ASS/SSA):</translation>
     </message>
@@ -6873,7 +3387,7 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Botto_m margin</source>
+        <source>Botto_m margin:</source>
         <translation type="unfinished">_Donja granica:</translation>
     </message>
     <message>
@@ -6883,58 +3397,68 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Hardcode ass/ssa/srt subtitles using libass.</source>
+        <source>Hardcode ASS/SSA/SRT subtitles using libass.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+63"/>
         <source>Format ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Are you sure this is an ass file ?</source>
+        <source>Are you sure this is an ASS/SSA file ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+41"/>
-        <source>Select Subtitle file</source>
+        <location line="+40"/>
+        <source>Select Subtitle File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+5"/>
+        <source>Do not adjust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust for display aspect ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
         <source>ASS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>This is a srt file. Convert to SSA ?</source>
+        <source>This is a SRT file. Convert to SSA ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+5"/>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Error</source>
         <translation type="unfinished">Greška</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Cannot load this srt file.</source>
+        <location line="-14"/>
+        <source>Cannot load this SRT file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
-        <source>Cannot convert to ssa.</source>
+        <source>Cannot convert to SSA.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Cannot save converted file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+56"/>
         <source>Fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6945,21 +3469,14 @@ This message will not be displayed again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+52"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Cannot read_file for *%s*</source>
+        <source>ass_read_file() failed for %s</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>autoWizard</name>
-    <message>
-        <source>Codec:</source>
-        <translation type="obsolete">Kodek:</translation>
     </message>
 </context>
 <context>
@@ -7153,31 +3670,37 @@ This message will not be displayed again.</source>
     <name>blackenDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt4/blackenBorders.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+14"/>
         <source>Blacken Borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+38"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+38"/>
         <source>Right:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Top:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+43"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+43"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+21"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+21"/>
         <source>Bottom:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Left:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7206,14 +3729,6 @@ This message will not be displayed again.</source>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="+40"/>
         <source>Custom</source>
         <translation type="unfinished">Proizvoljno</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Režim:</translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Nova učestanost kadrova:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7814,21 +4329,6 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
     </message>
 </context>
 <context>
-    <name>dmxHeader</name>
-    <message>
-        <source>Out of memory</source>
-        <translation type="obsolete">Nestalo je memorije</translation>
-    </message>
-    <message>
-        <source>Opening MPEG</source>
-        <translation type="obsolete">Otvaram MPEG</translation>
-    </message>
-    <message>
-        <source>MPEG renumbering error</source>
-        <translation type="obsolete">Greška pri ponovnom MPEG numerisanju</translation>
-    </message>
-</context>
-<context>
     <name>dummy</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dummy/dummyVideoFilter.cpp" line="+44"/>
@@ -8015,33 +4515,6 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
     </message>
 </context>
 <context>
-    <name>encodingWindow</name>
-    <message>
-        <source>Pause / Abort</source>
-        <translation type="obsolete">Pauza / Prekid</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">Nastavi</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">Prekini</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">Potrebna ovlašćenja</translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">Administratorska ovlašćenja su potrebna za izvršavanje ove operacije.</translation>
-    </message>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">Gasim računar</translation>
-    </message>
-</context>
-<context>
     <name>eq2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="+64"/>
@@ -8061,14 +4534,6 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
 </context>
 <context>
     <name>eq2Dialog</name>
-    <message>
-        <source>MPlayer eq2</source>
-        <translation type="obsolete">MPlayer ekvilajzer 2</translation>
-    </message>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">Gama</translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/eq2.ui" line="+14"/>
         <location line="+88"/>
@@ -8132,29 +4597,6 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+6"/>
         <source>Opus Configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>fade</name>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">Izlaz</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="obsolete">Bledi izlaz</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation type="obsolete">Ulaz</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="obsolete">Bledi ulaz</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">Tip _izbleđivanja:</translation>
     </message>
 </context>
 <context>
@@ -8289,6 +4731,44 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
     </message>
 </context>
 <context>
+    <name>ffVAEncHEVC</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaHEVC/ADM_ffVAEncHEVC.cpp" line="+343"/>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Maximum Consecutive B-Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Max Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Frame Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>FFmpeg VA-API HEVC Encoder Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ffmpeg2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+223"/>
@@ -8306,7 +4786,7 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
         <translation type="unfinished">Progresivni</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+14"/>
         <source>Threading</source>
         <translation type="unfinished">Više niti</translation>
     </message>
@@ -8321,7 +4801,7 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
         <translation type="unfinished">Kontrola protoka</translation>
     </message>
     <message>
-        <location line="-86"/>
+        <location line="-85"/>
         <source>Normal (4:3)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8391,7 +4871,7 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8495,31 +4975,6 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
     <name>ffmpeg4</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
-        <source>None</source>
-        <translation type="unfinished">Ništa</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation type="unfinished">Potpuno</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation type="unfinished">Dnevnik izmena</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation type="unfinished">Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
-    </message>
-    <message>
-        <location line="+5"/>
         <source>H.263</source>
         <translation type="unfinished">H.263</translation>
     </message>
@@ -8529,17 +4984,17 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
         <translation type="unfinished">MPEG</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+21"/>
         <source>Threading</source>
         <translation type="unfinished">Više niti</translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+23"/>
         <source>User Interface</source>
         <translation type="unfinished">Korisničko okruženje</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+9"/>
         <source>Motion Estimation</source>
         <translation type="unfinished">Procena pokreta</translation>
     </message>
@@ -8549,12 +5004,7 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
         <translation type="unfinished">Kontrola protoka</translation>
     </message>
     <message>
-        <location line="-72"/>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
+        <location line="-58"/>
         <source>MB comparison</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8590,11 +5040,6 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
     </message>
     <message>
         <location line="+10"/>
-        <source>Matrices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8624,12 +5069,7 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_GMC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Number of B frames:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8669,7 +5109,7 @@ trebalo bi da je sačuvate ukoliko želite da je zadržite)</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Quantization</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9123,25 +5563,6 @@ Do you want to replace it?</source>
     </message>
 </context>
 <context>
-    <name>filtermainWindow</name>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">Filter je već polovičan</translation>
-    </message>
-    <message>
-        <source>Load set of filters</source>
-        <translation type="obsolete">Učitaj set filtera</translation>
-    </message>
-    <message>
-        <source>Nothing to save</source>
-        <translation type="obsolete">Nemam šta da snimim</translation>
-    </message>
-    <message>
-        <source>Save set of filters</source>
-        <translation type="obsolete">Sačuvaj set filtera</translation>
-    </message>
-</context>
-<context>
     <name>flux</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="+37"/>
@@ -9169,31 +5590,6 @@ Do you want to replace it?</source>
     <name>flv1</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
-        <source>None</source>
-        <translation type="unfinished">Ništa</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation type="unfinished">Potpuno</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation type="unfinished">Dnevnik izmena</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation type="unfinished">Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
-    </message>
-    <message>
-        <location line="+5"/>
         <source>H.263</source>
         <translation type="unfinished">H.263</translation>
     </message>
@@ -9203,7 +5599,7 @@ Do you want to replace it?</source>
         <translation type="unfinished">MPEG</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+26"/>
         <source>User Interface</source>
         <translation type="unfinished">Korisničko okruženje</translation>
     </message>
@@ -9213,12 +5609,7 @@ Do you want to replace it?</source>
         <translation type="unfinished">Kontrola protoka</translation>
     </message>
     <message>
-        <location line="-42"/>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
+        <location line="-32"/>
         <source>MB comparison</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9233,7 +5624,7 @@ Do you want to replace it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9612,13 +6003,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>h263Header</name>
-    <message>
-        <source>Size is not (s)QCIF</source>
-        <translation type="obsolete">Veličina nije (s)QCIF</translation>
-    </message>
-</context>
-<context>
     <name>hflip</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/horizontalFlip/horizontalFlip.cpp" line="+44"/>
@@ -9908,37 +6292,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>jobsWindow</name>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">Spremno</translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">Uspešno</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">Neuspelo</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">Uklonjeno</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">U toku</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">Sigurno!</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">Ukloni zadatak</translation>
-    </message>
-</context>
-<context>
     <name>jpeg</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="+102"/>
@@ -9964,53 +6317,6 @@ I will assume it has and try to continue</source>
         <location line="+4"/>
         <source>Mjpeg Configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>kernelDeint</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Iznad</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Dno</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">_Redosled polja:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Osetljivost:</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Manja vrednost više raspliće</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">O_štro:</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">Izoštriva_č:</translation>
-    </message>
-    <message>
-        <source>T_woway</source>
-        <translation type="obsolete">Dva _načina</translation>
-    </message>
-    <message>
-        <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">Bolja ekstrapolacija (bolje ne koristi)</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">_Mapa</translation>
-    </message>
-    <message>
-        <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">Prikaži prepletena područja (samo za testiranje!)</translation>
     </message>
 </context>
 <context>
@@ -10158,48 +6464,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>lavDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>Linear blend</source>
-        <translation type="obsolete">Linearno stapanje</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">Linearno umetanje</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Kvadratno umetanje</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Usrednjeno umetanje</translation>
-    </message>
-    <message>
-        <source>FFmpeg deint</source>
-        <translation type="obsolete">FFmpeg rasplitanje</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">_Rasplitanje:</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">_Automatski nivo :</translation>
-    </message>
-</context>
-<context>
-    <name>lavMuxer</name>
-    <message>
-        <source>Incompatible frame rate</source>
-        <translation type="obsolete">Nepodržana učestanost kadrova</translation>
-    </message>
-</context>
-<context>
     <name>lavcodec</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
@@ -10213,11 +6477,6 @@ I will assume it has and try to continue</source>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
         <translation type="unfinished">_Zameni U i V</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show motion _vectors</source>
-        <translation type="unfinished">Prikaži _vektore pokreta</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -10298,22 +6557,6 @@ I will assume it has and try to continue</source>
 </context>
 <context>
     <name>logo</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">_Logotip (jpg datoteka)</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">X _pozicija:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">Y p_ozicija:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">_Alfa:</translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="+22"/>
         <source>Add logo</source>
@@ -10400,10 +6643,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Uređivanje video filtera</translation>
     </message>
     <message>
-        <source>Save Script</source>
-        <translation type="obsolete">Sačuvaj skriptu</translation>
-    </message>
-    <message>
         <location line="+180"/>
         <source>Transform</source>
         <translation type="unfinished">Transformacije</translation>
@@ -10439,10 +6678,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Raznovrsno</translation>
     </message>
     <message>
-        <source>External</source>
-        <translation type="obsolete">Spoljni</translation>
-    </message>
-    <message>
         <location line="-182"/>
         <source>&lt;big&gt;&lt;b&gt;Active Filters&lt;/b&gt;&lt;/big&gt;</source>
         <translation type="unfinished"></translation>
@@ -10469,21 +6704,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>mainMenu</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Bez izmene</translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">Postavke</translation>
-    </message>
-    <message>
-        <source>Filters</source>
-        <translation type="obsolete">Filteri</translation>
-    </message>
-</context>
-<context>
     <name>matroskademuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Matroska/ADM_mkvIndexer.cpp" line="+48"/>
@@ -10491,7 +6711,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+426"/>
+        <location line="+433"/>
         <source>Matroska clusters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10690,13 +6910,9 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+815"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Problem pri čitanju SVQ3 zaglavlja</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="obsolete">Ne postoji stts tabela</translation>
     </message>
 </context>
 <context>
@@ -10879,22 +7095,6 @@ I will assume it has and try to continue</source>
 <context>
     <name>msharpen</name>
     <message>
-        <source>_Mask</source>
-        <translation type="obsolete">_Maska</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="obsolete">_Vikok Q</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Osetljivost:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Jačina :</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="+48"/>
         <source>Msharpen</source>
         <translation type="unfinished"></translation>
@@ -10957,29 +7157,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>nuvHeader</name>
-    <message>
-        <source>Opening Nuppel video</source>
-        <translation type="obsolete">Otvaram Nuppel video</translation>
-    </message>
-    <message>
-        <source>Sure you want to abort ?</source>
-        <translation type="obsolete">Da zaista prekinem ?</translation>
-    </message>
-    <message>
-        <source>Size mismatch</source>
-        <translation type="obsolete">Veličina se ne poklapa</translation>
-    </message>
-    <message>
-        <source>Expect a crash.</source>
-        <translation type="obsolete">Očekujem pad programa.</translation>
-    </message>
-    <message>
-        <source>Do you want to save an index ?</source>
-        <translation type="obsolete">Hoćete li da sačuvate indeks ?</translation>
-    </message>
-</context>
-<context>
     <name>nvenc</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/nvEnc/ADM_nvEnc.cpp" line="+136"/>
@@ -11033,17 +7210,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>oggHeader</name>
-    <message>
-        <source>Take second track ?</source>
-        <translation type="obsolete">Da uzmem drugu stazu ?</translation>
-    </message>
-    <message>
-        <source>Scanning OGM</source>
-        <translation type="obsolete">Skeniram OGM</translation>
-    </message>
-</context>
-<context>
     <name>opendmldemuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="+321"/>
@@ -11082,13 +7248,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>previewDialog</name>
-    <message>
-        <source>Preview</source>
-        <translation type="obsolete">Pregled</translation>
-    </message>
-</context>
-<context>
     <name>printinfo</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/printInfo/printInfo.cpp" line="+44"/>
@@ -11099,25 +7258,6 @@ I will assume it has and try to continue</source>
         <location line="+1"/>
         <source>Display some informations on Screen.</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>propWindow</name>
-    <message>
-        <source>No</source>
-        <translation type="obsolete">Ne</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation type="obsolete">Da</translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">Mono</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">Stereo</translation>
     </message>
 </context>
 <context>
@@ -11159,25 +7299,9 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Kodek 4CC:</translation>
     </message>
     <message>
-        <source>Global Motion Compensation:</source>
-        <translation type="obsolete">Globalna konpenzacija pokreta:</translation>
-    </message>
-    <message>
-        <source>Packed Bitstream:</source>
-        <translation type="obsolete">Upakovani bitski tok:</translation>
-    </message>
-    <message>
-        <source>Quarter Pixel:</source>
-        <translation type="obsolete">Četvrt piksela:</translation>
-    </message>
-    <message>
         <location line="+62"/>
         <source>Audio</source>
         <translation type="unfinished">Zvuk</translation>
-    </message>
-    <message>
-        <source>File Size:</source>
-        <translation type="obsolete">Veličina datoteke:</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -11242,7 +7366,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>psdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+80"/>
         <source>Error</source>
         <translation type="unfinished">Greška</translation>
     </message>
@@ -11258,7 +7382,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Pravim indeks</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+42"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11360,19 +7484,19 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qfile</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+50"/>
-        <location line="+139"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+45"/>
+        <location line="+141"/>
         <source>All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-54"/>
-        <location line="+96"/>
+        <location line="-58"/>
+        <location line="+105"/>
         <source> files (*.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-68"/>
+        <location line="-81"/>
         <source>Overwrite file </source>
         <translation type="unfinished"></translation>
     </message>
@@ -11395,7 +7519,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+658"/>
+        <location line="+660"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11460,7 +7584,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+617"/>
+        <location line="+619"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
@@ -11677,7 +7801,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qprocessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+66"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+65"/>
         <source>Unknown</source>
         <translation type="unfinished">Nepoznato</translation>
     </message>
@@ -11873,6 +7997,19 @@ Ready.
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="+88"/>
         <source>Select Idx File</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>rawmuxer</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerRaw/muxerRawConfig.cpp" line="+29"/>
+        <source>Prefer Annex B type stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Video Only Muxer Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -12360,13 +8497,6 @@ Ready.
     </message>
 </context>
 <context>
-    <name>resizeWindow</name>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Visina i širina ne mogu biti neparni brojevi</translation>
-    </message>
-</context>
-<context>
     <name>rotate</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="+52"/>
@@ -12421,42 +8551,11 @@ Ready.
     </message>
 </context>
 <context>
-    <name>rotateFilter</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 stepeni</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 stepeni</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 stepeni</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">_Ugao:</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">Rotiraj</translation>
-    </message>
-</context>
-<context>
     <name>seekablePreviewDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="+20"/>
         <source>Preview</source>
         <translation type="unfinished">Pregled</translation>
-    </message>
-    <message>
-        <source>00:00:00.000</source>
-        <translation type="obsolete">00:00:00.000</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
@@ -12563,29 +8662,6 @@ Ready.
         <location line="+1"/>
         <source>_Duration:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>subAss</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">Datoteka sa _titlom (ASS/SSA):</translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">_Širina linije:</translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">_Rastezanje slovnog lika:</translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">_Gornja granica:</translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">_Donja granica:</translation>
     </message>
 </context>
 <context>
@@ -12786,8 +8862,8 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+186"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+329"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+188"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+327"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+83"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
@@ -13019,96 +9095,7 @@ Please delete the idx2 file and reopen.</source>
     </message>
 </context>
 <context>
-    <name>vidBlendRemoval</name>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Osetljivost:</translation>
-    </message>
-    <message>
-        <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="obsolete">Ukoliko je vrednost manja nego osetljivost smatra se ispravnom. Manja vrednost može da znači netačan pozitiv.</translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">_Šum:</translation>
-    </message>
-    <message>
-        <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">Ukoliko su pikseli slični šumu, oni smatraju istimm</translation>
-    </message>
-    <message>
-        <source>I_dentical:</source>
-        <translation type="obsolete">_Identično:</translation>
-    </message>
-    <message>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Ukoliko su mere gotovo iste, slike se smatraju istim</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">Prikaži _mere</translation>
-    </message>
-    <message>
-        <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Prikaži mere u slici (nalaženje grešaka)</translation>
-    </message>
-</context>
-<context>
-    <name>vidColorYuv</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ništa</translation>
-    </message>
-</context>
-<context>
-    <name>vidHardPDRemoval</name>
-    <message>
-        <source>Metrics</source>
-        <translation type="obsolete">Mere</translation>
-    </message>
-    <message>
-        <source>Do you want to print metrics on screen ?</source>
-        <translation type="obsolete">Da li želite da prikažete mere na ekranu ?</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Osetljivost:</translation>
-    </message>
-    <message>
-        <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="obsolete">Ukoliko je vrednost manja nego osetljivost smatra se ispravnom. Manja vrednost može da znači varljiv pozitiv</translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">_Šum:</translation>
-    </message>
-    <message>
-        <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">Ukoliko su pikseli slični šumu, oni smatraju istimm</translation>
-    </message>
-    <message>
-        <source>_Identical:</source>
-        <translation type="obsolete">_Identično:</translation>
-    </message>
-    <message>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Ukoliko su mere gotovo iste, slike se smatraju istim</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">Prikaži _mere</translation>
-    </message>
-    <message>
-        <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Prikaži mere u slici (nalaženje grešaka)</translation>
-    </message>
-</context>
-<context>
     <name>vobSubDialog</name>
-    <message>
-        <source>VobSub Settings</source>
-        <translation type="obsolete">VobSub postavke</translation>
-    </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="+13"/>
         <source>Subtitle Font Size and Position</source>
@@ -13224,23 +9211,18 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <translation type="unfinished">Obrada</translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+19"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="-48"/>
+        <location line="-13"/>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+20"/>
         <source>Time Remaining:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+113"/>
-        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -13434,10 +9416,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+280"/>
         <source>Fast</source>
         <translation type="unfinished">Brzo</translation>
-    </message>
-    <message>
-        <source>Advanced</source>
-        <translation type="obsolete">Naprednije</translation>
     </message>
     <message>
         <location line="+1598"/>
@@ -16061,41 +12039,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+4"/>
         <source>yadif</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>yadifFilter</name>
-    <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">Temporalna i spatialna provera</translation>
-    </message>
-    <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">Bob, temporalna i spatialna provera</translation>
-    </message>
-    <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="obsolete">Preskoči spatialnu temporalnu proveru</translation>
-    </message>
-    <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">Bob, preskoči spatialnu temporalnu proveru</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">Najpre donja polja</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">Najpre gornja polja</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Režim:</translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">_Redosled:</translation>
     </message>
 </context>
 </TS>

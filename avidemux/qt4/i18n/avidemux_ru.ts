@@ -2,2346 +2,11 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
-    <name></name>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Копировать</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">Низкий</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">Высокий</translation>
-    </message>
-    <message>
-        <source>_Background Image:</source>
-        <translation type="obsolete">Изображение:</translation>
-    </message>
-    <message>
-        <source>Select background image</source>
-        <translation type="obsolete">Выбор изображения</translation>
-    </message>
-    <message>
-        <source>Timecode:</source>
-        <translation type="obsolete">Время:</translation>
-    </message>
-    <message>
-        <source>_Dynamic range compression</source>
-        <translation type="obsolete">Динамическое сжатие диапазона</translation>
-    </message>
-    <message>
-        <source>_Time shift (ms):</source>
-        <translation type="obsolete">Сдвиг (мs):</translation>
-    </message>
-    <message>
-        <source>Time shift value (ms)</source>
-        <translation type="obsolete">Значение сдвига (ms)</translation>
-    </message>
-    <message>
-        <source>R_esampling (Hz):</source>
-        <translation type="obsolete">Преобразование частоты (Hz):</translation>
-    </message>
-    <message>
-        <source>Resampling frequency (Hz)</source>
-        <translation type="obsolete">Новая частота (Hz)</translation>
-    </message>
-    <message>
-        <source>_Frame rate change:</source>
-        <translation type="obsolete">Изменить частоту:</translation>
-    </message>
-    <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="obsolete">Авто (макс. -3 dB)</translation>
-    </message>
-    <message>
-        <source>Manual</source>
-        <translation type="obsolete">Вручную</translation>
-    </message>
-    <message>
-        <source>_Gain mode:</source>
-        <translation type="obsolete">Режим:</translation>
-    </message>
-    <message>
-        <source>G_ain value:</source>
-        <translation type="obsolete">Значение:</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">Уровень нормализации</translation>
-    </message>
-    <message>
-        <source>No change</source>
-        <translation type="obsolete">Без изменений</translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">Моно</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">Стерео</translation>
-    </message>
-    <message>
-        <source>5 channels</source>
-        <translation type="obsolete">5 каналов  </translation>
-    </message>
-    <message>
-        <source>_Mixer:</source>
-        <translation type="obsolete">_Микшер</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">Звуковые фильтры</translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">Битрейт:</translation>
-    </message>
-    <message>
-        <source>No data</source>
-        <translation type="obsolete">Нет данных.</translation>
-    </message>
-    <message>
-        <source>Max. bitrate:</source>
-        <translation type="obsolete">Максимальный битрейт:</translation>
-    </message>
-    <message>
-        <source>Average bitrate:</source>
-        <translation type="obsolete">Средний битрейт:</translation>
-    </message>
-    <message>
-        <source>Number of I frames:</source>
-        <translation type="obsolete">Число I-кадров</translation>
-    </message>
-    <message>
-        <source>Number of P frames:</source>
-        <translation type="obsolete">Число P-кадров</translation>
-    </message>
-    <message>
-        <source>Number of B frames:</source>
-        <translation type="obsolete">Число B-кадров</translation>
-    </message>
-    <message>
-        <source>Max. B frames:</source>
-        <translation type="obsolete">Максимальное количество B-кадров</translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">Диаграмма битрейта</translation>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <translation type="obsolete">Библиотеки</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">Поддержка</translation>
-    </message>
-    <message>
-        <source>_Hours:</source>
-        <translation type="obsolete">Час:</translation>
-    </message>
-    <message>
-        <source>Go to Time</source>
-        <translation type="obsolete">Переход</translation>
-    </message>
-    <message>
-        <source>_Job name:</source>
-        <translation type="obsolete">_Имя задания:</translation>
-    </message>
-    <message>
-        <source>Select Video To Write</source>
-        <translation type="obsolete">Выбор видео для записи</translation>
-    </message>
-    <message>
-        <source>Save Job</source>
-        <translation type="obsolete">Сохранение задания</translation>
-    </message>
-    <message>
-        <source>_Swap U and V</source>
-        <translation type="obsolete">Поменять U и V</translation>
-    </message>
-    <message>
-        <source>Show motion _vectors</source>
-        <translation type="obsolete">Показать вектор движения</translation>
-    </message>
-    <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">Опции кодека</translation>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="obsolete">Интерфейс</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">Качество:</translation>
-    </message>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">Уровень фильтрации:</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">Горизонтальный деблокинг</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">Вертикальный деблокинг</translation>
-    </message>
-    <message>
-        <source>_Shrink Factor:</source>
-        <translation type="obsolete">Коэффициент сокращения:</translation>
-    </message>
-    <message>
-        <source>Requant Configuration</source>
-        <translation type="obsolete">Настройка Requant</translation>
-    </message>
-    <message>
-        <source>Auto (might not work)</source>
-        <translation type="obsolete">Авто (может не работать)</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">Верхнее поле первое</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">Нижнее поле первое</translation>
-    </message>
-    <message>
-        <source>Cubic interpolation</source>
-        <translation type="obsolete">Кубическая интерполяция </translation>
-    </message>
-    <message>
-        <source>Modified ELA</source>
-        <translation type="obsolete">Изменить ELA   </translation>
-    </message>
-    <message>
-        <source>Kernel interpolation</source>
-        <translation type="obsolete">Корневая интерполяция  </translation>
-    </message>
-    <message>
-        <source>Modified ELA-2</source>
-        <translation type="obsolete">Изменить ELA-2 </translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Порядок полей:</translation>
-    </message>
-    <message>
-        <source>_Interpolate:</source>
-        <translation type="obsolete">Интерполяция:</translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">Тип:</translation>
-    </message>
-    <message>
-        <source>_MntMode:</source>
-        <translation type="obsolete">Режим монтирования</translation>
-    </message>
-    <message>
-        <source>_Link:</source>
-        <translation type="obsolete">Ссылка</translation>
-    </message>
-    <message>
-        <source>_AP type:</source>
-        <translation type="obsolete">Тип _AP:</translation>
-    </message>
-    <message>
-        <source>Use ch_roma to evalute</source>
-        <translation type="obsolete">Использовать цвет (chroma) для определения</translation>
-    </message>
-    <message>
-        <source>Try _weave</source>
-        <translation type="obsolete">Попробовать узор</translation>
-    </message>
-    <message>
-        <source>_Denoise</source>
-        <translation type="obsolete">Подавление шума</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">Резкость</translation>
-    </message>
-    <message>
-        <source>_Evalute all frames</source>
-        <translation type="obsolete">Оценить все кадры</translation>
-    </message>
-    <message>
-        <source>Motion threshold, l_uma:</source>
-        <translation type="obsolete">Порог движения, яркость (l_uma):</translation>
-    </message>
-    <message>
-        <source>Motion threshold, c_hroma:</source>
-        <translation type="obsolete">Порог движения, цвет (c_hroma):</translation>
-    </message>
-    <message>
-        <source>Area com_bing threshold:</source>
-        <translation type="obsolete">Порог области &quot;расчески&quot;:</translation>
-    </message>
-    <message>
-        <source>Combe_d threshold:</source>
-        <translation type="obsolete">Порог &quot;расчески&quot;:</translation>
-    </message>
-    <message>
-        <source>Artefact _protection threshold:</source>
-        <translation type="obsolete">Порог защиты от артефактов  </translation>
-    </message>
-    <message>
-        <source>Debug:</source>
-        <translation type="obsolete">Отладка</translation>
-    </message>
-    <message>
-        <source>_VOB file(s):</source>
-        <translation type="obsolete">_VOB-файл(ы):</translation>
-    </message>
-    <message>
-        <source>Select VOB file(s)</source>
-        <translation type="obsolete">Выбор VOB-файла</translation>
-    </message>
-    <message>
-        <source>_IFO file:</source>
-        <translation type="obsolete">_IFO файл:</translation>
-    </message>
-    <message>
-        <source>Select IFO file</source>
-        <translation type="obsolete">Выбор IFO-файла</translation>
-    </message>
-    <message>
-        <source>VobSub file:</source>
-        <translation type="obsolete">VobSub файл</translation>
-    </message>
-    <message>
-        <source>Select VobSub file</source>
-        <translation type="obsolete">Выбор VobSub-файла...</translation>
-    </message>
-    <message>
-        <source>The selected vobfile does not exist</source>
-        <translation type="obsolete">Выбранный VOB-файл не существует</translation>
-    </message>
-    <message>
-        <source>Please select a correct VobSub path/dir</source>
-        <translation type="obsolete">Укажите корректный путь к VobSub файлу</translation>
-    </message>
-    <message>
-        <source>Joint stereo</source>
-        <translation type="obsolete">Псевдостерео</translation>
-    </message>
-    <message>
-        <source>C_hannel mode:</source>
-        <translation type="obsolete">Каналы:</translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">Режим:</translation>
-    </message>
-    <message>
-        <source>LAME Configuration</source>
-        <translation type="obsolete">Настройка LAME</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">По качеству</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
-    </message>
-    <message>
-        <source>Vorbis Configuration</source>
-        <translation type="obsolete">Настройка Vorbis</translation>
-    </message>
-    <message>
-        <source>Codec Error</source>
-        <translation type="obsolete">Ошибка аудиокодера</translation>
-    </message>
-    <message>
-        <source>The number of channels is greater than what the selected audio codec can do.
-Either change codec or use the mixer filter to have less channels.</source>
-        <translation type="obsolete">Количество каналов больше, чем допускает аудиокодек.
-Используйте другой кодек или используйте звуковой фильтр (миксер)для уменьшения количества каналов.</translation>
-    </message>
-    <message>
-        <source>AVI, dual audio</source>
-        <translation type="obsolete">AVI, два аудио</translation>
-    </message>
-    <message>
-        <source>Crop</source>
-        <translation type="obsolete">Обрезка   </translation>
-    </message>
-    <message>
-        <source>Remove lines from top/bottom/left/right.</source>
-        <translation type="obsolete">Удаление линий сверху/снизу/справа/слева.</translation>
-    </message>
-    <message>
-        <source>MPlayer resize</source>
-        <translation type="obsolete">MPlayer изменить размер  </translation>
-    </message>
-    <message>
-        <source>Change image size. Faster than Avisynth&apos;s Resize.</source>
-        <translation type="obsolete">Изменение размера картинки. Работает быстрее, чем Avisynth-овский алгоритм.</translation>
-    </message>
-    <message>
-        <source>Resize</source>
-        <translation type="obsolete">Изменить размер</translation>
-    </message>
-    <message>
-        <source>Add black borders</source>
-        <translation type="obsolete">Добавить черную рамку  </translation>
-    </message>
-    <message>
-        <source>Blacken borders</source>
-        <translation type="obsolete">Черные рамки</translation>
-    </message>
-    <message>
-        <source>Fill borders with pure black. Doesn&apos;t alter size.</source>
-        <translation type="obsolete">Заполняет границы картинки черным. Не изменяет её размер.</translation>
-    </message>
-    <message>
-        <source>Vertical flip</source>
-        <translation type="obsolete">Повернуть по вертикали</translation>
-    </message>
-    <message>
-        <source>Vertically flip the picture.</source>
-        <translation type="obsolete">Поворот картинки на 180 градусов.</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">Вращать</translation>
-    </message>
-    <message>
-        <source>Rotate the picture by 90, 180 or 270 degrees.</source>
-        <translation type="obsolete">Поворот картинки на 90, 180 или 270 градусов.</translation>
-    </message>
-    <message>
-        <source>Resample fps</source>
-        <translation type="obsolete">Изменить fps</translation>
-    </message>
-    <message>
-        <source>Change framerate while keeping duration.</source>
-        <translation type="obsolete">Изменение частоты кадров с сохранением продолжительности.</translation>
-    </message>
-    <message>
-        <source>Reverse</source>
-        <translation type="obsolete">Реверс  </translation>
-    </message>
-    <message>
-        <source>Play video backward.</source>
-        <translation type="obsolete">Воспроизведение в обратную сторону.</translation>
-    </message>
-    <message>
-        <source>Fade</source>
-        <translation type="obsolete">Затемнение   </translation>
-    </message>
-    <message>
-        <source>Fade in/out.</source>
-        <translation type="obsolete">Плавное затемнение или появление картинки.</translation>
-    </message>
-    <message>
-        <source>Yet Another DeInterlacer. Ported from MPlayer.</source>
-        <translation type="obsolete">Еще Один Деинтерлейсер. Портирован из MPlayer.</translation>
-    </message>
-    <message>
-        <source>mcDeinterlace</source>
-        <translation type="obsolete">mc Деинтерлейс</translation>
-    </message>
-    <message>
-        <source>Motion compensation deinterlacer. Ported from MPlayer.</source>
-        <translation type="obsolete">Деинтерлейсер компенсации движения. Портирован из MPlayer.</translation>
-    </message>
-    <message>
-        <source>Deinterlace</source>
-        <translation type="obsolete">Деинтерлейсинг</translation>
-    </message>
-    <message>
-        <source>Mask interlacing artifacts. Port of Smart deinterlace.</source>
-        <translation type="obsolete">Маскирует артефакты чрезстрочности. Порт Smart deinterlace.</translation>
-    </message>
-    <message>
-        <source>KernelDeint</source>
-        <translation type="obsolete">Корневой деинтерлейс</translation>
-    </message>
-    <message>
-        <source>Kernel deinterlacer by Donald Graft.</source>
-        <translation type="obsolete">Корневой деинтерлейс by Donald Graft </translation>
-    </message>
-    <message>
-        <source>Motion adaptative deinterlacer by Tritical.</source>
-        <translation type="obsolete">Деинтерлейсер для движения by Tritical</translation>
-    </message>
-    <message>
-        <source>libavcodec deinterlacer</source>
-        <translation type="obsolete">libavcodec деинтерлейс</translation>
-    </message>
-    <message>
-        <source>All FFmpeg deinterlace filters (bicubic, median, ...).</source>
-        <translation type="obsolete">Все фильтры удаления чрезстрочности из FFmpeg (bicubic, median, ...).</translation>
-    </message>
-    <message>
-        <source>Great deinterlacing package including IVTC.</source>
-        <translation type="obsolete">Отличный пакет фильтров удаления чрезстрочности, включая IVTC.</translation>
-    </message>
-    <message>
-        <source>Decomb Decimate</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Convert 24 fps to 30 fps by repeating fields.</source>
-        <translation type="obsolete">Преобразование 24 кб/с к 30 кб/с путем повторения полей.</translation>
-    </message>
-    <message>
-        <source>Drop</source>
-        <translation type="obsolete">Пропустить</translation>
-    </message>
-    <message>
-        <source>Drop damaged fields (e.g. from VHS capture).</source>
-        <translation type="obsolete">Удаляет поврежденные кадры (например, после захвата с VHS).</translation>
-    </message>
-    <message>
-        <source>Swap fields</source>
-        <translation type="obsolete">Поменять поля</translation>
-    </message>
-    <message>
-        <source>Swap top and bottom fields.</source>
-        <translation type="obsolete">Меняет местами верхние и нижние поля.</translation>
-    </message>
-    <message>
-        <source>Smart swap fields</source>
-        <translation type="obsolete">умный обмен полей</translation>
-    </message>
-    <message>
-        <source>Smartly swap fields. Needed when field order changes.</source>
-        <translation type="obsolete">Умный обмен полей. Нужен когда поля не на своих местах</translation>
-    </message>
-    <message>
-        <source>Keep even fields</source>
-        <translation type="obsolete"> Держит ровные поля</translation>
-    </message>
-    <message>
-        <source>Keep odd fields</source>
-        <translation type="obsolete">Держит нечетные поля</translation>
-    </message>
-    <message>
-        <source>Each field becomes full picture, half sized.</source>
-        <translation type="obsolete">Каждое поле становится полной картинкй. Половина размера.</translation>
-    </message>
-    <message>
-        <source>Merge fields</source>
-        <translation type="obsolete">Поглощение полей</translation>
-    </message>
-    <message>
-        <source>Merge two pictures as if they were two fields.</source>
-        <translation type="obsolete">Поглощает две картинки как если они из двух полей            </translation>
-    </message>
-    <message>
-        <source>Adjust contrast, brightness, saturation and gamma.</source>
-        <translation type="obsolete">Настройка контраста, яркости, насыщености и гаммы.</translation>
-    </message>
-    <message>
-        <source>Adjust hue and saturation.</source>
-        <translation type="obsolete">Настройка оттенка (hue) и насыщености.</translation>
-    </message>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">Контраст</translation>
-    </message>
-    <message>
-        <source>Adjust contrast, brightness and colors.</source>
-        <translation type="obsolete">Изменение контраста, яркости и цвета.</translation>
-    </message>
-    <message>
-        <source>Luma correction filter with histogram.</source>
-        <translation type="obsolete">Фильтр коррекции яркости (luma), с гистограммой</translation>
-    </message>
-    <message>
-        <source>Swap U and V</source>
-        <translation type="obsolete">Поменять местами UV</translation>
-    </message>
-    <message>
-        <source>Chroma shift</source>
-        <translation type="obsolete">Цвет U</translation>
-    </message>
-    <message>
-        <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
-        <translation type="obsolete">Смещение chroma U/V для исправления плохой синхронизации яркости/цвета (luma/chroma).</translation>
-    </message>
-    <message>
-        <source>Convert picture to greyscale (black and white).</source>
-        <translation type="obsolete">Преобразование картинки в чёрно-белую. Сохраняется только яркость (luma).</translation>
-    </message>
-    <message>
-        <source>Difference between current and previous picture.</source>
-        <translation type="obsolete">Разница в яркости между текущим и предыдущим кадром.</translation>
-    </message>
-    <message>
-        <source>Alter colors (auto white balance etc...). Ported from Avisynth.</source>
-        <translation type="obsolete">Коррекция цвета (автоматический баланс белого и т.п.). Портировано из Avisynth.</translation>
-    </message>
-    <message>
-        <source>Reduce noise, smooth image, increase compressibility.</source>
-        <translation type="obsolete">Уменьшает шум, сглаживает картинку, улучшает сжимаемость.</translation>
-    </message>
-    <message>
-        <source>High quality version of denoise3d. Slower but more precise.</source>
-        <translation type="obsolete">Улучшенная версия denoise3d. Медленная, но более точная.</translation>
-    </message>
-    <message>
-        <source>Temporal Cleaner</source>
-        <translation type="obsolete">Сила фильтра</translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">Удаление шума   </translation>
-    </message>
-    <message>
-        <source>Port of Transcode DNR.</source>
-        <translation type="obsolete">Порт Transcode DNR.</translation>
-    </message>
-    <message>
-        <source>Light denoiser.</source>
-        <translation type="obsolete">Светлый удалитель шума</translation>
-    </message>
-    <message>
-        <source>Smooth the image, don&apos;t blur edges. Useful on anime.</source>
-        <translation type="obsolete">Сглаживает картинку, но не размывает границы. Полезен для анимэ.</translation>
-    </message>
-    <message>
-        <source>Sharpen</source>
-        <translation type="obsolete">Резкость</translation>
-    </message>
-    <message>
-        <source>MSharpen</source>
-        <translation type="obsolete">Резкость</translation>
-    </message>
-    <message>
-        <source>asharp</source>
-        <translation type="obsolete">Резкость</translation>
-    </message>
-    <message>
-        <source>Gauss smooth</source>
-        <translation type="obsolete">Гауссово склаживание</translation>
-    </message>
-    <message>
-        <source>Gaussian smooth. Blur the picture.</source>
-        <translation type="obsolete">Гауссово сглаживание. Размытие картинки.</translation>
-    </message>
-    <message>
-        <source>Median</source>
-        <translation type="obsolete">Носитель:</translation>
-    </message>
-    <message>
-        <source>Median kernel 5x5. Good for reducing chroma noise.</source>
-        <translation type="obsolete">            </translation>
-    </message>
-    <message>
-        <source>Forced postprocessing</source>
-        <translation type="obsolete">Постпроцессинг</translation>
-    </message>
-    <message>
-        <source>Subtitler</source>
-        <translation type="obsolete">Субтитры</translation>
-    </message>
-    <message>
-        <source>Add srt/sub subtitles to the picture.</source>
-        <translation type="obsolete">Прожигает srt/sub субтитры в картинку.</translation>
-    </message>
-    <message>
-        <source>ASS</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Add ASS/SSA subtitles to the picture.</source>
-        <translation type="obsolete">Прожигает ASS/SSA субтитры в картинку.</translation>
-    </message>
-    <message>
-        <source>Embed VobSub subtitles into picture.</source>
-        <translation type="obsolete">Прожигает VobSub субтитры в картинку.</translation>
-    </message>
-    <message>
-        <source>Embed DVB-T subtitle.</source>
-        <translation type="obsolete">Прожигает DVB-T субтитры в картинку.</translation>
-    </message>
-    <message>
-        <source>Remove IVTC that has been analog captured or resized.</source>
-        <translation type="obsolete">Удалить IVTC от аналоговой картинки или изменения размера</translation>
-    </message>
-    <message>
-        <source>Whirl</source>
-        <translation type="obsolete">Вихрь</translation>
-    </message>
-    <message>
-        <source>Useless whirlwind effect.</source>
-        <translation type="obsolete">Бесполезный эффект вихря</translation>
-    </message>
-    <message>
-        <source>Split the picture into tiny thumbnails.</source>
-        <translation type="obsolete">Разбивает картинку на множество её уменьшенных копий.</translation>
-    </message>
-    <message>
-        <source>Add a png as logo.</source>
-        <translation type="obsolete">Добавляет в картинку лого из файла.</translation>
-    </message>
-    <message>
-        <source>Animated Menu</source>
-        <translation type="obsolete">Анимация меню</translation>
-    </message>
-    <message>
-        <source>Create a video made of 6 mini windows, very useful to do DVD menus.</source>
-        <translation type="obsolete">Создать видео сделанное из 6 мини окошек, очень полезно для DVD менюшек.</translation>
-    </message>
-    <message>
-        <source>Compute Average</source>
-        <translation type="obsolete">Вычислить среднее</translation>
-    </message>
-    <message>
-        <source>Compute average luma value for each pixel throughout all frames, and save to file</source>
-        <translation type="obsolete">Вычисляет среднее значение яркости (luma) каждого пиксела по всем кадрам и сохраняет его в файл.</translation>
-    </message>
-    <message>
-        <source>Eraser</source>
-        <translation type="obsolete">Ластик</translation>
-    </message>
-    <message>
-        <source>&quot;Erase&quot; arbitrary areas of each frame</source>
-        <translation type="obsolete">Вырезать произвольную область в каждом кадре</translation>
-    </message>
-    <message>
-        <source>Swiss Army Knife</source>
-        <translation type="obsolete">Швейцарский армейский нож     </translation>
-    </message>
-    <message>
-        <source>Threshold</source>
-        <translation type="obsolete">Порог</translation>
-    </message>
-    <message>
-        <source>Particle List</source>
-        <translation type="obsolete">Частично</translation>
-    </message>
-    <message>
-        <source>Partial</source>
-        <translation type="obsolete">Частичное наложение</translation>
-    </message>
-    <message>
-        <source>Problem reading XML filters</source>
-        <translation type="obsolete">Ошибка чтения XML-файла фильтров</translation>
-    </message>
-    <message>
-        <source>No filter found</source>
-        <translation type="obsolete">Фильтры не найдены</translation>
-    </message>
-    <message>
-        <source>Could not find a filter</source>
-        <translation type="obsolete">Невозможно найти фильтр</translation>
-    </message>
-    <message>
-        <source>No tag found</source>
-        <translation type="obsolete">Не найден тэг</translation>
-    </message>
-    <message>
-        <source>Node not found</source>
-        <translation type="obsolete">Не найден узел</translation>
-    </message>
-    <message>
-        <source>There is several mpeg file, append them ?</source>
-        <translation type="obsolete">Здесь несколько mpeg файлов, хотите объединить их?</translation>
-    </message>
-    <message>
-        <source>Can&apos;t determine aspect ratio</source>
-        <translation type="obsolete">Невозможно определить соотношение сторон</translation>
-    </message>
-    <message>
-        <source>Wrong Colorspace</source>
-        <translation type="obsolete">Неверное цветовое пространство</translation>
-    </message>
-    <message>
-        <source>Only YV12/I420 or YUY2/I422 JPegs are supported</source>
-        <translation type="obsolete">Поддерживаются только YV12/I420 или YUY2/I422 jpeg</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation type="obsolete">Неизвестно</translation>
-    </message>
-    <message>
-        <source>Could not open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Ошибка открытия &quot;%s&quot; для записи.</translation>
-    </message>
-    <message>
-        <source>Problem loading sub</source>
-        <translation type="obsolete">Проблема загрузки субтитров</translation>
-    </message>
-    <message>
-        <source>Ifo error</source>
-        <translation type="obsolete">Ошибка в файле IFO</translation>
-    </message>
-    <message>
-        <source>Error reading ifo file, aborting.</source>
-        <translation type="obsolete">Ошибка чтения файла IFO.</translation>
-    </message>
-    <message>
-        <source>Cannot write .idx</source>
-        <translation type="obsolete">Невозможно записать .idx</translation>
-    </message>
-    <message>
-        <source>Cannot write .sub</source>
-        <translation type="obsolete">Невозможно записать .sub</translation>
-    </message>
-    <message>
-        <source>Problem opening the mpeg files</source>
-        <translation type="obsolete">Проблема при открытии mpeg файла.</translation>
-    </message>
-    <message>
-        <source>Generating VobSub file</source>
-        <translation type="obsolete">Генерация VobSub</translation>
-    </message>
-    <message>
-        <source>Could not write the file</source>
-        <translation type="obsolete">Ошибка записи в файл</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Файловая ошибка</translation>
-    </message>
-    <message>
-        <source>Could not read &quot;%s&quot;.</source>
-        <translation type="obsolete">Ошибка чтения &quot;%s&quot;.</translation>
-    </message>
-    <message>
-        <source>Load it</source>
-        <translation type="obsolete">Загрузить</translation>
-    </message>
-    <message>
-        <source>Crash file</source>
-        <translation type="obsolete">Крэш-файл</translation>
-    </message>
-    <message>
-        <source>I have detected a crash file. 
-Do you want to load it  ?
-(It will be deleted in all cases, you should save it if you want to keep it)</source>
-        <translation type="obsolete">Обнаружен крэш-файл. 
-Хотите загрузить его?
-(Он будет удален в любом случае, поэтому Вам нужно сохранить его, если он потребуется Вам в дальнейшем)</translation>
-    </message>
-    <message>
-        <source>Oops</source>
-        <translation type="obsolete">Предупреждение</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot;.</source>
-        <translation type="obsolete">Невозможно открыть &quot;%s&quot;.</translation>
-    </message>
-    <message>
-        <source>It is possible that you are trying to overwrite an input file!</source>
-        <translation type="obsolete">Возможно, вы пытаетесь перезаписать исходный файл!</translation>
-    </message>
-    <message>
-        <source>Cannot write the file</source>
-        <translation type="obsolete">Невозможно сохранить файл</translation>
-    </message>
-    <message>
-        <source>No write access to &quot;%s&quot;.</source>
-        <translation type="obsolete">Нет доступа на запись для &quot;%s&quot;.</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <translation type="obsolete">Нормальный</translation>
-    </message>
-    <message>
-        <source>Cannot initialize the video stream</source>
-        <translation type="obsolete">Ошибка при инициализации видеопотока</translation>
-    </message>
-    <message>
-        <source>Dummy</source>
-        <translation type="obsolete">Поддельный</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Невозможно инициализировать фильтр</translation>
-    </message>
-    <message>
-        <source>Encoding</source>
-        <translation type="obsolete">Кодирование</translation>
-    </message>
-    <message>
-        <source>Error while encoding</source>
-        <translation type="obsolete">Ошибка во время кодирования</translation>
-    </message>
-    <message>
-        <source>KeyFrame error</source>
-        <translation type="obsolete">Ошибка в ключевом кадре</translation>
-    </message>
-    <message>
-        <source>The beginning frame is not a key frame.
-Please move the A marker.</source>
-        <translation type="obsolete">Первый кадр не ключевой.
-Пожалуйста, переместите метку A.</translation>
-    </message>
-    <message>
-        <source>Unsupported video</source>
-        <translation type="obsolete">Формат видео не поддерживается</translation>
-    </message>
-    <message>
-        <source>Only FLV1 and VP6 video are supported</source>
-        <translation type="obsolete">Поддерживаются только FLV1 и VP6</translation>
-    </message>
-    <message>
-        <source>Unsupported audio</source>
-        <translation type="obsolete">Формат звука не поддерживается</translation>
-    </message>
-    <message>
-        <source>Audio must be mp3 for flv output.</source>
-        <translation type="obsolete">Для контейнера FLV звук должен быть в MP3.</translation>
-    </message>
-    <message>
-        <source>Frequency must be 44100, 22050 or 11025 Hz.</source>
-        <translation type="obsolete">Частота должна быть 44100, 22050 или 11025 Hz.</translation>
-    </message>
-    <message>
-        <source>Cannot initialize the audio stream</source>
-        <translation type="obsolete">Невозможно инициализировать аудиопоток</translation>
-    </message>
-    <message>
-        <source>Invalid audio stream detected</source>
-        <translation type="obsolete">Ошибка детектирования аудио потока</translation>
-    </message>
-    <message>
-        <source>The audio stream may be invalid for this container.
-
-Continue anyway?</source>
-        <translation type="obsolete">Аудио поток может быть испорчен в этом контейнере
-
-Продолжать все равно?</translation>
-    </message>
-    <message>
-        <source>This is not MPEG compatible</source>
-        <translation type="obsolete">Несовместимый MPEG</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use the Copy codec.</source>
-        <translation type="obsolete">Вы не можете использовать Копирование.</translation>
-    </message>
-    <message>
-        <source>There is no audio track</source>
-        <translation type="obsolete">Звуковая дорожка отсутствует</translation>
-    </message>
-    <message>
-        <source>The first frame is not intra frame</source>
-        <translation type="obsolete">Первый кадр не является начальным кадром</translation>
-    </message>
-    <message>
-        <source>Use the &amp;lt;&amp;lt; and the &amp;gt;&amp;gt; buttons to move using Intra frames.</source>
-        <translation type="obsolete">Используйте &amp;lt;&amp;lt; и &amp;gt;&amp;gt; кнопки для переноса начальных кадров</translation>
-    </message>
-    <message>
-        <source>Audio track is not suitable</source>
-        <translation type="obsolete">Не подходит звуковая дорожка</translation>
-    </message>
-    <message>
-        <source>For VCD, audio must be 44.1 kHz MP2.</source>
-        <translation type="obsolete">Для VCD звук должен быть в формате 44.1 kHz MP2.</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2(stereo), AC3, DTS or LPCM (stereo).</source>
-        <translation type="obsolete">Для DVD звук должен быть в формате 48 kHz MP2(стерео), AC3, DTS или LPCM (стерео).</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2, AC3 or LPCM.</source>
-        <translation type="obsolete">Для DVD звук должен быть в формате 48 kHz MP2, AC3 or LPCM.</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Невозможно открыть для записи &quot;%s&quot;</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="obsolete">Выберите каталог</translation>
-    </message>
-    <message>
-        <source>Float</source>
-        <translation type="obsolete">Контейнер:</translation>
-    </message>
-    <message>
-        <source>menu</source>
-        <translation type="obsolete">меню</translation>
-    </message>
-    <message>
-        <source>Chroma U</source>
-        <translation type="obsolete">Цвет U</translation>
-    </message>
-    <message>
-        <source>Chroma V</source>
-        <translation type="obsolete">Цвет V</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">Ошибка</translation>
-    </message>
-    <message>
-        <source>Input</source>
-        <translation type="obsolete">Ввод</translation>
-    </message>
-    <message>
-        <source>Output</source>
-        <translation type="obsolete">Вывод</translation>
-    </message>
-    <message>
-        <source>Select idx file:</source>
-        <translation type="obsolete">Выбор IDX-файла:</translation>
-    </message>
-    <message>
-        <source>Select GlyphSet file</source>
-        <translation type="obsolete">Выбор файла</translation>
-    </message>
-    <message>
-        <source>Output SRT file</source>
-        <translation type="obsolete">Выходной SRT-файл</translation>
-    </message>
-    <message>
-        <source>Save SRT file</source>
-        <translation type="obsolete">Выбор файла для сохранения</translation>
-    </message>
-    <message>
-        <source>Select input and ouput files</source>
-        <translation type="obsolete">Выбор входного и выходного файлов</translation>
-    </message>
-    <message>
-        <source>Cannot load the glyphset file.</source>
-        <translation type="obsolete">Не могу загрузить файл символов</translation>
-    </message>
-    <message>
-        <source>GlyphSet filename</source>
-        <translation type="obsolete">Неверное имя</translation>
-    </message>
-    <message>
-        <source>Save GlyphSet file</source>
-        <translation type="obsolete">Сохранить файл</translation>
-    </message>
-    <message>
-        <source>Save Glyph</source>
-        <translation type="obsolete">Сохранить символ</translation>
-    </message>
-    <message>
-        <source>Select TS file</source>
-        <translation type="obsolete">Выбор AVI файла</translation>
-    </message>
-    <message>
-        <source>Subtitle PID:</source>
-        <translation type="obsolete">PID субтитра</translation>
-    </message>
-    <message>
-        <source>Please Select a valid TS file.</source>
-        <translation type="obsolete">Пожалуйстра выберите подходящий TS файл</translation>
-    </message>
-    <message>
-        <source>Save GlyphSet</source>
-        <translation type="obsolete">Сохранить установки символа</translation>
-    </message>
-    <message>
-        <source>_Use systray while encoding</source>
-        <translation type="obsolete">Минимизировать в трей во время кодирования</translation>
-    </message>
-    <message>
-        <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">Позволять нестандартную частоту звука для DVD</translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="obsolete">Создавать файлы _OpenDML</translation>
-    </message>
-    <message>
-        <source>Automatically _index MPEG files</source>
-        <translation type="obsolete">Автоматически индексировать MPEG-файлы</translation>
-    </message>
-    <message>
-        <source>Automatically _swap A and B if A&gt;B</source>
-        <translation type="obsolete">Автоматически менять A и B, если A &gt; B</translation>
-    </message>
-    <message>
-        <source>_Disable NUV audio sync</source>
-        <translation type="obsolete">Запретить синхронизацию NUV звука</translation>
-    </message>
-    <message>
-        <source>Automatically _build VBR map</source>
-        <translation type="obsolete">Автоматически создавать карту VBR</translation>
-    </message>
-    <message>
-        <source>Automatically _rebuild index</source>
-        <translation type="obsolete">Автоматически пересоздавать индекс</translation>
-    </message>
-    <message>
-        <source>Automatically remove _packed bitstream</source>
-        <translation type="obsolete">Автоматически удалять упакованный поток</translation>
-    </message>
-    <message>
-        <source>Enable all SIMD</source>
-        <translation type="obsolete">Включить все SIMD</translation>
-    </message>
-    <message>
-        <source>Enable MMX</source>
-        <translation type="obsolete">Включить MMX</translation>
-    </message>
-    <message>
-        <source>Enable MMXEXT</source>
-        <translation type="obsolete">Включить MMXEXT</translation>
-    </message>
-    <message>
-        <source>Enable 3DNOW</source>
-        <translation type="obsolete">Включить 3DNOW</translation>
-    </message>
-    <message>
-        <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">Включить 3DNOWEXT</translation>
-    </message>
-    <message>
-        <source>Enable SSE</source>
-        <translation type="obsolete">Включить SSE</translation>
-    </message>
-    <message>
-        <source>Enable SSE2</source>
-        <translation type="obsolete">Включить SSE2</translation>
-    </message>
-    <message>
-        <source>Enable SSE3</source>
-        <translation type="obsolete">Включить SSE3</translation>
-    </message>
-    <message>
-        <source>Enable SSSE3</source>
-        <translation type="obsolete">Включить SSSE3</translation>
-    </message>
-    <message>
-        <source>_lavc threads:</source>
-        <translation type="obsolete">_lavc</translation>
-    </message>
-    <message>
-        <source>Multi-threading</source>
-        <translation type="obsolete">Использовать многопоточность</translation>
-    </message>
-    <message>
-        <source>Above normal</source>
-        <translation type="obsolete">Выше нормального</translation>
-    </message>
-    <message>
-        <source>Below normal</source>
-        <translation type="obsolete">Ниже нормального</translation>
-    </message>
-    <message>
-        <source>_Encoding priority:</source>
-        <translation type="obsolete">Кодирования:</translation>
-    </message>
-    <message>
-        <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">Индексации/распаковки:</translation>
-    </message>
-    <message>
-        <source>_Playback priority:</source>
-        <translation type="obsolete">Воспроизведения:</translation>
-    </message>
-    <message>
-        <source>Prioritisation</source>
-        <translation type="obsolete">Приоритет</translation>
-    </message>
-    <message>
-        <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">Использовать альтернативные тэги для MP3 в .MP4</translation>
-    </message>
-    <message>
-        <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (лучше всего)</translation>
-    </message>
-    <message>
-        <source>SDL (good)</source>
-        <translation type="obsolete">SDL (хорошо)</translation>
-    </message>
-    <message>
-        <source>Video _display:</source>
-        <translation type="obsolete">Метод вывода видео:</translation>
-    </message>
-    <message>
-        <source>No alerts</source>
-        <translation type="obsolete">Без сообщений</translation>
-    </message>
-    <message>
-        <source>Display only error alerts</source>
-        <translation type="obsolete">Только сообщения об ошибках</translation>
-    </message>
-    <message>
-        <source>Display all alerts</source>
-        <translation type="obsolete">Все сообщения</translation>
-    </message>
-    <message>
-        <source>_Message level:</source>
-        <translation type="obsolete">Уровень сообщений:</translation>
-    </message>
-    <message>
-        <source>Master</source>
-        <translation type="obsolete">Мастер</translation>
-    </message>
-    <message>
-        <source>_Volume control:</source>
-        <translation type="obsolete">Громкость звука управляется:</translation>
-    </message>
-    <message>
-        <source>No downmixing</source>
-        <translation type="obsolete">Оригинальный</translation>
-    </message>
-    <message>
-        <source>_Local playback downmixing:</source>
-        <translation type="obsolete">При проигрывании звук:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">Уровень:</translation>
-    </message>
-    <message>
-        <source>Default Postprocessing</source>
-        <translation type="obsolete">Постпроцессинг по умолчанию</translation>
-    </message>
-    <message>
-        <source>Use _Global GlyphSet</source>
-        <translation type="obsolete">Glyph</translation>
-    </message>
-    <message>
-        <source>Automation</source>
-        <translation type="obsolete">Авто</translation>
-    </message>
-    <message>
-        <source>Audio</source>
-        <translation type="obsolete">Звук</translation>
-    </message>
-    <message>
-        <source>Video</source>
-        <translation type="obsolete">Видео</translation>
-    </message>
-    <message>
-        <source>Threading</source>
-        <translation type="obsolete">Многопоточность</translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">Свойства</translation>
-    </message>
-    <message>
-        <source>_Subtitle file:</source>
-        <translation type="obsolete">Файл субтитров:</translation>
-    </message>
-    <message>
-        <source>Select Subtitle file</source>
-        <translation type="obsolete">Выбор файла субтитров</translation>
-    </message>
-    <message>
-        <source>_Font (TTF):</source>
-        <translation type="obsolete">Шрифт (TTF):</translation>
-    </message>
-    <message>
-        <source>Select TTF file</source>
-        <translation type="obsolete">Выбор TTF-файла</translation>
-    </message>
-    <message>
-        <source>_Encoding:</source>
-        <translation type="obsolete">Кодировка:</translation>
-    </message>
-    <message>
-        <source>S_elect C_olor</source>
-        <translation type="obsolete">Выбор цвета</translation>
-    </message>
-    <message>
-        <source>Set Size and _Position</source>
-        <translation type="obsolete">Установка размера и размещения</translation>
-    </message>
-    <message>
-        <source>_Auto split</source>
-        <translation type="obsolete">Автоматический перенос</translation>
-    </message>
-    <message>
-        <source>_Delay (ms):</source>
-        <translation type="obsolete">Сдвиг (мs):</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be 0</source>
-        <translation type="obsolete">Ширина и высота не могут быть нулевыми</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Ширина и высота не могут быть нечетными</translation>
-    </message>
-    <message>
-        <source>Something very wrong happened when building joblist.</source>
-        <translation type="obsolete">Что-то очень необъяснимое случилось при построении списка заданий.</translation>
-    </message>
-    <message>
-        <source>There are no jobs stored</source>
-        <translation type="obsolete">Нет сохраненных заданий</translation>
-    </message>
-    <message>
-        <source>Select ECMAScript to Run</source>
-        <translation type="obsolete">Выберите ECMAScript для запуска</translation>
-    </message>
-    <message>
-        <source>Obsolete</source>
-        <translation type="obsolete">Устарело</translation>
-    </message>
-    <message>
-        <source>Not coded in this version</source>
-        <translation type="obsolete">Нет в этой версии</translation>
-    </message>
-    <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">Выберите файл</translation>
-    </message>
-    <message>
-        <source>Select Workbench to Save</source>
-        <translation type="obsolete">Выберите файл для сохранения</translation>
-    </message>
-    <message>
-        <source>Select Raw File to Save</source>
-        <translation type="obsolete">Выберите файл для сохранения</translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">Выберите файл для присоединения</translation>
-    </message>
-    <message>
-        <source>Select File to Save Audio</source>
-        <translation type="obsolete">Выберите файл для сохранения звука</translation>
-    </message>
-    <message>
-        <source>Select JPEG Sequence to Save</source>
-        <translation type="obsolete">Выберите файл для сохранения</translation>
-    </message>
-    <message>
-        <source>Select BMP to Save</source>
-        <translation type="obsolete">Выберите файл для сохранения</translation>
-    </message>
-    <message>
-        <source>Select JPEG to Save</source>
-        <translation type="obsolete">Выберите файл для сохранения</translation>
-    </message>
-    <message>
-        <source>Select File to Save</source>
-        <translation type="obsolete">Укажите файл для сохранения</translation>
-    </message>
-    <message>
-        <source>Select MP3 to Load</source>
-        <translation type="obsolete">Выбор MP3-файла</translation>
-    </message>
-    <message>
-        <source>Select AC3 to Load</source>
-        <translation type="obsolete">Выбор AC3-файла</translation>
-    </message>
-    <message>
-        <source>Select WAV to Load</source>
-        <translation type="obsolete">Выбор WAV-файла</translation>
-    </message>
-    <message>
-        <source>Go to Frame</source>
-        <translation type="obsolete">Переход</translation>
-    </message>
-    <message>
-        <source>_Go to frame:</source>
-        <translation type="obsolete">Номер кадра:</translation>
-    </message>
-    <message>
-        <source>Out of bounds</source>
-        <translation type="obsolete">Выход за пределы</translation>
-    </message>
-    <message>
-        <source>Marker A &gt; B</source>
-        <translation type="obsolete">Метка A &gt; B</translation>
-    </message>
-    <message>
-        <source>Cannot copy.</source>
-        <translation type="obsolete">Невозможно копировать.</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II))</source>
-        <translation type="obsolete">Ошибка при обновлении видео</translation>
-    </message>
-    <message>
-        <source>Are you sure?</source>
-        <translation type="obsolete">Вы уверены?</translation>
-    </message>
-    <message>
-        <source>Use custom value</source>
-        <translation type="obsolete">Использовать другое значение</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">Частота кадров </translation>
-    </message>
-    <message>
-        <source>_Frames per second</source>
-        <translation type="obsolete">_Кадров в секунду</translation>
-    </message>
-    <message>
-        <source>Width is not a multiple of 8</source>
-        <translation type="obsolete">Ширина не кратна 8</translation>
-    </message>
-    <message>
-        <source>This will make trouble for AVI files.</source>
-        <translation type="obsolete">Это создаст проблемы для AVI-файлов.</translation>
-    </message>
-    <message>
-        <source>Rebuild all Keyframes?</source>
-        <translation type="obsolete">Перестроить все ключевые кадры?</translation>
-    </message>
-    <message>
-        <source>Permission error</source>
-        <translation type="obsolete">Ошибка прав доступа</translation>
-    </message>
-    <message>
-        <source>&quot;%s&quot; does not exist.</source>
-        <translation type="obsolete">&quot;%s&quot; не существует.</translation>
-    </message>
-    <message>
-        <source>Cannot open project using the video loader.</source>
-        <translation type="obsolete">Невозможно открыть проект, используя загрузчик видео.</translation>
-    </message>
-    <message>
-        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
-        <translation type="obsolete">Попробуйте &quot;Файл-&gt;Загрузить/Запустить проект...&quot;</translation>
-    </message>
-    <message>
-        <source>Could not open the file</source>
-        <translation type="obsolete">Невозможно открыть файл</translation>
-    </message>
-    <message>
-        <source>Multiple Audio Tracks</source>
-        <translation type="obsolete">Несколько звуковых дорожек</translation>
-    </message>
-    <message>
-        <source>The file you just loaded contains several audio tracks.
-Go to Audio-&gt;MainTrack to select the active one.</source>
-        <translation type="obsolete">Файл содержит несколько звуковых дорожек.
-Выберите главную через меню &quot;Аудио-&gt;Главная дорожка&quot;.</translation>
-    </message>
-    <message>
-        <source>No audio decoder found for this file</source>
-        <translation type="obsolete">Не найден декодер звука для этого файла</translation>
-    </message>
-    <message>
-        <source>Save (A+V) will generate bad AVI. Save audio will work.</source>
-        <translation type="obsolete">Сохранение (Аудио+Видео) создаст плохой AVI файл. Сохранение только аудиопотока будет работать.</translation>
-    </message>
-    <message>
-        <source>Something failed when appending</source>
-        <translation type="obsolete">Ошибка при открытии файла для записи</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II)</source>
-        <translation type="obsolete">Ошибка при обновлении видео</translation>
-    </message>
-    <message>
-        <source>Cannot save the audio in copy mode</source>
-        <translation type="obsolete">Невозможно сохранить аудио в режиме &quot;Копировать&quot;</translation>
-    </message>
-    <message>
-        <source>Select WAV PCM as the audio codec, otherwise the audio file would be raw PCM.</source>
-        <translation type="obsolete">Выберите WAV PCM как кодек, иначе звук будет raw PCM.</translation>
-    </message>
-    <message>
-        <source>Saving audio</source>
-        <translation type="obsolete">Сохранение аудио</translation>
-    </message>
-    <message>
-        <source>Get Frame</source>
-        <translation type="obsolete">Следующий кадр</translation>
-    </message>
-    <message>
-        <source>Cannot get this frame to save</source>
-        <translation type="obsolete">Невозможно кодировать кадр</translation>
-    </message>
-    <message>
-        <source>Mark A &gt; B</source>
-        <translation type="obsolete">Метка A &gt; B</translation>
-    </message>
-    <message>
-        <source>Set your markers correctly.</source>
-        <translation type="obsolete">Установите метки корректно.</translation>
-    </message>
-    <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="obsolete">Сохранение как jpeg</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="obsolete">Невозможно декодировать кадр</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="obsolete">Прервано.</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation type="obsolete">Выполнено</translation>
-    </message>
-    <message>
-        <source>Saved %d images.</source>
-        <translation type="obsolete">Сохранено изображений: %d </translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">Ошибка</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="obsolete">Невозможно сохранить все изображения.</translation>
-    </message>
-    <message>
-        <source>Saved &quot;%s&quot;.</source>
-        <translation type="obsolete">&quot;%s&quot; cохранён.</translation>
-    </message>
-    <message>
-        <source>BMP op failed</source>
-        <translation type="obsolete">Ошибка открытия BMP</translation>
-    </message>
-    <message>
-        <source>Saving %s as a BMP file failed.</source>
-        <translation type="obsolete">Ошибка сохранения &quot;%s&quot; как BMP.</translation>
-    </message>
-    <message>
-        <source>Failed to open the file</source>
-        <translation type="obsolete">Невозможно открыть файл</translation>
-    </message>
-    <message>
-        <source>Not a WAV file?</source>
-        <translation type="obsolete">Файл не является WAV?</translation>
-    </message>
-    <message>
-        <source>WAV open file failed...</source>
-        <translation type="obsolete">Ошибка при открытии WAV-файла...</translation>
-    </message>
-    <message>
-        <source>Cannot decompress audio frame</source>
-        <translation type="obsolete">Невозможно распаковать аудиокадр</translation>
-    </message>
-    <message>
-        <source>Memory Error</source>
-        <translation type="obsolete">Ошибка выделения памяти</translation>
-    </message>
-    <message>
-        <source>No frames to encode</source>
-        <translation type="obsolete">Нет кадров для кодирования</translation>
-    </message>
-    <message>
-        <source>Please check markers. Is &quot;A&gt;&quot; == &quot;&gt;B&quot;?</source>
-        <translation type="obsolete">Проверьте метки, должно быть &quot;A&gt;&quot; == &quot;&gt;B&quot;</translation>
-    </message>
-    <message>
-        <source>Saving raw video stream</source>
-        <translation type="obsolete">Сохранение необработанного видеопотока</translation>
-    </message>
-    <message>
-        <source>Checking video</source>
-        <translation type="obsolete">Проверка видео</translation>
-    </message>
-    <message>
-        <source>No error found</source>
-        <translation type="obsolete">Ошибки не найдены</translation>
-    </message>
-    <message>
-        <source>Errors found in %u frames</source>
-        <translation type="obsolete">Найдены ошибки в %u кадрах</translation>
-    </message>
-    <message>
-        <source>Cannot decompress the audio stream</source>
-        <translation type="obsolete">Ошибка при распаковке аудиопотока</translation>
-    </message>
-    <message>
-        <source>Switch audio codec to Copy.</source>
-        <translation type="obsolete">Смените аудиокодек на &quot;Копировать&quot;.</translation>
-    </message>
-    <message>
-        <source>Cannot delete the selection.</source>
-        <translation type="obsolete">Невозможно удалить выделенное.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t remove all frames</source>
-        <translation type="obsolete">Вы не можете удалить все кадры.</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">Ошибка при открытии файла для записи</translation>
-    </message>
-    <message>
-        <source>Could not get tracks info</source>
-        <translation type="obsolete">Невозможно получить информацию по аудиопотокам</translation>
-    </message>
-    <message>
-        <source>Take audio from video file</source>
-        <translation type="obsolete">Взять звук из исходного видео файла</translation>
-    </message>
-    <message>
-        <source>No audio</source>
-        <translation type="obsolete">Без звука</translation>
-    </message>
-    <message>
-        <source>External AC3</source>
-        <translation type="obsolete">AC3 из файла</translation>
-    </message>
-    <message>
-        <source>Take audio from external AC3 file</source>
-        <translation type="obsolete">Взять звук из внешнего AC3-файла</translation>
-    </message>
-    <message>
-        <source>External MP3</source>
-        <translation type="obsolete">MP3 из файла</translation>
-    </message>
-    <message>
-        <source>Take audio from external MP3 file</source>
-        <translation type="obsolete">Взять звук из внешнего MP3-файла</translation>
-    </message>
-    <message>
-        <source>External WAV</source>
-        <translation type="obsolete">WAV из файла</translation>
-    </message>
-    <message>
-        <source>Take audio from external WAV file</source>
-        <translation type="obsolete">Взять звук из внешнего WAV-файла</translation>
-    </message>
-    <message>
-        <source>_Audio source:</source>
-        <translation type="obsolete">Источник звука:</translation>
-    </message>
-    <message>
-        <source>_External file:</source>
-        <translation type="obsolete">Файл:</translation>
-    </message>
-    <message>
-        <source>Select file</source>
-        <translation type="obsolete">Выбор AVI файла...</translation>
-    </message>
-    <message>
-        <source>_Track from video:</source>
-        <translation type="obsolete">Дорожка:</translation>
-    </message>
-    <message>
-        <source>Main Audio Track</source>
-        <translation type="obsolete">Главная звуковая дорожка</translation>
-    </message>
-    <message>
-        <source>Cannot load</source>
-        <translation type="obsolete">Ошибка загрузки</translation>
-    </message>
-    <message>
-        <source>The selected audio file does not exist.</source>
-        <translation type="obsolete">Файл не существует.</translation>
-    </message>
-    <message>
-        <source>Second Audio Track</source>
-        <translation type="obsolete">Вторая звуковая дорожка</translation>
-    </message>
-    <message>
-        <source>Error loading the MP3 file</source>
-        <translation type="obsolete">Ошибка при загрузке MP3-файла</translation>
-    </message>
-    <message>
-        <source>Second track loaded</source>
-        <translation type="obsolete">Вторая звуковая дорожка загружена</translation>
-    </message>
-    <message>
-        <source>Error loading the AC3 file</source>
-        <translation type="obsolete">Ошибка при загрузке AC3-файла</translation>
-    </message>
-    <message>
-        <source>Error loading the WAV file</source>
-        <translation type="obsolete">Ошибка при загрузке WAV-файла</translation>
-    </message>
-    <message>
-        <source>Saving failed</source>
-        <translation type="obsolete">Ошибка при сохранении</translation>
-    </message>
-    <message>
-        <source>Saving the job failed. Maybe you have permission issue with ~/.avidemux</source>
-        <translation type="obsolete">Ошибка при сохранении задания. Возможно, у вас нет прав доступа к ~/.avidemux.</translation>
-    </message>
-    <message>
-        <source>File %s has been successfully saved.</source>
-        <translation type="obsolete">Файл &quot;%s&quot; успешно сохранен.</translation>
-    </message>
-    <message>
-        <source>File %s was NOT saved correctly.</source>
-        <translation type="obsolete">Файл &quot;%s&quot; сохранен не корректно.</translation>
-    </message>
-    <message>
-        <source>Failed to connect to avsproxy.
-Is it running ?</source>
-        <translation type="obsolete">Невозможно соединиться с AvsProxy.
-Он запущен?</translation>
-    </message>
-    <message>
-        <source>Frame type:</source>
-        <translation type="obsolete">Тип кадра:</translation>
-    </message>
-    <message>
-        <source>Frame size:</source>
-        <translation type="obsolete">Размер кадра:</translation>
-    </message>
-    <message>
-        <source>Frame Hex Dump</source>
-        <translation type="obsolete">Дамп кадра</translation>
-    </message>
-    <message>
-        <source>Decompressing error</source>
-        <translation type="obsolete">Ошибка при распаковке</translation>
-    </message>
-    <message>
-        <source>Cannot decode next frame.</source>
-        <translation type="obsolete">Невозможно декодировать следующий кадр.</translation>
-    </message>
-    <message>
-        <source>Cannot decode keyframe.</source>
-        <translation type="obsolete">Невозможно декодировать ключевой кадр.</translation>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="obsolete">Поиск</translation>
-    </message>
-    <message>
-        <source>Finding black frames</source>
-        <translation type="obsolete">Поиск черных кадров</translation>
-    </message>
-    <message>
-        <source>Cannot decode the frame.</source>
-        <translation type="obsolete">Невозможно декодировать кадр.</translation>
-    </message>
-    <message>
-        <source>Dual audio can only be used in copy mode</source>
-        <translation type="obsolete">Две звуковые дорожки могут быть использованы только в режиме копирования.</translation>
-    </message>
-    <message>
-        <source>Select Copy as the video codec.</source>
-        <translation type="obsolete">Выберите &quot;Копировать&quot; в качестве видеокодека.</translation>
-    </message>
-    <message>
-        <source>Incompatible output format</source>
-        <translation type="obsolete">Несовместимый выходной формат</translation>
-    </message>
-    <message>
-        <source>There is no second track</source>
-        <translation type="obsolete">Не задана вторая аудиодорожка</translation>
-    </message>
-    <message>
-        <source>Select a second audio track in the Audio menu.</source>
-        <translation type="obsolete">Выберите вторую аудиодорожку в меню &apos;Аудио&apos;</translation>
-    </message>
-    <message>
-        <source>Select dual audio AVI to write</source>
-        <translation type="obsolete">Сохранение AVI файла с двумя звуковыми дорожками</translation>
-    </message>
-    <message>
-        <source>This cannot have packed VOP</source>
-        <translation type="obsolete">Файл не может иметь VOP упаковку</translation>
-    </message>
-    <message>
-        <source>It is not MPEG-4 video. File will not be saved.</source>
-        <translation type="obsolete">Это не MPEG-4 видео. Файл не будет сохранен.</translation>
-    </message>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">Проблема при инициализации аудиоустройства.</translation>
-    </message>
-    <message>
-        <source>Internal error finding codec</source>
-        <translation type="obsolete">Внутренняя ошибка поиска кодека</translation>
-    </message>
-</context>
-<context>
-    <name>ADMImage</name>
-    <message>
-        <source>Memory error</source>
-        <translation type="obsolete">Ошибка выделения памяти</translation>
-    </message>
-    <message>
-        <source>Error converting to BMP</source>
-        <translation type="obsolete">Ошибка при конвертации в BMP</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">Ошибка при открытии файла для записи</translation>
-    </message>
-    <message>
-        <source>Cannot encode the frame</source>
-        <translation type="obsolete">Невозможно кодировать кадр</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Файловая ошибка</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Невозможно открыть для записи &quot;%s&quot;</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoComputeAverage</name>
-    <message>
-        <source>_Start Frame (first frame # to include in average):</source>
-        <translation type="obsolete">Начальный кадр:</translation>
-    </message>
-    <message>
-        <source>_End Frame (last frame # to include), -1 = last:</source>
-        <translation type="obsolete">Конечный кадр:</translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">Выходной файл:</translation>
-    </message>
-    <message>
-        <source>Select output file</source>
-        <translation type="obsolete">Укажите файл для сохранения</translation>
-    </message>
-    <message>
-        <source>_Bias (only for display; use 0 for average, 128 for frame minus average):</source>
-        <translation type="obsolete">_Bias (только для предпросмотра; 0 - среднее, 128 - кадр минус среднее):</translation>
-    </message>
-    <message>
-        <source>Current frame minus average so far</source>
-        <translation type="obsolete">Текущий кадр минус среднее значение</translation>
-    </message>
-    <message>
-        <source>Average so far</source>
-        <translation type="obsolete">Среднее значение</translation>
-    </message>
-    <message>
-        <source>Display nothing (fast for batch processing)</source>
-        <translation type="obsolete">Ничего не показывать (для пакетной обработки)</translation>
-    </message>
-    <message>
-        <source>Display _Mode:</source>
-        <translation type="obsolete">Режим предпросмотра:</translation>
-    </message>
-    <message>
-        <source>ComputeAverage</source>
-        <translation type="obsolete">Вычислить среднее</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDenoise</name>
-    <message>
-        <source>_Scene change:</source>
-        <translation type="obsolete">Без изменений</translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">Удаление шума   </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDropOut</name>
-    <message>
-        <source>DropOut Threshold</source>
-        <translation type="obsolete">Порог определения повреждённых кадров</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoEraser</name>
-    <message>
-        <source>Erase</source>
-        <translation type="obsolete">Очистить</translation>
-    </message>
-    <message>
-        <source>Un-Erase</source>
-        <translation type="obsolete">Отменить очистку</translation>
-    </message>
-    <message>
-        <source>Brush _Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
-    </message>
-    <message>
-        <source>Eraser _Data File:</source>
-        <translation type="obsolete">Очистка Data файла</translation>
-    </message>
-    <message>
-        <source>Select data file</source>
-        <translation type="obsolete">Выбор AVI файла...</translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">Опции отладки (bits):</translation>
-    </message>
-    <message>
-        <source>Eraser Configuration</source>
-        <translation type="obsolete">Настройка Vorbis</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoFlux</name>
-    <message>
-        <source>_Temporal threshold:</source>
-        <translation type="obsolete">Временной порог:</translation>
-    </message>
-    <message>
-        <source>_Spatial threshold:</source>
-        <translation type="obsolete">Пространственный порог:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoForcedPP</name>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">Уровень фильтрации:</translation>
-    </message>
-    <message>
-        <source>_Quantizer:</source>
-        <translation type="obsolete">Квантователь:</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">Горизонтальный деблокинг</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">Вертикальный деблокинг</translation>
-    </message>
-    <message>
-        <source>Forced Postprocessing</source>
-        <translation type="obsolete">Постпроцессинг</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoKernelDeint</name>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Порядок полей:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Чем меньше значение, тем сильнее деинтерлейсинг</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">Резкость</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">Включить механизм усиления резкости</translation>
-    </message>
-    <message>
-        <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">Улучшенная экстраполяция (лучше не использовать)</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">Карта</translation>
-    </message>
-    <message>
-        <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">Показать области чрезстрочности (для тестирования!)</translation>
-    </message>
-    <message>
-        <source>KernelDeint</source>
-        <translation type="obsolete">Корневой деинтерлейс</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLargeMedian</name>
-    <message>
-        <source>_Process luma</source>
-        <translation type="obsolete">Обработать яркость (luma)</translation>
-    </message>
-    <message>
-        <source>P_rocess chroma</source>
-        <translation type="obsolete">Обработать цвет (chroma)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLavPPDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">Линейная интерполяция</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Кубическая интерполяция</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Средняя интерполяция</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">Алгоритм:</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">Автоматический уровень</translation>
-    </message>
-    <message>
-        <source>libavcodec deinterlacer</source>
-        <translation type="obsolete">libavcodec деинтерлейс</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLogo</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">Лого (JPG-файл)</translation>
-    </message>
-    <message>
-        <source>Select JPEG file</source>
-        <translation type="obsolete">Выбор JPEG-файла</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">Позиция X:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">Позиция Y:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">Прозрачность (alpha):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3D</name>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">Сила фильтра :</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3Dlow</name>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">Сила фильтра :</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMaskedSoften</name>
-    <message>
-        <source>_Luma threshold:</source>
-        <translation type="obsolete">Порог по яркости (luma):</translation>
-    </message>
-    <message>
-        <source>C_hroma threshold:</source>
-        <translation type="obsolete">Порог по цвету (chroma):</translation>
-    </message>
-    <message>
-        <source>_Radius:</source>
-        <translation type="obsolete">Радиус:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMosaic</name>
-    <message>
-        <source>_Horizontal stacking:</source>
-        <translation type="obsolete">Картинок по горизонтали:</translation>
-    </message>
-    <message>
-        <source>_Vertical stacking:</source>
-        <translation type="obsolete">Картинок по вертикали:</translation>
-    </message>
-    <message>
-        <source>_Shrink factor:</source>
-        <translation type="obsolete">Коэффициент уменьшения размера:</translation>
-    </message>
-    <message>
-        <source>Show _frame</source>
-        <translation type="obsolete">Показать номера кадров</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation type="obsolete">Прочие</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoPalShift</name>
-    <message>
-        <source>Pal Field Shift</source>
-        <translation type="obsolete">Включить сдвиг</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoParticle</name>
-    <message>
-        <source>Output _Format:</source>
-        <translation type="obsolete">Контейнер:</translation>
-    </message>
-    <message>
-        <source>_Left side crop (ignore particles in):</source>
-        <translation type="obsolete">_Левосторонняя обрезка</translation>
-    </message>
-    <message>
-        <source>_Right side crop (ignore particles in):</source>
-        <translation type="obsolete">_Правосторонняя обрезка</translation>
-    </message>
-    <message>
-        <source>_Top crop (ignore particles in):</source>
-        <translation type="obsolete">_Верхняя обрезка</translation>
-    </message>
-    <message>
-        <source>_Bottom crop (ignore particles in):</source>
-        <translation type="obsolete">_Нижняя обрезка</translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">Выходной файл:</translation>
-    </message>
-    <message>
-        <source>Select file</source>
-        <translation type="obsolete">Выбор AVI файла...</translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">_Опции отладки (bits):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoResampleFPS</name>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">Новая частота кадров:</translation>
-    </message>
-    <message>
-        <source>Resample fps</source>
-        <translation type="obsolete">Изменить fps</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoRotate</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 градусов</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 градусов</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 градусов</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">Угол:</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">Вращать</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubASS</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">Файл субтитров (ASS/SSA):</translation>
-    </message>
-    <message>
-        <source>Select Subtitle file</source>
-        <translation type="obsolete">Выбор файла субтитров</translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">Межстрочный интервал:</translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">Масштаб шрифта:</translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">Верхняя граница:</translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">Нижняя граница:</translation>
-    </message>
-    <message>
-        <source>ASS</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubtitle</name>
-    <message>
-        <source>Could not open subtitle file</source>
-        <translation type="obsolete">Ошибка открытия файла субтитров.</translation>
-    </message>
-    <message>
-        <source>Cannot identify subtitle format</source>
-        <translation type="obsolete">Неопознанный формат субтитров.</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSwissArmyKnife</name>
-    <message>
-        <source>Select file</source>
-        <translation type="obsolete">Выбор AVI файла...</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoTIsophote</name>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Средне</translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">Тип:</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Чем меньше значение, тем сильнее деинтерлейсинг</translation>
-    </message>
-    <message>
-        <source>KernelDeint</source>
-        <translation type="obsolete">Корневой деинтерлейс</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoThreshold</name>
-    <message>
-        <source>Output values:</source>
-        <translation type="obsolete">Выходные значения:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoYadif</name>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">Нижнее поле первое</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">Верхнее поле первое</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">Порядок:</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_AudiocodecWMA</name>
-    <message>
-        <source>Internal error</source>
-        <translation type="obsolete">WMA/QDM2: внутренняя ошибка</translation>
-    </message>
-    <message>
-        <source>Cannot open WMA2 codec.</source>
-        <translation type="obsolete">Невозможно открыть WMA2 кодек.</translation>
-    </message>
-</context>
-<context>
     <name>ADM_Composer</name>
-    <message>
-        <source>No video loaded</source>
-        <translation type="obsolete">Видео не загружено</translation>
-    </message>
-    <message>
-        <source>Not indexable</source>
-        <translation type="obsolete">Невозможно индексировать файл</translation>
-    </message>
-    <message>
-        <source>DivX 5 + packed?</source>
-        <translation type="obsolete">Упакованный DivX 5?</translation>
-    </message>
-    <message>
-        <source>Rebuilding Frames</source>
-        <translation type="obsolete">Переупорядочивание кадров</translation>
-    </message>
-    <message>
-        <source>Aborted</source>
-        <translation type="obsolete">Прервано</translation>
-    </message>
-    <message>
-        <source>Unsupported</source>
-        <translation type="obsolete">Не поддерживается</translation>
-    </message>
-    <message>
-        <source>Old format project file</source>
-        <translation type="obsolete">Старый формат проекта</translation>
-    </message>
-    <message>
-        <source>No more supported.</source>
-        <translation type="obsolete">Больше не поддерживается.</translation>
-    </message>
-    <message>
-        <source>File type identified but no loader support detected...</source>
-        <translation type="obsolete">Файл идентифицирован, но не поддерживается.</translation>
-    </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+232"/>
         <source>Attempt to open %s failed!</source>
         <translation type="unfinished">Ошибка при открытии %s!</translation>
-    </message>
-    <message>
-        <source>Build Time Map</source>
-        <translation type="obsolete">Создать</translation>
-    </message>
-    <message>
-        <source>Build VBR time map?</source>
-        <translation type="obsolete">Создать временную карту VBR?</translation>
-    </message>
-    <message>
-        <source>Packed Bitstream detected</source>
-        <translation type="obsolete">Обнаружен упакованный поток</translation>
-    </message>
-    <message>
-        <source>Do you want me to unpack it ?</source>
-        <translation type="obsolete">Распаковать?</translation>
-    </message>
-    <message>
-        <source>Could not unpack the video</source>
-        <translation type="obsolete">Не могу распаковать видео</translation>
-    </message>
-    <message>
-        <source>Weird</source>
-        <translation type="obsolete">Странно</translation>
-    </message>
-    <message>
-        <source>The unpacking succeedeed but the index is still not up to date.</source>
-        <translation type="obsolete">Распаковка прошла успешно, но индекс не обновлён</translation>
-    </message>
-    <message>
-        <source>Index is not up to date</source>
-        <translation type="obsolete">Индекс не обновлён</translation>
-    </message>
-    <message>
-        <source>You should use Tool-&gt;Rebuild frame. Do it now ?</source>
-        <translation type="obsolete">Вы должны использовать &apos;Инструменты-&gt;Переупорядочить кадры&apos;. Сделать это сейчас?</translation>
-    </message>
-    <message>
-        <source>This looks like mpeg
- Do you want to index it?</source>
-        <translation type="obsolete">Выглядит как mpeg
-Хотите индексировать?</translation>
-    </message>
-    <message>
-        <source>Indexing failed</source>
-        <translation type="obsolete">Ошибка при индексировании</translation>
     </message>
     <message>
         <location line="-36"/>
@@ -2349,7 +14,7 @@ Is it running ?</source>
         <translation type="unfinished">Невозможно найти демультиплексор для %s</translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+64"/>
         <source>width</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2418,276 +83,6 @@ Drop timing informations ?</source>
 При прямом копировании видео без его перекодировки
  они сохранятся.
 Сбросить информацию о таймингах?</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4CoreUIToolkit</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">Внимание</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4Factory::ADM_Qbitrate</name>
-    <message>
-        <source>Constant Bitrate</source>
-        <translation type="obsolete">Постоянный битрейт</translation>
-    </message>
-    <message>
-        <source>Encoding mode</source>
-        <translation type="obsolete">Режим кодирования</translation>
-    </message>
-    <message>
-        <source>Bitrate</source>
-        <translation type="obsolete">Битрейт</translation>
-    </message>
-    <message>
-        <source>Target video size (MB)</source>
-        <translation type="obsolete">Конечный размер видео (МБ)</translation>
-    </message>
-    <message>
-        <source>Average bitrate (kb/s)</source>
-        <translation type="obsolete">Средний битрейт (кб/с)</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_QthreadCount</name>
-    <message>
-        <source>Disabled</source>
-        <translation type="obsolete">Выключено</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Автоопределение</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">Вручную</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWrite</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Копировать</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Файловая ошибка</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Невозможно открыть для записи &quot;%s&quot;</translation>
-    </message>
-    <message>
-        <source>Could not initialize video</source>
-        <translation type="obsolete">Невозможно инициализировать видео</translation>
-    </message>
-    <message>
-        <source>Could not initialize audio</source>
-        <translation type="obsolete">Невозможно инициализировать аудио</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Копировать</translation>
-    </message>
-    <message>
-        <source>Saving...</source>
-        <translation type="obsolete">Сохранение...</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteProcess</name>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Невозможно инициализировать фильтр</translation>
-    </message>
-    <message>
-        <source>Encoding</source>
-        <translation type="obsolete">Кодирование</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qt4Factory::ADM_QthreadCount</name>
-    <message>
-        <source>Disabled</source>
-        <translation type="obsolete">Выключено</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Автоопределение</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">Вручную</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMFastVideoConvolution</name>
-    <message>
-        <source>_Process luma</source>
-        <translation type="obsolete">Обработать яркость (luma)</translation>
-    </message>
-    <message>
-        <source>P_rocess chroma</source>
-        <translation type="obsolete">Обработать цвет (chroma)</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMGenericAudioStream</name>
-    <message>
-        <source>Building VBR map</source>
-        <translation type="obsolete">Построение карты VBR</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoAddBorder</name>
-    <message>
-        <source>_Left border:</source>
-        <translation type="obsolete">Слева:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="obsolete">Справа:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="obsolete">Сверху:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="obsolete">Снизу:</translation>
-    </message>
-    <message>
-        <source>Add Borders</source>
-        <translation type="obsolete">Добавление границ</translation>
-    </message>
-    <message>
-        <source>Incorrect parameters</source>
-        <translation type="obsolete">Неверные параметры</translation>
-    </message>
-    <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Все параметры должны быть четными и укладываться в границы</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoMCDeint</name>
-    <message>
-        <source>Fast</source>
-        <translation type="obsolete">Быстро</translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Средне</translation>
-    </message>
-    <message>
-        <source>Slow iterative motion search</source>
-        <translation type="obsolete">Медленно (последовательный поиск движения)</translation>
-    </message>
-    <message>
-        <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="obsolete">Очень медленно (то же, что и 3 + multiple reference frames)</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
-    </message>
-    <message>
-        <source>_Field dominance:</source>
-        <translation type="obsolete">Главное поле:</translation>
-    </message>
-    <message>
-        <source>mcDeinterlace</source>
-        <translation type="obsolete">mc Деинтерлейс</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoStreamBSMear</name>
-    <message>
-        <source>_Left border:</source>
-        <translation type="obsolete">Слева:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="obsolete">Справа:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="obsolete">Сверху:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="obsolete">Снизу:</translation>
-    </message>
-    <message>
-        <source>Blacken Borders</source>
-        <translation type="obsolete">Заполнение границ</translation>
-    </message>
-    <message>
-        <source>Incorrect parameters</source>
-        <translation type="obsolete">Неверные параметры</translation>
-    </message>
-    <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Все параметры должны быть четными и укладываться в границы</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoVlad</name>
-    <message>
-        <source>_Luma temporal threshold:</source>
-        <translation type="obsolete">Временной порог для яркости (luma):</translation>
-    </message>
-    <message>
-        <source>Ch_roma temporal threshold:</source>
-        <translation type="obsolete">Временной порог для цвета (chroma):</translation>
-    </message>
-    <message>
-        <source>Temporal Cleaner</source>
-        <translation type="obsolete">Сила фильтра :</translation>
-    </message>
-</context>
-<context>
-    <name>AVDM_Fade</name>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">Вывод</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">Тип затемнения:</translation>
-    </message>
-    <message>
-        <source>_Start frame:</source>
-        <translation type="obsolete">Начальный кадр:</translation>
-    </message>
-    <message>
-        <source>_End frame:</source>
-        <translation type="obsolete">Конечный кадр:</translation>
-    </message>
-    <message>
-        <source>Fade to _black</source>
-        <translation type="obsolete">Затемнить до черного</translation>
-    </message>
-    <message>
-        <source>Fade</source>
-        <translation type="obsolete">Затемнение   </translation>
-    </message>
-    <message>
-        <source>Parameter Error</source>
-        <translation type="obsolete">Ошибка параметров</translation>
-    </message>
-    <message>
-        <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="obsolete">Начальный кадр должен быть меньше конечного и они не должны превышать общего количества кадров</translation>
     </message>
 </context>
 <context>
@@ -2854,151 +249,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Cnr2Dialog</name>
-    <message>
-        <source>Narrow</source>
-        <translation type="obsolete">Стрелка</translation>
-    </message>
-    <message>
-        <source>Sensibility</source>
-        <translation type="obsolete">Чувствительность</translation>
-    </message>
-</context>
-<context>
-    <name>ColorYuvDialog</name>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">Контраст</translation>
-    </message>
-    <message>
-        <source>Brightness</source>
-        <translation type="obsolete">Яркость</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">Уровень нормализации</translation>
-    </message>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">Гамма</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-</context>
-<context>
-    <name>DGbob</name>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Порядок полей:</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
-    </message>
-    <message>
-        <source>_Extra</source>
-        <translation type="obsolete">Экстра</translation>
-    </message>
-    <message>
-        <source>Extra check, avoid using it</source>
-        <translation type="obsolete">Экстра, избегайте использовать</translation>
-    </message>
-</context>
-<context>
-    <name>DIA_encodingQt4</name>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">Завершение работы</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">Продолжить</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">Прервать</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">Требуются права</translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">Для выполнения этой операции требуются права root.</translation>
-    </message>
-</context>
-<context>
-    <name>DVEncoder</name>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">Несовместимые настройки</translation>
-    </message>
-</context>
-<context>
-    <name>Decimate</name>
-    <message>
-        <source>Replace (interpolate)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Pulldown dupe removal</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Fastest (no chroma, partial luma)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Fast (partial luma and chroma)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Medium (full luma, no chroma)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Slow (full luma and chroma)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">Качество:</translation>
-    </message>
-    <message>
-        <source>_Threshold 1:</source>
-        <translation type="obsolete">Порог 1:</translation>
-    </message>
-    <message>
-        <source>T_hreshold 2:</source>
-        <translation type="obsolete">Порог 2:</translation>
-    </message>
-    <message>
-        <source>C_ycle:</source>
-        <translation type="obsolete">Цикл:</translation>
-    </message>
-    <message>
-        <source>Decomb Decimate</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
     <name>Dialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="+64"/>
@@ -3025,10 +275,6 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <source>Configure</source>
         <translation type="unfinished">&amp;Настройка</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">Звуковые фильтры</translation>
     </message>
     <message>
         <location line="-116"/>
@@ -3138,38 +384,33 @@ Drop timing informations ?</source>
         <translation type="unfinished">Диалог</translation>
     </message>
     <message>
-        <location line="+19"/>
-        <source>Cancel</source>
-        <translation type="unfinished">Отмена</translation>
-    </message>
-    <message>
-        <location line="+7"/>
+        <location line="+33"/>
         <source>TimeLeft</source>
         <translation type="unfinished">Осталось времени</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-21"/>
         <source>00:00:00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+42"/>
         <source>ProcessImages</source>
         <translation type="unfinished">Обработка изображений</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="-35"/>
         <source>0</source>
         <translation type="unfinished">
             </translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+28"/>
         <source>Speed</source>
         <translation type="unfinished">Скорость</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-7"/>
         <source>0 fps</source>
         <translation type="unfinished">0 к/с</translation>
     </message>
@@ -3200,13 +441,6 @@ Drop timing informations ?</source>
         <location line="+7"/>
         <source>...</source>
         <translation type="unfinished">...</translation>
-    </message>
-</context>
-<context>
-    <name>EncoderCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Копировать</translation>
     </message>
 </context>
 <context>
@@ -3241,144 +475,9 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>FLV1Encoder</name>
-    <message>
-        <source>_Bitrate (kb/s):</source>
-        <translation type="obsolete">Битрейт (кб/с):</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">Размер GOP:</translation>
-    </message>
-</context>
-<context>
-    <name>GUIPlayback</name>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">Проблема при инициализации аудиоустройства.</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSave</name>
-    <message>
-        <source>Error initalizing audio filters</source>
-        <translation type="obsolete">Ошибка при инициализации аудиофильтров</translation>
-    </message>
-    <message>
-        <source>Error initalizing video filters</source>
-        <translation type="obsolete">Ошибка при инициализации видеофильтров</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Копировать</translation>
-    </message>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Ошибка при инициализации сохранения</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopy</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Ошибка при инициализации сохранения</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyPack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Ошибка при инициализации сохранения</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyUnpack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Ошибка при инициализации сохранения</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveProcess</name>
-    <message>
-        <source>Width is not a multiple of 8
- continue anyway ?</source>
-        <translation type="obsolete">Ширина не кратна 8.
-Продолжить?</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Невозможно инициализировать фильтр</translation>
-    </message>
-    <message>
-        <source>Aborting</source>
-        <translation type="obsolete">Прервать</translation>
-    </message>
-    <message>
-        <source>Encoding</source>
-        <translation type="obsolete">Кодирование</translation>
-    </message>
-</context>
-<context>
-    <name>GlyphEditorWindow</name>
-    <message>
-        <source>No more glyphs</source>
-        <translation type="obsolete">Нет больше символов</translation>
-    </message>
-    <message>
-        <source>String</source>
-        <translation type="obsolete">Строка</translation>
-    </message>
-    <message>
-        <source>Search string</source>
-        <translation type="obsolete">Найти строку</translation>
-    </message>
-</context>
-<context>
-    <name>H263Encoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>Encoding Mode</source>
-        <translation type="obsolete">Режим кодирования</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Определение движения</translation>
-    </message>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">Несовместимые настройки</translation>
-    </message>
-</context>
-<context>
-    <name>IndexDialog</name>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">Индектирование</translation>
-    </message>
-</context>
-<context>
-    <name>MP4Header</name>
-    <message>
-        <source>Problem reading SVQ3 headers</source>
-        <translation type="obsolete">Ошибка чтения заголовков SVQ3</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
-        <source>&lt;b&gt;Video&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Видео&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="+485"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="+475"/>
         <location line="+169"/>
         <source>Copy</source>
         <translation type="unfinished">Копировать</translation>
@@ -3398,39 +497,14 @@ Drop timing informations ?</source>
         <translation type="unfinished">Фильтры</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Audio&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Звук&lt;/b&gt;</translation>
-    </message>
-    <message>
         <location line="+27"/>
         <source>&amp;Shift:</source>
         <translation type="unfinished">Сдв&amp;иг:</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Format&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Контейнер&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>Frame:</source>
-        <translation type="obsolete">Кадр:</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
         <location line="+602"/>
         <source>Time:</source>
         <translation type="unfinished">Время:</translation>
-    </message>
-    <message>
-        <source>Frame Type:</source>
-        <translation type="obsolete">Тип кадра:</translation>
-    </message>
-    <message>
-        <source>Selection</source>
-        <translation type="obsolete">Выделено</translation>
     </message>
     <message>
         <location line="-1196"/>
@@ -3453,14 +527,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">&amp;Файл</translation>
     </message>
     <message>
-        <source>&amp;Recent Files</source>
-        <translation type="obsolete">&amp;Открывавшиеся файлы</translation>
-    </message>
-    <message>
-        <source>&amp;Save</source>
-        <translation type="obsolete">&amp;Сохранить</translation>
-    </message>
-    <message>
         <location line="-10"/>
         <source>&amp;Tools</source>
         <translation type="unfinished">С&amp;ервис</translation>
@@ -3476,10 +542,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">&amp;Вид</translation>
     </message>
     <message>
-        <source>&amp;Preview Mode</source>
-        <translation type="obsolete">Резим просмотра</translation>
-    </message>
-    <message>
         <location line="+21"/>
         <source>&amp;Custom</source>
         <translation type="unfinished">&amp;Своё</translation>
@@ -3490,41 +552,9 @@ Drop timing informations ?</source>
         <translation type="unfinished">Перех&amp;од</translation>
     </message>
     <message>
-        <source>A&amp;uto</source>
-        <translation type="obsolete">&amp;Авто</translation>
-    </message>
-    <message>
         <location line="+1544"/>
         <source>&amp;Open...</source>
         <translation type="unfinished">&amp;Открыть...</translation>
-    </message>
-    <message>
-        <source>&amp;Append...</source>
-        <translation type="obsolete">&amp;Добавить...</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t</source>
-        <translation type="obsolete">Вы&amp;резать</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation type="obsolete">&amp;Копировать</translation>
-    </message>
-    <message>
-        <source>&amp;Paste</source>
-        <translation type="obsolete">&amp;Вставить</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation type="obsolete">&amp;Удалить</translation>
-    </message>
-    <message>
-        <source>Set Marker A</source>
-        <translation type="obsolete">Установить маркер А</translation>
-    </message>
-    <message>
-        <source>Set Marker B</source>
-        <translation type="obsolete">Установить маркер В</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -3541,22 +571,6 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <source>Save Video</source>
         <translation type="unfinished">Сохранить видео</translation>
-    </message>
-    <message>
-        <source>Save &amp;BMP Image...</source>
-        <translation type="obsolete">Сохранить &amp;BMP картинку...</translation>
-    </message>
-    <message>
-        <source>Save BMP Image</source>
-        <translation type="obsolete">Сохранить BMP картинку</translation>
-    </message>
-    <message>
-        <source>Save &amp;JPEG Image...</source>
-        <translation type="obsolete">Сохранить &amp;JPEG картинку</translation>
-    </message>
-    <message>
-        <source>Save JPEG Image</source>
-        <translation type="obsolete">Сохранить JPEG картинку</translation>
     </message>
     <message>
         <location line="+21"/>
@@ -3581,249 +595,9 @@ Drop timing informations ?</source>
         <translation type="unfinished">Сохранить проект</translation>
     </message>
     <message>
-        <source>Save P&amp;roject As...</source>
-        <translation type="obsolete">Сохранить п&amp;роект как...</translation>
-    </message>
-    <message>
-        <source>Save Project As</source>
-        <translation type="obsolete">Сохранить проект как</translation>
-    </message>
-    <message>
-        <source>Zoom 1:4</source>
-        <translation type="obsolete">&amp;Размер 1:4</translation>
-    </message>
-    <message>
-        <source>Zoom 1:2</source>
-        <translation type="obsolete">Р&amp;азмер 1:2</translation>
-    </message>
-    <message>
-        <source>Zoom 1:1</source>
-        <translation type="obsolete">Размер &amp;1:1</translation>
-    </message>
-    <message>
-        <source>Zoom 2:1</source>
-        <translation type="obsolete">Размер &amp;2:1</translation>
-    </message>
-    <message>
-        <source>&amp;Decoder Options...</source>
-        <translation type="obsolete">&amp;Опции кодека</translation>
-    </message>
-    <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">Опции кодека</translation>
-    </message>
-    <message>
-        <source>&amp;Postprocessing...</source>
-        <translation type="obsolete">&amp;Постобработка...</translation>
-    </message>
-    <message>
-        <source>&amp;Frame Rate...</source>
-        <translation type="obsolete">&amp; Частота кадров...</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">Частота кадров </translation>
-    </message>
-    <message>
-        <source>Fil&amp;ters...</source>
-        <translation type="obsolete">Филь&amp;тры...</translation>
-    </message>
-    <message>
-        <source>&amp;Main Track...</source>
-        <translation type="obsolete">&amp;Главный трэк...</translation>
-    </message>
-    <message>
-        <source>&amp;Secondary Track...</source>
-        <translation type="obsolete">&amp;Вторичный трэк...</translation>
-    </message>
-    <message>
-        <source>Build VBR Time Map</source>
-        <translation type="obsolete">Построить временную карту VBR </translation>
-    </message>
-    <message>
-        <source>S&amp;ave...</source>
-        <translation type="obsolete">C&amp;охранить...</translation>
-    </message>
-    <message>
-        <source>&amp;Filters</source>
-        <translation type="obsolete">&amp;Фильтры</translation>
-    </message>
-    <message>
         <location line="+9"/>
         <source>&amp;Calculator...</source>
         <translation type="unfinished">&amp;Калькулятор...</translation>
-    </message>
-    <message>
-        <source>&amp;Rebuild I &amp;&amp; B Frames</source>
-        <translation type="obsolete">&amp; Перестроить I &amp;&amp; B кадры</translation>
-    </message>
-    <message>
-        <source>Rebuild I &amp; B Frames</source>
-        <translation type="obsolete">Перестроить I &amp; B кадры</translation>
-    </message>
-    <message>
-        <source>&amp;Bitrate Histogram...</source>
-        <translation type="obsolete">&amp;Диаграмма битрейта...</translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">Диаграмма битрейта</translation>
-    </message>
-    <message>
-        <source>&amp;Scan for Black Frames...</source>
-        <translation type="obsolete">&amp;Сканировать для черных кадров...</translation>
-    </message>
-    <message>
-        <source>Scan for Black Frames</source>
-        <translation type="obsolete">Сканировать для черных кадров</translation>
-    </message>
-    <message>
-        <source>P&amp;revious Frame</source>
-        <translation type="obsolete">П&amp;редыдущий кадр</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation type="obsolete">Влево</translation>
-    </message>
-    <message>
-        <source>&amp;Next Frame</source>
-        <translation type="obsolete">&amp;Следующий кадр</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation type="obsolete">Вправо</translation>
-    </message>
-    <message>
-        <source>Pr&amp;evious Intra Frame</source>
-        <translation type="obsolete">Пр&amp;едыдущая сцена</translation>
-    </message>
-    <message>
-        <source>Previous Intra Frame</source>
-        <translation type="obsolete">Предыдущая сцена</translation>
-    </message>
-    <message>
-        <source>Down</source>
-        <translation type="obsolete">Вниз</translation>
-    </message>
-    <message>
-        <source>Next &amp;Intra Frame</source>
-        <translation type="obsolete">Следующая &amp;сцена</translation>
-    </message>
-    <message>
-        <source>Next Intra Frame</source>
-        <translation type="obsolete">Следующая сцена</translation>
-    </message>
-    <message>
-        <source>Up</source>
-        <translation type="obsolete">Вверх</translation>
-    </message>
-    <message>
-        <source>Previou&amp;s Black Frame</source>
-        <translation type="obsolete">Предыду&amp;щий черный кадр</translation>
-    </message>
-    <message>
-        <source>Previous Black Frame</source>
-        <translation type="obsolete">Предыдущий черный кадр</translation>
-    </message>
-    <message>
-        <source>Ne&amp;xt Black Frame</source>
-        <translation type="obsolete">Сл&amp;едующий черный кадр</translation>
-    </message>
-    <message>
-        <source>Next Black Frame</source>
-        <translation type="obsolete">Следующий черный кадр</translation>
-    </message>
-    <message>
-        <source>&amp;First Frame</source>
-        <translation type="obsolete">&amp;Первый кадр</translation>
-    </message>
-    <message>
-        <source>&amp;Last Frame</source>
-        <translation type="obsolete">&amp;Последний кадр</translation>
-    </message>
-    <message>
-        <source>Jump to Marker &amp;A</source>
-        <translation type="obsolete">Перейти на маркер &amp;A</translation>
-    </message>
-    <message>
-        <source>Jump to Marker A</source>
-        <translation type="obsolete">Перейти на маркер А</translation>
-    </message>
-    <message>
-        <source>Jump to Marker &amp;B</source>
-        <translation type="obsolete">Перейти на маркер &amp;B</translation>
-    </message>
-    <message>
-        <source>Jump to Marker B</source>
-        <translation type="obsolete">Перейти на маркер В</translation>
-    </message>
-    <message>
-        <source>Jump to Fra&amp;me...</source>
-        <translation type="obsolete">Перейти к ка&amp;дру...</translation>
-    </message>
-    <message>
-        <source>Jump to &amp;Time...</source>
-        <translation type="obsolete">Перейти на &amp;время...</translation>
-    </message>
-    <message>
-        <source>&amp;Built-in Support...</source>
-        <translation type="obsolete">&amp;Поддержка...</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">Поддержка</translation>
-    </message>
-    <message>
-        <source>&amp;About Avidemux...</source>
-        <translation type="obsolete">&amp;О программе...</translation>
-    </message>
-    <message>
-        <source>About Avidemux</source>
-        <translation type="obsolete">О программе</translation>
-    </message>
-    <message>
-        <source>&amp;Play/Stop</source>
-        <translation type="obsolete">&amp;Старт/стоп</translation>
-    </message>
-    <message>
-        <source>Play/Stop</source>
-        <translation type="obsolete">Старт/стоп</translation>
-    </message>
-    <message>
-        <source>Add to &amp;Joblist...</source>
-        <translation type="obsolete">Добавить в список заданий</translation>
-    </message>
-    <message>
-        <source>Add to Joblist</source>
-        <translation type="obsolete">Добавить в список заданий</translation>
-    </message>
-    <message>
-        <source>View &amp;Joblist...</source>
-        <translation type="obsolete">Просмотреть &amp;список заданий...</translation>
-    </message>
-    <message>
-        <source>View Joblist</source>
-        <translation type="obsolete">Проспотреть список заданий</translation>
-    </message>
-    <message>
-        <source>Co&amp;nnect to avsproxy</source>
-        <translation type="obsolete">Сое&amp;диниться с avsproxy</translation>
-    </message>
-    <message>
-        <source>Connect to avsproxy</source>
-        <translation type="obsolete">Соединиться с avsproxy</translation>
-    </message>
-    <message>
-        <source>&amp;Reset Edits</source>
-        <translation type="obsolete">&amp;Отменить изменения</translation>
-    </message>
-    <message>
-        <source>Edit &amp;Glyphs...</source>
-        <translation type="obsolete">Редактировать &amp;символы...</translation>
-    </message>
-    <message>
-        <source>Edit Glyphs</source>
-        <translation type="obsolete">Редактировать символы</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -3861,16 +635,12 @@ Drop timing informations ?</source>
         <translation type="unfinished">&amp;Отделить</translation>
     </message>
     <message>
-        <source>&amp;Close</source>
-        <translation type="obsolete">&amp;Закрыть</translation>
-    </message>
-    <message>
-        <location line="-1883"/>
+        <location line="-1873"/>
         <source>Avidemux</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+124"/>
+        <location line="+114"/>
         <source>&amp;Toolbars</source>
         <translation type="unfinished">&amp;Панели</translation>
     </message>
@@ -3888,10 +658,6 @@ Drop timing informations ?</source>
         <location line="+46"/>
         <source>Codec O&amp;ptions</source>
         <translation type="unfinished">На&amp;стройки кодека</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Декодер видео&lt;b&gt;</translation>
     </message>
     <message>
         <location line="+108"/>
@@ -4070,10 +836,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">Перейти к маркеру B [PAGE DOWN]</translation>
     </message>
     <message>
-        <source>Display output video on playback</source>
-        <translation type="obsolete">Отображать видео на выходе при воспроизведении</translation>
-    </message>
-    <message>
         <location line="+213"/>
         <source>Play filtered</source>
         <translation type="unfinished">Включить фильтр</translation>
@@ -4155,171 +917,11 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Mpeg1Encoder</name>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">Макс. битрейт:</translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">Мин. битрейт:</translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">Использовать управление битрейтом Xvid</translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">Размер буфера:</translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">Соотношение сторон:</translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">Матрица:</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">Размер GOP:</translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">Чрезстрочность:</translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg2Encoder</name>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">Макс. битрейт:</translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">Мин. битрейт:</translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">Использовать управление битрейтом Xvid</translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">Размер буфера:</translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">Соотношение сторон:</translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">Матрица:</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">Размер GOP:</translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">Чрезстрочность:</translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg4aspEncoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>Encoding Mode</source>
-        <translation type="obsolete">Режим кодирования</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Определение движения</translation>
-    </message>
-</context>
-<context>
-    <name>MpegMuxer</name>
-    <message>
-        <source>Incompatible audio</source>
-        <translation type="obsolete">Несовместимое аудио</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be MP2 or AC3.</source>
-        <translation type="obsolete">Для DVD звук должен быть в формате MP2 или AC3</translation>
-    </message>
-    <message>
-        <source>lvemux init failed</source>
-        <translation type="obsolete">Сбой инициализации lvemux</translation>
-    </message>
-</context>
-<context>
-    <name>Msharpen</name>
-    <message>
-        <source>_Mask</source>
-        <translation type="obsolete">Маска</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="obsolete">Высокое качество</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">Уровень:</translation>
-    </message>
-    <message>
-        <source>MSharpen</source>
-        <translation type="obsolete">Резкость</translation>
-    </message>
-</context>
-<context>
-    <name>Msmooth</name>
-    <message>
-        <source>_High quality</source>
-        <translation type="obsolete">Высокое качество</translation>
-    </message>
-    <message>
-        <source>Show _mask</source>
-        <translation type="obsolete">Показать маску</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">Уровень:</translation>
-    </message>
-</context>
-<context>
-    <name>OpenDMLHeader</name>
-    <message>
-        <source>Unpacking bitstream</source>
-        <translation type="obsolete">Распаковка потока</translation>
-    </message>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">Индектирование</translation>
-    </message>
-</context>
-<context>
     <name>Opus</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+254"/>
         <source>_Bitrate:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">Внимание</translation>
     </message>
 </context>
 <context>
@@ -4343,73 +945,6 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <source>Ctrl+Return</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Telecide</name>
-    <message>
-        <source>No strategy</source>
-        <translation type="obsolete">Без стратегии</translation>
-    </message>
-    <message>
-        <source>Never</source>
-        <translation type="obsolete">Никогда</translation>
-    </message>
-    <message>
-        <source>If still combed</source>
-        <translation type="obsolete">Если &quot;расческа&quot; осталась</translation>
-    </message>
-    <message>
-        <source>Always</source>
-        <translation type="obsolete">Всегда</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>_Strategy:</source>
-        <translation type="obsolete">Стратегия:</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Порядок полей:</translation>
-    </message>
-    <message>
-        <source>_Postprocessing:</source>
-        <translation type="obsolete">Постобработка:</translation>
-    </message>
-    <message>
-        <source>_Try backward:</source>
-        <translation type="obsolete">В обратном направлении:</translation>
-    </message>
-    <message>
-        <source>_Direct threshold:</source>
-        <translation type="obsolete">Порог прямого направления:</translation>
-    </message>
-    <message>
-        <source>_Backward threshold:</source>
-        <translation type="obsolete">Порог для обратного направления:</translation>
-    </message>
-    <message>
-        <source>_Noise threshold:</source>
-        <translation type="obsolete">Порог шума:</translation>
-    </message>
-    <message>
-        <source>Postp_rocessing threshold:</source>
-        <translation type="obsolete">Порог постобработки:</translation>
-    </message>
-    <message>
-        <source>_Use chroma to decide</source>
-        <translation type="obsolete">Использовать цвет (chroma) для определения</translation>
-    </message>
-    <message>
-        <source>Sho_w info</source>
-        <translation type="obsolete">Показать информацию</translation>
-    </message>
-    <message>
-        <source>Debu_g</source>
-        <translation type="obsolete">Отладка</translation>
     </message>
 </context>
 <context>
@@ -4441,57 +976,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>XvidConfigDialog</name>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">Управление битрейтом</translation>
-    </message>
-    <message>
-        <source>Pixel Aspect Ratio</source>
-        <translation type="obsolete">Cоотношение сторон:</translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="obsolete">Запретить</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Автоопределение</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Определение движения</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">Низкий</translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Средне</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">Высокий</translation>
-    </message>
-    <message>
-        <source>Limited Search</source>
-        <translation type="obsolete">Ограниченный поиск</translation>
-    </message>
-    <message>
-        <source>Medium Search</source>
-        <translation type="obsolete">Средний поиск</translation>
-    </message>
-    <message>
-        <source>Wide Search</source>
-        <translation type="obsolete">Широкий поиск</translation>
-    </message>
-    <message>
-        <source>Turbo Mode</source>
-        <translation type="obsolete">Турбо режим</translation>
-    </message>
-</context>
-<context>
     <name>aboutDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+14"/>
@@ -4510,7 +994,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+29"/>
-        <source>© 2001 - 2018  Mean</source>
+        <source>© 2001 - 2019  Mean / Eumagga0x2a</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4574,47 +1058,16 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>addLogopFilter</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">Лого (JPG-файл)</translation>
-    </message>
-    <message>
-        <source>Select JPEG file</source>
-        <translation type="obsolete">Выбор JPEG-файла</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">Позиция X:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">Позиция Y:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">Прозрачность (alpha):</translation>
-    </message>
-</context>
-<context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+219"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+218"/>
         <source>Decode video using DXVA2 (windows)</source>
         <translation>Декодировать видео посредством DXVA2 (Windows)</translation>
-    </message>
-    <message>
-        <source>_Use systray while encoding</source>
-        <translation type="obsolete">Минимизировать в трей во время кодирования</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>_Accept non-standard audio frequency for DVD</source>
         <translation type="unfinished">_Разрешать нестандартную частоту звука для DVD</translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="obsolete">Создавать файлы _OpenDML</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -4815,7 +1268,12 @@ Drop timing informations ?</source>
         <translation type="unfinished">_Даунмиксинг звука при локальном воспроизведении:</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+38"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+26"/>
+        <source>The options above are effective only for MPEG and DivX with software decoding</source>
+        <translation>Эти параметры действуют только для MPEG и DivX без аппаратного ускорения декодирования</translation>
+    </message>
+    <message>
+        <location line="+13"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+17"/>
         <source>_Horizontal deblocking</source>
         <translation type="unfinished">_Горизонтальный деблокинг</translation>
@@ -4825,6 +1283,11 @@ Drop timing informations ?</source>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+1"/>
         <source>_Vertical deblocking</source>
         <translation type="unfinished">_Вертикальный деблокинг</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>De_interlacing (ffmpegdeint)</source>
+        <translation>_Деинтерлейсинг (ffmpegdeint)</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+3"/>
@@ -4851,7 +1314,7 @@ Drop timing informations ?</source>
         <location line="+278"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+409"/>
+        <location filename="../../common/gui_savenew.cpp" line="+423"/>
         <source>Audio</source>
         <translation type="unfinished">Звук</translation>
     </message>
@@ -4967,10 +1430,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">5 каналов</translation>
     </message>
     <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="obsolete">Авто (макс. -3 дБ)</translation>
-    </message>
-    <message>
         <location line="+14"/>
         <source>_Gain mode:</source>
         <translation type="unfinished">Режим:</translation>
@@ -5030,14 +1489,6 @@ Drop timing informations ?</source>
         <location filename="../../common/gui_main.cpp" line="+373"/>
         <source>Not coded in this version</source>
         <translation type="unfinished">Нет в этой версии</translation>
-    </message>
-    <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">Выберите файл</translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">Выберите файл для присоединения</translation>
     </message>
     <message>
         <location line="+251"/>
@@ -5127,7 +1578,7 @@ Go to Audio-&gt;MainTrack to select the active one.</source>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+317"/>
+        <location line="+320"/>
         <source>Something bad happened (II)</source>
         <translation type="unfinished">Ошибка при обновлении видео</translation>
     </message>
@@ -5171,7 +1622,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
         <source>Something bad happened</source>
         <translation type="unfinished">Ошибка при открытии файла для записи</translation>
     </message>
@@ -5213,14 +1664,9 @@ Is it running ?</source>
         <translation type="unfinished">Переход</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-12"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-15"/>
         <source>_Filter strength:</source>
         <translation type="unfinished">Уровень фильтрации:</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>_Swap U and V</source>
-        <translation type="unfinished">Поменять U и V</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="-229"/>
@@ -5259,18 +1705,6 @@ Is it running ?</source>
         <translation type="unfinished">Сохранение аудио</translation>
     </message>
     <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="obsolete">Сохранение как jpeg</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="obsolete">Невозможно декодировать кадр</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="obsolete">Прервано.</translation>
-    </message>
-    <message>
         <location line="+303"/>
         <location line="+83"/>
         <source>Done</source>
@@ -5297,10 +1731,6 @@ Is it running ?</source>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_quota.cpp" line="+68"/>
         <source>Error</source>
         <translation type="unfinished">Ошибка</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="obsolete">Невозможно сохранить все изображения.</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="+61"/>
@@ -5333,65 +1763,9 @@ Is it running ?</source>
         <translation type="unfinished">Вручную</translation>
     </message>
     <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">Новая частота кадров:</translation>
-    </message>
-    <message>
-        <source>Resample fps</source>
-        <translation type="obsolete">Изменить fps</translation>
-    </message>
-    <message>
-        <source>Interlacing</source>
-        <translation type="obsolete">Черезстрочность</translation>
-    </message>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">Управление битрейтом</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Определение движения</translation>
-    </message>
-    <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="+3"/>
         <source>Medium</source>
         <translation type="unfinished">Средне</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">По качеству</translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">Битрейт:</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">Качество:</translation>
-    </message>
-    <message>
-        <source>Vorbis Configuration</source>
-        <translation type="obsolete">Настройка Vorbis</translation>
-    </message>
-    <message>
-        <source>_Quantizer:</source>
-        <translation type="obsolete">_Квантизатор:</translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">Режим:</translation>
-    </message>
-    <message>
-        <source>LAME Configuration</source>
-        <translation type="obsolete">Настройка LAME</translation>
-    </message>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">Фильтр уже частично применён</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -5407,62 +1781,6 @@ Is it running ?</source>
         <location line="+1"/>
         <source>Wide Search</source>
         <translation type="unfinished">Широкий поиск</translation>
-    </message>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">Готово</translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">Выполнено</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">Удалено</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">Исполняется</translation>
-    </message>
-    <message>
-        <source>Job Name</source>
-        <translation type="obsolete">Имя задания</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation type="obsolete">Статус</translation>
-    </message>
-    <message>
-        <source>Start Time</source>
-        <translation type="obsolete">Начальное время</translation>
-    </message>
-    <message>
-        <source>End Time</source>
-        <translation type="obsolete">Конечное время</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">Да</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">Удалить задание</translation>
-    </message>
-    <message>
-        <source>Delete *all* job</source>
-        <translation type="obsolete">Удалить все задания</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="obsolete">Вы уверены что хотите удалить все задания?</translation>
-    </message>
-    <message>
-        <source>Already done</source>
-        <translation type="obsolete">Уже сделано</translation>
-    </message>
-    <message>
-        <source>This script has already been successfully executed.</source>
-        <translation type="obsolete">Этот скрипт уже был выполнен</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="-25"/>
@@ -5681,7 +1999,7 @@ Is it running ?</source>
         <translation type="unfinished">Информация о плагинах</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+12"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+14"/>
         <source>_Deringing</source>
         <translation type="unfinished">_Дерингинг</translation>
     </message>
@@ -5726,10 +2044,6 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>_Split MPEG files every (MB):</source>
-        <translation type="obsolete">_Разделять файлы MPEG через каждые (Мб)</translation>
-    </message>
-    <message>
         <location line="+62"/>
         <source>VDPAU (best)</source>
         <translation type="unfinished">VDPAU (лучшее)</translation>
@@ -5752,7 +2066,7 @@ Is it running ?</source>
     </message>
     <message>
         <location line="+15"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+211"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+213"/>
         <source>PCM</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6144,7 +2458,7 @@ It is needed to create PSP compatible video.</source>
 Он требуется для создания видео, совместимого с PSP.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1379"/>
+        <location filename="../../common/gui_main.cpp" line="-1382"/>
         <source>Select script/project to run</source>
         <translation type="unfinished">Выбрать скрипт/проект для запуска</translation>
     </message>
@@ -6208,7 +2522,7 @@ Proceed anyway?</source>
         <translation type="unfinished">Ошибка обрезки</translation>
     </message>
     <message>
-        <location line="+754"/>
+        <location line="+757"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation type="unfinished">Неверный индекс аудио</translation>
@@ -6259,7 +2573,7 @@ Proceed anyway?</source>
         <translation type="unfinished">Функция отключена или более недействительна</translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+443"/>
+        <location filename="../../common/gui_play.cpp" line="+446"/>
         <source>Trouble initializing audio device</source>
         <translation type="unfinished">Проблема при инициализации аудиоустройства.</translation>
     </message>
@@ -6365,10 +2679,6 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Fail to save as jpeg</source>
-        <translation type="obsolete">Не удалось сохранить в JPEG</translation>
-    </message>
-    <message>
         <location line="+67"/>
         <source>Cannot get tinyPÿ script engine</source>
         <translation type="unfinished">Невозможно запустить движок скрипта tinyPy</translation>
@@ -6379,14 +2689,14 @@ Proceed anyway?</source>
         <translation type="unfinished">Невозможно добавить операцию %s</translation>
     </message>
     <message>
-        <location filename="../../common/gui_savenew.cpp" line="-196"/>
+        <location filename="../../common/gui_savenew.cpp" line="-207"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
         <translation type="unfinished">Использовать предыдущие данные прохода еще раз?
 Предупреждение: настройки могут быть закрыты.</translation>
     </message>
     <message>
-        <location line="+160"/>
+        <location line="+171"/>
         <source>Cannot instantiate video chain</source>
         <translation type="unfinished">Невозможно подтвердить цепочку видео</translation>
     </message>
@@ -6417,15 +2727,15 @@ Do you want to continue anyway ?</source>
         </translation>
     </message>
     <message>
-        <location line="-244"/>
-        <location line="+255"/>
+        <location line="-255"/>
+        <location line="+266"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation type="unfinished">Мультиплексор</translation>
     </message>
     <message>
-        <location line="-281"/>
-        <location line="+255"/>
+        <location line="-292"/>
+        <location line="+266"/>
         <source>Cannot instantiate muxer</source>
         <translation type="unfinished">Невозможно подтвердить мультиплексор</translation>
     </message>
@@ -6731,6 +3041,11 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Float PCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Ogg Vorbis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6805,12 +3120,8 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished">Слишком коротко</translation>
     </message>
     <message>
-        <source>The video has been saved but seems to be incomplete.</source>
-        <translation type="obsolete">Видео сохранено, но возможно, что оно неполное.</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+385"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+374"/>
         <source>Unknown</source>
         <translation type="unfinished">Неизвестно</translation>
     </message>
@@ -6906,8 +3217,8 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
-        <location line="+32"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
+        <location line="+30"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -6960,7 +3271,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+227"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7034,7 +3345,7 @@ Proceed anyway?</source>
 </translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+471"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+468"/>
         <source>Indexing</source>
         <translation type="unfinished">Индексирование</translation>
     </message>
@@ -7083,13 +3394,13 @@ Proceed anyway?</source>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+171"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation type="unfinished">_Файл субтитров (ASS/SSA):</translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Select Subtitle file</source>
+        <source>Select Subtitle File</source>
         <translation type="unfinished">Выбор файла субтитров</translation>
     </message>
     <message>
@@ -7109,63 +3420,73 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Botto_m margin</source>
+        <source>Botto_m margin:</source>
         <translation type="unfinished">Чёрная полоса с_низу:</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>ASS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-112"/>
+        <location line="-114"/>
         <source>SSA/ASS/SRT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Hardcode ass/ssa/srt subtitles using libass.</source>
+        <source>Hardcode ASS/SSA/SRT subtitles using libass.</source>
         <translation type="unfinished">Встроенные файлы субтитров ASS/SSA/SRT с использованием libass.</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+63"/>
         <source>Format ?</source>
         <translation type="unfinished">Формат?</translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Are you sure this is an ass file ?</source>
-        <translation type="unfinished">Вы уверены, что это файл ASS?</translation>
+        <source>Are you sure this is an ASS/SSA file ?</source>
+        <translation type="unfinished">Вы уверены, что это файл ASS/SSA?</translation>
     </message>
     <message>
-        <location line="+56"/>
-        <source>This is a srt file. Convert to SSA ?</source>
+        <location line="+45"/>
+        <source>Do not adjust</source>
+        <translation type="unfinished">Не учитывать</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust for display aspect ratio:</source>
+        <translation type="unfinished">Учесть соотношение сторон видео (DAR):</translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>This is a SRT file. Convert to SSA ?</source>
         <translation type="unfinished">Это файл SRT. Конвертировать в SSA?</translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+5"/>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Error</source>
         <translation type="unfinished">Ошибка</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Cannot load this srt file.</source>
+        <location line="-14"/>
+        <source>Cannot load this SRT file.</source>
         <translation type="unfinished">Невозможно загрузить файл SRT.</translation>
     </message>
     <message>
         <location line="+5"/>
-        <source>Cannot convert to ssa.</source>
+        <source>Cannot convert to SSA.</source>
         <translation type="unfinished">Невозможно конвертировать в SSA.</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Cannot save converted file.</source>
         <translation type="unfinished">Невозможно сохранить конвертированный файл.</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+56"/>
         <source>Fonts</source>
         <translation type="unfinished">Шрифты</translation>
     </message>
@@ -7177,21 +3498,14 @@ This message will not be displayed again.</source>
 Это сообщение больше показываться не будет.</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+52"/>
         <source>SSA Error</source>
         <translation type="unfinished">Ошибка SSA</translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Cannot read_file for *%s*</source>
-        <translation type="unfinished">Невозможно прочитать файл для *%s*</translation>
-    </message>
-</context>
-<context>
-    <name>autoWizard</name>
-    <message>
-        <source>Codec:</source>
-        <translation type="obsolete">Кодек:</translation>
+        <source>ass_read_file() failed for %s</source>
+        <translation type="unfinished">Метод ass_read_file() для файла %s вернул ошибку.</translation>
     </message>
 </context>
 <context>
@@ -7372,33 +3686,9 @@ This message will not be displayed again.</source>
 <context>
     <name>blacken</name>
     <message>
-        <source>_Left border:</source>
-        <translation type="obsolete">Слева:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="obsolete">Справа:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="obsolete">Сверху:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="obsolete">Снизу:</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.h" line="+41"/>
         <source>Blacken Borders</source>
         <translation type="unfinished">Зачернение краёв</translation>
-    </message>
-    <message>
-        <source>Incorrect parameters</source>
-        <translation type="obsolete">Неверные параметры</translation>
-    </message>
-    <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Все параметры должны быть четными и укладываться в границы</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7407,65 +3697,40 @@ This message will not be displayed again.</source>
     </message>
 </context>
 <context>
-    <name>blackenBorders</name>
-    <message>
-        <source>_Left border:</source>
-        <translation type="obsolete">Слева:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="obsolete">Справа:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="obsolete">Сверху:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="obsolete">Снизу:</translation>
-    </message>
-    <message>
-        <source>Blacken Borders</source>
-        <translation type="obsolete">Заполнение границ</translation>
-    </message>
-    <message>
-        <source>Incorrect parameters</source>
-        <translation type="obsolete">Неверные параметры</translation>
-    </message>
-    <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Все параметры должны быть четными и укладываться в границы</translation>
-    </message>
-</context>
-<context>
     <name>blackenDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt4/blackenBorders.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+14"/>
         <source>Blacken Borders</source>
         <translation type="unfinished">Зачернение краёв</translation>
     </message>
     <message>
         <location line="+38"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+38"/>
         <source>Right:</source>
         <translation type="unfinished">Справа:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Top:</source>
         <translation type="unfinished">Сверху:</translation>
     </message>
     <message>
         <location line="+43"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+43"/>
         <source>Reset</source>
         <translation type="unfinished">Сброс</translation>
     </message>
     <message>
         <location line="+21"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+21"/>
         <source>Bottom:</source>
         <translation type="unfinished">Снизу:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Left:</source>
         <translation type="unfinished">Слева:</translation>
     </message>
@@ -7494,18 +3759,6 @@ This message will not be displayed again.</source>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="+40"/>
         <source>Custom</source>
         <translation type="unfinished">Вручную</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">Новая частота кадров:</translation>
-    </message>
-    <message>
-        <source>Resample fps</source>
-        <translation type="obsolete">Изменить fps</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7850,14 +4103,6 @@ Do you want to load it  ?
 <context>
     <name>crop</name>
     <message>
-        <source>crop</source>
-        <translation type="obsolete">Обрезка</translation>
-    </message>
-    <message>
-        <source>crop filter</source>
-        <translation type="obsolete">Фильтр обрезки</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="+56"/>
         <source>Crop</source>
         <translation>Кадрирование</translation>
@@ -8115,17 +4360,6 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
-    <name>dmxHeader</name>
-    <message>
-        <source>Out of memory</source>
-        <translation type="obsolete">Нехватка памяти</translation>
-    </message>
-    <message>
-        <source>Opening MPEG</source>
-        <translation type="obsolete">Открытие MPEG</translation>
-    </message>
-</context>
-<context>
     <name>dummy</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dummy/dummyVideoFilter.cpp" line="+44"/>
@@ -8313,33 +4547,6 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
-    <name>encodingWindow</name>
-    <message>
-        <source>Pause / Abort</source>
-        <translation type="obsolete">Пауза / Прервать</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">Продолжить</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">Прервать</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">Требуются права</translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">Для выполнения этой операции требуются права root.</translation>
-    </message>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">Завершение работы</translation>
-    </message>
-</context>
-<context>
     <name>eq2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="+65"/>
@@ -8359,10 +4566,6 @@ Do you want to load it  ?
 </context>
 <context>
     <name>eq2Dialog</name>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">Гамма</translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/eq2.ui" line="+14"/>
         <location line="+88"/>
@@ -8426,32 +4629,6 @@ Do you want to load it  ?
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+6"/>
         <source>Opus Configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>fade</name>
-    <message>
-        <source>Fade</source>
-        <translation type="obsolete">Затемнение   </translation>
-    </message>
-    <message>
-        <source>Fade in/out.</source>
-        <translation type="obsolete">Плавное затемнение или появление картинки.</translation>
-    </message>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">Вывод</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">Тип затемнения:</translation>
-    </message>
-</context>
-<context>
-    <name>fade to</name>
-    <message>
-        <source>Fade</source>
-        <translation type="obsolete">Затемнение   </translation>
     </message>
 </context>
 <context>
@@ -8586,9 +4763,47 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
+    <name>ffVAEncHEVC</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaHEVC/ADM_ffVAEncHEVC.cpp" line="+343"/>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Maximum Consecutive B-Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Max Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Frame Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>FFmpeg VA-API HEVC Encoder Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+257"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+256"/>
         <source>Threading</source>
         <translation type="unfinished">Многопоточность</translation>
     </message>
@@ -8603,7 +4818,7 @@ Do you want to load it  ?
         <translation type="unfinished">Управление битрейтом</translation>
     </message>
     <message>
-        <location line="-86"/>
+        <location line="-85"/>
         <source>Normal (4:3)</source>
         <translation type="unfinished">Нормальный (4:3)</translation>
     </message>
@@ -8688,7 +4903,7 @@ Do you want to load it  ?
         <translation type="unfinished">Сначала нижнее поле</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished">_Мин. квантизатор:</translation>
     </message>
@@ -8791,22 +5006,17 @@ Do you want to load it  ?
 <context>
     <name>ffmpeg4</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
-        <source>None</source>
-        <translation type="unfinished">Не нужно</translation>
-    </message>
-    <message>
-        <location line="+33"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+209"/>
         <source>Threading</source>
         <translation type="unfinished">Многопоточность</translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+23"/>
         <source>User Interface</source>
         <translation type="unfinished">Интерфейс</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+9"/>
         <source>Motion Estimation</source>
         <translation type="unfinished">Определение движения</translation>
     </message>
@@ -8816,32 +5026,7 @@ Do you want to load it  ?
         <translation type="unfinished">Управление битрейтом</translation>
     </message>
     <message>
-        <location line="-76"/>
-        <source>Full</source>
-        <translation type="unfinished">Полностью</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation type="unfinished">Журнал</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+4"/>
+        <location line="-63"/>
         <source>H.263</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8887,11 +5072,6 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+10"/>
-        <source>Matrices</source>
-        <translation type="unfinished">Матрицы</translation>
-    </message>
-    <message>
-        <location line="+2"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished">_Мин. квантизатор:</translation>
     </message>
@@ -8921,12 +5101,7 @@ Do you want to load it  ?
         <translation type="unfinished">_Четверть пикселя</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_GMC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Number of B frames:</source>
         <translation type="unfinished">К_оличество кадров B:</translation>
     </message>
@@ -8966,7 +5141,7 @@ Do you want to load it  ?
         <translation type="unfinished">Дополнительный простой профиль</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Quantization</source>
         <translation type="unfinished">Квантизация</translation>
     </message>
@@ -9194,10 +5369,6 @@ Do you want to load it  ?
         <location line="+9"/>
         <source>NVENC H.264 configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>libavcodec MPEG-4 configuration</source>
-        <translation type="obsolete">Настройка libavcodec MPEG-4</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+4"/>
@@ -9434,25 +5605,6 @@ Do you want to replace it?</source>
     </message>
 </context>
 <context>
-    <name>filtermainWindow</name>
-    <message>
-        <source>Load set of filters</source>
-        <translation type="obsolete">Загрузка настроек фильтров</translation>
-    </message>
-    <message>
-        <source>Nothing to save</source>
-        <translation type="obsolete">Нечего сохранять</translation>
-    </message>
-    <message>
-        <source>Save set of filters</source>
-        <translation type="obsolete">Сохранение настроек фильтров</translation>
-    </message>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">Фильтр уже частично применён</translation>
-    </message>
-</context>
-<context>
     <name>flux</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="+88"/>
@@ -9479,12 +5631,7 @@ Do you want to replace it?</source>
 <context>
     <name>flv1</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
-        <source>None</source>
-        <translation type="unfinished">Не нужно</translation>
-    </message>
-    <message>
-        <location line="+37"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+189"/>
         <source>User Interface</source>
         <translation type="unfinished">Интерфейс</translation>
     </message>
@@ -9494,32 +5641,7 @@ Do you want to replace it?</source>
         <translation type="unfinished">Управление битрейтом</translation>
     </message>
     <message>
-        <location line="-46"/>
-        <source>Full</source>
-        <translation type="unfinished">Полностью</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation type="unfinished">Журнал</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+4"/>
+        <location line="-37"/>
         <source>H.263</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9544,7 +5666,7 @@ Do you want to replace it?</source>
         <translation type="unfinished">Искажение частоты</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished">_Мин. квантизатор:</translation>
     </message>
@@ -10213,69 +6335,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>jobsWindow</name>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">Готово</translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">Выполнено</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">Ошибка</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">Удалено</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">Выполняется</translation>
-    </message>
-    <message>
-        <source>Job Name</source>
-        <translation type="obsolete">Имя задания</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation type="obsolete">Статус</translation>
-    </message>
-    <message>
-        <source>Start Time</source>
-        <translation type="obsolete">Начальное время</translation>
-    </message>
-    <message>
-        <source>End Time</source>
-        <translation type="obsolete">Конечное время</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">Да</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">Удалить задание</translation>
-    </message>
-    <message>
-        <source>Delete *all* job</source>
-        <translation type="obsolete">Удалить все задания</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="obsolete">Вы уверены что хотите удалить все задания?</translation>
-    </message>
-    <message>
-        <source>Already done</source>
-        <translation type="obsolete">Уже сделано</translation>
-    </message>
-    <message>
-        <source>This script has already been successfully executed.</source>
-        <translation type="obsolete">Этот скрипт уже был выполнен</translation>
-    </message>
-</context>
-<context>
     <name>jpeg</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="+102"/>
@@ -10301,45 +6360,6 @@ I will assume it has and try to continue</source>
         <location line="+4"/>
         <source>Mjpeg Configuration</source>
         <translation type="unfinished">Настройка Mjpeg</translation>
-    </message>
-</context>
-<context>
-    <name>kernelDeint</name>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Порядок полей:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Чем меньше значение, тем сильнее деинтерлейсинг</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">Резкость</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">Включить механизм усиления резкости</translation>
-    </message>
-    <message>
-        <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">Улучшенная экстраполяция (лучше не использовать)</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">Карта</translation>
-    </message>
-    <message>
-        <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">Показать области чрезстрочности (для тестирования!)</translation>
-    </message>
-    <message>
-        <source>KernelDeint</source>
-        <translation type="obsolete">Корневой деинтерлейс</translation>
     </message>
 </context>
 <context>
@@ -10454,17 +6474,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>largeMedian</name>
-    <message>
-        <source>_Process luma</source>
-        <translation type="obsolete">Обработать яркость (luma)</translation>
-    </message>
-    <message>
-        <source>P_rocess chroma</source>
-        <translation type="obsolete">Обработать цвет (chroma)</translation>
-    </message>
-</context>
-<context>
     <name>largemedian</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/largeMedian/ADM_largeMedian.cpp" line="+71"/>
@@ -10498,44 +6507,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>lavDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">Линейная интерполяция</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Кубическая интерполяция</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Средняя интерполяция</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">Алгоритм:</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">Автоматический уровень</translation>
-    </message>
-    <message>
-        <source>libavcodec deinterlacer</source>
-        <translation type="obsolete">libavcodec деинтерлейс</translation>
-    </message>
-</context>
-<context>
-    <name>lavMuxer</name>
-    <message>
-        <source>Incompatible frame rate</source>
-        <translation type="obsolete">Несовместимая частота кадров</translation>
-    </message>
-</context>
-<context>
     <name>lavcodec</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
@@ -10549,11 +6520,6 @@ I will assume it has and try to continue</source>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
         <translation type="unfinished">Поменять U и V</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show motion _vectors</source>
-        <translation type="unfinished">Показать вектор движения</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -10635,26 +6601,6 @@ I will assume it has and try to continue</source>
 <context>
     <name>logo</name>
     <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">Лого (JPG-файл)</translation>
-    </message>
-    <message>
-        <source>Select JPEG file</source>
-        <translation type="obsolete">Выбор JPEG-файла</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">Позиция X:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">Позиция Y:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">Прозрачность (alpha):</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="+22"/>
         <source>Add logo</source>
         <translation type="unfinished">Добавить логотип</translation>
@@ -10704,10 +6650,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Alpha will be ignored if the image has alpha channel (png in RGB)</source>
-        <translation type="obsolete">Альфа-канал будет пропущен, если он уже есть в изображении (png в RGB)</translation>
-    </message>
-    <message>
         <location line="+20"/>
         <source>Alpha</source>
         <translation type="unfinished">Альфа</translation>
@@ -10742,18 +6684,6 @@ I will assume it has and try to continue</source>
         <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="+20"/>
         <source>Video Filter Manager</source>
         <translation type="unfinished">Видеофильтры</translation>
-    </message>
-    <message>
-        <source>Save Script</source>
-        <translation type="obsolete">Сохранить скрипт</translation>
-    </message>
-    <message>
-        <source>Down</source>
-        <translation type="obsolete">Вниз</translation>
-    </message>
-    <message>
-        <source>Up</source>
-        <translation type="obsolete">Вверх</translation>
     </message>
     <message>
         <location line="+180"/>
@@ -10796,10 +6726,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">&amp;Закрыть</translation>
     </message>
     <message>
-        <source>External</source>
-        <translation type="obsolete">Внешние</translation>
-    </message>
-    <message>
         <location line="-244"/>
         <source>&lt;big&gt;&lt;b&gt;Active Filters&lt;/b&gt;&lt;/big&gt;</source>
         <translation type="unfinished">&lt;big&gt;&lt;b&gt;Активные фильтры&lt;/b&gt;&lt;/big&gt;</translation>
@@ -10821,49 +6747,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>mainMenu</name>
-    <message>
-        <source>Connect to avsproxy</source>
-        <translation type="obsolete">Соединиться с avsproxy</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Копировать</translation>
-    </message>
-    <message>
-        <source>Set Marker A</source>
-        <translation type="obsolete">Установить маркер А</translation>
-    </message>
-    <message>
-        <source>Set Marker B</source>
-        <translation type="obsolete">Установить маркер В</translation>
-    </message>
-    <message>
-        <source>Filters</source>
-        <translation type="obsolete">Фильтры</translation>
-    </message>
-    <message>
-        <source>Play/Stop</source>
-        <translation type="obsolete">Старт/стоп</translation>
-    </message>
-    <message>
-        <source>Previous Intra Frame</source>
-        <translation type="obsolete">Предыдущая сцена</translation>
-    </message>
-    <message>
-        <source>Next Intra Frame</source>
-        <translation type="obsolete">Следующая сцена</translation>
-    </message>
-    <message>
-        <source>Previous Black Frame</source>
-        <translation type="obsolete">Предыдущий черный кадр</translation>
-    </message>
-    <message>
-        <source>Next Black Frame</source>
-        <translation type="obsolete">Следующий черный кадр</translation>
-    </message>
-</context>
-<context>
     <name>matroskademuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Matroska/ADM_mkvIndexer.cpp" line="+48"/>
@@ -10871,7 +6754,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Изображения Matroska</translation>
     </message>
     <message>
-        <location line="+426"/>
+        <location line="+433"/>
         <source>Matroska clusters</source>
         <translation type="unfinished">Кластеры Matroska</translation>
     </message>
@@ -11033,10 +6916,6 @@ I will assume it has and try to continue</source>
         <source>MPlayer Denoise 3D HQ</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Luma _Temporal strength:</source>
-        <translation type="obsolete">_Временная сила luma:</translation>
-    </message>
 </context>
 <context>
     <name>mp3dlow</name>
@@ -11074,13 +6953,9 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+815"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Ошибка чтения заголовков SVQ3</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="obsolete">Нет таблицы stts</translation>
     </message>
 </context>
 <context>
@@ -11100,10 +6975,6 @@ I will assume it has and try to continue</source>
         <location line="+9"/>
         <source>Only AAC, AC3, E-AC3 and mpegaudio supported for audio</source>
         <translation type="unfinished">Для аудио поддерживаются только AAC, AC3, E-AC3 и mpegaudio</translation>
-    </message>
-    <message>
-        <source>Only AAC, AC3, and mpegaudio supported for audio</source>
-        <translation type="obsolete">Для аудио поддерживаются только AAC, AC3 и mpegaudio</translation>
     </message>
     <message>
         <location line="+112"/>
@@ -11268,26 +7139,6 @@ I will assume it has and try to continue</source>
 <context>
     <name>msharpen</name>
     <message>
-        <source>_Mask</source>
-        <translation type="obsolete">Маска</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="obsolete">Высокое качество</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">Уровень:</translation>
-    </message>
-    <message>
-        <source>MSharpen</source>
-        <translation type="obsolete">Резкость</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="+48"/>
         <source>Msharpen</source>
         <translation type="unfinished"></translation>
@@ -11350,29 +7201,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>nuvHeader</name>
-    <message>
-        <source>Opening Nuppel video</source>
-        <translation type="obsolete">Открытие Nuppel video</translation>
-    </message>
-    <message>
-        <source>Sure you want to abort ?</source>
-        <translation type="obsolete">Вы уверены, что хотите прервать?</translation>
-    </message>
-    <message>
-        <source>Size mismatch</source>
-        <translation type="obsolete">Размер не совпадает</translation>
-    </message>
-    <message>
-        <source>Expect a crash.</source>
-        <translation type="obsolete">Возможен сбой.</translation>
-    </message>
-    <message>
-        <source>Do you want to save an index ?</source>
-        <translation type="obsolete">Хотите сохранить индекс?</translation>
-    </message>
-</context>
-<context>
     <name>nvenc</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/nvEnc/ADM_nvEnc.cpp" line="+136"/>
@@ -11426,17 +7254,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>oggHeader</name>
-    <message>
-        <source>Take second track ?</source>
-        <translation type="obsolete">Взять вторую аудио дорожку?</translation>
-    </message>
-    <message>
-        <source>Scanning OGM</source>
-        <translation type="obsolete">Сканирование OGM</translation>
-    </message>
-</context>
-<context>
     <name>opendmldemuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="+321"/>
@@ -11475,13 +7292,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>previewDialog</name>
-    <message>
-        <source>Preview</source>
-        <translation type="obsolete">Предпросмотр</translation>
-    </message>
-</context>
-<context>
     <name>printinfo</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/printInfo/printInfo.cpp" line="+44"/>
@@ -11492,25 +7302,6 @@ I will assume it has and try to continue</source>
         <location line="+1"/>
         <source>Display some informations on Screen.</source>
         <translation type="unfinished">Вывод некоторой информации на экран.</translation>
-    </message>
-</context>
-<context>
-    <name>propWindow</name>
-    <message>
-        <source>No</source>
-        <translation type="obsolete">Нет</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation type="obsolete">Да</translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">Моно</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">Стерео</translation>
     </message>
 </context>
 <context>
@@ -11552,25 +7343,9 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Кодек 4СС:</translation>
     </message>
     <message>
-        <source>Global Motion Compensation:</source>
-        <translation type="obsolete">Компенсация общего движения:</translation>
-    </message>
-    <message>
-        <source>Packed Bitstream:</source>
-        <translation type="obsolete">Упакованный поток:</translation>
-    </message>
-    <message>
-        <source>Quarter Pixel:</source>
-        <translation type="obsolete">Квадратный пиксель:</translation>
-    </message>
-    <message>
         <location line="+62"/>
         <source>Audio</source>
         <translation type="unfinished">Звук</translation>
-    </message>
-    <message>
-        <source>File Size:</source>
-        <translation type="obsolete">Размер:</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -11635,7 +7410,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>psdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+80"/>
         <source>Error</source>
         <translation type="unfinished">Ошибка</translation>
     </message>
@@ -11652,7 +7427,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Индексирование</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+42"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished">Обнаружены несколько файлов с последовательными именами. Загрузить их все?</translation>
     </message>
@@ -11754,19 +7529,19 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qfile</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+50"/>
-        <location line="+139"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+45"/>
+        <location line="+141"/>
         <source>All files (*.*)</source>
         <translation>Все файлы (*.*)</translation>
     </message>
     <message>
-        <location line="-54"/>
-        <location line="+96"/>
+        <location line="-58"/>
+        <location line="+105"/>
         <source> files (*.</source>
         <translation> файлы (*.</translation>
     </message>
     <message>
-        <location line="-68"/>
+        <location line="-81"/>
         <source>Overwrite file </source>
         <translation>Перезаписать файл </translation>
     </message>
@@ -11789,7 +7564,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Предыдущие проекты</translation>
     </message>
     <message>
-        <location line="+658"/>
+        <location line="+660"/>
         <source>Play/Stop</source>
         <translation type="unfinished">Старт/стоп</translation>
     </message>
@@ -11854,7 +7629,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Вперед на 1 минуту</translation>
     </message>
     <message>
-        <location line="+617"/>
+        <location line="+619"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Приложение столкнулось с критической проблемой
@@ -12072,7 +7847,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qprocessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+66"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+65"/>
         <source>Unknown</source>
         <translation type="unfinished">Неизвестно</translation>
     </message>
@@ -12271,6 +8046,19 @@ Ready.
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="+88"/>
         <source>Select Idx File</source>
         <translation type="unfinished">Выбрать файл IDX</translation>
+    </message>
+</context>
+<context>
+    <name>rawmuxer</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerRaw/muxerRawConfig.cpp" line="+29"/>
+        <source>Prefer Annex B type stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Video Only Muxer Settings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -12757,13 +8545,6 @@ Ready.
     </message>
 </context>
 <context>
-    <name>resizeWindow</name>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Ширина и высота не могут быть нечетными</translation>
-    </message>
-</context>
-<context>
     <name>rotate</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="+52"/>
@@ -12818,42 +8599,11 @@ Ready.
     </message>
 </context>
 <context>
-    <name>rotateFilter</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 градусов</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 градусов</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 градусов</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">Угол:</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">Вращать</translation>
-    </message>
-</context>
-<context>
     <name>seekablePreviewDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="+20"/>
         <source>Preview</source>
         <translation type="unfinished">Предпросмотр</translation>
-    </message>
-    <message>
-        <source>next</source>
-        <translation type="obsolete">дальше</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
@@ -12889,10 +8639,6 @@ Ready.
         <location line="+1"/>
         <source>Forward one minute</source>
         <translation type="unfinished">Вперед на 1 мин</translation>
-    </message>
-    <message>
-        <source>A&amp;utoZoom</source>
-        <translation type="obsolete">&amp;Автоматическое увеличение</translation>
     </message>
 </context>
 <context>
@@ -12964,46 +8710,6 @@ Ready.
         <location line="+1"/>
         <source>_Duration:</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Start time:</source>
-        <translation type="obsolete">_Начальное время:</translation>
-    </message>
-    <message>
-        <source>Duration:</source>
-        <translation type="obsolete">_Продолжительность:</translation>
-    </message>
-</context>
-<context>
-    <name>subAss</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">Файл субтитров (ASS/SSA):</translation>
-    </message>
-    <message>
-        <source>Select Subtitle file</source>
-        <translation type="obsolete">Выбор файла субтитров</translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">Межстрочный интервал:</translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">Масштаб шрифта:</translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">Верхняя граница:</translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">Нижняя граница:</translation>
-    </message>
-    <message>
-        <source>ASS</source>
-        <translation type="obsolete">
-            </translation>
     </message>
 </context>
 <context>
@@ -13205,8 +8911,8 @@ Please delete the idx2 file and reopen.</source>
 Пожалуйста, удалите файл idx2 и откройте заново.</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+186"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+329"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+188"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+327"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+83"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished">Обнаружены несколько файлов с последовательными именами. Загрузить их все?</translation>
@@ -13438,88 +9144,7 @@ Please delete the idx2 file and reopen.</source>
     </message>
 </context>
 <context>
-    <name>vidBlendRemoval</name>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
-    </message>
-    <message>
-        <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="obsolete">Если значение меньше порогового, то картинка считается правильной. Меньшее пороговое значение увеличивает вероятность неправильности.</translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">Шум:</translation>
-    </message>
-    <message>
-        <source>I_dentical:</source>
-        <translation type="obsolete">Идентичность:</translation>
-    </message>
-    <message>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Если метрика меньше этого значения, картинки считаются идентичными</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">Показать метрики</translation>
-    </message>
-    <message>
-        <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Показать метрики в картинке (для отладки)</translation>
-    </message>
-</context>
-<context>
-    <name>vidColorYuv</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
-    </message>
-</context>
-<context>
-    <name>vidHardPDRemoval</name>
-    <message>
-        <source>Metrics</source>
-        <translation type="obsolete">Метрики</translation>
-    </message>
-    <message>
-        <source>Do you want to print metrics on screen ?</source>
-        <translation type="obsolete">Хотите вывести метрики на экран?</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
-    </message>
-    <message>
-        <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="obsolete">Если значение меньше порогового, то картинка считается правильной. Меньшее пороговое значение увеличивает вероятность неправильности.</translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">Шум:</translation>
-    </message>
-    <message>
-        <source>_Identical:</source>
-        <translation type="obsolete">Идентичность:</translation>
-    </message>
-    <message>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Если метрика меньше этого значения, картинки считаются идентичными</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">Показать метрики</translation>
-    </message>
-    <message>
-        <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Показать метрики в картинке (для отладки)</translation>
-    </message>
-</context>
-<context>
     <name>vobSubDialog</name>
-    <message>
-        <source>VobSub Settings</source>
-        <translation type="obsolete">Установки VobSub</translation>
-    </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="+13"/>
         <source>Subtitle Font Size and Position</source>
@@ -13637,24 +9262,19 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <translation type="unfinished">Обработка</translation>
     </message>
     <message>
-        <location line="+86"/>
+        <location line="+26"/>
         <source>Time Remaining:</source>
         <translation type="unfinished">Осталось времени:</translation>
     </message>
     <message>
-        <location line="-22"/>
+        <location line="-20"/>
         <source>Elapsed:</source>
         <translation type="unfinished">Прошло времени</translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+13"/>
         <source>00:00:00</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+87"/>
-        <source>Cancel</source>
-        <translation type="unfinished">Отмена</translation>
     </message>
 </context>
 <context>
@@ -13859,10 +9479,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+423"/>
         <source>Fast</source>
         <translation type="unfinished">Быстро</translation>
-    </message>
-    <message>
-        <source>Advanced</source>
-        <translation type="obsolete">Дополнительно</translation>
     </message>
     <message>
         <location line="+1598"/>
@@ -14187,10 +9803,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+20"/>
         <source>Subpixel Refinement</source>
         <translation type="unfinished">Субпиксельная точность</translation>
-    </message>
-    <message>
-        <source>10 (Best)</source>
-        <translation type="obsolete">10 (Лучший)</translation>
     </message>
     <message>
         <location line="+98"/>
@@ -16491,25 +12103,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+4"/>
         <source>yadif</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>yadifFilter</name>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">Нижнее поле первое</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">Верхнее поле первое</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">Порядок:</translation>
     </message>
 </context>
 </TS>

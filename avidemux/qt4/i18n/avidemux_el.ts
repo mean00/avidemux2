@@ -2,2792 +2,11 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="el_GR" sourcelanguage="en">
 <context>
-    <name></name>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">0</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Αντιγραφή</translation>
-    </message>
-    <message>
-        <source>Cannot initialize the video stream</source>
-        <translation type="obsolete">Αδύνατη η  αρχικοποίηση της ροής βίντεο</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Καμία</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Η αρχικοποίηση του φίλτρου απέτυχε</translation>
-    </message>
-    <message>
-        <source>Error while encoding</source>
-        <translation type="obsolete">Σφάλμα κατά την κωδικοποίηση</translation>
-    </message>
-    <message>
-        <source>KeyFrame error</source>
-        <translation type="obsolete">Σφάλμα αποκωδικοποίησης</translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="obsolete">Δημιουργία αρχείων _OpenDML</translation>
-    </message>
-    <message>
-        <source>Automatically _swap A and B if A&gt;B</source>
-        <translation type="obsolete">Αυτόματη _εναλλαγή A και B, αν A&gt;B</translation>
-    </message>
-    <message>
-        <source>_Disable NUV audio sync</source>
-        <translation type="obsolete">_Απενεργοποίηση συγχρονισμού ήχου NUV</translation>
-    </message>
-    <message>
-        <source>Automatically _build VBR map</source>
-        <translation type="obsolete">Αυτόματο _χτίσιμο του χάρτη VBR</translation>
-    </message>
-    <message>
-        <source>SIMD</source>
-        <translation type="obsolete">SIMD</translation>
-    </message>
-    <message>
-        <source>Enable all SIMD</source>
-        <translation type="obsolete">Ενεργοποίηση όλων των SIMD</translation>
-    </message>
-    <message>
-        <source>Enable MMX</source>
-        <translation type="obsolete">Ενεργοποίηση MMX</translation>
-    </message>
-    <message>
-        <source>Enable MMXEXT</source>
-        <translation type="obsolete">Ενεργοποίηση MMXEXT</translation>
-    </message>
-    <message>
-        <source>Enable 3DNOW</source>
-        <translation type="obsolete">Ενεργοποίηση 3DNOW</translation>
-    </message>
-    <message>
-        <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">Ενεργοποίηση 3DNOWEXT</translation>
-    </message>
-    <message>
-        <source>Enable SSE</source>
-        <translation type="obsolete">Ενεργοποίηση SSE</translation>
-    </message>
-    <message>
-        <source>Enable SSE2</source>
-        <translation type="obsolete">Ενεργοποίηση SSE2</translation>
-    </message>
-    <message>
-        <source>Enable SSE3</source>
-        <translation type="obsolete">Ενεργοποίηση SSE3</translation>
-    </message>
-    <message>
-        <source>Enable SSSE3</source>
-        <translation type="obsolete">Ενεργοποίηση SSSE3</translation>
-    </message>
-    <message>
-        <source>_lavc threads:</source>
-        <translation type="obsolete">Ολόκληρα νήματα</translation>
-    </message>
-    <message>
-        <source>Multi-threading</source>
-        <translation type="obsolete">Multi-aterm</translation>
-    </message>
-    <message>
-        <source>Above normal</source>
-        <translation type="obsolete">Πάνω από το Κανονικό</translation>
-    </message>
-    <message>
-        <source>Below normal</source>
-        <translation type="obsolete">Κάτω από το Κανονικό</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">Χαμηλή</translation>
-    </message>
-    <message>
-        <source>_Encoding priority:</source>
-        <translation type="obsolete">_Προτεραιότητα κωδικοποίησης:</translation>
-    </message>
-    <message>
-        <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">Προτεραιότητα δημιουργίας ε_υρετηρίου/απο-πακεταρίσματος:</translation>
-    </message>
-    <message>
-        <source>_Playback priority:</source>
-        <translation type="obsolete">Προτεραιότητα _αναπαραγωγής:</translation>
-    </message>
-    <message>
-        <source>Prioritisation</source>
-        <translation type="obsolete">Ορισμός Προτεραιοτήτων</translation>
-    </message>
-    <message>
-        <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (καλύτερο)</translation>
-    </message>
-    <message>
-        <source>SDL (good)</source>
-        <translation type="obsolete">SDL (καλό)</translation>
-    </message>
-    <message>
-        <source>Video _display:</source>
-        <translation type="obsolete">_Εμφάνιση βίντεο:</translation>
-    </message>
-    <message>
-        <source>No alerts</source>
-        <translation type="obsolete">Χωρίς ειδοποιήσεις</translation>
-    </message>
-    <message>
-        <source>Display only error alerts</source>
-        <translation type="obsolete">Προβολή μόνο των ειδοποιήσεων σφάλματος</translation>
-    </message>
-    <message>
-        <source>Display all alerts</source>
-        <translation type="obsolete">Προβολή όλων των ειδοποιήσεων</translation>
-    </message>
-    <message>
-        <source>_Message level:</source>
-        <translation type="obsolete">Το παραπάνω μήνυμα έχει άγνωστο επίπεδο καταγραφής συμβάντων</translation>
-    </message>
-    <message>
-        <source>Master</source>
-        <translation type="obsolete">Πρωτεύων</translation>
-    </message>
-    <message>
-        <source>_Volume control:</source>
-        <translation type="obsolete">_Έλεγχος Έντασης Ήχου:</translation>
-    </message>
-    <message>
-        <source>No downmixing</source>
-        <translation type="obsolete">(χωρίς όνομα)</translation>
-    </message>
-    <message>
-        <source>Pro Logic</source>
-        <translation type="obsolete">Pro Logic</translation>
-    </message>
-    <message>
-        <source>Pro Logic II</source>
-        <translation type="obsolete">Pro Logic II</translation>
-    </message>
-    <message>
-        <source>_Local playback downmixing:</source>
-        <translation type="obsolete">Η τοπική αναπαραγωγή NMM απέτυχε.</translation>
-    </message>
-    <message>
-        <source>De_ringing</source>
-        <translation type="obsolete">Δια&amp;γραφή</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Ισχύς:</translation>
-    </message>
-    <message>
-        <source>Default Postprocessing</source>
-        <translation type="obsolete">Προεπιλεγμένη Μετεπεξεργασία</translation>
-    </message>
-    <message>
-        <source>Use _Global GlyphSet</source>
-        <translation type="obsolete">Χρήση καθολικής ρύθμισης</translation>
-    </message>
-    <message>
-        <source>Gl_yphSet:</source>
-        <translation type="obsolete">Gl_yphSet:</translation>
-    </message>
-    <message>
-        <source>Automation</source>
-        <translation type="obsolete">Αυτοματοποίηση</translation>
-    </message>
-    <message>
-        <source>Input</source>
-        <translation type="obsolete">Είσοδος</translation>
-    </message>
-    <message>
-        <source>Output</source>
-        <translation type="obsolete">Έξοδος</translation>
-    </message>
-    <message>
-        <source>Video</source>
-        <translation type="obsolete">Βίντεο</translation>
-    </message>
-    <message>
-        <source>Global GlyphSet</source>
-        <translation type="obsolete">Γενικές Λειτουργίες</translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">Προτιμήσεις</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">Υψηλή</translation>
-    </message>
-    <message>
-        <source>_Background Image:</source>
-        <translation type="obsolete">_Εικόνα Παρασκηνίου:</translation>
-    </message>
-    <message>
-        <source>Select background image</source>
-        <translation type="obsolete">Επιλογή Εικόνας Παρασκηνίου</translation>
-    </message>
-    <message>
-        <source>Vignette _Width:</source>
-        <translation type="obsolete">_Πλάτος Διακοσμητικού Πλαισίου:</translation>
-    </message>
-    <message>
-        <source>Vignette _Height:</source>
-        <translation type="obsolete">_Ύψος Διακοσμητικού Πλαισίου:</translation>
-    </message>
-    <message>
-        <source>Timecode:</source>
-        <translation type="obsolete">Χρόνος:</translation>
-    </message>
-    <message>
-        <source>_Dynamic range compression</source>
-        <translation type="obsolete">Συμπίεση _Δυναμικής Περιοχής</translation>
-    </message>
-    <message>
-        <source>_Time shift (ms):</source>
-        <translation type="obsolete">_Χρονική Μετατόπιση (χιλ.τουδευτ.):</translation>
-    </message>
-    <message>
-        <source>Time shift value (ms)</source>
-        <translation type="obsolete">Μέγεθος χρονικής μετατόπισης (χιλ.τουδευτ.)</translation>
-    </message>
-    <message>
-        <source>R_esampling (Hz):</source>
-        <translation type="obsolete">Ε_παναδειγματοληψία (Hz):</translation>
-    </message>
-    <message>
-        <source>Resampling frequency (Hz)</source>
-        <translation type="obsolete">Συχνότητα επανακωδικοποίησης (Hz)</translation>
-    </message>
-    <message>
-        <source>Film to PAL</source>
-        <translation type="obsolete">Από Film σε PAL</translation>
-    </message>
-    <message>
-        <source>PAL to Film</source>
-        <translation type="obsolete">Από PAL σε Film</translation>
-    </message>
-    <message>
-        <source>_Frame rate change:</source>
-        <translation type="obsolete">Αλλαγή _ταχύτητας καρέ:</translation>
-    </message>
-    <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="obsolete">Αυτόματο (μέγιστο -3 dB)</translation>
-    </message>
-    <message>
-        <source>Manual</source>
-        <translation type="obsolete">Με το χέρι</translation>
-    </message>
-    <message>
-        <source>_Gain mode:</source>
-        <translation type="obsolete">Λειτουργία αποσφαλμάτωσης</translation>
-    </message>
-    <message>
-        <source>G_ain value:</source>
-        <translation type="obsolete">Τιμή _κέρδους:</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">Κέρδος</translation>
-    </message>
-    <message>
-        <source>No change</source>
-        <translation type="obsolete">Καμία αλαγή</translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">Μονοφωνικό</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">Στέρεο</translation>
-    </message>
-    <message>
-        <source>Stereo+surround</source>
-        <translation type="obsolete">Στέρεο+περιμετρικός</translation>
-    </message>
-    <message>
-        <source>Stereo+center</source>
-        <translation type="obsolete">Στέρεο+κέντρο</translation>
-    </message>
-    <message>
-        <source>Stereo+center+surround</source>
-        <translation type="obsolete">Στέρεο+κέντρο+περιμετρικός</translation>
-    </message>
-    <message>
-        <source>Stereo front+stereo rear</source>
-        <translation type="obsolete">Στέρεο εμπρός + στέρεο πίσω</translation>
-    </message>
-    <message>
-        <source>5 channels</source>
-        <translation type="obsolete">5 κανάλια</translation>
-    </message>
-    <message>
-        <source>5.1</source>
-        <translation type="obsolete">5.1</translation>
-    </message>
-    <message>
-        <source>Dolby Pro Logic</source>
-        <translation type="obsolete">Dolby Pro Logic</translation>
-    </message>
-    <message>
-        <source>Dolby Pro Logic II</source>
-        <translation type="obsolete">Dolby Pro Logic II</translation>
-    </message>
-    <message>
-        <source>_Mixer:</source>
-        <translation type="obsolete">_Μίκτης: </translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">Φίλτρα Ήχου</translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">_Ρυθμός bit:</translation>
-    </message>
-    <message>
-        <source>No data</source>
-        <translation type="obsolete">Δεν υπάρχουν δεδομένα</translation>
-    </message>
-    <message>
-        <source>Max. bitrate:</source>
-        <translation type="obsolete">Μέγιστος ρυθμός bit:</translation>
-    </message>
-    <message>
-        <source>Average bitrate:</source>
-        <translation type="obsolete">Μέσος ρυθμός μπιτιών:</translation>
-    </message>
-    <message>
-        <source>Number of I frames:</source>
-        <translation type="obsolete">Αριθμός πλαισίων:</translation>
-    </message>
-    <message>
-        <source>Number of P frames:</source>
-        <translation type="obsolete">Το πλήθος των Π΄ καρέ:</translation>
-    </message>
-    <message>
-        <source>Number of B frames:</source>
-        <translation type="obsolete">Αριθμός πλαισίων:</translation>
-    </message>
-    <message>
-        <source>Max. B frames:</source>
-        <translation type="obsolete">Μέγιστο βήμα QP μεταξύ καρέ</translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">Ιστόγραμμα Ρυθμού Bit</translation>
-    </message>
-    <message>
-        <source>Fontconfig</source>
-        <translation type="obsolete">Ρύθμιση γραμματοσειράς (Fontconfig)</translation>
-    </message>
-    <message>
-        <source>Gettext</source>
-        <translation type="obsolete">Gettext</translation>
-    </message>
-    <message>
-        <source>SDL</source>
-        <translation type="obsolete">SDL</translation>
-    </message>
-    <message>
-        <source>XVideo</source>
-        <translation type="obsolete">XVideo</translation>
-    </message>
-    <message>
-        <source>AltiVec</source>
-        <translation type="obsolete">AltiVec</translation>
-    </message>
-    <message>
-        <source>PowerPC</source>
-        <translation type="obsolete">PowerPC</translation>
-    </message>
-    <message>
-        <source>x86</source>
-        <translation type="obsolete">x86</translation>
-    </message>
-    <message>
-        <source>x86-64</source>
-        <translation type="obsolete">x86-64</translation>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <translation type="obsolete">Βιβλιοθήκες</translation>
-    </message>
-    <message>
-        <source>CPU</source>
-        <translation type="obsolete">CPU</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">Ενσωματωμένη Υποστήριξη</translation>
-    </message>
-    <message>
-        <source>_Hours:</source>
-        <translation type="obsolete">_Ώρες:</translation>
-    </message>
-    <message>
-        <source>_Minutes:</source>
-        <translation type="obsolete">_Λεπτά:</translation>
-    </message>
-    <message>
-        <source>_Seconds:</source>
-        <translation type="obsolete">_Δευτερόλεπτα:</translation>
-    </message>
-    <message>
-        <source>Go to Time</source>
-        <translation type="obsolete">Μετάβαση στο Χρόνο</translation>
-    </message>
-    <message>
-        <source>_Job name:</source>
-        <translation type="obsolete">_Όνομα διαδικασίας:</translation>
-    </message>
-    <message>
-        <source>Save Job</source>
-        <translation type="obsolete">Αποθήκευση διαδικασίας</translation>
-    </message>
-    <message>
-        <source>_Swap U and V</source>
-        <translation type="obsolete">_Εναλλαγή U και V</translation>
-    </message>
-    <message>
-        <source>Show motion _vectors</source>
-        <translation type="obsolete">Εμφάνιση της κίνησης περιστροφής κατά την αλλαγή της θέσης εστίασης;</translation>
-    </message>
-    <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">Επιλογές Αποκωδικοποιητή</translation>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="obsolete">Περιβάλλον Εργασίας</translation>
-    </message>
-    <message>
-        <source>Joint stereo</source>
-        <translation type="obsolete">Ενωμένο στέρεο</translation>
-    </message>
-    <message>
-        <source>C_hannel mode:</source>
-        <translation type="obsolete">Κατάσταση λειτουργίας C_hannel:</translation>
-    </message>
-    <message>
-        <source>CBR</source>
-        <translation type="obsolete">Σταθ.Ρυθ.Μπιτ.</translation>
-    </message>
-    <message>
-        <source>ABR</source>
-        <translation type="obsolete">ABR</translation>
-    </message>
-    <message>
-        <source>Extreme</source>
-        <translation type="obsolete">Ακραίο</translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">Λειτουργία _ρυθμού Μπιτιών:</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">_Ποιότητα:</translation>
-    </message>
-    <message>
-        <source>LAME Configuration</source>
-        <translation type="obsolete">Ρύθμιση LAME</translation>
-    </message>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">Ένταση _φίλτρου:</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">Οριζόντια αφαίρεση κομματιών</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">Κατακόρυφη αφαίρεση κομματιών</translation>
-    </message>
-    <message>
-        <source>_Deringing</source>
-        <translation type="obsolete">Φίλτρο αφαίρεσης δακτυλίων</translation>
-    </message>
-    <message>
-        <source>_Shrink Factor:</source>
-        <translation type="obsolete">_Συντελεστής σμίκρυνσης:</translation>
-    </message>
-    <message>
-        <source>Requant Configuration</source>
-        <translation type="obsolete">Σφάλμα ρυθμίσεων</translation>
-    </message>
-    <message>
-        <source>NTSC 4:3</source>
-        <translation type="obsolete">NTSC 4:3</translation>
-    </message>
-    <message>
-        <source>NTSC 16:9</source>
-        <translation type="obsolete">NTSC 16:9</translation>
-    </message>
-    <message>
-        <source>PAL 4:3</source>
-        <translation type="obsolete">PAL 4:3</translation>
-    </message>
-    <message>
-        <source>PAL 16:9</source>
-        <translation type="obsolete">PAL 16:9</translation>
-    </message>
-    <message>
-        <source>1:1</source>
-        <translation type="obsolete">1:1</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation type="obsolete">Άγνωστο</translation>
-    </message>
-    <message>
-        <source>Auto (might not work)</source>
-        <translation type="obsolete">Αυτόματο (ίσως να μη λειτουργήσει)</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">Πρώτα το επάνω πεδίο</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">Πρώτα το κάτω πεδίο</translation>
-    </message>
-    <message>
-        <source>Bottom field (keep top)</source>
-        <translation type="obsolete">Κάτω πεδίο (διατήρηση του πάνω)</translation>
-    </message>
-    <message>
-        <source>Top field (keep bottom)</source>
-        <translation type="obsolete">Πάνω πεδίο (διατήρηση του κάτω)</translation>
-    </message>
-    <message>
-        <source>Cubic interpolation</source>
-        <translation type="obsolete">Παρεμβολή AHD</translation>
-    </message>
-    <message>
-        <source>Modified ELA</source>
-        <translation type="obsolete">Μεταποιημένη ELA</translation>
-    </message>
-    <message>
-        <source>Kernel interpolation</source>
-        <translation type="obsolete">Παρεμβολή AHD</translation>
-    </message>
-    <message>
-        <source>Modified ELA-2</source>
-        <translation type="obsolete">Μεταποιημένη ELA-2</translation>
-    </message>
-    <message>
-        <source>4 fields check</source>
-        <translation type="obsolete">Έλεγχος 4 πεδίων</translation>
-    </message>
-    <message>
-        <source>5 fields check</source>
-        <translation type="obsolete">Έλεγχος 5 πεδίων</translation>
-    </message>
-    <message>
-        <source>No link</source>
-        <translation type="obsolete">Δεν υπάρχουν διαθέσιμες κάρτες μέσω του δεσμού pilot</translation>
-    </message>
-    <message>
-        <source>Full link</source>
-        <translation type="obsolete">Πλήρης δεσμός</translation>
-    </message>
-    <message>
-        <source>Y to UV</source>
-        <translation type="obsolete">από Y σε UV</translation>
-    </message>
-    <message>
-        <source>UV to Y</source>
-        <translation type="obsolete">από UV σε Y</translation>
-    </message>
-    <message>
-        <source>1</source>
-        <translation type="obsolete">1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="obsolete">2</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">&lt;b&gt;Σειρά Subpixel&lt;/b&gt;:</translation>
-    </message>
-    <message>
-        <source>_Interpolate:</source>
-        <translation type="obsolete">Παρεμβολή:</translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">_Τύπος:</translation>
-    </message>
-    <message>
-        <source>_MntMode:</source>
-        <translation type="obsolete">_ΛειτουργίαMnt:</translation>
-    </message>
-    <message>
-        <source>_Link:</source>
-        <translation type="obsolete">_Δεσμός:</translation>
-    </message>
-    <message>
-        <source>_AP type:</source>
-        <translation type="obsolete">Τύπος _AP:</translation>
-    </message>
-    <message>
-        <source>Use ch_roma to evalute</source>
-        <translation type="obsolete">Χρήση του ch_roma για να γίνει εκτίμηση</translation>
-    </message>
-    <message>
-        <source>Try _weave</source>
-        <translation type="obsolete">Πράσινο πλέξιμο</translation>
-    </message>
-    <message>
-        <source>_Denoise</source>
-        <translation type="obsolete">_Αοπθορυβοποίηση</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">_Οξύ</translation>
-    </message>
-    <message>
-        <source>_Evalute all frames</source>
-        <translation type="obsolete">_Εκτίμηση όλων των καρέ</translation>
-    </message>
-    <message>
-        <source>Area com_bing threshold:</source>
-        <translation type="obsolete">Κατώφλι χρώματος</translation>
-    </message>
-    <message>
-        <source>Combe_d threshold:</source>
-        <translation type="obsolete">Κατώφλι χρώματος:</translation>
-    </message>
-    <message>
-        <source>Debug:</source>
-        <translation type="obsolete">Αποσφαλμάτωση:</translation>
-    </message>
-    <message>
-        <source>TDeint</source>
-        <translation type="obsolete">TΑποπλέξιμο</translation>
-    </message>
-    <message>
-        <source>Motion adaptative deinterlacer by Tritical.</source>
-        <translation type="obsolete">Προσαρμοζώμενος αποπλεκτής κίνησης από τον Tritical.</translation>
-    </message>
-    <message>
-        <source>_VOB file(s):</source>
-        <translation type="obsolete">Αρχείο(-α) _VOB:</translation>
-    </message>
-    <message>
-        <source>Select VOB file(s)</source>
-        <translation type="obsolete">Επιλογή αρχείου(-ων) VOB</translation>
-    </message>
-    <message>
-        <source>_IFO file:</source>
-        <translation type="obsolete">_Αρχείο IFO:</translation>
-    </message>
-    <message>
-        <source>Select IFO file</source>
-        <translation type="obsolete">Επιλογή αρχείου IFO</translation>
-    </message>
-    <message>
-        <source>VobSub file:</source>
-        <translation type="obsolete">Αρχείο VobSub:</translation>
-    </message>
-    <message>
-        <source>Select VobSub file</source>
-        <translation type="obsolete">Επιλογή αρχείου VobSub</translation>
-    </message>
-    <message>
-        <source>VOB to VobSub</source>
-        <translation type="obsolete">από VOB σε VobSub</translation>
-    </message>
-    <message>
-        <source>The selected vobfile does not exist</source>
-        <translation type="obsolete">Η επιλεγμένη αναθεώρηση δεν υπάρχει.</translation>
-    </message>
-    <message>
-        <source>Please select a correct VobSub path/dir</source>
-        <translation type="obsolete">Παρακαλώ επέλεξε τη σωστή διαδρομή/κατάλογο για VobSub</translation>
-    </message>
-    <message>
-        <source>Select ECMAScript to Run</source>
-        <translation type="obsolete">Επέλεξε ECMAScript προς Εκτέλεση</translation>
-    </message>
-    <message>
-        <source>Obsolete</source>
-        <translation type="obsolete">Ξεπερασμένο</translation>
-    </message>
-    <message>
-        <source>Not coded in this version</source>
-        <translation type="obsolete">Δεν κωδικοποιήθηκε σε αυτή την έκδοση</translation>
-    </message>
-    <message>
-        <source>Select Workbench to Save</source>
-        <translation type="obsolete">Επέλεξε Workbench για Αποθήκευση</translation>
-    </message>
-    <message>
-        <source>Select Raw File to Save</source>
-        <translation type="obsolete">Επέλεξε Ανεπεξέργαστο Αρχείο για Αποθήκευση</translation>
-    </message>
-    <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">Επιλέξτε αρχείο AVI...</translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">Επιλέξτε ένα αρχείο AVI για προσκόλληση...</translation>
-    </message>
-    <message>
-        <source>Select File to Save Audio</source>
-        <translation type="obsolete">Επέλεξε Αρχείο για την Αποθήκευση του Ήχου</translation>
-    </message>
-    <message>
-        <source>Select JPEG Sequence to Save</source>
-        <translation type="obsolete">Επέλεξε την Ακολουθία JPEG για Αποθήκευση</translation>
-    </message>
-    <message>
-        <source>Select BMP to Save</source>
-        <translation type="obsolete">Επιλογή BMP για να Φορτωθεί</translation>
-    </message>
-    <message>
-        <source>Select JPEG to Save</source>
-        <translation type="obsolete">Επέλεξε JPEG για Αποθήκευση</translation>
-    </message>
-    <message>
-        <source>Select File to Save</source>
-        <translation type="obsolete">Επιλογή αρχείου για να Φορτωθεί</translation>
-    </message>
-    <message>
-        <source>Select MP3 to Load</source>
-        <translation type="obsolete">Επιλογή MP3 για να Φορτωθεί</translation>
-    </message>
-    <message>
-        <source>Select AC3 to Load</source>
-        <translation type="obsolete">Επιλογή AC3 για να Φορτωθεί</translation>
-    </message>
-    <message>
-        <source>Select WAV to Load</source>
-        <translation type="obsolete">Επιλογή WAV για να Φορτωθεί</translation>
-    </message>
-    <message>
-        <source>Go to Frame</source>
-        <translation type="obsolete">Μετάβαση στο Καρέ</translation>
-    </message>
-    <message>
-        <source>_Go to frame:</source>
-        <translation type="obsolete">_Μετάβαση στο Καρέ:</translation>
-    </message>
-    <message>
-        <source>Out of bounds</source>
-        <translation type="obsolete">Εκτός ορίων</translation>
-    </message>
-    <message>
-        <source>Marker A &gt; B</source>
-        <translation type="obsolete">Δείκτης Α &gt; B</translation>
-    </message>
-    <message>
-        <source>Cannot copy.</source>
-        <translation type="obsolete">Αδυναμία αντιγραφής.</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II))</source>
-        <translation type="obsolete">Κάτι στραβό έχει γίνει (II))</translation>
-    </message>
-    <message>
-        <source>Are you sure?</source>
-        <translation type="obsolete">Είσαι σίγουρος/η;</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">Ταχύτητα Καρέ</translation>
-    </message>
-    <message>
-        <source>Width is not a multiple of 8</source>
-        <translation type="obsolete">Το πλάτος δεν είναι πολλαπλάσιο του 8</translation>
-    </message>
-    <message>
-        <source>This will make trouble for AVI files.</source>
-        <translation type="obsolete">Αυτό θα δημιουργήσει προβλήματα στα αρχεία AVI.</translation>
-    </message>
-    <message>
-        <source>Rebuild all Keyframes?</source>
-        <translation type="obsolete">Επανακατασκευή όλων των επισκοπήσεων...</translation>
-    </message>
-    <message>
-        <source>Permission error</source>
-        <translation type="obsolete">Σφάλμα δικαιωμάτων   </translation>
-    </message>
-    <message>
-        <source>&quot;%s&quot; does not exist.</source>
-        <translation type="obsolete" variants="yes">
-            <lengthvariant>Δεν υπάρχει το αρχείο
- &quot;%s&quot;</lengthvariant>
-            <lengthvariant></lengthvariant>
-        </translation>
-    </message>
-    <message>
-        <source>Cannot open project using the video loader.</source>
-        <translation type="obsolete">Αδύνατο το άνοιγμα της εργασίας με τη χρήση του φορτωτή βίντεο.</translation>
-    </message>
-    <message>
-        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
-        <translation type="obsolete">Δοκίμασε «Αρχείο» -&gt; «Φόρτωση/Εκτέλεση Εργασίας...»</translation>
-    </message>
-    <message>
-        <source>Could not open the file</source>
-        <translation type="obsolete">Αδύνατο το άνοιγμα του αρχείου</translation>
-    </message>
-    <message>
-        <source>Multiple Audio Tracks</source>
-        <translation type="obsolete">Πολλαπλά Κανάλια Ήχου</translation>
-    </message>
-    <message>
-        <source>The file you just loaded contains several audio tracks.
-Go to Audio-&gt;MainTrack to select the active one.</source>
-        <translation type="obsolete">Το αρχείο που μόλις φορτώθηκε περιέχει διάφορα κανάλια ήχου.
-Πήγαινε στο «Ήχος» -&gt; «Κύριο Κανάλι» για να επιλέξεις πιο θα είναι ενεργό.</translation>
-    </message>
-    <message>
-        <source>No audio decoder found for this file</source>
-        <translation type="obsolete">Δεν βρέθηκε αποκωδικοποιητής ήχου για αυτό το αρχείο</translation>
-    </message>
-    <message>
-        <source>Save (A+V) will generate bad AVI. Save audio will work.</source>
-        <translation type="obsolete">Η αποθήκευση (ήχος+βίντεο) θα δημιουργήσει προβληματικό AVI.
-Η αποθήκευση ήχου θα λειτουργήσει.</translation>
-    </message>
-    <message>
-        <source>Something failed when appending</source>
-        <translation type="obsolete">Κάτι απέτυχε στην προσκόληση</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II)</source>
-        <translation type="obsolete">Κάτι στραβό συνέβη (II)</translation>
-    </message>
-    <message>
-        <source>Cannot save the audio in copy mode</source>
-        <translation type="obsolete">Αδύνατη η αποθήκευση του ήχου σε λειτουργία κατάστασης αντιγραφής</translation>
-    </message>
-    <message>
-        <source>Select WAV PCM as the audio codec, otherwise the audio file would be raw PCM.</source>
-        <translation type="obsolete">Επέλεξε το WAV PCM ως κώδικα ήχου, διαφορετικά το αρχείο ήχου θα είναι ανεπεξέργαστο PCM.</translation>
-    </message>
-    <message>
-        <source>Saving audio</source>
-        <translation type="obsolete">Αποθήκευση ήχου</translation>
-    </message>
-    <message>
-        <source>Get Frame</source>
-        <translation type="obsolete">Λήψη Καρέ</translation>
-    </message>
-    <message>
-        <source>Cannot get this frame to save</source>
-        <translation type="obsolete">Δεν μπορεί να επιτευχθεί η αποθήκευση αυτού του καρέ</translation>
-    </message>
-    <message>
-        <source>Mark A &gt; B</source>
-        <translation type="obsolete">Δείκτης A &gt; B</translation>
-    </message>
-    <message>
-        <source>Set your markers correctly.</source>
-        <translation type="obsolete">Όρισε τους δείκτες σου σωστά.</translation>
-    </message>
-    <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="obsolete">Αποθήκευση ως μια ομάδα από jpeg</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="obsolete">Αδύνατη η αποκωδικοποίηση του στιγμιότυπου</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="obsolete">Εγκατάλειψη.</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation type="obsolete">Έγινε</translation>
-    </message>
-    <message>
-        <source>Saved %d images.</source>
-        <translation type="obsolete">Αποθήκευση %d εικόνων</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">Σφάλμα</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="obsolete">Δεν ήταν δυνατή η αποθήκευση όλων των εικόνων.</translation>
-    </message>
-    <message>
-        <source>Saved &quot;%s&quot;.</source>
-        <translation type="obsolete">Αποθηκεύτηκε &quot;%s&quot;.</translation>
-    </message>
-    <message>
-        <source>BMP op failed</source>
-        <translation type="obsolete">Η BMP op απέτυχε</translation>
-    </message>
-    <message>
-        <source>Saving %s as a BMP file failed.</source>
-        <translation type="obsolete">Η αποθήκευση του %s ως BMP απέτυχε.</translation>
-    </message>
-    <message>
-        <source>Failed to open the file</source>
-        <translation type="obsolete">Αποτυχία ανοίγματος αρχείου</translation>
-    </message>
-    <message>
-        <source>Not a WAV file?</source>
-        <translation type="obsolete">Δεν είναι αρχείο WAV;</translation>
-    </message>
-    <message>
-        <source>WAV open file failed...</source>
-        <translation type="obsolete">Απέτυχε το άνοιγμα του αρχείου WAV...</translation>
-    </message>
-    <message>
-        <source>Cannot decompress audio frame</source>
-        <translation type="obsolete">Αδύνατη η αποσυμπίεση του καρέ ήχου</translation>
-    </message>
-    <message>
-        <source>Memory Error</source>
-        <translation type="obsolete">Σφάλμα μνήμης</translation>
-    </message>
-    <message>
-        <source>No frames to encode</source>
-        <translation type="obsolete">Δεν υπάρχουν καρέ για κωδικοποίηση</translation>
-    </message>
-    <message>
-        <source>Please check markers. Is &quot;A&gt;&quot; == &quot;&gt;B&quot;?</source>
-        <translation type="obsolete">Παρακαλώ έλεγξε τους δείκτες. Είναι το &quot;A&gt;&quot; == &quot;&gt;B&quot;;</translation>
-    </message>
-    <message>
-        <source>Saving raw video stream</source>
-        <translation type="obsolete">Αποθήκευση ανεπεξέργαστης ροής βίντεο</translation>
-    </message>
-    <message>
-        <source>Checking video</source>
-        <translation type="obsolete">Ελέγχεται το βίντεο</translation>
-    </message>
-    <message>
-        <source>No error found</source>
-        <translation type="obsolete">Δεν βρέθηκαν σφάλματα</translation>
-    </message>
-    <message>
-        <source>Errors found in %u frames</source>
-        <translation type="obsolete">Βρέθηκαν σφάλματα σε %u καρέ</translation>
-    </message>
-    <message>
-        <source>Cannot decompress the audio stream</source>
-        <translation type="obsolete">Αδύνατη η αποσυμπίεση της ροής ήχου</translation>
-    </message>
-    <message>
-        <source>Switch audio codec to Copy.</source>
-        <translation type="obsolete">Εναλλαγή του κώδικα ήχου σε Αντιγραφή.</translation>
-    </message>
-    <message>
-        <source>Cannot delete the selection.</source>
-        <translation type="obsolete">Αδυναμία διαγραφής της επιλογής.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t remove all frames</source>
-        <translation type="obsolete">Δεν μπορείς να μετακινήσεις όλα τα καρέ</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">Κάτι στραβό έγινε</translation>
-    </message>
-    <message>
-        <source>Could not get tracks info</source>
-        <translation type="obsolete">Αδύνατη η ανεύρεση των πληροφοριών των καναλιών</translation>
-    </message>
-    <message>
-        <source>Take audio from video file</source>
-        <translation type="obsolete">Λήψη του ήχου από το αρχείο βίντεο</translation>
-    </message>
-    <message>
-        <source>No audio</source>
-        <translation type="obsolete">Χωρίς ήχο</translation>
-    </message>
-    <message>
-        <source>External AC3</source>
-        <translation type="obsolete">Εξωτερικό AC3</translation>
-    </message>
-    <message>
-        <source>Take audio from external AC3 file</source>
-        <translation type="obsolete">Λήψη του ήχου από εξωτερικό αρχείο AC3</translation>
-    </message>
-    <message>
-        <source>External MP3</source>
-        <translation type="obsolete">Εξωτερικό MP3</translation>
-    </message>
-    <message>
-        <source>Take audio from external MP3 file</source>
-        <translation type="obsolete">Λήψη του ήχου από εξωτερικό αρχείο MP3</translation>
-    </message>
-    <message>
-        <source>External WAV</source>
-        <translation type="obsolete">Εξωτερικό WAV</translation>
-    </message>
-    <message>
-        <source>Take audio from external WAV file</source>
-        <translation type="obsolete">Λήψη του ήχου από εξωτερικό αρχείο WAV</translation>
-    </message>
-    <message>
-        <source>_Audio source:</source>
-        <translation type="obsolete">Πηγή _ήχου:</translation>
-    </message>
-    <message>
-        <source>_External file:</source>
-        <translation type="obsolete">_Εξωτερικό αρχείο:</translation>
-    </message>
-    <message>
-        <source>Select file</source>
-        <translation type="obsolete">Επιλογή Αρχείου</translation>
-    </message>
-    <message>
-        <source>_Track from video:</source>
-        <translation type="obsolete">_Κανάλι από το βίντεο</translation>
-    </message>
-    <message>
-        <source>Main Audio Track</source>
-        <translation type="obsolete">Κύριο Κανάλι Ήχου</translation>
-    </message>
-    <message>
-        <source>Cannot load</source>
-        <translation type="obsolete">Αδύνατη η φόρτωση</translation>
-    </message>
-    <message>
-        <source>The selected audio file does not exist.</source>
-        <translation type="obsolete">Το επιλεγμένο αρχείο ήχου δεν υπάρχει.</translation>
-    </message>
-    <message>
-        <source>Second Audio Track</source>
-        <translation type="obsolete">Δεύτερο Κανάλι Ήχου</translation>
-    </message>
-    <message>
-        <source>Error loading the MP3 file</source>
-        <translation type="obsolete">Σφάλμα στη φόρτωση του αρχείου MP3</translation>
-    </message>
-    <message>
-        <source>Second track loaded</source>
-        <translation type="obsolete">Φορτώθηκε το δεύτερο κανάλι</translation>
-    </message>
-    <message>
-        <source>Error loading the AC3 file</source>
-        <translation type="obsolete">Σφάλμα στη φόρτωση του αρχείου AC3</translation>
-    </message>
-    <message>
-        <source>Error loading the WAV file</source>
-        <translation type="obsolete">Σφάλμα στη φόρτωση του αρχείου WAV</translation>
-    </message>
-    <message>
-        <source>Saving failed</source>
-        <translation type="obsolete">Η αποθήκευση απέτυχε</translation>
-    </message>
-    <message>
-        <source>Saving the job failed. Maybe you have permission issue with ~/.avidemux</source>
-        <translation type="obsolete">Αδύνατη η αποθήκευση της διαδικασίας. Ίσως να υπάρχει θέμα με τις άδειες  του ~/.avidemux</translation>
-    </message>
-    <message>
-        <source>File %s has been successfully saved.</source>
-        <translation type="obsolete">Το αρχείο %s αποθηκεύτηκε με επιτυχία.</translation>
-    </message>
-    <message>
-        <source>File %s was NOT saved correctly.</source>
-        <translation type="obsolete">Το αρχείο %s ΔΕΝ αποθηκεύτηκε σωστά.</translation>
-    </message>
-    <message>
-        <source>AvsProxy</source>
-        <translation type="obsolete">AvsProxy</translation>
-    </message>
-    <message>
-        <source>Failed to connect to avsproxy.
-Is it running ?</source>
-        <translation type="obsolete">Αποτυχία σύνδεσης με το avsproxy.
-
-Είναι σε κατάσταση λειτουργίας;</translation>
-    </message>
-    <message>
-        <source>avsproxy</source>
-        <translation type="obsolete">AvsProxy</translation>
-    </message>
-    <message>
-        <source>Frame type:</source>
-        <translation type="obsolete">Τύπος καρέ:</translation>
-    </message>
-    <message>
-        <source>Frame size:</source>
-        <translation type="obsolete">Μέγεθος καρέ:</translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">Αποθορυβοποίηση</translation>
-    </message>
-    <message>
-        <source>Drop</source>
-        <translation type="obsolete">Απόρυψη</translation>
-    </message>
-    <message>
-        <source>Drop damaged fields (e.g. from VHS capture).</source>
-        <translation type="obsolete">Αποβολή κατεστραμένων πεδίων (πχ από σύλληψη VHS).</translation>
-    </message>
-    <message>
-        <source>FluxSmooth</source>
-        <translation type="obsolete">FluxSmooth</translation>
-    </message>
-    <message>
-        <source>Forced postprocessing</source>
-        <translation type="obsolete">Εξαναγκασμένη μετεπεξεργασία</translation>
-    </message>
-    <message>
-        <source>Kernel deinterlacer by Donald Graft.</source>
-        <translation type="obsolete">Αποπλεκτής πυρήνα από τον Donald Graft.</translation>
-    </message>
-    <message>
-        <source>Median (5x5)</source>
-        <translation type="obsolete">Μέσος (5x5)</translation>
-    </message>
-    <message>
-        <source>libavcodec deinterlacer</source>
-        <translation type="obsolete">παράλληλος αποπλέκτης libavcodec</translation>
-    </message>
-    <message>
-        <source>All FFmpeg deinterlace filters (bicubic, median, ...).</source>
-        <translation type="obsolete">Όλα τα φίλτρα απόπλεξης FFmpeg (δικυβικό, μέσο, ...).</translation>
-    </message>
-    <message>
-        <source>Logo</source>
-        <translation type="obsolete">Λογότυπο</translation>
-    </message>
-    <message>
-        <source>MPlayer hqdn3d</source>
-        <translation type="obsolete">MPlayer hqdn3d</translation>
-    </message>
-    <message>
-        <source>MPlayer denoise3d</source>
-        <translation type="obsolete">Αποθορυβοποιητής3d MPlayer </translation>
-    </message>
-    <message>
-        <source>Soften</source>
-        <translation type="obsolete">Απαλότερο</translation>
-    </message>
-    <message>
-        <source>A variant of stabilize.</source>
-        <translation type="obsolete">Μία παραλλαγή του σταθεροποιητή.</translation>
-    </message>
-    <message>
-        <source>PAL field shift</source>
-        <translation type="obsolete">Μετατόπιση πεδίου PAL</translation>
-    </message>
-    <message>
-        <source>Shift fields by one. Useful for some PAL movies.</source>
-        <translation type="obsolete">Μετατόπιση των πεδίων κατά ένα. Χρήσιμο σε κάποιες ταινίες PAL.</translation>
-    </message>
-    <message>
-        <source>Resample fps</source>
-        <translation type="obsolete">Επαναδειγματοληψία </translation>
-    </message>
-    <message>
-        <source>Change framerate while keeping duration.</source>
-        <translation type="obsolete">Αλλαγή του ρυθμού των καρέ, ενώ διατηρείται η διάρκεια.</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">Περιστροφή</translation>
-    </message>
-    <message>
-        <source>Rotate the picture by 90, 180 or 270 degrees.</source>
-        <translation type="obsolete">Περιστροφή της εικόνας κατά 90, 180, ή 270 μοίρες.</translation>
-    </message>
-    <message>
-        <source>Light denoiser.</source>
-        <translation type="obsolete">Αποθορυβοποιητής φωτός.</translation>
-    </message>
-    <message>
-        <source>ASS</source>
-        <translation type="obsolete">ASS</translation>
-    </message>
-    <message>
-        <source>Add ASS/SSA subtitles to the picture.</source>
-        <translation type="obsolete">Προσθήκη υποτίτλων ASS/SSA στην εικόνα.</translation>
-    </message>
-    <message>
-        <source>Subtitler</source>
-        <translation type="obsolete">Υποτιτλιστής</translation>
-    </message>
-    <message>
-        <source>Add srt/sub subtitles to the picture.</source>
-        <translation type="obsolete">Προσθήκη υποτίτλων srt/sub στην εικόνα.</translation>
-    </message>
-    <message>
-        <source>Yet Another DeInterlacer. Ported from MPlayer.</source>
-        <translation type="obsolete">Ακόμη Ένας Αποπλεκτής. Εισήχθηκε και Προσαρμόσθηκε από τον MPlayer.</translation>
-    </message>
-    <message>
-        <source>Add black borders</source>
-        <translation type="obsolete">Προσθήκη μαύρων ορίων</translation>
-    </message>
-    <message>
-        <source>mcDeinterlace</source>
-        <translation type="obsolete">mcΠαράλληλοΑποπλέξιμο</translation>
-    </message>
-    <message>
-        <source>Motion compensation deinterlacer. Ported from MPlayer.</source>
-        <translation type="obsolete">Αποπλεκτής αποζημίωσης κίνησης. Εισήχθηκε και Προσαρμόσθηκε από τον MPlayer.</translation>
-    </message>
-    <message>
-        <source>Blacken borders</source>
-        <translation type="obsolete">Μαύρισμα των ορίων</translation>
-    </message>
-    <message>
-        <source>Fill borders with pure black. Doesn&apos;t alter size.</source>
-        <translation type="obsolete">Γέμιση των ορίων με απόλυτο μαύρο. Δεν αλλάζουν οι διαστάσεις.</translation>
-    </message>
-    <message>
-        <source>Temporal Cleaner</source>
-        <translation type="obsolete">Χρονικός Καθαριστής</translation>
-    </message>
-    <message>
-        <source>Fade</source>
-        <translation type="obsolete">Ομαλή μετάβαση</translation>
-    </message>
-    <message>
-        <source>Fade in/out.</source>
-        <translation type="obsolete">Ομαλή είσοδος/έξοδος.</translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <translation type="obsolete">Κανονικό</translation>
-    </message>
-    <message>
-        <source>Mux every N video frames</source>
-        <translation type="obsolete">Ρυθμός καρέ εισόδου βίντεο</translation>
-    </message>
-    <message>
-        <source>Muxing _type:</source>
-        <translation type="obsolete">_Τύπος πολυπλεξίματος:</translation>
-    </message>
-    <message>
-        <source>_Split every MB:</source>
-        <translation type="obsolete">_Χωρισμό ανά MB:</translation>
-    </message>
-    <message>
-        <source>Mux _every x video frames:</source>
-        <translation type="obsolete">Ρυθμός καρέ εισόδου βίντεο</translation>
-    </message>
-    <message>
-        <source>AVI Muxer Options</source>
-        <translation type="obsolete">Επιλογές AVI Πολυμείκτη</translation>
-    </message>
-    <message>
-        <source>PCM</source>
-        <translation type="obsolete">PCM</translation>
-    </message>
-    <message>
-        <source>MP2</source>
-        <translation type="obsolete">MP2</translation>
-    </message>
-    <message>
-        <source>MP3</source>
-        <translation type="obsolete">MP3</translation>
-    </message>
-    <message>
-        <source>MSharpen</source>
-        <translation type="obsolete">MSharpen (οξύτητα)</translation>
-    </message>
-    <message>
-        <source>Great deinterlacing package including IVTC.</source>
-        <translation type="obsolete">Σπουδαίο πακέτο απόπλεξης που περιέχει IVTC.</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">Αποτυχεία</translation>
-    </message>
-    <message>
-        <source>Blend Removal</source>
-        <translation type="obsolete">Αφαίρεση ειδοποίησης</translation>
-    </message>
-    <message>
-        <source>Codec Error</source>
-        <translation type="obsolete">Σφάλμα Κώδικα</translation>
-    </message>
-    <message>
-        <source>The number of channels is greater than what the selected audio codec can do.
-Either change codec or use the mixer filter to have less channels.</source>
-        <translation type="obsolete">Ο αριθμός των καναλιών είναι μεγαλύτερος από αυτά που μπορεί να επιτύχει ο κώδικας ήχου.
-Είτε άλλαξε κώδικα, είτε χρησιμοποίησε το φίλτρο μίξης, για να έχεις λιγότερα κανάλια.</translation>
-    </message>
-    <message>
-        <source>Internal error finding codec</source>
-        <translation type="obsolete">Εσωτερικό σφάλμα στην εύρεση του κώδικα</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Σφάλμα αρχείου</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot;.</source>
-        <translation type="obsolete">Αδύνατο το άνοιγμα του
- &quot;%s&quot;</translation>
-    </message>
-    <message>
-        <source>It is possible that you are trying to overwrite an input file!</source>
-        <translation type="obsolete">Είναι πιθανό να προσπαθείς να επαναγράψεις ένα αρχείο δεδομένων εισόδου!</translation>
-    </message>
-    <message>
-        <source>Cannot write the file</source>
-        <translation type="obsolete">Αδύνατη η εγγραφή του αρχείου</translation>
-    </message>
-    <message>
-        <source>No write access to &quot;%s&quot;.</source>
-        <translation type="obsolete">Χωρίς πρόσβαση εγγραφής στο
- &quot;%s&quot;</translation>
-    </message>
-    <message>
-        <source>AVI</source>
-        <translation type="obsolete">AVI</translation>
-    </message>
-    <message>
-        <source>AVI, dual audio</source>
-        <translation type="obsolete">AVI, διπλού ήχου</translation>
-    </message>
-    <message>
-        <source>MPEG-PS (A+V)</source>
-        <translation type="obsolete">MPEG-PS (A+V)</translation>
-    </message>
-    <message>
-        <source>MPEG-TS (A+V)</source>
-        <translation type="obsolete">MPEG-TS (A+V)</translation>
-    </message>
-    <message>
-        <source>MPEG video</source>
-        <translation type="obsolete">Βίντεο MPEG</translation>
-    </message>
-    <message>
-        <source>MP4</source>
-        <translation type="obsolete">MP4</translation>
-    </message>
-    <message>
-        <source>OGM</source>
-        <translation type="obsolete">OGM</translation>
-    </message>
-    <message>
-        <source>FLV</source>
-        <translation type="obsolete">FLV</translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation type="obsolete">MKV</translation>
-    </message>
-    <message>
-        <source>DUMMY</source>
-        <translation type="obsolete">ΕΙΚΟΝΙΚΟ</translation>
-    </message>
-    <message>
-        <source>VobSub</source>
-        <translation type="obsolete">VobSub</translation>
-    </message>
-    <message>
-        <source>Embed VobSub subtitles into picture.</source>
-        <translation type="obsolete">Ενσωμάτωση υποτίτλων VobSub στην εικόνα.</translation>
-    </message>
-    <message>
-        <source>DVB sub</source>
-        <translation type="obsolete">DVB sub</translation>
-    </message>
-    <message>
-        <source>Embed DVB-T subtitle.</source>
-        <translation type="obsolete">Ενσωμάτωση υποτίτλων DVB-T.</translation>
-    </message>
-    <message>
-        <source>Compute Average</source>
-        <translation type="obsolete">Υπολογισμός Μέσου Όρου</translation>
-    </message>
-    <message>
-        <source>Threshold</source>
-        <translation type="obsolete">Κατώφλι</translation>
-    </message>
-    <message>
-        <source>Particle List</source>
-        <translation type="obsolete">Λίστα Στοιχείων</translation>
-    </message>
-    <message>
-        <source>Eraser</source>
-        <translation type="obsolete">Σβηστήρας</translation>
-    </message>
-    <message>
-        <source>Swiss Army Knife</source>
-        <translation type="obsolete">Ελβετικός Σουγιάς</translation>
-    </message>
-    <message>
-        <source>Partial</source>
-        <translation type="obsolete">Μερικό</translation>
-    </message>
-    <message>
-        <source>Problem reading XML filters</source>
-        <translation type="obsolete">Πρόβλημα στην ανάγνωση των XML φίλτρων</translation>
-    </message>
-    <message>
-        <source>No filter found</source>
-        <translation type="obsolete">Δεν βρέθηκε φίλτρο</translation>
-    </message>
-    <message>
-        <source>Could not find a filter</source>
-        <translation type="obsolete">Δεν βρέθηκε κάποιο φίλτρο</translation>
-    </message>
-    <message>
-        <source>No tag found</source>
-        <translation type="obsolete">Δε βρέθηκε ετικέτα</translation>
-    </message>
-    <message>
-        <source>Node not found</source>
-        <translation type="obsolete">Δε βρέθηκε κόμβος</translation>
-    </message>
-    <message>
-        <source>There is several mpeg file, append them ?</source>
-        <translation type="obsolete">Υπάρχουν διάφορα αρχεία mpeg· να προσκολληθούν ;</translation>
-    </message>
-    <message>
-        <source>Can&apos;t determine aspect ratio</source>
-        <translation type="obsolete">Αδύνατος ο προσδιορισμός της αναλογίας οθόνης</translation>
-    </message>
-    <message>
-        <source>Wrong Colorspace</source>
-        <translation type="obsolete">Μετατροπή χρωματικού χώρου</translation>
-    </message>
-    <message>
-        <source>Only YV12/I420 or YUY2/I422 JPegs are supported</source>
-        <translation type="obsolete">Υποστηρίζονται μόνο YV12/I420 ή YUY2/I422 JPeg</translation>
-    </message>
-    <message>
-        <source>Output file error</source>
-        <translation type="obsolete">Σφάλμα αρχείου εξόδου</translation>
-    </message>
-    <message>
-        <source>Could not open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Αδύνατο το άνοιγμα, για εγγραφή, του
- &quot;%s&quot;</translation>
-    </message>
-    <message>
-        <source>Problem loading sub</source>
-        <translation type="obsolete">Πρόβλημα στη φόρτωση του sub</translation>
-    </message>
-    <message>
-        <source>Ifo error</source>
-        <translation type="obsolete">Σφάλμα Ifo</translation>
-    </message>
-    <message>
-        <source>Error reading ifo file, aborting.</source>
-        <translation type="obsolete">Σφάλμα στην ανάγνωση του αρχείου ifo, εγκατάλειψη.</translation>
-    </message>
-    <message>
-        <source>Cannot write .idx</source>
-        <translation type="obsolete">Αδύνατη η εγγραφή .idx</translation>
-    </message>
-    <message>
-        <source>Cannot write .sub</source>
-        <translation type="obsolete">Αδύνατη η εγγραφή .sub</translation>
-    </message>
-    <message>
-        <source>Problem opening the mpeg files</source>
-        <translation type="obsolete">Πρόβλημα στο άνοιγμα των αρχείων mpeg</translation>
-    </message>
-    <message>
-        <source>Generating VobSub file</source>
-        <translation type="obsolete">Δημιουργία αρχείου VobSub</translation>
-    </message>
-    <message>
-        <source>Could not write the file</source>
-        <translation type="obsolete">Αδύνατη η εγγραφή του αρχείου</translation>
-    </message>
-    <message>
-        <source>Could not read &quot;%s&quot;.</source>
-        <translation type="obsolete">Αδύνατη η ανάγνωση του
- &quot;%s&quot;</translation>
-    </message>
-    <message>
-        <source>Load it</source>
-        <translation type="obsolete">Να γίνει φόρτωση</translation>
-    </message>
-    <message>
-        <source>Crash file</source>
-        <translation type="obsolete">Αρχείο κατάρευσης</translation>
-    </message>
-    <message>
-        <source>I have detected a crash file. 
-Do you want to load it  ?
-(It will be deleted in all cases, you should save it if you want to keep it)</source>
-        <translation type="obsolete">Έχω ανιχνεύσει ένα αρχείο κατάρρευσης. 
-Θέλεις να φορτωθεί ;
-(σε κάθε περίπτωση, θα διαγραφεί, θα πρέπει να το αποθηκεύσεις αν θες να το διατηρήσεις)</translation>
-    </message>
-    <message>
-        <source>Unsupported video</source>
-        <translation type="obsolete">Μη υποστηριζόμενο βίντεο</translation>
-    </message>
-    <message>
-        <source>Only FLV1 and VP6 video are supported</source>
-        <translation type="obsolete">Υποστηρίζονται μόνο βίντεο FLV1 και VP6</translation>
-    </message>
-    <message>
-        <source>Unsupported audio</source>
-        <translation type="obsolete">Μη υποστηριζόμενος ήχος</translation>
-    </message>
-    <message>
-        <source>Audio must be mp3 for flv output.</source>
-        <translation type="obsolete">Για μορφή εξόδου flv, ο ήχος πρέπει να είναι mp3.</translation>
-    </message>
-    <message>
-        <source>Frequency must be 44100, 22050 or 11025 Hz.</source>
-        <translation type="obsolete">Η συχνότητα πρέπει να είναι 44100, 22050 ή 11025 Hz.</translation>
-    </message>
-    <message>
-        <source>Cannot initialize the audio stream</source>
-        <translation type="obsolete">Αδύνατη η αρχικοποίηση της ροής ήχου</translation>
-    </message>
-    <message>
-        <source>PSP</source>
-        <translation type="obsolete">PSP</translation>
-    </message>
-    <message>
-        <source>This is not MPEG compatible</source>
-        <translation type="obsolete">Αυτό δεν είναι συμβατό με MPEG</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use the Copy codec.</source>
-        <translation type="obsolete">Δεν μπορείς να χρησιμοποιήσεις την επιλογή κώδικα Αντιγραφή.</translation>
-    </message>
-    <message>
-        <source>There is no audio track</source>
-        <translation type="obsolete">Δεν υπάρχει κανάλι ήχου</translation>
-    </message>
-    <message>
-        <source>Audio track is not suitable</source>
-        <translation type="obsolete">Το κανάλι ήχου δεν είναι κατάλληλο</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2(stereo), AC3, DTS or LPCM (stereo).</source>
-        <translation type="obsolete">Για DVD, ο ήχος πρέπει να είναι 48 kHz MP2(στέρεο), AC3, DTS or LPCM (στέρεο).</translation>
-    </message>
-    <message>
-        <source>For VCD, audio must be 44.1 kHz MP2.</source>
-        <translation type="obsolete">Για VCD, ο ήχος πρέπει να είναι 44.1 kHz MP2.</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2, AC3 or LPCM.</source>
-        <translation type="obsolete">Για DVD, ο ήχος πρέπει να είναι 48 kHz MP2, AC3 ή LPCM.</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Αδύνατο το άνοιγμα, για εγγραφή, του
- &quot;%s&quot;</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="obsolete">Επιλογή ενός καταλόγου</translation>
-    </message>
-    <message>
-        <source>Test uinteger</source>
-        <translation type="obsolete">Δοκιμή Κρυπτογράφησης</translation>
-    </message>
-    <message>
-        <source>Float</source>
-        <translation type="obsolete">Κινητής υποδιαστολής</translation>
-    </message>
-    <message>
-        <source>Toggle</source>
-        <translation type="obsolete">Εναλλαγή</translation>
-    </message>
-    <message>
-        <source>No Strategy</source>
-        <translation type="obsolete">Μη έγκυρη στρατηγική &apos;%s&apos;</translation>
-    </message>
-    <message>
-        <source>Pal/Secam</source>
-        <translation type="obsolete">Pal/Secam</translation>
-    </message>
-    <message>
-        <source>NTSC converted from PAL</source>
-        <translation type="obsolete">NTSC τροποποιημένο από PAL</translation>
-    </message>
-    <message>
-        <source>menu</source>
-        <translation type="obsolete">μενού</translation>
-    </message>
-    <message>
-        <source>Select idx file:</source>
-        <translation type="obsolete">Επιλογή Αρχείου Idx:</translation>
-    </message>
-    <message>
-        <source>Use GlyphSet (optional):</source>
-        <translation type="obsolete">- Για την έρευνα προαιρετικών όρων, χρησιμοποιήστε OR.</translation>
-    </message>
-    <message>
-        <source>Select GlyphSet file</source>
-        <translation type="obsolete">Επιλογή Αρχείου Ήχου</translation>
-    </message>
-    <message>
-        <source>Output SRT file</source>
-        <translation type="obsolete">Αρχείο αποτελέσματος εξόδου SRT</translation>
-    </message>
-    <message>
-        <source>Save SRT file</source>
-        <translation type="obsolete">Αποθήκευση αρχείου SRT</translation>
-    </message>
-    <message>
-        <source>Select input and ouput files</source>
-        <translation type="obsolete">Επέλεξε αρχεία εισόδου και εξόδου</translation>
-    </message>
-    <message>
-        <source>The idx/sub file does not exist.</source>
-        <translation type="obsolete">Το αρχείο idx/sub δεν υπάρχει.</translation>
-    </message>
-    <message>
-        <source>Please Select a valid output SRT file.</source>
-        <translation type="obsolete">Παρακαλώ επέλεξε ένα έγκυρο αποτέλεσμα εξόδου αρχείου SRT.</translation>
-    </message>
-    <message>
-        <source>Cannot load the glyphset file.</source>
-        <translation type="obsolete">Αδύνατη η φόρτωση του αρχείου torrent: %1</translation>
-    </message>
-    <message>
-        <source>GlyphSet filename</source>
-        <translation type="obsolete">  --filename      - όνομα αρχείου του πακέτου
-</translation>
-    </message>
-    <message>
-        <source>Save GlyphSet file</source>
-        <translation type="obsolete">Αποθήκευση σε αρχείο</translation>
-    </message>
-    <message>
-        <source>Save Glyph</source>
-        <translation type="obsolete">Αποθήκευση Ανάγλυφου</translation>
-    </message>
-    <message>
-        <source>Input TS:</source>
-        <translation type="obsolete">Διακοπή   S</translation>
-    </message>
-    <message>
-        <source>Select TS file</source>
-        <translation type="obsolete">Επιλογή Αρχείου TS</translation>
-    </message>
-    <message>
-        <source>Subtitle PID:</source>
-        <translation type="obsolete">Υπότιτλοι PID:</translation>
-    </message>
-    <message>
-        <source>Please Select a valid TS file.</source>
-        <translation type="obsolete">Παρακαλώ, επέλεξε ένα έγκυρο TS αρχείο.</translation>
-    </message>
-    <message>
-        <source>Save GlyphSet</source>
-        <translation type="obsolete">Αποθήκευση &amp;ως...</translation>
-    </message>
-    <message>
-        <source>Audio</source>
-        <translation type="obsolete">Ήχος</translation>
-    </message>
-    <message>
-        <source>Oops</source>
-        <translation type="obsolete">Ουπς</translation>
-    </message>
-    <message>
-        <source>Something very wrong happened when building joblist.</source>
-        <translation type="obsolete">Κάτι πολύ λάθος συνέβει με τη λίστα διαδικασιών.</translation>
-    </message>
-    <message>
-        <source>There are no jobs stored</source>
-        <translation type="obsolete">Δεν υπάρχουν αποθηκευμένες διαδικασίες</translation>
-    </message>
-    <message>
-        <source>Decompressing error</source>
-        <translation type="obsolete">Λάθος στην αποσυμπίεση</translation>
-    </message>
-    <message>
-        <source>Cannot decode next frame.</source>
-        <translation type="obsolete">Αδύνατη η αποκωδικοποίηση του επόμενου καρέ</translation>
-    </message>
-    <message>
-        <source>Cannot decode keyframe.</source>
-        <translation type="obsolete">Αδύνατη η αποκωδικοποίηση του καρέ</translation>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="obsolete">Αναζήτηση</translation>
-    </message>
-    <message>
-        <source>Finding black frames</source>
-        <translation type="obsolete">Αναζήτηση μαύρων στιγμιότυπων</translation>
-    </message>
-    <message>
-        <source>Cannot decode the frame.</source>
-        <translation type="obsolete">Αδύνατη η αποκωδικοποίηση του καρέ</translation>
-    </message>
-    <message>
-        <source>Dual audio can only be used in copy mode</source>
-        <translation type="obsolete">Ο διπλός ήχος μπορεί να χρησιμοποιηθεί μόνο στη κατάσταση λειτουργίας αντιγραφής</translation>
-    </message>
-    <message>
-        <source>Select Copy as the video codec.</source>
-        <translation type="obsolete">Επέλεξε Αντιγραφή σαν κώδικα βίντεο.</translation>
-    </message>
-    <message>
-        <source>Incompatible output format</source>
-        <translation type="obsolete">Ασύμβατη μορφή αποτελέσματος εξόδου</translation>
-    </message>
-    <message>
-        <source>There is no second track</source>
-        <translation type="obsolete">Δεν υπάρχει δεύτερο κανάλι</translation>
-    </message>
-    <message>
-        <source>Select a second audio track in the Audio menu.</source>
-        <translation type="obsolete">Επέλεξε ένα δεύτερο κανάλι ήχου, από το μενού Ήχος.</translation>
-    </message>
-    <message>
-        <source>Select dual audio AVI to write</source>
-        <translation type="obsolete">Επέλεξε ένα AVI διπλού ήχου για αντιγραφή</translation>
-    </message>
-    <message>
-        <source>It is not MPEG-4 video. File will not be saved.</source>
-        <translation type="obsolete">Δεν είναι βίντεο MPEG-4. Το αρχείο δεν θα αποθηκευθεί.</translation>
-    </message>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">Πρόβλημα στην αρχικοποίηση της συσκευής ήχου</translation>
-    </message>
-    <message>
-        <source>VBR</source>
-        <translation type="obsolete">VBR</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">Με βάση την ποιότητα</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Λειτουργία: </translation>
-    </message>
-    <message>
-        <source>Vorbis Configuration</source>
-        <translation type="obsolete">Ρύθμιση Vorbis</translation>
-    </message>
-    <message>
-        <source>asharp</source>
-        <translation type="obsolete">asharp (οξύτητα)</translation>
-    </message>
-    <message>
-        <source>Adaptative sharpener by MarcFD.</source>
-        <translation type="obsolete">Προσαρμοζόμενος οξυντής από τον MarcFD.</translation>
-    </message>
-    <message>
-        <source>Animated Menu</source>
-        <translation type="obsolete">Επεξεργασία μενού</translation>
-    </message>
-    <message>
-        <source>Resize</source>
-        <translation type="obsolete">Αλλαγή μεγέθους</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be 0</source>
-        <translation type="obsolete">Το πλάτος και το ύψος δεν μπορούν να είναι 0</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Το πλάτος και το ύψος δεν μπορούν να είναι παράδοξα</translation>
-    </message>
-    <message>
-        <source>Cnr2</source>
-        <translation type="obsolete">Cnr2</translation>
-    </message>
-    <message>
-        <source>Chroma U</source>
-        <translation type="obsolete">Χρωματισμός U</translation>
-    </message>
-    <message>
-        <source>Chroma V</source>
-        <translation type="obsolete">Κατώφλι χρώματος:</translation>
-    </message>
-    <message>
-        <source>Chroma shift</source>
-        <translation type="obsolete">Μετατόπιση χρωματικού τόνου</translation>
-    </message>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">Αντίθεση</translation>
-    </message>
-    <message>
-        <source>Crop</source>
-        <translation type="obsolete">Περιτομή</translation>
-    </message>
-    <message>
-        <source>Deinterlace</source>
-        <translation type="obsolete">Παράλληλη Απόπλεξη</translation>
-    </message>
-    <message>
-        <source>Luma delta</source>
-        <translation type="obsolete">Συμπίεση Delta Row</translation>
-    </message>
-    <message>
-        <source>MPlayer eq2</source>
-        <translation type="obsolete">MPlayer eq2</translation>
-    </message>
-    <message>
-        <source>Luma equalizer</source>
-        <translation type="obsolete">Ενεργοποίηση ισοσταθμιστή</translation>
-    </message>
-    <message>
-        <source>Gauss smooth</source>
-        <translation type="obsolete">Ομαλή κλιμάκωση</translation>
-    </message>
-    <message>
-        <source>Median</source>
-        <translation type="obsolete">Μέσος</translation>
-    </message>
-    <message>
-        <source>Median kernel 3x3. Remove high frequency noise.</source>
-        <translation type="obsolete">Μέσος πυρήνας 3x3. Αφαιρεί θόρυβο υψηλών συχνοτήτων.</translation>
-    </message>
-    <message>
-        <source>Mean</source>
-        <translation type="obsolete">Μέσος (θόλωμα)</translation>
-    </message>
-    <message>
-        <source>Mean (blur) kernel.</source>
-        <translation type="obsolete">Μέσος πυρήνας (θόλωμα).</translation>
-    </message>
-    <message>
-        <source>Sharpen</source>
-        <translation type="obsolete">Όξυνση</translation>
-    </message>
-    <message>
-        <source>MPlayer hue</source>
-        <translation type="obsolete">Απόχρωση του MPlayer</translation>
-    </message>
-    <message>
-        <source>Adjust hue and saturation.</source>
-        <translation type="obsolete">Ρύθμιση της απόχρωσης και της πληρότητας.</translation>
-    </message>
-    <message>
-        <source>Merge fields</source>
-        <translation type="obsolete">Συγχώνευση πεδίων</translation>
-    </message>
-    <message>
-        <source>Merge two pictures as if they were two fields.</source>
-        <translation type="obsolete">Συγχώνευση δύο εικόνων σαν να ήταν δύο πεδία.</translation>
-    </message>
-    <message>
-        <source>Each field becomes full picture, half sized.</source>
-        <translation type="obsolete">Κάθε πεδίο γίνεται πλήρης εικόνα, με το μισό μέγεθος.</translation>
-    </message>
-    <message>
-        <source>Stack fields</source>
-        <translation type="obsolete">Στοίβαγμα πεδίων</translation>
-    </message>
-    <message>
-        <source>Put two fields on top of one another.</source>
-        <translation type="obsolete">Τοποθέτηση δύο πεδίων το ένα πάνω στο άλλο.</translation>
-    </message>
-    <message>
-        <source>Unstack fields</source>
-        <translation type="obsolete">Από-στοίβαγμα πεδίων</translation>
-    </message>
-    <message>
-        <source>Luma only</source>
-        <translation type="obsolete">Μόνο με προσκλήσεις</translation>
-    </message>
-    <message>
-        <source>MPlayer delogo</source>
-        <translation type="obsolete">MPlayer αφαιρετής λογότυπου</translation>
-    </message>
-    <message>
-        <source>MPlayer resize</source>
-        <translation type="obsolete">Αλλαγή διαστάσεων MPlayer</translation>
-    </message>
-    <message>
-        <source>PAL smart</source>
-        <translation type="obsolete">Έξυπνο PAL</translation>
-    </message>
-    <message>
-        <source>Convert 24 fps to 30 fps by repeating fields.</source>
-        <translation type="obsolete">Μετατροπή των 24 fps στα 30 fps, με την επανάληψη πεδίων.</translation>
-    </message>
-    <message>
-        <source>Reverse</source>
-        <translation type="obsolete">Αναστροφή</translation>
-    </message>
-    <message>
-        <source>Play video backward.</source>
-        <translation type="obsolete">Ανάστροφη αναπαραγωγή του βίντεο.</translation>
-    </message>
-    <message>
-        <source>_Subtitle file:</source>
-        <translation type="obsolete">_Αρχείο  Υποτίτλων:</translation>
-    </message>
-    <message>
-        <source>Select Subtitle file</source>
-        <translation type="obsolete">Επιλογή αρχείου Υποτίτλων</translation>
-    </message>
-    <message>
-        <source>_Font (TTF):</source>
-        <translation type="obsolete">_Γραμματοσειρά (TTF):</translation>
-    </message>
-    <message>
-        <source>Select TTF file</source>
-        <translation type="obsolete">Επιλογή αρχείου TTF</translation>
-    </message>
-    <message>
-        <source>_Encoding:</source>
-        <translation type="obsolete">_Κωδικοποίηση:</translation>
-    </message>
-    <message>
-        <source>S_elect C_olor</source>
-        <translation type="obsolete">Ε_πιλογή _Χρώματος</translation>
-    </message>
-    <message>
-        <source>Set Size and _Position</source>
-        <translation type="obsolete">Ορισμός του Μεγέθους και της _Θέσης</translation>
-    </message>
-    <message>
-        <source>_Auto split</source>
-        <translation type="obsolete">_Αυτόματος διαχωρισμός</translation>
-    </message>
-    <message>
-        <source>_Delay (ms):</source>
-        <translation type="obsolete">_Καθυστέρηση (χιλ.τουδευτ.):</translation>
-    </message>
-    <message>
-        <source>Keep even fields</source>
-        <translation type="obsolete">Διατήρηση ομοιόμορφων πεδίων</translation>
-    </message>
-    <message>
-        <source>Keep odd fields</source>
-        <translation type="obsolete">Διατήρηση παράξενων πεδίων</translation>
-    </message>
-    <message>
-        <source>Swap fields</source>
-        <translation type="obsolete">Εναλλαγή πεδίων</translation>
-    </message>
-    <message>
-        <source>Swap top and bottom fields.</source>
-        <translation type="obsolete">Εναλλαγή του πάνω και του κάτω πεδίου.</translation>
-    </message>
-    <message>
-        <source>Smart swap fields</source>
-        <translation type="obsolete">Έξυπνη εναλλαγή πεδίων</translation>
-    </message>
-    <message>
-        <source>Smartly swap fields. Needed when field order changes.</source>
-        <translation type="obsolete">Έξυπνη εναλλαγή πεδίων. Χρήσιμη όταν αλλάζει η σειρά των πεδίων.</translation>
-    </message>
-    <message>
-        <source>Swap U and V</source>
-        <translation type="obsolete">Εναλλαγή U και V</translation>
-    </message>
-    <message>
-        <source>Invert chroma U and chroma V.</source>
-        <translation type="obsolete">Αντιστροφή μαύρου με άσπρο</translation>
-    </message>
-    <message>
-        <source>Vertical flip</source>
-        <translation type="obsolete">Κατακόρυφη Αναστροφή</translation>
-    </message>
-    <message>
-        <source>Vertically flip the picture.</source>
-        <translation type="obsolete">Κατακόρυφη αναστροφή της εικόνας.</translation>
-    </message>
-    <message>
-        <source>Whirl</source>
-        <translation type="obsolete">Δίνη</translation>
-    </message>
-</context>
-<context>
-    <name>ADMImage</name>
-    <message>
-        <source>Memory error</source>
-        <translation type="obsolete">Σφάλμα μνήμης</translation>
-    </message>
-    <message>
-        <source>Error converting to BMP</source>
-        <translation type="obsolete">Σφάλμα στην μετατροπή σε BMP</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">Κάτι στραβό έγινε</translation>
-    </message>
-    <message>
-        <source>Cannot encode the frame</source>
-        <translation type="obsolete">Αδυναμία κωδικοποίησης του στιγμιότυπου</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Σφάλμα αρχείου</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Αδύνατο το άνοιγμα, για εγγραφή, του
- &quot;%s&quot;</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoComputeAverage</name>
-    <message>
-        <source>_Start Frame (first frame # to include in average):</source>
-        <translation type="obsolete">_Καρέ Εκκίνησης (το πρώτο καρέ # που περιλαμβάνεται στο μέσο όρο)</translation>
-    </message>
-    <message>
-        <source>_End Frame (last frame # to include), -1 = last:</source>
-        <translation type="obsolete">_Καρέ Τέλους (το τελευταίο καρέ # που περιλαμβάνεται), -1 = τελευταίο:</translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">_Αρχείο εξόδου:</translation>
-    </message>
-    <message>
-        <source>Select output file</source>
-        <translation type="obsolete">Επιλέξτε το αρχείο αποτελέσματος εξόδου</translation>
-    </message>
-    <message>
-        <source>Current frame minus average so far</source>
-        <translation type="obsolete">Το τωρινό καρέ, μείον το μέχρι τώρα μέσο όρο</translation>
-    </message>
-    <message>
-        <source>Average so far</source>
-        <translation type="obsolete">Μέσος όρος μέχρι τώρα</translation>
-    </message>
-    <message>
-        <source>Display nothing (fast for batch processing)</source>
-        <translation type="obsolete">Χωρίς προβολή κανενός (γρήγορο για ομαδική επεξεργασία)</translation>
-    </message>
-    <message>
-        <source>Display _Mode:</source>
-        <translation type="obsolete">Κατάσταση _Λειτουργίας Προβολής:</translation>
-    </message>
-    <message>
-        <source>ComputeAverage</source>
-        <translation type="obsolete">ΥπολογισμόςΜέσουΌρου</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDenoise</name>
-    <message>
-        <source>_Luma lock:</source>
-        <translation type="obsolete">Κ_λείδωμα Σημείωσης</translation>
-    </message>
-    <message>
-        <source>C_hroma lock:</source>
-        <translation type="obsolete">Κ_λείδωμα Σημείωσης</translation>
-    </message>
-    <message>
-        <source>L_uma threshold:</source>
-        <translation type="obsolete">Κατώφλι χρώματος:</translation>
-    </message>
-    <message>
-        <source>Ch_roma threshold:</source>
-        <translation type="obsolete">Κατώφλι ch_roma:</translation>
-    </message>
-    <message>
-        <source>_Scene change:</source>
-        <translation type="obsolete">Αλλαγή _Σκηνής:</translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">Αποθορυβοποίηση</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDropOut</name>
-    <message>
-        <source>DropOut Threshold</source>
-        <translation type="obsolete">Κατώφλι χρώματος:</translation>
-    </message>
-    <message>
-        <source>Drop Out</source>
-        <translation type="obsolete">%s αποσυνδέθηκε.</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoEraser</name>
-    <message>
-        <source>Erase</source>
-        <translation type="obsolete">Σβήσιμο</translation>
-    </message>
-    <message>
-        <source>Un-Erase</source>
-        <translation type="obsolete">Από-σβήσιμο</translation>
-    </message>
-    <message>
-        <source>1x1</source>
-        <translation type="obsolete">1x1</translation>
-    </message>
-    <message>
-        <source>3x3</source>
-        <translation type="obsolete">3x3</translation>
-    </message>
-    <message>
-        <source>5x5</source>
-        <translation type="obsolete">5x5</translation>
-    </message>
-    <message>
-        <source>7x7</source>
-        <translation type="obsolete">7x7</translation>
-    </message>
-    <message>
-        <source>9x9</source>
-        <translation type="obsolete">9x9</translation>
-    </message>
-    <message>
-        <source>11x11</source>
-        <translation type="obsolete">11x11</translation>
-    </message>
-    <message>
-        <source>15x15</source>
-        <translation type="obsolete">15x15</translation>
-    </message>
-    <message>
-        <source>21x21</source>
-        <translation type="obsolete">21x21</translation>
-    </message>
-    <message>
-        <source>Brush _Mode:</source>
-        <translation type="obsolete">_Λειτουργία Πινέλου:</translation>
-    </message>
-    <message>
-        <source>Brush _Size:</source>
-        <translation type="obsolete">_Μέγεθος Πινέλου:</translation>
-    </message>
-    <message>
-        <source>Select data file</source>
-        <translation type="obsolete">Επιλογή Αρχείου</translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">Ρυθμίσεις _αποσφαλμάτωσης (μπίτια):</translation>
-    </message>
-    <message>
-        <source>Eraser Configuration</source>
-        <translation type="obsolete">Ρύθμιση Vorbis</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoFlux</name>
-    <message>
-        <source>_Temporal threshold:</source>
-        <translation type="obsolete">Κατώφλι χρώματος:</translation>
-    </message>
-    <message>
-        <source>_Spatial threshold:</source>
-        <translation type="obsolete">Κατώφλι χρώματος:</translation>
-    </message>
-    <message>
-        <source>FluxSmooth</source>
-        <translation type="obsolete">FluxSmooth</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoForcedPP</name>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">Ένταση _φίλτρου:</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">_Οριζόντια αφαίρεση τμημάτων</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">_Κατακόρυφη αφαίρεση τμημάτων</translation>
-    </message>
-    <message>
-        <source>_Deringing</source>
-        <translation type="obsolete">Φίλτρο αφαίρεσης _δακτυλίων</translation>
-    </message>
-    <message>
-        <source>Forced Postprocessing</source>
-        <translation type="obsolete">Εξαναγκασμένη Μετεπεξεργασία</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoKernelDeint</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">πάνω-κάτω</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Πάτος</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">&lt;b&gt;Σειρά Subpixel&lt;/b&gt;:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Κατώφλι:</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">_Οξύ</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">_Μηχανή οξύτητας:</translation>
-    </message>
-    <message>
-        <source>T_woway</source>
-        <translation type="obsolete">_Διπλής Κατεύθυνσης</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">_Χαρτογράφηση</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLargeMedian</name>
-    <message>
-        <source>_Process luma</source>
-        <translation type="obsolete">Κατώφλι φωτεινότητας:</translation>
-    </message>
-    <message>
-        <source>P_rocess chroma</source>
-        <translation type="obsolete">Επεξεργασία chroma</translation>
-    </message>
-    <message>
-        <source>Large Median 5x5</source>
-        <translation type="obsolete">Μεγάλος Μέσος 5x5</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLavPPDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Καμία</translation>
-    </message>
-    <message>
-        <source>Linear blend</source>
-        <translation type="obsolete">Γραμμική ανάμειξη</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">Γραμμική ανάμειξη</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Κυβική Spline</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Απόπλεξη διαμέσου</translation>
-    </message>
-    <message>
-        <source>FFmpeg deint</source>
-        <translation type="obsolete">Απόπλεξη FFmpeg</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">_Παράλληλο Αποπλέξιμο:</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">_Συσκευή ήχου</translation>
-    </message>
-    <message>
-        <source>libavcodec deinterlacer</source>
-        <translation type="obsolete">παράλληλη απόπλεξη libavcodec</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLogo</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">_Λογότυπο (αρχείο jpg):</translation>
-    </message>
-    <message>
-        <source>Select JPEG file</source>
-        <translation type="obsolete">Επιλογή Αρχείου JPEG</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">Θέση _X:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">Θέση _Y:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">_Άλφα:</translation>
-    </message>
-    <message>
-        <source>Logo</source>
-        <translation type="obsolete">Λογότυπο</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3D</name>
-    <message>
-        <source>MPlayer denoise3d</source>
-        <translation type="obsolete">Αποθορυβοποιητής3d MPlayer </translation>
-    </message>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">Σήμα:</translation>
-    </message>
-    <message>
-        <source>MPlayer hqdn3d</source>
-        <translation type="obsolete">MPlayer hqdn3d</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3Dlow</name>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">Σήμα:</translation>
-    </message>
-    <message>
-        <source>MPlayer denoise3d</source>
-        <translation type="obsolete">Αποθορυβοποιητής3d MPlayer </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMaskedSoften</name>
-    <message>
-        <source>_Luma threshold:</source>
-        <translation type="obsolete">_Κατώφλι φωτεινότητας:</translation>
-    </message>
-    <message>
-        <source>C_hroma threshold:</source>
-        <translation type="obsolete">Κατώφλι c_hroma:</translation>
-    </message>
-    <message>
-        <source>_Radius:</source>
-        <translation type="obsolete">_Ακτίνα:</translation>
-    </message>
-    <message>
-        <source>Soften</source>
-        <translation type="obsolete">Απαλότερο</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMosaic</name>
-    <message>
-        <source>_Horizontal stacking:</source>
-        <translation type="obsolete">Οριζόντια διαβάθμιση</translation>
-    </message>
-    <message>
-        <source>_Vertical stacking:</source>
-        <translation type="obsolete">Κάθετα Αριστερά</translation>
-    </message>
-    <message>
-        <source>_Shrink factor:</source>
-        <translation type="obsolete">_Συντελεστής σμίκρυνσης:</translation>
-    </message>
-    <message>
-        <source>Show _frame</source>
-        <translation type="obsolete">Εμφάνιση _καρέ</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation type="obsolete">Μωσαϊκό</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoPalShift</name>
-    <message>
-        <source>_Try reverse</source>
-        <translation type="obsolete">ανάποδα πλάγια</translation>
-    </message>
-    <message>
-        <source>Pal Field Shift</source>
-        <translation type="obsolete">Ενεργοποίηση χρονικής μετατόπισης</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoParticle</name>
-    <message>
-        <source>New format, preferred, good for Tracker3D</source>
-        <translation type="obsolete">Νέα μορφή, προτιμότερη, καλή για Tracker3D</translation>
-    </message>
-    <message>
-        <source>DG@UWA format (includes shape info &amp; bounding box)</source>
-        <translation type="obsolete">Μορφή DG@UWA (εμπερικλείει πληροφορίες σχήματος &amp; κουτί ορίων)</translation>
-    </message>
-    <message>
-        <source>AB@ODU format (includes shape info)</source>
-        <translation type="obsolete">Μορφή AB@ODU (εμπερικλείει πληροφορίες σχήματος)</translation>
-    </message>
-    <message>
-        <source>Old format that Tracker3D can&apos;t read directly</source>
-        <translation type="obsolete">Παλαιότερη μορφή, που ο Tracker3D δεν μπορεί απευθείας να διαβάσει</translation>
-    </message>
-    <message>
-        <source>Output _Format:</source>
-        <translation type="obsolete">Μορφή αποτελέσματος _εξόδου:</translation>
-    </message>
-    <message>
-        <source>Mi_nimum area for a particle to be detected:</source>
-        <translation type="obsolete">_Ελάχιστη περιοχή για την ανίχνευση ενός στοιχείου:</translation>
-    </message>
-    <message>
-        <source>Ma_ximum area for a particle to be detected:</source>
-        <translation type="obsolete">_Μέγιστη περιοχή για την ανίχνευση ενός στοιχείου:</translation>
-    </message>
-    <message>
-        <source>_Left side crop (ignore particles in):</source>
-        <translation type="obsolete">Περιτομή _αριστερής πλευράς (αγνόηση στοιχείων στην):</translation>
-    </message>
-    <message>
-        <source>_Right side crop (ignore particles in):</source>
-        <translation type="obsolete">Περιτομή _δεξίας πλευράς (αγνόηση στοιχείων στην):</translation>
-    </message>
-    <message>
-        <source>_Top crop (ignore particles in):</source>
-        <translation type="obsolete">Περιτομή _επάνω πλευράς (αγνόηση στοιχείων στην):</translation>
-    </message>
-    <message>
-        <source>_Bottom crop (ignore particles in):</source>
-        <translation type="obsolete">Περιτομή _κάτω πλευράς (αγνόηση στοιχείων στην):</translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">_Αρχείο εξόδου:</translation>
-    </message>
-    <message>
-        <source>Select file</source>
-        <translation type="obsolete">Επιλογή Αρχείου</translation>
-    </message>
-    <message>
-        <source>_Camera number:</source>
-        <translation type="obsolete">Αριθμός _κάμερας:</translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">Ρυθμίσεις _αποσφαλμάτωσης (bit):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoResampleFPS</name>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Νέα ταχύτητα καρέ:</translation>
-    </message>
-    <message>
-        <source>_Blend</source>
-        <translation type="obsolete">Ανά_μιξη</translation>
-    </message>
-    <message>
-        <source>Resample fps</source>
-        <translation type="obsolete">Επαναδειγματοληψία fps</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoRotate</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Καμία</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 μοίρες</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 μοίρες</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 μοίρες</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">_Γωνία:</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">Περιστροφή</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoStabilize</name>
-    <message>
-        <source>Stabilize Threshold</source>
-        <translation type="obsolete">Σταθεροποίηση του Κατωφλιού</translation>
-    </message>
-    <message>
-        <source>Stabilize</source>
-        <translation type="obsolete">Σταθεροποίηση</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubASS</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">Αρχείο _υποτίτλων (ASS/SSA):</translation>
-    </message>
-    <message>
-        <source>Select Subtitle file</source>
-        <translation type="obsolete">Επιλογή αρχείου  Υποτίτλων</translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">Απόσταση μεταξύ γρα&amp;μμών:</translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">Μέγεθος _γραμματοσειράς:</translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">Άνω περιθώριο:</translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">Περιθώριο _πάτου</translation>
-    </message>
-    <message>
-        <source>ASS</source>
-        <translation type="obsolete">ASS</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubtitle</name>
-    <message>
-        <source>Could not open subtitle file</source>
-        <translation type="obsolete">Αδύνατο το άνοιγμα του αρχείου υποτίτλων</translation>
-    </message>
-    <message>
-        <source>Cannot identify subtitle format</source>
-        <translation type="obsolete">Αδυναμία αναγνώρισης της μορφής των υποτίτλων</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSwissArmyKnife</name>
-    <message>
-        <source>P&apos; = A</source>
-        <translation type="obsolete">P&apos; = A</translation>
-    </message>
-    <message>
-        <source>P&apos; = P</source>
-        <translation type="obsolete">P&apos; = P</translation>
-    </message>
-    <message>
-        <source>P&apos; = P - A</source>
-        <translation type="obsolete">P&apos; = P - A</translation>
-    </message>
-    <message>
-        <source>P&apos; = A - P</source>
-        <translation type="obsolete">P&apos; = A - P</translation>
-    </message>
-    <message>
-        <source>P&apos; = P + A</source>
-        <translation type="obsolete">P&apos; = P + A</translation>
-    </message>
-    <message>
-        <source>P&apos; = P * A</source>
-        <translation type="obsolete">P&apos; = P * A</translation>
-    </message>
-    <message>
-        <source>P&apos; = P / A</source>
-        <translation type="obsolete">P&apos; = P / A</translation>
-    </message>
-    <message>
-        <source>P&apos; = A / P</source>
-        <translation type="obsolete">P&apos; = A / P</translation>
-    </message>
-    <message>
-        <source>P&apos; = min (P, A)</source>
-        <translation type="obsolete">P&apos; = ελάχιστο (P, A)</translation>
-    </message>
-    <message>
-        <source>P&apos; = max (P, A)</source>
-        <translation type="obsolete">P&apos; = μέγιστο (P, A)</translation>
-    </message>
-    <message>
-        <source>A = floating point constant value</source>
-        <translation type="obsolete">Α = πλευστού σημείου σταθερή τιμή</translation>
-    </message>
-    <message>
-        <source>Input _Type:</source>
-        <translation type="obsolete">_Τύπος Εισόδου:</translation>
-    </message>
-    <message>
-        <source>Select file</source>
-        <translation type="obsolete">Επιλογή Αρχείου</translation>
-    </message>
-    <message>
-        <source>Input _Constant:</source>
-        <translation type="obsolete">Χαρακτήρας Συνεχούς</translation>
-    </message>
-    <message>
-        <source>_Histogram every N frames (0 to disable):</source>
-        <translation type="obsolete">_Ιστόγραμμα κάθε Ν καρέ (0 για απενεργοποίηση):</translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">Ρυθμίσεις _αποσφαλμάτωσης (bit):</translation>
-    </message>
-    <message>
-        <source>Swiss Army Knife Configuration</source>
-        <translation type="obsolete">Ρύθμιση Ελβετικού Σουγιά</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoTIsophote</name>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Μεσαίο</translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">_Τύπος:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoThreshold</name>
-    <message>
-        <source>Mi_nimum value to be in-range:</source>
-        <translation type="obsolete">_Ελάχιστη τιμή, εντός των ορίων:</translation>
-    </message>
-    <message>
-        <source>Ma_ximum value to be in-range:</source>
-        <translation type="obsolete">_Μέγιστη τιμή, εντός των ορίων:</translation>
-    </message>
-    <message>
-        <source>In-range values go white, out-of-range go black</source>
-        <translation type="obsolete">Οι εντός των ορίων τιμές γίνονται λευκές, οι εκτός των ορίων γίνονται μαύρες</translation>
-    </message>
-    <message>
-        <source>In-range values go black, out-of-range go white</source>
-        <translation type="obsolete">Οι εντός των ορίων τιμές γίνονται μαύρες, οι εκτός των ορίων γίνονται λευκές</translation>
-    </message>
-    <message>
-        <source>Output values:</source>
-        <translation type="obsolete">Τιμές αποτελέσματος εξόδου:</translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">Ρυθμίσεις _αποσφαλμάτωσης (bit):</translation>
-    </message>
-    <message>
-        <source>Threshold Configuration</source>
-        <translation type="obsolete">Ρύθμιση Κατωφλιού</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoYadif</name>
-    <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">Χρονικός και χωρικός έλεγχος</translation>
-    </message>
-    <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="obsolete">Παράβλεψη χωρικού και χρονικού ελέγχου</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">Πρώτα το κάτω πεδίο</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">Πρώτα το επάνω πεδίο</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Λειτουργία: </translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">_Σειρά:</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_AudiocodecWMA</name>
-    <message>
-        <source>Internal error</source>
-        <translation type="obsolete">Εσωτερικό σφάλμα</translation>
-    </message>
-    <message>
-        <source>Cannot open WMA2 codec.</source>
-        <translation type="obsolete">Αδύνατο το άνοιγμα του κώδικα WMA2 .</translation>
-    </message>
-</context>
-<context>
     <name>ADM_Composer</name>
-    <message>
-        <source>No video loaded</source>
-        <translation type="obsolete">Δεν φορτώθηκε βίντεο</translation>
-    </message>
-    <message>
-        <source>Not indexable</source>
-        <translation type="obsolete">Χωρίς δυνατότητα ευρετηρίου</translation>
-    </message>
-    <message>
-        <source>DivX 5 + packed?</source>
-        <translation type="obsolete">DivX 5 +πακετοποιημένο;</translation>
-    </message>
-    <message>
-        <source>Rebuilding Frames</source>
-        <translation type="obsolete">Επαναχτίσιμο των Καρέ</translation>
-    </message>
-    <message>
-        <source>Aborted</source>
-        <translation type="obsolete">Εγκαταλείφθηκε</translation>
-    </message>
-    <message>
-        <source>Unsupported</source>
-        <translation type="obsolete">Μη υποστηριζόμενη</translation>
-    </message>
-    <message>
-        <source>Old format project file</source>
-        <translation type="obsolete">Αρχείο εργασίας παλιάς μορφής</translation>
-    </message>
-    <message>
-        <source>No more supported.</source>
-        <translation type="obsolete">Δεν υποστηρίζεται πια.</translation>
-    </message>
-    <message>
-        <source>May be related to an old index file.</source>
-        <translation type="obsolete">Ίσως να συνδέεται με ένα παλαιότερο αρχείο ευρετηρίου.</translation>
-    </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+232"/>
         <source>Attempt to open %s failed!</source>
         <translation>Η προσπάθεια ανοίγματος του %s απέτυχε.</translation>
-    </message>
-    <message>
-        <source>Build Time Map</source>
-        <translation type="obsolete">Χτίσιμο Χάρτη Χρόνου</translation>
-    </message>
-    <message>
-        <source>Build VBR time map?</source>
-        <translation type="obsolete">Να χτιστεί ο χάρτης χρόνου VBR;</translation>
-    </message>
-    <message>
-        <source>Could not unpack the video</source>
-        <translation type="obsolete">Αδύνατο το αποπακετάρισμα του βίντεο</translation>
-    </message>
-    <message>
-        <source>Weird</source>
-        <translation type="obsolete">Αλλόκοτο</translation>
-    </message>
-    <message>
-        <source>Index is not up to date</source>
-        <translation type="obsolete">Το ευρετήριο δεν είναι ενημερωμένο</translation>
-    </message>
-    <message>
-        <source>This looks like mpeg
- Do you want to index it?</source>
-        <translation type="obsolete">Αυτό φαίνεται να είναι mpeg
- Να δημιουργηθεί ευρετήριο;</translation>
-    </message>
-    <message>
-        <source>Indexing failed</source>
-        <translation type="obsolete">Η δημιουργία ευρετηρίου απέτυχε</translation>
     </message>
     <message>
         <location line="-36"/>
@@ -2795,7 +14,7 @@ Do you want to load it  ?
         <translation>Αδυναμία εύρεσης αποπολυπλέκτη για το %s</translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+64"/>
         <source>width</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2859,285 +78,6 @@ If you just copy the video without reencoding,
 Drop timing informations ?</source>
         <translation>Κάποιες πληροφορίες χρονισμού είναι εσφαλμένες.
 Αυτό συνέβη με κάποιο πρόγραμμα σύλληψης.</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4CoreUIToolkit</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">Συναγερμός</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4Factory::ADM_Qbitrate</name>
-    <message>
-        <source>Two Pass - Video Size</source>
-        <translation type="obsolete">Δύο Περάσματα - Μέγεθος Αρχείου</translation>
-    </message>
-    <message>
-        <source>Two Pass - Average Bitrate</source>
-        <translation type="obsolete">Δύο Περάσματα - Μέσος Όρος Ρυθμού Bit</translation>
-    </message>
-    <message>
-        <source>Bitrate</source>
-        <translation type="obsolete">Ρυθμός μπιτιών</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="obsolete">-</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_QthreadCount</name>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Αυτόματη ανίχνευση</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">Προσαρμοσμένο</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWrite</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Καμία</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Αντιγραφή</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Σφάλμα αρχείου</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Αδύνατο το άνοιγμα, για εγγραφή, του
- &quot;%s&quot;</translation>
-    </message>
-    <message>
-        <source>OGM</source>
-        <translation type="obsolete">OGM</translation>
-    </message>
-    <message>
-        <source>Could not initialize video</source>
-        <translation type="obsolete">Αδύνατη η αρχικοποίηση του βίντεο</translation>
-    </message>
-    <message>
-        <source>Could not initialize audio</source>
-        <translation type="obsolete">Αδύνατη η αρχικοποίηση του ήχου</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Αντιγραφή</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteProcess</name>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Η αρχικοποίηση του φίλτρου απέτυχε</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qt4Factory::ADM_QthreadCount</name>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Αυτόματη ανίχνευση</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">Προσαρμοσμένο</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMFastVideoConvolution</name>
-    <message>
-        <source>_Process luma</source>
-        <translation type="obsolete">Κατώφλι φωτεινότητας:</translation>
-    </message>
-    <message>
-        <source>P_rocess chroma</source>
-        <translation type="obsolete">Επεξεργασία chroma</translation>
-    </message>
-    <message>
-        <source>Fast Convolution</source>
-        <translation type="obsolete">&amp;Προσαρμοσμένη περιέλιξη...</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMGenericAudioStream</name>
-    <message>
-        <source>Building VBR map</source>
-        <translation type="obsolete">Χτίσιμο χάρτη VBR</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoAddBorder</name>
-    <message>
-        <source>_Left border:</source>
-        <translation type="obsolete">_Αριστερό όριο:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="obsolete">_Δεξί όριο:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="obsolete">_Επάνω όριο:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="obsolete">_Κάτω όριο:</translation>
-    </message>
-    <message>
-        <source>Add Borders</source>
-        <translation type="obsolete">Προσθήκη Ορίων</translation>
-    </message>
-    <message>
-        <source>Incorrect parameters</source>
-        <translation type="obsolete">Εσφαλμένες παράμετροι</translation>
-    </message>
-    <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Όλες οι παράμετροι πρέπει να είναι ίσες και μέσα στα όρια.</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoMCDeint</name>
-    <message>
-        <source>Fast</source>
-        <translation type="obsolete">Γρήγορο</translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Μεσαίο</translation>
-    </message>
-    <message>
-        <source>Slow iterative motion search</source>
-        <translation type="obsolete">Αργή αναζήτηση επαναληπτικής κίνησης</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">πάνω-κάτω</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Πάτος</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Λειτουργία: </translation>
-    </message>
-    <message>
-        <source>_Field dominance:</source>
-        <translation type="obsolete">Πεδίο ταξινόμησης:</translation>
-    </message>
-    <message>
-        <source>_Qp:</source>
-        <translation type="obsolete">_Qp:</translation>
-    </message>
-    <message>
-        <source>mcDeinterlace</source>
-        <translation type="obsolete">mcΠαράλληλοΑποπλέξιμο</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoStreamBSMear</name>
-    <message>
-        <source>_Left border:</source>
-        <translation type="obsolete">_Αριστερό όριο:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="obsolete">_Δεξί όριο:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="obsolete">_Επάνω όριο:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="obsolete">_Κάτω όριο:</translation>
-    </message>
-    <message>
-        <source>Blacken Borders</source>
-        <translation type="obsolete">Μαύρισμα των Ορίων</translation>
-    </message>
-    <message>
-        <source>Incorrect parameters</source>
-        <translation type="obsolete">Εσφαλμένες παράμετροι</translation>
-    </message>
-    <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Όλες οι παράμετροι πρέπει να είναι ίσες και μέσα στα όρια.</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoVlad</name>
-    <message>
-        <source>_Luma temporal threshold:</source>
-        <translation type="obsolete">Κατώφλι φωτεινότητας</translation>
-    </message>
-    <message>
-        <source>Ch_roma temporal threshold:</source>
-        <translation type="obsolete">Κατώφλι χρώματος</translation>
-    </message>
-    <message>
-        <source>Temporal Cleaner</source>
-        <translation type="obsolete">Χρονικός Καθαριστής</translation>
-    </message>
-</context>
-<context>
-    <name>AVDM_Fade</name>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">Έξοδος</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="obsolete">Φθίνουσα έξοδος</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation type="obsolete">Είσοδος</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="obsolete">Αύξουσα είσοδος</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">_Τύπος μετάβασης:</translation>
-    </message>
-    <message>
-        <source>_Start frame:</source>
-        <translation type="obsolete">_Αρχικό καρέ:</translation>
-    </message>
-    <message>
-        <source>_End frame:</source>
-        <translation type="obsolete">_Τελικό καρέ:</translation>
-    </message>
-    <message>
-        <source>Fade to _black</source>
-        <translation type="obsolete">Φθίνουσα μετάβαση στο _μαύρο</translation>
-    </message>
-    <message>
-        <source>Fade</source>
-        <translation type="obsolete">Ομαλή μετάβαση</translation>
-    </message>
-    <message>
-        <source>Parameter Error</source>
-        <translation type="obsolete">Σφάλμα Παραμέτρου</translation>
-    </message>
-    <message>
-        <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="obsolete">Η αρχή πρέπει να είναι πριν το τέλος, και τα δύο εντός του βίντεο # των καρέ.</translation>
     </message>
 </context>
 <context>
@@ -3303,159 +243,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Cnr2Dialog</name>
-    <message>
-        <source>Narrow</source>
-        <translation type="obsolete">Στενό</translation>
-    </message>
-</context>
-<context>
-    <name>ColorYuvDialog</name>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">Αντίθεση</translation>
-    </message>
-    <message>
-        <source>Brightness</source>
-        <translation type="obsolete">Φωτεινότητα</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">Κέρδος</translation>
-    </message>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">Γάμμα</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Καμία</translation>
-    </message>
-    <message>
-        <source>Rec.709</source>
-        <translation type="obsolete">Rec.709</translation>
-    </message>
-    <message>
-        <source>Coring</source>
-        <translation type="obsolete">Φίλτρο αφαίρεσης δακτυλίων</translation>
-    </message>
-</context>
-<context>
-    <name>CurveDialog</name>
-    <message>
-        <source>Help</source>
-        <translation type="obsolete">Βοήθεια</translation>
-    </message>
-</context>
-<context>
-    <name>DGbob</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">πάνω-κάτω</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Πάτος</translation>
-    </message>
-    <message>
-        <source>Keep nb of frames and fps</source>
-        <translation type="obsolete">Διατήρηση του αριθμού των καρέ και την ταχύτητά τους (fps)</translation>
-    </message>
-    <message>
-        <source>Double nb of frames and fps</source>
-        <translation type="obsolete">Εικόνες σκότους</translation>
-    </message>
-    <message>
-        <source>Double nb of frames (slow motion)</source>
-        <translation type="obsolete">Διπλός αριθμός καρέ (αργή κίνηση)</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">&lt;b&gt;Σειρά Subpixel&lt;/b&gt;:</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Λειτουργία: </translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Κατώφλι:</translation>
-    </message>
-    <message>
-        <source>_Extra</source>
-        <translation type="obsolete">_Επιπλέον</translation>
-    </message>
-    <message>
-        <source>Extra check, avoid using it</source>
-        <translation type="obsolete">Επιπλέον έλεγχος· απέφυγε τη χρήση του</translation>
-    </message>
-    <message>
-        <source>DGBob</source>
-        <translation type="obsolete">DGBob</translation>
-    </message>
-</context>
-<context>
-    <name>DIA_encodingQt4</name>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">Τερματίζεται</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">Συνέχιση</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">Εγκατάλειψη</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">Απαιτούνται Δικαιώματα</translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">Απαιτούνται δικαιώματα Υπερχρήστη για να εκτελεστεί αυτή η λειτουργία.</translation>
-    </message>
-</context>
-<context>
-    <name>DVEncoder</name>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">Ασυμβίβαστες ρυθμίσεις</translation>
-    </message>
-</context>
-<context>
-    <name>Decimate</name>
-    <message>
-        <source>Discard closer</source>
-        <translation type="obsolete">Απόρριψη κοντινότερου</translation>
-    </message>
-    <message>
-        <source>Replace (interpolate)</source>
-        <translation type="obsolete">Αντικατάσταση αλφαριθμητικού</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Λειτουργία: </translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">_Ποιότητα:</translation>
-    </message>
-    <message>
-        <source>_Threshold 1:</source>
-        <translation type="obsolete">_Κατώφλι 1:</translation>
-    </message>
-    <message>
-        <source>T_hreshold 2:</source>
-        <translation type="obsolete">Κα_τώφλι 2:</translation>
-    </message>
-    <message>
-        <source>C_ycle:</source>
-        <translation type="obsolete">_Τύπος:</translation>
-    </message>
-</context>
-<context>
     <name>Dialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="+64"/>
@@ -3482,10 +269,6 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <source>Configure</source>
         <translation>Ρύθμιση</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">Φίλτρα Ήχου</translation>
     </message>
     <message>
         <location line="-116"/>
@@ -3590,42 +373,37 @@ Drop timing informations ?</source>
 <context>
     <name>DialogProcessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+47"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+26"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="+34"/>
+        <location line="+7"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-67"/>
+        <location line="-19"/>
         <source>Dialog</source>
         <translation>Διάλογος</translation>
     </message>
     <message>
-        <location line="+19"/>
-        <source>Cancel</source>
-        <translation>Ακύρωση</translation>
-    </message>
-    <message>
-        <location line="+7"/>
+        <location line="+33"/>
         <source>TimeLeft</source>
         <translation>ΑπομείνανταςΧρόνος</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+21"/>
         <source>ProcessImages</source>
         <translation>ΕπεξεργασίαΕικόνων</translation>
     </message>
     <message>
-        <location line="+34"/>
+        <location line="-7"/>
         <source>Speed</source>
         <translation>Ταχύτητα</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-7"/>
         <source>0 fps</source>
         <translation>0 στιγ.ανάδευτ.</translation>
     </message>
@@ -3656,13 +434,6 @@ Drop timing informations ?</source>
         <location line="+14"/>
         <source>File being written </source>
         <translation>Γράφεται το αρχείο </translation>
-    </message>
-</context>
-<context>
-    <name>EncoderCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Αντιγραφή</translation>
     </message>
 </context>
 <context>
@@ -3697,208 +468,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>FLV1Encoder</name>
-    <message>
-        <source>_Bitrate (kb/s):</source>
-        <translation type="obsolete">_Ρυθμός bit (kb/s):</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">Μέ_γεθος GOP:</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation type="obsolete">Ρυθμίσεις</translation>
-    </message>
-</context>
-<context>
-    <name>GUIPlayback</name>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">Πρόβλημα στην αρχικοποίηση της συσκευής ήχου</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSave</name>
-    <message>
-        <source>Error initalizing audio filters</source>
-        <translation type="obsolete">Σφάλμα στην αρχικοποίηση των φίλτρων του ήχου</translation>
-    </message>
-    <message>
-        <source>Error initalizing video filters</source>
-        <translation type="obsolete">Σφάλμα στην αρχικοποίηση των φίλτρων του βίντεο</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Καμία</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Αντιγραφή</translation>
-    </message>
-    <message>
-        <source>AVI</source>
-        <translation type="obsolete">AVI</translation>
-    </message>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Αδύνατη η αρχικοποίηση της αποθήκευσης</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopy</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Αδύνατη η αρχικοποίηση της αποθήκευσης</translation>
-    </message>
-    <message>
-        <source>Saving</source>
-        <translation type="obsolete">Αποθήκευση</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyPack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Αδύνατη η αρχικοποίηση της αποθήκευσης</translation>
-    </message>
-    <message>
-        <source>Saving</source>
-        <translation type="obsolete">Αποθήκευση</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyUnpack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Αδύνατη η αρχικοποίηση της αποθήκευσης</translation>
-    </message>
-    <message>
-        <source>Saving</source>
-        <translation type="obsolete">Αποθήκευση</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveProcess</name>
-    <message>
-        <source>Width is not a multiple of 8
- continue anyway ?</source>
-        <translation type="obsolete">Το πλάτος δεν είναι πολλαπλάσιο του 8
- να συνεχιστεί η διαδικασία, έτσι κι αλλιώς;</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Η αρχικοποίηση του φίλτρου απέτυχε</translation>
-    </message>
-    <message>
-        <source>Aborting</source>
-        <translation type="obsolete">Εγκατάλειψη</translation>
-    </message>
-    <message>
-        <source>Encoding</source>
-        <translation type="obsolete">Κωδικοποίηση</translation>
-    </message>
-</context>
-<context>
-    <name>GlyphEditorDialog</name>
-    <message>
-        <source>Prev. Empty</source>
-        <translation type="obsolete">Προηγούμενο Κενό</translation>
-    </message>
-    <message>
-        <source>Next Empty</source>
-        <translation type="obsolete">Επόμενο Κενό</translation>
-    </message>
-</context>
-<context>
-    <name>GlyphEditorWindow</name>
-    <message>
-        <source>Head reached</source>
-        <translation type="obsolete">Έφτασε στην αρχή</translation>
-    </message>
-    <message>
-        <source>No more glyphs</source>
-        <translation type="obsolete">Όχι άλλα ανάγλυφα</translation>
-    </message>
-    <message>
-        <source>End reached</source>
-        <translation type="obsolete">Έφτασε στο τέλος</translation>
-    </message>
-    <message>
-        <source>String</source>
-        <translation type="obsolete">Αλφαριθμητικό</translation>
-    </message>
-    <message>
-        <source>Search string</source>
-        <translation type="obsolete">Εύρεση αλφαριθμητικού</translation>
-    </message>
-    <message>
-        <source>Select GlyphFile to edit</source>
-        <translation type="obsolete">Επιλογή GlyphFile για επεξεργασία</translation>
-    </message>
-</context>
-<context>
-    <name>H263Encoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Καμία</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">Πλήρες</translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">Καταγραφή</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">Phods</translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">H.263</translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Encoding Mode</source>
-        <translation type="obsolete">Κατάσταση Λειτουργίας Κωδικοποίησης</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Εκτίμηση Κίνησης</translation>
-    </message>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">Ασυμβίβαστες ρυθμίσεις</translation>
-    </message>
-</context>
-<context>
-    <name>IndexDialog</name>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">Δημιουργία ευρετηρίου</translation>
-    </message>
-</context>
-<context>
-    <name>MP4Header</name>
-    <message>
-        <source>Problem reading SVQ3 headers</source>
-        <translation type="obsolete">Πρόβλημα στην ανάγνωση των κεφαλίδων SVQ3</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="obsolete">Χωρίς πίνακα stts</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="+15"/>
@@ -3906,11 +475,7 @@ Drop timing informations ?</source>
         <translation>Avidemux</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Video&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Βίντεο&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <location line="+470"/>
+        <location line="+460"/>
         <location line="+169"/>
         <source>Copy</source>
         <translation>Αντιγραφή</translation>
@@ -3930,17 +495,9 @@ Drop timing informations ?</source>
         <translation>Μεταμορφωτές</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Audio&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Ήχος&lt;/b&gt;</translation>
-    </message>
-    <message>
         <location line="+27"/>
         <source>&amp;Shift:</source>
         <translation>Μετατόπι&amp;ση:</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Format&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Μορφή&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+265"/>
@@ -3961,18 +518,6 @@ Drop timing informations ?</source>
         <translation>...</translation>
     </message>
     <message>
-        <source>Frame:</source>
-        <translation type="obsolete">Καρέ:</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">0</translation>
-    </message>
-    <message>
-        <source>/ 0</source>
-        <translation type="obsolete">/ 0</translation>
-    </message>
-    <message>
         <location line="-286"/>
         <source>Time:</source>
         <translation>Χρόνος:</translation>
@@ -3988,17 +533,9 @@ Drop timing informations ?</source>
         <translation>/ 00:00:00.000</translation>
     </message>
     <message>
-        <source>Frame Type:</source>
-        <translation type="obsolete">Τύπος Στιγμιότυπου:</translation>
-    </message>
-    <message>
         <location line="+42"/>
         <source>?</source>
         <translation>;</translation>
-    </message>
-    <message>
-        <source>Selection</source>
-        <translation type="obsolete">Επιλογή</translation>
     </message>
     <message>
         <location line="+128"/>
@@ -4027,14 +564,6 @@ Drop timing informations ?</source>
         <translation>&amp;Αρχείο</translation>
     </message>
     <message>
-        <source>&amp;Recent Files</source>
-        <translation type="obsolete">&amp;Πρόσφατα Αρχεία</translation>
-    </message>
-    <message>
-        <source>&amp;Save</source>
-        <translation type="obsolete">Απο&amp;θήκευση</translation>
-    </message>
-    <message>
         <location line="-10"/>
         <source>&amp;Tools</source>
         <translation>Ε&amp;ργαλεία</translation>
@@ -4050,10 +579,6 @@ Drop timing informations ?</source>
         <translation>Προ&amp;βολή</translation>
     </message>
     <message>
-        <source>&amp;Preview Mode</source>
-        <translation type="obsolete">&amp;Λειτουργία Προεπισκόπησης</translation>
-    </message>
-    <message>
         <location line="+21"/>
         <source>&amp;Custom</source>
         <translation>Προ&amp;σαρμοσμένο</translation>
@@ -4064,73 +589,9 @@ Drop timing informations ?</source>
         <translation>&amp;Μετάβαση</translation>
     </message>
     <message>
-        <source>A&amp;uto</source>
-        <translation type="obsolete">Αυ&amp;τόματο</translation>
-    </message>
-    <message>
         <location line="+1544"/>
         <source>&amp;Open...</source>
         <translation>Άν&amp;οιγμα...</translation>
-    </message>
-    <message>
-        <source>Ctrl+O</source>
-        <translation type="obsolete">Ctrl+Ο</translation>
-    </message>
-    <message>
-        <source>&amp;Append...</source>
-        <translation type="obsolete">&amp;Προσάρτηση...</translation>
-    </message>
-    <message>
-        <source>Ctrl+Alt+A</source>
-        <translation type="obsolete">Ctrl+Alt+Α</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t</source>
-        <translation type="obsolete">Απο&amp;κοπή</translation>
-    </message>
-    <message>
-        <source>Ctrl+X</source>
-        <translation type="obsolete">Ctrl+Χ</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation type="obsolete">&amp;Αντιγραφή</translation>
-    </message>
-    <message>
-        <source>Ctrl+C</source>
-        <translation type="obsolete">Ctrl+C</translation>
-    </message>
-    <message>
-        <source>&amp;Paste</source>
-        <translation type="obsolete">Ε&amp;πικόλληση</translation>
-    </message>
-    <message>
-        <source>Ctrl+V</source>
-        <translation type="obsolete">Ctrl+Ω</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation type="obsolete">&amp;Διαγραφή</translation>
-    </message>
-    <message>
-        <source>Del</source>
-        <translation type="obsolete">Διαγρ.</translation>
-    </message>
-    <message>
-        <source>Set Marker A</source>
-        <translation type="obsolete">Όρισε το δείκτη Α</translation>
-    </message>
-    <message>
-        <source>[</source>
-        <translation type="obsolete">[</translation>
-    </message>
-    <message>
-        <source>Set Marker B</source>
-        <translation type="obsolete">Όρισε το δείκτη Β</translation>
-    </message>
-    <message>
-        <source>]</source>
-        <translation type="obsolete">]</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -4152,26 +613,6 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <source>Save Video</source>
         <translation>Αποθήκευση του Βίντεου</translation>
-    </message>
-    <message>
-        <source>Ctrl+S</source>
-        <translation type="obsolete">Ctrl+S</translation>
-    </message>
-    <message>
-        <source>Save &amp;BMP Image...</source>
-        <translation type="obsolete">Αποθήκευση Εικόνας &amp;BMP</translation>
-    </message>
-    <message>
-        <source>Save BMP Image</source>
-        <translation type="obsolete">Αποθήκευση Εικόνας BMP</translation>
-    </message>
-    <message>
-        <source>Save &amp;JPEG Image...</source>
-        <translation type="obsolete">Αποθήκευση Εικόνας &amp;JPEG...</translation>
-    </message>
-    <message>
-        <source>Save JPEG Image</source>
-        <translation type="obsolete">Αποθήκευση Εικόνας JPEG</translation>
     </message>
     <message>
         <location line="+21"/>
@@ -4196,105 +637,9 @@ Drop timing informations ?</source>
         <translation>Αποθήκευση της Εργασίας</translation>
     </message>
     <message>
-        <source>Save P&amp;roject As...</source>
-        <translation type="obsolete">Αποθήκευση του Σεναρίου &amp;Ως...</translation>
-    </message>
-    <message>
-        <source>Save Project As</source>
-        <translation type="obsolete">Αποθήκευση του Σεναρίου Ως</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom 1:4</source>
-        <translation type="obsolete">Σμίκρυνση 1:&amp;4</translation>
-    </message>
-    <message>
-        <source>Ctrl+Shift+4</source>
-        <translation type="obsolete">Ctrl+Shift+4</translation>
-    </message>
-    <message>
-        <source>Z&amp;oom 1:2</source>
-        <translation type="obsolete">Σμίκρ&amp;υνση 1:2</translation>
-    </message>
-    <message>
-        <source>Ctrl+Shift+2</source>
-        <translation type="obsolete">Ctrl+Shift+2</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;1:1</source>
-        <translation type="obsolete">Προβολή &amp;1:1</translation>
-    </message>
-    <message>
-        <source>Ctrl+Alt+1</source>
-        <translation type="obsolete">Ctrl+Alt+1</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;2:1</source>
-        <translation type="obsolete">Μεγέθυνση &amp;2:1</translation>
-    </message>
-    <message>
-        <source>Ctrl+Alt+2</source>
-        <translation type="obsolete">Ctrl+Alt+2</translation>
-    </message>
-    <message>
-        <source>&amp;Decoder Options...</source>
-        <translation type="obsolete">Επιλογές Απο&amp;κωδικοποιητή...</translation>
-    </message>
-    <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">Επιλογές Αποκωδικοποιητή</translation>
-    </message>
-    <message>
-        <source>F3</source>
-        <translation type="obsolete">F3</translation>
-    </message>
-    <message>
-        <source>&amp;Postprocessing...</source>
-        <translation type="obsolete">Μετεπε&amp;ξεργασία...</translation>
-    </message>
-    <message>
-        <source>F4</source>
-        <translation type="obsolete">F4</translation>
-    </message>
-    <message>
-        <source>&amp;Frame Rate...</source>
-        <translation type="obsolete">&amp;Ταχύτητα Καρέ...</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">Ταχύτητα Καρέ</translation>
-    </message>
-    <message>
-        <source>Fil&amp;ters...</source>
-        <translation type="obsolete">&amp;Φίλτρα...</translation>
-    </message>
-    <message>
-        <source>Ctrl+Alt+F</source>
-        <translation type="obsolete">Ctrl+Alt+F</translation>
-    </message>
-    <message>
-        <source>&amp;Main Track...</source>
-        <translation type="obsolete">&amp;Κύριο Κανάλι...</translation>
-    </message>
-    <message>
-        <source>&amp;Secondary Track...</source>
-        <translation type="obsolete">&amp;Δευτερεύων Κανάλι...</translation>
-    </message>
-    <message>
-        <source>Build VBR Time Map</source>
-        <translation type="obsolete">Χτίσιμο Χάρτη Χρόνου VBR</translation>
-    </message>
-    <message>
-        <source>S&amp;ave...</source>
-        <translation type="obsolete">Απο&amp;θήκευση...</translation>
-    </message>
-    <message>
         <location line="+81"/>
         <source>Ctrl+Alt+S</source>
         <translation>Ctrl+Alt+S</translation>
-    </message>
-    <message>
-        <source>&amp;Filters</source>
-        <translation type="obsolete">&amp;Φίλτρα</translation>
     </message>
     <message>
         <location line="-72"/>
@@ -4305,54 +650,6 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <source>F7</source>
         <translation>F7</translation>
-    </message>
-    <message>
-        <source>&amp;Rebuild I &amp;&amp; B Frames</source>
-        <translation type="obsolete">Επανα&amp;χτίσιμο των Καρέ I &amp; B</translation>
-    </message>
-    <message>
-        <source>Rebuild I &amp; B Frames</source>
-        <translation type="obsolete">Επανα&amp;χτίσιμο των Καρέ I &amp; B</translation>
-    </message>
-    <message>
-        <source>&amp;Bitrate Histogram...</source>
-        <translation type="obsolete">Ιστόγραμμα &amp;Ρυθμού Bit...</translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">Ιστόγραμμα Ρυθμού Bit</translation>
-    </message>
-    <message>
-        <source>&amp;Scan for Black Frames...</source>
-        <translation type="obsolete">Αναζήτηση για Μα&amp;ύρα Καρέ...</translation>
-    </message>
-    <message>
-        <source>Scan for Black Frames</source>
-        <translation type="obsolete">Αναζήτηση για Μαύρα Καρέ</translation>
-    </message>
-    <message>
-        <source>&amp;VOB -&gt; VobSub...</source>
-        <translation type="obsolete">&amp;VOB -&gt; VobSub...</translation>
-    </message>
-    <message>
-        <source>VOB -&gt; VobSub</source>
-        <translation type="obsolete">VOB -&gt; VobSub</translation>
-    </message>
-    <message>
-        <source>&amp;OCR (VobSub -&gt; srt)...</source>
-        <translation type="obsolete">&amp;OCR (VobSub -&gt; srt)...</translation>
-    </message>
-    <message>
-        <source>OCR (VobSub -&gt; srt)</source>
-        <translation type="obsolete">OCR (VobSub -&gt; srt)</translation>
-    </message>
-    <message>
-        <source>P</source>
-        <translation type="obsolete">P</translation>
-    </message>
-    <message>
-        <source>P&amp;revious Frame</source>
-        <translation type="obsolete">Προη&amp;γούμενο Καρέ</translation>
     </message>
     <message>
         <location line="-1043"/>
@@ -4368,248 +665,6 @@ Drop timing informations ?</source>
         <location line="+7"/>
         <source>B:</source>
         <translation>Β:</translation>
-    </message>
-    <message>
-        <source>Recent Projects</source>
-        <translation type="obsolete">Πρόσφατες Εργασίες</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation type="obsolete">Έ&amp;ξοδος</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation type="obsolete">Αριστερά</translation>
-    </message>
-    <message>
-        <source>&amp;Next Frame</source>
-        <translation type="obsolete">&amp;Επόμενο Καρέ</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translatorcomment>μήπως πλήκτρο;</translatorcomment>
-        <translation type="obsolete">Δεξιά</translation>
-    </message>
-    <message>
-        <source>Down</source>
-        <translation type="obsolete">Κάτω</translation>
-    </message>
-    <message>
-        <source>Up</source>
-        <translation type="obsolete">Επάνω</translation>
-    </message>
-    <message>
-        <source>Previou&amp;s Black Frame</source>
-        <translation type="obsolete">Προ&amp;ηγούμενο Μαύρο Καρέ</translation>
-    </message>
-    <message>
-        <source>Previous Black Frame</source>
-        <translation type="obsolete">Προηγούμενο Μαύρο Καρέ</translation>
-    </message>
-    <message>
-        <source>Ne&amp;xt Black Frame</source>
-        <translation type="obsolete">Ε&amp;πόμενο Μαύρο Καρέ</translation>
-    </message>
-    <message>
-        <source>Next Black Frame</source>
-        <translation type="obsolete">Επόμενο Μαύρο Καρέ</translation>
-    </message>
-    <message>
-        <source>&amp;First Frame</source>
-        <translation type="obsolete">Πρ&amp;ώτο Καρέ</translation>
-    </message>
-    <message>
-        <source>Home</source>
-        <translatorcomment>το πλήκτρο</translatorcomment>
-        <translation type="obsolete">Home</translation>
-    </message>
-    <message>
-        <source>&amp;Last Frame</source>
-        <translation type="obsolete">&amp;Τελευταίο Καρέ</translation>
-    </message>
-    <message>
-        <source>End</source>
-        <translation type="obsolete">Τέλος</translation>
-    </message>
-    <message>
-        <source>Jump to Marker &amp;A</source>
-        <translation type="obsolete">Μετάβαση στο δείκτη &amp;Α</translation>
-    </message>
-    <message>
-        <source>Jump to Marker A</source>
-        <translation type="obsolete">Μετάβαση στο δείκτη Α</translation>
-    </message>
-    <message>
-        <source>Ctrl+[</source>
-        <translation type="obsolete">Ctrl+[</translation>
-    </message>
-    <message>
-        <source>Jump to Marker &amp;B</source>
-        <translation type="obsolete">Μετάβαση στο δείκτη &amp;Β</translation>
-    </message>
-    <message>
-        <source>Jump to Marker B</source>
-        <translation type="obsolete">Μετάβαση στο δείκτη Β</translation>
-    </message>
-    <message>
-        <source>Ctrl+]</source>
-        <translation type="obsolete">Ctrl+]</translation>
-    </message>
-    <message>
-        <source>Jump to Fra&amp;me...</source>
-        <translation type="obsolete">Μετάβαση στο &amp;Καρέ...</translation>
-    </message>
-    <message>
-        <source>Ctrl+F</source>
-        <translation type="obsolete">Ctrl+F</translation>
-    </message>
-    <message>
-        <source>Jump to &amp;Time...</source>
-        <translation type="obsolete">Μετάβαση στο &amp;Χρόνο...</translation>
-    </message>
-    <message>
-        <source>Ctrl+T</source>
-        <translation type="obsolete">Ctrl+T</translation>
-    </message>
-    <message>
-        <source>&amp;Built-in Support...</source>
-        <translation type="obsolete">Ενσ&amp;ωματωμένη Υποστήριξη...</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">Ενσωματωμένη Υποστήριξη</translation>
-    </message>
-    <message>
-        <source>&amp;About Avidemux...</source>
-        <translation type="obsolete">Σχετικά με το Avidemux...</translation>
-    </message>
-    <message>
-        <source>About Avidemux</source>
-        <translation type="obsolete">Σχετικά με το Avidemux</translation>
-    </message>
-    <message>
-        <source>&amp;Play/Stop</source>
-        <translation type="obsolete">Ανα&amp;παραγωγή/Σταμάτημα</translation>
-    </message>
-    <message>
-        <source>Play/Stop</source>
-        <translation type="obsolete">Αναπαραγωγή/Σταμάτημα</translation>
-    </message>
-    <message>
-        <source>Recent0</source>
-        <translation type="obsolete">Πρόσφατο0</translation>
-    </message>
-    <message>
-        <source>Recent1</source>
-        <translation type="obsolete">Πρόσφατο1</translation>
-    </message>
-    <message>
-        <source>Recent2</source>
-        <translation type="obsolete">Πρόσφατο2</translation>
-    </message>
-    <message>
-        <source>Recent3</source>
-        <translation type="obsolete">Πρόσφατο3</translation>
-    </message>
-    <message>
-        <source>&amp;Close</source>
-        <translation type="obsolete">&amp;Κλείσιμο</translation>
-    </message>
-    <message>
-        <source>Ctrl+W</source>
-        <translation type="obsolete">Ctrl+W</translation>
-    </message>
-    <message>
-        <source>Save Selection as JPEG Images...</source>
-        <translation type="obsolete">Αποθήκευση της Επιλογής ως Εικόνες JPEG...</translation>
-    </message>
-    <message>
-        <source>&amp;Preferences...</source>
-        <translation type="obsolete">&amp;Προτιμήσεις...</translation>
-    </message>
-    <message>
-        <source>&amp;Plugins...</source>
-        <translation type="obsolete">Εν&amp;θέματα...</translation>
-    </message>
-    <message>
-        <source>Recent4</source>
-        <translation type="obsolete">Πρόσφατο4</translation>
-    </message>
-    <message>
-        <source>Recent5</source>
-        <translation type="obsolete">Πρόσφατο5</translation>
-    </message>
-    <message>
-        <source>RecentProject0</source>
-        <translation type="obsolete">ΠρόσφατεςΕργασίες0</translation>
-    </message>
-    <message>
-        <source>RecentProject1</source>
-        <translation type="obsolete">ΠρόσφατεςΕργασίες1</translation>
-    </message>
-    <message>
-        <source>RecentProject2</source>
-        <translation type="obsolete">ΠρόσφατεςΕργασίες2</translation>
-    </message>
-    <message>
-        <source>RecentProject3</source>
-        <translation type="obsolete">ΠρόσφατεςΕργασίες3</translation>
-    </message>
-    <message>
-        <source>RecentProject4</source>
-        <translation type="obsolete">ΠρόσφατεςΕργασίες4</translation>
-    </message>
-    <message>
-        <source>RecentProject5</source>
-        <translation type="obsolete">ΠρόσφατεςΕργασίες5</translation>
-    </message>
-    <message>
-        <source>Add to &amp;Joblist...</source>
-        <translation type="obsolete">Προσθήκη στη &amp;Λίστα Διαδικασιών...</translation>
-    </message>
-    <message>
-        <source>Add to Joblist</source>
-        <translation type="obsolete">Προσθήκη στη Λίστα Διαδικασιών</translation>
-    </message>
-    <message>
-        <source>View &amp;Joblist...</source>
-        <translation type="obsolete">Εμφάνιση της Λίστας &amp;Διαδικασιών...</translation>
-    </message>
-    <message>
-        <source>View Joblist</source>
-        <translation type="obsolete">Εμφάνιση της Λίστας Διαδικασιών</translation>
-    </message>
-    <message>
-        <source>Ctrl+J</source>
-        <translation type="obsolete">Ctrl+J</translation>
-    </message>
-    <message>
-        <source>Co&amp;nnect to avsproxy</source>
-        <translation type="obsolete">Σύ&amp;νδεση στο avsproxy</translation>
-    </message>
-    <message>
-        <source>Connect to avsproxy</source>
-        <translation type="obsolete">Σύνδεση στο avsproxy</translation>
-    </message>
-    <message>
-        <source>&amp;Reset Edits</source>
-        <translation type="obsolete">Πρόσ&amp;φατες Επεξεργασίες</translation>
-    </message>
-    <message>
-        <source>OCR (&amp;TS -&gt; srt)...</source>
-        <translation type="obsolete">OCR (&amp;TS -&gt; srt)...</translation>
-    </message>
-    <message>
-        <source>OCR (TS -&gt; srt)</source>
-        <translation type="obsolete">OCR (TS -&gt; srt)</translation>
-    </message>
-    <message>
-        <source>Edit &amp;Glyphs...</source>
-        <translation type="obsolete">Επεξεργασία των Ανάγλυ&amp;φων...</translation>
-    </message>
-    <message>
-        <source>Edit Glyphs</source>
-        <translation type="obsolete">Επεξεργασία των Ανάγλυφων</translation>
     </message>
     <message>
         <location line="+287"/>
@@ -4647,26 +702,6 @@ Drop timing informations ?</source>
         <translation>Δια&amp;χωρισμός</translation>
     </message>
     <message>
-        <source>%1 (%2)</source>
-        <translation type="obsolete">%1 (%2)</translation>
-    </message>
-    <message>
-        <source>Optical Disc</source>
-        <translation type="obsolete">Οπτικός Δίσκος</translation>
-    </message>
-    <message>
-        <source>DVD</source>
-        <translation type="obsolete">DVD</translation>
-    </message>
-    <message>
-        <source>Super Video CD</source>
-        <translation type="obsolete">Super Video CD</translation>
-    </message>
-    <message>
-        <source>Video CD</source>
-        <translation type="obsolete">Video CD</translation>
-    </message>
-    <message>
         <location line="-1759"/>
         <source>&amp;Toolbars</source>
         <translation>&amp;Γραμμές εργαλείων</translation>
@@ -4685,10 +720,6 @@ Drop timing informations ?</source>
         <location line="+46"/>
         <source>Codec O&amp;ptions</source>
         <translation>Ε&amp;πιλογές Κώδικα</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation type="vanished">&lt;b&gt;Αποκωδικοποιητής Βίντεου&lt;b&gt;</translation>
     </message>
     <message>
         <location line="+108"/>
@@ -4731,10 +762,6 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <source>Play</source>
         <translation>Αναπαραγωγή</translation>
-    </message>
-    <message>
-        <source>Stop [SPACE]</source>
-        <translation type="vanished">Σταμάτημα [ΔΙΑΣΤΗΜΑ]</translation>
     </message>
     <message>
         <location line="+26"/>
@@ -4817,10 +844,6 @@ Drop timing informations ?</source>
         <translation>Μετάβαση στο Δείκτη Β΄ [PAGE DOWN]</translation>
     </message>
     <message>
-        <source>Display output video on playback</source>
-        <translation type="vanished">Προβολή του βίντεου εξαγωγής κατά την αναπαραγωγή</translation>
-    </message>
-    <message>
         <location line="+213"/>
         <source>Play filtered</source>
         <translation>Αναπαραγωγή του μεταμορφωμένου</translation>
@@ -4887,279 +910,11 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Mpeg1Encoder</name>
-    <message>
-        <source>4:3</source>
-        <translation type="obsolete">4:3</translation>
-    </message>
-    <message>
-        <source>16:9</source>
-        <translation type="obsolete">16:9</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Προεπιλεγμένο</translation>
-    </message>
-    <message>
-        <source>TMPGEnc</source>
-        <translation type="obsolete">TMPGEnc</translation>
-    </message>
-    <message>
-        <source>Anime</source>
-        <translation type="obsolete">Κινούμενα σχέδια</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">Προοδευτικό</translation>
-    </message>
-    <message>
-        <source>Interlaced BFF</source>
-        <translation type="obsolete">Πεπλεγμένη BFF</translation>
-    </message>
-    <message>
-        <source>Interlaced TFF</source>
-        <translation type="obsolete">Πεπλεγμένη TFF</translation>
-    </message>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">_Μέγιστος ρυθμός bit:</translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">Ε_λάχιστος Ρυθμός bit:</translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">_Χρήση ελέγχου ρυθμού Xvid</translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">_Μέγεθος μικροαποθήκευσης (buffer):</translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">Αναλογία _διαστάσεων:</translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">Μεγ. πίνακες ανάμειξης vertex</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">Μέ_γεθος GOP:</translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">Πλέ_ξη:</translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg2Encoder</name>
-    <message>
-        <source>4:3</source>
-        <translation type="obsolete">4:3</translation>
-    </message>
-    <message>
-        <source>16:9</source>
-        <translation type="obsolete">16:9</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Προεπιλεγμένο</translation>
-    </message>
-    <message>
-        <source>TMPGEnc</source>
-        <translation type="obsolete">TMPGEnc</translation>
-    </message>
-    <message>
-        <source>Anime</source>
-        <translation type="obsolete">Κινούμενα σχέδια</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">Προοδευτικό</translation>
-    </message>
-    <message>
-        <source>Interlaced BFF</source>
-        <translation type="obsolete">Πεπλεγμένη BFF</translation>
-    </message>
-    <message>
-        <source>Interlaced TFF</source>
-        <translation type="obsolete">Πεπλεγμένη TFF</translation>
-    </message>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">_Μέγιστος ρυθμός bit:</translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">Ε_λάχιστος Ρυθμός bit:</translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">_Χρήση ελέγχου ρυθμού Xvid</translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">_Μέγεθος μικροαποθήκευσης (buffer):</translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">Αναλογία Διαστάσεων</translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">Μεγ. πίνακες ανάμειξης vertex</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">Μέ_γεθος GOP:</translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">Πλέ_ξη:</translation>
-    </message>
-    <message>
-        <source>DVD</source>
-        <translation type="obsolete">DVD</translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg4aspEncoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Καμία</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">Πλήρες</translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">Καταγραφή</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">Phods</translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">H.263</translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Encoding Mode</source>
-        <translation type="obsolete">Κατάσταση Λειτουργίας Κωδικοποίησης</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Εκτίμηση κίνησης</translation>
-    </message>
-</context>
-<context>
-    <name>MpegMuxer</name>
-    <message>
-        <source>Incompatible audio</source>
-        <translation type="obsolete">Ασύμβατος ήχος</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be MP2 or AC3.</source>
-        <translation type="obsolete">Για DVD, ο ήχος θα πρέπει να είναι MP2 ή AC3.</translation>
-    </message>
-    <message>
-        <source>lvemux init failed</source>
-        <translation type="obsolete">Αποτυχία αρχικοποίησης lvemux</translation>
-    </message>
-</context>
-<context>
-    <name>Msharpen</name>
-    <message>
-        <source>_Mask</source>
-        <translation type="obsolete">Mask</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="obsolete">_Υψηλό Q</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Κατώφλι:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Ισχύς:</translation>
-    </message>
-    <message>
-        <source>MSharpen</source>
-        <translation type="obsolete">MSharpen (οξύτητα)</translation>
-    </message>
-</context>
-<context>
-    <name>Msmooth</name>
-    <message>
-        <source>_High quality</source>
-        <translation type="obsolete">_Υψηλή Ποιότητα</translation>
-    </message>
-    <message>
-        <source>Show _mask</source>
-        <translation type="obsolete">Εμφάνιση _μάσκας</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Κατώφλι:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Ισχύς:</translation>
-    </message>
-    <message>
-        <source>MSmooth</source>
-        <translation type="obsolete">MSmooth</translation>
-    </message>
-</context>
-<context>
-    <name>OpenDMLHeader</name>
-    <message>
-        <source>Malformed header</source>
-        <translation type="obsolete">Παραμορφωμένη κεφαλίδα</translation>
-    </message>
-    <message>
-        <source>Unpacking bitstream</source>
-        <translation type="obsolete">Αποπακετάρισμα ροής δεδομένων</translation>
-    </message>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">Δημιουργία ευρετηρίου</translation>
-    </message>
-</context>
-<context>
     <name>Opus</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+254"/>
         <source>_Bitrate:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">Συναγερμός</translation>
     </message>
 </context>
 <context>
@@ -5183,109 +938,6 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <source>Ctrl+Return</source>
         <translation>Ctrl+Επιστροφή</translation>
-    </message>
-</context>
-<context>
-    <name>Telecide</name>
-    <message>
-        <source>No strategy</source>
-        <translation type="obsolete">Μη έγκυρη στρατηγική &apos;%s&apos;</translation>
-    </message>
-    <message>
-        <source>PAL/SECAM</source>
-        <translation type="obsolete">PAL/SECAM</translation>
-    </message>
-    <message>
-        <source>NTSC converted from PAL</source>
-        <translation type="obsolete">NTSC τροποποιημένο από PAL</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">πάνω-κάτω</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Κάτω</translation>
-    </message>
-    <message>
-        <source>Never</source>
-        <translation type="obsolete">Ποτέ</translation>
-    </message>
-    <message>
-        <source>Always</source>
-        <translation type="obsolete">Πάντα</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Καμία</translation>
-    </message>
-    <message>
-        <source>None but compute</source>
-        <translation type="obsolete">Κανένα αλλά υπολόγισε</translation>
-    </message>
-    <message>
-        <source>Postproc on best match</source>
-        <translation type="obsolete">Μετεπεξεργασία και καλύτερο ταίριασμα</translation>
-    </message>
-    <message>
-        <source>Postproc and show zones (debug)</source>
-        <translation type="obsolete">Μετεπεξεργασία και προβολή ζωνών (απασφαλμάτωση)</translation>
-    </message>
-    <message>
-        <source>Process image (not fields)</source>
-        <translation type="obsolete">Επεξεργασία εικόνας (όχι πεδία)</translation>
-    </message>
-    <message>
-        <source>Process image (not fields), debug</source>
-        <translation type="obsolete">Επεξεργασία εικόνας (όχι πεδία), απασφαλμάτωση</translation>
-    </message>
-    <message>
-        <source>_Strategy:</source>
-        <translation type="obsolete">Σ_τρατηγική:</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">&lt;b&gt;Σειρά Subpixel&lt;/b&gt;:</translation>
-    </message>
-    <message>
-        <source>_Postprocessing:</source>
-        <translation type="obsolete">_Μεταεπεξεργασία:</translation>
-    </message>
-    <message>
-        <source>_Try backward:</source>
-        <translation type="obsolete">Προς τα πίσω βέλος</translation>
-    </message>
-    <message>
-        <source>_Direct threshold:</source>
-        <translation type="obsolete">Κατώφλι χρώματος:</translation>
-    </message>
-    <message>
-        <source>_Backward threshold:</source>
-        <translation type="obsolete">Κατώφλι χρώματος:</translation>
-    </message>
-    <message>
-        <source>_Noise threshold:</source>
-        <translation type="obsolete">Κατώφλι _Θορύβου:</translation>
-    </message>
-    <message>
-        <source>Postp_rocessing threshold:</source>
-        <translation type="obsolete">Κατώφλι _μετεπεξεργασίας:</translation>
-    </message>
-    <message>
-        <source>_Use chroma to decide</source>
-        <translation type="obsolete">_Επέλεξε chroma για να αποφασίσει</translation>
-    </message>
-    <message>
-        <source>Sho_w info</source>
-        <translation type="obsolete">Προβολή _πληροφοριών</translation>
-    </message>
-    <message>
-        <source>Debu_g</source>
-        <translation type="obsolete">_Απασφαλμάτωση</translation>
-    </message>
-    <message>
-        <source>Bl_end</source>
-        <translation type="obsolete">Ομαλή Μ_είξη</translation>
     </message>
 </context>
 <context>
@@ -5317,57 +969,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>XvidConfigDialog</name>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">Έλεγχος Ρυθμού</translation>
-    </message>
-    <message>
-        <source>Pixel Aspect Ratio</source>
-        <translation type="obsolete">Λόγος Διαστάσεων σε Εικονοστοιχεία</translation>
-    </message>
-    <message>
-        <source>As Input</source>
-        <translation type="obsolete">Ώς δεδομένα εισόδου</translation>
-    </message>
-    <message>
-        <source>:</source>
-        <translation type="obsolete">:</translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="obsolete">Απενεργοποίηση</translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">Αυτόματη ανίχνευση</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Εκτίμηση κίνησης</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">Χαμηλή</translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Μεσαίο</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">Υψηλή</translation>
-    </message>
-    <message>
-        <source>Turbo Mode</source>
-        <translation type="obsolete">Κατάσταση Λειτουργίας Υπερτροφοδότησης</translation>
-    </message>
-    <message>
-        <source>Custom Matrix</source>
-        <translation type="obsolete">Προσαρμοσμένο Πλαίσιο</translation>
-    </message>
-</context>
-<context>
     <name>aboutDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+14"/>
@@ -5375,7 +976,12 @@ Drop timing informations ?</source>
         <translation>Σχετικά με το Avidemux</translation>
     </message>
     <message>
-        <location line="+141"/>
+        <location line="+122"/>
+        <source>© 2001 - 2019  Mean / Eumagga0x2a</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+19"/>
         <source>http://www.avidemux.org</source>
         <translation>http://www.avidemux.org</translation>
     </message>
@@ -5390,16 +996,7 @@ Drop timing informations ?</source>
         <translation>Πολλαπλών Πλατφορμών Επεξεργαστής Βίντεων</translation>
     </message>
     <message>
-        <location line="+10"/>
-        <source>© 2001 - 2018  Mean</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>© 2001 - 2016  Mean</source>
-        <translation type="vanished">© 2001 - 2016  Μυιν (Mean)</translation>
-    </message>
-    <message>
-        <location line="+64"/>
+        <location line="+74"/>
         <source>&amp;License</source>
         <translation>&amp;Άδεια</translation>
     </message>
@@ -5454,42 +1051,11 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>addLogopFilter</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">_Λογότυπο (αρχείο jpg):</translation>
-    </message>
-    <message>
-        <source>Select JPEG file</source>
-        <translation type="obsolete">Επιλογή Αρχείου JPEG</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">Θέση _X:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">Θέση _Y:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">_Άλφα:</translation>
-    </message>
-    <message>
-        <source>Logo</source>
-        <translation type="obsolete">Λογότυπο</translation>
-    </message>
-</context>
-<context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+219"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+218"/>
         <source>Decode video using DXVA2 (windows)</source>
         <translation>Αποκωδικοποίηση του βίντεου με τη χρήση DXVA2 (windows)</translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="vanished">Δημι_ουργία αρχείων OpenDML</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -5665,7 +1231,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+5"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+211"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+213"/>
         <source>PCM</source>
         <translation>PCM</translation>
     </message>
@@ -5740,7 +1306,7 @@ Drop timing informations ?</source>
         <location line="+278"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+409"/>
+        <location filename="../../common/gui_savenew.cpp" line="+423"/>
         <source>Audio</source>
         <translation>Ήχος</translation>
     </message>
@@ -5894,10 +1460,6 @@ Drop timing informations ?</source>
         <translation>Dolby Pro Logic II</translation>
     </message>
     <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="vanished">Αυτόματο (μέγιστο -3 dB)</translation>
-    </message>
-    <message>
         <location line="+11"/>
         <source>_Gain mode:</source>
         <translation>Κατάσταση λειτουργίας _κέρδους:</translation>
@@ -5982,14 +1544,6 @@ Drop timing informations ?</source>
         <location filename="../../common/gui_main.cpp" line="+373"/>
         <source>Not coded in this version</source>
         <translation>Δεν κωδικοποιήθηκε σε αυτή την έκδοση</translation>
-    </message>
-    <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">Επιλέξτε αρχείο AVI...</translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">Επιλέξτε ένα αρχείο AVI για προσκόλληση...</translation>
     </message>
     <message>
         <location line="+251"/>
@@ -6080,7 +1634,7 @@ Go to Audio-&gt;MainTrack to select the active one.</source>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+317"/>
+        <location line="+320"/>
         <source>Something bad happened (II)</source>
         <translation>Κάτι στραβό συνέβη (II)</translation>
     </message>
@@ -6123,7 +1677,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
         <source>Something bad happened</source>
         <translation>Κάτι στραβό έγινε</translation>
     </message>
@@ -6176,11 +1730,6 @@ Is it running ?</source>
         <translation>Ένταση _μεταμορφωτή:</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_Swap U and V</source>
-        <translation>_Εναλλαγή U και V</translation>
-    </message>
-    <message>
         <location filename="../../common/gui_save.cpp" line="-229"/>
         <source>Select Workbench to Save</source>
         <translation>Επέλεξε Workbench για Αποθήκευση</translation>
@@ -6217,18 +1766,6 @@ Is it running ?</source>
         <translation>Αποθηκεύεται ο ήχος</translation>
     </message>
     <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="vanished">Αποθήκευση ως μια ομάδα από jpeg</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="vanished">Αδυναμία αποκωδικοποίησης του στιγμιότυπου</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="vanished">Εγκατάλειψη.</translation>
-    </message>
-    <message>
         <location line="+303"/>
         <location line="+83"/>
         <source>Done</source>
@@ -6257,10 +1794,6 @@ Is it running ?</source>
         <translation>Σφάλμα</translation>
     </message>
     <message>
-        <source>Could not save all images.</source>
-        <translation type="vanished">Αδυναμία αποθήκευσης όλων των εικόνων.</translation>
-    </message>
-    <message>
         <location filename="../../common/gui_save.cpp" line="+61"/>
         <source>BMP op failed</source>
         <translation>Απέτυχε η BMP λειτουργία</translation>
@@ -6286,146 +1819,14 @@ Is it running ?</source>
         <translation>Το αρχείο %s ΔΕΝ αποθηκεύτηκε σωστά.</translation>
     </message>
     <message>
-        <source>Recent Projects</source>
-        <translation type="obsolete">Πρόσφατες Εργασίες</translation>
-    </message>
-    <message>
         <location filename="../ADM_UIs/src/T_threadCount.cpp" line="+47"/>
         <source>Custom</source>
         <translation>Προσαρμοσμένο</translation>
     </message>
     <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Λειτουργία: </translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Νέα ταχύτητα καρέ:</translation>
-    </message>
-    <message>
-        <source>Resample fps</source>
-        <translation type="obsolete">Επαναδειγματοληψία fps</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Προεπιλεγμένο</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">Προοδευτικό</translation>
-    </message>
-    <message>
-        <source>Interlacing</source>
-        <translation type="obsolete">Πλέξη</translation>
-    </message>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">Έλεγχος Ρυθμού</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">Πλήρες</translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">Καταγραφή</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">Phods</translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">H.263</translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Εκτίμηση κίνησης</translation>
-    </message>
-    <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="+3"/>
         <source>Medium</source>
         <translation>Μεσαίο</translation>
-    </message>
-    <message>
-        <source>VBR</source>
-        <translation type="obsolete">Μεταβ.Ρυθ.Μπιτ.</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">Με βάση την ποιότητα</translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">_Ρυθμός bit:</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">_Ποιότητα:</translation>
-    </message>
-    <message>
-        <source>Vorbis Configuration</source>
-        <translation type="obsolete">Ρύθμιση Vorbis</translation>
-    </message>
-    <message>
-        <source>_Quantizer:</source>
-        <translation type="obsolete">_Συμπιεστής Χρώματος (Quantizer):</translation>
-    </message>
-    <message>
-        <source>CBR</source>
-        <translation type="obsolete">Σταθ.Ρυθ.Μπιτ.</translation>
-    </message>
-    <message>
-        <source>ABR</source>
-        <translation type="obsolete">ABR</translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">Λειτουργία _ρυθμού Μπιτιών:</translation>
-    </message>
-    <message>
-        <source>LAME Configuration</source>
-        <translation type="obsolete">Ρύθμιση LAME</translation>
-    </message>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">Το φίλτρο είναι ήδη μερικό</translation>
-    </message>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">Έτοιμο</translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">Επιτεύχθηκε</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">Διαγράφηκε</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">Εκτελείται</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">Σίγουρα!</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">Διαγραφή διαδικασίας</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="-25"/>
@@ -6578,7 +1979,12 @@ Is it running ?</source>
         <translation>Πληροφορίες Ενθεμάτων</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+10"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-1"/>
+        <source>The options above are effective only for MPEG and DivX with software decoding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-123"/>
         <source>_Horizontal deblocking</source>
         <translation>Ορι_ζόντια αφαίρεση τμημάτων</translation>
@@ -6593,6 +1999,11 @@ Is it running ?</source>
         <location line="+1"/>
         <source>_Deringing</source>
         <translation>Αφαίρεση _δακτυλίων</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>De_interlacing (ffmpegdeint)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-169"/>
@@ -6625,10 +2036,6 @@ Is it running ?</source>
         <translation>Αν χρησιμοποιήσεις αποκωδικοποίηση υλικού, να επιλέξεις και τον ταιριαστό οδηγό συσκευής απεικόνισης</translation>
     </message>
     <message>
-        <source>_Use systray while encoding</source>
-        <translation type="vanished">_Χρήση του ραφιού του συστήματος κατά την κωδικοποίηση</translation>
-    </message>
-    <message>
         <location line="+3"/>
         <source>_Accept non-standard audio frequency for DVD</source>
         <translation>_Αποδοχή μη τυποποιημένων συχνοτήτων ήχου για DVD</translation>
@@ -6637,10 +2044,6 @@ Is it running ?</source>
         <location line="+4"/>
         <source>_Check for new release</source>
         <translation>Έλεγ_χος για νέα έκδοση</translation>
-    </message>
-    <message>
-        <source>_Split MPEG files every (MB):</source>
-        <translation type="vanished">_Χωρισμός αρχείων MPEG ανά (ΜέγαΜπάιτια):</translation>
     </message>
     <message>
         <location line="+55"/>
@@ -7049,7 +2452,7 @@ It is needed to create PSP compatible video.</source>
 Είναι απαραίτητο για τη δημιουργία βίντεου συμβατό με PSP.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1379"/>
+        <location filename="../../common/gui_main.cpp" line="-1382"/>
         <source>Select script/project to run</source>
         <translation>Επέλεξε σενάριο ή εργασία για τρέξιμο</translation>
     </message>
@@ -7113,7 +2516,7 @@ Proceed anyway?</source>
         <translation>Σφάλμα κατά την αποκοπή.</translation>
     </message>
     <message>
-        <location line="+754"/>
+        <location line="+757"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation>Δόθηκε μη έγκυρο ευρετήριο ήχου</translation>
@@ -7159,7 +2562,7 @@ Proceed anyway?</source>
         <translation>Αυτή η λειτουργία είναι απενεργοποιημένη και δεν ισχύει πια</translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+443"/>
+        <location filename="../../common/gui_play.cpp" line="+446"/>
         <source>Trouble initializing audio device</source>
         <translation>Πρόβλημα στην αρχικοποίηση της συσκευής ήχου</translation>
     </message>
@@ -7265,10 +2668,6 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Fail to save as jpeg</source>
-        <translation type="vanished">Αδυναμία αποθήκευσης ως jpeg</translation>
-    </message>
-    <message>
         <location line="+67"/>
         <source>Cannot get tinyPÿ script engine</source>
         <translation>Αδυναμία λήψης της μηχανής σεναρίων tinyPÿ</translation>
@@ -7279,14 +2678,14 @@ Proceed anyway?</source>
         <translation>Αδυναμία προσθήκης της διαδικασίας %s</translation>
     </message>
     <message>
-        <location filename="../../common/gui_savenew.cpp" line="-196"/>
+        <location filename="../../common/gui_savenew.cpp" line="-207"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
         <translation>Να επανα-χρησιμοποιηθούν τα προηγούμενα δεδομένα του πρώτου περάσματος;
 Προειδοποίηση: οι ρυθμίσεις θα πρέπει να κλείσουν.</translation>
     </message>
     <message>
-        <location line="+160"/>
+        <location line="+171"/>
         <source>Cannot instantiate video chain</source>
         <translation>Αδυναμία παράστασης της αλυσίδας του βίντεου</translation>
     </message>
@@ -7321,15 +2720,15 @@ Do you want to continue anyway ?</source>
 Να συνεχιστεί, έτσι κι αλλιώς;</translation>
     </message>
     <message>
-        <location line="-244"/>
-        <location line="+255"/>
+        <location line="-255"/>
+        <location line="+266"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation>Πολυπλέκτης</translation>
     </message>
     <message>
-        <location line="-281"/>
-        <location line="+255"/>
+        <location line="-292"/>
+        <location line="+266"/>
         <source>Cannot instantiate muxer</source>
         <translation>Αδυναμία παράστασης του πολυπλέκτη</translation>
     </message>
@@ -7650,6 +3049,11 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Float PCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Ogg Vorbis</source>
         <translation>Ogg Vorbis</translation>
     </message>
@@ -7714,12 +3118,8 @@ Do you want to continue anyway ?</source>
         <translation>Πολύ σύντομο</translation>
     </message>
     <message>
-        <source>The video has been saved but seems to be incomplete.</source>
-        <translation type="vanished">Το βίντεο έχει παυθεί, αλλά φαίνεται να είναι ασύμβατο.</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+385"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+374"/>
         <source>Unknown</source>
         <translation>Άγνωστο</translation>
     </message>
@@ -7815,8 +3215,8 @@ Do you want to continue anyway ?</source>
         <translation>1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
-        <location line="+32"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
+        <location line="+30"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -7869,7 +3269,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+227"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7942,7 +3342,7 @@ Proceed anyway?</source>
         <translation>Αδυναμία ανοίγματος του αρχείου</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+471"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+468"/>
         <source>Indexing</source>
         <translation>Δημιουργία ευρετηρίου</translation>
     </message>
@@ -7958,14 +3358,6 @@ Proceed anyway?</source>
         <location line="-1"/>
         <source>Asharp</source>
         <translation>Asharp (οξύτητα)</translation>
-    </message>
-    <message>
-        <source>Original</source>
-        <translation type="vanished">Αρχικό</translation>
-    </message>
-    <message>
-        <source>Processed</source>
-        <translation type="vanished">Επεξεργασμένο</translation>
     </message>
 </context>
 <context>
@@ -7999,7 +3391,7 @@ Proceed anyway?</source>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+171"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation>Αρχείο _υποτίτλων (ASS/SSA):</translation>
     </message>
@@ -8020,68 +3412,78 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Botto_m margin</source>
+        <source>Botto_m margin:</source>
         <translation>Περιθώριο _πάτου</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>ASS</source>
         <translation>ASS</translation>
     </message>
     <message>
-        <location line="-112"/>
+        <location line="-114"/>
         <source>SSA/ASS/SRT</source>
         <translation>SSA/ASS/SRT</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Hardcode ass/ssa/srt subtitles using libass.</source>
-        <translation>Εγχάραξη υποτίτλων ass, ssa ή srt χρησιμοποιώντας την libass.</translation>
+        <source>Hardcode ASS/SSA/SRT subtitles using libass.</source>
+        <translation>Εγχάραξη υποτίτλων ASS, SSA ή SRT χρησιμοποιώντας την libass.</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+63"/>
         <source>Format ?</source>
         <translation>Μορφή ;</translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Are you sure this is an ass file ?</source>
-        <translation>Είναι σίγουρα αυτό ένα αρχείο ass ;</translation>
+        <source>Are you sure this is an ASS/SSA file ?</source>
+        <translation>Είναι σίγουρα αυτό ένα αρχείο ASS/SSA ;</translation>
     </message>
     <message>
-        <location line="+41"/>
-        <source>Select Subtitle file</source>
+        <location line="+40"/>
+        <source>Select Subtitle File</source>
         <translation>Επιλογή αρχείου  Υποτίτλων</translation>
     </message>
     <message>
-        <location line="+15"/>
-        <source>This is a srt file. Convert to SSA ?</source>
-        <translation>Αυτό είναι ένα αρχείο srt . Να μετατραπεί σε SSA ;</translation>
+        <location line="+5"/>
+        <source>Do not adjust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust for display aspect ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>This is a SRT file. Convert to SSA ?</source>
+        <translation>Αυτό είναι ένα αρχείο SRT . Να μετατραπεί σε SSA ;</translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+5"/>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Error</source>
         <translation>Σφάλμα</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Cannot load this srt file.</source>
-        <translation>Αδυναμία φορτώματος αυτού του αρχείου srt.</translation>
+        <location line="-14"/>
+        <source>Cannot load this SRT file.</source>
+        <translation>Αδυναμία φορτώματος αυτού του αρχείου SRT.</translation>
     </message>
     <message>
         <location line="+5"/>
-        <source>Cannot convert to ssa.</source>
-        <translation>Αδυναμία μετατροπής σε ssa.</translation>
+        <source>Cannot convert to SSA.</source>
+        <translation>Αδυναμία μετατροπής σε SSA.</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Cannot save converted file.</source>
         <translation>Αδυναμία αποθήκευσης του μεταποιημένου αρχείου.</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+56"/>
         <source>Fonts</source>
         <translation>Γραμματοσειρές</translation>
     </message>
@@ -8093,21 +3495,14 @@ This message will not be displayed again.</source>
 Αυτό το μήνυμα δεν θα επανεμφανιστεί.</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+52"/>
         <source>SSA Error</source>
         <translation>SSA Σφάλμα</translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Cannot read_file for *%s*</source>
-        <translation>Αδυναμία ανάγνωσης_αρχείου για το *%s*</translation>
-    </message>
-</context>
-<context>
-    <name>autoWizard</name>
-    <message>
-        <source>Codec:</source>
-        <translation type="obsolete">Κώδικας:</translation>
+        <source>ass_read_file() failed for %s</source>
+        <translation>Αδυναμία ανάγνωσης_αρχείου για το %s</translation>
     </message>
 </context>
 <context>
@@ -8288,33 +3683,9 @@ This message will not be displayed again.</source>
 <context>
     <name>blacken</name>
     <message>
-        <source>_Left border:</source>
-        <translation type="vanished">_Αριστερό όριο:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="vanished">_Δεξί όριο:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="vanished">_Επάνω όριο:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="vanished">_Κάτω όριο:</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.h" line="+41"/>
         <source>Blacken Borders</source>
         <translation>Μαύρισμα των Ορίων</translation>
-    </message>
-    <message>
-        <source>Incorrect parameters</source>
-        <translation type="vanished">Εσφαλμένες παράμετροι</translation>
-    </message>
-    <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="vanished">Όλες οι παράμετροι πρέπει να είναι ζυγοί αριθμοί και μέσα στα όρια.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8323,65 +3694,40 @@ This message will not be displayed again.</source>
     </message>
 </context>
 <context>
-    <name>blackenBorders</name>
-    <message>
-        <source>_Left border:</source>
-        <translation type="obsolete">_Αριστερό όριο:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="obsolete">_Δεξί όριο:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="obsolete">_Επάνω όριο:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="obsolete">_Κάτω όριο:</translation>
-    </message>
-    <message>
-        <source>Blacken Borders</source>
-        <translation type="obsolete">Μαύρισμα των Ορίων</translation>
-    </message>
-    <message>
-        <source>Incorrect parameters</source>
-        <translation type="obsolete">Εσφαλμένες παράμετροι</translation>
-    </message>
-    <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Όλες οι παράμετροι πρέπει να είναι ζυγοί αριθμοί και μέσα στα όρια.</translation>
-    </message>
-</context>
-<context>
     <name>blackenDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt4/blackenBorders.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+14"/>
         <source>Blacken Borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+38"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+38"/>
         <source>Right:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Top:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+43"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+43"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+21"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+21"/>
         <source>Bottom:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Left:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8410,18 +3756,6 @@ This message will not be displayed again.</source>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="+40"/>
         <source>Custom</source>
         <translation>Προσαρμοσμένο</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Λειτουργία: </translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Νέα ταχύτητα καρέ:</translation>
-    </message>
-    <message>
-        <source>Resample fps</source>
-        <translation type="obsolete">Επαναδειγματοληψία fps</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8680,14 +4014,6 @@ This message will not be displayed again.</source>
         <translation>Αντίθεση</translation>
     </message>
     <message>
-        <source>Contrast:</source>
-        <translation type="obsolete">Αντίθεση:</translation>
-    </message>
-    <message>
-        <source>Brightness:</source>
-        <translation type="obsolete">Φωτεινότητα:</translation>
-    </message>
-    <message>
         <location line="+94"/>
         <source>Luma</source>
         <translation>Φωτεινότητα</translation>
@@ -8775,14 +4101,6 @@ Do you want to load it  ?
 </context>
 <context>
     <name>crop</name>
-    <message>
-        <source>crop</source>
-        <translation type="vanished">περιτομή</translation>
-    </message>
-    <message>
-        <source>crop filter</source>
-        <translation type="vanished">μεταμορφωτής περιτομής</translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="+56"/>
         <source>Crop</source>
@@ -8958,13 +4276,6 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
-    <name>delogo</name>
-    <message>
-        <source>MPlayer delogo</source>
-        <translation type="obsolete">MPlayer αφαιρετής λογότυπου</translation>
-    </message>
-</context>
-<context>
     <name>delogo2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/ADM_vidMPdelogo.cpp" line="+41"/>
@@ -9043,21 +4354,6 @@ Do you want to load it  ?
         <location line="+20"/>
         <source>_Top Field First:</source>
         <translation>Πρώτα _το Επάνω Πεδίο:</translation>
-    </message>
-</context>
-<context>
-    <name>dmxHeader</name>
-    <message>
-        <source>Out of memory</source>
-        <translation type="obsolete">Μνήμη υπερπλήρης</translation>
-    </message>
-    <message>
-        <source>Opening MPEG</source>
-        <translation type="obsolete">Άνοιγμα MPEG</translation>
-    </message>
-    <message>
-        <source>MPEG renumbering error</source>
-        <translation type="obsolete">Σφάλμα στην επαναρίθμηση MPEG</translation>
     </message>
 </context>
 <context>
@@ -9236,151 +4532,14 @@ Do you want to load it  ?
         <translation>Φάση:</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Time Remaining:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Απομένων Χρόνος:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
         <location line="+94"/>
         <source>Minimize to Tray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Codec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Κώδικας Ήχου:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Container:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Σκεύος:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
         <location line="+114"/>
         <source>Video Codec:</source>
         <translation>Κώδικας Βίντεου:</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Μέγεθος Ήχου:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Total Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Συνολικό Μέγεθος:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Video Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Μέγεθος Βίντεου:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Average Bitrate:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Μέσος Ρυθμός Μπιτιών:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Processed Frames:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Επεξεργασμένα Στιγμιότυπα:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Quantiser:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Κβαντιστής:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Elapsed:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Πέρασε:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Frames/sec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Στιγμιότυπα/δευτ.:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>encodingWindow</name>
-    <message>
-        <source>Pause / Abort</source>
-        <translation type="obsolete">Παύση / Εγκατάληψη</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">Συνέχιση</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">Εγκατάλειψη</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">Απαιτούνται Δικαιώματα</translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">Απαιτούνται δικαιώματα Υπερχρήστη για να εκτελεστεί αυτή η λειτουργία.</translation>
-    </message>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">Τερματίζεται</translation>
     </message>
 </context>
 <context>
@@ -9403,14 +4562,6 @@ p, li { white-space: pre-wrap; }
 </context>
 <context>
     <name>eq2Dialog</name>
-    <message>
-        <source>MPlayer eq2</source>
-        <translation type="obsolete">MPlayer eq2</translation>
-    </message>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">Γάμμα</translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/eq2.ui" line="+14"/>
         <location line="+88"/>
@@ -9474,44 +4625,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+6"/>
         <source>Opus Configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>fade</name>
-    <message>
-        <source>Fade</source>
-        <translation type="obsolete">Ομαλή μετάβαση</translation>
-    </message>
-    <message>
-        <source>Fade in/out.</source>
-        <translation type="obsolete">Ομαλή είσοδος/έξοδος.</translation>
-    </message>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">Έξοδος</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="obsolete">Φθίνουσα έξοδος</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation type="obsolete">Είσοδος</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="obsolete">Αύξουσα είσοδος</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">_Τύπος μετάβασης:</translation>
-    </message>
-</context>
-<context>
-    <name>fade to</name>
-    <message>
-        <source>Fade</source>
-        <translation type="obsolete">Ομαλή μετάβαση</translation>
     </message>
 </context>
 <context>
@@ -9646,6 +4759,44 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ffVAEncHEVC</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaHEVC/ADM_ffVAEncHEVC.cpp" line="+343"/>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Maximum Consecutive B-Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Max Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Frame Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>FFmpeg VA-API HEVC Encoder Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ffmpeg2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+223"/>
@@ -9663,7 +4814,7 @@ p, li { white-space: pre-wrap; }
         <translation>Προοδευτικό</translation>
     </message>
     <message>
-        <location line="+51"/>
+        <location line="+50"/>
         <source>Interlacing</source>
         <translation>Παράλληλη Πλέξη</translation>
     </message>
@@ -9673,7 +4824,7 @@ p, li { white-space: pre-wrap; }
         <translation>Έλεγχος Ρυθμού</translation>
     </message>
     <message>
-        <location line="-86"/>
+        <location line="-85"/>
         <source>Normal (4:3)</source>
         <translation>Κανονικό (4:3)</translation>
     </message>
@@ -9743,7 +4894,7 @@ p, li { white-space: pre-wrap; }
         <translation>Πρώτα το Κάτω Πεδίο</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+9"/>
         <source>Threading</source>
         <translation>Γνέσιμο</translation>
     </message>
@@ -9852,31 +5003,6 @@ p, li { white-space: pre-wrap; }
     <name>ffmpeg4</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
-        <source>None</source>
-        <translation>Κανένα</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation>Πλήρες</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation>Καταγραφή</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation>Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation>EPZS</translation>
-    </message>
-    <message>
-        <location line="+5"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
@@ -9886,12 +5012,12 @@ p, li { white-space: pre-wrap; }
         <translation>MPEG</translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+44"/>
         <source>User Interface</source>
         <translation>Περιβάλλον Χρήσης</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+9"/>
         <source>Motion Estimation</source>
         <translation>Εκτίμηση Κίνησης</translation>
     </message>
@@ -9901,12 +5027,7 @@ p, li { white-space: pre-wrap; }
         <translation>Έλεγχος Ρυθμού</translation>
     </message>
     <message>
-        <location line="-72"/>
-        <source>X1</source>
-        <translation>X1</translation>
-    </message>
-    <message>
-        <location line="+9"/>
+        <location line="-58"/>
         <source>MB comparison</source>
         <translation>Σύγκριση ΜέγαΜπάιτιων</translation>
     </message>
@@ -9941,12 +5062,7 @@ p, li { white-space: pre-wrap; }
         <translation>Αυτόματο (#cpu)</translation>
     </message>
     <message>
-        <location line="+10"/>
-        <source>Matrices</source>
-        <translation>Πίνακες</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+9"/>
         <source>Threading</source>
         <translation>Γνέσιμο</translation>
     </message>
@@ -9981,12 +5097,7 @@ p, li { white-space: pre-wrap; }
         <translation>_Εικονοστοιχείο τεταρτημόριου</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_GMC</source>
-        <translation>_GMC</translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Number of B frames:</source>
         <translation>_Πλήθος από Β΄ στιγμιότυπα:</translation>
     </message>
@@ -10026,7 +5137,7 @@ p, li { white-space: pre-wrap; }
         <translation>Προχωρημένο Απλό Προφίλ</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Quantization</source>
         <translation>Κβαντισμός</translation>
     </message>
@@ -10254,10 +5365,6 @@ p, li { white-space: pre-wrap; }
         <location line="+9"/>
         <source>NVENC H.264 configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>libavcodec MPEG-4 configuration</source>
-        <translation type="vanished">libavcodec MPEG-4 ρύθμιση</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+4"/>
@@ -10488,25 +5595,6 @@ Do you want to replace it?</source>
     </message>
 </context>
 <context>
-    <name>filtermainWindow</name>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">Το φίλτρο είναι ήδη μερικό</translation>
-    </message>
-    <message>
-        <source>Load set of filters</source>
-        <translation type="obsolete">Φόρτωση ομάδας μεταμορφωτών</translation>
-    </message>
-    <message>
-        <source>Nothing to save</source>
-        <translation type="obsolete">Τίποτα για αποθήκευση</translation>
-    </message>
-    <message>
-        <source>Save set of filters</source>
-        <translation type="obsolete">Αποθήκευση ομάδας φίλτρων</translation>
-    </message>
-</context>
-<context>
     <name>flux</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="+88"/>
@@ -10534,31 +5622,6 @@ Do you want to replace it?</source>
     <name>flv1</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
-        <source>None</source>
-        <translation>Κανένα</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation>Πλήρες</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation>Καταγραφή</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation>Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation>EPZS</translation>
-    </message>
-    <message>
-        <location line="+5"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
@@ -10568,7 +5631,7 @@ Do you want to replace it?</source>
         <translation>MPEG</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+26"/>
         <source>User Interface</source>
         <translation>Περιβάλλον Χρήσης</translation>
     </message>
@@ -10578,12 +5641,7 @@ Do you want to replace it?</source>
         <translation>Έλεγχος Ρυθμού</translation>
     </message>
     <message>
-        <location line="-42"/>
-        <source>X1</source>
-        <translation>X1</translation>
-    </message>
-    <message>
-        <location line="+9"/>
+        <location line="-32"/>
         <source>MB comparison</source>
         <translation>Σύγκριση ΜέγαΜπάιτιων</translation>
     </message>
@@ -10598,7 +5656,7 @@ Do you want to replace it?</source>
         <translation>Παραμόρφωση ρυθμού</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>Mi_n. quantizer:</source>
         <translation>Ελά_χιστος κβαντιστής:</translation>
     </message>
@@ -10978,13 +6036,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>h263Header</name>
-    <message>
-        <source>Size is not (s)QCIF</source>
-        <translation type="obsolete">Το μέγεθος δεν είναι (s)QCIF</translation>
-    </message>
-</context>
-<context>
     <name>hflip</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/horizontalFlip/horizontalFlip.cpp" line="+44"/>
@@ -11052,14 +6103,6 @@ I will assume it has and try to continue</source>
         <location line="-1"/>
         <source>Mplayer Hue</source>
         <translation>Απόχρωσ MPlayer</translation>
-    </message>
-    <message>
-        <source>Original</source>
-        <translation type="vanished">Αρχικό</translation>
-    </message>
-    <message>
-        <source>Processed</source>
-        <translation type="vanished">Επεξεργασμένο</translation>
     </message>
 </context>
 <context>
@@ -11282,37 +6325,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>jobsWindow</name>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">Έτοιμο</translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">Επιτεύχθηκε</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">Αποτυχεία</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">Διαγράφηκε</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">Εκτελείται</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">Σίγουρα!</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">Διαγραφή διαδικασίας</translation>
-    </message>
-</context>
-<context>
     <name>jpeg</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="+102"/>
@@ -11338,41 +6350,6 @@ I will assume it has and try to continue</source>
         <location line="+4"/>
         <source>Mjpeg Configuration</source>
         <translation>Ρύθμιση Mjpeg</translation>
-    </message>
-</context>
-<context>
-    <name>kernelDeint</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">πάνω-κάτω</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Κάτω</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">&lt;b&gt;Σειρά Subpixel&lt;/b&gt;:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Κατώφλι:</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">_Οξύ</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">_Μηχανή οξύτητας:</translation>
-    </message>
-    <message>
-        <source>T_woway</source>
-        <translation type="obsolete">_Διπλής Κατεύθυνσης</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">_Χαρτογράφηση</translation>
     </message>
 </context>
 <context>
@@ -11487,21 +6464,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>largeMedian</name>
-    <message>
-        <source>_Process luma</source>
-        <translation type="obsolete">Κατώφλι φωτεινότητας:</translation>
-    </message>
-    <message>
-        <source>P_rocess chroma</source>
-        <translation type="obsolete">Επεξε_ργασία του χρωματισμού</translation>
-    </message>
-    <message>
-        <source>Fast Convolution</source>
-        <translation type="obsolete">&amp;Προσαρμοσμένη περιέλιξη...</translation>
-    </message>
-</context>
-<context>
     <name>largemedian</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/largeMedian/ADM_largeMedian.cpp" line="+71"/>
@@ -11535,52 +6497,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>lavDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Κανένα</translation>
-    </message>
-    <message>
-        <source>Linear blend</source>
-        <translation type="obsolete">Γραμμική ανάμειξη</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">Γραμμική ανάμειξη</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Κυβική Spline</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Απόπλεξη διαμέσου</translation>
-    </message>
-    <message>
-        <source>FFmpeg deint</source>
-        <translation type="obsolete">Απόπλεξη FFmpeg</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">_Απόπλεξη:</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">_Συσκευή ήχου</translation>
-    </message>
-    <message>
-        <source>libavcodec deinterlacer</source>
-        <translation type="obsolete">Ρύθμιση Deinterlacer...</translation>
-    </message>
-</context>
-<context>
-    <name>lavMuxer</name>
-    <message>
-        <source>Incompatible frame rate</source>
-        <translation type="obsolete">Ασύμβατη ταχύτητα καρέ</translation>
-    </message>
-</context>
-<context>
     <name>lavcodec</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
@@ -11594,11 +6510,6 @@ I will assume it has and try to continue</source>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
         <translation>_Εναλλαγή U και V</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show motion _vectors</source>
-        <translation>Εμφάνιση των _διανυσμάτων κίνησης</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -11680,30 +6591,6 @@ I will assume it has and try to continue</source>
 <context>
     <name>logo</name>
     <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">_Λογότυπο (αρχείο jpg):</translation>
-    </message>
-    <message>
-        <source>Select JPEG file</source>
-        <translation type="obsolete">Επιλογή Αρχείου JPEG</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">Θέση _X:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">Θέση _Y:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">_Άλφα:</translation>
-    </message>
-    <message>
-        <source>Logo</source>
-        <translation type="obsolete">Λογότυπο</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="+22"/>
         <source>Add logo</source>
         <translation>Προσθήκη λογότυπου</translation>
@@ -11763,17 +6650,9 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Alpha will be ignored if the image has alpha channel (png in RGB)</source>
-        <translation type="vanished">Το Άλφα (διαφάνεια) θα αγνοείται, αν η εικόνα έχει κανάλι άλφα (png σε RGB)</translation>
-    </message>
-    <message>
         <location line="-85"/>
         <source>Alpha</source>
         <translation>Άλφα</translation>
-    </message>
-    <message>
-        <source>You can click in the image to set the logo approximatively</source>
-        <translation type="vanished">Μπορείς να κλικάρεις στην εικόνα για να ορίσεις το λογότυπο στο περίπου</translation>
     </message>
 </context>
 <context>
@@ -11795,18 +6674,6 @@ I will assume it has and try to continue</source>
         <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="+20"/>
         <source>Video Filter Manager</source>
         <translation>Διαχειριστής Μεταμορφωτών Βίντεου</translation>
-    </message>
-    <message>
-        <source>Save Script</source>
-        <translation type="obsolete">Αποθήκευση σεναρίου</translation>
-    </message>
-    <message>
-        <source>Down</source>
-        <translation type="obsolete">Κάτω</translation>
-    </message>
-    <message>
-        <source>Up</source>
-        <translation type="obsolete">Επάνω</translation>
     </message>
     <message>
         <location line="+180"/>
@@ -11849,10 +6716,6 @@ I will assume it has and try to continue</source>
         <translation>&amp;Κλείσιμο</translation>
     </message>
     <message>
-        <source>External</source>
-        <translation type="obsolete">Εξωτερικό</translation>
-    </message>
-    <message>
         <location line="-244"/>
         <source>&lt;big&gt;&lt;b&gt;Active Filters&lt;/b&gt;&lt;/big&gt;</source>
         <translation>&lt;big&gt;&lt;b&gt;Ενεργός Μεταμορφωτής&lt;/b&gt;&lt;/big&gt;</translation>
@@ -11874,45 +6737,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>mainMenu</name>
-    <message>
-        <source>Connect to avsproxy</source>
-        <translation type="obsolete">Σύνδεση στο avsproxy</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Αντιγραφή</translation>
-    </message>
-    <message>
-        <source>Set Marker A</source>
-        <translation type="obsolete">Όρισε το δείκτη Α</translation>
-    </message>
-    <message>
-        <source>Set Marker B</source>
-        <translation type="obsolete">Όρισε το δείκτη Β</translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">Προτιμήσεις</translation>
-    </message>
-    <message>
-        <source>Filters</source>
-        <translation type="obsolete">Φίλτρα</translation>
-    </message>
-    <message>
-        <source>Play/Stop</source>
-        <translation type="obsolete">Αναπαραγωγή/Σταμάτημα</translation>
-    </message>
-    <message>
-        <source>Previous Black Frame</source>
-        <translation type="obsolete">Προηγούμενο Μαύρο Καρέ</translation>
-    </message>
-    <message>
-        <source>Next Black Frame</source>
-        <translation type="obsolete">Επόμενο Μαύρο Καρέ</translation>
-    </message>
-</context>
-<context>
     <name>matroskademuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Matroska/ADM_mkvIndexer.cpp" line="+48"/>
@@ -11920,7 +6744,7 @@ I will assume it has and try to continue</source>
         <translation>Εικόνες Matroska</translation>
     </message>
     <message>
-        <location line="+426"/>
+        <location line="+433"/>
         <source>Matroska clusters</source>
         <translation>Συστάδες Matroska</translation>
     </message>
@@ -12048,10 +6872,6 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp3d</name>
     <message>
-        <source>MPlayer denoise3d</source>
-        <translation type="vanished">Αποθορυβοτής3Δ MPlayer</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="+201"/>
         <source>Mplayer Denoise 3D HQ</source>
         <translation>Αποθορυβοτής MPlayer 3Δ Υψ.Ποι.</translation>
@@ -12086,10 +6906,6 @@ I will assume it has and try to continue</source>
         <source>MPlayer Denoise 3D HQ</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Luma _Temporal strength:</source>
-        <translation type="vanished">Χωρική δύναμη Φω_τεινότητας:</translation>
-    </message>
 </context>
 <context>
     <name>mp3dlow</name>
@@ -12097,10 +6913,6 @@ I will assume it has and try to continue</source>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="+71"/>
         <source>_Temporal strength:</source>
         <translation>_Χρονική ένταση:</translation>
-    </message>
-    <message>
-        <source>MPlayer denoise3d</source>
-        <translation type="vanished">Αποθορυβοτής3Δ MPlayer</translation>
     </message>
     <message>
         <location line="-35"/>
@@ -12131,13 +6943,9 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+815"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>Πρόβλημα στην ανάγνωση των κεφαλίδων SVQ3</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="vanished">Κανένας πίνακας stts</translation>
     </message>
 </context>
 <context>
@@ -12157,10 +6965,6 @@ I will assume it has and try to continue</source>
         <location line="+9"/>
         <source>Only AAC, AC3, E-AC3 and mpegaudio supported for audio</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Only AAC, AC3, and mpegaudio supported for audio</source>
-        <translation type="vanished">Μόνο AAC, AC3, κ΄ mpegaudio υποστηρίζονται για ήχο</translation>
     </message>
     <message>
         <location line="+112"/>
@@ -12325,26 +7129,6 @@ I will assume it has and try to continue</source>
 <context>
     <name>msharpen</name>
     <message>
-        <source>_Mask</source>
-        <translation type="vanished">_Μάσκα</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="vanished">_Υψηλό Q</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="vanished">_Κατώφλι:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="vanished">_Ισχύς:</translation>
-    </message>
-    <message>
-        <source>MSharpen</source>
-        <translation type="vanished">MSharpen (οξύτητα)</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="+48"/>
         <source>Msharpen</source>
         <translation>M-οξύτητα</translation>
@@ -12407,29 +7191,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>nuvHeader</name>
-    <message>
-        <source>Opening Nuppel video</source>
-        <translation type="obsolete">Άνοιγμα βίντεο Nuppel</translation>
-    </message>
-    <message>
-        <source>Sure you want to abort ?</source>
-        <translation type="obsolete">Σίγουρα θέλεις να εγκαταλείψεις ;</translation>
-    </message>
-    <message>
-        <source>Size mismatch</source>
-        <translation type="obsolete">Αταίριαστα μεγέθη</translation>
-    </message>
-    <message>
-        <source>Expect a crash.</source>
-        <translation type="obsolete">Αναμένεται κατάρευση.</translation>
-    </message>
-    <message>
-        <source>Do you want to save an index ?</source>
-        <translation type="obsolete">Θέλεις να αποθηκεύσεις ένα ευρετήριο ;</translation>
-    </message>
-</context>
-<context>
     <name>nvenc</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/nvEnc/ADM_nvEnc.cpp" line="+136"/>
@@ -12483,17 +7244,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>oggHeader</name>
-    <message>
-        <source>Take second track ?</source>
-        <translation type="obsolete">Λήψη δεύτερου καναλιού;</translation>
-    </message>
-    <message>
-        <source>Scanning OGM</source>
-        <translation type="obsolete">Σάρωση OGM</translation>
-    </message>
-</context>
-<context>
     <name>opendmldemuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="+321"/>
@@ -12532,13 +7282,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>previewDialog</name>
-    <message>
-        <source>Preview</source>
-        <translation type="obsolete">Προεπισκόπηση</translation>
-    </message>
-</context>
-<context>
     <name>printinfo</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/printInfo/printInfo.cpp" line="+44"/>
@@ -12549,25 +7292,6 @@ I will assume it has and try to continue</source>
         <location line="+1"/>
         <source>Display some informations on Screen.</source>
         <translation>Εμφάνιση κάποιων πληροφοριών στην Οθόνη.</translation>
-    </message>
-</context>
-<context>
-    <name>propWindow</name>
-    <message>
-        <source>No</source>
-        <translation type="obsolete">Όχι</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation type="obsolete">Ναι</translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">Μονοφωνικό</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">Στέρεο</translation>
     </message>
 </context>
 <context>
@@ -12609,21 +7333,9 @@ I will assume it has and try to continue</source>
         <translation>Κώδικας 4CC:</translation>
     </message>
     <message>
-        <source>Packed Bitstream:</source>
-        <translation type="obsolete">%1 %</translation>
-    </message>
-    <message>
-        <source>Quarter Pixel:</source>
-        <translation type="obsolete">Μέγεθος σε Εικ/χεία:</translation>
-    </message>
-    <message>
         <location line="+62"/>
         <source>Audio</source>
         <translation>Ήχος</translation>
-    </message>
-    <message>
-        <source>File Size:</source>
-        <translation type="obsolete">Μέγεθος Αρχείου:</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -12688,7 +7400,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>psdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+80"/>
         <source>Error</source>
         <translation>Σφάλμα</translation>
     </message>
@@ -12705,7 +7417,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Δημιουργία ευρετηρίου</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+42"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Υπάρχουν αρκετά αρχεία με συνεχόμενες ονομασίες. Να φορτωθούν όλα μαζί;</translation>
     </message>
@@ -12807,19 +7519,19 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qfile</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+50"/>
-        <location line="+139"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+45"/>
+        <location line="+141"/>
         <source>All files (*.*)</source>
         <translation>Όλα τα αρχεία (*.*)</translation>
     </message>
     <message>
-        <location line="-54"/>
-        <location line="+96"/>
+        <location line="-58"/>
+        <location line="+105"/>
         <source> files (*.</source>
         <translation> αρχεία (*.</translation>
     </message>
     <message>
-        <location line="-68"/>
+        <location line="-81"/>
         <source>Overwrite file </source>
         <translation>Επανογραφή αρχείου </translation>
     </message>
@@ -12842,7 +7554,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Πρόσφατες Εργασίες</translation>
     </message>
     <message>
-        <location line="+658"/>
+        <location line="+660"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12907,7 +7619,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+617"/>
+        <location line="+619"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>Η εφαρμογή αντιμετώπισε ένα μοιραίο πρόβλημα
@@ -13125,7 +7837,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qprocessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+66"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+65"/>
         <source>Unknown</source>
         <translation>Άγνωστο</translation>
     </message>
@@ -13323,6 +8035,19 @@ Ready.
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="+88"/>
         <source>Select Idx File</source>
         <translation>Επιλογή Αρχείου Idx</translation>
+    </message>
+</context>
+<context>
+    <name>rawmuxer</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerRaw/muxerRawConfig.cpp" line="+29"/>
+        <source>Prefer Annex B type stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Video Only Muxer Settings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -13809,13 +8534,6 @@ Ready.
     </message>
 </context>
 <context>
-    <name>resizeWindow</name>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Το πλάτος και το ύψος δεν μπορούν να είναι παράδοξα</translation>
-    </message>
-</context>
-<context>
     <name>rotate</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="+52"/>
@@ -13870,46 +8588,11 @@ Ready.
     </message>
 </context>
 <context>
-    <name>rotateFilter</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Κανένα</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 μοίρες</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 μοίρες</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 μοίρες</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">_Γωνία:</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">Περιστροφή</translation>
-    </message>
-</context>
-<context>
     <name>seekablePreviewDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="+20"/>
         <source>Preview</source>
         <translation>Προεπισκόπηση</translation>
-    </message>
-    <message>
-        <source>00:00:00.000</source>
-        <translation type="vanished">00:00:00.000</translation>
-    </message>
-    <message>
-        <source>next</source>
-        <translation type="vanished">επόμενο</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
@@ -14016,33 +8699,6 @@ Ready.
         <location line="+1"/>
         <source>_Duration:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>subAss</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">Αρχείο _υποτίτλων (ASS/SSA):</translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">Απόσταση μεταξύ γρα&amp;μμών:</translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">Μέγεθος _γραμματοσειράς:</translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">Άνω περιθώριο:</translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">Περιθώριο _πάτου</translation>
-    </message>
-    <message>
-        <source>ASS</source>
-        <translation type="obsolete">ASS</translation>
     </message>
 </context>
 <context>
@@ -14244,8 +8900,8 @@ Please delete the idx2 file and reopen.</source>
 Παρακαλώ, διέγραψε το αρχείο idx2, και κάνε ξανά άνοιγμα.</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+186"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+329"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+188"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+327"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+83"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Υπάρχουν αρκετά αρχεία με συνεχόμενες ονομασίες. Να φορτωθούν όλα μαζί;</translation>
@@ -14477,68 +9133,7 @@ Please delete the idx2 file and reopen.</source>
     </message>
 </context>
 <context>
-    <name>vidBlendRemoval</name>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Κατώφλι:</translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">_Θόρυβος:</translation>
-    </message>
-    <message>
-        <source>I_dentical:</source>
-        <translation type="obsolete">_Όμοια:</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">&amp;Εμφάνιση αναφορών</translation>
-    </message>
-    <message>
-        <source>Blend Removal</source>
-        <translation type="obsolete">Αφαίρεση ειδοποίησης</translation>
-    </message>
-</context>
-<context>
-    <name>vidColorYuv</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Κανένα</translation>
-    </message>
-</context>
-<context>
-    <name>vidHardPDRemoval</name>
-    <message>
-        <source>Metrics</source>
-        <translation type="obsolete">Μετρικά γραμματοσειράς Adobe</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Κατώφλι:</translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">_Θόρυβος:</translation>
-    </message>
-    <message>
-        <source>_Identical:</source>
-        <translation type="obsolete">_Πανομοιότυπα:</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">&amp;Εμφάνιση αναφορών</translation>
-    </message>
-    <message>
-        <source>Hard IVTC Removal</source>
-        <translation type="obsolete">Αφαίρεση Σκληρού IVTC</translation>
-    </message>
-</context>
-<context>
     <name>vobSubDialog</name>
-    <message>
-        <source>VobSub Settings</source>
-        <translation type="obsolete">Ρυθμίσεις VobSub</translation>
-    </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="+13"/>
         <source>Subtitle Font Size and Position</source>
@@ -14656,24 +9251,19 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <translation>Επεξεργασία</translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+19"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="-48"/>
+        <location line="-13"/>
         <source>Elapsed:</source>
         <translation>Πέρασε:</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+20"/>
         <source>Time Remaining:</source>
         <translation>Απομένων Χρόνος:</translation>
-    </message>
-    <message>
-        <location line="+113"/>
-        <source>Cancel</source>
-        <translation>Ακύρωση</translation>
     </message>
 </context>
 <context>
@@ -14908,10 +9498,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+9"/>
         <source>Custom Matrix</source>
         <translation>Προσαρμοσμένο Πλαίσιο</translation>
-    </message>
-    <message>
-        <source>Advanced</source>
-        <translation type="obsolete">Προχωρημένα</translation>
     </message>
     <message>
         <location line="+1052"/>
@@ -15250,10 +9836,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+20"/>
         <source>Subpixel Refinement</source>
         <translation>Λαγάρισμα Υπο-εικονοστοιχείου</translation>
-    </message>
-    <message>
-        <source>10 (Best)</source>
-        <translation type="vanished">10 (Καλύτερο)</translation>
     </message>
     <message>
         <location line="+98"/>
@@ -17375,22 +11957,6 @@ If it is a system profile it will be recreated next time.</source>
         <translation>1:1 (Υπολογιστής)</translation>
     </message>
     <message>
-        <source>4:3 (PAL))</source>
-        <translation type="vanished">4:3 (PAL))</translation>
-    </message>
-    <message>
-        <source>4:3 (NTSC))</source>
-        <translation type="vanished">4:3 (NTSC))</translation>
-    </message>
-    <message>
-        <source>16:9 (PAL))</source>
-        <translation type="vanished">16:9 (PAL))</translation>
-    </message>
-    <message>
-        <source>16:9 (NTSC))</source>
-        <translation type="vanished">16:9 (NTSC))</translation>
-    </message>
-    <message>
         <location line="+11"/>
         <source>MotionEstimation</source>
         <translation>ΕκτίμησηΚίνησης</translation>
@@ -17527,33 +12093,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+4"/>
         <source>yadif</source>
         <translation>yadif</translation>
-    </message>
-</context>
-<context>
-    <name>yadifFilter</name>
-    <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">Χρονικός και χωρικός έλεγχος</translation>
-    </message>
-    <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="obsolete">Παράβλεψη χωρικού και χρονικού ελέγχου</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">Πρώτα το κάτω πεδίο</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">Πρώτα το επάνω πεδίο</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Κατάσταση Λειτουργίας:</translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">_Σειρά:</translation>
     </message>
 </context>
 </TS>

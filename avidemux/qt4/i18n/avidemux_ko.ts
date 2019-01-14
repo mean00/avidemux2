@@ -14,7 +14,7 @@
         <translation>%s 열기 실패!</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+28"/>
         <source>width</source>
         <translation type="unfinished"></translation>
     </message>
@@ -383,37 +383,32 @@ Drop timing informations ?</source>
         <translation>대화</translation>
     </message>
     <message>
-        <location line="+19"/>
-        <source>Cancel</source>
-        <translation>취소</translation>
-    </message>
-    <message>
-        <location line="+7"/>
+        <location line="+33"/>
         <source>TimeLeft</source>
         <translation>남은시간</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-21"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+42"/>
         <source>ProcessImages</source>
         <translation>이미지처리</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="-35"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+28"/>
         <source>Speed</source>
         <translation>속도</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-7"/>
         <source>0 fps</source>
         <translation>0 fps</translation>
     </message>
@@ -480,17 +475,17 @@ Drop timing informations ?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="+151"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="+141"/>
         <source>&amp;Auto</source>
         <translation>자동(&amp;U)</translation>
     </message>
     <message>
-        <location line="-136"/>
+        <location line="-126"/>
         <source>Avidemux</source>
         <translation>Avidemux</translation>
     </message>
     <message>
-        <location line="+105"/>
+        <location line="+95"/>
         <source>&amp;Help</source>
         <translation>도움말(&amp;H)</translation>
     </message>
@@ -766,10 +761,6 @@ Drop timing informations ?</source>
         <translation>표시 B로 가기 [PAGE DOWN]</translation>
     </message>
     <message>
-        <source>Display output video on playback</source>
-        <translation type="vanished">재생시 출력 비디오 표시하기</translation>
-    </message>
-    <message>
         <location line="+213"/>
         <source>Play filtered</source>
         <translation>처리 후 재생</translation>
@@ -1001,16 +992,8 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+10"/>
-        <source>© 2001 - 2018  Mean</source>
+        <source>© 2001 - 2019  Mean / Eumagga0x2a</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>© 2001 - 2017  Mean</source>
-        <translation type="vanished">© 2001 - 2018  Mean</translation>
-    </message>
-    <message>
-        <source>© 2001 - 2016  Mean</source>
-        <translation type="vanished">© 2001 - 2018  Mean</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -1323,7 +1306,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+367"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+366"/>
         <source>Stereo</source>
         <translation>스테레오</translation>
     </message>
@@ -1376,10 +1359,6 @@ Drop timing informations ?</source>
         <location line="+4"/>
         <source>Automatic</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="vanished">자동 (최대 -3 dB)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1537,7 +1516,7 @@ Drop timing informations ?</source>
         <location line="+278"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+409"/>
+        <location filename="../../common/gui_savenew.cpp" line="+423"/>
         <source>Audio</source>
         <translation>오디오</translation>
     </message>
@@ -1612,12 +1591,12 @@ Drop timing informations ?</source>
         <translation>필터 강도:</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_Swap U and V</source>
-        <translation>U와 V 교체</translation>
+        <location line="-1"/>
+        <source>The options above are effective only for MPEG and DivX with software decoding</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+13"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-70"/>
         <source>_Horizontal deblocking</source>
         <translation>수평 깍두기 제거 (deblocking)</translation>
@@ -1632,6 +1611,11 @@ Drop timing informations ?</source>
         <location line="+1"/>
         <source>_Deringing</source>
         <translation>물결 현상 제거 (deringing)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>De_interlacing (ffmpegdeint)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-170"/>
@@ -1672,10 +1656,6 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <source>_Accept non-standard audio frequency for DVD</source>
         <translation>DVD에 대해 비표준 오디오 주파수 받아들이기 </translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="vanished">OpenDML 파일 만들기</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1805,10 +1785,6 @@ Drop timing informations ?</source>
         <translation>우선 순위</translation>
     </message>
     <message>
-        <source>_Split MPEG files every (MB):</source>
-        <translation type="vanished">MPEG 파일 용량 자르기 (MB):</translation>
-    </message>
-    <message>
         <location line="+5"/>
         <source>_Use alternative tag for MP3 in .mp4</source>
         <translation>.mp4에서 MP3용 대체 태그 사용하기</translation>
@@ -1886,7 +1862,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+5"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+211"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+213"/>
         <source>PCM</source>
         <translation>PCM</translation>
     </message>
@@ -2095,7 +2071,7 @@ Drop timing informations ?</source>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="+1473"/>
+        <location filename="../../common/gui_main.cpp" line="+1476"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -2199,7 +2175,7 @@ It is needed to create PSP compatible video.</source>
         <translation>FAAC 코덱이 없습니다! PSP 호환 비디오를 만들 때 필요합니다.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1379"/>
+        <location filename="../../common/gui_main.cpp" line="-1382"/>
         <source>Select script/project to run</source>
         <translation>실행할 스크립트/프로젝트 선택</translation>
     </message>
@@ -2355,7 +2331,7 @@ Go to Audio-&gt;MainTrack to select the active one.</source>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+317"/>
+        <location line="+320"/>
         <source>Something bad happened (II)</source>
         <translation>잘못된 일이 발생했습니다 (II)</translation>
     </message>
@@ -2398,7 +2374,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
         <source>Something bad happened</source>
         <translation>잘못된 일이 발생했습니다</translation>
     </message>
@@ -2485,7 +2461,7 @@ Is it running ?</source>
         <translation>이 기능이 비활성화되었거나 더 이상 유효하지 않습니다</translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+443"/>
+        <location filename="../../common/gui_play.cpp" line="+446"/>
         <source>Trouble initializing audio device</source>
         <translation>오디오 장치 초기화 중 문제 발생</translation>
     </message>
@@ -2627,22 +2603,6 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Fail to save as jpeg</source>
-        <translation type="vanished">JPEG로 저장 실패</translation>
-    </message>
-    <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="vanished">JPEG 세트로 저장 중</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="vanished">프레임을 디코드할 수 없습니다</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="vanished">취소 중.</translation>
-    </message>
-    <message>
         <location line="-34"/>
         <location line="+83"/>
         <source>Done</source>
@@ -2652,10 +2612,6 @@ Is it running ?</source>
         <location line="-83"/>
         <source>Saved %d images.</source>
         <translation>%d개의 이미지를 저장했습니다.</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="vanished">전체 이미지를 저장할 수 없습니다.</translation>
     </message>
     <message>
         <location line="+63"/>
@@ -2693,13 +2649,13 @@ Is it running ?</source>
         <translation>%s 작업을 추가할 수 없습니다</translation>
     </message>
     <message>
-        <location filename="../../common/gui_savenew.cpp" line="-233"/>
+        <location filename="../../common/gui_savenew.cpp" line="-244"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
         <translation>이전의 첫 패스 데이터를 재사용할까요? 경고, 설정을 닫어야 합니다.</translation>
     </message>
     <message>
-        <location line="+160"/>
+        <location line="+171"/>
         <location line="+12"/>
         <location line="+16"/>
         <location line="+8"/>
@@ -2737,15 +2693,15 @@ Do you want to continue anyway ?</source>
 어쨌든 계속할까요?</translation>
     </message>
     <message>
-        <location line="-244"/>
-        <location line="+255"/>
+        <location line="-255"/>
+        <location line="+266"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation>먹서</translation>
     </message>
     <message>
-        <location line="-281"/>
-        <location line="+255"/>
+        <location line="-292"/>
+        <location line="+266"/>
         <source>Cannot instantiate muxer</source>
         <translation>먹서를 인스턴스화할 수 없습니다</translation>
     </message>
@@ -3076,6 +3032,11 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Float PCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Ogg Vorbis</source>
         <translation>Ogg Vorbis</translation>
     </message>
@@ -3150,12 +3111,8 @@ Do you want to continue anyway ?</source>
         <translation>너무 짧음</translation>
     </message>
     <message>
-        <source>The video has been saved but seems to be incomplete.</source>
-        <translation type="vanished">비디오를 저장했으나 미완성인 듯 싶습니다. </translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+385"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+374"/>
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
@@ -3246,8 +3203,8 @@ Do you want to continue anyway ?</source>
         <translation>1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
-        <location line="+32"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
+        <location line="+30"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -3300,7 +3257,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+227"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3373,7 +3330,7 @@ Proceed anyway?</source>
         <translation>파일을 열 수 없습니다</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+471"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+468"/>
         <source>Indexing</source>
         <translation>인덱싱</translation>
     </message>
@@ -3422,33 +3379,33 @@ Proceed anyway?</source>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+67"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+76"/>
         <source>SSA/ASS/SRT</source>
         <translation>SSA/ASS/SRT</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Hardcode ass/ssa/srt subtitles using libass.</source>
+        <source>Hardcode ASS/SSA/SRT subtitles using libass.</source>
         <translation>ASS/SSA/SRT 자막을 libass로 하드코딩합니다.</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+63"/>
         <source>Format ?</source>
         <translation>형식?</translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Are you sure this is an ass file ?</source>
-        <translation>ASS 파일이 확실한가요?</translation>
+        <source>Are you sure this is an ASS/SSA file ?</source>
+        <translation>ASS/SSA 파일이 확실한가요?</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+40"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation>자막 파일 (ASS/SSA):</translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Select Subtitle file</source>
+        <source>Select Subtitle File</source>
         <translation>자막 파일 선택</translation>
     </message>
     <message>
@@ -3468,8 +3425,18 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Botto_m margin</source>
-        <translation>하단 여백</translation>
+        <source>Botto_m margin:</source>
+        <translation>하단 여백:</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Do not adjust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust for display aspect ratio:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
@@ -3478,33 +3445,33 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+7"/>
-        <source>This is a srt file. Convert to SSA ?</source>
+        <source>This is a SRT file. Convert to SSA ?</source>
         <translation>이것은 SRT 파일입니다. SSA로 변환할까요?</translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+5"/>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Error</source>
         <translation>오류</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Cannot load this srt file.</source>
+        <location line="-14"/>
+        <source>Cannot load this SRT file.</source>
         <translation>이 SRT 파일을 불러올 수 없습니다.</translation>
     </message>
     <message>
         <location line="+5"/>
-        <source>Cannot convert to ssa.</source>
+        <source>Cannot convert to SSA.</source>
         <translation>SSA로 변환할 수 없습니다.</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Cannot save converted file.</source>
         <translation>변환한 파일을 저장할 수 없습니다.</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+56"/>
         <source>Fonts</source>
         <translation>글꼴</translation>
     </message>
@@ -3516,13 +3483,13 @@ This message will not be displayed again.</source>
 이 메시지는 다시 표시되지 않습니다.</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+52"/>
         <source>SSA Error</source>
         <translation>SSA 오류</translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Cannot read_file for *%s*</source>
+        <source>ass_read_file() failed for %s</source>
         <translation>*%s*용 파일을 읽을 수 없습니다</translation>
     </message>
 </context>
@@ -3718,31 +3685,37 @@ This message will not be displayed again.</source>
     <name>blackenDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt4/blackenBorders.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+14"/>
         <source>Blacken Borders</source>
         <translation>경계선 검은색으로 만들기</translation>
     </message>
     <message>
         <location line="+38"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+38"/>
         <source>Right:</source>
         <translation>오른쪽:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Top:</source>
         <translation>위쪽:</translation>
     </message>
     <message>
         <location line="+43"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+43"/>
         <source>Reset</source>
         <translation>초기화</translation>
     </message>
     <message>
         <location line="+21"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+21"/>
         <source>Bottom:</source>
         <translation>아래쪽:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Left:</source>
         <translation>왼쪽:</translation>
     </message>
@@ -4772,6 +4745,44 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
+    <name>ffVAEncHEVC</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaHEVC/ADM_ffVAEncHEVC.cpp" line="+343"/>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Maximum Consecutive B-Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Max Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Frame Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>FFmpeg VA-API HEVC Encoder Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ffmpeg2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+217"/>
@@ -4859,7 +4870,7 @@ Do you want to load it  ?
         <translation>하단 필드 먼저</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+9"/>
         <source>Threading</source>
         <translation>쓰레딩</translation>
     </message>
@@ -4978,36 +4989,6 @@ Do you want to load it  ?
     <name>ffmpeg4</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
-        <source>None</source>
-        <translation>없음</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation>전체</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation>로그</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation>Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation>EPZS</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>X1</source>
-        <translation>X1</translation>
-    </message>
-    <message>
-        <location line="+4"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
@@ -5052,12 +5033,7 @@ Do you want to load it  ?
         <translation>자동 (#cpu)</translation>
     </message>
     <message>
-        <location line="+10"/>
-        <source>Matrices</source>
-        <translation>매트릭스</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+9"/>
         <source>Threading</source>
         <translation>쓰레딩</translation>
     </message>
@@ -5092,12 +5068,7 @@ Do you want to load it  ?
         <translation>쿼터 픽셀 Q-pel</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_GMC</source>
-        <translation>GMC</translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Number of B frames:</source>
         <translation>B 프레임 개수:</translation>
     </message>
@@ -5142,7 +5113,7 @@ Do you want to load it  ?
         <translation>고급 간편 프로파일</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+6"/>
         <source>Motion Estimation</source>
         <translation>모션 추정</translation>
     </message>
@@ -5380,10 +5351,6 @@ Do you want to load it  ?
         <location line="+9"/>
         <source>NVENC H.264 configuration</source>
         <translation>NVENC H.264 설정</translation>
-    </message>
-    <message>
-        <source>libavcodec MPEG-4 configuration</source>
-        <translation type="vanished">libavcodec MPEG-4 설정</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+4"/>
@@ -5639,36 +5606,6 @@ Do you want to replace it?</source>
     <name>flv1</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
-        <source>None</source>
-        <translation>없음</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation>전체</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation>로그</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation>Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation>EPZS</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>X1</source>
-        <translation>X1</translation>
-    </message>
-    <message>
-        <location line="+4"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
@@ -5693,7 +5630,7 @@ Do you want to replace it?</source>
         <translation>비율 왜곡 Rate distortion</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>Mi_n. quantizer:</source>
         <translation>최소 양자화기:</translation>
     </message>
@@ -6559,11 +6496,6 @@ I will assume it has and try to continue</source>
         <translation>U와 V 교체하기</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>Show motion _vectors</source>
-        <translation>모션 벡터 보여주기</translation>
-    </message>
-    <message>
         <location line="+2"/>
         <source>Decoder Options</source>
         <translation>디코더 옵션</translation>
@@ -6692,10 +6624,6 @@ I will assume it has and try to continue</source>
         <translation>Y</translation>
     </message>
     <message>
-        <source>Alpha will be ignored if the image has alpha channel (png in RGB)</source>
-        <translation type="vanished">이미지에 알파 채널(RGB로 된 PNG)이 있다면 알파는 무시될 것입니다</translation>
-    </message>
-    <message>
         <location line="+20"/>
         <source>Alpha</source>
         <translation>알파</translation>
@@ -6800,7 +6728,7 @@ I will assume it has and try to continue</source>
         <translation>Matroska 이미지</translation>
     </message>
     <message>
-        <location line="+426"/>
+        <location line="+433"/>
         <source>Matroska clusters</source>
         <translation>Matroska 클러스터</translation>
     </message>
@@ -6962,14 +6890,6 @@ I will assume it has and try to continue</source>
         <source>MPlayer Denoise 3D HQ</source>
         <translation>MPlayer 디노이즈 3D HQ</translation>
     </message>
-    <message>
-        <source>Luma _Temporal strength:</source>
-        <translation type="vanished">루마 시간 강도:</translation>
-    </message>
-    <message>
-        <source>MPlayer denoise3d</source>
-        <translation type="vanished">MPlayer denoise3d</translation>
-    </message>
 </context>
 <context>
     <name>mp3dlow</name>
@@ -7003,21 +6923,13 @@ I will assume it has and try to continue</source>
         <source>MPlayer Denoise 3D</source>
         <translation>Mplayer 디노이즈 3D</translation>
     </message>
-    <message>
-        <source>MPlayer denoise3d</source>
-        <translation type="vanished">MPlayer denoise3d</translation>
-    </message>
 </context>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+815"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>SVQ3 헤더를 읽는 중 문제 발생</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="vanished">Stts 테이블이 없습니다</translation>
     </message>
 </context>
 <context>
@@ -7471,7 +7383,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>psdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+80"/>
         <source>Error</source>
         <translation>오류</translation>
     </message>
@@ -7488,7 +7400,7 @@ idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
         <translation>인덱싱</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+42"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>연속적인 파일 이름을 가진 파일이 여럿 있습니다. 전부 불러올까요?</translation>
     </message>
@@ -7590,19 +7502,19 @@ idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
 <context>
     <name>qfile</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+50"/>
-        <location line="+139"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+45"/>
+        <location line="+141"/>
         <source>All files (*.*)</source>
         <translation>전체 파일 (*.*)</translation>
     </message>
     <message>
-        <location line="-54"/>
-        <location line="+96"/>
+        <location line="-58"/>
+        <location line="+105"/>
         <source> files (*.</source>
         <translation>파일 (*.</translation>
     </message>
     <message>
-        <location line="-68"/>
+        <location line="-81"/>
         <source>Overwrite file </source>
         <translation>파일 덮어쓰기</translation>
     </message>
@@ -7625,7 +7537,7 @@ idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
         <translation>최근 프로젝트</translation>
     </message>
     <message>
-        <location line="+658"/>
+        <location line="+660"/>
         <source>Play/Stop</source>
         <translation>재생/정지</translation>
     </message>
@@ -7690,7 +7602,7 @@ idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
         <translation>1분 앞으로</translation>
     </message>
     <message>
-        <location line="+617"/>
+        <location line="+619"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>프로그램에서 치명적인 문제가 발생했습니다
@@ -7908,7 +7820,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qprocessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+66"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+65"/>
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
@@ -8105,6 +8017,19 @@ Ready.
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="+88"/>
         <source>Select Idx File</source>
         <translation>Idx 파일 선택</translation>
+    </message>
+</context>
+<context>
+    <name>rawmuxer</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerRaw/muxerRawConfig.cpp" line="+29"/>
+        <source>Prefer Annex B type stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Video Only Muxer Settings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8652,10 +8577,6 @@ Ready.
         <translation>미리보기</translation>
     </message>
     <message>
-        <source>00:00:00.000</source>
-        <translation type="vanished">00:00:00.000</translation>
-    </message>
-    <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
         <source>Back one minute</source>
         <translation>1분 뒤로</translation>
@@ -8689,10 +8610,6 @@ Ready.
         <location line="+1"/>
         <source>Forward one minute</source>
         <translation>1분 앞으로</translation>
-    </message>
-    <message>
-        <source>A&amp;utoZoom</source>
-        <translation type="vanished">자동 확대/축소</translation>
     </message>
 </context>
 <context>
@@ -8965,8 +8882,8 @@ Please delete the idx2 file and reopen.</source>
 idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+186"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+329"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+188"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+327"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+83"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>연속적인 파일 이름을 가진 파일이 여럿 있습니다. 전부 불러올까요?</translation>
@@ -9096,21 +9013,6 @@ idx2 파일을 삭제하고 파일을 다시 여세요.</translation>
         <location line="+4"/>
         <source>vaapi</source>
         <translation>vaapi</translation>
-    </message>
-</context>
-<context>
-    <name>vaenc</name>
-    <message>
-        <source>Bitrate (kbps):</source>
-        <translation type="vanished">비트레이트 (kbps):</translation>
-    </message>
-    <message>
-        <source>Max Bitrate (kbps):</source>
-        <translation type="vanished">최대 비트레이트 (kbps):</translation>
-    </message>
-    <message>
-        <source>VAAPI H264 Encoder</source>
-        <translation type="vanished">vaapi H264 인코더</translation>
     </message>
 </context>
 <context>
@@ -9331,24 +9233,19 @@ VP8/VP9 비디오와 Vorbis/Opus 오디오만 지원합니다</translation>
         <translation>처리 중</translation>
     </message>
     <message>
-        <location line="+64"/>
+        <location line="+6"/>
         <source>Elapsed:</source>
         <translation>경과:</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+20"/>
         <source>Time Remaining:</source>
         <translation>남은 시간:</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="-7"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
-    </message>
-    <message>
-        <location line="+87"/>
-        <source>Cancel</source>
-        <translation>취소</translation>
     </message>
 </context>
 <context>
