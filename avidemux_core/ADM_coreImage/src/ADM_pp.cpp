@@ -73,6 +73,7 @@ char stringMode[60];
 	if(postProcType&1) strcat(stringMode,"ha:a:128:7,");
 	if(postProcType&2) strcat(stringMode,"va:a:128:7,");
 	if(postProcType&4) strcat(stringMode,"dr:a,");
+	if(postProcType&8) strcat(stringMode,"fd,");
 	if(forcedQuant)  
 		{
 			char stringFQ[60];
