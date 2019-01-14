@@ -2,2453 +2,11 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
-    <name></name>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">0</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">コピー</translation>
-    </message>
-    <message>
-        <source>Cannot initialize the video stream</source>
-        <translation type="obsolete">映像ストリームを初期化できません</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">フィルタ初期化失敗</translation>
-    </message>
-    <message>
-        <source>Error while encoding</source>
-        <translation type="obsolete">エンコード中にエラー</translation>
-    </message>
-    <message>
-        <source>KeyFrame error</source>
-        <translation type="obsolete">キーフレーム エラー</translation>
-    </message>
-    <message>
-        <source>The beginning frame is not a key frame.
-Please move the A marker.</source>
-        <translation type="obsolete">始まりのフレームがキーフレームではありません.
-マーカーAを移動して下さい.</translation>
-    </message>
-    <message>
-        <source>_Use systray while encoding</source>
-        <translation type="obsolete">エンコード中シストレーを使う(_U)</translation>
-    </message>
-    <message>
-        <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">DVDに標準でない音声周波数を受け付ける(_A)</translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="obsolete">OpenDMLファイルを作成する(_O)</translation>
-    </message>
-    <message>
-        <source>Automatically _index MPEG files</source>
-        <translation type="obsolete">自動的にMPEGファイルのインデックスを作成する(_I)</translation>
-    </message>
-    <message>
-        <source>Automatically _swap A and B if A&gt;B</source>
-        <translation type="obsolete">A&gt;BならマーカーAとBを自動的に交換する(_S)</translation>
-    </message>
-    <message>
-        <source>_Disable NUV audio sync</source>
-        <translation type="obsolete">NUVの音声同期を無効にする(_D)</translation>
-    </message>
-    <message>
-        <source>Automatically _build VBR map</source>
-        <translation type="obsolete">自動的にVBRマップを作成する(_B)</translation>
-    </message>
-    <message>
-        <source>Automatically _rebuild index</source>
-        <translation type="obsolete">自動的にインデックスを再構築する(_R)</translation>
-    </message>
-    <message>
-        <source>Automatically remove _packed bitstream</source>
-        <translation type="obsolete">自動的にパックドビットストリームを削除する(_P)</translation>
-    </message>
-    <message>
-        <source>SIMD</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable all SIMD</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable MMX</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable MMXEXT</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable 3DNOW</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable SSE</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable SSE2</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable SSE3</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable SSSE3</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_lavc threads:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Multi-threading</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Above normal</source>
-        <translation type="obsolete">普通以上</translation>
-    </message>
-    <message>
-        <source>Below normal</source>
-        <translation type="obsolete">普通以下</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">低い</translation>
-    </message>
-    <message>
-        <source>_Encoding priority:</source>
-        <translation type="obsolete">エンコードの優先度(_E):</translation>
-    </message>
-    <message>
-        <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">インデックス付/アンパックの優先度(_I):</translation>
-    </message>
-    <message>
-        <source>_Playback priority:</source>
-        <translation type="obsolete">再生の優先度(_P):</translation>
-    </message>
-    <message>
-        <source>Prioritisation</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">.mp4にmp3の代替タグを使う(_U)</translation>
-    </message>
-    <message>
-        <source>XVideo (best)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>SDL (good)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Video _display:</source>
-        <translation type="obsolete">映像表示(_D):</translation>
-    </message>
-    <message>
-        <source>No alerts</source>
-        <translation type="obsolete">警告しない</translation>
-    </message>
-    <message>
-        <source>Display only error alerts</source>
-        <translation type="obsolete">エラーの警告のみ表示する</translation>
-    </message>
-    <message>
-        <source>Display all alerts</source>
-        <translation type="obsolete">すべての警告を表示する</translation>
-    </message>
-    <message>
-        <source>_Message level:</source>
-        <translation type="obsolete">メッセージレベル(_M):</translation>
-    </message>
-    <message>
-        <source>Master</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Volume control:</source>
-        <translation type="obsolete">音量制御(_V):</translation>
-    </message>
-    <message>
-        <source>No downmixing</source>
-        <translation type="obsolete">ダウンミックスなし</translation>
-    </message>
-    <message>
-        <source>Pro Logic</source>
-        <translation type="obsolete">ドルビープロロジック</translation>
-    </message>
-    <message>
-        <source>Pro Logic II</source>
-        <translation type="obsolete">ドルビープロロジックII</translation>
-    </message>
-    <message>
-        <source>_Local playback downmixing:</source>
-        <translation type="obsolete">ローカル再生ダウンミックス(_L):</translation>
-    </message>
-    <message>
-        <source>De_ringing</source>
-        <translation type="obsolete">デリング(_R)</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">強さ(_S):</translation>
-    </message>
-    <message>
-        <source>Default Postprocessing</source>
-        <translation type="obsolete">デフォルトの後処理</translation>
-    </message>
-    <message>
-        <source>Use _Global GlyphSet</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Gl_yphSet:</source>
-        <translation type="obsolete">グリフセット(_Y):</translation>
-    </message>
-    <message>
-        <source>Automation</source>
-        <translation type="obsolete">自動化</translation>
-    </message>
-    <message>
-        <source>Input</source>
-        <translation type="obsolete">入力</translation>
-    </message>
-    <message>
-        <source>Output</source>
-        <translation type="obsolete">出力</translation>
-    </message>
-    <message>
-        <source>Video</source>
-        <translation type="obsolete">映像</translation>
-    </message>
-    <message>
-        <source>Threading</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Global GlyphSet</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">設定</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">高い</translation>
-    </message>
-    <message>
-        <source>_Background Image:</source>
-        <translation type="obsolete">背景画像(_B):</translation>
-    </message>
-    <message>
-        <source>Vignette _Width:</source>
-        <translation type="obsolete">ビネット幅(_W):</translation>
-    </message>
-    <message>
-        <source>Vignette _Height:</source>
-        <translation type="obsolete">ビネット高さ(_H):</translation>
-    </message>
-    <message>
-        <source>Vignette frame number</source>
-        <translation type="obsolete">ビネットフレーム数</translation>
-    </message>
-    <message>
-        <source>Timecode:</source>
-        <translation type="obsolete">タイムコード:</translation>
-    </message>
-    <message>
-        <source>_Dynamic range compression</source>
-        <translation type="obsolete">動的域圧縮(_D)</translation>
-    </message>
-    <message>
-        <source>_Time shift (ms):</source>
-        <translation type="obsolete">時間ずれ(_T) (ms):</translation>
-    </message>
-    <message>
-        <source>Time shift value (ms)</source>
-        <translation type="obsolete">時間ずれの値 (ms)</translation>
-    </message>
-    <message>
-        <source>R_esampling (Hz):</source>
-        <translation type="obsolete">リサンプル(_E) (Hz):</translation>
-    </message>
-    <message>
-        <source>Resampling frequency (Hz)</source>
-        <translation type="obsolete">変換周波数 (Hz)</translation>
-    </message>
-    <message>
-        <source>Film to PAL</source>
-        <translation type="obsolete">FilmをPALへ</translation>
-    </message>
-    <message>
-        <source>PAL to Film</source>
-        <translation type="obsolete">PALをFilmへ</translation>
-    </message>
-    <message>
-        <source>_Frame rate change:</source>
-        <translation type="obsolete">フレームレート変換(_F):</translation>
-    </message>
-    <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="obsolete">自動(最大 -3dB)</translation>
-    </message>
-    <message>
-        <source>Manual</source>
-        <translation type="obsolete">手動</translation>
-    </message>
-    <message>
-        <source>_Gain mode:</source>
-        <translation type="obsolete">利得モード(_G):</translation>
-    </message>
-    <message>
-        <source>G_ain value:</source>
-        <translation type="obsolete">利得値(_A):</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">利得</translation>
-    </message>
-    <message>
-        <source>No change</source>
-        <translation type="obsolete">変更なし</translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">モノ</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">ステレオ</translation>
-    </message>
-    <message>
-        <source>Stereo+surround</source>
-        <translation type="obsolete">ステレオ+サラウンド</translation>
-    </message>
-    <message>
-        <source>Stereo+center</source>
-        <translation type="obsolete">ステレオ+センター</translation>
-    </message>
-    <message>
-        <source>Stereo+center+surround</source>
-        <translation type="obsolete">ステレオ+センター+サラウンド</translation>
-    </message>
-    <message>
-        <source>Stereo front+stereo rear</source>
-        <translation type="obsolete">ステレオ フロント+ステレオ リア</translation>
-    </message>
-    <message>
-        <source>5 channels</source>
-        <translation type="obsolete">5 チャンネル</translation>
-    </message>
-    <message>
-        <source>5.1</source>
-        <translation type="obsolete">5.1</translation>
-    </message>
-    <message>
-        <source>Dolby Pro Logic</source>
-        <translation type="obsolete">ドルビープロロジック</translation>
-    </message>
-    <message>
-        <source>Dolby Pro Logic II</source>
-        <translation type="obsolete">ドルビープロロジックII</translation>
-    </message>
-    <message>
-        <source>_Mixer:</source>
-        <translation type="obsolete">ミキサー(_M):</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">音声フィルタ</translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">ビットレート(_B):</translation>
-    </message>
-    <message>
-        <source>No data</source>
-        <translation type="obsolete">データなし</translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">ビットレート ヒストグラム</translation>
-    </message>
-    <message>
-        <source>Fontconfig</source>
-        <translation type="obsolete">Fontconfig</translation>
-    </message>
-    <message>
-        <source>SDL</source>
-        <translation type="obsolete">SDL</translation>
-    </message>
-    <message>
-        <source>XVideo</source>
-        <translation type="obsolete">XVideo</translation>
-    </message>
-    <message>
-        <source>AltiVec</source>
-        <translation type="obsolete">AltiVec</translation>
-    </message>
-    <message>
-        <source>PowerPC</source>
-        <translation type="obsolete">PowerPC</translation>
-    </message>
-    <message>
-        <source>x86</source>
-        <translation type="obsolete">x86</translation>
-    </message>
-    <message>
-        <source>x86-64</source>
-        <translation type="obsolete">x86-64</translation>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <translation type="obsolete">ライブラリ</translation>
-    </message>
-    <message>
-        <source>CPU</source>
-        <translation type="obsolete">CPU</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">内蔵サポート</translation>
-    </message>
-    <message>
-        <source>_Hours:</source>
-        <translation type="obsolete">時間(_H):</translation>
-    </message>
-    <message>
-        <source>_Minutes:</source>
-        <translation type="obsolete">分(_M):</translation>
-    </message>
-    <message>
-        <source>_Seconds:</source>
-        <translation type="obsolete">秒(_S):</translation>
-    </message>
-    <message>
-        <source>_Job name:</source>
-        <translation type="obsolete">ジョブ名(_J):</translation>
-    </message>
-    <message>
-        <source>Save Job</source>
-        <translation type="obsolete">ジョブを保存</translation>
-    </message>
-    <message>
-        <source>_Swap U and V</source>
-        <translation type="obsolete">UとVを交換(_S)</translation>
-    </message>
-    <message>
-        <source>Show motion _vectors</source>
-        <translation type="obsolete">動きベクトルを示す(_V)</translation>
-    </message>
-    <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">デコーダオプション</translation>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="obsolete">ユーザインタフェース</translation>
-    </message>
-    <message>
-        <source>Joint stereo</source>
-        <translation type="obsolete">ジョイントステレオ</translation>
-    </message>
-    <message>
-        <source>C_hannel mode:</source>
-        <translation type="obsolete">チャンネルモード(_H):</translation>
-    </message>
-    <message>
-        <source>CBR</source>
-        <translation type="obsolete">CBR</translation>
-    </message>
-    <message>
-        <source>ABR</source>
-        <translation type="obsolete">ABR</translation>
-    </message>
-    <message>
-        <source>Extreme</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">ビットレートモード(_R):</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">品質(_Q):</translation>
-    </message>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">フィルタの強さ(_F):</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">水平デブロック(_H)</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">垂直デブロック(_V)</translation>
-    </message>
-    <message>
-        <source>_Deringing</source>
-        <translation type="obsolete">デリング(_D)</translation>
-    </message>
-    <message>
-        <source>_Shrink Factor:</source>
-        <translation type="obsolete">圧縮度(_S):</translation>
-    </message>
-    <message>
-        <source>NTSC 4:3</source>
-        <translation type="obsolete">NTSC 4:3</translation>
-    </message>
-    <message>
-        <source>NTSC 16:9</source>
-        <translation type="obsolete">NTSC 16:9</translation>
-    </message>
-    <message>
-        <source>PAL 4:3</source>
-        <translation type="obsolete">PAL 4:3</translation>
-    </message>
-    <message>
-        <source>PAL 16:9</source>
-        <translation type="obsolete">PAL 16:9</translation>
-    </message>
-    <message>
-        <source>1:1</source>
-        <translation type="obsolete">1:1</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation type="obsolete">不明</translation>
-    </message>
-    <message>
-        <source>Auto (might not work)</source>
-        <translation type="obsolete">自動 (動かないかも)</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">トップフィールドが先</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">ボトムフィールドが先</translation>
-    </message>
-    <message>
-        <source>Bottom field (keep top)</source>
-        <translation type="obsolete">ボトムフィールド(トップを保つ)</translation>
-    </message>
-    <message>
-        <source>Top field (keep bottom)</source>
-        <translation type="obsolete">トップフィールド(ボトムを保つ)</translation>
-    </message>
-    <message>
-        <source>Cubic interpolation</source>
-        <translation type="obsolete">Cubic 補間</translation>
-    </message>
-    <message>
-        <source>Modified ELA</source>
-        <translation type="obsolete">修正 ELA</translation>
-    </message>
-    <message>
-        <source>Kernel interpolation</source>
-        <translation type="obsolete">Kernel 補間</translation>
-    </message>
-    <message>
-        <source>Modified ELA-2</source>
-        <translation type="obsolete">修正 ELA-2</translation>
-    </message>
-    <message>
-        <source>4 fields check</source>
-        <translation type="obsolete">4フィールド検査</translation>
-    </message>
-    <message>
-        <source>5 fields check</source>
-        <translation type="obsolete">5フィールド検査</translation>
-    </message>
-    <message>
-        <source>4 fields check (no avg)</source>
-        <translation type="obsolete">4フィールド検査(平均なし)</translation>
-    </message>
-    <message>
-        <source>5 fields check (no avg)</source>
-        <translation type="obsolete">5フィールド検査(平均なし)</translation>
-    </message>
-    <message>
-        <source>No link</source>
-        <translation type="obsolete">リンクなし</translation>
-    </message>
-    <message>
-        <source>Full link</source>
-        <translation type="obsolete">完全リンク</translation>
-    </message>
-    <message>
-        <source>Y to UV</source>
-        <translation type="obsolete">YをUVへ</translation>
-    </message>
-    <message>
-        <source>UV to Y</source>
-        <translation type="obsolete">UVをYへ</translation>
-    </message>
-    <message>
-        <source>1</source>
-        <translation type="obsolete">1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="obsolete">2</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">フィールドオーダー(_F):</translation>
-    </message>
-    <message>
-        <source>_Interpolate:</source>
-        <translation type="obsolete">補間(_I):</translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">タイプ(_T):</translation>
-    </message>
-    <message>
-        <source>_MntMode:</source>
-        <translation type="obsolete">Mntモード(_M):</translation>
-    </message>
-    <message>
-        <source>_Link:</source>
-        <translation type="obsolete">リンク(_L):</translation>
-    </message>
-    <message>
-        <source>_AP type:</source>
-        <translation type="obsolete">APタイプ(_A):</translation>
-    </message>
-    <message>
-        <source>Use ch_roma to evalute</source>
-        <translation type="obsolete">彩度を評価に使う(_R)</translation>
-    </message>
-    <message>
-        <source>Try _weave</source>
-        <translation type="obsolete">weaveを試す(_W)</translation>
-    </message>
-    <message>
-        <source>_Denoise</source>
-        <translation type="obsolete">ノイズ除去(_D)</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">シャープ(_S)</translation>
-    </message>
-    <message>
-        <source>_Evalute all frames</source>
-        <translation type="obsolete">全フレームを評価する(_E)</translation>
-    </message>
-    <message>
-        <source>Motion threshold, l_uma:</source>
-        <translation type="obsolete">動き閾値, 輝度(_U):</translation>
-    </message>
-    <message>
-        <source>Motion threshold, c_hroma:</source>
-        <translation type="obsolete">動き閾値, 彩度(_H):</translation>
-    </message>
-    <message>
-        <source>Area com_bing threshold:</source>
-        <translation type="obsolete">領域コーミング閾値(_B):</translation>
-    </message>
-    <message>
-        <source>Combe_d threshold:</source>
-        <translation type="obsolete">コームド閾値(_D):</translation>
-    </message>
-    <message>
-        <source>Artefact _protection threshold:</source>
-        <translation type="obsolete">作為保護閾値(_P):</translation>
-    </message>
-    <message>
-        <source>Debug:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>TDeint</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_VOB file(s):</source>
-        <translation type="obsolete">VOBファイル(_V):</translation>
-    </message>
-    <message>
-        <source>_IFO file:</source>
-        <translation type="obsolete">IFOファイル(_I):</translation>
-    </message>
-    <message>
-        <source>VOB to VobSub</source>
-        <translation type="obsolete">VOBをVobSubへ</translation>
-    </message>
-    <message>
-        <source>The selected vobfile does not exist</source>
-        <translation type="obsolete">選択したVOBファイルは存在しません</translation>
-    </message>
-    <message>
-        <source>Please select a correct VobSub path/dir</source>
-        <translation type="obsolete">正しいVobSubパス/フォルダを選んで下さい</translation>
-    </message>
-    <message>
-        <source>Select ECMAScript to Run</source>
-        <translation type="obsolete">起動するECMAスクリプトの選択</translation>
-    </message>
-    <message>
-        <source>Obsolete</source>
-        <translation type="obsolete">旧式</translation>
-    </message>
-    <message>
-        <source>Not coded in this version</source>
-        <translation type="obsolete">このバージョンではコード化されていません</translation>
-    </message>
-    <message>
-        <source>Select Workbench to Save</source>
-        <translation type="obsolete">保存するプロジェクトの選択</translation>
-    </message>
-    <message>
-        <source>Select Raw File to Save</source>
-        <translation type="obsolete">保存するrawファイルの選択</translation>
-    </message>
-    <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">AVIファイルの選択...</translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">追加するAVIファイルの選択...</translation>
-    </message>
-    <message>
-        <source>Select File to Save Audio</source>
-        <translation type="obsolete">音声を保存するファイルの選択</translation>
-    </message>
-    <message>
-        <source>Select JPEG Sequence to Save</source>
-        <translation type="obsolete">保存するJPEG順序の選択</translation>
-    </message>
-    <message>
-        <source>Select BMP to Save</source>
-        <translation type="obsolete">保存するBMPの選択</translation>
-    </message>
-    <message>
-        <source>Select JPEG to Save</source>
-        <translation type="obsolete">保存するJPEGの選択</translation>
-    </message>
-    <message>
-        <source>Select File to Save</source>
-        <translation type="obsolete">保存するファイルの選択</translation>
-    </message>
-    <message>
-        <source>Select MP3 to Load</source>
-        <translation type="obsolete">読込むMP3の選択</translation>
-    </message>
-    <message>
-        <source>Select AC3 to Load</source>
-        <translation type="obsolete">読込むAC3の選択</translation>
-    </message>
-    <message>
-        <source>Select WAV to Load</source>
-        <translation type="obsolete">読込むWAVの選択</translation>
-    </message>
-    <message>
-        <source>Out of bounds</source>
-        <translation type="obsolete">境界外</translation>
-    </message>
-    <message>
-        <source>Marker A &gt; B</source>
-        <translation type="obsolete">マーカー A &gt; B</translation>
-    </message>
-    <message>
-        <source>Cannot copy.</source>
-        <translation type="obsolete">コピーできません.</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II))</source>
-        <translation type="obsolete">何か悪いことが起きました (II)</translation>
-    </message>
-    <message>
-        <source>Are you sure?</source>
-        <translation type="obsolete">本当ですか ?</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">フレームレート</translation>
-    </message>
-    <message>
-        <source>Width is not a multiple of 8</source>
-        <translation type="obsolete">幅が 8 の倍数ではありません</translation>
-    </message>
-    <message>
-        <source>This will make trouble for AVI files.</source>
-        <translation type="obsolete">これはAVIファイルではトラブルになる.</translation>
-    </message>
-    <message>
-        <source>Rebuild all Keyframes?</source>
-        <translation type="obsolete">全てのキーフレームを再構築しますか ?</translation>
-    </message>
-    <message>
-        <source>Permission error</source>
-        <translation type="obsolete">パーミッション エラー</translation>
-    </message>
-    <message>
-        <source>&quot;%s&quot; does not exist.</source>
-        <translation type="obsolete">&quot;%s&quot; がありません.</translation>
-    </message>
-    <message>
-        <source>Cannot open project using the video loader.</source>
-        <translation type="obsolete">映像ローダーを使っているプロジェクトを開けません.</translation>
-    </message>
-    <message>
-        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
-        <translation type="obsolete">&apos;ファイル&apos; -&gt; &apos;プロジェクトを読込む/起動&apos;を試してみて下さい</translation>
-    </message>
-    <message>
-        <source>Could not open the file</source>
-        <translation type="obsolete">ファイルを開けません</translation>
-    </message>
-    <message>
-        <source>Multiple Audio Tracks</source>
-        <translation type="obsolete">複数の音声トラック</translation>
-    </message>
-    <message>
-        <source>The file you just loaded contains several audio tracks.
-Go to Audio-&gt;MainTrack to select the active one.</source>
-        <translation type="obsolete">読込んだファイルには複数の音声トラックが含まれています.
-音声-&gt;主トラック でアクティブにするものを選択して下さい.</translation>
-    </message>
-    <message>
-        <source>No audio decoder found for this file</source>
-        <translation type="obsolete">このファイル用の音声デコーダが見付かりません</translation>
-    </message>
-    <message>
-        <source>Save (A+V) will generate bad AVI. Save audio will work.</source>
-        <translation type="obsolete">(A+V)保存は悪いAVIを作り出します. 音声保存は動作します.</translation>
-    </message>
-    <message>
-        <source>Something failed when appending</source>
-        <translation type="obsolete">追加時に何かが失敗しました</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II)</source>
-        <translation type="obsolete">何か悪いことが起きました (II)</translation>
-    </message>
-    <message>
-        <source>Cannot save the audio in copy mode</source>
-        <translation type="obsolete">音声をコピーモードで保存できません</translation>
-    </message>
-    <message>
-        <source>Select WAV PCM as the audio codec, otherwise the audio file would be raw PCM.</source>
-        <translation type="obsolete">WAV PCMを音声コーデックとして選んで下さい. そうしないと、音声ファイルはraw PCMとなります.</translation>
-    </message>
-    <message>
-        <source>Saving audio</source>
-        <translation type="obsolete">音声保存中</translation>
-    </message>
-    <message>
-        <source>Get Frame</source>
-        <translation type="obsolete">フレームを得る</translation>
-    </message>
-    <message>
-        <source>Cannot get this frame to save</source>
-        <translation type="obsolete">保存するフレームを得られません</translation>
-    </message>
-    <message>
-        <source>Mark A &gt; B</source>
-        <translation type="obsolete">マーク A &gt; B</translation>
-    </message>
-    <message>
-        <source>Set your markers correctly.</source>
-        <translation type="obsolete">マーカーを正しく設定して下さい.</translation>
-    </message>
-    <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="obsolete">JPEGの組を保存中</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="obsolete">フレームをデコードできません</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="obsolete">中止しています.</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation type="obsolete">完了</translation>
-    </message>
-    <message>
-        <source>Saved %d images.</source>
-        <translation type="obsolete">%d 画像を保存.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">エラー</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="obsolete">全画像を保存できません</translation>
-    </message>
-    <message>
-        <source>Saved &quot;%s&quot;.</source>
-        <translation type="obsolete">&quot;%s&quot; を保存.</translation>
-    </message>
-    <message>
-        <source>BMP op failed</source>
-        <translation type="obsolete">BMP op 失敗</translation>
-    </message>
-    <message>
-        <source>Saving %s as a BMP file failed.</source>
-        <translation type="obsolete">%s をBMPファイルとしての保存は失敗しました.</translation>
-    </message>
-    <message>
-        <source>Failed to open the file</source>
-        <translation type="obsolete">ファイルを開くのに失敗</translation>
-    </message>
-    <message>
-        <source>Not a WAV file?</source>
-        <translation type="obsolete">WAVファイルではない ?</translation>
-    </message>
-    <message>
-        <source>WAV open file failed...</source>
-        <translation type="obsolete">WAVファイルを開くのに失敗...</translation>
-    </message>
-    <message>
-        <source>Cannot decompress audio frame</source>
-        <translation type="obsolete">音声フレームを解凍できません</translation>
-    </message>
-    <message>
-        <source>Memory Error</source>
-        <translation type="obsolete">メモリエラー</translation>
-    </message>
-    <message>
-        <source>No frames to encode</source>
-        <translation type="obsolete">エンコードするフレームがありません</translation>
-    </message>
-    <message>
-        <source>Please check markers. Is &quot;A&gt;&quot; == &quot;&gt;B&quot;?</source>
-        <translation type="obsolete">マーカーを確認して下さい. &quot;A&gt;&quot; == &quot;&gt;B&quot; ですか ?</translation>
-    </message>
-    <message>
-        <source>Saving raw video stream</source>
-        <translation type="obsolete">raw 映像ストリームを保存中</translation>
-    </message>
-    <message>
-        <source>Checking video</source>
-        <translation type="obsolete">映像をチェック中</translation>
-    </message>
-    <message>
-        <source>No error found</source>
-        <translation type="obsolete">エラーは見付かりません</translation>
-    </message>
-    <message>
-        <source>Errors found in %u frames</source>
-        <translation type="obsolete">%u フレームにエラーが見付かりました</translation>
-    </message>
-    <message>
-        <source>Cannot decompress the audio stream</source>
-        <translation type="obsolete">音声ストリームを解凍できません</translation>
-    </message>
-    <message>
-        <source>Switch audio codec to Copy.</source>
-        <translation type="obsolete">音声コーデックをコピーに切り替える.</translation>
-    </message>
-    <message>
-        <source>Cannot delete the selection.</source>
-        <translation type="obsolete">選択を削除できません.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t remove all frames</source>
-        <translation type="obsolete">全フレームを削除できません</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">何か悪いことが起きました</translation>
-    </message>
-    <message>
-        <source>Could not get tracks info</source>
-        <translation type="obsolete">トラック情報を得られません</translation>
-    </message>
-    <message>
-        <source>Take audio from video file</source>
-        <translation type="obsolete">映像ファイルから音声を取る</translation>
-    </message>
-    <message>
-        <source>No audio</source>
-        <translation type="obsolete">音声なし</translation>
-    </message>
-    <message>
-        <source>External AC3</source>
-        <translation type="obsolete">外部AC3</translation>
-    </message>
-    <message>
-        <source>Take audio from external AC3 file</source>
-        <translation type="obsolete">外部AC3ファイルから音声を取る</translation>
-    </message>
-    <message>
-        <source>External MP3</source>
-        <translation type="obsolete">外部MP3</translation>
-    </message>
-    <message>
-        <source>Take audio from external MP3 file</source>
-        <translation type="obsolete">外部MP3ファイルから音声を取る</translation>
-    </message>
-    <message>
-        <source>External WAV</source>
-        <translation type="obsolete">外部WAV</translation>
-    </message>
-    <message>
-        <source>Take audio from external WAV file</source>
-        <translation type="obsolete">外部WAVファイルから音声を取る</translation>
-    </message>
-    <message>
-        <source>_Audio source:</source>
-        <translation type="obsolete">音声ソース(_A):</translation>
-    </message>
-    <message>
-        <source>_External file:</source>
-        <translation type="obsolete">外部ファイル(_E):</translation>
-    </message>
-    <message>
-        <source>_Track from video:</source>
-        <translation type="obsolete">映像からのトラック(_T):</translation>
-    </message>
-    <message>
-        <source>Main Audio Track</source>
-        <translation type="obsolete">主音声トラック</translation>
-    </message>
-    <message>
-        <source>Cannot load</source>
-        <translation type="obsolete">読込めません</translation>
-    </message>
-    <message>
-        <source>The selected audio file does not exist.</source>
-        <translation type="obsolete">選択した音声ファイルは存在しません</translation>
-    </message>
-    <message>
-        <source>Second Audio Track</source>
-        <translation type="obsolete">第２音声トラック</translation>
-    </message>
-    <message>
-        <source>Error loading the MP3 file</source>
-        <translation type="obsolete">MP3ファイル読込みエラー</translation>
-    </message>
-    <message>
-        <source>Second track loaded</source>
-        <translation type="obsolete">第２トラックを読込みました</translation>
-    </message>
-    <message>
-        <source>Error loading the AC3 file</source>
-        <translation type="obsolete">AC3ファイル読込みエラー</translation>
-    </message>
-    <message>
-        <source>Error loading the WAV file</source>
-        <translation type="obsolete">WAVファイル読込みエラー</translation>
-    </message>
-    <message>
-        <source>Saving failed</source>
-        <translation type="obsolete">保存に失敗</translation>
-    </message>
-    <message>
-        <source>Saving the job failed. Maybe you have permission issue with ~/.avidemux</source>
-        <translation type="obsolete">ジョブの保存に失敗. ~/.avidemux でのパーミッション問題かも</translation>
-    </message>
-    <message>
-        <source>File %s has been successfully saved.</source>
-        <translation type="obsolete">ファイル %s を無事に保存しました.</translation>
-    </message>
-    <message>
-        <source>File %s was NOT saved correctly.</source>
-        <translation type="obsolete">ファイル %s は正しく保存されなかった.</translation>
-    </message>
-    <message>
-        <source>AvsProxy</source>
-        <translation type="obsolete">AvsProxy</translation>
-    </message>
-    <message>
-        <source>Failed to connect to avsproxy.
-Is it running ?</source>
-        <translation type="obsolete">AvsProxyへの接続に失敗.
-それは起動していますか ?</translation>
-    </message>
-    <message>
-        <source>avsproxy</source>
-        <translation type="obsolete">AvsProxy</translation>
-    </message>
-    <message>
-        <source>Frame type:</source>
-        <translation type="obsolete">フレームタイプ:</translation>
-    </message>
-    <message>
-        <source>Frame size:</source>
-        <translation type="obsolete">フレームサイズ:</translation>
-    </message>
-    <message>
-        <source>Frame Hex Dump</source>
-        <translation type="obsolete">フレーム16進ダンプ</translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">ノイズ除去</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">回転</translation>
-    </message>
-    <message>
-        <source>Subtitler</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <translation type="obsolete">普通</translation>
-    </message>
-    <message>
-        <source>Mux every N video frames</source>
-        <translation type="obsolete">N個の映像フレーム毎に</translation>
-    </message>
-    <message>
-        <source>Mux by packet size</source>
-        <translation type="obsolete">パケットサイズ毎に</translation>
-    </message>
-    <message>
-        <source>Muxing _type:</source>
-        <translation type="obsolete">多重化タイプ(_T):</translation>
-    </message>
-    <message>
-        <source>_Split every MB:</source>
-        <translation type="obsolete">MB毎に分割(_S):</translation>
-    </message>
-    <message>
-        <source>Mux _every x video frames:</source>
-        <translation type="obsolete">x個の映像フレーム毎に多重化(_E):</translation>
-    </message>
-    <message>
-        <source>Mux in _blocks of x bytes:</source>
-        <translation type="obsolete">xバイトのブロック毎に多重化(_B):</translation>
-    </message>
-    <message>
-        <source>AVI Muxer Options</source>
-        <translation type="obsolete">AVI多重化オプション</translation>
-    </message>
-    <message>
-        <source>PCM</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>MP2</source>
-        <translation type="obsolete">MP2</translation>
-    </message>
-    <message>
-        <source>MP3</source>
-        <translation type="obsolete">MP3</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">失敗した</translation>
-    </message>
-    <message>
-        <source>Codec Error</source>
-        <translation type="obsolete">コーデックエラー</translation>
-    </message>
-    <message>
-        <source>The number of channels is greater than what the selected audio codec can do.
-Either change codec or use the mixer filter to have less channels.</source>
-        <translation type="obsolete">選択した音声コーデックが可能な数よりチャンネル数が大きい.
-コーデックを変更するか、チャンネル数を減らすようミキサーフィルタを使ってください.</translation>
-    </message>
-    <message>
-        <source>Internal error finding codec</source>
-        <translation type="obsolete">コーデック検索中に内部エラー</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">ファイルエラー</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot;.</source>
-        <translation type="obsolete">&quot;%s&quot; を開けません.</translation>
-    </message>
-    <message>
-        <source>Cannot write the file</source>
-        <translation type="obsolete">ファイルを書込めません</translation>
-    </message>
-    <message>
-        <source>No write access to &quot;%s&quot;.</source>
-        <translation type="obsolete">&quot;%s&quot; に書込みアクセスがありません.</translation>
-    </message>
-    <message>
-        <source>AVI</source>
-        <translation type="obsolete">AVI</translation>
-    </message>
-    <message>
-        <source>AVI, dual audio</source>
-        <translation type="obsolete">AVI, 2音声</translation>
-    </message>
-    <message>
-        <source>AVI, pack VOP</source>
-        <translation type="obsolete">AVI, パックVOP</translation>
-    </message>
-    <message>
-        <source>AVI, unpack VOP</source>
-        <translation type="obsolete">AVI, アンパックVOP</translation>
-    </message>
-    <message>
-        <source>MPEG-PS (A+V)</source>
-        <translation type="obsolete">MPEG-PS (A+V)</translation>
-    </message>
-    <message>
-        <source>MPEG-TS (A+V)</source>
-        <translation type="obsolete">MPEG-TS (A+V)</translation>
-    </message>
-    <message>
-        <source>MPEG video</source>
-        <translation type="obsolete">MPEG映像 (ES)</translation>
-    </message>
-    <message>
-        <source>MP4</source>
-        <translation type="obsolete">MP4</translation>
-    </message>
-    <message>
-        <source>OGM</source>
-        <translation type="obsolete">OGM</translation>
-    </message>
-    <message>
-        <source>FLV</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>DUMMY</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Partial</source>
-        <translation type="obsolete">部分適用</translation>
-    </message>
-    <message>
-        <source>Problem reading XML filters</source>
-        <translation type="obsolete">XMLフィルタ読取りに問題</translation>
-    </message>
-    <message>
-        <source>No filter found</source>
-        <translation type="obsolete">フィルタがありません</translation>
-    </message>
-    <message>
-        <source>Could not find a filter</source>
-        <translation type="obsolete">フィルタが見付かりません</translation>
-    </message>
-    <message>
-        <source>No tag found</source>
-        <translation type="obsolete">タグが見付かりません</translation>
-    </message>
-    <message>
-        <source>Node not found</source>
-        <translation type="obsolete">ノードが見付かりません</translation>
-    </message>
-    <message>
-        <source>There is several mpeg file, append them ?</source>
-        <translation type="obsolete">複数のmpegファイルがあります. それらを追加しますか ?</translation>
-    </message>
-    <message>
-        <source>Can&apos;t determine aspect ratio</source>
-        <translation type="obsolete">アスペクト比を決定できません</translation>
-    </message>
-    <message>
-        <source>Wrong Colorspace</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Only YV12/I420 or YUY2/I422 JPegs are supported</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Output file error</source>
-        <translation type="obsolete">出力ファイルエラー</translation>
-    </message>
-    <message>
-        <source>Could not open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">書込み用に &quot;%s&quot; を開けません</translation>
-    </message>
-    <message>
-        <source>Problem loading sub</source>
-        <translation type="obsolete">字幕読込に問題</translation>
-    </message>
-    <message>
-        <source>Ifo error</source>
-        <translation type="obsolete">IFO エラー</translation>
-    </message>
-    <message>
-        <source>Error reading ifo file, aborting.</source>
-        <translation type="obsolete">IFOファイル読取エラー, 中止します.</translation>
-    </message>
-    <message>
-        <source>Cannot write .idx</source>
-        <translation type="obsolete">.idxを書込めません</translation>
-    </message>
-    <message>
-        <source>Cannot write .sub</source>
-        <translation type="obsolete">.subを書込めません</translation>
-    </message>
-    <message>
-        <source>Problem opening the mpeg files</source>
-        <translation type="obsolete">MPEGファイルを開くのに問題</translation>
-    </message>
-    <message>
-        <source>Generating VobSub file</source>
-        <translation type="obsolete">VobSubファイルを作成中</translation>
-    </message>
-    <message>
-        <source>Could not write the file</source>
-        <translation type="obsolete">ファイルを書込めません</translation>
-    </message>
-    <message>
-        <source>Could not read &quot;%s&quot;.</source>
-        <translation type="obsolete">&quot;%s&quot; を読めません.</translation>
-    </message>
-    <message>
-        <source>Load it</source>
-        <translation type="obsolete">それを読込む</translation>
-    </message>
-    <message>
-        <source>Crash file</source>
-        <translation type="obsolete">クラッシュ ファイル</translation>
-    </message>
-    <message>
-        <source>I have detected a crash file. 
-Do you want to load it  ?
-(It will be deleted in all cases, you should save it if you want to keep it)</source>
-        <translation type="obsolete">クラッシュファイルを検出した. 
-それを読込みますか ?
-(それはあらゆる場合に削除されるでしょう, それを保ちたいなら保存しておくべきです)</translation>
-    </message>
-    <message>
-        <source>Unsupported video</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Only FLV1 and VP6 video are supported</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Unsupported audio</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Audio must be mp3 for flv output.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Frequency must be 44100, 22050 or 11025 Hz.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Cannot initialize the audio stream</source>
-        <translation type="obsolete">音声ストリームを初期化できません</translation>
-    </message>
-    <message>
-        <source>PSP</source>
-        <translation type="obsolete">PSP</translation>
-    </message>
-    <message>
-        <source>This is not MPEG compatible</source>
-        <translation type="obsolete">これはMPEG互換ではありません</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use the Copy codec.</source>
-        <translation type="obsolete">そのコピーコーデックを使えません.</translation>
-    </message>
-    <message>
-        <source>There is no audio track</source>
-        <translation type="obsolete">音声トラックがありません</translation>
-    </message>
-    <message>
-        <source>The first frame is not intra frame</source>
-        <translation type="obsolete">最初のフレームは I-フレームではありません</translation>
-    </message>
-    <message>
-        <source>Use the &amp;lt;&amp;lt; and the &amp;gt;&amp;gt; buttons to move using Intra frames.</source>
-        <translation type="obsolete">I-フレームを使って移動するには &amp;lt;&amp;lt; と &amp;gt;&amp;gt; ボタンを使って下さい.</translation>
-    </message>
-    <message>
-        <source>Audio track is not suitable</source>
-        <translation type="obsolete">音声トラックが適切ではありません</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2(stereo), AC3, DTS or LPCM (stereo).</source>
-        <translation type="obsolete">DVD用には, 音声は 48 kHz MP2(ステレオ), AC3, DTS または LPCM (ステレオ)でなければならない.</translation>
-    </message>
-    <message>
-        <source>For VCD, audio must be 44.1 kHz MP2.</source>
-        <translation type="obsolete">VCD用には, 音声は 44.1 kHz MP2 でなければならない.</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2, AC3 or LPCM.</source>
-        <translation type="obsolete">DVD用には, 音声は 48 kHz MP2, AC3 または LPCMでなければならない.</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">書込み用に &quot;%s&quot; を開けません.</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="obsolete">フォルダの選択</translation>
-    </message>
-    <message>
-        <source>Uinteger</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Float</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Toggle</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>No Strategy</source>
-        <translation type="obsolete">ストラテジなし</translation>
-    </message>
-    <message>
-        <source>3:2 Pulldown</source>
-        <translation type="obsolete">3:2 プルダウン</translation>
-    </message>
-    <message>
-        <source>Pal/Secam</source>
-        <translation type="obsolete">Pal/Secam</translation>
-    </message>
-    <message>
-        <source>NTSC converted from PAL</source>
-        <translation type="obsolete">PALから変換したNTSC</translation>
-    </message>
-    <message>
-        <source>menu</source>
-        <translation type="obsolete">メニュー</translation>
-    </message>
-    <message>
-        <source>Select idx file:</source>
-        <translation type="obsolete">idxファイルの選択:</translation>
-    </message>
-    <message>
-        <source>Output SRT file</source>
-        <translation type="obsolete">出力SRTファイル</translation>
-    </message>
-    <message>
-        <source>Select input and ouput files</source>
-        <translation type="obsolete">入出力ファイルの選択</translation>
-    </message>
-    <message>
-        <source>The idx/sub file does not exist.</source>
-        <translation type="obsolete">idx/subファイルがありません.</translation>
-    </message>
-    <message>
-        <source>Please Select a valid output SRT file.</source>
-        <translation type="obsolete">有効な出力SRTファイルを選んで下さい.</translation>
-    </message>
-    <message>
-        <source>Cannot load the glyphset file.</source>
-        <translation type="obsolete">グリフセットファイルを読込めません.</translation>
-    </message>
-    <message>
-        <source>Save Glyph</source>
-        <translation type="obsolete">グリフを保存</translation>
-    </message>
-    <message>
-        <source>Input TS:</source>
-        <translation type="obsolete">入力 TS:</translation>
-    </message>
-    <message>
-        <source>Subtitle PID:</source>
-        <translation type="obsolete">字幕PID:</translation>
-    </message>
-    <message>
-        <source>Please Select a valid TS file.</source>
-        <translation type="obsolete">有効なTSファイルを選んで下さい.</translation>
-    </message>
-    <message>
-        <source>Audio</source>
-        <translation type="obsolete">音声</translation>
-    </message>
-    <message>
-        <source>Oops</source>
-        <translation type="obsolete">しまった</translation>
-    </message>
-    <message>
-        <source>Something very wrong happened when building joblist.</source>
-        <translation type="obsolete">ジョブリストを作成中に何か非常に悪いことが起きました</translation>
-    </message>
-    <message>
-        <source>There are no jobs stored</source>
-        <translation type="obsolete">ジョブがありません</translation>
-    </message>
-    <message>
-        <source>Decompressing error</source>
-        <translation type="obsolete">解凍(decompression)エラー</translation>
-    </message>
-    <message>
-        <source>Cannot decode next frame.</source>
-        <translation type="obsolete">次のフレームをデコードできません</translation>
-    </message>
-    <message>
-        <source>Cannot decode keyframe.</source>
-        <translation type="obsolete">キーフレームをデコードできません</translation>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="obsolete">シーク中</translation>
-    </message>
-    <message>
-        <source>Finding black frames</source>
-        <translation type="obsolete">黒フレームを検索中</translation>
-    </message>
-    <message>
-        <source>Cannot decode the frame.</source>
-        <translation type="obsolete">そのフレームをデコードできません</translation>
-    </message>
-    <message>
-        <source>Dual audio can only be used in copy mode</source>
-        <translation type="obsolete">２つの音声はコピーモードで使えるだけです</translation>
-    </message>
-    <message>
-        <source>Select Copy as the video codec.</source>
-        <translation type="obsolete">コピーを映像コーデックとして選択.</translation>
-    </message>
-    <message>
-        <source>Incompatible output format</source>
-        <translation type="obsolete">互換性のない出力形式</translation>
-    </message>
-    <message>
-        <source>There is no second track</source>
-        <translation type="obsolete">第２トラックがありません</translation>
-    </message>
-    <message>
-        <source>Select a second audio track in the Audio menu.</source>
-        <translation type="obsolete">音声メニュー中第２音声トラックを選択.</translation>
-    </message>
-    <message>
-        <source>Select dual audio AVI to write</source>
-        <translation type="obsolete">書き込む２音声AVIを選択</translation>
-    </message>
-    <message>
-        <source>This cannot have packed VOP</source>
-        <translation type="obsolete">これはパックドVOPを持てない</translation>
-    </message>
-    <message>
-        <source>It is not MPEG-4 video. File will not be saved.</source>
-        <translation type="obsolete">MPEG-4映像ではない. ファイルは保存されません.</translation>
-    </message>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">音声デバイス初期化トラブル</translation>
-    </message>
-    <message>
-        <source>VBR</source>
-        <translation type="obsolete">VBR</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">品質に基づく</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
-    </message>
-    <message>
-        <source>Resize</source>
-        <translation type="obsolete">リサイズ</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be 0</source>
-        <translation type="obsolete">幅や高さは 0 にはできません</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">幅や高さは 奇数にはできません</translation>
-    </message>
-    <message>
-        <source>Chroma U</source>
-        <translation type="obsolete">彩度 U</translation>
-    </message>
-    <message>
-        <source>Chroma V</source>
-        <translation type="obsolete">彩度 V</translation>
-    </message>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">コントラスト</translation>
-    </message>
-    <message>
-        <source>MPlayer eq2</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Subtitle file:</source>
-        <translation type="obsolete">字幕ファイル(_S):</translation>
-    </message>
-    <message>
-        <source>_Font (TTF):</source>
-        <translation type="obsolete">フォント(_F) (TFF):</translation>
-    </message>
-    <message>
-        <source>_Encoding:</source>
-        <translation type="obsolete">エンコード(_E):</translation>
-    </message>
-    <message>
-        <source>S_elect C_olor</source>
-        <translation type="obsolete">色の選択(_E)(_O)</translation>
-    </message>
-    <message>
-        <source>Set Size and _Position</source>
-        <translation type="obsolete">サイズと位置を設定(_P)</translation>
-    </message>
-    <message>
-        <source>_Auto split</source>
-        <translation type="obsolete">自動分割(_A)</translation>
-    </message>
-    <message>
-        <source>_Delay (ms):</source>
-        <translation type="obsolete">遅延(_D) (ms):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMImage</name>
-    <message>
-        <source>Memory error</source>
-        <translation type="obsolete">メモリエラー</translation>
-    </message>
-    <message>
-        <source>Error converting to BMP</source>
-        <translation type="obsolete">BMPへの変換エラー</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">何か悪いことが起きました</translation>
-    </message>
-    <message>
-        <source>Cannot encode the frame</source>
-        <translation type="obsolete">フレームをエンコードできません</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">ファイルエラー</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">書込み用に &quot;%s&quot; を開けません.</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoComputeAverage</name>
-    <message>
-        <source>_Start Frame (first frame # to include in average):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_End Frame (last frame # to include), -1 = last:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Bias (only for display; use 0 for average, 128 for frame minus average):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Current frame minus average so far</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Average so far</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Display nothing (fast for batch processing)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Display _Mode:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDenoise</name>
-    <message>
-        <source>_Luma lock:</source>
-        <translation type="obsolete">輝度ロック(_L):</translation>
-    </message>
-    <message>
-        <source>C_hroma lock:</source>
-        <translation type="obsolete">彩度ロック(_H):</translation>
-    </message>
-    <message>
-        <source>L_uma threshold:</source>
-        <translation type="obsolete">輝度閾値(_U):</translation>
-    </message>
-    <message>
-        <source>Ch_roma threshold:</source>
-        <translation type="obsolete">彩度閾値(_H):</translation>
-    </message>
-    <message>
-        <source>_Scene change:</source>
-        <translation type="obsolete">シーン変化(_S):</translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">ノイズ除去</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDropOut</name>
-    <message>
-        <source>DropOut Threshold</source>
-        <translation type="obsolete">ドロップアウト閾値</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoEraser</name>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoForcedPP</name>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">フィルタの強さ(_F):</translation>
-    </message>
-    <message>
-        <source>_Quantizer:</source>
-        <translation type="obsolete">量子化度(_Q):</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">水平デブロック(_H)</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">垂直デブロック(_V)</translation>
-    </message>
-    <message>
-        <source>_Deringing</source>
-        <translation type="obsolete">デリング(_D)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoKernelDeint</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">トップ</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">ボトム</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">フィールドオーダー(_F):</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">小さな値ほどより大きなデインタレースを意味する</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">シャープ(_S)</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">よりシャープにするエンジン(_S):</translation>
-    </message>
-    <message>
-        <source>T_woway</source>
-        <translation type="obsolete">２方向(_W)</translation>
-    </message>
-    <message>
-        <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">より良く外挿する (それを使わないのがベター)</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">マップ(_M)</translation>
-    </message>
-    <message>
-        <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">インタレース領域を表示(テスト用!)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLavPPDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>Linear blend</source>
-        <translation type="obsolete">線形ブレンド</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">線形補間</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Cubic 補間</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Median 補間</translation>
-    </message>
-    <message>
-        <source>FFmpeg deint</source>
-        <translation type="obsolete">FFmpeg デインタレース</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">デインタレース(_D):</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">自動レベル(_A)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLogo</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3D</name>
-    <message>
-        <source>_Spatial luma strength:</source>
-        <translation type="obsolete">空間的輝度の強さ(_S):</translation>
-    </message>
-    <message>
-        <source>S_patial chroma strength:</source>
-        <translation type="obsolete">空間的彩度の強さ(_P):</translation>
-    </message>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">時間的強さ(_T):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3Dlow</name>
-    <message>
-        <source>_Spatial luma strength:</source>
-        <translation type="obsolete">空間的輝度の強さ(_S):</translation>
-    </message>
-    <message>
-        <source>S_patial chroma strength:</source>
-        <translation type="obsolete">空間的彩度の強さ(_P):</translation>
-    </message>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">時間的強さ(_T):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMaskedSoften</name>
-    <message>
-        <source>_Luma threshold:</source>
-        <translation type="obsolete">輝度閾値(_L) :</translation>
-    </message>
-    <message>
-        <source>C_hroma threshold:</source>
-        <translation type="obsolete">彩度閾値(_H) :</translation>
-    </message>
-    <message>
-        <source>_Radius:</source>
-        <translation type="obsolete">半径(_R):</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMosaic</name>
-    <message>
-        <source>_Horizontal stacking:</source>
-        <translation type="obsolete">水平スタック(_H):</translation>
-    </message>
-    <message>
-        <source>_Vertical stacking:</source>
-        <translation type="obsolete">垂直スタック(_V):</translation>
-    </message>
-    <message>
-        <source>_Shrink factor:</source>
-        <translation type="obsolete">圧縮度(_S):</translation>
-    </message>
-    <message>
-        <source>Show _frame</source>
-        <translation type="obsolete">フレームを示す(_F)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoPalShift</name>
-    <message>
-        <source>_Try reverse</source>
-        <translation type="obsolete">逆を試す(_T)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoParticle</name>
-    <message>
-        <source>New format, preferred, good for Tracker3D</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Old format that Tracker3D can&apos;t read directly</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Mi_nimum area for a particle to be detected:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Ma_ximum area for a particle to be detected:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Left side crop (ignore particles in):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Right side crop (ignore particles in):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Top crop (ignore particles in):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Bottom crop (ignore particles in):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Camera number:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoResampleFPS</name>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">新規フレームレート(_N):</translation>
-    </message>
-    <message>
-        <source>_Blend</source>
-        <translation type="obsolete">ブレンド(_B)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoRotate</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 度</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 度</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 度</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">角度(_A):</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">回転</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoStabilize</name>
-    <message>
-        <source>Stabilize Threshold</source>
-        <translation type="obsolete">安定化閾値</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubASS</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">字幕ファイル(_S) (ASS/SSA):</translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">行スペーシング(_L):</translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">フォントスケール(_F):</translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">上余白(_T):</translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">下余白(_M)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubtitle</name>
-    <message>
-        <source>Could not open subtitle file</source>
-        <translation type="obsolete">字幕ファイルを開けません</translation>
-    </message>
-    <message>
-        <source>Cannot identify subtitle format</source>
-        <translation type="obsolete">字幕形式を特定できません</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSwissArmyKnife</name>
-    <message>
-        <source>P&apos; = A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P - A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = A - P</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P + A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P * A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P / A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = A / P</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = min (P, A)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = max (P, A)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = convolve(P); Load convolution kernel from file</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = pixel from image file as float; Load image from file</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = pixel from image file as integer; Load image from file</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = floating point constant value</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = rolling average of pixel: A = A*(1-alpha)+(P*alpha)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select _Operation on each pixel P and input A:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Input _Type:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Input _File (image or convolution kernel):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Load Bias (added to each pixel
-in file image when loaded):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Load _Multiplier (each pixel in
-file image mult. by this when loaded):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Input _Constant:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Init _Start Frame (first frame # to use for head start):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Init _End Frame (last frame # to use for head start):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Init By _Rolling (compute head start using a rolling average rather than a straight average)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Bias (will be added to result):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Histogram every N frames (0 to disable):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoTIsophote</name>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">中くらい</translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">タイプ(_T):</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">小さな値ほどより大きなデインタレースを意味する</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoThreshold</name>
-    <message>
-        <source>Mi_nimum value to be in-range:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Ma_ximum value to be in-range:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>In-range values go white, out-of-range go black</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>In-range values go black, out-of-range go white</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Output values:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoYadif</name>
-    <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">時間と空間チェック</translation>
-    </message>
-    <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">Bob, 時間と空間チェック</translation>
-    </message>
-    <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="obsolete">空間-時間チェックをスキップ</translation>
-    </message>
-    <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">Bob, 空間-時間チェックをスキップ</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">ボトムフィールドが先</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">トップフィールドが先</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">オーダー(_O):</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_AudiocodecWMA</name>
-    <message>
-        <source>Internal error</source>
-        <translation type="obsolete">内部エラー</translation>
-    </message>
-    <message>
-        <source>Cannot open WMA2 codec.</source>
-        <translation type="obsolete">WMA2コーデックを開けません.</translation>
-    </message>
-</context>
-<context>
     <name>ADM_Composer</name>
-    <message>
-        <source>No video loaded</source>
-        <translation type="obsolete">読込む映像がありません</translation>
-    </message>
-    <message>
-        <source>Not indexable</source>
-        <translation type="obsolete">インデックスを付けれません</translation>
-    </message>
-    <message>
-        <source>DivX 5 + packed?</source>
-        <translation type="obsolete">DivX5 + パックド?</translation>
-    </message>
-    <message>
-        <source>Rebuilding Frames</source>
-        <translation type="obsolete">フレームを再構築中</translation>
-    </message>
-    <message>
-        <source>Aborted</source>
-        <translation type="obsolete">中止しました</translation>
-    </message>
-    <message>
-        <source>Unsupported</source>
-        <translation type="obsolete">未サポート</translation>
-    </message>
-    <message>
-        <source>Old format project file</source>
-        <translation type="obsolete">古い形式のプロジェクトファイル</translation>
-    </message>
-    <message>
-        <source>No more supported.</source>
-        <translation type="obsolete">もはやサポートされません</translation>
-    </message>
-    <message>
-        <source>File type identified but no loader support detected...</source>
-        <translation type="obsolete">ファイルタイプは特定されますが読取りサポートを見付けられません...</translation>
-    </message>
-    <message>
-        <source>May be related to an old index file.</source>
-        <translation type="obsolete">古いインデックスファイルに関係するかもしれません.</translation>
-    </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+232"/>
         <source>Attempt to open %s failed!</source>
         <translation type="unfinished">%s を開く試みは失敗しました!</translation>
-    </message>
-    <message>
-        <source>Build Time Map</source>
-        <translation type="obsolete">タイムマップを作成する</translation>
-    </message>
-    <message>
-        <source>Build VBR time map?</source>
-        <translation type="obsolete">VBR タイムマップを作成しますか ?</translation>
-    </message>
-    <message>
-        <source>Packed Bitstream detected</source>
-        <translation type="obsolete">パックドビットストリームを検出しました</translation>
-    </message>
-    <message>
-        <source>Do you want me to unpack it ?</source>
-        <translation type="obsolete">それをアンパックしますか ?</translation>
-    </message>
-    <message>
-        <source>Could not unpack the video</source>
-        <translation type="obsolete">映像をアンパックできません</translation>
-    </message>
-    <message>
-        <source>Using backup decoder - not frame accurate.</source>
-        <translation type="obsolete">バックアップデコーダを使う - フレームに正確ではない.</translation>
-    </message>
-    <message>
-        <source>Weird</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>The unpacking succeedeed but the index is still not up to date.</source>
-        <translation type="obsolete">アンパックは成功しましたが、インデックスはまだ更新されてません.</translation>
-    </message>
-    <message>
-        <source>Index is not up to date</source>
-        <translation type="obsolete">インデックスが最新ではありません</translation>
-    </message>
-    <message>
-        <source>You should use Tool-&gt;Rebuild frame. Do it now ?</source>
-        <translation type="obsolete">ツール-&gt;フレームを再構築 を使うべきです. 今実行しますか ?</translation>
-    </message>
-    <message>
-        <source>This looks like mpeg
- Do you want to index it?</source>
-        <translation type="obsolete">これは mpeg のようです
- それのインデックスを作成しますか ?</translation>
-    </message>
-    <message>
-        <source>Indexing failed</source>
-        <translation type="obsolete">インデックス付けに失敗</translation>
     </message>
     <message>
         <location line="-36"/>
@@ -2456,7 +14,7 @@ file image mult. by this when loaded):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+64"/>
         <source>width</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2517,193 +75,6 @@ If you just copy the video without reencoding,
  you should keep them.
 Drop timing informations ?</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4CoreUIToolkit</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">警告</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4Factory::ADM_Qbitrate</name>
-    <message>
-        <source>Bitrate</source>
-        <translation type="obsolete">ビットレート</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="obsolete">-</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_QthreadCount</name>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">カスタム</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWrite</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">コピー</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">ファイルエラー</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">書込み用に &quot;%s&quot; を開けません.</translation>
-    </message>
-    <message>
-        <source>OGM</source>
-        <translation type="obsolete">OGM</translation>
-    </message>
-    <message>
-        <source>Could not initialize video</source>
-        <translation type="obsolete">映像を初期化できません</translation>
-    </message>
-    <message>
-        <source>Could not initialize audio</source>
-        <translation type="obsolete">音声を初期化できません</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">コピー</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteProcess</name>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">フィルタ初期化失敗</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qt4Factory::ADM_QthreadCount</name>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">カスタム</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMGenericAudioStream</name>
-    <message>
-        <source>Building VBR map</source>
-        <translation type="obsolete">VBRマップを構築中</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoMCDeint</name>
-    <message>
-        <source>Fast</source>
-        <translation type="obsolete">高速</translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">中くらい</translation>
-    </message>
-    <message>
-        <source>Slow iterative motion search</source>
-        <translation type="obsolete">低速, 繰返し動き検索</translation>
-    </message>
-    <message>
-        <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="obsolete">特別低速 (低速+複数参照フレーム)</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">トップ</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">ボトム</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
-    </message>
-    <message>
-        <source>_Field dominance:</source>
-        <translation type="obsolete">優先フィールド(_F):</translation>
-    </message>
-    <message>
-        <source>_Qp:</source>
-        <translation type="obsolete">_Qp:</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoVlad</name>
-    <message>
-        <source>_Luma temporal threshold:</source>
-        <translation type="obsolete">輝度時間的閾値(_L):</translation>
-    </message>
-    <message>
-        <source>Ch_roma temporal threshold:</source>
-        <translation type="obsolete">彩度時間的閾値(_R):</translation>
-    </message>
-</context>
-<context>
-    <name>AVDM_Fade</name>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">アウト</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="obsolete">フェードアウト</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation type="obsolete">イン</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="obsolete">フェードイン</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">フェードタイプ(_F):</translation>
-    </message>
-    <message>
-        <source>_Start frame:</source>
-        <translation type="obsolete">開始フレーム(_S):</translation>
-    </message>
-    <message>
-        <source>_End frame:</source>
-        <translation type="obsolete">終了フレーム(_E):</translation>
-    </message>
-    <message>
-        <source>Fade to _black</source>
-        <translation type="obsolete">黒にフェード(_B)</translation>
-    </message>
-    <message>
-        <source>Parameter Error</source>
-        <translation type="obsolete">パラメータエラー</translation>
-    </message>
-    <message>
-        <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="obsolete">始点は終点より前でなければならないし, 両点とも映像フレーム数内でなければならない</translation>
     </message>
 </context>
 <context>
@@ -2869,169 +240,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Cnr2Dialog</name>
-    <message>
-        <source>Narrow</source>
-        <translation type="obsolete">狭い</translation>
-    </message>
-    <message>
-        <source>Sensibility</source>
-        <translation type="obsolete">感度</translation>
-    </message>
-</context>
-<context>
-    <name>ColorYuvDialog</name>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">コントラスト</translation>
-    </message>
-    <message>
-        <source>Brightness</source>
-        <translation type="obsolete">明るさ</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">利得</translation>
-    </message>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">ガンマ</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>Rec.709</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Coring</source>
-        <translation type="obsolete">コアリング</translation>
-    </message>
-</context>
-<context>
-    <name>DGbob</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">トップ</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">ボトム</translation>
-    </message>
-    <message>
-        <source>Keep nb of frames and fps</source>
-        <translation type="obsolete">フレーム数とFPSを保つ</translation>
-    </message>
-    <message>
-        <source>Double nb of frames and fps</source>
-        <translation type="obsolete">フレーム数とFPSを２倍にする</translation>
-    </message>
-    <message>
-        <source>Double nb of frames (slow motion)</source>
-        <translation type="obsolete">フレーム数を２倍にする(スローモーション)</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">フィールドオーダー(_F):</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
-    </message>
-    <message>
-        <source>_Extra</source>
-        <translation type="obsolete">特別(_E)</translation>
-    </message>
-    <message>
-        <source>Extra check, avoid using it</source>
-        <translation type="obsolete">特別チェック, それを使うのを避けよ</translation>
-    </message>
-</context>
-<context>
-    <name>DIA_encodingQt4</name>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">シャットダウン中</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">再開</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">中止</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">特権が要求される</translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">この操作を実行するにはRoot特権が要求される</translation>
-    </message>
-</context>
-<context>
-    <name>DVEncoder</name>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">互換性のない設定</translation>
-    </message>
-</context>
-<context>
-    <name>Decimate</name>
-    <message>
-        <source>Discard closer</source>
-        <translation type="obsolete">近いものを破棄</translation>
-    </message>
-    <message>
-        <source>Replace (interpolate)</source>
-        <translation type="obsolete">置換(補間)</translation>
-    </message>
-    <message>
-        <source>Pulldown dupe removal</source>
-        <translation type="obsolete">プルダウンdupe除去</translation>
-    </message>
-    <message>
-        <source>Fastest (no chroma, partial luma)</source>
-        <translation type="obsolete">最速(彩度なし, 部分輝度)</translation>
-    </message>
-    <message>
-        <source>Fast (partial luma and chroma)</source>
-        <translation type="obsolete">速い(部分彩度と輝度)</translation>
-    </message>
-    <message>
-        <source>Medium (full luma, no chroma)</source>
-        <translation type="obsolete">中くらい(完全輝度, 彩度なし)</translation>
-    </message>
-    <message>
-        <source>Slow (full luma and chroma)</source>
-        <translation type="obsolete">遅い(完全輝度と彩度)</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">品質(_Q):</translation>
-    </message>
-    <message>
-        <source>_Threshold 1:</source>
-        <translation type="obsolete">閾値１ (_T):</translation>
-    </message>
-    <message>
-        <source>T_hreshold 2:</source>
-        <translation type="obsolete">閾値２ (_H):</translation>
-    </message>
-</context>
-<context>
     <name>Dialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="+64"/>
@@ -3058,10 +266,6 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <source>Configure</source>
         <translation type="unfinished">構成</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">音声フィルタ</translation>
     </message>
     <message>
         <location line="-116"/>
@@ -3166,42 +370,37 @@ Drop timing informations ?</source>
 <context>
     <name>DialogProcessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+47"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+26"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="+34"/>
+        <location line="+7"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location line="-67"/>
+        <location line="-19"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+19"/>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
+        <location line="+33"/>
         <source>TimeLeft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+21"/>
         <source>ProcessImages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+34"/>
+        <location line="-7"/>
         <source>Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-7"/>
         <source>0 fps</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3232,13 +431,6 @@ Drop timing informations ?</source>
         <location line="+7"/>
         <source>...</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>EncoderCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">コピー</translation>
     </message>
 </context>
 <context>
@@ -3273,186 +465,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>FLV1Encoder</name>
-    <message>
-        <source>_Bitrate (kb/s):</source>
-        <translation type="obsolete">ビットレート(_B) (kb/s):</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">GOPサイズ(_G):</translation>
-    </message>
-</context>
-<context>
-    <name>GUIPlayback</name>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">音声デバイス初期化トラブル</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSave</name>
-    <message>
-        <source>Error initalizing audio filters</source>
-        <translation type="obsolete">音声フィルタ初期化エラー</translation>
-    </message>
-    <message>
-        <source>Error initalizing video filters</source>
-        <translation type="obsolete">映像フィルタ初期化エラー</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">コピー</translation>
-    </message>
-    <message>
-        <source>AVI</source>
-        <translation type="obsolete">AVI</translation>
-    </message>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">保存を開始できません</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopy</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">保存を開始できません</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyPack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">保存を開始できません</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyUnpack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">保存を開始できません</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveProcess</name>
-    <message>
-        <source>Width is not a multiple of 8
- continue anyway ?</source>
-        <translation type="obsolete">幅が8の倍数ではありません
- ともかく続けますか ?</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">フィルタ初期化失敗</translation>
-    </message>
-    <message>
-        <source>Aborting</source>
-        <translation type="obsolete">中止</translation>
-    </message>
-</context>
-<context>
-    <name>GlyphEditorDialog</name>
-    <message>
-        <source>Prev. Empty</source>
-        <translation type="obsolete">前の空</translation>
-    </message>
-    <message>
-        <source>Next Empty</source>
-        <translation type="obsolete">次の空</translation>
-    </message>
-</context>
-<context>
-    <name>GlyphEditorWindow</name>
-    <message>
-        <source>Head reached</source>
-        <translation type="obsolete">先頭に到達した</translation>
-    </message>
-    <message>
-        <source>No more glyphs</source>
-        <translation type="obsolete">これ以上グリフなし</translation>
-    </message>
-    <message>
-        <source>End reached</source>
-        <translation type="obsolete">最後に到達した</translation>
-    </message>
-    <message>
-        <source>String</source>
-        <translation type="obsolete">文字列</translation>
-    </message>
-    <message>
-        <source>Search string</source>
-        <translation type="obsolete">文字列検索</translation>
-    </message>
-    <message>
-        <source>Select GlyphFile to edit</source>
-        <translation type="obsolete">編集するグリフファイルの選択</translation>
-    </message>
-</context>
-<context>
-    <name>H263Encoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">ログ</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">H.263</translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">動き予測</translation>
-    </message>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">互換性のない設定</translation>
-    </message>
-</context>
-<context>
-    <name>IndexDialog</name>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">インデックス作成中</translation>
-    </message>
-</context>
-<context>
-    <name>MP4Header</name>
-    <message>
-        <source>Problem reading SVQ3 headers</source>
-        <translation type="obsolete">SVQ3ヘッダ読取に問題</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="obsolete">stts テーブルがない</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="+15"/>
@@ -3460,11 +472,7 @@ Drop timing informations ?</source>
         <translation type="unfinished">Avidemux</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Video&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;映像&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <location line="+470"/>
+        <location line="+460"/>
         <location line="+169"/>
         <source>Copy</source>
         <translation type="unfinished">コピー</translation>
@@ -3489,22 +497,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">フィルタ</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Audio&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;音声&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Format&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;形式&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">0</translation>
-    </message>
-    <message>
-        <source>/ 0</source>
-        <translation type="obsolete">/ 0</translation>
-    </message>
-    <message>
         <location line="+648"/>
         <source>00:00:00.000</source>
         <translation type="unfinished">00:00:00.000</translation>
@@ -3521,18 +513,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">000000</translation>
     </message>
     <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">デコーダオプション</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">フレームレート</translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">ビットレート ヒストグラム</translation>
-    </message>
-    <message>
         <location line="-27"/>
         <source>A:</source>
         <translation type="unfinished">A :</translation>
@@ -3540,11 +520,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+7"/>
         <source>B:</source>
-        <translation type="unfinished">B :</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">内蔵サポート</translation>
+        <translation type="unfinished">B&#xa0;:</translation>
     </message>
     <message>
         <location line="-131"/>
@@ -3931,257 +907,11 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Mpeg1Encoder</name>
-    <message>
-        <source>4:3</source>
-        <translation type="obsolete">4:3</translation>
-    </message>
-    <message>
-        <source>16:9</source>
-        <translation type="obsolete">16:9</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">デフォルト</translation>
-    </message>
-    <message>
-        <source>TMPGEnc</source>
-        <translation type="obsolete">TMPGEnc</translation>
-    </message>
-    <message>
-        <source>Anime</source>
-        <translation type="obsolete">アニメ</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">プログレッシブ</translation>
-    </message>
-    <message>
-        <source>Interlaced BFF</source>
-        <translation type="obsolete">インタレース BFF</translation>
-    </message>
-    <message>
-        <source>Interlaced TFF</source>
-        <translation type="obsolete">インタレース TFF</translation>
-    </message>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">最大ビットレート(_X):</translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">最小ビットレート(_N):</translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">XviDレート制御を使う(_U)</translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">バッファサイズ(_B):</translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">アスペクト比(_R):</translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">マトリックス(_M):</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">GOPサイズ(_G):</translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">インタレース(_I):</translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg2Encoder</name>
-    <message>
-        <source>4:3</source>
-        <translation type="obsolete">4:3</translation>
-    </message>
-    <message>
-        <source>16:9</source>
-        <translation type="obsolete">16:9</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">デフォルト</translation>
-    </message>
-    <message>
-        <source>TMPGEnc</source>
-        <translation type="obsolete">TMPGEnc</translation>
-    </message>
-    <message>
-        <source>Anime</source>
-        <translation type="obsolete">アニメ</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">プログレッシブ</translation>
-    </message>
-    <message>
-        <source>Interlaced BFF</source>
-        <translation type="obsolete">インタレース BFF</translation>
-    </message>
-    <message>
-        <source>Interlaced TFF</source>
-        <translation type="obsolete">インタレース TFF</translation>
-    </message>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">最大ビットレート(_X):</translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">最小ビットレート(_N):</translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">XviDレート制御を使う(_U)</translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">バッファサイズ(_B):</translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">アスペクト比(_R):</translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">マトリックス(_M):</translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">GOPサイズ(_G):</translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">インタレース(_I):</translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg4aspEncoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">ログ</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">H.263</translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">動き予測</translation>
-    </message>
-</context>
-<context>
-    <name>MpegMuxer</name>
-    <message>
-        <source>Incompatible audio</source>
-        <translation type="obsolete">互換性のない音声</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be MP2 or AC3.</source>
-        <translation type="obsolete">DVD用には, 音声は MP2 または AC3 でなければならない.</translation>
-    </message>
-    <message>
-        <source>lvemux init failed</source>
-        <translation type="obsolete">lvemux初期化失敗</translation>
-    </message>
-</context>
-<context>
-    <name>Msharpen</name>
-    <message>
-        <source>_Mask</source>
-        <translation type="obsolete">マスク(_M)</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="obsolete">高Q (_H)</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">強さ(_S):</translation>
-    </message>
-</context>
-<context>
-    <name>Msmooth</name>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">強さ(_S):</translation>
-    </message>
-</context>
-<context>
-    <name>OpenDMLHeader</name>
-    <message>
-        <source>Malformed header</source>
-        <translation type="obsolete">誤った形式のヘッダ</translation>
-    </message>
-    <message>
-        <source>Unpacking bitstream</source>
-        <translation type="obsolete">ビットストリームをアンパック中</translation>
-    </message>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">インデックス作成中</translation>
-    </message>
-</context>
-<context>
     <name>Opus</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+254"/>
         <source>_Bitrate:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">警告</translation>
     </message>
 </context>
 <context>
@@ -4205,117 +935,6 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <source>Ctrl+Return</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Telecide</name>
-    <message>
-        <source>No strategy</source>
-        <translation type="obsolete">ストラテジなし</translation>
-    </message>
-    <message>
-        <source>3:2 pulldown</source>
-        <translation type="obsolete">3:2プルダウン</translation>
-    </message>
-    <message>
-        <source>PAL/SECAM</source>
-        <translation type="obsolete">PAL/SECAM</translation>
-    </message>
-    <message>
-        <source>NTSC converted from PAL</source>
-        <translation type="obsolete">PALから変換したNTSC</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">トップ</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">ボトム</translation>
-    </message>
-    <message>
-        <source>Never</source>
-        <translation type="obsolete">しない</translation>
-    </message>
-    <message>
-        <source>If still combed</source>
-        <translation type="obsolete">なおコームされているなら</translation>
-    </message>
-    <message>
-        <source>Always</source>
-        <translation type="obsolete">必ず</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>None but compute</source>
-        <translation type="obsolete">なし, 計算だけ</translation>
-    </message>
-    <message>
-        <source>Postproc on best match</source>
-        <translation type="obsolete">最善のマッチで後処理</translation>
-    </message>
-    <message>
-        <source>Postproc and show zones (debug)</source>
-        <translation type="obsolete">後処理してゾーンを表示 (デバッグ)</translation>
-    </message>
-    <message>
-        <source>Process image (not fields)</source>
-        <translation type="obsolete">画像を処理(フィールドではない)</translation>
-    </message>
-    <message>
-        <source>Process image (not fields), debug</source>
-        <translation type="obsolete">画像を処理(フィールドではない), デバッグ</translation>
-    </message>
-    <message>
-        <source>_Strategy:</source>
-        <translation type="obsolete">ストラテジ(_S):</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">フィールドオーダー(_F):</translation>
-    </message>
-    <message>
-        <source>_Postprocessing:</source>
-        <translation type="obsolete">後処理(_P):</translation>
-    </message>
-    <message>
-        <source>_Try backward:</source>
-        <translation type="obsolete">逆方向を試す(_T):</translation>
-    </message>
-    <message>
-        <source>_Direct threshold:</source>
-        <translation type="obsolete">直接閾値(_D):</translation>
-    </message>
-    <message>
-        <source>_Backward threshold:</source>
-        <translation type="obsolete">逆方向閾値(_B):</translation>
-    </message>
-    <message>
-        <source>_Noise threshold:</source>
-        <translation type="obsolete">ノイズ閾値(_N):</translation>
-    </message>
-    <message>
-        <source>Postp_rocessing threshold:</source>
-        <translation type="obsolete">後処理閾値(_R):</translation>
-    </message>
-    <message>
-        <source>_Use chroma to decide</source>
-        <translation type="obsolete">決定に彩度を使う(_U)</translation>
-    </message>
-    <message>
-        <source>Sho_w info</source>
-        <translation type="obsolete">情報を表示(_W)</translation>
-    </message>
-    <message>
-        <source>Debu_g</source>
-        <translation type="obsolete">デバッグ(_G)</translation>
-    </message>
-    <message>
-        <source>Bl_end</source>
-        <translation type="obsolete">ブレンド(_E)</translation>
     </message>
 </context>
 <context>
@@ -4347,51 +966,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>XvidConfigDialog</name>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">レート制御</translation>
-    </message>
-    <message>
-        <source>Pixel Aspect Ratio</source>
-        <translation type="obsolete">ピクセルアスペクト比</translation>
-    </message>
-    <message>
-        <source>:</source>
-        <translation type="obsolete">:</translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">動き予測</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">低い</translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">中くらい</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">高い</translation>
-    </message>
-    <message>
-        <source>Turbo Mode</source>
-        <translation type="obsolete">ターボモード</translation>
-    </message>
-</context>
-<context>
     <name>aboutDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+155"/>
@@ -4415,7 +989,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+10"/>
-        <source>© 2001 - 2018  Mean</source>
+        <source>© 2001 - 2019  Mean / Eumagga0x2a</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4474,47 +1048,16 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>addLogopFilter</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+219"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+218"/>
         <source>Decode video using DXVA2 (windows)</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Use systray while encoding</source>
-        <translation type="obsolete">エンコード中シストレーを使う(_U)</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>_Accept non-standard audio frequency for DVD</source>
         <translation type="unfinished">DVDに標準でない音声周波数を受け付ける(_A)</translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="obsolete">OpenDMLファイルを作成する(_O)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -4710,7 +1253,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+5"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+211"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+213"/>
         <source>PCM</source>
         <translation type="unfinished">
             </translation>
@@ -4753,7 +1296,12 @@ Drop timing informations ?</source>
         <translation type="unfinished">ローカル再生ダウンミックス(_L):</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+38"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+26"/>
+        <source>The options above are effective only for MPEG and DivX with software decoding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+17"/>
         <source>_Horizontal deblocking</source>
         <translation type="unfinished">水平デブロック(_H)</translation>
@@ -4763,6 +1311,11 @@ Drop timing informations ?</source>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+1"/>
         <source>_Vertical deblocking</source>
         <translation type="unfinished">垂直デブロック(_V)</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>De_interlacing (ffmpegdeint)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+1"/>
@@ -4799,7 +1352,7 @@ Drop timing informations ?</source>
         <location line="+278"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+409"/>
+        <location filename="../../common/gui_savenew.cpp" line="+423"/>
         <source>Audio</source>
         <translation type="unfinished">音声</translation>
     </message>
@@ -4929,10 +1482,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">ドルビープロロジックII</translation>
     </message>
     <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="obsolete">自動(最大 -3dB)</translation>
-    </message>
-    <message>
         <location line="+11"/>
         <source>_Gain mode:</source>
         <translation type="unfinished">利得モード(_G):</translation>
@@ -5014,17 +1563,9 @@ Drop timing informations ?</source>
         <translation type="unfinished">このバージョンではコード化されていません</translation>
     </message>
     <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">AVIファイルの選択...</translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">追加するAVIファイルの選択...</translation>
-    </message>
-    <message>
         <location line="+251"/>
         <source>Are you sure?</source>
-        <translation type="unfinished">本当ですか ?</translation>
+        <translation type="unfinished">本当ですか&#xa0;?</translation>
     </message>
     <message>
         <location line="+48"/>
@@ -5109,7 +1650,7 @@ Go to Audio-&gt;MainTrack to select the active one.</source>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+317"/>
+        <location line="+320"/>
         <source>Something bad happened (II)</source>
         <translation type="unfinished">何か悪いことが起きました (II)</translation>
     </message>
@@ -5138,7 +1679,7 @@ Expect problems.</source>
     <message>
         <location line="+16"/>
         <source>Marker A &gt; B</source>
-        <translation type="unfinished">マーカー A &gt; B</translation>
+        <translation type="unfinished">マーカー A&#xa0;&gt;&#xa0;B</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -5152,7 +1693,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
         <source>Something bad happened</source>
         <translation type="unfinished">何か悪いことが起きました</translation>
     </message>
@@ -5199,17 +1740,12 @@ Is it running ?</source>
         <translation type="unfinished">フレーム16進ダンプ</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-12"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-15"/>
         <source>_Filter strength:</source>
         <translation type="unfinished">フィルタの強さ(_F):</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_Swap U and V</source>
-        <translation type="unfinished">UとVを交換(_S)</translation>
-    </message>
-    <message>
-        <location line="+12"/>
+        <location line="+14"/>
         <source>_Deringing</source>
         <translation type="unfinished">デリング(_D)</translation>
     </message>
@@ -5250,18 +1786,6 @@ Is it running ?</source>
         <translation type="unfinished">音声保存中</translation>
     </message>
     <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="obsolete">JPEGの組を保存中</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="obsolete">フレームをデコードできません</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="obsolete">中止しています.</translation>
-    </message>
-    <message>
         <location line="+303"/>
         <location line="+83"/>
         <source>Done</source>
@@ -5288,10 +1812,6 @@ Is it running ?</source>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_quota.cpp" line="+68"/>
         <source>Error</source>
         <translation type="unfinished">エラー</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="obsolete">全画像を保存できません</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="+61"/>
@@ -5324,128 +1844,9 @@ Is it running ?</source>
         <translation type="unfinished">カスタム</translation>
     </message>
     <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">新規フレームレート(_N):</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">デフォルト</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">プログレッシブ</translation>
-    </message>
-    <message>
-        <source>Interlacing</source>
-        <translation type="obsolete">インタレース</translation>
-    </message>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">レート制御</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">ログ</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">H.263</translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">動き予測</translation>
-    </message>
-    <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="+3"/>
         <source>Medium</source>
         <translation type="unfinished">中くらい</translation>
-    </message>
-    <message>
-        <source>VBR</source>
-        <translation type="obsolete">VBR</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">品質に基づく</translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">ビットレート(_B):</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">品質(_Q):</translation>
-    </message>
-    <message>
-        <source>_Quantizer:</source>
-        <translation type="obsolete">量子化度(_Q):</translation>
-    </message>
-    <message>
-        <source>CBR</source>
-        <translation type="obsolete">CBR</translation>
-    </message>
-    <message>
-        <source>ABR</source>
-        <translation type="obsolete">ABR</translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">ビットレートモード(_R):</translation>
-    </message>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">フィルタは既に部分的です</translation>
-    </message>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">成功した</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">削除した</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">稼動中</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">本当!</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">ジョブを削除</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="-25"/>
@@ -6053,7 +2454,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1379"/>
+        <location filename="../../common/gui_main.cpp" line="-1382"/>
         <source>Select script/project to run</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6117,7 +2518,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+754"/>
+        <location line="+757"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation type="unfinished"></translation>
@@ -6158,7 +2559,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+443"/>
+        <location filename="../../common/gui_play.cpp" line="+446"/>
         <source>Trouble initializing audio device</source>
         <translation type="unfinished">音声デバイス初期化トラブル</translation>
     </message>
@@ -6274,13 +2675,13 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_savenew.cpp" line="-196"/>
+        <location filename="../../common/gui_savenew.cpp" line="-207"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+160"/>
+        <location line="+171"/>
         <source>Cannot instantiate video chain</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6308,15 +2709,15 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-244"/>
-        <location line="+255"/>
+        <location line="-255"/>
+        <location line="+266"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-281"/>
-        <location line="+255"/>
+        <location line="-292"/>
+        <location line="+266"/>
         <source>Cannot instantiate muxer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6638,6 +3039,11 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Float PCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Ogg Vorbis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6713,7 +3119,7 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+385"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+374"/>
         <source>Unknown</source>
         <translation type="unfinished">不明</translation>
     </message>
@@ -6804,8 +3210,8 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished">1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
-        <location line="+32"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
+        <location line="+30"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -6857,7 +3263,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+227"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6930,7 +3336,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+471"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+468"/>
         <source>Indexing</source>
         <translation type="unfinished">インデックス作成中</translation>
     </message>
@@ -6979,7 +3385,7 @@ Proceed anyway?</source>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+171"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation type="unfinished">字幕ファイル(_S) (ASS/SSA):</translation>
     </message>
@@ -7000,8 +3406,8 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Botto_m margin</source>
-        <translation type="unfinished">下余白(_M)</translation>
+        <source>Botto_m margin:</source>
+        <translation type="unfinished">下余白(_M):</translation>
     </message>
     <message>
         <location line="-108"/>
@@ -7010,58 +3416,68 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Hardcode ass/ssa/srt subtitles using libass.</source>
+        <source>Hardcode ASS/SSA/SRT subtitles using libass.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+63"/>
         <source>Format ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Are you sure this is an ass file ?</source>
+        <source>Are you sure this is an ASS/SSA file ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+41"/>
-        <source>Select Subtitle file</source>
+        <location line="+40"/>
+        <source>Select Subtitle File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+5"/>
+        <source>Do not adjust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust for display aspect ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
         <source>ASS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>This is a srt file. Convert to SSA ?</source>
+        <source>This is a SRT file. Convert to SSA ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+5"/>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Error</source>
         <translation type="unfinished">エラー</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Cannot load this srt file.</source>
+        <location line="-14"/>
+        <source>Cannot load this SRT file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
-        <source>Cannot convert to ssa.</source>
+        <source>Cannot convert to SSA.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Cannot save converted file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+56"/>
         <source>Fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7072,21 +3488,14 @@ This message will not be displayed again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+52"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Cannot read_file for *%s*</source>
+        <source>ass_read_file() failed for %s</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>autoWizard</name>
-    <message>
-        <source>Codec:</source>
-        <translation type="obsolete">コーデック:</translation>
     </message>
 </context>
 <context>
@@ -7280,31 +3689,37 @@ This message will not be displayed again.</source>
     <name>blackenDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt4/blackenBorders.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+14"/>
         <source>Blacken Borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+38"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+38"/>
         <source>Right:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Top:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+43"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+43"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+21"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+21"/>
         <source>Bottom:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Left:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7333,14 +3748,6 @@ This message will not be displayed again.</source>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="+40"/>
         <source>Custom</source>
         <translation type="unfinished">カスタム</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">新規フレームレート(_N):</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7942,21 +4349,6 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
-    <name>dmxHeader</name>
-    <message>
-        <source>Out of memory</source>
-        <translation type="obsolete">メモリ範囲外</translation>
-    </message>
-    <message>
-        <source>Opening MPEG</source>
-        <translation type="obsolete">MPEGを開いています</translation>
-    </message>
-    <message>
-        <source>MPEG renumbering error</source>
-        <translation type="obsolete">MPEGの再番号付けエラー</translation>
-    </message>
-</context>
-<context>
     <name>dummy</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dummy/dummyVideoFilter.cpp" line="+44"/>
@@ -8143,33 +4535,6 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
-    <name>encodingWindow</name>
-    <message>
-        <source>Pause / Abort</source>
-        <translation type="obsolete">休止 / 中止</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">再開</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">中止</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">特権が要求される</translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">この操作を実行するにはRoot特権が要求される</translation>
-    </message>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">シャットダウン中</translation>
-    </message>
-</context>
-<context>
     <name>eq2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="+64"/>
@@ -8190,15 +4555,6 @@ Do you want to load it  ?
 </context>
 <context>
     <name>eq2Dialog</name>
-    <message>
-        <source>MPlayer eq2</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">ガンマ</translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/eq2.ui" line="+14"/>
         <location line="+88"/>
@@ -8262,29 +4618,6 @@ Do you want to load it  ?
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+6"/>
         <source>Opus Configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>fade</name>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">アウト</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="obsolete">フェードアウト</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation type="obsolete">イン</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="obsolete">フェードイン</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">フェードタイプ(_F):</translation>
     </message>
 </context>
 <context>
@@ -8419,6 +4752,44 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
+    <name>ffVAEncHEVC</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaHEVC/ADM_ffVAEncHEVC.cpp" line="+343"/>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Maximum Consecutive B-Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Max Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Frame Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>FFmpeg VA-API HEVC Encoder Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ffmpeg2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+223"/>
@@ -8436,7 +4807,7 @@ Do you want to load it  ?
         <translation type="unfinished">プログレッシブ</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+14"/>
         <source>Threading</source>
         <translation type="unfinished">
             </translation>
@@ -8452,7 +4823,7 @@ Do you want to load it  ?
         <translation type="unfinished">レート制御</translation>
     </message>
     <message>
-        <location line="-86"/>
+        <location line="-85"/>
         <source>Normal (4:3)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8522,7 +4893,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8626,33 +4997,6 @@ Do you want to load it  ?
     <name>ffmpeg4</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
-        <source>None</source>
-        <translation type="unfinished">なし</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation type="unfinished">
-            </translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation type="unfinished">ログ</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation type="unfinished">
-            </translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
-    </message>
-    <message>
-        <location line="+5"/>
         <source>H.263</source>
         <translation type="unfinished">H.263</translation>
     </message>
@@ -8662,18 +5006,18 @@ Do you want to load it  ?
         <translation type="unfinished">MPEG</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+21"/>
         <source>Threading</source>
         <translation type="unfinished">
             </translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+23"/>
         <source>User Interface</source>
         <translation type="unfinished">ユーザインタフェース</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+9"/>
         <source>Motion Estimation</source>
         <translation type="unfinished">動き予測</translation>
     </message>
@@ -8683,12 +5027,7 @@ Do you want to load it  ?
         <translation type="unfinished">レート制御</translation>
     </message>
     <message>
-        <location line="-72"/>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
+        <location line="-58"/>
         <source>MB comparison</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8724,11 +5063,6 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+10"/>
-        <source>Matrices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8758,12 +5092,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_GMC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Number of B frames:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8803,7 +5132,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Quantization</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9259,25 +5588,6 @@ Do you want to replace it?</source>
     </message>
 </context>
 <context>
-    <name>filtermainWindow</name>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">フィルタは既に部分的です</translation>
-    </message>
-    <message>
-        <source>Load set of filters</source>
-        <translation type="obsolete">フィルタの組を読込む</translation>
-    </message>
-    <message>
-        <source>Nothing to save</source>
-        <translation type="obsolete">保存するものがありません</translation>
-    </message>
-    <message>
-        <source>Save set of filters</source>
-        <translation type="obsolete">フィルタの組を保存</translation>
-    </message>
-</context>
-<context>
     <name>flux</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="+37"/>
@@ -9305,33 +5615,6 @@ Do you want to replace it?</source>
     <name>flv1</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
-        <source>None</source>
-        <translation type="unfinished">なし</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation type="unfinished">
-            </translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation type="unfinished">ログ</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation type="unfinished">
-            </translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
-    </message>
-    <message>
-        <location line="+5"/>
         <source>H.263</source>
         <translation type="unfinished">H.263</translation>
     </message>
@@ -9341,7 +5624,7 @@ Do you want to replace it?</source>
         <translation type="unfinished">MPEG</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+26"/>
         <source>User Interface</source>
         <translation type="unfinished">ユーザインタフェース</translation>
     </message>
@@ -9351,12 +5634,7 @@ Do you want to replace it?</source>
         <translation type="unfinished">レート制御</translation>
     </message>
     <message>
-        <location line="-42"/>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
+        <location line="-32"/>
         <source>MB comparison</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9371,7 +5649,7 @@ Do you want to replace it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9750,13 +6028,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>h263Header</name>
-    <message>
-        <source>Size is not (s)QCIF</source>
-        <translation type="obsolete">サイズが(s)QCIFでない</translation>
-    </message>
-</context>
-<context>
     <name>hflip</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/horizontalFlip/horizontalFlip.cpp" line="+44"/>
@@ -10047,38 +6318,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>jobsWindow</name>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">成功した</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">失敗した</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">削除した</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">稼動中</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">本当!</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">ジョブを削除</translation>
-    </message>
-</context>
-<context>
     <name>jpeg</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="+102"/>
@@ -10104,53 +6343,6 @@ I will assume it has and try to continue</source>
         <location line="+4"/>
         <source>Mjpeg Configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>kernelDeint</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">トップ</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">ボトム</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">フィールドオーダー(_F):</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">小さな値ほどより大きなデインタレースを意味する</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">シャープ(_S)</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">よりシャープにするエンジン(_S):</translation>
-    </message>
-    <message>
-        <source>T_woway</source>
-        <translation type="obsolete">２方向(_W)</translation>
-    </message>
-    <message>
-        <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">より良く外挿する (それを使わないのがベター)</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">マップ(_M)</translation>
-    </message>
-    <message>
-        <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">インタレース領域を表示(テスト用!)</translation>
     </message>
 </context>
 <context>
@@ -10298,48 +6490,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>lavDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>Linear blend</source>
-        <translation type="obsolete">線形ブレンド</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">線形補間</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Cubic 補間</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Median 補間</translation>
-    </message>
-    <message>
-        <source>FFmpeg deint</source>
-        <translation type="obsolete">FFmpeg デインタレース</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">デインタレース(_D):</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">自動レベル(_A)</translation>
-    </message>
-</context>
-<context>
-    <name>lavMuxer</name>
-    <message>
-        <source>Incompatible frame rate</source>
-        <translation type="obsolete">互換性のないフレームレート</translation>
-    </message>
-</context>
-<context>
     <name>lavcodec</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
@@ -10353,11 +6503,6 @@ I will assume it has and try to continue</source>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
         <translation type="unfinished">UとVを交換(_S)</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show motion _vectors</source>
-        <translation type="unfinished">動きベクトルを示す(_V)</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -10438,26 +6583,6 @@ I will assume it has and try to continue</source>
 </context>
 <context>
     <name>logo</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="+22"/>
         <source>Add logo</source>
@@ -10544,10 +6669,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">映像 フィルタ マネージャ</translation>
     </message>
     <message>
-        <source>Save Script</source>
-        <translation type="obsolete">スクリプト保存</translation>
-    </message>
-    <message>
         <location line="+180"/>
         <source>Transform</source>
         <translation type="unfinished">変換</translation>
@@ -10583,10 +6704,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">雑多</translation>
     </message>
     <message>
-        <source>External</source>
-        <translation type="obsolete">外部</translation>
-    </message>
-    <message>
         <location line="-182"/>
         <source>&lt;big&gt;&lt;b&gt;Active Filters&lt;/b&gt;&lt;/big&gt;</source>
         <translation type="unfinished"></translation>
@@ -10613,21 +6730,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>mainMenu</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">コピー</translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">設定</translation>
-    </message>
-    <message>
-        <source>Filters</source>
-        <translation type="obsolete">フィルタ</translation>
-    </message>
-</context>
-<context>
     <name>matroskademuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Matroska/ADM_mkvIndexer.cpp" line="+48"/>
@@ -10635,7 +6737,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+426"/>
+        <location line="+433"/>
         <source>Matroska clusters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10834,13 +6936,9 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+815"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">SVQ3ヘッダ読取に問題</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="obsolete">stts テーブルがない</translation>
     </message>
 </context>
 <context>
@@ -11023,22 +7121,6 @@ I will assume it has and try to continue</source>
 <context>
     <name>msharpen</name>
     <message>
-        <source>_Mask</source>
-        <translation type="obsolete">マスク(_M)</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="obsolete">高Q (_H)</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">強さ(_S):</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="+48"/>
         <source>Msharpen</source>
         <translation type="unfinished"></translation>
@@ -11101,29 +7183,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>nuvHeader</name>
-    <message>
-        <source>Opening Nuppel video</source>
-        <translation type="obsolete">Nuppel映像を開いています</translation>
-    </message>
-    <message>
-        <source>Sure you want to abort ?</source>
-        <translation type="obsolete">本当に中止しますか ?</translation>
-    </message>
-    <message>
-        <source>Size mismatch</source>
-        <translation type="obsolete">サイズが合いません</translation>
-    </message>
-    <message>
-        <source>Expect a crash.</source>
-        <translation type="obsolete">クラッシュするかも.</translation>
-    </message>
-    <message>
-        <source>Do you want to save an index ?</source>
-        <translation type="obsolete">インデックスを保存しますか ?</translation>
-    </message>
-</context>
-<context>
     <name>nvenc</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/nvEnc/ADM_nvEnc.cpp" line="+136"/>
@@ -11177,17 +7236,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>oggHeader</name>
-    <message>
-        <source>Take second track ?</source>
-        <translation type="obsolete">第２トラックを取る ?</translation>
-    </message>
-    <message>
-        <source>Scanning OGM</source>
-        <translation type="obsolete">OGMをスキャン中</translation>
-    </message>
-</context>
-<context>
     <name>opendmldemuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="+321"/>
@@ -11226,13 +7274,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>previewDialog</name>
-    <message>
-        <source>Preview</source>
-        <translation type="obsolete">プレビュー</translation>
-    </message>
-</context>
-<context>
     <name>printinfo</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/printInfo/printInfo.cpp" line="+44"/>
@@ -11243,25 +7284,6 @@ I will assume it has and try to continue</source>
         <location line="+1"/>
         <source>Display some informations on Screen.</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>propWindow</name>
-    <message>
-        <source>No</source>
-        <translation type="obsolete">いいえ</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation type="obsolete">はい</translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">モノ</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">ステレオ</translation>
     </message>
 </context>
 <context>
@@ -11303,25 +7325,9 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">コーデック4CC:</translation>
     </message>
     <message>
-        <source>Global Motion Compensation:</source>
-        <translation type="obsolete">グローバル動き補償:</translation>
-    </message>
-    <message>
-        <source>Packed Bitstream:</source>
-        <translation type="obsolete">パックドビットストリーム:</translation>
-    </message>
-    <message>
-        <source>Quarter Pixel:</source>
-        <translation type="obsolete">1/4 ピクセル:</translation>
-    </message>
-    <message>
         <location line="+62"/>
         <source>Audio</source>
         <translation type="unfinished">音声</translation>
-    </message>
-    <message>
-        <source>File Size:</source>
-        <translation type="obsolete">ファイルサイズ:</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -11386,7 +7392,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>psdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+80"/>
         <source>Error</source>
         <translation type="unfinished">エラー</translation>
     </message>
@@ -11402,7 +7408,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">インデックス作成中</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+42"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11504,19 +7510,19 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qfile</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+50"/>
-        <location line="+139"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+45"/>
+        <location line="+141"/>
         <source>All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-54"/>
-        <location line="+96"/>
+        <location line="-58"/>
+        <location line="+105"/>
         <source> files (*.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-68"/>
+        <location line="-81"/>
         <source>Overwrite file </source>
         <translation type="unfinished"></translation>
     </message>
@@ -11539,7 +7545,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+658"/>
+        <location line="+660"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11604,7 +7610,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+617"/>
+        <location line="+619"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
@@ -11822,7 +7828,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qprocessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+66"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+65"/>
         <source>Unknown</source>
         <translation type="unfinished">不明</translation>
     </message>
@@ -12018,6 +8024,19 @@ Ready.
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="+88"/>
         <source>Select Idx File</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>rawmuxer</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerRaw/muxerRawConfig.cpp" line="+29"/>
+        <source>Prefer Annex B type stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Video Only Muxer Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -12507,13 +8526,6 @@ Ready.
     </message>
 </context>
 <context>
-    <name>resizeWindow</name>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">幅や高さは 奇数にはできません</translation>
-    </message>
-</context>
-<context>
     <name>rotate</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="+52"/>
@@ -12568,42 +8580,11 @@ Ready.
     </message>
 </context>
 <context>
-    <name>rotateFilter</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 度</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 度</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 度</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">角度(_A):</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">回転</translation>
-    </message>
-</context>
-<context>
     <name>seekablePreviewDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="+20"/>
         <source>Preview</source>
         <translation type="unfinished">プレビュー</translation>
-    </message>
-    <message>
-        <source>00:00:00.000</source>
-        <translation type="obsolete">00:00:00.000</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
@@ -12710,29 +8691,6 @@ Ready.
         <location line="+1"/>
         <source>_Duration:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>subAss</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">字幕ファイル(_S) (ASS/SSA):</translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">行スペーシング(_L):</translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">フォントスケール(_F):</translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">上余白(_T):</translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">下余白(_M)</translation>
     </message>
 </context>
 <context>
@@ -12933,8 +8891,8 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+186"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+329"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+188"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+327"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+83"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
@@ -13166,96 +9124,7 @@ Please delete the idx2 file and reopen.</source>
     </message>
 </context>
 <context>
-    <name>vidBlendRemoval</name>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
-    </message>
-    <message>
-        <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="obsolete">値が閾値より小さいなら有効とみなす. 小さな値はより偽りのポジを意味するかも</translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">ノイズ(_N):</translation>
-    </message>
-    <message>
-        <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">ピクセルがノイズより近いなら, 同一とみなす</translation>
-    </message>
-    <message>
-        <source>I_dentical:</source>
-        <translation type="obsolete">同一(_D):</translation>
-    </message>
-    <message>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">計測値が同一値より小さいなら, 画像は同一とみなす</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">計測値を表示(_S)</translation>
-    </message>
-    <message>
-        <source>Show metric in image (debug)</source>
-        <translation type="obsolete">画像中に計測値を表示する(デバッグ用)</translation>
-    </message>
-</context>
-<context>
-    <name>vidColorYuv</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">なし</translation>
-    </message>
-</context>
-<context>
-    <name>vidHardPDRemoval</name>
-    <message>
-        <source>Metrics</source>
-        <translation type="obsolete">計測値</translation>
-    </message>
-    <message>
-        <source>Do you want to print metrics on screen ?</source>
-        <translation type="obsolete">画面上の計測値を印刷しますか ?</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
-    </message>
-    <message>
-        <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="obsolete">値が閾値より小さいなら有効とみなす. より小さな値は誤診を意味するかもしれない</translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">ノイズ(_N):</translation>
-    </message>
-    <message>
-        <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">ピクセルがノイズより近いなら, 同一とみなす</translation>
-    </message>
-    <message>
-        <source>_Identical:</source>
-        <translation type="obsolete">同一(_I):</translation>
-    </message>
-    <message>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">計測値が同一値より小さいなら, 画像は同一とみなす</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">計測値を表示(_S)</translation>
-    </message>
-    <message>
-        <source>Show metric in image (debug)</source>
-        <translation type="obsolete">画像中に計測値を表示する(デバッグ用)</translation>
-    </message>
-</context>
-<context>
     <name>vobSubDialog</name>
-    <message>
-        <source>VobSub Settings</source>
-        <translation type="obsolete">VobSubの設定</translation>
-    </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="+13"/>
         <source>Subtitle Font Size and Position</source>
@@ -13371,23 +9240,18 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <translation type="unfinished">処理中</translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+19"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="-48"/>
+        <location line="-13"/>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+20"/>
         <source>Time Remaining:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+113"/>
-        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -13583,10 +9447,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+280"/>
         <source>Fast</source>
         <translation type="unfinished">高速</translation>
-    </message>
-    <message>
-        <source>Advanced</source>
-        <translation type="obsolete">拡張</translation>
     </message>
     <message>
         <location line="+1598"/>
@@ -16214,41 +12074,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+4"/>
         <source>yadif</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>yadifFilter</name>
-    <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">時間と空間チェック</translation>
-    </message>
-    <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">Bob, 時間と空間チェック</translation>
-    </message>
-    <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="obsolete">空間-時間チェックをスキップ</translation>
-    </message>
-    <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">Bob, 空間-時間チェックをスキップ</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">ボトムフィールドが先</translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">トップフィールドが先</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">オーダー(_O):</translation>
     </message>
 </context>
 </TS>
