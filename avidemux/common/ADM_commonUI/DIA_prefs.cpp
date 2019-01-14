@@ -99,8 +99,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         // Default pp
-         if(!prefs->get(DEFAULT_POSTPROC_TYPE,&pp_type)) pp_type=3;
-         if(!prefs->get(DEFAULT_POSTPROC_VALUE,&pp_value)) pp_value=3;
+         if(!prefs->get(DEFAULT_POSTPROC_TYPE,&pp_type)) pp_type=0;
+         if(!prefs->get(DEFAULT_POSTPROC_VALUE,&pp_value)) pp_value=0;
 #define DOME(x,y) y=!!(pp_type & x)
 
     DOME(1,hzd);
@@ -679,20 +679,5 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
 	return 1;
-}
-extern int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,bool *swap);
-void setpp(void)
-{
-        uint32_t type,strength;
-        bool uv=0;
-
-        if(!prefs->get(DEFAULT_POSTPROC_TYPE,&type)) type=3;
-        if(!prefs->get(DEFAULT_POSTPROC_VALUE,&strength)) strength=3;
-        if( DIA_getMPParams( &type,&strength,&uv))
-        {
-                prefs->set(DEFAULT_POSTPROC_TYPE,type);
-                prefs->set(DEFAULT_POSTPROC_VALUE,strength);
-        }
-//	video_body->setPostProc(type, strength, uv);
 }
 //EOF
