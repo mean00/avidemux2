@@ -728,8 +728,6 @@ void MainWindow::buildActionLists(void)
         ActionsAvailableWhenFileLoaded.push_back(ui.menuView->actions().at(i));
     }
 
-    ActionsAvailableWhenFileLoaded.push_back(ui.menuVideo->actions().at(1)); // post-processing
-
     bool canSave=!!ADM_mx_getNbMuxers();
     for(int i=3-canSave;i<ui.toolBar->actions().size();i++)
     { // disable "Save" and "Information" buttons in the toolbar if no video is loaded, "Save" also if we've got zero muxers
@@ -968,6 +966,10 @@ void MainWindow::updateCodecWidgetControlsState(void)
     ui.pushButtonDecoderConf->setEnabled(b);
     // take care of the "Decoder Options" item in the menu "Video"
     ui.menuVideo->actions().at(0)->setEnabled(b);
+    // post-processing is available only for software decoding and old codecs
+    if(b && !(isMpeg12Compatible(avifileinfo->fcc) || isMpeg4Compatible(avifileinfo->fcc)))
+        b=false;
+    ui.menuVideo->actions().at(1)->setEnabled(b);
 
     b=false;
     if(ui.comboBoxVideo->currentIndex())
