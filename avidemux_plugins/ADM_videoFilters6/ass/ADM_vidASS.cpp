@@ -74,7 +74,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   subAss,   // Class
                         VF_SUBTITLE,            // Category
                         "ssa",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("ass","SSA/ASS/SRT"),            // Display name
-                        QT_TRANSLATE_NOOP("ass","Hardcode ass/ssa/srt subtitles using libass.") // Description
+                        QT_TRANSLATE_NOOP("ass","Hardcode ASS/SSA/SRT subtitles using libass.") // Description
                     );
 
 
@@ -137,7 +137,7 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
     {
         if (!this->setup()) 
         {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Format ?"), QT_TRANSLATE_NOOP("ass","Are you sure this is an ass file ?"));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Format ?"), QT_TRANSLATE_NOOP("ass","Are you sure this is an ASS/SSA file ?"));
         }
     }
 }
@@ -177,7 +177,7 @@ bool subAss::configure(void)
 
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
-    diaElemFile       file(0,param.subtitleFile,QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
+    diaElemFile       file(0,param.subtitleFile,QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle File"));
     diaElemFloat      dSpacing(&spacing,QT_TRANSLATE_NOOP("ass","_Line spacing:"),0.10,10.0);
     diaElemFloat      dScale(&scale,QT_TRANSLATE_NOOP("ass","_Font scale:"),0.10,10.0);
     diaElemUInteger   dTop(PX(topMargin),QT_TRANSLATE_NOOP("ass","_Top margin:"),0,200);
@@ -194,19 +194,19 @@ again:
     int l=strlen(p);
     if(l>3 && !strcasecmp(p+l-4,".srt"))
     {
-        if(!GUI_Question(QT_TRANSLATE_NOOP("ass","This is a srt file. Convert to SSA ?")))
+        if(!GUI_Question(QT_TRANSLATE_NOOP("ass","This is a SRT file. Convert to SSA ?")))
         {
             goto again;
         }
         ADM_subtitle sub;
         if(!sub.load(p))
         {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot load this srt file."));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot load this SRT file."));
             goto again;
         }
         if(false==sub.srt2ssa())
         {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot convert to ssa."));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot convert to SSA."));
             goto again;               
         }
 
@@ -323,7 +323,7 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
         ass_set_pixel_aspect(_ass_rend, par);
        _ass_track = ass_read_file(_ass_lib, (char *)param.subtitleFile.c_str(), NULL);
         if(!_ass_track)
-          GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","SSA Error"),QT_TRANSLATE_NOOP("ass","Cannot read_file for *%s*"),param.subtitleFile.c_str());
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","SSA Error"),QT_TRANSLATE_NOOP("ass","ass_read_file() failed for %s"),param.subtitleFile.c_str());
         return 1;
 }
 
