@@ -210,7 +210,7 @@ again:
             goto again;               
         }
 
-        char newName[l+1];
+        char *newName=(char *)admAlloca(l+1);
         strcpy(newName,p);
         strcpy(newName+l-4,".ssa");
         if(false==sub.saveAsSSA(newName, previousFilter->getInfo()->width, previousFilter->getInfo()->height))
