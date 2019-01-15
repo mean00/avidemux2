@@ -9,7 +9,7 @@ MACRO(checkNvEnc)
             PKG_CHECK_MODULES(FFNVENC ffnvcodec)
             IF (FFNVENC_FOUND)
                 FIND_PATH(NVENC_INCLUDE_DIR nvEncodeAPI.h
-                        PATHS /usr/local/include/ffnvcodec /usr/include/ffnvcodec /include/ffnvcodec ${FFNVENC_CFLAGS})
+                        PATHS /usr/local/include/ffnvcodec /usr/include/ffnvcodec /include/ffnvcodec ${FFNVENC_CFLAGS} ${CROSS}/include)
                 IF (NVENC_INCLUDE_DIR)
                     MESSAGE(STATUS "NVENC header found in ${NVENC_INCLUDE_DIR}")
                     SET(USE_NVENC True)
