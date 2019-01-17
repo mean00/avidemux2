@@ -6854,24 +6854,24 @@ I will assume it has and try to continue</source>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+168"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+167"/>
         <source>Saving Mkv</source>
         <translation type="unfinished">Сохранение в MKV</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkvConfig.cpp" line="+29"/>
         <source>Force display width</source>
-        <translation type="unfinished">Принудительная ширина монитора</translation>
+        <translation type="unfinished">Принудительная ширина изображения</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Display width</source>
-        <translation type="unfinished">Ширина монитора</translation>
+        <translation type="unfinished">Ширина изображения</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Force Aspect Ratio (DAR)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Поставить формат кадра (DAR)</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -6961,7 +6961,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4muxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+66"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+67"/>
         <location line="+9"/>
         <source>Unsupported</source>
         <translation type="unfinished">Не поддерживается</translation>
@@ -6977,7 +6977,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Для аудио поддерживаются только AAC, AC3, E-AC3 и mpegaudio</translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+130"/>
         <source>Saving mp4</source>
         <translation type="unfinished">Сохранение в MP4</translation>
     </message>
@@ -6987,7 +6987,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Сохранение в формате PSP</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+29"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+30"/>
         <source>Muxing Format</source>
         <translation type="unfinished">Формат мультиплексирования</translation>
     </message>
@@ -6999,12 +6999,37 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+1"/>
         <source>Force aspect ratio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Поставить соотношение сторон</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Aspect Ratio (DAR)</source>
-        <translation type="unfinished"></translation>
+        <translation>Формат кадра (DAR)</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Do not rotate</source>
+        <translation>не вращать</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>90°</source>
+        <translation>на 90 градусов</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>180°</source>
+        <translation>на 180 градусов</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>270°</source>
+        <translation>на 270 градусов</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Rotate video</source>
+        <translation>Повернуть кадр</translation>
     </message>
     <message>
         <location line="+3"/>

@@ -6835,7 +6835,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+168"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+167"/>
         <source>Saving Mkv</source>
         <translation type="unfinished">Speichere MKV</translation>
     </message>
@@ -6852,7 +6852,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+2"/>
         <source>Force Aspect Ratio (DAR)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildformat (DAR) erzwingen</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -6942,7 +6942,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4muxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+66"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+67"/>
         <location line="+9"/>
         <source>Unsupported</source>
         <translation>Nicht unterstütztes Format</translation>
@@ -6958,7 +6958,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+130"/>
         <source>Saving mp4</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6968,7 +6968,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+29"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+30"/>
         <source>Muxing Format</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6980,12 +6980,37 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+1"/>
         <source>Force aspect ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Bildformat erzwingen</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Aspect Ratio (DAR)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bildformat (DAR)</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Do not rotate</source>
+        <translation>Nicht drehen</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>90°</source>
+        <translation>um 90°</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>180°</source>
+        <translation>um 180°</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>270°</source>
+        <translation>um 270°</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Rotate video</source>
+        <translation>Video drehen</translation>
     </message>
     <message>
         <location line="+3"/>
