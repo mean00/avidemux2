@@ -6843,7 +6843,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+168"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+167"/>
         <source>Saving Mkv</source>
         <translation>Zapisywanie MKV</translation>
     </message>
@@ -6950,7 +6950,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4muxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+66"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+67"/>
         <location line="+9"/>
         <source>Unsupported</source>
         <translation>Nie wspierane</translation>
@@ -6966,7 +6966,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+130"/>
         <source>Saving mp4</source>
         <translation>Zapisywanie MP4</translation>
     </message>
@@ -6976,7 +6976,7 @@ I will assume it has and try to continue</source>
         <translation>Zapisywanie PSP</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+29"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+30"/>
         <source>Muxing Format</source>
         <translation>Format muksowania</translation>
     </message>
@@ -6994,6 +6994,31 @@ I will assume it has and try to continue</source>
         <location line="+2"/>
         <source>Aspect Ratio (DAR)</source>
         <translation>Proporcje obrazu (DAR)</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Do not rotate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>90°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>180°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>270°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Rotate video</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
