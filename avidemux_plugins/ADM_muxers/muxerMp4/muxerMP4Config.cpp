@@ -34,8 +34,10 @@ bool mp4Configure(void)
         diaElemMenu  menuAspect(&dar,QT_TRANSLATE_NOOP("mp4muxer","Aspect Ratio (DAR)"),4,aspect,"");
         diaMenuEntry rotation[]={
             {MP4_MUXER_ROTATE_0,QT_TRANSLATE_NOOP("mp4muxer","Do not rotate")},
-            {MP4_MUXER_ROTATE_90,"90°"},{MP4_MUXER_ROTATE_180,"180°"},
-            {MP4_MUXER_ROTATE_270,"270°"}};
+            {MP4_MUXER_ROTATE_90,QT_TRANSLATE_NOOP("mp4muxer","90°")},
+            {MP4_MUXER_ROTATE_180,QT_TRANSLATE_NOOP("mp4muxer","180°")},
+            {MP4_MUXER_ROTATE_270,QT_TRANSLATE_NOOP("mp4muxer","270°")}
+        };
         diaElemMenu menuRotation(&rot,QT_TRANSLATE_NOOP("mp4muxer","Rotate video"),4,rotation,"");
 
         diaElem *tabs[]={&menuFormat,&alternate,&forceAR,&menuAspect,&menuRotation};
