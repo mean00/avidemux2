@@ -11,10 +11,10 @@
         <table>
             <tr><td>New Demuxer:</td><td>Native AviSynth demuxer (MSVC++ 64 bits Windows builds only)</td></tr>
             <tr><td>New Installer:</td><td>Replace NSIS installer with Qt Installer Framework for native MSVC++ 64 bits Windows builds</td></tr>
+            <tr><td>New Encoder:</td><td>Add FFmpeg-based VA-API HW accelerated H.264 encoder (Intel/Linux)</td></tr>
+            <tr><td>New Encoder:</td><td>Add FFmpeg-based VA-API HW accelerated HEVC encoder (Intel/Linux)</td></tr>
             <tr><td>FFmpeg:</td><td>Migrate to the 4.x branch</td></tr>
             <tr><td>Decoder:</td><td>As a result of the FFmpeg upgrade, HW accelerated HEVC decoding on macOS is now available when supported by the hardware</td></tr>
-            <tr><td>Encoder:</td><td>Add FFmpeg-based VA-API HW accelerated H.264 encoder (Intel/Linux)</td></tr>
-            <tr><td>Encoder:</td><td>Add FFmpeg-based VA-API HW accelerated HEVC encoder (Intel/Linux)</td></tr>
             <tr><td>Encoder:</td><td>Fix issues with image quality and skipped frames in the MJPEG encoder</td></tr>
             <tr><td>Demuxer:</td><td>Fix audio delay calculation in the Mp4 demuxer</td></tr>
             <tr><td>Demuxer:</td><td>Fix crash loading large MP4 files with LPCM audio</td></tr>
@@ -23,6 +23,7 @@
             <tr><td>Demuxer:</td><td>Re-enable multiloading for MPEG-TS streams cut in chunks of a multiple of a GiB in size only</td></tr>
             <tr><td>Demuxer:</td><td>Fix MPEG-TS indexer to start a H.264 or HEVC frame with the Access Unit Delimiter</td></tr>
             <tr><td>Muxer:</td><td>Add Annex B to Annex B video stream filter to deal with misplaced frame boundaries</td></tr>
+            <tr><td>Muxer:</td><td>Add support for setting rotation flag to the MP4 muxer</td></tr>
             <tr><td>Filter:</td><td>Add rubber band selector to the "Blacken Borders" filter</td></tr>
             <tr><td>Filter:</td><td>Add option to deal with anamorphic display to the subtitle filter, fix issues in SRT to SSA converter</td></tr>
             <tr><td>UI:</td><td>Autosave session on video close, add session restore feature</td></tr>
