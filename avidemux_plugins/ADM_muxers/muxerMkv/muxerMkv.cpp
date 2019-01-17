@@ -145,7 +145,6 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
         av_dict_set(&dict, "preload", buf, 0);
         av_dict_set(&dict, "max_delay", "200000", 0);
-		av_dict_set(&dict, "muxrate", "10080000", 0);
 
         ADM_assert(avformat_write_header(oc, &dict) >= 0);
         ADM_info("Timebase codec = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
