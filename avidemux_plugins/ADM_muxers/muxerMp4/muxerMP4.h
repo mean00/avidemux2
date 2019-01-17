@@ -32,6 +32,15 @@ typedef enum
     UNI,
     CINEMA
 }MP4_MUXER_DAR;
+
+typedef enum
+{
+    MP4_MUXER_ROTATE_0,
+    MP4_MUXER_ROTATE_90,
+    MP4_MUXER_ROTATE_180,
+    MP4_MUXER_ROTATE_270
+}MP4_MUXER_ROTATION;
+
 #include "mp4_muxer.h"
 extern mp4_muxer muxerConfig;
 
