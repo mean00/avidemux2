@@ -6,4 +6,5 @@ uint32_t muxerType;
 bool useAlternateMp3Tag;
 bool forceAspectRatio;
 uint32_t aspectRatio;
+uint32_t rotation;
 }mp4_muxer;
