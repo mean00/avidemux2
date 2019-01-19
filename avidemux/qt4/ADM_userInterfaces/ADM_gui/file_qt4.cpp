@@ -133,7 +133,7 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
                     filterFile,   // filter
                     NULL,QFileDialog::DontConfirmOverwrite);   // selected filter
 
-    int len = fileName.size();
+    int len = fileName.size()*sizeof(QChar);
     if(!len || len >= max) return 0;
 
     // Check if we need to add an extension....
@@ -142,7 +142,7 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
         if(!strstr(fileName.toUtf8().constData(),".")) //FIXME
         {
             fileName=fileName+QString(".")+QString(ext);
-            len+=extSize;
+            len+=extSize*sizeof(QChar);
         }
     }
     QFile newFile(fileName);
@@ -239,7 +239,7 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
                                 NULL,   // selected filter
                                 opts);
 
-    int len=fileName.size();
+    int len=fileName.size()*sizeof(QChar);
     if(!len || len >= max) return 0;
 
     strncpy(target,fileName.toUtf8().constData(),len);
