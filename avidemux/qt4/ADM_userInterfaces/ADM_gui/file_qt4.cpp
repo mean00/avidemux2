@@ -260,12 +260,10 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
 namespace ADM_QT4_fileSel
 {
 
-#if defined(_WIN32)
- #define MAX_LEN 255
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
  #define MAX_LEN 1024
 #else
- #define MAX_LEN 2048
+ #define MAX_LEN 4096
 #endif
 void GUI_FileSelRead(const char *label, char **name)
 {
