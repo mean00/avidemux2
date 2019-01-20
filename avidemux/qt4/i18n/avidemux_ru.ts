@@ -16,41 +16,41 @@
     <message>
         <location line="+64"/>
         <source>width</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ширина</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>%sheight</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%sвысота</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> and </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> и </translation>
     </message>
     <message>
         <location line="+3"/>
         <source>%sdifferent between first and this video stream</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> у первого видеопотока %s от этого</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> are </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">отличны</translation>
     </message>
     <message>
         <location line="+0"/>
         <source> is </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">отлична</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatenate them together</source>
-        <translation type="unfinished">Невозможно обьединить видео с различным разрешением. Использование частичного фильтра видео не исправит эту проблему. Выход следующий:
-1.) &quot;изменить размер&quot; / &quot;добавить рамки&quot; / &quot;обрезать&quot; потоки, приведя их к одному разрешению
-2.) склеить их вместе</translation>
+        <translation type="unfinished">Видеопотоки различного разрешения не объединяются. Использование частичного фильтра видео не исправит эту проблему. Выход следующий:
+1) &quot;изменить размер&quot; / &quot;добавить рамки&quot; / &quot;обрезать&quot; потоки, приведя их к одному разрешению
+2) склеить их вместе</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+59"/>
@@ -1574,7 +1574,7 @@ Go to Audio-&gt;MainTrack to select the active one.</source>
     <message>
         <location line="+106"/>
         <source>Something failed when appending</source>
-        <translation type="unfinished">Ошибка при открытии файла для записи</translation>
+        <translation type="unfinished">Ошибка при добавлении видео</translation>
     </message>
     <message>
         <location line="+5"/>
