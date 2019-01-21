@@ -228,5 +228,10 @@ INSTALL(FILES ${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h DESTINATION "$
 ADM_INSTALL_QT_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_openGL/include/"  ADM_openGL)
 ADM_INSTALL_QT_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_UIs/include/"  ADM_UIs)
 
+# install XDG metadata
+if(UNIX AND NOT APPLE)
+	add_subdirectory(xdg_data)
+endif()
+
 #
 MESSAGE("")

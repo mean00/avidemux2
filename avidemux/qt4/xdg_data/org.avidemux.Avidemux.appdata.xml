@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2017 Adrien Vergé -->
-<component type="desktop-application">
-    <id>avidemux2.desktop</id>
+<component type="desktop">
+    <id>org.avidemux.Avidemux</id>
     <metadata_license>CC0</metadata_license>
+    <project_license>GPL-2.0+</project_license>
     <name>Avidemux</name>
     <summary>Multi-purpose video editing and processing software</summary>
     <description>
@@ -21,10 +22,13 @@
     <provides>
         <binary>avidemux3_qt5</binary>
     </provides>
-    <project_license>GPL-2.0+</project_license>
     <update_contact>Avidemux team -- avidemux.org/smif/</update_contact>
     <screenshots>
         <screenshot type="default">http://fixounet.free.fr/avidemux/index_files/screenshot1.png</screenshot>
         <screenshot type="default">http://fixounet.free.fr/avidemux/index_files/screenshot2.png</screenshot>
     </screenshots>
+    <content_rating type="oars-1.1"/>
+    <releases>
+        <release version="2.7.1" date="2018-06-04"/>
+    </releases>
 </component>
