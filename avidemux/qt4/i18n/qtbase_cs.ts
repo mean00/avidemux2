@@ -116,6 +116,30 @@
         <translation>Přepnout</translation>
     </message>
     <message>
+        <source>Scroll Left</source>
+        <translation>Projíždět doleva</translation>
+    </message>
+    <message>
+        <source>Scroll Right</source>
+        <translation>Projíždět doprava</translation>
+    </message>
+    <message>
+        <source>Scroll Up</source>
+        <translation>Projíždět nahoru</translation>
+    </message>
+    <message>
+        <source>Scroll Down</source>
+        <translation>Projíždět dolů</translation>
+    </message>
+    <message>
+        <source>Previous Page</source>
+        <translation>Předchozí strana</translation>
+    </message>
+    <message>
+        <source>Next Page</source>
+        <translation>Další strana</translation>
+    </message>
+    <message>
         <source>Triggers the action</source>
         <translation>Spouští činnost</translation>
     </message>
@@ -138,6 +162,30 @@
     <message>
         <source>Toggles the state</source>
         <translation>Přepne stav</translation>
+    </message>
+    <message>
+        <source>Scrolls to the left</source>
+        <translation>Projíždí doleva</translation>
+    </message>
+    <message>
+        <source>Scrolls to the right</source>
+        <translation>Projíždí doprava</translation>
+    </message>
+    <message>
+        <source>Scrolls up</source>
+        <translation>Projíždí nahoru</translation>
+    </message>
+    <message>
+        <source>Scrolls down</source>
+        <translation>Projíždí dolů</translation>
+    </message>
+    <message>
+        <source>Goes back a page</source>
+        <translation>Jde zpět o stranu</translation>
+    </message>
+    <message>
+        <source>Goes to the next page</source>
+        <translation>Jde na další stranu</translation>
     </message>
 </context>
 <context>
@@ -227,6 +275,22 @@
         <source>Exit</source>
         <translation>Ukončit</translation>
     </message>
+    <message>
+        <source>Cut</source>
+        <translation>Vyjmout</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopírovat</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation>Vložit</translation>
+    </message>
+    <message>
+        <source>Select All</source>
+        <translation>Vybrat vše</translation>
+    </message>
 </context>
 <context>
     <name>QCocoaTheme</name>
@@ -268,6 +332,16 @@
     <message>
         <source>&amp;HTML:</source>
         <translation>&amp;HTML:</translation>
+    </message>
+    <message>
+        <source>Cursor at %1, %2
+Press ESC to cancel</source>
+        <translation>Ukazovátko na %1, %2
+Stiskněte Esc pro zrušení</translation>
+    </message>
+    <message>
+        <source>&amp;Pick Screen Color</source>
+        <translation>&amp;Zvolit barvu obrazovky</translation>
     </message>
     <message>
         <source>Cursor at %1, %2, color: %3
@@ -523,7 +597,33 @@ Stiskněte Esc pro zrušení</translation>
     </message>
 </context>
 <context>
+    <name>QDBusTrayIcon</name>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+</context>
+<context>
     <name>QDateTimeEdit</name>
+    <message>
+        <source>AM</source>
+        <translation>AM</translation>
+    </message>
+    <message>
+        <source>am</source>
+        <translation>am</translation>
+    </message>
+    <message>
+        <source>PM</source>
+        <translation>PM</translation>
+    </message>
+    <message>
+        <source>pm</source>
+        <translation>pm</translation>
+    </message>
+</context>
+<context>
+    <name>QDateTimeParser</name>
     <message>
         <source>AM</source>
         <translation>AM</translation>
@@ -682,6 +782,10 @@ Stiskněte Esc pro zrušení</translation>
 <context>
     <name>QDnsLookupRunnable</name>
     <message>
+        <source>IPv6 addresses for nameservers are currently not supported</source>
+        <translation>Adresy IPv6 pro DNS servery nejsou v současnosti podporovány</translation>
+    </message>
+    <message>
         <source>Invalid domain name</source>
         <translation>Neplatný název domény</translation>
     </message>
@@ -769,6 +873,14 @@ Stiskněte Esc pro zrušení</translation>
     <message>
         <source>Invalid hostname</source>
         <translation>Neplatný název serveru</translation>
+    </message>
+    <message>
+        <source>Host %1 could not be found.</source>
+        <translation>Počítač %1 se nepodařilo nalézt.</translation>
+    </message>
+    <message>
+        <source>Unknown error</source>
+        <translation>Neznámá chyba</translation>
     </message>
 </context>
 <context>
@@ -1064,6 +1176,11 @@ Přesto chcete soubor smazat?</translation>
         <translation>Disková jednotka</translation>
     </message>
     <message>
+        <source>%1 File</source>
+        <extracomment>%1 is a file name suffix, for example txt</extracomment>
+        <translation>Soubor %1</translation>
+    </message>
+    <message>
         <source>File</source>
         <translation>Soubor</translation>
     </message>
@@ -1076,6 +1193,11 @@ Přesto chcete soubor smazat?</translation>
         <source>Folder</source>
         <comment>All other platforms</comment>
         <translation>Složka</translation>
+    </message>
+    <message>
+        <source>Alias</source>
+        <comment>OS X Finder</comment>
+        <translation>Přezdívka</translation>
     </message>
     <message>
         <source>Alias</source>
@@ -1189,11 +1311,39 @@ Přesto chcete soubor smazat?</translation>
     </message>
     <message>
         <source>Demi</source>
+        <extracomment>The word for &quot;Demi&quot; as in &quot;Demi Bold&quot; used as a pattern for string searches</extracomment>
         <translation>Polotučné</translation>
     </message>
     <message>
         <source>Light</source>
         <translation>Jemné</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>The Normal or Regular font weight</comment>
+        <translation>Normální</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <comment>The Medium font weight</comment>
+        <translation>Střední</translation>
+    </message>
+    <message>
+        <source>Thin</source>
+        <translation>Tenké</translation>
+    </message>
+    <message>
+        <source>Extra Light</source>
+        <translation>Velice lehké</translation>
+    </message>
+    <message>
+        <source>Extra Bold</source>
+        <translation>Velice tučné</translation>
+    </message>
+    <message>
+        <source>Extra</source>
+        <extracomment>The word for &quot;Extra&quot; as in &quot;Extra Bold, Extra Thin&quot; used as a pattern for string searches</extracomment>
+        <translation>Velice</translation>
     </message>
     <message>
         <source>Italic</source>
@@ -1571,6 +1721,14 @@ Přesto chcete soubor smazat?</translation>
         <source>SSL handshake failed</source>
         <translation>Během startu SSL protokolu se vyskytla chyba</translation>
     </message>
+    <message>
+        <source>Too many redirects</source>
+        <translation>Příliš mnoho přesměrování</translation>
+    </message>
+    <message>
+        <source>Insecure redirect</source>
+        <translation>Nezabezpečené přesměrování</translation>
+    </message>
 </context>
 <context>
     <name>QHttpSocketEngine</name>
@@ -1729,6 +1887,48 @@ Přesto chcete soubor smazat?</translation>
     </message>
 </context>
 <context>
+    <name>QImageReader</name>
+    <message>
+        <source>Invalid device</source>
+        <translation>Neplatné zařízení</translation>
+    </message>
+    <message>
+        <source>File not found</source>
+        <translation>Soubor nebyl nalezen</translation>
+    </message>
+    <message>
+        <source>Unsupported image format</source>
+        <translation>Nepodporovaný formát obrázku</translation>
+    </message>
+    <message>
+        <source>Unable to read image data</source>
+        <translation>Nelze přečíst data obrazu</translation>
+    </message>
+    <message>
+        <source>Unknown error</source>
+        <translation>Neznámá chyba</translation>
+    </message>
+</context>
+<context>
+    <name>QImageWriter</name>
+    <message>
+        <source>Unknown error</source>
+        <translation>Neznámá chyba</translation>
+    </message>
+    <message>
+        <source>Device is not set</source>
+        <translation>Zařízení není nastaveno</translation>
+    </message>
+    <message>
+        <source>Device not writable</source>
+        <translation>Zařízení není zapisovatelné</translation>
+    </message>
+    <message>
+        <source>Unsupported image format</source>
+        <translation>Nepodporovaný formát obrázku</translation>
+    </message>
+</context>
+<context>
     <name>QInputDialog</name>
     <message>
         <source>Enter a value:</source>
@@ -1793,6 +1993,10 @@ Přesto chcete soubor smazat?</translation>
         <source>too large document</source>
         <translation>Příliš velký dokument</translation>
     </message>
+    <message>
+        <source>garbage at the end of the document</source>
+        <translation>Neplatná/chybná data za koncem dokumentu</translation>
+    </message>
 </context>
 <context>
     <name>QKeySequenceEdit</name>
@@ -1823,6 +2027,10 @@ Přesto chcete soubor smazat?</translation>
     <message>
         <source>Plugin verification data mismatch in &apos;%1&apos;</source>
         <translation>Ověřovací data přídavného modulu nesouhlasí v &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
+        <translation>Nepodařilo se získat popisná data přídavného modulu z &apos;%1&apos;</translation>
     </message>
     <message>
         <source>The shared library was not found.</source>
@@ -2001,6 +2209,10 @@ Přesto chcete soubor smazat?</translation>
 <context>
     <name>QMYSQLDriver</name>
     <message>
+        <source>Unable to allocate a MYSQL object</source>
+        <translation>Nepodařilo se přidělit objekt MYSQL</translation>
+    </message>
+    <message>
         <source>Unable to open database &apos;%1&apos;</source>
         <translation>Nepodařilo se otevřít spojení s databází &apos;%1&apos;</translation>
     </message>
@@ -2161,6 +2373,10 @@ Přesto chcete soubor smazat?</translation>
         <translation>Skrýt podrobnosti...</translation>
     </message>
     <message>
+        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Qt je sadou softwarových nástrojů C++ určených pro víceplatformní vývoj aplikací.&lt;/p&gt;&lt;p&gt;Qt poskytuje snadnou přenositelnost a jednotný zdrojový kód pro většinu počítačových operačních systémů. Qt je rovněž dostupné pro vestavěný Linux a další vestavěn a mobilní operační systémy.&lt;/p&gt;&lt;p&gt;Qt je dostupné s třemi rozdílnými licencemi, aby vyhovělo širokým řadám našich uživatelů.&lt;/p&gt;&lt;p&gt;Qt s naší obchodní licenční smlouvou je vhodné pro vývoj soukromého/obchodního software, u kterého si nepřejete sdílet jakýkoli zdrojový kód se třetími stranami anebo z jiného důvodu nemůžete vyhovět podmínkám GNU LGPL ve verzi 2.1 nebo GNU GPL ve verzi 3.0.&lt;/p&gt;&lt;p&gt;Qt s licencí GNU LGPL ve verzi 3 je vhodné pro vývoj Qt&amp;nbsp;aplikací za předpokladu, že můžete souhlasit s požadavky a podmínkami GNU LGPL verze 2.1.&lt;/p&gt;&lt;p&gt;Podívejte se, prosím, na &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt;, kde najdete přehled licencování Qt.&lt;/p&gt;&lt;p&gt;Autorské právo (C) %1 The Qt Company Ltd a/nebo její dceřinná(é) společnost(i) a další přispěvatelé.&lt;/p&gt;&lt;p&gt;Qt a logo Qt jsou obchodní značky Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt je vyvíjeno jako projekt s otevřeným zdrojovým kódem. Další informace najdete na &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt;.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -2175,10 +2391,6 @@ Přesto chcete soubor smazat?</translation>
     <message>
         <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 2.1 or GNU GPL version 3.0.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 2.1 is appropriate for the development of Qt applications provided you can comply with the terms and conditions of the GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU General Public License version 3.0 is appropriate for the development of Qt applications where you wish to use such applications in combination with software subject to the terms of the GNU GPL version 3.0 or where you are otherwise willing to comply with the terms of the GNU GPL version 3.0.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://qt.io/licensing/&quot;&gt;qt.io/licensing&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) 2015 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of Digia Plc and/or its subsidiary(-ies).&lt;/p&gt;&lt;p&gt;Qt is developed as an open source project on &lt;a href=&quot;http://qt-project.org/&quot;&gt;qt-project.org&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Qt is a Digia product. See &lt;a href=&quot;http://qt.io/&quot;&gt;qt.io&lt;/a&gt; for more information.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Qt je sadou softwarových nástrojů C++ určených pro víceplatformní vývoj aplikací.&lt;/p&gt;&lt;p&gt;Qt poskytuje snadnou přenositelnost a jednotný zdrojový kód pro MS&amp;nbsp;Windows, Mac&amp;nbsp;OS&amp;nbsp;X, Linux a všechny hlavní prodejní varianty systému Unix. Qt je rovněž dostupné pro vestavěná zařízení jako Qt pro Embedded Linux a Qt pro Windows CE.&lt;/p&gt;&lt;p&gt;Qt je dostupné s třemi rozdílnými licencemi, aby vyhovělo širokým řadám našich uživatelů.&lt;/p&gt;Qt s naší obchodní licenční smlouvou je vhodné pro vývoj soukromého/obchodního software, u kterého si nepřejete sdílet jakýkoli zdrojový kód se třetími stranami anebo z jiného důvodu nemůžete vyhovět podmínkám GNU LGPL ve verzi 2.1 nebo GNU GPL ve verzi 3.0.&lt;/p&gt;&lt;p&gt;Qt s licencí GNU LGPL ve verzi 2.1 je vhodné pro vývoj Qt aplikací (soukromých nebo s otevřeným zdrojovým kódem) za předpokladu, že můžete souhlasit s požadavky a podmínkami GNU LGPL verze 2.1.&lt;/p&gt;&lt;p&gt;Qt s licencí GNU General Public License ve verzi 3.0 je vhodné pro vývoj aplikací Qt, u nichž si přejete použít takovou aplikaci ve spojení se software, který podléhá požadavkům GNU GPL ve verzi 3.0, nebo kde jste jinak ochotni souhlasit s podmínkami GNU GPL ve verzi 3.0.&lt;/p&gt;&lt;p&gt;Více informací najdete na &lt;a href=&quot;http://qt.io/licensing/&quot;&gt;qt.nokia.com/products/licensing&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Autorské právo (C) 2015 The Qt Company Ltd a/nebo její dceřinná(é) společnost(i) a další přispěvatelé.&lt;/p&gt;&lt;p&gt;Qt a logo Qt jsou obchodní značky Digia Plc a/nebo její dceřinná(é) společnost(i).&lt;/p&gt;&lt;p&gt;Qt je vyvíjeno jako projekt s otevřeným zdrojovým kódem na &lt;a href=&quot;http://qt-project.org/&quot;&gt;qt-project.org&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Qt je výrobkem společnosti Digia. Další informace najdete na &lt;a href=&quot;http://qt.io/&quot;&gt;qt.io&lt;/a&gt;. href=&quot;http://qt.io/&quot;&gt;qt.nokia.com&lt;/a&gt;.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 2.1 or GNU GPL version 3.0.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 2.1 is appropriate for the development of Qt applications provided you can comply with the terms and conditions of the GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU General Public License version 3.0 is appropriate for the development of Qt applications where you wish to use such applications in combination with software subject to the terms of the GNU GPL version 3.0 or where you are otherwise willing to comply with the terms of the GNU GPL version 3.0.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://qt.io/licensing/&quot;&gt;qt.io/licensing&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) 2015 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of Digia Plc and/or its subsidiary(-ies).&lt;/p&gt;&lt;p&gt;Qt is developed as an open source project on &lt;a href=&quot;http://qt-project.org/&quot;&gt;qt-project.org&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Qt is a Digia product. See &lt;a href=&quot;http://qt.io/&quot;&gt;qt.io&lt;/a&gt; for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Qt je sadou softwarových nástrojů C++ určených pro víceplatformní vývoj aplikací.&lt;/p&gt;&lt;p&gt;Qt poskytuje snadnou přenositelnost a jednotný zdrojový kód pro MS&amp;nbsp;Windows, Mac&amp;nbsp;OS&amp;nbsp;X, Linux a všechny hlavní prodejní varianty systému Unix. Qt je rovněž dostupné pro vestavěná zařízení jako Qt pro Embedded Linux a Qt pro Windows CE.&lt;/p&gt;&lt;p&gt;Qt je dostupné s třemi rozdílnými licencemi, aby vyhovělo širokým řadám našich uživatelů.&lt;/p&gt;Qt s naší obchodní licenční smlouvou je vhodné pro vývoj soukromého/obchodního software, u kterého si nepřejete sdílet jakýkoli zdrojový kód se třetími stranami anebo z jiného důvodu nemůžete vyhovět podmínkám GNU LGPL ve verzi 2.1 nebo GNU GPL ve verzi 3.0.&lt;/p&gt;&lt;p&gt;Qt s licencí GNU LGPL ve verzi 2.1 je vhodné pro vývoj Qt aplikací (soukromých nebo s otevřeným zdrojovým kódem) za předpokladu, že můžete souhlasit s požadavky a podmínkami GNU LGPL verze 2.1.&lt;/p&gt;&lt;p&gt;Qt s licencí GNU General Public License ve verzi 3.0 je vhodné pro vývoj aplikací Qt, u nichž si přejete použít takovou aplikaci ve spojení se software, který podléhá požadavkům GNU GPL ve verzi 3.0, nebo kde jste jinak ochotni souhlasit s podmínkami GNU GPL ve verzi 3.0.&lt;/p&gt;&lt;p&gt;Více informací najdete na &lt;a href=&quot;http://qt.io/licensing/&quot;&gt;qt.nokia.com/products/licensing&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Autorské právo (C) 2015 The Qt Company Ltd a/nebo její dceřinná(é) společnost(i).&lt;/p&gt;&lt;p&gt;Qt je výrobkem společnosti Nokia. Další informace najdete na &lt;a href=&quot;http://qt.io/&quot;&gt;qt.nokia.com&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>About Qt</source>
@@ -2292,6 +2504,14 @@ Přesto chcete soubor smazat?</translation>
         <translation>Dočasná chyba</translation>
     </message>
     <message>
+        <source>Network dropped connection on reset</source>
+        <translation>Při restartování bylo síťové spojení přerušeno</translation>
+    </message>
+    <message>
+        <source>Connection reset by peer</source>
+        <translation>Spojení restartováno protějškem</translation>
+    </message>
+    <message>
         <source>Unknown error</source>
         <translation>Neznámá chyba</translation>
     </message>
@@ -2403,6 +2623,10 @@ Přesto chcete soubor smazat?</translation>
     <message>
         <source>Protocol &quot;%1&quot; is unknown</source>
         <translation>Protokol &quot;%1&quot; není znám</translation>
+    </message>
+    <message>
+        <source>Error transferring %1 - server replied: %2</source>
+        <translation>Při přenosu %1 se vyskytla chyba - Odpověď serveru je: %2</translation>
     </message>
 </context>
 <context>
@@ -3720,6 +3944,10 @@ Vypněte, prosím, jednu z voleb.</translation>
 <context>
     <name>QPrintPropertiesDialog</name>
     <message>
+        <source>Printer Properties</source>
+        <translation>Vlastnosti tiskárny</translation>
+    </message>
+    <message>
         <source>Job Options</source>
         <translation>Volby pro úlohy</translation>
     </message>
@@ -3874,6 +4102,10 @@ Vypněte, prosím, jednu z voleb.</translation>
     <message>
         <source>Process crashed</source>
         <translation>Proces spadl</translation>
+    </message>
+    <message>
+        <source>Process failed to start</source>
+        <translation>Spuštění procesu se nezdařilo</translation>
     </message>
     <message>
         <source>No program defined</source>
@@ -4276,6 +4508,46 @@ Vypněte, prosím, jednu z voleb.</translation>
         <source>character value in \u.... sequence is too large</source>
         <translation>Hodnota znaku v sekvenci \u....  je příliš velká</translation>
     </message>
+    <message>
+        <source>invalid UTF-32 string</source>
+        <translation>Neplatný řetězec UTF-32</translation>
+    </message>
+    <message>
+        <source>setting UTF is disabled by the application</source>
+        <translation>Nastavení UTF je zakázáno programem</translation>
+    </message>
+    <message>
+        <source>non-hex character in \x{} (closing brace missing?)</source>
+        <translation>\x{} obsahuje znak, který není šestnáctkovým (hexadecimálním) číslem (chybí uzavírající závorky?)</translation>
+    </message>
+    <message>
+        <source>non-octal character in \o{} (closing brace missing?)</source>
+        <translation>\x{} obsahuje znak, který není osmičkovým (oktalovým) číslem (chybí uzavírající závorky?)</translation>
+    </message>
+    <message>
+        <source>missing opening brace after \o</source>
+        <translation>Chybí otevírající závorka po \o</translation>
+    </message>
+    <message>
+        <source>parentheses are too deeply nested</source>
+        <translation>Příliš hluboko zanořené závorky</translation>
+    </message>
+    <message>
+        <source>invalid range in character class</source>
+        <translation>Neplatný rozsah ve třídě znaků</translation>
+    </message>
+    <message>
+        <source>group name must start with a non-digit</source>
+        <translation>Název skupiny nesmí začínat číslem</translation>
+    </message>
+    <message>
+        <source>parentheses are too deeply nested (stack check)</source>
+        <translation>Příliš hluboko zanořené závorky(kontrola zásobníku)</translation>
+    </message>
+    <message>
+        <source>digits missing in \x{} or \o{}</source>
+        <translation>Chybí číslice v \x{} nebo \o{}</translation>
+    </message>
 </context>
 <context>
     <name>QSQLite2Driver</name>
@@ -4368,6 +4640,10 @@ Vypněte, prosím, jednu z voleb.</translation>
         <translation>Stávající soubor %1 není zapisovatelný</translation>
     </message>
     <message>
+        <source>Filename refers to a directory</source>
+        <translation>Název souboru označuje adresář</translation>
+    </message>
+    <message>
         <source>Writing canceled by application</source>
         <translation>Zápis zrušen programem</translation>
     </message>
@@ -4428,6 +4704,13 @@ Vypněte, prosím, jednu z voleb.</translation>
     </message>
 </context>
 <context>
+    <name>QSctpSocket</name>
+    <message>
+        <source>The remote host closed the connection</source>
+        <translation>Vzdálený počítač uzavřel spojení</translation>
+    </message>
+</context>
+<context>
     <name>QSharedMemory</name>
     <message>
         <source>%1: unable to set key on lock</source>
@@ -4468,6 +4751,10 @@ Vypněte, prosím, jednu z voleb.</translation>
     <message>
         <source>%1: key is empty</source>
         <translation>%1: Neplatný údaj u klíče (prázdný)</translation>
+    </message>
+    <message>
+        <source>%1: bad name</source>
+        <translation>%1: Neplatný název</translation>
     </message>
     <message>
         <source>%1: UNIX key file doesn&apos;t exist</source>
@@ -5136,6 +5423,86 @@ Vypněte, prosím, jednu z voleb.</translation>
         <translation>Hibernovat</translation>
     </message>
     <message>
+        <source>Media Rewind</source>
+        <translation>Přetočit médium zpět</translation>
+    </message>
+    <message>
+        <source>Media Fast Forward</source>
+        <translation>Přetočit médium vpřed</translation>
+    </message>
+    <message>
+        <source>Power Down</source>
+        <translation>Vypnout</translation>
+    </message>
+    <message>
+        <source>Microphone Mute</source>
+        <translation>Ztlumit mikrofon</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>Červená</translation>
+    </message>
+    <message>
+        <source>Green</source>
+        <translation>Zelená</translation>
+    </message>
+    <message>
+        <source>Yellow</source>
+        <translation>Žlutá</translation>
+    </message>
+    <message>
+        <source>Blue</source>
+        <translation>Modrá</translation>
+    </message>
+    <message>
+        <source>Channel Up</source>
+        <translation>Další kanál</translation>
+    </message>
+    <message>
+        <source>Channel Down</source>
+        <translation>Předchozí kanál</translation>
+    </message>
+    <message>
+        <source>Guide</source>
+        <translation>Návod</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation>Informace</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Nastavení</translation>
+    </message>
+    <message>
+        <source>Microphone Volume Up</source>
+        <translation>Mikrofon hlasitěji</translation>
+    </message>
+    <message>
+        <source>Microphone Volume Down</source>
+        <translation>Mikrofon slaběji</translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation>Nový</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Otevřít</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Najít</translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation>Zpět</translation>
+    </message>
+    <message>
+        <source>Redo</source>
+        <translation>Znovu</translation>
+    </message>
+    <message>
         <source>Print Screen</source>
         <translation>Print Screen</translation>
     </message>
@@ -5383,6 +5750,22 @@ Vypněte, prosím, jednu z voleb.</translation>
         <translation>Zvětšení</translation>
     </message>
     <message>
+        <source>Exit</source>
+        <translation>Ukončit</translation>
+    </message>
+    <message>
+        <source>Touchpad Toggle</source>
+        <translation>Přepínač vstupního zařízení (touchpad)</translation>
+    </message>
+    <message>
+        <source>Touchpad On</source>
+        <translation>Vstupní zařízení (touchpad) zapnuto</translation>
+    </message>
+    <message>
+        <source>Touchpad Off</source>
+        <translation>Vstupní zařízení (touchpad) vypnuto</translation>
+    </message>
+    <message>
         <source>Ctrl</source>
         <translation>Ctrl</translation>
     </message>
@@ -5569,7 +5952,9 @@ Vypněte, prosím, jednu z voleb.</translation>
     </message>
     <message>
         <source>frame</source>
-        <extracomment>Role of an accessible object</extracomment>
+        <extracomment>Role of an accessible object: a window with frame and title
+----------
+Role of an accessible object</extracomment>
         <translation>Rámeček</translation>
     </message>
     <message>
@@ -5783,9 +6168,69 @@ Vypněte, prosím, jednu z voleb.</translation>
         <translation>Panel s více vrstvami</translation>
     </message>
     <message>
+        <source>web document</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>Webový dokument</translation>
+    </message>
+    <message>
+        <source>paragraph</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>Odstavec</translation>
+    </message>
+    <message>
+        <source>section</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>Část</translation>
+    </message>
+    <message>
+        <source>color chooser</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>Výběr barvy</translation>
+    </message>
+    <message>
+        <source>footer</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>Zápatí</translation>
+    </message>
+    <message>
+        <source>form</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>Formulář</translation>
+    </message>
+    <message>
+        <source>heading</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>Nadpis</translation>
+    </message>
+    <message>
+        <source>note</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>Poznámka</translation>
+    </message>
+    <message>
+        <source>complementary content</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>Doplňující obsah</translation>
+    </message>
+    <message>
         <source>unknown</source>
         <extracomment>Role of an accessible object</extracomment>
         <translation>Neznámý</translation>
+    </message>
+</context>
+<context>
+    <name>QSslDiffieHellmanParameter</name>
+    <message>
+        <source>No error</source>
+        <translation>Žádná chyba</translation>
+    </message>
+    <message>
+        <source>Invalid input data</source>
+        <translation>Neplatná vstupní data</translation>
+    </message>
+    <message>
+        <source>The given Diffie-Hellman parameters are deemed unsafe</source>
+        <translation>Zadané parametry Diffie-Hellman jsou považovány za nebezpečné</translation>
     </message>
 </context>
 <context>
@@ -5887,8 +6332,16 @@ Vypněte, prosím, jednu z voleb.</translation>
         <translation>Neznámá chyba</translation>
     </message>
     <message>
+        <source>Error when setting the elliptic curves (%1)</source>
+        <translation>Chyba při nastavování elipsovitých křivek (%1)</translation>
+    </message>
+    <message>
         <source>Error creating SSL context (%1)</source>
         <translation>Nepodařilo se vytvořit žádný kontext SSL (%1)</translation>
+    </message>
+    <message>
+        <source>unsupported protocol</source>
+        <translation>Nepodporovaný protokol</translation>
     </message>
     <message>
         <source>Invalid or empty cipher list (%1)</source>
@@ -5909,6 +6362,14 @@ Vypněte, prosím, jednu z voleb.</translation>
     <message>
         <source>Private key does not certify public key, %1</source>
         <translation>Soukromý klíč nedosvědčuje veřejný klíč, %1</translation>
+    </message>
+    <message>
+        <source>Diffie-Hellman parameters are not valid</source>
+        <translation>Parametry Diffie-Hellman nejsou platné</translation>
+    </message>
+    <message>
+        <source>OpenSSL version too old, need at least v1.0.2</source>
+        <translation>Používaná verze OpenSSL je příliš stará. Je potřeba verze 1.0.2 nebo novější</translation>
     </message>
     <message>
         <source>Error creating SSL session, %1</source>
@@ -5984,6 +6445,10 @@ Vypněte, prosím, jednu z voleb.</translation>
     <message>
         <source>Application Data</source>
         <translation>Data aplikací</translation>
+    </message>
+    <message>
+        <source>Application Configuration</source>
+        <translation>Nastavení programu</translation>
     </message>
     <message>
         <source>Cache</source>
@@ -6126,6 +6591,17 @@ Vypněte, prosím, jednu z voleb.</translation>
     <message>
         <source>Could not reset to read data</source>
         <translation>Nepodařilo se nastavit znovu na čtení dat</translation>
+    </message>
+</context>
+<context>
+    <name>QUdpSocket</name>
+    <message>
+        <source>Unable to send a datagram</source>
+        <translation>Nepodařilo se odeslat datové schéma</translation>
+    </message>
+    <message>
+        <source>No datagram available for reading</source>
+        <translation>Žádné datové schéma dostupné pro čtení</translation>
     </message>
 </context>
 <context>
@@ -6287,6 +6763,21 @@ Vypněte, prosím, jednu z voleb.</translation>
     <message>
         <source>Select All</source>
         <translation>Vybrat vše</translation>
+    </message>
+</context>
+<context>
+    <name>QWindowsDirect2DIntegration</name>
+    <message>
+        <source>Qt cannot load the direct2d platform plugin because the Direct2D version on this system is too old. The minimum system requirement for this platform plugin is Windows 7 SP1 with Platform Update.
+
+The minimum Direct2D version required is %1.%2.%3.%4. The Direct2D version on this system is %5.%6.%7.%8.</source>
+        <translation>Qt nemůže nahrát přídavný modul platformy direct2d, protože verze Direct2D na tomto systému je příliš stará. Nejmenší systémový požadavek na přídavný modul pro tuto platformu je Windows 7 SP1 s Platform Update.
+
+Nejnižší požadovaná verze Direct2D je %1.%2.%3.%4. Verze Direct2D nainstalovaná na tomto systému je %5.%6.%7.%8.</translation>
+    </message>
+    <message>
+        <source>Cannot load direct2d platform plugin</source>
+        <translation>Nelze nahrát přídavný modul platformy direct2d</translation>
     </message>
 </context>
 <context>
@@ -6464,6 +6955,10 @@ Vypněte, prosím, jednu z voleb.</translation>
     <message>
         <source>Attribute redefined.</source>
         <translation>Vlastnost byla nově vymezena.</translation>
+    </message>
+    <message>
+        <source>Attribute &apos;%1&apos; redefined.</source>
+        <translation>Vlastnost &apos;%1&apos; nově vymezena.</translation>
     </message>
     <message>
         <source>Unexpected character &apos;%1&apos; in public id literal.</source>

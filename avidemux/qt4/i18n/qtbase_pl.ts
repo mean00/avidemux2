@@ -651,7 +651,7 @@ Naciśnij ESC aby anulować</translation>
     </message>
     <message>
         <source>Resolver functions not found</source>
-        <translation type="unfinished"></translation>
+        <translation>Brak funkcji resolvera</translation>
     </message>
     <message>
         <source>Resolver initialization failed</source>
@@ -683,43 +683,43 @@ Naciśnij ESC aby anulować</translation>
     </message>
     <message>
         <source>Invalid IPv4 address record</source>
-        <translation type="unfinished"></translation>
+        <translation>Niepoprawny rekord z adresem IPv4</translation>
     </message>
     <message>
         <source>Invalid IPv6 address record</source>
-        <translation type="unfinished"></translation>
+        <translation>Niepoprawny rekord z adresem IPv6</translation>
     </message>
     <message>
         <source>Invalid canonical name record</source>
-        <translation type="unfinished"></translation>
+        <translation>Niepoprawny rekord z nazwą kanoniczną</translation>
     </message>
     <message>
         <source>Invalid name server record</source>
-        <translation type="unfinished"></translation>
+        <translation>Niepoprawny rekord z serwerem nazw</translation>
     </message>
     <message>
         <source>Invalid pointer record</source>
-        <translation type="unfinished"></translation>
+        <translation>Niepoprawny rekord ze wskaźnikiem</translation>
     </message>
     <message>
         <source>Invalid mail exchange record</source>
-        <translation type="unfinished"></translation>
+        <translation>Niepoprawny rekord z wymianą poczty</translation>
     </message>
     <message>
         <source>Invalid service record</source>
-        <translation type="unfinished"></translation>
+        <translation>Niepoprawny rekord z serwisem</translation>
     </message>
     <message>
         <source>Invalid text record</source>
-        <translation type="unfinished"></translation>
+        <translation>Niepoprawny rekord z tekstem</translation>
     </message>
     <message>
         <source>Resolver library can&apos;t be loaded: No runtime library loading support</source>
-        <translation type="unfinished"></translation>
+        <translation>Błąd ładowania biblioteki resolvera. Brak obsługi dynamicznego ładowania bibliotek</translation>
     </message>
     <message>
         <source>IPv6 addresses for nameservers are currently not supported</source>
-        <translation type="unfinished"></translation>
+        <translation>Brak obecnie obsługi adresów IPv6 dla serwerów nazw</translation>
     </message>
     <message>
         <source>No hostname given</source>
@@ -770,8 +770,16 @@ Naciśnij ESC aby anulować</translation>
         <translation>Ostrzeżenie:</translation>
     </message>
     <message>
+        <source>Critical Error:</source>
+        <translation>Błąd krytyczny:</translation>
+    </message>
+    <message>
         <source>Fatal Error:</source>
         <translation>Błąd krytyczny:</translation>
+    </message>
+    <message>
+        <source>Information:</source>
+        <translation>Informacja:</translation>
     </message>
     <message>
         <source>&amp;Show this message again</source>
@@ -1766,6 +1774,10 @@ Czy na pewno chcesz go usunąć?</translation>
         <translation>Nie ustawiono urządzenia</translation>
     </message>
     <message>
+        <source>Cannot open device for writing: %1</source>
+        <translation>Nie można otworzyć urządzenia do zapisu: %1</translation>
+    </message>
+    <message>
         <source>Device not writable</source>
         <translation>Urządzenie tylko do odczytu</translation>
     </message>
@@ -1793,7 +1805,7 @@ Czy na pewno chcesz go usunąć?</translation>
     </message>
     <message>
         <source>missing name separator</source>
-        <translation type="unfinished"></translation>
+        <translation>brak separatora nazwy</translation>
     </message>
     <message>
         <source>unterminated array</source>
@@ -1801,7 +1813,7 @@ Czy na pewno chcesz go usunąć?</translation>
     </message>
     <message>
         <source>missing value separator</source>
-        <translation type="unfinished"></translation>
+        <translation>brak separatora wartości</translation>
     </message>
     <message>
         <source>illegal value</source>
@@ -1809,7 +1821,7 @@ Czy na pewno chcesz go usunąć?</translation>
     </message>
     <message>
         <source>invalid termination by number</source>
-        <translation type="unfinished"></translation>
+        <translation>niepoprawne zakończenie liczbą</translation>
     </message>
     <message>
         <source>illegal number</source>
@@ -1817,7 +1829,7 @@ Czy na pewno chcesz go usunąć?</translation>
     </message>
     <message>
         <source>invalid escape sequence</source>
-        <translation type="unfinished"></translation>
+        <translation>niepoprawna sekwencja specjalna</translation>
     </message>
     <message>
         <source>invalid UTF8 string</source>
@@ -1871,8 +1883,56 @@ Czy na pewno chcesz go usunąć?</translation>
         <translation>&quot;%1&quot; jest niepoprawnym obiektem ELF (%2)</translation>
     </message>
     <message>
-        <source>Plugin verification data mismatch in &apos;%1&apos;</source>
-        <translation>Niezgodność podczas weryfikacji danych we wtyczce &quot;%1&quot;</translation>
+        <source>odd cpu architecture</source>
+        <translation>niekompatybilna architektura procesora</translation>
+    </message>
+    <message>
+        <source>wrong cpu architecture</source>
+        <translation>niepoprawna architektura procesora</translation>
+    </message>
+    <message>
+        <source>odd endianness</source>
+        <translation>niekompatybilna kolejność bajtów</translation>
+    </message>
+    <message>
+        <source>unexpected e_shsize</source>
+        <translation>nieoczekiwane e_shsize</translation>
+    </message>
+    <message>
+        <source>unexpected e_shentsize</source>
+        <translation>nieoczekiwane e_shentsize</translation>
+    </message>
+    <message numerus="yes">
+        <source>announced %n section(s), each %1 byte(s), exceed file size</source>
+        <translation>
+            <numerusform>zapowiedziano %n sekcję %1-bajtową, przekroczono rozmiar pliku</numerusform>
+            <numerusform>zapowiedziano %n sekcje %1-bajtowe, przekroczono rozmiar pliku</numerusform>
+            <numerusform>zapowiedziano %n sekcji %1-bajtowych, przekroczono rozmiar pliku</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>shstrtab section header seems to be at %1</source>
+        <translation>nagłówek sekcji shstrtab znajduje się na pozycji %1</translation>
+    </message>
+    <message>
+        <source>string table seems to be at %1</source>
+        <translation>tabela ciągów znakowych znajduje się na pozycji %1</translation>
+    </message>
+    <message>
+        <source>section name %1 of %2 behind end of file</source>
+        <translation>Nazwa sekcji %1 z %2 poza plikiem</translation>
+    </message>
+    <message>
+        <source>empty .rodata. not a library.</source>
+        <translation>puste &quot;.rodata&quot;, nie jest to biblioteka</translation>
+    </message>
+    <message>
+        <source>missing section data. This is not a library.</source>
+        <translation>brak danych o sekcji, nie jest to biblioteka</translation>
+    </message>
+    <message>
+        <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
+        <translation>Niezgodność weryfikacji metadanych we wtyczce &quot;%1&quot;</translation>
     </message>
     <message>
         <source>The shared library was not found.</source>
@@ -1920,7 +1980,7 @@ Czy na pewno chcesz go usunąć?</translation>
     </message>
     <message>
         <source>no suitable architecture in fat binary</source>
-        <translation type="unfinished"></translation>
+        <translation>brak odpowiedniej architektury w pliku wykonywalnym</translation>
     </message>
     <message>
         <source>invalid magic %1</source>
@@ -2215,20 +2275,12 @@ Czy na pewno chcesz go usunąć?</translation>
         <translation>Ukryj szczegóły...</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Pomoc</translation>
+        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;h3&gt;About Qt&lt;/h3&gt;&lt;p&gt;This program uses Qt version %1.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;Informacje o Qt&lt;/h3&gt;&lt;p&gt; Ten program używa Qt w wersji %1.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3 or GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 2.1 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>About Qt</source>
@@ -3764,10 +3816,6 @@ Wyłącz jedną z tych opcji.</translation>
         <translation>Błąd zapisywania do procesu</translation>
     </message>
     <message>
-        <source>Process failed to start (spawned process exited with code 127)</source>
-        <translation>Proces nie został uruchomiony (zakończony kodem 127)</translation>
-    </message>
-    <message>
         <source>No program defined</source>
         <translation>Nie zdefiniowano programu</translation>
     </message>
@@ -3878,15 +3926,11 @@ Wyłącz jedną z tych opcji.</translation>
     </message>
     <message>
         <source>invalid escape sequence in character class</source>
-        <translation type="unfinished"></translation>
+        <translation>niepoprawna sekwencja specjalna w klasie znakowej</translation>
     </message>
     <message>
         <source>range out of order in character class</source>
         <translation>nieuporządkowany zakres w klasie znakowej</translation>
-    </message>
-    <message>
-        <source>nothing to repeat</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>internal error: unexpected repeat</source>
@@ -3898,47 +3942,19 @@ Wyłącz jedną z tych opcji.</translation>
     </message>
     <message>
         <source>POSIX named classes are supported only within a class</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>missing )</source>
-        <translation>brakujący )</translation>
+        <translation>Klasy nazwane POSIX obsługiwane są jedynie wewnątrz klasy</translation>
     </message>
     <message>
         <source>reference to non-existent subpattern</source>
         <translation>odnośnik do nieistniejącego podwzorca</translation>
     </message>
     <message>
-        <source>erroffset passed as NULL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>unknown option bit(s) set</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>missing ) after comment</source>
-        <translation>brakujący ) następujący po komentarzu</translation>
-    </message>
-    <message>
         <source>regular expression is too large</source>
         <translation>zbyt wielkie wyrażenie regularne</translation>
     </message>
     <message>
-        <source>failed to get memory</source>
-        <translation>nie można przydzielić pamięci</translation>
-    </message>
-    <message>
-        <source>unmatched parentheses</source>
-        <translation>niedopasowane nawiasy</translation>
-    </message>
-    <message>
         <source>internal error: code overflow</source>
         <translation>błąd wewnętrzny: nadmiarowy kod</translation>
-    </message>
-    <message>
-        <source>unrecognized character after (?&lt;</source>
-        <translation>nieoczekiwany znak następujący po (?&lt;</translation>
     </message>
     <message>
         <source>lookbehind assertion is not fixed length</source>
@@ -3953,12 +3969,8 @@ Wyłącz jedną z tych opcji.</translation>
         <translation>grupa warunkowa zawiera więcej niż dwie gałęzie</translation>
     </message>
     <message>
-        <source>assertion expected after (?(</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>(?R or (?[+-]digits must be followed by )</source>
-        <translation type="unfinished"></translation>
+        <translation>po (?R lub po (?[+-]cyfry musi następować &quot;)&quot;</translation>
     </message>
     <message>
         <source>unknown POSIX class name</source>
@@ -3966,39 +3978,15 @@ Wyłącz jedną z tych opcji.</translation>
     </message>
     <message>
         <source>POSIX collating elements are not supported</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>this version of PCRE is not compiled with PCRE_UTF8 support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>character value in \x{...} sequence is too large</source>
-        <translation type="unfinished"></translation>
+        <translation>Brak obsługi scalania elementów POSIX</translation>
     </message>
     <message>
         <source>invalid condition (?(0)</source>
         <translation>niepoprawny warunek (?(0)</translation>
     </message>
     <message>
-        <source>\C not allowed in lookbehind assertion</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>PCRE does not support \L, \l, \N{name}, \U, or \u</source>
         <translation>PCRE nie obsługuje \L, \l, \N{nazwa}, \U ani \u</translation>
-    </message>
-    <message>
-        <source>number after (?C is &gt; 255</source>
-        <translation>liczba następująca po (?C jest większa od 255</translation>
-    </message>
-    <message>
-        <source>closing ) for (?C expected</source>
-        <translation>oczekiwano domykającego ) następującego po (?C</translation>
-    </message>
-    <message>
-        <source>recursive call could loop indefinitely</source>
-        <translation>wywołanie rekurencyjne może wpaść w nieskończoną pętlę</translation>
     </message>
     <message>
         <source>unrecognized character after (?P</source>
@@ -4009,36 +3997,12 @@ Wyłącz jedną z tych opcji.</translation>
         <translation>błąd składni w nazwie podwzorca (brak zakończenia)</translation>
     </message>
     <message>
-        <source>two named subpatterns have the same name</source>
-        <translation>dwa nazwane podwzorce posiadają tę samą nazwę</translation>
-    </message>
-    <message>
-        <source>invalid UTF-8 string</source>
-        <translation>niepoprawny ciąg UTF-8</translation>
-    </message>
-    <message>
-        <source>support for \P, \p, and \X has not been compiled</source>
-        <translation>obsługa \P, \p i \X nie została skompilowana</translation>
-    </message>
-    <message>
         <source>malformed \P or \p sequence</source>
         <translation>niepoprawnie sformatowana sekwencja \P lub \p</translation>
     </message>
     <message>
         <source>unknown property name after \P or \p</source>
         <translation>nieznana nazwa właściwości następująca po \P lub \p</translation>
-    </message>
-    <message>
-        <source>subpattern name is too long (maximum 32 characters)</source>
-        <translation>za długa nazwa podwzorca (maksymalnie 32 znaki)</translation>
-    </message>
-    <message>
-        <source>too many named subpatterns (maximum 10000)</source>
-        <translation>zbyt wiele nazwanych podwzorców (maksymalnie 10000)</translation>
-    </message>
-    <message>
-        <source>octal value is greater than \377 (not in UTF-8 mode)</source>
-        <translation>wartość ósemkowa większa od \377 (nie w trybie UTF-8)</translation>
     </message>
     <message>
         <source>internal error: overran compiling workspace</source>
@@ -4053,28 +4017,16 @@ Wyłącz jedną z tych opcji.</translation>
         <translation>grupa DEFINE zawiera więcej niż jedną gałąź</translation>
     </message>
     <message>
-        <source>repeating a DEFINE group is not allowed</source>
-        <translation>powtarzanie grupy DEFINE jest niedozwolone</translation>
-    </message>
-    <message>
-        <source>inconsistent NEWLINE options</source>
-        <translation>niespójne opcje NEWLINE</translation>
-    </message>
-    <message>
         <source>\g is not followed by a braced, angle-bracketed, or quoted name/number or by a plain number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>a numbered reference must not be zero</source>
-        <translation type="unfinished"></translation>
+        <translation>numerowana referencja nie może być zerem</translation>
     </message>
     <message>
         <source>an argument is not allowed for (*ACCEPT), (*FAIL), or (*COMMIT)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>(*VERB) not recognized</source>
-        <translation type="unfinished"></translation>
+        <translation>argument jest niedozwolony w (*ACCEPT), w (*FAIL) lub w (*COMMIT)</translation>
     </message>
     <message>
         <source>number is too big</source>
@@ -4089,10 +4041,6 @@ Wyłącz jedną z tych opcji.</translation>
         <translation>oczekiwano cyfry następującej po (?+</translation>
     </message>
     <message>
-        <source>] is an invalid data character in JavaScript compatibility mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>different names for subpatterns of the same number are not allowed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4101,16 +4049,8 @@ Wyłącz jedną z tych opcji.</translation>
         <translation>(*MARK) musi posiadać argument</translation>
     </message>
     <message>
-        <source>this version of PCRE is not compiled with PCRE_UCP support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>\c must be followed by an ASCII character</source>
-        <translation>po \c musi następować znak ASCII</translation>
-    </message>
-    <message>
         <source>\k is not followed by a braced, angle-bracketed, or quoted name</source>
-        <translation type="unfinished"></translation>
+        <translation>po \k nie następuje nazwa w nawiasach klamrowych, w ostrokątnych ani nazwa w cudzysłowie</translation>
     </message>
     <message>
         <source>internal error: unknown opcode in find_fixedlength()</source>
@@ -4121,32 +4061,12 @@ Wyłącz jedną z tych opcji.</translation>
         <translation>\N nie jest obsługiwane w klasie</translation>
     </message>
     <message>
-        <source>too many forward references</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>disallowed Unicode code point (&gt;= 0xd800 &amp;&amp; &lt;= 0xdfff)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>invalid UTF-16 string</source>
-        <translation>niepoprawny ciąg UTF-16</translation>
+        <translation>niedozwolony znaku unikodu (&gt;= 0xd800 &amp;&amp; &lt;= 0xdfff)</translation>
     </message>
     <message>
         <source>name is too long in (*MARK), (*PRUNE), (*SKIP), or (*THEN)</source>
         <translation>za długa nazwa w (*MARK), (*PRUNE), (*SKIP), lub (*THEN)</translation>
-    </message>
-    <message>
-        <source>character value in \u.... sequence is too large</source>
-        <translation>wartość znakowa w sekwencji \u.... za duża</translation>
-    </message>
-    <message>
-        <source>invalid UTF-32 string</source>
-        <translation>niepoprawny ciąg UTF-32</translation>
-    </message>
-    <message>
-        <source>setting UTF is disabled by the application</source>
-        <translation>ustawianie UTF jest wyłączone przez aplikację</translation>
     </message>
     <message>
         <source>non-hex character in \x{} (closing brace missing?)</source>
@@ -4173,12 +4093,412 @@ Wyłącz jedną z tych opcji.</translation>
         <translation>nazwa grupy nie może rozpoczynać się od cyfry</translation>
     </message>
     <message>
+        <source>quantifier does not follow a repeatable item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>missing closing parenthesis</source>
+        <translation>brak domykającego nawiasu</translation>
+    </message>
+    <message>
+        <source>pattern passed as NULL</source>
+        <translation>wzorzec przekazany jako NULL</translation>
+    </message>
+    <message>
+        <source>unrecognised compile-time option bit(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>missing ) after (?# comment</source>
+        <translation>Brak ) po komentarzu (?#</translation>
+    </message>
+    <message>
+        <source>failed to allocate heap memory</source>
+        <translation>błąd przydzielenia pamięci na stercie</translation>
+    </message>
+    <message>
+        <source>unmatched closing parenthesis</source>
+        <translation>niedopasowany nawias domykający</translation>
+    </message>
+    <message>
+        <source>letter or underscore expected after (?&lt; or (?&apos;</source>
+        <translation>oczekiwano litery lub znaku podkreślenia po (?&lt; lub po (?&apos;</translation>
+    </message>
+    <message>
+        <source>assertion expected after (?( or (?(?C)</source>
+        <translation>oczekiwano asercji po (?( lub po (?(?C)</translation>
+    </message>
+    <message>
+        <source>internal error in pcre2_study(): should not occur</source>
+        <translation>błąd wewnętrzny w pcre2_study(): nie powinien wystąpić</translation>
+    </message>
+    <message>
+        <source>this version of PCRE2 does not have Unicode support</source>
+        <translation>ta wersja PCRE2 nie obsługuje unikodu</translation>
+    </message>
+    <message>
         <source>parentheses are too deeply nested (stack check)</source>
         <translation>nawiasy zbyt głęboko zagnieżdżone (kontrola stosu)</translation>
     </message>
     <message>
+        <source>character code point value in \x{} or \o{} is too large</source>
+        <translation>za duża wartość kodu znaku w \x{} lub w \o{}</translation>
+    </message>
+    <message>
+        <source>\C is not allowed in a lookbehind assertion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>number after (?C is greater than 255</source>
+        <translation>po (?C następuje liczba większa od 255</translation>
+    </message>
+    <message>
+        <source>closing parenthesis for (?C expected</source>
+        <translation>oczekiwano nawiasu domykającego po (?C</translation>
+    </message>
+    <message>
+        <source>invalid escape sequence in (*VERB) name</source>
+        <translation>niepoprawna sekwencja specjalna w nazwie (*VERB)</translation>
+    </message>
+    <message>
+        <source>two named subpatterns have the same name (PCRE2_DUPNAMES not set)</source>
+        <translation>dwa nazwane podwzorce mają taką samą nazwę (PCRE2_DUPNAMES nie jest ustawione)</translation>
+    </message>
+    <message>
+        <source>this version of PCRE2 does not have support for \P, \p, or \X</source>
+        <translation>ta wersja PCRE2 nie obsługuje \P, \p ani \X</translation>
+    </message>
+    <message>
+        <source>subpattern name is too long (maximum 10000 characters)</source>
+        <translation>za długa nazwa podwzorca (maksymalnie 10000 znaków)</translation>
+    </message>
+    <message>
+        <source>too many named subpatterns (maximum 256)</source>
+        <translation>zbyt wiele nazwanych podwzorców (maksymalnie 256)</translation>
+    </message>
+    <message>
+        <source>octal value is greater than \377 in 8-bit non-UTF-8 mode</source>
+        <translation>wartość ósemkowa większa od \377 w ośmiobitowym trybie (ale nie UTF-8)</translation>
+    </message>
+    <message>
+        <source>internal error: unknown newline setting</source>
+        <translation>błąd wewnętrzny: nieznane ustawienia znaków końca linii</translation>
+    </message>
+    <message>
+        <source>(*VERB) not recognized or malformed</source>
+        <translation>nie rozpoznano (*VERB) lub nie posiada on poprawnego format</translation>
+    </message>
+    <message>
+        <source>\c must be followed by a printable ASCII character</source>
+        <translation>po \c musi następować drukowalny znak ASCII</translation>
+    </message>
+    <message>
+        <source>\c must be followed by a letter or one of [\]^_?</source>
+        <translation>po \c musi następować litera lub jeden ze znaków [\]^_?</translation>
+    </message>
+    <message>
+        <source>SPARE ERROR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>using UTF is disabled by the application</source>
+        <translation>używanie UTF wyłączone w aplikacji</translation>
+    </message>
+    <message>
+        <source>using UCP is disabled by the application</source>
+        <translation>używanie UCP wyłączone w aplikacji</translation>
+    </message>
+    <message>
+        <source>character code point value in \u.... sequence is too large</source>
+        <translation>za duża wartość kodu znaku w sekwencji \u....</translation>
+    </message>
+    <message>
         <source>digits missing in \x{} or \o{}</source>
         <translation>brak cyfr w \x{} lub w \o{}</translation>
+    </message>
+    <message>
+        <source>syntax error in (?(VERSION condition</source>
+        <translation>błąd składni w warunku (?(VERSION</translation>
+    </message>
+    <message>
+        <source>internal error: unknown opcode in auto_possessify()</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>missing terminating delimiter for callout with string argument</source>
+        <translation>brak końcowego separatora dla wywołania z argumentem będącym ciągiem tekstowym</translation>
+    </message>
+    <message>
+        <source>unrecognized string delimiter follows (?C</source>
+        <translation>nieoczekiwany separator ciągu tekstowego następujący po (?C</translation>
+    </message>
+    <message>
+        <source>using \C is disabled by the application</source>
+        <translation>używanie \C jest wyłączone przez aplikację</translation>
+    </message>
+    <message>
+        <source>(?| and/or (?J: or (?x: parentheses are too deeply nested</source>
+        <translation>Nawiasy &quot;(?|&quot;, &quot;(?J:&quot; lub &quot;(?x:&quot; zbyt głęboko zagnieżdżone</translation>
+    </message>
+    <message>
+        <source>using \C is disabled in this PCRE2 library</source>
+        <translation>używanie \C jest wyłączone w tej bibliotece PCRE2</translation>
+    </message>
+    <message>
+        <source>regular expression is too complicated</source>
+        <translation>wyrażenie regularne zbyt skomplikowane</translation>
+    </message>
+    <message>
+        <source>lookbehind assertion is too long</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>pattern string is longer than the limit set by the application</source>
+        <translation>długość wzorca jest większa niż dopuszczalny limit ustawiony w aplikacji</translation>
+    </message>
+    <message>
+        <source>no match</source>
+        <translation>brak dopasowań</translation>
+    </message>
+    <message>
+        <source>partial match</source>
+        <translation>częściowe dopasowanie</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 1 byte missing at end</source>
+        <translation>błąd UTF-8: brak 1 bajta na końcu</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 2 bytes missing at end</source>
+        <translation>błąd UTF-8: brak 2 bajtów na końcu</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 3 bytes missing at end</source>
+        <translation>błąd UTF-8: brak 3 bajtów na końcu</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 4 bytes missing at end</source>
+        <translation>błąd UTF-8: brak 4 bajtów na końcu</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 5 bytes missing at end</source>
+        <translation>błąd UTF-8: brak 5 bajtów na końcu</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 2 top bits not 0x80</source>
+        <translation>błąd UTF-8: bajt 2 inny niż 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 3 top bits not 0x80</source>
+        <translation>błąd UTF-8: bajt 3 inny niż 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 4 top bits not 0x80</source>
+        <translation>błąd UTF-8: bajt 4 inny niż 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 5 top bits not 0x80</source>
+        <translation>błąd UTF-8: bajt 5 inny niż 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 6 top bits not 0x80</source>
+        <translation>błąd UTF-8: bajt 6 inny niż 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 5-byte character is not allowed (RFC 3629)</source>
+        <translation>błąd UTF-8: 5-bajtowe znaki nie są dozwolone (RFC 3629)</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 6-byte character is not allowed (RFC 3629)</source>
+        <translation>błąd UTF-8: 6-bajtowe znaki nie są dozwolone (RFC 3629)</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: code points greater than 0x10ffff are not defined</source>
+        <translation>błąd UTF-8: kody większe od 0x10ffff nie są zdefiniowane</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: code points 0xd800-0xdfff are not defined</source>
+        <translation>błąd UTF-8: kody w zakresie od 0xd800 do 0xdfff nie są zdefiniowane</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 2-byte sequence</source>
+        <translation>błąd UTF-8: wydłużona sekwencja 2-bajtowa</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 3-byte sequence</source>
+        <translation>błąd UTF-8: wydłużona sekwencja 3-bajtowa</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 4-byte sequence</source>
+        <translation>błąd UTF-8: wydłużona sekwencja 4-bajtowa</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 5-byte sequence</source>
+        <translation>błąd UTF-8: wydłużona sekwencja 5-bajtowa</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 6-byte sequence</source>
+        <translation>błąd UTF-8: wydłużona sekwencja 6-bajtowa</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: isolated byte with 0x80 bit set</source>
+        <translation>błąd UTF-8: samotny bajt z wartością 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: illegal byte (0xfe or 0xff)</source>
+        <translation>błąd UTF-8: niepoprawny bajt (0xfe lub 0xff)</translation>
+    </message>
+    <message>
+        <source>UTF-16 error: missing low surrogate at end</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UTF-16 error: invalid low surrogate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UTF-16 error: isolated low surrogate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UTF-32 error: code points 0xd800-0xdfff are not defined</source>
+        <translation>błąd UTF-32: kody w zakresie od 0xd800 do 0xdfff nie są zdefiniowane</translation>
+    </message>
+    <message>
+        <source>UTF-32 error: code points greater than 0x10ffff are not defined</source>
+        <translation>błąd UTF-32: kody większe od 0x10ffff nie są zdefiniowane</translation>
+    </message>
+    <message>
+        <source>bad data value</source>
+        <translation>niepoprawna wartość danych</translation>
+    </message>
+    <message>
+        <source>patterns do not all use the same character tables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>magic number missing</source>
+        <translation>brak liczby magicznej</translation>
+    </message>
+    <message>
+        <source>pattern compiled in wrong mode: 8/16/32-bit error</source>
+        <translation>wzorzec skompilowany w złym trybie: błąd 8/16/32-bitowy</translation>
+    </message>
+    <message>
+        <source>bad offset value</source>
+        <translation>niepoprawna wartość offsetu</translation>
+    </message>
+    <message>
+        <source>bad option value</source>
+        <translation>niepoprawna wartość opcji</translation>
+    </message>
+    <message>
+        <source>invalid replacement string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bad offset into UTF string</source>
+        <translation>niepoprawny offset do ciągu tekstowego UTF</translation>
+    </message>
+    <message>
+        <source>callout error code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>invalid data in workspace for DFA restart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>too much recursion for DFA matching</source>
+        <translation>zbyt wiele rekurencji w dopasowaniu DFA</translation>
+    </message>
+    <message>
+        <source>backreference condition or recursion test is not supported for DFA matching</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>function is not supported for DFA matching</source>
+        <translation>brak obsługi funkcji w dopasowaniach DFA</translation>
+    </message>
+    <message>
+        <source>pattern contains an item that is not supported for DFA matching</source>
+        <translation>wzorzec zawiera element który jest nieobsługiwany w dopasowaniach DFA</translation>
+    </message>
+    <message>
+        <source>workspace size exceeded in DFA matching</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>internal error - pattern overwritten?</source>
+        <translation>błąd wewnętrzny: wzorzec nadpisany</translation>
+    </message>
+    <message>
+        <source>bad JIT option</source>
+        <translation>niepoprawna opcja JIT</translation>
+    </message>
+    <message>
+        <source>JIT stack limit reached</source>
+        <translation>osiągnięto limit stosu JIT</translation>
+    </message>
+    <message>
+        <source>match limit exceeded</source>
+        <translation>przekroczono limit dopasowań</translation>
+    </message>
+    <message>
+        <source>no more memory</source>
+        <translation>brak pamięci</translation>
+    </message>
+    <message>
+        <source>unknown substring</source>
+        <translation>nieznany podciąg</translation>
+    </message>
+    <message>
+        <source>non-unique substring name</source>
+        <translation>nieunikatowa nazwa podciągu</translation>
+    </message>
+    <message>
+        <source>NULL argument passed</source>
+        <translation>przekazano argument o wartości NULL</translation>
+    </message>
+    <message>
+        <source>nested recursion at the same subject position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>recursion limit exceeded</source>
+        <translation>przekroczono limit rekurencji</translation>
+    </message>
+    <message>
+        <source>requested value is not available</source>
+        <translation>żądana wartość nie jest dostępna</translation>
+    </message>
+    <message>
+        <source>requested value is not set</source>
+        <translation>żądana wartość nie jest ustawiona</translation>
+    </message>
+    <message>
+        <source>offset limit set without PCRE2_USE_OFFSET_LIMIT</source>
+        <translation>ustawiono limit offsetu bez PCRE2_USE_OFFSET_LIMIT</translation>
+    </message>
+    <message>
+        <source>bad escape sequence in replacement string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>expected closing curly bracket in replacement string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bad substitution in replacement string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>match with end before start is not supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>too many replacements (more than INT_MAX)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4333,6 +4653,13 @@ Wyłącz jedną z tych opcji.</translation>
     <message>
         <source>Scroll down</source>
         <translation>Przewiń w dół</translation>
+    </message>
+</context>
+<context>
+    <name>QSctpSocket</name>
+    <message>
+        <source>The remote host closed the connection</source>
+        <translation>Zdalny host zamknął połączenie</translation>
     </message>
 </context>
 <context>
@@ -5657,7 +5984,7 @@ Role of an accessible object</extracomment>
     <message>
         <source>property page</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>strona z właściwościami</translation>
     </message>
     <message>
         <source>indicator</source>
@@ -5707,7 +6034,7 @@ Role of an accessible object</extracomment>
     <message>
         <source>dial</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>pokrętło</translation>
     </message>
     <message>
         <source>hotkey field</source>
@@ -5727,7 +6054,7 @@ Role of an accessible object</extracomment>
     <message>
         <source>canvas</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>płótno</translation>
     </message>
     <message>
         <source>animation</source>
@@ -5831,6 +6158,21 @@ Role of an accessible object</extracomment>
     </message>
 </context>
 <context>
+    <name>QSslDiffieHellmanParameter</name>
+    <message>
+        <source>No error</source>
+        <translation>Brak błędu</translation>
+    </message>
+    <message>
+        <source>Invalid input data</source>
+        <translation>Niepoprawne dane wejściowe</translation>
+    </message>
+    <message>
+        <source>The given Diffie-Hellman parameters are deemed unsafe</source>
+        <translation>Podane parametry protokołu Diffiego-Hellmana uznano jako niepewne</translation>
+    </message>
+</context>
+<context>
     <name>QSslSocket</name>
     <message>
         <source>Error when setting the elliptic curves (%1)</source>
@@ -5863,6 +6205,10 @@ Role of an accessible object</extracomment>
     <message>
         <source>Private key does not certify public key, %1</source>
         <translation>Prywatny klucz nie uwiarygodnia publicznego, %1</translation>
+    </message>
+    <message>
+        <source>Diffie-Hellman parameters are not valid</source>
+        <translation>Niepoprawne parametry protokołu Diffiego-Hellmana</translation>
     </message>
     <message>
         <source>OpenSSL version too old, need at least v1.0.2</source>
@@ -6183,7 +6529,18 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <source>Could not reset to read data</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można zresetować w celu odczytu danych</translation>
+    </message>
+</context>
+<context>
+    <name>QUdpSocket</name>
+    <message>
+        <source>Unable to send a datagram</source>
+        <translation>Nie można wysłać datagramu</translation>
+    </message>
+    <message>
+        <source>No datagram available for reading</source>
+        <translation>Brak datagramów dostępnych do odczytu</translation>
     </message>
 </context>
 <context>
@@ -6353,11 +6710,13 @@ Role of an accessible object</extracomment>
         <source>Qt cannot load the direct2d platform plugin because the Direct2D version on this system is too old. The minimum system requirement for this platform plugin is Windows 7 SP1 with Platform Update.
 
 The minimum Direct2D version required is %1.%2.%3.%4. The Direct2D version on this system is %5.%6.%7.%8.</source>
-        <translation type="unfinished"></translation>
+        <translation>Qt nie może załadować wtyczki platformy direct2d ponieważ wersja Direct2D zainstalowana na tym systemie jest zbyt stara. Minimalne wymagania systemowe dla tej wtyczki to Windows 7 SP1 z uaktualnieniami platformy.
+
+Minimalną wymaganą wersją Direct2D jest %1.%2.%3.%4. Zainstalowaną wersją na tym systemie jest %5.%6.%7.%8.</translation>
     </message>
     <message>
         <source>Cannot load direct2d platform plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można załadować wtyczki platformy direct2d</translation>
     </message>
 </context>
 <context>
