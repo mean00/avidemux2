@@ -729,6 +729,14 @@ Press ESC to cancel</source>
         <source>Invalid hostname</source>
         <translation>שם מארח לא תקין</translation>
     </message>
+    <message>
+        <source>Host %1 could not be found.</source>
+        <translation>מארח %1 לא נמצא.</translation>
+    </message>
+    <message>
+        <source>Unknown error</source>
+        <translation>שגיאה לא מוכרת</translation>
+    </message>
 </context>
 <context>
     <name>QDockWidget</name>
@@ -1524,10 +1532,6 @@ Do you want to delete it anyway?</source>
         <source>Unknown error (%1)</source>
         <translation>שגיאה לא מוכרת (%1)</translation>
     </message>
-    <message>
-        <source>Host %1 could not be found.</source>
-        <translation>מארח %1 לא נמצא</translation>
-    </message>
 </context>
 <context>
     <name>QHttp</name>
@@ -1867,8 +1871,8 @@ Do you want to delete it anyway?</source>
         <translation>&apos;%1&apos; אינו אובייקט ELF תקין (%2)</translation>
     </message>
     <message>
-        <source>Plugin verification data mismatch in &apos;%1&apos;</source>
-        <translation>חוסר התאמה במידע אימות תוסף בתוך &apos;%1&apos;</translation>
+        <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
+        <translation>שגיאה בחילוץ מטה־מידע של תוסף מתוך &apos;%1&apos;</translation>
     </message>
     <message>
         <source>The shared library was not found.</source>
@@ -2223,8 +2227,8 @@ Do you want to delete it anyway?</source>
         <translation>&lt;h3&gt;אודות Qt&lt;/h3&gt;&lt;p&gt;תוכנית זו משתמשת ב־Qt גירסה %1.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3 or GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 2.1 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;‏Qt הינה ערכת כלי C++‎ עבור פיתוח יישומים חוצי-פלטפורמה.&lt;/p&gt;&lt;p&gt;‏Qt מספקת ניידות קוד-בודד על פני כל מערכות ההפעלה הגדולות לשולחן העבודה. ‏Qt גם כן זמינה עבור Embedded Linux וגם מערכות הפעלה משובצות וניידות אחרות.&lt;/p&gt;&lt;p&gt;‏Qt זמינה תחת שלוש אפשרויות רישוי שונות המיועדות להתאים לצרכים של המשתמשים השונים שלנו.&lt;/p&gt;&lt;p&gt;‏Qt אשר רשויה תחת הסכם ההרשאה המסחרי שלנו הינה מתאימה לצורך פיתוח של תכנות קנייניות/מסחריות כאשר אין ברצונך לשתף שום קוד מקור עם צדדים שלישיים או שבמובן אחר לא יכול להיענות עם התנאים של GNU LGPL גירסה 3 או GNU LGPL גירסה 2.1.&lt;/p&gt;&lt;p&gt;‏Qt אשר רשויה תחת הרשיון GNU LGPL גירסה 3 הינה מתאימה לצורך פיתוח של יישומי Qt בתנאי שביכולתך להיענות עם התנאים והסייגים של הרשיון GNU LGPL גירסה 3.&lt;/p&gt;&lt;p&gt;‏Qt אשר רשויה תחת הרשיון GNU LGPL גירסה 2.1 הינה מתאימה לצורך פיתוח של יישומי Qt בתנאי שביכולתך להיענות עם התנאים והסייגים של הרשיון GNU LGPL גירסה 2.1.&lt;/p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;‏Qt הינה ערכת כלי C++‎ עבור פיתוח יישומים חוצי-פלטפורמה.&lt;/p&gt;&lt;p&gt;‏Qt מספקת ניידות קוד-בודד על פני כל מערכות ההפעלה הגדולות לשולחן העבודה. ‏Qt גם כן זמינה עבור Embedded Linux וגם מערכות הפעלה משובצות וניידות אחרות.&lt;/p&gt;&lt;p&gt;‏Qt זמינה תחת שלוש אפשרויות רישוי שונות המיועדות להתאים לצרכים של המשתמשים השונים שלנו.&lt;/p&gt;&lt;p&gt;‏Qt אשר רשויה תחת הסכם ההרשאה המסחרי שלנו הינה מתאימה לצורך פיתוח של תכנות קנייניות/מסחריות כאשר אין ברצונך לשתף שום קוד מקור עם צדדים שלישיים או שבמובן אחר לא יכול להיענות עם התנאים של GNU LGPL גירסה 3.&lt;/p&gt;&lt;p&gt;‏Qt אשר רשויה תחת הרשיון GNU LGPL גירסה 3 הינה מתאימה לצורך פיתוח של יישומי Qt בתנאי שביכולתך להיענות עם התנאים והסייגים של הרשיון GNU LGPL גירסה 3.&lt;/p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>About Qt</source>
@@ -2336,6 +2340,14 @@ Do you want to delete it anyway?</source>
     <message>
         <source>Temporary error</source>
         <translation>שגיאה זמנית</translation>
+    </message>
+    <message>
+        <source>Network dropped connection on reset</source>
+        <translation>רשת ניתקה את החיבור בעת אתחול</translation>
+    </message>
+    <message>
+        <source>Connection reset by peer</source>
+        <translation>חיבור נותק בידי הצד השני</translation>
     </message>
     <message>
         <source>Unknown error</source>
@@ -3748,10 +3760,6 @@ Please turn one of those options off.</source>
         <translation>תהליך נכשל בעליה</translation>
     </message>
     <message>
-        <source>Process failed to start (spawned process exited with code 127)</source>
-        <translation>תהליך נכשל בהפעלה (תהליך שהותחל יצא עם קוד 127)</translation>
-    </message>
-    <message>
         <source>No program defined</source>
         <translation>לא הוגדרה תוכנית</translation>
     </message>
@@ -3781,20 +3789,6 @@ Please turn one of those options off.</source>
     <message>
         <source>Cancel</source>
         <translation>ביטול</translation>
-    </message>
-</context>
-<context>
-    <name>QQnxFileDialogHelper</name>
-    <message>
-        <source>All files (*.*)</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>QQnxFilePicker</name>
-    <message>
-        <source>Pick a file</source>
-        <translation>בחר קובץ</translation>
     </message>
 </context>
 <context>

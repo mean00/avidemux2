@@ -735,7 +735,7 @@ Drücken Sie ESC, um abzubrechen</translation>
     </message>
     <message>
         <source>IPv6 addresses for nameservers are currently not supported</source>
-        <translation>IPv6-Adressen für DNS-Server werden gegenwärtig nicht unterstützt</translation>
+        <translation>IPv6-Adressen für Nameserver sind gegenwärtig nicht unterstützt</translation>
     </message>
 </context>
 <context>
@@ -1872,8 +1872,8 @@ Möchten Sie die Datei trotzdem löschen?</translation>
         <translation>&apos;%1&apos; ist keine gültige ELF-Objektdatei (%2)</translation>
     </message>
     <message>
-        <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
-        <translation>Die Metadaten des Plugins &apos;%1&apos; konnten nicht bestimmt werden</translation>
+        <source>Plugin verification data mismatch in &apos;%1&apos;</source>
+        <translation>Die Prüfdaten des Plugins &apos;%1&apos; stimmen nicht überein</translation>
     </message>
     <message>
         <source>The shared library was not found.</source>
@@ -2216,12 +2216,20 @@ Möchten Sie die Datei trotzdem löschen?</translation>
         <translation>Details ausblenden...</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</translation>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Hilfe</translation>
     </message>
     <message>
         <source>&lt;h3&gt;About Qt&lt;/h3&gt;&lt;p&gt;This program uses Qt version %1.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;Über Qt&lt;/h3&gt;&lt;p&gt;Dieses Programm verwendet Qt Version %1.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3 or GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 2.1 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3 or GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 2.1 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>About Qt</source>
@@ -4325,13 +4333,6 @@ Bitte deaktivieren Sie eine der beiden.</translation>
     </message>
 </context>
 <context>
-    <name>QSctpSocket</name>
-    <message>
-        <source>The remote host closed the connection</source>
-        <translation>Der entfernte Rechner hat die Verbindung geschlossen</translation>
-    </message>
-</context>
-<context>
     <name>QSharedMemory</name>
     <message>
         <source>%1: unable to set key on lock</source>
@@ -5827,21 +5828,6 @@ Role of an accessible object</extracomment>
     </message>
 </context>
 <context>
-    <name>QSslDiffieHellmanParameter</name>
-    <message>
-        <source>No error</source>
-        <translation>Kein Fehler</translation>
-    </message>
-    <message>
-        <source>Invalid input data</source>
-        <translation>Ungültige Eingabedaten</translation>
-    </message>
-    <message>
-        <source>The given Diffie-Hellman parameters are deemed unsafe</source>
-        <translation>Die angegebenen Diffie-Hellman-Parameter wurden als unsicher eingeschätzt</translation>
-    </message>
-</context>
-<context>
     <name>QSslSocket</name>
     <message>
         <source>No error</source>
@@ -5966,10 +5952,6 @@ Role of an accessible object</extracomment>
     <message>
         <source>Private key does not certify public key, %1</source>
         <translation>Der private Schlüssel passt nicht zum öffentlichen Schlüssel, %1</translation>
-    </message>
-    <message>
-        <source>Diffie-Hellman parameters are not valid</source>
-        <translation>Die Diffie-Hellman-Parameter sind ungültig</translation>
     </message>
     <message>
         <source>OpenSSL version too old, need at least v1.0.2</source>
@@ -6199,17 +6181,6 @@ Role of an accessible object</extracomment>
     <message>
         <source>Could not reset to read data</source>
         <translation>Die Positionierung zum Lesen der Daten schlug fehl</translation>
-    </message>
-</context>
-<context>
-    <name>QUdpSocket</name>
-    <message>
-        <source>Unable to send a datagram</source>
-        <translation>Es konnte kein Datagramm gesendet werden</translation>
-    </message>
-    <message>
-        <source>No datagram available for reading</source>
-        <translation>Es steht kein Datagramm zum Lesen bereit</translation>
     </message>
 </context>
 <context>

@@ -345,7 +345,7 @@ Tryk på ESC for at annullere</translation>
     <name>QComboBox</name>
     <message>
         <source>Open the combo box selection popup</source>
-        <translation>Åbn komboboksens valg-pop op</translation>
+        <translation>Åbn komboboksens valg-pop-op</translation>
     </message>
     <message>
         <source>False</source>
@@ -2213,6 +2213,14 @@ Vil du slette den alligevel?</translation>
     <message>
         <source>Hide Details...</source>
         <translation>Skjul detaljer...</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Hjælp</translation>
     </message>
     <message>
         <source>&lt;h3&gt;About Qt&lt;/h3&gt;&lt;p&gt;This program uses Qt version %1.&lt;/p&gt;</source>
@@ -4324,13 +4332,6 @@ Slå venligst en at disse valgmuligheder fra.</translation>
     </message>
 </context>
 <context>
-    <name>QSctpSocket</name>
-    <message>
-        <source>The remote host closed the connection</source>
-        <translation>Fjern-værten lukkede forbindelsen</translation>
-    </message>
-</context>
-<context>
     <name>QSharedMemory</name>
     <message>
         <source>%1: unable to set key on lock</source>
@@ -5527,7 +5528,7 @@ Role of an accessible object</extracomment>
     <message>
         <source>popup menu</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>pop op-menu</translation>
+        <translation>pop-op-menu</translation>
     </message>
     <message>
         <source>menu item</source>
@@ -5826,21 +5827,6 @@ Role of an accessible object</extracomment>
     </message>
 </context>
 <context>
-    <name>QSslDiffieHellmanParameter</name>
-    <message>
-        <source>No error</source>
-        <translation>Ingen fejl</translation>
-    </message>
-    <message>
-        <source>Invalid input data</source>
-        <translation>Ugyldig inputdata</translation>
-    </message>
-    <message>
-        <source>The given Diffie-Hellman parameters are deemed unsafe</source>
-        <translation>De givne Diffie-Hellman-parametre skønnes usikre</translation>
-    </message>
-</context>
-<context>
     <name>QSslSocket</name>
     <message>
         <source>Error when setting the elliptic curves (%1)</source>
@@ -5873,10 +5859,6 @@ Role of an accessible object</extracomment>
     <message>
         <source>Private key does not certify public key, %1</source>
         <translation>Privat nøgle certificere ikke offentlig nøgle, %1</translation>
-    </message>
-    <message>
-        <source>Diffie-Hellman parameters are not valid</source>
-        <translation>Diffie-Hellman-parametre er ikke gyldige</translation>
     </message>
     <message>
         <source>OpenSSL version too old, need at least v1.0.2</source>
@@ -6198,17 +6180,6 @@ Role of an accessible object</extracomment>
     <message>
         <source>Could not reset to read data</source>
         <translation>Kunne ikke nulstille læsedata</translation>
-    </message>
-</context>
-<context>
-    <name>QUdpSocket</name>
-    <message>
-        <source>Unable to send a datagram</source>
-        <translation>Kunne ikke sende et datagram</translation>
-    </message>
-    <message>
-        <source>No datagram available for reading</source>
-        <translation>Intet tilgængeligt datagram til læsning</translation>
     </message>
 </context>
 <context>
