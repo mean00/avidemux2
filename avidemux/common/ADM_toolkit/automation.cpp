@@ -115,6 +115,7 @@ static int myargc;
 static int index;
 static three_arg_type three;
 static two_arg_type two;
+static bool portable;
 
     argc=global_argc;
     argv = global_argv;
@@ -145,26 +146,30 @@ static two_arg_type two;
     argc-=1;
     cur=1;
     myargc=argc;
+    portable=false;
     while(myargc>0)
     {
                 if(( *argv[cur]!='-') || (*(argv[cur]+1)!='-'))
                 {
-                      if(cur==1)
+                      if(cur==1 || (cur==2 && portable))
                       {
                           loadCB(argv[cur]);
                       }
                       else
                           printf("\n Found garbage %s\n",argv[cur]);
                       cur+=1;myargc-=1;
+                      portable=false;
                       continue;
                 }
                 // else it begins with --
                 if(!strcmp(argv[cur]+2,"portable")) // portable mode switch has been already taken care of, ignore
                 {
+                    portable=true;
                     cur++;
                     myargc--;
                     continue;
                 }
+                portable=false;
                 index= searchReactionTable(argv[cur]+2);
                 if(index==-1) // not found
                 {
