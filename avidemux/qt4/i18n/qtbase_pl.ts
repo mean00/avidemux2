@@ -743,11 +743,11 @@ Naciśnij ESC aby anulować</translation>
     <message>
         <source>Float</source>
         <extracomment>Accessible name for button undocking a dock widget (floating state)</extracomment>
-        <translation>Uwolnij</translation>
+        <translation>Zwolnij</translation>
     </message>
     <message>
         <source>Undocks and re-attaches the dock widget</source>
-        <translation>Uwalnia i ponownie dokuje widżet</translation>
+        <translation>Zwalnia i ponownie dokuje widżet</translation>
     </message>
     <message>
         <source>Close</source>
@@ -756,7 +756,7 @@ Naciśnij ESC aby anulować</translation>
     </message>
     <message>
         <source>Closes the dock widget</source>
-        <translation type="unfinished"></translation>
+        <translation>Zamyka zadokowany widżet</translation>
     </message>
 </context>
 <context>
@@ -3926,7 +3926,7 @@ Wyłącz jedną z tych opcji.</translation>
     </message>
     <message>
         <source>invalid escape sequence in character class</source>
-        <translation>niepoprawna sekwencja specjalna w klasie znakowej</translation>
+        <translation>nieprawidłowa sekwencja ucieczki w klasie znaków</translation>
     </message>
     <message>
         <source>range out of order in character class</source>
@@ -4794,7 +4794,7 @@ Wyłącz jedną z tych opcji.</translation>
     </message>
     <message>
         <source>Home</source>
-        <translation>Katalog domowy</translation>
+        <translation>Home</translation>
     </message>
     <message>
         <source>End</source>
@@ -6379,7 +6379,8 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <source>Home</source>
-        <translation>Katalog domowy</translation>
+        <translatorcomment>Keyboard button name</translatorcomment>
+        <translation>Home</translation>
     </message>
     <message>
         <source>Cache</source>
