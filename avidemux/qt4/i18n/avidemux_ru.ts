@@ -5038,17 +5038,17 @@ Do you want to load it  ?
     <message>
         <location line="+4"/>
         <source>MB comparison</source>
-        <translation type="unfinished">Сравнение Мб</translation>
+        <translation>Сравнение макроблоков</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished">Несколько битов (vhq)</translation>
+        <translation>Минимум битов (vhq)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rate distortion</source>
-        <translation type="unfinished">Искажение темпа</translation>
+        <translation>Минимум искажений</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -5653,17 +5653,17 @@ Do you want to replace it?</source>
     <message>
         <location line="+4"/>
         <source>MB comparison</source>
-        <translation type="unfinished">Сравнение Мб</translation>
+        <translation>Сравнение макроблоков</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished">Несколько бит (vhq)</translation>
+        <translation>Минимум битов (vhq)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rate distortion</source>
-        <translation type="unfinished">Искажение частоты</translation>
+        <translation>Минимум искажений</translation>
     </message>
     <message>
         <location line="+8"/>
