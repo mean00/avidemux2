@@ -1410,8 +1410,8 @@ It is needed to create FLV  video.</source>
         <translation>關閉</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
-        <location line="+30"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
+        <location line="+32"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -1701,7 +1701,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="+1148"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
         <source>Something bad happened</source>
         <translation>有些事發生問題</translation>
     </message>
@@ -3264,7 +3264,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4803,7 +4803,7 @@ Do you want to load it  ?
         <translation>KVCD</translation>
     </message>
     <message>
-        <location line="+37"/>
+        <location line="+38"/>
         <source>_Trellis quantization</source>
         <translation>網格量化</translation>
     </message>
@@ -4818,12 +4818,12 @@ Do you want to load it  ?
         <translation>VBV 緩衝容量 :</translation>
     </message>
     <message>
-        <location line="-28"/>
+        <location line="-29"/>
         <source>Rate distortion</source>
         <translation>速率失真</translation>
     </message>
     <message>
-        <location line="+40"/>
+        <location line="+41"/>
         <source>_Filesize tolerance (kb):</source>
         <translation>容許誤差檔案大小 (kb):</translation>
     </message>
@@ -4843,7 +4843,7 @@ Do you want to load it  ?
         <translation>Gop(圖像群組)大小：</translation>
     </message>
     <message>
-        <location line="-39"/>
+        <location line="-40"/>
         <source>Auto (#cpu)</source>
         <translation>自動 (#cpu)</translation>
     </message>
@@ -4858,17 +4858,17 @@ Do you want to load it  ?
         <translation>頂部首先掃描</translation>
     </message>
     <message>
-        <location line="+38"/>
+        <location line="+39"/>
         <source>Basic Settings</source>
         <translation>基本設定</translation>
     </message>
     <message>
-        <location line="-59"/>
+        <location line="-60"/>
         <source>Animes</source>
         <translation>動畫</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+33"/>
         <source>Mi_n. quantizer:</source>
         <translation>最小量化器:</translation>
     </message>
@@ -4888,7 +4888,7 @@ Do you want to load it  ?
         <translation>libavcodec MPEG-2 配置</translation>
     </message>
     <message>
-        <location line="-70"/>
+        <location line="-71"/>
         <source>One thread</source>
         <translation>一個線程</translation>
     </message>
@@ -4903,7 +4903,7 @@ Do you want to load it  ?
         <translation>漸進的</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+15"/>
         <source>Threading</source>
         <translation>線程</translation>
     </message>
@@ -4918,7 +4918,7 @@ Do you want to load it  ?
         <translation>交錯</translation>
     </message>
     <message>
-        <location line="-56"/>
+        <location line="-57"/>
         <source>Two threads)</source>
         <translation>兩個線程</translation>
     </message>
@@ -4928,12 +4928,12 @@ Do you want to load it  ?
         <translation>預設</translation>
     </message>
     <message>
-        <location line="+65"/>
+        <location line="+66"/>
         <source>Adv. Settings</source>
         <translation>Adv. 設定</translation>
     </message>
     <message>
-        <location line="-64"/>
+        <location line="-65"/>
         <source>Tmpgenc</source>
         <translation>Tmpgenc</translation>
     </message>
@@ -4943,7 +4943,7 @@ Do you want to load it  ?
         <translation>正常 (4:3)</translation>
     </message>
     <message>
-        <location line="+54"/>
+        <location line="+55"/>
         <source>Matrices:</source>
         <translation>矩陣:</translation>
     </message>
@@ -4953,7 +4953,7 @@ Do you want to load it  ?
         <translation>宏塊決定:</translation>
     </message>
     <message>
-        <location line="-26"/>
+        <location line="-27"/>
         <source>Interlaced</source>
         <translation>交錯</translation>
     </message>
@@ -4963,7 +4963,7 @@ Do you want to load it  ?
         <translation>底部首先掃描</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+56"/>
         <source>Rate Control</source>
         <translation>速率控制</translation>
     </message>
@@ -4973,12 +4973,12 @@ Do you want to load it  ?
         <translation>最大量化器:</translation>
     </message>
     <message>
-        <location line="-27"/>
+        <location line="-28"/>
         <source>Fewest bits (vhq)</source>
         <translation>少位元 (vhq)</translation>
     </message>
     <message>
-        <location line="+39"/>
+        <location line="+40"/>
         <source>Aspect ratio:</source>
         <translation>縱橫比例(AR):</translation>
     </message>
@@ -4996,42 +4996,82 @@ Do you want to load it  ?
 <context>
     <name>ffmpeg4</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+199"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+208"/>
         <source>Three threads</source>
         <translation>三個線程</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+17"/>
         <source>4_MV</source>
         <translation>4MV</translation>
     </message>
     <message>
-        <location line="-26"/>
+        <location line="-28"/>
         <source>MPEG</source>
         <translation>MPEG</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+29"/>
         <source>_Trellis quantization</source>
         <translation>網格量化</translation>
     </message>
     <message>
-        <location line="-28"/>
+        <location line="-30"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+27"/>
         <source>Max. quantizer _difference:</source>
         <translation>最大量化器的區別:</translation>
     </message>
     <message>
-        <location line="-18"/>
+        <location line="-20"/>
         <source>Rate distortion</source>
         <translation>速率失真</translation>
     </message>
     <message>
-        <location line="+30"/>
+        <location line="-16"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+27"/>
+        <source>Matrices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>_GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
         <source>_Filesize tolerance (kb):</source>
         <translation>濾鏡大小容許誤差:</translation>
     </message>
@@ -5046,27 +5086,27 @@ Do you want to load it  ?
         <translation>Gop 大小:</translation>
     </message>
     <message>
-        <location line="-29"/>
+        <location line="-33"/>
         <source>Auto (#cpu)</source>
         <translation>自動 (#cpu)</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+36"/>
         <source>User Interface</source>
         <translation>使用者介面</translation>
     </message>
     <message>
-        <location line="-22"/>
+        <location line="-24"/>
         <source>Mi_n. quantizer:</source>
         <translation>最小量化器:</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+12"/>
         <source>_Quantization type:</source>
         <translation>量化型式:</translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+26"/>
         <source>Quantization</source>
         <translation>量化</translation>
     </message>
@@ -5076,7 +5116,7 @@ Do you want to load it  ?
         <translation>libavcodec MPEG-4 配置</translation>
     </message>
     <message>
-        <location line="-56"/>
+        <location line="-61"/>
         <source>One thread</source>
         <translation>一個線程</translation>
     </message>
@@ -5086,27 +5126,27 @@ Do you want to load it  ?
         <translation>MB 比較</translation>
     </message>
     <message>
-        <location line="+17"/>
+        <location line="+19"/>
         <source>Threading</source>
         <translation>線程</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+12"/>
         <source>_Number of B frames:</source>
         <translation>B幀的數量:</translation>
     </message>
     <message>
-        <location line="-21"/>
+        <location line="-25"/>
         <source>Two threads)</source>
         <translation>兩個線程</translation>
     </message>
     <message>
-        <location line="+43"/>
+        <location line="+48"/>
         <source>Motion Estimation</source>
         <translation>運動估計</translation>
     </message>
     <message>
-        <location line="-6"/>
+        <location line="-7"/>
         <source>Advanced Simple Profile</source>
         <translation>進階簡單設定檔</translation>
     </message>
@@ -5116,27 +5156,27 @@ Do you want to load it  ?
         <translation>宏塊決定:</translation>
     </message>
     <message>
-        <location line="-5"/>
+        <location line="-7"/>
         <source>_Quarter pixel</source>
         <translation>1/4像素</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+36"/>
         <source>Rate Control</source>
         <translation>速率控制</translation>
     </message>
     <message>
-        <location line="-39"/>
+        <location line="-42"/>
         <source>Ma_x. quantizer:</source>
         <translation>最大量化器:</translation>
     </message>
     <message>
-        <location line="-18"/>
+        <location line="-20"/>
         <source>Fewest bits (vhq)</source>
         <translation>少位元 (vhq)</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+37"/>
         <source>_Quantizer compression:</source>
         <translation>濾鏡氣壓縮:</translation>
     </message>
@@ -5621,32 +5661,62 @@ Do you want to replace it?</source>
 <context>
     <name>flv1</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+163"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+172"/>
         <source>MPEG</source>
         <translation>MPEG</translation>
     </message>
     <message>
-        <location line="+17"/>
+        <location line="+18"/>
         <source>_Trellis quantization</source>
         <translation>網格量化</translation>
     </message>
     <message>
-        <location line="-18"/>
+        <location line="-19"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
     <message>
-        <location line="+17"/>
+        <location line="+18"/>
         <source>Max. quantizer _difference:</source>
         <translation>最大濾鏡器的區別:</translation>
     </message>
     <message>
-        <location line="-10"/>
+        <location line="-11"/>
         <source>Rate distortion</source>
         <translation>速率失真</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="-16"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+24"/>
         <source>_Filesize tolerance (kb):</source>
         <translation>濾鏡大小容許誤差:</translation>
     </message>
@@ -5676,12 +5746,12 @@ Do you want to replace it?</source>
         <translation>量化</translation>
     </message>
     <message>
-        <location line="-27"/>
+        <location line="-28"/>
         <source>MB comparison</source>
         <translation>MB 比較</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+33"/>
         <source>Rate Control</source>
         <translation>速率控制</translation>
     </message>
@@ -5696,12 +5766,12 @@ Do you want to replace it?</source>
         <translation>libavcodec FLV1 配置</translation>
     </message>
     <message>
-        <location line="-34"/>
+        <location line="-35"/>
         <source>Fewest bits (vhq)</source>
         <translation>少位 (vhq)</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+16"/>
         <source>_Quantizer compression:</source>
         <translation>量化器壓縮：</translation>
     </message>
@@ -6509,6 +6579,11 @@ I will assume it has and try to continue</source>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
         <translation>U和V交換色彩</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Show motion _vectors</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>

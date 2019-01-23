@@ -2044,7 +2044,7 @@ Espere problemas.</translation>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
         <source>Something bad happened</source>
         <translation>Algo malo ha sucedido</translation>
     </message>
@@ -3225,8 +3225,8 @@ El vídeo se va a guardar pero estará corrupto en los puntos de corte.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
-        <location line="+30"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
+        <location line="+32"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -3283,7 +3283,7 @@ Descartar un fotograma da como resultado un vídeo severamente corrupto.
         <translation>Al guardar, algunos fotogramas de vídeo anteriores a %s han tenido que ser retrasados, dando como resultado una pérdida temporal de sincronización de A/V. ¿Quiere continuar de todas formas?</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation>Error de permisos</translation>
     </message>
@@ -4879,7 +4879,7 @@ Do you want to load it  ?
         <translation>Campo inferior primero</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+10"/>
         <source>Threading</source>
         <translation>Hilos</translation>
     </message>
@@ -4989,7 +4989,7 @@ Do you want to load it  ?
         <translation>Configuración de libavcodec MPEG-2</translation>
     </message>
     <message>
-        <location line="-88"/>
+        <location line="-89"/>
         <source>Normal (4:3)</source>
         <translation>Normal (4:3)</translation>
     </message>
@@ -5009,7 +5009,7 @@ Do you want to load it  ?
         <translation>Automático (n.º de cpu)</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+34"/>
         <source>Matrices:</source>
         <translation>Matrices:</translation>
     </message>
@@ -5017,7 +5017,7 @@ Do you want to load it  ?
 <context>
     <name>ffmpeg4</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+196"/>
         <source>H.263</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5057,7 +5057,12 @@ Do you want to load it  ?
         <translation>Tres subprocesos</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+11"/>
+        <source>Matrices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Threading</source>
         <translation>Subprocesos</translation>
     </message>
@@ -5082,7 +5087,12 @@ Do you want to load it  ?
         <translation>Rejilla de cuan_tización</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+3"/>
+        <source>_GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>_Number of B frames:</source>
         <translation>_Número de fotogramas B:</translation>
     </message>
@@ -5127,7 +5137,7 @@ Do you want to load it  ?
         <translation>Perfil simple avanzado</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+7"/>
         <source>Motion Estimation</source>
         <translation>Estimación de movimiento</translation>
     </message>
@@ -5147,12 +5157,42 @@ Do you want to load it  ?
         <translation>Configuración de libavcodec MPEG-4</translation>
     </message>
     <message>
-        <location line="-53"/>
+        <location line="-58"/>
         <source>Auto (#cpu)</source>
         <translation>Automático (n.º de cpu)</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="-22"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+33"/>
         <source>4_MV</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5644,6 +5684,36 @@ Do you want to replace it?</source>
     <name>flv1</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
         <source>H.263</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5668,7 +5738,7 @@ Do you want to replace it?</source>
         <translation>Distorsión de la tasa</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Mi_n. quantizer:</source>
         <translation>Cuantizador mí_nimo:</translation>
     </message>
@@ -6532,6 +6602,11 @@ Se asume que tiene y se intenta continuar.</translation>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
         <translation>Intercambiar U y V</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Show motion _vectors</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>

@@ -2149,7 +2149,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
         <source>Something bad happened</source>
         <translation>Valami rossz történt</translation>
     </message>
@@ -3202,8 +3202,8 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished">1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
-        <location line="+30"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
+        <location line="+32"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -3255,7 +3255,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4866,7 +4866,7 @@ Be akarja tölteni?
         <translation>Alsó mező először</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+10"/>
         <source>Threading</source>
         <translation>Szálak</translation>
     </message>
@@ -4985,6 +4985,36 @@ Be akarja tölteni?
     <name>ffmpeg4</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
@@ -5029,7 +5059,12 @@ Be akarja tölteni?
         <translation>Automata (#cpu)</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+10"/>
+        <source>Matrices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Threading</source>
         <translation>Szálak</translation>
     </message>
@@ -5064,7 +5099,12 @@ Be akarja tölteni?
         <translation>Negyed Pixel</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
+        <source>_GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>_Number of B frames:</source>
         <translation>B Képkockák száma:</translation>
     </message>
@@ -5109,7 +5149,7 @@ Be akarja tölteni?
         <translation>Advanced Simple Profile</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+7"/>
         <source>Motion Estimation</source>
         <translation>Mozgásbecslés</translation>
     </message>
@@ -5600,6 +5640,36 @@ Do you want to replace it?</source>
     <name>flv1</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
         <source>H.263</source>
         <translation>H.263</translation>
     </message>
@@ -5624,7 +5694,7 @@ Do you want to replace it?</source>
         <translation>Sebességtorzulás</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Mi_n. quantizer:</source>
         <translation>Min. kvantáló:</translation>
     </message>
@@ -6487,6 +6557,11 @@ I will assume it has and try to continue</source>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
         <translation type="unfinished">U és V csere</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Show motion _vectors</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>

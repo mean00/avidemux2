@@ -1622,7 +1622,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
         <source>Something bad happened</source>
         <translation type="unfinished">Ошибка при открытии файла для записи</translation>
     </message>
@@ -3217,8 +3217,8 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
-        <location line="+30"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
+        <location line="+32"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -3271,7 +3271,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4803,7 +4803,7 @@ Do you want to load it  ?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+256"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+257"/>
         <source>Threading</source>
         <translation type="unfinished">Многопоточность</translation>
     </message>
@@ -4818,7 +4818,7 @@ Do you want to load it  ?
         <translation type="unfinished">Управление битрейтом</translation>
     </message>
     <message>
-        <location line="-85"/>
+        <location line="-86"/>
         <source>Normal (4:3)</source>
         <translation type="unfinished">Нормальный (4:3)</translation>
     </message>
@@ -4903,7 +4903,7 @@ Do you want to load it  ?
         <translation type="unfinished">Сначала нижнее поле</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+11"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished">_Мин. квантизатор:</translation>
     </message>
@@ -5006,17 +5006,17 @@ Do you want to load it  ?
 <context>
     <name>ffmpeg4</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+209"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+220"/>
         <source>Threading</source>
         <translation type="unfinished">Многопоточность</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+25"/>
         <source>User Interface</source>
         <translation type="unfinished">Интерфейс</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+10"/>
         <source>Motion Estimation</source>
         <translation type="unfinished">Определение движения</translation>
     </message>
@@ -5026,29 +5026,59 @@ Do you want to load it  ?
         <translation type="unfinished">Управление битрейтом</translation>
     </message>
     <message>
-        <location line="-63"/>
+        <location line="-68"/>
         <source>H.263</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location line="-9"/>
+        <source>None</source>
+        <translation type="unfinished">Не нужно</translation>
+    </message>
+    <message>
         <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished">Полностью</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation>Логарифмически</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation>Метод PHODS</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation>Метод EPZS</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation>Метод X1</translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>MPEG</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
         <source>MB comparison</source>
-        <translation type="unfinished">Сравнение Мб</translation>
+        <translation>Сравнение макроблоков</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished">Несколько битов (vhq)</translation>
+        <translation>Минимум битов (vhq)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rate distortion</source>
-        <translation type="unfinished">Искажение темпа</translation>
+        <translation>Минимум искажений</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -5072,6 +5102,11 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+10"/>
+        <source>Matrices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished">_Мин. квантизатор:</translation>
     </message>
@@ -5101,7 +5136,12 @@ Do you want to load it  ?
         <translation type="unfinished">_Четверть пикселя</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
+        <source>_GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>_Number of B frames:</source>
         <translation type="unfinished">К_оличество кадров B:</translation>
     </message>
@@ -5141,7 +5181,7 @@ Do you want to load it  ?
         <translation type="unfinished">Дополнительный простой профиль</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+11"/>
         <source>Quantization</source>
         <translation type="unfinished">Квантизация</translation>
     </message>
@@ -5631,7 +5671,7 @@ Do you want to replace it?</source>
 <context>
     <name>flv1</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+189"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+199"/>
         <source>User Interface</source>
         <translation type="unfinished">Интерфейс</translation>
     </message>
@@ -5641,12 +5681,42 @@ Do you want to replace it?</source>
         <translation type="unfinished">Управление битрейтом</translation>
     </message>
     <message>
-        <location line="-37"/>
+        <location line="-38"/>
         <source>H.263</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location line="-9"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>MPEG</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5666,7 +5736,7 @@ Do you want to replace it?</source>
         <translation type="unfinished">Искажение частоты</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished">_Мин. квантизатор:</translation>
     </message>
@@ -6520,6 +6590,11 @@ I will assume it has and try to continue</source>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
         <translation type="unfinished">Поменять U и V</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Show motion _vectors</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>

@@ -2147,7 +2147,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
         <source>Something bad happened</source>
         <translation>C&apos;è stato qualche errore</translation>
     </message>
@@ -3200,8 +3200,8 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished">1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
-        <location line="+30"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
+        <location line="+32"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -3253,7 +3253,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4804,7 +4804,7 @@ Vuoi caricarlo?
         <translation type="unfinished">Prima il semiquadro inferiore</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+10"/>
         <source>Threading</source>
         <translation type="unfinished">Threading</translation>
     </message>
@@ -4824,7 +4824,7 @@ Vuoi caricarlo?
         <translation type="unfinished">Controllo bitrate</translation>
     </message>
     <message>
-        <location line="-85"/>
+        <location line="-86"/>
         <source>Normal (4:3)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4884,7 +4884,7 @@ Vuoi caricarlo?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+15"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4982,7 +4982,7 @@ Vuoi caricarlo?
 <context>
     <name>ffmpeg4</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+196"/>
         <source>H.263</source>
         <translation type="unfinished">H.263</translation>
     </message>
@@ -4992,17 +4992,17 @@ Vuoi caricarlo?
         <translation type="unfinished">MPEG</translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+23"/>
         <source>Threading</source>
         <translation type="unfinished">Threading</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+25"/>
         <source>User Interface</source>
         <translation type="unfinished">Interfaccia utente</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+10"/>
         <source>Motion Estimation</source>
         <translation type="unfinished">Stima movimento</translation>
     </message>
@@ -5012,12 +5012,42 @@ Vuoi caricarlo?
         <translation type="unfinished">Controllo bitrate</translation>
     </message>
     <message>
-        <location line="-58"/>
+        <location line="-63"/>
         <source>MB comparison</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location line="-14"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
         <source>Fewest bits (vhq)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5048,6 +5078,11 @@ Vuoi caricarlo?
     </message>
     <message>
         <location line="+10"/>
+        <source>Matrices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5077,7 +5112,12 @@ Vuoi caricarlo?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
+        <source>_GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>_Number of B frames:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5117,7 +5157,7 @@ Vuoi caricarlo?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+11"/>
         <source>Quantization</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5599,7 +5639,7 @@ Vuoi sostituirlo?</translation>
 <context>
     <name>flv1</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+171"/>
         <source>H.263</source>
         <translation type="unfinished">H.263</translation>
     </message>
@@ -5609,7 +5649,7 @@ Vuoi sostituirlo?</translation>
         <translation type="unfinished">MPEG</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="+27"/>
         <source>User Interface</source>
         <translation type="unfinished">Interfaccia utente</translation>
     </message>
@@ -5619,12 +5659,42 @@ Vuoi sostituirlo?</translation>
         <translation type="unfinished">Controllo bitrate</translation>
     </message>
     <message>
-        <location line="-32"/>
+        <location line="-33"/>
         <source>MB comparison</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location line="-14"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location line="+1"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
         <source>Fewest bits (vhq)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5634,7 +5704,7 @@ Vuoi sostituirlo?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6487,6 +6557,11 @@ I will assume it has and try to continue</source>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
         <translation type="unfinished">_Inverti U e V</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Show motion _vectors</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>
