@@ -6533,7 +6533,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>_Disable reservoir:</source>
+        <source>_Disable reservoir</source>
         <translation>_Deaktivér reservoir:</translation>
     </message>
     <message>

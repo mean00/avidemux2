@@ -6491,37 +6491,37 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="+310"/>
         <source>CBR</source>
-        <translation type="unfinished">konstante Bitrate</translation>
+        <translation>Konstante Bitrate</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>ABR</source>
-        <translation type="unfinished">durchschnittl. Bitrate</translation>
+        <translation>Durchschnittl. Bitrate</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Bit_rate mode:</source>
-        <translation type="unfinished">Datenratenmodus:</translation>
+        <translation type="unfinished">_Datenratenmodus:</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>_Bitrate:</source>
-        <translation type="unfinished">_Bitrate (kb/s):</translation>
+        <translation>_Bitrate (kb/s):</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_Quality:</source>
-        <translation type="unfinished">Qualität:</translation>
+        <translation>_Qualität:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>LAME Configuration</source>
-        <translation type="unfinished">LAME Konfiguration</translation>
+        <translation>Konfiguration von LAME</translation>
     </message>
     <message>
         <location line="-4"/>
-        <source>_Disable reservoir:</source>
-        <translation type="unfinished"></translation>
+        <source>_Disable reservoir</source>
+        <translation>_Verbleibenden Platz im Audioframe nicht für Daten des nächsten verwenden</translation>
     </message>
 </context>
 <context>

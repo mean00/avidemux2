@@ -6544,7 +6544,7 @@ Ja zakładam, że ma i spróbuję kontynuować</translation>
     </message>
     <message>
         <location line="-4"/>
-        <source>_Disable reservoir:</source>
+        <source>_Disable reservoir</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

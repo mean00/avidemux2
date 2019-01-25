@@ -6486,7 +6486,7 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+3"/>
-        <source>_Disable reservoir:</source>
+        <source>_Disable reservoir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

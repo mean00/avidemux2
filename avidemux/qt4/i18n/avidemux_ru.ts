@@ -6530,17 +6530,17 @@ I will assume it has and try to continue</source>
     <message>
         <location line="-30"/>
         <source>CBR</source>
-        <translation type="unfinished"></translation>
+        <translation>Постоянный битрейт (CBR)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>ABR</source>
-        <translation type="unfinished"></translation>
+        <translation>Усреднённый битрейт (ABR)</translation>
     </message>
     <message>
         <location line="+25"/>
-        <source>_Disable reservoir:</source>
-        <translation type="unfinished">_Отключить источник:</translation>
+        <source>_Disable reservoir</source>
+        <translation>_Отключить использование свободного места в аудиокадре для данных следующего</translation>
     </message>
 </context>
 <context>

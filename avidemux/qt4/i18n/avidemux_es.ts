@@ -6546,7 +6546,7 @@ Se asume que tiene y se intenta continuar.</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>_Disable reservoir:</source>
+        <source>_Disable reservoir</source>
         <translation>Desac_tivar el reservorio:</translation>
     </message>
     <message>

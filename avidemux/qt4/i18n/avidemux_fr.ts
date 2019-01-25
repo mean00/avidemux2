@@ -6502,7 +6502,7 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+5"/>
-        <source>_Disable reservoir:</source>
+        <source>_Disable reservoir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
