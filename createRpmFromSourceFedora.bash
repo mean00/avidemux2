@@ -87,12 +87,10 @@ get_su_command()
 #
 install_deps()
 {
-    required_packages=($PKGLIST)
-    rpmfusion_stuff=($OPTIONAL_PACKAGES)
-    check_deps ${required_packages[@]}
+    check_deps ${PKGLIST}
     missing_required=(${missing_pkgs[*]})
     missing_pkgs=()
-    check_deps ${rpmfusion_stuff[@]}
+    check_deps ${OPTIONAL_PACKAGES}
     missing_extras=(${missing_pkgs[*]})
     missing_pkgs=()
     if [ ${#missing_required[@]} -gt 0 ]; then
@@ -189,8 +187,10 @@ install_deps
 echo "Building..."
 umask 0022
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
-bash bootStrap.bash ${rebuild} --rpm 2>&1 | tee ${logfile} \
- || fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
+bash bootStrap.bash ${rebuild} --rpm 2>&1 | tee ${logfile}
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+    fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
+fi
 #
 echo "Build completed, the RPMS are in the debs folder"
 #
