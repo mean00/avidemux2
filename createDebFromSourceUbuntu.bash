@@ -100,12 +100,19 @@ done
 install_deps
 #
 echo "Compiling avidemux, it will take 20 minutes or so"
-bash bootStrap.bash --deb --prefix=$install_prefix $rebuild 2>&1 | tee log-bootstrap-$(date +%F_%T).log \
- || { echo "Build failed. Cancelling installation." && exit 3; }
+logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
+bash bootStrap.bash --deb --prefix=$install_prefix $rebuild 2>&1 | tee ${logfile}
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+    echo "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
+    if [ $install_packages -eq 1 ]; then
+        echo "Cancelling installation."
+    fi
+    exit 3
+fi
 #
 if [ $install_packages -eq 1 ]; then
     install_avidemux
-    exit
+    exit $?
 fi
 #
 exit 0
