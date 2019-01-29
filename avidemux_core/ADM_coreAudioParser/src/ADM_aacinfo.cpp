@@ -138,6 +138,11 @@ bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info)
         }
     }
 
+    if(!channelConfiguration)
+    {
+        ADM_error("AOT Specific Config not handled!\n");
+        return false;
+    }
     info.frequency=fq;
     info.channels=aacChannels[channelConfiguration];
     info.sbr=sbrPresent;
