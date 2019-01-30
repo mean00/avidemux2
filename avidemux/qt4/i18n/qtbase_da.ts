@@ -643,7 +643,7 @@ Tryk på ESC for at annullere</translation>
     <name>QDnsLookupRunnable</name>
     <message>
         <source>IPv6 addresses for nameservers are currently not supported</source>
-        <translation>IPv6-adresser for navneservere understøttes ikke aktuelt</translation>
+        <translation>IPv6-adresser for navneservere understøttes ikke på nuværende tidspunkt</translation>
     </message>
     <message>
         <source>Invalid domain name</source>
@@ -770,8 +770,16 @@ Tryk på ESC for at annullere</translation>
         <translation>Advarsel:</translation>
     </message>
     <message>
+        <source>Critical Error:</source>
+        <translation>Kritisk fejl:</translation>
+    </message>
+    <message>
         <source>Fatal Error:</source>
         <translation>Fatal fejl:</translation>
+    </message>
+    <message>
+        <source>Information:</source>
+        <translation>Information:</translation>
     </message>
     <message>
         <source>&amp;Show this message again</source>
@@ -797,8 +805,8 @@ Tryk på ESC for at annullere</translation>
         <translation>Destinationsfilen findes</translation>
     </message>
     <message>
-        <source>Error while renaming.</source>
-        <translation>Fejl under omdøbning.</translation>
+        <source>Error while renaming: %1</source>
+        <translation>Fejl under omdøbning: %1</translation>
     </message>
     <message>
         <source>Unable to restore from %1: %2</source>
@@ -811,6 +819,10 @@ Tryk på ESC for at annullere</translation>
     <message>
         <source>Cannot remove source file</source>
         <translation>Kan ikke fjerne kildefilen</translation>
+    </message>
+    <message>
+        <source>Cannot open destination file: %1</source>
+        <translation>Kan ikke åbne destinationsfilen: %1</translation>
     </message>
     <message>
         <source>Cannot open %1 for input</source>
@@ -834,6 +846,10 @@ Tryk på ESC for at annullere</translation>
     <message>
         <source>No file engine available or engine does not support UnMapExtension</source>
         <translation>Ingen tilgængelig fil-motor eller motor understøtter ikke UnMapExtension</translation>
+    </message>
+    <message>
+        <source>No file engine available</source>
+        <translation>Ingen tilgængelig fil-motor</translation>
     </message>
 </context>
 <context>
@@ -1079,31 +1095,11 @@ Vil du slette den alligevel?</translation>
 <context>
     <name>QFileSystemModel</name>
     <message>
-        <source>%1 TB</source>
-        <translation>%1 TB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 bytes</source>
-        <translation>%1 byte</translation>
-    </message>
-    <message>
         <source>Invalid filename</source>
         <translation>Ugyldigt filnavn</translation>
     </message>
     <message>
-        <source>&lt;b&gt;The name &quot;%1&quot; can not be used.&lt;/b&gt;&lt;p&gt;Try using another name, with fewer characters or no punctuations marks.</source>
+        <source>&lt;b&gt;The name &quot;%1&quot; cannot be used.&lt;/b&gt;&lt;p&gt;Try using another name, with fewer characters or no punctuation marks.</source>
         <translation>&lt;b&gt;Navnet &quot;%1&quot; kan ikke bruges.&lt;/b&gt;&lt;p&gt;Prøv et andet navn, med færre tegn eller ingen tegnsætningstegn.</translation>
     </message>
     <message>
@@ -1135,10 +1131,6 @@ Vil du slette den alligevel?</translation>
     <message>
         <source>Computer</source>
         <translation>Computer</translation>
-    </message>
-    <message>
-        <source>%1 byte(s)</source>
-        <translation>%1 byte</translation>
     </message>
 </context>
 <context>
@@ -1360,7 +1352,7 @@ Vil du slette den alligevel?</translation>
     </message>
     <message>
         <source>Stri&amp;keout</source>
-        <translation>&amp;Overstreget</translation>
+        <translation>&amp;Gennemstreget</translation>
     </message>
     <message>
         <source>&amp;Underline</source>
@@ -1525,10 +1517,6 @@ Vil du slette den alligevel?</translation>
         <translation>Værten blev ikke fundet</translation>
     </message>
     <message>
-        <source>Unknown error</source>
-        <translation>Ukendt fejl</translation>
-    </message>
-    <message>
         <source>Unknown error (%1)</source>
         <translation>Ukendt fejl (%1)</translation>
     </message>
@@ -1561,7 +1549,7 @@ Vil du slette den alligevel?</translation>
     </message>
     <message>
         <source>Unknown protocol specified</source>
-        <translation>Ukendt protokol specificeret</translation>
+        <translation>Ukendt protokol angivet</translation>
     </message>
     <message>
         <source>SSL handshake failed</source>
@@ -1766,12 +1754,20 @@ Vil du slette den alligevel?</translation>
         <translation>Enheden er ikke sat</translation>
     </message>
     <message>
+        <source>Cannot open device for writing: %1</source>
+        <translation>Kan ikke åbne enhed til skrivning: %1</translation>
+    </message>
+    <message>
         <source>Device not writable</source>
         <translation>Der kan ikke skrives til enheden</translation>
     </message>
     <message>
         <source>Unsupported image format</source>
         <translation>Billedformatet understøttes ikke</translation>
+    </message>
+    <message>
+        <source>Image is empty</source>
+        <translation>Billedet er tomt</translation>
     </message>
 </context>
 <context>
@@ -1809,7 +1805,7 @@ Vil du slette den alligevel?</translation>
     </message>
     <message>
         <source>invalid termination by number</source>
-        <translation>ugyldig terminering af tal</translation>
+        <translation>ugyldig terminering af nummer</translation>
     </message>
     <message>
         <source>illegal number</source>
@@ -1833,7 +1829,7 @@ Vil du slette den alligevel?</translation>
     </message>
     <message>
         <source>too deeply nested document</source>
-        <translation>for dybt indlejret dokument</translation>
+        <translation>dokument er indlejret for dybt</translation>
     </message>
     <message>
         <source>too large document</source>
@@ -1869,6 +1865,57 @@ Vil du slette den alligevel?</translation>
     <message>
         <source>&apos;%1&apos; is an invalid ELF object (%2)</source>
         <translation>&apos;%1&apos; er et ugyldigt ELF-objekt (%2)</translation>
+    </message>
+    <message>
+        <source>odd cpu architecture</source>
+        <translation>besynderlig cpu-arkitektur</translation>
+    </message>
+    <message>
+        <source>wrong cpu architecture</source>
+        <translation>forkert cpu-arkitektur</translation>
+    </message>
+    <message>
+        <source>odd endianness</source>
+        <translation>besynderlig byterækkefølge</translation>
+    </message>
+    <message>
+        <source>unexpected e_shsize</source>
+        <translation>uventet e_shsize</translation>
+    </message>
+    <message>
+        <source>unexpected e_shentsize</source>
+        <translation>uventet e_shentsize</translation>
+    </message>
+    <message numerus="yes">
+        <source>announced %n section(s), each %1 byte(s), exceed file size</source>
+        <translation>
+            <numerusform>annocerede %n sektion, på hver %1 byte(s), overskredet filstørrelse</numerusform>
+            <numerusform>annocerede %n sektioner, på hver %1 byte(s), overskredet filstørrelse</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>shstrtab section header seems to be at %1</source>
+        <translation>shstrtab-sektionshoved ser ud til at være ved %1</translation>
+    </message>
+    <message>
+        <source>string table seems to be at %1</source>
+        <translation>strengtabel ser ud til at være ved %1</translation>
+    </message>
+    <message>
+        <source>section name %1 of %2 behind end of file</source>
+        <translation>sektionsnavn %1 af %2 efter filens slutning</translation>
+    </message>
+    <message>
+        <source>empty .rodata. not a library.</source>
+        <translation>tom .rodata. ikke et bibliotek.</translation>
+    </message>
+    <message>
+        <source>missing section data. This is not a library.</source>
+        <translation>manglende sektionsdata. Dette er ikke et bibliotek.</translation>
+    </message>
+    <message>
+        <source>Out of memory while loading plugin &apos;%1&apos;.</source>
+        <translation>Løb tør for hukommelse under indlæsning af pluginet &apos;%1&apos;.</translation>
     </message>
     <message>
         <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
@@ -2220,7 +2267,7 @@ Vil du slette den alligevel?</translation>
     </message>
     <message>
         <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Qt er et C++-værktøjskit til programudvikling på tværs af platforme.&lt;/p&gt;&lt;p&gt;Qt giver enkelt-kilde portability på tværs af alle større skrivebordsstyresystemer. Det er også tilgængeligt til Embedded Linux og andre indlejrede og mobile styresystemer.&lt;/p&gt;&lt;p&gt;Qt er tilgængelig under tre forskellige licenseringsmuligheder, designet til at rumme behovene af vores forskellige brugere.&lt;/p&gt;&lt;p&gt;Qt licenseret under vores kommercielle licensaftale er passende til udvikling af proprietær/kommerciel software, hvor du ikke vil dele kildekode med tredjeparter eller på anden måde ikke kan efterleve vilkårene i GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licenseret under GNU LGPL version 3 er passende til udvikling af Qt-programmer, på forudsætning af at du kan efterleve vilkårene og betingelserne i GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Se venligst &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for en oversigt af Qt-licensering.&lt;/p&gt;&lt;p&gt;Ophavsret (C) %1 Qt Company Ltd og andre bidragydere.&lt;/p&gt;&lt;p&gt;Qt og Qt-logoet er varemærker af Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt er Qt Company Ltd-produktet, udviklet som et open source projekt. Se &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for mere information.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Qt er et C++-værktøjskit til programudvikling på tværs af platforme.&lt;/p&gt;&lt;p&gt;Qt giver enkelt-kilde portability på tværs af alle større skrivebordsstyresystemer. Det er også tilgængeligt til Embedded Linux og andre indlejrede og mobile styresystemer.&lt;/p&gt;&lt;p&gt;Qt er tilgængelig under tre forskellige licenseringsmuligheder, designet til at rumme behovene af vores forskellige brugere.&lt;/p&gt;&lt;p&gt;Qt licenseret under vores kommercielle licensaftale er passende til udvikling af proprietær/kommerciel software, hvor du ikke vil dele kildekode med tredjeparter eller på anden måde ikke kan efterleve vilkårene i GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licenseret under GNU LGPL version 3 er passende til udvikling af Qt-programmer, på forudsætning af at du kan efterleve vilkårene og betingelserne i GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Se venligst &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for en oversigt af Qt-licensering.&lt;/p&gt;&lt;p&gt;Ophavsret (C) %1 Qt Company Ltd og andre bidragydere.&lt;/p&gt;&lt;p&gt;Qt og Qt-logoet er varemærker tilhørende Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt er Qt Company Ltd-produktet, udviklet som et open source projekt. Se &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for mere information.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>About Qt</source>
@@ -2496,7 +2543,7 @@ Vil du slette den alligevel?</translation>
     </message>
     <message>
         <source>The specified configuration cannot be used.</source>
-        <translation>Den specificerede konfiguration kan ikke bruges.</translation>
+        <translation>Den angivne konfiguration kan ikke bruges.</translation>
     </message>
     <message>
         <source>Roaming was aborted or is not possible.</source>
@@ -2629,6 +2676,17 @@ Vil du slette den alligevel?</translation>
     </message>
 </context>
 <context>
+    <name>QPPDOptionsModel</name>
+    <message>
+        <source>Name</source>
+        <translation>Navn</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Værdi</translation>
+    </message>
+</context>
+<context>
     <name>QPSQLDriver</name>
     <message>
         <source>Unable to connect</source>
@@ -2658,8 +2716,20 @@ Vil du slette den alligevel?</translation>
 <context>
     <name>QPSQLResult</name>
     <message>
+        <source>Query results lost - probably discarded on executing another SQL query.</source>
+        <translation>Forespørgselsresultater tabt - formodentligt forkastet ved eksekvering af en anden SQL-forespørgsel.</translation>
+    </message>
+    <message>
         <source>Unable to create query</source>
         <translation>Kunne ikke oprette forespørgsel</translation>
+    </message>
+    <message>
+        <source>Unable to get result</source>
+        <translation>Kunne ikke hente resultat</translation>
+    </message>
+    <message>
+        <source>Unable to send query</source>
+        <translation>Kunne ikke sende forespørgsel</translation>
     </message>
     <message>
         <source>Unable to prepare statement</source>
@@ -3454,6 +3524,14 @@ Vil du slette den alligevel?</translation>
         <translation>&amp;Valgmuligheder &lt;&lt;</translation>
     </message>
     <message>
+        <source>Invalid Pages Definition</source>
+        <translation>Ugyldig sider-definition</translation>
+    </message>
+    <message>
+        <source>%1 does not follow the correct syntax. Please use &apos;,&apos; to separate ranges and pages, &apos;-&apos; to define ranges and make sure ranges do not intersect with each other.</source>
+        <translation>%1 følger ikke den korrekte syntaks. Brug venligst &apos;,&apos; til at separere områder og sider, &apos;-&apos; til at angive områder og sørge for at områder ikke krydser hinanden.</translation>
+    </message>
+    <message>
         <source>Print to File (PDF)</source>
         <translation>Udskriv til fil (PDF)</translation>
     </message>
@@ -3595,6 +3673,14 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <source>Job Options</source>
         <translation>Job-valgmuligheder</translation>
     </message>
+    <message>
+        <source>Advanced Option Conflicts</source>
+        <translation>Konflikter i avancerede valgmuligheder</translation>
+    </message>
+    <message>
+        <source>There are conflicts in some advanced options. Do you want to fix them?</source>
+        <translation>Der er konflikter i nogle avancerede valgmuligheder. Vil du rette dem?</translation>
+    </message>
 </context>
 <context>
     <name>QPrintPropertiesWidget</name>
@@ -3605,6 +3691,14 @@ Slå venligst en at disse valgmuligheder fra.</translation>
     <message>
         <source>Page</source>
         <translation>Side</translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation>Avanceret</translation>
+    </message>
+    <message>
+        <source>There are conflicts in some options. Please fix them.</source>
+        <translation>Der er konflikter i nogle valgmuligheder. Ret dem venligst.</translation>
     </message>
 </context>
 <context>
@@ -3635,7 +3729,7 @@ Slå venligst en at disse valgmuligheder fra.</translation>
     </message>
     <message>
         <source>Current Page</source>
-        <translation>Aktuelle side</translation>
+        <translation>Nuværende side</translation>
     </message>
     <message>
         <source>Selection</source>
@@ -3692,6 +3786,14 @@ Slå venligst en at disse valgmuligheder fra.</translation>
     <message>
         <source>Short side</source>
         <translation>Kort side</translation>
+    </message>
+    <message>
+        <source>Pages</source>
+        <translation>Sider</translation>
+    </message>
+    <message>
+        <source>Specify pages or ranges separated by commas. Ranges are specified by two numbers separated by a hyphen. E.g: 3,5-7,9 prints pages 3, 5, 6, 7 and 9.</source>
+        <translation>Angiv sider eller områder separeret med kommaer. Områder angives med to tal separeret med en bindestreg. F.eks.: 3,5-7,9 udskriver siderne 3, 5, 6, 7 og 9.</translation>
     </message>
 </context>
 <context>
@@ -3850,7 +3952,7 @@ Slå venligst en at disse valgmuligheder fra.</translation>
     </message>
     <message>
         <source>unrecognized character follows \</source>
-        <translation>ikke genkendt tegn efterfølger \</translation>
+        <translation>ikke-genkendt tegn efterfølger \</translation>
     </message>
     <message>
         <source>numbers out of order in {} quantifier</source>
@@ -3873,10 +3975,6 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <translation>område udenfor rækkefølge i tegnklasse</translation>
     </message>
     <message>
-        <source>nothing to repeat</source>
-        <translation>intet at gentage</translation>
-    </message>
-    <message>
         <source>internal error: unexpected repeat</source>
         <translation>intern fejl: uventet gentag</translation>
     </message>
@@ -3889,44 +3987,16 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <translation>POSIX-navngivne klasser understøttes kun inden i en klasse</translation>
     </message>
     <message>
-        <source>missing )</source>
-        <translation>mangler )</translation>
-    </message>
-    <message>
         <source>reference to non-existent subpattern</source>
         <translation>reference til ikke-eksisterende undermønster</translation>
-    </message>
-    <message>
-        <source>erroffset passed as NULL</source>
-        <translation>erroffset givet som NULL</translation>
-    </message>
-    <message>
-        <source>unknown option bit(s) set</source>
-        <translation>ukendt valgmulighed bit sat</translation>
-    </message>
-    <message>
-        <source>missing ) after comment</source>
-        <translation>manglende ) efter kommentar</translation>
     </message>
     <message>
         <source>regular expression is too large</source>
         <translation>regulært udtryk er for stort</translation>
     </message>
     <message>
-        <source>failed to get memory</source>
-        <translation>kunne ikke få hukommelse</translation>
-    </message>
-    <message>
-        <source>unmatched parentheses</source>
-        <translation>umatchede parenteser</translation>
-    </message>
-    <message>
         <source>internal error: code overflow</source>
         <translation>intern fejl: kodeoverløb</translation>
-    </message>
-    <message>
-        <source>unrecognized character after (?&lt;</source>
-        <translation>ikke genkendt tegn efter (?&lt;</translation>
     </message>
     <message>
         <source>lookbehind assertion is not fixed length</source>
@@ -3941,10 +4011,6 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <translation>betinget gruppe indeholder mere end to grene</translation>
     </message>
     <message>
-        <source>assertion expected after (?(</source>
-        <translation>påstand ventet efter (?(</translation>
-    </message>
-    <message>
         <source>(?R or (?[+-]digits must be followed by )</source>
         <translation>(?R eller (?[+-]cifre skal efterfølges af )</translation>
     </message>
@@ -3957,36 +4023,12 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <translation>POSIX-arrangerende elementer understøttes ikke</translation>
     </message>
     <message>
-        <source>this version of PCRE is not compiled with PCRE_UTF8 support</source>
-        <translation>denne version af PCRE er ikke kompileret med PCRE_UTF8-understøttelse</translation>
-    </message>
-    <message>
-        <source>character value in \x{...} sequence is too large</source>
-        <translation>tegnværdi i \x{...}-sekvens er for stor</translation>
-    </message>
-    <message>
         <source>invalid condition (?(0)</source>
         <translation>ugyldig betingelse (?(0)</translation>
     </message>
     <message>
-        <source>\C not allowed in lookbehind assertion</source>
-        <translation>\C ikke tillad i lookbehind-påstand</translation>
-    </message>
-    <message>
         <source>PCRE does not support \L, \l, \N{name}, \U, or \u</source>
         <translation>PCRE understøtter ikke \L, \l, \N{navn}, \U eller \u</translation>
-    </message>
-    <message>
-        <source>number after (?C is &gt; 255</source>
-        <translation>nummer efter (?C er &gt; 255</translation>
-    </message>
-    <message>
-        <source>closing ) for (?C expected</source>
-        <translation>lukkende ) til (?C ventet</translation>
-    </message>
-    <message>
-        <source>recursive call could loop indefinitely</source>
-        <translation>rekursive kald kan danne uendelig løkke</translation>
     </message>
     <message>
         <source>unrecognized character after (?P</source>
@@ -3997,36 +4039,12 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <translation>syntaksfejl i undermønsternavn (manglende terminator)</translation>
     </message>
     <message>
-        <source>two named subpatterns have the same name</source>
-        <translation>to navngivne undermønstre har det samme navn</translation>
-    </message>
-    <message>
-        <source>invalid UTF-8 string</source>
-        <translation>ugyldig UTF-8-streng</translation>
-    </message>
-    <message>
-        <source>support for \P, \p, and \X has not been compiled</source>
-        <translation>understøttelse af \P, \p og \X er ikke blevet kompileret</translation>
-    </message>
-    <message>
         <source>malformed \P or \p sequence</source>
         <translation>forkert udformet \P- eller \p-sekvens</translation>
     </message>
     <message>
         <source>unknown property name after \P or \p</source>
         <translation>ukendt egenskabsnavn efter \P eller \p</translation>
-    </message>
-    <message>
-        <source>subpattern name is too long (maximum 32 characters)</source>
-        <translation>undermønsternavn er for langt (maksimum 32 tegn)</translation>
-    </message>
-    <message>
-        <source>too many named subpatterns (maximum 10000)</source>
-        <translation>for mange navngivne undermønstre (maksimum 10000)</translation>
-    </message>
-    <message>
-        <source>octal value is greater than \377 (not in UTF-8 mode)</source>
-        <translation>oktal-værdi er større end \377 (ikke i UTF-8-tilstand)</translation>
     </message>
     <message>
         <source>internal error: overran compiling workspace</source>
@@ -4041,14 +4059,6 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <translation>DEFINE-gruppe indeholder mere end én gren</translation>
     </message>
     <message>
-        <source>repeating a DEFINE group is not allowed</source>
-        <translation>gentagelse a en DEFINE-gruppe er ikke tilladt</translation>
-    </message>
-    <message>
-        <source>inconsistent NEWLINE options</source>
-        <translation>inkonsistente NEWLINE-valgmuligheder</translation>
-    </message>
-    <message>
         <source>\g is not followed by a braced, angle-bracketed, or quoted name/number or by a plain number</source>
         <translation>\g efterfølges ikke af et navn/nummer i klammer, vinkelklammer, citationstegn eller af et almindeligt nummer</translation>
     </message>
@@ -4059,10 +4069,6 @@ Slå venligst en at disse valgmuligheder fra.</translation>
     <message>
         <source>an argument is not allowed for (*ACCEPT), (*FAIL), or (*COMMIT)</source>
         <translation>et argument er ikke tilladt for (*ACCEPT), (*FAIL) eller (*COMMIT)</translation>
-    </message>
-    <message>
-        <source>(*VERB) not recognized</source>
-        <translation>(*VERB) ikke genkendt</translation>
     </message>
     <message>
         <source>number is too big</source>
@@ -4077,24 +4083,12 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <translation>ciffer ventet efter (?+</translation>
     </message>
     <message>
-        <source>] is an invalid data character in JavaScript compatibility mode</source>
-        <translation>] er et ugyldigt datategn i JavaScript-kompatibilitetstilstand</translation>
-    </message>
-    <message>
         <source>different names for subpatterns of the same number are not allowed</source>
         <translation>forskellige navne til undermønstre af det samme nummer er ikke tilladt</translation>
     </message>
     <message>
         <source>(*MARK) must have an argument</source>
         <translation>(*MARK) skal have et argument</translation>
-    </message>
-    <message>
-        <source>this version of PCRE is not compiled with PCRE_UCP support</source>
-        <translation>denne version af PCRE er ikke kompileret med PCRE_UCP-understøttelse</translation>
-    </message>
-    <message>
-        <source>\c must be followed by an ASCII character</source>
-        <translation>\c skal være efterfulgt af et ASCII-tegn</translation>
     </message>
     <message>
         <source>\k is not followed by a braced, angle-bracketed, or quoted name</source>
@@ -4109,32 +4103,12 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <translation>\N understøttes ikke i en klasse</translation>
     </message>
     <message>
-        <source>too many forward references</source>
-        <translation>for mange fremad-referencer</translation>
-    </message>
-    <message>
         <source>disallowed Unicode code point (&gt;= 0xd800 &amp;&amp; &lt;= 0xdfff)</source>
         <translation>ikke tilladt unicode-kodepunkt (&gt;= 0xd800 &amp;&amp; &lt;= 0xdfff)</translation>
     </message>
     <message>
-        <source>invalid UTF-16 string</source>
-        <translation>ugyldig UTF-16-streng</translation>
-    </message>
-    <message>
         <source>name is too long in (*MARK), (*PRUNE), (*SKIP), or (*THEN)</source>
         <translation>navn er for langt i (*MARK), (*PRUNE), (*SKIP) eller (*THEN)</translation>
-    </message>
-    <message>
-        <source>character value in \u.... sequence is too large</source>
-        <translation>tegnværdi i \u...-sekvens er for stor</translation>
-    </message>
-    <message>
-        <source>invalid UTF-32 string</source>
-        <translation>ugyldig UTF-32-streng</translation>
-    </message>
-    <message>
-        <source>setting UTF is disabled by the application</source>
-        <translation>sættelse af UTF er deaktiveret af programmet</translation>
     </message>
     <message>
         <source>non-hex character in \x{} (closing brace missing?)</source>
@@ -4150,7 +4124,7 @@ Slå venligst en at disse valgmuligheder fra.</translation>
     </message>
     <message>
         <source>parentheses are too deeply nested</source>
-        <translation>parenteser er for dybt indlejret</translation>
+        <translation>parenteser er indlejret for dybt</translation>
     </message>
     <message>
         <source>invalid range in character class</source>
@@ -4161,12 +4135,412 @@ Slå venligst en at disse valgmuligheder fra.</translation>
         <translation>gruppenavn skal begynde med et ikke-ciffer</translation>
     </message>
     <message>
+        <source>quantifier does not follow a repeatable item</source>
+        <translation>kvantor følger ikke punktum der kan gentages</translation>
+    </message>
+    <message>
+        <source>missing closing parenthesis</source>
+        <translation>manglende lukkende parenteser</translation>
+    </message>
+    <message>
+        <source>pattern passed as NULL</source>
+        <translation>mønster givet som NULL</translation>
+    </message>
+    <message>
+        <source>unrecognised compile-time option bit(s)</source>
+        <translation>Ikke-genkendt kompileringstid-valgmulighedsbit</translation>
+    </message>
+    <message>
+        <source>missing ) after (?# comment</source>
+        <translation>manglende ) efter (?#-kommentar</translation>
+    </message>
+    <message>
+        <source>failed to allocate heap memory</source>
+        <translation>kunne ikke allokere heap-hukommelse</translation>
+    </message>
+    <message>
+        <source>unmatched closing parenthesis</source>
+        <translation>umatchede lukkende parenteser</translation>
+    </message>
+    <message>
+        <source>letter or underscore expected after (?&lt; or (?&apos;</source>
+        <translation>bogstav eller understregning ventet efter (?&lt; eller (?&apos;</translation>
+    </message>
+    <message>
+        <source>assertion expected after (?( or (?(?C)</source>
+        <translation>påstand ventet efter (?( eller (?(?C)</translation>
+    </message>
+    <message>
+        <source>internal error in pcre2_study(): should not occur</source>
+        <translation>intern fejl i pcre2_study(): burde ikke ske</translation>
+    </message>
+    <message>
+        <source>this version of PCRE2 does not have Unicode support</source>
+        <translation>denne version af PCRE2 har ikke Unicode-understøttelse</translation>
+    </message>
+    <message>
         <source>parentheses are too deeply nested (stack check)</source>
-        <translation>parenteser er for dybt indlejret (staktjek)</translation>
+        <translation>parenteser er indlejret for dybt (staktjek)</translation>
+    </message>
+    <message>
+        <source>character code point value in \x{} or \o{} is too large</source>
+        <translation>tegn-kodepunktsværdi i \x{} eller \o{} er for stor</translation>
+    </message>
+    <message>
+        <source>\C is not allowed in a lookbehind assertion</source>
+        <translation>\C er ikke tilladt i en lookbehind-påstand</translation>
+    </message>
+    <message>
+        <source>number after (?C is greater than 255</source>
+        <translation>nummer efter (?C er større end 255</translation>
+    </message>
+    <message>
+        <source>closing parenthesis for (?C expected</source>
+        <translation>lukkende parentes for (?C ventet</translation>
+    </message>
+    <message>
+        <source>invalid escape sequence in (*VERB) name</source>
+        <translation>ugyldig undvigesekvens i (*VERB)-navn</translation>
+    </message>
+    <message>
+        <source>two named subpatterns have the same name (PCRE2_DUPNAMES not set)</source>
+        <translation>to navngivne undermønstre har det samme navn (PCRE2_DUPNAMES ikke sat)</translation>
+    </message>
+    <message>
+        <source>this version of PCRE2 does not have support for \P, \p, or \X</source>
+        <translation>denne version af PCRE2 har ikke understøttelse af \P, \p eller \X</translation>
+    </message>
+    <message>
+        <source>subpattern name is too long (maximum 10000 characters)</source>
+        <translation>undermønsternavn er for langt (maksimum 10000 tegn)</translation>
+    </message>
+    <message>
+        <source>too many named subpatterns (maximum 256)</source>
+        <translation>for mange navngivne undermønstre (maksimum 256)</translation>
+    </message>
+    <message>
+        <source>octal value is greater than \377 in 8-bit non-UTF-8 mode</source>
+        <translation>oktal-værdi er større end \377 i 8-bit ikke-UTF-8-tilstand</translation>
+    </message>
+    <message>
+        <source>internal error: unknown newline setting</source>
+        <translation>intern fejl: ukendt newline-indstilling</translation>
+    </message>
+    <message>
+        <source>(*VERB) not recognized or malformed</source>
+        <translation>(*VERB) ikke genkendt eller forkert udformet</translation>
+    </message>
+    <message>
+        <source>\c must be followed by a printable ASCII character</source>
+        <translation>\c skal efterfølges af et udskrivningsbart ASCII-tegn</translation>
+    </message>
+    <message>
+        <source>\c must be followed by a letter or one of [\]^_?</source>
+        <translation>\c skal efterfølges af et bogstav eller en af [\]^_?</translation>
+    </message>
+    <message>
+        <source>SPARE ERROR</source>
+        <translation>SPARE-FEJL</translation>
+    </message>
+    <message>
+        <source>using UTF is disabled by the application</source>
+        <translation>brug af UTF er deaktiveret af programmet</translation>
+    </message>
+    <message>
+        <source>using UCP is disabled by the application</source>
+        <translation>brug af UCP er deaktiveret af programmet</translation>
+    </message>
+    <message>
+        <source>character code point value in \u.... sequence is too large</source>
+        <translation>tegn-kodepunktsværdi i \u....-sekvens er for lang</translation>
     </message>
     <message>
         <source>digits missing in \x{} or \o{}</source>
         <translation>cifre mangler i \x{} eller \o{}</translation>
+    </message>
+    <message>
+        <source>syntax error in (?(VERSION condition</source>
+        <translation>syntaksfejl i (?(VERSION-betingelse</translation>
+    </message>
+    <message>
+        <source>internal error: unknown opcode in auto_possessify()</source>
+        <translation>intern fejl: ukendt opcode i auto_possessify()</translation>
+    </message>
+    <message>
+        <source>missing terminating delimiter for callout with string argument</source>
+        <translation>manglende terminerende afgrænser for callout med streng-argument</translation>
+    </message>
+    <message>
+        <source>unrecognized string delimiter follows (?C</source>
+        <translation>ikke-genkendt strengafgrænser efterfølger (?C</translation>
+    </message>
+    <message>
+        <source>using \C is disabled by the application</source>
+        <translation>brug af \C er deaktiveret af programmet</translation>
+    </message>
+    <message>
+        <source>(?| and/or (?J: or (?x: parentheses are too deeply nested</source>
+        <translation>(?|- og/eller (?J:- eller (?x:-parenteser er indlejret for dybt</translation>
+    </message>
+    <message>
+        <source>using \C is disabled in this PCRE2 library</source>
+        <translation>brug af \C er deaktiveret i dette PCRE2-bibliotek</translation>
+    </message>
+    <message>
+        <source>regular expression is too complicated</source>
+        <translation>regulært udtryk er for komplikeret</translation>
+    </message>
+    <message>
+        <source>lookbehind assertion is too long</source>
+        <translation>lookbehind-påstand er for lang</translation>
+    </message>
+    <message>
+        <source>pattern string is longer than the limit set by the application</source>
+        <translation>mønsterstreng er længere end grænsen som er sat af programmet</translation>
+    </message>
+    <message>
+        <source>no match</source>
+        <translation>ingen match</translation>
+    </message>
+    <message>
+        <source>partial match</source>
+        <translation>delvist match</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 1 byte missing at end</source>
+        <translation>UTF-8-fejl: 1 byte mangler ved slutningen</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 2 bytes missing at end</source>
+        <translation>UTF-8-fejl: 2 bytes mangler ved slutningen</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 3 bytes missing at end</source>
+        <translation>UTF-8-fejl: 3 bytes mangler ved slutningen</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 4 bytes missing at end</source>
+        <translation>UTF-8-fejl: 4 bytes mangler ved slutningen</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 5 bytes missing at end</source>
+        <translation>UTF-8-fejl: 5 bytes mangler ved slutningen</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 2 top bits not 0x80</source>
+        <translation>UTF-8-fejl: byte 2 top-bit ikke 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 3 top bits not 0x80</source>
+        <translation>UTF-8-fejl: byte 3 top-bit ikke 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 4 top bits not 0x80</source>
+        <translation>UTF-8-fejl: byte 4 top-bit ikke 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 5 top bits not 0x80</source>
+        <translation>UTF-8-fejl: byte 5 top-bit ikke 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 6 top bits not 0x80</source>
+        <translation>UTF-8-fejl: byte 6 top-bit ikke 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 5-byte character is not allowed (RFC 3629)</source>
+        <translation>UTF-8-fejl: 5-byte-tegn er ikke tilladt (RFC 3629)</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 6-byte character is not allowed (RFC 3629)</source>
+        <translation>UTF-8-fejl: 6-byte-tegn er ikke tilladt (RFC 3629)</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: code points greater than 0x10ffff are not defined</source>
+        <translation>UTF-8-fejl: kodepunkter større end 0x10ffff er ikke defineret</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: code points 0xd800-0xdfff are not defined</source>
+        <translation>UTF-8-fejl: kodepunkter 0xd800-0xdfff er ikke defineret</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 2-byte sequence</source>
+        <translation>UTF-8-fejl: for lang 2-byte-sekvens</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 3-byte sequence</source>
+        <translation>UTF-8-fejl: for lang 3-byte-sekvens</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 4-byte sequence</source>
+        <translation>UTF-8-fejl: for lang 4-byte-sekvens</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 5-byte sequence</source>
+        <translation>UTF-8-fejl: for lang 5-byte-sekvens</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 6-byte sequence</source>
+        <translation>UTF-8-fejl: for lang 6-byte-sekvens</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: isolated byte with 0x80 bit set</source>
+        <translation>UTF-8-fejl: isoleret byte med 0x80 bit sat</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: illegal byte (0xfe or 0xff)</source>
+        <translation>UTF-8-fejl: ulovlig byte (0xfe eller 0xff)</translation>
+    </message>
+    <message>
+        <source>UTF-16 error: missing low surrogate at end</source>
+        <translation>UTF-16-fejl: manglende lav surrogat ved slutning</translation>
+    </message>
+    <message>
+        <source>UTF-16 error: invalid low surrogate</source>
+        <translation>UTF-16-fejl: ugyldig lav surrogat</translation>
+    </message>
+    <message>
+        <source>UTF-16 error: isolated low surrogate</source>
+        <translation>UTF-16-fejl: isoleret lav surrogat</translation>
+    </message>
+    <message>
+        <source>UTF-32 error: code points 0xd800-0xdfff are not defined</source>
+        <translation>UTF-32-fejl: kodepunkter 0xd800-0xdfff er ikke defineret</translation>
+    </message>
+    <message>
+        <source>UTF-32 error: code points greater than 0x10ffff are not defined</source>
+        <translation>UTF-32-fejl: kodepunkter større end 0x10ffff er ikke defineret</translation>
+    </message>
+    <message>
+        <source>bad data value</source>
+        <translation>dårlig dataværdi</translation>
+    </message>
+    <message>
+        <source>patterns do not all use the same character tables</source>
+        <translation>mønstre bruger ikke allesammen de samme tegntabeller</translation>
+    </message>
+    <message>
+        <source>magic number missing</source>
+        <translation>magisk nummer mangler</translation>
+    </message>
+    <message>
+        <source>pattern compiled in wrong mode: 8/16/32-bit error</source>
+        <translation>mønster kompileret i forkert tilstand: 8/16/32-bit-fejl</translation>
+    </message>
+    <message>
+        <source>bad offset value</source>
+        <translation>dårlig offset-værdi</translation>
+    </message>
+    <message>
+        <source>bad option value</source>
+        <translation>dårlig valgmulighed-værdi</translation>
+    </message>
+    <message>
+        <source>invalid replacement string</source>
+        <translation>ugyldig erstatningsstreng</translation>
+    </message>
+    <message>
+        <source>bad offset into UTF string</source>
+        <translation>dårlig offset ind i UTF-streng</translation>
+    </message>
+    <message>
+        <source>callout error code</source>
+        <translation>callout-fejlkode</translation>
+    </message>
+    <message>
+        <source>invalid data in workspace for DFA restart</source>
+        <translation>ugyldig data i arbejdsområde for DFA-genstart</translation>
+    </message>
+    <message>
+        <source>too much recursion for DFA matching</source>
+        <translation>for meget rekursion for DFA-matching</translation>
+    </message>
+    <message>
+        <source>backreference condition or recursion test is not supported for DFA matching</source>
+        <translation>tilbagereference-betingelse eller rekursionstest understøttes ikke for DFA-matching</translation>
+    </message>
+    <message>
+        <source>function is not supported for DFA matching</source>
+        <translation>funktion understøttes ikke for DFA-matching</translation>
+    </message>
+    <message>
+        <source>pattern contains an item that is not supported for DFA matching</source>
+        <translation>mønster indeholder et punkt som ikke understøttes for DFA-matching</translation>
+    </message>
+    <message>
+        <source>workspace size exceeded in DFA matching</source>
+        <translation>arbejdsområdestørrelse overskredet i DFA-matching</translation>
+    </message>
+    <message>
+        <source>internal error - pattern overwritten?</source>
+        <translation>intern fejl - mønster overskrevet?</translation>
+    </message>
+    <message>
+        <source>bad JIT option</source>
+        <translation>dårlig JIT-valgmulighed</translation>
+    </message>
+    <message>
+        <source>JIT stack limit reached</source>
+        <translation>JIT-stakgrænse nået</translation>
+    </message>
+    <message>
+        <source>match limit exceeded</source>
+        <translation>matchgrænse overskredet</translation>
+    </message>
+    <message>
+        <source>no more memory</source>
+        <translation>ikke mere hukommelse</translation>
+    </message>
+    <message>
+        <source>unknown substring</source>
+        <translation>ukendt understreng</translation>
+    </message>
+    <message>
+        <source>non-unique substring name</source>
+        <translation>ikke-unik understrengsnavn</translation>
+    </message>
+    <message>
+        <source>NULL argument passed</source>
+        <translation>NULL-argument givet</translation>
+    </message>
+    <message>
+        <source>nested recursion at the same subject position</source>
+        <translation>indlejret rekursion ved den samme subjektplacering</translation>
+    </message>
+    <message>
+        <source>recursion limit exceeded</source>
+        <translation>rekusionsgrænse overskredet</translation>
+    </message>
+    <message>
+        <source>requested value is not available</source>
+        <translation>anmodet værdi er ikke tilgængelig</translation>
+    </message>
+    <message>
+        <source>requested value is not set</source>
+        <translation>anmodet værdi er ikke sat</translation>
+    </message>
+    <message>
+        <source>offset limit set without PCRE2_USE_OFFSET_LIMIT</source>
+        <translation>offset-grænse sat uden PCRE2_USE_OFFSET_LIMIT</translation>
+    </message>
+    <message>
+        <source>bad escape sequence in replacement string</source>
+        <translation>dårlig undvigesekvens i erstatningsstreng</translation>
+    </message>
+    <message>
+        <source>expected closing curly bracket in replacement string</source>
+        <translation>ventede lukkende krøllet parentes i erstatningsstreng</translation>
+    </message>
+    <message>
+        <source>bad substitution in replacement string</source>
+        <translation>dårlig udskiftning i erstatningsstreng</translation>
+    </message>
+    <message>
+        <source>match with end before start is not supported</source>
+        <translation>match med slutning inden start understøttes ikke</translation>
+    </message>
+    <message>
+        <source>too many replacements (more than INT_MAX)</source>
+        <translation>for mange erstatninger (flere end INT_MAX)</translation>
     </message>
 </context>
 <context>
@@ -4262,6 +4636,10 @@ Slå venligst en at disse valgmuligheder fra.</translation>
     <message>
         <source>Filename refers to a directory</source>
         <translation>Filnavnet refererer til en mappe</translation>
+    </message>
+    <message>
+        <source>QSaveFile cannot open &apos;%1&apos; without direct write fallback enabled: path contains an Alternate Data Stream specifier</source>
+        <translation>QSaveFile kan ikke åbne &apos;%1&apos; uden direkte skrive-fallback er aktiveret: stien indeholder en alternativ datastrøm-angiver</translation>
     </message>
     <message>
         <source>Writing canceled by application</source>
@@ -5879,6 +6257,38 @@ Role of an accessible object</extracomment>
         <translation>Diffie-Hellman-parametre er ikke gyldige</translation>
     </message>
     <message>
+        <source>OpenSSL version with disabled elliptic curves</source>
+        <translation>OpenSSL-version med deaktiveret elliptiske kurver</translation>
+    </message>
+    <message>
+        <source>Error when setting the OpenSSL configuration (%1)</source>
+        <translation>Fejl under indstilling af OpenSSL-konfigurationen (%1)</translation>
+    </message>
+    <message>
+        <source>Expecting QByteArray for %1</source>
+        <translation>Forventer QByteArray for %1</translation>
+    </message>
+    <message>
+        <source>An error occurred attempting to set %1 to %2</source>
+        <translation>Der opstod en fejl under forsøg på at sætte %1 til %2</translation>
+    </message>
+    <message>
+        <source>Wrong value for %1 (%2)</source>
+        <translation>Forkert værdi til %1 (%2)</translation>
+    </message>
+    <message>
+        <source>Unrecognized command %1 = %2</source>
+        <translation>Ikke-genkendt kommando %1 = %2</translation>
+    </message>
+    <message>
+        <source>SSL_CONF_finish() failed</source>
+        <translation>SSL_CONF_finish() fejlede</translation>
+    </message>
+    <message>
+        <source>SSL_CONF_CTX_new() failed</source>
+        <translation>SSL_CONF_CTX_new() fejlede</translation>
+    </message>
+    <message>
         <source>OpenSSL version too old, need at least v1.0.2</source>
         <translation>OpenSSL-version for gammel, skal mindst være v1.0.2</translation>
     </message>
@@ -5956,11 +6366,11 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <source>The current candidate issuer certificate was rejected because its subject name did not match the issuer name of the current certificate</source>
-        <translation>Det aktuelle kandidat-udstedercertifikat blev afvist fordi dets subjektnavn ikke matchede udstedernavnet på det aktuelle certifikat</translation>
+        <translation>Det nuværende kandidat-udstedercertifikat blev afvist fordi dets subjektnavn ikke matchede udstedernavnet på det nuværende certifikat</translation>
     </message>
     <message>
         <source>The current candidate issuer certificate was rejected because its issuer name and serial number was present and did not match the authority key identifier of the current certificate</source>
-        <translation>Det aktuelle kandidat-udstedercertifikat blev afvist fordi dets udstedernavn og serienummer var tilstede og ikke matchede myndighedsnøgle-identifikatoren på det aktuelle certifikat</translation>
+        <translation>Det nuværende kandidat-udstedercertifikat blev afvist fordi dets udstedernavn og serienummer var tilstede og ikke matchede myndighedsnøgle-identifikatoren på det nuværende certifikat</translation>
     </message>
     <message>
         <source>The peer did not present any certificate</source>
@@ -6377,10 +6787,10 @@ Role of an accessible object</extracomment>
     <message>
         <source>Qt cannot load the direct2d platform plugin because the Direct2D version on this system is too old. The minimum system requirement for this platform plugin is Windows 7 SP1 with Platform Update.
 
-The minimum Direct2D version required is %1.%2.%3.%4. The Direct2D version on this system is %5.%6.%7.%8.</source>
+The minimum Direct2D version required is %1. The Direct2D version on this system is %2.</source>
         <translation>Qt kan ikke indlæse direct2d-platform-pluginet fordi Direct2D-versionen på dette system er for gammel. Minimum systemkrav for dette platform-plugin er Windows 7 SP1 med platformsopdatering.
 
-Direct2D-versionen skal minimum være %1.%2.%3.%4. Direct2D-versionen på dette system er %5.%6.%7.%8.</translation>
+Direct2D-versionen skal minimum være %1. Direct2D-versionen på dette system er %2.</translation>
     </message>
     <message>
         <source>Cannot load direct2d platform plugin</source>
@@ -6474,7 +6884,7 @@ Direct2D-versionen skal minimum være %1.%2.%3.%4. Direct2D-versionen på dette 
     </message>
     <message>
         <source>version expected while reading the XML declaration</source>
-        <translation>version forventet under læsning af XML-deklaration</translation>
+        <translation>version ventet under læsning af XML-deklarationen</translation>
     </message>
     <message>
         <source>wrong value for standalone declaration</source>
@@ -6482,11 +6892,11 @@ Direct2D-versionen skal minimum være %1.%2.%3.%4. Direct2D-versionen på dette 
     </message>
     <message>
         <source>encoding declaration or standalone declaration expected while reading the XML declaration</source>
-        <translation>kodningsdeklaration eller selvstændig deklaration ventet ved læsning af XML-deklaration</translation>
+        <translation>kodningsdeklaration eller selvstændig deklaration ventet ved læsning af XML-deklarationen</translation>
     </message>
     <message>
         <source>standalone declaration expected while reading the XML declaration</source>
-        <translation>selvstændig deklaration ventet ved læsning af XML-deklaration</translation>
+        <translation>selvstændig deklaration ventet ved læsning af XML-deklarationen</translation>
     </message>
     <message>
         <source>error occurred while parsing document type definition</source>
@@ -6604,16 +7014,36 @@ Direct2D-versionen skal minimum være %1.%2.%3.%4. Direct2D-versionen på dette 
         <translation>Ugyldigt dokument.</translation>
     </message>
     <message>
-        <source>Expected </source>
-        <translation>Forventede </translation>
+        <source>&apos;%1&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&apos;&lt;first option&gt;&apos;</extracomment>
+        <translation>&apos;%1&apos;</translation>
     </message>
     <message>
-        <source>, but got &apos;</source>
-        <translation>, men fik &apos;</translation>
+        <source>%1 or &apos;%2&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&lt;first option&gt;, &apos;&lt;second option&gt;&apos;</extracomment>
+        <translation>%1 eller &apos;%2&apos;</translation>
     </message>
     <message>
-        <source>Unexpected &apos;</source>
-        <translation>Uventet &apos;</translation>
+        <source>%1, &apos;%2&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&lt;options so far&gt;, &apos;&lt;next option&gt;&apos;</extracomment>
+        <translation>%1, &apos;%2&apos;</translation>
+    </message>
+    <message>
+        <source>%1, or &apos;%2&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&lt;options so far&gt;, or &apos;&lt;final option&gt;&apos;</extracomment>
+        <translation>%1 eller &apos;%2&apos;</translation>
+    </message>
+    <message>
+        <source>Expected %1, but got &apos;%2&apos;.</source>
+        <translation>Ventede %1, men fik &apos;%2&apos;.</translation>
+    </message>
+    <message>
+        <source>Unexpected &apos;%1&apos;.</source>
+        <translation>Uventet &apos;%1&apos;.</translation>
     </message>
     <message>
         <source>Expected character data.</source>
@@ -6625,7 +7055,7 @@ Direct2D-versionen skal minimum være %1.%2.%3.%4. Direct2D-versionen på dette 
     </message>
     <message>
         <source>Start tag expected.</source>
-        <translation>Start-tag forventet.</translation>
+        <translation>Start-tag ventet.</translation>
     </message>
     <message>
         <source>NDATA in parameter entity declaration.</source>

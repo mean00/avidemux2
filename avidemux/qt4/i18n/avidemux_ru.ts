@@ -16,41 +16,41 @@
     <message>
         <location line="+64"/>
         <source>width</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ширина</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>%sheight</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%sвысота</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> and </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> и </translation>
     </message>
     <message>
         <location line="+3"/>
         <source>%sdifferent between first and this video stream</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> у первого видеопотока %s от этого</translation>
     </message>
     <message>
         <location line="+1"/>
         <source> are </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">отличны</translation>
     </message>
     <message>
         <location line="+0"/>
         <source> is </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">отлична</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatenate them together</source>
-        <translation type="unfinished">Невозможно обьединить видео с различным разрешением. Использование частичного фильтра видео не исправит эту проблему. Выход следующий:
-1.) &quot;изменить размер&quot; / &quot;добавить рамки&quot; / &quot;обрезать&quot; потоки, приведя их к одному разрешению
-2.) склеить их вместе</translation>
+        <translation type="unfinished">Видеопотоки различного разрешения не объединяются. Использование частичного фильтра видео не исправит эту проблему. Выход следующий:
+1) &quot;изменить размер&quot; / &quot;добавить рамки&quot; / &quot;обрезать&quot; потоки, приведя их к одному разрешению
+2) склеить их вместе</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+59"/>
@@ -1574,7 +1574,7 @@ Go to Audio-&gt;MainTrack to select the active one.</source>
     <message>
         <location line="+106"/>
         <source>Something failed when appending</source>
-        <translation type="unfinished">Ошибка при открытии файла для записи</translation>
+        <translation type="unfinished">Ошибка при добавлении видео</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -5038,17 +5038,17 @@ Do you want to load it  ?
     <message>
         <location line="+4"/>
         <source>MB comparison</source>
-        <translation type="unfinished">Сравнение Мб</translation>
+        <translation>Сравнение макроблоков</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished">Несколько битов (vhq)</translation>
+        <translation>Минимум битов (vhq)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rate distortion</source>
-        <translation type="unfinished">Искажение темпа</translation>
+        <translation>Минимум искажений</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -5653,17 +5653,17 @@ Do you want to replace it?</source>
     <message>
         <location line="+4"/>
         <source>MB comparison</source>
-        <translation type="unfinished">Сравнение Мб</translation>
+        <translation>Сравнение макроблоков</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished">Несколько бит (vhq)</translation>
+        <translation>Минимум битов (vhq)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rate distortion</source>
-        <translation type="unfinished">Искажение частоты</translation>
+        <translation>Минимум искажений</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -6460,17 +6460,17 @@ I will assume it has and try to continue</source>
     <message>
         <location line="-30"/>
         <source>CBR</source>
-        <translation type="unfinished"></translation>
+        <translation>Постоянный битрейт (CBR)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>ABR</source>
-        <translation type="unfinished"></translation>
+        <translation>Усреднённый битрейт (ABR)</translation>
     </message>
     <message>
         <location line="+25"/>
-        <source>_Disable reservoir:</source>
-        <translation type="unfinished">_Отключить источник:</translation>
+        <source>_Disable reservoir</source>
+        <translation>_Отключить использование свободного места в аудиокадре для данных следующего</translation>
     </message>
 </context>
 <context>
@@ -6854,24 +6854,24 @@ I will assume it has and try to continue</source>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+168"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+167"/>
         <source>Saving Mkv</source>
         <translation type="unfinished">Сохранение в MKV</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkvConfig.cpp" line="+29"/>
         <source>Force display width</source>
-        <translation type="unfinished">Принудительная ширина монитора</translation>
+        <translation type="unfinished">Принудительная ширина изображения</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Display width</source>
-        <translation type="unfinished">Ширина монитора</translation>
+        <translation type="unfinished">Ширина изображения</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Force Aspect Ratio (DAR)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Поставить формат кадра (DAR)</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -6961,7 +6961,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4muxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+66"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+67"/>
         <location line="+9"/>
         <source>Unsupported</source>
         <translation type="unfinished">Не поддерживается</translation>
@@ -6977,7 +6977,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Для аудио поддерживаются только AAC, AC3, E-AC3 и mpegaudio</translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+130"/>
         <source>Saving mp4</source>
         <translation type="unfinished">Сохранение в MP4</translation>
     </message>
@@ -6987,7 +6987,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Сохранение в формате PSP</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+29"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+30"/>
         <source>Muxing Format</source>
         <translation type="unfinished">Формат мультиплексирования</translation>
     </message>
@@ -6999,12 +6999,37 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+1"/>
         <source>Force aspect ratio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Поставить соотношение сторон</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Aspect Ratio (DAR)</source>
-        <translation type="unfinished"></translation>
+        <translation>Формат кадра (DAR)</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Do not rotate</source>
+        <translation>не вращать</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>90°</source>
+        <translation>на 90 градусов</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>180°</source>
+        <translation>на 180 градусов</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>270°</source>
+        <translation>на 270 градусов</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Rotate video</source>
+        <translation>Повернуть кадр</translation>
     </message>
     <message>
         <location line="+3"/>

@@ -4,5 +4,6 @@ extern const ADM_paramList mp4_muxer_param[]={
  {"useAlternateMp3Tag",offsetof(mp4_muxer,useAlternateMp3Tag),"bool",ADM_param_bool},
  {"forceAspectRatio",offsetof(mp4_muxer,forceAspectRatio),"bool",ADM_param_bool},
  {"aspectRatio",offsetof(mp4_muxer,aspectRatio),"uint32_t",ADM_param_uint32_t},
+ {"rotation",offsetof(mp4_muxer,rotation),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };

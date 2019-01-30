@@ -1674,6 +1674,7 @@ SOURCES = \
 ../../../avidemux_plugins/ADM_muxers/muxerFlv/muxerFlv.cpp \ 
 ../../../avidemux_plugins/ADM_muxers/muxerFlv/muxerFlvPlugin.cpp \ 
 ../../../avidemux_plugins/ADM_muxers/muxerFlv/muxerFlvConfig.cpp \ 
+../../../avidemux_plugins/ADM_muxers/muxerMkv/mkv_muxer_json.cpp \ 
 ../../../avidemux_plugins/ADM_muxers/muxerMkv/mkv_muxer_desc.cpp \ 
 ../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp \ 
 ../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkvConfig.cpp \ 

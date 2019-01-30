@@ -34,7 +34,8 @@ mp4_muxer muxerConfig=
     MP4_MUXER_MP4,
     true,
     false,
-    WIDE
+    WIDE,
+    MP4_MUXER_ROTATE_0
 };
 
 
@@ -157,10 +158,28 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
         av_dict_set(&dict, "preload", buf, 0);
         av_dict_set(&dict, "max_delay", "200000", 0);
-        av_dict_set(&dict, "muxrate", "10080000", 0);
 #ifndef _WIN32 // does not work on windows as the file must be opened twice at the same time        
         av_dict_set(&dict, "movflags","faststart",0);
 #endif
+        const char *angle=NULL;
+        switch(muxerConfig.rotation)
+        {
+            case(MP4_MUXER_ROTATE_90):
+                angle="90";
+                break;
+            case(MP4_MUXER_ROTATE_180):
+                angle="180";
+                break;
+            case(MP4_MUXER_ROTATE_270):
+                angle="270";
+                break;
+            default: break;
+        }
+        if(angle)
+        {
+            ADM_info("Setting rotation to %s degrees clockwise\n",angle);
+            av_dict_set(&(video_st->metadata), "rotate", angle, 0);
+        }
         ADM_assert(avformat_write_header(oc, &dict) >= 0);
 
         ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);

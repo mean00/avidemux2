@@ -21,6 +21,7 @@ h1 {
 
 table {
     border-spacing: 0 2px;
+    margin-bottom: 2em;
 }
 
 td {

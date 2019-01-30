@@ -6463,7 +6463,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>_Disable reservoir:</source>
+        <source>_Disable reservoir</source>
         <translation>_Deaktivér reservoir:</translation>
     </message>
     <message>
@@ -6853,7 +6853,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+168"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+167"/>
         <source>Saving Mkv</source>
         <translation>Gemmer MKV</translation>
     </message>
@@ -6960,7 +6960,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>mp4muxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+66"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+67"/>
         <location line="+9"/>
         <source>Unsupported</source>
         <translation>Understøttes ikke</translation>
@@ -6976,7 +6976,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Understøtter kun AAC, AC3, E-AC3 og mpegaudio til lyd</translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+130"/>
         <source>Saving mp4</source>
         <translation>Gemmer MP4</translation>
     </message>
@@ -6986,7 +6986,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Gemmer PSP</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+29"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+30"/>
         <source>Muxing Format</source>
         <translation>Muxing-format</translation>
     </message>
@@ -7003,6 +7003,31 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
     <message>
         <location line="+2"/>
         <source>Aspect Ratio (DAR)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Do not rotate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>90°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>180°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>270°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Rotate video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

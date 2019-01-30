@@ -6476,7 +6476,7 @@ Se asume que tiene y se intenta continuar.</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>_Disable reservoir:</source>
+        <source>_Disable reservoir</source>
         <translation>Desac_tivar el reservorio:</translation>
     </message>
     <message>
@@ -6866,7 +6866,7 @@ Se asume que tiene y se intenta continuar.</translation>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+168"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+167"/>
         <source>Saving Mkv</source>
         <translation>Guardando Mkv</translation>
     </message>
@@ -6973,7 +6973,7 @@ Se asume que tiene y se intenta continuar.</translation>
 <context>
     <name>mp4muxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+66"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+67"/>
         <location line="+9"/>
         <source>Unsupported</source>
         <translation>No soportado</translation>
@@ -6989,7 +6989,7 @@ Se asume que tiene y se intenta continuar.</translation>
         <translation>Solo se admiten AAC, AC3, E-AC3 y mpegaudio para el audio</translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+130"/>
         <source>Saving mp4</source>
         <translation>Guardando mp4</translation>
     </message>
@@ -6999,7 +6999,7 @@ Se asume que tiene y se intenta continuar.</translation>
         <translation>Guardando PSP</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+29"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+30"/>
         <source>Muxing Format</source>
         <translation>Formato de multiplexado</translation>
     </message>
@@ -7017,6 +7017,31 @@ Se asume que tiene y se intenta continuar.</translation>
         <location line="+2"/>
         <source>Aspect Ratio (DAR)</source>
         <translation>Relación de aspecto (DAR)</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Do not rotate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>90°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>180°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>270°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Rotate video</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
