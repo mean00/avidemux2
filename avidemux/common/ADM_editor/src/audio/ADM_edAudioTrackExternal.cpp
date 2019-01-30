@@ -117,6 +117,8 @@ bool             ADM_edAudioTrackExternal::refillPacketBuffer(void)
     vprintf("Refilling buffer dts=%s\n",ADM_us2plain(packetBufferDts));
     return true;
 }
+
+
 /**
     \fn create_edAudioExternal
 */
@@ -124,7 +126,8 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
 {
     #define EXTERNAL_PROBE_SIZE (1024*1024)
     // Identify file type
-    uint8_t buffer[EXTERNAL_PROBE_SIZE];
+    notStackAllocator dummyBuffer(EXTERNAL_PROBE_SIZE);
+    uint8_t *buffer=dummyBuffer.data;
     FILE *f=ADM_fopen(name,"rb");
     if(!f)
     {
