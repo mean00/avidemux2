@@ -75,3 +75,20 @@ ADM_CORE6_EXPORT const char *ADM_translate(const char *domain, const char *strin
 #define QT_TR_NOOP(x) ADM_translate("adm",x)
 #define QT_TRANSLATE_NOOP(a,x) ADM_translate(a,x)
 
+#ifdef __cplusplus
+
+class notStackAllocator
+{
+public:    
+    notStackAllocator(int nb)
+    {
+        data=new uint8_t[nb];
+    }
+    ~notStackAllocator()
+    {
+        delete [] data;
+        data=NULL;
+    }
+    uint8_t *data;
+};
+#endif
