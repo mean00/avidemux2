@@ -215,12 +215,12 @@ Drop timing informations ?</source>
     <message>
         <location line="+28"/>
         <source>Audio Size:</source>
-        <translation>Μέγεθος Ήχου:</translation>
+        <translation>Μέγεθος του Ήχου:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Video Size:</source>
-        <translation>Μέγεθος Βίντεου:</translation>
+        <translation>Μέγεθος του Βίντεου:</translation>
     </message>
     <message>
         <location line="+61"/>
@@ -2707,7 +2707,8 @@ Proceed anyway?</source>
         <location filename="../../common/gui_savenew.cpp" line="-207"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
-        <translation>Να επανα-χρησιμοποιηθούν τα προηγούμενα δεδομένα του πρώτου περάσματος;
+        <translation>Να επανα-χρησιμοποιηθούν τα προηγούμενα δεδομένα 
+του πρώτου περάσματος;
 Προειδοποίηση: οι ρυθμίσεις θα πρέπει να κλείσουν.</translation>
     </message>
     <message>
@@ -3006,12 +3007,12 @@ Do you want to continue anyway ?</source>
     <message>
         <location filename="../../../avidemux_core/ADM_core/src/ADM_prettyPrint.cpp" line="+23"/>
         <source>%d minute(s)</source>
-        <translation>%d λεπτό(-α)</translation>
+        <translation>λεπτά: %d</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>%d hour(s)</source>
-        <translation>%d ώρα(-ες)</translation>
+        <translation>ώρες: %d</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -3131,7 +3132,7 @@ Do you want to continue anyway ?</source>
     <message>
         <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStreamMP3.cpp" line="+199"/>
         <source>Building time map</source>
-        <translation>Χτίσιμο χάρτη χρόνου</translation>
+        <translation>Χτίζεται ο χάρτης του χρόνου</translation>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="-41"/>
@@ -4442,7 +4443,7 @@ Do you want to load it  ?
     <message>
         <location line="-7"/>
         <source>Audio Codec:</source>
-        <translation>Κώδικας Ήχου:</translation>
+        <translation>Κώδικας του Ήχου:</translation>
     </message>
     <message>
         <location line="+21"/>
@@ -4462,7 +4463,7 @@ Do you want to load it  ?
     <message>
         <location line="+21"/>
         <source>Video Size:</source>
-        <translation>Μέγεθος Βίντεου:</translation>
+        <translation>Μέγεθος του Βίντεου:</translation>
     </message>
     <message>
         <location line="+44"/>
@@ -4581,7 +4582,7 @@ Do you want to load it  ?
     <message>
         <location line="+114"/>
         <source>Video Codec:</source>
-        <translation>Κώδικας Βίντεου:</translation>
+        <translation>Κώδικας του Βίντεου:</translation>
     </message>
 </context>
 <context>
@@ -7322,7 +7323,7 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="+89"/>
         <source>Unpacking bitstream</source>
-        <translation>Αποπακετάρισμα ροής δεδομένων</translation>
+        <translation>Ξεπακετάρεται η ροή των δεδομένων</translation>
     </message>
 </context>
 <context>
@@ -7600,7 +7601,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="-81"/>
         <source>Overwrite file </source>
-        <translation>Επανογραφή αρχείου </translation>
+        <translation>Επανωγραφή του αρχείου </translation>
     </message>
 </context>
 <context>
@@ -7921,7 +7922,7 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location line="+1"/>
         <source>Cancel it ?</source>
-        <translation>Να ακυρωθεί; </translation>
+        <translation>Να ακυρωθεί ;</translation>
     </message>
 </context>
 <context>
@@ -8093,7 +8094,7 @@ Ready.
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/ADM_qtray.cpp" line="+82"/>
         <source>Open Avidemux</source>
-        <translation>Άνοιγμα του Αβιντεμιουξίου</translation>
+        <translation>Άνοιγμα του Αβυντειμαξίου</translation>
     </message>
 </context>
 <context>
@@ -9437,7 +9438,7 @@ Do you wish to continue?</source>
     <message>
         <location line="+34"/>
         <source>Overwrite</source>
-        <translation>Επανογραφή</translation>
+        <translation>Επανωγραφή</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -10777,7 +10778,7 @@ Do you wish to continue?</source>
     <message>
         <location line="+45"/>
         <source>Overwrite</source>
-        <translation>Επανογραφή</translation>
+        <translation>Επανωγραφή</translation>
     </message>
     <message>
         <location line="+0"/>
