@@ -78,15 +78,13 @@ bool tsPacket::open(const char *filenames,FP_TYPE append)
     // Detect TS1/TS2...
         printf("[TsPacket] Detecting TS/TS2...\n");
 
-    uint8_t r;
 #define MAX_BOGUS_TS_MARKERS 4
     for(int i=0;i<MAX_BOGUS_TS_MARKERS;i++)
     {
         int tryMe=250;
         while(tryMe--)
         {
-            r=_file->read8i();
-            if(r==TS_MARKER) break;
+            if(_file->read8i()==TS_MARKER) break;
             if(_file->end()) 
             {
                 tryMe=0;
@@ -112,7 +110,7 @@ bool tsPacket::open(const char *filenames,FP_TYPE append)
             setPos(startPos);
             continue;
         }
-        if(score2 && score2>score1)
+        if(score2>score1)
         {
             printf("[TsPacket] Probably TS2 (192)...\n");
             extraCrap=4;
