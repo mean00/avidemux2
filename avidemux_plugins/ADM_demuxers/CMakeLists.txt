@@ -12,4 +12,4 @@ IF(MSVC)
     ADD_SUBDIRECTORY(NativeAvisynth)
 ENDIF(MSVC)
 #
-#ADD_SUBDIRECTORY(VapourSynth)
+ADD_SUBDIRECTORY(VapourSynth)
