@@ -578,17 +578,22 @@ bool MP4Header::checkDuplicatedPts(void)
  * \fn adjustElstDelay
  * @return 
  */
-bool MP4Header::adjustElstDelay()
+bool MP4Header::adjustElstDelay(void)
 {
     int xmin=10000000;
     int xscaledDelay[_3GP_MAX_TRACKS];
     for(int i=0;i<1+nbAudioTrack;i++)
     {
         double scaledDelay=_tracks[i].delay;
-        scaledDelay=scaledDelay/(double)_movieScale;
+        double scaledStartOffset=_tracks[i].startOffset;
+        scaledDelay/=_movieScale;
+        scaledStartOffset/=_tracks[i].scale;
         scaledDelay*=1000000;
+        scaledStartOffset*=1000000;
+        ADM_info("Delay for track %d : raw = %d, scaled  = %d with scale = %d\n",i,_tracks[i].delay,(int)scaledDelay,_movieScale);
+        ADM_info("Start offset for track %d : raw = %d, scaled = %d with scale = %d\n",i,_tracks[i].startOffset,(int)scaledStartOffset,_tracks[i].scale);
+        scaledDelay-=scaledStartOffset;
         xscaledDelay[i]=scaledDelay;
-        ADM_info("Delay for track %d : raw = %d, scaled  = %d with scale=%d\n",i,_tracks[i].delay,xscaledDelay[i],_movieScale);
         if(scaledDelay<xmin)
             xmin=scaledDelay;
     }
