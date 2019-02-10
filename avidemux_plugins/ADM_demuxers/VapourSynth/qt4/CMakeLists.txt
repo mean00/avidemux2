@@ -5,6 +5,10 @@ ADD_DEFINITIONS("-std=c++11")
 
 ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
 #
+IF(MSVC)
+		ADD_DEFINITIONS("-DNO_WINSOCK2") # else double include on windows	
+ENDIF(MSVC)
+#
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
 SET(UI_SUFFIX qt4)
@@ -62,6 +66,12 @@ TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ${LIBS_TO_LINK} )
 
 IF (MINGW)
 	target_link_libraries(vsProxy_gui_${QT_EXTENSION} -lwsock32 winmm -mwindows )
+	target_link_libraries(vsProxy_gui_${QT_EXTENSION} ${LIBS_TO_LINK} "-lm -lstdc++")
 ENDIF (MINGW)
-target_link_libraries(vsProxy_gui_${QT_EXTENSION} ${LIBS_TO_LINK} "-lm -lstdc++")
+IF(MSVC)
+		set_target_properties(vsProxy_gui_${QT_EXTENSION} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
+		set_target_properties(vsProxy_gui_${QT_EXTENSION} PROPERTIES WIN32_EXECUTABLE True)
+		TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ws2_32.lib  winmm -mwindows  )
+ENDIF(MSVC)
+
 ADM_INSTALL_BIN(vsProxy_gui_${QT_EXTENSION})
