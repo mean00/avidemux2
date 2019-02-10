@@ -157,10 +157,34 @@ bool MP4Header::refineFps(void)
     {
         double f=1000000./(double)minDelta;
         f*=1000.;
-        ADM_info("MinDelta=%d us\n",(int)minDelta);
-        ADM_info("Computed fps1000=%d\n",(int)f);
         uint32_t fps1000=floor(f+0.49);
-        if(fps1000>  _videostream.dwRate)
+        ADM_info("MinDelta=%d us\n",(int)minDelta);
+        ADM_info("Computed fps1000=%d\n",fps1000);
+        if(fps1000 == _videostream.dwRate)
+        {
+            ADM_info("Computed fps1000 matches the average one.\n");
+            return true;
+        }
+        int score=0;
+        uint64_t avgDelta=_mainaviheader.dwMicroSecPerFrame;
+        int64_t halfway=avgDelta-minDelta+1;
+        halfway/=2;
+        halfway+=minDelta;
+        for(int i=0;i<n-1;i++)
+        {
+            MP4Index *dex=&(_tracks[0].index[i]);
+            MP4Index *next=&(_tracks[0].index[i+1]);
+            if(dex->dts==ADM_NO_PTS) continue;
+            if(next->dts==ADM_NO_PTS) continue;
+            uint64_t delta=next->dts-dex->dts;
+            if(delta==minDelta) score++;
+            if(delta<halfway) score++;
+        }
+        float weighted=score*1000.;
+        weighted/=n;
+        ADM_info("Original fps1000 = %d, score = %d, weighted score = %d\n",_videostream.dwRate,score,(int)weighted);
+        // require that at least 10% of video better or 5% perfectly matches max fps
+        if(fps1000 > _videostream.dwRate && (int)weighted > 100)
         {
             ADM_info("Adjusting fps, the computed is higher than average, dropped frames ?\n");
            _videostream.dwRate=fps1000;
@@ -520,7 +544,6 @@ uint8_t    MP4Header::open(const char *name)
             audioStream[audio]=ADM_audioCreateStream(&(_tracks[1+audio]._rdWav), audioAccess[audio]);
         }
         fseeko(_fd,0,SEEK_SET);
-        refineFps();
         uint64_t duration1=_movieDuration*1000LL;
         uint64_t duration2=0;
         uint32_t lastFrame=0;
@@ -539,7 +562,15 @@ uint8_t    MP4Header::open(const char *name)
         { // video duration must be > max PTS, otherwise we drop the last frame
             ADM_warning("Last PTS is at or after movie duration, increasing movie duration\n");
             _movieDuration=(duration2/1000)+1;
+            // adjust calculated average FPS and time increment
+            double f=_movieDuration;
+            f=1000.*_tracks[0].nbIndex/f;
+            f*=1000.;
+            _videostream.dwRate=(uint32_t)floor(f+0.49);
+            _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
+            ADM_info("Adjusted fps1000: %d = %" PRIu64" us per frame.\n",_videostream.dwRate,_mainaviheader.dwMicroSecPerFrame);
         }
+        refineFps();
         if(nb>1 && !lastFrame)
             lastFrame=nb-1;
         ADM_info("Nb images       : %d\n",nb);
