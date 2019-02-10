@@ -185,10 +185,12 @@ class mkvHeader         :public vidHeader
     BVector <mkvIndex    >   _clusters;
     BVector <uint64_t>       _cueTime;
 
+    std::vector <uint64_t>  _sortedPts;
+    std::vector <uint32_t>  _framesNoPts;
+
     uint32_t                _nbAudioTrack;
     uint32_t                _currentAudioTrack;
-    uint32_t                _reordered;
-    //
+
     uint64_t                _segmentPosition;
     uint64_t                _cuePosition;
     uint64_t                _trackPosition;
@@ -225,6 +227,7 @@ class mkvHeader         :public vidHeader
                                                 MKV_ELEM_ID searchedId,const char *txt);
     int                     checkDeviation(int num, int den);
     bool                    enforceFixedFrameRate(int num, int den);
+    bool                    setDtsFromListOfSortedPts(void);
   public:
 
 

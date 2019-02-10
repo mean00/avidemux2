@@ -214,7 +214,7 @@ uint8_t MP4Header::parseTrack(void *ztom)
   uint32_t w,h;
   uint32_t trackType=TRACK_OTHER;
   _currentDelay=0;
-  bool delayInTrackTimescale=false;
+  _currentStartOffset=0;
   ADM_info("Parsing Track\n");
    while(!tom->isDone())
   {
@@ -257,14 +257,14 @@ uint8_t MP4Header::parseTrack(void *ztom)
               }
         case ADM_MP4_MDIA:
         {
-            if(!parseMdia(&son,&trackType,w,h,delayInTrackTimescale))
+            if(!parseMdia(&son,&trackType,w,h))
                 return false;
             break;
         }
         case ADM_MP4_EDTS:
         {
             ADM_info("EDTS atom found\n");
-            parseEdts(&son,trackType,&delayInTrackTimescale);
+            parseEdts(&son,trackType);
             break;
         }
        default:
@@ -278,7 +278,7 @@ uint8_t MP4Header::parseTrack(void *ztom)
       \fn parseMdia
       \brief Parse mdia header
 */
-uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h,bool delayInTrackTimescale)
+uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h)
 {
   adm_atom *tom=(adm_atom *)ztom;
   ADMAtoms id;
@@ -344,13 +344,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
                 case MKFCCR('v','i','d','e')://'vide':
                         *trackType=TRACK_VIDEO;
                         _tracks[0].delay=_currentDelay;
-                        if(delayInTrackTimescale)
-                        {
-                            double d=(double)_tracks[0].delay;
-                            d*=_movieScale;
-                            d/=trackScale;
-                            _tracks[0].delay=(int64_t)d;
-                        }
+                        _tracks[0].startOffset=_currentStartOffset;
                         ADM_info("hdlr video found \n ");
                         _movieDuration=trackDuration;
                         _videoScale=trackScale;
@@ -358,13 +352,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
                         break;
                 case MKFCCR('s','o','u','n'): //'soun':
                         _tracks[1+nbAudioTrack].delay=_currentDelay;
-                        if(delayInTrackTimescale)
-                        {
-                            double d=(double)_tracks[1+nbAudioTrack].delay;
-                            d*=_movieScale;
-                            d/=trackScale;
-                            _tracks[1+nbAudioTrack].delay=(int64_t)d;
-                        }
+                        _tracks[1+nbAudioTrack].startOffset=_currentStartOffset;
                         *trackType=TRACK_AUDIO;
                         ADM_info("hdlr audio found \n ");
                         break;
@@ -427,7 +415,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
  * @param tom
  * @return 
  */
-int64_t MP4Header::parseElst(void *ztom,bool *inTrackTimescale)
+uint8_t MP4Header::parseElst(void *ztom, int64_t *delay, int64_t *skip)
 {
     uint32_t playbackSpeed;
     adm_atom *tom=(adm_atom *)ztom;
@@ -436,8 +424,8 @@ int64_t MP4Header::parseElst(void *ztom,bool *inTrackTimescale)
     uint32_t nb=tom->read32();
     int64_t *editDuration=new int64_t[nb];
     int64_t *mediaTime=new int64_t[nb];
-    int64_t delay=0;
-    *inTrackTimescale=false;
+    int64_t dlay=0;
+    int64_t adv=0;
     
     ADM_info("[ELST] Found %" PRIu32" entries in list, version=%d\n",nb,version);
     for(int i=0;i<nb;i++)
@@ -460,36 +448,36 @@ int64_t MP4Header::parseElst(void *ztom,bool *inTrackTimescale)
             case 1:
                 if(mediaTime[0]>0)
                 {
-                    *inTrackTimescale=true;
-                    delay=mediaTime[0];
+                    adv=mediaTime[0];
                 }
                 break;
             case 2:
                 if(mediaTime[0]==-1)
                 {
-                    delay=editDuration[0];
+                    dlay=editDuration[0];
+                    adv=mediaTime[1];
                 }
                 break;
             default:
                 break;        
     }
-    // Nb  : The unit is either movie timescale OR track (media) timescale
-    ADM_info("**  Computed delay =%d\n",delay);
+    ADM_info("delay = %" PRId64" in movie scale units, skip to time %" PRId64" in track scale units.\n",dlay,adv);
     
     delete [] editDuration;
     delete [] mediaTime;
-    return delay;
+    *delay=dlay;
+    *skip=adv;
+    return 1;
 }
 /**
         \fn parseEdts
         \brief parse sample table. this is the most important function.
 */
-uint8_t       MP4Header::parseEdts(void *ztom,uint32_t trackType,bool *delayInTrackTimescale)
+uint8_t MP4Header::parseEdts(void *ztom,uint32_t trackType)
 {
   adm_atom *tom=(adm_atom *)ztom;
   ADMAtoms id;
   uint32_t container;
-  *delayInTrackTimescale=false;
 
   ADM_info("Parsing Edts, trackType=%d\n",trackType);
   while(!tom->isDone())
@@ -506,7 +494,7 @@ uint8_t       MP4Header::parseEdts(void *ztom,uint32_t trackType,bool *delayInTr
        case ADM_MP4_ELST:
        {
               ADM_info("ELST atom found\n");
-              _currentDelay=parseElst(&son,delayInTrackTimescale);
+              parseElst(&son,&_currentDelay,&_currentStartOffset);
               son.skipAtom();
               break;
         

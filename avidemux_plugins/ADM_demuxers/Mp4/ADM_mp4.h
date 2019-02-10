@@ -75,7 +75,8 @@ public:
     uint32_t    extraDataSize;
     uint8_t     *extraData;
     WAVHeader   _rdWav;
-    uint64_t    delay;
+    int64_t     delay; // in movie scale units
+    int64_t     startOffset; // media time in track scale units
     std::vector <mp4Fragment>     fragments;
                 MP4Track(void);
                 ~MP4Track();
@@ -186,14 +187,14 @@ protected:
           uint8_t                       lookupMainAtoms(void *tom);
           void                          parseMvhd(void *tom);
           uint8_t                       parseTrack(void *ztom);
-          int64_t                       parseElst(void *tom,bool *inTrackTimescale);
+          uint8_t                       parseElst(void *tom,int64_t *delay,int64_t *skip);
           bool                          parseMoof(adm_atom &son);
           bool                          parseTraf(adm_atom &son,uint64_t moofStart);
           int                           lookupIndex(int desc)          ;
           bool                          parseTrun(int trackNo,adm_atom &son,const mp4TrafInfo &info);
           uint8_t                       decodeVideoAtom(void *ztom);
-          uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h,bool delayInTrackTimescale);
-          uint8_t                       parseEdts(void *ztom,uint32_t trackType,bool *delayInTrackTimescale);
+          uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h);
+          uint8_t                       parseEdts(void *ztom,uint32_t trackType);
           uint8_t                       parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint32_t h,uint32_t trackScale);
           uint8_t                       decodeEsds(void *ztom,uint32_t trackType);
           uint8_t                       updateCtts(MPsampleinfo *info );
@@ -220,6 +221,7 @@ protected:
         int64_t                       _audioDuration;
         uint32_t                      _currentAudioTrack;
         int64_t                       _currentDelay;
+        int64_t                       _currentStartOffset;
         Mp4Flavor                     _flavor;
         uint8_t                       parseAtomTree(adm_atom *atom);
         ADM_mp4AudioAccess            *audioAccess[_3GP_MAX_TRACKS-1];
