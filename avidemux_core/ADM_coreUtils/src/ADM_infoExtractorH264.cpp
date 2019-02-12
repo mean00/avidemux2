@@ -958,7 +958,11 @@ int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor
             oldZbp=zeroBytePrefixed;
             continue;
         }
-        if(index>=maxNalu) return 0;
+        if(index>=maxNalu)
+        {
+            ADM_warning("Number of NALUs exceeds max (%d), dropping the leftover.\n",maxNalu);
+            return index;
+        }
         desc[index].start=head;
         desc[index].size=offset-zeroBytePrefixed-startCodePrefixLen;
         desc[index].nalu=oldStartCode;
