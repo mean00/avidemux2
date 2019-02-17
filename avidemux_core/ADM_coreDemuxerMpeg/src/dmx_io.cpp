@@ -496,8 +496,16 @@ uint8_t r;
     }
     else    
     {
+        uint32_t oldFd=_curFd;
+        uint64_t oldPos=ftello(listOfFd[_curFd].file);
         read32(1,&r);
         _off--;
+        if(_curFd!=oldFd)
+        {
+            _curFd=oldFd;
+            fseeko(listOfFd[_curFd].file,oldPos,SEEK_SET);
+            _head=_tail=_off;
+        }
     }
     return r;
 
