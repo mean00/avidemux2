@@ -494,16 +494,22 @@ uint8_t r;
     }
     else    
     {
-        uint32_t oldFd=_curFd;
-        uint64_t oldPos=ftello(listOfFd[_curFd].file);
-        read32(1,&r);
-        _off--;
-        if(_curFd!=oldFd)
+        uint64_t mx=listOfFd[_curFd].fileSize+listOfFd[_curFd].fileSizeCumul-_off;
+        // If nothing is left, switch to the next file
+        if(!mx)
         {
-            _curFd=oldFd;
-            fseeko(listOfFd[_curFd].file,oldPos,SEEK_SET);
             _head=_tail=_off;
+            _curFd++;
+            if(_curFd>=listOfFd.size()) return 0;
+            fseeko(listOfFd[_curFd].file,0,SEEK_SET);
+            mx=listOfFd[_curFd].fileSize;
         }
+        if(mx>DMX_BUFFER) mx=DMX_BUFFER;
+        // Fill the buffer
+        fread(_buffer,mx,1,listOfFd[_curFd].file);
+        _head=_off;
+        _tail=_head+mx;
+        r=_buffer[0];
     }
     return r;
 
