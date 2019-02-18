@@ -21,7 +21,7 @@
 
 ADM_DEMUXER_BEGIN( vsHeader, 50,
                     1,0,0,
-                    "flv",
+                    "vs",
                     "VapourSynth demuxer plugin (c) Mean 2015"
                 );
 
@@ -32,10 +32,10 @@ ADM_DEMUXER_BEGIN( vsHeader, 50,
 extern "C"  uint32_t     ADM_PLUGIN_EXPORT    probe(uint32_t magic, const char *fileName)
 {
         std::string fname=std::string(fileName);
-        if(fname.length()<3) return 0;
-        if (fname.substr(fname.length()-3) == std::string(".py")) 
+        if(fname.length()<4) return 0;
+        if (fname.substr(fname.length()-4) == std::string(".vpy"))
         {
-                ADM_info("[Probe] This is .py, might be vapourSynth\n");
+                ADM_info("This is .vpy, might be VapourSynth\n");
                 // todo : probe deeper
                 return 100;
         }

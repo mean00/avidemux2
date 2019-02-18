@@ -20,7 +20,9 @@
 #include "ADM_videoInfoExtractor.h"
 
 #include "ADM_vs.h"
-
+#if !defined(__APPLE__) && !defined(_WIN32)
+ #include <dlfcn.h>
+#endif
 #include <math.h>
 
 static const VSAPI *vsapi = NULL;
@@ -39,10 +41,13 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 uint8_t vsHeader::open(const char *name)
 {
     ADM_info("Opening %s as VapourSynth file\n",name);
+#if !defined(__APPLE__) && !defined(_WIN32)
+    dlopen("libpython3.7m.so", RTLD_LAZY|RTLD_GLOBAL);
+#endif
     if (!vsscript_init()) 
     {
-          ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
-          return false;
+        ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
+        return false;
     }
     if(!vsapi)
     {
@@ -53,30 +58,28 @@ uint8_t vsHeader::open(const char *name)
             vsscript_finalize();
             return 0;
         }
-        
     }
-     ADM_info("VapourSynth init ok, opening file..\n");
+    ADM_info("VapourSynth init ok, opening file..\n");
     if (vsscript_evaluateFile(&_script, name, 0)) 
     {
         ADM_warning("Evaluate script failed <%s>\n", vsscript_getError(_script));
-        abort();
+        close();
         return 0;
     }
     _node = vsscript_getOutput(_script, 0);
     if (!_node) 
     {
-       ADM_warning("vsscript_getOutputNode failed\n");
-       abort();
-       return 0;
+        ADM_warning("vsscript_getOutputNode failed\n");
+        close();
+        return 0;
     }  
 
     const VSVideoInfo *vi = vsapi->getVideoInfo(_node);
     if(!vi)
     {
-          ADM_warning("Cannot get information on node\n");
-          vsscript_freeScript(_script);
-          vsscript_finalize();
-          return 0;
+        ADM_warning("Cannot get information on node\n");
+        close();
+        return 0;
     }
     ADM_info("Format    : %s\n",vi->format->name);
     ADM_info("FrameRate : %d / %d\n",vi->fpsNum,vi->fpsDen);

@@ -36,10 +36,13 @@ IF(USE_VAPOURSYNTH)
         SET(ADM_vs_SRCS 
                 ADM_vs.cpp  ADM_vs.h  ADM_vsPlugin.cpp  
                 )
-        #INIT_DEMUXER(ADM_dm_vapoursynth)
-        #ADD_DEMUXER(ADM_dm_vapoursynth ${ADM_vs_SRCS})
-        #TARGET_LINK_LIBRARIES(ADM_dm_vapoursynth ${LIBS_TO_LINK} ADM_core6 ADM_coreSocket6)
-        #INSTALL_DEMUXER(ADM_dm_vapoursynth)
+        INIT_DEMUXER(ADM_dm_vapoursynth)
+        ADD_DEMUXER(ADM_dm_vapoursynth ${ADM_vs_SRCS})
+        IF(NOT APPLE AND NOT WIN32 AND NOT MSVC)
+            LIST(APPEND LIBS_TO_LINK "-ldl")
+        ENDIF(NOT APPLE AND NOT WIN32 AND NOT MSVC)
+        TARGET_LINK_LIBRARIES(ADM_dm_vapoursynth ${LIBS_TO_LINK} ADM_core6 ADM_coreSocket6)
+        INSTALL_DEMUXER(ADM_dm_vapoursynth)
         #----------------
         iF( WIN32)
 				IF(MSVC)
