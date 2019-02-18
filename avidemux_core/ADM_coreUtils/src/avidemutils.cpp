@@ -496,13 +496,13 @@ bool ADM_probeSequencedFile(const char *fileName)
     bool success=false;
     uint64_t fileSize,threshold,tolerance;
     threshold=tolerance=1;
-    threshold<<=30; // we start with 1 GiB
+    threshold<<=28; // we start at 256 MiB, this value is hardcoded in some devices
     tolerance<<=20; // 1 MiB
     int64_t sz=ADM_fileSize(fileName);
     if(sz<0)
         return false;
     fileSize=sz;
-    for(int i=0;i<3;i++)
+    for(int i=0;i<5;i++)
     {
         if(fileSize >= threshold-tolerance && fileSize <= threshold+tolerance)
         {
@@ -532,14 +532,9 @@ bool ADM_probeSequencedFile(const char *fileName)
     sprintf(names,match,base+1);
     std::string middle(names);
     std::string target=aLeft+middle+aRight;
-    bool r=false;
-    FILE *f=ADM_fopen(target.c_str(),"rb");
-    if(f)
-    {
-        fclose(f);
-        r=true;
-    }
-
-    return r;
+    sz=ADM_fileSize(target.c_str());
+    if(sz<0 || sz > threshold+tolerance)
+        return false;
+    return true;
 }
 //EOF
