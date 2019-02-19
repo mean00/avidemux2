@@ -109,6 +109,7 @@ uint8_t vsHeader::open(const char *name)
     _videostream.dwStart= 0;
     _video_bih.biHeight=_mainaviheader.dwHeight=vi->height  ;
     _video_bih.biWidth=_mainaviheader.dwWidth=vi->width;
+    _isvideopresent=true;
     _isaudiopresent=false;
     _nbFrames=vi->numFrames;
     _videostream.dwLength=_mainaviheader.dwTotalFrames=_nbFrames;
