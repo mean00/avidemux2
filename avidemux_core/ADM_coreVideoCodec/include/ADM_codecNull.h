@@ -60,6 +60,7 @@ public:
     {
         out->Pts=dts;
     }
+    out->flags=AVI_KEY_FRAME;
     return 1;
   }
 };
