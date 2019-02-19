@@ -18,13 +18,13 @@
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_videoInfoExtractor.h"
-
+#ifndef __APPLE__
+#include "ADM_memsupport.h"
+#endif
 
 #include "ADM_vsProxy.h"
 #include <math.h>
 #include <string>
-
-extern uint8_t ADM_InitMemcpy(void);
 
 static void printUsageAndExit()
 {
@@ -103,9 +103,9 @@ int main(int ac, char **av)
     if (port == -1) {
         port = 9999;
     }
-
+#ifndef __APPLE__
     ADM_InitMemcpy();
-
+#endif
 #ifdef _WIN32
     WSADATA wsaData;
     int iResult;

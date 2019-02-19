@@ -19,7 +19,9 @@
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_threads.h"
+#ifndef __APPLE__
 #include "ADM_memsupport.h"
+#endif
 #include "ADM_crashdump.h"
 #include "prefs.h"
 #include "ADM_last.h"
@@ -32,7 +34,9 @@
 */
 int main(int argc, char *argv[])
 {
+#ifndef __APPLE__
     ADM_InitMemcpy();
+#endif
     ADM_initBaseDir(argc,argv);
     initPrefs();
     if(!prefs->load())
