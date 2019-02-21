@@ -59,6 +59,7 @@ uint64_t pts,dts,startAt;
         {
             case ADM_TS_MPEG_AUDIO:
             case ADM_TS_AC3:
+            case ADM_TS_DTS:
             case ADM_TS_EAC3:
             case ADM_TS_AAC_ADTS:
             case ADM_TS_AAC_LATM:
@@ -201,8 +202,7 @@ again:
                                 trackInfo->wav.channels=2;
                                 trackInfo->wav.byterate=2*2*48000;
                                 break;
-            case ADM_TS_AC3: // AC3 or DTS
-                            // AC3
+            case ADM_TS_AC3:
                             {
                                 trackInfo->wav.encoding=WAV_AC3;
                                 if(!ADM_AC3GetInfo(audioBuffer, rd, &fq, &br, &chan,&off))
@@ -213,6 +213,20 @@ again:
                                 trackInfo->wav.frequency=fq;
                                 trackInfo->wav.channels=chan;
                                 trackInfo->wav.byterate=(br);
+                                break;
+                            }
+            case ADM_TS_DTS:
+                            {
+                                trackInfo->wav.encoding=WAV_DTS;
+                                ADM_DCA_INFO dcainfo;
+                                if(false==ADM_DCAGetInfo(audioBuffer, rd, &dcainfo, &off))
+                                {
+                                    ADM_error("Failed to get info on track : 0x%x (DTS)\n",trackInfo->esId);
+                                    goto er;
+                                }
+                                trackInfo->wav.frequency=dcainfo.frequency;
+                                trackInfo->wav.channels=dcainfo.channels;
+                                trackInfo->wav.byterate=dcainfo.bitrate/8;
                                 break;
                             }
             case ADM_TS_EAC3: 

@@ -33,6 +33,7 @@ typedef enum
     ADM_TS_AC3,
     ADM_TS_AAC_ADTS,
     ADM_TS_AAC_LATM,
+    ADM_TS_DTS,
     ADM_TS_EAC3,
     ADM_TS_VC1,
     ADM_TS_LPCM,
