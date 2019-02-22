@@ -44,7 +44,8 @@ uint8_t vsHeader::open(const char *name)
 #if !defined(__APPLE__) && !defined(_WIN32)
     dlopen("libpython3.7m.so", RTLD_LAZY|RTLD_GLOBAL);
 #endif
-    if (!vsscript_init()) 
+    inited=vsscript_init();
+    if(!inited)
     {
         ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
         return false;
@@ -55,7 +56,7 @@ uint8_t vsHeader::open(const char *name)
         if(!vsapi)
         {
             ADM_warning("Cannot get vsAPI entry point\n");
-            vsscript_finalize();
+            close();
             return 0;
         }
     }
@@ -113,7 +114,7 @@ uint8_t vsHeader::open(const char *name)
     _isaudiopresent=false;
     _nbFrames=vi->numFrames;
     _videostream.dwLength=_mainaviheader.dwTotalFrames=_nbFrames;
-    _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"YV12");
+    _videostream.fccType=_videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"YV12");
     return true;
 }
 /**
@@ -122,7 +123,10 @@ uint8_t vsHeader::open(const char *name)
 */
 uint64_t vsHeader::getVideoDuration(void)
 {
-       return _mainaviheader.dwMicroSecPerFrame*(1+_nbFrames);
+    uint64_t d=_mainaviheader.dwMicroSecPerFrame;
+    if(_nbFrames)
+        d+=getTimeForFrame(_nbFrames-1);
+    return d;
 }
 /**
  * 
@@ -132,11 +136,17 @@ uint64_t vsHeader::getVideoDuration(void)
  */
 uint8_t  vsHeader::setFlag(uint32_t frame,uint32_t flags)
 {
-    return 1;
+    return 0;
 }
 uint32_t vsHeader::getFlags(uint32_t frame,uint32_t *flags)
 {
-    return AVI_KEY_FRAME;
+    *flags=AVI_KEY_FRAME;
+    if(frame>=_mainaviheader.dwTotalFrames)
+    {
+        ADM_warning("Frame out of bounds: %u / %u\n",frame,_mainaviheader.dwTotalFrames);
+        return 0;
+    }
+    return 1;
 }
 
 /**
@@ -152,10 +162,10 @@ WAVHeader *vsHeader::getAudioInfo(uint32_t i )
  * @param frame
  * @return 
  */
- uint64_t vsHeader::getTime(uint32_t frame)
- {
-     return frame* _mainaviheader.dwMicroSecPerFrame;
- }
+uint64_t vsHeader::getTime(uint32_t frame)
+{
+    return getTimeForFrame(frame);
+}
 /**
    \fn getAudioStream
 */
@@ -180,13 +190,23 @@ uint8_t   vsHeader::getNbAudioStreams(void)
 
 uint8_t vsHeader::close(void)
 {
+    if(vsapi && _node)
+    {
+        vsapi->freeNode(_node);
+        _node=NULL;
+    }
     if(_script)
     {
-          vsscript_freeScript(_script);
-          vsscript_finalize();
+        vsscript_freeScript(_script);
+        _script=NULL;
     }
-    // _node ?
-   return 1;
+    while(inited)
+    {
+        inited--;
+        vsscript_finalize();
+    }
+    vsapi=NULL;
+    return 1;
 }
 /**
     \fn vsHeader
@@ -195,6 +215,7 @@ uint8_t vsHeader::close(void)
 
  vsHeader::vsHeader( void ) : vidHeader()
 {
+    inited=0;
     _script=NULL;
     _node = NULL;
 }
@@ -232,7 +253,6 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     img->demuxerPts=getTimeForFrame(frame);
     img->demuxerDts=img->demuxerPts;
     img->demuxerFrameNo=frame; // not sure
-    
     uint8_t *target=img->data;
 #if 0    
     const VSVideoInfo *vi = vsapi->getVideoInfo(_node);
@@ -241,6 +261,7 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
         ADM_error("Error getting getVideoInfo for frame %d\n",frame);
         return false;
     }
+#endif
     for (int plane = 0; plane < 3; plane++) 
     {
         int p=mapp[plane];
@@ -267,7 +288,6 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              readPtr += stride;
          }
     }
-#endif
     vsapi->freeFrame(vsframe);
     return true;
 }
@@ -307,6 +327,7 @@ uint64_t vsHeader::getTimeForFrame(int frame)
     double d=1000000.;
     d*=(double)_videostream.dwScale;
     d/=(double)_videostream.dwRate;
+    d*=frame;
     return (uint64_t)d;
 }
 /**
