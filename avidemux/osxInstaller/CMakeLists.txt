@@ -87,7 +87,7 @@ ENDFOREACH(k ${kind})
 LIST(APPEND all ${myPlugins})
 LIST(APPEND all ${all_adm_plugin})
 MESSAGE(STATUS "Plugin to fix : ${all}")
-FIXUP_BUNDLE("${BUNDLE}" "${all}" "${bundleDirs}")
+FIXUP_BUNDLE("${BUNDLE}" "${all}" "${bundleDirs}" IGNORE_ITEM "python3;python3.7m;python3.7;Python")
 # Now we can move the old libs
 MESSAGE(STATUS " * Cleanup * ")
 FILE(REMOVE_RECURSE  "${BUNDLE}/Contents/lib")
@@ -117,6 +117,31 @@ FILE(APPEND "${QT_CONF}" "Plugins = PlugIns\n")
 FILE(COPY "${ORIGINAL}/Contents/Resources/share" DESTINATION "${RESOURCES}") 
 FILE(COPY "${ORIGINAL}/Contents/Resources/fonts" DESTINATION "${RESOURCES}") 
 FILE(COPY "${ORIGINAL}/Contents/Resources/avidemux.icns" DESTINATION "${RESOURCES}") 
+
+# Partially relink libADM_dm_vapoursynth.dylib
+# Using default link location because versioned paths from VAPOURSYNTHSCRIPT_LDFLAGS
+# would result in each minor VapourSynth upgrade breaking the demuxer.
+FILE(GLOB dmvs "${BIN}/ADM_plugins6/demuxers/libADM_dm_vapoursynth.dylib")
+IF(dmvs)
+    SET(HOMEBREW_PREFIX "/usr/local")
+    MESSAGE(STATUS "Relinking ${dmvs}")
+    EXECUTE_PROCESS(COMMAND install_name_tool -change "@executable_path/../Frameworks/libvapoursynth.dylib"
+        "${HOMEBREW_PREFIX}/lib/libvapoursynth.dylib" "${dmvs}")
+    EXECUTE_PROCESS(COMMAND install_name_tool -change "@executable_path/../Frameworks/libvapoursynth-script.0.dylib"
+        "${HOMEBREW_PREFIX}/lib/libvapoursynth-script.0.dylib" "${dmvs}")
+ENDIF(dmvs)
+
+# Remove Python and libvapoursynth*, the former can't be relinked and we end up using external versions anyway.
+FILE(GLOB pyth "${BUNDLE}/Contents/Frameworks/Python.framework")
+IF(pyth)
+        MESSAGE(STATUS "Removing Python")
+        FILE(REMOVE_RECURSE "${pyth}")
+ENDIF(pyth)
+FILE(GLOB vs "${BUNDLE}/Contents/Frameworks/libvapoursynth*")
+FOREACH(v ${vs})
+        MESSAGE(STATUS "Removing ${v}")
+        FILE(REMOVE "${v}")
+ENDFOREACH(v ${vs})
 
 # Remove the copies of Qt lib in framework, we only keep "5"
 FILE(GLOB  frameworks "${BUNDLE}/Contents/Frameworks/*")
