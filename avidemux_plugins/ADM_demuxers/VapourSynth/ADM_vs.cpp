@@ -16,14 +16,10 @@
 
 #include "ADM_default.h"
 #include "fourcc.h"
-#include "DIA_coreToolkit.h"
-#include "ADM_videoInfoExtractor.h"
-
 #include "ADM_vs.h"
 #if !defined(__APPLE__) && !defined(_WIN32)
  #include <dlfcn.h>
 #endif
-#include <math.h>
 
 static const VSAPI *vsapi = NULL;
 #if 0

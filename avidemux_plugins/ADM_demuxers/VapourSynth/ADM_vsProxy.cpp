@@ -16,12 +16,8 @@
 
 #include "ADM_default.h"
 #include "fourcc.h"
-#include "DIA_coreToolkit.h"
-#include "ADM_videoInfoExtractor.h"
-
 
 #include "ADM_vsProxy.h"
-#include <math.h>
 
 
 static const VSAPI *vsapi = NULL;

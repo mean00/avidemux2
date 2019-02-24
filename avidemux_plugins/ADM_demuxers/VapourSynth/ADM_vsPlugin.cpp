@@ -16,8 +16,6 @@
 #include "ADM_default.h"
 #include "ADM_vs.h"
 #include "ADM_demuxerInternal.h"
-#include "fourcc.h"
-#include <algorithm>
 
 ADM_DEMUXER_BEGIN( vsHeader, 50,
                     1,0,0,

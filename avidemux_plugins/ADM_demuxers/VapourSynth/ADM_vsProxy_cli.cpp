@@ -16,15 +16,11 @@
 
 #include "ADM_default.h"
 #include "fourcc.h"
-#include "DIA_coreToolkit.h"
-#include "ADM_videoInfoExtractor.h"
 #ifndef __APPLE__
 #include "ADM_memsupport.h"
 #endif
 
 #include "ADM_vsProxy.h"
-#include <math.h>
-#include <string>
 
 static void printUsageAndExit()
 {
