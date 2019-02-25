@@ -1,7 +1,8 @@
---- libavformat/libavformat.v.orig	2018-07-16 20:07:01.208778253 +0200
-+++ libavformat/libavformat.v	2018-07-16 20:21:16.972337937 +0200
+--- libavformat/libavformat.v.orig	2019-02-09 21:56:02.000000000 +0100
++++ libavformat/libavformat.v	2019-02-25 12:13:10.925757857 +0100
 @@ -1,6 +1,9 @@
- LIBAVFORMAT_MAJOR {
+-LIBAVFORMAT_MAJOR {
++ADM_LIBAVFORMAT_MAJOR {
      global:
          av*;
 +# Avidemux

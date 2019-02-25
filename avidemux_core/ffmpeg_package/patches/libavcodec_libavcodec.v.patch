@@ -1,7 +1,8 @@
---- libavcodec/libavcodec.v.orig	2018-07-17 22:05:10.667194018 +0200
-+++ libavcodec/libavcodec.v	2018-07-17 22:03:33.983796242 +0200
+--- libavcodec/libavcodec.v.orig	2019-02-09 21:56:02.000000000 +0100
++++ libavcodec/libavcodec.v	2019-02-25 12:14:12.177349940 +0100
 @@ -1,6 +1,13 @@
- LIBAVCODEC_MAJOR {
+-LIBAVCODEC_MAJOR {
++ADM_LIBAVCODEC_MAJOR {
      global:
          av*;
 +# Avidemux

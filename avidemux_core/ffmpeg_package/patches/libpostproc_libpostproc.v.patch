@@ -1,0 +1,8 @@
+--- libpostproc/libpostproc.v.orig	2018-11-01 19:34:28.000000000 +0100
++++ libpostproc/libpostproc.v	2019-02-25 12:14:54.846065644 +0100
+@@ -1,4 +1,4 @@
+-LIBPOSTPROC_MAJOR {
++ADM_LIBPOSTPROC_MAJOR {
+     global:
+         postproc_*;
+         pp_*;
