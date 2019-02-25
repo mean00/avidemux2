@@ -159,6 +159,7 @@ bool vapourSynthProxy::run(int myPort, const char *name)
     if(!slave)
     {
         ADM_warning("No connection , timeout\n");
+        abort();
         return false;
     }
     
