@@ -38,7 +38,7 @@ uint8_t vsHeader::open(const char *name)
 {
     ADM_info("Opening %s as VapourSynth file\n",name);
 #if !defined(__APPLE__) && !defined(_WIN32)
-    dlopen("libpython3.7m.so", RTLD_LAZY|RTLD_GLOBAL);
+    dlopen(VAPOURSYNTH_PYTHONLIB, RTLD_LAZY|RTLD_GLOBAL);
 #endif
     inited=vsscript_init();
     if(!inited)
