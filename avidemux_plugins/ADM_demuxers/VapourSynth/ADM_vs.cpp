@@ -38,9 +38,10 @@ uint8_t vsHeader::open(const char *name)
 {
     ADM_info("Opening %s as VapourSynth file\n",name);
 #if !defined(__APPLE__) && !defined(_WIN32)
+    ADM_info("Trying to dlopen %s\n",VAPOURSYNTH_PYTHONLIB);
     dlopen(VAPOURSYNTH_PYTHONLIB, RTLD_LAZY|RTLD_GLOBAL);
 #endif
-    inited=vsscript_init();
+    inited+=!!vsscript_init();
     if(!inited)
     {
         ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
@@ -232,12 +233,11 @@ uint8_t vsHeader::close(void)
 
 uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
+    if(frame>=_nbFrames) return false;
+
     char errMsg[1024];
     const int mapp[3]={0,2,1};
-    int error = 0;
-    
-    if(frame>=_nbFrames) return false;
-    
+
     const VSFrameRef *vsframe = vsapi->getFrame(frame, _node, errMsg, sizeof(errMsg));
     if (!vsframe) 
     { 
