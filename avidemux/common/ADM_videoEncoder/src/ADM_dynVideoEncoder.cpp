@@ -139,23 +139,22 @@ static void parseFolder(const char *folder)
         clearDirectoryContent(nbFile,files);        
 }
 /**
- *     \fn ADM_ve6_loadPlugins
- *  \brief load all audio device plugins
- */
+    \fn ADM_ve6_loadPlugins
+    \brief load all video encoder plugins
+*/
 uint8_t ADM_ve6_loadPlugins(const char *path,const char *subFolder)
 {
+    // Add our copy encoder...
+    ADM_videoEncoder6 *dll=new ADM_videoEncoder6(DUMMY_ENCODER_COPY);
+    dll->desc=&copyDesc;
+    ListOfEncoders.append(dll);
 
-        // Add our copy encoder....
-        ADM_videoEncoder6 *dll=new ADM_videoEncoder6("copyADM");
-        dll->desc=&copyDesc;
-        ListOfEncoders.append(dll);
-        
-        std::string myPath=std::string(path);
-        parseFolder(myPath.c_str());
-        
-        myPath+=std::string("/")+std::string(subFolder);
-        parseFolder(myPath.c_str());
-        
+    std::string myPath=std::string(path);
+    parseFolder(myPath.c_str());
+
+    myPath+=std::string("/")+std::string(subFolder);
+    parseFolder(myPath.c_str());
+
     sortEncoder();
 
     return 1;
