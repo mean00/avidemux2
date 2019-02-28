@@ -488,6 +488,8 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
             {
             CHANNEL_TYPE *p_ch_type = channelMapping;
 #define DOIT(x,y) if(_context->channel_layout & AV_CH_##x) *(p_ch_type++)=ADM_CH_##y;
+            if(!_context->channel_layout)
+                _context->channel_layout=av_get_default_channel_layout(channels);
 
                     DOIT(FRONT_LEFT,FRONT_LEFT);
                     DOIT(FRONT_RIGHT,FRONT_RIGHT);
