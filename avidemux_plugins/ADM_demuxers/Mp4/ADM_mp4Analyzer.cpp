@@ -61,11 +61,9 @@ bool MP4Header::refineAudio(WAVHeader *header,uint32_t extraLen,uint8_t *extraDa
     ADM_info("Audio track is AAC, checking it...\n");
 
     AacAudioInfo info;
-    ADM_getAacInfoFromConfig(extraLen,extraData,info);
-
-    if(info.channels>8)
+    if(!ADM_getAacInfoFromConfig(extraLen,extraData,info))
     {
-        ADM_warning("Invalid channel index = %" PRIu32"\n",info.channels);
+        ADM_warning("Can't get # of channels from AAC extradata.\n");
         return false;
     }
 
