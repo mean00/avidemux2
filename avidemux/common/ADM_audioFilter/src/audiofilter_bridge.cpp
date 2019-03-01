@@ -54,6 +54,9 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
   // For SBR TEST
   //_wavHeader.frequency*=2;
   _wavHeader.frequency=_incoming->getOutputFrequency();
+  uint32_t outChannels=_incoming->getOutputChannels();
+  if(outChannels)
+      _wavHeader.channels=(uint16_t)outChannels;
   // /For SBR Test
   _startTimeUs=_ms2us(startInMs);
   _shiftUs=_ms2us(shiftMs);

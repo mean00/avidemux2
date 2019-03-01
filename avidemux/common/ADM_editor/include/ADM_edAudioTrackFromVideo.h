@@ -52,6 +52,7 @@ public:
                     uint8_t	   getAudioStream(ADM_audioStream **audio);
             virtual WAVHeader    *getInfo(void);
                     uint32_t      getOutputFrequency(void); // sbr
+                    uint32_t      getOutputChannels(void);
             virtual CHANNEL_TYPE * getChannelMapping(void );
                     bool           hasVBRAudio(void) {return true;};
 

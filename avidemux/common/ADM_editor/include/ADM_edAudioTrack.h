@@ -67,6 +67,7 @@ public:
                     }
             virtual bool            destroyable()=0;
             virtual uint32_t      getOutputFrequency(void)=0; // sbr
+            virtual uint32_t      getOutputChannels(void)=0;
             virtual CHANNEL_TYPE * getChannelMapping(void )=0;
             virtual bool            getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts)=0;
             virtual ADM_edAudioTrackFromVideo *castToTrackFromVideo(void) 

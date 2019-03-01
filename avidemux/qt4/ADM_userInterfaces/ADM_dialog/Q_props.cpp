@@ -95,27 +95,8 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
         sprintf(text, "%s", getStrFromAudioCodec(wavinfo->encoding));
         FILLQT_TRANSLATE_NOOP("qprops",labelACodec);
 
-        switch (wavinfo->channels)
-        {
-            case 1:
-                sprintf(text,"%s", QT_TRANSLATE_NOOP("qprops","Mono"));
-                break;
-            case 2:
-                sprintf(text,"%s", QT_TRANSLATE_NOOP("qprops","Stereo"));
-                break;
-            default:
-                sprintf(text, "%d",wavinfo->channels);
-                break;
-        }
-
-        FILLQT_TRANSLATE_NOOP("qprops",labelChannels);
-
-        FILLTEXT4(labelBitrate, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Bps / %" PRIu32" kbps"), wavinfo->byterate, wavinfo->byterate * 8 / 1000);
-
-        FILLTEXT(labelVBR,"%s","n/a");
-
-        FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), wavinfo->frequency);
-
+        uint32_t channels=wavinfo->channels;
+        uint32_t frequency=wavinfo->frequency;
         duration=0;
         EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
         if(ed)
@@ -125,13 +106,39 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
             {
                 case ADM_EDAUDIO_FROM_VIDEO:
                     duration=ed->edTrack->castToTrackFromVideo()->getDurationInUs();
+                    channels=ed->edTrack->castToTrackFromVideo()->getOutputChannels();
+                    frequency=ed->edTrack->castToTrackFromVideo()->getOutputFrequency();
                     break;
                 case ADM_EDAUDIO_EXTERNAL:
                     duration=ed->edTrack->castToExternal()->getDurationInUs();
+                    channels=ed->edTrack->castToExternal()->getOutputChannels();
+                    frequency=ed->edTrack->castToExternal()->getOutputFrequency();
                     break;
                 default:break;
             }
         }
+
+        switch (channels)
+        {
+            case 1:
+                sprintf(text,"%s", QT_TRANSLATE_NOOP("qprops","Mono"));
+                break;
+            case 2:
+                sprintf(text,"%s", QT_TRANSLATE_NOOP("qprops","Stereo"));
+                break;
+            default:
+                sprintf(text, "%d",channels);
+                break;
+        }
+
+        FILLQT_TRANSLATE_NOOP("qprops",labelChannels);
+
+        FILLTEXT4(labelBitrate, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Bps / %" PRIu32" kbps"), wavinfo->byterate, wavinfo->byterate * 8 / 1000);
+
+        FILLTEXT(labelVBR,"%s","n/a");
+
+        FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), frequency);
+
         ms2time(duration/1000,&hh,&mm,&ss,&ms);
         sprintf(text, QT_TRANSLATE_NOOP("qprops","%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
         FILLQT_TRANSLATE_NOOP("qprops",labelAudioDuration);
