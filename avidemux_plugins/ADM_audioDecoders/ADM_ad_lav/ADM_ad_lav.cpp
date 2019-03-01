@@ -264,6 +264,12 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
             _context->sample_rate,outputFrequency);
         outputFrequency=_context->sample_rate;
     }
+    if(_context->channels!=info->channels)
+    {
+        ADM_warning("Decoder and demuxer disagree about # of channels: %d / %d\n",_context->channels,info->channels);
+        if(updateChannels(_context->channels))
+            channels=_context->channels;
+    }
 }
 /**
     \fn dtor
