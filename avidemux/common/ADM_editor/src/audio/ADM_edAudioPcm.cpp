@@ -102,6 +102,7 @@ again:
     *samples=0;
     ADM_audioStreamTrack *trk=getCurrentTrack();
     if(!trk) return false;
+    if(trk->codec->isDummy()) return false;
     checkDts=trk->stream->constantSamplesPerPacket();
     // Do we already have a packet ?
     if(!packetBufferSize)
@@ -173,8 +174,7 @@ again:
     if(!trk->codec->run(packetBuffer, packetBufferSize, dest, &nbOut))
     {
             packetBufferSize=0; // consume
-            ADM_warning("[Composer::getPCMPacket] Track %d:%x : codec failed failed\n",
-                            myTrackNumber,trk);
+            ADM_warning("Track %d at 0x%p : decoding failed\n",myTrackNumber,trk);
             return false;
     }
     packetBufferSize=0; // consume
