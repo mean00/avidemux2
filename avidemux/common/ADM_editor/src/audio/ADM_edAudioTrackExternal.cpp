@@ -91,6 +91,13 @@ uint32_t    ADM_edAudioTrackExternal::getOutputFrequency(void)
     return codec->getOutputFrequency();
 }
 /**
+    \fn getOutputChannels
+*/
+uint32_t ADM_edAudioTrackExternal::getOutputChannels(void)
+{
+    return codec->getOutputChannels();
+}
+/**
     \fn refillPacketBuffer
 */
 bool             ADM_edAudioTrackExternal::refillPacketBuffer(void)
@@ -192,7 +199,11 @@ bool         ADM_edAudioTrackExternal::getPCMPacket(float  *dest, uint32_t sizeM
 uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
 uint32_t inSize;
 bool      drop=false;
-uint32_t outFrequency=codec->getOutputFrequency();
+uint32_t outFrequency=getOutputFrequency();
+uint32_t outChannels=getOutputChannels();
+
+    if(!outChannels) return false;
+
  vprintf("[PCMPacketExt]  request TRK %d:%x\n",0,(long int)0);
 again:
     *samples=0;
@@ -228,7 +239,7 @@ again:
 
     // Compute how much decoded sample to compare with what demuxer said
     uint32_t decodedSample=nbOut;
-    decodedSample/=wavHeader.channels;
+    decodedSample/=outChannels;
     if(!decodedSample) goto again;
 #define ADM_MAX_JITTER 5000  // in samples, due to clock accuracy, it can be +er, -er, + er, -er etc etc
     if(labs((int64_t)decodedSample-(int64_t)packetBufferSamples)>ADM_MAX_JITTER)
@@ -244,7 +255,7 @@ again:
     advanceDtsByCustomSample(decodedSample,outFrequency);
     vprintf("[Composer::getPCMPacket] Track %d:%x Adding %u decoded, Adding %u filler sample,"
         " dts is now %lu\n", 0,(long int)0,  decodedSample,fillerSample,lastDts);
-    ADM_assert(sizeMax>=(fillerSample+decodedSample)*wavHeader.channels);
+    ADM_assert(sizeMax>=(fillerSample+decodedSample)*outChannels);
     vprintf("[getPCMext] %d samples, dts=%s\n",*samples,ADM_us2plain(*odts));
     return true;
 }

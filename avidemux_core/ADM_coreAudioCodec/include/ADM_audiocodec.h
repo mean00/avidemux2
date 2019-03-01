@@ -27,6 +27,11 @@ class ADM_Audiocodec
     protected:
         uint8_t	_init;
         WAVHeader wavHeader;
+        virtual bool updateChannels(uint32_t nb)
+        {
+            if(!nb || nb>MAX_CHANNELS) return false;
+            wavHeader.channels=(uint16_t)nb; return true;
+        }
     public:
         ADM_Audiocodec(uint32_t fourcc,const WAVHeader &info)
         {
@@ -35,6 +40,7 @@ class ADM_Audiocodec
             wavHeader=info;
         };
         virtual uint32_t getOutputFrequency(void)  {return wavHeader.frequency;}
+        virtual uint32_t getOutputChannels(void) {return wavHeader.channels;}
         virtual	        ~ADM_Audiocodec() {};
         virtual	        void purge(void) {}
         virtual	bool    resetAfterSeek(void) {return true;};
