@@ -124,7 +124,9 @@ again:
                         if(latm.getFrequency())
                         {
                             ADM_assert(latm.getExtraData(&eLen,&eData));
-                            trackInfo->wav.frequency=latm.getFrequency();
+                            uint32_t fq=latm.getFrequency();
+                            if(fq<=24000) fq*=2; // implicit SBR?
+                            trackInfo->wav.frequency=fq;
                             trackInfo->wav.channels=latm.getChannels();
                             trackInfo->wav.byterate=128000>>3;
                             trackInfo->extraDataLen=eLen;
