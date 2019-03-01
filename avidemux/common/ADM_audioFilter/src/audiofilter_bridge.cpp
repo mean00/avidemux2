@@ -62,8 +62,7 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
   _shiftUs=_ms2us(shiftMs);
   
   _held=_hold=0;
-  rewind();
-  
+
   ADM_info("[Bridge] Starting with time %s , shift %" PRIi32" ms\n",ADM_us2plain(startInMs*1000LL),-shiftMs);
   // If shiftMS is > 0, it means we have to go in the future, just increase _startTime
   if(shiftMs>0)
@@ -119,8 +118,6 @@ uint8_t AUDMAudioFilter_Bridge::rewind(void)
 */
 uint32_t   AUDMAudioFilter_Bridge::fill(uint32_t max,float *output,AUD_Status *status)
 {
-  uint32_t asked,asked2,total=0;
-  //
   ADM_assert(_tail>=_head);
   shrink();
   ADM_assert(_tail>=_head);
