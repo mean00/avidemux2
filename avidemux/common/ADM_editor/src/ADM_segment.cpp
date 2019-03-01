@@ -124,6 +124,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
   uint64_t minDelta=100000;
   uint64_t maxDelta=0;
+  int fmin,fmax;
   for (int frame=0; frame<info.nb_frames; frame++)
   {
       if (ref->_aviheader->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
@@ -136,14 +137,14 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
           }
 
           uint64_t probedTimeIncrement=(dts-firstNonZeroDts)/(frame-firstNonZeroDtsFrame);
-          if(probedTimeIncrement<minDelta) minDelta=probedTimeIncrement;
-          if(probedTimeIncrement>maxDelta) maxDelta=probedTimeIncrement;
+          if(probedTimeIncrement<minDelta) { minDelta=probedTimeIncrement; fmin=frame; }
+          if(probedTimeIncrement>maxDelta) { maxDelta=probedTimeIncrement; fmax=frame; }
           firstNonZeroDts=dts;
           firstNonZeroDtsFrame=frame;
       }
   }
-  ADM_info("min increment %s = %" PRIu64" us\n",ADM_us2plain(minDelta),minDelta);
-  ADM_info("max increment %s = %" PRIu64" us\n",ADM_us2plain(maxDelta),maxDelta);
+  ADM_info("min increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(minDelta),minDelta,fmin);
+  ADM_info("max increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(maxDelta),maxDelta,fmax);
   
   //if (minDelta==ref->timeIncrementInUs*2)
               //ref->timeIncrementInUs=minDelta;
