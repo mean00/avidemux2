@@ -48,6 +48,9 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 #define check(...) {}
 #endif
 
+static ADMCountdown wait(100);
+static ADMCountdown reset(199);
+
 /**
     \fn ADM_getH264SpsPpsFromExtraData
     \brief Returns a copy of PPS/SPS extracted from extrdata
@@ -459,7 +462,9 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 */
 static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
-
+    static int count=0;
+    if(wait.done() && reset.done())
+        count=0;
     uint8_t *payloadBuffer=(uint8_t *)malloc(nalSize+16);
     int     originalNalSize=nalSize+16;
     uint8_t *payload=payloadBuffer;
@@ -472,6 +477,20 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
         return false;
     }
 
+#define RATE_LIMITED_WARNING(x) if(!count)\
+    { \
+        ADM_warning(#x"\n"); \
+        wait.reset(); \
+    } \
+    if(wait.done() && count) \
+    { \
+        ADM_warning(#x" (message repeated %d times)\n",count); \
+        wait.reset(); \
+        count=0; \
+    } \
+    count++; \
+    reset.reset();
+
     uint8_t *tail=payload+nalSize;
     *recoveryLength=16;
     while( payload<tail)
@@ -482,14 +501,14 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                         sei_type+=0xff;payload++;
                         if(payload+2>=tail)
                         {
-                            ADM_warning("Cannot decode SEI\n");
+                            RATE_LIMITED_WARNING(Cannot decode SEI)
                             goto abtSei;
                         }
                 };
                 sei_type+=payload[0];payload++;
                 if(payload>=tail)
                 {
-                            ADM_warning("Cannot decode SEI\n");
+                            RATE_LIMITED_WARNING(Cannot decode SEI)
                             goto abtSei;
                 }
                 while(payload[0]==0xff)
@@ -497,7 +516,7 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                     sei_size+=0xff;payload++;
                     if(payload+1>=tail)
                         {
-                            ADM_warning("Cannot decode SEI (2)\n");
+                            RATE_LIMITED_WARNING(Cannot decode SEI (2))
                             goto abtSei;
                         }
                 };
@@ -512,6 +531,7 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                             payload+=sei_size;
                             *recoveryLength=bits.getUEG();
                             r=true;
+                            count=0;
                             break;
                         }
                         default:
