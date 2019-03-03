@@ -161,6 +161,7 @@ protected:
                     bool        switchToNextAudioSegment(void);
                     PoolOfAudioTracks   audioTrackPool;
                     ActiveAudioTracks   activeAudioTracks;
+                    bool        checkSamplingFrequency(ADM_audioStreamTrack *trk); // detect implicit SBR in AAC
 
 //****************************** Audio **********************************
                     void        deleteAllVideos(void );

@@ -103,7 +103,7 @@ again:
     ADM_audioStreamTrack *trk=getCurrentTrack();
     if(!trk) return false;
     if(trk->codec->isDummy()) return false;
-    checkDts=trk->stream->constantSamplesPerPacket();
+    checkDts=(trk->stream->constantSamplesPerPacket() && !trk->isbr);
     // Do we already have a packet ?
     if(!packetBufferSize)
     {

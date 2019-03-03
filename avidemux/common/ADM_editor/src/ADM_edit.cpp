@@ -362,6 +362,8 @@ uint8_t ADM_Composer::addFile (const char *name)
 
             stream->getExtraData(&extraLen,&extraData);
             track->codec=getAudioCodec(header->encoding,header,extraLen,extraData);
+            if((track->wavheader).encoding==WAV_AAC)
+                track->isbr=checkSamplingFrequency(track);
 
             thisVid->audioTracks.push_back(track);
             if(!_segments.getNbRefVideos()) // 1st video..
@@ -468,6 +470,50 @@ bool ADM_Composer::hasVBRAudio(void)
         return 0;
 }
 #endif
+/**
+    \fn checkSamplingFrequency
+    \brief Check AAC for implicit SBR
+*/
+bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
+{
+    if(!track) return false;
+    if(!track->codec) return false;
+    if(track->codec->isDummy()) return false;
+
+    uint32_t chan=track->codec->getOutputChannels();
+    if(chan<2) chan=2;
+
+    WAVHeader *hdr=&(track->wavheader);
+    if(hdr->channels>chan)
+        chan=hdr->channels;
+
+    uint32_t len=(hdr->frequency)*chan; // 1 sec max
+    uint32_t max=ADM_EDITOR_PACKET_BUFFER_SIZE;
+
+    notStackAllocator inbuf(max);
+    uint8_t *in=inbuf.data;
+
+    uint32_t inlen,samples;
+    uint64_t dts;
+    if(false==track->stream->getPacket(in,&inlen,max,&samples,&dts))
+        return false;
+
+    notStackAllocator outbuf(len*sizeof(float));
+    float *out=(float *)outbuf.data;
+
+    uint32_t nbOut;
+    if(false==track->codec->run(in,inlen,out,&nbOut))
+        return false;
+
+    uint32_t fq=track->codec->getOutputFrequency();
+    if(fq && fq!=hdr->frequency)
+    {
+        ADM_warning("Updating sampling frequency from %u to %u\n",hdr->frequency,fq);
+        hdr->frequency=fq;
+        return true; // implicit SBR
+    }
+    return false;
+}
 /**
     \fn getPARWidth
 

@@ -52,6 +52,7 @@ protected:
     bool        decodeToS32(float **outptr,uint32_t *nbOut);
     bool        decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut);
     uint32_t    outputFrequency;
+    bool        sbrChecked;
 public:
                     ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
     virtual         ~ADM_AudiocoderLavcodec() ;
@@ -112,7 +113,8 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     _blockalign=0;
     _frame=av_frame_alloc();
     AVCodecID codecID = AV_CODEC_ID_NONE;
-    outputFrequency=info->frequency;    
+    outputFrequency=info->frequency;
+    sbrChecked=false;
     switch(fourcc)
     {
       case WAV_WMAPRO:
@@ -489,6 +491,18 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
                   break;
             }
         }
+
+    if(!sbrChecked)
+    {
+        if(_context->sample_rate!=outputFrequency)
+        {
+            ADM_warning("Output frequency %d does not match input frequency %d. Implicit SBR?\n",
+                _context->sample_rate,outputFrequency);
+            outputFrequency=_context->sample_rate;
+        }
+        sbrChecked=true;
+    }
+
         //------------------
           if(channels>=5 )
             {
