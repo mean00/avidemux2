@@ -1705,7 +1705,7 @@ Is it running ?</source>
         <translation type="unfinished">Сохранение аудио</translation>
     </message>
     <message>
-        <location line="+303"/>
+        <location line="+309"/>
         <location line="+83"/>
         <source>Done</source>
         <translation type="unfinished">Выполнено</translation>
@@ -1716,7 +1716,7 @@ Is it running ?</source>
         <translation type="unfinished">Сохранено изображений: %d </translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2407,7 +2407,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="-144"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <source>No audio track</source>
         <translation type="unfinished">Нет звуковой дорожки</translation>
     </message>
@@ -2649,7 +2649,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4393,7 +4393,7 @@ Do you want to load it  ?
         <translation type="unfinished">Этап:</translation>
     </message>
     <message>
-        <location line="+180"/>
+        <location line="+220"/>
         <source>Audio Codec:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4408,43 +4408,43 @@ Do you want to load it  ?
         <translation type="unfinished">Кодек видео:</translation>
     </message>
     <message>
-        <location line="-215"/>
-        <location line="+180"/>
+        <location line="-255"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation type="unfinished">Не нужно</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation type="unfinished">Неизвестно</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+64"/>
         <source>Audio Size:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+72"/>
+        <location line="+81"/>
         <source>Average Bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation type="unfinished">
             </translation>
     </message>
     <message>
-        <location line="-393"/>
+        <location line="-460"/>
         <source>Time Remaining:</source>
         <translation type="unfinished">Осталось времени:</translation>
     </message>
     <message>
-        <location line="+242"/>
+        <location line="+291"/>
         <source>Total Size:</source>
         <translation type="unfinished">Общий размер:</translation>
     </message>
@@ -4454,7 +4454,7 @@ Do you want to load it  ?
         <translation type="unfinished">Размер видео:</translation>
     </message>
     <message>
-        <location line="-252"/>
+        <location line="-301"/>
         <source>Shut down computer when finished</source>
         <translation type="unfinished">Выключить после завершения</translation>
     </message>
@@ -4499,12 +4499,12 @@ Do you want to load it  ?
         <translation type="unfinished">Пауза / Прервать</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+26"/>
         <source>Advanced</source>
         <translation type="unfinished">Дополнительно</translation>
     </message>
     <message>
-        <location line="+204"/>
+        <location line="+249"/>
         <source>Processed Frames:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4514,7 +4514,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4524,24 +4524,24 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-442"/>
+        <location line="-509"/>
         <source>Main</source>
         <translation type="unfinished">Главный</translation>
     </message>
     <message>
-        <location line="+291"/>
+        <location line="+340"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
         <translation type="unfinished">0 Мб</translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+77"/>
         <source>0 kB/s</source>
         <translation type="unfinished">0 Кб/с</translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>00:00:00</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6523,12 +6523,12 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Качество:</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+6"/>
         <source>LAME Configuration</source>
         <translation type="unfinished">Настройка LAME</translation>
     </message>
     <message>
-        <location line="-30"/>
+        <location line="-29"/>
         <source>CBR</source>
         <translation>Постоянный битрейт (CBR)</translation>
     </message>
@@ -6538,7 +6538,7 @@ I will assume it has and try to continue</source>
         <translation>Усреднённый битрейт (ABR)</translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+24"/>
         <source>_Disable reservoir</source>
         <translation>_Отключить использование свободного места в аудиокадре для данных следующего</translation>
     </message>
@@ -7028,7 +7028,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Ошибка чтения заголовков SVQ3</translation>
     </message>
@@ -7980,7 +7980,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Да</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+98"/>
         <source>Mono</source>
         <translation type="unfinished">Моно</translation>
     </message>
@@ -7990,7 +7990,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Стерео</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+46"/>
         <source>Video</source>
         <translation>Видео</translation>
     </message>
@@ -8066,18 +8066,18 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>Без звука</translation>
     </message>
     <message>
-        <location line="-148"/>
+        <location line="-155"/>
         <source>%2.3f fps</source>
         <translation type="unfinished">%2.3f кадров/с</translation>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation>%02d:%02d:%02d,%03d</translation>
     </message>
     <message>
-        <location line="-80"/>
+        <location line="-87"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>

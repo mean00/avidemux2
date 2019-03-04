@@ -1087,7 +1087,7 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1168,7 +1168,7 @@ Drop timing informations ?</source>
         <translation>GMC</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-469"/>
+        <location filename="../../common/gui_save.cpp" line="-475"/>
         <source>Job</source>
         <translation>工作</translation>
     </message>
@@ -1245,7 +1245,7 @@ Drop timing informations ?</source>
         <translation>H263</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+435"/>
+        <location filename="../../common/gui_save.cpp" line="+441"/>
         <location line="+83"/>
         <source>Done</source>
         <translation>完成</translation>
@@ -1267,7 +1267,7 @@ Drop timing informations ?</source>
         <translation>LPCM</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-180"/>
+        <location filename="../../common/gui_save.cpp" line="-186"/>
         <source>Jpeg</source>
         <translation>Jpeg</translation>
     </message>
@@ -1376,7 +1376,7 @@ It is needed to create FLV  video.</source>
         <translation>它沒&apos;有LAME！，它需要去建立 FLV影片。</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+582"/>
+        <location filename="../../common/gui_save.cpp" line="+588"/>
         <source>File %s was NOT saved correctly.</source>
         <translation>檔案 %s 儲存不正確。</translation>
     </message>
@@ -1395,7 +1395,7 @@ It is needed to create FLV  video.</source>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+212"/>
         <location line="+3"/>
         <location line="+5"/>
-        <location filename="../../common/gui_save.cpp" line="-582"/>
+        <location filename="../../common/gui_save.cpp" line="-588"/>
         <location line="+10"/>
         <location line="+278"/>
         <location line="+19"/>
@@ -1423,7 +1423,7 @@ It is needed to create FLV  video.</source>
         <translation>只顯示錯誤警告</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -1434,7 +1434,7 @@ It is needed to create FLV  video.</source>
         <location line="+24"/>
         <location line="+8"/>
         <location line="+4"/>
-        <location filename="../../common/gui_save.cpp" line="+183"/>
+        <location filename="../../common/gui_save.cpp" line="+189"/>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_quota.cpp" line="+68"/>
         <source>Error</source>
         <translation>錯誤</translation>
@@ -1762,7 +1762,7 @@ Proceed anyway?</source>
         <translation>當增加時某些事情失敗</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-473"/>
+        <location filename="../../common/gui_save.cpp" line="-479"/>
         <source>Select Workbench to Save</source>
         <translation>選擇工作台進行儲存</translation>
     </message>
@@ -2041,7 +2041,7 @@ Installation mismatch</source>
         <translation>沒有編進這個版本</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+478"/>
+        <location filename="../../common/gui_save.cpp" line="+484"/>
         <source>Failed</source>
         <translation>已失敗</translation>
     </message>
@@ -2102,7 +2102,7 @@ Installation mismatch</source>
         <translation>運動</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-515"/>
+        <location filename="../../common/gui_save.cpp" line="-521"/>
         <source>Job name</source>
         <translation>工作名稱</translation>
     </message>
@@ -2112,7 +2112,7 @@ Installation mismatch</source>
         <translation>複合器</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+428"/>
+        <location filename="../../common/gui_save.cpp" line="+434"/>
         <source>Saved %d images.</source>
         <translation>已儲存 %d 個圖像。</translation>
     </message>
@@ -2143,7 +2143,7 @@ Installation mismatch</source>
         <translation>輸出</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-188"/>
+        <location filename="../../common/gui_save.cpp" line="-194"/>
         <source>Cannot create stream</source>
         <translation>不能建立流</translation>
     </message>
@@ -2469,7 +2469,7 @@ Do you want to continue anyway ?</source>
         <translation>正在檢查影片</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+498"/>
+        <location filename="../../common/gui_save.cpp" line="+504"/>
         <source>Saving %s as a BMP file failed.</source>
         <translation>另存 %s 為 BMP 檔失敗。</translation>
     </message>
@@ -2499,7 +2499,7 @@ Do you want to continue anyway ?</source>
         <translation>Film 轉成 PAL</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-428"/>
+        <location filename="../../common/gui_save.cpp" line="-434"/>
         <source>Select File to Save</source>
         <translation>選擇檔案進行儲存</translation>
     </message>
@@ -2811,7 +2811,7 @@ Installation mismatch</source>
         <translation>幾秒鐘</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+469"/>
+        <location filename="../../common/gui_save.cpp" line="+475"/>
         <source>File %s has been successfully saved.</source>
         <translation>檔案 %s 已經成功地儲存。</translation>
     </message>
@@ -2906,7 +2906,7 @@ Installation mismatch</source>
         <translation>無法安裝編解碼器，位元率太低？</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-512"/>
+        <location filename="../../common/gui_save.cpp" line="-518"/>
         <source>Output file</source>
         <translation>輸出檔案</translation>
     </message>
@@ -3210,7 +3210,7 @@ Expect problems.</source>
         <translation>外掛-音訊(ADM)</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+497"/>
+        <location filename="../../common/gui_save.cpp" line="+503"/>
         <source>Cannot get tinyPÿ script engine</source>
         <translation>不能獲得tinyPÿ腳本引擎</translation>
     </message>
@@ -3225,7 +3225,7 @@ Expect problems.</source>
         <translation>模式決定</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-526"/>
+        <location filename="../../common/gui_save.cpp" line="-532"/>
         <source>Queue job to jobList</source>
         <translation>工作清單</translation>
     </message>
@@ -4374,26 +4374,26 @@ Do you want to load it  ?
 <context>
     <name>encodingDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="+398"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="+456"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-331"/>
+        <location line="-398"/>
         <source>Low</source>
         <translation>低</translation>
     </message>
     <message>
-        <location line="+187"/>
+        <location line="+236"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
         <translation>0 MB</translation>
     </message>
     <message>
-        <location line="-228"/>
+        <location line="-277"/>
         <source>High</source>
         <translation>高</translation>
     </message>
@@ -4404,7 +4404,7 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+28"/>
-        <location line="+180"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation>無</translation>
@@ -4415,12 +4415,12 @@ Do you want to load it  ?
         <translation>音訊編解碼器:</translation>
     </message>
     <message>
-        <location line="-142"/>
+        <location line="-182"/>
         <source>Priority:</source>
         <translation>優先權:</translation>
     </message>
     <message>
-        <location line="+232"/>
+        <location line="+281"/>
         <source>Video Size:</source>
         <translation>影片大小:</translation>
     </message>
@@ -4430,42 +4430,42 @@ Do you want to load it  ?
         <translation>音訊大小:</translation>
     </message>
     <message>
-        <location line="-188"/>
+        <location line="-237"/>
         <source>Above Normal</source>
         <translation>高於一般</translation>
     </message>
     <message>
-        <location line="+154"/>
+        <location line="+194"/>
         <source>Video Codec:</source>
         <translation>影片編解碼器:</translation>
     </message>
     <message>
-        <location line="+123"/>
+        <location line="+141"/>
         <source>Processed Frames:</source>
         <translation>已處理的幀:</translation>
     </message>
     <message>
-        <location line="-267"/>
+        <location line="-325"/>
         <source>Below Normal</source>
         <translation>低於一般</translation>
     </message>
     <message>
-        <location line="+322"/>
+        <location line="+389"/>
         <source>Elapsed:</source>
         <translation>經過時間:</translation>
     </message>
     <message>
-        <location line="-41"/>
+        <location line="-50"/>
         <source>0 kB/s</source>
         <translation>0 kB/s</translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="-386"/>
+        <location line="-453"/>
         <source>Time Remaining:</source>
         <translation>剩餘時間:</translation>
     </message>
@@ -4480,12 +4480,12 @@ Do you want to load it  ?
         <translation>階段:</translation>
     </message>
     <message>
-        <location line="+338"/>
+        <location line="+396"/>
         <source>Quantiser:</source>
         <translation>量化器:</translation>
     </message>
     <message>
-        <location line="-320"/>
+        <location line="-378"/>
         <source>Shut down computer when finished</source>
         <translation>完成後關閉電腦</translation>
     </message>
@@ -4495,17 +4495,17 @@ Do you want to load it  ?
         <translation>暫停 / 停止</translation>
     </message>
     <message>
-        <location line="+200"/>
+        <location line="+258"/>
         <source>Average Bitrate:</source>
         <translation>平均位元率(ABR):</translation>
     </message>
     <message>
-        <location line="-113"/>
+        <location line="-131"/>
         <source>Container:</source>
         <translation>容器:</translation>
     </message>
     <message>
-        <location line="-252"/>
+        <location line="-292"/>
         <source>Encoding...</source>
         <translation>正在編碼...</translation>
     </message>
@@ -4515,23 +4515,23 @@ Do you want to load it  ?
         <translation>縮到工具列上</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+46"/>
         <source>Advanced</source>
         <translation>進階</translation>
     </message>
     <message>
-        <location line="+280"/>
+        <location line="+334"/>
         <source>Frames/sec:</source>
         <translation>幀/秒:</translation>
     </message>
     <message>
-        <location line="-431"/>
-        <location line="+211"/>
+        <location line="-498"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+71"/>
         <source>Total Size:</source>
         <translation>總大小:</translation>
     </message>
@@ -6512,12 +6512,12 @@ I will assume it has and try to continue</source>
         <translation>位元率:</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>LAME Configuration</source>
         <translation>LAME 配置</translation>
     </message>
     <message>
-        <location line="-27"/>
+        <location line="-26"/>
         <source>Bit_rate mode:</source>
         <translation>位元率模式:</translation>
     </message>
@@ -6527,7 +6527,7 @@ I will assume it has and try to continue</source>
         <translation>品質:</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Disable reservoir</source>
         <translation>停用貯存:</translation>
     </message>
@@ -7017,7 +7017,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>讀取 SVQ3 檔頭時發生問題</translation>
     </message>
@@ -7968,12 +7968,12 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>是</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+98"/>
         <source>Mono</source>
         <translation>單音</translation>
     </message>
     <message>
-        <location line="+88"/>
+        <location line="+72"/>
         <source>Audio</source>
         <translation>音訊</translation>
     </message>
@@ -7998,12 +7998,12 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>幀率:	</translation>
     </message>
     <message>
-        <location line="-116"/>
+        <location line="-123"/>
         <source>%2.3f fps</source>
         <translation>%2.3f fps</translation>
     </message>
     <message>
-        <location line="+128"/>
+        <location line="+135"/>
         <source>Extra data:	</source>
         <translation>額外資料：:	</translation>
     </message>
@@ -8018,8 +8018,8 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>額外影片屬性</translation>
     </message>
     <message>
-        <location line="-116"/>
-        <location line="+74"/>
+        <location line="-123"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation>%02d:%02d:%02d.%03d</translation>
     </message>
@@ -8034,22 +8034,22 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>編解碼器 4CC:	</translation>
     </message>
     <message>
-        <location line="-64"/>
+        <location line="-48"/>
         <source>Stereo</source>
         <translation>立體聲</translation>
     </message>
     <message>
-        <location line="+89"/>
+        <location line="+73"/>
         <source>Codec:		</source>
         <translation>編解碼器：		</translation>
     </message>
     <message>
-        <location line="-137"/>
+        <location line="-144"/>
         <source>%s (%u:%u)</source>
         <translation>%s (%u:%u)</translation>
     </message>
     <message>
-        <location line="+141"/>
+        <location line="+148"/>
         <source>Bitrate:	</source>
         <translation>位元率:	</translation>
     </message>

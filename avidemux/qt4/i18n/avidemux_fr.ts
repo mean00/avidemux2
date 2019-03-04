@@ -2110,7 +2110,7 @@ It is needed to create FLV  video.</source>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-109"/>
-        <location filename="../../common/gui_save.cpp" line="+282"/>
+        <location filename="../../common/gui_save.cpp" line="+288"/>
         <location line="+10"/>
         <source>Queue</source>
         <translation>Mettre en queue</translation>
@@ -2143,7 +2143,7 @@ It is needed to create FLV  video.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2191,7 +2191,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="-82"/>
-        <location filename="../../common/gui_save.cpp" line="-497"/>
+        <location filename="../../common/gui_save.cpp" line="-503"/>
         <source>No audio track</source>
         <translation>Pas de piste audio</translation>
     </message>
@@ -2574,7 +2574,7 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4373,7 +4373,7 @@ Do you want to load it  ?
         <translation type="unfinished">Phases:</translation>
     </message>
     <message>
-        <location line="+180"/>
+        <location line="+220"/>
         <source>Audio Codec:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4388,20 +4388,20 @@ Do you want to load it  ?
         <translation type="unfinished">Codec Vidéo:</translation>
     </message>
     <message>
-        <location line="-215"/>
-        <location line="+180"/>
+        <location line="-255"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation type="unfinished">Aucun</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation type="unfinished">Inconnu</translation>
     </message>
     <message>
-        <location line="-180"/>
+        <location line="-220"/>
         <source>Time Remaining:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4441,7 +4441,7 @@ Do you want to load it  ?
         <translation type="unfinished">Pause/Abandon</translation>
     </message>
     <message>
-        <location line="+128"/>
+        <location line="+177"/>
         <source>Audio Size:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4456,7 +4456,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+53"/>
         <source>Average Bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4471,7 +4471,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4481,7 +4481,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-442"/>
+        <location line="-509"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4496,31 +4496,31 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+46"/>
         <source>Advanced</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+129"/>
+        <location line="+165"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+53"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-55"/>
+        <location line="-64"/>
         <source>0 kB/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>00:00:00</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6501,7 +6501,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
         <source>_Disable reservoir</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6996,7 +6996,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Impossible de lire l&apos;entete SVQ3</translation>
     </message>
@@ -7953,7 +7953,7 @@ L&apos;édition en cours a été enregistrée et sera rechargée au prochain dé
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8034,12 +8034,12 @@ L&apos;édition en cours a été enregistrée et sera rechargée au prochain dé
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-150"/>
+        <location line="-157"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+68"/>
         <source>Mono</source>
         <translation type="unfinished"></translation>
     </message>

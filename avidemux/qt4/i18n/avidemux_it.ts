@@ -1396,7 +1396,7 @@ Eliminare le informazioni temporali?</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../common/gui_save.cpp" line="+282"/>
+        <location filename="../../common/gui_save.cpp" line="+288"/>
         <location line="+10"/>
         <source>Queue</source>
         <translation>Coda</translation>
@@ -1950,7 +1950,7 @@ Eliminare le informazioni temporali?</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="+48"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <source>No audio track</source>
         <translation>Nessuna traccia audio</translation>
     </message>
@@ -2275,7 +2275,7 @@ Is it running ?</source>
         <translation>Jpeg</translation>
     </message>
     <message>
-        <location line="+97"/>
+        <location line="+103"/>
         <location line="+83"/>
         <source>Done</source>
         <translation>Fatto</translation>
@@ -2286,7 +2286,7 @@ Is it running ?</source>
         <translation>%d immagini salvate.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2615,7 +2615,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-572"/>
+        <location filename="../../common/gui_save.cpp" line="-578"/>
         <source>Audio encoder index out of bounds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2661,7 +2661,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4370,27 +4370,27 @@ Vuoi caricarlo?
         <translation>Fase:</translation>
     </message>
     <message>
-        <location line="+208"/>
+        <location line="+248"/>
         <source>Video Codec:</source>
         <translation>Codec video:</translation>
     </message>
     <message>
-        <location line="-215"/>
-        <location line="+180"/>
+        <location line="-255"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation>Nessuno</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation>Sconosciuto</translation>
     </message>
     <message>
-        <location line="+134"/>
+        <location line="+152"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation>0</translation>
     </message>
@@ -4400,19 +4400,19 @@ Vuoi caricarlo?
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="-137"/>
+        <location line="-155"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
         <translation>0 MB</translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+77"/>
         <source>0 kB/s</source>
         <translation>0 kB/s</translation>
     </message>
     <message>
-        <location line="-327"/>
+        <location line="-385"/>
         <source>Shut down computer when finished</source>
         <translation>Arresta il sistema al termine</translation>
     </message>
@@ -4457,7 +4457,7 @@ Vuoi caricarlo?
         <translation>Pausa / Annulla </translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+127"/>
         <source>Container:</source>
         <translation>Contenitore:</translation>
     </message>
@@ -4467,22 +4467,22 @@ Vuoi caricarlo?
         <translation>Codec audio:</translation>
     </message>
     <message>
-        <location line="+206"/>
+        <location line="+233"/>
         <source>Elapsed:</source>
         <translation>Tempo trascorso:</translation>
     </message>
     <message>
-        <location line="-379"/>
+        <location line="-446"/>
         <source>Time Remaining:</source>
         <translation>Tempo rimanente:</translation>
     </message>
     <message>
-        <location line="+400"/>
+        <location line="+467"/>
         <source>Frames/sec:</source>
         <translation>Fotogrammi/sec:</translation>
     </message>
     <message>
-        <location line="-158"/>
+        <location line="-176"/>
         <source>Total Size:</source>
         <translation>Dimensione totale:</translation>
     </message>
@@ -4497,7 +4497,7 @@ Vuoi caricarlo?
         <translation>Dimensione video:</translation>
     </message>
     <message>
-        <location line="+61"/>
+        <location line="+70"/>
         <source>Processed Frames:</source>
         <translation>Fotogrammi elaborati:</translation>
     </message>
@@ -4512,12 +4512,12 @@ Vuoi caricarlo?
         <translation>Quantizzatore:</translation>
     </message>
     <message>
-        <location line="-211"/>
+        <location line="-256"/>
         <source>Advanced</source>
         <translation type="unfinished">Avanzate</translation>
     </message>
     <message>
-        <location line="-162"/>
+        <location line="-175"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6500,7 +6500,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">_Qualità:</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+6"/>
         <source>LAME Configuration</source>
         <translation type="unfinished">Configurazione LAME</translation>
     </message>
@@ -6995,7 +6995,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Problema di lettura delle intestazioni SVQ3</translation>
     </message>
@@ -8405,7 +8405,7 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation type="unfinished">%02d:%02d:%02d.%03d</translation>
     </message>
@@ -8486,12 +8486,12 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-150"/>
+        <location line="-157"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished">%s (%u:%u)</translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+68"/>
         <source>Mono</source>
         <translation type="unfinished">Mono</translation>
     </message>

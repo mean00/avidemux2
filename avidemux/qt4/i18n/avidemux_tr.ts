@@ -1843,7 +1843,7 @@ Is it running ?</source>
         <translation type="unfinished">Ses kaydediliyor</translation>
     </message>
     <message>
-        <location line="+303"/>
+        <location line="+309"/>
         <location line="+83"/>
         <source>Done</source>
         <translation type="unfinished">Tamamlandı</translation>
@@ -1854,7 +1854,7 @@ Is it running ?</source>
         <translation type="unfinished">%d resim kaydedildi.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2463,7 +2463,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="-144"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <source>No audio track</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2693,7 +2693,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4456,14 +4456,14 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+44"/>
-        <location line="+180"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation type="unfinished">Hiçbiri</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation type="unfinished">
             </translation>
@@ -4479,7 +4479,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+50"/>
         <source>Audio Size:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4494,19 +4494,19 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+53"/>
         <source>Average Bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location line="-69"/>
+        <location line="-78"/>
         <source>Processed Frames:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4516,7 +4516,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4531,7 +4531,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-151"/>
+        <location line="-169"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
@@ -4539,13 +4539,13 @@ Do you want to load it  ?
             </translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+77"/>
         <source>0 kB/s</source>
         <translation type="unfinished">
             </translation>
     </message>
     <message>
-        <location line="-327"/>
+        <location line="-385"/>
         <source>Shut down computer when finished</source>
         <translation type="unfinished">
             </translation>
@@ -4596,12 +4596,12 @@ Do you want to load it  ?
         <translation type="unfinished">Duraklat / İptâl et</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+26"/>
         <source>Advanced</source>
         <translation type="unfinished">Gelişmiş</translation>
     </message>
     <message>
-        <location line="-162"/>
+        <location line="-175"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4616,7 +4616,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+114"/>
+        <location line="+154"/>
         <source>Video Codec:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6616,7 +6616,7 @@ I will assume it has and try to continue</source>
             </translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Disable reservoir</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7114,7 +7114,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">SVQ3 başlıklarının okunmasında hata</translation>
     </message>
@@ -8081,7 +8081,7 @@ The current editing has been saved and will be reloaded at next start</source>
             </translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+98"/>
         <source>Mono</source>
         <translation type="unfinished">Tek kanal</translation>
     </message>
@@ -8091,7 +8091,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">İki kanal</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+46"/>
         <source>Video</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8167,18 +8167,18 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-148"/>
+        <location line="-155"/>
         <source>%2.3f fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-80"/>
+        <location line="-87"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>

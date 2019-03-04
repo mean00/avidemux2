@@ -1857,7 +1857,7 @@ Czy jest on uruchomiony?</translation>
         <translation>Zapisywanie dźwięku</translation>
     </message>
     <message>
-        <location line="+303"/>
+        <location line="+309"/>
         <location line="+83"/>
         <source>Done</source>
         <translation>Zrobione</translation>
@@ -1868,7 +1868,7 @@ Czy jest on uruchomiony?</translation>
         <translation>Zapisano %d obrazów.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2415,7 +2415,7 @@ Niezgodność instalacji</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="-144"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <source>No audio track</source>
         <translation>Brak ścieżki dźwiękowej</translation>
     </message>
@@ -2650,7 +2650,7 @@ Czy kontynuować mimo to?</translation>
         <translation>Nie udało się zapisać jako JPEG</translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation>Zapisywanie zaznaczenia w postaci zestawu obrazów JPEG</translation>
     </message>
@@ -4395,14 +4395,14 @@ Czy chcesz go wczytać ?
     </message>
     <message>
         <location line="+44"/>
-        <location line="+180"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation>Brak</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation>Nieznany</translation>
     </message>
@@ -4417,7 +4417,7 @@ Czy chcesz go wczytać ?
         <translation>Kontener:</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+50"/>
         <source>Audio Size:</source>
         <translation>Rozmiar dźwięku:</translation>
     </message>
@@ -4432,19 +4432,19 @@ Czy chcesz go wczytać ?
         <translation>Rozmiar wideo:</translation>
     </message>
     <message>
-        <location line="+51"/>
+        <location line="+60"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-69"/>
+        <location line="-78"/>
         <source>Processed Frames:</source>
         <translation>Przetworzone klatki:</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+64"/>
         <source>Elapsed:</source>
         <translation>Upłynęło:</translation>
     </message>
@@ -4459,14 +4459,14 @@ Czy chcesz go wczytać ?
         <translation>Klatki/sek:</translation>
     </message>
     <message>
-        <location line="-151"/>
+        <location line="-169"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
         <translation>0 MB</translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+77"/>
         <source>0 kB/s</source>
         <translation>0 kB/s</translation>
     </message>
@@ -4481,7 +4481,7 @@ Czy chcesz go wczytać ?
         <translation>Kwantyzator:</translation>
     </message>
     <message>
-        <location line="-320"/>
+        <location line="-378"/>
         <source>Shut down computer when finished</source>
         <translation>Wyłącz komputer po zakończeniu</translation>
     </message>
@@ -4541,12 +4541,12 @@ Czy chcesz go wczytać ?
         <translation>Minimalizuj do zasobnika</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+46"/>
         <source>Advanced</source>
         <translation>Zaawansowane</translation>
     </message>
     <message>
-        <location line="+81"/>
+        <location line="+108"/>
         <source>Video Codec:</source>
         <translation>Kodek obrazu:</translation>
     </message>
@@ -6538,7 +6538,7 @@ Ja zakładam, że ma i spróbuję kontynuować</translation>
         <translation>_Jakość:</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+6"/>
         <source>LAME Configuration</source>
         <translation>Konfiguracja LAME</translation>
     </message>
@@ -7034,7 +7034,7 @@ Ja zakładam, że ma i spróbuję kontynuować</translation>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>Wystąpił problem podczas czytania nagłówków SVQ3</translation>
     </message>
@@ -7985,7 +7985,7 @@ Bieżąca edycja została zapisana i zostanie ponownie załadowana przy następn
         <translation>Tak</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+98"/>
         <source>Mono</source>
         <translation>Mono</translation>
     </message>
@@ -7995,7 +7995,7 @@ Bieżąca edycja została zapisana i zostanie ponownie załadowana przy następn
         <translation>Stereo</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+46"/>
         <source>Video</source>
         <translation>Obraz</translation>
     </message>
@@ -8071,18 +8071,18 @@ Bieżąca edycja została zapisana i zostanie ponownie załadowana przy następn
         <translation>Brak dźwięku</translation>
     </message>
     <message>
-        <location line="-148"/>
+        <location line="-155"/>
         <source>%2.3f fps</source>
         <translation>%2.3f fps</translation>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation>%02d:%02d:%02d.%03d</translation>
     </message>
     <message>
-        <location line="-80"/>
+        <location line="-87"/>
         <source>%s (%u:%u)</source>
         <translation>%s (%u:%u)</translation>
     </message>

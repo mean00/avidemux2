@@ -1066,7 +1066,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../common/gui_save.cpp" line="+653"/>
+        <location filename="../../common/gui_save.cpp" line="+659"/>
         <location line="+10"/>
         <source>Queue</source>
         <translation>Qu&amp;eue</translation>
@@ -1503,7 +1503,7 @@ Drop timing informations ?</source>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-43"/>
         <location line="+3"/>
         <location line="+5"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <location line="+10"/>
         <location line="+278"/>
         <location line="+19"/>
@@ -2057,7 +2057,7 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2068,7 +2068,7 @@ Drop timing informations ?</source>
         <location line="+24"/>
         <location line="+8"/>
         <location line="+4"/>
-        <location filename="../../common/gui_save.cpp" line="+183"/>
+        <location filename="../../common/gui_save.cpp" line="+189"/>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_quota.cpp" line="+68"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
@@ -2105,7 +2105,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="+48"/>
-        <location filename="../../common/gui_save.cpp" line="-497"/>
+        <location filename="../../common/gui_save.cpp" line="-503"/>
         <source>No audio track</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2556,7 +2556,7 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2592,12 +2592,12 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-568"/>
+        <location line="-574"/>
         <source>Audio encoder index out of bounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+485"/>
+        <location line="+491"/>
         <source>Saved %d images.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4358,19 +4358,19 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+11"/>
-        <location line="+211"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-194"/>
-        <location line="+180"/>
+        <location line="-234"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-194"/>
+        <location line="-234"/>
         <source>Phase:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4425,12 +4425,12 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+26"/>
         <source>Advanced</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+53"/>
+        <location line="+80"/>
         <source>Audio Codec:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4440,7 +4440,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+50"/>
         <source>Audio Size:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4455,7 +4455,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+53"/>
         <source>Average Bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4470,7 +4470,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4480,31 +4480,31 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-199"/>
+        <location line="-226"/>
         <source>Video Codec:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+53"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-55"/>
+        <location line="-64"/>
         <source>0 kB/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>00:00:00</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6485,7 +6485,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Disable reservoir</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6980,7 +6980,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7935,7 +7935,7 @@ The current editing has been saved and will be reloaded at next start</source>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8016,12 +8016,12 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-150"/>
+        <location line="-157"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+68"/>
         <source>Mono</source>
         <translation type="unfinished"></translation>
     </message>
