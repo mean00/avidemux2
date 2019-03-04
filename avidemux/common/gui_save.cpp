@@ -514,7 +514,13 @@ int A_saveBunchJpg(const char *name)
     admPreview::deferDisplay(true);
     admPreview::seekToTime(start);
 
-    char fullName[2048];
+#if defined(__APPLE__)
+ #define MAX_LEN 1024
+#else
+ #define MAX_LEN 4096
+#endif
+
+    char fullName[MAX_LEN];
     std::string baseName,ext;
     uint32_t range=(uint32_t)((end-start)/1000);
     uint32_t fn;
