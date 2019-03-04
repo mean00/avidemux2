@@ -16,14 +16,8 @@
  ***************************************************************************/
 #pragma once 
 
-extern "C"
-{
-#define oldcplusplus __cplusplus
-#undef __cplusplus
 #include "VSScript.h"
 #include "VSHelper.h"
-#define __cplusplus oldcplusplus
-}
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
 
