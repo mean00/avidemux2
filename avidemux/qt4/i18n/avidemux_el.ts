@@ -1783,7 +1783,7 @@ Is it running ?</source>
         <translation>Αποθηκεύεται ο ήχος</translation>
     </message>
     <message>
-        <location line="+303"/>
+        <location line="+309"/>
         <location line="+83"/>
         <source>Done</source>
         <translation>Έγινε</translation>
@@ -1794,7 +1794,7 @@ Is it running ?</source>
         <translation>Αποθηκεύτηκαν %d εικόνες.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2420,7 +2420,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="-144"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <source>No audio track</source>
         <translation>Κανένα κανάλι ήχου</translation>
     </message>
@@ -2664,7 +2664,7 @@ Proceed anyway?</source>
         <translation>Αποτυχία αποθήκευσης ως JPEG</translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation>Αποθήκευση της επιλογής ως μία ομάδα από εικόνες JPEG</translation>
     </message>
@@ -3307,7 +3307,7 @@ Proceed anyway?</source>
 Θα ήθελες να συνιστεί, έτσι κι αλλιώς;</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation>Σφάλμα Δικαιωμάτων</translation>
     </message>
@@ -4429,14 +4429,14 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+44"/>
-        <location line="+180"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation>Κανένα</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation>Άγνωστο</translation>
     </message>
@@ -4451,7 +4451,7 @@ Do you want to load it  ?
         <translation>Σκεύος:</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+50"/>
         <source>Audio Size:</source>
         <translation>Μέγεθος Ήχου:</translation>
     </message>
@@ -4466,19 +4466,19 @@ Do you want to load it  ?
         <translation>Μέγεθος του Βίντεου:</translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+53"/>
         <source>Average Bitrate:</source>
         <translation>Μέσος Ρυθμός Μπιτιών:</translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-69"/>
+        <location line="-78"/>
         <source>Processed Frames:</source>
         <translation>Επεξεργασμένα Στιγμιότυπα:</translation>
     </message>
@@ -4488,7 +4488,7 @@ Do you want to load it  ?
         <translation>Κβαντιστής:</translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>Elapsed:</source>
         <translation>Πέρασαν:</translation>
     </message>
@@ -4503,19 +4503,19 @@ Do you want to load it  ?
         <translation>Στιγμιότυπα/δευτ.:</translation>
     </message>
     <message>
-        <location line="-151"/>
+        <location line="-169"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
         <translation>0 ΜέγαΜπάιτια</translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+77"/>
         <source>0 kB/s</source>
         <translation>0 χιλιομπίτια/δευτ</translation>
     </message>
     <message>
-        <location line="-327"/>
+        <location line="-385"/>
         <source>Shut down computer when finished</source>
         <translation>Κλείσιμο του υπολογιστή, όταν τελειώσει</translation>
     </message>
@@ -4560,12 +4560,12 @@ Do you want to load it  ?
         <translation>Παύση / Εγκατάλειψη</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+26"/>
         <source>Advanced</source>
         <translation>Προχωρημένα</translation>
     </message>
     <message>
-        <location line="-162"/>
+        <location line="-175"/>
         <source>Main</source>
         <translation>Κύριο</translation>
     </message>
@@ -4580,7 +4580,7 @@ Do you want to load it  ?
         <translation>Ελαχιστοποίηση στο Ραφάκι</translation>
     </message>
     <message>
-        <location line="+114"/>
+        <location line="+154"/>
         <source>Video Codec:</source>
         <translation>Κώδικας του Βίντεου:</translation>
     </message>
@@ -6496,7 +6496,7 @@ I will assume it has and try to continue</source>
         <translation>_Ποιότητα:</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+6"/>
         <source>LAME Configuration</source>
         <translation>Ρύθμιση του LAME</translation>
     </message>
@@ -6986,7 +6986,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>Πρόβλημα στην ανάγνωση των κεφαλίδων SVQ3</translation>
     </message>
@@ -7938,7 +7938,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>Ναι</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+98"/>
         <source>Mono</source>
         <translation>Μονοφωνικό</translation>
     </message>
@@ -7948,7 +7948,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>Στερεοφωνικός</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+46"/>
         <source>Video</source>
         <translation>Βίντεο</translation>
     </message>
@@ -8024,18 +8024,18 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>Χωρίς Ήχο</translation>
     </message>
     <message>
-        <location line="-148"/>
+        <location line="-155"/>
         <source>%2.3f fps</source>
         <translation>%2.3f στιγ.ανάδευτ.</translation>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation>%02d:%02d:%02d.%03d</translation>
     </message>
     <message>
-        <location line="-80"/>
+        <location line="-87"/>
         <source>%s (%u:%u)</source>
         <translation>%s (%u:%u)</translation>
     </message>
@@ -9264,14 +9264,14 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>vsWindow</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+68"/>
-        <source>Open VapourSynth File 1</source>
-        <translation>Άνοιγμα του VapourSynth Αρχείου 1</translation>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+85"/>
+        <source>Open VapourSynth File</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>VS File Files (*.vpy)</source>
-        <translation>VS Αρχεία Κατοχύρωσης (*.vpy)</translation>
+        <source>VS Script Files (*.vpy)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

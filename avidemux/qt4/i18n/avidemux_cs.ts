@@ -1878,7 +1878,7 @@ Je spuštěno?</translation>
         <translation type="unfinished">Ukládá se zvuk</translation>
     </message>
     <message>
-        <location line="+303"/>
+        <location line="+309"/>
         <location line="+83"/>
         <source>Done</source>
         <translation type="unfinished">Hotovo</translation>
@@ -1889,7 +1889,7 @@ Je spuštěno?</translation>
         <translation type="unfinished">Počet uložených obrázků: %d.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2758,7 +2758,7 @@ Proceed anyway?</source>
         <translation type="unfinished">Chyba inicializace zvukového zařízení</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-596"/>
+        <location filename="../../common/gui_save.cpp" line="-602"/>
         <source>Audio encoder index out of bounds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2829,7 +2829,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3246,7 +3246,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4364,20 +4364,20 @@ Chcete ho nahrát?
         <translation type="unfinished">Fáze:</translation>
     </message>
     <message>
-        <location line="+208"/>
+        <location line="+248"/>
         <source>Video Codec:</source>
         <translation type="unfinished">Video kodek:</translation>
     </message>
     <message>
-        <location line="-215"/>
-        <location line="+180"/>
+        <location line="-255"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation type="unfinished">Nic</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation type="unfinished">Neznámý</translation>
     </message>
@@ -4392,9 +4392,9 @@ Chcete ho nahrát?
         <translation>Zvukový kodek:</translation>
     </message>
     <message>
-        <location line="+141"/>
+        <location line="+159"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
@@ -4409,17 +4409,17 @@ Chcete ho nahrát?
         <translation type="unfinished">Uplynulý čas:</translation>
     </message>
     <message>
-        <location line="-379"/>
+        <location line="-446"/>
         <source>Time Remaining:</source>
         <translation type="unfinished">Zbývající čas:</translation>
     </message>
     <message>
-        <location line="+400"/>
+        <location line="+467"/>
         <source>Frames/sec:</source>
         <translation type="unfinished">Snímků za sekundu:</translation>
     </message>
     <message>
-        <location line="-151"/>
+        <location line="-169"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
@@ -4441,7 +4441,7 @@ Chcete ho nahrát?
         <translation type="unfinished">Velikost videa:</translation>
     </message>
     <message>
-        <location line="+61"/>
+        <location line="+70"/>
         <source>Processed Frames:</source>
         <translation type="unfinished">Zpracované snímky:</translation>
     </message>
@@ -4461,7 +4461,7 @@ Chcete ho nahrát?
         <translation type="unfinished">Kvantizér:</translation>
     </message>
     <message>
-        <location line="-320"/>
+        <location line="-378"/>
         <source>Shut down computer when finished</source>
         <translation type="unfinished">Po ukončení vypnout počítač</translation>
     </message>
@@ -4506,12 +4506,12 @@ Chcete ho nahrát?
         <translation type="unfinished">Hlavní</translation>
     </message>
     <message>
-        <location line="+162"/>
+        <location line="+175"/>
         <source>Advanced</source>
         <translation type="unfinished">Pokročilé</translation>
     </message>
     <message>
-        <location line="-33"/>
+        <location line="-46"/>
         <source>Minimize to Tray</source>
         <translation>Minimalizovat</translation>
     </message>
@@ -6424,7 +6424,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">_Kvalita:</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+6"/>
         <source>LAME Configuration</source>
         <translation type="unfinished">Nastavení LAME</translation>
     </message>
@@ -6914,7 +6914,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Chyba čtení hlavičky SVQ3</translation>
     </message>
@@ -7869,7 +7869,7 @@ The current editing has been saved and will be reloaded at next start</source>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation type="unfinished">%02d:%02d:%02d.%03d</translation>
     </message>
@@ -7950,12 +7950,12 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-150"/>
+        <location line="-157"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished">%s (%u:%u)</translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+68"/>
         <source>Mono</source>
         <translation type="unfinished">Mono</translation>
     </message>
@@ -9187,13 +9187,13 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>vsWindow</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+68"/>
-        <source>Open VapourSynth File 1</source>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+85"/>
+        <source>Open VapourSynth File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>VS File Files (*.vpy)</source>
+        <source>VS Script Files (*.vpy)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

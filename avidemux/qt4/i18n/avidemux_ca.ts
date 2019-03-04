@@ -1884,7 +1884,7 @@ Segur que està funcionant?</translation>
         <translation type="unfinished">S&apos;està desant l&apos;àudio.</translation>
     </message>
     <message>
-        <location line="+303"/>
+        <location line="+309"/>
         <location line="+83"/>
         <source>Done</source>
         <translation type="unfinished">Fet</translation>
@@ -1895,7 +1895,7 @@ Segur que està funcionant?</translation>
         <translation type="unfinished">S&apos;han desat %d imatges.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2428,7 +2428,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="-144"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <source>No audio track</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2657,7 +2657,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3244,7 +3244,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4361,20 +4361,20 @@ El voleu carregar?
         <translation type="unfinished">Fase:</translation>
     </message>
     <message>
-        <location line="+208"/>
+        <location line="+248"/>
         <source>Video Codec:</source>
         <translation type="unfinished">Còdec de vídeo:</translation>
     </message>
     <message>
-        <location line="-215"/>
-        <location line="+180"/>
+        <location line="-255"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation type="unfinished">Cap</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation type="unfinished">Desconegut</translation>
     </message>
@@ -4389,9 +4389,9 @@ El voleu carregar?
         <translation type="unfinished">Còdec d&apos;àudio:</translation>
     </message>
     <message>
-        <location line="+141"/>
+        <location line="+159"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
@@ -4406,17 +4406,17 @@ El voleu carregar?
         <translation type="unfinished">Transcorregut:</translation>
     </message>
     <message>
-        <location line="-379"/>
+        <location line="-446"/>
         <source>Time Remaining:</source>
         <translation type="unfinished">Temps restant:</translation>
     </message>
     <message>
-        <location line="+400"/>
+        <location line="+467"/>
         <source>Frames/sec:</source>
         <translation type="unfinished">Fotogrames/s:</translation>
     </message>
     <message>
-        <location line="-151"/>
+        <location line="-169"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
@@ -4438,7 +4438,7 @@ El voleu carregar?
         <translation type="unfinished">Mida del vídeo:</translation>
     </message>
     <message>
-        <location line="+61"/>
+        <location line="+70"/>
         <source>Processed Frames:</source>
         <translation type="unfinished">Fotogram. processats:</translation>
     </message>
@@ -4458,7 +4458,7 @@ El voleu carregar?
         <translation type="unfinished">Quantificador:</translation>
     </message>
     <message>
-        <location line="-320"/>
+        <location line="-378"/>
         <source>Shut down computer when finished</source>
         <translation type="unfinished">Apaga l&apos;ordinador en acabar</translation>
     </message>
@@ -4498,12 +4498,12 @@ El voleu carregar?
         <translation type="unfinished">Atura / Cancel·la</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+26"/>
         <source>Advanced</source>
         <translation type="unfinished">Avançat</translation>
     </message>
     <message>
-        <location line="-162"/>
+        <location line="-175"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6416,17 +6416,17 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Taxa de _bits: </translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>LAME Configuration</source>
         <translation type="unfinished">Configuració LAME</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-6"/>
         <source>_Quality:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Disable reservoir</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6911,7 +6911,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Hi ha hagut un problema en la lectura d&apos;encapçalaments d&apos;SVQ3</translation>
     </message>
@@ -7860,7 +7860,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Sí</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+98"/>
         <source>Mono</source>
         <translation type="unfinished">Mono</translation>
     </message>
@@ -7870,7 +7870,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Estèreo</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+46"/>
         <source>Video</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7946,18 +7946,18 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-148"/>
+        <location line="-155"/>
         <source>%2.3f fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-80"/>
+        <location line="-87"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9184,13 +9184,13 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>vsWindow</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+68"/>
-        <source>Open VapourSynth File 1</source>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+85"/>
+        <source>Open VapourSynth File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>VS File Files (*.vpy)</source>
+        <source>VS Script Files (*.vpy)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

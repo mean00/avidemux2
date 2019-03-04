@@ -1393,7 +1393,7 @@ Si solo copia el vídeo sin recodificarlo,
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../common/gui_save.cpp" line="+282"/>
+        <location filename="../../common/gui_save.cpp" line="+288"/>
         <location line="+10"/>
         <source>Queue</source>
         <translation>Cola</translation>
@@ -1842,7 +1842,7 @@ Si solo copia el vídeo sin recodificarlo,
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="+48"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <source>No audio track</source>
         <translation>No hay pistas de audio</translation>
     </message>
@@ -2167,7 +2167,7 @@ Is it running ?</source>
         <translation>Guardando audio</translation>
     </message>
     <message>
-        <location line="+303"/>
+        <location line="+309"/>
         <location line="+83"/>
         <source>Done</source>
         <translation>Hecho</translation>
@@ -2178,7 +2178,7 @@ Is it running ?</source>
         <translation>Guardadas %d imágenes.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2753,7 +2753,7 @@ Los vídeos guardados en modo de copia quedan corruptos en dicho punto.
         <translation>Problemas al inicializar el dispositivo de audio</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-572"/>
+        <location filename="../../common/gui_save.cpp" line="-578"/>
         <source>Audio encoder index out of bounds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2805,7 +2805,7 @@ Los vídeos guardados en modo de copia quedan corruptos en dicho punto.
         <translation>Error al guardar como JPEG</translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation>Guardando la selección como un conjunto de imágenes JPEG</translation>
     </message>
@@ -3283,7 +3283,7 @@ Descartar un fotograma da como resultado un vídeo severamente corrupto.
         <translation>Al guardar, algunos fotogramas de vídeo anteriores a %s han tenido que ser retrasados, dando como resultado una pérdida temporal de sincronización de A/V. ¿Quiere continuar de todas formas?</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation>Error de permisos</translation>
     </message>
@@ -4401,14 +4401,14 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+44"/>
-        <location line="+180"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation>Ninguno</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation>Desconocido</translation>
     </message>
@@ -4423,7 +4423,7 @@ Do you want to load it  ?
         <translation>Contenedor:</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+50"/>
         <source>Audio Size:</source>
         <translation>Tamaño del audio:</translation>
     </message>
@@ -4438,19 +4438,19 @@ Do you want to load it  ?
         <translation>Tamaño del vídeo:</translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+53"/>
         <source>Average Bitrate:</source>
         <translation>Tasa de bits media:</translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-69"/>
+        <location line="-78"/>
         <source>Processed Frames:</source>
         <translation>Fotogramas procesados:</translation>
     </message>
@@ -4460,7 +4460,7 @@ Do you want to load it  ?
         <translation>Cuantizador:</translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>Elapsed:</source>
         <translation>Transcurrido:</translation>
     </message>
@@ -4475,19 +4475,19 @@ Do you want to load it  ?
         <translation>Fotogramas/s:</translation>
     </message>
     <message>
-        <location line="-151"/>
+        <location line="-169"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+77"/>
         <source>0 kB/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-327"/>
+        <location line="-385"/>
         <source>Shut down computer when finished</source>
         <translation>Apagar el ordenador al terminar</translation>
     </message>
@@ -4537,22 +4537,22 @@ Do you want to load it  ?
         <translation>Fase:</translation>
     </message>
     <message>
-        <location line="+208"/>
+        <location line="+248"/>
         <source>Video Codec:</source>
         <translation>Códec de vídeo:</translation>
     </message>
     <message>
-        <location line="-243"/>
+        <location line="-283"/>
         <source>Main</source>
         <translation>Principal</translation>
     </message>
     <message>
-        <location line="+162"/>
+        <location line="+175"/>
         <source>Advanced</source>
         <translation>Avanzado</translation>
     </message>
     <message>
-        <location line="-33"/>
+        <location line="-46"/>
         <source>Minimize to Tray</source>
         <translation>Minimizar a la bandeja</translation>
     </message>
@@ -6475,7 +6475,7 @@ Se asume que tiene y se intenta continuar.</translation>
         <translation>_Calidad:</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Disable reservoir</source>
         <translation>Desac_tivar el reservorio:</translation>
     </message>
@@ -6965,7 +6965,7 @@ Se asume que tiene y se intenta continuar.</translation>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>Ha habido un problema leyendo las cabeceras SVQ3</translation>
     </message>
@@ -7917,7 +7917,7 @@ Se ha guardado la edición actual y se volverá a cargar en el siguiente inicio<
         <translation>Sí</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+98"/>
         <source>Mono</source>
         <translation>Mono</translation>
     </message>
@@ -7927,7 +7927,7 @@ Se ha guardado la edición actual y se volverá a cargar en el siguiente inicio<
         <translation>Estéreo</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+46"/>
         <source>Video</source>
         <translation>Vídeo</translation>
     </message>
@@ -8003,18 +8003,18 @@ Se ha guardado la edición actual y se volverá a cargar en el siguiente inicio<
         <translation>No hay audio</translation>
     </message>
     <message>
-        <location line="-148"/>
+        <location line="-155"/>
         <source>%2.3f fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-80"/>
+        <location line="-87"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9246,14 +9246,14 @@ Borre el archivo idx2 y vuelva a abrir.</translation>
 <context>
     <name>vsWindow</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+68"/>
-        <source>Open VapourSynth File 1</source>
-        <translation>Abrir archivo 1 de VapourSynth</translation>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+85"/>
+        <source>Open VapourSynth File</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>VS File Files (*.vpy)</source>
-        <translation>Archivos de VS (*.vpy)</translation>
+        <source>VS Script Files (*.vpy)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

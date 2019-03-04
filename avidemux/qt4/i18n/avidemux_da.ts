@@ -1074,7 +1074,7 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../common/gui_save.cpp" line="+653"/>
+        <location filename="../../common/gui_save.cpp" line="+659"/>
         <location line="+10"/>
         <source>Queue</source>
         <translation>Sæt i kø</translation>
@@ -1553,7 +1553,7 @@ Drop timinginformationer?</translation>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-43"/>
         <location line="+3"/>
         <location line="+5"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <location line="+10"/>
         <location line="+278"/>
         <location line="+19"/>
@@ -2242,7 +2242,7 @@ Kører den?</translation>
         <translation>JPEG</translation>
     </message>
     <message>
-        <location line="+97"/>
+        <location line="+103"/>
         <location line="+83"/>
         <source>Done</source>
         <translation>Færdig</translation>
@@ -2253,7 +2253,7 @@ Kører den?</translation>
         <translation>Gemte %d billeder.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -2819,7 +2819,7 @@ Forvent problemer.</translation>
         <translation>Problem ved initialisering af lydenhed</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-572"/>
+        <location filename="../../common/gui_save.cpp" line="-578"/>
         <source>Audio encoder index out of bounds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2866,7 +2866,7 @@ Forvent problemer.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3271,7 +3271,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+233"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation>Tilladelsesfejl</translation>
     </message>
@@ -4393,20 +4393,20 @@ Vil du indlæse den?
         <translation>Fase:</translation>
     </message>
     <message>
-        <location line="+208"/>
+        <location line="+248"/>
         <source>Video Codec:</source>
         <translation>Video-codec:</translation>
     </message>
     <message>
-        <location line="-215"/>
-        <location line="+180"/>
+        <location line="-255"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation>Ingen</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation>Ukendt</translation>
     </message>
@@ -4421,9 +4421,9 @@ Vil du indlæse den?
         <translation>Lyd-codec:</translation>
     </message>
     <message>
-        <location line="+141"/>
+        <location line="+159"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation>0</translation>
     </message>
@@ -4438,17 +4438,17 @@ Vil du indlæse den?
         <translation>Forløbet:</translation>
     </message>
     <message>
-        <location line="-379"/>
+        <location line="-446"/>
         <source>Time Remaining:</source>
         <translation>Resterende tid:</translation>
     </message>
     <message>
-        <location line="+400"/>
+        <location line="+467"/>
         <source>Frames/sec:</source>
         <translation>Billeder/sekund:</translation>
     </message>
     <message>
-        <location line="-151"/>
+        <location line="-169"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
@@ -4470,7 +4470,7 @@ Vil du indlæse den?
         <translation>Videostørrelse:</translation>
     </message>
     <message>
-        <location line="+61"/>
+        <location line="+70"/>
         <source>Processed Frames:</source>
         <translation>Behandlet billeder:</translation>
     </message>
@@ -4490,7 +4490,7 @@ Vil du indlæse den?
         <translation>Quantiser:</translation>
     </message>
     <message>
-        <location line="-320"/>
+        <location line="-378"/>
         <source>Shut down computer when finished</source>
         <translation>Luk computer når fuldført</translation>
     </message>
@@ -4540,7 +4540,7 @@ Vil du indlæse den?
         <translation>Minimer til bakke</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+46"/>
         <source>Advanced</source>
         <translation>Avanceret</translation>
     </message>
@@ -6462,7 +6462,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>_Kvalitet:</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Disable reservoir</source>
         <translation>_Deaktivér reservoir:</translation>
     </message>
@@ -6952,7 +6952,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+841"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>Problem ved læsning af SVQ3-hoveder</translation>
     </message>
@@ -7910,7 +7910,7 @@ Den aktuelle redigering er blevet gemt og vil blive genindlæst ved næste start
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation>%02d:%02d:%02d,%03d</translation>
     </message>
@@ -7991,12 +7991,12 @@ Den aktuelle redigering er blevet gemt og vil blive genindlæst ved næste start
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-150"/>
+        <location line="-157"/>
         <source>%s (%u:%u)</source>
         <translation>%s (%u:%u)</translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+68"/>
         <source>Mono</source>
         <translation>Mono</translation>
     </message>
@@ -9232,14 +9232,14 @@ Slet venligst idx2-filen og genåbn.</translation>
 <context>
     <name>vsWindow</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+68"/>
-        <source>Open VapourSynth File 1</source>
-        <translation>Åbn VapourSynth-fil 1</translation>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+85"/>
+        <source>Open VapourSynth File</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>VS File Files (*.vpy)</source>
-        <translation>VS-fil-filer (*.vpy)</translation>
+        <source>VS Script Files (*.vpy)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
