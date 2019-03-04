@@ -10,7 +10,7 @@
         <h1>Changes in Avidemux v2.7.1 – v2.7.2 Beta</h1>
         <table>
             <tr><td>New Demuxer:</td><td>Native AviSynth demuxer (MSVC++ 64 bits Windows builds only)</td></tr>
-            <tr><td>New Demuxer:</td><td>VapourSynth demuxer to directly load .vpy scripts (macOS with Homebrew, custom Linux builds only)</td></tr>
+            <tr><td>New Demuxer:</td><td>VapourSynth demuxer to directly load .vpy scripts (MSVC++, macOS with Homebrew, custom Linux builds)</td></tr>
             <tr><td>New Installer:</td><td>Replace NSIS installer with Qt Installer Framework for native MSVC++ 64 bits Windows builds</td></tr>
             <tr><td>New Encoder:</td><td>Add FFmpeg-based VA-API HW accelerated H.264 encoder (Intel/Linux)</td></tr>
             <tr><td>New Encoder:</td><td>Add FFmpeg-based VA-API HW accelerated HEVC encoder (Intel/Linux)</td></tr>
