@@ -47,6 +47,8 @@ typedef enum
 } CHANNEL_CONF;
 
 #define MAX_CHANNELS 9
+#define MIN_SAMPLING_RATE 6000
+#define MAX_SAMPLING_RATE 192000
 
 typedef enum 
 {

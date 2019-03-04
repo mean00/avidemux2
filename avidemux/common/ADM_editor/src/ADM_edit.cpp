@@ -362,6 +362,25 @@ uint8_t ADM_Composer::addFile (const char *name)
 
             stream->getExtraData(&extraLen,&extraData);
             track->codec=getAudioCodec(header->encoding,header,extraLen,extraData);
+
+            // sanity check
+#define SKIP_TRACK delete track; track=NULL; continue;
+            if(!track->codec) // actually this can't happen, but better safe than sorry
+            {
+                ADM_warning("Codec is NULL, rejecting track %d\n",i);
+                SKIP_TRACK
+            }
+            if((track->wavheader).frequency < MIN_SAMPLING_RATE || (track->wavheader).frequency > MAX_SAMPLING_RATE)
+            {
+                ADM_warning("Sampling frequency %" PRIu32" for track %d out of bounds, rejecting track.\n",(track->wavheader).frequency,i);
+                SKIP_TRACK
+            }
+            if(!track->codec->getOutputChannels() || track->codec->getOutputChannels() > MAX_CHANNELS)
+            {
+                ADM_warning("Invalid number of channels %d for track %d, rejecting track.\n",track->codec->getOutputChannels(),i);
+                SKIP_TRACK
+            }
+
             if((track->wavheader).encoding==WAV_AAC)
                 track->isbr=checkSamplingFrequency(track);
 
@@ -375,7 +394,7 @@ uint8_t ADM_Composer::addFile (const char *name)
       if(!_segments.getNbRefVideos()) // only for 1st video
       {
         activeAudioTracks.clear();
-        for(int i=0;i<nbAStream;i++)
+        for(int i=0;i<audioTrackPool.size();i++)
             activeAudioTracks.addTrack(i,audioTrackPool.at(i)); // default add 1st track of video pool
       }
     }
