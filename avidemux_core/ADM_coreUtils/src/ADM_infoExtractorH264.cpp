@@ -48,8 +48,8 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 #define check(...) {}
 #endif
 
-static ADMCountdown wait(100);
-static ADMCountdown reset(199);
+static ADMCountdown msgRateLimiter(100);
+static ADMCountdown limiterReset(199);
 
 /**
     \fn ADM_getH264SpsPpsFromExtraData
@@ -463,7 +463,7 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
     static int count=0;
-    if(wait.done() && reset.done())
+    if(msgRateLimiter.done() && limiterReset.done())
         count=0;
     uint8_t *payloadBuffer=(uint8_t *)malloc(nalSize+16);
     int     originalNalSize=nalSize+16;
@@ -480,16 +480,16 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
 #define RATE_LIMITED_WARNING(x) if(!count)\
     { \
         ADM_warning(#x"\n"); \
-        wait.reset(); \
+        msgRateLimiter.reset(); \
     } \
-    if(wait.done() && count) \
+    if(msgRateLimiter.done() && count) \
     { \
         ADM_warning(#x" (message repeated %d times)\n",count); \
-        wait.reset(); \
+        msgRateLimiter.reset(); \
         count=0; \
     } \
     count++; \
-    reset.reset();
+    limiterReset.reset();
 
     uint8_t *tail=payload+nalSize;
     *recoveryLength=16;
