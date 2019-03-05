@@ -471,6 +471,26 @@ bool A_saveJpg (const char *name)
 */
 int A_saveBunchJpg(const char *name)
 {
+#if defined(__APPLE__)
+ #define MAX_LEN 1024
+#else
+ #define MAX_LEN 4096
+#endif
+
+    char fullName[MAX_LEN];
+    std::string baseName,ext;
+
+    // Split name into base + extension
+    ADM_PathSplit(std::string(name),baseName,ext);
+
+    int check=strlen(baseName.c_str());
+    check+=10;
+    if(check>MAX_LEN)
+    {
+        ADM_error("Full path = %d is too long, aborting.\n",check);
+        return 0;
+    }
+
     int success=0;
     uint64_t original=admPreview::getCurrentPts();
     uint64_t start=video_body->getMarkerAPts();
@@ -514,20 +534,10 @@ int A_saveBunchJpg(const char *name)
     admPreview::deferDisplay(true);
     admPreview::seekToTime(start);
 
-#if defined(__APPLE__)
- #define MAX_LEN 1024
-#else
- #define MAX_LEN 4096
-#endif
 
-    char fullName[MAX_LEN];
-    std::string baseName,ext;
     uint32_t range=(uint32_t)((end-start)/1000);
     uint32_t fn;
     DIA_workingBase *working;
-
-    // Split name into base + extension
-    ADM_PathSplit(std::string(name),baseName,ext);
 
     working=createWorking(QT_TRANSLATE_NOOP("adm","Saving selection as set of JPEG images"));
     while(true)
