@@ -351,6 +351,13 @@ uint8_t ADM_Composer::addFile (const char *name)
             ADM_audioStreamTrack *track=new ADM_audioStreamTrack;
 
             header=thisVid->_aviheader->getAudioInfo(i );
+
+            if(header->encoding==0x706d)
+            {
+                ADM_info("Mapping codec ID 0x706d to AAC.\n");
+                header->encoding=WAV_AAC;
+            }
+
             memcpy(&(track->wavheader),header,sizeof(*header));
 
             thisVid->_aviheader->getAudioStream(i,&stream);
