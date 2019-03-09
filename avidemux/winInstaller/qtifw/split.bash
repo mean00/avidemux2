@@ -21,5 +21,6 @@ echo "Moving"
 mv $run_path/include $dev_path
 mv $run_path/*.lib $dev_path
 rm $run_path/plugins/*/*.lib
-
+rm -f $run_path/vsscript.dll
+rm -f $run_path/vapoursynth.dll
 echo "Done"
