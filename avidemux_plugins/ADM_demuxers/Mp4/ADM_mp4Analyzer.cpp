@@ -255,7 +255,7 @@ uint8_t MP4Header::parseTrack(void *ztom)
               }
         case ADM_MP4_MDIA:
         {
-            if(!parseMdia(&son,&trackType,w,h))
+            if(!parseMdia(&son,&trackType))
                 return false;
             break;
         }
@@ -276,13 +276,13 @@ uint8_t MP4Header::parseTrack(void *ztom)
       \fn parseMdia
       \brief Parse mdia header
 */
-uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h)
+uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType)
 {
   adm_atom *tom=(adm_atom *)ztom;
   ADMAtoms id;
   uint32_t container;
   uint32_t trackScale=_videoScale;
-  uint64_t trackDuration;
+  uint64_t trackDuration=0;
   *trackType=TRACK_OTHER;
   uint8_t r=0;
   ADM_info("<<Parsing Mdia>>\n");
@@ -387,7 +387,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
               }
               if(id==ADM_MP4_STBL)
               {
-                   if(! parseStbl(&grandson,*trackType, w, h,trackScale))
+                   if(! parseStbl(&grandson,*trackType,trackScale))
                    {
                       ADM_info("STBL failed\n");
                       return 0;
@@ -510,16 +510,12 @@ uint8_t MP4Header::parseEdts(void *ztom,uint32_t trackType)
         \fn parseStbl
         \brief parse sample table. this is the most important function.
 */
-uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint32_t h,uint32_t trackScale)
+uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
 {
   adm_atom *tom=(adm_atom *)ztom;
   ADMAtoms id;
   uint32_t container;
   MPsampleinfo  info;
-
-
-  memset(&info,0,sizeof(info));
-
 
   ADM_info("<<Parsing Stbl>>\n");
   while(!tom->isDone())
@@ -613,7 +609,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
           break;
            case ADM_MP4_CTTS: // Composition time to sample
             {
-                uint32_t n,i,j,k,v;
+                uint32_t n,i,k;
 
                   ADM_info("ctts:%" PRIu32"\n",son.read32()); // version & flags
                   n=son.read32();
@@ -976,7 +972,7 @@ nextAtom:
 
                                 packSize=son.read16(); // Packet Size
                                 left-=2;
-                                printf("[STSD]Packet size    :%d\n",encoding);
+                                printf("[STSD]Packet size    :%d\n",packSize);
 
 
                                 fq=ADIO.frequency=son.read16();
@@ -1365,16 +1361,29 @@ int tag,l;
                                             {
                                                     VDEO.extraDataSize=l;
                                                     VDEO.extraData=new uint8_t[l];
-                                                    fread(VDEO.extraData,VDEO.extraDataSize,1,_fd);
+                                                    if(fread(VDEO.extraData,VDEO.extraDataSize,1,_fd)<1)
+                                                    {
+                                                        ADM_warning("Error reading video extradata from file.\n");
+                                                        delete [] VDEO.extraData;
+                                                        VDEO.extraData=NULL;
+                                                        VDEO.extraDataSize=0;
+                                                    }else
+                                                        ADM_info("%d bytes of video extradata successfully read from file.\n",l);
                                             }
                                             break;
                                         case TRACK_AUDIO:
                                             printf("Esds for audio\n");
                                             _tracks[1+nbAudioTrack].extraDataSize=l;
                                             _tracks[1+nbAudioTrack].extraData=new uint8_t[l];
-                                            fread(_tracks[1+nbAudioTrack].extraData,
-                                            _tracks[1+nbAudioTrack].extraDataSize,1,_fd);
-                                            printf("\t %d bytes of extraData\n",(int)l);
+                                            if(fread(_tracks[1+nbAudioTrack].extraData,
+                                                     _tracks[1+nbAudioTrack].extraDataSize,1,_fd)<1)
+                                            {
+                                                ADM_warning("Error reading audio extradata from file.\n");
+                                                delete [] _tracks[1+nbAudioTrack].extraData;
+                                                _tracks[1+nbAudioTrack].extraData=NULL;
+                                                _tracks[1+nbAudioTrack].extraDataSize=0;
+                                            }else
+                                                ADM_info("%d bytes of audio extradata successfully read from file.\n",l);
                                             break;
                                         default: printf("Unknown track type for esds %d\n",trackType);
                                     }
