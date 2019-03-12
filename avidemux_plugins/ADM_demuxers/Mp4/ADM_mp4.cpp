@@ -305,7 +305,6 @@ uint8_t      MP4Header::getNbAudioStreams(void)
 
 uint8_t   MP4Header::getExtraHeaderData(uint32_t *len, uint8_t **data)
 {
-uint32_t old;
         *len=0;*data=NULL;
         if(_tracks[0].extraDataSize)
         {
