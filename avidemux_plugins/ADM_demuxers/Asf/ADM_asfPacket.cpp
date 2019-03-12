@@ -138,7 +138,11 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    uint32_t  paddingLen;
    int   lengthTypeFlags,propertyFlags,multiplePayloadPresent;
    int sequenceType,sequence,offsetLenType,replicaLenType,streamNumberLenType,mediaObjectNumberLenType;
-   
+   int mediaObjectNumber, offset,replica,r;
+   int32_t remaining;
+   uint32_t payloadLen=0;
+   uint32_t keyframe;
+ 
 
     
    packetStart=ftello(_fd);
@@ -202,11 +206,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
      packetLen=packetLen-paddingLen;
    }
 #endif
-   int mediaObjectNumber, offset,replica,r;
-   int32_t remaining;
-   uint32_t payloadLen;
-   uint32_t keyframe;
-   // Multi payload
+    // Multi payload
    if(multiplePayloadPresent)
     {
         uint8_t r=read8();
