@@ -31,12 +31,15 @@
 #define aprintf printf
 #endif
 
-static uint16_t s16;
-static uint32_t s32;
 #define MAX_ACCEPTED_OPEN_FILE 99999
 
 #define US_PER_PIC (40*1000)
 
+#ifdef __APPLE__
+ #define MAX_LEN 1024
+#else
+ #define MAX_LEN 4096
+#endif
 
 /**
  * 
@@ -142,7 +145,6 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
     
     bool r=true;
     uint16_t s16;
-    uint32_t s32;
     BmpLowLevel low(fd);
     
     switch(type) // this is bad. All the offsets are hardcoded and could be actually different.
@@ -171,7 +173,12 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
 	{
 	    ADM_BITMAPINFOHEADER bmph;
 
-            fread(&s16, 2, 1, fd);
+            if (!fread(&s16, 2, 1, fd))
+            {
+                ADM_warning("Cannot read bmp file.\n");
+                r=false;
+                break;
+            }
 	    if (s16 != 0x4D42) 
             {
 		ADM_warning(" incorrect bmp sig.\n");
@@ -234,7 +241,12 @@ static void splitImageSequence(std::string inname,int &nbOfDigits, int &first,st
  */
 uint8_t picHeader::open(const char *inname)
 {
-    uint32_t nnum;
+    if(strlen(inname)>=MAX_LEN)
+    {
+        ADM_warning("Path too long, aborting.\n");
+        return 0;
+    }
+
     FILE *fd;    
     int bpp = 0;
     
@@ -259,7 +271,7 @@ uint8_t picHeader::open(const char *inname)
     }
     else
     {
-        char realstring[1024];
+        char realstring[MAX_LEN];
         sprintf(realstring, "%s%%0%" PRIu32"d.%s", prefix.c_str(), nbOfDigits, extension.c_str());
         _filePrefix=std::string(realstring);
         _nbFiles = 0;
@@ -369,7 +381,7 @@ uint32_t picHeader::getFlags(uint32_t frame, uint32_t * flags)
  */
 FILE* picHeader::openFrameFile(uint32_t frameNum)
 {
-    char filename[250];
+    char filename[MAX_LEN];
     sprintf(filename, _filePrefix.c_str(), frameNum + _first);
     return ADM_fopen(filename, "rb");
 }
