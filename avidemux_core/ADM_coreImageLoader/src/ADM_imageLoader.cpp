@@ -105,12 +105,12 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
             swap=true;
         }
 
-        if(ADM_COLOR_RGB24==sourceFormat)
+        if(ADM_COLOR_RGB24==sourceFormat || ADM_COLOR_BGR24==sourceFormat)
             swap=true;
 
-        ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);     
-        converter.convertImage(source,image); 
-        
+        ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);
+        converter.convertImage(source,image);
+
         if(swap)
         {
             uint8_t **s=image->_planes,*v;
@@ -205,7 +205,7 @@ static int lookupTag(FILE *fd,int fileSize)
  */
 static bool readJpegInfo(FILE *fd, int &width, int &height)
 {
-        uint16_t tag = 0, count = 0, off;
+        uint16_t tag = 0, count = 0, off = 0;
         int w,h;
         fseek(fd, 0, SEEK_END);
         int fileLength=ftell(fd);
@@ -305,8 +305,13 @@ int  w = 0, h = 0;
         // Load the binary coded image
         ADM_byteBuffer buffer(_imgSize);
         fseek(fd, 0, SEEK_SET);
-        fread(buffer.at(0),_imgSize,1,fd);
+        int r=fread(buffer.at(0),_imgSize,1,fd);
         fclose(fd);
+        if(!r)
+        {
+            ADM_warning("Cannot read JPEG file.\n");
+            return NULL;
+        }
         //
 
         ADMImageRef tmpImage(w,h); // It is a reference image
@@ -335,7 +340,7 @@ int  w = 0, h = 0;
 ADMImage *createImageFromFile_png(const char *filename)
 {
     
-    uint32_t offset,size;
+    uint32_t size;
     FILE *fd=NULL;
     uint32_t w,h;
 
@@ -356,8 +361,13 @@ ADMImage *createImageFromFile_png(const char *filename)
        fseek(fd,0,SEEK_SET);
        ADM_byteBuffer buffer(size);
 
-       fread(buffer.at(0),size,1,fd);
+       int r=fread(buffer.at(0),size,1,fd);
        fclose(fd);
+       if(!r)
+       {
+           ADM_warning("Cannot read PNG file.\n");
+           return NULL;
+       }
        ADMImageRef tmpImage(w,h);
     	// Decode PNG
         decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"PNG "),   w,   h, 0 , NULL,0);
@@ -370,10 +380,7 @@ ADMImage *createImageFromFile_png(const char *filename)
     	bin.data=buffer.at(0);
     	bin.dataLength=size; // This is more than actually, but who cares...
 
-    	bool success=dec->uncompress (&bin, &tmpImage);
-   
-        
-        if(!success)
+        if(!dec->uncompress (&bin, &tmpImage))
         {
             ADM_warning("PNG Decompressing failed\n");
             delete dec;
@@ -397,10 +404,10 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
 {
 
     ADM_BITMAPINFOHEADER bmph;
-    uint8_t fcc_tab[4];
     uint32_t offset;
     FILE *fd=NULL;
-    uint32_t w,h;
+    uint32_t w,h,bpp;
+    int bufSize;
 
 	fd = ADM_fopen(filename, "rb");
         if(!fd)
@@ -415,7 +422,7 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
  
         offset = reader.read32LE();
         reader.readBmphLE(bmph);
-        if (bmph.biCompression != 0 &bmph.biCompression!=3)
+        if(bmph.biCompression && bmph.biCompression!=3)
         {
             ADM_warning("[imageLoader] BMP2:Cannot handle compressed bmp (%08x)\n",bmph.biCompression);
             fclose(fd);
@@ -423,25 +430,87 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
         }
         w = bmph.biWidth;
         h = bmph.biHeight;
+        if(w > MAXIMUM_SIZE)
+        {
+            ADM_warning("Width %u exceeds maximum supported (%u)\n",w,MAXIMUM_SIZE);
+            fclose(fd);
+            return NULL;
+        }
+        if(h > MAXIMUM_SIZE)
+        {
+            ADM_warning("Height %u exceeds maximum supported (%u)\n",h,MAXIMUM_SIZE);
+            fclose(fd);
+            return NULL;
+        }
+        bpp = bmph.biBitCount;
+        switch(bpp)
+        {
+            case 24:
+            case 32:
+                break;
+            default:
+                ADM_warning("Only 24 and 32 bpp bitmaps are supported.\n");
+                fclose(fd);
+                return NULL;
+        }
+
+        if(bpp == 32)
+        {
+            if(bmph.biCompression == 3)
+            { // read channel masks, FIXME: BGR is assumed
+                reader.read32LE(); // red
+                reader.read32LE(); // green
+                uint32_t bmask=reader.read32LE(); // blue
+                uint32_t amask=reader.read32LE(); // alpha
+                if((!amask && bmask == 0xff00) || amask == 0xff)
+                    bpp=96; // xBGR
+            }
+            bufSize=w*h*4;
+        }else // 24
+        {
+            bufSize=w*h*3;
+        }
+
         ADM_info("[imageLoader] BMP2 W: %" PRIu32" H: %" PRIu32" offset : %" PRIu32"\n", w, h, offset);
 // Load the binary coded image
  	fseek(fd,offset,SEEK_SET);
         
-        ADM_byteBuffer buffer(w*h*4);
+        ADM_byteBuffer buffer(bufSize);
         
-        fread(buffer.at(0),w*h*4,1,fd);
+        uint32_t count=fread(buffer.at(0),bufSize,1,fd);
         fclose(fd);
+        if(!count)
+        {
+            ADM_warning("Read incomplete.\n");
+            return NULL;
+        }
 
-  // Colorconversion
+        // Decode DIB
+        decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"DIB "), w, h, 0, NULL, bpp);
+        if(!dec)
+        {
+            ADM_warning("Cannot get DIB decoder");
+            return NULL;
+        }
 
-    	
-        ADMImageRefWrittable ref(w,h);
-        
-        ref._planes[0]=buffer.at(0)+(h-1)*w*3;
-        ref._planeStride[0]=-w*3;
-        ref._colorspace=ADM_COLOR_RGB24;
+        ADMCompressedImage bin;
+        bin.data=buffer.at(0);
+        bin.dataLength=bufSize;
 
-    	return convertImageColorSpace(&ref,w,h);
+        ADMImageRef ref(w,h);
+
+        if(!dec->uncompress(&bin,&ref))
+        {
+            ADM_warning("DIB decoding failed\n");
+            delete dec;
+            dec=NULL;
+            return NULL;
+        }
+
+        ADMImage *image=convertImageColorSpace(&ref,w,h);
+        delete dec;
+        dec=NULL;
+        return image;
 }
 /**
  * 		\fn ADM_identidyImageFile
@@ -452,7 +521,6 @@ ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t
 {
     uint8_t fcc_tab[4];
     FILE *fd;
-    uint32_t off,tag=0,count,size;
 
     // 1- identity the file type
     //
@@ -463,7 +531,12 @@ ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t
         ADM_info("[imageIdentify] Cannot open that file!\n");
         return ADM_PICTURE_UNKNOWN;
     }
-    fread(fcc_tab, 4, 1, fd);
+    if (!fread(fcc_tab, 4, 1, fd))
+    {
+        ADM_warning("Cannot read image file.\n");
+        fclose(fd);
+        return ADM_PICTURE_UNKNOWN;
+    }
 
     // 2- JPEG ?
     if (fcc_tab[0] == 0xff && fcc_tab[1] == 0xd8)
