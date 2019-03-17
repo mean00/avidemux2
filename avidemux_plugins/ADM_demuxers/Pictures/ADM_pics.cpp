@@ -166,6 +166,21 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
                     break;
                 }
                 bpp = bmph.biBitCount;
+                if (bpp > 32)
+                {
+                    ADM_warning("Invalid bpp = %d\n",bpp);
+                    r=false;
+                    break;
+                }
+                if (bpp == 32 && bmph.biCompression == 3)
+                { // read channel masks, FIXME: BGR is assumed
+                    low.read32LE(); // red
+                    low.read32LE(); // green
+                    uint32_t bmask=low.read32LE(); // blue
+                    uint32_t amask=low.read32LE(); // alpha
+                    if((!amask && bmask == 0xff00) || amask == 0xff)
+                        bpp=96; // xBGR
+                }
                 aprintf("Bmp bpp=%d offset: %d (bmp header=%d,%d)\n", bpp, bmpHeaderOffset,sizeof(bmph),bmph.biSize);
             }
             break;
