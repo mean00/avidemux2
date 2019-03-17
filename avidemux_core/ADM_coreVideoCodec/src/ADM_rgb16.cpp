@@ -26,7 +26,7 @@ decoderRGB16::decoderRGB16(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDa
     : decoders (  w,   h,  fcc,   extraDataLen,   extraData,  bpp)
 {
     _bpp = bpp;
-    bytePerPixel=_bpp>>3;
+    bytePerPixel=(_bpp & 0x3f)>>3;
     decoded = new uint8_t[2*bytePerPixel * w * h];
 }
 /**
@@ -56,7 +56,8 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
                         colorspace = ADM_COLOR_RGB555;
                         break;
                 case 24:
-                case 32:
+                case 32: // BGRx
+                case 96: // fake bpp indicating xBGR
                         colorspace = ADM_COLOR_BGR24;
                         break;
                 default:
@@ -66,7 +67,7 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
     // Pack...
         // Invert scanline
         src = in->data+lineSize*(_h-1);
-        if (_bpp == 32) // 32 -> 24
+        if (_bpp == 32 || _bpp == 96) // 32 -> 24
         {
             outBytePerPixel=3;   
             destStride=outBytePerPixel*_w;
@@ -77,11 +78,19 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
 
                     for(j = 0; j < _w; j++) // 32 32 32 32
                     {
-                            ptr[0] = buf[1]; // remove alpha channel + reorder. IT would be more efficient to do it in colorspace...
+                        if(_bpp == 32)
+                        {
+                            ptr[0] = buf[0]; // remove alpha channel + reorder. IT would be more efficient to do it in colorspace...
+                            ptr[1] = buf[1];
+                            ptr[2] = buf[2];
+                        }else // xBGR
+                        {
+                            ptr[0] = buf[1];
                             ptr[1] = buf[2];
                             ptr[2] = buf[3];
-                            ptr += 3;
-                            buf += 4;
+                        }
+                        ptr += 3;
+                        buf += 4;
                     }
                     src -= lineSize;
                     dst += _w * 3;                    
