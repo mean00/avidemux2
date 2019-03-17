@@ -88,7 +88,10 @@ public:
         READ_FIELD(biBitCount,16)
         READ_FIELD(biCompression,32)            
         READ_FIELD(biSizeImage,32)
-        READ_FIELD(biSize,32)
+        READ_FIELD(biXPelsPerMeter,32)
+        READ_FIELD(biYPelsPerMeter,32)
+        READ_FIELD(biClrUsed,32)
+        READ_FIELD(biClrImportant,32)
     }    
     
 protected:
