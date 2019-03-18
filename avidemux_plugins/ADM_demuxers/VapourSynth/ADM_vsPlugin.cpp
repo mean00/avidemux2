@@ -32,19 +32,6 @@ ADM_DEMUXER_BEGIN( vsHeader, 50,
                 );
 
 
-#ifdef __APPLE__
-        #define  DLL_TO_LOAD "libvapoursynth-script.dylib"
-        #define  PYTHONLIB ""
-#else
-    #ifdef _WIN32
-        #define  DLL_TO_LOAD "vapoursynth-script.dll"
-        #define  PYTHONLIB ""
-    #else
-        #define  DLL_TO_LOAD "libvapoursynth-script.so"
-        #define  PYTHONLIB VAPOURSYNTH_PYTHONLIB
-    #endif
-#endif
-
 /**
     \fn Probe
 */

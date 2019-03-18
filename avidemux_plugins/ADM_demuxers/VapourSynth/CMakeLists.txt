@@ -1,6 +1,12 @@
 include(admCheckVapourSynth)
 include(dm_plugin)
 checkVapourSynth()
+
+ IF(NOT APPLE AND NOT WIN32 AND NOT MSVC)
+           SET(VS_SYSTEM_LIBS "-ldl")
+ENDIF(NOT APPLE AND NOT WIN32 AND NOT MSVC)
+
+
 IF(USE_VAPOURSYNTH)
     IF(DO_COMMON)
         IF(NOT APPLE)
@@ -26,9 +32,7 @@ IF(USE_VAPOURSYNTH)
                 )
         INIT_DEMUXER(ADM_dm_vapoursynth)
         ADD_DEMUXER(ADM_dm_vapoursynth ${ADM_vs_SRCS})
-        IF(NOT APPLE AND NOT WIN32 AND NOT MSVC)
-            TARGET_LINK_LIBRARIES(ADM_dm_vapoursynth "-ldl")
-        ENDIF(NOT APPLE AND NOT WIN32 AND NOT MSVC)
+        TARGET_LINK_LIBRARIES(ADM_dm_vapoursynth "${VS_SYSTEM_LIBS}")
 
         INSTALL_DEMUXER(ADM_dm_vapoursynth)
         #----------------
@@ -42,6 +46,7 @@ IF(USE_VAPOURSYNTH)
             ELSE(WIN32)
                 TARGET_LINK_LIBRARIES(vsProxy -lstdc++) # clang
             ENDIF(WIN32)
+            TARGET_LINK_LIBRARIES(vsProxy "${VS_SYSTEM_LIBS}")
             ADM_INSTALL_BIN(vsProxy)
         ENDIF(NOT APPLE)
    ENDIF(DO_COMMON)

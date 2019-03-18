@@ -46,15 +46,7 @@ IF("${OLD}" MATCHES ".*NOT.*FOUND")
    SET(OLD "")
 ENDIF("${OLD}" MATCHES ".*NOT.*FOUND")
 # Keep -L, discard everything else
-FOREACH(i ${VAPOURSYNTHSCRIPT_LDFLAGS})
-  IF(${i} MATCHES "^-L")
-        MESSAGE(STATUS "Updating linker flags  => ${i}")
-        SET(OLD "${i} ${OLD} ") 
-  ELSE(${i} MATCHES "^-L")
-        MESSAGE(STATUS "Updating linker libs  => ${i}")
-        LIST(APPEND LIBS_TO_LINK  ${i})
-  ENDIF(${i} MATCHES "^-L")
-ENDFOREACH(i ${VAPOURSYNTHSCRIPT_LDFLAGS})
+
 
 SET_TARGET_PROPERTIES(vsProxy_gui_${QT_EXTENSION}  PROPERTIES LINK_FLAGS "${OLD}")
 
@@ -73,5 +65,5 @@ IF(MSVC)
 		set_target_properties(vsProxy_gui_${QT_EXTENSION} PROPERTIES WIN32_EXECUTABLE True)
 		TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ws2_32.lib  winmm -mwindows  )
 ENDIF(MSVC)
-
+TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} "${VS_SYSTEM_LIBS}")
 ADM_INSTALL_BIN(vsProxy_gui_${QT_EXTENSION})

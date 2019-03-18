@@ -22,6 +22,9 @@
 
 static const VSAPI *vsapi = NULL;
 vsDynaLoader dynaLoader;
+static bool loaded=false;
+
+
 
 /**
  */
@@ -87,6 +90,12 @@ bool vapourSynthProxy::run(int myPort, const char *name)
 {
 
     ADM_info("Opening %s as VapourSynth file\n",name);
+    
+    if(!loaded)
+         dynaLoader.vsInit(DLL_TO_LOAD,PYTHONLIB);
+     loaded=true;
+     if(!dynaLoader.isOperational())
+         return 0;
     
    
     
