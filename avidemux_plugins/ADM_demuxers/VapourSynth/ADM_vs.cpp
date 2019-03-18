@@ -17,10 +17,7 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "ADM_vs.h"
-#if !defined(__APPLE__) && !defined(_WIN32)
- #include <dlfcn.h>
-#endif
-
+#include "ADM_vsInternal.h"
 static const VSAPI *vsapi = NULL;
 #if 0
     #define aprintf printf
@@ -28,7 +25,7 @@ static const VSAPI *vsapi = NULL;
     #define aprintf(...) {}
 #endif
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
-
+extern vsDynaLoader dynaLoader;
 /**
       \fn open
       \brief open the flv file, gather infos and build index(es).
@@ -37,11 +34,7 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 uint8_t vsHeader::open(const char *name)
 {
     ADM_info("Opening %s as VapourSynth file\n",name);
-#if !defined(__APPLE__) && !defined(_WIN32)
-    ADM_info("Trying to dlopen %s\n",VAPOURSYNTH_PYTHONLIB);
-    dlopen(VAPOURSYNTH_PYTHONLIB, RTLD_LAZY|RTLD_GLOBAL);
-#endif
-    inited+=!!vsscript_init();
+    inited+=!!dynaLoader.init();
     if(!inited)
     {
         ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
@@ -49,7 +42,7 @@ uint8_t vsHeader::open(const char *name)
     }
     if(!vsapi)
     {
-        vsapi = vsscript_getVSApi();
+        vsapi = dynaLoader.getVSApi();
         if(!vsapi)
         {
             ADM_warning("Cannot get vsAPI entry point\n");
@@ -58,13 +51,13 @@ uint8_t vsHeader::open(const char *name)
         }
     }
     ADM_info("VapourSynth init ok, opening file..\n");
-    if (vsscript_evaluateFile(&_script, name, 0)) 
+    if (dynaLoader.evaluateFile(&_script, name, 0)) 
     {
-        ADM_warning("Evaluate script failed <%s>\n", vsscript_getError(_script));
+        ADM_warning("Evaluate script failed <%s>\n", dynaLoader.getError(_script));
         close();
         return 0;
     }
-    _node = vsscript_getOutput(_script, 0);
+    _node = dynaLoader.getOutput(_script, 0);
     if (!_node) 
     {
         ADM_warning("vsscript_getOutputNode failed\n");
@@ -194,13 +187,13 @@ uint8_t vsHeader::close(void)
     }
     if(_script)
     {
-        vsscript_freeScript(_script);
+        dynaLoader.freeScript(_script);
         _script=NULL;
     }
     while(inited)
     {
         inited--;
-        vsscript_finalize();
+        dynaLoader.finalize();
     }
     vsapi=NULL;
     return 1;

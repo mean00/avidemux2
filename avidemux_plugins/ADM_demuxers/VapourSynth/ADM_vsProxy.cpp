@@ -18,10 +18,10 @@
 #include "fourcc.h"
 
 #include "ADM_vsProxy.h"
-
+#include "ADM_vsInternal.h"
 
 static const VSAPI *vsapi = NULL;
-
+vsDynaLoader dynaLoader;
 
 /**
  */
@@ -47,10 +47,10 @@ void vapourSynthProxy::abort(void)
 {
         if(_script)
         {
-            vsscript_freeScript(_script);
+            dynaLoader.freeScript(_script);
             _script=NULL;
         }
-        vsscript_finalize();
+        dynaLoader.finalize();
 }
 /**
  * 
@@ -90,27 +90,27 @@ bool vapourSynthProxy::run(int myPort, const char *name)
     
    
     
-    if (!vsscript_init()) 
+    if (!dynaLoader.init()) 
     {
           ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
           return false;
     }
-    vsapi = vsscript_getVSApi();
+    vsapi = dynaLoader.getVSApi();
     if(!vsapi)
     {
         ADM_warning("Cannot get vsAPI entry point\n");
-        vsscript_finalize();
+        dynaLoader.finalize();
         return 0;
     }
         
     ADM_info("VapourSynth init ok, opening file..\n");
-    if (vsscript_evaluateFile(&_script, name, 0)) 
+    if (dynaLoader.evaluateFile(&_script, name, 0)) 
     {
-        ADM_warning("Evaluate script failed <%s>\n", vsscript_getError(_script));
+        ADM_warning("Evaluate script failed <%s>\n", dynaLoader.getError(_script));
         abort();
         return 0;
     }
-    _node = vsscript_getOutput(_script, 0);
+    _node = dynaLoader.getOutput(_script, 0);
     if (!_node) 
     {
        ADM_warning("vsscript_getOutputNode failed\n");
@@ -166,8 +166,8 @@ bool vapourSynthProxy::run(int myPort, const char *name)
     bool success=manageSlave(slave,vi);
     delete slave;
     vsapi->freeNode(_node);
-    vsscript_freeScript(_script);
-    vsscript_finalize();
+    dynaLoader.freeScript(_script);
+    dynaLoader.finalize();
     _node=NULL;
     _script=NULL;
     return success;

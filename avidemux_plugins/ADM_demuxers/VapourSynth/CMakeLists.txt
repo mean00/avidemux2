@@ -12,29 +12,12 @@ IF(USE_VAPOURSYNTH)
             #ADD_DEFINITIONS("-std=c++11")
             ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
             SET(SRCS ADM_vsProxy.cpp ADM_vsProxy_cli.cpp)
-            ADD_EXECUTABLE(vsProxy ${SRCS})
-            GET_PROPERTY(OLD
-                        TARGET vsProxy
-                        PROPERTY LINK_FLAGS)
-            IF("${OLD}" MATCHES ".*NOT.*FOUND")
-                SET(OLD "")
-            ENDIF("${OLD}" MATCHES ".*NOT.*FOUND")
-# Keep -L, discard everything else
-            FOREACH(i ${VAPOURSYNTHSCRIPT_LDFLAGS})
-                IF(${i} MATCHES "^-L")
-                    MESSAGE(STATUS "Updating linker flags  => ${i}")
-                    SET(OLD "${i} ${OLD} ")
-                ELSE(${i} MATCHES "^-L")
-                    MESSAGE(STATUS "Updating linker libs  => ${i}")
-                    LIST(APPEND LIBS_TO_LINK  ${i})
-                ENDIF(${i} MATCHES "^-L")
-            ENDFOREACH(i ${VAPOURSYNTHSCRIPT_LDFLAGS})
+            ADD_EXECUTABLE(vsProxy ${SRCS})                      
             # Add vs Proxy
             SET_TARGET_PROPERTIES(vsProxy PROPERTIES LINK_FLAGS "${OLD}")
-            TARGET_LINK_LIBRARIES(vsProxy ${LIBS_TO_LINK} ADM_core6 ADM_coreSocket6)
+            TARGET_LINK_LIBRARIES(vsProxy ADM_core6 ADM_coreSocket6)
         ELSE(NOT APPLE)
             ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
-            LIST(APPEND LIBS_TO_LINK ${VAPOURSYNTHSCRIPT_LDFLAGS})
         ENDIF(NOT APPLE)
         #----------------
         # Add direct Loading
@@ -44,9 +27,9 @@ IF(USE_VAPOURSYNTH)
         INIT_DEMUXER(ADM_dm_vapoursynth)
         ADD_DEMUXER(ADM_dm_vapoursynth ${ADM_vs_SRCS})
         IF(NOT APPLE AND NOT WIN32 AND NOT MSVC)
-            LIST(APPEND LIBS_TO_LINK "-ldl")
+            TARGET_LINK_LIBRARIES(ADM_dm_vapoursynth "-ldl")
         ENDIF(NOT APPLE AND NOT WIN32 AND NOT MSVC)
-        TARGET_LINK_LIBRARIES(ADM_dm_vapoursynth ${LIBS_TO_LINK})
+
         INSTALL_DEMUXER(ADM_dm_vapoursynth)
         #----------------
         IF(NOT APPLE)

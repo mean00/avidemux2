@@ -16,7 +16,15 @@
 #include "ADM_default.h"
 #include "ADM_vs.h"
 #include "ADM_demuxerInternal.h"
+#include "ADM_vsInternal.h"
 
+#if !defined(__APPLE__) && !defined(_WIN32)
+ #include <dlfcn.h>
+#endif
+
+
+vsDynaLoader dynaLoader;
+static bool loaded=false;
 ADM_DEMUXER_BEGIN( vsHeader, 50,
                     1,0,0,
                     "vs",
@@ -29,6 +37,13 @@ ADM_DEMUXER_BEGIN( vsHeader, 50,
 
 extern "C"  uint32_t     ADM_PLUGIN_EXPORT    probe(uint32_t magic, const char *fileName)
 {
+        
+        // Check if we have the lib loaded
+        if(!loaded)
+            dynaLoader.vsInit("/usr/lib/libvapoursynth-script.so");
+        loaded=true;
+        if(!dynaLoader.isOperational())
+            return 0;
         std::string fname=std::string(fileName);
         if(fname.length()<4) return 0;
         if (fname.substr(fname.length()-4) == std::string(".vpy"))
