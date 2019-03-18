@@ -55,7 +55,7 @@ bool MP4Header::parseMoof(adm_atom &tom)
             {
                 case ADM_MP4_MFHD: son.skipAtom();break;
                 case ADM_MP4_TRAF: parseTraf(son,tom.getStartPos());break;
-                
+                default:break;
             }
             aprintf("[MOOF]Found atom %s \n",fourCC::tostringBE(son.getFCC()));
             son.skipAtom();
@@ -146,6 +146,7 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                     aprintf("[TFDT] Base DTS=%ld\n",(long int)info.baseDts);
                 }   
                     break;
+                default:break;
             }
            
             aprintf("[MOOF]Found atom %s \n",fourCC::tostringBE(son.getFCC()));
