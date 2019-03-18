@@ -31,6 +31,20 @@ ADM_DEMUXER_BEGIN( vsHeader, 50,
                     "VapourSynth demuxer plugin (c) Mean 2015"
                 );
 
+
+#ifdef __APPLE__
+        #define  DLL_TO_LOAD "libvapoursynth-script.dylib"
+        #define  PYTHONLIB ""
+#else
+    #ifdef _WIN32
+        #define  DLL_TO_LOAD "vapoursynth-script.dll"
+        #define  PYTHONLIB ""
+    #else
+        #define  DLL_TO_LOAD "libvapoursynth-script.so"
+        #define  PYTHONLIB VAPOURSYNTH_PYTHONLIB
+    #endif
+#endif
+
 /**
     \fn Probe
 */
@@ -40,7 +54,7 @@ extern "C"  uint32_t     ADM_PLUGIN_EXPORT    probe(uint32_t magic, const char *
         
         // Check if we have the lib loaded
         if(!loaded)
-            dynaLoader.vsInit("/usr/lib/libvapoursynth-script.so");
+            dynaLoader.vsInit(DLL_TO_LOAD,PYTHONLIB);
         loaded=true;
         if(!dynaLoader.isOperational())
             return 0;
