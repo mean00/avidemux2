@@ -14,7 +14,7 @@
         #define  PYTHONLIB ""
 #else
     #ifdef _WIN32
-        #define  DLL_TO_LOAD "vapoursynth-script.dll"
+        #define  DLL_TO_LOAD "vsscript.dll"
         #define  PYTHONLIB ""
     #else
         #define  DLL_TO_LOAD "libvapoursynth-script.so"
