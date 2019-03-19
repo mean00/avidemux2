@@ -124,8 +124,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
   uint64_t minDelta=100000;
   uint64_t maxDelta=0;
-  int fmin,fmax;
-  for (int frame=0; frame<info.nb_frames; frame++)
+  uint32_t fmin=0,fmax=0;
+  for (uint32_t frame=0; frame<info.nb_frames; frame++)
   {
       if (ref->_aviheader->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
       {
@@ -143,9 +143,14 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
           firstNonZeroDtsFrame=frame;
       }
   }
-  ADM_info("min increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(minDelta),minDelta,fmin);
-  ADM_info("max increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(maxDelta),maxDelta,fmax);
-  
+  if(maxDelta>=minDelta)
+  {
+      ADM_info("min increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(minDelta),minDelta,fmin);
+      ADM_info("max increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(maxDelta),maxDelta,fmax);
+  }else
+  {
+      ADM_warning("DTS missing, cannot probe time increment.\n");
+  }
   //if (minDelta==ref->timeIncrementInUs*2)
               //ref->timeIncrementInUs=minDelta;
 
@@ -176,7 +181,9 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
         else ADM_info("The first frame DTS = %" PRIu64" ms\n",dts/1000);
         if(pts!=ADM_NO_PTS &&pts)
         {
-            ADM_warning("The first frame has a PTS >0, adjusting to %" PRIu64" ms\n",pts/1000);
+            ADM_warning("The first frame has a PTS > 0, adjusting to %" PRIu64" %s\n",
+                (pts>=1000)? pts/1000 : pts,
+                (pts>=1000)? "ms" : "us");
             ref->firstFramePts=pts;
 #ifdef ADM_ZERO_OFFSET
             seg._refStartTimeUs=pts;
