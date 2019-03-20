@@ -156,7 +156,6 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
     {
       // don't ask too much front.
       asked = (3*AUD_PROCESS_BUFFER_SIZE)/4-_tail;
-      asked/=_wavHeader.channels; // float->samples
       if(false==_incoming->getPCMPacket(_incomingBuffer.at(_tail), asked, &got,&dts))
       {
           got=0;
