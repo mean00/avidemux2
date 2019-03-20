@@ -38,14 +38,16 @@ public:
         {
             uint32_t i;
             i = 0;
-            i=(((uint32_t)(read16LE()))<<0)+(((uint32_t)read16LE())<<16);
+            i += (((uint32_t)(read16LE())) << 0);
+            i += (((uint32_t)read16LE()) << 16);
             return i;
         }    
         uint32_t    read32BE ()
         {
             uint32_t i;
             i = 0;
-            i=(((uint32_t)(read16BE()))<<16)+(((uint32_t)read16BE())<<0);
+            i += (((uint32_t)(read16BE())) << 16);
+            i +=(((uint32_t)read16BE()) << 0);
             return i;
         }        
     uint16_t    read16LE ()
@@ -53,7 +55,8 @@ public:
             uint16_t i;
 
             i = 0;
-            i = (read8( ) ) + (read8( )<< 8);
+            i += (read8());
+            i +=(read8() << 8);
             return i;
         }    
         uint16_t    read16BE ()
@@ -61,7 +64,8 @@ public:
             uint16_t i;
 
             i = 0;
-            i = (read8( ) <<8) + (read8( )<< 0);
+            i += (read8() << 8);
+            i += (read8());
             return i;
         }        
     uint8_t     read8 ()
