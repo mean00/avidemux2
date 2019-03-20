@@ -260,7 +260,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
         _blockalign=378;
       }
     }
-    ADM_info("[ADM_ad_lav] init successful (blockalign %d), channels=%d\n",info->blockalign,_context->channels);
+    ADM_info("[ADM_ad_lav] init successful (blockalign %d), channels=%d\n",_blockalign,_context->channels);
     if(_context->sample_rate!=outputFrequency)
     {
         ADM_warning("Output frequency does not match input frequency (SBR ?) : %d / %d\n",
@@ -447,9 +447,6 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
     {
         nbChunk=(_tail-_head)/_blockalign;
         pkt.size=nbChunk*_blockalign;
-        int remainder=_tail-_head-nbChunk*_blockalign;
-        if(remainder)
-            ADM_warning("Remained in buffer: %d\n",remainder);
         pkt.data=_buffer+_head;
 
         avcodec_send_packet(_context, &pkt);
