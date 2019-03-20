@@ -234,15 +234,15 @@ bool	AUDMEncoder_Lavcodec::encodeBlock(int count, uint8_t *dest,int &encoded)
 bool AUDMEncoder_Lavcodec::lastBlock(AVPacket *pkt,int &encoded)
 {
     int gotPacket;
-    int nbout=avcodec_encode_audio2(CONTEXT, pkt,NULL,&gotPacket);
-         if(nbout<0)
-         {
-             printError("Encoding lastBlock",nbout);
-             return false;
-         }
-         if(gotPacket)
-               encoded=pkt->size;
-         return true;
+    int er=avcodec_encode_audio2(CONTEXT, pkt,NULL,&gotPacket);
+    if(er<0)
+    {
+        printError("Encoding lastBlock",er);
+        return false;
+    }
+    if(gotPacket)
+        encoded=pkt->size;
+    return true;
 }
 
 /**
@@ -297,17 +297,17 @@ bool	AUDMEncoder_Lavcodec::encodeBlockMultiChannels(int count, uint8_t *dest,int
             printError("Fill audio",er);
             return false;
         }
-         
-    int  nbout = avcodec_encode_audio2(CONTEXT, &pkt,_frame,&gotPacket);
-    if(nbout>=0 && gotPacket)
+
+    er = avcodec_encode_audio2(CONTEXT, &pkt,_frame,&gotPacket);
+    if(er<0)
+    {
+        printError("Encoding",er);
+        return false;
+    }
+    if(gotPacket)
     {
         cprintf("Got %d bytes \n",pkt.size);
         encoded=pkt.size;
-    }
-    else
-    {
-        printError("Encoding",nbout);
-        return false;
     }
     return true;
 }
@@ -437,7 +437,6 @@ bool AUDMEncoder_Lavcodec::computeChannelLayout(void)
 */
 bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
-  uint32_t nbout;
   int retries=16;
   bool r;
   int sz;
@@ -471,17 +470,17 @@ again:
               {
                   if(false==encodeBlock(0,dest,sz))
                   {
-                        ADM_warning("Error while flushing lame\n");
+                        ADM_warning("Error flushing encoder\n");
                         return false;                      
                   }
                   *len=sz;
                   *samples=_chunk/channels;
-                  ADM_info("[Lav] Flushing, last block is %d bytes\n",nbout);
+                  ADM_info("[Lav] Flushing, last block is %d bytes\n",sz);
                   return true;
               }else
               {
               }
-              ADM_info("[Lav] No data to flush\n",nbout);
+              ADM_info("[Lav] No data to flush\n");
               return true;
         }
     }
@@ -507,7 +506,6 @@ cnt:
 */
 bool configure (CONFcouple **setup)
 {
- int ret=0;
     lav_encoder config=defaultConfig;
     if(*setup)
     {
