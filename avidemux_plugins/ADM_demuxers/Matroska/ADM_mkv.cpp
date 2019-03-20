@@ -74,10 +74,8 @@ uint8_t mkvHeader::open(const char *name)
 {
 
   ADM_ebml_file ebml;
-  uint64_t id,len;
+  uint64_t len;
   uint64_t alen;
-  ADM_MKV_TYPE type;
-  const char *ss;
 
   _timeBase=1000; // default value is 1 ms timebase (unit is in us)
   _isvideopresent=0;
@@ -210,7 +208,7 @@ uint8_t mkvHeader::open(const char *name)
         int bumped=0;
         for(int i=1;i<last;i++)
         {
-            uint64_t pts,dts;
+            uint64_t pts;
             pts=vid->index[i].Pts;
             lastDts+=increment; // This frame dts with no correction
             if(pts==ADM_NO_PTS)
@@ -457,8 +455,6 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
   double dHalf=(500000.*(double)num)/((double)den);
   int half=dHalf-1; // half interval in us
   int first=0;
-  int bad=0;
-  int good=0;
   while(  track->index[first].Pts==ADM_NO_PTS && first<nb) first++; // we should have some at least
   uint64_t zero= track->index[first].Pts;
   ADM_info("Num=%d Den=%d half=%d zero=%d first=%d\n",num,den,half,(int)zero,first);
@@ -1086,6 +1082,7 @@ uint8_t  mkvHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
  * @param hd
  * @return
  */
+#if 0
 static int xypheLacingRead(uint8_t **hd)
 {
       int x=0;
@@ -1100,6 +1097,7 @@ static int xypheLacingRead(uint8_t **hd)
       *hd=p;
       return x;
 }
+#endif
 /**
     \fn mkreformatVorbisHeader
     \brief reformat oggvorbis header to avidemux style

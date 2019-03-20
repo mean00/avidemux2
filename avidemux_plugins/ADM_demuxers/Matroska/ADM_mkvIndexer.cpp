@@ -38,9 +38,7 @@
 */
 uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
 {
-  uint64_t fileSize,len,bsize;
-  uint32_t alen,vlen;
-  uint64_t id;
+  uint64_t len,id;
   ADM_MKV_TYPE type;
   const char *ss;
 
@@ -139,7 +137,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
 */
 uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t clusterTimeCodeMs)
 {
-  int lacing,nbLaces,entryFlags=0;
+  int entryFlags=0;
   //
   uint64_t tail=parser->tell()+len;
   // Read Track id
@@ -158,7 +156,7 @@ uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t cluste
       //if(!track) printf("TC: %d\n",timecode);
       uint8_t flags=parser->readu8();
 
-      lacing=((flags>>1)&3);
+      //int lacing=((flags>>1)&3);
 
       addIndexEntry(track,parser,blockBegin,tail-blockBegin,entryFlags,clusterTimeCodeMs+timecode);
       parser->seek(tail);
@@ -238,7 +236,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             parser->readBin(readBuffer+rpt,size-3);
             // Search the frame type...
 
-             uint32_t nb,vopType,timeinc=16;
+             uint32_t nb,timeinc=16;
              ADM_vopS vops[10];
              vops[0].type=AVI_KEY_FRAME;
              ADM_searchVop(readBuffer,readBuffer+rpt+size-3,&nb,vops, &timeinc);
@@ -285,7 +283,6 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 parser->readBin(readBuffer+rpt,size-3);
                 uint8_t *begin=readBuffer;
                 uint8_t *end=readBuffer+size-3+rpt;
-                uint32_t flags=0;
                 while(begin<end)
                 {
                     int code=mkvFindStartCode(begin,end);
@@ -450,12 +447,11 @@ bool     mkvHeader::readCue(ADM_ebml_file *parser)
 */
 uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
 {
-  uint64_t fileSize,len,bsize;
+  uint64_t fileSize,len;
   uint64_t alen,vlen;
   uint64_t id;
   ADM_MKV_TYPE type;
   const char *ss;
-  uint64_t time;
   uint64_t pos;
   uint8_t res=1;
 
