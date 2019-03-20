@@ -41,9 +41,6 @@ It is an fopen/fwrite lookalike interface to chunks
 
 #define MAX_VOP 200
 
-/* Static ones */
-
-static const char *s_voptype[4]={"I frame","P frame","B frame","D frame"};
 /**
     \fn unpackPacked
     \brief Removed packed bitstream hack
@@ -52,7 +49,6 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 {
 	uint32_t nbFrame;
 	uint8_t ret=0;
-	uint32_t firstType, secondType,thirdType;
 	uint32_t targetIndex=0,nbVop;
 	uint32_t nbDuped=0;
     uint32_t timcincbits=16;  /* Nb bits used to code time_inc 16 is a safe default */
@@ -80,8 +76,8 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 	#ifndef __HAIKU__
 	uint32_t originalPriority = getpriority(PRIO_PROCESS, 0);
 	#endif
-	uint32_t priorityLevel;
 #if 0
+	uint32_t priorityLevel;
 	prefs->get(PRIORITY_INDEXING,&priorityLevel);
 	setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priorityLevel));
 #endif
@@ -90,8 +86,6 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 	ADMCompressedImage image;
     image.data=buffer;
 	uint32_t img=0;
-    uint32_t modulo,time_inc,vopcoded,vopType;
-    uint32_t timeincbits=16;
     uint32_t oldtimecode=0xffffffff;
 	while(img<nbFrame)
 	{
@@ -149,8 +143,6 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 		myVops[0].offset=0;
 		myVops[nbVop].offset=image.dataLength;
 
-
-		uint32_t place;
                 //if(nbVop>2)
                 {
                         aprintf("At %u, %d vop!\n",img,nbVop);
