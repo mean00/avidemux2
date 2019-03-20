@@ -188,6 +188,8 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                         if(myFd.fileSize >= threshold-tolerance && myFd.fileSize <= threshold+tolerance)
                             break;
                         threshold<<=1;
+                        if(i==1)
+                            tolerance<<=3; // 8 MiB starting with 1 GiB fragment size
                     }
                 }
                 count++;
