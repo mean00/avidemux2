@@ -245,8 +245,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
       //***************** Audio tracks *****************
       if(entry.trackType==2 && _nbAudioTrack<ADM_MKV_MAX_TRACKS)
       {
-         uint32_t  streamIndex;
-         mkvTrak *t=&(_tracks[1+_nbAudioTrack]);
+        mkvTrak *t=&(_tracks[1+_nbAudioTrack]);
         t->extraDataLen=entry.extraDataLen;
         ADM_info("This track has %d bytes of  extradata\n",t->extraDataLen);
         // MS/ACM : ACMX
