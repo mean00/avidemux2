@@ -443,7 +443,8 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
     AVPacket pkt;
     av_init_packet(&pkt);
     int nbChunk,res=0;
-    while(_tail-_head>=_blockalign)
+    bool eof=false;
+    while(_tail-_head>=_blockalign && !eof)
     {
         nbChunk=(_tail-_head)/_blockalign;
         pkt.size=nbChunk*_blockalign;
@@ -459,14 +460,15 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
             if(res==AVERROR(EAGAIN)) break; // we need to send more input
             if(res==AVERROR_EOF)
             {
-                return 1;
+                eof=true;
+                break;
             }
             if(res<0)
             {
                 char er[2048]={0};
                 av_make_error_string(er, sizeof(er)-1, res);
                 ADM_warning("[ADM_ad_lav] decoding error: %s\n",er);
-                return 1;
+                break;
             }
 
             bool invalid=false;
