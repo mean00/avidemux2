@@ -60,8 +60,12 @@ void DIA_processingQt4 :: postCtor( void )
         _first=true;
         _slotIndex=0;
         setWindowModality(Qt::ApplicationModal);        
-        
+
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+        connect(ui->buttonBox,SIGNAL(rejected()),this,SLOT(reject()));
+#else
         connect(ui->buttonBox,&QDialogButtonBox::rejected,this,&QDialog::reject);
+#endif
         ui->labelTimeLeft->setText(QString(QT_TRANSLATE_NOOP("qprocessing", "Unknown")));
         ui->progressBar->setValue((int)0);        
         show();
