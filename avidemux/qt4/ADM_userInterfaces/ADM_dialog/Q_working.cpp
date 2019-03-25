@@ -26,7 +26,11 @@ workWindow::workWindow(QWidget *parent) : QDialog(parent)
      ui->setupUi(this);
      active=true;
      setWindowModality(Qt::ApplicationModal);
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+     connect(ui->buttonBox,SIGNAL(rejected()),this,SLOT(reject()));
+#else
      connect(ui->buttonBox,&QDialogButtonBox::rejected,this,&QDialog::reject);
+#endif
  }
 
 void workWindow::reject(void)
