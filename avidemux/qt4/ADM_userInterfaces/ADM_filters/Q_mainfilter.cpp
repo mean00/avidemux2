@@ -502,8 +502,8 @@ void filtermainWindow::displayFamily(uint32_t family)
         uint32_t major,minor,patch;
         ADM_vf_getFilterInfo((VF_CATEGORY)family,i,&name, &desc,&major,&minor,&patch);
 
-        QString s1 = QString(name);
-        QString s2 = QString(desc);
+        QString s1 = QString::fromUtf8(name);
+        QString s2 = QString::fromUtf8(desc);
 
         QListWidgetItem *item;
         item=new QListWidgetItem(NULL,availableList,ALL_FILTER_BASE+i+family*100);
@@ -559,8 +559,8 @@ void filtermainWindow::buildActiveFilterList(void)
         const char *conf=instance->getConfiguration();
         printf("%d %s\n",i,name);
 
-        QString s1 = QString(name);
-        QString s2 = QString(conf);
+        QString s1 = QString::fromUtf8(name);
+        QString s2 = QString::fromUtf8(conf);
 
         QListWidgetItem *item=new QListWidgetItem(NULL,activeList,ACTIVE_FILTER_BASE+i);
         item->setData(FilterItemDelegate::FilterNameRole, s1);
