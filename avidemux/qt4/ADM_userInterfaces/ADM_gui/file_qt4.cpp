@@ -42,7 +42,7 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
     QString str,outputPath,outputExt=QString("");
     QString fileName,dot=QString(".");
     QString separator = QString("/");
-    QString filterFile=QString(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
+    QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     bool doFilter = !!(ext && strlen(ext));
     bool isProject=false;
     QFileDialog::Options opts;
@@ -125,10 +125,10 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
 
     if(doFilter)
     {
-        filterFile=QString(ext)+QString(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
+        filterFile=QString(ext)+QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
     }
     fileName = QFileDialog::getSaveFileName(fileSelGetParent(),
-                    label,  // caption
+                    QString::fromUtf8(label),  // caption
                     str,    // folder
                     filterFile,   // filter
                     NULL,QFileDialog::DontConfirmOverwrite);   // selected filter
@@ -149,7 +149,7 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
     if(newFile.exists())
     {
         QFileInfo fileInfo(newFile);
-        QString q=QString(QT_TRANSLATE_NOOP("qfile","Overwrite file "))+fileInfo.fileName()+QString("?");
+        QString q=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","Overwrite file "))+fileInfo.fileName()+QString("?");
         if(!GUI_Question(q.toUtf8().constData()))
         {
             return 0;
@@ -183,7 +183,7 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
 {
     QString str;
     QString fileName,dot=QString(".");
-    QString filterFile=QString(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
+    QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     bool doFilter = !!(ext && strlen(ext));
     bool isProject=false;
     QFileDialog::Options opts;
@@ -230,10 +230,10 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
 
     if(doFilter)
     {
-        filterFile=QString(ext)+QString(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
+        filterFile=QString(ext)+QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
     }
     fileName = QFileDialog::getOpenFileName(fileSelGetParent(),
-                                label,  // caption
+                                QString::fromUtf8(label),  // caption
                                 str,    // folder
                                 filterFile,   // filter
                                 NULL,   // selected filter
