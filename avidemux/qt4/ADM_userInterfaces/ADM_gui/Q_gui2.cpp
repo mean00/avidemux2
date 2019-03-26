@@ -568,7 +568,11 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
     for(int i=0;i<nb;i++)
     {
         MenuEntry *m=menu+i;
-        QString qs=QString::fromUtf8(QT_TRANSLATE_NOOP("adm",m->text.c_str()));
+        QString qs;
+        if(m->translated)
+            qs=QString::fromUtf8(m->text.c_str());
+        else
+            qs=QString::fromUtf8(QT_TRANSLATE_NOOP("adm",m->text.c_str()));
         switch(m->type)
         {
             case MENU_SEPARATOR:

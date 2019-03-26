@@ -34,7 +34,7 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
         {
             if (this->_scriptEngines.size() > 0)
             {
-                MenuEntry separatorEntry = {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL};
+                MenuEntry separatorEntry = {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL, true};
 
                 fileMenu.insert(fileMenu.begin() + i, separatorEntry);
                 i++;
@@ -55,20 +55,20 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
                     itemName = this->_scriptEngines[engineIndex]->name() + QT_TRANSLATE_NOOP("qgui2menu"," Project");
                 }
 
-                MenuEntry dummyEntry = {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL};
+                MenuEntry dummyEntry = {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL, true};
                 it = fileMenu.insert(it, dummyEntry);
 
-                MenuEntry runProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","&Run Project..."), NULL, firstMenuId, NULL, NULL};
+                MenuEntry runProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","&Run Project..."), NULL, firstMenuId, NULL, NULL, true};
                 it = fileMenu.insert(it + 1, runProjectEntry);
 
                 if ((this->_scriptEngines[engineIndex]->capabilities() & IScriptEngine::Debugger) == IScriptEngine::Debugger)
                 {
-                    MenuEntry debugEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","&Debug Project..."), NULL, (Action)(firstMenuId + 1), NULL, NULL};
+                    MenuEntry debugEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","&Debug Project..."), NULL, (Action)(firstMenuId + 1), NULL, NULL, true};
                     it = fileMenu.insert(it + 1, debugEntry);
                     i++;
                 }
 
-                MenuEntry saveAsProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","Save &As Project..."), NULL, (Action)(firstMenuId + 2), NULL, NULL};
+                MenuEntry saveAsProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","Save &As Project..."), NULL, (Action)(firstMenuId + 2), NULL, NULL, true};
                 it = fileMenu.insert(it + 1, saveAsProjectEntry);
                 i += 3;
             }
@@ -95,7 +95,7 @@ void MainWindow::addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu)
             itemName = this->_scriptEngines[engineIndex]->name() + QT_TRANSLATE_NOOP("qgui2menu"," Shell");
         }
 
-        MenuEntry entry = {MENU_ACTION, itemName, NULL, (Action)(ACT_SCRIPT_ENGINE_SHELL_FIRST + engineIndex), NULL, NULL};
+        MenuEntry entry = {MENU_ACTION, itemName, NULL, (Action)(ACT_SCRIPT_ENGINE_SHELL_FIRST + engineIndex), NULL, NULL, true};
 
         it = toolMenu.insert(it, entry) + 1;
     }
@@ -291,10 +291,10 @@ void MainWindow::addSessionRestoreToRecentMenu(vector<MenuEntry>& menu)
                 vector<MenuEntry>::iterator it = menu.begin() + i;
                 // add session restore menu entry
                 string restoreSessionEntryName = QT_TRANSLATE_NOOP("qgui2menu","Restore previous session");
-                MenuEntry restoreSessionEntry = {MENU_ACTION, restoreSessionEntryName, NULL, ACT_RESTORE_SESSION, NULL, NULL};
+                MenuEntry restoreSessionEntry = {MENU_ACTION, restoreSessionEntryName, NULL, ACT_RESTORE_SESSION, NULL, NULL, true};
                 it = menu.insert(it + 1, restoreSessionEntry);
                 // add separator
-                MenuEntry separatorEntry = {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL};
+                MenuEntry separatorEntry = {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL, true};
                 menu.insert(it + 1, separatorEntry);
             }
             break;
