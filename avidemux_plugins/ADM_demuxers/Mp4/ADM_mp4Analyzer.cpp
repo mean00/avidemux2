@@ -1280,6 +1280,12 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
               info.SzIndentical=info.SzIndentical*ADIO.channels;
             }
 #endif
+            if(nbAudioTrack>=_3GP_MAX_TRACKS-1)
+            {
+                ADM_warning("Maximum number of tracks reached, cannot add audio track.\n");
+                r=1;
+                break;
+            }
             r=indexify(&(_tracks[1+nbAudioTrack]),trackScale,&info,1,&nbo);
             ADM_info("Indexed audio, nb blocks:%u\n",nbo);
             if(r)
