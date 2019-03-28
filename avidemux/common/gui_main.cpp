@@ -1192,8 +1192,9 @@ void A_saveDefaultSettings()
     delete writer;
     
     std::string script = stream.str();
-    ADM_info("Generated settings=%s\n",script.c_str());
-    
+    ADM_info("Generated settings:\n");
+    printf("%s\n",script.c_str());
+
     FILE *file = ADM_fopen(fileName.c_str(), "wt");
     ADM_fwrite(script.c_str(), script.length(), 1, file);
     ADM_fclose(file);
