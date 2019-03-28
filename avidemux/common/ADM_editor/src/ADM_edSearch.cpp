@@ -514,6 +514,7 @@ uint64_t    ADM_Composer::getLastKeyFramePts(void)
           }
           if(pts!=ADM_NO_PTS)
           {
+              if(pts<s->_refStartTimeUs) continue; // no keyframe in the last segment, retry with the previous one
               pts+=s->_startTimeUs-s->_refStartTimeUs;
               ADM_info("found last keyframe at %s\n",ADM_us2plain(pts));
               return pts;
