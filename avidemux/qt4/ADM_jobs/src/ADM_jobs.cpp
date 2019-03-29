@@ -37,8 +37,10 @@ extern const char* new_progname;
 */
 int main(int argc, char *argv[])
 {
+    ADM_initBaseDir(argc,argv);
+
 #if defined(_WIN32) && !defined(_MSC_VER) // This causes problem when installed in program files, for whatever reasons, when not run as admin
-	redirectStdoutToFile();
+    redirectStdoutToFile("jobslog.txt");
 #endif
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
@@ -51,7 +53,7 @@ int main(int argc, char *argv[])
 #define MKSTRING(x) STR(x)
 
     printf("*************************\n");
-    printf("  Avidemux v%s", MKSTRING(ADM_VERSION));
+    printf("  Avidemux Jobs v%s", MKSTRING(ADM_VERSION));
 #if defined(ADM_SUBVERSION)
      printf(" (%s)", MKSTRING(ADM_SUBVERSION));
 #endif
@@ -119,8 +121,6 @@ int main(int argc, char *argv[])
 	// Load .avidemuxrc
     quotaInit();
 
-
-    ADM_initBaseDir(argc,argv);
     // Init jobs
     ADMJob::jobInit();
     jobRun(argc,argv);

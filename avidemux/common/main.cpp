@@ -57,7 +57,7 @@ int main(int _argc, char *_argv[])
 
 #if defined(_WIN32) && (ADM_UI_TYPE_BUILD == ADM_UI_GTK || ADM_UI_TYPE_BUILD == ADM_UI_QT4) 
 	// redirect output before registering exception handler so error dumps are captured
-	redirectStdoutToFile();
+	redirectStdoutToFile("admlog.txt");
 #endif
 
 	installSigHandler();
