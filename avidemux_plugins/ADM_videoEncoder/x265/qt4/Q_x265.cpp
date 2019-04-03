@@ -193,7 +193,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         }
 
         upload();
-        ADM_pluginInstallSystem( std::string("x265"),std::string(".json"),pluginVersion);
+        ADM_pluginInstallSystem( std::string("x265"),std::string("json"),pluginVersion);
         updatePresetList();
         int n=ui.configurationComboBox->count();
         ui.configurationComboBox->setCurrentIndex(n-1);
@@ -207,7 +207,7 @@ bool x265Dialog::updatePresetList(void)
     std::string rootPath;
     vector <std::string >  list;
     ADM_pluginGetPath("x265",pluginVersion,rootPath);
-    ADM_listFile(rootPath,".json",list);
+    ADM_listFile(rootPath,"json",list);
     int l=list.size();
     combo->clear();
     for( int i=0;i<l;i++)
