@@ -118,6 +118,7 @@ void HandleAction_Save(Action action)
                 }else
                 {
                     std::string oFile;
+#if !defined(_MSC_VER)
                     std::string text;
                     char timestamp[32];
                     uint64_t ss=ADM_getSecondsSinceEpoch();
@@ -131,7 +132,9 @@ void HandleAction_Save(Action action)
                     else
                         text+=std::string("UNKNOWN");
                     char *oText=ADM_strdup(text.c_str());
-                    
+#else
+                    char *oText=NULL;
+#endif
                     diaElemFile wFile(1,oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
                     diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
                     diaElem *elems[2]={&wText,&wFile};
