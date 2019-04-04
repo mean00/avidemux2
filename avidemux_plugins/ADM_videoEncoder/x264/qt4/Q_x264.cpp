@@ -802,9 +802,9 @@ void x264Dialog::configurationComboBox_currentIndexChanged(int index)
     \fn getProfileName  
     \brief Popup a dialog that asks the user the preset name
 */
-static char *getProfileName(void)
+static char *getProfileName(QDialog *parent)
 {
-  QDialog dialog;
+  QDialog dialog(parent);
   dialog.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("x264","Save Profile")));
   QDialogButtonBox *buttonBox = new QDialogButtonBox();  
   QVBoxLayout *vboxLayout = new QVBoxLayout();
@@ -840,7 +840,7 @@ static char *getProfileName(void)
 void x264Dialog::saveAsButton_pressed(void)
 {
   // 1-ask name
-  char *out=getProfileName();
+  char *out=getProfileName(this);
   if(!out) return;
   ADM_info("Using %s\n",out);
   download();
