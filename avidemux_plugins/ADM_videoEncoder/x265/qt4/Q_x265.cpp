@@ -780,17 +780,17 @@ static char *getProfileName(void)
 
   vboxLayout->addWidget(text);
   vboxLayout->addWidget(buttonBox);
-
   dialog.setLayout(vboxLayout);
+//  dialog.setModal(true);
+//  dialog.setWindowModality(Qt::ApplicationModal);
 
   if(dialog.exec()!=QDialog::Accepted)
   {
-        ADM_info("Canceled");
+        ADM_info("Cancelled");
         return NULL;
   }
-  QString fileName=text->text();
-  const char *out=fileName.toUtf8().constData();
-  return ADM_strdup(out);
+  std::string st = std::string( text->text().toUtf8().constData());
+  return ADM_strdup(st.c_str());
 }
 /**
         \fn saveAsButton_pressed

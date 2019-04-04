@@ -811,22 +811,22 @@ static char *getProfileName(void)
   QLineEdit *text=new QLineEdit;
 //  text->setAcceptRichText(false);
 
-  text->setText(QT_TRANSLATE_NOOP("x264","my profile"));
+  text->setText("my profile");
   text->selectAll();
 
   vboxLayout->addWidget(text);
   vboxLayout->addWidget(buttonBox);
-
+//  dialog.setModal(true);
+//  dialog.setWindowModality(Qt::ApplicationModal);
   dialog.setLayout(vboxLayout);
 
   if(dialog.exec()!=QDialog::Accepted)
   {
-        ADM_info("Canceled");
+        ADM_info("Cancelled");
         return NULL;
   }
-  QString fileName=text->text();
-  const char *out=fileName.toUtf8().constData();
-  return ADM_strdup(out);
+  std::string st = std::string(text->text().toUtf8().constData());
+  return ADM_strdup(st.c_str());
 }
 /**
         \fn saveAsButton_pressed
