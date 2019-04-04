@@ -51,7 +51,7 @@ private slots:
         void saveAsButton_pressed(void);
         void deleteButton_pressed(void);
 
-        bool updatePresetList(void);
+        bool updatePresetList(const char *select=NULL);
 
         bool toogleAdvancedConfiguration(bool advancedEnabled);
         
