@@ -70,7 +70,7 @@ void diaElemFrame::setMe(void *dialog, void *opaque,uint32_t line)
 	QVBoxLayout *vboxlayout = new QVBoxLayout(groupBox);
 	QLayout *layout2 = NULL;
 	int currentLayout = 0;
-	int v;
+	int v = 0;
 
 	for (int i = 0; i < nbElems; i++)
 	{
