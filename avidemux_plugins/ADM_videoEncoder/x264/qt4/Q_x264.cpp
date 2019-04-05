@@ -880,7 +880,7 @@ void x264Dialog::deleteButton_pressed(void)
   QString preset=ui.configurationComboBox->itemText(n);
   QString msg=QString(QT_TRANSLATE_NOOP("x264","Do you really want to delete the "))+preset+
             QString(QT_TRANSLATE_NOOP("x264"," profile ?.\nIf it is a system profile it will be recreated next time."));
-  if(true==GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("x264","Delete preset"),QT_TRANSLATE_NOOP("x264","Delete"),msg.toUtf8().constData()))
+  if(true==GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("x264","Delete"),QT_TRANSLATE_NOOP("x264","Delete preset"),msg.toUtf8().constData()))
   {
     std::string rootPath;
     ADM_pluginGetPath("x264",pluginVersion,rootPath);
