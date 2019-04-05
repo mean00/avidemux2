@@ -344,8 +344,8 @@ decoderFFVDPAU::~decoderFFVDPAU()
                 }
                 delete r;
             }
-            vdpau.fullQueue.clear();
         }
+        vdpau.fullQueue.clear();
 }
 /**
     \fn uncompress
