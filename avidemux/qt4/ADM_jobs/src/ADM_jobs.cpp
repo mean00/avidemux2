@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
 {
     ADM_initBaseDir(argc,argv);
 
-#if defined(_WIN32) && !defined(_MSC_VER) // This causes problem when installed in program files, for whatever reasons, when not run as admin
+#if defined(_WIN32) 
+//&& !defined(_MSC_VER) // This causes problem when installed in program files, for whatever reasons, when not run as admin
     redirectStdoutToFile("jobslog.txt");
 #endif
 
