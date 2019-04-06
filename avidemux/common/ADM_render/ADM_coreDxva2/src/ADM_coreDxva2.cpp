@@ -20,9 +20,9 @@
 #include "ADM_coreD3D.h"
 #ifdef USE_DXVA2
 
-#if 1
-#define aprintf printf
 #define DUMP_GUID
+#if 0
+#define aprintf printf
 #else
 #define aprintf(...) {}
 #endif
@@ -73,10 +73,11 @@ typedef struct dxva2_mode
 } dxva2_mode;
 /**
  */
-static int ALIGN(int x,int align)
+static int ALIGN(int x,int align,bool verbose=false)
 {
     int y= ((x+(align-1)) &(~(align-1)));
-    aprintf("Align %d,%d => %d\n",x,align,y);
+    if(verbose)
+        printf("Align %d,%d => %d\n",x,align,y);
     return y;
 }
 
@@ -566,8 +567,8 @@ DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec,int bits)
 IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int height, int numSurface, LPDIRECT3DSURFACE9 *surface,int align,int bits)
 {
     Dxv2SupportMap *cmap;
-    int paddedWidth=ALIGN(with,align);
-    int paddedHeight=ALIGN(height,align);
+    int paddedWidth=ALIGN(with,align,true);
+    int paddedHeight=ALIGN(height,align,true);
     switch(codec)
     {
         case AV_CODEC_ID_H264:
