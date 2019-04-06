@@ -195,13 +195,11 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         upload();
         ADM_pluginInstallSystem( std::string("x265"),std::string("json"),pluginVersion);
         updatePresetList();
-        int n=ui.configurationComboBox->count();
-        ui.configurationComboBox->setCurrentIndex(n-1);
 }
 /**
     \fn updatePresetList
 */
-bool x265Dialog::updatePresetList(void)
+bool x265Dialog::updatePresetList(const char *match)
 {
     QComboBox *combo=ui.configurationComboBox;
     std::string rootPath;
@@ -209,12 +207,19 @@ bool x265Dialog::updatePresetList(void)
     ADM_pluginGetPath("x265",pluginVersion,rootPath);
     ADM_listFile(rootPath,"json",list);
     int l=list.size();
+    int idx=l;
+    std::string current;
+    if(match)
+        current=std::string(match);
     combo->clear();
     for( int i=0;i<l;i++)
     {
+        if(match && list[i]==current)
+            idx=i;
         combo->addItem(list[i].c_str());
     }
     combo->addItem(QString(QT_TRANSLATE_NOOP("x265","Custom")));
+    combo->setCurrentIndex(idx);
     return true;
 }
 
@@ -761,9 +766,9 @@ void x265Dialog::configurationComboBox_currentIndexChanged(int index)
     \fn getProfileName  
     \brief Popup a dialog that asks the user the preset name
 */
-static char *getProfileName(void)
+static char *getProfileName(QDialog *parent)
 {
-  QDialog dialog;
+  QDialog dialog(parent);
   dialog.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","Save Profile")));
   QDialogButtonBox *buttonBox = new QDialogButtonBox();  
   QVBoxLayout *vboxLayout = new QVBoxLayout();
@@ -799,13 +804,14 @@ static char *getProfileName(void)
 void x265Dialog::saveAsButton_pressed(void)
 {
   // 1-ask name
-  char *out=getProfileName();
+  char *out=getProfileName(this);
   if(!out) return;
   ADM_info("Using %s\n",out);
   download();
   std::string rootPath;
   ADM_pluginGetPath("x265",pluginVersion,rootPath);
-  std::string fullpath=rootPath+std::string(ADM_SEPARATOR)+out+std::string(".json");
+  std::string name=std::string(out);
+  std::string fullpath=rootPath+std::string(ADM_SEPARATOR)+name+std::string(".json");
 
   if(ADM_fileExist(fullpath.c_str()))
   {
@@ -821,7 +827,7 @@ void x265Dialog::saveAsButton_pressed(void)
         GUI_Error_HIG(QT_TRANSLATE_NOOP("x265","Error"),QT_TRANSLATE_NOOP("x265","Cannot save preset"));
         ADM_error("Cannot write to %s\n",out);
   }
-  updatePresetList();
+  updatePresetList(name.c_str());
 }
 /**
 
@@ -838,7 +844,7 @@ void x265Dialog::deleteButton_pressed(void)
   QString preset=ui.configurationComboBox->itemText(n);
   QString msg=QString(QT_TRANSLATE_NOOP("x265","Do you really want to delete the "))+preset+
             QString(QT_TRANSLATE_NOOP("x265"," profile ?.\nIf it is a system profile it will be recreated next time."));
-  if(true==GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("x265","Delete preset"),QT_TRANSLATE_NOOP("x265","Delete"),msg.toUtf8().constData()))
+  if(true==GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("x265","Delete"),QT_TRANSLATE_NOOP("x265","Delete preset"),msg.toUtf8().constData()))
   {
     std::string rootPath;
     ADM_pluginGetPath("x265",pluginVersion,rootPath);
