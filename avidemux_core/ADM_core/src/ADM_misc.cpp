@@ -330,11 +330,10 @@ const std::string &ADM_getTimeDateAsString()
 const std::string &ADM_getTimeDateAsString()
 {    
    static std::string text; // not thread safe...
-    char timestamp[32];
-    uint64_t ss=ADM_getSecondsSinceEpoch();
-    time_t tme=(time_t)ss;
+    char timestamp[64];
+    time_t currentTime=time(NULL);
     struct tm *ct;
-    ct=localtime(&tme);
+    ct=localtime(&currentTime);
     size_t l=strftime(timestamp,32,"%F %H%M%S",ct);
     text=std::string("Job ");
     if(l)
