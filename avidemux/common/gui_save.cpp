@@ -118,23 +118,7 @@ void HandleAction_Save(Action action)
                 }else
                 {
                     std::string oFile;
-#if !defined(_MSC_VER)
-                    std::string text;
-                    char timestamp[32];
-                    uint64_t ss=ADM_getSecondsSinceEpoch();
-                    time_t tme=(time_t)ss;
-                    struct tm *ct;
-                    ct=localtime(&tme);
-                    size_t l=strftime(timestamp,32,"%F %H%M%S",ct);
-                    text=std::string("Job ");
-                    if(l)
-                        text+=std::string(timestamp);
-                    else
-                        text+=std::string("UNKNOWN");
-                    char *oText=ADM_strdup(text.c_str());
-#else
-                    char *oText=NULL;
-#endif
+                    char *oText=ADM_strdup(ADM_getTimeDateAsString().c_str());
                     diaElemFile wFile(1,oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
                     diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
                     diaElem *elems[2]={&wText,&wFile};

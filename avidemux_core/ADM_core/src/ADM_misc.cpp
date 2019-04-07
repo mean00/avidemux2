@@ -304,4 +304,46 @@ bool ADM_shutdown(void)
 	return (system("shutdown -P 0") == 0);
 #endif
 }
+
+#ifndef _MSC_VER
+/**
+ * 
+ * @return 
+ */
+const std::string &ADM_getTimeDateAsString()
+{    
+    static std::string text; // not thread safe...
+    char timestamp[32];
+    uint64_t ss=ADM_getSecondsSinceEpoch();
+    time_t tme=(time_t)ss;
+    struct tm *ct;
+    ct=localtime(&tme);
+    size_t l=strftime(timestamp,32,"%F %H%M%S",ct);
+    text=std::string("Job ");
+    if(l)
+        text+=std::string(timestamp);
+    else
+        text+=std::string("UNKNOWN");
+    return text;
+}
+#else
+const std::string &ADM_getTimeDateAsString()
+{    
+        static std::string text;
+                    char timestamp[32];
+                    uint64_t ss=ADM_getSecondsSinceEpoch();
+                    time_t tme=(time_t)ss;
+                    struct tm *ct;
+                    ct=localtime(&tme);
+                    size_t l=strftime(timestamp,32,"%F %H%M%S",ct);
+                    text=std::string("Job ");
+                    if(l)
+                        text+=std::string(timestamp);
+                    else
+                        text+=std::string("UNKNOWN");
+                    char *oText=ADM_strdup(text.c_str());
+}
+                    
+#endif
+
 //EOF
