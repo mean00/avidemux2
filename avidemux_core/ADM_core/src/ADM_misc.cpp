@@ -305,7 +305,7 @@ bool ADM_shutdown(void)
 #endif
 }
 
-#ifndef _MSC_VER
+
 /**
  * 
  * @return 
@@ -326,23 +326,6 @@ const std::string &ADM_getTimeDateAsString()
         text+=std::string("UNKNOWN");
     return text;
 }
-#else
-const std::string &ADM_getTimeDateAsString()
-{    
-   static std::string text; // not thread safe...
-    char timestamp[64];
-    time_t currentTime=time(NULL);
-    struct tm *ct;
-    ct=localtime(&currentTime);
-    size_t l=strftime(timestamp,32,"%F %H%M%S",ct);
-    text=std::string("Job ");
-    if(l)
-        text+=std::string(timestamp);
-    else
-        text+=std::string("UNKNOWN");
-    return text;
-}
-                    
-#endif
+
 
 //EOF
