@@ -204,7 +204,6 @@ static bool portable;
                     myargc-=1+reaction_table[index].have_arg;
                 }
     } // end while
-    GUI_Verbose();
     printf("\n ********** Automation ended***********\n");
     return 0; // Do not call me anymore
 }
