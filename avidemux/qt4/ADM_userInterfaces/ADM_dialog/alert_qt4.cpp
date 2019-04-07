@@ -96,7 +96,7 @@ namespace ADM_Qt4CoreUIToolkit
 		if (beQuiet)
 		{
 			printf("Info: %s\n", primary);
-			return 0;
+			return 1;
 		}
 
 		if (!secondary_format)
@@ -126,7 +126,7 @@ namespace ADM_Qt4CoreUIToolkit
 		if (beQuiet)
 		{
 			printf("Info: %s\n", primary);
-			return 0;
+			return 1;
 		}
 
 		if (!secondary_format)
@@ -155,7 +155,7 @@ namespace ADM_Qt4CoreUIToolkit
 		if (beQuiet)
 		{
 			printf("Question: %s\n", alertstring);
-			return 0;
+			return 1;
 		}
 
 		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question")),

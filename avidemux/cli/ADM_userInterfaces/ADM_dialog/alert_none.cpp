@@ -95,8 +95,8 @@ int             GUI_Confirmation_HIG(const char *button_confirm, const char *pri
         }
         if (beQuiet)
         {
-          boxAdd("--> First one\n");
-          return 0;
+          boxAdd("--> Automatically confirmed\n");
+          return 1;
         }
         else
         {
@@ -134,8 +134,8 @@ int             GUI_YesNo(const char *primary, const char *secondary_format)
         }
         if (beQuiet)
         {
-          boxAdd("--> First one\n");
-          return 0;
+          boxAdd("--> Automatically affirmed\n");
+          return 1;
         }
         else
         {
@@ -156,8 +156,8 @@ int             GUI_Question(const char *alertstring)
   
   if(beQuiet)  
   {
-      printf("%s => No\n",alertstring);
-      return false;
+      printf("%s => Yes\n",alertstring);
+      return 1;
   }
     
   boxStart();
