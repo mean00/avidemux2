@@ -118,7 +118,8 @@ void HandleAction_Save(Action action)
                 }else
                 {
                     std::string oFile;
-                    char *oText=ADM_strdup(ADM_getTimeDateAsString().c_str());
+                    std::string prefilled=std::string("Job ")+ADM_getTimeDateAsString();
+                    char *oText=ADM_strdup(prefilled.c_str());
                     diaElemFile wFile(1,oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
                     diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
                     diaElem *elems[2]={&wText,&wFile};

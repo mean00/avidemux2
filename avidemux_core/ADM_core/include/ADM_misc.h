@@ -33,7 +33,7 @@ ADM_CORE6_EXPORT void               ADM_lowerCase(std::string &st);
 //
 ADM_CORE6_EXPORT uint64_t           ADM_getSecondsSinceEpoch(void);
 ADM_CORE6_EXPORT const char        *ADM_epochToString(uint64_t epoch);
-ADM_CORE6_EXPORT const std::string  &ADM_getTimeDateAsString();
+ADM_CORE6_EXPORT const std::string  &ADM_getTimeDateAsString(const char *format=NULL);
 
 #ifdef HAVE_GETTIMEOFDAY
 	#include <sys/time.h>

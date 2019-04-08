@@ -310,7 +310,7 @@ bool ADM_shutdown(void)
  * 
  * @return 
  */
-const std::string &ADM_getTimeDateAsString()
+const std::string &ADM_getTimeDateAsString(const char *format)
 {    
     static std::string text; // not thread safe...
     char timestamp[32];
@@ -318,12 +318,11 @@ const std::string &ADM_getTimeDateAsString()
     time_t tme=(time_t)ss;
     struct tm *ct;
     ct=localtime(&tme);
-    size_t l=strftime(timestamp,32,"%F %H%M%S",ct);
-    text=std::string("Job ");
+    size_t l=strftime(timestamp,32,format? format : "%F %H%M%S",ct);
     if(l)
-        text+=std::string(timestamp);
+        text=std::string(timestamp);
     else
-        text+=std::string("UNKNOWN");
+        text=std::string("UNKNOWN");
     return text;
 }
 
