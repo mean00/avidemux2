@@ -52,10 +52,14 @@ function Component()
         component.loaded.connect(this, Component.prototype.installerLoaded);
         ComponentSelectionPage = gui.pageById(QInstaller.ComponentSelection);
 		
-		var text=installer.value( "TargetDir");
-		if (installer.fileExists(text + "/components.xml")) 
+		var folder=installer.value( "TargetDir");
+		if (installer.fileExists(folder + "/components.xml")) 
 		{							
 			update=true;
+    	    // remove old one
+			// https://stackoverflow.com/questions/46455360/workaround-for-qt-installer-framework-not-overwriting-existing-installation
+			QMessageBox.question("question","Uninstall","I will now uninstall the previous version of avidemux VC++" ,  QMessageBox.Yes);     			
+			installer.execute(folder+"/Uninstall Avidemux VC++ 64bits.exe", "--script="+folder+"/scripts/auto_uninstall.js");			
 		}        
 
         installer.setDefaultPageVisible(QInstaller.TargetDirectory, !update);
