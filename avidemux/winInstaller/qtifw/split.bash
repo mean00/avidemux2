@@ -1,5 +1,5 @@
 #/bin/bash
-export bash_path=`cygpath -u $0`
+export bash_path=$(cygpath -ua $(dirname $0))
 export src_path=`cygpath -u $1`
 export run_path="packages/org.avidemux.run/data/"
 export dev_path="packages/org.avidemux.dev/data/" 
