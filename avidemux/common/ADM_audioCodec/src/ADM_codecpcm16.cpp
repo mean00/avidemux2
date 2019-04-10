@@ -20,6 +20,12 @@
 
 ADM_AudiocodecWav::ADM_AudiocodecWav( uint32_t fourcc,const WAVHeader &info ) : ADM_Audiocodec(fourcc,info)
 {
+    channelMapping[0] = ADM_CH_FRONT_LEFT;
+    channelMapping[1] = ADM_CH_FRONT_RIGHT;
+    channelMapping[2] = ADM_CH_FRONT_CENTER;
+    channelMapping[3] = ADM_CH_REAR_LEFT;
+    channelMapping[4] = ADM_CH_REAR_RIGHT;
+    channelMapping[5] = ADM_CH_LFE;
     ADM_info("Creating not swapped wav decoder (PCM)\n");
 }
 ADM_AudiocodecWav::~ADM_AudiocodecWav()
