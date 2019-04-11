@@ -59,6 +59,7 @@ protected:
            bool         hurryUp;
            bool         _drain;
            bool         _done;
+           bool         _keepFeeding;
            bool         _endOfStream;
            bool         _setBpp;
            bool         _setFcc;
@@ -116,6 +117,7 @@ public:
         virtual uint8_t getPARWidth (void);
         virtual uint8_t getPARHeight (void);
         virtual bool decodeErrorHandler(int code, bool headerOnly=false);
+        virtual bool keepFeeding(void) { return _keepFeeding; }
         virtual bool endOfStreamReached(void) { return _endOfStream; }
         virtual void setEndOfStream(bool reached) { _endOfStream=reached; }
         virtual bool getDrainingState(void) { return _drain; }
