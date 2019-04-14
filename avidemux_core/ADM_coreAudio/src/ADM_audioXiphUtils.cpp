@@ -153,7 +153,6 @@ bool admExtraData2packets(uint8_t *extraData, int extraLen,uint8_t **packs,int *
  */
 int admExtraData2xiph(int l, uint8_t *src, uint8_t *dstOrg)
 {
-    int outLen=1;
     int length[3];
     uint8_t *dst=dstOrg;
     ADM_info("insize=%d\n",l);

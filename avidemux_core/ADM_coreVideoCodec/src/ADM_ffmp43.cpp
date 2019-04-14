@@ -26,12 +26,6 @@
     #define LAV_VERBOSITY_LEVEL AV_LOG_INFO
 #endif
 
-extern "C"
-{
-    static void ADM_releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-    static int  ADM_getBuffer(AVCodecContext *avctx, AVFrame *pic);
-}
-
 #define aprintf(...) {}
 
 
@@ -373,7 +367,6 @@ bool decoderFF::decodeErrorHandler(int code, bool headerOnly)
 */
 bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
-  uint8_t *oBuff[3];
   int ret = 0;
   out->_noPicture = 0;
   if(hwDecoder)

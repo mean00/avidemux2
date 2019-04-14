@@ -595,7 +595,6 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
   uint8_t *head = buffer, *tail = buffer + len;
   uint8_t stream;
 
-  uint32_t val, hnt;
   nalSize=4;
 // Check for short nalSize, i.e. size coded on 3 bytes
   {
@@ -718,7 +717,6 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
 bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
     bool r=false;
-    bool closeCodec=false;
 
     // duplicate
     int myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;

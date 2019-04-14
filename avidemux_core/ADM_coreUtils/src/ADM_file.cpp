@@ -66,13 +66,10 @@ uint64_t ADMFile::tell(void)
  ADM_assert(_fill<ADM_FILE_BUFFER);
 	// MOD Feb 2005 by GMV
 	// uint32_t c;
-	uint64_t c;
 	// END MOD Feb 2005 by GMV
-        
-     
         flush();
-#ifdef ADMF_DEBUG           
-        c=ftello(_out);
+#ifdef ADMF_DEBUG
+        uint64_t c=ftello(_out);
         ADM_assert(c==_curPos);
         printf("[%lu] Ftell :%lu \n",this,c);
 #endif        
