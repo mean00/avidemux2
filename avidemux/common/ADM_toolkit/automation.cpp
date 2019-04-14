@@ -49,7 +49,6 @@ static void list_audio_languages(char *p);
 static void saveCB(char*name);
 static void loadCB(char *name);
 static int set_output_format(const char *str);
-static void set_reuse_2pass_log(char *p);
 static void setVar(char *in);
 extern void UI_closeGui();
 //_________________________________________________________________________
