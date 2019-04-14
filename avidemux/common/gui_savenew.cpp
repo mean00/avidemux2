@@ -174,7 +174,7 @@ bool abort=false;
     if(videoDuration<5000) videoDuration=5000;
     printf("[Save] Performing Pass one,using %s as log file\n",logFileName.c_str());
     
-    if(ADM_fileExist(logFileName.c_str()))
+    if(false==GUI_isQuiet() && ADM_fileExist(logFileName.c_str()))
     {
         if(GUI_Question(QT_TRANSLATE_NOOP("adm","Reuse previous first pass data ?\nWarning, the settings must be close.")))
         {
