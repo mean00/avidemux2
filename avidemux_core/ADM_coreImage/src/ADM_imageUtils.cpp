@@ -151,10 +151,6 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
 {
     int step=w/4;
     int left=w-4*step;
-    uint8_t *xsrc=src;
-    uint8_t *xdst=dst;
-    uint8_t *xdst2=dst2;
-
 
     for(int y=0;y<h;y++)
     {
@@ -208,7 +204,6 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcv, u
 {
         int mod8=w>>3;
         int leftOver=w&7;
-        int x;
         for(int y=0;y<h;y++)
         {
                 adm_uv_to_nv12_mmx(srcu,srcv,dst,mod8);
@@ -254,7 +249,6 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
 {
         int mod8=w>>3;
         int leftOver=w&7;
-        int x;
         for(int y=0;y<h;y++)
         {
                 uint8_t *ssrc=src;
@@ -355,16 +349,13 @@ bool    ADMImage::convertFromNV12(uint8_t *yData, uint8_t *uvData, int strideY, 
  */
 bool    ADMImage::convertToNV12(uint8_t *yData, uint8_t *uvData, int strideY, int strideUV)
 {
-        // Y
-        int w=_width;
-        int h=_height;
         int sstride=GetPitch(PLANAR_Y);
         int dstride=strideY;
         uint8_t *src=GetReadPtr(PLANAR_Y);
         uint8_t *dst=yData;
         for(int y=0;y<_height;y++)
         {
-            memcpy(dst,src,w);
+            memcpy(dst,src,_width);
             src+=sstride;
             dst+=dstride;
         }
@@ -466,10 +457,10 @@ void testYUV444Chroma(void)
     uint8_t dst2[50],dst2b[50];
 
     for(int i=0;i<50;i++) src[i]=(i*0x55) ^( i+1);
-    memset(dst,50,0);
-    memset(dst2,50,0);
-    memset(dstb,50,0);
-    memset(dst2b,50,0);
+    memset(dst,0,50);
+    memset(dst2,0,50);
+    memset(dstb,0,50);
+    memset(dst2b,0,50);
 
 
 #define ROW_SIZE 23
@@ -495,10 +486,10 @@ void testUV(void)
     uint8_t dst2[50],dst2b[50];
 
     for(int i=0;i<50;i++) src[i]=(i*0x55) ^( i+1);
-    memset(dst,50,0);
-    memset(dst2,50,0);
-    memset(dstb,50,0);
-    memset(dst2b,50,0);
+    memset(dst,0,50);
+    memset(dst2,0,50);
+    memset(dstb,0,50);
+    memset(dst2b,0,50);
 
 
 
@@ -527,8 +518,8 @@ void testYUV444Luma()
     uint8_t dst2[SRC_SIZE];
 
     for(int i=0;i<SRC_SIZE;i++) src[i]=i;
-    memset(dst,SRC_SIZE,0);
-    memset(dst2,SRC_SIZE,0);
+    memset(dst,0,SRC_SIZE);
+    memset(dst2,0,SRC_SIZE);
 
 
     yuv444_MMX(src,dst,ROW_SIZE,1,ROW_SIZE,4*ROW_SIZE);
@@ -563,8 +554,8 @@ void testInterleaveUv()
           srcu[i]=i;
           srcv[i]=0x80^i;
       }
-      memset(dst,SRC_SIZE,0);
-      memset(dst2,SRC_SIZE,0);
+      memset(dst,0,SRC_SIZE);
+      memset(dst2,0,SRC_SIZE);
 
 
       uv_to_nv12_mmx(ROW_SIZE,1,ROW_SIZE>>1,ROW_SIZE>>1,srcu,srcv,ROW_SIZE,dst2);
