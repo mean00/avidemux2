@@ -51,7 +51,7 @@ ADM_COREUI6_EXPORT void            GUI_Verbose(void);
 // Set the ui in silent mode. All popups & questions will be answered with their default value
 ADM_COREUI6_EXPORT void            GUI_Quiet(void);
 // Is the UI in quiet mode ?
-uint8_t			GUI_isQuiet(void);
+ADM_COREUI6_EXPORT uint8_t         GUI_isQuiet(void);
 //
 ADM_COREUI6_EXPORT void            UI_purge(void);
 //
