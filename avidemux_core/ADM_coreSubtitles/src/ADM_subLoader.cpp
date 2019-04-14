@@ -79,9 +79,10 @@ static bool splitSrtTiming(const char *str,uint64_t &start,uint64_t &end )
 
 
 /**
- *      \fn updateTiming
+ *      \fn updateTiming // unused
  *      \brief srt does not provide 'end display' timeing information, make a guess
  */
+#if 0
 static bool updateSrtTiming(ListOfSubtitleLines &lines)
 {
     int n=lines.size();
@@ -96,9 +97,8 @@ static bool updateSrtTiming(ListOfSubtitleLines &lines)
     if(n)
         lines[n-1].stop=lines[n-1].start+HOLD_ON_TIMER;
     return true;
-    
-    
 }
+#endif
 /**
  * \fn loadSrt
  * @param file
@@ -113,7 +113,6 @@ bool loadSrt(const char *file,ListOfSubtitleLines &lines)
         ADM_warning("Cannot open subtitle %s\n,file");
         return false;
     }
-    bool status=true;
     char buffer[1024];
     SRT_STATE state=STATE_LINENO;
     subtitleTextEntry entry;
@@ -142,14 +141,12 @@ bool loadSrt(const char *file,ListOfSubtitleLines &lines)
                         if(length<2) 
                         { 
                             ADM_warning("Inconsistent file\n");
-                            status=false;
                             break;
                         }
                         uint64_t start,end;
                         if(!splitSrtTiming(buffer,start,end))
                         {
                              ADM_warning("Inconsistent timing line\n");
-                             status=false;
                              break;
                         }
                         entry.start=start;

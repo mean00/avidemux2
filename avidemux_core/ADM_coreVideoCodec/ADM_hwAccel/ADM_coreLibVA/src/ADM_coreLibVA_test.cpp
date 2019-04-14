@@ -63,7 +63,6 @@ static bool tryDirect(const char *title, ADM_vaSurface &admSurface,ADMImage &ima
  */
 static bool tryIndirectUpload(const char *title, ADM_vaSurface &admSurface,VAImage *image, ADMImage &image1)
 {
-    bool work=false;
     ADM_info("%s indirect upload... \n",title);
     if(!admLibVA::uploadToImage(&image1,image))
     {
@@ -88,7 +87,6 @@ static bool tryIndirectUpload(const char *title, ADM_vaSurface &admSurface,VAIma
  */
 static bool tryIndirectDownload(const char *title, ADM_vaSurface &admSurface,VAImage *image, ADMImage &image2)
 {
-    bool work=false;
     ADM_info("%s indirect download... \n",title);
     if(!admLibVA::surfaceToImage(&admSurface,image))
     {

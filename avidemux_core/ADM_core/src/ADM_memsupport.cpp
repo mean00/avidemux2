@@ -36,11 +36,6 @@
 #undef free
 #undef realloc
 
-static uint32_t ADM_consumed = 0;
-static uint32_t ADM_maxConsumed = 0;
-static admMutex memAccess("MemAccess");
-static int doMemStat = 0;
-
 static void *ADM_aligned_alloc(size_t size);
 static void ADM_aligned_free(void *ptr);
 static void *ADM_aligned_memalign(size_t align,size_t size);
