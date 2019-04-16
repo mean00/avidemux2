@@ -28,12 +28,7 @@ bool mp4Configure(void)
         bool force=muxerConfig.forceAspectRatio;
         diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4"},{MP4_MUXER_PSP,"PSP"}};
         diaElemMenu  menuFormat(&fmt,QT_TRANSLATE_NOOP("mp4muxer","Muxing Format"),2,format,"");
-#if !defined(_WIN32) || defined(_MSC_VER)
         diaElemToggle faststart(&fast,QT_TRANSLATE_NOOP("mp4muxer","Move index to the beginning of the file"));
-        const uint32_t nbTabs=5;
-#else
-        const uint32_t nbTabs=4;
-#endif
         diaElemToggle forceAR(&force,QT_TRANSLATE_NOOP("mp4muxer","Force aspect ratio"));
         diaMenuEntry aspect[]={{STANDARD,"4:3"},{WIDE,"16:9"},{UNI,"18:9"},{CINEMA,"64:27"}};
         diaElemMenu  menuAspect(&dar,QT_TRANSLATE_NOOP("mp4muxer","Aspect Ratio (DAR)"),4,aspect,"");
@@ -44,12 +39,9 @@ bool mp4Configure(void)
             {MP4_MUXER_ROTATE_270,QT_TRANSLATE_NOOP("mp4muxer","270°")}
         };
         diaElemMenu menuRotation(&rot,QT_TRANSLATE_NOOP("mp4muxer","Rotate video"),4,rotation,"");
-#if !defined(_WIN32) || defined(_MSC_VER)
         diaElem *tabs[]={&menuFormat,&faststart,&forceAR,&menuAspect,&menuRotation};
-#else
-        diaElem *tabs[]={&menuFormat,&forceAR,&menuAspect,&menuRotation};
-#endif
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MP4 Muxer"),nbTabs,tabs))
+
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MP4 Muxer"),5,tabs))
         {
             muxerConfig.muxerType=(MP4_MUXER_TYPE)fmt;
             muxerConfig.faststart=fast;
