@@ -59,23 +59,19 @@ function Component()
     	    // remove old one
 			// https://stackoverflow.com/questions/46455360/workaround-for-qt-installer-framework-not-overwriting-existing-installation
 			QMessageBox.question("question","Uninstall","I will now uninstall the previous version of avidemux VC++" ,  QMessageBox.Yes);     			
-/*
 		    if (installer.fileExists(folder + "/scripts/auto_uninstall.js")) 
 			    installer.execute(folder+"/Uninstall Avidemux VC++ 64bits.exe", "--script="+folder+"/scripts/auto_uninstall.js");			
             else
 			    installer.execute(folder+"/Uninstall Avidemux VC++ 64bits.exe");
-*/
-		    if (installer.fileExists(folder + "/scripts/auto_uninstall.js")) 
-                component.addElevatedOperation("Execute", folder+"/Uninstall Avidemux VC++ 64bits.exe", "--script="+folder+"/scripts/auto_uninstall.js");
-            else
-                component.addElevatedOperation("Execute", folder+"/Uninstall Avidemux VC++ 64bits.exe");
 		}        
 
         installer.setDefaultPageVisible(QInstaller.TargetDirectory, !update);
         installer.setDefaultPageVisible(QInstaller.ComponentSelection, !update);
         installer.setDefaultPageVisible(QInstaller.LicenseCheck, !update);
-        //if (systemInfo.productType === "windows")
+		/*
+        if (systemInfo.productType === "windows")
             installer.setDefaultPageVisible(QInstaller.StartMenuSelection, !update);
+			*/
         installer.setDefaultPageVisible(QInstaller.ReadyForInstallation, false);
     }
 }
