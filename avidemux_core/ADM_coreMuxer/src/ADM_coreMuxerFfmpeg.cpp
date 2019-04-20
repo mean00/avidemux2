@@ -446,7 +446,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     uint64_t lastVideoDts=0;
     uint64_t lastVideoDtsLav=0;
     uint64_t videoIncrement;
-    bool ret;
+    bool ret=true;
     uint32_t written=0;
     bool result=true;
     int missingPts=0;
@@ -561,7 +561,6 @@ bool muxerFFmpeg::saveLoop(const char *title)
                 WAVHeader *info=a->getInfo();
                 if(!info) // no more track
                     continue;
-                uint32_t fq=info->frequency;
 
                 while(1)
                 {

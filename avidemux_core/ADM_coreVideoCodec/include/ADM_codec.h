@@ -76,6 +76,10 @@ public:
   {
     return false;
   }
+  virtual bool keepFeeding(void) // Does the decoder expect more input?
+  {
+    return false;
+  }
   virtual bool endOfStreamReached(void)
   {
     return false;

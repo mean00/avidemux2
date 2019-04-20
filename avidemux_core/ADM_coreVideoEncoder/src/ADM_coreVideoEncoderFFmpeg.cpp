@@ -422,32 +422,42 @@ bool             ADM_coreVideoEncoderFFmpeg::getExtraData(uint32_t *l,uint8_t **
 */
 bool ADM_coreVideoEncoderFFmpeg::loadStatFile(const char *file)
 {
-  printf("[FFmpeg] Loading stat file :%s\n",file);
-  FILE *_statfile = ADM_fopen (file, "rb");
-  int statSize;
+    ADM_info("Loading stat file %s\n",file);
+    FILE *_statfile = ADM_fopen (file, "rb");
 
-  if (!_statfile)
+    if (!_statfile)
     {
-      printf ("[ffmpeg] internal file does not exists ?\n");
-      return false;
+        ADM_error ("Cannot open stat file. Does it exist?\n");
+        return false;
     }
 
-  fseek (_statfile, 0, SEEK_END);
-  statSize = ftello (_statfile);
-  fseek (_statfile, 0, SEEK_SET);
-  _context->stats_in = (char *) av_malloc(statSize+1);
-  _context->stats_in[statSize] = 0;
-  fread (_context->stats_in, statSize, 1, _statfile);
-  fclose(_statfile);
-
+    fseek (_statfile, 0, SEEK_END);
+    uint64_t statSize = ftello (_statfile);
+    if (statSize >= INT_MAX - 32) // enforce the av_malloc limit
+    {
+        ADM_error ("Stat file too large.\n");
+        fclose(_statfile);
+        return false;
+    }
+    fseek (_statfile, 0, SEEK_SET);
+    _context->stats_in = (char *) av_malloc(statSize+1);
+    _context->stats_in[statSize] = 0;
+    if (!fread (_context->stats_in, statSize, 1, _statfile))
+    {
+        ADM_error ("Cannot read stat file.\n");
+        fclose(_statfile);
+        return false;
+    }
+    fclose(_statfile);
 
     int i;
     char *p=_context->stats_in;
-   for(i=-1; p; i++){
-            p= strchr(p+1, ';');
-        }
-  printf("[FFmpeg] stat file loaded ok, %d frames found\n",i);
-  return true;
+    for(i=-1; p; i++)
+    {
+        p= strchr(p+1, ';');
+    }
+    ADM_info ("Stat file loaded ok, %d frames found.\n",i);
+    return true;
 }
 /**
         \fn postEncode

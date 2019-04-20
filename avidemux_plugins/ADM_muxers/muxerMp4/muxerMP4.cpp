@@ -158,9 +158,9 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
         av_dict_set(&dict, "preload", buf, 0);
         av_dict_set(&dict, "max_delay", "200000", 0);
-#ifndef _WIN32 // does not work on windows as the file must be opened twice at the same time        
-        av_dict_set(&dict, "movflags","faststart",0);
-#endif
+        if(muxerConfig.faststart)
+            av_dict_set(&dict, "movflags","faststart",0);
+
         const char *angle=NULL;
         switch(muxerConfig.rotation)
         {

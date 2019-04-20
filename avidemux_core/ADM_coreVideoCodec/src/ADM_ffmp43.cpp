@@ -26,12 +26,6 @@
     #define LAV_VERBOSITY_LEVEL AV_LOG_INFO
 #endif
 
-extern "C"
-{
-    static void ADM_releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-    static int  ADM_getBuffer(AVCodecContext *avctx, AVFrame *pic);
-}
-
 #define aprintf(...) {}
 
 
@@ -170,6 +164,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   hurryUp=false;
   _drain=false;
   _done=false;
+  _keepFeeding=false;
   _endOfStream=false;
   _setBpp=false;
   _setFcc=false;
@@ -336,11 +331,15 @@ bool decoderFF::decodeErrorHandler(int code, bool headerOnly)
         {
             case AVERROR_EOF:
                 ADM_warning("[lavc] End of video stream reached\n");
-                setEndOfStream(true);
+                _keepFeeding=false;
+                _endOfStream=true;
                 flush();
                 return false;
             case AVERROR(EAGAIN):
+#ifdef ADM_DEBUG
                 ADM_info("[lavc] The decoder expects more input before output can be produced\n");
+#endif
+                _keepFeeding=true;
                 return false;
             case AVERROR(EINVAL):
                 ADM_error("[lavc] Codec not opened\n");
@@ -355,6 +354,8 @@ bool decoderFF::decodeErrorHandler(int code, bool headerOnly)
                 }
         }
     }
+    _keepFeeding=false;
+    _endOfStream=false;
     return true;
 }
 
@@ -364,7 +365,6 @@ bool decoderFF::decodeErrorHandler(int code, bool headerOnly)
 */
 bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
-  uint8_t *oBuff[3];
   int ret = 0;
   out->_noPicture = 0;
   if(hwDecoder)
@@ -422,8 +422,6 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 
     ret = avcodec_receive_frame(_context, _frame);
 
-    if(!ret)
-        _endOfStream=false;
     if(!decodeErrorHandler(ret,hurryUp))
         return false;
 

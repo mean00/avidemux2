@@ -31,8 +31,6 @@
 #define CONFIG "config3"
 #define FILE_SIZE_MAX (20*1024)
 
-static char *checkDirAccess(char *home);
-extern char *ADM_escape(const ADM_filename *incoming);
 class preferences *prefs;
 static my_prefs_struct myPrefs;
 

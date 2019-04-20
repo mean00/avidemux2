@@ -469,6 +469,13 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     buildMyMenu();
     buildCustomMenu(); // action lists are populated (i.e. buildActionLists() called) within buildCustomMenu()
     buildButtonLists();
+
+#define AUTOREPEAT_TOOLBUTTON(x) ui.x->setAutoRepeat(true); ui.x->setAutoRepeatDelay(500); ui.x->setAutoRepeatInterval(100);
+    AUTOREPEAT_TOOLBUTTON(toolButtonPreviousFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonNextFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonPreviousIntraFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
+
     // Crash in some cases addScriptReferencesToHelpMenu();
     connect(ui.menuVideo->actions().at(3),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromMenu(bool)));
     connect(ui.toolBar->actions().at(5),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromToolbar(bool)));

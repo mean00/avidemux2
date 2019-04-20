@@ -1032,6 +1032,11 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     ADIO.byterate=128000>>3;
 
                                     break;
+                                case MKFCCR('e','c','-','3'):
+                                    audioCodec(EAC3);
+                                    ADIO.byterate=128000>>3;
+
+                                    break;
                                 case MKFCCR('l','p','c','m'):
                                     ADIO.frequency=44100; // Wrong !
                                     ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;

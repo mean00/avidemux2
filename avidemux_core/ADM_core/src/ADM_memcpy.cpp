@@ -17,8 +17,6 @@ adm_fast_memcpy myAdmMemcpy=NULL;
 */
 uint8_t ADM_InitMemcpy(void)
 {
-  uint64_t          t;
-
 #undef memcpy
         myAdmMemcpy=memcpy;
 	return 1;
