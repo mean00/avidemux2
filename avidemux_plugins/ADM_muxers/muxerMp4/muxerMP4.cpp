@@ -98,6 +98,8 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         c = video_st->codec;
         AVCodecParameters *par;
         par = video_st->codecpar;
+        if(isH265Compatible(s->getFCC()))
+            par->codec_tag = MKTAG('h', 'v', 'c', '1');
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         myTimeBase=video_st->time_base=c->time_base;
         ADM_info("Video stream time base :%d,%d\n",video_st->time_base.num,video_st->time_base.den);
