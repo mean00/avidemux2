@@ -308,7 +308,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     memset(dx_context,0,sizeof(*dx_context)); // dangerous...
 
     // Allocate temp buffer
-    num_surfaces=4;
+    num_surfaces=8;
 
     switch(avctx->codec_id)
     {
