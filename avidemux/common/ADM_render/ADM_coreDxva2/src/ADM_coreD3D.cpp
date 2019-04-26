@@ -51,6 +51,7 @@ static IDirect3D9Ex          *d3d9ex       = NULL;
 static IDirect3DDevice9      *d3d9device   = NULL;
 static IDirect3DDevice9Ex    *d3d9deviceex = NULL;
 static admD3D::ADM_vendorID  d3dVendorId  =  admD3D::VENDOR_UNKNOWN;
+static int64_t               d3dDriverVersion = 0;
 
 static bool isD3D9Ex=false;
 
@@ -125,9 +126,12 @@ static bool admD3D_initD3D9Ex(GUI_WindowInfo *x)
     {
         ADM_warning("GetAdapterIdentifier failed\n");
         d3dVendorId=admD3D::VENDOR_UNKNOWN;
+        d3dDriverVersion=0;
     }else
     {
-        ADM_info("D3D Device: %s Vendor: %x Device:%x Rev:%x\n", id.Description,id.VendorId, id.DeviceId, id.Revision );
+        ADM_info("D3D Device: %s, Vendor: %x, Device: %x, Rev: %x, Driver Version: %" PRId64"\n",
+                id.Description, id.VendorId, id.DeviceId, id.Revision, id.DriverVersion.QuadPart);
+        d3dDriverVersion=id.DriverVersion.QuadPart;
         switch(id.VendorId)
         {
         case  0x1002: d3dVendorId=admD3D::VENDOR_AMD;break;
@@ -266,6 +270,14 @@ bool admD3D::isOperationnal(void)
 admD3D::ADM_vendorID      admD3D::getVendorID(void)
 {
   return d3dVendorId;
+}
+
+/**
+    \fn getDriverVersion
+*/
+int64_t admD3D::getDriverVersion(void)
+{
+    return d3dDriverVersion;
 }
 
 /**
