@@ -47,4 +47,5 @@ public:
         static IDirect3D9       *getHandle();
         static bool              isDirect9Ex();
         static ADM_vendorID      getVendorID();
+        static int64_t           getDriverVersion();
 };

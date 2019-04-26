@@ -219,25 +219,25 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
 
         if(c!=AV_PIX_FMT_DXVA2_VLD) continue;
 #define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_DXVA2_VLD;id=avctx->codec_id;break;
-
+#define INTEL_MIN_DRIVER_VERSION_FOR_HEVC 7036960323672538 // 25.20.100.6618
 
         switch(avctx->codec_id)  //AV_CODEC_ID_H265
         {
             FMT_V_CHECK(H264,H264)
             case AV_CODEC_ID_H265:
-              {
-                    admD3D::ADM_vendorID vid=admD3D::getVendorID();
-                    if(vid==admD3D::VENDOR_INTEL)
-                    {
-                        ADM_warning("Intel blacklisted for H265 decoding \n");
-                    }
-                    else
-                    {
-                      outPix=AV_PIX_FMT_DXVA2_VLD;
-                      id=avctx->codec_id;
-                    }
-              }
-              break;
+            {
+                admD3D::ADM_vendorID vid=admD3D::getVendorID();
+                int64_t drv=admD3D::getDriverVersion();
+                if(vid==admD3D::VENDOR_INTEL && drv<INTEL_MIN_DRIVER_VERSION_FOR_HEVC)
+                {
+                    ADM_warning("Intel driver version %" PRId64" < %" PRId64" is blacklisted for HEVC decoding.\n",drv,INTEL_MIN_DRIVER_VERSION_FOR_HEVC);
+                }else
+                {
+                    outPix=AV_PIX_FMT_DXVA2_VLD;
+                    id=avctx->codec_id;
+                }
+            }
+            break;
             //FMT_V_CHECK(H265,H265)
             default:
                 ADM_info("DXVA2 No hw support for format %d\n",avctx->codec_id);
@@ -411,8 +411,9 @@ bool decoderFFDXVA2::markSurfaceUnused(admDx2Surface *surface)
 {
 
    imageMutex.lock();
-   surface->refCount--;
-   aprintf("Surface %x, Ref count is now %d\n",surface->surface,surface->refCount);
+   if(surface->refCount>0)
+       surface->refCount--;
+   aprintf("Surface 0x%p, Ref count is now %d\n",surface->surface,surface->refCount);
    if(!surface->refCount)
    {
         surface->removeRef();
