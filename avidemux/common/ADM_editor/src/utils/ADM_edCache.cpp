@@ -114,6 +114,7 @@ ADMImage	*EditorCache::getFreeImage(void)
     printf("[edCache] Flush\n");
     for(int i=0;i<_nbImage;i++)
     {
+        _elem[i].image->hwDecRefCount();
         _elem[i].pts=ADM_NO_PTS;
     }
     writeIndex=readIndex=0;
