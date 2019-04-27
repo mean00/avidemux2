@@ -1,8 +1,10 @@
 INCLUDE(vf_plugin)
 
-SET(ADM_vf_yadif_SRCS ADM_vidYadif.cpp ADM_vidYadif_asm.c)
+SET(ADM_vf_yadif_SRCS ADM_vidYadif.cpp vf_yadif.asm)
 
-ADD_VIDEO_FILTER(ADM_vf_yadif ${ADM_vf_yadif_SRCS})
+YASMIFY(azm vf_yadif.asm)
+
+ADD_VIDEO_FILTER(ADM_vf_yadif ${ADM_vf_yadif_SRCS} ${azm})
 
 INIT_VIDEO_FILTER(ADM_vf_yadif)
 INSTALL_VIDEO_FILTER(ADM_vf_yadif)
