@@ -203,7 +203,7 @@ bool yadifFilter::configure( void)
                              {3,  QT_TRANSLATE_NOOP("yadif","Field : Skip spatial temporal check"),NULL}
           };
     diaMenuEntry tOrder[]={
-                            {0,   QT_TRANSLATE_NOOP("yadif","Auto"),NULL},
+                            //{0,   QT_TRANSLATE_NOOP("yadif","Auto"),NULL},
                             {1,   QT_TRANSLATE_NOOP("yadif","Top field first"),NULL},
                             {2,      QT_TRANSLATE_NOOP("yadif","Bottom field first"),NULL}                             
           };
@@ -217,8 +217,8 @@ bool yadifFilter::configure( void)
     uint32_t parity=configuration.parity+1;
     diaElemMenu mMode(&(configuration.mode),   QT_TRANSLATE_NOOP("yadif","_Mode:"), 4,tMode);
     diaElemMenu mDeint(&(configuration.deint),   QT_TRANSLATE_NOOP("yadif","_Deint:"), 2,tDeint);    
-    diaElemMenu mOrder(&(parity),   QT_TRANSLATE_NOOP("yadif","_Order:"), 3,tOrder);
-    diaElem *elems[]={&mMode,&mOrder,&mDeint};
+    diaElemMenu mOrder(&(parity),   QT_TRANSLATE_NOOP("yadif","_Order:"), 2,tOrder);
+    diaElem *elems[]={&mMode,&mOrder}; //,&mDeint};
      
     if(diaFactoryRun(QT_TRANSLATE_NOOP("yadif","yadif"),sizeof(elems)/sizeof(diaElem *),elems))
     {
