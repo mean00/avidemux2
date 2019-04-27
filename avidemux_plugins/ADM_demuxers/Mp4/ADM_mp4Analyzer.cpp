@@ -851,7 +851,8 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     while(!son.isDone())
                                     {
                                         adm_atom avcc(&son);
-                                        printf("Reading hev1, got %s\n",fourCC::tostringBE(avcc.getFCC()));
+                                        const char *hevc = (entryName == MKFCCR('h','e','v','1'))? "hev1" : "hvc1";
+                                        printf("Reading %s, got %s\n",hevc,fourCC::tostringBE(avcc.getFCC()));
                                         if( avcc.getFCC()== MKFCCR('h','v','c','C'))
                                         {
                                             VDEO.extraDataSize=avcc.getRemainingSize();
