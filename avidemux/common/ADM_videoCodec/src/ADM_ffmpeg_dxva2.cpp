@@ -194,9 +194,13 @@ bool dxva2Cleanup(void)
 }
 
 
-
-
-
+static const char *humanReadable(int64_t version)
+{
+    char str[49];
+    snprintf(str,48,"%u.%u.%u.%u", (version>>48) & 0xFFFF, (version>>32) & 0xFFFF, (version>>16) & 0xFFFF, version & 0xFFFF);
+    str[48]=0;
+    return ADM_strdup(str);
+}
 
 extern "C"
 {
@@ -230,7 +234,11 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
                 int64_t drv=admD3D::getDriverVersion();
                 if(vid==admD3D::VENDOR_INTEL && drv<INTEL_MIN_DRIVER_VERSION_FOR_HEVC)
                 {
-                    ADM_warning("Intel driver version %" PRId64" < %" PRId64" is blacklisted for HEVC decoding.\n",drv,INTEL_MIN_DRIVER_VERSION_FOR_HEVC);
+                    const char *minversion=humanReadable(INTEL_MIN_DRIVER_VERSION_FOR_HEVC);
+                    ADM_warning("Intel driver version %s < %s is blacklisted for HEVC decoding.\n",humanReadable(drv),minversion);
+                }else if(vid==admD3D::VENDOR_INTEL && dxvaBitDepthFromContext(avctx)==10)
+                {
+                    ADM_warning("Intel is blacklisted for 10bit HEVC.\n");
                 }else
                 {
                     outPix=AV_PIX_FMT_DXVA2_VLD;
