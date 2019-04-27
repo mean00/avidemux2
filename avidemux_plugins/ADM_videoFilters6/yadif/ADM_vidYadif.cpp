@@ -34,8 +34,26 @@
 #include "yadif_desc.cpp"
 
 #if defined( ADM_CPU_X86) && !defined(_MSC_VER)
-        #define CAN_DO_INLINE_X86_ASM
+        //#define CAN_DO_INLINE_X86_ASM
 #endif
+
+enum YADIFMode {
+    YADIF_MODE_SEND_FRAME           = 0, ///< send 1 frame for each frame
+    YADIF_MODE_SEND_FIELD           = 1, ///< send 1 frame for each field
+    YADIF_MODE_SEND_FRAME_NOSPATIAL = 2, ///< send 1 frame for each frame but skips spatial interlacing check
+    YADIF_MODE_SEND_FIELD_NOSPATIAL = 3, ///< send 1 frame for each field but skips spatial interlacing check
+};
+
+enum YADIFParity {
+    YADIF_PARITY_TFF  =  0, ///< top field first
+    YADIF_PARITY_BFF  =  1, ///< bottom field first
+    YADIF_PARITY_AUTO = -1, ///< auto detection
+};
+
+enum YADIFDeint {
+    YADIF_DEINT_ALL        = 0, ///< deinterlace all frames
+    YADIF_DEINT_INTERLACED = 1, ///< only deinterlace frames marked as interlaced
+};
 
 
 //************************************************
@@ -98,8 +116,10 @@ yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup):
     if(!setup || !ADM_paramLoad(setup,yadif_param,&configuration))
     {
         // Default value
-        configuration.mode=0;
-        configuration.order=1;
+        configuration.mode=YADIF_MODE_SEND_FRAME;
+        configuration.deint=YADIF_DEINT_ALL;
+        configuration.parity=YADIF_PARITY_AUTO;
+        
     }
     
     updateInfo();
@@ -134,23 +154,33 @@ bool yadifFilter::configure( void)
 {
     
      diaMenuEntry tMode[]={
-                             {0,      QT_TRANSLATE_NOOP("yadif","Temporal & spatial check"),NULL},
-                             {1,   QT_TRANSLATE_NOOP("yadif","Bob, temporal & spatial check"),NULL},
-                             {2,      QT_TRANSLATE_NOOP("yadif","Skip spatial temporal check"),NULL},
-                             {3,  QT_TRANSLATE_NOOP("yadif","Bob, skip spatial temporal check"),NULL}
+                             {0,      QT_TRANSLATE_NOOP("yadif",    "Frame : Temporal & spatial check"),NULL},
+                             {1,   QT_TRANSLATE_NOOP("yadif",       "Field :  Temporal & spatial check"),NULL},
+                             {2,      QT_TRANSLATE_NOOP("yadif",    "Frame : Skip spatial temporal check"),NULL},
+                             {3,  QT_TRANSLATE_NOOP("yadif","       Field : Skip spatial temporal check"),NULL}
           };
      diaMenuEntry tOrder[]={
-                             {0,      QT_TRANSLATE_NOOP("yadif","Bottom field first"),NULL},
-                             {1,   QT_TRANSLATE_NOOP("yadif","Top field first"),NULL}
+                             {0,   QT_TRANSLATE_NOOP("yadif","Auto"),NULL},
+                             {1,   QT_TRANSLATE_NOOP("yadif","Bottom field first"),NULL},
+                             {2,   QT_TRANSLATE_NOOP("yadif","Top field first"),NULL}
+                            
+          };
+     diaMenuEntry tDeint[]={
+                             {0,      QT_TRANSLATE_NOOP("yadif","Deinterlace All"),NULL},
+                             {1,   QT_TRANSLATE_NOOP("yadif","Deinterlace Interlaced Only"),NULL}
           };
   
-     diaElemMenu mMode(&(configuration.mode),   QT_TRANSLATE_NOOP("yadif","_Mode:"), 4,tMode);
-     diaElemMenu morder(&(configuration.order),   QT_TRANSLATE_NOOP("yadif","_Order:"), 2,tOrder);
+     uint32_t  order=configuration.parity+1;
      
-     diaElem *elems[]={&mMode,&morder};
+     diaElemMenu mMode(&(configuration.mode),   QT_TRANSLATE_NOOP("yadif","_Mode:"), 4,tMode);     
+     diaElemMenu mOrder(&(order),   QT_TRANSLATE_NOOP("yadif","_Order:"), 3,tOrder);     
+     diaElemMenu mDeint(&(configuration.deint),   QT_TRANSLATE_NOOP("yadif","_deint:"), 2,tDeint);
+     
+     diaElem *elems[]={&mMode,&mOrder,&mDeint};
      
      if(diaFactoryRun(QT_TRANSLATE_NOOP("yadif","yadif"),sizeof(elems)/sizeof(diaElem *),elems))
      {
+        configuration.parity=(int)order-1;
         updateInfo();
         return 1;
      }
@@ -178,8 +208,8 @@ const char *yadifFilter::getConfiguration(void)
 {
     static char conf[80];
     conf[0]=0;
-    snprintf(conf,80,"yadif : mode=%d, order=%d\n",
-                (int)configuration.mode, (int)configuration.order);
+    snprintf(conf,80,"yadif : mode=%d, parity=%d,deint=%d\n",
+                (int)configuration.mode, (int)configuration.parity,(int)configuration.deint);
     return conf;
 }
 
@@ -242,7 +272,7 @@ bool yadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
                 tff = avs_get_parity(p->child, n) ? 1 : 0; // 0 or 1
         else
 #endif
-                tff = configuration.order;	
+                tff = configuration.parity;	
         
         parity = (mode & 1) ? (nextFrame & 1) ^ (1^tff) : (tff ^ 1);  // 0 or 1
 

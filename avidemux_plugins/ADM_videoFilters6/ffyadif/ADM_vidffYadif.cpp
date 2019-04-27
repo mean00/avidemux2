@@ -32,7 +32,7 @@
 #include "DIA_factory.h"
 #include "ffyadif.h"
 #include "ffyadif_desc.cpp"
-
+#include "libavutil/common.h"
 #if defined( ADM_CPU_X86) && !defined(_MSC_VER)
       // #define CAN_DO_INLINE_X86_ASM
 #endif
@@ -323,6 +323,152 @@ bool ffyadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
       return 1;
 }
 #else
+
+
+#define CHECK(j)\
+    {   int score = FFABS(cur[mrefs - 1 + (j)] - cur[prefs - 1 - (j)])\
+                  + FFABS(cur[mrefs  +(j)] - cur[prefs  -(j)])\
+                  + FFABS(cur[mrefs + 1 + (j)] - cur[prefs + 1 - (j)]);\
+        if (score < spatial_score) {\
+            spatial_score= score;\
+            spatial_pred= (cur[mrefs  +(j)] + cur[prefs  -(j)])>>1;\
+
+/* The is_not_edge argument here controls when the code will enter a branch
+ * which reads up to and including x-3 and x+3. */
+
+#define FILTER(start, end, is_not_edge) \
+    for (x = start;  x < end; x++) { \
+        int c = cur[mrefs]; \
+        int d = (prev2[0] + next2[0])>>1; \
+        int e = cur[prefs]; \
+        int temporal_diff0 = FFABS(prev2[0] - next2[0]); \
+        int temporal_diff1 =(FFABS(prev[mrefs] - c) + FFABS(prev[prefs] - e) )>>1; \
+        int temporal_diff2 =(FFABS(next[mrefs] - c) + FFABS(next[prefs] - e) )>>1; \
+        int diff = FFMAX3(temporal_diff0 >> 1, temporal_diff1, temporal_diff2); \
+        int spatial_pred = (c+e) >> 1; \
+ \
+        if (is_not_edge) {\
+            int spatial_score = FFABS(cur[mrefs - 1] - cur[prefs - 1]) + FFABS(c-e) \
+                              + FFABS(cur[mrefs + 1] - cur[prefs + 1]) - 1; \
+            CHECK(-1) CHECK(-2) }} }} \
+            CHECK( 1) CHECK( 2) }} }} \
+        }\
+ \
+        if (!(mode&2)) { \
+            int b = (prev2[2 * mrefs] + next2[2 * mrefs])>>1; \
+            int f = (prev2[2 * prefs] + next2[2 * prefs])>>1; \
+            int max = FFMAX3(d - e, d - c, FFMIN(b - c, f - e)); \
+            int min = FFMIN3(d - e, d - c, FFMAX(b - c, f - e)); \
+ \
+            diff = FFMAX3(diff, min, -max); \
+        } \
+ \
+        if (spatial_pred > d + diff) \
+           spatial_pred = d + diff; \
+        else if (spatial_pred < d - diff) \
+           spatial_pred = d - diff; \
+ \
+        dst[0] = spatial_pred; \
+ \
+        dst++; \
+        cur++; \
+        prev++; \
+        next++; \
+        prev2++; \
+        next2++; \
+    }
+
+static void filter_line_c(void *dst1,
+                          void *prev1, void *cur1, void *next1,
+                          int w, int prefs, int mrefs, int parity, int mode)
+{
+    uint8_t *dst  = (uint8_t *)dst1;
+    uint8_t *prev = (uint8_t *)prev1;
+    uint8_t *cur  = (uint8_t *)cur1;
+    uint8_t *next = (uint8_t *)next1;
+    int x;
+    uint8_t *prev2 = (uint8_t *)parity ? prev : cur ;
+    uint8_t *next2 = (uint8_t *)parity ? cur  : next;
+
+    /* The function is called with the pointers already pointing to data[3] and
+     * with 6 subtracted from the width.  This allows the FILTER macro to be
+     * called so that it processes all the pixels normally.  A constant value of
+     * true for is_not_edge lets the compiler ignore the if statement. */
+    FILTER(0, w, 1)
+}
+
+#define MAX_ALIGN 8
+static void filter_edges(void *dst1, void *prev1, void *cur1, void *next1,
+                         int w, int prefs, int mrefs, int parity, int mode)
+{
+    uint8_t *dst  = (uint8_t *)dst1;
+    uint8_t *prev = (uint8_t *)prev1;
+    uint8_t *cur  = (uint8_t *)cur1;
+    uint8_t *next = (uint8_t *)next1;
+    int x;
+    uint8_t *prev2 = (uint8_t *)parity ? prev : cur ;
+    uint8_t *next2 = (uint8_t *)parity ? cur  : next;
+
+    const int edge = MAX_ALIGN - 1;
+
+    /* Only edge pixels need to be processed here.  A constant value of false
+     * for is_not_edge should let the compiler ignore the whole branch. */
+    FILTER(0, 3, 0)
+
+    dst  = (uint8_t*)dst1  + w - edge;
+    prev = (uint8_t*)prev1 + w - edge;
+    cur  = (uint8_t*)cur1  + w - edge;
+    next = (uint8_t*)next1 + w - edge;
+    prev2 = (uint8_t*)(parity ? prev : cur);
+    next2 = (uint8_t*)(parity ? cur  : next);
+
+    FILTER(w - edge, w - 3, 1)
+    FILTER(w - 3, w, 0)
+}
+
+/**
+ * 
+ * @param width
+ * @param height
+ * @param prevp
+ * @param curp
+ * @param nextp
+ * @param configuration
+ */
+void filter_plane(int width,int height,uint8_t *prevp,uint8_t *curp,uint8_t *nextp,uint8_t *destp,ffyadif &configuration)
+{
+#if 0
+      int edge = 3 + MAX_ALIGN / df - 1;
+
+    /* filtering reads 3 pixels to the left/right; to avoid invalid reads,
+     * we need to call the c variant which avoids this for border pixels
+     */
+    for (y = 0; y < height; y++) 
+    {
+        if ((y ^ configuration.order) & 1)    // FIXME      
+        {
+            uint8_t *prev = &s->prev->data[td->plane][y * refs];
+            uint8_t *cur  = &s->cur ->data[td->plane][y * refs];
+            uint8_t *next = &s->next->data[td->plane][y * refs];
+            uint8_t *dst  = &td->frame->data[td->plane][y * td->frame->linesize[td->plane]];
+            int     mode  = y == 1 || y + 2 == td->h ? 2 : s->mode;
+            s->filter_line(dst + pix_3, prev + pix_3, cur + pix_3,
+                           next + pix_3, td->w - edge,
+                           y + 1 < td->h ? refs : -refs,
+                           y ? -refs : refs,
+                           td->parity ^ td->tff, mode);
+            s->filter_edges(dst, prev, cur, next, td->w,
+                            y + 1 < td->h ? refs : -refs,
+                            y ? -refs : refs,
+                            td->parity ^ td->tff, mode);
+        } else {
+            memcpy(&td->frame->data[td->plane][y * td->frame->linesize[td->plane]],
+                   &s->cur->data[td->plane][y * refs], td->w * df);
+        }
+    }
+#endif
+}
+
 /**
     \fn getConfiguration
     \brief Return current setting as a string
@@ -374,20 +520,7 @@ bool ffyadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
             return 0;
         }
         
-  // Construct a frame based on the information of the current frame
-  // contained in the "vi" struct.
-#if 0 //MEANX
-        if (configuration.order == -1)
-//		tff = avs_is_tff(&p->vi) == 0 ? 0 : 1; // 0 or 1
-                tff = avs_get_parity(p->child, n) ? 1 : 0; // 0 or 1
-        else
-#endif
-                tff = configuration.order;	
         
-        parity = (mode & 1) ? (nextFrame & 1) ^ (1^tff) : (tff ^ 1);  // 0 or 1
-
-      //MEANX  cpu = avs_get_cpu_flags(p->env);
-
         for (iplane = 0; iplane<3; iplane++)
         {
                 ADM_PLANE plane = (iplane==0) ? PLANAR_Y : (iplane==1) ? PLANAR_U : PLANAR_V;
@@ -423,29 +556,10 @@ bool ffyadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
                 const int prev_pitch = prev->GetPitch(plane);
                 const int next_pitch = next->GetPitch(plane);
 
-                // in v.0.1-0.3  all source pitches are  assumed equal (for simplicity)
-                                // consider other (rare) case
-                if (prev_pitch != src_pitch)
-                {
-                    prevp = (unsigned char *)ADM_alloc(height*src_pitch);
-                    int h;
-                    for (h=0; h<0; h++)
-                      memcpy(prevp+h*src_pitch, prevp0+h*prev_pitch, width);
-                }
-                    
-                if (next_pitch != src_pitch)
-                {
-                    nextp = (unsigned char *)ADM_alloc(height*src_pitch);
-                    int h;
-                    for (h=0; h<0; h++)
-                      memcpy(nextp+h*src_pitch, nextp0+h*next_pitch, width);
-                }
-                    
-                filter_plane(mode, dstp, dst_pitch, prevp, srcp, nextp, src_pitch, width, height, parity, tff, 0);
-                if (prev_pitch != src_pitch)
-                        ADM_dealloc(prevp);
-                if (next_pitch != src_pitch)
-                        ADM_dealloc(nextp);
+//                filter_plan(width,height,prevp,curp,nextp,configuration);
+                
+                
+               
         }
       vidCache->unlockAll();
       
