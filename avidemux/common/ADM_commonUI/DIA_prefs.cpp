@@ -60,7 +60,6 @@ bool     doAutoUpdate=false;
 bool     loadDefault=false;
 char     *alsaDevice=NULL;
 
-bool     balternate_mp3_tag=true;
 bool     lastReadDirAsTarget=false;
 bool     copyModeSanitizeDts=false;
 bool     altKeyboardShortcuts=false;
@@ -153,9 +152,6 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifdef USE_VIDEOTOOLBOX
         prefs->get(FEATURES_VIDEOTOOLBOX,&bvideotoolbox);
 #endif
-        // Alternate mp3 tag (haali)
-        prefs->get(FEATURES_ALTERNATE_MP3_TAG,&balternate_mp3_tag);
-
         // Video renderer
         if(prefs->get(VIDEODEVICE,&render)!=RC_OK)
         {
@@ -286,7 +282,6 @@ std::string currentSdlDriver=getSdlDriverName();
         framePriority.swallow(&menuIndexPriority);
         framePriority.swallow(&menuPlaybackPriority);
 
-        diaElemToggle togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
         diaElemToggle sanitizeDtsInCopyMode(&copyModeSanitizeDts,QT_TRANSLATE_NOOP("adm","_Sanitize decode time stamps (DTS) in copy mode"));
 
@@ -439,8 +434,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* Output */
-        diaElem *diaOutput[]={&allowAnyMpeg,&togTagMp3,&sanitizeDtsInCopyMode,&useLastReadAsTarget};
-        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
+        diaElem *diaOutput[]={&allowAnyMpeg,&sanitizeDtsInCopyMode,&useLastReadAsTarget};
+        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),3,(diaElem **)diaOutput);
 
         /* Audio */
 
@@ -629,8 +624,6 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifdef USE_VIDEOTOOLBOX
             prefs->set(FEATURES_VIDEOTOOLBOX,bvideotoolbox);
 #endif
-            // Alternate mp3 tag (haali)
-            prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
             // Make users happy who prefer the output dir to be the same as the input dir
             prefs->set(FEATURES_USE_LAST_READ_DIR_AS_TARGET,lastReadDirAsTarget);
             // Don't let DTS get too close to each other by delaying frames, drop frames if necessary.
