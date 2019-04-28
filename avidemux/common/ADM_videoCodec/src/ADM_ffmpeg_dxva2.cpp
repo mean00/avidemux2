@@ -208,10 +208,12 @@ extern "C"
 static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt)
 {
     int i;
+    bool ignore_version, ignore_profile;
     ADM_info("[DXVA2]: GetFormat\n");
     AVCodecID id=AV_CODEC_ID_NONE;
     AVPixelFormat c;
     AVPixelFormat outPix;
+    ignore_version=ignore_profile=false;
     for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
     {
         c=fmt[i];
@@ -234,16 +236,26 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
                 int64_t drv=admD3D::getDriverVersion();
                 if(vid==admD3D::VENDOR_INTEL && drv<INTEL_MIN_DRIVER_VERSION_FOR_HEVC)
                 {
+                    prefs->get(FEATURES_DXVA2_OVERRIDE_BLACKLIST_VERSION,&ignore_version);
                     const char *minversion=humanReadable(INTEL_MIN_DRIVER_VERSION_FOR_HEVC);
-                    ADM_warning("Intel driver version %s < %s is blacklisted for HEVC decoding.\n",humanReadable(drv),minversion);
+                    if(!ignore_version)
+                    {
+                        ADM_warning("Intel driver version %s < %s is blacklisted for HEVC decoding.\n",humanReadable(drv),minversion);
+                        continue;
+                    }
+                    ADM_warning("Overriding Intel driver version blacklist for %s\n",humanReadable(drv));
                 }else if(vid==admD3D::VENDOR_INTEL && dxvaBitDepthFromContext(avctx)==10)
                 {
-                    ADM_warning("Intel is blacklisted for 10bit HEVC.\n");
-                }else
-                {
-                    outPix=AV_PIX_FMT_DXVA2_VLD;
-                    id=avctx->codec_id;
+                    prefs->get(FEATURES_DXVA2_OVERRIDE_BLACKLIST_PROFILE,&ignore_profile);
+                    if(!ignore_profile)
+                    {
+                        ADM_warning("Intel is blacklisted for 10bit HEVC.\n");
+                        continue;
+                    }
+                    ADM_warning("Overriding blacklist for 10bit HEVC on Intel.\n");
                 }
+                outPix=AV_PIX_FMT_DXVA2_VLD;
+                id=avctx->codec_id;
             }
             break;
             //FMT_V_CHECK(H265,H265)
