@@ -16,6 +16,7 @@ json.addBool("reuse_2pass_log",key->features.reuse_2pass_log);
 json.addBool("audiobar_uses_master",key->features.audiobar_uses_master);
 json.addUint32("threading_lavc",key->features.threading_lavc);
 json.addUint32("cpu_caps",key->features.cpu_caps);
+json.addUint32("cache_size",key->features.cache_size);
 json.addBool("mpeg_no_limit",key->features.mpeg_no_limit);
 json.addBool("dxva2",key->features.dxva2);
 json.addBool("dxva2_override_blacklist_version",key->features.dxva2_override_blacklist_version);

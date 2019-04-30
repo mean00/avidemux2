@@ -8,6 +8,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"features.audiobar_uses_master",offsetof(my_prefs_struct,features.audiobar_uses_master),"bool",ADM_param_bool},
  {"features.threading_lavc",offsetof(my_prefs_struct,features.threading_lavc),"uint32_t",ADM_param_uint32_t},
  {"features.cpu_caps",offsetof(my_prefs_struct,features.cpu_caps),"uint32_t",ADM_param_uint32_t},
+ {"features.cache_size",offsetof(my_prefs_struct,features.cache_size),"uint32_t",ADM_param_uint32_t},
  {"features.mpeg_no_limit",offsetof(my_prefs_struct,features.mpeg_no_limit),"bool",ADM_param_bool},
  {"features.dxva2",offsetof(my_prefs_struct,features.dxva2),"bool",ADM_param_bool},
  {"features.dxva2_override_blacklist_version",offsetof(my_prefs_struct,features.dxva2_override_blacklist_version),"bool",ADM_param_bool},
