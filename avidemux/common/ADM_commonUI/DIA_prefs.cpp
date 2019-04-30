@@ -70,12 +70,18 @@ bool     swapUpDown=false;
 uint32_t pp_type=3;
 uint32_t pp_value=5;
 
+uint32_t editor_cache_size=16;
+
+#ifdef USE_DXVA2
 bool     bdxva2=false;
 bool     bdxva2_override_version=false;
 bool     bdxva2_override_profile=false;
+#endif
 bool     bvdpau=false;
 bool     blibva=false;
+#ifdef USE_VIDEOTOOLBOX
 bool     bvideotoolbox=false;
+#endif
 bool     hzd,vzd,dring;
 bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
 bool     hasOpenGl=false;
@@ -142,6 +148,8 @@ std::string currentSdlDriver=getSdlDriverName();
         if( prefs->get(DEVICE_AUDIO_ALSA_DEVICE, &alsaDevice) != RC_OK )
                 alsaDevice = ADM_strdup("plughw:0,0");
 #endif
+        // Video cache
+        prefs->get(FEATURES_CACHE_SIZE,&editor_cache_size);
 #ifdef USE_DXVA2
         // dxva2
         prefs->get(FEATURES_DXVA2,&bdxva2);
@@ -297,6 +305,10 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
         diaElemToggle sanitizeDtsInCopyMode(&copyModeSanitizeDts,QT_TRANSLATE_NOOP("adm","_Sanitize decode time stamps (DTS) in copy mode"));
 
+        diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
+        diaElemUInteger cacheSize(&editor_cache_size,QT_TRANSLATE_NOOP("adm","_Cache size:"),8,16);
+        frameCache.swallow(&cacheSize);
+
         diaMenuEntry videoMode[]={
                              {RENDER_GTK, getNativeRendererDesc(0), NULL}
 #ifdef USE_XV
@@ -442,8 +454,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* Output */
-        diaElem *diaOutput[]={&allowAnyMpeg,&sanitizeDtsInCopyMode,&useLastReadAsTarget};
-        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),3,(diaElem **)diaOutput);
+        diaElem *diaOutput[]={&allowAnyMpeg,&sanitizeDtsInCopyMode,&useLastReadAsTarget,&frameCache};
+        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
 
         /* Audio */
 
@@ -600,7 +612,8 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(UPDATE_ENABLED,doAutoUpdate);
             // Video render
             prefs->set(VIDEODEVICE,render);
-
+            // Video cache
+            prefs->set(FEATURES_CACHE_SIZE, editor_cache_size);
             // number of threads
             prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
             // Encoding priority
