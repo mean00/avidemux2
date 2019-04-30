@@ -39,7 +39,6 @@ extern "C" {
 #include "../private_inc/ADM_codecDxva2.h"
 #include "ADM_threads.h"
 #include "ADM_vidMisc.h"
-#include "prefs.h"
 
 static bool         dxva2Working=false;
 static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
@@ -325,7 +324,12 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     memset(dx_context,0,sizeof(*dx_context)); // dangerous...
 
     // Allocate temp buffer
-    num_surfaces=8;
+    uint32_t cacheSize;
+    if(!prefs->get(FEATURES_CACHE_SIZE,&cacheSize))
+        cacheSize = EDITOR_CACHE_MAX_SIZE;
+    if(cacheSize > EDITOR_CACHE_MAX_SIZE) cacheSize = EDITOR_CACHE_MAX_SIZE;
+    if(cacheSize < EDITOR_CACHE_MIN_SIZE) cacheSize = EDITOR_CACHE_MIN_SIZE;
+    num_surfaces = cacheSize + SURFACES_SAFETY_MARGIN;
 
     switch(avctx->codec_id)
     {

@@ -6,9 +6,10 @@
 
 #include <BVector.h>
 #include "ADM_threads.h"
+#include "ADM_edCache.h"
 
-#define ADM_DXVA2_BUFFER 24
-#define ADM_MAX_SURFACE 24
+#define SURFACES_SAFETY_MARGIN 8
+#define ADM_MAX_SURFACE EDITOR_CACHE_MAX_SIZE + SURFACES_SAFETY_MARGIN + 16
 /**
       \struct surface_info
 */
