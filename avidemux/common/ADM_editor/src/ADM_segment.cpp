@@ -27,6 +27,7 @@
 #include "ADM_codec.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
+#include "prefs.h"
 
 #if 1
 #define aprintf printf
@@ -101,12 +102,18 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   uint8_t 	    *d;
   aviInfo       info;
   _SEGMENT      seg;
+  uint32_t      cacheSize;
+
+  if(false==prefs->get(FEATURES_CACHE_SIZE,&cacheSize))
+      cacheSize = EDITOR_CACHE_MAX_SIZE;
+  if(cacheSize > EDITOR_CACHE_MAX_SIZE) cacheSize = EDITOR_CACHE_MAX_SIZE;
+  if(cacheSize < EDITOR_CACHE_MIN_SIZE) cacheSize = EDITOR_CACHE_MIN_SIZE;
 
   ref->dontTrustBFramePts=ref->_aviheader->unreliableBFramePts();
   ref->_aviheader->getVideoInfo (&info);
   ref->_aviheader->getExtraHeaderData (&l, &d);
   ref->decoder = ADM_getDecoder (info.fcc,  info.width, info.height, l, d,info.bpp);
-  ref->_videoCache = new EditorCache(16,info.width,info.height);
+  ref->_videoCache = new EditorCache(cacheSize,info.width,info.height);
 
   // discard implausibly high fps, hardcode the value to 25 fps
   if (info.fps1000 > 2000 * 1000)
