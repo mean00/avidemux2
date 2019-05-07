@@ -85,17 +85,17 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     TS_PESpacket SEI_nal(0);
     while(keepRunning)
     {
-      int startCode=pkt->findStartCode();
+        int startCode=pkt->findStartCode();
 
-      if(!pkt->stillOk())
-      {
-          keepRunning=false;
-          continue;
-      }
-      if(startCode&0x80) continue; // Marker missing
-      startCode&=0x1f;
-      if(startCode!=NAL_SPS) 
-          continue;
+        if(!pkt->stillOk())
+        {
+            keepRunning=false;
+            continue;
+        }
+        if(startCode&0x80) continue; // Marker missing
+        startCode&=0x1f;
+        if(startCode!=NAL_SPS)
+            continue;
 
         // Got SPS!
 
@@ -103,19 +103,18 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
         // Get info
         pkt->getInfo(&tmpInfo);
         // Read just enough...
+        SEI_nal.empty();
+        uint32_t code=0xffff+0xffff0000;
+        while(((code&0xffffff)!=1) && pkt->stillOk())
         {
-          SEI_nal.empty();
-          uint32_t code=0xffff+0xffff0000;
-          while(((code&0xffffff)!=1) && pkt->stillOk())
-          {
-                  uint8_t r=pkt->readi8();
-                  code=(code<<8)+r;
-                  SEI_nal.pushByte(r);
-          }
-          if(!pkt->stillOk()) break;;
-          pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
-          if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
-          {
+            uint8_t r=pkt->readi8();
+            code=(code<<8)+r;
+            SEI_nal.pushByte(r);
+        }
+        if(!pkt->stillOk()) break;
+        pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
+        if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-3,&spsInfo))
+        {
             ADM_info("[TsIndexer] Found video %" PRIu32"x%" PRIu32", fps=%" PRIu32"\n",video.w,video.h,video.fps);
             ADM_info("[TsIndexer] SPS says %" PRIu32"x%" PRIu32"\n",spsInfo.width,spsInfo.height);
             seq_found=1;
@@ -130,8 +129,8 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
             // Rewind
 
             break;
-        };
-      }
+        }
+        pkt->seek(tmpInfo.startAt,tmpInfo.offset);
     }
     return seq_found;
 }
