@@ -41,6 +41,14 @@ void redirectStdoutToFile(const char *logFile)
     // Redirect output to log file in the user's profile directory
     std::string filePath=std::string(ADM_getLogDir())+std::string(logFile);
 
-    freopen(filePath.c_str(),"w",stdout);
- 
+    FILE *stream = fopen(filePath.c_str(), "w");
+
+    if (stream)
+    {
+        fclose(stdout);
+        fclose(stderr);
+
+        *stdout = *stream;
+        *stderr = *stream;
+    }
 }
