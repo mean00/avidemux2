@@ -98,8 +98,6 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
             continue;
 
         // Got SPS!
-
-        uint32_t xA,xR;
         // Get info
         pkt->getInfo(&tmpInfo);
         // Read just enough...
@@ -121,8 +119,6 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
             video.w=spsInfo.width;
             video.h=spsInfo.height;
             video.fps=spsInfo.fps1000;
-            xA=spsInfo.darNum;
-            xR=spsInfo.darDen;
             writeVideo(&video,ADM_TS_H264);
             writeAudio();
             qfprintf(index,"[Data]");
