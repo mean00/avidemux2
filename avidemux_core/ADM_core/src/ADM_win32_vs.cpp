@@ -39,8 +39,21 @@ void redirectStdoutToFile(const char *logFile)
     remove(stderrPath);
 
     // Redirect output to log file in the user's profile directory
+ #if 1
     std::string filePath=std::string(ADM_getLogDir())+std::string(logFile);
+#else
+    std::string filePath=std::string("f:\\tmp\\élém\\")+std::string(logFile);
+#endif
 
-    freopen(filePath.c_str(),"w",stdout);
- 
+    int length = utf8StringToWideChar(filePath.c_str(), -1, NULL);
+    wchar_t *filePath2 = new wchar_t[length+1];
+    wchar_t mode[] = L"w";
+    utf8StringToWideChar(filePath.c_str(), -1, filePath2);
+    FILE *newFD=_wfreopen(filePath2, mode,stdout);
+    delete[] filePath2;
+    if (!newFD)
+    {
+        assert(0);
+        ADM_assert(0);
+    }
 }
