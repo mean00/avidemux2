@@ -275,26 +275,28 @@ void filtermainWindow::preview(bool b)
     }
     previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
     previewDialog->setModal(true);
-    //connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
-    //connect(previewDialog, SIGNAL(rejected()), this, SLOT(closePreview()));
-    qtRegisterDialog(previewDialog);
+    connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
+    connect(previewDialog, SIGNAL(rejected()), this, SLOT(closePreview()));
+    //qtRegisterDialog(previewDialog);
     previewDialog->show();
     previewDialog->seekablePreview->adjustCanvasPosition();
     previewDialog->canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
-    previewDialog->exec();
-    closePreview();
+    //previewDialog->exec();
+    //closePreview();
 }
 /**
  * \fn closePreview
  */
 void filtermainWindow::closePreview()
 {
+    /*
     if (previewDialog)
     {
         qtUnregisterDialog(previewDialog);
         delete previewDialog;
         previewDialog = NULL;
     }
+     */
 }
 
 /**
