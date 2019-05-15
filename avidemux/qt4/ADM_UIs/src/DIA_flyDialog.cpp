@@ -384,8 +384,12 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
 }
 void ADM_flyDialogYuv::resetScaler(void)
 {
-    if(yuvToRgb) delete yuvToRgb;
-    yuvToRgb=NULL;
+    if(yuvToRgb) 
+    {
+        delete yuvToRgb;
+        yuvToRgb=NULL;
+    }
+    
     yuvToRgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
                             _w,
                             _h,
@@ -393,8 +397,16 @@ void ADM_flyDialogYuv::resetScaler(void)
                             _zoomH,
                             ADM_COLOR_YV12,toRgbColor());
 }
+/**
+ * 
+ */
 ADM_flyDialogYuv::~ADM_flyDialogYuv()
 {
+    if(yuvToRgb)
+    {
+        delete yuvToRgb;
+        yuvToRgb=NULL;
+    }
     if(_yuvBufferOut) delete _yuvBufferOut;
     _yuvBufferOut=NULL;
     if(_control)
