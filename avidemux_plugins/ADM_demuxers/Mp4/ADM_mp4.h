@@ -193,7 +193,7 @@ protected:
           int                           lookupIndex(int desc)          ;
           bool                          parseTrun(int trackNo,adm_atom &son,const mp4TrafInfo &info);
           uint8_t                       decodeVideoAtom(void *ztom);
-          uint8_t                       parseMdia(void *ztom,uint32_t *trackType);
+          uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t *trackId);
           uint8_t                       parseEdts(void *ztom,uint32_t trackType);
           uint8_t                       parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale);
           uint8_t                       decodeEsds(void *ztom,uint32_t trackType);
