@@ -208,6 +208,7 @@ uint8_t MP4Header::parseTrack(void *ztom)
     uint32_t container;
     uint32_t w,h;
     uint32_t trackType=TRACK_OTHER;
+    uint32_t trackId=0;
     _currentDelay=0;
     _currentStartOffset=0;
 
@@ -235,7 +236,8 @@ uint8_t MP4Header::parseTrack(void *ztom)
                 else
                     tom->skipBytes(8);
 
-                aprintf("Track Id: %" PRIu32"\n", son.read32());
+                trackId = son.read32();
+                aprintf("[parseTrack] Track Id: %" PRIu32"\n", trackId);
                 son.skipBytes(4);
 
                 uint64_t duration = (version == 1) ? son.read64() : son.read32();
@@ -253,7 +255,7 @@ uint8_t MP4Header::parseTrack(void *ztom)
             }
             case ADM_MP4_MDIA:
             {
-                if(!parseMdia(&son,&trackType))
+                if(!parseMdia(&son,&trackType,&trackId))
                     return false;
                 break;
             }
@@ -274,7 +276,7 @@ uint8_t MP4Header::parseTrack(void *ztom)
       \fn parseMdia
       \brief Parse mdia header
 */
-uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType)
+uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t *trackId)
 {
     adm_atom *tom=(adm_atom *)ztom;
     ADMAtoms id;
@@ -347,10 +349,14 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType)
                         _movieDuration=trackDuration;
                         _videoScale=trackScale;
                         _tracks[0].scale=_videoScale;
+                        _tracks[0].id=*trackId;
                         break;
                     case MKFCCR('s','o','u','n'): // 'soun'
                         _tracks[1+nbAudioTrack].delay=_currentDelay;
                         _tracks[1+nbAudioTrack].startOffset=_currentStartOffset;
+                        _tracks[1+nbAudioTrack].id=*trackId;
+                        if(!*trackId)
+                            ADM_warning("Invalid track ID for audio track %d\n",1+nbAudioTrack);
                         *trackType=TRACK_AUDIO;
                         ADM_info("hdlr audio found \n ");
                         break;
@@ -1294,16 +1300,23 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
             }
             r=indexify(&(_tracks[1+nbAudioTrack]),trackScale,&info,1,&nbo);
             ADM_info("Indexed audio, nb blocks:%u\n",nbo);
+            nbAudioTrack++;
+            _tracks[nbAudioTrack].scale=trackScale;
             if(r)
             {
-                nbo=_tracks[1+nbAudioTrack].nbIndex;
+                nbo=_tracks[nbAudioTrack].nbIndex;
                 if(nbo)
-                    _tracks[1+nbAudioTrack].nbIndex=nbo;
+                    _tracks[nbAudioTrack].nbIndex=nbo;
                 else
-                    _tracks[1+nbAudioTrack].nbIndex=info.nbSz;
-                ADM_info("Indexed audio, nb blocks:%u (final)\n",_tracks[1+nbAudioTrack].nbIndex);
-                _tracks[1+nbAudioTrack].scale=trackScale;
-                nbAudioTrack++;
+                    _tracks[nbAudioTrack].nbIndex=info.nbSz;
+                ADM_info("Indexed audio, nb blocks:%u (final)\n",_tracks[nbAudioTrack].nbIndex);
+            }else
+            {
+                if(_tracks[nbAudioTrack].index)
+                {
+                    delete [] _tracks[nbAudioTrack].index;
+                    _tracks[nbAudioTrack].index=NULL;
+                }
             }
 
             break;
