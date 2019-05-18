@@ -27,242 +27,248 @@ static int beQuiet=0;
 
 namespace ADM_Qt4CoreUIToolkit
 {
-	void GUI_Alert(const char *alertstring)
-	{
-		QMessageBox::critical(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Alert")),
-			QString::fromUtf8(alertstring), QMessageBox::Ok );
-	}
 
-	void GUI_Info(const char *alertstring)
-	{
-		QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Info")),
-			QString::fromUtf8(alertstring), QMessageBox::Ok );
-	}
-
-	void GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *secondary_format)
-	{
-		uint32_t msglvl=2;
-		QString alertString;
-
-		prefs->get(MESSAGE_LEVEL,&msglvl);
-
-		if(msglvl<level)
-		{
-			printf("Info : %s \n",primary);
-			return;
-		}
-
-		if(! secondary_format)
-			alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big>";
-		else
-		{
-			alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big><br><br>" + QString::fromUtf8(secondary_format);
-			alertString.replace("\n", "<br>");
-		}
-
-		QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Info")),
-			alertString, QMessageBox::Ok);
-	}
-
-	void GUI_Error_HIG(const char *primary, const char *secondary_format)
-	{
-		uint32_t msglvl=2;
-		QString alertString;
-
-		prefs->get(MESSAGE_LEVEL,&msglvl);
-
-		if(msglvl==ADM_LOG_NONE) 
-		{
-			printf("Error :%s\n",primary);
-			return;
-		}
-
-		if(! secondary_format)
-			alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big>";
-		else
-		{
-			alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big><br><br>" + QString::fromUtf8(secondary_format);
-			alertString.replace("\n", "<br>");
-		}
-
-		QMessageBox::critical(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Info")),
-			alertString, QMessageBox::Ok);
-	}
-
-	int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const char *secondary_format)
-	{
-		uint32_t msglvl=2;
-		prefs->get(MESSAGE_LEVEL,&msglvl);
-		QString alertString;
-
-		if (beQuiet || msglvl==ADM_LOG_NONE)
-		{
-			printf("Info: %s\n", primary);
-			return 1;
-		}
-
-		if (!secondary_format)
-			alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big>";
-		else
-		{	
-			alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big><br><br>" + QString::fromUtf8(secondary_format);
-			alertString.replace("\n", "<br>");
-		}
-
-		QMessageBox::StandardButton reply;
-
-		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")),
-			alertString, QMessageBox::Yes | QMessageBox::No);
-
-		if (reply == QMessageBox::Yes)
-			return 1;
-
-		return 0; 
-	}
-
-	int GUI_YesNo(const char *primary, const char *secondary_format)
-	{
-		uint32_t msglvl=2;
-		prefs->get(MESSAGE_LEVEL,&msglvl);
-		QString alertString;
-
-		if (beQuiet || msglvl==ADM_LOG_NONE)
-		{
-			printf("Info: %s\n", primary);
-			return 1;
-		}
-
-		if (!secondary_format)
-			alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big>";
-		else
-		{	
-			alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big><br><br>" + QString::fromUtf8(secondary_format);
-			alertString.replace("\n", "<br>");
-		}
-
-		QMessageBox::StandardButton reply;
-
-		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")),
-			alertString, QMessageBox::Yes | QMessageBox::No );
-
-		if (reply == QMessageBox::Yes)
-			return 1;
-
-		return 0; 
-	}
-
-	int GUI_Question(const char *alertstring)
-	{
-		uint32_t msglvl=2;
-		prefs->get(MESSAGE_LEVEL,&msglvl);
-		QMessageBox::StandardButton reply;
-
-		if (beQuiet || msglvl==ADM_LOG_NONE)
-		{
-			printf("Question: %s\n", alertstring);
-			return 1;
-		}
-
-		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question")),
-			QString::fromUtf8(alertstring), QMessageBox::Yes | QMessageBox::No);
-
-		if (reply==QMessageBox::Yes)
-			return 1;
-
-		return 0;
-	}
-	/**
-	\fn GUI_Alternate(char *title,char *choice1,char *choice2)
-	\brief Popup a dialog box name title with 2 buttons (choice1/choice2)
-	\return 0 if first is selected, 1 if second
-	*/
-int      GUI_Alternate(const char *title,const char *choice1,const char *choice2)
-	{
-		uint32_t msglvl=2;
-		prefs->get(MESSAGE_LEVEL,&msglvl);
-
-		if (beQuiet || msglvl==ADM_LOG_NONE)
-		{
-			printf("Alternate<%s>: %s or %s\n", title,choice1,choice2);
-			return 0;
-		}
-
-		QMessageBox box(qtLastRegisteredDialog());
-
-		box.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question?")));
-		box.addButton(QString::fromUtf8(choice1),QMessageBox::YesRole);
-		box.addButton(QString::fromUtf8(choice2),QMessageBox::NoRole);
-
-		if (title)
-			box.setText(QString::fromUtf8(title));
-		else
-			box.setText(QT_TRANSLATE_NOOP("qtalert","Question"));
-
-		box.setIcon(QMessageBox::Question);
-
-		if (box.exec() == 0)
-			return 1;
-		else
-			return 0;
-	}
-
-	uint8_t  GUI_getDoubleValue(double *valye, float min, float max, const char *title)
-	{
-		return 0; 
-	}
-
-	uint8_t	GUI_isQuiet(void)
-	{
-		return beQuiet;
-	}
-
-	void GUI_Verbose(void)
-	{
-		beQuiet=0;
-	}
-
-	void GUI_Quiet(void)
-	{
-		beQuiet=1;
-	}
-
-	extern DIA_workingBase *createWorking(const char *title);
-        extern DIA_processingBase *createProcessing(const char *title, uint64_t totalToProcess);
-	extern DIA_encodingBase *createEncoding(uint64_t duration);
-        extern DIA_audioTrackBase *createAudioTrack( PoolOfAudioTracks *pool, ActiveAudioTracks *active );
-	void getVersion(uint32_t *maj,uint32_t *minor)
-	{
-		*maj=ADM_CORE_TOOLKIT_MAJOR;
-		*minor=ADM_CORE_TOOLKIT_MINOR;
-	}
-
-	void UI_purge( void )
-	{
-		QCoreApplication::processEvents ();
-	}
+void GUI_Alert(const char *alertstring)
+{
+    QMessageBox::critical(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Alert")),
+    QString::fromUtf8(alertstring), QMessageBox::Ok );
 }
+
+void GUI_Info(const char *alertstring)
+{
+    QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Info")),
+    QString::fromUtf8(alertstring), QMessageBox::Ok );
+}
+
+void GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *secondary_format)
+{
+    uint32_t msglvl=2;
+    QString alertString;
+
+    prefs->get(MESSAGE_LEVEL,&msglvl);
+
+    if(msglvl<level)
+    {
+        printf("Info : %s \n",primary);
+        return;
+    }
+
+    if(! secondary_format)
+        alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big>";
+    else
+    {
+        alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big><br><br>" + QString::fromUtf8(secondary_format);
+        alertString.replace("\n", "<br>");
+    }
+
+    QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Info")),
+            alertString, QMessageBox::Ok);
+}
+
+void GUI_Error_HIG(const char *primary, const char *secondary_format)
+{
+    uint32_t msglvl=2;
+    QString alertString;
+
+    prefs->get(MESSAGE_LEVEL,&msglvl);
+
+    if(msglvl==ADM_LOG_NONE)
+    {
+        printf("Error :%s\n",primary);
+        return;
+    }
+
+    if(! secondary_format)
+        alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big>";
+    else
+    {
+        alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big><br><br>" + QString::fromUtf8(secondary_format);
+        alertString.replace("\n", "<br>");
+    }
+
+    QMessageBox::critical(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Info")),
+            alertString, QMessageBox::Ok);
+}
+
+int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const char *secondary_format)
+{
+    uint32_t msglvl=2;
+    prefs->get(MESSAGE_LEVEL,&msglvl);
+    QString alertString;
+
+    if (beQuiet || msglvl==ADM_LOG_NONE)
+    {
+        printf("Info: %s\n", primary);
+        return 1;
+    }
+
+    if (!secondary_format)
+        alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big>";
+    else
+    {
+        alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big><br><br>" + QString::fromUtf8(secondary_format);
+        alertString.replace("\n", "<br>");
+    }
+
+    QMessageBox::StandardButton reply;
+
+    reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")),
+                alertString, QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes)
+        return 1;
+
+    return 0;
+}
+
+int GUI_YesNo(const char *primary, const char *secondary_format)
+{
+    uint32_t msglvl=2;
+    prefs->get(MESSAGE_LEVEL,&msglvl);
+    QString alertString;
+
+    if (beQuiet || msglvl==ADM_LOG_NONE)
+    {
+        printf("Info: %s\n", primary);
+        return 1;
+    }
+
+    if (!secondary_format)
+        alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big>";
+    else
+    {
+        alertString = "<big><b>" + QString::fromUtf8(primary) + "</b></big><br><br>" + QString::fromUtf8(secondary_format);
+        alertString.replace("\n", "<br>");
+    }
+
+    QMessageBox::StandardButton reply;
+
+    reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")),
+                alertString, QMessageBox::Yes | QMessageBox::No );
+
+    if (reply == QMessageBox::Yes)
+        return 1;
+
+    return 0;
+}
+
+int GUI_Question(const char *alertstring)
+{
+    uint32_t msglvl=2;
+    prefs->get(MESSAGE_LEVEL,&msglvl);
+    QMessageBox::StandardButton reply;
+
+    if (beQuiet || msglvl==ADM_LOG_NONE)
+    {
+        printf("Question: %s\n", alertstring);
+        return 1;
+    }
+
+    reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question")),
+                QString::fromUtf8(alertstring), QMessageBox::Yes | QMessageBox::No);
+
+    if (reply==QMessageBox::Yes)
+        return 1;
+
+    return 0;
+}
+/**
+    \fn GUI_Alternate(char *title,char *choice1,char *choice2)
+    \brief Popup a dialog box name title with 2 buttons (choice1/choice2)
+    \return 0 if first is selected, 1 if second
+*/
+int GUI_Alternate(const char *title,const char *choice1,const char *choice2)
+{
+    uint32_t msglvl=2;
+    prefs->get(MESSAGE_LEVEL,&msglvl);
+
+    if (beQuiet || msglvl==ADM_LOG_NONE)
+    {
+        printf("Alternate<%s>: %s or %s\n", title,choice1,choice2);
+        return 0;
+    }
+
+    QMessageBox box(qtLastRegisteredDialog());
+
+    box.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question?")));
+    box.addButton(QString::fromUtf8(choice1),QMessageBox::YesRole);
+    box.addButton(QString::fromUtf8(choice2),QMessageBox::NoRole);
+
+    if (title)
+        box.setText(QString::fromUtf8(title));
+    else
+        box.setText(QT_TRANSLATE_NOOP("qtalert","Question"));
+
+    box.setIcon(QMessageBox::Question);
+
+    if (box.exec() == 0)
+        return 1;
+    else
+        return 0;
+}
+
+uint8_t GUI_getDoubleValue(double *valye, float min, float max, const char *title)
+{
+    return 0;
+}
+
+uint8_t GUI_isQuiet(void)
+{
+    return beQuiet;
+}
+
+void GUI_Verbose(void)
+{
+    beQuiet=0;
+}
+
+void GUI_Quiet(void)
+{
+    beQuiet=1;
+}
+
+extern DIA_workingBase *createWorking(const char *title);
+extern DIA_processingBase *createProcessing(const char *title, uint64_t totalToProcess);
+extern DIA_encodingBase *createEncoding(uint64_t duration);
+extern DIA_audioTrackBase *createAudioTrack( PoolOfAudioTracks *pool, ActiveAudioTracks *active );
+
+void getVersion(uint32_t *maj,uint32_t *minor)
+{
+    *maj=ADM_CORE_TOOLKIT_MAJOR;
+    *minor=ADM_CORE_TOOLKIT_MINOR;
+}
+
+void UI_purge( void )
+{
+    QCoreApplication::processEvents ();
+}
+
+} // namespace
 
 static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
 {
-		&ADM_Qt4CoreUIToolkit::getVersion,
-		&ADM_Qt4CoreUIToolkit::GUI_Info_HIG,
-		&ADM_Qt4CoreUIToolkit::GUI_Error_HIG,
-		&ADM_Qt4CoreUIToolkit::GUI_Confirmation_HIG,
-		&ADM_Qt4CoreUIToolkit::GUI_YesNo,
-		&ADM_Qt4CoreUIToolkit::GUI_Question,
-		&ADM_Qt4CoreUIToolkit::GUI_Alternate,
-		&ADM_Qt4CoreUIToolkit::GUI_Verbose,
-		&ADM_Qt4CoreUIToolkit::GUI_Quiet,
-		&ADM_Qt4CoreUIToolkit::GUI_isQuiet,
-                &ADM_Qt4CoreUIToolkit::createWorking,
-                &ADM_Qt4CoreUIToolkit::createEncoding,
-                &ADM_Qt4CoreUIToolkit::createAudioTrack,
-                &ADM_Qt4CoreUIToolkit::UI_purge,
-                &ADM_Qt4CoreUIToolkit::createProcessing,
+    &ADM_Qt4CoreUIToolkit::getVersion,
+    &ADM_Qt4CoreUIToolkit::GUI_Info_HIG,
+    &ADM_Qt4CoreUIToolkit::GUI_Error_HIG,
+    &ADM_Qt4CoreUIToolkit::GUI_Confirmation_HIG,
+
+    &ADM_Qt4CoreUIToolkit::GUI_YesNo,
+    &ADM_Qt4CoreUIToolkit::GUI_Question,
+    &ADM_Qt4CoreUIToolkit::GUI_Alternate,
+    &ADM_Qt4CoreUIToolkit::GUI_Verbose,
+
+    &ADM_Qt4CoreUIToolkit::GUI_Quiet,
+    &ADM_Qt4CoreUIToolkit::GUI_isQuiet,
+    &ADM_Qt4CoreUIToolkit::createWorking,
+    &ADM_Qt4CoreUIToolkit::createEncoding,
+
+    &ADM_Qt4CoreUIToolkit::createAudioTrack,
+    &ADM_Qt4CoreUIToolkit::UI_purge,
+    &ADM_Qt4CoreUIToolkit::createProcessing,
 };
 
 void InitCoreToolkit(void )
 {
-	DIA_toolkitInit(&Qt4CoreToolkitDescriptor);
+    DIA_toolkitInit(&Qt4CoreToolkitDescriptor);
 }
 //EOF
