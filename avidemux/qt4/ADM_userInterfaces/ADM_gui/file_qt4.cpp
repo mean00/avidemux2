@@ -150,20 +150,11 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
     {
         QFileInfo fileInfo(newFile);
         QString q=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","Overwrite file "))+fileInfo.fileName()+QString("?");
-        // Confirm overwrite even if the user has disabled alerts. This has no effect in the silent mode.
-        const uint32_t info=ADM_LOG_INFO;
-        uint32_t old=info;
-        prefs->get(MESSAGE_LEVEL,&old);
-        if(old<info)
-            prefs->set(MESSAGE_LEVEL,info);
-        if(!GUI_Question(q.toUtf8().constData()))
+        // Show the dialog even in silent mode or if the user has disabled alerts.
+        if(!GUI_Question(q.toUtf8().constData(),true))
         {
-            if(old<info)
-                prefs->set(MESSAGE_LEVEL,old);
             return 0;
         }
-        if(old<info)
-            prefs->set(MESSAGE_LEVEL,old);
     }
 
     if(len >= max)
