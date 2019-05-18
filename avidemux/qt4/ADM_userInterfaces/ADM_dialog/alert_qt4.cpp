@@ -152,15 +152,15 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
     return 0;
 }
 
-int GUI_Question(const char *alertstring)
+int GUI_Question(const char *alertstring, bool insuppressible)
 {
     uint32_t msglvl=2;
     prefs->get(MESSAGE_LEVEL,&msglvl);
     QMessageBox::StandardButton reply;
 
-    if (beQuiet || msglvl==ADM_LOG_NONE)
+    if ((beQuiet || msglvl == ADM_LOG_NONE) && !insuppressible)
     {
-        printf("Question: %s\n", alertstring);
+        printf("Question: %s => Yes\n", alertstring);
         return 1;
     }
 
