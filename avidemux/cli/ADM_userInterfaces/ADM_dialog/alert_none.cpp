@@ -133,9 +133,9 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
     return 0;
 }
 
-int GUI_Question(const char *alertstring)
+int GUI_Question(const char *alertstring, bool insuppressible)
 {
-    if(beQuiet)
+    if(beQuiet && !insuppressible)
     {
         printf("%s => Yes\n",alertstring);
         return 1;
