@@ -91,9 +91,11 @@ namespace ADM_Qt4CoreUIToolkit
 
 	int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const char *secondary_format)
 	{
+		uint32_t msglvl=2;
+		prefs->get(MESSAGE_LEVEL,&msglvl);
 		QString alertString;
 
-		if (beQuiet)
+		if (beQuiet || msglvl==ADM_LOG_NONE)
 		{
 			printf("Info: %s\n", primary);
 			return 1;
@@ -121,9 +123,10 @@ namespace ADM_Qt4CoreUIToolkit
 	int GUI_YesNo(const char *primary, const char *secondary_format)
 	{
 		uint32_t msglvl=2;
+		prefs->get(MESSAGE_LEVEL,&msglvl);
 		QString alertString;
 
-		if (beQuiet)
+		if (beQuiet || msglvl==ADM_LOG_NONE)
 		{
 			printf("Info: %s\n", primary);
 			return 1;
@@ -150,9 +153,11 @@ namespace ADM_Qt4CoreUIToolkit
 
 	int GUI_Question(const char *alertstring)
 	{
+		uint32_t msglvl=2;
+		prefs->get(MESSAGE_LEVEL,&msglvl);
 		QMessageBox::StandardButton reply;
 
-		if (beQuiet)
+		if (beQuiet || msglvl==ADM_LOG_NONE)
 		{
 			printf("Question: %s\n", alertstring);
 			return 1;
@@ -173,7 +178,10 @@ namespace ADM_Qt4CoreUIToolkit
 	*/
 int      GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 	{
-		if (beQuiet)
+		uint32_t msglvl=2;
+		prefs->get(MESSAGE_LEVEL,&msglvl);
+
+		if (beQuiet || msglvl==ADM_LOG_NONE)
 		{
 			printf("Alternate<%s>: %s or %s\n", title,choice1,choice2);
 			return 0;
