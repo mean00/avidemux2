@@ -27,6 +27,13 @@ typedef enum
 
 typedef enum
 {
+    MP4_MUXER_OPT_NONE,
+    MP4_MUXER_OPT_FASTSTART,
+    MP4_MUXER_OPT_FRAGMENT
+}MP4_MUXER_OPTIMIZE;
+
+typedef enum
+{
     STANDARD,
     WIDE,
     UNI,

@@ -32,7 +32,7 @@
 mp4_muxer muxerConfig=
 {
     MP4_MUXER_MP4,
-    true,
+    MP4_MUXER_OPT_FASTSTART,
     false,
     WIDE,
     MP4_MUXER_ROTATE_0
@@ -160,8 +160,18 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
         av_dict_set(&dict, "preload", buf, 0);
         av_dict_set(&dict, "max_delay", "200000", 0);
-        if(muxerConfig.faststart)
-            av_dict_set(&dict, "movflags","faststart",0);
+
+        switch(muxerConfig.optimize)
+        {
+            case(MP4_MUXER_OPT_FASTSTART):
+                av_dict_set(&dict, "movflags", "faststart", 0);
+                break;
+            case(MP4_MUXER_OPT_FRAGMENT):
+                av_dict_set(&dict, "movflags", "frag_keyframe+empty_moov", 0);
+                av_dict_set(&dict, "min_frag_duration", "2000000", 0); // 2 seconds, an arbitrary value
+                break;
+            default: break;
+        }
 
         const char *angle=NULL;
         switch(muxerConfig.rotation)
