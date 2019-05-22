@@ -25,7 +25,6 @@ void qtRegisterDialog(QWidget *dialog)
         flags &= ~Qt::WindowFullscreenButtonHint;
         dialog->setWindowFlags(flags);
         dialog->setWindowModality(Qt::ApplicationModal);
-        dialog->show();
 #else
         bool reparent = false;
         bool isDialog = false;
@@ -37,7 +36,6 @@ void qtRegisterDialog(QWidget *dialog)
         {
             ADM_info("reparenting widget %s\n",dialog->objectName().toUtf8().constData());
             dialog->setParent(widgetStack.top(), Qt::Dialog);
-            dialog->show(); // reparenting makes the widget invisible
         }
 #endif
     }
