@@ -49,9 +49,6 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     SPINNER(Bottom);
 
     setModal(true);
-    show();
-    myBlacken->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
   void Ui_blackenWindow::sliderUpdate(int foo)
   {
@@ -119,6 +116,14 @@ void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
     myBlacken->rubber->nestedIgnore--;
     myBlacken->blockChanges(false);
     
+}
+
+void Ui_blackenWindow::showEvent(QShowEvent *event)
+{
+    myBlacken->rubber->rubberband->show(); // must be called first
+    QDialog::showEvent(event);
+    myBlacken->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
 //************************

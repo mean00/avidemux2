@@ -35,7 +35,6 @@ flyBlacken::flyBlacken (QDialog *parent,uint32_t width,uint32_t height,ADM_coreV
                 : ADM_flyDialogRgb(parent,width, height,in,canvas, slider,RESIZE_LAST) 
   {
     rubber=new ADM_rubberControl(this,canvas);
-    rubber->resize(width,height);
     _ox=0;
     _oy=0;
     _ow=width;
