@@ -208,9 +208,6 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         myLogo->sliderChanged();
 
         setModal(true);
-        show();
-        myLogo->adjustCanvasPosition();
-        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
 /**
     \fn sliderUpdate
@@ -313,6 +310,17 @@ void Ui_logoWindow::resizeEvent(QResizeEvent *event)
     myLogo->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myLogo->adjustCanvasPosition();
     lock--;
+}
+
+/**
+    \fn showEvent
+    \brief set canvas initial size and position
+*/
+void Ui_logoWindow::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    myLogo->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
 /**

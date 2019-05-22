@@ -216,9 +216,6 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
         ui.labelHelp->setPixmap(QPixmap(":/images/grips.png"));
 
         setModal(true);
-        show();
-        myCrop->adjustCanvasPosition();
-        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
 
 /**
@@ -236,6 +233,17 @@ void Ui_mpdelogoWindow::resizeEvent(QResizeEvent *event)
     myCrop->adjustCanvasPosition();
     myCrop->blockChanges(false);
     myCrop->rubber->nestedIgnore--;
+}
+
+/**
+    \fn showEvent
+*/
+void Ui_mpdelogoWindow::showEvent(QShowEvent *event)
+{
+    myCrop->rubber->rubberband->show(); // must be called first
+    QDialog::showEvent(event);
+    myCrop->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
 /**
