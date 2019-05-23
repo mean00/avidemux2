@@ -198,6 +198,8 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
         aprintf("Uploading\n");
         myCrop->upload();
         myCrop->sliderChanged();
+        myCrop->rubber->nestedIgnore=1;
+
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
         SPINNER(spinX);
@@ -244,6 +246,7 @@ void Ui_mpdelogoWindow::showEvent(QShowEvent *event)
     QDialog::showEvent(event);
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+    myCrop->rubber->nestedIgnore=0;
 }
 
 /**
