@@ -352,9 +352,9 @@ uint32_t width,height;
     myCrop->addControl(ui.toolboxLayout);
     myCrop->upload(false,true);
     myCrop->sliderChanged();
+    myCrop->rubber->nestedIgnore=1;
 
     ui.checkBoxRubber->setChecked(myCrop->rubber_is_hidden);
-    myCrop->rubber->setVisible(!(myCrop->rubber_is_hidden));
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
@@ -482,9 +482,11 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
 void Ui_cropWindow::showEvent(QShowEvent *event)
 {
     myCrop->rubber->rubberband->show(); // must be called first
+    myCrop->rubber->setVisible(!(myCrop->rubber_is_hidden));
     QDialog::showEvent(event);
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+    myCrop->rubber->nestedIgnore=0;
 }
 
 //EOF
