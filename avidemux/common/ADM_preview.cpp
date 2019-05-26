@@ -105,7 +105,7 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h, float nzoom)
       UI_getPhysicalScreenSize(NULL, &phyW,&phyH);
       if(3*phyW<4*w || 3*phyH<4*h)
       {
-          if(phyW<w/2 || phyH<h/2)
+          if(5*phyW<4*w || 5*phyH<4*h)
           {
                     nzoom=ZOOM_1_4;
           }else
