@@ -890,5 +890,12 @@ void x264Dialog::deleteButton_pressed(void)
   }
   updatePresetList();
 }
+/**
 
+*/
+void x264Dialog::showEvent(QShowEvent *event)
+{
+    adjustSize();
+    QDialog::showEvent(event);
+}
 
