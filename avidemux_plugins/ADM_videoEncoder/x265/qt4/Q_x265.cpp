@@ -195,6 +195,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         upload();
         ADM_pluginInstallSystem( std::string("x265"),std::string("json"),pluginVersion);
         updatePresetList();
+        adjustSize();
 }
 /**
     \fn updatePresetList
@@ -853,13 +854,5 @@ void x265Dialog::deleteButton_pressed(void)
     unlink(text.toUtf8().constData());
   }
   updatePresetList();
-}
-/**
-
-*/
-void x265Dialog::showEvent(QShowEvent *event)
-{
-    adjustSize();
-    QDialog::showEvent(event);
 }
 

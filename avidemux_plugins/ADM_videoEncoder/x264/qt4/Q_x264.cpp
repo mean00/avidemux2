@@ -189,6 +189,7 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         upload();
         ADM_pluginInstallSystem( std::string("x264"),std::string("json"),pluginVersion);
         updatePresetList();
+        adjustSize();
 }
 /**
     \fn updatePresetList
@@ -889,13 +890,5 @@ void x264Dialog::deleteButton_pressed(void)
     unlink(text.toUtf8().constData());
   }
   updatePresetList();
-}
-/**
-
-*/
-void x264Dialog::showEvent(QShowEvent *event)
-{
-    adjustSize();
-    QDialog::showEvent(event);
 }
 

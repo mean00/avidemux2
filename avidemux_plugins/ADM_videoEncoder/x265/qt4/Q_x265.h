@@ -25,7 +25,6 @@ private:
     bool upload(void);
     int lastBitrate, lastVideoSize;
 
-    void showEvent(QShowEvent *event);
 protected:
 	void  *cookie;
 
