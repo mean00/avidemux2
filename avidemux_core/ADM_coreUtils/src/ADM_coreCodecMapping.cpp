@@ -114,6 +114,10 @@ AVCodecID ADM_codecIdFindByFourcc(const char *fcc)
     {
       return AV_CODEC_ID_MPEG4;
     }
+if (isVP9Compatible (fid) == 1)
+    {
+      return AV_CODEC_ID_VP9;
+    }
 
     uint32_t nb=sizeof(ffCodec)/sizeof(ffVideoCodec);
     for(int i=0;i<nb;i++)
