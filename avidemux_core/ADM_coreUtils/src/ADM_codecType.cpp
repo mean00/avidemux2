@@ -190,7 +190,6 @@ bool isVP9Compatible (uint32_t fourcc)
 
   uint8_t vp9 = 0;
 
-  CHECK ("VP  ");
   CHECK ("VP9 ");
   CHECK ("VP90");
 
