@@ -1,13 +1,13 @@
---- libavcodec/h264_parser.c.org	2017-03-10 18:39:39.106069071 +0100
-+++ libavcodec/h264_parser.c	2017-03-10 18:38:20.586520540 +0100
-@@ -64,6 +64,102 @@
+--- libavcodec/h264_parser.c.orig	2019-04-01 13:16:31.000000000 +0200
++++ libavcodec/h264_parser.c	2019-06-08 16:59:58.655821446 +0200
+@@ -64,6 +64,105 @@
      int last_frame_num, last_picture_structure;
  } H264ParseContext;
  
 +#include "ff_spsinfo.h" // MEANX
 +#include <assert.h>
 + // MEANX
-+int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info);
++int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsInfo *info);
 +/**
 +    \fn AVCodecParserContext
 + *  \brief find a valid sps,take the 1st one that look sok
@@ -42,7 +42,7 @@
 + * @param info
 + * @return 
 + */
-+int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info)
++int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsInfo *info)
 +{
 +    H264ParseContext *ctx = parser->priv_data;    
 +    int f;   
@@ -60,7 +60,10 @@
 +    {
 +            float scale=sps->time_scale ;
 +            float ticks=sps->num_units_in_tick;
-+            info->fps1000 =  (uint32_t) ((scale/ticks) *    1000.);
++            float fps = scale/ticks;
++            if(ticksPerFrame>1)
++                fps /= ticksPerFrame;
++            info->fps1000 = (uint32_t)(fps * 1000.);
 +#undef printf
 +            printf("Scale : %d, tick=%d, fps=%d\n",(int)scale,(int)ticks,(int)info->fps1000);
 +    }else

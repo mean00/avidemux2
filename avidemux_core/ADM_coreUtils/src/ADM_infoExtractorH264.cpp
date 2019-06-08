@@ -23,7 +23,7 @@ extern "C"
 #include "libavcodec/parser.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
-extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
+extern int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsInfo *ndo);
 }
 
 #include "ADM_Video.h"
@@ -723,6 +723,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
     uint8_t *myData=new uint8_t[myLen];
     memset(myData,0x2,myLen);
     memcpy(myData,data,len);
+    myData[len]=0; // stop ff_h264_decode_extradata() from trying to parse the remaining buffer content as PPS
 
     // 1-Create parser
     AVCodecParserContext *parser=av_parser_init(AV_CODEC_ID_H264);
@@ -750,7 +751,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
         goto theEnd;
     }
 
-    ADM_info("Context created\n");
+    ADM_info("Context created, ticks_per_frame = %d\n",ctx->ticks_per_frame);
     //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
     ctx->extradata=myData;
     ctx->extradata_size=len;
@@ -762,15 +763,16 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
          printf("Used bytes %d/%d (+5)\n",used,len);
          if(!used)
          {
-             ADM_warning("Failed to extract SPS info\n");
+           //ADM_warning("Failed to extract SPS info\n"); // it ain't necessarily so
            //  goto theEnd;
          }
     }
-    ADM_info("Width  : %d\n",ctx->width);
-    ADM_info("Height : %d\n",ctx->height);
+    // Size is not supposed to be set in AVCodecContext after parsing
+    //ADM_info("Width  : %d\n",ctx->width);
+    //ADM_info("Height : %d\n",ctx->height);
     {
         ffSpsInfo nfo;
-        if(!ff_h264_info(parser,&nfo))
+        if(!ff_h264_info(parser,ctx->ticks_per_frame,&nfo))
         {
             ADM_error("Cannot get sps info from lavcodec\n");
             r=false;
