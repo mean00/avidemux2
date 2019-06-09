@@ -149,7 +149,8 @@ bool    ADMJob::jobInit(void)
     {
         ADM_info("Bad database version...\n");
         dbCleanup();
-        unlink(dbFile);
+        if(!ADM_eraseFile(dbFile))
+            ADM_warning("Could not delete %s\n",dbFile);
         if(true==ADM_jobInitializeDb())
         {
             if(false==dbInit())

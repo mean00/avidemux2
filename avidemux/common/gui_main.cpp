@@ -264,9 +264,8 @@ void HandleAction (Action action)
                     std::string f=LAST_SESSION_FILE;
                     if(ADM_fileExist(f.c_str()))
                     {
-                        int err=remove(f.c_str());
-                        if(err)
-                            ADM_warning("Error %d deleting last editing state %s\n",err,f.c_str());
+                        if(!ADM_eraseFile(f.c_str()))
+                            ADM_warning("Could not delete last editing state %s\n",f.c_str());
                     }
                 }
                 return;
@@ -1230,10 +1229,11 @@ bool A_saveSession(void)
     {
         std::string tmp=ADM_getBaseDir()+std::string("lastEdit.tmp");
         A_saveScript(engine, tmp.c_str());
-        if(remove(where.c_str()))
+        if(!ADM_eraseFile(where.c_str()))
         {
             ADM_warning("Could not delete the old saved session (%s)\n",where.c_str());
-            remove(tmp.c_str());
+            if(!ADM_eraseFile(tmp.c_str()))
+                ADM_warning("Could not delete temporary file (%s)\n",tmp.c_str());
             return false;
         }
         return !!rename(tmp.c_str(), where.c_str());
@@ -1259,7 +1259,8 @@ bool A_checkSavedSession(bool load)
             ADM_info("Restoring the last editing state from %s\n",where.c_str());
             r=A_parseScript(engine,where.c_str());
             A_Resync();
-            remove(where.c_str());
+            if(!ADM_eraseFile(where.c_str()))
+                ADM_warning("Could not delete %s\n",where.c_str());
         }
     }
     return r;

@@ -43,7 +43,8 @@ uint8_t tsHeader::open(const char *name)
     if(r==ADM_IGN)
     {
         ADM_warning("Indexing cancelled by the user, deleting the index file. Bye.\n");
-        remove(idxName);
+        if(!ADM_eraseFile(idxName))
+            ADM_warning("Could not delete %s\n",idxName);
         free(idxName);
         return r;
     }
@@ -149,9 +150,9 @@ abt:
     index.close();
     if(reindex)
     {
-        int err=remove(idxName);
+        uint8_t success=ADM_eraseFile(idxName);
         free(idxName);
-        if(!err)
+        if(success)
             r=open(name);
         else
             ADM_error("Can't delete old index file.\n");

@@ -88,7 +88,8 @@ void checkCrashFile(void)
                 A_Resync();
             }
 	  }
-        unlink(where);
+        if(!ADM_eraseFile(where))
+            ADM_warning("Could not delete %s\n",where);
   }else
   {
     printf("No crash file (%s)\n",where);

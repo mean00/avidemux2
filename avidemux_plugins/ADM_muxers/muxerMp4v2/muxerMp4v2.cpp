@@ -309,7 +309,8 @@ theEnd:
         ADM_info("Optimizing...\n");
         MP4Optimize( tmpTargetFileName.c_str(), targetFileName.c_str() );
         // delete
-        unlink(tmpTargetFileName.c_str());
+        if(!ADM_eraseFile(tmpTargetFileName.c_str()))
+            ADM_warning("Could not delete %s\n",tmpTargetFileName.c_str());
     }
     closeUI();
     return result;
