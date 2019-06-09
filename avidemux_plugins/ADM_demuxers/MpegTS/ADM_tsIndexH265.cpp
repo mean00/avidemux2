@@ -106,8 +106,7 @@ bool TsIndexerH265::decodeSEIH265(uint32_t nalSize, uint8_t *org,uint32_t *recov
  */
 static bool findGivenStartCode(tsPacketLinearTracker *pkt,int match, const char *name)
 {
-    bool keepRunning=true;    
-    while(keepRunning)
+    while(true)
     {
       int startCode=pkt->findStartCode();
       if(!pkt->stillOk())
@@ -157,7 +156,6 @@ static uint8_t * findGivenStartCodeInBuffer(uint8_t *start, uint8_t *end,int mat
  */
 bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
 {    
-    bool keepRunning=true;
     dmxPacketInfo packetInfo;
     uint8_t headerBuffer[512+5]={0,0,0,1,(NAL_H265_VPS<<1)}; // we are forcing some bits to be zero...
     // This is a bit naive...
@@ -282,7 +280,7 @@ int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
     \fn run
     \brief Index H265 stream
 */
-bool TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
+uint8_t TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
 {
     TSVideo video;
     indexerData data;
@@ -310,7 +308,7 @@ bool TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
         return false;
     }
 
-    bool result=false;
+    uint8_t result=0;
     bool bAppend=false;
     bool seq_found=false;
     bool firstSps=true;
@@ -336,7 +334,6 @@ bool TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
     fullSize=pkt->getSize();
     gui=createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),pkt->getSize());
     int lastRefIdc=0;
-    bool keepRunning=true;
     //******************
     // 1 search SPS
     //******************
@@ -355,7 +352,7 @@ bool TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
     // 2 Index
     //******************
     bool fourBytes;
-    while(keepRunning)
+    while(true)
     {
         fourBytes=false;
         int startCode=pkt->findStartCode2(fourBytes);
@@ -424,7 +421,10 @@ bool TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
                     thisUnit.imageType=picType;
                     thisUnit.unitType=unitTypePic;
                     if(!addUnit(data,unitTypePic,thisUnit,startCodeLength))
-                        keepRunning=false;
+                    {
+                        result=ADM_IGN;
+                        goto the_end;
+                    }
                     // reset to default
                     thisUnit.imageStructure=pictureFrame;
                     thisUnit.recoveryCount=0xff;
@@ -455,14 +455,17 @@ bool TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
                     thisUnit.consumedSoFar=lastAudOffset;
                 }
                 if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
-                    keepRunning=false;
+                {
+                    result=ADM_IGN;
+                    goto the_end;
+                }
                 break;
             }
             default:
                 break;
         }
     } // End while
-    result=true;
+    result=1;
 the_end:
         printf("\n");
         qfprintf(index,"\n[End]\n");

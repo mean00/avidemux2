@@ -23,7 +23,7 @@ static const uint32_t  VC1_ar[16][2] = {  // From VLC
     \fn runVC1
     \brief Index VC1 stream
 */  
-bool TsIndexerVC1::run(const char *file,ADM_TS_TRACK *videoTrac)
+uint8_t TsIndexerVC1::run(const char *file,ADM_TS_TRACK *videoTrac)
 {
 uint32_t temporal_ref,val;
 uint8_t buffer[50*1024];
@@ -64,6 +64,7 @@ dmxPacketInfo info;
     data.pkt=pkt;
     fullSize=pkt->getSize();
     gui= createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),pkt->getSize());
+    uint8_t result=1;
     int startCode;
     decodingImage=false;
 #define likely(x) x
@@ -81,7 +82,11 @@ dmxPacketInfo info;
                           {
                               pkt->getInfo(&thisUnit.packetInfo);
                               thisUnit.consumedSoFar=pkt->getConsumed();
-                              addUnit(data,unitTypeSps,thisUnit,4);
+                              if(!addUnit(data,unitTypeSps,thisUnit,4))
+                              {
+                                  result=ADM_IGN;
+                                  goto the_end;
+                              }
                               decodingImage=false;
                               break;
                           }
@@ -113,7 +118,11 @@ dmxPacketInfo info;
                           
                           pkt->getInfo(&thisUnit.packetInfo);
                           thisUnit.consumedSoFar=pkt->getConsumed();
-                          addUnit(data,unitTypeSps,thisUnit,seqSize+4);
+                          if(!addUnit(data,unitTypeSps,thisUnit,seqSize+4))
+                          {
+                              result=ADM_IGN;
+                              goto the_end;
+                          }
                           decodingImage=false;
                           
                           continue;
@@ -136,7 +145,11 @@ dmxPacketInfo info;
                           if(!decodeVC1Pic(bits,fType,sType)) continue;
                           thisUnit.imageType=fType;
                           updatePicStructure(video,sType);
-                          addUnit(data,unitTypePic,thisUnit,4);
+                          if(!addUnit(data,unitTypePic,thisUnit,4))
+                          {
+                              result=ADM_IGN;
+                              goto the_end;
+                          }
                           decodingImage=true;
                           data.nbPics++;
                         }
@@ -145,7 +158,7 @@ dmxPacketInfo info;
                     break;
                   }
       }
-    
+the_end:
         printf("\n");
 //        Mark(&data,&info,2);
         qfprintf(index,"\n[End]\n");
@@ -157,7 +170,7 @@ dmxPacketInfo info;
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;
-        return 1; 
+        return result;
 }
 /**
     \fn decodeVc1Seq
