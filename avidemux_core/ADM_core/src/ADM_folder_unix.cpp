@@ -68,6 +68,15 @@ FILE *ADM_fopen(const char *file, const char *mode)
 	return fopen(file, mode);
 }
 
+/**
+    \fn ADM_eraseFile
+*/
+uint8_t ADM_eraseFile(const char *file)
+{
+    if(!unlink(file))
+        return true;
+    return false;
+}
 
 /*----------------------------------------
       Create a directory
