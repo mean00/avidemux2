@@ -141,7 +141,11 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             printf("[MP4] Failed to init audio\n");
             return false;
         }
-
+        // Mark all audio tracks as enabled, VLC is picky about that.
+        for(int i=0;i<nbAudioTrack;i++)
+        {
+            audio_st[i]->disposition |= AV_DISPOSITION_DEFAULT;
+        }
         // /audio
         int er = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
 
