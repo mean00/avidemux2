@@ -43,7 +43,8 @@ uint8_t psHeader::open(const char *name)
     if(r==ADM_IGN)
     {
         ADM_warning("Indexing cancelled by the user, deleting the index file. Bye.\n");
-        remove(idxName);
+        if(!ADM_eraseFile(idxName))
+            ADM_warning("Could not delete %s\n",idxName);
         free(idxName);
         return r;
     }

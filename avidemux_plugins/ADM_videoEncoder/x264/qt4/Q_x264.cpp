@@ -887,7 +887,8 @@ void x264Dialog::deleteButton_pressed(void)
     ADM_pluginGetPath("x264",pluginVersion,rootPath);
     QString text=QString("/")+ui.configurationComboBox->itemText(n);
     text=QString(rootPath.c_str())+text+QString(".json");
-    unlink(text.toUtf8().constData());
+    if(!ADM_eraseFile(text.toUtf8().constData()))
+        ADM_warning("Could not delete %s\n",text.toUtf8().constData());
   }
   updatePresetList();
 }
