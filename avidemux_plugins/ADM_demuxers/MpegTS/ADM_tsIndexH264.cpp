@@ -134,7 +134,7 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     \fn run
     \brief Index H264 stream
 */
-bool TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
+uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
 {
     bool seq_found=false;
     bool firstSps=true;
@@ -142,7 +142,7 @@ bool TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     TSVideo video;
     indexerData data;
 
-    bool result=false;
+    uint8_t result=0;
     bool bAppend=false;
 
     beginConsuming=0;
@@ -165,8 +165,8 @@ bool TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
 
     if(!index)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
-        return false;
+        ADM_error("[TsIndexerH264] Cannot create %s\n",indexName.c_str());
+        return 0;
     }
 
     uint64_t lastAudOffset=0;
@@ -287,7 +287,10 @@ resume:
 
                 decodingImage=false;
                 if(!addUnit(data,unitTypeSei,thisUnit,startCodeLength))
-                    keepRunning=false;
+                {
+                    result=ADM_IGN;
+                    goto the_end;
+                }
                 fourBytes=true;
                 goto resume;
             }
@@ -324,7 +327,10 @@ resume:
                     }
                 }
                 if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
-                    keepRunning=false;
+                {
+                    result=ADM_IGN;
+                    goto the_end;
+                }
             }
                 break;
 
@@ -380,7 +386,10 @@ resume:
                 audCount=0;
 
                 if(!addUnit(data,unitTypePic,thisUnit,startCodeLength))
-                    keepRunning=false;
+                {
+                    result=ADM_IGN;
+                    goto the_end;
+                }
                 // reset to default
                 thisUnit.imageStructure=pictureFrame;
                 thisUnit.recoveryCount=0xff;
@@ -391,7 +400,7 @@ resume:
                 break;
         }
     } // End while
-    result=true;
+    result=1;
 the_end:
     printf("\n");
     qfprintf(index,"\n[End]\n");

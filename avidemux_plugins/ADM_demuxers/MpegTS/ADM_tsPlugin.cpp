@@ -27,74 +27,21 @@ ADM_DEMUXER_BEGIN( tsHeader, 90,
 
 static bool detectTs(const char *file);
 static bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block);
-uint8_t   tsIndexer(const char *file);
+
 /**
     \fn Probe
 */
 
 extern "C"  uint32_t ADM_PLUGIN_EXPORT        probe(uint32_t magic, const char *fileName)
 {
-char *index=(char *)malloc(strlen(fileName)+6);
-int count=0;
     printf("[TS Demuxer] Probing...\n");
     if( !detectTs(fileName))
     {
         printf(" [TS Demuxer] Not a ts file\n");
-        free(index);
         return false;
     }
-    sprintf(index,"%s.idx2",fileName);
-again:    
-    if(ADM_fileExist(index)) 
-    {
-        printf(" [TS Demuxer] There is an index for that file \n");
-        FILE *f=ADM_fopen(index,"rt");
-        char signature[10];
-        fread(signature,4,1,f);
-        signature[4]=0;
-        fclose(f);
-        if(!strcmp(signature,"PSD1"))
-        {
-                // Check if it is a valid index for us...
-                 indexFile indexFile;
-                 char *type;
-                 if(!indexFile.open(index))
-                 {
-                    printf("[tsDemux] Cannot open index file %s\n",index);
-                    indexFile.close();
-                    free(index);
-                    return false;
-                  }
-                 if(!indexFile.readSection("System"))
-                {
-                    printf("[tsDemux] Cannot read system section\n");
-                    indexFile.close();
-                    free(index);
-                    return false;
-                }
-                type=indexFile.getAsString("Type");
-                if(!type || type[0]!='T')
-                    {
-                        printf("[TsDemux] Incorrect or not found type\n");
-                        indexFile.close();
-                        free(index);
-                        return false;
-                    }
-                return 50;
-        }
-        printf("[TSDemuxer] Not a valid index\n");
-        return false;
-
-     }
-    if(count) return false;
-    printf("[TSDemuxer] Analyzing file..\n");
-    count++;
     
-  
-    if(true==tsIndexer(fileName)) goto again;
-    free(index);
-    printf("[TSDemuxer] Failed..\n");
-   return 0;
+    return 50;
 }
 #define PROBE_SIZE (1024*1024)
 /**
