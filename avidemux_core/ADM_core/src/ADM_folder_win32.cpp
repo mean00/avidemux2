@@ -354,5 +354,22 @@ const std::string ADM_getFileName(const std::string &str)
     return str.substr(idx+1);
 }
 
+/**
+    \fn ADM_eraseFile
+    \brief utf8-capable unlink(), so that we can use utf8 string even on win32
+*/
+uint8_t ADM_eraseFile(const char *file)
+{
+    int fileNameLength = utf8StringToWideChar(file, -1, NULL);
+    wchar_t *wcFile = new wchar_t[fileNameLength];
+
+    utf8StringToWideChar(file, -1, wcFile);
+
+    bool r = DeleteFileW(wcFile);
+    delete [] wcFile;
+    if(!r)
+        return 0;
+    return 1;
+}
 
 // EOF
