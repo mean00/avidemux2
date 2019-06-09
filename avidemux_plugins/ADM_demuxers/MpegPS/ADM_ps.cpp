@@ -59,6 +59,7 @@ uint8_t psHeader::open(const char *name)
     char *type;
     uint64_t startDts;
     uint32_t version=0;
+    bool reindex=false;
     indexFile index;
     r=0;
 
@@ -77,7 +78,8 @@ uint8_t psHeader::open(const char *name)
     version=index.getAsUint32("Version");
     if(version!=ADM_INDEX_FILE_VERSION)
     {
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("psdemuxer","Error"), QT_TRANSLATE_NOOP("psdemuxer","This file's index has been created with an older version of avidemux.\nPlease delete the idx2 file and reopen."));
+        if(GUI_Question(QT_TRANSLATE_NOOP("psdemuxer","This file's index has been created with an older version of avidemux.\nThe file must be re-indexed. Proceed?")))
+            reindex=true;
         goto abt;
     }
     type=index.getAsString("Type");
@@ -162,11 +164,22 @@ uint8_t psHeader::open(const char *name)
     }
 abt:
     index.close();
-    free(idxName);
-    if(r)
-        ADM_info("Loaded %s successfully\n",name);
-    else
-        ADM_warning("Loading %s failed\n",name);
+    if(reindex)
+    {
+        uint8_t success=ADM_eraseFile(idxName);
+        free(idxName);
+        if(success)
+            r=open(name);
+        else
+            ADM_error("Can't delete old index file.\n");
+    }else
+    {
+        free(idxName);
+        if(r)
+            ADM_info("Loaded %s successfully\n",name);
+        else
+            ADM_warning("Loading %s failed\n",name);
+    }
     return r;
 }
 
