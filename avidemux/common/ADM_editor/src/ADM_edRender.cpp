@@ -209,7 +209,7 @@ uint32_t seg;
     \fn NextPicture
     \brief decode & returns the next picture
 */
-bool        ADM_Composer::nextPicture(ADMImage *image,bool dontcross)
+bool ADM_Composer::nextPicture(ADMImage *image, int flags)
 {
 uint64_t pts;
 uint64_t tail;
@@ -240,6 +240,10 @@ uint64_t tail;
                 maxPts=seg->_refStartTimeUs+seg->_durationUs;
             if(false== nextPictureInternal(seg->_reference,image,maxPts))
             {
+                if(flags & 2)
+                {
+                    goto np_nextSeg;
+                }
                 uint64_t nkfPts=maxPts;
                 uint32_t frame=0;
                 if(searchNextKeyFrameInRef(seg->_reference,refPts,&nkfPts) && nkfPts<maxPts)
@@ -278,7 +282,7 @@ uint64_t tail;
 
 // Try to get an image for the following segment....
 np_nextSeg:
-        if(true==dontcross)
+        if(flags & 1)
         {
             ADM_warning("Not allowed to cross segment\n");
             return false;
@@ -340,7 +344,7 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 // Now forward till we reach out frame
                 while(1)
                 {
-                    if(false==nextPicture(image,true))
+                    if(false==nextPicture(image,3))
                     {
                             ADM_warning("Error in decoding forward\n");
                             return false;
@@ -388,7 +392,7 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
         }
         ADMImage *cached=vid->_videoCache->getBefore(refPts);
        
-        if(cached)
+        if(cached && cached->Pts<refPts)
         {
             if(cached->Pts>=seg->_refStartTimeUs) // It might be in the cache but belonging to the previous seg
             {
@@ -421,10 +425,13 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
         {
                 if(false==decodeTillPictureAtPts(targetPts,image))
                 {
-                    ADM_error("Cannot decode till our current pts\n");
-                    return false;
+                    ADM_warning("Cannot decode till our current pts\n");
+                    cached=vid->_videoCache->getLast();
+                    //return false;
+                }else
+                {
+                    cached=vid->_videoCache->getBefore(refPts);
                 }
-                cached=vid->_videoCache->getBefore(refPts);
                 if(cached)
                 {
                     if(cached->Pts>=seg->_refStartTimeUs)

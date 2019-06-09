@@ -249,7 +249,7 @@ public:
                     bool        goToTimeVideo(uint64_t time);
                     void		getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser);
                     bool        goToIntraTimeVideo(uint64_t time);
-                    bool        nextPicture(ADMImage *image,bool dontcross=false);
+                    bool        nextPicture(ADMImage *image, int flags=0); // 1 = don't cross segment, 2 = don't skip to next keyframe
                     bool        samePicture(ADMImage *image);
                     bool        previousPicture(ADMImage *image);
                     bool        rewind(void);

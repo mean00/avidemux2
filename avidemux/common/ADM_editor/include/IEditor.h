@@ -66,7 +66,7 @@ public:
     virtual bool goToIntraTimeVideo(uint64_t time) = 0;
     virtual bool goToTimeVideo(uint64_t time) = 0;
     virtual bool isFileOpen(void) = 0;
-    virtual bool nextPicture(ADMImage *image, bool dontcross = false) = 0;
+    virtual bool nextPicture(ADMImage *image, int flags = 0) = 0;
     virtual bool samePicture(ADMImage *image) = 0;
     virtual int openFile(const char *name) = 0;
     virtual bool rewind(void) = 0;
