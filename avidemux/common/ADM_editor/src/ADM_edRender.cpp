@@ -310,7 +310,7 @@ np_nextSeg:
                 dont want to decode the targetPts if it is a keyframe
                 but have the frame before
 */
-bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
+uint8_t ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
 {
  // Go to the previous keyframe and decode forward...
                 uint32_t thisSeg=_currentSegment;
@@ -332,13 +332,13 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 uint64_t previousKf;
                 if(false==searchPreviousKeyFrameInRef(ref,refTime,&previousKf))
                 {
-                    ADM_warning("Cannot find previous keyframe in ref %d, time=%" PRIu64" \n",ref,refTime);
+                    ADM_warning("Cannot find previous keyframe in ref %d for ref time %s\n",ref,ADM_us2plain(refTime));
                     return false;
                 }
                 // go to it...
                 if(false==seektoTime(ref,previousKf,false))
                 {
-                    ADM_warning("Cannot seek to time=%" PRIu64" \n",previousKf);
+                    ADM_warning("Cannot seek to ref time %s\n",ADM_us2plain(previousKf));
                     return false;            
                 }
                 // Now forward till we reach out frame
@@ -347,7 +347,7 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                     if(false==nextPicture(image,3))
                     {
                             ADM_warning("Error in decoding forward\n");
-                            return false;
+                            return ADM_IGN;
                     }
                     if(image->Pts>=targetPts)
                             break;
@@ -356,10 +356,10 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 }
                 if(image->Pts!=targetPts)
                 {
-                    ADM_error("Could not retrieve our own frame at PTS=%" PRIu64" ms\n",targetPts/1000);
-                    return false;
+                    ADM_warning("Could not retrieve our own frame at %s\n",ADM_us2plain(targetPts));
+                    return ADM_IGN;
                 }
-                return true;
+                return 1;
 }
 /**
     \fn previousPicture
@@ -423,14 +423,17 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
         seg=_segments.getSegment(segNo);
         if(segNo==_currentSegment) // Still in the same segment..
         {
-                if(false==decodeTillPictureAtPts(targetPts,image))
+                switch(decodeTillPictureAtPts(targetPts,image))
                 {
-                    ADM_warning("Cannot decode till our current pts\n");
-                    cached=vid->_videoCache->getLast();
-                    //return false;
-                }else
-                {
-                    cached=vid->_videoCache->getBefore(refPts);
+                    case 1:
+                        cached=vid->_videoCache->getBefore(refPts);
+                        break;
+                    case ADM_IGN:
+                        ADM_warning("Cannot decode till our current pts\n");
+                        cached=vid->_videoCache->getLast();
+                        break;
+                    default:
+                        return false;
                 }
                 if(cached)
                 {
@@ -462,7 +465,11 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
         vid=_segments.getRefVideo(seg->_reference);
         
 
-        decodeTillPictureAtPts(targetPts,image);
+        if(false==decodeTillPictureAtPts(targetPts,image))
+        {
+            ADM_error("Cannot decode to get a candidate.\n");
+            return false;
+        }
         _currentSegment=segNo;
         // We may have overshot...
         uint64_t last=vid->lastDecodedPts;

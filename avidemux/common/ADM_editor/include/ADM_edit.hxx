@@ -116,7 +116,7 @@ class ADM_Composer : public IEditor
                     void        recalibrateSigned(int64_t *time,_SEGMENT *seg);
                     bool        updateImageTiming(_SEGMENT *seg,ADMImage *image);
                     // Need to get the image just before targetPts
-                    bool        decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image);
+                    uint8_t     decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image);
                     bool        getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &frameNumber);
 
 protected:
