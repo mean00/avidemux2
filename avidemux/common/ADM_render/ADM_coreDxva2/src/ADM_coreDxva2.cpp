@@ -424,17 +424,8 @@ bool admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int nu
     D3DFORMAT fmt;
     fmt=dxvaBitsToFormat(bits);
 
-    if(!admD3D::isDirect9Ex())
-    {
-    
-     hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
-                                                   width,
-                                                   height,
-                                                   num-1,
-                                                   fmt, D3DPOOL_DEFAULT, 0,
-                                                   DXVA2_VideoDecoderRenderTarget,
-                                                   surfaces, NULL);
-    }else
+    bool share=admD3D::isDirect9Ex();
+    if(share)
     {
      hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
                                                    width,
@@ -443,7 +434,23 @@ bool admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int nu
                                                    fmt, D3DPOOL_DEFAULT, 0,
                                                    DXVA2_VideoDecoderRenderTarget,
                                                    surfaces, &sh);
-        
+        if(ADM_FAILED(hr))
+        {
+            // Requesting resource sharing on Windows 7 may result in a failure to allocate surfaces.
+            // On Windows 10, not requesting a shared handle seems to impact energy efficiency.
+            ADM_warning("Cannot allocate D3D9 surfaces with resource sharing, retrying without.\n");
+            share=false;
+        }
+    }
+    if(!share)
+    {
+     hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
+                                                   width,
+                                                   height,
+                                                   num-1,
+                                                   fmt, D3DPOOL_DEFAULT, 0,
+                                                   DXVA2_VideoDecoderRenderTarget,
+                                                   surfaces, NULL);
     }
      if(ADM_FAILED(hr))
      {
