@@ -63,7 +63,11 @@ setupEnv()
         export TOOLCHAIN_LOCATION=${MXE_ROOT}/usr
         export SDL2DIR=${MXE_ROOT}/usr/${MXE_TARGET}
         export PARAL="-j $(nproc)"
-        export INSTALL_DIR=${MINGW}/out/avidemux
+        if [ "x$debug" != "x1" ]; then
+            export INSTALL_DIR=${MINGW}/out/avidemux
+        else
+            export INSTALL_DIR=${MINGW}/out_debug/avidemux
+        fi
     fi
     export CROSS_PREFIX=$MXE_TARGET
     export PKG_CONFIG_PATH=$MINGW/lib/pkgconfig
