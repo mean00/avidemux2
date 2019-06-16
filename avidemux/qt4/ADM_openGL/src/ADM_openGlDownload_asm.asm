@@ -52,7 +52,7 @@ MASK:
 section .text
 INIT_MMX mmx
 default rel
-cglobal glYUV444_Init
+cglobal glYUV444_Init,0,0,0
         movq          m7,[MASK]
         RET
 
