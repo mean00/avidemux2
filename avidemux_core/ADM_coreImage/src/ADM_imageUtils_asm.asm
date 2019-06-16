@@ -99,7 +99,7 @@ cglobal YUV444_chroma, 4,4,8, src, dst, dst2, w4
         add            dst2q,4
         sub            w4d,1
         jnz             .again
-        ret
+        RET
 ;
 ;
 ;
@@ -134,7 +134,7 @@ cglobal nv12_to_u_v_one_line,4,4,4, w8, dstu, dstv, src
        add            dstvq,8
        sub            w8q,1
        jnz            .nv12_again
-       ret
+       RET
 
 ;yuv444_MMX
 ;  xdst=dst;
@@ -189,7 +189,7 @@ cglobal YUV444Luma,4,4,5, w8, dst, src,mangle
             add            dstq,8
             sub            w8q,1
             jnz            .again3
-            ret
+            RET
 
 
 ;eof
@@ -234,4 +234,4 @@ cglobal uv_to_nv12,4,4,4, u, v, dst,w8
   add            vq,8
   sub            w8q,1
   jnz            .nv12
-  ret
+  RET
