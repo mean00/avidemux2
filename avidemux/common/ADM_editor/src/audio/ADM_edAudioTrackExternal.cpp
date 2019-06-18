@@ -143,9 +143,14 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
         ADM_warning("Cannot identify external audio track\n");
         return NULL;
     }
-    if(!hdr.channels)
+    if(!hdr.channels || hdr.channels > MAX_CHANNELS)
     {
-        ADM_error("Got zero channels, the audio file must have been misidentified!\n");
+        ADM_error("Number of channels out of bounds, the audio file must have been misidentified!\n");
+        return NULL;
+    }
+    if(hdr.frequency < MIN_SAMPLING_RATE || hdr.frequency > MAX_SAMPLING_RATE)
+    {
+        ADM_error("Sampling frequency out of bounds, the audio file must have been misidentified!\n");
         return NULL;
     }
     // Try to create an access for the file...
