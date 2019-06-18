@@ -176,7 +176,7 @@ again:
     int nbFrames=0;
     bool crc=false;
     int match;
-    for( p=(buffer.at(tail));p<(buffer.at(head-2));p++)
+    for( p=(buffer.at(tail));p<(buffer.at(head-6));p++)
     {
         if(p[0]!=0xff || ((p[1]&0xf0)!=0xf0))
             continue;
@@ -198,13 +198,13 @@ again:
             found=true;
             break;
         }
-        if(match+packetLen+2>head && match+packetLen!=head)
+        if(match+packetLen+3>head && match+packetLen!=head)
         {
             aprintf("[ADTS]** not enough data **\n");
             return ADTS_MORE_DATA_NEEDED;
         }
         // do we have sync at the end ?
-        if(p[packetLen]!=0xff)
+        if(p[packetLen]!=0xff || (p[packetLen+1]&0xf0)!=0xf0)
         {
             aprintf("[ADTS] no ff marker at the end\n");
             continue;
@@ -217,7 +217,7 @@ again:
     if(found==false)
     {
         aprintf("[ADTS]No sync\n");
-        tail=head-1;
+        tail=head-6;
         return ADTS_MORE_DATA_NEEDED;
     }
     if(!hasExtra)
