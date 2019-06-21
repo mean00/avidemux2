@@ -165,7 +165,6 @@ static bool idWAV(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
 	          }
 	       }
 
-	    uint32_t length;
 	    wRead32(t32);
 	    ADM_info(" %lu bytes data \n", totalSize);
 	    info.blockalign=1;
@@ -320,21 +319,24 @@ static bool idAAACADTS(int bufferSize,const uint8_t *data,WAVHeader &info,uint32
     ADM_adts2aac aac;
     const uint8_t *start=data;
     const uint8_t *end=data+bufferSize;
+    offset=0;
     while(start<end)
     {
         int incoming=500;
-        int outLen;
+        int off,outLen;
         if(start+500>end) incoming=end-start;
-        ADM_adts2aac::ADTS_STATE state=aac.convert2(incoming,start,&outLen,NULL);
+        bool r=false;
+        if(incoming>0)
+            r=aac.addData(incoming,start);
+        ADM_adts2aac::ADTS_STATE state=aac.getAACFrame(&outLen,NULL,&off);
         start+=incoming;
         switch(state)
         {
-            case ADM_adts2aac::ADTS_ERROR: 
+            case ADM_adts2aac::ADTS_ERROR:
                     return false;
-                    break;
-            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED: 
-                    continue;
-                    break;
+            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED:
+                    if(r) continue;
+                    return false;
             case ADM_adts2aac::ADTS_OK:
                     // Got sync
                     info.encoding=WAV_AAC;
@@ -343,9 +345,9 @@ static bool idAAACADTS(int bufferSize,const uint8_t *data,WAVHeader &info,uint32
                     info.bitspersample=16;
                     info.byterate=128000>>3;
                     info.frequency=aac.getFrequency();
-                    ADM_info("Detected as AAC, fq=%d, channels=%d\n",info.frequency,info.channels);
+                    offset=off;
+                    ADM_info("Detected as AAC, fq=%d, channels=%d, offset=%d\n",info.frequency,info.channels,offset);
                     return true;
-                    break;
             default:
                 ADM_assert(0);
                 break;
