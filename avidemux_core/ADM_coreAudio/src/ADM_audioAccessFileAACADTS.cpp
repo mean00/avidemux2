@@ -26,12 +26,13 @@ bool ADM_audioAccessFileAACADTS::init(void)
 {
     aac=new  ADM_adts2aac();    
     // ----- extract data frequency etc.. to initialize clock
+    fseek(_fd,_offset,SEEK_SET);
 #define PROBE_SIZE 8000
     uint8_t buffer[PROBE_SIZE+1];
     int n=fread(buffer,1,PROBE_SIZE,_fd);
     if(n<=0) return false;
-    fseek(_fd,0,SEEK_SET);
-    ADM_info("Probing AAC/ADTS with %d bytes\n",n);
+    fseek(_fd,_offset,SEEK_SET);
+    ADM_info("Probing AAC/ADTS with %d bytes at offset %d\n",n,_offset);
     if(!aac->addData(n,buffer)) return false;
     if(ADM_adts2aac::ADTS_OK!=aac->getAACFrame(NULL,NULL))
     {
@@ -59,12 +60,12 @@ bool ADM_audioAccessFileAACADTS::init(void)
     clock= new audioClock(headerInfo.frequency);
     
     // ----- build time map
-    fseek(_fd,0,SEEK_SET);
-    adtsIndexer dexer(_fd,headerInfo.frequency,headerInfo.channels);
+    fseek(_fd,_offset,SEEK_SET);
+    adtsIndexer dexer(_fd,_offset,headerInfo.frequency,headerInfo.channels);
     ADM_info("Indexing adts/aac file\n");
     dexer.index(seekPoints );  
     ADM_info("found %d seekPoints\n",seekPoints.size());
-    fseek(_fd,0,SEEK_SET);
+    fseek(_fd,_offset,SEEK_SET);
     payloadSize=dexer.getPayloadSize();
     // 
     // compute duration
@@ -88,13 +89,11 @@ bool ADM_audioAccessFileAACADTS::init(void)
 
 ADM_audioAccessFileAACADTS::ADM_audioAccessFileAACADTS(const char *fileName,int offset)
 {
-        fileSize=ADM_fileSize(fileName)-offset;
-        _fd=ADM_fopen(fileName,"rb");
-        ADM_assert(_fd);
-        clock=NULL;
-        inited=init();;
-        
-        
+    _offset=(offset>0)? offset : 0;
+    _fd=ADM_fopen(fileName,"rb");
+    ADM_assert(_fd);
+    clock=NULL;
+    inited=init();
 }
 /**
     \fn

@@ -36,8 +36,8 @@ class ADM_COREAUDIO6_EXPORT ADM_audioAccessFileAACADTS  : public ADM_audioAccess
 {
 protected:
                 FILE            *_fd;
+                int             _offset;
                 uint64_t        payloadSize;
-                uint64_t        fileSize;
                 uint64_t        durationUs;
                 bool            inited;
                 audioClock      *clock;
