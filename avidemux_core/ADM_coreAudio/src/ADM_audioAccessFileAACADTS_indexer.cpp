@@ -57,8 +57,7 @@ protected:
  */
 bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
 {
-#define CHUNK_SIZE (5*1024)
-   uint8_t  buffer[CHUNK_SIZE];
+   uint8_t  buffer[ADTS_MAX_AAC_FRAME_SIZE];
    uint64_t lastPoint=0;
    int      len;
    
@@ -102,7 +101,7 @@ bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED:
            {
               
-               int n=fread(buffer,1,CHUNK_SIZE,f);
+               int n=fread(buffer,1,ADTS_MAX_AAC_FRAME_SIZE,f);
                if(n<=0)
                    return true;
                if(!aac.addData(n,buffer))
