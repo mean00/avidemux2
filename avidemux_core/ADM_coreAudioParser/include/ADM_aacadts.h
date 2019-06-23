@@ -21,7 +21,8 @@
 /**
     \class ADM_adts2aac
 */
-#define ADTS_BUFFER_SIZE 16000
+#define ADTS_MAX_AAC_FRAME_SIZE 8192
+#define ADTS_BUFFER_SIZE (2*ADTS_MAX_AAC_FRAME_SIZE)
 
 
 class ADM_AUDIOPARSER6_EXPORT ADM_adts2aac
