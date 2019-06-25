@@ -327,19 +327,18 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
     // This is only an empty Shell
     if(refOnly)
     {
-        uint32_t w,h;
         if(_scratch) // Can we reuse the old scratch memory ?
         {
+            uint32_t w,h;
             _scratch->getWidthHeight(&w,&h);
             if(w!=_imageBuffer->_width || _imageBuffer->_height!=h)
             {
                 delete _scratch;
                 _scratch=NULL;
             }
-        }else
-        {
-            _scratch=new ADMImageRef(_imageBuffer->_width,_imageBuffer->_height);
         }
+        if(!_scratch)
+            _scratch=new ADMImageRef(_imageBuffer->_width,_imageBuffer->_height);
         tmpImage=_scratch;
     }else
     {
