@@ -116,6 +116,7 @@ ADMImage *EditorCache::getFreeImage(void)
     for(int i=0;i<_nbImage;i++)
     {
         _elem[i].pts=ADM_NO_PTS;
+        _elem[i].image->hwDecRefCount();
     }
     writeIndex=readIndex=0;
 }
