@@ -77,7 +77,7 @@ class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
 
   protected:
                         admMutex        lock;
-                        int             failures;
+                        bool            failure;
                         GUI_WindowInfo  info;
                         IDirect3DSurface9 *mySurface;
                         IDirect3DSurface9 *myYV12Surface;
@@ -116,7 +116,7 @@ dxvaRender::dxvaRender()
     videoBuffer=NULL;
     videoWidget=NULL;
     d3dHandle=admD3D::getHandle();
-    failures=0;
+    failure=false;
 }
 /**
     \fn dxvaRender
@@ -572,12 +572,9 @@ bool dxvaRender::displayImage_surface(ADMImage *pic,admDx2Surface *surface)
 {
   // this does not work, both surfaces are coming from different device
 
-#define MAX_FAILURES_DIRECT 10
-
-    if(failures<MAX_FAILURES_DIRECT)
+    if(!failure)
     {
         IDirect3DSurface9 *bBuffer;
-        POINT point={0,0};
         if( ADM_FAILED(D3DCall(IDirect3DDevice9,GetBackBuffer,d3dDevice, 0, 0,
                                D3DBACKBUFFER_TYPE_MONO,
                                &bBuffer)))
@@ -597,18 +594,9 @@ bool dxvaRender::displayImage_surface(ADMImage *pic,admDx2Surface *surface)
                                D3DTEXF_LINEAR)))
         {
             ADM_warning("StretchRec yv12 failed\n");
-            failures++;
-        }else
-        {
-            failures=0;
+            failure=true;
         }
-    }
-    if(failures==MAX_FAILURES_DIRECT)
-    {
-        ADM_warning("Bridging has failed %d times in a row, not trying anymore.\n",MAX_FAILURES_DIRECT);
-        failures++;
-    }
-    if(failures)
+    }else
     {
         // go to indirect route
         if(!pic->hwDownloadFromRef())
