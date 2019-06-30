@@ -68,12 +68,13 @@ mkdir -p ../../opt/lib
 # qt5
 ldd avidemux3_portable | grep libQ | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5/ || fail qt5
 ldd avidemux3_portable | grep icu | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5 || fail icu
-cp ${QT_HOME}/lib/libQt5DBus.so.5 ../lib/qt5 || failQtDbus
-cp ${QT_HOME}/lib/libQt5XcbQpa.so.5  ../lib/qt5 || failQtXcb
+cp ${QT_HOME}/lib/libQt5DBus.so.5 ../lib/qt5 || fail QtDbus
+cp ${QT_HOME}/lib/libQt5XcbQpa.so.5  ../lib/qt5 || fail QtXcb
 
 #cpyRootx86Lib libdbus-1.so.3
 
 cp -Rap -t ../lib/qt5/plugins ${QT_HOME}/plugins/platforms  || fail qtplugins
+cp -Rap -t ../lib/qt5/plugins ${QT_HOME}/plugins/xcbglintegrations || fail qxcbglintegrations
 # Support libs
 for i in libffi.so.6  libsqlite3.so.0 libpng12.so.0 libgobject-2.0.so.0 libgthread-2.0.so.0 
 do

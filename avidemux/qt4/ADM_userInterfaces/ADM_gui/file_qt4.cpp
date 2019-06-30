@@ -10,9 +10,7 @@
 //
 
 
-
-#include <QtCore/QVariant>
-#include <qfiledialog.h>
+#include <QFileDialog>
 
 #include "ADM_default.h"
 #include "ADM_toolkitQt.h"
@@ -28,10 +26,7 @@
 extern QWidget *QuiMainWindows;
 static IScriptEngine *tempEngine;
 
-namespace ADM_QT4_fileSel
-{
-
-QWidget *fileSelGetParent(void)
+static QWidget *fileSelGetParent(void)
 {
     QWidget *parent=qtLastRegisteredDialog();
     if(!parent)
@@ -40,14 +35,14 @@ QWidget *fileSelGetParent(void)
 }
 
 /**
- * \fn GUI_FileSelSelectWriteInternal
+ * \fn fileSelWriteInternal
  */
-static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, char **name)
+static int fileSelWriteInternal(const char *label, char *target, uint32_t max, const char *location, const char *ext)
 {
-    *name = NULL;		
-    QString str ;
+    QString str,outputPath,outputExt=QString("");
     QString fileName,dot=QString(".");
-    QString filterFile=QString(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
+    QString separator = QString("/");
+    QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     bool doFilter = !!(ext && strlen(ext));
     bool isProject=false;
     QFileDialog::Options opts;
@@ -55,6 +50,7 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
 
     if(doFilter)
     {
+        outputExt = dot+QString(ext);
         extSize+=strlen(ext);
         for(int i=0; i < getScriptEngines().size(); i++)
         {
@@ -67,107 +63,109 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
             }
         }
     }
-    //printf("Do filer=%d\n",(int)doFilter);
-    bool lastReadAsTarget=false;
-    prefs->get(FEATURES_USE_LAST_READ_DIR_AS_TARGET,&lastReadAsTarget);
-    std::string lastFolder;
-    if(!lastReadAsTarget)
+
+    if(location)
+        outputPath = QFileInfo(location).path();
+
+    if(!location || !QDir(outputPath).exists())
     {
-        if(!isProject)
-        {
-            admCoreUtils::getLastWriteFolder(lastFolder);
-        }else
-        {
-            admCoreUtils::getLastProjectWriteFolder(lastFolder);
-        }
-        if(!lastFolder.size())
+        bool lastReadAsTarget=false;
+        prefs->get(FEATURES_USE_LAST_READ_DIR_AS_TARGET,&lastReadAsTarget);
+        std::string lastFolder;
+        if(!lastReadAsTarget)
         {
             if(!isProject)
             {
-                admCoreUtils::getLastReadFolder(lastFolder);
+                admCoreUtils::getLastWriteFolder(lastFolder);
             }else
             {
-                admCoreUtils::getLastProjectReadFolder(lastFolder);
+                admCoreUtils::getLastProjectWriteFolder(lastFolder);
             }
-        }
-    }else
-    {
-        admCoreUtils::getLastReadFolder(lastFolder);
-    }
-    if (lastFolder.size())
-    {
-        QString outputPath = QFileInfo(QString::fromUtf8(lastFolder.c_str())).path();
-
-        QString inputBaseName = QString("");
-        std::string lastRead;
-        admCoreUtils::getLastReadFile(lastRead);
-        if (lastRead.size())
-        {
-            inputBaseName = QFileInfo(QString::fromUtf8(lastRead.c_str())).completeBaseName();
-        }
-
-        QString outputExt = QString("");
-        if (doFilter)
-        {
-            outputExt = dot+QString(ext);
-        }
-        QString separator = QString("/");
-        str = outputPath+separator+inputBaseName+outputExt;
-
-        /* LASTDIR may have gone; then use the user's homedir instead */
-        if (!QDir(outputPath).exists())
-        {
-            str = QDir::homePath();
+            if(!lastFolder.size())
+            {
+                if(!isProject)
+                {
+                    admCoreUtils::getLastReadFolder(lastFolder);
+                }else
+                {
+                    admCoreUtils::getLastProjectReadFolder(lastFolder);
+                }
+            }
         }else
         {
-            if(str==QString::fromUtf8(lastRead.c_str()))
-            { // try to avoid name collision when saving in the same directory as the currently loaded video
-                str = outputPath+separator+inputBaseName+QString("_edit")+outputExt;
-            }
+            admCoreUtils::getLastReadFolder(lastFolder);
+        }
+
+        if(lastFolder.size())
+        {
+            outputPath = QFileInfo(QString::fromUtf8(lastFolder.c_str())).path();
+        }
+    }
+
+    /* LASTDIR may have gone; then use the user's homedir instead */
+    if(outputPath.isEmpty() || !QDir(outputPath).exists())
+        outputPath = QDir::homePath();
+
+    QString inputBaseName = QString("");
+    std::string lastRead;
+    admCoreUtils::getLastReadFile(lastRead);
+    if(lastRead.size())
+    {
+        inputBaseName = QFileInfo(QString::fromUtf8(lastRead.c_str())).completeBaseName();
+        str = outputPath+separator+inputBaseName+outputExt;
+
+        if(str==QString::fromUtf8(lastRead.c_str()))
+        { // try to avoid name collision when saving in the same directory as the currently loaded video
+            str = outputPath+separator+inputBaseName+QString("_edit")+outputExt;
         }
     }else
     {
-        str = QDir::homePath();
+        str = QDir::homePath()+separator+QString("out")+dot+outputExt;
     }
 
     if(doFilter)
     {
-        filterFile=QString(ext)+QString(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
+        filterFile=QString(ext)+QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
     }
     fileName = QFileDialog::getSaveFileName(fileSelGetParent(),
-                    label,  // caption
+                    QString::fromUtf8(label),  // caption
                     str,    // folder
                     filterFile,   // filter
                     NULL,QFileDialog::DontConfirmOverwrite);   // selected filter
 
-
-    if (fileName.isNull() ) return;
-
-    *name=(char *)ADM_alloc(  strlen(fileName.toUtf8().constData())+extSize);
-    strcpy(*name,fileName.toUtf8().constData());
+    int len = strlen(fileName.toUtf8().constData());
+    if(!len || len >= max) return 0;
 
     // Check if we need to add an extension....
     if(doFilter)
     {                     
-        if(!strstr(*name,"."))
+        if(!strstr(fileName.toUtf8().constData(),".")) //FIXME
         {
-            strcat(*name,"."); strcat(*name,ext);
-
             fileName=fileName+QString(".")+QString(ext);
+            len+=extSize;
         }
     }
     QFile newFile(fileName);
     if(newFile.exists())
     {
         QFileInfo fileInfo(newFile);
-        QString q=QString(QT_TRANSLATE_NOOP("qfile","Overwrite file "))+fileInfo.fileName()+QString("?");
-        if(!GUI_Question(q.toUtf8().constData()))
+        QString q=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","Overwrite file "))+fileInfo.fileName()+QString("?");
+        // Show the dialog even in silent mode or if the user has disabled alerts.
+        if(!GUI_Question(q.toUtf8().constData(),true))
         {
-            ADM_dezalloc(*name);
-            *name=NULL;
-            return;
+            return 0;
         }
     }
+
+    if(len >= max)
+    {
+        ADM_warning("Path length %d exceeds max %d\n",len,max-1);
+        return 0;
+    }
+
+    strncpy(target,fileName.toUtf8().constData(),len);
+    target[len]='\0';
+
     if(!isProject)
     {
         admCoreUtils::setLastWriteFolder( std::string(fileName.toUtf8().constData()));
@@ -175,37 +173,41 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
     {
         admCoreUtils::setLastProjectWriteFolder( std::string(fileName.toUtf8().constData()));
     }
+    return len;
 }
 
 
 /**
- * \fn GUI_FileSelSelectReadInternal
+ * \fn fileSelReadInternal
  */
-static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, char **name)
+static int fileSelReadInternal(const char *label, char *target, uint32_t max, const char *location, const char *ext)
 {
-        *name = NULL;		
-        QString str ;
-        QString fileName,dot=QString(".");
-        QString filterFile=QString(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
-        bool doFilter = !!(ext && strlen(ext));
-        bool isProject=false;
-        QFileDialog::Options opts;
+    QString str;
+    QString fileName,dot=QString(".");
+    QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
+    bool doFilter = !!(ext && strlen(ext));
+    bool isProject=false;
+    QFileDialog::Options opts;
 
-        if(doFilter)
+    if(doFilter)
+    {
+        for(int i=0; i < getScriptEngines().size(); i++)
         {
-            for(int i=0; i < getScriptEngines().size(); i++)
+            tempEngine = getScriptEngines()[i];
+            std::string dext = tempEngine->defaultFileExtension();
+            if(!dext.empty() && dext == std::string(ext))
             {
-                tempEngine = getScriptEngines()[i];
-                std::string dext = tempEngine->defaultFileExtension();
-                if(!dext.empty() && dext == std::string(ext))
-                {
-                    isProject=true;
-                    break;
-                }
+                isProject=true;
+                break;
             }
         }
+    }
 
-        //printf("Do filer=%d\n",(int)doFilter);
+    if(location)
+        str = QFileInfo(location).path();
+
+    if(!location || !QDir(str).exists())
+    {
         std::string lastFolder;
         if(!isProject)
         {
@@ -217,46 +219,71 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
 
         if (lastFolder.size())
         {
-                str = QFileInfo(QString::fromUtf8(lastFolder.c_str())).path();
-                /* LASTDIR may have gone; then use the user's homedir instead */
-                if (!QDir(str).exists())
-                    str = QDir::homePath();
+            str = QFileInfo(QString::fromUtf8(lastFolder.c_str())).path();
+            /* LASTDIR may have gone; then use the user's homedir instead */
+            if (!QDir(str).exists())
+                str = QDir::homePath();
         }else
         {
             str = QDir::homePath();
         }
+    }
 
-        if(doFilter)
-        {
-            filterFile=QString(ext)+QString(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
-        }
-        fileName = QFileDialog::getOpenFileName(fileSelGetParent(),
-                                label,  // caption
+    if(doFilter)
+    {
+        filterFile=QString(ext)+QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
+    }
+    fileName = QFileDialog::getOpenFileName(fileSelGetParent(),
+                                QString::fromUtf8(label),  // caption
                                 str,    // folder
                                 filterFile,   // filter
                                 NULL,   // selected filter
                                 opts);
 
-        if (fileName.isNull() ) return;
+    int len = strlen(fileName.toUtf8().constData());
+    if(!len || len >= max) return 0;
 
-        *name=ADM_strdup(fileName.toUtf8().constData());
-        if(!isProject)
-        {
-            admCoreUtils::setLastReadFolder(std::string(fileName.toUtf8().constData()));
-        }else
-        {
-            admCoreUtils::setLastProjectReadFolder(std::string(fileName.toUtf8().constData()));
-        }
+    strncpy(target,fileName.toUtf8().constData(),len);
+    target[len]='\0';
+
+    if(!isProject)
+    {
+        admCoreUtils::setLastReadFolder(std::string(fileName.toUtf8().constData()));
+    }else
+    {
+        admCoreUtils::setLastProjectReadFolder(std::string(fileName.toUtf8().constData()));
+    }
+    return len;
 }        
 
+/*****************************************************/
+
+namespace ADM_QT4_fileSel
+{
+
+#if defined(__APPLE__)
+ #define MAX_LEN 1024
+#else
+ #define MAX_LEN 4096
+#endif
 void GUI_FileSelRead(const char *label, char **name)
 {
-        GUI_FileSelSelectReadInternal(label, "",name);
+    char *fn=(char *)ADM_alloc(MAX_LEN);
+    if(fileSelReadInternal(label,fn,MAX_LEN,NULL,NULL))
+        *name=ADM_strdup(fn);
+    else
+        *name=NULL;
+    ADM_dealloc(fn);
 }
 
 void GUI_FileSelWrite(const char *label, char **name)
 {
-        GUI_FileSelSelectWriteInternal(label,"",name);
+    char *fn=(char *)ADM_alloc(MAX_LEN);
+    if(fileSelWriteInternal(label,fn,MAX_LEN,NULL,NULL))
+        *name=ADM_strdup(fn);
+    else
+        *name=NULL;
+    ADM_dealloc(fn);
 }
 
 void GUI_FileSelRead(const char *label, SELFILE_CB cb)
@@ -296,22 +323,14 @@ void GUI_FileSelWrite(const char *label, SELFILE_CB cb)
           @param target where to store result
           @param max Max buffer size in bytes
           @param source Original value
+          @param extension Filter for the view
           @return 1 on success, 0 on failure
 */
-uint8_t FileSel_SelectWrite(const char *title, char *target, uint32_t max, const char *source)
+uint8_t FileSel_SelectWrite(const char *title, char *target, uint32_t max, const char *source, const char *extension)
 {
-        QString fileName;
-        QFileDialog::Options options = 0;
-
-        fileName=QFileDialog::getSaveFileName(fileSelGetParent(), title, source, NULL, NULL, options);
-
-        if (!fileName.isNull())
-        {
-            strncpy(target, fileName.toUtf8().constData(), max);
-            target[max-1]=0;
-            return 1;
-        }
-        return 0;
+    if(fileSelWriteInternal(title,target,max,source,extension))
+        return 1;
+    return 0;
 }
 
 /**
@@ -321,22 +340,14 @@ uint8_t FileSel_SelectWrite(const char *title, char *target, uint32_t max, const
           @param target where to store result
           @param max Max buffer size in bytes
           @param source Original value
+          @param extension Filter for the view
           @return 1 on success, 0 on failure
 */
-uint8_t FileSel_SelectRead(const char *title, char *target, uint32_t max, const char *source)
+uint8_t FileSel_SelectRead(const char *title, char *target, uint32_t max, const char *source, const char *extension)
 {
-        QString fileName;
-        QFileDialog::Options options = 0;
-
-        fileName = QFileDialog::getOpenFileName(fileSelGetParent(), title, source, NULL, NULL, options);
-
-        if (!fileName.isNull())
-        {
-                strncpy(target, fileName.toUtf8().constData(), max);
-                target[max-1]=0;
-                return 1;
-        }
-        return 0;
+    if(fileSelReadInternal(title,target,max,source,extension))
+        return 1;
+    return 0;
 }
 
 /**
@@ -348,7 +359,7 @@ uint8_t FileSel_SelectRead(const char *title, char *target, uint32_t max, const 
           @param source Original value
           @return 1 on success, 0 on failure
 */
-uint8_t FileSel_SelectDir(const char *title, char *target, uint32_t max, const char *source)
+uint8_t FileSel_SelectDir(const char *title, char *target, uint32_t max, const char *source, const char *extension)
 {
         QString fileName;
         QFileDialog::Options options = QFileDialog::ShowDirsOnly;
@@ -367,9 +378,11 @@ uint8_t FileSel_SelectDir(const char *title, char *target, uint32_t max, const c
 }
 void GUI_FileSelWriteExtension(const char *label, const char *extension,SELFILE_CB cb)
 {
-    char *name;
-    //printf("Extension is : %s\n",extension);
-    GUI_FileSelSelectWriteInternal(label, extension, &name);
+    char *name=NULL;
+    char *fn=(char *)ADM_alloc(MAX_LEN);
+    if(fileSelWriteInternal(label,fn,MAX_LEN,NULL,extension))
+        name=ADM_strdup(fn);
+    ADM_dealloc(fn);
     if(name)
     {
         cb(name);
@@ -378,9 +391,11 @@ void GUI_FileSelWriteExtension(const char *label, const char *extension,SELFILE_
 }
 void GUI_FileSelReadExtension(const char *label, const char *extension,SELFILE_CB cb)
 {
-    char *name;
-    //printf("Extension is : %s\n",extension);
-    GUI_FileSelSelectReadInternal(label, extension, &name);
+    char *name=NULL;
+    char *fn=(char *)ADM_alloc(MAX_LEN);
+    if(fileSelReadInternal(label,fn,MAX_LEN,NULL,extension))
+        name=ADM_strdup(fn);
+    ADM_dealloc(fn);
     if(name)
     {
         cb(name);

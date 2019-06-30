@@ -332,8 +332,7 @@ bool configure (CONFcouple **setup)
 		       bitrateM);
   diaElemUInteger quality (PX (quality), QT_TRANSLATE_NOOP("lame","_Quality:"), 0, 9);
   bool reservoir32=config.disableBitReservoir;
-  diaElemToggle reservoir (&reservoir32,
-			   QT_TRANSLATE_NOOP("lame","_Disable reservoir:"));
+  diaElemToggle reservoir (&reservoir32, QT_TRANSLATE_NOOP("lame","_Disable reservoir"));
 
   diaElem *elems[] = { &Mode, &bitrate,&quality, &reservoir };
 

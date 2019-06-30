@@ -51,7 +51,7 @@ bool ADM_DCAGetInfo(uint8_t *buf, uint32_t len,ADM_DCA_INFO *info,uint32_t *sync
 {
 uint8_t *end=buf+len-4-DTS_HEADER_SIZE;
 uint8_t *cur=buf-1;
-uint32_t size,len1,len2,flags,sr,framesize=0,index,nbBlocks;
+uint32_t len1,len2,flags,framesize=0,index,nbBlocks;
              // Assume 16 bits big endian
             // Search for 7F FE 80 01 as sync start
             *syncoff=0;

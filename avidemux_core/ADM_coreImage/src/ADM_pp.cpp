@@ -73,6 +73,7 @@ char stringMode[60];
 	if(postProcType&1) strcat(stringMode,"ha:a:128:7,");
 	if(postProcType&2) strcat(stringMode,"va:a:128:7,");
 	if(postProcType&4) strcat(stringMode,"dr:a,");
+	if(postProcType&8) strcat(stringMode,"fd,");
 	if(forcedQuant)  
 		{
 			char stringFQ[60];
@@ -189,7 +190,7 @@ uint32_t border;
         {
               
                 uint8_t *src,*dst;
-                uint32_t stridein,strideout,right;
+                uint32_t right;
 
                 right=ww;
                 // Luma

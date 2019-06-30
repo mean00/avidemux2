@@ -76,7 +76,7 @@ MACRO (registerFFmpeg sourceDir binaryDir installed)
 		add_custom_target(libavcodec DEPENDS "${binaryDir}/libavcodec/${LIBAVCODEC_LIB}")
 		add_custom_target(libavformat DEPENDS "${binaryDir}/libavformat/${LIBAVFORMAT_LIB}")
 		add_custom_target(libavutil DEPENDS "${binaryDir}/libavutil/${LIBAVUTIL_LIB}")
-		add_custom_target(libpostproc DEPENDS "${binaryDir}/libpostproc/${LIBAVPOSTPROC_LIB}")
+		add_custom_target(libpostproc DEPENDS "${binaryDir}/libpostproc/${LIBPOSTPROC_LIB}")
 		add_custom_target(libswscale DEPENDS "${binaryDir}/libswscale/${LIBSWSCALE_LIB}")
 		add_custom_target(ffmpeg DEPENDS "${binaryDir}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}")
 

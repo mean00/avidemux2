@@ -25,7 +25,7 @@ extern "C" {
 #include "libavutil/pixdesc.h"
 #include "libavutil/hwcontext_dxva2.h"
 #define CONFIG_DXVA2 1
-#include "libavcodec/dxva2_internal.h"
+//#include "libavcodec/dxva2_internal.h"
 #include "libavcodec/dxva2.h"
 }
 
@@ -37,11 +37,10 @@ extern "C" {
 #include "prefs.h"
 #include "ADM_coreDxva2.h"
 #include "../private_inc/ADM_codecDxva2.h"
-#include "ADM_threads.h"
 #include "ADM_vidMisc.h"
-#include "prefs.h"
 
 static bool         dxva2Working=false;
+static int          totalSurfaces=0;
 static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
 static void ADM_DXVA2releaseBuffer(void *s, uint8_t *d);
 static admMutex     imageMutex;
@@ -194,9 +193,13 @@ bool dxva2Cleanup(void)
 }
 
 
-
-
-
+static const char *humanReadable(int64_t version)
+{
+    char str[49];
+    snprintf(str,48,"%u.%u.%u.%u", (version>>48) & 0xFFFF, (version>>32) & 0xFFFF, (version>>16) & 0xFFFF, version & 0xFFFF);
+    str[48]=0;
+    return ADM_strdup(str);
+}
 
 extern "C"
 {
@@ -204,10 +207,12 @@ extern "C"
 static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt)
 {
     int i;
+    bool ignore_version, ignore_profile;
     ADM_info("[DXVA2]: GetFormat\n");
     AVCodecID id=AV_CODEC_ID_NONE;
     AVPixelFormat c;
     AVPixelFormat outPix;
+    ignore_version=ignore_profile=false;
     for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
     {
         c=fmt[i];
@@ -219,25 +224,39 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
 
         if(c!=AV_PIX_FMT_DXVA2_VLD) continue;
 #define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_DXVA2_VLD;id=avctx->codec_id;break;
-
+#define INTEL_MIN_DRIVER_VERSION_FOR_HEVC 7036960323672538 // 25.20.100.6618
 
         switch(avctx->codec_id)  //AV_CODEC_ID_H265
         {
             FMT_V_CHECK(H264,H264)
             case AV_CODEC_ID_H265:
-              {
-                    admD3D::ADM_vendorID vid=admD3D::getVendorID();
-                    if(vid==admD3D::VENDOR_INTEL)
+            {
+                admD3D::ADM_vendorID vid=admD3D::getVendorID();
+                int64_t drv=admD3D::getDriverVersion();
+                if(vid==admD3D::VENDOR_INTEL && drv<INTEL_MIN_DRIVER_VERSION_FOR_HEVC)
+                {
+                    prefs->get(FEATURES_DXVA2_OVERRIDE_BLACKLIST_VERSION,&ignore_version);
+                    const char *minversion=humanReadable(INTEL_MIN_DRIVER_VERSION_FOR_HEVC);
+                    if(!ignore_version)
                     {
-                        ADM_warning("Intel blacklisted for H265 decoding \n");
+                        ADM_warning("Intel driver version %s < %s is blacklisted for HEVC decoding.\n",humanReadable(drv),minversion);
+                        continue;
                     }
-                    else
+                    ADM_warning("Overriding Intel driver version blacklist for %s\n",humanReadable(drv));
+                }else if(vid==admD3D::VENDOR_INTEL && dxvaBitDepthFromContext(avctx)==10)
+                {
+                    prefs->get(FEATURES_DXVA2_OVERRIDE_BLACKLIST_PROFILE,&ignore_profile);
+                    if(!ignore_profile)
                     {
-                      outPix=AV_PIX_FMT_DXVA2_VLD;
-                      id=avctx->codec_id;
+                        ADM_warning("Intel is blacklisted for 10bit HEVC.\n");
+                        continue;
                     }
-              }
-              break;
+                    ADM_warning("Overriding blacklist for 10bit HEVC on Intel.\n");
+                }
+                outPix=AV_PIX_FMT_DXVA2_VLD;
+                id=avctx->codec_id;
+            }
+            break;
             //FMT_V_CHECK(H265,H265)
             default:
                 ADM_info("DXVA2 No hw support for format %d\n",avctx->codec_id);
@@ -251,6 +270,7 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of DXVA2 decoder
+#if 0 // The lavc functions we rely on in ADM_acceleratedDecoderFF::parseHwAccel are no more
     const AVHWAccel *accel=ADM_acceleratedDecoderFF::parseHwAccel(outPix,id,AV_PIX_FMT_DXVA2_VLD);
     if(accel)
     {
@@ -259,6 +279,8 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         return AV_PIX_FMT_DXVA2_VLD;
     }
     return AV_PIX_FMT_NONE;
+#endif
+    return AV_PIX_FMT_DXVA2_VLD;
 }
 }
 /**
@@ -305,7 +327,14 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     memset(dx_context,0,sizeof(*dx_context)); // dangerous...
 
     // Allocate temp buffer
-    num_surfaces=4;
+    uint32_t cacheSize;
+    if(!prefs->get(FEATURES_CACHE_SIZE,&cacheSize))
+        cacheSize = EDITOR_CACHE_MAX_SIZE;
+    if(cacheSize > EDITOR_CACHE_MAX_SIZE) cacheSize = EDITOR_CACHE_MAX_SIZE;
+    if(cacheSize < EDITOR_CACHE_MIN_SIZE) cacheSize = EDITOR_CACHE_MIN_SIZE;
+    num_surfaces = cacheSize;
+    if(!totalSurfaces)
+        num_surfaces+=ADM_THREAD_QUEUE_SIZE;
 
     switch(avctx->codec_id)
     {
@@ -364,8 +393,9 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     dx_context->surface_count   = num_surfaces;
     dx_context->cfg             = admDxva2::getDecoderConfig(avctx->codec_id,bits);
 
-    ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,this,parent,avctx);
     alive=true;
+    totalSurfaces+=num_surfaces;
+    ADM_info("Successfully setup DXVA2 hw accel (%d surface created, %d total, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,totalSurfaces,this,parent,avctx);
 }
 
 /**
@@ -376,6 +406,7 @@ decoderFFDXVA2::~decoderFFDXVA2()
     if(alive)
     {
         admDxva2::destroyD3DSurface(num_surfaces,surfaces);
+        totalSurfaces-=num_surfaces;
         // TODO : flush pool
     }
     if(_context->hwaccel_context)
@@ -411,8 +442,9 @@ bool decoderFFDXVA2::markSurfaceUnused(admDx2Surface *surface)
 {
 
    imageMutex.lock();
-   surface->refCount--;
-   aprintf("Surface %x, Ref count is now %d\n",surface->surface,surface->refCount);
+   if(surface->refCount>0)
+       surface->refCount--;
+   aprintf("Surface 0x%p, Ref count is now %d\n",surface->surface,surface->refCount);
    if(!surface->refCount)
    {
         surface->removeRef();
@@ -479,8 +511,6 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
 
     int ret = avcodec_receive_frame(_context, frame);
 
-    if(!ret)
-        _parent->setEndOfStream(false);
     if(!_parent->decodeErrorHandler(ret))
         return false;
 

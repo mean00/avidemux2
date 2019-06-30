@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Package>
+    <DisplayName>Avidemux @ADM_FLAVOR@</DisplayName>
+    <Description>Main files</Description>
+    <Version>@ADM_VERSION@</Version>
+    <ReleaseDate>2014-12-19</ReleaseDate>
+    <Default>true</Default>
+    <Script>installscript.js</Script>
+    <UserInterfaces>
+		<UserInterface>targetwidget.ui</UserInterface>
+    </UserInterfaces>
+	<Licenses>
+        <License name="Gnu Public License" file="license.txt" />
+    </Licenses>
+	<RequiresAdminRights>true</RequiresAdminRights>
+</Package>

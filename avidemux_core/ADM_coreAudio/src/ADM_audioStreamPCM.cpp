@@ -71,4 +71,23 @@ uint64_t thisDts=0;
     advanceDtsBySample(*nbSample);
     return 1;
 }
+/**
+        \fn getPacket
+*/
+uint8_t ADM_audioStreamFloatPCM::getPacket(uint8_t *obuffer,uint32_t *osize, 
+                                      uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)
+{
+uint64_t thisDts=0;
+    if(!access->getPacket(obuffer,osize,sizeMax,&thisDts)) return 0;
+
+    int  sampleSize=4;    
+    uint32_t bytesPerSample=wavHeader.channels*sampleSize; 
+    *nbSample=(uint32_t)(*osize/bytesPerSample);
+    if(thisDts!=ADM_NO_PTS) 
+            setDts(thisDts);
+    *dts=lastDts;
+    advanceDtsBySample(*nbSample);
+    return 1;
+}
+
 // EOF

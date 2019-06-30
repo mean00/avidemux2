@@ -34,6 +34,7 @@ public:
     ADM_Audiocodec   *codec;
     WAVHeader        wavheader;
     bool             vbr;
+    bool             isbr;
     uint64_t         duration;
     uint64_t         size;
 
@@ -44,6 +45,7 @@ public:
                 codec=NULL;
                 duration=size=0;
                 vbr=false;
+                isbr=false;
                 memset(&wavheader,0,sizeof(wavheader));
         }
     ~ADM_audioStreamTrack();

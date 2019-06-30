@@ -264,9 +264,8 @@ void HandleAction (Action action)
                     std::string f=LAST_SESSION_FILE;
                     if(ADM_fileExist(f.c_str()))
                     {
-                        int err=remove(f.c_str());
-                        if(err)
-                            ADM_warning("Error %d deleting last editing state %s\n",err,f.c_str());
+                        if(!ADM_eraseFile(f.c_str()))
+                            ADM_warning("Could not delete last editing state %s\n",f.c_str());
                     }
                 }
                 return;
@@ -1087,6 +1086,7 @@ void cleanUp (void)
  * @return 
  */
 #define DEFAULT_SETTINGS_FILE ADM_getBaseDir()+std::string("defaultSettings.py")
+#define CRASH_RECOVERY_FILE ADM_getBaseDir()+std::string("crash.py")
 bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode)
 {
     bool ret;
@@ -1104,7 +1104,9 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
         video_body->setProjectName(longname);
     }
 
-    if (std::string(longname) != DEFAULT_SETTINGS_FILE && std::string(longname) != LAST_SESSION_FILE)
+    if (std::string(longname) != DEFAULT_SETTINGS_FILE &&
+        std::string(longname) != LAST_SESSION_FILE &&
+        std::string(longname) != CRASH_RECOVERY_FILE)
     {
         prefs->set_lastprojectfile(longname);
         UI_updateRecentProjectMenu();
@@ -1189,8 +1191,9 @@ void A_saveDefaultSettings()
     delete writer;
     
     std::string script = stream.str();
-    ADM_info("Generated settings=%s\n",script.c_str());
-    
+    ADM_info("Generated settings:\n");
+    printf("%s\n",script.c_str());
+
     FILE *file = ADM_fopen(fileName.c_str(), "wt");
     ADM_fwrite(script.c_str(), script.length(), 1, file);
     ADM_fclose(file);
@@ -1226,10 +1229,11 @@ bool A_saveSession(void)
     {
         std::string tmp=ADM_getBaseDir()+std::string("lastEdit.tmp");
         A_saveScript(engine, tmp.c_str());
-        if(remove(where.c_str()))
+        if(!ADM_eraseFile(where.c_str()))
         {
             ADM_warning("Could not delete the old saved session (%s)\n",where.c_str());
-            remove(tmp.c_str());
+            if(!ADM_eraseFile(tmp.c_str()))
+                ADM_warning("Could not delete temporary file (%s)\n",tmp.c_str());
             return false;
         }
         return !!rename(tmp.c_str(), where.c_str());
@@ -1255,7 +1259,8 @@ bool A_checkSavedSession(bool load)
             ADM_info("Restoring the last editing state from %s\n",where.c_str());
             r=A_parseScript(engine,where.c_str());
             A_Resync();
-            remove(where.c_str());
+            if(!ADM_eraseFile(where.c_str()))
+                ADM_warning("Could not delete %s\n",where.c_str());
         }
     }
     return r;

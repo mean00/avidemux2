@@ -13,6 +13,10 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+
+#ifdef _MSC_VER
+#define __STDC_LIMIT_MACROS
+#endif
 #include <string>
 typedef void ADM_updateComplete(int  version, const std::string &releaseDate,const std::string &downloadlink);
 

@@ -38,7 +38,7 @@ uint32_t trackId,ccType;
 uint32_t audioCount[9]={0,0,0,0, 0,0,0,0,0};
 uint32_t forward[9];
 uint32_t backward[9];
-int64_t startOfData;
+int64_t startOfData=0;
   
 	printf("Trying avi type 1 index\n");
 	if(!_regularIndex.offset)
@@ -123,14 +123,12 @@ int64_t startOfData;
         }
 
         uint32_t audiocount=0,videocount=0;
-        uint32_t audiototal=0;
         uint32_t audioSize=0;
         odmlIndex *track;
         int     Achunk;
         count=_regularIndex.size >> 4;
         while(count)
 	{
-_again:
                 fcc=len=0;
                 fcc=read32();
                 flags=read32();

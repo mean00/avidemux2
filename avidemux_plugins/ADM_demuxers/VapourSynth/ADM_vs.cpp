@@ -16,13 +16,8 @@
 
 #include "ADM_default.h"
 #include "fourcc.h"
-#include "DIA_coreToolkit.h"
-#include "ADM_videoInfoExtractor.h"
-
 #include "ADM_vs.h"
-
-#include <math.h>
-
+#include "ADM_vsInternal.h"
 static const VSAPI *vsapi = NULL;
 #if 0
     #define aprintf printf
@@ -30,7 +25,7 @@ static const VSAPI *vsapi = NULL;
     #define aprintf(...) {}
 #endif
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
-
+extern vsDynaLoader dynaLoader;
 /**
       \fn open
       \brief open the flv file, gather infos and build index(es).
@@ -39,44 +34,43 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 uint8_t vsHeader::open(const char *name)
 {
     ADM_info("Opening %s as VapourSynth file\n",name);
-    if (!vsscript_init()) 
+    inited+=!!dynaLoader.init();
+    if(!inited)
     {
-          ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
-          return false;
+        ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
+        return false;
     }
     if(!vsapi)
     {
-        vsapi = vsscript_getVSApi();
+        vsapi = dynaLoader.getVSApi();
         if(!vsapi)
         {
             ADM_warning("Cannot get vsAPI entry point\n");
-            vsscript_finalize();
+            close();
             return 0;
         }
-        
     }
-     ADM_info("VapourSynth init ok, opening file..\n");
-    if (vsscript_evaluateFile(&_script, name, 0)) 
+    ADM_info("VapourSynth init ok, opening file..\n");
+    if (dynaLoader.evaluateFile(&_script, name, 0)) 
     {
-        ADM_warning("Evaluate script failed <%s>\n", vsscript_getError(_script));
-        abort();
+        ADM_warning("Evaluate script failed <%s>\n", dynaLoader.getError(_script));
+        close();
         return 0;
     }
-    _node = vsscript_getOutput(_script, 0);
+    _node = dynaLoader.getOutput(_script, 0);
     if (!_node) 
     {
-       ADM_warning("vsscript_getOutputNode failed\n");
-       abort();
-       return 0;
+        ADM_warning("vsscript_getOutputNode failed\n");
+        close();
+        return 0;
     }  
 
     const VSVideoInfo *vi = vsapi->getVideoInfo(_node);
     if(!vi)
     {
-          ADM_warning("Cannot get information on node\n");
-          vsscript_freeScript(_script);
-          vsscript_finalize();
-          return 0;
+        ADM_warning("Cannot get information on node\n");
+        close();
+        return 0;
     }
     ADM_info("Format    : %s\n",vi->format->name);
     ADM_info("FrameRate : %d / %d\n",vi->fpsNum,vi->fpsDen);
@@ -106,10 +100,11 @@ uint8_t vsHeader::open(const char *name)
     _videostream.dwStart= 0;
     _video_bih.biHeight=_mainaviheader.dwHeight=vi->height  ;
     _video_bih.biWidth=_mainaviheader.dwWidth=vi->width;
+    _isvideopresent=true;
     _isaudiopresent=false;
     _nbFrames=vi->numFrames;
     _videostream.dwLength=_mainaviheader.dwTotalFrames=_nbFrames;
-    _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"YV12");
+    _videostream.fccType=_videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"YV12");
     return true;
 }
 /**
@@ -118,7 +113,10 @@ uint8_t vsHeader::open(const char *name)
 */
 uint64_t vsHeader::getVideoDuration(void)
 {
-       return _mainaviheader.dwMicroSecPerFrame*(1+_nbFrames);
+    uint64_t d=_mainaviheader.dwMicroSecPerFrame;
+    if(_nbFrames)
+        d+=getTimeForFrame(_nbFrames-1);
+    return d;
 }
 /**
  * 
@@ -128,11 +126,17 @@ uint64_t vsHeader::getVideoDuration(void)
  */
 uint8_t  vsHeader::setFlag(uint32_t frame,uint32_t flags)
 {
-    return 1;
+    return 0;
 }
 uint32_t vsHeader::getFlags(uint32_t frame,uint32_t *flags)
 {
-    return AVI_KEY_FRAME;
+    *flags=AVI_KEY_FRAME;
+    if(frame>=_mainaviheader.dwTotalFrames)
+    {
+        ADM_warning("Frame out of bounds: %u / %u\n",frame,_mainaviheader.dwTotalFrames);
+        return 0;
+    }
+    return 1;
 }
 
 /**
@@ -148,10 +152,10 @@ WAVHeader *vsHeader::getAudioInfo(uint32_t i )
  * @param frame
  * @return 
  */
- uint64_t vsHeader::getTime(uint32_t frame)
- {
-     return frame* _mainaviheader.dwMicroSecPerFrame;
- }
+uint64_t vsHeader::getTime(uint32_t frame)
+{
+    return getTimeForFrame(frame);
+}
 /**
    \fn getAudioStream
 */
@@ -176,13 +180,23 @@ uint8_t   vsHeader::getNbAudioStreams(void)
 
 uint8_t vsHeader::close(void)
 {
+    if(vsapi && _node)
+    {
+        vsapi->freeNode(_node);
+        _node=NULL;
+    }
     if(_script)
     {
-          vsscript_freeScript(_script);
-          vsscript_finalize();
+        dynaLoader.freeScript(_script);
+        _script=NULL;
     }
-    // _node ?
-   return 1;
+    while(inited)
+    {
+        inited--;
+        dynaLoader.finalize();
+    }
+    vsapi=NULL;
+    return 1;
 }
 /**
     \fn vsHeader
@@ -191,6 +205,7 @@ uint8_t vsHeader::close(void)
 
  vsHeader::vsHeader( void ) : vidHeader()
 {
+    inited=0;
     _script=NULL;
     _node = NULL;
 }
@@ -211,12 +226,11 @@ uint8_t vsHeader::close(void)
 
 uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
+    if(frame>=_nbFrames) return false;
+
     char errMsg[1024];
     const int mapp[3]={0,2,1};
-    int error = 0;
-    
-    if(frame>=_nbFrames) return false;
-    
+
     const VSFrameRef *vsframe = vsapi->getFrame(frame, _node, errMsg, sizeof(errMsg));
     if (!vsframe) 
     { 
@@ -228,7 +242,6 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     img->demuxerPts=getTimeForFrame(frame);
     img->demuxerDts=img->demuxerPts;
     img->demuxerFrameNo=frame; // not sure
-    
     uint8_t *target=img->data;
 #if 0    
     const VSVideoInfo *vi = vsapi->getVideoInfo(_node);
@@ -237,6 +250,7 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
         ADM_error("Error getting getVideoInfo for frame %d\n",frame);
         return false;
     }
+#endif
     for (int plane = 0; plane < 3; plane++) 
     {
         int p=mapp[plane];
@@ -263,7 +277,6 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              readPtr += stride;
          }
     }
-#endif
     vsapi->freeFrame(vsframe);
     return true;
 }
@@ -303,6 +316,7 @@ uint64_t vsHeader::getTimeForFrame(int frame)
     double d=1000000.;
     d*=(double)_videostream.dwScale;
     d/=(double)_videostream.dwRate;
+    d*=frame;
     return (uint64_t)d;
 }
 /**

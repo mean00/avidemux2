@@ -9,22 +9,23 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "ADM_coreSubtitles_export.h"
 typedef std::vector<std::string> ListOfText;
 /**
  * \class subtitleTextEntry
  */
 class subtitleTextEntry
 {
-public:    
+public:
     uint64_t    start;
     uint64_t    stop;
     ListOfText  texts;
 };
 typedef std::vector<subtitleTextEntry> ListOfSubtitleLines;
 /**
- *      \class ADM_subtitle
+ * \class ADM_subtitle
  */
-class ADM_subtitle
+class ADM_CORESUBTITLES6_EXPORT ADM_subtitle
 {
     typedef enum
     {
@@ -35,12 +36,11 @@ class ADM_subtitle
 protected:
     ADM_SUBTITLE_TYPE    _type;
     ListOfSubtitleLines  _list;
-public:    
-                ADM_subtitle();
-     virtual   ~ADM_subtitle();
-     bool      load(const char *subtitleFile);
-     bool      dump(void);
-     bool      saveAsSSA(const char *out);
-public:    
-    bool       srt2ssa();
+public:
+            ADM_subtitle();
+    virtual ~ADM_subtitle();
+    bool    load(const char *subtitleFile);
+    bool    dump(void);
+    bool    saveAsSSA(const char *out, int width=0, int height=0);
+    bool    srt2ssa();
 };

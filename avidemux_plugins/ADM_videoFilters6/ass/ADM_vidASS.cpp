@@ -31,6 +31,15 @@ extern "C"
 #endif
 }
 
+typedef enum
+{
+    SQUARE_PIXELS,
+    STANDARD,
+    WIDE,
+    UNI,
+    CINEMA
+}SUBASS_DAR;
+
 /**
     \class subAss
 */
@@ -65,7 +74,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   subAss,   // Class
                         VF_SUBTITLE,            // Category
                         "ssa",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("ass","SSA/ASS/SRT"),            // Display name
-                        QT_TRANSLATE_NOOP("ass","Hardcode ass/ssa/srt subtitles using libass.") // Description
+                        QT_TRANSLATE_NOOP("ass","Hardcode ASS/SSA/SRT subtitles using libass.") // Description
                     );
 
 
@@ -115,6 +124,7 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
         param.subtitleFile = std::string("");
         param.fontDirectory = std::string(DEFAULT_FONT_DIR);
         param.extractEmbeddedFonts = 1;
+        param.displayAspectRatio = 0;
     }
     src = new ADMImageDefault(in->getInfo()->width, in->getInfo()->height);
 
@@ -127,7 +137,7 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
     {
         if (!this->setup()) 
         {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Format ?"), QT_TRANSLATE_NOOP("ass","Are you sure this is an ass file ?"));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Format ?"), QT_TRANSLATE_NOOP("ass","Are you sure this is an ASS/SSA file ?"));
         }
     }
 }
@@ -167,41 +177,43 @@ bool subAss::configure(void)
 
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
-    char newName[2*1024]; // should be a dynamic size..
-    diaElemFile       file(0,param.subtitleFile,QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
+    diaElemFile       file(0,param.subtitleFile,QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle File"));
     diaElemFloat      dSpacing(&spacing,QT_TRANSLATE_NOOP("ass","_Line spacing:"),0.10,10.0);
     diaElemFloat      dScale(&scale,QT_TRANSLATE_NOOP("ass","_Font scale:"),0.10,10.0);
     diaElemUInteger   dTop(PX(topMargin),QT_TRANSLATE_NOOP("ass","_Top margin:"),0,200);
-    diaElemUInteger   dBottom(PX(bottomMargin),QT_TRANSLATE_NOOP("ass","Botto_m margin"),0,200);
+    diaElemUInteger   dBottom(PX(bottomMargin),QT_TRANSLATE_NOOP("ass","Botto_m margin:"),0,200);
+    diaMenuEntry      aspect[]={{SQUARE_PIXELS,QT_TRANSLATE_NOOP("ass","Do not adjust")},{STANDARD,"4:3"},{WIDE,"16:9"},{UNI,"18:9"},{CINEMA,"64:27"}};
+    diaElemMenu       menuAspect(PX(displayAspectRatio),QT_TRANSLATE_NOOP("ass","Adjust for display aspect ratio:"),5,aspect,"");
 
-       diaElem *elems[5]={&file,&dSpacing,&dScale,&dTop,&dBottom};
+    diaElem *elems[6]={&file,&dSpacing,&dScale,&dTop,&dBottom,&menuAspect};
 again:
-   if(!diaFactoryRun(QT_TRANSLATE_NOOP("ass","ASS"),5,elems))
-       return false;
+    if(!diaFactoryRun(QT_TRANSLATE_NOOP("ass","ASS"),6,elems))
+        return false;
    
     const char *p=param.subtitleFile.c_str();
     int l=strlen(p);
     if(l>3 && !strcasecmp(p+l-4,".srt"))
     {
-        if(!GUI_Question(QT_TRANSLATE_NOOP("ass","This is a srt file. Convert to SSA ?")))
+        if(!GUI_Question(QT_TRANSLATE_NOOP("ass","This is a SRT file. Convert to SSA ?")))
         {
             goto again;
         }
         ADM_subtitle sub;
         if(!sub.load(p))
         {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot load this srt file."));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot load this SRT file."));
             goto again;
         }
         if(false==sub.srt2ssa())
         {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot convert to ssa."));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot convert to SSA."));
             goto again;               
         }
 
+        char *newName=(char *)admAlloca(l+1);
         strcpy(newName,p);
         strcpy(newName+l-4,".ssa");
-        if(false==sub.saveAsSSA(newName))
+        if(false==sub.saveAsSSA(newName, previousFilter->getInfo()->width, previousFilter->getInfo()->height))
         {
             GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot save converted file."));
             goto again;                              
@@ -251,6 +263,7 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
 
         // update outpur image size
         memcpy(&info,previousFilter->getInfo(),sizeof(info));
+        uint32_t origHeight=info.height;
         info.height += param.topMargin + param.bottomMargin;
         
         bool warn;
@@ -276,16 +289,41 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
         ass_set_margins(_ass_rend, param.topMargin, param.bottomMargin, 0, 0);
         ass_set_use_margins(_ass_rend, use_margins);
         ass_set_font_scale(_ass_rend, param.font_scale);
+        ass_set_line_spacing(_ass_rend, param.line_spacing);
 //ASS_Renderer *priv, const char *default_font, const char *default_family, int fc, const char *config,                   int update);
         int fc=0;
 #ifdef USE_FONTCONFIG
         fc=1;
 #endif
         ass_set_fonts(_ass_rend, NULL, "Sans",fc,NULL,true);
-        //~ ass_set_aspect_ratio(_ass_rend, ((double)_info.width) / ((double)_info.height));
+        double par=1.;
+        if(param.displayAspectRatio)
+        {
+            par = (double)info.width / (double)origHeight;
+            par *= (double)info.height / (double)origHeight;
+            switch(param.displayAspectRatio)
+            {
+                case 1:
+                    par*=3.;
+                    par/=4.;
+                    break;
+                case 2:
+                    par*=9.;
+                    par/=16.;
+                    break;
+                case 3:
+                    par/=2.;
+                    break;
+                case 4:
+                    par*=27.;
+                    par/=64.;
+                    break;
+            }
+        }
+        ass_set_pixel_aspect(_ass_rend, par);
        _ass_track = ass_read_file(_ass_lib, (char *)param.subtitleFile.c_str(), NULL);
         if(!_ass_track)
-          GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","SSA Error"),QT_TRANSLATE_NOOP("ass","Cannot read_file for *%s*"),param.subtitleFile.c_str());
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","SSA Error"),QT_TRANSLATE_NOOP("ass","ass_read_file() failed for %s"),param.subtitleFile.c_str());
         return 1;
 }
 
@@ -368,11 +406,11 @@ bool subAss::mergeOneImage(ASS_Image *img,ADMImage *target)
     target->GetWritePlanes(planes);
 
     uint32_t x=img->dst_x;
-    ydata = planes[0]+pitches[0]*( param.topMargin+img->dst_y)+x;
+    ydata = planes[0]+pitches[0]*(img->dst_y)+x;
 
     x>>=1;
-    udata = planes[1]+pitches[1]*((param.topMargin+img->dst_y)/2)+x;
-    vdata = planes[2]+pitches[2]*((param.topMargin+img->dst_y)/2)+x;
+    udata = planes[1]+pitches[1]*(img->dst_y/2)+x;
+    vdata = planes[2]+pitches[2]*(img->dst_y/2)+x;
    
     
     
@@ -381,7 +419,7 @@ bool subAss::mergeOneImage(ASS_Image *img,ADMImage *target)
     int topH,topW;
     
     // -- clip height --
-    topH=clipWindow(img->h, param.topMargin+img->dst_y,target->_height);    
+    topH=clipWindow(img->h, img->dst_y, target->_height);
     if(topH<0)
     {
         ADM_warning("Subtitle outside of video-h\n");

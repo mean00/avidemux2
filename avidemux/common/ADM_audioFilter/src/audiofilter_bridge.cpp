@@ -54,13 +54,15 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
   // For SBR TEST
   //_wavHeader.frequency*=2;
   _wavHeader.frequency=_incoming->getOutputFrequency();
+  uint32_t outChannels=_incoming->getOutputChannels();
+  if(outChannels)
+      _wavHeader.channels=(uint16_t)outChannels;
   // /For SBR Test
   _startTimeUs=_ms2us(startInMs);
   _shiftUs=_ms2us(shiftMs);
   
   _held=_hold=0;
-  rewind();
-  
+
   ADM_info("[Bridge] Starting with time %s , shift %" PRIi32" ms\n",ADM_us2plain(startInMs*1000LL),-shiftMs);
   // If shiftMS is > 0, it means we have to go in the future, just increase _startTime
   if(shiftMs>0)
@@ -116,8 +118,6 @@ uint8_t AUDMAudioFilter_Bridge::rewind(void)
 */
 uint32_t   AUDMAudioFilter_Bridge::fill(uint32_t max,float *output,AUD_Status *status)
 {
-  uint32_t asked,asked2,total=0;
-  //
   ADM_assert(_tail>=_head);
   shrink();
   ADM_assert(_tail>=_head);
@@ -156,7 +156,6 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
     {
       // don't ask too much front.
       asked = (3*AUD_PROCESS_BUFFER_SIZE)/4-_tail;
-      asked/=_wavHeader.channels; // float->samples
       if(false==_incoming->getPCMPacket(_incomingBuffer.at(_tail), asked, &got,&dts))
       {
           got=0;

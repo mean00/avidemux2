@@ -23,7 +23,8 @@ extern "C"
 #include "libavcodec/parser.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
-extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
+#include "libavutil/mem.h"
+extern int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsInfo *ndo);
 }
 
 #include "ADM_Video.h"
@@ -47,9 +48,8 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 #define check(...) {}
 #endif
 
-#define MAX_NALU_PER_CHUNK 60
-
-int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeLen);
+static ADMCountdown msgRateLimiter(100);
+static ADMCountdown limiterReset(199);
 
 /**
     \fn ADM_getH264SpsPpsFromExtraData
@@ -91,8 +91,8 @@ bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
     return true;
 }
 
-bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
-                uint8_t * outstartcode, uint32_t * offset);
+extern bool ADM_findAnnexBStartCode(uint8_t *start, uint8_t *end, uint8_t *outstartcode,
+                uint32_t *offset, bool *fivebytes);
 /**
     \fn ADM_escapeH264
     \brief Add escape stuff
@@ -462,7 +462,9 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 */
 static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
-
+    static int count=0;
+    if(msgRateLimiter.done() && limiterReset.done())
+        count=0;
     uint8_t *payloadBuffer=(uint8_t *)malloc(nalSize+16);
     int     originalNalSize=nalSize+16;
     uint8_t *payload=payloadBuffer;
@@ -475,6 +477,20 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
         return false;
     }
 
+#define RATE_LIMITED_WARNING(x) if(!count)\
+    { \
+        ADM_warning(#x"\n"); \
+        msgRateLimiter.reset(); \
+    } \
+    if(msgRateLimiter.done() && count) \
+    { \
+        ADM_warning(#x" (message repeated %d times)\n",count); \
+        msgRateLimiter.reset(); \
+        count=0; \
+    } \
+    count++; \
+    limiterReset.reset();
+
     uint8_t *tail=payload+nalSize;
     *recoveryLength=16;
     while( payload<tail)
@@ -485,14 +501,14 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                         sei_type+=0xff;payload++;
                         if(payload+2>=tail)
                         {
-                            ADM_warning("Cannot decode SEI\n");
+                            RATE_LIMITED_WARNING(Cannot decode SEI)
                             goto abtSei;
                         }
                 };
                 sei_type+=payload[0];payload++;
                 if(payload>=tail)
                 {
-                            ADM_warning("Cannot decode SEI\n");
+                            RATE_LIMITED_WARNING(Cannot decode SEI)
                             goto abtSei;
                 }
                 while(payload[0]==0xff)
@@ -500,7 +516,7 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                     sei_size+=0xff;payload++;
                     if(payload+1>=tail)
                         {
-                            ADM_warning("Cannot decode SEI (2)\n");
+                            RATE_LIMITED_WARNING(Cannot decode SEI (2))
                             goto abtSei;
                         }
                 };
@@ -515,6 +531,7 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                             payload+=sei_size;
                             *recoveryLength=bits.getUEG();
                             r=true;
+                            count=0;
                             break;
                         }
                         default:
@@ -579,7 +596,6 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
   uint8_t *head = buffer, *tail = buffer + len;
   uint8_t stream;
 
-  uint32_t val, hnt;
   nalSize=4;
 // Check for short nalSize, i.e. size coded on 3 bytes
   {
@@ -702,13 +718,13 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
 bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
     bool r=false;
-    bool closeCodec=false;
 
     // duplicate
-    int myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
+    int myLen=len+AV_INPUT_BUFFER_PADDING_SIZE;
     uint8_t *myData=new uint8_t[myLen];
     memset(myData,0x2,myLen);
     memcpy(myData,data,len);
+    myData[len]=0; // stop ff_h264_decode_extradata() from trying to parse the remaining buffer content as PPS
 
     // 1-Create parser
     AVCodecParserContext *parser=av_parser_init(AV_CODEC_ID_H264);
@@ -736,7 +752,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
         goto theEnd;
     }
 
-    ADM_info("Context created\n");
+    ADM_info("Context created, ticks_per_frame = %d\n",ctx->ticks_per_frame);
     //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
     ctx->extradata=myData;
     ctx->extradata_size=len;
@@ -748,15 +764,16 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
          printf("Used bytes %d/%d (+5)\n",used,len);
          if(!used)
          {
-             ADM_warning("Failed to extract SPS info\n");
+           //ADM_warning("Failed to extract SPS info\n"); // it ain't necessarily so
            //  goto theEnd;
          }
     }
-    ADM_info("Width  : %d\n",ctx->width);
-    ADM_info("Height : %d\n",ctx->height);
+    // Size is not supposed to be set in AVCodecContext after parsing
+    //ADM_info("Width  : %d\n",ctx->width);
+    //ADM_info("Height : %d\n",ctx->height);
     {
         ffSpsInfo nfo;
-        if(!ff_h264_info(parser,&nfo))
+        if(!ff_h264_info(parser,ctx->ticks_per_frame,&nfo))
         {
             ADM_error("Cannot get sps info from lavcodec\n");
             r=false;
@@ -942,46 +959,48 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
     \fn ADM_splitNalu
     \brief split a nalu annexb size into a list of nalu descriptor
 */
-int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeLen)
+int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
 {
-bool first=true;
-uint8_t *head=start;
-uint32_t offset;
-uint8_t startCode,oldStartCode=0xff;
-int index=0;
-      while(true==SearchStartCode(head,end,&startCode,&offset))
-      {
-            if(true==first)
-            {
-                head+=offset;
-                first=false;
-                oldStartCode=startCode;
-                continue;
-            }
-        if(index>=maxNalu) return 0;
+    bool first=true;
+    uint8_t *head=start;
+    uint32_t offset;
+    uint8_t startCode,oldStartCode=0xff;
+    bool zeroBytePrefixed,oldZbp=false;
+    const uint32_t startCodePrefixLen=4;
+    int index=0;
+
+    while(true==ADM_findAnnexBStartCode(head,end,&startCode,&offset,&zeroBytePrefixed))
+    {
+        if(true==first)
+        {
+            head+=offset;
+            first=false;
+            oldStartCode=startCode;
+            oldZbp=zeroBytePrefixed;
+            continue;
+        }
+        if(index>=maxNalu)
+        {
+            ADM_warning("Number of NALUs exceeds max (%d), dropping the leftover.\n",maxNalu);
+            return index;
+        }
         desc[index].start=head;
-        desc[index].size=offset-startCodeLen;
+        desc[index].size=offset-zeroBytePrefixed-startCodePrefixLen;
         desc[index].nalu=oldStartCode;
+        desc[index].zerobyte=oldZbp;
         index++;
         head+=offset;
         oldStartCode=startCode;
-      }
+        oldZbp=zeroBytePrefixed;
+    }
     // leftover
     desc[index].start=head;
     desc[index].size=(uint32_t)(end-head);
     desc[index].nalu=oldStartCode;
+    desc[index].zerobyte=oldZbp;
     index++;
     return index;
 }
-/**
-    \fn ADM_splitNalu
-    \brief split a nalu annexb size into a list of nalu descriptor
-*/
-int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
-{
-    return ADM_splitNalu_internal(start,end,maxNalu,desc,START_CODE_LEN);
-}
-
 /**
     \fn ADM_findNalu
     \brief lookup for a specific NALU in the given buffer
@@ -1003,16 +1022,16 @@ static void writeBE32(uint8_t *p, uint32_t size)
     p[3]=(size>>0)&0xff;
 }
 /**
-    \fn ADM_convertFromAnnexBToMP4
+    \fn ADM_convertFromAnnexBToMP4_internal
     \brief convert annexB startcode (00 00 00 0 xx) to NALU
 */
-int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize,
-                                                      uint8_t *outData,uint32_t outMaxSize)
+int ADM_convertFromAnnexBToMP4(uint8_t *inData, uint32_t inSize,
+                               uint8_t *outData,uint32_t outMaxSize)
 {
     uint8_t *tgt=outData;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK+1];
-    int nbNalu=ADM_splitNalu(inData,inData+inSize, MAX_NALU_PER_CHUNK,desc);
-    int nalHeaderSize=4;
+    int nbNalu=ADM_splitNalu(inData,inData+inSize,MAX_NALU_PER_CHUNK,desc);
+    const int nalHeaderSize=4;
     int outputSize=0;
 
 

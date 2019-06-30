@@ -347,7 +347,7 @@ try{
 		info.channels=inf.AudioChannels();
 		if(info.frequency)
 		{
-			if(inf.SampleType()!=SAMPLE_INT16)
+			if(inf.SampleType()!=16)
 			{
 				printf("Only int16 for audio and not %d!\n",(int)inf.SampleType());
 				fflush(stdout);

@@ -4,11 +4,11 @@
  */
 
 
-#include <BVector.h>
 #include "ADM_threads.h"
+#include "ADM_edCache.h"
+#include "ADM_filterThread.h"
 
-#define ADM_DXVA2_BUFFER 24
-#define ADM_MAX_SURFACE 24
+#define ADM_MAX_SURFACE (EDITOR_CACHE_MAX_SIZE + ADM_THREAD_QUEUE_SIZE + 16)
 /**
       \struct surface_info
 */

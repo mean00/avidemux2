@@ -9,37 +9,6 @@
     </message>
 </context>
 <context>
-    <name>MAC_APPLICATION_MENU</name>
-    <message>
-        <source>Services</source>
-        <translation>Службы</translation>
-    </message>
-    <message>
-        <source>Hide %1</source>
-        <translation>Скрыть %1</translation>
-    </message>
-    <message>
-        <source>Hide Others</source>
-        <translation>Скрыть другие</translation>
-    </message>
-    <message>
-        <source>Show All</source>
-        <translation>Показать всё</translation>
-    </message>
-    <message>
-        <source>Preferences...</source>
-        <translation>Настройки...</translation>
-    </message>
-    <message>
-        <source>Quit %1</source>
-        <translation>Завершить %1</translation>
-    </message>
-    <message>
-        <source>About %1</source>
-        <translation>О программе %1</translation>
-    </message>
-</context>
-<context>
     <name>QAbstractSocket</name>
     <message>
         <source>Socket operation timed out</source>
@@ -189,25 +158,6 @@
     </message>
 </context>
 <context>
-    <name>QAndroidPlatformTheme</name>
-    <message>
-        <source>Yes</source>
-        <translation>Да</translation>
-    </message>
-    <message>
-        <source>Yes to All</source>
-        <translation>Да для всех</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Нет</translation>
-    </message>
-    <message>
-        <source>No to All</source>
-        <translation>Нет для всех</translation>
-    </message>
-</context>
-<context>
     <name>QApplication</name>
     <message>
         <source>Executable &apos;%1&apos; requires Qt %2, found Qt %3.</source>
@@ -216,74 +166,6 @@
     <message>
         <source>Incompatible Qt Library Error</source>
         <translation>Ошибка совместимости библиотеки Qt</translation>
-    </message>
-</context>
-<context>
-    <name>QCocoaMenuItem</name>
-    <message>
-        <source>About Qt</source>
-        <translation>О Qt</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>О программе</translation>
-    </message>
-    <message>
-        <source>Config</source>
-        <translatorcomment>Это общая часть названия. Окончание пропущено специально.</translatorcomment>
-        <translation>Конфигур</translation>
-    </message>
-    <message>
-        <source>Preference</source>
-        <translatorcomment>Это общая часть названия. Окончание пропущено специально.</translatorcomment>
-        <translation>Свойств</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translatorcomment>Это общая часть названия. Окончание пропущено специально.</translatorcomment>
-        <translation>Параметры</translation>
-    </message>
-    <message>
-        <source>Setting</source>
-        <translatorcomment>Это общая часть названия. Окончание пропущено специально.</translatorcomment>
-        <translation>Настройк</translation>
-    </message>
-    <message>
-        <source>Setup</source>
-        <translatorcomment>Это общая часть названия. Окончание пропущено специально.</translatorcomment>
-        <translation>Настр</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translatorcomment>Это общая часть названия. Окончание пропущено специально.</translatorcomment>
-        <translation>Заверш</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Выход</translation>
-    </message>
-    <message>
-        <source>Cut</source>
-        <translation>Вырезать</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Копировать</translation>
-    </message>
-    <message>
-        <source>Paste</source>
-        <translation>Вставить</translation>
-    </message>
-    <message>
-        <source>Select All</source>
-        <translation>Выделить всё</translation>
-    </message>
-</context>
-<context>
-    <name>QCocoaTheme</name>
-    <message>
-        <source>Don&apos;t Save</source>
-        <translation>Н&amp;е сохранять</translation>
     </message>
 </context>
 <context>
@@ -525,6 +407,29 @@ Press ESC to cancel</source>
         <source>Top Secret</source>
         <comment>CUPS Banner page</comment>
         <translation>Особой важности</translation>
+    </message>
+</context>
+<context>
+    <name>QCupsPrinterSupport</name>
+    <message>
+        <source>Authentication Needed</source>
+        <translation>Требуется аутентификация</translation>
+    </message>
+    <message>
+        <source>Authentication needed to use %1.</source>
+        <translation>Для использования %1 требуется аутентификация.</translation>
+    </message>
+    <message>
+        <source>Authentication needed to use %1 on %2.</source>
+        <translation>Для использования %1 на %2 требуется аутентификация.</translation>
+    </message>
+    <message>
+        <source>Username:</source>
+        <translation>Имя пользователя:</translation>
+    </message>
+    <message>
+        <source>Password:</source>
+        <translation>Пароль:</translation>
     </message>
 </context>
 <context>
@@ -770,6 +675,133 @@ Press ESC to cancel</source>
     </message>
 </context>
 <context>
+    <name>QDtls</name>
+    <message>
+        <source>Invalid (empty) secret</source>
+        <translation>Неверный (пустой) пароль</translation>
+    </message>
+    <message>
+        <source>Multicast and broadcast addresses are not supported</source>
+        <translation>Групповые и широковещательные адреса не поддерживаются</translation>
+    </message>
+    <message>
+        <source>Cannot set peer after handshake started</source>
+        <translation>Невозможно задать адрес после начала квитирования</translation>
+    </message>
+    <message>
+        <source>Invalid address</source>
+        <translation>Неверный адрес</translation>
+    </message>
+    <message>
+        <source>Cannot set verification name after handshake started</source>
+        <translation>Невозможно задать проверочное имя после начала квитирования</translation>
+    </message>
+    <message>
+        <source>Cannot set configuration after handshake started</source>
+        <translation>Невозможно задать конфигурацию после начала квитирования</translation>
+    </message>
+    <message>
+        <source>Cannot start/continue handshake, invalid handshake state</source>
+        <translation>Невозможно запустить/продолжить квитирование, так как его состояние неверно</translation>
+    </message>
+    <message>
+        <source>Invalid (nullptr) socket</source>
+        <translation>Неверный (nullptr) сокет</translation>
+    </message>
+    <message>
+        <source>To start a handshake you must set peer&apos;s address and port first</source>
+        <translation>Для запуска квитирования требуется сначала задать адрес и порт</translation>
+    </message>
+    <message>
+        <source>To start a handshake, DTLS server requires non-empty datagram (client hello)</source>
+        <translation>Сервер DTLS требует непустую датаграмму (client hello) для начала квитирования</translation>
+    </message>
+    <message>
+        <source>Cannot start handshake, already done/in progress</source>
+        <translation>Невозможно начать квитирование, так как уже выполнено или в процессе</translation>
+    </message>
+    <message>
+        <source>A valid QUdpSocket and non-empty datagram are needed to continue the handshake</source>
+        <translation>Для продолжения квитирования необходим корректный QUdpSocket и непустая датаграмма</translation>
+    </message>
+    <message>
+        <source>Cannot continue handshake, not in InProgress state</source>
+        <translation>Невозможно продолжить квитирование, так как состояние не InProgress</translation>
+    </message>
+    <message>
+        <source>Cannot resume, not in VerificationError state</source>
+        <translation>Невозможно возобновить, так как не в режиме VerificationError</translation>
+    </message>
+    <message>
+        <source>No handshake in progress, nothing to abort</source>
+        <translation>Квитирование не выполняется, нечего прерывать</translation>
+    </message>
+    <message>
+        <source>Cannot send shutdown alert, not encrypted</source>
+        <translation>Невозможно отправить оповещение о завершении, не зашифрован</translation>
+    </message>
+    <message>
+        <source>Cannot write a datagram, not in encrypted state</source>
+        <translation>Невозможно записать датаграмму, не зашифрован</translation>
+    </message>
+    <message>
+        <source>Cannot read a datagram, not in encrypted state</source>
+        <translation>Невозможно прочитать датаграмму, не зашифрован</translation>
+    </message>
+    <message>
+        <source>%1 failed</source>
+        <extracomment>%1: Some function</extracomment>
+        <translation>%1 завершилась с ошибкой</translation>
+    </message>
+    <message>
+        <source>Invalid SslMode, SslServerMode or SslClientMode expected</source>
+        <translation>Неверный SslMode, требуется или SslServerMode, или SslClientMode</translation>
+    </message>
+    <message>
+        <source>Invalid protocol version, DTLS protocol expected</source>
+        <translation>Неверная версия протокола, требуется протокол DTLS</translation>
+    </message>
+    <message>
+        <source>BIO_ADD_new failed, cannot start handshake</source>
+        <translation>BIO_ADD_new завершилась с ошибкой, невозможно начать квитирование</translation>
+    </message>
+    <message>
+        <source>Cannot start the handshake, verified client hello expected</source>
+        <translation>Невозможно начать квитирование, требуется проверенное приветствие клиента (client hello)</translation>
+    </message>
+    <message>
+        <source>Peer verification failed</source>
+        <translation>Не удалось выполнить проверку адреса</translation>
+    </message>
+    <message>
+        <source>The DTLS connection has been closed</source>
+        <translation>Соединение DTLS было закрыто</translation>
+    </message>
+    <message>
+        <source>Error while writing: %1</source>
+        <translation>Ошибка записи: %1</translation>
+    </message>
+    <message>
+        <source>The DTLS connection has been shutdown</source>
+        <translation>Соединение DTLS было завершено</translation>
+    </message>
+    <message>
+        <source>Error while reading: %1</source>
+        <translation>Ошибка чтения: %1</translation>
+    </message>
+</context>
+<context>
+    <name>QDtlsClientVerifier</name>
+    <message>
+        <source>A valid UDP socket, non-empty datagram, valid address/port were expected</source>
+        <translation>Требуется допустимый сокет UDP, непустая датаграмма и корректный адрес/порт</translation>
+    </message>
+    <message>
+        <source>BIO_ADDR_new failed, ignoring client hello</source>
+        <translation>BIO_ADD_new завершилась с ошибкой, приветствие клиента (client hello) пропускается</translation>
+    </message>
+</context>
+<context>
     <name>QErrorMessage</name>
     <message>
         <source>Debug Message:</source>
@@ -780,8 +812,16 @@ Press ESC to cancel</source>
         <translation>Предупреждение:</translation>
     </message>
     <message>
-        <source>Fatal Error:</source>
+        <source>Critical Error:</source>
         <translation>Критическая ошибка:</translation>
+    </message>
+    <message>
+        <source>Fatal Error:</source>
+        <translation>Фатальная ошибка:</translation>
+    </message>
+    <message>
+        <source>Information:</source>
+        <translation>Информация:</translation>
     </message>
     <message>
         <source>&amp;Show this message again</source>
@@ -807,8 +847,8 @@ Press ESC to cancel</source>
         <translation>Файл существует</translation>
     </message>
     <message>
-        <source>Error while renaming.</source>
-        <translation>Возникла ошибка при переименовании.</translation>
+        <source>Error while renaming: %1</source>
+        <translation>Возникла ошибка при переименовании: %1</translation>
     </message>
     <message>
         <source>Unable to restore from %1: %2</source>
@@ -821,6 +861,10 @@ Press ESC to cancel</source>
     <message>
         <source>Cannot remove source file</source>
         <translation>Невозможно удалить исходный файл</translation>
+    </message>
+    <message>
+        <source>Cannot open destination file: %1</source>
+        <translation>Не удалось открыть файл назначения: %1</translation>
     </message>
     <message>
         <source>Cannot open %1 for input</source>
@@ -844,6 +888,10 @@ Press ESC to cancel</source>
     <message>
         <source>No file engine available or engine does not support UnMapExtension</source>
         <translation>Нет файлового движка или он не поддерживает UnMapExtension</translation>
+    </message>
+    <message>
+        <source>No file engine available</source>
+        <translation>Файловый движок недоступен</translation>
     </message>
 </context>
 <context>
@@ -1089,31 +1137,11 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QFileSystemModel</name>
     <message>
-        <source>%1 TB</source>
-        <translation>%1 Тб</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 Гб</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 Мб</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 Кб</translation>
-    </message>
-    <message>
-        <source>%1 bytes</source>
-        <translation>%1 байт</translation>
-    </message>
-    <message>
         <source>Invalid filename</source>
         <translation>Некорректное имя файла</translation>
     </message>
     <message>
-        <source>&lt;b&gt;The name &quot;%1&quot; can not be used.&lt;/b&gt;&lt;p&gt;Try using another name, with fewer characters or no punctuations marks.</source>
+        <source>&lt;b&gt;The name &quot;%1&quot; cannot be used.&lt;/b&gt;&lt;p&gt;Try using another name, with fewer characters or no punctuation marks.</source>
         <translation>&lt;b&gt;Имя «%1» не может быть использовано.&lt;/b&gt;&lt;p&gt;Попробуйте использовать имя меньшей длины и/или без символов пунктуации.</translation>
     </message>
     <message>
@@ -1145,10 +1173,6 @@ Do you want to delete it anyway?</source>
     <message>
         <source>Computer</source>
         <translation>Компьютер</translation>
-    </message>
-    <message>
-        <source>%1 byte(s)</source>
-        <translation>%1 байт</translation>
     </message>
 </context>
 <context>
@@ -1535,10 +1559,6 @@ Do you want to delete it anyway?</source>
         <translation>Узел не найден</translation>
     </message>
     <message>
-        <source>Unknown error</source>
-        <translation>Неизвестная ошибка</translation>
-    </message>
-    <message>
         <source>Unknown error (%1)</source>
         <translation>Неизвестная ошибка (%1)</translation>
     </message>
@@ -1559,11 +1579,11 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>Proxy requires authentication</source>
-        <translation>Время на операцию с сокетом истекло</translation>
+        <translation>Прокси-сервер требует аутентификацию</translation>
     </message>
     <message>
         <source>Host requires authentication</source>
-        <translation>Узел требует авторизацию</translation>
+        <translation>Узел требует аутентификацию</translation>
     </message>
     <message>
         <source>Data corrupted</source>
@@ -1594,11 +1614,11 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>Error parsing authentication request from proxy</source>
-        <translation>Ошибка разбора запроса авторизации от прокси-сервера</translation>
+        <translation>Ошибка разбора запроса аутентификации от прокси-сервера</translation>
     </message>
     <message>
         <source>Authentication required</source>
-        <translation>Требуется авторизация</translation>
+        <translation>Требуется аутентификация</translation>
     </message>
     <message>
         <source>Proxy denied connection</source>
@@ -1776,12 +1796,20 @@ Do you want to delete it anyway?</source>
         <translation>Устройство не задано</translation>
     </message>
     <message>
+        <source>Cannot open device for writing: %1</source>
+        <translation>Не удалось открыть устройство для записи: %1</translation>
+    </message>
+    <message>
         <source>Device not writable</source>
         <translation>Устройство не поддерживает запись</translation>
     </message>
     <message>
         <source>Unsupported image format</source>
         <translation>Неподдерживаемый формат изображения</translation>
+    </message>
+    <message>
+        <source>Image is empty</source>
+        <translation>Изображение пусто</translation>
     </message>
 </context>
 <context>
@@ -1881,8 +1909,56 @@ Do you want to delete it anyway?</source>
         <translation>«%1» является некорректным объектом ELF (%2)</translation>
     </message>
     <message>
-        <source>Plugin verification data mismatch in &apos;%1&apos;</source>
-        <translation>Проверочная информация для модуля «%1» не совпадает</translation>
+        <source>odd cpu architecture</source>
+        <translation>странная архитектура CPU</translation>
+    </message>
+    <message>
+        <source>wrong cpu architecture</source>
+        <translation>неверная архитектура CPU</translation>
+    </message>
+    <message>
+        <source>odd endianness</source>
+        <translation>странный порядок байт</translation>
+    </message>
+    <message>
+        <source>unexpected e_shsize</source>
+        <translation>неожиданный e_shsize</translation>
+    </message>
+    <message>
+        <source>unexpected e_shentsize</source>
+        <translation>неожиданный e_shentsize</translation>
+    </message>
+    <message numerus="yes">
+        <source>announced %n section(s), each %1 byte(s), exceed file size</source>
+        <translation>
+            <numerusform>объявлена %n секция по %1 байт, что превышает размер файла</numerusform>
+            <numerusform>объявлено %n секции по %1 байт, что превышает размер файла</numerusform>
+            <numerusform>объявлено %n секций по %1 байт, что превышает размер файла</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>shstrtab section header seems to be at %1</source>
+        <translation>заголовок секции shstrtab кажется должен быть с %1</translation>
+    </message>
+    <message>
+        <source>string table seems to be at %1</source>
+        <translation>таблица строк кажется должна быть с %1</translation>
+    </message>
+    <message>
+        <source>section name %1 of %2 behind end of file</source>
+        <translation>имя секции %1 из %2 за пределами файла</translation>
+    </message>
+    <message>
+        <source>empty .rodata. not a library.</source>
+        <translation>пустая .rodata. Это не библиотека.</translation>
+    </message>
+    <message>
+        <source>missing section data. This is not a library.</source>
+        <translation>отсутствуют данные секции. Это не библиотека.</translation>
+    </message>
+    <message>
+        <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
+        <translation>Не удалось извлечь мета-данные модуля из «%1»</translation>
     </message>
     <message>
         <source>The shared library was not found.</source>
@@ -2225,20 +2301,12 @@ Do you want to delete it anyway?</source>
         <translation>Скрыть подробности...</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>Закрыть</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Справка</translation>
+        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Qt ― это инструментарий для разработки кроссплатформенных приложений на C++.&lt;/p&gt;&lt;p&gt;Qt предоставляет совместимость на уровне исходных текстов для всех популярных настольных операционных систем. Также Qt доступна для встраиваемого Linux и других мобильных операционных систем.&lt;/p&gt;&lt;p&gt;Qt доступна под тремя различными лицензиями, разработанными для удовлетворения различных требований.&lt;/p&gt;&lt;p&gt;Qt под нашей коммерческой лицензией предназначена для развития проприетарного/коммерческого программного обеспечения, когда Вы не желаете предоставлять исходные тексты третьим сторонам, или в случае невозможности принятия условий лицензий GNU LGPL версии 3.&lt;/p&gt;&lt;p&gt;Qt под лицензией GNU LGPL версии 3 предназначена для разработки программного обеспечения удовлетворяющего условиям лицензии GNU LGPL версии 3.&lt;/p&gt;&lt;p&gt;Подробнее с лицензированием Qt можно ознакомиться на сайте &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt и логотип Qt являются товарными знаками The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt ― продукт компании Qt Company Ltd, разрабатываемый как проект с открытым исходным кодом. &lt;/p&gt;&lt;p&gt;Более подробную информацию можно найти на сайте &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;h3&gt;About Qt&lt;/h3&gt;&lt;p&gt;This program uses Qt version %1.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;О Qt&lt;/h3&gt;&lt;p&gt;Данная программа использует Qt версии %1.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3 or GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 2.1 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Qt ― это инструментарий для разработки кроссплатформенных приложений на C++.&lt;/p&gt;&lt;p&gt;Qt предоставляет совместимость на уровне исходных текстов между для всех популярных настольных операционных систем. Также Qt доступна для встраиваемого Linux и других мобильных операционных систем.&lt;/p&gt;&lt;p&gt;Qt доступна под тремя различными лицензиями, разработанными для удовлетворения различных требований.&lt;/p&gt;&lt;p&gt;Qt под нашей коммерческой лицензией предназначена для развития проприетарного/коммерческого программного обеспечения, когда Вы не желаете предоставлять исходные тексты третьим сторонам, или в случае невозможности принятия условий лицензий GNU LGPL версии 3 или GNU LGPL версии 2.1.&lt;/p&gt;&lt;p&gt;Qt под лицензией GNU LGPL версии 3 предназначена для разработки программного обеспечения удовлетворяющего условиям лицензии GNU LGPL версии 3.&lt;/p&gt;&lt;p&gt;Qt под лицензией GNU LGPL версии 2.1 предназначена для разработки программного обеспечения удовлетворяющего условиям лицензии GNU LGPL версии 2.1.&lt;/p&gt;&lt;p&gt;Подробнее с лицензированием Qt можно ознакомиться на сайте &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt и логотип Qt являются товарными знаками The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt ― продукт компании Digia, разрабатываемый как проект с открытым исходным кодом. &lt;/p&gt;&lt;p&gt;Более подробную информацию можно найти на сайте &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>About Qt</source>
@@ -2428,7 +2496,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>Logging in to %1 failed: authentication required</source>
-        <translation>Соединение с %1 не удалось: требуется авторизация</translation>
+        <translation>Соединение с %1 не удалось: требуется аутентификация</translation>
     </message>
     <message>
         <source>Error while downloading %1: %2</source>
@@ -2676,8 +2744,20 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPSQLResult</name>
     <message>
+        <source>Query results lost - probably discarded on executing another SQL query.</source>
+        <translation>Результат запроса потерян, возможно, из-за выполнения другого запроса SQL.</translation>
+    </message>
+    <message>
         <source>Unable to create query</source>
         <translation>Невозможно создать запрос</translation>
+    </message>
+    <message>
+        <source>Unable to get result</source>
+        <translation>Не удалось получить результат</translation>
+    </message>
+    <message>
+        <source>Unable to send query</source>
+        <translation>Не удалось отправить запрос</translation>
     </message>
     <message>
         <source>Unable to prepare statement</source>
@@ -3473,6 +3553,22 @@ Do you want to delete it anyway?</source>
         <translation>&amp;Параметры &lt;&lt;</translation>
     </message>
     <message>
+        <source>Invalid Pages Definition</source>
+        <translation>Неверное определение страницы</translation>
+    </message>
+    <message>
+        <source>%1 does not follow the correct syntax. Please use &apos;,&apos; to separate ranges and pages, &apos;-&apos; to define ranges and make sure ranges do not intersect with each other.</source>
+        <translation>%1 имеет некорректный синтаксис. Используйте «,» для разделения страниц и диапазонов, а «-» для определения диапазонов. Пересекающиеся диапазоны недопустимы.</translation>
+    </message>
+    <message>
+        <source>Duplex Settings Conflicts</source>
+        <translation>Противоречия в настройках двусторонней печати</translation>
+    </message>
+    <message>
+        <source>There are conflicts in duplex settings. Do you want to fix them?</source>
+        <translation>Обнаружены противоречия в настройках двусторонней печати. Устранить?</translation>
+    </message>
+    <message>
         <source>Print to File (PDF)</source>
         <translation>Печать в файл (PDF)</translation>
     </message>
@@ -3615,6 +3711,22 @@ Please turn one of those options off.</source>
         <source>Job Options</source>
         <translation>Параметры задания</translation>
     </message>
+    <message>
+        <source>Page Setup Conflicts</source>
+        <translation>Противоречия в настройках страницы</translation>
+    </message>
+    <message>
+        <source>There are conflicts in page setup options. Do you want to fix them?</source>
+        <translation>Обнаружены противоречия в настройках страницы. Устранить?</translation>
+    </message>
+    <message>
+        <source>Advanced Option Conflicts</source>
+        <translation>Противоречия расширенных настроек</translation>
+    </message>
+    <message>
+        <source>There are conflicts in some advanced options. Do you want to fix them?</source>
+        <translation>Обнаружены противоречия в некоторых расширенных настройках. Устранить?</translation>
+    </message>
 </context>
 <context>
     <name>QPrintPropertiesWidget</name>
@@ -3626,12 +3738,20 @@ Please turn one of those options off.</source>
         <source>Page</source>
         <translation>Страница</translation>
     </message>
+    <message>
+        <source>Advanced</source>
+        <translation>Расширенные</translation>
+    </message>
+    <message>
+        <source>There are conflicts in some options. Please fix them.</source>
+        <translation>Обнаружены противоречия в некоторых настройках. Устраните их.</translation>
+    </message>
 </context>
 <context>
     <name>QPrintSettingsOutput</name>
     <message>
         <source>Form</source>
-        <translation>Форма</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Copies</source>
@@ -3712,6 +3832,14 @@ Please turn one of those options off.</source>
     <message>
         <source>Page Set:</source>
         <translation>Список страниц:</translation>
+    </message>
+    <message>
+        <source>Pages</source>
+        <translation>Страницы</translation>
+    </message>
+    <message>
+        <source>Specify pages or ranges separated by commas. Ranges are specified by two numbers separated by a hyphen. E.g: 3,5-7,9 prints pages 3, 5, 6, 7 and 9.</source>
+        <translation>Укажите страницы или диапазоны разделённые запятыми. Диапазоны задаются двумя числами, разделёнными дефисом. Например: при указании 3,5-7,9 будут напечатаны страницы 3, 5, 6, 7 и 9.</translation>
     </message>
 </context>
 <context>
@@ -3870,7 +3998,7 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <source>unrecognized character follows \</source>
-        <translation>символ следующий за \ не опознан</translation>
+        <translation>не опознан символ следующий за \</translation>
     </message>
     <message>
         <source>numbers out of order in {} quantifier</source>
@@ -3893,64 +4021,32 @@ Please turn one of those options off.</source>
         <translation>некорректный диапазон в классе символов</translation>
     </message>
     <message>
-        <source>nothing to repeat</source>
-        <translation>нечего повторять</translation>
-    </message>
-    <message>
         <source>internal error: unexpected repeat</source>
         <translation>внутренняя ошибка: неожиданный повтор</translation>
     </message>
     <message>
         <source>unrecognized character after (? or (?-</source>
-        <translation>символ следующий за (? или (?- не опознан</translation>
+        <translation>не опознан символ следующий за (? или (?-</translation>
     </message>
     <message>
         <source>POSIX named classes are supported only within a class</source>
         <translation>классы именованные в стиле POSIX поддерживаются только внутри класса</translation>
     </message>
     <message>
-        <source>missing )</source>
-        <translation>отсутствует )</translation>
-    </message>
-    <message>
         <source>reference to non-existent subpattern</source>
         <translation>ссылка на несуществующий подшаблон</translation>
-    </message>
-    <message>
-        <source>erroffset passed as NULL</source>
-        <translation>в качестве erroffset передан NULL</translation>
-    </message>
-    <message>
-        <source>unknown option bit(s) set</source>
-        <translation>неизвестный набор флагов регулярного выражения</translation>
-    </message>
-    <message>
-        <source>missing ) after comment</source>
-        <translation>отсутствует ) после комментария</translation>
     </message>
     <message>
         <source>regular expression is too large</source>
         <translation>Регулярное выражение слишком велико</translation>
     </message>
     <message>
-        <source>failed to get memory</source>
-        <translation>не удалось выделить память</translation>
-    </message>
-    <message>
-        <source>unmatched parentheses</source>
-        <translation>круглые скобки не согласованы</translation>
-    </message>
-    <message>
         <source>internal error: code overflow</source>
         <translation>внутренняя ошибка: переполнение кода</translation>
     </message>
     <message>
-        <source>unrecognized character after (?&lt;</source>
-        <translation>символ после (?&lt; не опознан</translation>
-    </message>
-    <message>
         <source>lookbehind assertion is not fixed length</source>
-        <translation>проверка lookbehind имеет нефиксированную длину</translation>
+        <translation>утверждение lookbehind не фиксированной длины</translation>
     </message>
     <message>
         <source>malformed number or name after (?(</source>
@@ -3959,10 +4055,6 @@ Please turn one of those options off.</source>
     <message>
         <source>conditional group contains more than two branches</source>
         <translation>условная группа содержит более двух веток</translation>
-    </message>
-    <message>
-        <source>assertion expected after (?(</source>
-        <translation>после (?( требуется проверка</translation>
     </message>
     <message>
         <source>(?R or (?[+-]digits must be followed by )</source>
@@ -3977,56 +4069,20 @@ Please turn one of those options off.</source>
         <translation>POSIX-сортировка элементов не поддерживается</translation>
     </message>
     <message>
-        <source>this version of PCRE is not compiled with PCRE_UTF8 support</source>
-        <translation>эта версия PCRE собрана без поддержки PCRE_UTF8</translation>
-    </message>
-    <message>
-        <source>character value in \x{...} sequence is too large</source>
-        <translation>значение символа в последовательности \x{...} слишком большое</translation>
-    </message>
-    <message>
         <source>invalid condition (?(0)</source>
         <translation>некорректное условие (?(0)</translation>
-    </message>
-    <message>
-        <source>\C not allowed in lookbehind assertion</source>
-        <translation>\C не допустима в проверке lookbehind</translation>
     </message>
     <message>
         <source>PCRE does not support \L, \l, \N{name}, \U, or \u</source>
         <translation>PCRE не поддерживает \L, \l, \N{имя}, \U и \u</translation>
     </message>
     <message>
-        <source>number after (?C is &gt; 255</source>
-        <translation>число после (?C больше 255</translation>
-    </message>
-    <message>
-        <source>closing ) for (?C expected</source>
-        <translation>требуется закрывающая ) для (?C</translation>
-    </message>
-    <message>
-        <source>recursive call could loop indefinitely</source>
-        <translation>рекурсивный вызов может зациклиться навечно</translation>
-    </message>
-    <message>
         <source>unrecognized character after (?P</source>
-        <translation>символ после (?P не опознан</translation>
+        <translation>не опознан символ после (?P</translation>
     </message>
     <message>
         <source>syntax error in subpattern name (missing terminator)</source>
         <translation>синтаксическая ошибка в имени подшаблона (отсутствует признак завершения)</translation>
-    </message>
-    <message>
-        <source>two named subpatterns have the same name</source>
-        <translation>два именованных подшаблона имеют одинаковое имя</translation>
-    </message>
-    <message>
-        <source>invalid UTF-8 string</source>
-        <translation>некорректная строка UTF-8</translation>
-    </message>
-    <message>
-        <source>support for \P, \p, and \X has not been compiled</source>
-        <translation>поддержка \P, \p и \X не скомпилирована</translation>
     </message>
     <message>
         <source>malformed \P or \p sequence</source>
@@ -4035,18 +4091,6 @@ Please turn one of those options off.</source>
     <message>
         <source>unknown property name after \P or \p</source>
         <translation>неизвестное имя свойства после \P или \p</translation>
-    </message>
-    <message>
-        <source>subpattern name is too long (maximum 32 characters)</source>
-        <translation>название подшаблона слишком велико (ограничено в 32 символа)</translation>
-    </message>
-    <message>
-        <source>too many named subpatterns (maximum 10000)</source>
-        <translation>слишком много именованых подшаблонов (ограничено 10000)</translation>
-    </message>
-    <message>
-        <source>octal value is greater than \377 (not in UTF-8 mode)</source>
-        <translation>восьмиричное число больше \377 (в режиме не UTF-8)</translation>
     </message>
     <message>
         <source>internal error: overran compiling workspace</source>
@@ -4061,14 +4105,6 @@ Please turn one of those options off.</source>
         <translation>группа DEFINE содержит более одной ветки</translation>
     </message>
     <message>
-        <source>repeating a DEFINE group is not allowed</source>
-        <translation>повтор группы DEFINE не допустим</translation>
-    </message>
-    <message>
-        <source>inconsistent NEWLINE options</source>
-        <translation>несовместимая опция NEWLINE</translation>
-    </message>
-    <message>
         <source>\g is not followed by a braced, angle-bracketed, or quoted name/number or by a plain number</source>
         <translation>за \g должно следовать число или название/число заключённое в фигурные/угловые скобки или кавычки</translation>
     </message>
@@ -4079,10 +4115,6 @@ Please turn one of those options off.</source>
     <message>
         <source>an argument is not allowed for (*ACCEPT), (*FAIL), or (*COMMIT)</source>
         <translation>для (*ACCEPT), (*FAIL) и (*COMMIT) аргументы не допустимы</translation>
-    </message>
-    <message>
-        <source>(*VERB) not recognized</source>
-        <translation>(*VERB) не опознан</translation>
     </message>
     <message>
         <source>number is too big</source>
@@ -4097,24 +4129,12 @@ Please turn one of those options off.</source>
         <translation>после (?+ требуется цифра</translation>
     </message>
     <message>
-        <source>] is an invalid data character in JavaScript compatibility mode</source>
-        <translation>] недопустимый символ данных в режиме совместимости с JavaScript</translation>
-    </message>
-    <message>
         <source>different names for subpatterns of the same number are not allowed</source>
         <translation>отличные имена для подшаблонов с одним номером не допустимы</translation>
     </message>
     <message>
         <source>(*MARK) must have an argument</source>
         <translation>(*MARK) должен иметь аргумент</translation>
-    </message>
-    <message>
-        <source>this version of PCRE is not compiled with PCRE_UCP support</source>
-        <translation>эта версия PCRE собрана без поддержки PCRE_UCP</translation>
-    </message>
-    <message>
-        <source>\c must be followed by an ASCII character</source>
-        <translation>после \c должен следовать символ ASCII</translation>
     </message>
     <message>
         <source>\k is not followed by a braced, angle-bracketed, or quoted name</source>
@@ -4129,32 +4149,12 @@ Please turn one of those options off.</source>
         <translation>\N не поддерживается в классе</translation>
     </message>
     <message>
-        <source>too many forward references</source>
-        <translation>слишком много опережающих ссылок</translation>
-    </message>
-    <message>
         <source>disallowed Unicode code point (&gt;= 0xd800 &amp;&amp; &lt;= 0xdfff)</source>
         <translation>недопустимая кодовая точка Unicode (&gt;= 0xd800 &amp;&amp; &lt;= 0xdfff)</translation>
     </message>
     <message>
-        <source>invalid UTF-16 string</source>
-        <translation>некорректная строка UTF-16</translation>
-    </message>
-    <message>
         <source>name is too long in (*MARK), (*PRUNE), (*SKIP), or (*THEN)</source>
         <translation>слишком длинное имя в (*MARK), (*PRUNE), (*SKIP) или (*THEN)</translation>
-    </message>
-    <message>
-        <source>character value in \u.... sequence is too large</source>
-        <translation>значение символа в последовательности \u... слишком велико</translation>
-    </message>
-    <message>
-        <source>invalid UTF-32 string</source>
-        <translation>некорректная строка UTF-32</translation>
-    </message>
-    <message>
-        <source>setting UTF is disabled by the application</source>
-        <translation>настройка UTF отключена приложением</translation>
     </message>
     <message>
         <source>non-hex character in \x{} (closing brace missing?)</source>
@@ -4181,12 +4181,415 @@ Please turn one of those options off.</source>
         <translation>имя группы должно начинаться с нецифры</translation>
     </message>
     <message>
+        <source>quantifier does not follow a repeatable item</source>
+        <translation>квантификатор не соответствует повторяемому элементу</translation>
+    </message>
+    <message>
+        <source>missing closing parenthesis</source>
+        <translation>отсутствует закрывающая скобка</translation>
+    </message>
+    <message>
+        <source>pattern passed as NULL</source>
+        <translation>вместо шаблона передан NULL</translation>
+    </message>
+    <message>
+        <source>unrecognised compile-time option bit(s)</source>
+        <translation>не опознаны биты опций времени компиляции</translation>
+    </message>
+    <message>
+        <source>missing ) after (?# comment</source>
+        <translation>отсутствует ) после комментария (?#</translation>
+    </message>
+    <message>
+        <source>failed to allocate heap memory</source>
+        <translation>не удалось выделить память в куче</translation>
+    </message>
+    <message>
+        <source>unmatched closing parenthesis</source>
+        <translation>не соответствует закрывающая скобка</translation>
+    </message>
+    <message>
+        <source>letter or underscore expected after (?&lt; or (?&apos;</source>
+        <translation>после (?&lt; или (?&apos; требуется буква или подчеркивание</translation>
+    </message>
+    <message>
+        <source>assertion expected after (?( or (?(?C)</source>
+        <translation>после (?( или (?(?C) требуется утверждение</translation>
+    </message>
+    <message>
+        <source>internal error in pcre2_study(): should not occur</source>
+        <translation>внутренняя ошибка в pcre2_study(): не должно возникать</translation>
+    </message>
+    <message>
+        <source>this version of PCRE2 does not have Unicode support</source>
+        <translation>эта версия PCRE2 не поддерживает юникод</translation>
+    </message>
+    <message>
         <source>parentheses are too deeply nested (stack check)</source>
         <translation>слишком большое вложение скобок (контроль стека)</translation>
     </message>
     <message>
+        <source>character code point value in \x{} or \o{} is too large</source>
+        <translation>значение кодовой точки символа в \x{} или \o{} слишком большое</translation>
+    </message>
+    <message>
+        <source>\C is not allowed in a lookbehind assertion</source>
+        <translation>\C не допустимо в утверждениях lookbehind</translation>
+    </message>
+    <message>
+        <source>number after (?C is greater than 255</source>
+        <translation>число после (?C больше 255</translation>
+    </message>
+    <message>
+        <source>closing parenthesis for (?C expected</source>
+        <translation>требуется закрывающая скобка после (?C</translation>
+    </message>
+    <message>
+        <source>invalid escape sequence in (*VERB) name</source>
+        <translation>Неверная ESC-последовательность в имени (*VERB)</translation>
+    </message>
+    <message>
+        <source>two named subpatterns have the same name (PCRE2_DUPNAMES not set)</source>
+        <translation>два именованных подшаблона имеют одинаковое имя (PCRE2_DUPNAMES не установлен)</translation>
+    </message>
+    <message>
+        <source>this version of PCRE2 does not have support for \P, \p, or \X</source>
+        <translation>эта версия PCRE2 не поддерживает \P, \p или \X</translation>
+    </message>
+    <message>
+        <source>subpattern name is too long (maximum 10000 characters)</source>
+        <translation>название подшаблона слишком велико (ограничено в 10000 символов)</translation>
+    </message>
+    <message>
+        <source>too many named subpatterns (maximum 256)</source>
+        <translation>слишком много именованых подшаблонов (ограничено 256)</translation>
+    </message>
+    <message>
+        <source>octal value is greater than \377 in 8-bit non-UTF-8 mode</source>
+        <translation>восьмиричное число больше \377 в 8-ми битном не UTF-8 режиме</translation>
+    </message>
+    <message>
+        <source>internal error: unknown newline setting</source>
+        <translation>внутренняя ошибка: неизвестный разделитель строк</translation>
+    </message>
+    <message>
+        <source>(*VERB) not recognized or malformed</source>
+        <translation>(*VERB) не опознан или неверен</translation>
+    </message>
+    <message>
+        <source>\c must be followed by a printable ASCII character</source>
+        <translation>после \c должен идти печатаемый символ ASCII</translation>
+    </message>
+    <message>
+        <source>\c must be followed by a letter or one of [\]^_?</source>
+        <translation>после \c должна идти буква или один из [\]^_?</translation>
+    </message>
+    <message>
+        <source>SPARE ERROR</source>
+        <translation type="unfinished">ОШИБКА SPARE</translation>
+    </message>
+    <message>
+        <source>using UTF is disabled by the application</source>
+        <translation>использование UTF отключено приложением</translation>
+    </message>
+    <message>
+        <source>using UCP is disabled by the application</source>
+        <translation>использование UCP отключено приложением</translation>
+    </message>
+    <message>
+        <source>character code point value in \u.... sequence is too large</source>
+        <translation>значение кодовой точки символа в последовательности \u.... слишком большое</translation>
+    </message>
+    <message>
         <source>digits missing in \x{} or \o{}</source>
-        <translation>Отсутствуют цифры в \x{} или \o{}</translation>
+        <translation>отсутствуют цифры в \x{} или \o{}</translation>
+    </message>
+    <message>
+        <source>syntax error in (?(VERSION condition</source>
+        <translation>синтаксическая ошибка в условии (?(VERSION</translation>
+    </message>
+    <message>
+        <source>internal error: unknown opcode in auto_possessify()</source>
+        <translation>внутренняя ошибка: неизвестный опкод в auto_possessify()</translation>
+    </message>
+    <message>
+        <source>missing terminating delimiter for callout with string argument</source>
+        <translation>отстутствует конечный разделитель для вызова со строковым параметром</translation>
+    </message>
+    <message>
+        <source>unrecognized string delimiter follows (?C</source>
+        <translation>не опознан строковый разделитель следующий за (?C</translation>
+    </message>
+    <message>
+        <source>using \C is disabled by the application</source>
+        <translation>использование \C отключено приложением</translation>
+    </message>
+    <message>
+        <source>(?| and/or (?J: or (?x: parentheses are too deeply nested</source>
+        <translation>слишком глубокое вложение скобок (?| и/или (?J: или (?x:</translation>
+    </message>
+    <message>
+        <source>using \C is disabled in this PCRE2 library</source>
+        <translation>использование \C отключено в этой библиотеке PCRE2</translation>
+    </message>
+    <message>
+        <source>regular expression is too complicated</source>
+        <translation>слишком сложное регулярное выражение</translation>
+    </message>
+    <message>
+        <source>lookbehind assertion is too long</source>
+        <translation>утверждение lookbehind слишком большое</translation>
+    </message>
+    <message>
+        <source>pattern string is longer than the limit set by the application</source>
+        <translation>строка шаблона больше ограничения, заданного приложением</translation>
+    </message>
+    <message>
+        <source>no match</source>
+        <translation>нет соответствий</translation>
+    </message>
+    <message>
+        <source>partial match</source>
+        <translation>частичное соответствие</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 1 byte missing at end</source>
+        <translation>ошибка UTF-8: недостаточно 1 байта в конце</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 2 bytes missing at end</source>
+        <translation>ошибка UTF-8: недостаточно 2 байт в конце</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 3 bytes missing at end</source>
+        <translation>ошибка UTF-8: недостаточно 3 байт в конце</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 4 bytes missing at end</source>
+        <translation>ошибка UTF-8: недостаточно 4 байт в конце</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 5 bytes missing at end</source>
+        <translation>ошибка UTF-8: недостаточно 5 байт в конце</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 2 top bits not 0x80</source>
+        <translation>ошибка UTF-8: во 2 байте старшие биты не 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 3 top bits not 0x80</source>
+        <translation>ошибка UTF-8: во 3 байте старшие биты не 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 4 top bits not 0x80</source>
+        <translation>ошибка UTF-8: во 4 байте старшие биты не 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 5 top bits not 0x80</source>
+        <translation>ошибка UTF-8: во 5 байте старшие биты не 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: byte 6 top bits not 0x80</source>
+        <translation>ошибка UTF-8: во 6 байте старшие биты не 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 5-byte character is not allowed (RFC 3629)</source>
+        <translation>ошибка UTF-8: 5-ти байтовые символы недопустимы (RFC 3629)</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: 6-byte character is not allowed (RFC 3629)</source>
+        <translation>ошибка UTF-8: 6-ти байтовые символы недопустимы (RFC 3629)</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: code points greater than 0x10ffff are not defined</source>
+        <translation>ошибка UTF-8: кодовые точки больше 0x10ffff не определены</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: code points 0xd800-0xdfff are not defined</source>
+        <translation>ошибка UTF-8: кодовые точки с 0xd800 по 0xdfff не определены</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 2-byte sequence</source>
+        <translation>ошибка UTF-8: сверхдлинная двухбайтовая последовательность</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 3-byte sequence</source>
+        <translation>ошибка UTF-8: сверхдлинная трёхбайтовая последовательность</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 4-byte sequence</source>
+        <translation>ошибка UTF-8: сверхдлинная четырёхбайтовая последовательность</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 5-byte sequence</source>
+        <translation>ошибка UTF-8: сверхдлинная пятибайтовая последовательность</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: overlong 6-byte sequence</source>
+        <translation>ошибка UTF-8: сверхдлинная шестибайтовая последовательность</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: isolated byte with 0x80 bit set</source>
+        <translation>ошибка UTF-8: отдельный байт с установленным битом 0x80</translation>
+    </message>
+    <message>
+        <source>UTF-8 error: illegal byte (0xfe or 0xff)</source>
+        <translation>ошибка UTF-8: недопустимый байт (0xfe или 0xff)</translation>
+    </message>
+    <message>
+        <source>UTF-16 error: missing low surrogate at end</source>
+        <translation>ошибка UTF-16: отсутствует нижний суррогат в конце</translation>
+    </message>
+    <message>
+        <source>UTF-16 error: invalid low surrogate</source>
+        <translation>ошибка UTF-16: неверный нижний суррогат</translation>
+    </message>
+    <message>
+        <source>UTF-16 error: isolated low surrogate</source>
+        <translation>ошибка UTF-16: отдельный нижний суррогат</translation>
+    </message>
+    <message>
+        <source>UTF-32 error: code points 0xd800-0xdfff are not defined</source>
+        <translation>ошибка UTF-32: кодовые точки с 0xd800 по 0xdfff не определены</translation>
+    </message>
+    <message>
+        <source>UTF-32 error: code points greater than 0x10ffff are not defined</source>
+        <translation>ошибка UTF-32: кодовые точки больше 0x10ffff не определены</translation>
+    </message>
+    <message>
+        <source>bad data value</source>
+        <translation>плохое значение данных</translation>
+    </message>
+    <message>
+        <source>patterns do not all use the same character tables</source>
+        <translation>не все шаблоны используют одинаковые символьные таблицы</translation>
+    </message>
+    <message>
+        <source>magic number missing</source>
+        <translation>отсутствует магическое число</translation>
+    </message>
+    <message>
+        <source>pattern compiled in wrong mode: 8/16/32-bit error</source>
+        <translation>шаблон скомпилирован в неверном режиме: ошибка 8/16/32 бит</translation>
+    </message>
+    <message>
+        <source>bad offset value</source>
+        <translation>плохое значение смещения</translation>
+    </message>
+    <message>
+        <source>bad option value</source>
+        <translation>плохое значение опции</translation>
+    </message>
+    <message>
+        <source>invalid replacement string</source>
+        <translation>неверная замещающая строка</translation>
+    </message>
+    <message>
+        <source>bad offset into UTF string</source>
+        <translation>плохое смещение в строке UTF</translation>
+    </message>
+    <message>
+        <source>callout error code</source>
+        <translation>код ошибки вызова</translation>
+    </message>
+    <message>
+        <source>invalid data in workspace for DFA restart</source>
+        <translatorcomment>Deterministic Finite Automaton - Детерминированный Конечный Автомат</translatorcomment>
+        <translation>данные в рабочей области недопустимы для перезапуска ДКА</translation>
+    </message>
+    <message>
+        <source>too much recursion for DFA matching</source>
+        <translation>слишком большая рекурсия для ДКА поиска</translation>
+    </message>
+    <message>
+        <source>backreference condition or recursion test is not supported for DFA matching</source>
+        <translation>условие обратной ссылки или рекурсивный тест не поддерживается ДКА поиска</translation>
+    </message>
+    <message>
+        <source>function is not supported for DFA matching</source>
+        <translation>функция не поддерживается ДКА поиска</translation>
+    </message>
+    <message>
+        <source>pattern contains an item that is not supported for DFA matching</source>
+        <translation>шаблон содержит элемент, неподдерживаемый ДКА поиска</translation>
+    </message>
+    <message>
+        <source>workspace size exceeded in DFA matching</source>
+        <translation>превышен размер рабочей области ДКА поиска</translation>
+    </message>
+    <message>
+        <source>internal error - pattern overwritten?</source>
+        <translation>внутренняя ошибка: шаблон перезаписан?</translation>
+    </message>
+    <message>
+        <source>bad JIT option</source>
+        <translation>неверная опция JIT</translation>
+    </message>
+    <message>
+        <source>JIT stack limit reached</source>
+        <translation>достигнут предел стека JIT</translation>
+    </message>
+    <message>
+        <source>match limit exceeded</source>
+        <translation>предел поиска превышен</translation>
+    </message>
+    <message>
+        <source>no more memory</source>
+        <translation>нет больше памяти</translation>
+    </message>
+    <message>
+        <source>unknown substring</source>
+        <translation>неизвестная подстрока</translation>
+    </message>
+    <message>
+        <source>non-unique substring name</source>
+        <translation>неуникальное имя подстроки</translation>
+    </message>
+    <message>
+        <source>NULL argument passed</source>
+        <translation>вместо аргумента передан NULL</translation>
+    </message>
+    <message>
+        <source>nested recursion at the same subject position</source>
+        <translatorcomment>х.з. что значит</translatorcomment>
+        <translation>вложенная рекурсия в той же позиции субъекта</translation>
+    </message>
+    <message>
+        <source>recursion limit exceeded</source>
+        <translation>предел рекурсии превышен</translation>
+    </message>
+    <message>
+        <source>requested value is not available</source>
+        <translation>запрошенное значение недоступно</translation>
+    </message>
+    <message>
+        <source>requested value is not set</source>
+        <translation>запрошенное значение не задано</translation>
+    </message>
+    <message>
+        <source>offset limit set without PCRE2_USE_OFFSET_LIMIT</source>
+        <translation>предел смещения задан без PCRE2_USE_OFFSET_LIMIT</translation>
+    </message>
+    <message>
+        <source>bad escape sequence in replacement string</source>
+        <translation>неверная ESC-последовательность в замещающей строке</translation>
+    </message>
+    <message>
+        <source>expected closing curly bracket in replacement string</source>
+        <translation>требуется закрытая фигурная скобка в замещающей строке</translation>
+    </message>
+    <message>
+        <source>bad substitution in replacement string</source>
+        <translatorcomment>бред какой-то</translatorcomment>
+        <translation>плохая замена в замещающей строке</translation>
+    </message>
+    <message>
+        <source>match with end before start is not supported</source>
+        <translation>поиск с концом перед началом не поддерживается</translation>
+    </message>
+    <message>
+        <source>too many replacements (more than INT_MAX)</source>
+        <translation>слишком много замен (более INT_MAX)</translation>
     </message>
 </context>
 <context>
@@ -4284,6 +4687,10 @@ Please turn one of those options off.</source>
         <translation>Имя файла ссылается на каталог</translation>
     </message>
     <message>
+        <source>QSaveFile cannot open &apos;%1&apos; without direct write fallback enabled: path contains an Alternate Data Stream specifier</source>
+        <translation>QSaveFile не может открыть «%1» без включения прямой записи: путь содержит спецификатор альтернативного потока данных</translation>
+    </message>
+    <message>
         <source>Writing canceled by application</source>
         <translation>Запись прервана приложением</translation>
     </message>
@@ -4341,6 +4748,13 @@ Please turn one of those options off.</source>
     <message>
         <source>Scroll down</source>
         <translation>Прокрутить вниз</translation>
+    </message>
+</context>
+<context>
+    <name>QSctpSocket</name>
+    <message>
+        <source>The remote host closed the connection</source>
+        <translation>Удалённый узел закрыл соединение</translation>
     </message>
 </context>
 <context>
@@ -4901,7 +5315,7 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <source>Rotate Windows</source>
-        <translation type="unfinished">Повернуть окна</translation>
+        <translation>Повернуть окна</translation>
     </message>
     <message>
         <source>Rotation PB</source>
@@ -5439,11 +5853,11 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <source>Proxy authentication failed</source>
-        <translation>Не удалось авторизоваться на прокси-сервере</translation>
+        <translation>Не удалось аутентифицироваться на прокси-сервере</translation>
     </message>
     <message>
         <source>Proxy authentication failed: %1</source>
-        <translation>Не удалось авторизоваться на прокси-сервере: %1</translation>
+        <translation>Не удалось аутентифицироваться на прокси-сервере: %1</translation>
     </message>
     <message>
         <source>SOCKS version 5 protocol error</source>
@@ -5839,6 +6253,21 @@ Role of an accessible object</extracomment>
     </message>
 </context>
 <context>
+    <name>QSslDiffieHellmanParameter</name>
+    <message>
+        <source>No error</source>
+        <translation>Нет ошибки</translation>
+    </message>
+    <message>
+        <source>Invalid input data</source>
+        <translation>Неверные входные данные</translation>
+    </message>
+    <message>
+        <source>The given Diffie-Hellman parameters are deemed unsafe</source>
+        <translation>Переданные параметры Диффи-Хеллмана считаются небезопасными</translation>
+    </message>
+</context>
+<context>
     <name>QSslSocket</name>
     <message>
         <source>No error</source>
@@ -5949,6 +6378,14 @@ Role of an accessible object</extracomment>
         <translation>протокол не поддерживается</translation>
     </message>
     <message>
+        <source>Error while setting the minimal protocol version</source>
+        <translation>Ошибка при задании минимальной версии протокола</translation>
+    </message>
+    <message>
+        <source>Error while setting the maximum protocol version</source>
+        <translation>Ошибка при задании максимальной версии протокола</translation>
+    </message>
+    <message>
         <source>Invalid or empty cipher list (%1)</source>
         <translation>Некорректный или пустой список шифров (%1)</translation>
     </message>
@@ -5967,6 +6404,42 @@ Role of an accessible object</extracomment>
     <message>
         <source>Private key does not certify public key, %1</source>
         <translation>Закрытый ключ не соответствует открытому ключу, %1</translation>
+    </message>
+    <message>
+        <source>Diffie-Hellman parameters are not valid</source>
+        <translation>Параметры Диффи-Хеллмана неверны</translation>
+    </message>
+    <message>
+        <source>OpenSSL version with disabled elliptic curves</source>
+        <translation>Версия OpenSSL с отключёнными эллиптическими кривыми</translation>
+    </message>
+    <message>
+        <source>Error when setting the OpenSSL configuration (%1)</source>
+        <translation>Ошибка при создании конфигурации OpenSSL (%1)</translation>
+    </message>
+    <message>
+        <source>Expecting QByteArray for %1</source>
+        <translation>Для %1 требуется QByteArray</translation>
+    </message>
+    <message>
+        <source>An error occurred attempting to set %1 to %2</source>
+        <translation>Возникла ошибка при попытке задать %1 значение %2</translation>
+    </message>
+    <message>
+        <source>Wrong value for %1 (%2)</source>
+        <translation>Неверное значение для %1 (%2)</translation>
+    </message>
+    <message>
+        <source>Unrecognized command %1 = %2</source>
+        <translation>Команда не распознана %1 = %2</translation>
+    </message>
+    <message>
+        <source>SSL_CONF_finish() failed</source>
+        <translation>Сбой SSL_CONF_finish()</translation>
+    </message>
+    <message>
+        <source>SSL_CONF_CTX_new() failed</source>
+        <translation>Сбой SSL_CONF_CTX_new()</translation>
     </message>
     <message>
         <source>OpenSSL version too old, need at least v1.0.2</source>
@@ -6003,6 +6476,14 @@ Role of an accessible object</extracomment>
     <message>
         <source>Error during SSL handshake: %1</source>
         <translation>Ошибка квитирования SSL: %1</translation>
+    </message>
+    <message>
+        <source>DTLS server requires a &apos;VerifyNone&apos; mode with your version of OpenSSL</source>
+        <translation>Серверу DTLS требуется режим «VerifyNone» для текущей версии OpenSSL</translation>
+    </message>
+    <message>
+        <source>TLS initialization failed</source>
+        <translation>Не удалось инициализировать TLS</translation>
     </message>
 </context>
 <context>
@@ -6178,6 +6659,10 @@ Role of an accessible object</extracomment>
         <translation>Недопустимая глубина цвета изображения</translation>
     </message>
     <message>
+        <source>Image size exceeds limit</source>
+        <translation>Размер изображения больше допустимого</translation>
+    </message>
+    <message>
         <source>Could not seek to image read footer</source>
         <translation>Не удалось переместиться к концу изображения</translation>
     </message>
@@ -6192,6 +6677,17 @@ Role of an accessible object</extracomment>
     <message>
         <source>Could not reset to read data</source>
         <translation>Не удалось переместиться к данным</translation>
+    </message>
+</context>
+<context>
+    <name>QUdpSocket</name>
+    <message>
+        <source>Unable to send a datagram</source>
+        <translation>Невозможно отправить датаграмму</translation>
+    </message>
+    <message>
+        <source>No datagram available for reading</source>
+        <translation>Нет доступных для чтения датаграмм</translation>
     </message>
 </context>
 <context>
@@ -6353,21 +6849,6 @@ Role of an accessible object</extracomment>
     <message>
         <source>Select All</source>
         <translation>Выделить всё</translation>
-    </message>
-</context>
-<context>
-    <name>QWindowsDirect2DIntegration</name>
-    <message>
-        <source>Qt cannot load the direct2d platform plugin because the Direct2D version on this system is too old. The minimum system requirement for this platform plugin is Windows 7 SP1 with Platform Update.
-
-The minimum Direct2D version required is %1.%2.%3.%4. The Direct2D version on this system is %5.%6.%7.%8.</source>
-        <translation>Qt не может загрузить модуль платформы direct2d, так как установленная версия Direct2D слишком старая. Минимальные требования этого модуля: Windows 7 SP1 с Platform Update.
-
-Требуется Direct2D версии не ниже %1.%2.%3.%4. Версия обнаруженного Direct2D: %5.%6.%7.%8.</translation>
-    </message>
-    <message>
-        <source>Cannot load direct2d platform plugin</source>
-        <translation>Не удалось загрузить модуль платформы direct2d</translation>
     </message>
 </context>
 <context>
@@ -6587,16 +7068,36 @@ The minimum Direct2D version required is %1.%2.%3.%4. The Direct2D version on th
         <translation>Некорректный документ.</translation>
     </message>
     <message>
-        <source>Expected </source>
-        <translation>Требуется </translation>
+        <source>&apos;%1&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&apos;&lt;first option&gt;&apos;</extracomment>
+        <translation>«%1»</translation>
     </message>
     <message>
-        <source>, but got &apos;</source>
-        <translation>, получили &apos;</translation>
+        <source>%1 or &apos;%2&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&lt;first option&gt;, &apos;&lt;second option&gt;&apos;</extracomment>
+        <translation>%1 или «%2»</translation>
     </message>
     <message>
-        <source>Unexpected &apos;</source>
-        <translation>Неожиданное &apos;</translation>
+        <source>%1, &apos;%2&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&lt;options so far&gt;, &apos;&lt;next option&gt;&apos;</extracomment>
+        <translation>%1, «%2»</translation>
+    </message>
+    <message>
+        <source>%1, or &apos;%2&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&lt;options so far&gt;, or &apos;&lt;final option&gt;&apos;</extracomment>
+        <translation>%1 или «%2»</translation>
+    </message>
+    <message>
+        <source>Expected %1, but got &apos;%2&apos;.</source>
+        <translation>Требуется %1, а получено «%2».</translation>
+    </message>
+    <message>
+        <source>Unexpected &apos;%1&apos;.</source>
+        <translation>Неожиданное «%1».</translation>
     </message>
     <message>
         <source>Expected character data.</source>

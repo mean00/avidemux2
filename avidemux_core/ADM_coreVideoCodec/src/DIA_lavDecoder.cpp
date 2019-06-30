@@ -18,12 +18,11 @@
       \fn DIA_lavDecoder
       \brief Dialog for lavcodec *DECODER* option
 */
-uint8_t DIA_lavDecoder(bool  *swapUv, bool *showU)
+uint8_t DIA_lavDecoder(bool *swapUv)
 {
          diaElemToggle    swap(swapUv,QT_TRANSLATE_NOOP("lavdecoder","_Swap U and V"));
-         diaElemToggle    show(showU,QT_TRANSLATE_NOOP("lavdecoder","Show motion _vectors"));
-         diaElem *tabs[]={&swap,&show};
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("lavdecoder","Decoder Options"),2,tabs))
+         diaElem *tabs[]={&swap};
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("lavdecoder","Decoder Options"),1,tabs))
 	{
           return 1;
         }

@@ -1,0 +1,8 @@
+--- libswscale/libswscale.v.orig	2018-11-01 19:34:28.000000000 +0100
++++ libswscale/libswscale.v	2019-02-25 12:15:25.118863866 +0100
+@@ -1,4 +1,4 @@
+-LIBSWSCALE_MAJOR {
++ADM_LIBSWSCALE_MAJOR {
+     global:
+         swscale_*;
+         sws_*;

@@ -45,7 +45,20 @@ endif (WIN32)
 ###########################################
 include(admCoreIncludes)
 include_directories("${PTHREAD_INCLUDE_DIR}")
-ADD_EXECUTABLE(avidemux3_jobs_${QT_EXTENSION} ${ADM_JOB_SRCS})
+
+IF(WIN32)
+    ADD_EXECUTABLE(avidemux3_jobs_${QT_EXTENSION} WIN32 ${ADM_JOB_SRCS})
+    IF(MSVC)
+        set_target_properties(avidemux3_jobs_${QT_EXTENSION} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
+	    set_target_properties(avidemux3_jobs_${QT_EXTENSION} PROPERTIES WIN32_EXECUTABLE True)
+    ELSE(MSVC)
+	    target_link_libraries(avidemux3_jobs_${QT_EXTENSION} winmm -mwindows)
+    ENDIF(MSVC)
+ELSE(WIN32)
+    ADD_EXECUTABLE(avidemux3_jobs_${QT_EXTENSION} ${ADM_JOB_SRCS})
+ENDIF(WIN32)
+
+
 ADD_SOURCE_CFLAGS(ADM_jobs.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
 if (ADM_SUBVERSION)
         ADD_SOURCE_CFLAGS(ADM_jobs.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
@@ -62,9 +75,6 @@ if (WIN32 OR APPLE)
 	set_property(TARGET avidemux3_jobs_${QT_EXTENSION} PROPERTY OUTPUT_NAME avidemux_jobs)
 endif (WIN32 OR APPLE)
 
-IF (MINGW)
-	target_link_libraries(avidemux3_jobs_${QT_EXTENSION} winmm -mwindows)
-ENDIF (MINGW)
 
 IF (APPLE)
 	target_link_libraries(avidemux3_jobs_${QT_EXTENSION} "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")

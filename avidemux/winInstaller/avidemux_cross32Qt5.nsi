@@ -10,9 +10,14 @@ Section "Avidemux Core" SecCore
     SectionIn 1 2 RO
     SetOutPath $INSTDIR
     SetOverwrite on
-    ${File} "./Build Info.txt"
+    ${File} "./Build-Info.txt"
     ${File} "./ChangeLog.html"
     ${File} "./change.css"
+
+    ${File} ${BINARY_FOLDER}/libcrypto-1_1.dll
+    ${File} ${BINARY_FOLDER}/libssl-1_1.dll
+    ${File} ${BINARY_FOLDER}/libpcre2-16-0.dll
+
     ${File} ${BINARY_FOLDER}/libexpat-1.dll
     ${File} ${BINARY_FOLDER}/libffi-6.dll
     ${File} ${BINARY_FOLDER}/libglib-2.0-0.dll
@@ -48,13 +53,15 @@ Section "Avidemux Core" SecCore
     #${File} ${BINARY_FOLDER}/icutu56.dll  
     #${File} ${BINARY_FOLDER}/icuuc56.dll
     ${File} ${BINARY_FOLDER}/libintl-8.dll
-# SSL
+# SSL still needed ?
     ${File} ${BINARY_FOLDER}/libeay32.dll
     ${File} ${BINARY_FOLDER}/ssleay32.dll
         
     SetOutPath $INSTDIR\platforms
     ${File} ${BINARY_FOLDER}/platforms/qminimal.dll  
     ${File} ${BINARY_FOLDER}/platforms/qwindows.dll
+    SetOutPath $INSTDIR\styles
+    ${File} ${BINARY_FOLDER}/styles/qwindowsvistastyle.dll
     SetOutPath $INSTDIR
 # adm
     ${File} ${BINARY_FOLDER}/libADM_audioParser6.dll
@@ -77,7 +84,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}/libADM_coreVideoCodec6.dll
     ${File} ${BINARY_FOLDER}/libADM_coreVideoEncoder6.dll
     ${File} ${BINARY_FOLDER}/libADM_coreVideoFilter6.dll
-    ${File} ${BINARY_FOLDER}/libADM_coreSubtitle.dll
+    ${File} ${BINARY_FOLDER}/libADM_coreSubtitles6.dll
     ${File} ${SOURCE_FOLDER}/AUTHORS.
     ${File} ${SOURCE_FOLDER}/COPYING.
     ${File} ${SOURCE_FOLDER}/README.

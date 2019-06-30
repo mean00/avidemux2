@@ -16,7 +16,9 @@
 #define ADM_CORE_SOCKET_H
 
 #ifdef _WIN32
-#include "winsock2.h"
+ #ifndef NO_WINSOCK2
+	#include "winsock2.h"
+  #endif NO_WINSOCK2
 #endif
 
 #include "ADM_coreSocket6_export.h"

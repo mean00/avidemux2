@@ -41,7 +41,6 @@ extractMpeg4Info (uint8_t * data, uint32_t dataSize, uint32_t * w,
 		  uint32_t * h, uint32_t * time_inc)
 {
   // Search startcode
-  uint8_t b;
   uint32_t idx = 0;
   uint32_t mw, mh;
   uint32_t timeVal;
@@ -340,7 +339,7 @@ ADM_searchVop (uint8_t * begin, uint8_t * end, uint32_t * nb, ADM_vopS * vop,
   uint32_t globalOff = 0;
   uint32_t voptype;
   uint8_t code;
-  uint32_t w, h, t;
+  uint32_t w, h;
   uint32_t modulo, time_inc, vopcoded, vopType;
   *nb = 0;
   while (begin < end - 3)
@@ -489,11 +488,6 @@ int splitMpeg4(uint8_t *frame,uint32_t dataSize,mpeg4unit *unit,int maxUnits)
 bool extractVolHeader(uint8_t *data,uint32_t dataSize,uint8_t **volStart, uint32_t *volLen)
 {
     // Search startcode
-    uint8_t b;
-    uint32_t idx=0;
-    uint32_t mw,mh;
-    uint32_t time_inc;
-    
     mpeg4unit unit[10];
     int nbUnit=splitMpeg4(data,dataSize,unit,10);
     if(!nbUnit)

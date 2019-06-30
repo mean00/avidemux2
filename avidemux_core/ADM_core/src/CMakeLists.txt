@@ -4,7 +4,6 @@ SET(ADM_core_SRCS
         ADM_coreTranslator.cpp
         ADM_prettyPrint.cpp
 )
-
 IF (MINGW)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_mingw.cpp ADM_folder_win32.cpp ADM_folder_mingw.cpp ADM_win32_mingw.cpp )
 ELSEIF (APPLE)

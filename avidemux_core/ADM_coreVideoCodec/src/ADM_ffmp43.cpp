@@ -26,17 +26,11 @@
     #define LAV_VERBOSITY_LEVEL AV_LOG_INFO
 #endif
 
-extern "C"
-{
-    static void ADM_releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-    static int  ADM_getBuffer(AVCodecContext *avctx, AVFrame *pic);
-}
-
 #define aprintf(...) {}
 
 
 //****************************
-extern uint8_t DIA_lavDecoder (bool  * swapUv, bool * showU);
+extern uint8_t DIA_lavDecoder (bool *swapUv);
 extern "C"
 {
   int av_is_voppacked (AVCodecContext * avctx, int *vop_packed, int *gmc,
@@ -132,17 +126,15 @@ uint8_t decoderFF::getPARHeight (void)
 //________________________________________________
 bool  decoderFF::setParam(void)
 {
-	DIA_lavDecoder(&decoderFF_params.swapUv, &decoderFF_params.showMv);
-
-	return true;			// no param for ffmpeg
+    DIA_lavDecoder(&decoderFF_params.swapUv);
+    return true;
 }
 
-const decoderFF::decoderFF_param_t decoderFF::defaultConfig = {false, false};
+const decoderFF::decoderFF_param_t decoderFF::defaultConfig = {false};
 
 const ADM_paramList decoderFF::decoderFF_param_template[] =
 {
 	{"swapUv", offsetof(decoderFF_param_t, swapUv), "bool", ADM_param_bool},
-	{"showMv", offsetof(decoderFF_param_t, showMv), "bool", ADM_param_bool},
 	{NULL, 0, NULL}
 };
 
@@ -172,6 +164,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   hurryUp=false;
   _drain=false;
   _done=false;
+  _keepFeeding=false;
   _endOfStream=false;
   _setBpp=false;
   _setFcc=false;
@@ -198,8 +191,8 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   if(extraDataLen)
     {
             _extraDataLen=(int)extraDataLen;
-            _extraDataCopy=new uint8_t[extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE];
-            memset(_extraDataCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            _extraDataCopy=new uint8_t[extraDataLen+AV_INPUT_BUFFER_PADDING_SIZE];
+            memset(_extraDataCopy,0,extraDataLen+AV_INPUT_BUFFER_PADDING_SIZE);
             memcpy(_extraDataCopy,extraData,extraDataLen);
     }
    hwDecoder=NULL;
@@ -338,11 +331,15 @@ bool decoderFF::decodeErrorHandler(int code, bool headerOnly)
         {
             case AVERROR_EOF:
                 ADM_warning("[lavc] End of video stream reached\n");
-                setEndOfStream(true);
+                _keepFeeding=false;
+                _endOfStream=true;
                 flush();
                 return false;
             case AVERROR(EAGAIN):
+#ifdef ADM_DEBUG
                 ADM_info("[lavc] The decoder expects more input before output can be produced\n");
+#endif
+                _keepFeeding=true;
                 return false;
             case AVERROR(EINVAL):
                 ADM_error("[lavc] Codec not opened\n");
@@ -357,6 +354,8 @@ bool decoderFF::decodeErrorHandler(int code, bool headerOnly)
                 }
         }
     }
+    _keepFeeding=false;
+    _endOfStream=false;
     return true;
 }
 
@@ -366,24 +365,11 @@ bool decoderFF::decodeErrorHandler(int code, bool headerOnly)
 */
 bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
-  uint8_t *oBuff[3];
   int ret = 0;
   out->_noPicture = 0;
   if(hwDecoder)
         return hwDecoder->uncompress(in,out);
  
-  
-  if (decoderFF_params.showMv)
-    {
-      _context->debug_mv |= FF_SHOW;
-      _context->debug |= 0;	//FF_DEBUG_VIS_MB_TYPE;
-    }
-  else
-    {
-      _context->debug_mv &= ~FF_SHOW;
-      _context->debug &= ~(FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP);
-    }
-
   //printf("Frame size : %d\n",in->dataLength);
 
   if (in->dataLength == 0 && !_allowNull)	// Null frame, silently skipped
@@ -436,8 +422,6 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 
     ret = avcodec_receive_frame(_context, _frame);
 
-    if(!ret)
-        _endOfStream=false;
     if(!decodeErrorHandler(ret,hurryUp))
         return false;
 

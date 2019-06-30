@@ -37,7 +37,7 @@ ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src,bool globalHeader) : A
 */
 bool ADM_jpegEncoder::configureContext(void)
 {
-    _context->flags |= CODEC_FLAG_QSCALE;
+    _context->flags |= AV_CODEC_FLAG_QSCALE;
     return true;
 }
 

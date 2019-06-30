@@ -194,57 +194,41 @@ void memcpyswap(uint8_t *dest, uint8_t *src, uint32_t size)
 
 }
 /**
-    \file ADM_findMpegStartCode
-    \brief    Find mpeg1/2/4 video startcode
-    00 00 01 xx yy
-    return xx + offset to yy
-
+    \fn ADM_findMpegStartCode
+    \brief Compatibility wrapper
 */
 bool ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset)
 {
-    uint32_t startcode=0xffffffff;
-    uint8_t  *ptr=start;
-
-
-    while(ptr<end)
-	{
-		startcode=(startcode<<8)+*ptr;
-		if((startcode&0xffffff00)==0x100)
-		{
-			*outstartcode=*ptr;
-			*offset=ptr-start+1;
-			return true;
-		}
-		ptr++;
-	}
-	return false; // startcode not found
+    bool zero=false;
+    return ADM_findAnnexBStartCode(start,end,outstartcode,offset,&zero);
 }
 /**
-    \file ADM_findH264StartCode
-    \brief    Find mpeg1/2/4 video startcode
-    00 00 00 01 xx yy
-    return xx + offset to yy
-
+    \fn     ADM_findAnnexBStartCode
+    \brief  Find Annex B video stream startcode 00 00 01 xx yy
+            and check whether it is preceded by zero byte,
+            return xx + offset to payload (yy).
 */
-
-bool ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset)
+bool ADM_findAnnexBStartCode(uint8_t *start, uint8_t *end, uint8_t *outstartcode, uint32_t *offset, bool *zero)
 {
     uint32_t startcode=0xffffffff;
     uint8_t  *ptr=start;
+    *zero=false;
     end--;
 
     while(ptr<end)
-	{
-		startcode=(startcode<<8)+*ptr;
-		if(1==startcode)
-		{
-			*outstartcode=ptr[1];
-			*offset=ptr-start+2;
-			return true;
-		}
-		ptr++;
-	}
-	return false; // startcode not found
+    {
+        startcode=(startcode<<8)+*ptr;
+        if(1==(startcode&0xffffff))
+        {
+            if(!(startcode>>24))
+                *zero=true;
+            *outstartcode=ptr[1];
+            *offset=ptr-start+2;
+            return true;
+        }
+        ptr++;
+    }
+    return false; // startcode not found
 }
 
 //**********************************************************
@@ -512,13 +496,13 @@ bool ADM_probeSequencedFile(const char *fileName)
     bool success=false;
     uint64_t fileSize,threshold,tolerance;
     threshold=tolerance=1;
-    threshold<<=30; // we start with 1 GiB
+    threshold<<=28; // we start at 256 MiB, this value is hardcoded in some devices
     tolerance<<=20; // 1 MiB
     int64_t sz=ADM_fileSize(fileName);
     if(sz<0)
         return false;
     fileSize=sz;
-    for(int i=0;i<3;i++)
+    for(int i=0;i<5;i++)
     {
         if(fileSize >= threshold-tolerance && fileSize <= threshold+tolerance)
         {
@@ -526,6 +510,8 @@ bool ADM_probeSequencedFile(const char *fileName)
             break;
         }
         threshold<<=1;
+        if(i==1)
+            tolerance<<=3; // 8 MiB starting with 1 GiB fragment size
     }
     if(!success)
         return false;
@@ -548,14 +534,9 @@ bool ADM_probeSequencedFile(const char *fileName)
     sprintf(names,match,base+1);
     std::string middle(names);
     std::string target=aLeft+middle+aRight;
-    bool r=false;
-    FILE *f=ADM_fopen(target.c_str(),"rb");
-    if(f)
-    {
-        fclose(f);
-        r=true;
-    }
-
-    return r;
+    sz=ADM_fileSize(target.c_str());
+    if(sz<0 || sz > threshold+tolerance)
+        return false;
+    return true;
 }
 //EOF

@@ -23,9 +23,9 @@ static void GUI_FileSelRead(const char *label,SELFILE_CB cb);
 static void GUI_FileSelWrite(const char *label,SELFILE_CB cb);
 static void GUI_FileSelRead(const char *label, char * * name);
 static void GUI_FileSelWrite(const char *label, char * * name);
-static uint8_t FileSel_SelectDir(const char *title,char *target,uint32_t max, const char *source);
-static uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const char *source);
-static uint8_t FileSel_SelectRead(const char *title,char *target,uint32_t max, const char *source);
+static uint8_t FileSel_SelectDir(const char *title,char *target,uint32_t max, const char *source, const char *extension);
+static uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const char *source, const char *extension);
+static uint8_t FileSel_SelectRead(const char *title,char *target,uint32_t max, const char *source, const char *extension);
 static void init(void);
 //********************
 void GUI_FileSelRead(const char *label,SELFILE_CB *cb) 
@@ -41,15 +41,15 @@ void GUI_FileSelWriteExtension(const char *label, const char *ext, SELFILE_CB * 
 void GUI_FileSelReadExtension(const char *label, const char *ext,SELFILE_CB * name)
 {}
 
-uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const char *source)
+uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const char *source, const char *extension)
 {
 	return 0;
 }
-uint8_t FileSel_SelectRead(const char *title,char *target,uint32_t max, const char *source)
+uint8_t FileSel_SelectRead(const char *title,char *target,uint32_t max, const char *source, const char *extension)
 {
   return 0;
 }
-uint8_t FileSel_SelectDir(const char *title,char *target,uint32_t max, const char *source)
+uint8_t FileSel_SelectDir(const char *title,char *target,uint32_t max, const char *source, const char *extension)
 {
 	return 0;
 }

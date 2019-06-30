@@ -1,0 +1,29 @@
+Avidemux 2.6.7 
+-----------------------
+Built using GCC 4.8.1 
+Packaged with NSIS 2.46.
+
+Included libraries:
+Aften           git-89aee3d496bb2a89f046025402626ee12a12969f
+Expat           2.1.0
+FAAC            1.28
+FAAD2           2.7
+Fontconfig      2.10.2
+Freetype        2.4.10
+FriBidi         0.19.5
+LAME            3.99.5
+libogg          1.3.0
+libvorbis       1.3.3
+libvpx          1.1.0
+NSPR            4.9.4
+opencore-amr    0.1.3
+Qt              4.8.4
+SpiderMonkey    1.7.0
+SQLite          3.7.15
+TwoLAME         0.3.13
+x264            r2230
+Xvid            1.3.2
+zlib            1.2.8
+
+Included applications:
+Avisynth Proxy GUI 2.20

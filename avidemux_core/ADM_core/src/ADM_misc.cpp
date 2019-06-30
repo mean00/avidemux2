@@ -304,4 +304,27 @@ bool ADM_shutdown(void)
 	return (system("shutdown -P 0") == 0);
 #endif
 }
+
+
+/**
+ * 
+ * @return 
+ */
+const std::string &ADM_getTimeDateAsString(const char *format)
+{    
+    static std::string text; // not thread safe...
+    char timestamp[32];
+    uint64_t ss=ADM_getSecondsSinceEpoch();
+    time_t tme=(time_t)ss;
+    struct tm *ct;
+    ct=localtime(&tme);
+    size_t l=strftime(timestamp,32,format? format : "%F %H%M%S",ct);
+    if(l)
+        text=std::string(timestamp);
+    else
+        text=std::string("UNKNOWN");
+    return text;
+}
+
+
 //EOF

@@ -1,14 +1,14 @@
---- libavutil/log.c.org	2016-10-01 10:35:54.268021336 +0200
-+++ libavutil/log.c	2016-10-01 10:37:11.186206914 +0200
+--- libavutil/log.c.orig	2018-04-20 12:02:58.000000000 +0200
++++ libavutil/log.c	2018-07-16 20:28:17.928746112 +0200
 @@ -39,6 +39,7 @@
  #include "common.h"
  #include "internal.h"
  #include "log.h"
 +#include "avassert.h" // MEANX
+ #include "thread.h"
  
- #if HAVE_PTHREADS
- #include <pthread.h>
-@@ -121,7 +122,7 @@
+ static AVMutex mutex = AV_MUTEX_INITIALIZER;
+@@ -119,7 +120,7 @@
  
  #endif
  static int use_color = -1;
@@ -16,8 +16,8 @@
 +static AV_FATAL_HANDLER *fatalHandler=NULL; // MEANX
  static void check_color_terminal(void)
  {
- #if defined(_WIN32) && !defined(__MINGW32CE__) && HAVE_SETCONSOLETEXTATTRIBUTE
-@@ -439,3 +440,22 @@
+ #if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE
+@@ -433,3 +434,22 @@
      missing_feature_sample(0, avc, msg, argument_list);
      va_end(argument_list);
  }

@@ -101,7 +101,8 @@ void jobsWindow::DeleteOne(bool b)
 		if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("qjobs","Sure!"), QT_TRANSLATE_NOOP("qjobs","Delete job"), QT_TRANSLATE_NOOP("qjobs","Are you sure you want to delete %s job?"), ADM_getFileName(_jobsName[sel]).c_str()))
 		{
 			desc[sel].status = STATUS_DELETED;
-			unlink(_jobsName[sel]);
+			if(!ADM_eraseFile(_jobsName[sel]))
+				ADM_warning("Could not delete %s\n",_jobsName[sel]);
 			updateRows();
 		}
 	}
@@ -117,7 +118,8 @@ void jobsWindow::DeleteAll(bool b)
 		for(int sel = 0; sel < _nbJobs; sel++)
 		{
 			desc[sel].status = STATUS_DELETED;
-			unlink(_jobsName[sel]);
+			if(!ADM_eraseFile(_jobsName[sel]))
+				ADM_warning("Could not delete %s\n",_jobsName[sel]);
 		}
 
 		updateRows();

@@ -32,8 +32,6 @@
 	{ \
 		ADM_AVCODEC_SETTING_VERSION, \
 		2, /* Multithreaded */ \
-		ME_EPZS,			/* ME */ \
-		0,				/* GMC */ \
 		1,				/* 4MV */ \
 		0,				/* _QPEL */ \
 		1,				/* _TREILLIS_QUANT */ \

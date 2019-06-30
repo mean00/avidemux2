@@ -36,6 +36,9 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 */
 void mx_bihFromVideo(ADM_BITMAPINFOHEADER *bih,ADM_videoStream *video)
 {
+        uint32_t fcc=video->getFCC();
+        if(fcc==fourCC::get((uint8_t *)"DIB "))
+            fcc=0;
         memset(bih,0,sizeof(*bih));
         //
          bih->biSize=sizeof(ADM_BITMAPINFOHEADER); //uint32_t 	biSize;
@@ -43,7 +46,7 @@ void mx_bihFromVideo(ADM_BITMAPINFOHEADER *bih,ADM_videoStream *video)
          bih->biHeight=video->getHeight(); //uint32_t  	biHeight;
          bih->biPlanes=1; //    uint16_t 	biPlanes;
          bih->biBitCount=24; //
-         bih->biCompression=video->getFCC(); //    uint32_t 	biCompression;
+         bih->biCompression=fcc; // uint32_t biCompression;
          bih->biSizeImage=(bih->biWidth*bih->biHeight*3)>>1;//    uint32_t 	biSizeImage;
          bih->biXPelsPerMeter=0;
          bih->biYPelsPerMeter=0;
@@ -82,9 +85,12 @@ void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
 */
  void mx_streamHeaderFromVideo(AVIStreamHeader *header,ADM_videoStream *video)
 {
+        uint32_t fcc=video->getFCC();
+        if(fcc==fourCC::get((uint8_t *)"DIB "))
+            fcc=0;
         memset(header,0,sizeof(*header));
 	header->fccType=fourCC::get((uint8_t *)"vids");  //uint32_t	fccType;
-	header->fccHandler=video->getFCC(); //uint32_t	fccHandler;
+	header->fccHandler=fcc; // uint32_t fccHandler;
 	header->dwFlags=0; //int32_t	dwFlags;	/* Contains AVITF_* flags */
 	header->wPriority=0; //int16_t	wPriority;	/* dwPriority - splited for audio */
 	header->wLanguage=0; //int16_t	wLanguage;

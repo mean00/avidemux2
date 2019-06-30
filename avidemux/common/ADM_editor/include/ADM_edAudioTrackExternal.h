@@ -47,6 +47,7 @@ public:
 //
                     CHANNEL_TYPE    *getChannelMapping(void );
                     uint32_t        getOutputFrequency(void); // sbr
+                    uint32_t        getOutputChannels(void);
             virtual bool            getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
 
 virtual ADM_edAudioTrackExternal *castToExternal(void) {return this;}

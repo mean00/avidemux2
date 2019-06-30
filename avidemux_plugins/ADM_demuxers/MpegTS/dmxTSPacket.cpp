@@ -78,12 +78,13 @@ bool tsPacket::open(const char *filenames,FP_TYPE append)
     // Detect TS1/TS2...
         printf("[TsPacket] Detecting TS/TS2...\n");
 
-        uint8_t r;
+#define MAX_BOGUS_TS_MARKERS 4
+    for(int i=0;i<MAX_BOGUS_TS_MARKERS;i++)
+    {
         int tryMe=250;
         while(tryMe--)
         {
-            r=_file->read8i();
-            if(r==TS_MARKER) break;
+            if(_file->read8i()==TS_MARKER) break;
             if(_file->end()) 
             {
                 tryMe=0;
@@ -102,7 +103,14 @@ bool tsPacket::open(const char *filenames,FP_TYPE append)
         setPos(startPos);
         score2=score(_file,20,4);
         printf("[TsPacket] Score : 188:%d, 192:%d out of 20\n",score1,score2);
-        if(score2 && score2>score1)
+        if(score1==1 && score2==1)
+        {
+            startPos++;
+            ADM_info("Probably bogus sync byte detection, retrying at offset %" PRIu64"\n",startPos);
+            setPos(startPos);
+            continue;
+        }
+        if(score2>score1)
         {
             printf("[TsPacket] Probably TS2 (192)...\n");
             extraCrap=4;
@@ -110,8 +118,10 @@ bool tsPacket::open(const char *filenames,FP_TYPE append)
         {
             printf("[TsPacket] Probably TS1 (188)...\n");
         }
-        setPos(0);
-        return true;
+        break;
+    }
+    setPos(0);
+    return true;
 }
 /**
     \fn close

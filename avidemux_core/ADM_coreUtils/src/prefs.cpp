@@ -31,8 +31,6 @@
 #define CONFIG "config3"
 #define FILE_SIZE_MAX (20*1024)
 
-static char *checkDirAccess(char *home);
-extern char *ADM_escape(const ADM_filename *incoming);
 class preferences *prefs;
 static my_prefs_struct myPrefs;
 
@@ -211,7 +209,8 @@ bool preferences::save()
    if(true==my_prefs_struct_jserialize(tmp.c_str(),&myPrefs))
     {
         ADM_copyFile(tmp.c_str(),path.c_str());
-        ADM_eraseFile(tmp.c_str());
+        if(!ADM_eraseFile(tmp.c_str()))
+            ADM_warning("Could not delete temporary file %s\n",tmp.c_str());
         return RC_OK;
     }
     ADM_error("Cannot save prefs\n");

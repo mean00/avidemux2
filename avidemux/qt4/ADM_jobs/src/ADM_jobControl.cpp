@@ -207,6 +207,9 @@ bool        jobWindow::popup(const char *errorMessage)
 bool jobRun(int ac,char **av)
 {
     initTranslator();
+#if defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(5,11,0)
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     QApplication *app=new QApplication(ac,av,0);
     Q_INIT_RESOURCE(jobs);
     loadTranslator();

@@ -126,7 +126,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         uint64_t total=0;
         uint64_t threshold,tolerance;
         threshold=tolerance=1;
-        threshold<<=30;
+        threshold<<=28;
         tolerance<<=20;
 
         // build match string
@@ -177,17 +177,19 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                                             myFd.fileSize );
 
                 listOfFd.append(myFd);
-                // append only if all files but the last one are of ~ equal size: 1, 2 or 4 GiB,
-                // the usual threshold for automatically split streams
+                // append only if all files but the last one are of ~ equal size: 256 or 512 MiB,
+                // 1, 2 or 4 GiB, the usual threshold for automatically split streams
                 if(myFd.fileSize < threshold-tolerance)
                     break;
                 if(!count)
                 {
-                    for(int i=0;i<3;i++)
+                    for(int i=0;i<5;i++)
                     {
                         if(myFd.fileSize >= threshold-tolerance && myFd.fileSize <= threshold+tolerance)
                             break;
                         threshold<<=1;
+                        if(i==1)
+                            tolerance<<=3; // 8 MiB starting with 1 GiB fragment size
                     }
                 }
                 count++;
@@ -358,8 +360,6 @@ uint8_t fileParser::getpos(uint64_t *o)
 ----------------------------------------------------*/
 uint32_t fileParser::read32(uint32_t len, uint8_t *buffer)
 {
-uint32_t r;
-
 uint64_t remain,begin,mx,last;
 
         ADM_assert(_off>=_head);
@@ -496,8 +496,22 @@ uint8_t r;
     }
     else    
     {
-        read32(1,&r);
-        _off--;
+        uint64_t mx=listOfFd[_curFd].fileSize+listOfFd[_curFd].fileSizeCumul-_off;
+        // If nothing is left, switch to the next file
+        if(!mx)
+        {
+            _head=_tail=_off;
+            _curFd++;
+            if(_curFd>=listOfFd.size()) return 0;
+            fseeko(listOfFd[_curFd].file,0,SEEK_SET);
+            mx=listOfFd[_curFd].fileSize;
+        }
+        if(mx>DMX_BUFFER) mx=DMX_BUFFER;
+        // Fill the buffer
+        fread(_buffer,mx,1,listOfFd[_curFd].file);
+        _head=_off;
+        _tail=_head+mx;
+        r=_buffer[0];
     }
     return r;
 

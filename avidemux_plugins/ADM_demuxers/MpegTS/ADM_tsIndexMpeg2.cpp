@@ -37,7 +37,7 @@ static const uint32_t FPS[16]={
 /**
     \fn runMpeg2
 */  
-bool TsIndexerMpeg2::run(const char *file,ADM_TS_TRACK *videoTrac)
+uint8_t TsIndexerMpeg2::run(const char *file,ADM_TS_TRACK *videoTrac)
 {
 uint32_t temporal_ref,val;
 uint8_t buffer[50*1024];
@@ -50,6 +50,7 @@ TSVideo video;
 indexerData  data;    
 dmxPacketInfo tmpInfo;
 
+uint8_t result=1;
 bool bAppend=false;
 
     listOfUnits.clear();
@@ -70,8 +71,8 @@ bool bAppend=false;
 
     if(!index)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
-        return false;
+        printf("[TsIndexerMpeg2] Cannot create %s\n",indexName.c_str());
+        return 0;
     }
     
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
@@ -93,13 +94,12 @@ bool bAppend=false;
     fullSize=pkt->getSize();
     int startCode;
     decodingImage=false;
-    bool keepRunning=true;
 #define likely(x) x
 #define unlikely(x) x
     int lastStartCode=0xb3;
 
 #define REMEMBER() { lastStartCode=startCode;}   
-      while(keepRunning)
+      while(true)
       {
         startCode=pkt->findStartCode();
         if(!pkt->stillOk()) break;
@@ -115,7 +115,10 @@ bool bAppend=false;
                                 pkt->getInfo(&thisUnit.packetInfo);
                                 thisUnit.consumedSoFar=pkt->getConsumed();
                                 if(!addUnit(data,unitTypeSps,thisUnit,4))
-                                    keepRunning=false;
+                                {
+                                    result=ADM_IGN;
+                                    goto the_end;
+                                }
                                 pkt->forward(8);  // Ignore
                                 continue;
                           }
@@ -139,7 +142,10 @@ bool bAppend=false;
                           pkt->getInfo(&thisUnit.packetInfo);
                           thisUnit.consumedSoFar=pkt->getConsumed();
                           if(!addUnit(data,unitTypeSps,thisUnit,4+4+4))
-                              keepRunning=false;
+                          {
+                              result=ADM_IGN;
+                              goto the_end;
+                          }
                           continue;
                           break;
 //#warning FIXME, update pic field info.... It triggers a end-of-pic message as it is
@@ -192,7 +198,10 @@ bool bAppend=false;
                           pkt->getInfo(&thisUnit.packetInfo);
                           thisUnit.consumedSoFar=pkt->getConsumed();
                           if(!addUnit(data,unitTypeSps,thisUnit,4))
-                              keepRunning=false;
+                          {
+                              result=ADM_IGN;
+                              goto the_end;
+                          }
                           break;                                            
                   case 0x00 : // picture
                         {
@@ -219,7 +228,10 @@ bool bAppend=false;
                           thisUnit.consumedSoFar=pkt->getConsumed();
                           thisUnit.imageType=type;
                           if(!addUnit(data,unitTypePic,thisUnit,4+2))
-                              keepRunning=false;
+                          {
+                              result=ADM_IGN;
+                              goto the_end;
+                          }
                           pkt->invalidatePtsDts();
                           data.nbPics++;
                         }
@@ -228,7 +240,7 @@ bool bAppend=false;
                     break;
                   }
       }
-    
+the_end:
         printf("\n");
         qfprintf(index,"\n[End]\n");
         qfprintf(index,"\n# Found %" PRIu32" images \n",data.nbPics); // Size
@@ -239,7 +251,7 @@ bool bAppend=false;
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;
-        return 1; 
+        return result;
 }
 
 /********************************************************************************************/

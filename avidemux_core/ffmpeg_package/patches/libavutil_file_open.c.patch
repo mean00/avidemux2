@@ -1,0 +1,22 @@
+--- libavutil/file_open.c.orig	2019-04-01 13:16:31.000000000 +0200
++++ libavutil/file_open.c	2019-04-16 19:17:10.696158476 +0200
+@@ -38,12 +38,19 @@
+ #include <share.h>
+ #include <errno.h>
+ #include "wchar_filename.h"
++#include "avstring.h"
++
++#ifdef _MSC_VER
++#undef HAVE_MKSTEMP // MEANX
++#endif
+ 
+ static int win32_open(const char *filename_utf8, int oflag, int pmode)
+ {
+     int fd;
+     wchar_t *filename_w;
+ 
++    av_strstart(filename_utf8, "//", &filename_utf8); // remove leading double slashes - eum.
++
+     /* convert UTF-8 to wide chars */
+     if (utf8towchar(filename_utf8, &filename_w))
+         return -1;

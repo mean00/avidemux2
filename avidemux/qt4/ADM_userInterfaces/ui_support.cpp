@@ -66,9 +66,16 @@ const char* getNativeRendererDesc(int engine)
 	return "Qt";
 }
 
+#ifdef _MSC_VER
+ #define FLUSH_LOG_BUFFER fflush(stdout);
+#else
+ #define FLUSH_LOG_BUFFER
+#endif
+
 void GUI_OpenApplicationLog()
 {
 #ifdef _WIN32
+    FLUSH_LOG_BUFFER
     QDesktopServices::openUrl(QUrl::fromLocalFile(QString(ADM_getLogDir()) + "admlog.txt"));
 #else
     QDesktopServices::openUrl(QUrl::fromLocalFile(QString(ADM_getBaseDir()) + "admlog.txt"));
@@ -78,7 +85,7 @@ void GUI_OpenApplicationLog()
 void GUI_OpenApplicationDataFolder()
 {
     QString baseDir = QString(ADM_getBaseDir());
-#ifdef __WIN32
+#ifdef _WIN32
     QString logDir = QString(ADM_getLogDir());
     if(logDir != baseDir)
     {
@@ -92,8 +99,12 @@ void GUI_OpenApplicationDataFolder()
             QFile::copy(dest,old);
         if(QFile::exists(dest) && !QFile::remove(dest))
             ADM_warning("Could not delete %s to copy %s there\n",dest.toUtf8().constData(),src.toUtf8().constData());
-        else if(!QFile::copy(src,dest))
-            ADM_warning("Copying %s to %s failed\n",src.toUtf8().constData(),dest.toUtf8().constData());
+        else
+        {
+            FLUSH_LOG_BUFFER
+            if(!QFile::copy(src,dest))
+                ADM_warning("Copying %s to %s failed\n",src.toUtf8().constData(),dest.toUtf8().constData());
+        }
     }
 #endif
     QDesktopServices::openUrl(QUrl::fromLocalFile(baseDir));

@@ -6,6 +6,7 @@
 #include "ADM_crashdump_apple.h"
 #include "ADM_crashdump_other.h"
 #include "ADM_crashdump_unix.h"
+#include "ADM_crashdump_vs.h"
 
 #ifdef __cplusplus
 extern "C"

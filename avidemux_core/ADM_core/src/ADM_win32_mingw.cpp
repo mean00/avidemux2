@@ -10,7 +10,7 @@
 #include "ADM_misc.h"
 #include <algorithm>
 
-void redirectStdoutToFile(void)
+void redirectStdoutToFile(const char *logFile)
 {
     // Don't redirect stdout and stderr if SDL hasn't already hijacked it.
     // This allows us to optionally compile all EXEs as console applications
@@ -40,7 +40,6 @@ void redirectStdoutToFile(void)
     remove(stderrPath);
 
     // Redirect output to log file in the user's profile directory
-    const char* logFile = "admlog.txt";
     const char* logDir = ADM_getLogDir();
     char *logPath = new char[strlen(logDir) + strlen(logFile) + 1];
 

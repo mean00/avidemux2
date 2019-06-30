@@ -118,8 +118,8 @@ void HandleAction_Save(Action action)
                 }else
                 {
                     std::string oFile;
-                    char *oText=NULL;
-                    
+                    std::string prefilled=std::string("Job ")+ADM_getTimeDateAsString();
+                    char *oText=ADM_strdup(prefilled.c_str());
                     diaElemFile wFile(1,oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
                     diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
                     diaElem *elems[2]={&wText,&wFile};
@@ -471,6 +471,26 @@ bool A_saveJpg (const char *name)
 */
 int A_saveBunchJpg(const char *name)
 {
+#if defined(__APPLE__)
+ #define MAX_LEN 1024
+#else
+ #define MAX_LEN 4096
+#endif
+
+    char fullName[MAX_LEN];
+    std::string baseName,ext;
+
+    // Split name into base + extension
+    ADM_PathSplit(std::string(name),baseName,ext);
+
+    int check=strlen(baseName.c_str());
+    check+=10;
+    if(check>MAX_LEN)
+    {
+        ADM_error("Full path = %d is too long, aborting.\n",check);
+        return 0;
+    }
+
     int success=0;
     uint64_t original=admPreview::getCurrentPts();
     uint64_t start=video_body->getMarkerAPts();
@@ -514,14 +534,10 @@ int A_saveBunchJpg(const char *name)
     admPreview::deferDisplay(true);
     admPreview::seekToTime(start);
 
-    char fullName[2048];
-    std::string baseName,ext;
+
     uint32_t range=(uint32_t)((end-start)/1000);
     uint32_t fn;
     DIA_workingBase *working;
-
-    // Split name into base + extension
-    ADM_PathSplit(std::string(name),baseName,ext);
 
     working=createWorking(QT_TRANSLATE_NOOP("adm","Saving selection as set of JPEG images"));
     while(true)
@@ -650,21 +666,36 @@ void A_queueJob(const char *jobName,const char *outputFile)
     IScriptEngine *engine=getPythonScriptEngine();
             if(!engine)
             {
-                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Queue"),QT_TRANSLATE_NOOP("adm","Cannot get tinyPÿ script engine"));
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Cannot get tinyPy script engine"));
                 return;
             }
 
             job.outputFileName=string(outputFile);
+            if(job.outputFileName.empty())
+            {
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Output file not specified"));
+                return;
+            }
             job.jobName=string(jobName);
 //#warning make sure it is unique
             job.scriptName=string(jobName)+string(".")+engine->defaultFileExtension();
-            if(false==ADMJob::jobAdd(job))
+            string completePath=string(ADM_getJobDir());
+            completePath+=job.scriptName;
+            bool collision=false;
+            if(ADM_fileExist(completePath.c_str()))
             {
-                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Queue"),QT_TRANSLATE_NOOP("adm","Cannot add job %s"),jobName);
+                char str[4096+512+1];
+                str[0]='\0';
+                snprintf(str,4096+512+1,QT_TRANSLATE_NOOP("adm","Job script %s already exists. Overwrite?"),completePath.c_str());
+                str[4096+512]='\0';
+                if(false==GUI_Question(str))
+                    collision=true;
+            }
+            if(collision || false==ADMJob::jobAdd(job))
+            {
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Cannot add job %s"),jobName);
                 return;
             }
-            string completePath=string(ADM_getJobDir());
-            completePath=completePath+string("/")+job.scriptName;
             // Save the script...
 
             A_saveScript(engine, completePath.c_str());

@@ -124,7 +124,10 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
  if ((fcc == 0) || fourCC::check (fcc, (uint8_t *) "DIB "))
     {
       // RGB 16 Codecs
-      printf ("\n using DIB codec (%d bpp)\n",(int)bpp);
+      if(bpp!=96)
+          printf ("\n using DIB codec (%d bpp%s)\n",(int)bpp,(bpp==32)? " BGRx" : "");
+      else
+          printf ("\n using DIB codec (%d bpp xBGR)\n",32);
       return (decoders *) (new decoderRGB16 (w,h,fcc,extraLen,extraData,bpp));  //0
 
     }

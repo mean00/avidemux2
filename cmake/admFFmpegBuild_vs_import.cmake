@@ -48,7 +48,8 @@ INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/avconfig.h" DESTINATION "${AVI
 
 INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/avcodec.h" "${IMPORT_FOLDER}/include/libavcodec/vdpau.h"
         "${IMPORT_FOLDER}/include/libavcodec/version.h"
-        "${IMPORT_FOLDER}/include/libavcodec/audioconvert.h"
+        #"${IMPORT_FOLDER}/include/libavcodec/audioconvert.h"
+		
         DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
 
 INSTALL(FILES "${IMPORT_FOLDER}/include/libavformat/avformat.h" "${IMPORT_FOLDER}/include/libavformat/avio.h"
@@ -79,6 +80,7 @@ INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/attributes.h"
         "${IMPORT_FOLDER}/include/libavutil/samplefmt.h"
         "${IMPORT_FOLDER}/include/libavutil/rational.h" 
         "${IMPORT_FOLDER}/include/libavutil/hwcontext_dxva2.h" 
+		"${IMPORT_FOLDER}/include/libavutil/hwcontext.h"
         DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavutil" COMPONENT dev)
 
 INSTALL(FILES "${IMPORT_FOLDER}/include/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)

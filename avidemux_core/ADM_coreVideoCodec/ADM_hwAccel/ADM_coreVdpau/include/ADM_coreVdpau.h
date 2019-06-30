@@ -19,6 +19,16 @@
 #ifdef USE_VDPAU
 #include "vdpau/vdpau_x11.h"
 #include "vdpau/vdpau.h"
+
+#define FF_VDPAU_STATE_USED_FOR_RENDER 1
+#define FF_VDPAU_STATE_USED_FOR_REFERENCE 2
+
+struct ADM_vdpauRenderState {
+    VdpVideoSurface surface;
+    int state; // Holds FF_VDPAU_STATE_* values.
+    int refCount; // Used by how many client MEANX
+};
+
 #endif 
 
 #include "ADM_windowInfo.h"

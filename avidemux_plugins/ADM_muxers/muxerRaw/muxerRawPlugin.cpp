@@ -16,9 +16,9 @@
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
 #include "muxerRaw.h"
+#include "raw_muxer_desc.cpp"
 
-#include "fourcc.h"
-static bool rawConfigure(void) {return true;};
+extern bool rawConfigure(void);
 
 ADM_MUXER_BEGIN( "raw",muxerRaw,
                     1,0,0,
@@ -26,7 +26,8 @@ ADM_MUXER_BEGIN( "raw",muxerRaw,
                     "RAW muxer plugin (c) Mean 2008",
                     "Video Only", // DIsplay name
                     rawConfigure,
-                    NULL,0,
-                    0
+                    raw_muxer_param,
+                    &muxerConfig,
+                    sizeof(muxerConfig)
                 );
 

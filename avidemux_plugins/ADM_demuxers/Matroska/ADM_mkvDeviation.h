@@ -23,6 +23,7 @@ public:
         ~mkvDeviation();
         int computeDeviation(int num, int den,int &nbSkipped);
         void sort(void);
+        uint64_t *getSorted(void) { return sorted; }
         void add(uint64_t p)
         {
             sorted[nbValid++]=p+500; // one ms error, take in the middle

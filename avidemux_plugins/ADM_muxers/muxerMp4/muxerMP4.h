@@ -27,11 +27,27 @@ typedef enum
 
 typedef enum
 {
+    MP4_MUXER_OPT_NONE,
+    MP4_MUXER_OPT_FASTSTART,
+    MP4_MUXER_OPT_FRAGMENT
+}MP4_MUXER_OPTIMIZE;
+
+typedef enum
+{
     STANDARD,
     WIDE,
     UNI,
     CINEMA
 }MP4_MUXER_DAR;
+
+typedef enum
+{
+    MP4_MUXER_ROTATE_0,
+    MP4_MUXER_ROTATE_90,
+    MP4_MUXER_ROTATE_180,
+    MP4_MUXER_ROTATE_270
+}MP4_MUXER_ROTATION;
+
 #include "mp4_muxer.h"
 extern mp4_muxer muxerConfig;
 

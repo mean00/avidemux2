@@ -36,7 +36,6 @@
 
 static bool inited=false;
 static struct timeval _itimev;
-static uint32_t getAbsTime( void );
 
 #ifndef _WIN32
 #include <unistd.h>

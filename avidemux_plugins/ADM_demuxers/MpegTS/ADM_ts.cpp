@@ -25,9 +25,7 @@
 #define MY_CLASS tsHeader
 #include "ADM_coreDemuxerMpegTemplate.cpp.h"
 
-
-
-uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
+extern uint8_t tsIndexer(const char *file);
 
 /**
       \fn open
@@ -37,14 +35,35 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 uint8_t tsHeader::open(const char *name)
 {
     char *idxName=(char *)malloc(strlen(name)+6);
-    bool r=false;
+    uint8_t r=1;
+
+    sprintf(idxName,"%s.idx2",name);
+    if(!ADM_fileExist(idxName))
+        r=tsIndexer(name);
+    if(r==ADM_IGN)
+    {
+        ADM_warning("Indexing cancelled by the user, deleting the index file. Bye.\n");
+        if(!ADM_eraseFile(idxName))
+            ADM_warning("Could not delete %s\n",idxName);
+        free(idxName);
+        return r;
+    }
+    if(!r)
+    {
+        ADM_error("Indexing of %s failed, aborting\n",name);
+        // Currently, indexer returns 0 only if it can't create the .idx2 file, nothing to remove.
+        free(idxName);
+        return r;
+    }
+
     FP_TYPE appendType=FP_DONT_APPEND;
-    uint32_t append;
     char *type;
     uint64_t startDts;
     uint32_t version=0;
+    bool reindex=false;
+    uint32_t append;
+    r=0;
 
-    sprintf(idxName,"%s.idx2",name);
     indexFile index;
     if(!index.open(idxName))
     {
@@ -67,7 +86,8 @@ uint8_t tsHeader::open(const char *name)
     version=index.getAsUint32("Version");
     if(version!=ADM_INDEX_FILE_VERSION)
     {
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("tsdemuxer","Error"),QT_TRANSLATE_NOOP("tsdemuxer","This file's index has been created with an older version of avidemux.\nPlease delete the idx2 file and reopen."));
+        if(GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","This file's index has been created with an older version of avidemux.\nThe file must be re-indexed. Proceed?")))
+            reindex=true;
         goto abt;
     }
     append=index.getAsUint32("Append");
@@ -127,9 +147,18 @@ uint8_t tsHeader::open(const char *name)
         }
     }
 abt:
-    free(idxName);
     index.close();
-    printf("[tsDemuxer] Loaded %d\n",r);
+    if(reindex)
+    {
+        uint8_t success=ADM_eraseFile(idxName);
+        free(idxName);
+        if(success)
+            r=open(name);
+        else
+            ADM_error("Can't delete old index file.\n");
+    }else
+        free(idxName);
+    printf("[tsDemuxer] open() returned %d\n",r);
     return r;
 }
 
@@ -298,7 +327,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     // Random frame
     // Need to rewind, then forward
     int startPoint=frame;
-    while(startPoint && (ListOfFrames[startPoint]->type!=1 || ListOfFrames[startPoint]->type!=4)) startPoint--;
+    while(startPoint && ListOfFrames[startPoint]->type!=1 && ListOfFrames[startPoint]->type!=4) startPoint--;
     printf("[tsDemux] Wanted frame %" PRIu32", going back to frame %" PRIu32", last frame was %" PRIu32",\n",frame,startPoint,lastFrame);
     pk=ListOfFrames[startPoint];
     if(!tsPacket->seek(pk->startAt,pk->index)) 

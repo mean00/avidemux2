@@ -1,8 +1,6 @@
-diff --git libavutil/lfg.c libavutil/lfg.c
-index ffa2f1f..9bdb5c9 100644
---- libavutil/lfg.c
-+++ libavutil/lfg.c
-@@ -41,7 +41,7 @@ av_cold void av_lfg_init(AVLFG *c, unsigned int seed)
+--- libavutil/lfg.c.orig	2017-10-15 17:59:38.000000000 +0200
++++ libavutil/lfg.c	2017-10-20 22:46:29.265946667 +0200
+@@ -43,7 +43,7 @@
          c->state[i + 2] = AV_RL32(tmp + 8);
          c->state[i + 3] = AV_RL32(tmp + 12);
      }

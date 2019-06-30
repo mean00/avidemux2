@@ -34,6 +34,7 @@ extern "C"
 #include "libavcodec/hevc_ps.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
+#include "libavutil/mem.h"
 }
 
 extern "C"
@@ -46,12 +47,6 @@ extern  HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *parser);
 }
 
 #include "../include/ADM_h265_tag.h"
-
-extern bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
-                                    uint32_t *outLen, uint8_t *outData);
-extern bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
-                uint8_t * outstartcode, uint32_t * offset);
-
 
 /**
  */
@@ -76,7 +71,7 @@ protected:
 H265Parser::H265Parser  (int len,uint8_t *data)
 {
     originalLength=len;
-    myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
+    myLen=len+AV_INPUT_BUFFER_PADDING_SIZE;
     myData=new uint8_t[myLen];
     memset(myData,0x2,myLen);
     memcpy(myData,data,len);
@@ -211,9 +206,10 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
    spsinfo-> num_extra_slice_header_bits=0;
    if(sps)
    {
-        printf("Coded width=%d x %d\n",sps->output_width,sps->output_height);
-        spsinfo->width=sps->output_width;
-        spsinfo->height=sps->output_height;
+        HEVCWindow *ow=&sps->output_window;
+        printf("Coded dimensions = %d x %d\n",sps->width-ow->left_offset-ow->right_offset,sps->height-ow->top_offset-ow->bottom_offset);
+        spsinfo->width=sps->width-ow->left_offset-ow->right_offset;
+        spsinfo->height=sps->height-ow->top_offset-ow->bottom_offset;
         spsinfo->fps1000=23976;
         spsinfo->dependent_slice_segments_enabled_flag=0;
         spsinfo->address_coding_length=bitsNeeded(sps->ctb_width*sps->ctb_height);
@@ -281,7 +277,7 @@ bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSinfoH265 *spsinfo)
 }
 
 /**
-    \fn ADM_findNalu
+    \fn ADM_findNaluH265
     \brief lookup for a specific NALU in the given buffer
 */
 NALU_descriptor *ADM_findNaluH265(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc)
@@ -295,13 +291,47 @@ NALU_descriptor *ADM_findNaluH265(uint32_t nalu,uint32_t maxNalu,NALU_descriptor
 }
 
 /**
-    \fn ADM_splitNalu
-    \brief split a nalu annexb size into a list of nalu descriptor
+    \fn writeBE32
 */
-extern int ADM_splitNalu_internal(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc,int startCodeLen);
-
-int ADM_splitNaluH265(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
+static void writeBE32(uint8_t *p, uint32_t size)
 {
-    return ADM_splitNalu_internal(start,end,maxNalu,desc,5); //  FOR h265 assume long start code
+    p[0]=size>>24;
+    p[1]=(size>>16)&0xff;
+    p[2]=(size>>8)&0xff;
+    p[3]=(size>>0)&0xff;
+}
+
+/**
+    \fn ADM_convertFromAnnexBToMP4H265
+    \brief convert annexB startcode (00 00 00 0 xx) to NALU
+*/
+int ADM_convertFromAnnexBToMP4H265(uint8_t *inData, uint32_t inSize, uint8_t *outData, uint32_t outMaxSize)
+{
+    uint8_t *tgt=outData;
+    NALU_descriptor desc[MAX_NALU_PER_CHUNK+1];
+    int nbNalu=ADM_splitNalu(inData,inData+inSize,MAX_NALU_PER_CHUNK,desc);
+    const int nalHeaderSize=4;
+    int outputSize=0;
+
+    for(int i=0;i<nbNalu;i++)
+    {
+        NALU_descriptor *d=desc+i;
+        aprintf("%d/%d : Nalu :0x%x size=%d\n",i,nbNalu,d->nalu,d->size);
+        switch((d->nalu>>1)&0x3f)
+        {
+            case NAL_H265_FD_NUT:
+            case NAL_H265_AUD:
+                break;
+            default:
+                writeBE32(tgt,1+d->size);
+                tgt[nalHeaderSize]=d->nalu;
+                memcpy(tgt+1+nalHeaderSize,d->start,d->size);
+                tgt+=d->size+1+nalHeaderSize;
+                break;
+        }
+        outputSize=tgt-outData;
+        ADM_assert(outputSize<outMaxSize);
+    }
+    return outputSize;
 }
 // EOF

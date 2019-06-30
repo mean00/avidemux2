@@ -102,10 +102,10 @@ void GUI_FileSelReadExtension(const char *label,const char *extension,SELFILE_CB
  * @param max : [in] Max number of bytes the buffer will hold
  * @param source : [in] Initial value for the file, can be null
  */	
-uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const char *source)
+uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const char *source, const char *ext)
 {
 	ADM_assert(fileSelDescriptor);
-	return fileSelDescriptor->fileSelectWrite(title,target,max, source);
+	return fileSelDescriptor->fileSelectWrite(title,target,max, source,ext);
 }
 /**
  * \fn FileSel_SelectRead
@@ -115,10 +115,10 @@ uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const c
  * @param max : [in] Max number of bytes the buffer will hold
  * @param source : [in] Initial value for the file, can be null
  */	
-uint8_t FileSel_SelectRead(const char *title,char *target,uint32_t max, const char *source)
+uint8_t FileSel_SelectRead(const char *title,char *target,uint32_t max, const char *source, const char *ext)
 {
 	ADM_assert(fileSelDescriptor);
-	return fileSelDescriptor->fileSelectRead(title,target,max, source);
+	return fileSelDescriptor->fileSelectRead(title,target,max, source,ext);
 }
 /**
  * \fn FileSel_SelectDir
@@ -131,7 +131,7 @@ uint8_t FileSel_SelectRead(const char *title,char *target,uint32_t max, const ch
 uint8_t FileSel_SelectDir(const char *title,char *target,uint32_t max, const char *source)
 {
 	ADM_assert(fileSelDescriptor);
-	return fileSelDescriptor->fileSelectDirectory(title,target,max, source);
+	return fileSelDescriptor->fileSelectDirectory(title,target,max, source,NULL);
 }
 
 void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *actual_workbench_file)

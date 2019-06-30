@@ -202,7 +202,7 @@ conclusion:
         {
             ADM_TS_TRACK_TYPE type=list[i].trackType;
             if(type==ADM_TS_MPEG_AUDIO || type==ADM_TS_AC3 || type==ADM_TS_AAC_ADTS ||type==ADM_TS_AAC_LATM
-                        || type==ADM_TS_EAC3 || type==ADM_TS_LPCM)
+                || type==ADM_TS_DTS || type==ADM_TS_EAC3 || type==ADM_TS_LPCM)
             {
                 TSpacketInfo pkt;
                 t->setPos(0);
@@ -366,7 +366,7 @@ ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str)
                 case 0x1B:     *str= "H264 Video";return ADM_TS_H264;break;
                 case 0x24:     *str= "H265 Video(not sure)";return ADM_TS_H265;break;
                 case 0x81:     *str= "AC3 (Not sure)";return ADM_TS_AC3;break;
-                //case 0x82:     *str= "DTS (Not sure)";return ADM_TS_DTS;break;
+                case 0x82:     *str= "DTS (Not sure)";return ADM_TS_DTS;break;
                 case 0x83:     *str= "TrueHD AC3  (BluRay)";return ADM_TS_AC3;break;
                 case 0x84:     *str= "E-AC3 (Not sure)";return ADM_TS_EAC3;break;
                 case 0x87:     *str= "E-AC3 (Not sure)";return ADM_TS_EAC3;break;

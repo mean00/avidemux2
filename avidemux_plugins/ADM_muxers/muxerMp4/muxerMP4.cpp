@@ -32,9 +32,10 @@
 mp4_muxer muxerConfig=
 {
     MP4_MUXER_MP4,
-    true,
+    MP4_MUXER_OPT_FASTSTART,
     false,
-    WIDE
+    WIDE,
+    MP4_MUXER_ROTATE_0
 };
 
 
@@ -97,6 +98,8 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         c = video_st->codec;
         AVCodecParameters *par;
         par = video_st->codecpar;
+        if(isH265Compatible(s->getFCC()))
+            par->codec_tag = MKTAG('h', 'v', 'c', '1');
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         myTimeBase=video_st->time_base=c->time_base;
         ADM_info("Video stream time base :%d,%d\n",video_st->time_base.num,video_st->time_base.den);
@@ -138,7 +141,11 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             printf("[MP4] Failed to init audio\n");
             return false;
         }
-
+        // Mark all audio tracks as enabled, VLC is picky about that.
+        for(int i=0;i<nbAudioTrack;i++)
+        {
+            audio_st[i]->disposition |= AV_DISPOSITION_DEFAULT;
+        }
         // /audio
         int er = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
 
@@ -157,10 +164,38 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
         av_dict_set(&dict, "preload", buf, 0);
         av_dict_set(&dict, "max_delay", "200000", 0);
-        av_dict_set(&dict, "muxrate", "10080000", 0);
-#ifndef _WIN32 // does not work on windows as the file must be opened twice at the same time        
-        av_dict_set(&dict, "movflags","faststart",0);
-#endif
+
+        switch(muxerConfig.optimize)
+        {
+            case(MP4_MUXER_OPT_FASTSTART):
+                av_dict_set(&dict, "movflags", "faststart", 0);
+                break;
+            case(MP4_MUXER_OPT_FRAGMENT):
+                av_dict_set(&dict, "movflags", "frag_keyframe+empty_moov", 0);
+                av_dict_set(&dict, "min_frag_duration", "2000000", 0); // 2 seconds, an arbitrary value
+                break;
+            default: break;
+        }
+
+        const char *angle=NULL;
+        switch(muxerConfig.rotation)
+        {
+            case(MP4_MUXER_ROTATE_90):
+                angle="90";
+                break;
+            case(MP4_MUXER_ROTATE_180):
+                angle="180";
+                break;
+            case(MP4_MUXER_ROTATE_270):
+                angle="270";
+                break;
+            default: break;
+        }
+        if(angle)
+        {
+            ADM_info("Setting rotation to %s degrees clockwise\n",angle);
+            av_dict_set(&(video_st->metadata), "rotate", angle, 0);
+        }
         ADM_assert(avformat_write_header(oc, &dict) >= 0);
 
         ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);

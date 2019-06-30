@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Avidemux @ADM_FLAVOR@</Name>
+    <Version>@ADM_VERSION@</Version>
+    <Title>Avidemux @ADM_FLAVOR@</Title>
+    <Watermark>watermark.png</Watermark>
+    <Publisher>Mean</Publisher>
+	<WizardStyle>Modern</WizardStyle>	
+	 <InstallerWindowIcon>avidemux</InstallerWindowIcon>
+    <InstallerApplicationIcon>avidemux</InstallerApplicationIcon>
+    <StartMenuDir>Avidemux @ADM_MENU_VERSION@ @ADM_FLAVOR@</StartMenuDir>
+    <TargetDir>@ApplicationsDirX64@/Avidemux @ADM_MENU_VERSION@ @ADM_FLAVOR@</TargetDir>
+    <MaintenanceToolName>Uninstall Avidemux @ADM_FLAVOR@</MaintenanceToolName>
+
+</Installer>

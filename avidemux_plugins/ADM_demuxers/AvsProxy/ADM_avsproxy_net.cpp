@@ -44,7 +44,7 @@
 */
 bool avsNet::bindMe(uint32_t port)
 {
- #ifdef __MINGW32__
+ #ifdef _WIN32
  mySocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
  #else
  mySocket = socket(PF_INET, SOCK_STREAM, 0);
@@ -84,7 +84,7 @@ bool avsNet::close(void)
     if(mySocket)
     {
         int er;
-#ifdef __MINGW32__
+#ifdef _WIN32
 		er=shutdown(mySocket,SD_BOTH);
 #else
         er=shutdown(mySocket,SHUT_RDWR);

@@ -25,24 +25,24 @@
  */
 Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame) : QDialog(parent)
 {
-	ui.setupUi(this);
+    ui.setupUi(this);
 
-	seekablePreview = NULL;
-	canvas = NULL;
+    seekablePreview = NULL;
+    canvas = NULL;
 
-	resetVideoStream(videoStream);
-        
-        seekablePreview->addControl(ui.toolLayout);
-	seekablePreview->sliderSet(defaultFrame);
-	seekablePreview->sliderChanged();
+    resetVideoStream(videoStream);
 
-	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
+    seekablePreview->addControl(ui.toolLayout);
+    seekablePreview->sliderSet(defaultFrame);
+    seekablePreview->sliderChanged();
+
+    connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
 {
-	delete seekablePreview;
-	delete canvas;
+    delete seekablePreview;
+    delete canvas;
 }
 
 /**
@@ -51,20 +51,19 @@ Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
  */
 void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream)
 {
-	if (seekablePreview)
-		delete seekablePreview;
-        seekablePreview=NULL;
-	if (canvas)
-		delete canvas;
-        canvas=NULL;
+    if (seekablePreview)
+        delete seekablePreview;
+    seekablePreview=NULL;
+    if (canvas)
+        delete canvas;
+    canvas=NULL;
 
-	uint32_t canvasWidth = videoStream->getInfo()->width;
-	uint32_t canvasHeight = videoStream->getInfo()->height;
+    uint32_t canvasWidth = videoStream->getInfo()->width;
+    uint32_t canvasHeight = videoStream->getInfo()->height;
 
-	canvas = new ADM_QCanvas(ui.graphicsView, canvasWidth, canvasHeight);
-	canvas->show();
-	seekablePreview = new flySeekablePreview(this,canvasWidth, canvasHeight, videoStream, canvas, ui.horizontalSlider);	
-	seekablePreview->sliderChanged();
+    canvas = new ADM_QCanvas(ui.graphicsView, canvasWidth, canvasHeight);
+    seekablePreview = new flySeekablePreview(this,canvasWidth, canvasHeight, videoStream, canvas, ui.horizontalSlider);
+    seekablePreview->sliderChanged();
 }
 /**
  * 
@@ -72,7 +71,7 @@ void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream
  */
 uint32_t Ui_seekablePreviewWindow::frameIndex()
 {
-	return seekablePreview->sliderGet();
+    return seekablePreview->sliderGet();
 }
 
 /**
@@ -81,7 +80,7 @@ uint32_t Ui_seekablePreviewWindow::frameIndex()
  */
 void Ui_seekablePreviewWindow::sliderChanged(int value)
 {
-	seekablePreview->sliderChanged();
+    seekablePreview->sliderChanged();
 }
 
 

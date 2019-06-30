@@ -175,7 +175,7 @@ static bool bFrameDroppable(uint32_t fcc)
 bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
 {
     aviInfo info;
-    int found;
+    int found=-1;
     uint32_t startSegNo;
     uint64_t segTime;
     *delay=0;

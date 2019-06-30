@@ -27,6 +27,7 @@
 #include "ADM_codec.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
+#include "prefs.h"
 
 #if 1
 #define aprintf printf
@@ -101,12 +102,18 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   uint8_t 	    *d;
   aviInfo       info;
   _SEGMENT      seg;
+  uint32_t      cacheSize;
+
+  if(false==prefs->get(FEATURES_CACHE_SIZE,&cacheSize))
+      cacheSize = EDITOR_CACHE_MAX_SIZE;
+  if(cacheSize > EDITOR_CACHE_MAX_SIZE) cacheSize = EDITOR_CACHE_MAX_SIZE;
+  if(cacheSize < EDITOR_CACHE_MIN_SIZE) cacheSize = EDITOR_CACHE_MIN_SIZE;
 
   ref->dontTrustBFramePts=ref->_aviheader->unreliableBFramePts();
   ref->_aviheader->getVideoInfo (&info);
   ref->_aviheader->getExtraHeaderData (&l, &d);
   ref->decoder = ADM_getDecoder (info.fcc,  info.width, info.height, l, d,info.bpp);
-  ref->_videoCache = new EditorCache(16,info.width,info.height);
+  ref->_videoCache = new EditorCache(cacheSize,info.width,info.height);
 
   // discard implausibly high fps, hardcode the value to 25 fps
   if (info.fps1000 > 2000 * 1000)
@@ -124,7 +131,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
   uint64_t minDelta=100000;
   uint64_t maxDelta=0;
-  for (int frame=0; frame<info.nb_frames; frame++)
+  uint32_t fmin=0,fmax=0;
+  for (uint32_t frame=0; frame<info.nb_frames; frame++)
   {
       if (ref->_aviheader->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
       {
@@ -136,15 +144,20 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
           }
 
           uint64_t probedTimeIncrement=(dts-firstNonZeroDts)/(frame-firstNonZeroDtsFrame);
-          if(probedTimeIncrement<minDelta) minDelta=probedTimeIncrement;
-          if(probedTimeIncrement>maxDelta) maxDelta=probedTimeIncrement;
+          if(probedTimeIncrement<minDelta) { minDelta=probedTimeIncrement; fmin=frame; }
+          if(probedTimeIncrement>maxDelta) { maxDelta=probedTimeIncrement; fmax=frame; }
           firstNonZeroDts=dts;
           firstNonZeroDtsFrame=frame;
       }
   }
-  ADM_info("min increment %s = %" PRIu64" us\n",ADM_us2plain(minDelta),minDelta);
-  ADM_info("max increment %s = %" PRIu64" us\n",ADM_us2plain(maxDelta),maxDelta);
-  
+  if(maxDelta>=minDelta)
+  {
+      ADM_info("min increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(minDelta),minDelta,fmin);
+      ADM_info("max increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(maxDelta),maxDelta,fmax);
+  }else
+  {
+      ADM_warning("DTS missing, cannot probe time increment.\n");
+  }
   //if (minDelta==ref->timeIncrementInUs*2)
               //ref->timeIncrementInUs=minDelta;
 
@@ -175,7 +188,9 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
         else ADM_info("The first frame DTS = %" PRIu64" ms\n",dts/1000);
         if(pts!=ADM_NO_PTS &&pts)
         {
-            ADM_warning("The first frame has a PTS >0, adjusting to %" PRIu64" ms\n",pts/1000);
+            ADM_warning("The first frame has a PTS > 0, adjusting to %" PRIu64" %s\n",
+                (pts>=1000)? pts/1000 : pts,
+                (pts>=1000)? "ms" : "us");
             ref->firstFramePts=pts;
 #ifdef ADM_ZERO_OFFSET
             seg._refStartTimeUs=pts;

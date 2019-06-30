@@ -24,6 +24,11 @@
 #define REDUCE_WIDTH   12
 #define REDUCE_HEIGHT  20
 
+#ifdef _MSC_VER
+#  include <intrin.h>
+
+#  define __builtin_popcount __popcnt
+#endif
 /**
     \class AsciiFilter
 */

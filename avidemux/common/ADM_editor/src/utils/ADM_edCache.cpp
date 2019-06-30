@@ -32,13 +32,14 @@
 
 EditorCache::EditorCache(uint32_t size,uint32_t w, uint32_t h)
 {
-	_elem=new cacheElem[size];
-	for(uint32_t i=0;i<size;i++)
-	{
-		_elem[i].image=new ADMImageDefault(w,h);
-		_elem[i].pts=ADM_NO_PTS;
-	}
-	_nbImage=size;
+    _elem=new cacheElem[size];
+    for(uint32_t i=0;i<size;i++)
+    {
+        _elem[i].image=new ADMImageDefault(w,h);
+        _elem[i].pts=ADM_NO_PTS;
+    }
+    _nbImage=size;
+    ADM_info("Video cache created for %u decoded images.\n",_nbImage);
 }
 /**
     \fn EditorCache
@@ -46,11 +47,11 @@ EditorCache::EditorCache(uint32_t size,uint32_t w, uint32_t h)
 */
 EditorCache::~EditorCache(void)
 {
-	for(uint32_t i=0;i<_nbImage;i++)
-	{
-		delete _elem[i].image;
-	}
-	delete[] _elem;
+    for(uint32_t i=0;i<_nbImage;i++)
+    {
+        delete _elem[i].image;
+    }
+    delete[] _elem;
 }
 /**
 
@@ -78,10 +79,10 @@ void EditorCache::check()
                 the cache is big enough to be immune
                 to reuse in the same go
 */
-ADMImage	*EditorCache::getFreeImage(void)
+ADMImage *EditorCache::getFreeImage(void)
 {
-	uint32_t min=0;
-	uint64_t  delta=0;
+    uint32_t min=0;
+    uint64_t  delta=0;
     int found=-1;
     check();
     // next!
@@ -98,10 +99,10 @@ ADMImage	*EditorCache::getFreeImage(void)
     
     // Mark it as used
     if(found==-1) ADM_assert(0);
-	_elem[found].pts=ADM_NO_PTS;;
+    _elem[found].pts=ADM_NO_PTS;;
     writeIndex++;
     aprintf("Using free image at index %d\n",found);
-	return _elem[found].image;
+    return _elem[found].image;
 
 }
 /**
@@ -115,6 +116,7 @@ ADMImage	*EditorCache::getFreeImage(void)
     for(int i=0;i<_nbImage;i++)
     {
         _elem[i].pts=ADM_NO_PTS;
+        _elem[i].image->hwDecRefCount();
     }
     writeIndex=readIndex=0;
 }
@@ -127,14 +129,14 @@ void        EditorCache::invalidate(ADMImage *image)
     for(int i=0;i<_nbImage;i++)
     {
         if(_elem[i].image==image)
-            {
-                uint32_t prev=(writeIndex+_nbImage-1)%_nbImage;
-                 ADM_assert(i==prev);
-                 ADM_assert(_elem[i].pts==ADM_NO_PTS);
-                 aprintf("Invalidate writeIndex %" PRIu32"\n",writeIndex);
-                 writeIndex--;
-                 return;
-            }
+        {
+            uint32_t prev=(writeIndex+_nbImage-1)%_nbImage;
+            ADM_assert(i==prev);
+            ADM_assert(_elem[i].pts==ADM_NO_PTS);
+            aprintf("Invalidate writeIndex %" PRIu32"\n",writeIndex);
+            writeIndex--;
+            return;
+        }
     }
     printf("[edCache]Image not in cache\n");
     ADM_assert(0);
@@ -144,20 +146,19 @@ void        EditorCache::invalidate(ADMImage *image)
         \brief update the frameNo associated to a cache line (obsolete)
                Only used to mark it as valid
 */
-bool		EditorCache::validate(ADMImage *image)
+bool EditorCache::validate(ADMImage *image)
 {
-	for(uint32_t i=0;i<_nbImage;i++)
-	{
-		if(_elem[i].image==image)
-		{
+    for(uint32_t i=0;i<_nbImage;i++)
+    {
+        if(_elem[i].image==image)
+        {
             ADM_assert(_elem[i].pts==ADM_NO_PTS);
-			_elem[i].pts=image->Pts;
+            _elem[i].pts=image->Pts;
             aprintf("validate Index %" PRIu32" with pts=%" PRIu64"ms\n",i,image->Pts);
-			return true;
-		}
-
-	}
-	ADM_assert(0);
+            return true;
+        }
+    }
+    ADM_assert(0);
     return false;
 }
 /**
@@ -172,9 +173,9 @@ void EditorCache::dump( void)
       cacheElem *e=&(_elem[i]);
       switch(e->pts)
         {
-            case ADM_NO_PTS:  printf("Not used %d\n",i);break;
+            case ADM_NO_PTS:  printf("Not used %02d\n",i);break;
             default:
-                printf("Edcache content[%d]: PTS : %s %" PRIu64" ms\n",i,
+                printf("Edcache content[%02d]: PTS : %s %" PRIu64" ms\n",i,
                                                                     ADM_us2plain(e->image->Pts),e->image->Pts/1000);
                 break;
         }
@@ -189,7 +190,7 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
 {
     if(!writeIndex) return NULL;
     for(uint32_t i=readIndex;i<writeIndex-1;i++)
-	{
+    {
         int index=i%_nbImage;
         ADM_assert(_elem[index].pts!=ADM_NO_PTS);
         if(_elem[index].pts==pts)
@@ -227,7 +228,7 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
 ADMImage    *EditorCache::getBefore(uint64_t pts)
 {
     for(int i=readIndex+1;i<writeIndex;i++)
-	{
+    {
         int index=i%_nbImage;
         ADM_assert(_elem[index].pts!=ADM_NO_PTS);
         if(_elem[index].pts==pts)
@@ -249,9 +250,9 @@ ADMImage    *EditorCache::getBefore(uint64_t pts)
 ADMImage *EditorCache::getByPts(uint64_t Pts)
 {
     for(int i=readIndex;i<writeIndex;i++)
-	{
+    {
         int index=i%_nbImage;
-		if(_elem[index].image->Pts==Pts)
+        if(_elem[index].image->Pts==Pts)
         {
             return _elem[index].image;
         }

@@ -107,7 +107,7 @@ bool         ADM_videoFilterQueue::getNextFrameAs( ADM_HW_IMAGE type,uint32_t *f
             // If no item, thread still alive ?
             if(threadState==RunStateStopped)
             {
-                ADM_info("Audio thread stopped, no more data\n");
+                ADM_info("Video thread stopped, no more data\n");
                 mutex->unlock();
                 return false;
             }
@@ -134,7 +134,7 @@ bool         ADM_videoFilterQueue::runAction(void)
     {
         if(threadState==RunStateStopOrder)  
         {
-            ADM_info("Audio Thread, received stop order\n");
+            ADM_info("Video thread, received stop order\n");
             goto theEnd;
         }
         mutex->lock();
@@ -145,7 +145,7 @@ bool         ADM_videoFilterQueue::runAction(void)
         }
         if(threadState==RunStateStopOrder)  
         {
-            ADM_info("Audio Thread, received stop order\n");
+            ADM_info("Video thread, received stop order\n");
             mutex->unlock();
             goto theEnd;
         }

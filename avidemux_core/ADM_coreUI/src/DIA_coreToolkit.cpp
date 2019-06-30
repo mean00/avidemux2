@@ -129,13 +129,14 @@ int             GUI_YesNo(const char *primary, const char *secondary_format, ...
 	return Toolkit->yesno(primary,text);	
 }
 /**
- * 	\fn GUI_Question
- *  \brief About the same as GUI_YesNo, the button will be ok/cancel
+ *  \fn GUI_Question
+ *  \brief About the same as GUI_YesNo, the button will be ok/cancel. If the second arg is true,
+ *  \      reject the dialog in silent mode / override the message level preference.
  */
-int             GUI_Question(const char *alertstring)
+int             GUI_Question(const char *alertstring, bool insuppressible)
 {
 	ADM_assert(Toolkit);
-	return Toolkit->question(alertstring);	
+	return Toolkit->question(alertstring,insuppressible);
 }
 
 //

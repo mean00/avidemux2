@@ -144,7 +144,7 @@ protected:
 public:
                 TsIndexerBase(listOfTsAudioTracks *tr);
         virtual ~TsIndexerBase();
-virtual bool    run(const char *file,ADM_TS_TRACK *videoTrac)=0;                
+virtual uint8_t run(const char *file,ADM_TS_TRACK *videoTrac)=0;
         bool    writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append=false);
@@ -190,7 +190,7 @@ public:
                 {
                   
                 } 
-        bool    run(const char *file,ADM_TS_TRACK *videoTrac);
+        uint8_t run(const char *file,ADM_TS_TRACK *videoTrac);
         bool    updatePicStructure(TSVideo &video,const uint32_t t)
                         {
                                             switch(t)
@@ -223,7 +223,7 @@ public:
                         {
                           
                         }
-        bool            run(const char *file,ADM_TS_TRACK *videoTrac);
+        uint8_t         run(const char *file,ADM_TS_TRACK *videoTrac);
                         TsIndexerVC1(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
                         {
 
@@ -243,7 +243,7 @@ public:
                 {
                   
                 }
-        bool    run(const char *file,ADM_TS_TRACK *videoTrac);
+        uint8_t run(const char *file,ADM_TS_TRACK *videoTrac);
                 TsIndexerMpeg2(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
                 {
 
@@ -271,7 +271,7 @@ public:
                 {
                   
                 }
-        bool    run(const char *file,ADM_TS_TRACK *videoTrac);
+        uint8_t run(const char *file,ADM_TS_TRACK *videoTrac);
                 TsIndexerH265(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
                 {
 

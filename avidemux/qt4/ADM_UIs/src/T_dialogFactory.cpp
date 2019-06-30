@@ -45,22 +45,19 @@ public:
         factoryCookie(const char *title)
         {
             dialog=new QDialog(qtLastRegisteredDialog());
-            qtRegisterDialog(dialog);
             dialog->setWindowTitle(QString::fromUtf8(title));
-            vboxlayout = new QVBoxLayout();
-            
+            vboxlayout = new QVBoxLayout(dialog);
             tabWidget=NULL;
             layout=NULL;
-            
         }
         virtual ~factoryCookie()
         {
+            if(vboxlayout)
+                delete vboxlayout;
             if(dialog)
-            {
-                qtUnregisterDialog(dialog);
                 delete dialog;
-            }
             dialog=NULL;
+            vboxlayout=NULL;
         }
 public:
         QDialog     *dialog;
@@ -146,6 +143,8 @@ bool  qt4DiaFactoryFinish(void *finish)
 
    cookie->dialog->setLayout(cookie->vboxlayout);
 
+   qtRegisterDialog(cookie->dialog);
+
   if(cookie->dialog->exec()==QDialog::Accepted)
   {
      int nb=cookie->items.size();
@@ -156,6 +155,9 @@ bool  qt4DiaFactoryFinish(void *finish)
       }
      r=true;
   }
+
+  qtUnregisterDialog(cookie->dialog);
+
   delete cookie;
   return r;
 }
@@ -226,6 +228,8 @@ bool qt4DiaFactoryTabsFinish(void *f)
      cookie->dialog->adjustSize();
      cookie->tabWidget->setUsesScrollButtons(true);
 
+    qtRegisterDialog(cookie->dialog);
+
     if(cookie->dialog->exec()==QDialog::Accepted)
     {
         // Read tabs
@@ -233,7 +237,8 @@ bool qt4DiaFactoryTabsFinish(void *f)
         for(int i=0;i<n;i++)
             cookie->items[i]->getMe();
         r=true;
-    }    
+    }
+    qtUnregisterDialog(cookie->dialog);
     delete cookie;
     return r;
 }

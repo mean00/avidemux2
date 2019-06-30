@@ -196,11 +196,11 @@ static bool getFileNameAndExt(const std::string &input, std::string &output)
     size_t lastSlash;
 
      lastSlash=s.find_last_of("/");
-     if(lastSlash!=-1)
+     if(lastSlash!=std::string::npos)
         s.replace(0,lastSlash+1,std::string(""));
 #ifdef _WIN32
      size_t lastBackSlash=s.find_last_of("\\");
-     if(lastBackSlash!=-1)
+     if(lastBackSlash!=std::string::npos)
         s.replace(0,lastBackSlash+1,std::string(""));
 #endif
     ADM_info("Stripping : %s => %s\n",input.c_str(),s.c_str());
@@ -265,7 +265,7 @@ bool ADM_listFile(const std::string& path,const std::string& extension,vector <s
         getFileNameAndExt(s,file);
         lastDot=file.find_last_of('.');
         // Remove extension
-        if(lastDot!=-1)
+        if(lastDot!=std::string::npos)
             file.replace(lastDot,file.size(),std::string(""));
         listOut.push_back(file);
     }

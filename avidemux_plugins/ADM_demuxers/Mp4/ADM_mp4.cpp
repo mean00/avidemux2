@@ -157,10 +157,34 @@ bool MP4Header::refineFps(void)
     {
         double f=1000000./(double)minDelta;
         f*=1000.;
-        ADM_info("MinDelta=%d us\n",(int)minDelta);
-        ADM_info("Computed fps1000=%d\n",(int)f);
         uint32_t fps1000=floor(f+0.49);
-        if(fps1000>  _videostream.dwRate)
+        ADM_info("MinDelta=%d us\n",(int)minDelta);
+        ADM_info("Computed fps1000=%d\n",fps1000);
+        if(fps1000 == _videostream.dwRate)
+        {
+            ADM_info("Computed fps1000 matches the average one.\n");
+            return true;
+        }
+        int score=0;
+        uint64_t avgDelta=_mainaviheader.dwMicroSecPerFrame;
+        int64_t halfway=avgDelta-minDelta+1;
+        halfway/=2;
+        halfway+=minDelta;
+        for(int i=0;i<n-1;i++)
+        {
+            MP4Index *dex=&(_tracks[0].index[i]);
+            MP4Index *next=&(_tracks[0].index[i+1]);
+            if(dex->dts==ADM_NO_PTS) continue;
+            if(next->dts==ADM_NO_PTS) continue;
+            uint64_t delta=next->dts-dex->dts;
+            if(delta==minDelta) score++;
+            if(delta<halfway) score++;
+        }
+        float weighted=score*1000.;
+        weighted/=n;
+        ADM_info("Original fps1000 = %d, score = %d, weighted score = %d\n",_videostream.dwRate,score,(int)weighted);
+        // require that at least 10% of video better or 5% perfectly matches max fps
+        if(fps1000 > _videostream.dwRate && (int)weighted > 100)
         {
             ADM_info("Adjusting fps, the computed is higher than average, dropped frames ?\n");
            _videostream.dwRate=fps1000;
@@ -183,8 +207,16 @@ MP4Index *idx=&(VDEO.index[framenum]);
     uint64_t offset=idx->offset; //+_mdatOffset;
 
 
-    fseeko(_fd,offset,SEEK_SET);
-    fread(img->data, idx->size, 1, _fd);
+    if(fseeko(_fd,offset,SEEK_SET))
+    {
+        ADM_error("Seeking past the end of the file! Broken index?\n");
+        return 0;
+    }
+    if(!fread(img->data, (size_t)idx->size, 1, _fd))
+    {
+        ADM_error("Incomplete frame %" PRIu32". Broken index?\n",framenum);
+        return 0;
+    }
     img->dataLength=idx->size;
 	img->flags = idx->intra;
 
@@ -273,7 +305,6 @@ uint8_t      MP4Header::getNbAudioStreams(void)
 
 uint8_t   MP4Header::getExtraHeaderData(uint32_t *len, uint8_t **data)
 {
-uint32_t old;
         *len=0;*data=NULL;
         if(_tracks[0].extraDataSize)
         {
@@ -349,7 +380,7 @@ uint8_t    MP4Header::open(const char *name)
         if(!lookupMainAtoms((void*) atom))
         {
           printf("Cannot find needed atom\n");   
-          if(!_tracks[0].fragments.size() || !indexVideoFragments(0)) // fixme audio
+          if(!_tracks[0].fragments.size() || !indexVideoFragments(0))
           {
             fclose(_fd);
             _fd=NULL;
@@ -361,6 +392,8 @@ uint8_t    MP4Header::open(const char *name)
               {
                   if(_tracks[i].fragments.size())
                       indexAudioFragments(i);
+                  if(_tracks[i].index==NULL)
+                      nbAudioTrack--;
               }
           }
         }
@@ -512,7 +545,6 @@ uint8_t    MP4Header::open(const char *name)
             audioStream[audio]=ADM_audioCreateStream(&(_tracks[1+audio]._rdWav), audioAccess[audio]);
         }
         fseeko(_fd,0,SEEK_SET);
-        refineFps();
         uint64_t duration1=_movieDuration*1000LL;
         uint64_t duration2=0;
         uint32_t lastFrame=0;
@@ -531,7 +563,15 @@ uint8_t    MP4Header::open(const char *name)
         { // video duration must be > max PTS, otherwise we drop the last frame
             ADM_warning("Last PTS is at or after movie duration, increasing movie duration\n");
             _movieDuration=(duration2/1000)+1;
+            // adjust calculated average FPS and time increment
+            double f=_movieDuration;
+            f=1000.*_tracks[0].nbIndex/f;
+            f*=1000.;
+            _videostream.dwRate=(uint32_t)floor(f+0.49);
+            _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
+            ADM_info("Adjusted fps1000: %d = %" PRIu64" us per frame.\n",_videostream.dwRate,_mainaviheader.dwMicroSecPerFrame);
         }
+        refineFps();
         if(nb>1 && !lastFrame)
             lastFrame=nb-1;
         ADM_info("Nb images       : %d\n",nb);
@@ -570,17 +610,22 @@ bool MP4Header::checkDuplicatedPts(void)
  * \fn adjustElstDelay
  * @return 
  */
-bool MP4Header::adjustElstDelay()
+bool MP4Header::adjustElstDelay(void)
 {
     int xmin=10000000;
     int xscaledDelay[_3GP_MAX_TRACKS];
     for(int i=0;i<1+nbAudioTrack;i++)
     {
         double scaledDelay=_tracks[i].delay;
-        scaledDelay=scaledDelay/(double)_movieScale;
+        double scaledStartOffset=_tracks[i].startOffset;
+        scaledDelay/=_movieScale;
+        scaledStartOffset/=_tracks[i].scale;
         scaledDelay*=1000000;
+        scaledStartOffset*=1000000;
+        ADM_info("Delay for track %d : raw = %d, scaled  = %d with scale = %d\n",i,_tracks[i].delay,(int)scaledDelay,_movieScale);
+        ADM_info("Start offset for track %d : raw = %d, scaled = %d with scale = %d\n",i,_tracks[i].startOffset,(int)scaledStartOffset,_tracks[i].scale);
+        scaledDelay-=scaledStartOffset;
         xscaledDelay[i]=scaledDelay;
-        ADM_info("Delay for track %d : raw = %d, scaled  = %d with scale=%d\n",i,_tracks[i].delay,xscaledDelay[i],_movieScale);
         if(scaledDelay<xmin)
             xmin=scaledDelay;
     }

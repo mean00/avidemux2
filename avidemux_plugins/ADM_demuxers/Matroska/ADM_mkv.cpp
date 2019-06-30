@@ -74,10 +74,8 @@ uint8_t mkvHeader::open(const char *name)
 {
 
   ADM_ebml_file ebml;
-  uint64_t id,len;
+  uint64_t len;
   uint64_t alen;
-  ADM_MKV_TYPE type;
-  const char *ss;
 
   _timeBase=1000; // default value is 1 ms timebase (unit is in us)
   _isvideopresent=0;
@@ -200,15 +198,17 @@ uint8_t mkvHeader::open(const char *name)
     if(last>1)
         ComputeDeltaAndCheckBFrames(&mindelta, &ptsdtsdelta, &hasBframe);
 
-  uint64_t increment=_tracks[0]._defaultFrameDuration;
-  uint64_t lastDts=0;
-  _tracks[0].index[0].Dts=0;
-  mkvTrak                 *vid=_tracks;
-  if(hasBframe==true) // Try to compute a sane DTS knowing the PTS and the DTS/PTS delay
+    uint64_t increment=_tracks[0]._defaultFrameDuration;
+    uint64_t lastDts=0;
+    _tracks[0].index[0].Dts=0;
+    mkvTrak *vid=_tracks;
+    if(hasBframe==true) // Try to compute a sane DTS knowing the PTS and the DTS/PTS delay
     {
-      for(int i=1;i<last;i++)
-      {
-            uint64_t pts,dts;
+        bool useSortedPtsToSetDts=false;
+        int bumped=0;
+        for(int i=1;i<last;i++)
+        {
+            uint64_t pts;
             pts=vid->index[i].Pts;
             lastDts+=increment; // This frame dts with no correction
             if(pts==ADM_NO_PTS)
@@ -219,33 +219,70 @@ uint8_t mkvHeader::open(const char *name)
             uint64_t limitDts=0;
             if(vid->index[i].Pts>ptsdtsdelta)
                 limitDts=vid->index[i].Pts-ptsdtsdelta;
-            if(  lastDts<limitDts)
+
+#define DTS_BUMPED_THRESHOLD 10
+
+            if(lastDts<limitDts)
             {
+                if(i==1)
+                {
+                    lastDts = (vid->index[0].Pts-ptsdtsdelta>0)? vid->index[0].Pts-ptsdtsdelta : 0;
+                    vid->index[0].Dts = lastDts;
+                    lastDts+=increment;
+                }
                 if(limitDts-lastDts>1000) // not just a rounding error
+                {
                     ADM_warning("Bumping DTS by %" PRIu64" ms to keep PTS/DTS delta within limits for frame %d\n",(limitDts-lastDts)/1000,i);
-                lastDts=limitDts;
+                    lastDts=limitDts;
+                    bumped++;
+                    if(bumped>DTS_BUMPED_THRESHOLD)
+                    {
+                        ADM_warning("Default time increment is probably too low, resorting to direct mapping.\n");
+                        useSortedPtsToSetDts=true;
+                        break;
+                    }
+                }
             }
             vid->index[i].Dts=lastDts;
-      }
+        }
+        if(useSortedPtsToSetDts)
+        {
+            setDtsFromListOfSortedPts();
+        }
         // Check that we have PTS>=DTS also
-        uint64_t enforePtsGreaterThanDts=0;
+        uint64_t enforcePtsGreaterThanDts;
+        bool secondTry=false;
+_again:
+        enforcePtsGreaterThanDts=0;
+        int frmeMaxDlta=-1;
         for(int i=0;i<last;i++)
         {
-                if(vid->index[i].Pts<vid->index[i].Dts)
+            if(vid->index[i].Pts<vid->index[i].Dts)
+            {
+                uint64_t delta=vid->index[i].Dts-vid->index[i].Pts;
+                if(delta>enforcePtsGreaterThanDts)
                 {
-                    uint64_t delta=vid->index[i].Dts-vid->index[i].Pts;
-                    if(delta>enforePtsGreaterThanDts) enforePtsGreaterThanDts=delta;
+                    enforcePtsGreaterThanDts=delta;
+                    frmeMaxDlta=i;
                 }
+            }
         }
-        if(enforePtsGreaterThanDts)
+        if(enforcePtsGreaterThanDts)
         {
-                ADM_info("Have to delay by %" PRIu64" us so that PTS>DTS\n",enforePtsGreaterThanDts);
-                if(enforePtsGreaterThanDts>ptsdtsdelta)
+            ADM_info("Have to delay by %" PRIu64" us detected for frame %d so that PTS>DTS\n",enforcePtsGreaterThanDts,frmeMaxDlta);
+            if(enforcePtsGreaterThanDts>ptsdtsdelta)
+            {
+                ADM_warning("The delay is implausibly high. The calculated frame rate is probably too low.\n");
+                if(!secondTry)
                 {
-                    ADM_warning("The delay is implausibly high. The calculated frame rate is probably too low.\n");
+                    setDtsFromListOfSortedPts();
+                    ADM_warning("Retrying with direct mapping.\n");
+                    secondTry=true;
+                    goto _again;
                 }
-                for(int i=0;i<_nbAudioTrack+1;i++)
-                delayTrack(i,&(_tracks[i]),enforePtsGreaterThanDts);
+            }
+            for(int i=0;i<_nbAudioTrack+1;i++)
+                delayTrack(i,&(_tracks[i]),enforcePtsGreaterThanDts);
         }
     }else
     {       // No bframe, DTS=PTS
@@ -328,6 +365,86 @@ bool mkvHeader::delayTrack(int index,mkvTrak *track, uint64_t value)
     return true;
 }
 /**
+    \fn setDtsFromListOfSortedPts
+    \brief Handle cases of mixed content and wrong default time increment
+*/
+bool mkvHeader::setDtsFromListOfSortedPts(void)
+{
+    mkvTrak *vid=_tracks;
+    int last=_tracks[0].index.size();
+    int nbValidPts=_sortedPts.size();
+    int nbPtsUnset=_framesNoPts.size();
+    if(!nbPtsUnset)
+    {
+        ADM_assert(last==nbValidPts);
+        for(int i=0;i<last;i++)
+            vid->index[i].Dts=_sortedPts.at(i);
+    }else
+    {
+        int start=0;
+        while(start<nbPtsUnset && _framesNoPts.at(start)==start) start++;
+        // The first entry in the sorted list is frame "start", how many consecutive frames with pts do we have?
+        int span=last-start;
+        if(start<nbPtsUnset)
+            span=_framesNoPts.at(start)-start;
+        // Calculate current average frame increment from the first 8 frames at best.
+        uint64_t increment=_tracks[0]._defaultFrameDuration;;
+        int psize=(span<8)? span : 8;
+        if(psize)
+        {
+            double d=_sortedPts.at(psize);
+            d/=psize;
+            increment=d;
+        }
+        // Calculate the offset we must add to all timestamps when the first frames don't have valid pts.
+        uint64_t shift=increment*start;
+        // Go!
+        int curValid=0;
+        int curNoPts=0;
+        int backfill=0;
+        uint64_t lastFilledDts=0;
+        for(int i=0;i<last;i++)
+        {
+            if(curNoPts==nbPtsUnset || _framesNoPts.at(curNoPts)>i)
+            {
+                uint64_t dts=_sortedPts.at(curValid)+shift;
+                if(backfill)
+                {
+                    if(curValid>1) // We don't get meaningful time increment at the start of the video, use what we alredy have.
+                    {
+                        double d=dts-lastFilledDts;
+                        d/=backfill+1;
+                        increment=d;
+                    }
+                    uint64_t shift2=0;
+                    for(int j=0;j<backfill;j++)
+                    {
+                        int k=i-backfill+j;
+                        shift2=increment*(j+1);
+                        vid->index[k].Dts=lastFilledDts+shift2;
+                    }
+                    if(!shift) // We are at the frame right after early B-frames.
+                    {
+                        dts+=shift2;
+                        if(curValid<2)
+                            shift=shift2;
+                    }
+                    backfill=0;
+                }
+                vid->index[i].Dts=dts;
+                lastFilledDts=dts;
+                curValid++;
+                if(curValid==nbValidPts) break;
+            }else
+            {
+                backfill++;
+                curNoPts++;
+            }
+        }
+    }
+    return true;
+}
+/**
     \fn checkDeviation
     \brief Bypass the 1ms accuracy by making sure all the frames are in the form PTS=offset + N*frameInterval
 */
@@ -338,8 +455,6 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
   double dHalf=(500000.*(double)num)/((double)den);
   int half=dHalf-1; // half interval in us
   int first=0;
-  int bad=0;
-  int good=0;
   while(  track->index[first].Pts==ADM_NO_PTS && first<nb) first++; // we should have some at least
   uint64_t zero= track->index[first].Pts;
   ADM_info("Num=%d Den=%d half=%d zero=%d first=%d\n",num,den,half,(int)zero,first);
@@ -353,7 +468,13 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
     dmultiple/=(1000000.*(double)num);
     uint64_t multiple=(uint64_t)dmultiple;
     int64_t reconstructed=(multiple*1000000*num)/den+zero;
-    //printf("frame %d multiple = %d, pts=%d, reconstructed=%d,delta = %d\n",i,(int)multiple,(int)pts,(int)reconstructed,(int)(pts-reconstructed));
+#if 0
+    if(i<100)
+    {
+        pts+=zero;
+        printf("frame %d multiple = %d, pts=%d, reconstructed=%d,delta = %d\n",i,(int)multiple,(int)pts,(int)reconstructed,(int)(pts-reconstructed));
+    }
+#endif
     track->index[i].Pts=reconstructed;
   }
   return true;
@@ -437,18 +558,35 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         mkvDeviation devEngine(nb);      
         int first=0;
         while(  track->index[first].Pts==ADM_NO_PTS && first<nb) 
-              first++; // we should have some at least
+        {
+            _framesNoPts.push_back(first);
+            first++; // we should have some at least
+        }
         uint64_t zero= track->index[first].Pts;
         ADM_info("Num=%d Den=%d zero=%d first=%d\n",num,den,(int)zero,first);
+        int valid=0;
         for(int i=first;i<nb;i++)
         {
-          uint64_t pts=track->index[i].Pts;
-          if(pts==ADM_NO_PTS) continue;
-          if(pts<zero) continue;
-            
-          devEngine.add(pts-zero);
+            uint64_t pts=track->index[i].Pts;
+            if(pts==ADM_NO_PTS)
+            {
+                _framesNoPts.push_back(i);
+                continue;
+            }
+            if(pts<zero) // early B-frames
+            {
+                _framesNoPts.push_back(i);
+                continue;
+            }
+            devEngine.add(pts-zero);
+            valid++;
         }
         devEngine.sort();
+        uint64_t *s = devEngine.getSorted();
+        for(int i=0;i<valid;i++)
+        {
+            _sortedPts.push_back(s[i]-500); // subtract 500 us added by add()
+        }
         ADM_info("Checking deviation for native %d %d\n", _videostream.dwScale,   _videostream.dwRate);
         deviation=devEngine.computeDeviation(  _videostream.dwScale,   _videostream.dwRate,skipped);
         
@@ -833,7 +971,6 @@ uint8_t mkvHeader::close(void)
   _nbAudioTrack=0;
   _filename=NULL;
  // memset(_tracks,0,sizeof(_tracks));
-  _reordered=0;
 
   _currentAudioTrack=0;
   _access=NULL;
@@ -945,6 +1082,7 @@ uint8_t  mkvHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
  * @param hd
  * @return
  */
+#if 0
 static int xypheLacingRead(uint8_t **hd)
 {
       int x=0;
@@ -959,6 +1097,7 @@ static int xypheLacingRead(uint8_t **hd)
       *hd=p;
       return x;
 }
+#endif
 /**
     \fn mkreformatVorbisHeader
     \brief reformat oggvorbis header to avidemux style

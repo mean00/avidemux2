@@ -77,7 +77,7 @@
              put_bits(&s->pb, 2, s->chroma_format);
              put_bits(&s->pb, 2, s->width  >> 12);
              put_bits(&s->pb, 2, s->height >> 12);
-@@ -420,6 +461,7 @@
+@@ -421,6 +462,7 @@
  
  void ff_mpeg1_encode_picture_header(MpegEncContext *s, int picture_number)
  {
@@ -85,7 +85,7 @@
      AVFrameSideData *side_data;
      mpeg1_encode_sequence_header(s);
  
-@@ -458,6 +500,46 @@
+@@ -459,6 +501,46 @@
  
      s->frame_pred_frame_dct = 1;
      if (s->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
@@ -132,7 +132,7 @@
          put_header(s, EXT_START_CODE);
          put_bits(&s->pb, 4, 8);                 /* pic ext */
          if (s->pict_type == AV_PICTURE_TYPE_P ||
-@@ -477,10 +559,14 @@
+@@ -478,10 +560,14 @@
  
          av_assert0(s->picture_structure == PICT_FRAME);
          put_bits(&s->pb, 2, s->picture_structure);
@@ -147,7 +147,7 @@
          /* XXX: optimize the generation of this flag with entropy measures */
          s->frame_pred_frame_dct = s->progressive_sequence;
  
-@@ -489,7 +575,8 @@
+@@ -490,7 +576,8 @@
          put_bits(&s->pb, 1, s->q_scale_type);
          put_bits(&s->pb, 1, s->intra_vlc_format);
          put_bits(&s->pb, 1, s->alternate_scan);

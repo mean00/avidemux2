@@ -2,8 +2,6 @@
 extern const ADM_paramList FFcodecContext_param[]={
  {"version",offsetof(FFcodecContext,version),"uint32_t",ADM_param_uint32_t},
  {"MultiThreaded",offsetof(FFcodecContext,MultiThreaded),"uint32_t",ADM_param_uint32_t},
- {"me_method",offsetof(FFcodecContext,me_method),"uint32_t",ADM_param_uint32_t},
- {"_GMC",offsetof(FFcodecContext,_GMC),"bool",ADM_param_bool},
  {"_4MV",offsetof(FFcodecContext,_4MV),"bool",ADM_param_bool},
  {"_QPEL",offsetof(FFcodecContext,_QPEL),"bool",ADM_param_bool},
  {"_TRELLIS_QUANT",offsetof(FFcodecContext,_TRELLIS_QUANT),"bool",ADM_param_bool},

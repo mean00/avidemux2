@@ -116,6 +116,30 @@
         <translation>전환</translation>
     </message>
     <message>
+        <source>Scroll Left</source>
+        <translation>왼쪽으로 스크롤</translation>
+    </message>
+    <message>
+        <source>Scroll Right</source>
+        <translation>오른쪽으로 스크롤</translation>
+    </message>
+    <message>
+        <source>Scroll Up</source>
+        <translation>위로 스크롤</translation>
+    </message>
+    <message>
+        <source>Scroll Down</source>
+        <translation>아래로 스크롤</translation>
+    </message>
+    <message>
+        <source>Previous Page</source>
+        <translation>이전 쪽</translation>
+    </message>
+    <message>
+        <source>Next Page</source>
+        <translation>다음 쪽</translation>
+    </message>
+    <message>
         <source>Triggers the action</source>
         <translation>동작을 실행함</translation>
     </message>
@@ -138,6 +162,30 @@
     <message>
         <source>Toggles the state</source>
         <translation>상태를 전환함</translation>
+    </message>
+    <message>
+        <source>Scrolls to the left</source>
+        <translation>왼쪽으로 스크롤</translation>
+    </message>
+    <message>
+        <source>Scrolls to the right</source>
+        <translation>오른쪽으로 스크롤</translation>
+    </message>
+    <message>
+        <source>Scrolls up</source>
+        <translation>위로 스크롤</translation>
+    </message>
+    <message>
+        <source>Scrolls down</source>
+        <translation>아래로 스크롤</translation>
+    </message>
+    <message>
+        <source>Goes back a page</source>
+        <translation>이전 쪽으로 이동</translation>
+    </message>
+    <message>
+        <source>Goes to the next page</source>
+        <translation>다음 쪽으로 이동</translation>
     </message>
 </context>
 <context>
@@ -265,6 +313,16 @@
     <message>
         <source>&amp;HTML:</source>
         <translation>HTML(&amp;H):</translation>
+    </message>
+    <message>
+        <source>Cursor at %1, %2
+Press ESC to cancel</source>
+        <translation>커서 위치: %1, %2
+ESC 키를 누르면 취소합니다</translation>
+    </message>
+    <message>
+        <source>&amp;Pick Screen Color</source>
+        <translation>화면 색상 선택(&amp;P)</translation>
     </message>
     <message>
         <source>Cursor at %1, %2, color: %3
@@ -520,7 +578,33 @@ ESC 키를 누르면 취소합니다</translation>
     </message>
 </context>
 <context>
+    <name>QDBusTrayIcon</name>
+    <message>
+        <source>OK</source>
+        <translation>확인</translation>
+    </message>
+</context>
+<context>
     <name>QDateTimeEdit</name>
+    <message>
+        <source>AM</source>
+        <translation>오전</translation>
+    </message>
+    <message>
+        <source>am</source>
+        <translation>오전</translation>
+    </message>
+    <message>
+        <source>PM</source>
+        <translation>오후</translation>
+    </message>
+    <message>
+        <source>pm</source>
+        <translation>오후</translation>
+    </message>
+</context>
+<context>
+    <name>QDateTimeParser</name>
     <message>
         <source>AM</source>
         <translation>오전</translation>
@@ -586,6 +670,10 @@ ESC 키를 누르면 취소합니다</translation>
 </context>
 <context>
     <name>QDnsLookupRunnable</name>
+    <message>
+        <source>IPv6 addresses for nameservers are currently not supported</source>
+        <translation>네임 서버 IPv6 주소는 아직 지원되지 않음</translation>
+    </message>
     <message>
         <source>Invalid domain name</source>
         <translation>잘못된 도메인 이름</translation>
@@ -674,13 +762,20 @@ ESC 키를 누르면 취소합니다</translation>
         <source>Invalid hostname</source>
         <translation>호스트 이름이 잘못됨</translation>
     </message>
+    <message>
+        <source>Host %1 could not be found.</source>
+        <translation>호스트 %1을(를) 찾을 수 없습니다.</translation>
+    </message>
+    <message>
+        <source>Unknown error</source>
+        <translation>알 수 없는 오류</translation>
+    </message>
 </context>
 <context>
     <name>QDockWidget</name>
     <message>
         <source>Float</source>
-        <extracomment>Accessible name for button undocking a dock widget (floating state)
-</extracomment>
+        <extracomment>Accessible name for button undocking a dock widget (floating state)</extracomment>
         <translation>띄우기</translation>
     </message>
     <message>
@@ -689,8 +784,7 @@ ESC 키를 누르면 취소합니다</translation>
     </message>
     <message>
         <source>Close</source>
-        <extracomment>Accessible name for button closing a dock widget
-</extracomment>
+        <extracomment>Accessible name for button closing a dock widget</extracomment>
         <translation>닫기</translation>
     </message>
     <message>
@@ -983,8 +1077,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>%1 File</source>
-        <extracomment>%1 is a file name suffix, for example txt
-</extracomment>
+        <extracomment>%1 is a file name suffix, for example txt</extracomment>
         <translation>%1 파일</translation>
     </message>
     <message>
@@ -1000,6 +1093,11 @@ Do you want to delete it anyway?</source>
         <source>Folder</source>
         <comment>All other platforms</comment>
         <translation>폴더</translation>
+    </message>
+    <message>
+        <source>Alias</source>
+        <comment>OS X Finder</comment>
+        <translation>별명</translation>
     </message>
     <message>
         <source>Alias</source>
@@ -1101,11 +1199,39 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>Demi</source>
+        <extracomment>The word for &quot;Demi&quot; as in &quot;Demi Bold&quot; used as a pattern for string searches</extracomment>
         <translation>데미</translation>
     </message>
     <message>
         <source>Light</source>
         <translation>라이트</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <comment>The Normal or Regular font weight</comment>
+        <translation>일반</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <comment>The Medium font weight</comment>
+        <translation>중간</translation>
+    </message>
+    <message>
+        <source>Thin</source>
+        <translation>얇게</translation>
+    </message>
+    <message>
+        <source>Extra Light</source>
+        <translation>매우 얇게</translation>
+    </message>
+    <message>
+        <source>Extra Bold</source>
+        <translation>매우 굵게</translation>
+    </message>
+    <message>
+        <source>Extra</source>
+        <extracomment>The word for &quot;Extra&quot; as in &quot;Extra Bold, Extra Thin&quot; used as a pattern for string searches</extracomment>
+        <translation>매우</translation>
     </message>
     <message>
         <source>Italic</source>
@@ -1483,6 +1609,14 @@ Do you want to delete it anyway?</source>
         <source>SSL handshake failed</source>
         <translation>SSL 악수 실패</translation>
     </message>
+    <message>
+        <source>Too many redirects</source>
+        <translation>리디렉트가 너무 많음</translation>
+    </message>
+    <message>
+        <source>Insecure redirect</source>
+        <translation>안전하지 않은 리디렉트</translation>
+    </message>
 </context>
 <context>
     <name>QHttpSocketEngine</name>
@@ -1760,8 +1894,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>%1, ...</source>
-        <extracomment>This text is an &quot;unfinished&quot; shortcut, expands like &quot;Ctrl+A, ...&quot;
-</extracomment>
+        <extracomment>This text is an &quot;unfinished&quot; shortcut, expands like &quot;Ctrl+A, ...&quot;</extracomment>
         <translation>%1, ...</translation>
     </message>
 </context>
@@ -1782,6 +1915,10 @@ Do you want to delete it anyway?</source>
     <message>
         <source>Plugin verification data mismatch in &apos;%1&apos;</source>
         <translation>&apos;%1&apos;의 플러그인 확인 데이터가 일치하지 않음</translation>
+    </message>
+    <message>
+        <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
+        <translation>&apos;%1&apos;에서 플러그인 메타데이터를 추출할 수 없음</translation>
     </message>
     <message>
         <source>The shared library was not found.</source>
@@ -1960,6 +2097,10 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QMYSQLDriver</name>
     <message>
+        <source>Unable to allocate a MYSQL object</source>
+        <translation>MySQL 객체를 할당할 수 없음</translation>
+    </message>
+    <message>
         <source>Unable to open database &apos;%1&apos;</source>
         <translation>데이터베이스 &apos;%1&apos;을(를) 열 수 없음</translation>
     </message>
@@ -2120,6 +2261,10 @@ Do you want to delete it anyway?</source>
         <translation>자세한 정보 숨기기...</translation>
     </message>
     <message>
+        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Qt는 크로스 플랫폼 프로그램 개발을 위한 C++ 툴킷입니다.&lt;/p&gt;&lt;p&gt;Qt는 모든 주요 데스크톱 운영 체제에서 단일 소스 코드 호환성을 제공합니다.임베디드 리눅스 및 다른 임베디드 및 모바일 운영 체제에서도 사용할 수 있습니다.&lt;/p&gt;&lt;p&gt;다양한 사용자의 요구에 부응하기 위하여, Qt는 두 종류의 라이선스 옵션으로 제공됩니다.&lt;/p&gt;&lt;p&gt;상용 소프트웨어를 개발하면서 제 3자와 소스 코드를 공유하고 싶지 않거나, GNU LGPL 3의 조건을 만족할 수 없으면 상용 라이선스 Qt를 사용하십시오.&lt;/p&gt;&lt;p&gt;GNU LGPL 3의 조건을 만족하는 Qt 기반 프로그램을 개발하려면 GNU LGPL 3 라이선스 Qt를 사용하십시오.&lt;/p&gt;&lt;p&gt;Qt 라이선스에 관한 정보를 보려면 &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; 페이지를 참조하십시오.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt는 오픈 소스 프로젝트로 개발되는 The Qt Company Ltd의 제품입니다. 더 많은 정보를 보려면 &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; 사이트를 방문하십시오.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>OK</source>
         <translation>확인</translation>
     </message>
@@ -2247,6 +2392,14 @@ Do you want to delete it anyway?</source>
         <translation>임시 오류</translation>
     </message>
     <message>
+        <source>Network dropped connection on reset</source>
+        <translation>초기화 중 네트워크에서 연결 끊음</translation>
+    </message>
+    <message>
+        <source>Connection reset by peer</source>
+        <translation>원격지에서 연결을 초기화함</translation>
+    </message>
+    <message>
         <source>Unknown error</source>
         <translation>알 수 없는 오류</translation>
     </message>
@@ -2358,6 +2511,10 @@ Do you want to delete it anyway?</source>
     <message>
         <source>Protocol &quot;%1&quot; is unknown</source>
         <translation>알 수 없는 프로토콜 &quot;%1&quot;</translation>
+    </message>
+    <message>
+        <source>Error transferring %1 - server replied: %2</source>
+        <translation>%1을(를) 전송하는 중 오류 발생 - 서버 응답: %2</translation>
     </message>
 </context>
 <context>
@@ -2679,38 +2836,32 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>mm</source>
-        <extracomment>Unit &apos;Millimeter&apos;
-</extracomment>
+        <extracomment>Unit &apos;Millimeter&apos;</extracomment>
         <translation>mm</translation>
     </message>
     <message>
         <source>pt</source>
-        <extracomment>Unit &apos;Points&apos;
-</extracomment>
+        <extracomment>Unit &apos;Points&apos;</extracomment>
         <translation>pt</translation>
     </message>
     <message>
         <source>in</source>
-        <extracomment>Unit &apos;Inch&apos;
-</extracomment>
+        <extracomment>Unit &apos;Inch&apos;</extracomment>
         <translation>in</translation>
     </message>
     <message>
         <source>P̸</source>
-        <extracomment>Unit &apos;Pica&apos;
-</extracomment>
+        <extracomment>Unit &apos;Pica&apos;</extracomment>
         <translation>P̸</translation>
     </message>
     <message>
         <source>DD</source>
-        <extracomment>Unit &apos;Didot&apos;
-</extracomment>
+        <extracomment>Unit &apos;Didot&apos;</extracomment>
         <translation>DD</translation>
     </message>
     <message>
         <source>CC</source>
-        <extracomment>Unit &apos;Cicero&apos;
-</extracomment>
+        <extracomment>Unit &apos;Cicero&apos;</extracomment>
         <translation>CC</translation>
     </message>
 </context>
@@ -2718,44 +2869,37 @@ Do you want to delete it anyway?</source>
     <name>QPageSize</name>
     <message>
         <source>Custom (%1mm x %2mm)</source>
-        <extracomment>Custom size name in millimeters
-</extracomment>
+        <extracomment>Custom size name in millimeters</extracomment>
         <translation>사용자 정의(%1mm x %2mm)</translation>
     </message>
     <message>
         <source>Custom (%1pt x %2pt)</source>
-        <extracomment>Custom size name in points
-</extracomment>
+        <extracomment>Custom size name in points</extracomment>
         <translation>사용자 정의(%1pt x %2pt)</translation>
     </message>
     <message>
         <source>Custom (%1in x %2in)</source>
-        <extracomment>Custom size name in inches
-</extracomment>
+        <extracomment>Custom size name in inches</extracomment>
         <translation>사용자 정의(%1in x %2in)</translation>
     </message>
     <message>
         <source>Custom (%1pc x %2pc)</source>
-        <extracomment>Custom size name in picas
-</extracomment>
+        <extracomment>Custom size name in picas</extracomment>
         <translation>사용자 정의(%1pc x %2pc)</translation>
     </message>
     <message>
         <source>Custom (%1DD x %2DD)</source>
-        <extracomment>Custom size name in didots
-</extracomment>
+        <extracomment>Custom size name in didots</extracomment>
         <translation>사용자 정의(%1DD x %2DD)</translation>
     </message>
     <message>
         <source>Custom (%1CC x %2CC)</source>
-        <extracomment>Custom size name in ciceros
-</extracomment>
+        <extracomment>Custom size name in ciceros</extracomment>
         <translation>사용자 정의(%1CC x %2CC)</translation>
     </message>
     <message>
         <source>%1 x %2 in</source>
-        <extracomment>Page size in &apos;Inch&apos;.
-</extracomment>
+        <extracomment>Page size in &apos;Inch&apos;.</extracomment>
         <translation>%1 x %2 in</translation>
     </message>
     <message>
@@ -3506,6 +3650,10 @@ Please turn one of those options off.</source>
 <context>
     <name>QPrintPropertiesDialog</name>
     <message>
+        <source>Printer Properties</source>
+        <translation>프린터 속성</translation>
+    </message>
+    <message>
         <source>Job Options</source>
         <translation>작업 설정</translation>
     </message>
@@ -3660,6 +3808,10 @@ Please turn one of those options off.</source>
     <message>
         <source>Process crashed</source>
         <translation>프로세스가 충돌함</translation>
+    </message>
+    <message>
+        <source>Process failed to start</source>
+        <translation>프로세스를 시작할 수 없음</translation>
     </message>
     <message>
         <source>No program defined</source>
@@ -4096,6 +4248,10 @@ Please turn one of those options off.</source>
         <source>parentheses are too deeply nested (stack check)</source>
         <translation>괄호 깊이가 너무 깊음(스택 확인)</translation>
     </message>
+    <message>
+        <source>digits missing in \x{} or \o{}</source>
+        <translation>\x{} 또는 \o{}에 숫자가 없음</translation>
+    </message>
 </context>
 <context>
     <name>QSQLite2Driver</name>
@@ -4252,6 +4408,13 @@ Please turn one of those options off.</source>
     </message>
 </context>
 <context>
+    <name>QSctpSocket</name>
+    <message>
+        <source>The remote host closed the connection</source>
+        <translation>원격 호스트에서 연결을 닫음</translation>
+    </message>
+</context>
+<context>
     <name>QSharedMemory</name>
     <message>
         <source>%1: unable to set key on lock</source>
@@ -4294,6 +4457,10 @@ Please turn one of those options off.</source>
         <translation>%1: 키가 비어 있음</translation>
     </message>
     <message>
+        <source>%1: bad name</source>
+        <translation>%1: 잘못된 이름</translation>
+    </message>
+    <message>
         <source>%1: UNIX key file doesn&apos;t exist</source>
         <translation>%1: 유닉스 키 파일이 없음</translation>
     </message>
@@ -4330,8 +4497,7 @@ Please turn one of those options off.</source>
     <name>QShortcut</name>
     <message>
         <source>Space</source>
-        <extracomment>This and all following &quot;incomprehensible&quot; strings in QShortcut context are key names. Please use the localized names appearing on actual keyboards or whatever is commonly used.
-</extracomment>
+        <extracomment>This and all following &quot;incomprehensible&quot; strings in QShortcut context are key names. Please use the localized names appearing on actual keyboards or whatever is commonly used.</extracomment>
         <translation>Space</translation>
     </message>
     <message>
@@ -4500,14 +4666,12 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <source>Media Pause</source>
-        <extracomment>Media player pause button
-</extracomment>
+        <extracomment>Media player pause button</extracomment>
         <translation>미디어 일시 정지</translation>
     </message>
     <message>
         <source>Toggle Media Play/Pause</source>
-        <extracomment>Media player button to toggle between playing and paused
-</extracomment>
+        <extracomment>Media player button to toggle between playing and paused</extracomment>
         <translation>미디어 재생/일시 정지</translation>
     </message>
     <message>
@@ -5104,20 +5268,17 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <source>Call</source>
-        <extracomment>Button to start a call (note: a separate button is used to end the call)
-</extracomment>
+        <extracomment>Button to start a call (note: a separate button is used to end the call)</extracomment>
         <translation>통화</translation>
     </message>
     <message>
         <source>Hangup</source>
-        <extracomment>Button to end a call (note: a separate button is used to start the call)
-</extracomment>
+        <extracomment>Button to end a call (note: a separate button is used to start the call)</extracomment>
         <translation>끊기</translation>
     </message>
     <message>
         <source>Toggle Call/Hangup</source>
-        <extracomment>Button that will hang up if we&apos;re in call, or make a call if we&apos;re not.
-</extracomment>
+        <extracomment>Button that will hang up if we&apos;re in call, or make a call if we&apos;re not.</extracomment>
         <translation>전화 걸기/끊기</translation>
     </message>
     <message>
@@ -5126,26 +5287,22 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <source>Voice Dial</source>
-        <extracomment>Button to trigger voice dialing
-</extracomment>
+        <extracomment>Button to trigger voice dialing</extracomment>
         <translation>음성 다이얼</translation>
     </message>
     <message>
         <source>Last Number Redial</source>
-        <extracomment>Button to redial the last number called
-</extracomment>
+        <extracomment>Button to redial the last number called</extracomment>
         <translation>마지막 번호 재다이얼</translation>
     </message>
     <message>
         <source>Camera Shutter</source>
-        <extracomment>Button to trigger the camera shutter (take a picture)
-</extracomment>
+        <extracomment>Button to trigger the camera shutter (take a picture)</extracomment>
         <translation>카메라 셔터</translation>
     </message>
     <message>
         <source>Camera Focus</source>
-        <extracomment>Button to focus the camera
-</extracomment>
+        <extracomment>Button to focus the camera</extracomment>
         <translation>카메라 초점</translation>
     </message>
     <message>
@@ -5293,6 +5450,18 @@ Please turn one of those options off.</source>
         <translation>끝내기</translation>
     </message>
     <message>
+        <source>Touchpad Toggle</source>
+        <translation>터치패드 전환</translation>
+    </message>
+    <message>
+        <source>Touchpad On</source>
+        <translation>터치패드 켜기</translation>
+    </message>
+    <message>
+        <source>Touchpad Off</source>
+        <translation>터치패드 끄기</translation>
+    </message>
+    <message>
         <source>Ctrl</source>
         <translation>Ctrl</translation>
     </message>
@@ -5384,435 +5553,383 @@ Please turn one of those options off.</source>
     <name>QSpiAccessibleBridge</name>
     <message>
         <source>invalid role</source>
-        <extracomment>Role of an accessible object - the object is in an invalid state or could not be constructed
-</extracomment>
+        <extracomment>Role of an accessible object - the object is in an invalid state or could not be constructed</extracomment>
         <translation>잘못된 역할</translation>
     </message>
     <message>
         <source>title bar</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>제목 표시줄</translation>
     </message>
     <message>
         <source>menu bar</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>메뉴 표시줄</translation>
     </message>
     <message>
         <source>scroll bar</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>스크롤 바</translation>
     </message>
     <message>
         <source>grip</source>
-        <extracomment>Role of an accessible object - the grip is usually used for resizing another object
-</extracomment>
+        <extracomment>Role of an accessible object - the grip is usually used for resizing another object</extracomment>
         <translation>그립</translation>
     </message>
     <message>
         <source>sound</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>소리</translation>
     </message>
     <message>
         <source>cursor</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>커서</translation>
     </message>
     <message>
         <source>text caret</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>텍스트 캐럿</translation>
     </message>
     <message>
         <source>alert message</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>경고 메시지</translation>
     </message>
     <message>
         <source>frame</source>
         <extracomment>Role of an accessible object: a window with frame and title
 ----------
-Role of an accessible object
-</extracomment>
+Role of an accessible object</extracomment>
         <translation>프레임</translation>
     </message>
     <message>
         <source>filler</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>자리 채움자</translation>
     </message>
     <message>
         <source>popup menu</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>팝업 메뉴</translation>
     </message>
     <message>
         <source>menu item</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>메뉴 항목</translation>
     </message>
     <message>
         <source>tool tip</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>풍선 도움말</translation>
     </message>
     <message>
         <source>application</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>프로그램</translation>
     </message>
     <message>
         <source>document</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>문서</translation>
     </message>
     <message>
         <source>panel</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>패널</translation>
     </message>
     <message>
         <source>chart</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>차트</translation>
     </message>
     <message>
         <source>dialog</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>대화 상자</translation>
     </message>
     <message>
         <source>separator</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>구분자</translation>
     </message>
     <message>
         <source>tool bar</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>도구 모음</translation>
     </message>
     <message>
         <source>status bar</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>상태 표시줄</translation>
     </message>
     <message>
         <source>table</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>표</translation>
     </message>
     <message>
         <source>column header</source>
-        <extracomment>Role of an accessible object - part of a table
-</extracomment>
+        <extracomment>Role of an accessible object - part of a table</extracomment>
         <translation>열 머릿글</translation>
     </message>
     <message>
         <source>row header</source>
-        <extracomment>Role of an accessible object - part of a table
-</extracomment>
+        <extracomment>Role of an accessible object - part of a table</extracomment>
         <translation>행 머릿글</translation>
     </message>
     <message>
         <source>column</source>
-        <extracomment>Role of an accessible object - part of a table
-</extracomment>
+        <extracomment>Role of an accessible object - part of a table</extracomment>
         <translation>열</translation>
     </message>
     <message>
         <source>row</source>
-        <extracomment>Role of an accessible object - part of a table
-</extracomment>
+        <extracomment>Role of an accessible object - part of a table</extracomment>
         <translation>행</translation>
     </message>
     <message>
         <source>cell</source>
-        <extracomment>Role of an accessible object - part of a table
-</extracomment>
+        <extracomment>Role of an accessible object - part of a table</extracomment>
         <translation>셀</translation>
     </message>
     <message>
         <source>link</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>링크</translation>
     </message>
     <message>
         <source>help balloon</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>도움말 풍선</translation>
     </message>
     <message>
         <source>assistant</source>
-        <extracomment>Role of an accessible object - a helper dialog
-</extracomment>
+        <extracomment>Role of an accessible object - a helper dialog</extracomment>
         <translation>도우미</translation>
     </message>
     <message>
         <source>list</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>목록</translation>
     </message>
     <message>
         <source>list item</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>목록 항목</translation>
     </message>
     <message>
         <source>tree</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>트리</translation>
     </message>
     <message>
         <source>tree item</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>트리 항목</translation>
     </message>
     <message>
         <source>page tab</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>페이지 탭</translation>
     </message>
     <message>
         <source>property page</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>속성 페이지</translation>
     </message>
     <message>
         <source>indicator</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>표시기</translation>
     </message>
     <message>
         <source>graphic</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>그래픽</translation>
     </message>
     <message>
         <source>label</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>이름표</translation>
     </message>
     <message>
         <source>text</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>텍스트</translation>
     </message>
     <message>
         <source>push button</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>누름 단추</translation>
     </message>
     <message>
         <source>check box</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>체크 상자</translation>
     </message>
     <message>
         <source>radio button</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>라디오 단추</translation>
     </message>
     <message>
         <source>combo box</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>콤보 상자</translation>
     </message>
     <message>
         <source>progress bar</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>진행 표시기</translation>
     </message>
     <message>
         <source>dial</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>다이얼</translation>
     </message>
     <message>
         <source>hotkey field</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>단축키 필드</translation>
     </message>
     <message>
         <source>slider</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>슬라이더</translation>
     </message>
     <message>
         <source>spin box</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>스핀 상자</translation>
     </message>
     <message>
         <source>canvas</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>캔버스</translation>
     </message>
     <message>
         <source>animation</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>애니메이션</translation>
     </message>
     <message>
         <source>equation</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>수식</translation>
     </message>
     <message>
         <source>button with drop down</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>드롭 다운이 있는 단추</translation>
     </message>
     <message>
         <source>button menu</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>단추 메뉴</translation>
     </message>
     <message>
         <source>button with drop down grid</source>
-        <extracomment>Role of an accessible object - a button that expands a grid.
-</extracomment>
+        <extracomment>Role of an accessible object - a button that expands a grid.</extracomment>
         <translation>드롭 다운 그리드가 있는 단추</translation>
     </message>
     <message>
         <source>space</source>
-        <extracomment>Role of an accessible object - blank space between other objects.
-</extracomment>
+        <extracomment>Role of an accessible object - blank space between other objects.</extracomment>
         <translation>공백</translation>
     </message>
     <message>
         <source>page tab list</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>페이지 탭 목록</translation>
     </message>
     <message>
         <source>clock</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>시계</translation>
     </message>
     <message>
         <source>splitter</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>구분자</translation>
     </message>
     <message>
         <source>layered pane</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>레이어가 있는 영역</translation>
     </message>
     <message>
         <source>web document</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>웹 문서</translation>
     </message>
     <message>
         <source>paragraph</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>문단</translation>
     </message>
     <message>
         <source>section</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>부분</translation>
     </message>
     <message>
         <source>color chooser</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>색상 선택기</translation>
     </message>
     <message>
         <source>footer</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>꼬릿글</translation>
     </message>
     <message>
         <source>form</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>폼</translation>
     </message>
     <message>
         <source>heading</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>머릿글</translation>
     </message>
     <message>
         <source>note</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>메모</translation>
     </message>
     <message>
         <source>complementary content</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>보조 내용</translation>
     </message>
     <message>
         <source>unknown</source>
-        <extracomment>Role of an accessible object
-</extracomment>
+        <extracomment>Role of an accessible object</extracomment>
         <translation>알 수 없음</translation>
     </message>
 </context>
 <context>
+    <name>QSslDiffieHellmanParameter</name>
+    <message>
+        <source>No error</source>
+        <translation>오류 없음</translation>
+    </message>
+    <message>
+        <source>Invalid input data</source>
+        <translation>잘못된 입력 데이터</translation>
+    </message>
+    <message>
+        <source>The given Diffie-Hellman parameters are deemed unsafe</source>
+        <translation>지정한 디피-헬만 인자가 안전하지 않음</translation>
+    </message>
+</context>
+<context>
     <name>QSslSocket</name>
+    <message>
+        <source>Error when setting the elliptic curves (%1)</source>
+        <translation>타원 곡선을 설정하는 중 오류 발생(%1)</translation>
+    </message>
     <message>
         <source>Error creating SSL context (%1)</source>
         <translation>SSL 컨텍스트를 만드는 중 오류 발생(%1)</translation>
@@ -5840,6 +5957,14 @@ Role of an accessible object
     <message>
         <source>Private key does not certify public key, %1</source>
         <translation>개인 키가 공개 키를 인증하지 않음, %1</translation>
+    </message>
+    <message>
+        <source>Diffie-Hellman parameters are not valid</source>
+        <translation>디피-헬만 인자가 올바르지 않음</translation>
+    </message>
+    <message>
+        <source>OpenSSL version too old, need at least v1.0.2</source>
+        <translation>OpenSSL 버전이 너무 오래됨, 최소 v1.0.2가 필요함</translation>
     </message>
     <message>
         <source>No error</source>
@@ -6040,6 +6165,10 @@ Role of an accessible object
         <source>Application Data</source>
         <translation>프로그램 데이터</translation>
     </message>
+    <message>
+        <source>Application Configuration</source>
+        <translation>프로그램 설정</translation>
+    </message>
 </context>
 <context>
     <name>QStateMachine</name>
@@ -6153,6 +6282,17 @@ Role of an accessible object
     <message>
         <source>Could not reset to read data</source>
         <translation>데이터를 읽기 위하여 초기화할 수 없음</translation>
+    </message>
+</context>
+<context>
+    <name>QUdpSocket</name>
+    <message>
+        <source>Unable to send a datagram</source>
+        <translation>데이터그램을 보낼 수 없음</translation>
+    </message>
+    <message>
+        <source>No datagram available for reading</source>
+        <translation>읽어 올 데이터그램이 없음</translation>
     </message>
 </context>
 <context>

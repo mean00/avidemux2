@@ -71,7 +71,36 @@ ADM_edAudioTrackExternal::~ADM_edAudioTrackExternal()
 bool ADM_edAudioTrackExternal::create(uint32_t extraLen, uint8_t *extraData)
 {
     ADM_info("Initializing audio track from external %s \n",sourceFile.c_str());
-    codec=getAudioCodec(wavHeader.encoding,&wavHeader,extraLen,extraData);;
+    codec=getAudioCodec(wavHeader.encoding,&wavHeader,extraLen,extraData);
+    if(!codec || codec->isDummy())
+    {
+        ADM_warning("No decoder for %s.\n",getStrFromAudioCodec(wavHeader.encoding));
+        return false;
+    }
+    // Check AAC for SBR
+    if(wavHeader.encoding==WAV_AAC)
+    {
+        uint32_t inlen,max=ADM_EDITOR_PACKET_BUFFER_SIZE;
+        notStackAllocator inbuf(max);
+        uint8_t *in=inbuf.data;
+        uint64_t dts;
+        if(false==internalAccess->getPacket(in,&inlen,max,&dts))
+        {
+            ADM_warning("Cannot get packets.\n");
+            return false;
+        }
+
+        notStackAllocator outbuf(wavHeader.frequency*wavHeader.channels*sizeof(float));
+        float *out=(float *)outbuf.data;
+        uint32_t nbOut,fq=0;
+        if(codec->run(in,inlen,out,&nbOut))
+            fq=codec->getOutputFrequency();
+        if(fq && fq!=wavHeader.frequency)
+        {
+            ADM_warning("Updating sampling frequency from %u to %u\n",wavHeader.frequency,fq);
+            wavHeader.frequency=fq;
+        }
+    }
     size=internalAccess->getLength();
     internalAudioStream=ADM_audioCreateStream(&wavHeader,internalAccess,true);
     return true;
@@ -89,6 +118,13 @@ CHANNEL_TYPE * ADM_edAudioTrackExternal::getChannelMapping(void )
 uint32_t    ADM_edAudioTrackExternal::getOutputFrequency(void)
 {
     return codec->getOutputFrequency();
+}
+/**
+    \fn getOutputChannels
+*/
+uint32_t ADM_edAudioTrackExternal::getOutputChannels(void)
+{
+    return codec->getOutputChannels();
 }
 /**
     \fn refillPacketBuffer
@@ -110,6 +146,8 @@ bool             ADM_edAudioTrackExternal::refillPacketBuffer(void)
     vprintf("Refilling buffer dts=%s\n",ADM_us2plain(packetBufferDts));
     return true;
 }
+
+
 /**
     \fn create_edAudioExternal
 */
@@ -117,7 +155,8 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
 {
     #define EXTERNAL_PROBE_SIZE (1024*1024)
     // Identify file type
-    uint8_t buffer[EXTERNAL_PROBE_SIZE];
+    notStackAllocator dummyBuffer(EXTERNAL_PROBE_SIZE);
+    uint8_t *buffer=dummyBuffer.data;
     FILE *f=ADM_fopen(name,"rb");
     if(!f)
     {
@@ -133,9 +172,14 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
         ADM_warning("Cannot identify external audio track\n");
         return NULL;
     }
-    if(!hdr.channels)
+    if(!hdr.channels || hdr.channels > MAX_CHANNELS)
     {
-        ADM_error("Got zero channels, the audio file must have been misidentified!\n");
+        ADM_error("Number of channels out of bounds, the audio file must have been misidentified!\n");
+        return NULL;
+    }
+    if(hdr.frequency < MIN_SAMPLING_RATE || hdr.frequency > MAX_SAMPLING_RATE)
+    {
+        ADM_error("Sampling frequency out of bounds, the audio file must have been misidentified!\n");
         return NULL;
     }
     // Try to create an access for the file...
@@ -189,7 +233,11 @@ bool         ADM_edAudioTrackExternal::getPCMPacket(float  *dest, uint32_t sizeM
 uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
 uint32_t inSize;
 bool      drop=false;
-uint32_t outFrequency=codec->getOutputFrequency();
+uint32_t outFrequency=getOutputFrequency();
+uint32_t outChannels=getOutputChannels();
+
+    if(!outChannels) return false;
+
  vprintf("[PCMPacketExt]  request TRK %d:%x\n",0,(long int)0);
 again:
     *samples=0;
@@ -225,7 +273,7 @@ again:
 
     // Compute how much decoded sample to compare with what demuxer said
     uint32_t decodedSample=nbOut;
-    decodedSample/=wavHeader.channels;
+    decodedSample/=outChannels;
     if(!decodedSample) goto again;
 #define ADM_MAX_JITTER 5000  // in samples, due to clock accuracy, it can be +er, -er, + er, -er etc etc
     if(labs((int64_t)decodedSample-(int64_t)packetBufferSamples)>ADM_MAX_JITTER)
@@ -241,7 +289,7 @@ again:
     advanceDtsByCustomSample(decodedSample,outFrequency);
     vprintf("[Composer::getPCMPacket] Track %d:%x Adding %u decoded, Adding %u filler sample,"
         " dts is now %lu\n", 0,(long int)0,  decodedSample,fillerSample,lastDts);
-    ADM_assert(sizeMax>=(fillerSample+decodedSample)*wavHeader.channels);
+    ADM_assert(sizeMax>=(fillerSample+decodedSample)*outChannels);
     vprintf("[getPCMext] %d samples, dts=%s\n",*samples,ADM_us2plain(*odts));
     return true;
 }

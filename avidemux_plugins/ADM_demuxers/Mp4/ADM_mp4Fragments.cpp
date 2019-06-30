@@ -55,7 +55,7 @@ bool MP4Header::parseMoof(adm_atom &tom)
             {
                 case ADM_MP4_MFHD: son.skipAtom();break;
                 case ADM_MP4_TRAF: parseTraf(son,tom.getStartPos());break;
-                
+                default:break;
             }
             aprintf("[MOOF]Found atom %s \n",fourCC::tostringBE(son.getFCC()));
             son.skipAtom();
@@ -85,7 +85,7 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
 {        
         ADMAtoms id;
         uint32_t container;
-        aprintf("[TRAF]\n");
+        aprintf("[TRAF] Starting at 0x%" PRIx64"\n",moofStart);
         uint32_t trafFlags=0;
         mp4TrafInfo info;
         int trackIndex=-1;
@@ -128,11 +128,12 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                             info.baseOffset=moofStart;
                             aprintf("base is moof at %llx\n",(long long int)info.baseOffset);
                     }
-                    trackIndex=lookupIndex(info.sampleDesc);
+                    trackIndex=lookupIndex(info.trackID);
                     if(-1==trackIndex)
                     {
-                        ADM_warning("Cannot find track for %d\n",info.sampleDesc);
+                        ADM_warning("Cannot find track with id %d\n",info.trackID);
                     }
+                    break;
                 }
                 case ADM_MP4_TFDT:
                 {
@@ -146,9 +147,8 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                     aprintf("[TFDT] Base DTS=%ld\n",(long int)info.baseDts);
                 }   
                     break;
+                default:break;
             }
-           
-            aprintf("[MOOF]Found atom %s \n",fourCC::tostringBE(son.getFCC()));
             son.skipAtom();
         }     
         tom.skipAtom();
@@ -170,14 +170,14 @@ bool MP4Header::parseTrun(int trackNo,adm_atom &tom,const mp4TrafInfo &info)
     std::vector <mp4Fragment>   &fragList=_tracks[trackNo].fragments;
     if(flags & 0x1)
     {
-            firstOffset+=tom.read32()&0xffff; // Signed!
+            firstOffset+=tom.read32(); // Signed!
     }
     if(flags & 0x4)    
             firstSampleFlags=tom.read32(); // Signed!
     else 
             firstSampleFlags=info.defaultFlags;
    
-    aprintf("[TRUN] count=%d, offset=0x%x,synth=0x%x, flags=%x\n",count,firstOffset,(long long int)firstOffset+info.baseOffset,firstSampleFlags);
+    aprintf("[TRUN] count=%d, offset=0x%" PRIx64", base=0x%" PRIx64", flags=%x\n",count,firstOffset,info.baseOffset,firstSampleFlags);
     for(int i=0;i<count;i++)
     {
        mp4Fragment frag;
@@ -212,7 +212,7 @@ bool MP4Header::indexVideoFragments(int trackNo)
     trk->index=new MP4Index[trk->nbIndex];
     uint64_t sum=0;
     int intra=0;
-    for(int i=0;i<trk->nbIndex;i++)
+    for(uint32_t i=0;i<trk->nbIndex;i++)
     {
         MP4Index *dex=trk->index+i;
         dex->offset=fragList[i].offset;
@@ -220,8 +220,7 @@ bool MP4Header::indexVideoFragments(int trackNo)
         
         double dts=sum;
         double ctts=fragList[i].composition;
-        dts=sum;
-        
+
         dts=dts/_videoScale;
         dts*=1000000.;
         ctts=ctts/_videoScale;
@@ -236,7 +235,8 @@ bool MP4Header::indexVideoFragments(int trackNo)
         else
             dex->intra=0;    
         sum+=fragList[i].duration;
-        aprintf("[FRAG] offset=0x%llx size=%d dts=%s pts=%s\n",dex->offset,(int)dex->size,ADM_us2plain(dex->dts),ADM_us2plain(dex->pts));
+        aprintf("[FRAG] Video entry %u offset=0x%llx size=%d dts=%s ",i,dex->offset,(int)dex->size,ADM_us2plain(dex->dts));
+        aprintf("pts=%s\n",ADM_us2plain(dex->pts));
     }
     printf("Found %d intra\n",intra);
     MP4Index *ff=trk->index;
@@ -257,20 +257,30 @@ bool MP4Header::indexAudioFragments(int trackNo)
     trk->nbIndex=fragList.size();
     trk->index=new MP4Index[trk->nbIndex];
     uint64_t sum=0;
-    for(int i=0;i<trk->nbIndex;i++)
+    for(uint32_t i=0;i<trk->nbIndex;i++)
     {
         MP4Index *dex=trk->index+i;
         dex->offset=fragList[i].offset;
         dex->size=fragList[i].size;
         
         double dts=sum;
-        dts=sum;
+        dts/=trk->scale;
+        dts*=1000000.;
         dex->dts=dts;
-        dex->pts=dex->dts+fragList[i].composition*10;
+        dex->pts=dex->dts;
+        if(fragList[i].composition)
+        {
+            dts=fragList[i].composition;
+            dts/=trk->scale;
+            dts*=1000000.;
+            dex->pts+=dts;
+        }
         dex->intra=0;    
         sum+=fragList[i].duration;
-        aprintf("[FRAG] offset=0x%llx size=%d dts=%s pts=%s\n",dex->offset,(int)dex->size,ADM_us2plain(dex->dts),ADM_us2plain(dex->pts));
-    }   
+        aprintf("[FRAG] Audio entry %d offset=0x%llx size=%d dts=%s ",i,dex->offset,(int)dex->size,ADM_us2plain(dex->dts));
+        aprintf("pts=%s\n",ADM_us2plain(dex->pts));
+    }
+    fragList.clear();
     return true;
 }
 // EOF

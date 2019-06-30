@@ -12,8 +12,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef AVS_PROXY_NET_H
-#define AVS_PROXY_NET_H
+#pragma once
 #include "ADM_threads.h"
 typedef struct
 {
@@ -22,14 +21,19 @@ typedef struct
     uint8_t  *buffer;
 }avsNetPacket;
 
+#ifdef  _MSC_VER
+	#define ADM_SOCKET_TYPE SOCKET
+#else
+	#define ADM_SOCKET_TYPE int
+#endif
 /**
     \class avsNet
 */
 class avsNet       
 {
     protected:
-        int         mySocket;
-        admMutex    lock;
+		ADM_SOCKET_TYPE mySocket;
+        admMutex		lock;
     public:
         bool     bindMe(uint32_t port);
         bool     sendData(uint32_t cmd,uint32_t frame, uint32_t payload_size,uint8_t *payload);
@@ -47,5 +51,5 @@ class avsNet
         avsNet( void );
         ~avsNet(  );
 };
-#endif
+
 //EOF

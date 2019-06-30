@@ -1,8 +1,8 @@
---- libavcodec/nvenc.c.org	2016-12-17 20:35:41.567875083 +0100
-+++ libavcodec/nvenc.c	2016-12-17 20:36:24.587708057 +0100
-@@ -1208,8 +1208,11 @@
-     if (nv_status != NV_ENC_SUCCESS)
-         av_log(avctx, AV_LOG_ERROR, "Failed unlocking bitstream buffer, expect the gates of mordor to open\n");
+--- libavcodec/nvenc.c.orig	2017-10-20 22:17:13.506948923 +0200
++++ libavcodec/nvenc.c	2017-10-20 22:17:37.312801259 +0200
+@@ -1875,8 +1875,11 @@
+         tmpoutsurf->input_surface = NULL;
+     }
  
 +    avctx->coded_frame->key_frame = 0;
 +
@@ -10,5 +10,5 @@
      case NV_ENC_PIC_TYPE_IDR:
 +        avctx->coded_frame->key_frame = 1;
          pkt->flags |= AV_PKT_FLAG_KEY;
- #if FF_API_CODED_FRAME
- FF_DISABLE_DEPRECATION_WARNINGS
+     case NV_ENC_PIC_TYPE_I:
+         pict_type = AV_PICTURE_TYPE_I;

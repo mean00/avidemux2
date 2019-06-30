@@ -11,6 +11,7 @@
 
 extern "C" {
 #include "libavcodec/avcodec.h"
+#include "libavutil/mem.h"
 }
 
 /**
@@ -208,7 +209,7 @@ ADM_byteBuffer   byteBuffer;
     context->time_base.num=1;
     context->width=_width;
     context->height=_height;
-    context->flags |= CODEC_FLAG_QSCALE;
+    context->flags |= AV_CODEC_FLAG_QSCALE;
     r=avcodec_open2(context, codec, NULL); 
     if(r<0)
     {

@@ -294,10 +294,9 @@ uint8_t ADM_Composer::addFile (const char *name)
     if(!_segments.getNbRefVideos())
     {
         uint32_t type=0,value=0;
-#if 0
-        if(!prefs->get(DEFAULT_POSTPROC_TYPE,&type)) type=3;
-        if(!prefs->get(DEFAULT_POSTPROC_VALUE,&value)) value=3;
-#endif
+        prefs->get(DEFAULT_POSTPROC_TYPE,&type);
+        prefs->get(DEFAULT_POSTPROC_VALUE,&value);
+
         if(_pp) delete _pp;
         _pp=new ADM_PP(info.width,info.height);
         _pp->postProcType=type;
@@ -352,6 +351,13 @@ uint8_t ADM_Composer::addFile (const char *name)
             ADM_audioStreamTrack *track=new ADM_audioStreamTrack;
 
             header=thisVid->_aviheader->getAudioInfo(i );
+
+            if(header->encoding==0x706d)
+            {
+                ADM_info("Mapping codec ID 0x706d to AAC.\n");
+                header->encoding=WAV_AAC;
+            }
+
             memcpy(&(track->wavheader),header,sizeof(*header));
 
             thisVid->_aviheader->getAudioStream(i,&stream);
@@ -364,6 +370,27 @@ uint8_t ADM_Composer::addFile (const char *name)
             stream->getExtraData(&extraLen,&extraData);
             track->codec=getAudioCodec(header->encoding,header,extraLen,extraData);
 
+            // sanity check
+#define SKIP_TRACK delete track; track=NULL; continue;
+            if(!track->codec) // actually this can't happen, but better safe than sorry
+            {
+                ADM_warning("Codec is NULL, rejecting track %d\n",i);
+                SKIP_TRACK
+            }
+            if((track->wavheader).frequency < MIN_SAMPLING_RATE || (track->wavheader).frequency > MAX_SAMPLING_RATE)
+            {
+                ADM_warning("Sampling frequency %" PRIu32" for track %d out of bounds, rejecting track.\n",(track->wavheader).frequency,i);
+                SKIP_TRACK
+            }
+            if(!track->codec->getOutputChannels() || track->codec->getOutputChannels() > MAX_CHANNELS)
+            {
+                ADM_warning("Invalid number of channels %d for track %d, rejecting track.\n",track->codec->getOutputChannels(),i);
+                SKIP_TRACK
+            }
+
+            if((track->wavheader).encoding==WAV_AAC)
+                track->isbr=checkSamplingFrequency(track);
+
             thisVid->audioTracks.push_back(track);
             if(!_segments.getNbRefVideos()) // 1st video..
             {
@@ -374,7 +401,7 @@ uint8_t ADM_Composer::addFile (const char *name)
       if(!_segments.getNbRefVideos()) // only for 1st video
       {
         activeAudioTracks.clear();
-        for(int i=0;i<nbAStream;i++)
+        for(int i=0;i<audioTrackPool.size();i++)
             activeAudioTracks.addTrack(i,audioTrackPool.at(i)); // default add 1st track of video pool
       }
     }
@@ -410,7 +437,7 @@ uint8_t ADM_Composer::addFile (const char *name)
         {
             printf("[Editor] B- frame possible with that codec \n");
 #define FCC_MATCHES(x) fourCC::check(info.fcc,(uint8_t *)x)
-            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || isVC1Compatible(info.fcc) || FCC_MATCHES("WMV3"))
+            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || FCC_MATCHES("VC1 ") || FCC_MATCHES("WMV3"))
             {
                 ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");
                 uint64_t delay;
@@ -437,9 +464,9 @@ uint8_t ADM_Composer::addFile (const char *name)
         }
      }
     int lastVideo=_segments.getNbSegments();
-    if(lastVideo && isH264Compatible(info.fcc))
+    if(lastVideo && (isH264Compatible(info.fcc) || FCC_MATCHES("WVC1")))
     {
-        ADM_info("H264 in mp4 sometimes has invalid timestamps which confuse avidemux, checking\n");
+        ADM_info("%s sometimes has invalid timestamps which confuse avidemux, checking\n",fourCC::tostring(info.fcc));
         checkForValidPts(_segments.getSegment(lastVideo-1)); 
     }
     if(true==checkForDoubledFps( video._aviheader,video.timeIncrementInUs))
@@ -469,6 +496,50 @@ bool ADM_Composer::hasVBRAudio(void)
         return 0;
 }
 #endif
+/**
+    \fn checkSamplingFrequency
+    \brief Check AAC for implicit SBR
+*/
+bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
+{
+    if(!track) return false;
+    if(!track->codec) return false;
+    if(track->codec->isDummy()) return false;
+
+    uint32_t chan=track->codec->getOutputChannels();
+    if(chan<2) chan=2;
+
+    WAVHeader *hdr=&(track->wavheader);
+    if(hdr->channels>chan)
+        chan=hdr->channels;
+
+    uint32_t len=(hdr->frequency)*chan; // 1 sec max
+    uint32_t max=ADM_EDITOR_PACKET_BUFFER_SIZE;
+
+    notStackAllocator inbuf(max);
+    uint8_t *in=inbuf.data;
+
+    uint32_t inlen,samples;
+    uint64_t dts;
+    if(false==track->stream->getPacket(in,&inlen,max,&samples,&dts))
+        return false;
+
+    notStackAllocator outbuf(len*sizeof(float));
+    float *out=(float *)outbuf.data;
+
+    uint32_t nbOut;
+    if(false==track->codec->run(in,inlen,out,&nbOut))
+        return false;
+
+    uint32_t fq=track->codec->getOutputFrequency();
+    if(fq && fq!=hdr->frequency)
+    {
+        ADM_warning("Updating sampling frequency from %u to %u\n",hdr->frequency,fq);
+        hdr->frequency=fq;
+        return true; // implicit SBR
+    }
+    return false;
+}
 /**
     \fn getPARWidth
 

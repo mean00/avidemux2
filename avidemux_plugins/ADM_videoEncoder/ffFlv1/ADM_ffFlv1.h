@@ -32,8 +32,6 @@
     { \
           ADM_AVCODEC_SETTING_VERSION, \
           false, \
-          ME_EPZS,			/* ME */ \
-          0,				/* GMC */ \
           0,				/* 4MV */ \
           0,				/* _QPEL */ \
           1,				/* _TREILLIS_QUANT */ \

@@ -20,9 +20,9 @@
 #include "ADM_coreD3D.h"
 #ifdef USE_DXVA2
 
-#if 1
-#define aprintf printf
 #define DUMP_GUID
+#if 0
+#define aprintf printf
 #else
 #define aprintf(...) {}
 #endif
@@ -73,10 +73,11 @@ typedef struct dxva2_mode
 } dxva2_mode;
 /**
  */
-static int ALIGN(int x,int align)
+static int ALIGN(int x,int align,bool verbose=false)
 {
     int y= ((x+(align-1)) &(~(align-1)));
-    aprintf("Align %d,%d => %d\n",x,align,y);
+    if(verbose)
+        printf("Align %d,%d => %d\n",x,align,y);
     return y;
 }
 
@@ -423,17 +424,8 @@ bool admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int nu
     D3DFORMAT fmt;
     fmt=dxvaBitsToFormat(bits);
 
-    if(!admD3D::isDirect9Ex())
-    {
-    
-     hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
-                                                   width,
-                                                   height,
-                                                   num-1,
-                                                   fmt, D3DPOOL_DEFAULT, 0,
-                                                   DXVA2_VideoDecoderRenderTarget,
-                                                   surfaces, NULL);
-    }else
+    bool share=admD3D::isDirect9Ex();
+    if(share)
     {
      hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
                                                    width,
@@ -442,7 +434,23 @@ bool admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int nu
                                                    fmt, D3DPOOL_DEFAULT, 0,
                                                    DXVA2_VideoDecoderRenderTarget,
                                                    surfaces, &sh);
-        
+        if(ADM_FAILED(hr))
+        {
+            // Requesting resource sharing on Windows 7 may result in a failure to allocate surfaces.
+            // On Windows 10, not requesting a shared handle seems to impact energy efficiency.
+            ADM_warning("Cannot allocate D3D9 surfaces with resource sharing, retrying without.\n");
+            share=false;
+        }
+    }
+    if(!share)
+    {
+     hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
+                                                   width,
+                                                   height,
+                                                   num-1,
+                                                   fmt, D3DPOOL_DEFAULT, 0,
+                                                   DXVA2_VideoDecoderRenderTarget,
+                                                   surfaces, NULL);
     }
      if(ADM_FAILED(hr))
      {
@@ -566,8 +574,8 @@ DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec,int bits)
 IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int height, int numSurface, LPDIRECT3DSURFACE9 *surface,int align,int bits)
 {
     Dxv2SupportMap *cmap;
-    int paddedWidth=ALIGN(with,align);
-    int paddedHeight=ALIGN(height,align);
+    int paddedWidth=ALIGN(with,align,true);
+    int paddedHeight=ALIGN(height,align,true);
     switch(codec)
     {
         case AV_CODEC_ID_H264:

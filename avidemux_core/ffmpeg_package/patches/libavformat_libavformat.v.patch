@@ -1,10 +1,11 @@
---- libavformat/libavformat.v.org	2016-12-21 13:33:22.003206754 +0100
-+++ libavformat/libavformat.v	2016-12-21 13:33:58.440572281 +0100
-@@ -14,6 +14,9 @@
-         ffurl_write;
-         #those are deprecated, remove on next bump
-         url_feof;
-+        # Avidemux
+--- libavformat/libavformat.v.orig	2019-02-09 21:56:02.000000000 +0100
++++ libavformat/libavformat.v	2019-02-25 12:13:10.925757857 +0100
+@@ -1,6 +1,9 @@
+-LIBAVFORMAT_MAJOR {
++ADM_LIBAVFORMAT_MAJOR {
+     global:
+         av*;
++# Avidemux
 +        ffurl_get_protocols;
 +
      local:

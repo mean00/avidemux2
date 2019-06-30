@@ -76,7 +76,7 @@ typedef enum
 static bool vdpauMarkSurfaceUsed(void *v, void * cookie)
 {
     vdpauContext *vd=(vdpauContext*)v;
-    vdpau_render_state *render=(vdpau_render_state *)cookie;
+    ADM_vdpauRenderState *render=(ADM_vdpauRenderState *)cookie;
     render->refCount++;
     return true;
 }
@@ -87,7 +87,7 @@ static bool vdpauMarkSurfaceUsed(void *v, void * cookie)
 static bool vdpauMarkSurfaceUnused(void *v, void * cookie)
 {
     vdpauContext *vd=(vdpauContext*)v;
-    vdpau_render_state *render=(vdpau_render_state *)cookie;
+    ADM_vdpauRenderState *render=(ADM_vdpauRenderState *)cookie;
     render->refCount--;
     if(!render->refCount)
     {
@@ -105,7 +105,7 @@ static bool vdpauMarkSurfaceUnused(void *v, void * cookie)
 static bool vdpauRefDownload(ADMImage *image, void *instance, void *cookie)
 {
     vdpauContext *vd=(vdpauContext*)instance;
-    vdpau_render_state *render=(vdpau_render_state *)cookie;
+    ADM_vdpauRenderState *render=(ADM_vdpauRenderState *)cookie;
     ADM_assert(render->refCount);
     ADM_assert(image->refType==ADM_HW_VDPAU);
     
@@ -147,12 +147,12 @@ static bool vdpauRefDownload(ADMImage *image, void *instance, void *cookie)
 */
 int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-    vdpau_render_state * render=NULL;
+    ADM_vdpauRenderState *render=NULL;
     if(vdpau.freeQueue.size()==0)
     {
         ADM_info("[VDPAU] No more available surface, creating a new one\n");
-        render=new vdpau_render_state;
-        memset(render,0,sizeof( vdpau_render_state));
+        render=new ADM_vdpauRenderState;
+        memset(render,0,sizeof( ADM_vdpauRenderState));
         int widthToUse = admVdpau::dimensionRoundUp(avctx->coded_width);
         int heightToUse= admVdpau::dimensionRoundUp(avctx->coded_height);
         if(VDP_STATUS_OK!=admVdpau::surfaceCreate(widthToUse,heightToUse,&(render->surface)))
@@ -194,7 +194,7 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 /**
     \fn releaseBuffer
 */
-void decoderFFVDPAU::releaseBuffer(struct vdpau_render_state *rdr)
+void decoderFFVDPAU::releaseBuffer(struct ADM_vdpauRenderState *rdr)
 {
   ADM_assert(rdr);
   ADM_assert(rdr->refCount);
@@ -245,6 +245,7 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of Vdpau decoder
+#if 0 // The lavc functions we rely on in ADM_acceleratedDecoderFF::parseHwAccel are no more
     const AVHWAccel *accel=ADM_acceleratedDecoderFF::parseHwAccel(outPix,id,AV_PIX_FMT_VDPAU);
     if(accel)
     {
@@ -254,6 +255,8 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
     }
     ADM_info("No matching hw accelerator Found \n");
     return AV_PIX_FMT_NONE;
+#endif
+    return AV_PIX_FMT_VDPAU;
 }
 }
 
@@ -284,9 +287,6 @@ bool decoderFFVDPAU::initVdpContext()
 decoderFFVDPAU::decoderFFVDPAU(struct AVCodecContext *avctx,decoderFF *parent) : ADM_acceleratedDecoderFF(avctx,parent)
 {
         alive=true;
-        avVdCtx=NULL;
-        
-        AVCodecID codecID;
         const char *name="";
         VdpDevice dev=(VdpDevice)(uint64_t)admVdpau::getVdpDevice();
         
@@ -334,7 +334,7 @@ decoderFFVDPAU::~decoderFFVDPAU()
         int n=vdpau.fullQueue.size();        
         for(int i=0;i<n;i++)
         {
-            vdpau_render_state *r=vdpau.fullQueue[i];
+            ADM_vdpauRenderState *r=vdpau.fullQueue[i];
             if(r)
             {
                 if(r->surface)
@@ -344,8 +344,8 @@ decoderFFVDPAU::~decoderFFVDPAU()
                 }
                 delete r;
             }
-            vdpau.fullQueue.clear();
         }
+        vdpau.fullQueue.clear();
 }
 /**
     \fn uncompress
@@ -397,8 +397,6 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
 
     int ret = avcodec_receive_frame(_context, frame);
 
-    if(!ret)
-        _parent->setEndOfStream(false);
     if(!_parent->decodeErrorHandler(ret))
         return false;
 
@@ -423,7 +421,7 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
 bool     decoderFFVDPAU::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out)
 {
    // VdpSurface *surface=decodedFrame->data[3];
-    struct vdpau_render_state *rndr = (struct vdpau_render_state *)decodedFrame->data[0];
+    struct ADM_vdpauRenderState *rndr = (struct ADM_vdpauRenderState *)decodedFrame->data[0];
     ADM_assert(rndr);
     aprintf("Decoding ===> Got surface = %d\n",rndr->surface);
     out->refType=ADM_HW_VDPAU;

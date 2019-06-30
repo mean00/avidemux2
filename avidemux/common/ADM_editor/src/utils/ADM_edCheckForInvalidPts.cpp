@@ -78,6 +78,23 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
         ADM_info("No B-frames and no PTS, setting PTS equal DTS\n");
         return setPtsEqualDts(hdr,inc);
     }
+    // check whether DTS are completely missing, ignore the first frame
+    bool noDts=true;
+    for(uint32_t i=1;i<totalFrames;i++)
+    {
+        uint64_t pts,dts;
+        hdr->getPtsDts(i,&pts,&dts);
+        if(dts!=ADM_NO_PTS)
+        {
+            noDts=false;
+            break;
+        }
+    }
+    if(!stats.nbBFrames && !stats.nbPtsgoingBack && hdr->providePts() && noDts)
+    {
+        ADM_info("No B-frames and no DTS, setting DTS equal PTS\n");
+        return setPtsEqualDts(hdr,inc);
+    }
 
     if(stats.nbPtsgoingBack>1 || (stats.nbBFrames && hdr->providePts()==false))
     {

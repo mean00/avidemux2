@@ -59,28 +59,33 @@ typedef struct
     \brief Plugin Wrapper Class
 
 */
+
+#define DUMMY_ENCODER_COPY "copyADM"
+
 class ADM_videoEncoder6 :public ADM_LibWrapper
 {
 public:
-        int                  initialised;
-        ADM_videoEncoderDesc *desc;
-        ADM_videoEncoderDesc  *(*getInfo)();
-        ADM_videoEncoder6(const char *file) : ADM_LibWrapper()
+    int                     initialised;
+    ADM_videoEncoderDesc    *desc;
+    ADM_videoEncoderDesc    *(*getInfo)();
+    ADM_videoEncoder6(const char *file) : ADM_LibWrapper()
+    {
+        initialised = 0;
+        if(!strcmp(file,DUMMY_ENCODER_COPY)) return;
+
+        if(loadLibrary(file) && getSymbols(1,&getInfo,"getInfo"))
         {
-			initialised = (loadLibrary(file) && getSymbols(1,
-				&getInfo, "getInfo"));
-                if(initialised)
-                {
-                    desc=getInfo();
-                    printf("[videoEncoder6]Name :%s ApiVersion :%d Description :%s\n",
-                                                        desc->encoderName,
-                                                        desc->apiVersion,
-                                                        desc->description);
-                }else
-                {
-                    printf("[videoEncoder6]Symbol loading failed for %s\n",file);
-                }
+            initialised = 1;
+            desc=getInfo();
+            printf("[videoEncoder6]Name :%s ApiVersion :%d Description :%s\n",
+                    desc->encoderName,
+                    desc->apiVersion,
+                    desc->description);
+        }else
+        {
+            printf("[videoEncoder6]Symbol loading failed for %s\n",file);
         }
+    }
 };
 
 extern ADM_COREVIDEOENCODER6_EXPORT BVector <ADM_videoEncoder6 *> ListOfEncoders;

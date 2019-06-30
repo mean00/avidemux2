@@ -8,7 +8,7 @@
 ADM_CORE6_EXPORT uint8_t win32_netInit(void);
 int shutdown_win32(void);
 ADM_CORE6_EXPORT bool getWindowsVersion(char* version);
-ADM_CORE6_EXPORT void redirectStdoutToFile(void);
+ADM_CORE6_EXPORT void redirectStdoutToFile(const char *filename);
 
 int ansiStringToWideChar(const char *ansiString, int ansiStringLength, wchar_t *wideCharString);
 ADM_CORE6_EXPORT int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);

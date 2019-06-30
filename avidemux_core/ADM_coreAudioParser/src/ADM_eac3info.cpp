@@ -13,8 +13,9 @@
 extern "C"
 {
 #define sign_extend
-#include "libavcodec/ac3_parser.h"
-
+#include "libavcodec/ac3.h"
+#include "libavcodec/ac3_parser_internal.h"
+#include "libavutil/mem.h"
 };
 
 /**
@@ -42,9 +43,7 @@ bool ADM_EAC3GetInfo(const uint8_t *buf, uint32_t len, uint32_t *syncoff, ADM_EA
             continue;
         }
         AC3HeaderInfo *hdr=NULL;
-        GetBitContext gb;
-        init_get_bits(&gb,buf,len*8);
-        if(avpriv_ac3_parse_header(&gb, &hdr))
+        if(avpriv_ac3_parse_header(&hdr,buf,len)<0)
         {
             len--;
             buf++;

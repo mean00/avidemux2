@@ -7,34 +7,35 @@
 </head>
 <body>
     <div id="inner">
-        <h1>Changes in Avidemux v2.7.0 – v2.7.1</h1>
+        <h1>Changes in Avidemux v2.7.1 – v2.7.2 Beta</h1>
         <table>
-            <tr><td>Encoder:</td><td>Add LibVA based HW accelerated H.264 encoder (Intel/Linux)</td></tr>
-            <tr><td>Decoder:</td><td>Fix last frames of video not retrieved from decoder</td></tr>
-            <tr><td>Decoder:</td><td>Implement hardware accelerated decoding of H.264 on macOS</td></tr>
-            <tr><td>Decoder:</td><td>Fix keyframe-based navigation in field-encoded MPEG-2 video</td></tr>
-            <tr><td>Demuxer:</td><td>Fix crash in the Matroska demuxer with high bitrate audio</td></tr>
-            <tr><td>Demuxer:</td><td>Fix too short duration reported for MKV and MP4 with B-frames</td></tr>
-            <tr><td>Demuxer:</td><td>Fix PTS delay calculation in the Matroska demuxer</td></tr>
-            <tr><td>Demuxer:</td><td>Fix audio delay ignored by the Mp4 demuxer</td></tr>
-            <tr><td>Muxer:</td><td>Improve resilience of FFmpeg based muxers against decode timestamps irregularities</td></tr>
-            <tr><td>Muxer:</td><td>Allow to force display aspect ratio in the configuration of the MP4 muxer</td></tr>
-            <tr><td>Muxer:</td><td>Fix crash in the AVI muxer on switch to OpenDML</td></tr>
-            <tr><td>Images:</td><td>Add PNG export, fix wrong colors with some colorspaces</td></tr>
-            <tr><td>Images:</td><td>Add feature to export selection as JPEG images</td></tr>
-            <tr><td>Editor:</td><td>Fix AVI with H.264 / HEVC without B-frames being not seekable</td></tr>
-            <tr><td>Editor:</td><td>Make AVI with H.264 / HEVC containing B-frames seekable by decoding the entire video</td></tr>
-            <tr><td>New Filter:</td><td>Still Image: generate video of specified duration out of a single image</td></tr>
-            <tr><td>Filter:</td><td>Make eq2 video filter partializable</td></tr>
-            <tr><td>Filter:</td><td>Implement fade-in / fade-out transition for "Add logo"</td></tr>
-            <tr><td>UI:</td><td>Display selection duration in the UI, move filter preview toggle to the toolbar</td></tr>
-            <tr><td>UI:</td><td>Warn right away if an edit would result in cuts being not on keyframes</td></tr>
-            <tr><td>UI:</td><td>Improve time chooser dialog</td></tr>
-            <tr><td>Audio:</td><td>Add Opus encoder</td></tr>
-            <tr><td>Audio:</td><td>Allow LPCM in FFmpeg-based muxers</td></tr>
-            <tr><td>Audio:</td><td>Show duration for external audio tracks</td></tr>
-            <tr><td>Miscellaneous:</td><td>Improved overall polish and stability</td></tr>
-        </ul>
+            <tr><td>New Demuxer:</td><td>Native AviSynth demuxer (MSVC++ 64 bits Windows builds only)</td></tr>
+            <tr><td>New Demuxer:</td><td>VapourSynth demuxer to directly load .vpy scripts (MSVC++, macOS with Homebrew, custom Linux builds)</td></tr>
+            <tr><td>New Installer:</td><td>Replace NSIS installer with Qt Installer Framework for native MSVC++ 64 bits Windows builds</td></tr>
+            <tr><td>New Encoder:</td><td>Add FFmpeg-based VA-API HW accelerated H.264 encoder (Intel/Linux)</td></tr>
+            <tr><td>New Encoder:</td><td>Add FFmpeg-based VA-API HW accelerated HEVC encoder (Intel/Linux)</td></tr>
+            <tr><td>FFmpeg:</td><td>Migrate to the 4.x branch</td></tr>
+            <tr><td>Decoder:</td><td>As a result of the FFmpeg upgrade, HW accelerated HEVC decoding on macOS is now available when supported by the hardware</td></tr>
+            <tr><td>Encoder:</td><td>Fix issues with image quality and skipped frames in the MJPEG encoder</td></tr>
+            <tr><td>Demuxer:</td><td>Fix audio delay calculation in the Mp4 demuxer</td></tr>
+            <tr><td>Demuxer:</td><td>Fix crash loading large MP4 files with LPCM audio</td></tr>
+            <tr><td>Demuxer:</td><td>Fix multiple issues in the ASF demuxer, allow to cancel indexing</td></tr>
+            <tr><td>Demuxer:</td><td>Allow to cancel indexing of MKV files</td></tr>
+            <tr><td>Demuxer:</td><td>Re-enable multiloading for MPEG-TS streams cut in chunks of 256, 512 MiB, 1, 2 and 4 GiB in size only</td></tr>
+            <tr><td>Demuxer:</td><td>Fix MPEG-TS indexer to start a H.264 or HEVC frame with the Access Unit Delimiter</td></tr>
+            <tr><td>Muxer:</td><td>Add Annex B to Annex B video stream filter to deal with misplaced frame boundaries</td></tr>
+            <tr><td>Muxer:</td><td>Add support for setting rotation flag to the MP4 muxer</td></tr>
+            <tr><td>Filter:</td><td>Add rubber band selector to the "Blacken Borders" filter</td></tr>
+            <tr><td>Filter:</td><td>Add option to deal with anamorphic display to the subtitle filter, fix issues in SRT to SSA converter</td></tr>
+            <tr><td>UI:</td><td>Autosave session on video close, add session restore feature</td></tr>
+            <tr><td>UI:</td><td>Add file name extension when saving audio for some audio types</td></tr>
+            <tr><td>Audio:</td><td>Make maximum level in the "Normalize" filter customizable</td></tr>
+            <tr><td>Audio:</td><td>Improve AAC sampling frequency detection</td></tr>
+            <tr><td>Audio:</td><td>Add decoding support for multichannel Opus audio</td></tr>
+            <tr><td>Miscellaneous:</td><td>Fix regression playback stuck after going to the previous picture</td></tr>
+            <tr><td>Miscellaneous:</td><td>Fix regression "Fade to black" reset when starting filtered playback close to the end of video</td></tr>
+            <tr><td>Miscellaneous:</td><td>Fix regression stopping playback rewinds to the start of video if seek back to the last displayed picture fails</td></tr>
+        </table>
     </div>
 </body>
 </html>

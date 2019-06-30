@@ -59,7 +59,7 @@ bool         vidColorYuv::getNextFrame(uint32_t *fn,ADMImage *image)
 	int i,j,wby4;
 	int modulo;
 
-#ifdef _DEBUG
+#ifdef cyuv_DEBUG
 	COUNT y0,u0,v0;
 	COUNT y,u,v;
 	COUNT r,g,b;
@@ -239,7 +239,7 @@ bool         vidColorYuv::getNextFrame(uint32_t *fn,ADMImage *image)
 	  MakeGammaLUT();
   }
 
-#ifdef _DEBUG
+#ifdef cyuv_DEBUG
 	total = wby4 * h;
 	totalby2 = total / 2;
 
@@ -275,7 +275,7 @@ bool         vidColorYuv::getNextFrame(uint32_t *fn,ADMImage *image)
 		  {
 			  pixel.data = *srcp;
 
-#ifdef _DEBUG
+#ifdef cyuv_DEBUG
 			pixel0.data = pixel.data;
 			CheckYUV(NULL, &pixel, &y0, &u0, &v0, 0);
 			
@@ -291,7 +291,7 @@ bool         vidColorYuv::getNextFrame(uint32_t *fn,ADMImage *image)
 			  pixel.yuv.v  = LUT_V[pixel.yuv.v ];
 			  *srcp++ = pixel.data;
 
-#ifdef _DEBUG
+#ifdef cyuv_DEBUG
 			CheckYUV(&pixel0, &pixel, &y, &u, &v, 1);
 
 			YUV2RGB(pixel.yuv.y0, pixel.yuv.u, pixel.yuv.v, &r.d, &g.d, &b.d, matrix);
@@ -332,7 +332,7 @@ if (vi.IsPlanar())
     }
   }
 
-#ifdef _DEBUG
+#ifdef cyuv_DEBUG
 /*
 	y.ave  = ( y.ave+total)/total/2; u.ave  = ( u.ave+totalby2)/total;   v.ave  = ( v.ave+totalby2)/total;
 	y0.ave = (y0.ave+total)/total/2; u0.ave = (u0.ave+totalby2)/total;   v0.ave = (v0.ave+totalby2)/total;
@@ -521,7 +521,7 @@ void vidColorYuv::MakeGammaLUT(void)
 		LUT_V[i] = (unsigned char)val;
     }
 
-#ifdef _DEBUG
+#ifdef cyuv_DEBUG
 	DumpLUT();
 #endif
 

@@ -35,7 +35,6 @@ flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
                 : ADM_flyDialogRgb(parent,width, height,in,canvas, slider,RESIZE_LAST)
 {
     rubber=new ADM_rubberControl(this,canvas);
-    rubber->resize(width,height);
     _ox=0;
     _oy=0;
     _ow=width;
@@ -344,7 +343,6 @@ uint32_t width,height;
     canvas=new ADM_QCanvas(ui.graphicsView,width,height);
 
     myCrop=new flyCrop( this,width, height,in,canvas,ui.horizontalSlider);
-    myCrop->rubber->nestedIgnore++; // don't modify crop parameters simply by opening the dialog
     myCrop->left=param->left;
     myCrop->right=param->right;
     myCrop->top=param->top;
@@ -354,9 +352,9 @@ uint32_t width,height;
     myCrop->addControl(ui.toolboxLayout);
     myCrop->upload(false,true);
     myCrop->sliderChanged();
+    myCrop->rubber->nestedIgnore=1;
 
     ui.checkBoxRubber->setChecked(myCrop->rubber_is_hidden);
-    myCrop->rubber->setVisible(!(myCrop->rubber_is_hidden));
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
@@ -369,10 +367,6 @@ uint32_t width,height;
       SPINNER(Bottom);
 
     setModal(true);
-    show();
-    myCrop->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
-    myCrop->rubber->nestedIgnore--;
 }
 /**
  * 
@@ -479,6 +473,20 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
     myCrop->rubber->resize(w,h);
     myCrop->rubber->nestedIgnore--;
     myCrop->blockChanges(false);
+}
+
+/**
+ * \fn showEvent
+ * \brief set canvas size and position
+ */
+void Ui_cropWindow::showEvent(QShowEvent *event)
+{
+    myCrop->rubber->rubberband->show(); // must be called first
+    myCrop->rubber->setVisible(!(myCrop->rubber_is_hidden));
+    QDialog::showEvent(event);
+    myCrop->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+    myCrop->rubber->nestedIgnore=0;
 }
 
 //EOF

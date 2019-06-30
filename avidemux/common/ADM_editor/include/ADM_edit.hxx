@@ -116,7 +116,7 @@ class ADM_Composer : public IEditor
                     void        recalibrateSigned(int64_t *time,_SEGMENT *seg);
                     bool        updateImageTiming(_SEGMENT *seg,ADMImage *image);
                     // Need to get the image just before targetPts
-                    bool        decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image);
+                    uint8_t     decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image);
                     bool        getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &frameNumber);
 
 protected:
@@ -161,6 +161,7 @@ protected:
                     bool        switchToNextAudioSegment(void);
                     PoolOfAudioTracks   audioTrackPool;
                     ActiveAudioTracks   activeAudioTracks;
+                    bool        checkSamplingFrequency(ADM_audioStreamTrack *trk); // detect implicit SBR in AAC
 
 //****************************** Audio **********************************
                     void        deleteAllVideos(void );
@@ -248,7 +249,7 @@ public:
                     bool        goToTimeVideo(uint64_t time);
                     void		getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser);
                     bool        goToIntraTimeVideo(uint64_t time);
-                    bool        nextPicture(ADMImage *image,bool dontcross=false);
+                    bool        nextPicture(ADMImage *image, int flags=0); // 1 = don't cross segment, 2 = don't skip to next keyframe
                     bool        samePicture(ADMImage *image);
                     bool        previousPicture(ADMImage *image);
                     bool        rewind(void);

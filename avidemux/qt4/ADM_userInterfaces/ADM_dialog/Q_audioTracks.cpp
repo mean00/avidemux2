@@ -73,8 +73,6 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
                             this,SLOT(languagesClicked(int)));   
  * */          
         }
-        // set the parent and show the window
-        qtRegisterDialog(window);
 };
 /**
  * \fn setLanguageFromPool
@@ -273,6 +271,7 @@ bool      audioTrackQt4::run(void)
 {
     ADM_info("Running QT4 audioTrack GUI\n");
     bool r=false;
+    qtRegisterDialog(window);
     again:
     if(window->exec()==QDialog::Accepted)
     {

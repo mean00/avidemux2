@@ -12,6 +12,11 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+
+#ifdef _MSC_VER
+#define __STDC_LIMIT_MACROS
+#endif
+
 #include <QtWinExtras/QtWinExtras>
 #include <QMainWindow>
 #include <QStyle>
@@ -19,6 +24,8 @@
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_systemTrayProgress.h"
+
+
 /**
  */
 class winTaskBarProgress : public admUITaskBarProgress

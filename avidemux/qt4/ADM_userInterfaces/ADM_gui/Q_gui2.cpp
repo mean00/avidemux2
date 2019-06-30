@@ -469,6 +469,13 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     buildMyMenu();
     buildCustomMenu(); // action lists are populated (i.e. buildActionLists() called) within buildCustomMenu()
     buildButtonLists();
+
+#define AUTOREPEAT_TOOLBUTTON(x) ui.x->setAutoRepeat(true); ui.x->setAutoRepeatDelay(500); ui.x->setAutoRepeatInterval(100);
+    AUTOREPEAT_TOOLBUTTON(toolButtonPreviousFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonNextFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonPreviousIntraFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
+
     // Crash in some cases addScriptReferencesToHelpMenu();
     connect(ui.menuVideo->actions().at(3),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromMenu(bool)));
     connect(ui.toolBar->actions().at(5),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromToolbar(bool)));
@@ -509,7 +516,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     threshold = RESIZE_THRESHOLD;
     actZoomCalled = false;
-    ignoreResizeEvent = true;
+    ignoreResizeEvent = false;
     blockResizing = false;
     blockZoomChanges = true;
 
@@ -568,7 +575,11 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
     for(int i=0;i<nb;i++)
     {
         MenuEntry *m=menu+i;
-        QString qs=QString::fromUtf8(QT_TRANSLATE_NOOP("adm",m->text.c_str()));
+        QString qs;
+        if(m->translated)
+            qs=QString::fromUtf8(m->text.c_str());
+        else
+            qs=QString::fromUtf8(QT_TRANSLATE_NOOP("adm",m->text.c_str()));
         switch(m->type)
         {
             case MENU_SEPARATOR:
@@ -727,8 +738,6 @@ void MainWindow::buildActionLists(void)
     { // disable zoom if no video is loaded
         ActionsAvailableWhenFileLoaded.push_back(ui.menuView->actions().at(i));
     }
-
-    ActionsAvailableWhenFileLoaded.push_back(ui.menuVideo->actions().at(1)); // post-processing
 
     bool canSave=!!ADM_mx_getNbMuxers();
     for(int i=3-canSave;i<ui.toolBar->actions().size();i++)
@@ -968,6 +977,10 @@ void MainWindow::updateCodecWidgetControlsState(void)
     ui.pushButtonDecoderConf->setEnabled(b);
     // take care of the "Decoder Options" item in the menu "Video"
     ui.menuVideo->actions().at(0)->setEnabled(b);
+    // post-processing is available only for software decoding and old codecs
+    if(b && !(isMpeg12Compatible(avifileinfo->fcc) || isMpeg4Compatible(avifileinfo->fcc)))
+        b=false;
+    ui.menuVideo->actions().at(1)->setEnabled(b);
 
     b=false;
     if(ui.comboBoxVideo->currentIndex())
@@ -1641,7 +1654,11 @@ int UI_Init(int nargc, char **nargv)
     global_argc=nargc;
     global_argv=nargv;
     ADM_renderLibInit(&UI_Hooks);
-
+#if defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(5,11,0)
+    // Despite HiDPI scaling being supported from Qt 5.6 on, important aspects
+    // like OpenGL support were fixed only in much later versions.
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     myApplication=new myQApplication (global_argc, global_argv);
     myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
     myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
@@ -2380,8 +2397,7 @@ void UI_setAudioTrackCount( int nb )
 {
     char txt[50];
     sprintf(txt,QT_TRANSLATE_NOOP("qgui2"," (%d track(s))"),nb);
-     WIDGET(TrackCountLabel)->setText(QString(txt));
-
+    WIDGET(TrackCountLabel)->setText(QString::fromUtf8(txt));
 }
 /**
  * \fn dtor

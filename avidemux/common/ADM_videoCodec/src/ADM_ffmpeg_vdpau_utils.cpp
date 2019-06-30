@@ -86,7 +86,7 @@ int ADM_VDPAUgetBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
     
     decoderFFVDPAU *dec=(decoderFFVDPAU *)opaque;
     ADM_assert(dec);
-    struct vdpau_render_state *rdr=( struct vdpau_render_state  *)data;
+    struct ADM_vdpauRenderState *rdr=( struct ADM_vdpauRenderState *)data;
     dec->releaseBuffer(rdr);
 }
 

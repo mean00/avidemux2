@@ -172,7 +172,6 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" "${FFMPEG_SOURCE_DIR}/libavcodec/vdpau.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/videotoolbox.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/version.h"
-            "${FFMPEG_SOURCE_DIR}/libavcodec/audioconvert.h"
             DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h"
             "${FFMPEG_SOURCE_DIR}/libavformat/version.h"
@@ -281,7 +280,7 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
 
     if (ADM_CPU_X86)
         file(READ ${FFMPEG_BINARY_DIR}/config.h FF_CONFIG_H)
-        string(REGEX MATCH "#define[ ]+HAVE_YASM[ ]+1" FF_YASM "${FF_CONFIG_H}")
+        string(REGEX MATCH "#define[ ]+HAVE_X86ASM[ ]+1" FF_YASM "${FF_CONFIG_H}")
 
         if (NOT FF_YASM)
             message(FATAL_ERROR "Yasm was not found.")

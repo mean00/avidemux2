@@ -52,9 +52,6 @@
           SPINNER(Saturation);
 
         setModal(true);
-        show();
-        myCrop->adjustCanvasPosition();
-        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
   void Ui_hueWindow::sliderUpdate(int foo)
   {
@@ -90,6 +87,13 @@ void Ui_hueWindow::resizeEvent(QResizeEvent *event)
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
     myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myCrop->adjustCanvasPosition();
+}
+
+void Ui_hueWindow::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    myCrop->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYSPIN(x) w->horizontalSlider##x

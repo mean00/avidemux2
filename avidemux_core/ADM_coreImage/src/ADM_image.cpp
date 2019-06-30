@@ -48,6 +48,8 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
         flags=0;
         _aspect=ADM_ASPECT_1_1;
         imgCurNb++;
+        if(imgCurNb>imgMaxNb)
+            imgMaxNb=imgCurNb;
         _noPicture=0;
         _colorspace=ADM_COLOR_YV12;
         Pts=0;

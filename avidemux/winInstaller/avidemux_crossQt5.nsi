@@ -323,8 +323,9 @@ Section "Avisynth_VapourSynth" SecGrpAvisynth
         SectionIn 2
         SetOutPath $INSTDIR
         SetOverwrite on
-        ${File} ${BINARY_FOLDER}/avsproxy.exe
-        ${File} ${BINARY_FOLDER}/avsproxy_gui.exe
+        ${File} ${BINARY_FOLDER}/avsproxy32.exe
+        ${File} ${BINARY_FOLDER}/avsproxy64.exe
+        #${File} ${BINARY_FOLDER}/avsproxy_gui.exe
         # TMP ${File} ${BINARY_FOLDER}/vsProxy.exe
         # TMP ${File} ${BINARY_FOLDER}/vsProxy_gui_qt5.exe
 SectionEnd

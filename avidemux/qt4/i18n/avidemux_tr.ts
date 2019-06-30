@@ -2,2628 +2,11 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
-    <name></name>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">0</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Kopyala</translation>
-    </message>
-    <message>
-        <source>Cannot initialize the video stream</source>
-        <translation type="obsolete">Video akışı başlatılamadı</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Süzgeç başlatma başarısız oldu</translation>
-    </message>
-    <message>
-        <source>Error while encoding</source>
-        <translation type="obsolete">Kodlarken hata oluştu</translation>
-    </message>
-    <message>
-        <source>KeyFrame error</source>
-        <translation type="obsolete">AnahtarKare hatası</translation>
-    </message>
-    <message>
-        <source>The beginning frame is not a key frame.
-Please move the A marker.</source>
-        <translation type="obsolete">Başlangıç karesi anahtar bir kare değil.
-Lütfen A işaretçisini taşıyın.</translation>
-    </message>
-    <message>
-        <source>_Use systray while encoding</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Automatically _index MPEG files</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Automatically _swap A and B if A&gt;B</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Disable NUV audio sync</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Automatically _build VBR map</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Automatically _rebuild index</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Automatically remove _packed bitstream</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>SIMD</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable all SIMD</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable MMX</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable MMXEXT</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable 3DNOW</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable SSE</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable SSE2</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable SSE3</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Enable SSSE3</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_lavc threads:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Multi-threading</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Above normal</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Below normal</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Encoding priority:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Playback priority:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Prioritisation</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>XVideo (best)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>SDL (good)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Video _display:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>No alerts</source>
-        <translation type="obsolete">Uyarı yok</translation>
-    </message>
-    <message>
-        <source>Display only error alerts</source>
-        <translation type="obsolete">Sadece hata uyarılarını göster</translation>
-    </message>
-    <message>
-        <source>Display all alerts</source>
-        <translation type="obsolete">Tüm uyarıları göster</translation>
-    </message>
-    <message>
-        <source>_Message level:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Master</source>
-        <translation type="obsolete">Ana</translation>
-    </message>
-    <message>
-        <source>_Volume control:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>No downmixing</source>
-        <translation type="obsolete">Kanal azaltma yok (çok kanallı)</translation>
-    </message>
-    <message>
-        <source>Pro Logic</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Pro Logic II</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Local playback downmixing:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>De_ringing</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Güç:</translation>
-    </message>
-    <message>
-        <source>Default Postprocessing</source>
-        <translation type="obsolete">Varsayılan Son İşleme</translation>
-    </message>
-    <message>
-        <source>Use _Global GlyphSet</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Gl_yphSet:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Automation</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Input</source>
-        <translation type="obsolete">Girdi</translation>
-    </message>
-    <message>
-        <source>Output</source>
-        <translation type="obsolete">Çıktı</translation>
-    </message>
-    <message>
-        <source>Video</source>
-        <translation type="obsolete">Video</translation>
-    </message>
-    <message>
-        <source>Threading</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Global GlyphSet</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">Tercihler</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Background Image:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Vignette _Width:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Vignette _Height:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Vignette frame number</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Timecode:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Dynamic range compression</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Time shift (ms):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Time shift value (ms)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>R_esampling (Hz):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Resampling frequency (Hz)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Film to PAL</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>PAL to Film</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Frame rate change:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Manual</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Gain mode:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>G_ain value:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">Kazanım</translation>
-    </message>
-    <message>
-        <source>No change</source>
-        <translation type="obsolete">Değiştirme</translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">Tek kanal</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">İki kanal</translation>
-    </message>
-    <message>
-        <source>Stereo+surround</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Stereo+center</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Stereo+center+surround</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Stereo front+stereo rear</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>5 channels</source>
-        <translation type="obsolete">5 kanal</translation>
-    </message>
-    <message>
-        <source>5.1</source>
-        <translation type="obsolete">5.1</translation>
-    </message>
-    <message>
-        <source>Dolby Pro Logic</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Dolby Pro Logic II</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Mixer:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>No data</source>
-        <translation type="obsolete">Veri yok</translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">Bithızı Histogramı</translation>
-    </message>
-    <message>
-        <source>Fontconfig</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>SDL</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>XVideo</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>AltiVec</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>PowerPC</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>x86</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>x86-64</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>CPU</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Hours:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Minutes:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Seconds:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Job name:</source>
-        <translation type="obsolete">_Görev adı:</translation>
-    </message>
-    <message>
-        <source>Save Job</source>
-        <translation type="obsolete">Görevi Kaydet</translation>
-    </message>
-    <message>
-        <source>_Swap U and V</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Show motion _vectors</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="obsolete">Kullanıcı Arayüzü</translation>
-    </message>
-    <message>
-        <source>Joint stereo</source>
-        <translation type="obsolete">Birleşik Stereo</translation>
-    </message>
-    <message>
-        <source>C_hannel mode:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>CBR</source>
-        <translation type="obsolete">CBR</translation>
-    </message>
-    <message>
-        <source>ABR</source>
-        <translation type="obsolete">ABR</translation>
-    </message>
-    <message>
-        <source>Extreme</source>
-        <translation type="obsolete">En yüksek</translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">_Süzgeç gücü:</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">_Yatay Blok Çözme</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">_Dikey Blok Çözme</translation>
-    </message>
-    <message>
-        <source>_Deringing</source>
-        <translation type="obsolete">_Halka Azaltma</translation>
-    </message>
-    <message>
-        <source>_Shrink Factor:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>NTSC 4:3</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>NTSC 16:9</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>PAL 4:3</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>PAL 16:9</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>1:1</source>
-        <translation type="obsolete">1:1</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Auto (might not work)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Bottom field (keep top)</source>
-        <translation type="obsolete">Alt bölge (üstü tut)</translation>
-    </message>
-    <message>
-        <source>Top field (keep bottom)</source>
-        <translation type="obsolete">Üst bölge (altı tut)</translation>
-    </message>
-    <message>
-        <source>Cubic interpolation</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Modified ELA</source>
-        <translation type="obsolete">Değiştirilmiş ELA</translation>
-    </message>
-    <message>
-        <source>Kernel interpolation</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Modified ELA-2</source>
-        <translation type="obsolete">Değiştirilmiş ELA-2</translation>
-    </message>
-    <message>
-        <source>4 fields check</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>5 fields check</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>4 fields check (no avg)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>5 fields check (no avg)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>No link</source>
-        <translation type="obsolete">Bağ kullanma</translation>
-    </message>
-    <message>
-        <source>Full link</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Y to UV</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>UV to Y</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>1</source>
-        <translation type="obsolete">1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Ala_n Sırası:</translation>
-    </message>
-    <message>
-        <source>_Interpolate:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_MntMode:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Link:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_AP type:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Use ch_roma to evalute</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Try _weave</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Denoise</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">Ke_skin</translation>
-    </message>
-    <message>
-        <source>_Evalute all frames</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Motion threshold, l_uma:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Motion threshold, c_hroma:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Area com_bing threshold:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Combe_d threshold:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Artefact _protection threshold:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Debug:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>TDeint</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_VOB file(s):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_IFO file:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>VOB to VobSub</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>The selected vobfile does not exist</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Please select a correct VobSub path/dir</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select ECMAScript to Run</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Obsolete</source>
-        <translation type="obsolete">Artık kullanılmıyor</translation>
-    </message>
-    <message>
-        <source>Not coded in this version</source>
-        <translation type="obsolete">Bu sürümde kodlanmamış</translation>
-    </message>
-    <message>
-        <source>Select Workbench to Save</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select Raw File to Save</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select File to Save Audio</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select JPEG Sequence to Save</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select BMP to Save</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select JPEG to Save</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select File to Save</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select MP3 to Load</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select AC3 to Load</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select WAV to Load</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Out of bounds</source>
-        <translation type="obsolete">Sınırların dışında</translation>
-    </message>
-    <message>
-        <source>Marker A &gt; B</source>
-        <translation type="obsolete">İşaretçi A &gt; B</translation>
-    </message>
-    <message>
-        <source>Cannot copy.</source>
-        <translation type="obsolete">Kopyalanamadı.</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II))</source>
-        <translation type="obsolete">Kötü birşeyler oldu (II))</translation>
-    </message>
-    <message>
-        <source>Are you sure?</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">Kare Hızı</translation>
-    </message>
-    <message>
-        <source>Width is not a multiple of 8</source>
-        <translation type="obsolete">Genişlik 8&apos;in katı değil</translation>
-    </message>
-    <message>
-        <source>This will make trouble for AVI files.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Rebuild all Keyframes?</source>
-        <translation type="obsolete">Tüm Anahtar kareler yeniden inşa edilsin mi?</translation>
-    </message>
-    <message>
-        <source>Permission error</source>
-        <translation type="obsolete">İzin hatası</translation>
-    </message>
-    <message>
-        <source>&quot;%s&quot; does not exist.</source>
-        <translation type="obsolete">&quot;%s&quot; yok.</translation>
-    </message>
-    <message>
-        <source>Cannot open project using the video loader.</source>
-        <translation type="obsolete">Video yükleyici kullanılarak proje açılamadı.</translation>
-    </message>
-    <message>
-        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
-        <translation type="obsolete">&apos;Dosya&apos; -&gt; &apos;Projeyi Yükle/Çalıştır...&apos;ı deneyin</translation>
-    </message>
-    <message>
-        <source>Could not open the file</source>
-        <translation type="obsolete">Dosya açılamadı</translation>
-    </message>
-    <message>
-        <source>Multiple Audio Tracks</source>
-        <translation type="obsolete">Birden fazla Ses İzi</translation>
-    </message>
-    <message>
-        <source>The file you just loaded contains several audio tracks.
-Go to Audio-&gt;MainTrack to select the active one.</source>
-        <translation type="obsolete">Yüklediğiniz dosya birden fazla ses izi barındırıyor.
-Aktif olanı seçmek için Ses-&gt;Ana İz&apos;e gidin.</translation>
-    </message>
-    <message>
-        <source>No audio decoder found for this file</source>
-        <translation type="obsolete">Bu dosya için ses kod çözücüsü bulunamadı</translation>
-    </message>
-    <message>
-        <source>Save (A+V) will generate bad AVI. Save audio will work.</source>
-        <translation type="obsolete">Kaydet (Ses+Video) bozuk bir AVI oluşturacaktır. esi kaydet düzgün sonuç üretecektir.</translation>
-    </message>
-    <message>
-        <source>Something failed when appending</source>
-        <translation type="obsolete">Eklerken birşeyler başarısız oldu</translation>
-    </message>
-    <message>
-        <source>Something bad happened (II)</source>
-        <translation type="obsolete">Kötü birşeyler oldu (II)</translation>
-    </message>
-    <message>
-        <source>Cannot save the audio in copy mode</source>
-        <translation type="obsolete">Kopyalama kipinde ses kaydedilemez</translation>
-    </message>
-    <message>
-        <source>Select WAV PCM as the audio codec, otherwise the audio file would be raw PCM.</source>
-        <translation type="obsolete">Ses kodeği olarak WAV PCM seçin, aksi taktirde ses dosyası ham PCM biçeminde olur.</translation>
-    </message>
-    <message>
-        <source>Saving audio</source>
-        <translation type="obsolete">Ses kaydediliyor</translation>
-    </message>
-    <message>
-        <source>Get Frame</source>
-        <translation type="obsolete">Kareyi Al</translation>
-    </message>
-    <message>
-        <source>Cannot get this frame to save</source>
-        <translation type="obsolete">Kaydetmek için bu kare alınamadı</translation>
-    </message>
-    <message>
-        <source>Mark A &gt; B</source>
-        <translation type="obsolete">İşaretçi A &gt; B</translation>
-    </message>
-    <message>
-        <source>Set your markers correctly.</source>
-        <translation type="obsolete">İşaretçilerinizi düzgün ayarlayın.</translation>
-    </message>
-    <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="obsolete">Jpeg seti olarak kaydediliyor</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="obsolete">Kare kodu çözülemedi</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="obsolete">İptâl ediliyor.</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation type="obsolete">Tamamlandı</translation>
-    </message>
-    <message>
-        <source>Saved %d images.</source>
-        <translation type="obsolete">%d resim kaydedildi.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">Hata</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="obsolete">Tüm resimler kaydedilemedi.</translation>
-    </message>
-    <message>
-        <source>Saved &quot;%s&quot;.</source>
-        <translation type="obsolete">&quot;%s&quot; kaydedildi.</translation>
-    </message>
-    <message>
-        <source>BMP op failed</source>
-        <translation type="obsolete">BMP işlemmi başarısız oldu</translation>
-    </message>
-    <message>
-        <source>Saving %s as a BMP file failed.</source>
-        <translation type="obsolete">%s BMP kaydetme başarısız oldu.</translation>
-    </message>
-    <message>
-        <source>Failed to open the file</source>
-        <translation type="obsolete">Dosya açılamadı</translation>
-    </message>
-    <message>
-        <source>Not a WAV file?</source>
-        <translation type="obsolete">WAV dosyası değil mi?</translation>
-    </message>
-    <message>
-        <source>WAV open file failed...</source>
-        <translation type="obsolete">WAV dosya açma başarısız oldu...</translation>
-    </message>
-    <message>
-        <source>Cannot decompress audio frame</source>
-        <translation type="obsolete">Sıkıştırılmış ses karesi açılamadı</translation>
-    </message>
-    <message>
-        <source>Memory Error</source>
-        <translation type="obsolete">Hafıza Hatası</translation>
-    </message>
-    <message>
-        <source>No frames to encode</source>
-        <translation type="obsolete">Kodlanacak kare yok</translation>
-    </message>
-    <message>
-        <source>Please check markers. Is &quot;A&gt;&quot; == &quot;&gt;B&quot;?</source>
-        <translation type="obsolete">Lütfen işaretçileri kontrol edin. &quot;A&gt;&quot; == &quot;&gt;B&quot; mi şu anda?</translation>
-    </message>
-    <message>
-        <source>Saving raw video stream</source>
-        <translation type="obsolete">Ham video akışı kaydediliyor</translation>
-    </message>
-    <message>
-        <source>Checking video</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>No error found</source>
-        <translation type="obsolete">Hata yok</translation>
-    </message>
-    <message>
-        <source>Errors found in %u frames</source>
-        <translation type="obsolete">%u karede hata bulundu</translation>
-    </message>
-    <message>
-        <source>Cannot decompress the audio stream</source>
-        <translation type="obsolete">Sıkıştırılmış ses akışı açılamadı</translation>
-    </message>
-    <message>
-        <source>Switch audio codec to Copy.</source>
-        <translation type="obsolete">Ses kodeğini Kopyala yapın.</translation>
-    </message>
-    <message>
-        <source>Cannot delete the selection.</source>
-        <translation type="obsolete">Seçili kısım silinemez.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t remove all frames</source>
-        <translation type="obsolete">Tüm kareleri silemezsiniz</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">Kötü birşeyler oldu</translation>
-    </message>
-    <message>
-        <source>Could not get tracks info</source>
-        <translation type="obsolete">İz bilgisi alınamadı</translation>
-    </message>
-    <message>
-        <source>Take audio from video file</source>
-        <translation type="obsolete">Sesi video dosyasından al</translation>
-    </message>
-    <message>
-        <source>No audio</source>
-        <translation type="obsolete">Ses yok</translation>
-    </message>
-    <message>
-        <source>External AC3</source>
-        <translation type="obsolete">Haricî AC3</translation>
-    </message>
-    <message>
-        <source>Take audio from external AC3 file</source>
-        <translation type="obsolete">Sesi haricî AC3 dosyasından al</translation>
-    </message>
-    <message>
-        <source>External MP3</source>
-        <translation type="obsolete">Haricî MP3</translation>
-    </message>
-    <message>
-        <source>Take audio from external MP3 file</source>
-        <translation type="obsolete">Sesi haricî MP3 dosyasından al</translation>
-    </message>
-    <message>
-        <source>External WAV</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Take audio from external WAV file</source>
-        <translation type="obsolete">Sesi harici WAV dosyasından al</translation>
-    </message>
-    <message>
-        <source>_Audio source:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_External file:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Track from video:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Main Audio Track</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Cannot load</source>
-        <translation type="obsolete">Yüklenemedi</translation>
-    </message>
-    <message>
-        <source>The selected audio file does not exist.</source>
-        <translation type="obsolete">Seçilen ses dosyası yok.</translation>
-    </message>
-    <message>
-        <source>Second Audio Track</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Error loading the MP3 file</source>
-        <translation type="obsolete">MP3 dosyasının yüklenmesinde hata</translation>
-    </message>
-    <message>
-        <source>Second track loaded</source>
-        <translation type="obsolete">İkinci iz yüklendi</translation>
-    </message>
-    <message>
-        <source>Error loading the AC3 file</source>
-        <translation type="obsolete">AC3 dosyasının yüklenmesinde hata</translation>
-    </message>
-    <message>
-        <source>Error loading the WAV file</source>
-        <translation type="obsolete">WAV dosyasının yüklenmesinde hata</translation>
-    </message>
-    <message>
-        <source>Saving failed</source>
-        <translation type="obsolete">Kaydetme başarısız</translation>
-    </message>
-    <message>
-        <source>Saving the job failed. Maybe you have permission issue with ~/.avidemux</source>
-        <translation type="obsolete">Görevin kaydedilmesi işlemi başarısız oldu. ~/.avidemux diziniyle ilgili izin problemleriniz olabilir</translation>
-    </message>
-    <message>
-        <source>File %s has been successfully saved.</source>
-        <translation type="obsolete">%s dosyası başarıyla kaydedildi.</translation>
-    </message>
-    <message>
-        <source>File %s was NOT saved correctly.</source>
-        <translation type="obsolete">%s dosyası sorunsuz biçimde KAYDEDİLEMEDİ.</translation>
-    </message>
-    <message>
-        <source>AvsProxy</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Failed to connect to avsproxy.
-Is it running ?</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>avsproxy</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Frame type:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Frame size:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Frame Hex Dump</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">Gürültü gider</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Subtitler</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Normal</source>
-        <translation type="obsolete">Normal</translation>
-    </message>
-    <message>
-        <source>Mux every N video frames</source>
-        <translation type="obsolete">Her N video karesini ayrıştır</translation>
-    </message>
-    <message>
-        <source>Mux by packet size</source>
-        <translation type="obsolete">Paket boyutuna göre ayrıştır</translation>
-    </message>
-    <message>
-        <source>Muxing _type:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Split every MB:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Mux _every x video frames:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Mux in _blocks of x bytes:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>AVI Muxer Options</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>PCM</source>
-        <translation type="obsolete">PCM</translation>
-    </message>
-    <message>
-        <source>MP2</source>
-        <translation type="obsolete">MP2</translation>
-    </message>
-    <message>
-        <source>MP3</source>
-        <translation type="obsolete">MP3</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">Başarısız</translation>
-    </message>
-    <message>
-        <source>Codec Error</source>
-        <translation type="obsolete">Kodek Hatası</translation>
-    </message>
-    <message>
-        <source>The number of channels is greater than what the selected audio codec can do.
-Either change codec or use the mixer filter to have less channels.</source>
-        <translation type="obsolete">Kanal sayısı seçili ses kodeğinin yapabileceğinden daha fazla.
-Ya farklı bir kodek kullanın ya da daha az kanal elde etmek için karıştırıcı süzgecini kullanın.</translation>
-    </message>
-    <message>
-        <source>Internal error finding codec</source>
-        <translation type="obsolete">Kodeğin bulunmasında iç hata</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Dosya hatası</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot;.</source>
-        <translation type="obsolete">&quot;%s&quot; açılamadı.</translation>
-    </message>
-    <message>
-        <source>Cannot write the file</source>
-        <translation type="obsolete">Dosya yazılamadı</translation>
-    </message>
-    <message>
-        <source>No write access to &quot;%s&quot;.</source>
-        <translation type="obsolete">&quot;%s&quot;&apos;ye yazma erişimi yok.</translation>
-    </message>
-    <message>
-        <source>AVI</source>
-        <translation type="obsolete">AVI</translation>
-    </message>
-    <message>
-        <source>AVI, dual audio</source>
-        <translation type="obsolete">AVI, iki kanal ses</translation>
-    </message>
-    <message>
-        <source>AVI, pack VOP</source>
-        <translation type="obsolete">AVI, paketlenmiş VOP</translation>
-    </message>
-    <message>
-        <source>AVI, unpack VOP</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>MPEG-PS (A+V)</source>
-        <translation type="obsolete">MPEG PS (Ses+Video)</translation>
-    </message>
-    <message>
-        <source>MPEG-TS (A+V)</source>
-        <translation type="obsolete">MPEG TS (Ses+Video)</translation>
-    </message>
-    <message>
-        <source>MPEG video</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>MP4</source>
-        <translation type="obsolete">MP4</translation>
-    </message>
-    <message>
-        <source>OGM</source>
-        <translation type="obsolete">OGM</translation>
-    </message>
-    <message>
-        <source>FLV</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>DUMMY</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Partial</source>
-        <translation type="obsolete">Parçalı</translation>
-    </message>
-    <message>
-        <source>Problem reading XML filters</source>
-        <translation type="obsolete">XML süzgeçlerinin okunmasında hata</translation>
-    </message>
-    <message>
-        <source>No filter found</source>
-        <translation type="obsolete">Hiç süzgeç bulunmadı</translation>
-    </message>
-    <message>
-        <source>Could not find a filter</source>
-        <translation type="obsolete">Bir süzgeç bulunamadı</translation>
-    </message>
-    <message>
-        <source>No tag found</source>
-        <translation type="obsolete">Hiç etiket bulunamadı</translation>
-    </message>
-    <message>
-        <source>Node not found</source>
-        <translation type="obsolete">Düğüm bulunamadı</translation>
-    </message>
-    <message>
-        <source>There is several mpeg file, append them ?</source>
-        <translation type="obsolete">Birkaç mpeg dosyası var, birleştirilsinler mi ?</translation>
-    </message>
-    <message>
-        <source>Can&apos;t determine aspect ratio</source>
-        <translation type="obsolete">En/boy oranı belirlenemedi</translation>
-    </message>
-    <message>
-        <source>Wrong Colorspace</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Only YV12/I420 or YUY2/I422 JPegs are supported</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Output file error</source>
-        <translation type="obsolete">Çıktı dosyası hatası</translation>
-    </message>
-    <message>
-        <source>Could not open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Yazmak için &quot;%s&quot; açılamadı.</translation>
-    </message>
-    <message>
-        <source>Problem loading sub</source>
-        <translation type="obsolete">Altyazı yüklenirken hata</translation>
-    </message>
-    <message>
-        <source>Ifo error</source>
-        <translation type="obsolete">Ifo dosyası hatası</translation>
-    </message>
-    <message>
-        <source>Error reading ifo file, aborting.</source>
-        <translation type="obsolete">Ifo dosyasının okunmasında hata, işlem iptâl ediliyor.</translation>
-    </message>
-    <message>
-        <source>Cannot write .idx</source>
-        <translation type="obsolete">.idx dosyası yazılamadı</translation>
-    </message>
-    <message>
-        <source>Cannot write .sub</source>
-        <translation type="obsolete">.sub dosyası yazılamadı</translation>
-    </message>
-    <message>
-        <source>Problem opening the mpeg files</source>
-        <translation type="obsolete">mpeg dosyalarının açılmasında hata</translation>
-    </message>
-    <message>
-        <source>Generating VobSub file</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Could not write the file</source>
-        <translation type="obsolete">Dosya yazılamadı</translation>
-    </message>
-    <message>
-        <source>Could not read &quot;%s&quot;.</source>
-        <translation type="obsolete">&quot;%s&quot; okunamadı.</translation>
-    </message>
-    <message>
-        <source>Load it</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Crash file</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>I have detected a crash file. 
-Do you want to load it  ?
-(It will be deleted in all cases, you should save it if you want to keep it)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Unsupported video</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Only FLV1 and VP6 video are supported</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Unsupported audio</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Audio must be mp3 for flv output.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Frequency must be 44100, 22050 or 11025 Hz.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Cannot initialize the audio stream</source>
-        <translation type="obsolete">Ses akışı başlatılamadı</translation>
-    </message>
-    <message>
-        <source>PSP</source>
-        <translation type="obsolete">PSP</translation>
-    </message>
-    <message>
-        <source>This is not MPEG compatible</source>
-        <translation type="obsolete">Bu MPEG uyumlu değil</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use the Copy codec.</source>
-        <translation type="obsolete">Kopyala kodeğini kullanamazsnız.</translation>
-    </message>
-    <message>
-        <source>There is no audio track</source>
-        <translation type="obsolete">Ses izi yok</translation>
-    </message>
-    <message>
-        <source>The first frame is not intra frame</source>
-        <translation type="obsolete">İlk kare bir ön kare değil</translation>
-    </message>
-    <message>
-        <source>Use the &amp;lt;&amp;lt; and the &amp;gt;&amp;gt; buttons to move using Intra frames.</source>
-        <translation type="obsolete">Ön kareleri kullanarak hareket etmek için &amp;lt;&amp;lt; ve &amp;gt;&amp;gt; düğmelerini kullanın.</translation>
-    </message>
-    <message>
-        <source>Audio track is not suitable</source>
-        <translation type="obsolete">Ses izi uygun değil</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2(stereo), AC3, DTS or LPCM (stereo).</source>
-        <translation type="obsolete">DVD için, ses 48 kHz MP2 (iki kanal), AC3, DTS ve LPCM (iki kanal) olmalı.</translation>
-    </message>
-    <message>
-        <source>For VCD, audio must be 44.1 kHz MP2.</source>
-        <translation type="obsolete">VCD için, ses 44.1 kHz MP2 olmalı.</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be 48 kHz MP2, AC3 or LPCM.</source>
-        <translation type="obsolete">DVD için, ses 48 kHz MP2, AC3 veya LPCM olmalı.</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Yazmak için &quot;%s&quot; açılamadı.</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="obsolete">Bir dizin seçin</translation>
-    </message>
-    <message>
-        <source>Uinteger</source>
-        <translation type="obsolete">İşaretsiz (unsigned) tamsayı (integer)</translation>
-    </message>
-    <message>
-        <source>Float</source>
-        <translation type="obsolete">Ondalıklı</translation>
-    </message>
-    <message>
-        <source>Toggle</source>
-        <translation type="obsolete">Aç/ Kapat</translation>
-    </message>
-    <message>
-        <source>No Strategy</source>
-        <translation type="obsolete">Strateji Yok</translation>
-    </message>
-    <message>
-        <source>3:2 Pulldown</source>
-        <translation type="obsolete">3:2 Aşağı çekme</translation>
-    </message>
-    <message>
-        <source>Pal/Secam</source>
-        <translation type="obsolete">Pal/Secam</translation>
-    </message>
-    <message>
-        <source>NTSC converted from PAL</source>
-        <translation type="obsolete">PAL&apos;dan dönüştürülen NTSC</translation>
-    </message>
-    <message>
-        <source>menu</source>
-        <translation type="obsolete">menü</translation>
-    </message>
-    <message>
-        <source>Select idx file:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Output SRT file</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select input and ouput files</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>The idx/sub file does not exist.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Please Select a valid output SRT file.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Cannot load the glyphset file.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Save Glyph</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Input TS:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Subtitle PID:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Please Select a valid TS file.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Audio</source>
-        <translation type="obsolete">Ses</translation>
-    </message>
-    <message>
-        <source>Oops</source>
-        <translation type="obsolete">Ah</translation>
-    </message>
-    <message>
-        <source>Something very wrong happened when building joblist.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>There are no jobs stored</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Decompressing error</source>
-        <translation type="obsolete">Sıkıştırılmışı açma hatası</translation>
-    </message>
-    <message>
-        <source>Cannot decode next frame.</source>
-        <translation type="obsolete">Sonraki karenin kodu çözülemedi.</translation>
-    </message>
-    <message>
-        <source>Cannot decode keyframe.</source>
-        <translation type="obsolete">Anahtar karenin kodu çözülemedi.</translation>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="obsolete">Gidiyor</translation>
-    </message>
-    <message>
-        <source>Finding black frames</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Cannot decode the frame.</source>
-        <translation type="obsolete">Karenin kodu çözülemedi.</translation>
-    </message>
-    <message>
-        <source>Dual audio can only be used in copy mode</source>
-        <translation type="obsolete">İkili ses sadece kopyala modunda kullanılabilir</translation>
-    </message>
-    <message>
-        <source>Select Copy as the video codec.</source>
-        <translation type="obsolete">Video kodeği olarak Kopyala&apos;yı seçin.</translation>
-    </message>
-    <message>
-        <source>Incompatible output format</source>
-        <translation type="obsolete">Uyumsuz çıktı biçemi</translation>
-    </message>
-    <message>
-        <source>There is no second track</source>
-        <translation type="obsolete">İkinci bir iz yok</translation>
-    </message>
-    <message>
-        <source>Select a second audio track in the Audio menu.</source>
-        <translation type="obsolete">Ses menüsünden ikinci bir ses izi seçin.</translation>
-    </message>
-    <message>
-        <source>Select dual audio AVI to write</source>
-        <translation type="obsolete">Yazılacak ikili sesli AVI dosyasını seçin</translation>
-    </message>
-    <message>
-        <source>This cannot have packed VOP</source>
-        <translation type="obsolete">Bu paketli VOP içeremez</translation>
-    </message>
-    <message>
-        <source>It is not MPEG-4 video. File will not be saved.</source>
-        <translation type="obsolete">MPEG-4 videosu değil. Dosya kaydedilmeyecek.</translation>
-    </message>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">Ses aygıtının başlatılmasında hata</translation>
-    </message>
-    <message>
-        <source>VBR</source>
-        <translation type="obsolete">VBR</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
-    </message>
-    <message>
-        <source>Resize</source>
-        <translation type="obsolete">Tekrar boyutlandır</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be 0</source>
-        <translation type="obsolete">Genişlik ve yükseklik 0 olamaz</translation>
-    </message>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Genişlik ve yükseklik tekil olamaz</translation>
-    </message>
-    <message>
-        <source>Chroma U</source>
-        <translation type="obsolete">Berraklık U</translation>
-    </message>
-    <message>
-        <source>Chroma V</source>
-        <translation type="obsolete">Berraklık V</translation>
-    </message>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">Fark</translation>
-    </message>
-    <message>
-        <source>MPlayer eq2</source>
-        <translation type="obsolete">MPlayer ekolayzır2</translation>
-    </message>
-    <message>
-        <source>_Subtitle file:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Font (TTF):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Encoding:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>S_elect C_olor</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Set Size and _Position</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Auto split</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Delay (ms):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMImage</name>
-    <message>
-        <source>Memory error</source>
-        <translation type="obsolete">Hafıza hatası</translation>
-    </message>
-    <message>
-        <source>Error converting to BMP</source>
-        <translation type="obsolete">BMP&apos;ye dönüştürme işleminde hata</translation>
-    </message>
-    <message>
-        <source>Something bad happened</source>
-        <translation type="obsolete">Kötü birşeyler oldu</translation>
-    </message>
-    <message>
-        <source>Cannot encode the frame</source>
-        <translation type="obsolete">Kare kodlanamıyor</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Dosya hatası</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Yazmak için &quot;%s&quot; açılamadı.</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoComputeAverage</name>
-    <message>
-        <source>_Start Frame (first frame # to include in average):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_End Frame (last frame # to include), -1 = last:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Bias (only for display; use 0 for average, 128 for frame minus average):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Current frame minus average so far</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Average so far</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Display nothing (fast for batch processing)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Display _Mode:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDenoise</name>
-    <message>
-        <source>_Luma lock:</source>
-        <translation type="obsolete">Par_laklık kilidi:</translation>
-    </message>
-    <message>
-        <source>C_hroma lock:</source>
-        <translation type="obsolete">Berra_klık kilidi:</translation>
-    </message>
-    <message>
-        <source>L_uma threshold:</source>
-        <translation type="obsolete">P_arlaklık eşiği:</translation>
-    </message>
-    <message>
-        <source>Ch_roma threshold:</source>
-        <translation type="obsolete">Be_rraklık eşiği:</translation>
-    </message>
-    <message>
-        <source>_Scene change:</source>
-        <translation type="obsolete">_Sahne değişimi:</translation>
-    </message>
-    <message>
-        <source>Denoise</source>
-        <translation type="obsolete">Gürültü gider</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoDropOut</name>
-    <message>
-        <source>DropOut Threshold</source>
-        <translation type="obsolete">Düşürme Eşiği</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoEraser</name>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoForcedPP</name>
-    <message>
-        <source>_Filter strength:</source>
-        <translation type="obsolete">_Süzgeç gücü:</translation>
-    </message>
-    <message>
-        <source>_Quantizer:</source>
-        <translation type="obsolete">_Nicemleyici:</translation>
-    </message>
-    <message>
-        <source>_Horizontal deblocking</source>
-        <translation type="obsolete">_Yatay Blok Çözme</translation>
-    </message>
-    <message>
-        <source>_Vertical deblocking</source>
-        <translation type="obsolete">_Dikey Blok Çözme</translation>
-    </message>
-    <message>
-        <source>_Deringing</source>
-        <translation type="obsolete">_Halka Azaltma</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoKernelDeint</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Üst</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Alt</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Ala_n Sırası:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Daha küçük sayı daha fazla titreşim çöz demektir</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">Ke_skin</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">Daha ke_skin motor:</translation>
-    </message>
-    <message>
-        <source>T_woway</source>
-        <translation type="obsolete">İ_ki Yönlü</translation>
-    </message>
-    <message>
-        <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">Daha iyi ek kutupla (kullanmamak daha iyi olur)</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">_Harita</translation>
-    </message>
-    <message>
-        <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">Titreşimli bölgeleri göster (sadece test!)</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLavPPDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>Linear blend</source>
-        <translation type="obsolete">Doğrusal karışım</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">Doğrusal kutuplaştırma</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Kübik kutuplaştırma</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Medyan titreşim çözücü</translation>
-    </message>
-    <message>
-        <source>FFmpeg deint</source>
-        <translation type="obsolete">FFmpeg titreşim çözücü</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">_Titreşim Çözme:</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">_Otomatik Denge</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoLogo</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3D</name>
-    <message>
-        <source>_Spatial luma strength:</source>
-        <translation type="obsolete">_Uzamsal parlaklık gücü:</translation>
-    </message>
-    <message>
-        <source>S_patial chroma strength:</source>
-        <translation type="obsolete">Uza_msal berraklık gücü:</translation>
-    </message>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">_Zamansal güç:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMPD3Dlow</name>
-    <message>
-        <source>_Spatial luma strength:</source>
-        <translation type="obsolete">_Uzamsal parlaklık gücü:</translation>
-    </message>
-    <message>
-        <source>S_patial chroma strength:</source>
-        <translation type="obsolete">Uza_msal berraklık gücü:</translation>
-    </message>
-    <message>
-        <source>_Temporal strength:</source>
-        <translation type="obsolete">_Zamansal güç:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMaskedSoften</name>
-    <message>
-        <source>_Luma threshold:</source>
-        <translation type="obsolete">_Parlaklık eşiği:</translation>
-    </message>
-    <message>
-        <source>C_hroma threshold:</source>
-        <translation type="obsolete">_Berraklık eşiği:</translation>
-    </message>
-    <message>
-        <source>_Radius:</source>
-        <translation type="obsolete">_Yarıçap:</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoMosaic</name>
-    <message>
-        <source>_Horizontal stacking:</source>
-        <translation type="obsolete">_Yatay yığma:</translation>
-    </message>
-    <message>
-        <source>_Vertical stacking:</source>
-        <translation type="obsolete">_Dikey yığma:</translation>
-    </message>
-    <message>
-        <source>_Shrink factor:</source>
-        <translation type="obsolete">_Küçültme çarpanı:</translation>
-    </message>
-    <message>
-        <source>Show _frame</source>
-        <translation type="obsolete">Kareyi _göster</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoPalShift</name>
-    <message>
-        <source>_Try reverse</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoParticle</name>
-    <message>
-        <source>New format, preferred, good for Tracker3D</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Old format that Tracker3D can&apos;t read directly</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Mi_nimum area for a particle to be detected:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Ma_ximum area for a particle to be detected:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Left side crop (ignore particles in):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Right side crop (ignore particles in):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Top crop (ignore particles in):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Bottom crop (ignore particles in):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Output File:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Camera number:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoResampleFPS</name>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Yeni kare hızı:</translation>
-    </message>
-    <message>
-        <source>_Blend</source>
-        <translation type="obsolete">_Harmanla</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoRotate</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 derece</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 derece</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 derece</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoStabilize</name>
-    <message>
-        <source>Stabilize Threshold</source>
-        <translation type="obsolete">Eşiği Dengele</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubASS</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubtitle</name>
-    <message>
-        <source>Could not open subtitle file</source>
-        <translation type="obsolete">Altyazı dosyası açılamadı</translation>
-    </message>
-    <message>
-        <source>Cannot identify subtitle format</source>
-        <translation type="obsolete">Altyazı biçemi belirlenemedi</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSwissArmyKnife</name>
-    <message>
-        <source>P&apos; = A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P - A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = A - P</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P + A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P * A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = P / A</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = A / P</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = min (P, A)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>P&apos; = max (P, A)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = convolve(P); Load convolution kernel from file</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = pixel from image file as float; Load image from file</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = pixel from image file as integer; Load image from file</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = floating point constant value</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>A = rolling average of pixel: A = A*(1-alpha)+(P*alpha)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select _Operation on each pixel P and input A:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Input _Type:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Input _File (image or convolution kernel):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Load Bias (added to each pixel
-in file image when loaded):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Load _Multiplier (each pixel in
-file image mult. by this when loaded):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Input _Constant:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Init _Start Frame (first frame # to use for head start):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Init _End Frame (last frame # to use for head start):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Init By _Rolling (compute head start using a rolling average rather than a straight average)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Bias (will be added to result):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Histogram every N frames (0 to disable):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoTIsophote</name>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Orta</translation>
-    </message>
-    <message>
-        <source>_Type:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Daha küçük sayı daha fazla titreşim çöz demektir</translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoThreshold</name>
-    <message>
-        <source>Mi_nimum value to be in-range:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Ma_ximum value to be in-range:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>In-range values go white, out-of-range go black</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>In-range values go black, out-of-range go white</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Output values:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Debugging settings (bits):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoYadif</name>
-    <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="obsolete">Uzamsal zamansal kontrolü atla</translation>
-    </message>
-    <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADM_AudiocodecWMA</name>
-    <message>
-        <source>Internal error</source>
-        <translation type="obsolete">İç hata</translation>
-    </message>
-    <message>
-        <source>Cannot open WMA2 codec.</source>
-        <translation type="obsolete">WMA2 kodeği açılamadı.</translation>
-    </message>
-</context>
-<context>
     <name>ADM_Composer</name>
-    <message>
-        <source>No video loaded</source>
-        <translation type="obsolete">Yüklü video yok</translation>
-    </message>
-    <message>
-        <source>Not indexable</source>
-        <translation type="obsolete">Endekslenebilir değil</translation>
-    </message>
-    <message>
-        <source>DivX 5 + packed?</source>
-        <translation type="obsolete">DivX 5 + paketli ?</translation>
-    </message>
-    <message>
-        <source>Rebuilding Frames</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Aborted</source>
-        <translation type="obsolete">İptâl edildi</translation>
-    </message>
-    <message>
-        <source>Unsupported</source>
-        <translation type="obsolete">Desteklenmiyor</translation>
-    </message>
-    <message>
-        <source>Old format project file</source>
-        <translation type="obsolete">Eski biçem proje dosyası</translation>
-    </message>
-    <message>
-        <source>No more supported.</source>
-        <translation type="obsolete">Artık desteklenmiyor.</translation>
-    </message>
-    <message>
-        <source>File type identified but no loader support detected...</source>
-        <translation type="obsolete">Dosya tipi belirlendi ama yükleyici desteği bulunamadı...</translation>
-    </message>
-    <message>
-        <source>May be related to an old index file.</source>
-        <translation type="obsolete">Eski bir endeks dosyasıyla ilgili olabilir.</translation>
-    </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+232"/>
         <source>Attempt to open %s failed!</source>
         <translation type="unfinished">%s açma teşebbüsü başarısız oldu!</translation>
-    </message>
-    <message>
-        <source>Build Time Map</source>
-        <translation type="obsolete">Zaman Haritasını İnşa Et</translation>
-    </message>
-    <message>
-        <source>Build VBR time map?</source>
-        <translation type="obsolete">VBR zaman haritası inşa edilsin mi?</translation>
-    </message>
-    <message>
-        <source>Packed Bitstream detected</source>
-        <translation type="obsolete">Paketlenmiş bit akışı bulundu</translation>
-    </message>
-    <message>
-        <source>Do you want me to unpack it ?</source>
-        <translation type="obsolete">Paketten çıkarmamı ister misiniz ?</translation>
-    </message>
-    <message>
-        <source>Could not unpack the video</source>
-        <translation type="obsolete">Video paketten çıkarılamadı</translation>
-    </message>
-    <message>
-        <source>Using backup decoder - not frame accurate.</source>
-        <translation type="obsolete">Yedek kod çözücü kullanılıyor - kare doğru olmayacaktır.</translation>
-    </message>
-    <message>
-        <source>Weird</source>
-        <translation type="obsolete">Garip</translation>
-    </message>
-    <message>
-        <source>The unpacking succeedeed but the index is still not up to date.</source>
-        <translation type="obsolete">Paketten çıkarma başarılı oldu ama endeks hâlâ güncel değil.</translation>
-    </message>
-    <message>
-        <source>Index is not up to date</source>
-        <translation type="obsolete">Endeks güncel değil</translation>
-    </message>
-    <message>
-        <source>You should use Tool-&gt;Rebuild frame. Do it now ?</source>
-        <translation type="obsolete">Araç-&gt;Kareyi yeniden oluştur&apos;u kullanmalısınız. Şimdi yapalım mı?</translation>
-    </message>
-    <message>
-        <source>This looks like mpeg
- Do you want to index it?</source>
-        <translation type="obsolete">Bu mpeg&apos;e benziyor
- Endekslemek istiyor musunuz?</translation>
-    </message>
-    <message>
-        <source>Indexing failed</source>
-        <translation type="obsolete">Endeksleme başarısız oldu</translation>
     </message>
     <message>
         <location line="-36"/>
@@ -2631,7 +14,7 @@ file image mult. by this when loaded):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+64"/>
         <source>width</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2692,197 +75,6 @@ If you just copy the video without reencoding,
  you should keep them.
 Drop timing informations ?</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4CoreUIToolkit</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">Uyarı</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4Factory::ADM_Qbitrate</name>
-    <message>
-        <source>Bitrate</source>
-        <translation type="obsolete">Bithızı</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>ADM_QthreadCount</name>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">Özel</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWrite</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Kopyala</translation>
-    </message>
-    <message>
-        <source>File error</source>
-        <translation type="obsolete">Dosya hatası</translation>
-    </message>
-    <message>
-        <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation type="obsolete">Yazmak için &quot;%s&quot; açılamadı.</translation>
-    </message>
-    <message>
-        <source>OGM</source>
-        <translation type="obsolete">OGM</translation>
-    </message>
-    <message>
-        <source>Could not initialize video</source>
-        <translation type="obsolete">Video başlatılamadı</translation>
-    </message>
-    <message>
-        <source>Could not initialize audio</source>
-        <translation type="obsolete">Ses başlatılamadı</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Kopyala</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_ogmWriteProcess</name>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Süzgeç başlatma başarısız oldu</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qt4Factory::ADM_QthreadCount</name>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="obsolete">Özel</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMGenericAudioStream</name>
-    <message>
-        <source>Building VBR map</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoMCDeint</name>
-    <message>
-        <source>Fast</source>
-        <translation type="obsolete">Hızlı</translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Orta</translation>
-    </message>
-    <message>
-        <source>Slow iterative motion search</source>
-        <translation type="obsolete">Yavaş yinelemeli hareket tahmini</translation>
-    </message>
-    <message>
-        <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="obsolete">İlave yavaş (3+çok başvurulu kare ile aynıdır)</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Üst</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Alt</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
-    </message>
-    <message>
-        <source>_Field dominance:</source>
-        <translation type="obsolete">A_lan hakimiyeti:</translation>
-    </message>
-    <message>
-        <source>_Qp:</source>
-        <translation type="obsolete">_Qp:</translation>
-    </message>
-</context>
-<context>
-    <name>AVDMVideoVlad</name>
-    <message>
-        <source>_Luma temporal threshold:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Ch_roma temporal threshold:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>AVDM_Fade</name>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">Dışarı</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="obsolete">Dışarı doğru solma</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation type="obsolete">İçeri</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="obsolete">İçeri doğru solma</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">So_lma tipi:</translation>
-    </message>
-    <message>
-        <source>_Start frame:</source>
-        <translation type="obsolete">Başlama kare_si:</translation>
-    </message>
-    <message>
-        <source>_End frame:</source>
-        <translation type="obsolete">Bitiş kar_esi:</translation>
-    </message>
-    <message>
-        <source>Fade to _black</source>
-        <translation type="obsolete">Si_yaha doğru sol</translation>
-    </message>
-    <message>
-        <source>Parameter Error</source>
-        <translation type="obsolete">Parametre Hatası</translation>
-    </message>
-    <message>
-        <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="obsolete">Başlangıç bitişten önce ve ikisi de videonun kare sayısı sınırları içinde olmalı.</translation>
     </message>
 </context>
 <context>
@@ -3048,178 +240,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Cnr2Dialog</name>
-    <message>
-        <source>Narrow</source>
-        <translation type="obsolete">Dar</translation>
-    </message>
-    <message>
-        <source>Sensibility</source>
-        <translation type="obsolete">Hassaslık</translation>
-    </message>
-</context>
-<context>
-    <name>ColorYuvDialog</name>
-    <message>
-        <source>Contrast</source>
-        <translation type="obsolete">Fark</translation>
-    </message>
-    <message>
-        <source>Brightness</source>
-        <translation type="obsolete">Parlaklık</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation type="obsolete">Kazanım</translation>
-    </message>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">Gama</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>Rec.709</source>
-        <translation type="obsolete">Rec.709</translation>
-    </message>
-    <message>
-        <source>Coring</source>
-        <translation type="obsolete">Ortalama</translation>
-    </message>
-</context>
-<context>
-    <name>DGbob</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Üst</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Alt</translation>
-    </message>
-    <message>
-        <source>Keep nb of frames and fps</source>
-        <translation type="obsolete">Kare sayısını ve sbk&apos;yi koru</translation>
-    </message>
-    <message>
-        <source>Double nb of frames and fps</source>
-        <translation type="obsolete">Kare sayısını ve sbk (saniye başına kare) sayısını iki katına çıkar</translation>
-    </message>
-    <message>
-        <source>Double nb of frames (slow motion)</source>
-        <translation type="obsolete">Kare sayısını iki katına çıkar (yavaş gösterim)</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Ala_n Sırası:</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
-    </message>
-    <message>
-        <source>_Extra</source>
-        <translation type="obsolete">_Ek</translation>
-    </message>
-    <message>
-        <source>Extra check, avoid using it</source>
-        <translation type="obsolete">Ek kontrol, kullanmaktan kaçın</translation>
-    </message>
-</context>
-<context>
-    <name>DIA_encodingQt4</name>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">Devam et</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">İptâl et</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>DVEncoder</name>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">Uyumsuz ayarlar</translation>
-    </message>
-</context>
-<context>
-    <name>Decimate</name>
-    <message>
-        <source>Discard closer</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Replace (interpolate)</source>
-        <translation type="obsolete">Değiştir (aradeğerleme)</translation>
-    </message>
-    <message>
-        <source>Pulldown dupe removal</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Fastest (no chroma, partial luma)</source>
-        <translation type="obsolete">En hızlı (berraklık yok, kısmî parlaklık)</translation>
-    </message>
-    <message>
-        <source>Fast (partial luma and chroma)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Medium (full luma, no chroma)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Slow (full luma and chroma)</source>
-        <translation type="obsolete">Yavaş (tam parlaklık ve berraklık)</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Threshold 1:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>T_hreshold 2:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
     <name>Dialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="+64"/>
@@ -3247,11 +267,6 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <source>Configure</source>
         <translation type="unfinished">Yapılandır</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="obsolete">
-            </translation>
     </message>
     <message>
         <location line="-116"/>
@@ -3357,42 +372,37 @@ Drop timing informations ?</source>
 <context>
     <name>DialogProcessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+47"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+26"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="+34"/>
+        <location line="+7"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location line="-67"/>
+        <location line="-19"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+19"/>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
+        <location line="+33"/>
         <source>TimeLeft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+21"/>
         <source>ProcessImages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+34"/>
+        <location line="-7"/>
         <source>Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-7"/>
         <source>0 fps</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3423,13 +433,6 @@ Drop timing informations ?</source>
         <location line="+7"/>
         <source>...</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>EncoderCopy</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Kopyala</translation>
     </message>
 </context>
 <context>
@@ -3464,196 +467,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>FLV1Encoder</name>
-    <message>
-        <source>_Bitrate (kb/s):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>GUIPlayback</name>
-    <message>
-        <source>Trouble initializing audio device</source>
-        <translation type="obsolete">Ses aygıtının başlatılmasında hata</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSave</name>
-    <message>
-        <source>Error initalizing audio filters</source>
-        <translation type="obsolete">Ses süzgeçlerini başlatma hatası</translation>
-    </message>
-    <message>
-        <source>Error initalizing video filters</source>
-        <translation type="obsolete">Video süzgeçlerini başlatma hatası</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Kopyala</translation>
-    </message>
-    <message>
-        <source>AVI</source>
-        <translation type="obsolete">AVI</translation>
-    </message>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Kaydetme başlatılamadı</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopy</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Kaydetme başlatılamadı</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyPack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Kaydetme başlatılamadı</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveCopyUnpack</name>
-    <message>
-        <source>Cannot initiate save</source>
-        <translation type="obsolete">Kaydetme başlatılamadı</translation>
-    </message>
-</context>
-<context>
-    <name>GenericAviSaveProcess</name>
-    <message>
-        <source>Width is not a multiple of 8
- continue anyway ?</source>
-        <translation type="obsolete">Genişlik 8&apos;in katı değil
- yine de devam edilsin mi?</translation>
-    </message>
-    <message>
-        <source>Filter init failed</source>
-        <translation type="obsolete">Süzgeç başlatma başarısız oldu</translation>
-    </message>
-    <message>
-        <source>Aborting</source>
-        <translation type="obsolete">İptâl ediyor</translation>
-    </message>
-</context>
-<context>
-    <name>GlyphEditorDialog</name>
-    <message>
-        <source>Prev. Empty</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Next Empty</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>GlyphEditorWindow</name>
-    <message>
-        <source>Head reached</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>No more glyphs</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>End reached</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>String</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Search string</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select GlyphFile to edit</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>H263Encoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">Tam</translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">Günlük</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">Phods</translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Hareket Tahmini</translation>
-    </message>
-    <message>
-        <source>Incompatible settings</source>
-        <translation type="obsolete">Uyumsuz ayarlar</translation>
-    </message>
-</context>
-<context>
-    <name>IndexDialog</name>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>MP4Header</name>
-    <message>
-        <source>Problem reading SVQ3 headers</source>
-        <translation type="obsolete">SVQ3 başlıklarının okunmasında hata</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="obsolete">Stts tablosu yok</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="+15"/>
@@ -3661,11 +474,7 @@ Drop timing informations ?</source>
         <translation type="unfinished">Avidemux</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Video&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Video&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <location line="+470"/>
+        <location line="+460"/>
         <location line="+169"/>
         <source>Copy</source>
         <translation type="unfinished">Kopyala</translation>
@@ -3690,23 +499,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">Süzgeçler</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Audio&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Ses&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Format&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Biçem&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation type="obsolete">0</translation>
-    </message>
-    <message>
-        <source>/ 0</source>
-        <translation type="obsolete">
-             {0?}</translation>
-    </message>
-    <message>
         <location line="+648"/>
         <source>00:00:00.000</source>
         <translation type="unfinished">00:00:00.000</translation>
@@ -3724,19 +516,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">000000</translation>
     </message>
     <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">Kare Hızı</translation>
-    </message>
-    <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">Bithızı Histogramı</translation>
-    </message>
-    <message>
         <location line="-27"/>
         <source>A:</source>
         <translation type="unfinished">A:</translation>
@@ -3745,11 +524,6 @@ Drop timing informations ?</source>
         <location line="+7"/>
         <source>B:</source>
         <translation type="unfinished">B:</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">
-            </translation>
     </message>
     <message>
         <location line="-131"/>
@@ -4137,280 +911,11 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Mpeg1Encoder</name>
-    <message>
-        <source>4:3</source>
-        <translation type="obsolete">4:3</translation>
-    </message>
-    <message>
-        <source>16:9</source>
-        <translation type="obsolete">16:9</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Varsayılan</translation>
-    </message>
-    <message>
-        <source>TMPGEnc</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Anime</source>
-        <translation type="obsolete">Anime</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">Tedricî</translation>
-    </message>
-    <message>
-        <source>Interlaced BFF</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Interlaced TFF</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg2Encoder</name>
-    <message>
-        <source>4:3</source>
-        <translation type="obsolete">4:3</translation>
-    </message>
-    <message>
-        <source>16:9</source>
-        <translation type="obsolete">16:9</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Varsayılan</translation>
-    </message>
-    <message>
-        <source>TMPGEnc</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Anime</source>
-        <translation type="obsolete">Anime</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">Tedricî</translation>
-    </message>
-    <message>
-        <source>Interlaced BFF</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Interlaced TFF</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Ma_x. bitrate:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Mi_n. bitrate:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Use Xvid rate control</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Buffer size:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Aspect _ratio:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Matrices:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_GOP size:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Interlacing:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
-    <name>Mpeg4aspEncoder</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">Tam</translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">Günlük</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">Phods</translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Hareket Tahmini</translation>
-    </message>
-</context>
-<context>
-    <name>MpegMuxer</name>
-    <message>
-        <source>Incompatible audio</source>
-        <translation type="obsolete">Uyumsuz ses</translation>
-    </message>
-    <message>
-        <source>For DVD, audio must be MP2 or AC3.</source>
-        <translation type="obsolete">DVD için, ses MP2 veya AC3 olmalı.</translation>
-    </message>
-    <message>
-        <source>lvemux init failed</source>
-        <translation type="obsolete">lvemux başlatma başarısız</translation>
-    </message>
-</context>
-<context>
-    <name>Msharpen</name>
-    <message>
-        <source>_Mask</source>
-        <translation type="obsolete">_Maskeleme</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="obsolete">_Yüksek Kalite</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Güç:</translation>
-    </message>
-</context>
-<context>
-    <name>Msmooth</name>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Güç:</translation>
-    </message>
-</context>
-<context>
-    <name>OpenDMLHeader</name>
-    <message>
-        <source>Malformed header</source>
-        <translation type="obsolete">Bozuk başlık</translation>
-    </message>
-    <message>
-        <source>Unpacking bitstream</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Indexing</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
     <name>Opus</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+254"/>
         <source>_Bitrate:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Alert</source>
-        <translation type="obsolete">Uyarı</translation>
     </message>
 </context>
 <context>
@@ -4434,133 +939,6 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <source>Ctrl+Return</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Telecide</name>
-    <message>
-        <source>No strategy</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>3:2 pulldown</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>PAL/SECAM</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>NTSC converted from PAL</source>
-        <translation type="obsolete">PAL&apos;dan dönüştürülen NTSC</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Üst</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Alt</translation>
-    </message>
-    <message>
-        <source>Never</source>
-        <translation type="obsolete">Asla</translation>
-    </message>
-    <message>
-        <source>If still combed</source>
-        <translation type="obsolete">Eğer hâlâ taralıysa</translation>
-    </message>
-    <message>
-        <source>Always</source>
-        <translation type="obsolete">Her zaman</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>None but compute</source>
-        <translation type="obsolete">Asla (ama hesapla)</translation>
-    </message>
-    <message>
-        <source>Postproc on best match</source>
-        <translation type="obsolete">En iyi uyana göre son işleme</translation>
-    </message>
-    <message>
-        <source>Postproc and show zones (debug)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Process image (not fields)</source>
-        <translation type="obsolete">(Alanları değil) resmi işle</translation>
-    </message>
-    <message>
-        <source>Process image (not fields), debug</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Strategy:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Ala_n Sırası:</translation>
-    </message>
-    <message>
-        <source>_Postprocessing:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Try backward:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Direct threshold:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Backward threshold:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Noise threshold:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Postp_rocessing threshold:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Use chroma to decide</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Sho_w info</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Debu_g</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Bl_end</source>
-        <translation type="obsolete">
-            </translation>
     </message>
 </context>
 <context>
@@ -4592,53 +970,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>XvidConfigDialog</name>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">Oran Kontrol</translation>
-    </message>
-    <message>
-        <source>Pixel Aspect Ratio</source>
-        <translation type="obsolete">Piksel En/Boy Oranı</translation>
-    </message>
-    <message>
-        <source>:</source>
-        <translation type="obsolete">:</translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Auto-detect</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Hareket Tahmini</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Medium</source>
-        <translation type="obsolete">Orta</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Turbo Mode</source>
-        <translation type="obsolete">Turbo Kipi</translation>
-    </message>
-</context>
-<context>
     <name>aboutDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+155"/>
@@ -4662,7 +993,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+10"/>
-        <source>© 2001 - 2018  Mean</source>
+        <source>© 2001 - 2019  Mean / Eumagga0x2a</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4721,49 +1052,16 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>addLogopFilter</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+219"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+218"/>
         <source>Decode video using DXVA2 (windows)</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Use systray while encoding</source>
-        <translation type="obsolete">
-            </translation>
     </message>
     <message>
         <location line="+12"/>
         <source>_Accept non-standard audio frequency for DVD</source>
         <translation type="unfinished">
-            </translation>
-    </message>
-    <message>
-        <source>Create _OpenDML files</source>
-        <translation type="obsolete">
             </translation>
     </message>
     <message>
@@ -4970,7 +1268,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+5"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+211"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+213"/>
         <source>PCM</source>
         <translation type="unfinished">PCM</translation>
     </message>
@@ -5015,7 +1313,12 @@ Drop timing informations ?</source>
             </translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+38"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+26"/>
+        <source>The options above are effective only for MPEG and DivX with software decoding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+17"/>
         <source>_Horizontal deblocking</source>
         <translation type="unfinished">_Yatay Blok Çözme</translation>
@@ -5025,6 +1328,11 @@ Drop timing informations ?</source>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+1"/>
         <source>_Vertical deblocking</source>
         <translation type="unfinished">_Dikey Blok Çözme</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>De_interlacing (ffmpegdeint)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+1"/>
@@ -5062,7 +1370,7 @@ Drop timing informations ?</source>
         <location line="+278"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+409"/>
+        <location filename="../../common/gui_savenew.cpp" line="+423"/>
         <source>Audio</source>
         <translation type="unfinished">Ses</translation>
     </message>
@@ -5205,11 +1513,6 @@ Drop timing informations ?</source>
             </translation>
     </message>
     <message>
-        <source>Automatic (max -3 dB)</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
         <location line="+11"/>
         <source>_Gain mode:</source>
         <translation type="unfinished">
@@ -5302,16 +1605,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">Bu sürümde kodlanmamış</translation>
     </message>
     <message>
-        <source>Select AVI File...</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Select AVI File to Append...</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
         <location line="+251"/>
         <source>Are you sure?</source>
         <translation type="unfinished">
@@ -5400,7 +1693,7 @@ Aktif olanı seçmek için Ses-&gt;Ana İz&apos;e gidin.</translation>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+317"/>
+        <location line="+320"/>
         <source>Something bad happened (II)</source>
         <translation type="unfinished">Kötü birşeyler oldu (II)</translation>
     </message>
@@ -5444,7 +1737,7 @@ Expect problems.</source>
     </message>
     <message>
         <location line="+8"/>
-        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+119"/>
+        <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+120"/>
         <source>Something bad happened</source>
         <translation type="unfinished">Kötü birşeyler oldu</translation>
     </message>
@@ -5498,18 +1791,12 @@ Is it running ?</source>
             </translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-12"/>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="-15"/>
         <source>_Filter strength:</source>
         <translation type="unfinished">_Süzgeç gücü:</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_Swap U and V</source>
-        <translation type="unfinished">
-            </translation>
-    </message>
-    <message>
-        <location line="+12"/>
+        <location line="+14"/>
         <source>_Deringing</source>
         <translation type="unfinished">_Halka Azaltma</translation>
     </message>
@@ -5556,19 +1843,7 @@ Is it running ?</source>
         <translation type="unfinished">Ses kaydediliyor</translation>
     </message>
     <message>
-        <source>Saving as set of jpegs</source>
-        <translation type="obsolete">Jpeg seti olarak kaydediliyor</translation>
-    </message>
-    <message>
-        <source>Cannot decode frame</source>
-        <translation type="obsolete">Kare kodu çözülemedi</translation>
-    </message>
-    <message>
-        <source>Aborting.</source>
-        <translation type="obsolete">İptâl ediliyor.</translation>
-    </message>
-    <message>
-        <location line="+303"/>
+        <location line="+309"/>
         <location line="+83"/>
         <source>Done</source>
         <translation type="unfinished">Tamamlandı</translation>
@@ -5579,7 +1854,7 @@ Is it running ?</source>
         <translation type="unfinished">%d resim kaydedildi.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+636"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
         <location line="+44"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
@@ -5594,10 +1869,6 @@ Is it running ?</source>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_quota.cpp" line="+68"/>
         <source>Error</source>
         <translation type="unfinished">Hata</translation>
-    </message>
-    <message>
-        <source>Could not save all images.</source>
-        <translation type="obsolete">Tüm resimler kaydedilemedi.</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="+61"/>
@@ -5630,130 +1901,9 @@ Is it running ?</source>
         <translation type="unfinished">Özel</translation>
     </message>
     <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Yeni kare hızı:</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Varsayılan</translation>
-    </message>
-    <message>
-        <source>KVCD</source>
-        <translation type="obsolete">KVCD</translation>
-    </message>
-    <message>
-        <source>Progressive</source>
-        <translation type="obsolete">Tedricî</translation>
-    </message>
-    <message>
-        <source>Interlacing</source>
-        <translation type="obsolete">Titreştirme</translation>
-    </message>
-    <message>
-        <source>Rate Control</source>
-        <translation type="obsolete">Oran Kontrol</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="obsolete">Tam</translation>
-    </message>
-    <message>
-        <source>Log</source>
-        <translation type="obsolete">Günlük</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="obsolete">Phods</translation>
-    </message>
-    <message>
-        <source>EPZS</source>
-        <translation type="obsolete">EPZS</translation>
-    </message>
-    <message>
-        <source>H.263</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>MPEG</source>
-        <translation type="obsolete">MPEG</translation>
-    </message>
-    <message>
-        <source>Motion Estimation</source>
-        <translation type="obsolete">Hareket Tahmini</translation>
-    </message>
-    <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="+3"/>
         <source>Medium</source>
         <translation type="unfinished">Orta</translation>
-    </message>
-    <message>
-        <source>VBR</source>
-        <translation type="obsolete">VBR</translation>
-    </message>
-    <message>
-        <source>Quality based</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Bitrate:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Quality:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Quantizer:</source>
-        <translation type="obsolete">_Nicemleyici:</translation>
-    </message>
-    <message>
-        <source>CBR</source>
-        <translation type="obsolete">CBR</translation>
-    </message>
-    <message>
-        <source>ABR</source>
-        <translation type="obsolete">ABR</translation>
-    </message>
-    <message>
-        <source>Bit_rate mode:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">Süzgeç zaten kısmî</translation>
-    </message>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">Hazır</translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">Başarılı</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">Silindi</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">Çalışıyor</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">Kesinlikle!</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">Görevi sil</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="-25"/>
@@ -6313,7 +2463,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="-144"/>
-        <location filename="../../common/gui_save.cpp" line="-606"/>
+        <location filename="../../common/gui_save.cpp" line="-612"/>
         <source>No audio track</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6361,7 +2511,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1379"/>
+        <location filename="../../common/gui_main.cpp" line="-1382"/>
         <source>Select script/project to run</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6425,7 +2575,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+754"/>
+        <location line="+757"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation type="unfinished"></translation>
@@ -6466,7 +2616,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+443"/>
+        <location filename="../../common/gui_play.cpp" line="+446"/>
         <source>Trouble initializing audio device</source>
         <translation type="unfinished">Ses aygıtının başlatılmasında hata</translation>
     </message>
@@ -6543,7 +2693,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6583,13 +2733,13 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_savenew.cpp" line="-196"/>
+        <location filename="../../common/gui_savenew.cpp" line="-207"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+160"/>
+        <location line="+171"/>
         <source>Cannot instantiate video chain</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6617,15 +2767,15 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-244"/>
-        <location line="+255"/>
+        <location line="-255"/>
+        <location line="+266"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-281"/>
-        <location line="+255"/>
+        <location line="-292"/>
+        <location line="+266"/>
         <source>Cannot instantiate muxer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6947,6 +3097,11 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Float PCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Ogg Vorbis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7022,7 +3177,7 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+385"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+374"/>
         <source>Unknown</source>
         <translation type="unfinished">
             </translation>
@@ -7118,8 +3273,8 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished">1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
-        <location line="+32"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+171"/>
+        <location line="+30"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
         <source>Codec</source>
@@ -7171,7 +3326,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+227"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7245,7 +3400,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+471"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asfHeaders.cpp" line="+468"/>
         <source>Indexing</source>
         <translation type="unfinished">
             </translation>
@@ -7295,7 +3450,7 @@ Proceed anyway?</source>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+171"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation type="unfinished">
             </translation>
@@ -7320,7 +3475,7 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Botto_m margin</source>
+        <source>Botto_m margin:</source>
         <translation type="unfinished">
             </translation>
     </message>
@@ -7331,58 +3486,68 @@ Proceed anyway?</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Hardcode ass/ssa/srt subtitles using libass.</source>
+        <source>Hardcode ASS/SSA/SRT subtitles using libass.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+63"/>
         <source>Format ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Are you sure this is an ass file ?</source>
+        <source>Are you sure this is an ASS/SSA file ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+41"/>
-        <source>Select Subtitle file</source>
+        <location line="+40"/>
+        <source>Select Subtitle File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+5"/>
+        <source>Do not adjust</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust for display aspect ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
         <source>ASS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>This is a srt file. Convert to SSA ?</source>
+        <source>This is a SRT file. Convert to SSA ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+5"/>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Error</source>
         <translation type="unfinished">Hata</translation>
     </message>
     <message>
-        <location line="-13"/>
-        <source>Cannot load this srt file.</source>
+        <location line="-14"/>
+        <source>Cannot load this SRT file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
-        <source>Cannot convert to ssa.</source>
+        <source>Cannot convert to SSA.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Cannot save converted file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+56"/>
         <source>Fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7393,22 +3558,14 @@ This message will not be displayed again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+52"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>Cannot read_file for *%s*</source>
+        <source>ass_read_file() failed for %s</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>autoWizard</name>
-    <message>
-        <source>Codec:</source>
-        <translation type="obsolete">
-            </translation>
     </message>
 </context>
 <context>
@@ -7603,31 +3760,37 @@ This message will not be displayed again.</source>
     <name>blackenDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt4/blackenBorders.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+14"/>
         <source>Blacken Borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+38"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+38"/>
         <source>Right:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Top:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+43"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+43"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+21"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+21"/>
         <source>Bottom:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt5/blackenBorders.ui" line="+7"/>
         <source>Left:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7656,14 +3819,6 @@ This message will not be displayed again.</source>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="+40"/>
         <source>Custom</source>
         <translation type="unfinished">Özel</translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
-    </message>
-    <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Yeni kare hızı:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8271,22 +4426,6 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
-    <name>dmxHeader</name>
-    <message>
-        <source>Out of memory</source>
-        <translation type="obsolete">Hafıza doldu</translation>
-    </message>
-    <message>
-        <source>Opening MPEG</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>MPEG renumbering error</source>
-        <translation type="obsolete">MPEG yeniden numaralandırma hatası</translation>
-    </message>
-</context>
-<context>
     <name>dummy</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dummy/dummyVideoFilter.cpp" line="+44"/>
@@ -8317,14 +4456,14 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+44"/>
-        <location line="+180"/>
+        <location line="+220"/>
         <location line="+21"/>
         <source>None</source>
         <translation type="unfinished">Hiçbiri</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <location line="+211"/>
+        <location line="-258"/>
+        <location line="+251"/>
         <source>Unknown</source>
         <translation type="unfinished">
             </translation>
@@ -8340,7 +4479,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+50"/>
         <source>Audio Size:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8355,19 +4494,19 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+53"/>
         <source>Average Bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+31"/>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location line="-69"/>
+        <location line="-78"/>
         <source>Processed Frames:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8377,7 +4516,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+57"/>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8392,7 +4531,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-151"/>
+        <location line="-169"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
@@ -8400,13 +4539,13 @@ Do you want to load it  ?
             </translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+77"/>
         <source>0 kB/s</source>
         <translation type="unfinished">
             </translation>
     </message>
     <message>
-        <location line="-327"/>
+        <location line="-385"/>
         <source>Shut down computer when finished</source>
         <translation type="unfinished">
             </translation>
@@ -8457,12 +4596,12 @@ Do you want to load it  ?
         <translation type="unfinished">Duraklat / İptâl et</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+26"/>
         <source>Advanced</source>
         <translation type="unfinished">Gelişmiş</translation>
     </message>
     <message>
-        <location line="-162"/>
+        <location line="-175"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8477,39 +4616,9 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+114"/>
+        <location line="+154"/>
         <source>Video Codec:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>encodingWindow</name>
-    <message>
-        <source>Pause / Abort</source>
-        <translation type="obsolete">Duraklat / İptâl et</translation>
-    </message>
-    <message>
-        <source>Resume</source>
-        <translation type="obsolete">Devam et</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="obsolete">İptâl et</translation>
-    </message>
-    <message>
-        <source>Privileges Required</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Root privileges are required to perform this operation.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Shutting down</source>
-        <translation type="obsolete">
-            </translation>
     </message>
 </context>
 <context>
@@ -8532,14 +4641,6 @@ Do you want to load it  ?
 </context>
 <context>
     <name>eq2Dialog</name>
-    <message>
-        <source>MPlayer eq2</source>
-        <translation type="obsolete">MPlayer ekolayzır2</translation>
-    </message>
-    <message>
-        <source>Gamma</source>
-        <translation type="obsolete">Gama</translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/eq2.ui" line="+14"/>
         <location line="+88"/>
@@ -8604,29 +4705,6 @@ Do you want to load it  ?
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/opus/audioencoder_opus.cpp" line="+6"/>
         <source>Opus Configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>fade</name>
-    <message>
-        <source>Out</source>
-        <translation type="obsolete">Dışarı</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="obsolete">Dışarı doğru solma</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation type="obsolete">İçeri</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="obsolete">İçeri doğru solma</translation>
-    </message>
-    <message>
-        <source>_Fade type:</source>
-        <translation type="obsolete">So_lma tipi:</translation>
     </message>
 </context>
 <context>
@@ -8761,6 +4839,44 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
+    <name>ffVAEncHEVC</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaHEVC/ADM_ffVAEncHEVC.cpp" line="+343"/>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Maximum Consecutive B-Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Max Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Frame Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>FFmpeg VA-API HEVC Encoder Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ffmpeg2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+223"/>
@@ -8778,7 +4894,7 @@ Do you want to load it  ?
         <translation type="unfinished">Tedricî</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+14"/>
         <source>Threading</source>
         <translation type="unfinished">
             </translation>
@@ -8794,7 +4910,7 @@ Do you want to load it  ?
         <translation type="unfinished">Oran Kontrol</translation>
     </message>
     <message>
-        <location line="-86"/>
+        <location line="-85"/>
         <source>Normal (4:3)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8864,7 +4980,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8968,31 +5084,6 @@ Do you want to load it  ?
     <name>ffmpeg4</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+187"/>
-        <source>None</source>
-        <translation type="unfinished">Hiçbiri</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation type="unfinished">Tam</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation type="unfinished">Günlük</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation type="unfinished">Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
-    </message>
-    <message>
-        <location line="+5"/>
         <source>H.263</source>
         <translation type="unfinished">
             </translation>
@@ -9003,18 +5094,18 @@ Do you want to load it  ?
         <translation type="unfinished">MPEG</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+21"/>
         <source>Threading</source>
         <translation type="unfinished">
             </translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+23"/>
         <source>User Interface</source>
         <translation type="unfinished">Kullanıcı Arayüzü</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+9"/>
         <source>Motion Estimation</source>
         <translation type="unfinished">Hareket Tahmini</translation>
     </message>
@@ -9024,12 +5115,7 @@ Do you want to load it  ?
         <translation type="unfinished">Oran Kontrol</translation>
     </message>
     <message>
-        <location line="-72"/>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
+        <location line="-58"/>
         <source>MB comparison</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9065,11 +5151,6 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+10"/>
-        <source>Matrices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9099,12 +5180,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>_GMC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+2"/>
         <source>_Number of B frames:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9144,7 +5220,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+10"/>
         <source>Quantization</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9599,25 +5675,6 @@ Do you want to replace it?</source>
     </message>
 </context>
 <context>
-    <name>filtermainWindow</name>
-    <message>
-        <source>The filter is already partial</source>
-        <translation type="obsolete">Süzgeç zaten kısmî</translation>
-    </message>
-    <message>
-        <source>Load set of filters</source>
-        <translation type="obsolete">Bir süzgeç kümesi yükle</translation>
-    </message>
-    <message>
-        <source>Nothing to save</source>
-        <translation type="obsolete">Kaydedecek birşey yok</translation>
-    </message>
-    <message>
-        <source>Save set of filters</source>
-        <translation type="obsolete">Süzgeç kümesini kaydet</translation>
-    </message>
-</context>
-<context>
     <name>flux</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="+37"/>
@@ -9645,31 +5702,6 @@ Do you want to replace it?</source>
     <name>flv1</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+162"/>
-        <source>None</source>
-        <translation type="unfinished">Hiçbiri</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Full</source>
-        <translation type="unfinished">Tam</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log</source>
-        <translation type="unfinished">Günlük</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phods</source>
-        <translation type="unfinished">Phods</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
-    </message>
-    <message>
-        <location line="+5"/>
         <source>H.263</source>
         <translation type="unfinished">
             </translation>
@@ -9680,7 +5712,7 @@ Do you want to replace it?</source>
         <translation type="unfinished">MPEG</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+26"/>
         <source>User Interface</source>
         <translation type="unfinished">Kullanıcı Arayüzü</translation>
     </message>
@@ -9690,12 +5722,7 @@ Do you want to replace it?</source>
         <translation type="unfinished">Oran Kontrol</translation>
     </message>
     <message>
-        <location line="-42"/>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
+        <location line="-32"/>
         <source>MB comparison</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9710,7 +5737,7 @@ Do you want to replace it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+8"/>
         <source>Mi_n. quantizer:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10095,13 +6122,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>h263Header</name>
-    <message>
-        <source>Size is not (s)QCIF</source>
-        <translation type="obsolete">Boyut (s)QCIF değil</translation>
-    </message>
-</context>
-<context>
     <name>hflip</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/horizontalFlip/horizontalFlip.cpp" line="+44"/>
@@ -10395,37 +6415,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>jobsWindow</name>
-    <message>
-        <source>Ready</source>
-        <translation type="obsolete">Hazır</translation>
-    </message>
-    <message>
-        <source>Succeeded</source>
-        <translation type="obsolete">Başarılı</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="obsolete">Başarısız</translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="obsolete">Silindi</translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="obsolete">Çalışıyor</translation>
-    </message>
-    <message>
-        <source>Sure!</source>
-        <translation type="obsolete">Kesinlikle!</translation>
-    </message>
-    <message>
-        <source>Delete job</source>
-        <translation type="obsolete">Görevi sil</translation>
-    </message>
-</context>
-<context>
     <name>jpeg</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="+102"/>
@@ -10451,53 +6440,6 @@ I will assume it has and try to continue</source>
         <location line="+4"/>
         <source>Mjpeg Configuration</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>kernelDeint</name>
-    <message>
-        <source>Top</source>
-        <translation type="obsolete">Üst</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="obsolete">Alt</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">Ala_n Sırası:</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Daha küçük sayı daha fazla titreşim çöz demektir</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">Ke_skin</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">Daha ke_skin motor:</translation>
-    </message>
-    <message>
-        <source>T_woway</source>
-        <translation type="obsolete">İ_ki Yönlü</translation>
-    </message>
-    <message>
-        <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">Daha iyi ek kutupla (kullanmamak daha iyi olur)</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">_Harita</translation>
-    </message>
-    <message>
-        <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">Titreşimli bölgeleri göster (sadece test!)</translation>
     </message>
 </context>
 <context>
@@ -10604,8 +6546,8 @@ I will assume it has and try to continue</source>
             </translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>_Disable reservoir:</source>
+        <location line="+2"/>
+        <source>_Disable reservoir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -10648,48 +6590,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>lavDeint</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>Linear blend</source>
-        <translation type="obsolete">Doğrusal karışım</translation>
-    </message>
-    <message>
-        <source>Linear interpolate</source>
-        <translation type="obsolete">Doğrusal kutuplaştırma</translation>
-    </message>
-    <message>
-        <source>Cubic interpolate</source>
-        <translation type="obsolete">Kübik kutuplaştırma</translation>
-    </message>
-    <message>
-        <source>Median interpolate</source>
-        <translation type="obsolete">Medyan titreşim çözücü</translation>
-    </message>
-    <message>
-        <source>FFmpeg deint</source>
-        <translation type="obsolete">FFmpeg titreşim çözücü</translation>
-    </message>
-    <message>
-        <source>_Deinterlacing:</source>
-        <translation type="obsolete">_Titreşim Çözme:</translation>
-    </message>
-    <message>
-        <source>_Autolevel</source>
-        <translation type="obsolete">_Otomatik Denge</translation>
-    </message>
-</context>
-<context>
-    <name>lavMuxer</name>
-    <message>
-        <source>Incompatible frame rate</source>
-        <translation type="obsolete">Uyumsuz kare hızı</translation>
-    </message>
-</context>
-<context>
     <name>lavcodec</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
@@ -10703,12 +6603,6 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
-        <translation type="unfinished">
-            </translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show motion _vectors</source>
         <translation type="unfinished">
             </translation>
     </message>
@@ -10792,26 +6686,6 @@ I will assume it has and try to continue</source>
 </context>
 <context>
     <name>logo</name>
-    <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="+22"/>
         <source>Add logo</source>
@@ -10898,10 +6772,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Video Süzgeç Yöneticisi</translation>
     </message>
     <message>
-        <source>Save Script</source>
-        <translation type="obsolete">Betiği Kaydet</translation>
-    </message>
-    <message>
         <location line="+180"/>
         <source>Transform</source>
         <translation type="unfinished">Dönüştür</translation>
@@ -10937,10 +6807,6 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Çeşitli</translation>
     </message>
     <message>
-        <source>External</source>
-        <translation type="obsolete">Haricî</translation>
-    </message>
-    <message>
         <location line="-182"/>
         <source>&lt;big&gt;&lt;b&gt;Active Filters&lt;/b&gt;&lt;/big&gt;</source>
         <translation type="unfinished"></translation>
@@ -10967,21 +6833,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>mainMenu</name>
-    <message>
-        <source>Copy</source>
-        <translation type="obsolete">Kopyala</translation>
-    </message>
-    <message>
-        <source>Preferences</source>
-        <translation type="obsolete">Tercihler</translation>
-    </message>
-    <message>
-        <source>Filters</source>
-        <translation type="obsolete">Süzgeçler</translation>
-    </message>
-</context>
-<context>
     <name>matroskademuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Matroska/ADM_mkvIndexer.cpp" line="+48"/>
@@ -10989,7 +6840,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+426"/>
+        <location line="+433"/>
         <source>Matroska clusters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11089,7 +6940,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+168"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+167"/>
         <source>Saving Mkv</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11188,19 +7039,15 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+815"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">SVQ3 başlıklarının okunmasında hata</translation>
-    </message>
-    <message>
-        <source>No stts table</source>
-        <translation type="obsolete">Stts tablosu yok</translation>
     </message>
 </context>
 <context>
     <name>mp4muxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+66"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+67"/>
         <location line="+9"/>
         <source>Unsupported</source>
         <translation type="unfinished">Desteklenmiyor</translation>
@@ -11216,7 +7063,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+130"/>
         <source>Saving mp4</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11226,7 +7073,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+29"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4Config.cpp" line="+30"/>
         <source>Muxing Format</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11243,6 +7090,31 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+2"/>
         <source>Aspect Ratio (DAR)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Do not rotate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>90°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>180°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>270°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Rotate video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -11377,22 +7249,6 @@ I will assume it has and try to continue</source>
 <context>
     <name>msharpen</name>
     <message>
-        <source>_Mask</source>
-        <translation type="obsolete">_Maskeleme</translation>
-    </message>
-    <message>
-        <source>_High Q</source>
-        <translation type="obsolete">_Yüksek Kalite</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
-    </message>
-    <message>
-        <source>_Strength:</source>
-        <translation type="obsolete">_Güç:</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="+48"/>
         <source>Msharpen</source>
         <translation type="unfinished"></translation>
@@ -11455,30 +7311,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>nuvHeader</name>
-    <message>
-        <source>Opening Nuppel video</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Sure you want to abort ?</source>
-        <translation type="obsolete">İptâl etmek istediğinize emin misiniz?</translation>
-    </message>
-    <message>
-        <source>Size mismatch</source>
-        <translation type="obsolete">Boyut uyumsuzluğu</translation>
-    </message>
-    <message>
-        <source>Expect a crash.</source>
-        <translation type="obsolete">Bir çökme umabilirsiniz.</translation>
-    </message>
-    <message>
-        <source>Do you want to save an index ?</source>
-        <translation type="obsolete">Bir endeks kaydetmek istiyor musunuz?</translation>
-    </message>
-</context>
-<context>
     <name>nvenc</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/nvEnc/ADM_nvEnc.cpp" line="+136"/>
@@ -11532,17 +7364,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>oggHeader</name>
-    <message>
-        <source>Take second track ?</source>
-        <translation type="obsolete">İkinci iz alınsın mı ?</translation>
-    </message>
-    <message>
-        <source>Scanning OGM</source>
-        <translation type="obsolete">OGM taranıyor</translation>
-    </message>
-</context>
-<context>
     <name>opendmldemuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="+321"/>
@@ -11582,13 +7403,6 @@ I will assume it has and try to continue</source>
     </message>
 </context>
 <context>
-    <name>previewDialog</name>
-    <message>
-        <source>Preview</source>
-        <translation type="obsolete">Önizleme</translation>
-    </message>
-</context>
-<context>
     <name>printinfo</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/printInfo/printInfo.cpp" line="+44"/>
@@ -11599,27 +7413,6 @@ I will assume it has and try to continue</source>
         <location line="+1"/>
         <source>Display some informations on Screen.</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>propWindow</name>
-    <message>
-        <source>No</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Mono</source>
-        <translation type="obsolete">Tek kanal</translation>
-    </message>
-    <message>
-        <source>Stereo</source>
-        <translation type="obsolete">İki kanal</translation>
     </message>
 </context>
 <context>
@@ -11667,29 +7460,9 @@ I will assume it has and try to continue</source>
             </translation>
     </message>
     <message>
-        <source>Global Motion Compensation:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Packed Bitstream:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Quarter Pixel:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
         <location line="+62"/>
         <source>Audio</source>
         <translation type="unfinished">Ses</translation>
-    </message>
-    <message>
-        <source>File Size:</source>
-        <translation type="obsolete">
-            </translation>
     </message>
     <message>
         <location line="+38"/>
@@ -11759,7 +7532,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>psdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+80"/>
         <source>Error</source>
         <translation type="unfinished">Hata</translation>
     </message>
@@ -11776,7 +7549,7 @@ Please delete the idx2 file and reopen.</source>
             </translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+42"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11880,19 +7653,19 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qfile</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+50"/>
-        <location line="+139"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+45"/>
+        <location line="+141"/>
         <source>All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-54"/>
-        <location line="+96"/>
+        <location line="-58"/>
+        <location line="+105"/>
         <source> files (*.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-68"/>
+        <location line="-81"/>
         <source>Overwrite file </source>
         <translation type="unfinished"></translation>
     </message>
@@ -11915,7 +7688,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+658"/>
+        <location line="+660"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11980,7 +7753,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+617"/>
+        <location line="+619"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
@@ -12197,7 +7970,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qprocessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+66"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+65"/>
         <source>Unknown</source>
         <translation type="unfinished">
             </translation>
@@ -12233,7 +8006,7 @@ The current editing has been saved and will be reloaded at next start</source>
             </translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+98"/>
         <source>Mono</source>
         <translation type="unfinished">Tek kanal</translation>
     </message>
@@ -12243,7 +8016,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">İki kanal</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+46"/>
         <source>Video</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12319,18 +8092,18 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-148"/>
+        <location line="-155"/>
         <source>%2.3f fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <location line="+74"/>
+        <location line="+81"/>
         <source>%02d:%02d:%02d.%03d</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-80"/>
+        <location line="-87"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12396,6 +8169,19 @@ Ready.
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="+88"/>
         <source>Select Idx File</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>rawmuxer</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerRaw/muxerRawConfig.cpp" line="+29"/>
+        <source>Prefer Annex B type stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Video Only Muxer Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -12883,13 +8669,6 @@ Ready.
     </message>
 </context>
 <context>
-    <name>resizeWindow</name>
-    <message>
-        <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Genişlik ve yükseklik tekil olamaz</translation>
-    </message>
-</context>
-<context>
     <name>rotate</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="+52"/>
@@ -12946,44 +8725,11 @@ Ready.
     </message>
 </context>
 <context>
-    <name>rotateFilter</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-    <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 derece</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 derece</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 derece</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-</context>
-<context>
     <name>seekablePreviewDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="+20"/>
         <source>Preview</source>
         <translation type="unfinished">Önizleme</translation>
-    </message>
-    <message>
-        <source>00:00:00.000</source>
-        <translation type="obsolete">00:00:00.000</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
@@ -13090,34 +8836,6 @@ Ready.
         <location line="+1"/>
         <source>_Duration:</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>subAss</name>
-    <message>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Line spacing:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Font scale:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Top margin:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Botto_m margin</source>
-        <translation type="obsolete">
-            </translation>
     </message>
 </context>
 <context>
@@ -13334,8 +9052,8 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+186"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+329"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+188"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+327"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+83"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
@@ -13569,98 +9287,7 @@ Please delete the idx2 file and reopen.</source>
     </message>
 </context>
 <context>
-    <name>vidBlendRemoval</name>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
-    </message>
-    <message>
-        <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">_Gürültü:</translation>
-    </message>
-    <message>
-        <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">Eğer pikseller gürültü eşiğinden daha yakınsa, özdeş kabul edilirler</translation>
-    </message>
-    <message>
-        <source>I_dentical:</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Eğer metrik özdeş&apos;den daha düşükse, resimler özdeş kabul edilirler</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">Me_safe bilgilerini göster</translation>
-    </message>
-    <message>
-        <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Resimde mesafe bilgilerini göster (tanılama amaçlı)</translation>
-    </message>
-</context>
-<context>
-    <name>vidColorYuv</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
-    </message>
-</context>
-<context>
-    <name>vidHardPDRemoval</name>
-    <message>
-        <source>Metrics</source>
-        <translation type="obsolete">Ölçüler</translation>
-    </message>
-    <message>
-        <source>Do you want to print metrics on screen ?</source>
-        <translation type="obsolete">Ölçülerin ekrana yazılmasını istiyor musunuz ?</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
-    </message>
-    <message>
-        <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="obsolete">Eğer değer eşikten daha düşükse geçerli kabul edilir, daha küçük değer daha yanlış artı nicelik anlamına gelebilir</translation>
-    </message>
-    <message>
-        <source>_Noise:</source>
-        <translation type="obsolete">_Gürültü:</translation>
-    </message>
-    <message>
-        <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">Eğer pikseller gürültü eşiğinden daha yakınsa, özdeş kabul edilirler</translation>
-    </message>
-    <message>
-        <source>_Identical:</source>
-        <translation type="obsolete">_Özdeş:</translation>
-    </message>
-    <message>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Eğer metrik özdeş&apos;den daha düşükse, resimler özdeş kabul edilirler</translation>
-    </message>
-    <message>
-        <source>_Show metrics</source>
-        <translation type="obsolete">Me_safe bilgilerini göster</translation>
-    </message>
-    <message>
-        <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Resimde mesafe bilgilerini göster (tanılama amaçlı)</translation>
-    </message>
-</context>
-<context>
     <name>vobSubDialog</name>
-    <message>
-        <source>VobSub Settings</source>
-        <translation type="obsolete">VobSub Ayarları</translation>
-    </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="+13"/>
         <source>Subtitle Font Size and Position</source>
@@ -13726,13 +9353,13 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>vsWindow</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+68"/>
-        <source>Open VapourSynth File 1</source>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.cpp" line="+85"/>
+        <source>Open VapourSynth File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
-        <source>VS File Files (*.vpy)</source>
+        <source>VS Script Files (*.vpy)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -13780,23 +9407,18 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
             </translation>
     </message>
     <message>
-        <location line="+112"/>
+        <location line="+19"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="-48"/>
+        <location line="-13"/>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+20"/>
         <source>Time Remaining:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+113"/>
-        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -13992,10 +9614,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+280"/>
         <source>Fast</source>
         <translation type="unfinished">Hızlı</translation>
-    </message>
-    <message>
-        <source>Advanced</source>
-        <translation type="obsolete">Gelişmiş</translation>
     </message>
     <message>
         <location line="+1598"/>
@@ -16633,47 +12251,6 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+4"/>
         <source>yadif</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>yadifFilter</name>
-    <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="obsolete">Uzamsal zamansal kontrolü atla</translation>
-    </message>
-    <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
-    </message>
-    <message>
-        <source>_Order:</source>
-        <translation type="obsolete">
-            </translation>
     </message>
 </context>
 </TS>

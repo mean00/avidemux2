@@ -52,9 +52,9 @@ MASK:
 section .text
 INIT_MMX mmx
 default rel
-cglobal glYUV444_Init
+cglobal glYUV444_Init,0,0,0
         movq          m7,[MASK]
-        ret
+        RET
 
 default abs
 INIT_MMX mmx
@@ -83,7 +83,7 @@ cglobal glYUV444_luma, 3,4,4, src, dst, count
         add            dstq,8
         sub            countd,1
         jnz             .luma
-        ret
+        RET
 ;"1:\n"
 ;                        "movq           (%0),%%mm0 \n"
 ;                        "pmov           %%mm0,%%mm4 \n"
@@ -149,6 +149,6 @@ cglobal glYUV444_luma2, 3,4,4, src, dstY, count
         add            dstYq,8
         sub            countd,1
         jnz            .chroma        
-        ret                
+        RET                
                         
 

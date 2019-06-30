@@ -174,7 +174,7 @@ bool abort=false;
     if(videoDuration<5000) videoDuration=5000;
     printf("[Save] Performing Pass one,using %s as log file\n",logFileName.c_str());
     
-    if(ADM_fileExist(logFileName.c_str()))
+    if(false==GUI_isQuiet() && ADM_fileExist(logFileName.c_str()))
     {
         if(GUI_Question(QT_TRANSLATE_NOOP("adm","Reuse previous first pass data ?\nWarning, the settings must be close.")))
         {
@@ -323,7 +323,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         video_body->getExtraHeaderData(&extraLen,&extra);
 //#warning do something better
         ADM_videoStreamCopy *copy=NULL;        
-        if(isH264Compatible(info.fcc)) // H264 only for now || isH265Compatible(info.fcc))
+        if(isH264Compatible(info.fcc) || isH265Compatible(info.fcc))
         {
             copy=dealWithH26x(!extraLen);      
          }
