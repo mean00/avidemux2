@@ -16,7 +16,13 @@
 #define ADM_FILTER_THREAD_H
 #include "ADM_coreVideoFilter.h"
 #include "ADM_threadQueue.h"
-#define ADM_THREAD_QUEUE_SIZE 8
+
+// From the UX POV, it is nice to have the currently displayed frame still
+// in the editor cache so that a seek back to the current frame succeeds
+// instantly when stopping playback. The fixed size of the queue should not
+// exceed the minimum cache size - 2 for this purpose.
+#define ADM_THREAD_QUEUE_SIZE 6
+
 /**
  *  \class ADM_videoFilterQueue
  *  \brief
