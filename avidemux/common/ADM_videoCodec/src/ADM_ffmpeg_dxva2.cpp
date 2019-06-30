@@ -37,10 +37,10 @@ extern "C" {
 #include "prefs.h"
 #include "ADM_coreDxva2.h"
 #include "../private_inc/ADM_codecDxva2.h"
-#include "ADM_threads.h"
 #include "ADM_vidMisc.h"
 
 static bool         dxva2Working=false;
+static int          totalSurfaces=0;
 static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
 static void ADM_DXVA2releaseBuffer(void *s, uint8_t *d);
 static admMutex     imageMutex;
@@ -332,7 +332,9 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         cacheSize = EDITOR_CACHE_MAX_SIZE;
     if(cacheSize > EDITOR_CACHE_MAX_SIZE) cacheSize = EDITOR_CACHE_MAX_SIZE;
     if(cacheSize < EDITOR_CACHE_MIN_SIZE) cacheSize = EDITOR_CACHE_MIN_SIZE;
-    num_surfaces = cacheSize + SURFACES_SAFETY_MARGIN;
+    num_surfaces = cacheSize;
+    if(!totalSurfaces)
+        num_surfaces+=ADM_THREAD_QUEUE_SIZE;
 
     switch(avctx->codec_id)
     {
@@ -391,8 +393,9 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     dx_context->surface_count   = num_surfaces;
     dx_context->cfg             = admDxva2::getDecoderConfig(avctx->codec_id,bits);
 
-    ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,this,parent,avctx);
     alive=true;
+    totalSurfaces+=num_surfaces;
+    ADM_info("Successfully setup DXVA2 hw accel (%d surface created, %d total, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,totalSurfaces,this,parent,avctx);
 }
 
 /**
@@ -403,6 +406,7 @@ decoderFFDXVA2::~decoderFFDXVA2()
     if(alive)
     {
         admDxva2::destroyD3DSurface(num_surfaces,surfaces);
+        totalSurfaces-=num_surfaces;
         // TODO : flush pool
     }
     if(_context->hwaccel_context)
