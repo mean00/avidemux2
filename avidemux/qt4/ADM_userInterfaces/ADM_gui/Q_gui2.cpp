@@ -1688,10 +1688,11 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
     UI_getPhysicalScreenSize(QuiMainWindows, &w,&h);
     printf("The screen seems to be %u x %u px\n",w,h);
     mw->ui.frame_video->setAttribute(Qt::WA_OpaquePaintEvent);
-    
 
     UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
     mw->ui.frame_video->setAcceptDrops(true); // needed for drag and drop to work on windows
+    admPreview::setMainDimension(0,0,ZOOM_1_1);
+
     UI_updateRecentMenu();
     UI_updateRecentProjectMenu();
 
@@ -1716,8 +1717,6 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 #else
         ADM_info("OpenGL: Not enabled at built time.\n");
 #endif
-
-    admPreview::setMainDimension(0,0,ZOOM_1_1);
 
     return 1;
 }
