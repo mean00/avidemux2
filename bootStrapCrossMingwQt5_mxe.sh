@@ -252,6 +252,7 @@ create_release_package()
     libwinpthread-*.dll \
     libx264-*.dll \
     libx265.dll \
+    libzstd.dll \
     SDL2.dll \
     ssleay32.dll \
     xvidcore.dll \
