@@ -178,7 +178,7 @@ again:
     int match;
     for( p=(buffer.at(tail));p<(buffer.at(head-6));p++)
     {
-        if(p[0]!=0xff || p[1]&0xf0!=0xf0 || p[1]&6)
+        if(p[0]!=0xff || (p[1]&0xf0)!=0xf0 || p[1]&6)
             continue;
 
         match=p-buffer.at(0); // offset of syncword
@@ -204,7 +204,7 @@ again:
             return ADTS_MORE_DATA_NEEDED;
         }
         // do we have sync at the end ?
-        if(p[packetLen]!=0xff || p[packetLen+1]&0xf0!=0xf0 || p[packetLen+1]&6)
+        if(p[packetLen]!=0xff || (p[packetLen+1]&0xf0)!=0xf0 || p[packetLen+1]&6)
         {
             aprintf("[ADTS] no syncword at the end or layer!=0\n");
             continue;
