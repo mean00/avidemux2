@@ -150,7 +150,7 @@ bool  ADM_videoStreamCopy::getPacket(ADMBitstream *out)
     if(true==eofMet) return false;
 again:
     image.data=out->data;
-    if(false==video_body->getCompressedPicture(videoDelay,sanitizeDts,&image))
+    if(false==video_body->getCompressedPicture(rewindTime,videoDelay,sanitizeDts,&image))
     {
             ADM_warning("Get packet failed\n");
             return false;
