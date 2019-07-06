@@ -118,6 +118,7 @@ int pyPrintTiming(IEditor *editor, int framenumber)
                 frameType = "P";
                 break;
             case AVI_B_FRAME:
+            case AVI_B_FRAME+AVI_NON_REF_FRAME:
                 frameType = "B";
                 break;
             default:
