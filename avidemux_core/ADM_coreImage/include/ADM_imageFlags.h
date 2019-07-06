@@ -17,9 +17,10 @@
 
 
 #define AVI_KEY_FRAME   0x10
-#define AVI_B_FRAME	    0x4000	 
+#define AVI_B_FRAME     0x4000
 #define AVI_P_FRAME     0x0
-#define AVI_FRAME_TYPE_MASK (AVI_KEY_FRAME+AVI_B_FRAME+AVI_P_FRAME)
+#define AVI_NON_REF_FRAME 0x400
+#define AVI_FRAME_TYPE_MASK (AVI_KEY_FRAME+AVI_B_FRAME+AVI_P_FRAME+AVI_NON_REF_FRAME)
 
 /**
     For demuxers, it is the field type/frame
