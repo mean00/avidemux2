@@ -619,6 +619,7 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
           return 0;
         }
       head += nalSize;        // Skip nal lenth
+      int ref=(*(head)>>5) & 3;
       stream = *(head) & 0x1F;
 
 
@@ -648,6 +649,8 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
               break;
             case NAL_NON_IDR:
               getNalType(head+1,head+length,flags,recovery);
+              if(!ref && (*flags & AVI_B_FRAME))
+                  *flags |= AVI_NON_REF_FRAME;
               return 1;
               break;
             default:

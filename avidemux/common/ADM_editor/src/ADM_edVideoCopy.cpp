@@ -20,6 +20,7 @@
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
 #include "ADM_vidMisc.h"
+#include "ADM_videoInfoExtractor.h"
 #if 0
 #define aprintf printf
 #else
@@ -150,10 +151,39 @@ bool ADM_Composer::checkCutIsOnIntra(uint64_t time)
 /**
      \fn bFrameDroppable
 */
-static bool bFrameDroppable(uint32_t fcc)
+static bool bFrameDroppable(uint32_t fcc,vidHeader *hdr,ADMCompressedImage *img=NULL)
 {
-    if(isH264Compatible(fcc)) 
-      return false;
+    if(isH264Compatible(fcc))
+    {
+        if(!img)
+            return false;
+        if(img->flags & AVI_NON_REF_FRAME)
+            return true; // the demuxer has done the job for us
+        uint32_t maxSize=img->dataLength;
+        maxSize+=512; // arbitrary safety margin
+        uint32_t size=maxSize;
+        notStackAllocator buf(maxSize);
+        bool AnnexB=false;
+        if(hdr)
+        {
+            uint8_t *extra;
+            uint32_t extraLen=0;
+            hdr->getExtraHeaderData(&extraLen,&extra);
+            if(!extraLen)
+                AnnexB=true;
+        }
+        if(AnnexB)
+            size=ADM_convertFromAnnexBToMP4(img->data,img->dataLength,buf.data,maxSize);
+        else
+            memcpy(buf.data,img->data,img->dataLength);
+        if(size)
+        {
+            uint32_t nalSize=0;
+            if(extractH264FrameType(nalSize,buf.data,size,&(img->flags),NULL) && (img->flags & AVI_NON_REF_FRAME))
+                return true;
+        }
+        return false;
+    }
     if(isH265Compatible(fcc)) 
       return false;    
     return true;
@@ -193,7 +223,7 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
         uint64_t pts,dts;
 
         vid->_aviheader->getVideoInfo (&info);
-        if(bFrameDroppable(info.fcc))
+        if(bFrameDroppable(info.fcc,NULL))
         {
             return true; // no need to add extra delay
         }
@@ -237,6 +267,20 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
             if(pts<refTime)
             {
                 ADM_info("frame %d is early \n",i);
+                ADMCompressedImage img;
+#define ROUNDUP(x,y) (x+y-1)&~(y-1)
+                uint32_t len=ROUNDUP(info.width,16);
+                len*=ROUNDUP(info.height,16);
+                len*=3;
+                notStackAllocator buf(len);
+                img.flags=0;
+                img.data=buf.data;
+                img.dataLength=len;
+                if(vid->_aviheader->getFrame(i,&img))
+                {
+                    if(bFrameDroppable(info.fcc,vid->_aviheader,&img))
+                        break; // this frame will be dropped, no need to add delay
+                }
                 uint32_t delta=refTime-pts;
                 if(delta>*delay) *delay=delta;
             }else
@@ -262,7 +306,7 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
 
 
 */
-bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,bool sanitize,ADMCompressedImage *img)
+bool        ADM_Composer::getCompressedPicture(uint64_t start,uint64_t videoDelay,bool sanitize,ADMCompressedImage *img)
 {
     uint64_t tail;
     //
@@ -288,6 +332,13 @@ againGet:
     vidHeader *demuxer=vid->_aviheader;
     ADM_assert(demuxer);
 
+    uint32_t segNo=0;
+    uint64_t segTme,startFromPtsInRef=ADM_NO_PTS;
+    if(_segments.convertLinearTimeToSeg(start,&segNo,&segTme))
+    {
+        startFromPtsInRef=segTme+seg->_refStartTimeUs;
+    }
+
     // Prepare to deal with field-encoded streams
     uint64_t timeIncrement=vid->timeIncrementInUs;
     // Get next pic?
@@ -305,8 +356,7 @@ againGet:
     //
     // after a segment switch, we may have some frames from "the past"
     // if the cut point is not a keyframe, drop them
-    
-    if(bFrameDroppable(info.fcc))
+    if(bFrameDroppable(info.fcc,NULL))
     {
         if(img->flags & AVI_B_FRAME)
         {
@@ -326,31 +376,32 @@ againGet:
             }
         }
     }
-    if( img->demuxerDts!=ADM_NO_PTS)
+    if(img->demuxerDts!=ADM_NO_PTS)
     {
-        bool drop=false;
-        if(_currentSegment  && img->demuxerDts<seg->_refStartDts)
+        if(img->demuxerDts<seg->_refStartDts)
         {
-            ADM_info("Frame %d is in the past for this segment (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerDts));
-            ADM_info("vs refstartdts %s\n",ADM_us2plain(seg->_refStartDts));
-            ADM_info(" dts=%llu, ref=%llu\n",img->demuxerDts,seg->_refStartDts);
-            drop=true;
+            printf("[getCompressedPicture] Frame %d DTS is in the past vs segment start: %s /",vid->lastSentFrame,ADM_us2plain(img->demuxerDts));
+            printf(" %s\n",ADM_us2plain(seg->_refStartDts));
+            goto againGet;
         }
+    }
+    if(img->demuxerPts!=ADM_NO_PTS)
+    {
         // Seeking is not accurate when cutting on non intra
         // we might have some frames that are clearly too early , even in seg0
-        if(img->demuxerPts!=ADM_NO_PTS && bFrameDroppable(info.fcc))
+        uint64_t reftime=(seg->_refStartTimeUs > vid->firstFramePts)? seg->_refStartTimeUs : vid->firstFramePts;
+        if(startFromPtsInRef!=ADM_NO_PTS && segNo==_currentSegment && startFromPtsInRef>reftime)
+            reftime=startFromPtsInRef;
+        if(img->demuxerPts<reftime)
         {
-            if(img->demuxerPts+seg->_startTimeUs<seg->_refStartTimeUs)
+            printf("[getCompressedPicture] Frame %d PTS is in the past vs segment start: %s /",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
+            printf(" %s\n",ADM_us2plain(reftime));
+            if(bFrameDroppable(info.fcc,demuxer,img))
             {
-                ADM_info("Frame %d is in the past for this segment -bis (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
-                ADM_info("vs refstartdts %s\n",ADM_us2plain(seg->_refStartTimeUs));
-                ADM_info(" pts=%llu, startTime=%llu, _refStartTimeUs=%llu\n",img->demuxerPts,seg->_startTimeUs,seg->_refStartTimeUs);
-                drop=true;
+                ADM_warning("Dropping frame %d\n",vid->lastSentFrame);
+                goto againGet;
             }
         }
-        if(drop)
-            goto againGet;
-        
     }
 
     // Need to switch seg ?
@@ -576,7 +627,7 @@ nextSeg:
     _SEGMENT *thisseg=_segments.getSegment(_currentSegment);
     thisseg->_dropBframes=_SEGMENT::ADM_DROP_MAYBE_AFER_SWITCH;
     ADM_info("Retrying for next segment\n");
-    return getCompressedPicture(videoDelay,sanitize,img);
+    return getCompressedPicture(start,videoDelay,sanitize,img);
 }
 
 /**
