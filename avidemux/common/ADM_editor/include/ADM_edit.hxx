@@ -233,7 +233,7 @@ typedef std::vector <undoQueueElem> ListOfUndoQueueElements;
 protected:
                     ListOfUndoQueueElements undoQueue;
                     static const uint8_t maxUndoSteps=50;
-                    uint32_t    _cnt; // track the nb of performed undo steps for redo
+                    uint32_t    _undo_counter; // track the nb of performed undo steps for redo
 public:
                     bool        addToUndoQueue(void);
                     bool        undo(void);
