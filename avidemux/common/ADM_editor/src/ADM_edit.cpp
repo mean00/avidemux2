@@ -50,14 +50,12 @@
 */
 ADM_Composer::ADM_Composer (void)
 {
-uint32_t type,value;
-
-
   _pp=NULL;
   _imageBuffer=NULL;
   _internalFlags=0;
   _currentSegment=0;
   _scratch=NULL;
+  _undo_counter=0;
   currentProjectName=std::string("");
 
   _currentPts = 0;
