@@ -52,7 +52,7 @@
 admMutex singleThread;
 
 float currentZoom=ZOOM_1_1;
-static bool cutsNotOnIntraWarned;
+static int cutsNotOnIntraWarned;
 #include "DIA_audioTracks.h"
 //***********************************
 //******** A Function ***************
@@ -563,17 +563,45 @@ void HandleAction (Action action)
               {
                   video_body->pasteFromClipBoard(currentPts);
               }
-              if(!UI_getCurrentVCodec() && !video_body->checkCutsAreOnIntra())
+              ADM_cutPointType chk=ADM_EDITOR_CUT_POINT_IDR;
+              if(!UI_getCurrentVCodec())
+                  chk=video_body->checkCutsAreOnIntra();
+              if(cutsNotOnIntraWarned!=(int)chk && chk!=ADM_EDITOR_CUT_POINT_IDR)
               {
-                  if(!GUI_Question(QT_TRANSLATE_NOOP("adm","The cut points of the pasted video are not on keyframes.\n"
-                      "Video saved in copy mode will be corrupted at these points.\n"
-                      "Proceed anyway?")))
+                  const char *alert;
+                  bool ask=true;
+                  switch(chk)
+                  {
+                      case ADM_EDITOR_CUT_POINT_NON_IDR:
+                          alert=QT_TRANSLATE_NOOP("adm","The cut points of the pasted video are not on keyframes.\n"
+                              "Video saved in copy mode will be corrupted at these points.\n"
+                              "Proceed anyway?");
+                          break;
+                      case ADM_EDITOR_CUT_POINT_RECOVERY:
+                          alert=QT_TRANSLATE_NOOP("adm","The cut points of the pasted video may result "
+                              "in playback interruption due to specific composition "
+                              "of the video stream if the video is saved in copy mode.\n"
+                              "Proceed anyway?");
+                          break;
+                      case ADM_EDITOR_CUT_POINT_MISMATCH:
+                          alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across a cut point of the pasted video do not match.\n"
+                              "Playback of the video saved in copy mode may stop at this point.\n"
+                              "Proceed anyway?");
+                      case ADM_EDITOR_CUT_POINT_UNCHECKED:
+                          alert=QT_TRANSLATE_NOOP("adm","Cut points of the pasted video could not be checked.\n"
+                              "This indicates an issue with a source video, the state of editing or a bug in the program.\n"
+                              "Please check the application log file or console output for details.\n"
+                              "Try anyway?");
+                      default:
+                          ask=false; break;
+                  }
+                  if(ask && !GUI_Question(alert))
                   {
                       video_body->undo();
-                      cutsNotOnIntraWarned=false;
+                      cutsNotOnIntraWarned=-1;
                       break;
                   }
-                  cutsNotOnIntraWarned=true;
+                  cutsNotOnIntraWarned=(int)chk;
               }
               video_body->getVideoInfo (avifileinfo);
               d=video_body->getVideoDuration()-d;
@@ -691,27 +719,46 @@ void HandleAction (Action action)
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
                 break;
             }
-            if(!cutsNotOnIntraWarned && !lastFrame && !UI_getCurrentVCodec() && !video_body->checkCutIsOnIntra(a))
+            ADM_cutPointType chk=ADM_EDITOR_CUT_POINT_IDR;
+            if(!lastFrame && !UI_getCurrentVCodec())
+                chk=video_body->checkCutIsOnIntra(a);
+            if(cutsNotOnIntraWarned!=(int)chk && chk!=ADM_EDITOR_CUT_POINT_IDR)
             {
                 const char *alert;
-                if(action==ACT_Cut)
+                bool ask=true;
+                switch(chk)
                 {
-                    alert=QT_TRANSLATE_NOOP("adm","The end point of the cut is not on a keyframe.\n"
-                        "Video saved in copy mode will be corrupted at this point.\n"
-                        "Proceed anyway?");
-                }else
-                {
-                    alert=QT_TRANSLATE_NOOP("adm","The end point of the deletion is not on a keyframe.\n"
-                        "Video saved in copy mode will be corrupted at this point.\n"
-                        "Proceed anyway?");
+                    case ADM_EDITOR_CUT_POINT_NON_IDR:
+                        if(action==ACT_Cut)
+                            alert=QT_TRANSLATE_NOOP("adm","The end point of the cut is not on a keyframe.\n"
+                                "Video saved in copy mode will be corrupted at this point.\n"
+                                "Proceed anyway?");
+                        else
+                            alert=QT_TRANSLATE_NOOP("adm","The end point of the deletion is not on a keyframe.\n"
+                                "Video saved in copy mode will be corrupted at this point.\n"
+                                "Proceed anyway?");
+                        break;
+                    case ADM_EDITOR_CUT_POINT_RECOVERY:
+                        if(action==ACT_Cut)
+                            alert=QT_TRANSLATE_NOOP("adm","The chosen start and end points of the cut "
+                                "may result in playback interruption due to specific properties "
+                                "of the video stream if the video is saved in copy mode.\n"
+                                "Proceed anyway?");
+                        else
+                            alert=QT_TRANSLATE_NOOP("adm","The chosen start and end points of the deletion "
+                                "may result in playback interruption due to specific properties "
+                                "of the video stream if the video is saved in copy mode.\n"
+                                "Proceed anyway?");
+                        break;
+                    default: ask=false; break;
                 }
-                if(!GUI_Question(alert))
+                if(ask && !GUI_Question(alert))
                 {
                     video_body->undo();
-                    cutsNotOnIntraWarned=false;
+                    cutsNotOnIntraWarned=-1;
                     break;
                 }
-                cutsNotOnIntraWarned=true;
+                cutsNotOnIntraWarned=(int)chk;
             }
             A_ResetMarkers();
             A_Resync(); // total duration & stuff

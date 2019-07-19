@@ -63,6 +63,19 @@ typedef enum
         ENV_EDITOR_LAST=   0x8000
 }_ENV_EDITOR_FLAGS;
 
+/**
+    \enum ADM_cutPointType
+    \brief keep track of potential problems when in copy mode
+*/
+typedef enum
+{
+    ADM_EDITOR_CUT_POINT_IDR,
+    ADM_EDITOR_CUT_POINT_NON_IDR,
+    ADM_EDITOR_CUT_POINT_RECOVERY,
+    ADM_EDITOR_CUT_POINT_MISMATCH,
+    ADM_EDITOR_CUT_POINT_UNCHECKED
+}ADM_cutPointType;
+
 class ADM_edAudioTrackFromVideo;
 class ADM_edAudioTrack;
 
@@ -258,9 +271,10 @@ public:
                     bool        getCompressedPicture(uint64_t start,uint64_t delay,bool sanitizeDts,ADMCompressedImage *img); //COPYMODE
                     // Use only for debug purpose !!!
                     bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);
-                    bool        checkCutsAreOnIntra(void);
-                    bool        checkCutIsOnIntra(uint64_t time);
+                    ADM_cutPointType checkCutsAreOnIntra(void);
+                    ADM_cutPointType checkCutIsOnIntra(uint64_t time);
 private:
+                    ADM_cutPointType checkSegmentStartsOnIntra(uint32_t seg);
                     uint64_t    totalExtraDelay;
                     int64_t     desyncScore;
 public:
