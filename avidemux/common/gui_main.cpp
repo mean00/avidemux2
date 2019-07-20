@@ -578,9 +578,10 @@ void HandleAction (Action action)
                               "Proceed anyway?");
                           break;
                       case ADM_EDITOR_CUT_POINT_RECOVERY:
-                          alert=QT_TRANSLATE_NOOP("adm","The cut points of the pasted video may result "
-                              "in playback interruption due to specific composition "
-                              "of the video stream if the video is saved in copy mode.\n"
+                          alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
+                              "Picture reordering information in the video stream is not reset at non-IDR frames. "
+                              "The cut points of the pasted selection may result in playback interruption "
+                              "due to reversed display order of frames if saved in copy mode.\n"
                               "Proceed anyway?");
                           break;
                       case ADM_EDITOR_CUT_POINT_MISMATCH:
@@ -740,15 +741,33 @@ void HandleAction (Action action)
                         break;
                     case ADM_EDITOR_CUT_POINT_RECOVERY:
                         if(action==ACT_Cut)
-                            alert=QT_TRANSLATE_NOOP("adm","The chosen start and end points of the cut "
-                                "may result in playback interruption due to specific properties "
-                                "of the video stream if the video is saved in copy mode.\n"
+                            alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
+                                "Picture reordering information in the video stream is not reset at non-IDR frames. "
+                                "The chosen start and end points of the cut may result in playback interruption "
+                                "due to reversed display order of frames if saved in copy mode.\n"
                                 "Proceed anyway?");
                         else
-                            alert=QT_TRANSLATE_NOOP("adm","The chosen start and end points of the deletion "
-                                "may result in playback interruption due to specific properties "
-                                "of the video stream if the video is saved in copy mode.\n"
+                            alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
+                                "Picture reordering information in the video stream is not reset at non-IDR frames. "
+                                "The chosen start and end points of the deletion may result in playback interruption "
+                                "due to reversed display order of frames if saved in copy mode.\n"
                                 "Proceed anyway?");
+                        break;
+                    case ADM_EDITOR_CUT_POINT_MISMATCH:
+                        if(action==ACT_Cut)
+                            alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across the cut do not match. "
+                                "Playback of the video saved in copy mode may stop at this point.\n"
+                                "Proceed anyway?");
+                        else
+                            alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across the deletion do not match. "
+                                "Playback of the video saved in copy mode may stop at this point.\n"
+                                "Proceed anyway?");
+                        break;
+                    case ADM_EDITOR_CUT_POINT_UNCHECKED:
+                        alert=QT_TRANSLATE_NOOP("adm","Cut points could not be checked.\n"
+                            "This indicates an issue with a source video, the state of editing or a bug in the program. "
+                            "Please check the application log file or console output for details.\n"
+                            "Proceed anyway?");
                         break;
                     default: ask=false; break;
                 }

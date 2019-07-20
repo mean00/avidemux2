@@ -459,17 +459,19 @@ bool admSaver::save(void)
                     "Do you want to continue anyway ?");
                 break;
             case ADM_EDITOR_CUT_POINT_RECOVERY:
-                alert=QT_TRANSLATE_NOOP("adm","The choice of cut points may result in playback interruption "
-                    "due to specific properties of the video stream if the video is saved in copy mode.\n"
+                alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
+                    "Picture reordering information in the video stream is not reset at non-IDR frames. "
+                    "The choice of cut points may result in playback interruption "
+                    "due to reversed display order of frames if saved in copy mode.\n"
                     "Do you want to continue anyway?");
                 break;
             case ADM_EDITOR_CUT_POINT_MISMATCH:
-                alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across a cut point do not match.\n"
+                alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across a cut point do not match. "
                     "Playback of the video saved in copy mode may stop at this point.\n"
                     "Do you want to continue anyway?");
             case ADM_EDITOR_CUT_POINT_UNCHECKED:
-                alert=QT_TRANSLATE_NOOP("adm","Cut points could not be checked.\n"
-                    "This indicates an issue with a source video, the state of editing or a bug in the program.\n"
+                alert=QT_TRANSLATE_NOOP("adm","Cut points could not be checked. "
+                    "This indicates an issue with a source video, the state of editing or a bug in the program. "
                     "Please check the application log file or console output for details.\n"
                     "Try anyway?");
                 break;
