@@ -96,14 +96,6 @@ public:
         timeIncrementInUs=0;
         firstFramePts=0;
     }
-    ~_VIDEOS()
-    {
-        if(paramCache)
-        {
-            delete [] paramCache;
-            paramCache=NULL;
-        }
-    }
 };
 
 /**
