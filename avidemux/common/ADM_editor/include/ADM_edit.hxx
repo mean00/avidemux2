@@ -272,6 +272,7 @@ public:
                     // Use only for debug purpose !!!
                     bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);
                     ADM_cutPointType checkCutsAreOnIntra(void);
+                    ADM_cutPointType checkCutsAreOnIntra(uint64_t start,uint64_t end);
                     ADM_cutPointType checkCutIsOnIntra(uint64_t time);
 private:
                     ADM_cutPointType checkSegmentStartsOnIntra(uint32_t seg);
