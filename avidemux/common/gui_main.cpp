@@ -589,8 +589,8 @@ void HandleAction (Action action)
                               "Playback of the video saved in copy mode may stop at this point.\n"
                               "Proceed anyway?");
                       case ADM_EDITOR_CUT_POINT_UNCHECKED:
-                          alert=QT_TRANSLATE_NOOP("adm","Cut points of the pasted video could not be checked.\n"
-                              "This indicates an issue with a source video, the state of editing or a bug in the program.\n"
+                          alert=QT_TRANSLATE_NOOP("adm","Cut points of the pasted video could not be checked. "
+                              "This indicates an issue with a source video, the state of editing or a bug in the program. "
                               "Please check the application log file or console output for details.\n"
                               "Try anyway?");
                       default:
