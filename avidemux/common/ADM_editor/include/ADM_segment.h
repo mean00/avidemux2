@@ -67,6 +67,8 @@ public:
       
 
       uint32_t _nb_video_frames; /// Really needed ?
+      uint32_t paramCacheSize;
+      uint8_t *paramCache; /// Reuse decoded SPS and friends
       EditorCache *_videoCache; /// Decoded video cache
 
       /* Timeing info */
@@ -85,6 +87,8 @@ public:
         decoder=NULL;
         color=NULL;
         _nb_video_frames=0;
+        paramCacheSize=0;
+        paramCache=NULL;
         _videoCache=NULL;
         lastSentFrame=0;
         lastDecodedPts=0;
@@ -92,7 +96,14 @@ public:
         timeIncrementInUs=0;
         firstFramePts=0;
     }
-
+    ~_VIDEOS()
+    {
+        if(paramCache)
+        {
+            delete [] paramCache;
+            paramCache=NULL;
+        }
+    }
 };
 
 /**
