@@ -588,6 +588,7 @@ void HandleAction (Action action)
                           alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across a cut point of the pasted video do not match.\n"
                               "Playback of the video saved in copy mode may stop at this point.\n"
                               "Proceed anyway?");
+                          break;
                       case ADM_EDITOR_CUT_POINT_UNCHECKED:
                           alert=QT_TRANSLATE_NOOP("adm","Cut points of the pasted video could not be checked. "
                               "This indicates an issue with a source video, the state of editing or a bug in the program. "

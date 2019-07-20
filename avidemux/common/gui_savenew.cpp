@@ -448,7 +448,7 @@ bool admSaver::save(void)
     
     if(!videoEncoderIndex) 
     {
-        ADM_cutPointType chk=video_body->checkCutsAreOnIntra();
+        ADM_cutPointType chk=video_body->checkCutsAreOnIntra(startAudioTime,markerB);
         const char *alert;
         bool ask=true;
         switch(chk)
@@ -469,6 +469,7 @@ bool admSaver::save(void)
                 alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across a cut point do not match. "
                     "Playback of the video saved in copy mode may stop at this point.\n"
                     "Do you want to continue anyway?");
+                break;
             case ADM_EDITOR_CUT_POINT_UNCHECKED:
                 alert=QT_TRANSLATE_NOOP("adm","Cut points could not be checked. "
                     "This indicates an issue with a source video, the state of editing or a bug in the program. "

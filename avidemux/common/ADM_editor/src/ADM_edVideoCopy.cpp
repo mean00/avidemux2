@@ -31,6 +31,25 @@
 
 static int warn_cnt=0;
 
+static bool checkCodec(aviInfo *first,aviInfo *second)
+{
+    bool match=false;
+#define XCHECK(x) if(!match && x(first->fcc) && x(second->fcc)) { ADM_info("Codecs identified by %s() as matching\n",#x); match=true; }
+    XCHECK(isH264Compatible)
+    XCHECK(isH265Compatible)
+    XCHECK(isMpeg4Compatible)
+    XCHECK(isMpeg12Compatible)
+    XCHECK(isVC1Compatible)
+    XCHECK(isVP9Compatible)
+    XCHECK(isVP6Compatible)
+    XCHECK(isMSMpeg4Compatible)
+    XCHECK(isDVCompatible)
+    // catch fourcc values not covered by above
+    if(!match && first->fcc == second->fcc)
+        match=true;
+    return match;
+}
+
 /**
     \fn checkSegmentStartsOnIntra
     \brief In copy mode, if the cuts are not on intra we will run into trouble :
@@ -68,6 +87,21 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
     {
         BOWOUT
     }
+    // Cursorily check that codec matches if the ref video is not the first one.
+    aviInfo info;
+    demuxer->getVideoInfo(&info);
+    if(refNo)
+    {
+        aviInfo inf0;
+        getVideoInfo(&inf0);
+        if(!checkCodec(&info,&inf0))
+        {
+            ADM_error("Codec doesn't match the one of the first ref video. This is currently unsupported.\n");
+            cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+            BOWOUT
+        }
+    }
+
     uint32_t flags=0;
     uint64_t pts,dts;
     demuxer->getPtsDts(frame,&pts,&dts);
@@ -101,9 +135,8 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         cut=ADM_EDITOR_CUT_POINT_IDR;
         BOWOUT
     }
+
     // It is a cut, perform codec-specific checks
-    aviInfo info;
-    demuxer->getVideoInfo(&info);
 
 #define MAX_NALU_TO_CHECK 4
     static NALU_descriptor desc[MAX_NALU_TO_CHECK];
@@ -356,7 +389,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
 }
 /**
     \fn checkCutsAreOnIntra
-    \brief
+    \brief Check all segments
 */
 ADM_cutPointType ADM_Composer::checkCutsAreOnIntra(void)
 {
@@ -371,6 +404,47 @@ ADM_cutPointType ADM_Composer::checkCutsAreOnIntra(void)
     }
     return success;
 }
+
+/**
+    \fn checkCutsAreOnIntra
+    \brief Check a span
+*/
+ADM_cutPointType ADM_Composer::checkCutsAreOnIntra(uint64_t startTime,uint64_t endTime)
+{
+    ADM_cutPointType success=ADM_EDITOR_CUT_POINT_UNCHECKED;
+    int nbSeg=_segments.getNbSegments();
+    ADM_info("Checking cuts start on keyframe..\n");
+    uint32_t segNo;
+    uint64_t segTime;
+
+    if(false==_segments.convertLinearTimeToSeg(startTime,&segNo,&segTime))
+        return ADM_EDITOR_CUT_POINT_UNCHECKED; // we can't do anything meaningful if we fail to convert time to segment
+
+    ADM_assert(segNo<nbSeg);
+    int startSeg=segNo;
+    if(false==_segments.convertLinearTimeToSeg(endTime,&segNo,&segTime))
+        return ADM_EDITOR_CUT_POINT_UNCHECKED;
+
+    if(segNo==startSeg) // within one and the same segment, check only that codec matches
+    {
+        aviInfo here,first;
+        getVideoInfo(&first);
+        _SEGMENT *seg=_segments.getSegment(segNo);
+        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+        vid->_aviheader->getVideoInfo(&here);
+        if(!checkCodec(&here,&first))
+            return ADM_EDITOR_CUT_POINT_MISMATCH;
+        return ADM_EDITOR_CUT_POINT_IDR;
+    }
+    for(int i=startSeg;i<segNo;i++)
+    {
+        success=checkSegmentStartsOnIntra(i+1);
+        if(success!=ADM_EDITOR_CUT_POINT_IDR)
+            break;
+    }
+    return success;
+}
+
 /**
     \fn checkCutIsOnIntra
     \brief Allow to check if a particular delete operation results in a cut being not on an intra
