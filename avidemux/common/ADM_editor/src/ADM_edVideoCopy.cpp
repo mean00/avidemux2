@@ -120,32 +120,45 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         demuxer->getExtraHeaderData(&extraLen,&extra);
         if(!extraLen)
             AnnexB=true;
-        // Get SPS to be able to decode the slice header
-        ADM_SPSInfo sps;
-        bool gotSps=false;
+        // Allocate memory to hold compressed frame
         ADMCompressedImage img;
 #define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
         buffer=new uint8_t[MAX_FRAME_LENGTH];
         img.data=buffer;
-        if(AnnexB)
+        // Get SPS to be able to decode the slice header
+        ADM_SPSInfo sps;
+        bool gotSps=false;
+        // Do we have a cached copy?
+        if(vid->paramCacheSize==sizeof(ADM_SPSInfo) && vid->paramCache)
         {
-            if(!demuxer->getFrame(0,&img))
-            {
-                ADM_warning("Unable to get the first frame in ref %d, segment %d\n",seg->_reference,segNo);
-                BOWOUT
-            }
-            int nbNalu=ADM_splitNalu(img.data, img.data+img.dataLength, MAX_NALU_TO_CHECK, desc);
-            int spsIndex=ADM_findNalu(NAL_SPS,nbNalu,desc);
-            if(spsIndex!=-1)
-                gotSps=extractSPSInfo(desc[spsIndex].start, desc[spsIndex].size, &sps);
+            memcpy(&sps,vid->paramCache,sizeof(ADM_SPSInfo));
+            gotSps=true;
         }else
         {
-            gotSps=extractSPSInfo(extra,extraLen,&sps);
-        }
-        if(!gotSps)
-        {
-            ADM_warning("Cannot retrieve SPS info.\n");
-            BOWOUT
+            if(AnnexB)
+            {
+                if(!demuxer->getFrame(0,&img))
+                {
+                    ADM_warning("Unable to get the first frame in ref %d, segment %d\n",seg->_reference,segNo);
+                    BOWOUT
+                }
+                int nbNalu=ADM_splitNalu(img.data, img.data+img.dataLength, MAX_NALU_TO_CHECK, desc);
+                int spsIndex=ADM_findNalu(NAL_SPS,nbNalu,desc);
+                if(spsIndex!=-1)
+                    gotSps=extractSPSInfo(desc[spsIndex].start, desc[spsIndex].size, &sps);
+            }else
+            {
+                gotSps=extractSPSInfo(extra,extraLen,&sps);
+            }
+            if(!gotSps)
+            {
+                ADM_warning("Cannot retrieve SPS info.\n");
+                BOWOUT
+            }
+            // Store the decoded SPS info in the cache
+            vid->paramCacheSize=sizeof(ADM_SPSInfo);
+            vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
+            memcpy(vid->paramCache,&sps,sizeof(ADM_SPSInfo));
         }
         // We have SPS, now get the frame we are interested in.
         if(!demuxer->getFrame(frame,&img))
@@ -166,59 +179,68 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
             BOWOUT
         }
-        if(recoveryDistance==NO_RECOVERY_INFO && (img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME)
+        // We are done with this segment, restore the last sent frame
+        vid->lastSentFrame=oldFrame;
+
+        // Check the preceding segment
+        ADM_info("Getting previous segment, current segment number: %d\n",segNo);
+        ADM_assert(segNo>0);
+        segNo--;
+        seg=_segments.getSegment(segNo);
+        vid=_segments.getRefVideo(seg->_reference);
+        demuxer=vid->_aviheader;
+        oldFrame=vid->lastSentFrame;
+
+        if(false==switchToSegment(segNo,true))
         {
-            ADM_info("IDR verified, the cut point is fine.\n");
-            cut=ADM_EDITOR_CUT_POINT_IDR;
+            ADM_warning("Cannot check the previous segment %d\n",segNo);
             BOWOUT
         }
-        ADM_info("Recovery distance: %u\n",recoveryDistance);
-        if(!recoveryDistance) // recovery point, check POC
+        // Same ref video?
+        if(seg->_reference==refNo)
         {
-            if(poc==-1)
+            // Not a recovery point and marked as keyframe?
+            if(recoveryDistance==NO_RECOVERY_INFO && (img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME)
             {
-                ADM_warning("Cannot get POC, only POC explicitely set in the slice header is supported.\n");
+                ADM_info("IDR verified and same ref video, the cut point is fine.\n");
+                cut=ADM_EDITOR_CUT_POINT_IDR;
+                BOWOUT
+            }
+            // Recovery point and no POC? Don't bother to perform further checks.
+            if(!recoveryDistance && poc==-1)
+            {
+                ADM_warning("No POC to compare with, only POC explicitely set in the slice header is supported.\n");
                 cut=ADM_EDITOR_CUT_POINT_IDR; // ??
                 BOWOUT
             }
-            ADM_info("poc_lsb for frame %d: %d\n",frame,poc);
-            // We reuse the objects and switch pointers, restore the last sent frame
-            vid->lastSentFrame=oldFrame;
-            // Get the POC of the last frame in display order of the previous segment
-            ADM_info("Getting previous segment, current segment number: %d\n",segNo);
-            ADM_assert(segNo>0);
-            segNo--;
-            seg=_segments.getSegment(segNo);
-            vid=_segments.getRefVideo(seg->_reference);
-            demuxer=vid->_aviheader;
-            oldFrame=vid->lastSentFrame;
-
-            if(false==switchToSegment(segNo,true))
+        }else
+        {
+            // Not the same video. Does the codec match?
+            demuxer->getVideoInfo(&info);
+            if(!isH264Compatible(info.fcc))
             {
+                ADM_error("Codec mismatch!\n");
+                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
                 BOWOUT
             }
-            // Is it the same ref video?
-            if(seg->_reference!=refNo)
+            // Check that stream types match
+            extraLen=0;
+            demuxer->getExtraHeaderData(&extraLen,&extra);
+            if(!extraLen != AnnexB) // FIXME stream filter setup should be per segment
             {
-                // Nope, check that codecs match first
-                demuxer->getVideoInfo(&info);
-                if(!isH264Compatible(info.fcc))
-                {
-                    ADM_error("Codec mismatch!\n");
-                    cut=ADM_EDITOR_CUT_POINT_MISMATCH;
-                    BOWOUT
-                }
-                // Check that stream types match
-                extraLen=0;
-                demuxer->getExtraHeaderData(&extraLen,&extra);
-                if(!extraLen != AnnexB) // FIXME stream filter setup should be per segment
-                {
-                    ADM_warning("Combining AVCC and AnnexB type H.264 streams is currently not supported.\n");
-                    cut=ADM_EDITOR_CUT_POINT_MISMATCH;
-                    BOWOUT
-                }
-                // Check that SPS matches
-                ADM_SPSInfo sps2;
+                ADM_warning("Combining AVCC and AnnexB type H.264 streams is currently not supported.\n");
+                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                BOWOUT
+            }
+            // Get SPS info
+            gotSps=false;
+            ADM_SPSInfo sps2;
+            if(vid->paramCacheSize==sizeof(ADM_SPSInfo) && vid->paramCache)
+            {
+                memcpy(&sps2,vid->paramCache,sizeof(ADM_SPSInfo));
+                gotSps=true;
+            }else
+            {
                 gotSps=false;
                 if(AnnexB)
                 {
@@ -240,24 +262,46 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                     ADM_warning("Cannot retrieve SPS info for H.264 ref video in segment %d\n",segNo);
                     BOWOUT
                 }
-                // We have SPS, does it match the one from the next segment?
-                // Check at least the fields we use here.
-#define MATCH(x) if(match && (sps.x != sps2.x)) match=false;
-                bool match=true;
-                MATCH(hasPocInfo)
-                MATCH(log2MaxFrameNum)
-                MATCH(log2MaxPocLsb)
-                MATCH(frameMbsOnlyFlag)
-                MATCH(refFrames)
-                if(!match)
-                {
-                    ADM_warning("SPS mismatch, saved video will be broken.\n");
-                    cut=ADM_EDITOR_CUT_POINT_MISMATCH;
-                    BOWOUT
-                }
-            }else
-                ADM_info("It is the same ref video, no need to check SPS.\n");
-            // SPS checked, now get the frame we are interested in.
+                // Store the decoded SPS info in the cache
+                vid->paramCacheSize=sizeof(ADM_SPSInfo);
+                vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
+                memcpy(vid->paramCache,&sps2,sizeof(ADM_SPSInfo));
+            }
+            // We have SPS, does it match the one from the next segment?
+            // Check at least the fields we use here.
+#define MATCH(x) if(match && (sps.x != sps2.x)) { ADM_warning("%s value does not match.\n",#x); match=false; }
+            bool match=true;
+            MATCH(hasPocInfo)
+            MATCH(log2MaxFrameNum)
+            MATCH(log2MaxPocLsb)
+            MATCH(frameMbsOnlyFlag)
+            MATCH(refFrames)
+            if(!match)
+            {
+                ADM_warning("SPS mismatch, saved video will be broken.\n");
+                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                BOWOUT
+            }
+            // Not a recovery point and marked as keyframe?
+            if(recoveryDistance==NO_RECOVERY_INFO && (img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME)
+            {
+                ADM_info("IDR verified, the cut point should be fine.\n");
+                cut=ADM_EDITOR_CUT_POINT_IDR;
+                BOWOUT
+            }
+        }
+
+        ADM_info("Recovery distance: %u\n",recoveryDistance);
+        if(!recoveryDistance) // recovery point, check POC
+        {
+            if(poc==-1)
+            {
+                ADM_warning("No POC to compare, only POC explicitely set in the slice header is supported.\n");
+                cut=ADM_EDITOR_CUT_POINT_IDR; // ??
+                BOWOUT
+            }
+            ADM_info("poc_lsb for frame %d: %d\n",frame,poc);
+            // Get the POC of the last frame in display order
             if(false==getFrameNumFromPtsOrBefore(vid, seg->_refStartTimeUs+seg->_durationUs-1, frame))
             {
                 ADM_warning("Cannot identify the last frame in display order for segment %d\n",segNo);
