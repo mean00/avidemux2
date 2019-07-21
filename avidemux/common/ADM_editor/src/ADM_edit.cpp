@@ -335,7 +335,6 @@ uint8_t ADM_Composer::addFile (const char *name)
   else
     {
         // Read and construct the audio tracks for that videos
-      audioInfo *info;
       uint32_t extraLen;
       uint8_t  *extraData;
       ADM_audioStream *stream;
@@ -686,10 +685,6 @@ uint32_t ref;
 */
 bool ADM_Composer::changeAudioStream(uint64_t xtime,uint32_t newstream)
 {
-double     duration;
-WAVHeader *wav;
-aviInfo    info;
-uint32_t ref;
         int n=_segments.getNbRefVideos();
         for(int i=0;i<n;i++)
         {

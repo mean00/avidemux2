@@ -96,7 +96,6 @@ again:
 bool			ADM_Composer::getPKFramePTS(uint64_t *frameTime)
 {
 uint64_t refTime,nkTime,segTime;
-int lastSeg=_segments.getNbSegments();
 uint32_t seg;
 bool r;
     // 1- Convert frameTime to segments
@@ -164,10 +163,8 @@ again:
 
 bool			ADM_Composer::getPtsDtsDelta(uint64_t frameTime, uint64_t *outDelta)
 {
-uint64_t refTime,nkTime,segTime;
-int lastSeg=_segments.getNbSegments();
+uint64_t refTime,segTime;
 uint32_t seg;
-bool r;
     // 1- Convert frameTime to segments
     if(false== _segments.convertLinearTimeToSeg(  frameTime, &seg, &segTime))
     {
@@ -389,7 +386,6 @@ bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t
         return false;
     // Search for the current frame with quick search
     _VIDEOS *v = _segments.getRefVideo(ref);
-    uint32_t nbFrame = v->_nb_video_frames;
     uint64_t pts, dts;
     int curFrame;
 
@@ -436,8 +432,7 @@ bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t
 */
 bool        ADM_Composer::getDtsFromPts(uint64_t *time)
 {
-uint64_t refTime,nkTime,segTime;
-int lastSeg=_segments.getNbSegments();
+uint64_t segTime;
 uint32_t seg;
     // 1- Convert frameTime to segments
     if(false== _segments.convertLinearTimeToSeg(  *time, &seg, &segTime))

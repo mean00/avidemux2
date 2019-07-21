@@ -37,10 +37,9 @@
 */
 bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
 {
-   _VIDEOS *vid=_segments.getRefVideo(ref);
-    vidHeader *demuxer=vid->_aviheader;
-	EditorCache   *cache =vid->_videoCache;
-	ADM_assert(cache);
+    _VIDEOS *vid=_segments.getRefVideo(ref);
+    EditorCache   *cache =vid->_videoCache;
+    ADM_assert(cache);
     bool found=false;
     if(timeToSeek>vid->firstFramePts && !dontdecode)
     {
@@ -119,9 +118,8 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
 bool ADM_Composer::samePictureInternal(uint32_t ref,ADMImage *out)
 {
     _VIDEOS *vid=_segments.getRefVideo(ref);
-    vidHeader *demuxer=vid->_aviheader;
-	EditorCache   *cache =vid->_videoCache;
-	ADM_assert(cache);
+    EditorCache   *cache =vid->_videoCache;
+    ADM_assert(cache);
 
   ADMImage *in=cache->getByPts(vid->lastDecodedPts);
   if(!in)
@@ -212,7 +210,6 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
   EditorCache   *cache;
   ADMImage	*result;
   bool drain=false;
-  uint32_t  flags;
    _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
     ADM_assert(vid->decoder);

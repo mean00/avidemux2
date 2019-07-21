@@ -472,7 +472,6 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
         }
         _currentSegment=segNo;
         // We may have overshot...
-        uint64_t last=vid->lastDecodedPts;
         _segments.LinearToRefTime(_currentSegment,targetPts,&refPts);
         ADMImage *candidate=vid->_videoCache->getLast();
         if(!candidate)
@@ -653,10 +652,8 @@ bool        ADM_Composer::switchToSegment(uint32_t s,bool dontdecode)
         // If the refStartTime is 0, it is the first image
         // But the fist image might not be = 0
       _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
-      vidHeader 	*demuxer=vid->_aviheader;  
       ADM_assert(vid);
       uint64_t from=seg->_refStartTimeUs;
-      uint64_t pts,dts;
 
       if(!from) from=vid->firstFramePts;
 

@@ -56,18 +56,12 @@ uint8_t ADM_Composer::updateVideoInfo (aviInfo * info)
   info->nb_frames = _segments.getNbFrames();
   if (info->fps1000)
     {
-      uint32_t 	r,	s,	d;
+      uint32_t r, s;
       // we got 1000 * image /s
       // we want rate, scale and duration
       //
       s = 1000;
       r = info->fps1000;
-      double	u;
-      u = (double) info->fps1000;
-      if (u < 10.)
-            u = 10.;
-      u = 1000000. / u;
-      d = (uint32_t) floor (u);;	// 25 fps hard coded
       AVIStreamHeader *ily =	_segments.getRefVideo(0)->_aviheader->	getVideoStreamHeader ();
       ily->dwRate = r;
       ily->dwScale = s;

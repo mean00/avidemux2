@@ -316,7 +316,6 @@ static bool checkTiming(std::vector<uint64_t> &list, uint64_t limit)
 bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
 {       
     int totalFrames=hdr->getVideoStreamHeader()->dwLength;
-    int good=0,bad=0;
     uint64_t dtsCeil= (timeIncrementUs*18)/10;
     std::vector<uint64_t> dtsList,ptsList;
     std::vector<int> validDtsList,validPtsList;

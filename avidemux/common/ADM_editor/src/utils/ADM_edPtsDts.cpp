@@ -35,7 +35,6 @@ static bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *de
 */
 bool ADM_verifyDts(vidHeader *hdr,uint64_t timeIncrementUs)
 {
-        int nbMissing=0;
         aviInfo info;
         hdr->getVideoInfo(&info);
         uint32_t nbFrames=0;
@@ -556,10 +555,7 @@ bool setDtsFromPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     *delay=0;
     int last=0;
     int nbFrames;
-    int nbBframe=0;
-    int maxBframe=0;
     uint32_t flags;
-    int nbB=0;
     uint64_t pts,dts;
 
     ADM_info("computing dts...\n");
@@ -577,19 +573,15 @@ bool setDtsFromPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
         }
         if(flags & AVI_B_FRAME)
         {
-                
-                nbB++;
                 dts=pts;
                 hdr->setPtsDts(i,pts,dts);
                 continue;
         }
    
         uint64_t oldPts,oldDts;
-        uint64_t fwdPts,fwdDts;
           hdr->getPtsDts(last,&oldPts,&oldDts);
           dts=oldPts;
           hdr->setPtsDts(i,pts,dts);
-        nbBframe=0;
         last=i;
     }
     return 1;
@@ -602,7 +594,7 @@ bool setDtsFromPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
 bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
 {
     aviInfo info;
-    uint64_t offset,pts,dts;
+    uint64_t pts,dts;
     uint32_t nbFrames;
     uint64_t myDelay=0;
     *delay=0;
@@ -655,7 +647,7 @@ bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
                     {
                         double deltaTime=dts-backDts;
                         deltaTime=deltaTime/(deltaFrame);
-                        if(deltaTime>41700 & deltaTime<41800)
+                        if(deltaTime>41700 && deltaTime<41800)
                         {
                             for(int j=backIndex+1;j<i;j++)
                             {

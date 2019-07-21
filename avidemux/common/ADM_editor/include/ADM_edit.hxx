@@ -177,9 +177,7 @@ protected:
                     bool        checkSamplingFrequency(ADM_audioStreamTrack *trk); // detect implicit SBR in AAC
 
 //****************************** Audio **********************************
-                    void        deleteAllVideos(void );
                     uint8_t     getMagic(const char *name,uint32_t *magic);
-                    uint32_t    searchForwardSeg(uint32_t startframe);
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
@@ -224,7 +222,6 @@ virtual                         ~ADM_Composer();
 					int 		saveImageJpg(const char *filename);
                     int         saveImagePng(const char *filename);
                     uint8_t 	cleanup( void);
-                    bool        isMultiSeg( void);
 /************************************* Markers *****************************/
 private:
                     uint64_t    markerAPts,markerBPts;
