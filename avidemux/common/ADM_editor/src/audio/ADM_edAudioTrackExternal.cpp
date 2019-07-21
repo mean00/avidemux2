@@ -231,8 +231,6 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
 bool         ADM_edAudioTrackExternal::getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
 {
 uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
-uint32_t inSize;
-bool      drop=false;
 uint32_t outFrequency=getOutputFrequency();
 uint32_t outChannels=getOutputChannels();
 

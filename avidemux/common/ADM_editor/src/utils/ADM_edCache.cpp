@@ -81,8 +81,6 @@ void EditorCache::check()
 */
 ADMImage *EditorCache::getFreeImage(void)
 {
-    uint32_t min=0;
-    uint64_t  delta=0;
     int found=-1;
     check();
     // next!
