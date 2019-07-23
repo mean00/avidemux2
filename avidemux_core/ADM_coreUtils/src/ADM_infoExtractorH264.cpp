@@ -657,7 +657,7 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
                 *flags = AVI_KEY_FRAME;
                 if(!getNalType(head+1,head+length,flags,sps,&p,recovery))
                     return 0;
-                if(*flags != AVI_KEY_FRAME)
+                if(sps && *flags != AVI_KEY_FRAME)
                     ADM_warning("Mismatched frame (flags: %d) in IDR NAL unit!\n",*flags);
                 *flags = AVI_KEY_FRAME; // FIXME
                 if(pocLsb)
