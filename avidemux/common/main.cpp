@@ -36,11 +36,11 @@
 
 void abortExitHandler(void);
 
-typedef struct flavors
+typedef struct
 {
         const char *qt4;
         const char *qt5;
-};
+}flavors;
 
 static flavors myFlavors={"qt4","qt5"};
 
