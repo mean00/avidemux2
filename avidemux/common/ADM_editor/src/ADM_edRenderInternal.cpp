@@ -207,10 +207,11 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
 */
 bool ADM_Composer::DecodeNextPicture(uint32_t ref)
 {
-  EditorCache   *cache;
-  ADMImage	*result;
-  bool drain=false;
-   _VIDEOS *vid=_segments.getRefVideo(ref);
+    EditorCache *cache;
+    ADMImage *result,*last;
+    bool drain=false;
+
+    _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
     ADM_assert(vid->decoder);
     if(vid->decoder->endOfStreamReached())
@@ -241,6 +242,9 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
             endOfStream=false;
         }
     }
+    // Be prepared for the case that the decoder doesn't output a picture
+    // but tells us to repeat the previous one.
+    last=cache->getLast();
     // Now uncompress it...
     result=cache->getFreeImage();
     if(!result)
@@ -265,7 +269,18 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
             endOfStream=true;
          return true; // Not an error in itself
     }
-        aprintf("Got image with PTS=%s\n",ADM_us2plain(result->Pts));
+    if(result->_noPicture)
+    {
+        uint32_t flags=result->flags;
+        if(last && !last->_noPicture)
+            result->duplicate(last);
+        else
+            result->blacken();
+        result->_noPicture=0;
+        result->flags=flags;
+        result->Pts=ADM_NO_PTS;
+    }else
+        aprintf("Got a fresh image with PTS=%s\n",ADM_us2plain(result->Pts));
      uint64_t pts=result->Pts;
      uint64_t old=vid->lastDecodedPts;
         if(pts==ADM_COMPRESSED_NO_PTS || vid->dontTrustBFramePts) // No PTS available ?
@@ -350,11 +365,12 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         return false;
     }
 
-    if(tmpImage->_noPicture && refOnly)
+    if(tmpImage->_noPicture)
     {
         printf("[decompressImage] NoPicture\n");
-        // Fill in with black
-        return false;
+        // No picture and no error from decoder means repeat the previous one
+        out->_noPicture=1;
+        return true;
     }
     aprintf("[::Decompress] in:%" PRIu32" out:%" PRIu32" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
     // If not quant and it is already YV12, we can stop here
