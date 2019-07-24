@@ -302,7 +302,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             }
             // We have SPS, does it match the one from the next segment?
             // Check at least the fields we use here.
-#define MATCH(x) if(match && (sps.x != sps2.x)) { ADM_warning("%s value does not match.\n",#x); match=false; }
+#define MATCH(x) if(sps.x != sps2.x) { ADM_warning("%s value does not match.\n",#x); match=false; }
             bool match=true;
             MATCH(hasPocInfo)
             MATCH(log2MaxFrameNum)
