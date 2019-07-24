@@ -4,7 +4,7 @@ SET(${ADM_LIB}_SRCS
 DIA_audioFilter.cpp   
 DIA_gototime.cpp    
 DIA_postproc.cpp  
-DIA_bitrateHisto.cpp  
+#DIA_bitrateHisto.cpp
 DIA_prefs.cpp     
 DIA_builtin.cpp       
 DIA_jobs_save.cpp
