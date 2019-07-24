@@ -55,7 +55,7 @@ AUDMAudioFilterFilmChange::~AUDMAudioFilterFilmChange()
 //___________________________________________
 uint32_t AUDMAudioFilterFilmChange::fill( uint32_t max, float * buffer,AUD_Status *status)
 {
-  uint32_t len,i,rendered;
+  uint32_t len;
   uint32_t chan=_wavHeader.channels;
   
   
