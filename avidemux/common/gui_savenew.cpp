@@ -435,17 +435,11 @@ bool admSaver::setupAudio()
 
 bool admSaver::save(void)
 {
-
-
     int ret=false;
-    
-    
+
     ADM_info("Audio starting time %s\n",ADM_us2plain(startAudioTime));
     ADM_info("[A_Save] Saving..\n");
-    
-    
-    EditableAudioTrack *ed=NULL;
-    
+
     if(!videoEncoderIndex) 
     {
         ADM_cutPointType chk=video_body->checkCutsAreOnIntra(startAudioTime,markerB);
@@ -519,7 +513,7 @@ bool admSaver::save(void)
         ret=muxer->save();
         muxer->close();
     }
-abort123:
+
     if(video)
         delete video;
     video=NULL;

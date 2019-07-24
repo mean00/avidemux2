@@ -147,7 +147,7 @@ void HandleAction_Save(Action action)
 #endif
     case ACT_SAVE_AUDIO:
     {
-        std:string ext;
+        std::string ext;
         if(false==audioSavePrepare(&ext))
             break;
         if(ext.size())
@@ -226,7 +226,7 @@ int A_audioSave(const char *name)
 */
 static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double duration)
 {
-  uint32_t written, max;
+  uint32_t written;
   uint64_t dts;
   DIA_workingBase *work;
 #define ONE_STRIKE (64*1024)
@@ -248,7 +248,6 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
 
   work=createWorking(QT_TRANSLATE_NOOP("adm","Saving audio"));
 
-  uint64_t timeEnd,timeStart;
   uint32_t hold,len,sample;
   uint64_t tgt_sample,cur_sample;
 

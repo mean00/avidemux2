@@ -142,9 +142,6 @@ bool getScriptName(int action, int base,getName name,const char *ext,string &out
 }
 void HandleAction (Action action)
 {
-  uint32_t nf = 0;
-  uint32_t old;
-
   admScopedMutex autolock(&singleThread); // make sure only one thread at a time calls this
   
   ADM_warning("************ %s **************\n",getActionName(action));
@@ -920,6 +917,7 @@ int A_openVideo (const char *name)
 
     {
         int i;
+#if 0
         FILE *fd = NULL;
         char magic[4];
 
@@ -927,7 +925,6 @@ int A_openVideo (const char *name)
          ** by video_body->addFile (name);
          */
         //#warning FIXME
-#if 0
         if ((fd = ADM_fopen(longname, "rb")))
         {
             if (fread(magic, 4, 1, fd) == 4)
@@ -1102,8 +1099,6 @@ int A_appendVideo (const char *name)
 
 void ReSync (void)
 {
-  uint8_t isaviaud;
-
   // update audio stream
   // If we were on avi , mark it...
   GUI_setAllFrameAndTime ();
@@ -1764,13 +1759,14 @@ void GUI_avsProxy(void)
 
 void GUI_showCurrentFrameHex(void)
 {
+#if 0
  uint8_t *buffer;
  uint32_t fullLen,flags;
  char sType[5];
  char sSize[15];
  ADMCompressedImage image;
  uint8_t seq;
-#if 0
+
  if (!avifileinfo) return;
 
  buffer=new uint8_t [avifileinfo->width*avifileinfo->height*3];
@@ -1804,6 +1800,7 @@ void GUI_showCurrentFrameHex(void)
 #define DUMP_SIZE 30
 void GUI_showSize(void)
 {
+#if 0
 uint8_t *buffer;
  uint32_t fullLen,flags;
  ADMCompressedImage image;
@@ -1811,7 +1808,7 @@ uint8_t *buffer;
  char                text[DUMP_SIZE][100];
 
  if (!avifileinfo) return;
-#if 0
+
  buffer=new uint8_t [avifileinfo->width*avifileinfo->height*3];
  image.data=buffer;
     for(int i=0;i<DUMP_SIZE;i++)
