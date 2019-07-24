@@ -89,19 +89,14 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
 {
 
 
-    uint32_t scanned = 0, ch = 0;
+    uint32_t scanned = 0;
     AUD_Status status;
     _ratio = 0;
 
-    uint32_t percent=0;
-    uint32_t current=0,llength=0;
     float *max=new float[_wavHeader.channels];
     _previous->rewind();
     ADMDolbyContext::DolbySkip(1); 
     ADM_info("Seeking for maximum value, that can take a while\n");
-
-    llength=_length ;
-    
 
       for(int i=0;i<_wavHeader.channels;i++) max[i]=0;
       while (1)
@@ -175,7 +170,7 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
 */
 uint32_t AUDMAudioFilterNormalize::fill( uint32_t max, float * buffer,AUD_Status *status)
 {
-    uint32_t rd, i, j,rd2;
+    uint32_t rd, i;
 
     *status=AUD_OK;
     if(!_scanned) preprocess();

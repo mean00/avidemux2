@@ -78,8 +78,6 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
       _startTimeUs-=_shiftUs;
     }else
     {
-      double nbSample;
-      
       _shiftUs-=_startTimeUs;
       _startTimeUs=0;
       double dNbSample=_shiftUs;
