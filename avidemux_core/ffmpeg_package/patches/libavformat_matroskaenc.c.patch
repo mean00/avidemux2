@@ -1,5 +1,5 @@
---- libavformat/matroskaenc.c.orig	2017-10-15 17:59:38.000000000 +0200
-+++ libavformat/matroskaenc.c	2017-10-20 22:27:11.015317538 +0200
+--- libavformat/matroskaenc.c.orig	2019-07-08 19:45:30.000000000 +0200
++++ libavformat/matroskaenc.c	2019-07-25 00:44:53.173020711 +0200
 @@ -636,6 +636,8 @@
  
  static int put_xiph_codecpriv(AVFormatContext *s, AVIOContext *pb, AVCodecParameters *par)
@@ -39,7 +39,7 @@
  }
  
  static int put_wv_codecpriv(AVIOContext *pb, AVCodecParameters *par)
-@@ -1220,7 +1245,25 @@
+@@ -1222,7 +1247,25 @@
      put_ebml_uint (pb, MATROSKA_ID_TRACKUID,
                     mkv->is_dash ? mkv->dash_track_number : i + 1);
      put_ebml_uint (pb, MATROSKA_ID_TRACKFLAGLACING , 0);    // no lacing (yet)
