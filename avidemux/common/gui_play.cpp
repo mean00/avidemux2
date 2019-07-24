@@ -118,8 +118,6 @@ void GUI_PlayAvi(bool quit)
         return;
     }
 
-    uint32_t framelen,flags;
-    uint32_t max,err;
     uint64_t oldTimeFrame,newTimeFrame;
     aviInfo info;
     float oldZoom=admPreview::getCurrentZoom();
@@ -342,11 +340,9 @@ bool GUIPlayback::run(void)
                 delta=(int32_t)movieTime-(int32_t)systemTime;
             }
         }
-      }
+    }
     while (!stop_req);
-
-abort_play:
-        return true;
+    return true;
 };
 
 /**
@@ -456,13 +452,13 @@ bool  GUIPlayback::initializeAudio(void)
       }
       fill+=small_;
     }
-    AVDM_AudioPlay(wavbuf, fill);
     // Let audio latency sets in...
     ticktock.reset();
+    AVDM_AudioPlay(wavbuf, fill);
+    updateVu();
+#if 0
     uint32_t slice=(frequency * channels)/100; // 10 ms
     // pump data until latency is over
-    updateVu();
-    #if 0
     while(ticktock.getElapsedMS()<latency)
     {
         if(AVDM_getMsFullness()<AUDIO_PRELOAD)
@@ -477,8 +473,8 @@ bool  GUIPlayback::initializeAudio(void)
        ADM_usleep(10*1000);
        updateVu();
     }
-    #endif
     printf("[Playback] Latency is now %u\n",ticktock.getElapsedMS());
+#endif
     return true;
 }
 /**
