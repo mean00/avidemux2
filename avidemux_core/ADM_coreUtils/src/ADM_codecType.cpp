@@ -23,11 +23,7 @@
 */
 bool  isMpeg4Compatible (uint32_t fourcc)
 {
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{divx4=1; }
-
-  uint8_t divx4 = 0;
-
+#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) return true
   CHECK ("FMP4");
   CHECK ("fmp4");
   CHECK ("DIVX");
@@ -39,10 +35,7 @@ bool  isMpeg4Compatible (uint32_t fourcc)
   CHECK ("M4S2");
   CHECK ("3IV2");
   CHECK ("SEDG");
-
-  return divx4;
-
-#undef CHECK
+  return false;
 }
 #ifdef ADM_BIG_ENDIAN
 #define SWAP32(x) x=R32(x)
@@ -55,18 +48,13 @@ bool  isMpeg4Compatible (uint32_t fourcc)
 
 bool isMpeg12Compatible (uint32_t fourcc)
 {
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{mpeg=1; }
-
-  uint8_t mpeg = 0;
   CHECK ("MPEG");
   CHECK ("mpg1");
   CHECK ("mpg2");
   SWAP32 (fourcc);
   if (fourcc == 0x10000002 || fourcc==0x10000001) //Mplayer fourcc
-    mpeg = 1;
-  return mpeg;
-#undef CHECK
+    return true;
+  return false;
 }
 /**
     \fn isH264Compatible
@@ -74,20 +62,13 @@ bool isMpeg12Compatible (uint32_t fourcc)
 
 bool isH264Compatible (uint32_t fourcc)
 {
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-                                                {h264=1; }
-
-  uint8_t h264 = 0;
-
   CHECK ("X264");
   CHECK ("x264");
   CHECK ("h264");
   CHECK ("H264");
   CHECK ("AVC1");
   CHECK ("avc1");
-  return h264;
-
-#undef CHECK
+  return false;
 }
 
 /**
@@ -96,11 +77,6 @@ bool isH264Compatible (uint32_t fourcc)
 
 bool isH265Compatible (uint32_t fourcc)
 {
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-                                                {h265=1; }
-
-  uint8_t h265 = 0;
-
   CHECK ("X265");
   CHECK ("x265");
   CHECK ("h265");
@@ -109,9 +85,7 @@ bool isH265Compatible (uint32_t fourcc)
   CHECK ("hevc");
   CHECK ("HVC1");
   CHECK ("hvc1");
-  return h265;
-
-#undef CHECK
+  return false;
 }
 
 /**
@@ -120,11 +94,6 @@ bool isH265Compatible (uint32_t fourcc)
 
 bool isMSMpeg4Compatible (uint32_t fourcc)
 {
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{divx3=1; }
-
-  uint8_t divx3 = 0;
-
   CHECK ("MP43");
   CHECK ("mp43");
   CHECK ("div3");
@@ -132,27 +101,16 @@ bool isMSMpeg4Compatible (uint32_t fourcc)
   CHECK ("DIV4");
   CHECK ("div4");
   CHECK ("COL1");
-
-  return divx3;
-
-#undef CHECK
+  return false;
 }
 /**
     \fn isVC1Compatible
 */
 bool isVC1Compatible    (uint32_t fourcc)
 {
-
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{divx3=1; }
-
-  uint8_t divx3 = 0;
-
   CHECK ("VC1 ");
   CHECK ("WVC1");
-  return divx3;
-
-#undef CHECK
+  return false;
 }
 /**
     \fn isVP6Compatible
@@ -160,23 +118,12 @@ bool isVC1Compatible    (uint32_t fourcc)
 
 bool isVP6Compatible (uint32_t fourcc)
 {
-
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{divx3=1; }
-
-  uint8_t divx3 = 0;
-
   CHECK ("VP6F");
   CHECK ("VP6 ");
   CHECK ("VP61");
   CHECK ("VP62");
-
-  return divx3;
-
-#undef CHECK
+  return false;
 }
-
-
 
 /**
     \fn isVP9Compatible
@@ -184,18 +131,9 @@ bool isVP6Compatible (uint32_t fourcc)
 
 bool isVP9Compatible (uint32_t fourcc)
 {
-
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{vp9=1; }
-
-  uint8_t vp9 = 0;
-
   CHECK ("VP9 ");
   CHECK ("VP90");
-
-  return vp9;
-
-#undef CHECK
+  return false;
 }
 
 /**
@@ -204,19 +142,11 @@ bool isVP9Compatible (uint32_t fourcc)
 
 bool isDVCompatible (uint32_t fourcc)
 {
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{dv=1; }
-
-  uint8_t dv = 0;
-
   CHECK ("dvsd");
   CHECK ("DVSD");
   CHECK ("dvpp");
   CHECK ("CDVC");
   CHECK ("cdvc");
-
-  return dv;
-
-#undef CHECK
+  return false;
 }
 //EOF
