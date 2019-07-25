@@ -71,9 +71,10 @@ protected:
 H265Parser::H265Parser  (int len,uint8_t *data)
 {
     originalLength=len;
-    myLen=len+AV_INPUT_BUFFER_PADDING_SIZE;
+#define NAL_H265_CRA_NUT_LENGTH 10
+    myLen=len+AV_INPUT_BUFFER_PADDING_SIZE+NAL_H265_CRA_NUT_LENGTH;
     myData=new uint8_t[myLen];
-    memset(myData,0x2,myLen);
+    memset(myData,0,myLen);
     memcpy(myData,data,len);
     parser=NULL;
     ctx=NULL;
