@@ -32,7 +32,6 @@ extern int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsIn
 #include "fourcc.h"
 //#include "ADM_mp4.h"
 
-#define aprintf(...) {}
 #include "ADM_getbits.h"
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
@@ -48,8 +47,11 @@ extern int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsIn
 #define check(...) {}
 #endif
 
-static ADMCountdown msgRateLimiter(100);
-static ADMCountdown limiterReset(199);
+#if 0
+#define seiprintf ADM_info
+#else
+#define seiprintf(...) {}
+#endif
 
 /**
     \fn ADM_getH264SpsPpsFromExtraData
@@ -462,11 +464,9 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 */
 static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
-    static int count=0;
-    if(msgRateLimiter.done() && limiterReset.done())
-        count=0;
-    uint8_t *payloadBuffer=(uint8_t *)malloc(nalSize+16);
-    int     originalNalSize=nalSize+16;
+    int originalNalSize=nalSize+16;
+    uint8_t *payloadBuffer=(uint8_t *)malloc(originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
+    memset(payloadBuffer,0,originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
     uint8_t *payload=payloadBuffer;
     bool r=false;
     nalSize=ADM_unescapeH264(nalSize,org,payload);
@@ -477,67 +477,53 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
         return false;
     }
 
-#define RATE_LIMITED_WARNING(x) if(!count)\
-    { \
-        ADM_warning(#x"\n"); \
-        msgRateLimiter.reset(); \
-    } \
-    if(msgRateLimiter.done() && count) \
-    { \
-        ADM_warning(#x" (message repeated %d times)\n",count); \
-        msgRateLimiter.reset(); \
-        count=0; \
-    } \
-    count++; \
-    limiterReset.reset();
-
     uint8_t *tail=payload+nalSize;
     *recoveryLength=16;
     while( payload<tail)
     {
-                uint32_t sei_type=0,sei_size=0;
-                while(payload[0]==0xff)
-                {
-                        sei_type+=0xff;payload++;
-                        if(payload+2>=tail)
-                        {
-                            RATE_LIMITED_WARNING(Cannot decode SEI)
-                            goto abtSei;
-                        }
-                };
-                sei_type+=payload[0];payload++;
-                if(payload>=tail)
-                {
-                            RATE_LIMITED_WARNING(Cannot decode SEI)
-                            goto abtSei;
-                }
-                while(payload[0]==0xff)
-                {
-                    sei_size+=0xff;payload++;
-                    if(payload+1>=tail)
-                        {
-                            RATE_LIMITED_WARNING(Cannot decode SEI (2))
-                            goto abtSei;
-                        }
-                };
-                sei_size+=payload[0];payload++;
-                aprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
-                if(payload+sei_size>tail) break;
-                switch(sei_type) // Recovery point
-                {
-                       case 6:
-                        {
-                            getBits bits(sei_size,payload);
-                            payload+=sei_size;
-                            *recoveryLength=bits.getUEG();
-                            r=true;
-                            count=0;
-                            break;
-                        }
-                        default:
-                            payload+=sei_size;
-                            break;
-                }
+        uint32_t sei_type=0,sei_size=0;
+        while(payload[0]==0xff)
+        {
+            sei_type+=0xff;payload++;
+            {
+                seiprintf("Not enough data.\n");
+                goto abtSei;
+            }
+        }
+        sei_type+=payload[0];payload++;
+        if(payload>=tail)
+        {
+            seiprintf("No data left after decoding SEI type.\n");
+            goto abtSei;
+        }
+        while(payload[0]==0xff)
+        {
+            sei_size+=0xff;payload++;
+            if(payload+1>=tail)
+            {
+                seiprintf("Not enough data left after decoding SEI size.\n");
+                goto abtSei;
+            }
+        }
+        sei_size+=payload[0];payload++;
+        seiprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
+        if(payload+sei_size>tail) break;
+        switch(sei_type)
+        {
+            case 6: // Recovery point
+            {
+                getBits bits(sei_size,payload);
+                int distance=bits.getUEG();
+                seiprintf("Recovery distance: %d\n",distance);
+                *recoveryLength=distance;
+                r=true;
+                goto abtSei;
+                break;
+            }
+            default:
+                payload+=sei_size;
+                break;
+        }
     }
 abtSei:
     free(payloadBuffer);
@@ -552,7 +538,8 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
 {
     if(tail<=head)
         return false;
-    uint8_t *out=(uint8_t *)malloc(tail-head);
+    uint8_t *out=(uint8_t *)malloc(tail-head+AV_INPUT_BUFFER_PADDING_SIZE);
+    memset(out,0,tail-head+AV_INPUT_BUFFER_PADDING_SIZE);
     int size=ADM_unescapeH264(tail-head,head,out);
 
     getBits bits(size,out);
