@@ -365,7 +365,11 @@ uint64_t remain,begin,mx,last;
         ADM_assert(_off>=_head);
         ADM_assert(_off<=_tail);
 
-        if(_head>=_size-1) return 0;
+        if(_head>=_size-1)
+        {
+            memset(buffer,0,len);
+            return 0;
+        }
 
 // Check we do not go out of bound
         if(_off+len>=_size)
