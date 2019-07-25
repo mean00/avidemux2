@@ -185,18 +185,20 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     _context->bit_rate = info->byterate*8;
     _context->sample_fmt=AV_SAMPLE_FMT_FLT;
     _context->request_sample_fmt=AV_SAMPLE_FMT_FLT;
-    
+
     if(fourcc==WAV_OGG_VORBIS)
     {
         // Need to translate from adm to xiph
         int xiphLen=(int)l+(l/255)+4+5;
-        uint8_t *xiph=new uint8_t[xiphLen];
+        uint8_t *xiph=(uint8_t *)av_mallocz(xiphLen+AV_INPUT_BUFFER_PADDING_SIZE);
         xiphLen=ADMXiph::admExtraData2xiph(l,d,xiph);
         _context->extradata=xiph;
         _context->extradata_size=xiphLen;
     }else
     {
-        _context->extradata=(uint8_t *)d;
+        uint8_t *padded=(uint8_t *)av_mallocz(l+AV_INPUT_BUFFER_PADDING_SIZE);
+        memcpy(padded,d,l);
+        _context->extradata=padded;
         _context->extradata_size=(int)l;    
     }
 
