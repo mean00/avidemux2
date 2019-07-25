@@ -21,6 +21,11 @@
 
 
 #include "ADM_default.h"
+
+extern "C" {
+#include "libavcodec/avcodec.h"
+}
+
 #include <math.h>
 #include "ADM_getbits.h"
 #include "ADM_aacinfo.h"
@@ -73,7 +78,11 @@ bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info)
     {
         return false;
     }
-    getBits bits(size,data); // get a copy, needed to extract extra data
+    int paddedSize=size+AV_INPUT_BUFFER_PADDING_SIZE;
+    uint8_t *padded=new uint8_t[paddedSize];
+    memset(padded,0,paddedSize);
+    memcpy(padded,data,size);
+    getBits bits(size,padded); // get a copy, needed to extract extra data
     int audioObjectType=getAudioObjectType(&bits);
     int fq=getSamplingFrequency(&bits);
     int channelConfiguration=bits.get(4);
@@ -137,6 +146,9 @@ bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info)
             }
         }
     }
+
+    delete [] padded;
+    padded=NULL;
 
     if(!channelConfiguration)
     {
