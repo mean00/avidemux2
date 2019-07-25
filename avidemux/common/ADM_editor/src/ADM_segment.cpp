@@ -490,7 +490,7 @@ bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint
 {
     if(!frameTime && segments.size()) // pick the first one
     {
-        ADM_info("Frame time=0, taking first segment \n");
+        //ADM_info("Frame time=0, taking first segment \n");
         *seg=0;
         *segTime=0; // ??
         return true;
