@@ -18,6 +18,7 @@
 
 #include "ADM_mkv.h"
 #include "ADM_a52info.h"
+#include "ADM_eac3info.h"
 #include "ADM_dcainfo.h"
 
 #include "ADM_vidMisc.h"
@@ -45,6 +46,26 @@ mkvAccess::mkvAccess(const char *name,mkvTrak *track)
   _currentBlock=0;
   _currentLace=_maxLace=0;
   goToBlock(0);
+
+  /* Check that it is really EAC3 */
+  if(_track->wavHeader.encoding==WAV_EAC3)
+  {
+     if(getPacket(ac3Buffer, &len, 20000, &timecode))
+     {
+        uint32_t syncoff;
+        ADM_EAC3_INFO efo;
+        if(ADM_EAC3GetInfo(ac3Buffer, len, &syncoff, &efo, false))
+        {
+            track->wavHeader.channels=efo.channels;
+            track->wavHeader.frequency=efo.frequency;
+            track->wavHeader.byterate=efo.byterate;
+        }else
+        {
+            track->wavHeader.encoding=WAV_AC3;
+        }
+     }
+     goToBlock(0);
+  }
 
   /* In case of AC3, do not trust the header...*/
   if(_track->wavHeader.encoding==WAV_AC3)
