@@ -25,7 +25,6 @@ extern "C" {
 #include "fourcc.h"
 #include "ADM_audioXiphUtils.h"
 
-#define SCRATCH_PAD_SIZE (100*1000*2)
 #define ADMWA_BUF (4*1024*16) // 64 kB internal
 /**
  * \class ADM_AudiocoderLavcodec
@@ -41,10 +40,10 @@ protected:
                 ADM_outputFlavor        outputFlavor;
                 AVCodecContext          *_context;
                 AVFrame                 *_frame;
+                uint8_t                 *_paddedExtraData;
                 uint8_t    _buffer[ ADMWA_BUF];
                 uint32_t   _tail,_head;
                 uint32_t   _blockalign;
-                uint8_t scratchPad[SCRATCH_PAD_SIZE];
     uint32_t    channels;
     bool        decodeToS16(float **outptr,uint32_t *nbOut);
     bool        decodeToFloat(float **outptr,uint32_t *nbOut);
@@ -110,6 +109,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     ADM_info(" [ADM_AD_LAV] Using decoder for type 0x%x\n",info->encoding);
     ADM_info(" [ADM_AD_LAV] #of channels %d\n",info->channels);
     _tail=_head=0;
+    _paddedExtraData=NULL;
     channels=info->channels;
     _blockalign=0;
     _frame=av_frame_alloc();
@@ -191,17 +191,19 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     {
         // Need to translate from adm to xiph
         int xiphLen=(int)l+(l/255)+4+5;
-        uint8_t *xiph=(uint8_t *)av_mallocz(xiphLen+AV_INPUT_BUFFER_PADDING_SIZE);
+        uint8_t *xiph=new uint8_t[xiphLen+AV_INPUT_BUFFER_PADDING_SIZE];
+        memset(xiph,0,xiphLen+AV_INPUT_BUFFER_PADDING_SIZE);
         xiphLen=ADMXiph::admExtraData2xiph(l,d,xiph);
-        _context->extradata=xiph;
-        _context->extradata_size=xiphLen;
-    }else
+        _paddedExtraData=xiph;
+        l=xiphLen;
+    }else if(l)
     {
-        uint8_t *padded=(uint8_t *)av_mallocz(l+AV_INPUT_BUFFER_PADDING_SIZE);
-        memcpy(padded,d,l);
-        _context->extradata=padded;
-        _context->extradata_size=(int)l;    
+        _paddedExtraData=new uint8_t[l+AV_INPUT_BUFFER_PADDING_SIZE];
+        memset(_paddedExtraData,0,l+AV_INPUT_BUFFER_PADDING_SIZE);
+        memcpy(_paddedExtraData,d,l);
     }
+    _context->extradata=_paddedExtraData;
+    _context->extradata_size=l;
 
     if (!_blockalign) 
     {
@@ -280,11 +282,16 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     \fn dtor
 */
  ADM_AudiocoderLavcodec::~ADM_AudiocoderLavcodec()
- {
-        avcodec_close(_context);
-        av_free(_context);
-        _context=NULL;
-        av_frame_free(&_frame);
+{
+    avcodec_close(_context);
+    av_free(_context);
+    _context=NULL;
+    av_frame_free(&_frame);
+    if(_paddedExtraData)
+    {
+        delete [] _paddedExtraData;
+       _paddedExtraData=NULL;
+    }
 }
 /**
     \fn decodeToS16
