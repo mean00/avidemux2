@@ -24,10 +24,10 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
 {
     uint32_t of=0;
     *syncoff=0;
-    uint8_t *buf=(uint8_t *)av_mallocz(len+AV_INPUT_BUFFER_PADDING_SIZE);
-    ADM_assert(buf);
+    uint8_t *buf=new uint8_t[len+AV_INPUT_BUFFER_PADDING_SIZE];
+    memset(buf,0,len+AV_INPUT_BUFFER_PADDING_SIZE);
     memcpy(buf,data,len);
-#define CLEANUP free(buf); av_free(hdr); hdr=NULL;
+#define CLEANUP delete [] buf; buf=NULL; av_free(hdr); hdr=NULL;
     //	printf("\n Syncing on %d \n",len);
     // Search for startcode
     // 0x0b 0x77
@@ -36,23 +36,22 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
         if(len<7)
         {
             ADM_warning("Not enough info to find a52 syncword\n");
-            free(buf);
+            delete [] buf;
+            buf=NULL;
             return false;
         }
-        if( *buf!=0x0b || *(buf+1)!=0x77)
+        if(*(buf+of)!=0x0b || *(buf+of+1)!=0x77)
         {
             len--;
-            buf++;
             of++;
             continue;
         }
         AC3HeaderInfo *hdr=NULL;
         GetBitContext gb;
-        init_get_bits(&gb,buf,len*8);
+        init_get_bits(&gb,buf+of,len*8);
         if(avpriv_ac3_parse_header(&gb, &hdr))
         {
             len--;
-            buf++;
             of++;
             ADM_info("Sync failed... continuing\n");
             continue;
@@ -79,6 +78,7 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
         CLEANUP
         return true;
     }
-    free(buf);
+    delete [] buf;
+    buf=NULL;
     return true;
 }
