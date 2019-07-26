@@ -1648,7 +1648,11 @@ bool      UI_reset(void)
 */
 int UI_Init(int nargc, char **nargv)
 {
-        ADM_info("Starting QT4 GUI...\n");
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+    ADM_info("Starting Qt5 GUI...\n");
+#else
+    ADM_info("Starting Qt4 GUI...\n");
+#endif
     initTranslator();
 
     global_argc=nargc;
