@@ -84,7 +84,7 @@ DECLARE_VIDEO_FILTER(   changeFps,   // Class
 const char *changeFps::getConfiguration( void )
 {
 static char buf[100];
- snprintf(buf,99," Resample from %2.2f to %2.2f fps",
+ snprintf(buf,99," Change FPS from %2.2f to %2.2f fps",
         (double)configuration.oldFpsNum/configuration.oldFpsDen,
         (double)configuration.newFpsNum/configuration.newFpsDen);
  return buf;  
