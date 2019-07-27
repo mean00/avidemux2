@@ -37,6 +37,7 @@ HEADERS = \
 ../../../avidemux_core/ADM_core/include/ADM_byteBuffer.h \ 
 ../../../avidemux_core/ADM_core/include/ADM_crashdump_apple.h \ 
 ../../../avidemux_core/ADM_core/include/ADM_ptrQueue.h \ 
+../../../avidemux_core/ADM_core/include/ADM_crashdump_vs.h \ 
 ../../../avidemux_core/ADM_core/include/ADM_prettyPrint.h \ 
 ../../../avidemux_core/ADM_core/include/ADM_crashdump_unix.h \ 
 ../../../avidemux_core/ADM_core/include/ADM_queue.h \ 
@@ -234,6 +235,7 @@ HEADERS = \
 ../../../avidemux_core/ADM_coreUtils/include/prefs.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/ADM_codecType.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/ADM_coreCodecMapping.h \ 
+../../../avidemux_core/ADM_coreUtils/include/ADM_putbits.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/FFcodecContext_param.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/ADM_confCouple.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/ADM_paramList.h \ 
@@ -407,6 +409,7 @@ HEADERS = \
 ../../../avidemux_plugins/ADM_demuxers/NativeAvisynth/avs/cpuid.h \ 
 ../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.h \ 
 ../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_psAudioProbe.h \ 
+../../../avidemux_plugins/ADM_demuxers/VapourSynth/ADM_vsInternal.h \ 
 ../../../avidemux_plugins/ADM_demuxers/VapourSynth/ADM_vs.h \ 
 ../../../avidemux_plugins/ADM_demuxers/VapourSynth/qt4/vsProxy_qt4.h \ 
 ../../../avidemux_plugins/ADM_demuxers/VapourSynth/ADM_vsProxy.h \ 
@@ -842,8 +845,8 @@ SOURCES = \
 ../../../avidemux_core/ADM_coreVideoEncoder/ADM_hwAccelEncoder/ADM_coreLibVAEnc/src/ADM_coreLibVA_encodingContext.cpp \ 
 ../../../avidemux_core/ADM_coreVideoEncoder/include/FFcodecSettings_desc.cpp.h \ 
 ../../../avidemux_core/ffmpeg_package/patches/libavformat_mpegenc.c.patch \ 
-../../../avidemux_core/ffmpeg_package/patches/libavcodec_h263dec.c.patch \ 
 ../../../avidemux_core/ffmpeg_package/patches/libavcodec_hevc_parser.c.patch \ 
+../../../avidemux_core/ffmpeg_package/patches/attic/libavcodec_h263dec.c.patch \ 
 ../../../avidemux_core/ffmpeg_package/patches/libavcodec_mpegvideo_enc.c.patch \ 
 ../../../avidemux_core/ffmpeg_package/patches/libavcodec_mpeg12enc.c.patch \ 
 ../../../avidemux_core/ffmpeg_package/patches/libavcodec_nvenc.c.patch \ 
@@ -956,6 +959,7 @@ SOURCES = \
 ../../../avidemux_core/ADM_coreUtils/src/ADM_getbits.cpp \ 
 ../../../avidemux_core/ADM_coreUtils/src/prefs2.conf \ 
 ../../../avidemux_core/ADM_coreUtils/src/ADM_codecType.cpp \ 
+../../../avidemux_core/ADM_coreUtils/src/ADM_putbits.cpp \ 
 ../../../avidemux_core/ADM_coreUtils/src/ADM_infoExtractorVC1.cpp \ 
 ../../../avidemux_core/ADM_coreUtils/src/Source/JSONAllocator.cpp \ 
 ../../../avidemux_core/ADM_coreUtils/src/Source/JSONNode_Mutex.cpp \ 
@@ -1368,9 +1372,10 @@ SOURCES = \
 ../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilterparam_json.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/swapUV/swapUV.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/yadif/yadif_desc.cpp \ 
-../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif_asm.c \ 
+../../../avidemux_plugins/ADM_videoFilters6/yadif/yadif_json.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/yadif/yadif.conf \ 
+../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif_body.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/admIvtc/admIvtc_desc.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/admIvtc/ADM_admIvtc_util.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/admIvtc/admIvtc_json.cpp \ 
@@ -1445,7 +1450,6 @@ SOURCES = \
 ../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_libass/ass_font.c \ 
 ../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_libass/ass_utils.c \ 
 ../../../avidemux_plugins/ADM_videoFilters6/ass/ass_ssa_desc.cpp \ 
-../../../avidemux_plugins/ADM_videoFilters6/ass/ass_ssa_json.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/ass/ass_ssa.conf \ 
 ../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/changeFps/confChangeFps_desc.cpp \ 
