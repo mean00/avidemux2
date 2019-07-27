@@ -1009,7 +1009,7 @@ Premeu Esc per cancel·lar</translation>
     </message>
     <message>
         <source>Show </source>
-        <translation>Mostra</translation>
+        <translation>Mostra </translation>
     </message>
     <message>
         <source>&amp;Rename</source>
@@ -1150,7 +1150,7 @@ El voleu suprimir igualment?</translation>
     </message>
     <message>
         <source>%1 KB</source>
-        <translation type="vanished">%1 KB</translation>
+        <translation type="vanished">%1 kB</translation>
     </message>
     <message>
         <source>%1 bytes</source>
@@ -1246,11 +1246,11 @@ El voleu suprimir igualment?</translation>
     </message>
     <message>
         <source>Extra Light</source>
-        <translation>Extra fi</translation>
+        <translation>Extrafi</translation>
     </message>
     <message>
         <source>Extra Bold</source>
-        <translation>Extra negreta</translation>
+        <translation>Extranegreta</translation>
     </message>
     <message>
         <source>Extra</source>
@@ -1989,15 +1989,11 @@ El voleu suprimir igualment?</translation>
     </message>
     <message>
         <source>missing section data. This is not a library.</source>
-        <translation>manca la secció «data». Això no es cap biblioteca.</translation>
+        <translation>manca la secció «data». Això no és cap biblioteca.</translation>
     </message>
     <message>
         <source>Plugin verification data mismatch in &apos;%1&apos;</source>
         <translation type="vanished">Error de verificació de dades del connector a «%1»</translation>
-    </message>
-    <message>
-        <source>Out of memory while loading plugin &apos;%1&apos;.</source>
-        <translation>Sense memòria en carregar el connector «%1».</translation>
     </message>
     <message>
         <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
@@ -2824,7 +2820,7 @@ applications where you wish to use such applications in combination with softwar
     <name>QPSQLResult</name>
     <message>
         <source>Query results lost - probably discarded on executing another SQL query.</source>
-        <translation>S&apos;han perdut els resultats de la consulta - probablement s&apos;han descartat en executar una altra consulta SQL.</translation>
+        <translation>S&apos;han perdut els resultats de la consulta - probablement descartats en executar una altra consulta SQL.</translation>
     </message>
     <message>
         <source>Unable to create query</source>
@@ -2832,7 +2828,7 @@ applications where you wish to use such applications in combination with softwar
     </message>
     <message>
         <source>Unable to get result</source>
-        <translation>No s&apos;ha pogut obtenir el resultat</translation>
+        <translation>No s&apos;ha pogut obtenir els resultats</translation>
     </message>
     <message>
         <source>Unable to send query</source>
@@ -3632,11 +3628,11 @@ applications where you wish to use such applications in combination with softwar
     </message>
     <message>
         <source>Invalid Pages Definition</source>
-        <translation>Definició no vàlida de pàgina</translation>
+        <translation>Definició no vàlida de les pàgines</translation>
     </message>
     <message>
         <source>%1 does not follow the correct syntax. Please use &apos;,&apos; to separate ranges and pages, &apos;-&apos; to define ranges and make sure ranges do not intersect with each other.</source>
-        <translation>%1 no segueix la sintaxi correcta. Useu «,» per separarar intervals i pàgines, «-» per definir intervals i assegureu-vos que els intervals no intersequen entre ells.</translation>
+        <translation>%1 no segueix la sintaxi correcta. Useu «,» per separar intervals i pàgines, «-» per definir intervals, i assegureu-vos que els intervals no se sobreposen entre ells.</translation>
     </message>
     <message>
         <source>Print to File (PDF)</source>
@@ -3786,7 +3782,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>There are conflicts in some advanced options. Do you want to fix them?</source>
-        <translation>Hi ha conflictes a diverses opcions avançades. Voleu arreglar-los?</translation>
+        <translation>Hi ha conflictes a les opcions avançades. Els voleu solucionar?</translation>
     </message>
 </context>
 <context>
@@ -3805,7 +3801,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>There are conflicts in some options. Please fix them.</source>
-        <translation>Hi ha conflictes a diverses opcions. Esmeneu-los.</translation>
+        <translation>Hi ha conflictes a diverses opcions. Si us plau, solucioneu-los.</translation>
     </message>
 </context>
 <context>
@@ -3900,7 +3896,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>Specify pages or ranges separated by commas. Ranges are specified by two numbers separated by a hyphen. E.g: 3,5-7,9 prints pages 3, 5, 6, 7 and 9.</source>
-        <translation>Especifique les pàgines o intervals separats per comes. Els intervals s&apos;especifiquen amb dos nombres separats per un guió. P. ex: 3,5-7,9 imprimeix les pàgines 3, 5, 6, 7 i 9.</translation>
+        <translation>Especifiqueu les pàgines o intervals separats per comes. Els intervals s&apos;especifiquen amb dos nombres separats per un guió. P. ex: 3,5-7,9 imprimeix les pàgines 3, 5, 6, 7 i 9.</translation>
     </message>
 </context>
 <context>
@@ -4209,7 +4205,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>PCRE does not support \L, \l, \N{name}, \U, or \u</source>
-        <translation>PCRE not accepta \L, \l, \N{nom}, \U, ni \u</translation>
+        <translation>PCRE no accepta \L, \l, \N{nom}, \U, ni \u</translation>
     </message>
     <message>
         <source>number after (?C is &gt; 255</source>
@@ -4317,7 +4313,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>different names for subpatterns of the same number are not allowed</source>
-        <translation>no es permeten noms diferents per subpatrons dels mateix nombre</translation>
+        <translation>no es permeten noms diferents per subpatrons del mateix nombre</translation>
     </message>
     <message>
         <source>(*MARK) must have an argument</source>
@@ -4409,7 +4405,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>unrecognised compile-time option bit(s)</source>
-        <translation>bit/s no reconegut/s d&apos;opció en temps de compilació </translation>
+        <translation>bit/s no reconegut/s d&apos;opció en temps de compilació</translation>
     </message>
     <message>
         <source>missing ) after (?# comment</source>
@@ -4437,7 +4433,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>this version of PCRE2 does not have Unicode support</source>
-        <translation>aquesta versió del PCRE2 no implementa el Unicode</translation>
+        <translation>aquesta versió del PCRE2 no implementa l&apos;Unicode</translation>
     </message>
     <message>
         <source>parentheses are too deeply nested (stack check)</source>
@@ -4445,7 +4441,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>character code point value in \x{} or \o{} is too large</source>
-        <translation>el valor del codi de caràcter de coma en \x{} o \o{} es massa gran</translation>
+        <translation>el valor del codi de caràcter de coma en \x{} o \o{} és massa gran</translation>
     </message>
     <message>
         <source>\C is not allowed in a lookbehind assertion</source>
@@ -4513,11 +4509,11 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>character code point value in \u.... sequence is too large</source>
-        <translation>el valor del codi de caràcter de coma a una seqüència en \u.... es massa gran</translation>
+        <translation>el valor del codi de caràcter de coma a una seqüència en \u.... és massa gran</translation>
     </message>
     <message>
         <source>digits missing in \x{} or \o{}</source>
-        <translation>manquen els dígits a\x{} o \o{} </translation>
+        <translation>manquen els dígits a\x{} o \o{}</translation>
     </message>
     <message>
         <source>syntax error in (?(VERSION condition</source>
@@ -4713,11 +4709,11 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>too much recursion for DFA matching</source>
-        <translation>hi ha massa recursió per a la coincidència DFA</translation>
+        <translation>hi ha massa recursivitat per a la coincidència DFA</translation>
     </message>
     <message>
         <source>backreference condition or recursion test is not supported for DFA matching</source>
-        <translation>la condició de referència cap enrere o la prova de recursió no estan admeses a la coincidència DFA</translation>
+        <translation>la condició de referència cap enrere o la prova de recursivitat no estan admeses a la coincidència DFA</translation>
     </message>
     <message>
         <source>function is not supported for DFA matching</source>
@@ -4765,7 +4761,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>nested recursion at the same subject position</source>
-        <translation>recursió imbricada en la mateixa posició del subjecte</translation>
+        <translation>recursivitat imbricada a la mateixa posició del subjecte</translation>
     </message>
     <message>
         <source>recursion limit exceeded</source>
@@ -5141,7 +5137,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>ScrollLock</source>
-        <translation>BloqDespl</translation>
+        <translation>Bloq Despl</translation>
     </message>
     <message>
         <source>Menu</source>
@@ -5181,7 +5177,7 @@ Desactiveu una de les dues opcions.</translation>
     </message>
     <message>
         <source>Bass Boost</source>
-        <translation>Potencia de greus</translation>
+        <translation>Potència de greus</translation>
     </message>
     <message>
         <source>Bass Up</source>
@@ -6508,11 +6504,11 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <source>Error while setting the minimal protocol version</source>
-        <translation>Error en determinar la versió mínim del protocol</translation>
+        <translation>Error en definir la versió mínima del protocol</translation>
     </message>
     <message>
         <source>Error while setting the maximum protocol version</source>
-        <translation>Error en determinar la versió màxima del protocol</translation>
+        <translation>Error en definir la versió màxima del protocol</translation>
     </message>
     <message>
         <source>Invalid or empty cipher list (%1)</source>
@@ -6548,11 +6544,11 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <source>Expecting QByteArray for %1</source>
-        <translation>S&apos;esperava un QByteArray per %1</translation>
+        <translation>S&apos;esperava QByteArray per %1</translation>
     </message>
     <message>
         <source>An error occurred attempting to set %1 to %2</source>
-        <translation></translation>
+        <translation>S&apos;ha produït un error en intentar establir %1 a %2</translation>
     </message>
     <message>
         <source>Wrong value for %1 (%2)</source>
@@ -6874,6 +6870,10 @@ Role of an accessible object</extracomment>
     <message>
         <source>Image depth not valid</source>
         <translation>Profunditat de la imatge no vàlida</translation>
+    </message>
+    <message>
+        <source>Image size exceeds limit</source>
+        <translation>La mida de la imatge excedeix el límit</translation>
     </message>
     <message>
         <source>Could not seek to image read footer</source>

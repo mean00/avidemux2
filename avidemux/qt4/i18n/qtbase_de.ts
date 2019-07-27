@@ -6443,7 +6443,7 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <source>The root CA certificate is marked to reject the specified purpose</source>
-        <translation>Das oberste Zertifikat der Zertifizierungsstelle weist diesen Fall auf Grund einer speziellen Kennzeichnung zurück</translation>
+        <translation>Das oberste Zertifikat der Zertifizierungsstelle weist diesen Fall aufgrund einer speziellen Kennzeichnung zurück</translation>
     </message>
     <message>
         <source>The current candidate issuer certificate was rejected because its subject name did not match the issuer name of the current certificate</source>
