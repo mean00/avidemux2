@@ -3902,22 +3902,22 @@ This message will not be displayed again.</source>
     <message>
         <location line="+141"/>
         <source>Source Fps:</source>
-        <translation>Исходная частота кадров:</translation>
+        <translation>Режим исходной частоты кадров:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Source frame rate:</source>
-        <translation>Исходная частота кадров:</translation>
+        <translation>Исходная частота в ручном режиме:</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Destination Fps:</source>
-        <translation>Целевая частота кадров:</translation>
+        <translation>Режим целевой частоты кадров:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Destination frame rate:</source>
-        <translation>Целевая частота кадров:</translation>
+        <translation>Целевая частота в ручном режиме:</translation>
     </message>
     <message>
         <location line="+8"/>
