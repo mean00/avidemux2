@@ -1183,12 +1183,12 @@ Drop timing informations ?</source>
     <message>
         <location line="+2"/>
         <source>Caching of decoded pictures</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwischenspeicher für dekodierte Frames</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Cache size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Größe des _Zwischenspeichers:</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -1837,20 +1837,23 @@ Drop timing informations ?</source>
         <location line="+209"/>
         <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The cut points of the pasted selection may result in playback interruption due to reversed display order of frames if saved in copy mode.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieses Video verwendet Nicht-IDR-Frames für den Direktzugriff. Der Zähler für die Anzeigereihenfolge der Frames (POC) wird an solchen Keyframes nicht zurückgesetzt. Die Wiedergabe des im Kopiermodus gespeicherten editierten Videos kann durch den unerwartet zurückgehenden Zähler an Schnittpunkten der eingefügten Auswahl stocken.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Codec or codec settings across a cut point of the pasted video do not match.
 Playback of the video saved in copy mode may stop at this point.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec oder Codec-Parameter an den Schnittpunkten der eingefügten Auswahl sind nicht identisch. Die Wiedergabe des im Kopiermodus gespeicherten editierten Videos kann an diesen Stellen abbrechen.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Cut points of the pasted video could not be checked. This indicates an issue with a source video, the state of editing or a bug in the program. Please check the application log file or console output for details.
 Try anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Schnittpunkte der eingefügten Auswahl konnten nicht überprüft werden. Dies weist auf ein Problem mit dem Video, mit der Editierung oder auf einen Fehler im Programm hin. Für weitere Details sehen Sie bitte die Log-Datei bzw. die Konsolenausgabe des Programms ein.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+60"/>
@@ -1860,62 +1863,69 @@ Try anyway?</source>
     <message>
         <location line="+48"/>
         <source>It is impossible to cut out the entire video. Please recheck the position of markers A and B.</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Ausschneiden des gesamten Videos ist nicht zulässig. Bitte die Position der Markierungen A und B überprüfen.</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Deleting</source>
-        <translation type="unfinished"></translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>It is impossible to delete the entire video. Please recheck the position of markers A and B.</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Löschen des gesamten Videos ist nicht zulässig. Bitte die Position der Markierungen A und B überprüfen.</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>The end point of the cut is not on a keyframe.
 Video saved in copy mode will be corrupted at this point.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Der Endpunkt der Auswahl zum Ausschneiden befindet sich nicht an einem Keyframe. Das im Kopiermodus gespeicherte Video wird an diesem Punkt gestört sein.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>The end point of the deletion is not on a keyframe.
 Video saved in copy mode will be corrupted at this point.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Der Endpunkt der Auswahl zum Löschen befindet sich nicht an einem Keyframe. Das im Kopiermodus gespeicherte Video wird an diesem Punkt gestört sein.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The chosen start and end points of the cut may result in playback interruption due to reversed display order of frames if saved in copy mode.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieses Video verwendet Nicht-IDR-Frames für den Direktzugriff. Der Zähler für die Anzeigereihenfolge der Frames (POC) wird an solchen Keyframes nicht zurückgesetzt. Die gewählten Schnittpunkte führen zum unerwartet zurückgehenden Zähler und möglicherweise zur stockenden Wiedergabe des im Kopiermodus gespeicherten editierten Videos an dieser Stelle.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The chosen start and end points of the deletion may result in playback interruption due to reversed display order of frames if saved in copy mode.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieses Video verwendet Nicht-IDR-Frames für den Direktzugriff. Der Zähler für die Anzeigereihenfolge der Frames (POC) wird an solchen Keyframes nicht zurückgesetzt. Die gewählten Schnittpunkte führen zum unerwartet zurückgehenden Zähler und möglicherweise zur stockenden Wiedergabe des im Kopiermodus gespeicherten editierten Videos an dieser Stelle.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Codec or codec settings across the cut do not match. Playback of the video saved in copy mode may stop at this point.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec oder Codec-Parameter an den Schnittpunkten nach dem Ausschneiden sind nicht identisch. Die Wiedergabe des im Kopiermodus gespeicherten editierten Videos kann an diesen Stellen abbrechen.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Codec or codec settings across the deletion do not match. Playback of the video saved in copy mode may stop at this point.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec oder Codec-Parameter an den Schnittpunkten nach dem Löschen sind nicht identisch. Die Wiedergabe des im Kopiermodus gespeicherten editierten Videos kann an diesen Stellen abbrechen.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Cut points could not be checked.
 This indicates an issue with a source video, the state of editing or a bug in the program. Please check the application log file or console output for details.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Schnittpunkte konnten nicht überprüft werden. Dies weist auf ein Problem mit dem Video, mit der Editierung oder auf einen Fehler im Programm hin. Für weitere Details sehen Sie bitte die Log-Datei bzw. die Konsolenausgabe des Programms ein.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+103"/>
