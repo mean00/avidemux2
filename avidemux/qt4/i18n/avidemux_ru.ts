@@ -1504,7 +1504,7 @@ Drop timing informations ?</source>
         <location line="+209"/>
         <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The cut points of the pasted selection may result in playback interruption due to reversed display order of frames if saved in copy mode.
 Proceed anyway?</source>
-        <translation>Это видео использует кадры прямого доступа без мгновенного обновления декодирования (IDR). Счётчик очерёдности показа изображений (POC) на таких ключевых кадрах не сбрасывается. Образовавшиеся точки разреза вставки при сохранении видео в режиме копирования могут привести к задержке воспроизведения из-за нарушенного порядка показа изображений.
+        <translation>Это видео использует кадры прямого доступа без мгновенного обновления декодирования (non-IDR). Счётчик очерёдности показа изображений (POC) на таких ключевых кадрах не сбрасывается. Образовавшиеся точки разреза вставки при сохранении видео в режиме копирования могут привести к задержке воспроизведения из-за нарушенного порядка показа изображений.
 Всё равно продолжить?</translation>
     </message>
     <message>
@@ -1530,44 +1530,46 @@ Try anyway?</source>
     <message>
         <location line="+48"/>
         <source>It is impossible to cut out the entire video. Please recheck the position of markers A and B.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вырезать видео целиком недопустимо. Пожалуйста, проверьте положение меток A и B.</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Deleting</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Удаление</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>It is impossible to delete the entire video. Please recheck the position of markers A and B.</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить видео целиком недопустимо. Пожалуйста, проверьте порожение меток A и B.</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>The end point of the cut is not on a keyframe.
 Video saved in copy mode will be corrupted at this point.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Конечная точка вырезки находится не на ключевом кадре. При сохранении видео в режиме копирования на этом месте будут повреждения.
+Всё равно продолжить?</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>The end point of the deletion is not on a keyframe.
 Video saved in copy mode will be corrupted at this point.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Конечная точка удаления находится не на ключевом кадре. При сохранении видео в режиме копирования на этом месте будут повреждения.
+Всё равно продолжить?</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The chosen start and end points of the cut may result in playback interruption due to reversed display order of frames if saved in copy mode.
 Proceed anyway?</source>
-        <translation>Это видео использует кадры прямого доступа без мгновенного обновления декодирования (IDR). Счётчик очерёдности показа изображений (POC) на таких ключевых кадрах не сбрасывается. Выбранные конечные точки выреза при сохранении видео в режиме копирования могут привести к задержке воспроизведения из-за нарушенного порядка показа изображений.
+        <translation>Это видео использует кадры прямого доступа без мгновенного обновления декодирования (non-IDR). Счётчик очерёдности показа изображений (POC) на таких ключевых кадрах не сбрасывается. Выбранные конечные точки выреза при сохранении видео в режиме копирования могут привести к задержке воспроизведения из-за нарушенного порядка показа изображений.
 Всё равно продолжить?</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The chosen start and end points of the deletion may result in playback interruption due to reversed display order of frames if saved in copy mode.
 Proceed anyway?</source>
-        <translation>Это видео использует кадры прямого доступа без мгновенного обновления декодирования (IDR). Счётчик очерёдности показа изображений (POC) на таких ключевых кадрах не сбрасывается. Выбранные конечные точки удаления при сохранении видео в режиме копирования могут привести к задержке воспроизведения из-за нарушенного порядка показа изображений.
+        <translation>Это видео использует кадры прямого доступа без мгновенного обновления декодирования (non-IDR). Счётчик очерёдности показа изображений (POC) на таких ключевых кадрах не сбрасывается. Выбранные конечные точки удаления при сохранении видео в режиме копирования могут привести к задержке воспроизведения из-за нарушенного порядка показа изображений.
 Всё равно продолжить?</translation>
     </message>
     <message>
@@ -2580,7 +2582,8 @@ It is needed to create PSP compatible video.</source>
         <source>The cut points of the pasted video are not on keyframes.
 Video saved in copy mode will be corrupted at these points.
 Proceed anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Точки разреза вставленного видео находятся не на ключевых кадрах. Видео, сохранённое в режиме копирования, будет на этих местах повреждено.
+Всё равно продолжить?</translation>
     </message>
     <message>
         <location line="+124"/>
@@ -2807,10 +2810,8 @@ Warning, the settings must be close.</source>
         <source>The video is in copy mode but the cut points are not on keyframes.
 The video will be saved but there will be corruption at cut point(s).
 Do you want to continue anyway ?</source>
-        <translation type="unfinished">Установлен режим копирования для видео, но точки обрезки находятся не на ключевых кадрах.
-Видео будет сохранено, но в месте точек обрезки возможны повреждения.
-Вы все равно хотите продолжить?
-        </translation>
+        <translation>Установлен режим копирования для видео, но точки разреза находятся не на ключевых кадрах. Видео будет сохранено, но на точках разреза будут повреждения.
+Всё равно продолжить?</translation>
     </message>
     <message>
         <location line="-253"/>
@@ -2829,19 +2830,22 @@ Do you want to continue anyway ?</source>
         <location line="-28"/>
         <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The choice of cut points may result in playback interruption due to reversed display order of frames if saved in copy mode.
 Do you want to continue anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Это видео использует кадры прямого доступа без мгновенного обновления декодирования (non-IDR). Счётчик очерёдности показа изображений (POC) на таких ключевых кадрах не сбрасывается. Выбранные точки разреза при сохранении видео в режиме копирования могут привести к задержке воспроизведения из-за нарушенного порядка показа изображений.
+Всё равно продолжить?</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Codec or codec settings across a cut point do not match. Playback of the video saved in copy mode may stop at this point.
 Do you want to continue anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Кодек или параметры кодирования на точках разреза не совпадают. Воспроизведение видео, сохранённого в режиме копирования, может на этих точках обрываться.
+Всё равно продолжить?</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Cut points could not be checked. This indicates an issue with a source video, the state of editing or a bug in the program. Please check the application log file or console output for details.
 Try anyway?</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось проверить точки разреза. Это указывает на проблему либо с исходным видео, либо с шагами редактирования, либо является проявлением ошибки в программе. За деталями обратитесь, пожалуйста, к журнальному файлу приложения или к консольным сообщениям.
+Всё равно продолжить?</translation>
     </message>
     <message>
         <location line="+42"/>
