@@ -945,7 +945,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                             // Put some defaults
                             ADIO.encoding=1234;
                             ADIO.frequency=44100;
-                            ADIO.byterate=128000>>3;
+                            ADIO.byterate=AUDIO_BYTERATE_UNSET;
                             ADIO.channels=2;
                             ADIO.bitspersample=16;
 
@@ -1036,12 +1036,10 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                 case MKFCCR('a','c','-','3'):
                                 case MKFCCR('s','a','c','3'):
                                     audioCodec(AC3);
-                                    ADIO.byterate=128000>>3;
 
                                     break;
                                 case MKFCCR('e','c','-','3'):
                                     audioCodec(EAC3);
-                                    ADIO.byterate=128000>>3;
 
                                     break;
                                 case MKFCCR('l','p','c','m'):
@@ -1080,7 +1078,6 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     break;
                                 case MKFCCR('.','m','p','3'): //.mp3
                                     audioCodec(MP3);
-                                    ADIO.byterate=128000>>3;
 
                                     break;
                                 case MKFCCR('r','a','w',' '):
@@ -1305,9 +1302,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
             if(r)
             {
                 nbo=_tracks[nbAudioTrack].nbIndex;
-                if(nbo)
-                    _tracks[nbAudioTrack].nbIndex=nbo;
-                else
+                if(!nbo)
                     _tracks[nbAudioTrack].nbIndex=info.nbSz;
                 ADM_info("Indexed audio, nb blocks:%u (final)\n",_tracks[nbAudioTrack].nbIndex);
             }else

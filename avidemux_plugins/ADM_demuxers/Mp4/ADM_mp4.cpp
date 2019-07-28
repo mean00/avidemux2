@@ -89,7 +89,7 @@ MP4Track::MP4Track(void)
     id=0;
     memset(&_rdWav,0,sizeof(_rdWav));
     delay=0;
-
+    totalDataSize=0;
 }
 MP4Track::~MP4Track()
 {

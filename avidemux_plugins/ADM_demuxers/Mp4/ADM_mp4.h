@@ -75,6 +75,7 @@ public:
     uint32_t    extraDataSize;
     uint8_t     *extraData;
     WAVHeader   _rdWav;
+    uint64_t    totalDataSize;
     int64_t     delay; // in movie scale units
     int64_t     startOffset; // media time in track scale units
     std::vector <mp4Fragment>     fragments;
@@ -122,6 +123,7 @@ public:
 #define _3GP_MAX_TRACKS 8
 #define VDEO _tracks[0]
 #define ADIO _tracks[nbAudioTrack+1]._rdWav
+#define AUDIO_BYTERATE_UNSET 0xFFFFFFFF
 /**
  * 
  */
