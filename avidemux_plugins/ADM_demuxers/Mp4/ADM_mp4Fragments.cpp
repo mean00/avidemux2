@@ -217,7 +217,8 @@ bool MP4Header::indexVideoFragments(int trackNo)
         MP4Index *dex=trk->index+i;
         dex->offset=fragList[i].offset;
         dex->size=fragList[i].size;
-        
+        trk->totalDataSize+=fragList[i].size;
+
         double dts=sum;
         double ctts=fragList[i].composition;
 
@@ -262,6 +263,7 @@ bool MP4Header::indexAudioFragments(int trackNo)
         MP4Index *dex=trk->index+i;
         dex->offset=fragList[i].offset;
         dex->size=fragList[i].size;
+        trk->totalDataSize+=fragList[i].size;
         
         double dts=sum;
         dts/=trk->scale;
