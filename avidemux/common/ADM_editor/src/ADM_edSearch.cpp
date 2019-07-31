@@ -21,7 +21,11 @@ using std::string;
 #include "ADM_edit.hxx"
 #include "ADM_vidMisc.h"
 
+#if 1
 #define pivotPrintf(...) {}
+#else
+#define pivotPrintf printf
+#endif
 
 /**
     \fn getNKFramePTS
@@ -355,7 +359,7 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
             frameNumber = curFrame;
             return true;
         }
-        if(pts >= rangeBegin && pts > last && pts < refTime)
+        if(pts >= rangeBegin && (last? pts > last : true) && pts < refTime)
         {
             candidate = curFrame;
             last = pts;
