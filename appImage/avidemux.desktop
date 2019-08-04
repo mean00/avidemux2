@@ -2,3 +2,4 @@
 Name=AVIDEMUX
 Exec=avidemux3_portable
 Icon=avidemux.png
+Type=Application
