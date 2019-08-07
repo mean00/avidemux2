@@ -150,7 +150,7 @@ FF_SIMPLE_DECLARE(decoderFFhuff,)
 FF_SIMPLE_DECLARE(decoderFF_ffhuff,)
 FF_SIMPLE_DECLARE(decoderFFficv, bool uncompress(ADMCompressedImage *in, ADMImage *out);)
 FF_SIMPLE_DECLARE(decoderFFPng,)
-FF_SIMPLE_DECLARE(decoderFFMpeg4,
+FF_SIMPLE_DECLARE(decoderFFMpeg4, bool uncompress(ADMCompressedImage *in, ADMImage *out);
                                 // mpeg4 can have B-frame
                                 virtual bool bFramePossible (void)   {  return 1;   })
 FF_SIMPLE_DECLARE(decoderFFMpeg12,

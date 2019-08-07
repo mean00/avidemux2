@@ -575,6 +575,13 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   WRAP_Open (AV_CODEC_ID_MPEG4);
   
 }
+bool decoderFFMpeg4::uncompress(ADMCompressedImage *in, ADMImage *out)
+{
+    // For pseudo startcode
+    if(!_drain && in->dataLength && in->dataLength < ADM_COMPRESSED_MAX_DATA_LENGTH - 2)
+        memset(in->data+in->dataLength,0,2);
+    return decoderFF::uncompress(in,out);
+}
 //************************************
 decoderFFDV::decoderFFDV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
