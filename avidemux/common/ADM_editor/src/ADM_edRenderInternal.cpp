@@ -370,6 +370,8 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         printf("[decompressImage] NoPicture\n");
         // No picture and no error from decoder means repeat the previous one
         out->_noPicture=1;
+        // Copy flags as set by decoder
+        out->flags=tmpImage->flags;
         return true;
     }
     aprintf("[::Decompress] in:%" PRIu32" out:%" PRIu32" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
