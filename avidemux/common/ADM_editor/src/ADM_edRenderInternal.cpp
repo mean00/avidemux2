@@ -269,40 +269,39 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
             endOfStream=true;
          return true; // Not an error in itself
     }
-    if(result->_noPicture)
+    if(result->_noPicture) // Handle N-VOP in mpeg4
     {
-        uint32_t flags=result->flags;
         if(last && !last->_noPicture)
             result->duplicate(last);
-        else
+        else if(result->isWrittable())
             result->blacken();
         result->_noPicture=0;
-        result->flags=flags;
-        result->Pts=ADM_NO_PTS;
-    }else
-        aprintf("Got a fresh image with PTS=%s\n",ADM_us2plain(result->Pts));
-     uint64_t pts=result->Pts;
-     uint64_t old=vid->lastDecodedPts;
-        if(pts==ADM_COMPRESSED_NO_PTS || vid->dontTrustBFramePts) // No PTS available ?
+        result->flags=AVI_P_FRAME;
+        result->Pts=img.demuxerPts;
+    }
+    // else aprintf("Got a fresh image with PTS=%s\n",ADM_us2plain(result->Pts));
+    uint64_t pts=result->Pts;
+    uint64_t old=vid->lastDecodedPts;
+    if(pts==ADM_COMPRESSED_NO_PTS || vid->dontTrustBFramePts) // No PTS available ?
+    {
+        aprintf("[Editor] No PTS, guessing value\n");
+        aprintf("Image Pts : %s\n",ADM_us2plain(img.demuxerPts));
+        aprintf("Image Dts : %s\n",ADM_us2plain(img.demuxerDts));
+        vid->lastDecodedPts+=vid->timeIncrementInUs;
+        if(img.demuxerDts!=ADM_NO_PTS && (vid->dontTrustBFramePts || vid->_aviheader->providePts()==false))
         {
-                aprintf("[Editor] No PTS, guessing value\n");
-                aprintf("Image Pts : %s\n",ADM_us2plain(img.demuxerPts));
-                aprintf("Image Dts : %s\n",ADM_us2plain(img.demuxerDts));
-                vid->lastDecodedPts+=vid->timeIncrementInUs;
-                if(img.demuxerDts!=ADM_NO_PTS && (vid->dontTrustBFramePts || vid->_aviheader->providePts()==false))
-                {
-                    if(img.demuxerDts>vid->lastDecodedPts)
-                    {
-                        aprintf("Dts > Guessed Pts, cranking pts\n");
-                        vid->lastDecodedPts=img.demuxerDts;
-                    }
-                }
-                result->Pts=vid->lastDecodedPts;
-        }else
-           {
-                aprintf("[Editor] got PTS\n");
-                vid->lastDecodedPts=pts;
+            if(img.demuxerDts>vid->lastDecodedPts)
+            {
+                aprintf("Dts > Guessed Pts, cranking pts\n");
+                vid->lastDecodedPts=img.demuxerDts;
             }
+        }
+        result->Pts=vid->lastDecodedPts;
+    }else
+    {
+        aprintf("[Editor] got PTS\n");
+        vid->lastDecodedPts=pts;
+    }
     aprintf(">>Decoded frame %" PRIu32" with pts=%" PRId64" us, %" PRId64" ms, ptsdelta=%" PRId64" ms \n",
         frame,
         vid->lastDecodedPts,
@@ -370,8 +369,6 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         printf("[decompressImage] NoPicture\n");
         // No picture and no error from decoder means repeat the previous one
         out->_noPicture=1;
-        // Copy flags as set by decoder
-        out->flags=tmpImage->flags;
         return true;
     }
     aprintf("[::Decompress] in:%" PRIu32" out:%" PRIu32" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
