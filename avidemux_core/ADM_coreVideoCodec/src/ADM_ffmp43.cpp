@@ -421,9 +421,8 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
         if ((in->dataLength <= MPEG4_EMPTY_FRAME_THRESHOLD && codecId == AV_CODEC_ID_MPEG4) ||
             (in->dataLength <= FRAPS_EMPTY_FRAME_THRESHOLD && codecId == AV_CODEC_ID_MPEG4))
         {
-            printf ("[lavc] Probably pseudo black frame...\n");
+            printf ("[lavc] Probably placeholder frame (data length: %u)\n",in->dataLength);
             out->_Qp = 2;
-            out->flags = in->flags;
             out->Pts=ADM_NO_PTS; // not sure
             out->_noPicture = 1;
             return true;
