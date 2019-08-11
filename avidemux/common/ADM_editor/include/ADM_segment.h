@@ -79,6 +79,7 @@ public:
       uint64_t timeIncrementInUs; /// in case the video has no PTS, time increment (us)
 
       uint64_t firstFramePts; /// Pts of firstFrame
+      uint32_t decoderDelay; /// Nb of frames passed to decoder before the first picture pops out
 
     _VIDEOS()
     {
@@ -95,6 +96,7 @@ public:
         lastReadPts=0;
         timeIncrementInUs=0;
         firstFramePts=0;
+        decoderDelay=0;
     }
 };
 
