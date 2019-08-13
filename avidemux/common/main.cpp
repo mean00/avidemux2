@@ -33,6 +33,7 @@
 #include "audio_out.h"
 #include "ADM_assert.h"
 #include "adm_main.h"
+#include "ADM_render/GUI_render.h"
 
 void abortExitHandler(void);
 
@@ -427,25 +428,25 @@ void ADM_ExitCleanup( void )
 */
 bool setPrefsDefault(void)
 {
-#ifdef __MINGW32__
+#ifdef _WIN32
         prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("Win32"));
-    #ifdef USE_OPENGL
-        prefs->set(VIDEODEVICE,(uint32_t)5); // QTGL
+    #ifdef USE_DXVA2
+        prefs->set(VIDEODEVICE,(uint32_t)RENDER_DXVA2);
     #endif
 #endif
 #ifdef __linux__
-            prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("PulseAudioS"));
+        prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("PulseAudioS"));
     #ifdef USE_VDPAU
-            prefs->set(VIDEODEVICE,(uint32_t)4); // VDPAU
-    #else
-            prefs->set(VIDEODEVICE,(uint32_t)1); // XV
+        prefs->set(VIDEODEVICE,(uint32_t)RENDER_VDPAU);
+    #else if defined(USE_XV)
+        prefs->set(VIDEODEVICE,(uint32_t)RENDER_XV);
     #endif
 #endif
 #ifdef __APPLE__
         prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("CoreAudio"));
     #ifdef USE_OPENGL
         prefs->set(FEATURES_ENABLE_OPENGL,true);
-        prefs->set(VIDEODEVICE,(uint32_t)5); // QTGL
+        prefs->set(VIDEODEVICE,(uint32_t)RENDER_QTOPENGL);
     #endif
 #endif
     return true;
