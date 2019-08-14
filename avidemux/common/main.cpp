@@ -438,7 +438,7 @@ bool setPrefsDefault(void)
         prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("PulseAudioS"));
     #ifdef USE_VDPAU
         prefs->set(VIDEODEVICE,(uint32_t)RENDER_VDPAU);
-    #else if defined(USE_XV)
+    #elif defined(USE_XV)
         prefs->set(VIDEODEVICE,(uint32_t)RENDER_XV);
     #endif
 #endif
