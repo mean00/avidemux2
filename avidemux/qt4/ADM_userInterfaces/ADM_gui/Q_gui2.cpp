@@ -1686,7 +1686,9 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
     mw->ui.frame_video->setAttribute(Qt::WA_OpaquePaintEvent);
 
     UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
+#if QT_VERSION < QT_VERSION_CHECK(5,11,0) // not sure about the version
     mw->ui.frame_video->setAcceptDrops(true); // needed for drag and drop to work on windows
+#endif
     admPreview::setMainDimension(0,0,ZOOM_1_1);
 
     UI_updateRecentMenu();
