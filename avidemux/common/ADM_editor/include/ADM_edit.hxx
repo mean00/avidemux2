@@ -63,6 +63,19 @@ typedef enum
         ENV_EDITOR_LAST=   0x8000
 }_ENV_EDITOR_FLAGS;
 
+/**
+    \enum ADM_cutPointType
+    \brief keep track of potential problems when in copy mode
+*/
+typedef enum
+{
+    ADM_EDITOR_CUT_POINT_IDR,
+    ADM_EDITOR_CUT_POINT_NON_IDR,
+    ADM_EDITOR_CUT_POINT_RECOVERY,
+    ADM_EDITOR_CUT_POINT_MISMATCH,
+    ADM_EDITOR_CUT_POINT_UNCHECKED
+}ADM_cutPointType;
+
 class ADM_edAudioTrackFromVideo;
 class ADM_edAudioTrack;
 
@@ -116,7 +129,7 @@ class ADM_Composer : public IEditor
                     void        recalibrateSigned(int64_t *time,_SEGMENT *seg);
                     bool        updateImageTiming(_SEGMENT *seg,ADMImage *image);
                     // Need to get the image just before targetPts
-                    bool        decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image);
+                    uint8_t     decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image);
                     bool        getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &frameNumber);
 
 protected:
@@ -149,7 +162,7 @@ protected:
                     uint32_t    _currentSegment;    // Current video segment
                     int64_t     _nextFrameDts;      // COPYMODE Used in copy mode to fill the missing timestamp
                                                     // Warning, it is actually the DTS of the NEXT frame to fetch
-                    uint8_t     compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3]; // Buffer used for decoding
+                    uint8_t     compBuffer[ADM_COMPRESSED_MAX_DATA_LENGTH]; // Buffer used for decoding
                     bool        endOfStream; // The decoder has been flushed and no more compressed images from demuxer
 //****************************** Audio **********************************
                     // _audiooffset points to the offset / the total segment
@@ -164,9 +177,7 @@ protected:
                     bool        checkSamplingFrequency(ADM_audioStreamTrack *trk); // detect implicit SBR in AAC
 
 //****************************** Audio **********************************
-                    void        deleteAllVideos(void );
                     uint8_t     getMagic(const char *name,uint32_t *magic);
-                    uint32_t    searchForwardSeg(uint32_t startframe);
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
@@ -211,7 +222,6 @@ virtual                         ~ADM_Composer();
 					int 		saveImageJpg(const char *filename);
                     int         saveImagePng(const char *filename);
                     uint8_t 	cleanup( void);
-                    bool        isMultiSeg( void);
 /************************************* Markers *****************************/
 private:
                     uint64_t    markerAPts,markerBPts;
@@ -233,7 +243,7 @@ typedef std::vector <undoQueueElem> ListOfUndoQueueElements;
 protected:
                     ListOfUndoQueueElements undoQueue;
                     static const uint8_t maxUndoSteps=50;
-                    uint32_t    _cnt; // track the nb of performed undo steps for redo
+                    uint32_t    _undo_counter; // track the nb of performed undo steps for redo
 public:
                     bool        addToUndoQueue(void);
                     bool        undo(void);
@@ -249,18 +259,20 @@ public:
                     bool        goToTimeVideo(uint64_t time);
                     void		getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser);
                     bool        goToIntraTimeVideo(uint64_t time);
-                    bool        nextPicture(ADMImage *image,bool dontcross=false);
+                    bool        nextPicture(ADMImage *image, int flags=0); // 1 = don't cross segment, 2 = don't skip to next keyframe
                     bool        samePicture(ADMImage *image);
                     bool        previousPicture(ADMImage *image);
                     bool        rewind(void);
 // Used for stream copy
                     bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);
-                    bool        getCompressedPicture(uint64_t delay,bool sanitizeDts,ADMCompressedImage *img);     //COPYMODE
+                    bool        getCompressedPicture(uint64_t start,uint64_t delay,bool sanitizeDts,ADMCompressedImage *img); //COPYMODE
                     // Use only for debug purpose !!!
                     bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);
-                    bool        checkCutsAreOnIntra(void);
-                    bool        checkCutIsOnIntra(uint64_t time);
+                    ADM_cutPointType checkCutsAreOnIntra(void);
+                    ADM_cutPointType checkCutsAreOnIntra(uint64_t start,uint64_t end);
+                    ADM_cutPointType checkCutIsOnIntra(uint64_t time);
 private:
+                    ADM_cutPointType checkSegmentStartsOnIntra(uint32_t seg);
                     uint64_t    totalExtraDelay;
                     int64_t     desyncScore;
 public:

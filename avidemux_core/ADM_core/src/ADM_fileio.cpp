@@ -54,15 +54,7 @@ size_t ADM_fwrite(const void *ptr, size_t size, size_t n, FILE *sstream)
 {
 	return fwrite(ptr,size,n,sstream);
 }
-/**
-    \fn ADM_eraseFile
-*/
-uint8_t ADM_eraseFile(const char *file)
-{
-    if(!unlink(file))
-        return true;
-    return false;
-}
+
 /**
     \fn ADM_fileSize
     \brief return filesize, -1 on error

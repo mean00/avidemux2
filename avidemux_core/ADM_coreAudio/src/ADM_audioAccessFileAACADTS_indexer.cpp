@@ -13,7 +13,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#define AAC_SEEK_PERIOD (10000000LL) // 10 sec
+#define AAC_SEEK_PERIOD (200000LL) // 0.2 sec
 
 /**
  * \class adtsIndexer
@@ -23,9 +23,10 @@ class adtsIndexer
 {
 public:
     
-            adtsIndexer(FILE *fd,int fq,int chan)
+            adtsIndexer(FILE *fd,int off,int fq,int chan)
             {
                 f=fd;
+                startOffset=off;
                 this->fq=fq;
                 this->channels=chan;
                 payload=0;
@@ -42,6 +43,7 @@ public:
     
 protected:
     FILE *f;
+    int  startOffset;
     int  fq;
     int  channels;
     int  payload;
@@ -55,9 +57,7 @@ protected:
  */
 bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
 {
-#define CHUNK_SIZE (5*1024)
-   uint8_t  buffer[CHUNK_SIZE];
-   int      fileOffset=0;;
+   uint8_t  buffer[ADTS_MAX_AAC_FRAME_SIZE];
    uint64_t lastPoint=0;
    int      len;
    
@@ -67,23 +67,24 @@ bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
    int offset;
 
    start.dts=0;
-   start.position=0;
+   start.position=startOffset;
    seekPoints.push_back(start); // initial start
    
    while(1)
    {
        ADM_adts2aac::ADTS_STATE s=aac.getAACFrame(&len,buffer,&offset);
+       offset+=startOffset;
        switch(s)
        {
            case ADM_adts2aac::ADTS_OK:
             {
                uint64_t currentPoint=clk.getTimeUs();
-               if( (currentPoint-lastPoint)>AAC_SEEK_PERIOD) // one seek point every 10 s
+               if( (currentPoint-lastPoint)>AAC_SEEK_PERIOD) // one seek point every 200 ms
                {
                    start.dts=currentPoint;
                    start.position=offset;
                    seekPoints.push_back(start);
-                   lastPoint=currentPoint;   
+                   lastPoint=currentPoint;
                }
                 payload+=len;
                 clk.advanceBySample(1024);
@@ -100,7 +101,7 @@ bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED:
            {
               
-               int n=fread(buffer,1,CHUNK_SIZE,f);
+               int n=fread(buffer,1,ADTS_MAX_AAC_FRAME_SIZE,f);
                if(n<=0)
                    return true;
                if(!aac.addData(n,buffer))

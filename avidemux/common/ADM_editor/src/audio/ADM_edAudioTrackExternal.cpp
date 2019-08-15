@@ -71,7 +71,36 @@ ADM_edAudioTrackExternal::~ADM_edAudioTrackExternal()
 bool ADM_edAudioTrackExternal::create(uint32_t extraLen, uint8_t *extraData)
 {
     ADM_info("Initializing audio track from external %s \n",sourceFile.c_str());
-    codec=getAudioCodec(wavHeader.encoding,&wavHeader,extraLen,extraData);;
+    codec=getAudioCodec(wavHeader.encoding,&wavHeader,extraLen,extraData);
+    if(!codec || codec->isDummy())
+    {
+        ADM_warning("No decoder for %s.\n",getStrFromAudioCodec(wavHeader.encoding));
+        return false;
+    }
+    // Check AAC for SBR
+    if(wavHeader.encoding==WAV_AAC)
+    {
+        uint32_t inlen,max=ADM_EDITOR_PACKET_BUFFER_SIZE;
+        notStackAllocator inbuf(max);
+        uint8_t *in=inbuf.data;
+        uint64_t dts;
+        if(false==internalAccess->getPacket(in,&inlen,max,&dts))
+        {
+            ADM_warning("Cannot get packets.\n");
+            return false;
+        }
+
+        notStackAllocator outbuf(wavHeader.frequency*wavHeader.channels*sizeof(float));
+        float *out=(float *)outbuf.data;
+        uint32_t nbOut,fq=0;
+        if(codec->run(in,inlen,out,&nbOut))
+            fq=codec->getOutputFrequency();
+        if(fq && fq!=wavHeader.frequency)
+        {
+            ADM_warning("Updating sampling frequency from %u to %u\n",wavHeader.frequency,fq);
+            wavHeader.frequency=fq;
+        }
+    }
     size=internalAccess->getLength();
     internalAudioStream=ADM_audioCreateStream(&wavHeader,internalAccess,true);
     return true;
@@ -143,9 +172,14 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
         ADM_warning("Cannot identify external audio track\n");
         return NULL;
     }
-    if(!hdr.channels)
+    if(!hdr.channels || hdr.channels > MAX_CHANNELS)
     {
-        ADM_error("Got zero channels, the audio file must have been misidentified!\n");
+        ADM_error("Number of channels out of bounds, the audio file must have been misidentified!\n");
+        return NULL;
+    }
+    if(hdr.frequency < MIN_SAMPLING_RATE || hdr.frequency > MAX_SAMPLING_RATE)
+    {
+        ADM_error("Sampling frequency out of bounds, the audio file must have been misidentified!\n");
         return NULL;
     }
     // Try to create an access for the file...
@@ -197,8 +231,6 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
 bool         ADM_edAudioTrackExternal::getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
 {
 uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
-uint32_t inSize;
-bool      drop=false;
 uint32_t outFrequency=getOutputFrequency();
 uint32_t outChannels=getOutputChannels();
 

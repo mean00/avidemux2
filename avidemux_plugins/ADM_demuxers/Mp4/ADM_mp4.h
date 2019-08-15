@@ -75,6 +75,7 @@ public:
     uint32_t    extraDataSize;
     uint8_t     *extraData;
     WAVHeader   _rdWav;
+    uint64_t    totalDataSize;
     int64_t     delay; // in movie scale units
     int64_t     startOffset; // media time in track scale units
     std::vector <mp4Fragment>     fragments;
@@ -122,6 +123,7 @@ public:
 #define _3GP_MAX_TRACKS 8
 #define VDEO _tracks[0]
 #define ADIO _tracks[nbAudioTrack+1]._rdWav
+#define AUDIO_BYTERATE_UNSET 0xFFFFFFFF
 /**
  * 
  */
@@ -193,9 +195,9 @@ protected:
           int                           lookupIndex(int desc)          ;
           bool                          parseTrun(int trackNo,adm_atom &son,const mp4TrafInfo &info);
           uint8_t                       decodeVideoAtom(void *ztom);
-          uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h);
+          uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t *trackId);
           uint8_t                       parseEdts(void *ztom,uint32_t trackType);
-          uint8_t                       parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint32_t h,uint32_t trackScale);
+          uint8_t                       parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale);
           uint8_t                       decodeEsds(void *ztom,uint32_t trackType);
           uint8_t                       updateCtts(MPsampleinfo *info );
           bool                          refineFps(void);

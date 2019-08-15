@@ -13,9 +13,11 @@ struct  {
 	bool audiobar_uses_master;
 	uint32_t threading_lavc;
 	uint32_t cpu_caps;
+	uint32_t cache_size;
 	bool mpeg_no_limit;
-	bool alternate_mp3_tag;
 	bool dxva2;
+	bool dxva2_override_blacklist_version;
+	bool dxva2_override_blacklist_profile;
 	bool vdpau;
 	bool xvba;
 	bool libva;

@@ -3,7 +3,7 @@
 #pragma once
 typedef struct {
 uint32_t muxerType;
-bool useAlternateMp3Tag;
+uint32_t optimize;
 bool forceAspectRatio;
 uint32_t aspectRatio;
 uint32_t rotation;

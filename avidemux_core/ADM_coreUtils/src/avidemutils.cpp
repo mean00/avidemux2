@@ -510,6 +510,8 @@ bool ADM_probeSequencedFile(const char *fileName)
             break;
         }
         threshold<<=1;
+        if(i==1)
+            tolerance<<=3; // 8 MiB starting with 1 GiB fragment size
     }
     if(!success)
         return false;

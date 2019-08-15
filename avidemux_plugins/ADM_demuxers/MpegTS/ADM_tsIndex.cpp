@@ -43,8 +43,7 @@ static const uint32_t FPS[16]={
 */
 uint8_t   tsIndexer(const char *file)
 {
-bool r;
-
+    uint8_t r;
     ADM_TS_TRACK *tracks;
     uint32_t nbTracks;
     listOfTsAudioTracks audioTrack;
@@ -55,7 +54,7 @@ bool r;
             if(TS_guessContent(file,&nbTracks,&tracks)==false) 
             {
                 printf("[Ts Indexer] Brute force scan failed\n");
-                return false;
+                return 0;
             }
     }
     ADM_assert(tracks);
@@ -102,7 +101,7 @@ bool r;
     if(!dx)
     {
         ADM_warning("Unsupported video codec \n");
-        r=false;
+        r=0;
     }else
     {
         r=dx->run( file,&(tracks[0]));

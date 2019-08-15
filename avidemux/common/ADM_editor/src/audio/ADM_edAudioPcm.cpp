@@ -88,7 +88,6 @@ uint32_t ADM_edAudioTrackFromVideo::getOutputChannels(void)
 bool ADM_edAudioTrackFromVideo::getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
 {
 uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
-uint32_t inSize;
 bool drop=false;
 bool checkDts;
 static bool fail=false;

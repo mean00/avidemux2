@@ -39,21 +39,14 @@
 #include "ADM_render/GUI_render.h"
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_preview.h"
-#include "ADM_imageResizer.h"
 #include "DIA_coreToolkit.h"
 
 extern uint8_t              UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
-static void                 previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);
+//static void                 previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);
 static ADM_PREVIEW_MODE     previewMode=ADM_PREVIEW_NONE;
 
 static bool                 defered_display=false;  /* When 1, it means we are in playback mode */
 static float                zoom=ZOOM_1_1;
-static ADMImage             *resized=NULL;
-static ADMImageResizer      *resizer=NULL;
-
-
-extern bool GUI_GoToTime(uint64_t time); // hack, might be a circular dep
-
 
 /*************************************/
 ADMImage *admPreview::rdrImage=NULL; /* Unprocessed image */
@@ -215,7 +208,6 @@ void admPreview::stop( void )
 /**
       \fn previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty)
       \brief Blit "from" to "to" at position startx,starty
-*/
 
 void previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty)
 {
@@ -230,9 +222,6 @@ void previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty)
 
 void admPreview::displayNow(void)
 {
-
-    uint32_t fl,len;	
-    
     switch(previewMode)
     {
       case ADM_PREVIEW_NONE:

@@ -67,6 +67,8 @@ public:
       
 
       uint32_t _nb_video_frames; /// Really needed ?
+      uint32_t paramCacheSize;
+      uint8_t *paramCache; /// Reuse decoded SPS and friends
       EditorCache *_videoCache; /// Decoded video cache
 
       /* Timeing info */
@@ -77,6 +79,7 @@ public:
       uint64_t timeIncrementInUs; /// in case the video has no PTS, time increment (us)
 
       uint64_t firstFramePts; /// Pts of firstFrame
+      uint32_t decoderDelay; /// Nb of frames passed to decoder before the first picture pops out
 
     _VIDEOS()
     {
@@ -85,14 +88,16 @@ public:
         decoder=NULL;
         color=NULL;
         _nb_video_frames=0;
+        paramCacheSize=0;
+        paramCache=NULL;
         _videoCache=NULL;
         lastSentFrame=0;
         lastDecodedPts=0;
         lastReadPts=0;
         timeIncrementInUs=0;
         firstFramePts=0;
+        decoderDelay=0;
     }
-
 };
 
 /**

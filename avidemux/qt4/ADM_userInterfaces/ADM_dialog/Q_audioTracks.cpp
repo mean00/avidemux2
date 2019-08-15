@@ -73,8 +73,6 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
                             this,SLOT(languagesClicked(int)));   
  * */          
         }
-        // set the parent and show the window
-        qtRegisterDialog(window);
 };
 /**
  * \fn setLanguageFromPool
@@ -172,14 +170,22 @@ void audioTrackQt4::inputChanged(int signal)
         _pool->addInternalTrack(ext);
         for(int i=0;i<NB_MENU;i++)
         {
-            int forced=-1;
-            if(i==dex) forced=poolIndex;
+            bool checked=window->enabled[i]->isChecked();
+            int forced=window->inputs[i]->currentIndex();
+            if(i==dex)
+            {
+                checked=true;
+                forced=poolIndex;
+            }
             setupMenu(i,forced);
+            // restore enabled / disabled state
+            window->enabled[i]->blockSignals(true);
+            if(checked)
+                enable(i);
+            else
+                disable(i);
+            window->enabled[i]->blockSignals(false);
         }
-        // set enabled if needed
-          window->enabled[dex]->blockSignals(true);
-          enable(dex);
-          window->enabled[dex]->blockSignals(false);
         return;
 }
   
@@ -273,6 +279,7 @@ bool      audioTrackQt4::run(void)
 {
     ADM_info("Running QT4 audioTrack GUI\n");
     bool r=false;
+    qtRegisterDialog(window);
     again:
     if(window->exec()==QDialog::Accepted)
     {

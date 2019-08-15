@@ -85,53 +85,48 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     TS_PESpacket SEI_nal(0);
     while(keepRunning)
     {
-      int startCode=pkt->findStartCode();
+        int startCode=pkt->findStartCode();
 
-      if(!pkt->stillOk())
-      {
-          keepRunning=false;
-          continue;
-      }
-      if(startCode&0x80) continue; // Marker missing
-      startCode&=0x1f;
-      if(startCode!=NAL_SPS) 
-          continue;
+        if(!pkt->stillOk())
+        {
+            keepRunning=false;
+            continue;
+        }
+        if(startCode&0x80) continue; // Marker missing
+        startCode&=0x1f;
+        if(startCode!=NAL_SPS)
+            continue;
 
         // Got SPS!
-
-        uint32_t xA,xR;
         // Get info
         pkt->getInfo(&tmpInfo);
         // Read just enough...
+        SEI_nal.empty();
+        uint32_t code=0xffff+0xffff0000;
+        while(((code&0xffffff)!=1) && pkt->stillOk())
         {
-          SEI_nal.empty();
-          uint32_t code=0xffff+0xffff0000;
-          while(((code&0xffffff)!=1) && pkt->stillOk())
-          {
-                  uint8_t r=pkt->readi8();
-                  code=(code<<8)+r;
-                  SEI_nal.pushByte(r);
-          }
-          if(!pkt->stillOk()) break;;
-          pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
-          if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
-          {
+            uint8_t r=pkt->readi8();
+            code=(code<<8)+r;
+            SEI_nal.pushByte(r);
+        }
+        if(!pkt->stillOk()) break;
+        pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
+        if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-3,&spsInfo))
+        {
             ADM_info("[TsIndexer] Found video %" PRIu32"x%" PRIu32", fps=%" PRIu32"\n",video.w,video.h,video.fps);
             ADM_info("[TsIndexer] SPS says %" PRIu32"x%" PRIu32"\n",spsInfo.width,spsInfo.height);
             seq_found=1;
             video.w=spsInfo.width;
             video.h=spsInfo.height;
             video.fps=spsInfo.fps1000;
-            xA=spsInfo.darNum;
-            xR=spsInfo.darDen;
             writeVideo(&video,ADM_TS_H264);
             writeAudio();
             qfprintf(index,"[Data]");
             // Rewind
 
             break;
-        };
-      }
+        }
+        pkt->seek(tmpInfo.startAt,tmpInfo.offset);
     }
     return seq_found;
 }
@@ -139,7 +134,7 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     \fn run
     \brief Index H264 stream
 */
-bool TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
+uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
 {
     bool seq_found=false;
     bool firstSps=true;
@@ -147,7 +142,7 @@ bool TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     TSVideo video;
     indexerData data;
 
-    bool result=false;
+    uint8_t result=0;
     bool bAppend=false;
 
     beginConsuming=0;
@@ -170,8 +165,8 @@ bool TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
 
     if(!index)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
-        return false;
+        ADM_error("[TsIndexerH264] Cannot create %s\n",indexName.c_str());
+        return 0;
     }
 
     uint64_t lastAudOffset=0;
@@ -292,7 +287,10 @@ resume:
 
                 decodingImage=false;
                 if(!addUnit(data,unitTypeSei,thisUnit,startCodeLength))
-                    keepRunning=false;
+                {
+                    result=ADM_IGN;
+                    goto the_end;
+                }
                 fourBytes=true;
                 goto resume;
             }
@@ -329,7 +327,10 @@ resume:
                     }
                 }
                 if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
-                    keepRunning=false;
+                {
+                    result=ADM_IGN;
+                    goto the_end;
+                }
             }
                 break;
 
@@ -385,7 +386,10 @@ resume:
                 audCount=0;
 
                 if(!addUnit(data,unitTypePic,thisUnit,startCodeLength))
-                    keepRunning=false;
+                {
+                    result=ADM_IGN;
+                    goto the_end;
+                }
                 // reset to default
                 thisUnit.imageStructure=pictureFrame;
                 thisUnit.recoveryCount=0xff;
@@ -396,7 +400,7 @@ resume:
                 break;
         }
     } // End while
-    result=true;
+    result=1;
 the_end:
     printf("\n");
     qfprintf(index,"\n[End]\n");

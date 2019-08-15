@@ -31,7 +31,9 @@
 extern void 		AVDM_audioPref( void );
 extern const char* getNativeRendererDesc(int type);
 
-
+#if defined(USE_DXVA2) || defined(USE_VDPAU) || defined(USE_LIBVA) || defined(USE_VIDEOTOOLBOX)
+    #define HW_ACCELERATED_DECODING
+#endif
 
 uint8_t DIA_Preferences(void);
 
@@ -60,7 +62,6 @@ bool     doAutoUpdate=false;
 bool     loadDefault=false;
 char     *alsaDevice=NULL;
 
-bool     balternate_mp3_tag=true;
 bool     lastReadDirAsTarget=false;
 bool     copyModeSanitizeDts=false;
 bool     altKeyboardShortcuts=false;
@@ -69,11 +70,18 @@ bool     swapUpDown=false;
 uint32_t pp_type=3;
 uint32_t pp_value=5;
 
+uint32_t editor_cache_size=16;
+
+#ifdef USE_DXVA2
 bool     bdxva2=false;
+bool     bdxva2_override_version=false;
+bool     bdxva2_override_profile=false;
+#endif
 bool     bvdpau=false;
-bool     bxvba=false;
 bool     blibva=false;
+#ifdef USE_VIDEOTOOLBOX
 bool     bvideotoolbox=false;
+#endif
 bool     hzd,vzd,dring;
 bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
 bool     hasOpenGl=false;
@@ -140,22 +148,26 @@ std::string currentSdlDriver=getSdlDriverName();
         if( prefs->get(DEVICE_AUDIO_ALSA_DEVICE, &alsaDevice) != RC_OK )
                 alsaDevice = ADM_strdup("plughw:0,0");
 #endif
+        // Video cache
+        prefs->get(FEATURES_CACHE_SIZE,&editor_cache_size);
+#ifdef USE_DXVA2
         // dxva2
-        
-        prefs->get(FEATURES_DXVA2,&bdxva2);                
+        prefs->get(FEATURES_DXVA2,&bdxva2);
+        prefs->get(FEATURES_DXVA2_OVERRIDE_BLACKLIST_VERSION,&bdxva2_override_version);
+        prefs->get(FEATURES_DXVA2_OVERRIDE_BLACKLIST_PROFILE,&bdxva2_override_profile);
+#endif
+#ifdef USE_VDPAU
         // vdpau
         prefs->get(FEATURES_VDPAU,&bvdpau);
-        // xvba
-        prefs->get(FEATURES_XVBA,&bxvba);
+#endif
+#ifdef USE_LIBVA
         // libva
         prefs->get(FEATURES_LIBVA,&blibva);
-        // VideoToolbox
+#endif
 #ifdef USE_VIDEOTOOLBOX
+        // VideoToolbox
         prefs->get(FEATURES_VIDEOTOOLBOX,&bvideotoolbox);
 #endif
-        // Alternate mp3 tag (haali)
-        prefs->get(FEATURES_ALTERNATE_MP3_TAG,&balternate_mp3_tag);
-
         // Video renderer
         if(prefs->get(VIDEODEVICE,&render)!=RC_OK)
         {
@@ -215,18 +227,22 @@ std::string currentSdlDriver=getSdlDriverName();
         olddevice=newdevice=AVDM_getCurrentDevice();
         // Audio device
         /************************ Build diaelems ****************************************/
+#ifdef HW_ACCELERATED_DECODING
+    #if defined(USE_DXVA2)
         diaElemToggle useDxva2(&bdxva2,QT_TRANSLATE_NOOP("adm","Decode video using DXVA2 (windows)"));
-        diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU (NVIDIA)"));
-        diaElemToggle useXvba(&bxvba,QT_TRANSLATE_NOOP("adm","Decode video using XVBA (AMD)"));
-        diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
-#ifdef USE_VIDEOTOOLBOX
+        diaElemToggle dxva2OverrideVersion(&bdxva2_override_version,QT_TRANSLATE_NOOP("adm","Ignore driver blacklist (Intel)"));
+        diaElemToggle dxva2OverrideProfile(&bdxva2_override_profile,QT_TRANSLATE_NOOP("adm","Ignore codec blacklist (Intel, HEVC 10bit)"));
+    #elif defined(USE_VIDEOTOOLBOX)
         diaElemToggle useVideoToolbox(&bvideotoolbox,QT_TRANSLATE_NOOP("adm","Decode video using VideoToolbox (macOS)"));
+    #else
+        diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU (NVIDIA)"));
+        diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
+    #endif
+    #ifndef USE_VIDEOTOOLBOX
+        diaElemReadOnlyText hwAccelText(NULL,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"),NULL);
+    #endif
 #endif
         diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
-#ifndef USE_VIDEOTOOLBOX
-        diaElemReadOnlyText hwAccelText(NULL,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"),NULL);
-#endif
-
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
         diaElemToggle resetEncoder(&loadDefault,QT_TRANSLATE_NOOP("adm","_Revert to saved default output settings on video load"));
         diaElemToggle enableAltShortcuts(&altKeyboardShortcuts,QT_TRANSLATE_NOOP("adm","_Enable alternative keyboard shortcuts"));
@@ -286,9 +302,12 @@ std::string currentSdlDriver=getSdlDriverName();
         framePriority.swallow(&menuIndexPriority);
         framePriority.swallow(&menuPlaybackPriority);
 
-        diaElemToggle togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
         diaElemToggle sanitizeDtsInCopyMode(&copyModeSanitizeDts,QT_TRANSLATE_NOOP("adm","_Sanitize decode time stamps (DTS) in copy mode"));
+
+        diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
+        diaElemUInteger cacheSize(&editor_cache_size,QT_TRANSLATE_NOOP("adm","_Cache size:"),8,16);
+        frameCache.swallow(&cacheSize);
 
         diaMenuEntry videoMode[]={
                              {RENDER_GTK, getNativeRendererDesc(0), NULL}
@@ -301,10 +320,6 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifdef USE_DXVA2
                              ,{RENDER_DXVA2,   QT_TRANSLATE_NOOP("adm","DXVA2 (best)"),NULL}
 #endif
-#ifdef USE_XVBA
-                             //,{RENDER_XVBA,   QT_TRANSLATE_NOOP("adm","XVBA (best)"),NULL}
-#endif
-
 #ifdef USE_OPENGL
                              ,{RENDER_QTOPENGL,   QT_TRANSLATE_NOOP("adm","OpenGL (best)"),NULL}
 #endif
@@ -439,7 +454,7 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* Output */
-        diaElem *diaOutput[]={&allowAnyMpeg,&togTagMp3,&sanitizeDtsInCopyMode,&useLastReadAsTarget};
+        diaElem *diaOutput[]={&allowAnyMpeg,&sanitizeDtsInCopyMode,&useLastReadAsTarget,&frameCache};
         diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
 
         /* Audio */
@@ -479,12 +494,15 @@ std::string currentSdlDriver=getSdlDriverName();
 #endif
         diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),sizeof(diaVideo)/sizeof(diaElem *),(diaElem **)diaVideo);
         /* HW accel */
-#ifdef USE_VIDEOTOOLBOX
+#ifdef USE_DXVA2
+        diaElem *diaHwDecoding[]={&useDxva2,&dxva2OverrideVersion,&dxva2OverrideProfile,&hwAccelText};
+        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),4,(diaElem **)diaHwDecoding);
+#elif defined(USE_VIDEOTOOLBOX)
         diaElem *diaHwDecoding[]={&useVideoToolbox};
         diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),1,(diaElem **)diaHwDecoding);
-#else
-        diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA,&useDxva2,&hwAccelText};
-        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),5,(diaElem **)diaHwDecoding);
+#elif defined(HW_ACCELERATED_DECODING)
+        diaElem *diaHwDecoding[]={&useVdpau,&useLibVA,&hwAccelText};
+        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),3,(diaElem **)diaHwDecoding);
 #endif
 
         /* CPU tab */
@@ -502,23 +520,17 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemTabs tabAvisynth("Avisynth",2,(diaElem **)diaAvisynth);
 
         /* Global Glyph tab */
-
-
-                diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,
-                                &tabHwDecoding,  &tabCpu,&tabThreading, &tabAvisynth};
-                
-       void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),8,tabs);
-
+#ifdef HW_ACCELERATED_DECODING
+        diaElemTabs *tabs[]={&tabUser, &tabOutput, &tabAudio, &tabVideo, &tabHwDecoding, &tabCpu, &tabThreading, &tabAvisynth};
+        void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),8,tabs);
+#else
+        diaElemTabs *tabs[]={&tabUser, &tabOutput, &tabAudio, &tabVideo, &tabCpu, &tabThreading, &tabAvisynth};
+        void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),7,tabs);
+#endif
 // Now we can disable stuff if needed
-#ifndef USE_VIDEOTOOLBOX
-    #ifndef USE_DXVA2
-       useDxva2.enable(false);
-    #endif
+#if defined(HW_ACCELERATED_DECODING) && !defined(USE_VIDEOTOOLBOX) && !defined(USE_DXVA2)
     #ifndef USE_VDPAU
         useVdpau.enable(false);
-    #endif
-    #ifndef USE_XVBA
-        useXvba.enable(false);
     #endif
     #ifndef USE_LIBVA
         useLibVA.enable(false);
@@ -600,7 +612,8 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(UPDATE_ENABLED,doAutoUpdate);
             // Video render
             prefs->set(VIDEODEVICE,render);
-
+            // Video cache
+            prefs->set(FEATURES_CACHE_SIZE, editor_cache_size);
             // number of threads
             prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
             // Encoding priority
@@ -616,21 +629,24 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(MESSAGE_LEVEL,msglevel);
             // Discard changes to output config on video load
             prefs->set(RESET_ENCODER_ON_VIDEO_LOAD, loadDefault);
-
+#ifdef USE_VDPAU
             // VDPAU
             prefs->set(FEATURES_VDPAU,bvdpau);
+#endif
+#ifdef USE_DXVA2
             // DXVA2
             prefs->set(FEATURES_DXVA2,bdxva2);
-            // XVBA
-            prefs->set(FEATURES_XVBA,bxvba);
+            prefs->set(FEATURES_DXVA2_OVERRIDE_BLACKLIST_VERSION,bdxva2_override_version);
+            prefs->set(FEATURES_DXVA2_OVERRIDE_BLACKLIST_PROFILE,bdxva2_override_profile);
+#endif
+#ifdef USE_LIBVA
             // LIBVA
             prefs->set(FEATURES_LIBVA,blibva);
-            // VideoToolbox
+#endif
 #ifdef USE_VIDEOTOOLBOX
+            // VideoToolbox
             prefs->set(FEATURES_VIDEOTOOLBOX,bvideotoolbox);
 #endif
-            // Alternate mp3 tag (haali)
-            prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
             // Make users happy who prefer the output dir to be the same as the input dir
             prefs->set(FEATURES_USE_LAST_READ_DIR_AS_TARGET,lastReadDirAsTarget);
             // Don't let DTS get too close to each other by delaying frames, drop frames if necessary.

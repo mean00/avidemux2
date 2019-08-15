@@ -44,34 +44,48 @@
 */
  ADM_mp4AudioAccess::ADM_mp4AudioAccess(const char *name,MP4Track *track)
 {
-	_nb_chunks=track->nbIndex;
-	_fd=ADM_fopen(name,"rb");
+    _nb_chunks=track->nbIndex;
+    _fd=ADM_fopen(name,"rb");
     ADM_assert(_fd);
-	_current_index=0;
-	_index=track->index;
-	_msg_counter = 0;
-	_msg_ratelimit = new ADMCountdown(200);
-	_msg_ratelimit->reset();
+    _current_index=0;
+    _index=track->index;
+    _msg_counter = 0;
+    _msg_ratelimit = new ADMCountdown(200);
+    _msg_ratelimit->reset();
 
-	extraDataLen=track->extraDataSize;
-	extraData=track->extraData;
+    extraDataLen=track->extraDataSize;
+    extraData=track->extraData;
 
-	// Check if MP3 track is actually MP2
-	if (track->_rdWav.encoding == WAV_MP3 && _nb_chunks && _index[0].size >= 4)
-	{
-		uint8_t sample[4];
+    // Check if MP3 track is actually MP2
+    if(track->_rdWav.encoding == WAV_MP3 && _nb_chunks && _index[0].size >= 4)
+    {
+        uint8_t sample[4];
 
-		fseeko(_fd, _index[0].offset, SEEK_SET);
-		fread(&sample, 1, 4, _fd);
+        fseeko(_fd, _index[0].offset, SEEK_SET);
+        if(fread(&sample, 1, 4, _fd) < 4) return;
 
-		uint32_t fcc = sample[0] << 24 | sample[1] << 16 | sample[2] << 8 | sample[3];
-		int layer = 4 - ((fcc >> 17) & 0x3);
+        uint32_t fcc = sample[0] << 24 | sample[1] << 16 | sample[2] << 8 | sample[3];
+        int layer = 4 - ((fcc >> 17) & 0x3);
 
-		if (layer == 2)
-			track->_rdWav.encoding = WAV_MP2;
-	}
+        if (layer == 2)
+            track->_rdWav.encoding = WAV_MP2;
+    }
 
-
+    if(track->_rdWav.byterate == AUDIO_BYTERATE_UNSET)
+    {
+        track->_rdWav.byterate = 128000 >> 3; // dummy value
+        ADM_info("Estimating audio byterate...\n");
+        uint64_t duration = _index[_nb_chunks-1].dts;
+        if(duration != ADM_NO_PTS && duration > 100000) // at least 0.1 s
+        {
+            double d = duration;
+            d /= 1000;
+            d = track->totalDataSize / d;
+            d *= 1000;
+            if(d > 0 && d < (192000 * 32)) // anything beyond 7.1 at 192 kHz float must be clearly bogus
+                track->_rdWav.byterate = (uint32_t)d;
+        }
+    }
 }
 /**
     \fn ADM_mp4AudioAccess
@@ -123,7 +137,6 @@ uint64_t target=timeUs;
 bool    ADM_mp4AudioAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
     uint32_t r=0;
-    double delta;
     if(_current_index>=_nb_chunks)
     {
         if(_msg_ratelimit->done())

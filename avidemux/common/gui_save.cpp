@@ -118,7 +118,19 @@ void HandleAction_Save(Action action)
                 }else
                 {
                     std::string oFile;
-                    char *oText=NULL;
+                    std::string text;
+                    char timestamp[32];
+                    uint64_t ss=ADM_getSecondsSinceEpoch();
+                    time_t tme=(time_t)ss;
+                    struct tm *ct;
+                    ct=localtime(&tme);
+                    size_t l=strftime(timestamp,32,"%F %H%M%S",ct);
+                    text=std::string("Job ");
+                    if(l)
+                        text+=std::string(timestamp);
+                    else
+                        text+=std::string("UNKNOWN");
+                    char *oText=ADM_strdup(text.c_str());
                     
                     diaElemFile wFile(1,oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
                     diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
@@ -147,7 +159,7 @@ void HandleAction_Save(Action action)
 #endif
     case ACT_SAVE_AUDIO:
     {
-        std:string ext;
+        std::string ext;
         if(false==audioSavePrepare(&ext))
             break;
         if(ext.size())
@@ -226,7 +238,7 @@ int A_audioSave(const char *name)
 */
 static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double duration)
 {
-  uint32_t written, max;
+  uint32_t written;
   uint64_t dts;
   DIA_workingBase *work;
 #define ONE_STRIKE (64*1024)
@@ -248,7 +260,6 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
 
   work=createWorking(QT_TRANSLATE_NOOP("adm","Saving audio"));
 
-  uint64_t timeEnd,timeStart;
   uint32_t hold,len,sample;
   uint64_t tgt_sample,cur_sample;
 
@@ -666,21 +677,36 @@ void A_queueJob(const char *jobName,const char *outputFile)
     IScriptEngine *engine=getPythonScriptEngine();
             if(!engine)
             {
-                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Queue"),QT_TRANSLATE_NOOP("adm","Cannot get tinyPÿ script engine"));
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Cannot get tinyPy script engine"));
                 return;
             }
 
             job.outputFileName=string(outputFile);
+            if(job.outputFileName.empty())
+            {
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Output file not specified"));
+                return;
+            }
             job.jobName=string(jobName);
 //#warning make sure it is unique
             job.scriptName=string(jobName)+string(".")+engine->defaultFileExtension();
-            if(false==ADMJob::jobAdd(job))
+            string completePath=string(ADM_getJobDir());
+            completePath+=job.scriptName;
+            bool collision=false;
+            if(ADM_fileExist(completePath.c_str()))
             {
-                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Queue"),QT_TRANSLATE_NOOP("adm","Cannot add job %s"),jobName);
+                char str[4096+512+1];
+                str[0]='\0';
+                snprintf(str,4096+512+1,QT_TRANSLATE_NOOP("adm","Job script %s already exists. Overwrite?"),completePath.c_str());
+                str[4096+512]='\0';
+                if(false==GUI_Question(str))
+                    collision=true;
+            }
+            if(collision || false==ADMJob::jobAdd(job))
+            {
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Cannot add job %s"),jobName);
                 return;
             }
-            string completePath=string(ADM_getJobDir());
-            completePath=completePath+string("/")+job.scriptName;
             // Save the script...
 
             A_saveScript(engine, completePath.c_str());

@@ -174,7 +174,7 @@ bool abort=false;
     if(videoDuration<5000) videoDuration=5000;
     printf("[Save] Performing Pass one,using %s as log file\n",logFileName.c_str());
     
-    if(ADM_fileExist(logFileName.c_str()))
+    if(false==GUI_isQuiet() && ADM_fileExist(logFileName.c_str()))
     {
         if(GUI_Question(QT_TRANSLATE_NOOP("adm","Reuse previous first pass data ?\nWarning, the settings must be close.")))
         {
@@ -435,27 +435,47 @@ bool admSaver::setupAudio()
 
 bool admSaver::save(void)
 {
-
-
     int ret=false;
-    
-    
+
     ADM_info("Audio starting time %s\n",ADM_us2plain(startAudioTime));
     ADM_info("[A_Save] Saving..\n");
-    
-    
-    EditableAudioTrack *ed=NULL;
-    
+
     if(!videoEncoderIndex) 
     {
-        if(false==video_body-> checkCutsAreOnIntra())
+        ADM_cutPointType chk=video_body->checkCutsAreOnIntra(startAudioTime,markerB);
+        const char *alert;
+        bool ask=true;
+        switch(chk)
         {
-            if(!GUI_Question(QT_TRANSLATE_NOOP("adm","The video is in copy mode but the cut points are not on keyframes.\n"
-                            "The video will be saved but there will be corruption at cut point(s).\n"
-                             "Do you want to continue anyway ?")))
-            {
-                return false;
-            }
+            case ADM_EDITOR_CUT_POINT_NON_IDR:
+                alert=QT_TRANSLATE_NOOP("adm","The video is in copy mode but the cut points are not on keyframes.\n"
+                    "The video will be saved but there will be corruption at cut point(s).\n"
+                    "Do you want to continue anyway ?");
+                break;
+            case ADM_EDITOR_CUT_POINT_RECOVERY:
+                alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
+                    "Picture reordering information in the video stream is not reset at non-IDR frames. "
+                    "The choice of cut points may result in playback interruption "
+                    "due to reversed display order of frames if saved in copy mode.\n"
+                    "Do you want to continue anyway?");
+                break;
+            case ADM_EDITOR_CUT_POINT_MISMATCH:
+                alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across a cut point do not match. "
+                    "Playback of the video saved in copy mode may stop at this point.\n"
+                    "Do you want to continue anyway?");
+                break;
+            case ADM_EDITOR_CUT_POINT_UNCHECKED:
+                alert=QT_TRANSLATE_NOOP("adm","Cut points could not be checked. "
+                    "This indicates an issue with a source video, the state of editing or a bug in the program. "
+                    "Please check the application log file or console output for details.\n"
+                    "Try anyway?");
+                break;
+            default:
+                ask=false; break;
+        }
+        if(ask && !GUI_Question(alert))
+        {
+            return false;
         }
     }
 
@@ -493,7 +513,7 @@ bool admSaver::save(void)
         ret=muxer->save();
         muxer->close();
     }
-abort123:
+
     if(video)
         delete video;
     video=NULL;

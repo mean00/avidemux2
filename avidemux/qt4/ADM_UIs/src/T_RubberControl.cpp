@@ -103,14 +103,9 @@ ADM_rubberControl::ADM_rubberControl(ADM_flyDialog *fly, QWidget *parent) : QWid
     transparentSizeGrip *grip2 = new transparentSizeGrip(this);
     grip1->setFixedSize(10,10);
     grip2->setFixedSize(10,10);
-    grip1->setVisible(true);
-    grip2->setVisible(true);
     layout->addWidget(grip1, 0, Qt::AlignLeft | Qt::AlignTop);
     layout->addWidget(grip2, 0, Qt::AlignRight | Qt::AlignBottom);
     rubberband = new ADM_QRubberBand(this);
-    rubberband->move(0, 0);
-    rubberband->show();
-    show();
 }
 
 /**

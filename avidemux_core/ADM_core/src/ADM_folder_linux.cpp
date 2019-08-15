@@ -132,7 +132,6 @@ const char *ADM_getBaseDir(void)
 
 void ADM_initBaseDir(int argc, char *argv[])
 {
-	char *home = NULL;
 	const char* homeEnv = getenv("HOME");
 
 	if (!homeEnv)

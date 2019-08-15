@@ -469,6 +469,13 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     buildMyMenu();
     buildCustomMenu(); // action lists are populated (i.e. buildActionLists() called) within buildCustomMenu()
     buildButtonLists();
+
+#define AUTOREPEAT_TOOLBUTTON(x) ui.x->setAutoRepeat(true); ui.x->setAutoRepeatDelay(500); ui.x->setAutoRepeatInterval(100);
+    AUTOREPEAT_TOOLBUTTON(toolButtonPreviousFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonNextFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonPreviousIntraFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
+
     // Crash in some cases addScriptReferencesToHelpMenu();
     connect(ui.menuVideo->actions().at(3),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromMenu(bool)));
     connect(ui.toolBar->actions().at(5),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromToolbar(bool)));
@@ -509,7 +516,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     threshold = RESIZE_THRESHOLD;
     actZoomCalled = false;
-    ignoreResizeEvent = true;
+    ignoreResizeEvent = false;
     blockResizing = false;
     blockZoomChanges = true;
 
@@ -568,7 +575,11 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
     for(int i=0;i<nb;i++)
     {
         MenuEntry *m=menu+i;
-        QString qs=QString::fromUtf8(QT_TRANSLATE_NOOP("adm",m->text.c_str()));
+        QString qs;
+        if(m->translated)
+            qs=QString::fromUtf8(m->text.c_str());
+        else
+            qs=QString::fromUtf8(QT_TRANSLATE_NOOP("adm",m->text.c_str()));
         switch(m->type)
         {
             case MENU_SEPARATOR:
@@ -1673,10 +1684,13 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
     UI_getPhysicalScreenSize(QuiMainWindows, &w,&h);
     printf("The screen seems to be %u x %u px\n",w,h);
     mw->ui.frame_video->setAttribute(Qt::WA_OpaquePaintEvent);
-    
 
     UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
+#if QT_VERSION < QT_VERSION_CHECK(5,11,0) // not sure about the version
     mw->ui.frame_video->setAcceptDrops(true); // needed for drag and drop to work on windows
+#endif
+    admPreview::setMainDimension(0,0,ZOOM_1_1);
+
     UI_updateRecentMenu();
     UI_updateRecentProjectMenu();
 
@@ -1701,8 +1715,6 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 #else
         ADM_info("OpenGL: Not enabled at built time.\n");
 #endif
-
-    admPreview::setMainDimension(0,0,ZOOM_1_1);
 
     return 1;
 }
@@ -2382,8 +2394,7 @@ void UI_setAudioTrackCount( int nb )
 {
     char txt[50];
     sprintf(txt,QT_TRANSLATE_NOOP("qgui2"," (%d track(s))"),nb);
-     WIDGET(TrackCountLabel)->setText(QString(txt));
-
+    WIDGET(TrackCountLabel)->setText(QString::fromUtf8(txt));
 }
 /**
  * \fn dtor

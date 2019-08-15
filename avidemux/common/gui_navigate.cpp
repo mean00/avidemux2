@@ -213,8 +213,6 @@ static int ignore_change=0;
 */
 void GUI_NextFrame(uint32_t frameCount)
 {
-    // uint8_t *ptr;
-    uint32_t flags;
     if (playing)
     return;
     if (!avifileinfo)
@@ -297,11 +295,6 @@ int GUI_GoToFrame(uint32_t frame)
 
 void GUI_PreviousKeyFrame(void)
 {
-
-    uint32_t f;
-    uint32_t flags;
-
-
     if (playing)
     return;
     if (!avifileinfo)

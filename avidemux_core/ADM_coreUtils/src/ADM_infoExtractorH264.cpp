@@ -23,7 +23,7 @@ extern "C"
 #include "libavcodec/parser.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
-extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
+extern int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsInfo *ndo);
 }
 
 #include "ADM_Video.h"
@@ -31,7 +31,6 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 #include "fourcc.h"
 //#include "ADM_mp4.h"
 
-#define aprintf(...) {}
 #include "ADM_getbits.h"
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
@@ -47,8 +46,11 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 #define check(...) {}
 #endif
 
-static ADMCountdown wait(100);
-static ADMCountdown reset(199);
+#if 0
+#define seiprintf ADM_info
+#else
+#define seiprintf(...) {}
+#endif
 
 /**
     \fn ADM_getH264SpsPpsFromExtraData
@@ -461,11 +463,9 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 */
 static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
-    static int count=0;
-    if(wait.done() && reset.done())
-        count=0;
-    uint8_t *payloadBuffer=(uint8_t *)malloc(nalSize+16);
-    int     originalNalSize=nalSize+16;
+    int originalNalSize=nalSize+16;
+    uint8_t *payloadBuffer=(uint8_t *)malloc(originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
+    memset(payloadBuffer,0,originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
     uint8_t *payload=payloadBuffer;
     bool r=false;
     nalSize=ADM_unescapeH264(nalSize,org,payload);
@@ -476,67 +476,53 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
         return false;
     }
 
-#define RATE_LIMITED_WARNING(x) if(!count)\
-    { \
-        ADM_warning(#x"\n"); \
-        wait.reset(); \
-    } \
-    if(wait.done() && count) \
-    { \
-        ADM_warning(#x" (message repeated %d times)\n",count); \
-        wait.reset(); \
-        count=0; \
-    } \
-    count++; \
-    reset.reset();
-
     uint8_t *tail=payload+nalSize;
     *recoveryLength=16;
     while( payload<tail)
     {
-                uint32_t sei_type=0,sei_size=0;
-                while(payload[0]==0xff)
-                {
-                        sei_type+=0xff;payload++;
-                        if(payload+2>=tail)
-                        {
-                            RATE_LIMITED_WARNING(Cannot decode SEI)
-                            goto abtSei;
-                        }
-                };
-                sei_type+=payload[0];payload++;
-                if(payload>=tail)
-                {
-                            RATE_LIMITED_WARNING(Cannot decode SEI)
-                            goto abtSei;
-                }
-                while(payload[0]==0xff)
-                {
-                    sei_size+=0xff;payload++;
-                    if(payload+1>=tail)
-                        {
-                            RATE_LIMITED_WARNING(Cannot decode SEI (2))
-                            goto abtSei;
-                        }
-                };
-                sei_size+=payload[0];payload++;
-                aprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
-                if(payload+sei_size>tail) break;
-                switch(sei_type) // Recovery point
-                {
-                       case 6:
-                        {
-                            getBits bits(sei_size,payload);
-                            payload+=sei_size;
-                            *recoveryLength=bits.getUEG();
-                            r=true;
-                            count=0;
-                            break;
-                        }
-                        default:
-                            payload+=sei_size;
-                            break;
-                }
+        uint32_t sei_type=0,sei_size=0;
+        while(payload[0]==0xff)
+        {
+            sei_type+=0xff;payload++;
+            {
+                seiprintf("Not enough data.\n");
+                goto abtSei;
+            }
+        }
+        sei_type+=payload[0];payload++;
+        if(payload>=tail)
+        {
+            seiprintf("No data left after decoding SEI type.\n");
+            goto abtSei;
+        }
+        while(payload[0]==0xff)
+        {
+            sei_size+=0xff;payload++;
+            if(payload+1>=tail)
+            {
+                seiprintf("Not enough data left after decoding SEI size.\n");
+                goto abtSei;
+            }
+        }
+        sei_size+=payload[0];payload++;
+        seiprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
+        if(payload+sei_size>tail) break;
+        switch(sei_type)
+        {
+            case 6: // Recovery point
+            {
+                getBits bits(sei_size,payload);
+                int distance=bits.getUEG();
+                seiprintf("Recovery distance: %d\n",distance);
+                *recoveryLength=distance;
+                r=true;
+                goto abtSei;
+                break;
+            }
+            default:
+                payload+=sei_size;
+                break;
+        }
     }
 abtSei:
     free(payloadBuffer);
@@ -545,19 +531,33 @@ abtSei:
 /**
     \fn getNalType
     \brief Return the slice type. The stream is escaped by the function. If recovery==0
-            I as considered IDR else as P.
+           or frame_num==0 I is considered IDR else as P.
 */
-static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int recovery)
+static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSInfo *sps, int *poc_lsb, int recovery)
 {
-    uint8_t *out=(uint8_t *)malloc(tail-head);
+    if(tail<=head)
+        return false;
+    uint8_t *out=(uint8_t *)malloc(tail-head+AV_INPUT_BUFFER_PADDING_SIZE);
+    memset(out,0,tail-head+AV_INPUT_BUFFER_PADDING_SIZE);
     int size=ADM_unescapeH264(tail-head,head,out);
 
     getBits bits(size,out);
     uint32_t sliceType;
-    *flags = 0;
+    int frame = -1;
+    *poc_lsb = -1;
 
     bits.getUEG();               // first mb in slice
     sliceType = bits.getUEG31(); // get_ue_golomb_31??
+    if(sps && sps->hasPocInfo && sps->log2MaxFrameNum > 3 && sps->log2MaxFrameNum < 17) // sanity check
+    {
+        bits.getUEG(); // skip PPS id
+        frame = bits.get(sps->log2MaxFrameNum);
+        if(!sps->frameMbsOnlyFlag && bits.get(1))
+            bits.get(1); // skip field_pic_flag
+        if(*flags & AVI_KEY_FRAME) // from NAL
+            bits.getUEG(); // skip idr_pic_id
+        *poc_lsb = bits.get(sps->log2MaxPocLsb);
+    }
     if (sliceType > 9)
     {
       ADM_warning ("Weird Slice %d\n", sliceType);
@@ -573,7 +573,7 @@ static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int rec
         case 0: *flags=  AVI_P_FRAME;break;
         case 1: *flags = AVI_B_FRAME;break;
         case 2: case 4:
-                if(!recovery) *flags=AVI_KEY_FRAME;
+                if(!recovery || !frame) *flags=AVI_KEY_FRAME;
                     else      *flags=AVI_P_FRAME;
                 break;
 
@@ -590,74 +590,82 @@ static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int rec
                     but 4 bytes NALU
 
 */
-uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,  uint32_t * flags,uint32_t *extRecovery)
+uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int *pocLsb, ADM_SPSInfo *sps, uint32_t *extRecovery)
 {
-  uint8_t *head = buffer, *tail = buffer + len;
-  uint8_t stream;
+    uint8_t *head = buffer, *tail = buffer + len;
+    uint8_t stream;
 
-  uint32_t val, hnt;
-  nalSize=4;
+    uint32_t nalSize=4;
 // Check for short nalSize, i.e. size coded on 3 bytes
-  {
-      uint32_t length =(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
-      if(length>len) nalSize=3;
-  }
-  uint32_t recovery=0xff;
-  
-  
-  *flags=0;
-  while (head + nalSize < tail)
+    {
+        uint32_t length =(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
+        if(length>len) nalSize=3;
+    }
+    uint32_t recovery=0xff;
+    int p=-1;
+
+    *flags=0;
+    while (head + nalSize < tail)
     {
 
-      uint32_t length =(head[0] << 16) + (head[1] << 8) + (head[2] << 0) ;
-      if(nalSize==4)
-          length=(length<<8)+head[3];
-      if (length > len)// || length < 2)
-      {
-          ADM_warning ("Warning , incomplete nal (%u/%u),(%0x/%0x)\n", length, len, length, len);
-          *flags = 0;
-          return 0;
+        uint32_t length =(head[0] << 16) + (head[1] << 8) + (head[2] << 0) ;
+        if(nalSize==4)
+            length=(length<<8)+head[3];
+        if (length > len)// || length < 2)
+        {
+            ADM_warning ("Warning , incomplete nal (%u/%u),(%0x/%0x)\n", length, len, length, len);
+            *flags = 0;
+            return 0;
         }
-      head += nalSize;        // Skip nal lenth
-      stream = *(head) & 0x1F;
+        head += nalSize;        // Skip nal lenth
+        int ref=(*(head)>>5) & 3;
+        stream = *(head) & 0x1F;
 
-
-      switch (stream)
+        switch (stream)
         {
             case NAL_SEI:
-            {
-
-                bool sei=getRecoveryFromSei(length-1, head+1,&recovery);
-                if(extRecovery)
                 {
-                    if(sei)
-                        *extRecovery=recovery;
-                    else
-                        recovery=*extRecovery;
+                    bool sei=getRecoveryFromSei(length-1, head+1,&recovery);
+                    if(extRecovery)
+                    {
+                        if(sei)
+                            *extRecovery=recovery;
+                        else
+                            recovery=*extRecovery;
+                    }
                 }
-            }
                 break;
             case NAL_SPS:
             case NAL_PPS:
             case NAL_AU_DELIMITER:
             case NAL_FILLER:
-                    break;
+                break;
             case NAL_IDR:
-              *flags = AVI_KEY_FRAME;
-              return 1;
-              break;
+                *flags = AVI_KEY_FRAME;
+                if(!getNalType(head+1,head+length,flags,sps,&p,recovery))
+                    return 0;
+                if(sps && *flags != AVI_KEY_FRAME)
+                    ADM_warning("Mismatched frame (flags: %d) in IDR NAL unit!\n",*flags);
+                *flags = AVI_KEY_FRAME; // FIXME
+                if(pocLsb)
+                    *pocLsb=p;
+                return 1;
             case NAL_NON_IDR:
-              getNalType(head+1,head+length,flags,recovery);
-              return 1;
-              break;
+                if(!getNalType(head+1,head+length,flags,sps,&p,recovery))
+                    return 0;
+                if(!ref && (*flags & AVI_B_FRAME))
+                    *flags |= AVI_NON_REF_FRAME;
+                if(pocLsb)
+                    *pocLsb=p;
+                return 1;
             default:
-              ADM_warning ("unknown nal ??0x%x\n", stream);
-              break;
-         }
+                ADM_warning ("unknown nal ??0x%x\n", stream);
+                break;
+        }
         head+=length;
     }
-  ADM_warning ("No stream\n");
-  return 0;
+    ADM_warning ("No stream\n");
+    return 0;
 }
 
 /**
@@ -666,45 +674,72 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
       To be used only with  avi / mpeg TS nal type
         (i.e. with startcode 00 00 00 01)
 */
-uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32_t len, uint32_t * flags)
+uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *flags, int *pocLsb, ADM_SPSInfo *sps, uint32_t *extRecovery)
 {
-  uint8_t *head = buffer, *tail = buffer + len;
-  uint8_t stream;
-  uint32_t val, hnt;
+    uint8_t *head = buffer, *tail = buffer + len;
+    uint8_t stream;
+    uint32_t hnt=0xffffffff;
+    uint32_t recovery=0xff;
+    int counter = 0, length = 0;
+    int p = -1;
 
-// FIXME :  no startcode only !
-
-  while (head + 4 < tail)
+    while (head + 2 < tail)
     {
-      // Search startcode
-      hnt = (head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
-      head += 4;
-      while ((hnt != 1) && head < tail)
+        // Search startcode
+        hnt = (hnt << 8) + head[0];
+        if((hnt & 0xffffff) != 1)
         {
-
-          hnt <<= 8;
-          val = *head++;
-          hnt += val;
+            head++;
+            continue;
         }
-      if (head >= tail)
-    break;
-      stream = *(head++) & 0x1f;
-      switch (stream)
-    {
-    case NAL_IDR:
-      *flags = AVI_KEY_FRAME;
-      // printf("IDR\n");
-      return 1;
-      break;
-    case NAL_NON_IDR:
-       getNalType (head,tail, flags,16); // No recovery here
-      return 1;
-      break;
-    case NAL_SPS:case NAL_PPS: case NAL_FILLER: case NAL_AU_DELIMITER: break;
-    default:
-      ADM_warning ("??0x%x\n", stream);
-      continue;
-    }
+        head++;
+        counter++;
+        if(counter > 1)
+        {
+            length = head - buffer - 3; // 3 bytes start code length no matter zero-prefixed or not
+            buffer = head;
+        }
+        if(!length)
+            continue;
+        int ref=(*head >> 5) & 3;
+        stream = *(head++) & 0x1f;
+        switch (stream)
+        {
+            case NAL_SEI:
+                {
+                    bool sei=getRecoveryFromSei(length, head, &recovery);
+                    if(extRecovery)
+                    {
+                        if(sei)
+                            *extRecovery=recovery;
+                        else
+                            recovery=*extRecovery;
+                    }
+                }
+                break;
+            case NAL_SPS: case NAL_PPS: case NAL_FILLER: case NAL_AU_DELIMITER: break;
+            case NAL_IDR:
+                *flags = AVI_KEY_FRAME;
+                if(!getNalType(head, head+length, flags, sps, &p, recovery))
+                    return 0;
+                if(*flags != AVI_KEY_FRAME)
+                    ADM_warning("Mismatched frame (flags: %d) in IDR NAL unit!\n",*flags);
+                *flags = AVI_KEY_FRAME; // FIXME
+                if(pocLsb)
+                    *pocLsb=p;
+                return 1;
+            case NAL_NON_IDR:
+                if(!getNalType(head, head+length, flags, sps, &p, recovery))
+                    return 0;
+                if(!ref && (*flags & AVI_B_FRAME))
+                    *flags |= AVI_NON_REF_FRAME;
+                if(pocLsb)
+                    *pocLsb=p;
+                return 1;
+            default:
+                ADM_warning("Unknown NAL type ??0x%x\n", stream);
+                break;
+        }
     }
   printf ("No stream\n");
   return 0;
@@ -718,13 +753,13 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
 bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
     bool r=false;
-    bool closeCodec=false;
 
     // duplicate
     int myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
     uint8_t *myData=new uint8_t[myLen];
     memset(myData,0x2,myLen);
     memcpy(myData,data,len);
+    myData[len]=0; // stop ff_h264_decode_extradata() from trying to parse the remaining buffer content as PPS
 
     // 1-Create parser
     AVCodecParserContext *parser=av_parser_init(AV_CODEC_ID_H264);
@@ -752,7 +787,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
         goto theEnd;
     }
 
-    ADM_info("Context created\n");
+    ADM_info("Context created, ticks_per_frame = %d\n",ctx->ticks_per_frame);
     //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
     ctx->extradata=myData;
     ctx->extradata_size=len;
@@ -764,15 +799,16 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
          printf("Used bytes %d/%d (+5)\n",used,len);
          if(!used)
          {
-             ADM_warning("Failed to extract SPS info\n");
+           //ADM_warning("Failed to extract SPS info\n"); // it ain't necessarily so
            //  goto theEnd;
          }
     }
-    ADM_info("Width  : %d\n",ctx->width);
-    ADM_info("Height : %d\n",ctx->height);
+    // Size is not supposed to be set in AVCodecContext after parsing
+    //ADM_info("Width  : %d\n",ctx->width);
+    //ADM_info("Height : %d\n",ctx->height);
     {
         ffSpsInfo nfo;
-        if(!ff_h264_info(parser,&nfo))
+        if(!ff_h264_info(parser,ctx->ticks_per_frame,&nfo))
         {
             ADM_error("Cannot get sps info from lavcodec\n");
             r=false;
@@ -785,9 +821,14 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
         CPY(height);
         CPY(fps1000);
         CPY(hasStructInfo);
+        CPY(hasPocInfo);
         CPY(CpbDpbToSkip);
+        CPY(log2MaxFrameNum);
+        CPY(log2MaxPocLsb);
+        CPY(frameMbsOnlyFlag);
         CPY(darNum);
         CPY(darDen);
+        CPY(refFrames);
         r=true;
      }
     // cleanup
@@ -844,7 +885,11 @@ bool  extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
             DPY(height);
             DPY(fps1000);
             DPY(hasStructInfo);
+            DPY(hasPocInfo);
             DPY(CpbDpbToSkip);
+            DPY(log2MaxFrameNum);
+            DPY(log2MaxPocLsb);
+            DPY(frameMbsOnlyFlag);
             DPY(darNum);
             DPY(darDen);
         }else

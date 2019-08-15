@@ -234,6 +234,7 @@ HEADERS = \
 ../../../avidemux_core/ADM_coreUtils/include/prefs.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/ADM_codecType.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/ADM_coreCodecMapping.h \ 
+../../../avidemux_core/ADM_coreUtils/include/ADM_putbits.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/FFcodecContext_param.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/ADM_confCouple.h \ 
 ../../../avidemux_core/ADM_coreUtils/include/ADM_paramList.h \ 
@@ -846,6 +847,7 @@ SOURCES = \
 ../../../avidemux_core/ffmpeg_package/patches/libavformat_mpegtsenc.c.patch \ 
 ../../../avidemux_core/ffmpeg_package/patches/libavformat_matroskaenc.c.patch \ 
 ../../../avidemux_core/ffmpeg_package/patches/libavformat_isom.c.patch \ 
+../../../avidemux_core/ffmpeg_package/patches/libavutil_file_open.c.patch \ 
 ../../../avidemux_core/ADM_coreVideoFilter/src/ADM_videoFilterCache.cpp \ 
 ../../../avidemux_core/ADM_coreVideoFilter/src/ADM_coreVideoFilter.cpp \ 
 ../../../avidemux_core/ADM_coreVideoFilter/src/ADM_coreVideoFilterFunc.cpp \ 
@@ -947,6 +949,7 @@ SOURCES = \
 ../../../avidemux_core/ADM_coreUtils/src/ADM_getbits.cpp \ 
 ../../../avidemux_core/ADM_coreUtils/src/prefs2.conf \ 
 ../../../avidemux_core/ADM_coreUtils/src/ADM_codecType.cpp \ 
+../../../avidemux_core/ADM_coreUtils/src/ADM_putbits.cpp \ 
 ../../../avidemux_core/ADM_coreUtils/src/ADM_infoExtractorVC1.cpp \ 
 ../../../avidemux_core/ADM_coreUtils/src/Source/JSONAllocator.cpp \ 
 ../../../avidemux_core/ADM_coreUtils/src/Source/JSONNode_Mutex.cpp \ 
@@ -1433,7 +1436,6 @@ SOURCES = \
 ../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_libass/ass_font.c \ 
 ../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_libass/ass_utils.c \ 
 ../../../avidemux_plugins/ADM_videoFilters6/ass/ass_ssa_desc.cpp \ 
-../../../avidemux_plugins/ADM_videoFilters6/ass/ass_ssa_json.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/ass/ass_ssa.conf \ 
 ../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp \ 
 ../../../avidemux_plugins/ADM_videoFilters6/changeFps/confChangeFps_desc.cpp \ 

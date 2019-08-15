@@ -20,6 +20,9 @@
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
 #include "ADM_vidMisc.h"
+#include "ADM_videoInfoExtractor.h"
+#include "ADM_h264_tag.h"
+
 #if 0
 #define aprintf printf
 #else
@@ -28,132 +31,471 @@
 
 static int warn_cnt=0;
 
+static bool checkCodec(aviInfo *first,aviInfo *second)
+{
+    bool match=false;
+#define XCHECK(x) if(!match && x(first->fcc) && x(second->fcc)) { ADM_info("Codecs identified by %s() as matching\n",#x); match=true; }
+    XCHECK(isH264Compatible)
+    XCHECK(isH265Compatible)
+    XCHECK(isMpeg4Compatible)
+    XCHECK(isMpeg12Compatible)
+    XCHECK(isVC1Compatible)
+    XCHECK(isVP9Compatible)
+    XCHECK(isVP6Compatible)
+    XCHECK(isMSMpeg4Compatible)
+    XCHECK(isDVCompatible)
+    // catch fourcc values not covered by above
+    if(!match && first->fcc == second->fcc)
+        match=true;
+    return match;
+}
+
 /**
-    \fn checkCutsAreOnIntra
+    \fn checkSegmentStartsOnIntra
     \brief In copy mode, if the cuts are not on intra we will run into trouble :
             * We include skipped ref frames: we will have DTS going back error
-            * We skip them, we have borked video at cut points due to missing ref framesz
-    \return true if everything ok
+            * We skip them, we have borked video at cut points due to missing ref frames
 */
-bool ADM_Composer::checkCutsAreOnIntra(void)
+ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
 {
-    bool fail=false;
-    int nbSeg=_segments.getNbSegments();
-
-    ADMCompressedImage img;
-    uint8_t *buffer=new uint8_t[1920*1080*3];
-    img.data=buffer;
-    ADM_info("Checking cuts start on keyframe..\n");
-    for(int i=0;i<nbSeg;i++)
+    if(segNo>=_segments.getNbSegments())
     {
-        _SEGMENT *seg=_segments.getSegment(i);
-        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
-        vidHeader *demuxer=vid->_aviheader;
-
-        if(false==switchToSegment(i,true))
-        {
-            fail=true;
-            break;
-        }
-        if(false==demuxer->getFrame (vid->lastSentFrame,&img))
-        {
-            ADM_info("Cannot get 1st frame of segment %d\n",i);
-            fail=true;
-            break;
-        }
-        if(!(img.flags & AVI_KEY_FRAME))
-        {
-            ADM_warning("Segment %d does not start on a keyframe (%s)\n",i,ADM_us2plain(img.demuxerPts));
-            fail=true;
-            break;
-        }
-        // After a seg switch we are at the keyframe before or equal to where we want to go
-        // if the dts do not match, it means we went back too much
-        // When re-encoding, it's not a problem, it is when copying.
-        ADM_info("seg %d: ref %d, refDTS=%" PRIu64"\n",i,seg->_reference,seg->_refStartDts);
-        ADM_info("seg %d: ref %d, imgDTS=%" PRIu64"\n",i,seg->_reference,img.demuxerDts);
-        if(!seg->_refStartDts && !seg->_reference)
-        {
-            ADM_info("Ignoring first seg (unreliable DTS)\n");
-            
-        }else
-        if(img.demuxerDts!=ADM_NO_PTS && seg->_refStartDts!=ADM_NO_PTS && 
-            img.demuxerDts!=seg->_refStartDts)
-        {
-            ADM_warning("Segment %d does not start on a known DTS (%s)\n",i,ADM_us2plain(img.demuxerDts));
-            ADM_warning("expected (%s)\n",ADM_us2plain(seg->_refStartDts));
-            fail=true;
-            break;
-        }
-        ADM_info("Segment %d ok\n",i);
-    }   
-    delete [] buffer;
-    buffer=NULL;
-    if(fail) return false;
-    return true;
-}
-/**
-    \fn checkCutIsOnIntra
-    \brief Allow to check if a particular delete operation results in a cut being not on an intra
-*/
-bool ADM_Composer::checkCutIsOnIntra(uint64_t time)
-{
-    bool fail=false;
-    uint32_t segNo;
-    uint64_t segTime;
-    fail=!_segments.convertLinearTimeToSeg(time,&segNo,&segTime);
-    if(fail)
-        return true; // we can't do anything meaningful if we fail to convert time to segment
-
-    ADMCompressedImage img;
-    uint8_t *buffer=new uint8_t[1920*1080*3];
-    img.data=buffer;
-    ADM_info("Checking whether cut at %s is on a keyframe...\n",ADM_us2plain(time));
+        ADM_error("Requested segment number %d out of range!\n",segNo);
+        return ADM_EDITOR_CUT_POINT_IDR;
+    }
 
     _SEGMENT *seg=_segments.getSegment(segNo);
     _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
     vidHeader *demuxer=vid->_aviheader;
+
     uint32_t oldSeg=_currentSegment;
     uint32_t oldFrame=vid->lastSentFrame;
+    uint32_t refNo=seg->_reference;
+    uint64_t refstart=(seg->_refStartTimeUs > vid->firstFramePts)? seg->_refStartTimeUs : vid->firstFramePts;
+    int frame=0;
+    uint8_t *buffer=NULL;
+    ADM_cutPointType cut=ADM_EDITOR_CUT_POINT_UNCHECKED;
 
-    if(switchToSegment(segNo,true))
+#define BOWOUT if(buffer) { delete [] buffer; buffer=NULL; } \
+    _currentSegment=oldSeg; vid->lastSentFrame=oldFrame; return cut;
+
+    if(false==switchToSegment(segNo,true))
     {
-        if(demuxer->getFrame(vid->lastSentFrame,&img))
+        BOWOUT
+    }
+    if(false==getFrameNumFromPtsOrBefore(vid,refstart,frame))
+    {
+        BOWOUT
+    }
+    // Cursorily check that codec matches if the ref video is not the first one.
+    aviInfo info;
+    demuxer->getVideoInfo(&info);
+    if(refNo)
+    {
+        aviInfo inf0;
+        getVideoInfo(&inf0);
+        if(!checkCodec(&info,&inf0))
         {
-            if(!(img.flags & AVI_KEY_FRAME)) // always evaluates to false, img we've got is not the first frame of the segment
+            ADM_error("Codec doesn't match the one of the first ref video. This is currently unsupported.\n");
+            cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+            BOWOUT
+        }
+    }
+
+    uint32_t flags=0;
+    uint64_t pts,dts;
+    demuxer->getPtsDts(frame,&pts,&dts);
+
+    // After a seg switch we are at the keyframe before or equal to where we want to go
+    // if the dts do not match, it means we went back too much
+    // When re-encoding, it's not a problem, it is when copying.
+    ADM_info("seg %d: ref %d, refDTS=%" PRIu64"\n",segNo,seg->_reference,seg->_refStartDts);
+    ADM_info("seg %d: ref %d, imgDTS=%" PRIu64"\n",segNo,seg->_reference,dts);
+    if(!seg->_refStartDts && !seg->_reference)
+    {
+        ADM_info("Ignoring first seg (unreliable DTS)\n");
+    }else if(dts!=ADM_NO_PTS && seg->_refStartDts!=ADM_NO_PTS && dts!=seg->_refStartDts)
+    {
+        ADM_warning("Segment %d does not start on a known DTS (%" PRIu64" us = %s)\n",segNo,dts,ADM_us2plain(dts));
+        ADM_warning("expected: %" PRIu64" us = %s\n",seg->_refStartDts,ADM_us2plain(seg->_refStartDts));
+        cut=ADM_EDITOR_CUT_POINT_NON_IDR; // ??
+        BOWOUT
+    }
+    // DTS check passed, now check flags
+    demuxer->getFlags(frame,&flags);
+    if(!(flags & AVI_KEY_FRAME))
+    {
+        ADM_warning("Segment %d does not start on a keyframe (time in ref %s)\n",segNo,ADM_us2plain(pts));
+        cut=ADM_EDITOR_CUT_POINT_NON_IDR;
+        BOWOUT
+    }
+    // The frame is marked as keyframe
+    if(!segNo) // Not a cut point
+    {
+        cut=ADM_EDITOR_CUT_POINT_IDR;
+        BOWOUT
+    }
+
+    // It is a cut, perform codec-specific checks
+
+#define MAX_NALU_TO_CHECK 4
+    static NALU_descriptor desc[MAX_NALU_TO_CHECK];
+
+    if(isH264Compatible(info.fcc))
+    {
+        // It is H.264, check deeper. The keyframe may be a non-IDR random access point.
+        // If picture order count after a cut is going back, at least FFmpeg-based players
+        // like VLC and mpv may get stuck until the next recovery point is reached.
+        // First determine stream type
+        bool AnnexB=false;
+        uint8_t *extra;
+        uint32_t extraLen=0;
+        demuxer->getExtraHeaderData(&extraLen,&extra);
+        if(!extraLen)
+            AnnexB=true;
+        // Allocate memory to hold compressed frame
+        ADMCompressedImage img;
+#define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
+        buffer=new uint8_t[MAX_FRAME_LENGTH];
+        img.data=buffer;
+        // Get SPS to be able to decode the slice header
+        ADM_SPSInfo sps;
+        bool gotSps=false;
+        // Do we have a cached copy?
+        if(vid->paramCacheSize==sizeof(ADM_SPSInfo) && vid->paramCache)
+        {
+            memcpy(&sps,vid->paramCache,sizeof(ADM_SPSInfo));
+            gotSps=true;
+        }else
+        {
+            if(AnnexB)
             {
-                ADM_warning("Segment %d does not start on a keyframe (time in ref %s)\n",segNo,ADM_us2plain(img.demuxerPts));
-                fail=true;
+                if(!demuxer->getFrame(0,&img))
+                {
+                    ADM_warning("Unable to get the first frame in ref %d, segment %d\n",seg->_reference,segNo);
+                    BOWOUT
+                }
+                int nbNalu=ADM_splitNalu(img.data, img.data+img.dataLength, MAX_NALU_TO_CHECK, desc);
+                int spsIndex=ADM_findNalu(NAL_SPS,nbNalu,desc);
+                if(spsIndex!=-1)
+                    gotSps=extractSPSInfo(desc[spsIndex].start, desc[spsIndex].size, &sps);
+            }else
+            {
+                gotSps=extractSPSInfo(extra,extraLen,&sps);
+            }
+            if(!gotSps)
+            {
+                ADM_warning("Cannot retrieve SPS info.\n");
+                BOWOUT
+            }
+            // Store the decoded SPS info in the cache
+            vid->paramCacheSize=sizeof(ADM_SPSInfo);
+            vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
+            memcpy(vid->paramCache,&sps,sizeof(ADM_SPSInfo));
+        }
+        // We have SPS, now get the frame we are interested in.
+        if(!demuxer->getFrame(frame,&img))
+        {
+            ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
+            BOWOUT
+        }
+        int poc=-1;
+#define NO_RECOVERY_INFO 0xFF
+        uint32_t recoveryDistance=NO_RECOVERY_INFO;
+        bool outcome=false;
+        if(AnnexB)
+            outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &poc, &sps, &recoveryDistance);
+        else
+            outcome=extractH264FrameType(img.data, img.dataLength, &(img.flags), &poc, &sps, &recoveryDistance);
+        if(!outcome)
+        {
+            ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
+            BOWOUT
+        }
+        // We are done with this segment, restore the last sent frame
+        vid->lastSentFrame=oldFrame;
+
+        // Check the preceding segment
+        ADM_info("Getting previous segment, current segment number: %d\n",segNo);
+        ADM_assert(segNo>0);
+        segNo--;
+        seg=_segments.getSegment(segNo);
+        vid=_segments.getRefVideo(seg->_reference);
+        demuxer=vid->_aviheader;
+        oldFrame=vid->lastSentFrame;
+
+        if(false==switchToSegment(segNo,true))
+        {
+            ADM_warning("Cannot check the previous segment %d\n",segNo);
+            BOWOUT
+        }
+        // Same ref video?
+        if(seg->_reference==refNo)
+        {
+            // Not a recovery point and marked as keyframe?
+            if(recoveryDistance==NO_RECOVERY_INFO && (img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME)
+            {
+                ADM_info("IDR verified and same ref video, the cut point is fine.\n");
+                cut=ADM_EDITOR_CUT_POINT_IDR;
+                BOWOUT
+            }
+            // Recovery point and no POC? Don't bother to perform further checks.
+            if(!recoveryDistance && poc==-1)
+            {
+                ADM_warning("No POC to compare with, only POC explicitely set in the slice header is supported.\n");
+                cut=ADM_EDITOR_CUT_POINT_IDR; // ??
+                BOWOUT
             }
         }else
         {
-            ADM_info("Cannot get the 1st frame of segment %d\n",segNo);
+            // Not the same video. Does the codec match?
+            demuxer->getVideoInfo(&info);
+            if(!isH264Compatible(info.fcc))
+            {
+                ADM_error("Codec mismatch!\n");
+                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                BOWOUT
+            }
+            // Check that stream types match
+            extraLen=0;
+            demuxer->getExtraHeaderData(&extraLen,&extra);
+            if(!extraLen != AnnexB) // FIXME stream filter setup should be per segment
+            {
+                ADM_warning("Combining AVCC and AnnexB type H.264 streams is currently not supported.\n");
+                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                BOWOUT
+            }
+            // Get SPS info
+            gotSps=false;
+            ADM_SPSInfo sps2;
+            if(vid->paramCacheSize==sizeof(ADM_SPSInfo) && vid->paramCache)
+            {
+                memcpy(&sps2,vid->paramCache,sizeof(ADM_SPSInfo));
+                gotSps=true;
+            }else
+            {
+                gotSps=false;
+                if(AnnexB)
+                {
+                    if(!demuxer->getFrame(0,&img))
+                    {
+                        ADM_warning("Unable to get the first frame in ref %d, segment %d\n",seg->_reference,segNo);
+                        BOWOUT
+                    }
+                    int nbNalu=ADM_splitNalu(img.data, img.data+img.dataLength, MAX_NALU_TO_CHECK, desc);
+                    int spsIndex=ADM_findNalu(NAL_SPS,nbNalu,desc);
+                    if(spsIndex!=-1)
+                        gotSps=extractSPSInfo(desc[spsIndex].start, desc[spsIndex].size, &sps2);
+                }else
+                {
+                    gotSps=extractSPSInfo(extra,extraLen,&sps2);
+                }
+                if(!gotSps)
+                {
+                    ADM_warning("Cannot retrieve SPS info for H.264 ref video in segment %d\n",segNo);
+                    BOWOUT
+                }
+                // Store the decoded SPS info in the cache
+                vid->paramCacheSize=sizeof(ADM_SPSInfo);
+                vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
+                memcpy(vid->paramCache,&sps2,sizeof(ADM_SPSInfo));
+            }
+            // We have SPS, does it match the one from the next segment?
+            // Check at least the fields we use here.
+#define MATCH(x) if(sps.x != sps2.x) { ADM_warning("%s value does not match.\n",#x); match=false; }
+            bool match=true;
+            MATCH(hasPocInfo)
+            MATCH(log2MaxFrameNum)
+            MATCH(log2MaxPocLsb)
+            MATCH(frameMbsOnlyFlag)
+            MATCH(refFrames)
+            if(!match)
+            {
+                ADM_warning("SPS mismatch, saved video will be broken.\n");
+                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                BOWOUT
+            }
+            // Not a recovery point and marked as keyframe?
+            if(recoveryDistance==NO_RECOVERY_INFO && (img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME)
+            {
+                ADM_info("IDR verified, the cut point should be fine.\n");
+                cut=ADM_EDITOR_CUT_POINT_IDR;
+                BOWOUT
+            }
         }
-        if(!seg->_refStartDts && !seg->_reference)
+
+        ADM_info("Recovery distance: %u\n",recoveryDistance);
+        if(!recoveryDistance) // recovery point, check POC
         {
-            ADM_info("Ignoring first seg (unreliable DTS)\n");
-        }else if(img.demuxerDts!=ADM_NO_PTS && seg->_refStartDts!=ADM_NO_PTS && img.demuxerDts!=seg->_refStartDts)
-        {
-            ADM_warning("Segment %d does not start on a known DTS (%" PRIu64" us = %s)\n",segNo,img.demuxerDts,ADM_us2plain(img.demuxerDts));
-            ADM_warning("expected: %" PRIu64" us = %s\n",seg->_refStartDts,ADM_us2plain(seg->_refStartDts));
-            fail=true;
+            if(poc==-1)
+            {
+                ADM_warning("No POC to compare, only POC explicitely set in the slice header is supported.\n");
+                cut=ADM_EDITOR_CUT_POINT_IDR; // ??
+                BOWOUT
+            }
+            ADM_info("poc_lsb for frame %d: %d\n",frame,poc);
+            // Get the POC of the last frame in display order
+            if(false==getFrameNumFromPtsOrBefore(vid, seg->_refStartTimeUs+seg->_durationUs-1, frame))
+            {
+                ADM_warning("Cannot identify the last frame in display order for segment %d\n",segNo);
+                BOWOUT
+            }
+            if(!demuxer->getFrame(frame,&img))
+            {
+                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
+                BOWOUT
+            }
+            // Try to get POC, recovery distance doesn't matter here
+            int poc2 = -1;
+            outcome=false;
+            if(AnnexB)
+                outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &poc2, &sps, NULL);
+            else
+                outcome=extractH264FrameType(img.data, img.dataLength, &(img.flags), &poc2, &sps, NULL);
+            if(!outcome)
+            {
+                ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
+                BOWOUT
+            }
+
+            cut=ADM_EDITOR_CUT_POINT_IDR;
+
+            if(poc2==-1)
+            {
+                ADM_warning("Cannot get POC, only POC explicitely set in the slice header is supported.\n");
+                BOWOUT // or should the check fail instead?
+            }
+            ADM_info("poc_lsb of the last frame in display order of the previous seg = %d\n",poc2);
+            // Check that POC doesn't go back
+            int maxPocLsb = 1 << sps.log2MaxPocLsb;
+            int pocMsb = 0;
+            if(poc2 > poc && poc2 - poc >= maxPocLsb/2)
+                pocMsb += maxPocLsb;
+            else if(poc > poc2 && poc - poc2 > maxPocLsb/2)
+                pocMsb -= maxPocLsb;
+            int delta = poc2 - pocMsb - poc;
+            delta += 2*sps.refFrames; // unsure
+            if(delta>0)
+            {
+                ADM_warning("Saved video won't be smoothly playable in FFmpeg-based players (POC going back by %d)\n",delta);
+                cut=ADM_EDITOR_CUT_POINT_RECOVERY;
+                BOWOUT
+            }
         }
-        if(!fail)
-            ADM_info("Segment %d is OK\n",segNo);
     }
-    delete [] buffer;
-    buffer=NULL;
-    _currentSegment=oldSeg;
-    vid->lastSentFrame=oldFrame;
-    return !fail;
+    // TODO: check HEVC
+    cut=ADM_EDITOR_CUT_POINT_IDR;
+    BOWOUT
 }
+/**
+    \fn checkCutsAreOnIntra
+    \brief Check all segments
+*/
+ADM_cutPointType ADM_Composer::checkCutsAreOnIntra(void)
+{
+    ADM_cutPointType success=ADM_EDITOR_CUT_POINT_UNCHECKED;
+    int nbSeg=_segments.getNbSegments();
+    ADM_info("Checking cuts start on keyframe..\n");
+    for(int i=0;i<nbSeg;i++)
+    {
+        success=checkSegmentStartsOnIntra(i);
+        if(success!=ADM_EDITOR_CUT_POINT_IDR)
+            break;
+    }
+    return success;
+}
+
+/**
+    \fn checkCutsAreOnIntra
+    \brief Check a span
+*/
+ADM_cutPointType ADM_Composer::checkCutsAreOnIntra(uint64_t startTime,uint64_t endTime)
+{
+    ADM_cutPointType success=ADM_EDITOR_CUT_POINT_UNCHECKED;
+    int nbSeg=_segments.getNbSegments();
+    ADM_info("Checking cuts start on keyframe..\n");
+    uint32_t segNo;
+    uint64_t segTime;
+
+    if(false==_segments.convertLinearTimeToSeg(startTime,&segNo,&segTime))
+        return ADM_EDITOR_CUT_POINT_UNCHECKED; // we can't do anything meaningful if we fail to convert time to segment
+
+    ADM_assert(segNo<nbSeg);
+    int startSeg=segNo;
+    if(false==_segments.convertLinearTimeToSeg(endTime,&segNo,&segTime))
+        return ADM_EDITOR_CUT_POINT_UNCHECKED;
+
+    if(segNo==startSeg) // within one and the same segment, check only that codec matches
+    {
+        aviInfo here,first;
+        getVideoInfo(&first);
+        _SEGMENT *seg=_segments.getSegment(segNo);
+        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+        vid->_aviheader->getVideoInfo(&here);
+        if(!checkCodec(&here,&first))
+            return ADM_EDITOR_CUT_POINT_MISMATCH;
+        return ADM_EDITOR_CUT_POINT_IDR;
+    }
+    for(int i=startSeg;i<segNo;i++)
+    {
+        success=checkSegmentStartsOnIntra(i+1);
+        if(success!=ADM_EDITOR_CUT_POINT_IDR)
+            break;
+    }
+    return success;
+}
+
+/**
+    \fn checkCutIsOnIntra
+    \brief Allow to check if a particular delete operation results in a cut being not on an intra
+*/
+ADM_cutPointType ADM_Composer::checkCutIsOnIntra(uint64_t time)
+{
+    uint32_t segNo;
+    uint64_t segTime;
+    if(false==_segments.convertLinearTimeToSeg(time,&segNo,&segTime))
+        return ADM_EDITOR_CUT_POINT_UNCHECKED; // we can't do anything meaningful if we fail to convert time to segment
+
+    ADM_info("Checking whether cut at %s is on a keyframe...\n",ADM_us2plain(time));
+
+    return checkSegmentStartsOnIntra(segNo);
+}
+
 /**
      \fn bFrameDroppable
 */
-static bool bFrameDroppable(uint32_t fcc)
+static bool bFrameDroppable(uint32_t fcc,vidHeader *hdr,ADMCompressedImage *img=NULL)
 {
-    if(isH264Compatible(fcc)) 
-      return false;
+    if(isH264Compatible(fcc))
+    {
+        if(!img)
+            return false;
+        if(img->flags & AVI_NON_REF_FRAME)
+            return true; // the demuxer has done the job for us
+        uint32_t maxSize=img->dataLength;
+        maxSize+=512; // arbitrary safety margin
+        uint32_t size=maxSize;
+        notStackAllocator buf(maxSize);
+        bool AnnexB=false;
+        if(hdr)
+        {
+            uint8_t *extra;
+            uint32_t extraLen=0;
+            hdr->getExtraHeaderData(&extraLen,&extra);
+            if(!extraLen)
+                AnnexB=true;
+        }
+        if(AnnexB)
+            size=ADM_convertFromAnnexBToMP4(img->data,img->dataLength,buf.data,maxSize);
+        else
+            memcpy(buf.data,img->data,img->dataLength);
+        if(size)
+        {
+            if(extractH264FrameType(buf.data,size,&(img->flags),NULL,NULL) && (img->flags & AVI_NON_REF_FRAME))
+                return true;
+        }
+        return false;
+    }
     if(isH265Compatible(fcc)) 
       return false;    
     return true;
@@ -175,7 +517,7 @@ static bool bFrameDroppable(uint32_t fcc)
 bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
 {
     aviInfo info;
-    int found;
+    int found=-1;
     uint32_t startSegNo;
     uint64_t segTime;
     *delay=0;
@@ -193,7 +535,7 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
         uint64_t pts,dts;
 
         vid->_aviheader->getVideoInfo (&info);
-        if(bFrameDroppable(info.fcc))
+        if(bFrameDroppable(info.fcc,NULL))
         {
             return true; // no need to add extra delay
         }
@@ -237,6 +579,20 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
             if(pts<refTime)
             {
                 ADM_info("frame %d is early \n",i);
+                ADMCompressedImage img;
+#define ROUNDUP(x,y) (x+y-1)&~(y-1)
+                uint32_t len=ROUNDUP(info.width,16);
+                len*=ROUNDUP(info.height,16);
+                len*=3;
+                notStackAllocator buf(len);
+                img.flags=0;
+                img.data=buf.data;
+                img.dataLength=len;
+                if(vid->_aviheader->getFrame(i,&img))
+                {
+                    if(bFrameDroppable(info.fcc,vid->_aviheader,&img))
+                        break; // this frame will be dropped, no need to add delay
+                }
                 uint32_t delta=refTime-pts;
                 if(delta>*delay) *delay=delta;
             }else
@@ -262,7 +618,7 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
 
 
 */
-bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,bool sanitize,ADMCompressedImage *img)
+bool        ADM_Composer::getCompressedPicture(uint64_t start,uint64_t videoDelay,bool sanitize,ADMCompressedImage *img)
 {
     uint64_t tail;
     //
@@ -288,6 +644,13 @@ againGet:
     vidHeader *demuxer=vid->_aviheader;
     ADM_assert(demuxer);
 
+    uint32_t segNo=0;
+    uint64_t segTme,startFromPtsInRef=ADM_NO_PTS;
+    if(_segments.convertLinearTimeToSeg(start,&segNo,&segTme))
+    {
+        startFromPtsInRef=segTme+seg->_refStartTimeUs;
+    }
+
     // Prepare to deal with field-encoded streams
     uint64_t timeIncrement=vid->timeIncrementInUs;
     // Get next pic?
@@ -305,8 +668,7 @@ againGet:
     //
     // after a segment switch, we may have some frames from "the past"
     // if the cut point is not a keyframe, drop them
-    
-    if(bFrameDroppable(info.fcc))
+    if(bFrameDroppable(info.fcc,NULL))
     {
         if(img->flags & AVI_B_FRAME)
         {
@@ -326,31 +688,32 @@ againGet:
             }
         }
     }
-    if( img->demuxerDts!=ADM_NO_PTS)
+    if(img->demuxerDts!=ADM_NO_PTS)
     {
-        bool drop=false;
-        if(_currentSegment  && img->demuxerDts<seg->_refStartDts)
+        if(img->demuxerDts<seg->_refStartDts)
         {
-            ADM_info("Frame %d is in the past for this segment (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerDts));
-            ADM_info("vs refstartdts %s\n",ADM_us2plain(seg->_refStartDts));
-            ADM_info(" dts=%llu, ref=%llu\n",img->demuxerDts,seg->_refStartDts);
-            drop=true;
+            printf("[getCompressedPicture] Frame %d DTS is in the past vs segment start: %s /",vid->lastSentFrame,ADM_us2plain(img->demuxerDts));
+            printf(" %s\n",ADM_us2plain(seg->_refStartDts));
+            goto againGet;
         }
+    }
+    if(img->demuxerPts!=ADM_NO_PTS)
+    {
         // Seeking is not accurate when cutting on non intra
         // we might have some frames that are clearly too early , even in seg0
-        if(img->demuxerPts!=ADM_NO_PTS && bFrameDroppable(info.fcc))
+        uint64_t reftime=(seg->_refStartTimeUs > vid->firstFramePts)? seg->_refStartTimeUs : vid->firstFramePts;
+        if(startFromPtsInRef!=ADM_NO_PTS && segNo==_currentSegment && startFromPtsInRef>reftime)
+            reftime=startFromPtsInRef;
+        if(img->demuxerPts<reftime)
         {
-            if(img->demuxerPts+seg->_startTimeUs<seg->_refStartTimeUs)
+            printf("[getCompressedPicture] Frame %d PTS is in the past vs segment start: %s /",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
+            printf(" %s\n",ADM_us2plain(reftime));
+            if(bFrameDroppable(info.fcc,demuxer,img))
             {
-                ADM_info("Frame %d is in the past for this segment -bis (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
-                ADM_info("vs refstartdts %s\n",ADM_us2plain(seg->_refStartTimeUs));
-                ADM_info(" pts=%llu, startTime=%llu, _refStartTimeUs=%llu\n",img->demuxerPts,seg->_startTimeUs,seg->_refStartTimeUs);
-                drop=true;
+                ADM_warning("Dropping frame %d\n",vid->lastSentFrame);
+                goto againGet;
             }
         }
-        if(drop)
-            goto againGet;
-        
     }
 
     // Need to switch seg ?
@@ -576,7 +939,7 @@ nextSeg:
     _SEGMENT *thisseg=_segments.getSegment(_currentSegment);
     thisseg->_dropBframes=_SEGMENT::ADM_DROP_MAYBE_AFER_SWITCH;
     ADM_info("Retrying for next segment\n");
-    return getCompressedPicture(videoDelay,sanitize,img);
+    return getCompressedPicture(start,videoDelay,sanitize,img);
 }
 
 /**

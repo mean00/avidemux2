@@ -51,7 +51,7 @@ bool    decoderFFVP9::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
     uint8_t *parsedPointer=NULL;
     int      parsedLen=0;
-    bool result;
+    bool result=false;
     // run parser on it..
     int offset=0;
     xlog("Parse %d\n",in->dataLength);

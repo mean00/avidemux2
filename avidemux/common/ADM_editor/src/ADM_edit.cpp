@@ -50,14 +50,12 @@
 */
 ADM_Composer::ADM_Composer (void)
 {
-uint32_t type,value;
-
-
   _pp=NULL;
   _imageBuffer=NULL;
   _internalFlags=0;
   _currentSegment=0;
   _scratch=NULL;
+  _undo_counter=0;
   currentProjectName=std::string("");
 
   _currentPts = 0;
@@ -337,7 +335,6 @@ uint8_t ADM_Composer::addFile (const char *name)
   else
     {
         // Read and construct the audio tracks for that videos
-      audioInfo *info;
       uint32_t extraLen;
       uint8_t  *extraData;
       ADM_audioStream *stream;
@@ -437,7 +434,7 @@ uint8_t ADM_Composer::addFile (const char *name)
         {
             printf("[Editor] B- frame possible with that codec \n");
 #define FCC_MATCHES(x) fourCC::check(info.fcc,(uint8_t *)x)
-            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || isVC1Compatible(info.fcc) || FCC_MATCHES("WMV3"))
+            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || FCC_MATCHES("VC1 ") || FCC_MATCHES("WMV3"))
             {
                 ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");
                 uint64_t delay;
@@ -464,9 +461,9 @@ uint8_t ADM_Composer::addFile (const char *name)
         }
      }
     int lastVideo=_segments.getNbSegments();
-    if(lastVideo && isH264Compatible(info.fcc))
+    if(lastVideo && (isH264Compatible(info.fcc) || FCC_MATCHES("WVC1")))
     {
-        ADM_info("H264 in mp4 sometimes has invalid timestamps which confuse avidemux, checking\n");
+        ADM_info("%s sometimes has invalid timestamps which confuse avidemux, checking\n",fourCC::tostring(info.fcc));
         checkForValidPts(_segments.getSegment(lastVideo-1)); 
     }
     if(true==checkForDoubledFps( video._aviheader,video.timeIncrementInUs))
@@ -688,10 +685,6 @@ uint32_t ref;
 */
 bool ADM_Composer::changeAudioStream(uint64_t xtime,uint32_t newstream)
 {
-double     duration;
-WAVHeader *wav;
-aviInfo    info;
-uint32_t ref;
         int n=_segments.getNbRefVideos();
         for(int i=0;i<n;i++)
         {

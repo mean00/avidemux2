@@ -165,7 +165,6 @@ static bool idWAV(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
 	          }
 	       }
 
-	    uint32_t length;
 	    wRead32(t32);
 	    ADM_info(" %lu bytes data \n", totalSize);
 	    info.blockalign=1;
@@ -317,35 +316,52 @@ static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t &
  */
 static bool idAAACADTS(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &offset)
 {
+    int firstOffset,expected,sync=0;
     ADM_adts2aac aac;
+    uint8_t out[ADTS_MAX_AAC_FRAME_SIZE];
     const uint8_t *start=data;
     const uint8_t *end=data+bufferSize;
+    offset=firstOffset=expected=0;
     while(start<end)
     {
         int incoming=500;
-        int outLen;
+        int off,outLen=0;
         if(start+500>end) incoming=end-start;
-        ADM_adts2aac::ADTS_STATE state=aac.convert2(incoming,start,&outLen,NULL);
+        bool r=false;
+        if(incoming>0)
+            r=aac.addData(incoming,start);
+        ADM_adts2aac::ADTS_STATE state=aac.getAACFrame(&outLen,out,&off);
         start+=incoming;
         switch(state)
         {
-            case ADM_adts2aac::ADTS_ERROR: 
+            case ADM_adts2aac::ADTS_ERROR:
                     return false;
-                    break;
-            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED: 
-                    continue;
-                    break;
+            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED:
+                    if(r) continue;
+                    return false;
             case ADM_adts2aac::ADTS_OK:
                     // Got sync
+                    if(!sync)
+                        firstOffset=off;
+                    else if(off>expected)
+                    {
+                        ADM_warning("Skipped at least %d bytes between frames, assuming a false positive.\n",off-expected);
+                        return false;
+                    }
+                    sync++;
+                    expected=off+outLen+9; // ADTS header max size
+                    ADM_info("Sync %d at offset %d, frame size %d\n",sync,off,outLen);
+                    if(sync<3)
+                        continue;
                     info.encoding=WAV_AAC;
                     info.channels=aac.getChannels();
                     info.blockalign=0;
                     info.bitspersample=16;
                     info.byterate=128000>>3;
                     info.frequency=aac.getFrequency();
-                    ADM_info("Detected as AAC, fq=%d, channels=%d\n",info.frequency,info.channels);
+                    offset=firstOffset;
+                    ADM_info("Detected as AAC, fq=%d, channels=%d, offset=%d\n",info.frequency,info.channels,offset);
                     return true;
-                    break;
             default:
                 ADM_assert(0);
                 break;

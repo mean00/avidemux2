@@ -176,11 +176,11 @@ again:
     int nbFrames=0;
     bool crc=false;
     int match;
-    for( p=(buffer.at(tail));p<(buffer.at(head-2));p++)
+    for( p=(buffer.at(tail));p<(buffer.at(head-6));p++)
     {
-        if(p[0]!=0xff || ((p[1]&0xf0)!=0xf0))
+        if(p[0]!=0xff || (p[1]&0xf0)!=0xf0 || p[1]&6)
             continue;
-        
+
         match=p-buffer.at(0); // offset of syncword
         packetLen=((p[3]&0x3)<<11)+(p[4]<<3)+(p[5]>>5);
         nbFrames=1+(p[6]&3);
@@ -198,15 +198,15 @@ again:
             found=true;
             break;
         }
-        if(match+packetLen+2>head && match+packetLen!=head)
+        if(match+packetLen+3>head && match+packetLen!=head)
         {
             aprintf("[ADTS]** not enough data **\n");
             return ADTS_MORE_DATA_NEEDED;
         }
         // do we have sync at the end ?
-        if(p[packetLen]!=0xff)
+        if(p[packetLen]!=0xff || (p[packetLen+1]&0xf0)!=0xf0 || p[packetLen+1]&6)
         {
-            aprintf("[ADTS] no ff marker at the end\n");
+            aprintf("[ADTS] no syncword at the end or layer!=0\n");
             continue;
         }
         aprintf("[ADTS] End marker found\n");
@@ -217,7 +217,7 @@ again:
     if(found==false)
     {
         aprintf("[ADTS]No sync\n");
-        tail=head-1;
+        tail=head-6;
         return ADTS_MORE_DATA_NEEDED;
     }
     if(!hasExtra)

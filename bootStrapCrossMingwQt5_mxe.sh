@@ -6,6 +6,7 @@ bits=32
 default_mxerootdir="/opt/mxe"
 mxerootdir="$default_mxerootdir"
 rebuild=0
+debug=0
 do_core=1
 do_qt=1
 do_cli=1
@@ -62,7 +63,11 @@ setupEnv()
         export TOOLCHAIN_LOCATION=${MXE_ROOT}/usr
         export SDL2DIR=${MXE_ROOT}/usr/${MXE_TARGET}
         export PARAL="-j $(nproc)"
-        export INSTALL_DIR=${MINGW}/out/avidemux
+        if [ "x$debug" != "x1" ]; then
+            export INSTALL_DIR=${MINGW}/out/avidemux
+        else
+            export INSTALL_DIR=${MINGW}/out_debug/avidemux
+        fi
     fi
     export CROSS_PREFIX=$MXE_TARGET
     export PKG_CONFIG_PATH=$MINGW/lib/pkgconfig
@@ -84,6 +89,12 @@ Process()
     export BUILDDIR=$1
     export SOURCEDIR=$2
     export EXTRA=$3
+    GENERATOR="Unix Makefiles"
+    if [ "x$debug" = "x1" ]; then
+                DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug"
+                BUILDDIR="${BUILDDIR}_debug"
+                GENERATOR="CodeBlocks - Unix Makefiles"
+    fi
     echo "Building $BUILDDIR from $SOURCEDIR (Extra=$EXTRA)"
     if [ "x$rebuild" != "x1" ]; then
         rm -Rf ./"$BUILDDIR"
@@ -104,10 +115,11 @@ Process()
     -DCMAKE_AR:STRING=${CROSS_PREFIX}-ar \
     -DCMAKE_RC_COMPILER:STRING=${CROSS_PREFIX}-windres \
     -DAVIDEMUX_TOP_SOURCE_DIR="$TOP" \
-    -G "Unix Makefiles" \
+    ${DEBUG} \
+    -G "${GENERATOR}" \
     $EXTRA \
     $SOURCEDIR || fail cmake
-    make $PARAL VERBOSE=1 >& /tmp/log$BUILDDIR || fail make
+    make $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR "
     make install || fail make_install
     # Only install  component=dev for dev package
     if [ "x$author_setup" = "x1" ]; then
@@ -121,6 +133,7 @@ usage()
     echo "  --help                : Print usage"
     echo "  --32                  : Build a 32 bit application (default)"
     echo "  --64                  : Build a 64 bit application"
+    echo "  --debug               : Switch debugging on"
     echo "  --mxe-root=DIR        : Use MXE installed in DIR (default: ${default_mxerootdir})"
     echo "  --rebuild             : Preserve existing build directories"
     echo "  --with-core           : Build core"
@@ -177,9 +190,12 @@ create_release_package()
         echo "No avidemux.exe (${BITS} bit) found in ${INSTALL_DIR}, aborting"
         exit 1
     fi
-    echo "Preparing release package..."
+    echo "Preparing package..."
     cd $TOP
     PACKAGE_DIR="packaged_mingw_build_${BUILDDATE}"
+    if [ "x$debug" = "x1" ]; then
+        PACKAGE_DIR="packaged_mingw_debug_build_${BUILDDATE}"
+    fi
     if [ ! -e $PACKAGE_DIR ]; then
         mkdir $PACKAGE_DIR
     fi

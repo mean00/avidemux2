@@ -38,11 +38,11 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
     if (!avifileinfo)
         return;
 
-#define FILLTEXT(a,b,c) {snprintf(text,79,b,c); listOfValues.push_back(text); ui.a->setText(text);}
-#define FILLTEXT4(a,b,c,d) {snprintf(text,79,b,c,d); listOfValues.push_back(text); ui.a->setText(text);}
-#define FILLTEXT5(a,b,c,d,e) {snprintf(text,79,b,c,d,e); listOfValues.push_back(text); ui.a->setText(text);}
-#define SET_YES(a,b) ui.a->setText(yesno[b])
-#define FILLQT_TRANSLATE_NOOP(a,q) listOfValues.push_back(text); ui.q->setText(text);
+#define FILLTEXT(a,b,c) {snprintf(text,79,b,c); listOfValues.push_back(QString::fromUtf8(text)); ui.a->setText(QString::fromUtf8(text));}
+#define FILLTEXT4(a,b,c,d) {snprintf(text,79,b,c,d); listOfValues.push_back(QString::fromUtf8(text)); ui.a->setText(QString::fromUtf8(text));}
+#define FILLTEXT5(a,b,c,d,e) {snprintf(text,79,b,c,d,e); listOfValues.push_back(QString::fromUtf8(text)); ui.a->setText(QString::fromUtf8(text));}
+#define SET_YES(a,b) ui.a->setText(QString::fromUtf8(yesno[b])
+#define FILLQT_TRANSLATE_NOOP(a,q) listOfValues.push_back(QString::fromUtf8(text)); ui.q->setText(QString::fromUtf8(text));
 
     //------------------------------------
 
@@ -154,9 +154,9 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 }
 
 #define ADDCATEGORY(a) props += QString("\n=====================================================\n")\
-                               +QString(a)\
+                               +QString::fromUtf8(a)\
                                +QString("\n=====================================================\n");
-#define ADDNAMEVALUE(a,b) props += QString(a)+QString("\t")+QString(b)+QString("\n");
+#define ADDNAMEVALUE(a,b) props += QString::fromUtf8(a)+QString("\t")+QString(b)+QString("\n");
 
 /**
     \fn propsCopyToClipboard

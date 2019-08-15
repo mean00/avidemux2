@@ -1,13 +1,13 @@
---- libavcodec/h264_parser.c.org	2017-03-10 18:39:39.106069071 +0100
-+++ libavcodec/h264_parser.c	2017-03-10 18:38:20.586520540 +0100
-@@ -64,6 +64,102 @@
+--- libavcodec/h264_parser.c.orig	2019-04-01 13:16:31.000000000 +0200
++++ libavcodec/h264_parser.c	2019-07-15 23:20:28.365062563 +0200
+@@ -64,6 +64,112 @@
      int last_frame_num, last_picture_structure;
  } H264ParseContext;
  
 +#include "ff_spsinfo.h" // MEANX
 +#include <assert.h>
 + // MEANX
-+int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info);
++int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsInfo *info);
 +/**
 +    \fn AVCodecParserContext
 + *  \brief find a valid sps,take the 1st one that look sok
@@ -42,7 +42,7 @@
 + * @param info
 + * @return 
 + */
-+int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info)
++int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsInfo *info)
 +{
 +    H264ParseContext *ctx = parser->priv_data;    
 +    int f;   
@@ -60,7 +60,10 @@
 +    {
 +            float scale=sps->time_scale ;
 +            float ticks=sps->num_units_in_tick;
-+            info->fps1000 =  (uint32_t) ((scale/ticks) *    1000.);
++            float fps = scale/ticks;
++            if(ticksPerFrame>1)
++                fps /= ticksPerFrame;
++            info->fps1000 = (uint32_t)(fps * 1000.);
 +#undef printf
 +            printf("Scale : %d, tick=%d, fps=%d\n",(int)scale,(int)ticks,(int)info->fps1000);
 +    }else
@@ -71,7 +74,9 @@
 +    // D.2.2 SEI Timing present if CpbDbpDelayPresentFlag=1 or pictStructPresent=1
 +    // CpbDbpDelayPresentFlag =1 if nal_hdr or vcl_hrd or ???
 +    f=sps->nal_hrd_parameters_present_flag | sps->vcl_hrd_parameters_present_flag;
-+    info->hasStructInfo=f | sps->pic_struct_present_flag;;
++    info->hasStructInfo=f | sps->pic_struct_present_flag;
++    // Check whether POC is explicitely set in slice header
++    info->hasPocInfo=!sps->poc_type;
 +    // While decoding SEI, if CpbDpbDelaysPresentFlags is there we skip cpb_removal_delay + dpb_output_delay
 +
 +    info->CpbDpbToSkip=0;
@@ -79,6 +84,10 @@
 +    {
 +        info->CpbDpbToSkip=sps->cpb_removal_delay_length+sps->dpb_output_delay_length;
 +    }
++    info->log2MaxFrameNum=sps->log2_max_frame_num;
++    info->log2MaxPocLsb=sps->log2_max_poc_lsb;
++    // Needed to determine the offset of poc_lsb
++    info->frameMbsOnlyFlag=sps->frame_mbs_only_flag;
 +//#warning fixme sar vs dar
 +    info->darNum=sps->sar.num;
 +    info->darDen=sps->sar.den;
@@ -96,6 +105,7 @@
 +         info->height-=sps->crop_bottom*mul;
 +
 +    }
++    info->refFrames=sps->ref_frame_count;
 +    return 1;
 +}
 +// /MEANX

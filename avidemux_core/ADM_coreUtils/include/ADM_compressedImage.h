@@ -12,6 +12,7 @@
 #include "ADM_default.h"
 
 #define ADM_COMPRESSED_NO_PTS ADM_NO_PTS
+#define ADM_COMPRESSED_MAX_DATA_LENGTH (MAXIMUM_SIZE * MAXIMUM_SIZE * 3)
 class ADMCompressedImage
 {
   

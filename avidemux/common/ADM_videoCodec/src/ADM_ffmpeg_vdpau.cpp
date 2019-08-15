@@ -344,8 +344,8 @@ decoderFFVDPAU::~decoderFFVDPAU()
                 }
                 delete r;
             }
-            vdpau.fullQueue.clear();
         }
+        vdpau.fullQueue.clear();
 }
 /**
     \fn uncompress
@@ -397,8 +397,6 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
 
     int ret = avcodec_receive_frame(_context, frame);
 
-    if(!ret)
-        _parent->setEndOfStream(false);
     if(!_parent->decodeErrorHandler(ret))
         return false;
 

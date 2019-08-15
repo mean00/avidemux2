@@ -37,10 +37,9 @@
 */
 bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
 {
-   _VIDEOS *vid=_segments.getRefVideo(ref);
-    vidHeader *demuxer=vid->_aviheader;
-	EditorCache   *cache =vid->_videoCache;
-	ADM_assert(cache);
+    _VIDEOS *vid=_segments.getRefVideo(ref);
+    EditorCache   *cache =vid->_videoCache;
+    ADM_assert(cache);
     bool found=false;
     if(timeToSeek>vid->firstFramePts && !dontdecode)
     {
@@ -48,7 +47,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
         if(image)
         {
             vid->lastDecodedPts=vid->lastReadPts=timeToSeek;
-            ADM_info("Image found in cache, pts=%" PRIu64" ms\n",timeToSeek/1000);
+            ADM_info("Image found in cache, pts=%" PRIu64" ms, last sent frame: %" PRIu32"\n",timeToSeek/1000,vid->lastSentFrame);
             endOfStream=false;
             return true;
         }
@@ -96,7 +95,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
         vid->lastReadPts=pts;
         if(pts==timeToSeek)
         {
-            ADM_info("Image found, pts=%" PRIu64" ms\n",pts/1000);
+            ADM_info("Image found, pts=%" PRIu64" ms, last sent frame: %" PRIu32"\n",pts/1000,vid->lastSentFrame);
             return true;
         }
         if(pts>timeToSeek)
@@ -119,9 +118,8 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
 bool ADM_Composer::samePictureInternal(uint32_t ref,ADMImage *out)
 {
     _VIDEOS *vid=_segments.getRefVideo(ref);
-    vidHeader *demuxer=vid->_aviheader;
-	EditorCache   *cache =vid->_videoCache;
-	ADM_assert(cache);
+    EditorCache   *cache =vid->_videoCache;
+    ADM_assert(cache);
 
   ADMImage *in=cache->getByPts(vid->lastDecodedPts);
   if(!in)
@@ -177,7 +175,7 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
             // Duplicate
             if(out)
             {
-                aprintf("[getNextPicture] Looking for after> %" PRIu64", got %" PRIu64" delta=%" PRIi32" ms\n",vid->lastReadPts,img->Pts,(img->Pts-vid->lastReadPts)/1000);
+                aprintf("[getNextPicture] Looking for after> %" PRIu64", got %" PRIu64" delta=%" PRId64" ms\n",vid->lastReadPts,img->Pts,((int64_t)img->Pts-(int64_t)vid->lastReadPts)/1000);
                 out->duplicate(img);
                 vid->lastReadPts=img->Pts;
                 currentFrame++;
@@ -209,11 +207,11 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
 */
 bool ADM_Composer::DecodeNextPicture(uint32_t ref)
 {
-  EditorCache   *cache;
-  ADMImage	*result;
-  bool drain=false;
-  uint32_t  flags;
-   _VIDEOS *vid=_segments.getRefVideo(ref);
+    EditorCache *cache;
+    ADMImage *result,*last;
+    bool drain=false;
+
+    _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
     ADM_assert(vid->decoder);
     if(vid->decoder->endOfStreamReached())
@@ -236,7 +234,7 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
     {
         if(!demuxer->getFrame(frame,&img))
         {
-            ADM_warning("getFrame failed for frame %" PRIu32"\n",vid->lastSentFrame);
+            ADM_warning("getFrame failed for frame %" PRIu32"\n",frame);
             drain=true;
             vid->decoder->setDrainingState(true);
         }else
@@ -244,11 +242,14 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
             endOfStream=false;
         }
     }
+    // Be prepared for the case that the decoder doesn't output a picture
+    // but tells us to repeat the previous one.
+    last=cache->getLast();
     // Now uncompress it...
     result=cache->getFreeImage();
     if(!result)
     {
-        ADM_warning(" Cache full for frame %" PRIu32"\n",vid->lastSentFrame);
+        ADM_warning(" Cache full for frame %" PRIu32"\n",frame);
         return false;
     }
     if(!drain)
@@ -260,41 +261,59 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
     }
     if(!decompressImage(result,&img,ref))
     {
-        ADM_info("Decoding error for frame %" PRIu32", not necessarily a problem\n",vid->lastSentFrame);
+        if(false==vid->decoder->keepFeeding())
+            ADM_info("Error decoding frame %" PRIu32"\n",frame);
         stats.nbNoImage++;
         cache->invalidate(result);
         if(drain)
             endOfStream=true;
          return true; // Not an error in itself
     }
-        aprintf("Got image with PTS=%s\n",ADM_us2plain(result->Pts));
-     uint64_t pts=result->Pts;
-     uint64_t old=vid->lastDecodedPts;
-        if(pts==ADM_COMPRESSED_NO_PTS || vid->dontTrustBFramePts) // No PTS available ?
+    if(result->_noPicture) // Handle N-VOP in mpeg4
+    {
+        if(last && !last->_noPicture)
+            result->duplicate(last);
+        else if(result->isWrittable())
+            result->blacken();
+        result->_noPicture=0;
+        result->flags=AVI_P_FRAME;
+        result->Pts=ADM_NO_PTS;
+    }
+    // else aprintf("Got a fresh image with PTS=%s\n",ADM_us2plain(result->Pts));
+    uint64_t pts=result->Pts;
+    uint64_t old=vid->lastDecodedPts;
+    if(pts==ADM_COMPRESSED_NO_PTS || vid->dontTrustBFramePts) // No PTS available ?
+    {
+        aprintf("[Editor] No PTS, guessing value\n");
+        aprintf("Image Pts : %s\n",ADM_us2plain(img.demuxerPts));
+        aprintf("Image Dts : %s\n",ADM_us2plain(img.demuxerDts));
+        vid->lastDecodedPts+=vid->timeIncrementInUs;
+        uint64_t pts=img.demuxerPts;
+        uint64_t dts=img.demuxerDts;
+        uint32_t origin=0;
+        if(frame>=vid->decoderDelay)
+            origin=frame-vid->decoderDelay;
+        demuxer->getPtsDts(origin,&pts,&dts);
+        if(dts!=ADM_NO_PTS && (vid->dontTrustBFramePts || vid->_aviheader->providePts()==false))
         {
-                aprintf("[Editor] No PTS, guessing value\n");
-                aprintf("Image Pts : %s\n",ADM_us2plain(img.demuxerPts));
-                aprintf("Image Dts : %s\n",ADM_us2plain(img.demuxerDts));
-                vid->lastDecodedPts+=vid->timeIncrementInUs;
-                if(img.demuxerDts!=ADM_NO_PTS && (vid->dontTrustBFramePts || vid->_aviheader->providePts()==false))
-                {
-                    if(img.demuxerDts>vid->lastDecodedPts)
-                    {
-                        aprintf("Dts > Guessed Pts, cranking pts\n");
-                        vid->lastDecodedPts=img.demuxerDts;
-                    }
-                }
-                result->Pts=vid->lastDecodedPts;
-        }else
-           {
-                aprintf("[Editor] got PTS\n");
-                vid->lastDecodedPts=pts;
+            aprintf("Checking guessed PTS against DTS from frame %u, decoder delay: %u frames.\n",origin,vid->decoderDelay);
+            if(dts>vid->lastDecodedPts)
+            {
+                ADM_warning("Dts > Guessed Pts, cranking pts by %" PRIu64" us.\n",dts-vid->lastDecodedPts);
+                vid->lastDecodedPts=dts;
             }
+        }
+        result->Pts=vid->lastDecodedPts;
+    }else
+    {
+        aprintf("[Editor] got PTS\n");
+        vid->lastDecodedPts=pts;
+    }
     aprintf(">>Decoded frame %" PRIu32" with pts=%" PRId64" us, %" PRId64" ms, ptsdelta=%" PRId64" ms \n",
         frame,
         vid->lastDecodedPts,
         vid->lastDecodedPts/1000,
-        (vid->lastDecodedPts-old)/1000);
+        ((int64_t)vid->lastDecodedPts-(int64_t)old)/1000);
 
     if(old>vid->lastDecodedPts) 
     {
@@ -320,89 +339,84 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
 
 bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t ref)
 {
- ADMImage *tmpImage=NULL;
- _VIDEOS  *v=_segments.getRefVideo(ref);
- uint32_t refOnly=v->decoder->dontcopy(); // can we skip one memcpy ?
- // get settings from pref...
- 
-// This is only an empty Shell
+    ADMImage *tmpImage=NULL;
+    _VIDEOS  *v=_segments.getRefVideo(ref);
+    bool refOnly=v->decoder->dontcopy(); // can we skip one memcpy ?
+    // This is only an empty Shell
     if(refOnly)
     {
-                uint32_t w,h;
-                if(_scratch) // Can we reuse the old scratch memory ?
-                {
-                    _scratch->getWidthHeight(&w,&h);
-                    if(w!=_imageBuffer->_width || _imageBuffer->_height!=h)
-                    {
-                        delete _scratch;
-                        _scratch=NULL;
-                    }
-                }
-                if(!_scratch)
-                {
-                  _scratch=new ADMImageRef(_imageBuffer->_width,_imageBuffer->_height);
-                }
-                tmpImage=_scratch;
-        }
-        else
+        if(_scratch) // Can we reuse the old scratch memory ?
         {
-                tmpImage=_imageBuffer;
-       }
-    //
+            uint32_t w,h;
+            _scratch->getWidthHeight(&w,&h);
+            if(w!=_imageBuffer->_width || _imageBuffer->_height!=h)
+            {
+                delete _scratch;
+                _scratch=NULL;
+            }
+        }
+        if(!_scratch)
+            _scratch=new ADMImageRef(_imageBuffer->_width,_imageBuffer->_height);
+        tmpImage=_scratch;
+    }else
+    {
+        tmpImage=_imageBuffer;
+    }
+
     tmpImage->_colorspace=ADM_COLOR_YV12;
-	// Decode it
-        if (!v->decoder->uncompress (in, tmpImage))
-	    {
-            printf("[decompressImage] uncompress failed\n");
-            return false;
-        }
-        //
-        if(tmpImage->_noPicture && refOnly)
-        {
-            printf("[decompressImage] NoPicture\n");
-            // Fill in with black
-            return false;
-        }
-        aprintf("[::Decompress] in:%" PRIu32" out:%" PRIu32" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
-	// If not quant and it is already YV12, we can stop here
+    // Decode it
+    if (!v->decoder->uncompress (in, tmpImage))
+    {
+        //printf("[decompressImage] uncompress failed\n");
+        return false;
+    }
+
+    if(tmpImage->_noPicture)
+    {
+        printf("[decompressImage] NoPicture\n");
+        // No picture and no error from decoder means repeat the previous one
+        out->_noPicture=1;
+        return true;
+    }
+    aprintf("[::Decompress] in:%" PRIu64" out:%" PRIu64" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
+    // If not quant and it is already YV12, we can stop here
     // Also, if the image is decoded through hw, dont do post proc
-	if(tmpImage->refType!=ADM_HW_NONE || 
-                    ((!tmpImage->quant || !tmpImage->_qStride) && tmpImage->_colorspace==ADM_COLOR_YV12))
-	{
-		out->_Qp=2;
-		out->duplicate(tmpImage);
-		aprintf("[decompressImage] : No quant avail\n");
-		return true;
-	}
-	// We got everything, let's go
-	// 1 compute average quant
-	int qz;
-	uint32_t sumit=0;
+    if(tmpImage->refType!=ADM_HW_NONE || ((!tmpImage->quant || !tmpImage->_qStride) && tmpImage->_colorspace==ADM_COLOR_YV12))
+    {
+        out->_Qp=2;
+        out->duplicate(tmpImage);
+        aprintf("[decompressImage] : No quant avail\n");
+        return true;
+    }
+    // We got everything, let's go
+    // 1 compute average quant
+    int qz;
+    uint32_t sumit=0;
     // Dupe infos
     out->copyInfo(tmpImage);
 
 
     // Do postprocessing if any
-	for(uint32_t z=0;z<tmpImage->_qSize;z++)
-	{
-            qz=(int)tmpImage->quant[z];
-			sumit+=qz;
-	}
-	sumit+=(tmpImage->_qSize-1);
-	float sum=(float)sumit;
-	sum/=tmpImage->_qSize;
-	if(sum>31) sum=31;
-	if(sum<1) sum=1;
+    for(uint32_t z=0;z<tmpImage->_qSize;z++)
+    {
+        qz=(int)tmpImage->quant[z];
+        sumit+=qz;
+    }
+    sumit+=(tmpImage->_qSize-1);
+    float sum=(float)sumit;
+    sum/=tmpImage->_qSize;
+    if(sum>31) sum=31;
+    if(sum<1) sum=1;
 
     // update average Q
-	tmpImage->_Qp=out->_Qp=(uint32_t)floor(sum);
-	// Pp deactivated ?
-	if(!_pp->postProcType || !_pp->postProcStrength || tmpImage->_colorspace!=ADM_COLOR_YV12)
-        {
-                dupe(tmpImage,out,v);
-                aprintf("EdCache: Postproc disabled\n");
-		return 1;
-	}
+    tmpImage->_Qp=out->_Qp=(uint32_t)floor(sum);
+    // Pp deactivated ?
+    if(!_pp->postProcType || !_pp->postProcStrength || tmpImage->_colorspace!=ADM_COLOR_YV12)
+    {
+        dupe(tmpImage,out,v);
+        aprintf("EdCache: Postproc disabled\n");
+        return true;
+    }
     /* Do it!*/
     _pp->process(tmpImage,out);
     return true;
@@ -455,6 +469,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
     cache->flush();
     vid->decoder->flush();
     vid->decoder->setEndOfStream(false);
+    vid->decoderDelay=0;
     endOfStream=false;
     // The PTS associated with our frame is the one we are looking for
     uint64_t wantedPts=demuxer->estimatePts(frame);
@@ -470,76 +485,80 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
         // Last frame ? if so repeat
         if(vid->lastSentFrame>=nbFrames-1) vid->lastSentFrame=nbFrames-1;
         // Fetch frame
-         aprintf("[Editor] Decoding  frame %u\n",vid->lastSentFrame);
-         
-         if (!demuxer->getFrame (vid->lastSentFrame,&img))
-         {
-                ADM_warning(" getFrame failed for frame %" PRIu32"\n",vid->lastSentFrame);
-                //cache->flush();
-                vid->decoder->setDrainingState(true);
-         }
-         // Now uncompress it...
-         result=cache->getFreeImage();
-         if(frame==0) // out first frame, make sure it starts black to avoid the all green effect
-         {
-            result->blacken();
-         }
-         if(!result)
-         {
-                ADM_warning(" Cache full for frame %" PRIu32"\n",vid->lastSentFrame);
-                return false;
-          }
-           aprintf("[Decoder] Demuxer Frame %" PRIu32" pts=%" PRIu64" ms, %" PRIu64" us\n",vid->lastSentFrame,img.demuxerPts/1000,
+        aprintf("[Editor] Decoding  frame %u\n",vid->lastSentFrame);
+
+        if (!demuxer->getFrame (vid->lastSentFrame,&img))
+        {
+            ADM_warning("getFrame failed for frame %" PRIu32"\n",vid->lastSentFrame);
+            //cache->flush();
+            vid->decoder->setDrainingState(true);
+        }
+        if(!img.dataLength)
+        {
+            aprintf("Skipping zero-length frame %u\n",vid->lastSentFrame);
+            vid->lastSentFrame++;
+            vid->decoderDelay++;
+            continue;
+        }
+        // Now uncompress it...
+        result=cache->getFreeImage();
+        if(!result)
+        {
+            ADM_warning("Cache full for frame %" PRIu32"\n",vid->lastSentFrame);
+            return false;
+        }
+        aprintf("[Decoder] Demuxer Frame %" PRIu32" pts=%" PRIu64" ms, %" PRIu64" us\n",vid->lastSentFrame,img.demuxerPts/1000,
                                                                     img.demuxerPts);
-          if(!decompressImage(result,&img,ref))
-          {
-             ADM_info(" decode error for frame %" PRIu32", not necessarily a problem\n",vid->lastSentFrame);
-             //cache->dump();
-             cache->invalidate(result);
-             //cache->dump();
-             vid->lastSentFrame++;
-             continue;
-          }else
-            {
-                
-                uint64_t pts=result->Pts;
-                aprintf("[Decoder] Decoder Frame %" PRIu32" pts=%" PRIu64" ms, %" PRIu64" us\n",vid->lastSentFrame,
+        if(!decompressImage(result,&img,ref))
+        {
+            if(false==vid->decoder->keepFeeding())
+                ADM_info("Error decoding frame %" PRIu32"\n",vid->lastSentFrame);
+            //cache->dump();
+            cache->invalidate(result);
+            //cache->dump();
+            vid->lastSentFrame++;
+            vid->decoderDelay++;
+            continue;
+        }else
+        {
+            uint64_t pts=result->Pts;
+            aprintf("[Decoder] Decoder Frame %" PRIu32" pts=%" PRIu64" ms, %" PRIu64" us\n",vid->lastSentFrame,
                                                         result->Pts/1000,result->Pts);
-                if(pts==ADM_COMPRESSED_NO_PTS) // No PTS available ?
+            if(pts==ADM_COMPRESSED_NO_PTS) // No PTS available ?
+            {
+                if(false==syncFound)
                 {
-                   
-                    if(false==syncFound)
-                    {
-                        aprintf("[DecodePictureUpToIntra] No time stamp yet, dropping picture\n");
-                        cache->invalidate(result);
-                    }else
-                    {
-                        // increment it using average fps
-                        vid->lastDecodedPts+=vid->timeIncrementInUs;
-                        result->Pts=vid->lastDecodedPts;
-                    }
+                    aprintf("[DecodePictureUpToIntra] No time stamp yet, dropping picture\n");
+                    cache->invalidate(result);
                 }else
                 {
-                    if(false==syncFound)
-                    {
-                        aprintf("[DecodePictureUpToIntra] Sync found\n");
-                        syncFound=true;
-                    }
-                    vid->lastDecodedPts=pts;
+                    // increment it using average fps
+                    vid->lastDecodedPts+=vid->timeIncrementInUs;
+                    result->Pts=vid->lastDecodedPts;
                 }
-                cache->validate(result);
+            }else
+            {
+                if(false==syncFound)
+                {
+                    aprintf("[DecodePictureUpToIntra] Sync found\n");
+                    syncFound=true;
+                }
+                vid->lastDecodedPts=pts;
             }
+            cache->validate(result);
+        }
 
-            // Found our image ?
-          if(result->Pts==wantedPts)
-                found=true;
-          else
-                vid->lastSentFrame++;
+        // Found our image ?
+        if(result->Pts==wantedPts)
+            found=true;
+        else
+            vid->lastSentFrame++;
     }
     if(found==false)
     {
         ADM_warning(" Could not find decoded frame, wanted PTS :%" PRIu32" PTS=%" PRIu64" ms, %" PRIu64" us\n",frame,wantedPts/1000,wantedPts);
         cache->dump();
+        vid->decoderDelay=0;
         return false;
     }
     vid->lastReadPts=wantedPts;

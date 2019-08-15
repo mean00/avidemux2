@@ -39,7 +39,7 @@ ADM_COREUI6_EXPORT int             GUI_Confirmation_HIG(const char *button_confi
 // Ask for yes/no. Yes will return 1, No will return 0
 ADM_COREUI6_EXPORT int             GUI_YesNo(const char *primary, const char *secondary_format, ...);
 // About the same as GUI_YesNo, the button will be ok/cancel
-ADM_COREUI6_EXPORT int             GUI_Question(const char *alertstring);
+ADM_COREUI6_EXPORT int             GUI_Question(const char *alertstring, bool insuppressible=false);
 // Give some time to the UI to handle its events
 ADM_COREUI6_EXPORT void            GUI_Sleep(uint32_t ms);
 // Ask to choose between choice1 and choice2
@@ -51,7 +51,7 @@ ADM_COREUI6_EXPORT void            GUI_Verbose(void);
 // Set the ui in silent mode. All popups & questions will be answered with their default value
 ADM_COREUI6_EXPORT void            GUI_Quiet(void);
 // Is the UI in quiet mode ?
-uint8_t			GUI_isQuiet(void);
+ADM_COREUI6_EXPORT uint8_t         GUI_isQuiet(void);
 //
 ADM_COREUI6_EXPORT void            UI_purge(void);
 //

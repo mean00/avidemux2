@@ -68,6 +68,15 @@ FILE *ADM_fopen(const char *file, const char *mode)
 	return fopen(file, mode);
 }
 
+/**
+    \fn ADM_eraseFile
+*/
+uint8_t ADM_eraseFile(const char *file)
+{
+    if(!unlink(file))
+        return true;
+    return false;
+}
 
 /*----------------------------------------
       Create a directory
@@ -118,9 +127,12 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 	DIR *dir;
 	struct dirent *direntry;
 	int dirmax = 0, len;
-	int extlen = strlen(ext);
+	int extlen = strlen(ext)+1;
+    ADM_assert(extlen>1);
 
-	ADM_assert(extlen);
+    char *dotted=(char *)admAlloca(extlen+1);
+    strcpy(dotted+1,ext);
+    dotted[0]='.';
 
 	const char *base2 = base;
 
@@ -144,7 +156,7 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 
 		int xbase = len - extlen;
 
-		if (memcmp(d_name + xbase, ext, extlen))
+		if (memcmp(d_name + xbase, dotted, extlen))
 		{
 			printf("ignored: %s\n", d_name);
 			continue;

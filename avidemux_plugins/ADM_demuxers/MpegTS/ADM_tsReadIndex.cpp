@@ -181,6 +181,17 @@ bool tsHeader::processVideoIndex(char *buffer)
 
                 }
                 frame->len=len;
+                if(!interlaced && (frame->pictureType & AVI_FIELD_STRUCTURE))
+                {
+                    printf("[processVideoIndex] Setting interlaced flag.\n");
+                    interlaced=true;
+                    // Set fps to field rate for interlaced H.264 streams, necessary for copy mode
+                    if(_videostream.fccHandler==fourCC::get((uint8_t *)"H264"))
+                    {
+                        _videostream.dwRate*=2;
+                        printf("[processVideoIndex] Doubling fps1000 for interlaced H.264, new value = %d\n",_videostream.dwRate);
+                    }
+                }
                 ListOfFrames.push_back(frame);
                 count++;
                 if(!next) 
@@ -203,7 +214,7 @@ bool    tsHeader::readVideo(indexFile *index)
 {
     printf("[TsDemuxerer] Reading Video\n");
     if(!index->readSection("Video")) return false;
-    uint32_t w,h,fps,ar;
+    uint32_t w,h,fps;
     
     w=index->getAsUint32("Width");
     h=index->getAsUint32("height");

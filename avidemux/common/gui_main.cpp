@@ -52,7 +52,7 @@
 admMutex singleThread;
 
 float currentZoom=ZOOM_1_1;
-static bool cutsNotOnIntraWarned;
+static int cutsNotOnIntraWarned;
 #include "DIA_audioTracks.h"
 //***********************************
 //******** A Function ***************
@@ -142,9 +142,6 @@ bool getScriptName(int action, int base,getName name,const char *ext,string &out
 }
 void HandleAction (Action action)
 {
-  uint32_t nf = 0;
-  uint32_t old;
-
   admScopedMutex autolock(&singleThread); // make sure only one thread at a time calls this
   
   ADM_warning("************ %s **************\n",getActionName(action));
@@ -264,9 +261,8 @@ void HandleAction (Action action)
                     std::string f=LAST_SESSION_FILE;
                     if(ADM_fileExist(f.c_str()))
                     {
-                        int err=remove(f.c_str());
-                        if(err)
-                            ADM_warning("Error %d deleting last editing state %s\n",err,f.c_str());
+                        if(!ADM_eraseFile(f.c_str()))
+                            ADM_warning("Could not delete last editing state %s\n",f.c_str());
                     }
                 }
                 return;
@@ -564,17 +560,47 @@ void HandleAction (Action action)
               {
                   video_body->pasteFromClipBoard(currentPts);
               }
-              if(!UI_getCurrentVCodec() && !video_body->checkCutsAreOnIntra())
+              ADM_cutPointType chk=ADM_EDITOR_CUT_POINT_IDR;
+              if(!UI_getCurrentVCodec())
+                  chk=video_body->checkCutsAreOnIntra();
+              if(cutsNotOnIntraWarned!=(int)chk && chk!=ADM_EDITOR_CUT_POINT_IDR)
               {
-                  if(!GUI_Question(QT_TRANSLATE_NOOP("adm","The cut points of the pasted video are not on keyframes.\n"
-                      "Video saved in copy mode will be corrupted at these points.\n"
-                      "Proceed anyway?")))
+                  const char *alert;
+                  bool ask=true;
+                  switch(chk)
+                  {
+                      case ADM_EDITOR_CUT_POINT_NON_IDR:
+                          alert=QT_TRANSLATE_NOOP("adm","The cut points of the pasted video are not on keyframes.\n"
+                              "Video saved in copy mode will be corrupted at these points.\n"
+                              "Proceed anyway?");
+                          break;
+                      case ADM_EDITOR_CUT_POINT_RECOVERY:
+                          alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
+                              "Picture reordering information in the video stream is not reset at non-IDR frames. "
+                              "The cut points of the pasted selection may result in playback interruption "
+                              "due to reversed display order of frames if saved in copy mode.\n"
+                              "Proceed anyway?");
+                          break;
+                      case ADM_EDITOR_CUT_POINT_MISMATCH:
+                          alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across a cut point of the pasted video do not match.\n"
+                              "Playback of the video saved in copy mode may stop at this point.\n"
+                              "Proceed anyway?");
+                          break;
+                      case ADM_EDITOR_CUT_POINT_UNCHECKED:
+                          alert=QT_TRANSLATE_NOOP("adm","Cut points of the pasted video could not be checked. "
+                              "This indicates an issue with a source video, the state of editing or a bug in the program. "
+                              "Please check the application log file or console output for details.\n"
+                              "Try anyway?");
+                      default:
+                          ask=false; break;
+                  }
+                  if(ask && !GUI_Question(alert))
                   {
                       video_body->undo();
-                      cutsNotOnIntraWarned=false;
+                      cutsNotOnIntraWarned=-1;
                       break;
                   }
-                  cutsNotOnIntraWarned=true;
+                  cutsNotOnIntraWarned=(int)chk;
               }
               video_body->getVideoInfo (avifileinfo);
               d=video_body->getVideoDuration()-d;
@@ -692,27 +718,64 @@ void HandleAction (Action action)
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
                 break;
             }
-            if(!cutsNotOnIntraWarned && !lastFrame && !UI_getCurrentVCodec() && !video_body->checkCutIsOnIntra(a))
+            ADM_cutPointType chk=ADM_EDITOR_CUT_POINT_IDR;
+            if(!lastFrame && !UI_getCurrentVCodec())
+                chk=video_body->checkCutIsOnIntra(a);
+            if(cutsNotOnIntraWarned!=(int)chk && chk!=ADM_EDITOR_CUT_POINT_IDR)
             {
                 const char *alert;
-                if(action==ACT_Cut)
+                bool ask=true;
+                switch(chk)
                 {
-                    alert=QT_TRANSLATE_NOOP("adm","The end point of the cut is not on a keyframe.\n"
-                        "Video saved in copy mode will be corrupted at this point.\n"
-                        "Proceed anyway?");
-                }else
-                {
-                    alert=QT_TRANSLATE_NOOP("adm","The end point of the deletion is not on a keyframe.\n"
-                        "Video saved in copy mode will be corrupted at this point.\n"
-                        "Proceed anyway?");
+                    case ADM_EDITOR_CUT_POINT_NON_IDR:
+                        if(action==ACT_Cut)
+                            alert=QT_TRANSLATE_NOOP("adm","The end point of the cut is not on a keyframe.\n"
+                                "Video saved in copy mode will be corrupted at this point.\n"
+                                "Proceed anyway?");
+                        else
+                            alert=QT_TRANSLATE_NOOP("adm","The end point of the deletion is not on a keyframe.\n"
+                                "Video saved in copy mode will be corrupted at this point.\n"
+                                "Proceed anyway?");
+                        break;
+                    case ADM_EDITOR_CUT_POINT_RECOVERY:
+                        if(action==ACT_Cut)
+                            alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
+                                "Picture reordering information in the video stream is not reset at non-IDR frames. "
+                                "The chosen start and end points of the cut may result in playback interruption "
+                                "due to reversed display order of frames if saved in copy mode.\n"
+                                "Proceed anyway?");
+                        else
+                            alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
+                                "Picture reordering information in the video stream is not reset at non-IDR frames. "
+                                "The chosen start and end points of the deletion may result in playback interruption "
+                                "due to reversed display order of frames if saved in copy mode.\n"
+                                "Proceed anyway?");
+                        break;
+                    case ADM_EDITOR_CUT_POINT_MISMATCH:
+                        if(action==ACT_Cut)
+                            alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across the cut do not match. "
+                                "Playback of the video saved in copy mode may stop at this point.\n"
+                                "Proceed anyway?");
+                        else
+                            alert=QT_TRANSLATE_NOOP("adm","Codec or codec settings across the deletion do not match. "
+                                "Playback of the video saved in copy mode may stop at this point.\n"
+                                "Proceed anyway?");
+                        break;
+                    case ADM_EDITOR_CUT_POINT_UNCHECKED:
+                        alert=QT_TRANSLATE_NOOP("adm","Cut points could not be checked.\n"
+                            "This indicates an issue with a source video, the state of editing or a bug in the program. "
+                            "Please check the application log file or console output for details.\n"
+                            "Proceed anyway?");
+                        break;
+                    default: ask=false; break;
                 }
-                if(!GUI_Question(alert))
+                if(ask && !GUI_Question(alert))
                 {
                     video_body->undo();
-                    cutsNotOnIntraWarned=false;
+                    cutsNotOnIntraWarned=-1;
                     break;
                 }
-                cutsNotOnIntraWarned=true;
+                cutsNotOnIntraWarned=(int)chk;
             }
             A_ResetMarkers();
             A_Resync(); // total duration & stuff
@@ -854,6 +917,7 @@ int A_openVideo (const char *name)
 
     {
         int i;
+#if 0
         FILE *fd = NULL;
         char magic[4];
 
@@ -861,7 +925,6 @@ int A_openVideo (const char *name)
          ** by video_body->addFile (name);
          */
         //#warning FIXME
-#if 0
         if ((fd = ADM_fopen(longname, "rb")))
         {
             if (fread(magic, 4, 1, fd) == 4)
@@ -1036,8 +1099,6 @@ int A_appendVideo (const char *name)
 
 void ReSync (void)
 {
-  uint8_t isaviaud;
-
   // update audio stream
   // If we were on avi , mark it...
   GUI_setAllFrameAndTime ();
@@ -1192,8 +1253,9 @@ void A_saveDefaultSettings()
     delete writer;
     
     std::string script = stream.str();
-    ADM_info("Generated settings=%s\n",script.c_str());
-    
+    ADM_info("Generated settings:\n");
+    printf("%s\n",script.c_str());
+
     FILE *file = ADM_fopen(fileName.c_str(), "wt");
     ADM_fwrite(script.c_str(), script.length(), 1, file);
     ADM_fclose(file);
@@ -1229,10 +1291,11 @@ bool A_saveSession(void)
     {
         std::string tmp=ADM_getBaseDir()+std::string("lastEdit.tmp");
         A_saveScript(engine, tmp.c_str());
-        if(remove(where.c_str()))
+        if(!ADM_eraseFile(where.c_str()))
         {
             ADM_warning("Could not delete the old saved session (%s)\n",where.c_str());
-            remove(tmp.c_str());
+            if(!ADM_eraseFile(tmp.c_str()))
+                ADM_warning("Could not delete temporary file (%s)\n",tmp.c_str());
             return false;
         }
         return !!rename(tmp.c_str(), where.c_str());
@@ -1258,7 +1321,8 @@ bool A_checkSavedSession(bool load)
             ADM_info("Restoring the last editing state from %s\n",where.c_str());
             r=A_parseScript(engine,where.c_str());
             A_Resync();
-            remove(where.c_str());
+            if(!ADM_eraseFile(where.c_str()))
+                ADM_warning("Could not delete %s\n",where.c_str());
         }
     }
     return r;
@@ -1695,13 +1759,14 @@ void GUI_avsProxy(void)
 
 void GUI_showCurrentFrameHex(void)
 {
+#if 0
  uint8_t *buffer;
  uint32_t fullLen,flags;
  char sType[5];
  char sSize[15];
  ADMCompressedImage image;
  uint8_t seq;
-#if 0
+
  if (!avifileinfo) return;
 
  buffer=new uint8_t [avifileinfo->width*avifileinfo->height*3];
@@ -1735,6 +1800,7 @@ void GUI_showCurrentFrameHex(void)
 #define DUMP_SIZE 30
 void GUI_showSize(void)
 {
+#if 0
 uint8_t *buffer;
  uint32_t fullLen,flags;
  ADMCompressedImage image;
@@ -1742,7 +1808,7 @@ uint8_t *buffer;
  char                text[DUMP_SIZE][100];
 
  if (!avifileinfo) return;
-#if 0
+
  buffer=new uint8_t [avifileinfo->width*avifileinfo->height*3];
  image.data=buffer;
     for(int i=0;i<DUMP_SIZE;i++)

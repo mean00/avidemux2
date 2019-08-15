@@ -42,7 +42,7 @@ DIA_processingQt4::DIA_processingQt4(const char *title,uint64_t totalToProcess) 
         ui->setupUi(this);
 	qtRegisterDialog(this);
 
-        setWindowTitle(title);
+        setWindowTitle(QString::fromUtf8(title));
         postCtor(); 
 }
 #define REFRESH_RATE_IN_MS 1000
@@ -60,9 +60,13 @@ void DIA_processingQt4 :: postCtor( void )
         _first=true;
         _slotIndex=0;
         setWindowModality(Qt::ApplicationModal);        
-        
+
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+        connect(ui->buttonBox,SIGNAL(rejected()),this,SLOT(reject()));
+#else
         connect(ui->buttonBox,&QDialogButtonBox::rejected,this,&QDialog::reject);
-        ui->labelTimeLeft->setText(QString(QT_TRANSLATE_NOOP("qprocessing", "Unknown")));
+#endif
+        ui->labelTimeLeft->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("qprocessing", "Unknown")));
         ui->progressBar->setValue((int)0);        
         show();
 }

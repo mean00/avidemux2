@@ -55,9 +55,6 @@ Ui_chromaShiftWindow::Ui_chromaShiftWindow(QWidget* parent, chromashift *param,A
           SPINNER(V);
 
         setModal(true);
-        show();
-        myCrop->adjustCanvasPosition();
-        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
   void Ui_chromaShiftWindow::sliderUpdate(int foo)
   {
@@ -94,6 +91,13 @@ void Ui_chromaShiftWindow::resizeEvent(QResizeEvent *event)
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
     myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myCrop->adjustCanvasPosition();
+}
+
+void Ui_chromaShiftWindow::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    myCrop->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYSPIN(x) w->spinBox##x

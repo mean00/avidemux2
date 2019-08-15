@@ -24,14 +24,14 @@
 
 bool ADM_Composer::addToUndoQueue(void)
 {
-    // truncate the dead branch first if we add a new element to the undo queue after _cnt-1 undo steps
-    if(_cnt>1 && undoQueue.size()>1)
+    // truncate the dead branch first if we add a new element to the undo queue after _undo_counter-1 undo steps
+    if(_undo_counter>1 && undoQueue.size()>1)
     {
-        for(uint32_t i=0;i<_cnt;i++)
+        for(uint32_t i=0;i<_undo_counter;i++)
         {
             undoQueue.pop_back();
         }
-        ADM_info("Deleted last %d elements from the undo queue\n",_cnt);
+        ADM_info("Deleted last %d elements from the undo queue\n",_undo_counter);
     }
     // now populate the new element...
     undoQueueElem rec;
@@ -52,7 +52,7 @@ bool ADM_Composer::addToUndoQueue(void)
     // ...and store the new element in the queue
     undoQueue.push_back(rec);
     ADM_info("The undo queue has now %d element(s)\n",undoQueue.size());
-    _cnt=0; // redo should not be available after a new undo-able action has been performed
+    _undo_counter=0; // redo should not be available after a new undo-able action has been performed
     return true;
 }
 
@@ -68,19 +68,19 @@ bool ADM_Composer::undo(void)
         ADM_info("The undo queue is empty, nothing to do\n");
         return false;
     }
-    if(!_cnt) // no undo steps performed yet, thus we don't have the current state in the undo queue
+    if(!_undo_counter) // no undo steps performed yet, thus we don't have the current state in the undo queue
     {
         // store the current state in the queue and bump the tracker
         // to account for the queue becoming one element longer
         addToUndoQueue();
-        _cnt=1;
+        _undo_counter=1;
     }
-    undoQueueElem rec=undoQueue.at(undoQueue.size()-_cnt-1);
-    ADM_info("Restoring the state recorded in the element %d starting with 1 of %d\n",undoQueue.size()-_cnt,undoQueue.size());
+    undoQueueElem rec=undoQueue.at(undoQueue.size()-_undo_counter-1);
+    ADM_info("Restoring the state recorded in the element %d starting with 1 of %d\n",undoQueue.size()-_undo_counter,undoQueue.size());
     _segments.setSegments(rec.segm);
     setMarkerAPts(rec.markerA);
     setMarkerBPts(rec.markerB);
-    _cnt++;
+    _undo_counter++;
     return true;
 }
 
@@ -96,12 +96,12 @@ bool ADM_Composer::redo(void)
         ADM_info("The redo queue is empty, cannot perform redo\n");
         return false;
     }
-    undoQueueElem rec=undoQueue.at(undoQueue.size()-_cnt+1);
-    ADM_info("Restoring the state recorded in the element %d starting with 1 of %d\n",undoQueue.size()-_cnt+2,undoQueue.size());
+    undoQueueElem rec=undoQueue.at(undoQueue.size()-_undo_counter+1);
+    ADM_info("Restoring the state recorded in the element %d starting with 1 of %d\n",undoQueue.size()-_undo_counter+2,undoQueue.size());
     _segments.setSegments(rec.segm);
     setMarkerAPts(rec.markerA);
     setMarkerBPts(rec.markerB);
-    _cnt--;
+    _undo_counter--;
     return true;
 }
 
@@ -121,7 +121,7 @@ bool ADM_Composer::clearUndoQueue(void)
 
 bool ADM_Composer::canUndo(void)
 {
-    if(undoQueue.empty() || undoQueue.size()<_cnt+1)
+    if(undoQueue.empty() || undoQueue.size()<_undo_counter+1)
         return false;
     return true;
 }
@@ -132,7 +132,7 @@ bool ADM_Composer::canUndo(void)
 
 bool ADM_Composer::canRedo(void)
 {
-    if(_cnt<2 || undoQueue.size()<_cnt) // _cnt=2 once the first undo operation has been performed
+    if(_undo_counter<2 || undoQueue.size()<_undo_counter) // _undo_counter=2 once the first undo operation has been performed
         return false;
     return true;
 }

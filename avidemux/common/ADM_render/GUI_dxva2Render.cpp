@@ -30,7 +30,7 @@
 
 
 
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
@@ -77,6 +77,7 @@ class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
 
   protected:
                         admMutex        lock;
+                        bool            failure;
                         GUI_WindowInfo  info;
                         IDirect3DSurface9 *mySurface;
                         IDirect3DSurface9 *myYV12Surface;
@@ -115,7 +116,7 @@ dxvaRender::dxvaRender()
     videoBuffer=NULL;
     videoWidget=NULL;
     d3dHandle=admD3D::getHandle();
-
+    failure=false;
 }
 /**
     \fn dxvaRender
@@ -571,47 +572,52 @@ bool dxvaRender::displayImage_surface(ADMImage *pic,admDx2Surface *surface)
 {
   // this does not work, both surfaces are coming from different device
 
-  IDirect3DSurface9 *bBuffer;
-  POINT point={0,0};
-  // OK
-  ADM_info("surface duplicated\n");
-  if( ADM_FAILED(D3DCall(IDirect3DDevice9,GetBackBuffer,d3dDevice, 0, 0,
-                                              D3DBACKBUFFER_TYPE_MONO,
-                                              &bBuffer)))
-  {
-      ADM_warning("D3D Cannot create backBuffer\n");
-      return false;
-  }
+    if(!failure)
+    {
+        IDirect3DSurface9 *bBuffer;
+        if( ADM_FAILED(D3DCall(IDirect3DDevice9,GetBackBuffer,d3dDevice, 0, 0,
+                               D3DBACKBUFFER_TYPE_MONO,
+                               &bBuffer)))
+        {
+            ADM_warning("D3D Cannot create backBuffer\n");
+            return false;
+        }
+        // OK
+        ADM_info("surface duplicated\n");
 
-  // can we directly use the surface from dxva ? (can we at all ?)
-  if (ADM_FAILED(D3DCall(IDirect3DDevice9,StretchRect,d3dDevice,
-                  surface->surface,
-                  NULL,
-                  bBuffer,
-                  NULL,
-                  D3DTEXF_LINEAR)))
-  {
-    ADM_warning("StretchRec yv12 failed\n");
-    // go to indirect route
-    if(!pic->hwDownloadFromRef())
+        // can we directly use the surface from dxva ? (can we at all ?)
+        if (ADM_FAILED(D3DCall(IDirect3DDevice9,StretchRect,d3dDevice,
+                               surface->surface,
+                               NULL,
+                               bBuffer,
+                               NULL,
+                               D3DTEXF_LINEAR)))
+        {
+            ADM_warning("StretchRec yv12 failed\n");
+            failure=true;
+        }
+    }else
     {
-        ADM_warning("Failed to download yv12 from dxva\n");
-        return false;
+        // go to indirect route
+        if(!pic->hwDownloadFromRef())
+        {
+            ADM_warning("Failed to download yv12 from dxva\n");
+            return false;
+        }
+        // workaround : use default non bridged path
+        if(useYV12)
+        {
+            return displayImage_yv12(pic);
+        }
+        return displayImage_argb(pic);
     }
-    // workaround : use default non bridged path
-    if(useYV12)
+    IDirect3DDevice9_BeginScene(d3dDevice);
+    IDirect3DDevice9_EndScene(d3dDevice);
+    if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
     {
-         return displayImage_yv12(pic);
+        ADM_warning("D3D Present failed\n");
     }
-    return displayImage_argb(pic);
-  }
-  IDirect3DDevice9_BeginScene(d3dDevice);
-  IDirect3DDevice9_EndScene(d3dDevice);
-  if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
-  {
-    ADM_warning("D3D Present failed\n");
-  }
-  return true;
+    return true;
 }
 
 /**

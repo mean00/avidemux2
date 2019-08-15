@@ -2,7 +2,7 @@ Index: libavcodec/ff_spsinfo.h
 ===================================================================
 --- libavcodec/ff_spsinfo.h	(revision 0)
 +++ libavcodec/ff_spsinfo.h	(revision 0)
-@@ -0,0 +1,17 @@
+@@ -0,0 +1,22 @@
 +#ifndef FF_SPS_INFO_H
 +#define FF_SPS_INFO_H
 +
@@ -14,7 +14,12 @@ Index: libavcodec/ff_spsinfo.h
 +	int darNum;
 +	int darDen;
 +	int hasStructInfo;
++	int hasPocInfo;
 +	int CpbDpbToSkip;
++	int log2MaxFrameNum;
++	int log2MaxPocLsb;
++	int frameMbsOnlyFlag;
++	int refFrames;
 +}ffSpsInfo;
 +
 +

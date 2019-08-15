@@ -98,7 +98,6 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264()
     //mixDump(img.data,img.dataLength);
     int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,MAX_NALU_PER_CHUNK,desc);
     // search sps
-    uint8_t *spsStart,*ppsStart;
     uint32_t spsLen=0, ppsLen=0;
     int indexSps,indexPps;
 
@@ -449,7 +448,6 @@ ADM_videoStreamCopyToAnnexB::  ~ADM_videoStreamCopyToAnnexB()
 bool ADM_videoStreamCopyToAnnexB::getPacket(ADMBitstream *out)
 {
     AVPacket pktOut;
-    int size;
     bool keyFrame=false;
 
     aprintf("-------%d--------\n",(int)currentFrame);

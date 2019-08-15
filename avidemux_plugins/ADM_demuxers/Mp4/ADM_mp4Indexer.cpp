@@ -122,14 +122,14 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
 bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,  
                                     MPsampleinfo *info,uint32_t *nbOut)
 {
-    uint64_t audioClock=0;
-    
-    uint32_t totalBytes=info->SzIndentical*info->nbSz;
+    uint64_t totalBytes=info->SzIndentical*info->nbSz;
     uint32_t totalSamples=0;
     double   skewFactor=1;
-    ADM_info("All the same size: %u (total size %u bytes)\n",info->SzIndentical,totalBytes);
+    ADM_info("All the same size: %u (total size %" PRIu64" bytes)\n",info->SzIndentical,totalBytes);
     ADM_info("Byte per frame =%d\n",(int)info->bytePerFrame);
     ADM_info("SttsC[0] = %d, sttsN[0]=%d\n",info->SttsC[0],info->SttsN[0]);
+
+    track->totalDataSize=totalBytes;
     
     if(info->nbStts!=1) 
     {
@@ -204,7 +204,8 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     if(info->nbCo)
         track->index[0].pts=0;
     ADM_info("Found %u bytes, spread over %d blocks\n",totalBytes,info->nbCo);
-    //
+    track->totalDataSize=totalBytes;
+
     // split large chunk into smaller ones if needed
     splitAudio(track,info, trackScale);
 
@@ -291,12 +292,14 @@ uint32_t i,j,cur;
             aprintf("\t size for all %u frames : %u\n",info->nbSz,info->SzIndentical);
             for(i=0;i<info->nbSz;i++)
                 track->index[i].size=info->SzIndentical;
+            track->totalDataSize+=info->nbSz*info->SzIndentical;
         }else // Different size
         {
             for(i=0;i<info->nbSz;i++)
             {
                 track->index[i].size=info->Sz[i];
                 aprintf("\t size : %d : %u\n",i,info->Sz[i]);
+                track->totalDataSize+=info->Sz[i];
             }
         }
 	// if no sample to chunk we map directly

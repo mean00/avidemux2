@@ -34,7 +34,12 @@ typedef struct
     uint32_t darNum;
     uint32_t darDen;
     bool     hasStructInfo;
+    bool     hasPocInfo;
     uint32_t CpbDpbToSkip;
+    uint32_t log2MaxFrameNum;
+    uint32_t log2MaxPocLsb;
+    bool     frameMbsOnlyFlag;
+    uint32_t refFrames;
 }ADM_SPSInfo;
 
 /**
@@ -64,9 +69,9 @@ ADM_COREUTILS6_EXPORT bool    ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incom
 ADM_COREUTILS6_EXPORT bool    extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
 ADM_COREUTILS6_EXPORT bool    extractSPSInfo_mp4Header(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
 
-ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags,uint32_t *recovery=NULL);
+ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType(uint8_t *buffer,uint32_t len,uint32_t *flags,int *pocLsb,ADM_SPSInfo *sps,uint32_t *recovery=NULL);
 ADM_COREUTILS6_EXPORT uint8_t extractH265FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
-ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType_startCode(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
+ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType_startCode(uint8_t *buffer,uint32_t len,uint32_t *flags,int *pocLsb,ADM_SPSInfo *sps,uint32_t *recovery=NULL);
 ADM_COREUTILS6_EXPORT bool    ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                                     uint32_t *spsLen,uint8_t **spsData,
                                     uint32_t *ppsLen,uint8_t **ppsData); // return a copy of pps/sps extracted

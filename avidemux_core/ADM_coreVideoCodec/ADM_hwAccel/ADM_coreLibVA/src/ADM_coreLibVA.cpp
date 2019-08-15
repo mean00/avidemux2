@@ -455,7 +455,6 @@ bool admLibVA::init(GUI_WindowInfo *x)
 {
     Display *dis=(Display *)x->display;
     ADM_coreLibVA::display=vaGetDisplay(dis);
-    int maj=0,min=0,patch=0;
     ADM_info("[LIBVA] Initializing LibVA library ...\n");
 
 
@@ -914,7 +913,6 @@ dropIt:
 bool        admLibVA::putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,int displayHeight)
 {
     int xError;
-    VASurfaceStatus status;
     CHECK_WORKING(false);
     CHECK_ERROR(vaPutSurface ( ADM_coreLibVA::display, img->surface,(Drawable)widget,0,0,img->w, img->h,0,0,displayWidth,displayHeight,
                               NULL,0 // clip & and num clip
@@ -934,7 +932,6 @@ bool   admLibVA::imageToSurface(VAImage *src, ADM_vaSurface *dst)
 {
 
     int xError;
-    VASurfaceStatus status;
     CHECK_WORKING(false);
     CHECK_ERROR(vaPutImage(ADM_coreLibVA::display,
                            dst->surface,
@@ -958,7 +955,6 @@ bool   admLibVA::surfaceToImage(ADM_vaSurface *dst,VAImage *src )
 {
 
     int xError;
-    VASurfaceStatus status;
     CHECK_WORKING(false);
     CHECK_ERROR(vaGetImage(ADM_coreLibVA::display,
                            dst->surface,
@@ -983,7 +979,6 @@ bool   admLibVA::surfaceToImage(ADM_vaSurface *dst,VAImage *src )
 bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
 {
     int xError;
-    VASurfaceStatus status;
     CHECK_WORKING(false);
     uint8_t *ptr=NULL;
     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, dest->buf, (void**)&ptr))
@@ -1021,7 +1016,6 @@ bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
 bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADMColorScalerSimple *color)
 {
     int xError;
-    VASurfaceStatus status;
     CHECK_WORKING(false);
     uint8_t *ptr=NULL;
     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, dest->buf, (void**)&ptr))
@@ -1124,7 +1118,6 @@ bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
 {
     int xError;
     bool r=false;
-    VASurfaceStatus status;
     CHECK_WORKING(false);
     uint8_t *ptr=NULL;
 

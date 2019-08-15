@@ -31,7 +31,7 @@
 
 //*******************************************
 #define WIDGET(x) (ui->x)
-#define WRITEM(x,y) ui->x->setText(y)
+#define WRITEM(x,y) ui->x->setText(QString::fromUtf8(y))
 #define WRITE(x) WRITEM(x,stringMe)
 /*************************************/
 
@@ -182,11 +182,11 @@ void DIA_encodingQt4::setPhasis(const char *n)
     {
         ui->tabWidget->setTabEnabled(1, false); // disable the "Advanced" tab
         ui->checkBoxShutdown->setVisible(false); // hide the shutdown checkbox
-        this->setWindowTitle(QT_TRANSLATE_NOOP("qencoding","First Pass"));
+        this->setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qencoding","First Pass")));
         WRITEM(labelPhasis,QT_TRANSLATE_NOOP("qencoding","Pass 1"));
     }else
     {
-        this->setWindowTitle(QT_TRANSLATE_NOOP("qencoding","Encoding..."));
+        this->setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qencoding","Encoding...")));
         ui->tabWidget->setTabEnabled(1, true);
 #if 0
         ui->checkBoxShutdown->setVisible(true);
@@ -362,7 +362,7 @@ void DIA_encodingQt4::setRemainingTimeMS(uint32_t milliseconds)
           ADM_assert(ui);
           std::string s;
           ADM_durationToString(milliseconds,s);
-          ui->labelETA->setText(QString(s.c_str()));
+          ui->labelETA->setText(QString::fromUtf8(s.c_str()));
 }
 
 /**

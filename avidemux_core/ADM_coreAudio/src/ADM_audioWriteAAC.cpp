@@ -97,10 +97,16 @@ bool ADM_audioWriteAAC::init(ADM_audioStream *stream, const char *fileName)
     {
         if(l>0)
         {
-            profileMinus1=d[0]>>5;
+            profileMinus1=d[0]>>3;
             if(profileMinus1)
                 profileMinus1--;
             ADM_info("AAC profile minus 1= %d\n",profileMinus1);
+            int fqIdxFromConfig=((d[0]&7)<<1)+(d[1]>>7);
+            if(fqIdxFromConfig<13 && samplingFrequencyIndex!=fqIdxFromConfig) // explicit frequency not handled
+            {
+                ADM_warning("Using frequency index from extradata = %d (header says %d).\n",fqIdxFromConfig,samplingFrequencyIndex);
+                samplingFrequencyIndex=fqIdxFromConfig;
+            }
         }else
             ADM_warning("No valid AAC extra data");
     }else

@@ -4,7 +4,7 @@
 <context>
     <name>ADM_Composer</name>
     <message>
-        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+85"/>
+        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="+102"/>
         <source>This video contains B-frames, but presentation time stamps (PTS) are either missing or monotonically increasing. Avidemux can try to reconstruct correct PTS by decoding the entire video. This may take a lot of time. Proceed?</source>
         <translation>Denne video indeholder B-frames, men præsentationstidsstemplerne (PTS) findes enten ikke eller øges monotont. Avidemux kan forsøge at rekonstruere de korrekte PTS&apos;er ved at dekodere hele videoen. Dette kan tage lang tid. Fortsæt?</translation>
     </message>
@@ -31,7 +31,7 @@ Hvis du blot kopierer videoen uden genkodning,
 Drop timinginformationer?</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+196"/>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+194"/>
         <source>Cannot find a demuxer for %s</source>
         <translation>Kan ikke finde en demuxer for %s</translation>
     </message>
@@ -80,7 +80,7 @@ Drop timinginformationer?</translation>
 2.) sæt dem sammen</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="-172"/>
+        <location filename="../../common/ADM_editor/src/utils/ADM_edCheckForInvalidPts.cpp" line="-189"/>
         <source>Checking if timestamps are valid..</source>
         <translation>Tjekker om tidsstempler er gyldige...</translation>
     </message>
@@ -1058,7 +1058,7 @@ Drop timinginformationer?</translation>
 <context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="+34"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="+36"/>
         <source>Open</source>
         <translation>Åbn</translation>
     </message>
@@ -1074,8 +1074,6 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../common/gui_save.cpp" line="+659"/>
-        <location line="+10"/>
         <source>Queue</source>
         <translation>Sæt i kø</translation>
     </message>
@@ -1110,14 +1108,7 @@ Drop timinginformationer?</translation>
         <translation>Luk</translation>
     </message>
     <message>
-        <location line="+1"/>
         <location line="+2"/>
-        <location line="+2"/>
-        <source>-</source>
-        <translation>-</translation>
-    </message>
-    <message>
-        <location line="-3"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
@@ -1179,7 +1170,8 @@ Drop timinginformationer?</translation>
         <translation>Sæt markør B</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+510"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+525"/>
+        <location line="+3"/>
         <source>Preferences</source>
         <translation>Præferencer</translation>
     </message>
@@ -1368,7 +1360,7 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-144"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-147"/>
         <source>Stereo</source>
         <translation>Stereo</translation>
     </message>
@@ -1514,7 +1506,7 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+126"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+129"/>
         <source>CPU</source>
         <translation>CPU</translation>
     </message>
@@ -1550,12 +1542,12 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <location line="+23"/>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-43"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-46"/>
         <location line="+3"/>
         <location line="+5"/>
-        <location filename="../../common/gui_save.cpp" line="-612"/>
+        <location filename="../../common/gui_save.cpp" line="+57"/>
         <location line="+10"/>
-        <location line="+278"/>
+        <location line="+289"/>
         <location line="+19"/>
         <location line="+7"/>
         <location filename="../../common/gui_savenew.cpp" line="+423"/>
@@ -1628,12 +1620,12 @@ Drop timinginformationer?</translation>
         <translation>Pluginsinfo</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-232"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-227"/>
         <source>Enable openGl support</source>
         <translation>Aktivér understøttelse af OpenGL</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+1"/>
         <source>_Accept non-standard audio frequency for DVD</source>
         <translation>_Acceptér ikke-standard lydfrekvens for DVD</translation>
     </message>
@@ -1756,16 +1748,11 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <location line="+5"/>
-        <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation>_Brug alternativt mærkat for MP3 i .mp4</translation>
-    </message>
-    <message>
-        <location line="+1"/>
         <source>_Default to the directory of the last read file for saving</source>
         <translation type="unfinished">Foreslå at gemme i mappen fra den sidst åbnede fil</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+10"/>
         <source>XVideo (best)</source>
         <translation>XVideo (bedste)</translation>
     </message>
@@ -1775,7 +1762,7 @@ Drop timinginformationer?</translation>
         <translation>VDPAU (bedste)</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+6"/>
         <source>OpenGL (best)</source>
         <translation>OpenGL (bedste)</translation>
     </message>
@@ -1906,13 +1893,13 @@ Drop timinginformationer?</translation>
         <translation>Video</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+53"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+56"/>
         <source>Threading</source>
         <translation>Trådning</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="+48"/>
-        <location filename="../../common/gui_save.cpp" line="-314"/>
+        <location filename="../../common/gui_save.cpp" line="-325"/>
         <source>No audio track</source>
         <translation>Ingen lydspor</translation>
     </message>
@@ -1969,7 +1956,7 @@ It is needed to create PSP compatible video.</source>
 Det er nødvendigt for at kunne oprette PSP-kompatibel video.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="+189"/>
+        <location filename="../../common/gui_main.cpp" line="+186"/>
         <source>Select script to save</source>
         <translation>Vælg script som skal gemmes</translation>
     </message>
@@ -1979,19 +1966,38 @@ Det er nødvendigt for at kunne oprette PSP-kompatibel video.</translation>
         <translation>Du er igang med at slette listen over de sidst åbnede filer og projekter. Dette kan ikke fortrydes. Fortsæt?</translation>
     </message>
     <message>
-        <location line="+117"/>
+        <location line="+116"/>
         <source>Not coded in this version</source>
         <translation>Ikke kodet i denne version</translation>
     </message>
     <message>
-        <location line="+196"/>
+        <location line="+204"/>
         <source>The cut points of the pasted video are not on keyframes.
 Video saved in copy mode will be corrupted at these points.
 Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+5"/>
+        <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The cut points of the pasted selection may result in playback interruption due to reversed display order of frames if saved in copy mode.
+Proceed anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Codec or codec settings across a cut point of the pasted video do not match.
+Playback of the video saved in copy mode may stop at this point.
+Proceed anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Cut points of the pasted video could not be checked. This indicates an issue with a source video, the state of editing or a bug in the program. Please check the application log file or console output for details.
+Try anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+60"/>
         <source>Are you sure?</source>
         <translation>Er du sikker?</translation>
     </message>
@@ -2011,21 +2017,52 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+30"/>
         <source>The end point of the cut is not on a keyframe.
 Video saved in copy mode will be corrupted at this point.
 Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
         <source>The end point of the deletion is not on a keyframe.
 Video saved in copy mode will be corrupted at this point.
 Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+100"/>
+        <location line="+6"/>
+        <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The chosen start and end points of the cut may result in playback interruption due to reversed display order of frames if saved in copy mode.
+Proceed anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The chosen start and end points of the deletion may result in playback interruption due to reversed display order of frames if saved in copy mode.
+Proceed anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Codec or codec settings across the cut do not match. Playback of the video saved in copy mode may stop at this point.
+Proceed anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Codec or codec settings across the deletion do not match. Playback of the video saved in copy mode may stop at this point.
+Proceed anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Cut points could not be checked.
+This indicates an issue with a source video, the state of editing or a bug in the program. Please check the application log file or console output for details.
+Proceed anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+103"/>
         <source>Permission error</source>
         <translation>Tilladelsesfejl</translation>
     </message>
@@ -2078,7 +2115,7 @@ Gå til Lyd-&gt;Hovedspor for at vælge det aktive.</translation>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+320"/>
+        <location line="+321"/>
         <source>Something bad happened (II)</source>
         <translation>Noget gik galt (II)</translation>
     </message>
@@ -2146,7 +2183,7 @@ Kører den?</translation>
         <translation>avsproxy</translation>
     </message>
     <message>
-        <location line="+34"/>
+        <location line="+35"/>
         <source>Frame type:</source>
         <translation>Billedtype:</translation>
     </message>
@@ -2181,7 +2218,7 @@ Kører den?</translation>
         <translation>_Deringing</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+66"/>
+        <location filename="../../common/gui_save.cpp" line="+78"/>
         <source>Output file</source>
         <translation>Output-fil</translation>
     </message>
@@ -2237,12 +2274,12 @@ Kører den?</translation>
         <translation>Gemmer lyd</translation>
     </message>
     <message>
-        <location line="+206"/>
+        <location line="+205"/>
         <source>Jpeg</source>
         <translation>JPEG</translation>
     </message>
     <message>
-        <location line="+103"/>
+        <location line="+113"/>
         <location line="+83"/>
         <source>Done</source>
         <translation>Færdig</translation>
@@ -2253,24 +2290,27 @@ Kører den?</translation>
         <translation>Gemte %d billeder.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+637"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+653"/>
         <location line="+44"/>
-        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
+        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+80"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+144"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-249"/>
+        <location filename="../../common/gui_main.cpp" line="-250"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
         <location line="+4"/>
         <location filename="../../common/gui_save.cpp" line="+2"/>
+        <location line="+99"/>
+        <location line="+7"/>
+        <location line="+20"/>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_quota.cpp" line="+68"/>
         <source>Error</source>
         <translation>Fejl</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+61"/>
+        <location filename="../../common/gui_save.cpp" line="-65"/>
         <source>BMP op failed</source>
         <translation>BMP op mislykkedes</translation>
     </message>
@@ -2540,19 +2580,14 @@ Kører den?</translation>
         <translation>Mikser</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-278"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-282"/>
         <source>Decode video using DXVA2 (windows)</source>
         <translation>Dekod video ved brug af DXVA2 (windows)</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+6"/>
         <source>Decode video using VDPAU (NVIDIA)</source>
         <translation>Dekod video ved brug af VDPAU (NVIDIA)</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Decode video using XVBA (AMD)</source>
-        <translation>Dekod video ved brug af XVBA (AMD)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2560,17 +2595,27 @@ Kører den?</translation>
         <translation>Dekod video ved brug af LIBVA (INTEL)</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="-3"/>
         <source>Decode video using VideoToolbox (macOS)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="-3"/>
+        <source>Ignore driver blacklist (Intel)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Ignore codec blacklist (Intel, HEVC 10bit)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
         <source>If you use Hw decoding, it is better to use the matching display driver</source>
         <translation>Hvis du bruger hardwaredekodning, så er det bedre at bruge den matchende skærmdriver</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+5"/>
         <source>_Revert to saved default output settings on video load</source>
         <translation>_Tilbagefør til gemte standardoutputindstillinger når video indlæses</translation>
     </message>
@@ -2580,17 +2625,27 @@ Kører den?</translation>
         <translation>_Søg efter ny udgivelse</translation>
     </message>
     <message>
-        <location line="+57"/>
+        <location line="+56"/>
         <source>_Sanitize decode time stamps (DTS) in copy mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+2"/>
+        <source>Caching of decoded pictures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>_Cache size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+12"/>
         <source>DXVA2 (best)</source>
         <translation>DXVA2 (bedste)</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+6"/>
         <source>LIBVA (best)</source>
         <translation>LIBVA (bedste)</translation>
     </message>
@@ -2632,6 +2687,7 @@ Kører den?</translation>
     </message>
     <message>
         <location line="+4"/>
+        <location line="+3"/>
         <location line="+3"/>
         <source>HW Accel</source>
         <translation>Hardwareacceleration</translation>
@@ -2718,7 +2774,7 @@ Uoverensstemmelse i installation</translation>
         <translation>Kan ikke vælge MPEG-4 SP-codec.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1382"/>
+        <location filename="../../common/gui_main.cpp" line="-1449"/>
         <source>Select script/project to run</source>
         <translation>Vælg script/projekt som skal køre</translation>
     </message>
@@ -2733,7 +2789,7 @@ Uoverensstemmelse i installation</translation>
         <translation>Vælg script som skal fejlfindes</translation>
     </message>
     <message>
-        <location line="+199"/>
+        <location line="+198"/>
         <location line="+68"/>
         <source>Select Video File...</source>
         <translation>Vælg videofil...</translation>
@@ -2754,7 +2810,7 @@ Uoverensstemmelse i installation</translation>
         <translation>Vælg videofil som skal føjes til slutning...</translation>
     </message>
     <message>
-        <location line="+216"/>
+        <location line="+246"/>
         <location line="+21"/>
         <source>Cutting</source>
         <translation>Klipper</translation>
@@ -2765,7 +2821,7 @@ Uoverensstemmelse i installation</translation>
         <translation>Fejl under udklipning.</translation>
     </message>
     <message>
-        <location line="+445"/>
+        <location line="+480"/>
         <location line="+43"/>
         <source>The tinypy plugin is missing.
 Expect problems.</source>
@@ -2773,7 +2829,7 @@ Expect problems.</source>
 Forvent problemer.</translation>
     </message>
     <message>
-        <location line="+269"/>
+        <location line="+272"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation>Ugyldigt lydindeks givet</translation>
@@ -2804,7 +2860,7 @@ Forvent problemer.</translation>
         <translation>Indstilling af sproget til det givne sporindeks er ikke muligt: ugyldigt sporindeks!</translation>
     </message>
     <message>
-        <location line="+295"/>
+        <location line="+297"/>
         <source>Oops</source>
         <translation>Ups</translation>
     </message>
@@ -2814,12 +2870,12 @@ Forvent problemer.</translation>
         <translation>Denne funktion er deaktiveret eller er ikke længere gyldig</translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+446"/>
+        <location filename="../../common/gui_play.cpp" line="+442"/>
         <source>Trouble initializing audio device</source>
         <translation>Problem ved initialisering af lydenhed</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-578"/>
+        <location filename="../../common/gui_save.cpp" line="-599"/>
         <source>Audio encoder index out of bounds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2844,7 +2900,7 @@ Forvent problemer.</translation>
         <translation>Kan ikke kontakte database. Har du Job-kontrol kørende?</translation>
     </message>
     <message>
-        <location line="+228"/>
+        <location line="+239"/>
         <source>Function not implemented
 </source>
         <translation>Funktion ikke implementeret
@@ -2866,7 +2922,7 @@ Forvent problemer.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+77"/>
+        <location line="+87"/>
         <source>Saving selection as set of JPEG images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2897,11 +2953,21 @@ Forvent problemer.</translation>
     </message>
     <message>
         <location line="+67"/>
-        <source>Cannot get tinyPÿ script engine</source>
-        <translation>Kan ikke få tinyPÿ-script-motor</translation>
+        <source>Cannot get tinyPy script engine</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+7"/>
+        <source>Output file not specified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Job script %s already exists. Overwrite?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
         <source>Cannot add job %s</source>
         <translation>Kan ikke tilføje job %s</translation>
     </message>
@@ -2934,7 +3000,7 @@ Advarsel, indstillingerne skal være lukket.</translation>
         <translation>Kan ikke opsætte lydkoder. Sørg for at din strøm er kompatibel med lydkoderen (antal kanaler, bithastighed, format)</translation>
     </message>
     <message>
-        <location line="+30"/>
+        <location line="+28"/>
         <source>The video is in copy mode but the cut points are not on keyframes.
 The video will be saved but there will be corruption at cut point(s).
 Do you want to continue anyway ?</source>
@@ -2943,20 +3009,38 @@ Videoen vil blive gemt men der vil være ødelæggelse ved klippunkt(er).
 Vil du fortsætte alligevel?</translation>
     </message>
     <message>
-        <location line="-255"/>
-        <location line="+266"/>
+        <location line="-253"/>
+        <location line="+286"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation>Muxer</translation>
     </message>
     <message>
-        <location line="-292"/>
-        <location line="+266"/>
+        <location line="-312"/>
+        <location line="+286"/>
         <source>Cannot instantiate muxer</source>
         <translation>Kan ikke instantiere muxer</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="-28"/>
+        <source>This video uses non-IDR recovery points instead of IDR as keyframes. Picture reordering information in the video stream is not reset at non-IDR frames. The choice of cut points may result in playback interruption due to reversed display order of frames if saved in copy mode.
+Do you want to continue anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Codec or codec settings across a cut point do not match. Playback of the video saved in copy mode may stop at this point.
+Do you want to continue anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Cut points could not be checked. This indicates an issue with a source video, the state of editing or a bug in the program. Please check the application log file or console output for details.
+Try anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+42"/>
         <source>Cannot open </source>
         <translation>Kan ikke åbne </translation>
     </message>
@@ -3116,7 +3200,7 @@ Vil du fortsætte alligevel?</translation>
         <translation>Gemmer</translation>
     </message>
     <message>
-        <location line="+165"/>
+        <location line="+164"/>
         <source>The saved video is incomplete. The error occured at %s (%d%). This may happen as result of invalid time stamps in the video.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3224,7 +3308,7 @@ Vil du fortsætte alligevel?</translation>
         <translation>1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+173"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+175"/>
         <location line="+32"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
         <location line="+35"/>
@@ -3247,7 +3331,7 @@ Vil du fortsætte alligevel?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+449"/>
+        <location filename="../../common/ADM_editor/src/ADM_edVideoCopy.cpp" line="+812"/>
         <source>Decode time stamp (DTS) collision affecting a keyframe at %s detected.
 Dropping a keyframe will result in severely corrupted video.
 Proceed anyway?</source>
@@ -3271,7 +3355,7 @@ Proceed anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+238"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+234"/>
         <source>Permission Error</source>
         <translation>Tilladelsesfejl</translation>
     </message>
@@ -3995,13 +4079,13 @@ Denne meddelelse vil ikke blive vist igen.</translation>
     <message>
         <location line="-1"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="+64"/>
-        <location line="+90"/>
+        <location line="+87"/>
         <source>Contrast</source>
         <translation>Kontrast</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="-89"/>
-        <location line="+90"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="-86"/>
+        <location line="+87"/>
         <source>Brightness</source>
         <translation>Lysstyrke</translation>
     </message>
@@ -4127,7 +4211,7 @@ Vil du indlæse den?
 </translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/DIA_flyCrop.cpp" line="+324"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/DIA_flyCrop.cpp" line="+323"/>
         <source>Size: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -6578,7 +6662,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>lavcodec</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+516"/>
         <source>_Bitrate:</source>
         <translation>_Bithastighed:</translation>
     </message>
@@ -6823,12 +6907,12 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>matroskademuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Matroska/ADM_mkvIndexer.cpp" line="+48"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Matroska/ADM_mkvIndexer.cpp" line="+46"/>
         <source>Matroska Images</source>
         <translation>Matroska-billeder</translation>
     </message>
     <message>
-        <location line="+433"/>
+        <location line="+431"/>
         <source>Matroska clusters</source>
         <translation>Matroska-klynger</translation>
     </message>
@@ -7027,7 +7111,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>mp4demuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+827"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+818"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>Problem ved læsning af SVQ3-hoveder</translation>
     </message>
@@ -7051,7 +7135,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Understøtter kun AAC, AC3, E-AC3 og mpegaudio til lyd</translation>
     </message>
     <message>
-        <location line="+130"/>
+        <location line="+146"/>
         <source>Saving mp4</source>
         <translation>Gemmer MP4</translation>
     </message>
@@ -7066,9 +7150,24 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Muxing-format</translation>
     </message>
     <message>
+        <location line="+2"/>
+        <source>No optimization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location line="+1"/>
-        <source>Use alternate MP3 tag</source>
-        <translation>Brug alternativt MP3-tag</translation>
+        <source>Move index to the beginning of the file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Use fragmentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Optimize for Streaming</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7279,12 +7378,12 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>navigate</name>
     <message>
-        <location filename="../../common/gui_navigate.cpp" line="+244"/>
+        <location filename="../../common/gui_navigate.cpp" line="+242"/>
         <source>Cannot go to next keyframe</source>
         <translation>Kan ikke gå til det næste nøglebillede</translation>
     </message>
     <message>
-        <location line="+69"/>
+        <location line="+64"/>
         <source>Cannot go to previous keyframe</source>
         <translation>Kan ikke gå til det forrige nøglebillede</translation>
     </message>
@@ -7362,7 +7461,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Forkert udformet hoved</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="+89"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="+85"/>
         <source>Unpacking bitstream</source>
         <translation>Udpakker bitstrøm</translation>
     </message>
@@ -7509,18 +7608,6 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>psdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+80"/>
-        <source>Error</source>
-        <translation>Fejl</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>This file&apos;s index has been created with an older version of avidemux.
-Please delete the idx2 file and reopen.</source>
-        <translation>Denne fils indeks er blevet oprettet med en ældre version af avidemux.
-Slet venligst idx2-filen og genåbn.</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_psIndex.cpp" line="+159"/>
         <source>Indexing</source>
         <translation>Indekserer</translation>
@@ -7530,27 +7617,33 @@ Slet venligst idx2-filen og genåbn.</translation>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Der er flere med filer fortløbende filnavne. Skal de indlæses allesammen?</translation>
     </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegPS/ADM_ps.cpp" line="+82"/>
+        <source>This file&apos;s index has been created with an older version of avidemux.
+The file must be re-indexed. Proceed?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>qaudiotracks</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_audioTracks.cpp" line="+134"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_audioTracks.cpp" line="+132"/>
         <source>Select audio file</source>
         <translation>Vælg lydfil</translation>
     </message>
     <message>
         <location line="+22"/>
-        <location line="+152"/>
+        <location line="+161"/>
         <source>Error</source>
         <translation>Fejl</translation>
     </message>
     <message>
-        <location line="-152"/>
+        <location line="-161"/>
         <source>Cannot use that file as audio track</source>
         <translation>Kan ikke bruge den fil som lydspor</translation>
     </message>
     <message>
-        <location line="+152"/>
+        <location line="+161"/>
         <source>Some tracks are used multiple times</source>
         <translation>Nogle spor er brugt flere gange</translation>
     </message>
@@ -7629,18 +7722,18 @@ Slet venligst idx2-filen og genåbn.</translation>
     <name>qfile</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+45"/>
-        <location line="+141"/>
+        <location line="+142"/>
         <source>All files (*.*)</source>
         <translation>Alle filer (*.*)</translation>
     </message>
     <message>
-        <location line="-58"/>
-        <location line="+105"/>
+        <location line="-59"/>
+        <location line="+106"/>
         <source> files (*.</source>
         <translation> filer (*.</translation>
     </message>
     <message>
-        <location line="-81"/>
+        <location line="-82"/>
         <source>Overwrite file </source>
         <translation>Overskriv filen </translation>
     </message>
@@ -7663,7 +7756,7 @@ Slet venligst idx2-filen og genåbn.</translation>
         <translation>Seneste projekter</translation>
     </message>
     <message>
-        <location line="+660"/>
+        <location line="+671"/>
         <source>Play/Stop</source>
         <translation>Afspil/stop</translation>
     </message>
@@ -7728,7 +7821,7 @@ Slet venligst idx2-filen og genåbn.</translation>
         <translation>Fremad ét minut</translation>
     </message>
     <message>
-        <location line="+619"/>
+        <location line="+618"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>Programmet er stødt på et fatalt problem
@@ -7847,12 +7940,12 @@ Den aktuelle redigering er blevet gemt og vil blive genindlæst ved næste start
     </message>
     <message>
         <location line="+64"/>
-        <location line="+14"/>
+        <location line="+15"/>
         <source>Sure!</source>
         <translation>Klart!</translation>
     </message>
     <message>
-        <location line="-14"/>
+        <location line="-15"/>
         <source>Delete job</source>
         <translation>Slet job</translation>
     </message>
@@ -7862,7 +7955,7 @@ Den aktuelle redigering er blevet gemt og vil blive genindlæst ved næste start
         <translation>Er du sikker på, at du vil slette %s job?</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+15"/>
         <source>Delete *all* job</source>
         <translation>Slet *alle* jobs</translation>
     </message>
@@ -7872,7 +7965,7 @@ Den aktuelle redigering er blevet gemt og vil blive genindlæst ved næste start
         <translation>Er du sikker på, at du vil slette ALLE jobs?</translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+25"/>
         <source>Already done</source>
         <translation>Allerede færdig</translation>
     </message>
@@ -7893,7 +7986,7 @@ Den aktuelle redigering er blevet gemt og vil blive genindlæst ved næste start
 <context>
     <name>qmainfilter</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="+436"/>
+        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="+432"/>
         <source>Partial</source>
         <translation>Delvist</translation>
     </message>
@@ -7946,7 +8039,7 @@ Den aktuelle redigering er blevet gemt og vil blive genindlæst ved næste start
 <context>
     <name>qprocessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+65"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_processing.cpp" line="+69"/>
         <source>Unknown</source>
         <translation>Ukendt</translation>
     </message>
@@ -8103,7 +8196,7 @@ Klar.
 <context>
     <name>qtalert</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="+32"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="+33"/>
         <source>Alert</source>
         <translation>Besked</translation>
     </message>
@@ -8115,14 +8208,14 @@ Klar.
         <translation>Info</translation>
     </message>
     <message>
-        <location line="+24"/>
-        <location line="+30"/>
+        <location line="+26"/>
+        <location line="+31"/>
         <source>Confirmation</source>
         <translation>Bekræftelse</translation>
     </message>
     <message>
-        <location line="+19"/>
-        <location line="+30"/>
+        <location line="+21"/>
+        <location line="+33"/>
         <source>Question</source>
         <translation>Spørgsmål</translation>
     </message>
@@ -8999,21 +9092,9 @@ Klar.
 <context>
     <name>tsdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_ts.cpp" line="+70"/>
-        <source>Error</source>
-        <translation>Fejl</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>This file&apos;s index has been created with an older version of avidemux.
-Please delete the idx2 file and reopen.</source>
-        <translation>Denne fils indeks er blevet oprettet med en ældre version af avidemux.
-Slet venligst idx2-filen og genåbn.</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+188"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+327"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+83"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+183"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+325"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+84"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Der er flere med filer fortløbende filnavne. Skal de indlæses allesammen?</translation>
     </message>
@@ -9024,6 +9105,12 @@ Slet venligst idx2-filen og genåbn.</translation>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexVC1.cpp" line="+66"/>
         <source>Indexing</source>
         <translation>Indekserer</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_ts.cpp" line="+89"/>
+        <source>This file&apos;s index has been created with an older version of avidemux.
+The file must be re-indexed. Proceed?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9397,12 +9484,12 @@ Understøtter kun VP8-/VP9-video og Vorbis-/Opus-lyd</translation>
         <translation>intet</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+38"/>
         <source>Custom</source>
         <translation>Brugerdefineret</translation>
     </message>
     <message>
-        <location line="+411"/>
+        <location line="+412"/>
         <source>Target Bitrate:</source>
         <translation>Ønsket bithastighed:</translation>
     </message>
@@ -9457,13 +9544,13 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location line="+61"/>
-        <location line="+69"/>
+        <location line="+70"/>
         <location line="+14"/>
         <source>Error</source>
         <translation>Fejl</translation>
     </message>
     <message>
-        <location line="-83"/>
+        <location line="-84"/>
         <source>Cannot load preset</source>
         <translation>Kan ikke indlæse forudindstilling</translation>
     </message>
@@ -9473,12 +9560,7 @@ Do you wish to continue?</source>
         <translation>Gem profil</translation>
     </message>
     <message>
-        <location line="+11"/>
-        <source>my profile</source>
-        <translation>min profil</translation>
-    </message>
-    <message>
-        <location line="+34"/>
+        <location line="+46"/>
         <source>Overwrite</source>
         <translation>Overskriv</translation>
     </message>
@@ -10741,12 +10823,12 @@ Hvis det er en systemprofil, så vil den blive genskabt næste gang.</translatio
         <translation>ingen</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+38"/>
         <source>Custom</source>
         <translation>Brugerdefineret</translation>
     </message>
     <message>
-        <location line="+361"/>
+        <location line="+362"/>
         <source>Target Bitrate:</source>
         <translation>Ønsket bithastighed:</translation>
     </message>
@@ -10801,13 +10883,13 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location line="+41"/>
-        <location line="+69"/>
+        <location line="+70"/>
         <location line="+14"/>
         <source>Error</source>
         <translation>Fejl</translation>
     </message>
     <message>
-        <location line="-83"/>
+        <location line="-84"/>
         <source>Cannot load preset</source>
         <translation>Kan ikke indlæse forudindstilling</translation>
     </message>
@@ -10817,7 +10899,7 @@ Do you wish to continue?</source>
         <translation>Gem profil</translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+46"/>
         <source>Overwrite</source>
         <translation>Overskriv</translation>
     </message>
