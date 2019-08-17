@@ -430,8 +430,16 @@ bool setPrefsDefault(void)
 {
 #ifdef _WIN32
         prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("Win32"));
+        char version[250];
+        bool dxva2=false;
+        if(getWindowsVersion(version))
+        {
+            if(!strstr("Windows XP",version) && !strstr("Windows Server 2003",version))
+                dxva2=true;
+        }
     #ifdef USE_DXVA2
-        prefs->set(VIDEODEVICE,(uint32_t)RENDER_DXVA2);
+        if(dxva2)
+            prefs->set(VIDEODEVICE,(uint32_t)RENDER_DXVA2);
     #endif
 #endif
 #ifdef __linux__
