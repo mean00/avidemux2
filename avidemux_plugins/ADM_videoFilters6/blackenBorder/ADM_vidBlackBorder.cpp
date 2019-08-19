@@ -46,6 +46,7 @@ blackenBorders::blackenBorders( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM
         param.right=0;
         param.top=0;
         param.bottom=0;
+        param.rubber_is_hidden=false;
     }
 }
 /**

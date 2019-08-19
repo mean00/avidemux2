@@ -18,8 +18,11 @@
 //	Video is in RGB Colorspace
 //
 //
+/**
+ * \fn ctor
+ */
 Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_coreVideoFilter *in) : QDialog(parent)
-  {
+{
     uint32_t width,height;
     ui.setupUi(this);    
     lock=0;
@@ -38,9 +41,13 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     myBlacken->addControl(ui.toolboxLayout);
     myBlacken->upload();
     myBlacken->sliderChanged();
+
     myBlacken->rubber->nestedIgnore=1;
+    myBlacken->rubber_is_hidden=param->rubber_is_hidden;
+    ui.checkBoxRubber->setChecked(myBlacken->rubber_is_hidden);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
+    connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
     connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
     SPINNER(Left);
@@ -49,20 +56,10 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     SPINNER(Bottom);
 
     setModal(true);
-  }
-  void Ui_blackenWindow::sliderUpdate(int foo)
-  {
-    myBlacken->sliderChanged();
-  }
-  void Ui_blackenWindow::gather(blackenBorder *param)
-  {
-
-    myBlacken->download();
-    param->left=myBlacken->left;
-    param->right=myBlacken->right;
-    param->top=myBlacken->top;
-    param->bottom=myBlacken->bottom;
 }
+/**
+ * \fn dtor
+ */
 Ui_blackenWindow::~Ui_blackenWindow()
 {
   if(myBlacken) 
@@ -72,17 +69,52 @@ Ui_blackenWindow::~Ui_blackenWindow()
       delete canvas;
   canvas=NULL;
 }
+/**
+ * \fn sliderUpdate
+ */
+void Ui_blackenWindow::sliderUpdate(int foo)
+{
+    myBlacken->sliderChanged();
+}
+/**
+ * \fn gather
+ */
+void Ui_blackenWindow::gather(blackenBorder *param)
+{
+    myBlacken->download();
+    param->left=myBlacken->left;
+    param->right=myBlacken->right;
+    param->top=myBlacken->top;
+    param->bottom=myBlacken->bottom;
+    param->rubber_is_hidden=myBlacken->rubber_is_hidden;
+}
+/**
+ * \fn toggleRubber
+ */
+void Ui_blackenWindow::toggleRubber(int checkState)
+{
+    bool visible=true;
+    if(checkState)
+        visible=false;
+    myBlacken->rubber->rubberband->setVisible(visible);
+    myBlacken->rubber_is_hidden=!visible;
+}
+/**
+ * \fn valueChanged
+ */
 void Ui_blackenWindow::valueChanged( int f )
 {
-  if(lock) return;
-  lock++;
-  myBlacken->rubber->nestedIgnore++;
-  myBlacken->download();
-  myBlacken->sameImage();
-  myBlacken->rubber->nestedIgnore--;
-  lock--;
+    if(lock) return;
+    lock++;
+    myBlacken->rubber->nestedIgnore++;
+    myBlacken->download();
+    myBlacken->sameImage();
+    myBlacken->rubber->nestedIgnore--;
+    lock--;
 }
-
+/**
+ * \fn reset
+ */
 void Ui_blackenWindow::reset( bool f )
 {
     myBlacken->left=0;
@@ -94,7 +126,9 @@ void Ui_blackenWindow::reset( bool f )
     myBlacken->sameImage();
     lock--;
 }
-
+/**
+ * \fn resizeEvent
+ */
 void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -115,9 +149,10 @@ void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
     myBlacken->rubber->resize(w,h);
     myBlacken->rubber->nestedIgnore--;
     myBlacken->blockChanges(false);
-    
 }
-
+/**
+ * \fn showEvent
+ */
 void Ui_blackenWindow::showEvent(QShowEvent *event)
 {
     myBlacken->rubber->rubberband->show(); // must be called first
@@ -125,6 +160,8 @@ void Ui_blackenWindow::showEvent(QShowEvent *event)
     myBlacken->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
     myBlacken->rubber->nestedIgnore=0;
+    if(myBlacken->rubber_is_hidden)
+        myBlacken->rubber->rubberband->hide();
 }
 
 //************************
