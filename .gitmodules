@@ -1,3 +1,4 @@
-[submodule "avidemux/qt4/i18n"]
+[submodule "i18n"]
 	path = avidemux/qt4/i18n
 	url = https://github.com/mean00/avidemux2_i18n.git
+    branch=master
