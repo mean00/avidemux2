@@ -24,6 +24,7 @@
 #include "ADM_mp4.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_coreUtils.h"
+#include "ADM_videoInfoExtractor.h"
 #include "ADM_mp4Tree.h"
 #include "ADM_vidMisc.h"
 #include "ADM_aacinfo.h"
@@ -918,6 +919,18 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                         offset++;
                                         printf("avcC Pic len              :%x\n",len);
                                         mixDump(VDEO.extraData+offset,len);
+                                        // Verify width and height, the values from the container may be wrong.
+                                        ADM_SPSInfo sps;
+                                        if(extractSPSInfo(VDEO.extraData,VDEO.extraDataSize,&sps) && sps.width && sps.height)
+                                        {
+                                            if(lw && lw!=sps.width)
+                                                ADM_warning("Width mismatch, container says %u, codec %u, trusting codec\n",lw,sps.width);
+                                            _video_bih.biWidth=_mainaviheader.dwWidth=sps.width;
+                                            if(lh && lh!=sps.height)
+                                                ADM_warning("Height mismatch, container says %u, codec %u, trusting codec\n",lh,sps.height);
+                                            _video_bih.biHeight=_mainaviheader.dwHeight=sps.height;
+                                        }else
+                                            ADM_warning("Could not decode H.264 extradata to verify video width and height.\n");
                                         break;
                                     } // while
                                     son.skipAtom();
