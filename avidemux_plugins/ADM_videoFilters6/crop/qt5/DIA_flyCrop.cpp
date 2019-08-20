@@ -421,7 +421,7 @@ void Ui_cropWindow::toggleRubber(int checkState)
     bool visible=true;
     if(checkState)
         visible=false;
-    myCrop->rubber->setVisible(visible);
+    myCrop->rubber->rubberband->setVisible(visible);
     myCrop->rubber_is_hidden=!visible;
 }
 /**
@@ -482,7 +482,7 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
 void Ui_cropWindow::showEvent(QShowEvent *event)
 {
     myCrop->rubber->rubberband->show(); // must be called first
-    myCrop->rubber->setVisible(!(myCrop->rubber_is_hidden));
+    myCrop->rubber->rubberband->setVisible(!(myCrop->rubber_is_hidden));
     QDialog::showEvent(event);
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
