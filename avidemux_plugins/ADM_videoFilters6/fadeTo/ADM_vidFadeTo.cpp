@@ -31,14 +31,13 @@ public:
                                 AVDM_FadeTo(ADM_coreVideoFilter *previous,CONFcouple *conf);
                                 ~AVDM_FadeTo();
 
-        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
-        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-		virtual void setCoupledConf(CONFcouple *couples);
-        virtual bool         configure(void) ;           /// Start graphical user interface
-        uint16_t             lookupLuma[256][256];
-        uint16_t             lookupChroma[256][256];
+        virtual const char      *getConfiguration(void); /// Return  current configuration as a human readable string
+        virtual bool            getNextFrame(uint32_t *fn,ADMImage *image); /// Return the next image
+        virtual bool            getCoupledConf(CONFcouple **couples); /// Return the current filter configuration
+        virtual void            setCoupledConf(CONFcouple *couples);
+        virtual bool            configure(void); /// Start graphical user interface
+                uint16_t        lookupLuma[256][256];
+                uint16_t        lookupChroma[256][256];
 
 };
 
@@ -47,13 +46,13 @@ public:
 
 
 DECLARE_VIDEO_FILTER(AVDM_FadeTo,
-                1,0,0,              // Version
-                     ADM_UI_ALL,         // UI
-                     VF_TRANSFORM,            // Category
-                     "fadeTo",            // internal name (must be uniq!)
-                     QT_TRANSLATE_NOOP("fadeTo","Fade"),            // Display name
-                     QT_TRANSLATE_NOOP("fadeTo","Fade.") // Description
-                 );   
+                    1,0,0,          // Version
+                    ADM_UI_ALL,     // UI
+                    VF_TRANSFORM,   // Category
+                    "fadeTo",       // internal name (must be uniq!)
+                    QT_TRANSLATE_NOOP("fadeTo","Fade"), // Display name
+                    QT_TRANSLATE_NOOP("fadeTo","Fade.") // Description
+);
 /**
  * \fn configure
  * \brief UI configuration
@@ -62,18 +61,12 @@ DECLARE_VIDEO_FILTER(AVDM_FadeTo,
  */
 bool  AVDM_FadeTo::configure()
 {
-    
-  uint32_t start,end;
-  
-  
-while(1)
-{
     uint32_t mx=(uint32_t)(previousFilter->getInfo()->totalDuration/1000);
 
     diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeTo","_Start time:"),0,mx);
     diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeTo","_End time:"),0,mx);
     diaElem *elems[2]={&start,&end};
-  
+
     if( diaFactoryRun(QT_TRANSLATE_NOOP("fadeTo","Fade"),2+0*1,elems))
     {
         if(param.startFade > param.endFade)
@@ -84,10 +77,8 @@ while(1)
         }
         buildLut();
         return 1;
-    }else
-        return 0;
-} 
-  return 1;
+    }
+    return 0;
 }
 /**
  *      \fn getConfiguration
@@ -144,10 +135,10 @@ bool         AVDM_FadeTo::getCoupledConf(CONFcouple **couples)
  */
 AVDM_FadeTo::~AVDM_FadeTo(void)
 {
-    if(first)      
+    if(first)
     {
-      delete first;
-      first=NULL;
+        delete first;
+        first=NULL;
     }
 }
 /**
@@ -160,7 +151,6 @@ AVDM_FadeTo::~AVDM_FadeTo(void)
  */
 bool AVDM_FadeTo::process(ADMImage *source,ADMImage *source2, ADMImage *dest,int offset)
 {
-  
     uint8_t *splanes[3],*splanes2[3],*dplanes[3];
     int      spitches[3],spitches2[3],dpitches[3];
 
@@ -170,7 +160,6 @@ bool AVDM_FadeTo::process(ADMImage *source,ADMImage *source2, ADMImage *dest,int
     source2->GetPitches(spitches2);
     dest->GetWritePlanes(dplanes);
     dest->GetPitches(dpitches);
-    
 
     for(int i=0;i<3;i++)
     {
@@ -179,9 +168,9 @@ bool AVDM_FadeTo::process(ADMImage *source,ADMImage *source2, ADMImage *dest,int
         int colorOffset=128<<8;
         if(!i) 
         {
-          indx=lookupLuma[offset];
-          revindex=lookupLuma[255-offset];
-          colorOffset=0;
+            indx=lookupLuma[offset];
+            revindex=lookupLuma[255-offset];
+            colorOffset=0;
         }
         int    w=(int)dest->GetWidth((ADM_PLANE)i);
         int    h=(int)dest->GetHeight((ADM_PLANE)i);
@@ -199,7 +188,7 @@ bool AVDM_FadeTo::process(ADMImage *source,ADMImage *source2, ADMImage *dest,int
             d+=dpitches[i];
             s+=spitches[i];
             s2+=spitches2[i];
-        }        
+        }
     }
     return true;
 }
@@ -212,39 +201,35 @@ bool AVDM_FadeTo::process(ADMImage *source,ADMImage *source2, ADMImage *dest,int
  */
 bool AVDM_FadeTo::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-  *fn=nextFrame;
-  ADMImage *next= vidCache->getImage(nextFrame);
-  if(!next)
-  {
-      ADM_info("[Fade] Cant get image \n");
-      return false;
-  }
-  
-  image->Pts=next->Pts;
-  
-  uint64_t absPts=next->Pts+getAbsoluteStartTime();
-  
-  bool out_of_scope=false;
-  if(absPts<param.startFade*1000LL) out_of_scope=true;
-  if(absPts>param.endFade*1000LL)   out_of_scope=true;
-  
-  
-  if(!out_of_scope && !first)
-  {
-      first=new ADMImageDefault(next->GetWidth (PLANAR_Y),next->GetHeight(PLANAR_Y));
-      first->duplicateFull (next);
-  }
-  if( out_of_scope || !first)
-  {
-      image->duplicate(next);
-      nextFrame++;
-      vidCache->unlockAll();
-      return true;
-  }
-  
-  double scope=1000LL*(param.endFade-param.startFade);
-  double in;
-    if(!scope) 
+    *fn=nextFrame;
+    ADMImage *next= vidCache->getImage(nextFrame);
+    if(!next)
+    {
+        ADM_info("[Fade] Cant get image \n");
+        return false;
+    }
+    image->Pts=next->Pts;
+    uint64_t absPts=next->Pts+getAbsoluteStartTime();
+    bool out_of_scope=false;
+
+    if(absPts<param.startFade*1000LL) out_of_scope=true;
+    if(absPts>param.endFade*1000LL)   out_of_scope=true;
+
+    if(!out_of_scope && !first)
+    {
+        first=new ADMImageDefault(next->GetWidth (PLANAR_Y),next->GetHeight(PLANAR_Y));
+        first->duplicateFull (next);
+    }
+    if( out_of_scope || !first)
+    {
+        image->duplicate(next);
+        nextFrame++;
+        vidCache->unlockAll();
+        return true;
+    }
+    double scope=1000LL*(param.endFade-param.startFade);
+    double in;
+    if(!scope)
     {
         scope=1;
         in=1;
@@ -254,13 +239,11 @@ bool AVDM_FadeTo::getNextFrame(uint32_t *fn,ADMImage *image)
     }
     in=in/scope;
     in*=255;
-  
-  
-  uint32_t offset=(uint32_t)floor(in+0.4); // normalized to 0--255, begin -- end
-  
-  
+
+    uint32_t offset=(uint32_t)floor(in+0.4); // normalized to 0--255, begin -- end
+
     process(first,next,image,offset);
-  
+
     vidCache->unlockAll();
     nextFrame++;
     return 1;
@@ -272,27 +255,24 @@ bool AVDM_FadeTo::getNextFrame(uint32_t *fn,ADMImage *image)
  */
 bool  AVDM_FadeTo::buildLut(void)
 {
-  float f,ration;
-  for(int i=0;i<256;i++)
-  {
-    if(!param.inOut) ration=255.-i;
-    else ration=(float)i;
-    for(int r=0;r<256;r++)
+    float f,ration;
+    for(int i=0;i<256;i++)
     {
-      f=(float)r;
-      f=f*ration;
-      lookupLuma[i][r]=(uint16_t)(f+0.4);
+        if(!param.inOut)
+            ration=255.-i;
+        else
+            ration=(float)i;
+        for(int r=0;r<256;r++)
+        {
+            f=(float)r;
+            f=f*ration;
+            lookupLuma[i][r]=(uint16_t)(f+0.4);
 
-      f=r-128.;
-      f=f*ration;
-      lookupChroma[i][r]=(128<<8)+(uint16_t)(f+0.4);
-
+            f=r-128.;
+            f=f*ration;
+            lookupChroma[i][r]=(128<<8)+(uint16_t)(f+0.4);
+        }
     }
-    
-  }
-  return true;
+    return true;
 }
 //EOF
-
-
-
