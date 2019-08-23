@@ -24,6 +24,8 @@ class AVDM_FadeTo : public  ADM_coreVideoFilterCached
 {
 protected:
                 fade            param;
+                uint32_t        mx;
+                void            boundsCheck(void);
                 bool            buildLut(void);
                 ADMImage        *first;
                 bool            process(ADMImage *source,ADMImage *source2, ADMImage *dest,int offset);
@@ -61,21 +63,23 @@ DECLARE_VIDEO_FILTER(AVDM_FadeTo,
  */
 bool  AVDM_FadeTo::configure()
 {
-    uint32_t mx=(uint32_t)(previousFilter->getInfo()->totalDuration/1000);
+    uint32_t eInOut=(uint32_t)param.inOut;
 
+    diaMenuEntry fadeDirection[2]={
+        {0,QT_TRANSLATE_NOOP("fadeTo","From"),QT_TRANSLATE_NOOP("fadeTo","Fade from the first picture into movie")},
+        {1,QT_TRANSLATE_NOOP("fadeTo","To"),QT_TRANSLATE_NOOP("fadeTo","Fade from movie to the first picture")}
+    };
+
+    diaElemMenu menu(&(eInOut),QT_TRANSLATE_NOOP("fadeTo","_Fade direction:"),2,fadeDirection);
     diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeTo","_Start time:"),0,mx);
     diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeTo","_End time:"),0,mx);
-    diaElem *elems[2]={&start,&end};
+    diaElem *elems[3]={&menu,&start,&end};
 
-    if( diaFactoryRun(QT_TRANSLATE_NOOP("fadeTo","Fade"),2+0*1,elems))
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("fadeTo","Fade"),3,elems))
     {
-        if(param.startFade > param.endFade)
-        {
-            uint32_t swap=param.startFade;
-            param.startFade=param.endFade;
-            param.endFade=swap;
-        }
+        param.inOut=(bool)eInOut;
         buildLut();
+        boundsCheck();
         return 1;
     }
     return 0;
@@ -100,11 +104,13 @@ const char   *AVDM_FadeTo::getConfiguration(void)
  */
 AVDM_FadeTo::AVDM_FadeTo(ADM_coreVideoFilter *in,CONFcouple *setup) :  ADM_coreVideoFilterCached(3,in,setup)
 {
+    mx=(uint32_t)(in->getInfo()->totalDuration/1000);
     if(!setup || !ADM_paramLoad(setup,fade_param,&param))
     {
         // Default value
         param.startFade=0; 
         param.endFade=0;
+        param.inOut=false;
     }
     buildLut();
     nextFrame=0;
@@ -274,5 +280,22 @@ bool  AVDM_FadeTo::buildLut(void)
         }
     }
     return true;
+}
+/**
+ * \fn boundsCheck
+ * \brief Reset invalid start and end values
+ */
+void AVDM_FadeTo::boundsCheck(void)
+{
+    if(param.endFade < param.startFade)
+    {
+        uint32_t tmp=param.startFade;
+        param.startFade=param.endFade;
+        param.endFade=tmp;
+    }
+    if(param.endFade > mx)
+        param.endFade=mx;
+    if(param.startFade > mx)
+        param.startFade=0;
 }
 //EOF
