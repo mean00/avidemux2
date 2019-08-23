@@ -247,15 +247,15 @@ bool  AVDM_Fade::buildLut(void)
   float f,ration;
   for(int i=0;i<256;i++)
   {
-    if(!param.inOut) ration=255-i;
-    else ration=i;
+    if(!param.inOut) ration=255.-i;
+    else ration=(float)i;
     for(int r=0;r<256;r++)
     {
-      f=r;
+      f=(float)r;
       f=f*ration;
       lookupLuma[i][r]=(uint16_t)(f+0.4);
 
-      f=r-128;
+      f=r-128.;
       f=f*ration;
       lookupChroma[i][r]=(128<<8)+(uint16_t)(f+0.4);
 
