@@ -23,10 +23,10 @@
  */
 class AVDM_Fade : public  ADM_coreVideoFilterCached
 {
-                uint32_t        max;
-                void            boundsCheck(void);
 protected:
                 fade            param;
+                uint32_t        max;
+                void            boundsCheck(void);
                 bool            buildLut(void);
 
 public:
