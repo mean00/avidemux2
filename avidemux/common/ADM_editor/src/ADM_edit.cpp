@@ -42,6 +42,7 @@
 #include "ADM_videoFilterApi.h"
 #include "ADM_coreVideoFilterFunc.h"
 #include "ADM_coreDemuxer.h"
+#include "ADM_aacinfo.h"
 
 //#define TEST_MPEG2DEC
 /**
@@ -335,7 +336,7 @@ uint8_t ADM_Composer::addFile (const char *name)
   else
     {
         // Read and construct the audio tracks for that videos
-      uint32_t extraLen;
+      uint32_t extraLen=0;
       uint8_t  *extraData;
       ADM_audioStream *stream;
       WAVHeader *header;
@@ -386,7 +387,14 @@ uint8_t ADM_Composer::addFile (const char *name)
             }
 
             if((track->wavheader).encoding==WAV_AAC)
+            {
+                uint32_t samples=AAC_DEFAULT_FRAME_LENGTH;
+                AacAudioInfo aac;
                 track->isbr=checkSamplingFrequency(track);
+                if(track->isbr || (ADM_getAacInfoFromConfig(extraLen,extraData,aac) && aac.sbr))
+                    samples<<=1;
+                stream->setSamplesPerPacket(samples);
+            }
 
             thisVid->audioTracks.push_back(track);
             if(!_segments.getNbRefVideos()) // 1st video..

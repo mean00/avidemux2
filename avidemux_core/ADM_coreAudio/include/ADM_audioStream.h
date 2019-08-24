@@ -23,6 +23,7 @@
 
 
 #define ADM_UNKNOWN_LANGUAGE std::string("und")
+#define AAC_DEFAULT_FRAME_LENGTH 1024
 
 /**
         \fn      ADM_audioAccess
@@ -84,6 +85,7 @@ class ADM_COREAUDIO6_EXPORT ADM_audioStream
 /// Access will be allocated externally, but will be destroy by ADM_audioStream when it is destroyed
                        ADM_audioAccess          *access;
                        uint32_t                 lengthInBytes;
+                       uint32_t                 samplesPerPacket;
                        uint64_t                 position;
                        uint64_t                 lastDts;
                        uint64_t                 durationInUs;
@@ -123,6 +125,8 @@ virtual bool            constantSamplesPerPacket(void)
                                 if(!access) return true;
                                 return access->constantSamplesPerPacket();
                             }
+virtual bool            setSamplesPerPacket(uint32_t nbSamples) {samplesPerPacket=nbSamples; return true;}
+virtual uint32_t        getSamplesPerPacket(void) {return samplesPerPacket;} // use only for AAC
 virtual        const std::string &getLanguage() {return language;}
 virtual        void              setLanguage(const std::string &lan) {language=lan;}
 virtual        bool              isLanguageSet(void);

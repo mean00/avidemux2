@@ -271,9 +271,12 @@ int channels=wavheader.channels;
      _extraSize=pInfo.confSize;
      _extraData=new uint8_t[1+_extraSize];
      memcpy(_extraData,pInfo.confBuf,_extraSize);
+     _extraData[_extraSize]=0;
 
     // update
     wavheader.byterate=(_config.bitrate*1000)/8;
+    if(_config.profile!=AOT_AAC_LC)
+        wavheader.encoding=WAV_AAC_HE;
 
     // How many samples do we need to output one AAC packet ?
     _chunk=pInfo.frameLength*wavheader.channels;

@@ -33,6 +33,12 @@ ADM_audioStream::ADM_audioStream(WAVHeader *header,ADM_audioAccess *access)
     lastDts=ADM_AUDIO_NO_DTS;
     lastDtsBase=0;
     sampleElapsed=0;
+    if(wavHeader.encoding==WAV_AAC)
+        samplesPerPacket=AAC_DEFAULT_FRAME_LENGTH;
+    else if(wavHeader.encoding==WAV_AAC_HE)
+        samplesPerPacket=AAC_DEFAULT_FRAME_LENGTH<<1;
+    else
+        samplesPerPacket=512; // dummy
     durationInUs=0;
     if(access && access->canGetDuration())
         durationInUs=access->getDurationInUs();
@@ -81,11 +87,9 @@ uint64_t dts=0;
     if(!access->getPacket(buffer,size,sizeMax,&dts)) return 0;
     // We got the packet
     // Try to guess the nbSample
-    // if it is AAC, we hardcodec 1024 samples
-
-    if(wavHeader.encoding==WAV_AAC)
+    if(wavHeader.encoding==WAV_AAC || wavHeader.encoding==WAV_AAC_HE)
     {
-        *nbSample=1024;
+        *nbSample=samplesPerPacket;
         if(dts!=ADM_AUDIO_NO_DTS)
         {
             setDts(dts);
@@ -223,7 +227,8 @@ const char *getStrFromAudioCodec( uint32_t codec)
               case WAV_PCM_FLOAT:  return QT_TRANSLATE_NOOP("adm","Float PCM");
               case WAV_OGG_VORBIS: return QT_TRANSLATE_NOOP("adm","Ogg Vorbis");
               case WAV_MP4: return QT_TRANSLATE_NOOP("adm","MP4");
-              case WAV_AAC: return QT_TRANSLATE_NOOP("adm","AAC");
+              case WAV_AAC:
+              case WAV_AAC_HE: return QT_TRANSLATE_NOOP("adm","AAC");
               case WAV_QDM2: return QT_TRANSLATE_NOOP("adm","QDM2");
               case WAV_AMRNB: return QT_TRANSLATE_NOOP("adm","AMR-NB");
               case WAV_MSADPCM: return QT_TRANSLATE_NOOP("adm","MSADPCM");

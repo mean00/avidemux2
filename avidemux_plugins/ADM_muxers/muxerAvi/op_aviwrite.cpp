@@ -211,25 +211,20 @@ VBRext   mp3vbr;
                 header->dwInitialFrames =1;
                 header->dwSuggestedBufferSize=2048;
                 break;
-		case WAV_AAC:
+        case WAV_AAC:
           {
             // nb sample in stream
             // since it is vbr, assume N packet of 1024 samples
-			double len;
-			len=_videostream.dwLength;
-			len/=_videostream.dwRate;
-			len*=_videostream.dwScale;
-			len*=wav->frequency;
-			len/=1024;
+            uint32_t frameLength=stream->getSamplesPerPacket();
             header->dwFlags=1;
             header->dwInitialFrames=0;
             header->dwRate=wav->frequency;
-            header->dwScale=1024; //sample/packet 1024 seems good for aac
+            header->dwScale=frameLength;
             header->dwSampleSize = 0;
             header->dwSuggestedBufferSize=8192;
             header->dwInitialFrames = 0;
 
-            wav->blockalign=1024;
+            wav->blockalign=frameLength;
             wav->bitspersample = 0;
 
             uint32_t aLen;
@@ -245,8 +240,9 @@ VBRext   mp3vbr;
             }else
             {
                 int SRI=4;	// Default 44.1 khz
+                if(frameLength==(AAC_DEFAULT_FRAME_LENGTH<<1)) // SBR
+                    wav->frequency>>=1; // make it implicit SBR, using the real extradata doesn't work well
                 for(int i=0;i<16;i++) if(wav->frequency==aacBitrate[i]) SRI=i;
-            
                 extra[2]=(2<<3)+(SRI>>1); // Profile LOW
                 extra[3]=((SRI&1)<<7)+((wav->channels)<<3);
             }

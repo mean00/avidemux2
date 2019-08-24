@@ -133,9 +133,10 @@ bool muxerMp4v2::initAudio(void)
                                  GUI_Error_HIG("AAC",QT_TRANSLATE_NOOP("mp4v2muxer","Cannot get AAC Extra data\n"));
                                  return false;
                             }
+                        uint32_t frameLength=a->getSamplesPerPacket();
                         audioTrackIds[i]=MP4AddAudioTrack(handle,
                                                       header->frequency,
-                                                      1024,
+                                                      frameLength,
                                                       MP4_MPEG4_AUDIO_TYPE);
                         if(MP4_INVALID_TRACK_ID==audioTrackIds[i])
                         {

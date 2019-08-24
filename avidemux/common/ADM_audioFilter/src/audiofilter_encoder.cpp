@@ -38,12 +38,16 @@ class ADM_audioStream_autoDelete: public ADM_audioStream
     protected:
                         ADM_audioStream *son;
                         ADM_audioAccess *access;
+                        WAVHeader       wav;
         public:
                         ADM_audioStream_autoDelete(ADM_audioStream *s,ADM_audioAccess *access)
                         :    ADM_audioStream(s->getInfo(),access)
                         {
                                 this->access=access;
                                 son=s;
+                                wav=*(son->getInfo());
+                                if(wav.encoding==WAV_AAC_HE) // catch the dummy ID for AAC with SBR here
+                                    wav.encoding=WAV_AAC;
                         }
                         virtual ~ADM_audioStream_autoDelete()
                         {
@@ -54,13 +58,23 @@ class ADM_audioStream_autoDelete: public ADM_audioStream
                                 delete access;
                                 access=NULL;
                         }
-virtual                 WAVHeader                *getInfo(void) {return son->getInfo();}
+virtual WAVHeader       *getInfo(void) {return &wav;}
 virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)
                         {
                                 return son->getPacket(buffer,size,sizeMax,nbSample,dts);
                         }
 virtual bool            goToTime(uint64_t nbUs) {return son->goToTime(nbUs);};
 virtual bool            getExtraData(uint32_t *l, uint8_t **d) {return son->getExtraData(l,d);};
+virtual uint32_t        getSamplesPerPacket(void)
+                        {
+                                uint32_t samples=0;
+                                WAVHeader *hdr=son->getInfo();
+                                if(hdr->encoding==WAV_AAC)
+                                    samples=son->getSamplesPerPacket();
+                                if(hdr->encoding==WAV_AAC_HE)
+                                    samples=AAC_DEFAULT_FRAME_LENGTH<<1;
+                                return samples;
+                        }
         uint64_t        getDurationInUs(void) {return son->getDurationInUs();}
         const std::string &getLanguage() {return son->getLanguage();}
         void              setLanguage(const std::string &lan) {son->setLanguage(lan);}
