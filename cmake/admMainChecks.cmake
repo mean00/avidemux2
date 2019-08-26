@@ -42,7 +42,7 @@ IF(WIN32)
 	IF(NOT CROSS)
 		# Add the rootfs
                 IF(NOT VS_ROOT)
-		        SET(VS_ROOT "d:/mingw")
+		        SET(VS_ROOT "f:/mingw")
                 ENDIF(NOT VS_ROOT)
                 MESSAGE(STATUS "VS:using ${VS_ROOT} to import libs and headers")
                 INCLUDE_DIRECTORIES(${VS_ROOT}/include)
