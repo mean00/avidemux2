@@ -19,6 +19,7 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include <QAbstractItemView>
 
 extern const char *shortkey(const char *);
 
@@ -159,6 +160,9 @@ void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
     combo->addItem(QString::fromUtf8(entries[i]->text));
     if( *(uint32_t *)param==entries[i]->val) mem=i;
   }
+  int wdth=combo->minimumSizeHint().width();
+  combo->view()->setMinimumWidth(wdth);
+
    combo->setCurrentIndex(mem);
    text->setBuddy(combo);
    layout->addWidget(text,line,0);
