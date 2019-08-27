@@ -32,7 +32,7 @@ int main(int a, char **b)
   printf("Fontconfig version %d :%d.%d\n",fcVersion,fcMaj,fcMin);
   // fontconfig >= 2.13 configuration is not backward compatible
   // special case *ubuntu 18.04LTS (fontconfig 2.12.6), avoid startup delay from building cache
-  if(fcVersion>=21300 || fcVersion==21260)
+  if(fcVersion>=21300 || fcVersion==21206)
     return 1;
   return 0;
 }
