@@ -89,14 +89,7 @@ uint64_t pts,dts,startAt;
             uint8_t *eData=NULL;
 
             trackInfo->wav.encoding=WAV_AAC;  
-            
-         
-again:
-            if(!retries)
-            {
-                ADM_error("Cannot get info from audio\n");
-                return false;
-            }
+
             if(false==p->getNextPES(&pes))
                 {
                     ADM_warning("Cannot get pes packet for AAC track\n");
@@ -154,10 +147,17 @@ again:
                     ADM_adts2aac  adts;
                     trackInfo->mux=ADM_TS_MUX_ADTS;
                     int dummySize=0;
-                    if(ADM_adts2aac::ADTS_OK!=adts.convert2(size,ptr,&dummySize,NULL)) // We dont need the output hence the null
+                    while(ADM_adts2aac::ADTS_OK!=adts.convert2(size,ptr,&dummySize,NULL)) // We dont need the output hence the null
                     {
                         ADM_info("ADTS no sync\n");
-                        goto again;
+                        if(!retries || false==p->getNextPES(&pes))
+                        {
+                            ADM_warning("Cannot get pes packet for AAC track\n");
+                            return false;
+                        }
+                        ptr=pes.payload+pes.offset;
+                        size=pes.payloadSize-pes.offset;
+                        retries--;
                     }
                     adts.getExtraData(&eLen,&eData);
                     if( eLen!=2) 
