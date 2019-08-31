@@ -131,6 +131,7 @@ protected:
                x264_picture_t  pic;
                int             plane;
                bool            globalHeader;
+               bool            flush;
                bool            preAmble (ADMImage * in);
                bool            postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,x264_picture_t *picout);
                bool            createHeader(void);
@@ -143,7 +144,6 @@ protected:
                uint32_t        passNumber;
                char            *logFile;
 
-               
 public:
 
                            x264Encoder(ADM_coreVideoFilter *src,bool globalHeader);
