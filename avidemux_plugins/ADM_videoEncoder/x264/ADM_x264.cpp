@@ -49,6 +49,7 @@ x264Encoder::x264Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreV
     this->globalHeader=globalHeader;
     passNumber=0;
     logFile=NULL;
+    flush=false;
 }
 
 /**
@@ -164,21 +165,21 @@ bool         x264Encoder::encode (ADMBitstream * out)
     uint32_t nb;
 
     // update
-again:    
-    bool gotFrame=true;
-    if(source->getNextFrame(&nb,image)==false)
+again:
+    if(!flush)
     {
-        ADM_warning("[x264] Cannot get next image\n");
-        gotFrame=false;
-        //return false;
-    }else
-    {
-        //printf("[PPPP] x264 Incoming : %" PRIu64"us \n",image->Pts);    
-        // 2-preamble   
-        if(false==preAmble(image))
+        if(source->getNextFrame(&nb,image))
         {
-            ADM_warning("[x264] preAmble failed\n");
-            return false;
+            // 2-preamble
+            if(false==preAmble(image))
+            {
+                ADM_warning("[x264] preAmble failed\n");
+                return false;
+            }
+        }else
+        {
+            ADM_warning("[x264] Cannot get next image\n");
+            flush=true;
         }
     }
     //
@@ -186,32 +187,32 @@ again:
       int               nbNal = 0;
       x264_picture_t    pic_out;
 
-      out->flags = 0;
-      
-        int er;
-        if(false==gotFrame)     
+    out->flags = 0;
+
+    int er;
+    if(flush)
+    {
+        ADM_info("Flushing delayed frames\n");
+        er=x264_encoder_encode (handle, &nal, &nbNal, NULL, &pic_out);
+        if(er<0 || !x264_encoder_delayed_frames(handle))
         {
-            ADM_info("Flushing delayed frames\n");
-            er=x264_encoder_encode (handle, &nal, &nbNal, NULL, &pic_out);
-            if(er<=0)
-            {
-                ADM_info ("End of flush\n");
-                return false;
-            }
-        }else 
-        {
-            er=x264_encoder_encode (handle, &nal, &nbNal, &pic, &pic_out);
-            if(er<0)
-            {
-              ADM_error ("[x264] Error encoding %d\n",er);
-              return false;
-            }
+            ADM_info ("End of flush\n");
+            return false;
         }
-        if(!nbNal)
+    }else
+    {
+        er=x264_encoder_encode (handle, &nal, &nbNal, &pic, &pic_out);
+        if(er<0)
         {
-            ADM_info("[x264] Null frame\n");
-            goto again;
+            ADM_error ("[x264] Error encoding %d\n",er);
+            return false;
         }
+    }
+    if(!nbNal)
+    {
+        ADM_info("[x264] Null frame\n");
+        goto again;
+    }
 
 
     // 3-encode
