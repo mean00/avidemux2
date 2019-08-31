@@ -83,7 +83,11 @@ static const MenuEntry _myMenuEdit[] = {
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Pr&eferences"),       NULL,ACT_PREFERENCES,   NULL,NULL,0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
+#ifdef __APPLE__
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Save current settings as default"), NULL,ACT_SaveAsDefault,NULL,"Ctrl+Shift+D",0},
+#else
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Save current settings as default"), NULL,ACT_SaveAsDefault,NULL,"Ctrl+Alt+D",0},
+#endif
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Load saved settings"),              NULL,ACT_LoadDefault,  NULL,"Ctrl+R",0}
         };
 
