@@ -194,7 +194,12 @@ again:
     {
         ADM_info("Flushing delayed frames\n");
         er=x264_encoder_encode (handle, &nal, &nbNal, NULL, &pic_out);
-        if(er<0 || !x264_encoder_delayed_frames(handle))
+        if(er<0)
+        {
+            ADM_error ("[x264] Encode error %d while flushing delayed frames.\n",er);
+            return false;
+        }
+        if(!er && !x264_encoder_delayed_frames(handle))
         {
             ADM_info ("End of flush\n");
             return false;
