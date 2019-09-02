@@ -163,6 +163,9 @@ bool         x264Encoder::encode (ADMBitstream * out)
 {
     // 1 fetch a frame...
     uint32_t nb;
+    x264_picture_t pic_out;
+    x264_nal_t *nal;
+    int er,nbNal;
 
     // update
 again:
@@ -182,14 +185,11 @@ again:
             flush=true;
         }
     }
-    //
-      x264_nal_t        *nal;
-      int               nbNal = 0;
-      x264_picture_t    pic_out;
 
+    nbNal = 0;
+    x264_picture_init(&pic_out);
     out->flags = 0;
 
-    int er;
     if(flush)
     {
         ADM_info("Flushing delayed frames\n");
