@@ -234,10 +234,8 @@ uint64_t tail;
                 goto np_nextSeg;
         }else 
         { // Not in cache, decode next one
-          // but don't go past the end of the last segment
-            uint64_t maxPts=0;
-            if(_currentSegment+1 == _segments.getNbSegments())
-                maxPts=seg->_refStartTimeUs+seg->_durationUs;
+          // but don't go past the end of the segment
+            uint64_t maxPts=seg->_refStartTimeUs+seg->_durationUs;
             if(false== nextPictureInternal(seg->_reference,image,maxPts))
             {
                 if(flags & 2)
