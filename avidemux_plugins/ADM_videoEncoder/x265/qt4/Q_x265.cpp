@@ -195,6 +195,19 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         upload();
         ADM_pluginInstallSystem( std::string("x265"),std::string("json"),pluginVersion);
         updatePresetList();
+#ifdef __APPLE__
+        // On macOS, the width of the view is too small, resulting in entries being truncated due to wrapping.
+        int width=0;
+        for(int i=0;i<ui.encodingModeComboBox->count();i++)
+        {
+            QString text=ui.encodingModeComboBox->itemText(i);
+            QFontMetrics fm=ui.encodingModeComboBox->fontMetrics();
+            int w=fm.boundingRect(text).width();
+            if(w>width) width=w;
+        }
+        width+=ui.encodingModeComboBox->minimumSizeHint().width();
+        ui.encodingModeComboBox->view()->setMinimumWidth(width);
+#endif
         adjustSize();
 }
 /**
