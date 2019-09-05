@@ -171,7 +171,7 @@ ENDFOREACH(frame ${frameworks})
 MESSAGE(STATUS "* Creating dmg *")
 # Call cpack to create the dmg using the dragndrop installer
 IF(NOT DMG_BASENAME)
-        SET(DMG_BASENAME "Avidemux ${AVIDEMUX_VERSION}")
+        SET(DMG_BASENAME "Avidemux ${AVIDEMUX_VERSION}${AVIDEMUX_VERSION_SUFFIX}")
         IF(NOT RELEASE AND BUILD_REV)
                 SET(DMG_BASENAME "${DMG_BASENAME} ${BUILD_REV}")
         ENDIF(NOT RELEASE AND BUILD_REV)
