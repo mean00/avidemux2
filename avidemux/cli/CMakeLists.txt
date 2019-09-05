@@ -65,7 +65,7 @@ SDLify(../common/main.cpp)
 if (ADM_SUBVERSION)
         ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
 endif (ADM_SUBVERSION)
-ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
+ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}${AVIDEMUX_VERSION_SUFFIX}\"")
 
 ###########################################
 # Version Info

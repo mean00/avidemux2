@@ -18,4 +18,5 @@ IF(NOT RELEASE)
         # use date instead of subversion, we use git now
         ADM_TIMESTAMP(date)
         SET(CPACK_PACKAGE_VERSION_PATCH "${CPACK_PACKAGE_VERSION_PATCH}-${date}")
+        SET(AVIDEMUX_VERSION_SUFFIX "pre")
 ENDIF(NOT RELEASE)

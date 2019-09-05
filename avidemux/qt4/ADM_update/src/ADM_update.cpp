@@ -83,7 +83,7 @@ void ADMCheckUpdate::downloadFinished(QNetworkReply *reply)
         sscanf(result[1].c_str(),"%d.%d.%d",&a,&b,&c);
         version=(a*10000)+(b*100)+c;
         // Compute current version
-        if(version>ADM_CURRENT_VERSION)        
+        if(version>ADM_CURRENT_VERSION || (!RELEASE && version==ADM_CURRENT_VERSION))
             _updateCallback(version,result[2],result[3]);
         else
             ADM_info("Already up to date (%d/%d)\n",version,ADM_CURRENT_VERSION);

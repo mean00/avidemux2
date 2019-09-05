@@ -8,7 +8,11 @@ math(EXPR currentVersion "${CPACK_PACKAGE_VERSION_MAJOR}*10000+${CPACK_PACKAGE_V
 
 ADM_QT_WRAP_CPP(${ADM_update}_source  ADM_update.cpp ../private_inc/ADM_updateImpl.h )
 ADD_DEFINITIONS("-DADM_CURRENT_VERSION=${currentVersion}")
-
+IF(RELEASE)
+    ADD_DEFINITIONS("-DRELEASE=1")
+ELSE(RELEASE)
+    ADD_DEFINITIONS("-DRELEASE=0")
+ENDIF(RELEASE)
 
 ADD_LIBRARY( ${ADM_update} STATIC ADM_update.cpp ${${ADM_update}_source})
 
