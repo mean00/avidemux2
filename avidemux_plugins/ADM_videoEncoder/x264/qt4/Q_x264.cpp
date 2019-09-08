@@ -189,8 +189,8 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         upload();
         ADM_pluginInstallSystem( std::string("x264"),std::string("json"),pluginVersion);
         updatePresetList();
-#ifdef __APPLE__
-        // On macOS, the width of the view is too small, resulting in entries being truncated due to wrapping.
+#if defined(__APPLE__) && QT_VERSION == QT_VERSION_CHECK(5,13,0)
+        // On macOS with Qt 5.13.0, the width of the view is too small, resulting in entries being truncated due to wrapping.
         int width=0;
         for(int i=0;i<ui.encodingModeComboBox->count();i++)
         {
