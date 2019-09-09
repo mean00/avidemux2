@@ -1,6 +1,6 @@
---- libavformat/matroskaenc.c.orig	2019-07-08 19:45:30.000000000 +0200
-+++ libavformat/matroskaenc.c	2019-07-25 00:44:53.173020711 +0200
-@@ -636,6 +636,8 @@
+--- libavformat/matroskaenc.c.orig	2019-08-05 22:52:21.000000000 +0200
++++ libavformat/matroskaenc.c	2019-09-08 19:48:09.874774972 +0200
+@@ -627,6 +627,8 @@
  
  static int put_xiph_codecpriv(AVFormatContext *s, AVIOContext *pb, AVCodecParameters *par)
  {
@@ -9,7 +9,7 @@
      const uint8_t *header_start[3];
      int header_len[3];
      int first_header_size;
-@@ -660,6 +662,29 @@
+@@ -651,6 +653,29 @@
          avio_write(pb, header_start[j], header_len[j]);
  
      return 0;
@@ -39,7 +39,7 @@
  }
  
  static int put_wv_codecpriv(AVIOContext *pb, AVCodecParameters *par)
-@@ -1222,7 +1247,25 @@
+@@ -1213,7 +1238,25 @@
      put_ebml_uint (pb, MATROSKA_ID_TRACKUID,
                     mkv->is_dash ? mkv->dash_track_number : i + 1);
      put_ebml_uint (pb, MATROSKA_ID_TRACKFLAGLACING , 0);    // no lacing (yet)

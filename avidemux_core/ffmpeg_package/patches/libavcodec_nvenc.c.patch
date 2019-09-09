@@ -1,6 +1,6 @@
---- libavcodec/nvenc.c.orig	2017-10-20 22:17:13.506948923 +0200
-+++ libavcodec/nvenc.c	2017-10-20 22:17:37.312801259 +0200
-@@ -1875,8 +1875,11 @@
+--- libavcodec/nvenc.c.orig	2019-08-05 22:52:21.000000000 +0200
++++ libavcodec/nvenc.c	2019-09-08 19:41:32.162180966 +0200
+@@ -1860,8 +1860,11 @@
          tmpoutsurf->input_surface = NULL;
      }
  

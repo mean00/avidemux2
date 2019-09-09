@@ -1,6 +1,6 @@
---- libavcodec/mpeg12enc.c.org	2016-03-29 04:25:18.000000000 +0200
-+++ libavcodec/mpeg12enc.c	2016-09-15 07:10:15.734644778 +0200
-@@ -254,7 +254,7 @@
+--- libavcodec/mpeg12enc.c.orig	2019-08-05 22:52:21.000000000 +0200
++++ libavcodec/mpeg12enc.c	2019-09-08 19:21:09.578572070 +0200
+@@ -256,7 +256,7 @@
  
          put_sbits(&s->pb, 12, s->width  & 0xFFF);
          put_sbits(&s->pb, 12, s->height & 0xFFF);
@@ -9,7 +9,7 @@
          for (i = 1; i < 15; i++) {
              int64_t error = aspect_ratio.num * (1LL<<32) / aspect_ratio.den;
              if (s->codec_id == AV_CODEC_ID_MPEG1VIDEO || i <= 1)
-@@ -269,12 +269,41 @@
+@@ -271,12 +271,41 @@
                  s->aspect_ratio_info = i;
              }
          }
@@ -56,7 +56,7 @@
              if (v > 0x3ffff && s->codec_id == AV_CODEC_ID_MPEG1VIDEO)
                  v = 0x3ffff;
          } else {
-@@ -324,7 +353,19 @@
+@@ -326,7 +355,19 @@
              put_bits(&s->pb, 3, s->avctx->profile); // profile
              put_bits(&s->pb, 4, s->avctx->level);   // level
  
@@ -77,7 +77,7 @@
              put_bits(&s->pb, 2, s->chroma_format);
              put_bits(&s->pb, 2, s->width  >> 12);
              put_bits(&s->pb, 2, s->height >> 12);
-@@ -421,6 +462,7 @@
+@@ -423,6 +464,7 @@
  
  void ff_mpeg1_encode_picture_header(MpegEncContext *s, int picture_number)
  {
@@ -85,7 +85,7 @@
      AVFrameSideData *side_data;
      mpeg1_encode_sequence_header(s);
  
-@@ -459,6 +501,46 @@
+@@ -461,6 +503,46 @@
  
      s->frame_pred_frame_dct = 1;
      if (s->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
@@ -132,7 +132,7 @@
          put_header(s, EXT_START_CODE);
          put_bits(&s->pb, 4, 8);                 /* pic ext */
          if (s->pict_type == AV_PICTURE_TYPE_P ||
-@@ -478,10 +560,14 @@
+@@ -480,10 +562,14 @@
  
          av_assert0(s->picture_structure == PICT_FRAME);
          put_bits(&s->pb, 2, s->picture_structure);
@@ -147,7 +147,7 @@
          /* XXX: optimize the generation of this flag with entropy measures */
          s->frame_pred_frame_dct = s->progressive_sequence;
  
-@@ -490,7 +576,8 @@
+@@ -492,7 +578,8 @@
          put_bits(&s->pb, 1, s->q_scale_type);
          put_bits(&s->pb, 1, s->intra_vlc_format);
          put_bits(&s->pb, 1, s->alternate_scan);
