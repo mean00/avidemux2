@@ -158,7 +158,7 @@ yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup):
     filter_end=filter_end_c;
 
 #ifdef CAN_DO_INLINE_X86_ASM    
-     if (CpuCaps::hasSSE3()) 
+     if (CpuCaps::hasSSSE3())
      {
         filter_line=adm_yadif_filter_line_ssse3;
      }else 
