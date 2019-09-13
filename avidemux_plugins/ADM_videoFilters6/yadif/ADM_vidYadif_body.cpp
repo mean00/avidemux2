@@ -33,7 +33,6 @@ bool yadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         int parity;
         int tff;
         int iplane;
-        int cpu;
         int n;
         ADMImage *src, *dst, * prev, *next;
         

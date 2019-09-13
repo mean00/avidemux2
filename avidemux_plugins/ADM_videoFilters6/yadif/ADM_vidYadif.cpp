@@ -102,12 +102,11 @@ enum YADIFDeint {
 class yadifFilter : public  ADM_coreVideoFilterCached
 {
 protected:
-                    ADMImage    *original;
                     yadif       configuration;
                     void        updateInfo(void);
 public:
                     yadifFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
-                    ~yadifFilter();
+                    ~yadifFilter() {};
 
         virtual const char   *getConfiguration(void);                 /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);           /// Return the next image
@@ -134,8 +133,6 @@ DECLARE_VIDEO_FILTER(   yadifFilter,   // Class
                     );
 
 //
-static void filter_plane(int mode, uint8_t *dst, int dst_stride, const uint8_t *prev0, const uint8_t *cur0, const uint8_t *next0, int refs, int w, int h, int parity, int tff, int mmx);
-
 
 /**
     \fn constructor
@@ -143,13 +140,12 @@ static void filter_plane(int mode, uint8_t *dst, int dst_stride, const uint8_t *
 yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup): 
             ADM_coreVideoFilterCached(10,in,setup)
 {
-    original=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
     if(!setup || !ADM_paramLoad(setup,yadif_param,&configuration))
     {
         // Default value
         configuration.mode=YADIF_MODE_SEND_FRAME;
         configuration.deint=YADIF_DEINT_ALL; 
-        configuration.parity=YADIF_PARITY_AUTO;
+        configuration.parity=YADIF_PARITY_TFF;
     }
     updateInfo();
 
@@ -171,14 +167,6 @@ yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup):
     myName="yadif";
 }
 /**
-    \fn destructor
-*/
-yadifFilter::~yadifFilter()
-{
-        delete  original;
-        original=NULL;
-}
-/**
     \fn updateInfo
 */
 
@@ -191,7 +179,7 @@ void yadifFilter::updateInfo(void)
   }
 }
 /**
-    \fn updateInfo
+    \fn configure
 */
 bool yadifFilter::configure( void) 
 {
