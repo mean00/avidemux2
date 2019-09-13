@@ -165,15 +165,15 @@ void yadifFilter::filter_plane(int mode, uint8_t *dst, int dst_stride, const uin
         int df = 1;
         int pix_3 = 3 * df;
         int edge = 3 + MAX_ALIGN / df - 1;
-        memcpy(dst, cur0, w);
-        memcpy(dst + dst_stride, cur0 + refs, w);
-        for(int y=2; y<h-1; y++){
+        //memcpy(dst, cur0, w);
+        //memcpy(dst + dst_stride, cur0 + refs, w);
+        for(int y=0; y<h; y++){
             if(((y ^ parity) & 1)){
                 const uint8_t *prev= prev0 + y*refs;
                 const uint8_t *cur = cur0 + y*refs;
                 const uint8_t *next= next0 + y*refs;
                 uint8_t *dst2= dst + y*dst_stride;
-                
+                int mode = y == 1 || y + 2 == h ? 2 : 0;
                 filter_line(dst2 + pix_3, prev + pix_3, cur + pix_3,   next + pix_3, 
                              w - edge,
                            y + 1 < h ? refs : -refs,
@@ -189,7 +189,7 @@ void yadifFilter::filter_plane(int mode, uint8_t *dst, int dst_stride, const uin
                 memcpy(dst + y*dst_stride, cur0 + y*refs, w);
             }
         }
-        memcpy(dst + (h-1)*dst_stride, cur0 + (h-1)*refs, w);
+        //memcpy(dst + (h-1)*dst_stride, cur0 + (h-1)*refs, w);
 
 }
 
