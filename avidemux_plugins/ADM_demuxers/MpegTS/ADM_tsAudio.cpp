@@ -209,20 +209,26 @@ uint64_t p,d,start;
             {
                 // Try to get one...
                 int retries=10;
-                again:
-                if(latm.empty()==true) // fetch next LOAS frame, it will contain several frames
+                bool gotPacket=false;
+                uint64_t time=ADM_NO_PTS;
+                while(latm.empty()) // fetch next LOAS frame, it will contain several frames
                 {
                     if(!retries)
                     {
                         ADM_error("Cannot get AAC packet from LATM\n");
                         return false;
                     }
-                    if(false==demuxer.getNextPES(packet)) return false;
-                    int avail=packet->payloadSize-packet->offset;
-                    if(avail>maxSize) ADM_assert(0);
-                    latm.pushData(avail,packet->payload+packet->offset,packet->pts);
+                    if(gotPacket) time=packet->pts;
+                    if(ADM_latm2aac::LATM_MORE_DATA_NEEDED==latm.convert(time))
+                    {
+                        if(false==demuxer.getNextPES(packet)) return false;
+                        int avail=packet->payloadSize-packet->offset;
+                        if(avail>maxSize) ADM_assert(0);
+                        gotPacket=true;
+                        if(false==latm.pushData(avail,packet->payload+packet->offset))
+                            latm.flush();
+                    }
                     retries--;
-                    goto again;
                  }
                  uint64_t myPts;
                  latm.getData(&myPts,size,buffer,maxSize);

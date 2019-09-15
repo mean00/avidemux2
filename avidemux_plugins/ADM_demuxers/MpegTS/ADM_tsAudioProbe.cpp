@@ -113,7 +113,8 @@ uint64_t pts,dts,startAt;
                         ptr=pes.payload+pes.offset;
                         size=pes.payloadSize-pes.offset;
                         latm.flush();
-                        latm.pushData(size,ptr,0);
+                        latm.pushData(size,ptr);
+                        latm.convert(0);
                         if(latm.getFrequency())
                         {
                             ADM_assert(latm.getExtraData(&eLen,&eData));
