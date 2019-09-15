@@ -33,6 +33,7 @@
 #define AAC_LATM_MAX_EXTRA      10
 #define LATM_MAX_LAYER          64
 #define LATM_MAX_BUFFER_SIZE    8192
+#define INCOMING_BUFFER_SIZE    (LATM_MAX_BUFFER_SIZE*4)
 #define LATM_NB_BUFFERS         16
 
 typedef struct
@@ -67,6 +68,8 @@ private:
                 latmBuffer buffers[LATM_NB_BUFFERS];
                 ADM_ptrQueue <latmBuffer > listOfFreeBuffers;
                 ADM_ptrQueue <latmBuffer > listOfUsedBuffers;
+                ADM_byteBuffer depot;
+                int head,tail;
                 uint32_t extraLen;
                 uint8_t  extraData[AAC_LATM_MAX_EXTRA];
                 uint32_t fq,channels;
@@ -80,8 +83,12 @@ private:
                 latmConf_t conf;
 public:
                 bool getExtraData(uint32_t *len,uint8_t **data);
-                bool pushData (int incomingLen,uint8_t *intData,uint64_t date);
+                bool pushData (int incomingLen,uint8_t *intData);
                 bool empty(void);
+
+                typedef enum { LATM_OK, LATM_ERROR, LATM_MORE_DATA_NEEDED } LATM_STATE;
+                LATM_STATE convert(uint64_t dts=ADM_NO_PTS);
+
                 bool getData(uint64_t *date, uint32_t *len, uint8_t *data,uint32_t maxData);
                 bool flush(void);
                 int  getFrequency(void);

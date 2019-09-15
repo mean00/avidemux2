@@ -420,35 +420,77 @@ bool ADM_latm2aac::demuxLatm(uint64_t date,uint8_t *start,uint32_t size)
     \brief Check for LOAS sync word, extract LATM frames
 */
 
-bool ADM_latm2aac::pushData(int incomingLen,uint8_t *inData,uint64_t dts)
+bool ADM_latm2aac::pushData(int incomingLen,uint8_t *inData)
 {
-    // Lookup sync
-    uint8_t *end=inData+incomingLen;
-    uint8_t *start=inData;
     xdebug("Pushing data %d bytes\n",incomingLen);
-    while(start<end)
+    // Compact incoming buffer
+    if(head==tail)
+    {
+        head=tail=0;
+    }
+    if(tail>INCOMING_BUFFER_SIZE>>1)
+    {
+        int size=head-tail;
+        memmove(depot.at(0),depot.at(tail),size);
+        head=size;
+        tail=0;
+    }
+    if(head+incomingLen>INCOMING_BUFFER_SIZE)
+    {
+        ADM_error("LATM incoming buffer overflow: incoming: %d available: %d\n",incomingLen,INCOMING_BUFFER_SIZE-head);
+        return false;
+    }
+    // Add data
+    memcpy(depot.at(head),inData,incomingLen);
+    head+=incomingLen;
+    return true;
+}
+/**
+    \fn convert
+    \brief find LATM frame in the incoming buffer and demux it
+*/
+ADM_latm2aac::LATM_STATE ADM_latm2aac::convert(uint64_t dts)
+{
+    if(head==tail)
+        return LATM_MORE_DATA_NEEDED;
+    // Lookup sync
+    uint8_t *start=depot.at(tail);
+    uint8_t *end=depot.at(head);
+    uint32_t len=0;
+    while(start+2<end)
     {
         int key=(start[0]<<8)+start[1];
         if((key & 0xffe0)!=0x56e0)  // 0x2b7 shifted by one bit
         {
-            ADM_warning("Sync lost\n");
-            return true;
+            start++;
+            tail++;
+            continue;
         }
-        uint32_t len=start[2]+((key & 0x1f)<<8);
+        len=start[2]+((key & 0x1f)<<8);
         start+=3;
         if(start+len>end)
         {
-            ADM_warning("Not enough data, need %d, got %d\n",len,(int)(end-start));
-            return true;
+            xdebug("Not enough data, need %d, got %d\n",len,(int)(end-start));
+            int size=head-tail;
+            memmove(depot.at(0),depot.at(tail),size);
+            tail=0;
+            head=size;
+            return LATM_MORE_DATA_NEEDED;
         }
-        xdebug("Found LATM : size %d\n",len);
-        demuxLatm(dts,start,len);
-        dts=ADM_NO_PTS;
-        // LATM demux
-        start+=len;
+        break;
     }
+    if(!len)
+    {
+        xdebug("No sync.\n");
+        return LATM_MORE_DATA_NEEDED;
+    }
+    xdebug("Found LATM : size %d\n",len);
+    // Demux one LATM frame
+    bool r = demuxLatm(dts,start,len);
+    tail+=len;
+    ADM_assert(head>=tail);
     xdebug("-- end of this LATM frame --\n");
-    return true;
+    return r? LATM_OK : LATM_ERROR;
 }
 /**
     \fn ctor
@@ -463,6 +505,8 @@ ADM_latm2aac::ADM_latm2aac(void)
                 conf.gotConfig=false;
                 for(int i=0;i<LATM_NB_BUFFERS;i++)
                     listOfFreeBuffers.pushBack(&(buffers[i]));
+                depot.setSize(INCOMING_BUFFER_SIZE);
+                head=tail=0;
 }
 /**
     \fn dtor
@@ -492,6 +536,7 @@ bool ADM_latm2aac::flush()
    listOfUsedBuffers.clear();
    for(int i=0;i<LATM_NB_BUFFERS;i++)
                     listOfFreeBuffers.pushBack(&(buffers[i]));
+   head=tail=0;
    return true;
 }
 /**
