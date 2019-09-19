@@ -10,6 +10,7 @@ SET(ADM_matroska_SRCS
     mkv_tags.cpp
     ADM_mkvDeviation.cpp
     ADM_mkvAccessBuffered.cpp
+    ADM_mkvAccessLatm.cpp
 )
 ADD_DEMUXER(ADM_dm_matroska ${ADM_matroska_SRCS})
 
