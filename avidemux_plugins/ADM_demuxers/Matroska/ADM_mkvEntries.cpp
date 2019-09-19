@@ -259,15 +259,20 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                 mixDump(entry.extraData,l);
                 memcpy(&(t->wavHeader),entry.extraData,wavSize);
                 ADM_info("Encoding : %d\n",t->wavHeader.encoding);
+                wavSize+=2; // size of WAVEFORMATEX
                 int x=l-wavSize;
-                
-                if(x>0) // If we have more than a wavheader, it is extradata
+
+                if(x>0) // If we have more than WAVEFORMATEX, it is extradata
                 {
                     ADM_info("Found %d bytes of extradata\n",x);
                     t->extraData=new uint8_t[x];
                     t->extraDataLen=x;
                     memcpy(t->extraData,entry.extraData+wavSize,x);
+                    if(t->wavHeader.encoding==0xfffe) // WAVE_FORMAT_EXTENSIBLE + extradata: might be AAC LATM
+                        t->wavHeader.encoding=MKV_MUX_LATM;
                 }
+                if(t->wavHeader.encoding==MKV_MUX_LATM)
+                    t->wavHeader.byterate=(128000)>>3; // dummy value, FIXME
                 delete [] entry.extraData;
                 t->streamIndex=entry.trackNo;
                 if(entry.defaultDuration)

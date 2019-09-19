@@ -24,6 +24,7 @@
 
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
+#include "ADM_aacLatm.h"
 #include "ADM_ebml.h"
 #include <BVector.h>
 #define MKV_MAX_REPEAT_HEADER_SIZE 16
@@ -88,6 +89,7 @@ public:
 };
 
 #define MKV_MAX_LACES 101 // ?
+#define MKV_MUX_LATM 0x1602
 /**
  */
 class mkvAccess;
@@ -110,6 +112,26 @@ protected:
             uint8_t     *_buffer;
             int         _inBuffer;
             int         _offset;
+};
+
+class mkvAccessLatm : public ADM_audioAccess
+{
+public:
+            mkvAccessLatm(mkvAccess *ac,int maxSize);
+            ~mkvAccessLatm();
+                virtual bool      isCBR(void) { return false; }
+                virtual bool      canSeekTime(void) { return true; };
+                virtual bool      canSeekOffset(void) { return false; };
+                virtual bool      canGetDuration(void) { return true; };
+                virtual uint64_t  getDurationInUs(void);
+                virtual bool      goToTime(uint64_t timeUs);
+                virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
+                virtual bool      getExtraData(uint32_t *l, uint8_t **d);
+protected:
+            ADM_latm2aac latm;
+            mkvAccess   *_son;
+            int         _maxSize;
+            uint8_t     *_buffer;
 };
 
 /**

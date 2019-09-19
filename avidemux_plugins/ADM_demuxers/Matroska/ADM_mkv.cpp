@@ -337,10 +337,14 @@ _again:
         {
             mkvAccess *access=new mkvAccess(_filename,&(_tracks[i+1]));
             _access[i]=new mkvAccessBuffered(access,_tracks[i+1]._needBuffering);
-        }
-        else
+        }else if(_tracks[i+1].wavHeader.encoding==MKV_MUX_LATM)
         {
-               _access[i]=new mkvAccess(_filename,&(_tracks[i+1]));
+            mkvAccess *access=new mkvAccess(_filename,&(_tracks[i+1]));
+            _access[i]=new mkvAccessLatm(access,LATM_MAX_BUFFER_SIZE);
+            _tracks[i+1].wavHeader.encoding=WAV_AAC;
+        }else
+        {
+            _access[i]=new mkvAccess(_filename,&(_tracks[i+1]));
         }
         _audioStreams[i]=ADM_audioCreateStream(&(_tracks[1+i].wavHeader), _access[i]);;
         _audioStreams[i]->setLanguage(_tracks[1+i].language);
