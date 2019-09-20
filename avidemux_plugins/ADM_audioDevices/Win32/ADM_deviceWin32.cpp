@@ -95,14 +95,17 @@ bool win32AudioDevice::localStop(void)
 bool win32AudioDevice::localInit(void)
 {
     ADM_info("[Win32] Opening Audio, channels=%u freq=%u\n",_channels, _frequency);
+    if(_channels > 2)
+    {
+        ADM_error("[Win32] The API supports 2 channels max, please enable downmixing.\n");
+        return false;
+    }
 
     if (_inUse)
     {
         ADM_warning("[Win32] Already running?\n");
         return false;
     }
-
-    _inUse = 1;
 
     bucketSize = (_channels * _frequency*2)/10; // 100 ms bucket * 32 => 3 sec buffer
     ADM_info("Bucket size=%d\n",(int)bucketSize);
@@ -126,6 +129,8 @@ bool win32AudioDevice::localInit(void)
         return 0;
     }
 
+    _inUse = 1;
+
     for (uint32_t i = 0; i < NB_BUCKET; i++)
     {
         memset(&waveHdr[i], 0, sizeof(WAVEHDR));
@@ -147,6 +152,8 @@ bool win32AudioDevice::localInit(void)
 */
 uint8_t  win32AudioDevice::setVolume(int volume)
 {
+    if(!_inUse) return 1;
+
     uint32_t value;
 
     value = (0xffff * volume) / 100;
