@@ -327,7 +327,7 @@ bool spawnRenderer(void)
                 prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl);
                 if(!hasOpenGl)
                 {
-                    ADM_warning("OpenGl is disabled \n");
+                    ADM_warning("OpenGl is disabled\n");
                     renderer=NULL;
                 }else
                 {
