@@ -310,6 +310,8 @@ _again:
           for(int i=0;i<_nbAudioTrack;i++)
           {
             rescaleTrack(&(_tracks[1+i]),duration32);
+            if(!_tracks[1+i].duration)
+                _tracks[1+i].duration=_tracks[0].duration; // FIXME
             switch(_tracks[1+i].wavHeader.encoding)
             {
                 case WAV_OGG_VORBIS:            

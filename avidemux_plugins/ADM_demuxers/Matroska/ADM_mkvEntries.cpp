@@ -246,6 +246,10 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
       if(entry.trackType==2 && _nbAudioTrack<ADM_MKV_MAX_TRACKS)
       {
         mkvTrak *t=&(_tracks[1+_nbAudioTrack]);
+        t->language=entry.language;
+        t->wavHeader.bitspersample=16;
+        t->wavHeader.byterate=0; // to be set later
+        t->extraData=entry.extraData;
         t->extraDataLen=entry.extraDataLen;
         ADM_info("This track has %d bytes of  extradata\n",t->extraDataLen);
         // MS/ACM : ACMX
@@ -272,7 +276,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                         t->wavHeader.encoding=MKV_MUX_LATM;
                 }
                 if(t->wavHeader.encoding==MKV_MUX_LATM)
-                    t->wavHeader.byterate=(128000)>>3; // dummy value, FIXME
+                    t->wavHeader.byterate=0; // to be set later
                 delete [] entry.extraData;
                 t->streamIndex=entry.trackNo;
                 if(entry.defaultDuration)
@@ -307,17 +311,15 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                 }
             }
         }
+        if(entry.fcc==WAV_PCM || entry.fcc==WAV_LPCM)
+        {
+            t->wavHeader.byterate = t->wavHeader.bitspersample * entry.fq * entry.chan >> 3;
+        }
         //**
-         t->language=entry.language;
          t->wavHeader.encoding=entry.fcc;
          t->wavHeader.channels=entry.chan;
          t->wavHeader.frequency=entry.fq;
-         t->wavHeader.bitspersample=16;
-         t->wavHeader.byterate=(128000)>>3; //FIXME
          t->streamIndex=entry.trackNo;
-         t->extraData=entry.extraData;
-         
-         t->extraDataLen=entry.extraDataLen;
          if(entry.defaultDuration)
           t->_defaultFrameDuration=entry.defaultDuration;
          else
