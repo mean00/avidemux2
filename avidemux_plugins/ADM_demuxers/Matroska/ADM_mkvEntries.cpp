@@ -160,19 +160,17 @@ void entryDesc::dump(void)
 */
 uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
 {
+    entryDesc entry;
 
-      entryDesc entry;
-      
-      /* Set some defaults value */
+    /* Set some defaults value */
+    entry.chan=1;
 
-      entry.chan=1;
+    entryWalk(  (ADM_ebml_file *)head,headlen,&entry);
+    entry.dump();
 
-      entryWalk(  (ADM_ebml_file *)head,headlen,&entry);
-      entry.dump();
-
-      //***************** First video track *****************
-      if(entry.trackType==1 &&  !_isvideopresent)
-      {
+    //***************** First video track *****************
+    if(entry.trackType==1 &&  !_isvideopresent)
+    {
         _isvideopresent=1;
         if(entry.defaultDuration)
         {
@@ -186,11 +184,10 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
             _videostream.dwRate=(uint32_t)inv;
         }else
         {
-          printf("[MKV] No duration, assuming 25 fps\n");
-          _videostream.dwScale=1000;
-          _videostream.dwRate=25000;
-          _tracks[0]._defaultFrameDuration=40000;
-
+            printf("[MKV] No duration, assuming 25 fps\n");
+            _videostream.dwScale=1000;
+            _videostream.dwRate=25000;
+            _tracks[0]._defaultFrameDuration=40000;
         }
 
         _mainaviheader.dwMicroSecPerFrame=(uint32_t)floor(50.0F);;
@@ -205,33 +202,31 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         // if it is vfw...
         if(fourCC::check(entry.fcc,(uint8_t *)"VFWX") && entry.extraData && entry.extraDataLen>=sizeof(ADM_BITMAPINFOHEADER))
         {
-          ADM_info("VFW compatibility header, data=%d bytes\n",(int)entry.extraDataLen);
-          memcpy(& _video_bih,entry.extraData,sizeof(ADM_BITMAPINFOHEADER));
+            ADM_info("VFW compatibility header, data=%d bytes\n",(int)entry.extraDataLen);
+            memcpy(& _video_bih,entry.extraData,sizeof(ADM_BITMAPINFOHEADER));
 
-          _videostream.fccHandler=_video_bih.biCompression;
-          _mainaviheader.dwWidth=  _video_bih.biWidth;
-          _mainaviheader.dwHeight= _video_bih.biHeight;
-          if(entry.extraDataLen>sizeof(ADM_BITMAPINFOHEADER))
-          {
+            _videostream.fccHandler=_video_bih.biCompression;
+            _mainaviheader.dwWidth= _video_bih.biWidth;
+            _mainaviheader.dwHeight=_video_bih.biHeight;
+            if(entry.extraDataLen>sizeof(ADM_BITMAPINFOHEADER))
+            {
                 int l=entry.extraDataLen-sizeof(ADM_BITMAPINFOHEADER);
                 _tracks[0].extraData=new uint8_t[l];
                 _tracks[0].extraDataLen=l;
                 memcpy(_tracks[0].extraData,entry.extraData +sizeof(ADM_BITMAPINFOHEADER),l);
                 ADM_info("VFW Header+%d bytes of extradata\n",l);   
                 mixDump(_tracks[0].extraData,l);
-          }
-          delete [] entry.extraData;
-          entry.extraData=NULL;
-          entry.extraDataLen=0;
-
-        } 
-        else
+            }
+            delete [] entry.extraData;
+            entry.extraData=NULL;
+            entry.extraDataLen=0;
+        }else
         {
             _tracks[0].extraData=entry.extraData;
             _tracks[0].extraDataLen=entry.extraDataLen;
         }
         _tracks[0].streamIndex=entry.trackNo;
-        
+
         uint32_t hdr=entry.headerRepeatSize;
         if(hdr)
         {
@@ -239,12 +234,11 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
             memcpy(_tracks[0].headerRepeat,entry.headerRepeat,hdr);
             ADM_info("video has %d bytes of repeated headers\n",hdr);
         }
-        
         return 1;
-      }
-      //***************** Audio tracks *****************
-      if(entry.trackType==2 && _nbAudioTrack<ADM_MKV_MAX_TRACKS)
-      {
+    }
+    //***************** Audio tracks *****************
+    if(entry.trackType==2 && _nbAudioTrack<ADM_MKV_MAX_TRACKS)
+    {
         mkvTrak *t=&(_tracks[1+_nbAudioTrack]);
         t->language=entry.language;
         t->wavHeader.bitspersample=16;
@@ -288,7 +282,6 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                 return 1;
             }
         }
-        //**
         if(entry.fcc==WAV_AAC)
         {
             if(!entry.extraDataLen)
@@ -315,33 +308,31 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         {
             t->wavHeader.byterate = t->wavHeader.bitspersample * entry.fq * entry.chan >> 3;
         }
-        //**
-         t->wavHeader.encoding=entry.fcc;
-         t->wavHeader.channels=entry.chan;
-         t->wavHeader.frequency=entry.fq;
-         t->streamIndex=entry.trackNo;
-         if(entry.defaultDuration)
-          t->_defaultFrameDuration=entry.defaultDuration;
-         else
-           t->_defaultFrameDuration=0;
+        t->wavHeader.encoding=entry.fcc;
+        t->wavHeader.channels=entry.chan;
+        t->wavHeader.frequency=entry.fq;
+        t->streamIndex=entry.trackNo;
+        if(entry.defaultDuration)
+            t->_defaultFrameDuration=entry.defaultDuration;
+        else
+            t->_defaultFrameDuration=0;
         uint32_t hdr=entry.headerRepeatSize;
         if(hdr)
         {
-           t->headerRepeatSize=entry.headerRepeatSize;
+            t->headerRepeatSize=entry.headerRepeatSize;
             memcpy(t->headerRepeat,entry.headerRepeat,hdr);
         }
 
         _nbAudioTrack++;
         return 1;
-      }
-      // Other tracks, ignored...
-      
-      if(entry.extraData)
-      {
-          ADM_info("Ignoring extradata\n");
-          delete [] entry.extraData;
-      }
-      return 1;
+    }
+    // Other tracks, ignored...
+    if(entry.extraData)
+    {
+        ADM_info("Ignoring extradata\n");
+        delete [] entry.extraData;
+    }
+    return 1;
 
 }
 
