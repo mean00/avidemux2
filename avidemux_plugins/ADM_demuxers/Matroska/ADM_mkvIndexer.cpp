@@ -324,6 +324,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             }
     }
   }
+  Track->_sizeInBytes+=size;
   Track->index.append(ix);
 
   return 1;

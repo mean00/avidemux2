@@ -47,6 +47,9 @@ mkvAccess::mkvAccess(const char *name,mkvTrak *track)
   _currentLace=_maxLace=0;
   goToBlock(0);
 
+  if(track->duration && !track->wavHeader.byterate)
+    track->wavHeader.byterate=(uint32_t)(track->_sizeInBytes*1000000LL/track->duration);
+
   /* Check that it is really EAC3 */
   if(_track->wavHeader.encoding==WAV_EAC3)
   {
