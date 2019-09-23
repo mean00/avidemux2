@@ -55,19 +55,19 @@ bool  ADM_audioStream::goToTime(uint64_t nbUs)
     }
     ADM_assert(true==access->canSeekOffset());
     // Convert time to offset in bytes
-    float f=nbUs*wavHeader.byterate;
+    double f=nbUs*wavHeader.byterate;
     f/=1000;
     f/=1000; // in bytes
-    if(access->setPos( (uint32_t)(f+0.5)))
+    if(access->setPos( (uint64_t)(f+0.5)))
     {
         // The seek might not be accurate, recompute the Dts
         // it is better to undershoot in most case
         uint64_t pos=access->getPos();
         // compute dts from pos & byterate
-        float r=pos;
-            r*=1000*1000;
-            r/=wavHeader.byterate;
-            setDts(r);
+        double r=pos;
+        r*=1000*1000;
+        r/=wavHeader.byterate;
+        setDts(r);
         return 1;
     }
     return false;
