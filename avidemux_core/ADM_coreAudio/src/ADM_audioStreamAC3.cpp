@@ -16,11 +16,11 @@ ADM_audioStreamAC3::ADM_audioStreamAC3(WAVHeader *header,ADM_audioAccess *access
     if(access->canGetDuration()==false)
     {
         // We can compute the duration from the length
-        float size=access->getLength();
-              size/=header->byterate; // Result is in second
-              size*=1000;
-              size*=1000; // s->us
-              durationInUs=(uint64_t)size;
+        double size=access->getLength();
+        size/=header->byterate; // Result is in second
+        size*=1000;
+        size*=1000; // s->us
+        durationInUs=(uint64_t)size;
     }
 }
 
@@ -50,7 +50,7 @@ bool         ADM_audioStreamAC3::goToTime(uint64_t nbUs)
         return 1;
     }
     // If CBR we can use the default way
-    return ADM_audioStream::goToTime(nbUs);
+    return ADM_audioStreamBuffered::goToTime(nbUs);
     
 }
 /**
