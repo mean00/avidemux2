@@ -31,12 +31,12 @@ ADM_audioStreamMP3::ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access
     if(access->isCBR()==true && access->canSeekOffset()==true)
     {
         // We can compute the duration from the length
-        float size=access->getLength();
-              size/=header->byterate; // Result is in second
-              size*=1000;
-              size*=1000; // s->us
-              durationInUs=(uint64_t)size;
-              return;
+        double size=access->getLength();
+        size/=header->byterate; // Result is in second
+        size*=1000;
+        size*=1000; // s->us
+        durationInUs=(uint64_t)size;
+        return;
     }
     // and built vbr map if needed
     // The 2 conditions below means there is no gap i.e. avi style stream
