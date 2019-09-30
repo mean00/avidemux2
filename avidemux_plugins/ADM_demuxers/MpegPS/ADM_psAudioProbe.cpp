@@ -121,10 +121,11 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
         //Realign
         p->seek(startAt,0);
         int rd=packetSize*2;
+        if(rd<PROBE_MIN_SIZE) rd=PROBE_MIN_SIZE;
         if(rd>PROBE_ANALYZE_SIZE) rd=PROBE_ANALYZE_SIZE;
         if(!p->read(rd,audioBuffer))
         {
-            ADM_info("Cannot read %d bytes of type %x\n",packetSize*2,pid);
+            ADM_info("Cannot read %d bytes of type %x\n",rd,pid);
             return false;
         }
         psAudioTrackInfo *info=new psAudioTrackInfo;
