@@ -28,14 +28,15 @@
 */
 bool    psHeader::readIndex(indexFile *index)
 {
-char buffer[2000];
+#define PS_MAX_LINE 4000
+char buffer[PS_MAX_LINE];
 bool firstAudio=true;
         printf("[psDemuxer] Reading index\n");
         if(!index->goToSection("Data")) return false;
       
         while(1)
         {
-            if(!index->readString(2000,(uint8_t *)buffer)) break;
+            if(!index->readString(PS_MAX_LINE,(uint8_t *)buffer)) break;
             if(buffer[0]=='[') break;
             if(buffer[0]==0xa || buffer[0]==0xd) continue; // blank line
             // Now split the line
@@ -150,17 +151,12 @@ bool psHeader::processVideoIndex(char *buffer)
                 }
                 cur++;
                 next=strstr(start," ");
-                *next=0;
+                if(3!=sscanf(cur,"%" PRId64":%" PRId64":%" PRIx32,&framePts,&frameDts,&len))
                 {
-                    string me=string(cur); // pts:dts:length (dec/dec/hex)
-                    vector <string> result;
-                    ADM_splitString(":",me,result);
-                    
-                    ADM_assert(1==sscanf(result[2].c_str(),"%" PRIx32,&len));
-                    ADM_assert(1==sscanf(result[0].c_str(),"%" PRId64,&framePts));
-                    ADM_assert(1==sscanf(result[1].c_str(),"%" PRId64,&frameDts));
+                    ADM_warning("Malformed line:\n");
+                    printf("%s\n",buffer);
+                    return false;
                 }
-                
                 dmxFrame *frame=new dmxFrame;
                 if(!count) // First item.. PTS & DTS are provided as header
                 {
