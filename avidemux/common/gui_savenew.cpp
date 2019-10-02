@@ -289,6 +289,7 @@ ADM_videoStreamCopy *admSaver::dealWithH26x(bool isAnnexB)
             default:
             case 0:  // Both source and target are mp4 , nothing to do
                 ADM_info("Input and output are mp4 style, nothing to do\n");
+                copy=new ADM_videoStreamCopySeiInjector(markerA,markerB);
                 break;
             case 1:  // source is mp4, target is annexB
                 ADM_info("Input is probably MP4 bitstream, target is annexB\n");

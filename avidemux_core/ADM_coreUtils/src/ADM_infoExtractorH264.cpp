@@ -458,27 +458,37 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
     }
   return 1;
 }
+
 /**
-    \fn getRecoveryFromSei
-    \brief We dont unescape here, very unlikely needed as we only decode recovery which is small
+    \fn getInfoFromSei
+    \brief Get SEI type, decode recovery point
+    \return 0: failure, 1: recovery, 2: unregistered user data, 3: both
 */
-static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
+enum {
+    ADM_H264_SEI_TYPE_OTHER = 0,
+    ADM_H264_SEI_TYPE_USER_DATA_UNREGISTERED = 1,
+    ADM_H264_SEI_TYPE_RECOVERY_POINT = 2
+};
+
+static int getInfoFromSei(uint32_t nalSize, uint8_t *org, uint32_t *recoveryLength, uint32_t *unregistered)
 {
     int originalNalSize=nalSize+16;
     uint8_t *payloadBuffer=(uint8_t *)malloc(originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
     memset(payloadBuffer,0,originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
     uint8_t *payload=payloadBuffer;
-    bool r=false;
+    int r=ADM_H264_SEI_TYPE_OTHER;
     nalSize=ADM_unescapeH264(nalSize,org,payload);
     if(nalSize>originalNalSize)
     {
         ADM_warning("NAL is way too big : %d, while we expected %d at most\n",nalSize,originalNalSize);
         free(payloadBuffer);
-        return false;
+        return r;
     }
 
     uint8_t *tail=payload+nalSize;
     *recoveryLength=16;
+    *unregistered=0;
+
     while( payload<tail)
     {
         uint32_t sei_type=0,sei_size=0;
@@ -510,14 +520,38 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
         if(payload+sei_size>tail) break;
         switch(sei_type)
         {
+            case 5: // Unregistered user data
+            {
+                if(sei_size<16)
+                {
+                    ADM_info("User data too short: %u\n",sei_size);
+                    break;
+                }
+                char *udata=(char *)malloc(16+sei_size+1);
+                getBits bits(sei_size,payload);
+                for(uint32_t i=0; i<sei_size; i++)
+                    udata[i]=bits.get(8);
+                udata[sei_size]=0;
+                int build;
+                if(1!=sscanf(udata+16,"x264 - core %d",&build))
+                {
+                    ADM_info("Unregistered user data doesn't match the one expected for x264\n");
+                    mixDump((uint8_t *)udata,sei_size);
+                    break;
+                }
+                free(udata);
+                *unregistered=sei_size;
+                ADM_info("Found unregistered user data from x264 build %d, size: %u\n",build,sei_size);
+                r |= ADM_H264_SEI_TYPE_USER_DATA_UNREGISTERED;
+                break;
+            }
             case 6: // Recovery point
             {
                 getBits bits(sei_size,payload);
                 int distance=bits.getUEG();
                 seiprintf("Recovery distance: %d\n",distance);
                 *recoveryLength=distance;
-                r=true;
-                goto abtSei;
+                r |= ADM_H264_SEI_TYPE_RECOVERY_POINT;
                 break;
             }
             default:
@@ -603,6 +637,7 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
         if(length>len) nalSize=3;
     }
     uint32_t recovery=0xff;
+    uint32_t unregistered=0;
     int p=-1;
 
     *flags=0;
@@ -626,10 +661,10 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
         {
             case NAL_SEI:
                 {
-                    bool sei=getRecoveryFromSei(length-1, head+1,&recovery);
+                    int sei=getInfoFromSei(length-1, head+1, &recovery, &unregistered);
                     if(extRecovery)
                     {
-                        if(sei)
+                        if(sei & ADM_H264_SEI_TYPE_RECOVERY_POINT)
                             *extRecovery=recovery;
                         else
                             recovery=*extRecovery;
@@ -681,6 +716,7 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
     uint8_t stream;
     uint32_t hnt=0xffffffff;
     uint32_t recovery=0xff;
+    uint32_t unregistered=0;
     int counter = 0, length = 0;
     int p = -1;
 
@@ -708,10 +744,10 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
         {
             case NAL_SEI:
                 {
-                    bool sei=getRecoveryFromSei(length, head, &recovery);
+                    int sei=getInfoFromSei(length, head, &recovery, &unregistered);
                     if(extRecovery)
                     {
-                        if(sei)
+                        if(sei & ADM_H264_SEI_TYPE_RECOVERY_POINT)
                             *extRecovery=recovery;
                         else
                             recovery=*extRecovery;
@@ -745,6 +781,61 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
   printf ("No stream\n");
   return 0;
 }
+
+/**
+ *  \fn extractH264SEI
+ *  \brief If present, copy SEI containing x264 version info from access unit src to dest
+ */
+bool extractH264SEI(uint8_t *src, uint32_t inlen, uint8_t *dest, uint32_t bufsize, uint32_t *outlen)
+{
+    uint8_t *tail = src, *head = src + inlen;
+    uint8_t stream;
+
+    uint32_t nalSize = 4;
+// Check for short nalSize, i.e. size coded on 3 bytes
+    {
+        uint32_t length = (tail[0] << 24) + (tail[1] << 16) + (tail[2] << 8) + tail[3];
+        if(length > inlen) nalSize = 3;
+    }
+    uint32_t unregistered = 0;
+
+    while(tail + nalSize < head)
+    {
+        uint32_t length = (tail[0] << 16) + (tail[1] << 8) + (tail[2] << 0);
+        if(nalSize == 4)
+            length = (length << 8) + tail[3];
+        if(length > inlen)
+        {
+            ADM_warning ("Incomplete NALU, length: %u, available: %u\n", length, inlen);
+            return false;
+        }
+        tail += nalSize;
+        stream = *(tail) & 0x1f;
+
+        if(stream == NAL_SEI)
+        {
+            uint32_t recovery=0xff;
+            if(getInfoFromSei(length-1,tail+1,&recovery,&unregistered) & ADM_H264_SEI_TYPE_USER_DATA_UNREGISTERED)
+            {
+                uint32_t l = nalSize + length;
+                if(l > bufsize)
+                {
+                    ADM_warning("Insufficient destination buffer, need %u, got %u\n",l,bufsize);
+                    return false;
+                }
+                if(dest)
+                    memcpy(dest,tail-nalSize,l); // what about emulation prevention bytes??
+                if(outlen)
+                    *outlen = l;
+                return true;
+            }
+        }
+        tail += length;
+    }
+
+    return false;
+}
+
 
 
 /**

@@ -72,6 +72,8 @@ ADM_COREUTILS6_EXPORT bool    extractSPSInfo_mp4Header(uint8_t *data, uint32_t l
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType(uint8_t *buffer,uint32_t len,uint32_t *flags,int *pocLsb,ADM_SPSInfo *sps,uint32_t *recovery=NULL);
 ADM_COREUTILS6_EXPORT uint8_t extractH265FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType_startCode(uint8_t *buffer,uint32_t len,uint32_t *flags,int *pocLsb,ADM_SPSInfo *sps,uint32_t *recovery=NULL);
+ADM_COREUTILS6_EXPORT bool    extractH264SEI(uint8_t *src, uint32_t inlen, uint8_t *dest, uint32_t bufsize, uint32_t *outlen); // dest may be NULL
+
 ADM_COREUTILS6_EXPORT bool    ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                                     uint32_t *spsLen,uint8_t **spsData,
                                     uint32_t *ppsLen,uint8_t **ppsData); // return a copy of pps/sps extracted

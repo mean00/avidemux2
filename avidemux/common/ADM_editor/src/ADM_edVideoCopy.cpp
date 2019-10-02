@@ -965,3 +965,36 @@ bool        ADM_Composer::getDirectImageForDebug(uint32_t frameNum,ADMCompressed
     }
    return true;
 }
+
+/**
+    \fn getUserDataUnregistered
+    \brief For H.264, libavcodec parses SEI messages of type user data unregistered to retrieve x264
+           version number to apply version-specific quirks. This function copies the NALU containing
+           this SEI message to buffer allocated by the caller.
+*/
+bool ADM_Composer::getUserDataUnregistered(uint64_t start, uint8_t *buffer, uint32_t max, uint32_t *length)
+{
+    uint32_t segNo;
+    uint64_t segTime;
+
+    if(false==_segments.convertLinearTimeToSeg(start,&segNo,&segTime))
+        return false;
+    _SEGMENT *seg=_segments.getSegment(segNo);
+    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+    vidHeader *demuxer=vid->_aviheader;
+    aviInfo info;
+    demuxer->getVideoInfo(&info);
+    if(!isH264Compatible(info.fcc))
+        return false;
+    ADMCompressedImage img;
+    uint8_t *space=new uint8_t[MAX_FRAME_LENGTH];
+    img.data=space;
+    if(!demuxer->getFrame(0,&img))
+        return false;
+
+    bool r=extractH264SEI(img.data,img.dataLength,buffer,max,length);
+
+    delete [] space;
+    return r;
+}
+// EOF

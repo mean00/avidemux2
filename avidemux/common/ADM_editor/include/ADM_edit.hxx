@@ -279,6 +279,7 @@ public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
                     bool        getNonClosedGopDelay(uint64_t time,uint32_t *delay);
+                    bool        getUserDataUnregistered(uint64_t start,uint8_t *buffer,uint32_t max,uint32_t *length);
 /************************************ /audioStream ******************************/
                     bool            getAudioStreamsInfo(uint64_t xtime,uint32_t *nbStreams, audioInfo **infos);
                     bool            changeAudioStream(uint64_t xtime,uint32_t newstream);
