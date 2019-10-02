@@ -100,4 +100,19 @@ public:
         virtual         ~ADM_videoStreamCopyAudRemover();
         virtual bool    getPacket(ADMBitstream *out);
 };
+/**
+        \fn ADM_videoStreamCopySeiInjector
+        \brief If available, inject SEI message containing x264 version into the first access unit of a H.264 stream
+*/
+class ADM_videoStreamCopySeiInjector : public ADM_videoStreamCopy
+{
+protected:
+#define ADM_H264_MAX_SEI_LENGTH 2048
+        uint8_t         seiBuf[ADM_H264_MAX_SEI_LENGTH];
+        uint32_t        seiLen;
+public:
+                        ADM_videoStreamCopySeiInjector(uint64_t startTime,uint64_t endTime);
+        virtual         ~ADM_videoStreamCopySeiInjector();
+        virtual bool    getPacket(ADMBitstream *out);
+};
 #endif
