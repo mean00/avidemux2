@@ -112,6 +112,7 @@ void HandleAction_Save(Action action)
     {
     case ACT_SAVE_QUEUE:
             {
+                if(!ADM_mx_getNbMuxers()) break;
                 if(false==ADMJob::jobInit())
                 {
                     GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Job"),QT_TRANSLATE_NOOP("adm","Cannot reach database. Do you have Job control running ?"));
@@ -119,8 +120,9 @@ void HandleAction_Save(Action action)
                 {
                     std::string oFile;
                     std::string prefilled=std::string("Job ")+ADM_getTimeDateAsString();
+                    const char *defaultExtension=ADM_MuxerGetDefaultExtension(UI_GetCurrentFormat());
                     char *oText=ADM_strdup(prefilled.c_str());
-                    diaElemFile wFile(1,oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
+                    diaElemFile wFile(1,oFile,QT_TRANSLATE_NOOP("adm","Output file"),defaultExtension,NULL);
                     diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
                     diaElem *elems[2]={&wText,&wFile};
 

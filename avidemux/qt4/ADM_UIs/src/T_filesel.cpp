@@ -97,7 +97,7 @@ void ADM_Qfilesel::buttonPressed(QAbstractButton *s)
 			}
 #endif
 			admCoreUtils::getLastWriteFolder(lastFolder);
-			r=FileSel_SelectWrite(selectDesc,buffer,MAX_SEL,lastFolder.c_str());
+			r=FileSel_SelectWrite(selectDesc,buffer,MAX_SEL,lastFolder.c_str(),defaultSuffix);
 			break;
 
 		case ADM_FILEMODE_DIR:
