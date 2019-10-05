@@ -352,6 +352,7 @@ void jobWindow::cleanup(void)
 */
 void jobWindow::runAllJob(void)
 {
+    if(dialog) return;
     int n=listOfJob.size();
     dialog=new jobProgress(n);
 
