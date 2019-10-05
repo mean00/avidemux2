@@ -28,8 +28,6 @@ jobProgress::jobProgress(uint32_t nbJobs)
     ui.progressBar->setMaximum(100);
     ui.progressBar->setValue(0);
     ADM_info("Starting progress dialog\n");
-    open();
-    QApplication::processEvents();
 }
 /**
     \fn dtor

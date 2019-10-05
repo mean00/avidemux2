@@ -265,9 +265,12 @@ void jobWindow::runAction(JobAction action)
                         break;
             case   JobAction_runNow:
                         {
+                            if(dialog) break;
                             dialog=new jobProgress(1);
                             dialog->setCurrentJob(0);
                             dialog->setCurrentOutputName(j->outputFileName);
+                            dialog->open();
+                            QApplication::processEvents();
                             runOneJob(*j);
                             delete dialog;
                             dialog=NULL;
@@ -364,6 +367,8 @@ void jobWindow::runAllJob(void)
             {
                 dialog->setCurrentJob(i);
                 dialog->setCurrentOutputName(j->outputFileName);
+                dialog->open();
+                QApplication::processEvents();
                 runOneJob(*j);
             }
     }
