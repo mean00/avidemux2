@@ -55,7 +55,6 @@ void DIA_workingNone :: postCtor( void )
 
 uint8_t DIA_workingNone::update(uint32_t percent)
 {
-                if(!_priv) return 1;
                 if(!percent) return 0;
 
                 if(percent==lastper)
@@ -105,7 +104,6 @@ uint8_t DIA_workingNone::update(uint32_t cur, uint32_t total)
 {
 		double d,n;
 		uint32_t percent;
-		if(!_priv) return 1;
 
 		//aprintf("DIA_working::update(uint32_t %lu,uint32_t %lu) called\n", cur, total);
 		if(!total) return 0;
@@ -123,7 +121,6 @@ uint8_t DIA_workingNone::update(uint32_t cur, uint32_t total)
 
 uint8_t DIA_workingNone::isAlive (void )
 {
-	if(!_priv) return 0;
 	return 1;
 }
 
