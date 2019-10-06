@@ -27,7 +27,7 @@ jobProgress::jobProgress(uint32_t nbJobs)
     ui.progressBar->setMinimum(0);
     ui.progressBar->setMaximum(100);
     ui.progressBar->setValue(0);
-    ADM_info("Starting progress dialog\n");
+    ADM_info("Progress dialog created at %p\n",this);
 }
 /**
     \fn dtor
