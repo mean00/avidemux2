@@ -38,7 +38,8 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
     printf("[StreamProcess] Average FPS1000=%" PRIu32"\n",averageFps1000);
     isCFR=false;
     videoDelay=encoder->getEncoderDelay();
-    printf("[StreamProcess] Video Encoder Delay=%" PRIu64"ms\n",videoDelay/1000);
+    ADM_info("[StreamProcess] Initial video encoder delay: %" PRIu64" ms\n",videoDelay/1000);
+    firstPacket=true;
 }
 /**
     \fn ADM_videoStreamProcess
@@ -64,6 +65,12 @@ bool  ADM_videoStreamProcess::getPacket(ADMBitstream *out)
 {
     if(false==encoder->encode(out)) return false;
     ADM_assert(out->len<out->bufferSize);
+    if(firstPacket)
+    {
+        videoDelay=encoder->getEncoderDelay();
+        ADM_info("[StreamProcess] Final video encoder delay: %" PRIu64" ms\n",videoDelay/1000);
+        firstPacket=false;
+    }
     return true;
 }
 /**

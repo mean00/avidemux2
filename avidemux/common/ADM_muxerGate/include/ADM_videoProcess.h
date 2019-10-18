@@ -30,6 +30,7 @@ class ADM_videoStreamProcess: public ADM_videoStream
 {
 protected:
             ADM_coreVideoEncoder *encoder;
+            bool    firstPacket;
 public:
              ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder);
     virtual ~ADM_videoStreamProcess();

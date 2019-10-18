@@ -80,6 +80,7 @@ muxerFFmpeg::muxerFFmpeg()
     video_st=NULL;
     audioDelay=0;
     initialized=false;
+    firstVideoPacket=true;
     roundup=0;
 }
 /**
@@ -155,6 +156,7 @@ static bool setAvCodec(AVCodecContext *c,enum AVCodecID id)
 bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 {
     audioDelay=stream->getVideoDelay();
+    printf("[muxerFFmpeg::initVideo] Initial audio delay: %" PRIu64" ms\n",audioDelay/1000);
     video_st = avformat_new_stream(oc, NULL);
 	if (!video_st)
 	{
@@ -554,6 +556,12 @@ bool muxerFFmpeg::saveLoop(const char *title)
                 break;
             }
             written++;
+            if(firstVideoPacket)
+            {
+                firstVideoPacket=false;
+                audioDelay=vStream->getVideoDelay();
+                printf("[muxerFFmpeg::initVideo] Final audio delay: %" PRIu64" ms\n",audioDelay/1000);
+            }
             // Now send audio until they all have DTS > lastVideoDts+increment
             for(int audio=0;audio<nbAStreams;audio++)
             {
