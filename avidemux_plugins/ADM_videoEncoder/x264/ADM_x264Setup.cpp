@@ -326,6 +326,8 @@ bool x264Encoder::setup(void)
     x264_param_apply_profile(&param, x264Settings.general.profile.c_str());
   }
 
+  setConstraintsByLevel();
+
   dumpx264Setup(&param);
   ADM_info("Creating x264 encoder\n");
   handle = x264_encoder_open (&param);
@@ -347,9 +349,107 @@ bool x264Encoder::setup(void)
   return true;
 }
 /**
+    \fn setConstraintsByLevel
+    \brief Copied from Handbrake code
+*/
+bool x264Encoder::setConstraintsByLevel(void)
+{
+    if(param.i_level_idc < 0)
+        return true;
+    if(param.i_width <= 0 || param.i_height <= 0)
+    {
+        ADM_warning("Invalid dimensions: %d:%d\n",param.i_width,param.i_height);
+        return false;
+    }
+    const x264_level_t *level = NULL;
+    int val = param.i_level_idc;
+    for(int i=0; x264_levels[i].level_idc; i++)
+    {
+        if(x264_levels[i].level_idc == val)
+        {
+            level = &x264_levels[i];
+            break;
+        }
+    }
+    if(!level)
+    {
+        ADM_warning("Invalid level %d\n",val);
+        return false;
+    }
+    if(level->frame_only && (param.b_interlaced || param.b_fake_interlaced))
+    {
+        ADM_warning("Interlaced flag not supported for level %d, disabling",val);
+        param.b_interlaced = param.b_fake_interlaced = 0;
+    }
+    // Calculate frame dimensions and rate (in macroblocks)
+    int mbW = (param.i_width + 15) >> 4;
+    int mbH = (param.i_height + 15) >> 4;
+    if(param.b_interlaced || param.b_fake_interlaced)
+    {
+        // interlaced: encoded height must divide cleanly by 32
+        mbH = (mbH + 1) & ~1;
+    }
+    int nbMb = mbW * mbH;
+    int mbRate;
+    if(param.i_fps_den <= 0 || param.i_fps_num <= 0)
+        mbRate = 0;
+    else
+        mbRate = (int64_t)nbMb * param.i_fps_num / param.i_fps_den;
+    // Sanitize frame_reference
+    if(param.i_keyint_max != 1)
+    {
+        int decBufSize = level->dpb / nbMb;
+        if(decBufSize < 1) decBufSize = 1;
+        if(decBufSize > 16) decBufSize = 16;
+        if(decBufSize < param.i_frame_reference)
+        {
+            ADM_warning("Number of ref frames %d too high for the IDC level, setting to %d\n",param.i_frame_reference,decBufSize);
+            param.i_frame_reference = decBufSize;
+        }
+        // Now disable B-frames and pyramid if necessary.
+        if(decBufSize < 2)
+        {
+            if(param.i_bframe)
+            {
+                ADM_warning("B-frames forbidden by the IDC level, disabling.\n");
+                param.i_bframe = 0;
+            }
+        }else if(decBufSize < 4 && param.i_bframe_pyramid != X264_B_PYRAMID_NONE)
+        {
+            ADM_warning("B-frame pyramid forbidden by the IDC level, disabling.\n");
+            param.i_bframe_pyramid = X264_B_PYRAMID_NONE;
+        }
+    }
+    // Sanitize VBV depending on profile, simple mode only
+    if(!x264Settings.useAdvancedConfiguration && x264Settings.general.profile != std::string("high444"))
+    {
+        int codedPicBufFactor = 4;
+        if(x264Settings.general.profile == std::string("high"))
+            codedPicBufFactor = 5;
+        int maxVbvBitrate = (level->bitrate * codedPicBufFactor) >> 2;
+        if(!param.rc.i_vbv_max_bitrate || param.rc.i_vbv_max_bitrate > maxVbvBitrate)
+        {
+            param.rc.i_vbv_max_bitrate = maxVbvBitrate;
+        }
+        int maxVbvBufSize = (level->cpb * codedPicBufFactor) >> 2;
+        if(!param.rc.i_vbv_buffer_size || param.rc.i_vbv_buffer_size > maxVbvBitrate)
+        {
+            param.rc.i_vbv_buffer_size = maxVbvBitrate;
+        }
+    }
+    // Log warnings about constraints violation which are impossible to correct
+    if(level->frame_size < nbMb)
+        ADM_warning("Too many macroblocks per frame for the IDC level: %d (max: %d)\n",nbMb,level->frame_size);
+    if(level->mbps < mbRate)
+    {
+        ADM_warning("Framerate %d/%d too high for IDC level (mb/s: %d, max: %d)\n",param.i_fps_num,param.i_fps_den,mbRate,level->mbps);
+    }
+    return true;
+}
+/**
     \fn dumpx264Setup
 */
-void dumpx264Setup(x264_param_t *param)
+static void dumpx264Setup(x264_param_t *param)
 {
 #define PI(x) printf(#x"\t:%d\n",(int)param->x);
     PI(cpu);

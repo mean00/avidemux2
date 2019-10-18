@@ -143,6 +143,7 @@ protected:
                bool            firstIdr;
                uint32_t        passNumber;
                char            *logFile;
+               bool            setConstraintsByLevel(void);
 
 public:
 
