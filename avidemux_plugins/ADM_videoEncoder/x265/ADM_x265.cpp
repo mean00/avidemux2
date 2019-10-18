@@ -49,6 +49,7 @@ x265Encoder::x265Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreV
     this->globalHeader=globalHeader;
     passNumber=0;
     logFile=NULL;
+    firstIdr=true;
 }
 /**
  * 
@@ -289,6 +290,16 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
         out->len=size;
         aprintf("--PostAmble--\n");
         // Make sure PTS & DTS > 0
+        if(firstIdr)
+        {
+            if(picout->dts<0)
+                encoderDelay=-picout->dts;
+            else
+                encoderDelay=0;
+            ADM_info("First IDR out of encoder with DTS = %" PRId64" us, setting encoder delay to %" PRId64" us.\n",
+                picout->dts,
+                (int64_t)encoderDelay);
+        }
         int64_t finalDts=picout->dts+(int64_t)getEncoderDelay();
         if(finalDts<0)
         {
@@ -336,7 +347,6 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
           {
               // Put our SEI front...
               // first a temp location...
-              firstIdr=false;
               uint8_t *tmpBuffer=new uint8_t[size];
               memcpy(tmpBuffer,out->data,size);
               uint8_t *dout=out->data;
@@ -351,6 +361,7 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
               out->len = size; // update total size
               delete [] tmpBuffer;
           }
+          firstIdr=false;
           break;
         case X265_TYPE_I:
           aprintf("NAL I\n");
