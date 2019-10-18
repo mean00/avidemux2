@@ -50,6 +50,7 @@ x264Encoder::x264Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreV
     passNumber=0;
     logFile=NULL;
     flush=false;
+    firstIdr=true;
 }
 
 /**
@@ -275,6 +276,16 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
         out->len=size;
         aprintf("--PostAmble--\n");
         // Make sure PTS & DTS > 0
+        if(firstIdr)
+        {
+            if(picout->i_dts<0)
+                encoderDelay=-picout->i_dts;
+            else
+                encoderDelay=0;
+            ADM_info("First IDR out of encoder with DTS = %" PRId64" us, setting encoder delay to %" PRId64" us.\n",
+                picout->i_dts,
+                (int64_t)encoderDelay);
+        }
         int64_t finalDts=picout->i_dts+(int64_t)getEncoderDelay();
         if(finalDts<0)
         {
@@ -317,7 +328,6 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
           {
               // Put our SEI front...
               // first a temp location...
-              firstIdr=false;
               uint8_t *tmpBuffer=new uint8_t[size];
               memcpy(tmpBuffer,out->data,size);
               uint8_t *dout=out->data;
@@ -332,6 +342,7 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
               out->len = size; // update total size
               delete [] tmpBuffer;
           }
+          firstIdr=false;
           break;
         case X264_TYPE_I:
           out->flags = AVI_P_FRAME;
