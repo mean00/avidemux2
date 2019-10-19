@@ -229,6 +229,13 @@ bool muxerMp4v2::initVideo(void)
                 return false;
             }
         }
+        // Refine audio delay, encoders may adjust videoDelay once the first compressed frame has been produced.
+        uint64_t refinedAudioDelay=vStream->getVideoDelay();
+        if(refinedAudioDelay!=audioDelay)
+        {
+            ADM_info("[muxerMp4v2] Adjusting audio delay, was %" PRIu64" ms, now %" PRIu64" ms.\n",audioDelay/1000,refinedAudioDelay/1000);
+            audioDelay=refinedAudioDelay;
+        }
         double inc=vStream->getFrameIncrement();
         inc=inc/1000000;
         ADM_info("Frame increment =%d ms\n",(int)(inc*1000));
