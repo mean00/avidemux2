@@ -59,6 +59,7 @@ protected:
         audioClock      **clocks;
         uint64_t        audioDelay;
         uint64_t        firstPacketOffset;
+        bool            firstVideoPacket;
 public:
                 muxerAvi();
         virtual ~muxerAvi();

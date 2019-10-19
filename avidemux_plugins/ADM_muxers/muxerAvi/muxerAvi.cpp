@@ -43,6 +43,7 @@ muxerAvi::muxerAvi()
     videoBuffer=NULL;
     clocks=NULL;
     firstPacketOffset=0;
+    firstVideoPacket=true;
 };
 /**
     \fn     muxerAVI
@@ -187,6 +188,16 @@ bool muxerAvi::prefill(ADMBitstream *in)
         return false;
     }
     dts=in->dts;
+    if(firstVideoPacket)
+    { // Refine audio delay, encoders may adjust videoDelay once the first compressed frame has been produced.
+        uint64_t refinedAudioDelay=vStream->getVideoDelay();
+        if(refinedAudioDelay!=audioDelay)
+        {
+            ADM_info("[muxerAvi] Adjusting audio delay, was %" PRIu64" ms, now %" PRIu64" ms.\n",audioDelay/1000,refinedAudioDelay/1000);
+            audioDelay=refinedAudioDelay;
+        }
+        firstVideoPacket=false;
+    }
     for(int audioIndex=0;audioIndex<nbAStreams;audioIndex++)
     {
                 ADM_audioStream*a=aStreams[audioIndex];
