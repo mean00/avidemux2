@@ -1,6 +1,6 @@
---- libavcodec/h264_parser.c.orig	2019-04-01 13:16:31.000000000 +0200
-+++ libavcodec/h264_parser.c	2019-07-15 23:20:28.365062563 +0200
-@@ -64,6 +64,112 @@
+--- libavcodec/h264_parser.c.orig	2019-10-20 09:07:02.000000000 +0200
++++ libavcodec/h264_parser.c	2019-10-20 09:15:43.000000000 +0200
+@@ -64,6 +64,106 @@
      int last_frame_num, last_picture_structure;
  } H264ParseContext;
  
@@ -91,19 +91,13 @@
 +//#warning fixme sar vs dar
 +    info->darNum=sps->sar.num;
 +    info->darDen=sps->sar.den;
-+/* */
-+    printf("Crop L: %d\n",(int)sps->crop_left);
-+    printf("Crop R: %d\n",(int)sps->crop_right);
-+    printf("Crop T: %d\n",(int)sps->crop_top);
-+    printf("Crop B: %d\n",(int)sps->crop_bottom);
-+    if(sps->crop_bottom)
++    if(sps->crop_left || sps->crop_right || sps->crop_top || sps->crop_bottom)
 +    {
-+         int mul=1;
-+         printf("Taking crop bottom into account\n");
-+         if(sps->frame_mbs_only_flag)
-+              mul=1;
-+         info->height-=sps->crop_bottom*mul;
-+
++        printf("Taking crop into account, left: %u, right: %u, top: %u, bottom: %u\n",
++            sps->crop_left, sps->crop_right, sps->crop_top, sps->crop_bottom);
++        // frame_cropping_flag and frame_mbs_only_flag have been taken into account by libavcodec already
++        info->width  -= sps->crop_left + sps->crop_right;
++        info->height -= sps->crop_top  + sps->crop_bottom;
 +    }
 +    info->refFrames=sps->ref_frame_count;
 +    return 1;
