@@ -16,6 +16,13 @@ extern "C"
 #include "vpx/vpx_encoder.h"
 };
 
+#define VP9_DEFAULT_CONF \
+{ \
+     1, /* nbThreads */ \
+    20, /* qMin */ \
+    30  /* qMax */ \
+}
+
 /**
     \class vp9Encoder
     \brief libvpx VP9 encoder
@@ -23,13 +30,14 @@ extern "C"
 class vp9Encoder : public ADM_coreVideoEncoder
 {
 protected:
-                vpx_codec_ctx_t     *context;
+                vpx_codec_ctx_t     context;
                 vpx_codec_enc_cfg_t param;
                 vpx_codec_iface_t   *iface;
                 vpx_image_t         *pic;
                 std::vector <const vpx_codec_cx_pkt *> packetQueue;
                 int                 plane;
                 uint32_t            ticks;
+                bool                flush;
                 bool                postAmble(ADMBitstream *out);
 public:
                                     vp9Encoder(ADM_coreVideoFilter *src, bool globalHeader);

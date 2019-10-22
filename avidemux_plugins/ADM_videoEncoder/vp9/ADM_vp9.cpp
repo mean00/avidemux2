@@ -11,12 +11,18 @@
 #include "ADM_vp9.h"
 #include "ADM_coreVideoEncoderInternal.h"
 #include "vpx/vp8cx.h"
+#include "vp9_encoder.h"
+#include "vp9_encoder_desc.cpp"
 
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
-//vp9_settings vp9Settings = VP9_DEFAULT_CONF;
+vp9_encoder vp9Settings = VP9_DEFAULT_CONF;
 
-void resetConfigurationData() {}
+void resetConfigurationData()
+{
+    vp9_encoder conf = VP9_DEFAULT_CONF;
+    memcpy(&vp9Settings, &conf, sizeof(vp9_encoder));
+}
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(vp9Encoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("vp9",
@@ -25,8 +31,8 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("vp9",
                                 NULL, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0,
-                                NULL, // conf template
-                                NULL, // conf var
+                                vp9_encoder_param, // conf template
+                                &vp9Settings, // conf var
                                 NULL, // setProfile
                                 NULL  // getProfile
 );
@@ -37,10 +43,11 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("vp9",
 vp9Encoder::vp9Encoder(ADM_coreVideoFilter *src, bool globalHeader) : ADM_coreVideoEncoder(src)
 {
     ADM_info("Creating VP9 encoder\n");
-    context=NULL;
+    MMSET(context);
     MMSET(param);
     iface=NULL;
     pic=NULL;
+    flush=false;
 }
 
 static void dumpParams(vpx_codec_enc_cfg_t *cfg)
@@ -103,23 +110,18 @@ static void dumpParams(vpx_codec_enc_cfg_t *cfg)
     printf("\n");
 }
 
-static const char *printError(int er)
+static const char *packetTypeToString(int type)
 {
     char msg[32]={0};
 #define REPORT(x) case x: snprintf(msg,32,#x);break;
-    switch(er)
+    switch(type)
     {
-        REPORT(VPX_CODEC_OK)
-        REPORT(VPX_CODEC_ERROR)
-        REPORT(VPX_CODEC_MEM_ERROR)
-        REPORT(VPX_CODEC_ABI_MISMATCH)
-        REPORT(VPX_CODEC_INCAPABLE)
-        REPORT(VPX_CODEC_UNSUP_BITSTREAM)
-        REPORT(VPX_CODEC_UNSUP_FEATURE)
-        REPORT(VPX_CODEC_CORRUPT_FRAME)
-        REPORT(VPX_CODEC_INVALID_PARAM)
-        REPORT(VPX_CODEC_LIST_END)
-        default: snprintf(msg,32,"unknown error"); break;
+        REPORT(VPX_CODEC_CX_FRAME_PKT)
+        REPORT(VPX_CODEC_STATS_PKT)
+        REPORT(VPX_CODEC_FPMB_STATS_PKT)
+        REPORT(VPX_CODEC_PSNR_PKT)
+        REPORT(VPX_CODEC_CUSTOM_PKT)
+        default: snprintf(msg,32,"unknown packet type"); break;
     }
     return ADM_strdup(msg);
 }
@@ -146,6 +148,13 @@ bool vp9Encoder::setup(void)
 {
     vpx_codec_err_t ret;
 
+    image=new ADMImageDefault(getWidth(),getHeight());
+    if(!image)
+    {
+        ADM_error("Cannot allocate image.\n");
+        return false;
+    }
+
     iface=vpx_codec_vp9_cx();
     if(!iface)
     {
@@ -157,7 +166,7 @@ bool vp9Encoder::setup(void)
     ret=vpx_codec_enc_config_default(iface,&param,0);
     if(ret!=VPX_CODEC_OK)
     {
-        ADM_error("[vp9Encoder] Cannot set default configuration, error %d: %s.\n",(int)ret,printError((int)ret));
+        ADM_error("[vp9Encoder] Cannot set default configuration, error %d: %s.\n",(int)ret,vpx_codec_err_to_string(ret));
         return false;
     }
     ADM_info("Initial default config:\n");
@@ -165,23 +174,23 @@ bool vp9Encoder::setup(void)
 
     param.g_w=getWidth();
     param.g_h=getHeight();
-    param.g_threads=1;
+    param.g_threads=vp9Settings.nbThreads;
     usSecondsToFrac(getFrameIncrement(),&(param.g_timebase.num),&(param.g_timebase.den));
     ticks=param.g_timebase.num;
     //param.g_timebase.num=1;
     //param.g_timebase.den=1000000;
     param.g_pass=VPX_RC_ONE_PASS;
-    param.rc_min_quantizer=10;
-    param.rc_max_quantizer=30;
+    param.rc_min_quantizer=vp9Settings.qMin;
+    param.rc_max_quantizer=vp9Settings.qMax;
     param.rc_end_usage=VPX_Q;
 
     ADM_info("Trying to init encoder with the following configuration:\n");
     dumpParams(&param);
 
-    ret=vpx_codec_enc_init(context,iface,&param,0);
+    ret=vpx_codec_enc_init(&context,iface,&param,0);
     if(ret!=VPX_CODEC_OK)
     {
-        ADM_error("[vp9Encoder] Init failed with error %d: %s\n",(int)ret,printError((int)ret));
+        ADM_error("[vp9Encoder] Init failed with error %d: %s\n",(int)ret,vpx_codec_err_to_string(ret));
         return false;
     }
 
@@ -208,11 +217,7 @@ vp9Encoder::~vp9Encoder()
         vpx_img_free(pic);
         pic=NULL;
     }
-    if(context)
-    {
-        vpx_codec_destroy(context);
-        context=NULL;
-    }
+    vpx_codec_destroy(&context);
 }
 
 /**
@@ -227,19 +232,18 @@ bool vp9Encoder::encode(ADMBitstream *out)
 
     // update
 again:
-    bool gotFrame=true;
-    if(source->getNextFrame(&nb,image)==false)
+    if(!flush && source->getNextFrame(&nb,image)==false)
     {
         ADM_warning("[vp9] Cannot get next image\n");
-        gotFrame=false;
+        flush=true;
     }else
     {
         pic->planes[VPX_PLANE_Y] = YPLANE(image);
-        pic->planes[VPX_PLANE_U] = UPLANE(image);
-        pic->planes[VPX_PLANE_V] = VPLANE(image);
+        pic->planes[VPX_PLANE_U] = VPLANE(image);
+        pic->planes[VPX_PLANE_V] = UPLANE(image);
         pic->stride[VPX_PLANE_Y] = image->GetPitch(PLANAR_Y);
-        pic->stride[VPX_PLANE_U] = image->GetPitch(PLANAR_U);
-        pic->stride[VPX_PLANE_V] = image->GetPitch(PLANAR_V);
+        pic->stride[VPX_PLANE_U] = image->GetPitch(PLANAR_V);
+        pic->stride[VPX_PLANE_V] = image->GetPitch(PLANAR_U);
         pic->bit_depth = 8;
 
         pts=image->Pts;
@@ -252,25 +256,28 @@ again:
         mapper.push_back(map);
     }
 
-    if(!gotFrame)
+    if(flush)
     {
         ADM_info("Flushing delayed frames\n");
         pts+=ticks;
-        er=vpx_codec_encode(context,NULL,pts,ticks,0,0);
+        er=vpx_codec_encode(&context,NULL,pts,ticks,0,10000);
     }else
     {
-        er=vpx_codec_encode(context,pic,pts,ticks,0,0);
+        er=vpx_codec_encode(&context,pic,pts,ticks,0,10000);
     }
     if(er!=VPX_CODEC_OK)
     {
-        ADM_error("Encoding error %d: %s\n",(int)er,printError((int)er));
+        ADM_error("Encoding error %d: %s\n",(int)er,vpx_codec_err_to_string(er));
         return false;
     }
 
     out->flags=0;
 
     if(!postAmble(out))
+    {
+        if(flush) return false;
         goto again;
+    }
 
     return true;
 }
@@ -291,12 +298,15 @@ bool vp9Encoder::isDualPass(void)
 bool vp9Encoder::postAmble(ADMBitstream *out)
 {
     const vpx_codec_cx_pkt *pkt;
-    vpx_codec_iter_t *iter=NULL;
+    const void *iter=NULL;
 
-    while((pkt=vpx_codec_get_cx_data(context,iter)))
+    while((pkt=vpx_codec_get_cx_data(&context,&iter)))
     {
         if(pkt->kind != VPX_CODEC_CX_FRAME_PKT)
+        {
+            ADM_info("Got packet of type: %s\n",packetTypeToString(pkt->kind));
             continue;
+        }
         packetQueue.push_back(pkt);
     }
 
