@@ -13,10 +13,13 @@
 #include "vpx/vp8cx.h"
 #include "vp9_encoder.h"
 #include "vp9_encoder_desc.cpp"
+#include "DIA_factory.h"
 
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
 vp9_encoder vp9Settings = VP9_DEFAULT_CONF;
+
+static bool vp9EncoderConfigure(void);
 
 void resetConfigurationData()
 {
@@ -28,7 +31,7 @@ ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(vp9Encoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("vp9",
                                "VP9 (libvpx)",
                                "libvpx based VP9 Encoder",
-                                NULL, // No configuration
+                                vp9EncoderConfigure, // configuration dialog
                                 ADM_UI_ALL,
                                 1,0,0,
                                 vp9_encoder_param, // conf template
@@ -203,6 +206,21 @@ bool vp9Encoder::setup(void)
         return false;
     }
 
+    switch(vp9Settings.deadline)
+    {
+        case 0:
+            dline=VPX_DL_REALTIME;
+            break;
+        case 1:
+            dline=VPX_DL_GOOD_QUALITY;
+            break;
+        case 2:
+            dline=VPX_DL_BEST_QUALITY;
+            break;
+        default:
+            dline=VPX_DL_GOOD_QUALITY;
+            break;
+    }
     return true;
 }
 
@@ -260,10 +278,10 @@ again:
     {
         ADM_info("Flushing delayed frames\n");
         pts+=ticks;
-        er=vpx_codec_encode(&context,NULL,pts,ticks,0,10000);
+        er=vpx_codec_encode(&context,NULL,pts,ticks,0,dline);
     }else
     {
-        er=vpx_codec_encode(&context,pic,pts,ticks,0,10000);
+        er=vpx_codec_encode(&context,pic,pts,ticks,0,dline);
     }
     if(er!=VPX_CODEC_OK)
     {
@@ -322,6 +340,39 @@ bool vp9Encoder::postAmble(ADMBitstream *out)
         return true;
     }
 
+    return false;
+}
+
+/**
+ *  \fn vp9EncoderConfigure
+ *  \brief Configuration UI for VP9 encoder
+ */
+bool vp9EncoderConfigure(void)
+{
+    vp9_encoder *cfg = &vp9Settings;
+
+    diaMenuEntry dltype[]={
+        {REALTIME,QT_TRANSLATE_NOOP("vp9encoder","Speed (slow)")},
+        {GOOD_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Balanced (very slow)")},
+        {BEST_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Quality (extremely slow)")}
+    };
+#define PX(x) &(cfg->x)
+    diaElemMenu qual(PX(deadline),QT_TRANSLATE_NOOP("vp9encoder","Speed / Quality"),3,dltype);
+    diaElemUInteger conc(PX(nbThreads),QT_TRANSLATE_NOOP("vp9encoder","Threads"),1,8);
+    diaElemUInteger minq(PX(qMin),QT_TRANSLATE_NOOP("vp9encoder","Min. Quantizer"),0,63);
+    diaElemUInteger maxq(PX(qMax),QT_TRANSLATE_NOOP("vp9encoder","Max. Quantizer"),0,63);
+
+    diaElem *dialog[] = {&qual,&conc,&minq,&maxq};
+    if(diaFactoryRun(QT_TRANSLATE_NOOP("vp9encoder","libvpx VP9 Encoder Configuration"),4,dialog))
+    {
+        if(cfg->qMin > cfg->qMax)
+        {
+            uint32_t swap=cfg->qMax;
+            cfg->qMax=cfg->qMin;
+            cfg->qMin=swap;
+        }
+        return true;
+    }
     return false;
 }
 

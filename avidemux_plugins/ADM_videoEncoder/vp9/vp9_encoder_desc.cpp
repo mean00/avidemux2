@@ -3,5 +3,6 @@ extern const ADM_paramList vp9_encoder_param[]={
  {"nbThreads",offsetof(vp9_encoder,nbThreads),"uint32_t",ADM_param_uint32_t},
  {"qMin",offsetof(vp9_encoder,qMin),"uint32_t",ADM_param_uint32_t},
  {"qMax",offsetof(vp9_encoder,qMax),"uint32_t",ADM_param_uint32_t},
+ {"deadline",offsetof(vp9_encoder,deadline),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };

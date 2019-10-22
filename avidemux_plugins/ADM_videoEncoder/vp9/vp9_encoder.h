@@ -5,4 +5,5 @@ typedef struct {
 uint32_t nbThreads;
 uint32_t qMin;
 uint32_t qMax;
+uint32_t deadline;
 }vp9_encoder;

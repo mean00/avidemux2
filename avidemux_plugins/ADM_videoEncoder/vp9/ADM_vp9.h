@@ -10,17 +10,25 @@
 #define ADM_VP9_H
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_encoderConf.h"
-//#include "vp9_settings.h"
+
 extern "C"
 {
 #include "vpx/vpx_encoder.h"
 };
 
+enum vp9DeadlinePreset
+{
+    REALTIME=0,
+    GOOD_QUALITY=1,
+    BEST_QUALITY=2
+};
+
 #define VP9_DEFAULT_CONF \
 { \
-     1, /* nbThreads */ \
+     2, /* nbThreads */ \
     20, /* qMin */ \
-    30  /* qMax */ \
+    30, /* qMax */ \
+     1  /* deadline = 1s */ \
 }
 
 /**
@@ -37,6 +45,7 @@ protected:
                 std::vector <const vpx_codec_cx_pkt *> packetQueue;
                 int                 plane;
                 uint32_t            ticks;
+                uint32_t            dline;
                 bool                flush;
                 bool                postAmble(ADMBitstream *out);
 public:
