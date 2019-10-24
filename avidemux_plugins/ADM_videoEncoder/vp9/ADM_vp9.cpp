@@ -164,7 +164,6 @@ bool vp9Encoder::setup(void)
         ADM_error("No VP9 interface available.\n");
         return false;
     }
-    ADM_info("VP9 interface available at %p\n",iface);
 
     ret=vpx_codec_enc_config_default(iface,&param,0);
     if(ret!=VPX_CODEC_OK)
@@ -220,6 +219,15 @@ bool vp9Encoder::setup(void)
         default:
             dline=VPX_DL_GOOD_QUALITY;
             break;
+    }
+    int speed=(vp9Settings.speed > 18)? 9 : vp9Settings.speed-9;
+    if(VPX_CODEC_OK!=vpx_codec_control(&context,VP8E_SET_CPUUSED,speed))
+    {
+        ADM_warning("[vp9Encoder] Cannot set VP8E_SET_CPUUSED codec control to %d\n",speed);
+    }
+    if(VPX_CODEC_OK!=vpx_codec_control(&context,VP9E_SET_COLOR_RANGE,vp9Settings.fullrange))
+    {
+        ADM_warning("[vp9Encoder] Cannot set VP9E_SET_COLOR_RANGE codec control to %d\n",vp9Settings.fullrange);
     }
     return true;
 }
@@ -350,20 +358,23 @@ bool vp9Encoder::postAmble(ADMBitstream *out)
 bool vp9EncoderConfigure(void)
 {
     vp9_encoder *cfg = &vp9Settings;
+    int spdi = cfg->speed - 9;
 
     diaMenuEntry dltype[]={
-        {REALTIME,QT_TRANSLATE_NOOP("vp9encoder","Speed (slow)")},
-        {GOOD_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Balanced (very slow)")},
-        {BEST_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Quality (extremely slow)")}
+        {REALTIME,QT_TRANSLATE_NOOP("vp9encoder","Realtime")},
+        {GOOD_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Good quality")},
+        {BEST_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Best quality")}
     };
 #define PX(x) &(cfg->x)
-    diaElemMenu qual(PX(deadline),QT_TRANSLATE_NOOP("vp9encoder","Speed / Quality"),3,dltype);
+    diaElemMenu menudl(PX(deadline),QT_TRANSLATE_NOOP("vp9encoder","Deadline"),3,dltype);
+    diaElemInteger speedi(&spdi,QT_TRANSLATE_NOOP("vp9encoder","Speed"),-9,9);
     diaElemUInteger conc(PX(nbThreads),QT_TRANSLATE_NOOP("vp9encoder","Threads"),1,8);
     diaElemUInteger minq(PX(qMin),QT_TRANSLATE_NOOP("vp9encoder","Min. Quantizer"),0,63);
     diaElemUInteger maxq(PX(qMax),QT_TRANSLATE_NOOP("vp9encoder","Max. Quantizer"),0,63);
+    diaElemToggle range(PX(fullrange),QT_TRANSLATE_NOOP("vp9encoder","Use full color range"));
 
-    diaElem *dialog[] = {&qual,&conc,&minq,&maxq};
-    if(diaFactoryRun(QT_TRANSLATE_NOOP("vp9encoder","libvpx VP9 Encoder Configuration"),4,dialog))
+    diaElem *dialog[] = {&menudl,&speedi,&conc,&minq,&maxq,&range};
+    if(diaFactoryRun(QT_TRANSLATE_NOOP("vp9encoder","libvpx VP9 Encoder Configuration"),6,dialog))
     {
         if(cfg->qMin > cfg->qMax)
         {
@@ -371,6 +382,7 @@ bool vp9EncoderConfigure(void)
             cfg->qMax=cfg->qMin;
             cfg->qMin=swap;
         }
+        cfg->speed=spdi+9;
         return true;
     }
     return false;

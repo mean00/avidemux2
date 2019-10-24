@@ -26,9 +26,11 @@ enum vp9DeadlinePreset
 #define VP9_DEFAULT_CONF \
 { \
      2, /* nbThreads */ \
+    13, /* speed = VP8E_SET_CPUUSED + 9 */ \
+     1, /* deadline = 1s */ \
     20, /* qMin */ \
     30, /* qMax */ \
-     1  /* deadline = 1s */ \
+     0  /* fullrange */ \
 }
 
 /**

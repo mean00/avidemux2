@@ -3,7 +3,9 @@
 #pragma once
 typedef struct {
 uint32_t nbThreads;
+uint32_t speed;
+uint32_t deadline;
 uint32_t qMin;
 uint32_t qMax;
-uint32_t deadline;
+bool fullrange;
 }vp9_encoder;
