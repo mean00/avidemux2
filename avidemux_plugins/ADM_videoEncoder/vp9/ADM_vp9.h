@@ -25,11 +25,17 @@ enum vp9DeadlinePreset
 
 #define VP9_DEFAULT_CONF \
 { \
+    { \
+        COMPRESS_2PASS_BITRATE, /* COMPRESSION_MODE mode */ \
+        20, /* qz */ \
+        0, /* bitrate in kb/s */ \
+        0, /* finalsize in MiB */ \
+        0, /* avg_bitrate in kb/s */ \
+        ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL \
+    }, \
      2, /* nbThreads */ \
     13, /* speed = VP8E_SET_CPUUSED + 9 */ \
      1, /* deadline = 1s */ \
-    20, /* qMin */ \
-    30, /* qMax */ \
      0  /* fullrange */ \
 }
 
@@ -45,18 +51,26 @@ protected:
                 vpx_codec_iface_t   *iface;
                 vpx_image_t         *pic;
                 std::vector <const vpx_codec_cx_pkt *> packetQueue;
+
                 int                 plane;
                 uint32_t            ticks;
                 uint32_t            dline;
                 bool                flush;
                 bool                postAmble(ADMBitstream *out);
+
+                std::string         logFile;
+                FILE                *statFd;
+                int                 passNumber;
+                void                *statBuf;
+                uint64_t            lastDts;
 public:
                                     vp9Encoder(ADM_coreVideoFilter *src, bool globalHeader);
     virtual                         ~vp9Encoder();
-    virtual    bool                 setup(void);
-    virtual    bool                 encode(ADMBitstream *out);
-    virtual const char              *getFourcc(void) {return "VP9 ";}
-    virtual    bool                 isDualPass(void);
+    virtual     bool                setup(void);
+    virtual     bool                encode(ADMBitstream *out);
+    virtual     const char          *getFourcc(void) {return "VP9 ";}
+    virtual     bool                isDualPass(void);
+    virtual     bool                setPassAndLogFile(int pass, const char *name);
 };
 
 #endif

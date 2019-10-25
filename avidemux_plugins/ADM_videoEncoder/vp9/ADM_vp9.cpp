@@ -13,8 +13,10 @@
 #include "vpx/vp8cx.h"
 #include "vp9_encoder.h"
 #include "vp9_encoder_desc.cpp"
+#undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 
+#define VP9_MAX_QUANTIZER 63
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
 vp9_encoder vp9Settings = VP9_DEFAULT_CONF;
@@ -51,6 +53,9 @@ vp9Encoder::vp9Encoder(ADM_coreVideoFilter *src, bool globalHeader) : ADM_coreVi
     iface=NULL;
     pic=NULL;
     flush=false;
+    passNumber=0;
+    statFd=NULL;
+    statBuf=NULL;
 }
 
 static void dumpParams(vpx_codec_enc_cfg_t *cfg)
@@ -179,12 +184,93 @@ bool vp9Encoder::setup(void)
     param.g_threads=vp9Settings.nbThreads;
     usSecondsToFrac(getFrameIncrement(),&(param.g_timebase.num),&(param.g_timebase.den));
     ticks=param.g_timebase.num;
-    //param.g_timebase.num=1;
-    //param.g_timebase.den=1000000;
-    param.g_pass=VPX_RC_ONE_PASS;
-    param.rc_min_quantizer=vp9Settings.qMin;
-    param.rc_max_quantizer=vp9Settings.qMax;
-    param.rc_end_usage=VPX_Q;
+
+    int speed=(vp9Settings.speed > 18)? 9 : vp9Settings.speed-9;
+
+    param.rc_min_quantizer=vp9Settings.ratectl.qz;
+    switch(vp9Settings.ratectl.mode)
+    {
+        case COMPRESS_CQ:
+            param.rc_max_quantizer=vp9Settings.ratectl.qz;
+            param.rc_end_usage=VPX_Q;
+            break;
+        case COMPRESS_CBR:
+            param.rc_target_bitrate=vp9Settings.ratectl.bitrate;
+            param.rc_end_usage=VPX_CBR;
+            break;
+        case COMPRESS_2PASS:
+        case COMPRESS_2PASS_BITRATE:
+            if(passNumber!=1 && passNumber!=2)
+            {
+                ADM_error("Invalid pass number %d provided.\n",(int)passNumber);
+                return false;
+            }
+            ADM_info("[vp9Encoder] Starting pass %d\n",passNumber);
+            if(passNumber==1)
+            {
+                param.g_lag_in_frames=0;
+                speed=1;
+            }else
+            {
+                int64_t sz=ADM_fileSize(logFile.c_str());
+                if(sz<=0)
+                {
+                    ADM_error("Stats file not found or empty, cannot proceed with the second pass.\n");
+                    return false;
+                }
+                if(sz>(1LL<<30))
+                {
+                    ADM_error("Stats file size %" PRId64" exceeds one GiB, this cannot be right, not trying to load it into memory.\n",sz);
+                    return false;
+                }
+                statBuf=ADM_alloc(sz);
+                if(!statBuf)
+                {
+                    ADM_error("Allocating memory for stats from the first pass failed.\n");
+                    return false;
+                }
+                statFd=ADM_fopen(logFile.c_str(),"r");
+                if(!ADM_fread(statBuf,sz,1,statFd))
+                {
+                    ADM_error("Reading stats file %s failed.\n",logFile.c_str());
+                    fclose(statFd);
+                    return false;
+                }
+                fclose(statFd);
+                param.rc_twopass_stats_in.buf=statBuf; // should be freed by vpx_codec_destroy()
+                param.rc_twopass_stats_in.sz=sz;
+            }
+            {
+                uint32_t bitrate=0;
+                if(vp9Settings.ratectl.mode==COMPRESS_2PASS)
+                {
+                    uint64_t duration=source->getInfo()->totalDuration;
+                    if(vp9Settings.ratectl.finalsize)
+                    {
+                        if(false==ADM_computeAverageBitrateFromDuration(duration, vp9Settings.ratectl.finalsize, &bitrate))
+                            return false;
+                    }
+                }else
+                {
+                    if(vp9Settings.ratectl.bitrate)
+                        param.rc_target_bitrate=vp9Settings.ratectl.bitrate;
+                }
+                if(bitrate)
+                {
+                    param.rc_target_bitrate=bitrate;
+                    param.rc_max_quantizer=VP9_MAX_QUANTIZER;
+                    param.rc_end_usage=VPX_CQ;
+                }else
+                {
+                    param.rc_target_bitrate=0;
+                    param.rc_end_usage=VPX_Q;
+                }
+            }
+            break;
+        default:
+            break;
+    }
+    param.g_pass=(!passNumber)? VPX_RC_ONE_PASS : (passNumber==1)? VPX_RC_FIRST_PASS : VPX_RC_LAST_PASS;
 
     ADM_info("Trying to init encoder with the following configuration:\n");
     dumpParams(&param);
@@ -205,22 +291,24 @@ bool vp9Encoder::setup(void)
         return false;
     }
 
+    dline=VPX_DL_GOOD_QUALITY;
     switch(vp9Settings.deadline)
     {
         case 0:
+            if(passNumber==1)
+                break;
             dline=VPX_DL_REALTIME;
+            param.g_lag_in_frames=0;
             break;
         case 1:
-            dline=VPX_DL_GOOD_QUALITY;
             break;
         case 2:
             dline=VPX_DL_BEST_QUALITY;
             break;
         default:
-            dline=VPX_DL_GOOD_QUALITY;
             break;
     }
-    int speed=(vp9Settings.speed > 18)? 9 : vp9Settings.speed-9;
+
     if(VPX_CODEC_OK!=vpx_codec_control(&context,VP8E_SET_CPUUSED,speed))
     {
         ADM_warning("[vp9Encoder] Cannot set VP8E_SET_CPUUSED codec control to %d\n",speed);
@@ -243,7 +331,21 @@ vp9Encoder::~vp9Encoder()
         vpx_img_free(pic);
         pic=NULL;
     }
+    if(statFd)
+        fclose(statFd);
+    statFd=NULL;
     vpx_codec_destroy(&context);
+}
+
+/**
+ *  \fn setPassAndLogFile
+ */
+bool vp9Encoder::setPassAndLogFile(int pass, const char *name)
+{
+    ADM_info("Initializing pass %d, log file: %s\n",pass,name);
+    logFile=std::string(name);
+    passNumber=pass;
+    return true;
 }
 
 /**
@@ -314,6 +416,9 @@ again:
 */
 bool vp9Encoder::isDualPass(void)
 {
+    uint32_t encmode=vp9Settings.ratectl.mode;
+    if(encmode==COMPRESS_2PASS || encmode==COMPRESS_2PASS_BITRATE)
+        return true;
     return false;
 }
 
@@ -328,9 +433,14 @@ bool vp9Encoder::postAmble(ADMBitstream *out)
 
     while((pkt=vpx_codec_get_cx_data(&context,&iter)))
     {
-        if(pkt->kind != VPX_CODEC_CX_FRAME_PKT)
+        if(passNumber != 1 && pkt->kind != VPX_CODEC_CX_FRAME_PKT)
         {
             ADM_info("Got packet of type: %s\n",packetTypeToString(pkt->kind));
+            continue;
+        }
+        if(passNumber == 1 && pkt->kind != VPX_CODEC_STATS_PKT)
+        {
+            ADM_warning("Unexpected packet type %s during the first pass.\n",packetTypeToString(pkt->kind));
             continue;
         }
         packetQueue.push_back(pkt);
@@ -342,7 +452,31 @@ bool vp9Encoder::postAmble(ADMBitstream *out)
         packetQueue.erase(packetQueue.begin());
         memcpy(out->data,pkt->data.frame.buf,pkt->data.frame.sz);
         out->len=pkt->data.frame.sz;
-        getRealPtsFromInternal(pkt->data.frame.pts,&out->dts,&out->pts);
+        if(passNumber!=1)
+        {
+            getRealPtsFromInternal(pkt->data.frame.pts,&out->dts,&out->pts);
+        }else
+        {
+            if(queueOfDts.size())
+            {
+                lastDts=out->dts=out->pts=queueOfDts.front();
+                queueOfDts.erase(queueOfDts.begin());
+            }else
+            {
+                lastDts+=getFrameIncrement();
+                out->dts=out->pts=lastDts;
+            }
+            if(!statFd)
+            {
+                statFd=ADM_fopen(logFile.c_str(),"wb");
+                if(!statFd)
+                {
+                    ADM_error("Cannot open log file %s for writing.\n",logFile.c_str());
+                    return false;
+                }
+            }
+            ADM_fwrite(out->data,out->len,1,statFd);
+        }
         if(pkt->data.frame.flags & VPX_FRAME_IS_KEY)
             out->flags=AVI_KEY_FRAME;
         return true;
@@ -366,22 +500,26 @@ bool vp9EncoderConfigure(void)
         {BEST_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Best quality")}
     };
 #define PX(x) &(cfg->x)
+    diaElemBitrate bitrate(PX(ratectl),QT_TRANSLATE_NOOP("vp9encoder","For optimal results, select 2-pass average bitrate mode and set target bitrate to zero"));
     diaElemMenu menudl(PX(deadline),QT_TRANSLATE_NOOP("vp9encoder","Deadline"),3,dltype);
     diaElemInteger speedi(&spdi,QT_TRANSLATE_NOOP("vp9encoder","Speed"),-9,9);
     diaElemUInteger conc(PX(nbThreads),QT_TRANSLATE_NOOP("vp9encoder","Threads"),1,8);
-    diaElemUInteger minq(PX(qMin),QT_TRANSLATE_NOOP("vp9encoder","Min. Quantizer"),0,63);
-    diaElemUInteger maxq(PX(qMax),QT_TRANSLATE_NOOP("vp9encoder","Max. Quantizer"),0,63);
     diaElemToggle range(PX(fullrange),QT_TRANSLATE_NOOP("vp9encoder","Use full color range"));
 
-    diaElem *dialog[] = {&menudl,&speedi,&conc,&minq,&maxq,&range};
-    if(diaFactoryRun(QT_TRANSLATE_NOOP("vp9encoder","libvpx VP9 Encoder Configuration"),6,dialog))
+    diaElemFrame frameEncMode(QT_TRANSLATE_NOOP("vp9encoder","Encoding Mode"));
+    frameEncMode.swallow(&bitrate);
+
+    diaElemFrame frameEncSpeed(QT_TRANSLATE_NOOP("vp9encoder","Speed vs Quality"));
+    frameEncSpeed.swallow(&menudl);
+    frameEncSpeed.swallow(&speedi);
+    frameEncSpeed.swallow(&conc);
+
+    diaElemFrame frameMisc(QT_TRANSLATE_NOOP("vp9encoder","Miscellaneous"));
+    frameMisc.swallow(&range);
+
+    diaElem *dialog[] = {&frameEncMode,&frameEncSpeed,&frameMisc};
+    if(diaFactoryRun(QT_TRANSLATE_NOOP("vp9encoder","libvpx VP9 Encoder Configuration"),3,dialog))
     {
-        if(cfg->qMin > cfg->qMax)
-        {
-            uint32_t swap=cfg->qMax;
-            cfg->qMax=cfg->qMin;
-            cfg->qMin=swap;
-        }
         cfg->speed=spdi+9;
         return true;
     }

@@ -2,10 +2,9 @@
 #include "string"
 #pragma once
 typedef struct {
+COMPRES_PARAMS ratectl;
 uint32_t nbThreads;
 uint32_t speed;
 uint32_t deadline;
-uint32_t qMin;
-uint32_t qMax;
 bool fullrange;
 }vp9_encoder;
