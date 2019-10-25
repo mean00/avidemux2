@@ -195,7 +195,15 @@ bool vp9Encoder::setup(void)
             param.rc_end_usage=VPX_Q;
             break;
         case COMPRESS_CBR:
-            param.rc_target_bitrate=vp9Settings.ratectl.bitrate;
+            {
+                uint32_t br=vp9Settings.ratectl.bitrate;
+                if(!br)
+                {
+                    br=1500; // fallback
+                    ADM_warning("Bitrate equal zero replaced with a sensible value %d kbit/s\n",br);
+                }
+                param.rc_target_bitrate=br;
+            }
             param.rc_end_usage=VPX_CBR;
             break;
         case COMPRESS_2PASS:
@@ -271,6 +279,7 @@ bool vp9Encoder::setup(void)
             break;
     }
     param.g_pass=(!passNumber)? VPX_RC_ONE_PASS : (passNumber==1)? VPX_RC_FIRST_PASS : VPX_RC_LAST_PASS;
+    param.kf_max_dist=vp9Settings.keyint;
 
     ADM_info("Trying to init encoder with the following configuration:\n");
     dumpParams(&param);
@@ -287,7 +296,7 @@ bool vp9Encoder::setup(void)
     pic=vpx_img_alloc(pic,VPX_IMG_FMT_I420,param.g_w,param.g_h,alignment);
     if(!pic)
     {
-        ADM_error("[vp9Encoder] Cannot allocate image.\n");
+        ADM_error("[vp9Encoder] Cannot allocate VPX image.\n");
         return false;
     }
 
@@ -454,6 +463,12 @@ bool vp9Encoder::postAmble(ADMBitstream *out)
         out->len=pkt->data.frame.sz;
         if(passNumber!=1)
         {
+            int quantizer=0;
+            if(VPX_CODEC_OK==vpx_codec_control(&context,VP8E_GET_LAST_QUANTIZER_64,&quantizer))
+            { // The value filled by codec control does not apply to this particular frame, but oh well...
+                if(quantizer<=0) quantizer=vp9Settings.ratectl.qz;
+                out->out_quantizer=quantizer;
+            }
             getRealPtsFromInternal(pkt->data.frame.pts,&out->dts,&out->pts);
         }else
         {
@@ -504,6 +519,7 @@ bool vp9EncoderConfigure(void)
     diaElemMenu menudl(PX(deadline),QT_TRANSLATE_NOOP("vp9encoder","Deadline"),3,dltype);
     diaElemInteger speedi(&spdi,QT_TRANSLATE_NOOP("vp9encoder","Speed"),-9,9);
     diaElemUInteger conc(PX(nbThreads),QT_TRANSLATE_NOOP("vp9encoder","Threads"),1,8);
+    diaElemUInteger gopsize(PX(keyint),QT_TRANSLATE_NOOP("vp9encoder","GOP Size"),0,1000);
     diaElemToggle range(PX(fullrange),QT_TRANSLATE_NOOP("vp9encoder","Use full color range"));
 
     diaElemFrame frameEncMode(QT_TRANSLATE_NOOP("vp9encoder","Encoding Mode"));
@@ -514,11 +530,14 @@ bool vp9EncoderConfigure(void)
     frameEncSpeed.swallow(&speedi);
     frameEncSpeed.swallow(&conc);
 
+    diaElemFrame frameIdr(QT_TRANSLATE_NOOP("vp9encoder","Keyframes"));
+    frameIdr.swallow(&gopsize);
+
     diaElemFrame frameMisc(QT_TRANSLATE_NOOP("vp9encoder","Miscellaneous"));
     frameMisc.swallow(&range);
 
-    diaElem *dialog[] = {&frameEncMode,&frameEncSpeed,&frameMisc};
-    if(diaFactoryRun(QT_TRANSLATE_NOOP("vp9encoder","libvpx VP9 Encoder Configuration"),3,dialog))
+    diaElem *dialog[] = {&frameEncMode,&frameEncSpeed,&frameIdr,&frameMisc};
+    if(diaFactoryRun(QT_TRANSLATE_NOOP("vp9encoder","libvpx VP9 Encoder Configuration"),4,dialog))
     {
         cfg->speed=spdi+9;
         return true;
