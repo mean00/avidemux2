@@ -6,5 +6,6 @@ COMPRES_PARAMS ratectl;
 uint32_t nbThreads;
 uint32_t speed;
 uint32_t deadline;
+uint32_t keyint;
 bool fullrange;
 }vp9_encoder;
