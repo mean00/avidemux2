@@ -22,6 +22,8 @@ void      aClass::setMe(void *dialog, void *opaque,uint32_t line)\
 	{ \
 		ADM_assert(internalPointer); \
 		internalPointer->setMe(dialog,opaque,line); \
+		diaElem *cast=(diaElem *)internalPointer; \
+		setSize(cast->getSize()); \
 	} \
 void      aClass::getMe(void)\
 	{ \
