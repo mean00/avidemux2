@@ -170,15 +170,7 @@ bool vp9Encoder::setup(void)
             param.rc_end_usage=VPX_Q;
             break;
         case COMPRESS_CBR:
-            {
-                uint32_t br=vp9Settings.ratectl.bitrate;
-                if(!br)
-                {
-                    br=1500; // fallback
-                    ADM_warning("Bitrate equal zero replaced with a sensible value %d kbit/s\n",br);
-                }
-                param.rc_target_bitrate=br;
-            }
+            param.rc_target_bitrate=vp9Settings.ratectl.bitrate;
             param.rc_end_usage=VPX_CBR;
             break;
         case COMPRESS_2PASS:
@@ -217,9 +209,11 @@ bool vp9Encoder::setup(void)
                 {
                     ADM_error("Reading stats file %s failed.\n",logFile.c_str());
                     fclose(statFd);
+                    statFd=NULL;
                     return false;
                 }
                 fclose(statFd);
+                statFd=NULL;
                 param.rc_twopass_stats_in.buf=statBuf; // should be freed by vpx_codec_destroy()
                 param.rc_twopass_stats_in.sz=sz;
             }
@@ -235,8 +229,7 @@ bool vp9Encoder::setup(void)
                     }
                 }else
                 {
-                    if(vp9Settings.ratectl.bitrate)
-                        param.rc_target_bitrate=vp9Settings.ratectl.bitrate;
+                    bitrate=vp9Settings.ratectl.avg_bitrate;
                 }
                 if(bitrate)
                 {

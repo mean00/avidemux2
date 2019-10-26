@@ -28,8 +28,8 @@ enum vp9DeadlinePreset
     { \
         COMPRESS_2PASS_BITRATE, /* COMPRESSION_MODE mode */ \
         20, /* qz */ \
-        0, /* bitrate in kb/s */ \
-        0, /* finalsize in MiB */ \
+        2000, /* bitrate in kb/s */ \
+        200, /* finalsize in MiB */ \
         0, /* avg_bitrate in kb/s */ \
         ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL \
     }, \
