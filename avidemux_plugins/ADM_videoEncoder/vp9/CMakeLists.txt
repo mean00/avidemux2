@@ -2,6 +2,8 @@ INCLUDE(ve_plugin)
 
 SET(vp9_SRCS
     ADM_vp9.cpp
+    ADM_vp9Plugin.cpp
+    ADM_vp9Dialog.cpp
 )
 include(admCheckVpx)
 checkVpxEnc()

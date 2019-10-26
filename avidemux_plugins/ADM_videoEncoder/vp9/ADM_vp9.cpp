@@ -9,38 +9,13 @@
 
 #include "ADM_default.h"
 #include "ADM_vp9.h"
-#include "ADM_coreVideoEncoderInternal.h"
 #include "vpx/vp8cx.h"
 #include "vp9_encoder.h"
-#include "vp9_encoder_desc.cpp"
-#undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
-#include "DIA_factory.h"
 
 #define VP9_MAX_QUANTIZER 63
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
 vp9_encoder vp9Settings = VP9_DEFAULT_CONF;
-
-static bool vp9EncoderConfigure(void);
-
-void resetConfigurationData()
-{
-    vp9_encoder conf = VP9_DEFAULT_CONF;
-    memcpy(&vp9Settings, &conf, sizeof(vp9_encoder));
-}
-
-ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(vp9Encoder);
-ADM_DECLARE_VIDEO_ENCODER_MAIN("vp9",
-                               "VP9 (libvpx)",
-                               "libvpx based VP9 Encoder",
-                                vp9EncoderConfigure, // configuration dialog
-                                ADM_UI_ALL,
-                                1,0,0,
-                                vp9_encoder_param, // conf template
-                                &vp9Settings, // conf var
-                                NULL, // setProfile
-                                NULL  // getProfile
-);
 
 /**
  *  \fn vp9Encoder
@@ -497,51 +472,6 @@ bool vp9Encoder::postAmble(ADMBitstream *out)
         return true;
     }
 
-    return false;
-}
-
-/**
- *  \fn vp9EncoderConfigure
- *  \brief Configuration UI for VP9 encoder
- */
-bool vp9EncoderConfigure(void)
-{
-    vp9_encoder *cfg = &vp9Settings;
-    int spdi = cfg->speed - 9;
-
-    diaMenuEntry dltype[]={
-        {REALTIME,QT_TRANSLATE_NOOP("vp9encoder","Realtime")},
-        {GOOD_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Good quality")},
-        {BEST_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Best quality")}
-    };
-#define PX(x) &(cfg->x)
-    diaElemBitrate bitrate(PX(ratectl),QT_TRANSLATE_NOOP("vp9encoder","For optimal results, select 2-pass average bitrate mode and set target bitrate to zero"));
-    diaElemMenu menudl(PX(deadline),QT_TRANSLATE_NOOP("vp9encoder","Deadline"),3,dltype);
-    diaElemInteger speedi(&spdi,QT_TRANSLATE_NOOP("vp9encoder","Speed"),-9,9);
-    diaElemUInteger conc(PX(nbThreads),QT_TRANSLATE_NOOP("vp9encoder","Threads"),1,8);
-    diaElemUInteger gopsize(PX(keyint),QT_TRANSLATE_NOOP("vp9encoder","GOP Size"),0,1000);
-    diaElemToggle range(PX(fullrange),QT_TRANSLATE_NOOP("vp9encoder","Use full color range"));
-
-    diaElemFrame frameEncMode(QT_TRANSLATE_NOOP("vp9encoder","Encoding Mode"));
-    frameEncMode.swallow(&bitrate);
-
-    diaElemFrame frameEncSpeed(QT_TRANSLATE_NOOP("vp9encoder","Speed vs Quality"));
-    frameEncSpeed.swallow(&menudl);
-    frameEncSpeed.swallow(&speedi);
-    frameEncSpeed.swallow(&conc);
-
-    diaElemFrame frameIdr(QT_TRANSLATE_NOOP("vp9encoder","Keyframes"));
-    frameIdr.swallow(&gopsize);
-
-    diaElemFrame frameMisc(QT_TRANSLATE_NOOP("vp9encoder","Miscellaneous"));
-    frameMisc.swallow(&range);
-
-    diaElem *dialog[] = {&frameEncMode,&frameEncSpeed,&frameIdr,&frameMisc};
-    if(diaFactoryRun(QT_TRANSLATE_NOOP("vp9encoder","libvpx VP9 Encoder Configuration"),4,dialog))
-    {
-        cfg->speed=spdi+9;
-        return true;
-    }
     return false;
 }
 
