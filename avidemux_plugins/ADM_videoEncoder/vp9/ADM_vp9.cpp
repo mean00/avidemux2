@@ -163,11 +163,12 @@ bool vp9Encoder::setup(void)
     int speed=(vp9Settings.speed > 18)? 9 : vp9Settings.speed-9;
 
     param.rc_min_quantizer=vp9Settings.ratectl.qz;
+    param.rc_max_quantizer=VP9_MAX_QUANTIZER;
     switch(vp9Settings.ratectl.mode)
     {
         case COMPRESS_CQ:
             param.rc_max_quantizer=vp9Settings.ratectl.qz;
-            param.rc_end_usage=VPX_Q;
+            param.rc_end_usage=VPX_CQ;
             break;
         case COMPRESS_CBR:
             param.rc_target_bitrate=vp9Settings.ratectl.bitrate;
@@ -234,7 +235,7 @@ bool vp9Encoder::setup(void)
                 if(bitrate)
                 {
                     param.rc_target_bitrate=bitrate;
-                    param.rc_max_quantizer=VP9_MAX_QUANTIZER;
+                    param.rc_2pass_vbr_maxsection_pct=100; // max. bitrate = 2*target
                     param.rc_end_usage=VPX_CQ;
                 }else
                 {
@@ -289,6 +290,10 @@ bool vp9Encoder::setup(void)
     if(VPX_CODEC_OK!=vpx_codec_control(&context,VP8E_SET_CPUUSED,speed))
     {
         ADM_warning("[vp9Encoder] Cannot set VP8E_SET_CPUUSED codec control to %d\n",speed);
+    }
+    if(param.rc_end_usage==VPX_CQ && VPX_CODEC_OK!=vpx_codec_control(&context,VP8E_SET_CQ_LEVEL,vp9Settings.ratectl.qz))
+    {
+        ADM_warning("[vp9Encoder] Cannot set VP8E_SET_CQ_LEVEL codec control to %u\n",vp9Settings.ratectl.qz);
     }
     if(VPX_CODEC_OK!=vpx_codec_control(&context,VP9E_SET_COLOR_RANGE,vp9Settings.fullrange))
     {
