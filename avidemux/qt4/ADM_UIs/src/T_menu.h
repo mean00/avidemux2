@@ -10,6 +10,8 @@ namespace ADM_qt4Factory
 {
 	class diaElemMenuDynamic : public diaElemMenuDynamicBase,public QtFactoryUtils
 	{
+	protected:
+		void *label;
 	public:
 		diaElemMenuDynamic(uint32_t *intValue, const char *itle, uint32_t nb, diaMenuEntryDynamic **menu, const char *tip = NULL);
 
