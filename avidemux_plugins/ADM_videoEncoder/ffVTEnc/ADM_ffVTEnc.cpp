@@ -176,10 +176,14 @@ bool ffVTEncConfigure(void)
     frameControl.swallow(&gopSize);
     frameControl.swallow(&maxBframes);
 
+    profile.link(&vtProfile[0],0,&maxBframes);
+
     diaElem *diamode[] = {&profile,&rateControl,&frameControl};
 
     if( diaFactoryRun(QT_TRANSLATE_NOOP("ffvtenc","VideoToolbox H.264 Encoder Configuration"),3,diamode))
     {
+        if(conf->profile==FF_VT_PROFILE_BASELINE)
+            conf->bframes=0;
         return true;
     }
     return false;
