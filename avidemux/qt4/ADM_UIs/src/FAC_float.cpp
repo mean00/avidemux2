@@ -32,6 +32,7 @@ class diaElemFloat : public diaElem,QtFactoryUtils
 {
 protected:
 	int decimals;
+	void *label;
 
 public:
   ELEM_TYPE_FLOAT min,max;
@@ -75,6 +76,7 @@ void diaElemFloat::setMe(void *dialog, void *opaque,uint32_t line)
  
  QLabel *text=new QLabel( myQtTitle,(QWidget *)dialog);
  text->setBuddy(box);
+ label=(void *)text;
 
  QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -99,10 +101,10 @@ void diaElemFloat::enable(uint32_t onoff)
 {
    QDoubleSpinBox *box=(QDoubleSpinBox *)myWidget;
   ADM_assert(box);
-  if(onoff)
-    box->setEnabled(1);
-  else
-    box->setDisabled(1);
+  QLabel *txt=(QLabel *)label;
+  ADM_assert(txt);
+  txt->setEnabled(!!onoff);
+  box->setEnabled(!!onoff);
 }
 
 int diaElemFloat::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
