@@ -39,6 +39,7 @@ public:
   virtual ~diaElemReadOnlyText() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
+  void enable(uint32_t onoff);
   int getRequiredLayout(void);
 };
 
@@ -104,6 +105,13 @@ void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)
 void diaElemReadOnlyText::getMe(void)
 {
 
+}
+
+void diaElemReadOnlyText::enable(uint32_t onoff)
+{
+    ADM_assert(myWidget);
+    QLabel *l=(QLabel *)myWidget;
+    l->setEnabled(!!onoff);
 }
 
 int diaElemReadOnlyText::getRequiredLayout(void) { return layoutType; }

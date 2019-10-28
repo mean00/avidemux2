@@ -170,6 +170,7 @@ void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
    layout->addItem(spacer,line,2);
    
    combo->connectMe();
+   label=(void *)text;
 }
 
 void diaElemMenuDynamic::getMe(void)
@@ -224,13 +225,13 @@ void diaElemMenuDynamic::finalize(void)
   }
 }
 void diaElemMenuDynamic::enable(uint32_t onoff)
-{ 
-   ADM_QComboBox *combo=(ADM_QComboBox *)myWidget;
-  ADM_assert(combo);
-  if(onoff)
-    combo->setEnabled(true);
-  else
-    combo->setDisabled(true);
+{
+    ADM_QComboBox *combo=(ADM_QComboBox *)myWidget;
+    ADM_assert(combo);
+    QLabel *txt=(QLabel *)label;
+    ADM_assert(txt);
+    txt->setEnabled(!!onoff);
+    combo->setEnabled(!!onoff);
 }
 
 uint8_t   diaElemMenuDynamic::link(diaMenuEntryDynamic *entry,uint32_t onoff,diaElem *w)

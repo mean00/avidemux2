@@ -33,6 +33,7 @@ public:
   void setMinQz(uint32_t qz);
   int getRequiredLayout(void);
   void updateMe(void);
+  void enable(uint32_t onoff);
 };
 
 ADM_Qbitrate::ADM_Qbitrate(COMPRES_PARAMS *p,uint32_t minQ, uint32_t mq,QGridLayout *layout,int line)
@@ -225,6 +226,17 @@ void diaElemBitrate::getMe(void)
 {
   ((ADM_Qbitrate *)myWidget)->readBack();
   memcpy(param,&copy,sizeof(copy));
+}
+
+void diaElemBitrate::enable(uint32_t onoff)
+{
+  ADM_assert(myWidget);
+  ADM_Qbitrate *b=(ADM_Qbitrate *)myWidget;
+ #define DOIT(x) b->x->setEnabled(!!onoff);
+  DOIT(box)
+  DOIT(combo)
+  DOIT(text1)
+  DOIT(text2)
 }
 
 int diaElemBitrate::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }

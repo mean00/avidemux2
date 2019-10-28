@@ -60,6 +60,7 @@ typedef void ADM_FAC_CALLBACK(void *cookie);
 class ADM_COREUI6_EXPORT diaElem
 {
   protected:
+    int     size; // Number of rows the widget occupies
     void    setSize(int z) {size=z;};
     int     readOnly;
     diaElem    *internalPointer;
@@ -69,7 +70,6 @@ public:
   const char *paramTitle;
   const char *tip;
   elemEnum mySelf;
-  int       size; // Size of the widget in line
 
   diaElem(elemEnum num) {paramTitle=NULL;param=NULL;mySelf=num;myWidget=NULL;size=1;readOnly=0;internalPointer=NULL;};
           int getSize(void) {return size;};
@@ -446,7 +446,7 @@ public:
   void getMe(void);
   void setMaxQz(uint32_t qz);
   void setMinQz(uint32_t qz);
-  
+  void enable(uint32_t onoff);
   void updateMe(void);
   int getRequiredLayout(void);
 };
@@ -520,6 +520,7 @@ public:
   virtual ~diaElemReadOnlyText() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
+  void enable(uint32_t onoff);
   int getRequiredLayout(void);
 };
 /*************************************************/

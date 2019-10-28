@@ -29,7 +29,8 @@ namespace ADM_qt4Factory
 {
 class diaElemInteger : public diaElem,QtFactoryUtils
 {
-
+protected:
+  void *label;
 public:
   int32_t min,max;
   diaElemInteger(int32_t *intValue,const char *toggleTitle, int32_t min, int32_t max,const char *tip=NULL);
@@ -42,7 +43,8 @@ public:
 /* Same but unsigned */
 class diaElemUInteger : public diaElem,QtFactoryUtils
 {
-
+protected:
+  void *label;
 public:
   uint32_t min,max;
   diaElemUInteger(uint32_t *intValue,const char *toggleTitle, uint32_t min, uint32_t max,const char *tip=NULL);
@@ -80,6 +82,7 @@ void diaElemInteger::setMe(void *dialog, void *opaque,uint32_t line)
  QLabel *text=new QLabel( myQtTitle,(QWidget *)dialog);
  text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
  text->setBuddy(box);
+ label=(void *)text;
 
  QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -101,12 +104,12 @@ void diaElemInteger::getMe(void)
 }
 void diaElemInteger::enable(uint32_t onoff) 
 {
- QSpinBox *box=(QSpinBox *)myWidget;
+  QLabel *txt=(QLabel *)label;
+  ADM_assert(txt);
+  QSpinBox *box=(QSpinBox *)myWidget;
   ADM_assert(box);
-  if(onoff)
-    box->setEnabled(1);
-  else
-    box->setDisabled(1);
+  txt->setEnabled(!!onoff);
+  box->setEnabled(!!onoff);
 }
 
 int diaElemInteger::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
@@ -140,6 +143,7 @@ void diaElemUInteger::setMe(void *dialog, void *opaque,uint32_t line)
  QLabel *text=new QLabel(myQtTitle,(QWidget *)dialog);
  text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
  text->setBuddy(box);
+ label=(void *)text;
 
  QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -162,12 +166,12 @@ void diaElemUInteger::getMe(void)
 
 void diaElemUInteger::enable(uint32_t onoff) 
 {
- QSpinBox *box=(QSpinBox *)myWidget;
+  QLabel *txt=(QLabel *)label;
+  ADM_assert(txt);
+  QSpinBox *box=(QSpinBox *)myWidget;
   ADM_assert(box);
-  if(onoff)
-    box->setEnabled(1);
-  else
-    box->setDisabled(1);
+  txt->setEnabled(!!onoff);
+  box->setEnabled(!!onoff);
 }
 
 int diaElemUInteger::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
