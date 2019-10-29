@@ -25,7 +25,7 @@ public:
     {
 
     }
-    bool uncompress (ADMCompressedImage * in, ADMImage * out) {return true;}
+    bool uncompress (ADMCompressedImage * in, ADMImage * out) { out->Pts=in->demuxerPts; return out->blacken(); }
 
 };
 #endif
