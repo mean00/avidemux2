@@ -16,5 +16,7 @@ extern const ADM_paramList xvid4_encoder_param[]={
  {"optimizeChrome",offsetof(xvid4_encoder,optimizeChrome),"bool",ADM_param_bool},
  {"trellis",offsetof(xvid4_encoder,trellis),"bool",ADM_param_bool},
  {"useXvidFCC",offsetof(xvid4_encoder,useXvidFCC),"bool",ADM_param_bool},
+ {"enableFrameDrop",offsetof(xvid4_encoder,enableFrameDrop),"bool",ADM_param_bool},
+ {"frameDropRatio",offsetof(xvid4_encoder,frameDropRatio),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };

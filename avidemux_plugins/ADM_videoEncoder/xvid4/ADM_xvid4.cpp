@@ -263,7 +263,8 @@ bool xvid4Encoder::setup(void)
   xvid_enc_create.plugins = plugins;
   xvid_enc_create.num_plugins = 2;
 
-  xvid_enc_create.max_bframes = xvid4Settings.maxBFrame;
+  xvid_enc_create.max_bframes = (xvid4Settings.enableFrameDrop)? 0 : xvid4Settings.maxBFrame;
+  xvid_enc_create.frame_drop_ratio = (xvid4Settings.enableFrameDrop)? xvid4Settings.frameDropRatio : 0;
   xvid_enc_create.max_key_interval = xvid4Settings.maxKeyFrameInterval;
     // dummy
     for(int i=0;i<3;i++)
