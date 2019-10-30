@@ -20,14 +20,9 @@
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 
-#if 1
-#define aprintf(...) {}
-#else
-#define aprintf printf
-#endif
 /**
-    \fn jpegConfigure
-    \brief UI configuration for jpeg encoder
+    \fn xvidConfigure
+    \brief UI configuration for xvid4 encoder
 */
 extern xvid4_encoder xvid4Settings;
 bool         xvid4Configure(void)
@@ -84,7 +79,7 @@ diaMenuEntry arModeE[]={
 #define PX(x) &(xvid4Settings.x)
 
          diaElemBitrate   bitrate(&(xvid4Settings.params),NULL);
-         diaElemMenu      meM(PX(motionEstimation),QT_TRANSLATE_NOOP("xvid4","MotionEstimation"),4,meE);
+         diaElemMenu      meM(PX(motionEstimation),QT_TRANSLATE_NOOP("xvid4","Motion Estimation"),4,meE);
 
          diaElemMenu      threadM(PX(nbThreads),QT_TRANSLATE_NOOP("xvid4","Threading"),4,threads);
 
@@ -95,6 +90,9 @@ diaMenuEntry arModeE[]={
 */
          diaElemToggle    trellis(PX(trellis),QT_TRANSLATE_NOOP("xvid4","_Trellis quantization"));         
          diaElemUInteger  max_b_frames(PX(maxBFrame),QT_TRANSLATE_NOOP("xvid4","_Number of B frames:"),0,32);
+
+         diaElemToggle    fdrop(PX(enableFrameDrop),QT_TRANSLATE_NOOP("xvid4","_Drop identical frames (this disables B-frames)"),0);
+         diaElemUInteger  fdRatio(PX(frameDropRatio),QT_TRANSLATE_NOOP("xvid4","Framedrop _Ratio:"),1,100);
 
          diaElemMenu     qzM(PX(cqmMode),QT_TRANSLATE_NOOP("xvid4","_Quantization type:"),2,qzE);
          
@@ -116,17 +114,24 @@ diaMenuEntry arModeE[]={
         diaElemToggle fcc(PX(useXvidFCC),QT_TRANSLATE_NOOP("xvid4","Use XVID fcc (else DIVX)"));
         
           /* First Tab : encoding mode */
-       
-        diaElemFrame frameMe(QT_TRANSLATE_NOOP("xvid4","Advanced Simple Profile"));
-        frameMe.swallow(&profileM);
-        frameMe.swallow(&max_b_frames);
-        frameMe.swallow(&GopSize);
-        frameMe.swallow(&bitrate);
-        frameMe.swallow(&fcc);
-       
-        
-        diaElem *diaME[]={&frameMe};
-        diaElemTabs tabME(QT_TRANSLATE_NOOP("xvid4","Motion Estimation"),1,diaME);
+        diaElemFrame frameBr(QT_TRANSLATE_NOOP("xvid4","Encoding Mode"));
+        frameBr.swallow(&profileM);
+        frameBr.swallow(&bitrate);
+
+        diaElemFrame frameGop(QT_TRANSLATE_NOOP("xvid4","Frame Settings"));
+        frameGop.swallow(&max_b_frames);
+        frameGop.swallow(&fdrop);
+        frameGop.swallow(&fdRatio);
+        frameGop.swallow(&GopSize);
+
+        fdrop.link(0,&max_b_frames);
+        fdrop.link(1,&fdRatio);
+
+        diaElemFrame frameMisc(QT_TRANSLATE_NOOP("xvid4","Miscellaneous"));
+        frameMisc.swallow(&fcc);
+
+        diaElem *diaEM[]={&frameBr,&frameGop,&frameMisc};
+        diaElemTabs tabEM(QT_TRANSLATE_NOOP("xvid4","Encoding Mode"),3,diaEM);
 
         /* 2nd Tab : Qz */
        
@@ -149,9 +154,11 @@ diaMenuEntry arModeE[]={
          diaElem *diaRC[]={&filetol,&qzComp,&qzBlur};
         diaElemTabs tabRC(QT_TRANSLATE_NOOP("xvid4","Rate Control"),3,diaRC);
         #endif
-         diaElemTabs *tabs[]={&tabME,&tabQz,&tabThread,&tabAR};
+        diaElemTabs *tabs[]={&tabEM,&tabQz,&tabThread,&tabAR};
         if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("xvid4","Xvid4 MPEG-4 ASP configuration"),4,tabs))
         {
+            if(xvid4Settings.enableFrameDrop)
+                xvid4Settings.maxBFrame=0;
             return true;
         }
          return false;

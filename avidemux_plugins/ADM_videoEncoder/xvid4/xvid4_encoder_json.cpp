@@ -21,6 +21,8 @@ json.addBool("hqAcPred",key->hqAcPred);
 json.addBool("optimizeChrome",key->optimizeChrome);
 json.addBool("trellis",key->trellis);
 json.addBool("useXvidFCC",key->useXvidFCC);
+json.addBool("enableFrameDrop",key->enableFrameDrop);
+json.addUint32("frameDropRatio",key->frameDropRatio);
 return json.dumpToFile(file);
 };
 bool  xvid4_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,xvid4_encoder *key){
