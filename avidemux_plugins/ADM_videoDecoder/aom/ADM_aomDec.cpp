@@ -64,6 +64,7 @@ decoderAom::~decoderAom()
     {
         aom_codec_ctx_t *a=AX;
         aom_codec_destroy(a);
+        delete a;
         cookie=NULL;
     }
 }
