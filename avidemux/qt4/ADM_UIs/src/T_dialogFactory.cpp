@@ -227,6 +227,8 @@ bool qt4DiaFactoryTabsFinish(void *f)
      cookie->tabWidget->setUsesScrollButtons(false);
      cookie->dialog->adjustSize();
      cookie->tabWidget->setUsesScrollButtons(true);
+     // Squeeze all the air vertically
+     cookie->dialog->resize(cookie->dialog->width(), cookie->dialog->minimumSizeHint().height());
 
     qtRegisterDialog(cookie->dialog);
 
