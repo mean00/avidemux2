@@ -850,6 +850,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                 case MKFCCR('A','V','d','n'): // DNxHD
                                     commonPart(AVdn);
                                     break;
+
 //
                                 case MKFCCR('h','e','v','1'): // hev1 / hevc
                                 case MKFCCR('h','v','c','1'): // hev1 / hevc
@@ -938,6 +939,26 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
 
                                     break;
                                 } // avc1
+
+                                case MKFCCR('a','v','0','1'): // AV1
+                                    commonPart(av01);
+                                    while(!son.isDone())
+                                    {
+                                        adm_atom av1c(&son);
+                                        if(av1c.getFCC()== MKFCCR('a','v','1','C'))
+                                        {
+                                            VDEO.extraDataSize=av1c.getRemainingSize();
+                                            ADM_info("Found %d bytes of AV1 extradata\n",VDEO.extraDataSize);
+                                            VDEO.extraData=new uint8_t [VDEO.extraDataSize];
+                                            av1c.readPayload(VDEO.extraData,VDEO.extraDataSize);
+                                            mixDump(VDEO.extraData,VDEO.extraDataSize);
+                                            av1c.skipAtom();
+                                        }
+                                    }
+                                    son.skipAtom();
+                                    left=0;
+                                    break;
+
                                 default:
                                     if(left>10)
                                     {
