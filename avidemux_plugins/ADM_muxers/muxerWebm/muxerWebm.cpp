@@ -139,10 +139,10 @@ bool muxerWebm::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
 		av_dict_set(&dict, "muxrate", "10080000", 0);
 
         //ADM_assert(avformat_write_header(oc, &dict) >= 0);
-        int ret = avformat_write_header(oc, &dict);
-        if(ret < 0)
+        er = avformat_write_header(oc, &dict);
+        if(er < 0)
         {
-            ADM_error("Writing header failed with error %d (%s)\n", ret, av_err2str(ret));
+            ADM_error("Writing header failed with error %d (%s)\n", er, av_err2str(er));
             av_dict_free(&dict);
             avio_close(oc->pb);
             return false;
