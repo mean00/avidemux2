@@ -203,6 +203,7 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         {
             ADM_error("Writing header failed with error %d (%s)\n", ret, av_err2str(ret));
             av_dict_free(&dict);
+            avio_close(oc->pb);
             return false;
         }
 
