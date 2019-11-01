@@ -196,7 +196,15 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             ADM_info("Setting rotation to %s degrees clockwise\n",angle);
             av_dict_set(&(video_st->metadata), "rotate", angle, 0);
         }
-        ADM_assert(avformat_write_header(oc, &dict) >= 0);
+        //ADM_assert(avformat_write_header(oc, &dict) >= 0);
+        er = avformat_write_header(oc, &dict);
+        if(er < 0)
+        {
+            ADM_error("Writing header failed with error %d (%s)\n", er, av_err2str(er));
+            av_dict_free(&dict);
+            avio_close(oc->pb);
+            return false;
+        }
 
         ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);
         ADM_info("Timebase stream = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
