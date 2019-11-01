@@ -152,6 +152,7 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         {
             ADM_error("Writing header failed with error %d (%s)\n", ret, av_err2str(ret));
             av_dict_free(&dict);
+            avio_close(oc->pb);
             return false;
         }
         ADM_info("Timebase codec = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
