@@ -350,9 +350,7 @@ bool decoderFF::decodeErrorHandler(int code)
                 return false;
             default:
             {
-                char er[2048]={0};
-                av_make_error_string(er, sizeof(er)-1, code);
-                ADM_warning("Error %d in lavcodec (%s)\n",code,er);
+                ADM_warning("Error %d in lavcodec (%s)\n",code,av_err2str(code));
                 return false;
             }
         }
