@@ -136,11 +136,18 @@ bool muxerWebm::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         av_dict_set(&dict, "max_delay", "200000", 0);
 		av_dict_set(&dict, "muxrate", "10080000", 0);
 
-        ADM_assert(avformat_write_header(oc, &dict) >= 0);
+        //ADM_assert(avformat_write_header(oc, &dict) >= 0);
+        er = avformat_write_header(oc, &dict);
+        if(er < 0)
+        {
+            ADM_error("Writing header failed with error %d (%s)\n", er, av_err2str(er));
+            av_dict_free(&dict);
+            avio_close(oc->pb);
+            return false;
+        }
         ADM_info("Timebase codec = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
 //        ADM_info("Original timebase = %d/%d\n",myTimeBase.num,myTimeBase.den);
-        
-        
+        av_dict_free(&dict);
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
