@@ -69,7 +69,6 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
     _context->max_b_frames=VaEncSettings.bframes;
     _context->pix_fmt =AV_PIX_FMT_VAAPI;
 
-#define CLEARTEXT(x) char buf[AV_ERROR_MAX_STRING_SIZE]={0}; av_make_error_string(buf,AV_ERROR_MAX_STRING_SIZE,x);
     hwDeviceCtx = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
     if(!hwDeviceCtx)
     {
@@ -84,8 +83,7 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
     int err = av_hwdevice_ctx_init(hwDeviceCtx);
     if(err)
     {
-        CLEARTEXT(err)
-        ADM_warning("Cannot initialize VAAPI hwdevice (%d, %s)\n",err,buf);
+        ADM_warning("Cannot initialize VAAPI hwdevice (%d, %s)\n",err,av_err2str(err));
         return false;
     }
 
@@ -106,8 +104,7 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
     err = av_hwframe_ctx_init(hwFramesRef);
     if(err<0)
     {
-        CLEARTEXT(err)
-        ADM_error("Cannot initialize VAAPI frame context (%d, %s)\n",err,buf);
+        ADM_error("Cannot initialize VAAPI frame context (%d, %s)\n",err,av_err2str(err));
         av_buffer_unref(&hwFramesRef);
         return false;
     }
@@ -197,8 +194,7 @@ bool             ADM_ffVAEncH264Encoder::preEncode(void)
     int err=av_frame_get_buffer(swFrame, 32);
     if(err<0)
     {
-        CLEARTEXT(err)
-        ADM_warning("get buffer for sw frame failed with error code %d (%s)\n",err,buf);
+        ADM_warning("get buffer for sw frame failed with error code %d (%s)\n",err,av_err2str(err));
         return false;
     }
 
@@ -226,16 +222,14 @@ bool             ADM_ffVAEncH264Encoder::preEncode(void)
     err=av_hwframe_get_buffer(_context->hw_frames_ctx,hwFrame,0);
     if(err<0)
     {
-        CLEARTEXT(err)
-        ADM_warning("get buffer for hw frame failed with error code %d (%s)\n",err,buf);
+        ADM_warning("get buffer for hw frame failed with error code %d (%s)\n",err,av_err2str(err));
         return false;
     }
 
     err=av_hwframe_transfer_data(hwFrame, swFrame, 0);
     if(err<0)
     {
-        CLEARTEXT(err)
-        ADM_warning("data transfer to the hw frame failed with error code %d (%s)\n",err,buf);
+        ADM_warning("data transfer to the hw frame failed with error code %d (%s)\n",err,av_err2str(err));
         return false;
     }
 
@@ -317,8 +311,7 @@ again:
     sz=encodeWrapper(hwFrame,out);
     if(sz<0)
     {
-        CLEARTEXT(sz)
-        ADM_warning("[ffVAEncH264] Error %d (%s) encoding video\n",sz,buf);
+        ADM_warning("[ffVAEncH264] Error %d (%s) encoding video\n",sz,av_err2str(sz));
         return false;
     }
 
