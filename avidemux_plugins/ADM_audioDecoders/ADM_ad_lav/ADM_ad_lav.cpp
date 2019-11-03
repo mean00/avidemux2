@@ -474,7 +474,9 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
             }
             if(res<0)
             {
-                ADM_warning("[ADM_ad_lav] decoding error %d: %s\n",res,av_err2str(res));
+                char er[AV_ERROR_MAX_STRING_SIZE]={0};
+                av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, res);
+                ADM_warning("[ADM_ad_lav] decoding error %d: %s\n",res,er);
                 break;
             }
 

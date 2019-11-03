@@ -147,10 +147,12 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         av_dict_set(&dict, "max_delay", "200000", 0);
 
         //ADM_assert(avformat_write_header(oc, &dict) >= 0);
-        int ret = avformat_write_header(oc, &dict);
-        if(ret < 0)
+        er = avformat_write_header(oc, &dict);
+        if(er < 0)
         {
-            ADM_error("Writing header failed with error %d (%s)\n", ret, av_err2str(ret));
+            char str[AV_ERROR_MAX_STRING_SIZE]={0};
+            av_make_error_string(str, AV_ERROR_MAX_STRING_SIZE, er);
+            ADM_error("Writing header failed with error %d (%s)\n", er, str);
             av_dict_free(&dict);
             avio_close(oc->pb);
             return false;
