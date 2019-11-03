@@ -225,7 +225,7 @@ char *pyDirSelect(IEditor *editor, const char *title)
 {
 	char me[1024] = {0};
 
-	if (!FileSel_SelectDir(QT_TR_NOOP("Select a directory"), me, 1023, NULL))
+	if (!FileSel_SelectDir((title && strlen(title)) ? title : QT_TR_NOOP("Select a directory"), me, 1023, NULL))
 	{
 		return NULL;
 	}
