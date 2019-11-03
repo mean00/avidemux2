@@ -348,7 +348,9 @@ bool decoderFF::decodeErrorHandler(int code)
                 return false;
             default:
             {
-                ADM_warning("Error %d in lavcodec (%s)\n",code,av_err2str(code));
+                char er[AV_ERROR_MAX_STRING_SIZE]={0};
+                av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, code);
+                ADM_warning("Error %d in lavcodec (%s)\n",code,er);
                 return false;
             }
         }
