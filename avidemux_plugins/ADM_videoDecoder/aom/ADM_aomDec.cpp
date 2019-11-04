@@ -38,7 +38,7 @@ decoderAom::decoderAom(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataL
 
     memset(instance,0,sizeof(*instance));
     memset(&cfg,0,sizeof(cfg));
-    cfg.threads=2; // should be configurable
+    cfg.threads=ADM_cpu_num_processors();
     cfg.w=w;
     cfg.h=h;
     cfg.allow_lowbitdepth=1;
@@ -51,7 +51,7 @@ decoderAom::decoderAom(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataL
     {
         alive=true;
         cookie=(void *)instance;
-        ADM_info("libaom decoder init succeeded.\n");
+        ADM_info("libaom decoder init succeeded, threads: %d\n",cfg.threads);
     }
 }
 /**
