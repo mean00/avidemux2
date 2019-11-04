@@ -193,3 +193,12 @@ MACRO (ADD_TARGET_DEFINITIONS _target)
 		SET_TARGET_PROPERTIES(${_target} PROPERTIES COMPILE_FLAGS "${_flags}")
 	ENDIF (newflag)
 ENDMACRO (ADD_TARGET_DEFINITIONS)
+
+MACRO(DUMP_ALL_VARS)
+     get_cmake_property(_variableNames VARIABLES)
+    list (SORT _variableNames)
+    foreach (_variableName ${_variableNames})
+        message(STATUS "${_variableName}=${${_variableName}}")
+    endforeach()
+ENDMACRO(DUMP_ALL_VARS)
+
