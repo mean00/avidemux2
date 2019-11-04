@@ -947,11 +947,20 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                         adm_atom av1c(&son);
                                         if(av1c.getFCC()== MKFCCR('a','v','1','C'))
                                         {
-                                            VDEO.extraDataSize=av1c.getRemainingSize();
-                                            ADM_info("Found %d bytes of AV1 extradata\n",VDEO.extraDataSize);
-                                            VDEO.extraData=new uint8_t [VDEO.extraDataSize];
-                                            av1c.readPayload(VDEO.extraData,VDEO.extraDataSize);
-                                            mixDump(VDEO.extraData,VDEO.extraDataSize);
+                                            uint32_t len=av1c.getRemainingSize();
+#define AV1_EXTRADATA_OFFSET 4
+                                            if(len>AV1_EXTRADATA_OFFSET)
+                                            {
+                                                VDEO.extraDataSize=len-AV1_EXTRADATA_OFFSET;
+                                                ADM_info("Found %d bytes of AV1 extradata\n",VDEO.extraDataSize);
+                                                uint8_t *tmp=new uint8_t[len];
+                                                av1c.readPayload(tmp,len);
+                                                VDEO.extraData=new uint8_t[VDEO.extraDataSize];
+                                                memcpy(VDEO.extraData, tmp+AV1_EXTRADATA_OFFSET, VDEO.extraDataSize);
+                                                delete [] tmp;
+                                                tmp=NULL;
+                                                mixDump(VDEO.extraData,VDEO.extraDataSize);
+                                            }
                                             av1c.skipAtom();
                                         }
                                     }
