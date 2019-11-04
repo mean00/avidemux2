@@ -200,7 +200,11 @@ diaElemReadOnlyText ::~diaElemReadOnlyText()
 	Factory->DestroyReadonlyText(internalPointer);
 	internalPointer=NULL;
 }
-
+void diaElemReadOnlyText::enable(uint32_t onoff)
+{
+    ADM_assert(internalPointer);
+    internalPointer->enable(onoff);
+}
 DIA_MKSTUBS(diaElemReadOnlyText)
 // ****************** diaText ********************
 diaElemText ::diaElemText(char **readyOnly,const char *toggleTitle,const char *tip):
@@ -368,6 +372,11 @@ void diaElemBitrate::setMaxQz(uint32_t qz)
 	diaElemBitrateBase *cast=(diaElemBitrateBase *)internalPointer;
 		cast->setMaxQz(qz);
 	
+}
+void diaElemBitrate::enable(uint32_t onoff)
+{
+    ADM_assert(internalPointer);
+    internalPointer->enable(onoff);
 }
 DIA_MKSTUBS(diaElemBitrate)
 // ****************** diaElemFile ********************

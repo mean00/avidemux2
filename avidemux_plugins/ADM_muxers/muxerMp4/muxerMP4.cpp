@@ -62,9 +62,10 @@ muxerMP4::~muxerMP4()
 
 bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
-    if(!isMpeg4Compatible(s->getFCC()) && !isH264Compatible(s->getFCC()) && !isH265Compatible(s->getFCC()))
+    uint32_t fcc=s->getFCC();
+    if(!isMpeg4Compatible(fcc) && !isH264Compatible(fcc) && !isH265Compatible(fcc) && !fourCC::check(fcc,(const uint8_t *)"av01"))
     {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, and H265 supported for video"));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265 and AV1 supported for video"));
             return false;
     }
     if(nbAudioTrack)
@@ -98,7 +99,7 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         c = video_st->codec;
         AVCodecParameters *par;
         par = video_st->codecpar;
-        if(isH265Compatible(s->getFCC()))
+        if(isH265Compatible(fcc))
             par->codec_tag = MKTAG('h', 'v', 'c', '1');
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         myTimeBase=video_st->time_base=c->time_base;
@@ -196,7 +197,17 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             ADM_info("Setting rotation to %s degrees clockwise\n",angle);
             av_dict_set(&(video_st->metadata), "rotate", angle, 0);
         }
-        ADM_assert(avformat_write_header(oc, &dict) >= 0);
+        //ADM_assert(avformat_write_header(oc, &dict) >= 0);
+        er = avformat_write_header(oc, &dict);
+        if(er < 0)
+        {
+            char str[AV_ERROR_MAX_STRING_SIZE]={0};
+            av_make_error_string(str, AV_ERROR_MAX_STRING_SIZE, er);
+            ADM_error("Writing header failed with error %d (%s)\n", er, str);
+            av_dict_free(&dict);
+            avio_close(oc->pb);
+            return false;
+        }
 
         ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);
         ADM_info("Timebase stream = %d/%d\n",video_st->time_base.num,video_st->time_base.den);

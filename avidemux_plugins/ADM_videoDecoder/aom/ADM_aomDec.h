@@ -1,8 +1,7 @@
 /***************************************************************************
-         \fn ADM_codecEmpty.h
-         \brief Empty decoder
-         \author mean, fixounet@free.fr (C) 2002-2010
-    
+            \file  ADM_aomDec.h
+            \brief I/f to libaom (decoder)
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -13,19 +12,27 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_codecEmpty_H
-#define ADM_codecEmpty_H
-/* Dummy decoder in case we don't have the desired one */
-class decoderEmpty : public decoders
+#ifndef ADM_AOMDEC_H
+#define ADM_AOMDEC_H
+#include "ADM_codec.h"
+/**
+    \class decoderAom
+*/
+class decoderAom : public decoders
 {
 protected:
+            bool alive;
+            void *cookie;
 public:
-    decoderEmpty (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
-        :decoders (  w,   h,  fcc,   extraDataLen,  extraData,  bpp)
-    {
-
-    }
-    bool uncompress (ADMCompressedImage * in, ADMImage * out) { out->Pts=in->demuxerPts; return out->blacken(); }
-
+            decoderAom (uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp);
+            ~decoderAom();
+    virtual bool uncompress(ADMCompressedImage *in, ADMImage *out);
+    virtual bool bFramePossible (void) { return false; }
+    virtual const char *getDecoderName(void) { return "libaom"; }
+    virtual bool initializedOk(void) { return alive; }
+    virtual bool dontcopy(void) {return true; }
 };
+
 #endif
+//EOF
+

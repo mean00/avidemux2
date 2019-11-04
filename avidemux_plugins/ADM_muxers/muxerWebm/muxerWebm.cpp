@@ -61,7 +61,9 @@ bool muxerWebm::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
 {
     // We only support VP8 + Vorbis
     uint32_t fcc=s->getFCC();
-    if(!fourCC::check(fcc,(const uint8_t *)"VP8 ") && !fourCC::check(fcc,(const uint8_t *)"VP9 "))
+    if( !fourCC::check(fcc,(const uint8_t *)"VP8 ")
+        && !fourCC::check(fcc,(const uint8_t *)"VP9 ")
+        && !fourCC::check(fcc,(const uint8_t *)"av01"))
     {
         GUI_Error_HIG("Webm",QT_TRANSLATE_NOOP("webmmuxer","Unsupported Video.\nOnly VP8/VP9 video and Vorbis/Opus audio supported"));
         return false;
@@ -136,11 +138,20 @@ bool muxerWebm::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         av_dict_set(&dict, "max_delay", "200000", 0);
 		av_dict_set(&dict, "muxrate", "10080000", 0);
 
-        ADM_assert(avformat_write_header(oc, &dict) >= 0);
+        //ADM_assert(avformat_write_header(oc, &dict) >= 0);
+        er = avformat_write_header(oc, &dict);
+        if(er < 0)
+        {
+            char str[AV_ERROR_MAX_STRING_SIZE]={0};
+            av_make_error_string(str, AV_ERROR_MAX_STRING_SIZE, er);
+            ADM_error("Writing header failed with error %d (%s)\n", er, str);
+            av_dict_free(&dict);
+            avio_close(oc->pb);
+            return false;
+        }
         ADM_info("Timebase codec = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
 //        ADM_info("Original timebase = %d/%d\n",myTimeBase.num,myTimeBase.den);
-        
-        
+        av_dict_free(&dict);
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;

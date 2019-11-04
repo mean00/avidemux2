@@ -29,6 +29,9 @@ namespace ADM_qt4Factory
 
 class diaElemReadOnlyText : public diaElem,QtFactoryUtils
 {
+protected:
+
+  int layoutType;
 
 public:
   
@@ -36,6 +39,7 @@ public:
   virtual ~diaElemReadOnlyText() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
+  void enable(uint32_t onoff);
   int getRequiredLayout(void);
 };
 
@@ -56,35 +60,61 @@ public:
 diaElemReadOnlyText::diaElemReadOnlyText(const char *readyOnly,const char *toggleTitle,const char *tip)
   : diaElem(ELEM_TOGGLE),QtFactoryUtils(toggleTitle)
 {
-  param=(void *)ADM_strdup(readyOnly);
-  this->tip=tip;
- }
+    param=(void *)ADM_strdup(readyOnly);
+    this->tip=tip;
+    if(readyOnly && toggleTitle)
+        layoutType=FAC_QT_GRIDLAYOUT;
+    else
+        layoutType=FAC_QT_VBOXLAYOUT;
+}
 
 diaElemReadOnlyText::~diaElemReadOnlyText()
 {
- 
+
 }
+
 void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)
 {
+    QLabel *text,*text2;
 
-  QGridLayout *layout=(QGridLayout*) opaque;
+    if(layoutType==FAC_QT_GRIDLAYOUT)
+    {
+        QGridLayout *layout=(QGridLayout *) opaque;
 
-   
- 
- QLabel *text=new QLabel( myQtTitle,(QWidget *)dialog);
-  QLabel *text2=new QLabel( QString::fromUtf8((char *)param),(QWidget *)dialog);
- text->setBuddy(text2);
- layout->addWidget(text,line,0);
- layout->addWidget(text2,line,1);
- myWidget=(void *)text2;  
+        text=new QLabel( myQtTitle,(QWidget *)dialog);
+        text2=new QLabel( QString::fromUtf8((char *)param),(QWidget *)dialog);
+        text->setBuddy(text2);
+        layout->addWidget(text,line,0);
+        layout->addWidget(text2,line,1);
+
+        myWidget=(void *)text2;
+    }else
+    {
+        QVBoxLayout *layout=(QVBoxLayout *)opaque;
+
+        if(myQtTitle.isEmpty())
+            text=new QLabel( QString::fromUtf8((char *)param),(QWidget *)dialog);
+        else
+            text=new QLabel( myQtTitle,(QWidget *)dialog);
+        layout->addWidget(text);
+
+        myWidget=(void *)text;
+    }
 }
+
 void diaElemReadOnlyText::getMe(void)
 {
 
- 
 }
 
-int diaElemReadOnlyText::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
+void diaElemReadOnlyText::enable(uint32_t onoff)
+{
+    ADM_assert(myWidget);
+    QLabel *l=(QLabel *)myWidget;
+    l->setEnabled(!!onoff);
+}
+
+int diaElemReadOnlyText::getRequiredLayout(void) { return layoutType; }
 
 //*********************************
 

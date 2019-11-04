@@ -1,10 +1,8 @@
 /***************************************************************************
-         \fn ADM_codecEmpty.h
-         \brief Empty decoder
-         \author mean, fixounet@free.fr (C) 2002-2010
-    
+    \fn     aomDecPlugin
+    \brief  Video decoder plugin for libaom
+    \author eumagga0x2a based on vpx decoder by mean fixounet@free.fr (C) 2010
  ***************************************************************************/
-
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -13,19 +11,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_codecEmpty_H
-#define ADM_codecEmpty_H
-/* Dummy decoder in case we don't have the desired one */
-class decoderEmpty : public decoders
-{
-protected:
-public:
-    decoderEmpty (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
-        :decoders (  w,   h,  fcc,   extraDataLen,  extraData,  bpp)
-    {
-
-    }
-    bool uncompress (ADMCompressedImage * in, ADMImage * out) { out->Pts=in->demuxerPts; return out->blacken(); }
-
-};
-#endif
+#include "ADM_default.h"
+#include "ADM_coreVideoDecoderInternal.h"
+#include "ADM_aomDec.h"
+static uint32_t fccs[]={MKFCC('a','v','0','1'),0};
+ADM_DECLARE_VIDEO_DECODER_PREAMBLE(decoderAom);
+ADM_DECLARE_VIDEO_DECODER_MAIN("aom",
+                               "AV1",
+                               "Decoder using libaom (c) mean 2010 / eumagga0x2a 2019",
+                                fccs, // No configuration
+                                NULL,
+                                1,0,0
+);

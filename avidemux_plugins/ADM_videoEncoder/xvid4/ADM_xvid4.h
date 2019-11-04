@@ -46,7 +46,9 @@
     true, /*bool:hqAcPred */ \
     true, /*bool:optimizeChrome */ \
     true, /* Trellis */ \
-    false, /* UseXvidFCC */ \
+    true, /* UseXvidFCC */ \
+    false, /* enableFrameDrop */ \
+    50 /* frameDropRatio */ \
 }
 
 /**

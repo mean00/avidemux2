@@ -36,7 +36,6 @@ endif (USE_LIBVA)
 
 if (USE_VIDEOTOOLBOX)
     xadd(--enable-videotoolbox)
-    set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h263_videotoolbox h264_videotoolbox mpeg1_videotoolbox mpeg2_videotoolbox mpeg4_videotoolbox)
     set(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} h264_videotoolbox)
 endif (USE_VIDEOTOOLBOX)
 

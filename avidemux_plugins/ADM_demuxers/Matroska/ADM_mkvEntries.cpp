@@ -199,6 +199,8 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         _video_bih.biHeight=_mainaviheader.dwHeight=entry.h;
         _videostream.fccHandler=_video_bih.biCompression=entry.fcc;
 
+#define AV1_EXTRADATA_OFFSET 4
+
         // if it is vfw...
         if(fourCC::check(entry.fcc,(uint8_t *)"VFWX") && entry.extraData && entry.extraDataLen>=sizeof(ADM_BITMAPINFOHEADER))
         {
@@ -217,6 +219,14 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                 ADM_info("VFW Header+%d bytes of extradata\n",l);   
                 mixDump(_tracks[0].extraData,l);
             }
+            delete [] entry.extraData;
+            entry.extraData=NULL;
+            entry.extraDataLen=0;
+        }else if(fourCC::check(entry.fcc,(uint8_t *)"av01") && entry.extraData && entry.extraDataLen>AV1_EXTRADATA_OFFSET)
+        {
+            _tracks[0].extraDataLen=entry.extraDataLen-AV1_EXTRADATA_OFFSET;
+            _tracks[0].extraData=new uint8_t[_tracks[0].extraDataLen];
+            memcpy(_tracks[0].extraData, entry.extraData+AV1_EXTRADATA_OFFSET, _tracks[0].extraDataLen);
             delete [] entry.extraData;
             entry.extraData=NULL;
             entry.extraDataLen=0;

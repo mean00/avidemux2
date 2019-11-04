@@ -22,7 +22,7 @@
 #include "fourcc.h"
 const ffVideoCodec ffCodec[]=
 {
-                                // Refcopy // extrdata // Can have  B frame
+                            // extradata // Refcopy // Can have  B frame
   {"LAGS",  AV_CODEC_ID_LAGARITH,  false, false,    false},    
   {"SNOW",  AV_CODEC_ID_SNOW,      false, false,    false},
   {"cvid",  AV_CODEC_ID_CINEPAK,   false, false,    false},
@@ -30,6 +30,7 @@ const ffVideoCodec ffCodec[]=
   {"VP6F",  AV_CODEC_ID_VP6F,      false, false,    false},
   {"VP6A",  AV_CODEC_ID_VP6A,      false, false,    false},
   {"VP8 ",  AV_CODEC_ID_VP8,       false, false,    false},
+  {"VP9 ",  AV_CODEC_ID_VP9,       false, false,    false},
   {"SVQ1",  AV_CODEC_ID_SVQ1,      false, false,    false},
   {"FLV1",  AV_CODEC_ID_FLV1,      false, false,    false},
   {"AMV",   AV_CODEC_ID_AMV,       false, false,    false},
@@ -41,16 +42,15 @@ const ffVideoCodec ffCodec[]=
   {"cvid",  AV_CODEC_ID_CINEPAK,   false, false,    false},
   {"FICV",  AV_CODEC_ID_FIC,       false, false,    false},
   {"AVdn",  AV_CODEC_ID_DNXHD,     false, false,    false},
+  {"tscc",  AV_CODEC_ID_TSCC,      false, false,    false},
+  {"CSCD",  AV_CODEC_ID_CSCD,      false, false,    false},
 // Need extradata
+  {"av01", AV_CODEC_ID_AV1,        true, false,    false},
   {"WMV2", AV_CODEC_ID_WMV2,       true, false,    false},
   {"WMV1", AV_CODEC_ID_WMV1,       true, false,    false},
   {"WMV3", AV_CODEC_ID_WMV3,       true, false,    true},
   {"WVC1", AV_CODEC_ID_VC1,        true, false,    true},
   {"WMVA", AV_CODEC_ID_VC1,        true, false,    true},
-  {"VP8 ", AV_CODEC_ID_VP8,        true, false,    false},
-  {"VP9 ", AV_CODEC_ID_VP9,        true, false,    false},
-  {"tscc", AV_CODEC_ID_TSCC,       false,false,    false},
-  {"CSCD", AV_CODEC_ID_CSCD,       false,false,    false},
 
   
 // RefCopy

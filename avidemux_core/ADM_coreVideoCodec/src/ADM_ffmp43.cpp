@@ -348,8 +348,8 @@ bool decoderFF::decodeErrorHandler(int code)
                 return false;
             default:
             {
-                char er[2048]={0};
-                av_make_error_string(er, sizeof(er)-1, code);
+                char er[AV_ERROR_MAX_STRING_SIZE]={0};
+                av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, code);
                 ADM_warning("Error %d in lavcodec (%s)\n",code,er);
                 return false;
             }
