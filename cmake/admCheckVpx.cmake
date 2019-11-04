@@ -18,3 +18,24 @@ MACRO(checkVpxDec)
 
 		APPEND_SUMMARY_LIST("Video Decoder" "libvpx" "${VPX_FOUND}")
 ENDMACRO(checkVpxDec)
+
+MACRO(checkVpxEnc)
+    OPTION(VPXENC "" ON)
+
+    MESSAGE(STATUS "Checking for Vpx encoding capability")
+    MESSAGE(STATUS "*****************")
+
+    IF (VPXENC)
+        FIND_HEADER_AND_LIB(VPX_ENC vpx/vpx_encoder.h vpx vpx_codec_enc_init_ver)
+        PRINT_LIBRARY_INFO("Vpx encoder" VPX_ENC_FOUND "${VPX_ENC_INCLUDE_DIR}" "${VPX_ENC_LIBRARY_DIR}")
+        IF(VPX_ENC_FOUND)
+            SET(USE_VP9 1)
+            MESSAGE(STATUS "Linking to vpx encoder library")
+            ENDIF(VPX_ENC_FOUND)
+        ELSE (VPXENC)
+            MESSAGE("${MSG_DISABLE_OPTION}")
+        ENDIF (VPXENC)
+        MESSAGE("")
+
+    APPEND_SUMMARY_LIST("Video Encoder" "libvpx" "${VPX_ENC_FOUND}")
+ENDMACRO(checkVpxEnc)
