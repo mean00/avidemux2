@@ -97,6 +97,7 @@ void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)
         else
             text=new QLabel( myQtTitle,(QWidget *)dialog);
         layout->addWidget(text);
+        text->setWordWrap(true);
 
         myWidget=(void *)text;
     }
