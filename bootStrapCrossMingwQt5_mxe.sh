@@ -220,6 +220,7 @@ create_release_package()
         cp -v libmad-*.dll $TARGETDIR
     fi
     cp -v \
+    libaom.dll \
     libbz2.dll \
     libcrypto-*.dll \
     libeay32.dll \
