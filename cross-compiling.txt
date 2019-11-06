@@ -25,6 +25,7 @@ exemplary setup the 'mxe' folder has been subsequently moved elsewhere and
 then bind-mounted to /opt/mxe to save write cycles of an SSD where /opt
 resides. This has been done purely for convenience and is not required.
 
+##############################################################################
 
 2. Create /opt/mxe/settings.mk with
 
@@ -38,6 +39,7 @@ MXE_TMP := /tmp
 
 to the settings.mk file.
 
+##############################################################################
 
 3. Build required MXE packages for the targets specified above with
 
@@ -46,24 +48,85 @@ to the settings.mk file.
 
 This pulls in all the dependencies and can take a couple of hours. The final
 total size of the /opt/mxe folder may be about 2.2G. Please note that twolame
-is not available as a shared library and x265 has not been packaged for MXE as
-of this writing.
+is not available as a shared library.
 
+##############################################################################
 
 4. To enable hardware-accelerated encoding provided by NVIDIA graphics cards of
-the Kepler generation and later, download the file "nvEncodeAPI.h" e.g. from
+the Kepler generation and later, clone the nv-codec-headers repository
 
-    https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/compat/nvenc/nvEncodeAPI.h
+    git clone https://github.com/FFmpeg/nv-codec-headers.git
 
-and copy it to /opt/mxe/usr/i686-w64-mingw32.shared/include/ or
-/opt/mxe/usr/x86_64-w64-mingw32.shared/include/ correspondingly.
+change directory to the created nv-codec-headers subdirectory
 
+    cd nv-codec-headers
 
-5. Create a user-writable directory 'out' in '/opt/mxe/usr/x86_64-w64-mingw32.shared'
+delete the first line of the Makefile to remove a hardcoded PREFIX value
+
+    sed -i 1d Makefile
+
+and run
+
+    PREFIX="/opt/mxe/usr/i686-w64-mingw32.shared" make install
+
+for the 32 bit environment or
+
+    PREFIX="/opt/mxe/usr/x86_64-w64-mingw32.shared" make install
+
+for the 64 bit environment within /opt/mxe as MXE root correspondingly. Adjust
+the path specified as value of the PREFIX variable if MXE is installed
+elsewhere.
+
+##############################################################################
+
+5. In order to enable the AV1 decoder plugin in Avidemux, libaom, not provided
+by MXE, needs to be installed. To do so, clone the AOM git repository
+
+    git clone https://aomedia.googlesource.com/aom
+
+create a build directory, e.g. 'build-aom', and enter it:
+
+    mkdir build-aom
+    cd build-aom
+
+Export MXE_ROOT variable set to the path to MXE, e.g.
+
+    export MXE_ROOT=/opt/mxe
+
+for MXE in /opt/mxe and export the PATH environment variable to include
+the usr/bin subdirectory of MXE:
+
+    export PATH=${PATH}:${MXE_ROOT}/usr/bin
+
+Export CROSS_PREFIX set to the MXE
+target, e.g.
+
+    export CROSS_PREFIX=x86_64-w64-mingw32.shared
+
+for the 64 bit environment and run
+
+    cmake ../aom/ -DCROSS="${CROSS_PREFIX}-" -DCMAKE_TOOLCHAIN_FILE=../aom/build/cmake/toolchains/x86_64-mingw-gcc.cmake -DENABLE_DOCS=0 -DENABLE_EXAMPLES=0 -DENABLE_TOOLS=0 -DBUILD_SHARED_LIBS=1 -DCONFIG_AV1_ENCODER=0 -DCONFIG_ANALYZER=0 -DFORCE_HIGHBITDEPTH_DECODING=0 -DCMAKE_INSTALL_PREFIX=${MXE_ROOT}/usr/${CROSS_PREFIX}
+
+followed in case of success by
+
+   make && make install && mv -v ${MXE_ROOT}/usr/${CROSS_PREFIX}/lib/libaom.dll ${MXE_ROOT}/usr/${CROSS_PREFIX}/bin/
+
+Adjust the paths correspondingly if MXE is installed elsewhere. Build for the
+32 bit environment has not been tested yet.
+
+Due to volatile nature of development, a particular git revision of libaom can
+have issues or the build may be broken. In this case git checkout an older
+revision. As of this writing, git revision
+4d93222751a26841018179cdaa143f6f20e48977 was found working.
+
+##############################################################################
+
+6. Create a user-writable directory 'out' in '/opt/mxe/usr/x86_64-w64-mingw32.shared'
 and in '/opt/mxe/usr/i686-w64-mingw32.shared' respectively.
 
+##############################################################################
 
-6. Enter the Avidemux top source directory and run
+7. Enter the Avidemux top source directory and run
 
     bash bootStrapCrossMingwQt5_mxe.sh
 
@@ -80,9 +143,10 @@ installed and in $PATH. Copy the 'avidemux_rYYMMDD-hhmmss_win{32,64}Qt5.zip'
 file from the 'packaged_mingw_build_YYMMDD-hhmmss' directory to a Windows
 partition, extract it on Windows and run 'avidemux.exe' from there.
 
+##############################################################################
 
-7. Issues:
+8. Issues:
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2017-11-01 UTC 23:05
+2019-11-06 UTC 18:20
