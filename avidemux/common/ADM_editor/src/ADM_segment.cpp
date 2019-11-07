@@ -98,105 +98,106 @@ bool        ADM_EditorSegment::updateRefVideo(void)
 */
 bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
 {
-  uint32_t    	l;
-  uint8_t 	    *d;
-  aviInfo       info;
-  _SEGMENT      seg;
-  uint32_t      cacheSize;
+    uint32_t l, cacheSize;
+    uint8_t *d;
+    aviInfo info;
+    _SEGMENT seg;
 
-  if(false==prefs->get(FEATURES_CACHE_SIZE,&cacheSize))
-      cacheSize = EDITOR_CACHE_MAX_SIZE;
-  if(cacheSize > EDITOR_CACHE_MAX_SIZE) cacheSize = EDITOR_CACHE_MAX_SIZE;
-  if(cacheSize < EDITOR_CACHE_MIN_SIZE) cacheSize = EDITOR_CACHE_MIN_SIZE;
+    vidHeader *demuxer=ref->_aviheader;
+    ref->dontTrustBFramePts=demuxer->unreliableBFramePts();
+    demuxer->getVideoInfo (&info);
+    demuxer->getExtraHeaderData (&l, &d);
+    ref->decoder = ADM_getDecoder (info.fcc, info.width, info.height, l, d, info.bpp);
 
-  ref->dontTrustBFramePts=ref->_aviheader->unreliableBFramePts();
-  ref->_aviheader->getVideoInfo (&info);
-  ref->_aviheader->getExtraHeaderData (&l, &d);
-  ref->decoder = ADM_getDecoder (info.fcc,  info.width, info.height, l, d,info.bpp);
-  ref->_videoCache = new EditorCache(cacheSize,info.width,info.height);
+    if(false==prefs->get(FEATURES_CACHE_SIZE,&cacheSize))
+        cacheSize = EDITOR_CACHE_MAX_SIZE;
+    if(cacheSize > EDITOR_CACHE_MAX_SIZE) cacheSize = EDITOR_CACHE_MAX_SIZE;
+    if(cacheSize < EDITOR_CACHE_MIN_SIZE) cacheSize = EDITOR_CACHE_MIN_SIZE;
+    // For extremely short videos like individual image files, reduce cache size to the bare minimum.
+    if(info.nb_frames && info.nb_frames < cacheSize) // should we be paranoid and check the fcc?
+        cacheSize = info.nb_frames + 1;
+    ref->_videoCache = new EditorCache(cacheSize,info.width,info.height);
 
-  // discard implausibly high fps, hardcode the value to 25 fps
-  if (info.fps1000 > 2000 * 1000)
-      info.fps1000 = 25 * 1000;
+    // discard implausibly high fps, hardcode the value to 25 fps
+    if (info.fps1000 > 2000 * 1000)
+        info.fps1000 = 25 * 1000;
 
-  float frameD=info.fps1000;
-  frameD=frameD/1000;
-  frameD=1/frameD;
-  frameD*=1000000;
-  ref->timeIncrementInUs=(uint64_t)frameD;
+    float frameD=info.fps1000;
+    frameD=frameD/1000;
+    frameD=1/frameD;
+    frameD*=1000000;
+    ref->timeIncrementInUs=(uint64_t)frameD;
 
-  // Probe the real time increment as the value determined from FPS may be incorrect due to interlace
-  uint64_t firstNonZeroDts=ADM_NO_PTS,pts,dts;
-  int firstNonZeroDtsFrame;
-  ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
-  uint64_t minDelta=100000;
-  uint64_t maxDelta=0;
-  uint32_t fmin=0,fmax=0;
-  for (uint32_t frame=0; frame<info.nb_frames; frame++)
-  {
-      if (ref->_aviheader->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
-      {
-          if (firstNonZeroDts==ADM_NO_PTS)
-          {
-              firstNonZeroDts=dts;
-              firstNonZeroDtsFrame=frame;
-              continue;
-          }
+    // Probe the real time increment as the value determined from FPS may be incorrect due to interlace
+    uint64_t firstNonZeroDts=ADM_NO_PTS,pts,dts;
+    int firstNonZeroDtsFrame;
+    ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
+    uint64_t minDelta=100000;
+    uint64_t maxDelta=0;
+    uint32_t fmin=0,fmax=0;
+    for (uint32_t frame=0; frame<info.nb_frames; frame++)
+    {
+        if (demuxer->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
+        {
+            if (firstNonZeroDts==ADM_NO_PTS)
+            {
+                firstNonZeroDts=dts;
+                firstNonZeroDtsFrame=frame;
+                continue;
+            }
 
-          uint64_t probedTimeIncrement=(dts-firstNonZeroDts)/(frame-firstNonZeroDtsFrame);
-          if(probedTimeIncrement<minDelta) { minDelta=probedTimeIncrement; fmin=frame; }
-          if(probedTimeIncrement>maxDelta) { maxDelta=probedTimeIncrement; fmax=frame; }
-          firstNonZeroDts=dts;
-          firstNonZeroDtsFrame=frame;
-      }
-  }
-  if(maxDelta>=minDelta)
-  {
-      ADM_info("min increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(minDelta),minDelta,fmin);
-      ADM_info("max increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(maxDelta),maxDelta,fmax);
-  }else
-  {
-      ADM_warning("DTS missing, cannot probe time increment.\n");
-  }
+            uint64_t probedTimeIncrement=(dts-firstNonZeroDts)/(frame-firstNonZeroDtsFrame);
+            if(probedTimeIncrement<minDelta) { minDelta=probedTimeIncrement; fmin=frame; }
+            if(probedTimeIncrement>maxDelta) { maxDelta=probedTimeIncrement; fmax=frame; }
+            firstNonZeroDts=dts;
+            firstNonZeroDtsFrame=frame;
+        }
+    }
+    if(maxDelta>=minDelta)
+    {
+        ADM_info("min increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(minDelta),minDelta,fmin);
+        ADM_info("max increment %s = %" PRIu64" us for frame %d\n",ADM_us2plain(maxDelta),maxDelta,fmax);
+    }else
+    {
+        ADM_warning("DTS missing, cannot probe time increment.\n");
+    }
   //if (minDelta==ref->timeIncrementInUs*2)
               //ref->timeIncrementInUs=minDelta;
 
-  
-  ADM_info("About %" PRIu64" microseconds per frame\n",ref->timeIncrementInUs);
-  ref->_nb_video_frames = info.nb_frames;
-  //
-  //  And automatically create the segment
-  //
-  seg._reference=videos.size();
-  if(!videos.size())
-  {
+    ADM_info("About %" PRIu64" microseconds per frame, %" PRIu32" frames\n",ref->timeIncrementInUs,info.nb_frames);
+    ref->_nb_video_frames = info.nb_frames;
+    //
+    //  And automatically create the segment
+    //
+    seg._reference=videos.size();
+    if(!videos.size())
+    {
         seg._startTimeUs=0;
-  }else
-  {
+    }else
+    {
 //      #warning todo compute cumulative time
-   }
-   seg._durationUs=ref->_aviheader->getVideoDuration();
+    }
+    seg._durationUs=demuxer->getVideoDuration();
 
     // Set the default startTime to the pts of first Pic
-    vidHeader *demuxer=	ref->_aviheader;
     uint32_t flags;
-        demuxer->getFlags(0,&flags);
-        demuxer->getPtsDts(0,&pts,&dts);
-        ref->firstFramePts=0;
-        if(pts==ADM_NO_PTS) ADM_warning("First frame has unknown PTS\n");
-        if(dts==ADM_NO_PTS) ADM_warning("The first frame DTS is not set\n");
-        else ADM_info("The first frame DTS = %" PRIu64" ms\n",dts/1000);
-        if(pts!=ADM_NO_PTS &&pts)
-        {
-            ADM_warning("The first frame has a PTS > 0, adjusting to %" PRIu64" %s\n",
+    demuxer->getFlags(0,&flags);
+    demuxer->getPtsDts(0,&pts,&dts);
+    ref->firstFramePts=0;
+    if(pts==ADM_NO_PTS) ADM_warning("First frame has unknown PTS\n");
+    if(dts==ADM_NO_PTS) ADM_warning("The first frame DTS is not set\n");
+    else ADM_info("The first frame DTS = %" PRIu64" ms\n",dts/1000);
+    if(pts!=ADM_NO_PTS &&pts)
+    {
+        ADM_warning("The first frame has a PTS > 0, adjusting to %" PRIu64" %s\n",
                 (pts>=1000)? pts/1000 : pts,
                 (pts>=1000)? "ms" : "us");
-            ref->firstFramePts=pts;
+        ref->firstFramePts=pts;
 #ifdef ADM_ZERO_OFFSET
-            seg._refStartTimeUs=pts;
-            seg._durationUs-=pts;
+        seg._refStartTimeUs=pts;
+        seg._durationUs-=pts;
 #endif
-        }
+    }
 
     segments.push_back(seg);
     videos.push_back(*ref);
