@@ -489,10 +489,9 @@ uint64_t    ADM_Composer::getLastKeyFramePts(void)
               ADM_warning("Cannot map the last frame in segment to reference at PTS=%s\n",ADM_us2plain(endTimeInRef));
               lastRefFrameInSegment=v->_nb_video_frames;
           }
-          int nbFrame=lastRefFrameInSegment;
-          if(!nbFrame) break;
+          if(lastRefFrameInSegment==v->_nb_video_frames) continue;
 
-          for(int frame=nbFrame-1;frame>=0;frame--)
+          for(int frame=lastRefFrameInSegment;frame>=0;frame--)
           {
               uint32_t flags;
               pts=ADM_NO_PTS;    
