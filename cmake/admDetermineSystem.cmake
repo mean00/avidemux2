@@ -95,7 +95,7 @@ ELSE(NOT MSVC)
         SET(ADM_CPU_64BIT 1)
         SET(ADM_CPU_X86 1)
         SET(ADM_CPU_X86_64 1)
-		ADD_DEFINITIONS("/F40000000") # increase stack size to 4M, linux32 is 2 MB by default, MS is 1MB by default
+		ADD_DEFINITIONS("/F40000000 -D__STDC_LIMIT_MACROS") # increase stack size to 4M, linux32 is 2 MB by default, MS is 1MB by default
 ENDIF(NOT MSVC)
 
 MESSAGE("")
