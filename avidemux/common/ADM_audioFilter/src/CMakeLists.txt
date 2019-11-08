@@ -21,7 +21,6 @@ ADM_libsamplerate/samplerate.cpp
 ADM_libsamplerate/src_linear.cpp 
 ADM_libsamplerate/src_sinc.cpp 
 ADM_libsamplerate/src_zoh.cpp
-audiofilter_dolby_asm.asm
 )
 YASMIFY(dolbyAsm audiofilter_dolby_asm)
 

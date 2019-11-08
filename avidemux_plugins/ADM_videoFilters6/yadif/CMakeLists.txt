@@ -1,6 +1,6 @@
 INCLUDE(vf_plugin)
 
-SET(ADM_vf_yadif_SRCS ADM_vidYadif.cpp vf_yadif.asm)
+SET(ADM_vf_yadif_SRCS ADM_vidYadif.cpp )
 
 YASMIFY(azm vf_yadif)
 
