@@ -12,30 +12,32 @@ checkFontConfig()
 #
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 SET(ADM_LIB ADM_libass)
-SET(Asm x86/blend_bitmaps.asm  
-        x86/blur.asm    
-        x86/cpuid.asm  
-        x86/rasterizer.asm  
-        x86/utils.asm  
-        x86/x86inc.asm
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/x86)
+SET(Asm_srcs x86/blend_bitmaps  
+        x86/blur    
+        x86/cpuid  
+        x86/rasterizer  
+        x86/utils  
+        x86/x86inc
 )
 IF(ADM_CPU_X86_64)
-        SET(Asm ${Asm} x86/be_blur.asm )
+        SET(Asm_srcs ${Asm_srcs} x86/be_blur )
 ENDIF(ADM_CPU_X86_64)
 IF(ADM_CPU_X86)
         ADD_DEFINITIONS(-DCONFIG_ASM) 
 ENDIF(ADM_CPU_X86)
 #
+YASMIFY(asmFiles ${Asm_srcs})
+#
 SET(${ADM_LIB}_SRCS 
 ass_bitmap.c  ass.c  ass_cache.c  ass_fontconfig.c  ass_library.c   ass_render.c  ass_utils.c
 ass_font.c ass_parse.c ass_drawing.c ass_render_api.c ass_strtod.c ass_shaper.c
 ass_rasterizer_c.c ass_blur.c ass_font.c ass_rasterizer.c
-${Asm}
 )
 
 ADD_DEFINITIONS(" -std=gnu99 ")
 #
-ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS})
+ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS} ${asmFiles})
 ADD_DEFINITIONS(${FREETYPE2_CFLAGS} ${FRIBIDI_CFLAGS})
 INCLUDE_DIRECTORIES(${LIBICONV_INCLUDE_DIR})
 

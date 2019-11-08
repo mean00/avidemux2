@@ -32,9 +32,9 @@
 
 
 
-MACRO(YASMIFY out filez)
+MACRO(YASMIFY out )
            MESSAGE(STATUS "YASMIFY : ${filez}")
-           foreach(fl ${filez})
+           foreach(fl ${ARGN})
              MESSAGE(STATUS "    ${CMAKE_CURRENT_SOURCE_DIR}/${fl}.asm ==> ${CMAKE_CURRENT_BINARY_DIR}/${fl}.obj")
              add_custom_command(
                  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${fl}.obj
@@ -42,9 +42,9 @@ MACRO(YASMIFY out filez)
                  COMMAND ${YASM_YASM} ARGS ${ASM_ARGS_FORMAT} ${ASM_ARGS_FLAGS} -I${NASM_MACRO_FOLDER}  -o ${CMAKE_CURRENT_BINARY_DIR}/${fl}.obj ${CMAKE_CURRENT_SOURCE_DIR}/${fl}.asm
                  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${fl}.asm)
                  LIST( APPEND ${out} ${CMAKE_CURRENT_BINARY_DIR}/${fl}.obj)
-            endforeach(fl ${filez})
+            endforeach(fl ${ARGN})
         MESSAGE(STATUS "ASM files : ${${out}}")
-ENDMACRO(YASMIFY out filez)
+ENDMACRO(YASMIFY out )
 
 
 #
