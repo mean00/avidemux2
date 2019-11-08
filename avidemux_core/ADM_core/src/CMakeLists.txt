@@ -32,7 +32,7 @@ if (ADM_DEBUG AND FIND_LEAKS)
 	endif (MINGW)
 endif (ADM_DEBUG AND FIND_LEAKS)
 
-set(ADM_core_SRCS ${ADM_core_SRCS} cpuid.asm adm_emms.asm)
+set(ADM_core_SRCS ${ADM_core_SRCS})
 add_compiler_export_flags()
 
 SET(asmFiles "")
