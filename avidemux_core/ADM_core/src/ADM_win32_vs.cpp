@@ -37,6 +37,7 @@ void redirectStdoutToFile(const char *logFile)
 
     remove(stdoutPath);
     remove(stderrPath);
+#if 0
 
     // Redirect output to log file in the user's profile directory
  #if 1
@@ -44,7 +45,6 @@ void redirectStdoutToFile(const char *logFile)
 #else
     std::string filePath=std::string("f:\\tmp\\élém\\")+std::string(logFile);
 #endif
-#if 0
     int length = utf8StringToWideChar(filePath.c_str(), -1, NULL);
     wchar_t *filePath2 = new wchar_t[length+1];
     wchar_t mode[] = L"w";
