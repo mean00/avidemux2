@@ -1360,68 +1360,14 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
         case QEvent::Resize:
             if(watched == QuiMainWindows)
             {
-                if(blockZoomChanges || playing || !avifileinfo)
-                    break;
-                if(ignoreResizeEvent)
-                {
-                    ignoreResizeEvent = false;
-                    break;
-                }
-                uint32_t reqw, reqh;
-                calcDockWidgetDimensions(reqw,reqh);
-
-                uint32_t availw = 1;
-                if(QuiMainWindows->width() > reqw)
-                    availw = QuiMainWindows->width() - reqw;
-                else
-                    break;
-
-                uint32_t availh = 1;
-                if(QuiMainWindows->height() > reqh)
-                    availh = QuiMainWindows->height() - reqh;
-                else
-                    break;
-
-                uint32_t w = avifileinfo->width;
-                uint32_t h = avifileinfo->height;
-                if(!w || !h)
-                    break;
-                // We've got the available space and the video resolution,
-                // now calculate the zoom to fit the video into this space.
-                float widthRatio = (float)availw / (float)w;
-                float heightRatio = (float)availh / (float)h;
-                float zoom = (widthRatio < heightRatio ? widthRatio : heightRatio);
-
-                // Detect if the zoom has been likely set automatically on loading a new video or
-                // changed using a keyboard shortcut. In this case imitate physical friction
-                // requiring the window to be resized beyond certain threshold first.
-                float oldzoom = admPreview::getCurrentZoom();
-                QSize os = static_cast<QResizeEvent*>(event)->oldSize();
-                if(zoom > oldzoom && actZoomCalled)
-                {
-                    if(QuiMainWindows->width() > os.width())
-                        threshold -= QuiMainWindows->width() - os.width();
-                    if(QuiMainWindows->height() > os.height())
-                        threshold -= QuiMainWindows->height() - os.height();
-                    if(threshold > 0)
-                        break;
-                    if(threshold < 0)
-                        threshold = 0;
-                }
-
-                if(zoom > oldzoom + .001 || zoom < oldzoom - .001)
-                {
-                    blockResizing = true;
-                    admPreview::setMainDimension(w,h,zoom);
-                    actZoomCalled = false;
-                    admPreview::samePicture(); // required at least for VDPAU
-                    blockResizing = false;
-                }
+                QSize os = static_cast<QResizeEvent *>(event)->oldSize();
+                adjustZoom(os.width(),os.height());
+                break;
             }
             if (watched == ui.sliderPlaceHolder)
             {
-                    thumbSlider->resize(ui.sliderPlaceHolder->width(), 16);
-                    thumbSlider->move(0, (ui.sliderPlaceHolder->height() - thumbSlider->height()) / 2);
+                thumbSlider->resize(ui.sliderPlaceHolder->width(), 16);
+                thumbSlider->move(0, (ui.sliderPlaceHolder->height() - thumbSlider->height()) / 2);
             }
             break;
 
@@ -1463,27 +1409,117 @@ void MainWindow::dropEvent(QDropEvent *event)
     }
 }
 
+/**
+ *  \fn windowStateToString
+ */
+static const char *windowStateToString(const Qt::WindowStates s)
+{
+    if(s & Qt::WindowMinimized)
+        return "minimized";
+    else if(s & Qt::WindowMaximized)
+        return "maximized";
+    else if(s & Qt::WindowFullScreen)
+        return "fullscreen";
+    else
+        return "normal";
+}
+
 // If a video was loaded or zoom changed while the main window was maximized,
 // unmaximizing the window restores it to dimensions not necessarily matching
 // the actual dimensions of the video frame. Catch the window state change event
 // and resize the window when appropriate.
 void MainWindow::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::WindowStateChange)
+    if (event->type() == QEvent::WindowStateChange && false==QuiMainWindows->isMinimized())
     {
-        QWindowStateChangeEvent* ev = static_cast<QWindowStateChangeEvent*>(event);
-        if (true==UI_getNeedsResizingFlag() && ev->oldState() == Qt::WindowMaximized && false==QuiMainWindows->isMinimized())
+        QWindowStateChangeEvent *ev = static_cast<QWindowStateChangeEvent*>(event);
+        const Qt::WindowStates old = ev->oldState();
+        const Qt::WindowStates cur = QuiMainWindows->windowState();
+        ADM_info("Window change event: %s -> %s\n", windowStateToString(old), windowStateToString(cur));
+
+        if (!(old & Qt::WindowMinimized)) // Don't do anything on restore from minimized state.
         {
-            uint32_t w=ui.frame_video->width();
-            uint32_t h=ui.frame_video->height();
-            UI_resize(w,h);
-            UI_setNeedsResizingFlag(false);
+            if (true==UI_getNeedsResizingFlag() && (old & Qt::WindowMaximized))
+            {
+                uint32_t w=ui.frame_video->width();
+                uint32_t h=ui.frame_video->height();
+                UI_resize(w,h);
+                UI_setNeedsResizingFlag(false);
+            }
+            // Always adjust zoom on maximize from normal state.
+            if (!(old & Qt::WindowMaximized) && QuiMainWindows->isMaximized())
+            {
+                ignoreResizeEvent = false;
+                adjustZoom(0,0);
+            }
         }
-        // Always adjust zoom on maximize
-        if (ev->oldState() != Qt::WindowMaximized && QuiMainWindows->isMaximized())
-            ignoreResizeEvent = false;
     }
     QWidget::changeEvent(event);
+}
+
+/**
+ *  \fn adjustZoom
+ */
+bool MainWindow::adjustZoom(int oldWidth, int oldHeight)
+{
+    if(blockZoomChanges || playing || !avifileinfo)
+        return false;
+    if(ignoreResizeEvent)
+    {
+        ignoreResizeEvent = false;
+        return false;
+    }
+
+    uint32_t reqw, reqh;
+    calcDockWidgetDimensions(reqw,reqh);
+
+    if(QuiMainWindows->width() <= reqw)
+        return false;
+
+    uint32_t availw = QuiMainWindows->width() - reqw;
+
+    if(QuiMainWindows->height() <= reqh)
+        return false;
+
+    uint32_t availh = QuiMainWindows->height() - reqh;
+
+    uint32_t w = avifileinfo->width;
+    uint32_t h = avifileinfo->height;
+    if(!w || !h)
+        return false;
+    // We've got the available space and the video resolution,
+    // now calculate the zoom to fit the video into this space.
+    float widthRatio = (float)availw / (float)w;
+    float heightRatio = (float)availh / (float)h;
+    float zoom = (widthRatio < heightRatio ? widthRatio : heightRatio);
+
+    // Detect if the zoom has been likely set automatically on loading a new video or
+    // changed using a keyboard shortcut. In this case imitate physical friction
+    // requiring the window to be resized beyond certain threshold first.
+    float oldzoom = admPreview::getCurrentZoom();
+    if(oldWidth && oldHeight && zoom > oldzoom && actZoomCalled)
+    {
+        if(QuiMainWindows->width() > oldWidth)
+            threshold -= QuiMainWindows->width() - oldWidth;
+        if(QuiMainWindows->height() > oldHeight)
+            threshold -= QuiMainWindows->height() - oldHeight;
+        if(threshold > 0)
+            return false;
+        if(threshold < 0)
+            threshold = 0;
+    }
+
+    if(zoom > oldzoom + .001 || zoom < oldzoom - .001)
+    {
+        blockResizing = true;
+        admPreview::setMainDimension(w,h,zoom);
+        actZoomCalled = false;
+        admPreview::samePicture(); // required at least for VDPAU
+        blockResizing = false;
+
+        return true;
+    }
+    return false;
 }
 
 void MainWindow::openFiles(QList<QUrl> urlList)
