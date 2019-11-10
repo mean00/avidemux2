@@ -85,27 +85,27 @@ enum ADM_dragState
 */
 class MainWindow : public QMainWindow
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	Ui_MainWindow ui;
+    Ui_MainWindow ui;
 
-	MainWindow(const std::vector<IScriptEngine*>& scriptEngines);
-	virtual ~MainWindow();
+    MainWindow(const std::vector<IScriptEngine*>& scriptEngines);
+    virtual ~MainWindow();
 
-	void buildCustomMenu(void);
-	void buildRecentMenu(void);
-	void buildRecentProjectMenu(void);
-	void updateActionShortcuts(void);
-        void volumeWidgetOperational(void);
-        void calcDockWidgetDimensions(uint32_t &width, uint32_t &height);
-        void setBlockZoomChangesFlag(bool block);
-        bool getBlockResizingFlag(void);
-        void setBlockResizingFlag(bool block);
-        void setResizeThreshold(int value);
-        void setActZoomCalledFlag(bool called);
-        static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
-        static MainWindow *mainWindowSingleton;
+    void buildCustomMenu(void);
+    void buildRecentMenu(void);
+    void buildRecentProjectMenu(void);
+    void updateActionShortcuts(void);
+    void volumeWidgetOperational(void);
+    void calcDockWidgetDimensions(uint32_t &width, uint32_t &height);
+    void setBlockZoomChangesFlag(bool block);
+    bool getBlockResizingFlag(void);
+    void setBlockResizingFlag(bool block);
+    void setResizeThreshold(int value);
+    void setActZoomCalledFlag(bool called);
+    static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
+    static MainWindow *mainWindowSingleton;
 
 protected:
     QMenu *jsMenu;
@@ -128,47 +128,83 @@ protected:
     std::vector<QPushButton *>PushButtonsAvailableWhenFileLoaded;
     std::vector<QPushButton *>PushButtonsDisabledOnPlayback;
 
-public slots:
-        void updateAvailableSlot(int version, std::string date, std::string url);
-        void dragTimerTimeout(void);
-        void setRefreshCap(void);
-        void actionSlot(Action a)
-        {
-            if(a==ACT_PlayAvi) // ugly
-            {
-                playing=1-playing;
-                setMenuItemsEnabledState();
-                playing=1-playing;
-            }
-            HandleAction(a);
-            setMenuItemsEnabledState();
-        }
-        void sendAction(Action a)
-        {
-            //printf("Sending internal event %d\n",(int)a);
-            emit actionSignal(a);
-        }
-	void timeChanged(int);
-        void checkChanged(int);
-	void buttonPressed(void);
-	void toolButtonPressed(bool z);
-	void setMenuItemsEnabledState(void);
+    ADM_dragState dragState;
+    QTimer dragTimer;
+    const  std::vector<IScriptEngine*>& _scriptEngines;
 
-	void comboChanged(int z);
-	void sliderValueChanged(int u);
-	void sliderMoved(int value);
-	void sliderReleased(void);
-        void sliderPressed(void);
-        void sliderWheel(int way);
-	void volumeChange( int u );
-	void audioToggled(bool checked);
-	void previewModeChangedFromMenu(bool status);
-	void previewModeChangedFromToolbar(bool status);
-	void previousIntraFrame(void);
-	void nextIntraFrame(void);
-	void timeChangeFinished(void);
-	void currentFrameChanged(void);
-	void currentTimeChanged(void);
+    void addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts);
+    void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
+    void addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu);
+    void addScriptReferencesToHelpMenu();
+    void addSessionRestoreToRecentMenu(vector<MenuEntry>& menu);
+    bool buildMyMenu(void);
+    bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
+    void buildRecentMenu(QMenu *menu,std::vector<std::string>files, QAction **actions);
+    void buildActionLists(void);
+    void buildButtonLists(void);
+    void updateCodecWidgetControlsState(void);
+    void widgetsUpdateTooltips(void);
+    void searchMenu(QAction * action,MenuEntry *menu, int nb);
+    void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
+#ifdef ENABLE_EVENT_FILTER
+    bool eventFilter(QObject* watched, QEvent* event);
+#endif
+    void mousePressEvent(QMouseEvent* event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+    void openFiles(QList<QUrl>);
+    void changeEvent(QEvent* event);
+    /* Zoom control */
+    bool adjustZoom(int width, int height);
+    bool blockResizing;
+    bool blockZoomChanges;
+    bool ignoreResizeEvent; // suppress unwanted zoom changes
+    bool actZoomCalled; // zoom was set to a pre-defined fraction by a menu action
+    int  threshold; // track how much the window was resized
+    /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
+    void currentTimeToClipboard(void);
+
+public slots:
+    void updateAvailableSlot(int version, std::string date, std::string url);
+    void dragTimerTimeout(void);
+    void setRefreshCap(void);
+    void actionSlot(Action a)
+    {
+        if(a==ACT_PlayAvi) // ugly
+        {
+            playing=1-playing;
+            setMenuItemsEnabledState();
+            playing=1-playing;
+        }
+        HandleAction(a);
+        setMenuItemsEnabledState();
+    }
+    void sendAction(Action a)
+    {
+        //printf("Sending internal event %d\n",(int)a);
+        emit actionSignal(a);
+    }
+    void timeChanged(int);
+    void checkChanged(int);
+    void buttonPressed(void);
+    void toolButtonPressed(bool z);
+    void setMenuItemsEnabledState(void);
+
+    void comboChanged(int z);
+    void sliderValueChanged(int u);
+    void sliderMoved(int value);
+    void sliderReleased(void);
+    void sliderPressed(void);
+    void sliderWheel(int way);
+    void volumeChange( int u );
+    void audioToggled(bool checked);
+    void previewModeChangedFromMenu(bool status);
+    void previewModeChangedFromToolbar(bool status);
+    void previousIntraFrame(void);
+    void nextIntraFrame(void);
+    void timeChangeFinished(void);
+    void currentFrameChanged(void);
+    void currentTimeChanged(void);
 
     void thumbSlider_valueEmitted(int value);
 
@@ -188,50 +224,15 @@ public slots:
     void scriptFileActionHandler();
     void scriptReferenceActionHandler();
 
-     void closeEvent(QCloseEvent *event)
-        {
-                printf("Close event!\n");
-                //QMainWindow::closeEvent(event);
-                sendAction(ACT_EXIT);
-        }
+    void closeEvent(QCloseEvent *event)
+    {
+        printf("Close event!\n");
+        //QMainWindow::closeEvent(event);
+        sendAction(ACT_EXIT);
+    }
 
 signals:
-        void actionSignal(Action a);
-        void updateAvailable(int version,const std::string date,const std::string downloadLink);
-protected:
-        ADM_dragState    dragState;        
-        QTimer dragTimer;
-	const  std::vector<IScriptEngine*>& _scriptEngines;
-
-	void addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts);
-	void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
-	void addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu);
-	void addScriptReferencesToHelpMenu();
-        void addSessionRestoreToRecentMenu(vector<MenuEntry>& menu);
-        bool buildMyMenu(void);
-        bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
-	void buildRecentMenu(QMenu *menu,std::vector<std::string>files, QAction **actions);
-        void buildActionLists(void);
-        void buildButtonLists(void);
-        void updateCodecWidgetControlsState(void);
-        void widgetsUpdateTooltips(void);
-        void searchMenu(QAction * action,MenuEntry *menu, int nb);
-	void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
-#ifdef   ENABLE_EVENT_FILTER      
-	bool eventFilter(QObject* watched, QEvent* event);
-#endif
-	void mousePressEvent(QMouseEvent* event);
-	void dragEnterEvent(QDragEnterEvent *event);
-	void dropEvent(QDropEvent *event);
-	void openFiles(QList<QUrl>);
-        void changeEvent(QEvent* event);
-        /* Zoom control */
-        bool blockResizing;
-        bool blockZoomChanges;
-        bool ignoreResizeEvent; // suppress unwanted zoom changes
-        bool actZoomCalled; // zoom was set to a pre-defined fraction by a menu action
-        int  threshold; // track how much the window was resized
-        /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
-        void currentTimeToClipboard(void);
+    void actionSignal(Action a);
+    void updateAvailable(int version,const std::string date,const std::string downloadLink);
 };
 #endif	// Q_gui2_h
