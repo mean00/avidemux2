@@ -146,10 +146,13 @@ static const MenuEntry _myMenuGo[] = {
 std::vector<MenuEntry> myMenuGo(_myMenuGo, _myMenuGo + sizeof(_myMenuGo) / sizeof(_myMenuGo[0]));
 
 static const MenuEntry _myMenuView[] = {
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Zoom 1:4"),   NULL,ACT_ZOOM_1_4,    NULL,"4",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Zoom 1:2"),   NULL,ACT_ZOOM_1_2,    NULL,"3",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Zoom 1:1"),   NULL,ACT_ZOOM_1_1,    NULL,"2",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Zoom 2:1"),   NULL,ACT_ZOOM_2_1,    NULL,"1",0}
+            {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Zoom 1:4"),       NULL,ACT_ZOOM_1_4,    NULL,"4",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Zoom 1:2"),       NULL,ACT_ZOOM_1_2,    NULL,"3",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Zoom 1:1"),       NULL,ACT_ZOOM_1_1,    NULL,"2",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Zoom 2:1"),       NULL,ACT_ZOOM_2_1,    NULL,"1",0},
+            {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Fit to window"),  NULL,ACT_ZOOM_FIT_IN, NULL,"0",0},
         };
 
 std::vector<MenuEntry> myMenuView(_myMenuView, _myMenuView + sizeof(_myMenuView) / sizeof(_myMenuView[0]));

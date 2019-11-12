@@ -1439,12 +1439,18 @@ void MainWindow::changeEvent(QEvent *event)
 
         if (!(old & Qt::WindowMinimized)) // Don't do anything on restore from minimized state.
         {
-            if (true==UI_getNeedsResizingFlag() && (old & Qt::WindowMaximized))
+            if (old & Qt::WindowMaximized)
             {
-                uint32_t w=ui.frame_video->width();
-                uint32_t h=ui.frame_video->height();
-                UI_resize(w,h);
-                UI_setNeedsResizingFlag(false);
+                if (UI_getNeedsResizingFlag())
+                {
+                    uint32_t w=ui.frame_video->width();
+                    uint32_t h=ui.frame_video->height();
+                    UI_resize(w,h);
+                    UI_setNeedsResizingFlag(false);
+                }else
+                {
+                    setZoomToFit();
+                }
             }
             // Always adjust zoom on maximize from normal state.
             if (!(old & Qt::WindowMaximized) && QuiMainWindows->isMaximized())
@@ -1520,6 +1526,17 @@ bool MainWindow::adjustZoom(int oldWidth, int oldHeight)
         return true;
     }
     return false;
+}
+
+/**
+ *  \fn setZoomToFit
+ *  \brief adjust zoom level to fit video into available space at current window size
+ */
+void MainWindow::setZoomToFit(void)
+{
+    ignoreResizeEvent=false;
+    adjustZoom(0,0);
+    UI_setNeedsResizingFlag(false);
 }
 
 void MainWindow::openFiles(QList<QUrl> urlList)
@@ -2429,6 +2446,14 @@ void UI_resetZoomThreshold(void)
 {
     ((MainWindow *)QuiMainWindows)->setResizeThreshold(RESIZE_THRESHOLD);
     ((MainWindow *)QuiMainWindows)->setActZoomCalledFlag(true);
+}
+
+/**
+    \fn UI_setZoomToFitIntoWindow
+*/
+void UI_setZoomToFitIntoWindow(void)
+{
+    ((MainWindow *)QuiMainWindows)->setZoomToFit();
 }
 
 /**

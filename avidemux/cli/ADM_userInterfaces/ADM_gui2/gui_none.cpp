@@ -190,4 +190,6 @@ void UI_setBlockZoomChangesFlag(bool block)
 {}
 void UI_resetZoomThreshold(void)
 {}
+void UI_setZoomToFitIntoWindow(void)
+{}
 // EOF

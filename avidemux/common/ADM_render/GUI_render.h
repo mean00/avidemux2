@@ -59,6 +59,7 @@ bool UI_getNeedsResizingFlag(void);
 void UI_setNeedsResizingFlag(bool resize);
 void UI_setBlockZoomChangesFlag(bool block);
 void UI_resetZoomThreshold(void);
+void UI_setZoomToFitIntoWindow(void);
 
 /* The list of render engine we support. Warning the list is UI dependant, i.e. for example on macOsX, the GTK version can do Xv, but the QT4 one cannot */
 typedef enum 
