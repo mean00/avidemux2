@@ -31,6 +31,7 @@ include(admAsNeeded)
 INCLUDE(admCheckVDPAU)
 INCLUDE(admCheckLibVA)
 INCLUDE(admCheckVideoToolbox)
+INCLUDE(admCheckSqlLite)
 
 #########################################
 # Debug Summary
@@ -55,9 +56,8 @@ MESSAGE(STATUS "*******************")
 IF (UNIX)
 	SET(SQLITE_REQUIRED_FLAGS "-ldl")
 ENDIF (UNIX)
-
-FIND_HEADER_AND_LIB(SQLITE sqlite3.h sqlite3 sqlite3_close ${SQLITE_REQUIRED_FLAGS})
-PRINT_LIBRARY_INFO("SQLite" SQLITE_FOUND "${SQLITE_INCLUDE_DIR}" "${SQLITE_LIBRARY_DIR}" FATAL_ERROR)
+checkSqlite3()
+PRINT_LIBRARY_INFO("SQLite" SQLITE_FOUND "${SQLITE3_INCLUDEDIR}" "${SQLITE3_LINK_LIBRARIES}" FATAL_ERROR)
 MESSAGE("")
 
 ############################################"

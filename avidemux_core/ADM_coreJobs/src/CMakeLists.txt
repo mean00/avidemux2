@@ -10,6 +10,6 @@ IF (APPLE)
 	TARGET_LINK_LIBRARIES(ADM_coreJobs -Wl,-read_only_relocs,suppress)
 ENDIF (APPLE)
 
-INCLUDE_DIRECTORIES(../include ../../ADM_coreSqlLight3/include ${SQLITE_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(../include ../../ADM_coreSqlLight3/include ${SQLITE3_INCLUDEDIR})
 TARGET_LINK_LIBRARIES(ADM_coreJobs ADM_core6 ADM_coreSqlLight3)
 ADM_INSTALL_LIB(ADM_coreJobs)
