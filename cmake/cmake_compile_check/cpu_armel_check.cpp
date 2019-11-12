@@ -1,4 +1,4 @@
-int foo(void)
+void foo(void)
 {
 
 	asm volatile ("mov lr,pc " : : );
