@@ -1,4 +1,4 @@
-int foo(void)
+void foo(void)
 {
 	asm volatile ("movdqa %xmm7, 0");
 }
