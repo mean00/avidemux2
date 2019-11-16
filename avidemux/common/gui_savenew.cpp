@@ -512,7 +512,8 @@ bool admSaver::save(void)
     }else
     {
         ret=muxer->save();
-        muxer->close();
+        if(false==muxer->close())
+            ret=false;
     }
 
     if(video)

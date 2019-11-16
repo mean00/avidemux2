@@ -88,11 +88,14 @@ muxerFFmpeg::muxerFFmpeg()
 */
 bool muxerFFmpeg::closeMuxer()
 {
+    int res=0;
     if(oc)
     {
         if(initialized==true)
         {
-            av_write_trailer(oc);
+            res=av_write_trailer(oc);
+            if(res<0)
+                ADM_warning("Error %d writing trailer.\n",res);
             avio_close(oc->pb);
         }
         avformat_free_context(oc);
@@ -104,7 +107,7 @@ bool muxerFFmpeg::closeMuxer()
         audio_st[i]=NULL;
     }
     video_st=NULL;
-    return true;
+    return !res;
 }
 /**
     \fn muxerFFmpeg
