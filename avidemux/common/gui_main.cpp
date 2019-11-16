@@ -432,13 +432,16 @@ void HandleAction (Action action)
         case ACT_ZOOM_1_2:
         case ACT_ZOOM_1_1:
         case ACT_ZOOM_2_1:
-        case ACT_ZOOM_4_1:
+        //case ACT_ZOOM_4_1:
                 currentZoom=(float)(2<<(action-ACT_ZOOM_1_4))/8;
                 UI_setBlockZoomChangesFlag(true);
                 changePreviewZoom(currentZoom);
                 UI_setBlockZoomChangesFlag(false);
                 UI_resetZoomThreshold();
                 admPreview::samePicture();
+                break;
+        case ACT_ZOOM_FIT_IN:
+                UI_setZoomToFitIntoWindow();
                 break;
         case ACT_AUDIO_SELECT_TRACK:
                 A_audioTrack();
