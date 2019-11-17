@@ -68,6 +68,7 @@ version 2 media descriptor :
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_codecType.h"
 #include "ADM_a52info.h"
+#include "ADM_audioXiphUtils.h"
 
 #if 1
 #define aprintf(...) {}
@@ -536,6 +537,21 @@ uint8_t    MP4Header::open(const char *name)
                       }
                   }
                   delete [] buffer;
+            }
+            case WAV_OGG_VORBIS:
+            {
+                ADM_info("[MP4] Reformatting vorbis header for track %u\n",1+audio);
+                uint8_t *newExtra=NULL;
+                int newExtraSize=0;
+                if(false==ADMXiph::xiphExtraData2Adm(_tracks[1+audio].extraData, _tracks[1+audio].extraDataSize, &newExtra, &newExtraSize))
+                {
+                    ADM_warning("Cannot reformat vorbis extra data, faking audio format to avoid crash.\n");
+                    _tracks[1+audio]._rdWav.encoding=WAV_UNKNOWN;
+                }
+                // Destroy old extradata
+                delete [] _tracks[1+audio].extraData;
+                _tracks[1+audio].extraData=newExtra;
+                _tracks[1+audio].extraDataSize=newExtraSize;
             }
                 break;
             default:

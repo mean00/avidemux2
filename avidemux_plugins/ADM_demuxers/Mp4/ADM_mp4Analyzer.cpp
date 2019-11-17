@@ -986,7 +986,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                             uint32_t channels,bpp,encoding,fq,packSize;
 
                             // Put some defaults
-                            ADIO.encoding=1234;
+                            ADIO.encoding=WAV_UNKNOWN;
                             ADIO.frequency=44100;
                             ADIO.byterate=AUDIO_BYTERATE_UNSET;
                             ADIO.channels=2;
@@ -1401,6 +1401,9 @@ uint8_t MP4Header::decodeEsds(void *ztom,uint32_t trackType)
                         case 0x6b:
                         case 0x6d:
                             ADIO.encoding=WAV_MP3;
+                            break;
+                        case 0xdd:
+                            ADIO.encoding=WAV_OGG_VORBIS;
                             break;
                         case 226:
                             ADIO.encoding=WAV_AC3;
