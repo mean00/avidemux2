@@ -153,13 +153,18 @@ bool admExtraData2packets(uint8_t *extraData, int extraLen,uint8_t **packs,int *
  */
 int admExtraData2xiph(int l, uint8_t *src, uint8_t *dstOrg)
 {
-    int length[3];
+    int length[3],total=0;
     uint8_t *dst=dstOrg;
     ADM_info("insize=%d\n",l);
     *dst++=0x2;
     for(int i=0;i<3;i++)
     {
-        length[i]=(src[3]<<24)+(src[2]<<16)+(src[1]<<8)+src[0];
+        total+=length[i]=(src[3]<<24)+(src[2]<<16)+(src[1]<<8)+src[0];
+        if(total>l)
+        {
+            ADM_warning("Invalid data found: sum of packet lengths %d exceeds input size %d\n",total,l);
+            return 0;
+        }
         src+=4;
         //printf("Packet %d size %d\n",i,length[i]);
         // encode length
