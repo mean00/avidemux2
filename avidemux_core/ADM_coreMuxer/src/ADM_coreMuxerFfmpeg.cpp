@@ -23,6 +23,7 @@
 #include "ADM_coreMuxerFfmpeg.h"
 #include "ADM_muxerUtils.h"
 #include "ADM_coreCodecMapping.h"
+#include "ADM_audioXiphUtils.h"
 
 extern "C" {
 #include "libavformat/url.h"
@@ -129,15 +130,27 @@ bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
             return false;
     }
     oc = avformat_alloc_context();
-	if (!oc)
-	{
-       		printf("[FF] alloc format context failed\n");
-            return false;
-	}
-	oc->oformat = fmt;
-	snprintf(oc->filename,1000,"file://%s",filename);
-    // probably a memeleak here
-
+    if (!oc)
+    {
+        printf("[FF] alloc format context failed\n");
+        return false;
+    }
+    oc->oformat = fmt;
+#if defined(__APPLE__)
+ #define MAX_LEN 1024
+#else
+ #define MAX_LEN 4096
+#endif
+    uint32_t len=strlen(filename);
+    if(len>MAX_LEN)
+    {
+        ADM_error("Filename length %u exceeds limit %u\n",len,MAX_LEN);
+        return false;
+    }
+    char *url=(char *)ADM_alloc(len+8);
+    snprintf(url,len+8,"file://%s",filename);
+    url[len+7]=0;
+    oc->url=url;
 //#warning use AV METADATA
     printf("[FF] Muxer opened\n");
     return true;
@@ -335,6 +348,15 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
           {
                   case WAV_OGG_VORBIS:
                                 par->codec_id = AV_CODEC_ID_VORBIS;par->frame_size=6*256;
+                                if(!strcmp(fmt->name,"mp4") || !strcmp(fmt->name,"psp")) // Need to translate from adm to xiph
+                                {
+                                    int xiphLen=(int)audioextraSize+(audioextraSize/255)+4+5;
+                                    uint8_t *xiph=new uint8_t[xiphLen+AV_INPUT_BUFFER_PADDING_SIZE];
+                                    memset(xiph,0,xiphLen+AV_INPUT_BUFFER_PADDING_SIZE);
+                                    xiphLen=ADMXiph::admExtraData2xiph(audioextraSize,audioextraData,xiph);
+                                    audioextraData=xiph;
+                                    audioextraSize=xiphLen;
+                                }
                                 ffmpuxerSetExtradata(par,audioextraSize,audioextraData);
                                 break;
                   case WAV_FLAC:
