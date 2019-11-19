@@ -354,10 +354,13 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                                     uint8_t *xiph=new uint8_t[xiphLen+AV_INPUT_BUFFER_PADDING_SIZE];
                                     memset(xiph,0,xiphLen+AV_INPUT_BUFFER_PADDING_SIZE);
                                     xiphLen=ADMXiph::admExtraData2xiph(audioextraSize,audioextraData,xiph);
-                                    audioextraData=xiph;
-                                    audioextraSize=xiphLen;
+                                    ffmpuxerSetExtradata(par,xiphLen,xiph);
+                                    delete [] xiph;
+                                    xiph=NULL;
+                                }else
+                                {
+                                    ffmpuxerSetExtradata(par,audioextraSize,audioextraData);
                                 }
-                                ffmpuxerSetExtradata(par,audioextraSize,audioextraData);
                                 break;
                   case WAV_FLAC:
                                 par->codec_id = AV_CODEC_ID_FLAC;
