@@ -136,21 +136,7 @@ bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
         return false;
     }
     oc->oformat = fmt;
-#if defined(__APPLE__)
- #define MAX_LEN 1024
-#else
- #define MAX_LEN 4096
-#endif
-    uint32_t len=strlen(filename);
-    if(len>MAX_LEN)
-    {
-        ADM_error("Filename length %u exceeds limit %u\n",len,MAX_LEN);
-        return false;
-    }
-    char *url=(char *)ADM_alloc(len+8);
-    snprintf(url,len+8,"file://%s",filename);
-    url[len+7]=0;
-    oc->url=url;
+    snprintf(oc->filename,1024,"file://%s",filename);
 //#warning use AV METADATA
     printf("[FF] Muxer opened\n");
     return true;
