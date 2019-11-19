@@ -71,9 +71,9 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         for(int i=0;i<nbAudioTrack;i++)
         {
             uint32_t acc=a[i]->getInfo()->encoding;
-            if(acc!=WAV_MP2 && acc!=WAV_MP3 && acc!=WAV_AAC && acc!=WAV_AC3 && acc!=WAV_EAC3)
+            if(acc!=WAV_MP2 && acc!=WAV_MP3 && acc!=WAV_AAC && acc!=WAV_AC3 && acc!=WAV_EAC3 && acc!=WAV_OGG_VORBIS)
             {
-                GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, E-AC3 and mpegaudio supported for audio"));
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, E-AC3, MP2, MP3 and Vorbis supported for audio"));
                 return false;
             }
         }
