@@ -578,13 +578,14 @@ uint8_t    MP4Header::open(const char *name)
         if(duration2!=ADM_NO_PTS && duration2>=duration1)
         { // video duration must be > max PTS, otherwise we drop the last frame
             ADM_warning("Last PTS is at or after movie duration, increasing movie duration\n");
-            _movieDuration=(duration2/1000)+1;
+            _movieDuration=(duration2/1000);
             // adjust calculated average FPS and time increment
             double f=_movieDuration;
             f=1000.*_tracks[0].nbIndex/f;
             f*=1000.;
             _videostream.dwRate=(uint32_t)floor(f+0.49);
             _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
+            _movieDuration+=_mainaviheader.dwMicroSecPerFrame/1000;
             ADM_info("Adjusted fps1000: %d = %" PRIu64" us per frame.\n",_videostream.dwRate,_mainaviheader.dwMicroSecPerFrame);
         }
         refineFps();
