@@ -682,9 +682,8 @@ bool ADM_EditorSegment::truncateVideo(uint64_t from)
 
     _SEGMENT *first=getSegment(startSeg);
     _VIDEOS *vid=getRefVideo(first->_reference);
-    uint64_t padding=vid->timeIncrementInUs/2;
     // shorten the start segment
-    first->_durationUs=startOffset+padding;
+    first->_durationUs=startOffset+vid->timeIncrementInUs;
     // remove following segments
     int n=segments.size();
     for(int i=startSeg+1;i<n;i++)
