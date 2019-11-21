@@ -92,6 +92,9 @@ static bool audioSavePrepare(std::string *audioFileExtension)
         case WAV_AAC_HE:
             *audioFileExtension="aac";
             break;
+        case WAV_DTS:
+            *audioFileExtension="dts";
+            break;
         default: break;
     };
     return true;
