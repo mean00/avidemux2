@@ -66,8 +66,10 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
 
             newVal = minimum() + (maximum() - minimum()) * normalizedPosition;
         }
-
-        setValue(newVal);
+        if(layoutDirection() == Qt::LeftToRight)
+            setValue(newVal);
+        else
+            setValue(maximum() - newVal);
         e->accept();
     }else
     {

@@ -46,10 +46,17 @@ void ADM_mwNavSlider::paintEvent(QPaintEvent *event)
         int left  = (int)(((double)a * width()) / (double)totalDuration);
         int right = (int)(((double)b * width()) / (double)totalDuration);
 
-        QPainter painter(this);
+        if(left < 1) left = 1;
+        if(right < 1) right = 1;
+        if(left > width() - 1) left = width() - 1;
+        if(right > width() - 1) right = width() - 1;
 
+        QPainter painter(this);
         painter.setPen(Qt::blue);
-        painter.drawRect(left, 1, right - left, height() - 3);
+        if(layoutDirection() == Qt::LeftToRight)
+            painter.drawRect(left, 1, right - left, height() - 3);
+        else
+            painter.drawRect(width() - right, 1, right - left, height() - 3);
         painter.end();
     }
 }
