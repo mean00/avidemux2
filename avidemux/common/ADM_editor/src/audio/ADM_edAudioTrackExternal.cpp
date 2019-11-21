@@ -192,6 +192,7 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
         case WAV_PCM:
         case WAV_EAC3:
         case WAV_AC3:
+        case WAV_DTS:
         case WAV_MP2:
         case WAV_MP3:
                 ADM_info("Found external audio track, encoding =%d offset=%d\n",(int)hdr.encoding,(int)offset);

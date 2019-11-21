@@ -23,6 +23,7 @@
 #include "ADM_audioIdentify.h"
 #include "fourcc.h"
 #include "ADM_aacadts.h"
+#include "ADM_dcainfo.h"
 
 extern void Endian_WavHeader(WAVHeader *w);
 #define INVALID_OFFSET 0XFFFFFFF
@@ -371,6 +372,70 @@ static bool idAAACADTS(int bufferSize,const uint8_t *data,WAVHeader &info,uint32
 }
 
 /**
+    \fn idDCA
+    \brief return true if the track is DTS
+*/
+static bool idDCA(int bufferSize, const uint8_t *data, WAVHeader &oinfo, uint32_t &offset)
+{
+    uint32_t syncOffset;
+    ADM_DCA_INFO info,info2;
+    uintptr_t tmp=(uintptr_t)data;
+    uint8_t *probe=(uint8_t *)tmp;
+
+    if( !ADM_DCAGetInfo(probe, bufferSize, &info, &syncOffset))
+    {
+        ADM_info("Not DTS.\n");
+        return false;
+    }
+
+    // Need 2 more frames to be sure...
+    bool r=true;
+
+    for(int i=0;i<2;i++)
+    {
+        ADM_info("\t pass %d\n",i);
+        bufferSize-=info.frameSizeInBytes+syncOffset;
+        if(bufferSize<=0)
+        {
+            ADM_warning("Not enough data to confirm DTS.\n");
+            return false;
+        }
+        probe+=syncOffset+info.frameSizeInBytes;
+
+        if( !ADM_DCAGetInfo(probe, bufferSize, &info2, &syncOffset))
+        {
+            ADM_info("Cannot sync (pass %d)\n",i);
+            return false;
+        }
+        if(info.frequency!=info2.frequency || info.channels!=info2.channels || info.bitrate!=info2.bitrate)
+        {
+            ADM_info("Info doesn't match (pass %d)\n",i);
+            r=false;
+            break;
+        }
+        if(syncOffset>2)
+        {
+            ADM_info("Offset between frames too big = %" PRIu32" (pass %d)\n",syncOffset,i);
+            r=false;
+            break;
+        }
+    }
+    if(r)
+    {
+        ADM_info("\tProbably DTS : freq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.bitrate,(int)info.channels,(int)syncOffset);
+        oinfo.encoding=WAV_DTS;
+        oinfo.channels=info.channels;
+        oinfo.byterate=info.bitrate>>3;
+        oinfo.frequency=info.frequency;
+        return true;
+    }else
+    {
+        ADM_info("Cannot confirm DTS.\n");
+    }
+    return r;
+}
+
+/**
     \fn ADM_identifyAudioStream
     \param bufferSize : nb of bytes available for scanning
     \param buffer     : buffer containing the data to scan
@@ -385,6 +450,7 @@ bool ADM_identifyAudioStream(int bufferSize,const uint8_t *buffer,WAVHeader &inf
     if(idEAC3(bufferSize,buffer,info,offset)) return true;
     if(idAC3(bufferSize,buffer,info,offset)) return true;
     if(idAAACADTS(bufferSize,buffer,info,offset)) return true;
+    if(idDCA(bufferSize,buffer,info,offset)) return true;
 
     return false;
 }
