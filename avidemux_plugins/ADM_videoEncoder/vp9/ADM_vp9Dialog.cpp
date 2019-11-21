@@ -32,9 +32,14 @@ bool vp9EncoderConfigure(void)
 #define PX(x) &(cfg->x)
     diaElemBitrate bitrate(PX(ratectl),NULL);
     diaElemReadOnlyText advice(QT_TRANSLATE_NOOP("vp9encoder","For optimal quality, select 2-pass average bitrate mode and set target bitrate to zero"),NULL);
+
     diaElemMenu menudl(PX(deadline),QT_TRANSLATE_NOOP("vp9encoder","Deadline"),3,dltype);
     diaElemInteger speedi(&spdi,QT_TRANSLATE_NOOP("vp9encoder","Speed"),-9,9);
-    diaElemUInteger conc(PX(nbThreads),QT_TRANSLATE_NOOP("vp9encoder","Threads"),1,8);
+    diaElemUInteger conc(PX(nbThreads),QT_TRANSLATE_NOOP("vp9encoder","Threads"),1,VP9_ENC_MAX_THREADS);
+    diaElemToggle thrmatic(PX(autoThreads),QT_TRANSLATE_NOOP("vp9encoder","Use as many threads as CPU cores"));
+
+    thrmatic.link(0,&conc);
+
     diaElemUInteger gopsize(PX(keyint),QT_TRANSLATE_NOOP("vp9encoder","GOP Size"),0,1000);
     diaElemToggle range(PX(fullrange),QT_TRANSLATE_NOOP("vp9encoder","Use full color range"));
 
@@ -43,9 +48,10 @@ bool vp9EncoderConfigure(void)
     frameEncMode.swallow(&advice);
 
     diaElemFrame frameEncSpeed(QT_TRANSLATE_NOOP("vp9encoder","Speed vs Quality"));
-    frameEncSpeed.swallow(&menudl);
     frameEncSpeed.swallow(&speedi);
     frameEncSpeed.swallow(&conc);
+    frameEncSpeed.swallow(&thrmatic);
+    frameEncSpeed.swallow(&menudl);
 
     diaElemFrame frameIdr(QT_TRANSLATE_NOOP("vp9encoder","Keyframes"));
     frameIdr.swallow(&gopsize);

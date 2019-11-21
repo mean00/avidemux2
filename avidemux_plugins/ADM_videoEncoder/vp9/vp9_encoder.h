@@ -4,6 +4,7 @@
 typedef struct {
 COMPRES_PARAMS ratectl;
 uint32_t nbThreads;
+bool autoThreads;
 uint32_t speed;
 uint32_t deadline;
 uint32_t keyint;

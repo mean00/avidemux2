@@ -156,7 +156,9 @@ bool vp9Encoder::setup(void)
 
     param.g_w=getWidth();
     param.g_h=getHeight();
-    param.g_threads=vp9Settings.nbThreads;
+    uint32_t threads=vp9Settings.autoThreads? ADM_cpu_num_processors() : vp9Settings.nbThreads;
+    if(threads>VP9_ENC_MAX_THREADS) threads=VP9_ENC_MAX_THREADS;
+    param.g_threads=vp9Settings.nbThreads=threads;
     usSecondsToFrac(getFrameIncrement(),&(param.g_timebase.num),&(param.g_timebase.den));
     ticks=param.g_timebase.num;
 

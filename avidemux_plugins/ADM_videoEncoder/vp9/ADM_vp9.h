@@ -23,6 +23,8 @@ enum vp9DeadlinePreset
     BEST_QUALITY=2
 };
 
+#define VP9_ENC_MAX_THREADS 16
+
 #define VP9_DEFAULT_CONF \
 { \
     { \
@@ -34,6 +36,7 @@ enum vp9DeadlinePreset
         ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL \
     }, \
      2, /* nbThreads */ \
+     1, /* autoThreads */ \
     13, /* speed = VP8E_SET_CPUUSED + 9 */ \
      1, /* deadline = 1s */ \
    128, /* keyint */ \
