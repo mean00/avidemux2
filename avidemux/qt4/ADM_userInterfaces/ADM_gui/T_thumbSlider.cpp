@@ -67,7 +67,7 @@ void ThumbSlider::paintEvent(QPaintEvent *event)
 
 void ThumbSlider::mousePressEvent(QMouseEvent *event)
 {
-	if (event->buttons() && Qt::LeftButton)
+	if (event->buttons() & Qt::LeftButton)
 	{
 		int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
 
@@ -79,7 +79,7 @@ void ThumbSlider::mousePressEvent(QMouseEvent *event)
 
 void ThumbSlider::mouseMoveEvent(QMouseEvent *event)
 {
-	if (event->buttons() && Qt::LeftButton)
+	if (event->buttons() & Qt::LeftButton)
 	{
 		int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
 
