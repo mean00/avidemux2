@@ -126,6 +126,15 @@ FILE(COPY "${ORIGINAL}/Contents/Resources/share" DESTINATION "${RESOURCES}")
 FILE(COPY "${ORIGINAL}/Contents/Resources/fonts" DESTINATION "${RESOURCES}") 
 FILE(COPY "${ORIGINAL}/Contents/Resources/avidemux.icns" DESTINATION "${RESOURCES}") 
 
+# Entice macOS to return correct system language (QTBUG-72491)
+FILE(GLOB ListOfTranslationFiles "${RESOURCES}/share/avidemux6/qt5/i18n/avidemux_*.qm")
+FOREACH(lang ${ListOfTranslationFiles})
+    STRING(REGEX REPLACE ".*avidemux_" "" lang "${lang}")
+    STRING(REPLACE ".qm" "" lang "${lang}")
+    MESSAGE(STATUS "Creating directory ${BUNDLE}/Contents/Resources/${lang}.lproj")
+    FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/Resources/${lang}.lproj")
+ENDFOREACH(lang ${ListOfTranslationFiles})
+
 # Partially relink libADM_dm_vapoursynth.dylib
 # Using default link location because versioned paths from VAPOURSYNTHSCRIPT_LDFLAGS
 # would result in each minor VapourSynth upgrade breaking the demuxer.
