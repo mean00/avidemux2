@@ -39,6 +39,10 @@ if (USE_VIDEOTOOLBOX)
     set(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} h264_videotoolbox)
 endif (USE_VIDEOTOOLBOX)
 
+if (APPLE AND $ENV{MACOSX_DEPLOYMENT_TARGET} STREQUAL "10.15")
+    xadd(--extra-cflags="-fno-stack-check") # see https://trac.ffmpeg.org/ticket/8073
+endif (APPLE AND $ENV{MACOSX_DEPLOYMENT_TARGET} STREQUAL "10.15")
+
 #@@
 ADM_FF_ADD_OPTIONS()
 
