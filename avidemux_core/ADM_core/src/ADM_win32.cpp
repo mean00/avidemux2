@@ -70,10 +70,16 @@ int getpriority(int which, int who)
     ADM_assert(who == 0);
 
     priorityClass = GetPriorityClass(GetCurrentProcess());
+    if(!priorityClass)
+    {
+        ADM_warning("Cannot get priority class.\n");
+        return 0;
+    }
 
     switch (priorityClass)
     {
         case HIGH_PRIORITY_CLASS:
+        case REALTIME_PRIORITY_CLASS:
             return -18;
             break;
         case ABOVE_NORMAL_PRIORITY_CLASS:
