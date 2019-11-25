@@ -27,9 +27,6 @@ DIA_encodingBase::DIA_encodingBase(uint64_t duration)
         _originalPriority=getpriority(PRIO_PROCESS, 0);
         #endif
         _totalDurationUs=duration;
-#ifdef _WIN32
-        _originalPriority=getpriority(PRIO_PROCESS, 0);
-#endif
         reset();
 }
 /**
