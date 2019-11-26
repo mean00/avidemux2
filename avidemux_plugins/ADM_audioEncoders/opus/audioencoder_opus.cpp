@@ -107,7 +107,7 @@ AUDMEncoder_Opus::~AUDMEncoder_Opus()
     if(_handle)
         opus_encoder_destroy(_handle);
     _handle=NULL;
-    printf("[Opus] Deleting faac\n");
+    printf("[Opus] Deleting encoder\n");
 
 };
 
@@ -172,6 +172,29 @@ int channels=wavheader.channels;
     wavheader.blockalign=1;
     wavheader.bitspersample=0;
     wavheader.encoding=WAV_OPUS;
+    // create header
+    int initialPadding=0;
+    if(OPUS_OK != opus_encoder_ctl(_handle,OPUS_GET_LOOKAHEAD(&initialPadding)))
+        ADM_warning("[Opus] Cannot get number of lookahead samples.\n");
+    _extraSize=19; // max 2 channels
+    _extraData=new uint8_t[_extraSize];
+    uint8_t *p=_extraData;
+    memset(p,0,_extraSize);
+    const char *head="OpusHead";
+    memcpy(p,head,8);
+    p+=8;
+#define PUT_BYTE(v) *p=v&0xFF; p++;
+    PUT_BYTE(1) // version
+    PUT_BYTE(channels)
+
+    uint16_t padding=(uint32_t)initialPadding&0xFFFF;
+    PUT_BYTE(padding)
+    PUT_BYTE(padding>>8)
+    PUT_BYTE(wavheader.frequency)
+    PUT_BYTE(wavheader.frequency>>8)
+    PUT_BYTE(wavheader.frequency>>16)
+    PUT_BYTE(wavheader.frequency>>24)
+
     return true;
 }
 #define SIZE_INTERNAL 64*1024 
