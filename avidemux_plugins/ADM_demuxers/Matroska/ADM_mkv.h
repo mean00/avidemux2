@@ -224,7 +224,7 @@ class mkvHeader         :public vidHeader
     uint8_t                 walk(void *seed);
     uint64_t                walkAndFind(void *seed,MKV_ELEM_ID searched);
     int                     searchTrackFromTid(uint32_t tid);
-    bool                    readSeekHead(ADM_ebml_file *body);
+    bool                    readSeekHead(ADM_ebml_file *body,uint64_t *nexthead=NULL);
     //
     //                      
     int                     isBufferingNeeded(mkvTrak *trk); // Split audio blocks into smaller pieces if needed
