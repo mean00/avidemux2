@@ -537,6 +537,7 @@ uint8_t    MP4Header::open(const char *name)
                       }
                   }
                   delete [] buffer;
+                  break;
             }
             case WAV_OGG_VORBIS:
             {
