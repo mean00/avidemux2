@@ -96,8 +96,8 @@ int getpriority(int which, int who)
             break;
         default:
             ADM_warning("Unhandled priority class %x\n",priorityClass);
-            return 0;
-            //ADM_assert(0);
+            //return 0;
+            ADM_assert(0);
     }
 }
 
