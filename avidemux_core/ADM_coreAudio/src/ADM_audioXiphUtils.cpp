@@ -64,6 +64,8 @@ bool xiphExtraData2Adm(uint8_t *extraData, int extraLen,uint8_t **newExtra,int *
 {    
   *newExtra=NULL;
   *newExtraLen=0;
+  if(!extraData)
+      return false;
   uint8_t *oldata=extraData;
   int oldlen=extraLen;
   int len1,len2,len3;
