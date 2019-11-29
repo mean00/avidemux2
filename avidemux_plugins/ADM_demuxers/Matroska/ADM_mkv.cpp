@@ -114,11 +114,23 @@ uint8_t mkvHeader::open(const char *name)
   _segmentPosition=ebml.tell();
   ADM_info("[MKV] found Segment at 0x%llx\n",(uint64_t)_segmentPosition);
    /* Now find tracks */
+  bool tracksElemFound=false;
+  uint64_t nextHead=0;
   if(ebml.find(ADM_MKV_SECONDARY,MKV_SEGMENT,MKV_SEEK_HEAD,&alen))
   {
        ADM_ebml_file seekHead( &ebml,alen);
-       readSeekHead(&seekHead);
-  }else      
+       tracksElemFound = readSeekHead(&seekHead,&nextHead);
+       if(!tracksElemFound && nextHead)
+       {
+           ebml.seek(nextHead);
+           if(ebml.simplefind(MKV_SEEK_HEAD,&len,false))
+           {
+               ADM_ebml_file secondary(&ebml,len);
+               tracksElemFound = readSeekHead(&secondary);
+           }
+       }
+  }
+  if(!tracksElemFound)
   { // No valid seek_head, try to find MKV_TRACKS
       ADM_info("Searching for MKV_TRACKS\n");
       int headerLen;
@@ -1197,10 +1209,12 @@ bool    mkvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
  * \fn readSeekHead
  * \bried used to locate the interesting parts of the file
  */
-bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
+bool    mkvHeader::readSeekHead(ADM_ebml_file *body, uint64_t *nexthead)
 {
     uint64_t vlen,len;
     ADM_info("Parsing SeekHead\n");
+    if(nexthead)
+        *nexthead=0;
     while(!body->finished())
     {
         if(!body->simplefind(MKV_SEEK,&vlen,false))
@@ -1247,6 +1261,14 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
         uint64_t position=item.readUnsignedInt(len);
         switch(t)
         {
+            case MKV_SEEK_HEAD:
+                {
+                    uint64_t chained=position+_segmentPosition;
+                    ADM_info("Chained MKV_SEEK_HEAD at position %" PRIu64"\n",chained);
+                    if(nexthead)
+                        *nexthead=chained;
+                    break;
+                }
             case MKV_CUES:
                     _cuePosition=position+_segmentPosition;
                     ADM_info("   at position  0x%llx\n",_cuePosition);
