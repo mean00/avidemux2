@@ -85,6 +85,7 @@ virtual     uint64_t       frameToUs(uint32_t frame)
                                     f*=_videostream.dwScale;
                                     f/=_videostream.dwRate;
                                     f*=1000000.;
+                                    f+=0.49;
                                     return (uint64_t)f;
                                 }
 virtual        bool             unreliableBFramePts (void) { return false;} // By default frames are reliable
