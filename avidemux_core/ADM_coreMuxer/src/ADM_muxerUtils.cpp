@@ -61,7 +61,8 @@ uint64_t rescaleLavPts(uint64_t us, AVRational *scale)
 
      db*=s;
      db=(db)/1000000.; // in seconds
-    uint64_t i=(uint64_t)db; // round up to the closer num value
+    uint64_t i=(uint64_t)(db+0.49);
+    // round up to the closer num value
     i=(i+scale->num-1)/scale->num;
     i*=scale->num;
     return i;
