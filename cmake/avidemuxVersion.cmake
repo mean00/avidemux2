@@ -1,7 +1,7 @@
 #
 #
 #
-SET(RELEASE 1)
+SET(RELEASE 0)
 #
 #
 include(admTimeStamp)

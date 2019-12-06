@@ -42,7 +42,7 @@ const PredefinedFps_t predefinedFps[]=
  {QT_TRANSLATE_NOOP("changeFps","23.976 (Film)"),  24000,1001},
  {QT_TRANSLATE_NOOP("changeFps","29.97 (NTSC)"),   30000,1001},
  {QT_TRANSLATE_NOOP("changeFps","50 (Pal)"),       50000,1000},
- {QT_TRANSLATE_NOOP("changeFps","59.93  (NTSC)"),  60000,1001}
+ {QT_TRANSLATE_NOOP("changeFps","59.94  (NTSC)"),  60000,1001}
 };
 
 #define nbPredefined (sizeof(predefinedFps)/sizeof(PredefinedFps_t))
@@ -84,7 +84,7 @@ DECLARE_VIDEO_FILTER(   changeFps,   // Class
 const char *changeFps::getConfiguration( void )
 {
 static char buf[100];
- snprintf(buf,99," Change FPS from %2.2f to %2.2f fps",
+ snprintf(buf,99," Change FPS from %2.3f to %2.2f fps",
         (double)configuration.oldFpsNum/configuration.oldFpsDen,
         (double)configuration.newFpsNum/configuration.newFpsDen);
  return buf;  
@@ -217,7 +217,7 @@ ADM_assert(nbPredefined == 6);
     
 
     diaElemMenu mFps(&(configuration.oldMode),   QT_TRANSLATE_NOOP("changeFps","Source Fps:"), 6,tFps);
-    diaElemFloat fps(&oldFrac,QT_TRANSLATE_NOOP("changeFps","Source frame rate:"),1,200.);
+    diaElemFloat fps(&oldFrac,QT_TRANSLATE_NOOP("changeFps","Source frame rate:"),1,240.,NULL,3);
 
     mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
 
