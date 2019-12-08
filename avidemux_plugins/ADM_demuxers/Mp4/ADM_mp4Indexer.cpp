@@ -265,7 +265,7 @@ uint8_t	MP4Header::indexify(
 
 uint32_t i,j,cur;
 
-        ADM_info("Build Track index\n");
+        ADM_info("Build Track index, track timescale: %u\n",trackScale);
 	*outNbChunk=0;
 	aprintf("+_+_+_+_+_+\n");
 	aprintf("co : %lu sz: %lu sc: %lu co[0] %" PRIu64"\n",info->nbCo,info->nbSz,info->nbSc,info->Co[0]);
@@ -416,11 +416,18 @@ uint32_t i,j,cur;
         // now collapse
         uint64_t total=0;
         double   ftot;
-        uint32_t thisone;
+        uint32_t thisone,previous=0;
+        bool     constantFps=true;
 
         for(uint32_t i=0;i<nbChunk;i++)
         {
             thisone=track->index[i].dts;
+            if(!isAudio && constantFps)
+            {
+                if(i && thisone!=previous)
+                    constantFps=false;
+                previous=thisone;
+            }
             ftot=total;
             ftot*=1000.*1000.;
             ftot/=trackScale;
@@ -429,8 +436,24 @@ uint32_t i,j,cur;
             total+=thisone;
             aprintf("Audio chunk : %lu time :%lu\n",i,track->index[i].dts);
         }
+        if(isAudio)
+        {
+            ADM_info("Audio index done.\n");
+            return true;
+        }
+
+        if(constantFps)
+            _videostream.dwScale=thisone;
+        else
+            _videostream.dwScale=1;
+        ftot=total;
+        ftot/=nbChunk;
+        ftot*=1000.*1000.;
+        ftot/=trackScale;
+        ftot+=0.49;
+        _mainaviheader.dwMicroSecPerFrame=(int32_t)ftot;
         // Time is now built, it is in us
-        ADM_info("Index done\n");
+        ADM_info("Video index done.\n");
 	return true;
 }
 /**
