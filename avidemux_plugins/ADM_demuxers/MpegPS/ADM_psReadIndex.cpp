@@ -223,8 +223,29 @@ bool    psHeader::readVideo(indexFile *index)
     
     _video_bih.biWidth=_mainaviheader.dwWidth=w ;
     _video_bih.biHeight=_mainaviheader.dwHeight=h;             
-    _videostream.dwScale=1000;
-    _videostream.dwRate=fps;
+    switch(fps)
+    {
+        case 23976:
+            _videostream.dwScale=1001;
+            _videostream.dwRate=24000;
+            break;
+        case 29970:
+            _videostream.dwScale=1001;
+            _videostream.dwRate=30000;
+            break;
+        case 24000:
+        case 25000:
+        case 30000:
+        case 50000:
+        case 60000:
+            _videostream.dwScale=1000;
+            _videostream.dwRate=fps;
+            break;
+        default:
+            _videostream.dwScale=1;
+            _videostream.dwRate=90000;
+            break;
+    }
 
     _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"MPEG");
 
