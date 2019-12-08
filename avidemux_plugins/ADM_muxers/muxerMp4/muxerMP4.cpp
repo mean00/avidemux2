@@ -35,7 +35,8 @@ mp4_muxer muxerConfig=
     MP4_MUXER_OPT_FASTSTART,
     false,
     WIDE,
-    MP4_MUXER_ROTATE_0
+    MP4_MUXER_ROTATE_0,
+    MP4_MUXER_CLOCK_FREQ_AUTO
 };
 
 
@@ -55,6 +56,25 @@ muxerMP4::~muxerMP4()
 {
 
 }
+
+static uint32_t getClockFreqFromEnum(MP4_MUXER_CLOCK_FREQUENCIES type)
+{
+    switch(type)
+    {
+        case MP4_MUXER_CLOCK_FREQ_AUTO: return 0;
+        case MP4_MUXER_CLOCK_FREQ_24KHZ: return 24000;
+        case MP4_MUXER_CLOCK_FREQ_25KHZ: return 25000;
+        case MP4_MUXER_CLOCK_FREQ_30KHZ: return 30000;
+        case MP4_MUXER_CLOCK_FREQ_50KHZ: return 50000;
+        case MP4_MUXER_CLOCK_FREQ_60KHZ: return 60000;
+        case MP4_MUXER_CLOCK_FREQ_90KHZ: return 90000;
+        case MP4_MUXER_CLOCK_FREQ_180KHZ: return 180000;
+        default:
+            ADM_warning("Illegal type = %u\n",type);
+            return 0;
+    }
+}
+
 /**
     \fn open
     \brief Check that the streams are ok, initialize context...
@@ -100,7 +120,29 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         par = video_st->codecpar;
         if(isH265Compatible(s->getFCC()))
             par->codec_tag = MKTAG('h', 'v', 'c', '1');
-        rescaleFps(s->getAvgFps1000(),&(c->time_base));
+        uint32_t timescale=getClockFreqFromEnum((MP4_MUXER_CLOCK_FREQUENCIES)muxerConfig.clockfreq);
+        uint32_t clockFreq=s->getTimeBaseDen();
+        uint32_t nbTicks=s->getTimeBaseNum();
+        if(timescale)
+        {
+            if(clockFreq && nbTicks>1 && nbTicks<(1<<14))
+            {
+                if(!((nbTicks*timescale)%clockFreq))
+                    nbTicks=(nbTicks*timescale)/clockFreq;
+                else
+                    nbTicks=1;
+            }else
+            {
+                nbTicks=1;
+            }
+            clockFreq=timescale;
+        }
+        if(clockFreq && nbTicks)
+        {
+            c->time_base.den=clockFreq;
+            c->time_base.num=nbTicks;
+        }else
+            rescaleFps(s->getAvgFps1000(),&(c->time_base));
         myTimeBase=video_st->time_base=c->time_base;
         ADM_info("Video stream time base :%d,%d\n",video_st->time_base.num,video_st->time_base.den);
         c->gop_size=15;
@@ -210,12 +252,14 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 
         ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);
         ADM_info("Timebase stream = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
-        // The reason to enforce strict CFR is unclear. Disable rounding, which may result in collisions, for now.
-        if(myTimeBase.den==video_st->time_base.den && video_st->time_base.num==1)
+        // Rounding may result in timestamp collisions due to bad choice of timebase, handle with care.
+#if 0
+        if(myTimeBase.den>1 && myTimeBase.den==video_st->time_base.den && video_st->time_base.num==1)
         {
-            //roundup=myTimeBase.num;
-            ADM_info("Timebase roundup would have been %d, ignoring\n",myTimeBase.num);
+            roundup=myTimeBase.num;
+            ADM_info("Using %d as timebase roundup.\n",myTimeBase.num);
         }
+#endif
         av_dict_free(&dict);
         vStream=s;
         aStreams=a;

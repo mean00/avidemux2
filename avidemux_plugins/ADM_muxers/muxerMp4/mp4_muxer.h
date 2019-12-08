@@ -7,4 +7,5 @@ uint32_t optimize;
 bool forceAspectRatio;
 uint32_t aspectRatio;
 uint32_t rotation;
+uint32_t clockfreq;
 }mp4_muxer;
