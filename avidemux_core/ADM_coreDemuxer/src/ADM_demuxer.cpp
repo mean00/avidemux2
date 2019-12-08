@@ -49,6 +49,10 @@ vidHeader::vidHeader (void)
   _name = NULL;
   _videoExtraData = NULL;
   _videoExtraLen = 0;
+  _isvideopresent = 0;
+  _isaudiopresent = 0;
+  memset(&_mainaviheader,0,sizeof(MainAVIHeader));
+  memset(&_videostream,0,sizeof(AVIStreamHeader));
 }
 
 //_______________________________________
@@ -68,6 +72,15 @@ uint8_t vidHeader::getVideoInfo (aviInfo * info)
   info->nb_frames = _mainaviheader.dwTotalFrames;
   info->fcc = _videostream.fccHandler;
   info->bpp = _video_bih.biBitCount;
+  info->timebase_den = _videostream.dwRate;
+  info->timebase_num = _videostream.dwScale;
+  if (_mainaviheader.dwMicroSecPerFrame)
+  {
+    u = 1000*1000*1000;
+    d = _mainaviheader.dwMicroSecPerFrame;
+    info->fps1000 = (uint32_t) floor (u / d);
+    return 1;
+  }
   u = _videostream.dwRate;
   u *= 1000.F;
   d = _videostream.dwScale;
