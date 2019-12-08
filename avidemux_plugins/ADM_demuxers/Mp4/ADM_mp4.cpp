@@ -136,6 +136,8 @@ uint64_t                   MP4Header::getVideoDuration(void)
     return _movieDuration*1000LL; //VDEO.index[VDEO.nbIndex-1].time;
 
 }
+
+#ifdef DERIVE_TB_FROM_MINIMUM_DELTA
 /**
  * \fn compute the minimum us delta = maximum fps
  * \brief average fps is not good enough, it might be too high
@@ -195,6 +197,8 @@ bool MP4Header::refineFps(void)
     return true;
     
 }
+#endif
+
 uint8_t  MP4Header::getFrame(uint32_t framenum,ADMCompressedImage *img)
 {
     aprintf("[MP4] frame %d requested (nbFrame=%d)\n",framenum,VDEO.nbIndex);
@@ -579,17 +583,21 @@ uint8_t    MP4Header::open(const char *name)
         if(duration2!=ADM_NO_PTS && duration2>=duration1)
         { // video duration must be > max PTS, otherwise we drop the last frame
             ADM_warning("Last PTS is at or after movie duration, increasing movie duration\n");
-            _movieDuration=(duration2/1000);
+            _movieDuration=(duration2+499)/1000;
+#ifdef DERIVE_TB_FROM_MINIMUM_DELTA
             // adjust calculated average FPS and time increment
             double f=_movieDuration;
             f=1000.*_tracks[0].nbIndex/f;
             f*=1000.;
             _videostream.dwRate=(uint32_t)floor(f+0.49);
             _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
-            _movieDuration+=_mainaviheader.dwMicroSecPerFrame/1000;
             ADM_info("Adjusted fps1000: %d = %" PRIu64" us per frame.\n",_videostream.dwRate,_mainaviheader.dwMicroSecPerFrame);
+#endif
+            _movieDuration+=(_mainaviheader.dwMicroSecPerFrame+499)/1000;
         }
+#ifdef DERIVE_TB_FROM_MINIMUM_DELTA
         refineFps();
+#endif
         if(nb>1 && !lastFrame)
             lastFrame=nb-1;
         ADM_info("Nb images       : %d\n",nb);
