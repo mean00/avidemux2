@@ -35,7 +35,9 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
     if(f) f=1000000000./f;
         else f=25000;
     averageFps1000=(uint32_t)f;
-    printf("[StreamProcess] Average FPS1000=%" PRIu32"\n",averageFps1000);
+    timeBaseDen=encoder->getTimeBaseDen();
+    timeBaseNum=encoder->getTimeBaseNum();
+    printf("[StreamProcess] Average FPS1000=%" PRIu32", timebase: %" PRIu32" / %" PRIu32"\n",averageFps1000,timeBaseNum,timeBaseDen);
     isCFR=false;
     videoDelay=encoder->getEncoderDelay();
     ADM_info("[StreamProcess] Initial video encoder delay: %" PRIu64" ms\n",videoDelay/1000);
