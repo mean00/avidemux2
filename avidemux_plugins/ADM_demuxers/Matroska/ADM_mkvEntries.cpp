@@ -190,7 +190,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
             _tracks[0]._defaultFrameDuration=40000;
         }
 
-        _mainaviheader.dwMicroSecPerFrame=(uint32_t)floor(50.0F);;
+        _mainaviheader.dwMicroSecPerFrame=_tracks[0]._defaultFrameDuration;
         _videostream.fccType=fourCC::get((uint8_t *)"vids");
         _video_bih.biBitCount=24;
         _videostream.dwInitialFrames= 0;

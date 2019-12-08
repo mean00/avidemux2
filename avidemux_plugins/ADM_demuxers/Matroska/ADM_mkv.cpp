@@ -709,9 +709,8 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         double f=num;
         f=f*1000000.;
         f/=den;
-        track->_defaultFrameDuration=f;
-       
-
+        f+=0.49;
+        track->_defaultFrameDuration=_mainaviheader.dwMicroSecPerFrame=f;
     }
 
     ADM_info("New default duration    %" PRId64" us\n",track->_defaultFrameDuration);
