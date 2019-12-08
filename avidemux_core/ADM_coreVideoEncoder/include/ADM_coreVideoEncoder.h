@@ -69,6 +69,8 @@ virtual const  char         *getFourcc(void) =0;
                uint32_t    getWidth(void) {return source->getInfo()->width;}
                uint32_t    getHeight(void) {return source->getInfo()->height;}
                uint32_t    getFrameIncrement(void) {return source->getInfo()->frameIncrement;}
+               uint32_t    getTimeBaseDen(void) {return source->getInfo()->timeBaseDen;}
+               uint32_t    getTimeBaseNum(void) {return source->getInfo()->timeBaseNum;}
                uint64_t    getTotalDuration(void) {return source->getInfo()->totalDuration;}
 virtual        bool        setPassAndLogFile(int pass,const char *name) {return false;}
 virtual        uint64_t    getEncoderDelay(void){return encoderDelay;}
