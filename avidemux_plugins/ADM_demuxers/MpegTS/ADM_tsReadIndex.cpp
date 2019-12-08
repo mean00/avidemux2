@@ -280,9 +280,30 @@ bool    tsHeader::readVideo(indexFile *index)
     interlaced=index->getAsUint32("Interlaced");
     
     _video_bih.biWidth=_mainaviheader.dwWidth=w ;
-    _video_bih.biHeight=_mainaviheader.dwHeight=h;             
-    _videostream.dwScale=1000;
-    _videostream.dwRate=fps;
+    _video_bih.biHeight=_mainaviheader.dwHeight=h;
+    switch(fps)
+    {
+        case 23976:
+            _videostream.dwScale=1001;
+            _videostream.dwRate=24000;
+            break;
+        case 29970:
+            _videostream.dwScale=1001;
+            _videostream.dwRate=30000;
+            break;
+        case 24000:
+        case 25000:
+        case 30000:
+        case 50000:
+        case 60000:
+            _videostream.dwScale=1000;
+            _videostream.dwRate=fps;
+            break;
+        default:
+            _videostream.dwScale=1;
+            _videostream.dwRate=90000;
+            break;
+    }
     return true;
 }
 /**
