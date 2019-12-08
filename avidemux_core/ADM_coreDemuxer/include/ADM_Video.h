@@ -46,6 +46,8 @@ typedef struct
 {
     uint32_t   width,height;
     uint32_t   fps1000;
+    uint32_t   timebase_den;
+    uint32_t   timebase_num;
     uint32_t   nb_frames;
     uint32_t   fcc;    
     uint32_t   bpp;
