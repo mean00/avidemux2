@@ -191,6 +191,11 @@ bool changeFps::updateTimingInfo(void)
     timing/=configuration.newFpsNum;
     timing/=configuration.oldFpsDen;
     info.totalDuration=(uint64_t)timing;
+
+    // 3 update timebase
+    info.timeBaseDen=configuration.newFpsNum;
+    info.timeBaseNum=configuration.newFpsDen;
+
     return true;
 }
 /**
