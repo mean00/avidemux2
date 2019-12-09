@@ -441,6 +441,11 @@ uint32_t i,j,cur;
             ADM_info("Audio index done.\n");
             return true;
         }
+        if(!nbChunk)
+        {
+            ADM_warning("Empty index!\n");
+            return false;
+        }
 
         if(constantFps)
             _videostream.dwScale=thisone;
