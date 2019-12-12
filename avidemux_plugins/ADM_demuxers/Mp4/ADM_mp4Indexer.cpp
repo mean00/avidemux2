@@ -417,15 +417,29 @@ uint32_t i,j,cur;
         uint64_t total=0;
         double   ftot;
         uint32_t thisone,previous=0;
-        bool     constantFps=true;
+        uint32_t step=1;
 
         for(uint32_t i=0;i<nbChunk;i++)
         {
             thisone=track->index[i].dts;
-            if(!isAudio && constantFps)
+            if(!isAudio)
             {
-                if(i && thisone!=previous)
-                    constantFps=false;
+                if(!i)
+                    step=thisone;
+                if(i && step>1 && thisone!=previous)
+                {
+                    if(thisone>previous)
+                    {
+                        if(thisone%previous)
+                            step=1;
+                    }else
+                    {
+                        if(previous%thisone)
+                            step=1;
+                        else if(step>thisone)
+                            step=thisone;
+                    }
+                }
                 previous=thisone;
             }
             ftot=total;
@@ -447,10 +461,7 @@ uint32_t i,j,cur;
             return false;
         }
 
-        if(constantFps)
-            _videostream.dwScale=thisone;
-        else
-            _videostream.dwScale=1;
+        _videostream.dwScale=step;
         ftot=total;
         ftot/=nbChunk;
         ftot*=1000.*1000.;
