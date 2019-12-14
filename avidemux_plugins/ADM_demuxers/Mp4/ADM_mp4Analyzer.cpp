@@ -1283,7 +1283,6 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
             ADM_info("Avg fps %f\n",(float)f);
 
             _videostream.dwRate=trackScale;
-            _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(f);
 
             // if we have a sync atom ???
             if(info.nbSync)

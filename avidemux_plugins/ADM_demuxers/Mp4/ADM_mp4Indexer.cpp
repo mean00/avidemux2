@@ -418,16 +418,18 @@ uint32_t i,j,cur;
         double   ftot;
         uint32_t thisone,previous=0;
         uint32_t step=1;
+        bool constantFps=true;
 
         for(uint32_t i=0;i<nbChunk;i++)
         {
             thisone=track->index[i].dts;
-            if(!isAudio)
+            if(!isAudio && i+1<nbChunk)
             {
                 if(!i)
                     step=thisone;
-                if(i && step>1 && thisone!=previous)
+                if(i && step>1 && thisone!=previous && thisone && previous)
                 {
+                    constantFps=false;
                     if(thisone>previous)
                     {
                         if(thisone%previous)
@@ -460,16 +462,22 @@ uint32_t i,j,cur;
             ADM_warning("Empty index!\n");
             return false;
         }
-
+        // Time is now built, it is in us
+        ADM_info("Video index done.\n");
         _videostream.dwScale=step;
+        if(constantFps)
+        {
+            _mainaviheader.dwMicroSecPerFrame=0; // force usage of fraction for fps
+            return true;
+        }
         ftot=total;
         ftot/=nbChunk;
         ftot*=1000.*1000.;
         ftot/=trackScale;
         ftot+=0.49;
         _mainaviheader.dwMicroSecPerFrame=(int32_t)ftot;
-        // Time is now built, it is in us
-        ADM_info("Video index done.\n");
+        ADM_info("Variable frame rate, %d us per frame on average.\n",_mainaviheader.dwMicroSecPerFrame);
+
 	return true;
 }
 /**

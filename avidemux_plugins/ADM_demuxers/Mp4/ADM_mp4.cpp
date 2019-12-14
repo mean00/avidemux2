@@ -579,6 +579,17 @@ uint8_t    MP4Header::open(const char *name)
                 lastFrame=i;
             }
         }
+        int64_t increment=_mainaviheader.dwMicroSecPerFrame;
+        if(!increment) // perfectly regular stream
+        {
+            ADM_assert(_videostream.dwRate);
+            double f=_videostream.dwScale;
+            f*=1000.*1000.;
+            f/=_videostream.dwRate;
+            f+=0.49;
+            increment=(int64_t)f;
+        }
+        duration2+=increment;
         ADM_info("3gp/mov file successfully read..\n");
         if(duration2!=ADM_NO_PTS && duration2>=duration1)
         { // video duration must be > max PTS, otherwise we drop the last frame
@@ -593,7 +604,6 @@ uint8_t    MP4Header::open(const char *name)
             _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
             ADM_info("Adjusted fps1000: %d = %" PRIu64" us per frame.\n",_videostream.dwRate,_mainaviheader.dwMicroSecPerFrame);
 #endif
-            _movieDuration+=(_mainaviheader.dwMicroSecPerFrame+499)/1000;
         }
 #ifdef DERIVE_TB_FROM_MINIMUM_DELTA
         refineFps();
