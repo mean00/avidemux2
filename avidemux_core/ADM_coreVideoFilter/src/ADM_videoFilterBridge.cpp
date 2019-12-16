@@ -43,8 +43,7 @@ ADM_videoFilterBridge::ADM_videoFilterBridge(IEditor *editor, uint64_t startTime
     bridgeInfo.width = fo.width;
     bridgeInfo.height = fo.height;
     bridgeInfo.frameIncrement = editor->getFrameIncrement();
-    bridgeInfo.timeBaseDen = fo.timebase_den;
-    bridgeInfo.timeBaseNum = fo.timebase_num;
+    editor->getTimeBase(&(bridgeInfo.timeBaseNum), &(bridgeInfo.timeBaseDen));
     bridgeInfo.totalDuration = endTime - startTime;
     rewind();
 }
