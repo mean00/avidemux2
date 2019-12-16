@@ -21,7 +21,6 @@
 #include "audioEncoderApi.h"
 #include "ADM_muxerProto.h"
 #include "GUI_ui.h"
-#include "ADM_coreVideoFilterFunc.h"
 
 #include <fcntl.h>
 #include <errno.h>
@@ -153,6 +152,179 @@ bool ADM_Composer::setProjectName(const std::string &pj)
     currentProjectName=pj;
     return true;
 }
+
+/**
+    \fn checkStdTimeBase
+    \brief Try to replace timebase denominator with a standard value.
+*/
+static bool checkStdTimeBase(uint32_t &num, uint32_t &den)
+{
+    if(!num || !den)
+        return false;
+    switch(den)
+    {
+        case 24000: case 25000: case 30000:
+            return true; // nothing to do
+        case 48000:
+            if(num>1 && !(num&1))
+            {
+                num>>=1;
+                den>>=1;
+                return true;
+            }
+            break;
+        case 90000:
+            if(num>=18 && !(num%18))
+            {
+                num/=18;
+                num*=5;
+                den=25000;
+                break;
+            }
+            if(num>=3 && !(num%3))
+            {
+                num/=3;
+                den=30000;
+            }
+            break;
+        case 180000:
+            if(num>1 && !(num&1))
+            {
+                num>>=1;
+                den=90000;
+                return checkStdTimeBase(num,den);
+            }
+            break;
+        case 600: // libavformat doesn't like low timebase clocks
+            if(num==24)
+            {
+                num=1000;
+                den=25000;
+                break;
+            }
+            if(num==25)
+            {
+                num=1000;
+                den=24000;
+                break;
+            }
+            num*=50;
+            den=30000;
+            break;
+        case 1200:
+            num*=25;
+            den=30000;
+            return true;
+        case 2400:
+            num*=10;
+            den=24000;
+            return true;
+        default: break;
+    }
+    return true;
+}
+
+/**
+    \fn getTimeBase
+*/
+bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate)
+{
+    /* Using MPEG timescale as fallback */
+    *scale=1;
+    *rate=90000;
+    /* Which segments does the selection span? */
+    uint64_t segTime,start,end;
+    start=getMarkerAPts();
+    end=getMarkerBPts();
+    if(start>end)
+    {
+        uint64_t tmp=end;
+        end=start;
+        start=tmp;
+    }
+    uint32_t firstSeg,lastSeg;
+    if(false==_segments.convertLinearTimeToSeg(start,&firstSeg,&segTime))
+        return false;
+    if(false==_segments.convertLinearTimeToSeg(end,&lastSeg,&segTime))
+        return false;
+
+    /* Which unique ref videos do we need to check for timebase compatibility? */
+    std::vector <uint32_t> ListOfRefs;
+
+    for(uint32_t i=firstSeg; i<=lastSeg; i++)
+    {
+        _SEGMENT *s=_segments.getSegment(i);
+        ADM_assert(s);
+        bool skip=false;
+        for(int i=0;i<ListOfRefs.size();i++)
+        {
+            if(ListOfRefs.at(i)==s->_reference)
+                skip=true;
+        }
+        if(skip) continue;
+        ListOfRefs.push_back(s->_reference);
+    }
+    if(ListOfRefs.empty())
+        return false;
+    uint32_t myscale,myrate;
+    for(int i=0;i<ListOfRefs.size();i++)
+    {
+        _VIDEOS *vid=_segments.getRefVideo(ListOfRefs.at(i));
+        ADM_assert(vid);
+        vidHeader *demuxer=vid->_aviheader;
+        ADM_assert(demuxer);
+        aviInfo info;
+        demuxer->getVideoInfo(&info);
+        if(!i)
+        {
+            myscale=info.timebase_num;
+            myrate=info.timebase_den;
+            checkStdTimeBase(myscale,myrate);
+            continue;
+        }
+        /* FIXME properly reduce fractions when checking timebase */
+        checkStdTimeBase(info.timebase_num,info.timebase_den);
+        if(info.timebase_den == myrate)
+        {
+            if(info.timebase_num < myscale)
+            {
+                if(info.timebase_num > 1 && !(myscale % info.timebase_num))
+                    myscale = info.timebase_num;
+                else
+                    myscale = 1;
+            }
+        }else if(info.timebase_den > myrate)
+        {
+            if(!(info.timebase_den % myrate))
+            {
+                uint32_t mult = info.timebase_den / myrate;
+                myrate = info.timebase_den;
+                myscale *= mult;
+            }else
+            {
+                ADM_warning("Timebase mismatch: %u / %u (new) %u / %u (old)\n",info.timebase_num,info.timebase_den,myscale,myrate);
+                myrate = 90000;
+                myscale = 1;
+                break;
+            }
+        }else
+        {
+            if(myrate % info.timebase_den)
+            {
+                ADM_warning("Timebase mismatch: %u / %u (new) %u / %u (old)\n",info.timebase_num,info.timebase_den,myscale,myrate);
+                myrate = 90000;
+                myscale = 1;
+                break;
+            }
+        }
+    }
+    ADM_info("Timebase set to %u / %u\n",myscale,myrate);
+    *scale=myscale;
+    *rate=myrate;
+
+    return true;
+}
+
 /**
     \fn addFile
     \brief	Load or append a file.	The file type is determined automatically and the ad-hoc video decoder is spawned

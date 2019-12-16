@@ -231,18 +231,19 @@ public:
                     bool        setMarkerAPts(uint64_t pts);
                     bool        setMarkerBPts(uint64_t pts);
 /*********************************** Undo Queue ****************************/
-struct undoQueueElem
+private:
+
+typedef struct
 {
     ListOfSegments segm;
     uint64_t markerA;
     uint64_t markerB;
-};
+}undoQueueElem;
 
 typedef std::vector <undoQueueElem> ListOfUndoQueueElements;
 
-protected:
                     ListOfUndoQueueElements undoQueue;
-                    static const uint8_t maxUndoSteps=50;
+                    const uint8_t maxUndoSteps=50;
                     uint32_t    _undo_counter; // track the nb of performed undo steps for redo
 public:
                     bool        addToUndoQueue(void);
@@ -286,15 +287,16 @@ public:
                     uint32_t        getCurrentAudioStreamNumber(uint64_t xframe);
                     bool            setDecodeParam( uint64_t frameTime );
 /**************************************** Video Info **************************/
-                    AVIStreamHeader 	*getVideoStreamHeader(void ) ;
-                    MainAVIHeader 		*getMainHeader(void );
-                    ADM_BITMAPINFOHEADER 	*getBIH(void ) ;
+                    AVIStreamHeader *getVideoStreamHeader(void ) ;
+                    MainAVIHeader   *getMainHeader(void );
+                    ADM_BITMAPINFOHEADER *getBIH(void ) ;
 
-                    uint8_t			getVideoInfo(aviInfo *info);
-                    _VIDEOS* 		getRefVideo(int videoIndex);
-                    uint64_t        getVideoDuration(void);
-                    uint64_t        getFrameIncrement(void); /// Returns the # of us between 2 frames or the smaller value of them
-					int				getVideoCount(void);
+                    uint8_t     getVideoInfo(aviInfo *info); // for common timebase, call getTimeBase afterwards
+                    _VIDEOS*    getRefVideo(int videoIndex);
+                    uint64_t    getVideoDuration(void);
+                    uint64_t    getFrameIncrement(void); /// Returns the # of us between 2 frames or the smaller value of them
+                    int         getVideoCount(void);
+                    bool        getTimeBase(uint32_t *scale, uint32_t *rate); // common timebase or an approximation for all videos within the selection
 
 /**************************************** /Video Info **************************/
 /***************************************** Project Handling ********************/
