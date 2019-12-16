@@ -27,6 +27,7 @@ char *av_strdup(const char *s);
 void *av_malloc(size_t size) ;
 }
 //#define TIME_TENTH_MILLISEC
+#define USE_REAL_TIME_BASE
 #if 1
     #define aprintf(...) {}
 #else
@@ -68,6 +69,8 @@ _hasSettings=false;
     statFile=NULL;
     _globalHeader=globalHeader;
     _isMT=false;
+    timeScalerNum=0;
+    timeScalerDen=0;
 
     uint64_t inc=source->getInfo()->frameIncrement;
     if(inc<30000) // Less than 30 ms , fps > 30 fps it is probably field
@@ -163,23 +166,29 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
 int64_t          ADM_coreVideoEncoderFFmpeg::timingToLav(uint64_t val)
 {
     double q=(double)val;
-    q+=timeScaler/(double)2.;
-    q/=timeScaler;
-    
+    q/=1000.;
+    q*=timeScalerDen;
+    q/=timeScalerNum;
+    q/=1000.;
+    q+=0.49;
     int64_t v=floor(q);
-#if 0      
-  printf("Lav in=%d, scale=%lf,",(int)val,timeScaler);
-  printf(" q=%lf,out PTS=%lld\n",q,v);
+#if 0
+    printf("Lav in=%llu, scale=%d/%d,",val,timeScalerNum,timeScalerDen);
+    printf(" q=%lf,out PTS=%lld\n",q,v);
 #endif
-  return v;
+    return v;
 }
 /**
     \fn lavToTiming
 */
 uint64_t         ADM_coreVideoEncoderFFmpeg::lavToTiming(int64_t val)
 {
-    float v=(float)val;
-    return floor(v*timeScaler);
+    double v=val;
+    v*=timeScalerNum;
+    v/=timeScalerDen;
+    v*=1000.*1000.;
+    v+=0.49;
+    return floor(v);
 }
 
 /**
@@ -329,18 +338,30 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
                 ADM_info("Codec configured to use global header\n");
                 _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
     }
-   prolog(image);
+    prolog(image);
+
+    FilterInfo *info=source->getInfo();
     uint64_t inc=source->getInfo()->frameIncrement;
-#ifdef TIME_TENTH_MILLISEC
+#if defined(TIME_TENTH_MILLISEC)
     _context->time_base.num=1;
     _context->time_base.den=10000LL;
+#elif defined(USE_REAL_TIME_BASE)
+    int n = timeScalerNum = info->timeBaseNum & 0x7FFFFFFF;
+    int d = timeScalerDen = info->timeBaseDen & 0x7FFFFFFF;
+    ADM_assert(timeScalerNum);
+    ADM_assert(timeScalerDen);
+    if(codec->id == AV_CODEC_ID_MPEG4)
+        av_reduce(&n,&d,timeScalerNum,timeScalerDen,0xFFFF);
+    _context->time_base.num=n;
+    _context->time_base.den=d;
 #else
     int n,d;
-    usSecondsToFrac(inc,&n,&d);
+    usSecondsToFrac(info->frameIncrement,&n,&d);
     _context->time_base.num=n;
     _context->time_base.den=d;
 #endif
-    timeScaler=1000000.*av_q2d(_context->time_base);
+    timeScalerNum=_context->time_base.num;
+    timeScalerDen=_context->time_base.den;
    printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
    if(_hasSettings && LAVS(MultiThreaded))
     {
@@ -359,7 +380,6 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
 
     // Now allocate colorspace
     int w,h;
-    FilterInfo *info=source->getInfo();
     w=info->width;
     h=info->height;
     if(targetColorSpace!=ADM_COLOR_YV12)
@@ -619,17 +639,6 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
   _context->idct_algo = 0;
   _context->p_masking = 0.0;
 
-  // Set frame rate den/num
-  uint64_t inc=source->getInfo()->frameIncrement;
-#ifdef TIME_TENTH_MILLISEC
-  _context->time_base.num=1;
-  _context->time_base.den=10000LL;
-#else
-  int n,d;
-  usSecondsToFrac(inc,&n,&d);
-  _context->time_base.num=n;
-  _context->time_base.den=d;
-#endif
   prolog(image);
   return true;
 }
