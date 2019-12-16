@@ -44,8 +44,7 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     height=info.height;
     fourCC=info.fcc;
     averageFps1000=info.fps1000;
-    timeBaseDen=info.timebase_den;
-    timeBaseNum=info.timebase_num;
+    video_body->getTimeBase(&timeBaseNum,&timeBaseDen);
     frameIncrement=video_body->getFrameIncrement();
     isCFR=false;
     // Estimate start frame
