@@ -341,7 +341,6 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
     prolog(image);
 
     FilterInfo *info=source->getInfo();
-    uint64_t inc=source->getInfo()->frameIncrement;
 #if defined(TIME_TENTH_MILLISEC)
     _context->time_base.num=1;
     _context->time_base.den=10000LL;
