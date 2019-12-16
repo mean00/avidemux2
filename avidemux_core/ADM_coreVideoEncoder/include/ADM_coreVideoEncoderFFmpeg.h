@@ -44,7 +44,7 @@ protected:
                int              pass;   // Pass number = 1 or 2, valid only if we use 2 pass mode
                bool             _isMT; // True if multithreaded
                bool             _globalHeader;
-               double           timeScaler;
+               int              timeScalerNum,timeScalerDen;
                bool             _hasSettings;
                int64_t          lastLavPts;
                int64_t          lavPtsFromPacket;
