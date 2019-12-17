@@ -182,6 +182,7 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION}
 	ADM_toolkit6
 	ADM_coreAudio6
 	ADM_coreAudioDevice6
+	ADM_coreVideoEncoder6
 	ADM_osSupport6
 )
 

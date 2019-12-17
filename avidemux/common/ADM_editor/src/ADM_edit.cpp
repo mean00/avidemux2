@@ -18,8 +18,6 @@
 #include "ADM_default.h"
 #include "A_functions.h"
 #include "ADM_audioFilterInterface.h"
-#include "audioEncoderApi.h"
-#include "ADM_muxerProto.h"
 #include "GUI_ui.h"
 
 #include <fcntl.h>
@@ -32,14 +30,12 @@
 #include "DIA_coreToolkit.h"
 #include "prefs.h"
 
-//#include "ADM_outputfmt.h"
 #include "ADM_edPtsDts.h"
 #include "ADM_vidMisc.h"
 #include "ADM_confCouple.h"
 #include "ADM_videoFilters.h"
-#include "ADM_videoEncoderApi.h"
-#include "ADM_videoFilterApi.h"
 #include "ADM_coreVideoFilterFunc.h"
+#include "ADM_coreVideoEncoder.h"
 #include "ADM_coreDemuxer.h"
 #include "ADM_aacinfo.h"
 
@@ -159,9 +155,10 @@ static bool checkStdTimeBase(uint32_t &num, uint32_t &den)
 {
     if(!num || !den)
         return false;
+#define MAX_STD_CLOCK_FREQ 90000
     switch(den)
     {
-        case 24000: case 25000: case 30000:
+        case 24000: case 25000: case 30000: case 50000:
             return true; // nothing to do
         case 48000:
             if(num>1 && !(num&1))
@@ -193,6 +190,22 @@ static bool checkStdTimeBase(uint32_t &num, uint32_t &den)
                 return checkStdTimeBase(num,den);
             }
             break;
+        case 10000000:
+            {
+                den/=10;
+                num/=10;
+                if(!num) num=1;
+                return checkStdTimeBase(num,den);
+            }
+            break;
+        case 1000000:
+            {
+                int n,d;
+                usSecondsToFrac(num,&n,&d,MAX_STD_CLOCK_FREQ);
+                num=n;
+                den=d;
+            }
+            break;
         case 600: // libavformat doesn't like low timebase clocks
             if(num==24)
             {
@@ -219,6 +232,19 @@ static bool checkStdTimeBase(uint32_t &num, uint32_t &den)
             return true;
         default: break;
     }
+    /* some old AVI samples clock insanely high */
+    if(den>=1000000)
+    {
+        double us=num;
+        us*=1000.;
+        us/=den;
+        us*=1000.;
+        us+=0.49;
+        int n,d;
+        usSecondsToFrac((uint64_t)us,&n,&d,MAX_STD_CLOCK_FREQ);
+        num=n;
+        den=d;
+    }
     return true;
 }
 
@@ -229,7 +255,7 @@ bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate)
 {
     /* Using MPEG timescale as fallback */
     *scale=1;
-    *rate=90000;
+    *rate=MAX_STD_CLOCK_FREQ;
     /* Which segments does the selection span? */
     uint64_t segTime,start,end;
     start=getMarkerAPts();
@@ -301,7 +327,7 @@ bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate)
             }else
             {
                 ADM_warning("Timebase mismatch: %u / %u (new) %u / %u (old)\n",info.timebase_num,info.timebase_den,myscale,myrate);
-                myrate = 90000;
+                myrate = MAX_STD_CLOCK_FREQ;
                 myscale = 1;
                 break;
             }
@@ -310,7 +336,7 @@ bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate)
             if(myrate % info.timebase_den)
             {
                 ADM_warning("Timebase mismatch: %u / %u (new) %u / %u (old)\n",info.timebase_num,info.timebase_den,myscale,myrate);
-                myrate = 90000;
+                myrate = MAX_STD_CLOCK_FREQ;
                 myscale = 1;
                 break;
             }
