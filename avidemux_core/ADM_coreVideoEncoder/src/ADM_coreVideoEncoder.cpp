@@ -66,8 +66,8 @@ typedef struct
 
 TimeIncrementType fpsTable[]=
 {
-    {  40000,40000,1 ,25},
-    {  20000,20000,1 ,50},
+    {  40000,40000,1000,25000},
+    {  20000,20000,1000,50000},
     {  33360,33371,1001,30000},
     {  41700,41710,1001,24000},
 };
@@ -76,7 +76,7 @@ TimeIncrementType fpsTable[]=
     \fn usSecondsToFrac
     \brief Convert a duration in useconds into Rationnal
 */
-bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
+bool usSecondsToFrac(uint64_t useconds, int *n, int *d, int limit)
 {
     // First search for known value...
     int nb=sizeof(fpsTable)/sizeof(TimeIncrementType);
@@ -91,8 +91,8 @@ bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
         }
     }
     int nn,dd;
-    av_reduce(&nn,&dd, useconds, 1000000, 0xFFF0); // mpeg4 allows a maximum of 1<<16-1 as time base, should be enough for most case
-    ADM_info("%" PRIu64" us -> %d / %d (old)\n",useconds,nn,dd);
+    av_reduce(&nn,&dd, useconds, 1000000, limit);
+    ADM_info("%" PRIu64" us -> %d / %d (max: %d)\n",useconds,nn,dd,limit);
     *n=nn;
     *d=dd;
 
