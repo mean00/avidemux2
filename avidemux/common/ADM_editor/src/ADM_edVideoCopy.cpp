@@ -618,21 +618,12 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
 
 
 */
-bool        ADM_Composer::getCompressedPicture(uint64_t start,uint64_t videoDelay,bool sanitize,ADMCompressedImage *img)
+bool        ADM_Composer::getCompressedPicture(uint64_t start,uint64_t videoDelay,ADMCompressedImage *img)
 {
     uint64_t tail;
     //
     int64_t signedPts;
     int64_t signedDts;
-
-#define MAX_EXTRA_DELAY 100000
-#define CATCH_UP_RATE 5000
-#define MAX_DESYNC_SCORE 20*100000
-#define DESYNC_THRESHOLD 20000
-#define ENOUGH 4
-
-    if(totalExtraDelay>=CATCH_UP_RATE)
-        totalExtraDelay-=CATCH_UP_RATE; // gradually reduce extra delay, CATCH_UP_RATE/1000 ms at a time
 
 againGet:
     static uint32_t fn;
@@ -745,7 +736,6 @@ againGet:
     }else
     {
             signedDts=(int64_t)img->demuxerDts;
-            signedDts+=totalExtraDelay;
             recalibrateSigned(&(signedDts),seg);
             aprintf("Signed Dts=%s ",ADM_us2plain(signedDts));
     }
@@ -757,7 +747,6 @@ againGet:
     }else
     {
             signedPts=(int64_t)img->demuxerPts;
-            signedPts+=totalExtraDelay;
             recalibrateSigned(&(signedPts),seg);
             aprintf("Signed Pts=%s\n",ADM_us2plain(signedPts));
     }
@@ -780,71 +769,6 @@ againGet:
 	}
     }else
     {
-// It means that the incoming image is earlier than the expected time.
-// we add a bit of timeIncrement to compensate for rounding
-        if(sanitize && _nextFrameDts!=ADM_NO_PTS)
-        {
-            if(_nextFrameDts>(signedDts+(int64_t)(timeIncrement/3)))
-            {
-                double delta=_nextFrameDts-signedDts;
-                delta=fabs(delta);
-                if((uint64_t)delta<MAX_EXTRA_DELAY && totalExtraDelay<MAX_EXTRA_DELAY)
-                {
-                    ADM_warning("Frame %d DTS is going back in time, delaying it for %" PRIu64" us\n",(int)vid->lastSentFrame,(uint64_t)delta);
-                    signedDts=_nextFrameDts;
-                    totalExtraDelay+=(uint64_t)delta;
-                    ADM_info("total extra delay = %" PRIu64" us\n",totalExtraDelay);
-                    signedPts+=totalExtraDelay;
-                }else
-                {
-                    ADM_error("Frame %d DTS is going back in time: expected: %s : %d\n",
-                          (int)vid->lastSentFrame,
-                          ADM_us2plain(_nextFrameDts),
-                          (_nextFrameDts));
-                    ADM_error("and got %s : %d, timeIncrement=%d us, delta=%d\n",
-                          ADM_us2plain(signedDts),
-                          signedDts,(int)timeIncrement,
-                          (int)delta);
-                    uint64_t linearTime=img->demuxerPts-seg->_refStartTimeUs+seg->_startTimeUs;
-                    char msg[512+1];
-                    if(img->flags & AVI_KEY_FRAME)
-                    {
-                        snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
-                            "Decode time stamp (DTS) collision affecting a keyframe at %s detected.\n"
-                            "Dropping a keyframe will result in severely corrupted video.\n"
-                            "Proceed anyway?"),ADM_us2plain(linearTime));
-                    }else
-                    {
-                        snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
-                            "Decode time stamp (DTS) collision affecting a frame at %s detected.\n"
-                            "Dropping a frame may result in some video corruption.\n"
-                            "Proceed anyway?"),ADM_us2plain(linearTime));
-                    }
-                    if(warn_cnt>=0)
-                    {
-                        if(!GUI_Question(msg))
-                        {
-                            warn_cnt=0;
-                            desyncScore=0;
-                            totalExtraDelay=0;
-                            return false;
-                        }else
-                        {
-                            warn_cnt++;
-                        }
-                    }
-                    if(warn_cnt>ENOUGH)
-                    { // warn ENOUGH+1 times in a row then suggest going silent
-                        if(GUI_Question(QT_TRANSLATE_NOOP("adm","Do not warn again and drop frames silently while saving this video?")))
-                            warn_cnt=-1; // Yes: don't warn
-                        else
-                            warn_cnt=0; // No: ask again after ENOUGH+1 more warnings
-                    }
-
-                    goto againGet;
-                }
-            }
-        }
         _nextFrameDts=signedDts;
     }
     // Increase for next one
@@ -902,44 +826,19 @@ againGet:
     printf("Frame %" PRIu32", DTS=%s, PTS=%s, type: %s\n",vid->lastSentFrame-1,dtsAsString.c_str(),ptsAsString.c_str(),frameTypeAsString.c_str());
     }
 #endif
-    if(MAX_EXTRA_DELAY && totalExtraDelay>DESYNC_THRESHOLD && desyncScore>=0)
-    {
-        desyncScore+=(vid->timeIncrementInUs)*totalExtraDelay/MAX_EXTRA_DELAY;
-        aprintf("Desync score = %" PRId64"\n",desyncScore);
-    }
-    if(desyncScore>MAX_DESYNC_SCORE)
-    {
-        uint64_t linearTime=img->demuxerPts-seg->_refStartTimeUs+seg->_startTimeUs;
-        char msg[512+1];
-        snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
-        "While saving, some video frames prior to %s had to be delayed, resulting in temporary loss of A/V sync. "
-        "Would you like to continue nevertheless?"),ADM_us2plain(linearTime));
-        if(!GUI_Question(msg))
-        {
-            desyncScore=0;
-            totalExtraDelay=0;
-            warn_cnt=0;
-            return false;
-        }
-        desyncScore=-1; // ignore future desync
-    }
     return true;
 
 nextSeg:
     if(false==switchToNextSegment(true))
     {
         ADM_warning("Cannot update to new segment\n");
-        totalExtraDelay=0;
-        ADM_info("Accumulated desync score = %" PRId64"\n",desyncScore);
-        desyncScore=0;
-        warn_cnt=0;
         return false;
     }
     // Mark it as drop b frames...
     _SEGMENT *thisseg=_segments.getSegment(_currentSegment);
     thisseg->_dropBframes=_SEGMENT::ADM_DROP_MAYBE_AFER_SWITCH;
     ADM_info("Retrying for next segment\n");
-    return getCompressedPicture(start,videoDelay,sanitize,img);
+    return getCompressedPicture(start,videoDelay,img);
 }
 
 /**
@@ -995,6 +894,7 @@ bool ADM_Composer::getUserDataUnregistered(uint64_t start, uint8_t *buffer, uint
     bool r=extractH264SEI(img.data,img.dataLength,buffer,max,length);
 
     delete [] space;
+    space=NULL;
     return r;
 }
 // EOF

@@ -266,7 +266,7 @@ public:
                     bool        rewind(void);
 // Used for stream copy
                     bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);
-                    bool        getCompressedPicture(uint64_t start,uint64_t delay,bool sanitizeDts,ADMCompressedImage *img); //COPYMODE
+                    bool        getCompressedPicture(uint64_t start,uint64_t delay,ADMCompressedImage *img); //COPYMODE
                     // Use only for debug purpose !!!
                     bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);
                     ADM_cutPointType checkCutsAreOnIntra(void);
@@ -274,8 +274,6 @@ public:
                     ADM_cutPointType checkCutIsOnIntra(uint64_t time);
 private:
                     ADM_cutPointType checkSegmentStartsOnIntra(uint32_t seg);
-                    uint64_t    totalExtraDelay;
-                    int64_t     desyncScore;
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );

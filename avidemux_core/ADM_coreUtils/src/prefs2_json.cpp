@@ -30,7 +30,6 @@ json.addBool("cap_refresh_enabled",key->features.cap_refresh_enabled);
 json.addUint32("cap_refresh_value",key->features.cap_refresh_value);
 json.addString("sdlDriver",key->features.sdlDriver);
 json.addBool("use_last_read_dir_as_target",key->features.use_last_read_dir_as_target);
-json.addBool("copy_mode_sanitize_dts",key->features.copy_mode_sanitize_dts);
 json.endNode();
 json.addNode("keyboard_shortcuts");
 json.addBool("use_alternate_kbd_shortcuts",key->keyboard_shortcuts.use_alternate_kbd_shortcuts);

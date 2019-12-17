@@ -27,7 +27,6 @@ struct  {
 	uint32_t cap_refresh_value;
 	std::string sdlDriver;
 	bool use_last_read_dir_as_target;
-	bool copy_mode_sanitize_dts;
 }features;
 struct  {
 	bool use_alternate_kbd_shortcuts;

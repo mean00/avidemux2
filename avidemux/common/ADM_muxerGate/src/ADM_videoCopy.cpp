@@ -20,7 +20,6 @@ using std::string;
 #include "ADM_edit.hxx"
 #include "ADM_coreUtils.h"
 #include "ADM_vidMisc.h"
-#include "prefs.h"
 extern ADM_Composer *video_body; // Fixme!
 
 #if 1
@@ -90,9 +89,6 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     }
     eofMet=false;
     currentFrame=0;
-    sanitizeDts=false;
-    prefs->get(FEATURES_COPY_MODE_SANITIZE_DTS, &sanitizeDts);
-
     this->startTimeDts=dtsStart;
     this->startTimePts=ptsStart;
     this->endTimePts=endTime;
@@ -151,7 +147,7 @@ bool  ADM_videoStreamCopy::getPacket(ADMBitstream *out)
     if(true==eofMet) return false;
 again:
     image.data=out->data;
-    if(false==video_body->getCompressedPicture(rewindTime,videoDelay,sanitizeDts,&image))
+    if(false==video_body->getCompressedPicture(rewindTime,videoDelay,&image))
     {
             ADM_warning("Get packet failed\n");
             return false;
