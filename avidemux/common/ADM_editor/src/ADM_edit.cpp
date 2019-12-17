@@ -61,9 +61,6 @@ ADM_Composer::ADM_Composer (void)
   markerAPts = 0;
   markerBPts = 0;
   stats.reset();
-
-    totalExtraDelay=0;
-    desyncScore=0;
 }
 /**
 	Remap 1:1 video to segments
