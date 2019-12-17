@@ -257,9 +257,9 @@ char *ADM_getRelativePath(const char *base0, const char *base1, const char *base
     {
         WCHAR *wname = FindFileData.cFileName;
         //int wideCharStringToAnsi(const wchar_t *wideCharString, int wideCharStringLength, char *ansiString, const char *filler)
-        int nameLength = wideCharStringToAnsi(wname, -1, NULL, "?");       
+        int nameLength = wideCharStringToUtf8(wname, -1, NULL);
         char *shortName = new char[nameLength];
-        nameLength = wideCharStringToAnsi(wname, -1, shortName, "?");
+        nameLength = wideCharStringToUtf8(wname, -1, shortName);
         std::string item = std::string(base) + std::string("/") + std::string(shortName);
         delete[] shortName;
 
