@@ -16,6 +16,7 @@
 
 #include <string.h>
 #include <math.h>
+#include <map>
 
 #include "ADM_default.h"
 #include "ADM_Video.h"
@@ -420,6 +421,54 @@ uint32_t i,j,cur;
         uint32_t step=1;
         bool constantFps=true;
 
+        // try to correct jitter from rounding errors first
+        if(!isAudio)
+        {
+            std::map <uint32_t, uint32_t> hist;
+            for(uint32_t i=0;i<nbChunk;i++)
+            {
+                thisone=track->index[i].dts;
+                if(thisone<100) continue; // ignore too low durations
+                if(hist.find(thisone)==hist.end())
+                    hist.insert({thisone,1});
+                else
+                    hist[thisone]++;
+            }
+            ADM_info("Histogram map has %u elements.\n",hist.size());
+            std::map <uint32_t, uint32_t>::iterator it;
+            for(it=hist.begin(); it!=hist.end(); it++)
+            {
+                printf("Frame duration %u count: %u\n",it->first,it->second);
+            }
+            if(hist.size()==3) // we look for pattern x-1, x, x+1
+            {
+                ADM_info("Checking whether we need to fix jitter from rounding errors...\n");
+                uint32_t a,b,c;
+                uint32_t acount,ccount;
+                it=hist.begin();
+                a=it->first;
+                acount=it->second;
+                it++;
+                b=it->first;
+                bool restored=false;
+                if(b==a+1)
+                {
+                    it++;
+                    c=it->first;
+                    ccount=it->second;
+                    if(c==b+1 && ccount+2>acount && acount+2>ccount)
+                    {
+                        for(uint32_t i=0;i<nbChunk;i++)
+                            track->index[i].dts=b;
+                        ADM_info("Yes, enforcing CFR, frame duration %u ticks.\n",b);
+                        restored=true;
+                    }
+                }
+                if(!restored)
+                    ADM_info("No, nothing we can do.\n");
+            }
+        }
+
         for(uint32_t i=0;i<nbChunk;i++)
         {
             thisone=track->index[i].dts;
@@ -464,6 +513,7 @@ uint32_t i,j,cur;
         }
         // Time is now built, it is in us
         ADM_info("Video index done.\n");
+        ADM_info("Setting video timebase to %u / %u\n",step,_videoScale);
         _videostream.dwScale=step;
         if(constantFps)
         {
