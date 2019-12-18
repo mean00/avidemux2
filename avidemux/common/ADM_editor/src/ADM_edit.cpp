@@ -155,6 +155,18 @@ static bool checkStdTimeBase(uint32_t &num, uint32_t &den)
 {
     if(!num || !den)
         return false;
+    if(den>num && !(den%num))
+    {
+        switch(den/num)
+        {
+            case 24: case 25: case 30: case 50: case 60:
+                den/=num;
+                num=1000;
+                den*=1000;
+                return true;
+            default:break;
+        }
+    }
 #define MAX_STD_CLOCK_FREQ 90000
     switch(den)
     {
@@ -207,18 +219,6 @@ static bool checkStdTimeBase(uint32_t &num, uint32_t &den)
             }
             break;
         case 600: // libavformat doesn't like low timebase clocks
-            if(num==24)
-            {
-                num=1000;
-                den=25000;
-                break;
-            }
-            if(num==25)
-            {
-                num=1000;
-                den=24000;
-                break;
-            }
             num*=50;
             den=30000;
             break;
