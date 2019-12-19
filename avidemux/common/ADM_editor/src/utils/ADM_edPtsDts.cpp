@@ -522,6 +522,7 @@ bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     ADM_info("max bframe = %d\n",maxBframe);
     nbBframe=0;
     // We have now maxBframe = max number of Bframes in sequence
+    uint64_t maxPts=0;
     for(int i=1;i<nbFrames;i++)
     {
         hdr->getFlags(i,&flags);
@@ -531,6 +532,7 @@ bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
             pts=dts;
             hdr->setPtsDts(i,pts,dts);
             nbBframe++;
+            if(pts>maxPts) maxPts=pts;
         }
         else
         {
@@ -539,7 +541,10 @@ bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
               hdr->getPtsDts(last,&oldPts,&oldDts);
               hdr->getPtsDts(i,&fwdPts,&fwdDts);
               oldPts=fwdDts;
+              if(oldPts>maxPts) maxPts=oldPts;
               hdr->setPtsDts(last,oldPts,oldDts);
+              if(i+1==nbFrames)
+                  hdr->setPtsDts(i,maxPts+timeIncrementUs,fwdDts);
               last=i;
         }
     }
