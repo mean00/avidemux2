@@ -16,6 +16,7 @@
 
 #include <string.h>
 #include <math.h>
+#include <map>
 
 #include "ADM_default.h"
 #include "ADM_Video.h"
@@ -265,7 +266,7 @@ uint8_t	MP4Header::indexify(
 
 uint32_t i,j,cur;
 
-        ADM_info("Build Track index\n");
+        ADM_info("Build Track index, track timescale: %u\n",trackScale);
 	*outNbChunk=0;
 	aprintf("+_+_+_+_+_+\n");
 	aprintf("co : %lu sz: %lu sc: %lu co[0] %" PRIu64"\n",info->nbCo,info->nbSz,info->nbSc,info->Co[0]);
@@ -416,11 +417,82 @@ uint32_t i,j,cur;
         // now collapse
         uint64_t total=0;
         double   ftot;
-        uint32_t thisone;
+        uint32_t thisone,previous=0;
+        uint32_t step=1;
+        bool constantFps=true;
+
+        // try to correct jitter from rounding errors first
+        if(!isAudio)
+        {
+            std::map <uint32_t, uint32_t> hist;
+            for(uint32_t i=0;i<nbChunk;i++)
+            {
+                thisone=track->index[i].dts;
+                if(thisone<100) continue; // ignore too low durations
+                if(hist.find(thisone)==hist.end())
+                    hist.insert({thisone,1});
+                else
+                    hist[thisone]++;
+            }
+            ADM_info("Histogram map has %u elements.\n",hist.size());
+            std::map <uint32_t, uint32_t>::iterator it;
+            for(it=hist.begin(); it!=hist.end(); it++)
+            {
+                printf("Frame duration %u count: %u\n",it->first,it->second);
+            }
+            if(hist.size()==3) // we look for pattern x-1, x, x+1
+            {
+                ADM_info("Checking whether we need to fix jitter from rounding errors...\n");
+                uint32_t a,b,c;
+                uint32_t acount,ccount;
+                it=hist.begin();
+                a=it->first;
+                acount=it->second;
+                it++;
+                b=it->first;
+                bool restored=false;
+                if(b==a+1)
+                {
+                    it++;
+                    c=it->first;
+                    ccount=it->second;
+                    if(c==b+1 && ccount+2>acount && acount+2>ccount)
+                    {
+                        for(uint32_t i=0;i<nbChunk;i++)
+                            track->index[i].dts=b;
+                        ADM_info("Yes, enforcing CFR, frame duration %u ticks.\n",b);
+                        restored=true;
+                    }
+                }
+                if(!restored)
+                    ADM_info("No, nothing we can do.\n");
+            }
+        }
 
         for(uint32_t i=0;i<nbChunk;i++)
         {
             thisone=track->index[i].dts;
+            if(!isAudio && i+1<nbChunk)
+            {
+                if(!i)
+                    step=thisone;
+                if(i && step>1 && thisone!=previous && thisone && previous)
+                {
+                    constantFps=false;
+                    if(thisone>previous)
+                    {
+                        if(thisone%previous)
+                            step=1;
+                    }else
+                    {
+                        if(previous%thisone)
+                            step=1;
+                        else if(step>thisone)
+                            step=thisone;
+                    }
+                }
+                previous=thisone;
+            }
             ftot=total;
             ftot*=1000.*1000.;
             ftot/=trackScale;
@@ -429,8 +501,33 @@ uint32_t i,j,cur;
             total+=thisone;
             aprintf("Audio chunk : %lu time :%lu\n",i,track->index[i].dts);
         }
+        if(isAudio)
+        {
+            ADM_info("Audio index done.\n");
+            return true;
+        }
+        if(!nbChunk)
+        {
+            ADM_warning("Empty index!\n");
+            return false;
+        }
         // Time is now built, it is in us
-        ADM_info("Index done\n");
+        ADM_info("Video index done.\n");
+        ADM_info("Setting video timebase to %u / %u\n",step,_videoScale);
+        _videostream.dwScale=step;
+        if(constantFps)
+        {
+            _mainaviheader.dwMicroSecPerFrame=0; // force usage of fraction for fps
+            return true;
+        }
+        ftot=total;
+        ftot/=nbChunk;
+        ftot*=1000.*1000.;
+        ftot/=trackScale;
+        ftot+=0.49;
+        _mainaviheader.dwMicroSecPerFrame=(int32_t)ftot;
+        ADM_info("Variable frame rate, %d us per frame on average.\n",_mainaviheader.dwMicroSecPerFrame);
+
 	return true;
 }
 /**

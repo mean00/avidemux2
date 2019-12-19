@@ -81,7 +81,6 @@ muxerFFmpeg::muxerFFmpeg()
     video_st=NULL;
     audioDelay=0;
     initialized=false;
-    firstVideoPacket=true;
     roundup=0;
 }
 /**
@@ -480,6 +479,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     bool ret=true;
     uint32_t written=0;
     bool result=true;
+    bool gotVideoPacket=true;
     int missingPts=0;
     
     float f=(float)vStream->getAvgFps1000();
@@ -496,14 +496,16 @@ bool muxerFFmpeg::saveLoop(const char *title)
     encoding->setContainer(getContainerName());
     MuxAudioPacket *audioPackets=new MuxAudioPacket[nbAStreams];
     for(int i=0;i<nbAStreams;i++) // ugly...
-            audioPackets[i].clock=new audioClock(aStreams[i]->getInfo()->frequency);
+        audioPackets[i].clock=new audioClock(aStreams[i]->getInfo()->frequency);
     ADMBitstream out(bufSize);
     out.data=buffer;
 
-    while(true==vStream->getPacket(&out))
+    while(gotVideoPacket)
     {
-	AVPacket pkt;
-
+        gotVideoPacket=vStream->getPacket(&out);
+        uint64_t maxAudioDts;
+        if(gotVideoPacket)
+        {
             encoding->refresh();
             if(!encoding->isAlive())
             {
@@ -517,80 +519,29 @@ bool muxerFFmpeg::saveLoop(const char *title)
             aprintf("[FF:V] Pts: %" PRId64" DTS:%" PRId64" ms\n",xpts/1000,xdts/1000);
 
             aprintf("[FF:V] LastDts:%08" PRIu64" Dts:%08" PRIu64" (%04" PRIu64") Delta : %" PRIu64"\n",
-                        lastVideoDts,out.dts,out.dts/1000000,out.dts-lastVideoDts);
+                lastVideoDts,out.dts,out.dts/1000000,out.dts-lastVideoDts);
             rawDts=out.dts;
             if(rawDts==ADM_NO_PTS)
             {
                 ADM_warning("No DTS information for frame %" PRIu32"\n",written);
                 lastVideoDts+=videoIncrement;
-            }else if(lastVideoDts && rawDts<=lastVideoDts)
+            }else if(lastVideoDts && rawDts<lastVideoDts)
             {
-                ADM_warning("Duplicated or going back DTS for frame %" PRIu32", adding %" PRIu64" ms\n",written,(videoIncrement/2)/1000);
-                lastVideoDts+=videoIncrement/2;
+                ADM_warning("Duplicated or going back DTS for frame %" PRIu32"\n",written);
                 out.dts=lastVideoDts;
             }else
             {
                 lastVideoDts=out.dts;
             }
+            maxAudioDts=lastVideoDts+audioDelay;
+        }else
+        {
+            maxAudioDts=videoDuration;
+        }
 
-            if(out.pts==ADM_NO_PTS)
-            {
-                ADM_warning("No PTS information for frame %" PRIu32"\n",written);
-                missingPts++;
-                out.pts=lastVideoDts;
-            }
-            if(out.pts<lastVideoDts)
-            {
-                ADM_warning("Bumping PTS to keep PTS >= DTS for frame %" PRIu32"\n",written);
-                out.pts=lastVideoDts;
-            }
-
-            encoding->pushVideoFrame(out.len,out.out_quantizer,lastVideoDts);
-            muxerRescaleVideoTimeDts(&(out.dts),lastVideoDts);
-            if(!roundup && lastVideoDtsLav && out.dts==lastVideoDtsLav)
-            {
-                ADM_warning("Bumping lav DTS to avoid collision for frame %" PRIu32"\n",written);
-                out.dts++;
-            }
-            lastVideoDtsLav=out.dts;
-            muxerRescaleVideoTime(&(out.pts));
-            if(out.dts>out.pts)
-            {
-                ADM_warning("Bumping lav PTS to keep PTS >= DTS for frame %" PRIu32"\n",written);
-                out.pts=out.dts;
-            }
-            aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,out.dts);
-            aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%" PRIu64" Dts:%" PRIu64"\n",out.len,out.flags,out.pts,out.dts);
-
-            av_init_packet(&pkt);
-            pkt.dts=out.dts;
-            if(vStream->providePts()==true)
-            {
-                pkt.pts=out.pts;
-            }else
-            {
-                pkt.pts=pkt.dts;
-            }
-            pkt.stream_index=0;
-            pkt.data= buffer;
-            pkt.size= out.len;
-            if(out.flags & 0x10) // FIXME AVI_KEY_FRAME
-                        pkt.flags |= AV_PKT_FLAG_KEY;
-            ret =writePacket( &pkt);
-            aprintf("[FF]Frame:%u, DTS=%08lu PTS=%08lu\n",written,out.dts,out.pts);
-            if(false==ret)
-            {
-                printf("[FF]Error writing video packet\n");
-                break;
-            }
-            written++;
-            if(firstVideoPacket)
-            {
-                firstVideoPacket=false;
-                audioDelay=vStream->getVideoDelay();
-                printf("[muxerFFmpeg::initVideo] Final audio delay: %" PRIu64" ms\n",audioDelay/1000);
-            }
-            // Now send audio until they all have DTS > lastVideoDts+increment
+        if(written)
+        {
+            // Now send audio until they all have DTS > lastVideoDts
             for(int audio=0;audio<nbAStreams;audio++)
             {
                 MuxAudioPacket *audioTrack=&(audioPackets[audio]);
@@ -605,14 +556,14 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     if(audioTrack->present==false)
                     {
                         if(false==a->getPacket(audioTrack->buffer,
-                                                &(audioTrack->size),
-                                                AUDIO_BUFFER_SIZE,
-                                                &(audioTrack->samples),
-                                                &(audioTrack->dts)))
+                                            &(audioTrack->size),
+                                            AUDIO_BUFFER_SIZE,
+                                            &(audioTrack->samples),
+                                            &(audioTrack->dts)))
                         {
-                                audioTrack->eof=true;
-                                ADM_info("No more audio packets for audio track %d\n",audio);
-                                break;
+                            audioTrack->eof=true;
+                            ADM_info("No more audio packets for audio track %d\n",audio);
+                            break;
                         }
                        // printf("Track %d , new audio packet DTS=%"PRId64" size=%"PRIu32"\n",audioTrack->dts,audioTrack->size);
                         audioTrack->present=true;
@@ -622,7 +573,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     if(audioTrack->dts!=ADM_NO_PTS)
                     {
                         //printf("Audio PTS:%"PRId64", limit=%"PRId64"\n",audioTrack->dts,lastVideoDts+videoIncrement);
-                        if(audioTrack->dts>lastVideoDts+videoIncrement+audioDelay) break; // This packet is in the future
+                        if(audioTrack->dts>maxAudioDts) break; // This packet is in the future
                     }
                     // Write...
                     AVPacket pkt;
@@ -654,9 +605,69 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     }
                    // printf("[FF] A:%"PRIu32" ms vs V: %"PRIu32" ms\n",(uint32_t)audioTrack->dts/1000,(uint32_t)(lastVideoDts+videoIncrement)/1000);
                 }
-                //if(!nb) printf("[FF] A: No audio for video frame %d\n",written);
             }
+        }
 
+        if(!gotVideoPacket) break;
+
+        if(out.pts==ADM_NO_PTS)
+        {
+            ADM_warning("No PTS information for frame %" PRIu32"\n",written);
+            missingPts++;
+            out.pts=lastVideoDts;
+        }
+        if(out.pts<lastVideoDts)
+        {
+            ADM_warning("Bumping PTS to keep PTS >= DTS for frame %" PRIu32"\n",written);
+            out.pts=lastVideoDts;
+        }
+
+        encoding->pushVideoFrame(out.len,out.out_quantizer,lastVideoDts);
+        muxerRescaleVideoTimeDts(&(out.dts),lastVideoDts);
+        if(!roundup && lastVideoDtsLav && out.dts==lastVideoDtsLav)
+        {
+            ADM_warning("Bumping lav DTS to avoid collision for frame %" PRIu32"\n",written);
+            out.dts++;
+        }
+        lastVideoDtsLav=out.dts;
+        muxerRescaleVideoTime(&(out.pts));
+        if(out.dts>out.pts)
+        {
+            ADM_warning("Bumping lav PTS to keep PTS >= DTS for frame %" PRIu32"\n",written);
+            out.pts=out.dts;
+        }
+        aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,out.dts);
+        aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%" PRIu64" Dts:%" PRIu64"\n",out.len,out.flags,out.pts,out.dts);
+
+        AVPacket pkt;
+
+        av_init_packet(&pkt);
+        pkt.dts=out.dts;
+        if(vStream->providePts()==true)
+        {
+            pkt.pts=out.pts;
+        }else
+        {
+            pkt.pts=pkt.dts;
+        }
+        pkt.stream_index=0;
+        pkt.data = buffer;
+        pkt.size = out.len;
+        if(out.flags & 0x10) // FIXME AVI_KEY_FRAME
+            pkt.flags |= AV_PKT_FLAG_KEY;
+        ret = writePacket( &pkt);
+        aprintf("[FF]Frame:%u, DTS=%08lu PTS=%08lu\n",written,out.dts,out.pts);
+        if(false==ret)
+        {
+            printf("[FF]Error writing video packet\n");
+            break;
+        }
+        if(!written)
+        {
+            audioDelay=vStream->getVideoDelay();
+            printf("[muxerFFmpeg::initVideo] Final audio delay: %" PRIu64" ms\n",audioDelay/1000);
+        }
+        written++;
     }
     delete [] buffer;
     if(false==ret)

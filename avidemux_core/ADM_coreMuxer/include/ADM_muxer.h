@@ -22,6 +22,7 @@ class ADM_videoStream
 {
 protected:
             uint32_t width,height,averageFps1000;
+            uint32_t timeBaseDen,timeBaseNum;
             uint32_t fourCC;
             bool     isCFR;
             uint64_t videoDelay;
@@ -38,6 +39,8 @@ public:
             uint32_t getAvgFps1000(void) {return averageFps1000;}
             uint64_t getVideoDelay(void) {return videoDelay;}
             uint64_t getFrameIncrement(void) {return frameIncrement;}
+            uint32_t getTimeBaseDen(void) {return timeBaseDen;}
+            uint32_t getTimeBaseNum(void) {return timeBaseNum;}
 virtual     bool     getPacket(ADMBitstream *out)=0;
 virtual     bool     getExtraData(uint32_t *extraLen, uint8_t **extraData) {*extraLen=0;*extraData=NULL;return true;};
 virtual     bool     providePts(void) {return false;}

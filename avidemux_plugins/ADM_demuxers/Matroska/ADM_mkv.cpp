@@ -460,6 +460,7 @@ bool mkvHeader::setDtsFromListOfSortedPts(void)
             }
         }
     }
+    _videostream.dwScale=1; // FIXME: check dwRate
     return true;
 }
 /**
@@ -662,12 +663,12 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             ADM_info("Checking deviation for stdFrameRate=%d:%d\n",fr->num,fr->den);
             int deviationStd=devEngine.computeDeviation(fr->num,fr->den,stdSkip);
             ADM_info("Deviation for stdFrameRate(%d) =%d\n",stdFrameRate,deviationStd);
-            if(deviationStd<deviation && stdSkip<skipped*3)
+            if(deviationStd<=deviation && stdSkip<=skipped*3)
             {
               num=fr->num;
               den=fr->den;
               deviation=deviationStd;
-              ADM_info("Std frame rate is better\n");
+              ADM_info("Std frame rate is equal or better\n");
             }
         }
     }
@@ -709,9 +710,8 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         double f=num;
         f=f*1000000.;
         f/=den;
-        track->_defaultFrameDuration=f;
-       
-
+        f+=0.49;
+        track->_defaultFrameDuration=_mainaviheader.dwMicroSecPerFrame=f;
     }
 
     ADM_info("New default duration    %" PRId64" us\n",track->_defaultFrameDuration);

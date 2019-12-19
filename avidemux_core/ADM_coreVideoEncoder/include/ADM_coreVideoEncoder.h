@@ -69,12 +69,14 @@ virtual const  char         *getFourcc(void) =0;
                uint32_t    getWidth(void) {return source->getInfo()->width;}
                uint32_t    getHeight(void) {return source->getInfo()->height;}
                uint32_t    getFrameIncrement(void) {return source->getInfo()->frameIncrement;}
+               uint32_t    getTimeBaseDen(void) {return source->getInfo()->timeBaseDen;}
+               uint32_t    getTimeBaseNum(void) {return source->getInfo()->timeBaseNum;}
                uint64_t    getTotalDuration(void) {return source->getInfo()->totalDuration;}
 virtual        bool        setPassAndLogFile(int pass,const char *name) {return false;}
 virtual        uint64_t    getEncoderDelay(void){return encoderDelay;}
                uint64_t    lastDts; //
 };
-ADM_COREVIDEOENCODER6_EXPORT bool usSecondsToFrac(uint64_t useconds, int *n,int *d);
+ADM_COREVIDEOENCODER6_EXPORT bool usSecondsToFrac(uint64_t useconds, int *n, int *d, int maxclock=0xFFFF); // mpeg4 allows a maximum of 1<<16-1 as time base
 ADM_COREVIDEOENCODER6_EXPORT bool ADM_pluginGetPath(const std::string& pluginName,int pluginVersion,std::string &rootPath);
 ADM_COREVIDEOENCODER6_EXPORT bool ADM_pluginInstallSystem(const std::string& pluginName,const std::string& ext,int pluginVersion);
 ADM_COREVIDEOENCODER6_EXPORT bool ADM_listFile(const std::string& path,const std::string& extension,vector <std::string > & list);

@@ -1077,12 +1077,6 @@ int A_appendVideo (const char *name)
       GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something failed when appending"), NULL);
       return 0;
     }
-    if (!video_body->updateVideoInfo (avifileinfo))
-    {
-      GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened (II)"), NULL);
-      return 0;
-    }
-
 
     if(!markerChanged)
     {        

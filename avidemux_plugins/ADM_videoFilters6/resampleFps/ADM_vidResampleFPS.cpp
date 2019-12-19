@@ -92,8 +92,11 @@ bool resampleFps::updateIncrement(void)
 {
     float f=configuration.newFpsNum*1000;
     f/=configuration.newFpsDen;
+    f+=0.49;
     info.frameIncrement=ADM_UsecFromFps1000((uint32_t)f);
-  
+    info.timeBaseDen=configuration.newFpsNum;
+    info.timeBaseNum=configuration.newFpsDen;
+
     return true;
 }
 /**
@@ -189,10 +192,11 @@ void resampleFps::setCoupledConf(CONFcouple *couples)
           if(false==refill()) return false;
           prefillDone=true;
     }
-    float offset=configuration.newFpsDen;
+    double offset=configuration.newFpsDen;
     offset*=1000000LL;
     offset*=nextFrame;
-    offset=(offset+(configuration.newFpsNum/2-1))/configuration.newFpsNum;
+    offset/=configuration.newFpsNum;
+    offset+=0.49;
     uint64_t thisTime=baseTime+(uint64_t)offset;
 
 again:

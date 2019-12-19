@@ -78,7 +78,6 @@ protected:
         bool initVideo(ADM_videoStream *stream);
         bool initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio);
         bool initialized;
-        bool firstVideoPacket;
   virtual   const char *getContainerName(void)=0;
 public:
                 muxerFFmpeg();

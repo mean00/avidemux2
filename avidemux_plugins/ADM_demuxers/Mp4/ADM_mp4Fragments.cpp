@@ -212,20 +212,46 @@ bool MP4Header::indexVideoFragments(int trackNo)
     trk->index=new MP4Index[trk->nbIndex];
     uint64_t sum=0;
     int intra=0;
+    bool constantFps=true;
+    uint32_t thisone,step=1;
+    uint32_t previous=0;
     for(uint32_t i=0;i<trk->nbIndex;i++)
     {
         MP4Index *dex=trk->index+i;
         dex->offset=fragList[i].offset;
         dex->size=fragList[i].size;
         trk->totalDataSize+=fragList[i].size;
+        thisone=fragList[i].duration;
+        if(i+1<trk->nbIndex)
+        {
+            if(!i) step=thisone;
+            if(i && step>1 && thisone!=previous && thisone && previous)
+            {
+                constantFps=false;
+                if(thisone>previous)
+                {
+                    if(thisone%previous)
+                        step=1;
+                }else
+                {
+                    if(previous%thisone)
+                        step=1;
+                    else if(step>thisone)
+                        step=thisone;
+                }
+            }
+            previous=thisone;
+        }
 
         double dts=sum;
         double ctts=fragList[i].composition;
 
         dts=dts/_videoScale;
         dts*=1000000.;
+        dts+=0.49;
         ctts=ctts/_videoScale;
         ctts*=1000000.;
+        ctts+=0.49;
         dex->dts=dts;
         dex->pts=dex->dts+ctts;
         if(!(fragList[i].flags &(0x00010000|0x01000000)))
@@ -235,7 +261,7 @@ bool MP4Header::indexVideoFragments(int trackNo)
         }
         else
             dex->intra=0;    
-        sum+=fragList[i].duration;
+        sum+=thisone;
         aprintf("[FRAG] Video entry %u offset=0x%llx size=%d dts=%s ",i,dex->offset,(int)dex->size,ADM_us2plain(dex->dts));
         aprintf("pts=%s\n",ADM_us2plain(dex->pts));
     }
@@ -243,7 +269,22 @@ bool MP4Header::indexVideoFragments(int trackNo)
     MP4Index *ff=trk->index;
     ff->intra=AVI_KEY_FRAME;   
     _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
+    _videostream.dwScale=step;
+    _videostream.dwRate=_videoScale;
+    ADM_info("Setting video timebase to %u / %u\n",step,_videoScale);
     fragList.clear();
+    if(constantFps)
+    {
+        _mainaviheader.dwMicroSecPerFrame=0; // force usage of fraction for fps
+        return true;
+    }
+    double total=sum;
+    total/=_videostream.dwLength;
+    total*=1000.*1000.;
+    total/=_videoScale;
+    total+=0.49;
+    _mainaviheader.dwMicroSecPerFrame=(int32_t)total;
+
     return true;
 }
 

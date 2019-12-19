@@ -200,7 +200,9 @@ protected:
           uint8_t                       parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale);
           uint8_t                       decodeEsds(void *ztom,uint32_t trackType);
           uint8_t                       updateCtts(MPsampleinfo *info );
+#ifdef DERIVE_TB_FROM_MINIMUM_DELTA
           bool                          refineFps(void);
+#endif
           bool                          adjustElstDelay(void);
           uint32_t                      _videoScale;
           uint32_t                      _movieScale;

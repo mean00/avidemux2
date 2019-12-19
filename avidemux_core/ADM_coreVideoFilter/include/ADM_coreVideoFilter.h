@@ -42,7 +42,9 @@ typedef struct
 {
     uint32_t width;
     uint32_t height;
-    uint32_t frameIncrement; /// Minimum Delta time between 2 frames in useconds ~ 1/fps
+    uint32_t frameIncrement; /// Average delta time between 2 frames in useconds ~ 1/fps
+    uint32_t timeBaseDen; // timebase denominator
+    uint32_t timeBaseNum; // timebase numerator
     uint64_t totalDuration;     /// Duration of the whole stream in us
 }FilterInfo;
 

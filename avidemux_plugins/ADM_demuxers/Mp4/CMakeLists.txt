@@ -1,4 +1,7 @@
 include(dm_plugin)
+IF(APPLE)
+    ADD_DEFINITIONS("-std=c++11")
+ENDIF(APPLE)
 SET(ADM_mp4_SRCS 
 ADM_atom.cpp 
 ADM_mp4Analyzer.cpp 
