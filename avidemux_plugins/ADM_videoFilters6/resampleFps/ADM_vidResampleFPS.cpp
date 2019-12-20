@@ -45,7 +45,7 @@ const PredefinedFps_t predefinedFps[]=
  {QT_TRANSLATE_NOOP("resampleFps","23.976 (Film)"),  24000,1001},
  {QT_TRANSLATE_NOOP("resampleFps","29.97 (NTSC)"),   30000,1001},
  {QT_TRANSLATE_NOOP("resampleFps","50 (Pal)"),       50000,1000},
- {QT_TRANSLATE_NOOP("resampleFps","59.93  (NTSC)"),  60000,1001}
+ {QT_TRANSLATE_NOOP("resampleFps","59.94  (NTSC)"),  60000,1001}
 };
 
 #define nbPredefined (sizeof(predefinedFps)/sizeof(PredefinedFps_t))
