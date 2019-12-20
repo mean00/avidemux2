@@ -320,6 +320,8 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
     std::vector<uint64_t> dtsList,ptsList;
     uint64_t lastPts=ADM_NO_PTS;
     uint64_t lastDts=ADM_NO_PTS;
+    uint64_t maxPts=0;
+    uint64_t maxDts=0;
     bool oooDts=false;
     bool oooPts=false;
     ADM_info("Checking for doubled FPS.., time increment ceiling = %d\n",(int)dtsCeil);
@@ -330,14 +332,22 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
         if(dts!=ADM_NO_PTS && lastDts!=ADM_NO_PTS)
         {
             dtsList.push_back(lastDts);
-            if(!oooDts && lastDts>dts) oooDts=true;
+            if(!oooDts)
+            {
+                if(lastDts>maxDts) maxDts=lastDts;
+                if(maxDts>dts) oooDts=true;
+            }
         }
         lastDts=dts;
 
         if(pts!=ADM_NO_PTS && lastPts!=ADM_NO_PTS)
         {
             ptsList.push_back(lastPts);
-            if(!oooPts && lastPts>pts) oooPts=true;
+            if(!oooPts)
+            {
+                if(lastPts>maxPts) maxPts=lastPts;
+                if(maxPts>pts) oooPts=true;
+            }
         }
         lastPts=pts;
     }
