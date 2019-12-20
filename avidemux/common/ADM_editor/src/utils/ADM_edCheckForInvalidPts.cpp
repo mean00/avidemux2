@@ -318,65 +318,48 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
     int totalFrames=hdr->getVideoStreamHeader()->dwLength;
     uint64_t dtsCeil= (timeIncrementUs*18)/10;
     std::vector<uint64_t> dtsList,ptsList;
-    std::vector<int> validDtsList,validPtsList;
+    uint64_t lastPts=ADM_NO_PTS;
+    uint64_t lastDts=ADM_NO_PTS;
+    bool oooDts=false;
+    bool oooPts=false;
     ADM_info("Checking for doubled FPS.., time increment ceiling = %d\n",(int)dtsCeil);
     for(int i=0;i<totalFrames;i++)
     {
-          uint64_t pts,dts;          
-          hdr->getPtsDts(i,&pts,&dts);
-          
-          if(dts!=ADM_NO_PTS)
-          {
-                dtsList.push_back(dts);
-                validDtsList.push_back(i);
-          }
-          if(pts!=ADM_NO_PTS)
-          {
-                ptsList.push_back(pts);
-                validPtsList.push_back(i);
-          }
-    }
-    bool proceed=false;
-    if(validDtsList.size()>2)
-    {
-        for(int i=0;i<(validDtsList.size()-1);i++)
+        uint64_t pts,dts;
+        hdr->getPtsDts(i,&pts,&dts);
+        if(dts!=ADM_NO_PTS && lastDts!=ADM_NO_PTS)
         {
-            if(validDtsList[i+1]-validDtsList[i]==1)
-            {
-                proceed=true;
-                break; // got at least once two consecutive frames with valid DTS
-            }
+            dtsList.push_back(lastDts);
+            if(!oooDts && lastDts>dts) oooDts=true;
         }
+        lastDts=dts;
+
+        if(pts!=ADM_NO_PTS && lastPts!=ADM_NO_PTS)
+        {
+            ptsList.push_back(lastPts);
+            if(!oooPts && lastPts>pts) oooPts=true;
+        }
+        lastPts=pts;
     }
-    if(!proceed)
+    if(dtsList.size()<2)
     {
         ADM_info("No consecutive frames with valid DTS found, can't safely halve FPS\n");
         return false;
     }
-    proceed=false;
-    if(validPtsList.size()>2)
-    {
-        for(int i=0;i<(validPtsList.size()-1);i++)
-        {
-            if(validPtsList[i+1]-validPtsList[i]==1)
-            {
-                proceed=true;
-                break; // got at least once two consecutive frames with valid PTS
-            }
-        }
-    }
-    if(!proceed)
+    if(ptsList.size()<2)
     {
         ADM_info("No consecutive frames with valid PTS found, can't safely halve FPS\n");
         return false;
     }
-    std::sort (dtsList.begin(), dtsList.end());   
-    std::sort (ptsList.begin(), ptsList.end());  
-    ADM_info("Checking DTS...\n");
+    if(oooDts)
+        std::sort (dtsList.begin(), dtsList.end());
+    if(oooPts)
+        std::sort (ptsList.begin(), ptsList.end());
+    ADM_info("Checking %sDTS...\n",oooDts? "sorted " : "");
     bool okDts=checkTiming(dtsList,dtsCeil);
-    ADM_info("Checking PTS...\n");
+    ADM_info("Checking %sPTS...\n",oooPts? "sorted " : "");
     bool okPts=checkTiming(ptsList,dtsCeil);
-    
+
     if(okDts && okPts)
     {
         ADM_info("We can safely halve fps\n");
