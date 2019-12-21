@@ -322,32 +322,56 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
     uint64_t lastDts=ADM_NO_PTS;
     uint64_t maxPts=0;
     uint64_t maxDts=0;
-    bool oooDts=false;
-    bool oooPts=false;
+    bool oooPts,oooDts,skipPts,skipDts;
+    oooPts=oooDts=skipPts=skipDts=false;
     ADM_info("Checking for doubled FPS.., time increment ceiling = %d\n",(int)dtsCeil);
     for(int i=0;i<totalFrames;i++)
     {
         uint64_t pts,dts;
         hdr->getPtsDts(i,&pts,&dts);
         if(dts!=ADM_NO_PTS && lastDts!=ADM_NO_PTS)
-        {
-            dtsList.push_back(lastDts);
+        { /* We've got two consecutive frames with valid DTS. We need to add both,
+            the previous one now and the current one will be added to the list in
+            the next iteration. */
+            skipDts=false;
             if(!oooDts)
             {
                 if(lastDts>maxDts) maxDts=lastDts;
                 if(maxDts>dts) oooDts=true;
             }
         }
+        if(!skipDts && lastDts!=ADM_NO_PTS)
+        {
+            dtsList.push_back(lastDts);
+            if(i==totalFrames-1 && dts!=ADM_NO_PTS)
+                dtsList.push_back(dts); // add the last one
+        }else
+        { /* Stop adding further DTS until we have encountered two consecutive
+            frames with valid DTS again. */
+            skipDts=true;
+        }
         lastDts=dts;
 
         if(pts!=ADM_NO_PTS && lastPts!=ADM_NO_PTS)
-        {
-            ptsList.push_back(lastPts);
+        { /* We've got two consecutive frames with valid PTS. We need to add both,
+            the previous one now and the current one will be added to the list in
+            the next iteration. */
+            skipPts=false;
             if(!oooPts)
             {
                 if(lastPts>maxPts) maxPts=lastPts;
                 if(maxPts>pts) oooPts=true;
             }
+        }
+        if(!skipPts && lastPts!=ADM_NO_PTS)
+        {
+            ptsList.push_back(lastPts);
+            if(i==totalFrames-1 && pts!=ADM_NO_PTS)
+                ptsList.push_back(pts); // add the last one
+        }else
+        { /* Stop adding further PTS until we have encountered two consecutive
+            frames with valid PTS again. */
+            skipPts=true;
         }
         lastPts=pts;
     }
