@@ -243,7 +243,6 @@ typedef struct
 typedef std::vector <undoQueueElem> ListOfUndoQueueElements;
 
                     ListOfUndoQueueElements undoQueue;
-                    const uint8_t maxUndoSteps=50;
                     uint32_t    _undo_counter; // track the nb of performed undo steps for redo
 public:
                     bool        addToUndoQueue(void);
