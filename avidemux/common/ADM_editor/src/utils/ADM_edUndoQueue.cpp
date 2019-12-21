@@ -17,6 +17,8 @@
 #include "ADM_segment.h"
 #include "ADM_edit.hxx"
 
+#define MAX_UNDO_STEPS 50
+
 /**
     \fn addToUndoQueue
     \brief stores the segment layout and markers in the undo queue
@@ -41,7 +43,7 @@ bool ADM_Composer::addToUndoQueue(void)
     rec.markerA=a;
     rec.markerB=b;
     // ...do some housekeeping...
-    uint32_t m=maxUndoSteps;
+    uint32_t m=MAX_UNDO_STEPS;
     if(m<10) m=10; // less than 10 undo steps is a bad idea, ignore the limit then
     uint32_t nb=undoQueue.size();
     if(nb>m)
