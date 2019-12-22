@@ -43,7 +43,7 @@ index bfb3433..bf101f1 100644
 +        std::string fileName=tp_string2std(obj);
 +        int  lineno=tp->frames[i].lineno;
 +        snprintf(buffer,10,"%d",lineno);
-+        report+=std::string("File:")+fileName+std::string(", line ")+std::string(buffer);
++        report+=std::string("File: ")+fileName+std::string(", line ")+std::string(buffer);
 +        if(i) report+=std::string("\n");
          tp_echo(tp,tp->frames[i].name); printf("\n ");
          tp_echo(tp,tp->frames[i].line); printf("\n");
@@ -51,7 +51,7 @@ index bfb3433..bf101f1 100644
      }
      printf("\nException:\n"); tp_echo(tp,tp->ex); printf("\n");
 +    tp_obj *ex=&(tp->ex);
-+    report=std::string("Exception :")+tp_string2std(ex)+std::string("\nBackTrack:\n")+report;
++    report=std::string("Exception: ")+tp_string2std(ex)+std::string("\nBackTrack:\n")+report;
 +    pyRaise(tp,report.c_str());
  }
  
