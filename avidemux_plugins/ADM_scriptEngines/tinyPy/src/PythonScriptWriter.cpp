@@ -47,7 +47,8 @@ void PythonScriptWriter::addVideoFilter(ADM_vf_plugin *plugin, ADM_VideoFilterEl
 
 void PythonScriptWriter::appendVideo(const char* path)
 {
-    *(this->_stream) << "adm.appendVideo(\"" << path << "\")" << std::endl;
+    *(this->_stream) << "if not adm.appendVideo(\"" << path << "\"):" << std::endl;
+    *(this->_stream) << "    raise(\"Cannot append " << path << "\")" << std::endl;
 }
 
 void PythonScriptWriter::clearAudioTracks()
@@ -81,7 +82,8 @@ void PythonScriptWriter::disconnectStream()
 
 void PythonScriptWriter::loadVideo(const char* path)
 {
-    *(this->_stream) << "adm.loadVideo(\"" << path << "\")" << std::endl;
+    *(this->_stream) << "if not adm.loadVideo(\"" << path << "\"):" << std::endl;
+    *(this->_stream) << "    raise(\"Cannot load " << path << "\")" << std::endl;
 }
 
 void PythonScriptWriter::setAudioGain(int trackIndex, ADM_GAINMode gainMode, int32_t gainValue, int32_t maxLevel)
