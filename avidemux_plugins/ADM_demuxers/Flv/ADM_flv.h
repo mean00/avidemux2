@@ -116,7 +116,9 @@ class flvHeader         :public vidHeader
     uint8_t     setAudioHeader(uint32_t format,uint32_t fq,uint32_t bps,uint32_t channels);
     uint8_t     setVideoHeader(uint8_t codec,uint32_t *remaining);
     bool        extraHeader(flvTrak *trk,uint32_t *remain,bool haveCts,int32_t *cts);
-    
+    bool        enforceConstantFps(uint32_t scale, uint32_t rate, uint64_t delay, bool reorder);
+    bool        checkTimeBase(uint32_t scale, uint32_t rate);
+
     uint8_t     getFrameSize (uint32_t frame, uint32_t * size);
     char        *readFlvString(void);
     uint8_t     parseMetaData(uint32_t remaining);

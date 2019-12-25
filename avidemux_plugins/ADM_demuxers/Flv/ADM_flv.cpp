@@ -25,6 +25,8 @@ Not sure if the timestamp is PTS or DTS (...)
 #include "ADM_flv.h"
 
 #include <math.h>
+#include <algorithm>
+#include <vector>
 #if 0
     #define aprintf printf
 #else
@@ -122,6 +124,32 @@ static uint8_t stringz[FLV_MAX_STRING+1];
     return (char *)stringz;
 }
 
+static bool timeBaseFromFps1000(uint32_t v, uint32_t *num, uint32_t *den)
+{
+    if(!v || !num || !den)
+        return false;
+    switch(v)
+    {
+        case 23976:
+            *num=1001;
+            *den=24000;
+            break;
+        case 29970:
+            *num=1001;
+            *den=30000;
+            break;
+        case 59940:
+            *num=1001;
+            *den=60000;
+            break;
+        default:
+            *num=1000;
+            *den=v;
+            break;
+    }
+    return true;
+}
+
 /**
     \fn setProperties
     \brief get a couple key/value and use it if needed...
@@ -130,7 +158,16 @@ void flvHeader::setProperties(const char *name,float value)
 {
     if(!strcmp(name,"framerate"))
     {
-        _videostream.dwRate=(uint32_t)(value*1000);
+        value*=1000.;
+        value+=0.49;
+        uint32_t v=(uint32_t)value;
+        uint32_t num,den;
+        if(timeBaseFromFps1000(v,&num,&den))
+        {
+            _videostream.dwScale=num;
+            _videostream.dwRate=den;
+            _mainaviheader.dwMicroSecPerFrame=0; // conformance with constant fps will be probed later
+        }
         return;
     }
     if(!strcmp(name,"width"))
@@ -368,11 +405,15 @@ uint8_t flvHeader::open(const char *name)
   uint32_t prevLen, type, size, dts;
   uint64_t pos=0;
   bool firstVideo=true;
+  bool tryProbedAvgFps=false;
+  bool bFramesPresent=false;
+  int32_t firstCts=0;
   _isvideopresent=0;
   _isaudiopresent=0;
   audioTrack=NULL;
   videoTrack=NULL;
   _videostream.dwRate=0;
+  _videostream.dwScale=1000;
   _filename=ADM_strdup(name);
   _fd=ADM_fopen(name,"rb");
   if(!_fd)
@@ -505,6 +546,9 @@ uint8_t flvHeader::open(const char *name)
             if(videoCodec==FLV_CODECID_H264)
             {
                 if(true==extraHeader(videoTrack,&remaining,true,&cts)) continue;
+                if(!videoTrack->_nbIndex) firstCts=cts;
+                if(!bFramesPresent && firstCts!=cts)
+                    bFramesPresent=true;
                 int64_t sum=cts+dts;
                 if(sum<0) pts=0xffffffff;
                     else pts=dts+(int32_t)cts;
@@ -520,7 +564,7 @@ uint8_t flvHeader::open(const char *name)
   } // while
 
   // Udpate frame count etc..
-  ADM_info("\n[FLV] Found %u frames\n",videoTrack->_nbIndex);
+  ADM_info("[FLV] Found %u frames\n",videoTrack->_nbIndex);
   
   if(!metaWidth && !metaHeight &&  videoCodec==FLV_CODECID_H264)
   {
@@ -547,15 +591,24 @@ uint8_t flvHeader::open(const char *name)
   }
   
    _videostream.dwLength= _mainaviheader.dwTotalFrames=videoTrack->_nbIndex;
+
+    // Can we force a constant frame rate based on metadata?
+    uint64_t delay=(firstCts>0)? 1000LL*firstCts : 0;
+    if(false==enforceConstantFps(_videostream.dwScale,_videostream.dwRate,delay,bFramesPresent))
+    {
+        ADM_info("Cannot force constant frame rate for timebase %u / %u\n",_videostream.dwScale,_videostream.dwRate);
+        tryProbedAvgFps=true;
+    }
    // Compute average fps
     float f=_videostream.dwLength;
     uint64_t duration=videoTrack->_index[videoTrack->_nbIndex-1].dtsUs;
+    duration+=(uint64_t)((double)duration/(double)f+0.49);
 
     if(duration)
           f=1000.*1000.*1000.*f/duration;
      else  f=25000;
     // If it was available from the metadata, use the one from metadata
-    if(! _videostream.dwRate)
+    if(tryProbedAvgFps)
     {
         float d=searchMinimum();
         printf("[FLV] minimum delta :%d\n",(uint32_t)d);
@@ -566,11 +619,45 @@ uint8_t flvHeader::open(const char *name)
         uint32_t max=(uint32_t)floor(d);
         if(max<2) max=2; // 500 fps max
         printf("[FLV] Avg fps :%d, max fps :%d\n",avg,max);
-        _videostream.dwRate=max;
+        // Can we use the probed average fps for timebase?
+        bool skip=false;
+        uint32_t num,den;
+        if(timeBaseFromFps1000(avg,&num,&den))
+        {
+            skip = (num==_videostream.dwScale) && (den==_videostream.dwRate);
+            if(!skip)
+            {
+                _videostream.dwScale=num;
+                _videostream.dwRate=den;
+                _mainaviheader.dwMicroSecPerFrame=0; // assume a perfectly regular stream
+            }
+        }
+        if(skip || false==enforceConstantFps(_videostream.dwScale,_videostream.dwRate,delay,bFramesPresent))
+        {
+            if(skip)
+                ADM_info("Average fps matches metadata, skipping the check.\n");
+            else
+                ADM_info("Cannot force CFR based on avg fps for timebase %u / %u\n",_videostream.dwScale,_videostream.dwRate);
+            // Can we use at least a timebase derived from max fps?
+            if(timeBaseFromFps1000(max,&num,&den))
+            {
+                _videostream.dwScale=num;
+                _videostream.dwRate=den;
+            }
+            _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(avg); // should be safe now
+            if(false==checkTimeBase(_videostream.dwScale,_videostream.dwRate))
+            {
+                ADM_info("Cannot use timebase %u / %u from max fps, falling back to 1 / 1000 equivalent.\n",_videostream.dwScale,_videostream.dwRate);
+                {
+                    _videostream.dwRate=16000; // lavf doesn't like low clocks like e.g. 1000 // FIXME
+                    _videostream.dwScale=16;
+                }
+            }
+        }
     }
-    _videostream.dwScale=1000;
-    _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
-   printf("[FLV] Duration %" PRIu64" ms\n",videoTrack->_index[videoTrack->_nbIndex-1].dtsUs/1000);
+
+    ADM_info("[FLV] Duration: %" PRIu64" ms, time base: %u / %u\n",duration/1000,
+        _videostream.dwScale,_videostream.dwRate);
 
    //
     _videostream.fccType=fourCC::get((uint8_t *)"vids");
@@ -756,7 +843,210 @@ uint8_t flvHeader::insertVideo(uint64_t pos,uint32_t size,uint32_t frameType,uin
     return 1;
 }
 /**
-      \fn insertVideo
+      \fn enforceConstantFps
+      \brief Check whether we can force CFR and update video index if necessary
+*/
+bool flvHeader::enforceConstantFps(uint32_t scale, uint32_t rate, uint64_t delay, bool reorder)
+{
+    if(!_videostream.dwRate)
+        return false;
+
+    double d=_videostream.dwScale;
+    d*=1000.*1000;
+    d/=_videostream.dwRate*2;
+    d+=0.49;
+    const int64_t threshold=(int64_t)d; // half of frame increment, as generous as possible
+    const uint32_t nbFrames=videoTrack->_nbIndex;
+    uint32_t i;
+
+    for(i=0; i<nbFrames; i++)
+    {
+        d=i;
+        d*=_videostream.dwScale;
+        d*=1000.;
+        d/=_videostream.dwRate;
+        d*=1000.;
+        d+=0.49;
+        uint64_t expected=(uint64_t)d;
+        flvIndex *x=&(videoTrack->_index[i]);
+        if(x->dtsUs!=ADM_NO_PTS)
+        {
+            int64_t delta=x->dtsUs-expected;
+            //printf("Frame %u dts delta: %" PRId64" us\n",i,delta);
+            if(delta>threshold || -delta>threshold)
+            {
+                ADM_warning("Delta %" PRId64" for frame %u exceeds threshold.\n",delta,i);
+                return false;
+            }
+        }
+    }
+    ADM_info("Forcing constant frame rate...\n");
+    // Force constant frame rate
+    for(i=0; i<nbFrames; i++)
+    {
+        d=i;
+        d*=_videostream.dwScale;
+        d*=1000.*1000;
+        d/=_videostream.dwRate;
+        d+=0.49;
+        videoTrack->_index[i].dtsUs=(uint64_t)d;
+    }
+    // round up delay to a multiple of timebase
+    if(delay)
+    {
+        uint64_t num=_videostream.dwScale;
+        delay+=num-1;
+        delay/=num;
+        delay*=num;
+    }
+    if(reorder)
+    {
+        uint32_t i;
+        std::vector <uint32_t> DisplayOrder;
+        std::vector <uint64_t> sortedPts;
+        for(i=0; i<nbFrames; i++)
+        {
+            flvIndex *x=&(videoTrack->_index[i]);
+            if(x->ptsUs==ADM_NO_PTS) continue;
+            sortedPts.push_back(x->ptsUs);
+        }
+        std::sort(sortedPts.begin(),sortedPts.end());
+        for(i=0; i<nbFrames; i++)
+        {
+            uint32_t nbInvalid=0;
+            flvIndex *x=&(videoTrack->_index[i]);
+            if(x->ptsUs==ADM_NO_PTS)
+            {
+                DisplayOrder.push_back(i);
+                nbInvalid++;
+                continue;
+            }
+            uint32_t base=0;
+            if(i>32) base=i-32; // max 16 ref * 2 fields
+            for(uint32_t j=base;j<sortedPts.size();j++)
+            {
+                if(x->ptsUs!=sortedPts.at(j))
+                    continue;
+                uint32_t k=nbInvalid+j;
+                ADM_assert(k<nbFrames);
+                DisplayOrder.push_back(k);
+                //printf("%u --> %u\n",i,k);
+                break;
+            }
+        }
+        for(i=0; i<nbFrames; i++)
+        {
+            if(i+1>=DisplayOrder.size())
+                break;
+            uint32_t j=DisplayOrder.at(i);
+            flvIndex *x=&(videoTrack->_index[i]);
+            if(x->ptsUs==ADM_NO_PTS) continue;
+            x->ptsUs=videoTrack->_index[j].dtsUs+delay;
+        }
+    }else
+    {
+        for(i=0; i<nbFrames; i++)
+        {
+            flvIndex *x=&(videoTrack->_index[i]);
+            x->ptsUs=x->dtsUs+delay;
+        }
+    }
+    // verify that the delay is sufficient
+    uint64_t delay2=0;
+    for(i=0; i<nbFrames; i++)
+    {
+        flvIndex *x=&(videoTrack->_index[i]);
+        if(x->ptsUs==ADM_NO_PTS || x->dtsUs==ADM_NO_PTS)
+            continue;
+        if(x->ptsUs+delay2<x->dtsUs)
+            delay2+=x->dtsUs-x->ptsUs;
+    }
+    if(delay2)
+    {
+        ADM_warning("Original PTS delay is insufficient, adding %" PRIu64" us.\n",delay2);
+        for(i=0; i<nbFrames; i++)
+            videoTrack->_index[i].ptsUs+=delay2;
+    }
+    return true;
+}
+
+/**
+      \fn checkTimeBase
+      \brief Check whether all dts and pts can be expressed in the given timebase
+*/
+bool flvHeader::checkTimeBase(uint32_t scale, uint32_t rate)
+{
+    if(!scale || rate<1000)
+        return false;
+
+    uint32_t i;
+    const uint32_t nbFrames=videoTrack->_nbIndex;
+    scale*=1000;
+    // check dts first
+    for(i=0; i<nbFrames; i++)
+    {
+        flvIndex *x=&(videoTrack->_index[i]);
+        if(x->dtsUs==ADM_NO_PTS || x->dtsUs<1000)
+            continue;
+        uint64_t low=x->dtsUs-1000; // -1 ms
+        uint64_t high=x->dtsUs+1000; // +1 ms
+        double f=low;
+        f*=rate;
+        f/=scale;
+        f+=0.49;
+        low=(uint64_t)f; // 1000 * scaled time
+        f=high;
+        f*=rate;
+        f/=scale;
+        f+=0.49;
+        high=(uint64_t)f;
+        if(high%1000>100 || low%1000<900)
+        {
+            ADM_warning("Frame %d dts is not a multiple of timebase.\n",i);
+            return false;
+        }
+    }
+    // now get pts delay
+#define HIGH_POINT 0xFFFFFFF0 // an arbitrary high value
+    uint64_t delay=HIGH_POINT;
+    for(i=0; i<nbFrames; i++)
+    {
+        flvIndex *x=&(videoTrack->_index[i]);
+        if(x->ptsUs==ADM_NO_PTS)
+            continue;
+        if(x->ptsUs<delay) delay=x->ptsUs;
+    }
+    if(delay==HIGH_POINT)
+        return true; // no valid pts
+    // check pts
+    for(i=0; i<nbFrames; i++)
+    {
+        flvIndex *x=&(videoTrack->_index[i]);
+        if(x->ptsUs==ADM_NO_PTS || x->ptsUs-delay<1000)
+            continue;
+        uint64_t low=x->ptsUs-1000; // -1 ms
+        uint64_t high=x->ptsUs+1000; // +1 ms
+        double f=low;
+        f*=rate;
+        f/=scale;
+        f+=0.49;
+        low=(uint64_t)f; // 1000 * scaled time
+        f=high;
+        f*=rate;
+        f/=scale;
+        f+=0.49;
+        high=(uint64_t)f;
+        if(high%1000>100 || low%1000<900)
+        {
+            ADM_warning("Frame %d pts is not a multiple of timebase.\n",i);
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+      \fn insertAudio
       \brief add a frame to the index, grow the index if needed
 */
 uint8_t flvHeader::insertAudio(uint64_t pos,uint32_t size,uint32_t pts)
