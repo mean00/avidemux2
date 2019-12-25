@@ -1018,14 +1018,15 @@ bool flvHeader::checkTimeBase(uint32_t scale, uint32_t rate)
     }
     if(delay==HIGH_POINT)
         return true; // no valid pts
+    ADM_info("Probed PTS delay: %" PRIu64" us.\n",delay);
     // check pts
     for(i=0; i<nbFrames; i++)
     {
         flvIndex *x=&(videoTrack->_index[i]);
         if(x->ptsUs==ADM_NO_PTS || x->ptsUs-delay<1000)
             continue;
-        uint64_t low=x->ptsUs-1000; // -1 ms
-        uint64_t high=x->ptsUs+1000; // +1 ms
+        uint64_t low=x->ptsUs-delay-1000; // -1 ms
+        uint64_t high=x->ptsUs-delay+1000; // +1 ms
         double f=low;
         f*=rate;
         f/=scale;
