@@ -52,8 +52,8 @@ public:
  class ADM_COREDEMUXER6_EXPORT fileParser
 {
         private:
-         
             uint8_t  *_buffer;
+            uint32_t _bufferSize;
             uint64_t _off;              // Absolute offset
             
             uint32_t _curFd;        
@@ -61,7 +61,7 @@ public:
             uint64_t _head,_tail,_size;       
            
         public:
-                                fileParser(void);
+                                fileParser(uint32_t cacheSize=DMX_BUFFER);
                                 ~fileParser();                                         
                         uint8_t  open(const char *name,FP_TYPE *multi);
                         uint8_t  forward(uint64_t u);
