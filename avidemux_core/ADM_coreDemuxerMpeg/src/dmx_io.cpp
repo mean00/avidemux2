@@ -29,11 +29,13 @@
 #endif
 extern bool ADM_splitSequencedFile(const char *filename, char **left, char **right,uint32_t *nbDigit,uint32_t *base);
 
-fileParser::fileParser( void )
+fileParser::fileParser(uint32_t cacheSize)
 {
                 _off=0;
                 _curFd=0;
-                _buffer=new uint8_t[DMX_BUFFER];
+                _bufferSize=cacheSize;
+                _buffer=(uint8_t *)ADM_alloc(_bufferSize);
+                ADM_assert(_buffer);
                 _head=_tail=0;
                 _size=0;
 }
@@ -50,7 +52,7 @@ fileParser::~fileParser()
                 }
         }
         listOfFd.clear();
-        if(_buffer) delete [] _buffer;
+        if(_buffer) free(_buffer);
         _buffer=NULL;
 }
 
@@ -421,7 +423,7 @@ uint64_t remain,begin,mx,last;
         _off+=len;
         // available in that file
         mx-=len;
-        if(mx>DMX_BUFFER) mx=DMX_BUFFER;
+        if(mx>_bufferSize) mx=_bufferSize;
         fread(_buffer,mx,1,listOfFd[_curFd].file);
         _head=_off;
         _tail=_head+mx;
@@ -510,7 +512,7 @@ uint8_t r;
             fseeko(listOfFd[_curFd].file,0,SEEK_SET);
             mx=listOfFd[_curFd].fileSize;
         }
-        if(mx>DMX_BUFFER) mx=DMX_BUFFER;
+        if(mx>_bufferSize) mx=_bufferSize;
         // Fill the buffer
         fread(_buffer,mx,1,listOfFd[_curFd].file);
         _head=_off;
