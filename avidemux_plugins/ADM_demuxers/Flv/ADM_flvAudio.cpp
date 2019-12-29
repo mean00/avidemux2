@@ -44,8 +44,15 @@ bool      ADM_flvAccess::getExtraData(uint32_t *l, uint8_t **d)
 */
 ADM_flvAccess::ADM_flvAccess(const char *name,flvTrak *track) : ADM_audioAccess()
 {
+#ifdef USE_BUFFERED_IO
+    aparser=new fileParser();
+    ADM_assert(aparser);
+    FP_TYPE append=FP_DONT_APPEND;
+    ADM_assert(aparser->open(name,&append));
+#else
     _fd=ADM_fopen(name,"rb");
     ADM_assert(_fd);
+#endif
     _track=track;
     goToBlock(0);
     currentBlock=0;
@@ -60,8 +67,16 @@ ADM_flvAccess::ADM_flvAccess(const char *name,flvTrak *track) : ADM_audioAccess(
 */
 ADM_flvAccess::~ADM_flvAccess()
 {
+#ifdef USE_BUFFERED_IO
+    if(aparser)
+    {
+        delete aparser;
+        aparser=NULL;
+    }
+#else
     if(_fd) fclose(_fd);
     _fd=NULL;
+#endif
     if(_msg_ratelimit)
         delete _msg_ratelimit;
     _msg_ratelimit = NULL;
@@ -135,7 +150,11 @@ bool      ADM_flvAccess::getPacket(uint8_t *buffer, uint32_t *osize, uint32_t ma
         return false;
     }
     x=&(_track->_index[currentBlock]);
+#ifdef USE_BUFFERED_IO
+    aparser->read32(x->size,buffer);
+#else
     fread(buffer,x->size,1,_fd);
+#endif
     *osize=x->size;
     *dts=((uint64_t)x->dtsUs);
     
@@ -160,7 +179,11 @@ bool      ADM_flvAccess::goToBlock(uint32_t block)
         return false;  // FIXME
     }
     currentBlock=block;
+#ifdef USE_BUFFERED_IO
+    aparser->setpos(_track->_index[currentBlock].pos);
+#else
     fseeko(_fd,_track->_index[currentBlock].pos,SEEK_SET);
+#endif
     return 1;
 }
 

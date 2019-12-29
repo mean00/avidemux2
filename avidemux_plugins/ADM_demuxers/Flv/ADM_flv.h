@@ -23,6 +23,13 @@
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
 
+#define USE_BUFFERED_IO
+
+#ifdef USE_BUFFERED_IO
+  #define CACHE_SIZE 1024*1024
+  #include "dmx_io.h"
+#endif
+
 typedef struct 
 {
     uint64_t pos;       // Absolute position in bytes
@@ -55,8 +62,11 @@ public:
 class ADM_flvAccess : public ADM_audioAccess
 {
 protected:
-                      
+#ifdef USE_BUFFERED_IO
+                fileParser       *aparser;
+#else
                 FILE             *_fd;
+#endif
                 flvTrak          *_track;
                 uint32_t         currentBlock;
                 bool             goToBlock(uint32_t block);
@@ -93,8 +103,9 @@ public:
 class flvHeader         :public vidHeader
 {
   protected:
-                                
+#ifndef USE_BUFFERED_IO
     FILE                    *_fd;
+#endif
     char                    *_filename;
     flvTrak                 *videoTrack;
     flvTrak                 *audioTrack;
@@ -105,6 +116,9 @@ class flvHeader         :public vidHeader
     uint32_t            metaWidth,metaHeight,metaFps1000,videoCodec;
     uint32_t            metaFrameWidth,metaFrameHeight;
 
+#ifdef USE_BUFFERED_IO
+    fileParser  *parser;
+#endif
     uint8_t     read(uint32_t len, uint8_t *where);
     uint8_t     read8(void);
     uint32_t    read16(void);

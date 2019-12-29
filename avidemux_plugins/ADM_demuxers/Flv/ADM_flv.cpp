@@ -38,7 +38,36 @@ Not sure if the timestamp is PTS or DTS (...)
 // Borrowed from lavformt/flv.h
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 
-
+#ifdef USE_BUFFERED_IO
+uint8_t flvHeader::Skip(uint32_t len)
+{
+    return parser->forward(len);
+}
+uint8_t flvHeader::read(uint32_t len, uint8_t *where)
+{
+    if(len==parser->read32(len,where))
+        return 1;
+    return 0;
+}
+uint8_t flvHeader::read8(void)
+{
+    return parser->read8i();
+}
+uint32_t flvHeader::read16(void)
+{
+    uint32_t r=parser->read16i();
+    return r;
+}
+uint32_t flvHeader::read24(void)
+{
+    uint32_t r=parser->read16i();
+    return (r<<8)+(uint32_t)parser->read8i();
+}
+uint32_t flvHeader::read32(void)
+{
+    return parser->read32i();
+}
+#else
 /**
     \fn Skip
     \brief Skip some bytes from the file
@@ -97,6 +126,7 @@ uint32_t flvHeader::read32(void)
     aprintf("uint32_t =%d ",(r[0]<<24)+(r[1]<<16)+(r[2]<<8)+r[3]);
     return (r[0]<<24)+(r[1]<<16)+(r[2]<<8)+r[3];
 }
+#endif
 /**
     \fn     readFlvString
     \brief  read pascal like string
@@ -194,12 +224,123 @@ void flvHeader::setProperties(const char *name,float value)
 */
 bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos,bool &end)
 {
-            static int nesting=0;
-            nesting++;
-            int type=read8();
-            Nest();
-            
-            printf("\n>> type :%d ",type);
+    static int nesting=0;
+    nesting++;
+    int type=read8();
+    Nest();
+    printf("\n>> type :%d ",type);
+#ifdef USE_BUFFERED_IO
+    uint64_t pos=0;
+    parser->getpos(&pos);
+    aprintf("nesting = %d, at %d, : ,end=%d",nesting,pos,endPos);
+    switch(type)
+    {
+        case AMF_DATA_TYPE_NULL:
+            parser->setpos(endPos);
+            break;
+        case AMF_DATA_TYPE_OBJECT_END:
+            Nest(); printf("** Object end**.\n");
+            parser->getpos(&pos);
+            if(pos>=endPos-4)
+                parser->setpos(endPos);
+            end=true;
+            nesting--;
+            break;
+        case AMF_DATA_TYPE_OBJECT:
+        {
+            printf("\n");
+            bool myEnd=false;
+            parser->getpos(&pos);
+            while(pos<endPos-4 && myEnd==false)
+            {
+                Nest();
+                parser->getpos(&pos);
+                aprintf("Pos = %d, end=%d (object)\n",pos,endPos-4);
+                char *o=readFlvString();
+                Nest(); printf("\t ** Object**:%s",o);
+                if(false==parseOneMeta(o,endPos,myEnd)) return false;
+/*
+                char objType=read8();
+                printf("-->%d",objType);
+                if(objType!=10)
+                {
+                    ADM_warning("type is not strict array\n");
+                    goto xxer;
+                }
+                int count=read32();
+                printf(", count=%d\n",count);
+                for(int i=0;i<count;i++)
+                {
+                    if(false==parseOneMeta(endPos)) return false;
+                }
+                break;
+*/
+                parser->getpos(&pos);
+            }
+            break;
+        }
+        case AMF_DATA_TYPE_ARRAY:
+        {
+            uint32_t len=read32();
+            Nest();printf("\n**[FLV] Array : %" PRIu32" entries**\n",len);
+            bool theend;
+            parser->getpos(&pos);
+            for(int i=0;i<len && pos<endPos-4;i++)
+                if(false==parseOneMeta("",endPos,theend)) return false;
+            Nest();printf("\n");
+            break;
+        }
+        case AMF_DATA_TYPE_DATE: Skip(8+2);break;
+        case AMF_DATA_TYPE_NUMBER:
+        {
+            float val;
+            uint64_t hi,lo;
+            hi=read32();lo=read32();
+            hi=(hi<<32)+lo;
+            val=(float)av_int2double(hi);
+            printf("->%f",val);
+            setProperties(stri,val);
+            break;
+        }
+        case AMF_DATA_TYPE_STRING:
+        {
+            int r=read16();
+#if 1
+            Nest();printf("<");
+            for(int i=0;i<r;i++)
+            {
+                printf("%c",read8());
+            }
+            printf(">");
+#else
+            Skip(r);
+#endif
+        }
+            break;
+        case AMF_DATA_TYPE_BOOL: read8();break;
+        case AMF_DATA_TYPE_MIXEDARRAY:
+        {
+            read32();
+            parser->getpos(&pos);
+            while(pos<endPos-4)
+            {
+                char *o=readFlvString();
+                bool theend;
+                if(!o) break;
+                Nest();printf("** MixedArray:%s **",o);
+                if(false==parseOneMeta(o,endPos,theend)) return false;
+                parser->getpos(&pos);
+            }
+            if(read8()!=AMF_END_OF_OBJECT) return false;
+         }
+             break;
+        default: printf("Unknown type=%d\n",type);ADM_assert(0);
+    }
+    printf("\n");
+
+    nesting--;
+    return true;
+#else
             aprintf("nesting = %d, at %d, : ,end=%d",nesting,ftello(_fd),endPos);
             switch(type)
             {
@@ -309,6 +450,7 @@ bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos,bool &end)
 
             nesting--;
             return true;
+#endif
 xxer:
     nesting --;
     return false;
@@ -319,7 +461,15 @@ xxer:
 */
 uint8_t flvHeader::parseMetaData(uint32_t remaining)
 {
+#ifdef USE_BUFFERED_IO
+    uint64_t pos=0;
+    parser->getpos(&pos);
+    pos+=remaining;
+    ADM_assert(!(pos&0xffffffff00000000));
+    uint32_t endPos=pos;
+#else
     uint32_t endPos=ftello(_fd)+remaining;
+#endif
     // Check the first one is onMetaData...
     uint8_t type=read8();
     char *z;
@@ -329,15 +479,30 @@ uint8_t flvHeader::parseMetaData(uint32_t remaining)
     printf("[FlashString] %s\n",z);
     if(z && strncmp(z,"onMetaData",10)) goto endit;
     // Normally the next one is mixed array
+#ifdef USE_BUFFERED_IO
+    parser->getpos(&pos);
+    while(pos<endPos-4)
+    {
+        bool theend;
+        printf("\n----------------------- Parse---------------------\n");
+        if(false==parseOneMeta("meta",endPos,theend)) goto endit;
+        parser->getpos(&pos);
+    }
+
+#else
     while(ftello(_fd)<endPos-4)
     {
         bool theend;
         printf("\n----------------------- Parse---------------------\n");
         if(false==parseOneMeta("meta",endPos,theend)) goto endit;
     }
-
+#endif
 endit:
+#ifdef USE_BUFFERED_IO
+    parser->setpos(endPos);
+#else
     fseeko(_fd,endPos,SEEK_SET);
+#endif
     updateDimensionWithMeta(videoCodec);
     return 1;
 }
@@ -415,6 +580,17 @@ uint8_t flvHeader::open(const char *name)
   _videostream.dwRate=0;
   _videostream.dwScale=1000;
   _filename=ADM_strdup(name);
+#ifdef USE_BUFFERED_IO
+  parser=new fileParser(CACHE_SIZE);
+  ADM_assert(parser);
+  FP_TYPE append=FP_DONT_APPEND;
+  if(!parser->open(name,&append))
+  {
+    ADM_error("[flv] Cannot open %s\n",name);
+    return 0;
+  }
+  uint64_t fileSize=parser->getSize();
+#else
   _fd=ADM_fopen(name,"rb");
   if(!_fd)
   {
@@ -427,6 +603,7 @@ uint8_t flvHeader::open(const char *name)
   fileSize=ftello(_fd);
   fseeko(_fd,0,SEEK_SET);
   printf("[FLV] file size :%" PRIu64 " bytes\n",fileSize);
+#endif
   // It must begin by F L V 01
   uint8_t four[4];
 
@@ -456,9 +633,15 @@ uint8_t flvHeader::open(const char *name)
 
   // Skip header
   uint32_t skip=read32();
+#ifdef USE_BUFFERED_IO
+  parser->setpos(skip);
+  printf("[flv] Skipping %u header bytes\n",skip);
+  parser->getpos(&pos);
+#else
   fseeko(_fd,skip,SEEK_SET);
   printf("[FLV] Skipping %u header bytes\n",skip);
-  pos=ftello(_fd);;
+  pos=ftello(_fd);
+#endif
   printf("pos:%" PRIu64 "/%" PRIu64 "\n",pos,fileSize);
   // Create our video index
   videoTrack=new flvTrak(50);
@@ -471,8 +654,11 @@ uint8_t flvHeader::open(const char *name)
   {
     int32_t cts=0;
     uint32_t pts=0xffffffff;
-
+#ifdef USE_BUFFERED_IO
+    parser->getpos(&pos);
+#else
     pos=ftello(_fd);
+#endif
     prevLen=read32();
     type=read8();
     size=read24();
@@ -484,7 +670,13 @@ uint8_t flvHeader::open(const char *name)
     aprintf("type  =%d\n",(int)type);
     aprintf("size  =%d\n",(int)size);
     aprintf("dts   =%d\n",(int)dts);
-    if(!size) continue;
+    if(!size)
+    {
+#ifdef USE_BUFFERED_IO
+        parser->getpos(&pos);
+#endif
+        continue;
+    }
     uint32_t remaining=size;
     //printf("[FLV] At %08" PRIu64 " found type %x size %u pts%u\n",pos,type,size,dts);
     switch(type)
@@ -512,8 +704,16 @@ uint8_t flvHeader::open(const char *name)
             {
                 if(extraHeader(audioTrack,&remaining,false,&cts)) continue;
             }
+#ifdef USE_BUFFERED_IO
+            if(remaining)
+            {
+                parser->getpos(&pos);
+                insertAudio(pos,remaining,dts);
+            }
+#else
             if(remaining)
                 insertAudio(ftello(_fd),remaining,dts);
+#endif
           }
           break;
       case FLV_TAG_TYPE_META:
@@ -554,8 +754,16 @@ uint8_t flvHeader::open(const char *name)
                     else pts=dts+(int32_t)cts;
 
             }
+#ifdef USE_BUFFERED_IO
+            if(remaining)
+            {
+                parser->getpos(&pos);
+                insertVideo(pos,remaining,frameType,dts,pts);
+            }
+#else
             if(remaining)
                 insertVideo(ftello(_fd),remaining,frameType,dts,pts);
+#endif
           }
            break;
       default: printf("[FLV]At 0x%" PRIx64 ", unhandled type %u\n",pos,type);
@@ -755,12 +963,20 @@ uint8_t flvHeader::setVideoHeader(uint8_t codec,uint32_t *remaining)
 
     if(codec==FLV_CODECID_H263 && *remaining)
     {
-  
+#ifdef USE_BUFFERED_IO
+      uint64_t pos=0;
+      parser->getpos(&pos);
+#else
       uint32_t pos=ftello(_fd);
+#endif
       uint32_t len=*remaining,width,height;
       uint8_t *buffer=new uint8_t[len];
       read(len,buffer);
+#ifdef USE_BUFFERED_IO
+      parser->setpos(pos);
+#else
       fseeko(_fd,pos,SEEK_SET);
+#endif
        /* Decode header, from h263dec.c / lavcodec*/
       if(extractH263FLVInfo(buffer,len,&width,&height))
       {
@@ -1015,6 +1231,7 @@ bool flvHeader::checkTimeBase(uint32_t scale, uint32_t rate)
         if(x->ptsUs==ADM_NO_PTS)
             continue;
         if(x->ptsUs<delay) delay=x->ptsUs;
+        if(!delay) break;
     }
     if(delay==HIGH_POINT)
         return true; // no valid pts
@@ -1128,12 +1345,19 @@ uint8_t flvHeader::close(void)
      if(audioTrack->extraData) delete [] audioTrack->extraData;
     delete audioTrack;
   }
+#ifdef USE_BUFFERED_IO
+  if(parser)
+  {
+      delete parser;
+      parser=NULL;
+  }
+#else
   if(_fd) fclose(_fd);
+  _fd=NULL;
+#endif
   if(_audioStream) delete _audioStream;
   if(_access) delete _access;
-  
-  
-  _fd=NULL;
+
   _filename=NULL;
   videoTrack=NULL;
   audioTrack=NULL;
@@ -1149,7 +1373,11 @@ uint8_t flvHeader::close(void)
  flvHeader::flvHeader( void ) : vidHeader()
 {
     videoCodec=0xFFFF;
+#ifdef USE_BUFFERED_IO
+    parser=NULL;
+#else
     _fd=NULL;
+#endif
     _filename=NULL;
     videoTrack=NULL;
     audioTrack=NULL;
@@ -1224,8 +1452,14 @@ uint8_t  flvHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
      if(frame>=videoTrack->_nbIndex) return 0;
      flvIndex *idx=&(videoTrack->_index[frame]);
+#ifdef USE_BUFFERED_IO
+     parser->setpos(idx->pos);
+     if(!read(idx->size,img->data))
+         return 0;
+#else
      fseeko(_fd,idx->pos,SEEK_SET);
      fread(img->data,idx->size,1,_fd);
+#endif
      img->dataLength=idx->size;
      img->flags=idx->flags;
      //img->demuxerDts=ADM_COMPRESSED_NO_PTS;
