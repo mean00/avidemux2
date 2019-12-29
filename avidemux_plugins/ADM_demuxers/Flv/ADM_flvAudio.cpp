@@ -56,9 +56,7 @@ ADM_flvAccess::ADM_flvAccess(const char *name,flvTrak *track) : ADM_audioAccess(
     _track=track;
     goToBlock(0);
     currentBlock=0;
-    _msg_counter = 0;
-    _msg_ratelimit = new ADMCountdown(200);
-    _msg_ratelimit->reset();
+    _endOfStream=false;
 }
 /**
     \fn ADM_audioAccess
@@ -77,9 +75,6 @@ ADM_flvAccess::~ADM_flvAccess()
     if(_fd) fclose(_fd);
     _fd=NULL;
 #endif
-    if(_msg_ratelimit)
-        delete _msg_ratelimit;
-    _msg_ratelimit = NULL;
 }
 /**
     \fn getDurationInUs
@@ -132,20 +127,10 @@ bool      ADM_flvAccess::getPacket(uint8_t *buffer, uint32_t *osize, uint32_t ma
     flvIndex *x;
     if(false==goToBlock(currentBlock))
     {
-        if(_msg_ratelimit->done())
+        if(!_endOfStream)
         {
-            if(_msg_counter)
-            {
-                printf("[ADM_flvAccess::getPacket] Packet out of bounds (message repeated %" PRIu32" times)\n",_msg_counter);
-                _msg_counter = 0;
-            }else
-            {
-                printf("[ADM_flvAccess::getPacket] Packet out of bounds\n");
-            }
-            _msg_ratelimit->reset();
-        }else
-        {
-            _msg_counter++;
+            printf("[ADM_flvAccess::getPacket] Packet out of bounds.\n");
+            _endOfStream=true;
         }
         return false;
     }
@@ -159,7 +144,6 @@ bool      ADM_flvAccess::getPacket(uint8_t *buffer, uint32_t *osize, uint32_t ma
     *dts=((uint64_t)x->dtsUs);
     
     currentBlock++;
-    _msg_counter = 0;
     return 1;
 }
 /**
@@ -169,15 +153,11 @@ bool      ADM_flvAccess::goToBlock(uint32_t block)
 {
     if(block>=_track->_nbIndex)
     {
-        if(_msg_ratelimit->done())
-        {
-            if(_msg_counter)
-                printf("[ADM_flvAccess::goToBlock] Exceeding max cluster: asked: %u max: %u (message repeated %" PRIu32" times)\n",block,_track->_nbIndex,_msg_counter);
-            else
-                printf("[ADM_flvAccess::goToBlock] Exceeding max cluster: asked: %u max: %u\n",block,_track->_nbIndex);
-        }
+        if(!_endOfStream)
+            printf("[ADM_flvAccess::goToBlock] Exceeding max cluster: asked: %u max: %u\n",block,_track->_nbIndex);
         return false;  // FIXME
     }
+    _endOfStream=false;
     currentBlock=block;
 #ifdef USE_BUFFERED_IO
     aparser->setpos(_track->_index[currentBlock].pos);
