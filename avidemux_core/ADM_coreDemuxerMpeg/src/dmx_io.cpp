@@ -418,18 +418,44 @@ uint64_t remain,begin,mx,last;
                 fseeko(listOfFd[_curFd].file,0,SEEK_SET);
                 return mx+read32(len,buffer);
         }
-        // Read what is available in file, store leftover in the buffer
-        fread(buffer,len,1,listOfFd[_curFd].file);
-        _off+=len;
-        // available in that file
-        mx-=len;
+        if(len>_bufferSize)
+        {
+                // Read what is available in file, store leftover in the buffer
+                fread(buffer,len,1,listOfFd[_curFd].file);
+                _off+=len;
+                // available in that file
+                mx-=len;
+                if(mx>_bufferSize) mx=_bufferSize;
+                fread(_buffer,mx,1,listOfFd[_curFd].file);
+                _head=_off;
+                _tail=_head+mx;
+
+                return len;
+        }
+        // Fill the buffer first
         if(mx>_bufferSize) mx=_bufferSize;
         fread(_buffer,mx,1,listOfFd[_curFd].file);
         _head=_off;
         _tail=_head+mx;
-
-         return len;
-
+        return read32(len,buffer);
+}
+/**
+ *  \fn setBufferSize
+ */
+uint8_t fileParser::setBufferSize(uint32_t size)
+{
+    if(size>DMX_BUFFER_MAX)
+        return 0;
+    setpos(0);
+    if(_buffer)
+    {
+        free(_buffer);
+        _buffer=NULL;
+    }
+    _buffer=(uint8_t *)ADM_alloc(size);
+    ADM_assert(_buffer);
+    _bufferSize=size;
+    return 1;
 }
 #ifdef NO_INLINE_FP
 uint32_t fileParser::read32i(void )

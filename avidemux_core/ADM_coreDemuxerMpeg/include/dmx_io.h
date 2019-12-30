@@ -18,6 +18,7 @@
 #define FPARSER_
 #include "ADM_coreDemuxerMpeg6_export.h"
 #define DMX_BUFFER 1024*100
+#define DMX_BUFFER_MAX 4*1024*1024
 #include <BVector.h>
 
 /*
@@ -71,6 +72,7 @@ public:
                         uint8_t  setpos(uint64_t o);                
                         uint64_t getSize( void ) ;
                         uint32_t read32(uint32_t l, uint8_t *buffer);
+                        uint8_t  setBufferSize(uint32_t size);
                         uint8_t  end(void) { return _off>=_size-1;};
 						void hexDump(uint8_t *buf, int size);
                         uint8_t  peek8i(void); // Only call it once!!
