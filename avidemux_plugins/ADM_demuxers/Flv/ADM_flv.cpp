@@ -897,9 +897,10 @@ uint8_t flvHeader::open(const char *name)
         _audioStream = NULL;
        _access=NULL;
     }
+#ifdef USE_BUFFERED_IO
     // Too big cache may be detrimental for keyframe-based navigation, reduce cache size
     parser->setBufferSize(DMX_BUFFER);
-
+#endif
   printf("[FLV]FLV successfully read\n");
 
   return 1;
