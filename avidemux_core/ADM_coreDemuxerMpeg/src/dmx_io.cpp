@@ -52,7 +52,7 @@ fileParser::~fileParser()
                 }
         }
         listOfFd.clear();
-        if(_buffer) free(_buffer);
+        ADM_dealloc(_buffer);
         _buffer=NULL;
 }
 
@@ -447,11 +447,7 @@ uint8_t fileParser::setBufferSize(uint32_t size)
     if(size>DMX_BUFFER_MAX)
         return 0;
     setpos(0);
-    if(_buffer)
-    {
-        free(_buffer);
-        _buffer=NULL;
-    }
+    ADM_dealloc(_buffer);
     _buffer=(uint8_t *)ADM_alloc(size);
     ADM_assert(_buffer);
     _bufferSize=size;
