@@ -31,7 +31,7 @@
 #define aprintf printf
 #endif
 
-#define MAX_ACCEPTED_OPEN_FILE 99999
+#define MAX_ACCEPTED_OPEN_FILE 0x7FFFF
 
 #define US_PER_PIC (40*1000)
 
