@@ -36,10 +36,6 @@
 #include "ADM_coreJobs.h"
 #include "ADM_audioWrite.h"
 #include "ADM_filterChain.h"
-
-#include "ADM_coreVideoEncoder.h"
-#include "ADM_videoEncoderApi.h"
-
 // Local prototypes
 #include "A_functions.h"
 #include "ADM_script2/include/ADM_script.h"
@@ -502,7 +498,7 @@ int A_saveBunchJpg(const char *name)
     ADM_PathSplit(std::string(name),baseName,ext);
 
     int check=strlen(baseName.c_str());
-    check+=10;
+    check+=11; // '-'+'\d{5}'+'\.'+'jpg'+'\0'
     if(check>MAX_LEN)
     {
         ADM_error("Full path = %d is too long, aborting.\n",check);
@@ -539,42 +535,20 @@ int A_saveBunchJpg(const char *name)
     FilterInfo *info=filter->getInfo();
     uint32_t width=info->width;
     uint32_t height=info->height;
-
-    ADMImage *src=NULL;
-    ADM_coreVideoEncoder *encoder=NULL;
-
-    int idx=videoEncoder6_GetIndexFromName("Mjpeg");
-    if(idx>0)
-        encoder=createVideoEncoderFromIndex(filter,idx,false);
-
-    ADM_byteBuffer buf;
-    ADMBitstream out;
-
-    if(encoder)
+    ADMImage *src=new ADMImageDefault(width,height);
+    if(!src)
     {
-        int bufSize=width*height*4;
-        buf.setSize(bufSize);
-        out.bufferSize=bufSize;
-        out.data=buf.at(0);
-        if(!encoder->setup())
-        {
-            ADM_error("Encoder setup failed.\n");
-            goto _cleanup;
-        }
-    }else
-    {
-        src=new ADMImageDefault(width,height);
-        if(!src)
-        {
-            ADM_error("No buffer\n");
-            goto _cleanup;
-        }
+        ADM_error("No buffer\n");
+        destroyVideoFilterChain(chain);
+        chain=NULL;
+        filter=NULL;
+        return 0;
     }
 
     admPreview::deferDisplay(true);
     admPreview::seekToTime(start);
 
-    {
+
     uint32_t range=(uint32_t)((end-start)/1000);
     uint32_t fn;
     DIA_workingBase *working;
@@ -582,70 +556,38 @@ int A_saveBunchJpg(const char *name)
     working=createWorking(QT_TRANSLATE_NOOP("adm","Saving selection as set of JPEG images"));
     while(true)
     {
-        if(encoder)
+        if(!filter->getNextFrameAs(hw,&fn,src))
         {
-            if(!encoder->encode(&out))
-                break;
-            if(out.pts==ADM_NO_PTS)
-                pts+=inc;
-            else
-                pts=out.pts;
-        }else // slow path
-        {
-            if(!filter->getNextFrameAs(hw,&fn,src))
-            {
-                //GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cannot decode frame"), QT_TRANSLATE_NOOP("adm","Aborting."));
-                break;
-            }
-            if(src->Pts==ADM_NO_PTS)
-                pts+=inc;
-            else
-                pts=src->Pts;
+            //GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cannot decode frame"), QT_TRANSLATE_NOOP("adm","Aborting."));
+            break;
         }
+        if(src->Pts==ADM_NO_PTS)
+            pts+=inc;
+        else
+            pts=src->Pts;
         pts/=1000;
         working->update((uint32_t)pts,range);
         success++;
         if(!working->isAlive()) break;
         sprintf(fullName,"%s-%05d.jpg",baseName.c_str(),success);
-        if(src && !src->saveAsJpg(fullName)) break;
-        if(encoder)
-        {
-            FILE *f=ADM_fopen(fullName,"wb");
-            if(!f)
-            {
-                ADM_warning("Cannot write to \"%s\"\n",fullName);
-                continue;
-            }
-            fwrite(out.data,out.len,1,f);
-            fclose(f);
-        }
-        if(success==99999)
-        {
-            GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Warning"),QT_TRANSLATE_NOOP("adm","Maximum number of 9999 images reached, aborting."));
-            break;
-        }
+        if(!src->saveAsJpg(fullName)) break;
+        if(success==99999) break;
     }
+
     delete working;
     working=NULL;
-    if(success)
-        GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Done"),QT_TRANSLATE_NOOP("adm","Saved %d images."),success);
-    else
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Saving images failed."));
-    }
-_cleanup:
-    if(encoder)
-    {
-        delete encoder;
-        encoder=NULL;
-    }
-    if(src)
-    {
-        delete src;
-        src=NULL;
-    }
+    delete src;
+    src=NULL;
     destroyVideoFilterChain(chain);
     chain=NULL;
     filter=NULL;
+
+    if(success==99999)
+        GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Warning"),QT_TRANSLATE_NOOP("adm","Maximum number of 99999 images reached."));
+    else if(success)
+        GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Done"),QT_TRANSLATE_NOOP("adm","Saved %d images."),success);
+    else
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Saving images failed."));
 
     admPreview::seekToTime(original);
     admPreview::deferDisplay(false);
