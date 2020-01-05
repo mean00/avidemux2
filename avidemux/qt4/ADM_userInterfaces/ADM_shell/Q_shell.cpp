@@ -40,11 +40,15 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine, std::vector <shellHistory
     }
     ui.setupUi(this);
     ui.textBrowser_2->installEventFilter(this);
-    ui.textBrowser_2->setFocus();
     connect((ui.evalute),SIGNAL(clicked(bool)),this,SLOT(evaluate(bool)));
     connect((ui.clear),SIGNAL(clicked(bool)),this,SLOT(clear(bool)));
+#ifndef __APPLE__
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or CTRL+ENTER.\n"));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n"));
+#else
+    print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or ⌘⏎.\n"));
+    print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use ⌥⌘▲ and ⌥⌘▼ to recall previous commands.\nReady.\n"));
+#endif
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
     dumpHistory();
 #endif
@@ -172,21 +176,44 @@ bool qShell::clear(bool x)
     return true;
 }
 /**
+    \fn showEvent
+    \brief set focus to text input
+*/
+void qShell::showEvent(QShowEvent *ev)
+{
+    ui.textBrowser_2->setFocus();
+    QWidget::showEvent(ev);
+}
+/**
     \fn eventFilter
     \brief
 */
 bool qShell::eventFilter(QObject* watched, QEvent* event)
 {
-	if(event->type()==QEvent::KeyPress)
+    if(event->type()==QEvent::KeyPress)
     {
-			QKeyEvent *keyEvent = (QKeyEvent*)event;
-            if(keyEvent->modifiers() == Qt::ControlModifier)
-                switch (keyEvent->key())
-                {
-                    case Qt::Key_PageUp:   previousCommand();return true;break;
-                    case Qt::Key_PageDown: nextCommand();return true;break;
-                    default:break;
-                }
+        QKeyEvent *keyEvent = (QKeyEvent*)event;
+#ifndef __APPLE__
+        if(keyEvent->modifiers() == Qt::ControlModifier)
+        {
+            switch (keyEvent->key())
+            {
+                case Qt::Key_PageUp: previousCommand();return true;
+                case Qt::Key_PageDown: nextCommand();return true;
+                default:break;
+            }
+        }
+#else
+        if((keyEvent->modifiers() & Qt::AltModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
+        {
+            switch (keyEvent->key())
+            {
+                case Qt::Key_Up: previousCommand();return true;
+                case Qt::Key_Down: nextCommand();return true;
+                default:break;
+            }
+        }
+#endif
     }
     return QObject::eventFilter(watched, event);
 }

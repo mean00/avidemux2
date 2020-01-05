@@ -26,6 +26,7 @@ class qShell: public QDialog
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
     bool                 dumpHistory(void);
 #endif
+    void                 showEvent(QShowEvent *ev);
 protected:
     IScriptEngine      *_engine;
     Ui_SpiderMonkeyShell ui;
