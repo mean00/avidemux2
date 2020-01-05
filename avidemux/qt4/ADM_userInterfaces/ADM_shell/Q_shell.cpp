@@ -15,12 +15,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <vector>
 #include "ADM_inttype.h"
-#include <QtCore/QFileInfo>
-#include <QtCore/QUrl>
-#include <QtGui/QKeyEvent>
-#include <QGraphicsView>
+#include <QKeyEvent>
 #include "Q_shell.h"
 #include "ADM_default.h"
 #include "ui_shell.h"
@@ -29,20 +25,28 @@
 /**
     \fn qShell
 */
-qShell::qShell(QWidget *parent, IScriptEngine *engine) : QDialog(parent)
+qShell::qShell(QWidget *parent, IScriptEngine *engine, std::vector <shellHistoryEntry> *commands) : QDialog(parent)
 {
-    ADM_info("Setting up JS shell..\n");
+    ADM_info("Setting up shell for %s...\n",engine->name().c_str());
     _engine = engine;
-    for(int i=0;i<Q_SHELL_HISTORY;i++)
-                    history[i]=NULL;
-
+    _history = commands;
+    indexRead=indexWrite=0;
+    for(int i=0;i<_history->size();i++)
+    {
+        shellHistoryEntry e=_history->at(i);
+        if(e.name!=_engine->name()) continue;
+        indexRead++;
+        indexWrite++;
+    }
     ui.setupUi(this);
     ui.textBrowser_2->installEventFilter(this);
     connect((ui.evalute),SIGNAL(clicked(bool)),this,SLOT(evaluate(bool)));
     connect((ui.clear),SIGNAL(clicked(bool)),this,SLOT(clear(bool)));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or CTRL+ENTER.\n"));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n"));
-    indexRead=indexWrite=0;
+#ifdef SCRIPT_SHELL_HISTORY_VERBOSE
+    dumpHistory();
+#endif
 }
 /**
     \fn ~qShell
@@ -50,17 +54,50 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine) : QDialog(parent)
 qShell::~qShell()
 {
     ADM_info("Destroying JS shell..\n");
-    for(int i=0;i<Q_SHELL_HISTORY;i++)
-    {
-            if(history[i]) delete history[i];
-            history[i]=NULL;
-    }
-
 }
+/**
+    \fn run
+*/
 bool qShell::run(void)
 {
     this->exec();
     return true;
+}
+/**
+    \fn addToHistory
+*/
+int qShell::addToHistory(QString &command)
+{
+    int r=0;
+    int size=_history->size();
+    // remove duplicates
+    for(int i=0;i<size;i++)
+    {
+        shellHistoryEntry e=_history->at(size-i-1);
+        if(e.name!=_engine->name())
+            continue;
+        if(*(e.command)==command)
+        {
+            if(!i) // nothing to do
+                return r;
+            QString *cmd=e.command;
+            delete cmd;
+            e.command=NULL;
+            std::vector <shellHistoryEntry>::iterator it=_history->begin();
+            it+=size-i-1;
+            _history->erase(it);
+            size--;
+            r--;
+        }
+    }
+    // append our entry
+    shellHistoryEntry e;
+    e.name=_engine->name();
+    QString *cmd=new QString(command);
+    e.command=cmd;
+    _history->push_back(e);
+    r++;
+    return r;
 }
 /**
         \fn evaluate
@@ -71,10 +108,8 @@ bool            qShell::evaluate(bool x)
     ADM_info("Evaluating...\n");
     // 1 Get text from UI
     QString text=ui.textBrowser_2->toPlainText();
-    int dex=indexWrite & (Q_SHELL_HISTORY-1);
-    if(history[dex]) delete history[dex];
-    history[dex]=new QString(text);
-    indexWrite++;
+    indexWrite+=addToHistory(text);
+    if(indexWrite<1) indexWrite=1;
     indexRead=indexWrite-1; // Points to the last one
 
     ui.textBrowser->setFontItalic(true);
@@ -82,8 +117,34 @@ bool            qShell::evaluate(bool x)
     ui.textBrowser->setFontItalic(false);
     ui.textBrowser_2->setPlainText("");
     _engine->runScript(text.toLatin1().constData(), IScriptEngine::Normal);
+#ifdef SCRIPT_SHELL_HISTORY_VERBOSE
+    dumpHistory();
+#endif
     return true;
 }
+#ifdef SCRIPT_SHELL_HISTORY_VERBOSE
+/**
+    \fn dumpHistory
+*/
+bool qShell::dumpHistory(void)
+{
+    if(_history->empty())
+    {
+        ADM_info("History is empty.\n");
+        return true;
+    }
+    int count=0;
+    for(int i=0;i<_history->size();i++)
+    {
+        shellHistoryEntry e=_history->at(i);
+        if(e.name!=_engine->name())
+            continue;
+        QString *cmd=e.command;
+        printf(" --> history entry %d: \"%s\"\n",count++,cmd->toUtf8().constData());
+    }
+    return true;
+}
+#endif
 /**
     \fn print
 */
@@ -133,9 +194,31 @@ bool qShell::eventFilter(QObject* watched, QEvent* event)
 */
 bool   qShell::previousCommand(void)
 {
-    int dex=indexRead & (Q_SHELL_HISTORY-1);
-    QString *copy=history[dex];
-    if(indexRead) indexRead--;
+    if(indexWrite<1)
+        return false;
+    int count=0;
+    int size=_history->size();
+    QString *copy=NULL;
+    if(indexRead>=indexWrite) indexRead=indexWrite-1;
+    // Retrieve text from UI
+    QString text=ui.textBrowser_2->toPlainText();
+    for(int i=0;i<size;i++)
+    {
+        shellHistoryEntry e=_history->at(i);
+        if(e.name!=_engine->name())
+            continue;
+        if(count==indexRead)
+        {
+            copy=e.command;
+            if(indexRead>0 && *copy==text) // The command is already filled in, skip it
+            {
+                indexRead--;
+                return previousCommand();
+            }
+            break;
+        }
+        count++;
+    }
     if(!copy) return true;
     ui.textBrowser_2->clear();
     ui.textBrowser_2->append(*copy);
@@ -146,10 +229,24 @@ bool   qShell::previousCommand(void)
 */
 bool   qShell::nextCommand(void)
 {
+    if(indexRead+1>=indexWrite)
+        return true;
+    QString *copy=NULL;
+    int count=0;
+    int size=_history->size();
     if(indexRead+1<indexWrite) indexRead++;
-            else return true;
-    int dex=indexRead & (Q_SHELL_HISTORY-1);
-    QString *copy=history[dex];
+    for(int i=0;i<size;i++)
+    {
+        shellHistoryEntry e=_history->at(i);
+        if(e.name!=_engine->name())
+            continue;
+        if(count==indexRead)
+        {
+            copy=e.command;
+            break;
+        }
+        count++;
+    }
     if(!copy) return true;
     ui.textBrowser_2->clear();
     ui.textBrowser_2->append(*copy);

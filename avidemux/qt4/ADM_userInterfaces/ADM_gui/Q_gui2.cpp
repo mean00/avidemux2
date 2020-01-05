@@ -108,8 +108,9 @@ extern uint8_t AVDM_setVolume(int volume);
 extern bool AVDM_hasVolumeControl(void);
 extern bool ADM_QPreviewCleanup(void);
 extern void vdpauCleanup();
-extern bool A_loadDefaultSettings(void);;
+extern bool A_loadDefaultSettings(void);
 
+extern int ADM_clearQtShellHistory(void);
 extern void ADM_ExitCleanup(void);
 
 static bool uiRunning=false;
@@ -2462,7 +2463,7 @@ void UI_setAudioTrackCount( int nb )
  */
 myQApplication::~myQApplication()
 {
-    
+    ADM_clearQtShellHistory();
     ADM_warning("Cleaning render...\n");
     renderDestroy();
     ADM_warning("Cleaning preview...\n");
