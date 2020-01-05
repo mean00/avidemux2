@@ -9,6 +9,7 @@
 #include "IScriptEngine.h"
 
 static qShell *s;
+static std::vector <shellHistoryEntry> shellHistory;
 
 /**
     \fn qt4ShellLogger
@@ -25,7 +26,7 @@ static void qt4ShellLogger(IScriptEngine::EngineEvent *event)
 */
 bool ADM_startShell(IScriptEngine *engine)
 {
-        s = new qShell(qtLastRegisteredDialog(), engine);
+        s = new qShell(qtLastRegisteredDialog(), engine, &shellHistory);
 		qtRegisterDialog(s);
 
 		engine->registerEventHandler(qt4ShellLogger);
@@ -36,6 +37,31 @@ bool ADM_startShell(IScriptEngine *engine)
 
         delete s;
         return true;
+}
+
+/**
+    \fn ADM_clearQtShellHistory
+    \brief free memory
+*/
+int ADM_clearQtShellHistory(void)
+{
+    int freed=0;
+    int size=shellHistory.size();
+    ADM_info("Clearing script shell history (%d entries)\n",size);
+    for(int i=0;i<size;i++)
+    {
+        shellHistoryEntry e=shellHistory.at(i);
+        if(!e.command) continue;
+        QString *s=e.command;
+        QByteArray b=s->toUtf8();
+        freed+=b.size();
+        delete s;
+        s=NULL;
+    }
+    shellHistory.clear();
+    if(freed)
+        ADM_info("Freed %d bytes allocated for commands.\n",freed);
+    return freed;
 }
 //EOF
 
