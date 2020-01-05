@@ -40,6 +40,7 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine, std::vector <shellHistory
     }
     ui.setupUi(this);
     ui.textBrowser_2->installEventFilter(this);
+    ui.textBrowser_2->setFocus();
     connect((ui.evalute),SIGNAL(clicked(bool)),this,SLOT(evaluate(bool)));
     connect((ui.clear),SIGNAL(clicked(bool)),this,SLOT(clear(bool)));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or CTRL+ENTER.\n"));
