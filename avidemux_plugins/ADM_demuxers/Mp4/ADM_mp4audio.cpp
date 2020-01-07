@@ -49,9 +49,7 @@
     ADM_assert(_fd);
     _current_index=0;
     _index=track->index;
-    _msg_counter = 0;
-    _msg_ratelimit = new ADMCountdown(200);
-    _msg_ratelimit->reset();
+    _endOfStream=false;
 
     extraDataLen=track->extraDataSize;
     extraData=track->extraData;
@@ -99,9 +97,6 @@ ADM_mp4AudioAccess::~ADM_mp4AudioAccess()
         fclose(_fd);
         _fd=NULL;
     }
-    if(_msg_ratelimit)
-        delete _msg_ratelimit;
-    _msg_ratelimit = NULL;
 }
 /**
     \fn ADM_mp4AudioAccess
@@ -139,35 +134,25 @@ bool    ADM_mp4AudioAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t 
     uint32_t r=0;
     if(_current_index>=_nb_chunks)
     {
-        if(_msg_ratelimit->done())
+        if(!_endOfStream)
         {
-            if(_msg_counter)
-            {
-                printf("[MP4Audio] : index max :%u/%u (message repeated %u times)\n",_current_index,_nb_chunks,_msg_counter);
-                _msg_counter = 0;
-            }else
-            {
-                printf("[MP4Audio] : index max :%u/%u\n",_current_index,_nb_chunks);
-            }
-            _msg_ratelimit->reset();
-        }else
-        {
-            _msg_counter++;
+            printf("[ADM_mp4AudioAccess::getPacket] Requested index %u out of bounds, max: %u\n",_current_index,(_nb_chunks)?(_nb_chunks-1):0);
+            _endOfStream=true;
         }
         return 0;
     }
-	  fseeko(_fd,_index[_current_index].offset,SEEK_SET);
-	  r=fread(buffer,1,_index[_current_index].size,_fd);
-      if(!r)
-      {
+    fseeko(_fd,_index[_current_index].offset,SEEK_SET);
+    r=fread(buffer,1,_index[_current_index].size,_fd);
+    if(!r)
+    {
         printf("[MP4 Audio] Cannot read \n");
         return false;
-      }
-      *dts=_index[_current_index].dts;
-      *size=r;
-	  _current_index++;
-	  _msg_counter = 0;
-	  return true;
+    }
+    *dts=_index[_current_index].dts;
+    *size=r;
+    _current_index++;
+    _endOfStream=false;
+    return true;
 }
 /**
     \fn getDurationInUs
