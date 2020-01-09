@@ -179,10 +179,11 @@ uint64_t MY_CLASS::getTime(uint32_t frame)
 uint64_t MY_CLASS::timeConvert(uint64_t x)
 {
     if(x==ADM_NO_PTS) return ADM_NO_PTS;
-    x=x-ListOfFrames[0]->dts;
-    x=x*1000;
-    x/=90;
-    return x;
+    double f=x-ListOfFrames[0]->dts;
+    f*=1000.;
+    f/=90.;
+    f+=0.49;
+    return (uint64_t)f;
 }
 
 
