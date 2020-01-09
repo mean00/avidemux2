@@ -92,7 +92,16 @@ const char *er;
         par = video_st->codecpar;
 
         // Override codec settings
-        rescaleFps(s->getAvgFps1000(),&(c->time_base));
+        uint32_t clockFreq=s->getTimeBaseDen();
+        uint32_t nbTicks=s->getTimeBaseNum();
+        if(clockFreq && nbTicks)
+        {
+            c->time_base.den=clockFreq;
+            c->time_base.num=nbTicks;
+        }else
+        {
+            rescaleFps(s->getAvgFps1000(),&(c->time_base));
+        }
         video_st->time_base=c->time_base;
         par->bit_rate=psMuxerConfig.videoRatekBits*1000;
         c->rc_buffer_size=psMuxerConfig.bufferSizekBytes*8*1024;
