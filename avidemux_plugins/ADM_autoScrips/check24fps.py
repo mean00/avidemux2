@@ -44,14 +44,10 @@ while True:
 # end while
 total=ntsc+film+other+pal
 if(total==0):
-    gui.displayInfo("Not enough info to check...")      
-    exit(0)
-    
+    gui.displayInfo("Not enough info to check...")
+    return
 pal=round(0.4+(100*pal)/total)
 ntsc=round(0.4+(100*ntsc)/total)
 film=round((100*film)/total)
 other=round(0.4+(100*other)/total)
-gui.displayInfo("Framerate check","Pal ="+str(pal)+"%\nFilm="+str(film)+"%\n Ntsc="+str(ntsc)+"%\nOther="+str(other)+"%")      
-#
-
-    
+gui.displayInfo("Framerate check","Pal ="+str(pal)+"%\nFilm="+str(film)+"%\n Ntsc="+str(ntsc)+"%\nOther="+str(other)+"%")
