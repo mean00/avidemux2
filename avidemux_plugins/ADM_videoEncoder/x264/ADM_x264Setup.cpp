@@ -100,7 +100,7 @@ bool x264Encoder::setup(void)
   //Framerate
   int n,d;
   uint64_t f=source->getInfo()->frameIncrement;
-  usSecondsToFrac(f,&n,&d);
+  usSecondsToFrac(f,&n,&d,INT_MAX);
   param.i_fps_num = d;
   param.i_fps_den = n;
   n = source->getInfo()->timeBaseNum & 0x7FFFFFFF;
@@ -108,8 +108,13 @@ bool x264Encoder::setup(void)
   ADM_assert(d);
   param.i_timebase_num = n;
   param.i_timebase_den = d;
+#if 0
   bool constantFps = (n * 1000 * 1000 + (d / 2))/ d >= f;
   param.b_vfr_input = !constantFps;
+#else
+// We do pseudo cfr ...
+  param.b_vfr_input=0;
+#endif
 
   // -------------- vui------------
   #undef MKPARAM
@@ -200,10 +205,6 @@ bool x264Encoder::setup(void)
       param.b_repeat_headers=0;
   else
       param.b_repeat_headers=1;
-#if 0
-  // We do pseudo cfr ...
-  param.b_vfr_input=0;
-#endif
 
   if(x264Settings.useAdvancedConfiguration)
   {  
