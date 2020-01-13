@@ -50,12 +50,12 @@ dlgWizard.addControl(mnuSourceRatio);
 dlgWizard.addControl(mnuDestRatio);
 res=dlgWizard.show()
 if res!=1:
-    exit()
+    return
 source.ar=mnuSourceRatio.index
 dest.ar=mnuDestRatio.index+1
 resizer=source.compute_resize(source,dest,finalSizeWidth,finalSizeHeight,ADM_imageInfo.aspectRatio)
 if(resizer is None):
-    exit()
+    return
 print("Resize to "+str(resizer.width)+"x"+str(resizer.height))
 # Correct so that result is 2/3 D1 i.e. 480xxxx
 newW=resizer.width
@@ -70,24 +70,24 @@ source.apply_resize(resizer)
 tracks=adm.audioTracksCount()
 print("We have "+str(tracks)+ " audio tracks.")
 if tracks==0:
-     gui.displayError("Audio","No audio tracks!")
-     exit()
+    gui.displayError("Audio","No audio tracks!")
+    return
 for i in range(0,tracks):
-  encoding=adm.audioEncoding(i)
-  fq=adm.audioFrequency(i)
-  channels=adm.audioChannels(i)
-  reencode=False
-  # 1 check frequency
-  if(fq != 44100):
-      adm.audioSetResample(i,44100)
-      reencode=True
-  if(not(encoding in supported)):
-      reencode=True
-  if(channels!=2):
-      adm.audioSetMixer(i,"STEREO")
-      reencode=True
-  if(True==reencode):
-      adm.audioCodec(i,"TwoLame","bitrate=224")
+    encoding=adm.audioEncoding(i)
+    fq=adm.audioFrequency(i)
+    channels=adm.audioChannels(i)
+    reencode=False
+    # 1 check frequency
+    if(fq != 44100):
+        adm.audioSetResample(i,44100)
+        reencode=True
+    if(not(encoding in supported)):
+        reencode=True
+    if(channels!=2):
+        adm.audioSetMixer(i,"STEREO")
+        reencode=True
+    if(True==reencode):
+        adm.audioCodec(i,"TwoLame","bitrate=224")
 ##################################
 #  Video
 ##################################

@@ -53,12 +53,12 @@ dlgWizard.addControl(mnuSourceRatio);
 dlgWizard.addControl(mnuDestRatio);
 res=dlgWizard.show()
 if res!=1:
-    exit()
+    return
 source.ar=mnuSourceRatio.index
 dest.ar=mnuDestRatio.index+1
 resizer=source.compute_resize(source,dest,finalSizeWidth,finalSizeHeight,ADM_imageInfo.aspectRatio)
 if(resizer is None):
-    exit()
+    return
 print("Resize to "+str(resizer.width)+"x"+str(resizer.height))
 source.apply_resize(resizer)
 ############################
@@ -67,24 +67,24 @@ source.apply_resize(resizer)
 tracks=adm.audioTracksCount()
 print("We have "+str(tracks)+ " audio tracks.")
 if tracks==0:
-     gui.displayError("Audio","No audio tracks!")
-     exit()
+    gui.displayError("Audio","No audio tracks!")
+    return
 for i in range(0,tracks):
-  print("Processing track "+str(i))
-  encoding=adm.audioEncoding(i)
-  fq=adm.audioFrequency(i)
-  channels=adm.audioChannels(i)
-  reencode=False
-  # 1 check frequency
-  if(fq != 48000):
-      adm.audioSetResample(i,48000)
-      reencode=True
-  if(not(encoding in supported)):
-      reencode=True
-  if(True==reencode):
-      if(channels!=2):
-          adm.audioSetMixer(i,"STEREO")
-      adm.audioCodec(i,"LavAC3","bitrate=224")
+    print("Processing track "+str(i))
+    encoding=adm.audioEncoding(i)
+    fq=adm.audioFrequency(i)
+    channels=adm.audioChannels(i)
+    reencode=False
+    # 1 check frequency
+    if(fq != 48000):
+        adm.audioSetResample(i,48000)
+        reencode=True
+    if(not(encoding in supported)):
+        reencode=True
+    if(True==reencode):
+        if(channels!=2):
+            adm.audioSetMixer(i,"STEREO")
+        adm.audioCodec(i,"LavAC3","bitrate=224")
 ##################################
 #  Video
 ##################################
@@ -97,4 +97,3 @@ adm.videoCodec("ffMpeg2","params=CQ=2","lavcSettings=:version=2:MultiThreaded=2:
 # Container = Mpeg PS/DVD
 ###################################
 adm.setContainer("ffPS","muxingType=2","acceptNonCompliant=False","muxRatekBits=11000","videoRatekBits=9800","bufferSizekBytes=224")
-    

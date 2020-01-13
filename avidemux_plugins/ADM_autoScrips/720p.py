@@ -46,7 +46,7 @@ dlgWizard.addControl(mnuSourceRatio);
 dlgWizard.addControl(mnuDeint);
 res=dlgWizard.show()
 if res!=1:
-    exit()
+    return
 source.ar=mnuSourceRatio.index
 dest.ar=ADM_image.AR_1_1
 deint=mnuDeint.index
@@ -60,7 +60,7 @@ if(deint==2):
 #  Resize
 resizer=source.compute_resize(source,dest,1280,[720,720,720],ADM_imageInfo.aspectRatio)
 if(resizer is None):
-    exit()
+    return
 print("Resize to "+str(resizer.width)+"x"+str(resizer.height))
 # No need to add black border
 resizer.leftright=0
@@ -84,5 +84,4 @@ adm.videoCodec("x264","params=AQ=20","MaxRefFrames=2","MinIdr=10","MaxIdr=150","
 ###################################
 # Container = Mpeg PS/DVD
 ###################################
-adm.setContainer("MKV","forceDisplayWidth=False","displayWidth=1280")
-    
+adm.setContainer("MKV", "forceDisplayWidth=False", "displayWidth=1280", "displayAspectRatio=0")

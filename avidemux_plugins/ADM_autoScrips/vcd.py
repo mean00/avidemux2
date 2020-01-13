@@ -50,12 +50,12 @@ dlgWizard.addControl(mnuSourceRatio);
 dlgWizard.addControl(mnuDestRatio);
 res=dlgWizard.show()
 if res!=1:
-    exit()
+    return
 source.ar=mnuSourceRatio.index
 dest.ar=mnuDestRatio.index+1
 resizer=source.compute_resize(source,dest,finalSizeWidth,finalSizeHeight,ADM_imageInfo.aspectRatio)
 if(resizer is None):
-    exit()
+    return
 print("Resize to "+str(resizer.width)+"x"+str(resizer.height))
 source.apply_resize(resizer)
 ############################
@@ -64,8 +64,8 @@ source.apply_resize(resizer)
 tracks=adm.audioTracksCount()
 print("We have "+str(tracks)+ " audio tracks.")
 if(tracks!=1):
-  gui.displayError("Error","Please have only one audio track for VCD!")
-  exit()
+    gui.displayError("Error","Please have only one audio track for VCD!")
+    return
 encoding=adm.audioEncoding(0)
 fq=adm.audioFrequency(0)
 channels=adm.audioChannels(0)
