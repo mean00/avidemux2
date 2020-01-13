@@ -90,10 +90,10 @@ void DIA_encodingBase::pushAudioFrame(uint32_t size)
     \fn refresh
 */
 
-void DIA_encodingBase::refresh(void)
+void DIA_encodingBase::refresh(bool force)
 {
           uint32_t time=clock.getElapsedMS();
-          if(time>_nextUpdate)
+          if(force || time>_nextUpdate)
           {
                 uint32_t deltaTime=time-_lastClock;
                 uint32_t deltaFrame=_currentFrameCount-_lastFrameCount;
@@ -137,6 +137,7 @@ void DIA_encodingBase::refresh(void)
                     //printf("************** Fps:%d\n",(int)_fps_average);
                     setFps(_fps_average);
                     float p=(float)_currentDts/(float)_totalDurationUs;
+                    p+=0.0049;
                     if(p>1.0) p=1.0;
                     p*=100;
                     if(percent<(uint32_t)p)

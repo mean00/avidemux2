@@ -87,11 +87,17 @@ void DIA_encodingQt4::shutdownChanged(int state)
 #endif
 }
 
+void DIA_encodingQt4::keepOpenChanged(int state)
+{
+    stayOpen=!!state;
+}
+
 static char stringMe[80];
 
 DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 {
         stopRequest=false;
+        stayOpen=false;
         UI_getTaskBarProgress()->enable();
         ui=new Ui_encodingDialog;
 	ui->setupUi(this);
@@ -112,6 +118,7 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
         ui->checkBoxShutdown->setVisible(false); // shutdown is disabled, hide the checkbox on all platforms
 
 	connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
+	connect(ui->checkBoxKeepOpen, SIGNAL(stateChanged(int)), this, SLOT(keepOpenChanged(int)));
 	connect(ui->pushButton1, SIGNAL(pressed()), this, SLOT(useTrayButtonPressed()));
 	connect(ui->pushButton2, SIGNAL(pressed()), this, SLOT(pauseButtonPressed()));
 	connect(ui->comboBoxPriority, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
@@ -161,14 +168,12 @@ DIA_encodingQt4::~DIA_encodingQt4( )
         delete tray;
         tray=NULL;
     }
-        
-	
-	if(ui) 
-        {
-            qtUnregisterDialog(this);
-            delete ui;
-            ui=NULL;
-        }
+    if(ui)
+    {
+        qtUnregisterDialog(this);
+        delete ui;
+        ui=NULL;
+    }
 }
 /**
     \fn setPhasis(const char *n)
@@ -385,6 +390,34 @@ bool DIA_encodingQt4::isAlive( void )
 
         return false;
 }
+
+/**
+    \fn keepOpen
+    \brief Allow user to read the muxing stats calmly
+*/
+void DIA_encodingQt4::keepOpen(void)
+{
+    if(stayOpen)
+    {
+        UI_getTaskBarProgress()->disable();
+        if(tray)
+        {
+            UI_deiconify();
+            delete tray;
+            tray=NULL;
+        }
+        ui->pushButton1->setEnabled(false);
+        ui->pushButton2->setEnabled(false);
+        ui->comboBoxPriority->setEnabled(false);
+        show();
+        while(stayOpen)
+        {
+            ADM_usleep(100*1000);
+            QCoreApplication::processEvents();
+        }
+    }
+}
+
 /**
  * \fn closeEvent
  * @param event

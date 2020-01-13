@@ -81,7 +81,8 @@ public:
 
                 virtual void pushVideoFrame(uint32_t size, uint32_t quant,uint64_t timeUs);
                 virtual void pushAudioFrame(uint32_t size);
-                virtual void refresh(void);
+                virtual void refresh(bool force=false);
+                virtual void keepOpen(void) {};
 };
 //********************
 ADM_COREUI6_EXPORT DIA_encodingBase *createEncoding(uint64_t duration);
