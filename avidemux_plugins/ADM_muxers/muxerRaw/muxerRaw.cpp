@@ -79,11 +79,13 @@ bool muxerRaw::save(void)
     bool result=true;
     ADMBitstream in(bufSize);
     in.data=buffer;
-    initUI("Saving raw video");
+    initUI(QT_TRANSLATE_NOOP("rawmuxer","Saving raw video"));
+    encoding->setContainer(QT_TRANSLATE_NOOP("rawmuxer","None"));
     while(true==vStream->getPacket(&in))
     {
         if(in.dts==ADM_NO_PTS)
             in.dts=lastVideoDts+videoIncrement;
+        encoding->pushVideoFrame(in.len,in.out_quantizer,in.dts);
         if(updateUI()==false)
         {
             result=false;
