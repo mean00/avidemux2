@@ -23,6 +23,7 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
 #include "ADM_coreUtils.h"
+#include <climits>
 
 #if 1
     #define aprintf(...) {}
