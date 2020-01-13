@@ -46,8 +46,8 @@ protected:
     void setAverageQz(uint32_t nb);
     void setAverageBitrateKbits(uint32_t kb);
 
-    
     bool                stopRequest;
+    bool                stayOpen;
     Ui_encodingDialog   *ui;    
     ADM_tray            *tray;
 public:    
@@ -60,12 +60,13 @@ public:
     void setContainer(const char *container);
     void setQuantIn(int size);
     bool isAlive( void );
-    
+    void keepOpen(void);
  public slots:
     void useTrayButtonPressed(void);
     void pauseButtonPressed(void);
     void priorityChanged(int priorityLevel);
-    void shutdownChanged(int state);    
+    void shutdownChanged(int state);
+    void keepOpenChanged(int state);
     void closeEvent(QCloseEvent *event);
     void reject(void);
 

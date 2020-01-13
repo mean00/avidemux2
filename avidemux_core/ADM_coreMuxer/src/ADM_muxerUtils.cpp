@@ -122,8 +122,13 @@ bool     ADM_muxer::updateUI(void)
 
 bool     ADM_muxer::closeUI(void)
 {
-        if(encoding) delete encoding;
-        encoding=NULL;
-        return true;
+    if(encoding)
+    {
+        encoding->refresh(true);
+        encoding->keepOpen();
+        delete encoding;
+    }
+    encoding=NULL;
+    return true;
 }
 // EOF
