@@ -19,10 +19,10 @@
 
 
 #include "prefs.h"
-#include "DIA_working.h"
 #include "DIA_encoding.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
+#include "ADM_misc.h"
 #include "ADM_toolkitQt.h"
 #include "GUI_ui.h"
 #include "ADM_coreUtils.h"
@@ -84,12 +84,28 @@ void DIA_encodingQt4::shutdownChanged(int state)
 
 		GUI_Error_HIG(QT_TRANSLATE_NOOP("qencoding","Privileges Required"), QT_TRANSLATE_NOOP("qencoding","Root privileges are required to perform this operation."));
 	}
+#else
+	if(state)
+	{
+		ui->checkBoxKeepOpen->disconnect(SIGNAL(stateChanged(int)));
+		ui->checkBoxKeepOpen->setCheckState(Qt::Unchecked);
+		stayOpen=false;
+		connect(ui->checkBoxKeepOpen, SIGNAL(stateChanged(int)), this, SLOT(keepOpenChanged(int)));
+	}
 #endif
 }
 
 void DIA_encodingQt4::keepOpenChanged(int state)
 {
     stayOpen=!!state;
+#ifdef _WIN32
+    if(state)
+    {
+        ui->checkBoxShutdown->disconnect(SIGNAL(stateChanged(int)));
+        ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
+        connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
+    }
+#endif
 }
 
 static char stringMe[80];
@@ -114,9 +130,8 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
             ui->comboBoxPriority->setVisible(false);
             ui->labelPrio->setVisible(false);
         }
+        ui->checkBoxShutdown->setVisible(false);
 #endif
-        ui->checkBoxShutdown->setVisible(false); // shutdown is disabled, hide the checkbox on all platforms
-
 	connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
 	connect(ui->checkBoxKeepOpen, SIGNAL(stateChanged(int)), this, SLOT(keepOpenChanged(int)));
 	connect(ui->pushButton1, SIGNAL(pressed()), this, SLOT(useTrayButtonPressed()));
@@ -161,7 +176,7 @@ DIA_encodingQt4::~DIA_encodingQt4( )
 {
     ADM_info("Destroying encoding qt4\n");
     UI_getTaskBarProgress()->disable();
-    //bool shutdownRequired = (ui->checkBoxShutdown->checkState() == Qt::Checked);
+    bool shutdownRequested = (ui->checkBoxShutdown->checkState() == Qt::Checked);
     if(tray)
     {
         UI_deiconify();
@@ -173,6 +188,13 @@ DIA_encodingQt4::~DIA_encodingQt4( )
         qtUnregisterDialog(this);
         delete ui;
         ui=NULL;
+    }
+    if(shutdownRequested)
+    {
+        prefs->save(); // won't get another chance
+        ADM_info("Requesting shutdown...\n");
+        if(!ADM_shutdown())
+            ADM_warning("Shutdown request failed\n");
     }
 }
 /**
@@ -186,16 +208,12 @@ void DIA_encodingQt4::setPhasis(const char *n)
     if(!strcmp(n,"Pass 1"))
     {
         ui->tabWidget->setTabEnabled(1, false); // disable the "Advanced" tab
-        ui->checkBoxShutdown->setVisible(false); // hide the shutdown checkbox
         this->setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qencoding","First Pass")));
         WRITEM(labelPhasis,QT_TRANSLATE_NOOP("qencoding","Pass 1"));
     }else
     {
         this->setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qencoding","Encoding...")));
         ui->tabWidget->setTabEnabled(1, true);
-#if 0
-        ui->checkBoxShutdown->setVisible(true);
-#endif
         WRITEM(labelPhasis,n);
     }
 }
@@ -372,23 +390,21 @@ void DIA_encodingQt4::setRemainingTimeMS(uint32_t milliseconds)
 
 /**
     \fn isAlive( void )
-    \brief return 0 if the window was killed or cancel button press, 1 otherwisearchForward
+    \brief return 0 if the window was killed or cancel button pressed, 1 otherwise
 */
 bool DIA_encodingQt4::isAlive( void )
 {
+    if(!stopRequest)
+        return true;
 
-        if(stopRequest)
-        {
-                if(GUI_Alternate((char*)QT_TRANSLATE_NOOP("qencoding","The encoding is paused. Do you want to resume or abort?"),
-                              (char*)QT_TRANSLATE_NOOP("qencoding","Resume"),(char*)QT_TRANSLATE_NOOP("qencoding","Abort")))
-                 {
-                         stopRequest=false;
-                 }
-        }
-
-        if(!stopRequest) return true;		
-
-        return false;
+    if(GUI_Alternate((char*)QT_TRANSLATE_NOOP("qencoding","The encoding is paused. Do you want to resume or abort?"),
+                     (char*)QT_TRANSLATE_NOOP("qencoding","Resume"),(char*)QT_TRANSLATE_NOOP("qencoding","Abort")))
+    {
+        stopRequest=false;
+        return true;
+    }
+    ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
+    return false;
 }
 
 /**
@@ -407,6 +423,8 @@ void DIA_encodingQt4::keepOpen(void)
             delete tray;
             tray=NULL;
         }
+        ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
+        ui->checkBoxShutdown->setEnabled(false);
         ui->pushButton1->setEnabled(false);
         ui->pushButton2->setEnabled(false);
         ui->comboBoxPriority->setEnabled(false);

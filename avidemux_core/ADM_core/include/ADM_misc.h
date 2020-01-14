@@ -78,7 +78,7 @@ ADM_CORE6_EXPORT const char        *ADM_epochToString(uint64_t epoch);
 	#include <sys/resource.h>
 #endif
 
-bool ADM_shutdown(void);
+ADM_CORE6_EXPORT bool ADM_shutdown(void);
 
 #ifdef ADM_BIG_ENDIAN	
 	#define R64 ADM_swap64
