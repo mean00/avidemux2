@@ -399,6 +399,7 @@ void DIA_encodingQt4::keepOpen(void)
 {
     if(stayOpen)
     {
+        stopRequest=true;
         UI_getTaskBarProgress()->disable();
         if(tray)
         {
@@ -422,11 +423,16 @@ void DIA_encodingQt4::keepOpen(void)
  * \fn closeEvent
  * @param event
  */
- void DIA_encodingQt4::closeEvent(QCloseEvent *event) 
+void DIA_encodingQt4::closeEvent(QCloseEvent *event)
+{
+    if(stopRequest && stayOpen)
     {
-        stopRequest=true;
-        event->ignore(); // keep window
+        stayOpen=false;
+        return;
     }
+    stopRequest=true;
+    event->ignore(); // keep window
+}
 
 /**
  * \fn reject
@@ -434,6 +440,11 @@ void DIA_encodingQt4::keepOpen(void)
  */
 void DIA_encodingQt4::reject(void)
 {
+    if(stopRequest && stayOpen) // close dialog when done
+    {
+        stayOpen=false;
+        return;
+    }
     stopRequest=true;
 }
 
