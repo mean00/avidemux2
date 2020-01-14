@@ -164,10 +164,10 @@ int shutdown_win32(void)
     }
 
     // Shut down the system and force all applications to close.
-    //if (!ExitWindowsEx(EWX_POWEROFF | EWX_FORCE, SHTDN_REASON_FLAG_PLANNED))
-    //{
-        //return -1;
-    //}
+    if (!ExitWindowsEx(EWX_POWEROFF | EWX_FORCE, SHTDN_REASON_FLAG_PLANNED))
+    {
+        return -1;
+    }
 
     return 0;
 }
