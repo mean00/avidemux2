@@ -104,7 +104,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QSlider" name="horizontalSliderContrast">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderContrast">
        <property name="minimum">
         <number>-200</number>
        </property>
@@ -117,7 +117,7 @@
       </widget>
      </item>
      <item row="3" column="0">
-      <widget class="QSlider" name="horizontalSliderBrightness">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderBrightness">
        <property name="minimum">
         <number>-100</number>
        </property>
@@ -130,7 +130,7 @@
       </widget>
      </item>
      <item row="5" column="0">
-      <widget class="QSlider" name="horizontalSliderSaturation">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderSaturation">
        <property name="maximum">
         <number>300</number>
        </property>
@@ -169,7 +169,7 @@
       <number>6</number>
      </property>
      <item row="2" column="1">
-      <widget class="QSlider" name="horizontalSliderGreen">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderGreen">
        <property name="maximum">
         <number>300</number>
        </property>
@@ -179,7 +179,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QSlider" name="horizontalSliderBlue">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderBlue">
        <property name="maximum">
         <number>300</number>
        </property>
@@ -217,7 +217,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QSlider" name="horizontalSliderRed">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderRed">
        <property name="maximum">
         <number>300</number>
        </property>
@@ -234,7 +234,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSlider" name="horizontalSliderInitial">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderInitial">
        <property name="maximum">
         <number>300</number>
        </property>
@@ -244,7 +244,7 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QSlider" name="horizontalSliderWeight">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderWeight">
        <property name="maximum">
         <number>300</number>
        </property>
@@ -266,6 +266,11 @@
  <customwidgets>
   <customwidget>
    <class>ADM_QSlider</class>
+   <extends>QSlider</extends>
+   <header>ADM_toolkitQt.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ADM_SliderIndicator</class>
    <extends>QSlider</extends>
    <header>ADM_toolkitQt.h</header>
   </customwidget>
