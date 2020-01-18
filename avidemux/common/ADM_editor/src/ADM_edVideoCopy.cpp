@@ -334,12 +334,35 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 BOWOUT
             }
             ADM_info("poc_lsb for frame %d: %d\n",frame,poc);
-            // Get the POC of the last frame in display order
+            /* Get the POC of the last frame in display order before the cut,
+               this is not necessarily the last displayed frame of the segment.
+               We need to start earlier and identify the cut point. */
             if(false==getFrameNumFromPtsOrBefore(vid, seg->_refStartTimeUs+seg->_durationUs-1, frame))
             {
                 ADM_warning("Cannot identify the last frame in display order for segment %d\n",segNo);
                 BOWOUT
             }
+            int maxFrame=frame;
+            frame=(frame>32)? frame-32 : 0;
+            // Now search the frame with max pts before segment switch
+            uint64_t maxpts=0;
+            while(frame<=maxFrame)
+            {
+                if(!demuxer->getPtsDts(frame,&pts,&dts))
+                    break;
+                if(pts!=ADM_NO_PTS && pts>=seg->_refStartTimeUs+seg->_durationUs)
+                    break;
+                if(pts>maxpts) maxpts=pts;
+                if(dts!=ADM_NO_PTS && dts>=seg->_refStartTimeUs+seg->_durationUs)
+                    break;
+                frame++;
+            }
+            if(!maxpts || false==getFrameNumFromPtsOrBefore(vid, maxpts, frame))
+            {
+                ADM_warning("Cannot identify the last frame in display order before the cut for segment %d\n",segNo);
+                BOWOUT
+            }
+            // We've found our frame
             if(!demuxer->getFrame(frame,&img))
             {
                 ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
@@ -365,7 +388,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 ADM_warning("Cannot get POC, only POC explicitely set in the slice header is supported.\n");
                 BOWOUT // or should the check fail instead?
             }
-            ADM_info("poc_lsb of the last frame in display order of the previous seg = %d\n",poc2);
+            ADM_info("poc_lsb of the last frame %d in display order of the previous seg = %d\n",frame,poc2);
             // Check that POC doesn't go back
             int maxPocLsb = 1 << sps.log2MaxPocLsb;
             int pocMsb = 0;
