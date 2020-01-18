@@ -20,4 +20,14 @@ public:
 private:
     void mousePressEvent(QMouseEvent *e);
 };
+/**
+    \brief QSlider with value indicator in a tooltip
+*/
+class ADM_UIQT46_EXPORT ADM_SliderIndicator : public QSlider
+{
+public:
+    ADM_SliderIndicator(QWidget *parent);
+private:
+    virtual void sliderChange(SliderChange change);
+};
 #endif
