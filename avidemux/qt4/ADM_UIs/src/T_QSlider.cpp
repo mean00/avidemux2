@@ -16,6 +16,7 @@ Custom slider
 #include "ADM_inttype.h"
 #include <QSlider>
 #include <QStyleOptionSlider>
+#include <QToolTip>
 #include <QMouseEvent>
 #include "ADM_toolkitQt.h"
 #include "ADM_assert.h"
@@ -74,6 +75,42 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
     }else
     {
         QSlider::mousePressEvent(e);
+    }
+}
+
+/**
+    \fn ADM_SliderIndicator
+*/
+ADM_SliderIndicator::ADM_SliderIndicator(QWidget *parent) : QSlider(parent)
+{
+}
+
+/**
+    \fn sliderChange
+    \brief show slider value in a tooltip below slider handle on drag or move
+           stolen from https://stackoverflow.com/questions/18383885/qslider-show-min-max-and-current-value
+*/
+void ADM_SliderIndicator::sliderChange(QAbstractSlider::SliderChange change)
+{
+    QSlider::sliderChange(change);
+
+    if(change == QAbstractSlider::SliderValueChange)
+    {
+        QStyleOptionSlider opt;
+        initStyleOption(&opt);
+
+        QRect sr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+        QPoint bottomLeftCorner = sr.bottomLeft();
+        QPoint bottomRightCorner = sr.bottomRight();
+        int xpos = bottomLeftCorner.x() + bottomRightCorner.x();
+        int ypos = bottomLeftCorner.y();
+
+        QFontMetrics fm = fontMetrics();
+        QString text = QString::number(value());
+        xpos -= fm.boundingRect(text).width() + 12;
+        xpos /= 2;
+
+        QToolTip::showText(mapToGlobal(QPoint(xpos, ypos)), text, this);
     }
 }
 //EOF
