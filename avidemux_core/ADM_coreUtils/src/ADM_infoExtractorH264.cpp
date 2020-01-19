@@ -645,7 +645,6 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
         if(length>len) nalSize=3;
     }
     uint32_t recovery=0xff;
-    uint32_t unregistered=0;
     int p=-1;
 
     *flags=0;
@@ -669,7 +668,7 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
         {
             case NAL_SEI:
                 {
-                    int sei=getInfoFromSei(length-1, head+1, &recovery, &unregistered);
+                    int sei=getInfoFromSei(length-1, head+1, &recovery, NULL);
                     if(extRecovery)
                     {
                         if(sei & ADM_H264_SEI_TYPE_RECOVERY_POINT)
@@ -724,7 +723,6 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
     uint8_t stream;
     uint32_t hnt=0xffffffff;
     uint32_t recovery=0xff;
-    uint32_t unregistered=0;
     int counter = 0, length = 0;
     int ref = 0, p = -1;
     bool last = false;
@@ -764,7 +762,7 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
         {
             case NAL_SEI:
                 {
-                    int sei=getInfoFromSei(length, buffer, &recovery, &unregistered);
+                    int sei=getInfoFromSei(length, buffer, &recovery, NULL);
                     if(extRecovery)
                     {
                         if(sei & ADM_H264_SEI_TYPE_RECOVERY_POINT)
