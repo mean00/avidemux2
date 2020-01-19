@@ -838,8 +838,7 @@ bool extractH264SEI(uint8_t *src, uint32_t inlen, uint8_t *dest, uint32_t bufsiz
 
         if(stream == NAL_SEI)
         {
-            uint32_t recovery=0xff;
-            if(getInfoFromSei(length-1,tail+1,&recovery,&unregistered) & ADM_H264_SEI_TYPE_USER_DATA_UNREGISTERED)
+            if(getInfoFromSei(length-1,tail+1,NULL,&unregistered) & ADM_H264_SEI_TYPE_USER_DATA_UNREGISTERED)
             {
                 uint32_t l = nalSize + length;
                 if(l > bufsize)
