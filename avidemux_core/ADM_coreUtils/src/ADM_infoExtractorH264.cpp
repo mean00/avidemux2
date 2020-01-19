@@ -718,7 +718,8 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
     uint32_t recovery=0xff;
     uint32_t unregistered=0;
     int counter = 0, length = 0;
-    int p = -1;
+    int ref = 0, p = -1;
+    bool last = false;
 
     while (head + 2 < tail)
     {
@@ -727,24 +728,35 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
         if((hnt & 0xffffff) != 1)
         {
             head++;
-            continue;
+            if(head + 2 < tail)
+                continue;
+            if(!counter) break;
+            last = true;
+            length = head - buffer + 2;
         }
-        head++;
-        counter++;
-        if(counter > 1)
+        int prevNaluRefIdc = 0;
+        uint8_t prevNaluType = 0;
+        if(!last)
         {
-            length = head - buffer - 3; // 3 bytes start code length no matter zero-prefixed or not
-            buffer = head;
+            head++;
+            counter++;
+            if(counter > 1)
+                length = head - buffer - 3; // 3 bytes start code length no matter zero-prefixed or not
+            prevNaluRefIdc = (*head >> 5) & 3;
+            prevNaluType = *(head++) & 0x1f;
+            if(!length)
+            {
+                buffer = head;
+                ref = prevNaluRefIdc;
+                stream = prevNaluType;
+                continue;
+            }
         }
-        if(!length)
-            continue;
-        int ref=(*head >> 5) & 3;
-        stream = *(head++) & 0x1f;
         switch (stream)
         {
             case NAL_SEI:
                 {
-                    int sei=getInfoFromSei(length, head, &recovery, &unregistered);
+                    int sei=getInfoFromSei(length, buffer, &recovery, &unregistered);
                     if(extRecovery)
                     {
                         if(sei & ADM_H264_SEI_TYPE_RECOVERY_POINT)
@@ -757,7 +769,7 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
             case NAL_SPS: case NAL_PPS: case NAL_FILLER: case NAL_AU_DELIMITER: break;
             case NAL_IDR:
                 *flags = AVI_KEY_FRAME;
-                if(!getNalType(head, head+length, flags, sps, &p, recovery))
+                if(!getNalType(buffer, buffer+length, flags, sps, &p, recovery))
                     return 0;
                 if(*flags != AVI_KEY_FRAME)
                     ADM_warning("Mismatched frame (flags: %d) in IDR NAL unit!\n",*flags);
@@ -766,7 +778,7 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
                     *pocLsb=p;
                 return 1;
             case NAL_NON_IDR:
-                if(!getNalType(head, head+length, flags, sps, &p, recovery))
+                if(!getNalType(buffer, buffer+length, flags, sps, &p, recovery))
                     return 0;
                 if(!ref && (*flags & AVI_B_FRAME))
                     *flags |= AVI_NON_REF_FRAME;
@@ -777,6 +789,9 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
                 ADM_warning("Unknown NAL type ??0x%x\n", stream);
                 break;
         }
+        buffer = head;
+        ref = prevNaluRefIdc;
+        stream = prevNaluType;
     }
   printf ("No stream\n");
   return 0;
