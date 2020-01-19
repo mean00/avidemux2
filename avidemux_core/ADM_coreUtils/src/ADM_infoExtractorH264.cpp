@@ -488,12 +488,13 @@ static int getInfoFromSei(uint32_t nalSize, uint8_t *org, uint32_t *recoveryLeng
     *recoveryLength=16;
     *unregistered=0;
 
-    while( payload<tail)
+    while(payload+2<tail)
     {
         uint32_t sei_type=0,sei_size=0;
         while(payload[0]==0xff)
         {
             sei_type+=0xff;payload++;
+            if(payload+2>=tail)
             {
                 seiprintf("Not enough data.\n");
                 goto abtSei;
@@ -515,12 +516,17 @@ static int getInfoFromSei(uint32_t nalSize, uint8_t *org, uint32_t *recoveryLeng
             }
         }
         sei_size+=payload[0];payload++;
-        seiprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
-        if(payload+sei_size>tail) break;
+        seiprintf("Type: %u size: %u remaining: %d\n",sei_type,sei_size,tail-payload);
+        if(payload+sei_size>tail)
+        {
+            seiprintf("Not enough data.\n");
+            break;
+        }
         switch(sei_type)
         {
             case 5: // Unregistered user data
             {
+                if(!unregistered) break;
                 if(sei_size<16)
                 {
                     ADM_info("User data too short: %u\n",sei_size);
@@ -546,17 +552,22 @@ static int getInfoFromSei(uint32_t nalSize, uint8_t *org, uint32_t *recoveryLeng
             }
             case 6: // Recovery point
             {
+                if(!recoveryLength) break;
                 getBits bits(sei_size,payload);
                 int distance=bits.getUEG();
+                if(distance<0)
+                {
+                    ADM_warning("Invalid UE golomb code encountered while decoding recovery distance.\n");
+                    break;
+                }
                 seiprintf("Recovery distance: %d\n",distance);
                 *recoveryLength=distance;
                 r |= ADM_H264_SEI_TYPE_RECOVERY_POINT;
                 break;
             }
-            default:
-                payload+=sei_size;
-                break;
+            default:break;
         }
+        payload+=sei_size;
     }
 abtSei:
     free(payloadBuffer);
