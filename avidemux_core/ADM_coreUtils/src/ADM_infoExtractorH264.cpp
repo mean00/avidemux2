@@ -486,8 +486,6 @@ static int getInfoFromSei(uint32_t nalSize, uint8_t *org, uint32_t *recoveryLeng
     }
 
     uint8_t *tail=payload+nalSize;
-    *recoveryLength=16;
-    *unregistered=0;
 
     while(payload+2<tail)
     {
