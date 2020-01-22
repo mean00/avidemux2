@@ -27,7 +27,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   uint32_t vGainMode=(uint32_t)config->gainParam.mode;
   int32_t  vShift=config->shiftInMs;
   uint32_t bShiftEnabled=config->shiftEnabled;
-  ELEM_TYPE_FLOAT vGainValue=config->gainParam.gain10/10;
+  ELEM_TYPE_FLOAT vGainValue=config->gainParam.gain10/10.;
   ELEM_TYPE_FLOAT vGainMaxLevel=config->gainParam.maxlevel10/10.;
 
 #define PX(x) (&(config->x))
