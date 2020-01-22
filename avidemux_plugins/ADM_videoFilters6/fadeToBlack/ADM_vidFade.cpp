@@ -90,7 +90,8 @@ const char   *AVDM_Fade::getConfiguration(void)
  static char conf[256];
     std::string start=std::string(ADM_us2plain(param.startFade*1000LL));
     std::string end=std::string(ADM_us2plain(param.endFade*1000LL));
-    snprintf(conf,255," Fade : Start %s End %s",start.c_str(),end.c_str());
+    const char *type=(param.inOut)? "in" : "out";
+    snprintf(conf,255," Fade %s: Start %s End %s",type,start.c_str(),end.c_str());
     return conf;
 }
 
