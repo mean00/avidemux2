@@ -42,7 +42,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 #define FILLTEXT(a,b,c) {snprintf(text,MXL,b,c); listOfValues.push_back(QString::fromUtf8(text)); ui.a->setText(QString::fromUtf8(text));}
 #define FILLTEXT4(a,b,c,d) {snprintf(text,MXL,b,c,d); listOfValues.push_back(QString::fromUtf8(text)); ui.a->setText(QString::fromUtf8(text));}
 #define FILLTEXT5(a,b,c,d,e) {snprintf(text,MXL,b,c,d,e); listOfValues.push_back(QString::fromUtf8(text)); ui.a->setText(QString::fromUtf8(text));}
-#define SET_YES(a,b) ui.a->setText(QString::fromUtf8(yesno[b])
+#define SET_YES(a,b) ui.a->setText(QString::fromUtf8(yesno[b]))
 #define FILLQT_TRANSLATE_NOOP(a,q) listOfValues.push_back(QString::fromUtf8(text)); ui.q->setText(QString::fromUtf8(text));
 
     //------------------------------------
@@ -94,8 +94,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
     if(wavinfo)
     {
         int nbActive=video_body->getNumberOfActiveAudioTracks();
-        snprintf(text, MXL, QT_TRANSLATE_NOOP("qprops","Audio (%d active track(s))"), nbActive);
-        QString titleAudio=QString::fromUtf8(text);
+        QString titleAudio=QCoreApplication::translate("qprops","Audio (%n active track(s))",NULL,nbActive);
         ui.groupBoxAudio->setTitle(titleAudio);
         listOfValues.push_back(titleAudio);
 
