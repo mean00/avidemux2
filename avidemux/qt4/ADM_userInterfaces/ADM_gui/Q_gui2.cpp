@@ -2462,9 +2462,8 @@ void UI_setZoomToFitIntoWindow(void)
 */
 void UI_setAudioTrackCount( int nb )
 {
-    char txt[50];
-    sprintf(txt,QT_TRANSLATE_NOOP("qgui2"," (%d track(s))"),nb);
-    WIDGET(TrackCountLabel)->setText(QString::fromUtf8(txt));
+    QString text=QCoreApplication::translate("qgui2"," (%n track(s))",NULL,nb);
+    WIDGET(TrackCountLabel)->setText(text);
 }
 /**
  * \fn dtor
