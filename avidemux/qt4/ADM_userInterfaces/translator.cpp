@@ -32,7 +32,7 @@ static int loadTranslation(QTranslator *qTranslator, QString translation)
 
 const char* qt4Translate(const char *__domainname, const char *__msgid)
 {
-    QString msgid = QString(__msgid);
+    QString msgid = QString(__domainname) + QString("#") + QString(__msgid);
 
     if (!map)
         map = new QMap<QString, char*>;
