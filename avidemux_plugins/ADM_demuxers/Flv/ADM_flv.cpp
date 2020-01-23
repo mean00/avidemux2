@@ -422,7 +422,7 @@ bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos,bool &end)
                                                     }
                                                     printf(">");
                                                 #else
-                                                            Skip(r);}
+                                                    Skip(r);
                                                 #endif
                                                 }
                                                 
