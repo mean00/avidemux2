@@ -556,7 +556,7 @@
          <item>
           <widget class="QLabel" name="TrackCountLabel">
            <property name="text">
-            <string>   (0 track(s))</string>
+            <string> (0 tracks)</string>
            </property>
           </widget>
          </item>
