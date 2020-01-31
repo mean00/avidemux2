@@ -258,29 +258,6 @@ bool             ADM_ffVAEncH264Encoder::preEncode(void)
 }
 
 /**
- * \fn encodeWrapper
- */
-int ADM_ffVAEncH264Encoder::encodeWrapper(AVFrame *in,ADMBitstream *out)
-{
-    int r,gotData;
-    AVPacket pkt;
-    av_init_packet(&pkt);
-
-    r = avcodec_encode_video2(_context,&pkt,in,&gotData);
-    if(r<0)
-        return r;
-    if(!gotData)
-    {
-        ADM_warning("Encoder produced no data\n");
-        return 0;
-    }
-    lavPtsFromPacket=pkt.pts;
-    packetFlags=pkt.flags;
-    memcpy(out->data,pkt.data,pkt.size);
-    return pkt.size;
-}
-
-/**
     \fn encode
 */
 bool         ADM_ffVAEncH264Encoder::encode (ADMBitstream * out)

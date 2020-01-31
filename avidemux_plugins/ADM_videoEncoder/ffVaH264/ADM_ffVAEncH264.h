@@ -58,5 +58,4 @@ protected:
                 AVFrame    *swFrame;
                 AVFrame    *hwFrame;
                 bool       preEncode(void);
-                int        encodeWrapper(AVFrame *in, ADMBitstream *out);
 };
