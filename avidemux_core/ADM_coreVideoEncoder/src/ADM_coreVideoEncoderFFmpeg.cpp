@@ -292,32 +292,42 @@ bool             ADM_coreVideoEncoderFFmpeg::configureContext(void)
     return true;
 }
 
+static int printLavError(int er)
+{
+    if(er>=0)
+        return 0;
+    char msg[AV_ERROR_MAX_STRING_SIZE]={0};
+    av_make_error_string(msg, AV_ERROR_MAX_STRING_SIZE, er);
+    ADM_warning("Error %d encoding video (%s)\n",er,msg);
+    return er;
+}
+
 /**
  * \fn encodeWrapper
  */
-int              ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
+int ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
 {
-    int r,gotData;
-        AVPacket pkt;
-        av_init_packet(&pkt);
-        pkt.data=out->data;
-        pkt.size=out->bufferSize;
+    int r=avcodec_send_frame(_context,in);
+    if(r<0)
+        return printLavError(r);
 
+    AVPacket pkt;
+    av_init_packet(&pkt);
 
-        r= avcodec_encode_video2 (_context,&pkt,in, &gotData);
-        if(r<0)
-        {
-            ADM_warning("Error %d encoding video  \n",r);
-            return r;
-        }
-        if(!gotData)
-        {
-            ADM_warning("Encoder produced no data\n");
-            pkt.size=0;
-        }
-        lavPtsFromPacket=pkt.pts; // some encoders don't set pts in coded_frame
-        packetFlags=pkt.flags;
-        return pkt.size;            
+    r=avcodec_receive_packet(_context,&pkt);
+    if(r==AVERROR(EAGAIN))
+    {
+        ADM_info("Encoder needs more input to produce data.\n");
+        return 0;
+    }
+    if(r<0)
+        return printLavError(r);
+
+    ADM_assert(out->bufferSize>=pkt.size);
+    memcpy(out->data,pkt.data,pkt.size);
+    lavPtsFromPacket=pkt.pts; // some encoders don't set pts in coded_frame
+    packetFlags=pkt.flags;
+    return pkt.size;
 }
 /**
  * 
