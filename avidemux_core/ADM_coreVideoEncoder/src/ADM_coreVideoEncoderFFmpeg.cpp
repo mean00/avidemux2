@@ -327,7 +327,9 @@ int ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
     memcpy(out->data,pkt.data,pkt.size);
     lavPtsFromPacket=pkt.pts; // some encoders don't set pts in coded_frame
     packetFlags=pkt.flags;
-    return pkt.size;
+    r=pkt.size;
+    av_packet_unref(&pkt);
+    return r;
 }
 /**
  * 
