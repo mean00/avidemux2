@@ -2,6 +2,9 @@
 #include "config.h"
 #ifdef USE_OPENGL
 #include <QOpenGLWidget>
+#ifdef ADM_CPU_ARM64
+  #include "GL/gl.h" // not included via QOpenGLWidget on ES2 platforms
+#endif
 #include "Q_dummyWidget.h"
 #include "ADM_default.h"
 
