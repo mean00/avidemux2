@@ -75,7 +75,7 @@ IF(NOT MSVC)
                                 PERFORM_SYSTEM_TEST(cpu_arm64_check.cpp "ARM64" ARM64_SUPPORTED)
 
                                 IF(ARM64_SUPPORTED)
-                                        set(adm_cpu_arm64 1)
+                                        set(ADM_CPU_ARM64 1)
                                 endif(ARM64_SUPPORTED)
                         ENDIF(ARMEL_SUPPORTED)
 	        ENDIF (X86_32_SUPPORTED)
