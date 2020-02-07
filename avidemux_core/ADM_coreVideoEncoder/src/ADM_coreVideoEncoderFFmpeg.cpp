@@ -52,7 +52,7 @@ _hasSettings=false;
         memcpy(&Settings,set,sizeof(*set));
         _hasSettings=true;
     }
-
+    _options=NULL;
     targetColorSpace=ADM_COLOR_YV12;
     w=getWidth();
     h=getHeight();
@@ -104,7 +104,11 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
         av_free (_context);
         _context = NULL;
     }
-    
+    if (_options)
+    {
+        av_dict_free(&_options);
+        _options=NULL;
+    }
     if (_frame)
     {
         av_frame_free(&_frame);
@@ -383,7 +387,10 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
      return false;
    }
    ADM_info("Opening context\n");
-   res=avcodec_open2(_context, codec, NULL);
+   if(_options)
+        res=avcodec_open2(_context, codec, &_options);
+   else
+        res=avcodec_open2(_context, codec, NULL);
    if(res<0)
     {   ADM_info("[ff] Opening context failed\n");
         return false;
@@ -616,13 +623,18 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
       //SETX(_HQ);
       //SETX (_NORMALIZE_AQP);
 
-      if (set->lavcSettings.widescreen)
-        {
-          _context->sample_aspect_ratio.num = 16;
-          _context->sample_aspect_ratio.den = 9;
-          printf ("[LAVCODEC]16/9 aspect ratio is set.\n");
-
-        }
+    if(set->lavcSettings.widescreen)
+    {
+        float f=getHeight();
+        f*=16.;
+        f/=9.;
+        f+=0.49;
+        int num=1,den=1;
+        av_reduce(&num, &den, (uint32_t)f, getWidth(), 65535);
+        _context->sample_aspect_ratio.num = num;
+        _context->sample_aspect_ratio.den = den;
+        printf("[LAVCODEC] 16/9 display aspect ratio is set, pixel aspect = %d:%d\n",num,den);
+    }
 #undef SETX
   _context->bit_rate_tolerance = 8000000;
   _context->b_quant_factor = 1.25;
