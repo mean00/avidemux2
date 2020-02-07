@@ -68,6 +68,41 @@ bool ADM_ffMpeg2Encoder::configureContext(void)
             return false;
     }
     presetContext(&Settings);
+    if(Settings.lavcSettings.interlaced)
+        _context->flags |= (AV_CODEC_FLAG_INTERLACED_DCT | AV_CODEC_FLAG_INTERLACED_ME);
+    if(!Settings.lavcSettings.widescreen)
+    { // we handle only default resolutions
+        if(getHeight()==480) // NTSC
+        {
+            switch(getWidth())
+            {
+                case 704:
+                    _context->sample_aspect_ratio.num=10;
+                    _context->sample_aspect_ratio.den=11;
+                    break;
+                case 720:
+                    _context->sample_aspect_ratio.num=8;
+                    _context->sample_aspect_ratio.den=9;
+                    break;
+                default:break;
+            }
+        }
+        if(getHeight()==576) // PAL
+        {
+            switch(getWidth())
+            {
+                case 704:
+                    _context->sample_aspect_ratio.num=12;
+                    _context->sample_aspect_ratio.den=11;
+                    break;
+                case 720:
+                    _context->sample_aspect_ratio.num=16;
+                    _context->sample_aspect_ratio.den=15;
+                    break;
+                default:break;
+            }
+        }
+    }
     // Override some parameters specific to this codec
     // Set matrix if any...
 #define MX(a,b,c) case a: _context->intra_matrix=b,_context->inter_matrix=c;break;
@@ -97,7 +132,8 @@ bool ADM_ffMpeg2Encoder::configureContext(void)
 */
 bool ADM_ffMpeg2Encoder::setup(void)
 {
-
+    if(Settings.lavcSettings.interlaced)
+        av_dict_set(&_options, "alternate_scan", "1", 0);
     if(false== ADM_coreVideoEncoderFFmpeg::setup(AV_CODEC_ID_MPEG2VIDEO))
         return false;
     printf("[ffMpeg] Setup ok\n");
@@ -127,11 +163,6 @@ again:
     sz=0;
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
     {
-        AVPacket pkt;
-        av_init_packet(&pkt);
-        pkt.data=out->data;
-        pkt.size=out->bufferSize;
-
         r=encodeWrapper(NULL,out);
         if(r<0)
         {
@@ -179,6 +210,8 @@ again:
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);     
     
     _frame->reordered_opaque=image->Pts;
+    _frame->interlaced_frame=Settings.lavcSettings.interlaced;
+    _frame->top_field_first=!Settings.lavcSettings.bff;
     r=encodeWrapper(_frame,out);
     if(r<0)
     {
