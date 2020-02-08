@@ -729,6 +729,8 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
     int ref = 0, p = -1;
     bool last = false;
 
+    *flags = 0;
+
     while (head + 2 < tail)
     {
         // Search startcode
