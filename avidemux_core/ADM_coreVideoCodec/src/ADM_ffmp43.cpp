@@ -405,6 +405,14 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
             pkt.flags=0;
 
         avcodec_send_packet(_context, &pkt);
+        // HW accel may be setup by now if this has been the very first packet. In this case flush
+        // the buffers and ask the hw decoder right away to re-send the packet in order to avoid
+        // log noise from decoding pseudo-failure.
+        if(hwDecoder)
+        {
+            flush();
+            return hwDecoder->uncompress(in,out);
+        }
     }
 
     ret = avcodec_receive_frame(_context, _frame);
