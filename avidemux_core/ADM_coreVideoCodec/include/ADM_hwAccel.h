@@ -23,7 +23,7 @@ class ADM_COREVIDEOCODEC6_EXPORT ADM_acceleratedDecoderFF
 {
 public:
                      ADM_acceleratedDecoderFF(struct AVCodecContext *avctx,decoderFF *p) 
-                     {_context=avctx;_parent=p;};
+                     {_context=avctx;_parent=p;handover=false;}
                      uint32_t admFrameTypeFromLav (AVFrame *pic);
         virtual      ~ADM_acceleratedDecoderFF()
                     {
@@ -33,10 +33,11 @@ public:
         virtual const char      *getName()=0;
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
         virtual bool dontcopy() {return true;} // by default take a ref, dont copy
-        
+                void skipSendFrame(void) {handover=true;}
 protected:
         struct AVCodecContext  *_context;
                 decoderFF       *_parent;
+                bool            handover; // taking over from sw decoder, compressed frame has been already sent to hw decoder
 public:                
   static const AVHWAccel *parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id,AVPixelFormat searchedItem);
 };

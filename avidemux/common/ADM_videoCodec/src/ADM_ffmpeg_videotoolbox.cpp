@@ -144,14 +144,6 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
 
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
-    AVPacket pkt;
-    av_init_packet(&pkt);
-    pkt.data=in->data;
-    pkt.size=in->dataLength;
-    if(in->flags&AVI_KEY_FRAME)
-        pkt.flags=AV_PKT_FLAG_KEY;
-    else
-        pkt.flags=0;
 
     if(_parent->getDrainingState())
     {
@@ -160,9 +152,21 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
             avcodec_send_packet(_context, NULL);
             _parent->setDrainingInitiated(true);
         }
+    }else if(!handover)
+    {
+        AVPacket pkt;
+        av_init_packet(&pkt);
+        pkt.data=in->data;
+        pkt.size=in->dataLength;
+        if(in->flags&AVI_KEY_FRAME)
+            pkt.flags=AV_PKT_FLAG_KEY;
+        else
+            pkt.flags=0;
+
+        avcodec_send_packet(_context, &pkt);
     }else
     {
-        avcodec_send_packet(_context, &pkt);
+        handover=false;
     }
 
     int ret = avcodec_receive_frame(_context, frame);
