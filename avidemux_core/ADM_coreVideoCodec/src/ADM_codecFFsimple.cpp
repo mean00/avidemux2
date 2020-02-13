@@ -25,19 +25,28 @@
 decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
         : decoderFF(w,h,fcc,extraDataLen,extraData,bpp)
 {
-    const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
     hasBFrame=false;
-    ADM_assert(c);
-    
+    if(!_frame)
+        return;
+    const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
+    if(!c)
+        return;
+
     AVCodecID id=c->codecId;
     AVCodec *codec=avcodec_find_decoder(id);
-    if(!codec) {GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
-    codecId=id; 
-    ADM_assert(id!=AV_CODEC_ID_NONE);
-    
+    if(!codec)
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec 0x%x"),fcc);
+        return;
+    }
+    codecId=id;
+    if(id==AV_CODEC_ID_NONE)
+        return;
+
     _context = avcodec_alloc_context3(codec);
-    ADM_assert(_context);
-    
+    if(!_context)
+        return;
+
     if(true==c->extraData)
     {
          _context->extradata = (uint8_t *) _extraDataCopy;
@@ -63,17 +72,16 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
      _context->get_format=ADM_FFgetFormat; 
      _context->opaque=this;
     //
-    if (avcodec_open2(_context, codec, NULL) < 0)  
-                      { 
-                            printf("[lavc] Decoder init: %x video decoder failed!\n",fcc); 
-                            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening 0x%x"),fcc); 
-                            ADM_assert(0); 
-                    } 
-                    else 
-                    { 
-                            printf("[lavc] Decoder init: %x video decoder initialized! (%s)\n",fcc,codec->long_name); 
-                    } 
-    
+    if (avcodec_open2(_context, codec, NULL) < 0)
+    {
+        printf("[lavc] Decoder init: %x video decoder failed!\n",fcc);
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening 0x%x"),fcc);
+        return;
+    }else
+    {
+        printf("[lavc] Decoder init: %x video decoder initialized! (%s)\n",fcc,codec->long_name);
+    }
+    _initCompleted=true;
 }
 /**
     \fn admCreateFFSimple
@@ -84,7 +92,12 @@ decoders *admCreateFFSimple(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
     if(!c) return NULL;
     AVCodecID id=c->codecId;
     if(id==AV_CODEC_ID_NONE) return NULL;
-    return new decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp);
+    decoderFFSimple *ffdec=new decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp);
+    if(ffdec->initialized())
+        return (decoders *)ffdec;
+    delete ffdec;
+    ffdec=NULL;
+    return NULL;
 }
 /**
     \fn admCoreCodecSupports

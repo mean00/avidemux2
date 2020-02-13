@@ -57,6 +57,7 @@ protected:
 
            uint8_t      _allowNull;
            bool         hurryUp;
+           bool         _initCompleted;
            bool         _drain;
            bool         _done;
            bool         _keepFeeding;
@@ -86,6 +87,7 @@ protected:
 public:
                         decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
         virtual         ~ decoderFF ();
+        virtual bool initialized(void);
             bool        setHwDecoder(ADM_acceleratedDecoderFF *h)
                         {
                             if(h)
@@ -170,10 +172,11 @@ FF_SIMPLE_DECLARE(decoderFFH265,
 #define WRAP_Open_Template(funcz,argz,display,codecid,extra) \
 {\
 AVCodec *codec=funcz(argz);\
-if(!codec) {GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec" display));ADM_assert(0);} \
+  if(!codec) {GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec" display));return;} \
+  if(!_frame) { ADM_error("Could not allocate AVFrame.\n"); return; } \
   codecId=codecid; \
   _context = avcodec_alloc_context3 (codec);\
-  ADM_assert (_context);\
+  if(!_context) { ADM_error("Could not allocate AVCodecContext.\n"); return; } \
   _context->max_b_frames = 0;\
   _context->width = _w;\
   _context->height = _h;\
@@ -201,12 +204,13 @@ if(!codec) {GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("ad
                       { \
                                         ADM_info("[lavc] Decoder init: " display" video decoder failed!\n"); \
                                         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening " display)); \
-                                        ADM_assert(0); \
+                                        return; \
                                 } \
                                 else \
                                 { \
                                         ADM_info("[lavc] Decoder init: " display" video decoder initialized! (%s)\n",codec->long_name); \
                                 } \
+  _initCompleted=true; \
 }
 
 #define WRAP_Open(x)            {WRAP_Open_Template(avcodec_find_decoder,x,#x,x,;);}

@@ -46,46 +46,31 @@ extern "C"
 */
 decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp)
 {
-  ADM_info("Searching decoder in coreVideoCodec(%d x %d, extradataSize:%d)...\n",w,h,extraLen);
-  if (isMSMpeg4Compatible (fcc) == 1)
-    {
-      return (decoders *) (new decoderFFDiv3 (w,h,fcc,extraLen,extraData,bpp));
-    }
-  if (isDVCompatible(fcc))//"CDVC"))
-    {
-      return (decoders *) (new decoderFFDV (w,h,fcc,extraLen,extraData,bpp));
-    }
-  if (fourCC::check (fcc, (uint8_t *) "HFYU"))
-    {
-      return (decoders *) (new decoderFFhuff (w,h,fcc,extraLen,extraData,bpp));
-    }
-  if (fourCC::check (fcc, (uint8_t *) "PNG "))
-    {
-      return (decoders *) (new decoderFFPng (w,h,fcc,extraLen,extraData,bpp));
-    }
-  if (fourCC::check (fcc, (uint8_t *) "FFVH"))
-    {
-      return (decoders *) (new decoderFF_ffhuff (w,h,fcc,extraLen,extraData,bpp));
-    }
-  if (fourCC::check (fcc, (uint8_t *) "FICV"))
-    {
-      return (decoders *) (new decoderFFficv (w,h,fcc,extraLen,extraData,bpp));
-    }
-
-  if (isH264Compatible (fcc))
+    ADM_info("Searching decoder in coreVideoCodec(%d x %d, extradataSize:%d)...\n",w,h,extraLen);
+    decoderFF *ffdec = NULL;
+    if (isMSMpeg4Compatible (fcc))
+        ffdec = new decoderFFDiv3 (w,h,fcc,extraLen,extraData,bpp);
+    else if (isDVCompatible(fcc))//"CDVC"))
+        ffdec = new decoderFFDV (w,h,fcc,extraLen,extraData,bpp);
+    else if (fourCC::check (fcc, (uint8_t *) "HFYU"))
+        ffdec = new decoderFFhuff (w,h,fcc,extraLen,extraData,bpp);
+    else if (fourCC::check (fcc, (uint8_t *) "PNG "))
+        ffdec = new decoderFFPng (w,h,fcc,extraLen,extraData,bpp);
+    else if (fourCC::check (fcc, (uint8_t *) "FFVH"))
+        ffdec = new decoderFF_ffhuff (w,h,fcc,extraLen,extraData,bpp);
+    else if (fourCC::check (fcc, (uint8_t *) "FICV"))
+        ffdec = new decoderFFficv (w,h,fcc,extraLen,extraData,bpp);
+    else if (isH264Compatible (fcc))
     {
 #if defined(USE_VDPAU) && 0
         if(vdpauUsable()==true)
             return (decoders *) (new decoderFFVDPAU (w,h,fcc,extraLen,extraData,bpp));
         else
 #endif
-            return (decoders *) (new decoderFFH264 (w,h,fcc,extraLen,extraData,bpp));
+        ffdec = new decoderFFH264 (w,h,fcc,extraLen,extraData,bpp);
     }
-  
-  if (isH265Compatible (fcc))
-    {
-            return (decoders *) (new decoderFFH265 (w,h,fcc,extraLen,extraData,bpp));
-    }
+    else if (isH265Compatible (fcc))
+        ffdec = new decoderFFH265 (w,h,fcc,extraLen,extraData,bpp);
 
 /*
 	Could be either divx5 packed crap or xvid or ffmpeg
@@ -93,10 +78,21 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
 		(ugly hack for ugly hack....)
 */
 
-  if (isMpeg4Compatible (fcc) == 1)
+    else if (isMpeg4Compatible (fcc))
+        ffdec = new decoderFFMpeg4 (w,h,fcc,extraLen,extraData,bpp);
+    else if (isMpeg12Compatible (fcc))
+        ffdec = new decoderFFMpeg12 (w,h,fcc,extraLen,extraData,bpp);
+    else if(isVP9Compatible(fcc))
+        ffdec = new decoderFFVP9 (w,h,fcc,extraLen,extraData,bpp);
+
+    if(ffdec)
     {
-      return (decoders *) (new decoderFFMpeg4 (w,h,fcc,extraLen,extraData,bpp));
+        if(ffdec->initialized())
+            return (decoders *)ffdec;
+        delete ffdec;
+        ffdec=NULL;
     }
+
   if (fourCC::check (fcc, (uint8_t *) "YV12")
       || fourCC::check (fcc, (uint8_t *) "yv12")
       || fourCC::check (fcc, (uint8_t *) "I420"))
@@ -131,13 +127,6 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
       return (decoders *) (new decoderRGB16 (w,h,fcc,extraLen,extraData,bpp));  //0
 
     }
-  if (isMpeg12Compatible (fcc))
-	  return (decoders *) (new decoderFFMpeg12 (w,h,fcc,extraLen,extraData,bpp));
-
-  if(isVP9Compatible(fcc))
-  {
-       return (decoders *) (new decoderFFVP9 (w,h,fcc,extraLen,extraData,bpp));
-  }
     // Search ffsimple
     decoders *dec=admCreateFFSimple(w,h,fcc,extraLen,extraData,bpp);
     if(dec)
