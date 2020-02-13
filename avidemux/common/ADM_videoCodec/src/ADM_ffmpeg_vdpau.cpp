@@ -371,18 +371,10 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
    // Put a safe value....
     out->Pts=in->demuxerPts;
     _context->reordered_opaque=in->demuxerPts;
-    int got_picture;
-    AVPacket pkt;
-    av_init_packet(&pkt);
-    pkt.data=in->data;
-    pkt.size=in->dataLength;
-    if(in->flags&AVI_KEY_FRAME)
-        pkt.flags=AV_PKT_FLAG_KEY;
-    else
-        pkt.flags=0;
 
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
+
     if(_parent->getDrainingState())
     {
         if(_parent->getDrainingInitiated()==false)
@@ -390,9 +382,21 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
             avcodec_send_packet(_context, NULL);
             _parent->setDrainingInitiated(true);
         }
+    }else if(!handover)
+    {
+        AVPacket pkt;
+        av_init_packet(&pkt);
+        pkt.data=in->data;
+        pkt.size=in->dataLength;
+        if(in->flags&AVI_KEY_FRAME)
+            pkt.flags=AV_PKT_FLAG_KEY;
+        else
+            pkt.flags=0;
+
+        avcodec_send_packet(_context, &pkt);
     }else
     {
-        avcodec_send_packet(_context, &pkt);
+        handover=false;
     }
 
     int ret = avcodec_receive_frame(_context, frame);
