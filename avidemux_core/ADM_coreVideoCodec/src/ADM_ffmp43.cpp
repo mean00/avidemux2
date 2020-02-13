@@ -164,8 +164,8 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
             :decoders (w, h,fcc,extraDataLen,extraData,bpp)
 {
 	resetConfiguration();
-
   hurryUp=false;
+  _initCompleted=false;
   _drain=false;
   _done=false;
   _keepFeeding=false;
@@ -186,7 +186,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   _frame=av_frame_alloc();
   if(!_frame)
   {
-      ADM_assert (_frame);
+      return;
   }
 
   printf ("[lavc] Build: %d\n", LIBAVCODEC_BUILD);
@@ -233,6 +233,13 @@ decoderFF::~decoderFF ()
   }
   delete hwDecoder;
   hwDecoder=NULL;
+}
+/**
+ * \fn initialized
+ */
+bool decoderFF::initialized(void)
+{
+    return _initCompleted;
 }
 /**
  * 
