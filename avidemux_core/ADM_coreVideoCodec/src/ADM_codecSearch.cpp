@@ -85,12 +85,14 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
     else if(isVP9Compatible(fcc))
         ffdec = new decoderFFVP9 (w,h,fcc,extraLen,extraData,bpp);
 
+    bool ffailed=false;
     if(ffdec)
     {
         if(ffdec->initialized())
             return (decoders *)ffdec;
         delete ffdec;
         ffdec=NULL;
+        ffailed=true;
     }
 
   if (fourCC::check (fcc, (uint8_t *) "YV12")
@@ -127,14 +129,16 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
       return (decoders *) (new decoderRGB16 (w,h,fcc,extraLen,extraData,bpp));  //0
 
     }
-    // Search ffsimple
-    decoders *dec=admCreateFFSimple(w,h,fcc,extraLen,extraData,bpp);
-    if(dec)
+    if(!ffailed)
     {
-        printf("using ffSimple\n");
-        return dec;
+        // Search ffsimple
+        decoders *dec=admCreateFFSimple(w,h,fcc,extraLen,extraData,bpp);
+        if(dec)
+        {
+            printf("using ffSimple\n");
+            return dec;
+        }
     }
-
   // default : null decoder
   printf ("\n using invalid codec for ");
   fourCC::print (fcc);
