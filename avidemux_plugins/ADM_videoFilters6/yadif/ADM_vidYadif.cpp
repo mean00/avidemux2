@@ -169,14 +169,20 @@ yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup):
 /**
     \fn updateInfo
 */
-
 void yadifFilter::updateInfo(void)
 {
-  memcpy(&info,previousFilter->getInfo(),sizeof(info)); 
-  if(configuration.mode &1 ) // Bob
-  {
-    info.frameIncrement/=2;
-  }
+    memcpy(&info,previousFilter->getInfo(),sizeof(info));
+    if(configuration.mode &1 ) // Bob
+    {
+        info.frameIncrement/=2;
+        if(info.timeBaseNum && info.timeBaseDen)
+        {
+            if(info.timeBaseDen<=30000 && (info.timeBaseNum & 1))
+                info.timeBaseDen*=2;
+            else
+                info.timeBaseNum/=2;
+        }
+    }
 }
 /**
     \fn configure
