@@ -587,6 +587,7 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
 
     getBits bits(size,out);
     uint32_t sliceType;
+    uint32_t fieldFlags=0;
     int frame = -1;
     *poc_lsb = -1;
 
@@ -597,7 +598,13 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
         bits.getUEG(); // skip PPS id
         frame = bits.get(sps->log2MaxFrameNum);
         if(!sps->frameMbsOnlyFlag && bits.get(1))
-            bits.get(1); // skip field_pic_flag
+        {
+            fieldFlags |= AVI_FIELD_STRUCTURE;
+            if(bits.get(1))
+                fieldFlags |= AVI_BOTTOM_FIELD;
+            else
+                fieldFlags |= AVI_TOP_FIELD;
+        }
         if(*flags & AVI_KEY_FRAME) // from NAL
             bits.getUEG(); // skip idr_pic_id
         *poc_lsb = bits.get(sps->log2MaxPocLsb);
@@ -614,16 +621,16 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
     switch(sliceType)
     {
         case 3:
-        case 0: *flags=  AVI_P_FRAME;break;
+        case 0: *flags = AVI_P_FRAME;break;
         case 1: *flags = AVI_B_FRAME;break;
         case 2: case 4:
-                if(!recovery || !frame) *flags=AVI_KEY_FRAME;
-                    else      *flags=AVI_P_FRAME;
+                if(!recovery || !frame) *flags = AVI_KEY_FRAME;
+                    else      *flags = AVI_P_FRAME;
                 break;
 
     }
-
-      free(out);
+    *flags |= fieldFlags;
+    free(out);
     return true;
 }
 
@@ -688,9 +695,12 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
                 *flags = AVI_KEY_FRAME;
                 if(!getNalType(head+1,head+length,flags,sps,&p,recovery))
                     return 0;
-                if(sps && *flags != AVI_KEY_FRAME)
+                if(sps && !(*flags & AVI_KEY_FRAME))
+                {
                     ADM_warning("Mismatched frame (flags: %d) in IDR NAL unit!\n",*flags);
-                *flags = AVI_KEY_FRAME; // FIXME
+                    *flags &= ~AVI_B_FRAME;
+                    *flags |= AVI_KEY_FRAME; // FIXME
+                }
                 if(pocLsb)
                     *pocLsb=p;
                 return 1;
@@ -780,9 +790,12 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
                 *flags = AVI_KEY_FRAME;
                 if(!getNalType(buffer, buffer+length, flags, sps, &p, recovery))
                     return 0;
-                if(*flags != AVI_KEY_FRAME)
+                if(sps && !(*flags & AVI_KEY_FRAME))
+                {
                     ADM_warning("Mismatched frame (flags: %d) in IDR NAL unit!\n",*flags);
-                *flags = AVI_KEY_FRAME; // FIXME
+                    *flags &= ~AVI_B_FRAME;
+                    *flags |= AVI_KEY_FRAME; // FIXME
+                }
                 if(pocLsb)
                     *pocLsb=p;
                 return 1;
