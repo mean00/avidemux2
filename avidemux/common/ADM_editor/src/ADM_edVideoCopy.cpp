@@ -50,6 +50,65 @@ static bool checkCodec(aviInfo *first,aviInfo *second)
     return match;
 }
 
+static bool getH264SPSInfo(_VIDEOS *vid,ADM_SPSInfo *sps)
+{
+    if(!vid)
+        return false;
+    vidHeader *demuxer=vid->_aviheader;
+    if(!demuxer)
+        return false;
+    if(!sps)
+        return false;
+
+    // Do we have a cached copy?
+    if(vid->paramCacheSize==sizeof(ADM_SPSInfo) && vid->paramCache)
+    {
+        memcpy(sps,vid->paramCache,sizeof(ADM_SPSInfo));
+        return true;
+    }
+
+#define MAX_NALU_TO_CHECK 4
+    static NALU_descriptor desc[MAX_NALU_TO_CHECK];
+
+    bool AnnexB=false;
+    bool gotSps=false;
+    uint8_t *extra;
+    uint32_t extraLen=0;
+    demuxer->getExtraHeaderData(&extraLen,&extra);
+    if(!extraLen)
+        AnnexB=true;
+    // Allocate memory to hold compressed frame
+    ADMCompressedImage img;
+#define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
+    uint8_t *buffer=new uint8_t[MAX_FRAME_LENGTH];
+    img.data=buffer;
+    if(AnnexB)
+    {
+        if(!demuxer->getFrame(0,&img))
+        {
+            ADM_warning("Unable to get the first frame of video");
+            goto _the_end;
+        }
+        int nbNalu=ADM_splitNalu(img.data, img.data+img.dataLength, MAX_NALU_TO_CHECK, desc);
+        int spsIndex=ADM_findNalu(NAL_SPS,nbNalu,desc);
+        if(spsIndex!=-1)
+            gotSps=extractSPSInfo(desc[spsIndex].start, desc[spsIndex].size, sps);
+    }else
+    {
+        gotSps=extractSPSInfo(extra,extraLen,sps);
+    }
+    if(!gotSps)
+        goto _the_end;
+    // Store the decoded SPS info in the cache
+    vid->paramCacheSize=sizeof(ADM_SPSInfo);
+    vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
+    memcpy(vid->paramCache,sps,sizeof(ADM_SPSInfo));
+_the_end:
+    delete [] buffer;
+    buffer=NULL;
+    return gotSps;
+}
+
 /**
     \fn checkSegmentStartsOnIntra
     \brief In copy mode, if the cuts are not on intra we will run into trouble :
@@ -138,9 +197,6 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
 
     // It is a cut, perform codec-specific checks
 
-#define MAX_NALU_TO_CHECK 4
-    static NALU_descriptor desc[MAX_NALU_TO_CHECK];
-
     if(isH264Compatible(info.fcc))
     {
         // It is H.264, check deeper. The keyframe may be a non-IDR random access point.
@@ -155,43 +211,14 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             AnnexB=true;
         // Allocate memory to hold compressed frame
         ADMCompressedImage img;
-#define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
         buffer=new uint8_t[MAX_FRAME_LENGTH];
         img.data=buffer;
         // Get SPS to be able to decode the slice header
         ADM_SPSInfo sps;
-        bool gotSps=false;
-        // Do we have a cached copy?
-        if(vid->paramCacheSize==sizeof(ADM_SPSInfo) && vid->paramCache)
+        if(!getH264SPSInfo(vid,&sps))
         {
-            memcpy(&sps,vid->paramCache,sizeof(ADM_SPSInfo));
-            gotSps=true;
-        }else
-        {
-            if(AnnexB)
-            {
-                if(!demuxer->getFrame(0,&img))
-                {
-                    ADM_warning("Unable to get the first frame in ref %d, segment %d\n",seg->_reference,segNo);
-                    BOWOUT
-                }
-                int nbNalu=ADM_splitNalu(img.data, img.data+img.dataLength, MAX_NALU_TO_CHECK, desc);
-                int spsIndex=ADM_findNalu(NAL_SPS,nbNalu,desc);
-                if(spsIndex!=-1)
-                    gotSps=extractSPSInfo(desc[spsIndex].start, desc[spsIndex].size, &sps);
-            }else
-            {
-                gotSps=extractSPSInfo(extra,extraLen,&sps);
-            }
-            if(!gotSps)
-            {
-                ADM_warning("Cannot retrieve SPS info.\n");
-                BOWOUT
-            }
-            // Store the decoded SPS info in the cache
-            vid->paramCacheSize=sizeof(ADM_SPSInfo);
-            vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
-            memcpy(vid->paramCache,&sps,sizeof(ADM_SPSInfo));
+            ADM_warning("Cannot retrieve SPS info.\n");
+            BOWOUT
         }
         // We have SPS, now get the frame we are interested in.
         if(!demuxer->getFrame(frame,&img))
@@ -266,39 +293,11 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 BOWOUT
             }
             // Get SPS info
-            gotSps=false;
             ADM_SPSInfo sps2;
-            if(vid->paramCacheSize==sizeof(ADM_SPSInfo) && vid->paramCache)
+            if(!getH264SPSInfo(vid,&sps2))
             {
-                memcpy(&sps2,vid->paramCache,sizeof(ADM_SPSInfo));
-                gotSps=true;
-            }else
-            {
-                gotSps=false;
-                if(AnnexB)
-                {
-                    if(!demuxer->getFrame(0,&img))
-                    {
-                        ADM_warning("Unable to get the first frame in ref %d, segment %d\n",seg->_reference,segNo);
-                        BOWOUT
-                    }
-                    int nbNalu=ADM_splitNalu(img.data, img.data+img.dataLength, MAX_NALU_TO_CHECK, desc);
-                    int spsIndex=ADM_findNalu(NAL_SPS,nbNalu,desc);
-                    if(spsIndex!=-1)
-                        gotSps=extractSPSInfo(desc[spsIndex].start, desc[spsIndex].size, &sps2);
-                }else
-                {
-                    gotSps=extractSPSInfo(extra,extraLen,&sps2);
-                }
-                if(!gotSps)
-                {
-                    ADM_warning("Cannot retrieve SPS info for H.264 ref video in segment %d\n",segNo);
-                    BOWOUT
-                }
-                // Store the decoded SPS info in the cache
-                vid->paramCacheSize=sizeof(ADM_SPSInfo);
-                vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
-                memcpy(vid->paramCache,&sps2,sizeof(ADM_SPSInfo));
+                ADM_warning("Cannot retrieve SPS info for H.264 ref video in segment %d\n",segNo);
+                BOWOUT
             }
             // We have SPS, does it match the one from the next segment?
             // Check at least the fields we use here.
@@ -487,12 +486,14 @@ ADM_cutPointType ADM_Composer::checkCutIsOnIntra(uint64_t time)
 /**
      \fn bFrameDroppable
 */
-static bool bFrameDroppable(uint32_t fcc,vidHeader *hdr,ADMCompressedImage *img=NULL)
+static bool bFrameDroppable(uint32_t fcc,_VIDEOS *vid,ADMCompressedImage *img=NULL)
 {
     if(isH264Compatible(fcc))
     {
         if(!img)
             return false;
+        if(img->flags & (AVI_STRUCTURE_TYPE_MASK+AVI_FIELD_STRUCTURE))
+            return false; // don't drop fields
         if(img->flags & AVI_NON_REF_FRAME)
             return true; // the demuxer has done the job for us
         uint32_t maxSize=img->dataLength;
@@ -500,11 +501,11 @@ static bool bFrameDroppable(uint32_t fcc,vidHeader *hdr,ADMCompressedImage *img=
         uint32_t size=maxSize;
         notStackAllocator buf(maxSize);
         bool AnnexB=false;
-        if(hdr)
+        if(vid && vid->_aviheader)
         {
             uint8_t *extra;
             uint32_t extraLen=0;
-            hdr->getExtraHeaderData(&extraLen,&extra);
+            vid->_aviheader->getExtraHeaderData(&extraLen,&extra);
             if(!extraLen)
                 AnnexB=true;
         }
@@ -514,7 +515,13 @@ static bool bFrameDroppable(uint32_t fcc,vidHeader *hdr,ADMCompressedImage *img=
             memcpy(buf.data,img->data,img->dataLength);
         if(size)
         {
-            if(extractH264FrameType(buf.data,size,&(img->flags),NULL,NULL) && (img->flags & AVI_NON_REF_FRAME))
+            ADM_SPSInfo sps;
+            bool gotSps=getH264SPSInfo(vid,&sps);
+            if(!gotSps)
+                ADM_warning("No SPS info available to check fields.\n");
+            if(extractH264FrameType(buf.data,size,&(img->flags),NULL, gotSps? &sps : NULL,NULL) &&
+                    (img->flags & AVI_NON_REF_FRAME) &&
+                    !(img->flags & (AVI_STRUCTURE_TYPE_MASK+AVI_FIELD_STRUCTURE)))
                 return true;
         }
         return false;
@@ -589,16 +596,20 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
             ADM_warning("Cannot find the frame for segment %" PRIu32"\n");
             continue;
         }
+        bool trustDemuxer=false;
         for(int i=found+1;i<found+16;i++)
         {
             uint32_t flags;
             vid->_aviheader->getFlags(i,&flags);
-            if(!(flags & AVI_B_FRAME))
+            if(!trustDemuxer && (flags & AVI_B_FRAME))
+                trustDemuxer=true;
+            if((trustDemuxer && !(flags & AVI_B_FRAME)) || (flags & AVI_KEY_FRAME))
             {
                 ADM_info("Not a bframe, stopping (%d)\n",i-found);
                 break;
             }
             vid->_aviheader->getPtsDts(i,&pts,&dts);
+            if(pts==ADM_NO_PTS) continue;
             if(pts<refTime)
             {
                 ADM_info("frame %d is early \n",i);
@@ -613,8 +624,8 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
                 img.dataLength=len;
                 if(vid->_aviheader->getFrame(i,&img))
                 {
-                    if(bFrameDroppable(info.fcc,vid->_aviheader,&img))
-                        break; // this frame will be dropped, no need to add delay
+                    if(bFrameDroppable(info.fcc,vid,&img))
+                        continue; // this frame will be dropped, no need to add delay
                 }
                 uint32_t delta=refTime-pts;
                 if(delta>*delay) *delay=delta;
@@ -722,7 +733,7 @@ againGet:
         {
             printf("[getCompressedPicture] Frame %d PTS is in the past vs segment start: %s /",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
             printf(" %s\n",ADM_us2plain(reftime));
-            if(bFrameDroppable(info.fcc,demuxer,img))
+            if(bFrameDroppable(info.fcc,vid,img))
             {
                 ADM_warning("Dropping frame %d\n",vid->lastSentFrame);
                 goto againGet;
