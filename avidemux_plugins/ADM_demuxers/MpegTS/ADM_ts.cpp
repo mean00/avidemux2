@@ -260,7 +260,7 @@ uint8_t tsHeader::close(void)
 
  tsHeader::tsHeader( void ) : vidHeader()
 { 
-    interlaced=false;
+    fieldEncoded=false;
     lastFrame=0xffffffff;
     videoPid=0;
     videoNeedEscaping=false;

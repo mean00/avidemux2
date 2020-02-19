@@ -244,10 +244,9 @@ bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxP
         {
             switch(listOfUnits[i].unitType)
             {
-                case unitTypeSps: mustFlush=true;;break;
+                case unitTypeSps: mustFlush=true; break;
                 case unitTypePic: 
                             picIndex=i;
-                            pictStruct=listOfUnits[i].imageStructure;
                             if(listOfUnits[i].imageType==1 || listOfUnits[i].imageType==4)
                                 mustFlush=true;
                             break;
@@ -295,7 +294,7 @@ bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxP
                 else deltaDts=pic->dts-data.beginDts;            
 
 
-        qfprintf(index," %c%c",Type[picUnit->imageType],Structure[pictStruct&3]);
+        qfprintf(index," %c%c",Type[picUnit->imageType],Structure[pictStruct%6]);
         int32_t delta=(int32_t)(nextConsumed-beginConsuming);
         
     //    printf("%d -- %d = %d\n",nextConsumed, beginConsuming,delta);
@@ -347,14 +346,12 @@ bool    TsIndexerBase::updateLastUnitStructure(int t)
     H264Unit &lastUnit=listOfUnits[n-1];
     switch(t)
     {
-        case 3: 
-                lastUnit.imageStructure=pictureFrame;
-                break;
-        case 1:  lastUnit.imageStructure=pictureTopField;
-                 break;
-        case 2:  lastUnit.imageStructure=pictureBottomField;
-                 break;
-        default: ADM_warning("frame type 0 met, this is illegal\n");
+        case 3 : lastUnit.imageStructure=pictureFrame;break;
+        case 1 : lastUnit.imageStructure=pictureFieldTop;break;
+        case 2 : lastUnit.imageStructure=pictureFieldBottom;break;
+        case 4 : lastUnit.imageStructure=pictureTopFirst;break;
+        case 5 : lastUnit.imageStructure=pictureBottomFirst;break;
+        default: ADM_warning("frame type %d met, this is illegal\n",t);break;
     }
     return true;
 }

@@ -22,6 +22,7 @@ using std::string;
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_coreUtils.h"
 #include "ADM_indexFile.h"
 #include "ADM_ts.h"
 #include "ADM_string.h"
@@ -174,24 +175,16 @@ bool tsHeader::processVideoIndex(char *buffer)
                 }
                 switch(picStruct)
                 {
-                        default: ADM_warning("Unknown picture structure %c\n",picStruct);
-                        case 'F': frame->pictureType=AVI_FRAME_STRUCTURE;break;
+                        case 'F':
+                        case 'C':
+                        case 'S': frame->pictureType=AVI_FRAME_STRUCTURE;break;
                         case 'T': frame->pictureType=AVI_FIELD_STRUCTURE+AVI_TOP_FIELD;break;
                         case 'B': frame->pictureType=AVI_FIELD_STRUCTURE+AVI_BOTTOM_FIELD;break;
-
+                        default: ADM_warning("Unknown picture structure %c\n",picStruct);break;
                 }
                 frame->len=len;
-                if(!interlaced && (frame->pictureType & AVI_FIELD_STRUCTURE))
-                {
-                    printf("[processVideoIndex] Setting interlaced flag.\n");
-                    interlaced=true;
-                    // Set fps to field rate for interlaced H.264 streams, necessary for copy mode
-                    if(_videostream.fccHandler==fourCC::get((uint8_t *)"H264"))
-                    {
-                        _videostream.dwRate*=2;
-                        printf("[processVideoIndex] Doubling fps1000 for interlaced H.264, new value = %d\n",_videostream.dwRate);
-                    }
-                }
+                if(frame->pictureType & AVI_FIELD_STRUCTURE)
+                    fieldEncoded=true;
                 ListOfFrames.push_back(frame);
                 count++;
                 if(!next) 
@@ -277,10 +270,12 @@ bool    tsHeader::readVideo(indexFile *index)
         return false;
     }
 
-    interlaced=index->getAsUint32("Interlaced");
+    if(index->getAsUint32("Interlaced"))
+        printf("[tsDemux] Video is interlaced.\n");
     
     _video_bih.biWidth=_mainaviheader.dwWidth=w ;
     _video_bih.biHeight=_mainaviheader.dwHeight=h;
+    _mainaviheader.dwMicroSecPerFrame=0;
     switch(fps)
     {
         case 23976:
@@ -302,6 +297,7 @@ bool    tsHeader::readVideo(indexFile *index)
         default:
             _videostream.dwScale=1;
             _videostream.dwRate=90000;
+            _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(fps);
             break;
     }
     return true;

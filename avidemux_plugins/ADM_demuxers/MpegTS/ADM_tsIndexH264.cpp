@@ -18,12 +18,12 @@
 static bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStructure *pic);
 static bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery);
 /**
-        \fn decodeSEI
-        \brief decode SEI to get short ref I
-        @param recoveryLength # of recovery frame
-        \return true if recovery found
-*/
-bool TsIndexerH264::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
+ *  \fn decodeSEI
+ *  \brief decode SEI to get short ref I
+ *  @param recoveryLength # of recovery frame, may be NULL
+ *  \return 1 if picture structure found, 6 if recovery found, 7 if both, 0 if none.
+ */
+uint8_t TsIndexerH264::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
                 pictureStructure *picStruct)
 {
     if(nalSize+16>=ADM_NAL_BUFFER_SIZE)
@@ -32,46 +32,43 @@ bool TsIndexerH264::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryL
         return false;
     }
     uint8_t *payload=payloadBuffer;
-    bool r=false;
+    uint8_t ret=0;
     nalSize=ADM_unescapeH264(nalSize,org,payload);
     uint8_t *tail=payload+nalSize;
     *picStruct=pictureFrame; // frame
     while( payload<tail-2)
     {
-                uint32_t sei_type=0,sei_size=0;
-                while(payload[0]==0xff) {sei_type+=0xff;payload++;};
-                sei_type+=payload[0];payload++;
-                while(payload[0]==0xff) {sei_size+=0xff;payload++;};
-                sei_size+=payload[0];payload++;
-                aprintf("  [SEI] Type: 0x%x, size: %u\n",sei_type,sei_size);
-                if(payload+sei_size>=tail)
-                {
-                        return false;
-                }
-                switch(sei_type) // Recovery point
-                {
+        uint32_t sei_type=0,sei_size=0;
+        while(payload[0]==0xff) {sei_type+=0xff;payload++;};
+        sei_type+=payload[0];payload++;
+        while(payload[0]==0xff) {sei_size+=0xff;payload++;};
+        sei_size+=payload[0];payload++;
+        aprintf("  [SEI] Type: 0x%x, size: %u\n",sei_type,sei_size);
+        if(payload+sei_size>=tail)
+            return ret;
 
-                       case 1:
-                        {
-                            decoderSei1(spsInfo,sei_size,payload,picStruct);
-                            payload+=sei_size;
-                            break;
-                        }
-                       case 6:
-                        {
-                            decoderSei6(sei_size,payload,recoveryLength);
-                            payload+=sei_size;
-                            aprintf("[SEI] Recovery :%" PRIu32"\n",*recoveryLength);
-                            r=true;
-                            break;
-                        }
-                        default:
-                            payload+=sei_size;
-                            break;
-                }
+        switch(sei_type)
+        {
+            case 1:
+            {
+                decoderSei1(spsInfo,sei_size,payload,picStruct);
+                ret+=1;
+                break;
+            }
+            case 6: // Recovery point
+            {
+                if(!recoveryLength) break;
+                decoderSei6(sei_size,payload,recoveryLength);
+                aprintf("[SEI] Recovery :%" PRIu32"\n",*recoveryLength);
+                ret+=6;
+                break;
+            }
+            default:break;
+        }
+        payload+=sei_size;
     }
     //if(payload+1<tail) ADM_warning("Bytes left in SEI %d\n",(int)(tail-payload));
-    return r;
+    return ret;
 }
 /**
  * \fn findH264SPS
@@ -80,8 +77,11 @@ bool TsIndexerH264::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryL
 bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
 {
     dmxPacketInfo tmpInfo;
+    uint64_t rewindStart=0;
+    uint32_t rewindOffset=0;
     bool keepRunning=true;
-    bool seq_found=false;
+    bool sps_found=false;
+    bool sei_found=false;
     TS_PESpacket SEI_nal(0);
     while(keepRunning)
     {
@@ -94,7 +94,7 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
         }
         if(startCode&0x80) continue; // Marker missing
         startCode&=0x1f;
-        if(startCode!=NAL_SPS)
+        if(startCode!=NAL_SPS && startCode!=NAL_SEI)
             continue;
 
         // Got SPS!
@@ -110,25 +110,36 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
             SEI_nal.pushByte(r);
         }
         if(!pkt->stillOk()) break;
-        pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
-        if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-3,&spsInfo))
+        if(startCode==NAL_SPS &&!sps_found && extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-3, &spsInfo))
         {
             ADM_info("[TsIndexer] Found video %" PRIu32"x%" PRIu32", fps=%" PRIu32"\n",video.w,video.h,video.fps);
             ADM_info("[TsIndexer] SPS says %" PRIu32"x%" PRIu32"\n",spsInfo.width,spsInfo.height);
-            seq_found=1;
+            sps_found=true;
+            rewindStart=tmpInfo.startAt;
+            rewindOffset=tmpInfo.offset-5;
             video.w=spsInfo.width;
             video.h=spsInfo.height;
             video.fps=spsInfo.fps1000;
-            writeVideo(&video,ADM_TS_H264);
-            writeAudio();
-            qfprintf(index,"[Data]");
-            // Rewind
-
-            break;
         }
-        pkt->seek(tmpInfo.startAt,tmpInfo.offset);
+        if(startCode==NAL_SEI && sps_found && !sei_found && SEI_nal.payloadSize>=7)
+        {
+            pictureStructure p=pictureFrame;
+            if(decodeSEI(SEI_nal.payloadSize-4, SEI_nal.payload, NULL, &p) & 1)
+            {
+                sei_found=true;
+                video.interlaced=(p!=pictureFrame);
+            }
+        }
+        if(sps_found && sei_found) break;
     }
-    return seq_found;
+    if(sps_found)
+    {
+        pkt->seek(rewindStart,rewindOffset);
+        writeVideo(&video,ADM_TS_H264);
+        writeAudio();
+        qfprintf(index,"[Data]");
+    }
+    return sps_found;
 }
 /**
     \fn run
@@ -276,17 +287,20 @@ resume:
                 }
                 if(!pkt->stillOk()) goto resume;
                 aprintf("[SEI] Nal size :%d\n",SEI_nal.payloadSize);
+                bool gotPictStructInfo=false;
                 if(SEI_nal.payloadSize>=7)
-                    decodeSEI(SEI_nal.payloadSize-4,
+                {
+                    if(decodeSEI(SEI_nal.payloadSize-4,
                               SEI_nal.payload,
                               &(thisUnit.recoveryCount),
-                              &(thisUnit.imageStructure));
-                else
+                              &(thisUnit.imageStructure)) & 1)
+                        gotPictStructInfo=true;
+                }else
                     printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
                 startCode=pkt->readi8();
 
                 decodingImage=false;
-                if(!addUnit(data,unitTypeSei,thisUnit,startCodeLength))
+                if(gotPictStructInfo && !addUnit(data,unitTypeSei,thisUnit,startCodeLength))
                 {
                     result=ADM_IGN;
                     goto the_end;
@@ -435,10 +449,10 @@ bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStruc
       switch(pic4)
       {
           case 0: *pic=pictureFrame; break;
-          case 3:
-          case 4: *pic=pictureFrame;
-          case 1: *pic=pictureTopField;break;
-          case 2: *pic=pictureBottomField;break;
+          case 1: *pic=pictureFieldTop;break; // field-encoded, top field
+          case 3: *pic=pictureTopFirst;break; // frame-encoded, displayed as fields, top first
+          case 2: *pic=pictureFieldBottom;break; // field-encoded, bottom field
+          case 4: *pic=pictureBottomFirst;break; // frame-encoded, displayed as fields, bottom first
           default:*pic=pictureFrame;break;
       }
     }

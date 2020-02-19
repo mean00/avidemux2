@@ -41,7 +41,7 @@ using std::string;
 #else
 #define aprintf printf
 #endif
-static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
+static const char Structure[6]={'X','T','B','F','C','S'}; // Invalid, Top, Bottom, Frame, Frame+TFF, Frame+BFF
 static const char Type[5]={'X','I','P','B','D'};
 #define VC1_MAX_SEQ_SIZE 64
 #if 1
@@ -67,8 +67,10 @@ public:
 typedef enum
 {
     pictureFrame=3,
-    pictureTopField=1, 
-    pictureBottomField=2
+    pictureFieldTop=1,
+    pictureFieldBottom=2,
+    pictureTopFirst=4,
+    pictureBottomFirst=5
 }pictureStructure;
 
 typedef struct
@@ -150,22 +152,28 @@ virtual uint8_t run(const char *file,ADM_TS_TRACK *videoTrac)=0;
         bool    writeSystem(const char *filename,bool append=false);
         bool    updateLastUnitStructure(int structure);
         bool    updatePicStructure(TSVideo &video,const uint32_t t)
-                        {
-                                            switch(t)
-                                            {
-                                                case 3: video.frameCount++;
-                                                        thisUnit.imageStructure=pictureFrame;
-                                                        break;
-                                                case 1:  thisUnit.imageStructure=pictureTopField;
-                                                         video.fieldCount++;
-                                                         break;
-                                                case 2:  thisUnit.imageStructure=pictureBottomField;
-                                                         video.fieldCount++;
-                                                         break;
-                                                default: ADM_warning("frame type 0 met, this is illegal\n");
-                                            }
-                                            return true;
-                        }
+                {
+                    switch(t)
+                    {
+                        case 3: video.frameCount++;
+                                thisUnit.imageStructure=pictureFrame;
+                                break;
+                        case 1: thisUnit.imageStructure=pictureFieldTop;
+                                video.fieldCount++;
+                                break;
+                        case 2: thisUnit.imageStructure=pictureFieldBottom;
+                                video.fieldCount++;
+                                break;
+                        case 4: video.frameCount++;
+                                thisUnit.imageStructure=pictureTopFirst;
+                                break;
+                        case 5: video.frameCount++;
+                                thisUnit.imageStructure=pictureBottomFirst;
+                                break;
+                        default: ADM_warning("frame type 0 met, this is illegal\n");
+                    }
+                    return true;
+                }
 };
 
 /**
@@ -178,7 +186,7 @@ protected:
         
 protected:
         ADM_SPSInfo             spsInfo;
-        bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
+        uint8_t                 decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
         #define                 ADM_NAL_BUFFER_SIZE (2*1024) // only used to decode SEI, should plenty enough
         uint8_t                 payloadBuffer[ADM_NAL_BUFFER_SIZE];
 public:
@@ -191,23 +199,6 @@ public:
                   
                 } 
         uint8_t run(const char *file,ADM_TS_TRACK *videoTrac);
-        bool    updatePicStructure(TSVideo &video,const uint32_t t)
-                        {
-                                            switch(t)
-                                            {
-                                                case 3: video.frameCount++;
-                                                        thisUnit.imageStructure=pictureFrame;
-                                                        break;
-                                                case 1:  thisUnit.imageStructure=pictureTopField;
-                                                         video.fieldCount++;
-                                                         break;
-                                                case 2:  thisUnit.imageStructure=pictureBottomField;
-                                                         video.fieldCount++;
-                                                         break;
-                                                default: ADM_warning("frame type 0 met, this is illegal\n");
-                                            }
-                                            return true;
-                        }
 };
 
 class TsIndexerVC1: public TsIndexerBase
@@ -334,10 +325,10 @@ public:
                                                 case 3: video.frameCount++;
                                                         thisUnit.imageStructure=pictureFrame;
                                                         break;
-                                                case 1:  thisUnit.imageStructure=pictureTopField;
+                                                case 1:  thisUnit.imageStructure=pictureFieldTop;
                                                          video.fieldCount++;
                                                          break;
-                                                case 2:  thisUnit.imageStructure=pictureBottomField;
+                                                case 2:  thisUnit.imageStructure=pictureFieldBottom;
                                                          video.fieldCount++;
                                                          break;
                                                 default: ADM_warning("frame type 0 met, this is illegal\n");
