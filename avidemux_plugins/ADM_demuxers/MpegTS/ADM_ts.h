@@ -110,7 +110,7 @@ class tsHeader         :public vidHeader
 {
   protected:
     
-    bool    interlaced;
+    bool    fieldEncoded;
     bool    readVideo(indexFile *index);
     bool    readAudio(indexFile *index,const char *name);
     bool    readIndex(indexFile *index);

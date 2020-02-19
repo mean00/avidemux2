@@ -173,8 +173,10 @@ bool bAppend=false;
                                     three=pkt->readi8();
                                     
                                     int picture_structure=one&3;// 1=TOP, 2=BOTTOM, 3=FRAME
-                                    bool tff=!!(two&0x80);;
-                                    bool progressive_frame=!!(three&0x80);;
+                                    bool tff=!!(two&0x80);
+                                    bool progressive_frame=!!(three&0x80);
+                                    if(!progressive_frame && picture_structure==3)
+                                        picture_structure+=tff? 1 : 2;
                                     updateLastUnitStructure(picture_structure);
 #if 0                                                                                
                                     printf("structure %d progressive=%d tff=%d (%x:%x:%x)\n",picture_structure,progressive_frame,tff,one,two,three);

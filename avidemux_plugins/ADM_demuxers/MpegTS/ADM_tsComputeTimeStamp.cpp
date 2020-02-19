@@ -7,6 +7,7 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_coreUtils.h"
 #include "ADM_indexFile.h"
 #include "ADM_ts.h"
 
@@ -74,16 +75,30 @@ bool tsHeader::updatePtsDts(void)
 
         // Make sure everyone starts at 0
         // Search first timestamp (audio/video)
-
-        switch( _videostream.dwRate)
+        if(fieldEncoded) // Set fps to field rate, necessary for copy mode
         {
-            case 50000:   dtsIncrement=20000;break;
-            case 25000:   dtsIncrement=40000;break;
-            case 23976:   dtsIncrement=41708;break;
-            case 29970:   dtsIncrement=33367;break;
-            default : dtsIncrement=1;
-                    printf("[psDemux] Fps not handled for DTS increment\n");
-
+            if(_videostream.dwRate<=45000)
+                _videostream.dwRate*=2;
+            else if(!(_videostream.dwScale%2))
+                _videostream.dwScale/=2;
+            _mainaviheader.dwMicroSecPerFrame/=2;
+            printf("[processVideoIndex] Doubling fps for field-encoded video, new time base: %d / %d\n",_videostream.dwScale,_videostream.dwRate);
+        }
+        if(_mainaviheader.dwMicroSecPerFrame)
+        {
+            dtsIncrement=_mainaviheader.dwMicroSecPerFrame;
+        }else
+        {
+            if(_videostream.dwScale==1000)
+                dtsIncrement=ADM_UsecFromFps1000(_videostream.dwRate);
+            else if(_videostream.dwScale && _videostream.dwRate)
+            {
+                double f=_videostream.dwScale;
+                f*=1000.*1000.;
+                f/=_videostream.dwRate;
+                f+=0.49;
+                dtsIncrement=(uint64_t)f;
+            }
         }
         uint64_t startDts=ListOfFrames[0]->dts;
         uint64_t startPts=ListOfFrames[0]->pts;
