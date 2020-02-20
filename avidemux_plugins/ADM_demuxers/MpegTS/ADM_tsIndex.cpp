@@ -234,6 +234,7 @@ bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxP
 {
         // if it contain a SPS or a intra/idr, we start a new line
         bool mustFlush=false;
+        bool picStructFromSei=false;
         int n=listOfUnits.size();
         int picIndex=0;
         H264Unit *unit=&(listOfUnits[0]);
@@ -247,11 +248,15 @@ bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxP
                 case unitTypeSps: mustFlush=true; break;
                 case unitTypePic: 
                             picIndex=i;
+                            if(!picStructFromSei)
+                                pictStruct=listOfUnits[i].imageStructure;
+                            picStructFromSei=false;
                             if(listOfUnits[i].imageType==1 || listOfUnits[i].imageType==4)
                                 mustFlush=true;
                             break;
                 case unitTypeSei:
                             pictStruct=listOfUnits[i].imageStructure;
+                            picStructFromSei=true;
                             break;
                 default:
                         ADM_assert(0);
