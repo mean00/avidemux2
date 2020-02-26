@@ -82,7 +82,9 @@ bool psPacket::close(void)
 */
 uint64_t    psPacket::getPos(void)
 {
-    return 0;
+    uint64_t pos;
+    _file->getpos(&pos);
+    return pos;
 }
 /**
     \fn setPos
