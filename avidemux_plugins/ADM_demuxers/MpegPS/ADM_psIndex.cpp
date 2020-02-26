@@ -29,7 +29,7 @@
 #include "ADM_coreUtils.h"
 
 static const char Type[5]={'X','I','P','B','P'};  // Frame type
-static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
+static const char Structure[6]={'X','T','B','F','C','S'}; // Invalid, Top, Bottom, Frame, Frame+TFF, Frame+BFF
 
 static const uint32_t FPS[16]={
                 0,                      // 0
@@ -70,8 +70,10 @@ typedef enum
 typedef enum
 {
     pictureFrame=3,
-    pictureTopField=1, 
-    pictureBottomField=2
+    pictureFieldTop=1,
+    pictureFieldBottom=2,
+    pictureTopFirst=4,
+    pictureBottomFirst=5
 }pictureStructure;
 
 typedef struct
@@ -83,7 +85,6 @@ typedef struct
     uint32_t        nbPics;
     indexerState    state;
     psPacketLinear *pkt;
-    int32_t         nextOffset;
     uint64_t        gopStartDts;
 }indexerData;
 
@@ -126,14 +127,16 @@ public:
         bool    writeVideo(PSVideo *video);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
-        bool    Mark(indexerData *data,dmxPacketInfo *s,markType update);
+        bool    Mark(indexerData *data,dmxPacketInfo *s,uint32_t size,markType update);
         uint64_t timeConvert(uint64_t x) // 90 kHz tick -> us
-                    {
-                         if(x==ADM_NO_PTS) return ADM_NO_PTS;
-                            x=x*1000;
-                            x/=90;
-                            return x;
-                    }
+                {
+                    if(x==ADM_NO_PTS) return ADM_NO_PTS;
+                    double f=x;
+                    f*=100.;
+                    f/=9.;
+                    f+=0.49;
+                    return (uint64_t)f;
+                }
 };
 /**
       \fn psIndexer 
@@ -186,11 +189,13 @@ bool seq_found=false;
 
 PSVideo video;
 indexerData  data;    
-dmxPacketInfo info;
+dmxPacketInfo info,lastInfo;
 bool bAppend=false;
     
     memset(&video,0,sizeof(video));
     memset(&data,0,sizeof(data));
+    memset(&info,0,sizeof(info));
+    memset(&lastInfo,0,sizeof(lastInfo));
     data.picStructure=pictureFrame;
     char *indexName=(char *)malloc(strlen(file)+6);
     sprintf(indexName,"%s.idx2",file);
@@ -233,6 +238,11 @@ bool bAppend=false;
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
+
+    uint32_t lastConsumed=0;
+    bool picEntryPending=false;
+    markType update=markStart;
+
       while(1)
       {
         if(!ui->isAlive())
@@ -241,17 +251,27 @@ bool bAppend=false;
             break;
         }
         uint8_t startCode=pkt->findStartCode();
+        if(picEntryPending && startCode!=0xB5) // picture not followed by extension
+        {
+            /*printf("Writing pic %u type: %d size: 0x%x startAt: 0x%x offset: 0x%x\n",
+                data.nbPics,data.frameType,lastConsumed,lastInfo.startAt,lastInfo.offset);*/
+            picEntryPending=false;
+            Mark(&data,&lastInfo,lastConsumed,update);
+            lastConsumed=0;
+            data.state=idx_startAtImage;
+            data.nbPics++;
+        }
+
         if(!pkt->stillOk()) break;
         pkt->getInfo(&info);
         info.offset-=4;
+        //printf("start code: 0x%x pos: 0x%" PRIx64" offset: 0x%x pts: %s\n",startCode,pkt->getPos(),info.offset,ADM_us2plain(timeConvert(info.pts)));
 
           switch(startCode)
                   {
-                  
-
-                            ;
                   case 0xB3: // sequence start
-                          Mark(&data,&info,markStart);
+                          //printf("Writing sequence start.\n");
+                          Mark(&data,&info,pkt->getConsumed(),markStart);
                           data.state=idx_startAtGopOrSeq;
                           if(seq_found)
                           {
@@ -261,7 +281,7 @@ bool bAppend=false;
                           //
                           seq_found=1;
                           val=pkt->readi32();
-                          video.interlaced=0; // how to detect ?
+                          video.interlaced=0; // the correct value will be set later
                           video.w=val>>20;
                           video.w=((video.w+15)&~15);
                           video.h=((val>>8) & 0xfff);
@@ -277,7 +297,6 @@ bool bAppend=false;
                                 { 
                                     uint8_t firstByte=pkt->readi8();
                                     uint8_t id=firstByte>>4;
-                                    uint8_t two;
                                     switch(id)
                                     {
                                         case 1: // Sequence extension
@@ -291,31 +310,53 @@ bool bAppend=false;
                                                 uint32_t extSize=pkt->readi32();
                                                 uint32_t eh=(extSize<<15)>>18;
                                                 uint32_t ew=(extSize)>>18;
-                                                printf("**** %x ->%d x %d\n",extSize,ew,eh);
+                                                //printf("**** %x ->%d x %d\n",extSize,ew,eh);
                                             }
                                             break;
                                         case 8: // picture coding extension (mpeg2)
                                         {
                                             // skip motion vector
-                                            uint8_t picture_structure;
                                             pkt->forward(1); // 4*4 bits
-                                            two=pkt->readi8();
-                                            picture_structure=(two)&3;
-                                            
-                                            //printf("Picture type %02x struct:%x\n",two,picture_structure);
+                                            uint8_t picture_structure=pkt->readi8();
+                                            picture_structure&=3;
+                                            uint8_t two=pkt->readi8();
+                                            uint8_t three=pkt->readi8();
+                                            bool tff=!!(two&0x80);
+                                            bool progressive_frame=!!(three&0x80);
+                                            if(!progressive_frame && picture_structure==3)
+                                                picture_structure+=tff? 1 : 2;
+                                            //printf("Pic struct: %d %s\n",picture_structure,progressive_frame? "progressive" : tff? "top field first" : "bottom field first");
                                             switch(picture_structure)
                                             {
                                             case 3: video.frameCount++;
                                                     data.picStructure=pictureFrame;
                                                     break;
-                                            case 1:  data.picStructure=pictureTopField;
-                                                     video.fieldCount++;
-                                                     break;
-                                            case 2:  data.picStructure=pictureBottomField;
-                                                     video.fieldCount++;
-                                                     break;
-                                            default: ADM_warning("frame type 0 met, this is illegal\n");
+                                            case 1: data.picStructure=pictureFieldTop;
+                                                    video.fieldCount++;
+                                                    break;
+                                            case 2: data.picStructure=pictureFieldBottom;
+                                                    video.fieldCount++;
+                                                    break;
+                                            case 4: video.frameCount++;
+                                                    data.picStructure=pictureTopFirst;
+                                                    break;
+                                            case 5: video.frameCount++;
+                                                    data.picStructure=pictureBottomFirst;
+                                                    break;
+                                            default: ADM_warning("picture structure %d met, this is illegal\n",picture_structure);
                                             }
+                                            if(picEntryPending)
+                                            {
+                                                /*printf("Writing pic %u type: %d size: 0x%x startAt: 0x%x offset: 0x%x\n",
+                                                    data.nbPics,data.frameType,lastConsumed,lastInfo.startAt,lastInfo.offset);*/
+                                                picEntryPending=false;
+                                                Mark(&data,&lastInfo,lastConsumed,update);
+                                                lastConsumed=0;
+                                                data.state=idx_startAtImage;
+                                                data.nbPics++;
+                                            }
+                                            if(!video.interlaced && picture_structure && picture_structure!=3)
+                                                video.interlaced=1;
                                         }
                                         default:break;
                                     }
@@ -340,38 +381,37 @@ bool bAppend=false;
 
                             }
 
-#define PREAMBLE qfprintf(index,"[Data]\n"); \
-                 qfprintf(index,"# Warning, picture structure markers F/T/B are shifted one image to the right.\n"); \
-                 qfprintf(index,"# To compensate for that, they are shifted one image to the left in readIndex.");
-
+#define PREAMBLE qfprintf(index,"[Data]");
                           if(!seq_found) continue;
                           if(headerDumped==false)
                           {
                                 PREAMBLE
                                 headerDumped=true;
                           }
-                          if(data.state==idx_startAtGopOrSeq) 
-                          {         
-                                  continue;;
-                          }
-                          
-                          Mark(&data,&info,markStart);
+                          //printf("GOP, pics: %u\n",data.nbPics);
+                          if(data.state==idx_startAtGopOrSeq) continue;
+                          //printf("GOP, writing.\n");
+                          Mark(&data,&info,pkt->getConsumed(),markStart);
                           data.state=idx_startAtGopOrSeq;
                           break;
                   case 0x00 : // picture
                         {
                           int type;
-                          markType update=markNow;
+                          update=markNow;
                           if(!seq_found)
-                          { 
-                                  continue;
-                                  printf("[psIndexer]No sequence start yet, skipping..\n");
+                          {
+                              printf("[psIndexer] No sequence start yet, skipping...\n");
+                              continue;
                           }
                           if(headerDumped==false)
                           {
                                 PREAMBLE
                                 headerDumped=true;
                           }
+                          // Get the size of the previous pic prior to reading the type of the current
+                          // so that we don't need to account for 2 bytes offset in Mark().
+                          if(data.state==idx_startAtImage)
+                              lastConsumed=pkt->getConsumed();
                           val=pkt->readi16();
                           temporal_ref=val>>6;
                           type=7 & (val>>3);
@@ -395,16 +435,19 @@ bool bAppend=false;
                             {
                                     lastValidVideoDts=info.dts;
                             }
-                           
-                          
                           if(data.state==idx_startAtGopOrSeq) 
-                          {
-                                update=markEnd;
-                          }
+                              update=markEnd;
                           data.frameType=type;
-                          Mark(&data,&info,update);
-                          data.state=idx_startAtImage;
-                          data.nbPics++;
+                          if((info.pts!=ADM_NO_PTS || info.dts!=ADM_NO_PTS) &&
+                              lastInfo.pts==info.pts && lastInfo.dts==info.dts &&
+                              lastInfo.startAt==info.startAt) // both pics belong to the same packet
+                          {
+                              ADM_warning("Invalidating timing for frame %u\n",data.nbPics);
+                              lastInfo.pts=lastInfo.dts=ADM_NO_PTS;
+                          }else
+                              lastInfo=info;
+                          //printf("preparing pic entry, lastInfo.pts: %s\n",ADM_us2plain(timeConvert(lastInfo.pts)));
+                          picEntryPending=true;
                         }
                           break;
                   default:
@@ -415,8 +458,11 @@ bool bAppend=false;
 theEnd:    
         printf("\n");
         // Dump progressive/frame gop
-        Mark(&data,&info,markStart);
-        
+        if(picEntryPending)
+            Mark(&data,&lastInfo,lastConsumed,markStart);
+        else
+            Mark(&data,&info,pkt->getConsumed(),markStart);
+
         qfprintf(index,"\n# Found %" PRIu32" images \n",data.nbPics); // Size
         qfprintf(index,"# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
         qfprintf(index,"# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
@@ -440,34 +486,28 @@ cleanup:
 /**
     \fn   Mark
     \brief update the file
-
-    The offset part is due to the fact that we read 2 bytes from the pic header to know the pic type.
-    So when going from a pic to a pic, it is self cancelling.
-    If the beginning is not a pic, but a gop start for example, we had to add/remove those.
-
 */
-bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
+bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t size,markType update)
 {
-    int offset=data->nextOffset;
-    data->nextOffset=0;
-    
-     if( update==markStart)
-     {
-                offset=2;
-     }
     if(update==markStart || update==markNow)
     {
         if(data->nbPics)
         {
             // Write previous image data (size) : TODO
-            qfprintf(index,":%06" PRIx32" ",data->pkt->getConsumed()+offset); // Size
+            qfprintf(index,":%06" PRIx32" ",size); // Size
         }
-        else data->pkt->getConsumed();
     }
     if(update==markEnd || update==markNow)
     {
         if(data->frameType==1)
         {
+            // In field encoded streams both fields of the keyframe can be intra,
+            // update data from info then.
+            if(data->state==idx_startAtImage)
+            {
+                data->startAt=info->startAt;
+                data->offset=info->offset;
+            }
             // If audio, also dump audio
             if(audioTracks)
             {
@@ -484,17 +524,16 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
             // start a new line
             qfprintf(index,"\nVideo at:%08" PRIx64":%04" PRIx32" Pts:%08" PRId64":%08" PRId64" ",data->startAt,data->offset,info->pts,info->dts);
             data->gopStartDts=info->dts;
-            data->nextOffset=-2;
         }
         int64_t deltaDts,deltaPts;
 #if 0
-        printf("Dts%" PRId64",PTS:%" PRId64"\n",info->dts, info->pts);
+        printf("Dts: %" PRId64",PTS :%" PRId64"\n",info->dts, info->pts);
 #endif
         if(info->dts==-1 || data->gopStartDts==-1) deltaDts=-1;
                 else deltaDts=(int64_t)info->dts-(int64_t)data->gopStartDts;
         if(info->pts==-1 || data->gopStartDts==-1) deltaPts=-1;
                 else deltaPts=(int64_t)info->pts-(int64_t)data->gopStartDts;
-        qfprintf(index,"%c%c:%" PRId64":%" PRId64,Type[data->frameType],Structure[data->picStructure&3],
+        qfprintf(index,"%c%c:%" PRId64":%" PRId64,Type[data->frameType],Structure[data->picStructure%sizeof(Structure)],
                     deltaPts,deltaDts);
     }
     if(update==markEnd || update==markNow)
@@ -519,10 +558,7 @@ bool PsIndexer::writeVideo(PSVideo *video)
     qfprintf(index,"[Video]\n");
     qfprintf(index,"Width=%d\n",video->w);
     qfprintf(index,"Height=%d\n",video->h);
-    if(video->interlaced)
-        qfprintf(index,"Fps=%d\n",video->fps*2);
-    else
-        qfprintf(index,"Fps=%d\n",video->fps);
+    qfprintf(index,"Fps=%d\n",video->fps);
     qfprintf(index,"Interlaced=%d\n",video->interlaced);
     qfprintf(index,"AR=%d\n",video->ar);
     return true;
