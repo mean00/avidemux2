@@ -418,7 +418,7 @@ uint32_t i,j,cur;
         uint64_t total=0;
         double   ftot;
         uint32_t thisone,previous=0;
-        uint32_t step=1;
+        uint32_t step=0xFFFFFFFF;
         bool constantFps=true;
 
         // try to correct jitter from rounding errors first
@@ -428,6 +428,8 @@ uint32_t i,j,cur;
             for(uint32_t i=0;i<nbChunk;i++)
             {
                 thisone=track->index[i].dts;
+                if(!thisone) continue;
+                if(thisone<step) step=thisone;
                 if(thisone<100) continue; // ignore too low durations
                 if(hist.find(thisone)==hist.end())
                     hist.insert({thisone,1});
@@ -468,29 +470,17 @@ uint32_t i,j,cur;
                     ADM_info("No, nothing we can do.\n");
             }
         }
+        if(step==0xFFFFFFFF) step=1;
 
         for(uint32_t i=0;i<nbChunk;i++)
         {
             thisone=track->index[i].dts;
             if(!isAudio && i+1<nbChunk)
             {
-                if(!i)
-                    step=thisone;
-                if(i && step>1 && thisone!=previous && thisone && previous)
-                {
+                while(thisone%step)
+                    step=thisone%step;
+                if(constantFps && i && thisone!=previous && thisone && previous)
                     constantFps=false;
-                    if(thisone>previous)
-                    {
-                        if(thisone%previous)
-                            step=1;
-                    }else
-                    {
-                        if(previous%thisone)
-                            step=1;
-                        else if(step>thisone)
-                            step=thisone;
-                    }
-                }
                 previous=thisone;
             }
             ftot=total;
