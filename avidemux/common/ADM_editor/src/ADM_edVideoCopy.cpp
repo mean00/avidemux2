@@ -202,7 +202,14 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         // It is H.264, check deeper. The keyframe may be a non-IDR random access point.
         // If picture order count after a cut is going back, at least FFmpeg-based players
         // like VLC and mpv may get stuck until the next recovery point is reached.
-        // First determine stream type
+        // Get SPS to be able to decode the slice header
+        ADM_SPSInfo sps;
+        if(!getH264SPSInfo(vid,&sps))
+        {
+            ADM_warning("Cannot retrieve SPS info.\n");
+            BOWOUT
+        }
+        // Determine stream type
         bool AnnexB=false;
         uint8_t *extra;
         uint32_t extraLen=0;
@@ -213,13 +220,6 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         ADMCompressedImage img;
         buffer=new uint8_t[MAX_FRAME_LENGTH];
         img.data=buffer;
-        // Get SPS to be able to decode the slice header
-        ADM_SPSInfo sps;
-        if(!getH264SPSInfo(vid,&sps))
-        {
-            ADM_warning("Cannot retrieve SPS info.\n");
-            BOWOUT
-        }
         // We have SPS, now get the frame we are interested in.
         if(!demuxer->getFrame(frame,&img))
         {
