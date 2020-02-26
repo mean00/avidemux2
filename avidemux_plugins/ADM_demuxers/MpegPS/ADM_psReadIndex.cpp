@@ -17,6 +17,7 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_coreUtils.h"
 #include "ADM_indexFile.h"
 #include "ADM_ps.h"
 #include "ADM_string.h"
@@ -52,29 +53,6 @@ bool firstAudio=true;
                     processAudioIndex(buffer+6);
             }
         }
-
-    // Work around picture structure off-by-one
-    uint32_t nbImage=ListOfFrames.size();
-    if(nbImage>2)
-    {
-        ADM_info("Applying workaround for picture structure entries off-by-one.\n");
-        uint32_t next=0;
-        for(int i=0;i<nbImage-1;i++)
-        {
-            next=ListOfFrames[i+1]->pictureType;
-            ListOfFrames[i]->pictureType=next;
-        }
-        // We don't know the picture structure for the last image, but if it is a field,
-        // swapping top and bottom is a reasonable guess.
-        switch(next & AVI_FIELD_STRUCTURE)
-        {
-            case AVI_TOP_FIELD:
-                ListOfFrames[nbImage-1]->pictureType=AVI_FIELD_STRUCTURE+AVI_BOTTOM_FIELD; break;
-            case AVI_BOTTOM_FIELD:
-                ListOfFrames[nbImage-1]->pictureType=AVI_FIELD_STRUCTURE+AVI_TOP_FIELD; break;
-            default:break;
-        }
-    }
     return true;
 }
 /**
@@ -185,10 +163,14 @@ bool psHeader::processVideoIndex(char *buffer)
                 switch(picStruct)
                 {
                         default:  frame->pictureType=0;ADM_warning("Unknown picture structure %c\n",picStruct);break;
-                        case 'F': frame->pictureType=AVI_FRAME_STRUCTURE;break;
+                        case 'F':
+                        case 'C':
+                        case 'S': frame->pictureType=AVI_FRAME_STRUCTURE;break;
                         case 'T': frame->pictureType=AVI_FIELD_STRUCTURE+AVI_TOP_FIELD;break;
                         case 'B': frame->pictureType=AVI_FIELD_STRUCTURE+AVI_BOTTOM_FIELD;break;
                 }
+                if(!fieldEncoded && (frame->pictureType & AVI_FIELD_STRUCTURE))
+                    fieldEncoded=true;
                 frame->len=len;
                 ListOfFrames.append(frame);
                 count++;
@@ -219,34 +201,16 @@ bool    psHeader::readVideo(indexFile *index)
 
     if(!w || !h || !fps) return false;
 
-    interlaced=index->getAsUint32("Interlaced");
-    
+    if(index->getAsUint32("Interlaced"))
+        printf("[psDemuxer] This video is interlaced.\n");
+
     _video_bih.biWidth=_mainaviheader.dwWidth=w ;
     _video_bih.biHeight=_mainaviheader.dwHeight=h;             
-    switch(fps)
-    {
-        case 23976:
-            _videostream.dwScale=1001;
-            _videostream.dwRate=24000;
-            break;
-        case 29970:
-            _videostream.dwScale=1001;
-            _videostream.dwRate=30000;
-            break;
-        case 24000:
-        case 25000:
-        case 30000:
-        case 50000:
-        case 60000:
-            _videostream.dwScale=1000;
-            _videostream.dwRate=fps;
-            break;
-        default:
-            _videostream.dwScale=1;
-            _videostream.dwRate=90000;
-            break;
-    }
 
+    // time base and time increment will be adjusted later in open()
+    _mainaviheader.dwMicroSecPerFrame=0;
+    _videostream.dwScale=1000;
+    _videostream.dwRate=fps;
     _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"MPEG");
 
     return true;

@@ -116,7 +116,7 @@ class psHeader         :public vidHeader
 {
   protected:
     bool    append;
-    bool    interlaced;
+    bool    fieldEncoded;
     bool    readVideo(indexFile *index);
     bool    readAudio(indexFile *index,const char *name);
     bool    readIndex(indexFile *index);

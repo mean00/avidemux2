@@ -139,6 +139,46 @@ uint8_t psHeader::open(const char *name)
                   listOfAudioTracks[i]->access->setScrGapList(&listOfScrGap) ;
     }
     updatePtsDts();
+    {
+    uint32_t fps=_videostream.dwRate;
+    switch(fps)
+    {
+        case 23976:
+            _videostream.dwScale=1001;
+            _videostream.dwRate=24000;
+            break;
+        case 29970:
+            _videostream.dwScale=1001;
+            _videostream.dwRate=30000;
+            break;
+        case 24000:
+        case 25000:
+        case 30000:
+        case 50000:
+        case 60000:
+            _videostream.dwScale=1000;
+            _videostream.dwRate=fps;
+            break;
+        default:
+            _videostream.dwScale=1;
+            _videostream.dwRate=90000;
+            _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(fps);
+            break;
+    }
+    if(fieldEncoded)
+    {
+        printf("[psDemux] Doubling fps for field-encoded video");
+        if(_videostream.dwRate<=45000)
+            _videostream.dwRate*=2;
+        else if(!(_videostream.dwScale%2))
+            _videostream.dwScale/=2;
+        if(_mainaviheader.dwMicroSecPerFrame)
+            _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(fps*2);
+        else
+            printf(", new time base: %d / %d",_videostream.dwScale,_videostream.dwRate);
+        printf("\n");
+    }
+    }
     _videostream.dwLength= _mainaviheader.dwTotalFrames=ListOfFrames.size();
     printf("[psDemux] Found %d video frames\n",_videostream.dwLength);
     if(_videostream.dwLength)_isvideopresent=1;
@@ -230,7 +270,7 @@ uint8_t psHeader::close(void)
 
  psHeader::psHeader( void ) : vidHeader()
 { 
-    interlaced=false;
+    fieldEncoded=false;
     lastFrame=0xffffffff;
     
 }
@@ -251,6 +291,7 @@ uint8_t psHeader::close(void)
 uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
     if(frame>=ListOfFrames.size()) return 0;
+    getFlags(frame,&(img->flags));
     dmxFrame *pk=ListOfFrames[frame];
     if(frame==(lastFrame+1) && pk->type!=1) // the next frame, not an intra
     {
@@ -261,7 +302,6 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              img->demuxerDts=pk->dts;
              img->demuxerPts=pk->pts;
              //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
-             getFlags(frame,&(img->flags));
              return r;
     }
     if(pk->type==1) // an intra
@@ -272,7 +312,6 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              img->demuxerFrameNo=frame;
              img->demuxerDts=pk->dts;
              img->demuxerPts=pk->pts;
-             getFlags(frame,&(img->flags));
              //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
              lastFrame=frame;
              return r;
@@ -313,7 +352,6 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     img->demuxerDts=pk->dts;
     img->demuxerPts=pk->pts;
     //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
-    getFlags(frame,&(img->flags));
     return r;
 }
 
