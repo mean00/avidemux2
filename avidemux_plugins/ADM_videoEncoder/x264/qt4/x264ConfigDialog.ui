@@ -2836,7 +2836,12 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>Auto Variance AQ</string>
+                  <string>Auto Variance</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Auto Variance Biased</string>
                  </property>
                 </item>
                </widget>
