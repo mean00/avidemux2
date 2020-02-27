@@ -271,7 +271,9 @@ bool bAppend=false;
                   {
                   case 0xB3: // sequence start
                           //printf("Writing sequence start.\n");
-                          Mark(&data,&info,pkt->getConsumed(),markStart);
+                          lastConsumed+=pkt->getConsumed();
+                          Mark(&data,&info,lastConsumed,markStart);
+                          lastConsumed=0;
                           data.state=idx_startAtGopOrSeq;
                           if(seq_found)
                           {
@@ -391,7 +393,9 @@ bool bAppend=false;
                           //printf("GOP, pics: %u\n",data.nbPics);
                           if(data.state==idx_startAtGopOrSeq) continue;
                           //printf("GOP, writing.\n");
-                          Mark(&data,&info,pkt->getConsumed(),markStart);
+                          lastConsumed+=pkt->getConsumed();
+                          Mark(&data,&info,lastConsumed,markStart);
+                          lastConsumed=0;
                           data.state=idx_startAtGopOrSeq;
                           break;
                   case 0x00 : // picture
@@ -410,8 +414,9 @@ bool bAppend=false;
                           }
                           // Get the size of the previous pic prior to reading the type of the current
                           // so that we don't need to account for 2 bytes offset in Mark().
+                          // Add size of skipped pics with invalid type to the last valid one.
                           if(data.state==idx_startAtImage)
-                              lastConsumed=pkt->getConsumed();
+                              lastConsumed+=pkt->getConsumed();
                           val=pkt->readi16();
                           temporal_ref=val>>6;
                           type=7 & (val>>3);
