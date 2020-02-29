@@ -427,7 +427,7 @@
        </item>
        <item>
         <property name="text" >
-         <string>Lanzcos3</string>
+         <string>Lanczos-3</string>
         </property>
        </item>
       </widget>
