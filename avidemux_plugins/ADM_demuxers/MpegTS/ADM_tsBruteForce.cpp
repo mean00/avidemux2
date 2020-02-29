@@ -406,26 +406,36 @@ bool idAAC_LATM(int pid, tsPacket *ts)
 {
 #define LATM_NB_PACKET 10
 #define LATM_MIN_MATCH 7
+    int total=0;
+    uint32_t offset;
+    TS_PESpacket pes(pid);
+    for(int i=0;i<LATM_NB_PACKET;i++)
+    {
+        if(!ts->getNextPES(&pes))
+        {
+            ADM_warning("ADTS:Cannot get PES for pid=%d\n",pid);
+            return false;
+        }
         int match=0;
-        TS_PESpacket pes(pid);
-        for(int i=0;i<LATM_NB_PACKET;i++)
+        for(offset=pes.offset; offset<pes.payloadSize; offset++)
         {
-            if(!ts->getNextPES(&pes))
-            {
-                ADM_warning("ADTS:Cannot get PES for pid=%d\n",pid);
-                return false;
-            }
-            uint8_t *p=pes.payload+pes.offset;
+            uint8_t *p=pes.payload+offset;
             int key=(p[0]<<8)+p[1];
-            if((key & 0xffe0)==0x56e0)  // 0x2b7 shifted by one bit            
-                match++;
+            if((key & 0xffe0)!=0x56e0) // 0x2b7 shifted by one bit
+                continue;
+            ADM_info("LATM match in packet %d at offset %u (PES offset: %u, size: %u)\n",i,offset,pes.offset,pes.payloadSize);
+            match++;
+            if(match>=LATM_MIN_MATCH)
+                break;
         }
-        ADM_info("\t LATM match : %d/%d\n",match,LATM_MIN_MATCH);
-        if(match>=LATM_MIN_MATCH) 
-        {
-            return true;
-        }
-        return false;
+        total+=match;
+        if(total>=LATM_MIN_MATCH*2)
+            break;
+    }
+    ADM_info("\t LATM match : %d/%d\n",total,LATM_MIN_MATCH);
+    if(total>=LATM_MIN_MATCH)
+        return true;
+    return false;
 }
 /**
     \fn idAAC_ADTS
