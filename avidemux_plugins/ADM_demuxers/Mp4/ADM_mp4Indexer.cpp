@@ -463,6 +463,7 @@ uint32_t i,j,cur;
                         for(uint32_t i=0;i<nbChunk;i++)
                             track->index[i].dts=b;
                         ADM_info("Yes, enforcing CFR, frame duration %u ticks.\n",b);
+                        step=b;
                         restored=true;
                     }
                 }
