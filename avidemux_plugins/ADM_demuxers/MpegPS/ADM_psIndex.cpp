@@ -127,7 +127,7 @@ public:
         bool    writeVideo(PSVideo *video);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
-        bool    Mark(indexerData *data,dmxPacketInfo *s,uint32_t size,markType update);
+        bool    Mark(indexerData *data,dmxPacketInfo *s,bool noptsdts,uint32_t size,markType update);
         uint64_t timeConvert(uint64_t x) // 90 kHz tick -> us
                 {
                     if(x==ADM_NO_PTS) return ADM_NO_PTS;
@@ -241,6 +241,7 @@ bool bAppend=false;
 
     uint32_t lastConsumed=0;
     bool picEntryPending=false;
+    bool timingIsInvalid=false;
     markType update=markStart;
 
       while(1)
@@ -256,7 +257,7 @@ bool bAppend=false;
             /*printf("Writing pic %u type: %d size: 0x%x startAt: 0x%x offset: 0x%x\n",
                 data.nbPics,data.frameType,lastConsumed,lastInfo.startAt,lastInfo.offset);*/
             picEntryPending=false;
-            Mark(&data,&lastInfo,lastConsumed,update);
+            Mark(&data,&lastInfo,timingIsInvalid,lastConsumed,update);
             lastConsumed=0;
             data.state=idx_startAtImage;
             data.nbPics++;
@@ -272,7 +273,7 @@ bool bAppend=false;
                   case 0xB3: // sequence start
                           //printf("Writing sequence start.\n");
                           lastConsumed+=pkt->getConsumed();
-                          Mark(&data,&info,lastConsumed,markStart);
+                          Mark(&data,&info,false,lastConsumed,markStart);
                           lastConsumed=0;
                           data.state=idx_startAtGopOrSeq;
                           if(seq_found)
@@ -352,7 +353,7 @@ bool bAppend=false;
                                                 /*printf("Writing pic %u type: %d size: 0x%x startAt: 0x%x offset: 0x%x\n",
                                                     data.nbPics,data.frameType,lastConsumed,lastInfo.startAt,lastInfo.offset);*/
                                                 picEntryPending=false;
-                                                Mark(&data,&lastInfo,lastConsumed,update);
+                                                Mark(&data,&lastInfo,timingIsInvalid,lastConsumed,update);
                                                 lastConsumed=0;
                                                 data.state=idx_startAtImage;
                                                 data.nbPics++;
@@ -394,7 +395,7 @@ bool bAppend=false;
                           if(data.state==idx_startAtGopOrSeq) continue;
                           //printf("GOP, writing.\n");
                           lastConsumed+=pkt->getConsumed();
-                          Mark(&data,&info,lastConsumed,markStart);
+                          Mark(&data,&info,false,lastConsumed,markStart);
                           lastConsumed=0;
                           data.state=idx_startAtGopOrSeq;
                           break;
@@ -448,9 +449,12 @@ bool bAppend=false;
                               lastInfo.startAt==info.startAt) // both pics belong to the same packet
                           {
                               ADM_warning("Invalidating timing for frame %u\n",data.nbPics);
-                              lastInfo.pts=lastInfo.dts=ADM_NO_PTS;
+                              timingIsInvalid=true;
                           }else
-                              lastInfo=info;
+                          {
+                              timingIsInvalid=false;
+                          }
+                          lastInfo=info;
                           //printf("preparing pic entry, lastInfo.pts: %s\n",ADM_us2plain(timeConvert(lastInfo.pts)));
                           picEntryPending=true;
                         }
@@ -464,9 +468,9 @@ theEnd:
         printf("\n");
         // Dump progressive/frame gop
         if(picEntryPending)
-            Mark(&data,&lastInfo,lastConsumed,markStart);
+            Mark(&data,&lastInfo,timingIsInvalid,lastConsumed,markStart);
         else
-            Mark(&data,&info,pkt->getConsumed(),markStart);
+            Mark(&data,&info,timingIsInvalid,pkt->getConsumed(),markStart);
 
         qfprintf(index,"\n# Found %" PRIu32" images \n",data.nbPics); // Size
         qfprintf(index,"# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
@@ -492,8 +496,17 @@ cleanup:
     \fn   Mark
     \brief update the file
 */
-bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t size,markType update)
+bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,bool invalidateTiming,uint32_t size,markType update)
 {
+    uint64_t pts,dts;
+    if(invalidateTiming)
+    {
+        pts=dts=ADM_NO_PTS;
+    }else
+    {
+        pts=info->pts;
+        dts=info->dts;
+    }
     if(update==markStart || update==markNow)
     {
         if(data->nbPics)
@@ -527,24 +540,24 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t size,markTy
                 
             }
             // start a new line
-            qfprintf(index,"\nVideo at:%08" PRIx64":%04" PRIx32" Pts:%08" PRId64":%08" PRId64" ",data->startAt,data->offset,info->pts,info->dts);
-            data->gopStartDts=info->dts;
+            qfprintf(index,"\nVideo at:%08" PRIx64":%04" PRIx32" Pts:%08" PRId64":%08" PRId64" ",data->startAt,data->offset,pts,dts);
+            data->gopStartDts=dts;
         }
         int64_t deltaDts,deltaPts;
 #if 0
-        printf("Dts: %" PRId64",PTS :%" PRId64"\n",info->dts, info->pts);
+        printf("Dts: %" PRId64",PTS :%" PRId64"\n",dts,pts);
 #endif
-        if(info->dts==-1 || data->gopStartDts==-1) deltaDts=-1;
-                else deltaDts=(int64_t)info->dts-(int64_t)data->gopStartDts;
-        if(info->pts==-1 || data->gopStartDts==-1) deltaPts=-1;
-                else deltaPts=(int64_t)info->pts-(int64_t)data->gopStartDts;
+        if(dts==ADM_NO_PTS || data->gopStartDts==ADM_NO_PTS) deltaDts=-1;
+                else deltaDts=(int64_t)dts-(int64_t)data->gopStartDts;
+        if(pts==ADM_NO_PTS || data->gopStartDts==ADM_NO_PTS) deltaPts=-1;
+                else deltaPts=(int64_t)pts-(int64_t)data->gopStartDts;
         qfprintf(index,"%c%c:%" PRId64":%" PRId64,Type[data->frameType],Structure[data->picStructure%sizeof(Structure)],
                     deltaPts,deltaDts);
     }
     if(update==markEnd || update==markNow)
     {
-        data->pts=info->pts;
-        data->dts=info->dts;
+        data->pts=pts;
+        data->dts=dts;
     }
     if(update==markStart || update==markNow)
     {
