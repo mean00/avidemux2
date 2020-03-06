@@ -134,9 +134,18 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
     uint64_t minDelta=100000;
     uint64_t maxDelta=0;
-    uint32_t fmin=0,fmax=0;
+    uint32_t flags,fmin=0,fmax=0;
     for (uint32_t frame=0; frame<info.nb_frames; frame++)
     {
+        if(!ref->fieldEncoded)
+        {
+            demuxer->getFlags(frame,&flags);
+            if(flags & AVI_FIELD_STRUCTURE)
+            {
+                ADM_info("Ref video is field-encoded.\n");
+                ref->fieldEncoded=true;
+            }
+        }
         if (demuxer->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
         {
             if (firstNonZeroDts==ADM_NO_PTS)
@@ -180,7 +189,6 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     seg._durationUs=demuxer->getVideoDuration();
 
     // Set the default startTime to the pts of first Pic
-    uint32_t flags;
     demuxer->getFlags(0,&flags);
     demuxer->getPtsDts(0,&pts,&dts);
     ref->firstFramePts=0;

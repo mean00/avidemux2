@@ -291,9 +291,9 @@ public:
                     uint8_t     getVideoInfo(aviInfo *info); // for common timebase, call getTimeBase afterwards
                     _VIDEOS*    getRefVideo(int videoIndex);
                     uint64_t    getVideoDuration(void);
-                    uint64_t    getFrameIncrement(void); /// Returns the # of us between 2 frames or the smaller value of them
+                    uint64_t    getFrameIncrement(bool forCopyMode=false); /// Returns the # of us between 2 frames or the smaller value of them
                     int         getVideoCount(void);
-                    bool        getTimeBase(uint32_t *scale, uint32_t *rate); // common timebase or an approximation for all videos within the selection
+                    bool        getTimeBase(uint32_t *scale, uint32_t *rate, bool forCopyMode=false); // common timebase or an approximation for all videos within the selection
 
 /**************************************** /Video Info **************************/
 /***************************************** Project Handling ********************/

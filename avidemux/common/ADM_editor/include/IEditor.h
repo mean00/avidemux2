@@ -48,7 +48,7 @@ public:
     virtual void getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser) = 0;
     virtual uint64_t getCurrentFramePts(void) = 0;
     virtual bool getDirectImageForDebug(uint32_t frameNum, ADMCompressedImage *img) = 0;
-    virtual uint64_t getFrameIncrement(void) = 0;
+    virtual uint64_t getFrameIncrement(bool copy=false) = 0;
     virtual uint64_t getMarkerAPts() = 0;
     virtual uint64_t getMarkerBPts() = 0;
     virtual uint32_t getNbSegment(void) = 0;
@@ -61,7 +61,7 @@ public:
     virtual int getVideoCount(void) = 0;
     virtual uint64_t getVideoDuration(void) = 0;
     virtual uint8_t getVideoInfo(aviInfo *info) = 0;
-    virtual bool getTimeBase(uint32_t *scale, uint32_t *rate) = 0;
+    virtual bool getTimeBase(uint32_t *scale, uint32_t *rate, bool copy=false) = 0;
     virtual _VIDEOS* getRefVideo(int videoIndex) = 0;
     virtual bool getVideoPtsDts(uint32_t frame, uint32_t *flags, uint64_t *pts, uint64_t *dts) = 0;
     virtual bool goToIntraTimeVideo(uint64_t time) = 0;
