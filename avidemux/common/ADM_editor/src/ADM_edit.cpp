@@ -250,7 +250,7 @@ static bool checkStdTimeBase(uint32_t &num, uint32_t &den)
 /**
     \fn getTimeBase
 */
-bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate)
+bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate, bool copyMode)
 {
     /* Using MPEG timescale as fallback */
     *scale=1;
@@ -294,6 +294,7 @@ bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate)
     {
         _VIDEOS *vid=_segments.getRefVideo(ListOfRefs.at(i));
         ADM_assert(vid);
+        ADM_info("Ref video %u is %s-encoded, copy mode: %d\n",ListOfRefs.at(i),vid->fieldEncoded? "field" : "frame",copyMode);
         vidHeader *demuxer=vid->_aviheader;
         ADM_assert(demuxer);
         aviInfo info;
@@ -302,11 +303,45 @@ bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate)
         {
             myscale=info.timebase_num;
             myrate=info.timebase_den;
-            checkStdTimeBase(myscale,myrate);
+            if(false==checkStdTimeBase(myscale,myrate))
+                return false;
+            if(vid->fieldEncoded && !copyMode)
+            {
+                switch(myrate)
+                {
+                    case 60000:
+                    case 50000:
+                    case 48000:
+                        ADM_info("Halving timebase denominator %u for field-encoded ref video.\n",myrate);
+                        myrate/=2;
+                        break;
+                    default:
+                        ADM_info("Doubling timebase numerator %u for field-encoded ref video.\n",myscale);
+                        myscale*=2;
+                        break;
+                }
+            }
             continue;
         }
         /* FIXME properly reduce fractions when checking timebase */
-        checkStdTimeBase(info.timebase_num,info.timebase_den);
+        if(false==checkStdTimeBase(info.timebase_num,info.timebase_den))
+            return false;
+        if(vid->fieldEncoded && !copyMode)
+        {
+            switch(info.timebase_den)
+            {
+                case 60000:
+                case 50000:
+                case 48000:
+                    ADM_info("Halving timebase denominator %u for appended field-encoded ref video.\n",info.timebase_den);
+                    info.timebase_den/=2;
+                    break;
+                default:
+                    ADM_info("Doubling timebase numerator %u for appended field-encoded video.\n",info.timebase_num);
+                    info.timebase_num*=2;
+                    break;
+            }
+        }
         if(info.timebase_den == myrate)
         {
             if(info.timebase_num < myscale)
@@ -762,10 +797,26 @@ uint32_t ADM_Composer::getPARHeight()
 /**
     \fn getFrameIncrement
 */
-uint64_t ADM_Composer::getFrameIncrement(void)
+uint64_t ADM_Composer::getFrameIncrement(bool copyMode)
 {
-    if (!_segments.getNbSegments()) return 0;
-    return _segments.getRefVideo(0)->timeIncrementInUs;
+    uint32_t nb = _segments.getNbSegments();
+    if(!nb) return 0;
+    uint64_t minIncrement = 0;
+    for(uint32_t i=0; i<nb; i++)
+    {
+        _VIDEOS *vid = _segments.getRefVideo(i);
+        ADM_assert(vid);
+        uint64_t inc = vid->timeIncrementInUs;
+        if(!inc) continue;
+        if(!copyMode && vid->fieldEncoded)
+        {
+            ADM_info("Doubling frame increment for field-encoded ref video %u\n",i);
+            inc *= 2;
+        }
+        if(!minIncrement | (inc < minIncrement))
+            minIncrement = inc;
+    }
+    return minIncrement;
 }
 /**
 	Set decoder settings (post process/swap u&v...)

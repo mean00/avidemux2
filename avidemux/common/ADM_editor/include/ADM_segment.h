@@ -61,6 +61,7 @@ public:
       decoders *decoder; /// Video codec
       ADMColorScalerSimple *color; /// Color conversion if needed
       bool              dontTrustBFramePts;
+      bool              fieldEncoded;
       /* Audio part */
       uint32_t currentAudioStream;
       std::vector <ADM_audioStreamTrack *>  audioTracks;
@@ -83,6 +84,8 @@ public:
 
     _VIDEOS()
     {
+        dontTrustBFramePts=false;
+        fieldEncoded=false;
         currentAudioStream=0;
         _aviheader=NULL;
         decoder=NULL;
