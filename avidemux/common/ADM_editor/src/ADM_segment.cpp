@@ -820,7 +820,14 @@ void ADM_EditorSegment::dumpRefVideos(void)
         return false;
     }
     deltaFrame=frame-deltaFrame;
-    *dts=d+deltaFrame*vid->timeIncrementInUs;
+    d+=deltaFrame*vid->timeIncrementInUs;
+    if(d>pts)
+    {
+        ADM_warning("Calculated DTS=%" PRIu64" > PTS=%" PRIu64"\n",d,pts);
+        *dts=pts;
+        return false;
+    }
+    *dts=d;
     return true;
 }
 /**
