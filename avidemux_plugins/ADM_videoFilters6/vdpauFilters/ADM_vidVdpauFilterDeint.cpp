@@ -139,25 +139,28 @@ DECLARE_VIDEO_FILTER(   vdpauVideoFilterDeint,   // Class
 */
 bool vdpauVideoFilterDeint::updateConf(void)
 {
+    memcpy(&info,previousFilter->getInfo(),sizeof(info));
     if(passThrough)
     {
         ADM_warning("PassThrough mode\n");
-        info=*(previousFilter->getInfo());
         return true;
     }
     if(configuration.resizeToggle)
     {
         info.width=configuration.targetWidth;
         info.height=configuration.targetHeight;
-    }else
-    {
-            info=*(previousFilter->getInfo());
     }
-    uint64_t prev=previousFilter->getInfo()->frameIncrement;
     if(configuration.deintMode==ADM_KEEP_BOTH)
-        info.frameIncrement=prev/2;
-    else
-        info.frameIncrement=prev;
+    {
+        info.frameIncrement/=2;
+        if(info.timeBaseNum && info.timeBaseDen)
+        {
+            if(info.timeBaseDen<=30000 && (info.timeBaseNum & 1))
+                info.timeBaseDen*=2;
+            else
+                info.timeBaseNum/=2;
+        }
+    }
     return true;
 }
 /**
@@ -251,12 +254,16 @@ badInit:
 bool vdpauVideoFilterDeint::cleanupVdpau(void)
 {
     for(int i=0;i<ADM_NB_SURFACES;i++)
-        if(surfacePool[i]!=VDP_INVALID_HANDLE) admVdpau::surfaceDestroy(surfacePool[i]);
+    {
+        if(surfacePool[i]!=VDP_INVALID_HANDLE)
+        {
+            admVdpau::surfaceDestroy(surfacePool[i]);
+            surfacePool[i]=VDP_INVALID_HANDLE;
+        }
+    }
     if(outputSurface!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(outputSurface);
-    if(mixer!=VDP_INVALID_HANDLE) admVdpau::mixerDestroy(mixer);
     outputSurface=VDP_INVALID_HANDLE;
-    for(int i=0;i<ADM_NB_SURFACES;i++)
-        surfacePool[i]=VDP_INVALID_HANDLE;
+    if(mixer!=VDP_INVALID_HANDLE) admVdpau::mixerDestroy(mixer);
     mixer=VDP_INVALID_HANDLE;
     if(tempBuffer) delete [] tempBuffer;
     tempBuffer=NULL;
@@ -298,7 +305,7 @@ vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
     passThrough=false;
     updateConf();    
     passThrough=!setupVdpau();
-    
+    nextPts=0;
 }
 /**
     \fn destructor
@@ -333,17 +340,9 @@ bool vdpauVideoFilterDeint::configure( void)
      {
                 configuration.resizeToggle=(bool)doResize;
                 configuration.enableIvtc=doIvtc;
-                if(doResize)
-                {
-                    info.width=configuration.targetWidth;
-                    info.height=configuration.targetHeight;
-                }else
-                {
-                    info.width=previousFilter->getInfo()->width;
-                    info.height=previousFilter->getInfo()->height;
-                }
-                ADM_info("New dimension : %d x %d\n",info.width,info.height);
                 updateConf();
+                if(doResize)
+                    ADM_info("New dimension : %d x %d\n",info.width,info.height);
                 cleanupVdpau();
                 passThrough=!setupVdpau();
                 
@@ -448,7 +447,6 @@ bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
         tgt=render->surface;
         external=true;
     }
-    nextPts=image->Pts;
     slots[slot].pts=image->Pts;
     slots[slot].surface=tgt;
     slots[slot].isExternal=external;
@@ -590,9 +588,13 @@ bool r=true;
             secondField=false;
             *fn=nextFrame*2+1;
             if(false==getResult(image)) return false;
-            if(ADM_NO_PTS==nextPts) image->Pts=nextPts;
-                else image->Pts=nextPts-info.frameIncrement;
-            aprintf("2ndField : Pts=%s\n",ADM_us2plain(image->Pts));
+            if(ADM_NO_PTS==nextPts) image->Pts=ADM_NO_PTS;
+            else
+            {
+                aprintf("2nd field: nextPts = %s - frame increment = %d ms =",ADM_us2plain(nextPts),(int)(info.frameIncrement/1000LL));
+                image->Pts=nextPts-info.frameIncrement;
+                aprintf(" %s\n",ADM_us2plain(image->Pts));
+            }
             return true;
         }
      // shift frames;... free slot[0]
@@ -603,12 +605,12 @@ bool r=true;
     {
             aprintf("This is our first image, filling slot 1\n");
             ADMImage *prev= vidCache->getImageAs(ADM_HW_VDPAU,0);
-            if(false==fillSlot(1,prev))
+            if(!prev || false==fillSlot(1,prev))
             {
                     vidCache->unlockAll();
                     return false;
             }
-            
+            nextPts=prev->Pts;
     }
     // regular image, in fact we get the next image here
     ADMImage *next= vidCache->getImageAs(ADM_HW_VDPAU,nextFrame+1);
@@ -656,7 +658,7 @@ endit:
     nextFrame++;
     image->Pts=nextPts;
     if(next) nextPts=next->Pts;
-   // printf("VDPAU OUT PTS= %"PRIu64"\n",image->Pts);
+    aprintf("VDPAU OUT PTS: %s\n",ADM_us2plain(image->Pts));
     return r;
 }
 #else // USE_VDPAU
