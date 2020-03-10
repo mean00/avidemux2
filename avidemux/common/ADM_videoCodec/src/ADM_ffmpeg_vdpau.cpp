@@ -153,6 +153,7 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
         ADM_info("[VDPAU] No more available surface, creating a new one\n");
         render=new vdpau_render_state;
         memset(render,0,sizeof( vdpau_render_state));
+        render->surface=VDP_INVALID_HANDLE;
         int widthToUse = admVdpau::dimensionRoundUp(avctx->coded_width);
         int heightToUse= admVdpau::dimensionRoundUp(avctx->coded_height);
         if(VDP_STATUS_OK!=admVdpau::surfaceCreate(widthToUse,heightToUse,&(render->surface)))
@@ -162,8 +163,6 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
             alive=false;
             return -1;
         }
-        render->state=0;
-        vdpauMarkSurfaceUsed(&vdpau,(void *)render);
         surfaceMutex.lock();
         vdpau.fullQueue.push_back(render);
         surfaceMutex.unlock();
@@ -337,7 +336,7 @@ decoderFFVDPAU::~decoderFFVDPAU()
             vdpau_render_state *r=vdpau.fullQueue[i];
             if(r)
             {
-                if(r->surface)
+                if(r->surface!=VDP_INVALID_HANDLE)
                 {
                         if(VDP_STATUS_OK!=admVdpau::surfaceDestroy((r->surface)))
                                 ADM_error("Error destroying surface %d\n",i);
