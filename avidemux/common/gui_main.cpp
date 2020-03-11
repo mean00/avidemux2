@@ -39,6 +39,8 @@
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_videoEncoderApi.h"
 #include "ADM_muxerProto.h"
+
+#include "ADM_coreVideoFilterFunc.h"
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 
 #include "avi_vars.h"
@@ -1706,6 +1708,7 @@ uint8_t GUI_close(void)
       delete avifileinfo;
       //delete wavinfo;
       avifileinfo = NULL;
+      ADM_vf_clearFilters();
       video_body->clearUndoQueue();
       video_body->cleanup ();
       UI_setAudioTrackCount(0);
