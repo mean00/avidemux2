@@ -172,7 +172,12 @@ bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
     secondField=false;
     eof=false;
     clearSlots();
-    return ADM_coreVideoFilterCached::goToTime(usSeek);
+    uint64_t oldFrameIncrement=info.frameIncrement;
+    if(configuration.deintMode==ADM_KEEP_BOTH)
+        info.frameIncrement*=2;
+    bool r=ADM_coreVideoFilterCached::goToTime(usSeek);
+    info.frameIncrement=oldFrameIncrement;
+    return r;
 }
 /**
     \fn setIdentityCSC
