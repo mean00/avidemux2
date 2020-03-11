@@ -172,7 +172,7 @@ bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
     secondField=false;
     eof=false;
     clearSlots();
-    uint64_t oldFrameIncrement=info.frameIncrement;
+    uint32_t oldFrameIncrement=info.frameIncrement;
     if(configuration.deintMode==ADM_KEEP_BOTH)
         info.frameIncrement*=2;
     bool r=ADM_coreVideoFilterCached::goToTime(usSeek);
