@@ -375,9 +375,9 @@ void ADM_ExitCleanup( void )
 {
     printf("Cleaning up\n");
     admPreview::destroy();
+    ADM_vf_clearFilters();
     if(video_body)
-        video_body->cleanup ();
-    delete video_body;
+        delete video_body;
     video_body=NULL;
     // wait for thread to finish executing
     ADM_setCrashHook(NULL,NULL,NULL);
@@ -399,7 +399,6 @@ void ADM_ExitCleanup( void )
     destroyPrefs();
 
     UI_End();
-    ADM_vf_clearFilters();
 
 		int n=listOfHwCleanup.size();
 		for(int i=0;i<n;i++)
