@@ -807,10 +807,10 @@ uint32_t ADM_Composer::getPARHeight()
 */
 uint64_t ADM_Composer::getFrameIncrement(bool copyMode)
 {
-    uint32_t nb = _segments.getNbSegments();
+    int nb = _segments.getNbRefVideos();
     if(!nb) return 0;
     uint64_t minIncrement = 0;
-    for(uint32_t i=0; i<nb; i++)
+    for(int i=0; i<nb; i++)
     {
         _VIDEOS *vid = _segments.getRefVideo(i);
         ADM_assert(vid);
@@ -818,7 +818,7 @@ uint64_t ADM_Composer::getFrameIncrement(bool copyMode)
         if(!inc) continue;
         if(!copyMode && vid->fieldEncoded)
         {
-            ADM_info("Doubling frame increment for field-encoded ref video %u\n",i);
+            ADM_info("Doubling frame increment for field-encoded ref video %d\n",i);
             inc *= 2;
         }
         if(!minIncrement | (inc < minIncrement))
