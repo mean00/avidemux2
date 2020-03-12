@@ -29,7 +29,6 @@ using std::string;
 
 #include <math.h>
 #define TS_MAX_LINE 10000
-extern uint8_t  mk_hex(uint8_t a, uint8_t b);;
 /**
         \fn readIndex
         \brief Read the [video] section of the index file
