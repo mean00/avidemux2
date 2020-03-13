@@ -79,9 +79,9 @@ bool yadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
 //		tff = avs_is_tff(&p->vi) == 0 ? 0 : 1; // 0 or 1
                 tff = avs_get_parity(p->child, n) ? 1 : 0; // 0 or 1
         else
-#endif
                 tff = configuration.parity;	
-        
+#endif
+        tff = (configuration.parity > 0) ? 0 : 1;
         parity = (mode & 1) ? (nextFrame & 1) ^ (1^tff) : (tff ^ 1);  // 0 or 1
 
       //MEANX  cpu = avs_get_cpu_flags(p->env);
