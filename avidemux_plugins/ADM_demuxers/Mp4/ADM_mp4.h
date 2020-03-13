@@ -186,6 +186,7 @@ protected:
           uint64_t                      delayRelativeToVideo;
           uint8_t                       lookupMainAtoms(void *tom);
           void                          parseMvhd(void *tom);
+          uint8_t                       parseTrex(void *ztom);
           uint8_t                       parseTrack(void *ztom);
           uint8_t                       parseElst(void *tom,int64_t *delay,int64_t *skip);
           bool                          parseMoof(adm_atom &son);
@@ -204,6 +205,7 @@ protected:
           bool                          adjustElstDelay(void);
           uint32_t                      _videoScale;
           uint32_t                      _movieScale;
+          uint32_t                      _defaultDurationEx; // dts increment in ticks _videoScale
           int64_t			_movieDuration; // in ms
           uint32_t                      _videoFound;
           bool                          processAudio( MP4Track *track,  uint32_t trackScale,  

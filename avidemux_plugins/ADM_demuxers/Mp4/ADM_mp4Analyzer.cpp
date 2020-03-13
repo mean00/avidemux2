@@ -118,6 +118,12 @@ uint8_t MP4Header::lookupMainAtoms(void *ztom)
             switch(id)
             {
                 case ADM_MP4_MVHD: parseMvhd(&son);break;
+                case ADM_MP4_MVEX:
+                    {
+                        ADM_info("Found mvex at position %u of size %u\n",son.getStartPos(),son.getRemainingSize());
+                        parseTrex(&son);
+                    }
+                    break;
                 case ADM_MP4_TRACK:
                     if(!parseTrack(&son))
                     {
@@ -199,8 +205,45 @@ void MP4Header::parseMvhd(void *ztom)
 }
 
 /**
-      \fn parseMvhd
-      \brief Parse mvhd header
+    \fn parseTrex
+    \brief Some iso5 files specify dts increment via trex box only. We ignore other trex data for now.
+*/
+uint8_t MP4Header::parseTrex(void *ztom)
+{
+    if(_defaultDurationEx)
+    {
+        ADM_warning("Multiple trex boxes not handled!\n");
+        return 0;
+    }
+    adm_atom *tom=(adm_atom *)ztom;
+    ADMAtoms id;
+    uint32_t container;
+    uint32_t trackId=0;
+    while(!tom->isDone())
+    {
+        adm_atom son(tom);
+        if(!ADM_mp4SearchAtomName(son.getFCC(),&id,&container))
+        {
+            aprintf("[parseTrex] Unknown atom %s\n",fourCC::tostringBE(son.getFCC()));
+            son.skipAtom();
+            continue;
+        }
+        if(id!=ADM_MP4_TREX) continue;
+        ADM_info("Found trex, assuming it is for the video track, reading it.\n");
+        son.skipBytes(4); // version and flags
+        trackId=son.read32();
+        son.skipBytes(4); // stsd id
+        _defaultDurationEx=tom->read32();
+        ADM_info("Default duration from trex for track id %u: %u\n",trackId,_defaultDurationEx);
+        son.skipAtom();
+        return 1;
+    }
+    ADM_info("trex box not found.\n");
+    return 0;
+}
+/**
+      \fn parseTrack
+      \brief Parse track header
 */
 uint8_t MP4Header::parseTrack(void *ztom)
 {
@@ -921,7 +964,12 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                         mixDump(VDEO.extraData+offset,len);
                                         // Verify width and height, the values from the container may be wrong.
                                         ADM_SPSInfo sps;
-                                        if(extractSPSInfo(VDEO.extraData,VDEO.extraDataSize,&sps) && sps.width && sps.height)
+                                        if(false==extractSPSInfo(VDEO.extraData,VDEO.extraDataSize,&sps))
+                                        {
+                                            ADM_warning("Could not decode H.264 extradata.\n");
+                                            break;
+                                        }
+                                        if(sps.width && sps.height)
                                         {
                                             if(lw && lw!=sps.width)
                                                 ADM_warning("Width mismatch, container says %u, codec %u, trusting codec\n",lw,sps.width);
@@ -930,7 +978,24 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                                 ADM_warning("Height mismatch, container says %u, codec %u, trusting codec\n",lh,sps.height);
                                             _video_bih.biHeight=_mainaviheader.dwHeight=sps.height;
                                         }else
-                                            ADM_warning("Could not decode H.264 extradata to verify video width and height.\n");
+                                            ADM_warning("Got invalid dimensions from SPS, cannot verify video width and height.\n");
+                                        // Prefill time base from fps1000 value we got from SPS, we handle only standard cases here.
+                                        switch(sps.fps1000)
+                                        {
+                                            case 23976:
+                                                _videostream.dwScale=1001;
+                                                _videostream.dwRate=24000;
+                                                break;
+                                            case 29970:
+                                                _videostream.dwScale=1001;
+                                                _videostream.dwRate=30000;
+                                                break;
+                                            case 24000: case 25000: case 30000: case 50000: case 60000:
+                                                _videostream.dwScale=1000;
+                                                _videostream.dwRate=sps.fps1000;
+                                                break;
+                                            default:break;
+                                        }
                                         break;
                                     } // while
                                     son.skipAtom();
