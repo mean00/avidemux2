@@ -265,6 +265,7 @@ MP4Header::MP4Header(void)
         _currentAudioTrack=0;
         _reordered=0;
         _videoScale=1;
+        _defaultDurationEx=0;
         _videoFound=0;
         delayRelativeToVideo=0;
         _flavor=Mp4Regular;
@@ -333,7 +334,7 @@ uint8_t   MP4Header::getExtraHeaderData(uint32_t *len, uint8_t **data)
 //______________________________________
 uint8_t    MP4Header::open(const char *name)
 {
-        printf("** opening 3gpp files **");
+        printf("** opening 3gpp files **\n");
         _fd=ADM_fopen(name,"rb");
         if(!_fd)
         {

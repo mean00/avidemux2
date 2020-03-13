@@ -18,6 +18,7 @@ http://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap2/q
 /* Container atom */
 MKMP4LEAF('moov',MOOV,1),
 MKMP4LEAF('moof',MOOF,1),
+MKMP4LEAF('mvex',MVEX,1),
 MKMP4LEAF('trak',TRACK,1),
 MKMP4LEAF('mdia',MDIA,1),
 MKMP4LEAF('minf',MINF,1),
@@ -31,6 +32,7 @@ MKMP4LEAF('trun',TRUN,0),
 MKMP4LEAF('mfhd',MFHD,0),
 MKMP4LEAF('mvhd',MVHD,0),
 MKMP4LEAF('tkhd',TKHD,0),
+MKMP4LEAF('trex',TREX,0),
 MKMP4LEAF('mdhd',MDHD,0),
 MKMP4LEAF('hdlr',HDLR,0),
 

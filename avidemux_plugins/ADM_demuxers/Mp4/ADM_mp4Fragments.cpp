@@ -121,6 +121,8 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                     TRAF_INFO(0x20,defaultFlags,32);                    
                    
                     if(trafFlags&0x10000) {aprintf("Empty duration\n");info.emptyDuration=true;}
+                    if(!info.emptyDuration && !info.defaultDuration && _defaultDurationEx)
+                        info.defaultDuration=_defaultDurationEx; // from trex
                     if(trafFlags&0x20000) 
                     {
                             
