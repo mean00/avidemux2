@@ -1,7 +1,9 @@
 #!/bin/bash
 # Manually generate project file so GTK sources can be excluded.
 # Otherwise use: qmake -project -o avidemux.pro2
-export QT_SELECT=5
+if [[ "x${QT_SELECT}" = "x" ]]; then
+    export QT_SELECT=5
+fi
 
 function findHeader()
 {
@@ -52,7 +54,24 @@ cd $PRODIR
 find . -iname 'avidemux_*.ts' -printf "\"%p\" \\\ \n" >> avidemux.pro2
 echo "" >> avidemux.pro2
 echo "" >> avidemux.pro2
-cat avidemux.pro2 | sed 's/"//g' | grep -v "ADM_videoFilters\/" | grep -v qtScript | grep -v html |  grep -v build | grep -v cmake  | grep -v gtk | grep -v "cli\/" | grep -vi spidermon>     avidemux.pro
+cat avidemux.pro2 | sed 's/"//g' | \
+    grep -v attic | \
+    grep -v ffmpeg_package | \
+    grep -v "ADM_videoFilters\/" | \
+    grep -v qtScript | \
+    grep -v html | \
+    grep -v build | \
+    grep -v cmake | \
+    grep -v gtk | \
+    grep -v "cli\/" | \
+    grep -vi spidermon > avidemux.pro
 #
-lupdate -disable-heuristic number -disable-heuristic sametext -locations relative -pro avidemux.pro
-echo "DONE."
+for i in lupdate lupdate-qt${QT_SELECT}; do
+    which ${i} > /dev/null 2>&1;
+    if [[ "x$?" = "x0" ]]; then
+        echo ${i} found as $(which ${i});
+        ${i} -disable-heuristic number -disable-heuristic sametext -locations relative -pro avidemux.pro && echo "DONE" && exit 0 || \
+            echo "Update of translation files failed." && exit 1;
+    fi
+done
+echo "lupdate not found."
