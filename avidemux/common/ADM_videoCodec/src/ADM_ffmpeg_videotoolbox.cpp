@@ -145,6 +145,8 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
 
+    int ret;
+
     if(_parent->getDrainingState())
     {
         if(_parent->getDrainingInitiated()==false)
@@ -163,13 +165,26 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
         else
             pkt.flags=0;
 
-        avcodec_send_packet(_context, &pkt);
+        ret = avcodec_send_packet(_context, &pkt);
+
+        /* libavcodec doesn't handle switching between field and frame encoded parts of H.264 streams
+        in the way VideoToolbox expects. Proceeding with avcodec_receive_frame as if nothing happened
+        triggers a segfault. As a workaround, retry once with the same data. We do lose one picture. */
+        if(ret == AVERROR_UNKNOWN)
+        {
+            ADM_warning("Unknown error from avcodec_send_packet, retrying...\n");
+            if(!alive)
+                return false; // avoid endless loop
+            alive = false; // misuse, harmless
+            return _parent->uncompress(in,out); // retry
+        }
     }else
     {
         handover=false;
     }
+    alive = true;
 
-    int ret = avcodec_receive_frame(_context, frame);
+    ret = avcodec_receive_frame(_context, frame);
 
     if(!_parent->decodeErrorHandler(ret))
         return false;
