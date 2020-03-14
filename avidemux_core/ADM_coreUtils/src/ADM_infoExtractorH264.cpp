@@ -624,6 +624,8 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
         case 0: *flags = AVI_P_FRAME;break;
         case 1: *flags = AVI_B_FRAME;break;
         case 2: case 4:
+                if((*flags & AVI_KEY_FRAME) && !sps)
+                    break; // trust NAL when we cannot verify
                 if(!recovery || !frame) *flags = AVI_KEY_FRAME;
                     else      *flags = AVI_P_FRAME;
                 break;
