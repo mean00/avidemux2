@@ -665,8 +665,10 @@ bool tsPacketLinear::refill(void)
         if(false==getNextPES(pesPacket))
         {
                 printf("[tsPacketLinear] Refill failed for pid : 0x%x (%d)\n",pesPacket->pid,pesPacket->pid);
+                eof=true;
                 return false;
         }
+        eof=false;
         return true;
 }
 #ifndef TS_PACKET_INLINE
@@ -681,12 +683,8 @@ uint8_t tsPacketLinear::readi8(void)
         return pesPacket->payload[pesPacket->offset++];
     }
     if(false==refill()) 
-    {
-        eof=1;
         return 0;
-    }
     return pesPacket->payload[pesPacket->offset++];
-    
 }
 
 /**

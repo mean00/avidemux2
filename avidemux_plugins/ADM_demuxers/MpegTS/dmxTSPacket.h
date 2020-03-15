@@ -193,12 +193,8 @@ uint8_t readi8(void)
         return pesPacket->payload[pesPacket->offset++];
     }
     if(false==refill()) 
-    {
-        eof=1;
         return 0;
-    }
     return pesPacket->payload[pesPacket->offset++];
-    
 }
 
 /**
