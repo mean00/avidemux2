@@ -111,6 +111,12 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                     trafFlags=son.read32()&0xfffff;
                     
                     info.trackID=son.read32();
+                    mp4TrexInfo *trx=NULL;
+                    for(int i=0;i<nbTrex;i++)
+                    {
+                        if(_trexData[i]->trackID==info.trackID)
+                            trx=_trexData[i];
+                    }
                     aprintf("[TFHD] Track=%d flags =0x%x\n",info.trackID,trafFlags);
 #define TRAF_INFO(a,b,s)   if(trafFlags&a)  {info.b=son.read##s();aprintf("TFHD:"#b"=%d\n",(int)info.b);}
                     
@@ -121,8 +127,14 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                     TRAF_INFO(0x20,defaultFlags,32);                    
                    
                     if(trafFlags&0x10000) {aprintf("Empty duration\n");info.emptyDuration=true;}
-                    if(!info.emptyDuration && !info.defaultDuration && _defaultDurationEx)
-                        info.defaultDuration=_defaultDurationEx; // from trex
+                    if(trx)
+                    {
+#define CPY_TREX(a) if(!info.a) { info.a=trx->a; aprintf("[TFHD] Using "#a" from trex = %u\n",trx->a); }
+                        CPY_TREX(sampleDesc)
+                        CPY_TREX(defaultDuration)
+                        CPY_TREX(defaultSize)
+                        CPY_TREX(defaultFlags)
+                    }
                     if(trafFlags&0x20000) 
                     {
                             

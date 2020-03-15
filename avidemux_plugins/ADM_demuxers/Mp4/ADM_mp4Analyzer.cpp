@@ -206,15 +206,10 @@ void MP4Header::parseMvhd(void *ztom)
 
 /**
     \fn parseTrex
-    \brief Some iso5 files specify dts increment via trex box only. We ignore other trex data for now.
+    \brief Some iso5 files specify dts increment via trex box only.
 */
 uint8_t MP4Header::parseTrex(void *ztom)
 {
-    if(_defaultDurationEx)
-    {
-        ADM_warning("Multiple trex boxes not handled!\n");
-        return 0;
-    }
     adm_atom *tom=(adm_atom *)ztom;
     ADMAtoms id;
     uint32_t container;
@@ -229,12 +224,27 @@ uint8_t MP4Header::parseTrex(void *ztom)
             continue;
         }
         if(id!=ADM_MP4_TREX) continue;
-        ADM_info("Found trex, assuming it is for the video track, reading it.\n");
+        if(nbTrex>=_3GP_MAX_TRACKS)
+        {
+            ADM_warning("Number of trex boxes exceeds max supported.\n");
+            nbTrex=_3GP_MAX_TRACKS;
+            break;
+        }
+        mp4TrexInfo *trx=new mp4TrexInfo;
+        ADM_info("Found trex, reading it.\n");
         son.skipBytes(4); // version and flags
-        trackId=son.read32();
-        son.skipBytes(4); // stsd id
-        _defaultDurationEx=tom->read32();
-        ADM_info("Default duration from trex for track id %u: %u\n",trackId,_defaultDurationEx);
+        trx->trackID=son.read32();
+        trx->sampleDesc=son.read32(); // stsd id
+        trx->defaultDuration=son.read32();
+        trx->defaultSize=son.read32();
+        trx->defaultFlags=son.read32();
+#define DUMPX(a) printf("trex %u: "#a" = %u\n",nbTrex,trx->a);
+        DUMPX(trackID)
+        DUMPX(sampleDesc)
+        DUMPX(defaultDuration)
+        DUMPX(defaultSize)
+        DUMPX(defaultFlags)
+        _trexData[nbTrex++]=trx;
         son.skipAtom();
         return 1;
     }
