@@ -239,11 +239,16 @@ MP4Header::~MP4Header()
 {
     close();
 
-	for (int audio = 0; audio < nbAudioTrack; audio++)
-	{
-		delete audioStream[audio];
-		delete audioAccess[audio];
-	}
+    for(int audio = 0; audio < nbAudioTrack; audio++)
+    {
+        delete audioStream[audio];
+        delete audioAccess[audio];
+    }
+    for(int i = 0; i < nbTrex; i++)
+    {
+        delete _trexData[i];
+        _trexData[i] = NULL;
+    }
 }
 uint8_t    MP4Header::close( void )
 {
@@ -265,10 +270,12 @@ MP4Header::MP4Header(void)
         _currentAudioTrack=0;
         _reordered=0;
         _videoScale=1;
-        _defaultDurationEx=0;
         _videoFound=0;
         delayRelativeToVideo=0;
         _flavor=Mp4Regular;
+        nbTrex=0;
+        for(int i=0;i<_3GP_MAX_TRACKS;i++)
+            _trexData[i]=NULL;
 }
 /**
     \fn getAudioInfo
