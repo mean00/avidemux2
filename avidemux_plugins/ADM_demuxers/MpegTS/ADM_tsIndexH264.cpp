@@ -79,19 +79,14 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     dmxPacketInfo tmpInfo;
     uint64_t rewindStart=0;
     uint32_t rewindOffset=0;
-    bool keepRunning=true;
     bool sps_found=false;
     bool sei_found=false;
     TS_PESpacket SEI_nal(0);
-    while(keepRunning)
+    while(true)
     {
         int startCode=pkt->findStartCode();
 
-        if(!pkt->stillOk())
-        {
-            keepRunning=false;
-            continue;
-        }
+        if(!pkt->stillOk()) break;
         if(startCode&0x80) continue; // Marker missing
         startCode&=0x1f;
         if(startCode!=NAL_SPS && startCode!=NAL_SEI)
@@ -120,6 +115,12 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
             video.w=spsInfo.width;
             video.h=spsInfo.height;
             video.fps=spsInfo.fps1000;
+            continue;
+        }
+        if(startCode==NAL_SPS && sps_found) // most likely the next keyframe
+        {
+            ADM_warning("No picture timing SEI found within the first GOP, can't check interlacing.\n");
+            break;
         }
         if(startCode==NAL_SEI && sps_found && !sei_found && SEI_nal.payloadSize>=7)
         {
