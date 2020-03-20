@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # Take a .conf file and generate :
 # 1- Couple header   (.h)
 # 2- Couple template (_desc.cpp)
@@ -140,7 +140,7 @@ if(nb!=2):
 print("Processing "+str(sys.argv[1]))
 inputFile=sys.argv[1]
 if(not os.path.isfile(inputFile)):
-    print "no such file "+str(inputFile)
+    print("no such file "+str(inputFile))
     exit(1)
 structName=re.sub(r'.conf',r'',inputFile)
 #
@@ -189,7 +189,7 @@ while(1):
         fullPath=".".join(nested)
     elif(line.find(':')!=-1):
         if(gotName==False):
-            print "No structure name !"
+            print("No structure name !")
             exit(1)
         line=re.sub(r'#.*$',r'',line)
         line=re.sub(r'//.*$',r'',line)
@@ -206,7 +206,7 @@ while(1):
         varType=varType.strip()
         processLine(varType,varName)
     else:
-        print "Invalid line "+str(line)
+        print("Invalid line "+str(line))
         exit(1)
 f.close()
 writeDescFooter()
@@ -215,4 +215,4 @@ writeJsonFooter()
 headerFile.close()
 descFile.close()
 jsonFile.close()
-print "All done"
+print("All done")
