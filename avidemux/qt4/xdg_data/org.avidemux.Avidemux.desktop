@@ -2,7 +2,7 @@
 Name=Avidemux
 GenericName=Video Editor
 Comment=Multiplatform video editor
-Exec=avidemux3_qt5
+Exec=avidemux3_qt5 %f
 Icon=org.avidemux.Avidemux
 Terminal=false
 Type=Application
