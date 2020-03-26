@@ -66,6 +66,44 @@ static tp_obj zzpy_getPts(TP)
   double r =   pyGetPts(p0,p1); 
   return tp_number(r);
 }
+// getCurrentPts -> double editor->getCurrentFramePts (void ) 
+static tp_obj zzpy_getCurrentPts(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
+
+  double r =   editor->getCurrentFramePts(); 
+  return tp_number(r);
+}
+// getPrevKFramePts -> double pyGetPrevKFramePts (IEditor ) 
+static tp_obj zzpy_getPrevKFramePts(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
+
+  IEditor *p0 = editor;
+  double r =   pyGetPrevKFramePts(p0); 
+  return tp_number(r);
+}
+// getNextKFramePts -> double pyGetNextKFramePts (IEditor ) 
+static tp_obj zzpy_getNextKFramePts(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
+
+  IEditor *p0 = editor;
+  double r =   pyGetNextKFramePts(p0); 
+  return tp_number(r);
+}
 // getVideoDuration -> double editor->getVideoDuration (void ) 
 static tp_obj zzpy_getVideoDuration(TP)
  {
@@ -170,6 +208,18 @@ tp_obj zzpy__pyEditor_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_getPts);
   }
+  if (!strcmp(key, "getCurrentPts"))
+  {
+     return tp_method(vm, self, zzpy_getCurrentPts);
+  }
+  if (!strcmp(key, "getPrevKFramePts"))
+  {
+     return tp_method(vm, self, zzpy_getPrevKFramePts);
+  }
+  if (!strcmp(key, "getNextKFramePts"))
+  {
+     return tp_method(vm, self, zzpy_getNextKFramePts);
+  }
   if (!strcmp(key, "getVideoDuration"))
   {
      return tp_method(vm, self, zzpy_getVideoDuration);
@@ -230,6 +280,9 @@ static tp_obj zzpy__pyEditor_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "hexDumpFrame(IEditor,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getDts(IEditor,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPts(IEditor,int)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getCurrentPts(void)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPrevKFramePts(IEditor)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getNextKFramePts(IEditor)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getVideoDuration(void)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "nextFrame(IEditor)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpRefVideo(void)\n");
