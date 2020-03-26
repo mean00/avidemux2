@@ -55,6 +55,7 @@ public:
     virtual uint32_t getPARWidth(void) = 0;
     virtual uint32_t getPARHeight(void) = 0;
     virtual bool getPKFramePTS(uint64_t *frameTime) = 0;
+    virtual bool getNKFramePTS(uint64_t *frameTime) = 0;
     virtual uint8_t getPostProc(uint32_t *type, uint32_t *strength, bool *swapuv) = 0;
     virtual _SEGMENT* getSegment(int i) = 0;
     virtual char *getVideoCodec(void) = 0;
