@@ -193,6 +193,37 @@ double pyGetDts(IEditor *editor, int frameNum)
 
 	return (double)dts;
 }
+
+/**
+    \fn pyGetPrevKFramePts
+*/
+double pyGetPrevKFramePts(IEditor *editor)
+{
+    uint64_t pts = editor->getCurrentFramePts();
+    if(pts == ADM_NO_PTS)
+        return -1;
+
+    if(false == editor->getPKFramePTS(&pts))
+        return -1;
+
+    return (double)pts;
+}
+
+/**
+    \fn pyGetNextKFramePts
+*/
+double pyGetNextKFramePts(IEditor *editor)
+{
+    uint64_t pts = editor->getCurrentFramePts();
+    if(pts == ADM_NO_PTS)
+        return -1;
+
+    if(false == editor->getNKFramePTS(&pts))
+        return -1;
+
+    return (double)pts;
+}
+
 /**
     \fn pyFileSelWrite
 */

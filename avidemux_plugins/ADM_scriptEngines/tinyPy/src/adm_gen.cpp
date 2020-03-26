@@ -588,6 +588,19 @@ static tp_obj zzpy_audioChannels(TP)
   int r =   pyGetAudioChannels(p0,p1); 
   return tp_number(r);
 }
+// seekKeyFrame -> void editor->seekKeyFrame (int ) 
+static tp_obj zzpy_seekKeyFrame(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  int p0 = pm.asInt();
+  editor->seekKeyFrame(p0); 
+ return tp_None;
+}
 tp_obj zzpy__pyAdm_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
@@ -772,6 +785,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_audioChannels);
   }
+  if (!strcmp(key, "seekKeyFrame"))
+  {
+     return tp_method(vm, self, zzpy_seekKeyFrame);
+  }
   return tp_get(vm, self, tp_string(key));
 }
 tp_obj zzpy__pyAdm_set(tp_vm *vm)
@@ -857,6 +874,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioAddExternal(IEditor,str)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetPal2Film(IEditor,int,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioChannels(IEditor, int)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "seekKeyFrame(int)\n");
 
 	return tp_None;
 };

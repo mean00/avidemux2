@@ -61,7 +61,7 @@
 #
 #
 # Seek
-#/* METHOD */ int A_saveImg:saveBmp(str) 
+/* METHOD */ void editor->seekKeyFrame:seekKeyFrame(int)
 #
 #       Variables
 #

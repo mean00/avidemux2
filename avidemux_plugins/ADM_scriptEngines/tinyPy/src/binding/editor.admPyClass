@@ -2,6 +2,9 @@
 /* CLASS */ pyEditor : void : ADM_PYID_EDITOR
 /* METHOD */ double pyGetPts:getPts            (int) 
 /* METHOD */ double pyGetDts:getDts            (int) 
+/* METHOD */ double editor->getCurrentFramePts:getCurrentPts (void)
+/* METHOD */ double pyGetPrevKFramePts:getPrevKFramePts (void)
+/* METHOD */ double pyGetNextKFramePts:getNextKFramePts (void)
 /* METHOD */ int pyPrintTiming:printTiming      (int) 
 /* METHOD */ int editor->getNbSegment:nbSegments  (void)
 /* METHOD */ void editor->dumpSegments:dumpAllSegments    (void) 
