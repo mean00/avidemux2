@@ -47,10 +47,9 @@
 
 extern uint8_t GUI_close(void);
 extern bool GUI_GoToTime(uint64_t time);
+extern void GUI_GoToKFrameTime(uint64_t time);
 extern void GUI_NextFrame(uint32_t frameCount);
 extern void GUI_PrevFrame(uint32_t frameCount);
-extern void GUI_NextKeyFrame(void);
-extern void GUI_PreviousKeyFrame(void);
 extern void GUI_PrevBlackFrame(void);
 extern void GUI_NextBlackFrame(void);;
 
@@ -498,20 +497,31 @@ void ADM_Composer::seekFrame(int count)
 
 void ADM_Composer::seekKeyFrame(int count)
 {
-	if (count >= 0)
-	{
-		for (int i = 0; i < count; i++)
-		{
-			GUI_NextKeyFrame();
-		}
-	}
-	else
-	{
-		for (int i = 0; i < -count; i++)
-		{
-			GUI_PreviousKeyFrame();
-		}
-	}
+    uint64_t pts = video_body->getCurrentFramePts();
+    if(pts == ADM_NO_PTS)
+        return;
+
+    if(count >= 0)
+    {
+        for(int i = 0; i < count; i++)
+        {
+            uint64_t tmp = pts;
+            if(false == video_body->getNKFramePTS(&tmp))
+                break;
+            pts = tmp;
+        }
+    }else
+    {
+        for(int i = 0; i < -count; i++)
+        {
+            uint64_t tmp = pts;
+            if(false == video_body->getPKFramePTS(&tmp))
+                break;
+            pts = tmp;
+        }
+    }
+
+    GUI_GoToKFrameTime(pts);
 }
 
 void ADM_Composer::seekBlackFrame(int count)
