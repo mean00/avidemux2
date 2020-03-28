@@ -1,13 +1,13 @@
---- libavcodec/hevc_parser.c.orig	2017-10-15 17:59:37.000000000 +0200
-+++ libavcodec/hevc_parser.c	2017-10-20 20:05:01.724505874 +0200
+--- libavcodec/hevc_parser.c.orig	2019-12-31 22:35:23.000000000 +0100
++++ libavcodec/hevc_parser.c	2020-03-28 23:46:22.854425836 +0100
 @@ -31,6 +31,13 @@
  #include "internal.h"
  #include "parser.h"
  
 +/* MEANX */
-+HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s);
-+HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s);
-+HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s);
++const HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s);
++const HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s);
++const HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s);
 +/* /MEANX */
 +
 +
@@ -21,7 +21,7 @@
 + \fn ff_hevc_parser_get_sps
 +\brief meanx : extract sps from context
 +*/
-+HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s)
++const HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s)
 +{
 +      HEVCParserContext *ctx = s->priv_data;
 +      if(!ctx) return NULL;
@@ -32,10 +32,10 @@
 +     return sps;
 +}
 +/**
-+ \fn ff_hevc_parser_get_sps
-+\brief meanx : extract sps from context
++ \fn ff_hevc_parser_get_pps
++\brief meanx : extract pps from context
 +*/
-+HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s)
++const HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s)
 +{
 +      HEVCParserContext *ctx = s->priv_data;
 +      if(!ctx) return NULL;
@@ -46,10 +46,10 @@
 +     return pps;
 +}
 +/**
-+ \fn ff_hevc_parser_get_sps
-+\brief meanx : extract sps from context
++ \fn ff_hevc_parser_get_vps
++\brief meanx : extract vps from context
 +*/
-+HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s)
++const HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s)
 +{
 +      HEVCParserContext *ctx = s->priv_data;
 +      if(!ctx) return NULL;

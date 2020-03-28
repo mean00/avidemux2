@@ -39,11 +39,9 @@ extern "C"
 
 extern "C"
 {
-extern  HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *parser);
-extern  HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *parser);
-extern  HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *parser);
-   
-
+extern const HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *parser);
+extern const HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *parser);
+extern const HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *parser);
 }
 
 #include "../include/ADM_h265_tag.h"
@@ -127,6 +125,83 @@ bool H265Parser::init()
     parser->flags|=PARSER_FLAG_COMPLETE_FRAMES;
     return true;
 }
+
+/**
+ *  \fn bitsNeeded
+ */
+static int bitsNeeded(int v)
+{
+    int b=1;
+    while(v)
+    {
+        v>>=1;
+        b++;
+    }
+    return b;
+}
+
+/**
+ *  \fn spsInfoFromParserContext
+ */
+static bool spsInfoFromParserContext(AVCodecParserContext *parser, ADM_SPSinfoH265 *spsinfo)
+{
+    // Ok, let's see if we get a valid sps
+    const HEVCSPS *sps = ff_hevc_parser_get_sps(parser);
+    const HEVCVPS *vps = ff_hevc_parser_get_vps(parser);
+    const HEVCPPS *pps = ff_hevc_parser_get_pps(parser);
+    spsinfo-> num_extra_slice_header_bits=0;
+    if(sps)
+    {
+        const HEVCWindow *ow=&sps->output_window;
+        printf("Coded dimensions = %d x %d\n",sps->width-ow->left_offset-ow->right_offset,sps->height-ow->top_offset-ow->bottom_offset);
+        spsinfo->width=sps->width-ow->left_offset-ow->right_offset;
+        spsinfo->height=sps->height-ow->top_offset-ow->bottom_offset;
+        spsinfo->fps1000=23976;
+        spsinfo->log2_max_poc_lsb=sps->log2_max_poc_lsb;
+        spsinfo->dependent_slice_segments_enabled_flag=0;
+        spsinfo->address_coding_length=bitsNeeded(sps->ctb_width*sps->ctb_height);
+        printf("VPS = %d  x %d ** %d\n",sps->ctb_width,sps->ctb_height, sps->ctb_size);
+        uint32_t timeBaseNum=0;
+        uint32_t timeBaseDen=0;
+        if(vps && vps->vps_timing_info_present_flag)
+        {
+            printf("VPS timescale = %u\n",vps->vps_time_scale);
+            printf("VPS num unit in tick = %u\n",vps->vps_num_units_in_tick);
+            timeBaseNum=vps->vps_num_units_in_tick;
+            timeBaseDen=vps->vps_time_scale;
+        }else if(sps->vui.vui_timing_info_present_flag)
+        {
+            printf("VUI timescale = %u\n",sps->vui.vui_time_scale);
+            printf("VUI num unit in tick = %u\n",sps->vui.vui_num_units_in_tick);
+            timeBaseNum=sps->vui.vui_num_units_in_tick;
+            timeBaseDen=sps->vui.vui_time_scale;
+        }
+        if(!timeBaseNum || !timeBaseDen)
+        {
+            ADM_warning("No framerate information, hardcoding to 50 fps\n");
+            spsinfo->fps1000=50*1000;
+        }else
+        {
+            double f=1000.;
+            f*=timeBaseDen;
+            f/=timeBaseNum;
+            f+=0.49;
+            spsinfo->fps1000=(int)f;
+        }
+        if(pps)
+        {
+            spsinfo-> num_extra_slice_header_bits=pps-> num_extra_slice_header_bits;
+            spsinfo->dependent_slice_segments_enabled_flag=pps->dependent_slice_segments_enabled_flag;
+        }
+        if(sps->vui.frame_field_info_present_flag)
+            spsinfo->field_info_present=true;
+        else
+            printf("No field info present\n");
+        return true;
+    }
+    return false;
+}
+
 /**
  * 
  * @return 
@@ -145,18 +220,7 @@ bool H265Parser::parseMpeg4(ADM_SPSinfoH265 *spsinfo)
         ADM_warning("Failed to extract SPS info\n");
         return false;
     }
-    return  true;
-}
-
-static int bitsNeeded(int v)
-{
-    int b=1;
-    while(v)
-    {
-        v>>=1;
-        b++;
-    }
-    return b;
+    return spsInfoFromParserContext(parser,spsinfo);
 }
 
 /**
@@ -200,42 +264,7 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
          }
          break;
     }
-    // Ok, let's see if we get a valid sps
-   HEVCSPS *sps = ff_hevc_parser_get_sps(parser);
-   HEVCVPS *vps = ff_hevc_parser_get_vps(parser);
-   HEVCPPS *pps = ff_hevc_parser_get_pps(parser);
-   spsinfo-> num_extra_slice_header_bits=0;
-   if(sps)
-   {
-        HEVCWindow *ow=&sps->output_window;
-        printf("Coded dimensions = %d x %d\n",sps->width-ow->left_offset-ow->right_offset,sps->height-ow->top_offset-ow->bottom_offset);
-        spsinfo->width=sps->width-ow->left_offset-ow->right_offset;
-        spsinfo->height=sps->height-ow->top_offset-ow->bottom_offset;
-        spsinfo->fps1000=23976;
-        spsinfo->dependent_slice_segments_enabled_flag=0;
-        spsinfo->address_coding_length=bitsNeeded(sps->ctb_width*sps->ctb_height);
-        printf("VPS = %d  x %d ** %d\n",sps->ctb_width,sps->ctb_height, sps->ctb_size);
-        if(vps)
-        {
-            printf("VPS timescale =%d\n",(int)vps->vps_time_scale);
-            printf("VPS num unit in tick =%d\n",(int)vps->vps_num_units_in_tick);
-            if(vps->vps_time_scale && vps->vps_num_units_in_tick)
-                spsinfo->fps1000=(1000*vps->vps_time_scale)/vps->vps_num_units_in_tick;
-            else
-            {
-                ADM_warning("No framerate information, hardcoding to 50 fps\n");
-                spsinfo->fps1000=50*1000;
-            }
-        }
-        if(pps)
-        {
-            spsinfo-> num_extra_slice_header_bits=pps-> num_extra_slice_header_bits;
-            spsinfo->dependent_slice_segments_enabled_flag=pps->dependent_slice_segments_enabled_flag;
-            
-        }
-        return true;
-   }
-    return false;
+    return spsInfoFromParserContext(parser,spsinfo);
 }
 
 /**
