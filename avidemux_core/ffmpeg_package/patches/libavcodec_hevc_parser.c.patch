@@ -1,5 +1,5 @@
---- libavcodec/hevc_parser.c.orig	2019-12-31 22:35:23.000000000 +0100
-+++ libavcodec/hevc_parser.c	2020-03-28 23:46:22.854425836 +0100
+--- libavcodec/hevc_parse.c.orig	2020-03-29 00:49:17.000000000 +0100
++++ libavcodec/hevc_parser.c	2020-03-29 00:47:31.000000000 +0100
 @@ -31,6 +31,13 @@
  #include "internal.h"
  #include "parser.h"
@@ -14,7 +14,7 @@
  #define START_CODE 0x000001 ///< start_code_prefix_one_3bytes
  
  #define IS_IRAP_NAL(nal) (nal->type >= 16 && nal->type <= 23)
-@@ -171,6 +178,53 @@
+@@ -171,6 +178,50 @@
  }
  
  /**
@@ -28,7 +28,7 @@
 +      HEVCParamSets     *ps = &ctx->ps;
 +      if(!ps) return NULL;
 +
-+     HEVCSPS *sps = ps->sps;
++     const HEVCSPS *sps = ps->sps;
 +     return sps;
 +}
 +/**
@@ -42,7 +42,7 @@
 +      HEVCParamSets     *ps = &ctx->ps;
 +      if(!ps) return NULL;
 +
-+     HEVCPPS *pps = ps->pps;
++     const HEVCPPS *pps = ps->pps;
 +     return pps;
 +}
 +/**
@@ -56,13 +56,10 @@
 +      HEVCParamSets     *ps = &ctx->ps;
 +      if(!ps) return NULL;
 +
-+     HEVCVPS *vps = ps->vps;
++     const HEVCVPS *vps = ps->vps;
 +     return vps;
 +}
 +// /MEANX
-+
-+/**
-+
 +
 +/**
   * Parse NAL units of found picture and decode some basic information.
