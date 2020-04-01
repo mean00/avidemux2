@@ -118,8 +118,6 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         c = video_st->codec;
         AVCodecParameters *par;
         par = video_st->codecpar;
-        if(isH265Compatible(s->getFCC()))
-            par->codec_tag = MKTAG('h', 'v', 'c', '1');
         uint32_t timescale=getClockFreqFromEnum((MP4_MUXER_CLOCK_FREQUENCIES)muxerConfig.clockfreq);
         uint32_t clockFreq=s->getTimeBaseDen();
         uint32_t nbTicks=s->getTimeBaseNum();
