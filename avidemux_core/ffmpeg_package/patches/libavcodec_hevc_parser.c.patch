@@ -1,6 +1,11 @@
 --- libavcodec/hevc_parser.c.orig	2018-11-18 01:57:59.000000000 +0100
-+++ libavcodec/hevc_parser.c	2020-04-01 18:15:28.913548355 +0200
-@@ -28,6 +28,13 @@
++++ libavcodec/hevc_parser.c	2020-04-01 21:33:24.296127611 +0200
+@@ -24,10 +24,17 @@
+ 
+ #include "golomb.h"
+ #include "hevc.h"
+-#include "hevcdec.h"
++#include "hevc_parse.h"
  #include "h2645_parse.h"
  #include "parser.h"
  
@@ -186,3 +191,35 @@
   * Parse NAL units of found picture and decode some basic information.
   *
   * @param s parser context.
+@@ -410,10 +582,20 @@
+ {
+     int next;
+     HEVCParserContext *ctx = s->priv_data;
++#ifdef ADVANCED_PARSER
++    HEVCContext *h = &ctx->h;
++    HEVCParamSets *ps = &h->ps;
++#endif
+     ParseContext *pc = &ctx->pc;
+ 
+     if (avctx->extradata && !ctx->parsed_extradata) {
++#ifdef ADVANCED_PARSER
++        int is_nalff, nal_length_size;
++        ff_hevc_decode_extradata(avctx->extradata, avctx->extradata_size, ps, &is_nalff,
++                                 &nal_length_size, 1, avctx);
++#else
+         parse_nal_units(s, avctx->extradata, avctx->extradata_size, avctx);
++#endif
+         ctx->parsed_extradata = 1;
+     }
+ 
+--- libavcodec/Makefile.orig	2018-11-18 01:57:59.000000000 +0100
++++ libavcodec/Makefile	2020-04-01 21:56:17.022665188 +0200
+@@ -942,7 +942,7 @@
+ OBJS-$(CONFIG_H261_PARSER)             += h261_parser.o
+ OBJS-$(CONFIG_H263_PARSER)             += h263_parser.o
+ OBJS-$(CONFIG_H264_PARSER)             += h264_parser.o h264_sei.o h264data.o
+-OBJS-$(CONFIG_HEVC_PARSER)             += hevc_parser.o h2645_parse.o hevc_ps.o hevc_data.o
++OBJS-$(CONFIG_HEVC_PARSER)             += hevc_parser.o h2645_parse.o hevc_parse.o hevc_ps.o hevc_data.o
+ OBJS-$(CONFIG_MJPEG_PARSER)            += mjpeg_parser.o
+ OBJS-$(CONFIG_MLP_PARSER)              += mlp_parser.o mlp.o
+ OBJS-$(CONFIG_MPEG4VIDEO_PARSER)       += mpeg4video_parser.o h263.o \
