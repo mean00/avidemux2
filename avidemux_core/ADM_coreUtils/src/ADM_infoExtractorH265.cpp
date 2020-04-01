@@ -41,7 +41,6 @@ extern "C"
 extern const HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *parser);
 extern const HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *parser);
 extern const HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *parser);
-extern int ff_hevc_parser_get_nal_length_size(AVCodecParserContext *parser);
 }
 
 #include "../include/ADM_h265_tag.h"
@@ -149,7 +148,6 @@ static bool spsInfoFromParserContext(AVCodecParserContext *parser, ADM_SPSinfoH2
     const HEVCVPS *vps = ff_hevc_parser_get_vps(parser);
     const HEVCPPS *pps = ff_hevc_parser_get_pps(parser);
     spsinfo-> num_extra_slice_header_bits=0;
-    spsinfo->nal_length_size = ff_hevc_parser_get_nal_length_size(parser);
     spsinfo->output_flag_present_flag=false;
     if(sps)
     {
@@ -502,14 +500,8 @@ bool extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *spsinf
     uint8_t *tail = buffer + len;
     uint8_t nalType;
 
-    uint32_t nalSize = spsinfo->nal_length_size;
-    if(nalSize < 3 || nalSize > 4)
-    {
-        nalSize = 4;
-        ADM_warning("Invalid NAL length size %d from parser, trying out %u\n",spsinfo->nal_length_size);
-    }
-    // Check for short nalSize to be sure
-    if(nalSize == 4)
+    uint32_t nalSize = 4;
+    // Check for short nalSize
     {
         uint32_t length = 0;
         for(int i=0; i < nalSize; i++)
@@ -520,7 +512,7 @@ bool extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *spsinf
             ADM_warning("Reducing NAL length size to %u\n",nalSize);
         }
     }
-    spsinfo->nal_length_size = (int)nalSize;
+
     *flags = 0;
 
     while(head + nalSize < tail)

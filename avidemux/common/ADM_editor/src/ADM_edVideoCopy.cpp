@@ -143,7 +143,7 @@ static bool getH265SPSInfo(_VIDEOS *vid, ADM_SPSinfoH265 *sps)
         if(!demuxer->getFrame(0,&img))
         {
             ADM_warning("Unable to get the first frame of video");
-            goto _the_end;
+            goto _the_end_hevc;
         }
         gotSps=extractSPSInfoH265(img.data,img.dataLength,sps);
     }else
@@ -151,12 +151,12 @@ static bool getH265SPSInfo(_VIDEOS *vid, ADM_SPSinfoH265 *sps)
         gotSps=extractSPSInfoH265(extra,extraLen,sps);
     }
     if(!gotSps)
-        goto _the_end;
+        goto _the_end_hevc;
     // Store the decoded SPS info in the cache
     vid->paramCacheSize=spsSize;
     vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
     memcpy(vid->paramCache,sps,vid->paramCacheSize);
-_the_end:
+_the_end_hevc:
     if(buffer) delete [] buffer;
     buffer=NULL;
     return gotSps;
@@ -534,7 +534,6 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             MATCH(output_flag_present_flag)
             MATCH(field_info_present)
             MATCH(address_coding_length)
-            MATCH(nal_length_size)
             if(!match)
             {
                 ADM_warning("SPS mismatch, saved video will be broken.\n");

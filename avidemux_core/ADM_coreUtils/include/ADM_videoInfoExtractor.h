@@ -58,7 +58,6 @@ public:
       output_flag_present_flag=false; // from pps
       field_info_present=false;
       address_coding_length=0;
-      nal_length_size=0;
     }
     int     width;
     int     height;
@@ -70,7 +69,6 @@ public:
     bool    output_flag_present_flag;
     bool    field_info_present;
     int     address_coding_length;
-    int     nal_length_size;
 };
 
 
