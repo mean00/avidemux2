@@ -51,14 +51,18 @@ public:
     ADM_SPSinfoH265()
     {
       width=height=fps1000=0;
+      log2_max_poc_lsb=0;
       num_extra_slice_header_bits=0;  //copied from pps
+      field_info_present=false;
       address_coding_length=0;
     }
     int     width;
     int     height;
     int     fps1000;
+    unsigned int log2_max_poc_lsb;
     int     num_extra_slice_header_bits;
     bool    dependent_slice_segments_enabled_flag;
+    bool    field_info_present;
     int     address_coding_length;
 };
 
