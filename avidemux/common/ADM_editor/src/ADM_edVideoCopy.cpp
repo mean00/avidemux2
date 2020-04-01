@@ -17,6 +17,7 @@
  ***************************************************************************/
 #include "ADM_cpp.h"
 #include <math.h>
+#include <climits>
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
 #include "ADM_vidMisc.h"
@@ -70,20 +71,18 @@ static bool getH264SPSInfo(_VIDEOS *vid,ADM_SPSInfo *sps)
 #define MAX_NALU_TO_CHECK 4
     static NALU_descriptor desc[MAX_NALU_TO_CHECK];
 
-    bool AnnexB=false;
     bool gotSps=false;
+    uint8_t *buffer=NULL;
     uint8_t *extra;
     uint32_t extraLen=0;
     demuxer->getExtraHeaderData(&extraLen,&extra);
-    if(!extraLen)
-        AnnexB=true;
-    // Allocate memory to hold compressed frame
-    ADMCompressedImage img;
-#define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
-    uint8_t *buffer=new uint8_t[MAX_FRAME_LENGTH];
-    img.data=buffer;
-    if(AnnexB)
+    if(!extraLen) // AnnexB
     {
+        // Allocate memory to hold compressed frame
+        ADMCompressedImage img;
+#define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
+        buffer=new uint8_t[MAX_FRAME_LENGTH];
+        img.data=buffer;
         if(!demuxer->getFrame(0,&img))
         {
             ADM_warning("Unable to get the first frame of video");
@@ -104,7 +103,61 @@ static bool getH264SPSInfo(_VIDEOS *vid,ADM_SPSInfo *sps)
     vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
     memcpy(vid->paramCache,sps,sizeof(ADM_SPSInfo));
 _the_end:
-    delete [] buffer;
+    if(buffer) delete [] buffer;
+    buffer=NULL;
+    return gotSps;
+}
+
+/**
+    \fn getH265SPSInfo
+*/
+static bool getH265SPSInfo(_VIDEOS *vid, ADM_SPSinfoH265 *sps)
+{
+    if(!vid)
+        return false;
+    vidHeader *demuxer=vid->_aviheader;
+    if(!demuxer)
+        return false;
+    if(!sps)
+        return false;
+
+    // Do we have a cached copy?
+    uint32_t spsSize=sizeof(ADM_SPSinfoH265);
+    if(vid->paramCacheSize==spsSize && vid->paramCache)
+    {
+        memcpy(sps,vid->paramCache,spsSize);
+        return true;
+    }
+    // Nope, determine stream type
+    bool gotSps=false;
+    uint8_t *buffer=NULL;
+    uint8_t *extra;
+    uint32_t extraLen=0;
+    demuxer->getExtraHeaderData(&extraLen,&extra);
+    if(!extraLen) // AnnexB
+    {
+        // Allocate memory to hold compressed frame
+        ADMCompressedImage img;
+        buffer=new uint8_t[MAX_FRAME_LENGTH];
+        img.data=buffer;
+        if(!demuxer->getFrame(0,&img))
+        {
+            ADM_warning("Unable to get the first frame of video");
+            goto _the_end;
+        }
+        gotSps=extractSPSInfoH265(img.data,img.dataLength,sps);
+    }else
+    {
+        gotSps=extractSPSInfoH265(extra,extraLen,sps);
+    }
+    if(!gotSps)
+        goto _the_end;
+    // Store the decoded SPS info in the cache
+    vid->paramCacheSize=spsSize;
+    vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
+    memcpy(vid->paramCache,sps,vid->paramCacheSize);
+_the_end:
+    if(buffer) delete [] buffer;
     buffer=NULL;
     return gotSps;
 }
@@ -405,7 +458,181 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             }
         }
     }
-    // TODO: check HEVC
+
+    if(isH265Compatible(info.fcc))
+    {
+        // In HEVC, we check only for POC going back.
+        // Get SPS to be able to decode the slice header
+        ADM_SPSinfoH265 sps;
+        if(!getH265SPSInfo(vid,&sps))
+        {
+            ADM_warning("Cannot retrieve SPS info.\n");
+            BOWOUT
+        }
+        // Determine stream type
+        bool AnnexB=false;
+        uint8_t *extra;
+        uint32_t extraLen=0;
+        demuxer->getExtraHeaderData(&extraLen,&extra);
+        if(!extraLen)
+            AnnexB=true;
+        // Allocate memory to hold compressed frame
+        ADMCompressedImage img;
+        buffer=new uint8_t[MAX_FRAME_LENGTH];
+        img.data=buffer;
+        // With HEVC we need to check the preceding segment first
+        ADM_info("Getting previous segment, current segment number: %d\n",segNo);
+        ADM_assert(segNo>0);
+        segNo--;
+        seg=_segments.getSegment(segNo);
+        vid=_segments.getRefVideo(seg->_reference);
+        demuxer=vid->_aviheader;
+        oldFrame=vid->lastSentFrame;
+        uint32_t rememberCurrent=frame;
+        uint32_t rememberLastSent=oldFrame;
+
+        if(false==switchToSegment(segNo,true))
+        {
+            ADM_warning("Cannot check the previous segment %d\n",segNo);
+            BOWOUT
+        }
+        // Not the same ref video?
+        if(seg->_reference!=refNo)
+        {
+            // Does the codec match?
+            demuxer->getVideoInfo(&info);
+            if(!isH265Compatible(info.fcc))
+            {
+                ADM_error("Codec mismatch!\n");
+                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                BOWOUT
+            }
+            // Check that stream types match
+            extraLen=0;
+            demuxer->getExtraHeaderData(&extraLen,&extra);
+            if(!extraLen != AnnexB) // FIXME stream filter setup should be per segment
+            {
+                ADM_warning("Combining AVCC and AnnexB type HEVC streams is currently not supported.\n");
+                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                BOWOUT
+            }
+            // Get SPS info
+            ADM_SPSinfoH265 sps2;
+            if(!getH265SPSInfo(vid,&sps2))
+            {
+                ADM_warning("Cannot retrieve SPS info for HEVC ref video in segment %d\n",segNo);
+                BOWOUT
+            }
+            // We have SPS, does it match the one from the next segment?
+            // Width and height match for sure, check remaining fields.
+            bool match=true;
+            MATCH(fps1000)
+            MATCH(log2_max_poc_lsb)
+            MATCH(separate_colour_plane_flag)
+            MATCH(num_extra_slice_header_bits)
+            MATCH(dependent_slice_segments_enabled_flag)
+            MATCH(output_flag_present_flag)
+            MATCH(field_info_present)
+            MATCH(address_coding_length)
+            MATCH(nal_length_size)
+            if(!match)
+            {
+                ADM_warning("SPS mismatch, saved video will be broken.\n");
+                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                BOWOUT
+            }
+        }
+
+        /* Get the POC of the last frame in display order before the cut,
+           this is not necessarily the last displayed frame of the segment.
+           We need to start earlier and identify the cut point. */
+        if(false==getFrameNumFromPtsOrBefore(vid, seg->_refStartTimeUs+seg->_durationUs-1, frame))
+        {
+            ADM_warning("Cannot identify the last frame in display order for segment %d\n",segNo);
+            BOWOUT
+        }
+        int maxFrame=frame;
+        frame=(frame>32)? frame-32 : 0;
+        // Now search the frame with max pts before segment switch
+        uint64_t maxpts=0;
+        while(frame<=maxFrame)
+        {
+            if(!demuxer->getPtsDts(frame,&pts,&dts))
+                break;
+            if(pts!=ADM_NO_PTS && pts>=seg->_refStartTimeUs+seg->_durationUs)
+                break;
+            if(pts>maxpts) maxpts=pts;
+            if(dts!=ADM_NO_PTS && dts>=seg->_refStartTimeUs+seg->_durationUs)
+                break;
+            frame++;
+        }
+        if(!maxpts || false==getFrameNumFromPtsOrBefore(vid, maxpts, frame))
+        {
+            ADM_warning("Cannot identify the last frame in display order before the cut for segment %d\n",segNo);
+            BOWOUT
+        }
+        // We've found our frame
+        if(!demuxer->getFrame(frame,&img))
+        {
+            ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
+            BOWOUT
+        }
+        // Try to get POC
+        int poc2 = INT_MIN;
+        bool outcome=false;
+        if(AnnexB)
+            outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc2);
+        else
+            outcome=extractH265FrameType(img.data, img.dataLength, &sps, &(img.flags), &poc2);
+        if(!outcome)
+        {
+            ADM_warning("Cannot get HEVC frame type and Picture Order Count value.\n");
+            BOWOUT
+        }
+        // We are done with this segment, restore the last sent frame
+        vid->lastSentFrame=oldFrame;
+        // Switch back to the segment after the cutpoint
+        segNo++;
+        if(false==switchToSegment(segNo,true))
+        {
+            ADM_warning("Cannot return to the current segment %d\n",segNo);
+            BOWOUT
+        }
+        // Restore
+        frame=rememberCurrent;
+        vid->lastSentFrame=rememberLastSent;
+        // Get the frame we are interested in.
+        if(!demuxer->getFrame(frame,&img))
+        {
+            ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
+            BOWOUT
+        }
+        int poc=poc2;
+        outcome=false;
+        if(AnnexB)
+            outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc);
+        else
+            outcome=extractH265FrameType(img.data, img.dataLength, &sps, &(img.flags), &poc);
+        if(!outcome)
+        {
+            ADM_warning("Cannot get HEVC frame type and Picture Order Count value.\n");
+            BOWOUT
+        }
+
+        if((img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME && !poc) // IDR verified
+        {
+            cut=ADM_EDITOR_CUT_POINT_IDR;
+            BOWOUT
+        }
+
+        int delta=poc2-poc;
+        if(delta>0)
+        {
+            ADM_warning("Saved video won't be smoothly playable in FFmpeg-based players (POC going back by %d)\n",delta);
+            cut=ADM_EDITOR_CUT_POINT_RECOVERY;
+            BOWOUT
+        }
+    }
     cut=ADM_EDITOR_CUT_POINT_IDR;
     BOWOUT
 }
