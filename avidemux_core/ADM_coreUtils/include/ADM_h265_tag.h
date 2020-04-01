@@ -29,6 +29,7 @@
     NAME(NAL_H265_IDR_W_RADL , 19),\
     NAME(NAL_H265_IDR_N_LP,     20) , \
     NAME(NAL_H265_CRA_NUT    ,  21),\
+    NAME(NAL_H265_IRAP_VCL22 ,  22),\
     NAME(NAL_H265_IRAP_VCL23 ,  23),\
     NAME(NAL_H265_VPS  ,        32)    ,\
     NAME(NAL_H265_SPS  ,        33)    ,\

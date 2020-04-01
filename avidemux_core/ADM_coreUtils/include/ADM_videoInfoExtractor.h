@@ -52,18 +52,25 @@ public:
     {
       width=height=fps1000=0;
       log2_max_poc_lsb=0;
+      separate_colour_plane_flag=0;
       num_extra_slice_header_bits=0;  //copied from pps
+      dependent_slice_segments_enabled_flag=false; // from pps
+      output_flag_present_flag=false; // from pps
       field_info_present=false;
       address_coding_length=0;
+      nal_length_size=0;
     }
     int     width;
     int     height;
     int     fps1000;
     unsigned int log2_max_poc_lsb;
+    int     separate_colour_plane_flag;
     int     num_extra_slice_header_bits;
     bool    dependent_slice_segments_enabled_flag;
+    bool    output_flag_present_flag;
     bool    field_info_present;
     int     address_coding_length;
+    int     nal_length_size;
 };
 
 
@@ -74,7 +81,6 @@ ADM_COREUTILS6_EXPORT bool    extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPS
 ADM_COREUTILS6_EXPORT bool    extractSPSInfo_mp4Header(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
 
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType(uint8_t *buffer,uint32_t len,uint32_t *flags,int *pocLsb,ADM_SPSInfo *sps,uint32_t *recovery=NULL);
-ADM_COREUTILS6_EXPORT uint8_t extractH265FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType_startCode(uint8_t *buffer,uint32_t len,uint32_t *flags,int *pocLsb,ADM_SPSInfo *sps,uint32_t *recovery=NULL);
 ADM_COREUTILS6_EXPORT bool    extractH264SEI(uint8_t *src, uint32_t inlen, uint8_t *dest, uint32_t bufsize, uint32_t *outlen); // dest may be NULL
 
@@ -85,8 +91,8 @@ ADM_COREUTILS6_EXPORT bool    ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,u
 
 ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265_mp4Header(uint8_t *data, uint32_t len,ADM_SPSinfoH265 *info); 
 ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265(uint8_t *data, uint32_t len,ADM_SPSinfoH265 *info); 
-
-
+ADM_COREUTILS6_EXPORT bool    extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *info, uint32_t *flags, int *poc);
+ADM_COREUTILS6_EXPORT bool    extractH265FrameType_startCode(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *info, uint32_t *flags, int *poc);
 
 #define MAX_NALU_PER_CHUNK 60
 
