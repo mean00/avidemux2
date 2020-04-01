@@ -1,6 +1,6 @@
---- libavcodec/hevc_parse.c.orig	2020-03-29 00:49:17.000000000 +0100
-+++ libavcodec/hevc_parser.c	2020-03-29 00:47:31.000000000 +0100
-@@ -31,6 +31,13 @@
+--- libavcodec/hevc_parser.c.orig	2019-12-31 22:35:23.000000000 +0100
++++ libavcodec/hevc_parser.c	2020-04-01 15:21:20.711929323 +0200
+@@ -31,6 +31,14 @@
  #include "internal.h"
  #include "parser.h"
  
@@ -8,13 +8,14 @@
 +const HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s);
 +const HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s);
 +const HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s);
++int ff_hevc_parser_get_nal_length_size(AVCodecParserContext *s);
 +/* /MEANX */
 +
 +
  #define START_CODE 0x000001 ///< start_code_prefix_one_3bytes
  
  #define IS_IRAP_NAL(nal) (nal->type >= 16 && nal->type <= 23)
-@@ -171,6 +178,50 @@
+@@ -171,6 +179,166 @@
  }
  
  /**
@@ -23,13 +24,49 @@
 +*/
 +const HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s)
 +{
-+      HEVCParserContext *ctx = s->priv_data;
-+      if(!ctx) return NULL;
-+      HEVCParamSets     *ps = &ctx->ps;
-+      if(!ps) return NULL;
++    HEVCParserContext *ctx;
++    HEVCParamSets *ps;
++    const HEVCPPS *pps;
++    const HEVCSPS *sps;
++    AVBufferRef *ref;
++    unsigned int i, sps_id;
 +
-+     const HEVCSPS *sps = ps->sps;
-+     return sps;
++    ctx = s->priv_data;
++    if (!ctx)
++        return NULL;
++
++    ps = &ctx->ps;
++    if (!ps)
++        return NULL;
++
++    // Do we have an active SPS?
++    if (ps->sps)
++        return ps->sps;
++
++    // Nope, probably no slice header decoded yet. Pick the first PPS from the list and keep fingers crossed.
++    for (i = 0; i < HEVC_MAX_PPS_COUNT; i++)
++    {
++        ref = ps->pps_list[i];
++        if (!ref || !ref->data)
++            continue;
++        break;
++    }
++
++    if (!ref || !ref->data)
++        return NULL;
++
++    // From now on, follow the chain.
++    pps = (HEVCPPS *)ref->data;
++    sps_id = pps->sps_id;
++    if (sps_id >= HEVC_MAX_SPS_COUNT)
++        return NULL;
++
++    ref = ps->sps_list[sps_id];
++    if (!ref || !ref->data)
++        return NULL;
++
++    sps = (HEVCSPS *)ref->data;
++    return sps;
 +}
 +/**
 + \fn ff_hevc_parser_get_pps
@@ -37,13 +74,38 @@
 +*/
 +const HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s)
 +{
-+      HEVCParserContext *ctx = s->priv_data;
-+      if(!ctx) return NULL;
-+      HEVCParamSets     *ps = &ctx->ps;
-+      if(!ps) return NULL;
++    HEVCParserContext *ctx;
++    HEVCParamSets *ps;
++    const HEVCPPS *pps;
++    AVBufferRef *ref;
++    unsigned int i;
 +
-+     const HEVCPPS *pps = ps->pps;
-+     return pps;
++    ctx = s->priv_data;
++    if (!ctx)
++        return NULL;
++
++    ps = &ctx->ps;
++    if (!ps)
++        return NULL;
++
++    // Do we have an active PPS?
++    if (ps->pps)
++        return ps->pps;
++
++    // Nope, pick the first one from the list.
++    for (i = 0; i < HEVC_MAX_PPS_COUNT; i++)
++    {
++        ref = ps->pps_list[i];
++        if (!ref || !ref->data)
++            continue;
++        break;
++    }
++
++    if (!ref || !ref->data)
++        return NULL;
++
++    pps = (HEVCPPS *)ref->data;
++    return pps;
 +}
 +/**
 + \fn ff_hevc_parser_get_vps
@@ -51,13 +113,68 @@
 +*/
 +const HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s)
 +{
-+      HEVCParserContext *ctx = s->priv_data;
-+      if(!ctx) return NULL;
-+      HEVCParamSets     *ps = &ctx->ps;
-+      if(!ps) return NULL;
++    HEVCParserContext *ctx;
++    HEVCParamSets *ps;
++    const HEVCPPS *pps;
++    const HEVCSPS *sps;
++    const HEVCVPS *vps;
++    AVBufferRef *ref;
++    unsigned int i, sps_id, vps_id;
 +
-+     const HEVCVPS *vps = ps->vps;
-+     return vps;
++    ctx = s->priv_data;
++    if (!ctx)
++        return NULL;
++
++    ps = &ctx->ps;
++    if (!ps)
++        return NULL;
++
++    // Do we have a VPS set as active?
++    if (ps->vps)
++        return ps->vps;
++
++    // Nope, take the first PPS from the list and follow the chain.
++    for (i = 0; i < HEVC_MAX_PPS_COUNT; i++)
++    {
++        ref = ps->pps_list[i];
++        if (!ref || !ref->data)
++            continue;
++        break;
++    }
++
++    if (!ref || !ref->data)
++        return NULL;
++
++    pps = (HEVCPPS *)ref->data;
++    sps_id = pps->sps_id;
++    if (sps_id >= HEVC_MAX_SPS_COUNT)
++        return NULL;
++
++    ref = ps->sps_list[sps_id];
++    if (!ref || !ref->data)
++        return NULL;
++
++    sps = (HEVCSPS *)ref->data;
++    vps_id = sps->vps_id;
++    if (vps_id >= HEVC_MAX_VPS_COUNT)
++        return NULL;
++
++    ref = ps->vps_list[vps_id];
++    if (!ref || !ref->data)
++        return NULL;
++
++    vps = (HEVCVPS *)ref->data;
++    return vps;
++}
++/**
++    \fn ff_hevc_parser_get_nal_size_length
++    \brief eum: get number of bytes used to code nal length
++*/
++int ff_hevc_parser_get_nal_length_size(AVCodecParserContext *s)
++{
++    HEVCParserContext *ctx = s->priv_data;
++    if (!ctx) return 0;
++    return ctx->nal_length_size;
 +}
 +// /MEANX
 +
