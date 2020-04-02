@@ -69,9 +69,9 @@
             track->_rdWav.encoding = WAV_MP2;
     }
 
-    if(track->_rdWav.byterate == AUDIO_BYTERATE_UNSET)
+    if(track->_rdWav.byterate == AUDIO_BYTERATE_UNSET || track->_rdWav.encoding == WAV_MP3)
     {
-        track->_rdWav.byterate = 128000 >> 3; // dummy value
+        int average = AUDIO_BYTERATE_UNSET;
         ADM_info("Estimating audio byterate...\n");
         uint64_t duration = _index[_nb_chunks-1].dts;
         if(duration != ADM_NO_PTS && duration > 100000) // at least 0.1 s
@@ -81,8 +81,25 @@
             d = track->totalDataSize / d;
             d *= 1000;
             if(d > 0 && d < (192000 * 32)) // anything beyond 7.1 at 192 kHz float must be clearly bogus
-                track->_rdWav.byterate = (uint32_t)d;
+                average = (uint32_t)d;
         }
+        if(average != AUDIO_BYTERATE_UNSET)
+        {
+            if(track->_rdWav.byterate == AUDIO_BYTERATE_UNSET)
+            {
+                track->_rdWav.byterate = average;
+            }else // mp3
+            {
+                int probed = track->_rdWav.byterate;
+#define MAX_AUDIO_BYTERATE_DEVIATION_FROM_AVG 100
+                if(abs(average-probed) > MAX_AUDIO_BYTERATE_DEVIATION_FROM_AVG) // VBR mode mp3
+                {
+                    ADM_warning("Probed byterate %d doesn't match average %d, VBR?\n",probed,average);
+                    track->_rdWav.byterate = average;
+                }
+            }
+        }else if(track->_rdWav.byterate == AUDIO_BYTERATE_UNSET)
+            track->_rdWav.byterate = 128000 >> 3; // use a dummy value as the last resort
     }
 }
 /**
