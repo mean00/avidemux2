@@ -68,6 +68,7 @@ version 2 media descriptor :
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_codecType.h"
 #include "ADM_a52info.h"
+#include "ADM_mp3info.h"
 #include "ADM_audioXiphUtils.h"
 
 #if 1
@@ -550,6 +551,35 @@ uint8_t    MP4Header::open(const char *name)
                   }
                   delete [] buffer;
                   break;
+            }
+            case WAV_MP3: // same for mp3
+            {
+                MP4Index *dex=_tracks[1+audio].index;
+                int size=dex[0].size;
+                uint8_t *buffer=new uint8_t[size];
+                fseeko(_fd,dex[0].offset,SEEK_SET);
+                if(fread(buffer,1,size,_fd))
+                {
+                    uint32_t off;
+                    MpegAudioInfo mpeg;
+                    if(getMpegFrameInfo(buffer, size, &mpeg, NULL, &off) && size >= off+mpeg.size)
+                    {
+                        if(mpeg.mode == 3 && _tracks[1+audio]._rdWav.channels!=1)
+                        {
+                            uint32_t fq=mpeg.samplerate;
+                            uint32_t br=(mpeg.bitrate*1000)>>3; //
+                            ADM_info("Updating MP3 info : Fq=%u, br=%u, chan=%u\n",fq,br,1);
+                            _tracks[1+audio]._rdWav.channels=1;
+                            _tracks[1+audio]._rdWav.frequency=fq;
+                            _tracks[1+audio]._rdWav.byterate=br;
+                        }
+                    }else
+                    {
+                        ADM_warning("Cannot get MP3 info from the first sample.\n");
+                    }
+                }
+                delete [] buffer;
+                break;
             }
             case WAV_OGG_VORBIS:
             {
