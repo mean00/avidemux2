@@ -88,19 +88,44 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265 and AV1 supported for video"));
             return false;
     }
+    bool muxModeMov=false;
     if(nbAudioTrack)
+    {
         for(int i=0;i<nbAudioTrack;i++)
         {
             uint32_t acc=a[i]->getInfo()->encoding;
-            if(acc!=WAV_MP2 && acc!=WAV_MP3 && acc!=WAV_AAC && acc!=WAV_AC3 && acc!=WAV_EAC3 && acc!=WAV_OGG_VORBIS)
+            if( acc!=WAV_AAC &&
+                acc!=WAV_AC3 &&
+                acc!=WAV_EAC3 &&
+                acc!=WAV_LPCM &&
+                acc!=WAV_MP2 &&
+                acc!=WAV_MP3 &&
+                acc!=WAV_OGG_VORBIS)
             {
-                GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, E-AC3, MP2, MP3 and Vorbis supported for audio"));
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, E-AC3, LPCM, MP2, MP3 and Vorbis supported for audio"));
                 return false;
             }
+            if(acc==WAV_LPCM)
+                muxModeMov=true;
         }
+    }
     /* All seems fine, open stuff */
-    const char *f="mp4";
-    if(muxerConfig.muxerType==MP4_MUXER_PSP) f="psp";
+    const char *f;
+    if(muxerConfig.muxerType==MP4_MUXER_PSP)
+    {
+        if(muxModeMov)
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Incompatible Format"),QT_TRANSLATE_NOOP("mp4muxer","PSP format is incompatible with LPCM audio"));
+            return false;
+        }
+        f="psp";
+    }else if(muxModeMov)
+    {
+        f="mov";
+    }else
+    {
+        f="mp4";
+    }
     if(false==setupMuxer(f,file))
     {
         printf("[MP4] Failed to open muxer\n");
