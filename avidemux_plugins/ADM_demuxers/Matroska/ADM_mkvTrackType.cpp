@@ -43,7 +43,7 @@ MKVCC mkvCC[]=
   {"A_AAC/MPEG4/LC/SBR",0,WAV_AAC,""},
   {"A_AAC/MPEG4/LC",0,WAV_AAC,""},
   {"A_PCM/INT/LIT",0,WAV_PCM,""},
-
+  {"A_PCM/INT/BIG",0,WAV_LPCM,""},
   {"A_AAC",0,WAV_AAC,""},
   {"A_VORBIS",0,WAV_OGG_VORBIS,""},
   {"A_DTS",0,WAV_DTS,""},
