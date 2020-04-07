@@ -153,5 +153,8 @@ fi
 
 cd $ORG
 #AppImageAssistant  install $APP_NAME
-appimagetool $APP_NAME
+# Patch desktop file
+cp  install/avidemux.desktop /tmp
+cat /tmp/avidemux.desktop | sed 's/avidemux.png/avidemux/g' > install/avidemux.desktop
+appimagetool install
 
