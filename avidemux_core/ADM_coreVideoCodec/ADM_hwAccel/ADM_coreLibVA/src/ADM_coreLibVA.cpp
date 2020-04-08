@@ -1226,7 +1226,7 @@ bool ADM_vaSurface_cleanupCheck(void)
     int n=listOfAllocatedSurface.size();
     if(!n) return true;
 
-    ADM_warning("Some allocated va surface are still in use (%d), clearing them\n");
+    ADM_warning("Some allocated va surface are still in use (%d), clearing them\n",n);
     return true;
 
 }
@@ -1239,7 +1239,7 @@ bool ADM_vaImage_cleanupCheck(void)
     int n=listOfAllocatedVAImage.size();
     if(!n) return true;
 
-    ADM_warning("Some allocated va images are still in use (%d), clearing them\n");
+    ADM_warning("Some allocated va images are still in use (%d), clearing them\n",n);
     return true;
 
 }
