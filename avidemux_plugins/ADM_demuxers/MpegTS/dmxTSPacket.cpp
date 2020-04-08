@@ -233,7 +233,6 @@ nextPack:
     int payloadUnitStart=scratch[0]&0x40;
     int fieldControl=(scratch[2]>>4)&3;
     int continuity=(scratch[2]&0xf);
-    int len=TS_PACKET_LEN-4; // useful datas
 
     pkt->continuityCounter=continuity;
     pkt->payloadStart=payloadUnitStart;
@@ -308,7 +307,6 @@ nextPack2:
     if(!nbRetries)
         startOffset=pkt.startAt;
     nbRetries++;
-    uint32_t tableId;
     uint32_t sectionLength=0;
     uint32_t transportStreamId=0;
     uint32_t dummy;
@@ -482,9 +480,8 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
 {
     uint8_t  *start=pes->payload+6;
     uint8_t  *end=pes->payload+pes->payloadSize;
-    uint8_t  stream=pes->payload[3];
     uint32_t packLen=(pes->payload[4]<<8)+(pes->payload[5]);
-    int      align=0,c;
+    int      c;
 
 
     pes->dts=ADM_NO_PTS;
@@ -502,7 +499,6 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
     if((c&0xc0)!=0x80) fail("No Mpeg2 marker");
     
         uint32_t ptsdts,len;
-        if(c & 4) align=1;      
         c=*start++;     // PTS/DTS
         //printf("%x ptsdts\n",c
         ptsdts=c>>6;
@@ -530,8 +526,7 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
                                 #define PTS11_ADV 10 // nut monkey
                                 if(len>=PTS11_ADV)
                                 {
-                                        uint32_t skip=PTS11_ADV;
-                                        uint64_t pts1,pts2,dts,pts0;
+                                        uint64_t pts1,pts2,pts0;
                                                 //      printf("\n PTS10\n");
                                                 pts0=start[0];  
                                                 pts1=(start[1]<<8)+start[2]; 
@@ -563,14 +558,14 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
         if(packLen)
         {
             //printf("***Zimbla***\n");
-            if(packLen<sizeCheck) 
+            if((int)packLen<sizeCheck)
             {
                 tail=sizeCheck-packLen;
                 pes->payloadSize-=tail; 
                 ADM_warning("[TS Packet]extra crap at the end %d\n",tail);
             }
             else
-                if(packLen>sizeCheck)
+                if((int)packLen>sizeCheck)
                 {
                     ADM_warning("[TS Packet] PackLen=%d, avalailble=%d\n",packLen,sizeCheck);
                     fail("Pes too long");
@@ -605,11 +600,8 @@ nextPackx:
     count++;
     if(count>MAX_SKIPPED_PACKET) return false;
     *pid=id;
-    
-    int payloadUnitStart=scratch[0]&0x40;
+
     int fieldControl=(scratch[2]>>4)&3;
-    int continuity=(scratch[2]&0xf);
-    int len=TS_PACKET_LEN-4; // useful datas
 
     if(!(fieldControl & 1)) 
     {
@@ -1005,11 +997,8 @@ bool tsPacketLinearTracker::updateStats(uint8_t *scratch)
         if(id==stats[i].pid) found=i;
     if(found==-1) return false;
 
-    
     int payloadUnitStart=scratch[0]&0x40;
     int fieldControl=(scratch[2]>>4)&3;
-    int continuity=(scratch[2]&0xf);
-
 
     if(!payloadUnitStart) return false; // no PES start in here...
 
@@ -1111,8 +1100,7 @@ bool tsPacketLinearTracker::updateStats(uint8_t *scratch)
                                 #define PTS11_ADV 10 // nut monkey
                                 if(len>=PTS11_ADV)
                                 {
-                                        uint32_t skip=PTS11_ADV;
-                                        uint64_t pts1,pts2,dts,pts0;
+                                        uint64_t pts1,pts2,pts0;
                                                 //      printf("\n PTS10\n");
                                                 pts0=start[0];  
                                                 pts1=(start[1]<<8)+start[2]; 

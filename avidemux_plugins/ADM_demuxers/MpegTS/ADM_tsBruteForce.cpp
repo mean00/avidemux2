@@ -45,8 +45,6 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
     ADM_TS_TRACK *tracks=NULL;
     *outTracks=NULL;
     *nbTracks=0;
-    uint32_t nb=0;
-
 
     tsPacket *ts=new tsPacket();
     ts->open(file,FP_PROBE);
@@ -56,8 +54,6 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
     memset(map,0,MAX_PID*sizeof(int));
     uint8_t *buffer=new uint8_t[MAX_BUFFER_SIZE];
     int pid;
-    uint32_t packetSize;
-    uint64_t pts,dts,at;
     while(packetRead++<TS_MAX_PACKET_SCAN)
     {
             if(false==ts->getNextPid(&pid))
