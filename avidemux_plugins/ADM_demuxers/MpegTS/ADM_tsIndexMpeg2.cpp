@@ -40,7 +40,6 @@ static const uint32_t FPS[16]={
 uint8_t TsIndexerMpeg2::run(const char *file,ADM_TS_TRACK *videoTrac)
 {
 uint32_t temporal_ref,val;
-uint8_t buffer[50*1024];
 bool seq_found=false;
 H264Unit spsUnit;
 
@@ -48,7 +47,6 @@ beginConsuming=0;
 
 TSVideo video;
 indexerData  data;    
-dmxPacketInfo tmpInfo;
 
 uint8_t result=1;
 

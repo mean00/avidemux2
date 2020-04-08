@@ -38,6 +38,7 @@ static uint64_t wrapIt(uint64_t val, uint64_t start)
 }
 bool tsHeader::updatePtsDts(void)
 {
+        uint32_t i;
         uint64_t lastDts=0,lastPts=0,dtsIncrement=0;
 
 
@@ -46,7 +47,7 @@ bool tsHeader::updatePtsDts(void)
         // So we compute the DTS of the first real packet
         // by using the size field and byterate and arbitrarily make it begins
         // at video
-        for(int i=0;i<listOfAudioTracks.size();i++)
+        for(i=0;i<listOfAudioTracks.size();i++)
         {
             vector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
             if(!((*seekPoints).size())) continue;
@@ -114,7 +115,7 @@ bool tsHeader::updatePtsDts(void)
                 ListOfFrames[0]->dts=startDts;
             }
         }
-        for(int i=0;i<listOfAudioTracks.size();i++)
+        for(i=0;i<listOfAudioTracks.size();i++)
         {
             if(!listOfAudioTracks[i]->access->seekPoints.size()) continue;
             uint64_t a=listOfAudioTracks[i]->access->seekPoints[0].dts;
@@ -122,14 +123,14 @@ bool tsHeader::updatePtsDts(void)
         }
         // Rescale all so that it starts ~ 0
         // Video..
-        for(int i=0;i<ListOfFrames.size();i++)
+        for(i=0;i<ListOfFrames.size();i++)
         {
             dmxFrame *f=ListOfFrames[i];
             f->pts=wrapIt(f->pts,startDts);
             f->dts=wrapIt(f->dts,startDts);
         }
         // Audio start at 0 too
-        for(int i=0;i<listOfAudioTracks.size();i++)
+        for(i=0;i<listOfAudioTracks.size();i++)
         {
             ADM_tsTrackDescriptor *track=listOfAudioTracks[i];
             ADM_tsAccess    *access=track->access;
@@ -140,10 +141,10 @@ bool tsHeader::updatePtsDts(void)
         // for video
         // We are sure to have both PTS & DTS for 1st image
         // Guess missing DTS/PTS for video
-        int noUpdate=0;
+        /*int noUpdate=0;*/
         startDts=ListOfFrames[0]->dts;
         ListOfFrames[0]->dts=0;
-        for(int i=0;i<ListOfFrames.size();i++)
+        for(i=0;i<ListOfFrames.size();i++)
         {
             dmxFrame *frame=ListOfFrames[i];
             aprintf("[psUpdate] frame:%d raw DTS: %" PRId64" PTS:%" PRId64"\n",i,frame->dts,frame->pts);
@@ -185,12 +186,12 @@ bool tsHeader::updatePtsDts(void)
         // Now take care of the first frame dts.
         ListOfFrames[0]->dts=timeConvert(startDts);
         // convert to us for Audio tracks (seek points)
-        for(int i=0;i<listOfAudioTracks.size();i++)
+        for(i=0;i<listOfAudioTracks.size();i++)
         {
             ADM_tsTrackDescriptor *track=listOfAudioTracks[i];
             ADM_tsAccess    *access=track->access;
-            
-            for(int j=0;j<access->seekPoints.size();j++)
+            uint32_t j;
+            for(j=0;j<access->seekPoints.size();j++)
             {
                 if( access->seekPoints[j].dts!=ADM_NO_PTS) 
                     access->seekPoints[j].dts=access->timeConvert( access->seekPoints[j].dts);

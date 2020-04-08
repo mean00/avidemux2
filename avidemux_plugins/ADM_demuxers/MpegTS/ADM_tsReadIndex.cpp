@@ -321,7 +321,7 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
     for(int i=0;i<nbTracks;i++)
     {
         char header[40];
-        char body[40];
+        char body[80];
         std::string language=ADM_UNKNOWN_LANGUAGE;
         uint32_t fq,chan,br,codec,pid,muxing=0;
         sprintf(header,"Track%d.",i);

@@ -160,13 +160,11 @@ uint64_t ADM_tsAccess::timeConvert(uint64_t x)
 */
 bool      ADM_tsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
-uint64_t p,d,start;
     // If it is adts, ask ffmpeg to unwrap it...
     switch(muxing)
     {
         case ADM_TS_MUX_ADTS:
             {
-                    bool r=false;
                     int outsize=0;
                     *size=0;
                     bool gotPacket=false;
