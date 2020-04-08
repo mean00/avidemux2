@@ -108,6 +108,12 @@ do
         cpyX86Optional $i
 done
 cpyRootx86Lib libexpat.so.1
+# Misc
+for i in libFLAC.so.8 libbsd.so.0 libcap.so.2 libgcc_s.so.1 libgcrypt.so.20 liblz4.so.1 liblzma.so.5 libstdc++.so.6 libwrap.so.0 libz.so.1 libasyncns.so.0 libdbus-1.so.3 libdl.so.2 libdrm.so.2 libdrm_intel.so.1 libm.so.6 libsndfile.so.1 libdouble-conversion.so.1 libfontconfig.so.1 libfreetype.so.6 libharfbuzz.so.0
+  do
+     cpyRootx86Lib $i   
+  done
+
 # x264
 #cpyLib libx264.so.152
 # 
