@@ -22,21 +22,12 @@
 #include "vaapiFilter.h"
 #include "vaapiFilter_desc.cpp"
 
-
-
-
-#include "ADM_coreLibVA.h"
-//
-#define ADM_INVALID_FRAME_NUM 0x80000000
-#define ADM_NB_SURFACES 3
-
 /**
     \class vaapiVideoFilter
 */
 class vaapiVideoFilter : public  ADM_coreVideoFilterCached
 {
 protected:
-                    ADMColorScalerSimple *scaler;
                     ADM_vaSurface        *sourceSurface,*destSurface;
                     VAConfigID           configID;
                     VAContextID          contextID;
@@ -61,11 +52,11 @@ public:
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   vaapiVideoFilter,   // Class
                         1,0,0,              // Version
-                        ADM_UI_QT4+ADM_FEATURE_LIBVA,     // We need a display for VDPAU; so no cli...
+                        (ADM_UI_QT4+ADM_FEATURE_LIBVA), // We need a display for VDPAU; so no cli...
                         VF_TRANSFORM,            // Category
                         "vaapiResize",            // internal name (must be uniq!)
-                        QT_TRANSLATE_NOOP("vaapiResize","vaapi: Resize"),            // Display name
-                        QT_TRANSLATE_NOOP("vaapiResize","vaapi: Resize image using vaapi.") // Description
+                        QT_TRANSLATE_NOOP("vaapiResize","VA-API Resize"), // Display name
+                        QT_TRANSLATE_NOOP("vaapiResize","Resize image using VA-API.") // Description
 )
        
 /**
@@ -74,12 +65,7 @@ DECLARE_VIDEO_FILTER(   vaapiVideoFilter,   // Class
 bool vaapiVideoFilter::setupVaapi(void)
 {
     FilterInfo *prevInfo=previousFilter->getInfo();
-    FilterInfo *currentInfo=getInfo();
 
-    scaler=NULL;
-    info.width=configuration.targetWidth;
-    info.height=configuration.targetHeight;
-    
     if(configuration.targetWidth==prevInfo->width && configuration.targetHeight==prevInfo->height && !configuration.mpeg2ToPC)
     {
         ADM_info("Passthrough\n");
@@ -97,17 +83,17 @@ bool vaapiVideoFilter::setupVaapi(void)
     
     // Allocate source and target surface
     sourceSurface=ADM_vaSurface::allocateWithSurface(prevInfo->width,prevInfo->height);
-    destSurface=ADM_vaSurface::allocateWithSurface(currentInfo->width,currentInfo->height);
+    destSurface=ADM_vaSurface::allocateWithSurface(configuration.targetWidth,configuration.targetHeight);
     if(!sourceSurface || !destSurface )
     {
         ADM_warning("Cannot allocate surface\n");
         cleanupVaapi();
         return false;
     }
-    VASurfaceID surfaces[2]={sourceSurface->surface,destSurface->surface};
+    // Only the output surface matters for context creation
     VAStatus status= vaCreateContext(admLibVA::getDisplay(),configID,
                           configuration.targetWidth,configuration.targetHeight, VA_PROGRESSIVE,
-                          surfaces, 2,
+                          &destSurface->surface, 1,
                           &contextID);
     if(status!=VA_STATUS_SUCCESS)
     {
@@ -199,18 +185,19 @@ vaapiVideoFilter::~vaapiVideoFilter()
 */
 bool vaapiVideoFilter::configure( void) 
 {
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vaapiResize","Width :"),16,2048);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vaapiResize","Height :"),16,2048);
-     diaElemToggle    tMpeg2PC(&(configuration.mpeg2ToPC),   QT_TRANSLATE_NOOP("vaapiResize","mpeg->PC:"));
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vaapiResize","Width :"),16,MAXIMUM_SIZE);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vaapiResize","Height :"),16,MAXIMUM_SIZE);
+     diaElemToggle    tMpeg2PC(&(configuration.mpeg2ToPC),QT_TRANSLATE_NOOP("vaapiResize","mpeg->PC"));
      
      diaElem *elems[]={&tWidth,&tHeight,&tMpeg2PC};
      
      if(diaFactoryRun(QT_TRANSLATE_NOOP("vaapiResize","vaapi"),sizeof(elems)/sizeof(diaElem *),elems))
      {
-                ADM_info("New dimension : %d x %d\n",info.width,info.height);
+                ADM_info("Requested dimensions: %ux%u\n",configuration.targetWidth,configuration.targetHeight);
                 cleanupVaapi();
                 bool status=setupVaapi();
                 updateInfo(status);
+                ADM_info("Effective dimensions: %ux%u\n",info.width,info.height);
                 return true;
      }
      return false;
