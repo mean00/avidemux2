@@ -115,7 +115,7 @@ public:
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(       vaapiVideoFilterDeint, // Class
                             1,0,0, // Version
-                            ADM_UI_QT4+ADM_FEATURE_LIBVA, // We need a display for VA-API; so no cli...
+                            (ADM_UI_QT4+ADM_FEATURE_LIBVA), // We need a display for VA-API; so no cli...
                             VF_INTERLACING, // Category
                             "vaapiDeint", // internal name (must be uniq!)
                             QT_TRANSLATE_NOOP("vaapiDeint","VA-API Deinterlacer"), // Display name
@@ -157,17 +157,28 @@ bool vaapiVideoFilterDeint::setupVaapi(void)
         return false;
     }
     // Allocate output surface
-    outputSurface = ADM_vaSurface::allocateWithSurface(configuration.targetWidth, configuration.targetHeight);
+    uint32_t outWidth=configuration.targetWidth;
+    uint32_t outHeight=configuration.targetHeight;
+    FilterInfo *prevInfo=previousFilter->getInfo();
+    ADM_assert(prevInfo);
+
+    if(!configuration.resize)
+    {
+        outWidth=prevInfo->width;
+        outHeight=prevInfo->height;
+    }
+
+    outputSurface = ADM_vaSurface::allocateWithSurface(outWidth, outHeight);
     if(!outputSurface)
     {
-        ADM_warning("Cannot allocate output surface with size %u x %u\n", configuration.targetWidth, configuration.targetHeight);
+        ADM_warning("Cannot allocate output surface with size %u x %u\n", outWidth, outHeight);
         cleanupVaapi();
         return false;
     }
 
     VAStatus status = vaCreateContext(admLibVA::getDisplay(), configId,
-                        configuration.targetWidth, configuration.targetHeight,
-                        VA_PROGRESSIVE, &outputSurface->surface, 1, &contextId);
+                        outWidth, outHeight, VA_PROGRESSIVE,
+                        &outputSurface->surface, 1, &contextId);
 
     if(status != VA_STATUS_SUCCESS)
     {
@@ -270,8 +281,6 @@ bool vaapiVideoFilterDeint::setupVaapi(void)
         return false;
     }
     // Allocate source surfaces
-    FilterInfo *prevInfo=previousFilter->getInfo();
-    ADM_assert(prevInfo);
     for(i=0; i < queueLength; i++)
     {
         ADM_vaSurface *s = ADM_vaSurface::allocateWithSurface(prevInfo->width,prevInfo->height);
@@ -354,11 +363,22 @@ bool vaapiVideoFilterDeint::updateInfo(bool status)
         info.frameIncrement /= 2;
         if(info.timeBaseNum && info.timeBaseDen)
         {
-            if(info.timeBaseDen <= 30000 && (info.timeBaseNum & 1))
+            if(info.timeBaseDen <= 30000 || (info.timeBaseNum & 1))
                 info.timeBaseDen *= 2;
             else
                 info.timeBaseNum /= 2;
+            /* The frame increment passed along the filter chain may be based on
+            the average frame rate, but we need the minimum increment here.
+            Check whether the time base ~ matches the average increment and derive
+            the minimum increment from time base if possible. */
+            double f=1000.*1000.;
+            f /= info.timeBaseDen;
+            f *= info.timeBaseNum;
+            f += 0.49;
+            if((uint64_t)f > (uint64_t)info.frameIncrement*3/4)
+                info.frameIncrement = (uint32_t)f;
         }
+        ADM_info("New frame increment: %u us, new time base: %u / %u\n", info.frameIncrement, info.timeBaseNum, info.timeBaseDen);
     }
     if(configuration.resize)
     {
@@ -383,6 +403,7 @@ vaapiVideoFilterDeint::vaapiVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
     forwardRefs=NULL;
     backwardRefs=NULL;
     inputQueue=NULL;
+    queueLength=0;
     nbForwardRefs=0;
     nbBackwardRefs=0;
     deltaPts=0;
@@ -409,7 +430,7 @@ vaapiVideoFilterDeint::~vaapiVideoFilterDeint()
     cleanupVaapi();
 }
 /**
-    \fn updateInfo
+    \fn configure
 */
 bool vaapiVideoFilterDeint::configure( void) 
 {
@@ -432,16 +453,16 @@ bool vaapiVideoFilterDeint::configure( void)
     diaElemMenu fOrder(&configuration.fieldOrder, QT_TRANSLATE_NOOP("vaapideint","_Field Order:"), 2, fieldOrder);
     diaElemMenu outPol(&configuration.framePerField, QT_TRANSLATE_NOOP("vaapideint","_Output:"), 2, outputPolicy);
 
-    diaElemFrame frameDeint(QT_TRANSLATE_NOOP("vaapideint","Deinterlacing Settings"));
+    diaElemFrame frameDeint(QT_TRANSLATE_NOOP("vaapideint","Deinterlacing"));
     frameDeint.swallow(&dMode);
     frameDeint.swallow(&fOrder);
     frameDeint.swallow(&outPol);
 
     diaElemToggle tResize(&configuration.resize, QT_TRANSLATE_NOOP("vaapideint","_Resize"));
-    diaElemUInteger tWidth(&configuration.targetWidth, QT_TRANSLATE_NOOP("vaapideint","Width:"), 16, 3840);
-    diaElemUInteger tHeight(&configuration.targetHeight, QT_TRANSLATE_NOOP("vaapideint","Height:"), 16, 3840);
+    diaElemUInteger tWidth(&configuration.targetWidth, QT_TRANSLATE_NOOP("vaapideint","Width:"), 16, MAXIMUM_SIZE);
+    diaElemUInteger tHeight(&configuration.targetHeight, QT_TRANSLATE_NOOP("vaapideint","Height:"), 16, MAXIMUM_SIZE);
 
-    diaElemFrame frameResize(QT_TRANSLATE_NOOP("vaapideint","Output Settings"));
+    diaElemFrame frameResize(QT_TRANSLATE_NOOP("vaapideint","Transformation"));
     frameResize.swallow(&tResize);
     frameResize.swallow(&tWidth);
     frameResize.swallow(&tHeight);
@@ -466,7 +487,7 @@ bool vaapiVideoFilterDeint::configure( void)
         if(!status)
         {
             GUI_Error_HIG(QT_TRANSLATE_NOOP("vaapideint","VA-API Setup Error"),
-                          QT_TRANSLATE_NOOP("vaapideint","Could not setup VAAPI, purely passthrough operation."));
+                          QT_TRANSLATE_NOOP("vaapideint","Could not setup VA-API, purely passthrough operation."));
         }
         updateInfo(status);
         return true;
@@ -564,6 +585,7 @@ bool vaapiVideoFilterDeint::fillSlot(uint32_t slot,ADMImage *image)
 */
 bool vaapiVideoFilterDeint::rotateSlots(void)
 {
+    ADM_assert(queueLength);
     vaapiSlot *s = &inputQueue[0];
     if(s->surface)
     {
@@ -572,7 +594,7 @@ bool vaapiVideoFilterDeint::rotateSlots(void)
         else if(s->surface->refCount>0)
             s->surface->refCount--;
     }
-    for(int i=0; i < queueLength-1; i++)
+    for(int i=0; i < (int)queueLength-1; i++)
         inputQueue[i] = inputQueue[i+1];
     s = &inputQueue[queueLength-1];
     s->reset();
@@ -584,7 +606,7 @@ bool vaapiVideoFilterDeint::rotateSlots(void)
 */
 bool vaapiVideoFilterDeint::clearSlots(void)
 {
-    for(int i=0; i < queueLength; i++)
+    for(int i=0; i < (int)queueLength; i++)
     {
         vaapiSlot *s = &inputQueue[i];  
         if(s->surface)
@@ -657,7 +679,7 @@ bool vaapiVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
     image->Pts = src->pts;
     if(secondField && image->Pts != ADM_NO_PTS)
     {
-        if(deltaPts)
+        if(deltaPts < info.frameIncrement*2)
             image->Pts += deltaPts/2;
         else
             image->Pts += info.frameIncrement;
