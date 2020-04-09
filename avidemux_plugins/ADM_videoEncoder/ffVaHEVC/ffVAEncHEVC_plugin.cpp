@@ -29,7 +29,7 @@ void resetConfigurationData()
 {
 	ffvaHEVC_encoder defaultConf = VAENC_HEVC_CONF_DEFAULT;
 
-	memcpy(&VaEncHevcSettings, &defaultConf, sizeof(FFcodecSettings));
+	memcpy(&VaEncHevcSettings, &defaultConf, sizeof(VaEncHevcSettings));
 }
 
 /**
