@@ -28,7 +28,7 @@ extern "C" {
 #include "va/va.h"
 #include "ADM_image.h"
 
-#define VA_INVALID -1
+#define VA_INVALID VA_INVALID_ID
 class ADM_vaSurface;
 
 
