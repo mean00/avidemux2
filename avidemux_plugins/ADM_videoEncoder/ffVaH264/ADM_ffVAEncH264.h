@@ -20,7 +20,9 @@
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "ffVAEnc_H264.h"
 
-
+#define ADM_FFVAENC_RC_CRF 0
+#define ADM_FFVAENC_RC_CBR 1
+#define ADM_FFVAENC_RC_VBR 2
 
 #define VAENC_CONF_DEFAULT \
 { \
@@ -28,10 +30,10 @@
     100, \
     2, \
     4000, \
-    8000 \
+    8000, \
+    20, \
+    0 \
 }
-
-
 
 /**
         \class ADM_ffVAEncH264Encoder
@@ -40,10 +42,7 @@
 */
 class ADM_ffVAEncH264Encoder : public ADM_coreVideoEncoderFFmpeg
 {
-protected:
-
 public:
-
                            ADM_ffVAEncH264Encoder(ADM_coreVideoFilter *src,bool globalHeader);
 virtual                    ~ADM_ffVAEncH264Encoder();
 virtual        bool        configureContext(void);

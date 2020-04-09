@@ -21,6 +21,7 @@
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 //#define USE_NV12
+//#define USE_VBR
 #if 1
 #define aprintf(...) {}
 #else
@@ -62,10 +63,26 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
         SAY(HIGH)
         default:break;
 #undef SAY
-    };
-
-    _context->bit_rate=VaEncSettings.bitrate*1000;
-    _context->rc_max_rate=VaEncSettings.max_bitrate*1000;
+    }
+    switch(VaEncSettings.rc_mode)
+    {
+        case ADM_FFVAENC_RC_CRF:
+            _context->global_quality=VaEncSettings.quality;
+            break;
+        case ADM_FFVAENC_RC_VBR:
+#ifdef USE_VBR
+            _context->bit_rate=VaEncSettings.bitrate*1000;
+            _context->rc_max_rate=VaEncSettings.max_bitrate*1000;
+            break;
+#endif
+        case ADM_FFVAENC_RC_CBR:
+            _context->bit_rate=VaEncSettings.bitrate*1000;
+            _context->rc_max_rate=_context->bit_rate;
+            break;
+        default:
+            ADM_error("Unknown rate control mode %u\n",VaEncSettings.rc_mode);
+            return false;
+    }
     _context->max_b_frames=VaEncSettings.bframes;
     _context->pix_fmt =AV_PIX_FMT_VAAPI;
 
@@ -284,7 +301,7 @@ again:
     aprintf("[CODEC] Flags=%#x, QSCALE=%x, bit_rate=%d, quality=%d, qz=%d, incoming qz=%d\n",
         _context->flags,
         AV_CODEC_FLAG_QSCALE,
-        _context->bit_rate,
+        (int)_context->bit_rate,
         hwFrame->quality,
         hwFrame->quality / FF_QP2LAMBDA,
         q);
@@ -329,23 +346,46 @@ bool         ffVAEncConfigure(void)
         {FF_PROFILE_H264_MAIN,QT_TRANSLATE_NOOP("ffVAEncH264","Main")},
         {FF_PROFILE_H264_HIGH,QT_TRANSLATE_NOOP("ffVAEncH264","High")}
     };
+    diaMenuEntry rateControlMode[]={
+        {ADM_FFVAENC_RC_CRF,QT_TRANSLATE_NOOP("ffVAEncH264","Constant Rate Factor")},
+        {ADM_FFVAENC_RC_CBR,QT_TRANSLATE_NOOP("ffVAEncH264","Constant Bitrate")},
+#ifdef USE_VBR
+        {ADM_FFVAENC_RC_VBR,QT_TRANSLATE_NOOP("ffVAEncH264","Variable Bitrate")}
+#endif
+    };
 
 #define PX(x) &(conf->x)
 
     diaElemMenu profile(PX(profile),QT_TRANSLATE_NOOP("ffVAEncH264","Profile:"),3,h264Profile);
+#ifdef USE_VBR
+    diaElemMenu rcMode(PX(rc_mode),QT_TRANSLATE_NOOP("ffVAEncH264","Rate Control:"),3,rateControlMode);
+    diaElemUInteger maxBitrate(PX(max_bitrate), QT_TRANSLATE_NOOP("ffVAEncH264","Max Bitrate (kbps):"),1,50000);
+#else
+    diaElemMenu rcMode(PX(rc_mode),QT_TRANSLATE_NOOP("ffVAEncH264","Rate Control:"),2,rateControlMode);
+#endif
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffVAEncH264","GOP Size:"),1,250);
 
     if(conf->profile==FF_PROFILE_H264_CONSTRAINED_BASELINE)
         conf->bframes=0;
 
     diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffVAEncH264","Maximum Consecutive B-Frames:"),0,4);
+    diaElemUInteger quality(PX(quality), QT_TRANSLATE_NOOP("ffVAEncH264","Quality:"),1,51);
     diaElemUInteger bitrate(PX(bitrate), QT_TRANSLATE_NOOP("ffVAEncH264","Bitrate (kbps):"),1,50000);
-    diaElemUInteger maxBitrate(PX(max_bitrate), QT_TRANSLATE_NOOP("ffVAEncH264","Max Bitrate (kbps):"),1,50000);
     diaElemFrame rateControl(QT_TRANSLATE_NOOP("ffVAEncH264","Rate Control"));
     diaElemFrame frameControl(QT_TRANSLATE_NOOP("ffVAEncH264","Frame Control"));
 
+    rateControl.swallow(&rcMode);
+    rateControl.swallow(&quality);
     rateControl.swallow(&bitrate);
+#ifdef USE_VBR
     rateControl.swallow(&maxBitrate);
+
+    rcMode.link(rateControlMode+2,1,&maxBitrate);
+    rcMode.link(rateControlMode+2,1,&bitrate);
+#endif
+    rcMode.link(rateControlMode,1,&quality);
+    rcMode.link(rateControlMode+1,1,&bitrate);
+
     frameControl.swallow(&gopSize);
     frameControl.swallow(&maxBframes);
 

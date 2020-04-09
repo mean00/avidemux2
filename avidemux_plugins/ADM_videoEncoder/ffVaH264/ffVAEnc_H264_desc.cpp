@@ -5,5 +5,7 @@ extern const ADM_paramList ffvaenc_encoder_param[]={
  {"bframes",offsetof(ffvaenc_encoder,bframes),"uint32_t",ADM_param_uint32_t},
  {"bitrate",offsetof(ffvaenc_encoder,bitrate),"uint32_t",ADM_param_uint32_t},
  {"max_bitrate",offsetof(ffvaenc_encoder,max_bitrate),"uint32_t",ADM_param_uint32_t},
+ {"quality",offsetof(ffvaenc_encoder,quality),"uint32_t",ADM_param_uint32_t},
+ {"rc_mode",offsetof(ffvaenc_encoder,rc_mode),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };

@@ -29,7 +29,7 @@ void resetConfigurationData()
 {
 	ffvaenc_encoder defaultConf = VAENC_CONF_DEFAULT;
 
-	memcpy(&VaEncSettings, &defaultConf, sizeof(FFcodecSettings));
+	memcpy(&VaEncSettings, &defaultConf, sizeof(VaEncSettings));
 }
 
 /**

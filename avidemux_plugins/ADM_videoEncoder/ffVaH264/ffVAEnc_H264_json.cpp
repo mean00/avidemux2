@@ -10,6 +10,8 @@ json.addUint32("gopsize",key->gopsize);
 json.addUint32("bframes",key->bframes);
 json.addUint32("bitrate",key->bitrate);
 json.addUint32("max_bitrate",key->max_bitrate);
+json.addUint32("quality",key->quality);
+json.addUint32("rc_mode",key->rc_mode);
 return json.dumpToFile(file);
 };
 bool  ffvaenc_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,ffvaenc_encoder *key){
