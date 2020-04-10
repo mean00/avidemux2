@@ -14,13 +14,13 @@ MACRO(ADM_ADD_SHARED_LIBRARY name)
              endif(NOT ASAN)
 		TARGET_LINK_LIBRARIES( ${name} "stdc++") # for clang
 	endif (UNIX AND NOT APPLE)
-    IF(WIN32)
-        IF(MSVC)
-            set_property(TARGET ${name} PROPERTIES
-                VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}
+    #IF(WIN32)
+        #IF(MSVC)
+            set_target_properties(${name} 
+                PROPERTIES VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}
                 )
-        ENDIF(MSVC)
-    ENDIF(WIN32)
+        #ENDIF(MSVC)
+    #ENDIF(WIN32)
 ENDMACRO(ADM_ADD_SHARED_LIBRARY name)
 
 MACRO(ADM_TARGET_NO_EXCEPTION  name)
