@@ -21,6 +21,7 @@
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 //#define USE_NV12
+//#define USE_VBR
 #if 1
 #define aprintf(...) {}
 #else
@@ -55,8 +56,26 @@ bool ADM_ffVAEncHEVC::configureContext(void)
     ADM_info("Configuring context for VAAPI encoder\n");
     ADM_info("Our display: %#x\n",admLibVA::getDisplay());
 
-    _context->bit_rate=VaEncHevcSettings.bitrate*1000;
-    _context->rc_max_rate=VaEncHevcSettings.max_bitrate*1000;
+    switch(VaEncHevcSettings.rc_mode)
+    {
+        case ADM_FFVAENC_RC_CRF:
+            _context->global_quality=VaEncHevcSettings.quality;
+            break;
+        case ADM_FFVAENC_RC_VBR:
+#ifdef USE_VBR
+            _context->bit_rate=VaEncHevcSettings.bitrate*1000;
+            _context->rc_max_rate=VaEncHevcSettings.max_bitrate*1000;
+            break;
+#endif
+        case ADM_FFVAENC_RC_CBR:
+            _context->bit_rate=VaEncHevcSettings.bitrate*1000;
+            _context->rc_max_rate=_context->bit_rate;
+            break;
+        default:
+            ADM_error("Unknown rate control mode %u\n",VaEncHevcSettings.rc_mode);
+            return false;
+    }
+
     _context->max_b_frames=VaEncHevcSettings.bframes;
     _context->pix_fmt =AV_PIX_FMT_VAAPI;
 
@@ -315,18 +334,43 @@ bool ffVAEncHevcConfigure(void)
 {
     ffvaHEVC_encoder *conf=&VaEncHevcSettings;
 
+    diaMenuEntry rateControlMode[]={
+        {ADM_FFVAENC_RC_CRF,QT_TRANSLATE_NOOP("ffVAEncHEVC","Constant Rate Factor")},
+        {ADM_FFVAENC_RC_CBR,QT_TRANSLATE_NOOP("ffVAEncHEVC","Constant Bitrate")},
+#ifdef USE_VBR
+        {ADM_FFVAENC_RC_VBR,QT_TRANSLATE_NOOP("ffVAEncHEVC","Variable Bitrate")}
+#endif
+    };
+
 #define PX(x) &(conf->x)
 
+#ifdef USE_VBR
+    diaElemMenu rcMode(PX(rc_mode),QT_TRANSLATE_NOOP("ffVAEncHEVC","Rate Control:"),3,rateControlMode);
+    diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffVAEncHEVC","Max Bitrate (kbps):"),1,50000);
+#else
+    diaElemMenu rcMode(PX(rc_mode),QT_TRANSLATE_NOOP("ffVAEncHEVC","Rate Control:"),2,rateControlMode);
+#endif
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffVAEncHEVC","GOP Size:"),1,250);
-
     diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffVAEncHEVC","Maximum Consecutive B-Frames:"),0,4);
+
+    diaElemUInteger quality(PX(quality), QT_TRANSLATE_NOOP("ffVAEncHEVC","Quality:"),1,51);
     diaElemUInteger bitrate(PX(bitrate), QT_TRANSLATE_NOOP("ffVAEncHEVC","Bitrate (kbps):"),1,50000);
-    diaElemUInteger maxBitrate(PX(max_bitrate), QT_TRANSLATE_NOOP("ffVAEncHEVC","Max Bitrate (kbps):"),1,50000);
+
     diaElemFrame rateControl(QT_TRANSLATE_NOOP("ffVAEncHEVC","Rate Control"));
     diaElemFrame frameControl(QT_TRANSLATE_NOOP("ffVAEncHEVC","Frame Control"));
 
+    rateControl.swallow(&rcMode);
+    rateControl.swallow(&quality);
     rateControl.swallow(&bitrate);
+#ifdef USE_VBR
     rateControl.swallow(&maxBitrate);
+
+    rcMode.link(rateControlMode+2,1,&bitrate);
+    rcMode.link(rateControlMode+2,1,&maxBitrate);
+#endif
+    rcMode.link(rateControlMode,1,&quality);
+    rcMode.link(rateControlMode+1,1,&bitrate);
+
     frameControl.swallow(&gopSize);
     frameControl.swallow(&maxBframes);
 

@@ -6,4 +6,6 @@ uint32_t gopsize;
 uint32_t bframes;
 uint32_t bitrate;
 uint32_t max_bitrate;
+uint32_t quality;
+uint32_t rc_mode;
 }ffvaHEVC_encoder;
