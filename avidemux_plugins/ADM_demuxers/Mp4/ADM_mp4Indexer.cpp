@@ -516,6 +516,22 @@ uint32_t i,j,cur;
         ftot*=1000.*1000.;
         ftot/=trackScale;
         ftot+=0.49;
+        /* If the frame increment calculated from the time base is close to the average,
+        the stream may be a constant fps stream with a mixture of frames and fields or
+        simply have holes. The average is meaningless then. */
+        if(step && _videoScale)
+        {
+            double ti=1000.*1000.;
+            ti/=_videoScale;
+            ti*=step;
+            ti+=0.49;
+            if(ftot<ti*2)
+            {
+                _mainaviheader.dwMicroSecPerFrame=(int32_t)ti;
+                ADM_info("Using time base for frame increment %d us instead of average %d\n",(int32_t)ti,(int32_t)ftot);
+                return true;
+            }
+        }
         _mainaviheader.dwMicroSecPerFrame=(int32_t)ftot;
         ADM_info("Variable frame rate, %d us per frame on average.\n",_mainaviheader.dwMicroSecPerFrame);
 
