@@ -4,5 +4,7 @@ extern const ADM_paramList ffvaHEVC_encoder_param[]={
  {"bframes",offsetof(ffvaHEVC_encoder,bframes),"uint32_t",ADM_param_uint32_t},
  {"bitrate",offsetof(ffvaHEVC_encoder,bitrate),"uint32_t",ADM_param_uint32_t},
  {"max_bitrate",offsetof(ffvaHEVC_encoder,max_bitrate),"uint32_t",ADM_param_uint32_t},
+ {"quality",offsetof(ffvaHEVC_encoder,quality),"uint32_t",ADM_param_uint32_t},
+ {"rc_mode",offsetof(ffvaHEVC_encoder,rc_mode),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };

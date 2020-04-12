@@ -20,17 +20,19 @@
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "ffVAEnc_HEVC.h"
 
-
+#define ADM_FFVAENC_RC_CRF 0
+#define ADM_FFVAENC_RC_CBR 1
+#define ADM_FFVAENC_RC_VBR 2
 
 #define VAENC_HEVC_CONF_DEFAULT \
 { \
     100, \
     2, \
     2500, \
-    5000 \
+    5000, \
+    25, \
+    0 \
 }
-
-
 
 /**
         \class ADM_ffVAEncH264Encoder
