@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.0)
 SET(AVIDEMUX_API_VERSION 2.7)
 SET(ADM_PROJECT Avidemux_qt4)
 
+IF(WIN32)
+ ENABLE_LANGUAGE(RC) # ?
+ENDIF(WIN32)
+
+
+
 MESSAGE("")
 MESSAGE("#########################################")
 MESSAGE("Configure for Avidemux Qt Started")
