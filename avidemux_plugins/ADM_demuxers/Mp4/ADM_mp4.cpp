@@ -490,13 +490,15 @@ uint8_t    MP4Header::open(const char *name)
                 img.data=bfer;
                 uint32_t i,fields=0,nb=VDEO.nbIndex;
                 uint64_t processed=0;
-                DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("mp4demuxer","Decoding frame type"),VDEO.totalDataSize);
+                DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("mp4demuxer","Decoding frame type"),nb);
                 for(i=0;i<nb;i++)
                 {
+                    if(work && work->update(1,processed++))
+                        break; // cancelling frame type decoding is non-fatal
                     if(!getFrame(i,&img))
                     {
-                        ADM_warning("Could not get frame %u while decoding H.264 frame type, aborting.\n",i);
-                        break;
+                        ADM_warning("Could not get frame %u while decoding H.264 frame type.\n",i);
+                        continue;
                     }
                     if(img.flags & AVI_KEY_FRAME)
                     {
@@ -563,9 +565,6 @@ uint8_t    MP4Header::open(const char *name)
                         }
                         setFlag(i,flags);
                     }
-                    processed+=img.dataLength;
-                    if(work && work->update(i,processed))
-                        break; // cancelling frame type decoding is non-fatal
                 }
                 if(work) delete work;
                 work=NULL;
