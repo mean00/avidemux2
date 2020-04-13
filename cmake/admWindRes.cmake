@@ -37,6 +37,7 @@ MACRO(WINDRESIFY tag icon src)
             SET( ${src} ${ProductVersionFiles_${tag}})
            ELSE(MSVC)
             SET( ${src}  ${CMAKE_CURRENT_BINARY_DIR}/rcFile.o)
+            MESSAGE(STATUS "Generating RC object file : OUTPUT ${src} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i  ${ProductVersionFiles_${tag}}  -o ${${src}} -O coff --define VS_VERSION_INFO=1)")
             ADD_CUSTOM_COMMAND(OUTPUT ${src} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i  ${ProductVersionFiles_${tag}}  -o ${${src}} -O coff --define VS_VERSION_INFO=1)
            ENDIF(MSVC)
 
