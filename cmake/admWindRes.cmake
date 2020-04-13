@@ -25,9 +25,10 @@ MACRO(WINDRESIFY tag icon src)
             include(generate_product_version)
             generate_product_version(ProductVersionFiles_${tag}
                     NAME avidemux3
-                    VERSION_MAJOR 3
-                    VERSION_MINOR 2
-                    VERSION_PATCH 12
+                    VERSION_MAJOR ${CPACK_PACKAGE_VERSION_MAJOR}
+                    VERSION_MINOR ${CPACK_PACKAGE_VERSION_MINOR}
+                    VERSION_PATCH ${CPACK_PACKAGE_VERSION_P}
+                    ICON          ${ICON_PATH}
                     VERSION_REVISION 30303
                     COMPANY_NAME avidemux.org)
            SET( ${src} ${ProductVersionFiles_${tag}})
