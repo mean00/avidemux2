@@ -593,7 +593,7 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
 
     bits.getUEG();               // first mb in slice
     sliceType = bits.getUEG31(); // get_ue_golomb_31??
-    if(sps && sps->hasPocInfo && sps->log2MaxFrameNum > 3 && sps->log2MaxFrameNum < 17) // sanity check
+    if(sps && sps->log2MaxFrameNum > 3 && sps->log2MaxFrameNum < 17) // sanity check
     {
         bits.getUEG(); // skip PPS id
         frame = bits.get(sps->log2MaxFrameNum);
@@ -605,9 +605,12 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
             else
                 fieldFlags |= AVI_TOP_FIELD;
         }
-        if(*flags & AVI_KEY_FRAME) // from NAL
-            bits.getUEG(); // skip idr_pic_id
-        *poc_lsb = bits.get(sps->log2MaxPocLsb);
+        if(sps->hasPocInfo)
+        {
+            if(*flags & AVI_KEY_FRAME) // from NAL
+                bits.getUEG(); // skip idr_pic_id
+            *poc_lsb = bits.get(sps->log2MaxPocLsb);
+        }
     }
     if (sliceType > 9)
     {
