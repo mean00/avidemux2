@@ -978,6 +978,52 @@ theEnd:
     return r;
 }
 
+/**
+    \fn getRawH264SPS
+    \brief Find the first SPS in mp4 style buffer and copy it to dest, return SPS length.
+*/
+uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint8_t *dest, uint32_t maxsize)
+{
+    if(!dest || !maxsize)
+        return 0;
+
+    uint8_t *head=data, *tail=data+len;
+    uint8_t stream;
+
+    uint32_t i, length=0, nalSize=4;
+    // Check for short nalSize, i.e. size coded on 3 bytes
+    for(i=0; i<nalSize; i++)
+        length += head[i] << ((nalSize-i-1)*8);
+    if(length>len) nalSize=3;
+
+    while(head + nalSize < tail)
+    {
+        length=0;
+        for(i=0; i<nalSize; i++)
+            length += head[i] << ((nalSize-i-1)*8);
+        if(length > len)
+        {
+            ADM_warning ("Incomplete NALU, length: %u, available: %u\n", length, len);
+            return 0;
+        }
+        head += nalSize;
+        stream = *head & 0x1F;
+
+        if(stream == NAL_SPS)
+        {
+            if(length>maxsize)
+            {
+                ADM_warning("Buffer too small for SPS: need %u got %u\n",length,maxsize);
+                return 0;
+            }
+            memcpy(dest,head,length);
+            return length;
+        }
+        head += length;
+    }
+
+    return 0;
+}
 
 /**
         \fn extractSPSInfo2

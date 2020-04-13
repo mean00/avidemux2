@@ -79,6 +79,7 @@ ADM_COREUTILS6_EXPORT bool    ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incom
 
 ADM_COREUTILS6_EXPORT bool    extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
 ADM_COREUTILS6_EXPORT bool    extractSPSInfo_mp4Header(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
+ADM_COREUTILS6_EXPORT uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint8_t *dest, uint32_t maxsize);
 
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType(uint8_t *buffer,uint32_t len,uint32_t *flags,int *pocLsb,ADM_SPSInfo *sps,uint32_t *recovery=NULL);
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType_startCode(uint8_t *buffer,uint32_t len,uint32_t *flags,int *pocLsb,ADM_SPSInfo *sps,uint32_t *recovery=NULL);
