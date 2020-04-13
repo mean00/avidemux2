@@ -5,7 +5,7 @@
         ENDIF(CROSS)
 include(admTimeStamp)
 #
-MACRO(WINDRESIFY input icon src lib)
+MACRO(WINDRESIFY input icon src)
         # add icon and version info
         SET(FILEVERSION_STRING "${AVIDEMUX_VERSION}")
         SET(PRODUCTVERSION_STRING "${AVIDEMUX_VERSION}")
@@ -32,14 +32,11 @@ MACRO(WINDRESIFY input icon src lib)
         
         CONFIGURE_FILE(${input} ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc IMMEDIATE)
 
-        # Hack : We use mingw windres rather than visual one, the latest does not work for some reasons
         if (MINGW)
 	        SET(ADM_WIN_RES "adm.obj")
 	        SET( ${src} ${ADM_WIN_RES})
 	        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
         else (MINGW) # MSVC
-        	SET(ADM_WIN_RES "adm.res")
-	        SET(${lib} ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} )
-	        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O res --define VS_VERSION_INFO=1 --preprocessor=gccwr.exe --preprocessor-arg="-E" --preprocessor-arg="-xc-header" --preprocessor-arg="-DRC_INVOKED" )            
+            SET(${src}  ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc )
         endif (MINGW)
-ENDMACRO(WINDRESIFY input icon src lib)
+ENDMACRO(WINDRESIFY input icon src)

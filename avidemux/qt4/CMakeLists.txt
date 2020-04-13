@@ -2,12 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 SET(AVIDEMUX_API_VERSION 2.7)
 SET(ADM_PROJECT Avidemux_qt4)
 
-IF(WIN32)
- ENABLE_LANGUAGE(RC) # ?
-ENDIF(WIN32)
-
-
-
 MESSAGE("")
 MESSAGE("#########################################")
 MESSAGE("Configure for Avidemux Qt Started")
@@ -143,7 +137,7 @@ ADD_SOURCE_CFLAGS(../common/main.cpp "-DQT_FLAVOR=\"${QT_EXTENSION}\"")
 # Icon for windows
 ###########################################
 if (WIN32 )
-        WINDRESIFY(admWin32.rc.in "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico" src rclib)
+        WINDRESIFY(admWin32.rc.in "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico" src)
         SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${src})
 endif (WIN32)
 
@@ -214,8 +208,6 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_
 
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${PlatformLibs})
 
-# Resource file if any
-TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${rclib})
 #
 # i18n
 #
