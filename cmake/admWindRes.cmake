@@ -31,7 +31,15 @@ MACRO(WINDRESIFY tag icon src)
                     ICON          ${ICON_PATH}
                     VERSION_REVISION 30303
                     COMPANY_NAME avidemux.org)
-           SET( ${src} ${ProductVersionFiles_${tag}})
            MESSAGE(STATUS "RC file info : ${${src}}")
+           # In case of mingw we need to conver the .res to .o
+           IF(MSVC)
+            SET( ${src} ${ProductVersionFiles_${tag}})
+           ELSE(MSVC)
+            SET( ${src}  ${CMAKE_CURRENT_BINARY_DIR}/rcFile.o)
+            ADD_CUSTOM_COMMAND(OUTPUT ${src} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i  ${ProductVersionFiles_${tag}}  -o ${${src}} -O coff --define VS_VERSION_INFO=1)
+           ENDIF(MSVC)
+
+           
         ENDIF (WIN32)
 ENDMACRO(WINDRESIFY tag icon src)
