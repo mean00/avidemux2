@@ -5,7 +5,7 @@
         ENDIF(CROSS)
 include(admTimeStamp)
 #
-MACRO(WINDRESIFY input icon src)
+MACRO(WINDRESIFY input icon src lib)
         # add icon and version info
         SET(FILEVERSION_STRING "${AVIDEMUX_VERSION}")
         SET(PRODUCTVERSION_STRING "${AVIDEMUX_VERSION}")
@@ -39,7 +39,7 @@ MACRO(WINDRESIFY input icon src)
 	        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
         else (MINGW) # MSVC
         	SET(ADM_WIN_RES "adm.res")
-	        SET(${src} ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} )
+	        SET(${lib} ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} )
 	        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O res --define VS_VERSION_INFO=1 --preprocessor=gccwr.exe --preprocessor-arg="-E" --preprocessor-arg="-xc-header" --preprocessor-arg="-DRC_INVOKED" )            
         endif (MINGW)
-ENDMACRO(WINDRESIFY input icon src)
+ENDMACRO(WINDRESIFY input icon src lib)

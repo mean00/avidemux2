@@ -36,7 +36,7 @@ SET(ADM_JOB_SRCS
 # Version Info
 ###########################################
 if (WIN32)
-        WINDRESIFY(../../admWin32.rc.in "${CMAKE_CURRENT_SOURCE_DIR}/../../../common/xpm/adm.ico"  src) 
+        WINDRESIFY(../../admWin32.rc.in "${CMAKE_CURRENT_SOURCE_DIR}/../../../common/xpm/adm.ico"  src rclib) 
         SET(ADM_JOB_SRCS ${ADM_JOB_SRCS} ${src})
 endif (WIN32)
 
@@ -86,6 +86,7 @@ ENDIF (APPLE)
 TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ADM_coreJobs)
 TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ADM_coreUtils6)
 TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ADM_core6)
+TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ${rclib})
 #
 target_link_libraries(avidemux3_jobs_${QT_EXTENSION} "-lm -lstdc++")
 #

@@ -71,7 +71,7 @@ ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
 # Version Info
 ###########################################
 if (WIN32)
-        WINDRESIFY(admWin32.rc.in  "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico"  src) 
+        WINDRESIFY(admWin32.rc.in  "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico"  src rclib) 
         SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${src})
 endif (WIN32)
 
@@ -132,6 +132,7 @@ ENDIF (USE_SDL)
 if (WIN32 OR APPLE)
 	set_property(TARGET avidemux3_cli PROPERTY OUTPUT_NAME avidemux_cli)
 endif (WIN32 OR APPLE)
+target_link_libraries(avidemux3_cli ${rclib})
 
 IF (MINGW)
 	target_link_libraries(avidemux3_cli winmm -mwindows -Wl,-subsystem,console -Wl,--export-all-symbols)
