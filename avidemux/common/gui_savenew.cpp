@@ -213,18 +213,20 @@ bool abort=false;
         {
             if(bitstream.pts!=ADM_NO_PTS)
             {
-                float f=100;
-                f/=videoDuration;
-                f*=bitstream.pts;
-                uint32_t p=(uint32_t)f;
-                if(percent<p)
-                    percent=p; // avoid progress bar going backwards
                 if(!muxer->getEncoding()->isAlive())
                 {
                     abort=true;
                     break;
                 }
-                muxer->getEncoding()->setPercent(percent);
+                float f=100;
+                f/=videoDuration;
+                f*=bitstream.pts;
+                uint32_t p=(uint32_t)f;
+                if(percent<p)
+                {
+                    percent=p; // avoid progress bar going backwards
+                    muxer->getEncoding()->setPercent(percent);
+                }
                 uint32_t elapsed=ticktock.getElapsedMS();
                 if(percent>=1)
                 {
