@@ -7,10 +7,13 @@ bool  ffnvenc_encoder_jserialize(const char *file, const ffnvenc_encoder *key){
 admJson json;
 json.addUint32("preset",key->preset);
 json.addUint32("profile",key->profile);
+json.addUint32("rc_mode",key->rc_mode);
+json.addUint32("quality",key->quality);
 json.addUint32("gopsize",key->gopsize);
 json.addUint32("bframes",key->bframes);
 json.addUint32("bitrate",key->bitrate);
 json.addUint32("max_bitrate",key->max_bitrate);
+json.addBool("twopass",key->twopass);
 return json.dumpToFile(file);
 };
 bool  ffnvenc_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,ffnvenc_encoder *key){
