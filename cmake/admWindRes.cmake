@@ -5,15 +5,7 @@
         ENDIF(CROSS)
 include(admTimeStamp)
 #
-MACRO(WINDRESIFY input icon src)
-        # add icon and version info
-        SET(FILEVERSION_STRING "${AVIDEMUX_VERSION}")
-        SET(PRODUCTVERSION_STRING "${AVIDEMUX_VERSION}")
-        STRING(REPLACE "." "," FILEVERSION ${FILEVERSION_STRING})
-        STRING(REPLACE "." "," PRODUCTVERSION ${PRODUCTVERSION_STRING})
-        ADM_TIMESTAMP(date)
-        SET(PRODUCTVERSION "${PRODUCTVERSION},${date}")
-        SET(FILEVERSION "${FILEVERSION},${date}")
+MACRO(WINDRESIFY tag icon src)
 
         IF (ADM_CPU_X86_64)
 	        SET(WIN_RES_TARGET "pe-x86-64")
@@ -21,8 +13,6 @@ MACRO(WINDRESIFY input icon src)
 	        SET(WIN_RES_TARGET "pe-i386")
         ENDIF (ADM_CPU_X86_64)
 
-        #SET(AVIDEMUX_ICON "adm.ico")
-        #SET(FULL_PATH "${CMAKE_CURRENT_SOURCE_DIR}//avidemux/common/xpm/${AVIDEMUX_ICON}")
         # Convert to native absolute path
         SET(FULL_PATH "${icon}")
         get_filename_component(abs "${FULL_PATH}" ABSOLUTE)
@@ -30,13 +20,17 @@ MACRO(WINDRESIFY input icon src)
         # replace c:\foo by c:\\foo
         STRING(REPLACE "\\" "\\\\" ICON_PATH ${ICON_PATH})
         
-        CONFIGURE_FILE(${input} ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc IMMEDIATE)
 
-        if (MINGW)
-	        SET(ADM_WIN_RES "adm.obj")
-	        SET( ${src} ${ADM_WIN_RES})
-	        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
-        else (MINGW) # MSVC
-            SET(${src}  ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc )
-        endif (MINGW)
-ENDMACRO(WINDRESIFY input icon src)
+        IF(WIN32)
+            include(generate_product_version)
+            generate_product_version(ProductVersionFiles_${tag}
+                    NAME avidemux3
+                    VERSION_MAJOR 3
+                    VERSION_MINOR 2
+                    VERSION_PATCH 12
+                    VERSION_REVISION 30303
+                    COMPANY_NAME avidemux.org)
+           SET( ${src} ${ProductVersionFiles_${tag}})
+           MESSAGE(STATUS "RC file info : ${${src}}")
+        ENDIF (WIN32)
+ENDMACRO(WINDRESIFY tag icon src)
