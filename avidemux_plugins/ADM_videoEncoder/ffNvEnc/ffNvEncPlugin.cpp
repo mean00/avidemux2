@@ -27,7 +27,7 @@ void resetConfigurationData()
 {
 	ffnvenc_encoder defaultConf = NVENC_CONF_DEFAULT;
 
-	memcpy(&NvEncSettings, &defaultConf, sizeof(FFcodecSettings));
+	memcpy(&NvEncSettings, &defaultConf, sizeof(ffnvenc_encoder));
 }
 
 

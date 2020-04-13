@@ -51,19 +51,45 @@ ADM_ffNvEncEncoder::ADM_ffNvEncEncoder(ADM_coreVideoFilter *src,bool globalHeade
 */
 bool ADM_ffNvEncEncoder::configureContext(void)
 {
-    switch(NvEncSettings.preset)
+    _context->bit_rate = -1;
+    _context->rc_max_rate = -1;
+
+    _context->gop_size = NvEncSettings.gopsize;
+    _context->max_b_frames = NvEncSettings.bframes;
+
+    switch(NvEncSettings.rc_mode)
     {
-#define MIAOU(x,y) case NV_FF_PRESET_##x: ADM_assert(!av_opt_set(_context->priv_data,"preset",y, 0));break;  
-        
-     MIAOU(HP,"hp")   
-     MIAOU(BD,"bd")   
-     MIAOU(LL,"ll")   
-     MIAOU(LLHP,"llhp")   
-     MIAOU(LLHQ,"llhq")   
-     MIAOU(HQ,"hq")
-default:break;
+        case NV_FF_RC_AUTO:
+            switch(NvEncSettings.preset)
+            {
+#define MIAOU(x,y) case NV_FF_PRESET_##x: ADM_assert(!av_opt_set(_context->priv_data,"preset",y, 0));break;
+                MIAOU(HP,"hp")
+                MIAOU(HQ,"hq")
+                MIAOU(BD,"bd")
+                MIAOU(LL,"ll")
+                MIAOU(LLHP,"llhp")
+                MIAOU(LLHQ,"llhq")
+                default:break;
 #undef MIAOU
-    };
+            }
+            break;
+        case NV_FF_RC_CONSTQP:
+            _context->qmin = _context->qmax = NvEncSettings.quality;
+            ADM_assert(!av_opt_set(_context->priv_data,"rc","constqp",0));
+            break;
+        case NV_FF_RC_CBR:
+            _context->bit_rate = _context->rc_max_rate = NvEncSettings.bitrate*1000;
+            ADM_assert(!av_opt_set(_context->priv_data,"rc","cbr",0));
+            break;
+        case NV_FF_RC_VBR:
+            _context->bit_rate=NvEncSettings.bitrate*1000;
+            _context->rc_max_rate=NvEncSettings.max_bitrate*1000;
+            ADM_assert(!av_opt_set(_context->priv_data,"rc","vbr",0));
+            break;
+        default:
+            ADM_warning("Unsupported mode %d\n",NvEncSettings.rc_mode);
+            break;
+    }
 
     switch(NvEncSettings.profile)
     {
@@ -76,10 +102,6 @@ default:break;
 #undef MIAOU
     };
 
-    _context->bit_rate=NvEncSettings.bitrate*1000;
-    _context->rc_max_rate=NvEncSettings.max_bitrate*1000;
-    _context->gop_size=NvEncSettings.gopsize;
-    _context->max_b_frames=NvEncSettings.bframes;
 #ifdef USE_NV12    
     _context->pix_fmt=  AV_PIX_FMT_NV12;        
 #else    
@@ -203,7 +225,20 @@ link:
 
 */
 bool         ADM_ffNvEncEncoder::isDualPass(void)
-{   
+{
+    if(NvEncSettings.twopass)
+        return true;
+    if(NvEncSettings.rc_mode == NV_FF_RC_AUTO)
+    {
+        if(NvEncSettings.preset == NV_FF_PRESET_SLOW ||
+           NvEncSettings.preset == NV_FF_PRESET_LL ||
+           NvEncSettings.preset == NV_FF_PRESET_LLHP ||
+           NvEncSettings.preset == NV_FF_PRESET_LLHQ)
+            return true;
+    }else if(NvEncSettings.rc_mode == NV_FF_RC_CBR_LOWDELAY_HQ ||
+             NvEncSettings.rc_mode == NV_FF_RC_CBR_HQ ||
+             NvEncSettings.rc_mode == NV_FF_RC_VBR_HQ)
+        return true;
     return false;
 }
 
@@ -214,6 +249,12 @@ bool         ADM_ffNvEncEncoder::isDualPass(void)
 
 bool         ffNvEncConfigure(void)
 {
+diaMenuEntry meRcMode[]={
+  {NV_FF_RC_AUTO,QT_TRANSLATE_NOOP("ffnvenc","Controlled by Preset")},
+  {NV_FF_RC_CONSTQP,QT_TRANSLATE_NOOP("ffnvenc","Constant Quality")},
+  {NV_FF_RC_CBR,QT_TRANSLATE_NOOP("ffnvenc","Constant Bitrate")},
+  {NV_FF_RC_VBR,QT_TRANSLATE_NOOP("ffnvenc","Variable Bitrate")},
+};
 diaMenuEntry mePreset[]={ 
   {NV_FF_PRESET_HP,QT_TRANSLATE_NOOP("ffnvenc","Low Quality")},
   {NV_FF_PRESET_HQ,QT_TRANSLATE_NOOP("ffnvenc","High Quality")},
@@ -233,23 +274,52 @@ diaMenuEntry meProfile[]={
 
 #define PX(x) &(conf->x)
 
+        diaElemMenu      rcmode(PX(rc_mode),QT_TRANSLATE_NOOP("ffnvenc","RC Mode:"),4,meRcMode);
         diaElemMenu      qzPreset(PX(preset),QT_TRANSLATE_NOOP("ffnvenc","Preset:"),6,mePreset);
         diaElemMenu      profile(PX(profile),QT_TRANSLATE_NOOP("ffnvenc","Profile:"),3,meProfile);
+
+        diaElemUInteger  qual(PX(quality),QT_TRANSLATE_NOOP("ffnvenc","Quality:"),0,51);
         diaElemUInteger  bitrate(PX(bitrate),QT_TRANSLATE_NOOP("ffnvenc","Bitrate (kbps):"),1,50000);
         diaElemUInteger  maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,50000);
         diaElemUInteger  gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),8,250);
         diaElemUInteger  maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,4);
+
+        diaElemToggle    dualPass(PX(twopass),QT_TRANSLATE_NOOP("ffnvenc","2-Pass Mode"));
+        diaElemReadOnlyText hint(QT_TRANSLATE_NOOP("ffnvenc","Low Latency presets always use 2-pass mode"),NULL);
+
         diaElemFrame     rateControl(QT_TRANSLATE_NOOP("ffnvenc","Rate Control"));
         diaElemFrame     frameControl(QT_TRANSLATE_NOOP("ffnvenc","Frame Control"));
 
+        rateControl.swallow(&rcmode);
+        rateControl.swallow(&qzPreset);
+        rateControl.swallow(&qual);
         rateControl.swallow(&bitrate);
         rateControl.swallow(&maxBitrate);
+        rateControl.swallow(&dualPass);
+        rateControl.swallow(&hint);
+
+        rcmode.link(meRcMode,1,&qzPreset);
+        rcmode.link(meRcMode+1,1,&qual);
+        rcmode.link(meRcMode+1,1,&dualPass);
+        rcmode.link(meRcMode+2,1,&bitrate);
+        rcmode.link(meRcMode+2,1,&dualPass);
+        rcmode.link(meRcMode+3,1,&bitrate);
+        rcmode.link(meRcMode+3,1,&maxBitrate);
+        rcmode.link(meRcMode+3,1,&dualPass);
+
+        qzPreset.link(mePreset,1,&dualPass);
+        qzPreset.link(mePreset+1,1,&dualPass);
+        qzPreset.link(mePreset+2,1,&dualPass);
+
+        profile.link(meProfile+1,1,&maxBframes);
+        profile.link(meProfile+2,1,&maxBframes);
+
         frameControl.swallow(&gopSize);
         frameControl.swallow(&maxBframes);
           /* First Tab : encoding mode */
-        diaElem *diamode[]={&qzPreset,&profile,&rateControl,&frameControl};
+        diaElem *diamode[]={&profile,&rateControl,&frameControl};
 
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("ffnvenc","NVENC H.264 configuration"),4,diamode))
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("ffnvenc","NVENC H.264 configuration"),3,diamode))
         {
           
           return true;

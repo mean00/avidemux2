@@ -21,34 +21,47 @@
 
 enum FF_NVencPreset
 {
-  NV_FF_PRESET_HP=1,
-  NV_FF_PRESET_HQ=2,
-  NV_FF_PRESET_BD=3,
-  NV_FF_PRESET_LL=4,
-  NV_FF_PRESET_LLHP=5,
-  NV_FF_PRESET_LLHQ=6
+  NV_FF_PRESET_SLOW=1, // dual-pass
+  NV_FF_PRESET_MEDIUM=2,
+  NV_FF_PRESET_FAST=3,
+  NV_FF_PRESET_HP=4,
+  NV_FF_PRESET_HQ=5,
+  NV_FF_PRESET_BD=6,
+  NV_FF_PRESET_LL=7, // dual-pass
+  NV_FF_PRESET_LLHP=8, // dual-pass
+  NV_FF_PRESET_LLHQ=9 // dual-pass
 };
 
 enum FF_NVencProfile
 {
-  NV_FF_PROFILE_BASELINE=1,
-  NV_FF_PROFILE_MAIN=2,
-  NV_FF_PROFILE_HIGH=3
+  NV_FF_PROFILE_BASELINE=0,
+  NV_FF_PROFILE_MAIN=1,
+  NV_FF_PROFILE_HIGH=2
 };
 
-
+enum FF_NVencRateControl
+{
+  NV_FF_RC_AUTO=0, // controlled by preset
+  NV_FF_RC_CONSTQP=1,
+  NV_FF_RC_CBR=2,
+  NV_FF_RC_CBR_LOWDELAY_HQ=3, // dual-pass
+  NV_FF_RC_CBR_HQ=4, // dual-pass
+  NV_FF_RC_VBR=5,
+  NV_FF_RC_VBR_HQ=6 // dual-pass
+};
 
 #define NVENC_CONF_DEFAULT \
 { \
-		NV_FF_PRESET_HQ, \
-		NV_FF_PROFILE_HIGH, \
-		100, \
-		0, \
-                10000, \
-                20000,\
-	}
-
-
+  NV_FF_PRESET_HQ, \
+  NV_FF_PROFILE_HIGH, \
+  NV_FF_RC_AUTO, \
+  20, \
+  100, \
+  0, \
+  10000, \
+  20000,\
+  0 \
+}
 
 /**
         \class ADM_ffNvEncEncoder
