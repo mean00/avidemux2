@@ -188,6 +188,9 @@ bool abort=false;
         if(false==pass1->setup())
         {
             printf("[Save] setup failed for pass1 encoder\n");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Video"),QT_TRANSLATE_NOOP("adm","Cannot set up encoder for the first pass. "
+                "The configuration supplied to the encoder may be incompatible "
+                "or the encoder may depend on features unavailable on this system."));
             delete pass1;
             pass1=NULL;
             return NULL;
@@ -378,18 +381,14 @@ ADM_videoStream *admSaver::setupVideo(void)
         }
         if(encoder->setup()==false)
         {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Video"),QT_TRANSLATE_NOOP("adm","Cannot setup codec. Bitrate too low?"));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Video"),QT_TRANSLATE_NOOP("adm","Cannot set up encoder. "
+                "The configuration supplied to the encoder may be incompatible "
+                "or the encoder may depend on features unavailable on this system."));
             delete encoder;
             encoder=NULL;
             return NULL;
         }
         video= new ADM_videoStreamProcess(encoder);
-        if(!video)
-        {
-                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Video"),QT_TRANSLATE_NOOP("adm","Cannot create encoder"));
-                delete encoder;
-                return NULL;
-        }
     }  
     return video;
 }
