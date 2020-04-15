@@ -516,7 +516,7 @@ bool extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *spsinf
     for(i = 0; i < nalSize; i++)
     {
         length = (length << 8) + head[i];
-        if(length > len)
+        if(i && length > len)
         {
             nalSize = i;
             ADM_warning("Reducing NAL length size to %u\n",nalSize);
