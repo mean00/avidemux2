@@ -657,7 +657,7 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
     for(i = 0; i < nalSize; i++)
     {
         length = (length << 8) + head[i];
-        if(length > len)
+        if(i && length > len)
         {
             nalSize = i;
             break;
@@ -846,7 +846,7 @@ bool extractH264SEI(uint8_t *src, uint32_t inlen, uint8_t *dest, uint32_t bufsiz
     for(i = 0; i < nalSize; i++)
     {
         length = (length << 8) + tail[i];
-        if(length > inlen)
+        if(i && length > inlen)
         {
             nalSize = i;
             break;
@@ -1012,7 +1012,7 @@ uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint8_t *dest, uint32_t maxs
     for(i = 0; i < nalSize; i++)
     {
         length = (length << 8) + head[i];
-        if(length > len)
+        if(i && length > len)
         {
             nalSize = i;
             break;
