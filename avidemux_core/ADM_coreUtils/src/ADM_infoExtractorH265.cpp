@@ -500,16 +500,17 @@ bool extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *spsinf
     uint8_t *tail = buffer + len;
     uint8_t nalType;
 
+    uint32_t i, length = 0;
     uint32_t nalSize = 4;
     // Check for short nalSize
+    for(i = 0; i < nalSize; i++)
     {
-        uint32_t length = 0;
-        for(int i=0; i < nalSize; i++)
-            length += head[i] << (8*(nalSize-i-1));
+        length = (length << 8) + head[i];
         if(length > len)
         {
-            nalSize=3;
+            nalSize = i;
             ADM_warning("Reducing NAL length size to %u\n",nalSize);
+            break;
         }
     }
 
@@ -517,9 +518,9 @@ bool extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *spsinf
 
     while(head + nalSize < tail)
     {
-        uint32_t length = 0;
+        length = 0;
         for(int i=0; i < nalSize; i++)
-            length += head[i] << (8*(nalSize-i-1));
+            length = (length << 8) + head[i];
         if(!length)
         {
             ADM_warning("Zero length NAL unit?\n");
@@ -531,10 +532,12 @@ bool extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *spsinf
             return false;
         }
         head += nalSize;
+        len = (len > nalSize)? len - nalSize : 0;
         if(*(head) & 0x80)
         {
             ADM_warning("Invalid NAL header, skipping.\n");
             head += length;
+            len = (len > length)? len - length : 0;
             continue;
         }
         nalType = (*(head)>>1) & 0x3F;
@@ -567,6 +570,7 @@ bool extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *spsinf
                 break;
         }
         head+=length;
+        len = (len > length)? len - length : 0;
     }
     ADM_warning("No picture slice found in the buffer.\n");
     return false;

@@ -650,12 +650,18 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
 {
     uint8_t *head = buffer, *tail = buffer + len;
     uint8_t stream;
+    uint32_t i, length = 0;
 
-    uint32_t nalSize=4;
-// Check for short nalSize, i.e. size coded on 3 bytes
+    // Try to detect number of bytes used to code NAL length. Shaky.
+    uint32_t nalSize = 4;
+    for(i = 0; i < nalSize; i++)
     {
-        uint32_t length =(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
-        if(length>len) nalSize=3;
+        length = (length << 8) + head[i];
+        if(length > len)
+        {
+            nalSize = i;
+            break;
+        }
     }
     uint32_t recovery=0xff;
     int p=-1;
@@ -663,10 +669,9 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
     *flags=0;
     while (head + nalSize < tail)
     {
-
-        uint32_t length =(head[0] << 16) + (head[1] << 8) + (head[2] << 0) ;
-        if(nalSize==4)
-            length=(length<<8)+head[3];
+        length = 0;
+        for(i = 0; i < nalSize; i++)
+            length = (length << 8) + head[i];
         if (length > len)// || length < 2)
         {
             ADM_warning ("Warning , incomplete nal (%u/%u),(%0x/%0x)\n", length, len, length, len);
@@ -674,6 +679,7 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
             return 0;
         }
         head += nalSize;        // Skip nal lenth
+        len = (len > nalSize)? len - nalSize : 0;
         int ref=(*(head)>>5) & 3;
         stream = *(head) & 0x1F;
 
@@ -722,6 +728,7 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int
                 break;
         }
         head+=length;
+        len = (len > length)? len - length : 0;
     }
     ADM_warning ("No stream\n");
     return 0;
@@ -832,26 +839,33 @@ bool extractH264SEI(uint8_t *src, uint32_t inlen, uint8_t *dest, uint32_t bufsiz
 {
     uint8_t *tail = src, *head = src + inlen;
     uint8_t stream;
+    uint32_t i, length = 0;
 
+    // Try to detect NAL length size.
     uint32_t nalSize = 4;
-// Check for short nalSize, i.e. size coded on 3 bytes
+    for(i = 0; i < nalSize; i++)
     {
-        uint32_t length = (tail[0] << 24) + (tail[1] << 16) + (tail[2] << 8) + tail[3];
-        if(length > inlen) nalSize = 3;
+        length = (length << 8) + tail[i];
+        if(length > inlen)
+        {
+            nalSize = i;
+            break;
+        }
     }
     uint32_t unregistered = 0;
 
     while(tail + nalSize < head)
     {
-        uint32_t length = (tail[0] << 16) + (tail[1] << 8) + (tail[2] << 0);
-        if(nalSize == 4)
-            length = (length << 8) + tail[3];
+        length = 0;
+        for(i = 0; i < nalSize; i++)
+            length = (length << 8) + tail[i];
         if(length > inlen)
         {
             ADM_warning ("Incomplete NALU, length: %u, available: %u\n", length, inlen);
             return false;
         }
         tail += nalSize;
+        inlen = (inlen > nalSize)? inlen - nalSize : 0;
         stream = *(tail) & 0x1f;
 
         if(stream == NAL_SEI)
@@ -872,6 +886,7 @@ bool extractH264SEI(uint8_t *src, uint32_t inlen, uint8_t *dest, uint32_t bufsiz
             }
         }
         tail += length;
+        inlen = (inlen > length)? inlen - length : 0;
     }
 
     return false;
@@ -993,22 +1008,29 @@ uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint8_t *dest, uint32_t maxs
     uint8_t stream;
 
     uint32_t i, length=0, nalSize=4;
-    // Check for short nalSize, i.e. size coded on 3 bytes
-    for(i=0; i<nalSize; i++)
-        length += head[i] << ((nalSize-i-1)*8);
-    if(length>len) nalSize=3;
+    // Try to detect NAL length size.
+    for(i = 0; i < nalSize; i++)
+    {
+        length = (length << 8) + head[i];
+        if(length > len)
+        {
+            nalSize = i;
+            break;
+        }
+    }
 
     while(head + nalSize < tail)
     {
         length=0;
-        for(i=0; i<nalSize; i++)
-            length += head[i] << ((nalSize-i-1)*8);
+        for(i = 0; i < nalSize; i++)
+            length = (length << 8) + head[i];
         if(length > len)
         {
             ADM_warning ("Incomplete NALU, length: %u, available: %u\n", length, len);
             return 0;
         }
         head += nalSize;
+        len = (len>nalSize)? len-nalSize : 0;
         stream = *head & 0x1F;
 
         if(stream == NAL_SPS)
@@ -1022,6 +1044,7 @@ uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint8_t *dest, uint32_t maxs
             return length;
         }
         head += length;
+        len = (len>length)? len-length : 0;
     }
 
     return 0;
