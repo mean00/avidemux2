@@ -28,6 +28,20 @@ ADM_videoStreamCopySeiInjector::ADM_videoStreamCopySeiInjector(uint64_t startTim
 {
     ADM_info("SEI injector created\n");
     uint32_t length=0;
+    seiLen=0;
+    nalSize=0;
+    {
+        uint8_t *extra;
+        uint32_t extraLen=0;
+        getExtraData(&extraLen,&extra);
+        if(extraLen)
+            nalSize=ADM_getNalSizeH264(extra,extraLen);
+        if(!nalSize)
+        {
+            ADM_warning("Cannot get valid extradata, passthrough operation.\n");
+            return;
+        }
+    }
     if(video_body->getUserDataUnregistered(startTime, seiBuf, ADM_H264_MAX_SEI_LENGTH, &length))
     {
         ADM_info("SEI message with x264 build info present, NAL unit length: %u\n",length);
@@ -36,7 +50,6 @@ ADM_videoStreamCopySeiInjector::ADM_videoStreamCopySeiInjector(uint64_t startTim
     }else
     {
         ADM_info("No x264 build info found, purely passthrough operation.\n");
-        seiLen=0;
     }
 }
 
@@ -61,7 +74,7 @@ bool  ADM_videoStreamCopySeiInjector::getPacket(ADMBitstream *out)
         return true;
     // Check whether this particular SEI message is already present.
     uint32_t len=0;
-    if(extractH264SEI(out->data,out->len,NULL,ADM_H264_MAX_SEI_LENGTH,&len))
+    if(extractH264SEI(out->data, out->len, nalSize, NULL, ADM_H264_MAX_SEI_LENGTH, &len))
     {
         if(len!=seiLen)
             ADM_warning("SEI message present, but the length is different?\n");
@@ -80,16 +93,12 @@ bool  ADM_videoStreamCopySeiInjector::getPacket(ADMBitstream *out)
     uint8_t *tail=out->data;
     uint8_t *head=tail+out->len;
     uint8_t stream;
-    uint32_t nalSize=3;
 
     while(tail + nalSize < head)
     {
-        nalSize=4;
-        uint32_t length=(tail[0]<<16)+(tail[1]<<8)+tail[2];
-        if((length<<8)+tail[3] > out->len)
-            nalSize=3;
-        else
-            length=(length<<8)+tail[3];
+        uint32_t i,length=0;
+        for(i=0; i<length; i++)
+            length=(length<<8)+tail[i];
         stream=*(tail+nalSize)&0x1F;
         switch(stream)
         {

@@ -242,7 +242,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
             parser->readBin(readBuffer+rpt,size-3);
-            extractH264FrameType(readBuffer,rpt+size-3,&flags,NULL,NULL,&_H264Recovery);
+            extractH264FrameType(readBuffer,rpt+size-3,0,&flags,NULL,NULL,&_H264Recovery);
             if(flags & AVI_KEY_FRAME)
             {
                 printf("[MKV/H264] Frame %" PRIu32" is a keyframe\n",(uint32_t)Track->index.size());

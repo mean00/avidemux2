@@ -488,10 +488,10 @@ static bool decodeSliceHeaderH265(uint8_t *head, uint8_t *tail, uint32_t *flags,
 
 /**
  *  \fn extractH265FrameType
- *  \brief Parse access unit, find a slice and decode the header
+ *  \brief Parse access unit using given NALU length size nalSize (0: autodetect), find a slice and decode the header.
  *         The caller must set *poc to previous POC if applicable, else to INT_MIN
  */
-bool extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *spsinfo, uint32_t *flags, int *poc)
+bool extractH265FrameType(uint8_t *buffer, uint32_t len, uint32_t nalSize, ADM_SPSinfoH265 *spsinfo, uint32_t *flags, int *poc)
 {
     if(!spsinfo || !flags || !poc)
         return false;
@@ -501,19 +501,19 @@ bool extractH265FrameType(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *spsinf
     uint8_t nalType;
 
     uint32_t i, length = 0;
-    uint32_t nalSize = 4;
-    // Check for short nalSize
-    for(i = 0; i < nalSize; i++)
-    {
-        length = (length << 8) + head[i];
-        if(i && length > len)
+    if(!nalSize || nalSize > 4)
+    { // Try to detect number of bytes used to code NAL length. Shaky.
+        nalSize = 4;
+        for(i = 0; i < nalSize; i++)
         {
-            nalSize = i;
-            ADM_warning("Reducing NAL length size to %u\n",nalSize);
-            break;
+            length = (length << 8) + head[i];
+            if(i && length > len)
+            {
+                nalSize = i;
+                break;
+            }
         }
     }
-
     *flags = 0;
 
     while(head + nalSize < tail)
@@ -654,5 +654,24 @@ bool extractH265FrameType_startCode(uint8_t *buffer, uint32_t len, ADM_SPSinfoH2
     }
     ADM_warning("No picture slice found in the buffer.\n");
     return false;
+}
+
+/**
+ *  \fn ADM_getNalSizeH265
+ *  \brief extract NALU length size from hvcC header
+ */
+uint32_t ADM_getNalSizeH265(uint8_t *extra, uint32_t len)
+{
+    if(len < 24)
+    {
+        ADM_warning("Invalid HEVC extradata length %u\n",len);
+        return 0;
+    }
+    if(extra[0] != 1)
+    {
+        ADM_warning("Invalid HEVC extradata.\n");
+        return 0;
+    }
+    return (extra[22] & 3) + 1;
 }
 // EOF

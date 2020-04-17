@@ -52,6 +52,9 @@ extern int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsIn
 #define seiprintf(...) {}
 #endif
 
+extern bool ADM_findAnnexBStartCode(uint8_t *start, uint8_t *end, uint8_t *outstartcode,
+                uint32_t *offset, bool *fivebytes);
+
 /**
     \fn ADM_getH264SpsPpsFromExtraData
     \brief Returns a copy of PPS/SPS extracted from extrdata
@@ -92,8 +95,25 @@ bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
     return true;
 }
 
-extern bool ADM_findAnnexBStartCode(uint8_t *start, uint8_t *end, uint8_t *outstartcode,
-                uint32_t *offset, bool *fivebytes);
+/**
+    \fn ADM_getNalSizeH264
+    \brief extract NALU length size from avcC header
+*/
+uint32_t ADM_getNalSizeH264(uint8_t *extra, uint32_t len)
+{
+    if(len < 9)
+    {
+        ADM_warning("Invalid H.264 extradata length %u\n",len);
+        return 0;
+    }
+    if(extra[0] != 1)
+    {
+        ADM_warning("Invalid H.264 extradata\n");
+        return 0;
+    }
+    return (extra[4] & 3) + 1;
+}
+
 /**
     \fn ADM_escapeH264
     \brief Add escape stuff
@@ -640,27 +660,30 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
 }
 
 /**
-      \fn extractH264FrameType
-      \brief return frametype in flags (KEY_FRAME or 0).
-             To be used only with  mkv/mp4 nal type (i.e. no startcode)
-                    but 4 bytes NALU
-
+    \fn extractH264FrameType
+    \brief Parse access unit in buffer of size len, return frametype in flags (KEY/P/B).
+           nalSize should be either the NALU length size value retrieved from extradata or 0 for autodetect.
+           If ADM_SPSInfo is provided, return POC LSB or -1 if implicit or on error.
+           Return value: 1 on success, 0 on failure.
+           To be used only with AVCC (mkv/mp4) nal type (i.e. no startcode)
 */
-uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t *flags, int *pocLsb, ADM_SPSInfo *sps, uint32_t *extRecovery)
+uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t nalSize, uint32_t *flags, int *pocLsb, ADM_SPSInfo *sps, uint32_t *extRecovery)
 {
     uint8_t *head = buffer, *tail = buffer + len;
     uint8_t stream;
     uint32_t i, length = 0;
 
-    // Try to detect number of bytes used to code NAL length. Shaky.
-    uint32_t nalSize = 4;
-    for(i = 0; i < nalSize; i++)
-    {
-        length = (length << 8) + head[i];
-        if(i && length > len)
+    if(!nalSize || nalSize > 4)
+    { // Try to detect number of bytes used to code NAL length. Shaky.
+        nalSize = 4;
+        for(i = 0; i < nalSize; i++)
         {
-            nalSize = i;
-            break;
+            length = (length << 8) + head[i];
+            if(i && length > len)
+            {
+                nalSize = i;
+                break;
+            }
         }
     }
     uint32_t recovery=0xff;
@@ -835,21 +858,23 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
  *  \fn extractH264SEI
  *  \brief If present, copy SEI containing x264 version info from access unit src to dest
  */
-bool extractH264SEI(uint8_t *src, uint32_t inlen, uint8_t *dest, uint32_t bufsize, uint32_t *outlen)
+bool extractH264SEI(uint8_t *src, uint32_t inlen, uint32_t nalSize, uint8_t *dest, uint32_t bufsize, uint32_t *outlen)
 {
     uint8_t *tail = src, *head = src + inlen;
     uint8_t stream;
     uint32_t i, length = 0;
 
-    // Try to detect NAL length size.
-    uint32_t nalSize = 4;
-    for(i = 0; i < nalSize; i++)
-    {
-        length = (length << 8) + tail[i];
-        if(i && length > inlen)
+    if(!nalSize || nalSize > 4)
+    { // Try to detect NAL length size.
+        nalSize = 4;
+        for(i = 0; i < nalSize; i++)
         {
-            nalSize = i;
-            break;
+            length = (length << 8) + tail[i];
+            if(i && length > inlen)
+            {
+                nalSize = i;
+                break;
+            }
         }
     }
     uint32_t unregistered = 0;
@@ -999,7 +1024,7 @@ theEnd:
     \fn getRawH264SPS
     \brief Find the first SPS in mp4 style buffer and copy it to dest, return SPS length.
 */
-uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint8_t *dest, uint32_t maxsize)
+uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint32_t nalSize, uint8_t *dest, uint32_t maxsize)
 {
     if(!dest || !maxsize)
         return 0;
@@ -1007,15 +1032,18 @@ uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint8_t *dest, uint32_t maxs
     uint8_t *head=data, *tail=data+len;
     uint8_t stream;
 
-    uint32_t i, length=0, nalSize=4;
-    // Try to detect NAL length size.
-    for(i = 0; i < nalSize; i++)
-    {
-        length = (length << 8) + head[i];
-        if(i && length > len)
+    uint32_t i, length=0;
+    if(!nalSize || nalSize > 4)
+    { // Try to detect NAL length size.
+        nalSize = 4;
+        for(i = 0; i < nalSize; i++)
         {
-            nalSize = i;
-            break;
+            length = (length << 8) + head[i];
+            if(i && length > len)
+            {
+                nalSize = i;
+                break;
+            }
         }
     }
 
