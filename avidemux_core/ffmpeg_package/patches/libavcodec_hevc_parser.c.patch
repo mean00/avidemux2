@@ -1,6 +1,6 @@
 --- libavcodec/hevc_parser.c.orig	2019-12-31 22:35:23.000000000 +0100
-+++ libavcodec/hevc_parser.c	2020-04-01 15:21:20.711929323 +0200
-@@ -31,6 +31,14 @@
++++ libavcodec/hevc_parser.c	2020-04-16 23:51:04.726124182 +0200
+@@ -31,6 +31,13 @@
  #include "internal.h"
  #include "parser.h"
  
@@ -8,14 +8,13 @@
 +const HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s);
 +const HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s);
 +const HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s);
-+int ff_hevc_parser_get_nal_length_size(AVCodecParserContext *s);
 +/* /MEANX */
 +
 +
  #define START_CODE 0x000001 ///< start_code_prefix_one_3bytes
  
  #define IS_IRAP_NAL(nal) (nal->type >= 16 && nal->type <= 23)
-@@ -171,6 +179,166 @@
+@@ -171,6 +178,156 @@
  }
  
  /**
@@ -165,16 +164,6 @@
 +
 +    vps = (HEVCVPS *)ref->data;
 +    return vps;
-+}
-+/**
-+    \fn ff_hevc_parser_get_nal_size_length
-+    \brief eum: get number of bytes used to code nal length
-+*/
-+int ff_hevc_parser_get_nal_length_size(AVCodecParserContext *s)
-+{
-+    HEVCParserContext *ctx = s->priv_data;
-+    if (!ctx) return 0;
-+    return ctx->nal_length_size;
 +}
 +// /MEANX
 +

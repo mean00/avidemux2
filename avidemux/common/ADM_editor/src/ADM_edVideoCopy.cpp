@@ -266,9 +266,12 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         bool AnnexB=false;
         uint8_t *extra;
         uint32_t extraLen=0;
+        uint32_t nalSize=0;
         demuxer->getExtraHeaderData(&extraLen,&extra);
         if(!extraLen)
             AnnexB=true;
+        else
+            nalSize=ADM_getNalSizeH264(extra,extraLen);
         // Allocate memory to hold compressed frame
         ADMCompressedImage img;
         buffer=new uint8_t[MAX_FRAME_LENGTH];
@@ -286,7 +289,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         if(AnnexB)
             outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &poc, &sps, &recoveryDistance);
         else
-            outcome=extractH264FrameType(img.data, img.dataLength, &(img.flags), &poc, &sps, &recoveryDistance);
+            outcome=extractH264FrameType(img.data, img.dataLength, nalSize, &(img.flags), &poc, &sps, &recoveryDistance);
         if(!outcome)
         {
             ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
@@ -344,6 +347,17 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 ADM_warning("Combining AVCC and AnnexB type H.264 streams is currently not supported.\n");
                 cut=ADM_EDITOR_CUT_POINT_MISMATCH;
                 BOWOUT
+            }
+            // For AVCC, check that NALU length is coded on the same number of bytes
+            if(extraLen)
+            {
+                uint32_t nalSize2=ADM_getNalSizeH264(extra,extraLen);
+                if(nalSize2 != nalSize)
+                {
+                    ADM_warning("NAL unit length size mismatch: %u vs %u\n",nalSize2,nalSize);
+                    cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                    BOWOUT
+                }
             }
             // Get SPS info
             ADM_SPSInfo sps2;
@@ -426,7 +440,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             if(AnnexB)
                 outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &poc2, &sps, NULL);
             else
-                outcome=extractH264FrameType(img.data, img.dataLength, &(img.flags), &poc2, &sps, NULL);
+                outcome=extractH264FrameType(img.data, img.dataLength, nalSize, &(img.flags), &poc2, &sps, NULL);
             if(!outcome)
             {
                 ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
@@ -473,9 +487,12 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         bool AnnexB=false;
         uint8_t *extra;
         uint32_t extraLen=0;
+        uint32_t nalSize=0;
         demuxer->getExtraHeaderData(&extraLen,&extra);
         if(!extraLen)
             AnnexB=true;
+        else
+            nalSize=ADM_getNalSizeH265(extra,extraLen);
         // Allocate memory to hold compressed frame
         ADMCompressedImage img;
         buffer=new uint8_t[MAX_FRAME_LENGTH];
@@ -516,6 +533,17 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 cut=ADM_EDITOR_CUT_POINT_MISMATCH;
                 BOWOUT
             }
+            // For HVCC, check that NALU length is coded on the same number of bytes
+            if(extraLen)
+            {
+                uint32_t nalSize2=ADM_getNalSizeH265(extra,extraLen);
+                if(nalSize2 != nalSize)
+                {
+                    ADM_warning("NAL unit length size mismatch: %u vs %u\n",nalSize2,nalSize);
+                    cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                    BOWOUT
+                }
+            }
             // Get SPS info
             ADM_SPSinfoH265 sps2;
             if(!getH265SPSInfo(vid,&sps2))
@@ -534,7 +562,6 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             MATCH(output_flag_present_flag)
             MATCH(field_info_present)
             MATCH(address_coding_length)
-            MATCH(nal_length_size)
             if(!match)
             {
                 ADM_warning("SPS mismatch, saved video will be broken.\n");
@@ -583,7 +610,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         if(AnnexB)
             outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc2);
         else
-            outcome=extractH265FrameType(img.data, img.dataLength, &sps, &(img.flags), &poc2);
+            outcome=extractH265FrameType(img.data, img.dataLength, nalSize, &sps, &(img.flags), &poc2);
         if(!outcome)
         {
             ADM_warning("Cannot get HEVC frame type and Picture Order Count value.\n");
@@ -612,7 +639,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         if(AnnexB)
             outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc);
         else
-            outcome=extractH265FrameType(img.data, img.dataLength, &sps, &(img.flags), &poc);
+            outcome=extractH265FrameType(img.data, img.dataLength, nalSize, &sps, &(img.flags), &poc);
         if(!outcome)
         {
             ADM_warning("Cannot get HEVC frame type and Picture Order Count value.\n");
@@ -726,6 +753,7 @@ static bool bFrameDroppable(uint32_t fcc,_VIDEOS *vid,ADMCompressedImage *img=NU
         uint32_t maxSize=img->dataLength;
         maxSize+=512; // arbitrary safety margin
         uint32_t size=maxSize;
+        uint32_t nalSize=0;
         notStackAllocator buf(maxSize);
         bool AnnexB=false;
         if(vid && vid->_aviheader)
@@ -735,6 +763,8 @@ static bool bFrameDroppable(uint32_t fcc,_VIDEOS *vid,ADMCompressedImage *img=NU
             vid->_aviheader->getExtraHeaderData(&extraLen,&extra);
             if(!extraLen)
                 AnnexB=true;
+            else
+                nalSize=ADM_getNalSizeH264(extra,extraLen);
         }
         if(AnnexB)
             size=ADM_convertFromAnnexBToMP4(img->data,img->dataLength,buf.data,maxSize);
@@ -746,7 +776,7 @@ static bool bFrameDroppable(uint32_t fcc,_VIDEOS *vid,ADMCompressedImage *img=NU
             bool gotSps=getH264SPSInfo(vid,&sps);
             if(!gotSps)
                 ADM_warning("No SPS info available to check fields.\n");
-            if(extractH264FrameType(buf.data,size,&(img->flags),NULL, gotSps? &sps : NULL,NULL) &&
+            if(extractH264FrameType(buf.data, size, nalSize, &(img->flags), NULL, gotSps? &sps : NULL,NULL) &&
                     (img->flags & AVI_NON_REF_FRAME) &&
                     !(img->flags & (AVI_STRUCTURE_TYPE_MASK+AVI_FIELD_STRUCTURE)))
                 return true;
@@ -1140,13 +1170,19 @@ bool ADM_Composer::getUserDataUnregistered(uint64_t start, uint8_t *buffer, uint
     demuxer->getVideoInfo(&info);
     if(!isH264Compatible(info.fcc))
         return false;
+    uint8_t *extra;
+    uint32_t extraLen=0;
+    demuxer->getExtraHeaderData(&extraLen,&extra);
+    if(!extraLen) // AnnexB
+        return false;
+    uint32_t nalSize=ADM_getNalSizeH264(extra,extraLen);
     ADMCompressedImage img;
     uint8_t *space=new uint8_t[MAX_FRAME_LENGTH];
     img.data=space;
     if(!demuxer->getFrame(0,&img))
         return false;
 
-    bool r=extractH264SEI(img.data,img.dataLength,buffer,max,length);
+    bool r=extractH264SEI(img.data,img.dataLength,nalSize,buffer,max,length);
 
     delete [] space;
     space=NULL;

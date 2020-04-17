@@ -481,6 +481,7 @@ uint8_t    MP4Header::open(const char *name)
             ADM_SPSInfo info;
             if(extractSPSInfo_mp4Header(VDEO.extraData,VDEO.extraDataSize,&info))
             {
+                uint32_t nalSize = ADM_getNalSizeH264(VDEO.extraData,VDEO.extraDataSize);
                 uint32_t prevSpsLen=0;
                 uint8_t *prevSps=NULL, *curSps=NULL;
 #define MAX_SPS_SIZE 1024
@@ -506,7 +507,7 @@ uint8_t    MP4Header::open(const char *name)
                         if(!curSps)
                             curSps=new uint8_t[MAX_SPS_SIZE];
                         memset(curSps,0,MAX_SPS_SIZE);
-                        uint32_t curSpsLen = getRawH264SPS(img.data,img.dataLength,curSps,MAX_SPS_SIZE);
+                        uint32_t curSpsLen = getRawH264SPS(img.data, img.dataLength, nalSize, curSps, MAX_SPS_SIZE);
                         bool match=true;
                         if(curSpsLen)
                         {
@@ -551,7 +552,7 @@ uint8_t    MP4Header::open(const char *name)
                         }
                     }
                     uint32_t flags;
-                    if(extractH264FrameType(img.data,img.dataLength,&flags,NULL,&info))
+                    if(extractH264FrameType(img.data,img.dataLength,nalSize,&flags,NULL,&info))
                     {
                         if(flags & AVI_FIELD_STRUCTURE)
                         {
