@@ -20,7 +20,8 @@
 #include "ADM_Video.h"
 
 #include "fourcc.h"
-
+#include "ADM_codecType.h"
+#include "ADM_videoInfoExtractor.h"
 #include "ADM_mkv.h"
 
 #include "mkv_tags.h"
@@ -234,6 +235,18 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         {
             _tracks[0].extraData=entry.extraData;
             _tracks[0].extraDataLen=entry.extraDataLen;
+        }
+#define FRESH !_tracks[0].paramCache && !_tracks[0].paramCacheSize
+        if(isH264Compatible(entry.fcc) && FRESH)
+        {
+            ADM_SPSInfo info;
+            if(extractSPSInfo_mp4Header(_tracks[0].extraData, _tracks[0].extraDataLen, &info))
+            {
+                uint32_t sz=sizeof(ADM_SPSInfo);
+                _tracks[0].paramCache=new uint8_t[sz];
+                memcpy(_tracks[0].paramCache, &info, sz);
+                _tracks[0].paramCacheSize=sz;
+            }
         }
         _tracks[0].streamIndex=entry.trackNo;
 

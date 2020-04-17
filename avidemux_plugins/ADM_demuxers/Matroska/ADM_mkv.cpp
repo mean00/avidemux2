@@ -954,7 +954,8 @@ uint8_t mkvHeader::close(void)
     _parser=NULL;
 
 
-#define FREEIF(i) { if(_tracks[i].extraData) delete [] _tracks[i].extraData; _tracks[i].extraData=0;}
+#define FREEIF(i) { if(_tracks[i].extraData) delete [] _tracks[i].extraData; _tracks[i].extraData=0; \
+                    if(_tracks[i].paramCache) delete [] _tracks[i].paramCache; _tracks[i].paramCache=0; }
   if(_isvideopresent)
   {
       FREEIF(0);

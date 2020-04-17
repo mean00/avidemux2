@@ -59,6 +59,8 @@ public:
         length=0;
         extraData=NULL;
         extraDataLen=0;
+        paramCache=NULL;
+        paramCacheSize=0;
         headerRepeatSize=0;
         _sizeInBytes=0;
         _defaultFrameDuration=0;
@@ -77,6 +79,8 @@ public:
   /* Used for both */
   uint8_t    *extraData;
   uint32_t   extraDataLen;
+  uint8_t    *paramCache;
+  uint32_t   paramCacheSize;
   /* */
   uint32_t   headerRepeatSize;
   uint8_t    headerRepeat[MKV_MAX_REPEAT_HEADER_SIZE];
