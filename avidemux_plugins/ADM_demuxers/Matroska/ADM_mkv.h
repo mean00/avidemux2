@@ -59,6 +59,8 @@ public:
         length=0;
         extraData=NULL;
         extraDataLen=0;
+        infoCache=NULL;
+        infoCacheSize=0;
         paramCache=NULL;
         paramCacheSize=0;
         headerRepeatSize=0;
@@ -79,7 +81,9 @@ public:
   /* Used for both */
   uint8_t    *extraData;
   uint32_t   extraDataLen;
-  uint8_t    *paramCache;
+  uint8_t    *infoCache; // decoded SPS & friends
+  uint32_t   infoCacheSize;
+  uint8_t    *paramCache; // raw SPS data
   uint32_t   paramCacheSize;
   /* */
   uint32_t   headerRepeatSize;
