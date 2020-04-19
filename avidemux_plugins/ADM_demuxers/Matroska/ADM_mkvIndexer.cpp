@@ -276,10 +276,12 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             parser->readBin(readBuffer+rpt,size-3);
             uint8_t *begin=readBuffer;
             uint8_t *end=readBuffer+size-3+rpt;
+            bool following=false;
+            int picFound=0;
             while(begin<end)
             {
                 int code=mkvFindStartCode(begin,end);
-                if(code==-1)
+                if(!picFound && code==-1)
                 {
                     ADM_warning("[Mpg2InMkv]No startcode found\n");
                     break;
@@ -289,6 +291,10 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 {
                     int picType=begin[1]>>3;
                     begin+=4;
+                    picFound++;
+                    following=true;
+                    if(picFound>1)
+                        continue;
                     picType&=7;
                     switch(picType)
                     {
@@ -298,7 +304,38 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                         case 3: ix.flags=AVI_B_FRAME;break;
                         default: ADM_warning("[Mpeg2inMkv]Bad pictype : %d\n",picType);
                     }
-                    break;
+                }
+                if(code==0xB5) // extension
+                {
+                    int id=(begin[0]<<8)+begin[1];
+                    id>>=12;
+                    begin+=2;
+                    if(id!=8)
+                    {
+                        following=false;
+                        continue;
+                    }
+                    if(picFound>1)
+                    {
+                        //printf("Multiple pics in a single buffer, clearing field structure.\n");
+                        ix.flags &= ~AVI_STRUCTURE_TYPE_MASK;
+                        break;
+                    }
+                    if(!following)
+                    {
+                        ADM_warning("Skipping picture coding extension not following picture.\n");
+                        begin+=3;
+                        continue;
+                    }
+                    following=false;
+                    int picStruct=begin[0]&3;
+                    begin+=3; // skip also parity and progressive flags
+                    switch(picStruct)
+                    {
+                        case 1: ix.flags|=AVI_TOP_FIELD+AVI_FIELD_STRUCTURE; break;
+                        case 2: ix.flags|=AVI_BOTTOM_FIELD+AVI_FIELD_STRUCTURE; break;
+                        default:break;
+                    }
                 }
             }
         }else if(isVC1Compatible(_videostream.fccHandler))
