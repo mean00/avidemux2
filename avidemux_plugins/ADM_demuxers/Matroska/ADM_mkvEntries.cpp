@@ -226,16 +226,30 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
             _tracks[0].extraData=entry.extraData;
             _tracks[0].extraDataLen=entry.extraDataLen;
         }
-#define FRESH !_tracks[0].paramCache && !_tracks[0].paramCacheSize
-        if(isH264Compatible(entry.fcc) && FRESH)
+        if(isH264Compatible(entry.fcc) && _tracks[0].extraData
+            && _tracks[0].extraDataLen > 8 // FIXME
+            && (_tracks[0].extraData[5] & 0x1F) == 1) // 1x SPS
         {
             ADM_SPSInfo info;
             if(extractSPSInfo_mp4Header(_tracks[0].extraData, _tracks[0].extraDataLen, &info))
             {
                 uint32_t sz=sizeof(ADM_SPSInfo);
-                _tracks[0].paramCache=new uint8_t[sz];
-                memcpy(_tracks[0].paramCache, &info, sz);
-                _tracks[0].paramCacheSize=sz;
+                if(_tracks[0].infoCache)
+                    delete [] _tracks[0].infoCache;
+                _tracks[0].infoCache=new uint8_t[sz];
+                memcpy(_tracks[0].infoCache, &info, sz);
+                _tracks[0].infoCacheSize=sz;
+                // now copy SPS to the raw parameter sets cache
+                uint8_t *p=_tracks[0].extraData;
+                sz=(*(p+6)<<8)+*(p+7);
+                if(_tracks[0].extraDataLen > sz+8)
+                {
+                    if(_tracks[0].paramCache)
+                        delete [] _tracks[0].paramCache;
+                    _tracks[0].paramCache=new uint8_t[sz];
+                    memcpy(_tracks[0].paramCache,p+8,sz);
+                    _tracks[0].paramCacheSize=sz;
+                }
             }
         }
         _tracks[0].streamIndex=entry.trackNo;
