@@ -44,7 +44,7 @@ static const MenuEntry _myMenuFile[] = {
             {MENU_SUBACTION,QT_TRANSLATE_NOOP("adm","Save Selection as JPEG"),NULL,ACT_SAVE_BUNCH_OF_JPG,NULL,NULL,0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Close"),              NULL,ACT_CLOSE,         NULL,"Ctrl+W",0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Information"),        NULL,ACT_VIDEO_PROPERTIES, MKICON(info),NULL,0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Information"),        NULL,ACT_VIDEO_PROPERTIES, MKICON(info),"Alt+Return",0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Connect to avsproxy"),NULL,ACT_AVS_PROXY,NULL,0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
