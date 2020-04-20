@@ -1706,9 +1706,6 @@
    <property name="text">
     <string>&amp;Information...</string>
    </property>
-   <property name="shortcut">
-    <string>Alt+Return</string>
-   </property>
   </action>
   <action name="actionSave_video">
    <property name="icon">
@@ -1765,18 +1762,6 @@
    </property>
    <property name="toolTip">
     <string>Save Project</string>
-   </property>
-  </action>
-  <action name="actionCalculator">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/calc.png</normaloff>:/new/prefix1/pics/calc.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Calculator...</string>
-   </property>
-   <property name="shortcut">
-    <string>F7</string>
    </property>
   </action>
   <action name="actionPreviewInput">
