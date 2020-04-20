@@ -17,6 +17,7 @@
  ***************************************************************************/
 #include "ADM_inttype.h"
 #include <QKeyEvent>
+#include <QAction>
 #include "Q_shell.h"
 #include "ADM_default.h"
 #include "ui_shell.h"
@@ -40,6 +41,12 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine, std::vector <shellHistory
     }
     ui.setupUi(this);
     ui.textBrowser_2->installEventFilter(this);
+
+    QAction *ev = new QAction(this);
+    ev->setShortcut(Qt::CTRL + Qt::Key_Return);
+    connect(ev,SIGNAL(triggered(bool)),this,SLOT(evaluate(bool)));
+    addAction(ev);
+
     connect((ui.evalute),SIGNAL(clicked(bool)),this,SLOT(evaluate(bool)));
     connect((ui.clear),SIGNAL(clicked(bool)),this,SLOT(clear(bool)));
 #ifndef __APPLE__
