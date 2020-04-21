@@ -66,14 +66,14 @@ void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
 {
     memset(header,0,sizeof(*header));
     header->dwMicroSecPerFrame= ADM_UsecFromFps1000(video->getAvgFps1000()); //int32_t	dwMicroSecPerFrame;	// frame display rate (or 0L)
-    header->dwMaxBytesPerSec=8*1000*1000; //int32_t	dwMaxBytesPerSec;	// max. transfer rate
+    //header->dwMaxBytesPerSec=8*1000*1000; //int32_t	dwMaxBytesPerSec;	// max. transfer rate
     header->dwPaddingGranularity=0; //int32_t	dwPaddingGranularity;	// pad to multiples of this
 					// size; normally 2K.
     header->dwFlags= AVIF_HASINDEX + AVIF_ISINTERLEAVED; // FIXME HAS INDEX //int32_t	dwFlags;		// the ever-present flags
     //header->dwTotalFrames=0; //int32_t	dwTotalFrames;		// # frames in file
     header->dwInitialFrames=0; //int32_t	dwInitialFrames;
    // Must be set by caller  header->dwStreams=int32_t	dwStreams;
-    header->dwSuggestedBufferSize=64*1024;// int32_t	dwSuggestedBufferSize;
+    //header->dwSuggestedBufferSize=64*1024;// int32_t	dwSuggestedBufferSize;
 
     header->dwWidth=video->getWidth();//int32_t	dwWidth;
     header->dwHeight=video->getHeight();//int32_t	dwHeight;
@@ -99,7 +99,7 @@ void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
 	header->dwRate=video->getAvgFps1000();// int32_t	dwRate;		/* dwRate / dwScale == samples/second */
 	header->dwStart=0;// int32_t	dwStart;
 	header->dwLength=0; // int32_t	dwLength;	/* In units above... */
-	header->dwSuggestedBufferSize=1000000;// int32_t	dwSuggestedBufferSize;
+	//header->dwSuggestedBufferSize=1000000;// int32_t	dwSuggestedBufferSize;
 	header->dwQuality=0;// int32_t	dwQuality;
 	header->dwSampleSize=0;// int32_t	dwSampleSize;
         header->rcFrame.right=video->getWidth();// int32_t	dwSampleSize;
