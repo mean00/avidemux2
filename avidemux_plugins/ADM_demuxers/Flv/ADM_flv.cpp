@@ -20,7 +20,6 @@ Not sure if the timestamp is PTS or DTS (...)
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_videoInfoExtractor.h"
 #include "ADM_aacinfo.h"
 #include "ADM_flv.h"
 
@@ -571,7 +570,6 @@ uint8_t flvHeader::open(const char *name)
   uint64_t pos=0;
   bool firstVideo=true;
   bool tryProbedAvgFps=false;
-  bool bFramesPresent=false;
   int32_t firstCts=0;
   _isvideopresent=0;
   _isaudiopresent=0;
@@ -745,7 +743,19 @@ uint8_t flvHeader::open(const char *name)
             }
             if(videoCodec==FLV_CODECID_H264)
             {
-                if(true==extraHeader(videoTrack,&remaining,true,&cts)) continue;
+                if(true==extraHeader(videoTrack,&remaining,true,&cts))
+                {
+                    ADM_info("Retrieving H.264 info...\n");
+                    nalsize=ADM_getNalSizeH264(videoTrack->extraData,videoTrack->extraDataLen);
+                    spsinfo=new ADM_SPSInfo;
+                    if(false==extractSPSInfo_mp4Header(videoTrack->extraData,videoTrack->extraDataLen,spsinfo))
+                    {
+                        ADM_warning("Cannot decode SPS\n");
+                        delete [] spsinfo;
+                        spsinfo=NULL;
+                    }
+                    continue;
+                }
                 if(!videoTrack->_nbIndex) firstCts=cts;
                 if(!bFramesPresent && firstCts!=cts)
                     bFramesPresent=true;
@@ -757,12 +767,33 @@ uint8_t flvHeader::open(const char *name)
 #ifdef USE_BUFFERED_IO
             if(remaining)
             {
+                bool check=bFramesPresent;
                 parser->getpos(&pos);
                 insertVideo(pos,remaining,frameType,dts,pts);
+                if(!ptsInvalid && bFramesPresent!=check)
+                {
+                    ADM_warning("Invalid PTS detected at frame %d\n",(int)videoTrack->_nbIndex-1);
+                    ptsInvalid=true;
+                }
+                pos+=remaining;
+                remaining=0;
+                parser->setpos(pos);
             }
 #else
             if(remaining)
-                insertVideo(ftello(_fd),remaining,frameType,dts,pts);
+            {
+                bool check=bFramesPresent;
+                pos=ftello(_fd);
+                insertVideo(pos,remaining,frameType,dts,pts);
+                if(!ptsInvalid && bFramesPresent!=check)
+                {
+                    ADM_warning("Invalid PTS detected at frame %d\n",(int)videoTrack->_nbIndex-1);
+                    ptsInvalid=true;
+                }
+                pos+=remaining;
+                remaining=0;
+                fseeko(_fd,pos,SEEK_SET);
+            }
 #endif
           }
            break;
@@ -774,30 +805,16 @@ uint8_t flvHeader::open(const char *name)
   // Udpate frame count etc..
   ADM_info("[FLV] Found %u frames\n",videoTrack->_nbIndex);
   
-  if(!metaWidth && !metaHeight &&  videoCodec==FLV_CODECID_H264)
-  {
-      ADM_info("No width / height, trying to get them..\n");
-      ADM_SPSInfo spsinfo;
-      if(extractSPSInfo_mp4Header(videoTrack->extraData,videoTrack->extraDataLen,&spsinfo))
-      {
-                ADM_info("W %d\n",spsinfo.width);
-                ADM_info("H %d\n",spsinfo.height);
-                if(spsinfo.width && spsinfo.height)
-                {
-                    metaWidth=spsinfo.width;
-                    metaHeight=spsinfo.height;
-                    updateDimensionWithMeta(FLV_CODECID_H264);
-                }else
-                {
-                        ADM_warning("Cannot decode SPS\n");
-                }
-      }else
-      {
-          ADM_warning("Cannot extract pps and sps\n");
-      }
-          
-  }
-  
+    if(videoCodec==FLV_CODECID_H264 && spsinfo->width && spsinfo->height)
+    {
+        ADM_info("Setting width and height to values obtained from codec\n");
+        ADM_info("W %d\n",spsinfo->width);
+        ADM_info("H %d\n",spsinfo->height);
+        metaWidth=spsinfo->width;
+        metaHeight=spsinfo->height;
+        updateDimensionWithMeta(FLV_CODECID_H264);
+    }
+
    _videostream.dwLength= _mainaviheader.dwTotalFrames=videoTrack->_nbIndex;
 
     // Can we force a constant frame rate based on metadata?
@@ -872,7 +889,8 @@ uint8_t flvHeader::open(const char *name)
     _video_bih.biBitCount=24;
     _videostream.dwInitialFrames= 0;
     _videostream.dwStart= 0;
-    videoTrack->_index[0].flags=AVI_KEY_FRAME;
+    videoTrack->_index[0].flags &= ~AVI_B_FRAME;
+    videoTrack->_index[0].flags |= AVI_KEY_FRAME;
 
     // if it is AAC and we have extradata...
     if(_isaudiopresent && wavHeader.encoding && audioTrack->extraDataLen>=2)
@@ -1050,6 +1068,25 @@ uint8_t flvHeader::insertVideo(uint64_t pos,uint32_t size,uint32_t frameType,uin
     if(pts==0xffffffff) x->ptsUs=ADM_NO_PTS;
         else
       x->ptsUs=pts*1000LL;
+    if(videoCodec==FLV_CODECID_H264 && nalsize && spsinfo)
+    {
+        uint8_t *buffer=new uint8_t[size];
+        if(read(size,buffer))
+        { // Keep fingers crossed that we don't encounter inband SPS changing midstream.
+            uint32_t flags=0;
+            if(extractH264FrameType(buffer,size,nalsize,&flags,NULL,spsinfo))
+            {
+                if(!!(flags & AVI_KEY_FRAME) != (frameType==1))
+                    ADM_warning("Container and codec disagree about frame %u: %s says keyframe.\n",
+                        videoTrack->_nbIndex,(flags & AVI_KEY_FRAME)? "codec" : "container");
+                if(flags & AVI_B_FRAME)
+                    bFramesPresent=true;
+                x->flags=flags;
+                videoTrack->_nbIndex++;
+                return 1;
+            }
+        }
+    }
     if(frameType==1)
     {
         x->flags=AVI_KEY_FRAME;
@@ -1360,12 +1397,14 @@ uint8_t flvHeader::close(void)
 #endif
   if(_audioStream) delete _audioStream;
   if(_access) delete _access;
+  if(spsinfo) delete spsinfo;
 
   _filename=NULL;
   videoTrack=NULL;
   audioTrack=NULL;
   _audioStream=NULL;
   _access=NULL;
+  spsinfo=NULL;
   return 1;
 }
 /**
@@ -1392,7 +1431,10 @@ uint8_t flvHeader::close(void)
     metaFps1000=0;
     metaFrameWidth=0;
     metaFrameHeight=0;
-
+    ptsInvalid=false;
+    bFramesPresent=false;
+    nalsize=0;
+    spsinfo=NULL;
 }
 /**
     \fn flvHeader
