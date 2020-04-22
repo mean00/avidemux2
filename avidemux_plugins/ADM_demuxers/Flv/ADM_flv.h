@@ -22,6 +22,7 @@
 
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
+#include "ADM_videoInfoExtractor.h"
 
 #define USE_BUFFERED_IO
 
@@ -113,6 +114,11 @@ class flvHeader         :public vidHeader
     /* */
     uint32_t            metaWidth,metaHeight,metaFps1000,videoCodec;
     uint32_t            metaFrameWidth,metaFrameHeight;
+    // special treatment for H.264
+    bool                ptsInvalid;
+    bool                bFramesPresent;
+    uint32_t            nalsize;
+    ADM_SPSInfo         *spsinfo;
 
 #ifdef USE_BUFFERED_IO
     fileParser  *parser;
@@ -172,7 +178,7 @@ virtual     uint8_t                 getNbAudioStreams(void);
 
 virtual   bool                    getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
 virtual   bool                    setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
-
+virtual   bool                    providePts(void) { return !ptsInvalid; }
 
 };
 #endif
