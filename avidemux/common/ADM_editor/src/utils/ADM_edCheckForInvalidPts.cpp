@@ -54,33 +54,55 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     uint64_t inc=vid->timeIncrementInUs;
 
     stats.reset();
-    ADM_info("Checking file for broken PTS...\n");
-    ADM_info("Checking %d frames out of %d.\n",checkRange,totalFrames);
-    DIA_workingBase *working=createWorking(QT_TRANSLATE_NOOP("ADM_Composer","Checking if timestamps are valid.."));
-    for(int i=0;i<checkRange;i++)
-    {
-        DecodeNextPicture(seg->_reference);
-        working->update(i,checkRange);
-    }
-    goToTimeVideo(from);
-    delete working;
-    ADM_info("-------- Stats :----------\n");
-#define INFO(x) ADM_info(#x":%d\n",stats.x);
-    INFO(  nbBFrames);
-    INFO(  nbPFrames);
-    INFO(  nbIFrames);
-    INFO(  nbNoImage);
-    INFO(  nbPtsgoingBack);
-    ADM_info("-------- /Stats ----------\n");
 
-    if(!stats.nbBFrames && hdr->providePts()==false)
+    bool bFramesPresent=false;
+    for(int i=0;i<totalFrames;i++)
+    {
+        uint32_t flags;
+        if(!hdr->getFlags(i,&flags))
+            break;
+        if(flags & AVI_B_FRAME)
+        {
+            bFramesPresent=true;
+            break;
+        }
+    }
+
+    /* If the demuxer knows that B-frames are present but cannot provide
+    valid pts, we may proceed with pts reconstruction right away. */
+    if(!bFramesPresent || hdr->providePts())
+    {
+        ADM_info("Checking file for broken PTS...\n");
+        ADM_info("Checking %d frames out of %d.\n",checkRange,totalFrames);
+        DIA_workingBase *working=createWorking(QT_TRANSLATE_NOOP("ADM_Composer","Checking if timestamps are valid.."));
+        for(int i=0;i<checkRange;i++)
+        {
+            DecodeNextPicture(seg->_reference);
+            working->update(i,checkRange);
+        }
+        goToTimeVideo(from);
+        delete working;
+        ADM_info("-------- Stats :----------\n");
+#define INFO(x) ADM_info(#x":%d\n",stats.x);
+        INFO(  nbBFrames)
+        INFO(  nbPFrames)
+        INFO(  nbIFrames)
+        INFO(  nbNoImage)
+        INFO(  nbPtsgoingBack)
+        ADM_info("-------- /Stats ----------\n");
+
+        if(stats.nbBFrames)
+            bFramesPresent=true;
+    }
+
+    if(!bFramesPresent && hdr->providePts()==false)
     {
         ADM_info("No B-frames and no PTS, setting PTS equal DTS\n");
         return setPtsEqualDts(hdr,inc);
     }
     // check whether DTS are completely missing, ignore the first frame
     bool noDts=true;
-    for(uint32_t i=1;i<totalFrames;i++)
+    for(int i=1;i<totalFrames;i++)
     {
         uint64_t pts,dts;
         hdr->getPtsDts(i,&pts,&dts);
@@ -96,7 +118,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
         return setPtsEqualDts(hdr,inc);
     }
 
-    if(stats.nbPtsgoingBack>1 || (stats.nbBFrames && hdr->providePts()==false))
+    if(stats.nbPtsgoingBack>1 || (bFramesPresent && hdr->providePts()==false))
     {
 #ifdef WORK_AROUND_BAD_PTS
         if(!GUI_Question(QT_TRANSLATE_NOOP("ADM_Composer",
@@ -112,7 +134,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
             goToTimeVideo(from);
             vid->lastSentFrame=0;
             uint64_t bfdelay=2*inc; // FIXME B-frame delay
-            for(uint32_t i=0;i<totalFrames;i++)
+            for(int i=0;i<totalFrames;i++)
             {
                 uint64_t pts,dts;
                 hdr->getPtsDts(i,&pts,&dts);
@@ -131,7 +153,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
             }
 
             DIA_workingBase *decoding=createWorking(QT_TRANSLATE_NOOP("ADM_Composer","Decoding video..."));
-            for(uint32_t i=0;i<totalFrames;i++)
+            for(int i=0;i<totalFrames;i++)
             {
                 if(false==decoding->isAlive())
                 {
