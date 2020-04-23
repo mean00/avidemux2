@@ -805,7 +805,7 @@ uint8_t flvHeader::open(const char *name)
   // Udpate frame count etc..
   ADM_info("[FLV] Found %u frames\n",videoTrack->_nbIndex);
   
-    if(videoCodec==FLV_CODECID_H264 && spsinfo->width && spsinfo->height)
+    if(videoCodec==FLV_CODECID_H264 && spsinfo && spsinfo->width && spsinfo->height)
     {
         ADM_info("Setting width and height to values obtained from codec\n");
         ADM_info("W %d\n",spsinfo->width);
