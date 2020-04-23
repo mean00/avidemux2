@@ -751,7 +751,7 @@ uint8_t flvHeader::open(const char *name)
                     if(false==extractSPSInfo_mp4Header(videoTrack->extraData,videoTrack->extraDataLen,spsinfo))
                     {
                         ADM_warning("Cannot decode SPS\n");
-                        delete [] spsinfo;
+                        delete spsinfo;
                         spsinfo=NULL;
                     }
                     continue;
