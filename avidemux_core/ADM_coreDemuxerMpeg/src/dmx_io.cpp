@@ -22,12 +22,12 @@
 
 #include "ADM_default.h"
 #include "dmx_io.h"
+#include "ADM_coreUtils.h"
 #if 0
     #define aprintf(...) {}
 #else
     #define aprintf printf
 #endif
-extern bool ADM_splitSequencedFile(const char *filename, char **left, char **right,uint32_t *nbDigit,uint32_t *base);
 
 fileParser::fileParser(uint32_t cacheSize)
 {
@@ -69,19 +69,17 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         uint32_t decimals = 0;               // number of decimals
         char *left = NULL, *right = NULL; // parts of filename (after splitting)
 
-        uint8_t count = 0;                  // number of follow-ups
+        int nbFollowUps = 0;
         uint32_t base=0;
-        bool splitFile=false;
-//        int i = 0;      
-        // index (general use)
         if(*multi!=FP_DONT_APPEND)
         {
             aprintf("Checking if there are several files...\n");
-            splitFile=ADM_splitSequencedFile(filename, &left, &right,&decimals,&base);
-            if(splitFile)
-            {   
+            if(ADM_splitSequencedFile(filename, &left, &right, &decimals, &base))
+            {
                 aprintf("left:<%s>, right=<%s>,base=%" PRIu32",digit=%" PRIu32"\n",left,right,base,decimals);
-            }else       
+                nbFollowUps = ADM_probeSequencedFile(filename);
+                if(nbFollowUps<0) return 0;
+            }else
             {
                 aprintf("No.\n");
             }
@@ -89,7 +87,8 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         // ____________________
         // Single loading
         // ____________________
-        if( false ==splitFile )
+
+        if(!nbFollowUps)
         {
                 fdIo newFd;
                 aprintf( "\nSimple loading: \n" );
@@ -109,12 +108,13 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 aprintf( " file: %s, size: %" PRIu64"\n", filename, newFd.fileSize );
                 aprintf( " found 1 files \n" );
                 aprintf( "Done \n" );
+                if(*multi==FP_PROBE)
+                    *multi==FP_DONT_APPEND;
                 return 1;
         }
         // ____________________
         // Multi loading
         // ____________________
-        uint32_t tabSize;
         std::string leftPart(left);
         std::string rightPart(right);
         delete [] left;
@@ -123,13 +123,8 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         right=NULL;
     
         aprintf( "\nAuto adding: \n" );
-        uint32_t current=base;
         _curFd = 0;
         uint64_t total=0;
-        uint64_t threshold,tolerance;
-        threshold=tolerance=1;
-        threshold<<=28;
-        tolerance<<=20;
 
         // build match string
         char match[16];
@@ -140,19 +135,27 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         match[15]=0;
         aprintf("Using %s as match string\n",match);
         char number[16];
-        while(1)
+        for(int i=0; i<nbFollowUps+1; i++)
         {
-                sprintf(number,match,current);
+                sprintf(number,match,base+i);
                 std::string middle(number);
                 std::string outName=leftPart+middle+rightPart;
                 aprintf("Checking %s\n",outName.c_str());
 
                 // open file
+                int64_t sz=ADM_fileSize(outName.c_str());
+                if(sz<=0)
+                {
+                    if(!i) return 0;
+                    printf(" file: %s not found.\n",outName.c_str());
+                    nbFollowUps=i-1;
+                    break;
+                }
                 FILE *f= ADM_fopen(outName.c_str(), "rb");
                 if(!f)
                 {
                         // we need at least one file!
-                        if( !count  )
+                        if(!i)
                           { return 0; }
                         else
                           { 
@@ -164,52 +167,27 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 // calculate file-size
                 fdIo myFd;
                 myFd.file=f;
-                myFd.fileSize=ADM_fileSize(outName.c_str());
-                // check whether the file likely belongs to a different stream
-                if(count && myFd.fileSize > threshold+tolerance)
-                {
-                    ADM_fclose(myFd.file);
-                    break;
-                }
-
+                myFd.fileSize=sz;
                 myFd.fileSizeCumul = total;
                 total+=  myFd.fileSize;
 
-                aprintf( " file %d: %s, size: %" PRIu64"\n", (count + 1), outName.c_str(),
+                aprintf( " file %d: %s, size: %" PRIu64"\n", i + 1, outName.c_str(),
                                             myFd.fileSize );
 
                 listOfFd.append(myFd);
-                // append only if all files but the last one are of ~ equal size: 256 or 512 MiB,
-                // 1, 2 or 4 GiB, the usual threshold for automatically split streams
-                if(myFd.fileSize < threshold-tolerance)
-                    break;
-                if(!count)
-                {
-                    for(int i=0;i<5;i++)
-                    {
-                        if(myFd.fileSize >= threshold-tolerance && myFd.fileSize <= threshold+tolerance)
-                            break;
-                        threshold<<=1;
-                        if(i==1)
-                            tolerance<<=3; // 8 MiB starting with 1 GiB fragment size
-                    }
-                }
-                count++;
-                current++;
         } 
 
-      
         _size=total;
         // clean up
         if(*multi==FP_PROBE)
         {
-                if(count>1)
+                if(nbFollowUps>0)
                         *multi=FP_APPEND;       //
                 else
                         *multi=FP_DONT_APPEND;
         }
 
-        aprintf( " found %d files \n", count );
+        aprintf( " found %d files \n", nbFollowUps+1 );
         aprintf( "Done \n" );
         return 1;
 } // fileParser::open()
