@@ -79,7 +79,7 @@ bool bAppend=false;
     
     FP_TYPE append=FP_DONT_APPEND;
 #ifdef ASK_APPEND_SEQUENCED
-    if(true==ADM_probeSequencedFile(file))
+    if(ADM_probeSequencedFile(file)>0)
     {
         if(true==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
                bAppend=true;

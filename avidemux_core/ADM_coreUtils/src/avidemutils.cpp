@@ -482,39 +482,44 @@ bool ADM_splitSequencedFile(const char *filename, char **left, char **right,uint
 }
 /**
     \fn ADM_probeSequencedFile
+    \brief Check whether there are several sequentially named files with sizes matching the pattern,
+           return the number of files or a negative value on error.
 */
-bool ADM_probeSequencedFile(const char *fileName)
+int ADM_probeSequencedFile(const char *fileName)
 {
     char *left=NULL;
     char *right=NULL;
     uint32_t nbDigit,base;
-     if(false==ADM_splitSequencedFile(fileName, &left, &right,&nbDigit,&base))
-            return false;
+    if(false==ADM_splitSequencedFile(fileName, &left, &right,&nbDigit,&base))
+        return 0;
 
     // check whether the filesize approx. matches 2^n GiB, the usual
     // threshold for automatically split streams
-    bool success=false;
+    uint32_t count=0;
     uint64_t fileSize,threshold,tolerance;
     threshold=tolerance=1;
     threshold<<=28; // we start at 256 MiB, this value is hardcoded in some devices
     tolerance<<=20; // 1 MiB
+
     int64_t sz=ADM_fileSize(fileName);
     if(sz<0)
-        return false;
+        return sz;
     fileSize=sz;
     for(int i=0;i<5;i++)
     {
+        if(!i && fileSize < threshold-tolerance)
+            return 0;
         if(fileSize >= threshold-tolerance && fileSize <= threshold+tolerance)
         {
-            success=true;
+            count=1;
             break;
         }
         threshold<<=1;
         if(i==1)
             tolerance<<=3; // 8 MiB starting with 1 GiB fragment size
     }
-    if(!success)
-        return false;
+    if(!count)
+        return 0;
 
     // check if at least one sequence exists...
     std::string aLeft(left);
@@ -529,14 +534,19 @@ bool ADM_probeSequencedFile(const char *fileName)
     strcat(match,"d");
     match[15]=0;
 
-    
-    char names[16];
-    sprintf(names,match,base+1);
-    std::string middle(names);
-    std::string target=aLeft+middle+aRight;
-    sz=ADM_fileSize(target.c_str());
-    if(sz<0 || sz > threshold+tolerance)
-        return false;
-    return true;
+    while(true)
+    {
+        char names[16];
+        sprintf(names,match,base+count);
+        std::string middle(names);
+        std::string target=aLeft+middle+aRight;
+        sz=ADM_fileSize(target.c_str());
+        if(sz<0 || sz > threshold+tolerance)
+            return count-1;
+        if(sz < threshold-tolerance)
+            break;
+        count++;
+    }
+    return count;
 }
 //EOF
