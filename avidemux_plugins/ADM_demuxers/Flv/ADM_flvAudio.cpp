@@ -47,7 +47,7 @@ ADM_flvAccess::ADM_flvAccess(const char *name,flvTrak *track) : ADM_audioAccess(
 #ifdef USE_BUFFERED_IO
     aparser=new fileParser();
     ADM_assert(aparser);
-    FP_TYPE append=FP_DONT_APPEND;
+    int append=0;
     ADM_assert(aparser->open(name,&append));
 #else
     _fd=ADM_fopen(name,"rb");
