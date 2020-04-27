@@ -19,11 +19,10 @@
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
-#include "dmxPSPacket.h"
 #include "ADM_quota.h"
+#include "ADM_ps.h"
 #include "ADM_psAudioProbe.h"
 #include "DIA_working.h"
-#include "ADM_indexFile.h"
 #include "ADM_vidMisc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_coreUtils.h"
@@ -94,15 +93,6 @@ typedef enum
     markEnd,
     markNow
 }markType;
-/**
-    \struct scrGap
-    \brief Map gap/reset in the scr flow to put everything back to linear / monotonic
-*/
-typedef struct
-{
-    uint64_t position;
-    uint64_t timeOffset;
-}scrGap;
 
 /**
     \class PsIndexer
@@ -159,7 +149,6 @@ PsIndexer::PsIndexer(void)
     index=NULL;
     pkt=NULL;
     audioTracks=NULL;
-    ui=createWorking (QT_TRANSLATE_NOOP("psdemuxer","Indexing"));
     headerDumped=false;
     lastValidVideoDts=ADM_NO_PTS;
     timeOffset=0;
@@ -181,17 +170,16 @@ PsIndexer::~PsIndexer()
 */  
 uint8_t PsIndexer::run(const char *file)
 {
-uint32_t temporal_ref,val;
-uint64_t fullSize;
-uint8_t buffer[50*1024];
-uint8_t res=1;
-bool seq_found=false;
+    uint32_t temporal_ref,val;
+    uint64_t fullSize;
+    uint8_t buffer[50*1024];
+    uint8_t res=0;
+    bool seq_found=false;
 
-PSVideo video;
-indexerData  data;    
-dmxPacketInfo info,lastInfo;
-bool bAppend=false;
-    
+    PSVideo video;
+    indexerData  data;
+    dmxPacketInfo info,lastInfo;
+
     memset(&video,0,sizeof(video));
     memset(&data,0,sizeof(data));
     memset(&info,0,sizeof(info));
@@ -200,15 +188,6 @@ bool bAppend=false;
     char *indexName=(char *)malloc(strlen(file)+6);
     sprintf(indexName,"%s.idx2",file);
 
-    FP_TYPE append=FP_DONT_APPEND;
-    if(ADM_probeSequencedFile(file)>0)
-    {
-        if(true==GUI_Question(QT_TRANSLATE_NOOP("psdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
-               bAppend=true;
-    }
-    if(true==bAppend)
-        append=FP_APPEND;
-
     index=qfopen(indexName,"wt");
     if(!index)
     {
@@ -216,7 +195,23 @@ bool bAppend=false;
         free(indexName);        
         return false;
     }
-    writeSystem(file,bAppend);
+
+    int append=PS_DEFAULT_FRAGMENT_SIZE;
+    {
+    int nbFollowUps=ADM_probeSequencedFile(file,&append);
+    if(nbFollowUps<0)
+    {
+        printf("[PsIndex] Cannot open %s\n",file);
+        qfclose(index);
+        index=NULL;
+        free(indexName);
+        indexName=NULL;
+        return 0;
+    }
+    if(!nbFollowUps || false==GUI_Question(QT_TRANSLATE_NOOP("psdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
+        append=0;
+    }
+    writeSystem(file,append);
     pkt=new psPacketLinearTracker(0xE0);
 
     audioTracks=psProbeAudio(file,append);
@@ -235,14 +230,17 @@ bool bAppend=false;
 
     }
 
-    pkt->open(file,append);
-    data.pkt=pkt;
-    fullSize=pkt->getSize();
-
     uint32_t lastConsumed=0;
     bool picEntryPending=false;
     bool timingIsInvalid=false;
     markType update=markStart;
+
+    if(!pkt->open(file,append))
+        goto cleanup;
+    data.pkt=pkt;
+    fullSize=pkt->getSize();
+
+    ui=createWorking(QT_TRANSLATE_NOOP("psdemuxer","Indexing"));
 
       while(1)
       {
@@ -482,6 +480,7 @@ theEnd:
         writeAudio();
         writeScrReset();
         qfprintf(index,"\n[End]\n");
+        res=ADM_OK;
 cleanup:
         qfclose(index);
         index=NULL;

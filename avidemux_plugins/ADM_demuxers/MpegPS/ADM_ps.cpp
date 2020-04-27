@@ -40,27 +40,23 @@ uint8_t psHeader::open(const char *name)
     sprintf(idxName,"%s.idx2",name);
     if(!ADM_fileExist(idxName))
         r=psIndexer(name);
-    if(r==ADM_IGN)
+    if(r!=ADM_OK)
     {
-        ADM_warning("Indexing cancelled by the user, deleting the index file. Bye.\n");
-        if(!ADM_eraseFile(idxName))
+        if(r==ADM_IGN)
+            ADM_warning("Indexing cancelled by the user, deleting the index file. Bye.\n");
+        if(!r)
+            ADM_error("Indexing of %s failed, aborting\n",name);
+        if(ADM_fileExist(idxName) && !ADM_eraseFile(idxName))
             ADM_warning("Could not delete %s\n",idxName);
         free(idxName);
         return r;
     }
-    if(!r)
-    {
-        ADM_error("Indexing of %s failed, aborting\n",name);
-        // Currently, indexer returns 0 only if it can't create the .idx2 file, nothing to remove.
-        free(idxName);
-        return r;
-    }
 
-    FP_TYPE appendType=FP_DONT_APPEND;
     char *type;
     uint64_t startDts;
     uint32_t version=0;
     bool reindex=false;
+    int append=PS_DEFAULT_FRAGMENT_SIZE;
     indexFile index;
     r=0;
 
@@ -89,10 +85,10 @@ uint8_t psHeader::open(const char *name)
         printf("[psDemux] Incorrect or not found type\n");
         goto abt;
     }
-    append=(bool)index.getAsUint32("Append");
+    if(!index.getAsUint32("Append"))
+        append=0;
     printf("[psDemux] Append=%" PRIu32"\n",append);
-    if(append) appendType=FP_APPEND;
-    if(!parser.open(name,&appendType))
+    if(!parser.open(name,&append))
     {
         printf("[psDemux] Cannot open root file %s\n",name);
         goto abt;
@@ -185,7 +181,7 @@ uint8_t psHeader::open(const char *name)
 //***********
     
     psPacket=new psPacketLinear(0xE0);
-    if(psPacket->open(name,appendType)==false) 
+    if(psPacket->open(name,append)==false)
     {
         printf("psDemux] Cannot psPacket open the file\n");
         goto abt;

@@ -28,6 +28,7 @@
 #include <BVector.h>
 #include "ADM_coreDemuxerMpeg.h"
 
+#define PS_DEFAULT_FRAGMENT_SIZE -1 // no size check
 
 /**
     \struct scrGap
@@ -55,7 +56,7 @@ protected:
 public:
                 bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}
                 BVector        <ADM_mpgAudioSeekPoint >seekPoints;
-                                  ADM_psAccess(const char *name,uint8_t pid,bool append); 
+                                  ADM_psAccess(const char *name, uint8_t pid, int append);
                 virtual           ~ADM_psAccess();
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
                 virtual bool      isCBR(void) { return true;}
@@ -115,7 +116,6 @@ public:
 class psHeader         :public vidHeader
 {
   protected:
-    bool    append;
     bool    fieldEncoded;
     bool    readVideo(indexFile *index);
     bool    readAudio(indexFile *index,const char *name);
