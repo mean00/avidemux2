@@ -35,6 +35,6 @@ ADM_COREUTILS6_EXPORT uint8_t     mk_hex(uint8_t a, uint8_t b);
 ADM_COREUTILS6_EXPORT void mixDump(uint8_t * ptr, uint32_t len);
 
 ADM_COREUTILS6_EXPORT bool        ADM_splitSequencedFile(const char *filename, char **left, char **right, uint32_t *nbDigit, uint32_t *base);
-ADM_COREUTILS6_EXPORT int         ADM_probeSequencedFile(const char *fileName);
+ADM_COREUTILS6_EXPORT int         ADM_probeSequencedFile(const char *fileName, int *fragmentSize);
 
 #endif

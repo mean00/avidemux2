@@ -28,6 +28,7 @@
 
 #include "ADM_bitmap.h"
 #include "ADM_coreUtils.h"
+#include "prefs.h"
 
 
 uint8_t  mk_hex(uint8_t a, uint8_t b);
@@ -481,45 +482,91 @@ bool ADM_splitSequencedFile(const char *filename, char **left, char **right,uint
         return true;
 }
 /**
-    \fn ADM_probeSequencedFile
-    \brief Check whether there are several sequentially named files with sizes matching the pattern,
-           return the number of files or a negative value on error.
-*/
-int ADM_probeSequencedFile(const char *fileName)
+ *  \fn ADM_probeSequencedFile
+ *  \brief Check whether there are several sequentially named files with sizes matching the pattern.
+ *  \param fileName Path to the first file.
+ *  \param[in] fragmentSize Control file size pattern to match
+ *      0: disable probing alltogether
+ *      1: use defaults, either 256*2^n MiB up to 4 GiB or a custom value from preferences
+ *      negative values: skip size check
+ *      else fragment size in MiB to match
+ *  \param[out] fragmentSize Size of the first file in MiB if several files are found, 0 if only one
+ *      do not use when size check was skipped
+ *  \return Number of files or a negative value on error.
+ */
+int ADM_probeSequencedFile(const char *fileName, int *fragmentSize)
 {
+    if(!fragmentSize || !*fragmentSize)
+        return 0;
+
     char *left=NULL;
     char *right=NULL;
     uint32_t nbDigit,base;
     if(false==ADM_splitSequencedFile(fileName, &left, &right,&nbDigit,&base))
+    {
+        *fragmentSize=0;
         return 0;
+    }
+    // can we open the file?
+    int64_t sz=ADM_fileSize(fileName);
+    if(sz<0) // nope
+        return sz;
 
+    bool skipSizeCheck=*fragmentSize<0;
     // check whether the filesize approx. matches 2^n GiB, the usual
     // threshold for automatically split streams
     uint32_t count=0;
+    int rounds=5;
     uint64_t fileSize,threshold,tolerance;
-    threshold=tolerance=1;
-    threshold<<=28; // we start at 256 MiB, this value is hardcoded in some devices
-    tolerance<<=20; // 1 MiB
 
-    int64_t sz=ADM_fileSize(fileName);
-    if(sz<0)
-        return sz;
-    fileSize=sz;
-    for(int i=0;i<5;i++)
+    if(!skipSizeCheck)
     {
-        if(!i && fileSize < threshold-tolerance)
-            return 0;
-        if(fileSize >= threshold-tolerance && fileSize <= threshold+tolerance)
+        bool useCustomSize;
+        if(false==prefs->get(DEFAULT_MULTILOAD_USE_CUSTOM_SIZE,&useCustomSize))
+            useCustomSize=false;
+        uint32_t customSize;
+        if(false==prefs->get(DEFAULT_MULTILOAD_CUSTOM_SIZE_M,&customSize))
+            customSize=0;
+
+        tolerance=1<<20; // 1 MiB
+        if(*fragmentSize==1) // equivalent to FP_PROBE
         {
-            count=1;
-            break;
+            if(useCustomSize && customSize)
+                *fragmentSize=customSize;
         }
-        threshold<<=1;
-        if(i==1)
-            tolerance<<=3; // 8 MiB starting with 1 GiB fragment size
+        if(*fragmentSize==1) // try out default values
+        {
+            threshold=1<<28; // we start at 256 MiB, this value is hardcoded in some devices
+        }else
+        {
+            threshold=*fragmentSize<<20;
+            if(*fragmentSize > 999)
+                tolerance<<=3; // 8 MiB from ~0.98 GiB on
+            rounds=1;
+        }
+        *fragmentSize=0;
+
+        fileSize=sz;
+        for(int i=0;i<rounds;i++)
+        {
+            if(!i && fileSize < threshold-tolerance)
+                return 0;
+            if(fileSize >= threshold-tolerance && fileSize <= threshold+tolerance)
+            {
+                count=1;
+                *fragmentSize=threshold>>20;
+                break;
+            }
+            threshold<<=1;
+            if(i==1)
+                tolerance<<=3; // 8 MiB starting with 1 GiB fragment size
+        }
+        if(!count)
+            return 0;
+    }else
+    {
+        count=1; // the first sequence to check
     }
-    if(!count)
-        return 0;
 
     // check if at least one sequence exists...
     std::string aLeft(left);
@@ -541,9 +588,22 @@ int ADM_probeSequencedFile(const char *fileName)
         std::string middle(names);
         std::string target=aLeft+middle+aRight;
         sz=ADM_fileSize(target.c_str());
-        if(sz<0 || sz > threshold+tolerance)
-            return count-1;
-        if(sz < threshold-tolerance)
+        if(sz<0) // no such file
+        {
+            count--;
+            break;
+        }
+        if(skipSizeCheck)
+        {
+            count++;
+            continue;
+        }
+        if(sz > threshold+tolerance) // the next set of files, reject it
+        {
+            count--;
+            break;
+        }
+        if(sz < threshold-tolerance) // the last one
             break;
         count++;
     }
