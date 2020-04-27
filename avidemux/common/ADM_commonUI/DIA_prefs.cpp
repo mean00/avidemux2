@@ -69,6 +69,9 @@ bool     swapUpDown=false;
 uint32_t pp_type=3;
 uint32_t pp_value=5;
 
+bool     useCustomFragmentSize=false;
+uint32_t customFragmentSize=4000;
+
 uint32_t editor_cache_size=16;
 
 #ifdef USE_DXVA2
@@ -147,6 +150,11 @@ std::string currentSdlDriver=getSdlDriverName();
         if( prefs->get(DEVICE_AUDIO_ALSA_DEVICE, &alsaDevice) != RC_OK )
                 alsaDevice = ADM_strdup("plughw:0,0");
 #endif
+        // Auto-append
+        if(!prefs->get(DEFAULT_MULTILOAD_USE_CUSTOM_SIZE,&useCustomFragmentSize))
+            useCustomFragmentSize=false;
+        if(!prefs->get(DEFAULT_MULTILOAD_CUSTOM_SIZE_M,&customFragmentSize))
+            customFragmentSize=4000;
         // Video cache
         prefs->get(FEATURES_CACHE_SIZE,&editor_cache_size);
 #ifdef USE_DXVA2
@@ -297,6 +305,14 @@ std::string currentSdlDriver=getSdlDriverName();
         framePriority.swallow(&menuPlaybackPriority);
 
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
+
+        diaElemFrame frameMultiLoad(QT_TRANSLATE_NOOP("adm","Auto-Append Settings"));
+        diaElemToggle multiLoadUseCustomFragmentSize(&useCustomFragmentSize,QT_TRANSLATE_NOOP("adm","_Use custom fragment size for auto-append of MPEG-TS files"));
+        diaElemUInteger multiLoadCustomFragmentSize(&customFragmentSize,QT_TRANSLATE_NOOP("adm","_Fragment size:"),250,8196);
+        frameMultiLoad.swallow(&multiLoadUseCustomFragmentSize);
+        frameMultiLoad.swallow(&multiLoadCustomFragmentSize);
+        multiLoadUseCustomFragmentSize.link(1,&multiLoadCustomFragmentSize);
+
         diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
         diaElemUInteger cacheSize(&editor_cache_size,QT_TRANSLATE_NOOP("adm","_Cache size:"),8,16);
         frameCache.swallow(&cacheSize);
@@ -446,8 +462,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* Output */
-        diaElem *diaOutput[]={&allowAnyMpeg,&useLastReadAsTarget,&frameCache};
-        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),3,(diaElem **)diaOutput);
+        diaElem *diaOutput[]={&allowAnyMpeg,&useLastReadAsTarget,&frameMultiLoad,&frameCache};
+        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
 
         /* Audio */
 
@@ -604,6 +620,9 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(UPDATE_ENABLED,doAutoUpdate);
             // Video render
             prefs->set(VIDEODEVICE,render);
+            // Auto-append
+            prefs->set(DEFAULT_MULTILOAD_USE_CUSTOM_SIZE, useCustomFragmentSize);
+            prefs->set(DEFAULT_MULTILOAD_CUSTOM_SIZE_M, customFragmentSize);
             // Video cache
             prefs->set(FEATURES_CACHE_SIZE, editor_cache_size);
             // number of threads
