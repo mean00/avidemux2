@@ -21,19 +21,6 @@
 #define DMX_BUFFER_MAX 4*1024*1024
 #include <BVector.h>
 
-/*
-        _off is the logical offset in the file
-        _head is the logical offset of the 1st byte in _buffer
-        _tail is the logical offset of the last byte in the buffer
-
-
-*/
-typedef enum 
-{
-        FP_PROBE=1,
-        FP_DONT_APPEND=2,
-        FP_APPEND=3
-}FP_TYPE;
 /**
     \class fdIo
     \brief Describe one file
@@ -52,6 +39,11 @@ public:
 */
  class ADM_COREDEMUXER6_EXPORT fileParser
 {
+/*
+        _off is the logical offset in the file
+        _head is the logical offset of the 1st byte in _buffer
+        _tail is the logical offset of the last byte in the buffer
+*/
         private:
             uint8_t  *_buffer;
             uint32_t _bufferSize;
@@ -64,7 +56,7 @@ public:
         public:
                                 fileParser(uint32_t cacheSize=DMX_BUFFER);
                                 ~fileParser();                                         
-                        uint8_t  open(const char *name,FP_TYPE *multi);
+                        uint8_t  open(const char *name, int *multi);
                         uint8_t  forward(uint64_t u);
                         uint8_t  sync(uint8_t *t );
                         uint8_t  syncH264(uint8_t *t );

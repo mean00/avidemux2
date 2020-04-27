@@ -51,7 +51,7 @@ psPacket::~psPacket()
     \fn open
     \brief dtor
 */
-bool psPacket::open(const char *filenames,FP_TYPE append)
+bool psPacket::open(const char *filenames,int append)
 {
     _file=new fileParser();
     if(!_file->open(filenames,&append))
