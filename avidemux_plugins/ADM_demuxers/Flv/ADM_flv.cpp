@@ -581,7 +581,7 @@ uint8_t flvHeader::open(const char *name)
 #ifdef USE_BUFFERED_IO
   parser=new fileParser(CACHE_SIZE);
   ADM_assert(parser);
-  FP_TYPE append=FP_DONT_APPEND;
+  int append=0;
   if(!parser->open(name,&append))
   {
     ADM_error("[flv] Cannot open %s\n",name);
