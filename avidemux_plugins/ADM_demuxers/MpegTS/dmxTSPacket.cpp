@@ -63,7 +63,7 @@ int round=nbTry;
     \fn open
     \brief dtor
 */
-bool tsPacket::open(const char *filenames,FP_TYPE append)
+bool tsPacket::open(const char *filenames, int append)
 {
     _file=new fileParser();
     if(!_file->open(filenames,&append))

@@ -40,28 +40,23 @@ uint8_t tsHeader::open(const char *name)
     sprintf(idxName,"%s.idx2",name);
     if(!ADM_fileExist(idxName))
         r=tsIndexer(name);
-    if(r==ADM_IGN)
+    if(r!=ADM_OK)
     {
-        ADM_warning("Indexing cancelled by the user, deleting the index file. Bye.\n");
-        if(!ADM_eraseFile(idxName))
+        if(r==ADM_IGN)
+            ADM_warning("Indexing cancelled by the user, deleting the index file. Bye.\n");
+        if(!r)
+            ADM_error("Indexing of %s failed, aborting\n",name);
+        if(ADM_fileExist(idxName) && !ADM_eraseFile(idxName))
             ADM_warning("Could not delete %s\n",idxName);
         free(idxName);
         return r;
     }
-    if(!r)
-    {
-        ADM_error("Indexing of %s failed, aborting\n",name);
-        // Currently, indexer returns 0 only if it can't create the .idx2 file, nothing to remove.
-        free(idxName);
-        return r;
-    }
 
-    FP_TYPE appendType=FP_DONT_APPEND;
     char *type;
     uint64_t startDts;
     uint32_t version=0;
     bool reindex=false;
-    uint32_t append;
+    int append;
     r=0;
 
     indexFile index;
@@ -91,9 +86,9 @@ uint8_t tsHeader::open(const char *name)
         goto abt;
     }
     append=index.getAsUint32("Append");
-    printf("[tsDemux] Append=%" PRIu32"\n",append);
-    if(append) appendType=FP_APPEND;
-    if(!parser.open(name,&appendType))
+    ADM_assert(append>=0);
+    printf("[tsDemux] Append=%d\n",append);
+    if(!parser.open(name,&append))
     {
         printf("[tsDemux] Cannot open root file (%s)\n",name);
         goto abt;
@@ -127,7 +122,7 @@ uint8_t tsHeader::open(const char *name)
 //***********
     
     tsPacket=new tsPacketLinear(videoPid);
-    if(tsPacket->open(name,appendType)==false) 
+    if(tsPacket->open(name,append)==false)
     {
         printf("tsDemux] Cannot tsPacket open the file\n");
         goto abt;
