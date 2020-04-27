@@ -18,7 +18,6 @@
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_coreUtils.h"
-#include "ADM_indexFile.h"
 #include "ADM_ps.h"
 #include "ADM_string.h"
 #include <math.h>
@@ -225,8 +224,12 @@ bool    psHeader::readAudio(indexFile *index,const char *name)
     printf("[psDemuxer] Reading Audio\n");
     if(!index->readSection("Audio")) return false;
     uint32_t nbTracks;
-    
+    int append=PS_DEFAULT_FRAGMENT_SIZE;
+
     nbTracks=index->getAsUint32("Tracks");
+    if(!index->getAsUint32("Append"))
+        append=0;
+
     if(!nbTracks)
     {
         printf("[PsDemux] No audio\n");
