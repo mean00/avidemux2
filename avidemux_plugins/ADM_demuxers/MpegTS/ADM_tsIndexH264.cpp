@@ -155,7 +155,6 @@ uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     indexerData data;
 
     uint8_t result=0;
-    bool bAppend=false;
 
     beginConsuming=0;
     listOfUnits.clear();
@@ -184,27 +183,35 @@ uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     uint64_t lastAudOffset=0;
     int audCount=0;
     int audStartCodeLen=5;
+    int lastRefIdc=0;
+    bool keepRunning=true;
     dmxPacketInfo packetInfo;
+
+    int append=0;
+#ifdef ASK_APPEND_SEQUENCED
+    append=1;
+    {
+    int nbFollowUps=ADM_probeSequencedFile(file,&append);
+    if(nbFollowUps<0)
+    {
+        qfclose(index);
+        index=NULL;
+        return 0;
+    }
+    if(!nbFollowUps || false==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
+        append=0;
+    }
+#endif
+    writeSystem(file,append);
 
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
 
-    FP_TYPE append=FP_DONT_APPEND;
-#ifdef ASK_APPEND_SEQUENCED
-    if(ADM_probeSequencedFile(file)>0)
-    {
-        if(true==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
-            bAppend=true;
-    }
-    if(bAppend==true)
-        append=FP_APPEND;
-#endif
-    writeSystem(file,bAppend);
-    pkt->open(file,append);
+    if(!pkt->open(file,append))
+        goto the_end;
     data.pkt=pkt;
     fullSize=pkt->getSize();
-    gui=createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),pkt->getSize());
-    int lastRefIdc=0;
-    bool keepRunning=true;
+    gui=createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),fullSize);
+
     //******************
     // 1 search SPS
     //******************

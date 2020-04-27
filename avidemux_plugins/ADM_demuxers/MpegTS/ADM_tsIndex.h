@@ -149,7 +149,7 @@ public:
 virtual uint8_t run(const char *file,ADM_TS_TRACK *videoTrac)=0;
         bool    writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);
-        bool    writeSystem(const char *filename,bool append=false);
+        bool    writeSystem(const char *filename,int append=0);
         bool    updateLastUnitStructure(int structure);
         bool    updatePicStructure(TSVideo &video,const uint32_t t)
                 {

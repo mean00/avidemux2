@@ -62,7 +62,7 @@ uint8_t   tsIndexer(const char *file)
     //
     // Now extract the datas from audio tracks & verify they are here
     tsPacketLinear *p=new tsPacketLinear(0);
-    p->open(file,FP_DONT_APPEND);
+    p->open(file,0);
     for(int i=1;i<nbTracks;i++)
     {
         tsAudioTrackInfo trk;
@@ -183,14 +183,14 @@ bool TsIndexerBase::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
     \fn writeSystem
     \brief Write system part of index file
 */
-bool TsIndexerBase::writeSystem(const char *filename,bool append)
+bool TsIndexerBase::writeSystem(const char *filename,int append)
 {
     qfprintf(index,"PSD1\n");
     qfprintf(index,"[System]\n");
     qfprintf(index,"Version=%d\n",ADM_INDEX_FILE_VERSION);
     qfprintf(index,"Type=T\n");
     qfprintf(index,"File=%s\n",filename);
-    qfprintf(index,"Append=%d\n",append);
+    qfprintf(index,"Append=%u\n",(uint32_t)append);
     return true;
 }
 /**

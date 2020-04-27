@@ -47,7 +47,7 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
     *nbTracks=0;
 
     tsPacket *ts=new tsPacket();
-    ts->open(file,FP_PROBE);
+    ts->open(file,1);
 
     int packetRead=0;
     int *map=new int[MAX_PID];

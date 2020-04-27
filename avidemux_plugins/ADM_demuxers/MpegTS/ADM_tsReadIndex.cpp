@@ -383,7 +383,8 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
         {
             ADM_info("No extradata (%s)\n",body);
         }
-        bool append=(bool)index->getAsUint32("Append");
+        int append=index->getAsUint32("Append");
+        ADM_assert(append>=0);
         ADM_tsAccess *access=new ADM_tsAccess(name,pid,append,(ADM_TS_MUX_TYPE)muxing,extraLen,extraData);
         if(extraData) delete [] extraData;
         extraData=NULL;

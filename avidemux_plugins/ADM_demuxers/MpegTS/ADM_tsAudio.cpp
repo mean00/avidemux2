@@ -33,16 +33,14 @@
     \fn ADM_tsAccess
     \param name   [in] Name of the file to take audio from
     \param pid    [in] Pid of the audio track
-    \param append [in] Flag to auto append files (ignored for now)
+    \param append [in] Flag to auto append files
     \param aacAdts[in] Set to true if the file is aac/adts
     \param myLen/myExtra[in] ExtraData if any
 */
-ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,bool append,ADM_TS_MUX_TYPE muxing,int myLen,uint8_t  *myExtra)
+ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,int append,ADM_TS_MUX_TYPE muxing,int myLen,uint8_t  *myExtra)
 {
-FP_TYPE fp=FP_DONT_APPEND;
-        if(append) fp=FP_APPEND;
         this->pid=pid;
-        if(!demuxer.open(name,fp)) ADM_assert(0);
+        if(!demuxer.open(name,append)) ADM_assert(0);
         packet=new TS_PESpacket(pid);
         this->muxing=muxing;
         ADM_info("Creating audio track, pid=%x, muxing =%d\n",pid,muxing);

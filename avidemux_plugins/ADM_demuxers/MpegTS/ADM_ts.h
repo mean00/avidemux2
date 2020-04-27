@@ -50,7 +50,7 @@ public:
 public:
                 bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}
                 
-                                  ADM_tsAccess(const char *name,uint32_t pid,bool append,ADM_TS_MUX_TYPE muxing,int extraLen,uint8_t *extraData); 
+                                  ADM_tsAccess(const char *name,uint32_t pid,int append,ADM_TS_MUX_TYPE muxing,int extraLen,uint8_t *extraData);
                 virtual           ~ADM_tsAccess();
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
                 virtual bool      isCBR(void) { return true;}

@@ -59,11 +59,19 @@ dmxPacketInfo info;
     writeSystem(file,false);
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
     
-    FP_TYPE append=FP_APPEND;
-    pkt->open(file,append);
+    int append=1; // FIXME
+    if(!pkt->open(file,append))
+    {
+        delete pkt;
+        pkt=NULL;
+        qfclose(index);
+        index=NULL;
+        audioTracks=NULL;
+        return 0;
+    }
     data.pkt=pkt;
     fullSize=pkt->getSize();
-    gui= createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),pkt->getSize());
+    gui= createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),fullSize);
     uint8_t result=1;
     int startCode;
     decodingImage=false;

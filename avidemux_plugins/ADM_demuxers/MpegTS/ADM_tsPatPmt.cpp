@@ -88,7 +88,7 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
     nb=counter=failed=start=match=0;
 
     tsPacket *t=new tsPacket();
-    t->open(file,FP_PROBE);
+    t->open(file,1);
     int videoIndex=-1;
     int vidPidToMatch=-1;
     ADM_TS_TRACK_TYPE vidTypeToMatch=ADM_TS_UNKNOWN;

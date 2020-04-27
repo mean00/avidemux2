@@ -49,7 +49,6 @@ TSVideo video;
 indexerData  data;    
 
 uint8_t result=1;
-bool bAppend=false;
 
     listOfUnits.clear();
 
@@ -73,23 +72,37 @@ bool bAppend=false;
         return 0;
     }
     
-    pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
-    
-    FP_TYPE append=FP_DONT_APPEND;
+    int append=0;
 #ifdef ASK_APPEND_SEQUENCED
-    if(ADM_probeSequencedFile(file)>0)
+    append=1;
     {
-        if(true==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
-               bAppend=true;
+    int nbFollowUps=ADM_probeSequencedFile(file,&append);
+    if(nbFollowUps<0)
+    {
+        qfclose(index);
+        index=NULL;
+        return 0;
     }
-    if(true==bAppend)
-        append=FP_APPEND;
+    if(!nbFollowUps || false==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
+        append=0;
+    }
 #endif
-    writeSystem(file,bAppend);
-    pkt->open(file,append);
-    gui= createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),pkt->getSize());
+    writeSystem(file,append);
+
+    pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
+
+    if(!pkt->open(file,append))
+    {
+        delete pkt;
+        pkt=NULL;
+        audioTracks=NULL;
+        qfclose(index);
+        index=NULL;
+        return 0;
+    }
     data.pkt=pkt;
     fullSize=pkt->getSize();
+    gui=createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),fullSize);
     int startCode;
     decodingImage=false;
 #define likely(x) x
