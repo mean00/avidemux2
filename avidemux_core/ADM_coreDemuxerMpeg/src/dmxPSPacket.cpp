@@ -671,10 +671,11 @@ bool psPacketLinearTracker::decodeVobuPCI(uint32_t size,uint8_t *data)
         lastVobuPosition=nextVobuPosition;
         lastVobuEnd=nextVobuEnd;
 
+        nextVobuStart=start;
         nextVobuEnd=end;
         _file->getpos(&nextVobuPosition);
 #if 0
-        ADM_info("At : 0x%"PRIx64", Vobu start : %d end: %d seqEnd:%d\n",nextVobuPosition,start,end,seqEnd);
+        ADM_info("At : 0x%" PRIx64", Vobu start : %d end: %d seqEnd:%d\n",nextVobuPosition,start,end,seqEnd);
       
 #endif
 
