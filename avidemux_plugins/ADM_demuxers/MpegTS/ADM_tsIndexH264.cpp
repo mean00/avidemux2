@@ -115,6 +115,10 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
             video.w=spsInfo.width;
             video.h=spsInfo.height;
             video.fps=spsInfo.fps1000;
+            spsLen=SEI_nal.payloadSize-3;
+            if(spsLen>ADM_NAL_BUFFER_SIZE)
+                spsLen=ADM_NAL_BUFFER_SIZE;
+            memcpy(spsCache,SEI_nal.payload,spsLen);
             continue;
         }
         if(startCode==NAL_SPS && sps_found) // most likely the next keyframe
@@ -346,6 +350,56 @@ resume:
                     }else
                     {
                         thisUnit.consumedSoFar=pkt->getConsumed();
+                    }
+                    SEI_nal.empty();
+                    uint32_t code=0xffff+0xffff0000;
+                    while(((0xffffff&code)!=1) && pkt->stillOk())
+                    {
+                        uint8_t r=pkt->readi8();
+                        code=(code<<8)+r;
+                        SEI_nal.pushByte(r);
+                    }
+                    if(!pkt->stillOk()) goto resume;
+                    uint32_t tmpLen=SEI_nal.payloadSize;
+                    aprintf("[SPS] Nal size :%d\n",tmpLen);
+                    if(tmpLen>=7 && tmpLen<=ADM_NAL_BUFFER_SIZE+3)
+                    {
+                        tmpLen-=3;
+                        bool match=!memcmp(spsCache, SEI_nal.payload, (spsLen > tmpLen)? tmpLen : spsLen);
+                        if(!match)
+                        {
+                            ADM_warning("SPS changing midstream? Checking deeper...\n");
+                            ADM_SPSInfo tmpInfo;
+                            if(extractSPSInfo(SEI_nal.payload, tmpLen, &tmpInfo))
+                            {
+                                if(spsInfo.width!=tmpInfo.width || spsInfo.height!=tmpInfo.height)
+                                {
+                                    GUI_Info_HIG(ADM_LOG_IMPORTANT, QT_TRANSLATE_NOOP("tsdemuxer","Size Change"),
+                                                 QT_TRANSLATE_NOOP("tsdemuxer","The size of the video changes at frame %u from %ux%u to %ux%u. "
+                                                                   "This is unsupported, stopping here."),
+                                                 data.nbPics, spsInfo.width, spsInfo.height, tmpInfo.width, tmpInfo.height);
+                                    result=1;
+                                    goto the_end;
+                                }
+                                match=true;
+#define MATCH(x) if(spsInfo.x != tmpInfo.x) { ADM_warning("%s value does not match.\n",#x); spsInfo.x = tmpInfo.x; match=false; }
+
+                                MATCH(CpbDpbToSkip)
+                                MATCH(hasPocInfo)
+                                MATCH(log2MaxFrameNum)
+                                MATCH(log2MaxPocLsb)
+                                MATCH(frameMbsOnlyFlag)
+                                MATCH(refFrames)
+
+                                if(!match)
+                                {
+                                    ADM_warning("Codec parameters change on the fly at frame %u, expect problems.\n",data.nbPics);
+                                    // Nevertheless, update the cached SPS
+                                    memcpy(spsCache, SEI_nal.payload, tmpLen);
+                                    spsLen=tmpLen;
+                                }
+                            }
+                        }
                     }
                 }
                 if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
