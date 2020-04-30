@@ -189,10 +189,13 @@ protected:
         uint8_t                 decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
         #define                 ADM_NAL_BUFFER_SIZE (2*1024) // only used to decode SEI, should plenty enough
         uint8_t                 payloadBuffer[ADM_NAL_BUFFER_SIZE];
+        uint8_t                 spsCache[ADM_NAL_BUFFER_SIZE];
+        uint32_t                spsLen;
 public:
                 TsIndexerH264(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
                 {
-                      memset(&spsInfo,0,sizeof(spsInfo));
+                    memset(&spsInfo,0,sizeof(spsInfo));
+                    spsLen=0;
                 }
                 ~TsIndexerH264()
                 {
