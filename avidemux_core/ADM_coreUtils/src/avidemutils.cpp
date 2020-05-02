@@ -539,7 +539,7 @@ int ADM_probeSequencedFile(const char *fileName, int *fragmentSize)
             threshold=1<<28; // we start at 256 MiB, this value is hardcoded in some devices
         }else
         {
-            threshold=*fragmentSize<<20;
+            threshold=((uint64_t)*fragmentSize)<<20;
             if(*fragmentSize > 999)
                 tolerance<<=3; // 8 MiB from ~0.98 GiB on
             rounds=1;
