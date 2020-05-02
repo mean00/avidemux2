@@ -47,7 +47,7 @@ external_libmp4v2=0
 # /usr/include is no more on Catalina
 export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
 #export MACOSX_DEPLOYMENT_TARGET=$(xcrun --sdk macosx --show-sdk-version)
-export MACOSX_DEPLOYMENT_TARGET=10.13
+export MACOSX_DEPLOYMENT_TARGET=10.12
 
 test -f $HOME/myCC  && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
 
