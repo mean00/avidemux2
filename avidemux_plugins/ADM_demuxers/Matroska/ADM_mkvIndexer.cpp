@@ -33,8 +33,6 @@
 #define aprintf(...) {}
 #endif
 
-static bool mp4ExtractSPSInfoFromData(uint8_t *data, uint32_t length, ADM_SPSInfo *spsinfo);
-
 /**
     \fn videoIndexer
     \brief index the video Track
@@ -250,9 +248,8 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             uint8_t *sps=_tracks[0].paramCache;
             uint32_t spsLen=_tracks[0].paramCacheSize;
             // do we have inband SPS?
-#define MAX_SPS_SIZE 1024
-            uint8_t buf[MAX_SPS_SIZE];
-            uint32_t inBandSpsLen=getRawH264SPS(readBuffer, rpt+size-3, nalSize, buf, MAX_SPS_SIZE);
+            uint8_t buf[MAX_H264_SPS_SIZE];
+            uint32_t inBandSpsLen=getRawH264SPS(readBuffer, rpt+size-3, nalSize, buf, MAX_H264_SPS_SIZE);
             bool match=true;
             if(inBandSpsLen)
             {
@@ -264,7 +261,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             {
                 ADM_warning("SPS mismatch? Checking deeper...\n");
                 ADM_SPSInfo info2;
-                if(mp4ExtractSPSInfoFromData(buf,inBandSpsLen,&info2))
+                if(extractSPSInfoFromData(buf,inBandSpsLen,&info2))
                 {
                     const uint32_t sz=sizeof(ADM_SPSInfo);
                     if(!info)
@@ -651,33 +648,5 @@ bool mkvHeader::dumpVideoIndex(int mx)
                _tracks[0].index[i].pos,_tracks[0].index[i].size,ADM_us2plain(_tracks[0].index[i].Pts),_tracks[0].index[i].flags);
     }
     return true;
-}
-/**
- *  \fn mp4ExtractSPSInfoFromData
- *  \brief Decode SPS data
- */
-static bool mp4ExtractSPSInfoFromData(uint8_t *data, uint32_t length, ADM_SPSInfo *spsinfo)
-{
-    uint32_t myExtraLen=length+8;
-    uint8_t *myExtra=new uint8_t[myExtraLen];
-    memset(myExtra,0,myExtraLen);
-    uint8_t *p=myExtra;
-    // Create fake avcC extradata
-    *p++=1;       // AVC version
-    *p++=data[1]; // Profile
-    *p++=data[2]; // Profile compatibility
-    *p++=data[3]; // Level
-    *p++=0xff;    // Nal size minus 1
-    *p++=0xe1;    // 1x SPS
-    *p++=length>>8;
-    *p++=length&0xFF;
-    memcpy(p,data,length);
-
-    bool r = extractSPSInfo_mp4Header(myExtra,myExtraLen,spsinfo);
-
-    delete [] myExtra;
-    myExtra=NULL;
-
-    return r;
 }
 //EOF
