@@ -232,14 +232,18 @@ bool abort=false;
                     muxer->getEncoding()->setPercent(percent);
                 }
                 uint32_t elapsed=ticktock.getElapsedMS();
+                uint32_t remainingMs=0;
                 if(percent>=1)
                 {
                     double totalTime=(100*elapsed)/percent;
                     double remaining=totalTime-elapsed;
                     if(remaining<0)
                         remaining=0;
-                    uint32_t remainingMs=(uint32_t)remaining;
-                    muxer->getEncoding()->setRemainingTimeMS(remainingMs);
+                    if((uint32_t)remaining!=remainingMs)
+                    {
+                        remainingMs=(uint32_t)remaining;
+                        muxer->getEncoding()->setRemainingTimeMS(remainingMs);
+                    }
                 }
             }
             nbFrames++;
