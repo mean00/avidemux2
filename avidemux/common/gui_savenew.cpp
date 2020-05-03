@@ -212,6 +212,7 @@ bool abort=false;
         bitstream.bufferSize=BUFFER_SIZE;
         int nbFrames=0;
         uint32_t percent=0;
+        uint32_t remainingMs=0;
         while(pass1->encode(&bitstream))
         {
             if(bitstream.pts!=ADM_NO_PTS)
@@ -232,7 +233,6 @@ bool abort=false;
                     muxer->getEncoding()->setPercent(percent);
                 }
                 uint32_t elapsed=ticktock.getElapsedMS();
-                uint32_t remainingMs=0;
                 if(percent>=1)
                 {
                     double totalTime=(100*elapsed)/percent;
