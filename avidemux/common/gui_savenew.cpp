@@ -212,6 +212,7 @@ bool abort=false;
         bitstream.bufferSize=BUFFER_SIZE;
         int nbFrames=0;
         uint32_t percent=0;
+        uint32_t remainingMs=0;
         while(pass1->encode(&bitstream))
         {
             if(bitstream.pts!=ADM_NO_PTS)
@@ -238,8 +239,11 @@ bool abort=false;
                     double remaining=totalTime-elapsed;
                     if(remaining<0)
                         remaining=0;
-                    uint32_t remainingMs=(uint32_t)remaining;
-                    muxer->getEncoding()->setRemainingTimeMS(remainingMs);
+                    if((uint32_t)remaining!=remainingMs)
+                    {
+                        remainingMs=(uint32_t)remaining;
+                        muxer->getEncoding()->setRemainingTimeMS(remainingMs);
+                    }
                 }
             }
             nbFrames++;
