@@ -62,14 +62,11 @@ static bool getH264SPSInfo(_VIDEOS *vid,ADM_SPSInfo *sps)
         return false;
 
     // Do we have a cached copy?
-    if(vid->paramCacheSize==sizeof(ADM_SPSInfo) && vid->paramCache)
+    if(vid->infoCacheSize==sizeof(ADM_SPSInfo) && vid->infoCache)
     {
-        memcpy(sps,vid->paramCache,sizeof(ADM_SPSInfo));
+        memcpy(sps,vid->infoCache,sizeof(ADM_SPSInfo));
         return true;
     }
-
-#define MAX_NALU_TO_CHECK 4
-    static NALU_descriptor desc[MAX_NALU_TO_CHECK];
 
     bool gotSps=false;
     uint8_t *buffer=NULL;
@@ -88,20 +85,46 @@ static bool getH264SPSInfo(_VIDEOS *vid,ADM_SPSInfo *sps)
             ADM_warning("Unable to get the first frame of video");
             goto _the_end;
         }
+#define MAX_NALU_TO_CHECK 4
+        NALU_descriptor desc[MAX_NALU_TO_CHECK];
+
         int nbNalu=ADM_splitNalu(img.data, img.data+img.dataLength, MAX_NALU_TO_CHECK, desc);
         int spsIndex=ADM_findNalu(NAL_SPS,nbNalu,desc);
-        if(spsIndex!=-1)
-            gotSps=extractSPSInfo(desc[spsIndex].start, desc[spsIndex].size, sps);
+
+        NALU_descriptor *d=desc;
+        if(spsIndex<0)
+            goto _the_end;
+        d+=spsIndex;
+        if(extractSPSInfo(d->start, d->size, sps))
+        { // Cache raw SPS data
+            if(vid->paramCache)
+                delete [] vid->paramCache;
+            vid->paramCacheSize=d->size+1;
+            vid->paramCache=new uint8_t[vid->paramCacheSize];
+            uint8_t *p=vid->paramCache;
+            p[0]=d->nalu;
+            memcpy(p+1, d->start, d->size);
+            gotSps=true;
+        }
     }else
     {
         gotSps=extractSPSInfo(extra,extraLen,sps);
+        if(gotSps && extra[5] == 0xe1 /* We support only a single one SPS */ )
+        { // Cache raw SPS data
+            vid->paramCacheSize=(extra[6] << 8) + extra[7];
+            if(vid->paramCacheSize && vid->paramCacheSize+8<=extraLen) // 8 bytes AVCC header + SPS
+            {
+                vid->paramCache=new uint8_t[vid->paramCacheSize];
+                memcpy(vid->paramCache, extra+8, vid->paramCacheSize);
+            }
+        }
     }
     if(!gotSps)
         goto _the_end;
     // Store the decoded SPS info in the cache
-    vid->paramCacheSize=sizeof(ADM_SPSInfo);
-    vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
-    memcpy(vid->paramCache,sps,sizeof(ADM_SPSInfo));
+    vid->infoCacheSize=sizeof(ADM_SPSInfo);
+    vid->infoCache=new uint8_t[vid->infoCacheSize]; // will be destroyed with the video
+    memcpy(vid->infoCache,sps,sizeof(ADM_SPSInfo));
 _the_end:
     if(buffer) delete [] buffer;
     buffer=NULL;
@@ -123,9 +146,9 @@ static bool getH265SPSInfo(_VIDEOS *vid, ADM_SPSinfoH265 *sps)
 
     // Do we have a cached copy?
     uint32_t spsSize=sizeof(ADM_SPSinfoH265);
-    if(vid->paramCacheSize==spsSize && vid->paramCache)
+    if(vid->infoCacheSize==spsSize && vid->infoCache)
     {
-        memcpy(sps,vid->paramCache,spsSize);
+        memcpy(sps,vid->infoCache,spsSize);
         return true;
     }
     // Nope, determine stream type
@@ -153,9 +176,9 @@ static bool getH265SPSInfo(_VIDEOS *vid, ADM_SPSinfoH265 *sps)
     if(!gotSps)
         goto _the_end_hevc;
     // Store the decoded SPS info in the cache
-    vid->paramCacheSize=spsSize;
-    vid->paramCache=new uint8_t[vid->paramCacheSize]; // will be destroyed with the video
-    memcpy(vid->paramCache,sps,vid->paramCacheSize);
+    vid->infoCacheSize=spsSize;
+    vid->infoCache=new uint8_t[vid->infoCacheSize]; // will be destroyed with the video
+    memcpy(vid->infoCache,sps,vid->infoCacheSize);
 _the_end_hevc:
     if(buffer) delete [] buffer;
     buffer=NULL;
@@ -186,10 +209,15 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
     uint64_t refstart=(seg->_refStartTimeUs > vid->firstFramePts)? seg->_refStartTimeUs : vid->firstFramePts;
     int frame=0;
     uint8_t *buffer=NULL;
+    uint8_t *spsBuf1=NULL;
+    uint8_t *spsBuf2=NULL;
     ADM_cutPointType cut=ADM_EDITOR_CUT_POINT_UNCHECKED;
 
 #define BOWOUT if(buffer) { delete [] buffer; buffer=NULL; } \
-    _currentSegment=oldSeg; vid->lastSentFrame=oldFrame; return cut;
+               if(spsBuf1) { delete [] spsBuf1; spsBuf1=NULL; } \
+               if(spsBuf2) { delete [] spsBuf2; spsBuf2=NULL; } \
+               _currentSegment=oldSeg; vid->lastSentFrame=oldFrame; \
+               return cut;
 
     if(false==switchToSegment(segNo,true))
     {
@@ -254,7 +282,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
     {
         // It is H.264, check deeper. The keyframe may be a non-IDR random access point.
         // If picture order count after a cut is going back, at least FFmpeg-based players
-        // like VLC and mpv may get stuck until the next recovery point is reached.
+        // like VLC and mpv may get stuck until POC is greater than before the cut point.
         // Get SPS to be able to decode the slice header
         ADM_SPSInfo sps;
         if(!getH264SPSInfo(vid,&sps))
@@ -282,14 +310,50 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
             BOWOUT
         }
-        int poc=-1;
+        // Do we have in-band SPS?
+        ADM_info("Checking for in-band SPS...\n");
+        bool match=true;
+        uint32_t spsLen1,spsLen2=0;
+        // Allocate memory to hold copy of raw SPS data
+        if(!spsBuf2)
+            spsBuf2=new uint8_t[MAX_H264_SPS_SIZE];
+        memset(spsBuf2,0,MAX_H264_SPS_SIZE);
+        if(AnnexB)
+            spsLen2=getRawH264SPS_startCode(img.data, img.dataLength, spsBuf2, MAX_H264_SPS_SIZE);
+        else
+            spsLen2=getRawH264SPS(img.data, img.dataLength, nalSize, spsBuf2, MAX_H264_SPS_SIZE);
+        // If we have in-band SPS, the global one doesn't matter. The check below is purely informative.
+        if(spsLen2)
+        {
+            //mixDump(vid->paramCache, vid->paramCacheSize);
+            //mixDump(spsBuf, spsLen);
+            if(memcmp(vid->paramCache, spsBuf2, (spsLen2 > vid->paramCacheSize)? vid->paramCacheSize : spsLen2))
+            {
+                ADM_warning("SPS mismatch? Checking deeper...\n");
+                ADM_SPSInfo tmpinfo;
+                if(extractSPSInfoFromData(spsBuf2, spsLen2, &tmpinfo))
+                { // Update SPS info
+#define MATCH(x) if(sps.x != tmpinfo.x) { ADM_warning("%s value does not match.\n",#x); sps.x = tmpinfo.x; match=false; }
+                    MATCH(width)
+                    MATCH(height)
+                    MATCH(hasPocInfo)
+                    MATCH(log2MaxFrameNum)
+                    MATCH(log2MaxPocLsb)
+                    MATCH(frameMbsOnlyFlag)
+                    MATCH(refFrames)
+                    if(!match)
+                        ADM_warning("Codec parameters at frame %d don't match initial ones, expect problems.\n",frame);
+                }
+            }
+        }
+        int poc2=-1; // POC of the first frame after the cut
 #define NO_RECOVERY_INFO 0xFF
         uint32_t recoveryDistance=NO_RECOVERY_INFO;
         bool outcome=false;
         if(AnnexB)
-            outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &poc, &sps, &recoveryDistance);
+            outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &poc2, &sps, &recoveryDistance);
         else
-            outcome=extractH264FrameType(img.data, img.dataLength, nalSize, &(img.flags), &poc, &sps, &recoveryDistance);
+            outcome=extractH264FrameType(img.data, img.dataLength, nalSize, &(img.flags), &poc2, &sps, &recoveryDistance);
         if(!outcome)
         {
             ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
@@ -297,6 +361,9 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         }
         // We are done with this segment, restore the last sent frame
         vid->lastSentFrame=oldFrame;
+
+        uint8_t *nextSegParamCache=vid->paramCache;
+        uint32_t nextSegParamCacheSize=vid->paramCacheSize;
 
         // Check the preceding segment
         ADM_info("Getting previous segment, current segment number: %d\n",segNo);
@@ -312,22 +379,86 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             ADM_warning("Cannot check the previous segment %d\n",segNo);
             BOWOUT
         }
+        ADM_info("Switched to segment %d\n",segNo);
         // Same ref video?
         if(seg->_reference==refNo)
         {
-            // Not a recovery point and marked as keyframe?
-            if(recoveryDistance==NO_RECOVERY_INFO && (img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME)
+            // Recovery point and no POC? Don't bother to perform further checks.
+            if(!recoveryDistance && poc2==-1)
+            {
+                ADM_warning("No POC to compare with, only POC explicitely set in the slice header is supported.\n");
+                cut=ADM_EDITOR_CUT_POINT_IDR; // ??
+                BOWOUT
+            }
+            // Not a recovery point or POC reset to zero and marked as keyframe?
+            if((recoveryDistance==NO_RECOVERY_INFO || !poc2) && (img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME)
             {
                 ADM_info("IDR verified and same ref video, the cut point is fine.\n");
                 cut=ADM_EDITOR_CUT_POINT_IDR;
                 BOWOUT
             }
-            // Recovery point and no POC? Don't bother to perform further checks.
-            if(!recoveryDistance && poc==-1)
+            // Check for in-band SPS
+            // Identify the last keyframe of the segment. If in-band SPS is present, it will be there.
+            if(false==getFrameNumFromPtsOrBefore(vid, seg->_refStartTimeUs+seg->_durationUs-1, frame))
             {
-                ADM_warning("No POC to compare with, only POC explicitely set in the slice header is supported.\n");
-                cut=ADM_EDITOR_CUT_POINT_IDR; // ??
+                ADM_warning("Cannot identify the last frame in display order for segment %d\n",segNo);
                 BOWOUT
+            }
+            flags=0;
+            demuxer->getFlags(frame,&flags);
+            while(frame>0)
+            {
+                if(flags & AVI_KEY_FRAME) break;
+                demuxer->getFlags(--frame,&flags);
+            }
+            // Retrieve this keyframe
+            if(!demuxer->getFrame(frame,&img))
+            {
+                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
+                BOWOUT
+            }
+            spsLen1=0;
+            // Allocate another buffer to hold copy of raw SPS data
+            if(!spsBuf1)
+                spsBuf1=new uint8_t[MAX_H264_SPS_SIZE];
+            memset(spsBuf1,0,MAX_H264_SPS_SIZE);
+            if(AnnexB)
+                spsLen1=getRawH264SPS_startCode(img.data, img.dataLength, spsBuf1, MAX_H264_SPS_SIZE);
+            else
+                spsLen1=getRawH264SPS(img.data, img.dataLength, nalSize, spsBuf1, MAX_H264_SPS_SIZE);
+            if(spsLen1)
+            {   /* If the next segment doesn't have in-band SPS but this one does,
+                we are in trouble as we can't be sure that we parsed the slice header
+                using a valid SPS info. The least harmful thing to do is to check that
+                in-band SPS matches the global one and to bail out if it does not. */
+                uint8_t *sbuf=vid->paramCache;
+                uint32_t slen=vid->paramCacheSize;
+                if(spsLen2 && spsBuf2)
+                {
+                    sbuf=spsBuf2;
+                    slen=spsLen2;
+                }
+                if(memcmp(spsBuf1, sbuf, (spsLen1 > slen)? slen : spsLen1))
+                {
+                    ADM_warning("In-band SPS does not match the global one? Checking deeper...\n");
+                    ADM_SPSInfo tmpinfo;
+                    if(extractSPSInfoFromData(spsBuf1, spsLen1, &tmpinfo))
+                    { // Update SPS info used to parse slice header later
+                        match=true;
+                        MATCH(width)
+                        MATCH(height)
+                        MATCH(hasPocInfo)
+                        MATCH(log2MaxFrameNum)
+                        MATCH(log2MaxPocLsb)
+                        MATCH(frameMbsOnlyFlag)
+                        MATCH(refFrames)
+                        if(!match && !spsLen2)
+                        {
+                            ADM_warning("Appended incompatible streams possible, aborting check.\n");
+                            BOWOUT
+                        }
+                    }
+                }
             }
         }else
         {
@@ -360,46 +491,78 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 }
             }
             // Get SPS info
-            ADM_SPSInfo sps2;
-            if(!getH264SPSInfo(vid,&sps2))
+            // Check for in-band SPS first
+            // Identify the last keyframe of the segment. If in-band SPS is present, it will be there.
+            if(false==getFrameNumFromPtsOrBefore(vid, seg->_refStartTimeUs+seg->_durationUs-1, frame))
             {
-                ADM_warning("Cannot retrieve SPS info for H.264 ref video in segment %d\n",segNo);
+                ADM_warning("Cannot identify the last frame in display order for segment %d\n",segNo);
                 BOWOUT
             }
-            // We have SPS, does it match the one from the next segment?
-            // Check at least the fields we use here.
-#define MATCH(x) if(sps.x != sps2.x) { ADM_warning("%s value does not match.\n",#x); match=false; }
-            bool match=true;
-            MATCH(hasPocInfo)
-            MATCH(log2MaxFrameNum)
-            MATCH(log2MaxPocLsb)
-            MATCH(frameMbsOnlyFlag)
-            MATCH(refFrames)
-            if(!match)
+            flags=0;
+            demuxer->getFlags(frame,&flags);
+            while(frame>0)
             {
-                ADM_warning("SPS mismatch, saved video will be broken.\n");
-                cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                if(flags & AVI_KEY_FRAME) break;
+                demuxer->getFlags(--frame,&flags);
+            }
+            // Retrieve this keyframe
+            if(!demuxer->getFrame(frame,&img))
+            {
+                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
                 BOWOUT
             }
-            // Not a recovery point and marked as keyframe?
-            if(recoveryDistance==NO_RECOVERY_INFO && (img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME)
-            {
-                ADM_info("IDR verified, the cut point should be fine.\n");
-                cut=ADM_EDITOR_CUT_POINT_IDR;
-                BOWOUT
+            spsLen1=0;
+            // Allocate buffer to hold copy of raw SPS data
+            if(!spsBuf1)
+                spsBuf1=new uint8_t[MAX_H264_SPS_SIZE];
+            memset(spsBuf1,0,MAX_H264_SPS_SIZE);
+            if(AnnexB)
+                spsLen1=getRawH264SPS_startCode(img.data, img.dataLength, spsBuf1, MAX_H264_SPS_SIZE);
+            else
+                spsLen1=getRawH264SPS(img.data, img.dataLength, nalSize, spsBuf1, MAX_H264_SPS_SIZE);
+            if(spsLen1)
+            {   /* If the next segment's ref video doesn't have in-band SPS
+                but this one does, we must check that the SPS matches
+                the global header. */
+                if(memcmp(spsBuf1, nextSegParamCache, (spsLen1 > nextSegParamCacheSize)? nextSegParamCacheSize : spsLen1))
+                {
+                    ADM_warning("In-band SPS before and after the cut point does not match? Checking deeper...\n");
+                    ADM_SPSInfo tmpinfo;
+                    if(!extractSPSInfoFromData(spsBuf1, spsLen1, &tmpinfo) || !getH264SPSInfo(vid,&tmpinfo))
+                    {
+                        ADM_warning("Cannot retrieve H.264 SPS info for segment %u\n",segNo);
+                        BOWOUT
+                    }
+                    // Update SPS info used to parse slice header later
+                    match=true;
+                    MATCH(width)
+                    MATCH(height)
+                    MATCH(hasPocInfo)
+                    MATCH(log2MaxFrameNum)
+                    MATCH(log2MaxPocLsb)
+                    MATCH(frameMbsOnlyFlag)
+                    MATCH(refFrames)
+                    if(!match && !spsLen2)
+                    {
+                        ADM_warning("SPS mismatch, saved video will be broken.\n");
+                        cut=ADM_EDITOR_CUT_POINT_MISMATCH;
+                        BOWOUT
+                    }
+#undef MATCH(x)
+                }
             }
         }
 
         ADM_info("Recovery distance: %u\n",recoveryDistance);
         if(!recoveryDistance) // recovery point, check POC
         {
-            if(poc==-1)
+            if(poc2==-1)
             {
                 ADM_warning("No POC to compare, only POC explicitely set in the slice header is supported.\n");
                 cut=ADM_EDITOR_CUT_POINT_IDR; // ??
                 BOWOUT
             }
-            ADM_info("poc_lsb for frame %d: %d\n",frame,poc);
+            ADM_info("poc_lsb for frame %d: %d\n",frame,poc2);
             /* Get the POC of the last frame in display order before the cut,
                this is not necessarily the last displayed frame of the segment.
                We need to start earlier and identify the cut point. */
@@ -435,12 +598,12 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 BOWOUT
             }
             // Try to get POC, recovery distance doesn't matter here
-            int poc2 = -1;
+            int poc1 = -1; // POC of the last frame before the cut
             outcome=false;
             if(AnnexB)
-                outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &poc2, &sps, NULL);
+                outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &poc1, &sps, NULL);
             else
-                outcome=extractH264FrameType(img.data, img.dataLength, nalSize, &(img.flags), &poc2, &sps, NULL);
+                outcome=extractH264FrameType(img.data, img.dataLength, nalSize, &(img.flags), &poc1, &sps, NULL);
             if(!outcome)
             {
                 ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
@@ -449,20 +612,20 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
 
             cut=ADM_EDITOR_CUT_POINT_IDR;
 
-            if(poc2==-1)
+            if(poc1==-1)
             {
                 ADM_warning("Cannot get POC, only POC explicitely set in the slice header is supported.\n");
                 BOWOUT // or should the check fail instead?
             }
-            ADM_info("poc_lsb of the last frame %d in display order of the previous seg = %d\n",frame,poc2);
+            ADM_info("poc_lsb of the last frame %d in display order of the previous seg = %d\n",frame,poc1);
             // Check that POC doesn't go back
             int maxPocLsb = 1 << sps.log2MaxPocLsb;
             int pocMsb = 0;
-            if(poc2 > poc && poc2 - poc >= maxPocLsb/2)
+            if(poc1 > poc2 && poc1 - poc2 >= maxPocLsb/2)
                 pocMsb += maxPocLsb;
-            else if(poc > poc2 && poc - poc2 > maxPocLsb/2)
+            else if(poc2 > poc1 && poc2 - poc1 > maxPocLsb/2)
                 pocMsb -= maxPocLsb;
-            int delta = poc2 - pocMsb - poc;
+            int delta = poc1 - pocMsb - poc2;
             delta += 2*sps.refFrames; // unsure
             if(delta>0)
             {
@@ -553,6 +716,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             }
             // We have SPS, does it match the one from the next segment?
             // Width and height match for sure, check remaining fields.
+#define MATCH(x) if(sps.x != sps2.x) { ADM_warning("%s value does not match.\n",#x); match=false; }
             bool match=true;
             MATCH(fps1000)
             MATCH(log2_max_poc_lsb)
@@ -605,12 +769,12 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             BOWOUT
         }
         // Try to get POC
-        int poc2 = INT_MIN;
+        int poc1 = INT_MIN; // POC of the last frame before the cut
         bool outcome=false;
         if(AnnexB)
-            outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc2);
+            outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc1);
         else
-            outcome=extractH265FrameType(img.data, img.dataLength, nalSize, &sps, &(img.flags), &poc2);
+            outcome=extractH265FrameType(img.data, img.dataLength, nalSize, &sps, &(img.flags), &poc1);
         if(!outcome)
         {
             ADM_warning("Cannot get HEVC frame type and Picture Order Count value.\n");
@@ -634,25 +798,25 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
             BOWOUT
         }
-        int poc=poc2;
+        int poc2=poc1; // POC of the first frame after the cut
         outcome=false;
         if(AnnexB)
-            outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc);
+            outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc2);
         else
-            outcome=extractH265FrameType(img.data, img.dataLength, nalSize, &sps, &(img.flags), &poc);
+            outcome=extractH265FrameType(img.data, img.dataLength, nalSize, &sps, &(img.flags), &poc2);
         if(!outcome)
         {
             ADM_warning("Cannot get HEVC frame type and Picture Order Count value.\n");
             BOWOUT
         }
 
-        if((img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME && !poc) // IDR verified
+        if((img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME && !poc2) // IDR verified
         {
             cut=ADM_EDITOR_CUT_POINT_IDR;
             BOWOUT
         }
 
-        int delta=poc2-poc;
+        int delta=poc1-poc2;
         if(delta>0)
         {
             ADM_warning("Saved video won't be smoothly playable in FFmpeg-based players (POC going back by %d)\n",delta);
@@ -1148,6 +1312,39 @@ bool        ADM_Composer::getDirectImageForDebug(uint32_t frameNum,ADMCompressed
         return false;
     }
    return true;
+}
+
+/**
+    \fn getDirectKeyFrameImageAtPts
+    \brief Find and retrieve compressed keyframe image at or just before given time,
+           needed to create global header from in-band parameter sets.
+*/
+bool ADM_Composer::getDirectKeyFrameImageAtPts(uint64_t time, ADMCompressedImage *img)
+{
+    uint32_t segNo;
+    uint64_t segTime;
+
+    if(false==_segments.convertLinearTimeToSeg(time,&segNo,&segTime))
+        return false;
+    _SEGMENT *seg=_segments.getSegment(segNo);
+    ADM_assert(seg);
+    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+    ADM_assert(vid);
+    vidHeader *demuxer=vid->_aviheader;
+    ADM_assert(demuxer);
+
+    uint64_t refTime=segTime+seg->_refStartTimeUs;
+    if(refTime<=vid->firstFramePts)
+        return demuxer->getFrame(0,img);
+
+    int frame=0;
+    if(false==getFrameNumFromPtsOrBefore(vid,refTime,frame))
+        return false;
+    uint32_t flags=0;
+    demuxer->getFlags(frame,&flags);
+    while(frame>0 && !(flags & AVI_KEY_FRAME))
+        demuxer->getFlags(--frame,&flags);
+    return demuxer->getFrame(frame,img);
 }
 
 /**

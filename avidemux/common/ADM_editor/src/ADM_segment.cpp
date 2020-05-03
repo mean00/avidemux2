@@ -258,12 +258,15 @@ bool ADM_EditorSegment::deleteAll (void)
           v->_aviheader->close ();
           delete v->_aviheader;
       }
+      if(v->infoCache)
+          delete [] v->infoCache;
       if(v->paramCache)
           delete [] v->paramCache;
       v->_videoCache=NULL;
       v->color=NULL;
       v->decoder=NULL;
       v->_aviheader=NULL;
+      v->infoCache=NULL;
       v->paramCache=NULL;
      // Delete audio codec too
      // audioStream will be deleted by the demuxer
