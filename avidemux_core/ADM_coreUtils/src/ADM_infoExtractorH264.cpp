@@ -1079,6 +1079,98 @@ uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint32_t nalSize, uint8_t *d
 }
 
 /**
+    \fn getRawH264SPS_startCode
+    \brief Find the first SPS in AnnexB style buffer and copy it to dest, return SPS length.
+*/
+uint32_t getRawH264SPS_startCode(uint8_t *data, uint32_t len, uint8_t *dest, uint32_t maxsize)
+{
+    if(!dest || !maxsize)
+        return 0;
+
+    uint8_t *head = data;
+    uint8_t *tail = head + len;
+    uint8_t stream;
+    uint32_t hnt = 0xffffffff;
+    int counter = 0, length = 0;
+    bool last = false;
+#define MAX_NALU_TO_CHECK 4
+    while(head + 2 < tail)
+    {
+        if(counter > MAX_NALU_TO_CHECK)
+            return 0;
+
+        hnt = (hnt << 8) + head[0];
+        if((hnt & 0xffffff) != 1)
+        {
+            head++;
+            if(head + 2 < tail)
+                continue;
+            if(!counter) break;
+            last = true;
+        }
+        length = head - data + 2;
+        uint8_t prevNaluType = 0;
+        if(!last)
+        {
+            head++;
+            counter++;
+            if(counter > 1)
+                length = head - data - 3; // likely one zerobyte too much, harmless
+            prevNaluType = *head & 0x1f;
+            if(!length)
+            {
+                data = head;
+                stream = prevNaluType;
+                continue;
+            }
+        }
+        if(stream == NAL_SPS)
+        {
+            if(length>maxsize)
+            {
+                ADM_warning("Buffer too small for SPS: need %d, got %u\n",length,maxsize);
+                return 0;
+            }
+            memcpy(dest,data,length);
+            return length;
+        }
+        data = head++;
+        stream = prevNaluType;
+    }
+#undef MAX_NALU_TO_CHECK
+    return 0;
+}
+
+/**
+    \fn extractSPSInfoFromData
+    \brief Decode raw SPS data
+*/
+bool extractSPSInfoFromData(uint8_t *data, uint32_t length, ADM_SPSInfo *spsinfo)
+{
+    uint32_t myExtraLen=length+8;
+    uint8_t *myExtra=new uint8_t[myExtraLen];
+    memset(myExtra,0,myExtraLen);
+    uint8_t *p=myExtra;
+    // Create fake avcC extradata
+    *p++=1;       // AVC version
+    *p++=data[1]; // Profile
+    *p++=data[2]; // Profile compatibility
+    *p++=data[3]; // Level
+    *p++=0xff;    // Nal size minus 1
+    *p++=0xe1;    // 1x SPS
+    *p++=length>>8;
+    *p++=length&0xFF;
+    memcpy(p,data,length);
+
+    bool r = extractSPSInfo_mp4Header(myExtra,myExtraLen,spsinfo);
+
+    delete [] myExtra;
+    myExtra=NULL;
+
+    return r;
+}
+
+/**
         \fn extractSPSInfo2
         \brief Same as extractSPSInfo, but using libavcodec
 */
