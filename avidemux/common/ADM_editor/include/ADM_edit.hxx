@@ -266,6 +266,7 @@ public:
 // Used for stream copy
                     bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);
                     bool        getCompressedPicture(uint64_t start,uint64_t delay,ADMCompressedImage *img); //COPYMODE
+                    bool        getDirectKeyFrameImageAtPts(uint64_t time,ADMCompressedImage *img); // source of extradata in AnnexB to ISO conversion
                     // Use only for debug purpose !!!
                     bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);
                     ADM_cutPointType checkCutsAreOnIntra(void);

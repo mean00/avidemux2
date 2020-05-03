@@ -71,32 +71,12 @@ static bool isNalValid(int nal)
     return true;
 }
 /**
- * \fn extractExtraDataH264
+ *  \fn extractExtraDataH264Internal
  */
-bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264()
+bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264Internal(void)
 {
-    myBitstream=new ADMBitstream(ADM_COPY_FROM_ANNEX_B_SIZE);
-    myBitstream->data=buffer;
-
-    myExtra=NULL;
-    myExtraLen=0;
-    // Read First frame, it contains PPS & SPS
-    // Built avc-like atom from it.
-
-    // We need the absolute 1st frame to gety SPS PPS
-    // Hopefully it will be ok
-    ADMCompressedImage img;
-    img.data=buffer;
-    img.dataLength=0;
-    if(false==video_body->getDirectImageForDebug(0,&img))
-    {
-        ADM_warning("Cannot read first image\n");
-        return false;
-    }
-    myBitstream->len=img.dataLength;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK];
-    //mixDump(img.data,img.dataLength);
-    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,MAX_NALU_PER_CHUNK,desc);
+    int nbNalu=ADM_splitNalu(myBitstream->data, myBitstream->data+myBitstream->len, MAX_NALU_PER_CHUNK, desc);
     // search sps
     uint32_t spsLen=0, ppsLen=0;
     int indexSps,indexPps;
@@ -132,6 +112,7 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264()
     ADM_info("Copy from annexB: Found sps=%d, pps=%d.\n",(int)spsLen,(int)ppsLen);
     // Build extraData
     myExtraLen=5+1+2+1+spsLen+1+2+1+ppsLen;
+    if(myExtra) delete [] myExtra;
     myExtra=new uint8_t[myExtraLen];
     uint8_t *ptr=myExtra;
     uint8_t *sps=desc[indexSps].start;
@@ -161,6 +142,47 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264()
 }
 
 /**
+ * \fn extractExtraDataH264
+ */
+bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264()
+{
+    myBitstream=new ADMBitstream(ADM_COPY_FROM_ANNEX_B_SIZE);
+    myBitstream->data=buffer;
+
+    myExtra=NULL;
+    myExtraLen=0;
+    // Read the first keyframe in the range, it contains PPS & SPS
+    // Built avc-like atom from it.
+
+    /* We need the image at the start of the range as parameter sets
+    may change on the fly and we might get a disagreement between
+    the global header and in-band SPS & PPS from the start on if we
+    use the very first image in the stream.
+
+    Multiple SPS & PPS are not supported. */
+
+    ADMCompressedImage img;
+    img.data=buffer;
+    img.dataLength=0;
+    if(false==video_body->getDirectKeyFrameImageAtPts(startTimePts,&img))
+    {
+        ADM_warning("Cannot read the first keyframe image in the range\n");
+        return false;
+    }
+    myBitstream->len=img.dataLength;
+    if(extractExtraDataH264Internal())
+        return true;
+    // No SPS & PPS in the access unit? Fall back on the old behavior.
+    if(false==video_body->getDirectImageForDebug(0,&img))
+    {
+        ADM_warning("Cannot read first image\n");
+        return false;
+    }
+    myBitstream->len=img.dataLength;
+    return extractExtraDataH264Internal();
+}
+
+/**
  * 
  * @param ptr
  * @param naluType
@@ -179,46 +201,25 @@ static uint8_t *writeNaluH265(uint8_t *ptr, NALU_descriptor *d)
     memcpy(ptr,d->start,d->size);
     return ptr+d->size;
 }
-
 /**
- * \fn extractExtraDataH265
- * We need to pack VPS/PPS/SPS MP4 style
- * 
- * order should be  VPS, SPS, PPS, SEI. 
+ *  \fn extractExtraDataH265Internal
  */
-bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
+bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265Internal(void)
 {
-    myBitstream=new ADMBitstream(ADM_COPY_FROM_ANNEX_B_SIZE);
-    myBitstream->data=buffer;
-
-    myExtra=NULL;
-    myExtraLen=0;
-    // Read First frame, it contains PPS & SPS
-  
-    ADMCompressedImage img;
-    img.data=buffer;
-    img.dataLength=0;
-    if(false==video_body->getDirectImageForDebug(0,&img))
-    {
-        ADM_warning("Cannot read first image\n");
-        return false;
-    }
-    mixDump(img.data, 48);
-    myBitstream->len=img.dataLength;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK];
 
-    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len, MAX_NALU_PER_CHUNK,desc);
-    
+    int nbNalu=ADM_splitNalu(myBitstream->data, myBitstream->data+myBitstream->len, MAX_NALU_PER_CHUNK, desc);
+
     // The list of NALU we are interested in...
     NALU_descriptor *vpsNalu,*ppsNalu,*spsNalu;
-    
+
 #define LoadNalu(x,y)     x=ADM_findNaluH265(NAL_H265_##y,nbNalu,desc); \
     if(!x) \
     { \
         ADM_error("Cannot find "#y); \
         return false; \
     }
-    
+
 #define NUMBER_OF_NALU_IN_EXTRADATA 3 // SEI ?    
     LoadNalu(vpsNalu,VPS);
     LoadNalu(ppsNalu,PPS);
@@ -226,6 +227,7 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     
     // Build extraData
     myExtraLen=vpsNalu->size+ppsNalu->size+spsNalu->size+(7)*NUMBER_OF_NALU_IN_EXTRADATA+32;
+    if(myExtra) delete [] myExtra;
     myExtra=new uint8_t[myExtraLen];
     uint8_t *ptr=myExtra;
     
@@ -273,6 +275,44 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     ADM_info("generated %d bytes of extradata.\n",(int)myExtraLen);
     mixDump(myExtra, myExtraLen);
     return true;
+}
+
+/**
+ * \fn extractExtraDataH265
+ * We need to pack VPS/PPS/SPS MP4 style
+ *
+ * order should be  VPS, SPS, PPS, SEI.
+ */
+bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
+{
+    myBitstream=new ADMBitstream(ADM_COPY_FROM_ANNEX_B_SIZE);
+    myBitstream->data=buffer;
+
+    myExtra=NULL;
+    myExtraLen=0;
+    // Read the first keyframe in the range, it contains PPS & SPS
+
+    ADMCompressedImage img;
+    img.data=buffer;
+    img.dataLength=0;
+    if(false==video_body->getDirectKeyFrameImageAtPts(startTimePts,&img))
+    {
+        ADM_warning("Cannot read first the first keyframe image in the range\n");
+        return false;
+    }
+    mixDump(img.data, 48);
+    myBitstream->len=img.dataLength;
+    if(extractExtraDataH265Internal())
+        return true;
+    // No PPS & SPS? Try the first frame of the first ref video.
+    if(false==video_body->getDirectImageForDebug(0,&img))
+    {
+        ADM_warning("Cannot read first image\n");
+        return false;
+    }
+    mixDump(img.data, 48);
+    myBitstream->len=img.dataLength;
+    return extractExtraDataH265Internal();
 }
 /**
     \fn ctor

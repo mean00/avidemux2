@@ -60,6 +60,9 @@ public:
 protected:
         bool            extractExtraDataH264();
         bool            extractExtraDataH265();
+private:
+        bool            extractExtraDataH264Internal(void);
+        bool            extractExtraDataH265Internal(void);
 };
 /**
         \fn ADM_videoStreamCopyToAnnexB

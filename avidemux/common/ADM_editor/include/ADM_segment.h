@@ -68,8 +68,10 @@ public:
       
 
       uint32_t _nb_video_frames; /// Really needed ?
+      uint32_t infoCacheSize;
+      uint8_t *infoCache; /// Reuse decoded SPS and friends
       uint32_t paramCacheSize;
-      uint8_t *paramCache; /// Reuse decoded SPS and friends
+      uint8_t *paramCache; /// Raw SPS to speed up cut check
       EditorCache *_videoCache; /// Decoded video cache
 
       /* Timeing info */
@@ -91,6 +93,8 @@ public:
         decoder=NULL;
         color=NULL;
         _nb_video_frames=0;
+        infoCacheSize=0;
+        infoCache=NULL;
         paramCacheSize=0;
         paramCache=NULL;
         _videoCache=NULL;
