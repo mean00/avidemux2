@@ -81,8 +81,6 @@ version 2 media descriptor :
 //#define MP4_VERBOSE
 #define MAX_CHUNK_SIZE (3*1024)
 
-static bool mp4ExtractSPSInfoFromData(uint8_t *data, uint32_t length, ADM_SPSInfo *spsinfo);
-
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 //****************************************************
 MP4Track::MP4Track(void)
@@ -535,7 +533,7 @@ uint8_t    MP4Header::open(const char *name)
                         {
                             ADM_info("SPS mismatch? Checking deeper...\n");
                             ADM_SPSInfo info2;
-                            if(mp4ExtractSPSInfoFromData(curSps,curSpsLen,&info2))
+                            if(extractSPSInfoFromData(curSps,curSpsLen,&info2))
                             { // check only fields we actually use
 #define MATCH(x) if(info.x != info2.x) { ADM_warning("%s value does not match.\n",#x); info.x = info2.x; match=false; }
                                 match=true;
@@ -948,33 +946,5 @@ bool         MP4Header::unreliableBFramePts (void)
     if(isH264Compatible(_videostream.fccHandler))
         return true;
     return false;
-}
-/**
- *  \fn mp4ExtractSPSInfoFromData
- *  \brief Decode SPS data
- */
-static bool mp4ExtractSPSInfoFromData(uint8_t *data, uint32_t length, ADM_SPSInfo *spsinfo)
-{
-    uint32_t myExtraLen=length+8;
-    uint8_t *myExtra=new uint8_t[myExtraLen];
-    memset(myExtra,0,myExtraLen);
-    uint8_t *p=myExtra;
-    // Create fake avcC extradata
-    *p++=1;       // AVC version
-    *p++=data[1]; // Profile
-    *p++=data[2]; // Profile compatibility
-    *p++=data[3]; // Level
-    *p++=0xff;    // Nal size minus 1
-    *p++=0xe1;    // SPS
-    *p++=length>>8;
-    *p++=length&0xFF;
-    memcpy(p,data,length);
-
-    bool r = extractSPSInfo_mp4Header(myExtra,myExtraLen,spsinfo);
-
-    delete [] myExtra;
-    myExtra=NULL;
-
-    return r;
 }
 //EOF
