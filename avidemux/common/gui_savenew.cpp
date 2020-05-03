@@ -216,6 +216,7 @@ bool abort=false;
         {
             if(bitstream.pts!=ADM_NO_PTS)
             {
+                UI_purge();
                 if(!muxer->getEncoding()->isAlive())
                 {
                     abort=true;
