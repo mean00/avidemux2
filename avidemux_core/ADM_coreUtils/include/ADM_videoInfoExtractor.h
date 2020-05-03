@@ -71,13 +71,15 @@ public:
     int     address_coding_length;
 };
 
-
+#define MAX_H264_SPS_SIZE 2048
 
 ADM_COREUTILS6_EXPORT bool    ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming, uint32_t *outLen, uint8_t *outData);
 
 ADM_COREUTILS6_EXPORT bool    extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
 ADM_COREUTILS6_EXPORT bool    extractSPSInfo_mp4Header(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
+ADM_COREUTILS6_EXPORT bool    extractSPSInfoFromData(uint8_t *data, uint32_t length, ADM_SPSInfo *spsinfo);
 ADM_COREUTILS6_EXPORT uint32_t getRawH264SPS(uint8_t *data, uint32_t len, uint32_t nalSize, uint8_t *dest, uint32_t maxsize);
+ADM_COREUTILS6_EXPORT uint32_t getRawH264SPS_startCode(uint8_t *data, uint32_t len, uint8_t *dest, uint32_t maxsize);
 ADM_COREUTILS6_EXPORT uint32_t ADM_getNalSizeH264(uint8_t *extra, uint32_t len);
 
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t nalSize, uint32_t *flags, int *pocLsb, ADM_SPSInfo *sps, uint32_t *recovery=NULL);
