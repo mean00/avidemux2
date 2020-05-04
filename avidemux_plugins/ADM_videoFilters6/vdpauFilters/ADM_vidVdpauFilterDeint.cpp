@@ -336,8 +336,8 @@ bool vdpauVideoFilterDeint::configure( void)
      diaElemToggle    tIvtc(&(doIvtc),   QT_TRANSLATE_NOOP("vdpaudeint","_Ivtc:"));
      diaElemToggle    tResize(&(doResize),   QT_TRANSLATE_NOOP("vdpaudeint","_Resize:"));
      diaElemMenu      mMode(&(configuration.deintMode),   QT_TRANSLATE_NOOP("vdpaudeint","_Deint Mode:"), 3,tMode);
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpaudeint","Width :"),16,2048);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpaudeint","Height :"),16,2048);
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpaudeint","Width :"),16,MAXIMUM_SIZE);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpaudeint","Height :"),16,MAXIMUM_SIZE);
      
      diaElem *elems[]={&mMode,&tIvtc,&tResize,&tWidth,&tHeight};
      

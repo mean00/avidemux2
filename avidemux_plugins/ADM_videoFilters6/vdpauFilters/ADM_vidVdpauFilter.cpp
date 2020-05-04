@@ -198,10 +198,8 @@ vdpauVideoFilter::~vdpauVideoFilter()
 */
 bool vdpauVideoFilter::configure( void) 
 {
-    
-     
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpresize","Width :"),16,2048);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpresize","Height :"),16,2048);
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpresize","Width :"),16,MAXIMUM_SIZE);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpresize","Height :"),16,MAXIMUM_SIZE);
      
      diaElem *elems[]={&tWidth,&tHeight};
      
@@ -307,7 +305,7 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         
         struct ADM_vdpauRenderState *rndr = (struct ADM_vdpauRenderState *)next->refDescriptor.refHwImage;
         tmpSurface=rndr->surface;
-        printf("image is already vdpau %d\n",(int)tmpSurface);
+        //printf("image is already vdpau %d\n",(int)tmpSurface);
     }else
     {
         //printf("Uploading image to vdpau\n");
