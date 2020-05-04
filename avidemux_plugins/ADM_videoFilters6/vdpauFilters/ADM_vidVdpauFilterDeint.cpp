@@ -333,11 +333,11 @@ bool vdpauVideoFilterDeint::configure( void)
           };
      bool doResize=configuration.resizeToggle;
      bool doIvtc=configuration.enableIvtc;
-     diaElemToggle    tIvtc(&(doIvtc),   QT_TRANSLATE_NOOP("vdpaudeint","_Ivtc:"));
-     diaElemToggle    tResize(&(doResize),   QT_TRANSLATE_NOOP("vdpaudeint","_Resize:"));
+     diaElemToggle    tIvtc(&(doIvtc),   QT_TRANSLATE_NOOP("vdpaudeint","_IVTC"));
+     diaElemToggle    tResize(&(doResize),   QT_TRANSLATE_NOOP("vdpaudeint","_Resize"));
      diaElemMenu      mMode(&(configuration.deintMode),   QT_TRANSLATE_NOOP("vdpaudeint","_Deint Mode:"), 3,tMode);
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpaudeint","Width :"),16,MAXIMUM_SIZE);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpaudeint","Height :"),16,MAXIMUM_SIZE);
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpaudeint","Width:"),16,MAXIMUM_SIZE);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpaudeint","Height:"),16,MAXIMUM_SIZE);
      
      diaElem *elems[]={&mMode,&tIvtc,&tResize,&tWidth,&tHeight};
      

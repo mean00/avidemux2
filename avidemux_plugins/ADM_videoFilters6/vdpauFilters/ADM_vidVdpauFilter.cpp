@@ -198,8 +198,8 @@ vdpauVideoFilter::~vdpauVideoFilter()
 */
 bool vdpauVideoFilter::configure( void) 
 {
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpresize","Width :"),16,MAXIMUM_SIZE);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpresize","Height :"),16,MAXIMUM_SIZE);
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpresize","Width:"),16,MAXIMUM_SIZE);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpresize","Height:"),16,MAXIMUM_SIZE);
      
      diaElem *elems[]={&tWidth,&tHeight};
      
