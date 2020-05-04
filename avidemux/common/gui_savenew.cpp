@@ -212,7 +212,8 @@ bool abort=false;
         bitstream.bufferSize=BUFFER_SIZE;
         int nbFrames=0;
         uint32_t percent=0;
-        uint32_t remainingMs=0;
+#define GUI_REFRESH_DELAY 500 // in ms
+        uint32_t nextUpdate=GUI_REFRESH_DELAY;
         while(pass1->encode(&bitstream))
         {
             if(bitstream.pts!=ADM_NO_PTS)
@@ -233,17 +234,16 @@ bool abort=false;
                     muxer->getEncoding()->setPercent(percent);
                 }
                 uint32_t elapsed=ticktock.getElapsedMS();
-                if(percent>=1)
+                if(percent>=1 && elapsed>nextUpdate)
                 {
                     double totalTime=(100*elapsed)/percent;
                     double remaining=totalTime-elapsed;
                     if(remaining<0)
                         remaining=0;
-                    if((uint32_t)remaining!=remainingMs)
-                    {
-                        remainingMs=(uint32_t)remaining;
-                        muxer->getEncoding()->setRemainingTimeMS(remainingMs);
-                    }
+                    uint32_t remainingMs=(uint32_t)remaining;
+                    muxer->getEncoding()->setRemainingTimeMS(remainingMs);
+                    nextUpdate=elapsed+GUI_REFRESH_DELAY;
+#undef GUI_REFRESH_DELAY
                 }
             }
             nbFrames++;
