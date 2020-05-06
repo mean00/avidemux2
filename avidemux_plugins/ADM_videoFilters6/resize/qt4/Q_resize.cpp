@@ -61,8 +61,13 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
 
      ui.lockArCheckBox->setChecked(_param->rsz.lockAR);
      ui.checkBoxRoundup->setChecked(_param->rsz.roundup);
-     ui.spinBoxWidth->setValue(_param->rsz.width);
-     ui.spinBoxHeight->setValue(_param->rsz.height);
+
+     ui.spinBoxWidth->setKeyboardTracking(false);
+     ui.spinBoxHeight->setKeyboardTracking(false);
+     ui.percentageSpinBox->setKeyboardTracking(false);
+
+     ui.spinBoxWidth->setValue(_param->rsz.width & 0xfffffe);
+     ui.spinBoxHeight->setValue(_param->rsz.height & 0xfffffe);
      ui.horizontalSlider->setValue(100);
 	 ui.comboBoxAlgo->setCurrentIndex(_param->rsz.algo);
      ui.comboBoxSource->setCurrentIndex(_param->rsz.sourceAR);
@@ -70,6 +75,7 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
      if(_param->rsz.lockAR)
          updateWidthHeightSpinners();
      enableControls(_param->rsz.lockAR);
+     roundupToggled(_param->rsz.roundup);
 
 	 connect(ui.comboBoxSource, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
 	 connect(ui.comboBoxDestination, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
@@ -104,22 +110,24 @@ void resizeWindow::percentageSpinBoxChanged(int value)
 {
 	disconnectDimensionControls();
 
+	float width = _param->originalWidth;
+
+	width /= 100.;
+	width *= value;
+	width += 0.5;
+
+	uint32_t iw = floor(width);
+
 	if (ui.checkBoxRoundup->isChecked())
 	{
+		iw &= 0xfffff0;
 		if (lastPercentage > value)
-			ui.spinBoxWidth->setValue(ui.spinBoxWidth->value() - 16);
+			iw = iw >= 32 ? iw - 16 : 16;
 		else
-			ui.spinBoxWidth->setValue(ui.spinBoxWidth->value() + 16);
+			iw += 16;
 	}
-	else
-	{
-		float width = _param->originalWidth;
 
-		width /= 100.;
-		width *= value;
-
-		ui.spinBoxWidth->setValue(floor(width + 0.5));
-	}
+	ui.spinBoxWidth->setValue(iw);
 
 	updateWidthHeightSpinners(false);
 
@@ -134,6 +142,8 @@ void resizeWindow::widthSpinBoxChanged(int value)
 
 	if (ui.lockArCheckBox->isChecked())
 		updateWidthHeightSpinners(false);
+	else
+		ui.spinBoxWidth->setValue((uint32_t)value & 0xfffffe);
 
 	connectDimensionControls();
 }
@@ -144,6 +154,8 @@ void resizeWindow::heightSpinBoxChanged(int value)
 
 	if (ui.lockArCheckBox->isChecked())
 		updateWidthHeightSpinners(true);
+	else
+		ui.spinBoxHeight->setValue((uint32_t)value & 0xfffffe);
 
 	connectDimensionControls();
 }
