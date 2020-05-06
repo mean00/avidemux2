@@ -548,7 +548,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                         cut=ADM_EDITOR_CUT_POINT_MISMATCH;
                         BOWOUT
                     }
-#undef MATCH(x)
+#undef MATCH
                 }
             }
         }
