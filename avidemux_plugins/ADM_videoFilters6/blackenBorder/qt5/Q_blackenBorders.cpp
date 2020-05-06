@@ -54,13 +54,13 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     SPINNER(Right);
     SPINNER(Top);
     SPINNER(Bottom);
-#undef SPINNER(x)
+#undef SPINNER
 #define SPINNER(x) ui.spinBox##x->setSingleStep(2); ui.spinBox##x->setKeyboardTracking(false);
     SPINNER(Left)
     SPINNER(Right)
     SPINNER(Top)
     SPINNER(Bottom)
-#undef SPINNER(x)
+#undef SPINNER
 
     setModal(true);
 }
