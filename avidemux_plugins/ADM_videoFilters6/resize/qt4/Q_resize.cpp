@@ -120,11 +120,14 @@ void resizeWindow::percentageSpinBoxChanged(int value)
 
     if (ui.checkBoxRoundup->isChecked())
     {
-        iw &= 0xfffff0;
-        if (lastPercentage > value)
-            iw = iw >= 32 ? iw - 16 : 16;
-        else
-            iw += 16;
+        iw = (iw + 7) & 0xfffff0;
+        if ((int)iw == ui.spinBoxWidth->value())
+        {
+            if (lastPercentage > value)
+                iw = iw >= 32 ? iw - 16 : 16;
+            else
+                iw += 16;
+        }
     }
 
     ui.spinBoxWidth->setValue(iw);
