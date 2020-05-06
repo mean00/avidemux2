@@ -40,7 +40,7 @@ static double aspectRatio[2][5]={
 resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
  {
      ui.setupUi(this);
-	 lastPercentage = 100;
+     lastPercentage = 100;
      _param=param;
 
 #define ADD_PAR(x) ui.comboBoxSource->addItem(x); ui.comboBoxDestination->addItem(x);
@@ -69,7 +69,7 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
      ui.spinBoxWidth->setValue(_param->rsz.width & 0xfffffe);
      ui.spinBoxHeight->setValue(_param->rsz.height & 0xfffffe);
      ui.horizontalSlider->setValue(100);
-	 ui.comboBoxAlgo->setCurrentIndex(_param->rsz.algo);
+     ui.comboBoxAlgo->setCurrentIndex(_param->rsz.algo);
      ui.comboBoxSource->setCurrentIndex(_param->rsz.sourceAR);
      ui.comboBoxDestination->setCurrentIndex(_param->rsz.targetAR);
      if(_param->rsz.lockAR)
@@ -77,13 +77,13 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
      enableControls(_param->rsz.lockAR);
      roundupToggled(_param->rsz.roundup);
 
-	 connect(ui.comboBoxSource, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
-	 connect(ui.comboBoxDestination, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
-	 connect(ui.checkBoxRoundup, SIGNAL(toggled(bool)), this, SLOT(roundupToggled(bool)));
-	 connect(ui.lockArCheckBox, SIGNAL(toggled(bool)), this, SLOT(lockArToggled(bool)));
-	 connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
+     connect(ui.comboBoxSource, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
+     connect(ui.comboBoxDestination, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
+     connect(ui.checkBoxRoundup, SIGNAL(toggled(bool)), this, SLOT(roundupToggled(bool)));
+     connect(ui.lockArCheckBox, SIGNAL(toggled(bool)), this, SLOT(lockArToggled(bool)));
+     connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
 
-	 connectDimensionControls();
+     connectDimensionControls();
  }
 
  void resizeWindow::gather(void)
@@ -99,199 +99,199 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
  
  void resizeWindow::sliderChanged(int value)
 {
-	disconnectDimensionControls();
+    disconnectDimensionControls();
 
-	percentageSpinBoxChanged(value);
+    percentageSpinBoxChanged(value);
 
-	connectDimensionControls();
+    connectDimensionControls();
 }
 
 void resizeWindow::percentageSpinBoxChanged(int value)
 {
-	disconnectDimensionControls();
+    disconnectDimensionControls();
 
-	float width = _param->originalWidth;
+    float width = _param->originalWidth;
 
-	width /= 100.;
-	width *= value;
-	width += 0.5;
+    width /= 100.;
+    width *= value;
+    width += 0.5;
 
-	uint32_t iw = floor(width);
+    uint32_t iw = floor(width);
 
-	if (ui.checkBoxRoundup->isChecked())
-	{
-		iw &= 0xfffff0;
-		if (lastPercentage > value)
-			iw = iw >= 32 ? iw - 16 : 16;
-		else
-			iw += 16;
-	}
+    if (ui.checkBoxRoundup->isChecked())
+    {
+        iw &= 0xfffff0;
+        if (lastPercentage > value)
+            iw = iw >= 32 ? iw - 16 : 16;
+        else
+            iw += 16;
+    }
 
-	ui.spinBoxWidth->setValue(iw);
+    ui.spinBoxWidth->setValue(iw);
 
-	updateWidthHeightSpinners(false);
+    updateWidthHeightSpinners(false);
 
-	lastPercentage = ui.percentageSpinBox->value();
+    lastPercentage = ui.percentageSpinBox->value();
 
-	connectDimensionControls();
+    connectDimensionControls();
 }
 
 void resizeWindow::widthSpinBoxChanged(int value)
 {
-	disconnectDimensionControls();
+    disconnectDimensionControls();
 
-	if (ui.lockArCheckBox->isChecked())
-		updateWidthHeightSpinners(false);
-	else
-		ui.spinBoxWidth->setValue((uint32_t)value & 0xfffffe);
+    if (ui.lockArCheckBox->isChecked())
+        updateWidthHeightSpinners(false);
+    else
+        ui.spinBoxWidth->setValue((uint32_t)value & 0xfffffe);
 
-	connectDimensionControls();
+    connectDimensionControls();
 }
 
 void resizeWindow::heightSpinBoxChanged(int value)
 {
-	disconnectDimensionControls();
+    disconnectDimensionControls();
 
-	if (ui.lockArCheckBox->isChecked())
-		updateWidthHeightSpinners(true);
-	else
-		ui.spinBoxHeight->setValue((uint32_t)value & 0xfffffe);
+    if (ui.lockArCheckBox->isChecked())
+        updateWidthHeightSpinners(true);
+    else
+        ui.spinBoxHeight->setValue((uint32_t)value & 0xfffffe);
 
-	connectDimensionControls();
+    connectDimensionControls();
 }
 
 void resizeWindow::aspectRatioChanged(int index)
 {
-	disconnectDimensionControls();
+    disconnectDimensionControls();
 
-	if (ui.lockArCheckBox->isChecked())
-		updateWidthHeightSpinners();
+    if (ui.lockArCheckBox->isChecked())
+        updateWidthHeightSpinners();
 
-	connectDimensionControls();
+    connectDimensionControls();
 }
 
 void resizeWindow::disconnectDimensionControls()
 {
-	disconnect(ui.spinBoxHeight, SIGNAL(valueChanged(int)), this, SLOT(heightSpinBoxChanged(int)));
-	disconnect(ui.spinBoxWidth, SIGNAL(valueChanged(int)), this, SLOT(widthSpinBoxChanged(int)));
-	disconnect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-	disconnect(ui.percentageSpinBox, SIGNAL(valueChanged(int)), this, SLOT(percentageSpinBoxChanged(int)));
+    disconnect(ui.spinBoxHeight, SIGNAL(valueChanged(int)), this, SLOT(heightSpinBoxChanged(int)));
+    disconnect(ui.spinBoxWidth, SIGNAL(valueChanged(int)), this, SLOT(widthSpinBoxChanged(int)));
+    disconnect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
+    disconnect(ui.percentageSpinBox, SIGNAL(valueChanged(int)), this, SLOT(percentageSpinBoxChanged(int)));
 }
 
 void resizeWindow::connectDimensionControls()
 {
-	connect(ui.spinBoxHeight, SIGNAL(valueChanged(int)), this, SLOT(heightSpinBoxChanged(int)));
-	connect(ui.spinBoxWidth, SIGNAL(valueChanged(int)), this, SLOT(widthSpinBoxChanged(int)));
-	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-	connect(ui.percentageSpinBox, SIGNAL(valueChanged(int)), this, SLOT(percentageSpinBoxChanged(int)));
+    connect(ui.spinBoxHeight, SIGNAL(valueChanged(int)), this, SLOT(heightSpinBoxChanged(int)));
+    connect(ui.spinBoxWidth, SIGNAL(valueChanged(int)), this, SLOT(widthSpinBoxChanged(int)));
+    connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
+    connect(ui.percentageSpinBox, SIGNAL(valueChanged(int)), this, SLOT(percentageSpinBoxChanged(int)));
 }
 
 void resizeWindow::updateWidthHeightSpinners(bool useHeightAsRef)
 {
-	int sar = ui.comboBoxSource->currentIndex();
-	int dar = ui.comboBoxDestination->currentIndex();
-	float x = ui.spinBoxWidth->value();
-	float y = ui.spinBoxHeight->value();
-	float sr_mul = 1.;
-	float dst_mul = 1.;
-	float ar = 1.;
+    int sar = ui.comboBoxSource->currentIndex();
+    int dar = ui.comboBoxDestination->currentIndex();
+    float x = ui.spinBoxWidth->value();
+    float y = ui.spinBoxHeight->value();
+    float sr_mul = 1.;
+    float dst_mul = 1.;
+    float ar = 1.;
 
-	if (sar)
-	{  // source pixel aspect ratio is not 1:1
-		sr_mul = aspectRatio[_param->pal][sar];
-	}
+    if (sar)
+    {  // source pixel aspect ratio is not 1:1
+        sr_mul = aspectRatio[_param->pal][sar];
+    }
 
-	if (dar)
-	{  // dst pixel aspect ratio is not 1:1
-		dst_mul = 1 / aspectRatio[_param->pal][dar];
-	}
+    if (dar)
+    {  // dst pixel aspect ratio is not 1:1
+        dst_mul = 1 / aspectRatio[_param->pal][dar];
+    }
 
-	aprintf("source mul %02.2f , dst mul: %02.2f\n", sr_mul, dst_mul);
+    aprintf("source mul %02.2f , dst mul: %02.2f\n", sr_mul, dst_mul);
 
-	ar = _param->originalWidth / (_param->originalHeight / (sr_mul * dst_mul));
+    ar = _param->originalWidth / (_param->originalHeight / (sr_mul * dst_mul));
 
-	if (useHeightAsRef)
-		x = y * ar;
-	else
-		y = x / ar;
+    if (useHeightAsRef)
+        x = y * ar;
+    else
+        y = x / ar;
 
-	aprintf("x, y: %03f, %03f\n", x, y);
+    aprintf("x, y: %03f, %03f\n", x, y);
 
-	int xx = floor(x + 0.5);
-	int yy = floor(y + 0.5);
+    int xx = floor(x + 0.5);
+    int yy = floor(y + 0.5);
 
-	if (xx & 1)
-		xx--;
+    if (xx & 1)
+        xx--;
 
-	if (yy & 1)
-		yy--;
+    if (yy & 1)
+        yy--;
 
-	roundUp(xx, yy);
-	updateSlider();
+    roundUp(xx, yy);
+    updateSlider();
 }
 
 void resizeWindow::updateSlider()
 {
-	float percent = (((float)ui.spinBoxWidth->value() / (float)_param->originalWidth) * 100.) + 0.5;
+    float percent = (((float)ui.spinBoxWidth->value() / (float)_param->originalWidth) * 100.) + 0.5;
 
-	ui.horizontalSlider->setValue(percent);
-	ui.percentageSpinBox->setValue(percent);
+    ui.horizontalSlider->setValue(percent);
+    ui.percentageSpinBox->setValue(percent);
 }
 
 void resizeWindow::roundUp(int xx, int yy)
 {
-	float erx = 0.;
-	float ery = 0.;
+    float erx = 0.;
+    float ery = 0.;
 
-	if (ui.checkBoxRoundup->checkState())
-	{
-		int ox = xx, oy = yy;
+    if (ui.checkBoxRoundup->checkState())
+    {
+        int ox = xx, oy = yy;
 
-		xx = (xx + 7) & 0xfffff0;
-		yy = (yy + 7) & 0xfffff0;
+        xx = (xx + 7) & 0xfffff0;
+        yy = (yy + 7) & 0xfffff0;
 
-		erx = xx - ox;
-		erx = erx / xx;
-		ery = yy - oy;
-		ery = ery / yy;
+        erx = xx - ox;
+        erx = erx / xx;
+        ery = yy - oy;
+        ery = ery / yy;
 
-		aprintf("x: %d -> %d : err %f\n", ox, xx, erx);
-		aprintf("y: %d -> %d : err %f\n", oy, yy, ery);
-	}
+        aprintf("x: %d -> %d : err %f\n", ox, xx, erx);
+        aprintf("y: %d -> %d : err %f\n", oy, yy, ery);
+    }
 
-	ui.spinBoxWidth->setValue(xx);
-	ui.spinBoxHeight->setValue(yy);
+    ui.spinBoxWidth->setValue(xx);
+    ui.spinBoxHeight->setValue(yy);
 
-	ui.labelErrorXY->setText(QString("%1").arg(erx * 100., 0, 'f', 2) + " / " + QString("%1").arg(ery * 100., 0, 'f', 2));
+    ui.labelErrorXY->setText(QString("%1").arg(erx * 100., 0, 'f', 2) + " / " + QString("%1").arg(ery * 100., 0, 'f', 2));
 }
 
 void resizeWindow::lockArToggled(bool toggled)
 {
-	if (ui.lockArCheckBox->isChecked())
-		widthSpinBoxChanged(0);
-	else
-		ui.checkBoxRoundup->setChecked(false);
+    if (ui.lockArCheckBox->isChecked())
+        widthSpinBoxChanged(0);
+    else
+        ui.checkBoxRoundup->setChecked(false);
 
     enableControls(toggled);
 }
 
 void resizeWindow::roundupToggled(bool toggled)
 {
-	if (toggled)
-	{
-		disconnectDimensionControls();
+    if (toggled)
+    {
+        disconnectDimensionControls();
 
-		ui.spinBoxWidth->setSingleStep(16);
-		ui.spinBoxHeight->setSingleStep(16);
-		widthSpinBoxChanged(0);
+        ui.spinBoxWidth->setSingleStep(16);
+        ui.spinBoxHeight->setSingleStep(16);
+        widthSpinBoxChanged(0);
 
-		connectDimensionControls();
-	}
-	else
-	{
-		ui.spinBoxWidth->setSingleStep(2);
-		ui.spinBoxHeight->setSingleStep(2);
-	}
+        connectDimensionControls();
+    }
+    else
+    {
+        ui.spinBoxWidth->setSingleStep(2);
+        ui.spinBoxHeight->setSingleStep(2);
+    }
 }
 
 void resizeWindow::enableControls(bool lockArChecked)
@@ -314,48 +314,46 @@ void resizeWindow::enableControls(bool lockArChecked)
 
 void resizeWindow::okButtonClicked()
 {
-	if (ui.spinBoxWidth->value() & 1 || ui.spinBoxHeight->value() & 1)
-		GUI_Error_HIG(QT_TRANSLATE_NOOP("resize","Width and height cannot be odd"), NULL);
-	else
-		accept();
+    if (ui.spinBoxWidth->value() & 1 || ui.spinBoxHeight->value() & 1)
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("resize","Width and height cannot be odd"), NULL);
+    else
+        accept();
 }
 
 /**
     \fn DIA_resize
     \brief Handle resize dialo
 */
-bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize)
+bool DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize)
 {
-bool r=false;
-      resParam param={  
+    bool r=false;
+    resParam param={
                         originalWidth,
                         originalHeight,
                         fps1000,
                         0,
                         *resize
-                    };
-      //
-      if((fps1000>24600 && fps1000<25400) || (fps1000>49200 && fps1000<50800))
-        {
-                param.pal=1;
-        }
-       
+                   };
 
-     // Fetch info
-     resizeWindow resizewindow(qtLastRegisteredDialog(), &param);
 
-     qtRegisterDialog(&resizewindow);
+    if((fps1000>24600 && fps1000<25400) || (fps1000>49200 && fps1000<50800))
+        param.pal=1;
 
-     if(resizewindow.exec()==QDialog::Accepted)
-     {
-       resizewindow.gather();
-       *resize=param.rsz;
-       r=true;
-     }
+    // Fetch info
+    resizeWindow resizewindow(qtLastRegisteredDialog(), &param);
 
-	 qtUnregisterDialog(&resizewindow);
+    qtRegisterDialog(&resizewindow);
 
-     return r;
-}  
+    if(resizewindow.exec()==QDialog::Accepted)
+    {
+        resizewindow.gather();
+        *resize=param.rsz;
+        r=true;
+    }
+
+    qtUnregisterDialog(&resizewindow);
+
+    return r;
+}
 //********************************************
 //EOF
