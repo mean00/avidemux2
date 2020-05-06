@@ -35,13 +35,18 @@ static double aspectRatio[2][5]={
         1.454545  // PAL 704:576 DAR 16:9 PAR 16:11
     }
 };
-#define aprintf
+
+#if 0
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 
 resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
- {
-     ui.setupUi(this);
-     lastPercentage = 100;
-     _param=param;
+{
+    ui.setupUi(this);
+    lastPercentage = 100;
+    _param=param;
 
 #define ADD_PAR(x) ui.comboBoxSource->addItem(x); ui.comboBoxDestination->addItem(x);
 
@@ -59,35 +64,35 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
         ADD_PAR("NTSC 704:480 DAR 16:9 PAR 40:33")
     }
 
-     ui.lockArCheckBox->setChecked(_param->rsz.lockAR);
-     ui.checkBoxRoundup->setChecked(_param->rsz.roundup);
+    ui.lockArCheckBox->setChecked(_param->rsz.lockAR);
+    ui.checkBoxRoundup->setChecked(_param->rsz.roundup);
 
-     ui.spinBoxWidth->setKeyboardTracking(false);
-     ui.spinBoxHeight->setKeyboardTracking(false);
-     ui.percentageSpinBox->setKeyboardTracking(false);
+    ui.spinBoxWidth->setKeyboardTracking(false);
+    ui.spinBoxHeight->setKeyboardTracking(false);
+    ui.percentageSpinBox->setKeyboardTracking(false);
 
-     ui.spinBoxWidth->setValue(_param->rsz.width & 0xfffffe);
-     ui.spinBoxHeight->setValue(_param->rsz.height & 0xfffffe);
-     ui.horizontalSlider->setValue(100);
-     ui.comboBoxAlgo->setCurrentIndex(_param->rsz.algo);
-     ui.comboBoxSource->setCurrentIndex(_param->rsz.sourceAR);
-     ui.comboBoxDestination->setCurrentIndex(_param->rsz.targetAR);
-     if(_param->rsz.lockAR)
-         updateWidthHeightSpinners();
-     enableControls(_param->rsz.lockAR);
-     roundupToggled(_param->rsz.roundup);
+    ui.spinBoxWidth->setValue(_param->rsz.width & 0xfffffe);
+    ui.spinBoxHeight->setValue(_param->rsz.height & 0xfffffe);
+    ui.horizontalSlider->setValue(100);
+    ui.comboBoxAlgo->setCurrentIndex(_param->rsz.algo);
+    ui.comboBoxSource->setCurrentIndex(_param->rsz.sourceAR);
+    ui.comboBoxDestination->setCurrentIndex(_param->rsz.targetAR);
+    if(_param->rsz.lockAR)
+        updateWidthHeightSpinners();
+    enableControls(_param->rsz.lockAR);
+    roundupToggled(_param->rsz.roundup);
 
-     connect(ui.comboBoxSource, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
-     connect(ui.comboBoxDestination, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
-     connect(ui.checkBoxRoundup, SIGNAL(toggled(bool)), this, SLOT(roundupToggled(bool)));
-     connect(ui.lockArCheckBox, SIGNAL(toggled(bool)), this, SLOT(lockArToggled(bool)));
-     connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
+    connect(ui.comboBoxSource, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
+    connect(ui.comboBoxDestination, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
+    connect(ui.checkBoxRoundup, SIGNAL(toggled(bool)), this, SLOT(roundupToggled(bool)));
+    connect(ui.lockArCheckBox, SIGNAL(toggled(bool)), this, SLOT(lockArToggled(bool)));
+    connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
 
-     connectDimensionControls();
- }
+    connectDimensionControls();
+}
 
- void resizeWindow::gather(void)
- {
+void resizeWindow::gather(void)
+{
     _param->rsz.width=ui.spinBoxWidth->value();
     _param->rsz.height=ui.spinBoxHeight->value();
     _param->rsz.algo=ui.comboBoxAlgo->currentIndex();
@@ -95,9 +100,9 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     _param->rsz.targetAR=ui.comboBoxDestination->currentIndex();
     _param->rsz.lockAR=ui.lockArCheckBox->isChecked();
     _param->rsz.roundup=ui.checkBoxRoundup->isChecked();
- }
- 
- void resizeWindow::sliderChanged(int value)
+}
+
+void resizeWindow::sliderChanged(int value)
 {
     disconnectDimensionControls();
 
