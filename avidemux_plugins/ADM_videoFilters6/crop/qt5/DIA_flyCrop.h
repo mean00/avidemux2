@@ -10,7 +10,8 @@ class flyCrop : public ADM_flyDialogRgb
    bool rubber_is_hidden;
   public:
    uint8_t    processRgb(uint8_t *imageIn, uint8_t *imageOut);
-   uint8_t    download(void);
+   uint8_t    download(void) {return download(false);}
+   uint8_t    download(bool even);
    uint8_t    upload(void) {return upload(true,true);}
    uint8_t    upload(bool redraw, bool toRubber);
    uint8_t    autocrop(void);

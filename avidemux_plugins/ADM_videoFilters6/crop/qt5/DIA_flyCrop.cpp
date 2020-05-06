@@ -266,10 +266,11 @@ uint8_t flyCrop::upload(bool redraw, bool toRubber)
     return 1;
 }
 /**
- * 
+ * Read crop values from UI
+ * @param even Fixup crop values to make resulting width and height even
  * @return 
  */
-uint8_t flyCrop::download(void)
+uint8_t flyCrop::download(bool even)
 {
 int reject=0;
 Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
@@ -280,11 +281,6 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
     SPIN_GET(bottom,Bottom);
 
     aprintf("%d %d %d %d\n",left,right,top,bottom);
-
-    left&=0xffffe;
-    right&=0xffffe;
-    top&=0xffffe;
-    bottom&=0xffffe;
 
     if((top+bottom)>_h)
     {
@@ -303,6 +299,31 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
     else
     {
         blockChanges(true);
+        if(even)
+        {
+            if((_w-left-right)&1)
+            {
+                if(left&1)
+                    left&=0xfffe;
+                else if(right)
+                    right--;
+                else if(left)
+                    left--;
+                else
+                    right++;
+            }
+            if((_h-top-bottom)&1)
+            {
+                if(top&1)
+                    top&=0xfffe;
+                else if(bottom)
+                    bottom--;
+                else if(top)
+                    top--;
+                else
+                    bottom++;
+            }
+        }
         rubber->nestedIgnore++;
         rubber->move(_zoom*(float)left,_zoom*(float)top);
         rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
@@ -382,7 +403,7 @@ void Ui_cropWindow::sliderUpdate(int foo)
  */
 void Ui_cropWindow::gather(crop *param)
 {
-    myCrop->download();
+    myCrop->download(true);
     param->left=myCrop->left;
     param->right=myCrop->right;
     param->top=myCrop->top;
