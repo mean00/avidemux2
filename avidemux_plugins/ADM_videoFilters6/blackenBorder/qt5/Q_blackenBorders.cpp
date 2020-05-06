@@ -33,10 +33,10 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     canvas=new ADM_QCanvas(ui.graphicsView,width,height);
     
     myBlacken=new flyBlacken( this,width, height,in,canvas,ui.horizontalSlider);
-    myBlacken->left=param->left;
-    myBlacken->right=param->right;
-    myBlacken->top=param->top;
-    myBlacken->bottom=param->bottom;
+    myBlacken->left=param->left&0xffffe;
+    myBlacken->right=param->right&0xffffe;
+    myBlacken->top=param->top&0xffffe;
+    myBlacken->bottom=param->bottom&0xffffe;
     myBlacken->_cookie=&ui;
     myBlacken->addControl(ui.toolboxLayout);
     myBlacken->upload();
@@ -54,6 +54,13 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     SPINNER(Right);
     SPINNER(Top);
     SPINNER(Bottom);
+#undef SPINNER(x)
+#define SPINNER(x) ui.spinBox##x->setSingleStep(2); ui.spinBox##x->setKeyboardTracking(false);
+    SPINNER(Left)
+    SPINNER(Right)
+    SPINNER(Top)
+    SPINNER(Bottom)
+#undef SPINNER(x)
 
     setModal(true);
 }
@@ -197,18 +204,13 @@ uint8_t flyBlacken::download(void)
 {
     int reject=0;
     Ui_blackenDialog *w=(Ui_blackenDialog *)_cookie;
-#define SPIN_GET(x,y) x=w->spinBox##y->value();
+#define SPIN_GET(x,y) x=w->spinBox##y->value(); if(x&1) { x&=0xffffe; blockChanges(true); w->spinBox##y->setValue(x); blockChanges(false); }
         SPIN_GET(left,Left);
         SPIN_GET(right,Right);
         SPIN_GET(top,Top);
         SPIN_GET(bottom,Bottom);
 
         printf("%d %d %d %d\n",left,right,top,bottom);
-
-        left&=0xffffe;
-        right&=0xffffe;
-        top&=0xffffe;
-        bottom&=0xffffe;
 
         if((top+bottom)>_h)
                 {
