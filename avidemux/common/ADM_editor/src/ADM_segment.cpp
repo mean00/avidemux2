@@ -154,10 +154,15 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
                 firstNonZeroDtsFrame=frame;
                 continue;
             }
-
-            uint64_t probedTimeIncrement=(dts-firstNonZeroDts)/(frame-firstNonZeroDtsFrame);
-            if(probedTimeIncrement<minDelta) { minDelta=probedTimeIncrement; fmin=frame; }
-            if(probedTimeIncrement>maxDelta) { maxDelta=probedTimeIncrement; fmax=frame; }
+            if(dts>firstNonZeroDts)
+            {
+                uint64_t probedTimeIncrement=(dts-firstNonZeroDts)/(frame-firstNonZeroDtsFrame);
+                if(probedTimeIncrement<minDelta) { minDelta=probedTimeIncrement; fmin=frame; }
+                if(probedTimeIncrement>maxDelta) { maxDelta=probedTimeIncrement; fmax=frame; }
+            }else
+            {
+                ADM_warning("DTS going back by %" PRIu64" at frame %d\n",firstNonZeroDts-dts,frame);
+            }
             firstNonZeroDts=dts;
             firstNonZeroDtsFrame=frame;
         }
