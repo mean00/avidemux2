@@ -628,7 +628,7 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
         }
         if(sps->hasPocInfo)
         {
-            if(*flags & AVI_KEY_FRAME) // from NAL
+            if(*flags & AVI_IDR_FRAME) // from NAL
                 bits.getUEG(); // skip idr_pic_id
             *poc_lsb = bits.get(sps->log2MaxPocLsb);
         }
@@ -650,8 +650,12 @@ static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSIn
         case 2: case 4:
                 if((*flags & AVI_KEY_FRAME) && !sps)
                     break; // trust NAL when we cannot verify
-                if(!recovery || !frame) *flags = AVI_KEY_FRAME;
-                    else      *flags = AVI_P_FRAME;
+                if(!recovery || !frame)
+                    *flags = AVI_KEY_FRAME;
+                else
+                    *flags = AVI_P_FRAME;
+                if(!frame)
+                    *flags |= AVI_IDR_FRAME;
                 break;
 
     }
@@ -727,10 +731,10 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t nalSize, ui
             case NAL_FILLER:
                 break;
             case NAL_IDR:
-                *flags = AVI_KEY_FRAME;
+                *flags = AVI_KEY_FRAME + AVI_IDR_FRAME;
                 if(!getNalType(head+1,head+length,flags,sps,&p,recovery))
                     return 0;
-                if(sps && !(*flags & AVI_KEY_FRAME))
+                if(sps && !(*flags & AVI_IDR_FRAME))
                 {
                     ADM_warning("Mismatched frame (flags: %d) in IDR NAL unit!\n",*flags);
                     *flags &= ~AVI_B_FRAME;
@@ -823,10 +827,10 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
                 break;
             case NAL_SPS: case NAL_PPS: case NAL_FILLER: case NAL_AU_DELIMITER: break;
             case NAL_IDR:
-                *flags = AVI_KEY_FRAME;
+                *flags = AVI_KEY_FRAME + AVI_IDR_FRAME;
                 if(!getNalType(buffer, buffer+length, flags, sps, &p, recovery))
                     return 0;
-                if(sps && !(*flags & AVI_KEY_FRAME))
+                if(sps && !(*flags & AVI_IDR_FRAME))
                 {
                     ADM_warning("Mismatched frame (flags: %d) in IDR NAL unit!\n",*flags);
                     *flags &= ~AVI_B_FRAME;
