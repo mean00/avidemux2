@@ -22,6 +22,9 @@
 #define AVI_NON_REF_FRAME 0x400
 #define AVI_FRAME_TYPE_MASK (AVI_KEY_FRAME+AVI_B_FRAME+AVI_P_FRAME+AVI_NON_REF_FRAME)
 
+// for compatibility reasons not added to the mask
+#define AVI_IDR_FRAME   0x100
+
 /**
     For demuxers, it is the field type/frame
     For decoders, the TOP/Bottom is a hint about TFF/BFF as we always get a full picture
