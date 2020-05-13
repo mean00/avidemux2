@@ -44,6 +44,8 @@ ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,int append,ADM_TS_MUX_T
         packet=new TS_PESpacket(pid);
         this->muxing=muxing;
         ADM_info("Creating audio track, pid=%x, muxing =%d\n",pid,muxing);
+        lastDts=ADM_NO_PTS;
+        wrapCount=0;
         if(myLen && myExtra)
         {   
             extraData=new uint8_t [myLen+16]; // guards again lavcodec overread
@@ -122,6 +124,8 @@ bool      ADM_tsAccess::goToTime(uint64_t timeUs)
     {
             aprintf("[PsAudio] Requested %" PRIu32" tick before 1st seek point at :%" PRIu32"\n",(uint32_t)timeUs/1000,(uint32_t)seekPoints[0].dts/1000);
             demuxer.setPos(seekPoints[0].position);
+            wrapCount=0;
+            lastDts=ADM_NO_PTS;
             return true;
     }
 
@@ -133,6 +137,15 @@ bool      ADM_tsAccess::goToTime(uint64_t timeUs)
                     (uint32_t)seekPoints[i-1].dts/1000,
                     (uint32_t)seekPoints[i].dts/1000);
             demuxer.setPos(seekPoints[i-1].position);
+            uint64_t st=seekPoints[i-1].dts;
+            if(st!=ADM_NO_PTS)
+            {
+                st /= 100;
+                st *= 9; // now in ticks
+                st >>= 32;
+                wrapCount=(uint32_t)st;
+            }
+            lastDts=ADM_NO_PTS;
             return true;
         }
     }
@@ -145,14 +158,23 @@ bool      ADM_tsAccess::goToTime(uint64_t timeUs)
 uint64_t ADM_tsAccess::timeConvert(uint64_t x)
 {
     if(x==ADM_NO_PTS) return ADM_NO_PTS;
+    const uint64_t wrapLen=1LL<<32;
     if(x<dtsOffset)
+        x+=wrapLen;
+    x-=dtsOffset;
+    if(lastDts!=ADM_NO_PTS)
     {
-        x+=1LL<<32;
+        if(lastDts>x && lastDts-x >= wrapLen/2)
+            wrapCount++;
+        if(wrapCount && x>lastDts && x-lastDts > wrapLen/2)
+            wrapCount--;
     }
-    x=x-dtsOffset;
-    x=x*1000;
-    x/=90;
-    return x;
+    lastDts=x;
+    x+=wrapLen*wrapCount;
+    double f=x*100.;
+    f/=9.;
+    f+=0.49;
+    return (uint64_t)f;
 
 }
 /**
