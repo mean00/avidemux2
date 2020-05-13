@@ -47,11 +47,13 @@ ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,int append,ADM_TS_MUX_T
         lastDts=ADM_NO_PTS;
         wrapCount=0;
         if(myLen && myExtra)
-        {   
-            extraData=new uint8_t [myLen+16]; // guards again lavcodec overread
+        {
             extraDataLen=myLen;
+            myLen+=64; // AV_INPUT_BUFFER_PADDING_SIZE, guards against lavcodec overread
+            extraData=new uint8_t [myLen];
+            memset(extraData,0,myLen);
             memcpy(extraData,myExtra,extraDataLen);
-            ADM_info("Creating ts audio access with %d bytes of extradata.",myLen);
+            ADM_info("Creating ts audio access with %u bytes of extradata.",extraDataLen);
             mixDump(extraData,extraDataLen);
         }
 }
