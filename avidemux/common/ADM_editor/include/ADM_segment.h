@@ -131,6 +131,7 @@ public:
         uint64_t _durationUs; ///
         SegState _dropBframes; /// Internal state machine to know is we should drop bframe that are orphean
         uint64_t _refStartDts;
+        uint64_t _refMinimumPts; /// The PTS in reference of the earliest non-droppable B-frame after given offset
         void clear(void) 
         {
             _reference=0;
@@ -139,6 +140,7 @@ public:
             _durationUs=0;
             _dropBframes=ADM_NO_DROP;
             _refStartDts=0;
+            _refMinimumPts=0;
         }
         _SEGMENT() {clear();}
 };

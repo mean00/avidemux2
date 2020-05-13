@@ -69,9 +69,9 @@ typedef enum
 */
 typedef enum
 {
-    ADM_EDITOR_CUT_POINT_IDR,
-    ADM_EDITOR_CUT_POINT_NON_IDR,
-    ADM_EDITOR_CUT_POINT_RECOVERY,
+    ADM_EDITOR_CUT_POINT_KEY,
+    ADM_EDITOR_CUT_POINT_NON_KEY,
+    ADM_EDITOR_CUT_POINT_BAD_POC,
     ADM_EDITOR_CUT_POINT_MISMATCH,
     ADM_EDITOR_CUT_POINT_UNCHECKED
 }ADM_cutPointType;
@@ -274,6 +274,8 @@ public:
                     ADM_cutPointType checkCutIsOnIntra(uint64_t time);
 private:
                     ADM_cutPointType checkSegmentStartsOnIntra(uint32_t seg);
+                    bool        findLastFrameBeforeSwitch(uint32_t segNo, uint32_t *lastFrame, uint32_t *maxPtsFrame, uint64_t *maxPts);
+                    bool        getOpenGopDelayForSegment(uint32_t segNo, uint64_t segTime, uint32_t *delay, int *frameNo=NULL);
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
