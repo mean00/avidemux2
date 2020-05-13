@@ -41,6 +41,8 @@ protected:
                 tsPacket        demuxer;
                 uint32_t         pid;
                 uint64_t        dtsOffset;
+                uint64_t        lastDts; // in ticks, rescaled by dts offset
+                uint32_t        wrapCount; // dts wraps around after 1<<32 ticks
                 uint32_t        videoCodec;
                 ADM_TS_MUX_TYPE muxing;
                 ADM_adts2aac    adts;

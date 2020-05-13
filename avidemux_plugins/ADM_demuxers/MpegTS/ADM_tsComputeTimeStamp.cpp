@@ -24,17 +24,23 @@
         \fn updatePtsDts
         \brief Update the PTS/DTS
 
-TODO / FIXME : Handle wrap
 TODO / FIXME : Handle PTS reordering 
 */
-static uint64_t wrapIt(uint64_t val, uint64_t start)
+static uint64_t wrapIt(uint64_t val, uint64_t start, uint64_t &last, uint32_t &laps)
 {
     if(val==ADM_NO_PTS) return val;
-    if(val>=start) return val-start;
-    uint64_t r;
-        r=val+(1LL<<32);
-        r-=start;
-        return r;
+
+    const uint64_t wraplen=1LL<<32;
+    if(val<start)
+        val+=wraplen;
+    val-=start;
+    if(last>val && last-val >= wraplen/2)
+        laps++;
+    if(laps && val>last && val-last > wraplen/2)
+        laps--;
+    last=val;
+    val+=laps*wraplen;
+    return val;
 }
 bool tsHeader::updatePtsDts(void)
 {
@@ -123,12 +129,15 @@ bool tsHeader::updatePtsDts(void)
         }
         // Rescale all so that it starts ~ 0
         // Video..
+        uint32_t ptsWrapCount=0;
+        uint32_t dtsWrapCount=0;
         for(i=0;i<ListOfFrames.size();i++)
         {
             dmxFrame *f=ListOfFrames[i];
-            f->pts=wrapIt(f->pts,startDts);
-            f->dts=wrapIt(f->dts,startDts);
+            f->pts=wrapIt(f->pts,startDts,lastPts,ptsWrapCount);
+            f->dts=wrapIt(f->dts,startDts,lastDts,dtsWrapCount);
         }
+        lastPts=lastDts=0;
         // Audio start at 0 too
         for(i=0;i<listOfAudioTracks.size();i++)
         {
