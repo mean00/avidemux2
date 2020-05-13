@@ -463,13 +463,16 @@ static bool decodeSliceHeaderH265(uint8_t *head, uint8_t *tail, uint32_t *flags,
             ADM_warning("Slice type mismatch, NAL says IDR, header says %s\n",(*flags==AVI_B_FRAME)? "B" : "P");
             free(out);
             return false;
+        }else
+        {
+            *flags |= AVI_IDR_FRAME;
         }
         *poc=0;
         free(out);
         return true;
     }
     int pocLsb = bits.get(info->log2_max_poc_lsb);
-    int maxPocLsb = 1 << info->log2_max_poc_lsb;
+    const int maxPocLsb = 1 << info->log2_max_poc_lsb;
 
     int lastPoc = 0;
     if(*poc > INT_MIN) lastPoc = *poc;
@@ -591,7 +594,7 @@ bool extractH265FrameType_startCode(uint8_t *buffer, uint32_t len, ADM_SPSinfoH2
 
     uint8_t *head = buffer, *tail = buffer + len;
     uint32_t hnt = 0xFFFFFFFF;
-    int nalType, counter = 0, length = 0;
+    int nalType = -1, counter = 0, length = 0;
     bool last = false;
 
     *flags = 0;
