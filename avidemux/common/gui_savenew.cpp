@@ -454,12 +454,12 @@ bool admSaver::save(void)
         bool ask=true;
         switch(chk)
         {
-            case ADM_EDITOR_CUT_POINT_NON_IDR:
+            case ADM_EDITOR_CUT_POINT_NON_KEY:
                 alert=QT_TRANSLATE_NOOP("adm","The video is in copy mode but the cut points are not on keyframes.\n"
                     "The video will be saved but there will be corruption at cut point(s).\n"
                     "Do you want to continue anyway ?");
                 break;
-            case ADM_EDITOR_CUT_POINT_RECOVERY:
+            case ADM_EDITOR_CUT_POINT_BAD_POC:
                 alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
                     "Picture reordering information in the video stream is not reset at non-IDR frames. "
                     "The choice of cut points may result in playback interruption "

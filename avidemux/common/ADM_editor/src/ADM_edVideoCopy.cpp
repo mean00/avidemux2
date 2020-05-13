@@ -30,8 +30,6 @@
 #define aprintf(...) {}// printf
 #endif
 
-static int warn_cnt=0;
-
 static bool checkCodec(aviInfo *first,aviInfo *second)
 {
     bool match=false;
@@ -86,7 +84,7 @@ static bool getH264SPSInfo(_VIDEOS *vid,ADM_SPSInfo *sps)
             goto _the_end;
         }
 #define MAX_NALU_TO_CHECK 4
-        NALU_descriptor desc[MAX_NALU_TO_CHECK];
+        static NALU_descriptor desc[MAX_NALU_TO_CHECK];
 
         int nbNalu=ADM_splitNalu(img.data, img.data+img.dataLength, MAX_NALU_TO_CHECK, desc);
         int spsIndex=ADM_findNalu(NAL_SPS,nbNalu,desc);
@@ -186,6 +184,90 @@ _the_end_hevc:
 }
 
 /**
+    \fn findLastFrameBeforeSwitch
+    \brief Identify the last frame in stream order and last displayed frame before segment switch
+*/
+bool ADM_Composer::findLastFrameBeforeSwitch(uint32_t segNo, uint32_t *lastFrame, uint32_t *maxPtsFrame, uint64_t *maxPts)
+{
+    if(segNo>=_segments.getNbSegments())
+    {
+        ADM_error("Requested segment number %d out of range!\n",segNo);
+        return false;
+    }
+
+    _SEGMENT *seg=_segments.getSegment(segNo);
+    ADM_assert(seg);
+    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+    ADM_assert(vid);
+    vidHeader *demuxer=vid->_aviheader;
+    ADM_assert(demuxer);
+
+    // Identify the last frame before segment switch
+    int frame=0;
+    uint64_t tail = seg->_refStartTimeUs + seg->_durationUs;
+    if(false==getFrameNumFromPtsOrBefore(vid,tail-1,frame))
+    {
+        ADM_warning("Cannot identify the last frame in display order for segment %d\n",segNo);
+        return false;
+    }
+    // Check restrictions imposed by PTS delay and early B-frames in the next segment
+    uint64_t limitDts,limitPts;
+    limitDts=limitPts=tail;
+    if(segNo+1 < _segments.getNbSegments())
+    {
+        _SEGMENT *nextSeg=_segments.getSegment(segNo+1);
+        ADM_assert(nextSeg);
+        uint64_t delta=0;
+        if(nextSeg->_refStartTimeUs > nextSeg->_refStartDts)
+            delta = nextSeg->_refStartTimeUs - nextSeg->_refStartDts;
+        if(delta<limitDts)
+            limitDts-=delta;
+        uint32_t dlay=0;
+        if(getOpenGopDelayForSegment(segNo+1,0,&dlay) && (uint64_t)dlay < limitPts)
+            limitPts-=dlay;
+    }
+    int maxFrame=frame;
+#define MAX_REF_FRAMES_FIELDS 32 // the highest possible nb of references in a field-encoded H.264 stream
+    // FIXME In theory, 32 may be not enough as we may encounter an unknown number of early B-frames
+    // while maxFrame may be far past the first frame of the next segment if it uses the same ref video.
+    frame = (frame > MAX_REF_FRAMES_FIELDS)? frame - MAX_REF_FRAMES_FIELDS : 0;
+    // Now search the frame with max pts before segment switch
+    *maxPts=0;
+    *maxPtsFrame=-1;
+    uint64_t lastPts=0, lastDts=ADM_NO_PTS;
+    while(frame<=maxFrame)
+    {
+        *lastFrame=frame;
+        uint64_t pts,dts;
+        if(!demuxer->getPtsDts(frame,&pts,&dts))
+            break;
+        if(pts!=ADM_NO_PTS && pts >= limitPts)
+            break;
+        if(dts!=ADM_NO_PTS)
+        {
+            if(lastDts!=ADM_NO_PTS && lastDts>=dts)
+                ADM_warning("Frame %d DTS delta %" PRId64" ms\n",frame,
+                        ((int64_t)lastDts-(int64_t)dts)/1000); // Should we rather bail out?
+            lastDts=dts;
+        }
+        else if(lastDts!=ADM_NO_PTS)
+            lastDts+=vid->timeIncrementInUs;
+        if(lastDts!=ADM_NO_PTS && lastDts >= limitDts)
+            break;
+        if(pts!=ADM_NO_PTS)
+            lastPts=pts;
+        if(lastPts>*maxPts)
+        {
+            *maxPts=lastPts;
+            *maxPtsFrame=frame;
+        }
+        frame++;
+    }
+
+    return true;
+}
+
+/**
     \fn checkSegmentStartsOnIntra
     \brief In copy mode, if the cuts are not on intra we will run into trouble :
             * We include skipped ref frames: we will have DTS going back error
@@ -196,7 +278,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
     if(segNo>=_segments.getNbSegments())
     {
         ADM_error("Requested segment number %d out of range!\n",segNo);
-        return ADM_EDITOR_CUT_POINT_IDR;
+        return ADM_EDITOR_CUT_POINT_KEY;
     }
 
     _SEGMENT *seg=_segments.getSegment(segNo);
@@ -258,7 +340,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
     {
         ADM_warning("Segment %d does not start on a known DTS (%" PRIu64" us = %s)\n",segNo,dts,ADM_us2plain(dts));
         ADM_warning("expected: %" PRIu64" us = %s\n",seg->_refStartDts,ADM_us2plain(seg->_refStartDts));
-        cut=ADM_EDITOR_CUT_POINT_NON_IDR; // ??
+        cut=ADM_EDITOR_CUT_POINT_NON_KEY; // ??
         BOWOUT
     }
     // DTS check passed, now check flags
@@ -266,13 +348,13 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
     if(!(flags & AVI_KEY_FRAME))
     {
         ADM_warning("Segment %d does not start on a keyframe (time in ref %s)\n",segNo,ADM_us2plain(pts));
-        cut=ADM_EDITOR_CUT_POINT_NON_IDR;
+        cut=ADM_EDITOR_CUT_POINT_NON_KEY;
         BOWOUT
     }
     // The frame is marked as keyframe
     if(!segNo) // Not a cut point
     {
-        cut=ADM_EDITOR_CUT_POINT_IDR;
+        cut=ADM_EDITOR_CUT_POINT_KEY;
         BOWOUT
     }
 
@@ -280,6 +362,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
 
     if(isH264Compatible(info.fcc))
     {
+        int poc1,maxpoc1,poc2,minpoc2;
         // It is H.264, check deeper. The keyframe may be a non-IDR random access point.
         // If picture order count after a cut is going back, at least FFmpeg-based players
         // like VLC and mpv may get stuck until POC is greater than before the cut point.
@@ -346,7 +429,8 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 }
             }
         }
-        int poc2=-1; // POC of the first frame after the cut
+
+        poc2=-1; // POC of the first frame after the cut
 #define NO_RECOVERY_INFO 0xFF
         uint32_t recoveryDistance=NO_RECOVERY_INFO;
         bool outcome=false;
@@ -359,6 +443,34 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
             BOWOUT
         }
+
+        /* Now we need to calculate the minimum POC among the early B-frames
+        following the first frame of the segment. While not relevant for
+        the effect of being "stuck", a POC smaller than the maximum POC
+        before the cut point at an non-IDR frame will result in considerable
+        artifacts, dropped frames, stutter, flicker and such. */
+
+        minpoc2=-1;
+        uint32_t delay;
+        int earliest;
+        if(getOpenGopDelayForSegment(segNo,0,&delay,&earliest) && earliest>0)
+        {
+            if(demuxer->getFrame(earliest,&img))
+            {
+                outcome=false;
+                if(AnnexB)
+                    outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &minpoc2, &sps, NULL);
+                else
+                    outcome=extractH264FrameType(img.data, img.dataLength, nalSize, &(img.flags), &minpoc2, &sps, NULL);
+                if(!outcome)
+                    ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
+            }else
+            {
+                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",earliest,seg->_reference,segNo);
+            }
+        }
+        if(minpoc2!=-1)
+            ADM_info("Segment %u minimum POC LSB = %d at frame %d\n",segNo,minpoc2,earliest);
         // We are done with this segment, restore the last sent frame
         vid->lastSentFrame=oldFrame;
 
@@ -383,18 +495,18 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         // Same ref video?
         if(seg->_reference==refNo)
         {
+            // Marked as IDR? Ignore recovery.
+            if((img.flags & AVI_KEY_FRAME) && (img.flags & AVI_IDR_FRAME))
+            {
+                ADM_info("IDR verified and same ref video, the cut point is fine.\n");
+                cut=ADM_EDITOR_CUT_POINT_KEY;
+                BOWOUT
+            }
             // Recovery point and no POC? Don't bother to perform further checks.
             if(!recoveryDistance && poc2==-1)
             {
                 ADM_warning("No POC to compare with, only POC explicitely set in the slice header is supported.\n");
-                cut=ADM_EDITOR_CUT_POINT_IDR; // ??
-                BOWOUT
-            }
-            // Not a recovery point or POC reset to zero and marked as keyframe?
-            if((recoveryDistance==NO_RECOVERY_INFO || !poc2) && (img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME)
-            {
-                ADM_info("IDR verified and same ref video, the cut point is fine.\n");
-                cut=ADM_EDITOR_CUT_POINT_IDR;
+                cut=ADM_EDITOR_CUT_POINT_KEY; // ??
                 BOWOUT
             }
             // Check for in-band SPS
@@ -559,46 +671,28 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             if(poc2==-1)
             {
                 ADM_warning("No POC to compare, only POC explicitely set in the slice header is supported.\n");
-                cut=ADM_EDITOR_CUT_POINT_IDR; // ??
+                cut=ADM_EDITOR_CUT_POINT_KEY; // ??
                 BOWOUT
             }
-            ADM_info("poc_lsb for frame %d: %d\n",frame,poc2);
-            /* Get the POC of the last frame in display order before the cut,
-               this is not necessarily the last displayed frame of the segment.
-               We need to start earlier and identify the cut point. */
-            if(false==getFrameNumFromPtsOrBefore(vid, seg->_refStartTimeUs+seg->_durationUs-1, frame))
+            /* Get the POC of the last frame in stream order before the cut,
+            this is not necessarily the last displayed frame of the segment.
+            We need to start earlier and identify the cut point. */
+            uint32_t maxFrame,maxPtsFrame;
+            uint64_t maxPts;
+            if(false==findLastFrameBeforeSwitch(segNo,&maxFrame,&maxPtsFrame,&maxPts))
             {
-                ADM_warning("Cannot identify the last frame in display order for segment %d\n",segNo);
+                ADM_warning("Cannot identify the last frame before segment switch for segment %d\n",segNo);
                 BOWOUT
             }
-            int maxFrame=frame;
-            frame=(frame>32)? frame-32 : 0;
-            // Now search the frame with max pts before segment switch
-            uint64_t maxpts=0;
-            while(frame<=maxFrame)
-            {
-                if(!demuxer->getPtsDts(frame,&pts,&dts))
-                    break;
-                if(pts!=ADM_NO_PTS && pts>=seg->_refStartTimeUs+seg->_durationUs)
-                    break;
-                if(pts>maxpts) maxpts=pts;
-                if(dts!=ADM_NO_PTS && dts>=seg->_refStartTimeUs+seg->_durationUs)
-                    break;
-                frame++;
-            }
-            if(!maxpts || false==getFrameNumFromPtsOrBefore(vid, maxpts, frame))
-            {
-                ADM_warning("Cannot identify the last frame in display order before the cut for segment %d\n",segNo);
-                BOWOUT
-            }
-            // We've found our frame
-            if(!demuxer->getFrame(frame,&img))
+            // maxFrame is now the last frame before segment switch.
+            // We need poc_lsb of this frame to get poc_msb right.
+            if(!demuxer->getFrame(maxFrame,&img))
             {
                 ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
                 BOWOUT
             }
             // Try to get POC, recovery distance doesn't matter here
-            int poc1 = -1; // POC of the last frame before the cut
+            poc1 = -1; // POC of the last frame before the cut
             outcome=false;
             if(AnnexB)
                 outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &poc1, &sps, NULL);
@@ -609,28 +703,97 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
                 BOWOUT
             }
-
-            cut=ADM_EDITOR_CUT_POINT_IDR;
-
             if(poc1==-1)
             {
                 ADM_warning("Cannot get POC, only POC explicitely set in the slice header is supported.\n");
-                BOWOUT // or should the check fail instead?
+                BOWOUT
             }
-            ADM_info("poc_lsb of the last frame %d in display order of the previous seg = %d\n",frame,poc1);
-            // Check that POC doesn't go back
-            int maxPocLsb = 1 << sps.log2MaxPocLsb;
+            /* Calculate poc_msb, the discontinuity of poc_lsb at the cut point
+            may easily result in poc_msb incrementing or decrementing across the cut
+            due to poc_lsb wrapping around. */
+            const int maxPocLsb = 1 << sps.log2MaxPocLsb;
             int pocMsb = 0;
             if(poc1 > poc2 && poc1 - poc2 >= maxPocLsb/2)
                 pocMsb += maxPocLsb;
             else if(poc2 > poc1 && poc2 - poc1 > maxPocLsb/2)
                 pocMsb -= maxPocLsb;
+
+            ADM_info("POC of the last frame %d in stream order of the previous seg: %d + %d = %d\n",
+                    frame, pocMsb, poc1, pocMsb + poc1);
+
             int delta = poc1 - pocMsb - poc2;
-            delta += 2*sps.refFrames; // unsure
+
+            /* If delta is positive, the cut is bad and we don't need to check POC of other frames.
+            If delta is negative (POC increasese across the cut), playback won't get stuck, but we
+            need to check whether POC ranges overlap which may result in pictures from both segments
+            displayed interleaved. */
             if(delta>0)
             {
                 ADM_warning("Saved video won't be smoothly playable in FFmpeg-based players (POC going back by %d)\n",delta);
-                cut=ADM_EDITOR_CUT_POINT_RECOVERY;
+                cut=ADM_EDITOR_CUT_POINT_BAD_POC;
+                BOWOUT
+            }
+
+            cut=ADM_EDITOR_CUT_POINT_KEY;
+
+            if(!maxPts || maxPtsFrame==-1)
+            {
+                ADM_warning("Cannot identify the last frame in display order before the cut for segment %d\n",segNo);
+                BOWOUT
+            }
+            if(!demuxer->getFrame(maxPtsFrame,&img))
+            {
+                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
+                BOWOUT
+            }
+            // Got our frame, get poc_lsb of the slice
+            maxpoc1=-1;
+            outcome=false;
+            if(AnnexB)
+                outcome=extractH264FrameType_startCode(img.data, img.dataLength, &(img.flags), &maxpoc1, &sps, NULL);
+            else
+                outcome=extractH264FrameType(img.data, img.dataLength, nalSize, &(img.flags), &maxpoc1, &sps, NULL);
+            if(!outcome)
+            {
+                ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
+                BOWOUT
+            }
+
+            if(maxpoc1==-1)
+            {
+                ADM_warning("Cannot get POC, only POC explicitely set in the slice header is supported.\n");
+                BOWOUT // or should the check fail instead?
+            }
+            ADM_info("poc_lsb of the last frame %d in display order of the previous seg = %d\n",frame,maxpoc1);
+
+            /* Check that POC doesn't go back, i.e. max POC before the cut is less
+            than min POC after segment switch. First check that poc_msb is still valid. */
+            int prevPocMsb=0;
+            if(maxpoc1 > poc1 && maxpoc1 - poc1 >= maxPocLsb/2)
+                prevPocMsb += maxPocLsb;
+            else if(poc1 > maxpoc1 && poc1 - maxpoc1 > maxPocLsb/2)
+                prevPocMsb -= maxPocLsb;
+
+            ADM_info("POC of the last frame %d in display order of the previous seg: %d + %d = %d\n",
+                    frame, prevPocMsb, maxpoc1, prevPocMsb + maxpoc1);
+
+            poc1 += prevPocMsb;
+
+            if(poc2 > minpoc2 && poc2 - minpoc2 >= maxPocLsb/2)
+                pocMsb += maxPocLsb;
+            else if(minpoc2 > poc2 && minpoc2 - poc2 > maxPocLsb/2)
+                pocMsb -= maxPocLsb;
+
+            ADM_info("POC of the earliest frame %d in display order of the current seg: %d + %d = %d\n",
+                    frame, pocMsb, poc2, pocMsb + poc2);
+
+            poc2 += pocMsb;
+
+            delta=poc1-poc2;
+            if(delta>0)
+            {
+                ADM_warning("Saved video will exhibit flicker at cut point in FFmpeg-based players (POC overlap by %d)\n",delta);
+                cut=ADM_EDITOR_CUT_POINT_BAD_POC;
                 BOWOUT
             }
         }
@@ -638,6 +801,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
 
     if(isH265Compatible(info.fcc))
     {
+        int poc1,maxpoc1,poc2,minpoc2;
         // In HEVC, we check only for POC going back.
         // Get SPS to be able to decode the slice header
         ADM_SPSinfoH265 sps;
@@ -734,51 +898,44 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             }
         }
 
-        /* Get the POC of the last frame in display order before the cut,
-           this is not necessarily the last displayed frame of the segment.
-           We need to start earlier and identify the cut point. */
-        if(false==getFrameNumFromPtsOrBefore(vid, seg->_refStartTimeUs+seg->_durationUs-1, frame))
+        // Get the POC of the last frame in stream order before the cut,
+        uint32_t maxFrame,maxPtsFrame;
+        uint64_t maxPts=0;
+        if(false==findLastFrameBeforeSwitch(segNo,&maxFrame,&maxPtsFrame,&maxPts) ||
+            (int)maxFrame==-1 || (int)maxPtsFrame==-1 || !maxPts)
         {
-            ADM_warning("Cannot identify the last frame in display order for segment %d\n",segNo);
+            ADM_warning("Cannot identify the last frame before segment switch for segment %d\n",segNo);
             BOWOUT
         }
-        int maxFrame=frame;
-        frame=(frame>32)? frame-32 : 0;
-        // Now search the frame with max pts before segment switch
-        uint64_t maxpts=0;
-        while(frame<=maxFrame)
-        {
-            if(!demuxer->getPtsDts(frame,&pts,&dts))
-                break;
-            if(pts!=ADM_NO_PTS && pts>=seg->_refStartTimeUs+seg->_durationUs)
-                break;
-            if(pts>maxpts) maxpts=pts;
-            if(dts!=ADM_NO_PTS && dts>=seg->_refStartTimeUs+seg->_durationUs)
-                break;
-            frame++;
-        }
-        if(!maxpts || false==getFrameNumFromPtsOrBefore(vid, maxpts, frame))
-        {
-            ADM_warning("Cannot identify the last frame in display order before the cut for segment %d\n",segNo);
-            BOWOUT
-        }
-        // We've found our frame
-        if(!demuxer->getFrame(frame,&img))
-        {
-            ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
-            BOWOUT
-        }
-        // Try to get POC
-        int poc1 = INT_MIN; // POC of the last frame before the cut
+        // maxFrame is now the last frame before segment switch.
+        // If maxPts happens earlier, we must start there.
+        if(maxFrame>maxPtsFrame && maxFrame-maxPtsFrame>16)
+            maxPtsFrame=maxFrame; // invalidate maxPtsFrame
+        frame=(maxPtsFrame < maxFrame && maxFrame-maxPtsFrame < 16)? maxPtsFrame : maxFrame;
+
+        // Try to get POC, we start either at the last frame in display order
+        // or in stream order before the cut, whichever comes first.
+        poc1 = INT_MIN;
+        maxpoc1 = poc1;
         bool outcome=false;
-        if(AnnexB)
-            outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc1);
-        else
-            outcome=extractH265FrameType(img.data, img.dataLength, nalSize, &sps, &(img.flags), &poc1);
-        if(!outcome)
+        for(int i=frame; i<=maxFrame; i++)
         {
-            ADM_warning("Cannot get HEVC frame type and Picture Order Count value.\n");
-            BOWOUT
+            if(!demuxer->getFrame(i,&img))
+            {
+                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",i,seg->_reference,segNo);
+                BOWOUT
+            }
+            if(AnnexB)
+                outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc1);
+            else
+                outcome=extractH265FrameType(img.data, img.dataLength, nalSize, &sps, &(img.flags), &poc1);
+            if(!outcome)
+            {
+                ADM_warning("Cannot get HEVC frame type and Picture Order Count value.\n");
+                BOWOUT
+            }
+            if(poc1 > maxpoc1)
+                maxpoc1 = poc1;
         }
         // We are done with this segment, restore the last sent frame
         vid->lastSentFrame=oldFrame;
@@ -798,7 +955,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
             BOWOUT
         }
-        int poc2=poc1; // POC of the first frame after the cut
+        poc2=poc1; // POC of the first frame after the cut
         outcome=false;
         if(AnnexB)
             outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc2);
@@ -810,21 +967,61 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             BOWOUT
         }
 
-        if((img.flags & AVI_FRAME_TYPE_MASK)==AVI_KEY_FRAME && !poc2) // IDR verified
+        if((img.flags & AVI_KEY_FRAME) && (img.flags &AVI_IDR_FRAME)) // IDR verified, POC doesn't matter
         {
-            cut=ADM_EDITOR_CUT_POINT_IDR;
+            cut=ADM_EDITOR_CUT_POINT_KEY;
             BOWOUT
         }
 
-        int delta=poc1-poc2;
+        int delta = poc1 - poc2;
         if(delta>0)
         {
             ADM_warning("Saved video won't be smoothly playable in FFmpeg-based players (POC going back by %d)\n",delta);
-            cut=ADM_EDITOR_CUT_POINT_RECOVERY;
+            cut=ADM_EDITOR_CUT_POINT_BAD_POC;
+            BOWOUT
+        }
+
+        /* Calculate the minimum POC among the early B-frames following
+        the first frame of the segment. Overlapping POC ranges may result
+        in dropped pictures, considerable artifacts and stutter. */
+
+        minpoc2 = INT_MAX;
+        uint32_t delay;
+        int earliest;
+
+        if(getOpenGopDelayForSegment(segNo,0,&delay,&earliest) && earliest>frame)
+        {
+            for(int i=frame+1; i<=earliest; i++)
+            {
+                if(!demuxer->getFrame(i,&img))
+                {
+                    ADM_warning("Unable to get frame %d in ref %d, segment %d\n",i,seg->_reference,segNo);
+                    BOWOUT
+                }
+                if(AnnexB)
+                    outcome=extractH265FrameType_startCode(img.data, img.dataLength, &sps, &(img.flags), &poc2);
+                else
+                    outcome=extractH265FrameType(img.data, img.dataLength, nalSize, &sps, &(img.flags), &poc2);
+                if(!outcome)
+                {
+                    ADM_warning("Cannot get HEVC frame type and Picture Order Count value.\n");
+                    BOWOUT
+                }
+                if(poc2 < minpoc2)
+                    minpoc2 = poc2;
+            }
+        }
+        delta=0;
+        if(minpoc2 != INT_MAX)
+            delta = maxpoc1 - minpoc2;
+        if(delta>0)
+        {
+            ADM_warning("Saved video will exhibit flicker at cut point in FFmpeg-based players (POC overlap by %d)\n",delta);
+            cut=ADM_EDITOR_CUT_POINT_BAD_POC;
             BOWOUT
         }
     }
-    cut=ADM_EDITOR_CUT_POINT_IDR;
+    cut=ADM_EDITOR_CUT_POINT_KEY;
     BOWOUT
 }
 /**
@@ -839,7 +1036,7 @@ ADM_cutPointType ADM_Composer::checkCutsAreOnIntra(void)
     for(int i=0;i<nbSeg;i++)
     {
         success=checkSegmentStartsOnIntra(i);
-        if(success!=ADM_EDITOR_CUT_POINT_IDR)
+        if(success!=ADM_EDITOR_CUT_POINT_KEY)
             break;
     }
     return success;
@@ -874,12 +1071,12 @@ ADM_cutPointType ADM_Composer::checkCutsAreOnIntra(uint64_t startTime,uint64_t e
         vid->_aviheader->getVideoInfo(&here);
         if(!checkCodec(&here,&first))
             return ADM_EDITOR_CUT_POINT_MISMATCH;
-        return ADM_EDITOR_CUT_POINT_IDR;
+        return ADM_EDITOR_CUT_POINT_KEY;
     }
     for(int i=startSeg;i<segNo;i++)
     {
         success=checkSegmentStartsOnIntra(i+1);
-        if(success!=ADM_EDITOR_CUT_POINT_IDR)
+        if(success!=ADM_EDITOR_CUT_POINT_KEY)
             break;
     }
     return success;
@@ -951,6 +1148,102 @@ static bool bFrameDroppable(uint32_t fcc,_VIDEOS *vid,ADMCompressedImage *img=NU
       return false;    
     return true;
 }
+
+/**
+ *  \fn getOpenGopDelayForSegment
+ */
+bool ADM_Composer::getOpenGopDelayForSegment(uint32_t segNo, uint64_t segTime, uint32_t *delay, int *frameNo)
+{
+    _SEGMENT *seg=_segments.getSegment(segNo);
+    ADM_assert(seg);
+    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+    ADM_assert(vid);
+    vidHeader *demuxer=vid->_aviheader;
+    ADM_assert(demuxer);
+    uint64_t pts,dts;
+
+    // Look ahead to see if we have some late bframe in the past
+    int found=-1;
+    int nb=demuxer->getMainHeader()->dwTotalFrames;
+    uint64_t refTime=segTime+seg->_refStartTimeUs;
+    if(!refTime)
+    {
+        found=0;
+        demuxer->getPtsDts(0,&pts,&dts);
+    }else
+    {
+        for(int i=0;i<nb;i++)
+        {
+            demuxer->getPtsDts(i,&pts,&dts);
+            if(pts==refTime)
+            {
+                found=i;
+                break;
+            }
+        }
+    }
+    if(found==-1)
+    {
+        ADM_warning("Cannot find the frame for segment %" PRIu32"\n",segNo);
+        return false;
+    }
+
+    bool trustDemuxer=false;
+    int frame=-1;
+    aviInfo info;
+    demuxer->getVideoInfo(&info);
+
+    for(int i=found+1; i < found + MAX_REF_FRAMES_FIELDS; i++)
+    {
+        uint32_t flags;
+        demuxer->getFlags(i,&flags);
+        if(!trustDemuxer && (flags & AVI_B_FRAME))
+            trustDemuxer=true;
+        if((trustDemuxer && !(flags & AVI_B_FRAME)) || (flags & AVI_KEY_FRAME))
+        {
+            ADM_info("Not a bframe, stopping (%d)\n",i-found);
+            break;
+        }
+        demuxer->getPtsDts(i,&pts,&dts);
+        if(pts==ADM_NO_PTS) continue;
+        if(pts<refTime)
+        {
+            ADM_info("frame %d is early \n",i);
+            ADMCompressedImage img;
+#define ROUNDUP(x,y) (x+y-1)&~(y-1)
+            uint32_t len=ROUNDUP(info.width,16);
+            len*=ROUNDUP(info.height,16);
+            len*=3;
+            notStackAllocator buf(len);
+            img.flags=0;
+            img.data=buf.data;
+            img.dataLength=len;
+            if(demuxer->getFrame(i,&img))
+            {
+                if(bFrameDroppable(info.fcc,vid,&img))
+                    continue; // this frame will be dropped, no need to add delay
+            }
+            uint32_t delta=refTime-pts;
+            if(delta>*delay)
+            {
+                *delay=delta;
+                frame=i;
+            }
+        }else
+        {
+            ADM_info("Pts delta = %d\n",(int)(pts-refTime));
+        }
+    }
+    if(frameNo)
+        *frameNo=frame;
+    if(!segTime && refTime>*delay) // irrelevant for the first segment in range
+        seg->_refMinimumPts=refTime-*delay;
+ /* printf("Segment %u, start in ref at %s ",segNo,ADM_us2plain(seg->_refStartTimeUs));
+    printf("with offset %s ",ADM_us2plain(segTime));
+    printf("minimum PTS %s\n",(seg->_refMinimumPts!=ADM_NO_PTS)? ADM_us2plain(seg->_refMinimumPts) : "unset"); */
+    return true;
+}
+
 /**
  * 
  * @param time
@@ -968,7 +1261,6 @@ static bool bFrameDroppable(uint32_t fcc,_VIDEOS *vid,ADMCompressedImage *img=NU
 bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
 {
     aviInfo info;
-    int found=-1;
     uint32_t startSegNo;
     uint64_t segTime;
     *delay=0;
@@ -978,85 +1270,30 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
         return false;
     }
 
+    _SEGMENT *seg=_segments.getSegment(startSegNo);
+    ADM_assert(seg);
+    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+    ADM_assert(vid);
+    vidHeader *demuxer=vid->_aviheader;
+    ADM_assert(demuxer);
+    demuxer->getVideoInfo(&info);
+    if(bFrameDroppable(info.fcc,NULL))
+        return true; // no need to add extra delay
+
+    bool found=false;
+
     for(uint32_t segNo=startSegNo; segNo < _segments.getNbSegments(); segNo++)
     {
-        _SEGMENT *seg=_segments.getSegment(segNo);
-        ADM_assert(seg);
-        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
-        uint64_t pts,dts;
-
-        vid->_aviheader->getVideoInfo (&info);
-        if(bFrameDroppable(info.fcc,NULL))
-        {
-            return true; // no need to add extra delay
-        }
-        // Look ahead to see if we have some late bframe in the past
-        int nb=vid->_aviheader->getMainHeader ()->dwTotalFrames;
         if(segNo > startSegNo)
             segTime=0;
-        uint64_t refTime=segTime+seg->_refStartTimeUs;
-        found=-1;
-        if(!refTime)
-        {
-            found=0;
-            vid->_aviheader->getPtsDts(0,&pts,&dts);
-        }else
-        {
-            for(int i=0;i<nb;i++)
-            {
-                vid->_aviheader->getPtsDts (i,&pts,&dts);
-                if(pts==refTime)
-                {
-                    found=i;
-                    break;
-                }
-            }
-        }
-        if(found==-1)
-        {
-            ADM_warning("Cannot find the frame for segment %" PRIu32"\n");
+        uint32_t segDelay=0;
+        if(false == getOpenGopDelayForSegment(segNo,segTime,&segDelay))
             continue;
-        }
-        bool trustDemuxer=false;
-        for(int i=found+1;i<found+16;i++)
-        {
-            uint32_t flags;
-            vid->_aviheader->getFlags(i,&flags);
-            if(!trustDemuxer && (flags & AVI_B_FRAME))
-                trustDemuxer=true;
-            if((trustDemuxer && !(flags & AVI_B_FRAME)) || (flags & AVI_KEY_FRAME))
-            {
-                ADM_info("Not a bframe, stopping (%d)\n",i-found);
-                break;
-            }
-            vid->_aviheader->getPtsDts(i,&pts,&dts);
-            if(pts==ADM_NO_PTS) continue;
-            if(pts<refTime)
-            {
-                ADM_info("frame %d is early \n",i);
-                ADMCompressedImage img;
-#define ROUNDUP(x,y) (x+y-1)&~(y-1)
-                uint32_t len=ROUNDUP(info.width,16);
-                len*=ROUNDUP(info.height,16);
-                len*=3;
-                notStackAllocator buf(len);
-                img.flags=0;
-                img.data=buf.data;
-                img.dataLength=len;
-                if(vid->_aviheader->getFrame(i,&img))
-                {
-                    if(bFrameDroppable(info.fcc,vid,&img))
-                        continue; // this frame will be dropped, no need to add delay
-                }
-                uint32_t delta=refTime-pts;
-                if(delta>*delay) *delay=delta;
-            }else
-            {
-                ADM_info("Pts delta = %d\n",(int)(pts-refTime));
-            }
-        }
+        if(segDelay>*delay)
+            *delay=segDelay;
+        found=true;
     }
-    if(found==-1)
+    if(!found)
         return false;
     ADM_info("Found maximum non closed gop delay = %d\n",*delay);
     return true;
@@ -1081,7 +1318,7 @@ bool        ADM_Composer::getCompressedPicture(uint64_t start,uint64_t videoDela
     int64_t signedDts;
 
 againGet:
-    static uint32_t fn;
+    static uint32_t fn=0;
     fn++;
     _SEGMENT *seg=_segments.getSegment(_currentSegment);
     ADM_assert(seg);
@@ -1102,7 +1339,7 @@ againGet:
         ADM_info("Failed to get next frame for ref %" PRIu32"\n",seg->_reference);
         goto nextSeg;
     }
-    aprintf("Got frame %d, PTS=%s ",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
+    aprintf("Got frame %d, flags=0x%04x PTS=%s ",vid->lastSentFrame,img->flags,ADM_us2plain(img->demuxerPts));
     aprintf("DTS=%s\n",ADM_us2plain(img->demuxerDts));
     vid->lastSentFrame++;
     //
@@ -1223,25 +1460,45 @@ againGet:
     // Increase for next one
     if(ADM_NO_PTS!=_nextFrameDts)
         _nextFrameDts+=vid->timeIncrementInUs;
-    // Check the DTS is not too late compared to next seg beginning...
-    if(_currentSegment+1<_segments.getNbSegments() && img->demuxerDts!=ADM_NO_PTS)
+    if(_currentSegment+1<_segments.getNbSegments())
     {
         _SEGMENT *nextSeg=_segments.getSegment(_currentSegment+1);
-        int64_t nextDts=nextSeg->_startTimeUs+nextSeg->_refStartDts;
-        if(nextDts<nextSeg->_refStartTimeUs)
+        ADM_assert(nextSeg);
+        // Check the DTS is not too late compared to next seg beginning...
+        if(signedDts!=ADM_NO_PTS)
         {
-            ADM_warning("%" PRIu32" next DTS is negative %" PRIu64" %" PRIu64" ms\n",fn,nextDts,nextSeg->_refStartTimeUs);
-        }else       
-        {
-            nextDts-=nextSeg->_refStartTimeUs;
-            if(signedDts>=nextDts)
+            int64_t nextDts=nextSeg->_startTimeUs+nextSeg->_refStartDts;
+            if(nextDts<nextSeg->_refStartTimeUs)
             {
-                ADM_warning("%" PRIu32" have to switch segment, DTS limit reached %" PRIu64" %" PRIu64"\n",fn,img->demuxerDts/1000,nextDts/1000);
-                goto nextSeg;
+                ADM_warning("Frame %" PRIu32", next DTS is negative %" PRIu64" %" PRIu64" ms\n",fn,nextDts,nextSeg->_refStartTimeUs);
+            }else
+            {
+                nextDts-=nextSeg->_refStartTimeUs;
+                if(signedDts>=nextDts)
+                {
+                    ADM_warning("Frame %" PRIu32", have to switch segment, DTS limit reached %" PRIu64" %" PRIu64" ms\n",fn,signedDts/1000,nextDts/1000);
+                    goto nextSeg;
+                }
             }
         }
-
-
+        // Check that PTS does not collide with early B-frames,
+        // _refMinimumPts must be recalculated on every segment layout change!
+        if(signedPts!=ADM_NO_PTS)
+        {
+            int64_t nextPts=nextSeg->_startTimeUs+nextSeg->_refMinimumPts;
+            if(nextPts<nextSeg->_refStartTimeUs)
+            {
+                ADM_warning("Frame %" PRIu32", next PTS is negative %" PRIu64" %" PRIu64" ms\n",fn,nextPts,nextSeg->_refStartTimeUs);
+            }else
+            {
+                nextPts-=nextSeg->_refStartTimeUs;
+                if(signedPts>=nextPts)
+                {
+                    ADM_warning("Frame %" PRIu32", have to switch segment, PTS limit reached %" PRIu64" %" PRIu64" ms\n",fn,signedPts/1000,nextPts/1000);
+                    goto nextSeg;
+                }
+            }
+        }
     }
 // **
    // ADM_info("Frame after RECAL: Flags :%X, DTS:%"PRId64" PTS=%"PRId64" tail=%"PRId64"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);

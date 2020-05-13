@@ -565,21 +565,21 @@ void HandleAction (Action action)
               {
                   video_body->pasteFromClipBoard(currentPts);
               }
-              ADM_cutPointType chk=ADM_EDITOR_CUT_POINT_IDR;
+              ADM_cutPointType chk=ADM_EDITOR_CUT_POINT_KEY;
               if(!UI_getCurrentVCodec())
                   chk=video_body->checkCutsAreOnIntra();
-              if(cutsNotOnIntraWarned!=(int)chk && chk!=ADM_EDITOR_CUT_POINT_IDR)
+              if(cutsNotOnIntraWarned!=(int)chk && chk!=ADM_EDITOR_CUT_POINT_KEY)
               {
                   const char *alert;
                   bool ask=true;
                   switch(chk)
                   {
-                      case ADM_EDITOR_CUT_POINT_NON_IDR:
+                      case ADM_EDITOR_CUT_POINT_NON_KEY:
                           alert=QT_TRANSLATE_NOOP("adm","The cut points of the pasted video are not on keyframes.\n"
                               "Video saved in copy mode will be corrupted at these points.\n"
                               "Proceed anyway?");
                           break;
-                      case ADM_EDITOR_CUT_POINT_RECOVERY:
+                      case ADM_EDITOR_CUT_POINT_BAD_POC:
                           alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
                               "Picture reordering information in the video stream is not reset at non-IDR frames. "
                               "The cut points of the pasted selection may result in playback interruption "
@@ -723,16 +723,16 @@ void HandleAction (Action action)
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
                 break;
             }
-            ADM_cutPointType chk=ADM_EDITOR_CUT_POINT_IDR;
+            ADM_cutPointType chk=ADM_EDITOR_CUT_POINT_KEY;
             if(!lastFrame && !UI_getCurrentVCodec())
                 chk=video_body->checkCutIsOnIntra(a);
-            if(cutsNotOnIntraWarned!=(int)chk && chk!=ADM_EDITOR_CUT_POINT_IDR)
+            if(cutsNotOnIntraWarned!=(int)chk && chk!=ADM_EDITOR_CUT_POINT_KEY)
             {
                 const char *alert;
                 bool ask=true;
                 switch(chk)
                 {
-                    case ADM_EDITOR_CUT_POINT_NON_IDR:
+                    case ADM_EDITOR_CUT_POINT_NON_KEY:
                         if(action==ACT_Cut)
                             alert=QT_TRANSLATE_NOOP("adm","The end point of the cut is not on a keyframe.\n"
                                 "Video saved in copy mode will be corrupted at this point.\n"
@@ -742,7 +742,7 @@ void HandleAction (Action action)
                                 "Video saved in copy mode will be corrupted at this point.\n"
                                 "Proceed anyway?");
                         break;
-                    case ADM_EDITOR_CUT_POINT_RECOVERY:
+                    case ADM_EDITOR_CUT_POINT_BAD_POC:
                         if(action==ACT_Cut)
                             alert=QT_TRANSLATE_NOOP("adm","This video uses non-IDR recovery points instead of IDR as keyframes. "
                                 "Picture reordering information in the video stream is not reset at non-IDR frames. "
