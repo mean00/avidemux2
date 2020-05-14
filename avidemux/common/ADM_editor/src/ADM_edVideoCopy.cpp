@@ -764,7 +764,6 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 ADM_warning("Cannot get POC, only POC explicitely set in the slice header is supported.\n");
                 BOWOUT // or should the check fail instead?
             }
-            ADM_info("poc_lsb of the last frame %d in display order of the previous seg = %d\n",frame,maxpoc1);
 
             /* Check that POC doesn't go back, i.e. max POC before the cut is less
             than min POC after segment switch. First check that poc_msb is still valid. */
