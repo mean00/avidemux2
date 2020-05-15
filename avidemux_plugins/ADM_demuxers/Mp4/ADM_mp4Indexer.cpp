@@ -504,6 +504,7 @@ uint32_t i,j,cur;
         }
         // Time is now built, it is in us
         ADM_info("Video index done.\n");
+        _videoFound++;
         ADM_info("Setting video timebase to %u / %u\n",step,_videoScale);
         _videostream.dwScale=step;
         if(constantFps)
