@@ -309,8 +309,15 @@ uint8_t MP4Header::parseTrack(void *ztom)
             }
             case ADM_MP4_MDIA:
             {
+                bool skipTrack=!!_videoFound;
                 if(!parseMdia(&son,&trackType,&trackId))
                     return false;
+                if(trackType==TRACK_VIDEO && skipTrack)
+                {
+                    ADM_warning("Skipping video track %u\n",trackId);
+                    tom->skipAtom();
+                    return 1;
+                }
                 break;
             }
             case ADM_MP4_EDTS:
@@ -397,6 +404,12 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t *trackId)
                         break;
                     case MKFCCR('v','i','d','e'): // 'vide'
                         *trackType=TRACK_VIDEO;
+                        if(_videoFound)
+                        { // Ignore all subsequent video tracks, but keep track type set so that the caller can do the same.
+                            ADM_warning("Multiple video tracks are not supported, skipping.\n");
+                            tom->skipAtom();
+                            return 1;
+                        }
                         _tracks[0].delay=_currentDelay;
                         _tracks[0].startOffset=_currentStartOffset;
                         ADM_info("hdlr video found \n ");
