@@ -1,0 +1,895 @@
+diff --git a/src/qt3d.mk b/src/qt3d.mk
+index b509bd46..6c8ae8ee 100644
+--- a/src/qt3d.mk
++++ b/src/qt3d.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 9da82f1cc4b7d416d31ec96224c59d221473a48f6e579eef978f7d2e3932c674
++$(PKG)_CHECKSUM := cfad2e16f40fa07f8be59fa29c0c246743ee67db417ca29772a92f36fa322af3
+ $(PKG)_SUBDIR    = $(subst qtbase,qt3d,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qt3d,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qt3d,$(qtbase_URL))
+diff --git a/src/qtactiveqt.mk b/src/qtactiveqt.mk
+index 0fe8a8aa..780a6668 100644
+--- a/src/qtactiveqt.mk
++++ b/src/qtactiveqt.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := b53517d5d128719773a2941ba52da10acd7aa3149948862bc08c98f5b64152a9
++$(PKG)_CHECKSUM := d3c78e6c2a75b9d4f9685d4eea6e84f44f97034a54aed7a159c53cfd4ec4eac7
+ $(PKG)_SUBDIR    = $(subst qtbase,qtactiveqt,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtactiveqt,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtactiveqt,$(qtbase_URL))
+diff --git a/src/qtbase-1-fixes.patch b/src/qtbase-1-fixes.patch
+index 1a66c528..6f4bf160 100644
+--- a/src/qtbase-1-fixes.patch
++++ b/src/qtbase-1-fixes.patch
+@@ -1,9 +1,9 @@
+ This file is part of MXE. See LICENSE.md for licensing information.
+ 
+-From 103d3ed73e50968846786b78db241f9904b92538 Mon Sep 17 00:00:00 2001
++From 15145baa429524cf5d14f36c2b96f9e10b52838f Mon Sep 17 00:00:00 2001
+ From: Ray Donnelly <mingw.android@gmail.com>
+ Date: Wed, 26 Aug 2015 12:45:43 +0100
+-Subject: [PATCH 1/2] cmake: Rearrange STATIC vs INTERFACE targets
++Subject: [PATCH 1/4] cmake: Rearrange STATIC vs INTERFACE targets
+ 
+ Otherwise we attempt to add_library(Qt5::UiPlugin STATIC IMPORTED)
+ for header-only modules when building Qt5 statically.
+@@ -12,10 +12,10 @@ Source: https://git.io/vzWJz
+ See also: https://github.com/mxe/mxe/issues/1185
+ 
+ diff --git a/mkspecs/features/data/cmake/Qt5BasicConfig.cmake.in b/mkspecs/features/data/cmake/Qt5BasicConfig.cmake.in
+-index 1099a761ce..d03ebff899 100644
++index c729892889..8961199089 100644
+ --- a/mkspecs/features/data/cmake/Qt5BasicConfig.cmake.in
+ +++ b/mkspecs/features/data/cmake/Qt5BasicConfig.cmake.in
+-@@ -371,6 +371,9 @@ if (NOT TARGET Qt5::$${CMAKE_MODULE_NAME})
++@@ -214,12 +214,12 @@ if (NOT TARGET Qt5::$${CMAKE_MODULE_NAME})
+      list(APPEND _Qt5$${CMAKE_MODULE_NAME}_LIB_DEPENDENCIES \"$${CMAKE_INTERFACE_QT5_MODULE_DEPS}\")
+  !!ENDIF
+  
+@@ -23,10 +23,6 @@ index 1099a761ce..d03ebff899 100644
+ +    add_library(Qt5::$${CMAKE_MODULE_NAME} INTERFACE IMPORTED)
+ +!!ELSE
+  !!IF !isEmpty(CMAKE_STATIC_TYPE)
+-     if(NOT Qt5_EXCLUDE_STATIC_DEPENDENCIES)
+- !!IF !isEmpty(CMAKE_DEBUG_TYPE)
+-@@ -408,9 +411,6 @@ if (NOT TARGET Qt5::$${CMAKE_MODULE_NAME})
+- 
+      add_library(Qt5::$${CMAKE_MODULE_NAME} STATIC IMPORTED)
+      set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} PROPERTY IMPORTED_LINK_INTERFACE_LANGUAGES "CXX")
+ -!!ELSE
+@@ -39,18 +35,87 @@ index 1099a761ce..d03ebff899 100644
+ 2.20.1
+ 
+ 
+-From 56f0aad866df2439d8d3b2f1651ae2dd02f52354 Mon Sep 17 00:00:00 2001
++From 26458bce67f672e8c2f6eef3cd7adf3a9b88ee86 Mon Sep 17 00:00:00 2001
++From: Tony Theodore <tonyt@logyst.com>
++Date: Sat, 16 Jul 2016 20:31:07 +1000
++Subject: [PATCH 2/4] Fix pkgconfig file and library naming
++
++See: https://codereview.qt-project.org/#/c/165394/
++     https://bugreports.qt.io/browse/QTBUG-30898
++
++Currently, *.pc files are generated with debug suffix `d` in `-release`
++mode and without the suffix in `-debug` or `-debug-and-release`. This
++can be worked around by `CONIFG-=debug_and_release`, however, a more
++predictable and consistent naming approach would be preferable.
++
++This change mimics the *.prl file and lib conventions:
++
++  -release: creates normal *.pc files and lib names
++  -release -force-debug-info: normal as above
++  -debug: creates *d.pc and *d lib names
++  -debug-and-release: creates both
++  -default: creates both (default link: debug)
++
++and should be unsurprising to users of `pkg-config`. At very least,
++it's deterministic and easily incorporated into build systems.
++
++Task-number: 30898
++Change-Id: If75336ec7d21a7ec0cb6d245fe87c64afcb5a644
++
++diff --git a/mkspecs/features/qt_module.prf b/mkspecs/features/qt_module.prf
++index 51b5bde67a..faba17aedd 100644
++--- a/mkspecs/features/qt_module.prf
+++++ b/mkspecs/features/qt_module.prf
++@@ -263,6 +263,10 @@ load(qt_installs)
++ 
++ load(qt_targets)
++ 
+++# Set TARGET towards the end but before pkgconfig setup to keep naming
+++# conventions consistent with *prl files
+++TARGET = $$qt5LibraryTarget($$TARGET$$QT_LIBINFIX)
+++
++ # this builds on top of qt_common
++ !internal_module:if(unix|mingw) {
++     CONFIG += create_pc
++@@ -278,12 +282,12 @@ load(qt_targets)
++         QMAKE_PKGCONFIG_INCDIR = $$[QT_INSTALL_HEADERS/raw]
++         QMAKE_PKGCONFIG_CFLAGS = -D$$MODULE_DEFINE -I${includedir}/$$MODULE_INCNAME
++     }
++-    QMAKE_PKGCONFIG_NAME = $$replace(TARGET, ^Qt, "Qt$$QT_MAJOR_VERSION ")
++-    QMAKE_PKGCONFIG_FILE = $$replace(TARGET, ^Qt, Qt$$QT_MAJOR_VERSION)
+++    QMAKE_PKGCONFIG_NAME = $$replace(TARGET, ^Qt$$QT_MAJOR_VERSION, "Qt$$QT_MAJOR_VERSION ")
+++    QMAKE_PKGCONFIG_FILE = $$TARGET
++     for(i, MODULE_DEPENDS): \
++-        QMAKE_PKGCONFIG_REQUIRES += $$replace(QT.$${i}.name, ^Qt, Qt$$section(QT.$${i}.VERSION, ., 0, 0))
+++        QMAKE_PKGCONFIG_REQUIRES += $$replace(QT.$${i}.name, ^Qt, Qt$$section(QT.$${i}.VERSION, ., 0, 0))$$qtPlatformTargetSuffix()
++     isEmpty(QMAKE_PKGCONFIG_DESCRIPTION): \
++-        QMAKE_PKGCONFIG_DESCRIPTION = $$replace(TARGET, ^Qt, "Qt ") module
+++        QMAKE_PKGCONFIG_DESCRIPTION = $$replace(TARGET, ^Qt$$QT_MAJOR_VERSION, "Qt ") module
++     pclib_replace.match = $$lib_replace.match
++     !isEmpty(lib_replace.replace): \
++         pclib_replace.replace = $$QMAKE_PKGCONFIG_LIBDIR
++@@ -317,5 +321,3 @@ win32 {
++     # On other platforms, Qt's own compilation goes needs to compile the Qt 5.0 API
++     DEFINES *= QT_DISABLE_DEPRECATED_BEFORE=0x050000
++ }
++-
++-TARGET = $$qt5LibraryTarget($$TARGET$$QT_LIBINFIX)  # Do this towards the end
++-- 
++2.20.1
++
++
++From 02bb523901a33b66cc0e625cef56ef573b2a01d8 Mon Sep 17 00:00:00 2001
+ From: Mark Brand <mabrand@mabrand.nl>
+ Date: Sun, 11 Jun 2017 00:27:41 +0200
+-Subject: [PATCH 2/2] use pkg-config for harfbuzz
++Subject: [PATCH 3/4] use pkg-config for harfbuzz
+ 
+ Change-Id: Ia65cbb90fd180f1bc10ce077a9a8323a48e51421
+ 
+ diff --git a/src/gui/configure.json b/src/gui/configure.json
+-index 0202f17b21..1418a3bbee 100644
++index c51e3ceee3..966b0170ba 100644
+ --- a/src/gui/configure.json
+ +++ b/src/gui/configure.json
+-@@ -304,7 +304,8 @@
++@@ -303,7 +303,8 @@
+              },
+              "headers": "harfbuzz/hb.h",
+              "sources": [
+@@ -63,3 +128,40 @@ index 0202f17b21..1418a3bbee 100644
+ -- 
+ 2.20.1
+ 
++
++From 71c816bca64e9169ce6860df3bd8216faf1d0355 Mon Sep 17 00:00:00 2001
++From: Mark Brand <mabrand@mabrand.nl>
++Date: Thu, 23 Nov 2017 11:28:47 +0200
++Subject: [PATCH 4/4] disable qt_random_cpu for i686-w64-mingw32
++
++Workaround for gcc internal error compiling for mingw32:
++    global/qrandom.cpp: In function 'qsizetype qt_random_cpu(void*, qsizetype)':
++    global/qrandom.cpp:123:1: internal compiler error: in
++    ix86_compute_frame_layout, at config/i386/i386.c:10145
++     }
++     ^
++
++    global/qrandom.cpp:123:1: internal compiler error: Segmentation fault
++    i686-w64-mingw32.static-g++: internal compiler error: Segmentation fault
++    (program cc1plus)
++
++Based on https://codereview.qt-project.org/#/c/212360/
++
++Change-Id: Ia1c902e7b147bdda2b8d7904b40a3b968b8d0369
++
++diff --git a/src/corelib/global/qrandom.cpp b/src/corelib/global/qrandom.cpp
++index 90df8653a7..0d7002f2e8 100644
++--- a/src/corelib/global/qrandom.cpp
+++++ b/src/corelib/global/qrandom.cpp
++@@ -90,7 +90,7 @@ DECLSPEC_IMPORT BOOLEAN WINAPI SystemFunction036(PVOID RandomBuffer, ULONG Rando
++ 
++ QT_BEGIN_NAMESPACE
++ 
++-#if defined(Q_PROCESSOR_X86) && QT_COMPILER_SUPPORTS_HERE(RDRND)
+++#if defined(Q_PROCESSOR_X86) && !defined(Q_PROCESSOR_X86_32) && QT_COMPILER_SUPPORTS_HERE(RDRND)
++ static qsizetype qt_random_cpu(void *buffer, qsizetype count) Q_DECL_NOTHROW;
++ 
++ #  ifdef Q_PROCESSOR_X86_64
++-- 
++2.20.1
++
+diff --git a/src/qtbase.mk b/src/qtbase.mk
+index 34962c6a..78b52795 100644
+--- a/src/qtbase.mk
++++ b/src/qtbase.mk
+@@ -4,12 +4,12 @@ PKG             := qtbase
+ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+-$(PKG)_VERSION  := 5.14.2
+-$(PKG)_CHECKSUM := 48b9e79220941665a9dd827548c6428f7aa3052ccba8f4f7e039a94aa1d2b28a
++$(PKG)_VERSION  := 5.12.4
++$(PKG)_CHECKSUM := 20fbc7efa54ff7db9552a7a2cdf9047b80253c1933c834f35b0bc5c1ae021195
+ $(PKG)_SUBDIR   := $(PKG)-everywhere-src-$($(PKG)_VERSION)
+ $(PKG)_FILE     := $(PKG)-everywhere-src-$($(PKG)_VERSION).tar.xz
+-$(PKG)_URL      := https://download.qt.io/official_releases/qt/5.14/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
+-$(PKG)_DEPS     := cc dbus fontconfig freetds freetype harfbuzz jpeg libmysqlclient libpng openssl pcre2 postgresql sqlite zlib zstd
++$(PKG)_URL      := https://download.qt.io/official_releases/qt/5.12/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
++$(PKG)_DEPS     := cc dbus fontconfig freetds freetype harfbuzz jpeg libmysqlclient libpng openssl pcre2 postgresql sqlite zlib
+ $(PKG)_DEPS_$(BUILD) :=
+ $(PKG)_TARGETS  := $(BUILD) $(MXE_TARGETS)
+ 
+@@ -30,7 +30,6 @@ define $(PKG)_BUILD
+         PKG_CONFIG="${TARGET}-pkg-config" \
+         PKG_CONFIG_SYSROOT_DIR="/" \
+         PKG_CONFIG_LIBDIR="$(PREFIX)/$(TARGET)/lib/pkgconfig" \
+-        MAKE=$(MAKE) \
+         ./configure \
+             -opensource \
+             -confirm-license \
+@@ -41,7 +40,7 @@ define $(PKG)_BUILD
+             -force-pkg-config \
+             -no-use-gold-linker \
+             -release \
+-            $(if $(BUILD_STATIC), -static,)$(if $(BUILD_SHARED), -shared,) \
++            -static \
+             -prefix '$(PREFIX)/$(TARGET)/qt5' \
+             -no-icu \
+             -opengl desktop \
+@@ -76,7 +75,7 @@ define $(PKG)_BUILD
+ 
+     mkdir            '$(1)/test-qt'
+     cd               '$(1)/test-qt' && '$(PREFIX)/$(TARGET)/qt5/bin/qmake' '$(PWD)/src/qt-test.pro'
+-    $(MAKE)       -C '$(1)/test-qt' -j '$(JOBS)'
++    $(MAKE)       -C '$(1)/test-qt' -j '$(JOBS)' $(BUILD_TYPE)
+     $(INSTALL) -m755 '$(1)/test-qt/$(BUILD_TYPE)/test-qt5.exe' '$(PREFIX)/$(TARGET)/bin/'
+ 
+     # build test the manual way
+@@ -96,9 +95,8 @@ define $(PKG)_BUILD
+         -I'$(1)/test-$(PKG)-pkgconfig' \
+         `'$(TARGET)-pkg-config' Qt5Widgets$(BUILD_TYPE_SUFFIX) --cflags --libs`
+ 
+-    # setup cmake toolchain and test
++    # setup cmake toolchain
+     echo 'set(CMAKE_SYSTEM_PREFIX_PATH "$(PREFIX)/$(TARGET)/qt5" ${CMAKE_SYSTEM_PREFIX_PATH})' > '$(CMAKE_TOOLCHAIN_DIR)/$(PKG).cmake'
+-    $(CMAKE_TEST)
+ 
+     # batch file to run test programs
+     (printf 'set PATH=..\\lib;..\\qt5\\bin;..\\qt5\\lib;%%PATH%%\r\n'; \
+@@ -106,8 +104,17 @@ define $(PKG)_BUILD
+      printf 'test-qt5.exe\r\n'; \
+      printf 'test-qtbase-pkgconfig.exe\r\n';) \
+      > '$(PREFIX)/$(TARGET)/bin/test-qt5.bat'
++
++    # add libs to CMake config of Qt5Core to fix static linking
++    $(SED) -i 's,set(_Qt5Core_LIB_DEPENDENCIES \"\"),set(_Qt5Core_LIB_DEPENDENCIES \"ole32;uuid;ws2_32;advapi32;shell32;user32;kernel32;mpr;version;winmm;z;pcre2-16;netapi32;userenv\"),g' '$(PREFIX)/$(TARGET)/qt5/lib/cmake/Qt5Core/Qt5CoreConfig.cmake'
++    $(SED) -i 's,set(_Qt5Gui_LIB_DEPENDENCIES \"Qt5::Core\"),set(_Qt5Gui_LIB_DEPENDENCIES \"Qt5::Core;ole32;uuid;ws2_32;advapi32;shell32;user32;kernel32;mpr;version;winmm;z;pcre2-16;png16;harfbuzz;z\"),g' '$(PREFIX)/$(TARGET)/qt5/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake'
++    $(SED) -i 's,set(_Qt5Widgets_LIB_DEPENDENCIES \"Qt5::Gui;Qt5::Core\"),set(_Qt5Widgets_LIB_DEPENDENCIES \"Qt5::Gui;Qt5::Core;gdi32;comdlg32;oleaut32;imm32;opengl32;png16;harfbuzz;ole32;uuid;ws2_32;advapi32;shell32;user32;kernel32;mpr;version;winmm;z;pcre2-16;shell32;uxtheme;dwmapi\"),g' '$(PREFIX)/$(TARGET)/qt5/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake'
+ endef
+ 
++
++$(PKG)_BUILD_SHARED = $(subst -static ,-shared ,\
++                      $($(PKG)_BUILD))
++
+ define $(PKG)_BUILD_$(BUILD)
+     cd '$(BUILD_DIR)' && '$(SOURCE_DIR)/configure' \
+         -prefix '$(PREFIX)/$(TARGET)/qt5' \
+diff --git a/src/qtcharts.mk b/src/qtcharts.mk
+index e4daeae5..075a0de6 100644
+--- a/src/qtcharts.mk
++++ b/src/qtcharts.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := adb25203ea748d886cc3d8993c20def702115eccea311594592058134ba83bb7
++$(PKG)_CHECKSUM := 06ff68a80dc377847429cdd87d4e46465e1d6fbc417d52700a0a59d197669c9e
+ $(PKG)_SUBDIR    = $(subst qtbase,qtcharts,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtcharts,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtcharts,$(qtbase_URL))
+diff --git a/src/qtconnectivity.mk b/src/qtconnectivity.mk
+index 931b8d1c..9863d96d 100644
+--- a/src/qtconnectivity.mk
++++ b/src/qtconnectivity.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := abe67b3e3a775e2a2e27c62a5391f37007ffbe72bce58b96116995616cfcbc28
++$(PKG)_CHECKSUM := 749d05242b9fae12e80f569fb6b918dc011cb191eeb05147cbde474ca6b173ef
+ $(PKG)_SUBDIR    = $(subst qtbase,qtconnectivity,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtconnectivity,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtconnectivity,$(qtbase_URL))
+diff --git a/src/qtdatavis3d.mk b/src/qtdatavis3d.mk
+index d9cbfb66..5bc71804 100644
+--- a/src/qtdatavis3d.mk
++++ b/src/qtdatavis3d.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 723c03db2d2805b1be4ca534ac7bc867a1a21894d33a7e9261a382f3fa9d0e20
++$(PKG)_CHECKSUM := 1c160eeb430c8602aaee8ae4faa55bc62f880dae642be5fd1ac019f7886eb15a
+ $(PKG)_SUBDIR    = $(subst qtbase,qtdatavis3d,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtdatavis3d,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtdatavis3d,$(qtbase_URL))
+diff --git a/src/qtdeclarative.mk b/src/qtdeclarative.mk
+index 93872944..5576af8b 100644
+--- a/src/qtdeclarative.mk
++++ b/src/qtdeclarative.mk
+@@ -5,15 +5,13 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := a3c4617adc9760347c93d2eb6c25d22f620cd22f44afa0494eb499a805831650
++$(PKG)_CHECKSUM := 614105ed73079d67d81b34fef31c9934c5e751342e4b2e0297128c8c301acda7
+ $(PKG)_SUBDIR    = $(subst qtbase,qtdeclarative,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtdeclarative,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtdeclarative,$(qtbase_URL))
+ $(PKG)_DEPS     := cc qtbase qtimageformats qtsvg qtxmlpatterns
+ $(PKG)_TARGETS  := $(BUILD) $(MXE_TARGETS)
+ 
+-$(PKG)_DEPS_$(BUILD) := qtbase qtsvg qtxmlpatterns
+-
+ define $(PKG)_UPDATE
+     echo $(qtbase_VERSION)
+ endef
+diff --git a/src/qtgamepad.mk b/src/qtgamepad.mk
+index 8cc0ebb6..77f60fc3 100644
+--- a/src/qtgamepad.mk
++++ b/src/qtgamepad.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := f77daadb4755cf760e11812264259fb103396fd1b06df1e06b5df162081c8d03
++$(PKG)_CHECKSUM := 25de6f10fb18f2484d1e569688bf33deb90ecbfb97ce41c2b5fb3521146e4c45
+ $(PKG)_SUBDIR    = $(subst qtbase,qtgamepad,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtgamepad,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtgamepad,$(qtbase_URL))
+diff --git a/src/qtgraphicaleffects.mk b/src/qtgraphicaleffects.mk
+index ad4c7709..215e1e52 100644
+--- a/src/qtgraphicaleffects.mk
++++ b/src/qtgraphicaleffects.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 487a7f858244a08264363733055a8cf8b00e77c658c5608cc462817d15e4b50f
++$(PKG)_CHECKSUM := 0bc38b168fa724411984525173d667aa47076c8cbd4eeb791d0da7fe4b9bdf73
+ $(PKG)_SUBDIR    = $(subst qtbase,qtgraphicaleffects,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtgraphicaleffects,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtgraphicaleffects,$(qtbase_URL))
+diff --git a/src/qtimageformats.mk b/src/qtimageformats.mk
+index d502c9ba..fd4f8334 100644
+--- a/src/qtimageformats.mk
++++ b/src/qtimageformats.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 733eca0165c15e046b106039c989dac7f6bc2ecf215396d965ed065369264f8c
++$(PKG)_CHECKSUM := 2dee25c3eea90d172cbd40f41450153322b902da1daa7d2370a55124b2307bb3
+ $(PKG)_SUBDIR    = $(subst qtbase,qtimageformats,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtimageformats,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtimageformats,$(qtbase_URL))
+diff --git a/src/qtlocation-1.patch b/src/qtlocation-1.patch
+index 23cc2fc1..75140f39 100644
+--- a/src/qtlocation-1.patch
++++ b/src/qtlocation-1.patch
+@@ -1,17 +1,15 @@
+-This file is part of MXE. See LICENSE.md for licensing information.
+-
+-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
++From 59c9b6ace8c06c3aa8a74abf9e3e3b02b5687cd2 Mon Sep 17 00:00:00 2001
+ From: Mark Brand <mabrand@mabrand.nl>
+ Date: Fri, 2 Jun 2017 18:23:20 +0200
+-Subject: [PATCH 1/1] disable mapboxgl for MXE
++Subject: [PATCH] disable mapboxgl for MXE
+ 
+ 
+ diff --git a/src/plugins/geoservices/geoservices.pro b/src/plugins/geoservices/geoservices.pro
+-index 1111111..2222222 100644
++index 0810d392..de781ed1 100644
+ --- a/src/plugins/geoservices/geoservices.pro
+ +++ b/src/plugins/geoservices/geoservices.pro
+-@@ -12,7 +12,8 @@ qtConfig(geoservices_mapboxgl) {
+-     !exists(../../3rdparty/mapbox-gl-native/mapbox-gl-native.pro) {
++@@ -10,7 +10,8 @@ qtConfig(c++14):!win32|mingw:!qnx {
++     !exists(../../3rdparty/mapbox-gl-native/CMakeLists.txt) {
+          warning("Submodule mapbox-gl-native does not exist. Run 'git submodule update --init' on qtlocation.")
+      } else {
+ -        SUBDIRS += mapboxgl ../../3rdparty/mapbox-gl-native
+@@ -21,3 +19,6 @@ index 1111111..2222222 100644
+ +	message(MXE: mapboxgl disabled)
+      }
+  }
++-- 
++2.11.0
++
+diff --git a/src/qtlocation.mk b/src/qtlocation.mk
+index 60b3f53a..3877ca7c 100644
+--- a/src/qtlocation.mk
++++ b/src/qtlocation.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := c37708bc396f6dac397b49a6a268d5edb39e1c8296ca2337ce9e80bde04775cc
++$(PKG)_CHECKSUM := 127b40bd7679fead3fb98f4c9c1d71dde9d6d416e90a6000129b61a5f128b3a0
+ $(PKG)_SUBDIR    = $(subst qtbase,qtlocation,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtlocation,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtlocation,$(qtbase_URL))
+diff --git a/src/qtmultimedia.mk b/src/qtmultimedia.mk
+index 4a9fbd3f..abcc7a29 100644
+--- a/src/qtmultimedia.mk
++++ b/src/qtmultimedia.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 7acd8ede6835314206e407b35b668f0add67544577fb51fe67afb03137fb9fe9
++$(PKG)_CHECKSUM := 7c0759ab6fca2480b10b71a35beeffe0b847adeff5af94eacd1a4531d033423d
+ $(PKG)_SUBDIR    = $(subst qtbase,qtmultimedia,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtmultimedia,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtmultimedia,$(qtbase_URL))
+diff --git a/src/qtnetworkauth.mk b/src/qtnetworkauth.mk
+index a6de807b..ba257c5f 100644
+--- a/src/qtnetworkauth.mk
++++ b/src/qtnetworkauth.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 4f00513dd18598487d02187b80b54c669662cf8a8f2573858c7f9282d7b9265e
++$(PKG)_CHECKSUM := e501eb46b8405a2b7db9fe90a1c224cf6676a07dc22c0662317ffe3dee1dbf55
+ $(PKG)_SUBDIR    = $(subst qtbase,qtnetworkauth,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtnetworkauth,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtnetworkauth,$(qtbase_URL))
+diff --git a/src/qtpurchasing.mk b/src/qtpurchasing.mk
+index 9eb2e4e3..d610043a 100644
+--- a/src/qtpurchasing.mk
++++ b/src/qtpurchasing.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 69b087001e8fcec5bb49ca333d5f44e6b7eb09f76421dc792fc9cd76dee9e851
++$(PKG)_CHECKSUM := 7804a111043d0e8d6d81a0d0ae465ce2c36eca73f2774ccb5fa7be8670211672
+ $(PKG)_SUBDIR    = $(subst qtbase,qtpurchasing,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtpurchasing,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtpurchasing,$(qtbase_URL))
+diff --git a/src/qtquickcontrols.mk b/src/qtquickcontrols.mk
+index 2335f00c..38fa74d1 100644
+--- a/src/qtquickcontrols.mk
++++ b/src/qtquickcontrols.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := d55def1dd4ee1250bd6a4e76849f4e362368b6411c2216d5f669c761216d4461
++$(PKG)_CHECKSUM := 32d4c2505337c67b0bac26d7f565ec8fabdc616e61247e98674820769dda9858
+ $(PKG)_SUBDIR    = $(subst qtbase,qtquickcontrols,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtquickcontrols,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtquickcontrols,$(qtbase_URL))
+diff --git a/src/qtquickcontrols2.mk b/src/qtquickcontrols2.mk
+index d6f6610c..b81fb37b 100644
+--- a/src/qtquickcontrols2.mk
++++ b/src/qtquickcontrols2.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := faf7d349d8f4a8db36cd3c62a5724bcf689300f2fdb7dc1ea034392aab981560
++$(PKG)_CHECKSUM := 9a447eed38bc8c7d7be7bc407317f58940377c077ddca74c9a641b1ee6200331
+ $(PKG)_SUBDIR    = $(subst qtbase,qtquickcontrols2,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtquickcontrols2,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtquickcontrols2,$(qtbase_URL))
+diff --git a/src/qtremoteobjects.mk b/src/qtremoteobjects.mk
+index 04390f4c..00d0e08b 100644
+--- a/src/qtremoteobjects.mk
++++ b/src/qtremoteobjects.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := a6a601c4f4aab6fe41a462dae57033819f697e3317240a382cee45c08be614d6
++$(PKG)_CHECKSUM := 54dd0c782abff90bf0608771c2e90b36073d9bd8d6c61706a2873bb7c317f413
+ $(PKG)_SUBDIR    = $(subst qtbase,qtremoteobjects,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtremoteobjects,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtremoteobjects,$(qtbase_URL))
+diff --git a/src/qtscript.mk b/src/qtscript.mk
+index 4ed6f962..769db4d8 100644
+--- a/src/qtscript.mk
++++ b/src/qtscript.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := e9fd487ccb3cbf00e86b0b803aa79e9f6bbe7a337b8e97d069e040c3e0789bfe
++$(PKG)_CHECKSUM := 7adb3fe77638c7a6f2a26bca850b0ff54f5fb7e5561d2e4141d14a84305c2b6a
+ $(PKG)_SUBDIR    = $(subst qtbase,qtscript,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtscript,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtscript,$(qtbase_URL))
+diff --git a/src/qtscxml.mk b/src/qtscxml.mk
+index 76bd58e9..dea40394 100644
+--- a/src/qtscxml.mk
++++ b/src/qtscxml.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 030cea352a56074f577200f967ef37c959b2767127de61f766f59b0d99763790
++$(PKG)_CHECKSUM := 696fb72a62018151275fe589fc80cb160d2becab9a3254321d40e2e11a0ad4f8
+ $(PKG)_SUBDIR    = $(subst qtbase,qtscxml,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtscxml,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtscxml,$(qtbase_URL))
+diff --git a/src/qtsensors.mk b/src/qtsensors.mk
+index 88c2bb52..30672c83 100644
+--- a/src/qtsensors.mk
++++ b/src/qtsensors.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := bccfca6910b0383d8f65823496ff5011abed2fa8fd446b4b27333d0fd7bb8c61
++$(PKG)_CHECKSUM := 95873c7ea5960008d6eb41368ca64d68fbd05594ca8c2cd848b1612fc4aec0a9
+ $(PKG)_SUBDIR    = $(subst qtbase,qtsensors,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtsensors,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtsensors,$(qtbase_URL))
+diff --git a/src/qtserialbus.mk b/src/qtserialbus.mk
+index 64c78907..436003c9 100644
+--- a/src/qtserialbus.mk
++++ b/src/qtserialbus.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 0b7762175a649a40c4dd619c5de61d772235dc86099343278e2c3229d0836a91
++$(PKG)_CHECKSUM := 69d56905f43ee13e670750e8f46d373835fae81d6343baa7c4004d2a2c6311fc
+ $(PKG)_SUBDIR    = $(subst qtbase,qtserialbus,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtserialbus,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtserialbus,$(qtbase_URL))
+diff --git a/src/qtserialport.mk b/src/qtserialport.mk
+index 4d471434..7f251a94 100644
+--- a/src/qtserialport.mk
++++ b/src/qtserialport.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := a6d977dd723ad4d3368b5163691405b8852f809974a96ec54103494e834aea21
++$(PKG)_CHECKSUM := bf487df8a9fb2eddf103842b57a75b17ef4c498ee40306ae9997017c82b0ad39
+ $(PKG)_SUBDIR    = $(subst qtbase,qtserialport,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtserialport,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtserialport,$(qtbase_URL))
+diff --git a/src/qtspeech.mk b/src/qtspeech.mk
+index b490031e..2f7333b1 100644
+--- a/src/qtspeech.mk
++++ b/src/qtspeech.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE   = $(qtbase_WEBSITE)
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 5e9e8ea62f0207ba894df1e136df0af9fc5443c7817d28c39f0ea2bbae9ec6da
++$(PKG)_CHECKSUM := 2ff9660fb3f5663c9161f491d1a304db62691720136ae22c145ef6a1c94b90ec
+ $(PKG)_SUBDIR    = $(subst qtbase,qtspeech,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtspeech,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtspeech,$(qtbase_URL))
+diff --git a/src/qtsvg.mk b/src/qtsvg.mk
+index d7e77791..d98e45a4 100644
+--- a/src/qtsvg.mk
++++ b/src/qtsvg.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := c7d7faa01a3e7a6e4d38fafcec5529a488258218749779e6fa0e09a21173b5a1
++$(PKG)_CHECKSUM := 110812515a73c650e5ebc41305d9a243dadeb21f485aaed773e394dd84ce0d04
+ $(PKG)_SUBDIR    = $(subst qtbase,qtsvg,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtsvg,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtsvg,$(qtbase_URL))
+diff --git a/src/qttools.mk b/src/qttools.mk
+index ff436a34..cbea9d7a 100644
+--- a/src/qttools.mk
++++ b/src/qttools.mk
+@@ -5,13 +5,15 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 5bb0cf7832b88eb6bc9d4289f98307eb14b16a453ad6cf42cca13c4fe1a053c5
++$(PKG)_CHECKSUM := 3b0e353860a9c0cd4db9eeae5f94fef8811ed7d107e3e5e97e4a557f61bd6eb6
+ $(PKG)_SUBDIR    = $(subst qtbase,qttools,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qttools,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qttools,$(qtbase_URL))
+ $(PKG)_DEPS     := cc qtactiveqt qtbase qtdeclarative
+ $(PKG)_TARGETS  := $(BUILD) $(MXE_TARGETS)
+ 
++$(PKG)_TEST_DIR := $(dir $(lastword $(MAKEFILE_LIST)))/qttools-test
++
+ define $(PKG)_UPDATE
+     echo $(qtbase_VERSION)
+ endef
+@@ -22,7 +24,11 @@ define $(PKG)_BUILD
+     $(MAKE) -C '$(1)' -j 1 install
+ 
+     # test QUiLoader
+-    $(CMAKE_TEST)
++    mkdir '$(1)'.test
++    cd '$(1)'.test && '$(TARGET)-cmake' '$($(PKG)_TEST_DIR)'
++    $(MAKE) -C '$(1)'.test
++    cp '$(1)'.test/mxe-cmake-qtuitools.exe \
++        '$(PREFIX)/$(TARGET)/bin/test-qttools.exe'
+ endef
+ 
+ define $(PKG)_BUILD_$(BUILD)
+diff --git a/src/qttranslations.mk b/src/qttranslations.mk
+index b7805efa..cba62c58 100644
+--- a/src/qttranslations.mk
++++ b/src/qttranslations.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 2088ebee9f5dd0336c9fd11436899a95b7ce0141ce072290de1e8f315d82d1a6
++$(PKG)_CHECKSUM := ab8dd55f5ca869cab51c3a6ce0888f854b96dc03c7f25d2bd3d2c50314ab60fb
+ $(PKG)_SUBDIR    = $(subst qtbase,qttranslations,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qttranslations,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qttranslations,$(qtbase_URL))
+diff --git a/src/qtvirtualkeyboard.mk b/src/qtvirtualkeyboard.mk
+index d4aac5a3..4f7ae6a9 100644
+--- a/src/qtvirtualkeyboard.mk
++++ b/src/qtvirtualkeyboard.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 364f3338563e617e7c964a37170b415b546c5f82965e781271f9dada3e3868d7
++$(PKG)_CHECKSUM := 33ac0356f916995fe5a91582e12b4c4f730c705808ea3c14e75c6e350e8131e6
+ $(PKG)_SUBDIR    = $(subst qtbase,qtvirtualkeyboard,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtvirtualkeyboard,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtvirtualkeyboard,$(qtbase_URL))
+diff --git a/src/qtwebchannel.mk b/src/qtwebchannel.mk
+index 841efb71..74b5ba92 100644
+--- a/src/qtwebchannel.mk
++++ b/src/qtwebchannel.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 7d1dc8441523638c3d455c7d408ec65aebc073acab80e24063865f929231f874
++$(PKG)_CHECKSUM := ab571a1b699e61a86be1a6b8d6ffd998d431c4850cc27e9a21f81fa5923bfdb7
+ $(PKG)_SUBDIR    = $(subst qtbase,qtwebchannel,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtwebchannel,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtwebchannel,$(qtbase_URL))
+diff --git a/src/qtwebkit.mk b/src/qtwebkit.mk
+index f36c0042..3f214fde 100644
+--- a/src/qtwebkit.mk
++++ b/src/qtwebkit.mk
+@@ -4,11 +4,11 @@ PKG             := qtwebkit
+ $(PKG)_WEBSITE  := https://github.com/annulen/webkit
+ $(PKG)_DESCR    := QtWebKit
+ $(PKG)_IGNORE   :=
+-$(PKG)_VERSION  := 5.13.1
+-$(PKG)_CHECKSUM := f688e039e2bdc06e2e46680f3ef57715e1b7d6ea69fd76899107605a8f371ea3
++$(PKG)_VERSION  := 5.212
++$(PKG)_CHECKSUM := fada6fa2f2bae27a16b666e0360680de6ab21aac044670b434a729334e57b154
+ $(PKG)_SUBDIR   := qtwebkit-everywhere-src-$($(PKG)_VERSION)
+ $(PKG)_FILE     := qtwebkit-everywhere-src-$($(PKG)_VERSION).tar.xz
+-$(PKG)_URL      := https://download.qt.io/snapshots/ci/qtwebkit/5.212/latest/src/submodules/$($(PKG)_FILE)
++$(PKG)_URL      := https://download.qt.io/snapshots/ci/qtwebkit/$($(PKG)_VERSION)/latest/src/submodules/$($(PKG)_FILE)
+ $(PKG)_DEPS     := cc libxml2 libxslt libwebp qtbase qtmultimedia qtquickcontrols \
+                    qtsensors qtwebchannel sqlite
+ 
+diff --git a/src/qtwebsockets.mk b/src/qtwebsockets.mk
+index f82d9279..fc95c438 100644
+--- a/src/qtwebsockets.mk
++++ b/src/qtwebsockets.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := f06e62b18313fe1b40a35566e79645de4a8e7ac9f7717d1d98a06c5b49afca84
++$(PKG)_CHECKSUM := b471eda2f486d21c51fc3bc53bb8844022117e746d5f15c5eabb82cd37eb2abe
+ $(PKG)_SUBDIR    = $(subst qtbase,qtwebsockets,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtwebsockets,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtwebsockets,$(qtbase_URL))
+diff --git a/src/qtwebview.mk b/src/qtwebview.mk
+index d2f185d7..d1965eb3 100644
+--- a/src/qtwebview.mk
++++ b/src/qtwebview.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := c61f9213ee84fd7408898c0194468208ffb51af9d257e87e6b53daf24f65ff4b
++$(PKG)_CHECKSUM := 1f244c6b774dd9d03d3c5cafe877381900b50a2775cef6487c8bb66e32ab5a5d
+ $(PKG)_SUBDIR    = $(subst qtbase,qtwebview,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtwebview,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtwebview,$(qtbase_URL))
+diff --git a/src/qtwinextras.mk b/src/qtwinextras.mk
+index da563a76..381068fa 100644
+--- a/src/qtwinextras.mk
++++ b/src/qtwinextras.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 980f1bc31b37c8597c0bac55f69ecf00d1677218ce82f7bc3933236cb6d907f2
++$(PKG)_CHECKSUM := f6e0172582a499d5e50c51877552d1a3bff66546d9a02e5754100a51b192973f
+ $(PKG)_SUBDIR    = $(subst qtbase,qtwinextras,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtwinextras,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtwinextras,$(qtbase_URL))
+diff --git a/src/qtxlsxwriter.mk b/src/qtxlsxwriter.mk
+index 1e1006e9..8942b2f5 100644
+--- a/src/qtxlsxwriter.mk
++++ b/src/qtxlsxwriter.mk
+@@ -4,8 +4,8 @@ PKG             := qtxlsxwriter
+ $(PKG)_WEBSITE  := https://github.com/VSRonin/QtXlsxWriter/
+ $(PKG)_DESCR    := QtXlsxWriter
+ $(PKG)_IGNORE   :=
+-$(PKG)_VERSION  := d3bd83b
+-$(PKG)_CHECKSUM := 2191a30a99588befe5237add95393cbc5de60f8d4f184399cfc6d3e6b9843302
++$(PKG)_VERSION  := ed26e5d
++$(PKG)_CHECKSUM := b8d18c1d00e3eee4c4d824876fafcf4c00440e2866f8b2726d89b266a880a86b
+ $(PKG)_GH_CONF  := VSRonin/QtXlsxWriter/branches/master
+ $(PKG)_DEPS     := cc qtbase
+ 
+diff --git a/src/qtxmlpatterns.mk b/src/qtxmlpatterns.mk
+index b502f040..a5b30719 100644
+--- a/src/qtxmlpatterns.mk
++++ b/src/qtxmlpatterns.mk
+@@ -5,7 +5,7 @@ $(PKG)_WEBSITE  := https://www.qt.io/
+ $(PKG)_DESCR    := Qt
+ $(PKG)_IGNORE   :=
+ $(PKG)_VERSION   = $(qtbase_VERSION)
+-$(PKG)_CHECKSUM := 219a876665345e3801baff71f31f30f5495c1cb9ab23fbbd27602632c80fcfb7
++$(PKG)_CHECKSUM := 0bea1719bb948f65cbed4375cc3e997a6464f35d25b631bafbd7a3161f8f5666
+ $(PKG)_SUBDIR    = $(subst qtbase,qtxmlpatterns,$(qtbase_SUBDIR))
+ $(PKG)_FILE      = $(subst qtbase,qtxmlpatterns,$(qtbase_FILE))
+ $(PKG)_URL       = $(subst qtbase,qtxmlpatterns,$(qtbase_URL))
+diff --git a/src/qttools-test/CMakeLists.txt b/src/qttools-test/CMakeLists.txt
+new file mode 100644
+index 00000000..9f8f1634
+--- /dev/null
++++ b/src/qttools-test/CMakeLists.txt
+@@ -0,0 +1,35 @@
++# This file is part of MXE. See LICENSE.md for licensing information.
++
++# Source: https://github.com/mxe/mxe/issues/1185
++
++cmake_minimum_required(VERSION 3.0)
++find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui UiTools)
++
++include_directories(${Qt5UiTools_INCLUDE_DIRS})
++add_executable(mxe-cmake-qtuitools mxe-cmake-qtuitools.cpp)
++# NB: Qt5Widgets, Qt5Gui, Qt5Core must be given separately; otherwise they are
++# appended automatically at the end, making it impossible to satisfy all the
++# other implicit dependencies (opengl, harfbuzz, etc.)
++target_link_libraries(
++    mxe-cmake-qtuitools
++    ${Qt5UiTools_LIBRARIES}
++    ${Qt5Widgets_LIBRARIES}
++    ${Qt5Gui_LIBRARIES}
++    ${Qt5Core_LIBRARIES}
++    netapi32
++    userenv
++    opengl32
++    harfbuzz
++    jpeg
++    png
++    glib-2.0
++    winmm
++    dwmapi
++    uxtheme
++    ws2_32
++    intl
++    iconv
++    pcre2-16
++    version
++    z
++)
+diff --git a/src/qttools-test.cpp b/src/qttools-test/mxe-cmake-qtuitools.cpp
+similarity index 100%
+rename from src/qttools-test.cpp
+rename to src/qttools-test/mxe-cmake-qtuitools.cpp
+diff --git a/src/qtcanvas3d.mk b/src/qtcanvas3d.mk
+new file mode 100644
+index 00000000..2cba4974
+--- /dev/null
++++ b/src/qtcanvas3d.mk
+@@ -0,0 +1,22 @@
++# This file is part of MXE. See LICENSE.md for licensing information.
++
++PKG             := qtcanvas3d
++$(PKG)_WEBSITE  := https://www.qt.io/
++$(PKG)_DESCR    := Qt
++$(PKG)_IGNORE   :=
++$(PKG)_VERSION   = $(qtbase_VERSION)
++$(PKG)_CHECKSUM := d7e0e8aa542d077a929fb7700411ca9de1f65ae4748d64168d2e7533facd7869
++$(PKG)_SUBDIR    = $(subst qtbase,qtcanvas3d,$(qtbase_SUBDIR))
++$(PKG)_FILE      = $(subst qtbase,qtcanvas3d,$(qtbase_FILE))
++$(PKG)_URL       = $(subst qtbase,qtcanvas3d,$(qtbase_URL))
++$(PKG)_DEPS     := cc qtbase qtdeclarative
++
++define $(PKG)_UPDATE
++    echo $(qtbase_VERSION)
++endef
++
++define $(PKG)_BUILD
++    cd '$(1)' && '$(PREFIX)/$(TARGET)/qt5/bin/qmake'
++    $(MAKE) -C '$(1)' -j '$(JOBS)'
++    $(MAKE) -C '$(1)' -j 1 install
++endef
+diff --git a/src/qtimageformats-1.patch b/src/qtimageformats-1.patch
+new file mode 100644
+index 00000000..b09629f9
+--- /dev/null
++++ b/src/qtimageformats-1.patch
+@@ -0,0 +1,67 @@
++This file is part of MXE. See LICENSE.md for licensing information.
++
++From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
++From: Mark Brand <mabrand@mabrand.nl>
++Date: Mon, 17 Jun 2019 13:54:23 +0200
++Subject: [PATCH 1/1] use pkgconfig
++
++
++diff --git a/src/imageformats/configure.json b/src/imageformats/configure.json
++index 1111111..2222222 100644
++--- a/src/imageformats/configure.json
+++++ b/src/imageformats/configure.json
++@@ -51,9 +51,6 @@
++                         "stdio.h",
++                         "libmng.h"
++                     ],
++-                    "qmake": [
++-                        "LIBS += -lmng"
++-                    ],
++                     "main": [
++                         "mng_handle hMNG;",
++                         "mng_cleanup(&hMNG);",
++@@ -67,6 +64,7 @@
++                 }
++             },
++             "sources": [
+++                { "type": "pkgConfig", "args": "libmng" },
++                 "-lmng"
++             ]
++         },
++@@ -77,10 +75,6 @@
++                 "type": "compile",
++                 "test": {
++                     "include": "tiffio.h",
++-                    "qmake": [
++-                        "unix|mingw: LIBS += -ltiff",
++-                        "else:win32: LIBS += libtiff.lib"
++-                    ],
++                     "main": [
++                         "#if !defined(TIFF_VERSION) && defined(TIFF_VERSION_CLASSIC)",
++                         "// libtiff 4.0 splits it into TIFF_VERSION_CLASSIC and TIFF_VERSION_BIG",
++@@ -105,6 +99,7 @@
++                 }
++             },
++             "sources": [
+++                { "type": "pkgConfig", "args": "libtiff-4" },
++                 "-ltiff"
++             ]
++         },
++@@ -119,9 +114,6 @@
++                         "webp/encode.h",
++                         "webp/demux.h"
++                     ],
++-                    "qmake": [
++-                        "LIBS += -lwebp -lwebpdemux"
++-                    ],
++                     "main": [
++                         "#if WEBP_ABI_IS_INCOMPATIBLE(WEBP_DECODER_ABI_VERSION, 0x0203) || WEBP_ABI_IS_INCOMPATIBLE(WEBP_ENCODER_ABI_VERSION, 0x0202)",
++                         "#error \"Incompatible libwebp version\"",
++@@ -144,6 +136,7 @@
++                 }
++             },
++             "sources": [
+++                { "type": "pkgConfig", "args": "libwebp libwebpdemux" },
++                 "-lwebp -lwebpdemux"
++             ]
++         }
