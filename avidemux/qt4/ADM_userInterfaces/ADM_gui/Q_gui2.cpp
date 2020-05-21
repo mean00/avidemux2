@@ -2216,7 +2216,7 @@ void UI_setMarkers(uint64_t a, uint64_t b)
     timems=(uint32_t)(b-a);
     ms2time(timems,&hh,&mm,&ss,&ms);
     snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    QString duration=QString("Selection: ")+QString(text);
+    QString duration=QString(QT_TRANSLATE_NOOP("qgui2","Selection: "))+QString(text);
     WIDGET(selectionDuration)->setText(duration);
 
     slider->setMarkers(absoluteA, absoluteB);
