@@ -435,34 +435,34 @@ vaapiVideoFilterDeint::~vaapiVideoFilterDeint()
 bool vaapiVideoFilterDeint::configure( void) 
 {
     diaMenuEntry deintMethod[]={
-        { VAProcDeinterlacingBob,               QT_TRANSLATE_NOOP("vaapideint","Bob"),NULL },
-        { VAProcDeinterlacingWeave,             QT_TRANSLATE_NOOP("vaapideint","Weave"),NULL },
-        { VAProcDeinterlacingMotionAdaptive,    QT_TRANSLATE_NOOP("vaapideint","Motion-Adaptive"),NULL },
-        { VAProcDeinterlacingMotionCompensated, QT_TRANSLATE_NOOP("vaapideint","Motion-Compensated"),NULL }
+        { VAProcDeinterlacingBob,               QT_TRANSLATE_NOOP("vaapiDeint","Bob"),NULL },
+        { VAProcDeinterlacingWeave,             QT_TRANSLATE_NOOP("vaapiDeint","Weave"),NULL },
+        { VAProcDeinterlacingMotionAdaptive,    QT_TRANSLATE_NOOP("vaapiDeint","Motion-Adaptive"),NULL },
+        { VAProcDeinterlacingMotionCompensated, QT_TRANSLATE_NOOP("vaapiDeint","Motion-Compensated"),NULL }
     };
     diaMenuEntry fieldOrder[]={
-        { ADM_VAAPI_DEINT_TOP_FIELD_FIRST,          QT_TRANSLATE_NOOP("vaapideint","Top Field First"),NULL },
-        { ADM_VAAPI_DEINT_BOTTOM_FIELD_FIRST,       QT_TRANSLATE_NOOP("vaapideint","Bottom Field First"),NULL }
+        { ADM_VAAPI_DEINT_TOP_FIELD_FIRST,          QT_TRANSLATE_NOOP("vaapiDeint","Top Field First"),NULL },
+        { ADM_VAAPI_DEINT_BOTTOM_FIELD_FIRST,       QT_TRANSLATE_NOOP("vaapiDeint","Bottom Field First"),NULL }
     };
     diaMenuEntry outputPolicy[]={
-        { ADM_VAAPI_DEINT_SEND_FRAME,   QT_TRANSLATE_NOOP("vaapideint","Frame per Frame"),NULL },
-        { ADM_VAAPI_DEINT_SEND_FIELD,   QT_TRANSLATE_NOOP("vaapideint","Double Framerate"),NULL }
+        { ADM_VAAPI_DEINT_SEND_FRAME,   QT_TRANSLATE_NOOP("vaapiDeint","Frame per Frame"),NULL },
+        { ADM_VAAPI_DEINT_SEND_FIELD,   QT_TRANSLATE_NOOP("vaapiDeint","Double Framerate"),NULL }
     };
 
-    diaElemMenu dMode(&configuration.deintMode, QT_TRANSLATE_NOOP("vaapideint","_Mode:"), 4, deintMethod);
-    diaElemMenu fOrder(&configuration.fieldOrder, QT_TRANSLATE_NOOP("vaapideint","_Field Order:"), 2, fieldOrder);
-    diaElemMenu outPol(&configuration.framePerField, QT_TRANSLATE_NOOP("vaapideint","_Output:"), 2, outputPolicy);
+    diaElemMenu dMode(&configuration.deintMode, QT_TRANSLATE_NOOP("vaapiDeint","_Mode:"), 4, deintMethod);
+    diaElemMenu fOrder(&configuration.fieldOrder, QT_TRANSLATE_NOOP("vaapiDeint","_Field Order:"), 2, fieldOrder);
+    diaElemMenu outPol(&configuration.framePerField, QT_TRANSLATE_NOOP("vaapiDeint","_Output:"), 2, outputPolicy);
 
-    diaElemFrame frameDeint(QT_TRANSLATE_NOOP("vaapideint","Deinterlacing"));
+    diaElemFrame frameDeint(QT_TRANSLATE_NOOP("vaapiDeint","Deinterlacing"));
     frameDeint.swallow(&dMode);
     frameDeint.swallow(&fOrder);
     frameDeint.swallow(&outPol);
 
-    diaElemToggle tResize(&configuration.resize, QT_TRANSLATE_NOOP("vaapideint","_Resize"));
-    diaElemUInteger tWidth(&configuration.targetWidth, QT_TRANSLATE_NOOP("vaapideint","Width:"), 16, MAXIMUM_SIZE);
-    diaElemUInteger tHeight(&configuration.targetHeight, QT_TRANSLATE_NOOP("vaapideint","Height:"), 16, MAXIMUM_SIZE);
+    diaElemToggle tResize(&configuration.resize, QT_TRANSLATE_NOOP("vaapiDeint","_Resize"));
+    diaElemUInteger tWidth(&configuration.targetWidth, QT_TRANSLATE_NOOP("vaapiDeint","Width:"), 16, MAXIMUM_SIZE);
+    diaElemUInteger tHeight(&configuration.targetHeight, QT_TRANSLATE_NOOP("vaapiDeint","Height:"), 16, MAXIMUM_SIZE);
 
-    diaElemFrame frameResize(QT_TRANSLATE_NOOP("vaapideint","Transformation"));
+    diaElemFrame frameResize(QT_TRANSLATE_NOOP("vaapiDeint","Transformation"));
     frameResize.swallow(&tResize);
     frameResize.swallow(&tWidth);
     frameResize.swallow(&tHeight);
@@ -471,7 +471,7 @@ bool vaapiVideoFilterDeint::configure( void)
     tResize.link(1,&tHeight);
 
     diaElem *elems[]={&frameDeint,&frameResize};
-    if(diaFactoryRun(QT_TRANSLATE_NOOP("vaapideint","VA-API Deinterlacer and Resizer"),2,elems))
+    if(diaFactoryRun(QT_TRANSLATE_NOOP("vaapiDeint","VA-API Deinterlacer and Resizer"),2,elems))
     {
         cleanupVaapi();
         bool status=setupVaapi();
@@ -479,15 +479,15 @@ bool vaapiVideoFilterDeint::configure( void)
         {
             
             GUI_Info_HIG( ADM_LOG_IMPORTANT,
-                          QT_TRANSLATE_NOOP("vaapideint","Unsupported Mode"),
-                          QT_TRANSLATE_NOOP("vaapideint","Specified deinterlacing mode %s is not supported, replaced with %s."),
+                          QT_TRANSLATE_NOOP("vaapiDeint","Unsupported Mode"),
+                          QT_TRANSLATE_NOOP("vaapiDeint","Specified deinterlacing mode %s is not supported, replaced with %s."),
                               deintModeToString(unsupported), deintModeToString(configuration.deintMode));
             unsupported = 0;
         }
         if(!status)
         {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("vaapideint","VA-API Setup Error"),
-                          QT_TRANSLATE_NOOP("vaapideint","Could not setup VA-API, purely passthrough operation."));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("vaapiDeint","VA-API Setup Error"),
+                          QT_TRANSLATE_NOOP("vaapiDeint","Could not setup VA-API, purely passthrough operation."));
         }
         updateInfo(status);
         return true;
