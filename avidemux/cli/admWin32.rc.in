@@ -1,3 +1,5 @@
+#pragma code_page(65001) // UTF-8
+
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION     ${FILEVERSION}
  PRODUCTVERSION  ${PRODUCTVERSION}
@@ -11,12 +13,12 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName",      "Free Software Foundation"
-            VALUE "FileDescription",  "Avidemux ${PRODUCTVERSION_STRING}"
+            VALUE "CompanyName",      "avidemux.org"
+            VALUE "FileDescription",  "${EXECUTABLE_DESCRIPTION}"
             VALUE "FileVersion",      "${FILEVERSION_STRING}"
             VALUE "InternalName",     "avidemux"
-            VALUE "LegalCopyright",   "Copyright © 2001-2011 Free Software Foundation"
-            VALUE "OriginalFilename", ""
+            VALUE "LegalCopyright",   "${COPYRIGHT_STRING}"
+            VALUE "OriginalFilename", "${EXECUTABLE_FILENAME}"
             VALUE "ProductName",      "Avidemux"
             VALUE "ProductVersion",   "${PRODUCTVERSION_STRING}"
         END
