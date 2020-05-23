@@ -29,7 +29,7 @@ MACRO(WINDRESIFY tag icon src basename desc)
         SET(EXECUTABLE_DESCRIPTION "${desc}")
         SET(EXECUTABLE_FILENAME "${basename}.exe")
         SET(EXECUTABLE_REVISION "${BUILD_ID}")
-        IF(MSVC)
+        IF(OFF AND MSVC)
                 include(generate_product_version)
                 generate_product_version(ProductVersionFiles_${tag}
                         NAME "${EXECUTABLE_DESCRIPTION}"

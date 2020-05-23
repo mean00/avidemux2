@@ -13,14 +13,14 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName",      "avidemux.org"
-            VALUE "FileDescription",  "${EXECUTABLE_DESCRIPTION}"
-            VALUE "FileVersion",      "${FILEVERSION_STRING}"
-            VALUE "InternalName",     "avidemux"
-            VALUE "LegalCopyright",   "${COPYRIGHT_STRING}"
-            VALUE "OriginalFilename", "${EXECUTABLE_FILENAME}"
-            VALUE "ProductName",      "Avidemux"
-            VALUE "ProductVersion",   "${PRODUCTVERSION_STRING}"
+            VALUE "CompanyName",      "avidemux.org\0"
+            VALUE "FileDescription",  "${EXECUTABLE_DESCRIPTION}\0"
+            VALUE "FileVersion",      "${FILEVERSION_STRING}\0"
+            VALUE "InternalName",     "avidemux\0"
+            VALUE "LegalCopyright",   "${COPYRIGHT_STRING}\0"
+            VALUE "OriginalFilename", "${EXECUTABLE_FILENAME}\0"
+            VALUE "ProductName",      "Avidemux\0"
+            VALUE "ProductVersion",   "${PRODUCTVERSION_STRING}\0"
         END
     END
 
