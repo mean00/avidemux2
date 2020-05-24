@@ -55,9 +55,13 @@ MACRO(WINDRESIFY tag icon src basename desc)
                 SET(FILEVERSION "${FILEVERSION},${EXECUTABLE_REVISION}")
 
                 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/admWin32.rc.in  ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc IMMEDIATE)
-                SET(ADM_WIN_RES "adm.obj")
-                SET( ${src} ${ADM_WIN_RES})
-                ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
+                IF(MSVC)
+                        SET(${src} "${CMAKE_CURRENT_BINARY_DIR}/admWin.rc")
+                ELSE(MSVC)
+                        SET(ADM_WIN_RES "adm.obj")
+                        SET( ${src} ${ADM_WIN_RES})
+                        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
+                ENDIF(MSVC)
         ENDIF() # MINGW
 
 ENDMACRO(WINDRESIFY tag icon src basename desc)
