@@ -2,6 +2,3 @@
 	path = avidemux/qt4/i18n
 	url = ../avidemux2_i18n.git
 	branch = master
-[submodule "cmake/CMakeHelpers"]
-	path = cmake/CMakeHelpers
-	url = https://github.com/halex2005/CMakeHelpers.git
