@@ -31,6 +31,7 @@ MACRO(WINDRESIFY tag icon src basename desc)
         SET(EXECUTABLE_REVISION "${BUILD_ID}")
         IF(MSVC)
                 include(generate_product_version)
+                string(REPLACE "©" "(C)" COPYRIGHT_ASCII_STRING "${COPYRIGHT_STRING}")
                 generate_product_version(ProductVersionFiles_${tag}
                         NAME "${EXECUTABLE_DESCRIPTION}"
                         BUNDLE Avidemux
@@ -40,7 +41,7 @@ MACRO(WINDRESIFY tag icon src basename desc)
                         ICON          ${ICON_PATH}
                         VERSION_REVISION ${EXECUTABLE_REVISION}
                         COMPANY_NAME avidemux.org
-                        COMPANY_COPYRIGHT "${COPYRIGHT_STRING}"
+                        COMPANY_COPYRIGHT "${COPYRIGHT_ASCII_STRING}"
                         ORIGINAL_FILENAME "${EXECUTABLE_FILENAME}"
                         INTERNAL_NAME avidemux)
                 SET( ${src} ${ProductVersionFiles_${tag}})
