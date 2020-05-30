@@ -159,6 +159,9 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
                 uint64_t probedTimeIncrement=(dts-firstNonZeroDts)/(frame-firstNonZeroDtsFrame);
                 if(probedTimeIncrement<minDelta) { minDelta=probedTimeIncrement; fmin=frame; }
                 if(probedTimeIncrement>maxDelta) { maxDelta=probedTimeIncrement; fmax=frame; }
+            }else if(dts==firstNonZeroDts)
+            {
+                ADM_warning("Duplicate DTS %s at frame %d\n",ADM_us2plain(dts),frame);
             }else
             {
                 ADM_warning("DTS going back by %" PRIu64" at frame %d\n",firstNonZeroDts-dts,frame);
