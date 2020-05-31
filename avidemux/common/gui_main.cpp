@@ -51,10 +51,10 @@
 #include "ADM_edAudioTrackExternal.h"
 #include "ADM_threads.h"
 #include "ADM_muxerProto.h"
-admMutex singleThread;
 
-float currentZoom=ZOOM_1_1;
+static admMutex singleThread;
 static int cutsNotOnIntraWarned;
+
 #include "DIA_audioTracks.h"
 //***********************************
 //******** A Function ***************
@@ -435,13 +435,15 @@ void HandleAction (Action action)
         case ACT_ZOOM_1_1:
         case ACT_ZOOM_2_1:
         //case ACT_ZOOM_4_1:
-                currentZoom=(float)(2<<(action-ACT_ZOOM_1_4))/8;
+        {
+                float currentZoom=(float)(2<<(action-ACT_ZOOM_1_4))/8;
                 UI_setBlockZoomChangesFlag(true);
                 changePreviewZoom(currentZoom);
                 UI_setBlockZoomChangesFlag(false);
                 UI_resetZoomThreshold();
                 admPreview::samePicture();
                 break;
+        }
         case ACT_ZOOM_FIT_IN:
                 UI_setZoomToFitIntoWindow();
                 break;
