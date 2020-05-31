@@ -91,9 +91,6 @@ static void setupMenus(void);
 static int shiftKeyHeld=0;
 static ADM_mwNavSlider *slider=NULL;
 static int _upd_in_progres=0;
-static int currentFps = 0;
-static int frameCount = 0;
-static int currentFrame = 0;
 bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_ve6_getNbEncoders(void);
 void UI_refreshCustomMenu(void);
@@ -142,10 +139,6 @@ const adm_qt4_translation myTranslationTable[]=
 };
 static Action searchTranslationTable(const char *name);
 #define SIZEOF_MY_TRANSLATION sizeof(myTranslationTable)/sizeof(adm_qt4_translation)
-
-int UI_readCurTime(uint16_t &hh, uint16_t &mm, uint16_t &ss, uint16_t &ms);
-void UI_updateFrameCount(uint32_t curFrame);
-void UI_updateTimeCount(uint32_t curFrame,uint32_t fps);
 
 class FileDropEvent : public QEvent
 {
@@ -2024,38 +2017,6 @@ void UI_setScale( double val )
     _upd_in_progres--;
 }
 
-int UI_readCurFrame(void)
-{
-    return 0;
-}
-
-int UI_readCurTime(uint16_t &hh, uint16_t &mm, uint16_t &ss, uint16_t &ms)
-{
-    int success = 0;
-
-    QString timeText = WIDGET(currentTime)->text();
-    int pos;
-
-    if (WIDGET(currentTime)->validator()->validate(timeText, pos) == QValidator::Acceptable)
-    {
-        uint32_t frame;
-
-        hh = (uint16_t)timeText.left(2).toUInt();
-        mm = (uint16_t)timeText.mid(3, 2).toUInt();
-        ss = (uint16_t)timeText.mid(6, 2).toUInt();
-        ms = (uint16_t)timeText.right(3).toUInt();
-
-        time2frame(&frame, currentFps, hh, mm, ss, ms);
-
-        if (frame <= frameCount)
-            success = 1;
-    }
-
-    return success;
-}
-
-
-
 //*******************************************
 
 /**
@@ -2125,39 +2086,6 @@ admUITaskBarProgress *UI_getTaskBarProgress()
 {
     return QuiTaskBarProgress;
 }
-/**
-    \fn     UI_updateFrameCount(uint32_t curFrame)
-    \brief  Display the current displayed frame #
-*/
-void UI_updateFrameCount(uint32_t curFrame)
-{
-
-}
-
-/**
-    \fn      UI_setFrameCount(uint32_t curFrame,uint32_t total)
-    \brief  Display the current displayed frame # and total frame #
-*/
-void UI_setFrameCount(uint32_t curFrame,uint32_t total)
-{
-
-}
-
-/**
-    \fn     UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
-    \brief  Display the time corresponding to current frame according to fps (fps1000)
-*/
-void UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
-{
-    char text[80];
-    uint32_t mm,hh,ss,ms;
-
-    frame2time(curFrame,fps, &hh, &mm, &ss, &ms);
-    sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-    WIDGET(currentTime)->setText(text);
-}
-
-
 
 /**
     \fn UI_setCurrentTime

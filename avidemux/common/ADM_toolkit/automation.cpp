@@ -409,15 +409,8 @@ void show_info(char *p)
    printf("Video\n");
    printf("   Video Size: %u x %u\n", avifileinfo->width, avifileinfo->height);
    printf("   Frame Rate: %2.3f fps\n", (float)avifileinfo->fps1000/1000.F);
-   printf("   Number of frames: %d frames\n", avifileinfo->nb_frames);
    printf("   Codec FourCC: %s\n", fourCC::tostring(avifileinfo->fcc));
-   if(avifileinfo->nb_frames){
-     uint32_t hh, mm, ss, ms;
-      frame2time(avifileinfo->nb_frames, avifileinfo->fps1000,&hh, &mm, &ss, &ms);
-      printf("   Duration: %02d:%02d:%02d.%03d\n", hh, mm, ss, ms);
-   }else{
-      printf("   Duration: 00:00:00.000\n");
-   }
+   printf("   Duration: %s\n", ADM_us2plain(video_body->getVideoDuration()));
    war=video_body->getPARWidth();
    har=video_body->getPARHeight();
    getAspectRatioFromAR(war,har, &s);
@@ -434,17 +427,12 @@ void show_info(char *p)
    if( wavinfo )
     {
       printf("   Codec: %s\n",getStrFromAudioCodec(wavinfo->encoding));
-      printf("   Mode: ");
-      switch( wavinfo->channels ){
-         case 1:  printf("MONO\n"); break;
-         case 2:  printf("STEREO\n"); break;
-         default: printf("????\n"); break;
-      }
+      printf("   Channels: %u\n",wavinfo->channels);
       printf("   BitRate: %u Bps / %u kbps\n", wavinfo->byterate, wavinfo->byterate*8/1000);
       printf("   Frequency: %u Hz\n", wavinfo->frequency);
    }else{
       printf("   Codec: NONE\n");
-      printf("   Mode: NONE\n");
+      printf("   Channels: NONE\n");
       printf("   BitRate: NONE\n");
       printf("   Frequency: NONE\n");
       printf("   Duration: NONE\n");

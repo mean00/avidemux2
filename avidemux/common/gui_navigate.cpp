@@ -179,16 +179,6 @@ static int ignore_change=0;
              GUI_setCurrentFrameAndTime();
             //GUI_GoToKFrameTime(0);
             break;
-#if 0
-      case ACT_GotoTime:
-      {
-          uint16_t hh, mm, ss, ms;
-
-          if (UI_readCurTime(hh, mm, ss, ms))
-          A_jumpToTime(hh, mm, ss, ms);
-      }
-      break;
-#endif
       case ACT_GotoTime:
       {
            // Get current time
