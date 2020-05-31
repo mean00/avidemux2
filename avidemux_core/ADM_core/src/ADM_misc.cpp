@@ -104,6 +104,7 @@ uint32_t getTimeOfTheDay(void)
     return (tt&0xffffff);
 
 }
+#if 0
 /// convert frame number and fps to hour/mn/sec/ms
 void  frame2time(	uint32_t frame, uint32_t fps, uint32_t * hh, uint32_t * mm,
                                 uint32_t * ss, uint32_t * ms)
@@ -137,6 +138,7 @@ double d;
                 *frame= (uint32_t)(floor(d+0.5));
 
 }
+#endif
 
 uint64_t ADM_swap64(uint64_t in)
 {
@@ -170,6 +172,7 @@ uint16_t ADM_swap16( uint16_t in)
 {
 	return ( (in>>8) & 0xff) + ( (in&0xff)<<8);
 }
+#if 0
 uint8_t 	identMovieType(uint32_t fps1000)
 {
 #define INRANGE(value,type)  \
@@ -187,6 +190,7 @@ uint8_t 	identMovieType(uint32_t fps1000)
 
       return r;
 }
+#endif
 uint8_t ms2time(uint32_t ms, uint32_t *h,uint32_t *m, uint32_t *s,uint32_t *mms)
 {
       uint32_t sectogo;
