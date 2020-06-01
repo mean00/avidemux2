@@ -15,7 +15,7 @@
 class ADM_CORE6_EXPORT admMutex
 {
   private:
-    uint8_t       _locked;
+    uint32_t      _locked;
     const char    *_name;
   public: 
     pthread_mutex_t _tex;       

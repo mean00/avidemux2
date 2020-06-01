@@ -47,18 +47,20 @@ admMutex::~admMutex()
 uint8_t admMutex::lock(void)
 {
   THR_CHECK(pthread_mutex_lock(&_tex));
-  _locked=1;
+  _locked++;
   return 1;
 }
 uint8_t admMutex::unlock(void)
 {
-  _locked=0;      // Just informative, race possible here
+  if(_locked) _locked--; // Just informative, race possible here
   THR_CHECK(pthread_mutex_unlock(&_tex));
   return 1;
 }
 uint8_t admMutex::isLocked(void)
 {
-  return _locked;
+  if(_locked)
+      return 1;
+  return 0;
 }
 
 //**************** Cond *******************
