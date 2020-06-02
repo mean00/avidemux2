@@ -450,17 +450,17 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
 
     AVPacket pkt;
     av_init_packet(&pkt);
-    int nbChunk,res=0;
     bool eof=false;
     while(_tail-_head>=_blockalign && !eof)
     {
-        nbChunk=(_tail-_head)/_blockalign;
+        int nbChunk=(_tail-_head)/_blockalign;
         pkt.size=nbChunk*_blockalign;
         pkt.data=_buffer+_head;
 
         avcodec_send_packet(_context, &pkt);
         // Regardless of the outcome, always consume the data.
         _head+=nbChunk*_blockalign;
+        int res=0;
 
         while(!res)
         {
