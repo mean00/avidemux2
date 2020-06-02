@@ -32,10 +32,12 @@ fribidi-devel \
 fontconfig-devel \
 freetype-devel \
 opus-devel \
+lame-devel \
+libvpx-devel \
+libaom-devel \
 nv-codec-headers"
 # optional features
-OPTIONAL_PACKAGES="lame-devel \
-fdk-aac-devel \
+OPTIONAL_PACKAGES="fdk-aac-devel \
 twolame-devel \
 xvidcore-devel \
 x264-devel \
