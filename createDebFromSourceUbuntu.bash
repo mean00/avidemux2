@@ -26,7 +26,11 @@ install_deps()
     libpng-dev libaften-dev libmp3lame-dev libx264-dev libxvidcore-dev libfaad-dev libfaac-dev libopus-dev libvorbis-dev libogg-dev libdca-dev \
     || { echo "The installation at least of some of the build dependencies failed. Aborting." && exit 2; }
     sudo apt-get install libx265-dev \
-    || echo "Warning: libx265-dev cannot be installed using package management. Avidemux won't be able to encode in h265 unless the library and the headers have been installed manually. Continuing anyway." # there are no official libx265 packages for Ubuntu Trusty
+    || echo "Warning: libx265-dev cannot be installed using package management. Avidemux won't be able to encode HEVC unless the library and the headers have been installed manually. Continuing anyway." # there are no official libx265 packages for Ubuntu Trusty
+    sudo apt-get install libvpx-dev \
+    || echo "Warning: libvpx-dev cannot be installed using package management. Avidemux won't be able to encode VP9 unless the library and the headers have been installed manually. Continuing anyway."
+    sudo apt-get install libaom-dev \
+    || echo "Warning: libaom-dev cannot be installed using package management. Avidemux won't be able to decode AV1 unless the library and the headers have been installed manually. Continuing anyway." # available from Ubuntu Eoan on
 }
 #
 install_avidemux()
