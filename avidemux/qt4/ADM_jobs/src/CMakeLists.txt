@@ -36,7 +36,7 @@ SET(ADM_JOB_SRCS
 # Version Info
 ###########################################
 if (WIN32)
-        WINDRESIFY(../../admWin32.rc.in "${CMAKE_CURRENT_SOURCE_DIR}/../../../common/xpm/adm.ico"  src) 
+        WINDRESIFY(mainJobs "${CMAKE_CURRENT_SOURCE_DIR}/../../../common/xpm/adm.ico" src "avidemux_jobs" "Avidemux Jobs")
         SET(ADM_JOB_SRCS ${ADM_JOB_SRCS} ${src})
 endif (WIN32)
 

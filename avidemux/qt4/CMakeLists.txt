@@ -137,7 +137,7 @@ ADD_SOURCE_CFLAGS(../common/main.cpp "-DQT_FLAVOR=\"${QT_EXTENSION}\"")
 # Icon for windows
 ###########################################
 if (WIN32 )
-        WINDRESIFY(admWin32.rc.in "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico" src)
+        WINDRESIFY(mainQt  "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico" src "avidemux" "Avidemux Video Editor")
         SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${src})
 endif (WIN32)
 
