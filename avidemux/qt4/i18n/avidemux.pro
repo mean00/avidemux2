@@ -1899,5 +1899,6 @@ TRANSLATIONS = \
 ./avidemux_ja.ts \ 
 ./avidemux_de.ts \ 
 ./avidemux_tr.ts \ 
+./avidemux_sk.ts \ 
 
 
