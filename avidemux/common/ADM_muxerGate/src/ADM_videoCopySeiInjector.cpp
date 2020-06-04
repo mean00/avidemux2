@@ -97,7 +97,7 @@ bool  ADM_videoStreamCopySeiInjector::getPacket(ADMBitstream *out)
     while(tail + nalSize < head)
     {
         uint32_t i,length=0;
-        for(i=0; i<length; i++)
+        for(i=0; i<nalSize; i++)
             length=(length<<8)+tail[i];
         stream=*(tail+nalSize)&0x1F;
         switch(stream)
