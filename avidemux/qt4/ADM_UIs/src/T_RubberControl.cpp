@@ -12,6 +12,10 @@
 #include <QBoxLayout>
 #include <QSizeGrip>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5,15,0)
+    #include <QPainterPath>
+#endif
+
 #include "ADM_default.h"
 #include "DIA_flyDialogQt4.h"
 
