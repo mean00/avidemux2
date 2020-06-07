@@ -50,6 +50,14 @@ This pulls in all the dependencies and can take a couple of hours. The final
 total size of the /opt/mxe folder may be about 2.2G. Please note that twolame
 is not available as a shared library.
 
+NB: To build version 3.4 of x265 instead of 2.4 provided by MXE as of this
+writing, apply the "x265.patch" patch from the "mxe-patches" subdirectory of
+Avidemux source tree prior to running make: in the MXE root directory, run
+
+    patch -p1 < /path/to/avidemux2/mxe-patches/x265.patch
+
+and on success proceed with the make command as shown above.
+
 ##############################################################################
 
 4. To enable hardware-accelerated encoding provided by NVIDIA graphics cards of
@@ -80,44 +88,14 @@ elsewhere.
 ##############################################################################
 
 5. In order to enable the AV1 decoder plugin in Avidemux, libaom, not provided
-by MXE, needs to be installed. To do so, clone the AOM git repository
+by MXE, needs to be installed. Run script "install-libaom.bash" from the
+"mxe-patches" subdirectory of Avidemux source tree with the path to the MXE
+root directory passed as argument to automatically build and install version
+2.0.0 of libaom in the 64 bit environment.
 
-    git clone https://aomedia.googlesource.com/aom
+The script will use the present working directory for all intermediate steps.
 
-create a build directory, e.g. 'build-aom', and enter it:
-
-    mkdir build-aom
-    cd build-aom
-
-Export MXE_ROOT variable set to the path to MXE, e.g.
-
-    export MXE_ROOT=/opt/mxe
-
-for MXE in /opt/mxe and export the PATH environment variable to include
-the usr/bin subdirectory of MXE:
-
-    export PATH=${PATH}:${MXE_ROOT}/usr/bin
-
-Export CROSS_PREFIX set to the MXE
-target, e.g.
-
-    export CROSS_PREFIX=x86_64-w64-mingw32.shared
-
-for the 64 bit environment and run
-
-    cmake ../aom/ -DCROSS="${CROSS_PREFIX}-" -DCMAKE_TOOLCHAIN_FILE=../aom/build/cmake/toolchains/x86_64-mingw-gcc.cmake -DENABLE_DOCS=0 -DENABLE_EXAMPLES=0 -DENABLE_TOOLS=0 -DBUILD_SHARED_LIBS=1 -DCONFIG_AV1_ENCODER=0 -DCONFIG_ANALYZER=0 -DFORCE_HIGHBITDEPTH_DECODING=0 -DCMAKE_INSTALL_PREFIX=${MXE_ROOT}/usr/${CROSS_PREFIX}
-
-followed in case of success by
-
-   make && make install && mv -v ${MXE_ROOT}/usr/${CROSS_PREFIX}/lib/libaom.dll ${MXE_ROOT}/usr/${CROSS_PREFIX}/bin/
-
-Adjust the paths correspondingly if MXE is installed elsewhere. Build for the
-32 bit environment has not been tested yet.
-
-Due to volatile nature of development, a particular git revision of libaom can
-have issues or the build may be broken. In this case git checkout an older
-revision. As of this writing, git revision
-4d93222751a26841018179cdaa143f6f20e48977 was found working.
+Build for the 32 bit environment has not been tested yet.
 
 ##############################################################################
 
@@ -149,4 +127,4 @@ partition, extract it on Windows and run 'avidemux.exe' from there.
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2019-11-06 UTC 18:20
+2020-06-06 UTC 22:04
