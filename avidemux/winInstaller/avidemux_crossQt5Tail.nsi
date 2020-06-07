@@ -253,14 +253,14 @@ Function UpdateInstallOptions
 FunctionEnd
 
 Function IsInstallOptionsRequired
-Goto end
-	!insertmacro SectionFlagIsSet ${SecUiQt} ${SF_SELECTED} end resetOptions
-resetOptions:
+#Goto end
+	#!insertmacro SectionFlagIsSet ${SecUiQt} ${SF_SELECTED} end resetOptions
+#resetOptions:
 
-    StrCpy $CreateDesktopIcon 0
-    StrCpy $CreateStartMenuGroup 0
-    StrCpy $CreateQuickLaunchIcon 0
-    Abort
+    #StrCpy $CreateDesktopIcon 0
+    #StrCpy $CreateStartMenuGroup 0
+    #StrCpy $CreateQuickLaunchIcon 0
+    #Abort
 
 end:
 FunctionEnd
@@ -272,16 +272,16 @@ FunctionEnd
 
 Function ActivateInternalSections
     #AVS Proxy GUI shortcut:
-    SectionGetFlags ${SecAvsProxy} $0
+#X64    SectionGetFlags ${SecAvsProxy} $0
     IntOp $0 $0 & ${SF_SELECTED}
     IntOp $0 $0 & $CreateStartMenuGroup
-    SectionSetFlags ${SecStartMenuAvsProxyGui} $0
+    #X64 SectionSetFlags ${SecStartMenuAvsProxyGui} $0
 
     #Change Log shortcut:
     SectionSetFlags ${SecStartMenuChangeLog} $CreateStartMenuGroup
 
     #Qt shortcuts:
-    SectionGetFlags ${SecUiQt} $0
+    #X64 SectionGetFlags ${SecUiQt} $0
     IntOp $0 $0 & ${SF_SELECTED}
 
     IntOp $1 $0 & $CreateDesktopIcon
@@ -314,7 +314,7 @@ FunctionEnd
 
 Function ConfigureFinishPage
 
-    SectionGetFlags ${SecUiQt} $0
+    #X64 SectionGetFlags ${SecUiQt} $0
     IntOp $0 $0 & ${SF_SELECTED}
     StrCmp $0 ${SF_SELECTED} end
 
@@ -326,7 +326,7 @@ FunctionEnd
 Function RunAvidemux
     SetOutPath $INSTDIR
 
-    SectionGetFlags ${SecUiQt} $0
+    #X64 SectionGetFlags ${SecUiQt} $0
     IntOp $0 $0 & ${SF_SELECTED}
 
 	!insertmacro UAC_AsUser_ExecShell "" "$INSTDIR\avidemux.exe" "" "" ""
