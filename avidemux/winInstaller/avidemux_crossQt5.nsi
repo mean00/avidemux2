@@ -294,8 +294,13 @@ Section "Plugins" SecGrpPlugins
         ${File} ${BINARY_FOLDER}/plugins/scriptEngines/libADM_script_tinyPy.dll
         SetOutPath $INSTDIR\plugins\autoScripts
         ${Folder} ${BINARY_FOLDER}/plugins/autoScripts
+        #
+        SetOutPath $INSTDIR\plugins\videoDecoders
+        ${File} ${BINARY_FOLDER}/plugins/videoDecoders/*.dll
+        #
         SetOutPath $INSTDIR\plugins\videoEncoders
         ${File} ${BINARY_FOLDER}/plugins/videoEncoders/*.dll
+        #
         SetOutPath $INSTDIR\plugins\videoEncoders\qt5
         ${File} ${BINARY_FOLDER}/plugins/videoEncoders/qt5/*.dll
         #SetOutPath $INSTDIR\plugins\videoEncoders\cli
