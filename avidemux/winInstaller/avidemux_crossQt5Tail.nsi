@@ -254,7 +254,7 @@ FunctionEnd
 
 Function IsInstallOptionsRequired
 #Goto end
-	#!insertmacro SectionFlagIsSet ${SecUiQt} ${SF_SELECTED} end resetOptions
+	#!insertmacro SectionFlagIsSet ${SecDesktopQt} ${SF_SELECTED} end resetOptions
 #resetOptions:
 
     #StrCpy $CreateDesktopIcon 0
@@ -281,7 +281,7 @@ Function ActivateInternalSections
     SectionSetFlags ${SecStartMenuChangeLog} $CreateStartMenuGroup
 
     #Qt shortcuts:
-    #X64 SectionGetFlags ${SecUiQt} $0
+    SectionGetFlags ${SecDesktopQt} $0
     IntOp $0 $0 & ${SF_SELECTED}
 
     IntOp $1 $0 & $CreateDesktopIcon
@@ -314,7 +314,7 @@ FunctionEnd
 
 Function ConfigureFinishPage
 
-    #X64 SectionGetFlags ${SecUiQt} $0
+    SectionGetFlags ${SecDesktopQt} $0
     IntOp $0 $0 & ${SF_SELECTED}
     StrCmp $0 ${SF_SELECTED} end
 
@@ -326,7 +326,7 @@ FunctionEnd
 Function RunAvidemux
     SetOutPath $INSTDIR
 
-    #X64 SectionGetFlags ${SecUiQt} $0
+    SectionGetFlags ${SecDesktopQt} $0
     IntOp $0 $0 & ${SF_SELECTED}
 
 	!insertmacro UAC_AsUser_ExecShell "" "$INSTDIR\avidemux.exe" "" "" ""
