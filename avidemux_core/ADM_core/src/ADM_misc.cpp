@@ -322,7 +322,7 @@ const std::string &ADM_getTimeDateAsString(const char *format)
     time_t tme=(time_t)ss;
     struct tm *ct;
     ct=localtime(&tme);
-    size_t l=strftime(timestamp,32,format? format : "%F %H%M%S",ct);
+    size_t l=strftime(timestamp,32,format? format : "%Y-%m-%d %H%M%S",ct);
     if(l)
         text=std::string(timestamp);
     else
