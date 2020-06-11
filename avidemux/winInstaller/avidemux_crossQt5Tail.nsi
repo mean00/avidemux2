@@ -272,7 +272,7 @@ FunctionEnd
 
 Function ActivateInternalSections
     #AVS Proxy GUI shortcut:
-    SectionGetFlags ${SecAvsProxy} $0
+    SectionGetFlags ${SecDesktopQt} $0 # Was SecAvsProxy
     IntOp $0 $0 & ${SF_SELECTED}
     IntOp $0 $0 & $CreateStartMenuGroup
     SectionSetFlags ${SecStartMenuAvsProxyGui} $0
