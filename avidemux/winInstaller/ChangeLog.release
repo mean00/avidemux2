@@ -7,34 +7,35 @@
 </head>
 <body>
     <div id="inner">
-        <h1>Changes in Avidemux v2.7.2 – v2.7.4</h1>
+        <h1>Changes in Avidemux v2.7.4 – v2.7.6</h1>
         <table>
-            <tr><td>New Feature:</td><td>Detect and warn when cut points in H.264 video streams may result in playback issues despite being on keyframes</td></tr>
-            <tr><td>FFmpeg:</td><td>Update to the 4.1.4 release</td></tr>
-            <tr><td>Core:</td><td>Fix MSVC++ builds do not run when the path to user directory contains non-ASCII characters</td></tr>
-            <tr><td>Decoder:</td><td>Fix DXVA2 HW accelerated decoding on Windows 7</td></tr>
-            <tr><td>Decoder:</td><td>Fix DXVA2 HW accelerated decoding stops sometimes on cuts</td></tr>
-            <tr><td>Decoder:</td><td>Enable HW accelerated decoding of 8-bit HEVC for recent versions of Intel graphics driver on Windows</td></tr>
-            <tr><td>Encoder:</td><td>Fix regression with saved x264 and x265 profiles not found (MSVC++ only)</td></tr>
-            <tr><td>Demuxer:</td><td>Dynamically load VapourSynth Script library to avoid error messages on Windows if VapourSynth is not found</td></tr>
-            <tr><td>Demuxer:</td><td>Provide correct average audio bitrate in the Mp4 demuxer if the exact value for the particular codec is unknown</td></tr>
-            <tr><td>Demuxer:</td><td>Fix crash loading MP4 file with number of audio tracks exceeding the max supported</td></tr>
-            <tr><td>Demuxer:</td><td>Support audio tracks in fragmented MP4 files (the variety with empty moov only)</td></tr>
-            <tr><td>Demuxer:</td><td>Support E-AC3 audio tracks in MP4 files</td></tr>
-            <tr><td>Demuxer:</td><td>Fix ASF demuxer still broken by chance with MSVC++ only, the fix relevant for all platforms</td></tr>
-            <tr><td>Demuxer:</td><td>Support more varieties of BMP images</td></tr>
-            <tr><td>Muxer:</td><td>Optimize output of the Mp4 muxer for streaming on Windows too</td></tr>
-            <tr><td>Muxer:</td><td>Add option to the Mp4 muxer to output fragmented MP4 files</td></tr>
-            <tr><td>Muxer:</td><td>Label HEVC video in Mp4 in a way compatible with QuickTime on macOS</td></tr>
-            <tr><td>Filter:</td><td>Fix assembly in Yadif deinterlacer with MSVC++</td></tr>
-            <tr><td>UI:</td><td>Enable automatic application scaling on Windows for recent Qt versions</td></tr>
-            <tr><td>UI:</td><td>Fix silent mode, automatically confirm dialogs instead of choosing the default option</td></tr>
-            <tr><td>Audio:</td><td>Support WMAPRO audio codec for decoding</td></tr>
-            <tr><td>Audio:</td><td>Support AAC with signal band replication (SBR) in external audio tracks</td></tr>
-            <tr><td>Audio:</td><td>Fix saving AAC audio tracks with SBR to a file</td></tr>
-            <tr><td>Audio:</td><td>Improve resilience to false positives when probing external audio files for AAC</td></tr>
-            <tr><td>Miscellaneous:</td><td>Fix crash with OpenGL or DXVA2 video output in 32 bits Avidemux on Windows (better late than never)</td></tr>
-            <tr><td>Miscellaneous:</td><td>Fix regressed handling of empty frames in MPEG-4 and FRAPS video streams</td></tr>
+            <tr><td>New Feature:</td><td>Detect and warn when cut points in HEVC video streams may result in grave playback issues despite being on keyframes</td></tr>
+            <tr><td>New Video Decoder:</td><td>Add libaom-based AV1 decoder</td></tr>
+            <tr><td>New Video Encoder:</td><td>Add libvpx-based VP9 encoder</td></tr>
+            <tr><td>New Video Filter:</td><td>Add hardware accelerated deinterlacer and resizer based on VA-API (Linux only)</td></tr>
+            <tr><td>FFmpeg:</td><td>Update to the 4.2.3 release</td></tr>
+            <tr><td>Core:</td><td>Increase maximum supported resolution to 4096x4096</td></tr>
+            <tr><td>Core:</td><td>Fix crash on macOS with HW accel. decoding enabled and H.264 video streams containing both frame- and field-encoded slices</td></tr>
+            <tr><td>Encoder:</td><td>Extend configuration options for NVENC-based H.264 and HEVC encoders, add 2-pass mode</td></tr>
+            <tr><td>Demuxer:</td><td>Support MPEG-TS files with duration in excess of 13:15:36</td></tr>
+            <tr><td>Demuxer:</td><td>Support DTS XLL audio in MPEG-TS files</td></tr>
+            <tr><td>Demuxer:</td><td>Try to correct timestamp jitter in MP4 files produced by older Avidemux versions</td></tr>
+            <tr><td>Muxer:</td><td>Fix timestamp rounding which caused pseudo-VFR output from CFR sources</td></tr>
+            <tr><td>Muxer:</td><td>Fix saving to network shares on Windows using the Mp4 muxer when index should be moved to the start of the file</td></tr>
+            <tr><td>Muxer:</td><td>Support LPCM audio in the Mp4 muxer by silently switching to the MOV muxing mode</td></tr>
+            <tr><td>Muxer:</td><td>Add support for Vorbis audio to the Mp4 muxer</td></tr>
+            <tr><td>Filter:</td><td>Fix "Fade" and "Fade to black", broken on macOS</td></tr>
+            <tr><td>Filter:</td><td>Allow to toggle rubber band visibility in "Crop" and "Blacken Borders" video filters</td></tr>
+            <tr><td>Filter:</td><td>Fix keyboard input in "Resize" video filter by recalculating values only on moving focus to another field or on accepting dialog</td></tr>
+            <tr><td>Audio:</td><td>Add HE-AAC and HE-AACv2 profiles to the FDK AAC encoder plugin</td></tr>
+            <tr><td>Audio:</td><td>Support external audio tracks in DTS format</td></tr>
+            <tr><td>UI:</td><td>Fix navigation slider with RTL locales</td></tr>
+            <tr><td>UI:</td><td>Restore the shutdown option in encoding dialog on Windows</td></tr>
+            <tr><td>Scripting:</td><td>Add PTS query and keyframe seek methods to Python interface</td></tr>
+            <tr><td>Miscellaneous:</td><td>Allow user-defined fragment size for auto-append of chunked MPEG-TS files</td></tr>
+            <tr><td>Miscellaneous:</td><td>Improve handling of field-encoded video streams throughout the chain</td></tr>
+            <tr><td>Miscellaneous:</td><td>Improve handling of H.264 video streams with parameter sets changing on the fly</td></tr>
+            <tr><td>Miscellaneous:</td><td>Try to keep track of video time base throughout the chain</td></tr>
             <tr><td>Miscellaneous:</td><td>Numerous other fixes and polish</td></tr>
         </table>
     </div>
