@@ -246,6 +246,7 @@ create_release_package()
     libsamplerate-*.dll \
     libsqlite3-*.dll \
     libssl-*.dll \
+    libssp-*.dll \
     libstdc++-*.dll \
     libvorbis-*.dll \
     libvorbisenc-*.dll \
