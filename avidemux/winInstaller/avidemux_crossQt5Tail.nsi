@@ -275,7 +275,7 @@ Function ActivateInternalSections
     SectionGetFlags ${SecDesktopQt} $0 # Was SecAvsProxy
     IntOp $0 $0 & ${SF_SELECTED}
     IntOp $0 $0 & $CreateStartMenuGroup
-    SectionSetFlags ${SecStartMenuAvsProxyGui} $0
+    SectionSetFlags ${SecDesktopQt} $0
 
     #Change Log shortcut:
     SectionSetFlags ${SecStartMenuChangeLog} $CreateStartMenuGroup
