@@ -101,6 +101,8 @@ bool muxerWebm::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         par = video_st->codecpar;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         video_st->time_base=c->time_base;
+        video_st->avg_frame_rate.den =c->time_base.num;
+        video_st->avg_frame_rate.num =c->time_base.den;
         c->gop_size=15;
         
         if(true==WebmMuxerConfig.forceDisplayWidth && WebmMuxerConfig.displayWidth)
