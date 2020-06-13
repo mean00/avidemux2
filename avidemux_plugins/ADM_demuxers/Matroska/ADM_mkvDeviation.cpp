@@ -115,7 +115,7 @@ int mkvDeviation::computeDeviation(int num, int den,int &nbSkipped)
     //printf("frame %d multiple = %d, deviation=%d\n",i,(int)multiple,(int)deviation);
     
     // We have an accuracy of 1ms, so if the error is less than 2 ms, we ignore it
-    if(deviation>1000.)
+    if(deviation>2000.)
     {
         int dev=(int)deviation;
         dev=dev-dev%1000;

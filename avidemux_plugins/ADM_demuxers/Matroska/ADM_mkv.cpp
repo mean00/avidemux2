@@ -496,6 +496,14 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
 #endif
     track->index[i].Pts=reconstructed;
   }
+  _videostream.dwScale=num;
+  _videostream.dwRate=den;
+  double f=num;
+  f=f*1000000.;
+  f/=den;
+  f+=0.49;
+  track->_defaultFrameDuration=f;
+  _mainaviheader.dwMicroSecPerFrame=0; // perfectly regular
   return true;
 }
 /**
@@ -564,7 +572,34 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     if(nbBFrame) *bFramePresent=true;
 
     ADM_warning(">>> MinDelta=%d MaxDelta=%d\n",minDelta,maxDelta);
-    int stdFrameRate=getStdFrameRate(track->_defaultFrameDuration);
+    // Check whether the default frame duration is valid
+    int stdFrameRate=-1;
+    if(!nbBFrame && minDelta)
+    {
+        bool frameDurationInvalid=false;
+        if((uint64_t)maxDelta < (uint64_t)track->_defaultFrameDuration)
+        {
+            ADM_warning("Default frame duration is invalid, exceeds max delta\n");
+            frameDurationInvalid=true;
+        }
+        if((uint64_t)minDelta > (uint64_t)track->_defaultFrameDuration)
+        {
+            ADM_warning("Default frame duration is invalid, below min delta\n");
+            frameDurationInvalid=true;
+        }
+        if(frameDurationInvalid)
+        {
+            stdFrameRate=getStdFrameRate(minDelta);
+            if(stdFrameRate!=-1 && stdFrameRate==getStdFrameRate(maxDelta)) // full confidence
+            {
+                _videostream.dwScale = candidateFrameRate[stdFrameRate].num;
+                _videostream.dwRate = candidateFrameRate[stdFrameRate].den;
+                track->_defaultFrameDuration = candidateFrameRate[stdFrameRate].durationInUs;
+            }
+        }
+    }
+
+    stdFrameRate=getStdFrameRate(track->_defaultFrameDuration);
 
     int num= _videostream.dwScale;
     int den= _videostream.dwRate;
@@ -673,7 +708,8 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         }
     }
     ADM_info("Old default duration    %" PRId64" us\n",track->_defaultFrameDuration);
-    if(!deviation)
+#define TOLERANCE 500
+    if(deviation < TOLERANCE)
     {
         ADM_info("We are within margin, recomputing timestamp with exact value (%d vs %d)\n",num,den);
         enforceFixedFrameRate(num,den);
@@ -700,9 +736,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             //printf("\/=%" PRId64" Min %" PRId64" MAX %" PRId64"\n",delta,minDelta,maxDelta);
         }
 
-    }
-
-    //if( num!= _videostream.dwScale ||  den!= _videostream.dwRate)
+    }else
     {
         ADM_info("New framerate values : %d:%d\n",num,den);
         _videostream.dwScale=num;
@@ -715,9 +749,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     }
 
     ADM_info("New default duration    %" PRId64" us\n",track->_defaultFrameDuration);
-
-
-
+#undef TOLERANCE
     ADM_info("First frame pts     %" PRId64" us\n",track->index[0].Pts);
 
     *maxDeltaX=maxDelta;
