@@ -66,9 +66,16 @@ const char *ADM_getAutoDir(void)
 {
     if (ADM_autodir )
         return ADM_autodir;
-    const char *startDir=ADM_RELATIVE_LIB_DIR;
-    ADM_autodir = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "autoScripts");
-	return ADM_autodir;
+    const char *name="autoScripts";
+    if(isPortable)
+    {
+        std::string scripts=pluginDir+std::string(name);
+        ADM_autodir=ADM_strdup(scripts.c_str());
+    }else
+    {
+        ADM_autodir = ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, name);
+    }
+    return ADM_autodir;
 }
 /**
     \fn ADM_getPluginSettingsDir
@@ -77,8 +84,15 @@ const char *ADM_getAutoDir(void)
 const char *ADM_getSystemPluginSettingsDir(void)
 {
     if(ADM_systemPluginSettings) return ADM_systemPluginSettings;
-    const char *startDir=ADM_RELATIVE_LIB_DIR;
-    ADM_systemPluginSettings=ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "pluginSettings");
+    const char *name="pluginSettings";
+    if(isPortable)
+    {
+        std::string scripts=pluginDir+std::string(name);
+        ADM_systemPluginSettings=ADM_strdup(scripts.c_str());
+    }else
+    {
+        ADM_systemPluginSettings=ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, name);
+    }
     return ADM_systemPluginSettings;
 }
 /**
