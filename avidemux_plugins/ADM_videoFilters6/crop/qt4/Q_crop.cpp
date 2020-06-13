@@ -67,8 +67,7 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
   }
   void Ui_cropWindow::gather(crop *param)
   {
-    
-        myCrop->download();
+        myCrop->download(true);
         param->left=myCrop->left;
         param->right=myCrop->right;
         param->top=myCrop->top;
@@ -130,36 +129,59 @@ uint8_t flyCrop::upload(void)
         
         return 1;
 }
-uint8_t flyCrop::download(void)
+uint8_t flyCrop::download(bool even)
 {
-        int reject=0;
-Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+    int reject=0;
+    Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
 #define SPIN_GET(x,y) x=w->spinBox##y->value();
-                        SPIN_GET(left,Left);
-                        SPIN_GET(right,Right);
-                        SPIN_GET(top,Top);
-                        SPIN_GET(bottom,Bottom);
-                        
-                        printf("%d %d %d %d\n",left,right,top,bottom);
-                        
-                        left&=0xffffe;
-                        right&=0xffffe;
-                        top&=0xffffe;
-                        bottom&=0xffffe;
-                        
-                        if((top+bottom)>_h)
-                                {
-                                        top=bottom=0;
-                                        reject=1;
-                                }
-                        if((left+right)>_w)
-                                {
-                                        left=right=0;
-                                        reject=1;
-                                }
-                        if(reject)
-                                upload();
-                        return true;
+    SPIN_GET(left,Left);
+    SPIN_GET(right,Right);
+    SPIN_GET(top,Top);
+    SPIN_GET(bottom,Bottom);
+
+    printf("%d %d %d %d\n",left,right,top,bottom);
+
+    if((top+bottom)>_h)
+    {
+        top=bottom=0;
+        reject=1;
+        ADM_warning(" ** Rejected top bottom **\n");
+    }
+    if((left+right)>_w)
+    {
+        left=right=0;
+        reject=1;
+        ADM_warning(" ** Rejected left right **\n");
+    }
+    if(reject)
+        return upload();
+
+    if(even)
+    {
+        if((_w-left-right)&1)
+        {
+            if(left&1)
+                left&=0xfffe;
+            else if(right)
+                right--;
+            else if(left)
+                left--;
+            else
+                right++;
+        }
+        if((_h-top-bottom)&1)
+        {
+            if(top&1)
+                top&=0xfffe;
+            else if(bottom)
+                bottom--;
+            else if(top)
+                top--;
+            else
+                bottom++;
+        }
+    }
+    return 1;
 }
 
 /**
