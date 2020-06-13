@@ -69,7 +69,7 @@ DIA_workingQt4::DIA_workingQt4(const char *title) : DIA_workingBase(title)
     workWindow *wind = new workWindow(qtLastRegisteredDialog());
     qtRegisterDialog(wind);
     _priv=(void *)wind;
-    wind->setWindowTitle(title);
+    wind->setWindowTitle(QString::fromUtf8(title));
     postCtor();  
 }
 /**
