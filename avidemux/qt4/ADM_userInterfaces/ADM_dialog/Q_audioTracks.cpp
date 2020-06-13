@@ -438,7 +438,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
                                 QString num;
                                 ADM_edAudioTrackFromVideo *fromVideo=edTrack->castToTrackFromVideo() ;
                                 num.setNum(fromVideo->getMyTrackIndex());
-                                str=QString(QT_TRANSLATE_NOOP("qaudiotracks","Track "))+num+QString(QT_TRANSLATE_NOOP("qaudiotracks"," from video"));
+                                str=QString::fromUtf8(QT_TRANSLATE_NOOP("qaudiotracks","Track "))+num+QString::fromUtf8(QT_TRANSLATE_NOOP("qaudiotracks"," from video"));
                                 }
                                 break;
                 case ADM_EDAUDIO_EXTERNAL:
@@ -446,7 +446,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
                                 ADM_edAudioTrackExternal *ext=edTrack->castToExternal() ;
                                 ADM_assert(ext);
                                 std::string name=ext->getMyName();
-                                str=QString(QT_TRANSLATE_NOOP("qaudiotracks","File "))+QString(name.c_str());
+                                str=QString::fromUtf8(QT_TRANSLATE_NOOP("qaudiotracks","File "))+QString::fromUtf8(name.c_str());
                                 }
                                 break;
                 default:
@@ -480,7 +480,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
    
     //--
     // add the "add audio track" item
-    window->inputs[dex]->addItem(QString(QT_TRANSLATE_NOOP("qaudiotracks",".... Add audio track")));
+    window->inputs[dex]->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("qaudiotracks",".... Add audio track")));
     // set index if possible
     if(forcedIndex==-1)
     {
@@ -514,7 +514,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
     // now add codecs
     int nbAud=audioEncoderGetNumberOfEncoders();
     window->codec[dex]->clear();
-    window->codec[dex]->addItem(QString(QT_TRANSLATE_NOOP("qaudiotracks","copy")));
+    window->codec[dex]->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("qaudiotracks","copy")));
 	for(uint32_t i=1;i<nbAud;i++)
 	{
 		QString name=QString(audioEncoderGetDisplayName(i));
