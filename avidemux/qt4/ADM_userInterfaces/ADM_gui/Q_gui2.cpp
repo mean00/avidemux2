@@ -2390,7 +2390,11 @@ void UI_setZoomToFitIntoWindow(void)
 */
 void UI_setAudioTrackCount( int nb )
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
     QString text=QCoreApplication::translate("qgui2"," (%n track(s))",NULL,nb);
+#else
+    QString text=QCoreApplication::translate("qgui2"," (%n track(s))",NULL,QCoreApplication::UnicodeUTF8,nb);
+#endif
     WIDGET(TrackCountLabel)->setText(text);
 }
 /**

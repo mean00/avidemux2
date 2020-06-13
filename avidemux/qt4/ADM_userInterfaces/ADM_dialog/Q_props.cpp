@@ -94,7 +94,11 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
     if(wavinfo)
     {
         int nbActive=video_body->getNumberOfActiveAudioTracks();
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
         QString titleAudio=QCoreApplication::translate("qprops","Audio (%n active track(s))",NULL,nbActive);
+#else
+        QString titleAudio=QCoreApplication::translate("qprops","Audio (%n active track(s))",NULL,QCoreApplication::UnicodeUTF8,nbActive);
+#endif
         ui.groupBoxAudio->setTitle(titleAudio);
         listOfValues.push_back(titleAudio);
 
