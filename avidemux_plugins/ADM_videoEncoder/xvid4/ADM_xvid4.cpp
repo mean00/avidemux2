@@ -146,7 +146,7 @@ bool xvid4Encoder::setupPass(void)
                 plugins[0].param = &pass1;
                 memset(&pass1,0,sizeof(pass1));
                 pass1.version=XVID_VERSION;
-                pass1.filename=ADM_strdup(logFile.c_str()); // LEAK!
+                pass1.filename=ADM_strdup(logFile.c_str());
                 break;
         case 2:
                 {
@@ -154,7 +154,7 @@ bool xvid4Encoder::setupPass(void)
                 plugins[0].param = &pass2;
                 memset(&pass2,0,sizeof(pass2));
                 pass2.version=XVID_VERSION;
-                pass2.filename=ADM_strdup(logFile.c_str()); // LEAK!
+                pass2.filename=ADM_strdup(logFile.c_str());
                 uint64_t duration=source->getInfo()->totalDuration;
                 switch(xvid4Settings.params.mode)
                 {
@@ -189,7 +189,7 @@ bool xvid4Encoder::setupPass(void)
 */
 bool xvid4Encoder::setup(void)
 {
-  ADM_info("Xvid4, setting up");
+  ADM_info("Xvid4, setting up\n");
   query();
   xvid_enc_create_t xvid_enc_create;
   // Here we go...
@@ -314,6 +314,10 @@ xvid4Encoder::~xvid4Encoder()
         xvid_encore(handle, XVID_ENC_DESTROY, NULL, NULL);
         handle=NULL;
     }
+    ADM_dealloc(pass1.filename);
+    pass1.filename=NULL;
+    ADM_dealloc(pass2.filename);
+    pass2.filename=NULL;
 }
 
 /**
