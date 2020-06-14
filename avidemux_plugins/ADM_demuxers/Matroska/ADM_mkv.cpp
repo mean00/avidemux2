@@ -1010,6 +1010,8 @@ uint8_t mkvHeader::close(void)
         delete [] _access;
         _access=NULL;
     }
+    ADM_dealloc(_filename);
+    _filename=NULL;
     return 1;
 }
 /**
