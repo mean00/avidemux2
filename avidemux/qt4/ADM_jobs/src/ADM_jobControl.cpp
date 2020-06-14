@@ -143,7 +143,7 @@ void jobWindow::refreshList(void)
     \fn ctor
 */
 #define QT_NOOP(x) x
-jobWindow::jobWindow(void) : QDialog()
+jobWindow::jobWindow(bool mode) : QDialog()
 {
     ui.setupUi(this);
     ui.tableWidget->setColumnCount(6); // Job name, fileName, Status
@@ -184,7 +184,7 @@ jobWindow::jobWindow(void) : QDialog()
     //ADM_socket *n=mySocket.waitForConnect(5000);
     refreshList();
     dialog=NULL;
-
+    portable=mode;
 }
 /**
     \fn dtor
@@ -213,7 +213,8 @@ bool jobRun(int ac,char **av)
     QApplication *app=new QApplication(ac,av,0);
     Q_INIT_RESOURCE(jobs);
     loadTranslator();
-    jobWindow *jWindow=new jobWindow();
+    bool pmode=ac>1 && !strcmp(av[1],"--portable");
+    jobWindow *jWindow=new jobWindow(pmode);
 
     jWindow->exec();
     destroyTranslator();

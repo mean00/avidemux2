@@ -129,19 +129,24 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
 bool jobWindow::runProcess(spawnData *data)
 {
     // 3 args in our case...
-    string argv[5];
+    int nb=5;
+    if(portable) nb++;
+    string argv[nb];
+    int pos=0;
+    if(portable)
+        argv[pos++]=string("--portable");
+    argv[pos++]=string("--nogui ");
     char str[100];
     sprintf(str,"--slave %d",localPort);
-    argv[0]=string("--nogui ");
-    argv[1]=string(str);
-    argv[2]=string("--run \"")+data->script+string("\" ");
-    argv[3]=string("--save \"")+data->outputFile+string("\" ");
+    argv[pos++]=string(str);
+    argv[pos++]=string("--run \"")+data->script+string("\" ");
+    argv[pos++]=string("--save \"")+data->outputFile+string("\" ");
 #ifndef _WIN32
-    argv[4]=string("--quit > /tmp/prout.log");
+    argv[pos]=string("--quit > /tmp/prout.log");
 #else
-    argv[4]=string("--quit ");
+    argv[pos]=string("--quit ");
 #endif
-    return spawnProcess(data->exeName,5,argv);
+    return spawnProcess(data->exeName,nb,argv);
 }
 /**
     \fn spawnChild

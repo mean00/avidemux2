@@ -37,13 +37,14 @@ class jobWindow   : public QDialog
 	Q_OBJECT
 
 public:
-                jobWindow(void);
+                jobWindow(bool mode);
 	virtual     ~jobWindow();
     bool        runProcess(spawnData *data);
 protected:
     ADM_commandSocket  mySocket;
     uint32_t    localPort;
     jobProgress *dialog;
+    bool        portable;
 protected:
     int         getActiveIndex(void)	;
     bool        runOneJob(ADMJob &job)   ;
