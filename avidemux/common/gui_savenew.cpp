@@ -94,6 +94,8 @@ int A_Save(const char *name)
     uint64_t current=video_body->getCurrentFramePts();
     char *fullpath=ADM_PathCanonize(name);
     admSaver *save=new admSaver(fullpath);
+    delete [] fullpath;
+    fullpath=NULL;
     bool r=save->save();
     delete save;
     ADM_slaveSendResult(r);
