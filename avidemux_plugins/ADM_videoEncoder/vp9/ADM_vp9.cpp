@@ -419,12 +419,18 @@ bool vp9Encoder::postAmble(ADMBitstream *out)
     {
         if(passNumber != 1 && pkt->kind != VPX_CODEC_CX_FRAME_PKT)
         {
-            ADM_info("Got packet of type: %s\n",packetTypeToString(pkt->kind));
+            const char *msg=packetTypeToString(pkt->kind);
+            ADM_info("Got packet of type: %s\n",msg);
+            ADM_dealloc(msg);
+            msg=NULL;
             continue;
         }
         if(passNumber == 1 && pkt->kind != VPX_CODEC_STATS_PKT)
         {
-            ADM_warning("Unexpected packet type %s during the first pass.\n",packetTypeToString(pkt->kind));
+            const char *msg=packetTypeToString(pkt->kind);
+            ADM_warning("Unexpected packet type %s during the first pass.\n",msg);
+            ADM_dealloc(msg);
+            msg=NULL;
             continue;
         }
         packetQueue.push_back(pkt);
