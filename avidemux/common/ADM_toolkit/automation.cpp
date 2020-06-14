@@ -226,6 +226,7 @@ int searchReactionTable(char *string)
 void call_scriptEngine(const char *scriptFile)
 {
     char *fullpath=ADM_PathCanonize(scriptFile);
+#define BYE delete [] fullpath; fullpath=NULL; return;
     FILE *fd=ADM_fopen(fullpath,"r");
     if(!fd)
     {
@@ -237,7 +238,7 @@ void call_scriptEngine(const char *scriptFile)
         {
             GUI_Error_HIG(QT_TRANSLATE_NOOP("adm", "File Error"), QT_TRANSLATE_NOOP("adm", "Script \"%s\" does not exist."), fullpath);
         }
-        return;
+        BYE
     }
 
     std::vector<IScriptEngine*> engines = getScriptEngines();
@@ -252,7 +253,7 @@ void call_scriptEngine(const char *scriptFile)
             A_Rewind();
             UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
         }
-        return;
+        BYE
     }
 
     for (int i = 0; i < engines.size(); i++)
@@ -262,11 +263,13 @@ void call_scriptEngine(const char *scriptFile)
             A_parseScript(engines[i],fullpath);
             A_Rewind();
             UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
-            return;
+            BYE
         }
     }
 
-    ADM_warning("Unable to appropriate script engine for script file\n");    
+    ADM_warning("Unable to appropriate script engine for script file\n");
+    BYE
+#undef BYE
 }
 /**
  * \fn call_quit
