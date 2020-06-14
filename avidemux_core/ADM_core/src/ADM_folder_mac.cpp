@@ -57,7 +57,9 @@ const std::string ADM_getAutoDir(void)
 */
 const std::string ADM_getSystemPluginSettingsDir(void)
 {
-    if(ADM_systemPluginSettings) return ADM_systemPluginSettings;
+    if(ADM_systemPluginSettings.size())
+        return ADM_systemPluginSettings;
+
     const char *startDir="../lib";
     const char *s = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "pluginSettings");
     ADM_systemPluginSettings = std::string(s);
