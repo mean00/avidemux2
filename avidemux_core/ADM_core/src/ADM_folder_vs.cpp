@@ -23,7 +23,7 @@
  #include "ADM_win32.h"
  #include "ADM_default.h"
 
-char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
+extern char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
 
  #undef fread
  #undef fwrite

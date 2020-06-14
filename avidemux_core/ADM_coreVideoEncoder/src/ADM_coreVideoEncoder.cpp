@@ -172,7 +172,7 @@ static bool ADM_pluginSystemPath(const std::string& pluginName,int pluginVersion
 */
 bool ADM_pluginGetPath(const std::string& pluginName,int pluginVersion,std::string &rootPath)
 {
-    std::string path=std::string(ADM_getUserPluginSettingsDir());
+    std::string path=ADM_getUserPluginSettingsDir();
     std::string version;
     std::stringstream out;
     out << pluginVersion;

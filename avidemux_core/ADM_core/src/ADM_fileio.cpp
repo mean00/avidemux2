@@ -209,58 +209,67 @@ char *ADM_getRelativePath(const char *base0, const char *base1, const char *base
 
 
 /**
- * \fn ADM_getCustomDir
- * \brief      Get the  directory where jobs are stored
-*/
-static char *ADM_customdir = NULL;
-const char *ADM_getCustomDir(void)
+ *  \fn ADM_getCustomDir
+ *  \brief Get the directory where custom scripts are stored
+ */
+static std::string ADM_customdir;
+const std::string ADM_getCustomDir(void)
 {
-	if (ADM_customdir)
-		return ADM_customdir;
+    if (ADM_customdir.size())
+        return ADM_customdir;
 
-	ADM_customdir = ADM_getHomeRelativePath("custom");
+    const char *s = ADM_getHomeRelativePath("custom");
 
-	if (!ADM_mkdir(ADM_customdir))
-	{
-		printf("can't create custom directory (%s).\n", ADM_customdir);
-		return NULL;
-	}
+    if (ADM_mkdir(s))
+        ADM_customdir = std::string(s);
+    else
+        printf("can't create custom directory (%s).\n",s);
 
-	return ADM_customdir;
+    delete [] s;
+    s=NULL;
+
+    return ADM_customdir;
 }
 
 
 /**
- *      \fn ADM_getJobDir
-      \brief Get the  directory where jobs are stored
-*/
-static char *ADM_jobdir = NULL;
-const char *ADM_getJobDir(void)
+ *  \fn ADM_getJobDir
+ *  \brief Get the directory where jobs are stored
+ */
+static std::string ADM_jobdir;
+const std::string ADM_getJobDir(void)
 {
-	if (ADM_jobdir)
-		return ADM_jobdir;
+    if (ADM_jobdir.size())
+        return ADM_jobdir;
 
-	ADM_jobdir = ADM_getHomeRelativePath("jobs");
+    const char *s = ADM_getHomeRelativePath("jobs");
 
+    if (ADM_mkdir(s))
+        ADM_jobdir = std::string(s);
+    else
+        printf("can't create custom directory (%s).\n",s);
 
-	if (!ADM_mkdir(ADM_jobdir))
-	{
-		printf("can't create custom directory (%s).\n", ADM_jobdir);
-		return NULL;
-	}
+    delete [] s;
+    s=NULL;
 
-	return ADM_jobdir;
+    return ADM_jobdir;
 }
 
 /**
- * \fn  ADM_getUserPluginSettingsDir
- * \brief returns the user plugin setting 
-*/
-static char *ADM_userPluginSettings=NULL;
-const char *ADM_getUserPluginSettingsDir(void)
+ *  \fn ADM_getUserPluginSettingsDir
+ *  \brief returns the path to the user plugin setting directory
+ */
+static std::string ADM_userPluginSettings;
+const std::string ADM_getUserPluginSettingsDir(void)
 {
-    if(ADM_userPluginSettings) return ADM_userPluginSettings;
-    ADM_userPluginSettings=ADM_getHomeRelativePath("pluginSettings");
+    if(ADM_userPluginSettings.size())
+        return ADM_userPluginSettings;
+
+    const char *s = ADM_getHomeRelativePath("pluginSettings");
+    ADM_userPluginSettings = std::string(s);
+    delete [] s;
+    s=NULL;
+
     return ADM_userPluginSettings;
 }
 

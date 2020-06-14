@@ -769,9 +769,10 @@ avsfilter::avsfilter(ADM_coreVideoFilter *in,
   //vidCache = NULL;
 
 #define AVSFILTER_CONFIG_NAME "/avsfilter.config2"
-  int sz_prefs_name = strlen (ADM_getUserPluginSettingsDir()) + sizeof(AVSFILTER_CONFIG_NAME) + 1;
+  std::string psd = ADM_getUserPluginSettingsDir();
+  int sz_prefs_name = strlen (psd.c_str()) + sizeof(AVSFILTER_CONFIG_NAME) + 1;
   prefs_name = new char [sz_prefs_name];
-  snprintf(prefs_name, sz_prefs_name, "%s%s", ADM_getUserPluginSettingsDir(), AVSFILTER_CONFIG_NAME);
+  snprintf(prefs_name, sz_prefs_name, "%s%s", psd.c_str(), AVSFILTER_CONFIG_NAME);
 
   if (!couples || !ADM_paramLoad(couples,
                                  avsfilter_config_param,
@@ -873,6 +874,8 @@ avsfilter::~avsfilter()
   }
 
   if (tmp_buf) ADM_dezalloc(tmp_buf);
+  delete [] prefs_name;
+  prefs_name=NULL;
 
 /*  if (vidCache)
   {

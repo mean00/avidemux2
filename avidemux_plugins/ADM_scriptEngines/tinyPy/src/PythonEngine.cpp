@@ -113,7 +113,7 @@ void PythonEngine::initialise(IEditor *editor)
 	ADM_assert(editor);
 	_editor = editor;
 
-	string sysLib = string(ADM_getAutoDir()) + string("/lib");
+	string sysLib = ADM_getAutoDir() + string("/lib");
 
     tp_hook_set_syslib(sysLib.c_str());
 	_vm = tp_init(0, NULL);

@@ -24,12 +24,12 @@
 static bool isPortable=false;
 extern std::string pluginDir;
 
-char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
+extern char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
 
 static char ADM_basedir[1024] = {0};
 
-static char *ADM_autodir = NULL;
-static char *ADM_systemPluginSettings=NULL;
+static std::string ADM_autodir;
+static std::string ADM_systemPluginSettings;
 static std::string ADM_i18nDir;
 /**
  * 
@@ -60,20 +60,23 @@ static void AddSeparator(char *path)
 
 /**
     \fn ADM_getAutoDir
-    \brief  Get the  directory where auto script are stored. No need to free the string.
+    \brief  Get the  directory where auto script are stored.
 ******************************************************/
-const char *ADM_getAutoDir(void)
+const std::string ADM_getAutoDir(void)
 {
-    if (ADM_autodir )
+    if (ADM_autodir.size())
         return ADM_autodir;
+
     const char *name="autoScripts";
     if(isPortable)
     {
-        std::string scripts=pluginDir+std::string(name);
-        ADM_autodir=ADM_strdup(scripts.c_str());
+        ADM_autodir=pluginDir+std::string(name);
     }else
     {
-        ADM_autodir = ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, name);
+        const char *s = ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, name);
+        ADM_autodir=std::string(s);
+        delete [] s;
+        s=NULL;
     }
     return ADM_autodir;
 }
@@ -81,17 +84,21 @@ const char *ADM_getAutoDir(void)
     \fn ADM_getPluginSettingsDir
     \brief Get the folder containing the plugin settings (presets etc..)
 */
-const char *ADM_getSystemPluginSettingsDir(void)
+const std::string ADM_getSystemPluginSettingsDir(void)
 {
-    if(ADM_systemPluginSettings) return ADM_systemPluginSettings;
+    if(ADM_systemPluginSettings.size())
+        return ADM_systemPluginSettings;
+
     const char *name="pluginSettings";
     if(isPortable)
     {
-        std::string scripts=pluginDir+std::string(name);
-        ADM_systemPluginSettings=ADM_strdup(scripts.c_str());
+        ADM_systemPluginSettings=pluginDir+std::string(name);
     }else
     {
-        ADM_systemPluginSettings=ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, name);
+        const char *s = ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, name);
+        ADM_systemPluginSettings=std::string(s);
+        delete [] s;
+        s=NULL;
     }
     return ADM_systemPluginSettings;
 }

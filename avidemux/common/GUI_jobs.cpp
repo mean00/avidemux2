@@ -28,29 +28,27 @@ static char *jobName[MAX_JOBS];
 extern uint8_t DIA_job(uint32_t nb,char **name);
 uint8_t GUI_jobs(void)
 {
-uint32_t nb;
-        memset(jobName,0,sizeof(jobName));
-        const char *jobDir=ADM_getJobDir();
-        if(!buildDirectoryContent(&nb,ADM_getJobDir(),jobName,MAX_JOBS,"py"))
-        {
-          delete [] jobDir;
-          GUI_Error_HIG(QT_TRANSLATE_NOOP("jobs","Oops"),QT_TRANSLATE_NOOP("jobs","Something very wrong happened when building joblist."));
-                return 0;
-        }
-        delete [] jobDir;
-        if(!nb)
-        {
-          GUI_Info_HIG(ADM_LOG_IMPORTANT,QT_TRANSLATE_NOOP("jobs","There are no jobs stored"), NULL);
-                return 1;
-        }
-        DIA_job(nb,jobName);
-        for(int i=0;i<nb;i++)
-        {
-                //printf("List : %s\n",jobName[i]);
-                ADM_dealloc(jobName[i]);
-                jobName[i]=NULL;
-        }
+    uint32_t nb;
+    memset(jobName,0,sizeof(jobName));
+    std::string jobDir=ADM_getJobDir();
+    if(!buildDirectoryContent(&nb,jobDir.c_str(),jobName,MAX_JOBS,"py"))
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("jobs","Oops"),QT_TRANSLATE_NOOP("jobs","Something very wrong happened when building joblist."));
+        return 0;
+    }
+    if(!nb)
+    {
+        GUI_Info_HIG(ADM_LOG_IMPORTANT,QT_TRANSLATE_NOOP("jobs","There are no jobs stored"), NULL);
         return 1;
+    }
+    DIA_job(nb,jobName);
+    for(int i=0;i<nb;i++)
+    {
+        //printf("List : %s\n",jobName[i]);
+        ADM_dealloc(jobName[i]);
+        jobName[i]=NULL;
+    }
+    return 1;
 }
 
 //EOF

@@ -210,8 +210,8 @@ void MainWindow::buildCustomMenu(void)
     ui.menuCustom->clear();
     ui.menuAuto->clear();
 
-    this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir(), fileExts);
-    this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir(), fileExts);
+    this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir().c_str(), fileExts);
+    this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir().c_str(), fileExts);
     buildActionLists(); // since we change the menu, the list of stuff needs to be refreshed else it points to deleted items
 
 }

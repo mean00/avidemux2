@@ -682,7 +682,7 @@ void A_queueJob(const char *jobName,const char *outputFile)
             job.jobName=string(jobName);
 //#warning make sure it is unique
             job.scriptName=string(jobName)+string(".")+engine->defaultFileExtension();
-            string completePath=string(ADM_getJobDir());
+            string completePath=ADM_getJobDir();
             completePath+=job.scriptName;
             bool collision=false;
             if(ADM_fileExist(completePath.c_str()))

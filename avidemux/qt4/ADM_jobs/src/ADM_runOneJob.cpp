@@ -192,10 +192,7 @@ bool jobWindow::runOneJob( ADMJob &job)
     // 1- Start listening to socket
 
     // 2- Spawn  child
-    string ScriptFullPath;
-    
-    
-    ScriptFullPath=string(ADM_getJobDir())+slash+string(job.scriptName);
+    string ScriptFullPath=ADM_getJobDir()+slash+string(job.scriptName);
     const char *avidemuxVersion=MKCLI();
     if(ui.checkBoxUseQt4->isChecked())
     {

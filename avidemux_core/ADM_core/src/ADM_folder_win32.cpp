@@ -24,12 +24,11 @@
 #include "ADM_default.h"
 
 extern void simplify_path(char **buf);
-char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
+extern char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
 static char ADM_basedir[1024] = {0};
 static char ADM_logdir[1024] = {0};
-static char *ADM_autodir = NULL;
-static char *ADM_systemPluginSettings=NULL;
-
+static std::string ADM_autodir;
+static std::string ADM_systemPluginSettings;
 
 #undef fread
 #undef fwrite
@@ -40,23 +39,30 @@ static char *ADM_systemPluginSettings=NULL;
     \fn ADM_getAutoDir
     \brief  Get the  directory where auto script are stored. No need to free the string.
 ******************************************************/
-const char *ADM_getAutoDir(void)
+const std::string ADM_getAutoDir(void)
 {
-    if (ADM_autodir )
+    if (ADM_autodir.size())
         return ADM_autodir;
     const char *startDir=ADM_RELATIVE_LIB_DIR;
-    ADM_autodir = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "autoScripts");
-	return ADM_autodir;
+    const char *s = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "autoScripts");
+    ADM_autodir = std::string(s);
+    delete [] s;
+    s=NULL;
+    return ADM_autodir;
 }
 /**
     \fn ADM_getPluginSettingsDir
     \brief Get the folder containing the plugin settings (presets etc..)
 */
-const char *ADM_getSystemPluginSettingsDir(void)
+const std::string ADM_getSystemPluginSettingsDir(void)
 {
-    if(ADM_systemPluginSettings) return ADM_systemPluginSettings;
+    if(ADM_systemPluginSettings.size())
+        return ADM_systemPluginSettings;
     const char *startDir=ADM_RELATIVE_LIB_DIR;
-    ADM_systemPluginSettings=ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "pluginSettings");
+    const char *s = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "pluginSettings");
+    ADM_systemPluginSettings = std::string(s);
+    delete [] s;
+    s=NULL;
     return ADM_systemPluginSettings;
 }
 

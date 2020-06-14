@@ -1631,7 +1631,7 @@ void A_addJob(void)
         if(!name || !final) return;
         if(!*name || !*final) return;
 
-        base=ADM_getJobDir();
+        base=ADM_strdup(ADM_getJobDir().c_str());
         fullname=new char[strlen(name)+strlen(base)+2+4];
 
         strcpy(fullname,base);
@@ -1642,7 +1642,7 @@ void A_addJob(void)
         A_saveScript(getScriptEngines()[0], final);
 
         delete [] fullname;
-        delete [] base;
+        ADM_dealloc(base);
         ADM_dealloc(name);
         ADM_dealloc(final);
 }

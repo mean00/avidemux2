@@ -25,16 +25,16 @@ ADM_CORE6_EXPORT const char *ADM_getBaseDir(void);
 #ifdef _WIN32
 ADM_CORE6_EXPORT const char *ADM_getLogDir(void);
 #endif
-// Returns dir to ~/.avidemux/jobs, no need to free it
-ADM_CORE6_EXPORT const char *ADM_getJobDir(void);
-// Returns dir to ~/.avidemux/custom, no need to free it
-ADM_CORE6_EXPORT const char *ADM_getCustomDir(void);
-// Returns dir to ~/.avidemux/autoScript, no need to free it
-ADM_CORE6_EXPORT const char *ADM_getAutoDir(void);
-// Returns dir to ~/.avidemux/autoScript, no need to free it
-ADM_CORE6_EXPORT const char *ADM_getUserPluginSettingsDir(void);
-ADM_CORE6_EXPORT const char *ADM_getSystemPluginSettingsDir(void);
 #ifdef __cplusplus
+// Returns dir to ~/.avidemux/jobs
+ADM_CORE6_EXPORT const std::string ADM_getJobDir(void);
+// Returns dir to ~/.avidemux/custom
+ADM_CORE6_EXPORT const std::string ADM_getCustomDir(void);
+// Returns dir to ~/.avidemux/autoScript
+ADM_CORE6_EXPORT const std::string ADM_getAutoDir(void);
+// Returns dir to ~/.avidemux/pluginSettings
+ADM_CORE6_EXPORT const std::string ADM_getUserPluginSettingsDir(void);
+ADM_CORE6_EXPORT const std::string ADM_getSystemPluginSettingsDir(void);
 ADM_CORE6_EXPORT const std::string ADM_getI8NDir(const std::string &flavor);
 #endif
 
