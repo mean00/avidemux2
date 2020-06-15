@@ -2331,9 +2331,47 @@ void UI_resize(uint32_t w,uint32_t h)
     reqh += h;
     UI_setBlockZoomChangesFlag(true);
     QuiMainWindows->resize(reqw,reqh);
+    ADM_info("Resizing the main window to %dx%d px\n",reqw,reqh);
+#ifdef _WIN32
+    QSize fs = QuiMainWindows->frameSize();
+    QPoint p = QuiMainWindows->pos();
+
+    uint32_t screenWidth,screenHeight;
+    UI_getPhysicalScreenSize(QuiMainWindows, &screenWidth, &screenHeight);
+
+    int x = p.x() + fs.width() - (int)screenWidth;
+    bool move=false;
+    if(x > 0) // the right edge of the window doesn't fit into the screen
+    {
+        move = true;
+        if(x < p.x())
+            x = p.x() - x;
+        else
+            x = 0;
+    }else
+    {
+        x = p.x();
+    }
+    int y = p.y() + fs.height() - (int)screenHeight;
+    if(y > 0) // the bottom edge of the window doesn't fit into the screen
+    {
+        move = true;
+        if(y < p.y())
+            y = p.y() - y;
+        else
+            y = 0;
+    }else
+    {
+        y = p.y();
+    }
+    if(move)
+    {
+        ADM_info("Moving the main window to position (%d, %d)\n",x,y);
+        QuiMainWindows->move(x,y);
+    }
+#endif
     UI_setBlockZoomChangesFlag(false);
     ((MainWindow *)QuiMainWindows)->setResizeThreshold(RESIZE_THRESHOLD);
-    ADM_info("Resizing the main window to %dx%d px\n",reqw,reqh);
 }
 
 /**
