@@ -412,7 +412,7 @@ bool  ADM_latm2aac::readAudioMux( uint64_t dts,getBits &bits )
 */
 bool ADM_latm2aac::demuxLatm(uint64_t date,uint8_t *start,uint32_t size)
 {
-    getBits  bits(size,start);
+    getBits bits(size+AV_INPUT_BUFFER_PADDING_SIZE,start);
     return readAudioMux(date,bits);
 }
 /**
@@ -443,6 +443,7 @@ bool ADM_latm2aac::pushData(int incomingLen,uint8_t *inData)
     // Add data
     memcpy(depot.at(head),inData,incomingLen);
     head+=incomingLen;
+    memset(depot.at(head),0,AV_INPUT_BUFFER_PADDING_SIZE);
     return true;
 }
 /**
@@ -505,7 +506,7 @@ ADM_latm2aac::ADM_latm2aac(void)
                 conf.gotConfig=false;
                 for(int i=0;i<LATM_NB_BUFFERS;i++)
                     listOfFreeBuffers.pushBack(&(buffers[i]));
-                depot.setSize(INCOMING_BUFFER_SIZE);
+                depot.setSize(INCOMING_BUFFER_SIZE + AV_INPUT_BUFFER_PADDING_SIZE);
                 head=tail=0;
 }
 /**
