@@ -140,6 +140,7 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     if(sps_found)
     {
         pkt->seek(rewindStart,rewindOffset);
+        pkt->collectStats();
         writeVideo(&video,ADM_TS_H264);
         writeAudio();
         qfprintf(index,"[Data]");

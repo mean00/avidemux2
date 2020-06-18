@@ -248,15 +248,17 @@ typedef struct
 class tsPacketLinearTracker : public tsPacketLinear
 {
 protected:
-        
         TS_PESpacket *otherPes;
         packetTSStats *stats;
         uint32_t      totalTracks;
+
+        bool    resetStats(void);
 public:
                 tsPacketLinearTracker(uint32_t videoPid,listOfTsAudioTracks *audioTracks);
                 ~tsPacketLinearTracker();
         bool    getStats(uint32_t *nb,packetTSStats **stats);
 virtual bool    updateStats(uint8_t *data);
+        bool    collectStats(void);
         int     findStartCode(void);
         int     findStartCode2(bool &fourBytes);
 };

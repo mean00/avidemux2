@@ -887,6 +887,24 @@ tsPacketLinearTracker::tsPacketLinearTracker(uint32_t pid,listOfTsAudioTracks *a
     }
 }
 /**
+    \fn resetStats
+*/
+bool tsPacketLinearTracker::resetStats(void)
+{
+    if(!stats) return false;
+    for(uint32_t i=0; i<totalTracks; i++)
+    {
+        packetTSStats *s=stats+i;
+        s->count=0;
+        s->size=0;
+        s->startAt=0;
+        s->startCount=0;
+        s->startSize=0;
+        s->startDts=ADM_NO_PTS;
+    }
+    return true;
+}
+/**
     \fn findStartCode
     \brief Must check stillOk after calling this
 */
@@ -1128,5 +1146,40 @@ bool tsPacketLinearTracker::updateStats(uint8_t *scratch)
        
 
     return true;
+}
+/**
+    \fn collectStats
+    \brief Read from current position until we get the stats, then seek back
+*/
+bool tsPacketLinearTracker::collectStats(void)
+{
+    if(!resetStats()) // no audio tracks, nothing to do
+        return false;
+
+    bool success=false;
+    uint32_t i,found=0,count=0;
+    const uint32_t max=1<<24; // 16 MiB, should be enough
+    dmxPacketInfo info;
+    getInfo(&info);
+
+    while(count<max && stillOk())
+    {
+        found=0;
+        count++;
+        readi8();
+        for(i=0; i<totalTracks; i++)
+        {
+            if(stats[i].startAt)
+                found++;
+        }
+        if(found==totalTracks)
+        {
+            success=true;
+            break;
+        }
+    }
+    ADM_info("Stats for %u tracks out of %u populated, bytes used: %u\n",found,totalTracks,count);
+    seek(info.startAt,info.offset);
+    return success;
 }
 // EOF
