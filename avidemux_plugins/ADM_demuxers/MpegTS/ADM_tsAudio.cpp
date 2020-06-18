@@ -228,7 +228,7 @@ bool      ADM_tsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxS
         case ADM_TS_MUX_LATM:
             {
                 // Try to get one...
-                int retries=10;
+                int retries=20;
                 bool gotPacket=false;
                 uint64_t time=ADM_NO_PTS;
                 while(latm.empty()) // fetch next LOAS frame, it will contain several frames

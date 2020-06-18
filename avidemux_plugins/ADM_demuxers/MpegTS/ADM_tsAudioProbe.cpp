@@ -112,21 +112,29 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                         size=pes.payloadSize-pes.offset;
                         latm.flush();
                         latm.pushData(size,ptr);
-                        latm.convert(0);
-                        if(latm.getFrequency())
+                        int errors=8; // arbitrary
+                        while(true)
                         {
-                            ADM_assert(latm.getExtraData(&eLen,&eData));
-                            uint32_t fq=latm.getFrequency();
-                            if(fq<=24000) fq*=2; // implicit SBR?
-                            trackInfo->wav.frequency=fq;
-                            trackInfo->wav.channels=latm.getChannels();
-                            trackInfo->wav.byterate=128000>>3;
-                            trackInfo->extraDataLen=eLen;
-                            for(i=0;i<eLen;i++)
-                                trackInfo->extraData[i]=eData[i];
-                            trackInfo->mux=ADM_TS_MUX_LATM;
-                            ADM_info("AAC extra data (%d): %02x %02x\n",eLen,eData[0],eData[1]);
-                            return true;
+                            ADM_latm2aac::LATM_STATE outcome=latm.convert(0);
+                            if(outcome==ADM_latm2aac::LATM_ERROR && errors-- > 0)
+                                continue;
+                            if(outcome==ADM_latm2aac::LATM_MORE_DATA_NEEDED)
+                                break;
+                            if(latm.getFrequency())
+                            {
+                                ADM_assert(latm.getExtraData(&eLen,&eData));
+                                uint32_t fq=latm.getFrequency();
+                                if(fq<=24000) fq*=2; // implicit SBR?
+                                trackInfo->wav.frequency=fq;
+                                trackInfo->wav.channels=latm.getChannels();
+                                trackInfo->wav.byterate=128000>>3;
+                                trackInfo->extraDataLen=eLen;
+                                for(i=0;i<eLen;i++)
+                                    trackInfo->extraData[i]=eData[i];
+                                trackInfo->mux=ADM_TS_MUX_LATM;
+                                ADM_info("AAC extra data (%d): %02x %02x\n",eLen,eData[0],eData[1]);
+                                return true;
+                            }
                         }
                         // next packet
                         retries--;
