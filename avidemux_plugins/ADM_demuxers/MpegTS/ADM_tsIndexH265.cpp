@@ -169,13 +169,18 @@ bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     pkt->getInfo( &packetInfo);
     thisUnit.consumedSoFar=0; // Head
     
-    uint64_t startExtraData=packetInfo.startAt-193; // /!\ It may be in the previous packet, very unlikely though    
+    //uint64_t startExtraData=packetInfo.startAt-193; // /!\ It may be in the previous packet, very unlikely though
     pkt->read(512,headerBuffer+5);
     uint8_t *pointer=headerBuffer+5;
     uint8_t *end=headerBuffer+512;
     // Rewind
-    pkt->setPos(packetInfo.startAt);
-    
+    if(packetInfo.offset>12) // 2 x 5 bytes long start code + 2 bytes AUD
+        packetInfo.offset-=12;
+    else
+        packetInfo.offset=0;
+    pkt->seek(packetInfo.startAt,packetInfo.offset);
+    pkt->collectStats();
+
     pointer=findGivenStartCodeInBuffer(pointer,end,NAL_H265_SPS,"SPS");
     if(!pointer)
     {
