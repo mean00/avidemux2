@@ -1163,6 +1163,17 @@ bool tsPacketLinearTracker::collectStats(void)
     dmxPacketInfo info;
     getInfo(&info);
 
+    const uint32_t len=sizeof(packetTSStats)*totalTracks;
+    packetTSStats *first=(packetTSStats *)malloc(len);
+    if(!first)
+        return false;
+
+    memset(first,0,len);
+    for(i=0; i<totalTracks; i++)
+    {
+        first[i].startDts=ADM_NO_PTS;
+    }
+
     while(count<max && stillOk())
     {
         found=0;
@@ -1170,8 +1181,20 @@ bool tsPacketLinearTracker::collectStats(void)
         readi8();
         for(i=0; i<totalTracks; i++)
         {
+            if(first[i].startAt) continue; // already set
             if(stats[i].startAt)
+            {
+#define CPY(x) first[i].x = stats[i].x;
+                CPY(pid)
+                CPY(count)
+                CPY(size)
+                CPY(startAt)
+                CPY(startCount)
+                CPY(startSize)
+                CPY(startDts)
                 found++;
+#undef CPY
+            }
         }
         if(found==totalTracks)
         {
@@ -1179,6 +1202,23 @@ bool tsPacketLinearTracker::collectStats(void)
             break;
         }
     }
+    // Now sync back
+    for(i=0; i<totalTracks; i++)
+    {
+        if(!first[i].startAt) continue;
+#define CPY(x) stats[i].x = first[i].x;
+        CPY(pid)
+        CPY(count)
+        CPY(size)
+        CPY(startAt)
+        CPY(startCount)
+        CPY(startSize)
+        CPY(startDts)
+#undef CPY
+    }
+    free(first);
+    first=NULL;
+
     ADM_info("Stats for %u tracks out of %u populated, bytes used: %u\n",found,totalTracks,count);
     consumed=remember;
     seek(info.startAt,info.offset);
