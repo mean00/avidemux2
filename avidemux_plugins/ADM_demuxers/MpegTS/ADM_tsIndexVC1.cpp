@@ -123,7 +123,7 @@ dmxPacketInfo info;
                           writeVideo(&video,ADM_TS_VC1);
                           writeAudio();
                           qfprintf(index,"[Data]");
-                          
+                          pkt->collectStats();
                           pkt->getInfo(&thisUnit.packetInfo);
                           thisUnit.consumedSoFar=pkt->getConsumed();
                           if(!addUnit(data,unitTypeSps,thisUnit,seqSize+4))
