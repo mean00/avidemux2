@@ -126,6 +126,7 @@ uint8_t result=1;
                 writeAudio();
                 qfprintf(index,"[Data]");
                 seqEntryPending=false;
+                pkt->collectStats();
                 CHECK(addUnit(data,unitTypeSps,spsUnit,4+4+4))
             }
             CHECK(addUnit(data,unitTypePic,thisUnit,4+2))
@@ -203,6 +204,7 @@ uint8_t result=1;
                                             writeAudio();
                                             qfprintf(index,"[Data]");
                                             seqEntryPending=false;
+                                            pkt->collectStats();
                                             CHECK(addUnit(data,unitTypeSps,spsUnit,4+4+4))
                                         }
                                         updatePicStructure(video,picture_structure);
