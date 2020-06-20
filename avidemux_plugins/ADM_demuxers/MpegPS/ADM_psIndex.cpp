@@ -293,6 +293,12 @@ uint8_t PsIndexer::run(const char *file)
                           video.fps= FPS[val & 0xf];
                           pkt->forward(4);
                           pkt->resetStats();
+                          if(audioTracks)
+                          {
+                              uint32_t i,n=audioTracks->size();
+                              for(i=0;i<n;i++)
+                                  pkt->collectStats((*audioTracks)[i]->esID);
+                          }
                           break;
                   case 0xB5: //  extension
                                 { 
