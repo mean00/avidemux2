@@ -1159,6 +1159,7 @@ bool tsPacketLinearTracker::collectStats(void)
     bool success=false;
     uint32_t i,found=0,count=0;
     const uint32_t max=1<<24; // 16 MiB, should be enough
+    const uint32_t remember=consumed;
     dmxPacketInfo info;
     getInfo(&info);
 
@@ -1179,6 +1180,7 @@ bool tsPacketLinearTracker::collectStats(void)
         }
     }
     ADM_info("Stats for %u tracks out of %u populated, bytes used: %u\n",found,totalTracks,count);
+    consumed=remember;
     seek(info.startAt,info.offset);
     return success;
 }
