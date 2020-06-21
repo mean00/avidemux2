@@ -13,10 +13,9 @@
  ***************************************************************************/
 #include "ADM_tsIndex.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_tsIndex.h"
 
-static bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStructure *pic);
-static bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery);
+static bool decoderSei1(const ADM_SPSInfo &spsInfo, uint32_t size, uint8_t *bfer, pictureStructure *pic);
+static bool decoderSei6(uint32_t size, uint8_t *bfer, uint32_t *recovery);
 /**
  *  \fn decodeSEI
  *  \brief decode SEI to get short ref I
@@ -44,7 +43,7 @@ uint8_t TsIndexerH264::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recove
         while(payload[0]==0xff) {sei_size+=0xff;payload++;};
         sei_size+=payload[0];payload++;
         aprintf("  [SEI] Type: 0x%x, size: %u\n",sei_type,sei_size);
-        if(payload+sei_size>=tail)
+        if(payload+sei_size>tail)
             return ret;
 
         switch(sei_type)
@@ -89,10 +88,17 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
         if(!pkt->stillOk()) break;
         if(startCode&0x80) continue; // Marker missing
         startCode&=0x1f;
+        if(!sps_found && startCode!=NAL_SPS)
+            continue;
         if(startCode!=NAL_SPS && startCode!=NAL_SEI)
             continue;
 
         // Got SPS!
+        if(startCode==NAL_SPS && sps_found) // most likely the next keyframe
+        {
+            ADM_warning("No picture timing SEI found within the first GOP, can't check interlacing.\n");
+            break;
+        }
         // Get info
         pkt->getInfo(&tmpInfo);
         // Read just enough...
@@ -120,11 +126,6 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
                 spsLen=ADM_NAL_BUFFER_SIZE;
             memcpy(spsCache,SEI_nal.payload,spsLen);
             continue;
-        }
-        if(startCode==NAL_SPS && sps_found) // most likely the next keyframe
-        {
-            ADM_warning("No picture timing SEI found within the first GOP, can't check interlacing.\n");
-            break;
         }
         if(startCode==NAL_SEI && sps_found && !sei_found && SEI_nal.payloadSize>=7)
         {
@@ -497,17 +498,28 @@ the_end:
 
 // Workaround win64 bug
 // Put that in a separate function
-bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStructure *pic)
+bool decoderSei1(const ADM_SPSInfo &spsInfo, uint32_t size, uint8_t *bfer, pictureStructure *pic)
 {
     if(spsInfo.hasStructInfo)
     {
-      getBits bits(size,bfer);
+      uint32_t paddedSize=size+64; // AV_INPUT_BUFFER_PADDING_SIZE, guards against lavcodec overread
+      uint8_t *padded=(uint8_t *)ADM_alloc(paddedSize);
+      if(!padded) return false;
+
+      memcpy(padded,bfer,size);
+      memset(padded+size,0,64);
+
+      getBits bits(size,padded);
       if(spsInfo.CpbDpbToSkip)
       {
               bits.get(spsInfo.CpbDpbToSkip);
       }
       //printf("Consumed: %d,\n",bits.getConsumedBits());
       int pic4=bits.get(4);
+
+      ADM_dealloc(padded);
+      padded=NULL;
+
       aprintf("Pic struct: %d,\n",pic4);
       switch(pic4)
       {
@@ -523,11 +535,21 @@ bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStruc
 }
 //
 // 2nd one
-bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery)
+bool decoderSei6(uint32_t size, uint8_t *bfer, uint32_t *recovery)
 {
-     getBits bits(size,bfer);
-     *recovery=bits.getUEG();
-     return true;
+    uint32_t paddedSize=size+64; // AV_INPUT_BUFFER_PADDING_SIZE, guards against lavcodec overread
+    uint8_t *padded=(uint8_t *)ADM_alloc(paddedSize);
+    if(!padded) return false;
+
+    memcpy(padded,bfer,size);
+    memset(padded+size,0,64);
+
+    getBits bits(size,padded);
+    *recovery=bits.getUEG();
+
+    ADM_dealloc(padded);
+    padded=NULL;
+    return true;
 }
 
 
