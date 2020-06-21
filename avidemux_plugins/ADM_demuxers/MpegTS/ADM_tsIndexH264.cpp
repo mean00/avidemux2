@@ -79,11 +79,10 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     uint64_t rewindStart=0;
     uint32_t rewindOffset=0;
     bool sps_found=false;
-    bool sei_found=false;
     TS_PESpacket SEI_nal(0);
     while(true)
     {
-        int startCode=pkt->findStartCode();
+        uint32_t startCode=pkt->findStartCode();
 
         if(!pkt->stillOk()) break;
         if(startCode&0x80) continue; // Marker missing
@@ -125,18 +124,19 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
             if(spsLen>ADM_NAL_BUFFER_SIZE)
                 spsLen=ADM_NAL_BUFFER_SIZE;
             memcpy(spsCache,SEI_nal.payload,spsLen);
-            continue;
+            continue; // we miss the next NALU, should be harmless
         }
-        if(startCode==NAL_SEI && sps_found && !sei_found && SEI_nal.payloadSize>=7)
+        if(startCode==NAL_SEI && sps_found && SEI_nal.payloadSize>=7)
         {
             pictureStructure p=pictureFrame;
             if(decodeSEI(SEI_nal.payloadSize-4, SEI_nal.payload, NULL, &p) & 1)
             {
-                sei_found=true;
                 video.interlaced=(p!=pictureFrame);
+                break; // we've got both, SPS and SEI
             }
+            startCode=pkt->readi8(); // peek now, findStartCode will miss it
+            if((startCode&0x1f)==NAL_SPS) break;
         }
-        if(sps_found && sei_found) break;
     }
     if(sps_found)
     {
