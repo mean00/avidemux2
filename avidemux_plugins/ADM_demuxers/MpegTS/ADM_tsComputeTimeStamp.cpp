@@ -47,7 +47,7 @@ bool tsHeader::updatePtsDts(void)
         uint32_t i;
         uint64_t lastDts=0,lastPts=0,dtsIncrement=0;
 
-
+#if 0
         // For audio, The first packet in the seekpoints happens a bit after the action
         // It means some audio may have been seen since we locked on video.
         // So we compute the DTS of the first real packet
@@ -78,7 +78,7 @@ bool tsHeader::updatePtsDts(void)
 
             }
         }
-
+#endif
 
         // Make sure everyone starts at 0
         // Search first timestamp (audio/video)
