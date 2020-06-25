@@ -18,7 +18,7 @@
             <tr><td>Core:</td><td>Fix crash on macOS with HW accel. decoding enabled and H.264 video streams containing both frame- and field-encoded slices</td></tr>
             <tr><td>Encoder:</td><td>Extend configuration options for NVENC-based H.264 and HEVC encoders, add 2-pass mode</td></tr>
             <tr><td>Demuxer:</td><td>Support MPEG-TS files with duration in excess of 13:15:36</td></tr>
-            <tr><td>Demuxer:</td><td>Support DTS XLL audio in MPEG-TS files</td></tr>
+            <tr><td>Demuxer:</td><td>Use DTS core from DTS XLL audio in MPEG-TS files instead of rejecting the track</td></tr>
             <tr><td>Demuxer:</td><td>Fix mono MP3 audio tracks in MP4 files misdetected as stereo</td></tr>
             <tr><td>Demuxer:</td><td>Try to correct timestamp jitter in MP4 files produced by older Avidemux versions</td></tr>
             <tr><td>Muxer:</td><td>Fix timestamp rounding which caused pseudo-VFR output from CFR sources</td></tr>
