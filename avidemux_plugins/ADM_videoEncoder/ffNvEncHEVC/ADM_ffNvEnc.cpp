@@ -244,6 +244,9 @@ diaMenuEntry mePreset[]={
 
 #define PX(x) &(conf->x)
 
+    diaElemMenu     rcmode(PX(rc_mode),QT_TRANSLATE_NOOP("ffnvenc","RC Mode:"),4,meRcMode);
+    diaElemMenu     qzPreset(PX(preset),QT_TRANSLATE_NOOP("ffnvenc","Preset:"),6,mePreset);
+
     diaElemUInteger qual(PX(quality),QT_TRANSLATE_NOOP("ffnvenc","Quality:"),0,51);
     diaElemUInteger bitrate(PX(bitrate),QT_TRANSLATE_NOOP("ffnvenc","Bitrate (kbps):"),1,800000);
     diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,800000);
