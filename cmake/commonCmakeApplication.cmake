@@ -9,6 +9,7 @@ SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/
 SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
 # Common definitions...
 SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
+SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}/cmake_win32_rc" "${CMAKE_MODULE_PATH}")
 MESSAGE(STATUS "Cmake module path = ${CMAKE_MODULE_PATH}")
 include(admPluginLocation)
 include(admConfigSummary)
