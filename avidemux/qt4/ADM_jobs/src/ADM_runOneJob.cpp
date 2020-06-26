@@ -131,7 +131,7 @@ bool jobWindow::runProcess(spawnData *data)
     // 3 args in our case...
     int nb=5;
     if(portable) nb++;
-    string argv[nb];
+    string *argv=new string[nb];
     int pos=0;
     if(portable)
         argv[pos++]=string("--portable");
@@ -146,7 +146,10 @@ bool jobWindow::runProcess(spawnData *data)
 #else
     argv[pos]=string("--quit ");
 #endif
-    return spawnProcess(data->exeName,nb,argv);
+    bool r=spawnProcess(data->exeName,nb,argv);
+    delete [] argv;
+    argv=NULL;
+    return r;
 }
 /**
     \fn spawnChild
