@@ -69,14 +69,14 @@ static void *spawnerBoomerang(void *arg)
     return NULL;
 }
 
-bool spawnProcess(const char *processName, int argc, const string argv[])
+static bool spawnProcess(const char *processName, const vector <string> args)
 {
     ADM_info("Starting <%s>\n",processName);
     string command=string(processName);
-    for(int i=0;i<argc;i++)
+    for(int i=0;i<args.size();i++)
     {
-        ADM_info("%d : %s\n",i,argv[i].c_str());
-        command+=string(" ")+argv[i];
+        ADM_info("%d : %s\n",i,args.at(i).c_str());
+        command+=string(" ")+args.at(i);
     }
     ADM_info("=>%s\n",command.c_str());
     ADM_info("==================== Start of spawner process job ================\n");
@@ -128,28 +128,23 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
 */
 bool jobWindow::runProcess(spawnData *data)
 {
-    // 3 args in our case...
-    int nb=5;
-    if(portable) nb++;
-    string *argv=new string[nb];
-    int pos=0;
+    vector <string> args;
     if(portable)
-        argv[pos++]=string("--portable");
-    argv[pos++]=string("--nogui ");
+        args.push_back(string("--portable"));
+    args.push_back(string("--nogui "));
     char str[100];
     sprintf(str,"--slave %d",localPort);
-    argv[pos++]=string(str);
-    argv[pos++]=string("--run \"")+data->script+string("\" ");
-    argv[pos++]=string("--save \"")+data->outputFile+string("\" ");
+    args.push_back(string(str));
+    string s=string("--run \"")+data->script+string("\" ");
+    args.push_back(s);
+    s=string("--save \"")+data->outputFile+string("\" ");
+    args.push_back(s);
 #ifndef _WIN32
-    argv[pos]=string("--quit > /tmp/prout.log");
+    args.push_back(string("--quit > /tmp/prout.log"));
 #else
-    argv[pos]=string("--quit ");
+    args.push_back(string("--quit"));
 #endif
-    bool r=spawnProcess(data->exeName,nb,argv);
-    delete [] argv;
-    argv=NULL;
-    return r;
+    return spawnProcess(data->exeName,args);
 }
 /**
     \fn spawnChild
