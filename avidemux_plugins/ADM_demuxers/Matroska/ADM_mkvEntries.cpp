@@ -326,6 +326,8 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                 ADM_info("Recreating aac extradata..\n");
                 entry.extraData = new uint8_t[5];
                 createAACExtraData(entry.codecId.c_str(),&entry);
+                t->extraData=entry.extraData;
+                t->extraDataLen=entry.extraDataLen;
             }else
             {
                 // check AAC infoata
