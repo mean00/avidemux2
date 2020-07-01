@@ -17,6 +17,7 @@
 #include "ADM_videoProcess.h"
 #include "fourcc.h"
 #include "ADM_bitstream.h"
+#include "ADM_coreUtils.h"
 /**
     \fn ADM_videoStreamProcess
 */
@@ -31,10 +32,10 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
     ADM_info("[StreamProcess] Stream %" PRIu32"x%" PRIu32", codec : %s\n",width,height,fcc);
     fourCC=fourCC::get((uint8_t *)fcc);
     frameIncrement=encoder->getFrameIncrement();
-    float f=encoder->getFrameIncrement();
-    if(f) f=1000000000./f;
-        else f=25000;
-    averageFps1000=(uint32_t)f;
+    if(frameIncrement)
+        averageFps1000=ADM_Fps1000FromUs(frameIncrement);
+    else
+        averageFps1000=25000;
     timeBaseDen=encoder->getTimeBaseDen();
     timeBaseNum=encoder->getTimeBaseNum();
     printf("[StreamProcess] Average FPS1000=%" PRIu32", timebase: %" PRIu32" / %" PRIu32"\n",averageFps1000,timeBaseNum,timeBaseDen);
