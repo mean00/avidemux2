@@ -68,6 +68,8 @@ TimeIncrementType fpsTable[]=
 {
     {  40000,40000,1000,25000},
     {  20000,20000,1000,50000},
+    {  16661,16671,1000,60000},
+    {  16678,16688,1001,60000},
     {  33360,33371,1001,30000},
     {  41700,41710,1001,24000},
 };
@@ -85,6 +87,13 @@ bool usSecondsToFrac(uint64_t useconds, int *n, int *d, int limit)
         TimeIncrementType *t=fpsTable+i;
         if( useconds>=t->mn && useconds<=t->mx)
         {
+            if(t->d>limit)
+            {
+                if(t->d%t->n) break;
+                *n=1;
+                *d=t->d/t->n;
+                return true;
+            }
             *n=t->n;
             *d=t->d;
             return true;

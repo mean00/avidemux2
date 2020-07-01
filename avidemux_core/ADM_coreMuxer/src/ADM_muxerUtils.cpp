@@ -40,6 +40,12 @@ void  rescaleFps(uint32_t fps1000, AVRational *rational)
         rational->den=30000;
         break;
     }
+    case 59940 :
+    {
+        rational->num=1001;
+        rational->den=60000;
+        break;
+    }
     default:
     rational->num=1000;
     rational->den=fps1000;

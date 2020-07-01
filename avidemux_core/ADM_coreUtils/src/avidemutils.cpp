@@ -332,6 +332,13 @@ double f;
 uint32_t ADM_Fps1000FromUs(uint64_t us)
 {
     if(us<1000) return 1000;
+    // Avoid accumulation of rounding errors for std fps
+#define KNOW(x,y,z) if(us>=x && us<=y) return z;
+    KNOW(16666,16667,60000)
+    KNOW(16683,16684,59940)
+    KNOW(33333,33334,30000)
+    KNOW(33366,33367,29970)
+#undef KNOW
     double f;
     f=us;
     f=1000000./f;
