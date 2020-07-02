@@ -243,15 +243,29 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
             parser->readBin(readBuffer+rpt,size-3);
-            uint32_t nalSize=ADM_getNalSizeH264(_tracks[0].extraData, _tracks[0].extraDataLen);
+            // Deal with Matroska files containing Annex-B type of H.264 stream
+            bool AnnexB=false;
+            if(!_tracks[0].extraDataLen && rpt+size > 3 && !readBuffer[0] && !readBuffer[1])
+            {
+                uint32_t mark=(readBuffer[2] << 8) + readBuffer[3];
+                if(mark == 1 || (mark > 0xFF && mark < 0x200 && rpt+size-3 != mark+4))
+                    AnnexB=true;
+            }
+            uint32_t nalSize=0;
+            if(_tracks[0].extraDataLen)
+                nalSize=ADM_getNalSizeH264(_tracks[0].extraData, _tracks[0].extraDataLen);
             ADM_SPSInfo *info=(ADM_SPSInfo *)_tracks[0].infoCache;
             uint8_t *sps=_tracks[0].paramCache;
             uint32_t spsLen=_tracks[0].paramCacheSize;
             // do we have inband SPS?
             uint8_t buf[MAX_H264_SPS_SIZE];
-            uint32_t inBandSpsLen=getRawH264SPS(readBuffer, rpt+size-3, nalSize, buf, MAX_H264_SPS_SIZE);
+            uint32_t inBandSpsLen=0;
+            if(!AnnexB)
+                inBandSpsLen=getRawH264SPS(readBuffer, rpt+size-3, nalSize, buf, MAX_H264_SPS_SIZE);
+            else
+                inBandSpsLen=getRawH264SPS_startCode(readBuffer, rpt+size-3, buf, MAX_H264_SPS_SIZE);
             bool match=true;
-            if(inBandSpsLen)
+            if(inBandSpsLen > 1) // else likely misdetected Annex-B start code
             {
                 if(inBandSpsLen!=spsLen)
                     ADM_warning("SPS length mismatch: %u (old) vs %u (new)\n",spsLen,inBandSpsLen);
@@ -296,7 +310,10 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                     _tracks[0].paramCacheSize=inBandSpsLen;
                 }
             }
-            extractH264FrameType(readBuffer, rpt+size-3, nalSize, &flags, NULL, info, &_H264Recovery);
+            if(AnnexB)
+                extractH264FrameType_startCode(readBuffer, rpt+size-3, &flags, NULL, info, &_H264Recovery);
+            else
+                extractH264FrameType(readBuffer, rpt+size-3, nalSize, &flags, NULL, info, &_H264Recovery);
             if(flags & AVI_KEY_FRAME)
             {
                 printf("[MKV/H264] Frame %" PRIu32" is a keyframe\n",(uint32_t)Track->index.size());
