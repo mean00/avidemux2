@@ -1093,7 +1093,7 @@ uint32_t getRawH264SPS_startCode(uint8_t *data, uint32_t len, uint8_t *dest, uin
 
     uint8_t *head = data;
     uint8_t *tail = head + len;
-    uint8_t stream;
+    uint8_t stream = 0;
     uint32_t hnt = 0xffffffff;
     int counter = 0, length = 0;
     bool last = false;
