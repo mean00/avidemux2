@@ -195,6 +195,7 @@ uint8_t mkvHeader::open(const char *name)
         ADM_info("Track %" PRIu32" has an index size of %d entries\n",i,_tracks[i].index.size());
 
     int last=_tracks[0].index.size();
+#if 0
     if(isVC1Compatible(_videostream.fccHandler))
     {
         mkvTrak *vid=_tracks;
@@ -203,6 +204,7 @@ uint8_t mkvHeader::open(const char *name)
         for(int i=1;i<last-1;i++)
             vid->index[i].Pts=ADM_NO_PTS;
     }
+#endif
   // Delay frames + recompute frame duration
 // now that we have a good frameduration and max pts dts difference, we can set a proper DTS for all video frame
     uint32_t ptsdtsdelta, mindelta;
@@ -216,56 +218,9 @@ uint8_t mkvHeader::open(const char *name)
     mkvTrak *vid=_tracks;
     if(hasBframe==true) // Try to compute a sane DTS knowing the PTS and the DTS/PTS delay
     {
-        bool useSortedPtsToSetDts=false;
-        int bumped=0;
-        for(int i=1;i<last;i++)
-        {
-            uint64_t pts;
-            pts=vid->index[i].Pts;
-            lastDts+=increment; // This frame dts with no correction
-            if(pts==ADM_NO_PTS)
-            {
-                vid->index[i].Dts=lastDts;
-                continue;
-            }
-            uint64_t limitDts=0;
-            if(vid->index[i].Pts>ptsdtsdelta)
-                limitDts=vid->index[i].Pts-ptsdtsdelta;
+        setDtsFromListOfSortedPts();
 
-#define DTS_BUMPED_THRESHOLD 10
-
-            if(lastDts<limitDts)
-            {
-                if(i==1)
-                {
-                    lastDts = (vid->index[0].Pts-ptsdtsdelta>0)? vid->index[0].Pts-ptsdtsdelta : 0;
-                    vid->index[0].Dts = lastDts;
-                    lastDts+=increment;
-                }
-                if(limitDts-lastDts>1000) // not just a rounding error
-                {
-                    ADM_warning("Bumping DTS by %" PRIu64" ms to keep PTS/DTS delta within limits for frame %d\n",(limitDts-lastDts)/1000,i);
-                    lastDts=limitDts;
-                    bumped++;
-                    if(bumped>DTS_BUMPED_THRESHOLD)
-                    {
-                        ADM_warning("Default time increment is probably too low, resorting to direct mapping.\n");
-                        useSortedPtsToSetDts=true;
-                        break;
-                    }
-                }
-            }
-            vid->index[i].Dts=lastDts;
-        }
-        if(useSortedPtsToSetDts)
-        {
-            setDtsFromListOfSortedPts();
-        }
-        // Check that we have PTS>=DTS also
-        uint64_t enforcePtsGreaterThanDts;
-        bool secondTry=false;
-_again:
-        enforcePtsGreaterThanDts=0;
+        uint64_t enforcePtsGreaterThanDts=0;
         int frmeMaxDlta=-1;
         for(int i=0;i<last;i++)
         {
@@ -282,17 +237,6 @@ _again:
         if(enforcePtsGreaterThanDts)
         {
             ADM_info("Have to delay by %" PRIu64" us detected for frame %d so that PTS>DTS\n",enforcePtsGreaterThanDts,frmeMaxDlta);
-            if(enforcePtsGreaterThanDts>ptsdtsdelta)
-            {
-                ADM_warning("The delay is implausibly high. The calculated frame rate is probably too low.\n");
-                if(!secondTry)
-                {
-                    setDtsFromListOfSortedPts();
-                    ADM_warning("Retrying with direct mapping.\n");
-                    secondTry=true;
-                    goto _again;
-                }
-            }
             for(int i=0;i<_nbAudioTrack+1;i++)
                 delayTrack(i,&(_tracks[i]),enforcePtsGreaterThanDts);
         }
@@ -460,7 +404,6 @@ bool mkvHeader::setDtsFromListOfSortedPts(void)
             }
         }
     }
-    _videostream.dwScale=1; // FIXME: check dwRate
     return true;
 }
 /**
@@ -471,11 +414,19 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
 {
   mkvTrak *track=_tracks;
   int nb=track->index.size();
+  ADM_assert(den);
   double dHalf=(500000.*(double)num)/((double)den);
   int half=dHalf-1; // half interval in us
   int first=0;
   while(  track->index[first].Pts==ADM_NO_PTS && first<nb) first++; // we should have some at least
   uint64_t zero= track->index[first].Pts;
+  {
+    double dmultiple=zero+half;
+    dmultiple*=den;
+    dmultiple/=(1000000.*(double)num);
+    zero=((uint64_t)dmultiple*1000000*num)/den;
+    track->index[first].Pts=zero;
+  }
   ADM_info("Num=%d Den=%d half=%d zero=%d first=%d\n",num,den,half,(int)zero,first);
   for(int i=first+1;i<nb;i++)
   {
@@ -503,7 +454,6 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
   f/=den;
   f+=0.49;
   track->_defaultFrameDuration=f;
-  _mainaviheader.dwMicroSecPerFrame=0; // perfectly regular
   return true;
 }
 /**
@@ -703,6 +653,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
               num=fr->num;
               den=fr->den;
               deviation=deviationStd;
+              skipped=stdSkip;
               ADM_info("Std frame rate is equal or better\n");
             }
         }
@@ -713,6 +664,15 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     {
         ADM_info("We are within margin, recomputing timestamp with exact value (%d vs %d)\n",num,den);
         enforceFixedFrameRate(num,den);
+        if(!skipped)
+        {
+            ADM_info("Enforcing constant frame rate.\n");
+            _mainaviheader.dwMicroSecPerFrame=0; // perfectly regular
+        }else
+        {
+            ADM_info("Variable frame rate with time base %d/%d\n",num,den);
+            _mainaviheader.dwMicroSecPerFrame=track->_defaultFrameDuration;
+        }
         // do it again, the old may not be valid 
         // Search minimum and maximum between 2 frames
         // the minimum will give us the maximum fps
@@ -738,14 +698,14 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     }else
     {
-        ADM_info("New framerate values : %d:%d\n",num,den);
-        _videostream.dwScale=num;
-        _videostream.dwRate=den;
+        ADM_info("Variable frame rate, using 1/90000 time base.\n");
+        _videostream.dwScale=1;
+        _videostream.dwRate=90000;
         double f=num;
         f=f*1000000.;
         f/=den;
         f+=0.49;
-        track->_defaultFrameDuration=_mainaviheader.dwMicroSecPerFrame=f;
+        track->_defaultFrameDuration=_mainaviheader.dwMicroSecPerFrame=(uint32_t)f;
     }
 
     ADM_info("New default duration    %" PRId64" us\n",track->_defaultFrameDuration);

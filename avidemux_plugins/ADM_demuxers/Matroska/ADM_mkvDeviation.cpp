@@ -31,7 +31,7 @@ mkvDeviation::~mkvDeviation()
     sorted=NULL;    
 }
 
-int comp64_t (const void * elem1, const void * elem2) 
+static int comp64_t (const void * elem1, const void * elem2)
 {
     uint64_t left=*(uint64_t *)elem1;
     uint64_t right=*(uint64_t *)elem2;
@@ -107,7 +107,7 @@ int mkvDeviation::computeDeviation(int num, int den,int &nbSkipped)
     {
         //printf("Skipped %d %d\n",i,jump);
         nbSkipped+=jump;
-        sumOfError=sumOfError+(1+jump)*(1+jump)*coeff*coeff;
+        //sumOfError=sumOfError+(1+jump)*(1+jump)*coeff*coeff;
         lastValidFrame=multiple;
         continue;
     }
@@ -124,8 +124,8 @@ int mkvDeviation::computeDeviation(int num, int den,int &nbSkipped)
     }
   }
 
-  double scale=nbValid;
-  sumOfError/=scale*scale;
+  sumOfError/=(double)nbValid;
+  sumOfError=sqrt(sumOfError);
   ADM_info("Den=%d Num=%d  sum of error=%d, multiple=%d\n",den,num,(int)sumOfError,multipleError);
   ADM_info("MinDelta=%d maxDelta=%d skipped=%d\n",minDelta,maxDelta,nbSkipped);
   return (int)sumOfError  ;
