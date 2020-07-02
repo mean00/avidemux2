@@ -237,6 +237,7 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
             ADM_warning("getFrame failed for frame %" PRIu32"\n",frame);
             drain=true;
             vid->decoder->setDrainingState(true);
+            img.dataLength=0;
         }else
         {
             endOfStream=false;
