@@ -270,9 +270,6 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         t->language=entry.language;
         t->wavHeader.bitspersample=16;
         t->wavHeader.byterate=0; // to be set later
-        t->extraData=entry.extraData;
-        t->extraDataLen=entry.extraDataLen;
-        ADM_info("This track has %d bytes of  extradata\n",t->extraDataLen);
         // MS/ACM : ACMX
         if(0x100001==entry.fcc)
         {
@@ -316,8 +313,6 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                 ADM_info("Recreating aac extradata..\n");
                 entry.extraData = new uint8_t[5];
                 createAACExtraData(entry.codecId.c_str(),&entry);
-                t->extraData=entry.extraData;
-                t->extraDataLen=entry.extraDataLen;
             }else
             {
                 // check AAC infoata
@@ -351,6 +346,9 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
             t->headerRepeatSize=entry.headerRepeatSize;
             memcpy(t->headerRepeat,entry.headerRepeat,hdr);
         }
+        t->extraData=entry.extraData;
+        t->extraDataLen=entry.extraDataLen;
+        ADM_info("This track has %d bytes of extradata\n",t->extraDataLen);
 
         _nbAudioTrack++;
         return 1;
