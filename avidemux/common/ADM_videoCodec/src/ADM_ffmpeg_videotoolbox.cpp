@@ -128,7 +128,7 @@ decoderFFVT::~decoderFFVT()
 */
 bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
 {
-    if(!in->dataLength ) // Null frame, silently skipped
+    if(!_parent->getDrainingState() && !in->dataLength) // Null frame, silently skipped
     {
         out->_noPicture = 1;
         out->Pts=ADM_COMPRESSED_NO_PTS;

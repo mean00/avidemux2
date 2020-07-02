@@ -394,7 +394,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 
   //printf("Frame size : %d\n",in->dataLength);
 
-    if (in->dataLength == 0 && !_allowNull) // Null frame, silently skipped
+    if (!_drain && in->dataLength == 0 && !_allowNull) // Null frame, silently skipped
     {
         printf ("[Codec] null frame\n");
         out->_noPicture = 1;

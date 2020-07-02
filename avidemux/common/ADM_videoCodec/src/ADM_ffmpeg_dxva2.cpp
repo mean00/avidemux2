@@ -470,7 +470,7 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
             out->refType=ADM_HW_NONE;
     }
 
-    if (!in->dataLength )	// Null frame, silently skipped
+    if(!_parent->getDrainingState() && !in->dataLength) // Null frame, silently skipped
     {
         out->_noPicture = 1;
         out->Pts=ADM_COMPRESSED_NO_PTS;
