@@ -250,6 +250,7 @@ ADM_muxer *ADM_MuxerSpawnFromIndex(int index)
 extern "C"
 {
     #include "libavformat/avformat.h"
+    #include "libavutil/mem.h"
 };
 
 void ADM_lavFormatInit(void)
@@ -279,6 +280,7 @@ void ADM_lavFormatInit(void)
                 {
                         found=true;
                 }
+                av_freep(&prot);
          } 
          if(!found)
          {
