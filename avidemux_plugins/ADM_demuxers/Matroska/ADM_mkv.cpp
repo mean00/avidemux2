@@ -36,7 +36,7 @@ static const frameRateStruct candidateFrameRate[]=
    {40000,1000,25000}, // 25 fps
    {33367,1001,30000}, // 30 NTSC
    //{20853,2000,24000}, // 24*2
-   {20854,2002,24000}, // 23976*2
+   {20854,1001,48000}, // 23976*2
    {20000,1000,50000}, // 50
    {16683,1001,60000}, // 60 NTSCs
    {16667,1000,60000} // 60 fps
@@ -637,6 +637,8 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
                 deviation=deviationMinDelta;
                 skipped=minDeltaSkip;
                 ADM_info("Min delta is better\n");
+                if(stdFrameRate==-1)
+                    stdFrameRate=getStdFrameRate(minDelta);
             }
         }
 
