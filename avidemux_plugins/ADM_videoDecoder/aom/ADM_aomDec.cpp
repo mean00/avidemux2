@@ -70,6 +70,14 @@ decoderAom::~decoderAom()
     }
 }
 /**
+    \fn flush
+*/
+bool decoderAom::flush(void)
+{
+    drain=false;
+    return true;
+}
+/**
     \fn uncompress
 */
 bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)

@@ -30,6 +30,7 @@ public:
     virtual bool uncompress(ADMCompressedImage *in, ADMImage *out);
     virtual void setDrainingState(bool yesno) { drain=yesno; }
     virtual bool getDrainingState(void) { return drain; }
+    virtual bool flush(void);
     virtual bool bFramePossible (void) { return false; }
     virtual const char *getDecoderName(void) { return "libaom"; }
     virtual bool initializedOk(void) { return alive; }
