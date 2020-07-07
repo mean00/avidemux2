@@ -1176,7 +1176,6 @@ bool tsPacketLinearTracker::collectStats(void)
 
     while(count<max && stillOk())
     {
-        found=0;
         count++;
         readi8();
         for(i=0; i<totalTracks; i++)
