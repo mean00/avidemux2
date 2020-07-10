@@ -27,6 +27,7 @@ friend class ADM_vaSurface;
 protected:
 protected:
                     bool          alive;
+                    void          *hwctx;
                     libvaContext  vaPool;
                     VASurfaceID   initSurfaceID[ADM_DEFAULT_SURFACE];
 
