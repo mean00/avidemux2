@@ -315,12 +315,8 @@ bool    ADMImage::convertFromNV12(uint8_t *yData, uint8_t *uvData, int strideY, 
         int sstride=strideY;
         uint8_t *dst=GetWritePtr(PLANAR_Y);
         uint8_t *src=yData;
-        for(int y=0;y<_height;y++)
-        {
-            memcpy(dst,src,w);
-            src+=sstride;
-            dst+=dstride;
-        }
+
+        BitBlit(dst,dstride,src,sstride,w,h);
 
         //U & V
         sstride=strideUV;

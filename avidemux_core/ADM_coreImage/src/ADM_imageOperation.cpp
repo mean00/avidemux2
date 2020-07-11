@@ -21,7 +21,6 @@
 */
 bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
 {
-//#warning handle swap
         // Sanity check
         ADM_assert(src->_width==_width);
         ADM_assert(src->_height==_height);
@@ -39,12 +38,25 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
                 dest=this->GetWritePtr((ADM_PLANE)plane);
                 sourceStride=src->GetPitch((ADM_PLANE)plane);
                 destStride=this->GetPitch((ADM_PLANE)plane);
-                int opHeight=_height;
-                int opWidth=_width;
+                uint32_t opHeight=_height;
+                uint32_t opWidth=_width;
                 if(plane!=PLANAR_Y)
                 {
                     opHeight>>=1;
                     opWidth>>=1;
+                    if(swap)
+                    {
+                        if(plane==PLANAR_U)
+                        {
+                            dest=this->GetWritePtr(PLANAR_V);
+                            destStride=this->GetPitch(PLANAR_V);
+                        }
+                        if(plane==PLANAR_V)
+                        {
+                            dest=this->GetWritePtr(PLANAR_U);
+                            destStride=this->GetPitch(PLANAR_U);
+                        }
+                    }
                 }
                 BitBlit(dest, destStride,source,sourceStride,opWidth, opHeight);
             }

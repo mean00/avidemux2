@@ -373,9 +373,8 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
 decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
 : ADM_acceleratedDecoderFF(avctx,parent)
 {
-    
-    
     alive=false;
+    hwctx=NULL;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     
     for(int i=0;i<ADM_DEFAULT_SURFACE;i++)
@@ -400,6 +399,7 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
     // create decoder
     vaapi_context *va_context=new vaapi_context;
     memset(va_context,0,sizeof(*va_context)); // dangerous...
+    hwctx=(void *)va_context;
     
     VAProfile profile; 
     switch(avctx->codec_id)
@@ -432,8 +432,6 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
     if(va_context->context_id==VA_INVALID)
     {
         ADM_warning("Cannot create decoder\n");
-        delete va_context;
-        va_context=NULL;
         alive=false;
         return;
     }
@@ -470,6 +468,10 @@ decoderFFLIBVA::~decoderFFLIBVA()
         delete vaPool.freeSurfaceQueue[i];
     }
     vaPool.freeSurfaceQueue.clear();
+    vaapi_context *v=(vaapi_context *)hwctx;
+    if(v)
+        delete v;
+    hwctx=NULL;
     imageMutex.unlock();
 }
 /**

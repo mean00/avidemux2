@@ -20,6 +20,8 @@ extern "C" {
 
 #include "../include/ADM_coreVideoToolbox.h"
 
+#define PREFER_NV12 0
+
 static AVVideotoolboxContext *vtctx;
 
 int admCoreVideoToolbox::copyData(AVCodecContext *s, AVFrame *src, ADMImage *dest)
@@ -33,15 +35,19 @@ int admCoreVideoToolbox::copyData(AVCodecContext *s, AVFrame *src, ADMImage *des
 
     switch (pixel_format)
     {
+#if PREFER_NV12
+        case kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange:
+#else
         case kCVPixelFormatType_420YpCbCr8Planar:
-            dest->_colorspace = ADM_COLOR_YV12; // we handle only YUV420P for now
-            //ADM_info("pixel format: YUV420P (%d)\n",pixel_format);
+#endif
+            //ADM_info("pixel format: %s (%d)\n", (pixel_format == kCVPixelFormatType_420YpCbCr8Planar)? "YUV420P" : "NV12", pixel_format);
             break;
         default:
             ADM_error("%s: Unsupported pixel format: %d\n", av_fourcc2str(s->codec_tag), pixel_format);
             return AVERROR(ENOSYS);
     }
 
+    dest->_colorspace = ADM_COLOR_YV12; // we handle only YUV420P for now
     dest->_width  = CVPixelBufferGetWidth(pixbuf);
     dest->_height = CVPixelBufferGetHeight(pixbuf);
 
@@ -66,12 +72,17 @@ int admCoreVideoToolbox::copyData(AVCodecContext *s, AVFrame *src, ADMImage *des
         linesize[0] = CVPixelBufferGetBytesPerRow(pixbuf);
     }
 
-    dest->_planes[0] = data[0];
-    dest->_planes[1] = data[2];
-    dest->_planes[2] = data[1];
-    dest->_planeStride[0] = linesize[0];
-    dest->_planeStride[1] = linesize[2];
-    dest->_planeStride[2] = linesize[1];
+    ADMImageRefWrittable ref(dest->_width, dest->_height);
+    for (i = 0; i < planes; i++)
+    {
+        ref._planes[i] = data[i];
+        ref._planeStride[i] = linesize[i];
+    }
+#if PREFER_NV12
+    dest->convertFromNV12(ref._planes[0], ref._planes[1], ref._planeStride[0], ref._planeStride[1]);
+#else
+    dest->duplicateMacro(&ref, true);
+#endif
 
     CVPixelBufferUnlockBaseAddress(pixbuf, kCVPixelBufferLock_ReadOnly);
 
@@ -94,7 +105,9 @@ int admCoreVideoToolbox::initVideoToolbox(AVCodecContext *s)
 
     AVVideotoolboxContext *vtctx = av_videotoolbox_alloc_context();
     ADM_assert(vtctx);
+#if PREFER_NV12 == 0
     vtctx->cv_pix_fmt_type = kCVPixelFormatType_420YpCbCr8Planar; // lavc defaults to NV12, request YUV420P
+#endif
     ret = av_videotoolbox_default_init2(s, vtctx);
 
     if (ret < 0)
