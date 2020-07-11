@@ -77,7 +77,6 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
    
     	ADMImageDefault *image=new ADMImageDefault(w,h);        
         ADM_colorspace sourceFormat=source->_colorspace;   
-        bool swap=false;
         
         if(ADM_COLOR_RGB32A==sourceFormat)
         {
@@ -102,22 +101,10 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
                     inAlpha+=4;
                 }
             }
-            swap=true;
         }
-
-        if(ADM_COLOR_RGB24==sourceFormat || ADM_COLOR_BGR24==sourceFormat)
-            swap=true;
-
         ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);
         converter.convertImage(source,image);
 
-        if(swap)
-        {
-            uint8_t **s=image->_planes,*v;
-            v=s[1];
-            s[1]=s[2];
-            s[2]=v;
-        }
         return image;
 }
 typedef struct 
