@@ -781,7 +781,7 @@ void        admLibVA::destroySurface( VASurfaceID surface)
  * @param img
  * @return
  */
-bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMColorScalerSimple *color)
+bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
 {
     int xError;
     bool r=false;
@@ -872,13 +872,12 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMCol
                 case VA_FOURCC_P010:
 #endif                    
                 {
+#if 0
                     dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);
-                    break;
-                }
-#ifndef VA_10BITS_IS_ACTUALL_8BITS                
-                case VA_FOURCC_P010: // It is actually NV12 style All Y, then U/V interleaved
-                {
-                    ADM_assert(color);
+#else
+                    ADMColorScalerSimple *color=src->fromNv12ToYv12;
+                    if(!color)
+                        color = new ADMColorScalerSimple(src->w, src->h, ADM_COLOR_NV12, ADM_COLOR_YV12);
                     ADMImageRef ref(dest->_width,dest->_height);
                     for(int i=0;i<2;i++)
                     {
@@ -887,7 +886,27 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMCol
                     }
                     ref._planes[2]=NULL;
                     ref._planeStride[2]=0;
-                    color->convertImage(&ref,dest);                    
+                    color->convertImage(&ref,dest);
+                    src->fromNv12ToYv12=color;
+#endif
+                    break;
+                }
+#ifndef VA_10BITS_IS_ACTUALL_8BITS                
+                case VA_FOURCC_P010: // It is actually NV12 style All Y, then U/V interleaved
+                {
+                    ADMColorScalerSimple *color=src->color10bits;
+                    if(!color)
+                        color = new ADMColorScalerSimple(src->w, src->h, ADM_COLOR_NV12_10BITS, ADM_COLOR_YV12);
+                    ADMImageRef ref(dest->_width,dest->_height);
+                    for(int i=0;i<2;i++)
+                    {
+                            ref._planes[i]= ptr+vaImage.offsets[i];
+                            ref._planeStride[i]=vaImage.pitches[i];
+                    }
+                    ref._planes[2]=NULL;
+                    ref._planeStride[2]=0;
+                    color->convertImage(&ref,dest);
+                    src->color10bits=color;
                     break;
                 }
 #endif                
@@ -1013,7 +1032,7 @@ bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
  * @param src
  * @return
  */
-bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADMColorScalerSimple *color)
+bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADM_vaSurface *face)
 {
     int xError;
     CHECK_WORKING(false);
@@ -1040,7 +1059,10 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADMColorScalerSi
                 break;
         case VA_FOURCC_P010: // It is actually NV12 style All Y, then U/V interleaved
                 {
-                    ADM_assert(color);
+                    ADM_assert(face);
+                    ADMColorScalerSimple *color=face->color10bits;
+                    if(!color)
+                        color = new ADMColorScalerSimple(src->_width, src->_height, ADM_COLOR_NV12_10BITS, ADM_COLOR_YV12);
                     ADMImageRef ref(src->_width,src->_height);
                     for(int i=0;i<2;i++)
                     {
@@ -1049,12 +1071,32 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADMColorScalerSi
                     }
                     ref._planes[2]=NULL;
                     ref._planeStride[2]=0;
-                    color->convertImage(&ref,src);                    
+                    color->convertImage(&ref,src);
+                    face->color10bits=color;
                     break;
                 }                
         case VA_FOURCC_NV12:
-                        src->convertFromNV12(  ptr+dest->offsets[0], ptr+dest->offsets[1],dest->pitches[0],dest->pitches[1]);
-                        break;
+                {
+#if 0
+                    src->convertFromNV12(  ptr+dest->offsets[0], ptr+dest->offsets[1],dest->pitches[0],dest->pitches[1]);
+#else
+                    ADM_assert(face);
+                    ADMColorScalerSimple *color=face->fromNv12ToYv12;
+                    if(!color)
+                        color = new ADMColorScalerSimple(src->_width, src->_height, ADM_COLOR_NV12, ADM_COLOR_YV12);
+                    ADMImageRef ref(src->_width,src->_height);
+                    for(int i=0;i<2;i++)
+                    {
+                            ref._planes[i]= ptr+dest->offsets[i];
+                            ref._planeStride[i]=dest->pitches[i];
+                    }
+                    ref._planes[2]=NULL;
+                    ref._planeStride[2]=0;
+                    color->convertImage(&ref,src);
+                    face->fromNv12ToYv12=color;
+#endif
+                    break;
+                }
         default: ADM_assert(0);
     }
     CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));
@@ -1255,7 +1297,8 @@ bool ADM_vaImage_cleanupCheck(void)
     this->w=w;
     this->h=h;
     image=admLibVA::allocateImage(w,h);
-    color10bits=new ADMColorScalerSimple(w,h,ADM_COLOR_NV12_10BITS,ADM_COLOR_YV12);
+    fromNv12ToYv12=NULL;
+    color10bits=NULL;
 }
 /**
  * 
@@ -1271,6 +1314,11 @@ ADM_vaSurface:: ~ADM_vaSurface()
      {
          admLibVA::destroyImage(image);
          image=NULL;
+     }
+     if(fromNv12ToYv12)
+     {
+         delete fromNv12ToYv12;
+         fromNv12ToYv12=NULL;
      }
      if(color10bits)
      {
@@ -1304,13 +1352,13 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
     case   admLibVA::ADM_LIBVA_NONE: ADM_warning("No transfer supported\n");return false;break;
     case   admLibVA::ADM_LIBVA_DIRECT:
                 //printf("Direct\n");
-                return admLibVA::surfaceToAdmImage(dest,this,color10bits);
+                return admLibVA::surfaceToAdmImage(dest,this);
     case   admLibVA::ADM_LIBVA_INDIRECT_NV12:
     case   admLibVA::ADM_LIBVA_INDIRECT_YV12:
                 //printf("InDirect\n");
                 ADM_assert(this->image);
                 if(admLibVA::surfaceToImage(this,this->image))
-                        return  admLibVA::downloadFromImage(dest,this->image,color10bits);
+                        return  admLibVA::downloadFromImage(dest,this->image,this);
                 return false;
                 break;
     default:ADM_assert(0);

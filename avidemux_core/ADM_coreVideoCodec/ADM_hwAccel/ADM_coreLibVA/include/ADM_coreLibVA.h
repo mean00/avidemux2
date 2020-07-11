@@ -79,7 +79,7 @@ static bool        fillContext(VAProfile profile,vaapi_context *c);
 
 // Indirect access through image
 static bool        uploadToImage(ADMImage *src,VAImage *dest );
-static bool        downloadFromImage(ADMImage *src,VAImage *dest ,ADMColorScalerSimple *color=NULL);
+static bool        downloadFromImage(ADMImage *src,VAImage *dest,ADM_vaSurface *face=NULL);
 static bool        imageToSurface(VAImage *src,ADM_vaSurface *dest);
 static bool        surfaceToImage(ADM_vaSurface *dst,VAImage *src );
 
@@ -90,7 +90,7 @@ static bool        putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,
 // Direct access
 
 static bool        admImageToSurface( ADMImage *src,ADM_vaSurface *dest);
-static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMColorScalerSimple *color=NULL);
+static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 
 //
 static bool        supported(VAProfile profile);
@@ -121,6 +121,7 @@ public:
     int                 refCount;
     VAImage             *image;
     int                 w,h;
+    ADMColorScalerSimple *fromNv12ToYv12;
     ADMColorScalerSimple *color10bits;
     ADM_vaSurface(int w, int h);    
     ~ADM_vaSurface();
