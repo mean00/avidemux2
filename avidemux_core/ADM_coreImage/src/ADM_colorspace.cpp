@@ -91,6 +91,7 @@ static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
     case ADM_COLOR_YUV422: return AV_PIX_FMT_YUYV422;
     case ADM_COLOR_UYVY422: return AV_PIX_FMT_UYVY422;
     case ADM_COLOR_YV12: return AV_PIX_FMT_YUV420P;
+    case ADM_COLOR_NV12: return AV_PIX_FMT_NV12;
     case ADM_COLOR_YUV422P: return AV_PIX_FMT_YUV422P;
     case ADM_COLOR_RGB555: return AV_PIX_FMT_RGB555LE;
     case ADM_COLOR_BGR555: return AV_PIX_FMT_BGR555LE;
@@ -152,6 +153,14 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcStride[0]=width;
             srcStride[1]=width>>1;
             srcStride[2]=width>>1;
+            break;
+    case ADM_COLOR_NV12:
+            srcData[0]=from;
+            srcData[1]=from+width*height;
+            srcData[2]=NULL;
+            srcStride[0]=width;
+            srcStride[1]=width;
+            srcStride[2]=0;
             break;
     case  ADM_COLOR_YUV422:
     case  ADM_COLOR_UYVY422:        
@@ -255,6 +264,13 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
     
     src[3]=sourceImage->GetReadPtr(PLANAR_ALPHA);
     dst[3]=destImage->GetWritePtr(PLANAR_ALPHA);
+
+    if(toColor==ADM_COLOR_YV12)
+    {
+        uint8_t *p=dst[1];
+        dst[1]=dst[2];
+        dst[2]=p;
+    }
     
     sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
     return true;
