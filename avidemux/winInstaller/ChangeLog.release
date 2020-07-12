@@ -7,7 +7,7 @@
 </head>
 <body>
     <div id="inner">
-        <h1>Changes in Avidemux (Legacy Compatibility Branch) v2.7.4 – v2.7.6</h1>
+        <h1>Changes in Avidemux (Legacy Compatibility Branch) v2.7.4 – v2.7.7</h1>
         <table>
             <tr><td>New Feature:</td><td>Detect and warn when cut points in HEVC video streams may result in grave playback issues despite being on keyframes</td></tr>
             <tr><td>Encoder:</td><td>Extend configuration options for NVENC-based H.264 and HEVC encoders, add 2-pass mode</td></tr>
@@ -19,10 +19,12 @@
             <tr><td>Muxer:</td><td>Fix saving to network shares on Windows using the Mp4 muxer when index should be moved to the start of the file</td></tr>
             <tr><td>Muxer:</td><td>Support LPCM audio in the Mp4 muxer by silently switching to the MOV muxing mode</td></tr>
             <tr><td>Muxer:</td><td>Add support for Vorbis audio to the Mp4 muxer</td></tr>
+            <tr><td>Filter:</td><td>Fix subtitle files with non-ASCII characters in path rejected on Windows</td></tr>
             <tr><td>Filter:</td><td>Allow to toggle rubber band visibility in "Crop" and "Blacken Borders" video filters</td></tr>
             <tr><td>Filter:</td><td>Fix keyboard input in "Resize" video filter by recalculating values only on moving focus to another field or on accepting dialog</td></tr>
             <tr><td>Audio:</td><td>Add HE-AAC and HE-AACv2 profiles to the FDK AAC encoder plugin</td></tr>
             <tr><td>Audio:</td><td>Support external audio tracks in DTS format</td></tr>
+            <tr><td>UI:</td><td>Fix issue of file dialog on Windows expecting user to supply a fake filename extension when saving a selection as JPEG images</td></tr>
             <tr><td>UI:</td><td>Fix navigation slider with RTL locales</td></tr>
             <tr><td>UI:</td><td>Restore the shutdown option in encoding dialog on Windows</td></tr>
             <tr><td>Scripting:</td><td>Add PTS query and keyframe seek methods to Python interface</td></tr>
