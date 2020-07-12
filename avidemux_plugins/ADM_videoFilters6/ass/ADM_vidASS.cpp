@@ -53,7 +53,7 @@ protected:
         bool            setup(void);
         bool            cleanup(void);
         ADMImage        *src;
-        
+        char            *buffer;
         bool            mergeOneImage(ASS_Image *img,ADMImage *target);
 public:
                             subAss(ADM_coreVideoFilter *previous,CONFcouple *conf);
@@ -77,16 +77,16 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   subAss,   // Class
                         QT_TRANSLATE_NOOP("ass","Hardcode ASS/SSA/SRT subtitles using libass.") // Description
                     );
 
-
+// 1 GiB should be enough
+#define SUB_FILE_SIZE_MAX ((1<<30)-1)
 
 #ifndef DIR_SEP
-# ifdef WIN32
-#   define DIR_SEP '\\'
-#   define DEFAULT_FONT_DIR "c:"
-# else
-#   define DIR_SEP '/'
-#   define DEFAULT_FONT_DIR "/usr/share/fonts/truetype/"
-# endif
+# define DIR_SEP '/'
+#endif
+#ifdef _WIN32
+# define DEFAULT_FONT_DIR "c:"
+#else
+# define DEFAULT_FONT_DIR "/usr/share/fonts/truetype/"
 #endif
 //*****************
 
@@ -96,18 +96,45 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   subAss,   // Class
 */
 const char *subAss::getConfiguration(void)
 {
-    static char buf[500];
+#define CONFLEN 300
+    static char buf[CONFLEN];
     buf[0]=0;
 
       sprintf((char *)buf," ASS/SSA Subtitles: ");
 
       const char *filename = param.subtitleFile.c_str();
+      int left = CONFLEN - strlen(buf) - 1;
+      bool shortened = false;
       if(filename)
       {
-          if(strrchr(filename, DIR_SEP) != NULL && *(strrchr(filename, DIR_SEP) + 1) != 0)
-              filename = strrchr(filename, DIR_SEP) + 1;
-          strncat(buf, filename, 49-strlen(buf));
-          buf[49] = 0;
+          if(strlen(filename) > left)
+          {   // try to shorten the filename by skipping the path
+              if(strrchr(filename, DIR_SEP) != NULL && *(strrchr(filename, DIR_SEP) + 1) != 0)
+              {
+                  filename = strrchr(filename, DIR_SEP) + 1;
+                  shortened = true;
+              }
+#ifdef _WIN32
+# undef DIR_SEP
+# define DIR_SEP '\\'
+              // on Windows, additionally check for backslash, but normally Qt uses slash everywhere
+              if(strrchr(filename, DIR_SEP) != NULL && *(strrchr(filename, DIR_SEP) + 1) != 0)
+              {
+                  filename = strrchr(filename, DIR_SEP) + 1;
+                  shortened = true;
+              }
+#endif
+              // hint that the path has been skipped
+              const char ell[5] = { '.', '.', '.', DIR_SEP, '\0' };
+              if(shortened && left > strlen(ell) + 4)
+              {
+                  strncat(buf, ell, strlen(ell));
+                  left -= strlen(ell);
+              }
+          }
+          strncat(buf, filename, left);
+          buf[CONFLEN - 1] = 0;
+#undef CONFLEN
       }else
       {
         strcat(buf," (no sub)");
@@ -127,6 +154,7 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
         param.displayAspectRatio = 0;
     }
     src = new ADMImageDefault(in->getInfo()->width, in->getInfo()->height);
+    buffer = NULL;
 
     /* ASS initialization */
     _ass_lib = NULL;
@@ -252,6 +280,11 @@ bool subAss::cleanup(void)
               ass_library_done(_ass_lib);
               _ass_lib = NULL;
         }
+        if(buffer)
+        {
+              free(buffer);
+              buffer = NULL;
+        }
         return true;
 }
 /**
@@ -321,7 +354,42 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
             }
         }
         ass_set_pixel_aspect(_ass_rend, par);
-       _ass_track = ass_read_file(_ass_lib, (char *)param.subtitleFile.c_str(), NULL);
+
+        FILE *fd;
+        int64_t fileSize = ADM_fileSize(param.subtitleFile.c_str());
+        if(fileSize <= 0 || fileSize > SUB_FILE_SIZE_MAX)
+        {
+            ADM_error("Cannot open %s for reading (%" PRId64")\n",param.subtitleFile.c_str(),fileSize);
+            goto fail;
+        }
+        buffer = (char *)malloc(fileSize + 1);
+        if(!buffer)
+        {
+            ADM_error("Cannot allocate %" PRId64" bytes of memory for subtitle file.\n",fileSize);
+            goto fail;
+        }
+        fd = ADM_fopen(param.subtitleFile.c_str(),"r");
+        if(!fd)
+        {
+            ADM_error("Cannot open %s for reading.\n",param.subtitleFile.c_str());
+            free(buffer);
+            buffer = NULL;
+            goto fail;
+        }
+        if(!fread(buffer, (size_t)fileSize, 1, fd))
+        {
+            ADM_error("Cannot read %s\n",param.subtitleFile.c_str());
+            fclose(fd);
+            fd = NULL;
+            free(buffer);
+            buffer = NULL;
+            goto fail;
+        }
+        buffer[fileSize] = 0;
+        ADM_info("%" PRId64" bytes of data copied to memory from '%s'\n", fileSize, param.subtitleFile.c_str());
+
+        _ass_track = ass_read_memory(_ass_lib, buffer, fileSize, NULL);
+fail:
         if(!_ass_track)
           GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","SSA Error"),QT_TRANSLATE_NOOP("ass","ass_read_file() failed for %s"),param.subtitleFile.c_str());
         return 1;
