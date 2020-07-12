@@ -164,8 +164,11 @@ void HandleAction_Save(Action action)
     break;
 
     case ACT_SAVE_BUNCH_OF_JPG:
-      GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select JPEG Sequence to Save"), (SELFILE_CB *)A_saveBunchJpg);
-    	break;
+    {
+      const char *defaultExtension="jpg";
+      GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select JPEG Sequence to Save"),defaultExtension,(SELFILE_CB *)A_saveBunchJpg);
+    }
+      break;
     case ACT_SAVE_BMP:
     {
       const char *defaultExtension="bmp";
