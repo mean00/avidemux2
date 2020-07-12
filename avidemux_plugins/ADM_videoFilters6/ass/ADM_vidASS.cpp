@@ -356,6 +356,7 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
         ass_set_pixel_aspect(_ass_rend, par);
 
         FILE *fd;
+        bool copied;
         int64_t fileSize = ADM_fileSize(param.subtitleFile.c_str());
         if(fileSize <= 0 || fileSize > SUB_FILE_SIZE_MAX)
         {
@@ -376,11 +377,12 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
             buffer = NULL;
             goto fail;
         }
-        if(!fread(buffer, (size_t)fileSize, 1, fd))
+        copied = !!fread(buffer, (size_t)fileSize, 1, fd);
+        fclose(fd);
+        fd = NULL;
+        if(!copied)
         {
             ADM_error("Cannot read %s\n",param.subtitleFile.c_str());
-            fclose(fd);
-            fd = NULL;
             free(buffer);
             buffer = NULL;
             goto fail;
