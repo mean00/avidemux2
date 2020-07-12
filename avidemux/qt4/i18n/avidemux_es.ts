@@ -378,27 +378,27 @@ Si solo copia el vídeo sin recodificarlo,
 <context>
     <name>DialogProcessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+26"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+33"/>
         <source>00:00:00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+51"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-19"/>
+        <location line="-70"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+6"/>
         <source>TimeLeft</source>
         <translation>Tiempo restante</translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+41"/>
         <source>ProcessImages</source>
         <translation>Imágenes procesadas</translation>
     </message>
@@ -408,7 +408,7 @@ Si solo copia el vídeo sin recodificarlo,
         <translation>Velocidad</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-14"/>
         <source>0 fps</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1335,10 +1335,10 @@ Si solo copia el vídeo sin recodificarlo,
         <location line="+5"/>
         <location filename="../../common/gui_save.cpp" line="+57"/>
         <location line="+10"/>
-        <location line="+292"/>
+        <location line="+296"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+430"/>
+        <location filename="../../common/gui_savenew.cpp" line="+432"/>
         <source>Audio</source>
         <translation>Audio</translation>
     </message>
@@ -1834,7 +1834,7 @@ Si solo copia el vídeo sin recodificarlo,
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="+48"/>
-        <location filename="../../common/gui_save.cpp" line="-328"/>
+        <location filename="../../common/gui_save.cpp" line="-332"/>
         <source>No audio track</source>
         <translation>No hay pistas de audio</translation>
     </message>
@@ -2167,7 +2167,7 @@ Is it running ?</source>
         <translation>Añadir tarea a la cola</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+16"/>
         <source>Select Workbench to Save</source>
         <translation>Seleccionar la zona de trabajo a guardar</translation>
     </message>
@@ -2178,12 +2178,12 @@ Is it running ?</source>
         <translation>Seleccionar archivo para guardar al audio</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+7"/>
         <source>Select JPEG Sequence to Save</source>
         <translation>Seleccionar secuencia JPEG a guardar</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+6"/>
         <source>Select BMP to Save</source>
         <translation>Seleccionar BMP a guardar</translation>
     </message>
@@ -2808,7 +2808,7 @@ Los vídeos guardados en modo de copia quedan corruptos en dicho punto.
         <translation>Problemas al inicializar el dispositivo de audio</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-601"/>
+        <location filename="../../common/gui_save.cpp" line="-605"/>
         <source>Audio encoder index out of bounds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2833,7 +2833,7 @@ Los vídeos guardados en modo de copia quedan corruptos en dicho punto.
         <translation>No se puede acceder a la base de datos. ¿Tiene el control de tareas en ejecución?</translation>
     </message>
     <message>
-        <location line="+239"/>
+        <location line="+243"/>
         <source>Function not implemented
 </source>
         <translation>Función no implementada
@@ -3210,7 +3210,7 @@ Try anyway?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+375"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+382"/>
         <source>Unknown</source>
         <translation>Desconocido</translation>
     </message>
@@ -3337,7 +3337,7 @@ Instalación incongruente</translation>
         <translation>No se puede compilar el sombreador</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+234"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+235"/>
         <source>Permission Error</source>
         <translation>Error de permisos</translation>
     </message>
@@ -3460,7 +3460,7 @@ Instalación incongruente</translation>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+208"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation>Archivo de _subtítulo (ASS/SSA):</translation>
     </message>
@@ -3495,7 +3495,7 @@ Instalación incongruente</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-114"/>
+        <location line="-142"/>
         <source>SSA/ASS/SRT</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3505,7 +3505,7 @@ Instalación incongruente</translation>
         <translation>Incrustar los subtítulos ASS/SSA/SRT usando libass.</translation>
     </message>
     <message>
-        <location line="+63"/>
+        <location line="+91"/>
         <source>Format ?</source>
         <translation>¿Formato?</translation>
     </message>
@@ -3552,7 +3552,7 @@ Instalación incongruente</translation>
         <translation>No se puede guardar el archivo convertido.</translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+61"/>
         <source>Fonts</source>
         <translation>Fuentes</translation>
     </message>
@@ -3564,7 +3564,7 @@ This message will not be displayed again.</source>
 Este mensaje no se mostrará de nuevo.</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+87"/>
         <source>SSA Error</source>
         <translation>Error de SSA</translation>
     </message>
@@ -5488,11 +5488,13 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
         <source>RC Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Preset:</source>
         <translation>Preajuste:</translation>
     </message>
@@ -5503,7 +5505,7 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+2"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+2"/>
         <source>Quality:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6980,7 +6982,7 @@ Se asume que tiene y se intenta continuar.</translation>
         <translation>Imágenes Matroska</translation>
     </message>
     <message>
-        <location line="+506"/>
+        <location line="+523"/>
         <source>Matroska clusters</source>
         <translation>Clústeres Matroska</translation>
     </message>
@@ -7966,7 +7968,7 @@ Se ha guardado la edición actual y se volverá a cargar en el siguiente inicio<
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location line="+238"/>
+        <location line="+276"/>
         <source> (%n track(s))</source>
         <translation type="unfinished">
             <numerusform></numerusform>
@@ -9264,8 +9266,8 @@ Ready.
 <context>
     <name>tsdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+205"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+330"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+207"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+335"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+86"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Hay varios archivos con nombres de archivo secuenciales. ¿Debería cargarlos todos?</translation>
@@ -9603,7 +9605,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
 Solo se admite vídeo VP8/VP9 y audio Vorbis/Opus</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>Saving Webm</source>
         <translation>Guardando Webm</translation>
     </message>
@@ -9626,22 +9628,22 @@ Solo se admite vídeo VP8/VP9 y audio Vorbis/Opus</translation>
 <context>
     <name>workingDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+13"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+14"/>
         <source>Processing</source>
         <translation>Procesando</translation>
     </message>
     <message>
-        <location line="+19"/>
+        <location line="+33"/>
         <source>00:00:00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-13"/>
+        <location line="-27"/>
         <source>Elapsed:</source>
         <translation>Transcurrido:</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+14"/>
         <source>Time Remaining:</source>
         <translation>Tiempo restante:</translation>
     </message>

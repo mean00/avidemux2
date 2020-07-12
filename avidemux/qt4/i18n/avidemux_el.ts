@@ -379,27 +379,27 @@ Drop timing informations ?</source>
 <context>
     <name>DialogProcessing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+26"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/processing.ui" line="+33"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+51"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-19"/>
+        <location line="-70"/>
         <source>Dialog</source>
         <translation>Διάλογος</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+6"/>
         <source>TimeLeft</source>
         <translation>Εναπομένων χρόνος</translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+41"/>
         <source>ProcessImages</source>
         <translation>Επεξεργασμένες εικόνες</translation>
     </message>
@@ -409,7 +409,7 @@ Drop timing informations ?</source>
         <translation>Ταχύτητα</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-14"/>
         <source>0 fps</source>
         <translation>0 fps</translation>
     </message>
@@ -1319,10 +1319,10 @@ Drop timing informations ?</source>
         <location line="+5"/>
         <location filename="../../common/gui_save.cpp" line="+57"/>
         <location line="+10"/>
-        <location line="+292"/>
+        <location line="+296"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+430"/>
+        <location filename="../../common/gui_savenew.cpp" line="+432"/>
         <source>Audio</source>
         <translation>Ήχος</translation>
     </message>
@@ -1808,7 +1808,7 @@ Is it running ?</source>
         <translation>Ισχύς _μεταμορφωτή:</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-228"/>
+        <location filename="../../common/gui_save.cpp" line="-231"/>
         <source>Select Workbench to Save</source>
         <translation>Επιλέξτε το έργο για αποθήκευση</translation>
     </message>
@@ -1819,12 +1819,12 @@ Is it running ?</source>
         <translation>Επιλέξτε αρχείο για αποθήκευση του ήχου</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+7"/>
         <source>Select JPEG Sequence to Save</source>
         <translation>Επιλέξτε την ακολουθία JPEG για αποθήκευση</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+6"/>
         <source>Select BMP to Save</source>
         <translation>Επιλέξτε BMP για αποθήκευση</translation>
     </message>
@@ -2484,7 +2484,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="-144"/>
-        <location filename="../../common/gui_save.cpp" line="-611"/>
+        <location filename="../../common/gui_save.cpp" line="-615"/>
         <source>No audio track</source>
         <translation>Κανένα κανάλι ήχου</translation>
     </message>
@@ -2697,7 +2697,7 @@ Proceed anyway?</source>
         <translation>Προσθήκη της διαδικασίας στο κατάστιχο διαδικασιών</translation>
     </message>
     <message>
-        <location line="+51"/>
+        <location line="+55"/>
         <source>Select PNG to Save</source>
         <translation>Επιλέξτε PNG για αποθήκευση</translation>
     </message>
@@ -3240,7 +3240,7 @@ Try anyway?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+375"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+382"/>
         <source>Unknown</source>
         <translation>Άγνωστο</translation>
     </message>
@@ -3367,7 +3367,7 @@ Installation mismatch</source>
         <translation>Αδυναμία σύνθεσης των σκιάσεων</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+234"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+235"/>
         <source>Permission Error</source>
         <translation>Σφάλμα δικαιωμάτων</translation>
     </message>
@@ -3490,7 +3490,7 @@ Installation mismatch</source>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+208"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation>Αρχείο _υποτίτλων (ASS/SSA):</translation>
     </message>
@@ -3520,7 +3520,7 @@ Installation mismatch</source>
         <translation>ASS</translation>
     </message>
     <message>
-        <location line="-114"/>
+        <location line="-142"/>
         <source>SSA/ASS/SRT</source>
         <translation>SSA/ASS/SRT</translation>
     </message>
@@ -3530,7 +3530,7 @@ Installation mismatch</source>
         <translation>Εγχάραξη υποτίτλων ASS, SSA ή SRT χρησιμοποιώντας την libass.</translation>
     </message>
     <message>
-        <location line="+63"/>
+        <location line="+91"/>
         <source>Format ?</source>
         <translation>Μορφή ;</translation>
     </message>
@@ -3582,7 +3582,7 @@ Installation mismatch</source>
         <translation>Αδυναμία αποθήκευσης του μεταποιημένου αρχείου.</translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+61"/>
         <source>Fonts</source>
         <translation>Γραμματοσειρές</translation>
     </message>
@@ -3594,7 +3594,7 @@ This message will not be displayed again.</source>
 Αυτό το μήνυμα δεν θα επανεμφανιστεί.</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+87"/>
         <source>SSA Error</source>
         <translation>SSA Σφάλμα</translation>
     </message>
@@ -5518,11 +5518,13 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
         <source>RC Mode:</source>
         <translation>Λειτουργία RC:</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Preset:</source>
         <translation>Προρύθμιση:</translation>
     </message>
@@ -5533,7 +5535,7 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+2"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+2"/>
         <source>Quality:</source>
         <translation>Ποιότητα:</translation>
     </message>
@@ -7009,7 +7011,7 @@ I will assume it has and try to continue</source>
         <translation>Εικόνες Matroska</translation>
     </message>
     <message>
-        <location line="+506"/>
+        <location line="+523"/>
         <source>Matroska clusters</source>
         <translation>Συστάδες Matroska</translation>
     </message>
@@ -7996,7 +7998,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>Επιλογή: </translation>
     </message>
     <message numerus="yes">
-        <location line="+238"/>
+        <location line="+276"/>
         <source> (%n track(s))</source>
         <translation>
             <numerusform> (%n κανάλι)</numerusform>
@@ -9296,8 +9298,8 @@ Ready.
 <context>
     <name>tsdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+205"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+330"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+207"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+335"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+86"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Υπάρχουν αρκετά αρχεία με συνεχόμενες ονομασίες. Να φορτωθούν όλα μαζί;</translation>
@@ -9636,7 +9638,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
 Υποστηρίζονται μόνο VP8/VP9 βίντεο, και ήχος Vorbis/Opus</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>Saving Webm</source>
         <translation>Αποθήκευση του Webm</translation>
     </message>
@@ -9659,22 +9661,22 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
 <context>
     <name>workingDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+13"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+14"/>
         <source>Processing</source>
         <translation>Επεξεργασία</translation>
     </message>
     <message>
-        <location line="+19"/>
+        <location line="+33"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="-13"/>
+        <location line="-27"/>
         <source>Elapsed:</source>
         <translation>Διανύθηκαν:</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+14"/>
         <source>Time Remaining:</source>
         <translation>Εναπομένων χρόνος:</translation>
     </message>

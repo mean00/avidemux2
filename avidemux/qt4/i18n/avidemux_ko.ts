@@ -383,32 +383,32 @@ Drop timing informations ?</source>
         <translation>대화</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+6"/>
         <source>TimeLeft</source>
         <translation>남은시간</translation>
     </message>
     <message>
-        <location line="-21"/>
+        <location line="+13"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+28"/>
         <source>ProcessImages</source>
         <translation>이미지처리</translation>
     </message>
     <message>
-        <location line="-35"/>
+        <location line="+23"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="-30"/>
         <source>Speed</source>
         <translation>속도</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-14"/>
         <source>0 fps</source>
         <translation>0 fps</translation>
     </message>
@@ -1496,10 +1496,10 @@ Drop timing informations ?</source>
         <location line="+5"/>
         <location filename="../../common/gui_save.cpp" line="+57"/>
         <location line="+10"/>
-        <location line="+292"/>
+        <location line="+296"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+430"/>
+        <location filename="../../common/gui_savenew.cpp" line="+432"/>
         <source>Audio</source>
         <translation>오디오</translation>
     </message>
@@ -2117,7 +2117,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="+48"/>
-        <location filename="../../common/gui_save.cpp" line="-652"/>
+        <location filename="../../common/gui_save.cpp" line="-656"/>
         <source>No audio track</source>
         <translation>오디오 트랙 없음</translation>
     </message>
@@ -2556,7 +2556,7 @@ Is it running ?</source>
         <translation>작업목록 대기열에 작업 넣기</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+16"/>
         <source>Select Workbench to Save</source>
         <translation>저장할 작업벤치 선택</translation>
     </message>
@@ -2567,12 +2567,12 @@ Is it running ?</source>
         <translation>오디오를 저장할 파일 선택</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+7"/>
         <source>Select JPEG Sequence to Save</source>
         <translation>저장할 JPEG 시퀀스 선택</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+6"/>
         <source>Select BMP to Save</source>
         <translation>저장할 BMP 선택</translation>
     </message>
@@ -3194,7 +3194,7 @@ Try anyway?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+375"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+382"/>
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
@@ -3315,7 +3315,7 @@ Installation mismatch</source>
         <translation>쉐이더를 컴파일할 수 없습니다</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+234"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+235"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3447,7 +3447,7 @@ Installation mismatch</source>
         <translation>ASS/SSA/SRT 자막을 libass로 하드코딩합니다.</translation>
     </message>
     <message>
-        <location line="+63"/>
+        <location line="+91"/>
         <source>Format ?</source>
         <translation>형식?</translation>
     </message>
@@ -3529,7 +3529,7 @@ Installation mismatch</source>
         <translation>변환한 파일을 저장할 수 없습니다.</translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+61"/>
         <source>Fonts</source>
         <translation>글꼴</translation>
     </message>
@@ -3541,7 +3541,7 @@ This message will not be displayed again.</source>
 이 메시지는 다시 표시되지 않습니다.</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+87"/>
         <source>SSA Error</source>
         <translation>SSA 오류</translation>
     </message>
@@ -5463,11 +5463,13 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
         <source>RC Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Preset:</source>
         <translation>프리셋:</translation>
     </message>
@@ -5478,7 +5480,7 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+2"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+2"/>
         <source>Quality:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6946,7 +6948,7 @@ I will assume it has and try to continue</source>
         <translation>Matroska 이미지</translation>
     </message>
     <message>
-        <location line="+506"/>
+        <location line="+523"/>
         <source>Matroska clusters</source>
         <translation>Matroska 클러스터</translation>
     </message>
@@ -7931,7 +7933,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location line="+238"/>
+        <location line="+276"/>
         <source> (%n track(s))</source>
         <translation>
             <numerusform> (%n 트랙)</numerusform>
@@ -9223,8 +9225,8 @@ Ready.
 <context>
     <name>tsdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+205"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+330"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+207"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+335"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+86"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>연속적인 파일 이름을 가진 파일이 여럿 있습니다. 전부 불러올까요?</translation>
@@ -9562,7 +9564,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
 VP8/VP9 비디오와 Vorbis/Opus 오디오만 지원합니다</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>Saving Webm</source>
         <translation>WebM 저장 중</translation>
     </message>
@@ -9585,7 +9587,7 @@ VP8/VP9 비디오와 Vorbis/Opus 오디오만 지원합니다</translation>
 <context>
     <name>workingDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+13"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+14"/>
         <source>Processing</source>
         <translation>처리 중</translation>
     </message>
@@ -9595,12 +9597,12 @@ VP8/VP9 비디오와 Vorbis/Opus 오디오만 지원합니다</translation>
         <translation>경과:</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+14"/>
         <source>Time Remaining:</source>
         <translation>남은 시간:</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="+13"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>

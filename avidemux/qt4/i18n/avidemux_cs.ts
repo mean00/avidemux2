@@ -375,22 +375,22 @@ Drop timing informations ?</source>
         <translation type="unfinished">Dialog</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+19"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+51"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="-64"/>
         <source>TimeLeft</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+41"/>
         <source>ProcessImages</source>
         <translation type="unfinished"></translation>
     </message>
@@ -400,7 +400,7 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-14"/>
         <source>0 fps</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1314,10 +1314,10 @@ Drop timing informations ?</source>
         <location line="+5"/>
         <location filename="../../common/gui_save.cpp" line="+57"/>
         <location line="+10"/>
-        <location line="+292"/>
+        <location line="+296"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+430"/>
+        <location filename="../../common/gui_savenew.cpp" line="+432"/>
         <source>Audio</source>
         <translation type="unfinished">Audio</translation>
     </message>
@@ -1609,7 +1609,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="+48"/>
-        <location filename="../../common/gui_save.cpp" line="-328"/>
+        <location filename="../../common/gui_save.cpp" line="-332"/>
         <source>No audio track</source>
         <translation type="unfinished">Chybí zvuková stopa</translation>
     </message>
@@ -1885,7 +1885,7 @@ Je spuštěno?</translation>
         <translation type="unfinished">_Deringing</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="+100"/>
+        <location filename="../../common/gui_save.cpp" line="+101"/>
         <source>Select Workbench to Save</source>
         <translation type="unfinished">Zvolte projekt k uložení</translation>
     </message>
@@ -1896,12 +1896,12 @@ Je spuštěno?</translation>
         <translation>Vybrat soubor k uložení zvuku</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+7"/>
         <source>Select JPEG Sequence to Save</source>
         <translation>Vybrat sled JPEG souborů k uložení</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+6"/>
         <source>Select BMP to Save</source>
         <translation>Vybrat BMP soubor k uložení</translation>
     </message>
@@ -2813,7 +2813,7 @@ Proceed anyway?</source>
         <translation type="unfinished">Chyba inicializace zvukového zařízení</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-601"/>
+        <location filename="../../common/gui_save.cpp" line="-605"/>
         <source>Audio encoder index out of bounds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2853,7 +2853,7 @@ Proceed anyway?</source>
         <translation>Přidat úlohu na seznam</translation>
     </message>
     <message>
-        <location line="+51"/>
+        <location line="+55"/>
         <source>Select PNG to Save</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3184,7 +3184,7 @@ Try anyway?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+375"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+382"/>
         <source>Unknown</source>
         <translation type="unfinished">Neznámý</translation>
     </message>
@@ -3304,7 +3304,7 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+234"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+235"/>
         <source>Permission Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3426,7 +3426,7 @@ Installation mismatch</source>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+208"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation type="unfinished">_Soubor s titulky (ASS/SSA):</translation>
     </message>
@@ -3461,7 +3461,7 @@ Installation mismatch</source>
         <translation type="unfinished">ASS</translation>
     </message>
     <message>
-        <location line="-114"/>
+        <location line="-142"/>
         <source>SSA/ASS/SRT</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3471,7 +3471,7 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+63"/>
+        <location line="+91"/>
         <source>Format ?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3518,7 +3518,7 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+61"/>
         <source>Fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3529,7 +3529,7 @@ This message will not be displayed again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+87"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5451,11 +5451,13 @@ Chcete ho nahrát?
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
         <source>RC Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Preset:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5466,7 +5468,7 @@ Chcete ho nahrát?
     </message>
     <message>
         <location line="+2"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+2"/>
         <source>Quality:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6933,7 +6935,7 @@ I will assume it has and try to continue</source>
         <translation>Matroska obrázky</translation>
     </message>
     <message>
-        <location line="+506"/>
+        <location line="+523"/>
         <source>Matroska clusters</source>
         <translation>Matroska klastry</translation>
     </message>
@@ -7917,7 +7919,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location line="+238"/>
+        <location line="+276"/>
         <source> (%n track(s))</source>
         <translation type="unfinished">
             <numerusform></numerusform>
@@ -9213,8 +9215,8 @@ Ready.
 <context>
     <name>tsdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+205"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+330"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+207"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+335"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+86"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
@@ -9550,7 +9552,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>Saving Webm</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9573,7 +9575,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
 <context>
     <name>workingDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+13"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+14"/>
         <source>Processing</source>
         <translation type="unfinished">Zpracovávání</translation>
     </message>
@@ -9583,12 +9585,12 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <translation type="unfinished">Uplynulý čas:</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+14"/>
         <source>Time Remaining:</source>
         <translation type="unfinished">Zbývající čas:</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="+13"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>

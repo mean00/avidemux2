@@ -377,22 +377,22 @@ Drop timing informations ?</source>
         <translation type="unfinished">Dialog</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+6"/>
         <source>TimeLeft</source>
         <translation type="unfinished">Restzeit</translation>
     </message>
     <message>
-        <location line="-14"/>
+        <location line="+64"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-51"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+28"/>
         <source>ProcessImages</source>
         <translation type="unfinished"></translation>
     </message>
@@ -402,7 +402,7 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-14"/>
         <source>0 fps</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1284,10 +1284,10 @@ Drop timing informations ?</source>
         <location line="+5"/>
         <location filename="../../common/gui_save.cpp" line="+57"/>
         <location line="+10"/>
-        <location line="+292"/>
+        <location line="+296"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+430"/>
+        <location filename="../../common/gui_savenew.cpp" line="+432"/>
         <source>Audio</source>
         <translation>Audio</translation>
     </message>
@@ -2060,7 +2060,7 @@ Läuft er?</translation>
         <translation type="unfinished">Gehe zur Zeit</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-228"/>
+        <location filename="../../common/gui_save.cpp" line="-231"/>
         <source>Select Workbench to Save</source>
         <translation type="unfinished">Arbeitsbereich als Projekt speichern</translation>
     </message>
@@ -2071,12 +2071,12 @@ Läuft er?</translation>
         <translation type="unfinished">Audio-Datei zum Speichern wählen</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+7"/>
         <source>Select JPEG Sequence to Save</source>
         <translation type="unfinished">Als JPEG-Bildfolge speichern</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+6"/>
         <source>Select BMP to Save</source>
         <translation>BMP-Datei zum Speichern wählen</translation>
     </message>
@@ -2584,7 +2584,7 @@ Installation mismatch</source>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="-144"/>
-        <location filename="../../common/gui_save.cpp" line="-611"/>
+        <location filename="../../common/gui_save.cpp" line="-615"/>
         <source>No audio track</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2698,7 +2698,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished">Job zur Warteschlange hinzufügen</translation>
     </message>
     <message>
-        <location line="+51"/>
+        <location line="+55"/>
         <source>Select PNG to Save</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3202,7 +3202,7 @@ Try anyway?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+375"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+382"/>
         <source>Unknown</source>
         <translation type="unfinished">Unbekannt</translation>
     </message>
@@ -3329,7 +3329,7 @@ Nichtübereinstimmende Installation</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+234"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+235"/>
         <source>Permission Error</source>
         <translation>Berechtigungsfehler</translation>
     </message>
@@ -3451,7 +3451,7 @@ Nichtübereinstimmende Installation</translation>
 <context>
     <name>ass</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+180"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+208"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation>_Untertitel-Datei (ASS/SSA):</translation>
     </message>
@@ -3486,7 +3486,7 @@ Nichtübereinstimmende Installation</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-114"/>
+        <location line="-142"/>
         <source>SSA/ASS/SRT</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3496,7 +3496,7 @@ Nichtübereinstimmende Installation</translation>
         <translation>ASS/SSA/SRT-Untertitel durch libass einbrennen.</translation>
     </message>
     <message>
-        <location line="+63"/>
+        <location line="+91"/>
         <source>Format ?</source>
         <translation>Falsches Dateiformat?</translation>
     </message>
@@ -3543,7 +3543,7 @@ Nichtübereinstimmende Installation</translation>
         <translation>Kann umgewandelte Datei nicht speichern.</translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+61"/>
         <source>Fonts</source>
         <translation>Schriftarten</translation>
     </message>
@@ -3555,7 +3555,7 @@ This message will not be displayed again.</source>
 Diese Meldung wird nur einmal angezeigt.</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+87"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5479,11 +5479,13 @@ Soll dieses jetzt geladen werden ?
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
         <source>RC Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Preset:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5494,7 +5496,7 @@ Soll dieses jetzt geladen werden ?
     </message>
     <message>
         <location line="+2"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+2"/>
         <source>Quality:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6961,7 +6963,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+506"/>
+        <location line="+523"/>
         <source>Matroska clusters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7929,7 +7931,7 @@ The file must be re-indexed. Proceed?</source>
         <translation>Auswahl: </translation>
     </message>
     <message numerus="yes">
-        <location line="+238"/>
+        <location line="+276"/>
         <source> (%n track(s))</source>
         <translation>
             <numerusform> (%n Tonspur)</numerusform>
@@ -7937,7 +7939,7 @@ The file must be re-indexed. Proceed?</source>
         </translation>
     </message>
     <message>
-        <location line="-2179"/>
+        <location line="-2217"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation>&lt;b&gt;Neue Version verfügbar&lt;/b&gt;&lt;br&gt;Version %1&lt;br&gt;Freigegeben am %2.&lt;br&gt;Das Update kann hier heruntergeladen werden:&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Sie können automatische Überprüfung auf Updates in Einstellungen deaktivieren.&lt;/small&gt;</translation>
     </message>
@@ -9240,8 +9242,8 @@ Ready.
 <context>
     <name>tsdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+205"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+330"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+207"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+335"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+86"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Es gibt mehrere Dateien mit fortlaufender Nummerierung im Dateinamen. Sollen sie alle geladen werden?</translation>
@@ -9580,7 +9582,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
 Nur Vorbis und Opus sind zulässig.</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>Saving Webm</source>
         <translation type="unfinished">WebM speichern</translation>
     </message>
@@ -9603,7 +9605,7 @@ Nur Vorbis und Opus sind zulässig.</translation>
 <context>
     <name>workingDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+13"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+14"/>
         <source>Processing</source>
         <translation type="unfinished">Bearbeitung</translation>
     </message>
@@ -9613,12 +9615,12 @@ Nur Vorbis und Opus sind zulässig.</translation>
         <translation type="unfinished">Verbrauchte Zeit:</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+14"/>
         <source>Time Remaining:</source>
         <translation type="unfinished">Verbleibende Zeit:</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="+13"/>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>

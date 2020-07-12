@@ -4,7 +4,6 @@ HEADERS = \
 ../../../avidemux_core/ADM_coreMuxer/include/ADM_muxerUtils.h \ 
 ../../../avidemux_core/ADM_coreMuxer/include/ADM_coreMuxerFfmpeg.h \ 
 ../../../avidemux_core/ADM_coreMuxer/include/ADM_coreMuxer6_export.h \ 
-../../../avidemux_core/ADM_coreMuxer/include/.ADM_muxer.h.swp \ 
 ../../../avidemux_core/ADM_coreMuxer/include/ADM_muxerProto.h \ 
 ../../../avidemux_core/ADM_coreJobs/include/sqlJobs.h \ 
 ../../../avidemux_core/ADM_coreJobs/include/ADM_coreJobs_export.h \ 

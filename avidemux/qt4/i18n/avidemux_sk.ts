@@ -383,32 +383,32 @@ Vypustiť časové údaje?</translation>
         <translation>Dialóg</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+6"/>
         <source>TimeLeft</source>
         <translation>Odhad času</translation>
     </message>
     <message>
-        <location line="-21"/>
+        <location line="+13"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+28"/>
         <source>ProcessImages</source>
         <translation>Priebežne snímok</translation>
     </message>
     <message>
-        <location line="-35"/>
+        <location line="+23"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="-30"/>
         <source>Speed</source>
         <translation>Rýchlosť</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-14"/>
         <source>0 fps</source>
         <translation>0 snímok/s</translation>
     </message>
@@ -1496,10 +1496,10 @@ Vypustiť časové údaje?</translation>
         <location line="+5"/>
         <location filename="../../common/gui_save.cpp" line="+57"/>
         <location line="+10"/>
-        <location line="+292"/>
+        <location line="+296"/>
         <location line="+19"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+430"/>
+        <location filename="../../common/gui_savenew.cpp" line="+432"/>
         <source>Audio</source>
         <translation>Audio</translation>
     </message>
@@ -2118,7 +2118,7 @@ Zmätočná inštalácia</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="+48"/>
-        <location filename="../../common/gui_save.cpp" line="-652"/>
+        <location filename="../../common/gui_save.cpp" line="-656"/>
         <source>No audio track</source>
         <translation>Žiadna audio stopa</translation>
     </message>
@@ -2574,7 +2574,7 @@ Je spustené?</translation>
         <translation>Zaradené do zoznamu úloh</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+16"/>
         <source>Select Workbench to Save</source>
         <translation>Vyberte projekt na uloženie</translation>
     </message>
@@ -2585,12 +2585,12 @@ Je spustené?</translation>
         <translation>Vyberte súbor na uloženie audia</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+7"/>
         <source>Select JPEG Sequence to Save</source>
         <translation>Vyberte sekvenciu JPEG súborov na uloženie</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+6"/>
         <source>Select BMP to Save</source>
         <translation>Vyberte BMP na uloženie</translation>
     </message>
@@ -2688,12 +2688,12 @@ Je spustené?</translation>
         <translation>Hotovo</translation>
     </message>
     <message>
-        <location line="-597"/>
+        <location line="-601"/>
         <source>Audio encoder index out of bounds</source>
         <translation>Index audio kódovača je mimo hraníc</translation>
     </message>
     <message>
-        <location line="+519"/>
+        <location line="+523"/>
         <source>Maximum number of 99999 images reached.</source>
         <translation>Dosiahol sa maximálny počet 99999 obrázkov.</translation>
     </message>
@@ -3222,7 +3222,7 @@ Skúsiť to znovu?</translation>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+375"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+382"/>
         <source>Unknown</source>
         <translation>Neznámy</translation>
     </message>
@@ -3348,7 +3348,7 @@ Installation mismatch</source>
         <translation>Nemožno skompilovať shader</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_toolkit/automation.cpp" line="+234"/>
+        <location filename="../../common/ADM_toolkit/automation.cpp" line="+235"/>
         <source>Permission Error</source>
         <translation>Chyba oprávnenia</translation>
     </message>
@@ -3481,7 +3481,7 @@ Installation mismatch</source>
         <translation>Pevné titulky ASS/SSA/SRT použitím knižnice libass.</translation>
     </message>
     <message>
-        <location line="+63"/>
+        <location line="+91"/>
         <source>Format ?</source>
         <translation>Formátovať?</translation>
     </message>
@@ -3563,7 +3563,7 @@ Installation mismatch</source>
         <translation>Nemožno uložiť konvertovaný súbor.</translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+61"/>
         <source>Fonts</source>
         <translation>Písma</translation>
     </message>
@@ -3575,7 +3575,7 @@ This message will not be displayed again.</source>
 Táto správa sa znova nezobrazí.</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+87"/>
         <source>SSA Error</source>
         <translation>Chyba SSA</translation>
     </message>
@@ -5499,11 +5499,13 @@ Chcete ho načítať?
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
         <source>RC Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Preset:</source>
         <translation>Predvoľba:</translation>
     </message>
@@ -5514,7 +5516,7 @@ Chcete ho načítať?
     </message>
     <message>
         <location line="+2"/>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+2"/>
         <source>Quality:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6990,7 +6992,7 @@ Je predpoklad, že má a pokúsiť sa pokračovať</translation>
         <translation>Matroska obrázky</translation>
     </message>
     <message>
-        <location line="+506"/>
+        <location line="+523"/>
         <source>Matroska clusters</source>
         <translation>Matroska klustery</translation>
     </message>
@@ -7977,7 +7979,7 @@ Súčasná úprava bola uložená a pri ďalšom štarte bude znovu načítaná<
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location line="+238"/>
+        <location line="+276"/>
         <source> (%n track(s))</source>
         <translation>
             <numerusform> (%n stopa)</numerusform>
@@ -9279,8 +9281,8 @@ Pripravený.
 <context>
     <name>tsdemuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+205"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+330"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+207"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+335"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+86"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Existuje niekoľko súborov so sekvenčnými názvami súborov. Majú byť všetky načítané?</translation>
@@ -9619,7 +9621,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
 Podporované audio len VP8/VP9 video a Vorbis/Opus</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>Saving Webm</source>
         <translation>Uloženie Webm</translation>
     </message>
@@ -9642,7 +9644,7 @@ Podporované audio len VP8/VP9 video a Vorbis/Opus</translation>
 <context>
     <name>workingDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+13"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="+14"/>
         <source>Processing</source>
         <translation>Spracovávanie</translation>
     </message>
@@ -9652,12 +9654,12 @@ Podporované audio len VP8/VP9 video a Vorbis/Opus</translation>
         <translation>Uplynulý čas:</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+14"/>
         <source>Time Remaining:</source>
         <translation>Zostávajúci čas:</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="+13"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
