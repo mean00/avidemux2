@@ -61,7 +61,7 @@ enum
           0.5,				/* qcompress amount of qscale change between easy & hard scenes (0.0-1.0 */ \
           0.5,				/* qblur    amount of qscale smoothing over time (0.0-1.0) */ \
           0,   		        /* min bitrate in kB/S */ \
-          9500,  			/* max bitrate */ \
+          9000,			/* max bitrate */ \
           1,				/* user matrix */ \
           18,				/* gop size */ \
           0,				/* interlaced */ \
