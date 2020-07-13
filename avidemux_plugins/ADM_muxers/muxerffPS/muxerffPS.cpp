@@ -32,7 +32,7 @@
 ps_muxer psMuxerConfig=   // Default is standard DVD
 {
     MUXER_DVD,false,
-    11000,9800,224
+    10080,9000,224
 };
 
 /**
@@ -103,10 +103,20 @@ const char *er;
             rescaleFps(s->getAvgFps1000(),&(c->time_base));
         }
         video_st->time_base=c->time_base;
+
+        size_t propSize;
+        AVCPBProperties *props = av_cpb_properties_alloc(&propSize);
+        if(props)
+        {
+            props->buffer_size = psMuxerConfig.bufferSizekBytes*8*1024;
+            int err = av_stream_add_side_data(video_st, AV_PKT_DATA_CPB_PROPERTIES, (uint8_t *)props, propSize);
+            if(err < 0)
+                ADM_warning("Failed to add side data to video stream, error %d\n", err);
+        }
         par->bit_rate=psMuxerConfig.videoRatekBits*1000;
         c->rc_buffer_size=psMuxerConfig.bufferSizekBytes*8*1024;
-        c->rc_buffer_size_header=psMuxerConfig.bufferSizekBytes*8*1024;
-        c->gop_size=15;
+        //c->rc_buffer_size_header=psMuxerConfig.bufferSizekBytes*8*1024; // depends on avcodec.h patch
+        //c->gop_size=15;
 
         // Audio
         if(initAudio(nbAudioTrack,a)==false)
@@ -128,13 +138,15 @@ const char *er;
         }
 
         AVDictionary *dict = NULL;
-		char buf[64];
-        
+        char buf[64];
         snprintf(buf, sizeof(buf), "%d", psMuxerConfig.muxRatekBits * 1000);
-		av_dict_set(&dict, "muxrate", buf, 0);
+        av_dict_set(&dict, "muxrate", buf, 0);
+#if 0
+        // options below trigger a storm of buffer underflow errors
+        // from remove_decoded_packets() in libavformat/mpegenc.c
         av_dict_set(&dict, "preload", "0", 0);
         av_dict_set(&dict, "max_delay", "2000", 0);
-
+#endif
         ADM_assert(avformat_write_header(oc, &dict) >= 0);
         vStream=s;
         aStreams=a;

@@ -33,7 +33,7 @@ const mpegPsStruct psDescriptor[4]=
 {
     { "vcd",  40,1400,1152},  // Verify, not sure!
     { "svcd",112,2800,2400},
-    { "dvd", 224,11000,9800},
+    { "dvd", 224,10080,9000},
     { "free", 1024,70000,30000}
 };
 #define PS_NB_MUXERS (sizeof(psDescriptor)/sizeof(mpegPsStruct))
