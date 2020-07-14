@@ -314,6 +314,8 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
         diaElemMenu     interlaced(&(iinterlaced),QT_TRANSLATE_NOOP("ffmpeg2","_Interlaced:"),2,interE);
         diaElemMenu     fieldOrder(&(bff),QT_TRANSLATE_NOOP("ffmpeg2","Field Order:"),2,foE);
 
+        interlaced.link(interE+1,1,&fieldOrder);
+
           /* First Tab : encoding mode */
         diaElem *diamode[]={&arM,&threadM,&bitrate};
         diaElemTabs tabMode(QT_TRANSLATE_NOOP("ffmpeg2","Basic Settings"),3,diamode);
