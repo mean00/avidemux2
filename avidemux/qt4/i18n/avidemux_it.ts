@@ -3536,7 +3536,7 @@ This message will not be displayed again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4453,12 +4453,12 @@ Vuoi caricarlo?
     <message>
         <location line="+152"/>
         <location line="+31"/>
-        <location line="+57"/>
+        <location line="+60"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-10"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
@@ -4545,12 +4545,12 @@ Vuoi caricarlo?
         <translation>Tempo rimanente:</translation>
     </message>
     <message>
-        <location line="+525"/>
+        <location line="+528"/>
         <source>Frames/sec:</source>
         <translation>Fotogrammi/sec:</translation>
     </message>
     <message>
-        <location line="-176"/>
+        <location line="-179"/>
         <source>Total Size:</source>
         <translation>Dimensione totale:</translation>
     </message>
@@ -4872,7 +4872,7 @@ Vuoi caricarlo?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+256"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+257"/>
         <source>Default</source>
         <translation type="unfinished">Predefinito</translation>
     </message>
@@ -4907,7 +4907,7 @@ Vuoi caricarlo?
         <translation type="unfinished">Dimensione buffer VBV:</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+34"/>
         <source>Interlacing</source>
         <translation type="unfinished">Interlacciamento</translation>
     </message>
@@ -4917,7 +4917,7 @@ Vuoi caricarlo?
         <translation type="unfinished">Controllo bitrate</translation>
     </message>
     <message>
-        <location line="-86"/>
+        <location line="-88"/>
         <source>Normal (4:3)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5052,7 +5052,7 @@ Vuoi caricarlo?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>Basic Settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5545,7 +5545,7 @@ Vuoi caricarlo?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+99"/>
         <source>Saving mpeg PS (ff)</source>
         <translation type="unfinished">Salvataggio mpeg PS (ff) in corso</translation>
     </message>

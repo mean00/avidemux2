@@ -3541,7 +3541,7 @@ This message will not be displayed again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4544,12 +4544,12 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+24"/>
         <source>Frames/sec:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-533"/>
+        <location line="-536"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4578,12 +4578,12 @@ Do you want to load it  ?
     <message>
         <location line="+53"/>
         <location line="+31"/>
-        <location line="+57"/>
+        <location line="+60"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-64"/>
+        <location line="-67"/>
         <source>0 kB/s</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4875,12 +4875,12 @@ Do you want to load it  ?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+326"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+329"/>
         <source>Interlacing</source>
         <translation type="unfinished">Entrelacement</translation>
     </message>
     <message>
-        <location line="-76"/>
+        <location line="-78"/>
         <source>Normal (4:3)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5050,7 +5050,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>Basic Settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5548,7 +5548,7 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+99"/>
         <source>Saving mpeg PS (ff)</source>
         <translation type="unfinished">Sauvegarde au format PS (ff)</translation>
     </message>

@@ -3555,7 +3555,7 @@ This message will not be displayed again.</source>
 Diese Meldung wird nur einmal angezeigt.</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4582,12 +4582,12 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+7"/>
         <location line="+31"/>
-        <location line="+57"/>
+        <location line="+60"/>
         <source>0</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
-        <location line="-78"/>
+        <location line="-81"/>
         <source>Processed Frames:</source>
         <translation>Bilder verarbeitet:</translation>
     </message>
@@ -4607,7 +4607,7 @@ Soll dieses jetzt geladen werden ?
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+17"/>
         <source>Frames/sec:</source>
         <translation>Bilder pro Sekunde:</translation>
     </message>
@@ -4894,7 +4894,7 @@ Soll dieses jetzt geladen werden ?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+256"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+257"/>
         <source>Default</source>
         <translation type="unfinished">Voreinstellung</translation>
     </message>
@@ -4906,27 +4906,27 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+16"/>
         <source>Progressive</source>
-        <translation type="unfinished">Progressiv (Vollbilder)</translation>
+        <translation>Progressiv (Vollbilder)</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Threading</source>
-        <translation type="unfinished">Mehrkernprozessoren</translation>
+        <translation>Threading</translation>
     </message>
     <message>
-        <location line="+36"/>
+        <location line="+38"/>
         <source>Interlacing</source>
-        <translation type="unfinished">Interlacing beseitigen</translation>
+        <translation>Interlacing</translation>
     </message>
     <message>
-        <location line="-76"/>
+        <location line="-78"/>
         <source>Normal (4:3)</source>
-        <translation type="unfinished"></translation>
+        <translation>Normal (4:3)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Wide (16:9)</source>
-        <translation type="unfinished"></translation>
+        <translation>Breitbild (16:9)</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -4941,52 +4941,52 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+5"/>
         <source>MB comparison</source>
-        <translation type="unfinished"></translation>
+        <translation>MB-Vergleich</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kleinste Größe (vhq)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rate distortion</source>
-        <translation type="unfinished"></translation>
+        <translation>Abweichung bewerten</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>One thread</source>
-        <translation type="unfinished"></translation>
+        <translation>Ein Thread</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Two threads)</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwei Threads</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Three threads</source>
-        <translation type="unfinished"></translation>
+        <translation>Drei Threads</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Auto (#cpu)</source>
-        <translation type="unfinished"></translation>
+        <translation>So viele Threads wie Prozessorkerne</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Interlaced</source>
-        <translation type="unfinished"></translation>
+        <translation>Interlaced</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Top Field First</source>
-        <translation type="unfinished"></translation>
+        <translation>Oberes Halbbild zuerst</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bottom Field First</source>
-        <translation type="unfinished"></translation>
+        <translation>Unteres Halbbild zuerst</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -5006,12 +5006,12 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+1"/>
         <source>VBV Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Größe des _VBV-Puffers:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Max bitrate (kb/s):</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximale _Bitrate (kbit/s):</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -5021,7 +5021,7 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+2"/>
         <source>_Number of B frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Anzahl aufeinanderfolgender B-Frames:</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -5031,7 +5031,7 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+1"/>
         <source>Aspect ratio:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bildformat:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5056,27 +5056,27 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+2"/>
         <source>_Gop Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>_GOP-Länge:</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_Interlaced:</source>
-        <translation type="unfinished"></translation>
+        <translation>Die _Quelle ist:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Field Order:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Halbbildreihenfolge:</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>Basic Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Grundeinstellungen</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Adv. Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Erweitert</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -5086,12 +5086,12 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+5"/>
         <source>Rate Control</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitratensteuerung</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>libavcodec MPEG-2 configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>libavcodec MPEG-2 Encoder konfigurieren</translation>
     </message>
 </context>
 <context>
@@ -5567,7 +5567,7 @@ Soll dieses jetzt geladen werden ?
         <translation>Inkompatible Parameter</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+99"/>
         <source>Saving mpeg PS (ff)</source>
         <translation type="unfinished">Speichern als MPEG-PS (ff)</translation>
     </message>

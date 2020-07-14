@@ -3538,7 +3538,7 @@ This message will not be displayed again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4490,12 +4490,12 @@ Be akarja tölteni?
     <message>
         <location line="+7"/>
         <location line="+31"/>
-        <location line="+57"/>
+        <location line="+60"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-78"/>
+        <location line="-81"/>
         <source>Processed Frames:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4515,12 +4515,12 @@ Be akarja tölteni?
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+17"/>
         <source>Frames/sec:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-169"/>
+        <location line="-172"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
@@ -4874,7 +4874,7 @@ Be akarja tölteni?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+250"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+251"/>
         <source>Normal (4:3)</source>
         <translation>Normál (4:3)</translation>
     </message>
@@ -5044,7 +5044,7 @@ Be akarja tölteni?
         <translation>Mező sorrend:</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>Basic Settings</source>
         <translation>Alapbeállítások</translation>
     </message>
@@ -5547,7 +5547,7 @@ Be akarja tölteni?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+99"/>
         <source>Saving mpeg PS (ff)</source>
         <translation type="unfinished">mpeg PS (ff) mentés</translation>
     </message>

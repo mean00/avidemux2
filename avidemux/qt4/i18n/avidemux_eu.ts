@@ -3536,7 +3536,7 @@ This message will not be displayed again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>SSA Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4463,12 +4463,12 @@ Hau gertatzea nahi duzu  ?
     <message>
         <location line="+159"/>
         <location line="+31"/>
-        <location line="+57"/>
+        <location line="+60"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-7"/>
+        <location line="-10"/>
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
@@ -4483,12 +4483,12 @@ Hau gertatzea nahi duzu  ?
         <translation type="unfinished">Gelditzen dena:</translation>
     </message>
     <message>
-        <location line="+525"/>
+        <location line="+528"/>
         <source>Frames/sec:</source>
         <translation type="unfinished">Frame/seg:</translation>
     </message>
     <message>
-        <location line="-169"/>
+        <location line="-172"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
@@ -4872,7 +4872,7 @@ Hau gertatzea nahi duzu  ?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+250"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+251"/>
         <source>Normal (4:3)</source>
         <translation>Arrunta (4:3)</translation>
     </message>
@@ -5042,7 +5042,7 @@ Hau gertatzea nahi duzu  ?
         <translation>Eremu Hurrenkera:</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>Basic Settings</source>
         <translation>Ohinarrizko Ezarpenak</translation>
     </message>
@@ -5545,7 +5545,7 @@ Hau gertatzea nahi duzu  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+99"/>
         <source>Saving mpeg PS (ff)</source>
         <translation type="unfinished">mpeg PS (ff) gordetzea</translation>
     </message>

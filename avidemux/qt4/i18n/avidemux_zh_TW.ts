@@ -3487,22 +3487,22 @@ Expect problems.</source>
         <translation>你確認是ASS/SSA檔嗎?</translation>
     </message>
     <message>
-        <location line="+226"/>
+        <location line="+228"/>
         <source>SSA Error</source>
         <translation>SSA錯誤</translation>
     </message>
     <message>
-        <location line="-186"/>
+        <location line="-188"/>
         <source>Select Subtitle File</source>
         <translation>選擇字幕檔</translation>
     </message>
     <message>
-        <location line="+186"/>
+        <location line="+188"/>
         <source>ass_read_file() failed for %s</source>
         <translation>無法讀取檔案為 %s</translation>
     </message>
     <message>
-        <location line="-185"/>
+        <location line="-187"/>
         <source>_Line spacing:</source>
         <translation>行距:</translation>
     </message>
@@ -4439,12 +4439,12 @@ Do you want to load it  ?
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="+480"/>
         <location line="+31"/>
-        <location line="+57"/>
+        <location line="+60"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-409"/>
+        <location line="-412"/>
         <source>Low</source>
         <translation>低</translation>
     </message>
@@ -4588,12 +4588,12 @@ Do you want to load it  ?
         <translation>進階</translation>
     </message>
     <message>
-        <location line="+334"/>
+        <location line="+337"/>
         <source>Frames/sec:</source>
         <translation>幀/秒:</translation>
     </message>
     <message>
-        <location line="-501"/>
+        <location line="-504"/>
         <location line="+254"/>
         <source>Unknown</source>
         <translation>未知</translation>
@@ -4886,7 +4886,7 @@ Do you want to load it  ?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+270"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+271"/>
         <source>Three threads</source>
         <translation>三個線程</translation>
     </message>
@@ -4951,12 +4951,12 @@ Do you want to load it  ?
         <translation>頂部首先掃描</translation>
     </message>
     <message>
-        <location line="+39"/>
+        <location line="+41"/>
         <source>Basic Settings</source>
         <translation>基本設定</translation>
     </message>
     <message>
-        <location line="-60"/>
+        <location line="-62"/>
         <source>Animes</source>
         <translation>動畫</translation>
     </message>
@@ -4966,22 +4966,22 @@ Do you want to load it  ?
         <translation>最小量化器:</translation>
     </message>
     <message>
-        <location line="+40"/>
+        <location line="+42"/>
         <source>Quantization</source>
         <translation>量化</translation>
     </message>
     <message>
-        <location line="-36"/>
+        <location line="-38"/>
         <source>Max bitrate (kb/s):</source>
         <translation>最大位元率 (kb/s):</translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+46"/>
         <source>libavcodec MPEG-2 configuration</source>
         <translation>libavcodec MPEG-2 配置</translation>
     </message>
     <message>
-        <location line="-71"/>
+        <location line="-73"/>
         <source>One thread</source>
         <translation>一個線程</translation>
     </message>
@@ -5006,12 +5006,12 @@ Do you want to load it  ?
         <translation>B 幀的數量:</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+29"/>
         <source>Interlacing</source>
         <translation>交錯</translation>
     </message>
     <message>
-        <location line="-57"/>
+        <location line="-59"/>
         <source>Two threads)</source>
         <translation>兩個線程</translation>
     </message>
@@ -5021,12 +5021,12 @@ Do you want to load it  ?
         <translation>預設</translation>
     </message>
     <message>
-        <location line="+66"/>
+        <location line="+68"/>
         <source>Adv. Settings</source>
         <translation>Adv. 設定</translation>
     </message>
     <message>
-        <location line="-65"/>
+        <location line="-67"/>
         <source>Tmpgenc</source>
         <translation>Tmpgenc</translation>
     </message>
@@ -5056,12 +5056,12 @@ Do you want to load it  ?
         <translation>底部首先掃描</translation>
     </message>
     <message>
-        <location line="+56"/>
+        <location line="+58"/>
         <source>Rate Control</source>
         <translation>速率控制</translation>
     </message>
     <message>
-        <location line="-44"/>
+        <location line="-46"/>
         <source>Ma_x. quantizer:</source>
         <translation>最大量化器:</translation>
     </message>
@@ -5569,7 +5569,7 @@ Do you want to load it  ?
         <translation>Mpeg PS 複合器</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffPS/muxerffPS.cpp" line="+196"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffPS/muxerffPS.cpp" line="+208"/>
         <source> video not compatible
 </source>
         <translation> 影片不相容
@@ -5619,12 +5619,12 @@ Do you want to load it  ?
 </translation>
     </message>
     <message>
-        <location line="-188"/>
+        <location line="-200"/>
         <source>[Mismatch]</source>
         <translation>[Mismatch]</translation>
     </message>
     <message>
-        <location line="+153"/>
+        <location line="+165"/>
         <source> Bad width/height for DVD
 </source>
         <translation> 不對的寬度/高度為 DVD

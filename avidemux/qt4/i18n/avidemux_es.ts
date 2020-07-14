@@ -3564,7 +3564,7 @@ This message will not be displayed again.</source>
 Este mensaje no se mostrará de nuevo.</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>SSA Error</source>
         <translation>Error de SSA</translation>
     </message>
@@ -4509,12 +4509,12 @@ Do you want to load it  ?
     <message>
         <location line="+7"/>
         <location line="+31"/>
-        <location line="+57"/>
+        <location line="+60"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-78"/>
+        <location line="-81"/>
         <source>Processed Frames:</source>
         <translation>Fotogramas procesados:</translation>
     </message>
@@ -4534,12 +4534,12 @@ Do you want to load it  ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+17"/>
         <source>Frames/sec:</source>
         <translation>Fotogramas/s:</translation>
     </message>
     <message>
-        <location line="-169"/>
+        <location line="-172"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
@@ -4903,7 +4903,7 @@ Do you want to load it  ?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+251"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+252"/>
         <source>Wide (16:9)</source>
         <translation>Ancho (16:9)</translation>
     </message>
@@ -5048,7 +5048,7 @@ Do you want to load it  ?
         <translation>Orden de los campos:</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>Basic Settings</source>
         <translation>Configuración básica</translation>
     </message>
@@ -5078,7 +5078,7 @@ Do you want to load it  ?
         <translation>Configuración de libavcodec MPEG-2</translation>
     </message>
     <message>
-        <location line="-89"/>
+        <location line="-91"/>
         <source>Normal (4:3)</source>
         <translation>Normal (4:3)</translation>
     </message>
@@ -5576,7 +5576,7 @@ Do you want to load it  ?
         <translation>[Incongruencia]</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+99"/>
         <source>Saving mpeg PS (ff)</source>
         <translation>Guardando mpeg PS (ff)</translation>
     </message>

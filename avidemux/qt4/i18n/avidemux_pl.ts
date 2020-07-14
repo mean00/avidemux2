@@ -3564,7 +3564,7 @@ This message will not be displayed again.</source>
 Ten komunikat nie pojawi się ponownie.</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>SSA Error</source>
         <translation>Błąd SSA</translation>
     </message>
@@ -4502,12 +4502,12 @@ Czy chcesz go wczytać ?
     <message>
         <location line="+60"/>
         <location line="+31"/>
-        <location line="+57"/>
+        <location line="+60"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location line="-78"/>
+        <location line="-81"/>
         <source>Processed Frames:</source>
         <translation>Przetworzone klatki:</translation>
     </message>
@@ -4522,12 +4522,12 @@ Czy chcesz go wczytać ?
         <translation>00:00:00</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+17"/>
         <source>Frames/sec:</source>
         <translation>Klatki/sek:</translation>
     </message>
     <message>
-        <location line="-169"/>
+        <location line="-172"/>
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
@@ -4901,7 +4901,7 @@ Czy chcesz go wczytać ?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+256"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+257"/>
         <source>Default</source>
         <translation>Domyślna</translation>
     </message>
@@ -4921,7 +4921,7 @@ Czy chcesz go wczytać ?
         <translation>Wątkowanie</translation>
     </message>
     <message>
-        <location line="+36"/>
+        <location line="+38"/>
         <source>Interlacing</source>
         <translation>Przeplot</translation>
     </message>
@@ -4931,7 +4931,7 @@ Czy chcesz go wczytać ?
         <translation>Kontrola jakości</translation>
     </message>
     <message>
-        <location line="-86"/>
+        <location line="-88"/>
         <source>Normal (4:3)</source>
         <translation>Normalny (4:3)</translation>
     </message>
@@ -5081,7 +5081,7 @@ Czy chcesz go wczytać ?
         <translation>Kolejność obszarów:</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>Basic Settings</source>
         <translation>Podstawowe ustawienia</translation>
     </message>
@@ -5574,7 +5574,7 @@ Czy chcesz go wczytać ?
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+99"/>
         <source>Saving mpeg PS (ff)</source>
         <translation>Zapisywanie mpeg PS (ff)</translation>
     </message>
@@ -6744,7 +6744,7 @@ Ja zakładam, że ma i spróbuję kontynuować</translation>
     <message>
         <location line="+1"/>
         <source>Show motion _vectors</source>
-        <translation>Pokaż _wektory ruchu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>

@@ -3567,7 +3567,7 @@ This message will not be displayed again.</source>
 Это сообщение больше показываться не будет.</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <source>SSA Error</source>
         <translation type="unfinished">Ошибка SSA</translation>
     </message>
@@ -4486,81 +4486,80 @@ Do you want to load it  ?
         <location line="+247"/>
         <location line="+21"/>
         <source>None</source>
-        <translation type="unfinished">Не нужно</translation>
+        <translation>Никакой</translation>
     </message>
     <message>
         <location line="-261"/>
         <location line="+254"/>
         <source>Unknown</source>
-        <translation type="unfinished">Неизвестно</translation>
+        <translation>Неизвестно</translation>
     </message>
     <message>
         <location line="+64"/>
         <source>Audio Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Размер аудио:</translation>
     </message>
     <message>
         <location line="+81"/>
         <source>Average Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Средний битрейт:</translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+31"/>
-        <location line="+57"/>
+        <location line="+60"/>
         <source>0</source>
-        <translation type="unfinished">
-            </translation>
+        <translation>0</translation>
     </message>
     <message>
-        <location line="-518"/>
+        <location line="-521"/>
         <source>Time Remaining:</source>
-        <translation type="unfinished">Осталось времени:</translation>
+        <translation>Осталось времени:</translation>
     </message>
     <message>
         <location line="+349"/>
         <source>Total Size:</source>
-        <translation type="unfinished">Общий размер:</translation>
+        <translation>Общий размер:</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Video Size:</source>
-        <translation type="unfinished">Размер видео:</translation>
+        <translation>Размер видео:</translation>
     </message>
     <message>
         <location line="-312"/>
         <source>Shut down computer when finished</source>
-        <translation type="unfinished">Выключить после завершения</translation>
+        <translation>Выключить после завершения</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Priority:</source>
-        <translation type="unfinished">Приоритет:</translation>
+        <translation>Приоритет:</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>High</source>
-        <translation type="unfinished">Высокий</translation>
+        <translation>Высокий</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Above Normal</source>
-        <translation type="unfinished">Выше нормального</translation>
+        <translation>Выше нормального</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Normal</source>
-        <translation type="unfinished">Нормальный</translation>
+        <translation>Нормальный</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Below Normal</source>
-        <translation type="unfinished">Ниже нормального</translation>
+        <translation>Ниже нормального</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Low</source>
-        <translation type="unfinished">Низкий</translation>
+        <translation>Низкий</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -4570,7 +4569,7 @@ Do you want to load it  ?
     <message>
         <location line="+37"/>
         <source>Minimize to Tray</source>
-        <translation type="unfinished">Свернуть в трей</translation>
+        <translation>Свернуть в трей</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -4585,25 +4584,25 @@ Do you want to load it  ?
     <message>
         <location line="+249"/>
         <source>Processed Frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Выдано кадров:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Quantiser:</source>
-        <translation type="unfinished"></translation>
+        <translation>Квантизатор:</translation>
     </message>
     <message>
         <location line="+57"/>
         <source>Elapsed:</source>
-        <translation type="unfinished"></translation>
+        <translation>Прошло:</translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+24"/>
         <source>Frames/sec:</source>
-        <translation type="unfinished"></translation>
+        <translation>Скорость (к/с):</translation>
     </message>
     <message>
-        <location line="-533"/>
+        <location line="-536"/>
         <source>Main</source>
         <translation type="unfinished">Главный</translation>
     </message>
@@ -4612,17 +4611,17 @@ Do you want to load it  ?
         <location line="+7"/>
         <location line="+14"/>
         <source>0 MB</source>
-        <translation type="unfinished">0 Мб</translation>
+        <translation>0 Мб</translation>
     </message>
     <message>
         <location line="+77"/>
         <source>0 kB/s</source>
-        <translation type="unfinished">0 Кб/с</translation>
+        <translation>0 Кб/с</translation>
     </message>
     <message>
         <location line="+57"/>
         <source>00:00:00</source>
-        <translation type="unfinished"></translation>
+        <translation>00:00:00</translation>
     </message>
 </context>
 <context>
@@ -4907,29 +4906,29 @@ Do you want to load it  ?
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+290"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+291"/>
         <source>Threading</source>
-        <translation type="unfinished">Многопоточность</translation>
+        <translation>Многопоточность</translation>
     </message>
     <message>
-        <location line="+36"/>
+        <location line="+38"/>
         <source>Interlacing</source>
-        <translation type="unfinished">Череcстрочность</translation>
+        <translation>Череcстрочность</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Rate Control</source>
-        <translation type="unfinished">Управление битрейтом</translation>
+        <translation>Управление битрейтом</translation>
     </message>
     <message>
-        <location line="-86"/>
+        <location line="-88"/>
         <source>Normal (4:3)</source>
-        <translation type="unfinished">Нормальный (4:3)</translation>
+        <translation>Нормальный (4:3)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Wide (16:9)</source>
-        <translation type="unfinished">Широкий (16:9)</translation>
+        <translation>Широкий (16:9)</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -4954,82 +4953,82 @@ Do you want to load it  ?
     <message>
         <location line="+4"/>
         <source>MB comparison</source>
-        <translation type="unfinished">Сравнение MB</translation>
+        <translation>Сравнение MB</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished">Несколько битов (vhq)</translation>
+        <translation>Минимум битов (vhq)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rate distortion</source>
-        <translation type="unfinished">Искажение частоты</translation>
+        <translation>Оценка искажений</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>One thread</source>
-        <translation type="unfinished">Один поток</translation>
+        <translation>Один поток</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Two threads)</source>
-        <translation type="unfinished">2 потока</translation>
+        <translation>Два потока</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Three threads</source>
-        <translation type="unfinished">3 потока</translation>
+        <translation>Три потока</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Auto (#cpu)</source>
-        <translation type="unfinished">Автоматически (#cpu)</translation>
+        <translation>Соответственно количеству ядер процессора</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Progressive</source>
-        <translation type="unfinished">Прогрессивнный</translation>
+        <translation>Прогрессивнный</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Interlaced</source>
-        <translation type="unfinished">Чересстрочный</translation>
+        <translation>Чересстрочный</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Top Field First</source>
-        <translation type="unfinished">Сначала верхнее поле</translation>
+        <translation>Сначала верхнее поле</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bottom Field First</source>
-        <translation type="unfinished">Сначала нижнее поле</translation>
+        <translation>Сначала нижнее поле</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Mi_n. quantizer:</source>
-        <translation type="unfinished">_Мин. квантизатор:</translation>
+        <translation>_Мин. квантизатор:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ma_x. quantizer:</source>
-        <translation type="unfinished">М_акс. квантизатор:</translation>
+        <translation>М_акс. квантизатор:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Max. quantizer _difference:</source>
-        <translation type="unfinished">_Разница макс. квантизатора:</translation>
+        <translation>Макс. _скачок квантизатора:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>VBV Buffer Size:</source>
-        <translation type="unfinished">Размер буфера :</translation>
+        <translation>Размер буфера VBV:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Max bitrate (kb/s):</source>
-        <translation type="unfinished">Максимальный битрейт (Кб/с)</translation>
+        <translation>Максимальный битрейт (Кб/с):</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -5039,27 +5038,27 @@ Do you want to load it  ?
     <message>
         <location line="+2"/>
         <source>_Number of B frames:</source>
-        <translation type="unfinished">_Количество кадров B:</translation>
+        <translation>_Количество последовательных кадров B:</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>_Macroblock decision:</source>
-        <translation type="unfinished">_Определение макроблоков:</translation>
+        <translation>_Определение макроблоков:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Aspect ratio:</source>
-        <translation type="unfinished">Соотношение сторон:</translation>
+        <translation>Формат:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Matrices:</source>
-        <translation type="unfinished">Матрицы:</translation>
+        <translation>Матрицы:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Filesize tolerance (kb):</source>
-        <translation type="unfinished">_Допустимый размер файла (Кб)</translation>
+        <translation>_Допустимое превышение заданной величины видео (Кб):</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -5074,37 +5073,37 @@ Do you want to load it  ?
     <message>
         <location line="+2"/>
         <source>_Gop Size:</source>
-        <translation type="unfinished">_Размер GOP:</translation>
+        <translation>_Длина группы кадров:</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_Interlaced:</source>
-        <translation type="unfinished">_Чересстрочный:</translation>
+        <translation>_Исходник:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Field Order:</source>
-        <translation type="unfinished">Порядок поля:</translation>
+        <translation>Порядок полей:</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>Basic Settings</source>
-        <translation type="unfinished">Основные настройки</translation>
+        <translation>Общая</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Adv. Settings</source>
-        <translation type="unfinished">Доп. настройки</translation>
+        <translation>Дополнительная</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Quantization</source>
-        <translation type="unfinished">Квантизация</translation>
+        <translation>Квантизация</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>libavcodec MPEG-2 configuration</source>
-        <translation type="unfinished">Настройка libavcodec MPEG-2</translation>
+        <translation>Настройка кодировщика libavcodec MPEG-2</translation>
     </message>
 </context>
 <context>
@@ -5580,7 +5579,7 @@ Do you want to load it  ?
         <translation type="unfinished">[Несовпадение]</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+99"/>
         <source>Saving mpeg PS (ff)</source>
         <translation type="unfinished">Сохранение mpeg PS (ff)</translation>
     </message>
@@ -6745,17 +6744,17 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/DIA_lavDecoder.cpp" line="+23"/>
         <source>_Swap U and V</source>
-        <translation>_Поменять U и V</translation>
+        <translation type="unfinished">Поменять U и V</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show motion _vectors</source>
-        <translation>Показать _векторы движения</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Decoder Options</source>
-        <translation>Опции декодера</translation>
+        <translation type="unfinished">Опции кодека</translation>
     </message>
 </context>
 <context>
