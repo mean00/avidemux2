@@ -121,6 +121,7 @@ bool ADM_ffMpeg2Encoder::configureContext(void)
     //_context->rc_buffer_size_header=Mp2Settings.lavcSettings.bufferSize*8*1024; // needs patched avcodec.h
     _context->rc_initial_buffer_occupancy=_context->rc_buffer_size;
     _context->rc_max_rate=Mp2Settings.lavcSettings.maxBitrate*1000;
+    _context->bit_rate_tolerance=Mp2Settings.lavcSettings.vratetol*1000;
     //_context->rc_max_rate_header=Mp2Settings.lavcSettings.maxBitrate*1000; // needs patched avcodec.h
     // /Override some parameters specific to this codec
     
