@@ -73,7 +73,7 @@ int admCoreVideoToolbox::copyData(AVCodecContext *s, AVFrame *src, ADMImage *des
     }
 
     ADMImageRefWrittable ref(dest->_width, dest->_height);
-    for (i = 0; i < planes; i++)
+    for (i = 0; i < 3; i++)
     {
         ref._planes[i] = data[i];
         ref._planeStride[i] = linesize[i];
