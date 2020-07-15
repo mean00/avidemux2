@@ -17,12 +17,13 @@
 
 class decoderFFVT : public ADM_acceleratedDecoderFF
 {
+protected:
+                    ADMImage    *copy;
 public:
                     bool        alive;
                                 decoderFFVT (AVCodecContext *avctx,decoderFF *parent);
                                 ~decoderFFVT();
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
-    virtual         bool        dontcopy(void) {return false;}
     virtual const   char        *getName(void) {return "VideoToolbox";}
                     //bool        markSurfaceUsed(ADM_VTSurface *s);
                     //bool        markSurfaceUnused(ADM_VTSurface *s);

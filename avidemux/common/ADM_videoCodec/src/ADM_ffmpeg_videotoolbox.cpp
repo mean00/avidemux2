@@ -91,6 +91,7 @@ decoderFFVT::decoderFFVT(struct AVCodecContext *avctx, decoderFF *parent) : ADM_
     AVCodecID codecID;
     const char *name="";
     alive = false;
+    copy = NULL;
 
     switch(_context->codec_id)
     {
@@ -117,6 +118,7 @@ decoderFFVT::decoderFFVT(struct AVCodecContext *avctx, decoderFF *parent) : ADM_
         return;
     }
     alive = true;
+    copy = new ADMImageDefault(avctx->width, avctx->height);
     ADM_info("Successfully setup hw accel\n");
 }
 /**
@@ -125,6 +127,11 @@ decoderFFVT::decoderFFVT(struct AVCodecContext *avctx, decoderFF *parent) : ADM_
 decoderFFVT::~decoderFFVT()
 {
     ADM_info("Destroying VideoToolbox decoder\n");
+    if(copy)
+    {
+        delete copy;
+        copy = NULL;
+    }
 }
 /**
     \fn uncompress
@@ -197,16 +204,22 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
         return false;
     }
 
-    int result=admCoreVideoToolbox::copyData(_context, frame, out);
+    int result=admCoreVideoToolbox::copyData(_context, frame, copy);
     if(result)
     {
         ADM_error("copying hw image failed, return value was %d\n",result);
         return false;
     }
 
-    out->Pts = (uint64_t)(frame->reordered_opaque);
-    out->flags = admFrameTypeFromLav(frame);
-    out->refType=ADM_HW_NONE;
+    copy->Pts = (uint64_t)(frame->reordered_opaque);
+    copy->flags = admFrameTypeFromLav(frame);
+    copy->refType=ADM_HW_NONE;
+    for(int i=0;i<3;i++)
+    {
+        out->_planes[i] = copy->_planes[i];
+        out->_planeStride[i] = copy->_planeStride[i];
+    }
+    out->copyInfo(copy);
 
     return true;
 }
