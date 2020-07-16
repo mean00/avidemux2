@@ -425,12 +425,11 @@ uint32_t i,j,cur;
         if(!isAudio)
         {
             std::map <uint32_t, uint32_t> hist;
-            for(uint32_t i=0;i<nbChunk;i++)
+            for(uint32_t i=0;i+1<nbChunk;i++)
             {
                 thisone=track->index[i].dts;
                 if(!thisone) continue;
                 if(thisone<step) step=thisone;
-                if(thisone<100) continue; // ignore too low durations
                 if(hist.find(thisone)==hist.end())
                     hist.insert({thisone,1});
                 else
@@ -442,12 +441,13 @@ uint32_t i,j,cur;
             {
                 printf("Frame duration %u count: %u\n",it->first,it->second);
             }
-            if(hist.size()==3) // we look for pattern x-1, x, x+1
+            it=hist.begin();
+#define JITTER_FILTER_MIN_DURATION 99 // an arbitrary lower bound to avoid false positives
+            if(hist.size()==3 && it->first >= JITTER_FILTER_MIN_DURATION) // we look for pattern x-1, x, x+1
             {
                 ADM_info("Checking whether we need to fix jitter from rounding errors...\n");
                 uint32_t a,b,c;
                 uint32_t acount,ccount;
-                it=hist.begin();
                 a=it->first;
                 acount=it->second;
                 it++;
