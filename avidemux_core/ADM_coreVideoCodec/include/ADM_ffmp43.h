@@ -80,7 +80,7 @@ protected:
 
 protected:
            uint32_t     frameType (void);
-           uint8_t      clonePic (AVFrame * src, ADMImage * out);
+           uint8_t      clonePic (AVFrame * src, ADMImage * out, bool swap);
            void         decoderMultiThread ();
            uint32_t     admFrameTypeFromLav (AVFrame *pic);
 
