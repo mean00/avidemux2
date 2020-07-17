@@ -148,8 +148,10 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             break;
     case  ADM_COLOR_YV12:
             srcData[0]=from;
-            srcData[1]=from+width*height;
-            srcData[2]=from+((5*width*height)>>2);
+            from+=width*height;
+            srcData[1]=from;
+            from+=(width>>1)*(height>>1);
+            srcData[2]=from;
             srcStride[0]=width;
             srcStride[1]=width>>1;
             srcStride[2]=width>>1;
@@ -173,8 +175,10 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             break;            
     case  ADM_COLOR_YUV422P:
             srcData[0]=from;
-            srcData[1]=from+width*height;
-            srcData[2]=from+((3*width*height)>>1);
+            from+=width*height;
+            srcData[1]=from;
+            from+=(width>>1)*height;
+            srcData[2]=from;
             srcStride[0]=width;
             srcStride[1]=width>>1;
             srcStride[2]=width>>1;
@@ -264,6 +268,13 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
     
     src[3]=sourceImage->GetReadPtr(PLANAR_ALPHA);
     dst[3]=destImage->GetWritePtr(PLANAR_ALPHA);
+
+    if(fromColor==ADM_COLOR_YV12)
+    {
+        uint8_t *p=src[1];
+        src[1]=src[2];
+        src[2]=p;
+    }
 
     if(toColor==ADM_COLOR_YV12)
     {
@@ -379,6 +390,20 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
     dstPitch[0]=idstPitch[0];
     dstPitch[1]=idstPitch[1];
     dstPitch[2]=idstPitch[2];
+
+    if(fromColor==ADM_COLOR_YV12)
+    {
+        uint8_t *p=srcPlanes[1];
+        srcPlanes[1]=srcPlanes[2];
+        srcPlanes[2]=p;
+    }
+    if(toColor==ADM_COLOR_YV12)
+    {
+        uint8_t *p=dstPlanes[1];
+        dstPlanes[1]=dstPlanes[2];
+        dstPlanes[2]=p;
+    }
+
     if(false==convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes)) return false;
 
     if(toColor==ADM_COLOR_BGR32A)
