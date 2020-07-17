@@ -80,11 +80,11 @@ bool simpleRender::displayImage(ADMImage *pic)
     refresh();
     return true;
 }
-#if !(ADM_UI_TYPE_BUILD == ADM_UI_QT4)
+//#if (ADM_UI_TYPE_BUILD == ADM_UI_QT4)
     #define IVERT ADM_COLOR_BGR32A
-#else
-    #define IVERT ADM_COLOR_RGB32A
-#endif
+//#else
+//    #define IVERT ADM_COLOR_RGB32A
+//#endif
 /**
     \fn cleanup
 */

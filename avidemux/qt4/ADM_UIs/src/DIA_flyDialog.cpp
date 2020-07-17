@@ -718,7 +718,7 @@ void ADM_flyDialog::updateSlider(void)
 */
 bool  ADM_flyDialog::isRgbInverted(void)
 {
-  return 0; 
+    return 1;
 }
 
 
