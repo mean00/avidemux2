@@ -531,62 +531,15 @@ uint32_t segNo;
 */
 uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
 {
-    if(src->_colorspace!=ADM_COLOR_YV12)
-    {
-        // We need to do some colorspace conversion
-        // Is there already one ?
-        if(!vid->color)
-        {
-            vid->color=new ADMColorScalerSimple(src->_width,src->_height,src->_colorspace,ADM_COLOR_YV12);
-        }
-        // Since it is not YV12 it MUST be a ref
-        ADM_assert(src->isRef());
-
-        int srcStrides[3];
-        uint8_t *srcPlanes[3];
-        int dstStrides[3];
-        uint8_t *dstPlanes[3];
-        bool needToSwapUV=false;
-        // The src image has U & V already swapped, so that YUV420P output by sws_scale
-        // has swapped colors, meaning correct colors when interpreted as YV12.
-        // If all the data is in Y we have to swap planes here.
-        switch(src->_colorspace)
-        {
-            case ADM_COLOR_RGB32A:
-            case ADM_COLOR_RGB24:
-            case ADM_COLOR_BGR24:
-            case ADM_COLOR_RGB555:
-            case ADM_COLOR_YUV422:
-            case ADM_COLOR_UYVY422:
-                needToSwapUV=true;
-            default:break;
-        }
-
-        src->GetPitches(srcStrides);
-        src->GetReadPlanes(srcPlanes);
-        dstStrides[0]=dst->GetPitch(PLANAR_Y);
-        dstPlanes[0]=dst->GetWritePtr(PLANAR_Y);
-        if(needToSwapUV)
-        {
-            dstStrides[2]=dst->GetPitch(PLANAR_U);
-            dstStrides[1]=dst->GetPitch(PLANAR_V);
-            dstPlanes[2]=dst->GetWritePtr(PLANAR_U);
-            dstPlanes[1]=dst->GetWritePtr(PLANAR_V);
-        }else
-        {
-            dstStrides[1]=dst->GetPitch(PLANAR_U);
-            dstStrides[2]=dst->GetPitch(PLANAR_V);
-            dstPlanes[1]=dst->GetWritePtr(PLANAR_U);
-            dstPlanes[2]=dst->GetWritePtr(PLANAR_V);
-        }
-
-        vid->color->convertPlanes(srcStrides,dstStrides,srcPlanes,dstPlanes);
-        return 1;
-    }
-    // nothing to do
-    //#warning handle swap uv
-    dst->duplicate(src);
-    return 1;
+    if(src->_colorspace==ADM_COLOR_YV12)
+        return dst->duplicate(src);
+    // We need to do some colorspace conversion
+    // Is there already one ?
+    if(!vid->color)
+        vid->color=new ADMColorScalerSimple(src->_width,src->_height,src->_colorspace,ADM_COLOR_YV12);
+    // Since it is not YV12 it MUST be a ref
+    ADM_assert(src->isRef());
+    return vid->color->convertImage(src,dst);
 }
 /**
     \fn setPostProc
