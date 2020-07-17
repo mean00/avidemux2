@@ -42,14 +42,15 @@ extern "C"
     \fn clonePic
     \brief Convert AvFrame to ADMImage
 */
-uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
+uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
 {
   uint32_t    u,v;
   ADM_assert(out->isRef());
   ADMImageRef *ref=out->castToRef();
   ref->_planes[0] = (uint8_t *) src->data[0];
   ref->_planeStride[0] = src->linesize[0];
-  if (decoderFF_params.swapUv)
+  swap = swap != decoderFF_params.swapUv;
+  if (swap)
     {
       u = 1;
       v = 2;
@@ -59,11 +60,11 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
       u = 2;
       v = 1;
     }
-  ref->_planes[1] = (uint8_t *) src->data[u];
-  ref->_planeStride[1] = src->linesize[u];
+  ref->_planes[1] = (uint8_t *) src->data[v];
+  ref->_planeStride[1] = src->linesize[v];
 
-  ref->_planes[2] = (uint8_t *) src->data[v];
-  ref->_planeStride[2] = src->linesize[v];
+  ref->_planes[2] = (uint8_t *) src->data[u];
+  ref->_planeStride[2] = src->linesize[u];
   
   _lastQ = 0;			//_context->quality;
   out->_Qp = (src->quality * 32) / FF_LAMBDA_MAX;
@@ -471,6 +472,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
 
   // We have an image....
+  bool swap = false;
   switch (_context->pix_fmt)
     {
     case AV_PIX_FMT_YUV411P:
@@ -502,6 +504,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       // In that case depending on swap u/v
       // we do it or not
       out->_colorspace = ADM_COLOR_YV12;
+      swap = true;
       aprintf("colorspace is AV_PIX_FMT_YUV420P, AV_PIX_FMT_YUVJ420P or AV_PIX_FMT_YUVA420P --> ADM_COLOR_YV12\n");
       break;
     case AV_PIX_FMT_BGR24:
@@ -560,7 +563,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       printf ("[lavc] Unhandled colorspace: %d (AV_PIX_FMT_YUV444P10BE=%d)\n", _context->pix_fmt,AV_PIX_FMT_YUV444P10BE);
       return 0;
     }
-    clonePic (_frame, out);
+    clonePic(_frame, out, swap);
     //printf("[AvCodec] Pts : %"PRIu64" Out Pts:%"PRIu64" \n",_frame.pts,out->Pts);
 
   return 1;
