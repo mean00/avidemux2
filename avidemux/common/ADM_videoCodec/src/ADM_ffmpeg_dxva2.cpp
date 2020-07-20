@@ -237,12 +237,16 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
                 {
                     prefs->get(FEATURES_DXVA2_OVERRIDE_BLACKLIST_VERSION,&ignore_version);
                     const char *minversion=humanReadable(INTEL_MIN_DRIVER_VERSION_FOR_HEVC);
+                    const char *driverVersion=humanReadable(drv);
                     if(!ignore_version)
                     {
-                        ADM_warning("Intel driver version %s < %s is blacklisted for HEVC decoding.\n",humanReadable(drv),minversion);
+                        ADM_warning("Intel driver version %s < %s is blacklisted for HEVC decoding.\n",driverVersion,minversion);
+                        ADM_dealloc(minversion);
+                        ADM_dealloc(driverVersion);
                         continue;
                     }
-                    ADM_warning("Overriding Intel driver version blacklist for %s\n",humanReadable(drv));
+                    ADM_warning("Overriding Intel driver version blacklist for %s\n",driverVersion);
+                    ADM_dealloc(driverVersion);
                 }else if(vid==admD3D::VENDOR_INTEL && dxvaBitDepthFromContext(avctx)==10)
                 {
                     prefs->get(FEATURES_DXVA2_OVERRIDE_BLACKLIST_PROFILE,&ignore_profile);
