@@ -50,74 +50,40 @@ flyBlacken::~flyBlacken()
 }
 
 /**
-    \fn process
-	\brief 
-*/
-uint8_t    flyBlacken::processRgb(uint8_t *imageIn, uint8_t *imageOut)
+ * \fn blank
+ * \brief Green bars
+ */
+static void blank(uint8_t *in, int w, int h, int stride)
 {
-        uint32_t x,y;
-        uint8_t  *in;
-        uint32_t w=_w,h=_h;
-  
-        
-        memcpy(imageOut,imageIn,_w*_h*4);
-        in=imageOut;
-        for(y=0;y<top;y++)
-        {
-                for(x=0;x<w;x++)
-                {
-                        *in++=0;
-                        
-                        
-                        *in++=0xff;
-                        
-                        *in++=0;
-                        *in++=0xff;
-                }
-        }
-        // bottom
-        in=imageOut+(w*4)*(h-bottom);
-        for(y=0;y<bottom;y++)
-        {
-                for(x=0;x<w;x++)
-                {
-                        *in++=0;
-                        
-                        
-                        *in++=0xff;
-                        *in++=0;
-                        *in++=0xff;
-                }
-        }
-        // left
-        in=imageOut;
-        uint32_t stride=4*w-4;
-        for(y=0;y<h;y++)
-        {
-                for(x=0;x<left;x++)
-                {
-                        *(in+4*x)=0;
-                        
-                        
-                        *(in+4*x+1)=0xff;
-                        *(in+4*x+2)=0;
-                        *(in+4*x+3)=0xff;
-                }
-                for(x=0;x<right;x++)
-                {
-                        *(in-4*x+stride-4)=0;
-                        
-                        
-                        *(in-4*x+stride-3)=0xff;
-                        *(in-4*x+stride-2)=0;
-                        *(in-4*x+stride-1)=0xff;
-                        
-                }
-                in+=4*w;
-  
-        }
-        return true;
+    for(int y=0;y<h;y++)
+    {
+        memset(in,0,4*w);
+        uint8_t *green=in+1;
+        for(int x=0;x<w;x++)
+            green[x<<2]=0xff;
+        uint8_t *alpha=in+3;
+        for(int x=0;x<w;x++)
+            alpha[x<<2]=0xff;
+        in+=stride;
+    }
+}
 
+/**
+ * \fn processRgb
+ * @param imageIn
+ * @param imageOut
+ * @return
+ */
+uint8_t flyBlacken::processRgb(uint8_t *imageIn, uint8_t *imageOut)
+{
+    int stride=ADM_IMAGE_ALIGN(_w*4);
+    memcpy(imageOut,imageIn,stride*_h);
+
+    blank(imageOut,_w,top,stride);
+    blank(imageOut+stride*(_h-bottom),_w,bottom,stride);
+    blank(imageOut,left,_h,stride);
+    blank(imageOut+(_w-right)*4,right,_h,stride);
+    return true;
 }
 
 /**
