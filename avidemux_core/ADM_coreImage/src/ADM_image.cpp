@@ -174,7 +174,7 @@ ADMImageDefault::ADMImageDefault(uint32_t w, uint32_t h) : ADMImage(w,h,ADM_IMAG
 {
     uint32_t pitch=ADM_IMAGE_ALIGN(w);
     uint32_t allocatedHeight=ADM_IMAGE_ALIGN(h);
-    data.setSize(32+(pitch*allocatedHeight*3)/2);
+    data.setSize(64+(pitch*allocatedHeight*3)/2);
     _planes[0]=data.at(0);
     _planes[1]=data.at(pitch*allocatedHeight);
     _planes[2]=data.at((pitch*allocatedHeight*5)>>2);
@@ -202,7 +202,7 @@ bool           ADMImageDefault::isWrittable(void)
  */
 bool           ADMImageDefault::addAlphaChannel(void)
 {
-    int paddedWidth=(_width+15)& ~15;
+    int paddedWidth=(_width+31)& ~31;
     alphaChannel.setSize(paddedWidth*_height);
     _alpha=alphaChannel.at(0);
     _alphaStride=paddedWidth;
