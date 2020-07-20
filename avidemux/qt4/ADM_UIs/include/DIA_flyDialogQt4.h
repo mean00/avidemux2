@@ -56,6 +56,7 @@ class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
 {
 protected:
         uint32_t _w,_h;
+        uint32_t _l; // bytes per line
 public:
         uint8_t *dataBuffer;
 

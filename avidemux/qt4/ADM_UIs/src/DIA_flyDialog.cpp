@@ -103,9 +103,9 @@ public:
     \fn updateZoom
 */
 void ADM_flyDialog::updateZoom(void)
-{   
+{
         _rgbByteBufferDisplay.clean();
-        _rgbByteBufferDisplay.setSize(_zoomW * _zoomH * 4);
+        _rgbByteBufferDisplay.setSize(ADM_IMAGE_ALIGN(_zoomW * 4) * _zoomH);
         resetScaler();
 }
 /**
@@ -426,7 +426,8 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
                                 ADM_QCanvas *canvas, ADM_QSlider *slider,
                                 ResizeMethod resizeMethod) : ADM_flyDialog(parent,width,height,in,canvas,slider,resizeMethod)
 {
-    uint32_t size=_w*_h*4;
+    uint32_t size = ADM_IMAGE_ALIGN(_w*4);
+    size*=_h;
     _rgbByteBuffer.setSize(size);
     _rgbByteBufferOut.setSize(size);
      yuv2rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,
