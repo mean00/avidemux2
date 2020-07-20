@@ -43,34 +43,22 @@ extern "C" {
 /**
     \fn swapRGB
 */
-static void swapRGB32(uint32_t w,uint32_t h, uint8_t *to)
+static void swapRGB32(uint32_t w, uint32_t h, uint32_t p, uint8_t *to)
 {
-  uint32_t l=w*h;
-    uint8_t *d=(uint8_t *)to;
-    while(l--)
+    uint32_t i,l;
+    uint8_t *start=(uint8_t *)to;
+    for(i=0; i < h; i++)
     {
-        uint8_t s=d[0];
-        d[0]=d[2];
-        d[2]=s;
-        d+=4;
-        
-    }
-}
-/**
-    \fn swapRGB
-*/
-static void swapRGB24(uint32_t w,uint32_t h, uint8_t *to)
-{
-    uint32_t l=w*h;
-    uint8_t *d=(uint8_t *)to;
-    return;
-
-    while(l--)
-    {
-        uint8_t s=d[0];
-        d[0]=d[2];
-        d[2]=s;
-        d+=3;
+        uint8_t *d=start;
+        start+=p;
+        l=w;
+        while(l--)
+        {
+            uint8_t s=d[0];
+            d[0]=d[2];
+            d[2]=s;
+            d+=4;
+        }
     }
 }
 /**
@@ -133,7 +121,7 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcData[0]=from;
             srcData[1]=NULL;
             srcData[2]=NULL;
-            srcStride[0]=width*2;
+            srcStride[0]=ADM_IMAGE_ALIGN(width*2);
             srcStride[1]=0;
             srcStride[2]=0;
             break;
@@ -142,12 +130,14 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcData[0]=from;
             srcData[1]=NULL;
             srcData[2]=NULL;
-            srcStride[0]=width*3;
+            srcStride[0]=ADM_IMAGE_ALIGN(width*3);
             srcStride[1]=0;
             srcStride[2]=0;
             break;
     case  ADM_COLOR_YV12:
             srcData[0]=from;
+            width=ADM_IMAGE_ALIGN(width);
+            height=ADM_IMAGE_ALIGN(height);
             from+=width*height;
             srcData[1]=from;
             from+=(width>>1)*(height>>1);
@@ -169,12 +159,14 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcData[0]=from;
             srcData[1]=NULL;
             srcData[2]=NULL;
-            srcStride[0]=width*2;
+            srcStride[0]=ADM_IMAGE_ALIGN(width*2);
             srcStride[1]=0;
             srcStride[2]=0;
             break;            
     case  ADM_COLOR_YUV422P:
             srcData[0]=from;
+            width=ADM_IMAGE_ALIGN(width);
+            height=ADM_IMAGE_ALIGN(height);
             from+=width*height;
             srcData[1]=from;
             from+=(width>>1)*height;
@@ -188,11 +180,10 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcData[0]=from;
             srcData[1]=NULL;
             srcData[2]=NULL;
-            srcStride[0]=width*4;
+            srcStride[0]=ADM_IMAGE_ALIGN(width*4);
             srcStride[1]=0;
             srcStride[2]=0;
             break;
-    
     default:
         ADM_assert(0);
   }
@@ -219,15 +210,9 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
   sws_scale(CONTEXT,srcData,srcStride,0,srcHeight,dstData,dstStride);
   if(toColor==ADM_COLOR_BGR32A)
   {
-     swapRGB32(dstWidth,dstHeight,to);
+        swapRGB32(dstWidth,dstHeight,dstStride[0],to);
   }
-  if(toColor==ADM_COLOR_BGR24)
-  {
-     swapRGB24(dstWidth,dstHeight,to);
-  }
-  
   return true;
-  
 }
 /**
     \fn convertPlanes
@@ -383,13 +368,9 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
     uint8_t *dstPlanes[3];
     int srcPitch[3];
     int dstPitch[3];
-    int      idstPitch[3];
     img->GetPitches(srcPitch);
     img->GetReadPlanes(srcPlanes);
-    getStrideAndPointers(true,to,toColor, dstPlanes,idstPitch);
-    dstPitch[0]=idstPitch[0];
-    dstPitch[1]=idstPitch[1];
-    dstPitch[2]=idstPitch[2];
+    getStrideAndPointers(true,to,toColor, dstPlanes, dstPitch);
 
     if(fromColor==ADM_COLOR_YV12)
     {
@@ -408,8 +389,8 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
 
     if(toColor==ADM_COLOR_BGR32A)
     {
-             swapRGB32(dstWidth,dstHeight,to);
-    }   
+        swapRGB32(dstWidth,dstHeight,dstPitch[0],to);
+    }
     return true;
 }
 //EOF
