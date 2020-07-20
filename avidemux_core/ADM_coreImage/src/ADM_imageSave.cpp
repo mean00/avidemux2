@@ -13,6 +13,7 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 }
 
+#if 0
 /**
     \fn SwapMe
 */
@@ -34,6 +35,7 @@ void SwapMe(uint8_t *tgt,uint8_t *src,int nb)
    return;
     
 }
+#endif
 
 /**
     \fn saveAsBmp
@@ -44,11 +46,18 @@ bool  ADMImage::saveAsBmpInternal(const char *filename)
   ADM_BITMAPFILEHEADER bmfh;
   ADM_BITMAPINFOHEADER bmph;
   FILE *fd;
-  uint32_t sz;
   uint16_t s16;
   uint32_t s32;
+  uint32_t y;
 
-  sz = _width* _height * 3;
+  const uint32_t stride = ADM_IMAGE_ALIGN(_width * 3);
+  const uint32_t sz = stride * _height;
+
+#define ALIGN_DWORD(x) ((x+3)&(~3))
+
+  uint32_t packed = 0;
+  for(y=0; y < _height; y++)
+        packed = ALIGN_DWORD(packed + _width * 3);
 
   bmfh.bfReserved1 = bmfh.bfReserved2 = 0;
   bmfh.bfOffBits = sizeof (bmfh) + sizeof (bmph);
@@ -59,7 +68,7 @@ bool  ADMImage::saveAsBmpInternal(const char *filename)
   bmph.biPlanes = 1;
   bmph.biBitCount = 24;
   bmph.biCompression = 0;	// COMPRESSION NONE
-  bmph.biSizeImage = sz;
+  bmph.biSizeImage = packed;
   bmph.biXPelsPerMeter = 0;
   bmph.biYPelsPerMeter = 0;
   bmph.biClrUsed = 0;
@@ -70,56 +79,47 @@ bool  ADMImage::saveAsBmpInternal(const char *filename)
 	bmph.colorEncoding=0;
 */
 
-  uint8_t *out;
+    uint8_t *tmp=(uint8_t *)ADM_alloc(sz);
+    uint8_t *out=(uint8_t *)ADM_alloc(packed);
+    if(!tmp || !out)
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cannot allocate enough memory"), NULL);
+        ADM_dealloc(tmp);
+        ADM_dealloc(out);
+        return 0;
+    }
 
-        out=(uint8_t *)ADM_alloc(sz);
-        if(!out)
+    ADMColorScalerSimple converter(bmph.biWidth, bmph.biHeight, ADM_COLOR_YV12, ADM_COLOR_BGR24);
+    converter.convertImage(this,tmp);
+
+    // Pack data and swap lines
+    uint8_t *up=out;
+    uint8_t *down=tmp+(_height-1)*stride;
+    packed = 0;
+    for(y=0; y < _height; y++)
+    {
+        uint32_t end=packed+_width*3;
+        packed = ALIGN_DWORD(end);
+        uint32_t padding=packed-end;
+        memcpy(up,down,_width*3);
+        down-=stride;
+        up+=_width*3;
+        if(padding)
         {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Memory error"), NULL);
-//            ADM_dealloc(out);
-            return 0;
+            memset(up,0,padding);
+            up+=padding;
         }
+    }
+    ADM_dealloc(tmp);
+    tmp=NULL;
 
-        // swap U & V planes first
-        int xss[3], xds[3];
-        uint8_t *xsp[3], *xdp[3];
-        xss[0] = this->GetPitch(PLANAR_Y);
-        xss[1] = this->GetPitch(PLANAR_V);
-        xss[2] = this->GetPitch(PLANAR_U);
-        xsp[0] = this->GetReadPtr(PLANAR_Y);
-        xsp[1] = this->GetReadPtr(PLANAR_V);
-        xsp[2] = this->GetReadPtr(PLANAR_U);
-        xds[0] = bmph.biWidth*3;
-        xds[1] = xds[2] = 0;
-        xdp[0] = out;
-        xdp[1] = xdp[2] = NULL;
-
-        ADMColorScalerSimple converter(bmph.biWidth, bmph.biHeight, ADM_COLOR_YV12, ADM_COLOR_BGR24);
-        converter.convertPlanes(xss,xds,xsp,xdp);
-        uint32_t ww=bmph.biWidth;
-        uint32_t hh=bmph.biHeight;
-        uint8_t *swap = new uint8_t[ww*3];
-        uint8_t *up=out;
-        uint8_t *down=out+(hh-1)*ww*3;
-        
-        for(int y=0;y<hh>>1;y++)
-        {
-            SwapMe(swap,up,ww); 
-            SwapMe(up,down,ww);
-            memcpy( down,swap,ww*3);
-            down-=3*ww;
-            up+=3*ww;
-        }
-
-		delete [] swap;
-
-        fd = ADM_fopen (filename, "wb");
-        if (!fd)
-        {
-                GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened"), NULL);
-                ADM_dealloc(out);
-                return 0;
-        }
+    fd = ADM_fopen (filename, "wb");
+    if (!fd)
+    {
+        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Cannot create output file"), NULL);
+        ADM_dealloc(out);
+        return 0;
+    }
 
 	// Bitmpap file header, not using tructure due to gcc padding it
 #ifdef ADM_BIG_ENDIAN
@@ -127,7 +127,7 @@ bool  ADMImage::saveAsBmpInternal(const char *filename)
 #else
   	s16 = 0x4D42;
 #endif
-  	s32 = 14 + sizeof (bmph) + sz;
+  	s32 = 14 + sizeof (bmph) + packed;
 #ifdef ADM_BIG_ENDIAN
 	#define SWAP32(x) x=R32(x)
 #else
@@ -145,7 +145,7 @@ bool  ADMImage::saveAsBmpInternal(const char *filename)
 	Endian_BitMapInfo(&bmph);
 #endif
         fwrite (&bmph, sizeof (bmph), 1, fd);
-        fwrite (out, sz, 1, fd);
+        fwrite (out, packed, 1, fd);
 
         fclose(fd);
         ADM_dealloc(out);
@@ -173,103 +173,110 @@ bool  ADMImage::saveAsBmp(const char *filename)
 */
 bool  ADMImage::saveAsJpgInternal(const char *filename)
 {
-
-AVCodecContext   *context=NULL;   
-AVFrame          *frame=NULL;
-bool             result=false;
-AVCodec          *codec=NULL;
-int              r=0;
-ADM_byteBuffer   byteBuffer;
+    AVCodecContext *context=NULL;
+    AVFrame *frame=NULL;
+    bool result=false;
+    AVCodec *codec=NULL;
+    int r=0;
+    FILE *f=NULL;
 
     frame=av_frame_alloc();
     if(!frame)
     {
-        printf("[saveAsJpg] Cannot allocate frame\n");
-        goto  jpgCleanup;
+        ADM_error("Cannot allocate frame\n");
+        return false;
     }
 
     codec=avcodec_find_encoder(AV_CODEC_ID_MJPEG);
     if(!codec)
     {
-        printf("[saveAsJpg] Cannot allocate codec\n");
-        goto  jpgCleanup;
+        ADM_error("Cannot allocate encoder\n");
+        goto jpgCleanup;
     }
 
     context=avcodec_alloc_context3(codec);
     if(!context) 
     {
-        printf("[saveAsJpg] Cannot allocate context\n");
-        goto  jpgCleanup;
+        ADM_error("Cannot allocate context\n");
+        goto jpgCleanup;
     }
 
     context->pix_fmt =AV_PIX_FMT_YUV420P;
+    context->color_range = AVCOL_RANGE_MPEG;
     context->strict_std_compliance = -1;
     context->time_base.den=1;
     context->time_base.num=1;
     context->width=_width;
     context->height=_height;
-    context->flags |= CODEC_FLAG_QSCALE;
-    r=avcodec_open2(context, codec, NULL); 
+    context->flags |= AV_CODEC_FLAG_QSCALE;
+
+    r=avcodec_open2(context, codec, NULL);
+
     if(r<0)
     {
-        printf("[saveAsJpg] Cannot mix codec and context\n");
-        ADM_dealloc (context);
-        return false;
+        char msg[AV_ERROR_MAX_STRING_SIZE]={0};
+        av_make_error_string(msg, AV_ERROR_MAX_STRING_SIZE, r);
+        ADM_error("Cannot combine codec and context, error %d (%s)\n",r,msg);
+        goto jpgCleanup;
     }
     // Setup our image & stuff....
-        frame->width=_width;
-        frame->height=_height;
-        frame->format=AV_PIX_FMT_YUV420P;
+    frame->width=_width;
+    frame->height=_height;
+    frame->format=AV_PIX_FMT_YUV420P;
+    frame->color_range = AVCOL_RANGE_MPEG;
 
-        frame->linesize[0] = GetPitch(PLANAR_Y);
-        frame->linesize[2] = GetPitch(PLANAR_U);
-        frame->linesize[1] = GetPitch(PLANAR_V);
+    frame->linesize[0] = GetPitch(PLANAR_Y);
+    frame->linesize[2] = GetPitch(PLANAR_U);
+    frame->linesize[1] = GetPitch(PLANAR_V);
 
-        frame->data[0] = GetWritePtr(PLANAR_Y);
-        frame->data[2] = GetWritePtr(PLANAR_U);
-        frame->data[1] = GetWritePtr(PLANAR_V);
-    // Grab a temp buffer
-    
+    frame->data[0] = GetWritePtr(PLANAR_Y);
+    frame->data[2] = GetWritePtr(PLANAR_U);
+    frame->data[1] = GetWritePtr(PLANAR_V);
+    frame->quality = (int) floor (FF_QP2LAMBDA * 2+ 0.5);
+
     // Encode!
-     
-      frame->quality = (int) floor (FF_QP2LAMBDA * 2+ 0.5);
+    r = avcodec_send_frame(context,frame);
 
-      byteBuffer.setSize(_width*_height*4);
-	  
+    if(r<0)
+    {
+        char msg[AV_ERROR_MAX_STRING_SIZE]={0};
+        av_make_error_string(msg, AV_ERROR_MAX_STRING_SIZE, r);
+        ADM_error("Error %d (%s) sending data to encoder.\n",r,msg);
+        goto jpgCleanup;
+    }
 
-      AVPacket pkt;
-      av_init_packet(&pkt);
-      int gotSomething;
-      pkt.size=_width*_height*4;
-      pkt.data=byteBuffer.at(0);
-      r=avcodec_encode_video2(context,&pkt,frame,&gotSomething);
-      if(r || !gotSomething)
-      {
-            ADM_error("[jpeg] Error %d encoding video\n",r);
-            goto  jpgCleanup;
-      }
-      
-        // Ok now write our file...
-        {
-            FILE *f=ADM_fopen(filename,"wb");
-            if(f)
-            {
-                fwrite(byteBuffer.at(0),pkt.size,1,f);
-                fclose(f);
-                result=true;
-            }else
-            {
-                printf("[saveAsJpeg] Cannot open %s for writing!\n",filename);
+    AVPacket pkt;
+    av_init_packet(&pkt);
 
-            }
-       }
+    r = avcodec_receive_packet(context,&pkt);
+
+    if(r<0)
+    {
+        char msg[AV_ERROR_MAX_STRING_SIZE]={0};
+        av_make_error_string(msg, AV_ERROR_MAX_STRING_SIZE, r);
+        ADM_error("Error %d (%s) encoding to JPEG.\n",r,msg);
+        av_packet_unref(&pkt);
+        goto jpgCleanup;
+    }
+    // Ok now write our file...
+    f=ADM_fopen(filename,"wb");
+    if(!f)
+    {
+        ADM_error("Cannot open %s for writing!\n",filename);
+        av_packet_unref(&pkt);
+        goto jpgCleanup;
+    }
+    fwrite(pkt.data,pkt.size,1,f);
+    fclose(f);
+    f=NULL;
+    av_packet_unref(&pkt);
+    result=true;
 
 // Cleanup
 jpgCleanup:
     if(context)
     {
-        avcodec_close (context);
-        av_free (context);
+        avcodec_free_context(&context);
         context=NULL;
     }
 
@@ -291,25 +298,24 @@ bool ADMImage::saveAsPngInternal(const char *filename)
     AVCodecContext *context=NULL;
     AVFrame *frame=NULL;
     AVCodec *codec=NULL;
+    FILE *f=NULL;
     bool result=false;
-    int sz=_width*_height*3, r=0;
-    uint8_t *out;
-    int xss[3], xds[3];
-    uint8_t *xsp[3], *xdp[3];
+    const uint32_t sz=ADM_IMAGE_ALIGN(_width*3)*_height;
+    int r=0;
+    uint8_t *out=NULL;
     ADMColorScalerSimple converter(_width, _height, ADM_COLOR_YV12, ADM_COLOR_RGB24);
-    ADM_byteBuffer byteBuffer;
 
     frame=av_frame_alloc();
     if(!frame)
     {
         ADM_error("Cannot allocate frame\n");
-        goto __cleanup;
+        return false;
     }
 
     codec=avcodec_find_encoder(AV_CODEC_ID_PNG);
     if(!codec)
     {
-        ADM_error("Cannot allocate codec\n");
+        ADM_error("Cannot allocate encoder\n");
         goto __cleanup;
     }
 
@@ -328,35 +334,31 @@ bool ADMImage::saveAsPngInternal(const char *filename)
     context->height=_height;
 
     r=avcodec_open2(context, codec, NULL);
+
     if(r<0)
     {
-        ADM_error("Cannot combine codec and context\n");
-        ADM_dealloc(context);
-        return false;
+        char msg[AV_ERROR_MAX_STRING_SIZE]={0};
+        av_make_error_string(msg, AV_ERROR_MAX_STRING_SIZE, r);
+        ADM_error("Cannot combine codec and context, error %d (%s)\n",r,msg);
+        goto __cleanup;
     }
 
-    // swap U & V planes first
     out=(uint8_t *)ADM_alloc(sz);
-    xss[0] = this->GetPitch(PLANAR_Y);
-    xss[1] = this->GetPitch(PLANAR_V);
-    xss[2] = this->GetPitch(PLANAR_U);
-    xsp[0] = this->GetReadPtr(PLANAR_Y);
-    xsp[1] = this->GetReadPtr(PLANAR_V);
-    xsp[2] = this->GetReadPtr(PLANAR_U);
-    xds[0] = _width*3;
-    xds[1] = xds[2] = 0;
-    xdp[0] = out;
-    xdp[1] = xdp[2] = NULL;
+    if(!out)
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Memory error"), NULL);
+        goto __cleanup;
+    }
 
     // convert colorspace
-    converter.convertPlanes(xss,xds,xsp,xdp);
+    converter.convertImage(this,out);
 
     // setup AVFrame
     frame->width = _width;
     frame->height = _height;
     frame->format = AV_PIX_FMT_RGB24;
 
-    frame->linesize[0] = _width*3;
+    frame->linesize[0] = ADM_IMAGE_ALIGN(_width*3);
     frame->linesize[1] = 0;
     frame->linesize[2] = 0;
 
@@ -364,42 +366,52 @@ bool ADMImage::saveAsPngInternal(const char *filename)
     frame->data[1] = NULL;
     frame->data[2] = NULL;
 
-    // Grab a temp buffer
-    byteBuffer.setSize(sz);
-
     // Encode
+    r = avcodec_send_frame(context,frame);
+
+    ADM_dealloc(out);
+
+    if(r<0)
+    {
+        char msg[AV_ERROR_MAX_STRING_SIZE]={0};
+        av_make_error_string(msg, AV_ERROR_MAX_STRING_SIZE, r);
+        ADM_error("Error %d (%s) sending data to encoder.\n",r,msg);
+        goto __cleanup;
+    }
+
     AVPacket pkt;
     av_init_packet(&pkt);
-    int gotSomething;
-    pkt.size=sz;
-    pkt.data=byteBuffer.at(0);
-    r=avcodec_encode_video2(context,&pkt,frame,&gotSomething);
-    if(r || !gotSomething)
+
+    r = avcodec_receive_packet(context,&pkt);
+
+    if(r<0)
     {
-        ADM_error("Error %d encoding image\n",r);
+        char msg[AV_ERROR_MAX_STRING_SIZE]={0};
+        av_make_error_string(msg, AV_ERROR_MAX_STRING_SIZE, r);
+        ADM_error("Error %d (%s) encoding to JPEG.\n",r,msg);
+        av_packet_unref(&pkt);
         goto __cleanup;
     }
 
     // Ok now write our file...
+    f=ADM_fopen(filename,"wb");
+    if(!f)
     {
-        FILE *f=ADM_fopen(filename,"wb");
-        if(f)
-        {
-            fwrite(byteBuffer.at(0),pkt.size,1,f);
-            fclose(f);
-            result=true;
-        }else
-        {
-            ADM_error("Cannot open %s for writing!\n",filename);
-        }
+        ADM_error("Cannot open %s for writing!\n",filename);
+        av_packet_unref(&pkt);
+        goto __cleanup;
     }
+    fwrite(pkt.data,pkt.size,1,f);
+    fclose(f);
+    f=NULL;
+    av_packet_unref(&pkt);
+    result=true;
 
 __cleanup:
     // Cleanup
     if(context)
     {
-        avcodec_close(context);
-        av_free(context);
+        avcodec_free_context(&context);
         context=NULL;
     }
 

@@ -41,6 +41,7 @@ typedef enum
 //#define vi.num_frames _info.nb_frames
 //#define vi.IsYV12()   1
 #define GetRowSize GetPitch
+#define ADM_IMAGE_ALIGN(x) ((x+31)&(~31))
 
 typedef enum
 {
