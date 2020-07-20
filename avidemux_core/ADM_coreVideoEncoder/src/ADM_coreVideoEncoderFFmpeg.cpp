@@ -73,15 +73,10 @@ _hasSettings=false;
     timeScalerDen=0;
 
     uint64_t inc=source->getInfo()->frameIncrement;
-    if(inc<30000) // Less than 30 ms , fps > 30 fps it is probably field
-     {
-            inc*=2;
-            ADM_warning("It is probably field encoded, doubling increment\n");
-     }
-     if(_hasSettings && LAVS(max_b_frames))
-            encoderDelay=inc*2;
-     else
-            encoderDelay=0;
+    if(_hasSettings && LAVS(max_b_frames))
+        encoderDelay=inc*2;
+    else
+        encoderDelay=0;
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
     lastLavPts=0;
 }
