@@ -79,6 +79,7 @@ static void tryLoadingEngine(const char* path, IEditor *editor)
             printf("[Script] ERROR - Unable to load %s\n", files[index]);
         }
     }
+    clearDirectoryContent(fileCount, files);
 }
 
 /**
