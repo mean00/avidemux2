@@ -266,7 +266,7 @@ bool vaapiVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     }else
     {
 
-        printf("Uploading image to vaapi\n");
+        //printf("Uploading image to vaapi\n");
         if(!admLibVA::admImageToSurface(next,sourceSurface))        
         {
             ADM_warning("Cannot upload to sourceSurface");
