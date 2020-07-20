@@ -144,7 +144,7 @@ bool libvaRender::displayImage(ADMImage *pic)
     if(pic->refType==ADM_HW_LIBVA)
     {
         ADM_vaSurface *img=(ADM_vaSurface *)pic->refDescriptor.refHwImage;
-        admLibVA::putX11Surface(img,info.systemWindowId,displayWidth,displayHeight);
+        admLibVA::putX11Surface(img,info.systemWindowId,imageWidth,imageHeight,displayWidth,displayHeight);
         lastSurface=img;
     }else
     {
@@ -160,7 +160,7 @@ bool libvaRender::displayImage(ADMImage *pic)
             ADM_warning("VaRender] Failed to upload pic \n");
             return false;
         }
-        admLibVA::putX11Surface(dest,info.systemWindowId,displayWidth,displayHeight);
+        admLibVA::putX11Surface(dest,info.systemWindowId,imageWidth,imageHeight,displayWidth,displayHeight);
         lastSurface=dest;
     }
     return true;
@@ -185,7 +185,7 @@ bool libvaRender::refresh(void)
     ADM_info("[libva]Rrefresh\n");
     // This is a little bit dangerous, lastSurface might be gone
     if(lastSurface)
-        admLibVA::putX11Surface(lastSurface,info.systemWindowId,displayWidth,displayHeight);
+        admLibVA::putX11Surface(lastSurface,info.systemWindowId,imageWidth,imageHeight,displayWidth,displayHeight);
     else
         renderCompleteRedrawRequest();
     return true;

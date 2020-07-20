@@ -85,7 +85,7 @@ static bool        surfaceToImage(ADM_vaSurface *dst,VAImage *src );
 
 // Display
 
-static bool        putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,int displayHeight);
+static bool        putX11Surface(ADM_vaSurface *img,int widget,int sourceWidth,int sourceHeight,int displayWidth,int displayHeight);
 
 // Direct access
 

@@ -929,11 +929,12 @@ dropIt:
  * @param displayHeight
  * @return
  */
-bool        admLibVA::putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,int displayHeight)
+bool        admLibVA::putX11Surface(ADM_vaSurface *img,int widget,int sourceWidth,int sourceHeight,int displayWidth,int displayHeight)
 {
     int xError;
     CHECK_WORKING(false);
-    CHECK_ERROR(vaPutSurface ( ADM_coreLibVA::display, img->surface,(Drawable)widget,0,0,img->w, img->h,0,0,displayWidth,displayHeight,
+    CHECK_ERROR(vaPutSurface ( ADM_coreLibVA::display, img->surface, (Drawable)widget, 0, 0,
+                              sourceWidth, sourceHeight, 0, 0, displayWidth, displayHeight,
                               NULL,0 // clip & and num clip
                               ,0));  // flags
     if(xError)
