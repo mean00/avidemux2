@@ -430,7 +430,9 @@ void preferences::setFile(const std::string &file, std::string *file1, int maxFi
 
 	for (int index = 0; index < maxFiles; index++)
 	{
-		*(file1 + index) = ADM_strdup(index < files[index].size() ? files[index].c_str() : "");
+		char *name = ADM_strdup(index < files[index].size() ? files[index].c_str() : "");
+		*(file1 + index) = std::string(name);
+		ADM_dealloc(name);
 	}
 }
 
