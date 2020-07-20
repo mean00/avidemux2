@@ -76,6 +76,7 @@ bool vdpauRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zo
     if(admVdpau::isOperationnal()==false)
     {
         ADM_warning("[Vdpau] Not operationnal\n");
+        return false;
     }
     baseInit(w,h,zoom);
     // Create couple of outputSurface
@@ -196,8 +197,8 @@ bool vdpauRender::displayImage(ADMImage *pic)
         }
     }
     // Call mixer...
-    if(VDP_STATUS_OK!=admVdpau::mixerRender( mixer,myInput,surface[next], pic->_width,pic->_height))
-
+    //if(VDP_STATUS_OK!=admVdpau::mixerRender( mixer,myInput,surface[next], pic->_width,pic->_height))
+    if(VDP_STATUS_OK!=admVdpau::mixerRenderWithCropping( mixer, myInput, surface[next], displayWidth, displayHeight, pic->_width, pic->_height))
     {
         ADM_warning("[Vdpau] Cannot mixerRender\n");
         return false;
