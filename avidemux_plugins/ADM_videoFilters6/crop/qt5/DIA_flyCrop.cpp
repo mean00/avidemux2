@@ -74,12 +74,13 @@ static void blank(uint8_t *in, int w, int h, int stride)
  */
 uint8_t flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
 {
-    memcpy(imageOut,imageIn,_w*_h*4);
+    int stride=ADM_IMAGE_ALIGN(_w*4);
+    memcpy(imageOut,imageIn,stride*_h);
 
-    blank(imageOut,_w,top,4*_w);
-    blank(imageOut+(_w*4)*(_h-bottom),_w,bottom,4*_w);
-    blank(imageOut,left,_h,4*_w);
-    blank(imageOut+(_w-right)*4,right,_h,4*_w);
+    blank(imageOut,_w,top,stride);
+    blank(imageOut+stride*(_h-bottom),_w,bottom,stride);
+    blank(imageOut,left,_h,stride);
+    blank(imageOut+(_w-right)*4,right,_h,stride);
     return true;
 }
 /**
