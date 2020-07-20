@@ -27,7 +27,7 @@ extern ffvtenc VTEncSettings;
 void resetConfigurationData()
 {
     ffvtenc defaultConf = VT_ENC_CONF_DEFAULT;
-    memcpy(&VTEncSettings, &defaultConf, sizeof(FFcodecSettings));
+    memcpy(&VTEncSettings, &defaultConf, sizeof(ffvtenc));
 }
 
 /**
