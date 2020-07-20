@@ -262,7 +262,7 @@ bool vaapiVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     if(next->refType==ADM_HW_LIBVA)
     {
           source=(ADM_vaSurface *)next->refDescriptor.refHwImage;
-          printf("image is already vaapi %d\n",(int)source->surface);
+          //printf("image is already vaapi %d\n",(int)source->surface);
     }else
     {
 
@@ -307,7 +307,7 @@ bool vaapiVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
  
     // Download result to regular ADMImage
     r=destSurface->toAdmImage(image);
-    printf("Result is %d\n",r);
+    //printf("Result is %d\n",r);
 failed2:    
     vaDestroyBuffer(admLibVA::getDisplay(), paramId);
 failed:    
