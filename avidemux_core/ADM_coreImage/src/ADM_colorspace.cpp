@@ -148,7 +148,10 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             break;
     case ADM_COLOR_NV12:
             srcData[0]=from;
-            srcData[1]=from+width*height;
+            width=ADM_IMAGE_ALIGN(width);
+            height=ADM_IMAGE_ALIGN(height);
+            from+=width*height;
+            srcData[1]=from;
             srcData[2]=NULL;
             srcStride[0]=width;
             srcStride[1]=width;
