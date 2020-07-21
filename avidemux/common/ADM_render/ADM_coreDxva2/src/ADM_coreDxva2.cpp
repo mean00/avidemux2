@@ -741,7 +741,7 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
               for(int i=0;i<3;i++)
               {
                   int j=i;
-                  if(j) j=j^3;
+                  //if(j) j=j^3; // U & V swap is handled by convertImage
                   target._planes[j]=out->GetWritePtr((ADM_PLANE)i);
                   target._planeStride[j]=out->_planeStride[i];
               }
