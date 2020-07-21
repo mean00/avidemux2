@@ -75,7 +75,8 @@ bool simpleRender::displayImage(ADMImage *pic)
 {
     scaler->convertImage(pic,videoBuffer);
     lock.lock();
-    myImage=QImage(videoBuffer,displayWidth,displayHeight,QImage::Format_RGB32).copy(0,0,displayWidth,displayHeight);
+    int stride=ADM_IMAGE_ALIGN(displayWidth*4);
+    myImage=QImage(videoBuffer,displayWidth,displayHeight,stride,QImage::Format_RGB32).copy(0,0,displayWidth,displayHeight);
     lock.unlock();
     refresh();
     return true;
@@ -106,7 +107,9 @@ bool simpleRender::allocateStuff(void)
             ADM_COLOR_YV12,
             IVERT
         );
-        videoBuffer=new uint8_t[displayWidth*displayHeight*4];
+        uint32_t sz=ADM_IMAGE_ALIGN(displayWidth*4);
+        sz*=displayHeight;
+        videoBuffer=new uint8_t[sz];
         return true;
 }
 
