@@ -80,7 +80,6 @@ class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
                         GUI_WindowInfo  info;
                         IDirect3DSurface9 *mySurface;
                         IDirect3DSurface9 *myYV12Surface;
-                        uint8_t           *videoBuffer;
                         D3DDISPLAYMODE     displayMode;
                         IDirect3DDevice9  *d3dDevice;
                         IDirect3D9        *d3dHandle;
@@ -112,7 +111,6 @@ dxvaRender::dxvaRender()
     useYV12=false;
     mySurface=NULL;
     myYV12Surface=NULL;
-    videoBuffer=NULL;
     videoWidget=NULL;
     d3dHandle=admD3D::getHandle();
 }
@@ -325,7 +323,6 @@ bool dxvaRender::setup()
           ADM_COLOR_YV12,
           ADM_COLOR_RGB32A
       );
-  videoBuffer=new uint8_t[displayWidth*displayHeight*4];
   panScan.left  =0;
   panScan.right =imageWidth-1;
   panScan.top   =0;
@@ -365,11 +362,6 @@ bool dxvaRender::cleanup()
     {
        D3DCallNoArg(IDirect3DDevice9,Release,d3dDevice);
        d3dDevice=NULL;
-    }
-    if(videoBuffer)
-    {
-        delete [] videoBuffer;
-        videoBuffer=NULL;
     }
     return true;
 }
