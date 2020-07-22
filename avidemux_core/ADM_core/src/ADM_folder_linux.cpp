@@ -42,12 +42,14 @@ static std::string canonize(const std::string &in)
     char *simple2=canonicalize_file_name(in.c_str());
     if(simple2)
     {
-        out=std::string(simple2)+std::string("/");
+        out=std::string(simple2);
         free(simple2);simple2=NULL;
     }else
     {
          out=in;
     }
+    if(out.size() && *out.rbegin() != '/')
+        out+=std::string("/");
     return out;
 }
 
