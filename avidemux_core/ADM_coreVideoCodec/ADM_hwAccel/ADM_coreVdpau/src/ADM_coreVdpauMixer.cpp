@@ -313,7 +313,7 @@ VdpStatus admVdpau::mixerRenderFieldWithPastAndFuture(
     
     present=sourceSurface[1];
     int index=0;
-    if(!topField) index=1;
+    //if(!topField) index=1;
 
     if(VDP_INVALID_HANDLE==sourceSurface[0] ) nbPrev=0;
     else

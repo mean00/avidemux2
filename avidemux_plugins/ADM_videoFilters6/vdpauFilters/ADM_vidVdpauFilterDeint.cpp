@@ -32,6 +32,7 @@ extern "C" {
 #include "ADM_coreVdpau.h"
 //
 #define ADM_INVALID_FRAME_NUM 0x80000000
+#define ADM_NB_SLOTS 3
 #define ADM_NB_SURFACES 5
 
 //#define DO_BENCHMARK
@@ -49,6 +50,13 @@ enum
     ADM_KEEP_BOTTOM=1,
     ADM_KEEP_BOTH=2
 };
+
+enum
+{
+    ADM_TOP_FIELD_FIRST=0,
+    ADM_BOTTOM_FIELD_FIRST=1
+};
+
 /**
     \class VDPSlot
 */
@@ -86,11 +94,10 @@ VDPSlot::~VDPSlot()
 class vdpauVideoFilterDeint : public  ADM_coreVideoFilterCached
 {
 protected:
-                    VDPSlot              slots[3];
+                    VDPSlot              slots[ADM_NB_SLOTS];
                     bool                 eof;
                     bool                 secondField;
                     uint64_t             nextPts;
-                    ADMColorScalerSimple *scaler;
                     bool                 passThrough;
                     bool                 setupVdpau(void);
                     bool                 cleanupVdpau(void);
@@ -201,7 +208,6 @@ bool vdpauVideoFilterDeint::setIdentityCSC(void)
 */
 bool vdpauVideoFilterDeint::setupVdpau(void)
 {
-    scaler=NULL;
     secondField=false;
     nextFrame=0;
     int paddedHeight=(previousFilter->getInfo()->height+15)&~15;
@@ -229,7 +235,7 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
         aprintf("Created surface %d\n",(int)surfacePool[i]);
     }
     // allocate our (dummy) images
-    for(int i=0;i<3;i++)
+    for(int i=0;i<ADM_NB_SLOTS;i++)
         slots[i].image=new ADMImageDefault( previousFilter->getInfo()->width, 
                                             previousFilter->getInfo()->height);
     
@@ -240,7 +246,6 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
         goto badInit;
     } 
     tempBuffer=new uint8_t[info.width*info.height*4];
-    scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_BGR32A,ADM_COLOR_YV12);
 
     freeSurface.clear();
     for(int i=0;i<ADM_NB_SURFACES;i++)  
@@ -272,9 +277,7 @@ bool vdpauVideoFilterDeint::cleanupVdpau(void)
     mixer=VDP_INVALID_HANDLE;
     if(tempBuffer) delete [] tempBuffer;
     tempBuffer=NULL;
-    if(scaler) delete scaler;
-    scaler=NULL;
-    for(int i=0;i<3;i++)
+    for(int i=0;i<ADM_NB_SLOTS;i++)
        if(slots[i].image)
         {
             delete slots[i].image;
@@ -287,8 +290,8 @@ bool vdpauVideoFilterDeint::cleanupVdpau(void)
 /**
     \fn constructor
 */
-vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple *setup): 
-        ADM_coreVideoFilterCached(5,in,setup)
+vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple *setup):
+    ADM_coreVideoFilterCached(ADM_NB_SURFACES,in,setup)
 {
     eof=false;
     for(int i=0;i<ADM_NB_SURFACES;i++)
@@ -298,11 +301,12 @@ vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
     if(!setup || !ADM_paramLoad(setup,vdpauFilterDeint_param,&configuration))
     {
         // Default value
-        configuration.resizeToggle=false;
         configuration.deintMode=ADM_KEEP_TOP;
+        configuration.bottomFieldFirst=false;
+        configuration.enableIvtc=false;
+        configuration.resizeToggle=false;
         configuration.targetWidth=info.width;
         configuration.targetHeight=info.height;
-        configuration.enableIvtc=false;
     }
     
     myName="vdpauDeint";
@@ -324,37 +328,43 @@ vdpauVideoFilterDeint::~vdpauVideoFilterDeint()
 */
 bool vdpauVideoFilterDeint::configure( void) 
 {
-     
-     diaMenuEntry tMode[]={
-                             {ADM_KEEP_TOP,      QT_TRANSLATE_NOOP("vdpaudeint","Keep Top Field"),NULL},
-                             {ADM_KEEP_BOTTOM,   QT_TRANSLATE_NOOP("vdpaudeint","Keep Bottom Field"),NULL},
-                             {ADM_KEEP_BOTH,      QT_TRANSLATE_NOOP("vdpaudeint","Double framerate"),NULL}
-                             
-          };
-     bool doResize=configuration.resizeToggle;
-     bool doIvtc=configuration.enableIvtc;
-     diaElemToggle    tIvtc(&(doIvtc),   QT_TRANSLATE_NOOP("vdpaudeint","_IVTC"));
-     diaElemToggle    tResize(&(doResize),   QT_TRANSLATE_NOOP("vdpaudeint","_Resize"));
-     diaElemMenu      mMode(&(configuration.deintMode),   QT_TRANSLATE_NOOP("vdpaudeint","_Deint Mode:"), 3,tMode);
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpaudeint","Width:"),16,MAXIMUM_SIZE);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpaudeint","Height:"),16,MAXIMUM_SIZE);
-     
-     diaElem *elems[]={&mMode,&tIvtc,&tResize,&tWidth,&tHeight};
-     
-     if(diaFactoryRun(QT_TRANSLATE_NOOP("vdpaudeint","vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
-     {
-                configuration.resizeToggle=(bool)doResize;
-                configuration.enableIvtc=doIvtc;
-                updateConf();
-                if(doResize)
-                    ADM_info("New dimension : %d x %d\n",info.width,info.height);
-                cleanupVdpau();
-                passThrough=!setupVdpau();
-                
-                return 1;
-     }
-     return 0;
-     
+    diaMenuEntry tMode[]={
+        { ADM_KEEP_TOP,             QT_TRANSLATE_NOOP("vdpaudeint","Keep Top Field"),NULL },
+        { ADM_KEEP_BOTTOM,          QT_TRANSLATE_NOOP("vdpaudeint","Keep Bottom Field"),NULL },
+        { ADM_KEEP_BOTH,            QT_TRANSLATE_NOOP("vdpaudeint","Double framerate"),NULL }
+    };
+    diaMenuEntry tFieldOrder[]={
+        { ADM_TOP_FIELD_FIRST,      QT_TRANSLATE_NOOP("vdpaudeint","Top Field First"),NULL },
+        { ADM_BOTTOM_FIELD_FIRST,   QT_TRANSLATE_NOOP("vdpaudeint","Bottom Field First"),NULL }
+    };
+    bool doResize=configuration.resizeToggle;
+    bool doIvtc=configuration.enableIvtc;
+    uint32_t fieldOrder=configuration.bottomFieldFirst;
+
+    diaElemMenu mMode(&(configuration.deintMode),QT_TRANSLATE_NOOP("vdpaudeint","_Deint Mode:"),3,tMode);
+    diaElemMenu mOrder(&fieldOrder,QT_TRANSLATE_NOOP("vdpaudeint","_Field Order:"),2,tFieldOrder);
+
+    diaElemToggle tIvtc(&(doIvtc),QT_TRANSLATE_NOOP("vdpaudeint","_IVTC"));
+    diaElemToggle tResize(&(doResize),QT_TRANSLATE_NOOP("vdpaudeint","_Resize"));
+
+    diaElemUInteger tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpaudeint","Width:"),16,MAXIMUM_SIZE);
+    diaElemUInteger tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpaudeint","Height:"),16,MAXIMUM_SIZE);
+
+    diaElem *elems[]={&mMode,&mOrder,&tIvtc,&tResize,&tWidth,&tHeight};
+
+    if(diaFactoryRun(QT_TRANSLATE_NOOP("vdpaudeint","vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
+    {
+        configuration.bottomFieldFirst = fieldOrder == ADM_BOTTOM_FIELD_FIRST;
+        configuration.enableIvtc=doIvtc;
+        configuration.resizeToggle=(bool)doResize;
+        updateConf();
+        if(doResize)
+            ADM_info("New dimension : %d x %d\n",info.width,info.height);
+        cleanupVdpau();
+        passThrough=!setupVdpau();
+        return 1;
+    }
+    return 0;
 }
 /**
     \fn getCoupledConf
@@ -377,7 +387,11 @@ void vdpauVideoFilterDeint::setCoupledConf(CONFcouple *couples)
 const char *vdpauVideoFilterDeint::getConfiguration(void)
 {
     static char conf[80];
-    sprintf(conf,"Vdpau Deinterlace mode=%d, %d x %d",configuration.deintMode,info.width,info.height);
+    sprintf(conf,"Vdpau Deinterlace mode=%d, %s, %d x %d",
+        configuration.deintMode,
+        configuration.bottomFieldFirst? "bff" : "tff",
+        info.width,
+        info.height);
     conf[79]=0;
     return conf;
 }
@@ -478,10 +492,11 @@ bool vdpauVideoFilterDeint::rotateSlots(void)
             s->surface=VDP_INVALID_HANDLE;
         }
     }
-    slots[0]=slots[1];
-    slots[1]=slots[2];
-    slots[2].surface=VDP_INVALID_HANDLE;
-    slots[2].image=img;
+    const int last=ADM_NB_SLOTS-1;
+    for(int i=0;i<last;i++)
+        slots[i]=slots[i+1];
+    slots[last].surface=VDP_INVALID_HANDLE;
+    slots[last].image=img;
     return true;
 }
 /**
@@ -489,7 +504,7 @@ bool vdpauVideoFilterDeint::rotateSlots(void)
 */
 bool vdpauVideoFilterDeint::clearSlots(void)
 {
-    for(int i=0;i<3;i++)
+    for(int i=0;i<ADM_NB_SLOTS;i++)
     {
            VDPSlot *s=&(slots[i]);  
            if(s->surface!=VDP_INVALID_HANDLE)
@@ -516,13 +531,15 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
     VdpVideoSurface in[3];
     bool r=true;
     // PREVIOUS
-    for(int i=0;i<3;i++)
+    for(int i=0;i<ADM_NB_SLOTS;i++)
     {
         in[i]=slots[i].surface;
         aprintf("Mixing %d %d\n",i,(int)in[i]);
     }
+#if 0
     if(in[0]==VDP_INVALID_HANDLE)
             in[0]=in[1];
+#endif
     //
 
 #ifdef DO_BENCHMARK
@@ -579,7 +596,8 @@ bool vdpauVideoFilterDeint::getResult(ADMImage *image)
 */
 bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-bool r=true;
+    bool r=true;
+    bool first = (configuration.deintMode != ADM_KEEP_BOTTOM) && !configuration.bottomFieldFirst;
     if(eof)
     {
         ADM_warning("[VdpauDeint] End of stream\n");
@@ -588,7 +606,7 @@ bool r=true;
 #define FAIL {r=false;goto endit;}
      if(passThrough) return previousFilter->getNextFrame(fn,image);
     // top field has already been sent, grab bottom field
-    if((secondField)&&(configuration.deintMode==ADM_KEEP_BOTH))
+    if((secondField)&&(configuration.deintMode==ADM_KEEP_BOTH || configuration.deintMode==ADM_KEEP_BOTTOM))
         {
             secondField=false;
             *fn=nextFrame*2+1;
@@ -605,23 +623,28 @@ bool r=true;
      // shift frames;... free slot[0]
     rotateSlots();
 
-    // our first frame, we need to preload one frame
+    // our first frame, we need to preload some to fill the queue
+    const int last=ADM_NB_SLOTS-1;
     if(!nextFrame)
     {
-            aprintf("This is our first image, filling slot 1\n");
-            ADMImage *prev= vidCache->getImageAs(ADM_HW_VDPAU,0);
-            if(!prev || false==fillSlot(1,prev))
+        for(int i=0;i<last;i++)
+        {
+            aprintf("Prefilling, slot %d\n",i+1);
+            ADMImage *prev= vidCache->getImageAs(ADM_HW_VDPAU,i);
+            if(!prev || false==fillSlot(last-i-1,prev)) // in reverse order
             {
                     vidCache->unlockAll();
                     return false;
             }
-            nextPts=prev->Pts;
+            if(!i)
+                nextPts=prev->Pts;
+        }
     }
     // regular image, in fact we get the next image here
     ADMImage *next= vidCache->getImageAs(ADM_HW_VDPAU,nextFrame+1);
     if(next)
     {
-            if(false==fillSlot(2,next))
+            if(false==fillSlot(last,next))
             {
                 vidCache->unlockAll();
                 FAIL
@@ -632,7 +655,7 @@ bool r=true;
     // now we have slot 0 : prev Image, slot 1=current image, slot 2=next image
 
     // Now get our image back from surface...
-    sendField(true); // always send top field
+    sendField(first);
     if(configuration.deintMode==ADM_KEEP_TOP || configuration.deintMode==ADM_KEEP_BOTH)
     {
           if(false==getResult(image)) 
@@ -641,8 +664,6 @@ bool r=true;
           }
           aprintf("TOP/BOTH : Pts=%s\n",ADM_us2plain(image->Pts));
     }
-    // Send 2nd field
-    sendField(false); 
     if(configuration.deintMode==ADM_KEEP_BOTTOM)
     {
           if(false==getResult(image)) 
@@ -651,10 +672,12 @@ bool r=true;
           }
           aprintf("BOTTOM : Pts=%s\n",ADM_us2plain(image->Pts));
     }
+    // Send 2nd field
+    sendField(!first);
     // Top Field..
 endit:  
     vidCache->unlockAll();
-    if(configuration.deintMode==ADM_KEEP_BOTH) 
+    if(configuration.deintMode==ADM_KEEP_BOTH)
     {
         *fn=nextFrame*2;
         secondField=true;
