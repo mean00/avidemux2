@@ -646,6 +646,9 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                                     case ACT_End:
                                         prefs->get(KEYBOARD_SHORTCUTS_ALT_END,sc);
                                         break;
+                                    case ACT_Delete:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_DELETE,sc);
+                                        break;
                                     default:
                                         sc=std::string(m->shortCut);
                                 }
@@ -1079,6 +1082,9 @@ void MainWindow::updateActionShortcuts(void)
                     break;
                 case ACT_End:
                     prefs->get(KEYBOARD_SHORTCUTS_ALT_END,sc);
+                    break;
+                case ACT_Delete:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_DELETE,sc);
                     break;
                 default:
                     sc=std::string(m->shortCut);
