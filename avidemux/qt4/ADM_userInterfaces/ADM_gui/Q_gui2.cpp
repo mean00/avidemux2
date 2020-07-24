@@ -1039,7 +1039,7 @@ void MainWindow::updateActionShortcuts(void)
     ui.menuGo->actions().at(4-swpud)->setShortcut(Qt::Key_Up);
     ui.menuGo->actions().at(3+swpud)->setShortcut(Qt::Key_Down);
 
-    for(int i=8;i<11;i++)
+    for(int i=7;i<11;i++)
     {
         defaultShortcuts.push_back(&myMenuEdit[i]);
         listOfActionsToUpdate.push_back(ui.menuEdit->actions().at(i));
