@@ -38,6 +38,7 @@ struct  {
 	std::string alt_goto_mark_b;
 	std::string alt_begin;
 	std::string alt_end;
+	std::string alt_delete;
 }keyboard_shortcuts;
 struct  {
 	bool enabled;

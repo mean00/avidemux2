@@ -31,6 +31,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"keyboard_shortcuts.alt_goto_mark_b",offsetof(my_prefs_struct,keyboard_shortcuts.alt_goto_mark_b),"std::string",ADM_param_stdstring},
  {"keyboard_shortcuts.alt_begin",offsetof(my_prefs_struct,keyboard_shortcuts.alt_begin),"std::string",ADM_param_stdstring},
  {"keyboard_shortcuts.alt_end",offsetof(my_prefs_struct,keyboard_shortcuts.alt_end),"std::string",ADM_param_stdstring},
+ {"keyboard_shortcuts.alt_delete",offsetof(my_prefs_struct,keyboard_shortcuts.alt_delete),"std::string",ADM_param_stdstring},
  {"update.enabled",offsetof(my_prefs_struct,update.enabled),"bool",ADM_param_bool},
  {"update.lastCheck",offsetof(my_prefs_struct,update.lastCheck),"uint32_t",ADM_param_uint32_t},
  {"lastfiles.lastdir_read",offsetof(my_prefs_struct,lastfiles.lastdir_read),"std::string",ADM_param_stdstring},
