@@ -19,6 +19,7 @@ extern const ADM_paramList x265_settings_param[]={
  {"i_bframe_bias",offsetof(x265_settings,i_bframe_bias),"uint32_t",ADM_param_uint32_t},
  {"i_bframe_pyramid",offsetof(x265_settings,i_bframe_pyramid),"uint32_t",ADM_param_uint32_t},
  {"b_deblocking_filter",offsetof(x265_settings,b_deblocking_filter),"bool",ADM_param_bool},
+ {"b_open_gop",offsetof(x265_settings,b_open_gop),"bool",ADM_param_bool},
  {"interlaced_mode",offsetof(x265_settings,interlaced_mode),"uint32_t",ADM_param_uint32_t},
  {"constrained_intra",offsetof(x265_settings,constrained_intra),"bool",ADM_param_bool},
  {"lookahead",offsetof(x265_settings,lookahead),"uint32_t",ADM_param_uint32_t},

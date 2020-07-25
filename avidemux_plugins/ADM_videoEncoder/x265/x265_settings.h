@@ -25,6 +25,7 @@ uint32_t i_bframe_adaptive;
 uint32_t i_bframe_bias;
 uint32_t i_bframe_pyramid;
 bool b_deblocking_filter;
+bool b_open_gop;
 uint32_t interlaced_mode;
 bool constrained_intra;
 uint32_t lookahead;

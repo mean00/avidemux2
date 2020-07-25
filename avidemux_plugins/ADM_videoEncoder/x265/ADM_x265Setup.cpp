@@ -179,33 +179,37 @@ bool x265Encoder::setup(void)
   #define MKPARAM(x,y) {param.x = x265Settings.y;aprintf("[x265] "#x" = %d\n",param.x);}
   #define MKPARAMD(x,y) {param.x = (double)x265Settings.y; aprintf("[x265] "#x" = %.2f\n",param.x);}
   #define MKPARAMB(x,y) {param.x = x265Settings.y ;aprintf("[x265] "#x" = %s\n",TrueFalse[param.x&1]);}
-    MKPARAM(maxNumReferences,MaxRefFrames);
-    MKPARAM(keyframeMin,MinIdr);
-    MKPARAM(keyframeMax,MaxIdr);
-    MKPARAM(scenecutThreshold,i_scenecut_threshold);
-    MKPARAM(bframes,MaxBFrame);
+    MKPARAMB(interlaceMode,interlaced_mode)
+    MKPARAM(maxNumReferences,MaxRefFrames)
+    MKPARAMB(bOpenGOP,b_open_gop)
+    MKPARAM(keyframeMin,MinIdr)
+    MKPARAM(keyframeMax,MaxIdr)
 
-    MKPARAM(bFrameAdaptive,i_bframe_adaptive);
-    MKPARAM(bFrameBias,i_bframe_bias);
-    MKPARAM(bBPyramid,i_bframe_pyramid);
-    MKPARAMB(bEnableLoopFilter,b_deblocking_filter);
-    MKPARAMB(interlaceMode,interlaced_mode);
-    MKPARAMB(bEnableConstrainedIntra,constrained_intra);
-    MKPARAM(lookaheadDepth,lookahead);
+    MKPARAM(bframes,MaxBFrame)
+    MKPARAM(bFrameAdaptive,i_bframe_adaptive)
+    MKPARAM (bFrameAdaptive,trellis)
+    MKPARAM(bBPyramid,i_bframe_pyramid)
+    MKPARAM(bFrameBias,i_bframe_bias)
 
-    MKPARAMB(bEnableWeightedBiPred,weighted_bipred) 
-    MKPARAM (bEnableWeightedPred,weighted_pred) 
+    MKPARAM(lookaheadDepth,lookahead)
+    MKPARAM(scenecutThreshold,i_scenecut_threshold)
+    MKPARAMB(bEnableConstrainedIntra,constrained_intra)
+
+    MKPARAM(searchMethod,me_method)
+    MKPARAM(subpelRefine,subpel_refine)
+    MKPARAM(searchRange,me_range)
+
+    MKPARAM(bEnableWeightedPred,weighted_pred)
+    MKPARAMB(bEnableWeightedBiPred,weighted_bipred)
+
+    MKPARAMB(bEnableLoopFilter,b_deblocking_filter)
+    MKPARAMB(bEnableEarlySkip,fast_pskip)
+    MKPARAMB(bEnableTSkipFast,dct_decimate)
+
+    MKPARAMD(psyRd,psy_rd)
     MKPARAM (cbQpOffset,cb_chroma_offset)
     MKPARAM (crQpOffset,cr_chroma_offset)
 
-    MKPARAM (searchMethod,me_method) 
-    MKPARAM (searchRange,me_range)
-    MKPARAM (subpelRefine,subpel_refine) 
-    MKPARAM (bFrameAdaptive,trellis) 
-    MKPARAMB(bEnableEarlySkip,fast_pskip) 
-    MKPARAMB(bEnableTSkipFast,dct_decimate) 
-    MKPARAMD(psyRd,psy_rd)
-            
 #if X265_BUILD >= 40
     MKPARAM (noiseReductionIntra,noise_reduction_intra)
     MKPARAM (noiseReductionInter,noise_reduction_inter)

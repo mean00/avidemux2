@@ -28,6 +28,7 @@ json.addUint32("i_bframe_adaptive",key->i_bframe_adaptive);
 json.addUint32("i_bframe_bias",key->i_bframe_bias);
 json.addUint32("i_bframe_pyramid",key->i_bframe_pyramid);
 json.addBool("b_deblocking_filter",key->b_deblocking_filter);
+json.addBool("b_open_gop",key->b_open_gop);
 json.addUint32("interlaced_mode",key->interlaced_mode);
 json.addBool("constrained_intra",key->constrained_intra);
 json.addUint32("lookahead",key->lookahead);

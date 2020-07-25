@@ -314,8 +314,9 @@ bool x265Dialog::upload(void)
 
           MK_UINT(lookaheadSpinBox,lookahead);
           MK_CHECKBOX(cuTreeCheckBox,ratecontrol.cu_tree);
-          
+
           MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter);
+          MK_CHECKBOX(openGopCheckBox,b_open_gop);
 
           MK_MENU(meMethodComboBox,me_method);
           MK_MENU(weightedPPredictComboBox,weighted_pred);
@@ -437,9 +438,7 @@ bool x265Dialog::upload(void)
 #else
     MK_UINT(avgBitrateToleranceSpinBox,ratecontrol.rate_tolerance*100.0);
 #endif
-        
-	      DISABLE(spsiComboBox);
-	      DISABLE(openGopCheckBox);
+          DISABLE(spsiComboBox);
           DISABLE(groupBox_14); // quant matrix
           DISABLE(tabAdvanced1);
           DISABLE(tabAdvanced2);
@@ -522,6 +521,7 @@ bool x265Dialog::download(void)
           MK_CHECKBOX(cuTreeCheckBox,ratecontrol.cu_tree);
 
           MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter);
+          MK_CHECKBOX(openGopCheckBox,b_open_gop);
 
           MK_UINT(mvRangeSpinBox,me_range);
 
