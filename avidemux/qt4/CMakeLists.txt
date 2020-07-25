@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
+
+PROJECT(Avidemux_Qt)
+
 SET(AVIDEMUX_API_VERSION 2.7)
-SET(ADM_PROJECT Avidemux_qt4)
 
 MESSAGE("")
 MESSAGE("#########################################")

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
+PROJECT(admCore)
+
 MESSAGE("")
 MESSAGE("#########################################")
 MESSAGE("Configure for avidemux core libs Started")
@@ -13,7 +15,6 @@ SET(AVIDEMUX_CORE_BUILD_DIR ${CMAKE_BINARY_DIR})
 SET(AVIDEMUX_THIS_IS_CORE True)
 SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
 SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/cmake_win32_rc" "${CMAKE_MODULE_PATH}")
-SET(ADM_PROJECT admCore)
 
 IF (WIN32)
 	SET(ADM_PLUGIN_DIR "plugins")

@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
+PROJECT(Avidemux_CLI)
+
 SET(AVIDEMUX_API_VERSION 2.7)
-SET(ADM_PROJECT Avidemux_cli)
 
 MESSAGE("")
 MESSAGE("#########################################")
