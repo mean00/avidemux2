@@ -117,6 +117,11 @@ ENDIF (WIN32)
 if (CMAKE_COMPILER_IS_GNUCC)
 	add_definitions("-Werror=attributes") 
 endif (CMAKE_COMPILER_IS_GNUCC)
+
+IF (NOT MSVC AND CMAKE_BUILD_TYPE STREQUAL "Release")
+        add_compile_options("-O2") # override cmake default
+ENDIF (NOT MSVC AND CMAKE_BUILD_TYPE STREQUAL "Release")
+
 # MacOsX stuff
 IF(APPLE)
 	set (CMAKE_OSX_ARCHITECTURES "x86_64")
