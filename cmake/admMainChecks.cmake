@@ -67,7 +67,7 @@ ENDIF (FRESH_BUILD)
 OPTION(VERBOSE "" OFF)
 
 IF (NOT CMAKE_BUILD_TYPE)
-	SET(CMAKE_BUILD_TYPE "Release")
+        SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 ENDIF (NOT CMAKE_BUILD_TYPE)
 
 ########################################
