@@ -42,7 +42,7 @@ static optionDesc myOptions[]={
 { KEYBOARD_SHORTCUTS_ALT_GOTO_MARK_B,"keyboard_shortcuts.alt_goto_mark_b",ADM_param_stdstring  	,"B",	0,	0},
 { KEYBOARD_SHORTCUTS_ALT_BEGIN,"keyboard_shortcuts.alt_begin"         ,ADM_param_stdstring  	,"S",	0,	0},
 { KEYBOARD_SHORTCUTS_ALT_END,"keyboard_shortcuts.alt_end"             ,ADM_param_stdstring  	,"E",	0,	0},
-{ KEYBOARD_SHORTCUTS_ALT_DELETE,"keyboard_shortcuts.alt_delete"       ,ADM_param_stdstring  	,"K",	0,	0},
+{ KEYBOARD_SHORTCUTS_ALT_DELETE,"keyboard_shortcuts.alt_delete"       ,ADM_param_stdstring  	,"Delete",	0,	0},
 { UPDATE_ENABLED,"update.enabled"                                     ,ADM_param_bool    	,"1",	0,	1},
 { UPDATE_LASTCHECK,"update.lastCheck"                                 ,ADM_param_uint32_t	,"0",	0,	5000},
 { LASTFILES_LASTDIR_READ,"lastfiles.lastdir_read"                     ,ADM_param_stdstring  	,"",	0,	0},
