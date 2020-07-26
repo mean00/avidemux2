@@ -351,6 +351,8 @@ void filtermainWindow::removeAction(void)
 */
 void filtermainWindow::remove( bool b)
 {
+    if(!nb_active_filter)
+        return;
     int itag=getTagForActiveSelection();
     if(-1==itag)
         return;
@@ -771,6 +773,8 @@ void filtermainWindow::rowsMovedSlot(void)
             ADM_vf_moveFilterDown(itag+i);
         }
     }
+    buildActiveFilterList();
+    setSelected(moved);
 }
 
 /*******************************************************/
