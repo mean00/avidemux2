@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # Take a .in file and generate :
 # pref.cpp which is a loader/saver file + associated structure
 # (c) Mean 2011
@@ -55,7 +55,7 @@ def outputList(st):
 #
 def makeStructure(varType,params):
     if(len(params)<2):
-        print "Not enough parameter for line "+str(varName)
+        print("Not enough parameter for line "+str(varName))
         exit(1)
     min=0
     max=100
@@ -128,7 +128,7 @@ if(nb!=2):
 print("Processing "+str(sys.argv[1]))
 inputFile=sys.argv[1]
 if(not os.path.isfile(inputFile)):
-    print "no such file "+str(inputFile)
+    print("no such file "+str(inputFile))
     exit(1)
 jsonFileName=re.sub(r'.conf',r'_pref.h',inputFile)
 listFileName=str("../include/")+re.sub(r'.conf',r'_list.h',inputFile)
@@ -142,7 +142,7 @@ while(1):
     line=f.readline()
     #print line
     if(len(line)==0):
-        print "Reached end of file"
+        print("Reached end of file")
         break # eof
     line=re.sub(r'#.*$',r'',line).strip()
     #print(">"+str(line)+":"+str(len(line)))
@@ -171,7 +171,7 @@ while(1):
         fullPath2=".".join(nested)
     elif(line.find(':')!=-1): # varname : type,val,min,max
         if(gotName==False):
-            print "No structure name !"
+            print("No structure name !")
             exit(1)
         line=re.sub(r'#.*$',r'',line)
         line=re.sub(r'//.*$',r'',line)
@@ -183,10 +183,10 @@ while(1):
                 #print "\t"+params[i]+"\n"
         makeStructure(varType,params)
     else:
-        print "Invalid line "+str(line)
+        print("Invalid line "+str(line))
         exit(1)
 f.close()
 writeJsonFooter()
 jsonFile.close()
 listFile.close()
-print "All done"
+print("All done")
