@@ -33,7 +33,6 @@ if (ADM_DEBUG AND FIND_LEAKS)
 endif (ADM_DEBUG AND FIND_LEAKS)
 
 set(ADM_core_SRCS ${ADM_core_SRCS})
-add_compiler_export_flags()
 
 YASMIFY(asmFiles cpuid adm_emms)
 MESSAGE(STATUS "List of asm files ${asmFiles}")

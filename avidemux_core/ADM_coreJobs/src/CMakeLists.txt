@@ -3,7 +3,6 @@ SET(ADM_coreJobs_SRCS
         sqlJobs.cpp
 )
 
-add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_coreJobs ${ADM_coreJobs_SRCS})
 
 IF (APPLE)

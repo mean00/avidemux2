@@ -70,6 +70,9 @@ IF (NOT CMAKE_BUILD_TYPE)
         SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 ENDIF (NOT CMAKE_BUILD_TYPE)
 
+SET(CMAKE_CXX_VISIBILITY_PRESET hidden)
+SET(CMAKE_VISIBILITY_INLINES_HIDDEN True)
+
 ########################################
 # Avidemux system specific tweaks
 ########################################

@@ -10,7 +10,6 @@ SET(ADM_coreImage_SRCS
 )
 
 YASMIFY(bins ADM_imageUtils_asm)
-add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_coreImage6 ${ADM_coreImage_SRCS} ${bins})
 ADD_SOURCE_CFLAGS(DIA_flyDialog.cpp " -DADM_UI_TYPE_BUILD=99")
 

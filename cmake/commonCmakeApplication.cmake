@@ -21,6 +21,9 @@ INITIALISE_SUMMARY_LISTS()
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
 include(admMainChecks)
 
+UNSET(CMAKE_CXX_VISIBILITY_PRESET)
+UNSET(CMAKE_VISIBILITY_INLINES_HIDDEN)
+
 ########################################
 # Add include dirs
 ########################################

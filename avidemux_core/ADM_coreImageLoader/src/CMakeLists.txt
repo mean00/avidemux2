@@ -1,7 +1,6 @@
 SET(ADM_imageLoader_SRCS 
 ADM_imageLoader.cpp
 )
-add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_coreImageLoader6 ${ADM_imageLoader_SRCS})
 TARGET_LINK_LIBRARIES(ADM_coreImageLoader6 
                                           ADM_core6

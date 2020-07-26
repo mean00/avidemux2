@@ -10,7 +10,6 @@ ADM_ffHwAccel.cpp
 ADM_ffVp9.cpp
 )
 
-add_compiler_export_flags()
 IF(${ADM_DEBUG})
     ADD_DEFINITIONS(-DADM_DEBUG)
 ENDIF(${ADM_DEBUG})
