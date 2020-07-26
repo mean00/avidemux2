@@ -646,6 +646,9 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                                     case ACT_End:
                                         prefs->get(KEYBOARD_SHORTCUTS_ALT_END,sc);
                                         break;
+                                    case ACT_Delete:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_DELETE,sc);
+                                        break;
                                     default:
                                         sc=std::string(m->shortCut);
                                 }
@@ -1036,8 +1039,12 @@ void MainWindow::updateActionShortcuts(void)
     ui.menuGo->actions().at(4-swpud)->setShortcut(Qt::Key_Up);
     ui.menuGo->actions().at(3+swpud)->setShortcut(Qt::Key_Down);
 
-    for(int i=8;i<11;i++)
+    for(int i=6;i<11;i++)
     {
+        // The separator is number 7, but this is a bit more readable
+        if (myMenuEdit[i].type == MENU_SEPARATOR) {
+            continue;
+        }
         defaultShortcuts.push_back(&myMenuEdit[i]);
         listOfActionsToUpdate.push_back(ui.menuEdit->actions().at(i));
     }
@@ -1079,6 +1086,9 @@ void MainWindow::updateActionShortcuts(void)
                     break;
                 case ACT_End:
                     prefs->get(KEYBOARD_SHORTCUTS_ALT_END,sc);
+                    break;
+                case ACT_Delete:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_DELETE,sc);
                     break;
                 default:
                     sc=std::string(m->shortCut);

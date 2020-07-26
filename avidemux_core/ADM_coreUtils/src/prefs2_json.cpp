@@ -41,6 +41,7 @@ json.addString("alt_goto_mark_a",key->keyboard_shortcuts.alt_goto_mark_a);
 json.addString("alt_goto_mark_b",key->keyboard_shortcuts.alt_goto_mark_b);
 json.addString("alt_begin",key->keyboard_shortcuts.alt_begin);
 json.addString("alt_end",key->keyboard_shortcuts.alt_end);
+json.addString("alt_delete",key->keyboard_shortcuts.alt_delete);
 json.endNode();
 json.addNode("update");
 json.addBool("enabled",key->update.enabled);
