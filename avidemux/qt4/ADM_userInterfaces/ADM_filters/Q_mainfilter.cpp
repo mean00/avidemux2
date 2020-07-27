@@ -656,6 +656,9 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     availableList->setItemDelegate(new FilterItemDelegate(availableList));
     activeList->setItemDelegate(new FilterItemDelegate(activeList));
 
+    availableList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    activeList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
     connect(ui.listFilterCategory,SIGNAL(itemDoubleClicked(QListWidgetItem *)),
                 this,SLOT(filterFamilyClick(QListWidgetItem *)));
     connect(ui.listFilterCategory,SIGNAL(itemClicked(QListWidgetItem *)),
@@ -711,6 +714,19 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 
     this->installEventFilter(this);
     originalTime = admPreview::getCurrentPts();
+
+#if 1
+#define HINT_LENGTH 256
+    char hint[HINT_LENGTH];
+    hint[0] = '\0';
+    QKeySequence acc(Qt::ControlModifier + Qt::Key_Return);
+    snprintf(hint,HINT_LENGTH,QT_TRANSLATE_NOOP("qmainfilter","Press %s to accept the dialog"),acc.toString().toUtf8().constData());
+    hint[HINT_LENGTH-1] = '\0';
+    ui.labelAcceptHint->setText(QString::fromUtf8(hint));
+#undef HINT_LENGTH
+#else
+    ui.labelAcceptHint->setVisible(false);
+#endif
 }
 
 /**
