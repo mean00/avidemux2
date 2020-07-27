@@ -680,6 +680,30 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     availableList->addAction(add );
     connect(add,SIGNAL(triggered(bool )),this,SLOT(addSlot()));
 
+    QAction *rem = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),this);
+    int keycode;
+#ifdef __APPLE__
+    keycode = Qt::Key_Backspace;
+#else
+    keycode = Qt::Key_Delete;
+#endif
+    QKeySequence seq(keycode);
+    bool alt = false;
+    prefs->get(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,&alt);
+    if(alt)
+    {
+        std::string sc;
+        prefs->get(KEYBOARD_SHORTCUTS_ALT_DELETE,sc);
+        if(sc.size())
+        {
+            QString qs = QString::fromUtf8(sc.c_str());
+            seq = QKeySequence::fromString(qs);
+        }
+    }
+    rem->setShortcut(seq);
+    addAction(rem);
+    connect(rem,SIGNAL(triggered(bool)),this,SLOT(remove(bool)));
+
     activeList->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));
 
@@ -708,32 +732,22 @@ bool filtermainWindow::eventFilter(QObject* watched, QEvent* event)
     if(event->type() == QEvent::KeyPress)
     {
         keyEvent = (QKeyEvent*)event;
-        switch (keyEvent->key())
+        if(keyEvent->key() == Qt::Key_Return)
         {
-#ifndef __APPLE__
-            case Qt::Key_Delete:
-#else
-            case Qt::Key_Backspace:
-#endif
-                remove(true);
+            if(keyEvent->modifiers() & Qt::ControlModifier)
+            {
+                accept();
                 return true;
-            case Qt::Key_Return:
-                if(keyEvent->modifiers() & Qt::ControlModifier)
-                {
-                    accept();
-                    return true;
-                }
-                if(ui.listFilterCategory->hasFocus())
-                    filterFamilyClick(ui.listFilterCategory->currentRow());
-                else if(availableList->hasFocus())
-                    add(true);
-                else if(activeList->hasFocus())
-                    configure(true);
-                else
-                    accept();
-                return true;
-            default:
-                return false;
+            }
+            if(ui.listFilterCategory->hasFocus())
+                filterFamilyClick(ui.listFilterCategory->currentRow());
+            else if(availableList->hasFocus())
+                add(true);
+            else if(activeList->hasFocus())
+                configure(true);
+            else
+                accept();
+            return true;
         }
     }
     return QObject::eventFilter(watched, event);
