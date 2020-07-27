@@ -576,11 +576,11 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
 {
     QMenu *cm=new QMenu();
 
-    QAction *up = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),this);
-    QAction *down = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),this);
-    QAction *configure = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),this);
-    QAction *remove = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),this);
-    QAction *partial = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),this);
+    QAction *up = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),cm);
+    QAction *down = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),cm);
+    QAction *configure = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),cm);
+    QAction *remove = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),cm);
+    QAction *partial = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),cm);
 
     cm->addAction(up);
     cm->addAction(down);
@@ -596,6 +596,8 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
 
     updateContextMenu(cm);
     cm->exec(activeList->viewport()->mapToGlobal(pos));
+    delete cm;
+    cm = NULL;
 }
 
 /**
