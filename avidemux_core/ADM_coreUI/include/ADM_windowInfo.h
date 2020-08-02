@@ -22,5 +22,6 @@ typedef struct
     int y;
     int width;
     int height;
+    double scalingFactor; // logical px --> display px
 } GUI_WindowInfo;
 #endif

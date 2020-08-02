@@ -25,19 +25,17 @@
 
 /* Probably on unix/X11 ..*/
 #ifdef __APPLE__
-#include <Carbon/Carbon.h>
+#    include <Carbon/Carbon.h>
 #elif !defined(_WIN32)
-
-#if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
-        #include <QX11Info> // removed in qt5
-#else
+#   if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+#       include <QX11Info> // removed in qt5
+#   else
 extern "C"
 {
         extern void *XOpenDisplay(    char *name);
 }
-#endif
-
-
+#       include <QWindow>
+#   endif
 #endif
 
 #include "ADM_assert.h"
@@ -46,12 +44,12 @@ extern "C"
 #include "../ADM_render/GUI_accelRender.h"
 #include "GUI_ui.h"
 #include "DIA_coreToolkit.h"
-    
+
 void UI_QT4VideoWidget(QFrame *host);
-static uint8_t *lastImage=NULL;
 extern QWidget *QuiMainWindows;
 
-
+static uint32_t displayW=0,displayH=0;
+static ADM_Qvideo *videoWindow=NULL;
 
 void DIA_previewInit(uint32_t width, uint32_t height) {}
 uint8_t DIA_previewUpdate(uint8_t *data) {return 1;}
@@ -64,10 +62,7 @@ extern void callBackQtWindowDestroyed();
   Function to display
   Warning the incoming data are YUV!
   They are translated to RGB32 by the colorconv instance.
-
 */
-static uint32_t displayW=0,displayH=0;
-
 //****************************************************************************************************
 /*
   This is the class that will display the video images.
@@ -142,7 +137,6 @@ void ADM_Qvideo::paintEvent(QPaintEvent *ev)
     }
 }
 
-ADM_Qvideo *videoWindow=NULL;
 void UI_QT4VideoWidget(QFrame *host)
 {
    videoWindow=new ADM_Qvideo(host);
@@ -214,28 +208,32 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 
 #if defined(_WIN32)
     xinfo->display=(void *)videoWindow->winId();
-        xinfo->systemWindowId=videoWindow->winId();
+    xinfo->systemWindowId=videoWindow->winId();
 #elif defined(__APPLE__)
-    #if defined(ADM_CPU_X86_64)
-        xinfo->display = NULL; // we may not call winId() on a QWidget on macOS, it breaks OpenGL
-        xinfo->systemWindowId=0;
-    #else
-        xinfo->display = HIViewGetWindow(HIViewRef(widget->winId()));
-        xinfo->systemWindowId= HIViewGetWindow(HIViewRef(widget->winId()));
-    #endif
-#else // linux        
-        #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
-                const QX11Info &info=videoWindow->x11Info();
-                xinfo->display=info.display();
-        #else
-            {
-                static void *myDisplay=NULL;
-                if(!myDisplay)
-                  myDisplay=XOpenDisplay(NULL);
-                xinfo->display=myDisplay;
-            }
-        #endif
-        xinfo->systemWindowId=videoWindow->winId();
+#   if defined(ADM_CPU_X86_64)
+    xinfo->display = NULL; // we may not call winId() on a QWidget on macOS, it breaks OpenGL
+    xinfo->systemWindowId=0;
+#   else
+    xinfo->display = HIViewGetWindow(HIViewRef(widget->winId()));
+    xinfo->systemWindowId= HIViewGetWindow(HIViewRef(widget->winId()));
+#   endif
+#else // linux
+    xinfo->scalingFactor = 1.;
+#   if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+    const QX11Info &info=videoWindow->x11Info();
+    xinfo->display=info.display();
+#   else
+    {
+        static void *myDisplay=NULL;
+        if(!myDisplay)
+            myDisplay=XOpenDisplay(NULL);
+        xinfo->display=myDisplay;
+        QWindow *window = QuiMainWindows->windowHandle();
+        if(window)
+            xinfo->scalingFactor = (double)window->devicePixelRatio();
+    }
+#   endif
+    xinfo->systemWindowId=videoWindow->winId();
 #endif
     QPoint localPoint(0,0);
     QPoint windowPoint = videoWindow->mapToGlobal(localPoint);        
