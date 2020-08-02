@@ -55,7 +55,18 @@ libvaRender::~libvaRender()
 {
     cleanup();
 }
-
+/**
+ *  \fn rescaleDisplay
+ */
+void libvaRender::rescaleDisplay(void)
+{
+    double dw=displayWidth;
+    double dh=displayHeight;
+    dw*=info.scalingFactor;
+    dh*=info.scalingFactor;
+    displayWidth=(uint32_t)(dw+0.5);
+    displayHeight=(uint32_t)(dh+0.5);
+}
 /**
  * \fn realloc
  * @param newFormat
@@ -107,6 +118,7 @@ bool libvaRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zo
     }    
     
     baseInit(w,h,zoom);
+    rescaleDisplay();
     return true;
 }
 /**
@@ -171,10 +183,11 @@ bool libvaRender::displayImage(ADMImage *pic)
 */
 bool libvaRender::changeZoom(float newZoom)
 {
-        ADM_info("[libva]changing zoom.\n");
-        calcDisplayFromZoom(newZoom);
-        currentZoom=newZoom;
-        return true;
+    ADM_info("[libvaRender] Changing zoom.\n");
+    calcDisplayFromZoom(newZoom);
+    currentZoom=newZoom;
+    rescaleDisplay();
+    return true;
 }
 /**
     \fn refresh

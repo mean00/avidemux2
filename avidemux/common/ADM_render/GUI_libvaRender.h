@@ -27,6 +27,7 @@ class libvaRender: public VideoRenderBase
                             int            currentFmt;
                         bool cleanup(void);
                         bool realloc(int newFormat);
+                        void rescaleDisplay(void);
                         int  toggle;
       public:
                              libvaRender( void ) ;
