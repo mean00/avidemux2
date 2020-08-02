@@ -36,9 +36,8 @@ class XvRender: public VideoRenderBase
                         bool    lookupYV12(Display * dis, uint32_t port, uint32_t * fmt);
                         Atom    getAtom(const char *string,Display *xv_display,unsigned int xv_port);
                         void    displayAdaptorInfo(int num,XvAdaptorInfo *curai);
+                        void    rescaleDisplay(void);
 
-                        
-                        
       public:
                              XvRender( void ) ;
               virtual        ~XvRender();

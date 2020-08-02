@@ -60,6 +60,18 @@ XvRender::~XvRender()
 
 }
 /**
+ *  \fn rescaleDisplay
+ */
+void XvRender::rescaleDisplay(void)
+{
+    double dw=displayWidth;
+    double dh=displayHeight;
+    dw*=info.scalingFactor;
+    dh*=info.scalingFactor;
+    displayWidth=(uint32_t)(dw+0.5);
+    displayHeight=(uint32_t)(dh+0.5);
+}
+/**
     \fn init
 */
 bool XvRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
@@ -67,6 +79,7 @@ bool XvRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
     ADM_info("[Xvideo]Xv start\n");
     info=*window;
     baseInit(w,h,zoom);
+    rescaleDisplay();
     return  lowLevelXvInit( window,  w,  h);
 }
 /**
@@ -114,10 +127,11 @@ bool XvRender::displayImage(ADMImage *src)
 */
 bool XvRender::changeZoom(float newZoom)
 {
-        ADM_info("changing zoom, xv render.\n");
-        calcDisplayFromZoom(newZoom);
-        currentZoom=newZoom;
-        return true;
+    ADM_info("changing zoom, xv render.\n");
+    calcDisplayFromZoom(newZoom);
+    currentZoom=newZoom;
+    rescaleDisplay();
+    return true;
 }
 /**
     \fn refresh
