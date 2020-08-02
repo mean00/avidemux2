@@ -60,7 +60,18 @@ vdpauRender::~vdpauRender()
 
     cleanup();
 }
-
+/**
+ *  \fn rescaleDisplay
+ */
+void vdpauRender::rescaleDisplay(void)
+{
+    double dw=displayWidth;
+    double dh=displayHeight;
+    dw*=info.scalingFactor;
+    dh*=info.scalingFactor;
+    displayWidth=(uint32_t)(dw+0.5);
+    displayHeight=(uint32_t)(dh+0.5);
+}
 /**
     \fn init
 */
@@ -79,6 +90,7 @@ bool vdpauRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zo
         return false;
     }
     baseInit(w,h,zoom);
+    rescaleDisplay();
     // Create couple of outputSurface
     surface[0]=surface[1]=VDP_INVALID_HANDLE;
     currentSurface=0;
@@ -89,7 +101,7 @@ bool vdpauRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zo
     
     ADM_info("[VDpau] Allocating surfaces %d x%d , %d x %d, %d x x%d\n",w,h,widthToUse,heightToUse,displayWidth,displayHeight);
     
-    if(!reallocOutputSurface(displayWidth,displayHeight))
+    if(!reallocOutputSurface())
     {
         goto badInit;
     }
@@ -117,17 +129,17 @@ badInit:
 /**
     \fn reallocOutputSurface
 */
-bool vdpauRender::reallocOutputSurface(uint32_t tgtWidth, uint32_t tgtHeight)
+bool vdpauRender::reallocOutputSurface(void)
 {
     if(surface[0]!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(surface[0]);
     if(surface[1]!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(surface[1]);
     surface[0]=surface[1]=VDP_INVALID_HANDLE;
-    if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,tgtWidth,tgtHeight,&surface[0])) 
+    if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,displayWidth,displayHeight,&surface[0]))
     {
         ADM_error("Cannot create outputSurface0\n");
         return false;
     }
-    if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,tgtWidth,tgtHeight,&surface[1])) 
+    if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,displayWidth,displayHeight,&surface[1]))
     {
         ADM_error("Cannot create outputSurface1\n");
         return false;
@@ -218,14 +230,15 @@ bool vdpauRender::displayImage(ADMImage *pic)
 */
 bool vdpauRender::changeZoom(float newZoom)
 {
-        ADM_info("[Vdpau]changing zoom.\n");
-        calcDisplayFromZoom(newZoom);
-        currentZoom=newZoom;
-        if(!reallocOutputSurface(displayWidth,displayHeight))
-        {
-            ADM_error("[VdpauRender] Change zoome failed\n");
-        }
-        return true;
+    ADM_info("[vdpauRender] Changing zoom.\n");
+    calcDisplayFromZoom(newZoom);
+    currentZoom=newZoom;
+    rescaleDisplay();
+    if(!reallocOutputSurface())
+    {
+        ADM_error("[vdpauRender] Zoom change failed\n");
+    }
+    return true;
 }
 /**
     \fn refresh
