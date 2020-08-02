@@ -1715,7 +1715,7 @@ int UI_Init(int nargc, char **nargv)
     global_argc=nargc;
     global_argv=nargv;
     ADM_renderLibInit(&UI_Hooks);
-#if defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(5,11,0)
+#if !defined(__APPLE__) && QT_VERSION >= QT_VERSION_CHECK(5,11,0)
     // Despite HiDPI scaling being supported from Qt 5.6 on, important aspects
     // like OpenGL support were fixed only in much later versions.
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
