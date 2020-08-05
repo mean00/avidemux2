@@ -23,7 +23,7 @@ int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,bool *swap)
         
 
 #define PX(x) x
-    diaElemReadOnlyText applicability(NULL,QT_TRANSLATE_NOOP("adm","The options above are effective only for MPEG and DivX with software decoding"),NULL);
+    diaElemReadOnlyText applicability(NULL,QT_TRANSLATE_NOOP("adm","The options above are effective only for software decoding"),NULL);
     diaElemUInteger   postProcStrength(PX(ppstrength),QT_TRANSLATE_NOOP("adm","_Filter strength:"),0,5);
     //diaElemToggle     swapuv(PX(swap),QT_TRANSLATE_NOOP("adm","_Swap U and V"));
     

@@ -974,9 +974,13 @@ void MainWindow::updateCodecWidgetControlsState(void)
     ui.pushButtonDecoderConf->setEnabled(b);
     // take care of the "Decoder Options" item in the menu "Video"
     ui.menuVideo->actions().at(0)->setEnabled(b);
-    // post-processing is available only for software decoding and old codecs
-    if(b && !(isMpeg12Compatible(avifileinfo->fcc) || isMpeg4Compatible(avifileinfo->fcc)))
-        b=false;
+    // post-processing is available only for software decoding
+    b=false;
+    if(avifileinfo && strcmp(video_body->getVideoDecoderName(),"VDPAU")
+                   && strcmp(video_body->getVideoDecoderName(),"LIBVA")
+                   && strcmp(video_body->getVideoDecoderName(),"DXVA2"))
+                   // VideoToolbox decoder always downloads decoded image immediately
+        b=true;
     ui.menuVideo->actions().at(1)->setEnabled(b);
 
     b=false;
