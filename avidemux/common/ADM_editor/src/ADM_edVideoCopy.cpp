@@ -231,13 +231,13 @@ bool ADM_Composer::findLastFrameBeforeSwitch(uint32_t segNo, uint32_t *lastFrame
     // FIXME In theory, 32 may be not enough as we may encounter an unknown number of early B-frames
     // while maxFrame may be far past the first frame of the next segment if it uses the same ref video.
     frame = (frame > MAX_REF_FRAMES_FIELDS)? frame - MAX_REF_FRAMES_FIELDS : 0;
+    *lastFrame=frame;
     // Now search the frame with max pts before segment switch
     *maxPts=0;
     *maxPtsFrame=-1;
     uint64_t lastPts=0, lastDts=ADM_NO_PTS;
     while(frame<=maxFrame)
     {
-        *lastFrame=frame;
         uint64_t pts,dts;
         if(!demuxer->getPtsDts(frame,&pts,&dts))
             break;
@@ -261,6 +261,7 @@ bool ADM_Composer::findLastFrameBeforeSwitch(uint32_t segNo, uint32_t *lastFrame
             *maxPts=lastPts;
             *maxPtsFrame=frame;
         }
+        *lastFrame=frame;
         frame++;
     }
 
@@ -468,6 +469,9 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             {
                 ADM_warning("Unable to get frame %d in ref %d, segment %d\n",earliest,seg->_reference,segNo);
             }
+        }else
+        {
+            earliest=frame;
         }
         if(minpoc2!=-1)
             ADM_info("Segment %u minimum POC LSB = %d at frame %d\n",segNo,minpoc2,earliest);
@@ -718,8 +722,8 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             else if(poc2 > poc1 && poc2 - poc1 > maxPocLsb/2)
                 pocMsb -= maxPocLsb;
 
-            ADM_info("POC of the last frame %d in stream order of the previous seg: %d + %d = %d\n",
-                    frame, pocMsb, poc1, pocMsb + poc1);
+            ADM_info("POC of the last frame %u in stream order of the previous seg: %d + %d = %d\n",
+                    maxFrame, pocMsb, poc1, pocMsb + poc1);
 
             int delta = poc1 - pocMsb - poc2;
 
@@ -773,8 +777,8 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             else if(poc1 > maxpoc1 && poc1 - maxpoc1 > maxPocLsb/2)
                 prevPocMsb -= maxPocLsb;
 
-            ADM_info("POC of the last frame %d in display order of the previous seg: %d + %d = %d\n",
-                    frame, prevPocMsb, maxpoc1, prevPocMsb + maxpoc1);
+            ADM_info("POC of the last frame %u in display order of the previous seg: %d + %d = %d\n",
+                    maxPtsFrame, prevPocMsb, maxpoc1, prevPocMsb + maxpoc1);
 
             poc1 += prevPocMsb;
 
@@ -784,7 +788,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 pocMsb -= maxPocLsb;
 
             ADM_info("POC of the earliest frame %d in display order of the current seg: %d + %d = %d\n",
-                    frame, pocMsb, poc2, pocMsb + poc2);
+                    earliest, pocMsb, poc2, pocMsb + poc2);
 
             poc2 += pocMsb;
 
@@ -1187,6 +1191,8 @@ bool ADM_Composer::getOpenGopDelayForSegment(uint32_t segNo, uint64_t segTime, u
         return false;
     }
 
+    *delay=0;
+
     bool trustDemuxer=false;
     int frame=-1;
     aviInfo info;
@@ -1469,7 +1475,7 @@ againGet:
             int64_t nextDts=nextSeg->_startTimeUs+nextSeg->_refStartDts;
             if(nextDts<nextSeg->_refStartTimeUs)
             {
-                ADM_warning("Frame %" PRIu32", next DTS is negative %" PRIu64" %" PRIu64" ms\n",fn,nextDts,nextSeg->_refStartTimeUs);
+                ADM_warning("Frame %" PRIu32", next DTS is negative %" PRIu64" %" PRIu64" us\n",fn,nextDts,nextSeg->_refStartTimeUs);
             }else
             {
                 nextDts-=nextSeg->_refStartTimeUs;
@@ -1482,12 +1488,13 @@ againGet:
         }
         // Check that PTS does not collide with early B-frames,
         // _refMinimumPts must be recalculated on every segment layout change!
-        if(signedPts!=ADM_NO_PTS)
+        // Skip if _refMinimumPts is not set, i.e. is equal zero.
+        if(signedPts!=ADM_NO_PTS && nextSeg->_refMinimumPts)
         {
             int64_t nextPts=nextSeg->_startTimeUs+nextSeg->_refMinimumPts;
             if(nextPts<nextSeg->_refStartTimeUs)
             {
-                ADM_warning("Frame %" PRIu32", next PTS is negative %" PRIu64" %" PRIu64" ms\n",fn,nextPts,nextSeg->_refStartTimeUs);
+                ADM_warning("Frame %" PRIu32", next PTS is negative %" PRIu64" %" PRIu64" us\n",fn,nextPts,nextSeg->_refStartTimeUs);
             }else
             {
                 nextPts-=nextSeg->_refStartTimeUs;
