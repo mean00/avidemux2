@@ -33,7 +33,7 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 protected:
         typedef enum 
         {
-            asFloat,asFloatPlanar,asS32Planar,asS32
+            asFloat,asFloatPlanar,asS16Planar,asS32Planar,asS32
         }ADM_outputFlavor;
 
                 ADM_outputFlavor        outputFlavor;
@@ -47,11 +47,13 @@ protected:
     bool        decodeToS16(float **outptr,uint32_t *nbOut);
     bool        decodeToFloat(float **outptr,uint32_t *nbOut);
     bool        decodeToFloatPlanar(float **outptr,uint32_t *nbOut);
+    bool        decodeToS16Planar(float **outptr,uint32_t *nbOut);
     bool        decodeToS32Planar(float **outptr,uint32_t *nbOut);
     bool        decodeToS32(float **outptr,uint32_t *nbOut);
     bool        decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut);
     uint32_t    outputFrequency;
     bool        sbrChecked;
+    bool        nbChannelsChecked;
 public:
                     ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
     virtual         ~ADM_AudiocoderLavcodec() ;
@@ -59,7 +61,7 @@ public:
     virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
     virtual	uint8_t isCompressed(void) {return 1;}
     virtual uint32_t getOutputFrequency(void) {return outputFrequency;}
-
+    virtual uint32_t getOutputChannels(void) {return channels;}
 };
 
 // Supported formats + declare our plugin
@@ -115,6 +117,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     AVCodecID codecID = AV_CODEC_ID_NONE;
     outputFrequency=info->frequency;
     sbrChecked=false;
+    nbChannelsChecked=false;
     switch(fourcc)
     {
       case WAV_WMAPRO:
@@ -235,6 +238,10 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
             outputFlavor=asFloatPlanar;            
             ADM_info("Decoder created using float planar...\n");
             break;
+        case AV_SAMPLE_FMT_S16P:
+            outputFlavor=asS16Planar;
+            ADM_info("Decoder created using s16 planar...\n");
+            break;
         case AV_SAMPLE_FMT_S32P:
             outputFlavor=asS32Planar;            
             ADM_info("Decoder created using s32 planar...\n");
@@ -350,6 +357,32 @@ bool ADM_AudiocoderLavcodec::decodeToFloatPlanarStereo(float **outptr,uint32_t *
    *outptr=out;
    (*nbOut)+=nbSample*2;
    return true;
+}
+/**
+ * \fn decodeToS16Planar
+ * @param outptr
+ * @param nbOut
+ * @return
+ */
+bool ADM_AudiocoderLavcodec::decodeToS16Planar(float **outptr,uint32_t *nbOut)
+{
+    // Interleave
+    int nbSample=_frame->nb_samples;
+    float scale=1./(float)(1LL<<15LL);
+    float *p=*outptr;
+    for(int c=0;c<channels;c++)
+    {
+        float *o=p+c;
+        int16_t *d=(int16_t *)_frame->data[c];
+        for(int i=0;i<nbSample;i++)
+        {
+            *o=((float)d[i])*scale;
+            o+=channels;
+        }
+    }
+    (*nbOut) +=nbSample*channels;
+    (*outptr)+=nbSample*channels;
+    return true;
 }
 /**
  * 
@@ -481,7 +514,9 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
 
             bool invalid=false;
             int  toCheck=1;
-            if(_context->sample_fmt==AV_SAMPLE_FMT_FLTP || _context->sample_fmt==AV_SAMPLE_FMT_S32P)
+            if(_context->sample_fmt==AV_SAMPLE_FMT_FLTP ||
+               _context->sample_fmt==AV_SAMPLE_FMT_S16P ||
+               _context->sample_fmt==AV_SAMPLE_FMT_S32P)
                 toCheck=channels;
 
             for(int i=0;i<toCheck;i++)
@@ -498,6 +533,7 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
             {
                 case AV_SAMPLE_FMT_FLT:     decodeToFloat(&outptr,nbOut);break;
                 case AV_SAMPLE_FMT_FLTP:    decodeToFloatPlanar(&outptr,nbOut);break;
+                case AV_SAMPLE_FMT_S16P:    decodeToS16Planar(&outptr,nbOut);break;
                 case AV_SAMPLE_FMT_S32P:    decodeToS32Planar(&outptr,nbOut);break;
                 case AV_SAMPLE_FMT_S32:     decodeToS32(&outptr,nbOut);break;
                 default:
@@ -518,27 +554,39 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
         }
         sbrChecked=true;
     }
+    if(!nbChannelsChecked)
+    {
+        if(_context->channels!=channels)
+        {
+            ADM_warning("Decoder and demuxer disagree about # of channels: %d vs %u\n",
+                _context->channels,channels);
+            if(updateChannels(_context->channels))
+                channels=_context->channels;
+        }
+        nbChannelsChecked=true;
+    }
 
-        //------------------
-          if(channels>=5 )
-            {
-            CHANNEL_TYPE *p_ch_type = channelMapping;
+
+    if(channels>=5)
+    {
+        CHANNEL_TYPE *p_ch_type = channelMapping;
+        if(!_context->channel_layout)
+            _context->channel_layout=av_get_default_channel_layout(channels);
+
 #define DOIT(x,y) if(_context->channel_layout & AV_CH_##x) *(p_ch_type++)=ADM_CH_##y;
-            if(!_context->channel_layout)
-                _context->channel_layout=av_get_default_channel_layout(channels);
+        DOIT(FRONT_LEFT,FRONT_LEFT);
+        DOIT(FRONT_RIGHT,FRONT_RIGHT);
+        DOIT(FRONT_CENTER,FRONT_CENTER);
+        DOIT(LOW_FREQUENCY,LFE);
+        // DOIT(SIDE_LEFT,REAR_LEFT) // see https://trac.ffmpeg.org/ticket/3160
+        // DOIT(SIDE_RIGHT,REAR_RIGHT)
+        DOIT(BACK_LEFT,REAR_LEFT)
+        DOIT(BACK_RIGHT,REAR_RIGHT)
+        DOIT(SIDE_LEFT,SIDE_LEFT)
+        DOIT(SIDE_RIGHT,SIDE_RIGHT)
+    }
 
-                    DOIT(FRONT_LEFT,FRONT_LEFT);
-                    DOIT(FRONT_RIGHT,FRONT_RIGHT);
-                    DOIT(FRONT_CENTER,FRONT_CENTER);
-                    DOIT(LOW_FREQUENCY,LFE);
-                    DOIT(SIDE_LEFT,REAR_LEFT) // see https://trac.ffmpeg.org/ticket/3160
-                    DOIT(SIDE_RIGHT,REAR_RIGHT)
-                    // as long as we don't support 7.1, we map both side and back channels to ADM_CH_REAR_*
-                    DOIT(BACK_LEFT,REAR_LEFT)
-                    DOIT(BACK_RIGHT,REAR_RIGHT)
-            }
-
-        return 1;
+    return 1;
 }
 //--- EOF
 
