@@ -58,7 +58,7 @@ bool         ADM_audioStreamDCA::goToTime(uint64_t nbUs)
 */
 uint8_t ADM_audioStreamDCA::getPacket(uint8_t *obuffer,uint32_t *osize, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)
 {
-#define ADM_LOOK_AHEAD DTS_HEADER_SIZE // Need 10 bytes...
+#define ADM_LOOK_AHEAD DTS_HEADER_SIZE // Need 11 bytes...
 uint8_t data[ADM_LOOK_AHEAD];
 uint32_t offset;
 ADM_DCA_INFO info;
@@ -70,31 +70,13 @@ ADM_DCA_INFO info;
             ADM_warning("DCA: Not sync found in buffer\n");
             return false;
         }
-            
-        // Peek
-        peek(ADM_LOOK_AHEAD,data);
-        // Search start seq
-        if(buffer[start]!=0x7F || buffer[start+1]!=0xFE)
-        {
-            read8();
-            continue;
-        }
-        if(buffer[start+2]!=0x80 || buffer[start+3]!=0x1)
-        {
-            read8();
-            read8();
-            continue;
-        }
-
         if(false== ADM_DCAGetInfo(buffer.at(start), limit-start,&info,&offset))
         {
-            read8();
-            read8();
-            read8();
-            read8();
+            skipBytes(limit-start);
             continue;
         }
         ADM_assert(info.frameSizeInBytes<=sizeMax);
+        skipBytes(offset);
         if(needBytes(info.frameSizeInBytes)==false)
         {
             ADM_warning("DCA: Not enough data\n");
@@ -105,6 +87,7 @@ ADM_DCA_INFO info;
         *nbSample=info.samples;
         *dts=lastDts;
         advanceDtsBySample(*nbSample);
+        skipBytes(limit-start);
         return 1;
 
     }
