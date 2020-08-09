@@ -378,7 +378,11 @@ bool  GUIPlayback::audioPump(bool wait)
              if (! (oaf = playbackAudio->fill(slice,  wavbuf,&status)))
              {
                   if(status==AUD_END_OF_STREAM)
+                  {
+                      uint32_t stat[8]={0};
+                      UI_setVUMeter(stat);
                       return false;
+                  }
                   if(errorMet==false)
                     ADM_warning("[Playback] Error reading audio stream...\n");
                   errorMet=true;
