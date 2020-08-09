@@ -26,7 +26,9 @@
 #include "ADM_audiodevice.h"
 #include "ADM_audioDeviceInternal.h"
 #include "ADM_deviceAudioCore.h"
-#define BUFFER_SIZE (500*48000)
+
+#define COREAUDIO_LATENCY 75
+
 #define aprintf(...) {}
 
 #ifndef verify_noerr
@@ -58,7 +60,7 @@ uint8_t coreAudioDevice::setVolume(int volume)
 */
 uint32_t coreAudioDevice::getLatencyMs(void)
 {
-        return 0;
+    return COREAUDIO_LATENCY;
 }
 /**
 
@@ -231,20 +233,42 @@ bool coreAudioDevice::localInit(void)
     \fn getWantedChannelMapping
 */
 static const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
-static const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
-static const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
-                                             ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_LFE};
+static const CHANNEL_TYPE stereo[MAX_CHANNELS]={
+    ADM_CH_FRONT_LEFT,
+    ADM_CH_FRONT_RIGHT
+};
+// kAudioChannelLayoutTag_MPEG_5_1_A
+static const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={
+    ADM_CH_FRONT_LEFT,
+    ADM_CH_FRONT_RIGHT,
+    ADM_CH_FRONT_CENTER,
+    ADM_CH_LFE,
+    ADM_CH_REAR_LEFT,
+    ADM_CH_REAR_RIGHT
+};
+// kAudioChannelLayoutTag_MPEG_7_1_C
+static const CHANNEL_TYPE sevenDotOne[MAX_CHANNELS]={
+    ADM_CH_FRONT_LEFT,
+    ADM_CH_FRONT_RIGHT,
+    ADM_CH_FRONT_CENTER,
+    ADM_CH_LFE,
+    ADM_CH_SIDE_LEFT,
+    ADM_CH_SIDE_RIGHT,
+    ADM_CH_REAR_LEFT,
+    ADM_CH_REAR_RIGHT
+};
 /**
 */
 const CHANNEL_TYPE *coreAudioDevice::getWantedChannelMapping(uint32_t channels)
 {
     switch(channels)
     {
-        case 1: return mono;break;
-        case 2: return stereo;break;
-        default:
-                return fiveDotOne;
-                break;
+        case 1: return mono;
+        case 2: return stereo;
+        case 5:
+        case 6: return fiveDotOne;
+        case 8: return sevenDotOne;
+        default:break;
     }
     return NULL;
 }
