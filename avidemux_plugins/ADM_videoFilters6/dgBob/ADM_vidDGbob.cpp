@@ -43,7 +43,7 @@ public:
        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
 	   virtual void setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;                 /// Start graphical user interface        
-       
+       virtual bool         goToTime(uint64_t usSeek);
 };
 
 // DECLARE FILTER 
@@ -77,7 +77,7 @@ bool DGbob::configure()
     diaElemToggle   menu1(PX(order),QT_TRANSLATE_NOOP("dgbob","_Top Field First:"));
     diaElemMenu     menu2(PX(mode),QT_TRANSLATE_NOOP("dgbob","_Mode:"), 3,menuMode);
     diaElemUInteger threshold(PX(thresh),QT_TRANSLATE_NOOP("dgbob","_Threshold:"),0,255);
-    diaElemToggle   extra(PX(ap),QT_TRANSLATE_NOOP("dgbob","_Extra"),QT_TRANSLATE_NOOP("dgbob","Extra check, avoid using it"));
+    diaElemToggle   extra(PX(ap),QT_TRANSLATE_NOOP("dgbob","_Extra artifact protection (may increase flickering, rarely needed)"));
     
     diaElem *elems[4]={&menu1,&menu2,&threshold ,&extra};
     if(diaFactoryRun(QT_TRANSLATE_NOOP("dgbob","DGBob"),4,elems))
@@ -121,20 +121,43 @@ DGbob::DGbob(ADM_coreVideoFilter *in,CONFcouple *couples)  : ADM_coreVideoFilter
 */
 void DGbob::update(void)
 {
-    memcpy(&info,previousFilter->getInfo(),sizeof(info));    
+    memcpy(&info,previousFilter->getInfo(),sizeof(info));
     switch(_param.mode)
     {
-            case 0:
-                    break;
-            case 1:
-                    info.frameIncrement/=2;
-                    info.totalDuration*=2;
-                    break;
-            case 2:
-                    info.frameIncrement*=2;
-                    break;
-            default: ADM_assert(0);
-    }             
+        case 0:
+            break;
+        case 1:
+            info.frameIncrement/=2;
+            if(info.timeBaseNum && info.timeBaseDen)
+            {
+                if(info.timeBaseDen<=30000 && (info.timeBaseNum & 1))
+                    info.timeBaseDen*=2;
+                else
+                    info.timeBaseNum/=2;
+            }
+            break;
+        case 2:
+            info.totalDuration*=2;
+            break;
+        default: ADM_assert(0);
+    }
+}
+/**
+    \fn goToTime
+    \brief Seek in filter preview mode
+*/
+bool DGbob::goToTime(uint64_t usSeek)
+{
+    uint32_t oldFrameIncrement=info.frameIncrement;
+    switch(_param.mode)
+    {
+        case 1: info.frameIncrement*=2;break;
+        case 2: usSeek/=2;break;
+        default:break;
+    }
+    bool r=ADM_coreVideoFilterCached::goToTime(usSeek);
+    info.frameIncrement=oldFrameIncrement;
+    return r;
 }
 /**
     \fn getCoupledConf
@@ -510,21 +533,20 @@ bool         DGbob::getNextFrame(uint32_t *fn,ADMImage *image)
 		}
 	}
     vidCache->unlockAll();
-    
+
+    image->Pts=src->Pts;
+
     switch(_param.mode)
     {
-            case 0:
-                    image->Pts=src->Pts;
-                    break;
-            case 1:
-                    image->Pts=src->Pts;
-                    if(nextFrame&1) image->Pts+=info.frameIncrement;
-                    break;
-            case 2:
-                    image->Pts=src->Pts/2;
-                    if(nextFrame&1) image->Pts+=info.frameIncrement;
-                    break;
-            default: ADM_assert(0);
+        case 0: break;
+        case 1:
+            if(nextFrame&1) image->Pts+=info.frameIncrement;
+            break;
+        case 2:
+            image->Pts*=2;
+            if(nextFrame&1) image->Pts+=info.frameIncrement;
+            break;
+        default: ADM_assert(0);
     }        
     nextFrame++;
 	return true;
