@@ -106,75 +106,74 @@ static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
 #define wRead16(x) {x=( cur[0]+(cur[1]<<8));cur+=2;ADM_assert(cur<=tail);}
 static bool idWAV(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &offset)
 {
-		const uint8_t *cur=data,*tail=data+bufferSize;
-	 	uint32_t t32;
-	 	uint32_t totalSize;
-        offset=0;
-	 	wRead32(t32);
-        ADM_info("Checking if it is riff/wav...\n");
-	    if (!fourCC::check( t32, (uint8_t *) "RIFF"))
-	      {
-		  ADM_warning("Not riff.\n");
-		  fourCC::print(t32);
-		  goto drop;
-	      }
-	    wRead32(totalSize);
-	    ADM_info("\n %lu bytes total \n", totalSize);
+    const uint8_t *cur=data,*tail=data+bufferSize;
+    uint32_t t32;
+    uint32_t totalSize;
+    offset=0;
+    wRead32(t32);
+    ADM_info("Checking if it is riff/wav...\n");
+    if(!fourCC::check( t32, (uint8_t *) "RIFF"))
+    {
+          ADM_warning("Not riff.\n");
+          fourCC::print(t32);
+          goto drop;
+    }
+    wRead32(totalSize);
+    ADM_info("\n %lu bytes total \n", totalSize);
 
-	    wRead32(t32);
-	    if (!fourCC::check( t32, (uint8_t *) "WAVE"))
-	      {
-		  ADM_warning("\n no wave chunk..aborting..\n");
-		  goto drop;
-	      }
-	    wRead32(t32);
-	    if (!fourCC::check( t32, (uint8_t *) "fmt "))
-	      {
-	    	ADM_warning("\n no fmt chunk..aborting..\n");
-		  goto drop;
-	      }
-	    wRead32(t32);
-	    if (t32 < sizeof(WAVHeader))
-	      {
-	    	ADM_warning("\n incorrect fmt chunk..(%ld/%d)\n",t32,sizeof(WAVHeader));
-		  goto drop;
-	      }
-	    // read wavheader
-	    memcpy(&info,cur,sizeof(WAVHeader));
-	    cur+=t32;
-        if(t32>sizeof(WAVHeader))
+    wRead32(t32);
+    if(!fourCC::check( t32, (uint8_t *) "WAVE"))
+    {
+        ADM_warning("\n no wave chunk..aborting..\n");
+        goto drop;
+    }
+    wRead32(t32);
+    if(!fourCC::check( t32, (uint8_t *) "fmt "))
+    {
+        ADM_warning("\n no fmt chunk..aborting..\n");
+        goto drop;
+    }
+    wRead32(t32);
+    if(t32 < sizeof(WAVHeader))
+    {
+        ADM_warning("\n incorrect fmt chunk..(%ld/%d)\n",t32,sizeof(WAVHeader));
+        goto drop;
+    }
+    // read wavheader
+    memcpy(&info,cur,sizeof(WAVHeader));
+    cur+=t32;
+    if (t32>sizeof(WAVHeader))
+        ADM_warning("There are some extradata!\n");
+    ADM_assert(cur<tail);
+
+    // For our big endian friends
+    Endian_WavHeader(&info);
+
+    wRead32(t32);
+    if(!fourCC::check( t32, (uint8_t *) "data"))
+    {
+        // Maybe other chunk, skip at most one
+        wRead32(t32);
+        cur+=t32;
+        ADM_assert(cur+4<tail);
+        wRead32(t32);
+        if (!fourCC::check( t32, (uint8_t *) "data"))
         {
-            ADM_warning("There are some extradata!\n");
+            ADM_warning("\n no data chunk..aborting..\n");
+            goto drop;
         }
-	    ADM_assert(cur<tail);
+    }
 
-	    // For our big endian friends
-	    Endian_WavHeader(&info);
-	    //
-	    wRead32(t32);
-	    if (!fourCC::check( t32, (uint8_t *) "data"))
-	      {
-	          // Maybe other chunk, skip at most one
-	    	  wRead32(t32);
-	    	  cur+=t32;
-	    	  ADM_assert(cur+4<tail);
-	    	  wRead32(t32);
-	          if (!fourCC::check( t32, (uint8_t *) "data"))
-	          {
-	        	  ADM_warning("\n no data chunk..aborting..\n");
-		       goto drop;
-	          }
-	       }
-
-	    wRead32(t32);
-	    ADM_info(" %lu bytes data \n", totalSize);
-	    info.blockalign=1;
-        offset=(uint32_t)(cur-data);
-        ADM_info("yes, it is riff/wav, data starts at %d...\n",(int)offset);
-	    return true;
-	  drop:
-        ADM_info("No, not riff/wav...\n");
-	    return false;
+    wRead32(t32);
+    ADM_info(" %lu bytes data \n", totalSize);
+    info.encoding=WAV_PCM;
+    info.blockalign=1;
+    offset=(uint32_t)(cur-data);
+    ADM_info("yes, it is riff/wav, data starts at %d...\n",(int)offset);
+    return true;
+drop:
+    ADM_info("No, not riff/wav...\n");
+    return false;
 }
 /**
  * \fn idEAC3
