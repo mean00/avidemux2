@@ -293,19 +293,29 @@ _again:
 /**
     \fn getWantedChannelMapping
 */
-const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
-const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
-const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
-                                             ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_LFE};
+static const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
+static const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
+static const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={
+    ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,
+    ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,
+    ADM_CH_FRONT_CENTER,ADM_CH_LFE
+};
+static const CHANNEL_TYPE sevenDotOne[MAX_CHANNELS]={
+    ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,
+    ADM_CH_FRONT_CENTER,ADM_CH_LFE,
+    ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,
+    ADM_CH_SIDE_LEFT,ADM_CH_SIDE_RIGHT
+};
 const CHANNEL_TYPE *alsaAudioDevice::getWantedChannelMapping(uint32_t channels)
 {
     switch(channels)
     {
-        case 1: return mono;break;
-        case 2: return stereo;break;
-        default:
-                return fiveDotOne;
-                break;
+        case 1: return mono;
+        case 2: return stereo;
+        case 5:
+        case 6: return fiveDotOne;
+        case 8: return sevenDotOne;
+        default:break;
     }
     return NULL;
 }
