@@ -103,9 +103,11 @@ pa_channel_map map,*pmap=NULL;
         map.map[0]=PA_CHANNEL_POSITION_FRONT_LEFT;
         map.map[1]=PA_CHANNEL_POSITION_FRONT_RIGHT;
         map.map[2]=PA_CHANNEL_POSITION_FRONT_CENTER;
-        map.map[3]=PA_CHANNEL_POSITION_REAR_LEFT;
-        map.map[4]=PA_CHANNEL_POSITION_REAR_RIGHT;
-        map.map[5]=PA_CHANNEL_POSITION_SUBWOOFER;
+        map.map[3]=PA_CHANNEL_POSITION_SUBWOOFER;
+        map.map[4]=PA_CHANNEL_POSITION_REAR_LEFT;
+        map.map[5]=PA_CHANNEL_POSITION_REAR_RIGHT;
+        map.map[6]=PA_CHANNEL_POSITION_SIDE_LEFT;
+        map.map[7]=PA_CHANNEL_POSITION_SIDE_RIGHT;
   }
 
   ss.format = PA_SAMPLE_S16LE;
@@ -178,19 +180,29 @@ int er;
 /**
     \fn getWantedChannelMapping
 */
-const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
-const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
-const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
-                                             ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_LFE};
+static const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
+static const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
+static const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={
+    ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,
+    ADM_CH_FRONT_CENTER,ADM_CH_LFE,
+    ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT
+};
+static const CHANNEL_TYPE sevenDotOne[MAX_CHANNELS]={
+    ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,
+    ADM_CH_FRONT_CENTER,ADM_CH_LFE,
+    ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,
+    ADM_CH_SIDE_LEFT,ADM_CH_SIDE_RIGHT
+};
 const CHANNEL_TYPE *pulseSimpleAudioDevice::getWantedChannelMapping(uint32_t channels)
 {
     switch(channels)
     {
-        case 1: return mono;break;
-        case 2: return stereo;break;
-        default:
-                return fiveDotOne;
-                break;
+        case 1: return mono;
+        case 2: return stereo;
+        case 5:
+        case 6: return fiveDotOne;
+        case 8: return sevenDotOne;
+        default:break;
     }
     return NULL;
 }
