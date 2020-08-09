@@ -43,7 +43,7 @@ ADM_Qvumeter::ADM_Qvumeter(QWidget *z, int width, int height) : QWidget(z)
 	z->resize(width + 2, height + 2);
 
 	rgbDataBuffer = new uint8_t[width * height * 4];
-    for(int i=0;i<64;i++)
+    for(int i=0;i<88;i++)
     {
         uint8_t *ptr = rgbDataBuffer + (width * i * 4);
         uint32_t *data = (uint32_t *)ptr;
@@ -72,42 +72,42 @@ void ADM_Qvumeter::paintEvent(QPaintEvent *ev)
 */
 bool UI_InitVUMeter(QFrame *host)
 {
-	vuWidget = new ADM_Qvumeter(host, 64, 64);
-	vuWidget->show();
+    vuWidget = new ADM_Qvumeter(host, 64, 88);
+    vuWidget->show();
 
-	return true;
+    return true;
 }
 /**
     \fn UI_vuUpdate
     \brief Update vumeter, input is volume per channel between 0 & 255
 */
-bool UI_vuUpdate(uint32_t volume[6])
+bool UI_vuUpdate(uint32_t volume[8])
 {
-      // Draw lines
-      for(int i=0;i<6;i++)
-      {
-            int vol=volume[i];
-            if(vol>63) vol=63;
-            if(vol<3) vol=3;
-			uint8_t *ptr = vuWidget->rgbDataBuffer + vuWidget->width() * (2 + 10 * i) * 4;
-            uint32_t *data=(uint32_t *)(ptr);
-            for(int j=0;j<vol;j++)
-            {
-                if(j<32) *data++=GREEN;
-                else
-                if(j<50) *data++=YELLOW;
-                else *data++=RED;
-            }
-            for(int j=vol;j<64;j++)
-            {
-                *data++=BLACK;
-            }
-      }
+    // Draw lines
+    int vol;
+    for(int i=0;i<8;i++)
+    {
+        vol=volume[i];
+        if(vol>63) vol=63;
+        if(vol<3) vol=3;
+        uint8_t *ptr = vuWidget->rgbDataBuffer + vuWidget->width() * (8 + 10 * i) * 4;
+        uint32_t *data=(uint32_t *)(ptr);
+        for(int j=0;j<vol;j++)
+        {
+            if(j<32) *data++=GREEN;
+            else if(j<50) *data++=YELLOW;
+            else *data++=RED;
+        }
+        for(int j=vol;j<64;j++)
+        {
+            *data++=BLACK;
+        }
+    }
 #if 0
       ADM_info("VU : LEFT %"PRIu32" CENTER %"PRIu32" RIGHT %"PRIu32" REARLEFT %"PRIu32" REARRIGHT %"PRIu32"\n",
                     volume[0],volume[1],volume[2],volume[3],volume[4]);
 #endif
-      vuWidget->repaint();
-      return true;
+    vuWidget->update();
+    return true;
 }
 //EOF

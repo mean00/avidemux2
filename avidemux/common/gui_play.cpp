@@ -482,12 +482,15 @@ bool  GUIPlayback::initializeAudio(void)
 */
 bool GUIPlayback::updateVu(void)
 {
- uint64_t time=  ticktock.getElapsedMS();
-    // Refresh vumeter every 50 ms
+    uint64_t time=ticktock.getElapsedMS();
+    // Refresh vumeter at most every 50 ms
+    uint64_t wait=50;
+    if(refreshCapEnabled && refreshCapValue > wait)
+        wait=refreshCapValue;
     if(!playbackAudio)  return true;
-    if(time>(vuMeterPts+50))
+    if(time>(vuMeterPts+wait))
     {
-        uint32_t stat[6];
+        uint32_t stat[8];
         AVDM_getStats(stat);
         UI_setVUMeter(stat);
         vuMeterPts=time;

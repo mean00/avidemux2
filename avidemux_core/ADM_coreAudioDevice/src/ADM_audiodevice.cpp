@@ -307,10 +307,10 @@ bool        AVDM_getStats(uint32_t *vol)
 
 //**
 const CHANNEL_TYPE dummyAudioDevice::myChannelType[MAX_CHANNELS]=
-                            {ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
-                             ADM_CH_REAR_LEFT, ADM_CH_REAR_RIGHT, ADM_CH_LFE,
-                             ADM_CH_INVALID,   ADM_CH_INVALID
-                            };
+{
+    ADM_CH_FRONT_LEFT, ADM_CH_FRONT_RIGHT, ADM_CH_FRONT_CENTER, ADM_CH_LFE,
+    ADM_CH_REAR_LEFT, ADM_CH_REAR_RIGHT, ADM_CH_SIDE_LEFT, ADM_CH_SIDE_RIGHT
+};
 bool dummyAudioDevice::localInit(void)                                {return true;}
 bool dummyAudioDevice::localStop(void)                                {return true;}
 void  dummyAudioDevice::sendData(void)                                {ADM_usleep(5000);}

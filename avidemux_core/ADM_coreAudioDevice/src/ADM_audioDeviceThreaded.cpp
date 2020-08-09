@@ -223,19 +223,19 @@ uint8_t     audioDeviceThreaded::play(uint32_t len, float *data)
 }
 /**
     \fn getVolumeStats
-    \brief Return stats about volume for each channel [6] between 0 & 255
+    \brief Return stats about volume for each channel [8] between 0 & 255
 */
 bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
 {
-    float f[6];
-    uint32_t raw[6];
-    memset(vol,0,sizeof(uint32_t)*6);
+    float f[MAX_CHANNELS];
+    uint32_t raw[MAX_CHANNELS];
+    memset(vol,0,sizeof(uint32_t)*8);
     // 5 ms should be enough, i.e. fq/200
     uint32_t samples=_frequency/200;
     mutex.lock();
     if(samples*_channels*2 > (wrIndex-rdIndex))
             samples=(wrIndex-rdIndex)/(2*_channels);
-    for(int i=0;i<6;i++) f[i]=0;
+    for(int i=0;i<MAX_CHANNELS;i++) f[i]=0;
     if(!samples)
     {
         mutex.unlock();
@@ -256,7 +256,7 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         }
     mutex.unlock();
     // Normalize
-    for(int i=0;i<6;i++)
+    for(int i=0;i<MAX_CHANNELS;i++)
     {
         float d=f[i];
         d/=samples; // d is now between 0 and 32768
@@ -273,11 +273,11 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         vol[1]=raw[0];
         return true;
     }
-    // Move channels around so that they fit Left/Right/Center/Rear Left, Rear Right,LFE
+    // Move channels around so that they fit Left / Center / Right / LFE / Rear Left / Rear Right / Side Left / Side Right
     const CHANNEL_TYPE *chans=this->getWantedChannelMapping(_channels);
-    static const CHANNEL_TYPE output[6]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_CENTER,ADM_CH_FRONT_RIGHT,
-                                         ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_LFE};
-    for(int i=0;i<6;i++)
+    static const CHANNEL_TYPE output[8]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_CENTER,ADM_CH_FRONT_RIGHT,ADM_CH_LFE,
+                                         ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_SIDE_LEFT,ADM_CH_SIDE_RIGHT};
+    for(int i=0;i<8;i++)
     {
         CHANNEL_TYPE wanted=output[i];
         for(int j=0;j<_channels;j++)
@@ -291,7 +291,7 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
     }
 #if 0
     #define zz vol
-    printf("[%d] %02d %02d %02d %02d %02d %02d\n",samples,zz[0],zz[1],zz[2],zz[3],zz[4],zz[5]);
+    printf("[%d] %02d %02d %02d %02d %02d %02d %02d %02d\n",samples,zz[0],zz[1],zz[2],zz[3],zz[4],zz[5],zz[6],zz[7]);
 #endif
     return true;
 

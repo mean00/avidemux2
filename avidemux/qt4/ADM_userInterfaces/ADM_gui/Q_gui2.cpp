@@ -2267,7 +2267,7 @@ bool UI_setTimeShift(int onoff,int value)
 /**
     \fn UI_setVUMeter
 */
-bool UI_setVUMeter( uint32_t volume[6])
+bool UI_setVUMeter( uint32_t volume[8])
 {
     UI_vuUpdate( volume);
     return true;

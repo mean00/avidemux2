@@ -164,7 +164,7 @@ void UI_setMarkers(uint64_t a,uint64_t b)
 void UI_setTotalTime(uint64_t t)
 {
 }
-bool UI_setVUMeter(uint32_t volume[6])
+bool UI_setVUMeter(uint32_t volume[8])
 {
     return true;
 }

@@ -1702,7 +1702,7 @@ uint8_t GUI_close(void)
       }
       admPreview::setMainDimension(0, 0, ZOOM_1_1); // destroy preview
       UI_setNeedsResizingFlag(false);
-      uint32_t zero[6]={0};
+      uint32_t zero[8]={0};
       UI_setVUMeter(zero);
       if(video_body->canUndo())
         A_saveSession();
