@@ -15,17 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include <math.h>
 #include "ADM_audiocodec.h"
 
 ADM_AudiocodecWav::ADM_AudiocodecWav( uint32_t fourcc,const WAVHeader &info ) : ADM_Audiocodec(fourcc,info)
 {
-    channelMapping[0] = ADM_CH_FRONT_LEFT;
-    channelMapping[1] = ADM_CH_FRONT_RIGHT;
-    channelMapping[2] = ADM_CH_FRONT_CENTER;
-    channelMapping[3] = ADM_CH_REAR_LEFT;
-    channelMapping[4] = ADM_CH_REAR_RIGHT;
-    channelMapping[5] = ADM_CH_LFE;
+    CHANNEL_TYPE *p_ch_type = channelMapping;
+
+#define MAPME(ch) *(p_ch_type++)=ADM_CH_##ch;
+    MAPME(FRONT_LEFT)
+    MAPME(FRONT_RIGHT)
+    MAPME(FRONT_CENTER)
+    MAPME(LFE)
+    MAPME(REAR_LEFT)
+    MAPME(REAR_RIGHT)
+    MAPME(SIDE_LEFT)
+    MAPME(SIDE_RIGHT)
+
     ADM_info("Creating not swapped wav decoder (PCM)\n");
 }
 ADM_AudiocodecWav::~ADM_AudiocodecWav()
