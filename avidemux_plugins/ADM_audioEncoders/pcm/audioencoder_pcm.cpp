@@ -31,7 +31,7 @@ static ADM_audioEncoder encoderDesc = {
   "PCM",
   "PCM",
   "PCM encoder plugin Mean 2008",
-  6,                    // Max channels
+  8,                    // Max channels
   1,0,0,                // Version
   WAV_PCM,
   200,                  // Priority
