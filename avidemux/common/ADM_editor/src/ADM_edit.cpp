@@ -616,11 +616,13 @@ uint8_t ADM_Composer::addFile (const char *name)
                 SKIP_TRACK
             }
 
+            if((track->wavheader).encoding==WAV_AAC || (track->wavheader).encoding==WAV_DTS)
+                checkSamplingFrequency(track);
+
             if((track->wavheader).encoding==WAV_AAC)
             {
                 uint32_t samples=AAC_DEFAULT_FRAME_LENGTH;
                 AacAudioInfo aac;
-                track->isbr=checkSamplingFrequency(track);
                 if(track->isbr || (ADM_getAacInfoFromConfig(extraLen,extraData,aac) && aac.sbr))
                     samples<<=1;
                 stream->setSamplesPerPacket(samples);
@@ -741,14 +743,9 @@ bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
     if(!track->codec) return false;
     if(track->codec->isDummy()) return false;
 
-    uint32_t chan=track->codec->getOutputChannels();
-    if(chan<2) chan=2;
-
     WAVHeader *hdr=&(track->wavheader);
-    if(hdr->channels>chan)
-        chan=hdr->channels;
 
-    uint32_t len=(hdr->frequency)*chan; // 1 sec max
+    uint32_t len=(hdr->frequency)*MAX_CHANNELS;
     uint32_t max=ADM_EDITOR_PACKET_BUFFER_SIZE;
 
     notStackAllocator inbuf(max);
@@ -771,9 +768,15 @@ bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
     {
         ADM_warning("Updating sampling frequency from %u to %u\n",hdr->frequency,fq);
         hdr->frequency=fq;
-        return true; // implicit SBR
+        track->isbr=true;
     }
-    return false;
+    uint32_t chan=track->codec->getOutputChannels();
+    if(chan && chan!=(uint32_t)hdr->channels)
+    {
+        ADM_warning("Updating number of channels from %u to %u\n",hdr->channels,chan);
+        hdr->channels=(uint16_t)chan;
+    }
+    return true;
 }
 /**
     \fn getPARWidth
