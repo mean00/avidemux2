@@ -13,7 +13,7 @@
 
 #define MINUS_ONE 0xffffffff
 #define DITHER_SIZE 4800
-#define DITHER_CHANNELS 6
+#define DITHER_CHANNELS MAX_CHANNELS
 
 ADM_COREAUDIO6_EXPORT bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
 ADM_COREAUDIO6_EXPORT const char *getStrFromAudioCodec( uint32_t codec);
