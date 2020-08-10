@@ -701,6 +701,11 @@ std::string currentSdlDriver=getSdlDriverName();
         }
         delete [] audioDeviceItems;
 
+        for(int i=0;i<nbLanguages;i++)
+        {
+            delete languagesMenuItems[i];
+        }
+        delete [] languagesMenuItems;
 
 
 	return 1;
