@@ -313,9 +313,21 @@ const CHANNEL_TYPE dummyAudioDevice::myChannelType[MAX_CHANNELS]=
 };
 bool dummyAudioDevice::localInit(void)                                {return true;}
 bool dummyAudioDevice::localStop(void)                                {return true;}
-void  dummyAudioDevice::sendData(void)                                {ADM_usleep(5000);}
-
-
+void dummyAudioDevice::sendData(void)
+{
+    mutex.lock();
+    uint32_t avail=wrIndex-rdIndex;
+    if(!avail)
+    {
+        mutex.unlock();
+        ADM_usleep(10000);
+        return;
+    }
+    if(avail>sizeOf10ms) avail=sizeOf10ms;
+    rdIndex+=avail;
+    mutex.unlock();
+    ADM_usleep(10000);
+}
 
 // Else the linker will discard it...
 #include "ADM_audioDeviceThreaded.cpp"
