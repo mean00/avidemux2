@@ -917,6 +917,25 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     commonPart(AVdn);
                                     break;
 
+                                case MKFCCR('a','p','c','h'): // ProRes 422 High Quality
+                                    commonPart(apch);
+                                    break;
+
+                                case MKFCCR('a','p','c','n'): // ProRes 422 Standard Definition
+                                    commonPart(apcn);
+                                    break;
+
+                                case MKFCCR('a','p','c','s'): // ProRes 422 LT
+                                    commonPart(apcs);
+                                    break;
+
+                                case MKFCCR('a','p','c','o'): // ProRes 422 Proxy
+                                    commonPart(apcs);
+                                    break;
+
+                                case MKFCCR('a','p','4','h'): // ProRes 4444
+                                    commonPart(ap4h);
+                                    break;
 //
                                 case MKFCCR('h','e','v','1'): // hev1 / hevc
                                 case MKFCCR('h','v','c','1'): // hev1 / hevc
