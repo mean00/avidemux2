@@ -44,6 +44,11 @@ const ffVideoCodec ffCodec[]=
   {"AVdn",  AV_CODEC_ID_DNXHD,     false, false,    false},
   {"tscc",  AV_CODEC_ID_TSCC,      false, false,    false},
   {"CSCD",  AV_CODEC_ID_CSCD,      false, false,    false},
+  {"apch",  AV_CODEC_ID_PRORES,    false, false,    false},
+  {"apcn",  AV_CODEC_ID_PRORES,    false, false,    false},
+  {"apcs",  AV_CODEC_ID_PRORES,    false, false,    false},
+  {"apco",  AV_CODEC_ID_PRORES,    false, false,    false},
+  {"ap4h",  AV_CODEC_ID_PRORES,    false, false,    false},
 // Need extradata
   {"av01", AV_CODEC_ID_AV1,        true, false,    false},
   {"WMV2", AV_CODEC_ID_WMV2,       true, false,    false},
