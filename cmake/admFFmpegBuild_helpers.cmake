@@ -19,15 +19,15 @@ set(FFMPEG_BASE_DIR "${FFMPEG_EXTRACT_DIR}/ffmpeg")
 set(FFMPEG_SOURCE_DIR "${FFMPEG_BASE_DIR}/source")
 set(FFMPEG_BINARY_DIR "${FFMPEG_BASE_DIR}/build")
 
-set(FFMPEG_DECODERS     aac  ac3  adpcm_ima_amv  amv  bmp  cinepak  cscd  cyuv
-                        dca  dnxhd  dvbsub  dvvideo  eac3  ffv1  ffvhuff  fic
+set(FFMPEG_DECODERS     aac  ac3  adpcm_ima_amv  amv  cinepak  cscd  cyuv
+                        dca  dnxhd  dvvideo  eac3  ffv1  ffvhuff  fic
                         flac  flv  fraps  h263  h264  hevc  huffyuv  lagarith
                         mjpeg  mjpegb  mp2  mp3  mpeg2video  mpeg4  msmpeg4v2  msmpeg4v3
-                        msvideo1  nellymoser  png  qdm2  rawvideo  snow  svq3  theora
+                        msvideo1  nellymoser  png  prores  qdm2  rawvideo  snow  svq3  theora
                         tscc  vc1  vorbis  vp3  vp6  vp6a  vp6f  vp8
                         vp9  wmapro  wmav2  wmv1  wmv2  wmv3)
 
-set(FFMPEG_ENCODERS     aac  ac3  dca  dvvideo  ffv1  ffvhuff  flac  flv  h263  huffyuv
+set(FFMPEG_ENCODERS     aac  ac3  dvvideo  ffv1  ffvhuff  flac  flv  h263  huffyuv
                         mjpeg  mp2  mpeg1video  mpeg2video  mpeg4  png  snow)
 
 set(FFMPEG_MUXERS       flv  matroska  mpeg1vcd  mpeg2dvd  mpeg2svcd  mpegts  mov  mp4  psp  webm)
