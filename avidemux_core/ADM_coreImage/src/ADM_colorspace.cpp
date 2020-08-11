@@ -91,6 +91,7 @@ static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
     case ADM_COLOR_NV12_10BITS:  return AV_PIX_FMT_P010LE;
     case ADM_COLOR_YUV444_10BITS: return AV_PIX_FMT_YUV444P10LE;
     case ADM_COLOR_YUV422_10BITS: return AV_PIX_FMT_YUV422P10LE;
+    case ADM_COLOR_YUV444_12BITS: return AV_PIX_FMT_YUV444P12LE;
     case ADM_COLOR_Y8: return AV_PIX_FMT_GRAY8;
     default : ADM_assert(0); 
   }
@@ -186,6 +187,30 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcStride[0]=ADM_IMAGE_ALIGN(width*4);
             srcStride[1]=0;
             srcStride[2]=0;
+            break;
+    case ADM_COLOR_YUV422_10BITS:
+            srcData[0]=from;
+            width=ADM_IMAGE_ALIGN(width*2);
+            height=ADM_IMAGE_ALIGN(height);
+            from+=width*height;
+            srcData[1]=from;
+            from+=(width>>1)*height;
+            srcData[2]=from;
+            srcStride[0]=width;
+            srcStride[1]=width>>1;
+            srcStride[2]=width>>1;
+            break;
+    case ADM_COLOR_YUV444_12BITS:
+            srcData[0]=from;
+            width=ADM_IMAGE_ALIGN(width*2);
+            height=ADM_IMAGE_ALIGN(height);
+            from+=width*height;
+            srcData[1]=from;
+            from+=width*height;
+            srcData[2]=from;
+            srcStride[0]=width;
+            srcStride[1]=width;
+            srcStride[2]=width;
             break;
     default:
         ADM_assert(0);
