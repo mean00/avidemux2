@@ -519,7 +519,7 @@ bool configure (CONFcouple **setup)
 
     diaElem *elems[]={&bitrate};
 
-    if ( diaFactoryRun(QT_TRANSLATE_NOOP("lavcodec",ADM_LAV_MENU" (lav) Configuration"),1,elems))
+    if ( diaFactoryRun(QT_TRANSLATE_NOOP("lavcodec",ADM_LAV_MENU" Configuration"),1,elems))
     {
         if(*setup) delete *setup;
         *setup=NULL;
