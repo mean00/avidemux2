@@ -29,7 +29,9 @@ typedef enum
 {
     MP4_MUXER_OPT_NONE,
     MP4_MUXER_OPT_FASTSTART,
+#ifndef MUXER_IS_MOV
     MP4_MUXER_OPT_FRAGMENT
+#endif
 }MP4_MUXER_OPTIMIZE;
 
 typedef enum
@@ -63,13 +65,23 @@ typedef enum
 #include "mp4_muxer.h"
 extern mp4_muxer muxerConfig;
 
-class muxerMP4 : public muxerFFmpeg
+#ifdef MUXER_IS_MOV
+#   define MOVCLASS muxerMov
+#else
+#   define MOVCLASS muxerMP4
+#endif
+class MOVCLASS : public muxerFFmpeg
 {
 protected:
-        const char *getContainerName(void) {return "Mp4";};
+                const char *getContainerName(void)
+#ifdef MUXER_IS_MOV
+                {return "MOV";}
+#else
+                {return "MP4";}
+#endif
 public:
-                muxerMP4();
-        virtual ~muxerMP4();
+                MOVCLASS();
+        virtual ~MOVCLASS();
         virtual bool open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a);
         virtual bool save(void) ;
         virtual bool close(void) ;

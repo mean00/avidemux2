@@ -19,7 +19,11 @@
 #define ADM_MINIMAL_UI_INTERFACE
 #include "DIA_factory.h"
 
+#ifndef MUXER_IS_MOV
 bool mp4Configure(void)
+#else
+bool movConfigure(void)
+#endif
 {
         uint32_t fmt = muxerConfig.muxerType;
         uint32_t dar = muxerConfig.aspectRatio;
@@ -28,14 +32,24 @@ bool mp4Configure(void)
         uint32_t clk = muxerConfig.clockfreq;
         bool force   = muxerConfig.forceAspectRatio;
 
+#ifndef MUXER_IS_MOV
         diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4"},{MP4_MUXER_PSP,"PSP"}};
         diaElemMenu  menuFormat(&fmt,QT_TRANSLATE_NOOP("mp4muxer","Muxing Format"),2,format,"");
+#endif
         diaMenuEntry streamOpt[]={
             {MP4_MUXER_OPT_NONE,QT_TRANSLATE_NOOP("mp4muxer","No optimization")},
             {MP4_MUXER_OPT_FASTSTART,QT_TRANSLATE_NOOP("mp4muxer","Move index to the beginning of the file")},
+#ifndef MUXER_IS_MOV
             {MP4_MUXER_OPT_FRAGMENT,QT_TRANSLATE_NOOP("mp4muxer","Use fragmentation")}
+#endif
         };
-        diaElemMenu  menuOptimize(&opt,QT_TRANSLATE_NOOP("mp4muxer","Optimize for Streaming"),3,streamOpt,"");
+
+#ifndef MUXER_IS_MOV
+#   define NB_OPTIMIZE 3
+#else
+#   define NB_OPTIMIZE 2
+#endif
+        diaElemMenu  menuOptimize(&opt,QT_TRANSLATE_NOOP("mp4muxer","Optimize for Streaming"),NB_OPTIMIZE,streamOpt,"");
         diaElemToggle forceAR(&force,QT_TRANSLATE_NOOP("mp4muxer","Force aspect ratio"));
         diaMenuEntry aspect[]={{STANDARD,"4:3"},{WIDE,"16:9"},{UNI,"18:9"},{CINEMA,"64:27"}};
         diaElemMenu  menuAspect(&dar,QT_TRANSLATE_NOOP("mp4muxer","Aspect Ratio (DAR)"),4,aspect,"");
@@ -60,9 +74,22 @@ bool mp4Configure(void)
         };
         diaElemMenu menuClock(&clk,QT_TRANSLATE_NOOP("mp4muxer","Time scale"),8,clockFrequencies,NULL);
 
-        diaElem *tabs[]={&menuFormat,&menuOptimize,&forceAR,&menuAspect,&menuRotation,&menuClock};
+        diaElem *tabs[]={
+#ifndef MUXER_IS_MOV
+            &menuFormat,
+#endif
+            &menuOptimize,
+            &forceAR,
+            &menuAspect,
+            &menuRotation,
+            &menuClock
+        };
 
+#ifndef MUXER_IS_MOV
         if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MP4 Muxer"),6,tabs))
+#else
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MOV Muxer"),5,tabs))
+#endif
         {
             muxerConfig.muxerType=(MP4_MUXER_TYPE)fmt;
             muxerConfig.optimize=(MP4_MUXER_OPTIMIZE)opt;

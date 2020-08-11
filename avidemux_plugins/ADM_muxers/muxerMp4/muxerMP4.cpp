@@ -44,15 +44,15 @@ mp4_muxer muxerConfig=
     \fn     muxerMP4
     \brief  Constructor
 */
-muxerMP4::muxerMP4()
+MOVCLASS::MOVCLASS()
 {
-};
+
+}
 /**
     \fn     muxerMP4
     \brief  Destructor
 */
-
-muxerMP4::~muxerMP4()
+MOVCLASS::~MOVCLASS()
 {
 
 }
@@ -80,15 +80,33 @@ static uint32_t getClockFreqFromEnum(MP4_MUXER_CLOCK_FREQUENCIES type)
     \brief Check that the streams are ok, initialize context...
 */
 
-bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
+bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack, ADM_audioStream **a)
 {
+#define FCC_IS_NOT(x) !fourCC::check(fcc,(const uint8_t *)x)
     uint32_t fcc=s->getFCC();
-    if(!isMpeg4Compatible(fcc) && !isH264Compatible(fcc) && !isH265Compatible(fcc) && !fourCC::check(fcc,(const uint8_t *)"av01"))
+    if( !isMpeg4Compatible(fcc) &&
+        !isH264Compatible(fcc)  &&
+        !isH265Compatible(fcc)  &&
+#ifdef MUXER_IS_MOV
+        FCC_IS_NOT("AVdn") &&
+        FCC_IS_NOT("apch") &&
+        FCC_IS_NOT("apcn") &&
+        FCC_IS_NOT("apcs") &&
+        FCC_IS_NOT("apco") &&
+        FCC_IS_NOT("ac4h") &&
+#endif
+        FCC_IS_NOT("av01"))
     {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265 and AV1 supported for video"));
+        GUI_Error_HIG(
+            QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
+#ifdef MUXER_IS_MOV
+            QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265, AV1, DNxHD and ProRes supported for video")
+#else
+            QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265 and AV1 supported for video")
+#endif
+        );
             return false;
     }
-    bool muxModeMov=false;
     if(nbAudioTrack)
     {
         for(int i=0;i<nbAudioTrack;i++)
@@ -97,35 +115,34 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             if( acc!=WAV_AAC &&
                 acc!=WAV_AC3 &&
                 acc!=WAV_EAC3 &&
+#ifdef MUXER_IS_MOV
                 acc!=WAV_LPCM &&
+#endif
                 acc!=WAV_MP2 &&
                 acc!=WAV_MP3 &&
                 acc!=WAV_OGG_VORBIS)
             {
-                GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, E-AC3, LPCM, MP2, MP3 and Vorbis supported for audio"));
+                GUI_Error_HIG(
+                    QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
+#ifdef MUXER_IS_MOV
+                    QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, E-AC3, LPCM, MP2, MP3 and Vorbis supported for audio"));
+#else
+                    QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, E-AC3, MP2, MP3 and Vorbis supported for audio"));
+#endif
                 return false;
             }
-            if(acc==WAV_LPCM)
-                muxModeMov=true;
         }
     }
     /* All seems fine, open stuff */
     const char *f;
+#ifdef MUXER_IS_MOV
+    f="mov";
+#else
     if(muxerConfig.muxerType==MP4_MUXER_PSP)
-    {
-        if(muxModeMov)
-        {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Incompatible Format"),QT_TRANSLATE_NOOP("mp4muxer","PSP format is incompatible with LPCM audio"));
-            return false;
-        }
         f="psp";
-    }else if(muxModeMov)
-    {
-        f="mov";
-    }else
-    {
+    else
         f="mp4";
-    }
+#endif
     if(false==setupMuxer(f,file))
     {
         printf("[MP4] Failed to open muxer\n");
@@ -238,10 +255,12 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             case(MP4_MUXER_OPT_FASTSTART):
                 av_dict_set(&dict, "movflags", "faststart", 0);
                 break;
+#ifndef MUXER_IS_MOV
             case(MP4_MUXER_OPT_FRAGMENT):
                 av_dict_set(&dict, "movflags", "frag_keyframe+empty_moov", 0);
                 av_dict_set(&dict, "min_frag_duration", "2000000", 0); // 2 seconds, an arbitrary value
                 break;
+#endif
             default: break;
         }
 
@@ -295,10 +314,14 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 /**
     \fn save
 */
-bool muxerMP4::save(void)
+bool MOVCLASS::save(void)
 {
+#ifndef MUXER_IS_MOV
     const char *title=QT_TRANSLATE_NOOP("mp4muxer","Saving mp4");
     if(muxerConfig.muxerType==MP4_MUXER_PSP) title=QT_TRANSLATE_NOOP("mp4muxer","Saving PSP");
+#else
+    const char *title=QT_TRANSLATE_NOOP("mp4muxer","Saving mov");
+#endif
     return saveLoop(title);
 }
 
@@ -306,9 +329,8 @@ bool muxerMP4::save(void)
     \fn close
     \brief Cleanup is done in the dtor
 */
-bool muxerMP4::close(void)
+bool MOVCLASS::close(void)
 {
-
     printf("[MP4] Closing\n");
     return closeMuxer();
 }
