@@ -93,7 +93,7 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         FCC_IS_NOT("apcn") &&
         FCC_IS_NOT("apcs") &&
         FCC_IS_NOT("apco") &&
-        FCC_IS_NOT("ac4h") &&
+        FCC_IS_NOT("ap4h") &&
 #endif
         FCC_IS_NOT("av01"))
     {
