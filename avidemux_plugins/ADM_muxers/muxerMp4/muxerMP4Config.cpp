@@ -35,18 +35,24 @@ bool movConfigure(void)
 #ifndef MUXER_IS_MOV
         diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4"},{MP4_MUXER_PSP,"PSP"}};
         diaElemMenu  menuFormat(&fmt,QT_TRANSLATE_NOOP("mp4muxer","Muxing Format"),2,format,"");
-#endif
         diaMenuEntry streamOpt[]={
             {MP4_MUXER_OPT_NONE,QT_TRANSLATE_NOOP("mp4muxer","No optimization")},
             {MP4_MUXER_OPT_FASTSTART,QT_TRANSLATE_NOOP("mp4muxer","Move index to the beginning of the file")},
-#ifndef MUXER_IS_MOV
             {MP4_MUXER_OPT_FRAGMENT,QT_TRANSLATE_NOOP("mp4muxer","Use fragmentation")}
-#endif
         };
+#else
+        diaMenuEntry streamOpt[]={
+            {MP4_MUXER_OPT_NONE,QT_TRANSLATE_NOOP("mp4muxer","No optimization")},
+            {MP4_MUXER_OPT_FASTSTART,QT_TRANSLATE_NOOP("mp4muxer","Move index to the beginning of the file")}
+        };
+
+#endif
 
 #ifndef MUXER_IS_MOV
 #   define NB_OPTIMIZE 3
+#   define NB_TABS 6
 #else
+#   define NB_TABS 5
 #   define NB_OPTIMIZE 2
 #endif
         diaElemMenu  menuOptimize(&opt,QT_TRANSLATE_NOOP("mp4muxer","Optimize for Streaming"),NB_OPTIMIZE,streamOpt,"");
@@ -74,22 +80,13 @@ bool movConfigure(void)
         };
         diaElemMenu menuClock(&clk,QT_TRANSLATE_NOOP("mp4muxer","Time scale"),8,clockFrequencies,NULL);
 
-        diaElem *tabs[]={
 #ifndef MUXER_IS_MOV
-            &menuFormat,
-#endif
-            &menuOptimize,
-            &forceAR,
-            &menuAspect,
-            &menuRotation,
-            &menuClock
-        };
-
-#ifndef MUXER_IS_MOV
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MP4 Muxer"),6,tabs))
+        diaElem *tabs[]={&menuFormat,&menuOptimize,&forceAR,&menuAspect,&menuRotation,&menuClock};
 #else
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MOV Muxer"),5,tabs))
+        diaElem *tabs[]={            &menuOptimize,&forceAR,&menuAspect,&menuRotation,&menuClock};
 #endif
+
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MP4 Muxer"),NB_TABS,tabs))
         {
             muxerConfig.muxerType=(MP4_MUXER_TYPE)fmt;
             muxerConfig.optimize=(MP4_MUXER_OPTIMIZE)opt;

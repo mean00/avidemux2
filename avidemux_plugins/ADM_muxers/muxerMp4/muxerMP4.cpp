@@ -97,15 +97,16 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
 #endif
         FCC_IS_NOT("av01"))
     {
+#ifdef MUXER_IS_MOV
         GUI_Error_HIG(
             QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
-#ifdef MUXER_IS_MOV
-            QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265, AV1, DNxHD and ProRes supported for video")
+            QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265, AV1, DNxHD and ProRes supported for video"));
 #else
-            QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265 and AV1 supported for video")
+        GUI_Error_HIG(
+            QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
+            QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265 and AV1 supported for video"));
 #endif
-        );
-            return false;
+        return false;
     }
     if(nbAudioTrack)
     {
@@ -122,11 +123,13 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
                 acc!=WAV_MP3 &&
                 acc!=WAV_OGG_VORBIS)
             {
+#ifdef MUXER_IS_MOV
                 GUI_Error_HIG(
                     QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
-#ifdef MUXER_IS_MOV
                     QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, E-AC3, LPCM, MP2, MP3 and Vorbis supported for audio"));
 #else
+                GUI_Error_HIG(
+                    QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
                     QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, E-AC3, MP2, MP3 and Vorbis supported for audio"));
 #endif
                 return false;
