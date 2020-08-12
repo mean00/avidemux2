@@ -27,23 +27,26 @@ extern bool movConfigure(void);
 extern bool mp4Configure(void);
 #endif
 
-ADM_MUXER_BEGIN(
 #ifdef MUXER_IS_MOV
+ADM_MUXER_BEGIN(
         "mov",muxerMov,
         1,0,0,
         "MOV",           // Internal name
         "MOV muxer plugin (c) Mean 2009",
         "MOV Muxer",     // Display name
         movConfigure,    // configure function
+        mp4_muxer_param, // Template
+        &muxerConfig,    // conf
+        sizeof(mp4_muxer));
 #else
+ADM_MUXER_BEGIN(
         "mp4",muxerMP4,
         1,0,0,
         "MP4",           // Internal name
         "MP4 muxer plugin (c) Mean 2009",
         "MP4 Muxer",     // Display name
         mp4Configure,    // configure function
-#endif
         mp4_muxer_param, // Template
         &muxerConfig,    // conf
         sizeof(mp4_muxer));
-
+#endif
