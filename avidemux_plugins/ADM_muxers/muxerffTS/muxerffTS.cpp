@@ -128,7 +128,7 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
 		{
 			char buf[64];
         
-			snprintf(buf, sizeof(buf), "%d", tsMuxerConfig.muxRateInMBits * 1000000LL);
+			snprintf(buf, sizeof(buf), "%d", tsMuxerConfig.muxRateInMBits * 1000000);
 			av_dict_set(&dict, "muxrate", buf, 0);
 		}
 

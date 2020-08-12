@@ -98,7 +98,7 @@ int mkvDeviation::computeDeviation(int num, int den,int &nbSkipped)
         if(multipleCount)
         {
             multipleCount--;
-            printf("Frame %d, multiple = %d\n",i,multiple);
+            printf("Frame %d, multiple = %llu\n",i,multiple);
         }
         continue;
     }
