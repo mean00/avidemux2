@@ -49,11 +49,11 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
         if(track->_rdWav.encoding == WAV_DTS)
             maxChunkSize=AUDIO_PACKET_BUFFER_SIZE;
         // Probe if it is needed
-        int extra=0;
         uint64_t sizeOfAudio=0;
         uint64_t sz,largestBlockSize=0;
-        uint32_t i,nbBlocksToSplit=0;
-        int largestBlockNb=-1;
+        uint32_t i,extra=0;
+        uint32_t nbBlocksToSplit=0;
+        uint32_t largestBlockNb=-1;
         for(i=0;i<track->nbIndex;i++)
         {
             sz=track->index[i].size;
@@ -67,9 +67,9 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
                 largestBlockNb=i;
                 largestBlockSize=sz;
             }
-            int x=sz/(maxChunkSize+1);
+            uint32_t x = sz ? (sz-1)/maxChunkSize : 0;
             if(x) nbBlocksToSplit++;
-            extra+=x+1;
+            extra+=x;
             sizeOfAudio+=sz;
         }
         ADM_info("The largest block is %llu bytes in size at index %d out of %u\n",largestBlockSize,largestBlockNb,track->nbIndex);
@@ -78,7 +78,7 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
             ADM_info("No very large blocks found, %llu bytes present over %d blocks\n",sizeOfAudio,track->nbIndex);
             return true;
         }   
-        ADM_info("%u large blocks found, splitting into %d %llu bytes blocks\n",nbBlocksToSplit,extra,maxChunkSize);
+        ADM_info("%u large blocks found, splitting into %u %llu bytes blocks\n",nbBlocksToSplit,nbBlocksToSplit+extra,maxChunkSize);
 
         uint32_t newNbCo=track->nbIndex+extra;
         MP4Index *newindex=new MP4Index[newNbCo];
