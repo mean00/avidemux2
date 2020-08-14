@@ -33,7 +33,7 @@ typedef struct
 /**
     \fn ADM_DCAGetInfo
 */
-ADM_AUDIOPARSER6_EXPORT bool ADM_DCAGetInfo(uint8_t *buf, uint32_t len,ADM_DCA_INFO *info,uint32_t *syncoff);
+ADM_AUDIOPARSER6_EXPORT bool ADM_DCAGetInfo(uint8_t *buf, uint32_t len,ADM_DCA_INFO *info,uint32_t *syncoff,bool substream=false);
 
 #define DTS_HEADER_SIZE (11)
 #endif

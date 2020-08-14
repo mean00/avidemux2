@@ -44,11 +44,49 @@ static const uint8_t dts_channels[] =
 };
 
 /**
+    \fn getSubstreamSize
+    \brief Decode a small chunk of the header to get substream size.
+*/
+static bool getSubstreamSize(uint8_t *buf, uint32_t len, uint32_t *size)
+{
+    if(len < DTS_HEADER_SIZE)
+        return false;
+
+    if(buf[0]!=0x64 || buf[1]!=0x58 || buf[2]!=0x20 || buf[3]!=0x25)
+        return false;
+
+    // getBits buffer must be padded by AV_INPUT_BUFFER_PADDING_SIZE zerobytes
+#define PAD_SIZE (DTS_HEADER_SIZE + 64)
+    uint8_t hdr[PAD_SIZE]={0};
+    uint32_t framesize=0;
+
+    memcpy(hdr,buf,DTS_HEADER_SIZE);
+    memset(hdr+DTS_HEADER_SIZE,0,64);
+    getBits bits(DTS_HEADER_SIZE,hdr);
+    bits.skip(32); // syncword
+    bits.skip(8); // user defined bits
+    bits.skip(2); // extension substream index
+    if(bits.get(1)) // header size flag
+    {
+        bits.skip(12); // header size
+        framesize=bits.get(20);
+    }else
+    {
+        bits.skip(8);
+        framesize=bits.get(16);
+    }
+    framesize++;
+    if(framesize < DTS_HEADER_SIZE) // FIXME
+        return false;
+    *size=framesize;
+    return true;
+}
+
+/**
     \fn ADM_DCAGetInfo
     @param syncoff: # of dropped bytes from the begining
 */
-bool ADM_DCAGetInfo(uint8_t *buf, uint32_t len, ADM_DCA_INFO *info, uint32_t *syncoff)
-//int  ADM_DCAGetInfo(uint8_t *buf, uint32_t len, uint32_t *fq, uint32_t *br, uint32_t *chan,uint32_t *syncoff,uint32_t *flagso,uint32_t *nbSample)
+bool ADM_DCAGetInfo(uint8_t *buf, uint32_t len, ADM_DCA_INFO *info, uint32_t *syncoff, bool substream)
 {
     bool sync=false;
     uint8_t *end=buf+len-4-DTS_HEADER_SIZE;
@@ -57,8 +95,20 @@ bool ADM_DCAGetInfo(uint8_t *buf, uint32_t len, ADM_DCA_INFO *info, uint32_t *sy
 
     *syncoff=0;
 
-    // getBits buffer must be padded by AV_INPUT_BUFFER_PADDING_SIZE zerobytes
-#define PAD_SIZE (DTS_HEADER_SIZE + 64)
+    if(substream) // skip decoding DTS core header, buf points to the substream marker
+    {
+        uint32_t extra;
+        if(getSubstreamSize(buf,len,&extra))
+        {
+            framesize=info->frameSizeInBytes;
+            framesize=(framesize+3)&(~3);
+            framesize+=extra;
+            info->frameSizeInBytes=framesize;
+            return true;
+        }
+        return false;
+    }
+
     uint8_t pad[PAD_SIZE]={0};
 
     // Assume 16 bits big endian
@@ -162,7 +212,6 @@ bool ADM_DCAGetInfo(uint8_t *buf, uint32_t len, ADM_DCA_INFO *info, uint32_t *sy
     }
 
     cur+=framesize;
-    framesize=0;
     // Check for substream marker 64 58 20 25
     if(cur[0]!=0x64 || cur[1]!=0x58 || cur[2]!=0x20 || cur[3]!=0x25)
         return true;
@@ -175,24 +224,8 @@ bool ADM_DCAGetInfo(uint8_t *buf, uint32_t len, ADM_DCA_INFO *info, uint32_t *sy
         return true;
     }
     // Get the size of the substream, we don't care about the content
-    memcpy(pad,cur,DTS_HEADER_SIZE);
-    memset(pad+DTS_HEADER_SIZE,0,64);
-    getBits sbits(DTS_HEADER_SIZE,pad);
-    sbits.skip(32); // syncword
-    sbits.skip(8); // user defined bits
-    sbits.skip(2); // extension substream index
-    if(sbits.get(1)) // header size flag
-    {
-        sbits.skip(12); // header size
-        framesize=sbits.get(20);
-    }else
-    {
-        sbits.skip(8);
-        framesize=sbits.get(16);
-    }
-    framesize++;
-
-    info->frameSizeInBytes=((info->frameSizeInBytes+3)&(~3))+framesize;
+    if(getSubstreamSize(cur,remaining,&framesize))
+        info->frameSizeInBytes=((info->frameSizeInBytes+3)&(~3))+framesize;
 
     return true;
 }
