@@ -77,8 +77,8 @@ bool ADM_edAudioTrackExternal::create(uint32_t extraLen, uint8_t *extraData)
         ADM_warning("No decoder for %s.\n",getStrFromAudioCodec(wavHeader.encoding));
         return false;
     }
-    // Check AAC for SBR
-    if(wavHeader.encoding==WAV_AAC)
+    // Check AAC for SBR and DTS for extensions
+    if(wavHeader.encoding==WAV_AAC || wavHeader.encoding==WAV_DTS)
     {
         uint32_t inlen,max=ADM_EDITOR_PACKET_BUFFER_SIZE;
         notStackAllocator inbuf(max);
@@ -90,15 +90,23 @@ bool ADM_edAudioTrackExternal::create(uint32_t extraLen, uint8_t *extraData)
             return false;
         }
 
-        notStackAllocator outbuf(wavHeader.frequency*wavHeader.channels*sizeof(float));
+        notStackAllocator outbuf(MAX_SAMPLING_RATE*MAX_CHANNELS*sizeof(float));
         float *out=(float *)outbuf.data;
-        uint32_t nbOut,fq=0;
+        uint32_t nbOut,fq=0,chan=0;
         if(codec->run(in,inlen,out,&nbOut))
+        {
             fq=codec->getOutputFrequency();
+            chan=codec->getOutputChannels();
+        }
         if(fq && fq!=wavHeader.frequency)
         {
             ADM_warning("Updating sampling frequency from %u to %u\n",wavHeader.frequency,fq);
             wavHeader.frequency=fq;
+        }
+        if(chan && chan!=wavHeader.channels)
+        {
+            ADM_warning("Updating number of channels from %u to %u\n",wavHeader.channels,chan);
+            wavHeader.channels=chan;
         }
     }
     size=internalAccess->getLength();
