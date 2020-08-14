@@ -59,19 +59,21 @@ bool         ADM_audioStreamDCA::goToTime(uint64_t nbUs)
 uint8_t ADM_audioStreamDCA::getPacket(uint8_t *obuffer,uint32_t *osize, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)
 {
 #define ADM_LOOK_AHEAD DTS_HEADER_SIZE // Need 11 bytes...
-uint8_t data[ADM_LOOK_AHEAD];
-uint32_t offset;
-ADM_DCA_INFO info;
+    uint8_t data[ADM_LOOK_AHEAD];
+    uint32_t offset;
+    ADM_DCA_INFO info;
+
     while(1)
     {
-        // Do we have sync ?
         if(needBytes(ADM_LOOK_AHEAD)==false) 
         {
-            ADM_warning("DCA: Not sync found in buffer\n");
-            return false;
+            ADM_warning("DCA: Not enough data to decode core header\n");
+            return 0;
         }
-        if(false== ADM_DCAGetInfo(buffer.at(start), limit-start,&info,&offset))
+        // Do we have sync ?
+        if(false == ADM_DCAGetInfo(buffer.at(start), limit-start, &info, &offset))
         {
+            ADM_warning("DCA: No sync within buffer\n");
             skipBytes(limit-start);
             continue;
         }
@@ -80,16 +82,50 @@ ADM_DCA_INFO info;
         if(needBytes(info.frameSizeInBytes)==false)
         {
             ADM_warning("DCA: Not enough data\n");
-            return false;
+            return 0;
         }
-        *osize=info.frameSizeInBytes;
-        read(*osize,obuffer);
+
+        uint32_t coreSize=info.frameSizeInBytes;
+        *osize=coreSize;
+        read(coreSize,obuffer);
         *nbSample=info.samples;
         *dts=lastDts;
         advanceDtsBySample(*nbSample);
-        skipBytes(limit-start);
-        return 1;
 
+        // Check for substream marker, the initial data length may have been too short
+        if(false==needBytes(4+ADM_LOOK_AHEAD))
+        {
+            ADM_warning("DCA: Not enough data to check substream\n");
+            return 1;
+        }
+
+        if(false==peek(ADM_LOOK_AHEAD,data))
+            return 1;
+
+        if(data[0]!=0x7F || data[1]!=0xFE || data[2]!=0x80 || data[3]!=0x01)
+        {
+            uint32_t align=(coreSize+3)&(~3);
+            align-=coreSize;
+            start+=align;
+            if(false==peek(ADM_LOOK_AHEAD,data))
+                return 1;
+
+            if(data[0]!=0x64 || data[1]!=0x58 || data[2]!=0x20 || data[3]!=0x25)
+                return 1;
+
+            if(false == ADM_DCAGetInfo(buffer.at(start), limit-start, &info, &offset, true))
+            {
+                ADM_warning("DCA: Cannot get substream size.\n");
+                skipBytes(limit-start);
+                return 1;
+            }
+            if(coreSize >= info.frameSizeInBytes) // should not happen
+                return 1;
+            // Read the remainder of the frame i.e. the substream
+            *osize=info.frameSizeInBytes;
+            read(info.frameSizeInBytes-coreSize, obuffer+coreSize);
+        }
+        return 1;
     }
 }
 
