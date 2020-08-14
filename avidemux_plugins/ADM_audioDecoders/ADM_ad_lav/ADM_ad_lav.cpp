@@ -477,7 +477,7 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
         _head=0;
     }
     //
-    ADM_assert(nbIn+_tail<ADMWA_BUF);
+    ADM_assert(nbIn+_tail<=ADMWA_BUF);
     memcpy(_buffer+_tail,inptr,nbIn);
     _tail+=nbIn;
 
