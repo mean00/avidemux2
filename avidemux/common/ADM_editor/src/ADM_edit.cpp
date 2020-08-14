@@ -745,7 +745,7 @@ bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
 
     WAVHeader *hdr=&(track->wavheader);
 
-    uint32_t len=(hdr->frequency)*MAX_CHANNELS;
+    uint32_t len=MAX_SAMPLING_RATE*MAX_CHANNELS;
     uint32_t max=ADM_EDITOR_PACKET_BUFFER_SIZE;
 
     notStackAllocator inbuf(max);
