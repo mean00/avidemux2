@@ -23,7 +23,6 @@
 
 #include "fourcc.h"
 #include "ADM_mp4.h"
-#include "DIA_coreToolkit.h"
 
 #if 1
 #define aprintf(...) {}
@@ -34,7 +33,9 @@
 
 #define MAX_CHUNK_SIZE (4*1024)
 #define AUDIO_PACKET_BUFFER_SIZE (64*1024)
-uint32_t sample2byte(WAVHeader *hdr,uint32_t sample);
+
+static uint32_t sample2byte(WAVHeader *hdr,uint32_t sample);
+
 /**
  * \fn splitAudio
  * \brief Split audio chunks into small enough pieces
