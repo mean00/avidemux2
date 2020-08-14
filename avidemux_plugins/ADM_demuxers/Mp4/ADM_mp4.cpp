@@ -70,6 +70,7 @@ version 2 media descriptor :
 #include "ADM_codecType.h"
 #include "ADM_a52info.h"
 #include "ADM_mp3info.h"
+#include "ADM_dcainfo.h"
 #include "ADM_audioXiphUtils.h"
 
 #if 1
@@ -675,6 +676,33 @@ uint8_t    MP4Header::open(const char *name)
                     }
                 }
                 delete [] buffer;
+                break;
+            }
+            case WAV_DTS:
+            {
+                MP4Index *dex=_tracks[1+audio].index;
+                int size=dex[0].size;
+                uint8_t *buffer=(uint8_t *)ADM_alloc(size);
+                ADM_assert(buffer);
+                fseeko(_fd,dex[0].offset,SEEK_SET);
+                if(fread(buffer,1,size,_fd))
+                {
+                    uint32_t off;
+                    ADM_DCA_INFO dca;
+                    if(ADM_DCAGetInfo(buffer,size,&dca,&off)) // just for DTS core
+                    {
+                        uint32_t fq=dca.frequency;
+                        uint32_t br=dca.bitrate>>3;
+                        ADM_info("Updating DTS info: fq = %u, br = %u, chan = %u\n",fq,br,dca.channels);
+                        _tracks[1+audio]._rdWav.channels=dca.channels;
+                        _tracks[1+audio]._rdWav.frequency=fq;
+                        _tracks[1+audio]._rdWav.byterate=br;
+                    }else
+                    {
+                        ADM_warning("Cannot get DCA info from the first sample.\n");
+                    }
+                }
+                ADM_dealloc(buffer);
                 break;
             }
             case WAV_OGG_VORBIS:

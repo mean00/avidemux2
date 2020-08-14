@@ -1462,8 +1462,9 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                     delete [] _tracks[nbAudioTrack].index;
                     _tracks[nbAudioTrack].index=NULL;
                 }
+                nbAudioTrack--;
             }
-
+            r=1; // don't fail on audio
             break;
         case TRACK_OTHER:
             r=1;
@@ -1506,14 +1507,18 @@ uint8_t MP4Header::decodeEsds(void *ztom,uint32_t trackType)
                     {
                         case 0x69:
                         case 0x6b:
-                        case 0x6d:
+                        /* case 0x6d: // PNG according to libavformat/isom.c */
                             ADIO.encoding=WAV_MP3;
                             break;
                         case 0xdd:
                             ADIO.encoding=WAV_OGG_VORBIS;
                             break;
-                        case 226:
+                        /* case 226: // ? doesn't match any valid object type */
+                        case 0xa5:
                             ADIO.encoding=WAV_AC3;
+                            break;
+                        case 0xa9:
+                            ADIO.encoding=WAV_DTS;
                             break;
                     }
                 }
