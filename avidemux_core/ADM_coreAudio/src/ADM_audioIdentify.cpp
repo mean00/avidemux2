@@ -376,7 +376,7 @@ static bool idAAACADTS(int bufferSize,const uint8_t *data,WAVHeader &info,uint32
 */
 static bool idDCA(int bufferSize, const uint8_t *data, WAVHeader &oinfo, uint32_t &offset)
 {
-    uint32_t syncOffset;
+    uint32_t syncOffset,packetLen;
     ADM_DCA_INFO info,info2;
     uintptr_t tmp=(uintptr_t)data;
     uint8_t *probe=(uint8_t *)tmp;
@@ -386,6 +386,7 @@ static bool idDCA(int bufferSize, const uint8_t *data, WAVHeader &oinfo, uint32_
         ADM_info("Not DTS.\n");
         return false;
     }
+    packetLen=info.frameSizeInBytes;
 
     // Need 2 more frames to be sure...
     bool r=true;
@@ -393,19 +394,20 @@ static bool idDCA(int bufferSize, const uint8_t *data, WAVHeader &oinfo, uint32_
     for(int i=0;i<2;i++)
     {
         ADM_info("\t pass %d\n",i);
-        bufferSize-=info.frameSizeInBytes+syncOffset;
+        bufferSize-=syncOffset+packetLen;
         if(bufferSize<=0)
         {
             ADM_warning("Not enough data to confirm DTS.\n");
             return false;
         }
-        probe+=syncOffset+info.frameSizeInBytes;
+        probe+=syncOffset+packetLen;
 
         if( !ADM_DCAGetInfo(probe, bufferSize, &info2, &syncOffset))
         {
             ADM_info("Cannot sync (pass %d)\n",i);
             return false;
         }
+        packetLen=info2.frameSizeInBytes;
         if(info.frequency!=info2.frequency || info.channels!=info2.channels || info.bitrate!=info2.bitrate)
         {
             ADM_info("Info doesn't match (pass %d)\n",i);
