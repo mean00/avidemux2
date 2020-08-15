@@ -90,7 +90,7 @@ bool ADM_edAudioTrackExternal::create(uint32_t extraLen, uint8_t *extraData)
             return false;
         }
 
-        notStackAllocator outbuf(MAX_SAMPLING_RATE*MAX_CHANNELS*sizeof(float));
+        notStackAllocator outbuf(wavHeader.frequency * wavHeader.channels * sizeof(float));
         float *out=(float *)outbuf.data;
         uint32_t nbOut,fq=0,chan=0;
         if(codec->run(in,inlen,out,&nbOut))
@@ -108,6 +108,7 @@ bool ADM_edAudioTrackExternal::create(uint32_t extraLen, uint8_t *extraData)
             ADM_warning("Updating number of channels from %u to %u\n",wavHeader.channels,chan);
             wavHeader.channels=chan;
         }
+        codec->reconfigureCompleted();
     }
     size=internalAccess->getLength();
     internalAudioStream=ADM_audioCreateStream(&wavHeader,internalAccess,true);

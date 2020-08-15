@@ -745,7 +745,7 @@ bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
 
     WAVHeader *hdr=&(track->wavheader);
 
-    uint32_t len=MAX_SAMPLING_RATE*MAX_CHANNELS;
+    uint32_t len=hdr->channels*hdr->frequency; // 1 sec, should be enough
     uint32_t max=ADM_EDITOR_PACKET_BUFFER_SIZE;
 
     notStackAllocator inbuf(max);
@@ -776,6 +776,7 @@ bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
         ADM_warning("Updating number of channels from %u to %u\n",hdr->channels,chan);
         hdr->channels=(uint16_t)chan;
     }
+    track->codec->reconfigureCompleted();
     return true;
 }
 /**
