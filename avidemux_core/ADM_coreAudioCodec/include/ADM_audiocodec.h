@@ -25,8 +25,9 @@
 class ADM_Audiocodec
 {
     protected:
-        uint8_t	_init;
+        uint8_t _init;
         WAVHeader wavHeader;
+        bool reconfigureNeeded;
         virtual bool updateChannels(uint32_t nb)
         {
             if(!nb || nb>MAX_CHANNELS) return false;
@@ -38,15 +39,20 @@ class ADM_Audiocodec
             UNUSED_ARG(fourcc);
             _init=0;
             wavHeader=info;
+            reconfigureNeeded=false;
         };
-        virtual uint32_t getOutputFrequency(void)  {return wavHeader.frequency;}
-        virtual uint32_t getOutputChannels(void) {return wavHeader.channels;}
-        virtual	        ~ADM_Audiocodec() {};
-        virtual	        void purge(void) {}
-        virtual	bool    resetAfterSeek(void) {return true;};
-        virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)=0;
-        virtual	uint8_t isCompressed(void)=0;
-        virtual	bool    isDummy(void) {return false;};
+        virtual                 ~ADM_Audiocodec() {};
+        virtual void            purge(void) {}
+        virtual bool            resetAfterSeek(void) {return true;}
+
+        virtual bool            configurationChanged(void) {return reconfigureNeeded;}
+        virtual bool            reconfigureCompleted(void) {reconfigureNeeded=false; return true;}
+        virtual uint32_t        getOutputFrequency(void)  {return wavHeader.frequency;}
+        virtual uint32_t        getOutputChannels(void) {return wavHeader.channels;}
+
+        virtual uint8_t         run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)=0;
+        virtual uint8_t         isCompressed(void)=0;
+        virtual bool            isDummy(void) {return false;}
         // Channel mapping, only input is used by the decoders..
         CHANNEL_TYPE channelMapping[MAX_CHANNELS];
  };
