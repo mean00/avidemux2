@@ -31,37 +31,50 @@ extern "C" {
 class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 {
 protected:
-        typedef enum 
-        {
-            asFloat,asFloatPlanar,asS16Planar,asS32Planar,asS32
-        }ADM_outputFlavor;
 
-                ADM_outputFlavor        outputFlavor;
-                AVCodecContext          *_context;
-                AVFrame                 *_frame;
-                uint8_t                 *_paddedExtraData;
-                uint8_t    _buffer[ ADMWA_BUF];
-                uint32_t   _tail,_head;
-                uint32_t   _blockalign;
-    uint32_t    channels;
-    bool        decodeToS16(float **outptr,uint32_t *nbOut);
-    bool        decodeToFloat(float **outptr,uint32_t *nbOut);
-    bool        decodeToFloatPlanar(float **outptr,uint32_t *nbOut);
-    bool        decodeToS16Planar(float **outptr,uint32_t *nbOut);
-    bool        decodeToS32Planar(float **outptr,uint32_t *nbOut);
-    bool        decodeToS32(float **outptr,uint32_t *nbOut);
-    bool        decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut);
-    uint32_t    outputFrequency;
-    bool        sbrChecked;
-    bool        nbChannelsChecked;
+typedef enum
+{
+    asFloat,
+    asFloatPlanar,
+    asS16Planar,
+    asS32Planar,
+    asS32
+} ADM_outputFlavor;
+
+            ADM_outputFlavor    outputFlavor;
+            AVCodecContext      *_context;
+            AVFrame             *_frame;
+
+            uint8_t     *_paddedExtraData;
+            uint8_t    _buffer[ ADMWA_BUF];
+
+            uint32_t   _tail,_head;
+            uint32_t   _blockalign;
+            uint32_t    channels;
+            uint32_t    outputFrequency;
+
+            bool        frequencyChecked;
+            bool        nbChannelsChecked;
+
+            bool        decodeToS16(float **outptr,uint32_t *nbOut);
+            bool        decodeToFloat(float **outptr,uint32_t *nbOut);
+            bool        decodeToFloatPlanar(float **outptr,uint32_t *nbOut);
+            bool        decodeToS16Planar(float **outptr,uint32_t *nbOut);
+            bool        decodeToS32Planar(float **outptr,uint32_t *nbOut);
+            bool        decodeToS32(float **outptr,uint32_t *nbOut);
+            bool        decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut);
+
 public:
-                    ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
-    virtual         ~ADM_AudiocoderLavcodec() ;
-    virtual	bool    resetAfterSeek(void);
-    virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
-    virtual	uint8_t isCompressed(void) {return 1;}
-    virtual uint32_t getOutputFrequency(void) {return outputFrequency;}
-    virtual uint32_t getOutputChannels(void) {return channels;}
+                        ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
+    virtual             ~ADM_AudiocoderLavcodec() ;
+
+    virtual bool        resetAfterSeek(void);
+    virtual bool        reconfigureCompleted(void);
+    virtual uint8_t     run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
+    virtual uint8_t     isCompressed(void) {return 1;}
+
+    virtual uint32_t    getOutputFrequency(void);
+    virtual uint32_t    getOutputChannels(void);
 };
 
 // Supported formats + declare our plugin
@@ -111,12 +124,12 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     ADM_info(" [ADM_AD_LAV] #of channels %d\n",info->channels);
     _tail=_head=0;
     _paddedExtraData=NULL;
-    channels=info->channels;
     _blockalign=0;
     _frame=av_frame_alloc();
     AVCodecID codecID = AV_CODEC_ID_NONE;
     outputFrequency=info->frequency;
-    sbrChecked=false;
+    channels=info->channels;
+    frequencyChecked=false;
     nbChannelsChecked=false;
     switch(fourcc)
     {
@@ -512,6 +525,27 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
                 break;
             }
 
+            if(_context->sample_rate!=outputFrequency)
+            {
+                if(!frequencyChecked)
+                {
+                    ADM_warning("Output frequency %d does not match input frequency %d. Implicit SBR?\n",
+                        _context->sample_rate,outputFrequency);
+                }
+                frequencyChecked=true;
+                reconfigureNeeded=true;
+            }
+            if(_context->channels!=channels)
+            {
+                if(!nbChannelsChecked)
+                {
+                    ADM_warning("Decoder and demuxer disagree about # of channels: %d vs %u\n",
+                        _context->channels,channels);
+                }
+                nbChannelsChecked=true;
+                reconfigureNeeded=true;
+            }
+
             bool invalid=false;
             int  toCheck=1;
             if(_context->sample_fmt==AV_SAMPLE_FMT_FLTP ||
@@ -527,8 +561,26 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
                     break;
                 }
             }
-            if(invalid) 
-                break;
+            if(reconfigureNeeded || invalid)
+            {
+                if(_frame->nb_samples && _context->sample_rate)
+                {
+                    uint32_t fakeSamples=_frame->nb_samples;
+                    if(_context->sample_rate!=outputFrequency)
+                    {
+                        float f=fakeSamples;
+                        f*=outputFrequency;
+                        f/=_context->sample_rate;
+                        f+=0.49;
+                        fakeSamples=f;
+                    }
+                    memset(outptr,0,fakeSamples*channels*sizeof(float));
+                    outptr+=fakeSamples*channels;
+                    (*nbOut)+=fakeSamples*channels;
+                }
+                continue;
+            }
+
             switch(_context->sample_fmt)
             {
                 case AV_SAMPLE_FMT_FLT:     decodeToFloat(&outptr,nbOut);break;
@@ -543,29 +595,6 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
             }
         }
     }
-
-    if(!sbrChecked)
-    {
-        if(_context->sample_rate!=outputFrequency)
-        {
-            ADM_warning("Output frequency %d does not match input frequency %d. Implicit SBR?\n",
-                _context->sample_rate,outputFrequency);
-            outputFrequency=_context->sample_rate;
-        }
-        sbrChecked=true;
-    }
-    if(!nbChannelsChecked)
-    {
-        if(_context->channels!=channels)
-        {
-            ADM_warning("Decoder and demuxer disagree about # of channels: %d vs %u\n",
-                _context->channels,channels);
-            if(updateChannels(_context->channels))
-                channels=_context->channels;
-        }
-        nbChannelsChecked=true;
-    }
-
 
     if(channels>=5)
     {
@@ -587,6 +616,41 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
     }
 
     return 1;
+}
+/**
+    \fn
+    \brief return sampling rate as seen by libavcodec
+*/
+uint32_t ADM_AudiocoderLavcodec::getOutputFrequency(void)
+{
+    ADM_assert(_context);
+    uint32_t freq=_context->sample_rate;
+    return freq;
+}
+/**
+    \fn
+    \brief return number of channels as seen by libavcodec
+*/
+uint32_t ADM_AudiocoderLavcodec::getOutputChannels(void)
+{
+    ADM_assert(_context);
+    uint32_t chan=_context->channels;
+    return chan;
+}
+/**
+    \fn reconfigureCompleted
+    \brief sync internal sampling rate and number of channels with context
+*/
+bool ADM_AudiocoderLavcodec::reconfigureCompleted(void)
+{
+    outputFrequency=_context->sample_rate;
+    if(false==updateChannels(_context->channels))
+        return false;
+    channels=_context->channels;
+    reconfigureNeeded=false;
+    frequencyChecked=false;
+    nbChannelsChecked=false;
+    return true;
 }
 //--- EOF
 
