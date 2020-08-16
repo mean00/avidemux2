@@ -174,7 +174,6 @@ protected:
                     bool        switchToNextAudioSegment(void);
                     PoolOfAudioTracks   audioTrackPool;
                     ActiveAudioTracks   activeAudioTracks;
-                    bool        checkSamplingFrequency(ADM_audioStreamTrack *trk); // detect implicit SBR in AAC
 
 //****************************** Audio **********************************
                     uint8_t     getMagic(const char *name,uint32_t *magic);
@@ -182,7 +181,7 @@ protected:
 
   public:
                     bool                audioSetAudioPoolLanguage(int poolIndex, const char *language);
-                    
+                    bool                checkSamplingFrequency(ADM_audioStreamTrack *trk); // detect implicit SBR in AAC
                     ActiveAudioTracks   *getPoolOfActiveAudioTrack(void)
                                         {
                                             return &activeAudioTracks;

@@ -234,17 +234,18 @@ bool ADM_edAudioTrackFromVideo::goToTime (uint64_t ustime)
       }
     uint64_t seekTime;
     seekTime=segTime+s->_refStartTimeUs;
-    ADM_Audiocodec *codec=trk->codec;
-    if(codec)
-    {
-        codec->resetAfterSeek();
-    }
-
-    if(true==trk->stream->goToTime(seekTime))
+    if(trk->stream->goToTime(seekTime))
     {
         _audioSeg=seg;
         setDts(ustime);
         packetBufferSize=0; // Flush PCM decoder
+        ADM_Audiocodec *codec=trk->codec;
+        if(codec)
+        {
+            parent->checkSamplingFrequency(trk);
+            trk->stream->goToTime(seekTime);
+            codec->resetAfterSeek();
+        }
         return true;
     }
     ADM_warning("Go to time failed\n");
