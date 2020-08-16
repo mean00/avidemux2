@@ -57,7 +57,7 @@ uint32_t        ADM_edAudioTrackFromVideo::getOutputFrequency(void)
         ADM_warning("No audio track\n");
         return 0;
     }
-    if(!trk->codec)
+    if(!trk->codec || trk->codec->configurationChanged())
         return trk->wavheader.frequency;
     return trk->codec->getOutputFrequency();
 }
@@ -74,7 +74,7 @@ uint32_t ADM_edAudioTrackFromVideo::getOutputChannels(void)
         ADM_warning("No audio track\n");
         return 0;
     }
-    if(!trk->codec)
+    if(!trk->codec || trk->codec->configurationChanged())
         return trk->wavheader.channels;
     return trk->codec->getOutputChannels();
 }
