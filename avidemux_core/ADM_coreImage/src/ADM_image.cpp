@@ -115,23 +115,25 @@ bool r=false;
 }
 
 /**
- * 		\fn BitBlitAlpha
- * 		\brief Alpha blit from dst to src
+ *  \fn BitBlitAlpha
+ *  \brief Alpha blit from dst to src
  */
 bool BitBlitAlpha(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,
-		uint32_t width, uint32_t height,uint32_t alpha)
+                  uint32_t width, uint32_t height,uint32_t alpha)
 {
-
+    if(alpha>255) alpha=255;
+    if(alpha==255) // take a shortcut
+        return BitBlit(dst,pitchDst,src,pitchSrc,width,height);
     for(int y=0;y<height;y++)
     {
-    	for(int x=0;x<width;x++)
-    	{
-    		uint32_t s=src[x],d=dst[x];
-
-    		d=s*alpha+(255-alpha)*d;
-    		d>>=8;
-    		dst[x]=d;
-    	}
+        for(int x=0;x<width;x++)
+        {
+            float s=src[x],d=dst[x];
+            d=s*alpha+(255.-alpha)*d;
+            d/=255.;
+            d+=0.49;
+            dst[x]=(uint8_t)d;
+        }
         src+=pitchSrc;
         dst+=pitchDst;
     }
