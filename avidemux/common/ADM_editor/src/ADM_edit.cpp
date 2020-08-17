@@ -506,6 +506,29 @@ uint8_t ADM_Composer::addFile (const char *name)
    }
   // else update info
   video._aviheader->getVideoInfo (&info);
+  if(info.width > MAXIMUM_SIZE || info.height > MAXIMUM_SIZE)
+  {
+        char str[512];
+        str[0] = '\0';
+        if(info.width > MAXIMUM_SIZE && info.height <= MAXIMUM_SIZE)
+        {
+            snprintf(str,512,QT_TRANSLATE_NOOP("ADM_Composer","The width of the video %u px exceeds maximum supported width %u.\n"),
+                info.width,MAXIMUM_SIZE);
+        }else if(info.width <= MAXIMUM_SIZE && info.height > MAXIMUM_SIZE)
+        {
+            snprintf(str,512,QT_TRANSLATE_NOOP("ADM_Composer","The height of the video %u px exceeds maximum supported height %u.\n"),
+                info.height,MAXIMUM_SIZE);
+        }else // both
+        {
+            snprintf(str,512,QT_TRANSLATE_NOOP("ADM_Composer","Video dimensions %ux%u exceed maximum supported size %ux%u.\n"),
+                info.width,info.height,MAXIMUM_SIZE,MAXIMUM_SIZE);
+        }
+        str[511] = '\0';
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("ADM_Composer","Unsupported size"),str);
+        delete video._aviheader;
+        video._aviheader=NULL;
+        return 0;
+  }
   video._aviheader->setMyName (name);
 
   // Printf some info about extradata
