@@ -1074,7 +1074,15 @@ uint8_t  mkvHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
   _parser->seek(dx->pos);
   _parser->readSignedInt(2); // Timecode
   _parser->readu8();  // flags
-  img->dataLength=readAndRepeat(0,img->data, dx->size-3);
+
+  uint32_t sz=dx->size;
+  if(sz > ADM_COMPRESSED_MAX_DATA_LENGTH)
+  {
+        ADM_warning("Frame %u size %u exceeds max %u, truncating.\n",framenum,sz,ADM_COMPRESSED_MAX_DATA_LENGTH);
+        sz = ADM_COMPRESSED_MAX_DATA_LENGTH;
+  }
+  img->dataLength=readAndRepeat(0,img->data, sz-3);
+  ADM_assert(img->dataLength <= ADM_COMPRESSED_MAX_DATA_LENGTH);
   img->flags=dx->flags;
   img->demuxerDts=dx->Dts;
   img->demuxerPts=dx->Pts;
