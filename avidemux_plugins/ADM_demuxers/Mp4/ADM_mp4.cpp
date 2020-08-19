@@ -210,7 +210,13 @@ uint8_t  MP4Header::getFrame(uint32_t framenum,ADMCompressedImage *img)
       return 0;
     }
 
-MP4Index *idx=&(VDEO.index[framenum]);
+    MP4Index *idx=&(VDEO.index[framenum]);
+    uint64_t sz = idx->size;
+    if(sz > ADM_COMPRESSED_MAX_DATA_LENGTH)
+    {
+        ADM_warning("Frame %u size %llu exceeds max %u, truncating.\n",framenum,sz,ADM_COMPRESSED_MAX_DATA_LENGTH);
+        sz = ADM_COMPRESSED_MAX_DATA_LENGTH;
+    }
 
     uint64_t offset=idx->offset; //+_mdatOffset;
 
@@ -220,13 +226,13 @@ MP4Index *idx=&(VDEO.index[framenum]);
         ADM_error("Seeking past the end of the file! Broken index?\n");
         return 0;
     }
-    if(!fread(img->data, (size_t)idx->size, 1, _fd))
+    if(!fread(img->data, (size_t)sz, 1, _fd))
     {
         ADM_error("Incomplete frame %" PRIu32". Broken index?\n",framenum);
         return 0;
     }
-    img->dataLength=idx->size;
-	img->flags = idx->intra;
+    img->dataLength=sz;
+    img->flags = idx->intra;
 
     img->demuxerDts=idx->dts;
     img->demuxerPts=idx->pts;
