@@ -158,7 +158,7 @@ bool ADM_tsAccess::updateExtraData(uint64_t start)
         case ADM_TS_MUX_LATM:
         {
             uint64_t time=ADM_NO_PTS;
-            while(retries)
+            while(retries--)
             {
                 if(false==demuxer.getNextPES(packet)) return false;
                 int avail=packet->payloadSize-packet->offset;
@@ -185,7 +185,6 @@ bool ADM_tsAccess::updateExtraData(uint64_t start)
                     mixDump(extraData,extraDataLen);
                     return true;
                 }
-                retries--;
              }
         }
             break;
