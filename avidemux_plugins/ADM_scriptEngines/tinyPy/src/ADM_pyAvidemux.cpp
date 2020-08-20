@@ -59,21 +59,20 @@ int pyGetHeight(IEditor *editor)
 
 bool pyHexDumpFrame(IEditor *editor, int framenumber)
 {
-	ADMCompressedImage img;
-	img.data = new uint8_t[2000 * 2000 * 3];
-	img.dataLength = 2000 * 2000 * 3;
+    ADMCompressedImage img;
+    notStackAllocator buf(ADM_COMPRESSED_MAX_DATA_LENGTH);
+    img.data = buf.data;
+    img.dataLength = 0;
 
-	if (!editor->getDirectImageForDebug(framenumber, &img))
-	{
-		ADM_error("Cannot get picture %d\n", framenumber);
-		delete [] img.data;
-		return false;
-	}
+    if (!editor->getDirectImageForDebug(framenumber, &img))
+    {
+        ADM_error("Cannot get picture %d\n", framenumber);
+        return false;
+    }
 
-	mixDump(img.data, img.dataLength);
-	delete [] img.data;
+    mixDump(img.data, img.dataLength);
 
-	return true;
+    return true;
 }
 
 /**
