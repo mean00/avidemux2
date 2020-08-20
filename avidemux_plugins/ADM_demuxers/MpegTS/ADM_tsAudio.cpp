@@ -49,9 +49,7 @@ ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,int append,ADM_TS_MUX_T
         if(myLen && myExtra)
         {
             extraDataLen=myLen;
-            myLen+=64; // AV_INPUT_BUFFER_PADDING_SIZE, guards against lavcodec overread
             extraData=new uint8_t [myLen];
-            memset(extraData,0,myLen);
             memcpy(extraData,myExtra,extraDataLen);
             ADM_info("Creating ts audio access with %u bytes of extradata.",extraDataLen);
             mixDump(extraData,extraDataLen);
@@ -142,11 +140,10 @@ bool ADM_tsAccess::updateExtraData(uint64_t start)
                     if(extraDataLen!=len)
                     {
                         delete [] extraData;
-                        extraData=new uint8_t[len+64];
+                        extraData=new uint8_t[len];
                         extraDataLen=len;
                     }
                     memcpy(extraData,data,len);
-                    memset(extraData+len,0,64);
                     ADM_info("AAC ADTS extradata:\n");
                     mixDump(extraData,extraDataLen);
                     return true;
@@ -176,11 +173,10 @@ bool ADM_tsAccess::updateExtraData(uint64_t start)
                     if(extraDataLen!=len)
                     {
                         delete [] extraData;
-                        extraData=new uint8_t[len+64];
+                        extraData=new uint8_t[len];
                         extraDataLen=len;
                     }
                     memcpy(extraData,data,len);
-                    memset(extraData+len,0,64);
                     ADM_info("AAC LATM extradata:\n");
                     mixDump(extraData,extraDataLen);
                     return true;
