@@ -111,6 +111,8 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
    {
             avcodec_flush_buffers(_context);
             _tail=_head=0;
+            frequencyChecked=false;
+            nbChannelsChecked=false;
             return 1;
    };
 /**
@@ -288,13 +290,12 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     {
         ADM_warning("Output frequency does not match input frequency (SBR ?) : %d / %d\n",
             _context->sample_rate,outputFrequency);
-        outputFrequency=_context->sample_rate;
+        reconfigureNeeded=true;
     }
     if(_context->channels!=info->channels)
     {
         ADM_warning("Decoder and demuxer disagree about # of channels: %d / %d\n",_context->channels,info->channels);
-        if(updateChannels(_context->channels))
-            channels=_context->channels;
+        reconfigureNeeded=true;
     }
 }
 /**
@@ -398,7 +399,7 @@ bool ADM_AudiocoderLavcodec::decodeToS16Planar(float **outptr,uint32_t *nbOut)
     return true;
 }
 /**
- * 
+ * \fn decodeToS32Planar
  * @param outptr
  * @param nbOut
  * @return 
@@ -426,7 +427,7 @@ bool ADM_AudiocoderLavcodec::decodeToS32Planar(float **outptr,uint32_t *nbOut)
 }
 
 /**
-    \fn decodeToFloat
+    \fn decodeToS32
 */
 
 bool ADM_AudiocoderLavcodec::decodeToS32(float **outptr,uint32_t *nbOut)
@@ -445,7 +446,7 @@ bool ADM_AudiocoderLavcodec::decodeToS32(float **outptr,uint32_t *nbOut)
     return true;
 }
 /**
-    \fn decodeToFloat
+    \fn decodeToFloatPlanar
 */
 
 bool ADM_AudiocoderLavcodec::decodeToFloatPlanar(float **outptr,uint32_t *nbOut)
@@ -504,7 +505,8 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
         pkt.size=nbChunk*_blockalign;
         pkt.data=_buffer+_head;
 
-        avcodec_send_packet(_context, &pkt);
+        res=avcodec_send_packet(_context, &pkt);
+        if(res==AVERROR(EAGAIN)) res=0; // we are about to read output anyway
         // Regardless of the outcome, always consume the data.
         _head+=nbChunk*_blockalign;
 
@@ -618,7 +620,7 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
     return 1;
 }
 /**
-    \fn
+    \fn getOutputFrequency
     \brief return sampling rate as seen by libavcodec
 */
 uint32_t ADM_AudiocoderLavcodec::getOutputFrequency(void)
@@ -628,7 +630,7 @@ uint32_t ADM_AudiocoderLavcodec::getOutputFrequency(void)
     return freq;
 }
 /**
-    \fn
+    \fn getOutputChannels
     \brief return number of channels as seen by libavcodec
 */
 uint32_t ADM_AudiocoderLavcodec::getOutputChannels(void)
