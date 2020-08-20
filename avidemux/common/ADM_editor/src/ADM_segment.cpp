@@ -491,16 +491,21 @@ bool        ADM_EditorSegment::getRefFromTime(uint64_t xtime,uint32_t *refVideo)
 /**
     \fn ~ADM_audioStreamTrack
 */
- ADM_audioStreamTrack::~ADM_audioStreamTrack()
+ADM_audioStreamTrack::~ADM_audioStreamTrack()
+{
+    stream=NULL;
+    info=NULL;   // These 2 are destroyed by the demuxer itself
+    if(codec)
     {
-        stream=NULL;
-        info=NULL;   // These 2 are destroyed by the demuxer itself
-        if(codec)
-        {
-            delete codec;
-            codec=NULL;
-        }
+        delete codec;
+        codec=NULL;
     }
+    if(extraCopy)
+    {
+        delete [] extraCopy;
+        extraCopy=NULL;
+    }
+}
 
 /**
     \fn convertLinearTimeToSeg

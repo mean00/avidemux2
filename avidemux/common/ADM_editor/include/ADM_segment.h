@@ -32,6 +32,8 @@ public:
     ADM_audioStream  *stream;
     audioInfo        *info;
     ADM_Audiocodec   *codec;
+    uint8_t          *extraCopy; // copy of extradata last used to init decoder
+    uint32_t         extraCopyLen; // length of the extradata copy
     WAVHeader        wavheader;
     bool             vbr;
     bool             isbr;
@@ -43,6 +45,8 @@ public:
                 stream=NULL;
                 info=NULL;
                 codec=NULL;
+                extraCopy=NULL;
+                extraCopyLen=0;
                 duration=size=0;
                 vbr=false;
                 isbr=false;
