@@ -113,6 +113,88 @@ uint64_t  ADM_tsAccess::getDurationInUs(void)
     return 0; // ?
 }
 /**
+    \fn updateExtraData
+    \brief Re-extract extradata from audio stream at given position
+*/
+bool ADM_tsAccess::updateExtraData(uint64_t start)
+{
+    int retries=20;
+    demuxer.setPos(start);
+    switch(muxing)
+    {
+        case ADM_TS_MUX_ADTS:
+        {
+            int insize=0;
+            int dummySize;
+            uint8_t *ptr=NULL;
+            while(retries)
+            {
+                if(false==demuxer.getNextPES(packet)) return false;
+                int avail=packet->payloadSize-packet->offset;
+                insize=avail;
+                ptr=packet->payload+packet->offset;
+                if(ADM_adts2aac::ADTS_OK==adts.convert2(insize,ptr,&dummySize,NULL))
+                {
+                    uint32_t len=0;
+                    uint8_t *data=NULL;
+                    adts.getExtraData(&len,&data);
+                    if(len!=2) return false;
+                    if(extraDataLen!=len)
+                    {
+                        delete [] extraData;
+                        extraData=new uint8_t[len+64];
+                        extraDataLen=len;
+                    }
+                    memcpy(extraData,data,len);
+                    memset(extraData+len,0,64);
+                    ADM_info("AAC ADTS extradata:\n");
+                    mixDump(extraData,extraDataLen);
+                    return true;
+                }
+                retries--;
+            }
+        }
+            break;
+        case ADM_TS_MUX_LATM:
+        {
+            uint64_t time=ADM_NO_PTS;
+            while(retries)
+            {
+                if(false==demuxer.getNextPES(packet)) return false;
+                int avail=packet->payloadSize-packet->offset;
+                if(false==latm.pushData(avail,packet->payload+packet->offset))
+                    return false;
+                ADM_latm2aac::LATM_STATE outcome=latm.convert(packet->pts);
+                if(outcome==ADM_latm2aac::LATM_ERROR)
+                    continue;
+                if(outcome==ADM_latm2aac::LATM_MORE_DATA_NEEDED)
+                    continue;
+                uint32_t len;
+                uint8_t *data;
+                if(latm.getExtraData(&len,&data))
+                {
+                    if(extraDataLen!=len)
+                    {
+                        delete [] extraData;
+                        extraData=new uint8_t[len+64];
+                        extraDataLen=len;
+                    }
+                    memcpy(extraData,data,len);
+                    memset(extraData+len,0,64);
+                    ADM_info("AAC LATM extradata:\n");
+                    mixDump(extraData,extraDataLen);
+                    return true;
+                }
+                retries--;
+             }
+        }
+            break;
+        default:
+            return true;
+    }
+    return false;
+}
+/**
     \fn goToTime
     \brief Rememember seekPoint.dts time is already scaled and in us
 */                              
@@ -125,6 +207,7 @@ bool      ADM_tsAccess::goToTime(uint64_t timeUs)
     if(timeUs<seekPoints[0].dts)
     {
             aprintf("[PsAudio] Requested %" PRIu32" tick before 1st seek point at :%" PRIu32"\n",(uint32_t)timeUs/1000,(uint32_t)seekPoints[0].dts/1000);
+            updateExtraData(seekPoints[0].position);
             demuxer.setPos(seekPoints[0].position);
             wrapCount=0;
             lastDts=ADM_NO_PTS;
@@ -138,6 +221,7 @@ bool      ADM_tsAccess::goToTime(uint64_t timeUs)
             aprintf("[PsAudio] Requested %" PRIu32" tick seeking to  at :%" PRIu32" us (next is %" PRIu32"ms \n",(uint32_t)timeUs/1000,
                     (uint32_t)seekPoints[i-1].dts/1000,
                     (uint32_t)seekPoints[i].dts/1000);
+            updateExtraData(seekPoints[i-1].position);
             demuxer.setPos(seekPoints[i-1].position);
             uint64_t st=seekPoints[i-1].dts;
             if(st!=ADM_NO_PTS)

@@ -47,6 +47,8 @@ protected:
                 ADM_TS_MUX_TYPE muxing;
                 ADM_adts2aac    adts;
                 ADM_latm2aac    latm;
+
+                bool            updateExtraData(uint64_t pos);
 public:
                 vector          <ADM_mpgAudioSeekPoint >seekPoints;
 public:
