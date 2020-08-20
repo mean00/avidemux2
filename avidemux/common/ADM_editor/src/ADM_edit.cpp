@@ -619,6 +619,12 @@ uint8_t ADM_Composer::addFile (const char *name)
             track->size=0;
 
             stream->getExtraData(&extraLen,&extraData);
+            if(extraLen)
+            {
+                track->extraCopy=new uint8_t[extraLen];
+                memcpy(track->extraCopy,extraData,extraLen);
+                track->extraCopyLen=extraLen;
+            }
             track->codec=getAudioCodec(header->encoding,header,extraLen,extraData);
 
             // sanity check
@@ -640,7 +646,10 @@ uint8_t ADM_Composer::addFile (const char *name)
             }
 
             if((track->wavheader).encoding==WAV_AAC || (track->wavheader).encoding==WAV_DTS)
+            {
                 checkSamplingFrequency(track);
+                track->codec->reconfigureCompleted();
+            }
 
             if((track->wavheader).encoding==WAV_AAC)
             {
@@ -776,7 +785,7 @@ bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
 
     uint32_t inlen,samples;
     uint64_t dts;
-    if(false==track->stream->getPacket(in,&inlen,max,&samples,&dts))
+    if(false==track->stream->getPacket(in,&inlen,max,&samples,&dts) || !inlen)
         return false;
 
     notStackAllocator outbuf(len*sizeof(float));
@@ -785,6 +794,23 @@ bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
     uint32_t nbOut;
     if(false==track->codec->run(in,inlen,out,&nbOut))
         return false;
+
+    if(!nbOut)
+    {
+        uint32_t extraLen=0;
+        uint8_t *extraData;
+        track->stream->getExtraData(&extraLen,&extraData);
+        if(extraLen)
+        {
+            /* The worst outcome: the sampling frequency and number of channels
+            are invalid, but we probably don't have the right extradata to
+            decode it and to get the info we need in the first place. */
+            ADM_warning("Could not decode audio packet, wrong extradata?\n");
+            return false;
+        }
+        ADM_warning("Could not decode audio packet to verify sampling frequency and number of channels.\n");
+        return false;
+    }
 
     uint32_t fq=track->codec->getOutputFrequency();
     if(fq && fq!=hdr->frequency)
@@ -799,7 +825,6 @@ bool ADM_Composer::checkSamplingFrequency(ADM_audioStreamTrack *track)
         ADM_warning("Updating number of channels from %u to %u\n",hdr->channels,chan);
         hdr->channels=(uint16_t)chan;
     }
-    track->codec->reconfigureCompleted();
     return true;
 }
 /**
