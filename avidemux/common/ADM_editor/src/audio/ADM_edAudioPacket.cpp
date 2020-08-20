@@ -54,36 +54,53 @@ static bool warned = false;
  */
 bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
 {
-        // Try to switch segment
-        if(_audioSeg+1>=parent->_segments.getNbSegments()) return false;
+    // Try to switch segment
+    if(_audioSeg+1>=parent->_segments.getNbSegments()) return false;
 
-        ADM_warning("Switching to segment %" PRIu32"\n",_audioSeg+1);
-        _audioSeg++;
-        _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
-        ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
-        //
-        if(!trk)
+    ADM_warning("Switching to segment %" PRIu32"\n",_audioSeg+1);
+    _audioSeg++;
+    _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
+    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
+    //
+    if(!trk)
+    {
+        ADM_warning("No next segment audio\n");
+        return false;
+    }
+    // Go to beginning of the stream
+    if(false==trk->stream->goToTime(seg->_refStartTimeUs))
+    {
+        ADM_warning("Cannot seek in audio to %s\n",ADM_us2plain(seg->_refStartTimeUs));
+        return false;
+    }
+    ADM_Audiocodec *codec=NULL;
+    if(trk)
+        if(trk->codec)
+            codec=trk->codec;
+    if(codec)
+    {
+        /* If the codec requires extradata, we need to respawn the decoder
+        to deal with a chance that codec parameters have changed. */
+        uint32_t eLen=0;
+        uint8_t *eData=NULL;
+        trk->stream->getExtraData(&eLen,&eData);
+        if(eLen && (trk->extraCopyLen!=eLen || (trk->extraCopy && memcmp(trk->extraCopy,eData,eLen))))
         {
-            ADM_warning("No next segment audio\n");
-            return false;
+            ADM_warning("Extradata does not match cached copy, respawning the decoder.\n");
+            delete codec;
+            delete [] trk->extraCopy;
+            trk->extraCopy=new uint8_t[eLen];
+            memcpy(trk->extraCopy,eData,eLen);
+            trk->extraCopyLen=eLen;
+            WAVHeader *hdr=&(trk->wavheader);
+            trk->codec=getAudioCodec(hdr->encoding,hdr,eLen,eData);
         }
-        ADM_Audiocodec *codec=NULL;
-        if(trk)
-            if(trk->codec)
-                codec=trk->codec;
-        if(codec)
-        {
-            codec->resetAfterSeek();
-        }
-        // Go to beginning of the stream
-        if(false==trk->stream->goToTime(seg->_refStartTimeUs))
-          {
-            ADM_warning("Fail to seek audio to %" PRIu64"ms\n",seg->_refStartTimeUs/1000);
-            return false;
-          }
-        ADM_info("Switched ok to audio segment %" PRIu32", with a ref time=%s\n",
+        if(trk->codec)
+            trk->codec->resetAfterSeek();
+    }
+    ADM_info("Switched ok to audio segment %" PRIu32", with a ref time=%s\n",
             _audioSeg,ADM_us2plain(seg->_refStartTimeUs));
-        return true;
+    return true;
 
 }
 /**
@@ -216,15 +233,15 @@ zgain:
 */
 bool ADM_edAudioTrackFromVideo::goToTime (uint64_t ustime)
 {
-  uint32_t seg;
-  uint64_t segTime;
-    ADM_info(" go to time %02.2f secs\n",((float)ustime)/1000000.);
+    uint32_t seg;
+    uint64_t segTime;
+    ADM_info("[edAudioTrackFromVideo] Seeking to %s\n",ADM_us2plain(ustime));
     if(false==parent->_segments.convertLinearTimeToSeg(ustime,&seg,&segTime))
-      {
-        ADM_warning("Cannot convert %" PRIu64" to linear time\n",ustime/1000);
+    {
+        ADM_warning("Cannot convert %" PRIu64" to linear time\n",ustime);
         return false;
-      }
-    ADM_info("=> seg %d, rel time %02.2f secs\n",(int)seg,((float)segTime)/1000000.);
+    }
+    ADM_info("[edAudioTrackFromVideo] => seg %d, rel time %s\n",(int)seg,ADM_us2plain(segTime));
     _SEGMENT *s=parent->_segments.getSegment(seg);
     ADM_audioStreamTrack *trk=getTrackAtVideoNumber(s->_reference);
     if(!trk)
@@ -239,12 +256,21 @@ bool ADM_edAudioTrackFromVideo::goToTime (uint64_t ustime)
         _audioSeg=seg;
         setDts(ustime);
         packetBufferSize=0; // Flush PCM decoder
-        ADM_Audiocodec *codec=trk->codec;
-        if(codec)
+        /* If the codec requires extradata, we need to respawn the decoder
+        if codec parameters have changed. */
+        uint32_t eLen=0;
+        uint8_t *eData=NULL;
+        trk->stream->getExtraData(&eLen,&eData);
+        if(eLen && (trk->extraCopyLen!=eLen || (trk->extraCopy && memcmp(trk->extraCopy,eData,eLen))))
         {
-            parent->checkSamplingFrequency(trk);
-            trk->stream->goToTime(seekTime);
-            codec->resetAfterSeek();
+            ADM_warning("Extradata does not match cached copy, respawning the decoder.\n");
+            delete trk->codec;
+            delete [] trk->extraCopy;
+            trk->extraCopy=new uint8_t[eLen];
+            memcpy(trk->extraCopy,eData,eLen);
+            trk->extraCopyLen=eLen;
+            WAVHeader *hdr=&(trk->wavheader);
+            trk->codec=getAudioCodec(hdr->encoding,hdr,eLen,eData);
         }
         return true;
     }
@@ -284,7 +310,7 @@ WAVHeader       *ADM_edAudioTrackFromVideo::getInfo(void)
         if(!trk)
             return NULL;
     }
-    return trk->stream->getInfo();
+    return &(trk->wavheader);
 }
 /**
     \fn getChannelMapping
@@ -337,6 +363,21 @@ ADM_audioStreamTrack *ADM_edAudioTrackFromVideo::getCurrentTrack()
 
     return v->audioTracks[myTrackNumber];
 }
-
+/**
+    \fn updateHeader
+    \brief Update header and tell decoder that we can handle a change in # of channels.
+           We have consumed one packet, the caller should repeat seek.
+*/
+bool ADM_edAudioTrackFromVideo::updateHeader(void)
+{
+    _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
+    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
+    if(!trk) return false;
+    if(!trk->codec) return false;
+    bool r=parent->checkSamplingFrequency(trk);
+    trk->codec->resetAfterSeek();
+    trk->codec->reconfigureCompleted();
+    return r;
+}
 //EOF
 

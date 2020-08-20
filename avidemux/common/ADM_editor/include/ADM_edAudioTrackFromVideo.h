@@ -41,6 +41,7 @@ public:
                                  ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent);
             virtual            ~ADM_edAudioTrackFromVideo();
                     bool         destroyable() {return false;};
+            virtual bool        updateHeader(void);
                     int          getMyTrackIndex() {return myTrackNumber; }
 
 

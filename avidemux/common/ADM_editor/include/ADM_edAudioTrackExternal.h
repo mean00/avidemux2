@@ -35,6 +35,7 @@ public:
                                  ADM_edAudioTrackExternal(const char *file, WAVHeader *hdr,ADM_audioAccess *ccess);
             virtual            ~ADM_edAudioTrackExternal();
                     bool        destroyable() {return true;};
+            virtual bool        updateHeader(void) {return true;} // on-the-fly changes not supported in external tracks
                     bool        create(uint32_t extraLen, uint8_t *extraData);
 
                     std::string   &getMyName() {return sourceFile; }
