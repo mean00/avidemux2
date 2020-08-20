@@ -64,32 +64,11 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
   _held=_hold=0;
 
   ADM_info("[Bridge] Starting with time %s , shift %" PRIi32" ms\n",ADM_us2plain(startInMs*1000LL),-shiftMs);
-  // If shiftMS is > 0, it means we have to go in the future, just increase _startTime
-  if(shiftMs>0)
-  {
-    _startTimeUs+=_shiftUs;
-  }
-  else if(shiftMs<0) // In that case we have to go either in the past and/or duplicate frames
-  {
-    shiftMs=-shiftMs;
-    _shiftUs=-_shiftUs;
-    if(_startTimeUs>_shiftUs)  
-    {
-      _startTimeUs-=_shiftUs;
-    }else
-    {
-      _shiftUs-=_startTimeUs;
-      _startTimeUs=0;
-      double dNbSample=_shiftUs;
-      
-      dNbSample*=_wavHeader.frequency; 
-      dNbSample/=1000000.;
-      dNbSample*=_wavHeader.channels;
-      _hold=(int32_t)dNbSample;
-      _held=_hold;
-    }
-  }
   ADM_info("[Bridge] Ending with time %s, sample %u\n",ADM_us2plain(_startTimeUs),_hold);
+  rewind();
+  _incoming->updateHeader();
+  memcpy(&_wavHeader,_incoming->getInfo(),sizeof(_wavHeader)); // again
+  applyShift();
   rewind();
 }
 /**
@@ -99,6 +78,35 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
 AUDMAudioFilter_Bridge::~AUDMAudioFilter_Bridge()
 {
   printf("[Bridge] Destroying bridge\n");
+}
+/**
+    \fn applyShift
+*/
+bool AUDMAudioFilter_Bridge::applyShift(void)
+{
+    if(!_shiftUs) return true;
+    if(_shiftUs>0)
+    { // If shift is positive, it means we have to go in the future, just increase _startTime
+        _startTimeUs+=_shiftUs;
+        return true;
+    }
+    // If shift is negative, we have to go either in the past and/or duplicate frames
+    _shiftUs=-_shiftUs;
+    if(_startTimeUs>_shiftUs)
+    {
+        _startTimeUs-=_shiftUs;
+    }else
+    {
+        _shiftUs-=_startTimeUs;
+        _startTimeUs=0;
+        double dNbSample=_shiftUs;
+        dNbSample*=_wavHeader.frequency;
+        dNbSample/=1000000.;
+        dNbSample*=_wavHeader.channels;
+        _hold=(int32_t)dNbSample;
+        _held=_hold;
+    }
+    return true;
 }
 /**
     \fn rewind

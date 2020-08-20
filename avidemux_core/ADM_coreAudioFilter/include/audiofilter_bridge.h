@@ -27,6 +27,8 @@ class AUDMAudioFilter_Bridge : public AUDMAudioFilter
     uint64_t            _startTimeUs; /*< Starting time in us */
     int64_t             _shiftUs;  /*< Shift in Ms */
     int32_t             _hold;   /*< Nb Sample to repeat */
+
+    bool                        applyShift(void);
     virtual uint8_t             fillIncomingBuffer(AUD_Status *status);
   public:
                                 AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming, 
