@@ -45,7 +45,7 @@
 //ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
 #include "ADM_muxerProto.h"
 extern ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime);
-extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input, bool needPerfectAudio);
+extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime, int32_t shift, ADM_edAudioTrack *input, bool needPerfectAudio);
 
 extern void A_Rewind(void);
 extern bool GUI_GoToTime(uint64_t time);
