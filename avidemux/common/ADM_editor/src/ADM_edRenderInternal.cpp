@@ -232,7 +232,13 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
     drain=vid->decoder->getDrainingState();
     if(!drain)
     {
-        if(!demuxer->getFrame(frame,&img))
+        img.dataLength=0;
+        if(demuxer->getFrameSize(frame,&(img.dataLength)) && img.dataLength > ADM_COMPRESSED_MAX_DATA_LENGTH)
+        {
+            ADM_warning("Frame %" PRIu32" length %" PRIu32" exceeds max %" PRIu32", skipping it.\n",
+                        frame,img.dataLength,ADM_COMPRESSED_MAX_DATA_LENGTH);
+            img.dataLength=0;
+        }else if(!demuxer->getFrame(frame,&img))
         {
             ADM_warning("getFrame failed for frame %" PRIu32"\n",frame);
             drain=true;
@@ -487,14 +493,19 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
         if(vid->lastSentFrame>=nbFrames-1) vid->lastSentFrame=nbFrames-1;
         // Fetch frame
         aprintf("[Editor] Decoding  frame %u\n",vid->lastSentFrame);
-
-        if (!demuxer->getFrame (vid->lastSentFrame,&img))
+        img.dataLength=0;
+        if(demuxer->getFrameSize(vid->lastSentFrame,&(img.dataLength)) && img.dataLength > ADM_COMPRESSED_MAX_DATA_LENGTH)
+        {
+            ADM_warning("Frame %" PRIu32" length %" PRIu32" exceeds max %" PRIu32", skipping it.\n",
+                        vid->lastSentFrame,img.dataLength,ADM_COMPRESSED_MAX_DATA_LENGTH);
+            img.dataLength=0;
+        }else if(!demuxer->getFrame(vid->lastSentFrame,&img))
         {
             ADM_warning("getFrame failed for frame %" PRIu32"\n",vid->lastSentFrame);
             //cache->flush();
             vid->decoder->setDrainingState(true);
         }
-        if(!img.dataLength)
+        if(!vid->decoder->getDrainingState() && !img.dataLength)
         {
             aprintf("Skipping zero-length frame %u\n",vid->lastSentFrame);
             vid->lastSentFrame++;
