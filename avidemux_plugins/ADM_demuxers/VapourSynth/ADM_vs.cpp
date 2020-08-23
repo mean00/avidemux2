@@ -226,7 +226,7 @@ uint8_t vsHeader::close(void)
 
 uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
-    if(frame>=_nbFrames) return false;
+    if(frame>=_nbFrames) return 0;
 
     char errMsg[1024];
     const int mapp[3]={0,2,1};
@@ -235,7 +235,7 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     if (!vsframe) 
     { 
         ADM_error("Error getting frame %d\n",frame);
-        return false;
+        return 0;
     }   
     img->flags=AVI_KEY_FRAME;
     img->dataLength=(_mainaviheader.dwHeight*_mainaviheader.dwWidth*3)>>1;
@@ -260,7 +260,7 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
         if(!readPtr)
         {
             ADM_error("Cannot get pointer for frame %p\n",p);
-            return false;
+            return 0;
         }
         
         int rowSize = _mainaviheader.dwWidth;
@@ -278,7 +278,7 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
          }
     }
     vsapi->freeFrame(vsframe);
-    return true;
+    return 1;
 }
 /**
         \fn getExtraHeaderData
@@ -302,8 +302,9 @@ uint8_t  vsHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
 */
 uint8_t vsHeader::getFrameSize (uint32_t frame, uint32_t * size)
 {
-  *size = (_video_bih.biHeight*_video_bih.biWidth*3)>>1;
-  return 1;
+    if(frame>=_nbFrames) return 0;
+    *size = (_video_bih.biHeight*_video_bih.biWidth*3)>>1;
+    return 1;
 }
 
 /**
