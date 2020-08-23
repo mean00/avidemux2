@@ -34,23 +34,34 @@ extern "C" {
 */
 class ADM_AudiocodecAC3 : public     ADM_Audiocodec
 {
-	protected:
-		void *ac3_handle;
-		void *ac3_sample;
-                bool init();
-                bool clean();
-                bool doChannelMapping(int flags);
-                bool downmix;
+protected:
+            void        *ac3_handle;
+            void        *ac3_sample;
+            uint32_t    channels;
+            uint32_t    frequency;
+            bool        downmix;
 
-	public:
-		ADM_AudiocodecAC3(uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraDatab);
-		virtual	~ADM_AudiocodecAC3();
-		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
-		virtual	uint8_t isCompressed(void) {return 1;}
-		virtual	uint8_t isDecompressable(void) {return 1;}
-                virtual bool    resetAfterSeek(void);
+            bool        frequencyChecked;
+            bool        nbChannelsChecked;
 
-   };
+            bool        init();
+            bool        clean();
+            bool        doChannelMapping(int flags);
+            bool        setOutputChannels(int flags);
+
+public:
+                        ADM_AudiocodecAC3(uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraData);
+    virtual             ~ADM_AudiocodecAC3();
+    virtual uint8_t     run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
+    virtual uint8_t     isCompressed(void) {return 1;}
+    virtual uint8_t     isDecompressable(void) {return 1;}
+    virtual bool        resetAfterSeek(void);
+
+    virtual uint32_t    getOutputFrequency(void);
+    virtual uint32_t    getOutputChannels(void);
+    virtual bool        reconfigureCompleted(void);
+
+};
 // Supported formats + declare our plugin
 //*******************************************************
    static  ad_supportedFormat Formats[]={{WAV_AC3,AD_MEDIUM_QUAL}};
@@ -63,12 +74,12 @@ class ADM_AudiocodecAC3 : public     ADM_Audiocodec
 ADM_AudiocodecAC3::ADM_AudiocodecAC3( uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraData)
 		:   ADM_Audiocodec(fourcc,*info)
 {
-    
     ADM_assert(fourcc==WAV_AC3);
     ac3_handle=NULL;
     ac3_sample=NULL;
+    channels=wavHeader.channels;
+    frequency=wavHeader.frequency;
     init();
-      
 }
 /**
         \fn init
@@ -96,8 +107,10 @@ bool ADM_AudiocodecAC3::init()
         ADM_warning("Cannot init a52 sample\n");
         ADM_assert(0);
     }
+    frequencyChecked=false;
+    nbChannelsChecked=false;
     downmix=false;
-   return true;      
+    return true;
 }
 /**
         \fn clean
@@ -185,7 +198,43 @@ bool ADM_AudiocodecAC3::doChannelMapping(int flags)
     }
     return true;
 }
-
+/**
+    \fn updateChannels
+*/
+bool ADM_AudiocodecAC3::setOutputChannels(int flags)
+{
+    channels = 0;
+    if(flags & A52_LFE)
+        channels++;
+    switch(flags & A52_CHANNEL_MASK)
+    {
+        case A52_CHANNEL:
+        case A52_MONO:
+            channels += 1;
+            break;
+        case A52_STEREO:
+        case A52_DOLBY:
+            channels += 2;
+            break;
+        case A52_3F:
+        case A52_2F1R:
+            channels += 3;
+            break;
+        case A52_3F1R:
+        case A52_2F2R:
+            channels += 4;
+            break;
+        case A52_3F2R:
+            channels += 5;
+            break;
+        default:
+            ADM_assert(0);
+    }
+    return true;
+}
+/**
+    \fn run
+*/
 uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   uint32_t *nbOut)
 {
     uint32_t avail;
@@ -215,24 +264,56 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
             break;
         }
 
-        if(chan == 2 && (flags & A52_CHANNEL_MASK) == A52_3F2R)
+        frequency = samprate;
+        setOutputChannels(flags);
+
+        if(chan != channels)
         {
-            // enforce stereo downmix, if initially two channels detected and later 5.0/5.1 occurs
-            flags = A52_STEREO;
-            if(!downmix)
+            if(!nbChannelsChecked)
             {
-                ADM_warning("[a52] Downmixing to stereo after switch to 5.0/5.1\n");
-                downmix = true;
+                ADM_warning("[a52] Demuxer and decoder disagree about # of channels: %u vs %u\n",chan,channels);
+                nbChannelsChecked = true;
+            }
+            reconfigureNeeded = true;
+        }else
+        {
+            reconfigureNeeded = false;
+        }
+
+        bool frequencyMismatch = false;
+        if(samprate != wavHeader.frequency)
+        {
+            frequencyMismatch = true;
+            reconfigureNeeded = true;
+            if(!frequencyChecked)
+            {
+                ADM_warning("[a52] Demuxer and decoder disagree about sampling frequency: %u vs %d\n",wavHeader.frequency,samprate);
+                frequencyChecked = true;
             }
         }else
         {
-            downmix = false;
+            if(chan == 2 && (flags & A52_CHANNEL_MASK) == A52_3F2R)
+            {
+                // enforce stereo downmix, if initially two channels detected and later 5.0/5.1 occurs
+                flags = A52_STEREO;
+                if(!downmix)
+                {
+                    ADM_warning("[a52] Downmixing to stereo after switch to 5.0/5.1\n");
+                    downmix = true;
+                    done = false;
+                }
+            }else
+            {
+                downmix = false;
+            }
         }
+
+        bool silent = frequencyMismatch || (reconfigureNeeded && !downmix);
 
         if(!done)
         {
-                doChannelMapping(flags);
-                done=true;
+            doChannelMapping(flags);
+            done = true;
         }
 
         sample_t level = 1, bias = 0;
@@ -244,31 +325,76 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
             nbIn-=length;
             *nbOut += 256 * chan * 6;
             break;
-        };
+        }
         inptr+=length;
         nbIn-=length;
         *nbOut += 256 * chan * 6;
 
         float *cur;
-        for (int i = 0; i < 6; i++) {
-                if (a52_block(AC3_HANDLE)) {
-                        ADM_warning(" A52_block failed! on fblock :%d\n", i);
-                        // in that case we silent out the chunk
-                        memset(outptr, 0, 256 * chan * sizeof(float));
-                } else {
-                        for (int k = 0; k < chan; k++) {
-                                sample_t *sample=(sample_t *)ac3_sample;
-                                sample += 256 * k;
-                                cur = outptr + k;
-                                for (int j = 0; j < 256; j++) {
-                                        *cur = *sample++;
-                                        cur+=chan;
-                                }
-                        }
+        for (int i = 0; i < 6; i++)
+        {
+            if (a52_block(AC3_HANDLE))
+            {
+                ADM_warning(" A52_block failed! on fblock :%d\n", i);
+                // in that case we silent out the chunk
+                memset(outptr, 0, 256 * chan * sizeof(float));
+            } else if (!silent)
+            {
+                for (int k = 0; k < chan; k++)
+                {
+                    sample_t *sample=(sample_t *)ac3_sample;
+                    sample += 256 * k;
+                    cur = outptr + k;
+                    for (int j = 0; j < 256; j++)
+                    {
+                        *cur = *sample++;
+                        cur += chan;
+                    }
                 }
-                outptr += chan * 256;
+            } else
+            {
+                uint32_t fakeSamples = 256 * chan;
+                if (frequencyMismatch)
+                {
+                    float f = fakeSamples;
+                    f *= wavHeader.frequency;
+                    f /= samprate;
+                    f += 0.49;
+                    fakeSamples = f;
+                }
+                memset(outptr, 0, fakeSamples * sizeof(float));
+            }
+            outptr += chan * 256;
         }
     }
     return 1;
 
+}
+/**
+    \fn getOutputFrequency
+*/
+uint32_t ADM_AudiocodecAC3::getOutputFrequency(void)
+{
+    return frequency;
+}
+/**
+    \fn getOutputChannels
+*/
+uint32_t ADM_AudiocodecAC3::getOutputChannels(void)
+{
+    return channels;
+}
+/**
+    \fn reconfigureCompleted
+    \brief Update header from sampling rate and number of channels detected during decoding
+*/
+bool ADM_AudiocodecAC3::reconfigureCompleted(void)
+{
+    wavHeader.frequency = frequency;
+    bool r = updateChannels(channels);
+    reconfigureNeeded = false;
+    frequencyChecked = false;
+    nbChannelsChecked = false;
+    downmix = false;
+    return r;
 }
