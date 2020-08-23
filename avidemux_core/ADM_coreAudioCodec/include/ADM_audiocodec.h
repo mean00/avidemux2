@@ -40,6 +40,7 @@ class ADM_Audiocodec
             _init=0;
             wavHeader=info;
             reconfigureNeeded=false;
+            memset(channelMapping,0,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
         };
         virtual                 ~ADM_Audiocodec() {};
         virtual void            purge(void) {}
