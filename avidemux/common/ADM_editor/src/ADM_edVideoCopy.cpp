@@ -49,6 +49,22 @@ static bool checkCodec(aviInfo *first,aviInfo *second)
     return match;
 }
 
+static bool boundsCheck(vidHeader *hdr, ADMCompressedImage *img, uint32_t frame, uint32_t max)
+{
+    img->dataLength=0;
+    if(!hdr->getFrameSize(frame,&(img->dataLength)) || !img->dataLength)
+    {
+        ADM_warning("Cannot get valid length for frame %u\n",frame);
+        return false;
+    }
+    if(img->dataLength > max)
+    {
+        ADM_warning("Length of frame %u out of bounds: %u vs %u\n", frame, img->dataLength, max);
+        return false;
+    }
+    return true;
+}
+
 static bool getH264SPSInfo(_VIDEOS *vid,ADM_SPSInfo *sps)
 {
     if(!vid)
@@ -76,11 +92,16 @@ static bool getH264SPSInfo(_VIDEOS *vid,ADM_SPSInfo *sps)
         // Allocate memory to hold compressed frame
         ADMCompressedImage img;
 #define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
+        if(!boundsCheck(demuxer,&img,0,MAX_FRAME_LENGTH))
+        {
+            ADM_warning("First frame of video has invalid length.\n");
+            goto _the_end;
+        }
         buffer=new uint8_t[MAX_FRAME_LENGTH];
         img.data=buffer;
         if(!demuxer->getFrame(0,&img))
         {
-            ADM_warning("Unable to get the first frame of video");
+            ADM_warning("Unable to get the first frame of video\n");
             goto _the_end;
         }
 #define MAX_NALU_TO_CHECK 4
@@ -159,11 +180,16 @@ static bool getH265SPSInfo(_VIDEOS *vid, ADM_SPSinfoH265 *sps)
     {
         // Allocate memory to hold compressed frame
         ADMCompressedImage img;
+        if(!boundsCheck(demuxer,&img,0,MAX_FRAME_LENGTH))
+        {
+            ADM_warning("First frame of video has invalid length.\n");
+            goto _the_end_hevc;
+        }
         buffer=new uint8_t[MAX_FRAME_LENGTH];
         img.data=buffer;
         if(!demuxer->getFrame(0,&img))
         {
-            ADM_warning("Unable to get the first frame of video");
+            ADM_warning("Unable to get the first frame of video\n");
             goto _the_end_hevc;
         }
         gotSps=extractSPSInfoH265(img.data,img.dataLength,sps);
@@ -386,6 +412,12 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             nalSize=ADM_getNalSizeH264(extra,extraLen);
         // Allocate memory to hold compressed frame
         ADMCompressedImage img;
+#define CHECK_FRAME(x) if(!boundsCheck(demuxer,&img,x,MAX_FRAME_LENGTH)) \
+        { \
+            ADM_warning("Length of frame %d in ref %d, segment %d out of bounds or invalid.\n",x,seg->_reference,segNo); \
+            BOWOUT \
+        }
+        CHECK_FRAME(frame)
         buffer=new uint8_t[MAX_FRAME_LENGTH];
         img.data=buffer;
         // We have SPS, now get the frame we are interested in.
@@ -456,6 +488,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         int earliest;
         if(getOpenGopDelayForSegment(segNo,0,&delay,&earliest) && earliest>0)
         {
+            CHECK_FRAME(earliest)
             if(demuxer->getFrame(earliest,&img))
             {
                 outcome=false;
@@ -528,6 +561,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 demuxer->getFlags(--frame,&flags);
             }
             // Retrieve this keyframe
+            CHECK_FRAME(frame)
             if(!demuxer->getFrame(frame,&img))
             {
                 ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
@@ -622,6 +656,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 demuxer->getFlags(--frame,&flags);
             }
             // Retrieve this keyframe
+            CHECK_FRAME(frame)
             if(!demuxer->getFrame(frame,&img))
             {
                 ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
@@ -690,9 +725,10 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             }
             // maxFrame is now the last frame before segment switch.
             // We need poc_lsb of this frame to get poc_msb right.
+            CHECK_FRAME(maxFrame)
             if(!demuxer->getFrame(maxFrame,&img))
             {
-                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
+                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",maxFrame,seg->_reference,segNo);
                 BOWOUT
             }
             // Try to get POC, recovery distance doesn't matter here
@@ -745,9 +781,10 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                 ADM_warning("Cannot identify the last frame in display order before the cut for segment %d\n",segNo);
                 BOWOUT
             }
+            CHECK_FRAME(maxPtsFrame)
             if(!demuxer->getFrame(maxPtsFrame,&img))
             {
-                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
+                ADM_warning("Unable to get frame %d in ref %d, segment %d\n",maxPtsFrame,seg->_reference,segNo);
                 BOWOUT
             }
             // Got our frame, get poc_lsb of the slice
@@ -923,6 +960,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         bool outcome=false;
         for(int i=frame; i<=maxFrame; i++)
         {
+            CHECK_FRAME(i)
             if(!demuxer->getFrame(i,&img))
             {
                 ADM_warning("Unable to get frame %d in ref %d, segment %d\n",i,seg->_reference,segNo);
@@ -953,6 +991,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         frame=rememberCurrent;
         vid->lastSentFrame=rememberLastSent;
         // Get the frame we are interested in.
+        CHECK_FRAME(frame)
         if(!demuxer->getFrame(frame,&img))
         {
             ADM_warning("Unable to get frame %d in ref %d, segment %d\n",frame,seg->_reference,segNo);
@@ -996,6 +1035,7 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
         {
             for(int i=frame+1; i<=earliest; i++)
             {
+                CHECK_FRAME(i)
                 if(!demuxer->getFrame(i,&img))
                 {
                     ADM_warning("Unable to get frame %d in ref %d, segment %d\n",i,seg->_reference,segNo);
@@ -1222,8 +1262,9 @@ bool ADM_Composer::getOpenGopDelayForSegment(uint32_t segNo, uint64_t segTime, u
             notStackAllocator buf(len);
             img.flags=0;
             img.data=buf.data;
-            img.dataLength=len;
-            if(demuxer->getFrame(i,&img))
+            if(!demuxer->getFrameSize(i,&(img.dataLength)))
+                img.dataLength=0;
+            if(img.dataLength && img.dataLength <= len && demuxer->getFrame(i,&img))
             {
                 if(bFrameDroppable(info.fcc,vid,&img))
                     continue; // this frame will be dropped, no need to add delay
