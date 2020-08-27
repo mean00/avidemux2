@@ -140,6 +140,7 @@ protected:
             mkvAccess   *_son;
             int         _maxSize;
             uint8_t     *_buffer;
+            bool        updateExtraData(uint64_t timeUs);
 };
 
 /**
