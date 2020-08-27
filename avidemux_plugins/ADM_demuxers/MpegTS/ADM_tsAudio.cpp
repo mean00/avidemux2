@@ -166,9 +166,9 @@ bool ADM_tsAccess::updateExtraData(uint64_t start)
                     continue;
                 if(outcome==ADM_latm2aac::LATM_MORE_DATA_NEEDED)
                     continue;
-                uint32_t len;
-                uint8_t *data;
-                if(latm.getExtraData(&len,&data))
+                uint32_t len=0;
+                uint8_t *data=NULL;
+                if(latm.getExtraData(&len,&data) && len && data)
                 {
                     if(extraDataLen!=len)
                     {
