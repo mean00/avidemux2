@@ -40,6 +40,8 @@ static ADM_LibWrapper        vdpauDynaLoader;
 static VdpDeviceCreateX11    *ADM_createVdpX11;
 static VdpGetProcAddress     *vdpProcAddress;
 static bool                  coreVdpWorking=false;
+static int                   videoSurfaceMaxWidth=0;
+static int                   videoSurfaceMaxHeight=0;
 static VdpPresentationQueueTarget  queueX11;
 
 
@@ -74,14 +76,14 @@ static void *getFunc(uint32_t id)
     return (void *)f;
 }
 /**
-
+    \fn getVdpDevice
 */
 void        *admVdpau::getVdpDevice(void)
 {
         return (void *)(intptr_t)ADM_coreVdpau::vdpDevice;
 }
 /**
-
+    \fn getProcAddress
 */
 void        *admVdpau::getProcAddress(void)
 {
@@ -130,6 +132,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
 
     GetMe(createSurface,VDP_FUNC_ID_VIDEO_SURFACE_CREATE);
     GetMe(destroySurface,VDP_FUNC_ID_VIDEO_SURFACE_DESTROY);
+    GetMe(querySurfaceCapabilities,VDP_FUNC_ID_VIDEO_SURFACE_QUERY_CAPABILITIES)
     GetMe(getDataSurface,VDP_FUNC_ID_VIDEO_SURFACE_GET_BITS_Y_CB_CR);
     GetMe(surfacePutBitsYCbCr,VDP_FUNC_ID_VIDEO_SURFACE_PUT_BITS_Y_CB_CR);
 
@@ -175,6 +178,12 @@ bool admVdpau::init(GUI_WindowInfo *x)
         ADM_coreVdpau::funcs.getApiVersion(&version);
         ADM_info("[VDPAU] API : 0x%x, info : %s\n",version,versionString);
 
+    if(false==querySurfaceCapabilities(&videoSurfaceMaxWidth, &videoSurfaceMaxHeight) || !videoSurfaceMaxWidth || !videoSurfaceMaxHeight)
+    {
+        ADM_warning("Cannot get a valid maximum video surface size.\n");
+        return false;
+    }
+    ADM_info("VDPAU max supported video surface size: %d x %d\n", videoSurfaceMaxWidth, videoSurfaceMaxHeight);
     coreVdpWorking=true;
     myWindowInfo=*x;
 #if 0
@@ -237,7 +246,21 @@ bool admVdpau::isOperationnal(void)
     return coreVdpWorking;
 }
 /**
-    \fn
+    \fn getVideoSurfaceMaxWidth
+*/
+int admVdpau::getVideoSurfaceMaxWidth(void)
+{
+    return videoSurfaceMaxWidth;
+}
+/**
+    \fn getVideoSurfaceMaxHeight
+*/
+int admVdpau::getVideoSurfaceMaxHeight(void)
+{
+    return videoSurfaceMaxHeight;
+}
+/**
+    \fn decoderCreate
     \brief
 */
 VdpStatus admVdpau::decoderCreate(  VdpDevice dev,VdpDecoderProfile profile,    uint32_t  width,uint32_t  height,
@@ -247,7 +270,7 @@ VdpStatus admVdpau::decoderCreate(  VdpDevice dev,VdpDecoderProfile profile,    
     CHECK(ADM_coreVdpau::funcs.decoderCreate(dev,profile,dimensionRoundUp(width),dimensionRoundUp(height),max_references,decoder));
 }
 /**
-    \fn
+    \fn decoderDestroy
     \brief
 */
 VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
@@ -256,7 +279,7 @@ VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
     CHECK(ADM_coreVdpau::funcs.decoderDestroy(decoder));
 }
 /**
-    \fn
+    \fn surfaceCreate
     \brief
 */
 
@@ -266,7 +289,21 @@ VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurfac
     if(!isOperationnal()) 
         {ADM_error("vdpau is not operationnal\n");return VDP_STATUS_ERROR;}
     VDP_TRACK("[VDPAU] Creating surface %d x %d\n",(int)width,(int)height);
-    VdpStatus r=ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,dimensionRoundUp(width),dimensionRoundUp(height),surface);
+
+    int widthToUse=dimensionRoundUp(width);
+    int heightToUse=dimensionRoundUp(height);
+
+    if(widthToUse > videoSurfaceMaxWidth)
+    {
+        ADM_warning("Width %d exceeds max supported %d\n",widthToUse,videoSurfaceMaxWidth);
+        return VDP_STATUS_ERROR;
+    }
+    if(heightToUse > videoSurfaceMaxHeight)
+    {
+        ADM_warning("Height %d exceeds max supported %d\n",heightToUse,videoSurfaceMaxHeight);
+        return VDP_STATUS_ERROR;
+    }
+    VdpStatus r=ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,widthToUse,heightToUse,surface);
     if(VDP_STATUS_OK!=r) 
     {
         ADM_warning("ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface) call failed with error=%s\n",getErrorString(r));
@@ -281,7 +318,7 @@ VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurfac
     return VDP_STATUS_OK;
 }
 /**
-    \fn
+    \fn surfaceDestroy
     \brief
 */
 
@@ -297,7 +334,7 @@ VdpStatus  admVdpau::surfaceDestroy(VdpVideoSurface surface)
     CHECK(ADM_coreVdpau::funcs.destroySurface(surface));
 }
 /**
-    \fn
+    \fn getDataSurface
     \brief
 */
 
@@ -342,7 +379,7 @@ VdpStatus admVdpau::decoderRender(
     CHECK(ADM_coreVdpau::funcs.decoderRender(decoder, target, (void * const *)info,bitstream_buffer_count, bitstream_buffers));
 }
 /**
-    \fn
+    \fn outputSurfaceCreate
     \brief
 */
 
@@ -364,7 +401,7 @@ VdpStatus admVdpau::outputSurfaceDestroy(    VdpOutputSurface surface)
     CHECK(ADM_coreVdpau::funcs.destroyOutputSurface(surface));
 }
 /**
-    \fn
+    \fn outPutSurfacePutBitsYV12
     \brief
 */
 
@@ -407,7 +444,7 @@ VdpStatus admVdpau::outputSurfaceGetBitsNative_FieldWeave(VdpOutputSurface     s
 
 
 /**
-    \fn
+    \fn outputSurfaceGetParameters
     \brief
 */
 VdpStatus admVdpau::outputSurfaceGetParameters(  VdpOutputSurface surface,    VdpRGBAFormat *  rgba_format,
@@ -423,7 +460,7 @@ VdpStatus admVdpau::surfaceGetParameters(VdpVideoSurface surface,VdpChromaType *
 }
 
 /**
-    \fn
+    \fn presentationQueueCreate
     \brief
 */
 
@@ -433,7 +470,7 @@ VdpStatus admVdpau::presentationQueueCreate(VdpPresentationQueue *queue)
 
 }
 /**
-    \fn
+    \fn presentationQueueDestroy
     \brief
 */
 

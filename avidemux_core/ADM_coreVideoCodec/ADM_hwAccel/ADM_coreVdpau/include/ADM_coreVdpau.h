@@ -55,6 +55,8 @@ public:
     static  VdpGetProcAddress   *getProcAddress2(void)    ;
     static  const char  *getErrorString(VdpStatus er);
     static  bool        mixerIsFeatureEnabled( VdpVideoMixer mixer,VdpVideoMixerFeature feature);
+    static  int         getVideoSurfaceMaxWidth(void);
+    static  int         getVideoSurfaceMaxHeight(void);
     static  VdpStatus   surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface);
     static  VdpStatus   surfaceDestroy(VdpVideoSurface surface);
     static  VdpStatus   getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3]);
@@ -114,6 +116,7 @@ public:
                                 uint32_t attrCount,
                                 const  VdpVideoMixerAttribute *xkeys,
                                 void * const* values);
+    static bool      querySurfaceCapabilities(int *max_width, int *max_height);
     static bool      queryDecoderCapabilities(      VdpDecoderProfile profile, // return true if supported
                                                     int *        max_width,
                                                     int *        max_height);

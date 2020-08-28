@@ -258,7 +258,30 @@ VdpStatus admVdpau::mixerSetAttributesValue(VdpVideoMixer mixer,
     }
     return e;
 }
-
+/**
+    \fn querySurfaceCapabilities
+*/
+bool admVdpau::querySurfaceCapabilities(int *maxWidth, int *maxHeight)
+{
+    VdpBool is_supported=false;
+    uint32_t max_width,max_height;
+    VdpStatus e=ADM_coreVdpau::funcs.querySurfaceCapabilities(ADM_coreVdpau::vdpDevice,
+                                                              VDP_CHROMA_TYPE_420,
+                                                              &is_supported,
+                                                              &max_width,
+                                                              &max_height);
+    if(VDP_STATUS_OK!=e)
+    {
+        ADM_warning("querySurfaceCapabilities failed: %s\n",getErrorString(e));
+        return false;
+    }
+    *maxWidth=max_width;
+    *maxHeight=max_height;
+    return is_supported;
+}
+/**
+    \fn queryDecoderCapabilities
+*/
 bool admVdpau::queryDecoderCapabilities(
                                                     VdpDecoderProfile profile,
                                                     int *        maxWidth,

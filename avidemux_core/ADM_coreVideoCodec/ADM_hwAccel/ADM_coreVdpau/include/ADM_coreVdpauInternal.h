@@ -27,6 +27,7 @@ typedef struct
 
     VdpVideoSurfaceCreate   *createSurface;
     VdpVideoSurfaceDestroy  *destroySurface;
+    VdpVideoSurfaceQueryCapabilities *querySurfaceCapabilities;
     VdpVideoSurfaceGetBitsYCbCr *getDataSurface;
     VdpVideoSurfacePutBitsYCbCr *surfacePutBitsYCbCr;
 
