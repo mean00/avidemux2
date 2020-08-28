@@ -219,11 +219,16 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
             c=fmt[i];
             ADM_info("[vdpau]: Evaluating %d\n",c);
             if(c!=AV_PIX_FMT_VDPAU) continue;        
-    #define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:  \
-                                         if(admVdpau::queryDecoderCapabilities(y,&maxW,&maxH)) \
-                                         { id=avctx->codec_id;\
-                                         outPix=AV_PIX_FMT_VDPAU ;}else {ADM_info(#x ":Not supported by HW\n");}\
-                                         break;
+    #define FMT_V_CHECK(x,y) case AV_CODEC_ID_##x: \
+            if(admVdpau::queryDecoderCapabilities(y,&maxW,&maxH)) \
+            { \
+                if(avctx->width > maxW) { ADM_warning(#x ": width %d exceeds max %u supported by HW\n",avctx->width,maxW); break; } \
+                if(avctx->height > maxH) { ADM_warning(#x ": height %d exceeds max %u supported by HW\n",avctx->height,maxH); break; } \
+                id=avctx->codec_id; \
+                outPix=AV_PIX_FMT_VDPAU; \
+            }else \
+            {   ADM_info(#x ":Not supported by HW\n"); } \
+            break;
             switch(avctx->codec_id)
             {
                 FMT_V_CHECK(H264,      VDP_DECODER_PROFILE_H264_HIGH)
