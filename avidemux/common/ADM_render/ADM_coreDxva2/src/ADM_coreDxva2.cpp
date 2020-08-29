@@ -114,15 +114,19 @@ typedef struct
 {
      enum AVCodecID  codec;
      bool            enabled;
+     unsigned int    verifiedWorkingWidth;
+     unsigned int    verifiedWorkingHeight;
+     unsigned int    verifiedNotWorkingWidth;
+     unsigned int    verifiedNotWorkingHeight;
      DXVA2_VideoDesc desc;
      DXVA2_ConfigPictureDecode pictureDecode;
            GUID      device_guid;
            GUID      guid;
 }Dxv2SupportMap;
 
-static Dxv2SupportMap dxva2H265={AV_CODEC_ID_HEVC,false};
-static Dxv2SupportMap dxva2H264={AV_CODEC_ID_H264,false};
-static Dxv2SupportMap dxva2H265_10Bits={AV_CODEC_ID_HEVC,false};
+static Dxv2SupportMap dxva2H265={AV_CODEC_ID_HEVC,false,0,0,INT_MAX,INT_MAX};
+static Dxv2SupportMap dxva2H264={AV_CODEC_ID_H264,false,0,0,INT_MAX,INT_MAX};
+static Dxv2SupportMap dxva2H265_10Bits={AV_CODEC_ID_HEVC,false,0,0,INT_MAX,INT_MAX};
 
 /**
   \fn dxvaBitsToFormat
@@ -165,7 +169,7 @@ static bool ADM_FAILED(HRESULT hr)
   \fn checkDecoder
   \brief check if the decoder advertised is actually working
 */
-static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context)
+static bool checkDecoderConfiguration(const GUID *guid, Dxv2SupportMap *context, unsigned int width, unsigned int height)
 {
     HRESULT hr;
     unsigned int cfg_count = 0, best_score = 0;
@@ -173,14 +177,16 @@ static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context
     bool   found=false;
     const D3DFORMAT target_format = (const D3DFORMAT) MKTAG('N','V','1','2');
 
-    // initialize desc with dummy values
-    context->desc.SampleWidth=1920;
-    context->desc.SampleHeight=1080;
+    // initialize desc with values to test
+    context->desc.SampleWidth=width;
+    context->desc.SampleHeight=height;
     context->desc.Format=target_format;
 
     hr = D3DCall(IDirectXVideoDecoderService,GetDecoderConfigurations,decoder_service, *guid, &(context->desc), NULL, &cfg_count, &cfg_list);
     if (ADM_FAILED(hr)) {
         ADM_warning("Unable to retrieve decoder configurations\n");
+        context->verifiedNotWorkingWidth = width;
+        context->verifiedNotWorkingHeight = height;
         return false;
     }
 
@@ -209,6 +215,8 @@ static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context
         if (score > best_score)
         {
             best_score    = score;
+            context->verifiedWorkingWidth = width;
+            context->verifiedWorkingHeight = height;
             context->pictureDecode = *cfg;
             found=true;
             ADM_info("\t best score\n");
@@ -219,6 +227,8 @@ static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context
     if (! found )
     {
         ADM_warning( "No valid decoder configuration available\n");
+        context->verifiedNotWorkingWidth = width;
+        context->verifiedNotWorkingHeight = height;
         return false;
     }
     return true;
@@ -227,8 +237,15 @@ static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context
  * \fn lookupCodec
  * \brief find and populate the configuration for a given codec
  */
-static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned int guid_count,GUID *guid_list, int bitsPerComponent)
+static bool lookupCodec(const char *codecName,
+                        Dxv2SupportMap *context,
+                        unsigned int guid_count,
+                        GUID *guid_list,
+                        int bitsPerComponent,
+                        unsigned int width,
+                        unsigned int height)
 {
+    bool success=false;
     HRESULT hr;
     D3DFORMAT target_format = (D3DFORMAT) 0;
 
@@ -255,6 +272,7 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         hr = D3DCall(IDirectXVideoDecoderService,GetDecoderRenderTargets,decoder_service,*( mode->guid), &target_count, &target_list);
         if (ADM_FAILED(hr))
         {
+            ADM_info("Cannot GetDecoderRenderTargets\n");
             continue;
         }
         D3DFORMAT tgt;
@@ -272,8 +290,9 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         CoTaskMemFree(target_list);
         if (target_format)
         {
-            if(checkDecoderConfiguration(mode->guid,context)) // does it work ?
+            if(checkDecoderConfiguration(mode->guid,context,width,height)) // does it work for given width and height?
             {
+              success=true;
               context->device_guid = *(mode->guid);
               break;
             }
@@ -281,15 +300,15 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
     }
 
     // Did we find a working one ?
-    if (IsEqualGUID(context->device_guid, GUID_NULL))
+    if (IsEqualGUID(context->device_guid, GUID_NULL) || !success)
     {
-        ADM_info("No decoder device for codec %s found\n",codecName);
+        ADM_info("No decoder device for codec %s %d bits and size %u x %u found\n",codecName,bitsPerComponent,width,height);
         return false;
     }
 
     //--
 
-    ADM_info("DXVA2 support for  %s found\n",codecName);
+    ADM_info("DXVA2 support for %s %d bits and size %u x %u found\n",codecName,bitsPerComponent,width,height);
     context->enabled=true;
     return true;
 }
@@ -367,9 +386,11 @@ bool admDxva2::init(GUI_WindowInfo *x)
             ADM_warning("Failed to retrieve decoder device GUIDs\n");
             goto failInit;
         }
-        lookupCodec("H264",&dxva2H264,guid_count,guid_list,8);
-        lookupCodec("H265",&dxva2H265,guid_count,guid_list,8);
-        lookupCodec("H265",&dxva2H265_10Bits,guid_count,guid_list,10);
+        const unsigned int dummyCodedW=1280;
+        const unsigned int dummyCodedH=720;
+        lookupCodec("H264",&dxva2H264,guid_count,guid_list,8,dummyCodedW,dummyCodedH);
+        lookupCodec("H265",&dxva2H265,guid_count,guid_list,8,dummyCodedW,dummyCodedH);
+        lookupCodec("H265",&dxva2H265_10Bits,guid_count,guid_list,10,dummyCodedW,dummyCodedH);
         CoTaskMemFree(guid_list);
     }
     ADM_info("Scanning supported format done\n");
@@ -379,6 +400,7 @@ failInit:
     cleanup();
     return false;
 }
+
 /**
  */
 admDx2Surface         *admDx2Surface::duplicateForMe(IDirect3DDevice9 *me)
@@ -491,15 +513,14 @@ bool admDxva2::destroyD3DSurface(int num, void *zsurfaces)
 */
 bool admDxva2::isOperationnal(void)
 {
+    if(coreDxva2Working) return true;
     ADM_warning("This binary has no working DXVA2 support\n");
-    return coreDxva2Working;
+    return false;
 }
 /**
  */
 bool admDxva2::cleanup(void)
 {
-    ADM_warning("This binary has no DXVA2 support\n");
-
     if (decoder_service)
     {
         D3DCallNoArg(IDirectXVideoDecoderService,Release,decoder_service);
@@ -533,13 +554,40 @@ bool admDxva2::cleanup(void)
 /**
  *
  */
-bool        admDxva2::supported(AVCodecID codec,int bits)
+bool admDxva2::supported(AVCodecID codec, int bits, int width, int height)
 {
-#define SUPSUP(a,b,c) if(codec==a && bits==c) return (b.enabled) ;
+    if(!coreDxva2Working || (bits != 8 && bits != 10))
+        return false;
+
+#define SUPSUP(a,b,c) \
+    if(codec==a && bits==c) \
+    { \
+        if(!b.enabled) return false; \
+        if((int)b.verifiedWorkingWidth >= width && (int)b.verifiedWorkingHeight >= height) return true; \
+        if((int)b.verifiedNotWorkingWidth <= width && (int)b.verifiedNotWorkingHeight <= height) return false; \
+    }
     SUPSUP(AV_CODEC_ID_H264,dxva2H264,8)
     SUPSUP(AV_CODEC_ID_HEVC,dxva2H265,8)
     SUPSUP(AV_CODEC_ID_HEVC,dxva2H265_10Bits,10)
-    return false;
+
+    unsigned int guid_count = 0;
+    GUID *guid_list = NULL;
+
+    HRESULT hr = D3DCall(IDirectXVideoDecoderService, GetDecoderDeviceGuids, decoder_service, &guid_count, &guid_list);
+    if(ADM_FAILED(hr))
+    {
+        ADM_warning("Failed to retrieve decoder device GUIDs\n");
+        return false;
+    }
+    bool r = false;
+    if(codec == AV_CODEC_ID_H264 && bits == 8)
+        r = lookupCodec("H264",&dxva2H264,guid_count,guid_list,8,width,height);
+    else if(codec == AV_CODEC_ID_HEVC && bits == 8)
+        r = lookupCodec("H265",&dxva2H265,guid_count,guid_list,8,width,height);
+    else if(codec == AV_CODEC_ID_HEVC && bits == 10)
+        r = lookupCodec("H265",&dxva2H265_10Bits,guid_count,guid_list,10,width,height);
+    CoTaskMemFree(guid_list);
+    return r;
 }
 /**
  * \fn getDecoderConfig

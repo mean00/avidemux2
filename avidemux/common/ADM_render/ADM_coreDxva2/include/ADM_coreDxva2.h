@@ -56,7 +56,7 @@ public:
         static bool init(GUI_WindowInfo *x);
         static bool isOperationnal(void);
         static bool cleanup(void);
-        static bool supported(AVCodecID codec,int bits);
+        static bool supported(AVCodecID codec,int bits,int width,int height);
         static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int width, int height,int numSurface, LPDIRECT3DSURFACE9 *surface,int align,int bits);
         static bool destroyDecoder(IDirectXVideoDecoder *decoder);
         static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec,int bits);

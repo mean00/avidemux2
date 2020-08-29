@@ -661,13 +661,21 @@ bool           ADM_hwAccelEntryDxva2::canSupportThis(struct AVCodecContext *avct
         return false;
 
     outputFormat=ofmt;
-    ADM_info("This is maybe supported by DXVA2...\n");
+    int align=16;
+    if(avctx->codec_id == AV_CODEC_ID_H265)
+        align=128;
+    int width=avctx->width;
+    int height=avctx->height;
+    width=(width+align-1)&~(align-1);
+    height=(height+align-1)&~(align-1);
+    ADM_info("This is maybe supported by DXVA2, padded width: %d padded height: %d\n",width,height);
     int bits=dxvaBitDepthFromContext(avctx);
-    if(!admDxva2::supported(avctx->codec_id,bits)) // not sure either
+    if(!admDxva2::supported(avctx->codec_id, bits, width, height)) // not sure either
     {
         ADM_warning("Not supported by DXVA2\n");
         return false;
     }
+    ADM_info("This is supported by DXVA2\n");
     return true;
 }
 
