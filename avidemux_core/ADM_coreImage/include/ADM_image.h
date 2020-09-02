@@ -109,6 +109,7 @@ public:
         uint64_t        Pts;        /// Presentation time in us
         ADM_IMAGE_TYPE  _imageType;     /// Plain image or reference or vdpau wrapper
         ADM_colorspace  _colorspace;    /// Colorspace we are moving, default is YV12
+        ADM_colorRange  _range;     /// MPEG or JPEG
         uint8_t         _noPicture;     /// No picture to display
         ADM_ASPECT	    _aspect;	/// Aspect ratio
         //

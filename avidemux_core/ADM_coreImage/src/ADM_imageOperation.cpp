@@ -32,6 +32,7 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
         hwDecRefCount(); // free hw ref image if any..
         if(src->refType==ADM_HW_NONE)
         {
+            _range=src->_range;
             for(int plane=PLANAR_Y;plane<PLANAR_LAST;plane++)
             {
                 source=src->GetReadPtr((ADM_PLANE)plane);

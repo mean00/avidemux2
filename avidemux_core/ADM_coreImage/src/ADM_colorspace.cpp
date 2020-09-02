@@ -295,7 +295,28 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
         dst[1]=dst[2];
         dst[2]=p;
     }
-    
+    if(fromColor != toColor)
+    {
+        int *itbl = NULL;
+        int *ta = NULL;
+        int sr,dr,bri,con,sat,ret;
+        ret = sws_getColorspaceDetails(CONTEXT,&itbl,&sr,&ta,&dr,&bri,&con,&sat);
+        if(ret < 0)
+        {
+            ADM_warning("Cannot get colorspace details to set color range.\n");
+        }else
+        {
+            sr=(sourceImage->_range == ADM_COL_RANGE_JPEG)? 1 : 0;
+            dr=(destImage->_range   == ADM_COL_RANGE_JPEG)? 1 : 0;
+            ret = sws_setColorspaceDetails(CONTEXT,itbl,sr,ta,dr,bri,con,sat);
+            if(ret < 0)
+            {
+                const char *strSrc = sr? "JPEG" : "MPEG";
+                const char *strDst = dr? "JPEG" : "MPEG";
+                ADM_warning("Cannot set colorspace details, %s --> %s\n",strSrc,strDst);
+            }
+        }
+    }
     sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
     return true;
 }
@@ -411,6 +432,21 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
         uint8_t *p=dstPlanes[1];
         dstPlanes[1]=dstPlanes[2];
         dstPlanes[2]=p;
+    }
+    if(img->_range==ADM_COL_RANGE_JPEG)
+    {
+        int *itbl = NULL;
+        int *ta = NULL;
+        int sr,dr,bri,con,sat,ret;
+        ret = sws_getColorspaceDetails(CONTEXT,&itbl,&sr,&ta,&dr,&bri,&con,&sat);
+        if(ret < 0)
+            ADM_warning("Cannot get colorspace details to set color range.\n");
+        else
+        {
+            ret = sws_setColorspaceDetails(CONTEXT,itbl,1,ta,0,bri,con,sat);
+            if(ret < 0)
+                ADM_warning("Cannot set colorspace details, JPEG --> MPEG\n");
+        }
     }
 
     if(false==convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes)) return false;

@@ -30,6 +30,13 @@ typedef enum
     ADM_CS_SPLINE,
     ADM_CS_FAST_BILINEAR
 }ADMColorScaler_algo;
+
+typedef enum
+{
+    ADM_COL_RANGE_MPEG,
+    ADM_COL_RANGE_JPEG
+}ADM_colorRange;
+
 /**
     \class ADMColorScaler
 */
