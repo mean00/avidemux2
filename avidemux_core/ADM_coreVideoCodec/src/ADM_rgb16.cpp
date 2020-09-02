@@ -114,6 +114,7 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
         ADMImageRef *ref=out->castToRef();
         out->flags = AVI_KEY_FRAME;
         out->_colorspace = colorspace;
+        out->_range = ADM_COL_RANGE_JPEG; // full
 
         ref->_planes[0] = decoded;
         ref->_planes[1] = NULL;
