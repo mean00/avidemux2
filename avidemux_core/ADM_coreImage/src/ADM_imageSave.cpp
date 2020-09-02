@@ -168,14 +168,54 @@ bool  ADMImage::saveAsBmp(const char *filename)
     return clone.saveAsBmpInternal(filename);
     
 }
+
 /**
-    \fn saveAsJpg
+    \fn buildLut
+    \brief Populate lookup table, code stolen from ADM_vidContrast.cpp
+*/
+static void buildLut(uint8_t *luma, uint8_t *chroma)
+{
+    int i;
+    double f;
+    const double coef=1.164383;
+
+    for(i=0; i < 256; i++)
+    {
+        f = i;
+        f -= 16.;
+        f *= coef;
+        if(f < 0.) f = 0.;
+        if(f > 255.) f = 255.;
+        *(luma + i) = (uint8_t) floor(f); // gives a better approximation
+
+        f = i;
+        f -= 128.;
+        f *= coef;
+        if(f < -127.) f = -127.;
+        if(f > 127.) f = 127.;
+        f += 128.;
+        *(chroma + i) = (uint8_t) floor(f+0.49);
+    }
+}
+
+/**
+    \fn saveAsJpgInternal
     \brief save current image into filename, into jpg format
 */
 bool  ADMImage::saveAsJpgInternal(const char *filename)
 {
+    static uint8_t lumaLut[256];
+    static uint8_t chromaLut[256];
+    static bool tablesDone=false;
+    if(!tablesDone)
+    {
+        buildLut(lumaLut,chromaLut);
+        tablesDone=true;
+    }
+
     AVCodecContext *context=NULL;
     AVFrame *frame=NULL;
+    ADMImage *fullRangePic=NULL;
     bool result=false;
     AVCodec *codec=NULL;
     int r=0;
@@ -186,6 +226,26 @@ bool  ADMImage::saveAsJpgInternal(const char *filename)
     {
         ADM_error("Cannot allocate frame\n");
         return false;
+    }
+
+    if(_range == ADM_COL_RANGE_MPEG) // we need to increase contrast
+    { // Code stolen from ADM_vidContrast.cpp
+        fullRangePic = new ADMImageDefault(_width,_height);
+        for(int plane = 0; plane < 3; plane++)
+        {
+            uint32_t x,y;
+            int stride = fullRangePic->GetPitch((ADM_PLANE)plane);
+            uint8_t *s = GetReadPtr((ADM_PLANE)plane);
+            uint8_t *d = fullRangePic->GetWritePtr((ADM_PLANE)plane);
+            uint8_t *t = ((ADM_PLANE)plane != PLANAR_Y) ? chromaLut : lumaLut;
+            for(y = 0; y < GetHeight((ADM_PLANE)plane); y++)
+            {
+                for(x = 0; x < GetWidth((ADM_PLANE)plane); x++)
+                    d[x] = t[s[x]];
+                d += stride;
+                s += GetPitch((ADM_PLANE)plane);
+            }
+        }
     }
 
     codec=avcodec_find_encoder(AV_CODEC_ID_MJPEG);
@@ -203,7 +263,7 @@ bool  ADMImage::saveAsJpgInternal(const char *filename)
     }
 
     context->pix_fmt =AV_PIX_FMT_YUV420P;
-    context->color_range = AVCOL_RANGE_MPEG;
+    context->color_range = AVCOL_RANGE_JPEG;
     context->strict_std_compliance = -1;
     context->time_base.den=1;
     context->time_base.num=1;
@@ -224,15 +284,26 @@ bool  ADMImage::saveAsJpgInternal(const char *filename)
     frame->width=_width;
     frame->height=_height;
     frame->format=AV_PIX_FMT_YUV420P;
-    frame->color_range = AVCOL_RANGE_MPEG;
+    frame->color_range = AVCOL_RANGE_JPEG;
 
     frame->linesize[0] = GetPitch(PLANAR_Y);
     frame->linesize[2] = GetPitch(PLANAR_U);
     frame->linesize[1] = GetPitch(PLANAR_V);
 
-    frame->data[0] = GetWritePtr(PLANAR_Y);
-    frame->data[2] = GetWritePtr(PLANAR_U);
-    frame->data[1] = GetWritePtr(PLANAR_V);
+    frame->data[0] = GetReadPtr(PLANAR_Y);
+    frame->data[2] = GetReadPtr(PLANAR_U);
+    frame->data[1] = GetReadPtr(PLANAR_V);
+
+    if(_range == ADM_COL_RANGE_MPEG)
+    {
+        frame->linesize[0] = fullRangePic->GetPitch(PLANAR_Y);
+        frame->linesize[2] = fullRangePic->GetPitch(PLANAR_U);
+        frame->linesize[1] = fullRangePic->GetPitch(PLANAR_V);
+
+        frame->data[0] = fullRangePic->GetReadPtr(PLANAR_Y);
+        frame->data[2] = fullRangePic->GetReadPtr(PLANAR_U);
+        frame->data[1] = fullRangePic->GetReadPtr(PLANAR_V);
+    }
     frame->quality = (int) floor (FF_QP2LAMBDA * 2+ 0.5);
 
     // Encode!
@@ -275,6 +346,12 @@ bool  ADMImage::saveAsJpgInternal(const char *filename)
 
 // Cleanup
 jpgCleanup:
+    if(fullRangePic)
+    {
+        delete fullRangePic;
+        fullRangePic = NULL;
+    }
+
     if(context)
     {
         avcodec_free_context(&context);
@@ -328,6 +405,7 @@ bool ADMImage::saveAsPngInternal(const char *filename)
     }
 
     context->pix_fmt=AV_PIX_FMT_RGB24;
+    context->color_range = (_range == ADM_COL_RANGE_MPEG)? AVCOL_RANGE_MPEG : AVCOL_RANGE_JPEG;
     context->strict_std_compliance = -1;
     context->time_base.den=1;
     context->time_base.num=1;
@@ -389,7 +467,7 @@ bool ADMImage::saveAsPngInternal(const char *filename)
     {
         char msg[AV_ERROR_MAX_STRING_SIZE]={0};
         av_make_error_string(msg, AV_ERROR_MAX_STRING_SIZE, r);
-        ADM_error("Error %d (%s) encoding to JPEG.\n",r,msg);
+        ADM_error("Error %d (%s) encoding to PNG.\n",r,msg);
         av_packet_unref(&pkt);
         goto __cleanup;
     }
