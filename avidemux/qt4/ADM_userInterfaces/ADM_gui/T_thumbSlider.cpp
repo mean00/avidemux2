@@ -22,7 +22,7 @@ ThumbSlider::ThumbSlider(QWidget *parent) : QAbstractSlider(parent)
 	setMinimum(-100);
 	setValue(0);
 
-	count = lock = 0;
+	timerId = count = lock = pos = 0;
 }
 
 void ThumbSlider::timerEvent(QTimerEvent *event)
@@ -90,11 +90,30 @@ void ThumbSlider::mouseMoveEvent(QMouseEvent *event)
 
 void ThumbSlider::mouseReleaseEvent(QMouseEvent *event)
 {
-	killTimer(timerId);
-	setValue(0);
-	count = 0;
+	if (event->button() & Qt::LeftButton)
+	{
+		killTimer(timerId);
+		setValue(0);
+		timerId = count = pos = 0;
 
-	triggerAction(SliderNoAction);
+		triggerAction(SliderNoAction);
+	}
+}
+
+void ThumbSlider::wheelEvent(QWheelEvent *event)
+{
+	int value;
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+	value = event->delta();
+#else
+	value = event->angleDelta().ry();
+#endif
+	value /= 12;
+	pos += value;
+	setSliderPosition(pos);
+	if (!timerId)
+		timerId = startTimer(20);
+	triggerAction(SliderMove);
 }
 
 void ThumbSlider::drawBackground(QPainter *painter)

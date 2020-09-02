@@ -19,6 +19,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include <QSlider>
 
 class ThumbSlider : public QAbstractSlider
@@ -26,7 +27,7 @@ class ThumbSlider : public QAbstractSlider
 	Q_OBJECT
 
 private:
-	int timerId, count, lock;
+	int timerId, count, lock, pos;
 
 	void drawBackground(QPainter *painter);
 	void drawLines(QPainter *painter);
@@ -42,6 +43,7 @@ protected:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
+	void wheelEvent(QWheelEvent *event);
 
 signals:
 	void valueEmitted(int value);
