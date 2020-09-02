@@ -111,9 +111,22 @@ void ThumbSlider::wheelEvent(QWheelEvent *event)
 	value /= 12;
 	pos += value;
 	setSliderPosition(pos);
-	if (!timerId)
-		timerId = startTimer(20);
-	triggerAction(SliderMove);
+	if (pos)
+	{
+		if (!timerId)
+			timerId = startTimer(20);
+	}
+	else
+	{
+		if (timerId)
+			killTimer(timerId);
+		timerId = count = 0;
+	}
+
+	if (value)
+		triggerAction(SliderMove);
+	else
+		triggerAction(SliderNoAction);
 }
 
 void ThumbSlider::drawBackground(QPainter *painter)
