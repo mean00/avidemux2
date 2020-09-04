@@ -199,6 +199,7 @@ bool vdpauRender::displayImage(ADMImage *pic)
     }else
     {
         aprintf("VDPAU: This is NOT a  vdpau image, converting\n");
+        pic->shrinkColorRange();
         //printf("Blitting surface\n");
         if(VDP_STATUS_OK!=admVdpau::surfacePutBits( 
                 input,
