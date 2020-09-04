@@ -271,6 +271,7 @@ bool QtGlRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoo
 */
 bool QtGlRender::displayImage(ADMImage *pic)
 {
+    pic->shrinkColorRange();
     //printf("Gl paint\n");
     glWidget->makeCurrent();
     glWidget->setImage(pic);
