@@ -15,6 +15,9 @@
 
 #include "ADM_default.h"
 #include "ADM_image.h"
+
+static void fillLookupTables(uint8_t *luma, uint8_t *chroma, bool expand);
+
 /**
     \fn duplicateMacro
     \brief copy src to this, swapping u&v possibly
@@ -108,6 +111,88 @@ bool ADMImage::copyInfo(ADMImage *src)
     Pts=src->Pts;
     return 1;
 }
+/**
+    \fn shrinkColorRange
+    \brief Convert from JPEG to MPEG color range. No-op if the range is already limited.
+*/
+bool ADMImage::shrinkColorRange(void)
+{
+    if(!isWrittable()) return false;
+    if(_colorspace!=ADM_COLOR_YV12) return false;
+    if(_range==ADM_COL_RANGE_MPEG) return true;
+
+    static uint8_t shrinkLumaTable[256];
+    static uint8_t shrinkChromaTable[256];
+    static bool shrinkTablesDone=false;
+
+    uint8_t *lumaLut=shrinkLumaTable;
+    uint8_t *chromaLut=shrinkChromaTable;
+
+    if(!shrinkTablesDone)
+    {
+        fillLookupTables(lumaLut,chromaLut,false);
+        shrinkTablesDone=true;
+    }
+
+#define COL_RANGE_CONVERT \
+    ADMImageDefault *dst=new ADMImageDefault(_width,_height); \
+    for(int plane = 0; plane < 3; plane++) \
+    { \
+        int x,y; \
+        int stride = dst->GetPitch((ADM_PLANE)plane); \
+        uint8_t *s = _planes[plane]; \
+        uint8_t *d = dst->GetWritePtr((ADM_PLANE)plane); \
+        uint8_t *t = ((ADM_PLANE)plane != PLANAR_Y) ? chromaLut : lumaLut; \
+        for(y = 0; y < GetHeight((ADM_PLANE)plane); y++) \
+        { \
+            for(x = 0; x < GetWidth((ADM_PLANE)plane); x++) \
+                d[x] = t[s[x]]; \
+            s += _planeStride[plane]; \
+            d += stride; \
+        } \
+    } \
+    dst->copyInfo(this); \
+    duplicate(dst); \
+    delete dst; \
+    dst = NULL; \
+
+    COL_RANGE_CONVERT
+
+    _range = ADM_COL_RANGE_MPEG;
+
+    return true;
+}
+
+/**
+    \fn expandColorRange
+    \brief Convert from MPEG to JPEG color range. No-op if the range is already full.
+*/
+bool ADMImage::expandColorRange(void)
+{
+    if(!isWrittable()) return false;
+    if(_colorspace!=ADM_COLOR_YV12) return false;
+    if(_range==ADM_COL_RANGE_JPEG) return true;
+
+    static uint8_t expandLumaTable[256];
+    static uint8_t expandChromaTable[256];
+    static bool expandTablesDone=false;
+
+    uint8_t *lumaLut=expandLumaTable;
+    uint8_t *chromaLut=expandChromaTable;
+
+    if(!expandTablesDone)
+    {
+        fillLookupTables(lumaLut,chromaLut,true);
+        expandTablesDone=true;
+    }
+
+    COL_RANGE_CONVERT
+#undef COL_RANGE_CONVERT
+    _range = ADM_COL_RANGE_JPEG;
+
+    return true;
+}
+
 /**
     \fn blacken
 */
@@ -313,5 +398,54 @@ bool ADMImage::copyWithAlphaChannel(ADMImage *dest, uint32_t x,uint32_t y,uint32
                         ww,hh,mul,opacity);
     }
     return 1;
+}
+
+/**
+ *  \fn fillLookupTables
+ *  \brief Code based on ADM_vidContrast.cpp
+ */
+static void fillLookupTables(uint8_t *luma, uint8_t *chroma, bool expand)
+{
+    int i;
+    double f;
+    const double ycoef = expand? 255./(235.-16.) : (235.-16.)/255.;
+    const double ccoef = expand? 255./(240.-16.) : (240.-16.)/255.;
+
+    for(i=0; i < 256; i++)
+    {
+        f = i;
+        if(expand)
+        {
+            f -= 16.;
+            f *= ycoef;
+            if(f < 0.) f = 0.;
+            if(f > 255.) f = 255.;
+        }else
+        {
+            f *= ycoef;
+            f += 16.;
+            if(f < 16.) f = 16.;
+            if(f > 235.) f = 235.;
+        }
+        *(luma + i) = (uint8_t)f;
+
+        f = i;
+        if(expand)
+        {
+            f -= 128.;
+            f *= ccoef;
+            if(f < -127.) f = -127.;
+            if(f > 127.) f = 127.;
+            f += 128.;
+        }else
+        {
+            f -= 128.;
+            f *= ccoef;
+            if(f < -112.) f = -112.;
+            if(f > 112.) f = 112.;
+            f += 128.;
+        }
+        *(chroma + i) = (uint8_t)f;
+    }
 }
 //EOF

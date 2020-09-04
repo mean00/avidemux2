@@ -160,6 +160,8 @@ public:
         bool    copyQuantInfo(ADMImage *src);	/// copy quant table if any
         bool    isRef(void) { if(_imageType==ADM_IMAGE_REF) return true;return false;};
         bool    blacken(void);
+        bool    shrinkColorRange(void);
+        bool    expandColorRange(void);
         bool    copyTo(ADMImage *target, uint32_t x, uint32_t y);
         bool    copyToAlpha(ADMImage *target, uint32_t x, uint32_t y,uint32_t alpha);
         bool    copyWithAlphaChannel(ADMImage *target, uint32_t x, uint32_t y, uint32_t opacity=255);
