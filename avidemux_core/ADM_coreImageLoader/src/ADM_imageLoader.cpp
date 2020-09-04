@@ -104,6 +104,8 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
         }
         ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);
         converter.convertImage(source,image);
+        if(ADM_COLOR_YV12==sourceFormat && source->_range==ADM_COL_RANGE_JPEG)
+            image->shrinkColorRange();
 
         return image;
 }
