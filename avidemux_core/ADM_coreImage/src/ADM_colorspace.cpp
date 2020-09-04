@@ -316,6 +316,9 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
                 ADM_warning("Cannot set colorspace details, %s --> %s\n",strSrc,strDst);
             }
         }
+    }else
+    {
+        destImage->_range = sourceImage->_range;
     }
     sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
     return true;
