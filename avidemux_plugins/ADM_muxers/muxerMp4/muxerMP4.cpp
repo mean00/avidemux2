@@ -84,7 +84,8 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
 {
 #define FCC_IS_NOT(x) !fourCC::check(fcc,(const uint8_t *)x)
     uint32_t fcc=s->getFCC();
-    if( !isMpeg4Compatible(fcc) &&
+    if( !isMpeg12Compatible(fcc) &&
+        !isMpeg4Compatible(fcc) &&
         !isH264Compatible(fcc)  &&
         !isH265Compatible(fcc)  &&
 #ifdef MUXER_IS_MOV
@@ -100,11 +101,11 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
 #ifdef MUXER_IS_MOV
         GUI_Error_HIG(
             QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
-            QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265, AV1, DNxHD and ProRes supported for video"));
+            QT_TRANSLATE_NOOP("mp4muxer","Only MPEG-1/2/4, H264, H265, AV1, DNxHD and ProRes supported for video"));
 #else
         GUI_Error_HIG(
             QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
-            QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, H265 and AV1 supported for video"));
+            QT_TRANSLATE_NOOP("mp4muxer","Only MPEG-1/2/4, H264, H265 and AV1 supported for video"));
 #endif
         return false;
     }
