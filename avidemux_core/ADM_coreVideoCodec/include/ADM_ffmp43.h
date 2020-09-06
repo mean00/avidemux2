@@ -155,6 +155,8 @@ FF_SIMPLE_DECLARE(decoderFFPng,)
 FF_SIMPLE_DECLARE(decoderFFMpeg4, bool uncompress(ADMCompressedImage *in, ADMImage *out);
                                 // mpeg4 can have B-frame
                                 virtual bool bFramePossible (void)   {  return 1;   })
+FF_SIMPLE_DECLARE(decoderFFMpg1,
+                                virtual bool bFramePossible (void) { return true; })
 FF_SIMPLE_DECLARE(decoderFFMpeg12,
                                 // mpeg1/2 can have B-frame
                                 virtual bool bFramePossible (void)   {  return 1;
@@ -213,8 +215,8 @@ AVCodec *codec=funcz(argz);\
   _initCompleted=true; \
 }
 
-#define WRAP_Open(x)            {WRAP_Open_Template(avcodec_find_decoder,x,#x,x,;);}
-#define WRAP_OpenByName(x,y)    {WRAP_Open_Template(avcodec_find_decoder_by_name,#x,#x,y,;);}
+#define WRAP_Open(x)            {WRAP_Open_Template(avcodec_find_decoder,x,#x,x,;)}
+#define WRAP_OpenByName(x,y)    {WRAP_Open_Template(avcodec_find_decoder_by_name,#x,#x,y,;)}
 
 
 // EOF

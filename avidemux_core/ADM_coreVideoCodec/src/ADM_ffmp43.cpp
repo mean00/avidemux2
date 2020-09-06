@@ -627,6 +627,14 @@ bool decoderFFficv::uncompress(ADMCompressedImage *in, ADMImage *out)
     return false;
 }
 //************************************
+decoderFFMpg1::decoderFFMpg1(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp):
+                decoderFF(w,h,fcc,extraDataLen,extraData,bpp)
+{
+    _refCopy = 1;
+    decoderMultiThread();
+    WRAP_Open(AV_CODEC_ID_MPEG1VIDEO)
+}
+
 decoderFFMpeg12::decoderFFMpeg12 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
                 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
