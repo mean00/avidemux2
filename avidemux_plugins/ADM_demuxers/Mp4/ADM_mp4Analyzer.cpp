@@ -1501,6 +1501,28 @@ uint8_t MP4Header::decodeEsds(void *ztom,uint32_t trackType)
             {
                 uint8_t objectTypeIndication=tom->read();
                 printf("\tDecConfigDesc : Tag %u\n",objectTypeIndication);
+                if(trackType==TRACK_VIDEO)
+                {
+                    switch(objectTypeIndication)
+                    {
+                        case 0x60: // Visual ISO/IEC 13818-2 Simple Profile (MPEG-2)
+                        case 0x61: // Visual ISO/IEC 13818-2 Main Profile (MPEG-2)
+                            ADM_info("Changing FourCC from %s to MPEG (object type indication: 0x%x)\n",
+                                    fourCC::tostring(_videostream.fccHandler),
+                                    objectTypeIndication);
+                            commonPart(MPEG);
+                            break;
+                        case 0x6A: // Visual ISO/IEC 11172-2 (MPEG Video)
+                            ADM_info("Changing FourCC from %s to mpg1 (object type indication: 0x%x)\n",
+                                    fourCC::tostring(_videostream.fccHandler),
+                                    objectTypeIndication);
+                            commonPart(mpg1);
+                            break;
+                        default:
+                            ADM_warning("Object type indication 0x%x not handled\n",objectTypeIndication);
+                            break;
+                    }
+                }
                 if(trackType==TRACK_AUDIO && ADIO.encoding==WAV_AAC)
                 {
                     switch(objectTypeIndication)
@@ -1520,6 +1542,7 @@ uint8_t MP4Header::decodeEsds(void *ztom,uint32_t trackType)
                         case 0xa9:
                             ADIO.encoding=WAV_DTS;
                             break;
+                        default:break;
                     }
                 }
                 tom->skipBytes(1+3+4+4);
