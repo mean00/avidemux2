@@ -43,7 +43,8 @@ public:     // Callbacks
                     bool        initFail(void) {alive=false;return true;}
 public:
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
-                    bool        readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out);    
+                    bool        readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out);
+                    bool        isAlive(void) {return alive;}
     virtual const   char        *getName(void)        {return "LIBVA";}
                   ADM_vaSurface *lookupBySurfaceId(VASurfaceID id);
                     

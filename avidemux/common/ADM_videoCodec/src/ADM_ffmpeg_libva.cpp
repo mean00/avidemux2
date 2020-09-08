@@ -658,7 +658,14 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
 ADM_acceleratedDecoderFF *ADM_hwAccelEntryLibVA::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )
 {
     decoderFF *ff=(decoderFF *)avctx->opaque;
-    return new decoderFFLIBVA(avctx,ff);
+    decoderFFLIBVA *instance = new decoderFFLIBVA(avctx,ff);
+    if(!instance->isAlive())
+    {
+        ADM_warning("VA-API HW accel. decoder could not be initialized, destroying it.\n");
+        delete instance;
+        instance=NULL;
+    }
+    return instance;
 }
 static ADM_hwAccelEntryLibVA libvaEntry;
 /**
