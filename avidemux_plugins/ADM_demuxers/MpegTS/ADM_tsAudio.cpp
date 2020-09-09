@@ -146,6 +146,7 @@ bool ADM_tsAccess::updateExtraData(uint64_t start)
                     memcpy(extraData,data,len);
                     ADM_info("AAC ADTS extradata:\n");
                     mixDump(extraData,extraDataLen);
+                    adts.reset();
                     return true;
                 }
                 retries--;
@@ -179,6 +180,7 @@ bool ADM_tsAccess::updateExtraData(uint64_t start)
                     memcpy(extraData,data,len);
                     ADM_info("AAC LATM extradata:\n");
                     mixDump(extraData,extraDataLen);
+                    latm.flush();
                     return true;
                 }
              }
@@ -196,6 +198,7 @@ bool ADM_tsAccess::updateExtraData(uint64_t start)
 bool      ADM_tsAccess::goToTime(uint64_t timeUs)
 {
     latm.flush();
+    adts.reset();
     if(!seekPoints.size())
         return false;
 
