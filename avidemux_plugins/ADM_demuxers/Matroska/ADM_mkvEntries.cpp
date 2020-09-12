@@ -390,7 +390,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
       father.readElemId(&id,&len);
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
-        printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
+        printf("[MKV/entryWalk] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
         father.skip(len);
         continue;
       }

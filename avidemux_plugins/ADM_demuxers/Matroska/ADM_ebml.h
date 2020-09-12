@@ -14,7 +14,7 @@ class ADM_ebml
 {
   protected:
         uint64_t  _fileSize;
-        
+        uint64_t  _zerobytes;
   public:
         ADM_ebml  *_root;
         uint32_t  _refCount;                

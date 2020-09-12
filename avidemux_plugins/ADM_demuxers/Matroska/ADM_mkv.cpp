@@ -802,10 +802,11 @@ bool mkvHeader::analyzeTracks(ADM_ebml_file *parser)
     ADM_ebml_file father( parser,len);
     while(!father.finished())
     {
-      father.readElemId(&id,&len);
+      if(!father.readElemId(&id,&len))
+        continue;
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
-        printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
+        printf("[mkvHeader::analyzeTracks] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
         father.skip(len);
         continue;
       }
@@ -833,10 +834,11 @@ uint8_t mkvHeader::walk(void *seed)
    ADM_ebml_file *father=(ADM_ebml_file *)seed;
     while(!father->finished())
    {
-      father->readElemId(&id,&len);
+      if(!father->readElemId(&id,&len))
+        continue;
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
-        printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
+        printf("[mkvHeader::walk] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
         father->skip(len);
         continue;
       }
@@ -883,10 +885,11 @@ uint64_t mkvHeader::walkAndFind(void *seed,MKV_ELEM_ID searched)
   uint64_t value=0;
     while(!father->finished())
    {
-      father->readElemId(&id,&len);
+      if(!father->readElemId(&id,&len))
+        continue;
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
-        printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
+        printf("[mkvHeader::walkAndFind] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
         father->skip(len);
         continue;
       }
@@ -1230,7 +1233,11 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body, uint64_t *nexthead)
         ADM_MKV_TYPE type;
         const char *ss;
 
-        item.readElemId(&id,&len);
+        if(!item.readElemId(&id,&len))
+        {
+            ADM_warning("Invalid data\n");
+            return false;
+        }
         if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
         {
           printf("[MKV/SeekHead] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
@@ -1245,13 +1252,22 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body, uint64_t *nexthead)
         }
         // read id
         uint64_t t=item.readEBMCode_Full();
+        if(!t)
+        {
+            ADM_warning("Invalid data\n");
+            return false;
+        }
         if(!ADM_searchMkvTag( (MKV_ELEM_ID)t,&ss,&type))
         {
           printf("[MKV/SeekHead] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
           return false;
         }
         ADM_info("Found entry for %s\n",ss);
-        item.readElemId(&id,&len);
+        if(!item.readElemId(&id,&len))
+        {
+            ADM_warning("Invalid data\n");
+            return false;
+        }
         if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
         {
           printf("[MKV/SeekHead] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);

@@ -34,14 +34,20 @@
 
 
 /*
+    \fn readElemId
+    \brief Always check the return value!
   It is slow , optimize later
 */
 
 uint8_t    ADM_ebml::readElemId(uint64_t *code,uint64_t *len)
 {
-  *code=readEBMCode_Full(); // Keep the length-bits, easier to match with documentation
-  *len=readEBMCode();
-  return 1;
+    uint64_t c=readEBMCode_Full(); // Keep the length-bits, easier to match with documentation
+    if(!c) return 0;
+    *code=c;
+    c=readEBMCode();
+    if(!c) return 0;
+    *len=c;
+    return 1;
 }
 
 /**
@@ -58,9 +64,12 @@ uint64_t    ADM_ebml::readEBMCode(void)
   aprintf("Start :%x at %llx\n",start,tell()-1);
   if(!start)
   {
-        ADM_warning("Corruped EBML code\n");
+        if(!_zerobytes)
+            ADM_warning("Corrupted EBML code at 0x%llx\n",tell()-1);
+        _zerobytes++;
         return 0;
   }
+  _zerobytes=0;
   while(!(mask&start))
   {
     mask>>=1;
@@ -125,9 +134,12 @@ uint64_t    ADM_ebml::readEBMCode_Full(void)
   aprintf(">>StartFull :%x at %llx\n",start,tell()-1);
   if(!start)
   {
-        ADM_warning("Corrupted EBML entry!\n");
+        if(!_zerobytes)
+            ADM_warning("Corrupted EBML code at 0x%llx\n",tell()-1);
+        _zerobytes++;
         return 0;
   }
+  _zerobytes=0;
   while(!(mask&start))
   {
     mask>>=1;
@@ -184,13 +196,15 @@ uint8_t     ADM_ebml::readString(char *string, uint32_t maxLen)
 uint8_t ADM_ebml::readu8(void)
 {
   uint8_t v;
-    readBin(&v,1);
+    if(!readBin(&v,1))
+        return 0;
     return v;
 }
 uint16_t ADM_ebml::readu16(void)
 {
   uint8_t v[2];
-    readBin(v,2);
+    if(!readBin(v,2))
+        return 0;
     return (uint16_t)(v[0]<<8)+v[1];
 }
 /**
@@ -219,7 +233,7 @@ float       ADM_ebml::readFloat(uint32_t n)
 
 ADM_ebml::ADM_ebml(void)
 {
-
+    _zerobytes=0;
 }
 ADM_ebml::~ADM_ebml()
 {
@@ -429,7 +443,8 @@ bool ADM_ebml_file::simpleFindContainerOf(MKV_ELEM_ID  prim,bool rewind,uint64_t
       {
           //printf("Offset is %d\n",(int)(this->tell()>>10));
           pos=this->tell();
-          readElemId(&id,&alen);
+          if(!readElemId(&id,&alen))
+              continue;
           if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
           {
               vprintf("[MKV] Tag 0x%x not found\n",id);

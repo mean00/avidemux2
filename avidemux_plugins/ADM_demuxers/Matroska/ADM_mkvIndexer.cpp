@@ -63,7 +63,6 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
     {
         parser->seek(_clusters[clusters].pos);
         ADM_ebml_file cluster(parser,_clusters[clusters].size);
-        int thiscluster=0;
         while(!cluster.finished())
         {
             if(!work->isAlive())
@@ -72,10 +71,11 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
                 break;
             }
             work->update(clusters,nbClusters);
-            cluster.readElemId(&id,&len);
+            if(!cluster.readElemId(&id,&len))
+                break;
             if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
             {
-                printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
+                printf("[MKV] Cluster %d, tag 0x%" PRIx64" at 0x%llx not found (len %" PRIu64")\n",clusters,id,cluster.tell()-2,len);
                 cluster.skip(len);
                 continue;
             }
@@ -96,10 +96,11 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
                     ADM_ebml_file blockGroup(parser,len);
                     while(!blockGroup.finished())
                     {
-                        blockGroup.readElemId(&id,&len);
+                        if(!blockGroup.readElemId(&id,&len))
+                            break;
                         if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
                         {
-                            printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
+                            printf("[MKV] Block group in cluster %d, tag 0x%" PRIx64" at 0x%llx not found (len %" PRIu64")\n",clusters,id,blockGroup.tell()-2,len);
                             blockGroup.skip(len);
                             continue;
                         }
@@ -114,14 +115,13 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
                                 break;
                         }
                     }
-                    thiscluster++;
                 }
                 break; // Block Group
             }
         }
    // printf("[MKV] ending cluster at 0x%llx\n",segment.tell());
     }
-    printf("Found %" PRIu32" images in this cluster\n",(uint32_t)VIDEO.index.size());
+    printf("Found %" PRIu32" images in this video\n",(uint32_t)VIDEO.index.size());
     delete work;
     delete [] readBuffer;
     readBuffer=NULL;
@@ -462,10 +462,11 @@ bool mkvHeader::readCue(ADM_ebml_file *parser)
     ADM_ebml_file cues(parser,vlen);
     while(!cues.finished())
     {
-        cues.readElemId(&id,&len);
+        if(!cues.readElemId(&id,&len))
+            continue;
         if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
         {
-            printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
+            printf("[MKV] Tag 0x%" PRIx64" in CUES not found (len %" PRIu64")\n",id,len);
             cues.skip(len);
             continue;
         }
@@ -477,7 +478,8 @@ bool mkvHeader::readCue(ADM_ebml_file *parser)
         }
         ADM_ebml_file cue(&cues,len);
         // Cue TIME normally
-        cue.readElemId(&id,&len);
+        if(!cue.readElemId(&id,&len))
+            continue;
         if(id!=MKV_CUE_TIME)
         {
             ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
@@ -487,7 +489,8 @@ bool mkvHeader::readCue(ADM_ebml_file *parser)
         }
         time=cue.readUnsignedInt(len);
 
-        cue.readElemId(&id,&len);
+        if(!cue.readElemId(&id,&len))
+            continue;
         if(id!=MKV_CUE_TRACK_POSITION)
         {
             ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
@@ -501,7 +504,8 @@ bool mkvHeader::readCue(ADM_ebml_file *parser)
         uint64_t cue_position=0;
         while(!trackPos.finished())
         {
-            trackPos.readElemId(&id,&len);
+            if(!trackPos.readElemId(&id,&len))
+                continue;
             switch(id)
             {
                 case MKV_CUE_TRACK: tid=trackPos.readUnsignedInt(len);break;
@@ -584,7 +588,8 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
      // Normally the timecode is the 1st one following
 
 tryAgain:
-        segment.readElemId(&id,&len);
+        if(!segment.readElemId(&id,&len))
+            continue;
         switch(id)
         {
             case MKV_CRC32:
