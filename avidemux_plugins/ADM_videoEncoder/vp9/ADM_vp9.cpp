@@ -351,11 +351,11 @@ again:
     }else
     {
         pic->planes[VPX_PLANE_Y] = YPLANE(image);
-        pic->planes[VPX_PLANE_U] = VPLANE(image);
-        pic->planes[VPX_PLANE_V] = UPLANE(image);
+        pic->planes[VPX_PLANE_U] = UPLANE(image);
+        pic->planes[VPX_PLANE_V] = VPLANE(image);
         pic->stride[VPX_PLANE_Y] = image->GetPitch(PLANAR_Y);
-        pic->stride[VPX_PLANE_U] = image->GetPitch(PLANAR_V);
-        pic->stride[VPX_PLANE_V] = image->GetPitch(PLANAR_U);
+        pic->stride[VPX_PLANE_U] = image->GetPitch(PLANAR_U);
+        pic->stride[VPX_PLANE_V] = image->GetPitch(PLANAR_V);
         pic->bit_depth = 8;
 
         pts=image->Pts;

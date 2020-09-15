@@ -174,6 +174,8 @@ again:
     {
         if(source->getNextFrame(&nb,image))
         {
+            if(image->_range==ADM_COL_RANGE_JPEG)
+                image->shrinkColorRange();
             // 2-preamble
             if(false==preAmble(image))
             {
@@ -251,8 +253,8 @@ bool  x264Encoder::preAmble (ADMImage * in)
       pic.img.i_csp = X264_CSP_I420;
       pic.img.i_plane = 3;
       pic.img.plane[0] = YPLANE(in);
-      pic.img.plane[2] = UPLANE(in);
-      pic.img.plane[1] = VPLANE(in);
+      pic.img.plane[1] = UPLANE(in);
+      pic.img.plane[2] = VPLANE(in);
       pic.img.i_stride[0] = in->GetPitch(PLANAR_Y);
       pic.img.i_stride[1] = in->GetPitch(PLANAR_U);
       pic.img.i_stride[2] = in->GetPitch(PLANAR_V);

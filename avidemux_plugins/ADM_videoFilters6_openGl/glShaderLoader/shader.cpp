@@ -177,8 +177,8 @@ bool shaderLoader::getNextFrame(uint32_t *fn,ADMImage *image)
     // size is the last one...
     fboY->bind();
 
-    glProgramY->setUniformValue("myTextureU", 1);
-    glProgramY->setUniformValue("myTextureV", 2);
+    glProgramY->setUniformValue("myTextureU", 2);
+    glProgramY->setUniformValue("myTextureV", 1);
     glProgramY->setUniformValue("myTextureY", 0);
     glProgramY->setUniformValue("myResolution", (GLfloat)info.width,(GLfloat)info.height);
 

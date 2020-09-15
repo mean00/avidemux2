@@ -320,8 +320,8 @@ int             ADMImage::GetWidth(ADM_PLANE plane)
 bool            ADMImage::GetPitches(int *pitches) 
 {
     pitches[0]=GetPitch(PLANAR_Y);
-    pitches[1]=GetPitch(PLANAR_U);
-    pitches[2]=GetPitch(PLANAR_V);
+    pitches[1]=GetPitch(PLANAR_V);
+    pitches[2]=GetPitch(PLANAR_U);
     return true;
 }
 /**
@@ -332,8 +332,8 @@ bool            ADMImage::GetPitches(int *pitches)
 bool            ADMImage::GetWritePlanes(uint8_t **planes) 
 {
     planes[0]=GetWritePtr(PLANAR_Y);
-    planes[1]=GetWritePtr(PLANAR_U);
-    planes[2]=GetWritePtr(PLANAR_V);
+    planes[1]=GetWritePtr(PLANAR_V);
+    planes[2]=GetWritePtr(PLANAR_U);
     return true;
 }
 /**
@@ -344,8 +344,8 @@ bool            ADMImage::GetWritePlanes(uint8_t **planes)
 bool            ADMImage::GetReadPlanes(uint8_t **planes) 
 {
     planes[0]=GetReadPtr(PLANAR_Y);
-    planes[1]=GetReadPtr(PLANAR_U);
-    planes[2]=GetReadPtr(PLANAR_V);
+    planes[1]=GetReadPtr(PLANAR_V);
+    planes[2]=GetReadPtr(PLANAR_U);
     return true;
 }
 

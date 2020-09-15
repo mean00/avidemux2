@@ -134,8 +134,8 @@ bool openGlResize::getNextFrame(uint32_t *fn,ADMImage *image)
     fboY->bind();
     checkGlError("bind");
     uploadAllPlanes(original);
-    glProgramY->setUniformValue("myTextureU", 1); 
-    glProgramY->setUniformValue("myTextureV", 2); 
+    glProgramY->setUniformValue("myTextureU", 2);
+    glProgramY->setUniformValue("myTextureV", 1);
     glProgramY->setUniformValue("myTextureY", 0); 
     render(image,PLANAR_Y,fboY);
     downloadTextures(image,fboY);

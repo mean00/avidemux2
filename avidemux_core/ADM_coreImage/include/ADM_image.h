@@ -46,8 +46,8 @@ typedef enum
 typedef enum
 {
         PLANAR_Y=0,
-        PLANAR_U=1,
-        PLANAR_V=2,
+        PLANAR_V=1,
+        PLANAR_U=2,
         PLANAR_ALPHA=3,
         PLANAR_LAST=3 // Alpha is not a real channel
 

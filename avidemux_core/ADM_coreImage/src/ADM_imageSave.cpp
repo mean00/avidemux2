@@ -230,12 +230,12 @@ bool  ADMImage::saveAsJpgInternal(const char *filename)
     frame->color_range = AVCOL_RANGE_JPEG;
 
     frame->linesize[0] = GetPitch(PLANAR_Y);
-    frame->linesize[2] = GetPitch(PLANAR_U);
-    frame->linesize[1] = GetPitch(PLANAR_V);
+    frame->linesize[1] = GetPitch(PLANAR_U);
+    frame->linesize[2] = GetPitch(PLANAR_V);
 
     frame->data[0] = GetReadPtr(PLANAR_Y);
-    frame->data[2] = GetReadPtr(PLANAR_U);
-    frame->data[1] = GetReadPtr(PLANAR_V);
+    frame->data[1] = GetReadPtr(PLANAR_U);
+    frame->data[2] = GetReadPtr(PLANAR_V);
 
     frame->quality = (int) floor (FF_QP2LAMBDA * 2+ 0.5);
 

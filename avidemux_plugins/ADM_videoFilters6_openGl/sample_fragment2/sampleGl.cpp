@@ -124,8 +124,8 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
     float angle=*fn;
     angle=angle/40;
     glProgramY->setUniformValue("teta", angle);     
-    glProgramY->setUniformValue("myTextureU", 1); 
-    glProgramY->setUniformValue("myTextureV", 2); 
+    glProgramY->setUniformValue("myTextureU", 2);
+    glProgramY->setUniformValue("myTextureV", 1);
     glProgramY->setUniformValue("myTextureY", 0); 
     glProgramY->setUniformValue("myWidth", (GLfloat)image->GetWidth(PLANAR_Y)); 
     glProgramY->setUniformValue("myHeight", (GLfloat)image->GetHeight(PLANAR_Y)); 

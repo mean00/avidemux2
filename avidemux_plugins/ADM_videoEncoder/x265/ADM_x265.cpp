@@ -263,8 +263,8 @@ bool  x265Encoder::preAmble (ADMImage * in)
     MMSET(pic);
       pic.colorSpace = X265_CSP_I420;
       pic.planes[0] = YPLANE(in);
-      pic.planes[2] = UPLANE(in);
-      pic.planes[1] = VPLANE(in);
+      pic.planes[1] = UPLANE(in);
+      pic.planes[2] = VPLANE(in);
       pic.stride[0] = in->GetPitch(PLANAR_Y);
       pic.stride[1] = in->GetPitch(PLANAR_U);
       pic.stride[2] = in->GetPitch(PLANAR_V);
