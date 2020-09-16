@@ -60,7 +60,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     _context->width = _w;
     _context->height = _h;
     _context->pix_fmt = AV_PIX_FMT_YUV420P;
-    
+    _context->codec_tag = fcc;
     _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; 
     _context->error_concealment=3; 
     // Hack
