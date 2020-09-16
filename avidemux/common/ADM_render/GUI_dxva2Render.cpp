@@ -435,10 +435,10 @@ static bool  ADMImage_To_yv12Surface(ADMImage *pic, IDirect3DSurface9 *surface)
   d3dBlit(pic, PLANAR_Y,dst,dStride,width,height);
 
   dst+=height*dStride;
-  d3dBlit(pic, PLANAR_U,dst,dStride>>1,width>>1,height>>1);
+  d3dBlit(pic, PLANAR_V, dst, dStride>>1, width>>1, height>>1);
 
   dst+=(height/2)*(dStride/2);
-  d3dBlit(pic, PLANAR_V,dst,dStride>>1,width>>1,height>>1);
+  d3dBlit(pic, PLANAR_U, dst, dStride>>1, width>>1, height>>1);
 
   if (ADM_FAILED(D3DCallNoArg(IDirect3DSurface9,UnlockRect,surface)))
   {
