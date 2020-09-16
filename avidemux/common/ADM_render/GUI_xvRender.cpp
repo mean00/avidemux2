@@ -113,9 +113,9 @@ bool XvRender::displayImage(ADMImage *src)
         XLockDisplay (xv_display);
         int plane=xvimage->pitches[0]*imageHeight;
         int plane2=xvimage->pitches[1]*(imageHeight>>1);
-        BitBlit((uint8_t *)xvimage->data, xvimage->pitches[0],src->GetReadPtr(PLANAR_Y),src->GetPitch(PLANAR_Y),imageWidth,imageHeight);
-        BitBlit((uint8_t *)xvimage->data+plane,  xvimage->pitches[1],src->GetReadPtr(PLANAR_U),src->GetPitch(PLANAR_U),imageWidth/2,imageHeight/2);
-        BitBlit((uint8_t *)xvimage->data+plane+plane2,  xvimage->pitches[2],src->GetReadPtr(PLANAR_V),src->GetPitch(PLANAR_V),imageWidth/2,imageHeight/2);
+        BitBlit((uint8_t *)xvimage->data, xvimage->pitches[0], src->GetReadPtr(PLANAR_Y), src->GetPitch(PLANAR_Y), imageWidth, imageHeight);
+        BitBlit((uint8_t *)xvimage->data+plane, xvimage->pitches[1], src->GetReadPtr(PLANAR_V), src->GetPitch(PLANAR_V), imageWidth/2, imageHeight/2);
+        BitBlit((uint8_t *)xvimage->data+plane+plane2, xvimage->pitches[2], src->GetReadPtr(PLANAR_U), src->GetPitch(PLANAR_U), imageWidth/2, imageHeight/2);
         XUnlockDisplay (xv_display);
         xvDraw(imageWidth,imageHeight,displayWidth,displayHeight);
     }
