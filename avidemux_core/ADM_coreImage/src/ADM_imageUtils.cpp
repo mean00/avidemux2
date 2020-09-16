@@ -392,10 +392,10 @@ bool    ADMImage::interleaveUVtoNV12(uint8_t *target, int targetStride)
         int h=_height/2;
 #if defined(ADM_CPU_X86) && 1
         if(CpuCaps::hasMMX())
-            uv_to_nv12_mmx(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),targetStride,target);
+            uv_to_nv12_mmx(w,h,GetPitch(PLANAR_V),GetPitch(PLANAR_U),GetWritePtr(PLANAR_V),GetWritePtr(PLANAR_U),targetStride,target);
         else
 #endif
-            uv_to_nv12_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetReadPtr(PLANAR_U),GetReadPtr(PLANAR_V),targetStride,target);
+            uv_to_nv12_c(w,h,GetPitch(PLANAR_V),GetPitch(PLANAR_U),GetReadPtr(PLANAR_V),GetReadPtr(PLANAR_U),targetStride,target);
         return true;
 }
 /**
