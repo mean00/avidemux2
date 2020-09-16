@@ -289,6 +289,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                                     return false;
                                                 }
                                                 par->codec_id=cid;
+                                                par->codec_tag=id;
                                             }
                                         }
                         }
