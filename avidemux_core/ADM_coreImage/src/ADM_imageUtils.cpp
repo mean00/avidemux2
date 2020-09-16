@@ -326,10 +326,10 @@ bool    ADMImage::convertFromNV12(uint8_t *yData, uint8_t *uvData, int strideY, 
 
         #if defined(ADM_CPU_X86) && 1
                 if(CpuCaps::hasMMX())
-                    nv12_to_uv_mmx(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
+                    nv12_to_uv_mmx(w,h,GetPitch(PLANAR_V),GetPitch(PLANAR_U),GetWritePtr(PLANAR_V),GetWritePtr(PLANAR_U),strideUV,uvData);
                 else
         #endif
-                    nv12_to_uv_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
+                    nv12_to_uv_c(w,h,GetPitch(PLANAR_V),GetPitch(PLANAR_U),GetWritePtr(PLANAR_V),GetWritePtr(PLANAR_U),strideUV,uvData);
 
 
 
