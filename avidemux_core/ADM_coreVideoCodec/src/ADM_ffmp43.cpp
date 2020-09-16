@@ -557,8 +557,11 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   case   AV_PIX_FMT_P010LE:      
         out->_colorspace= ADM_COLOR_NV12_10BITS;
         break;
-  case  AV_PIX_FMT_YUV420P10LE      :  
+  case  AV_PIX_FMT_YUV420P10LE:
         out->_colorspace=ADM_COLOR_YV12_10BITS;
+        break;
+  case  AV_PIX_FMT_YUV444P12LE:
+        out->_colorspace=ADM_COLOR_YUV444_12BITS;
         break;
     default:
       printf ("[lavc] Unhandled colorspace: %d (AV_PIX_FMT_YUV444P10BE=%d)\n", _context->pix_fmt,AV_PIX_FMT_YUV444P10BE);
