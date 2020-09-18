@@ -89,6 +89,11 @@ uint8_t audioDeviceThreaded::init(uint32_t channel, uint32_t fq ,CHANNEL_TYPE *c
     char *str2=outgoing;
     *str1=*str2=0;
     const CHANNEL_TYPE *outgoingMapping=getWantedChannelMapping(_channels);
+    if(!outgoingMapping)
+    {
+        ADM_error("No valid channel mapping from audio device.\n");
+        return 0;
+    }
     for(int i=0;i<_channels;i++)
     {
         sprintf(chnl,"    %s\n",ADM_printChannel(incomingMapping[i]));
