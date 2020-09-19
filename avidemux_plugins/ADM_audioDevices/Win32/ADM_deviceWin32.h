@@ -10,7 +10,7 @@
 //
 //
 #pragma once
-#define NB_BUCKET 32
+#define NB_BUCKET 2
 
 
 class win32AudioDevice : public audioDeviceThreaded

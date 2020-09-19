@@ -24,15 +24,11 @@
 #define  markTime(...) {}
 #else
 #define aprintf printf
-#define  markTime markTime
+#define markTime markTime_
 #endif
 
 
 ADM_DECLARE_AUDIODEVICE(Win32,win32AudioDevice,1,0,0,"Win32 audio device (c) mean");
-/**
-    \fn ctor
-*/
-
 
 static void markTime_(const char *s)
 {
@@ -43,6 +39,9 @@ static void markTime_(const char *s)
 #endif
 }
 
+/**
+    \fn ctor
+*/
 win32AudioDevice::win32AudioDevice(void)
 {
     ADM_info("[Win32] Creating audio device\n");
@@ -184,7 +183,6 @@ int win32AudioDevice::findFreeBucket()
 */
 void win32AudioDevice::sendData(void)
 {
-    uint8_t success = 0;
     mutex.lock();
     uint32_t len=wrIndex-rdIndex;
     mutex.unlock();
@@ -240,13 +238,8 @@ void win32AudioDevice::sendData(void)
     markTime("exit");
 }
 
-/**
-    \fn getWantedChannelMapping
-*/
 const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
 const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
-const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
-                                             ADM_CH_LFE,ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT};
 /**
     \fn getWantedChannelMapping
 */
@@ -254,11 +247,9 @@ const CHANNEL_TYPE *win32AudioDevice::getWantedChannelMapping(uint32_t channels)
 {
     switch(channels)
     {
-        case 1: return mono;break;
-        case 2: return stereo;break;
-        default:
-                return fiveDotOne;
-                break;
+        case 1: return mono;
+        case 2: return stereo;
+        default:break;
     }
     return NULL;
 }
