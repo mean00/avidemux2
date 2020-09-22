@@ -45,8 +45,8 @@ public:
         switch(i)
         {
              case PLANAR_Y: src=in->data;break;
-             case PLANAR_U: src=in->data+plane;break;
-             case PLANAR_V: src=in->data+((plane*5)>>2);break;
+             case PLANAR_V: src=in->data+plane;break;
+             case PLANAR_U: src=in->data+((plane*5)>>2);break;
         }
         BitBlit(dest, pitch,src,line,line,colmn);
     }
