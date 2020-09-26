@@ -20,11 +20,13 @@ void PythonScriptWriter::addExternalAudioTrack(int trackIndex,const char *file)
     *(this->_stream) << "adm.audioAddExternal(\"" << file << "\")" << std::endl;
 }
 void PythonScriptWriter::addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track)
-{	
+{
+    *(this->_stream) << "if adm.audioTotalTracksCount() <= " << track->poolIndex << ":" << std::endl;
+    *(this->_stream) << "    raise(\"Cannot add audio track " << track->poolIndex << ", total tracks: \" + str(adm.audioTotalTracksCount()))" << std::endl;
     *(this->_stream) << "adm.audioAddTrack(" << track->poolIndex << ")" << std::endl;
     *(this->_stream) << "adm.audioCodec(" << trackIndex << ", \"" << encoder->codecName << "\"";
     this->dumpConfCouple(track->encoderConf);
-    *(this->_stream) << ");" << std::endl;
+    *(this->_stream) << ")" << std::endl;
 }
 
 void PythonScriptWriter::addSegment(uint32_t videoIndex, uint64_t startTime, uint64_t duration)
