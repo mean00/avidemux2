@@ -27,6 +27,7 @@ int pyAddAudioTrack(IEditor *editor, int poolindex);
 int pyAddExternal(IEditor *editor, const char *fileName);
 int pyClearAudioTracks(IEditor *editor);
 int pyGetNumberOfAudioTracks(IEditor *editor);
+int pyGetNumberOfAvailableAudioTracks(IEditor *editor);
 /* Audio filters */
 int pySetAudioShift(IEditor *editor,int track, int onoff, int value);
 int pyGetAudioShift(IEditor *editor,int track, int *onoff, int *value);

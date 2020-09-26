@@ -71,13 +71,24 @@ int pyGetAudioChannels(IEditor *editor,int dex)
 	return h.channels;
 }
 /**
-    \fn pyGetAudioChannels
-    \brief
+    \fn pyGetNumberOfAudioTracks
+    \brief Get the number of active audio tracks
 */
-
 int pyGetNumberOfAudioTracks(IEditor *editor)
 {
-        return editor->getNumberOfActiveAudioTracks();
+    return editor->getNumberOfActiveAudioTracks();
+}
+
+/**
+    \fn pyGetNumberOfAvailableAudioTracks
+    \brief Get the total number of audio tracks including disabled ones
+*/
+int pyGetNumberOfAvailableAudioTracks(IEditor *editor)
+{
+    PoolOfAudioTracks *alltracks = editor->getPoolOfAudioTrack();
+    if(alltracks)
+        return alltracks->size();
+    return 0;
 }
 /**
     \fn

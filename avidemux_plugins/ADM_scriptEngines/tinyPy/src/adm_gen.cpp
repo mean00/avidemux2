@@ -75,6 +75,19 @@ static tp_obj zzpy_audioTracksCount(TP)
   int r =   pyGetNumberOfAudioTracks(p0); 
   return tp_number(r);
 }
+// audioTotalTracksCount -> int pyGetNumberOfAvailableAudioTracks (IEditor ) 
+static tp_obj zzpy_audioTotalTracksCount(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int r =   pyGetNumberOfAvailableAudioTracks(p0); 
+  return tp_number(r);
+}
 // audioResetFilter -> void editor->resetAudioFilter (int ) 
 static tp_obj zzpy_audioResetFilter(TP)
  {
@@ -640,6 +653,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   if (!strcmp(key, "audioTracksCount"))
   {
      return tp_method(vm, self, zzpy_audioTracksCount);
+  }
+  if (!strcmp(key, "audioTotalTracksCount"))
+  {
+     return tp_method(vm, self, zzpy_audioTotalTracksCount);
   }
   if (!strcmp(key, "audioResetFilter"))
   {
