@@ -1884,7 +1884,17 @@ int UI_RunApp(void)
     setupMenus();
     QuiTaskBarProgress->setParent(QuiMainWindows);
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt,&abortExitHandler);
-    
+#ifdef USE_DXVA2
+    /* After d3d probing on startup, the host frame holding the video window
+    cannot be shrunk to zero size unless the main window is resized, becoming
+    visible as a white square if the main window is minimized and restored. */
+    {
+        int w = QuiMainWindows->width();
+        int h = QuiMainWindows->height();
+        QuiMainWindows->resize(w+1,h);
+        QuiMainWindows->resize(w,h);
+    }
+#endif
     ADM_info("Load default settings if any... \n");          
     A_loadDefaultSettings();
     UI_applySettings();
