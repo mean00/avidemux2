@@ -960,6 +960,9 @@ void MainWindow::setMenuItemsEnabledState(void)
     // which in turn may initiate unwanted zoom changes e.g. when stopping playback
     // or loading a video with small dimensions, so ignore just this one resize event
     ignoreResizeEvent = true;
+    // en passant reset frame type label if no video is loaded
+    if(!vid)
+        ui.label_8->setText(QT_TRANSLATE_NOOP("qgui2","?"));
 }
 
 /**
