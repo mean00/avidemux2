@@ -21,9 +21,13 @@ install_deps()
     echo "You will be asked to enter your password because installing build dependencies requires root permissions"
     # gcc, g++ and make get installed as dependencies of build-essential
     sudo apt-get update && sudo apt-get install build-essential cmake pkg-config yasm \
-    libsqlite3-dev libfontconfig1-dev libfribidi-dev libxv-dev libvdpau-dev libva-dev libasound2-dev libpulse-dev \
+    libsqlite3-dev \
+    libxv-dev libvdpau-dev libva-dev \
+    libasound2-dev libpulse-dev \
     qttools5-dev-tools qtbase5-dev \
-    libpng-dev libmp3lame-dev libx264-dev libxvidcore-dev libfaad-dev libopus-dev libvorbis-dev libogg-dev libdca-dev \
+    libx264-dev libxvidcore-dev \
+    libmp3lame-dev libtwolame-dev libopus-dev libvorbis-dev libogg-dev \
+    libpng-dev libfontconfig1-dev libfribidi-dev \
     || { echo "The installation at least of some of the build dependencies failed. Aborting." && exit 2; }
     # we don't fail if the following packages cannot be installed
     sudo apt-get install libaften-dev \
