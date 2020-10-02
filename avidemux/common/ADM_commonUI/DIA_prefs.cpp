@@ -549,9 +549,9 @@ std::string currentSdlDriver=getSdlDriverName();
         useOpenGl.enable(false);
 #endif
 
+        uint8_t dialogAccepted=0;
         if( diaFactoryRunTabsFinish(factoryCookiez))
-	{
-        	//
+        {
 #ifdef USE_OPENGL
             prefs->set(FEATURES_ENABLE_OPENGL,hasOpenGl);
 #endif
@@ -677,7 +677,8 @@ std::string currentSdlDriver=getSdlDriverName();
             setSdlDriverByName(driverName);
             prefs->set(FEATURES_SDLDRIVER,driverName.c_str());
 #endif
-	}
+            dialogAccepted=1;
+        }
 #ifdef USE_SDL
         if(sdlMenu)
         {
@@ -708,6 +709,6 @@ std::string currentSdlDriver=getSdlDriverName();
         delete [] languagesMenuItems;
 
 
-	return 1;
+        return dialogAccepted;
 }
 //EOF
