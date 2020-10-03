@@ -418,14 +418,12 @@ bool ADMImage::convertFromYUV444(uint8_t *from)
     #endif
             yuv444_C(src,dst,width,height,stride,4*width);
 
-
-    //
-    stride=this->GetPitch(PLANAR_U);
-    width=this->GetWidth(PLANAR_U);
-    height=this->GetHeight(PLANAR_U);
-    dst=this->GetWritePtr(PLANAR_U);
-    int stride2=this->GetPitch(PLANAR_V);
-    uint8_t * dst2=this->GetWritePtr(PLANAR_V);
+    stride=this->GetPitch(PLANAR_V);
+    width=this->GetWidth(PLANAR_V);
+    height=this->GetHeight(PLANAR_V);
+    dst=this->GetWritePtr(PLANAR_V);
+    int stride2=this->GetPitch(PLANAR_U);
+    uint8_t * dst2=this->GetWritePtr(PLANAR_U);
     src=from+0;
     #ifdef ADM_CPU_X86
         if(  CpuCaps::hasMMX())
