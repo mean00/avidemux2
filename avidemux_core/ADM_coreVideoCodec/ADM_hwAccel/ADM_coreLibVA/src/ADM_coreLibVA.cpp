@@ -1103,54 +1103,7 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADM_vaSurface *f
     CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));
     return true;
 }
-/**
- * \fn copyNV12
- * @param ptr
- * @param dest
- * @param src
- */
-static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
-{
-          int w=src->_width;
 
-         int h=src->_height;
-         int dstStride= dest->pitches[0];
-         int srcStride= src->GetPitch(PLANAR_Y);
-         uint8_t *s=    src->GetReadPtr(PLANAR_Y);
-         uint8_t *d=    ptr+dest->offsets[0];
-         for(int y=0;y<h;y++)
-         {
-                memcpy(d,s,w);
-                s+=srcStride;
-                d+=dstStride;
-         }
-
-        w=w/2;
-        h=h/2;
-        uint8_t *srcu=src->GetReadPtr(PLANAR_U);
-        uint8_t *srcv=src->GetReadPtr(PLANAR_V);
-        int     uStride=src->GetPitch(PLANAR_U);
-        int     vStride=src->GetPitch(PLANAR_V);
-                dstStride=dest->pitches[1];
-        uint8_t *dstPtr= ptr+dest->offsets[1];
-        for(int y=0;y<h;y++)
-        {
-                uint8_t *ssrcu=srcu;
-                uint8_t *ssrcv=srcv;
-                uint8_t *d=dstPtr;
-
-                srcu+=uStride;
-                srcv+=vStride;
-                dstPtr+=dstStride;
-
-                for(int x=0;x<w;x++)
-                {
-                    d[0]=*ssrcv++;
-                    d[1]=*ssrcu++;
-                    d+=2;
-                }
-        }
-}
 /**
  * \fn uploadToSurface
  * @param src
@@ -1202,7 +1155,7 @@ bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
                 }
                 break;
             case VA_FOURCC_NV12:
-                copyNV12(ptr,&vaImage,src);
+                src->convertToNV12(ptr+vaImage.offsets[0], ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);
                 break;
             default:
                 ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
