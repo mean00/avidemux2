@@ -276,6 +276,7 @@ bool x265Dialog::upload(void)
           toogleAdvancedConfiguration(myCopy.useAdvancedConfiguration);
           MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
+          MK_CHECKBOX(rectInterCheckBox,rect_inter);
           MK_CHECKBOX(trellisCheckBox,trellis);
           MK_UINT(psychoRdoSpinBox,psy_rd);
           if(myCopy.trellis)
@@ -471,6 +472,7 @@ bool x265Dialog::download(void)
           MK_CHECKBOX(useAdvancedConfigurationCheckBox,useAdvancedConfiguration);
           MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
+          MK_CHECKBOX(rectInterCheckBox,rect_inter);
 
           if (ui.interlacedCheckBox->isChecked()) {
                   myCopy.interlaced_mode = ui.interlacedComboBox->currentIndex() + 1;

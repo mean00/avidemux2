@@ -1227,6 +1227,13 @@
             </property>
            </widget>
           </item>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="rectInterCheckBox">
+            <property name="text">
+             <string>Rectangular Motion Partitions</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0">
            <layout class="QGridLayout">
             <item row="0" column="0">
@@ -3611,6 +3618,7 @@
   <tabstop>weightedPPredictComboBox</tabstop>
   <tabstop>weightedPredictCheckBox</tabstop>
   <tabstop>constrainedIntraCheckBox</tabstop>
+  <tabstop>rectInterCheckBox</tabstop>
   <tabstop>loopFilterCheckBox</tabstop>
   <tabstop>openGopCheckBox</tabstop>
   <tabstop>interlacedCheckBox</tabstop>
