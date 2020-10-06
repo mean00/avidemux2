@@ -82,7 +82,11 @@ static const aspectRatio predefinedARs[]={
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
+#if X265_BUILD > 173
 static const char* listOfTunings[] = { "none", "psnr", "ssim", "grain", "zerolatency", "fastdecode", "animation" };
+#else
+static const char* listOfTunings[] = { "none", "psnr", "ssim", "grain", "zerolatency", "fastdecode" };
+#endif
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
 static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
