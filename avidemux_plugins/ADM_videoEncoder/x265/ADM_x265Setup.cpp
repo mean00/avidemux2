@@ -201,6 +201,7 @@ bool x265Encoder::setup(void)
 
     MKPARAM(bEnableWeightedPred,weighted_pred)
     MKPARAMB(bEnableWeightedBiPred,weighted_bipred)
+    MKPARAMB(bEnableRectInter,rect_inter)
 
     MKPARAMB(bEnableLoopFilter,b_deblocking_filter)
     MKPARAMB(bEnableEarlySkip,fast_pskip)
@@ -363,13 +364,13 @@ void dumpx265Setup(x265_param *param)
     PI(maxNumMergeCand);
     PI(bEnableWeightedPred);
     PI(bEnableWeightedBiPred);
+    PI(bEnableRectInter);
     
     printf("*************************************\n");
     printf("***        Analysis Tools         ***\n");
     printf("*************************************\n");
     
     PI(bEnableAMP);
-    PI(bEnableRectInter);
 #if X265_BUILD < 45
     PI(bEnableCbfFastMode);
 #endif

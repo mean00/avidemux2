@@ -82,7 +82,7 @@ static const aspectRatio predefinedARs[]={
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
-static const char* listOfTunings[] = { "none", "psnr", "ssim", "grain", "zerolatency", "fastdecode" };
+static const char* listOfTunings[] = { "none", "psnr", "ssim", "grain", "zerolatency", "fastdecode", "animation" };
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
 static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
@@ -276,6 +276,7 @@ bool x265Dialog::upload(void)
           toogleAdvancedConfiguration(myCopy.useAdvancedConfiguration);
           MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
+          MK_CHECKBOX(rectInterCheckBox,rect_inter);
           MK_CHECKBOX(trellisCheckBox,trellis);
           MK_UINT(psychoRdoSpinBox,psy_rd);
           if(myCopy.trellis)
@@ -471,6 +472,7 @@ bool x265Dialog::download(void)
           MK_CHECKBOX(useAdvancedConfigurationCheckBox,useAdvancedConfiguration);
           MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
+          MK_CHECKBOX(rectInterCheckBox,rect_inter);
 
           if (ui.interlacedCheckBox->isChecked()) {
                   myCopy.interlaced_mode = ui.interlacedComboBox->currentIndex() + 1;
