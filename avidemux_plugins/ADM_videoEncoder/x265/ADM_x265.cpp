@@ -41,6 +41,7 @@ x265_settings x265Settings = X265_DEFAULT_CONF;
 x265Encoder::x265Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoder(src)
 {
     ADM_info("[x265] Creating with globalHeader=%d\n",globalHeader);
+    api=NULL;
     handle=NULL;
     extraData=NULL;
     extraDataLen=0;
@@ -124,7 +125,7 @@ bool x265Encoder::createHeader (void)
   x265_nal *nal;
   uint32_t nalCount;
 
-    extraDataLen = x265_encoder_headers(handle, &nal, &nalCount);
+    extraDataLen = api->encoder_headers(handle, &nal, &nalCount);
     extraData = new uint8_t[extraDataLen];
     bool idr;
     extraDataLen = encodeNals(extraData, extraDataLen, nal, nalCount, true,idr);
@@ -139,8 +140,8 @@ x265Encoder::~x265Encoder()
     ADM_info("[x265] Destroying.\n");
     if (handle)
     {
-      x265_encoder_close (handle);
-      handle = NULL;
+        api->encoder_close(handle);
+        handle = NULL;
     }
     
     if(extraData)
@@ -205,14 +206,14 @@ again:
       x265_nal          *nal;
       uint32_t          nbNal = 0;
       x265_picture      pic_out;
-      x265_picture_init(&param,&pic_out);
+      api->picture_init(&param,&pic_out);
       out->flags = 0;
       
         int er;
         if(false==gotFrame)     
         {
             ADM_info("Flushing delayed frames\n");
-            er=x265_encoder_encode (handle, &nal, &nbNal, NULL, &pic_out);
+            er = api->encoder_encode(handle, &nal, &nbNal, NULL, &pic_out);
             if(er<=0)
             {
                 ADM_info ("End of flush\n");
@@ -220,7 +221,7 @@ again:
             }
         }else 
         {
-            er=x265_encoder_encode (handle, &nal, &nbNal, &pic, &pic_out);
+            er = api->encoder_encode(handle, &nal, &nbNal, &pic, &pic_out);
             if(er<0)
             {
               ADM_error ("[x265] Error encoding %d\n",er);

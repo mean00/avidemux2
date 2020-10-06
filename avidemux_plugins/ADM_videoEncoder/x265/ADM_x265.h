@@ -108,6 +108,7 @@ class x265Encoder : public ADM_coreVideoEncoder
 protected:
                x265_param      param;
                x265_encoder    *handle;
+         const x265_api        *api;
                x265_picture    pic;
                int             plane;
                bool            globalHeader;

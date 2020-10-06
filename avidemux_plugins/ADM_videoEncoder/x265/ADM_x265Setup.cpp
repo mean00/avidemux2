@@ -39,7 +39,15 @@ bool x265Encoder::setup(void)
   ADM_info("=============x265, setting up==============\n");
   MMSET(param);
 
-  x265_param_default( &param);
+  if(!x265Settings.useAdvancedConfiguration && x265Settings.general.profile == std::string("main10"))
+        api = x265_api_get(10);
+  else
+        api = x265_api_get(8);
+  if(!api)
+        api = x265_api_get(0);
+  ADM_assert(api);
+
+  api->param_default(&param);
   firstIdr=true;
   image=new ADMImageDefault(getWidth(),getHeight());
 
@@ -48,10 +56,10 @@ bool x265Encoder::setup(void)
   {
     if(x265Settings.general.tuning == std::string("none"))
     {
-        x265_param_default_preset(&param, x265Settings.general.preset.c_str(), NULL);
+        api->param_default_preset(&param, x265Settings.general.preset.c_str(), NULL);
     }else
     {
-        x265_param_default_preset(&param, x265Settings.general.preset.c_str(), x265Settings.general.tuning.c_str());
+        api->param_default_preset(&param, x265Settings.general.preset.c_str(), x265Settings.general.tuning.c_str());
     }
   }
   param.logLevel=x265Settings.level; 
@@ -75,7 +83,7 @@ bool x265Encoder::setup(void)
   param.sourceWidth = getWidth();
   param.sourceHeight = getHeight();
   param.internalCsp = X265_CSP_I420;
-  param.internalBitDepth = 8;
+  param.internalBitDepth = api->bit_depth;
   param.logLevel=X265_LOG_INFO; //DEBUG; //INFO;
 
   //Framerate
@@ -258,12 +266,12 @@ bool x265Encoder::setup(void)
 
   if(!x265Settings.useAdvancedConfiguration)
   {
-    x265_param_apply_profile(&param, x265Settings.general.profile.c_str());
+    api->param_apply_profile(&param, x265Settings.general.profile.c_str());
   }
 
   dumpx265Setup(&param);
   ADM_info("Creating x265 encoder\n");
-  handle = x265_encoder_open (&param);
+  handle = api->encoder_open (&param);
   if (!handle)
   {
     ADM_error("Cannot initialize x265\n");
