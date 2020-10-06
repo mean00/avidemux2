@@ -33,6 +33,7 @@ extern const ADM_paramList x265_settings_param[]={
  {"me_range",offsetof(x265_settings,me_range),"uint32_t",ADM_param_uint32_t},
  {"subpel_refine",offsetof(x265_settings,subpel_refine),"uint32_t",ADM_param_uint32_t},
  {"trellis",offsetof(x265_settings,trellis),"uint32_t",ADM_param_uint32_t},
+ {"rd_level",offsetof(x265_settings,rd_level),"uint32_t",ADM_param_uint32_t},
  {"psy_rd",offsetof(x265_settings,psy_rd),"double",ADM_param_double},
  {"fast_pskip",offsetof(x265_settings,fast_pskip),"bool",ADM_param_bool},
  {"dct_decimate",offsetof(x265_settings,dct_decimate),"bool",ADM_param_bool},

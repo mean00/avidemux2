@@ -39,6 +39,7 @@ uint32_t me_method;
 uint32_t me_range;
 uint32_t subpel_refine;
 uint32_t trellis;
+uint32_t rd_level;
 double psy_rd;
 bool fast_pskip;
 bool dct_decimate;

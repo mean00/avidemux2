@@ -1796,9 +1796,47 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
+             <widget class="QLabel" name="lblRDO">
+              <property name="text">
+               <string>Rate Distortion Optimisation:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_15">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </spacer>
+            </item>
+            <item>
              <widget class="QLabel" name="lblPsychoRDO">
               <property name="text">
-               <string>Psychovisual Rate Distortion Optimisation:</string>
+               <string>Level:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="rdoSpinBox">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>6</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_16">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblRDOLevel">
+              <property name="text">
+               <string>Psycho-visual Strength:</string>
               </property>
              </widget>
             </item>
@@ -3654,6 +3692,7 @@
   <tabstop>trellisComboBox</tabstop>
   <tabstop>fastPSkipCheckBox</tabstop>
   <tabstop>dctDecimateCheckBox</tabstop>
+  <tabstop>rdoSpinBox</tabstop>
   <tabstop>psychoRdoSpinBox</tabstop>
   <tabstop>noiseReductionSpinBox</tabstop>
   <tabstop>matrixFlatRadioButton</tabstop>

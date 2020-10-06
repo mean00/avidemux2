@@ -74,6 +74,7 @@ extern "C"
     16, /*   uint32_t me_range */ \
     5, /*    uint32_t subpel_refine */ \
     1, /*    uint32_t trellis */ \
+    3, /*       uint32_t rd_level */ \
     1.0, /*     float psy_rd */ \
     true, /*    bool fast_pskip */ \
     true, /*    bool dct_decimate */ \

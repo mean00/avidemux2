@@ -278,6 +278,7 @@ bool x265Dialog::upload(void)
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
           MK_CHECKBOX(rectInterCheckBox,rect_inter);
           MK_CHECKBOX(trellisCheckBox,trellis);
+          MK_UINT(rdoSpinBox,rd_level);
           MK_UINT(psychoRdoSpinBox,psy_rd);
           if(myCopy.trellis)
           {
@@ -529,6 +530,7 @@ bool x265Dialog::download(void)
 
           MK_UINT(mvRangeSpinBox,me_range);
 
+          MK_UINT(rdoSpinBox,rd_level);
           MK_UINT(psychoRdoSpinBox,psy_rd);
           
 #if X265_BUILD >= 40

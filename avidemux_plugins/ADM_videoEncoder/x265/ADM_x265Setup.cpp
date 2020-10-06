@@ -208,6 +208,7 @@ bool x265Encoder::setup(void)
     MKPARAMB(bEnableEarlySkip,fast_pskip)
     MKPARAMB(bEnableTSkipFast,dct_decimate)
 
+    MKPARAM (rdLevel,rd_level)
     MKPARAMD(psyRd,psy_rd)
     MKPARAM (cbQpOffset,cb_chroma_offset)
     MKPARAM (crQpOffset,cr_chroma_offset)
