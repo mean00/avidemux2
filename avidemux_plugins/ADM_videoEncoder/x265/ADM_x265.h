@@ -63,6 +63,7 @@ extern "C"
     1, /* bool b_open_gop */ \
     0, /* uint32_t interlaced_mode */ \
     false, /* bool constrained_intra */ \
+    true, /* bool b_intra */ \
     40,	/* uint32_t lookahead; */ \
     2, /*    uint32_t weighted_pred */ \
     1, /*    bool weighted_bipred */ \

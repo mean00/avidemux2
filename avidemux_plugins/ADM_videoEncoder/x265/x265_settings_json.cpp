@@ -31,6 +31,7 @@ json.addBool("b_deblocking_filter",key->b_deblocking_filter);
 json.addBool("b_open_gop",key->b_open_gop);
 json.addUint32("interlaced_mode",key->interlaced_mode);
 json.addBool("constrained_intra",key->constrained_intra);
+json.addBool("b_intra",key->b_intra);
 json.addUint32("lookahead",key->lookahead);
 json.addUint32("weighted_pred",key->weighted_pred);
 json.addBool("weighted_bipred",key->weighted_bipred);

@@ -194,6 +194,7 @@ bool x265Encoder::setup(void)
     MKPARAM(lookaheadDepth,lookahead)
     MKPARAM(scenecutThreshold,i_scenecut_threshold)
     MKPARAMB(bEnableConstrainedIntra,constrained_intra)
+    MKPARAMB(bIntraInBFrames,b_intra)
 
     MKPARAM(searchMethod,me_method)
     MKPARAM(subpelRefine,subpel_refine)
@@ -352,6 +353,7 @@ void dumpx265Setup(x265_param *param)
     printf("*************************************\n");
     
     PI(bEnableConstrainedIntra);
+    PI(bIntraInBFrames);
     PI(bEnableStrongIntraSmoothing);
     
     printf("*************************************\n");
@@ -401,7 +403,6 @@ void dumpx265Setup(x265_param *param)
     
     PI(cbQpOffset);
     PI(crQpOffset);
-    PI(bIntraInBFrames);
     
 #if X265_BUILD >= 40
     PI(noiseReductionIntra);

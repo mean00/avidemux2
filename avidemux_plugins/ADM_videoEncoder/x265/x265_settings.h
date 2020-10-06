@@ -28,6 +28,7 @@ bool b_deblocking_filter;
 bool b_open_gop;
 uint32_t interlaced_mode;
 bool constrained_intra;
+bool b_intra;
 uint32_t lookahead;
 uint32_t weighted_pred;
 bool weighted_bipred;

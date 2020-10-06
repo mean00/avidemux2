@@ -324,6 +324,7 @@ bool x265Dialog::upload(void)
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
           MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
+          MK_CHECKBOX(bIntraCheckBox,b_intra);
 
           MK_UINT(mvRangeSpinBox,me_range);
 
@@ -495,6 +496,7 @@ bool x265Dialog::download(void)
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
           MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
+          MK_CHECKBOX(bIntraCheckBox,b_intra);
 
           MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
           
