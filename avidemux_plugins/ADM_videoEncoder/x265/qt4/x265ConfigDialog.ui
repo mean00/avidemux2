@@ -1214,11 +1214,29 @@
          </property>
          <layout class="QGridLayout">
           <item row="2" column="0">
-           <widget class="QCheckBox" name="weightedPredictCheckBox">
-            <property name="text">
-             <string>Weighted Prediction for B-frames</string>
-            </property>
-           </widget>
+           <layout class="QGridLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="lblBPredict">
+              <property name="text">
+               <string>Prediction for B-frames:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QCheckBox" name="weightedPredictCheckBox">
+              <property name="text">
+               <string>Weighted Prediction</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QCheckBox" name="bIntraCheckBox">
+              <property name="text">
+               <string>Intra Prediction</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item row="3" column="0">
            <widget class="QCheckBox" name="constrainedIntraCheckBox">
@@ -1407,6 +1425,27 @@
                </spacer>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_56">
+              <property name="text">
+               <string>Limit References by:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="limitRefCUCheckBox">
+              <property name="text">
+               <string>CU</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="limitRefDepthCheckBox">
+              <property name="text">
+               <string>Depth</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -1778,9 +1817,47 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
+             <widget class="QLabel" name="lblRDO">
+              <property name="text">
+               <string>Rate Distortion Optimisation:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_15">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </spacer>
+            </item>
+            <item>
              <widget class="QLabel" name="lblPsychoRDO">
               <property name="text">
-               <string>Psychovisual Rate Distortion Optimisation:</string>
+               <string>Level:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="rdoSpinBox">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>6</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_16">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblRDOLevel">
+              <property name="text">
+               <string>Psycho-visual Strength:</string>
               </property>
              </widget>
             </item>
@@ -3618,12 +3695,15 @@
   <tabstop>weightedPPredictComboBox</tabstop>
   <tabstop>weightedPredictCheckBox</tabstop>
   <tabstop>constrainedIntraCheckBox</tabstop>
+  <tabstop>bIntraCheckBox</tabstop>
   <tabstop>rectInterCheckBox</tabstop>
   <tabstop>loopFilterCheckBox</tabstop>
   <tabstop>openGopCheckBox</tabstop>
   <tabstop>interlacedCheckBox</tabstop>
   <tabstop>interlacedComboBox</tabstop>
   <tabstop>refFramesSpinBox</tabstop>
+  <tabstop>limitRefCUCheckBox</tabstop>
+  <tabstop>limitRefDepthCheckBox</tabstop>
   <tabstop>maxBFramesSpinBox</tabstop>
   <tabstop>BFrameBiasSpinBox</tabstop>
   <tabstop>adaptiveBFrameComboBox</tabstop>
@@ -3635,6 +3715,7 @@
   <tabstop>trellisComboBox</tabstop>
   <tabstop>fastPSkipCheckBox</tabstop>
   <tabstop>dctDecimateCheckBox</tabstop>
+  <tabstop>rdoSpinBox</tabstop>
   <tabstop>psychoRdoSpinBox</tabstop>
   <tabstop>noiseReductionSpinBox</tabstop>
   <tabstop>matrixFlatRadioButton</tabstop>

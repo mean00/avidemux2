@@ -202,10 +202,12 @@ bool x265Encoder::setup(void)
     MKPARAM(lookaheadDepth,lookahead)
     MKPARAM(scenecutThreshold,i_scenecut_threshold)
     MKPARAMB(bEnableConstrainedIntra,constrained_intra)
+    MKPARAMB(bIntraInBFrames,b_intra)
 
     MKPARAM(searchMethod,me_method)
     MKPARAM(subpelRefine,subpel_refine)
     MKPARAM(searchRange,me_range)
+    MKPARAM(limitReferences,limit_refs)
 
     MKPARAM(bEnableWeightedPred,weighted_pred)
     MKPARAMB(bEnableWeightedBiPred,weighted_bipred)
@@ -215,6 +217,7 @@ bool x265Encoder::setup(void)
     MKPARAMB(bEnableEarlySkip,fast_pskip)
     MKPARAMB(bEnableTSkipFast,dct_decimate)
 
+    MKPARAM (rdLevel,rd_level)
     MKPARAMD(psyRd,psy_rd)
     MKPARAM (cbQpOffset,cb_chroma_offset)
     MKPARAM (crQpOffset,cr_chroma_offset)
@@ -360,6 +363,7 @@ void dumpx265Setup(x265_param *param)
     printf("*************************************\n");
     
     PI(bEnableConstrainedIntra);
+    PI(bIntraInBFrames);
     PI(bEnableStrongIntraSmoothing);
     
     printf("*************************************\n");
@@ -370,6 +374,7 @@ void dumpx265Setup(x265_param *param)
     PI(subpelRefine);
     PI(searchRange);
     PI(maxNumMergeCand);
+    PI(limitReferences);
     PI(bEnableWeightedPred);
     PI(bEnableWeightedBiPred);
     PI(bEnableRectInter);
@@ -409,7 +414,6 @@ void dumpx265Setup(x265_param *param)
     
     PI(cbQpOffset);
     PI(crQpOffset);
-    PI(bIntraInBFrames);
     
 #if X265_BUILD >= 40
     PI(noiseReductionIntra);

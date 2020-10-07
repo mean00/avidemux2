@@ -125,6 +125,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.quantiserSlider, SIGNAL(valueChanged(int)), this, SLOT(quantiserSlider_valueChanged(int)));
         connect(ui.meSlider, SIGNAL(valueChanged(int)), this, SLOT(meSlider_valueChanged(int)));
         connect(ui.quantiserSpinBox, SIGNAL(valueChanged(int)), this, SLOT(quantiserSpinBox_valueChanged(int)));
+        connect(ui.refFramesSpinBox, SIGNAL(valueChanged(int)), this, SLOT(refFramesSpinBox_valueChanged(int)));
         connect(ui.maxBFramesSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxBFramesSpinBox_valueChanged(int)));
         connect(ui.bFrameRefComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(bFrameRefComboBox_currentIndexChanged(int)));
         connect(ui.meSpinBox, SIGNAL(valueChanged(int)), this, SLOT(meSpinBox_valueChanged(int)));
@@ -282,6 +283,7 @@ bool x265Dialog::upload(void)
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
           MK_CHECKBOX(rectInterCheckBox,rect_inter);
           MK_CHECKBOX(trellisCheckBox,trellis);
+          MK_UINT(rdoSpinBox,rd_level);
           MK_UINT(psychoRdoSpinBox,psy_rd);
           if(myCopy.trellis)
           {
@@ -299,6 +301,8 @@ bool x265Dialog::upload(void)
 
           MK_UINT(maxBFramesSpinBox,MaxBFrame);
           MK_UINT(refFramesSpinBox,MaxRefFrames);
+          MK_CHECKBOX(limitRefDepthCheckBox,limit_refs & X265_REF_LIMIT_DEPTH);
+          MK_CHECKBOX(limitRefCUCheckBox,limit_refs & X265_REF_LIMIT_CU);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
           MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
@@ -328,6 +332,7 @@ bool x265Dialog::upload(void)
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
           MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
+          MK_CHECKBOX(bIntraCheckBox,b_intra);
 
           MK_UINT(mvRangeSpinBox,me_range);
 
@@ -488,6 +493,8 @@ bool x265Dialog::download(void)
 
           MK_UINT(maxBFramesSpinBox,MaxBFrame);
           MK_UINT(refFramesSpinBox,MaxRefFrames);
+          myCopy.limit_refs = (ui.limitRefDepthCheckBox->isChecked() ? X265_REF_LIMIT_DEPTH : 0) |
+                              (ui.limitRefCUCheckBox->isChecked() ? X265_REF_LIMIT_CU : 0);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
           MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
@@ -499,6 +506,7 @@ bool x265Dialog::download(void)
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
           MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
+          MK_CHECKBOX(bIntraCheckBox,b_intra);
 
           MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
           
@@ -531,6 +539,7 @@ bool x265Dialog::download(void)
 
           MK_UINT(mvRangeSpinBox,me_range);
 
+          MK_UINT(rdoSpinBox,rd_level);
           MK_UINT(psychoRdoSpinBox,psy_rd);
           
 #if X265_BUILD >= 40
@@ -666,6 +675,14 @@ void x265Dialog::meSlider_valueChanged(int value)
 void x265Dialog::quantiserSpinBox_valueChanged(int value)
 {
 	ui.quantiserSlider->setValue(value);
+}
+
+void x265Dialog::refFramesSpinBox_valueChanged(int value)
+{
+    // Limiting reference frames doesn't have an effect when they are already limited to 1
+    const bool enable = value > 1;
+    ui.limitRefDepthCheckBox->setEnabled(enable);
+    ui.limitRefCUCheckBox->setEnabled(enable);
 }
 
 void x265Dialog::maxBFramesSpinBox_valueChanged(int value)

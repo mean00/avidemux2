@@ -63,6 +63,7 @@ extern "C"
     1, /* bool b_open_gop */ \
     0, /* uint32_t interlaced_mode */ \
     false, /* bool constrained_intra */ \
+    true, /* bool b_intra */ \
     40,	/* uint32_t lookahead; */ \
     2, /*    uint32_t weighted_pred */ \
     1, /*    bool weighted_bipred */ \
@@ -72,7 +73,9 @@ extern "C"
     3, /*    uint32_t me_method */ \
     16, /*   uint32_t me_range */ \
     5, /*    uint32_t subpel_refine */ \
+    0x03, /* uint32_t limit_refs */ \
     1, /*    uint32_t trellis */ \
+    3, /*       uint32_t rd_level */ \
     1.0, /*     float psy_rd */ \
     true, /*    bool fast_pskip */ \
     true, /*    bool dct_decimate */ \
