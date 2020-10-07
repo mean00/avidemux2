@@ -1426,6 +1426,27 @@
               </item>
              </layout>
             </item>
+            <item>
+             <widget class="QLabel" name="label_56">
+              <property name="text">
+               <string>Limit References by:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="limitRefCUCheckBox">
+              <property name="text">
+               <string>CU</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="limitRefDepthCheckBox">
+              <property name="text">
+               <string>Depth</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
@@ -3681,6 +3702,8 @@
   <tabstop>interlacedCheckBox</tabstop>
   <tabstop>interlacedComboBox</tabstop>
   <tabstop>refFramesSpinBox</tabstop>
+  <tabstop>limitRefCUCheckBox</tabstop>
+  <tabstop>limitRefDepthCheckBox</tabstop>
   <tabstop>maxBFramesSpinBox</tabstop>
   <tabstop>BFrameBiasSpinBox</tabstop>
   <tabstop>adaptiveBFrameComboBox</tabstop>

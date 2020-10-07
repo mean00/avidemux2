@@ -38,6 +38,7 @@ private slots:
         void useAdvancedConfigurationCheckBox_toggled(bool checked);
         void meSpinBox_valueChanged(int value);
         void meSlider_valueChanged(int value);
+        void refFramesSpinBox_valueChanged(int value);
         void maxBFramesSpinBox_valueChanged(int value);
         void bFrameRefComboBox_currentIndexChanged(int index);
         void encodingModeComboBox_currentIndexChanged(int index);

@@ -199,6 +199,7 @@ bool x265Encoder::setup(void)
     MKPARAM(searchMethod,me_method)
     MKPARAM(subpelRefine,subpel_refine)
     MKPARAM(searchRange,me_range)
+    MKPARAM(limitReferences,limit_refs)
 
     MKPARAM(bEnableWeightedPred,weighted_pred)
     MKPARAMB(bEnableWeightedBiPred,weighted_bipred)
@@ -365,6 +366,7 @@ void dumpx265Setup(x265_param *param)
     PI(subpelRefine);
     PI(searchRange);
     PI(maxNumMergeCand);
+    PI(limitReferences);
     PI(bEnableWeightedPred);
     PI(bEnableWeightedBiPred);
     PI(bEnableRectInter);
