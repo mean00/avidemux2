@@ -1270,6 +1270,13 @@
             </item>
            </layout>
           </item>
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="limitInterModesCheckBox">
+            <property name="text">
+             <string>Limit Motion Partition Modes</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0">
            <layout class="QGridLayout">
             <item row="0" column="0">
@@ -3668,6 +3675,7 @@
   <tabstop>constrainedIntraCheckBox</tabstop>
   <tabstop>rectInterCheckBox</tabstop>
   <tabstop>AMPInterCheckBox</tabstop>
+  <tabstop>limitInterModesCheckBox</tabstop>
   <tabstop>loopFilterCheckBox</tabstop>
   <tabstop>openGopCheckBox</tabstop>
   <tabstop>interlacedCheckBox</tabstop>

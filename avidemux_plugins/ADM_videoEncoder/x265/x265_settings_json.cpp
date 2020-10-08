@@ -37,6 +37,7 @@ json.addUint32("weighted_pred",key->weighted_pred);
 json.addBool("weighted_bipred",key->weighted_bipred);
 json.addBool("rect_inter",key->rect_inter);
 json.addBool("amp_inter",key->amp_inter);
+json.addBool("limit_modes",key->limit_modes);
 json.addUint32("cb_chroma_offset",key->cb_chroma_offset);
 json.addUint32("cr_chroma_offset",key->cr_chroma_offset);
 json.addUint32("me_method",key->me_method);

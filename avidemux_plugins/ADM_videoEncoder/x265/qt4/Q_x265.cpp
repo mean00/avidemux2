@@ -289,6 +289,7 @@ bool x265Dialog::upload(void)
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
           MK_CHECKBOX(rectInterCheckBox,rect_inter);
           MK_CHECKBOX(AMPInterCheckBox,amp_inter);
+          MK_CHECKBOX(limitInterModesCheckBox,limit_modes);
           MK_UINT(rdoSpinBox,rd_level);
           MK_UINT(psychoRdoSpinBox,psy_rd);
           MK_UINT(rdoqSpinBox,rdoq_level);
@@ -475,6 +476,7 @@ bool x265Dialog::download(void)
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
           MK_CHECKBOX(rectInterCheckBox,rect_inter);
           MK_CHECKBOX(AMPInterCheckBox,amp_inter);
+          MK_CHECKBOX(limitInterModesCheckBox,limit_modes);
 
           if (ui.interlacedCheckBox->isChecked()) {
                   myCopy.interlaced_mode = ui.interlacedComboBox->currentIndex() + 1;
@@ -659,9 +661,11 @@ void x265Dialog::quantiserSpinBox_valueChanged(int value)
 void x265Dialog::rectInterCheckBox_toggled(bool checked)
 {
     ui.AMPInterCheckBox->setEnabled(checked);
+    ui.limitInterModesCheckBox->setEnabled(checked);
     if(!checked)
     {
         ui.AMPInterCheckBox->setChecked(false);
+        ui.limitInterModesCheckBox->setChecked(false);
     }
 }
 
