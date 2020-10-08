@@ -130,6 +130,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.bFrameRefComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(bFrameRefComboBox_currentIndexChanged(int)));
         connect(ui.meSpinBox, SIGNAL(valueChanged(int)), this, SLOT(meSpinBox_valueChanged(int)));
         connect(ui.targetRateControlSpinBox, SIGNAL(valueChanged(int)), this, SLOT(targetRateControlSpinBox_valueChanged(int)));
+        connect(ui.rdoqSpinBox, SIGNAL(valueChanged(int)), this, SLOT(rdoqSpinBox_valueChanged(int)));
         connect(ui.cuTreeCheckBox, SIGNAL(toggled(bool)), this, SLOT(cuTreeCheckBox_toggled(bool)));
         connect(ui.aqVarianceCheckBox, SIGNAL(toggled(bool)), this, SLOT(aqVarianceCheckBox_toggled(bool)));
 #if 0
@@ -198,6 +199,9 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         }
 
         upload();
+
+        rdoqSpinBox_valueChanged(ui.rdoqSpinBox->value());
+
         ADM_pluginInstallSystem( std::string("x265"),std::string("json"),pluginVersion);
         updatePresetList();
 #if defined(__APPLE__) && QT_VERSION == QT_VERSION_CHECK(5,13,0)
@@ -284,6 +288,8 @@ bool x265Dialog::upload(void)
           MK_CHECKBOX(rectInterCheckBox,rect_inter);
           MK_UINT(rdoSpinBox,rd_level);
           MK_UINT(psychoRdoSpinBox,psy_rd);
+          MK_UINT(rdoqSpinBox,rdoq_level);
+          MK_UINT(psychoRdoqSpinBox,psy_rdoq); /* double, not uint, but setValue() is the same */
 
           if (myCopy.interlaced_mode > 0) {
         	  ui.interlacedCheckBox->setChecked(true);
@@ -536,6 +542,8 @@ bool x265Dialog::download(void)
 
           MK_UINT(rdoSpinBox,rd_level);
           MK_UINT(psychoRdoSpinBox,psy_rd);
+          MK_UINT(rdoqSpinBox,rdoq_level);
+          MK_UINT(psychoRdoqSpinBox,psy_rdoq); /* double, not uint, but value() is the same */
           
 #if X265_BUILD >= 40
           MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
@@ -720,6 +728,14 @@ void x265Dialog::targetRateControlSpinBox_valueChanged(int value)
 		lastVideoSize = value;
 	else
 		lastBitrate = value;
+}
+
+void x265Dialog::rdoqSpinBox_valueChanged(int value)
+{
+	const bool enable = value >= 1;
+
+	ui.lblPsyRDOQ->setEnabled(enable);
+	ui.psychoRdoqSpinBox->setEnabled(enable);
 }
 
 void x265Dialog::cuTreeCheckBox_toggled(bool checked)

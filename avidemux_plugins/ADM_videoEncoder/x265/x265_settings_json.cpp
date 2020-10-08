@@ -44,6 +44,8 @@ json.addUint32("subpel_refine",key->subpel_refine);
 json.addUint32("limit_refs",key->limit_refs);
 json.addUint32("rd_level",key->rd_level);
 json.addDouble("psy_rd",key->psy_rd);
+json.addUint32("rdoq_level",key->rdoq_level);
+json.addDouble("psy_rdoq",key->psy_rdoq);
 json.addBool("fast_pskip",key->fast_pskip);
 json.addBool("dct_decimate",key->dct_decimate);
 json.addUint32("noise_reduction",key->noise_reduction);
