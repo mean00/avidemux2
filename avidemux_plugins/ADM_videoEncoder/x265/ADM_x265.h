@@ -68,6 +68,7 @@ extern "C"
     2, /*    uint32_t weighted_pred */ \
     1, /*    bool weighted_bipred */ \
     0, /*    bool rect_inter */ \
+    0, /*    bool amp_inter */ \
     0, /*    uint32_t cb_chroma_offset */ \
     0, /*    uint32_t cr_chroma_offset */ \
     3, /*    uint32_t me_method */ \

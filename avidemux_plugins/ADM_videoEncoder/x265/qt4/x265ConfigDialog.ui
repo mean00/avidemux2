@@ -1246,11 +1246,29 @@
            </widget>
           </item>
           <item row="4" column="0">
-           <widget class="QCheckBox" name="rectInterCheckBox">
-            <property name="text">
-             <string>Rectangular Motion Partitions</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QLabel" name="lblMParts">
+              <property name="text">
+               <string>Motion Partitions:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="rectInterCheckBox">
+              <property name="text">
+               <string>Rectangular</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="AMPInterCheckBox">
+              <property name="text">
+               <string>Asymmetric</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item row="1" column="0">
            <layout class="QGridLayout">
@@ -3646,9 +3664,10 @@
   <tabstop>mvRangeSpinBox</tabstop>
   <tabstop>weightedPPredictComboBox</tabstop>
   <tabstop>weightedPredictCheckBox</tabstop>
-  <tabstop>constrainedIntraCheckBox</tabstop>
   <tabstop>bIntraCheckBox</tabstop>
+  <tabstop>constrainedIntraCheckBox</tabstop>
   <tabstop>rectInterCheckBox</tabstop>
+  <tabstop>AMPInterCheckBox</tabstop>
   <tabstop>loopFilterCheckBox</tabstop>
   <tabstop>openGopCheckBox</tabstop>
   <tabstop>interlacedCheckBox</tabstop>

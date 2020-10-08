@@ -33,6 +33,7 @@ uint32_t lookahead;
 uint32_t weighted_pred;
 bool weighted_bipred;
 bool rect_inter;
+bool amp_inter;
 uint32_t cb_chroma_offset;
 uint32_t cr_chroma_offset;
 uint32_t me_method;

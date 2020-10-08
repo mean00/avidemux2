@@ -27,6 +27,7 @@ extern const ADM_paramList x265_settings_param[]={
  {"weighted_pred",offsetof(x265_settings,weighted_pred),"uint32_t",ADM_param_uint32_t},
  {"weighted_bipred",offsetof(x265_settings,weighted_bipred),"bool",ADM_param_bool},
  {"rect_inter",offsetof(x265_settings,rect_inter),"bool",ADM_param_bool},
+ {"amp_inter",offsetof(x265_settings,amp_inter),"bool",ADM_param_bool},
  {"cb_chroma_offset",offsetof(x265_settings,cb_chroma_offset),"uint32_t",ADM_param_uint32_t},
  {"cr_chroma_offset",offsetof(x265_settings,cr_chroma_offset),"uint32_t",ADM_param_uint32_t},
  {"me_method",offsetof(x265_settings,me_method),"uint32_t",ADM_param_uint32_t},
