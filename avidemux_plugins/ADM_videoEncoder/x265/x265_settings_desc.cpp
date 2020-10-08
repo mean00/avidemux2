@@ -46,7 +46,6 @@ extern const ADM_paramList x265_settings_param[]={
  {"ratecontrol.qp_constant",offsetof(x265_settings,ratecontrol.qp_constant),"uint32_t",ADM_param_uint32_t},
  {"ratecontrol.qp_step",offsetof(x265_settings,ratecontrol.qp_step),"uint32_t",ADM_param_uint32_t},
  {"ratecontrol.bitrate",offsetof(x265_settings,ratecontrol.bitrate),"uint32_t",ADM_param_uint32_t},
- {"ratecontrol.rate_tolerance",offsetof(x265_settings,ratecontrol.rate_tolerance),"double",ADM_param_double},
  {"ratecontrol.vbv_max_bitrate",offsetof(x265_settings,ratecontrol.vbv_max_bitrate),"uint32_t",ADM_param_uint32_t},
  {"ratecontrol.vbv_buffer_size",offsetof(x265_settings,ratecontrol.vbv_buffer_size),"uint32_t",ADM_param_uint32_t},
  {"ratecontrol.vbv_buffer_init",offsetof(x265_settings,ratecontrol.vbv_buffer_init),"uint32_t",ADM_param_uint32_t},

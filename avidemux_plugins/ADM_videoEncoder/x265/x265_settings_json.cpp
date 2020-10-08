@@ -56,7 +56,6 @@ json.addUint32("rc_method",key->ratecontrol.rc_method);
 json.addUint32("qp_constant",key->ratecontrol.qp_constant);
 json.addUint32("qp_step",key->ratecontrol.qp_step);
 json.addUint32("bitrate",key->ratecontrol.bitrate);
-json.addDouble("rate_tolerance",key->ratecontrol.rate_tolerance);
 json.addUint32("vbv_max_bitrate",key->ratecontrol.vbv_max_bitrate);
 json.addUint32("vbv_buffer_size",key->ratecontrol.vbv_buffer_size);
 json.addUint32("vbv_buffer_init",key->ratecontrol.vbv_buffer_init);

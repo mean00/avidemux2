@@ -436,12 +436,7 @@ bool x265Dialog::upload(void)
 
     MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
 
-#if X265_BUILD >= 41
-    DISABLE(avgBitrateToleranceSpinBox);
     MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
-#else
-    MK_UINT(avgBitrateToleranceSpinBox,ratecontrol.rate_tolerance*100.0);
-#endif
           DISABLE(spsiComboBox);
           DISABLE(groupBox_14); // quant matrix
           DISABLE(tabAdvanced1);
@@ -504,12 +499,7 @@ bool x265Dialog::download(void)
 
           MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
           
-#if X265_BUILD >= 41
           MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
-#else
-          MK_UINT(avgBitrateToleranceSpinBox, ratecontrol.rate_tolerance);
-          myCopy.ratecontrol.rate_tolerance /= 100.0;
-#endif
           
           MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
           MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);

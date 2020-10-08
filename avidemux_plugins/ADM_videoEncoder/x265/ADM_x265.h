@@ -88,7 +88,6 @@ extern "C"
 	0,	/* uint32_t qp_constant; */ \
 	4,	/* uint32_t qp_step; */ \
 	0,	/* uint32_t bitrate; */ \
-	1.0,	/* float rate_tolerance; */ \
 	0,	/* uint32_t vbv_max_bitrate; */ \
 	0,	/* uint32_t vbv_buffer_size; */ \
 	1,	/* uint32_t vbv_buffer_init; */ \
