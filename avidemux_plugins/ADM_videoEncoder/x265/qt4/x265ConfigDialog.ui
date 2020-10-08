@@ -1760,47 +1760,6 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <item>
-           <layout class="QHBoxLayout">
-            <item>
-             <widget class="QCheckBox" name="trellisCheckBox">
-              <property name="text">
-               <string>Trellis Quantization:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="trellisComboBox">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <item>
-               <property name="text">
-                <string>Final Macroblock Only</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Always On</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <spacer name="spacer_33">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
            <widget class="QCheckBox" name="fastPSkipCheckBox">
             <property name="text">
              <string>Fast Skip Detection on P-frames</string>
@@ -3711,8 +3670,6 @@
   <tabstop>minGopSizeSpinBox</tabstop>
   <tabstop>maxGopSizeSpinBox</tabstop>
   <tabstop>IFrameThresholdSpinBox</tabstop>
-  <tabstop>trellisCheckBox</tabstop>
-  <tabstop>trellisComboBox</tabstop>
   <tabstop>fastPSkipCheckBox</tabstop>
   <tabstop>dctDecimateCheckBox</tabstop>
   <tabstop>rdoSpinBox</tabstop>
@@ -3831,22 +3788,6 @@
     <hint type="destinationlabel">
      <x>237</x>
      <y>251</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>trellisCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>trellisComboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>98</x>
-     <y>176</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>227</x>
-     <y>176</y>
     </hint>
    </hints>
   </connection>

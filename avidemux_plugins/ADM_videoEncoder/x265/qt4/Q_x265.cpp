@@ -282,13 +282,8 @@ bool x265Dialog::upload(void)
           MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
           MK_CHECKBOX(rectInterCheckBox,rect_inter);
-          MK_CHECKBOX(trellisCheckBox,trellis);
           MK_UINT(rdoSpinBox,rd_level);
           MK_UINT(psychoRdoSpinBox,psy_rd);
-          if(myCopy.trellis)
-          {
-                ui.trellisComboBox->setCurrentIndex(myCopy.trellis-1);
-          }
 
           if (myCopy.interlaced_mode > 0) {
         	  ui.interlacedCheckBox->setChecked(true);
@@ -580,13 +575,6 @@ bool x265Dialog::download(void)
           int frameThreadIndex=frameThreads->currentIndex();
           myCopy.general.frameThreads=listOfThreads[frameThreadIndex].idcValue;
           
-          int t=ui.trellisComboBox->currentIndex();
-          if(!ui.trellisCheckBox->isChecked())
-          {
-                myCopy.trellis=0;
-          }else
-                myCopy.trellis=t+1;
-
           if(ui.sarPredefinedRadioButton->isChecked())
           {
                 const aspectRatio *r=predefinedARs+ui.sarPredefinedComboBox->currentIndex();

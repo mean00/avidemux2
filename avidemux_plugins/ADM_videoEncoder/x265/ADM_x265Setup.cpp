@@ -195,7 +195,6 @@ bool x265Encoder::setup(void)
 
     MKPARAM(bframes,MaxBFrame)
     MKPARAM(bFrameAdaptive,i_bframe_adaptive)
-    MKPARAM (bFrameAdaptive,trellis)
     MKPARAM(bBPyramid,i_bframe_pyramid)
     MKPARAM(bFrameBias,i_bframe_bias)
 
