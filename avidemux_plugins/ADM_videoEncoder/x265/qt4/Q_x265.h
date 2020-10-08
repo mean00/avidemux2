@@ -45,6 +45,7 @@ private slots:
         void quantiserSlider_valueChanged(int value);
         void quantiserSpinBox_valueChanged(int value);
         void targetRateControlSpinBox_valueChanged(int value);
+        void rdoqSpinBox_valueChanged(int value);
         void cuTreeCheckBox_toggled(bool checked);
         void aqVarianceCheckBox_toggled(bool checked);
 	

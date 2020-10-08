@@ -218,6 +218,8 @@ bool x265Encoder::setup(void)
 
     MKPARAM (rdLevel,rd_level)
     MKPARAMD(psyRd,psy_rd)
+    MKPARAM (rdoqLevel,rdoq_level)
+    MKPARAMD(psyRdoq,psy_rdoq)
     MKPARAM (cbQpOffset,cb_chroma_offset)
     MKPARAM (crQpOffset,cr_chroma_offset)
 
@@ -390,6 +392,8 @@ void dumpx265Setup(x265_param *param)
     PI(rdPenalty);
     PI(rdLevel);
     PD(psyRd);
+    PI(rdoqLevel);
+    PD(psyRdoq);
     
     printf("*************************************\n");
     printf("***         Coding Tools          ***\n");

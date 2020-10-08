@@ -76,6 +76,8 @@ extern "C"
     0x03, /* uint32_t limit_refs */ \
     3, /*       uint32_t rd_level */ \
     1.0, /*     float psy_rd */ \
+    0, /*       uint32_t rdoq_level */ \
+    0.0, /*     double psy_rdoq */ \
     true, /*    bool fast_pskip */ \
     true, /*    bool dct_decimate */ \
     0, /*    uint32_t noise_reduction */ \

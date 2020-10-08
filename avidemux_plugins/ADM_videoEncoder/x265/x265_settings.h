@@ -41,6 +41,8 @@ uint32_t subpel_refine;
 uint32_t limit_refs;
 uint32_t rd_level;
 double psy_rd;
+uint32_t rdoq_level;
+double psy_rdoq;
 bool fast_pskip;
 bool dct_decimate;
 uint32_t noise_reduction;

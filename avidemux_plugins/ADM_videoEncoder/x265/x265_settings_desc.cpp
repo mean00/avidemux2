@@ -35,6 +35,8 @@ extern const ADM_paramList x265_settings_param[]={
  {"limit_refs",offsetof(x265_settings,limit_refs),"uint32_t",ADM_param_uint32_t},
  {"rd_level",offsetof(x265_settings,rd_level),"uint32_t",ADM_param_uint32_t},
  {"psy_rd",offsetof(x265_settings,psy_rd),"double",ADM_param_double},
+ {"rdoq_level",offsetof(x265_settings,rdoq_level),"uint32_t",ADM_param_uint32_t},
+ {"psy_rdoq",offsetof(x265_settings,psy_rdoq),"double",ADM_param_double},
  {"fast_pskip",offsetof(x265_settings,fast_pskip),"bool",ADM_param_bool},
  {"dct_decimate",offsetof(x265_settings,dct_decimate),"bool",ADM_param_bool},
  {"noise_reduction",offsetof(x265_settings,noise_reduction),"uint32_t",ADM_param_uint32_t},
