@@ -42,7 +42,6 @@ json.addUint32("me_method",key->me_method);
 json.addUint32("me_range",key->me_range);
 json.addUint32("subpel_refine",key->subpel_refine);
 json.addUint32("limit_refs",key->limit_refs);
-json.addUint32("trellis",key->trellis);
 json.addUint32("rd_level",key->rd_level);
 json.addDouble("psy_rd",key->psy_rd);
 json.addBool("fast_pskip",key->fast_pskip);
