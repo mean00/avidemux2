@@ -39,7 +39,6 @@ extern const ADM_paramList x265_settings_param[]={
  {"psy_rdoq",offsetof(x265_settings,psy_rdoq),"double",ADM_param_double},
  {"fast_pskip",offsetof(x265_settings,fast_pskip),"bool",ADM_param_bool},
  {"dct_decimate",offsetof(x265_settings,dct_decimate),"bool",ADM_param_bool},
- {"noise_reduction",offsetof(x265_settings,noise_reduction),"uint32_t",ADM_param_uint32_t},
  {"noise_reduction_intra",offsetof(x265_settings,noise_reduction_intra),"uint32_t",ADM_param_uint32_t},
  {"noise_reduction_inter",offsetof(x265_settings,noise_reduction_inter),"uint32_t",ADM_param_uint32_t},
  {"strong_intra_smoothing",offsetof(x265_settings,strong_intra_smoothing),"bool",ADM_param_bool},

@@ -1918,41 +1918,6 @@
            </layout>
           </item>
           <item>
-           <layout class="QGridLayout" name="gridLayout_5">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_42">
-              <property name="text">
-               <string>Noise Reduction:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <layout class="QHBoxLayout" name="horizontalLayout_9">
-              <item>
-               <widget class="QSpinBox" name="noiseReductionSpinBox">
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_35">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>13</width>
-                  <height>13</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-          <item>
            <layout class="QGridLayout" name="gridLayout_8">
             <item row="0" column="0">
              <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -3746,7 +3711,6 @@
   <tabstop>dctDecimateCheckBox</tabstop>
   <tabstop>rdoSpinBox</tabstop>
   <tabstop>psychoRdoSpinBox</tabstop>
-  <tabstop>noiseReductionSpinBox</tabstop>
   <tabstop>matrixFlatRadioButton</tabstop>
   <tabstop>matrixJvtRadioButton</tabstop>
   <tabstop>matrixCustomRadioButton</tabstop>

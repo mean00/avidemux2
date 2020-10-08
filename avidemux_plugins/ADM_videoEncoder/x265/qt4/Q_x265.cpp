@@ -431,15 +431,8 @@ bool x265Dialog::upload(void)
                 MK_UINT(sarCustomSpinBox2,vui.sar_height);
 	}
 
-#if X265_BUILD >= 40
-    DISABLE(noiseReductionSpinBox);
     MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
     MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
-#else
-    DISABLE(noiseReductionIntraSpinBox);
-    DISABLE(noiseReductionInterSpinBox);
-    MK_UINT(noiseReductionSpinBox,noise_reduction);
-#endif
 
     MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
 
@@ -545,12 +538,8 @@ bool x265Dialog::download(void)
           MK_UINT(rdoqSpinBox,rdoq_level);
           MK_UINT(psychoRdoqSpinBox,psy_rdoq); /* double, not uint, but value() is the same */
           
-#if X265_BUILD >= 40
           MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
           MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
-#else
-          MK_UINT(noiseReductionSpinBox,noise_reduction);
-#endif
 
           MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
 

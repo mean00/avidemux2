@@ -80,7 +80,6 @@ extern "C"
     0.0, /*     double psy_rdoq */ \
     true, /*    bool fast_pskip */ \
     true, /*    bool dct_decimate */ \
-    0, /*    uint32_t noise_reduction */ \
     0, /*    uint32_t noise_reduction_intra */ \
     0, /*    uint32_t noise_reduction_inter */ \
     true, /*    bool strong_intra_smoothing */ \

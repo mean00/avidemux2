@@ -223,12 +223,8 @@ bool x265Encoder::setup(void)
     MKPARAM (cbQpOffset,cb_chroma_offset)
     MKPARAM (crQpOffset,cr_chroma_offset)
 
-#if X265_BUILD >= 40
     MKPARAM (noiseReductionIntra,noise_reduction_intra)
     MKPARAM (noiseReductionInter,noise_reduction_inter)
-#else
-    MKPARAM (noiseReduction,noise_reduction)
-#endif
 
     MKPARAMB(bEnableStrongIntraSmoothing,strong_intra_smoothing)
 
@@ -418,12 +414,8 @@ void dumpx265Setup(x265_param *param)
     PI(cbQpOffset);
     PI(crQpOffset);
     
-#if X265_BUILD >= 40
     PI(noiseReductionIntra);
     PI(noiseReductionInter);
-#else
-    PI(noiseReduction);
-#endif
     
     PI(bLossless);
     PI(bCULossless);

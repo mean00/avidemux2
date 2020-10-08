@@ -48,7 +48,6 @@ json.addUint32("rdoq_level",key->rdoq_level);
 json.addDouble("psy_rdoq",key->psy_rdoq);
 json.addBool("fast_pskip",key->fast_pskip);
 json.addBool("dct_decimate",key->dct_decimate);
-json.addUint32("noise_reduction",key->noise_reduction);
 json.addUint32("noise_reduction_intra",key->noise_reduction_intra);
 json.addUint32("noise_reduction_inter",key->noise_reduction_inter);
 json.addBool("strong_intra_smoothing",key->strong_intra_smoothing);
