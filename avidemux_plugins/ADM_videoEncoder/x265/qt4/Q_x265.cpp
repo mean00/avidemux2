@@ -125,6 +125,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.quantiserSlider, SIGNAL(valueChanged(int)), this, SLOT(quantiserSlider_valueChanged(int)));
         connect(ui.meSlider, SIGNAL(valueChanged(int)), this, SLOT(meSlider_valueChanged(int)));
         connect(ui.quantiserSpinBox, SIGNAL(valueChanged(int)), this, SLOT(quantiserSpinBox_valueChanged(int)));
+        connect(ui.rectInterCheckBox, SIGNAL(toggled(bool)), this, SLOT(rectInterCheckBox_toggled(bool)));
         connect(ui.refFramesSpinBox, SIGNAL(valueChanged(int)), this, SLOT(refFramesSpinBox_valueChanged(int)));
         connect(ui.maxBFramesSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxBFramesSpinBox_valueChanged(int)));
         connect(ui.bFrameRefComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(bFrameRefComboBox_currentIndexChanged(int)));
@@ -201,6 +202,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         upload();
 
         rdoqSpinBox_valueChanged(ui.rdoqSpinBox->value());
+        rectInterCheckBox_toggled(ui.rectInterCheckBox->isChecked());
 
         ADM_pluginInstallSystem( std::string("x265"),std::string("json"),pluginVersion);
         updatePresetList();
@@ -286,6 +288,8 @@ bool x265Dialog::upload(void)
           MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
           MK_CHECKBOX(rectInterCheckBox,rect_inter);
+          MK_CHECKBOX(AMPInterCheckBox,amp_inter);
+          MK_CHECKBOX(limitInterModesCheckBox,limit_modes);
           MK_UINT(rdoSpinBox,rd_level);
           MK_UINT(psychoRdoSpinBox,psy_rd);
           MK_UINT(rdoqSpinBox,rdoq_level);
@@ -431,24 +435,12 @@ bool x265Dialog::upload(void)
                 MK_UINT(sarCustomSpinBox2,vui.sar_height);
 	}
 
-#if X265_BUILD >= 40
-    DISABLE(noiseReductionSpinBox);
     MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
     MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
-#else
-    DISABLE(noiseReductionIntraSpinBox);
-    DISABLE(noiseReductionInterSpinBox);
-    MK_UINT(noiseReductionSpinBox,noise_reduction);
-#endif
 
     MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
 
-#if X265_BUILD >= 41
-    DISABLE(avgBitrateToleranceSpinBox);
     MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
-#else
-    MK_UINT(avgBitrateToleranceSpinBox,ratecontrol.rate_tolerance*100.0);
-#endif
           DISABLE(spsiComboBox);
           DISABLE(groupBox_14); // quant matrix
           DISABLE(tabAdvanced1);
@@ -483,6 +475,8 @@ bool x265Dialog::download(void)
           MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
           MK_CHECKBOX(rectInterCheckBox,rect_inter);
+          MK_CHECKBOX(AMPInterCheckBox,amp_inter);
+          MK_CHECKBOX(limitInterModesCheckBox,limit_modes);
 
           if (ui.interlacedCheckBox->isChecked()) {
                   myCopy.interlaced_mode = ui.interlacedComboBox->currentIndex() + 1;
@@ -511,12 +505,7 @@ bool x265Dialog::download(void)
 
           MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
           
-#if X265_BUILD >= 41
           MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
-#else
-          MK_UINT(avgBitrateToleranceSpinBox, ratecontrol.rate_tolerance);
-          myCopy.ratecontrol.rate_tolerance /= 100.0;
-#endif
           
           MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
           MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);
@@ -545,12 +534,8 @@ bool x265Dialog::download(void)
           MK_UINT(rdoqSpinBox,rdoq_level);
           MK_UINT(psychoRdoqSpinBox,psy_rdoq); /* double, not uint, but value() is the same */
           
-#if X265_BUILD >= 40
           MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
           MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
-#else
-          MK_UINT(noiseReductionSpinBox,noise_reduction);
-#endif
 
           MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
 
@@ -671,6 +656,17 @@ void x265Dialog::meSlider_valueChanged(int value)
 void x265Dialog::quantiserSpinBox_valueChanged(int value)
 {
 	ui.quantiserSlider->setValue(value);
+}
+
+void x265Dialog::rectInterCheckBox_toggled(bool checked)
+{
+    ui.AMPInterCheckBox->setEnabled(checked);
+    ui.limitInterModesCheckBox->setEnabled(checked);
+    if(!checked)
+    {
+        ui.AMPInterCheckBox->setChecked(false);
+        ui.limitInterModesCheckBox->setChecked(false);
+    }
 }
 
 void x265Dialog::refFramesSpinBox_valueChanged(int value)

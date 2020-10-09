@@ -211,6 +211,8 @@ bool x265Encoder::setup(void)
     MKPARAM(bEnableWeightedPred,weighted_pred)
     MKPARAMB(bEnableWeightedBiPred,weighted_bipred)
     MKPARAMB(bEnableRectInter,rect_inter)
+    MKPARAMB(bEnableAMP,amp_inter)
+    MKPARAMB(limitModes,limit_modes)
 
     MKPARAMB(bEnableLoopFilter,b_deblocking_filter)
     MKPARAMB(bEnableEarlySkip,fast_pskip)
@@ -223,12 +225,8 @@ bool x265Encoder::setup(void)
     MKPARAM (cbQpOffset,cb_chroma_offset)
     MKPARAM (crQpOffset,cr_chroma_offset)
 
-#if X265_BUILD >= 40
     MKPARAM (noiseReductionIntra,noise_reduction_intra)
     MKPARAM (noiseReductionInter,noise_reduction_inter)
-#else
-    MKPARAM (noiseReduction,noise_reduction)
-#endif
 
     MKPARAMB(bEnableStrongIntraSmoothing,strong_intra_smoothing)
 
@@ -242,11 +240,7 @@ bool x265Encoder::setup(void)
 
       MKPARAM(qpStep,qp_step);
     
-#if X265_BUILD >= 41
       MKPARAMB(bStrictCbr,strict_cbr);
-#else
-      MKPARAM(rateTolerance,rate_tolerance);
-#endif
       
       MKPARAM(ipFactor,ip_factor);
       MKPARAM(pbFactor,pb_factor);
@@ -379,12 +373,13 @@ void dumpx265Setup(x265_param *param)
     PI(bEnableWeightedPred);
     PI(bEnableWeightedBiPred);
     PI(bEnableRectInter);
+    PI(bEnableAMP);
+    PI(limitModes);
     
     printf("*************************************\n");
     printf("***        Analysis Tools         ***\n");
     printf("*************************************\n");
     
-    PI(bEnableAMP);
 #if X265_BUILD < 45
     PI(bEnableCbfFastMode);
 #endif
@@ -418,12 +413,8 @@ void dumpx265Setup(x265_param *param)
     PI(cbQpOffset);
     PI(crQpOffset);
     
-#if X265_BUILD >= 40
     PI(noiseReductionIntra);
     PI(noiseReductionInter);
-#else
-    PI(noiseReduction);
-#endif
     
     PI(bLossless);
     PI(bCULossless);
@@ -438,11 +429,7 @@ void dumpx265Setup(x265_param *param)
     RI(qp);
     RI(bitrate);
     
-#if X265_BUILD >= 41
     RI(bStrictCbr);
-#else
-    RD(rateTolerance);
-#endif
     
     RD(qCompress);
     RD(ipFactor);

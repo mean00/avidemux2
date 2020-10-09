@@ -1246,9 +1246,34 @@
            </widget>
           </item>
           <item row="4" column="0">
-           <widget class="QCheckBox" name="rectInterCheckBox">
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QLabel" name="lblMParts">
+              <property name="text">
+               <string>Motion Partitions:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="rectInterCheckBox">
+              <property name="text">
+               <string>Rectangular</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="AMPInterCheckBox">
+              <property name="text">
+               <string>Asymmetric</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="limitInterModesCheckBox">
             <property name="text">
-             <string>Rectangular Motion Partitions</string>
+             <string>Limit Motion Partition Modes</string>
             </property>
            </widget>
           </item>
@@ -1887,7 +1912,7 @@
               </item>
              </layout>
             </item>
-            <item row="1" column="2">>
+            <item row="1" column="2">
              <layout class="QHBoxLayout">
               <item>
                <widget class="QLabel" name="lblPsyRDOQ">
@@ -1910,41 +1935,6 @@
                <spacer>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_5">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_42">
-              <property name="text">
-               <string>Noise Reduction:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <layout class="QHBoxLayout" name="horizontalLayout_9">
-              <item>
-               <widget class="QSpinBox" name="noiseReductionSpinBox">
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_35">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>13</width>
-                  <height>13</height>
-                 </size>
                 </property>
                </spacer>
               </item>
@@ -2106,7 +2096,7 @@
          <layout class="QVBoxLayout">
           <item>
            <layout class="QGridLayout">
-            <item row="4" column="0">
+            <item row="3" column="0">
              <widget class="QLabel" name="label_20">
               <property name="text">
                <string>Chroma to Luma Quantiser Offset:</string>
@@ -2140,14 +2130,14 @@
               </item>
              </layout>
             </item>
-            <item row="2" column="0">
+            <item row="1" column="0">
              <widget class="QLabel" name="label_6">
               <property name="text">
                <string>I and P-frame Quantiser Ratio:</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="2" column="1">
              <layout class="QHBoxLayout">
               <item>
                <widget class="QDoubleSpinBox" name="quantiserPbRatioSpinBox">
@@ -2183,43 +2173,6 @@
               </item>
              </layout>
             </item>
-            <item row="1" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QSpinBox" name="avgBitrateToleranceSpinBox">
-                <property name="minimum">
-                 <number>0</number>
-                </property>
-                <property name="maximum">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>100</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_2">
-                <property name="text">
-                 <string>%</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_45">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_17">
               <property name="text">
@@ -2227,7 +2180,7 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="3" column="1">
              <layout class="QHBoxLayout">
               <item>
                <widget class="QSpinBox" name="cbChromaLumaOffsetSpinBox">
@@ -2284,21 +2237,14 @@
               </item>
              </layout>
             </item>
-            <item row="3" column="0">
+            <item row="2" column="0">
              <widget class="QLabel" name="label_7">
               <property name="text">
                <string>P and B-frame Quantiser Ratio:</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_5">
-              <property name="text">
-               <string>Average Bitrate Tolerance:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
+            <item row="1" column="1">
              <layout class="QHBoxLayout">
               <item>
                <widget class="QDoubleSpinBox" name="quantiserIpRatioSpinBox">
@@ -3725,9 +3671,11 @@
   <tabstop>mvRangeSpinBox</tabstop>
   <tabstop>weightedPPredictComboBox</tabstop>
   <tabstop>weightedPredictCheckBox</tabstop>
-  <tabstop>constrainedIntraCheckBox</tabstop>
   <tabstop>bIntraCheckBox</tabstop>
+  <tabstop>constrainedIntraCheckBox</tabstop>
   <tabstop>rectInterCheckBox</tabstop>
+  <tabstop>AMPInterCheckBox</tabstop>
+  <tabstop>limitInterModesCheckBox</tabstop>
   <tabstop>loopFilterCheckBox</tabstop>
   <tabstop>openGopCheckBox</tabstop>
   <tabstop>interlacedCheckBox</tabstop>
@@ -3746,13 +3694,11 @@
   <tabstop>dctDecimateCheckBox</tabstop>
   <tabstop>rdoSpinBox</tabstop>
   <tabstop>psychoRdoSpinBox</tabstop>
-  <tabstop>noiseReductionSpinBox</tabstop>
   <tabstop>matrixFlatRadioButton</tabstop>
   <tabstop>matrixJvtRadioButton</tabstop>
   <tabstop>matrixCustomRadioButton</tabstop>
   <tabstop>matrixCustomEditButton</tabstop>
   <tabstop>quantiserMaxStepSpinBox</tabstop>
-  <tabstop>avgBitrateToleranceSpinBox</tabstop>
   <tabstop>quantiserIpRatioSpinBox</tabstop>
   <tabstop>quantiserPbRatioSpinBox</tabstop>
   <tabstop>cbChromaLumaOffsetSpinBox</tabstop>

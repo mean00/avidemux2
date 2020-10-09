@@ -68,6 +68,8 @@ extern "C"
     2, /*    uint32_t weighted_pred */ \
     1, /*    bool weighted_bipred */ \
     0, /*    bool rect_inter */ \
+    0, /*    bool amp_inter */ \
+    0, /*    bool limit_modes */ \
     0, /*    uint32_t cb_chroma_offset */ \
     0, /*    uint32_t cr_chroma_offset */ \
     3, /*    uint32_t me_method */ \
@@ -80,7 +82,6 @@ extern "C"
     0.0, /*     double psy_rdoq */ \
     true, /*    bool fast_pskip */ \
     true, /*    bool dct_decimate */ \
-    0, /*    uint32_t noise_reduction */ \
     0, /*    uint32_t noise_reduction_intra */ \
     0, /*    uint32_t noise_reduction_inter */ \
     true, /*    bool strong_intra_smoothing */ \
@@ -89,7 +90,6 @@ extern "C"
 	0,	/* uint32_t qp_constant; */ \
 	4,	/* uint32_t qp_step; */ \
 	0,	/* uint32_t bitrate; */ \
-	1.0,	/* float rate_tolerance; */ \
 	0,	/* uint32_t vbv_max_bitrate; */ \
 	0,	/* uint32_t vbv_buffer_size; */ \
 	1,	/* uint32_t vbv_buffer_init; */ \

@@ -44,6 +44,7 @@ private slots:
         void encodingModeComboBox_currentIndexChanged(int index);
         void quantiserSlider_valueChanged(int value);
         void quantiserSpinBox_valueChanged(int value);
+        void rectInterCheckBox_toggled(bool checked);
         void targetRateControlSpinBox_valueChanged(int value);
         void rdoqSpinBox_valueChanged(int value);
         void cuTreeCheckBox_toggled(bool checked);
