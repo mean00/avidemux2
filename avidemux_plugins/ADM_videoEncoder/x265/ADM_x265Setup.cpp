@@ -33,9 +33,9 @@ static void dumpx265Setup(x265_param *param);
 extern x265_settings x265Settings;
 
 /**
-    \fn x265QueryBitDepthSupported
+    \fn x265ProbeBitDepth
 */
-bool x265QueryBitDepthSupported(int depth)
+bool x265ProbeBitDepth(int depth)
 {
     static uint32_t cachedQueries=0;
 

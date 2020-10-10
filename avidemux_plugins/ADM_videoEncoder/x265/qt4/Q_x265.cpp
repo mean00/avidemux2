@@ -31,7 +31,7 @@ extern "C"
 extern const ADM_paramList x265_settings_param[];
 }
 
-extern bool x265QueryBitDepthSupported(int depth);
+extern bool x265ProbeBitDepth(int depth);
 
 typedef struct
 {
@@ -40,7 +40,6 @@ typedef struct
 }idcToken;
 
 static const idcToken listOfIdc[]={
-        {(unsigned int)-1,"Auto"},
         {10,"1"},
         {20,"2"},
         {21,"2.1"},
@@ -57,9 +56,8 @@ static const idcToken listOfIdc[]={
 };
 #define NB_IDC sizeof(listOfIdc)/sizeof(idcToken)
 static const idcToken listOfThreads[]={
-        {0,"Auto"},
-        {1,"1"},      
-        {2,"2"},      
+        {1,"1"},
+        {2,"2"},
         {4,"4"},
 };
 
@@ -88,7 +86,6 @@ typedef struct
 }bdToken;
 
 static const bdToken listOfBitDepths[]={
-    {0,"Auto"},
     {8,"8"},
     {10,"10"},
     {12,"12"}
@@ -167,9 +164,12 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.saveAsButton, SIGNAL(pressed()), this, SLOT(saveAsButton_pressed()));
         connect(ui.configurationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(configurationComboBox_currentIndexChanged(int)));
 
+        const char *automatic=QT_TRANSLATE_NOOP("x265","Auto");
+
         // Rebuild idc level list
         QComboBox *idc=ui.idcLevelComboBox;
         idc->clear();
+        idc->addItem(QString(automatic));
         for(int i=0;i<NB_IDC;i++)
         {
             const idcToken *t=listOfIdc+i;
@@ -178,14 +178,16 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
 
         QComboBox *poolThreads=ui.comboBoxPoolThreads;
         poolThreads->clear();
+        poolThreads->addItem(QString(automatic));
         for(int i=0;i<NB_THREADS;i++)
         {
             const idcToken *t=listOfThreads+i;
             poolThreads->addItem(QString(t->idcString));
         }
-        
+
         QComboBox *frameThreads=ui.comboBoxFrameThreads;
         frameThreads->clear();
+        frameThreads->addItem(QString(automatic));
         for(int i=0;i<NB_THREADS;i++)
         {
             const idcToken *t=listOfThreads+i;
@@ -213,15 +215,18 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         profiles->clear();
         for(int i=0;i<NB_PROFILE;i++)
         {
+            if(!strcmp(listOfProfiles[i],"main10") && false == x265ProbeBitDepth(10))
+                continue;
             profiles->addItem(QString(listOfProfiles[i]));
         }
 
         QComboBox *depths=ui.comboBoxBitDepth;
         depths->clear();
+        depths->addItem(QString(automatic));
         for(int i=0;i<NB_BITS;i++)
         {
             const bdToken *t = listOfBitDepths + i;
-            if(x265QueryBitDepthSupported(t->bdValue))
+            if(x265ProbeBitDepth(t->bdValue))
                 depths->addItem(QString(t->bdString));
         }
 
@@ -297,15 +302,17 @@ bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
 #define DISABLE(x) ui.x->setEnabled(false);
 #define MK_MENU(x,y) ui.x->setCurrentIndex(myCopy.y)
 #define MK_RADIOBUTTON(x) ui.x->setChecked(true);
-#define MK_COMBOBOX_STR(x,y,list,count) \
+#define MK_COMBOBOX_STR(x,y) \
   { \
     QComboBox *combobox=ui.x; \
+    const int count=combobox->count(); \
     for(int i=0;i<count;i++) \
     { \
-      const char *p=list[i]; \
+      const char *p=combobox->itemText(i).toUtf8().constData(); \
       if(myCopy.y.size() && !strcmp(myCopy.y.c_str(), p)) \
       { \
         combobox->setCurrentIndex(i); \
+        break; \
       } \
     } \
   }
@@ -369,20 +376,25 @@ bool x265Dialog::upload(void)
           MK_UINT(mvRangeSpinBox,me_range);
 
           // preset
-          MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
-          MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);
-          MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE);
+          MK_COMBOBOX_STR(presetComboBox, general.preset);
+          MK_COMBOBOX_STR(profileComboBox, general.profile);
+          MK_COMBOBOX_STR(tuningComboBox, general.tuning);
 
           // udate idc
           QComboBox *idc=ui.idcLevelComboBox;
-          for(int i=0;i<NB_IDC;i++)
+          if(myCopy.level==-1)
+              idc->setCurrentIndex(0); // auto mode
+          else
           {
-                const idcToken *t=listOfIdc+i;
-                if(myCopy.level==t->idcValue)
-                {
-                        idc->setCurrentIndex(i);
-                        break;
-                }
+              for(int i=0;i<NB_IDC;i++)
+              {
+                  const idcToken *t=listOfIdc+i;
+                  if(myCopy.level==t->idcValue)
+                  {
+                      idc->setCurrentIndex(i+1);
+                      break;
+                  }
+              }
           }
         // update threads
     
@@ -402,26 +414,44 @@ bool x265Dialog::upload(void)
 #endif
           
           QComboBox *frameThreads=ui.comboBoxFrameThreads;
-          for(int i=0;i<NB_THREADS;i++)
+          if(myCopy.general.frameThreads == 0 || myCopy.general.frameThreads == 99)
+              frameThreads->setCurrentIndex(0); // auto mode
+          else
           {
-                const idcToken *t=listOfThreads+i;
-                if(myCopy.general.frameThreads==t->idcValue)
-                {
-                        frameThreads->setCurrentIndex(i);
+              for(int i=0;i<NB_THREADS;i++)
+              {
+                  const idcToken *t=listOfThreads+i;
+                  if(myCopy.general.frameThreads==t->idcValue)
+                  {
+                        frameThreads->setCurrentIndex(i+1);
                         break;
-                }
+                  }
+              }
           }
 
           // update bit depth
           QComboBox *bdc=ui.comboBoxBitDepth;
-          for(int i=0; i < NB_BITS; i++)
+          if(!myCopy.general.output_bit_depth)
+              bdc->setCurrentIndex(0); // auto mode
+          else
           {
-                const bdToken *t = listOfBitDepths + i;
-                if(myCopy.general.output_bit_depth == t->bdValue)
-                {
-                        bdc->setCurrentIndex(i);
-                        break;
-                }
+              for(int i=0; i < NB_BITS; i++)
+              {
+                  const bdToken *t = listOfBitDepths + i;
+                  if(myCopy.general.output_bit_depth == t->bdValue)
+                  {
+                      for(int j=1; j < bdc->count(); j++)
+                      {
+                          const char *p = bdc->itemText(j).toUtf8().constData();
+                          if(!strcmp(t->bdString,p))
+                          {
+                              bdc->setCurrentIndex(j);
+                              break;
+                          }
+                      }
+                      break;
+                  }
+              }
           }
 
         switch(ENCODING(mode))
@@ -506,7 +536,14 @@ bool x265Dialog::upload(void)
     QComboBox* combo=ui.x; \
     int idx=combo->currentIndex(); \
     ADM_assert(idx<count); \
-    myCopy.y = std::string(ADM_strdup(list[idx])); \
+    for(int i=0;i<count;i++) \
+    { \
+      if(!strcmp(list[idx],combo->itemText(idx).toUtf8().constData())) \
+      { \
+        myCopy.y = std::string(ADM_strdup(list[idx])); \
+        break; \
+      } \
+    } \
   }
 
 bool x265Dialog::download(void)
@@ -585,13 +622,35 @@ bool x265Dialog::download(void)
 
           QComboBox *idc=ui.idcLevelComboBox;
           int dex=idc->currentIndex();
-          ADM_assert(dex<NB_IDC);
-          myCopy.level=listOfIdc[dex].idcValue;
+          ADM_assert(dex <= NB_IDC);
+          if(dex < 1)
+              myCopy.level = -1;
+          else
+              myCopy.level=listOfIdc[dex-1].idcValue;
 
           QComboBox *bdc=ui.comboBoxBitDepth;
           dex=bdc->currentIndex();
-          ADM_assert(dex < NB_BITS);
-          myCopy.general.output_bit_depth = listOfBitDepths[dex].bdValue;
+          ADM_assert(dex <= NB_BITS);
+          if(dex < 1) // special case auto mode label, it is translatable
+              myCopy.general.output_bit_depth = 0;
+          else
+          {
+              for(int i=0; i < NB_BITS; i++)
+              {
+                  const char *p=bdc->itemText(dex).toUtf8().constData();
+                  bool found=false;
+                  for(int j=1; j < bdc->count(); j++)
+                  {
+                      if(!strcmp(listOfBitDepths[i].bdString, p))
+                      {
+                          myCopy.general.output_bit_depth = listOfBitDepths[i].bdValue;
+                          found=true;
+                          break;
+                      }
+                  }
+                  if(found) break;
+              }
+          }
 
           switch(ui.encodingModeComboBox->currentIndex())
           {
@@ -611,8 +670,11 @@ bool x265Dialog::download(void)
           
           QComboBox *frameThreads=ui.comboBoxFrameThreads;
           int frameThreadIndex=frameThreads->currentIndex();
-          myCopy.general.frameThreads=listOfThreads[frameThreadIndex].idcValue;
-          
+          if(frameThreadIndex < 1)
+              myCopy.general.frameThreads = 0;
+          else
+              myCopy.general.frameThreads=listOfThreads[frameThreadIndex-1].idcValue;
+
           if(ui.sarPredefinedRadioButton->isChecked())
           {
                 const aspectRatio *r=predefinedARs+ui.sarPredefinedComboBox->currentIndex();
