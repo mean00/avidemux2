@@ -27,8 +27,14 @@ AUDMAudioFilterMixer::AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CON
     _output=out;
     _previous->rewind();     // rewind
     ADM_assert(_output<CHANNEL_LAST);
-    
-    
+    memset(inputChannelMapping,0,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
+    memset(outputChannelMapping,0,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
+    CHANNEL_TYPE *map=_previous->getChannelMapping();
+    bypass=false;
+    if(map)
+        memcpy(inputChannelMapping,map,sizeof(CHANNEL_TYPE)*_wavHeader.channels);
+    else
+        bypass=true;
     double d;               // Update duration
     d=_wavHeader.byterate;
     d/=_wavHeader.channels;
@@ -570,11 +576,29 @@ NULL, MNto1, MStereo, M2F1R, M3F, M3F1R, M2F2R, M3F2R, M3F2RLFE, MDolbyProLogic,
 //_____________________________________________
 uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *status)
 {
+    if(bypass)
+    {
+        *status==AUD_END_OF_STREAM; // not recoverable for now
+        return 0;
+    }
 
     uint32_t rd = 0;
     int nbSampleMax=max/_wavHeader.channels;
     if(!nbSampleMax) nbSampleMax=1;
     uint8_t input_channels = _previous->getInfo()->channels;
+    if(!input_channels)
+        return 0;
+
+    if(input_channels!=_wavHeader.channels)
+    {
+        ADM_warning("[Mixer] Number of channels has changed from %d to %d\n",_wavHeader.channels,input_channels);
+        _wavHeader.channels=input_channels;
+        if(_previous->getChannelMapping())
+        {
+            memset(inputChannelMapping,0,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
+            memcpy(inputChannelMapping,_previous->getChannelMapping(),sizeof(CHANNEL_TYPE)*input_channels);
+        }
+    }
 
 // Fill incoming buffer
     shrink();
@@ -610,14 +634,14 @@ uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *statu
 
     // Now do the downsampling
 	if (_output == CHANNEL_INVALID || true==ADM_audioCompareChannelMapping(&_wavHeader, _previous->getInfo(),
-			_previous->getChannelMapping(),outputChannelMapping))
+			inputChannelMapping,outputChannelMapping))
 	{
 		
 		rd= (uint32_t)MCOPY(_incomingBuffer.at(_head),output,available,input_channels);
 	} else 
 	{
 		MIXER *call=matrixCall[_output];
-		rd= (uint32_t)call(_incomingBuffer.at(_head),output,available,input_channels,_previous->getChannelMapping(),this);
+		rd= (uint32_t)call(_incomingBuffer.at(_head),output,available,input_channels,inputChannelMapping,this);
 	}
 
     _head+=available*input_channels;

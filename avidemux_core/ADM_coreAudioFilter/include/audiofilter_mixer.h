@@ -19,8 +19,10 @@
 class AUDMAudioFilterMixer : public AUDMAudioFilter
 {
     protected:
+        bool            bypass;
         CHANNEL_CONF    _output;
         CHANNEL_CONF    _input;
+        CHANNEL_TYPE    inputChannelMapping[MAX_CHANNELS];
         // output channel mapping
         CHANNEL_TYPE    outputChannelMapping[MAX_CHANNELS];
         // Dolby specific info
