@@ -31,6 +31,8 @@ extern "C"
 extern const ADM_paramList x265_settings_param[];
 }
 
+extern bool x265QueryBitDepthSupported(int depth);
+
 typedef struct
 {
     uint32_t idcValue;
@@ -78,6 +80,21 @@ static const aspectRatio predefinedARs[]={
 };
 
 #define NB_SAR sizeof(predefinedARs)/sizeof(aspectRatio)
+
+typedef struct
+{
+    int bdValue;
+    const char *bdString;
+}bdToken;
+
+static const bdToken listOfBitDepths[]={
+    {0,"Auto"},
+    {8,"8"},
+    {10,"10"},
+    {12,"12"}
+};
+
+#define NB_BITS sizeof(listOfBitDepths)/sizeof(bdToken)
 
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
@@ -199,6 +216,15 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
             profiles->addItem(QString(listOfProfiles[i]));
         }
 
+        QComboBox *depths=ui.comboBoxBitDepth;
+        depths->clear();
+        for(int i=0;i<NB_BITS;i++)
+        {
+            const bdToken *t = listOfBitDepths + i;
+            if(x265QueryBitDepthSupported(t->bdValue))
+                depths->addItem(QString(t->bdString));
+        }
+
         upload();
 
         rdoqSpinBox_valueChanged(ui.rdoqSpinBox->value());
@@ -254,6 +280,7 @@ bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
   ui.presetComboBox->setEnabled(!advancedEnabled);
   ui.tuningComboBox->setEnabled(!advancedEnabled);
   ui.profileComboBox->setEnabled(!advancedEnabled);
+  ui.comboBoxBitDepth->setEnabled(advancedEnabled);
   ui.tabAdvancedRC->setEnabled(advancedEnabled);
   ui.tabMotion->setEnabled(advancedEnabled);
   ui.tabFrame->setEnabled(advancedEnabled);
@@ -384,6 +411,19 @@ bool x265Dialog::upload(void)
                         break;
                 }
           }
+
+          // update bit depth
+          QComboBox *bdc=ui.comboBoxBitDepth;
+          for(int i=0; i < NB_BITS; i++)
+          {
+                const bdToken *t = listOfBitDepths + i;
+                if(myCopy.general.output_bit_depth == t->bdValue)
+                {
+                        bdc->setCurrentIndex(i);
+                        break;
+                }
+          }
+
         switch(ENCODING(mode))
         {
             case COMPRESS_AQ: // CRF
@@ -547,6 +587,11 @@ bool x265Dialog::download(void)
           int dex=idc->currentIndex();
           ADM_assert(dex<NB_IDC);
           myCopy.level=listOfIdc[dex].idcValue;
+
+          QComboBox *bdc=ui.comboBoxBitDepth;
+          dex=bdc->currentIndex();
+          ADM_assert(dex < NB_BITS);
+          myCopy.general.output_bit_depth = listOfBitDepths[dex].bdValue;
 
           switch(ui.encodingModeComboBox->currentIndex())
           {

@@ -45,6 +45,7 @@ extern "C"
     }, \
     99, /* Pool Threads : auto */ \
     99, /* Frame Threads : auto */ \
+    0, /* output_bit_depth */ \
     std::string(""), /* Preset */ \
     std::string(""), /* Tuning */ \
     std::string(""), /* Profile */ \

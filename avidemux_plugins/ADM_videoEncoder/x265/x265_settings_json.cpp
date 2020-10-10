@@ -10,6 +10,7 @@ json.addNode("general");
 json.addCompressParam("params",key->general.params);
 json.addUint32("poolThreads",key->general.poolThreads);
 json.addUint32("frameThreads",key->general.frameThreads);
+json.addUint32("output_bit_depth",key->general.output_bit_depth);
 json.addString("preset",key->general.preset);
 json.addString("tuning",key->general.tuning);
 json.addString("profile",key->general.profile);

@@ -7,6 +7,7 @@ struct  {
 	COMPRES_PARAMS params;
 	uint32_t poolThreads;
 	uint32_t frameThreads;
+	uint32_t output_bit_depth;
 	std::string preset;
 	std::string tuning;
 	std::string profile;

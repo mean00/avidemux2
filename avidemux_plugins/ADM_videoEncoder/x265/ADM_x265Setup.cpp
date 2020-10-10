@@ -31,6 +31,57 @@ static void dumpx265Setup(x265_param *param);
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
 extern x265_settings x265Settings;
+
+/**
+    \fn x265QueryBitDepthSupported
+*/
+bool x265QueryBitDepthSupported(int depth)
+{
+    static uint32_t cachedQueries=0;
+
+    uint32_t already=1;
+    uint32_t match=0;
+
+#define BIT_DEPTH_8_BITS 1
+#define BIT_DEPTH_10_BITS 2
+#define BIT_DEPTH_12_BITS 4
+
+    switch(depth)
+    {
+        case 0:
+            return true;
+        case 8:
+            match = BIT_DEPTH_8_BITS;
+            break;
+        case 10:
+            match = BIT_DEPTH_10_BITS;
+            break;
+        case 12:
+            match = BIT_DEPTH_12_BITS;
+            break;
+        default:
+            return false;
+    }
+    already <<= depth;
+    if(cachedQueries & already)
+    {
+        if((cachedQueries & BIT_DEPTH_8_BITS) && depth == 8)
+            return true;
+        if((cachedQueries & BIT_DEPTH_10_BITS) && depth == 10)
+            return true;
+        if((cachedQueries & BIT_DEPTH_12_BITS) && depth == 12)
+            return true;
+        return false;
+    }
+    cachedQueries |= already;
+    if(x265_api_get(depth))
+    {
+        cachedQueries |= match;
+        return true;
+    }
+    return false;
+}
+
 /**
     \fn setup
 */
@@ -39,10 +90,16 @@ bool x265Encoder::setup(void)
   ADM_info("=============x265, setting up==============\n");
   MMSET(param);
 
-  if(!x265Settings.useAdvancedConfiguration && x265Settings.general.profile == std::string("main10"))
+  if(x265Settings.useAdvancedConfiguration)
+  {
+        api = x265_api_get(x265Settings.general.output_bit_depth);
+  }else if(x265Settings.general.profile == std::string("main10"))
+  {
         api = x265_api_get(10);
-  else
+  }else
+  {
         api = x265_api_get(8);
+  }
   if(!api)
         api = x265_api_get(0);
   ADM_assert(api);
