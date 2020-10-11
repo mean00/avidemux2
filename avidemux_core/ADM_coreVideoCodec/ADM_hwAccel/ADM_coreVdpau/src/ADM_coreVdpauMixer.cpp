@@ -126,6 +126,13 @@ VdpStatus admVdpau::mixerRender(VdpVideoMixer mixer,
                                 uint32_t targetHeight )
 {
 const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
+
+    VdpRect targetRect;
+
+    targetRect.x0=targetRect.y0=0;
+    targetRect.x1=targetWidth;
+    targetRect.y1=targetHeight;
+
       VdpStatus e=ADM_coreVdpau::funcs.mixerRender(mixer,
                 VDP_INVALID_HANDLE,NULL,    // Background
                 VDP_VIDEO_MIXER_PICTURE_STRUCTURE_FRAME,
@@ -136,7 +143,7 @@ const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
                 NULL,                               // source RECT
                 targetOutputSurface,
                 NULL,                               // dest Rec
-                NULL,                               // dest video Rec
+                &targetRect,                        // dest video Rec
                 0,NULL);                            // Layers
                 
 #if 0
@@ -184,10 +191,15 @@ VdpStatus admVdpau::mixerRenderWithCropping(VdpVideoMixer mixer,
 {
 const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
 
-    VdpRect rect;
-    rect.x0=rect.y0=0;
-    rect.x1=sourceWidth;
-    rect.y1=sourceHeight;
+    VdpRect sourceRect,targetRect;
+
+    sourceRect.x0=sourceRect.y0=0;
+    sourceRect.x1=sourceWidth;
+    sourceRect.y1=sourceHeight;
+
+    targetRect.x0=targetRect.y0=0;
+    targetRect.x1=targetWidth;
+    targetRect.y1=targetHeight;
 #if 0
     VdpChromaType sourceChroma;
     uint32_t sourceW,sourceH;
@@ -206,10 +218,10 @@ const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
                 0,            listOfInvalidSurface, // Past...
                 sourceSurface,                      // current
                 0,            listOfInvalidSurface, // Future
-                &rect,                               // source RECT
+                &sourceRect,                        // source RECT
                 targetOutputSurface,
                 NULL,                               // dest Rec
-                NULL,                               // dest video Rec
+                &targetRect,                        // dest video Rec
                 0,NULL);                            // Layers
                 
             
