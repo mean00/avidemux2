@@ -222,12 +222,12 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
 
         QComboBox *depths=ui.comboBoxBitDepth;
         depths->clear();
-        depths->addItem(QString(automatic));
+        depths->addItem(QString(automatic), QVariant(0U));
         for(int i=0;i<NB_BITS;i++)
         {
             const bdToken *t = listOfBitDepths + i;
             if(x265ProbeBitDepth(t->bdValue))
-                depths->addItem(QString(t->bdString));
+                depths->addItem(QString(t->bdString), QVariant(t->bdValue));
         }
 
         upload();
@@ -429,30 +429,15 @@ bool x265Dialog::upload(void)
               }
           }
 
-          // update bit depth
-          QComboBox *bdc=ui.comboBoxBitDepth;
-          if(!myCopy.general.output_bit_depth)
-              bdc->setCurrentIndex(0); // auto mode
-          else
-          {
-              for(int i=0; i < NB_BITS; i++)
-              {
-                  const bdToken *t = listOfBitDepths + i;
-                  if(myCopy.general.output_bit_depth == t->bdValue)
-                  {
-                      for(int j=1; j < bdc->count(); j++)
-                      {
-                          const char *p = bdc->itemText(j).toUtf8().constData();
-                          if(!strcmp(t->bdString,p))
-                          {
-                              bdc->setCurrentIndex(j);
-                              break;
-                          }
-                      }
-                      break;
-                  }
-              }
-          }
+        // update bit depth
+        QComboBox *bdc=ui.comboBoxBitDepth;
+        int i = bdc->findData(myCopy.general.output_bit_depth);
+        if(i == -1) /* Not found.  Maybe saved project and depth is not supported anymore?  Use default. */
+        {
+            ADM_warning("X265 output bit depth %u not supported, using default\n", myCopy.general.output_bit_depth);
+            i = 0;
+        }
+        bdc->setCurrentIndex(i);
 
         switch(ENCODING(mode))
         {
@@ -628,29 +613,7 @@ bool x265Dialog::download(void)
           else
               myCopy.level=listOfIdc[dex-1].idcValue;
 
-          QComboBox *bdc=ui.comboBoxBitDepth;
-          dex=bdc->currentIndex();
-          ADM_assert(dex <= NB_BITS);
-          if(dex < 1) // special case auto mode label, it is translatable
-              myCopy.general.output_bit_depth = 0;
-          else
-          {
-              for(int i=0; i < NB_BITS; i++)
-              {
-                  const char *p=bdc->itemText(dex).toUtf8().constData();
-                  bool found=false;
-                  for(int j=1; j < bdc->count(); j++)
-                  {
-                      if(!strcmp(listOfBitDepths[i].bdString, p))
-                      {
-                          myCopy.general.output_bit_depth = listOfBitDepths[i].bdValue;
-                          found=true;
-                          break;
-                      }
-                  }
-                  if(found) break;
-              }
-          }
+          myCopy.general.output_bit_depth = ui.comboBoxBitDepth->currentData().toUInt();
 
           switch(ui.encodingModeComboBox->currentIndex())
           {
