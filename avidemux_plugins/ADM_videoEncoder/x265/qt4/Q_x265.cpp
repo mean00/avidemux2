@@ -90,11 +90,11 @@ static const idcToken listOfBitDepths[]={
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
+static const char* listOfTunings[] = { "psnr", "ssim", "grain", "zerolatency", "fastdecode",
 #if X265_BUILD > 173
-static const char* listOfTunings[] = { "none", "psnr", "ssim", "grain", "zerolatency", "fastdecode", "animation" };
-#else
-static const char* listOfTunings[] = { "none", "psnr", "ssim", "grain", "zerolatency", "fastdecode" };
+    "animation"
 #endif
+};
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
 static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
@@ -122,6 +122,60 @@ bool x265_ui(x265_settings *settings)
 
     return success;
 }
+
+/**
+    \brief Set combo box items to be elements in container with data.
+
+    Elements of container should be idcToken.  The string will be the item name
+    and value will be added as item data.
+
+    One could design function that used a lambda to convert from element type
+    into label and value, so that any element type can be used, but that is
+    C++14.
+
+    If initial is non-NULL, it will be added first and the data used will be
+    initdata;
+
+    As a somewhat ugly hack for Qt4, the initial string will go through
+    fromUtf8() in case it has been translated to non-ASCII.  As none of the
+    items in the containers used are translated, they don't need this.
+
+    \param [in] box ComboBox to set items in
+    \param [in] items Container (array) of idcToken to use.
+    \param [in] initial An option first item to add.
+    \param [in] initdata The data to be assigned with optional first item, default is empty.
+*/
+template <typename ContainerT>
+static void fillComboBoxData(QComboBox *box, const ContainerT& items, const char* initial = NULL, const QVariant& initdata = QVariant())
+{
+    box->clear();
+    if (initial)
+        box->addItem(QString::fromUtf8(initial), initdata);
+    for (const idcToken *t = std::begin(items); t != std::end(items); t++)
+        box->addItem(t->idcString, QVariant(t->idcValue));
+}
+
+/**
+    \brief Set combo box items to be elements in container.
+
+    Elements should be const char*.  In C++11 we could use anything convertable
+    to a QString by changing "const char* const *" to "auto".
+
+    The data assigned to each item will be the index in items whence it came.
+
+    See fillComboBoxData().
+*/
+template <typename ContainerT>
+static void fillComboBox(QComboBox *box, const ContainerT& items, const char* initial = NULL)
+{
+    box->clear();
+    if (initial)
+        box->addItem(QString::fromUtf8(initial), -1);
+    int i = 0;
+    for (const char * const *t = std::begin(items); t != std::end(items); t++, i++)
+        box->addItem(*t, i);
+}
+
 /**
 
 */  
@@ -159,60 +213,22 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.configurationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(configurationComboBox_currentIndexChanged(int)));
 
         const char *automatic=QT_TRANSLATE_NOOP("x265","Auto");
+        const char *none=QT_TRANSLATE_NOOP("x265","none");
 
         // Rebuild idc level list
-        QComboBox *idc=ui.idcLevelComboBox;
-        idc->clear();
-        idc->addItem(QString(automatic));
-        for(int i=0;i<NB_IDC;i++)
-        {
-            const idcToken *t=listOfIdc+i;
-            idc->addItem(QString(t->idcString));
-        }
+        fillComboBoxData(ui.idcLevelComboBox, listOfIdc, automatic, -1);
 
-        QComboBox *poolThreads=ui.comboBoxPoolThreads;
-        poolThreads->clear();
-        poolThreads->addItem(QString(automatic));
-        for(int i=0;i<NB_THREADS;i++)
-        {
-            const idcToken *t=listOfThreads+i;
-            poolThreads->addItem(QString(t->idcString));
-        }
+        fillComboBoxData(ui.comboBoxPoolThreads, listOfThreads, automatic, 0U);
 
-        QComboBox *frameThreads=ui.comboBoxFrameThreads;
-        frameThreads->clear();
-        frameThreads->addItem(QString(automatic));
-        for(int i=0;i<NB_THREADS;i++)
-        {
-            const idcToken *t=listOfThreads+i;
-            frameThreads->addItem(QString(t->idcString));
-        }
-        
-        QComboBox* presets=ui.presetComboBox;
-        presets->clear();
-        for(int i=0;i<NB_PRESET;i++)
-        {
-            presets->addItem(QString(listOfPresets[i]));
-        }
+        fillComboBoxData(ui.comboBoxFrameThreads, listOfThreads, automatic, 0U);
 
-        QComboBox* tunings=ui.tuningComboBox;
-        tunings->clear();
-        for(int i=0;i<NB_TUNE;i++)
-        {
-            const char* _tn=listOfTunings[i];
-            if(!strcmp(_tn,"none"))
-                _tn=QT_TRANSLATE_NOOP("x265","none");
-            tunings->addItem(QString(_tn));
-        }
+        fillComboBox(ui.presetComboBox, listOfPresets);
 
-        QComboBox* profiles=ui.profileComboBox;
-        profiles->clear();
-        for(int i=0;i<NB_PROFILE;i++)
-        {
-            if(!strcmp(listOfProfiles[i],"main10") && false == x265ProbeBitDepth(10))
-                continue;
-            profiles->addItem(QString(listOfProfiles[i]));
-        }
+        fillComboBox(ui.tuningComboBox, listOfTunings, none);
+
+        fillComboBox(ui.profileComboBox, listOfProfiles);
+        if (!x265ProbeBitDepth(10))
+            ui.profileComboBox->removeItem(ui.profileComboBox->findText("main10"));
 
         QComboBox *depths=ui.comboBoxBitDepth;
         depths->clear();
@@ -297,19 +313,12 @@ bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
 #define MK_MENU(x,y) ui.x->setCurrentIndex(myCopy.y)
 #define MK_RADIOBUTTON(x) ui.x->setChecked(true);
 #define MK_COMBOBOX_STR(x,y) \
-  { \
-    QComboBox *combobox=ui.x; \
-    const int count=combobox->count(); \
-    for(int i=0;i<count;i++) \
     { \
-      const char *p=combobox->itemText(i).toUtf8().constData(); \
-      if(myCopy.y.size() && !strcmp(myCopy.y.c_str(), p)) \
-      { \
-        combobox->setCurrentIndex(i); \
-        break; \
-      } \
-    } \
-  }
+        const int idx = ui.x->findText(myCopy.y.c_str()); \
+        ui.x->setCurrentIndex(idx < 0 ? 0 : idx); \
+    }
+#define MK_COMBOBOX_DATA(x,y) ui.x->setCurrentIndex(ui.x->findData(myCopy.y))
+
 bool x265Dialog::upload(void)
 {
           toogleAdvancedConfiguration(myCopy.useAdvancedConfiguration);
@@ -374,54 +383,19 @@ bool x265Dialog::upload(void)
           MK_COMBOBOX_STR(profileComboBox, general.profile);
           MK_COMBOBOX_STR(tuningComboBox, general.tuning);
 
-          // udate idc
-          QComboBox *idc=ui.idcLevelComboBox;
-          if(myCopy.level==-1)
-              idc->setCurrentIndex(0); // auto mode
-          else
-          {
-              for(int i=0;i<NB_IDC;i++)
-              {
-                  const idcToken *t=listOfIdc+i;
-                  if(myCopy.level==t->idcValue)
-                  {
-                      idc->setCurrentIndex(i+1);
-                      break;
-                  }
-              }
-          }
+        // udate idc
+        MK_COMBOBOX_DATA(idcLevelComboBox, level);
+
         // update threads
-    
 #if X265_BUILD >= 47
-          DISABLE(comboBoxPoolThreads);
+        DISABLE(comboBoxPoolThreads);
 #else
-          QComboBox *poolThreads=ui.comboBoxPoolThreads;
-          for(int i=0;i<NB_THREADS;i++)
-          {
-                const idcToken *t=listOfThreads+i;
-                if(myCopy.general.poolThreads==t->idcValue)
-                {
-                        poolThreads->setCurrentIndex(i);
-                        break;
-                }
-          }
+        MK_COMBOBOX_DATA(comboBoxPoolThreads, general.poolThreads);
 #endif
           
-          QComboBox *frameThreads=ui.comboBoxFrameThreads;
-          if(myCopy.general.frameThreads == 0 || myCopy.general.frameThreads == 99)
-              frameThreads->setCurrentIndex(0); // auto mode
-          else
-          {
-              for(int i=0;i<NB_THREADS;i++)
-              {
-                  const idcToken *t=listOfThreads+i;
-                  if(myCopy.general.frameThreads==t->idcValue)
-                  {
-                        frameThreads->setCurrentIndex(i+1);
-                        break;
-                  }
-              }
-          }
+        /* both 0 and 99 mean auto? */
+        const unsigned int framethreads = myCopy.general.frameThreads == 99 ? 0 : myCopy.general.frameThreads;
+        ui.comboBoxFrameThreads->setCurrentIndex(ui.comboBoxFrameThreads->findData(framethreads));
 
         // update bit depth
         QComboBox *bdc=ui.comboBoxBitDepth;
@@ -506,24 +480,23 @@ bool x265Dialog::upload(void)
 #undef MK_MENU
 #undef MK_RADIOBUTTON
 #undef MK_COMBOBOX_STR
+#undef MK_COMBOBOX_DATA
 #define MK_CHECKBOX(x,y)    myCopy.y=ui.x->isChecked()
 #define MK_UINT(x,y)        myCopy.y=ui.x->value()
 #define MK_MENU(x,y)        myCopy.y=ui.x->currentIndex()
 #define MK_RADIOBUTTON(x,y)   myCopy.y=ui.x->setChecked(true);
-#define MK_COMBOBOX_STR(x,y,list,count) \
-  { \
-    QComboBox* combo=ui.x; \
-    int idx=combo->currentIndex(); \
-    ADM_assert(idx<count); \
-    for(int i=0;i<count;i++) \
+#define MK_COMBOBOX_STR(x,y,list,count,none) \
     { \
-      if(!strcmp(list[idx],combo->itemText(idx).toUtf8().constData())) \
-      { \
-        myCopy.y = std::string(list[idx]); \
-        break; \
-      } \
-    } \
-  }
+        const QComboBox* combo=ui.x; \
+        const int idx = combo->itemData(combo->currentIndex()).toInt(); \
+        ADM_assert(idx < 0 || idx<count); \
+        myCopy.y = idx < 0 ? none : list[idx]; \
+    }
+#define MK_COMBOBOX_DATA(x,y) \
+    { \
+        const QComboBox* combo=ui.x; \
+        myCopy.y = combo->itemData(combo->currentIndex()).toInt(); \
+    }
 
 bool x265Dialog::download(void)
 {
@@ -595,23 +568,13 @@ bool x265Dialog::download(void)
 
           MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
 
-          MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
-          MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);
-          MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE);
+          MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET, "");
+          MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE, "");
+          MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE, "none");
 
-          QComboBox *idc=ui.idcLevelComboBox;
-          int dex=idc->currentIndex();
-          ADM_assert(dex <= NB_IDC);
-          if(dex < 1)
-              myCopy.level = -1;
-          else
-              myCopy.level=listOfIdc[dex-1].idcValue;
+          MK_COMBOBOX_DATA(idcLevelComboBox, level);
+          MK_COMBOBOX_DATA(comboBoxBitDepth, general.output_bit_depth);
 
-#if QT_VERSION < QT_VERSION_CHECK(5,2,0)
-          myCopy.general.output_bit_depth = ui.comboBoxBitDepth->itemData(ui.comboBoxBitDepth->currentIndex()).toUInt();
-#else
-          myCopy.general.output_bit_depth = ui.comboBoxBitDepth->currentData().toUInt();
-#endif
           switch(ui.encodingModeComboBox->currentIndex())
           {
             case 0: ENCODING(mode)=COMPRESS_CBR; ENCODING(bitrate)=ui.targetRateControlSpinBox->value();break;
@@ -622,18 +585,9 @@ bool x265Dialog::download(void)
           }
           
 #if X265_BUILD < 47
-          // update thread count
-          QComboBox *poolThreads=ui.comboBoxPoolThreads;
-          int poolThreadIndex=poolThreads->currentIndex();
-          myCopy.general.poolThreads=listOfThreads[poolThreadIndex].idcValue;
+          MK_COMBOBOX_DATA(comboBoxPoolThreads, general.poolThreads);
 #endif
-          
-          QComboBox *frameThreads=ui.comboBoxFrameThreads;
-          int frameThreadIndex=frameThreads->currentIndex();
-          if(frameThreadIndex < 1)
-              myCopy.general.frameThreads = 0;
-          else
-              myCopy.general.frameThreads=listOfThreads[frameThreadIndex-1].idcValue;
+          MK_COMBOBOX_DATA(comboBoxFrameThreads, general.frameThreads);
 
           if(ui.sarPredefinedRadioButton->isChecked())
           {
