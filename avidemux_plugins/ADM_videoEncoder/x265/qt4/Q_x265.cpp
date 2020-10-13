@@ -663,28 +663,28 @@ void x265Dialog::encodingModeComboBox_currentIndexChanged(int index)
 	switch (index)
 	{
 		case 0:
-			ui.targetRateControlLabel1->setText(QT_TRANSLATE_NOOP("x265","Target Bitrate:"));
-			ui.targetRateControlLabel2->setText(QT_TRANSLATE_NOOP("x265","kbit/s"));
+			ui.targetRateControlLabel1->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","Target Bitrate:")));
+			ui.targetRateControlLabel2->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","kbit/s")));
 			ui.targetRateControlSpinBox->setValue(lastBitrate);
                         enableStrictCbr = true;
 			break;
 		case 1: // Constant Quality - 1 pass
-			ui.quantiserLabel2->setText(QT_TRANSLATE_NOOP("x265","Quantiser:"));
+			ui.quantiserLabel2->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","Quantiser:")));
 			enableQp = true;
 			break;
 		case 2: // Average Quantiser - 1 pass
-			ui.quantiserLabel2->setText(QT_TRANSLATE_NOOP("x265","Quality:"));
+			ui.quantiserLabel2->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","Quality:")));
 			enableQp = true;
 			enableMaxCrf = true;
 			break;
 		case 3: // Video Size - 2 pass
-			ui.targetRateControlLabel1->setText(QT_TRANSLATE_NOOP("x265","Target Video Size:"));
-			ui.targetRateControlLabel2->setText(QT_TRANSLATE_NOOP("x265","MB"));
+			ui.targetRateControlLabel1->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","Target Video Size:")));
+			ui.targetRateControlLabel2->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","MB")));
 			ui.targetRateControlSpinBox->setValue(lastVideoSize);
 			break;
 		case 4: // Average Bitrate - 2 pass
-			ui.targetRateControlLabel1->setText(QT_TRANSLATE_NOOP("x265","Average Bitrate:"));
-			ui.targetRateControlLabel2->setText(QT_TRANSLATE_NOOP("x265","kbit/s"));
+			ui.targetRateControlLabel1->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","Average Bitrate:")));
+			ui.targetRateControlLabel2->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","kbit/s")));
 			ui.targetRateControlSpinBox->setValue(lastBitrate);
 			break;
 	}
