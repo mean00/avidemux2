@@ -109,7 +109,7 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
             case AOM_IMG_FMT_I42016:
                 if(img->bit_depth == 10)
                 {
-                    color = ADM_COLOR_YV12_10BITS;
+                    color = ADM_COLOR_YUV420_10BITS;
                     break;
                 }
                 ADM_warning("Unsupported bit depth %u for AOM_IMG_FMT_I42016 image format.\n",img->bit_depth);
@@ -121,12 +121,18 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
         ADMImageRef *r=out->castToRef();
         if(r)
         {
+            int u=1,v=2;
+            if(color != ADM_COLOR_YV12)
+            {
+                u = 2;
+                v = 1;
+            }
             r->_planes[0]=img->planes[0];
-            r->_planes[1]=img->planes[2];
-            r->_planes[2]=img->planes[1];
+            r->_planes[v]=img->planes[1];
+            r->_planes[u]=img->planes[2];
             r->_planeStride[0]=img->stride[0];
-            r->_planeStride[1]=img->stride[2];
-            r->_planeStride[2]=img->stride[1];
+            r->_planeStride[v]=img->stride[1];
+            r->_planeStride[u]=img->stride[2];
             r->_colorspace=color;
             r->Pts=in->demuxerPts;
             r->flags=in->flags;

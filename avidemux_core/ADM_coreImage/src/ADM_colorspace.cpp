@@ -87,7 +87,8 @@ static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
     case ADM_COLOR_BGR32A: return AV_PIX_FMT_RGBA; // Faster that way...AV_PIX_FMT_BGR32;
     case ADM_COLOR_RGB24: return AV_PIX_FMT_RGB24;
     case ADM_COLOR_BGR24: return AV_PIX_FMT_BGR24;
-    case ADM_COLOR_YV12_10BITS: return AV_PIX_FMT_YUV420P10LE;
+    case ADM_COLOR_YUV420_10BITS: return AV_PIX_FMT_YUV420P10LE;
+    case ADM_COLOR_YUV420_12BITS: return AV_PIX_FMT_YUV420P12LE;
     case ADM_COLOR_NV12_10BITS:  return AV_PIX_FMT_P010LE;
     case ADM_COLOR_YUV444_10BITS: return AV_PIX_FMT_YUV444P10LE;
     case ADM_COLOR_YUV422_10BITS: return AV_PIX_FMT_YUV422P10LE;
@@ -138,6 +139,19 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
     case  ADM_COLOR_YV12:
             srcData[0]=from;
             width=ADM_IMAGE_ALIGN(width);
+            height=ADM_IMAGE_ALIGN(height);
+            from+=width*height;
+            srcData[1]=from;
+            from+=(width>>1)*(height>>1);
+            srcData[2]=from;
+            srcStride[0]=width;
+            srcStride[1]=width>>1;
+            srcStride[2]=width>>1;
+            break;
+    case ADM_COLOR_YUV420_10BITS:
+    case ADM_COLOR_YUV420_12BITS:
+            srcData[0]=from;
+            width=ADM_IMAGE_ALIGN(width*2);
             height=ADM_IMAGE_ALIGN(height);
             from+=width*height;
             srcData[1]=from;

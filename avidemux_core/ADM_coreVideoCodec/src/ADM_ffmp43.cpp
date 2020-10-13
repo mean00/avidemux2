@@ -558,7 +558,10 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
         out->_colorspace= ADM_COLOR_NV12_10BITS;
         break;
   case  AV_PIX_FMT_YUV420P10LE:
-        out->_colorspace=ADM_COLOR_YV12_10BITS;
+        out->_colorspace=ADM_COLOR_YUV420_10BITS;
+        break;
+  case  AV_PIX_FMT_YUV420P12LE:
+        out->_colorspace=ADM_COLOR_YUV420_12BITS;
         break;
   case  AV_PIX_FMT_YUV444P12LE:
         out->_colorspace=ADM_COLOR_YUV444_12BITS;
