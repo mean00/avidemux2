@@ -79,19 +79,13 @@ static const aspectRatio predefinedARs[]={
 
 #define NB_SAR sizeof(predefinedARs)/sizeof(aspectRatio)
 
-typedef struct
-{
-    int bdValue;
-    const char *bdString;
-}bdToken;
-
-static const bdToken listOfBitDepths[]={
+static const idcToken listOfBitDepths[]={
     {8,"8"},
     {10,"10"},
     {12,"12"}
 };
 
-#define NB_BITS sizeof(listOfBitDepths)/sizeof(bdToken)
+#define NB_BITS sizeof(listOfBitDepths)/sizeof(*listOfBitDepths)
 
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
@@ -225,9 +219,9 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         depths->addItem(QString(automatic), QVariant(0U));
         for(int i=0;i<NB_BITS;i++)
         {
-            const bdToken *t = listOfBitDepths + i;
-            if(x265ProbeBitDepth(t->bdValue))
-                depths->addItem(QString(t->bdString), QVariant(t->bdValue));
+            const idcToken *t = listOfBitDepths + i;
+            if(x265ProbeBitDepth(t->idcValue))
+                depths->addItem(QString(t->idcString), QVariant(t->idcValue));
         }
 
         upload();
