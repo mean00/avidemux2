@@ -434,7 +434,7 @@ bool x264Encoder::setConstraintsByLevel(void)
     if(!x264Settings.useAdvancedConfiguration && x264Settings.general.profile != std::string("high444"))
     {
         int codedPicBufFactor = 4;
-        if(x264Settings.general.profile == std::string("high"))
+        if(x264Settings.general.profile == "high")
             codedPicBufFactor = 5;
         int maxVbvBitrate = (level->bitrate * codedPicBufFactor) >> 2;
         if(!param.rc.i_vbv_max_bitrate || param.rc.i_vbv_max_bitrate > maxVbvBitrate)

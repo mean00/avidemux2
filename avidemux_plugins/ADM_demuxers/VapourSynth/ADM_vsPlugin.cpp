@@ -47,7 +47,7 @@ extern "C"  uint32_t     ADM_PLUGIN_EXPORT    probe(uint32_t magic, const char *
             return 0;
         std::string fname=std::string(fileName);
         if(fname.length()<4) return 0;
-        if (fname.substr(fname.length()-4) == std::string(".vpy"))
+        if(fname.substr(fname.length()-4) == ".vpy")
         {
                 ADM_info("This is .vpy, might be VapourSynth\n");
                 // todo : probe deeper

@@ -540,7 +540,7 @@ bool x265Dialog::upload(void)
     { \
       if(!strcmp(list[idx],combo->itemText(idx).toUtf8().constData())) \
       { \
-        myCopy.y = std::string(ADM_strdup(list[idx])); \
+        myCopy.y = std::string(list[idx]); \
         break; \
       } \
     } \

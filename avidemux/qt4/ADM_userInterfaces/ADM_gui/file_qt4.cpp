@@ -56,7 +56,7 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
         {
             tempEngine = getScriptEngines()[i];
             std::string dext = tempEngine->defaultFileExtension();
-            if(!dext.empty() && dext == std::string(ext))
+            if(!dext.empty() && dext == ext)
             {
                 isProject=true;
                 break;
@@ -195,7 +195,7 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
         {
             tempEngine = getScriptEngines()[i];
             std::string dext = tempEngine->defaultFileExtension();
-            if(!dext.empty() && dext == std::string(ext))
+            if(!dext.empty() && dext == ext)
             {
                 isProject=true;
                 break;

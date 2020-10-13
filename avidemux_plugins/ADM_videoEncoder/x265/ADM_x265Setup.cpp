@@ -93,7 +93,7 @@ bool x265Encoder::setup(void)
   if(x265Settings.useAdvancedConfiguration)
   {
         api = x265_api_get(x265Settings.general.output_bit_depth);
-  }else if(x265Settings.general.profile == std::string("main10"))
+  }else if(x265Settings.general.profile == "main10")
   {
         api = x265_api_get(10);
   }else
@@ -111,7 +111,7 @@ bool x265Encoder::setup(void)
   // -------------- preset, tune, idc ------------
   if(!x265Settings.useAdvancedConfiguration)
   {
-    if(x265Settings.general.tuning == std::string("none"))
+    if(x265Settings.general.tuning == "none")
     {
         api->param_default_preset(&param, x265Settings.general.preset.c_str(), NULL);
     }else
