@@ -613,8 +613,11 @@ bool x265Dialog::download(void)
           else
               myCopy.level=listOfIdc[dex-1].idcValue;
 
+#if QT_VERSION < QT_VERSION_CHECK(5,2,0)
+          myCopy.general.output_bit_depth = ui.comboBoxBitDepth->itemData(ui.comboBoxBitDepth->currentIndex()).toUInt();
+#else
           myCopy.general.output_bit_depth = ui.comboBoxBitDepth->currentData().toUInt();
-
+#endif
           switch(ui.encodingModeComboBox->currentIndex())
           {
             case 0: ENCODING(mode)=COMPRESS_CBR; ENCODING(bitrate)=ui.targetRateControlSpinBox->value();break;
