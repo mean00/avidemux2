@@ -110,8 +110,8 @@
          <property name="title">
           <string>Basic</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayoutBasic">
+          <item>
            <widget class="QCheckBox" name="useAdvancedConfigurationCheckBox">
             <property name="text">
              <string>Use advanced configuration</string>
