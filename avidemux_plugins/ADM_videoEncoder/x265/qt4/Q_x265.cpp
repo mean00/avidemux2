@@ -275,17 +275,14 @@ bool x265Dialog::updatePresetList(const char *match)
     ADM_listFile(rootPath,"json",list);
     int l=list.size();
     int idx=l;
-    std::string current;
-    if(match)
-        current=std::string(match);
     combo->clear();
     for( int i=0;i<l;i++)
     {
-        if(match && list[i]==current)
+        if(match && list[i]==match)
             idx=i;
         combo->addItem(list[i].c_str());
     }
-    combo->addItem(QString(QT_TRANSLATE_NOOP("x265","Custom")));
+    combo->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","Custom")));
     combo->setCurrentIndex(idx);
     return true;
 }
@@ -853,7 +850,7 @@ static char *getProfileName(QDialog *parent)
         ADM_info("Cancelled");
         return NULL;
   }
-  std::string st = std::string( text->text().toUtf8().constData());
+  std::string st = text->text().toUtf8().constData();
   return ADM_strdup(st.c_str());
 }
 /**
@@ -869,27 +866,27 @@ void x265Dialog::saveAsButton_pressed(void)
   download();
   std::string rootPath;
   ADM_pluginGetPath("x265",pluginVersion,rootPath);
-  std::string name=std::string(out);
+  std::string name=out;
+  ADM_dealloc(out);
   std::string fullpath=rootPath+std::string(ADM_SEPARATOR)+name+std::string(".json");
 
   if(ADM_fileExist(fullpath.c_str()))
   {
-        if(false==GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("x265","Overwrite"),QT_TRANSLATE_NOOP("x265","Replace the following preset ?:"),out))
-        {
-            ADM_dealloc(out);
+        if(false==GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("x265","Overwrite"),QT_TRANSLATE_NOOP("x265","Replace the following preset ?:"),name.c_str()))
             return;
-        }
   }
-  ADM_dealloc(out);
   if(false==x265_settings_jserialize(fullpath.c_str(),&myCopy))
   {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("x265","Error"),QT_TRANSLATE_NOOP("x265","Cannot save preset"));
-        ADM_error("Cannot write to %s\n",out);
+        ADM_error("Cannot write to \"%s\"\n",fullpath.c_str());
+  }else
+  {
+        updatePresetList(name.c_str());
   }
-  updatePresetList(name.c_str());
 }
 /**
-
+    \fn deleteButton_pressed
+    \brief Delete json file for the currently selected profile
 */
 void x265Dialog::deleteButton_pressed(void)
 { 
@@ -911,7 +908,8 @@ void x265Dialog::deleteButton_pressed(void)
     text=QString(rootPath.c_str())+text+QString(".json");
     if(!ADM_eraseFile(text.toUtf8().constData()))
         ADM_warning("Could not delete %s\n",text.toUtf8().constData());
+    else
+        updatePresetList();
   }
-  updatePresetList();
 }
 
