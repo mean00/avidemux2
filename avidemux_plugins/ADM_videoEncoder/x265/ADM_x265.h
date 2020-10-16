@@ -51,7 +51,12 @@ extern "C"
     std::string(""), /* Profile */ \
     }, \
     -1, /* Level */ \
-    {1,1}, /* Sar width/height */ \
+    { /* VUI */ \
+        1,1, /* Sar width/height */ \
+        2, /* uint32_t color_primaries */ \
+        2, /* uint32_t transfer_characteristics */ \
+        2, /* uint32_t matrix_coeffs */ \
+    }, \
     3, /* uint32_t MaxRefFrames */ \
     25, /* uint32_t MinIdr */ \
     250, /* uint32_t MaxIdr */ \

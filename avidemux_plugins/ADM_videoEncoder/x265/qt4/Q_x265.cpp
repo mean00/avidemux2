@@ -100,6 +100,54 @@ static const char* listOfTunings[] = { "psnr", "ssim", "grain", "zerolatency", "
 static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
 #define NB_PROFILE sizeof(listOfProfiles)/sizeof(char*)
 
+static const idcToken listOfPrimaries[] = {
+    {1, "BT.709 (HD)" },
+    {4, "BT.470M (old NTSC)" },
+    {5, "BT.470BG (PAL)" },
+    {6, "SMPTE 170M (NTSC)" }, /* Same as SMTPE 240M */
+    {7, "SMPTE 240M" },
+    {9, "BT.2020 (UHD)" },
+    {8, "Film" },
+    {10, "SMPTE 428" },
+    {11, "SMPTE 431-2 (DCI-P3)" },
+    {12, "SMPTE 432 (Display P3)" },
+};
+
+static const idcToken listOfXfers[] = {
+    {1,  "BT.709 (HD)" }, /* Same as SMPTE 170M, BT.2020-10, BT.2020-12 */
+    {4,  "BT.470M (NTSC)" },
+    {5,  "BT.470BG (PAL)" },
+    {6,  "SMPTE 170M (NTSC)" },
+    {7,  "SMPTE 240M" },
+    {14, "BT.2020 10bit (UHD)" },
+    {15, "BT.2020 12bit (UHD)" },
+    {13, "IEC 61966-2-1 (sRGB)" },
+    {11, "IEC 61966-2-4" },
+    {16, "SMPTE 2084 (HDR)" },
+    {12, "BT.1361e" },
+    {17, "SMPTE 428" },
+    {8,  "linear" },
+    {9,  "log100" },
+    {10, "log316" },
+    {18, "arib-std-b67"},
+};
+
+static const idcToken listOfMatrices[] = { /* Kr      Kb     */
+    {1,  "BT.709 (HD)" },                  /* 0.2126  0.0722 */
+    {4,  "FCC (old NTSC)" },               /* 0.30    0.11   */
+    {5,  "BT.470BG (PAL)" },               /* 0.299   0.114  */
+    {6,  "SMPTE 170M (NTSC)" },            /* 0.299   0.114  */
+    {7,  "SMPTE 240M" },                   /* 0.212   0.087  */
+    {9,  "BT.2020 NCL (UHD)" },            /* 0.2627  0.0593 */
+    {10, "BT.2020 CL" },                   /* Color difference uses different values than luma */
+    {11, "SMPTE 2085 (HDR)" },
+    {14, "ICtCp" },
+    {0,  "gbr" },
+    {8,  "YCGCO" },
+    {12, "Chroma Derived NCL" },
+    {13, "Chroma Derived CL" },
+};
+
 /**
     \fn x265_ui
     \brief hook to enter UI specific dialog
@@ -215,6 +263,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         const char *automatic=QT_TRANSLATE_NOOP("x265","Auto");
         const char *none=QT_TRANSLATE_NOOP("x265","none");
         const char *dflt=QT_TRANSLATE_NOOP("x265","Default");
+        const char *unknown=QT_TRANSLATE_NOOP("x265","Unknown");
 
         // Rebuild idc level list
         fillComboBoxData(ui.idcLevelComboBox, listOfIdc, automatic, -1);
@@ -240,6 +289,10 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
             if(x265ProbeBitDepth(t->idcValue))
                 depths->addItem(QString(t->idcString), QVariant(t->idcValue));
         }
+
+        fillComboBoxData(ui.colourPrimariesComboBox, listOfPrimaries, unknown, 2);
+        fillComboBoxData(ui.transferCharacteristicsComboBox, listOfXfers, unknown, 2);
+        fillComboBoxData(ui.colourMatrixComboBox, listOfMatrices, unknown, 2);
 
         upload();
 
@@ -462,15 +515,21 @@ bool x265Dialog::upload(void)
     MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
 
     MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
+
+    /* VUI */
+    MK_COMBOBOX_DATA(colourPrimariesComboBox,vui.color_primaries);
+    MK_COMBOBOX_DATA(transferCharacteristicsComboBox,vui.transfer_characteristics);
+    MK_COMBOBOX_DATA(colourMatrixComboBox,vui.matrix_coeffs);
+    DISABLE(tabOutput); /* These aren't implemented */
+    DISABLE(videoFormatComboBox);
+    DISABLE(sarAsInputRadioButton);
+
           DISABLE(spsiComboBox);
           DISABLE(groupBox_14); // quant matrix
           DISABLE(tabAdvanced1);
           DISABLE(tabAdvanced2);
-          DISABLE(tabOutput2);
           DISABLE(maxCrfCheckBox);
-          DISABLE(sarAsInputRadioButton);
           DISABLE(groupBox_3);
-          DISABLE(accessUnitCheckBox);
           return true;
 }
 #undef MK_CHECKBOX
@@ -597,6 +656,10 @@ bool x265Dialog::download(void)
                 MK_UINT(sarCustomSpinBox1,vui.sar_width);
                 MK_UINT(sarCustomSpinBox2,vui.sar_height);
           }
+
+          MK_COMBOBOX_DATA(colourPrimariesComboBox, vui.color_primaries);
+          MK_COMBOBOX_DATA(transferCharacteristicsComboBox, vui.transfer_characteristics);
+          MK_COMBOBOX_DATA(colourMatrixComboBox, vui.matrix_coeffs);
 
           return true;
 }

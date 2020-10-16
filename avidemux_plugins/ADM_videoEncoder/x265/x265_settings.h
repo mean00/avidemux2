@@ -16,6 +16,9 @@ int32_t level;
 struct  {
 	uint32_t sar_height;
 	uint32_t sar_width;
+	uint32_t color_primaries;
+	uint32_t transfer_characteristics;
+	uint32_t matrix_coeffs;
 }vui;
 uint32_t MaxRefFrames;
 uint32_t MinIdr;
