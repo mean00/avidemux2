@@ -214,6 +214,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
 
         const char *automatic=QT_TRANSLATE_NOOP("x265","Auto");
         const char *none=QT_TRANSLATE_NOOP("x265","none");
+        const char *dflt=QT_TRANSLATE_NOOP("x265","Default");
 
         // Rebuild idc level list
         fillComboBoxData(ui.idcLevelComboBox, listOfIdc, automatic, -1);
@@ -232,7 +233,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
 
         QComboBox *depths=ui.comboBoxBitDepth;
         depths->clear();
-        depths->addItem(QString(automatic), QVariant(0U));
+        depths->addItem(QString::fromUtf8(dflt), QVariant(0U));
         for(int i=0;i<NB_BITS;i++)
         {
             const idcToken *t = listOfBitDepths + i;
