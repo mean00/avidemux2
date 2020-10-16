@@ -25,6 +25,8 @@ extern "C"
 */
 admJson::admJson()
 {
+    locale=setlocale(LC_NUMERIC,NULL);
+    setlocale(LC_NUMERIC,"C");
     JSONNODE *n = json_new(JSON_NODE);    
     cookie=(void *)n;
     cookies.push_back(cookie);
@@ -41,6 +43,7 @@ admJson::~admJson()
     }
     cookie=NULL;
     cookies.clear();
+    setlocale(LC_NUMERIC,locale);
 }
 /**
 

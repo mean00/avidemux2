@@ -30,7 +30,7 @@ protected:
          vector <void *>cookies;
          vector <string >nested;
          void *cookie;
-        
+        const char *locale;
 public:
             admJson();
             ~admJson();
