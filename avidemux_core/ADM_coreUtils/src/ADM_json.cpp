@@ -15,6 +15,7 @@
 #include "ADM_default.h"
 
 #include "ADM_coreJson.h"
+#include <clocale>
 extern "C"
 {
 #include "libjson.h"
