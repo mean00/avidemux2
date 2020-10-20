@@ -61,6 +61,36 @@ int main(int _argc, char *_argv[])
 	redirectStdoutToFile("admlog.txt");
 #endif
 
+#ifdef __APPLE__
+	// redirect output to file and disable buffering if not running in console
+	if(!isatty(fileno(stdout)))
+	{
+		const char *logfile="/tmp/admlog.txt";
+		ADM_eraseFile(logfile);
+		FILE *stream = ADM_fopen(logfile, "w");
+		if(stream)
+		{
+			setvbuf(stream, NULL, _IONBF, 0);
+			fclose(stdout);
+			fclose(stderr);
+			*stdout = *stream;
+			*stderr = *stream;
+		}
+	}
+
+	{ // export env var needed for fontconfig required by the libass plugin
+		char *fontsconf = ADM_getInstallRelativePath("../Resources/fonts/fonts.conf");
+		// remove the trailing directory separator appended by ADM_getRelativePath
+		char *slash = strrchr(fontsconf, '/');
+		if(slash)
+			*slash = '\0';
+		if(setenv("FONTCONFIG_FILE", fontsconf, 1))
+			ADM_warning("Cannot setenv FONTCONFIG_FILE to \"%s\"\n", fontsconf);
+		delete [] fontsconf;
+		fontsconf = NULL;
+	}
+#endif
+
 	installSigHandler();
 
 	char **argv;
