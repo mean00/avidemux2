@@ -49,9 +49,15 @@ class myQApplication : public QApplication
                 virtual ~myQApplication();
                 myQApplication(int &argc, char **argv) : QApplication(argc,argv)
                 {
-                     
+                     ready = false;
                 }
-               
+#ifdef __APPLE__
+private:
+                bool ready;
+                QList<QUrl> fileOpenQueue;
+                bool event(QEvent *event) override;
+                void handleFileOpenRequests(void);
+#endif
         protected:
                 QTimer timer;
         public slots:
@@ -62,6 +68,11 @@ class myQApplication : public QApplication
                         checkCrashFile();
                         if (global_argc >= 2)
                                 automation();
+#ifdef __APPLE__
+                        else
+                                ready = true;
+                        handleFileOpenRequests();
+#endif
                 }
                 void cleanup()
                 {
@@ -107,6 +118,10 @@ public:
     void setZoomToFit(void);
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
+
+#ifdef __APPLE__
+    void fileOpenWrapper(QList<QUrl> list) { openFiles(list); }
+#endif
 
 protected:
     QMenu *jsMenu;

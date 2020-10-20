@@ -21,6 +21,11 @@
 #include <QtCore/QDir>
 #include <QMessageBox>
 #include <QClipboard>
+
+#ifdef __APPLE__
+    #include <QFileOpenEvent>
+#endif
+
 #include "ADM_cpp.h"
 #define MENU_DECLARE
 #include "Q_gui2.h"
@@ -150,6 +155,36 @@ public:
         this->files = files;
     }
 };
+
+#ifdef __APPLE__
+/**
+ *  \fn event
+ *  \brief Queue requests from Finder to open files e.g. when they are dropped onto Avidemux icon in the dock
+ */
+bool myQApplication::event(QEvent *event)
+{
+    if(event->type() == QEvent::FileOpen)
+    {
+        QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
+        ADM_info("FileOpen event for \"%s\"\n",openEvent->file().toUtf8().constData());
+        fileOpenQueue.append(openEvent->url());
+        handleFileOpenRequests();
+    }
+    return QApplication::event(event);
+}
+/**
+ *  \fn handleFileOpenRequests
+ */
+void myQApplication::handleFileOpenRequests(void)
+{
+    if(QuiMainWindows && ready && fileOpenQueue.size())
+    {
+        MainWindow *mw = reinterpret_cast<MainWindow *>(QuiMainWindows);
+        mw->fileOpenWrapper(fileOpenQueue);
+        fileOpenQueue.clear();
+    }
+}
+#endif
 
 void MainWindow::comboChanged(int z)
 {
