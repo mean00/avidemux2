@@ -578,7 +578,7 @@ uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *statu
 {
     if(bypass)
     {
-        *status==AUD_END_OF_STREAM; // not recoverable for now
+        *status=AUD_END_OF_STREAM; // not recoverable for now
         return 0;
     }
 
