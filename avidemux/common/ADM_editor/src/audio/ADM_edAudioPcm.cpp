@@ -91,10 +91,7 @@ uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
 bool drop=false;
 bool checkDts;
 static bool fail=false;
-uint32_t outFrequency=getOutputFrequency();
-uint32_t outChannels=getOutputChannels();
-
-    if(!outChannels) return false;
+uint32_t outFrequency,outChannels;
 
  vprintf("[PCMPacket]  request TRK %d:%x\n",myTrackNumber,(long int)getCurrentTrack());
 again:
@@ -102,6 +99,13 @@ again:
     ADM_audioStreamTrack *trk=getCurrentTrack();
     if(!trk) return false;
     if(trk->codec->isDummy()) return false;
+
+    outChannels=getOutputChannels();
+    if(!outChannels) return false;
+
+    outFrequency=getOutputFrequency();
+    if(!outFrequency) return false;
+
     checkDts=(trk->stream->constantSamplesPerPacket() && !trk->isbr);
     // Do we already have a packet ?
     if(!packetBufferSize)
