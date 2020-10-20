@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Avidemux@S_VERSION@</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Avidemux @B_VERSION@ Copyright 2001-2018 Mean</string>
+	<string>Avidemux @B_VERSION@ Copyright 2001-2020 Mean / eumagga0x2a</string>
 	<key>CFBundleIconFile</key>
 	<string>avidemux.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -20,6 +20,41 @@
 	<string>Avidemux@S_VERSION@.app</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>avi</string>
+				<string>bmp</string>
+				<string>flv</string>
+				<string>jpeg</string>
+				<string>jpg</string>
+				<string>m2ts</string>
+				<string>mkv</string>
+				<string>mov</string>
+				<string>mp4</string>
+				<string>mpg</string>
+				<string>png</string>
+				<string>ts</string>
+				<string>vpy</string>
+				<string>webm</string>
+				<string>AVI</string>
+				<string>BMP</string>
+				<string>FLV</string>
+				<string>JPEG</string>
+				<string>JPG</string>
+				<string>M2TS</string>
+				<string>MKV</string>
+				<string>MOV</string>
+				<string>MP4</string>
+				<string>MPG</string>
+				<string>PNG</string>
+				<string>TS</string>
+				<string>VPY</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleShortVersionString</key>
 	<string>Avidemux @B_VERSION@</string>
 	<key>CFBundleSignature</key>
@@ -35,7 +70,7 @@
 	<key>NSAppleScriptEnabled</key>
 	<false/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Avidemux @B_VERSION@ Copyright 2001-2018 Mean</string>
+	<string>Avidemux @B_VERSION@ Copyright 2001-2020 Mean / eumagga0x2a</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
