@@ -102,20 +102,6 @@ FILE(REMOVE_RECURSE  "${BUNDLE}/Contents/lib")
 FILE(REMOVE_RECURSE  "${BUNDLE}/Contents/Resources/lib")
 makeLink("MacOS"  "lib" ${BUNDLE}/Contents/)
 
-MESSAGE(STATUS "*  Wrapper script *")
-#
-
-# Create symlink
-SET(BIN     "${BUNDLE}/Contents/MacOS/")
-SET(ExeName "${BIN}/Avidemux${AVIDEMUX_MAJOR_MINOR}")
-FILE(RENAME "${ExeName}"  "${BIN}/avidemux")
-# Create wrapper executable
-FILE(WRITE  "${ExeName}" "#!/bin/sh\n")
-FILE(APPEND "${ExeName}" "DIR=`dirname $0`\n")
-FILE(APPEND "${ExeName}" "export FONTCONFIG_FILE=\"$DIR/../Resources/fonts/fonts.conf\"\n")
-FILE(APPEND "${ExeName}" "cd \"$DIR\" && ./avidemux \"$@\"\n")
-execute_process( COMMAND chmod +x "${ExeName}")
-
 # Create Qt.conf
 SET(QT_CONF "${BUNDLE}/Contents/Resources/qt.conf")
 FILE(WRITE  "${QT_CONF}" "[Paths]\n")
@@ -138,7 +124,7 @@ ENDFOREACH(lang ${ListOfTranslationFiles})
 # Partially relink libADM_dm_vapoursynth.dylib
 # Using default link location because versioned paths from VAPOURSYNTHSCRIPT_LDFLAGS
 # would result in each minor VapourSynth upgrade breaking the demuxer.
-FILE(GLOB dmvs "${BIN}/ADM_plugins6/demuxers/libADM_dm_vapoursynth.dylib")
+FILE(GLOB dmvs "${BUNDLE}/Contents/MacOS/ADM_plugins6/demuxers/libADM_dm_vapoursynth.dylib")
 IF(dmvs)
     SET(HOMEBREW_PREFIX "/usr/local")
     MESSAGE(STATUS "Relinking ${dmvs}")
