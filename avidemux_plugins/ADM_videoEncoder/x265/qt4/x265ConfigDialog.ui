@@ -1816,7 +1816,7 @@
             <item row="0" column="2">
              <layout class="QHBoxLayout">
               <item>
-               <widget class="QLabel" name="lblRDOLevel">
+               <widget class="QLabel" name="lblRDOPsyVS">
                 <property name="text">
                  <string>Psycho-visual Strength:</string>
                 </property>
@@ -1870,7 +1870,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="lblRDOQ">
+               <widget class="QLabel" name="lblRDOQLevel">
                 <property name="text">
                  <string>Level:</string>
                 </property>
