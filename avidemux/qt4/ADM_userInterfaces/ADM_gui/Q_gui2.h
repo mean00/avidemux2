@@ -49,7 +49,9 @@ class myQApplication : public QApplication
                 virtual ~myQApplication();
                 myQApplication(int &argc, char **argv) : QApplication(argc,argv)
                 {
-                     ready = false;
+#ifdef __APPLE__
+                    ready = false;
+#endif
                 }
 #ifdef __APPLE__
 private:
