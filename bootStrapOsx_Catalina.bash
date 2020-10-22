@@ -75,11 +75,11 @@ setupPaths()
 }
 Process()
 {
-        export BUILDDIR=$1
-        export SOURCEDIR=$2
-        export FAKEROOT="-DFAKEROOT=$FAKEROOT_DIR"
-        export EXTRA="$3"
-        export DEBUG=""
+        BUILDDIR=$1
+        SOURCEDIR=$2
+        FAKEROOT="-DFAKEROOT=$FAKEROOT_DIR"
+        EXTRA="$3"
+        DEBUG=""
         BUILDER="Unix Makefiles"
         echo "**************** $1 *******************"
         if [ "x$debug" = "x1" ] ; then 
