@@ -106,7 +106,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QGroupBox" name="groupBox_7">
+        <widget class="QGroupBox" name="groupBoxBasic">
          <property name="title">
           <string>Basic</string>
          </property>
@@ -118,12 +118,86 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <layout class="QGridLayout" name="gridLayout_7">
+          <item>
+           <layout class="QGridLayout" name="gridLayoutBasic">
             <item row="2" column="0">
              <widget class="QLabel" name="label_46">
               <property name="text">
                <string>Profile:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutProfile">
+              <item>
+               <widget class="QComboBox" name="profileComboBox"/>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_10">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="1" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutTuning">
+              <item>
+               <widget class="QComboBox" name="tuningComboBox"/>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_9">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="3" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutIdc">
+              <item>
+               <widget class="QComboBox" name="idcLevelComboBox"/>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_45">
+              <property name="text">
+               <string>Tuning:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="labelPoolThread">
+              <property name="text">
+               <string>Pool Threads </string>
               </property>
              </widget>
             </item>
@@ -135,7 +209,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <layout class="QHBoxLayout" name="horizontalLayoutPreset">
               <item>
                <widget class="QComboBox" name="presetComboBox">
                 <property name="currentIndex">
@@ -158,32 +232,51 @@
               </item>
              </layout>
             </item>
-            <item row="1" column="1">
-             <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item row="4" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutThreads">
               <item>
-               <widget class="QComboBox" name="tuningComboBox"/>
+               <widget class="QComboBox" name="comboBoxPoolThreads"/>
               </item>
               <item>
-               <spacer name="horizontalSpacer_9">
+               <spacer name="horizontalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelFrameThreads">
+                <property name="text">
+                 <string>Frame Threads </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboBoxFrameThreads"/>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_12">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>0</width>
-                  <height>0</height>
+                  <width>40</width>
+                  <height>20</height>
                  </size>
                 </property>
                </spacer>
               </item>
              </layout>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_45">
-              <property name="text">
-               <string>Tuning:</string>
-              </property>
-             </widget>
             </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label_53">
@@ -192,125 +285,32 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
-             <layout class="QHBoxLayout" name="horizontalLayout_13">
-              <item>
-               <widget class="QComboBox" name="profileComboBox"/>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_10">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="3" column="1">
-             <layout class="QHBoxLayout" name="horizontalLayout_14">
-              <item>
-               <widget class="QComboBox" name="idcLevelComboBox"/>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_11">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-          <item row="2" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_10">
-            <item>
-             <widget class="QLabel" name="labelPoolThread">
-              <property name="text">
-               <string>Pool Threads </string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="comboBoxPoolThreads"/>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_5">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Preferred</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLabel" name="labelFrameThreads">
-              <property name="text">
-               <string>Frame Threads </string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="comboBoxFrameThreads"/>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_12">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item row="3" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayoutBitDepth">
-            <item>
+            <item row="5" column="0">
              <widget class="QLabel" name="labelBitDepth">
               <property name="text">
                <string>Output Bit Depth:</string>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QComboBox" name="comboBoxBitDepth"/>
-            </item>
-            <item>
-             <spacer name="horizontalSpacerBitDepth">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
+            <item row="5" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutBitDepth">
+              <item>
+               <widget class="QComboBox" name="comboBoxBitDepth"/>
+              </item>
+              <item>
+               <spacer name="horizontalSpacerBitDepth">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
@@ -1773,6 +1773,12 @@
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
                </spacer>
               </item>
               <item>
@@ -1796,6 +1802,12 @@
                <spacer>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
                 </property>
                </spacer>
               </item>
@@ -1825,6 +1837,12 @@
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
                </spacer>
               </item>
              </layout>
@@ -1842,6 +1860,12 @@
                <spacer>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
                 </property>
                </spacer>
               </item>
@@ -1866,6 +1890,12 @@
                <spacer>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
                 </property>
                </spacer>
               </item>
@@ -1894,6 +1924,12 @@
                <spacer>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
                 </property>
                </spacer>
               </item>
