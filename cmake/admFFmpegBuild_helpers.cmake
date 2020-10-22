@@ -28,7 +28,7 @@ set(FFMPEG_DECODERS     aac  ac3  adpcm_ima_amv  amv  cinepak  cscd  cyuv
                         vp9  wmapro  wmav2  wmv1  wmv2  wmv3)
 
 set(FFMPEG_ENCODERS     aac  ac3  dvvideo  ffv1  ffvhuff  flac  flv  h263  huffyuv
-                        mjpeg  mp2  mpeg1video  mpeg2video  mpeg4  png  snow)
+                        mjpeg  mp2  mpeg1video  mpeg2video  mpeg4  png  snow  utvideo)
 
 set(FFMPEG_MUXERS       flv  matroska  mpeg1vcd  mpeg2dvd  mpeg2svcd  mpegts  mov  mp4  psp  webm)
 
