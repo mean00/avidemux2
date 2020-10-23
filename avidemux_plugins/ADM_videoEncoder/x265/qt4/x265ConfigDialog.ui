@@ -1568,12 +1568,7 @@
               </item>
               <item>
                <property name="text">
-                <string>Strictly Hierarchical Pyramid</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Non-strict (Not Blu-ray Compatible)</string>
+                <string>Enabled</string>
                </property>
               </item>
              </widget>
