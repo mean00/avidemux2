@@ -57,9 +57,9 @@ extern "C"
     250, /* uint32_t MaxIdr */ \
     40, /* uint32_t i_scenecut_threshold */ \
     3, /* uint32_t MaxBFrame */ \
-    1, /* uint32_t i_bframe_adaptative */ \
+    2, /* uint32_t i_bframe_adaptive */ \
     0, /* uint32_t i_bframe_bias */ \
-    2, /* uint32_t i_bframe_pyramid */ \
+    1, /* uint32_t i_bframe_pyramid */ \
     1, /* bool b_deblocking_filter */ \
     1, /* bool b_open_gop */ \
     0, /* uint32_t interlaced_mode */ \
