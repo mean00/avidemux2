@@ -43,9 +43,9 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
     QString fileName,dot=QString(".");
     QString separator = QString("/");
     QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
+    QFileDialog::Options opts = 0;
     bool doFilter = !!(ext && strlen(ext));
     bool isProject=false;
-    QFileDialog::Options opts;
     int extSize=1;
 
     if(doFilter)
@@ -127,11 +127,17 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
     {
         filterFile=QString(ext)+QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
     }
+
+#ifndef __APPLE__
+    opts = QFileDialog::DontConfirmOverwrite; // doesn't work on macOS, wtf?
+#endif
+
     fileName = QFileDialog::getSaveFileName(fileSelGetParent(),
                     QString::fromUtf8(label),  // caption
                     str,    // folder
                     filterFile,   // filter
-                    NULL,QFileDialog::DontConfirmOverwrite);   // selected filter
+                    NULL, // selected filter
+                    opts);
 
     int len = strlen(fileName.toUtf8().constData());
     if(!len || len >= max) return 0;
@@ -145,15 +151,19 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
             len+=extSize;
         }
     }
-    QFile newFile(fileName);
-    if(newFile.exists())
+
+    if(opts & QFileDialog::DontConfirmOverwrite)
     {
-        QFileInfo fileInfo(newFile);
-        QString q=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","Overwrite file "))+fileInfo.fileName()+QString("?");
-        // Show the dialog even in silent mode or if the user has disabled alerts.
-        if(!GUI_Question(q.toUtf8().constData(),true))
+        QFile newFile(fileName);
+        if(newFile.exists())
         {
-            return 0;
+            QFileInfo fileInfo(newFile);
+            QString q=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","Overwrite file "))+fileInfo.fileName()+QString("?");
+            // Show the dialog even in silent mode or if the user has disabled alerts.
+            if(!GUI_Question(q.toUtf8().constData(),true))
+            {
+                return 0;
+            }
         }
     }
 
@@ -187,7 +197,7 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
     QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     bool doFilter = !!(ext && strlen(ext));
     bool isProject=false;
-    QFileDialog::Options opts;
+    QFileDialog::Options opts = 0;
 
     if(doFilter)
     {
