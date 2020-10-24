@@ -678,6 +678,6 @@ uint32_t ADM_getNalSizeH265(uint8_t *extra, uint32_t len)
         ADM_warning("Invalid HEVC extradata.\n");
         return 0;
     }
-    return (extra[22] & 3) + 1;
+    return (extra[21] & 3) + 1;
 }
 // EOF
