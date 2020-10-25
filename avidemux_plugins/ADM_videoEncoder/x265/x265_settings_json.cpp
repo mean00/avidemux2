@@ -17,6 +17,7 @@ json.addString("profile",key->general.profile);
 json.endNode();
 json.addInt32("level",key->level);
 json.addNode("vui");
+json.addUint32("sar_idc",key->vui.sar_idc);
 json.addUint32("sar_height",key->vui.sar_height);
 json.addUint32("sar_width",key->vui.sar_width);
 json.addUint32("color_primaries",key->vui.color_primaries);

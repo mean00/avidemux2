@@ -14,6 +14,7 @@ struct  {
 }general;
 int32_t level;
 struct  {
+	uint32_t sar_idc;
 	uint32_t sar_height;
 	uint32_t sar_width;
 	uint32_t color_primaries;

@@ -2540,36 +2540,33 @@
          </property>
          <layout class="QGridLayout">
           <item row="0" column="0">
-           <widget class="QRadioButton" name="sarCustomRadioButton">
+           <widget class="QRadioButton" name="sarUnspecifiedRadioButton">
             <property name="text">
-             <string comment="PAR">Custom:</string>
+             <string comment="PAR">Unspecified</string>
             </property>
             <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QRadioButton" name="sarAsInputRadioButton">
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="sarPredefinedRadioButton">
             <property name="text">
-             <string>As Input</string>
+             <string>Predefined Aspect Ratio:</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="1" column="1">
            <layout class="QHBoxLayout">
             <item>
-             <widget class="QLabel" name="sarAsInputLabel">
+             <widget class="QComboBox" name="sarPredefinedComboBox">
               <property name="enabled">
                <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
               </property>
              </widget>
             </item>
             <item>
-             <spacer name="spacer_65">
+             <spacer name="spacer_62">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -2583,7 +2580,14 @@
             </item>
            </layout>
           </item>
-          <item row="0" column="1">
+          <item row="2" column="0">
+           <widget class="QRadioButton" name="sarCustomRadioButton">
+            <property name="text">
+             <string comment="PAR">Custom Aspect Ratio:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
            <layout class="QHBoxLayout">
             <item>
              <widget class="QSpinBox" name="sarCustomSpinBox1">
@@ -2633,56 +2637,12 @@
             </item>
            </layout>
           </item>
-          <item row="1" column="0">
-           <widget class="QRadioButton" name="sarPredefinedRadioButton">
+          <item row="3" column="0">
+           <widget class="QRadioButton" name="sarAsInputRadioButton">
             <property name="text">
-             <string>Predefined Aspect Ratio:</string>
+             <string>Same as Input</string>
             </property>
            </widget>
-          </item>
-          <item row="1" column="1">
-           <layout class="QHBoxLayout">
-            <item>
-             <widget class="QComboBox" name="sarPredefinedComboBox">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <item>
-               <property name="text">
-                <string>16:15 (PAL 4:3)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>64:45 (PAL 16:9)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>8:9 (NTSC 4:3)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>32:27 (NTSC 16:9)</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <spacer name="spacer_62">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
           </item>
          </layout>
         </widget>

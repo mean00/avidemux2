@@ -9,6 +9,7 @@ extern const ADM_paramList x265_settings_param[]={
  {"general.tuning",offsetof(x265_settings,general.tuning),"std::string",ADM_param_stdstring},
  {"general.profile",offsetof(x265_settings,general.profile),"std::string",ADM_param_stdstring},
  {"level",offsetof(x265_settings,level),"int32_t",ADM_param_int32_t},
+ {"vui.sar_idc",offsetof(x265_settings,vui.sar_idc),"uint32_t",ADM_param_uint32_t},
  {"vui.sar_height",offsetof(x265_settings,vui.sar_height),"uint32_t",ADM_param_uint32_t},
  {"vui.sar_width",offsetof(x265_settings,vui.sar_width),"uint32_t",ADM_param_uint32_t},
  {"vui.color_primaries",offsetof(x265_settings,vui.color_primaries),"uint32_t",ADM_param_uint32_t},

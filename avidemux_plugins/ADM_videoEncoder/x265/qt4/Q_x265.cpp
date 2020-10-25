@@ -100,6 +100,25 @@ static const char* listOfTunings[] = { "psnr", "ssim", "grain", "zerolatency", "
 static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
 #define NB_PROFILE sizeof(listOfProfiles)/sizeof(char*)
 
+static const idcToken listOfSARs[] = {
+    { 1, "1:1 (Normal)" },
+    { 2, "12:11 (PAL 4:3)" },
+    { 4, "16:11 (PAL 16:9)" },
+    { 3, "10:11 (NTSC 4:3)" },
+    { 5, "40:33 (NTSC 16:9)" },
+    { 6, "24:11" },
+    { 7, "20:11" },
+    { 8, "32:11" },
+    { 9, "80:33" },
+    { 10, "18:11" },
+    { 11, "15:11" },
+    { 12, "64:33" },
+    { 13, "160:99" },
+    { 14, "4:3" },
+    { 15, "3:2" },
+    { 16, "2:1" },
+};
+
 static const idcToken listOfPrimaries[] = {
     {1, "BT.709 (HD)" },
     {4, "BT.470M (old NTSC)" },
@@ -290,6 +309,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
                 depths->addItem(QString(t->idcString), QVariant(t->idcValue));
         }
 
+        fillComboBoxData(ui.sarPredefinedComboBox, listOfSARs);
         fillComboBoxData(ui.colourPrimariesComboBox, listOfPrimaries, unknown, 2);
         fillComboBoxData(ui.transferCharacteristicsComboBox, listOfXfers, unknown, 2);
         fillComboBoxData(ui.colourMatrixComboBox, listOfMatrices, unknown, 2);
@@ -489,25 +509,19 @@ bool x265Dialog::upload(void)
             default: ADM_assert(0);break;
         }
 
-        bool predefined = false;
-
-        for (int i= 0;i<NB_SAR;i++)
-	{
-                if (myCopy.vui.sar_width == predefinedARs[i].sarWidth && myCopy.vui.sar_height == predefinedARs[i].sarHeight)
-                {
-                     MK_RADIOBUTTON(sarPredefinedRadioButton);
-                     ui.sarPredefinedComboBox->setCurrentIndex(i);
-                     predefined = true;
-                     break;
-                }
-	}
-
-	if (!predefined)
-	{
-                MK_RADIOBUTTON(sarCustomRadioButton);
-                MK_UINT(sarCustomSpinBox1,vui.sar_width);
-                MK_UINT(sarCustomSpinBox2,vui.sar_height);
-	}
+    if (myCopy.vui.sar_idc == 0)
+    {
+        MK_RADIOBUTTON(sarUnspecifiedRadioButton);
+    } else if (myCopy.vui.sar_idc == X265_EXTENDED_SAR)
+    {
+        MK_RADIOBUTTON(sarCustomRadioButton);
+        MK_UINT(sarCustomSpinBox1,vui.sar_width);
+        MK_UINT(sarCustomSpinBox2,vui.sar_height);
+    } else
+    {
+        MK_RADIOBUTTON(sarPredefinedRadioButton);
+        MK_COMBOBOX_DATA(sarPredefinedComboBox,vui.sar_idc);
+    }
 
     MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
     MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
@@ -646,15 +660,17 @@ bool x265Dialog::download(void)
 #endif
           MK_COMBOBOX_DATA(comboBoxFrameThreads, general.frameThreads);
 
-          if(ui.sarPredefinedRadioButton->isChecked())
+          if(ui.sarUnspecifiedRadioButton->isChecked())
           {
-                const aspectRatio *r=predefinedARs+ui.sarPredefinedComboBox->currentIndex();
-                myCopy.vui.sar_width=r->sarWidth;
-                myCopy.vui.sar_height=r->sarHeight;
+              myCopy.vui.sar_idc = 0;
+          }else if(ui.sarCustomRadioButton->isChecked())
+          {
+              myCopy.vui.sar_idc = X265_EXTENDED_SAR;
+              MK_UINT(sarCustomSpinBox1,vui.sar_width);
+              MK_UINT(sarCustomSpinBox2,vui.sar_height);
           }else
           {
-                MK_UINT(sarCustomSpinBox1,vui.sar_width);
-                MK_UINT(sarCustomSpinBox2,vui.sar_height);
+              MK_COMBOBOX_DATA(sarPredefinedComboBox,vui.sar_idc);
           }
 
           MK_COMBOBOX_DATA(colourPrimariesComboBox, vui.color_primaries);
