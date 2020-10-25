@@ -2528,6 +2528,302 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tabDispaly">
+      <attribute name="title">
+       <string>Display</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <item>
+        <widget class="QGroupBox" name="groupColor">
+         <property name="title">
+          <string>Color Description</string>
+         </property>
+         <layout class="QGridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_50">
+            <property name="text">
+             <string>Video Format:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <layout class="QHBoxLayout" name="_8">
+            <item>
+             <widget class="QComboBox" name="videoFormatComboBox">
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>Undefined</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Component</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>PAL</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>NTSC</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>SECAM</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>MAC</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <spacer name="spacer_68">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_19">
+            <property name="text">
+             <string>Colour Primaries:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <layout class="QHBoxLayout" name="_9">
+            <item>
+             <widget class="QComboBox" name="colourPrimariesComboBox">
+             </widget>
+            </item>
+            <item>
+             <spacer name="spacer_69">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_48">
+            <property name="text">
+             <string>Transfer Characteristics:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <layout class="QHBoxLayout" name="_5">
+            <item>
+             <widget class="QComboBox" name="transferCharacteristicsComboBox">
+             </widget>
+            </item>
+            <item>
+             <spacer name="spacer_67">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_47">
+            <property name="text">
+             <string>Colour Matrix:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <layout class="QHBoxLayout" name="_7">
+            <item>
+             <widget class="QComboBox" name="colourMatrixComboBox">
+             </widget>
+            </item>
+            <item>
+             <spacer name="spacer_71">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxPAR">
+         <property name="title">
+          <string>Pixel Aspect Ratio</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QLabel" name="labelPAR">
+            <property name="text">
+             <string>The value set here will almost always be ignored in favor of the aspect ratio stored in the container.  Configure that via the options in Output Format for the muxer chosen.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout">
+            <item row="0" column="0">
+             <widget class="QRadioButton" name="sarUnspecifiedRadioButton">
+              <property name="text">
+               <string comment="PAR">Unspecified</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QRadioButton" name="sarPredefinedRadioButton">
+              <property name="text">
+               <string>Predefined Aspect Ratio:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <layout class="QHBoxLayout">
+              <item>
+               <widget class="QComboBox" name="sarPredefinedComboBox">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="spacer_62">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="0">
+             <widget class="QRadioButton" name="sarCustomRadioButton">
+              <property name="text">
+               <string comment="PAR">Custom Aspect Ratio:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <layout class="QHBoxLayout">
+              <item>
+               <widget class="QSpinBox" name="sarCustomSpinBox1">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>9999</number>
+                </property>
+                <property name="value">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="sarCustomLabel">
+                <property name="text">
+                 <string>:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="sarCustomSpinBox2">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>9999</number>
+                </property>
+                <property name="value">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="spacer_64">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="3" column="0">
+             <widget class="QRadioButton" name="sarAsInputRadioButton">
+              <property name="text">
+               <string>Same as Input</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tabAdvanced1">
       <attribute name="title">
        <string>Advanced 1</string>
@@ -2986,9 +3282,9 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabOutput1">
+     <widget class="QWidget" name="tabOutput">
       <attribute name="title">
-       <string>Output 1</string>
+       <string>Output</string>
       </attribute>
       <layout class="QVBoxLayout">
        <item>
@@ -3007,184 +3303,6 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_15">
-         <property name="title">
-          <string>Pixel Aspect Ratio</string>
-         </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <layout class="QGridLayout">
-            <item row="0" column="0">
-             <widget class="QRadioButton" name="sarCustomRadioButton">
-              <property name="text">
-               <string comment="PAR">Custom:</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QRadioButton" name="sarAsInputRadioButton">
-              <property name="text">
-               <string>As Input</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QLabel" name="sarAsInputLabel">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_65">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="0" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QSpinBox" name="sarCustomSpinBox1">
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>9999</number>
-                </property>
-                <property name="value">
-                 <number>1</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="sarCustomLabel">
-                <property name="text">
-                 <string>:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="sarCustomSpinBox2">
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>9999</number>
-                </property>
-                <property name="value">
-                 <number>1</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_64">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="1" column="0">
-             <widget class="QRadioButton" name="sarPredefinedRadioButton">
-              <property name="text">
-               <string>Predefined Aspect Ratio:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QComboBox" name="sarPredefinedComboBox">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>16:15 (PAL 4:3)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>64:45 (PAL 16:9)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>8:9 (NTSC 4:3)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>32:27 (NTSC 16:9)</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_62">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <spacer name="spacer_60">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tabOutput2">
-      <attribute name="title">
-       <string>Output 2</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QGroupBox" name="groupBox_5">
          <property name="title">
@@ -3263,278 +3381,13 @@
              </layout>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="label_50">
-              <property name="text">
-               <string>Video Format:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <layout class="QHBoxLayout" name="_8">
-              <item>
-               <widget class="QComboBox" name="videoFormatComboBox">
-                <property name="currentIndex">
-                 <number>0</number>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>Undefined</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Component</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>PAL</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>NTSC</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>SECAM</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>MAC</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_68">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_19">
-              <property name="text">
-               <string>Colour Primaries:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <layout class="QHBoxLayout" name="_9">
-              <item>
-               <widget class="QComboBox" name="colourPrimariesComboBox">
-                <item>
-                 <property name="text">
-                  <string>Undefined</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>BT709</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>BT470M</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>BT470BG</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>SMPTE170M</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>SMPTE240M</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Film</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_69">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_48">
-              <property name="text">
-               <string>Transfer Characteristics:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <layout class="QHBoxLayout" name="_5">
-              <item>
-               <widget class="QComboBox" name="transferCharacteristicsComboBox">
-                <item>
-                 <property name="text">
-                  <string>Undefined</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>BT709</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>BT470M</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>BT470BG</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Linear</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>LOG100</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>LOG316</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>SMPTEL170M</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>SMPTE240M</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_67">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_47">
-              <property name="text">
-               <string>Colour Matrix:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <layout class="QHBoxLayout" name="_7">
-              <item>
-               <widget class="QComboBox" name="colourMatrixComboBox">
-                <item>
-                 <property name="text">
-                  <string>Undefined</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>BT709</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>FCC</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>BT470BG</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>SMPTE170M</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>SMPTE240M</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>GBR</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>YCgCo</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_71">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="5" column="0">
              <widget class="QLabel" name="hrdLabel">
               <property name="text">
                <string>HRD Parameters:</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
+            <item row="1" column="1">
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
                <widget class="QComboBox" name="hrdComboBox">
@@ -3570,14 +3423,14 @@
               </item>
              </layout>
             </item>
-            <item row="6" column="0">
+            <item row="2" column="0">
              <widget class="QLabel" name="label_49">
               <property name="text">
                <string>Chroma Sample Location:</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
+            <item row="2" column="1">
              <layout class="QHBoxLayout" name="_10">
               <item>
                <widget class="QSpinBox" name="chromaSampleSpinBox">
@@ -3614,7 +3467,7 @@
         </widget>
        </item>
        <item>
-        <spacer name="spacer_72">
+        <spacer name="spacer_60">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -3716,18 +3569,18 @@
   <tabstop>sliceThreadingCheckBox</tabstop>
   <tabstop>threadedLookaheadCheckBox</tabstop>
   <tabstop>threadedLookaheadSpinBox</tabstop>
-  <tabstop>accessUnitCheckBox</tabstop>
   <tabstop>sarCustomRadioButton</tabstop>
   <tabstop>sarCustomSpinBox1</tabstop>
   <tabstop>sarCustomSpinBox2</tabstop>
   <tabstop>sarPredefinedRadioButton</tabstop>
   <tabstop>sarPredefinedComboBox</tabstop>
   <tabstop>sarAsInputRadioButton</tabstop>
-  <tabstop>overscanComboBox</tabstop>
   <tabstop>videoFormatComboBox</tabstop>
   <tabstop>colourPrimariesComboBox</tabstop>
   <tabstop>transferCharacteristicsComboBox</tabstop>
   <tabstop>colourMatrixComboBox</tabstop>
+  <tabstop>accessUnitCheckBox</tabstop>
+  <tabstop>overscanComboBox</tabstop>
   <tabstop>hrdComboBox</tabstop>
   <tabstop>chromaSampleSpinBox</tabstop>
   <tabstop>fullRangeSamplesCheckBox</tabstop>

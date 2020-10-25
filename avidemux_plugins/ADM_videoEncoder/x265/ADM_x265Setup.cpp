@@ -157,8 +157,19 @@ bool x265Encoder::setup(void)
   #define MKPARAM(x,y) {param.vui.x = x265Settings.vui.y;aprintf("[x265] vui."#x" = %d\n",param.vui.x);}
   #define MKPARAMD(x,y) {param.vui.x = (double)x265Settings.vui.y; aprintf("[x265] vui."#x" = %.2f\n",param.vui.x);}
   #define MKPARAMB(x,y) {param.vui.x = x265Settings.vui.y ;aprintf("[x265] vui."#x" = %s\n",TrueFalse[param.vui.x&1]);}
-  MKPARAM (sarWidth,sar_width) 
-  MKPARAM (sarHeight,sar_height) 
+
+    MKPARAM(aspectRatioIdc,sar_idc);
+    MKPARAM(sarWidth,sar_width);
+    MKPARAM(sarHeight,sar_height);
+
+    if(x265Settings.vui.color_primaries != 2 || x265Settings.vui.matrix_coeffs != 2 || x265Settings.vui.transfer_characteristics != 2)
+    {
+	param.vui.bEnableVideoSignalTypePresentFlag = true;
+	param.vui.bEnableColorDescriptionPresentFlag = true;
+	MKPARAM(colorPrimaries,color_primaries);
+	MKPARAM(matrixCoeffs,matrix_coeffs);
+	MKPARAM(transferCharacteristics,transfer_characteristics);
+    }
 
   // -------------- rate control------------
   switch(x265Settings.general.params.mode)

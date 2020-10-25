@@ -100,6 +100,73 @@ static const char* listOfTunings[] = { "psnr", "ssim", "grain", "zerolatency", "
 static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
 #define NB_PROFILE sizeof(listOfProfiles)/sizeof(char*)
 
+static const idcToken listOfSARs[] = {
+    { 1, "1:1 (Normal)" },
+    { 2, "12:11 (PAL 4:3)" },
+    { 4, "16:11 (PAL 16:9)" },
+    { 3, "10:11 (NTSC 4:3)" },
+    { 5, "40:33 (NTSC 16:9)" },
+    { 6, "24:11" },
+    { 7, "20:11" },
+    { 8, "32:11" },
+    { 9, "80:33" },
+    { 10, "18:11" },
+    { 11, "15:11" },
+    { 12, "64:33" },
+    { 13, "160:99" },
+    { 14, "4:3" },
+    { 15, "3:2" },
+    { 16, "2:1" },
+};
+
+static const idcToken listOfPrimaries[] = {
+    {1, "BT.709 (HD)" },
+    {4, "BT.470M (old NTSC)" },
+    {5, "BT.470BG (PAL)" },
+    {6, "SMPTE 170M (NTSC)" }, /* Same as SMTPE 240M */
+    {7, "SMPTE 240M" },
+    {9, "BT.2020 (UHD)" },
+    {8, "Film" },
+    {10, "SMPTE 428" },
+    {11, "SMPTE 431-2 (DCI-P3)" },
+    {12, "SMPTE 432 (Display P3)" },
+};
+
+static const idcToken listOfXfers[] = {
+    {1,  "BT.709 (HD)" }, /* Same as SMPTE 170M, BT.2020-10, BT.2020-12 */
+    {4,  "BT.470M (NTSC)" },
+    {5,  "BT.470BG (PAL)" },
+    {6,  "SMPTE 170M (NTSC)" },
+    {7,  "SMPTE 240M" },
+    {14, "BT.2020 10bit (UHD)" },
+    {15, "BT.2020 12bit (UHD)" },
+    {13, "IEC 61966-2-1 (sRGB)" },
+    {11, "IEC 61966-2-4" },
+    {16, "SMPTE 2084 (HDR)" },
+    {12, "BT.1361e" },
+    {17, "SMPTE 428" },
+    {8,  "linear" },
+    {9,  "log100" },
+    {10, "log316" },
+    {18, "arib-std-b67"},
+};
+
+static const idcToken listOfMatrices[] = { /* Kr      Kb     */
+    {1,  "BT.709 (HD)" },                  /* 0.2126  0.0722 */
+    {4,  "FCC (old NTSC)" },               /* 0.30    0.11   */
+    {5,  "BT.470BG (PAL)" },               /* 0.299   0.114  */
+    {6,  "SMPTE 170M (NTSC)" },            /* 0.299   0.114  */
+    {7,  "SMPTE 240M" },                   /* 0.212   0.087  */
+    {9,  "BT.2020 NCL (UHD)" },            /* 0.2627  0.0593 */
+    {10, "BT.2020 CL" },                   /* Color difference uses different values than luma */
+    {11, "SMPTE 2085 (HDR)" },
+    {14, "ICtCp" },
+    {0,  "gbr" },
+    {8,  "YCGCO" },
+    {12, "Chroma Derived NCL" },
+    {13, "Chroma Derived CL" },
+};
+
 /**
     \fn x265_ui
     \brief hook to enter UI specific dialog
@@ -215,6 +282,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         const char *automatic=QT_TRANSLATE_NOOP("x265","Auto");
         const char *none=QT_TRANSLATE_NOOP("x265","none");
         const char *dflt=QT_TRANSLATE_NOOP("x265","Default");
+        const char *unknown=QT_TRANSLATE_NOOP("x265","Unknown");
 
         // Rebuild idc level list
         fillComboBoxData(ui.idcLevelComboBox, listOfIdc, automatic, -1);
@@ -240,6 +308,11 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
             if(x265ProbeBitDepth(t->idcValue))
                 depths->addItem(QString(t->idcString), QVariant(t->idcValue));
         }
+
+        fillComboBoxData(ui.sarPredefinedComboBox, listOfSARs);
+        fillComboBoxData(ui.colourPrimariesComboBox, listOfPrimaries, unknown, 2);
+        fillComboBoxData(ui.transferCharacteristicsComboBox, listOfXfers, unknown, 2);
+        fillComboBoxData(ui.colourMatrixComboBox, listOfMatrices, unknown, 2);
 
         upload();
 
@@ -436,25 +509,19 @@ bool x265Dialog::upload(void)
             default: ADM_assert(0);break;
         }
 
-        bool predefined = false;
-
-        for (int i= 0;i<NB_SAR;i++)
-	{
-                if (myCopy.vui.sar_width == predefinedARs[i].sarWidth && myCopy.vui.sar_height == predefinedARs[i].sarHeight)
-                {
-                     MK_RADIOBUTTON(sarPredefinedRadioButton);
-                     ui.sarPredefinedComboBox->setCurrentIndex(i);
-                     predefined = true;
-                     break;
-                }
-	}
-
-	if (!predefined)
-	{
-                MK_RADIOBUTTON(sarCustomRadioButton);
-                MK_UINT(sarCustomSpinBox1,vui.sar_width);
-                MK_UINT(sarCustomSpinBox2,vui.sar_height);
-	}
+    if (myCopy.vui.sar_idc == 0)
+    {
+        MK_RADIOBUTTON(sarUnspecifiedRadioButton);
+    } else if (myCopy.vui.sar_idc == X265_EXTENDED_SAR)
+    {
+        MK_RADIOBUTTON(sarCustomRadioButton);
+        MK_UINT(sarCustomSpinBox1,vui.sar_width);
+        MK_UINT(sarCustomSpinBox2,vui.sar_height);
+    } else
+    {
+        MK_RADIOBUTTON(sarPredefinedRadioButton);
+        MK_COMBOBOX_DATA(sarPredefinedComboBox,vui.sar_idc);
+    }
 
     MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
     MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
@@ -462,15 +529,21 @@ bool x265Dialog::upload(void)
     MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
 
     MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
+
+    /* VUI */
+    MK_COMBOBOX_DATA(colourPrimariesComboBox,vui.color_primaries);
+    MK_COMBOBOX_DATA(transferCharacteristicsComboBox,vui.transfer_characteristics);
+    MK_COMBOBOX_DATA(colourMatrixComboBox,vui.matrix_coeffs);
+    DISABLE(tabOutput); /* These aren't implemented */
+    DISABLE(videoFormatComboBox);
+    DISABLE(sarAsInputRadioButton);
+
           DISABLE(spsiComboBox);
           DISABLE(groupBox_14); // quant matrix
           DISABLE(tabAdvanced1);
           DISABLE(tabAdvanced2);
-          DISABLE(tabOutput2);
           DISABLE(maxCrfCheckBox);
-          DISABLE(sarAsInputRadioButton);
           DISABLE(groupBox_3);
-          DISABLE(accessUnitCheckBox);
           return true;
 }
 #undef MK_CHECKBOX
@@ -587,16 +660,22 @@ bool x265Dialog::download(void)
 #endif
           MK_COMBOBOX_DATA(comboBoxFrameThreads, general.frameThreads);
 
-          if(ui.sarPredefinedRadioButton->isChecked())
+          if(ui.sarUnspecifiedRadioButton->isChecked())
           {
-                const aspectRatio *r=predefinedARs+ui.sarPredefinedComboBox->currentIndex();
-                myCopy.vui.sar_width=r->sarWidth;
-                myCopy.vui.sar_height=r->sarHeight;
+              myCopy.vui.sar_idc = 0;
+          }else if(ui.sarCustomRadioButton->isChecked())
+          {
+              myCopy.vui.sar_idc = X265_EXTENDED_SAR;
+              MK_UINT(sarCustomSpinBox1,vui.sar_width);
+              MK_UINT(sarCustomSpinBox2,vui.sar_height);
           }else
           {
-                MK_UINT(sarCustomSpinBox1,vui.sar_width);
-                MK_UINT(sarCustomSpinBox2,vui.sar_height);
+              MK_COMBOBOX_DATA(sarPredefinedComboBox,vui.sar_idc);
           }
+
+          MK_COMBOBOX_DATA(colourPrimariesComboBox, vui.color_primaries);
+          MK_COMBOBOX_DATA(transferCharacteristicsComboBox, vui.transfer_characteristics);
+          MK_COMBOBOX_DATA(colourMatrixComboBox, vui.matrix_coeffs);
 
           return true;
 }
