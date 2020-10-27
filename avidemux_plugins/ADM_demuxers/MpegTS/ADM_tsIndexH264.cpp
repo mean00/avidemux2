@@ -13,6 +13,7 @@
  ***************************************************************************/
 #include "ADM_tsIndex.h"
 #include "DIA_coreToolkit.h"
+#include <algorithm>
 
 static bool decoderSei1(const ADM_SPSInfo &spsInfo, uint32_t size, uint8_t *bfer, pictureStructure *pic);
 static bool decoderSei6(uint32_t size, uint8_t *bfer, uint32_t *recovery);
@@ -79,6 +80,9 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     uint64_t rewindStart=0;
     uint32_t rewindOffset=0;
     bool sps_found=false;
+    bool sei_found=false;
+    bool no_timing=false;
+    std::vector <uint64_t> listOfPts;
     TS_PESpacket SEI_nal(0);
     while(true)
     {
@@ -87,6 +91,16 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
         if(!pkt->stillOk()) break;
         if(startCode&0x80) continue; // Marker missing
         startCode&=0x1f;
+        if(sps_found && no_timing)
+        {
+            dmxPacketInfo tme;
+            pkt->getInfo(&tme);
+            if(tme.pts != ADM_NO_PTS)
+            {
+                if(listOfPts.empty() || (listOfPts.size() && listOfPts.back() != tme.pts))
+                    listOfPts.push_back(tme.pts);
+            }
+        }
         if(!sps_found && startCode!=NAL_SPS)
             continue;
         if(startCode!=NAL_SPS && startCode!=NAL_SEI)
@@ -95,7 +109,8 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
         // Got SPS!
         if(startCode==NAL_SPS && sps_found) // most likely the next keyframe
         {
-            ADM_warning("No picture timing SEI found within the first GOP, can't check interlacing.\n");
+            if(!sei_found)
+                ADM_warning("No picture timing SEI found within the first GOP, can't check interlacing.\n");
             break;
         }
         // Get info
@@ -120,22 +135,65 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
             video.w=spsInfo.width;
             video.h=spsInfo.height;
             video.fps=spsInfo.fps1000;
+            if(!video.fps || video.fps > 1000000 /* arbitrary limit, tbc obviously doesn't match fps */ )
+                no_timing=true;
             spsLen=SEI_nal.payloadSize-3;
             if(spsLen>ADM_NAL_BUFFER_SIZE)
                 spsLen=ADM_NAL_BUFFER_SIZE;
             memcpy(spsCache,SEI_nal.payload,spsLen);
             continue; // we miss the next NALU, should be harmless
         }
-        if(startCode==NAL_SEI && sps_found && SEI_nal.payloadSize>=7)
+        if(startCode==NAL_SEI && sps_found && !sei_found && SEI_nal.payloadSize>=7)
         {
             pictureStructure p=pictureFrame;
             if(decodeSEI(SEI_nal.payloadSize-4, SEI_nal.payload, NULL, &p) & 1)
             {
                 video.interlaced=(p!=pictureFrame);
-                break; // we've got both, SPS and SEI
+                sei_found=true;
+                // keep collecting pts if we cannot use codec time base for fps
+                if(!no_timing)
+                    break;
             }
             startCode=pkt->readi8(); // peek now, findStartCode will miss it
             if((startCode&0x1f)==NAL_SPS) break;
+        }
+    }
+    // Try to derive fps from a sorted list of pts from the first GOP.
+    if(no_timing && listOfPts.size() > 1)
+    {
+        std::sort(listOfPts.begin(), listOfPts.end());
+        uint64_t delta = ADM_NO_PTS;
+        uint64_t previous = listOfPts.front();
+        std::vector<uint64_t>::iterator it;
+        for(it = listOfPts.begin(); it != listOfPts.end(); it++)
+        {
+            if(*it == previous)
+                continue;
+            uint64_t min = *it - previous;
+            if(min < delta)
+                delta = min;
+        }
+        if(delta != ADM_NO_PTS)
+        {
+            ADM_info("Minimum PTS delta in 90 kHz ticks: %" PRIu64"\n",delta);
+            double d = delta;
+            d /= 9.;
+            d *= 100.;
+            d += 0.49;
+            delta = (uint64_t)d; // in microseconds;
+            if(delta < 10000 || delta > 42000)
+            {
+                ADM_warning("Minimum delta %" PRIu64" out of range, probably bogus, hardcoding fps1000 to 25000\n",delta);
+                video.fps = 25000;
+            }else
+            {
+                video.fps = ADM_Fps1000FromUs(delta);
+                ADM_info("Setting fps1000 to %u\n",video.fps);
+            }
+        }else
+        {
+            ADM_warning("No usable timing information found, hardcoding fps1000 to 25000\n");
+            video.fps = 25000;
         }
     }
     if(sps_found)
