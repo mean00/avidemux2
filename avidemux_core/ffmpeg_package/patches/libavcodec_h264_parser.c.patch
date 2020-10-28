@@ -1,6 +1,6 @@
---- libavcodec/h264_parser.c.orig	2019-10-20 09:07:02.000000000 +0200
-+++ libavcodec/h264_parser.c	2019-10-20 09:15:43.000000000 +0200
-@@ -64,6 +64,106 @@
+--- libavcodec/h264_parser.c.orig	2020-07-09 11:17:46.000000000 +0200
++++ libavcodec/h264_parser.c	2020-10-28 00:51:47.874215935 +0100
+@@ -64,6 +64,105 @@
      int last_frame_num, last_picture_structure;
  } H264ParseContext;
  
@@ -69,7 +69,6 @@
 +    }else
 +    {
 +            printf("[H264] No timing information\n");
-+            info->fps1000=25000;
 +    }
 +    // D.2.2 SEI Timing present if CpbDbpDelayPresentFlag=1 or pictStructPresent=1
 +    // CpbDbpDelayPresentFlag =1 if nal_hdr or vcl_hrd or ???
