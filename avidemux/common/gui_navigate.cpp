@@ -36,13 +36,13 @@
 #include "ADM_preview.h"
 
 static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again for cannot seek
+static void A_timedError(bool force, const char *s);
 
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
 bool   GUI_GoToTime(uint64_t time);
 bool   GUI_infiniteForward(uint64_t pts);
 bool   GUI_lastFrameBeforePts(uint64_t pts);
 bool   GUI_SeekByTime(int64_t time);
-static void A_timedError(const char *s);
 bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 /**
     \fn HandleAction_Navigate
@@ -221,6 +221,7 @@ void GUI_NextFrame(uint32_t frameCount)
 */
 void GUI_NextKeyFrame(void)
 {
+    static bool firstError = true;
 
     if (playing)
     return;
@@ -229,7 +230,9 @@ void GUI_NextKeyFrame(void)
 
     if (!admPreview::nextKeyFrame())
       {
-        A_timedError(QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
+        bool force = firstError;
+        firstError = false;
+        A_timedError(force, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
         return;
       }
     GUI_setCurrentFrameAndTime();
@@ -285,16 +288,19 @@ int GUI_GoToFrame(uint32_t frame)
 
 void GUI_PreviousKeyFrame(void)
 {
+    static bool firstError = true;
+
     if (playing)
     return;
     if (!avifileinfo)
     return;
 
-
     if (!admPreview::previousKeyFrame())
       {
-          A_timedError(QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
-      return;
+        bool force = firstError;
+        firstError = false;
+        A_timedError(force, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
+        return;
       }
     GUI_setCurrentFrameAndTime();
     UI_purge();
@@ -555,11 +561,13 @@ bool GUI_lastFrameBeforePts(uint64_t pts)
  * \brief display error unless the last error is too recent
  * @param s
  */
-void A_timedError(const char *s)
+void A_timedError(bool force, const char *s)
 {
-    if(NaggingCountDown.done()) // still running, do not nag
+    if(force || NaggingCountDown.done()) // else still running, do not nag
     {
-      GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
+        NaggingCountDown.reset();
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
+        return;
     }
     NaggingCountDown.reset();
 }
