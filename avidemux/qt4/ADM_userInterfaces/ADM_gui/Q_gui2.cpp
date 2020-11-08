@@ -745,6 +745,20 @@ bool MainWindow::buildMyMenu(void)
 }
 
 /**
+    \fn getMenuEntryForAction
+*/
+static const MenuEntry *getMenuEntryForAction(std::vector<MenuEntry> *list, QAction *action)
+{
+    for(int i=0; i < list->size(); i++)
+    {
+        MenuEntry *candidate = &list->at(i);
+        if(candidate->cookie == (void *)action)
+            return candidate;
+    }
+    return NULL;
+}
+
+/**
     \fn buildActionLists
 */
 void MainWindow::buildActionLists(void)
@@ -1068,41 +1082,90 @@ void MainWindow::updateCodecWidgetControlsState(void)
 }
 
 /**
+    \fn findAction
+*/
+static QAction *findAction(std::vector<MenuEntry> *list, Action action)
+{
+    for(int i=0; i < list->size(); i++)
+    {
+        MenuEntry *m = &list->at(i);
+        if(m->type != MENU_ACTION) continue;
+        if(m->event != action) continue;
+        QAction *a = (QAction *)m->cookie;
+        return a;
+    }
+    return NULL;
+}
+
+/**
     \fn updateActionShortcuts
 */
 void MainWindow::updateActionShortcuts(void)
 {
-    std::vector<MenuEntry *> defaultShortcuts;
-    std::vector<QAction *> listOfActionsToUpdate;
     bool alt=false, swpud=false;
     prefs->get(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,&alt);
     prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swpud);
 
-    ui.menuGo->actions().at(4-swpud)->setShortcut(Qt::Key_Up);
-    ui.menuGo->actions().at(3+swpud)->setShortcut(Qt::Key_Down);
-
-    for(int i=6;i<11;i++)
     {
+        QAction *q;
+
+        q = findAction(&myMenuGo, ACT_PreviousKFrame);
+        if(q)
+            q->setShortcut(swpud ? Qt::Key_Up : Qt::Key_Down);
+
+        q = findAction(&myMenuGo, ACT_NextKFrame);
+        if(q)
+            q->setShortcut(swpud ? Qt::Key_Down : Qt::Key_Up);
+    }
+
+    std::vector<MenuEntry *> defaultShortcuts;
+
+    for(int i=0; i < myMenuEdit.size(); i++)
+    {
+        MenuEntry *m = &myMenuEdit[i];
         // The separator is number 7, but this is a bit more readable
-        if (myMenuEdit[i].type == MENU_SEPARATOR) {
+        if(m->type != MENU_ACTION)
             continue;
+        if(m->event == ACT_PREFERENCES)
+            break;
+        switch(m->event)
+        {
+            case ACT_Delete:
+            case ACT_MarkA:
+            case ACT_MarkB:
+            case ACT_ResetMarkers:
+                defaultShortcuts.push_back(m);
+                break;
+            default:break;
         }
-        defaultShortcuts.push_back(&myMenuEdit[i]);
-        listOfActionsToUpdate.push_back(ui.menuEdit->actions().at(i));
     }
 
-    for(int i=7;i<12;i++)
+    for(int i=0; i < myMenuGo.size(); i++)
     {
-        if(i==9) continue;
-        defaultShortcuts.push_back(&myMenuGo[i]);
-        listOfActionsToUpdate.push_back(ui.menuGo->actions().at(i));
+        MenuEntry *m = &myMenuGo[i];
+        if(m->type != MENU_ACTION)
+            continue;
+        if(m->event == ACT_GotoTime)
+            break;
+        switch(m->event)
+        {
+            case ACT_Begin:
+            case ACT_End:
+            case ACT_GotoMarkA:
+            case ACT_GotoMarkB:
+                defaultShortcuts.push_back(m);
+                break;
+            default:break;
+        }
     }
 
-    int n=listOfActionsToUpdate.size();
+    int n = defaultShortcuts.size();
     for(int i=0;i<n;i++)
     {
         MenuEntry *m=defaultShortcuts.at(i);
-        QAction *a=listOfActionsToUpdate.at(i);
+        if(!m) continue;
+        QAction *a=(QAction *)m->cookie;
+        if(!a) continue;
         if(alt)
         {
             std::string sc="";
@@ -1149,63 +1212,82 @@ void MainWindow::updateActionShortcuts(void)
 }
 
 /**
+    \fn getActionShortcutString
+*/
+static QString getActionShortcutString(QMenu *menu, std::vector<MenuEntry> *list, Action action)
+{
+    QString s = " ";
+    for(int i=0; i < menu->actions().size(); i++)
+    {
+        QAction *a = menu->actions().at(i);
+        const MenuEntry *m = getMenuEntryForAction(list, a);
+        if(!m) continue;
+        if(m->type != MENU_ACTION) continue;
+        if(m->event != action) continue;
+        QKeySequence seq = a->shortcut();
+        s = seq.toString().toUpper();
+        break;
+    }
+    return s;
+}
+
+/**
     \fn widgetsUpdateTooltips
     \brief Update tooltips showing tunable action shortcuts in the navigation and selection widgets
 */
 void MainWindow::widgetsUpdateTooltips(void)
 {
-    std::vector<QString> ListOfShortcuts;
-    for(int i=0;i<12;i++)
-    {
-        if(i==5 || i==6 || i==9) continue;
-        QKeySequence seq=ui.menuGo->actions().at(i)->shortcut();
-        QString s=seq.toString().toUpper();
-        ListOfShortcuts.push_back(s);
-    }
-
-    for(int i=8;i<10;i++)
-    {
-        QKeySequence seq=ui.menuEdit->actions().at(i)->shortcut();
-        QString s=seq.toString().toUpper();
-        ListOfShortcuts.push_back(s);
-    }
-
     QString tt;
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Play/Stop"))+QString(" [")+ListOfShortcuts[0]+QString("]");
+#define SHORTCUT(x,y) QString(" [") + getActionShortcutString(ui.menu ##y, &myMenu ##y, x) + QString("]");
+
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Play/Stop"));
+    tt += SHORTCUT(ACT_PlayAvi,Go)
     ui.toolButtonPlay->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to previous frame"))+QString(" [")+ListOfShortcuts[1]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to previous frame"));
+    tt += SHORTCUT(ACT_PreviousFrame,Go)
     ui.toolButtonPreviousFrame->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to next frame"))+QString(" [")+ListOfShortcuts[2]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to next frame"));
+    tt += SHORTCUT(ACT_NextFrame,Go)
     ui.toolButtonNextFrame->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to previous keyframe"))+QString(" [")+ListOfShortcuts[3]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to previous keyframe"));
+    tt += SHORTCUT(ACT_PreviousKFrame,Go)
     ui.toolButtonPreviousIntraFrame->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to next keyframe"))+QString(" [")+ListOfShortcuts[4]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to next keyframe"));
+    tt += SHORTCUT(ACT_NextKFrame,Go)
     ui.toolButtonNextIntraFrame->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Set start marker"))+QString(" [")+ListOfShortcuts[9]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Set start marker"));
+    tt += SHORTCUT(ACT_MarkA,Edit)
     ui.toolButtonSetMarkerA->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Set end marker"))+QString(" [")+ListOfShortcuts[10]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Set end marker"));
+    tt += SHORTCUT(ACT_MarkB,Edit)
     ui.toolButtonSetMarkerB->setToolTip(tt);
 
     // go to black frame tooltips are static, the actions don't have shortcuts
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to first frame"))+QString(" [")+ListOfShortcuts[5]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to first frame"));
+    tt += SHORTCUT(ACT_Begin,Go)
     ui.toolButtonFirstFrame->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to last frame"))+QString(" [")+ListOfShortcuts[6]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to last frame"));
+    tt += SHORTCUT(ACT_End,Go)
     ui.toolButtonLastFrame->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to marker A"))+QString(" [")+ListOfShortcuts[7]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to marker A"));
+    tt += SHORTCUT(ACT_GotoMarkA,Go)
     ui.pushButtonJumpToMarkerA->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to marker B"))+QString(" [")+ListOfShortcuts[8]+QString("]");
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to marker B"));
+    tt += SHORTCUT(ACT_GotoMarkB,Go)
     ui.pushButtonJumpToMarkerB->setToolTip(tt);
+
+#undef SHORTCUT
 
     // special case one minute back and forward buttons, their action shortcuts are not defined via myOwnMenu.h
     bool swpud=false;
