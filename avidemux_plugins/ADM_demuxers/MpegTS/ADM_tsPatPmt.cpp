@@ -308,12 +308,13 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                case 0xa:  // dvb language
                {
                    if(tag_len<2) break; // too short
-                   char lan[16];
-                   for(int i=0;i<tag_len;i++)
+                   char lan[4];
+                   int langCodeLen = (tag_len>3)? 3 : tag_len;
+                   for(int i=0; i<langCodeLen; i++)
                    {
                        lan[i]=head[2+i];
                    }
-                   lan[tag_len]=0;
+                   lan[langCodeLen]=0;
                    trk.language=std::string(lan);
                    break;                        
                }
