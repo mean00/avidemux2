@@ -34,7 +34,26 @@ bool ADM_Composer::audioSetAudioPoolLanguage(int poolIndex, const char *language
         ADM_warning("Pool index is out of bound (%d/%d)\n",poolIndex,(int)audioTrackPool.size());
         return false;
     }
-    audioTrackPool.at(poolIndex)->setLanguage(language);
+    if(!language)
+        return false;
+    ADM_edAudioTrack *trk = audioTrackPool.at(poolIndex);
+    int len = strlen(language);
+    if(len < 2)
+    {
+        ADM_warning("Language code too short (%d), skipping.\n",len);
+        return false;
+    }
+    if(len > 3)
+    {
+        ADM_warning("Language code too long (%d), truncating.\n",len);
+        char lang[4];
+        strncpy(lang,language,3);
+        lang[3] = 0;
+        trk->setLanguage(lang);
+    }else
+    {
+        trk->setLanguage(language);
+    }
     return true;
 }
 
