@@ -67,7 +67,7 @@ extern "C"
     0, /* uint32_t i_bframe_bias */ \
     1, /* uint32_t i_bframe_pyramid */ \
     1, /* bool b_deblocking_filter */ \
-    1, /* bool b_open_gop */ \
+    0, /* bool b_open_gop */ \
     0, /* uint32_t interlaced_mode */ \
     false, /* bool constrained_intra */ \
     true, /* bool b_intra */ \
