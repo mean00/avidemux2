@@ -560,7 +560,7 @@ typedef struct
     Action event;
 }toolBarTranslate;
 
-toolBarTranslate toolbar[]=
+static toolBarTranslate toolbar[]=
 {
 {"actionOpen",              ACT_OPEN_VIDEO},
 {"actionSave_video",        ACT_SAVE_VIDEO},
@@ -589,6 +589,70 @@ void MainWindow::searchToolBar(QAction *action)
         ADM_warning("Toolbar:Cannot handle %s\n",name);
         ADM_dealloc( name);
 }
+
+/**
+    \fn findActionInToolBar
+*/
+static QAction *findActionInToolBar(QToolBar *tb, Action action)
+{
+    toolBarTranslate *t = toolbar;
+    const char *name = NULL;
+    while(t->name)
+    {
+        if(t->event != action)
+        {
+            t++;
+            continue;
+        }
+        name = t->name;
+        break;
+    }
+    if(!name)
+        return NULL;
+
+    QAction *a = NULL;
+    for(int i=0; i < tb->actions().size(); i++)
+    {
+        a = tb->actions().at(i);
+        QString s = a->objectName();
+        if(s.isEmpty())
+            continue;
+        if(!strcmp(s.toUtf8().constData(), name))
+            return a;
+    }
+    return NULL;
+}
+
+/**
+    \fn getMenuEntryForAction
+*/
+static const MenuEntry *getMenuEntryForAction(std::vector<MenuEntry> *list, QAction *action)
+{
+    for(int i=0; i < list->size(); i++)
+    {
+        MenuEntry *candidate = &list->at(i);
+        if(candidate->cookie == (void *)action)
+            return candidate;
+    }
+    return NULL;
+}
+
+/**
+    \fn findAction
+*/
+static QAction *findAction(std::vector<MenuEntry> *list, Action action)
+{
+    for(int i=0; i < list->size(); i++)
+    {
+        MenuEntry *m = &list->at(i);
+        if(m->type != MENU_ACTION && m->type != MENU_SUBACTION) continue;
+        if(m->event != action) continue;
+        QAction *a = (QAction *)m->cookie;
+        return a;
+    }
+    return NULL;
+}
+
 /**
     \fn buildFileMenu
 */
@@ -631,6 +695,8 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                             a=insert->addAction(icon,qs);
                         }else
                             a=insert->addAction(qs);
+                        ADM_assert(a);
+                        a->setObjectName(m->text.c_str());
 #if defined(__APPLE__)
                         switch(m->event)
                         {
@@ -739,23 +805,11 @@ bool MainWindow::buildMyMenu(void)
     connect( ui.menuView,SIGNAL(triggered(QAction*)),this,SLOT(searchViewMenu(QAction*)));
     buildMenu(ui.menuView, &myMenuView[0], myMenuView.size());
 
-    ui.menuVideo->actions().at(3)->setCheckable(true);
+    QAction *a = findAction(&myMenuVideo, ACT_PreviewChanged);
+    if(a)
+        a->setCheckable(true);
 
     return true;
-}
-
-/**
-    \fn getMenuEntryForAction
-*/
-static const MenuEntry *getMenuEntryForAction(std::vector<MenuEntry> *list, QAction *action)
-{
-    for(int i=0; i < list->size(); i++)
-    {
-        MenuEntry *candidate = &list->at(i);
-        if(candidate->cookie == (void *)action)
-            return candidate;
-    }
-    return NULL;
 }
 
 /**
@@ -769,30 +823,43 @@ void MainWindow::buildActionLists(void)
 
     // Make a list of the items that are enabled/disabled depending if video is loaded or  not
     //-----------------------------------------------------------------------------------
-    for(int i=1;i<6;i++)
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(i));
+#define PUSH_LOADED(x,act) { QAction *a = findAction(&myMenu ##x,act); if(a) ActionsAvailableWhenFileLoaded.push_back(a); }
+    PUSH_LOADED(File, ACT_APPEND_VIDEO)
+    PUSH_LOADED(File, ACT_SAVE_VIDEO)
+    PUSH_LOADED(File, ACT_SAVE_QUEUE)
 
-    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(this->_scriptEngines.size()*2+7)); // "Information"
+    PUSH_LOADED(File, ACT_SAVE_BMP)
+    PUSH_LOADED(File, ACT_SAVE_PNG)
+    PUSH_LOADED(File, ACT_SAVE_JPG)
+    PUSH_LOADED(File, ACT_SAVE_BUNCH_OF_JPG)
 
-    for(int i=3;i<11;i++)
-    {
-        if(i==5 || i==7) continue;
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
-    }
+    PUSH_LOADED(File, ACT_CLOSE)
+    PUSH_LOADED(File, ACT_VIDEO_PROPERTIES)
 
-    for(int i=1;i<ui.menuView->actions().size();i++)
-    { // disable zoom if no video is loaded
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuView->actions().at(i));
-    }
+    PUSH_LOADED(Edit, ACT_Cut)
+    PUSH_LOADED(Edit, ACT_Copy)
+    PUSH_LOADED(Edit, ACT_Delete)
 
-    bool canSave=!!ADM_mx_getNbMuxers();
-    for(int i=3-canSave;i<ui.toolBar->actions().size();i++)
-    { // disable "Save" and "Information" buttons in the toolbar if no video is loaded, "Save" also if we've got zero muxers
-        ActionsAvailableWhenFileLoaded.push_back(ui.toolBar->actions().at(i));
-    }
+    PUSH_LOADED(Edit, ACT_MarkA)
+    PUSH_LOADED(Edit, ACT_MarkB)
+    PUSH_LOADED(Edit, ACT_ResetMarkers)
 
-#define PUSH_FULL_MENU_LOADED(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsAvailableWhenFileLoaded.push_back(ui.x->actions().at(i));
-#define PUSH_FULL_MENU_PLAYBACK(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsDisabledOnPlayback.push_back(ui.x->actions().at(i));
+    PUSH_LOADED(View, ACT_ZOOM_1_4)
+    PUSH_LOADED(View, ACT_ZOOM_1_2)
+    PUSH_LOADED(View, ACT_ZOOM_1_1)
+    PUSH_LOADED(View, ACT_ZOOM_2_1)
+    PUSH_LOADED(View, ACT_ZOOM_FIT_IN)
+
+#define PUSH_LOADED_TOOLBAR(action) { QAction *a = findActionInToolBar(ui.toolBar, action); if(a) ActionsAvailableWhenFileLoaded.push_back(a); }
+    if(ADM_mx_getNbMuxers()) // Don't enable "Save" if we've got zero muxers.
+        PUSH_LOADED_TOOLBAR(ACT_SAVE_VIDEO)
+    PUSH_LOADED_TOOLBAR(ACT_VIDEO_PROPERTIES)
+    PUSH_LOADED_TOOLBAR(ACT_PreviewChanged)
+
+#define PUSH_FULL_MENU_LOADED(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++) \
+    { QAction *a = ui.x->actions().at(i); if(a->objectName().isEmpty()) continue; ActionsAvailableWhenFileLoaded.push_back(a); }
+#define PUSH_FULL_MENU_PLAYBACK(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++) \
+    { QAction *a = ui.x->actions().at(i); if(a->objectName().isEmpty()) continue; ActionsDisabledOnPlayback.push_back(a); }
 
     PUSH_FULL_MENU_LOADED(menuAudio,2)
     PUSH_FULL_MENU_LOADED(menuAuto,0)
@@ -828,17 +895,19 @@ void MainWindow::buildActionLists(void)
 
     // "Always available" below doesn't override the list of menu items disabled during playback
 
-#define PUSH_ALWAYS_AVAILABLE(menu,entry)   ActionsAlwaysAvailable.push_back( ui.menu->actions().at(entry));
+#define PUSH_ALWAYS_AVAILABLE(menu,event) { QAction *a = findAction(&myMenu ##menu, event); if(a) ActionsAlwaysAvailable.push_back(a); }
 
-    PUSH_ALWAYS_AVAILABLE(menuFile,0)
-    PUSH_ALWAYS_AVAILABLE(menuFile,7)
-    PUSH_ALWAYS_AVAILABLE(menuFile,11)
+    PUSH_ALWAYS_AVAILABLE(File, ACT_OPEN_VIDEO)
+    PUSH_ALWAYS_AVAILABLE(File, ACT_AVS_PROXY)
+    PUSH_ALWAYS_AVAILABLE(File, ACT_EXIT)
 
-    PUSH_ALWAYS_AVAILABLE(menuEdit,12)
-    PUSH_ALWAYS_AVAILABLE(menuEdit,14)
-    PUSH_ALWAYS_AVAILABLE(menuEdit,15)            
+    PUSH_ALWAYS_AVAILABLE(Edit, ACT_PREFERENCES)
+    PUSH_ALWAYS_AVAILABLE(Edit, ACT_SaveAsDefault)
+    PUSH_ALWAYS_AVAILABLE(Edit, ACT_LoadDefault)
 
-    PUSH_ALWAYS_AVAILABLE(toolBar,1)
+#define PUSH_ALWAYS_AVAILABLE_TOOLBAR(event) { QAction *a = findActionInToolBar(ui.toolBar, event); if(a) ActionsAlwaysAvailable.push_back(a); }
+
+    PUSH_ALWAYS_AVAILABLE_TOOLBAR(ACT_OPEN_VIDEO)
 
 #define PUSH_FULL_MENU_ALWAYS_AVAILABLE(menu) for(int i=0;i<ui.menu->actions().size();i++)    ActionsAlwaysAvailable.push_back(ui.menu->actions().at(i));
 
@@ -960,24 +1029,26 @@ void MainWindow::setMenuItemsEnabledState(void)
     for(int i=0;i<npb;i++)
         PushButtonsAvailableWhenFileLoaded[i]->setEnabled(vid);
 
-    ui.menuFile->actions().at(2)->setEnabled(vid && !!ADM_mx_getNbMuxers()); // disable saving video if there are no muxers
+#define ENABLE(x,y,z) { QAction *a = findAction(&myMenu ##x, y); if(a) a->setEnabled(z); }
+#define TOOLBAR_ENABLE(x,y) { QAction *a = findActionInToolBar(ui.toolBar, x); if(a) a->setEnabled(y); }
+    ENABLE(File, ACT_SAVE_VIDEO, vid && ADM_mx_getNbMuxers()) // disable saving video if there are no muxers
     if(vid)
     {
         undo=video_body->canUndo();
         redo=video_body->canRedo();
-        paste=1-(video_body->clipboardEmpty());
+        paste=!video_body->clipboardEmpty();
     }
-    ui.menuEdit->actions().at(0)->setEnabled(undo); // menu item "Undo"
-    ui.menuEdit->actions().at(1)->setEnabled(redo); // menu item "Redo"
+    ENABLE(Edit, ACT_Undo, undo)
+    ENABLE(Edit, ACT_Redo, redo)
     if(!vid || (!undo && !redo)) // if no edits have been performed, disable "Reset Edit" menu item
     {
         restore=A_checkSavedSession(false);
-        ui.menuEdit->actions().at(2)->setEnabled(false);
+        ENABLE(Edit, ACT_ResetSegments, false)
     }else
     {
-        ui.menuEdit->actions().at(2)->setEnabled(true);
+        ENABLE(Edit, ACT_ResetSegments, true)
     }
-    ui.menuEdit->actions().at(5)->setEnabled(paste); // "Paste"
+    ENABLE(Edit, ACT_Paste, paste)
 
     n=ActionsAlwaysAvailable.size();
     for(int i=0;i<n;i++)
@@ -991,15 +1062,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         haveRecentItems=true;
     if(recentProjects && recentProjects->actions().size())
         haveRecentItems=true;
-    ui.menuRecent->actions().back()->setEnabled(haveRecentItems);
-
-    n=0;
-    if(recentFiles)
-        n++;
-    if(recentProjects)
-        n++;
-    if(ui.menuRecent->actions().size()>(n+2)) // "Restore session" entry exists
-        ui.menuRecent->actions().at(n+1)->setEnabled(restore);
+    ENABLE(Recent, ACT_CLEAR_RECENT, haveRecentItems)
+    ENABLE(Recent, ACT_RESTORE_SESSION, restore)
 
     ui.selectionDuration->setEnabled(vid);
     slider->setEnabled(vid);
@@ -1025,7 +1089,7 @@ void MainWindow::updateCodecWidgetControlsState(void)
         b=true;
     ui.pushButtonDecoderConf->setEnabled(b);
     // take care of the "Decoder Options" item in the menu "Video"
-    ui.menuVideo->actions().at(0)->setEnabled(b);
+    ENABLE(Video, ACT_DecoderOption, b)
     // post-processing is available only for software decoding
     b=false;
     if(avifileinfo && strcmp(video_body->getVideoDecoderName(),"VDPAU")
@@ -1033,7 +1097,7 @@ void MainWindow::updateCodecWidgetControlsState(void)
                    && strcmp(video_body->getVideoDecoderName(),"DXVA2"))
                    // VideoToolbox decoder always downloads decoded image immediately
         b=true;
-    ui.menuVideo->actions().at(1)->setEnabled(b);
+    ENABLE(Video, ACT_SetPostProcessing, b)
 
     b=false;
     if(ui.comboBoxVideo->currentIndex())
@@ -1043,32 +1107,32 @@ void MainWindow::updateCodecWidgetControlsState(void)
     {
         ui.pushButtonVideoFilter->setEnabled(b);
         // take care of the "Filter" item in the menu "Video" as well
-        ui.menuVideo->actions().at(2)->setEnabled(b);
-        ui.menuVideo->actions().at(3)->setEnabled(b);
-        ui.toolBar->actions().at(5)->setEnabled(b);
+        ENABLE(Video, ACT_VIDEO_FILTERS, b)
+        ENABLE(Video, ACT_PreviewChanged, b)
+        TOOLBAR_ENABLE(ACT_PreviewChanged, b)
     }else
     {
         ui.pushButtonVideoFilter->setEnabled(false);
-        ui.menuVideo->actions().at(2)->setEnabled(false);
-        ui.menuVideo->actions().at(3)->setEnabled(false);
-        ui.toolBar->actions().at(5)->setEnabled(false);
+        ENABLE(Video, ACT_VIDEO_FILTERS, false)
+        ENABLE(Video, ACT_PreviewChanged, false)
+        TOOLBAR_ENABLE(ACT_PreviewChanged, false)
     }
 
     b=false;
     if(avifileinfo && video_body->getDefaultEditableAudioTrack())
     {
-        ui.menuAudio->actions().at(1)->setEnabled(true);
+        ENABLE(Audio, ACT_SAVE_AUDIO, true)
         if(ui.comboBoxAudio->currentIndex())
             b=true;
     }else
     {   // disable "Save Audio" item in the menu "Audio" if we have no audio tracks
-        ui.menuAudio->actions().at(1)->setEnabled(false);
+        ENABLE(Audio, ACT_SAVE_AUDIO, false)
     }
     ui.pushButtonAudioConf->setEnabled(b);
     ui.pushButtonAudioFilter->setEnabled(b);
     // take care of the "Filter" item in the menu "Audio"
-    ui.menuAudio->actions().at(2)->setEnabled(b);
-
+    ENABLE(Audio, ACT_AUDIO_FILTERS, b)
+#undef ENABLE
     // reenable the controls below unconditionally after playback
     ui.checkBox_TimeShift->setEnabled(true);
     ui.spinBox_TimeValue->setEnabled(true);
@@ -1077,24 +1141,8 @@ void MainWindow::updateCodecWidgetControlsState(void)
     bool gotMuxers=(bool)ADM_mx_getNbMuxers();
     if(avifileinfo && gotMuxers)
         b=true;
-    ui.toolBar->actions().at(2)->setEnabled(b);
+    TOOLBAR_ENABLE(ACT_SAVE_VIDEO, b)
     ui.pushButtonFormatConfigure->setEnabled(gotMuxers);
-}
-
-/**
-    \fn findAction
-*/
-static QAction *findAction(std::vector<MenuEntry> *list, Action action)
-{
-    for(int i=0; i < list->size(); i++)
-    {
-        MenuEntry *m = &list->at(i);
-        if(m->type != MENU_ACTION) continue;
-        if(m->event != action) continue;
-        QAction *a = (QAction *)m->cookie;
-        return a;
-    }
-    return NULL;
 }
 
 /**

@@ -171,7 +171,7 @@ void MainWindow::addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const
         else
         {
             FileAction *action = new FileAction(fileInfo.baseName(), fileInfo.absoluteFilePath(), scriptMenu);
-
+            action->setObjectName(fileInfo.baseName());
             scriptMenu->addAction(action);
             connect(action, SIGNAL(triggered()), this, SLOT(scriptFileActionHandler()));
         }
