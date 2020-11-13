@@ -3669,22 +3669,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>sarAsInputRadioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>sarAsInputLabel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>97</x>
-     <y>304</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>187</x>
-     <y>303</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>aqVarianceCheckBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>aqStrengthLabel</receiver>
