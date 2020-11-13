@@ -42,7 +42,8 @@ typedef struct alg
 alg algs[]={
 				DECLARE(BILINEAR),
 				DECLARE(BICUBIC),
-				DECLARE(LANCZOS)
+				DECLARE(LANCZOS),
+				DECLARE(SPLINE)
 		};
 
 
@@ -95,7 +96,7 @@ UNUSED_ARG(setup);
         // Default value
         configuration.width=info.width;
         configuration.height=info.height;
-        configuration.algo=SWS_BILINEAR;
+        configuration.algo=1; // bicubic
         configuration.sourceAR=0;
         configuration.targetAR=0;
         configuration.lockAR=true;
@@ -208,8 +209,11 @@ bool swScaleResizeFilter::reset(uint32_t nw, uint32_t nh,uint32_t algo)
                 scalerAlgo=ADM_CS_BICUBIC;break;
         case 2: //Lanczos
                 scalerAlgo=ADM_CS_LANCZOS;break;
-        default:ADM_assert(0);
-
+        case 3: //spline
+                scalerAlgo=ADM_CS_SPLINE;break;
+        default:
+                ADM_error("Invalid algo: %u\n",algo);
+                ADM_assert(0);
     }
     resizer=new ADMColorScalerFull(scalerAlgo, 
                         previousFilter->getInfo()->width, previousFilter->getInfo()->height, 

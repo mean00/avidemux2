@@ -430,6 +430,11 @@
          <string>Lanczos-3</string>
         </property>
        </item>
+       <item>
+        <property name="text" >
+         <string>Spline</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
