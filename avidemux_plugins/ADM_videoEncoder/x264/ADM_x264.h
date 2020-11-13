@@ -46,7 +46,7 @@ extern "C"
     99, /* Threads : auto */ \
     std::string(""), /* Preset */ \
     std::string(""), /* Tuning */ \
-    std::string(""), /* Profile */ \
+    std::string("high"), /* Profile */ \
     false, /* Fast decode */ \
     false, /* Zero latency */ \
     true /* Fast first pass */ \
