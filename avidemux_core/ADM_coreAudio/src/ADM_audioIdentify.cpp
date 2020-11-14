@@ -211,7 +211,7 @@ static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t 
         ADM_info("Not EAC3\n");
         return false;
     }
-
+    offset=syncOffset;
     // Need 2 more frames to be sure...
     bool r=true;
     uintptr_t tmp=(uintptr_t)data;
@@ -255,7 +255,7 @@ static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t 
     }
     if(r)
     {
-        ADM_info("\tProbably EAC3 : freq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels,(int)syncOffset);
+        ADM_info("\tProbably EAC3 : freq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels,(int)offset);
         oinfo.encoding=WAV_EAC3;
         oinfo.channels=info.channels;
         oinfo.byterate=info.byterate; // already in bytes/sec
@@ -282,7 +282,7 @@ static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t &
         ADM_info("Not AC3\n");
         return false;
     }
-
+    offset=syncOffset;
     // Need 2 more frames to be sure...
     bool r=true;
     uintptr_t tmp=(uintptr_t)data;
@@ -316,7 +316,7 @@ static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t &
     }
     if(r)
     {
-        ADM_info("\tProbably AC3 : freq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels,(int)syncOffset);
+        ADM_info("\tProbably AC3 : freq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels,(int)offset);
         oinfo.encoding=WAV_AC3;
         oinfo.channels=info.channels;
         oinfo.byterate=info.byterate; // already in bytes/sec
