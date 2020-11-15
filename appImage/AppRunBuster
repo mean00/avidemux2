@@ -16,6 +16,14 @@ then
     exit 1
 fi
 
+# make relative-path arguments absolute before changing directory
+args=("--portable");
+paramprefix="--";
+for arg in "$@";
+do # add argument as is, or realpath of argument, depending on paramprefix
+	[ "${arg::2}" != "$paramprefix" -o -e "$arg" ] && args+=("$(realpath -- "$arg")") || args+=("$arg");
+	[ "$arg" == "$paramprefix" ] && paramprefix="123"; # new paramprefix will never match length-2 string
+done;
 HERE="$(dirname "$(readlink -f "${0}")")"
 cd "${HERE}/usr/"
 export QT_STYLE_OVERRIDE="fusion"
@@ -52,6 +60,12 @@ fi
 
 export LD_LIBRARY_PATH="${HERE}/usr/lib/:${HERE}/usr/lib/qt5:${LD_LIBRARY_PATH}"
 export PATH="${HERE}/usr/bin:${PATH}"
-"${HERE}/usr/bin/avidemux3_qt5" --portable "$@"
+# choose binary depending on substrings "_jobs" or "_cli" in the name appImage is called by
+if [[ "${ARGV0##*/}" =~ _jobs ]]
+then "${HERE}/usr/bin/avidemux3_jobs_qt5" "${args[@]}"
+elif [[ "${ARGV0##*/}" =~ _cli ]]
+then "${HERE}/usr/bin/avidemux3_cli" "${args[@]}"
+else "${HERE}/usr/bin/avidemux3_qt5" "${args[@]}"
+fi
 cd -
 
