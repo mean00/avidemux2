@@ -603,18 +603,23 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
         CHANNEL_TYPE *p_ch_type = channelMapping;
         if(!_context->channel_layout)
             _context->channel_layout=av_get_default_channel_layout(channels);
-
-#define DOIT(x,y) if(_context->channel_layout & AV_CH_##x) *(p_ch_type++)=ADM_CH_##y;
-        DOIT(FRONT_LEFT,FRONT_LEFT);
-        DOIT(FRONT_RIGHT,FRONT_RIGHT);
-        DOIT(FRONT_CENTER,FRONT_CENTER);
-        DOIT(LOW_FREQUENCY,LFE);
-        // DOIT(SIDE_LEFT,REAR_LEFT) // see https://trac.ffmpeg.org/ticket/3160
-        // DOIT(SIDE_RIGHT,REAR_RIGHT)
+#define HAVE(chan) (_context->channel_layout & AV_CH_ ##chan)
+#define MAPIT(chan) *(p_ch_type++)=ADM_CH_ ##chan;
+#define DOIT(x,y) if HAVE(x) MAPIT(y)
+        DOIT(FRONT_LEFT,FRONT_LEFT)
+        DOIT(FRONT_RIGHT,FRONT_RIGHT)
+        DOIT(FRONT_CENTER,FRONT_CENTER)
+        DOIT(LOW_FREQUENCY,LFE)
+        if(HAVE(SIDE_LEFT) && !HAVE(BACK_LEFT))
+            MAPIT(REAR_LEFT) // see https://trac.ffmpeg.org/ticket/3160
+        if(HAVE(SIDE_RIGHT) && !HAVE(BACK_RIGHT))
+            MAPIT(REAR_RIGHT)
         DOIT(BACK_LEFT,REAR_LEFT)
         DOIT(BACK_RIGHT,REAR_RIGHT)
-        DOIT(SIDE_LEFT,SIDE_LEFT)
-        DOIT(SIDE_RIGHT,SIDE_RIGHT)
+        if(HAVE(SIDE_LEFT) && HAVE(BACK_LEFT))
+            MAPIT(SIDE_LEFT)
+        if(HAVE(SIDE_RIGHT) && HAVE(BACK_RIGHT))
+            MAPIT(SIDE_RIGHT)
     }
 
     return 1;
