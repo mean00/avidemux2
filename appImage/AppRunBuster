@@ -19,7 +19,7 @@ fi
 # make relative-path arguments absolute before changing directory
 args=("--portable");
 paramprefix="--";
-param="--load";#enable filename to load as first/single argument
+param="--load";#enable filename as first/single argument, with --load as supposed default action
 for arg in "$@";
 do # add argument as is, or realpath of argument, depending on paramprefix
 	[ "${arg::2}" = "$paramprefix" ] && args+=("$arg") && param="$arg" || {
@@ -30,7 +30,7 @@ do # add argument as is, or realpath of argument, depending on paramprefix
 			args+=("$arg") ;;
 		esac
 	}
-	[ "$arg" == "$paramprefix" ] && paramprefix="123" && param=""; # new paramprefix will never match length-2 string again
+	[ "$arg" == "$paramprefix" ] && paramprefix="123" && param="--load"; # new paramprefix will never match length-2 string again
 done;
 HERE="$(dirname "$(readlink -f "${0}")")"
 cd "${HERE}/usr/"
