@@ -199,43 +199,63 @@ drop:
     return false;
 }
 /**
- * \fn idEAC3
+ * \fn detectAC3Internal
  */
-static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t &offset)
+static bool detectAC3Internal(int bufferSize, const uint8_t *data, WAVHeader &oinfo, uint32_t &offset, bool enhanced)
 {
-    uint32_t syncOffset;
+    uint32_t syncOffset,nextOffset;
     ADM_EAC3_INFO info,info2;
 
-    if( !ADM_EAC3GetInfo(data, bufferSize, &syncOffset, &info, false))
+    if( !ADM_EAC3GetInfo(data, bufferSize, &syncOffset, &info, !enhanced))
     {
-        ADM_info("Not EAC3\n");
+        if(enhanced)
+            ADM_info("Not EAC3\n");
+        else
+            ADM_info("Not AC3\n");
         return false;
     }
     offset=syncOffset;
+    nextOffset=syncOffset+info.frameSizeInBytes;
+    ADM_info("First sync at offset %u, freq = %u br = %u chan = %u\n",syncOffset,info.frequency,info.byterate<<3,info.channels);
     // Need 2 more frames to be sure...
-    bool r=true;
+    bool confirmed=true;
     uintptr_t tmp=(uintptr_t)data;
-    int size2=bufferSize;
+    tmp+=nextOffset;
+    int remaining=bufferSize-nextOffset;
     const uint32_t max_byterate_deviation=1000;
 
     for(int i=0;i<2;i++)
     {
         ADM_info("\t pass %d\n",i);
-        size2-=info.frameSizeInBytes+syncOffset;
-        ADM_assert(size2>0);
-        tmp+=syncOffset+info.frameSizeInBytes;
+        if(remaining<0)
+        {
+            if(enhanced)
+                ADM_warning("Not enough data to confirm EAC3\n");
+            else
+                ADM_warning("Not enough data to confirm AC3\n");
+            confirmed=false;
+            break;
+        }
+
         const uint8_t *data2=(uint8_t *)tmp;
 
-        if( !ADM_EAC3GetInfo(data2, size2, &syncOffset, &info2, false))
+        if( !ADM_EAC3GetInfo(data2, remaining, &syncOffset, &info2, !enhanced))
         {
             ADM_info("Cannot sync (pass %d)\n",i);
-            return false;
+            confirmed=false;
+            break;
         }
-        ADM_info("byterate = %" PRIu32" (pass %d)\n",info2.byterate,i);
+        if(syncOffset)
+        {
+            ADM_info("Offset between frames present = %" PRIu32" (pass %d)\n",syncOffset,i);
+            confirmed=false;
+            break;
+        }
+        ADM_info("Next sync at offset %u, freq = %u bitrate = %u chan = %u\n",nextOffset+syncOffset,info2.frequency,info2.byterate<<3,info2.channels);
         if(info.frequency!=info2.frequency || info.channels!=info2.channels)
         {
             ADM_info("Info doesn't match (pass %d)\n",i);
-            r=false;
+            confirmed=false;
             break;
         }
         if(info.byterate>info2.byterate+max_byterate_deviation || info.byterate+max_byterate_deviation<info2.byterate)
@@ -243,90 +263,47 @@ static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t 
             ADM_info("Byterate variance too high: %d (limit = %d)\n",
                 (info.byterate>info2.byterate ? (int)(info.byterate-info2.byterate) : (int)(info2.byterate-info.byterate)),
                 (int)max_byterate_deviation);
-            r=false;
+            confirmed=false;
             break;
         }
-        if(syncOffset>2)
-        {
-            ADM_info("Offset between frames too big = %" PRIu32" (pass %d)\n",syncOffset,i);
-            r=false;
-            break;
-        }
+        int sz=syncOffset+info2.frameSizeInBytes;
+        nextOffset+=sz;
+        tmp+=sz;
+        remaining-=sz;
     }
-    if(r)
+    if(confirmed)
     {
-        ADM_info("\tProbably EAC3 : freq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels,(int)offset);
-        oinfo.encoding=WAV_EAC3;
+        ADM_info("\tProbably %s: freq=%d byterate=%d chan=%d, offset=%d\n",enhanced? "EAC3" : "AC3",
+                 (int)info.frequency,(int)info.byterate,(int)info.channels,(int)offset);
+        oinfo.encoding=enhanced? WAV_EAC3 : WAV_AC3;
         oinfo.channels=info.channels;
         oinfo.byterate=info.byterate; // already in bytes/sec
         oinfo.frequency=info.frequency;
         return true;
-    }else
-    {
-        ADM_info("Cannot confirm EAC3\n");
     }
-    return r;
+    if(enhanced)
+        ADM_info("Cannot confirm EAC3\n");
+    else
+        ADM_info("Cannot confirm AC3\n");
+    return false;
+}
+
+/**
+    \fn idEAC3
+    \brief return true if the file is EAC3
+*/
+static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t &offset)
+{
+    return detectAC3Internal(bufferSize,data,oinfo,offset,true);
 }
 
 /**
     \fn idAC3
-    \brief return true if the track is AC3
+    \brief return true if the file is AC3
 */
 static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t &offset)
 {
-    uint32_t syncOffset;
-    ADM_EAC3_INFO info,info2;
-
-    if( !ADM_EAC3GetInfo(data, bufferSize, &syncOffset, &info, true))
-    {
-        ADM_info("Not AC3\n");
-        return false;
-    }
-    offset=syncOffset;
-    // Need 2 more frames to be sure...
-    bool r=true;
-    uintptr_t tmp=(uintptr_t)data;
-    int size2=bufferSize;
-
-    for(int i=0;i<2;i++)
-    {
-        ADM_info("\t pass %d\n",i);
-        size2-=info.frameSizeInBytes+syncOffset;
-        ADM_assert(size2>0);
-        tmp+=syncOffset+info.frameSizeInBytes;
-        const uint8_t *data2=(uint8_t *)tmp;
-
-        if( !ADM_EAC3GetInfo(data2, size2, &syncOffset, &info2, true))
-        {
-            ADM_info("Cannot sync (pass %d)\n",i);
-            return false;
-        }
-        if(info.frequency!=info2.frequency || info.channels!=info2.channels || info.byterate!=info2.byterate)
-        {
-            ADM_info("Info doesn't match (pass %d)\n",i);
-            r=false;
-            break;
-        }
-        if(syncOffset>2)
-        {
-            ADM_info("Offset between frames too big = %" PRIu32" (pass %d)\n",syncOffset,i);
-            r=false;
-            break;
-        }
-    }
-    if(r)
-    {
-        ADM_info("\tProbably AC3 : freq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels,(int)offset);
-        oinfo.encoding=WAV_AC3;
-        oinfo.channels=info.channels;
-        oinfo.byterate=info.byterate; // already in bytes/sec
-        oinfo.frequency=info.frequency;
-        return true;
-    }else
-    {
-        ADM_info("Cannot confirm AC3\n");
-    }
-    return r;
+    return detectAC3Internal(bufferSize,data,oinfo,offset,false);
 }
 
 /**
