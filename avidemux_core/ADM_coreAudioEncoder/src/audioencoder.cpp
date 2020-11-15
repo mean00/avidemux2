@@ -112,6 +112,8 @@ bool ADM_AudioEncoder::reorderToPlanar(float *sample_in,float *sample_out,int sa
         int chanIn=-1;
         for(int z=0;z<channel;z++)
             if(mapOut[i]==mapIn[z]) chanIn=z;
+        if(chanIn==-1)
+            ADM_error("Output channel %s not mapped!\n",ADM_printChannel(mapOut[i]));
         ADM_assert(chanIn!=-1);
         float *in=sample_in+chanIn;
         float *out=sample_out+(i*samplePerChannel);
