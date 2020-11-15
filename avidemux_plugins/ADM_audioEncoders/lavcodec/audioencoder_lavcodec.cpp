@@ -415,7 +415,7 @@ bool AUDMEncoder_Lavcodec::computeChannelLayout(void)
         for(int i=0;i<channels;i++)
         {
           uint64_t chan=av_channel_layout_extract_channel(CONTEXT->channel_layout,i);
-          cprintf("Channel %s ",av_get_channel_name(chan))  ;
+          cprintf("Channel %s\t",av_get_channel_name(chan));
           switch(chan)
           {
               CHANMIX(FRONT_LEFT,FRONT_LEFT)
@@ -425,7 +425,8 @@ bool AUDMEncoder_Lavcodec::computeChannelLayout(void)
               CHANMIX(REAR_LEFT,BACK_LEFT)
               CHANMIX(REAR_RIGHT,BACK_RIGHT)
                 default:
-                    ADM_warning("Channel no mapped : %s\n");
+                    cprintf(" =>???\n");
+                    ADM_warning("Channel %s not mapped\n",av_get_channel_name(chan));
                     *o++=ADM_CH_FRONT_LEFT;
                     break;
           }
