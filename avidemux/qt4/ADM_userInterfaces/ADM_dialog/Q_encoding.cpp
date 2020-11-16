@@ -226,6 +226,7 @@ void DIA_encodingQt4::setFrameCount(uint32_t nb)
 {
           ADM_assert(ui);
           snprintf(stringMe,79,"%" PRIu32,nb);
+          printf("frames: %s\t",stringMe);
           WRITE(labelFrame);
 
 }
@@ -237,7 +238,7 @@ void DIA_encodingQt4::setFrameCount(uint32_t nb)
 void DIA_encodingQt4::setPercent(uint32_t p)
 {
           ADM_assert(ui);
-          printf("Percent:%u\n",p);
+          printf("%*" PRIu32"%% done\t",3,p);
           WIDGET(progressBar)->setValue(p);
           ADM_slaveReportProgress(p);
           if(tray)
@@ -351,6 +352,7 @@ void DIA_encodingQt4::setElapsedTimeMs(uint32_t nb)
           uint64_t mb=nb;
           mb*=1000;
           strcpy(stringMe,ADM_us2plain(mb));
+          printf("elapsed: %s\n",stringMe);
           WRITE(labelElapsed);
 }
 /**
