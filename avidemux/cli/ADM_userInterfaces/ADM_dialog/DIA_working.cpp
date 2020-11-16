@@ -66,7 +66,7 @@ uint8_t DIA_workingNone::update(uint32_t percent)
 
     if(elapsed<1000)
     {
-        printf("%u%% done, elapsed: %u ms\n",percent,elapsed);
+        printf("%*u%% done, elapsed: %*u ms\n",3,percent,4,elapsed);
         _nextUpdate=elapsed;
         return 0;
     }
@@ -91,7 +91,7 @@ uint8_t DIA_workingNone::update(uint32_t percent)
     int  mm,ss;
     mm=sectogo/60;
     ss=sectogo%60;
-    printf("%u%% done, %d m %d s left\n",percent,mm,ss);
+    printf("%*u%% done, %d m %*d s left\n",3,percent,mm,2,ss);
 
     return 0;
 

@@ -52,20 +52,17 @@ bool DIA_encodingCli::isAlive( void )
 
         return 1;
 }
-    void DIA_encodingCli::setTotalSize(uint64_t size){}
-    void DIA_encodingCli::setAudioSize(uint64_t size){}
-    void DIA_encodingCli::setVideoSize(uint64_t size){}
-    void DIA_encodingCli::setPercent(uint32_t percent){ADM_slaveReportProgress(percent);}
-    void DIA_encodingCli::setFps(uint32_t fps){}
-    void DIA_encodingCli::setFrameCount(uint32_t nb){}
-    void DIA_encodingCli::setElapsedTimeMs(uint32_t nb){}
-    void DIA_encodingCli::setRemainingTimeMS(uint32_t nb){}
-    void DIA_encodingCli::setAverageQz(uint32_t nb){}
-    void DIA_encodingCli::setAverageBitrateKbits(uint32_t kb){}
-void DIA_encodingCli::setVideoCodec(const char *n)
-{
-
-}
+    void DIA_encodingCli::setTotalSize(uint64_t size) { UNUSED_ARG(size); }
+    void DIA_encodingCli::setAudioSize(uint64_t size) { UNUSED_ARG(size); }
+    void DIA_encodingCli::setVideoSize(uint64_t size) { UNUSED_ARG(size); }
+    void DIA_encodingCli::setPercent(uint32_t percent) { printf("%*" PRIu32"%% done\t",3,percent); ADM_slaveReportProgress(percent); }
+    void DIA_encodingCli::setFps(uint32_t fps) { UNUSED_ARG(fps); }
+    void DIA_encodingCli::setFrameCount(uint32_t nb) { printf("frames: %" PRIu32"\t",nb); }
+    void DIA_encodingCli::setElapsedTimeMs(uint32_t nb) { printf("elapsed: %s\n",ADM_us2plain(1000LL*nb)); }
+    void DIA_encodingCli::setRemainingTimeMS(uint32_t nb) { UNUSED_ARG(nb); }
+    void DIA_encodingCli::setAverageQz(uint32_t nb) { UNUSED_ARG(nb); }
+    void DIA_encodingCli::setAverageBitrateKbits(uint32_t kb) { UNUSED_ARG(kb); }
+    void DIA_encodingCli::setVideoCodec(const char *n) { UNUSED_ARG(n); }
 //**********************************
 namespace ADM_CliCoreUIToolkit
 {
