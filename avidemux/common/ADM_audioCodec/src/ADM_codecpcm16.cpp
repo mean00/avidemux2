@@ -45,15 +45,34 @@ uint8_t ADM_AudiocodecWav::isCompressed( void )
 
 uint8_t ADM_AudiocodecWav::run(uint8_t * inptr, uint32_t nbIn, float * outptr, uint32_t * nbOut)
 {
-	int16_t *in = (int16_t *) inptr;
+    uint32_t i,j,sampleSize=0;
+    switch(wavHeader.bitspersample)
+    {
+        case 16: sampleSize=2;break;
+        case 24: sampleSize=3;break;
+        default: break;
+    }
+    ADM_assert(sampleSize);
+    if (nbIn < sampleSize)
+        return 1;
 
-	*nbOut=nbIn / 2;
-	for (int i = 0; i < *nbOut; i++) {
-		*(outptr++) = (float)*in / 32768;
-		in++;
-	}
+    if (nbIn % sampleSize)
+    {
+        ADM_error("Error: nbIn (%i) not multiple of bytes per sample in lpcm", nbIn);
+        abort();
+    }
 
-	return 1;
+    *nbOut = nbIn / sampleSize;
+    for (i = 0; i < *nbOut; i++)
+    {
+        uint32_t sample = 0;
+        for (j = 0; j < sampleSize; j++)
+            sample |= inptr[j] << (32 - wavHeader.bitspersample + 8 * j);
+        *(outptr++) = (float)(int32_t)sample / (1 << 31);
+        inptr += sampleSize;
+    }
+
+    return 1;
 }
 
 

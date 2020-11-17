@@ -48,22 +48,33 @@ uint8_t ADM_AudiocodecWavSwapped::isCompressed( void )
 
 uint8_t ADM_AudiocodecWavSwapped::run(uint8_t * inptr, uint32_t nbIn, float *outptr, uint32_t * nbOut)
 {
-	if (nbIn < 2)
-		return 1;
+    uint32_t i,j,sampleSize=0;
+    switch(wavHeader.bitspersample)
+    {
+        case 16: sampleSize=2;break;
+        case 24: sampleSize=3;break;
+        default: break;
+    }
+    ADM_assert(sampleSize);
+    if (nbIn < sampleSize)
+        return 1;
 
-	if (nbIn&1) {
-		ADM_error("Error: nbIn (%i) odd in lpcm", nbIn);
-		abort();
-	}
+    if (nbIn % sampleSize)
+    {
+        ADM_error("Error: nbIn (%i) not multiple of bytes per sample in lpcm", nbIn);
+        abort();
+    }
 
-	int16_t sample;
-	*nbOut=nbIn / 2;
-	for (int i = 0; i < *nbOut; i++) {
-		sample = (inptr[0] << 8) | inptr[1];
-		*(outptr++) = (float)sample / 32768;
-		inptr += 2;
-	}
+    *nbOut = nbIn / sampleSize;
+    for (i = 0; i < *nbOut; i++)
+    {
+        uint32_t sample = 0;
+        for (j = 0; j < sampleSize; j++)
+            sample |= inptr[j] << (24 - 8 * j);
+        *(outptr++) = (float)(int32_t)sample / (1 << 31);
+        inptr += sampleSize;
+    }
 
-	return 1;
+    return 1;
 }
 
