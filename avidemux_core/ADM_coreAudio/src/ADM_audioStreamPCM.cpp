@@ -59,8 +59,15 @@ uint8_t ADM_audioStreamPCM::getPacket(uint8_t *obuffer,uint32_t *osize,
 uint64_t thisDts=0;
     if(!access->getPacket(obuffer,osize,sizeMax,&thisDts)) return 0;
 
-    int  sampleSize=2;
-    if(wavHeader.bitspersample==8) sampleSize=1;
+    int sampleSize=0;
+    switch(wavHeader.bitspersample)
+    {
+        case 8: sampleSize=1;break;
+        case 16: sampleSize=2;break;
+        case 24: sampleSize=3;break;
+        default: return 0;
+    }
+    ADM_assert(sampleSize);
     uint32_t bytesPerSample=wavHeader.channels*sampleSize; 
 //#warning fixme handle mono
     *nbSample=(uint32_t)(*osize/bytesPerSample);
