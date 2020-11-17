@@ -386,18 +386,17 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                               break;
                   case WAV_LPCM:
                   case WAV_PCM:
-                                if(audioheader->encoding==WAV_LPCM)
+                                par->frame_size=4; // One chunk is 10 ms (1/100 of fq)
                                 {
-                                  // One chunk is 10 ms (1/100 of fq)
-                                  par->frame_size=4;
-                                  par->codec_id = AV_CODEC_ID_PCM_S16BE;break;
+                                    bool bigEndian = audioheader->encoding == WAV_LPCM;
+                                    switch(audioheader->bitspersample)
+                                    {
+                                        case 16: par->codec_id = bigEndian? AV_CODEC_ID_PCM_S16BE : AV_CODEC_ID_PCM_S16LE; break;
+                                        case 24: par->codec_id = bigEndian? AV_CODEC_ID_PCM_S24BE : AV_CODEC_ID_PCM_S24LE; break;
+                                        default: ADM_error("Unsupported bits per sample value: %u\n",audioheader->bitspersample); ADM_assert(0);
+                                    }
                                 }
-                                else
-                                {
-                                  // One chunk is 10 ms (1/100 of fq)
-                                  par->frame_size=4;
-                                  par->codec_id = AV_CODEC_ID_PCM_S16LE;break;
-                                }
+                                break;
                   case WAV_AAC:
                   case WAV_AAC_HE:
                                   ffmpuxerSetExtradata(par,audioextraSize,audioextraData);
