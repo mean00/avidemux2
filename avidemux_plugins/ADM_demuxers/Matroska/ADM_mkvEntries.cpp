@@ -278,7 +278,8 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
     {
         mkvTrak *t=&(_tracks[1+_nbAudioTrack]);
         t->language=entry.language;
-        t->wavHeader.bitspersample=16;
+        if(!entry.bpp) entry.bpp = 16;
+        t->wavHeader.bitspersample = entry.bpp;
         t->wavHeader.byterate=0; // to be set later
         // MS/ACM : ACMX
         if(0x100001==entry.fcc)
@@ -409,6 +410,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
 
         case  MKV_AUDIO_FREQUENCY: entry->fq=(uint32_t)floor(father.readFloat(len));break;
         //case MKV_AUDIO_OUT_FREQUENCY:entry->fq=(uint32_t)floor(father.readFloat(len));break;
+        case  MKV_AUDIO_BITS_PER_SAMPLE: entry->bpp=father.readUnsignedInt(len);break;
         case  MKV_VIDEO_WIDTH: entry->w=father.readUnsignedInt(len);break;
         case  MKV_VIDEO_HEIGHT: entry->h=father.readUnsignedInt(len);break;
 
