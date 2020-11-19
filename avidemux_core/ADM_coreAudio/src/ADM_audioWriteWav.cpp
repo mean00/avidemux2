@@ -38,10 +38,10 @@ bool ADM_audioWriteWav::writeHeader(ADM_audioStream *stream)
           p=stream->getInfo();
           wh.encoding=WAV_PCM;
           wh.channels=p->channels;
-          wh.blockalign=p->channels*2;
-          wh.byterate=p->channels*p->frequency*2;
+          wh.blockalign=p->channels*p->bitspersample;
+          wh.byterate=p->channels*p->frequency*p->bitspersample;
           wh.frequency=p->frequency;
-          wh.bitspersample=16;
+          wh.bitspersample=p->bitspersample;
 
           writter->writeWavHeader("fmt ",&wh);
           writter->write32("data");
