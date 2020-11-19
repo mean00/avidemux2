@@ -190,7 +190,7 @@ static bool idWAV(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
     wRead32(t32);
     ADM_info(" %lu bytes data \n", totalSize);
     info.encoding=WAV_PCM;
-    info.blockalign=1;
+    ADM_info("Block alignment: %u\n",info.blockalign);
     offset=(uint32_t)(cur-data);
     ADM_info("yes, it is riff/wav, data starts at %d...\n",(int)offset);
     return true;
