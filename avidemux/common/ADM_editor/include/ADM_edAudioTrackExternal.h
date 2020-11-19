@@ -31,6 +31,7 @@ protected:
                     ADM_audioStream  *internalAudioStream;
                     ADM_audioAccess  *internalAccess;
                     std::string  sourceFile;
+                    uint32_t        maxPacketBufferSize;
 public:
                                  ADM_edAudioTrackExternal(const char *file, WAVHeader *hdr,ADM_audioAccess *ccess);
             virtual            ~ADM_edAudioTrackExternal();

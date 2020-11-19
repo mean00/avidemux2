@@ -43,6 +43,7 @@ ADM_edAudioTrackExternal:: ADM_edAudioTrackExternal(const char *file, WAVHeader 
 {
     ADM_info("Creating edAudio from external file %s\n",file);
     sourceFile=std::string(file);
+    maxPacketBufferSize=ADM_EDITOR_PACKET_BUFFER_SIZE;
     codec=NULL;
     vbr=false;
     duration=0;
@@ -111,6 +112,8 @@ bool ADM_edAudioTrackExternal::create(uint32_t extraLen, uint8_t *extraData)
         codec->reconfigureCompleted();
     }
     size=internalAccess->getLength();
+    if(wavHeader.encoding == WAV_PCM && wavHeader.blockalign > 1)
+        maxPacketBufferSize -= maxPacketBufferSize % wavHeader.blockalign;
     internalAudioStream=ADM_audioCreateStream(&wavHeader,internalAccess,true);
     return true;
 }
@@ -140,10 +143,10 @@ uint32_t ADM_edAudioTrackExternal::getOutputChannels(void)
 */
 bool             ADM_edAudioTrackExternal::refillPacketBuffer(void)
 {
-   packetBufferSize=0; 
-   uint64_t dts;
- 
-    if(!internalAudioStream->getPacket(packetBuffer,&packetBufferSize,ADM_EDITOR_PACKET_BUFFER_SIZE,
+    packetBufferSize=0;
+    uint64_t dts;
+
+    if(!internalAudioStream->getPacket(packetBuffer,&packetBufferSize,maxPacketBufferSize,
                         &packetBufferSamples,&dts))
     {           
              return false;
