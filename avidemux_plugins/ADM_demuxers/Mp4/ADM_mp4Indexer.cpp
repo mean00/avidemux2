@@ -49,6 +49,12 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
     // DTS packet can be up to 1064960 bytes large and cannot be split
     if(track->_rdWav.encoding == WAV_DTS)
         maxChunkSize=AUDIO_PACKET_BUFFER_SIZE;
+    if((track->_rdWav.encoding == WAV_PCM || track->_rdWav.encoding == WAV_LPCM) && info->bytePerPacket > 1)
+    {
+        uint64_t remainder = maxChunkSize % (info->bytePerPacket * track->_rdWav.channels);
+        maxChunkSize -= remainder;
+        ADM_info("Setting max chunk size to %" PRIu64"\n",maxChunkSize);
+    }
     // Probe if it is needed
     uint64_t sizeOfAudio=0;
     uint64_t sz,largestBlockSize=0;

@@ -1193,7 +1193,6 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
 
                                     break;
                                 case MKFCCR('l','p','c','m'):
-                                    ADIO.frequency=44100; // Wrong !
                                     ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
                                     audioCodec(PCM);
 
@@ -1266,8 +1265,16 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                 case MKFCCR('m','s',0,0x55): // why 55 ???
                                 case MKFCCR('m','s',0,0x11): // why 11 ???
                                 case MKFCCR('m','p','4','a'):
+                                case MKFCCR('i','n','2','4'):
                                 {
-                                    if(entryName==MKFCCR('m','s',0,0x11))
+                                    if(entryName == MKFCCR('i','n','2','4'))
+                                    {
+                                        ADIO.bitspersample=24;
+                                        ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
+                                        info.bytePerPacket=3;
+                                        info.bytePerFrame=3*ADIO.channels;
+                                        audioCodec(LPCM)
+                                    }else if(entryName == MKFCCR('m','s',0,0x11))
                                         audioCodec(MSADPCM)
                                     else
                                         audioCodec(AAC);
@@ -1298,6 +1305,16 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                                                 uint32_t codecid=item.read32();
                                                                 printf("frma Codec Id :%s\n",fourCC::tostringBE(codecid));
 
+                                                                break;
+                                                            }
+                                                            case MKFCCR('e','n','d','a'): // enda
+                                                            {
+                                                                bool little = item.read16() == 1;
+                                                                if(little && ADIO.encoding == WAV_LPCM)
+                                                                {
+                                                                    printf("Little-endian\n");
+                                                                    audioCodec(PCM)
+                                                                }
                                                                 break;
                                                             }
                                                             case MKFCCR('m','s',0,0x55):
