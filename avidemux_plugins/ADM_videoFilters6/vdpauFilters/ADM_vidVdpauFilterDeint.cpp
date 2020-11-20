@@ -210,7 +210,6 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
 {
     secondField=false;
     nextFrame=0;
-    int paddedHeight=(previousFilter->getInfo()->height+15)&~15;
     if(!admVdpau::isOperationnal())
     {
         ADM_warning("Vdpau not operationnal\n");
@@ -238,13 +237,15 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
     for(int i=0;i<ADM_NB_SLOTS;i++)
         slots[i].image=new ADMImageDefault( previousFilter->getInfo()->width, 
                                             previousFilter->getInfo()->height);
-    
-    if(VDP_STATUS_OK!=admVdpau::mixerCreate(previousFilter->getInfo()->width,
-                                            paddedHeight,&mixer,true,configuration.enableIvtc)) 
+    {
+    int paddedWidth = admVdpau::dimensionRoundUp(previousFilter->getInfo()->width);
+    int paddedHeight = admVdpau::dimensionRoundUp(previousFilter->getInfo()->height);
+    if(VDP_STATUS_OK!=admVdpau::mixerCreate(paddedWidth,paddedHeight,&mixer,true,configuration.enableIvtc))
     {
         ADM_error("Cannot create mixer\n");
         goto badInit;
-    } 
+    }
+    }
     tempBuffer=new uint8_t[info.width*info.height*4];
 
     freeSurface.clear();

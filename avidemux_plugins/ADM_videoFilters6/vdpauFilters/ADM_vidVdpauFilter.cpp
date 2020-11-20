@@ -125,9 +125,9 @@ bool vdpauVideoFilter::setupVdpau(void)
         }
     }
     {
-    int paddedHeight=(previousFilter->getInfo()->height+15)&~15;
-    if(VDP_STATUS_OK!=admVdpau::mixerCreate(previousFilter->getInfo()->width,
-                                            paddedHeight,&mixer)) 
+    int paddedWidth = admVdpau::dimensionRoundUp(previousFilter->getInfo()->width);
+    int paddedHeight = admVdpau::dimensionRoundUp(previousFilter->getInfo()->height);
+    if(VDP_STATUS_OK!=admVdpau::mixerCreate(paddedWidth,paddedHeight,&mixer))
     {
         ADM_error("Cannot create mixer\n");
         goto badInit;
