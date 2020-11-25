@@ -170,7 +170,7 @@ static bool checkStdTimeBase(uint32_t &num, uint32_t &den)
 #define MAX_STD_CLOCK_FREQ 90000
     switch(den)
     {
-        case 24000: case 25000: case 30000: case 50000:
+        case 24000: case 25000: case 30000: case 50000: case 60000:
             return true; // nothing to do
         case 48000:
             if(num>1 && !(num&1))
