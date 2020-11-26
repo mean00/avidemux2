@@ -285,6 +285,10 @@ bool    tsHeader::readVideo(indexFile *index)
             _videostream.dwScale=1001;
             _videostream.dwRate=30000;
             break;
+	case 59940:
+            _videostream.dwScale=1001;
+            _videostream.dwRate=60000;
+            break;
         case 24000:
         case 25000:
         case 30000:
