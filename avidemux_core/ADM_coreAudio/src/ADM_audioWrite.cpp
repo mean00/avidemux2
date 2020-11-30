@@ -70,9 +70,13 @@ ADM_audioWrite *admCreateAudioWriter(ADM_audioStream *stream)
     WAVHeader *hdr=stream->getInfo();
     switch(hdr->encoding)
     {
-        case WAV_PCM: return new ADM_audioWriteWav();break;
-        case WAV_AAC: return new ADM_audioWriteAAC();break;
-        default: return new ADM_audioWrite();break;
+        case WAV_PCM:
+        case WAV_LPCM:
+            return new ADM_audioWriteWav();
+        case WAV_AAC:
+            return new ADM_audioWriteAAC();
+        default:
+            return new ADM_audioWrite();
     }
 }
 // EOF

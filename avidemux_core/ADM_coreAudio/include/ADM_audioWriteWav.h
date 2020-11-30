@@ -25,13 +25,15 @@ protected:
              bool          updateHeader(void);
              riffWritter   *writter;
              uint64_t      dataPosition;
+             uint32_t      channels;
+             uint32_t      bytesPerSample;
+             bool          swapBytes;
 
 public:
 virtual      bool close(void);
 virtual      bool init(ADM_audioStream *stream, const char *fileName);
+virtual      bool write(uint32_t size, uint8_t *buffer);
                   ADM_audioWriteWav();
 
 };
-
-
 #endif
