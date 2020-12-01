@@ -280,6 +280,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         t->language=entry.language;
         if(!entry.bpp) entry.bpp = 16;
         t->wavHeader.bitspersample = entry.bpp;
+        t->wavHeader.blockalign = 1;
         t->wavHeader.byterate=0; // to be set later
         // MS/ACM : ACMX
         if(0x100001==entry.fcc)
@@ -341,7 +342,8 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         }
         if(entry.fcc==WAV_PCM || entry.fcc==WAV_LPCM)
         {
-            t->wavHeader.byterate = t->wavHeader.bitspersample * entry.fq * entry.chan >> 3;
+            t->wavHeader.blockalign = entry.chan * t->wavHeader.bitspersample >> 3;
+            t->wavHeader.byterate = t->wavHeader.blockalign * entry.fq;
         }
         t->wavHeader.encoding=entry.fcc;
         t->wavHeader.channels=entry.chan;
