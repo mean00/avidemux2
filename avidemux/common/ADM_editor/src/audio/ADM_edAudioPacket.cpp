@@ -158,7 +158,11 @@ zgain:
     _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
     ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) return 0;
-   
+
+    WAVHeader *hdr = &trk->wavheader;
+    if(hdr->blockalign > 1)
+        sizeMax -= sizeMax % hdr->blockalign;
+
     // Read a packet
 
     bool r=trk->stream->getPacket(dest,len,sizeMax,samples,odts);
@@ -192,6 +196,12 @@ zgain:
     }else
     {
         msgSuppressed = 0;
+    }
+
+    if(hdr->blockalign > 1 && *len % hdr->blockalign)
+    {
+        ADM_warning("Audio packet not aligned, truncating.\n");
+        *len -= *len % hdr->blockalign;
     }
 
     // Rescale odts
