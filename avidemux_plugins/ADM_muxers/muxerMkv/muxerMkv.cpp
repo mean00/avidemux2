@@ -78,6 +78,8 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         c = video_st->codec;
         AVCodecParameters *par;
         par = video_st->codecpar;
+        if(par->codec_tag == MKTAG('V','P','9',' '))
+            par->codec_tag = MKTAG('V','P','9','0');
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         video_st->time_base=c->time_base;
         video_st->avg_frame_rate.den =c->time_base.num;
