@@ -111,6 +111,42 @@ bool usSecondsToFrac(uint64_t useconds, int *n, int *d, int limit)
 }
 
 /**
+    \fn stdFrameRate
+    \brief Check that given num/den pair matches a known standard frame rate
+*/
+bool isStdFrameRate(int &frameRateNum, int &frameRateDen)
+{
+    if(frameRateNum < 1 || frameRateDen < 1)
+        return false;
+    int nn,dd;
+#define MAX_CLOCK 180000
+#define MAX_FPS 60
+    if(!av_reduce(&nn, &dd, frameRateNum, frameRateDen, MAX_CLOCK))
+        return false;
+    if(dd != 1 && dd != 1001)
+        return false;
+    if(nn/dd > MAX_FPS)
+        return false;
+    if(dd == 1)
+    {
+        dd*=1000;
+        nn*=1000;
+    }
+    int nb=sizeof(fpsTable)/sizeof(TimeIncrementType);
+    for(int i=0;i<nb;i++)
+    {
+        TimeIncrementType *t=fpsTable+i;
+        if(t->d == nn && t->n == dd)
+        {
+            frameRateNum = nn;
+            frameRateDen = dd;
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
     \fn getRealPtsFromInternal
     \brief Lookup in the stored value to get the exact pts from the truncated one
 */

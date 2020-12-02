@@ -26,8 +26,6 @@ extern "C"
 char *av_strdup(const char *s);
 void *av_malloc(size_t size) ;
 }
-//#define TIME_TENTH_MILLISEC
-#define USE_REAL_TIME_BASE
 #if 1
     #define aprintf(...) {}
 #else
@@ -341,27 +339,41 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
     prolog(image);
 
     FilterInfo *info=source->getInfo();
-#if defined(TIME_TENTH_MILLISEC)
-    _context->time_base.num=1;
-    _context->time_base.den=10000LL;
-#elif defined(USE_REAL_TIME_BASE)
-    int n = timeScalerNum = info->timeBaseNum & 0x7FFFFFFF;
-    int d = timeScalerDen = info->timeBaseDen & 0x7FFFFFFF;
-    ADM_assert(timeScalerNum);
-    ADM_assert(timeScalerDen);
-    if(codec->id == AV_CODEC_ID_MPEG4)
-        av_reduce(&n,&d,timeScalerNum,timeScalerDen,0xFFFF);
-    _context->time_base.num=n;
-    _context->time_base.den=d;
-#else
-    int n,d;
-    usSecondsToFrac(info->frameIncrement,&n,&d);
-    _context->time_base.num=n;
-    _context->time_base.den=d;
-#endif
+    int n = info->timeBaseNum & 0x7FFFFFFF;
+    int d = info->timeBaseDen & 0x7FFFFFFF;
+    ADM_assert(n);
+    ADM_assert(d);
+    if(isStdFrameRate(d,n))
+    {
+        _context->time_base.num = _context->framerate.den = n;
+        _context->time_base.den = _context->framerate.num = d;
+    }else
+    {
+        int maxClockFreq = 0x7FFFFFFF;
+        switch(codec->id)
+        {
+            case AV_CODEC_ID_MPEG4:
+                maxClockFreq = 0xFFFF;
+                break;
+            case AV_CODEC_ID_MPEG2VIDEO:
+                maxClockFreq = 90000;
+                break;
+            default:break;
+        }
+        usSecondsToFrac(info->frameIncrement,&n,&d,maxClockFreq);
+        _context->time_base.num = _context->framerate.den = n;
+        _context->time_base.den = _context->framerate.num = d;
+        if(codec->id == AV_CODEC_ID_MPEG2VIDEO && !isStdFrameRate(d,n))
+        {
+            ADM_error("Non-standard frame rate %d/%d is not supported for mpeg2video.\n",d,n);
+            return false;
+        }
+    }
     timeScalerNum=_context->time_base.num;
     timeScalerDen=_context->time_base.den;
-   printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
+    printf("[ff] Time base: %d/%d, frame rate: %d/%d\n",
+        _context->time_base.num, _context->time_base.den,
+        _context->framerate.num, _context->framerate.den);
    if(_hasSettings && LAVS(MultiThreaded))
     {
         encoderMT();

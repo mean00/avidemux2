@@ -77,6 +77,7 @@ virtual        uint64_t    getEncoderDelay(void){return encoderDelay;}
                uint64_t    lastDts; //
 };
 ADM_COREVIDEOENCODER6_EXPORT bool usSecondsToFrac(uint64_t useconds, int *n, int *d, int maxclock=0xFFFF); // mpeg4 allows a maximum of 1<<16-1 as time base
+ADM_COREVIDEOENCODER6_EXPORT bool isStdFrameRate(int &frameRateNum, int &frameRateDen);
 ADM_COREVIDEOENCODER6_EXPORT bool ADM_pluginGetPath(const std::string& pluginName,int pluginVersion,std::string &rootPath);
 ADM_COREVIDEOENCODER6_EXPORT bool ADM_pluginInstallSystem(const std::string& pluginName,const std::string& ext,int pluginVersion);
 ADM_COREVIDEOENCODER6_EXPORT bool ADM_listFile(const std::string& path,const std::string& extension,vector <std::string > & list);
