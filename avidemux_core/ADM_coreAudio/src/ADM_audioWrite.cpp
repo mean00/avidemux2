@@ -48,7 +48,7 @@ bool ADM_audioWrite::close(void)
 */
 bool ADM_audioWrite::init(ADM_audioStream *stream, const char *fileName)
 {
-    _file=fopen(fileName,"wb");
+    _file=ADM_fopen(fileName,"wb");
     if(!_file) return false;
     return true;
 }
