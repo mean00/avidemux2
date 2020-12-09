@@ -1,14 +1,19 @@
 INCLUDE(ve_plugin)
-
-SET(ffNvenc_SRCS 
-        ffNvEncPlugin.cpp
-        ADM_ffNvEnc.cpp
-)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
-ADD_VIDEO_ENCODER(ADM_ve_ffNvenc  ${ffNvenc_SRCS})
+MACRO(DEFINE_VID_ENCODER codec)
+    SET(family ffNvenc)
+    SET(outName ADM_ve_${family}${codec})
+    SET(${family}${codec}_SRCS
+        ffNvEncPlugin.cpp
+        ADM_ffNvEnc.cpp)
+    ADD_VIDEO_ENCODER(${outName} ${${family}${codec}_SRCS})
+    IF("${codec}" STREQUAL "HEVC")
+        TARGET_COMPILE_DEFINITIONS(${outName} PUBLIC H265_ENCODER)
+    ENDIF("${codec}" STREQUAL "HEVC")
+    INSTALL_VIDEO_ENCODER(${outName})
+    TARGET_LINK_LIBRARIES(${outName} ADM_libavcodec ADM_libavutil)
+ENDMACRO(DEFINE_VID_ENCODER codec)
 
-INIT_VIDEO_ENCODER(ADM_ve_ffNvenc)
-INSTALL_VIDEO_ENCODER(ADM_ve_ffNvenc)
-TARGET_LINK_LIBRARIES(ADM_ve_ffNvenc ADM_libavcodec ADM_libavutil)
-INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/")
+DEFINE_VID_ENCODER(H264)
+DEFINE_VID_ENCODER(HEVC)

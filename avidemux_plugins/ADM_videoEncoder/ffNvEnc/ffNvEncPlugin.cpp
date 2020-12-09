@@ -78,13 +78,26 @@ extern "C"
 }
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffNvEncEncoder);
+#ifdef H265_ENCODER
 ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEnc",
-                               "Nvidia H264",
+                               "Nvidia HEVC",
                                "Nvidia hw encoder",
-                                ffNvEncConfigure, // No configuration
+                                ffNvEncConfigure, // configuration
                                 ADM_UI_ALL,
                                 1,0,0,
                                 ffnvenc_encoder_param, // conf template
                                 &NvEncSettings,NULL,NULL, // conf var
                                 nvEncProbe
 );
+#else
+ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEnc",
+                               "Nvidia H264",
+                               "Nvidia hw encoder",
+                                ffNvEncConfigure, // configuration
+                                ADM_UI_ALL,
+                                1,0,0,
+                                ffnvenc_encoder_param, // conf template
+                                &NvEncSettings,NULL,NULL, // conf var
+                                nvEncProbe
+);
+#endif
