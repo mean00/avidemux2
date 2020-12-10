@@ -31,6 +31,7 @@ vp9Encoder::vp9Encoder(ADM_coreVideoFilter *src, bool globalHeader) : ADM_coreVi
     passNumber=0;
     statFd=NULL;
     statBuf=NULL;
+    lastScaledPts=0;
 }
 
 static void dumpParams(vpx_codec_enc_cfg_t *cfg)
@@ -119,8 +120,8 @@ static int64_t scaleTime(uint32_t num, uint32_t den, uint64_t time)
     d/=1000.;
     d*=den;
     d/=1000.;
-    d+=d/2.;
     d/=num;
+    d+=0.49;
     return (int64_t)d;
 }
 
@@ -159,8 +160,24 @@ bool vp9Encoder::setup(void)
     uint32_t threads=vp9Settings.autoThreads? ADM_cpu_num_processors() : vp9Settings.nbThreads;
     if(threads>VP9_ENC_MAX_THREADS) threads=VP9_ENC_MAX_THREADS;
     param.g_threads=vp9Settings.nbThreads=threads;
-    usSecondsToFrac(getFrameIncrement(),&(param.g_timebase.num),&(param.g_timebase.den));
-    ticks=param.g_timebase.num;
+
+    FilterInfo *info=source->getInfo();
+    param.g_timebase.num = info->timeBaseNum & 0x7FFFFFFF;
+    param.g_timebase.den = info->timeBaseDen & 0x7FFFFFFF;
+    ADM_assert(param.g_timebase.num);
+    ADM_assert(param.g_timebase.den);
+#define MAX_CLOCK 180000
+    if(isStdFrameRate(param.g_timebase.den, param.g_timebase.num))
+    {
+        int64_t dur=scaleTime(param.g_timebase.num, param.g_timebase.den, info->frameIncrement);
+        if(dur<1) dur=1;
+        if(dur>MAX_CLOCK) dur=MAX_CLOCK;
+        ticks=dur;
+    }else
+    {
+        usSecondsToFrac(info->frameIncrement,&(param.g_timebase.num),&(param.g_timebase.den),MAX_CLOCK);
+        ticks=1;
+    }
 
     int speed=(vp9Settings.speed > 18)? 9 : vp9Settings.speed-9;
 
@@ -348,6 +365,12 @@ again:
     {
         ADM_warning("[vp9] Cannot get next image\n");
         flush=true;
+    }
+    if(flush)
+    {
+        ADM_info("Flushing delayed frames\n");
+        pts+=ticks;
+        er=vpx_codec_encode(&context,NULL,pts,ticks,0,dline);
     }else
     {
         pic->planes[VPX_PLANE_Y] = YPLANE(image);
@@ -361,20 +384,15 @@ again:
         pts=image->Pts;
         queueOfDts.push_back(pts);
         uint64_t real=pts;
-        pts=scaleTime(ticks, param.g_timebase.den, real);
+        pts=scaleTime(param.g_timebase.num, param.g_timebase.den, real);
+        if(pts<=lastScaledPts) // either wrong timebase or bogus pts
+            pts=lastScaledPts+1;
+        lastScaledPts=pts;
         ADM_timeMapping map;
         map.realTS=real;
         map.internalTS=pts;
         mapper.push_back(map);
-    }
 
-    if(flush)
-    {
-        ADM_info("Flushing delayed frames\n");
-        pts+=ticks;
-        er=vpx_codec_encode(&context,NULL,pts,ticks,0,dline);
-    }else
-    {
         er=vpx_codec_encode(&context,pic,pts,ticks,0,dline);
     }
     if(er!=VPX_CODEC_OK)

@@ -67,6 +67,7 @@ protected:
                 int                 passNumber;
                 void                *statBuf;
                 uint64_t            lastDts;
+                uint64_t            lastScaledPts; // in timebase units!
 public:
                                     vp9Encoder(ADM_coreVideoFilter *src, bool globalHeader);
     virtual                         ~vp9Encoder();
