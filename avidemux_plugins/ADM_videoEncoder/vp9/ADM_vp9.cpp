@@ -373,6 +373,15 @@ again:
         er=vpx_codec_encode(&context,NULL,pts,scaledFrameDuration,0,dline);
     }else
     {
+        if(image->_range == ADM_COL_RANGE_JPEG)
+        {
+            if(!vp9Settings.fullrange)
+                image->shrinkColorRange();
+        }else
+        {
+            if(vp9Settings.fullrange)
+                image->expandColorRange();
+        }
         pic->planes[VPX_PLANE_Y] = YPLANE(image);
         pic->planes[VPX_PLANE_U] = UPLANE(image);
         pic->planes[VPX_PLANE_V] = VPLANE(image);
