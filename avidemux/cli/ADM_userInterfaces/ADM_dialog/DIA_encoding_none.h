@@ -33,6 +33,8 @@ public:
     ~DIA_encodingCli( );
     
 protected:
+    bool firstPass;
+
     void setTotalSize(uint64_t size);
     void setAudioSize(uint64_t size);
     void setVideoSize(uint64_t size);

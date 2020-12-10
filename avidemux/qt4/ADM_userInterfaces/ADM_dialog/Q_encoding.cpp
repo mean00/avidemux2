@@ -114,6 +114,7 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 {
         stopRequest=false;
         stayOpen=false;
+        firstPass=false;
         UI_getTaskBarProgress()->enable();
         ui=new Ui_encodingDialog;
 	ui->setupUi(this);
@@ -207,11 +208,13 @@ void DIA_encodingQt4::setPhasis(const char *n)
     ADM_assert(ui);
     if(!strcmp(n,"Pass 1"))
     {
+        firstPass=true;
         ui->tabWidget->setTabEnabled(1, false); // disable the "Advanced" tab
         this->setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qencoding","First Pass")));
         WRITEM(labelPhasis,QT_TRANSLATE_NOOP("qencoding","Pass 1"));
     }else
     {
+        firstPass=false;
         this->setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qencoding","Encoding...")));
         ui->tabWidget->setTabEnabled(1, true);
         WRITEM(labelPhasis,n);
@@ -238,7 +241,7 @@ void DIA_encodingQt4::setFrameCount(uint32_t nb)
 void DIA_encodingQt4::setPercent(uint32_t p)
 {
           ADM_assert(ui);
-          printf("%*" PRIu32"%% done\t",3,p);
+          printf("%*" PRIu32"%% done%s",3,p,firstPass? "\n" : "\t");
           WIDGET(progressBar)->setValue(p);
           ADM_slaveReportProgress(p);
           if(tray)

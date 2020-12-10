@@ -48,6 +48,7 @@ protected:
 
     bool                stopRequest;
     bool                stayOpen;
+    bool                firstPass;
     Ui_encodingDialog   *ui;    
     ADM_tray            *tray;
 public:    

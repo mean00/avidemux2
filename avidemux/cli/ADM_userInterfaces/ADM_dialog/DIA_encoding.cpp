@@ -20,7 +20,7 @@
 extern bool ADM_slaveReportProgress(uint32_t p);
 DIA_encodingCli::DIA_encodingCli(uint64_t fps1000) : DIA_encodingBase(fps1000)
 {
-
+    firstPass=false;
 }
 
 
@@ -30,8 +30,17 @@ DIA_encodingCli::~DIA_encodingCli( )
 }
 void DIA_encodingCli::setPhasis(const char *n)
 {
-            fprintf(stderr,"Encoding Phase        : %s\n",n);
+    if(!strcmp(n,"Pass 1"))
+        firstPass=true;
+    else
+        firstPass=false;
 
+    fprintf(stderr,"Encoding Phase        : %s\n",n);
+}
+void DIA_encodingCli::setPercent(uint32_t percent)
+{
+    printf("%*" PRIu32"%% done%s",3,percent,firstPass? "\n" : "\t");
+    ADM_slaveReportProgress(percent);
 }
 void DIA_encodingCli::setAudioCodec(const char *n)
 {
@@ -55,7 +64,6 @@ bool DIA_encodingCli::isAlive( void )
     void DIA_encodingCli::setTotalSize(uint64_t size) { UNUSED_ARG(size); }
     void DIA_encodingCli::setAudioSize(uint64_t size) { UNUSED_ARG(size); }
     void DIA_encodingCli::setVideoSize(uint64_t size) { UNUSED_ARG(size); }
-    void DIA_encodingCli::setPercent(uint32_t percent) { printf("%*" PRIu32"%% done\t",3,percent); ADM_slaveReportProgress(percent); }
     void DIA_encodingCli::setFps(uint32_t fps) { UNUSED_ARG(fps); }
     void DIA_encodingCli::setFrameCount(uint32_t nb) { printf("frames: %" PRIu32"\t",nb); }
     void DIA_encodingCli::setElapsedTimeMs(uint32_t nb) { printf("elapsed: %s\n",ADM_us2plain(1000LL*nb)); }
