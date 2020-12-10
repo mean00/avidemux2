@@ -28,14 +28,12 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
         ADM_assert(src->_width==_width);
         ADM_assert(src->_height==_height);
         ADM_assert(isWrittable()==true); // could not duplicate to a linked data image
-        copyInfo(src);
         uint32_t sourceStride,destStride;
         uint8_t  *source,*dest;
 
         hwDecRefCount(); // free hw ref image if any..
         if(src->refType==ADM_HW_NONE)
         {
-            _range=src->_range;
             for(int plane=PLANAR_Y;plane<PLANAR_LAST;plane++)
             {
                 source=src->GetReadPtr((ADM_PLANE)plane);
@@ -79,25 +77,21 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
 }
 /**
     \fn duplicate
+    \brief copy data + info (pts...)
 */
 bool ADMImage::duplicate(ADMImage *src)
 {
-	return duplicateMacro(src,false);
+    copyInfo(src);
+    return duplicateMacro(src,false);
 }
 /**
     \fn duplicateFull
-    \brief copy data + info (pts...)
+    \brief The same for compatibility with existing code
 */
 bool ADMImage::duplicateFull(ADMImage *src)
 {
-    // Sanity check
-    ADM_assert(src->_width==_width);
-    ADM_assert(src->_height==_height);
-
-
-    copyInfo(src);
     duplicate(src);
-    return 1;
+    return true;
 }
 /**
     \fn copyInfo
@@ -109,6 +103,7 @@ bool ADMImage::copyInfo(ADMImage *src)
     flags=src->flags;
     _aspect=src->_aspect;
     Pts=src->Pts;
+    _range=src->_range;
     return 1;
 }
 /**
@@ -151,8 +146,7 @@ bool ADMImage::shrinkColorRange(void)
             d += stride; \
         } \
     } \
-    dst->copyInfo(this); \
-    duplicate(dst); \
+    duplicateMacro(dst,false); \
     delete dst; \
     dst = NULL; \
 

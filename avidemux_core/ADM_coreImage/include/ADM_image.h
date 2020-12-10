@@ -146,7 +146,7 @@ public:
         virtual      bool           isWrittable(void)=0;
         virtual      ADMImageRef    *castToRef(void) {return NULL;};
 
-        virtual      bool           duplicateMacro(ADMImage *src,bool swap);       /// copy an image to ourself, including info
+        virtual      bool           duplicateMacro(ADMImage *src,bool swap); /// copy an image to ourselves, excluding info
 
                      uint8_t        getWidthHeight(uint32_t *w,uint32_t *h)
                                     {
