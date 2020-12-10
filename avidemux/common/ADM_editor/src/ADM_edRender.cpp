@@ -539,7 +539,7 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
         vid->color=new ADMColorScalerSimple(src->_width,src->_height,src->_colorspace,ADM_COLOR_YV12);
     // Since it is not YV12 it MUST be a ref
     ADM_assert(src->isRef());
-    dst->_range=src->_range;
+    dst->copyInfo(src);
     return vid->color->convertImage(src,dst);
 }
 /**
