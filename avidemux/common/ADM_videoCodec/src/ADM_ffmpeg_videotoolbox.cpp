@@ -213,6 +213,7 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
 
     copy->Pts = (uint64_t)(frame->reordered_opaque);
     copy->flags = admFrameTypeFromLav(frame);
+    copy->_range = (frame->color_range == AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
     copy->refType=ADM_HW_NONE;
     for(int i=0;i<3;i++)
     {

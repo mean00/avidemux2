@@ -559,6 +559,7 @@ bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
     out->Pts= (uint64_t)(pts_opaque);        
     out->flags=admFrameTypeFromLav(decodedFrame);
+    out->_range=(decodedFrame->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
     out->refType=ADM_HW_LIBVA;
     out->refDescriptor.refCodec=this;
     ADM_vaSurface *img=(ADM_vaSurface *)(decodedFrame->data[0]);

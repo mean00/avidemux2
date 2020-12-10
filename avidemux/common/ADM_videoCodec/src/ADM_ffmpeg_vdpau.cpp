@@ -443,6 +443,7 @@ bool     decoderFFVDPAU::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
     out->Pts= (uint64_t)(pts_opaque);    
     out->flags=admFrameTypeFromLav(decodedFrame);
+    out->_range=(decodedFrame->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
     return true;
 }
 
