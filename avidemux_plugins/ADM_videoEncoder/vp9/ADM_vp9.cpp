@@ -172,11 +172,11 @@ bool vp9Encoder::setup(void)
         int64_t dur=scaleTime(param.g_timebase.num, param.g_timebase.den, info->frameIncrement);
         if(dur<1) dur=1;
         if(dur>MAX_CLOCK) dur=MAX_CLOCK;
-        ticks=dur;
+        scaledFrameDuration=dur;
     }else
     {
         usSecondsToFrac(info->frameIncrement,&(param.g_timebase.num),&(param.g_timebase.den),MAX_CLOCK);
-        ticks=1;
+        scaledFrameDuration=1;
     }
 
     int speed=(vp9Settings.speed > 18)? 9 : vp9Settings.speed-9;
@@ -369,8 +369,8 @@ again:
     if(flush)
     {
         ADM_info("Flushing delayed frames\n");
-        pts+=ticks;
-        er=vpx_codec_encode(&context,NULL,pts,ticks,0,dline);
+        pts+=scaledFrameDuration;
+        er=vpx_codec_encode(&context,NULL,pts,scaledFrameDuration,0,dline);
     }else
     {
         pic->planes[VPX_PLANE_Y] = YPLANE(image);
@@ -393,7 +393,7 @@ again:
         map.internalTS=pts;
         mapper.push_back(map);
 
-        er=vpx_codec_encode(&context,pic,pts,ticks,0,dline);
+        er=vpx_codec_encode(&context,pic,pts,scaledFrameDuration,0,dline);
     }
     if(er!=VPX_CODEC_OK)
     {

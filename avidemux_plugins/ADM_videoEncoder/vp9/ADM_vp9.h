@@ -57,7 +57,7 @@ protected:
                 std::vector <const vpx_codec_cx_pkt *> packetQueue;
 
                 int                 plane;
-                uint32_t            ticks;
+                uint32_t            scaledFrameDuration;
                 uint32_t            dline;
                 bool                flush;
                 bool                postAmble(ADMBitstream *out);
