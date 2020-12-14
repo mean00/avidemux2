@@ -738,7 +738,7 @@ uint8_t ADM_Composer::addFile (const char *name)
         ADM_info("%s sometimes has invalid timestamps which confuse avidemux, checking\n",fourCC::tostring(info.fcc));
         checkForValidPts(_segments.getSegment(lastVideo-1)); 
     }
-    if(true==checkForDoubledFps( video._aviheader,video.timeIncrementInUs))
+    if(!video.fieldEncoded && checkForDoubledFps(video._aviheader,video.timeIncrementInUs))
     {
         ADM_info("Halving Fps...\n");
         _segments.halfFps();
