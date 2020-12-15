@@ -110,8 +110,8 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                     {
                         ptr=pes.payload+pes.offset;
                         size=pes.payloadSize-pes.offset;
-                        latm.flush();
-                        latm.pushData(size,ptr);
+                        if(false==latm.pushData(size,ptr))
+                            latm.flush();
                         int errors=8; // arbitrary
                         while(true)
                         {
