@@ -306,7 +306,10 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                         t->wavHeader.encoding=MKV_MUX_LATM;
                 }
                 if(t->wavHeader.encoding==MKV_MUX_LATM)
+                {
                     t->wavHeader.byterate=0; // to be set later
+                    t->wavHeader.blockalign=1; // restore default
+                }
                 delete [] entry.extraData;
                 t->streamIndex=entry.trackNo;
                 if(entry.defaultDuration)
