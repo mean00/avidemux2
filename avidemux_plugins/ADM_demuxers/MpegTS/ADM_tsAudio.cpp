@@ -310,7 +310,7 @@ bool      ADM_tsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxS
         case ADM_TS_MUX_LATM:
             {
                 // Try to get one...
-                int retries=20;
+                int retries=40; // arbitrary
                 bool gotPacket=false;
                 uint64_t time=ADM_NO_PTS;
                 while(latm.empty()) // fetch next LOAS frame, it will contain several frames
@@ -321,8 +321,14 @@ bool      ADM_tsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxS
                         return false;
                     }
                     if(gotPacket) time=packet->pts;
-                    if(ADM_latm2aac::LATM_MORE_DATA_NEEDED==latm.convert(time))
+                    ADM_latm2aac::LATM_STATE outcome = latm.convert(time);
+                    if(outcome != ADM_latm2aac::LATM_OK)
                     {
+                        if(outcome == ADM_latm2aac::LATM_ERROR)
+                        {
+                            latm.flush();
+                            ADM_warning("Error demuxing LATM frame, %d attempts remaining.\n",retries);
+                        }
                         if(false==demuxer.getNextPES(packet)) return false;
                         int avail=packet->payloadSize-packet->offset;
                         if(avail>maxSize) ADM_assert(0);
