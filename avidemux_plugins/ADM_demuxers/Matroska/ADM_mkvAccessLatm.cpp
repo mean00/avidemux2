@@ -104,8 +104,14 @@ bool mkvAccessLatm::getPacket(uint8_t *dest, uint32_t *packLen, uint32_t maxSize
             ADM_error("Cannot get AAC packet from LATM\n");
             return false;
         }
-        if(ADM_latm2aac::LATM_MORE_DATA_NEEDED==latm.convert(time))
+        ADM_latm2aac::LATM_STATE outcome = latm.convert(time);
+        if(outcome != ADM_latm2aac::LATM_OK)
         {
+            if(outcome == ADM_latm2aac::LATM_ERROR)
+            {
+                latm.flush();
+                ADM_warning("Error demuxing LATM frame, %d attempts remaining.\n",retries);
+            }
             uint32_t len=0;
             if(!_son->getPacket(_buffer,&len,_maxSize,&time)) return false;
             if(false==latm.pushData(len,_buffer))
