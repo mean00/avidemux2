@@ -36,10 +36,11 @@ typedef enum
 
 typedef enum
 {
-    STANDARD,
-    WIDE,
-    UNI,
-    CINEMA
+    STANDARD=0,
+    WIDE=1,
+    UNI=2,
+    CINEMA=3,
+    CUSTOM=4
 }MP4_MUXER_DAR;
 
 typedef enum

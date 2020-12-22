@@ -35,6 +35,7 @@ mp4_muxer muxerConfig=
     MP4_MUXER_OPT_FASTSTART,
     false,
     WIDE,
+    1280,
     MP4_MUXER_ROTATE_0,
     MP4_MUXER_CLOCK_FREQ_AUTO
 };
@@ -202,24 +203,28 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
             float w=h;
             switch (muxerConfig.aspectRatio)
             {
-                case 0:
+                case STANDARD:
                     w*=4.;
                     w/=3.;
                     break;
-                case 1:
+                case WIDE:
                     w*=16.;
                     w/=9.;
                     break;
-                case 2:
+                case UNI:
                     w*=2.;
                     break;
-                case 3:
+                case CINEMA:
                     w*=64.;
                     w/=27.;
                     break;
+                case CUSTOM:
+                default:
+                    break;
             }
             int num=1,den=1;
-            av_reduce(&num, &den, (uint32_t)w, s->getWidth(),65535);
+            int64_t iw64=(muxerConfig.aspectRatio==CUSTOM)? muxerConfig.displayWidth : w;
+            av_reduce(&num, &den, iw64, s->getWidth(),65535);
             par->sample_aspect_ratio.num=num;
             par->sample_aspect_ratio.den=den;
             video_st->sample_aspect_ratio.num=num;

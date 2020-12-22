@@ -27,6 +27,7 @@ bool movConfigure(void)
 {
         uint32_t fmt = muxerConfig.muxerType;
         uint32_t dar = muxerConfig.aspectRatio;
+        uint32_t diw = muxerConfig.displayWidth;
         uint32_t rot = muxerConfig.rotation;
         uint32_t opt = muxerConfig.optimize;
         uint32_t clk = muxerConfig.clockfreq;
@@ -57,9 +58,17 @@ bool movConfigure(void)
 #endif
         diaElemMenu  menuOptimize(&opt,QT_TRANSLATE_NOOP("mp4muxer","Optimize for Streaming"),NB_OPTIMIZE,streamOpt,"");
         diaElemToggle forceAR(&force,QT_TRANSLATE_NOOP("mp4muxer","Force aspect ratio"));
-        diaMenuEntry aspect[]={{STANDARD,"4:3"},{WIDE,"16:9"},{UNI,"18:9"},{CINEMA,"64:27"}};
-        diaElemMenu  menuAspect(&dar,QT_TRANSLATE_NOOP("mp4muxer","Aspect Ratio (DAR)"),4,aspect,"");
+        diaMenuEntry aspect[]={
+            {STANDARD,"4:3"},
+            {WIDE,"16:9"},
+            {UNI,"18:9"},
+            {CINEMA,"64:27"},
+            {CUSTOM,QT_TRANSLATE_NOOP("mp4muxer","Derived from display width")}
+        };
+        diaElemMenu  menuAspect(&dar,QT_TRANSLATE_NOOP("mp4muxer","Aspect Ratio (DAR)"),5,aspect,"");
+        diaElemUInteger dWidth(&diw,QT_TRANSLATE_NOOP("mp4muxer","Display Width"),16,65535);
         forceAR.link(1,&menuAspect);
+        menuAspect.link(aspect+4,1,&dWidth);
         diaMenuEntry rotation[]={
             {MP4_MUXER_ROTATE_0,QT_TRANSLATE_NOOP("mp4muxer","Do not rotate")},
             {MP4_MUXER_ROTATE_90,QT_TRANSLATE_NOOP("mp4muxer","90°")},
@@ -81,9 +90,9 @@ bool movConfigure(void)
         diaElemMenu menuClock(&clk,QT_TRANSLATE_NOOP("mp4muxer","Time scale"),8,clockFrequencies,NULL);
 
 #ifndef MUXER_IS_MOV
-        diaElem *tabs[]={&menuFormat,&menuOptimize,&forceAR,&menuAspect,&menuRotation,&menuClock};
+        diaElem *tabs[]={&menuFormat,&menuOptimize,&forceAR,&menuAspect,&dWidth,&menuRotation,&menuClock};
 #else
-        diaElem *tabs[]={            &menuOptimize,&forceAR,&menuAspect,&menuRotation,&menuClock};
+        diaElem *tabs[]={            &menuOptimize,&forceAR,&menuAspect,&dWidth,&menuRotation,&menuClock};
 #endif
 
         if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MP4 Muxer"),NB_TABS,tabs))
@@ -92,6 +101,7 @@ bool movConfigure(void)
             muxerConfig.optimize=(MP4_MUXER_OPTIMIZE)opt;
             muxerConfig.forceAspectRatio=force;
             muxerConfig.aspectRatio=(MP4_MUXER_DAR)dar;
+            muxerConfig.displayWidth=diw;
             muxerConfig.rotation=(MP4_MUXER_ROTATION)rot;
             muxerConfig.clockfreq=(MP4_MUXER_CLOCK_FREQUENCIES)clk;
             return true;
