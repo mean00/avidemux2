@@ -99,11 +99,6 @@ done
 # Same for libvdpau.
 cpyX86Rename libvdpau.so.1 vdpau
 
-# admVdpau::init() looks for unversioned name
-cd ../lib/vdpau
-ln -sf libvdpau.so.1 libvdpau.so
-cd ../../bin
-
 # Trying to use Buster's libGL on other hosts crashes Avidemux.
 # We still need libGLU, not present by default on Ubuntu and Fedora.
 DISPLAY_LIBS="libGLU.so.1 libXv.so.1"
