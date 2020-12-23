@@ -102,10 +102,13 @@ VdpGetProcAddress        *admVdpau::getProcAddress2(void)
 */
 bool admVdpau::init(GUI_WindowInfo *x)
 {
+#define STR(x) #x
+#define MKSTRING(x) STR(x)
+#define VDPAU_LIBNAME libvdpau.so.1
     memset(&ADM_coreVdpau::funcs,0,sizeof(ADM_coreVdpau::funcs));
-    if(false==vdpauDynaLoader.loadLibrary("libvdpau.so"))
+    if(false==vdpauDynaLoader.loadLibrary(MKSTRING(VDPAU_LIBNAME)))
     {
-        ADM_info("Cannot load libvdpau.so\n");
+        ADM_info("Cannot load " MKSTRING(VDPAU_LIBNAME) "\n");
         return false;
     }
     ADM_createVdpX11=(VdpDeviceCreateX11*)vdpauDynaLoader.getSymbol("vdp_device_create_x11");
