@@ -419,6 +419,11 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         case  MKV_VIDEO_WIDTH: entry->w=father.readUnsignedInt(len);break;
         case  MKV_VIDEO_HEIGHT: entry->h=father.readUnsignedInt(len);break;
 
+        case  MKV_VIDEO_COLOUR_MATRIX_COEFF: ADM_info("MatrixCoefficients: %u\n",father.readUnsignedInt(len));break;
+        case  MKV_VIDEO_COLOUR_RANGE: ADM_info("Range: %u\n",father.readUnsignedInt(len));break;
+        case  MKV_VIDEO_COLOUR_TRANSFER: ADM_info("TransferCharacteristics: %u\n",father.readUnsignedInt(len));break;
+        case  MKV_VIDEO_COLOUR_PRIMARIES: ADM_info("Primaries: %u\n",father.readUnsignedInt(len));break;
+
         case  MKV_DISPLAY_HEIGHT: ADM_info("Display Height:%d\n",(int)father.readUnsignedInt(len));break;
         case  MKV_DISPLAY_WIDTH: ADM_info("Display Width:%d\n",(int)father.readUnsignedInt(len));break;
 
@@ -440,6 +445,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         }
         case  MKV_AUDIO_SETTINGS:
         case  MKV_VIDEO_SETTINGS:
+        case  MKV_VIDEO_COLOUR:
         case  MKV_CONTENT_ONE_ENCODING:
         case  MKV_CONTENT_ENCODINGS:
         case  MKV_CONTENT_COMPRESSION:
