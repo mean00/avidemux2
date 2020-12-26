@@ -1488,17 +1488,17 @@ againGet:
     // From here we are in linear time, guess DTS if missing...
     if(signedDts==ADM_NO_PTS)
     {
-	// border case due to rounding we can have pts slighly above dts
-	if(_nextFrameDts!=ADM_NO_PTS)
-	{
+        // border case due to rounding we can have dts slighly above pts
+        if(_nextFrameDts!=ADM_NO_PTS)
+        {
             signedDts=_nextFrameDts;
             if(signedPts != ADM_NO_PTS && signedDts>signedPts)
-		{
-			// not sure it is correct. We may want to do it the other way around, i.e. bumping pts
-			ADM_warning("Compensating for rounding error with PTS=%" PRId64"ms DTS=%" PRId64"ms \n",signedPts,signedDts);
-                        signedPts=signedDts;
-		}
-	}
+            {
+                ADM_warning("Guessed DTS > PTS by %" PRId64" us for frame %" PRIu32", bumping PTS to %s (%" PRId64" us)\n",
+                              signedDts - signedPts, vid->lastSentFrame-1, ADM_us2plain(signedDts), signedDts);
+                signedPts=signedDts;
+            }
+        }
     }else
     {
         _nextFrameDts=signedDts;
