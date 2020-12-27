@@ -39,10 +39,10 @@ do_plugins=1
 do_rebuild=0
 debug=0
 create_app_bundle=1
-external_libass=0
-external_liba52=0
-external_libmad=0
-external_libmp4v2=0
+external_libass=1
+external_liba52=1
+external_libmad=1
+external_libmp4v2=1
 
 # /usr/include is no more on Catalina
 export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
@@ -140,25 +140,25 @@ usage()
 {
         echo "Bootstrap avidemux ${API_VERSION}:"
         echo "***********************"
-        echo "  --help                : Print usage"
-        echo "  --tgz                 : Build tgz packages"
-        echo "  --nopkg               : Don't create macOS app bundle"
-        echo "  --debug               : Switch debugging on"
-        echo "  --rebuild             : Preserve existing build directories"
-        echo "  --output=NAME         : Specify a custom basename for dmg"
-        echo "  --version=STRING      : Specify a custom Avidemux version string"
-        echo "  --with-core           : Build core (default)"
-        echo "  --without-core        : Don't build core"
-        echo "  --with-cli            : Build cli (default)"
-        echo "  --without-cli         : Don't build cli"
-        echo "  --with-qt             : Build qt (default)"
-        echo "  --without-qt          : Don't build qt"
-        echo "  --with-plugins        : Build plugins (default)"
-        echo "  --without-plugins     : Don't build plugins"
-        echo "  --with-system-libass  : Use system libass instead of the bundled one"
-        echo "  --with-system-liba52  : Use system liba52 (a52dec) instead of the bundled one"
-        echo "  --with-system-libmad  : Use system libmad instead of the bundled one"
-        echo "  --with-system-libmp4v2: Use system libmp4v2 instead of the bundled one"
+        echo "  --help                  : Print usage"
+        echo "  --tgz                   : Build tgz packages"
+        echo "  --nopkg                 : Don't create macOS app bundle"
+        echo "  --debug                 : Switch debugging on"
+        echo "  --rebuild               : Preserve existing build directories"
+        echo "  --output=NAME           : Specify a custom basename for dmg"
+        echo "  --version=STRING        : Specify a custom Avidemux version string"
+        echo "  --with-core             : Build core (default)"
+        echo "  --without-core          : Don't build core"
+        echo "  --with-cli              : Build cli (default)"
+        echo "  --without-cli           : Don't build cli"
+        echo "  --with-qt               : Build qt (default)"
+        echo "  --without-qt            : Don't build qt"
+        echo "  --with-plugins          : Build plugins (default)"
+        echo "  --without-plugins       : Don't build plugins"
+        echo "  --with-internal-libass  : Use bundled libass instead of the system one"
+        echo "  --with-internal-liba52  : Use bundled liba52 (a52dec) instead of the system one"
+        echo "  --with-internal-libmad  : Use bundled libmad instead of the system one"
+        echo "  --with-internal-libmp4v2: Use bundled libmp4v2 instead of the system one"
         config
 }
 option_value()
@@ -235,17 +235,17 @@ while [ $# != 0 ] ;do
          --with-core)
                 do_core=1
              ;;
-         --with-system-libass)
-                external_libass=1
+         --with-internal-libass)
+                external_libass=0
              ;;
-         --with-system-liba52)
-                external_liba52=1
+         --with-internal-liba52)
+                external_liba52=0
              ;;
-         --with-system-libmad)
-                external_libmad=1
+         --with-internal-libmad)
+                external_libmad=0
              ;;
-         --with-system-libmp4v2)
-                external_libmp4v2=1
+         --with-internal-libmp4v2)
+                external_libmp4v2=0
              ;;
         *)
                 echo "unknown parameter $config_option"
