@@ -2,7 +2,12 @@
 #include "string"
 #pragma once
 typedef struct {
-bool forceDisplayWidth;
+bool forceAspectRatio;
 uint32_t displayWidth;
 uint32_t displayAspectRatio;
+bool addColourInfo;
+uint32_t colMatrixCoeff;
+uint32_t colRange;
+uint32_t colTransfer;
+uint32_t colPrimaries;
 }mkv_muxer;

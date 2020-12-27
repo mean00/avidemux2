@@ -18,17 +18,29 @@
 #include "ADM_muxerInternal.h"
 #include "muxerMkv.h"
 #include "mkv_muxer_desc.cpp"
-#include "fourcc.h"
- bool mkvConfigure(void);
 
-ADM_MUXER_BEGIN( "mkv",muxerMkv,
-                    1,0,0,
-                    "MKV",    // Internal name
-                    "Matroska muxer plugin (c) Mean 2009",
-                    "Mkv Muxer", // DIsplay name
-                    mkvConfigure,
-                    mkv_muxer_param, //template
-                    &mkvMuxerConfig, //config
-                    sizeof(mkv_muxer)
-                );
-
+#ifdef MUXER_IS_WEBM
+extern bool WebmConfigure(void);
+ADM_MUXER_BEGIN(
+        "webm",muxerWebm,
+        1,0,0,
+        "WEBM",          // Internal name
+        "WebM muxer plugin (c) Mean 2009",
+        "WebM Muxer",    // Display name
+        WebmConfigure,   // configure function
+        mkv_muxer_param, // Template
+        &muxerConfig,    // conf
+        sizeof(mkv_muxer));
+#else
+extern bool mkvConfigure(void);
+ADM_MUXER_BEGIN(
+        "mkv",muxerMkv,
+        1,0,0,
+        "MKV",           // Internal name
+        "Matroska muxer plugin (c) Mean 2009",
+        "MKV Muxer",     // Display name
+        mkvConfigure,    // configure function
+        mkv_muxer_param, // Template
+        &muxerConfig,    // conf
+        sizeof(mkv_muxer));
+#endif

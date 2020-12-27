@@ -1,6 +1,6 @@
 /***************************************************************************
             \file            muxerMkv
-            \brief           i/f to lavformat Matroska muxer
+            \brief           i/f to lavformat Matroska / WebM muxer
                              -------------------
     
     copyright            : (C) 2009 by mean
@@ -29,157 +29,202 @@
 #define aprintf printf
 #endif
 
-mkv_muxer mkvMuxerConfig=
+mkv_muxer muxerConfig=
 {
-    false,  // Force
+    false,  // Force DAR
     1280,   // Display width
-    0       // Display aspect ratio (any)
+    2,      // Display aspect ratio (16:9)
+    false,  // Add color info
+    2,      // Matrix coeff. unspecified
+    0,      // Color range unspecified
+    2,      // Transfer characteristic unspecified
+    2       // Color primaries unspecified
 };
 
+#ifdef MUXER_IS_WEBM
+#   define MUXFMT WebM
+#else
+#   define MUXFMT Matroska
+#endif
+#define STR(x) #x
+#define MKSTRING(x) STR(x)
+#define MUXTYPE MKSTRING(MUXFMT)
 
 /**
     \fn     muxerMkv
     \brief  Constructor
 */
-muxerMkv::muxerMkv() 
+MKVCLASS::MKVCLASS()
 {
-};
+    ADM_info("Creating " MUXTYPE " muxer.\n");
+}
+
 /**
     \fn     muxerMkv
     \brief  Destructor
 */
-
-muxerMkv::~muxerMkv() 
+MKVCLASS::~MKVCLASS()
 {
-   
+    ADM_info("Destroying " MUXTYPE " muxer.\n");
 }
+
 /**
     \fn open
     \brief Check that the streams are ok, initialize context...
 */
-
-bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
+bool MKVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack, ADM_audioStream **a)
 {
-    /* All seems fine, open stuff */
-    if(false==setupMuxer("matroska",file))
+#ifdef MUXER_IS_WEBM
+    // We only support VP8 / VP9 / AV1 + Vorbis / Opus
+    uint32_t fcc=s->getFCC();
+    if( !fourCC::check(fcc,(const uint8_t *)"VP8 ")
+        && !fourCC::check(fcc,(const uint8_t *)"VP9 ")
+        && !fourCC::check(fcc,(const uint8_t *)"av01"))
     {
-        ADM_warning("[Mkv] Failed to open muxer (setup)\n");
+        GUI_Error_HIG("WebM",QT_TRANSLATE_NOOP("mkvmuxer","Unsupported Video.\nOnly VP8/VP9/AV1 video and Vorbis/Opus audio supported"));
+        return false;
+    }
+#endif
+
+    /* All seems fine, open stuff */
+    if(false==setupMuxer(
+#ifdef MUXER_IS_WEBM
+        "webm",
+#else
+        "matroska",
+#endif
+        file))
+    {
+        ADM_warning("Failed to setup " MUXTYPE " muxer.\n");
         return false;
     }
  
-   if(initVideo(s)==false) 
+    if(initVideo(s)==false)
     {
-        ADM_warning("[Mkv] Failed to init video\n");
+        ADM_warning("[" MUXTYPE "] Failed to init video.\n");
         return false;
     }
-  
-    
-        AVCodecContext *c;
-        c = video_st->codec;
-        AVCodecParameters *par;
-        par = video_st->codecpar;
-        if(par->codec_tag == MKTAG('V','P','9',' '))
-            par->codec_tag = MKTAG('V','P','9','0');
-        rescaleFps(s->getAvgFps1000(),&(c->time_base));
-        video_st->time_base=c->time_base;
-        video_st->avg_frame_rate.den =c->time_base.num;
-        video_st->avg_frame_rate.num =c->time_base.den;
-        c->gop_size=15;
-        
-        if((mkvMuxerConfig.forceDisplayWidth && mkvMuxerConfig.displayWidth) || mkvMuxerConfig.displayAspectRatio)
-        {
-            float h=(float)(s->getHeight());
-            float w=h;
-            switch (mkvMuxerConfig.displayAspectRatio)
-            {
-                case 1:
-                    w*=4.;
-                    w/=3.;
-                    break;
-                case 2:
-                    w*=16.;
-                    w/=9.;
-                    break;
-                case 3:
-                    w*=2.;
-                    break;
-                case 4:
-                    w*=64.;
-                    w/=27.;
-                    break;
-                default:break;
-            }
 
-            //sar=display/code  
-            int num=1,den=1;
-            if(mkvMuxerConfig.forceDisplayWidth)
-                av_reduce(&num, &den, mkvMuxerConfig.displayWidth, s->getWidth(),65535);
-            else
-                av_reduce(&num, &den, (uint32_t)w, s->getWidth(),65535);
-            par->sample_aspect_ratio.num=num;
-            par->sample_aspect_ratio.den=den;
-            video_st->sample_aspect_ratio.num=num;
-            video_st->sample_aspect_ratio.den=den;
-            int dw=(int)w;
-            if(mkvMuxerConfig.forceDisplayWidth)
-                dw=(int)mkvMuxerConfig.displayWidth;
-            ADM_info("Forcing display width of %d (pixel aspect ratio %d:%d)\n",dw,num,den);
+    AVCodecContext *c = video_st->codec;
+    AVCodecParameters *par = video_st->codecpar;
+#ifndef MUXER_IS_WEBM
+    if(par->codec_tag == MKTAG('V','P','9',' '))
+        par->codec_tag = MKTAG('V','P','9','0');
+#endif
+    rescaleFps(s->getAvgFps1000(),&(c->time_base));
+    video_st->time_base=c->time_base;
+    video_st->avg_frame_rate.den =c->time_base.num;
+    video_st->avg_frame_rate.num =c->time_base.den;
+    //c->gop_size=15; // ??
+
+    /* DAR / SAR code */
+    if(muxerConfig.forceAspectRatio && (muxerConfig.displayWidth || muxerConfig.displayAspectRatio))
+    {
+        float h=(float)(s->getHeight());
+        float w=h;
+        switch (muxerConfig.displayAspectRatio)
+        {
+            case STANDARD:
+                w*=4.;
+                w/=3.;
+                break;
+            case WIDE:
+                w*=16.;
+                w/=9.;
+                break;
+            case UNI:
+                w*=2.;
+                break;
+            case CINEMA:
+                w*=64.;
+                w/=27.;
+                break;
+            default:break;
         }
 
-        if(initAudio(nbAudioTrack,a)==false)
-        {
-            ADM_warning("[Mkv] Failed to init audio\n");
-            return false;
-        }
-        
-        // /audio
-        int er = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
+        int num=1,den=1;
+        if(muxerConfig.displayAspectRatio == OTHER)
+            av_reduce(&num, &den, muxerConfig.displayWidth, s->getWidth(),65535);
+        else
+            av_reduce(&num, &den, w, s->getWidth(),65535);
+        par->sample_aspect_ratio.num=num;
+        par->sample_aspect_ratio.den=den;
+        video_st->sample_aspect_ratio.num=num;
+        video_st->sample_aspect_ratio.den=den;
+        int dw=(int)w;
+        if(muxerConfig.displayAspectRatio == OTHER)
+            dw=(int)muxerConfig.displayWidth;
+        ADM_info("Forcing display width of %d (pixel aspect ratio %d:%d)\n",dw,num,den);
+    }
 
-        if (er)
-        {
-            ADM_error("[Mkv]: Failed to open file :%s, er=%d\n",file,er);
-            return false;
-        }
+    /* HDR stuff */
+    if(muxerConfig.addColourInfo)
+    {
+        par->color_range = (AVColorRange)muxerConfig.colRange;
+        par->color_primaries = (AVColorPrimaries)muxerConfig.colPrimaries;
+        par->color_trc = (AVColorTransferCharacteristic)muxerConfig.colTransfer;
+        par->color_space = (AVColorSpace)muxerConfig.colMatrixCoeff;
+    }
 
-        AVDictionary *dict = NULL;
-		char buf[64];
-        
-        snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
-        av_dict_set(&dict, "preload", buf, 0);
-        av_dict_set(&dict, "max_delay", "200000", 0);
+    /* Audio */
+    if(initAudio(nbAudioTrack,a)==false)
+    {
+        ADM_warning("[" MUXTYPE "] Failed to init audio.\n");
+        return false;
+    }
 
-        //ADM_assert(avformat_write_header(oc, &dict) >= 0);
-        er = avformat_write_header(oc, &dict);
-        if(er < 0)
-        {
-            char str[AV_ERROR_MAX_STRING_SIZE]={0};
-            av_make_error_string(str, AV_ERROR_MAX_STRING_SIZE, er);
-            ADM_error("Writing header failed with error %d (%s)\n", er, str);
-            av_dict_free(&dict);
-            avio_close(oc->pb);
-            return false;
-        }
-        ADM_info("Timebase codec = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
-        ADM_info("Timebase codec2 = %d/%d\n",c->time_base.num,c->time_base.den);
-//        ADM_info("Original timebase = %d/%d\n",myTimeBase.num,myTimeBase.den);
+    int er = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
+
+    if (er)
+    {
+        char str[AV_ERROR_MAX_STRING_SIZE]={0};
+        av_make_error_string(str, AV_ERROR_MAX_STRING_SIZE, er);
+        ADM_error("[" MUXTYPE "] Failed to open file \"%s\", error %d (%s)\n", file, er, str);
+        return false;
+    }
+
+    AVDictionary *dict = NULL;
+    char buf[64];
+    snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
+    av_dict_set(&dict, "preload", buf, 0);
+    av_dict_set(&dict, "max_delay", "200000", 0);
+
+    er = avformat_write_header(oc, &dict);
+
+    if(er < 0)
+    {
+        char str[AV_ERROR_MAX_STRING_SIZE]={0};
+        av_make_error_string(str, AV_ERROR_MAX_STRING_SIZE, er);
+        ADM_error("Writing header failed with error %d (%s)\n", er, str);
         av_dict_free(&dict);
-        vStream=s;
-        aStreams=a;
-        nbAStreams=nbAudioTrack;
-        initialized=true;
-        return true;
+        avio_close(oc->pb);
+        return false;
+    }
+    ADM_info("Timebase codec = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
+    ADM_info("Timebase codec2 = %d/%d\n",c->time_base.num,c->time_base.den);
+    av_dict_free(&dict);
+    vStream=s;
+    aStreams=a;
+    nbAStreams=nbAudioTrack;
+    initialized=true;
+    return true;
 }
 
 /**
     \fn save
 */
-bool muxerMkv::save(void) 
+bool MKVCLASS::save(void)
 {
-    const char *title=QT_TRANSLATE_NOOP("mkvmuxer","Saving Mkv");
+    const char *title=
+#ifdef MUXER_IS_WEBM
+    QT_TRANSLATE_NOOP("mkvmuxer","Saving WebM");
+#else
+    QT_TRANSLATE_NOOP("mkvmuxer","Saving Mkv");
+#endif
     return saveLoop(title);
 }
 
-bool muxerMkv::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
+bool MKVCLASS::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
 {
     if(*time==ADM_NO_PTS)
     {
@@ -192,10 +237,9 @@ bool muxerMkv::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
     \fn close
     \brief Cleanup is done in the dtor
 */
-bool muxerMkv::close(void) 
+bool MKVCLASS::close(void)
 {
-   
-    ADM_info("[Mkv] Closing\n");
+    ADM_info("[" MUXTYPE "] Closing\n");
     return closeMuxer();
 }
 

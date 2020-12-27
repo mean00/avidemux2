@@ -20,25 +20,35 @@
 #include "ADM_muxer.h"
 #include "ADM_coreMuxerFfmpeg.h"
 #include "mkv_muxer.h"
-extern mkv_muxer mkvMuxerConfig;
+extern mkv_muxer muxerConfig;
 
 typedef enum
 {
-    OTHER,
-    STANDARD,
-    WIDE,
-    UNI,
-    CINEMA
+    OTHER=0,
+    STANDARD=1,
+    WIDE=2,
+    UNI=3,
+    CINEMA=4
 }MKV_MUXER_DAR;
 
-class muxerMkv : public muxerFFmpeg
+#ifdef MUXER_IS_WEBM
+#   define MKVCLASS muxerWebm
+#else
+#   define MKVCLASS muxerMkv
+#endif
+class MKVCLASS : public muxerFFmpeg
 {
 protected:
         bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts);
-        const char *getContainerName(void) {return "Matroska";};
+        const char *getContainerName(void)
+#ifdef MUXER_IS_WEBM
+        {return "WebM";}
+#else
+        {return "Matroska";}
+#endif
 public:
-                muxerMkv();
-        virtual ~muxerMkv();
+                MKVCLASS();
+        virtual ~MKVCLASS();
         virtual bool open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a);
         virtual bool save(void) ;
         virtual bool close(void) ;
