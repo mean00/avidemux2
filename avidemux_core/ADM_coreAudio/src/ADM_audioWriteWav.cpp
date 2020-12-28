@@ -52,7 +52,7 @@ bool ADM_audioWriteWav::writeHeader(ADM_audioStream *stream)
           wh.encoding=WAV_PCM;
           wh.channels=p->channels;
           wh.blockalign=p->channels*p->bitspersample;
-          wh.byterate=p->channels*p->frequency*p->bitspersample;
+          wh.byterate=p->channels*p->frequency*p->bitspersample >> 3;
           wh.frequency=p->frequency;
           wh.bitspersample=p->bitspersample;
 
