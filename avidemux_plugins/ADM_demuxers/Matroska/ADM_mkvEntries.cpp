@@ -36,6 +36,7 @@ class entryDesc
           uint32_t fcc;
           uint32_t w,h,fps;
           uint32_t fq,chan,bpp;
+          uint32_t colflags,colrange,colprim,coltc,colmcoeff;
           uint32_t defaultDuration;
           float    trackScale;
           uint8_t *extraData;
@@ -51,7 +52,8 @@ class entryDesc
               trackNo=0;
               trackType=0;
               extraDataLen=0;
-              fcc=w=h=fps=fq=chan=bpp=defaultDuration=0;
+              fcc=w=h=fps=fq=chan=bpp=colflags=colrange=defaultDuration=0;
+              colprim=coltc=colmcoeff=2;
               trackScale=0;
               extraData=NULL;
               headerRepeatSize=0;
@@ -199,6 +201,11 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         _video_bih.biWidth=_mainaviheader.dwWidth=entry.w;
         _video_bih.biHeight=_mainaviheader.dwHeight=entry.h;
         _videostream.fccHandler=_video_bih.biCompression=entry.fcc;
+        _videoColFlags=entry.colflags;
+        _videoColRange=entry.colrange;
+        _videoColPrimaries=entry.colprim;
+        _videoColTransferCharacteristic=entry.coltc;
+        _videoColMatrixCoefficients=entry.colmcoeff;
 
 #define AV1_EXTRADATA_OFFSET 4
 
@@ -419,10 +426,26 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         case  MKV_VIDEO_WIDTH: entry->w=father.readUnsignedInt(len);break;
         case  MKV_VIDEO_HEIGHT: entry->h=father.readUnsignedInt(len);break;
 
-        case  MKV_VIDEO_COLOUR_MATRIX_COEFF: ADM_info("MatrixCoefficients: %u\n",father.readUnsignedInt(len));break;
-        case  MKV_VIDEO_COLOUR_RANGE: ADM_info("Range: %u\n",father.readUnsignedInt(len));break;
-        case  MKV_VIDEO_COLOUR_TRANSFER: ADM_info("TransferCharacteristics: %u\n",father.readUnsignedInt(len));break;
-        case  MKV_VIDEO_COLOUR_PRIMARIES: ADM_info("Primaries: %u\n",father.readUnsignedInt(len));break;
+        case  MKV_VIDEO_COLOUR_MATRIX_COEFF:
+            entry->colmcoeff=father.readUnsignedInt(len);
+            entry->colflags |= ADM_COL_FLAG_MATRIX_COEFF_SET;
+            ADM_info("MatrixCoefficients: %u\n",entry->colmcoeff);
+            break;
+        case  MKV_VIDEO_COLOUR_RANGE:
+            entry->colrange=father.readUnsignedInt(len);
+            entry->colflags |= ADM_COL_FLAG_RANGE_SET;
+            ADM_info("Range: %u\n",entry->colflags);
+            break;
+        case  MKV_VIDEO_COLOUR_TRANSFER:
+            entry->coltc=father.readUnsignedInt(len);
+            entry->colflags |= ADM_COL_FLAG_TRANSFER_SET;
+            ADM_info("TransferCharacteristics: %u\n",entry->coltc);
+            break;
+        case  MKV_VIDEO_COLOUR_PRIMARIES:
+            entry->colprim=father.readUnsignedInt(len);
+            entry->colflags |= ADM_COL_FLAG_PRIMARIES_SET;
+            ADM_info("Primaries: %u\n",entry->colprim);
+            break;
 
         case  MKV_DISPLAY_HEIGHT: ADM_info("Display Height:%d\n",(int)father.readUnsignedInt(len));break;
         case  MKV_DISPLAY_WIDTH: ADM_info("Display Width:%d\n",(int)father.readUnsignedInt(len));break;

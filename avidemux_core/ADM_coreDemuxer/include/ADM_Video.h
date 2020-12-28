@@ -32,6 +32,10 @@
 #include "ADM_audioStream.h"
 #include "ADM_colorspace.h"
 
+#define ADM_COL_FLAG_RANGE_SET         1
+#define ADM_COL_FLAG_PRIMARIES_SET    (1<<1)
+#define ADM_COL_FLAG_TRANSFER_SET     (1<<2)
+#define ADM_COL_FLAG_MATRIX_COEFF_SET (1<<3)
 
 typedef struct 
 {
@@ -51,6 +55,11 @@ typedef struct
     uint32_t   nb_frames;
     uint32_t   fcc;    
     uint32_t   bpp;
+    uint32_t   colflags; // color info flags (0 = no info present)
+    uint32_t   range;    // color range
+    uint32_t   prim;     // color primaries
+    uint32_t   coltc;    // transfer characteristic
+    uint32_t   mcoeff;   // matrix coefficients
 } aviInfo;
 
 
@@ -72,7 +81,11 @@ protected:
           uint32_t            _videoExtraLen;
           uint8_t           *_videoExtraData;
 
-                    
+          uint32_t            _videoColFlags;
+          uint32_t            _videoColRange;
+          uint32_t            _videoColPrimaries;
+          uint32_t            _videoColTransferCharacteristic;
+          uint32_t            _videoColMatrixCoefficients;
 public:
                            vidHeader();
 virtual                    ~vidHeader() ;

@@ -51,6 +51,7 @@ vidHeader::vidHeader (void)
   _videoExtraLen = 0;
   _isvideopresent = 0;
   _isaudiopresent = 0;
+  _videoColFlags = 0;
   memset(&_mainaviheader,0,sizeof(MainAVIHeader));
   memset(&_videostream,0,sizeof(AVIStreamHeader));
 }
@@ -72,6 +73,16 @@ uint8_t vidHeader::getVideoInfo (aviInfo * info)
   info->nb_frames = _mainaviheader.dwTotalFrames;
   info->fcc = _videostream.fccHandler;
   info->bpp = _video_bih.biBitCount;
+
+  info->colflags = _videoColFlags;
+  if(_videoColFlags)
+  {
+    info->range = _videoColRange;
+    info->prim = _videoColPrimaries;
+    info->coltc = _videoColTransferCharacteristic;
+    info->mcoeff = _videoColMatrixCoefficients;
+  }
+
   info->timebase_den = _videostream.dwRate;
   info->timebase_num = _videostream.dwScale;
   if (_mainaviheader.dwMicroSecPerFrame)

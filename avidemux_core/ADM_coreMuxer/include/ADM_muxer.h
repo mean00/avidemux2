@@ -28,9 +28,13 @@ protected:
             uint64_t videoDelay;
             uint64_t frameIncrement;
 
-            
+            bool     colorInfoPresent;
+            uint32_t colorRange;
+            uint32_t colorPrimaries;
+            uint32_t colorTransferCharacteristic;
+            uint32_t colorMatrixCoefficients;
 public:
-                      ADM_videoStream() {videoDelay=0;} ;
+                      ADM_videoStream() {videoDelay=0;colorInfoPresent=false;}
             virtual ~ADM_videoStream() {};
             uint32_t getWidth(void) {return width;}
             uint32_t getHeight(void) {return height;}
@@ -45,6 +49,20 @@ virtual     bool     getPacket(ADMBitstream *out)=0;
 virtual     bool     getExtraData(uint32_t *extraLen, uint8_t **extraData) {*extraLen=0;*extraData=NULL;return true;};
 virtual     bool     providePts(void) {return false;}
 virtual     uint64_t getVideoDuration(void) {return 1;}
+
+virtual     bool     getColorInfo(uint32_t *range, uint32_t *prim, uint32_t *transfer, uint32_t *mcoeff)
+                     {
+                         if(!colorInfoPresent) return false;
+                         if(!range || !prim || !transfer || !mcoeff) return false;
+                         *range=colorRange; *prim=colorPrimaries; *transfer=colorTransferCharacteristic; *mcoeff=colorMatrixCoefficients;
+                         return true;
+                     }
+virtual     bool     setColorInfo(uint32_t range, uint32_t prim, uint32_t transfer, uint32_t mcoeff)
+                     {
+                         colorRange=range; colorPrimaries=prim; colorTransferCharacteristic=transfer; colorMatrixCoefficients=mcoeff; colorInfoPresent=true;
+                         return true;
+                     }
+            void     invalidateColorInfo(void) {colorInfoPresent=false;}
 };
 /**
  *      \class ADM_muxer

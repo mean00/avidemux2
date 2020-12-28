@@ -43,6 +43,14 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     height=info.height;
     fourCC=info.fcc;
     averageFps1000=info.fps1000;
+    if(info.colflags)
+    {
+        colorInfoPresent = true;
+        colorRange = info.range;
+        colorPrimaries = info.prim;
+        colorTransferCharacteristic = info.coltc;
+        colorMatrixCoefficients = info.mcoeff;
+    }
     video_body->getTimeBase(&timeBaseNum,&timeBaseDen,true);
     frameIncrement=video_body->getFrameIncrement(true);
     isCFR=false;

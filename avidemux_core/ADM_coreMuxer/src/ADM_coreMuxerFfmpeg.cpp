@@ -188,6 +188,17 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
         par->width = stream->getWidth();
         par->height =stream->getHeight();
 
+        {
+        uint32_t r,p,t,m;
+        if(stream->getColorInfo(&r,&p,&t,&m))
+        {
+            par->color_range = (AVColorRange)r;
+            par->color_primaries = (AVColorPrimaries)p;
+            par->color_trc = (AVColorTransferCharacteristic)t;
+            par->color_space = (AVColorSpace)m;
+        }
+        }
+
         uint32_t videoExtraDataSize=0;
         uint8_t  *videoExtraData;
         stream->getExtraData(&videoExtraDataSize,&videoExtraData);
