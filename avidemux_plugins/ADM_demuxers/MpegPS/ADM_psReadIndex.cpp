@@ -251,8 +251,14 @@ bool    psHeader::readAudio(indexFile *index,const char *name)
         WAVHeader hdr;
             hdr.frequency=fq;
             hdr.byterate=br;
+            hdr.blockalign=1;
             hdr.channels=chan;
             hdr.encoding=codec;
+            if(codec==WAV_LPCM)
+            {
+                hdr.bitspersample=16; // FIXME
+                hdr.blockalign=chan*hdr.bitspersample>>3;
+            }
         ADM_psAccess *access=new ADM_psAccess(name,pid,append);
             ADM_psTrackDescriptor *desc=new ADM_psTrackDescriptor;
             desc->stream=NULL;
