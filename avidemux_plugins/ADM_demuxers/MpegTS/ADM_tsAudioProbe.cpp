@@ -72,8 +72,6 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
         p->changePid(trackInfo->esId); 
         //Realign
         p->seek(0,0);
-        // Set default block size of a compressed audio packet.
-        trackInfo->wav.blockalign=1;
         // This is a special case...
         // For ADTS, we read one packet and ask ffmpeg to extract
         // Extra data, frequency etc...
@@ -212,7 +210,6 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                                 trackInfo->wav.frequency=48000;
                                 trackInfo->wav.channels=2;
                                 trackInfo->wav.byterate=2*2*48000;
-                                trackInfo->wav.blockalign=trackInfo->wav.channels*2; //FIXME 16-bit audio hardcoded
                                 break;
             case ADM_TS_AC3:
                             {
