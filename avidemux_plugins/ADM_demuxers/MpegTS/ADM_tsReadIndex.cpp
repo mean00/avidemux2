@@ -355,8 +355,14 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
         WAVHeader hdr;
             hdr.frequency=fq;
             hdr.byterate=br;
+            hdr.blockalign=1;
             hdr.channels=chan;
             hdr.encoding=codec;
+            if(codec==WAV_LPCM)
+            {
+                hdr.bitspersample=16; // FIXME
+                hdr.blockalign=chan*hdr.bitspersample>>3;
+            }
         // Look up Track0.extraData line....
         sprintf(body,"Track%d.extraData",i);
         int extraLen=0;
