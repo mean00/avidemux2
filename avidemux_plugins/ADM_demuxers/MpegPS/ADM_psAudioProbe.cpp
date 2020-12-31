@@ -37,6 +37,8 @@
 
 static bool addAudioTrack(int pid, listOfPsAudioTracks *list, psPacketLinearTracker *p);
 static bool psCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize);
+static bool psParseLpcmHeader(WAVHeader *hdr, uint8_t *data, uint32_t dataSize);
+
 /**
     \fn listOfPsAudioTracks
     \brief returns a list of audio track found, null if none found
@@ -53,6 +55,8 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName, int append)
     psPacketLinearTracker *packet=new psPacketLinearTracker(0xE0);
 
     printf("[MpegPS] Probing audio for %s\n",fileName);
+
+    packet->dropPcmHeader(false);
 
     if(!packet->open(fileName,append)) goto end;
     fileSize=packet->getSize();
@@ -134,9 +138,11 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
         switch(pid & 0xF0)
         {
             case LPCM_AUDIO_VALUE: // LPCM
-                            info->header.frequency=48000;
-                            info->header.channels=2;
-                            info->header.byterate=48000*4;
+                            if(!psParseLpcmHeader(&info->header,audioBuffer,rd))
+                            {
+                                ADM_warning("Skipping LPCM track 0x%x\n",pid);
+                                goto er;
+                            }
                             info->header.encoding=WAV_LPCM;
                             break;
             case MP2_AUDIO_VALUE: // MP2
@@ -238,6 +244,43 @@ again:
     else
         hdr->channels=2;
     hdr->byterate=(mpeg.bitrate*1000)>>3;
+    return true;
+}
+/**
+    \fn psParseLpcmHeader
+    \brief Stolen from libavcodec/pcm-dvd.c
+*/
+bool psParseLpcmHeader(WAVHeader *hdr, uint8_t *data, uint32_t dataSize)
+{
+    if(dataSize < 3) return false;
+    const uint32_t frequencies[4] = { 48000, 96000, 44100, 32000 };
+
+    printf("[psParseLpcmHeader] Header: %02x %02x %02x\n",data[0],data[1],data[2]);
+
+    /* get sample bit depth */
+    uint32_t bps = 16 + ((data[1] >> 6 & 3) << 2);
+    if(bps == 28)
+    {
+        ADM_warning("Invalid bit depth %u, rejecting track.\n",bps);
+        return false;
+    }else if(bps != 16)
+    {
+        ADM_warning("Only 16-bit audio supported, detected %u, rejecting track.\n",bps);
+        return false;
+    }
+
+    uint32_t fq,ch,br;
+
+    fq = frequencies[data[1] >> 4 & 3];
+    ch = 1 + (data[1] & 7);
+    br = ch * fq * bps >> 3;
+
+    hdr->channels = ch;
+    hdr->frequency = fq;
+    hdr->byterate = br;
+    hdr->blockalign = ch * 2;
+    hdr->bitspersample = bps;
+
     return true;
 }
 //EOF
