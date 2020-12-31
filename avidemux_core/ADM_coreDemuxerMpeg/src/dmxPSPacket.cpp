@@ -37,7 +37,7 @@
 */
 psPacket::psPacket(void) 
 {
-
+    keepPcmHeader=false;
 }
 /**
     \fn psPacket
@@ -333,8 +333,11 @@ uint8_t align=0;
                                 // skip audio header (if not sub)
                                 if(*substream>0x26 || *substream<0x20)
                                 {
-                                        _file->forward(3);
-                                        size-=3;
+                                        if((*substream < 0xA0 || *substream > 0xA7) || !keepPcmHeader)
+                                        {
+                                                _file->forward(3);
+                                                 size-=3;
+                                        }
                                 }
                                 size--;
                         }

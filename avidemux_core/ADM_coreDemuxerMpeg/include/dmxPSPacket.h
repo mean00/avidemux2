@@ -19,6 +19,7 @@
 class ADM_COREDEMUXER6_EXPORT psPacket : public ADMMpegPacket
 {
 protected:
+    bool                keepPcmHeader;
     uint8_t             getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts);
 public:
                         psPacket(void);
@@ -28,6 +29,7 @@ public:
     virtual bool        getPacket(uint32_t maxSize, uint8_t *pid, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt);
     virtual uint64_t    getPos(void);
     virtual bool        setPos(uint64_t pos);
+    virtual void        dropPcmHeader(bool drop) { keepPcmHeader=!drop; }
 };
 /**
     \class psPacketLinear
