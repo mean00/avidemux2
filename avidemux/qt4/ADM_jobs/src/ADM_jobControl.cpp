@@ -74,8 +74,15 @@ void jobWindow::refreshList(void)
 
       int n=listOfJob.size();
       ADM_info("Found %d jobs\n",(int)n);
-      if(!n) return;
       list->setRowCount(n);
+      for(int i = 0; i < list->actions().size(); i++)
+        list->actions().at(i)->setEnabled(!!n);
+
+      ui.pushButtonRunAll->setEnabled(!!n);
+      ui.pushButtonCleanup->setEnabled(!!n);
+
+      if(!n) return;
+
       for(int i=0;i<n;i++)
       {
            QTableWidgetItem *nm=fromText(listOfJob[i].jobName,i);
