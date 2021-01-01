@@ -71,8 +71,7 @@ bool ADM_slaveReportProgress(uint32_t percent)
     ADM_socketMessage msg;
     msg.setPayloadAsUint32_t(percent);
     msg.command=ADM_socketCommand_Progress;
-    mySocket->sendMessage(msg);
-    return true;
+    return mySocket->sendMessage(msg);
 }
 /**
     \fn ADM_slaveReportProgress
@@ -83,8 +82,29 @@ bool ADM_slaveSendResult(bool result)
     ADM_socketMessage msg;
     msg.setPayloadAsUint32_t(result);
     msg.command=ADM_socketCommand_End;
-    mySocket->sendMessage(msg);
-    ADM_usleep(5*1000000); // wait 5 sec to make sure the data is delivered
+    if(!mySocket->sendMessage(msg))
+        return false;
+    ADM_usleep(10*1000); // give recipient a chance to respond
+    int retries=5;
+    while(retries>0)
+    {
+        if(!mySocket->isAlive())
+            break;
+        if(mySocket->pollMessage(msg))
+        {
+            if(msg.command == ADM_socketCommand_Readback)
+            {
+                uint32_t val;
+                if(msg.getPayloadAsUint32_t(&val) && val == result)
+                    return true;
+            }
+        }
+        retries--;
+        ADM_info("Will retry to receive readback in a second, %d retries left.\n",retries);
+        ADM_usleep(1000*1000);
+    }
+    if(retries>0)
+        ADM_usleep(retries*1000*1000); // wait up to 5 sec to make sure the data is delivered
     return true;
 }
 

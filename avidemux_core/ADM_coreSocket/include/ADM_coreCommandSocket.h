@@ -18,7 +18,7 @@
 #include "ADM_coreSocket6_export.h"
 #include "ADM_coreSocket.h"
 
-#define ADM_COMMAND_SOCKET_VERSION 2
+#define ADM_COMMAND_SOCKET_VERSION 3
 
 #define ADM_COMMAND_SOCKET_MAX_PAYLOAD 16
 
@@ -30,6 +30,7 @@ typedef enum
     ADM_socketCommand_Hello=1,
     ADM_socketCommand_End=2,
     ADM_socketCommand_Progress=3,
+    ADM_socketCommand_Readback=4
 }ADM_socketCommand;
 
 /**

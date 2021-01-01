@@ -178,15 +178,15 @@ bool jobWindow::spawnChild(const char *exeName, const string &script, const stri
 bool jobWindow::runOneJob( ADMJob &job)   
 {
     bool r=false;
-    uint32_t version;
     job.startTime=ADM_getSecondsSinceEpoch();
     job.status=ADM_JOB_RUNNING;
     ADM_commandSocket *runSocket=NULL;
+    ADM_socketMessage msg;
+    uint32_t v, version, wait=500; // by default, give application 500 ms to exit
+
     ADMJob::jobUpdate(job);
     refreshList();
-    ADM_socketMessage msg;
-    uint32_t v;
-    
+
     // 1- Start listening to socket
 
     // 2- Spawn  child
@@ -230,28 +230,31 @@ bool jobWindow::runOneJob( ADMJob &job)
             switch(msg.command)
             {
                 case ADM_socketCommand_End:
-                            if(msg.getPayloadAsUint32_t(&v))
-                            {
-                                    r=(bool)v;
-                                    ADM_info("Result is %d\n",r);
-                                    goto done;
-                            }else
-                            {
-                                    ADM_error("Can read End payload   \n");
-                            }
-                            break;
+                    if(!msg.getPayloadAsUint32_t(&v))
+                    {
+                        ADM_error("Cannot read End payload\n");
+                        break;
+                    }
+                    r=(bool)v;
+                    ADM_info("Result is %d\n",r);
+                    msg.command = ADM_socketCommand_Readback;
+                    msg.setPayloadAsUint32_t(v);
+                    if(!runSocket->sendMessage(msg))
+                        wait+=5000; // avoid starting next job while the application is still running
+                    goto done;
+                    break;
                 case ADM_socketCommand_Progress:
-                            if(msg.getPayloadAsUint32_t(&v))
-                            {
-                                    printf("Progress %d %%\n",(int)v);
-                                    dialog->setPercent(v);
-                            }else
-                            {
-                                    ADM_error("Can read End payload   \n");
-                            }
-                            break;
-                default:        ADM_error("Unknown command\n");
-                                break;
+                    if(!msg.getPayloadAsUint32_t(&v))
+                    {
+                        ADM_error("Cannot read Progress payload\n");
+                        break;
+                    }
+                    printf("Progress %d %%\n",(int)v);
+                    dialog->setPercent(v);
+                    break;
+                default:
+                    ADM_error("Unknown command\n");
+                    break;
             }
         }
         else
@@ -272,5 +275,6 @@ done:
     if(runSocket) delete runSocket;
     refreshList();
     ADM_info("Running job id = %d\n",job.id);
+    ADM_usleep(wait*1000); // Give application some time to exit
     return r;
 }
