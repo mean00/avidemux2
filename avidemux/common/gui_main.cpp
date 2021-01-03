@@ -489,23 +489,32 @@ void HandleAction (Action action)
     case ACT_MarkA:
     case ACT_MarkB:
     {
-      bool swapit=0;
-      uint64_t markA,markB;
-      uint64_t pts=admPreview::getCurrentPts();
-      if( prefs->get(FEATURES_SWAP_IF_A_GREATER_THAN_B, &swapit) != RC_OK )     swapit = 1;
+        bool swapit = false;
+        uint64_t pts,markA,markB;
+        pts = admPreview::getCurrentPts();
+        if(!prefs->get(FEATURES_SWAP_IF_A_GREATER_THAN_B, &swapit))
+            swapit = true;
 
-      markA=video_body->getMarkerAPts();
-      markB=video_body->getMarkerBPts();
-      if (action == ACT_MarkA)
+        markA = video_body->getMarkerAPts();
+        markB = video_body->getMarkerBPts();
+        if(action == ACT_MarkA)
             markA=pts;
-      else
+        else
             markB=pts;
-      if (markA>markB && swapit )    // auto swap
+        if(markA > markB)
         {
-          uint64_t y;
-          y = markA;
-          markA=markB;
-          markB=y;
+            if(swapit) // auto swap
+            {
+                uint64_t y = markA;
+                markA = markB;
+                markB = y;
+            }else
+            {
+                if(action == ACT_MarkA)
+                    markB = video_body->getVideoDuration(); // reset B
+                else
+                    markA = 0; // reset A
+            }
         }
         video_body->addToUndoQueue();
         video_body->setMarkerAPts(markA);

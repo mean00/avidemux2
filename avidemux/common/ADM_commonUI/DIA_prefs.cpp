@@ -249,6 +249,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle resetEncoder(&loadDefault,QT_TRANSLATE_NOOP("adm","_Revert to saved default output settings on video load"));
         diaElemToggle enableAltShortcuts(&altKeyboardShortcuts,QT_TRANSLATE_NOOP("adm","_Enable alternative keyboard shortcuts"));
         diaElemToggle swapUpDownKeys(&swapUpDown,QT_TRANSLATE_NOOP("adm","Re_verse UP and DOWN arrow keys for navigation"));
+        diaElemToggle swapMarkers(&useSwap,QT_TRANSLATE_NOOP("adm","_Swap markers if marker A is set past marker B or marker B before A in video"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
 
 
@@ -455,8 +456,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage,&menuLanguage,&resetEncoder,&enableAltShortcuts,&swapUpDownKeys,&checkForUpdate};
-        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),6,diaUser);
+        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMarkers, &checkForUpdate};
+        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),7,diaUser);
 
          /* Automation */
 
@@ -634,7 +635,7 @@ std::string currentSdlDriver=getSdlDriverName();
             // Playback priority
             prefs->set(PRIORITY_PLAYBACK, playbackPriority);
 
-            // Auto swap A/B
+            // Auto swap A/B vs reset the other marker
             prefs->set(FEATURES_SWAP_IF_A_GREATER_THAN_B, useSwap);
             //
             prefs->set(MESSAGE_LEVEL,msglevel);
