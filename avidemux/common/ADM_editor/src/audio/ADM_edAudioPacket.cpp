@@ -160,7 +160,7 @@ zgain:
     if(!trk) return 0;
 
     WAVHeader *hdr = &trk->wavheader;
-    if(hdr->blockalign > 1)
+    if((hdr->encoding == WAV_PCM || hdr->encoding == WAV_LPCM) && hdr->blockalign > 1)
         sizeMax -= sizeMax % hdr->blockalign;
 
     // Read a packet
@@ -198,7 +198,7 @@ zgain:
         msgSuppressed = 0;
     }
 
-    if(hdr->blockalign > 1 && *len % hdr->blockalign)
+    if((hdr->encoding == WAV_PCM || hdr->encoding == WAV_LPCM) && hdr->blockalign > 1 && *len % hdr->blockalign)
     {
         ADM_warning("Audio packet not aligned, truncating.\n");
         *len -= *len % hdr->blockalign;
