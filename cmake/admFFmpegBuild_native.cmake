@@ -43,6 +43,10 @@ if (APPLE AND "$ENV{MACOSX_DEPLOYMENT_TARGET}" VERSION_EQUAL "10.15")
     xadd(--extra-cflags="-fno-stack-check") # see https://trac.ffmpeg.org/ticket/8073
 endif (APPLE AND "$ENV{MACOSX_DEPLOYMENT_TARGET}" VERSION_EQUAL "10.15")
 
+if (NOT APPLE)
+    xadd(--enable-lto)
+endif (NOT APPLE)
+
 #@@
 ADM_FF_ADD_OPTIONS()
 
