@@ -184,7 +184,7 @@ again:
     }
     if(_file->end()==true) 
     {
-        //printf("[Mpeg Ts] End of file reached\n");
+        printf("[tsPacket::getSinglePacket] End of file reached\n");
         return false;
     }
     _file->read32(TS_PACKET_LEN-1,buffer); // 184-1
@@ -192,10 +192,7 @@ again:
     uint8_t r=_file->peek8i();
     if(r!=TS_MARKER)
     {
-
-        printf("[tsPacket] Sync lost (0x%x)\n",r);
-#ifdef TS_DEBUG1
-#endif
+        printf("[tsPacket::getSinglePacket] Sync lost at 0x%" PRIx64" (value: 0x%x)\n",getPos(),r);
         goto again;
     }
     return true;
