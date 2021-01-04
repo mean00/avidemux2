@@ -108,7 +108,7 @@ bool ADM_audioWriteAAC::init(ADM_audioStream *stream, const char *fileName)
                 samplingFrequencyIndex=fqIdxFromConfig;
             }
         }else
-            ADM_warning("No valid AAC extra data");
+            ADM_warning("No valid AAC extra data\n");
     }else
     {
         ADM_warning("Cannot get profile!\n");
