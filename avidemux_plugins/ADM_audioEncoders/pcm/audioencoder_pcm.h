@@ -27,6 +27,7 @@ class AUDMEncoder_PCM : public ADM_AudioEncoder
   protected:
     uint32_t            _chunk;
     pcm_encoder         _config;
+    float               *_ordered;
   public:
             virtual     ~AUDMEncoder_PCM();
                         /*! \param reverted : Should the endianness be reverted compared to system  

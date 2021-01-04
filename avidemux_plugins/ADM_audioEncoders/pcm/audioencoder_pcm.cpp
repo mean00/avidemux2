@@ -82,12 +82,47 @@ AUDMEncoder_PCM::AUDMEncoder_PCM(AUDMAudioFilter * instream,bool globalHeader, C
             wavheader.encoding = WAV_PCM;
             break;
   }
+
+  CHANNEL_TYPE *o = outputChannelMapping;
+
+  switch(wavheader.channels)
+  {
+        case 1:
+            *o    = ADM_CH_MONO;
+            break;
+        case 2:
+            *o++ = ADM_CH_FRONT_LEFT;
+            *o   = ADM_CH_FRONT_RIGHT;
+            break;
+        case 6:
+            *o++ = ADM_CH_FRONT_LEFT;
+            *o++ = ADM_CH_FRONT_RIGHT;
+            *o++ = ADM_CH_FRONT_CENTER;
+            *o++ = ADM_CH_LFE;
+            *o++ = ADM_CH_REAR_LEFT;
+            *o   = ADM_CH_REAR_RIGHT;
+            break;
+        case 8:
+        default:
+            *o++ = ADM_CH_FRONT_LEFT;
+            *o++ = ADM_CH_FRONT_RIGHT;
+            *o++ = ADM_CH_FRONT_CENTER;
+            if(!(wavheader.channels & 1))
+                *o++ = ADM_CH_LFE;
+            *o++ = ADM_CH_SIDE_LEFT;
+            *o++ = ADM_CH_SIDE_RIGHT;
+            *o++ = ADM_CH_REAR_LEFT;
+            *o   = ADM_CH_REAR_RIGHT;
+            break;
+  }
+  _ordered = NULL;
 };
 
 
 AUDMEncoder_PCM::~AUDMEncoder_PCM()
 {
     ADM_info("Deleting (L)PCM encoder.\n");
+    ADM_dealloc(_ordered);
 }
 
 /**
@@ -98,6 +133,8 @@ bool AUDMEncoder_PCM::initialize(void)
 
   wavheader.byterate=wavheader.channels*wavheader.frequency*2;
   _chunk = (wavheader.frequency/100)*wavheader.channels*2;
+  _ordered = (float *)ADM_alloc(_chunk*2*sizeof(float)); // keep a big margin in case of incomplete processing of the previous one
+  if(!_ordered) return false;
 
   printf("[PCM] Incoming fq : %" PRIu32", channel : %" PRIu32" \n",wavheader.frequency,wavheader.channels);
   printf("[PCM] Encoder initialized in %s mode.\n",wavheader.encoding == WAV_PCM ? "PCM" : "LPCM");
@@ -120,14 +157,19 @@ bool         AUDMEncoder_PCM::encode(uint8_t *dest, uint32_t *len, uint32_t *sam
   {
     return 0;
   }
-        // Do in place replace
-  dither16(&(tmpbuffer[tmphead]),_chunk,channels);
+
+  int incomingSamplesPerChannel=_chunk/channels;
+
+  reorder(&(tmpbuffer[tmphead]),_ordered,incomingSamplesPerChannel,_incoming->getChannelMapping(),outputChannelMapping);
+
+  // Do in place replace
+  dither16(_ordered,_chunk,channels);
   if(wavheader.encoding == WAV_PCM)
-    memcpy(dest,&(tmpbuffer[tmphead]),_chunk*2);
+    memcpy(dest,_ordered,_chunk*2);
   else
   {
     uint16_t *in,*out,tmp;
-    in=(uint16_t*)&(tmpbuffer[tmphead]);
+    in=(uint16_t *)_ordered;
     out=(uint16_t *)dest;
     for(int i=0;i<_chunk;i++)
     {
@@ -138,7 +180,7 @@ bool         AUDMEncoder_PCM::encode(uint8_t *dest, uint32_t *len, uint32_t *sam
   }
   tmphead+=_chunk;
   *len=_chunk*2;
-  *samples=_chunk/channels;
+  *samples = incomingSamplesPerChannel;
   return 1;
 }
 
