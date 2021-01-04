@@ -57,11 +57,11 @@ muxerffPS::~muxerffPS()
 */
 bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
-const char *er;
+    std::string er;
 
-    if(verifyCompatibility(psMuxerConfig.acceptNonCompliant,psMuxerConfig.muxingType,s,nbAudioTrack,a,&er)==false)
+    if(verifyCompatibility(psMuxerConfig.acceptNonCompliant,psMuxerConfig.muxingType,s,nbAudioTrack,a,er)==false)
     {
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("ffpsmuxer","[Mismatch]"),"%s",er);
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("ffpsmuxer","[Mismatch]"),"%s",er.c_str());
         return false;
     }
 
@@ -192,16 +192,16 @@ bool muxerffPS::close(void)
     \return true if the streams are ok to be muxed by selected muxer
 
 */
-#define FAIL(x) {*er=x;return false;}
+#define FAIL(x) {er+=x;compatible=false;}
 bool muxerffPS::verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
                                     ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a, 
-                                    const char **er)
+                                    std::string &er)
 {
     uint32_t fcc=s->getFCC();
     uint32_t w,h;
      w=s->getWidth();
      h=s->getHeight();
-     *er="??";
+     bool compatible=true;
 
      if(!isMpeg12Compatible(fcc))
      {
@@ -268,7 +268,7 @@ bool muxerffPS::verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
                     ADM_assert(0);
         }
     }
-    return true;
+    return compatible;
 }
 //EOF
 

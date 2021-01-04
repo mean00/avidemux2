@@ -42,7 +42,7 @@ protected:
         bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts);
         bool verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
                                     ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a, 
-                                    const char **er);
+                                    std::string &er);
         const char *getContainerName(void) {return "Mpeg PS";};
 public:
                 muxerffPS();
