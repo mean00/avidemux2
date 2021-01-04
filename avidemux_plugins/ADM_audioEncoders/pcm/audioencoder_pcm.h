@@ -12,16 +12,21 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+#include "pcm_encoder.h"
 /*!
     \class AUDMEncoder_PCM
     This class is the float->PCM encoder.
     It is somehow special as it can alsa be a LPCM encoder and a bigendian/littleendian swapper
 */
+
+#define OUTPUT_MODE_PCM     0
+#define OUTPUT_MODE_LPCM    1
+
 class AUDMEncoder_PCM : public ADM_AudioEncoder
 {
   protected:
-    uint32_t            revert;
     uint32_t            _chunk;
+    pcm_encoder         _config;
   public:
             virtual     ~AUDMEncoder_PCM();
                         /*! \param reverted : Should the endianness be reverted compared to system  
