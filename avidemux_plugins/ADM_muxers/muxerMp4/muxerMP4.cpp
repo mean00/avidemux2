@@ -83,10 +83,12 @@ static uint32_t getClockFreqFromEnum(MP4_MUXER_CLOCK_FREQUENCIES type)
 
 bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack, ADM_audioStream **a)
 {
+    bool wrongVideo = false;
+    bool wrongAudio = false;
+    std::string msg;
 #define FCC_IS_NOT(x) !fourCC::check(fcc,(const uint8_t *)x)
     uint32_t fcc=s->getFCC();
-    if( !isMpeg12Compatible(fcc) &&
-        !isMpeg4Compatible(fcc) &&
+    if( !isMpeg4Compatible(fcc) &&
         !isH264Compatible(fcc)  &&
         !isH265Compatible(fcc)  &&
 #ifdef MUXER_IS_MOV
@@ -96,19 +98,14 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         FCC_IS_NOT("apcs") &&
         FCC_IS_NOT("apco") &&
         FCC_IS_NOT("ap4h") &&
+#else
+        !isMpeg12Compatible(fcc) && // poorly supported by players in MOV, reject
 #endif
         FCC_IS_NOT("av01"))
     {
-#ifdef MUXER_IS_MOV
-        GUI_Error_HIG(
-            QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
-            QT_TRANSLATE_NOOP("mp4muxer","Only MPEG-1/2/4, H264, H265, AV1, DNxHD and ProRes supported for video"));
-#else
-        GUI_Error_HIG(
-            QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
-            QT_TRANSLATE_NOOP("mp4muxer","Only MPEG-1/2/4, H264, H265 and AV1 supported for video"));
-#endif
-        return false;
+        wrongVideo = true;
+        msg += QT_TRANSLATE_NOOP("mp4muxer","Video track is incompatible");
+        msg += "\n";
     }
     if(nbAudioTrack)
     {
@@ -127,18 +124,37 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
                 acc!=WAV_MP3 &&
                 acc!=WAV_OGG_VORBIS)
             {
-#ifdef MUXER_IS_MOV
-                GUI_Error_HIG(
-                    QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
-                    QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, DTS, E-AC3, (L)PCM, MP2, MP3 and Vorbis supported for audio"));
-#else
-                GUI_Error_HIG(
-                    QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),
-                    QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, DTS, E-AC3, MP2, MP3 and Vorbis supported for audio"));
-#endif
-                return false;
+                char str[512];
+                snprintf(str,512,QT_TRANSLATE_NOOP("mp4muxer","Audio track %d from %u is incompatible"),i+1,nbAudioTrack);
+                str[511] = 0;
+                msg += str;
+                msg += "\n";
+                wrongAudio = true;
             }
         }
+    }
+    if(wrongVideo)
+    {
+        msg += "\n";
+#ifdef MUXER_IS_MOV
+        msg += QT_TRANSLATE_NOOP("mp4muxer","Only MPEG-4, H264, H265, AV1, DNxHD and ProRes supported for video");
+#else
+        msg += QT_TRANSLATE_NOOP("mp4muxer","Only MPEG-1/2/4, H264, H265 and AV1 supported for video");
+#endif
+    }
+    if(wrongAudio)
+    {
+        msg += "\n";
+#ifdef MUXER_IS_MOV
+        msg += QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, DTS, E-AC3, (L)PCM, MP2, MP3 and Vorbis supported for audio");
+#else
+        msg += QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, DTS, E-AC3, MP2, MP3 and Vorbis supported for audio");
+#endif
+    }
+    if(wrongVideo || wrongAudio)
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),msg.c_str());
+        return false;
     }
     /* All seems fine, open stuff */
     const char *f;
