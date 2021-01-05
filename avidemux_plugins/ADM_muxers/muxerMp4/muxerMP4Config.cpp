@@ -89,13 +89,16 @@ bool movConfigure(void)
         };
         diaElemMenu menuClock(&clk,QT_TRANSLATE_NOOP("mp4muxer","Time scale"),8,clockFrequencies,NULL);
 
+        const char *title;
 #ifndef MUXER_IS_MOV
         diaElem *tabs[]={&menuFormat,&menuOptimize,&forceAR,&menuAspect,&dWidth,&menuRotation,&menuClock};
+        title = QT_TRANSLATE_NOOP("mp4muxer","MP4 Muxer");
 #else
         diaElem *tabs[]={            &menuOptimize,&forceAR,&menuAspect,&dWidth,&menuRotation,&menuClock};
+        title = QT_TRANSLATE_NOOP("mp4muxer","MOV Muxer");
 #endif
 
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MP4 Muxer"),NB_TABS,tabs))
+        if( diaFactoryRun(title,NB_TABS,tabs))
         {
             muxerConfig.muxerType=(MP4_MUXER_TYPE)fmt;
             muxerConfig.optimize=(MP4_MUXER_OPTIMIZE)opt;
