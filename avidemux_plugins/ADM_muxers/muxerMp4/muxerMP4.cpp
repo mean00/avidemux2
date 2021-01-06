@@ -125,7 +125,7 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
                 acc!=WAV_OGG_VORBIS)
             {
                 char str[512];
-                snprintf(str,512,QT_TRANSLATE_NOOP("mp4muxer","Audio track %d from %u is incompatible"),i+1,nbAudioTrack);
+                snprintf(str,512,QT_TRANSLATE_NOOP("mp4muxer","Audio track %d out of %u is incompatible"),i+1,nbAudioTrack);
                 str[511] = 0;
                 msg += str;
                 msg += "\n";
