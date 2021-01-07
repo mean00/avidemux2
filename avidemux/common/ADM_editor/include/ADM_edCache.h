@@ -16,7 +16,7 @@
 #define ADM_IN_USE_CACHE  0xfffe
 
 #define EDITOR_CACHE_MIN_SIZE 8
-#define EDITOR_CACHE_MAX_SIZE 16
+#define EDITOR_CACHE_MAX_SIZE 255
 
 typedef struct cacheElem
 {

@@ -315,7 +315,7 @@ std::string currentSdlDriver=getSdlDriverName();
         multiLoadUseCustomFragmentSize.link(1,&multiLoadCustomFragmentSize);
 
         diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
-        diaElemUInteger cacheSize(&editor_cache_size,QT_TRANSLATE_NOOP("adm","_Cache size:"),8,16);
+        diaElemUInteger cacheSize(&editor_cache_size,QT_TRANSLATE_NOOP("adm","_Cache size:"),8,255);
         frameCache.swallow(&cacheSize);
 
         diaMenuEntry videoMode[]={
