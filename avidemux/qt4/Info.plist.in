@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Avidemux@S_VERSION@</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Avidemux @B_VERSION@ Copyright 2001-2020 Mean / eumagga0x2a</string>
+	<string>Avidemux @B_VERSION@ @COPYRIGHT_STRING@</string>
 	<key>CFBundleIconFile</key>
 	<string>avidemux.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -70,7 +70,7 @@
 	<key>NSAppleScriptEnabled</key>
 	<false/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Avidemux @B_VERSION@ Copyright 2001-2020 Mean / eumagga0x2a</string>
+	<string>Avidemux @B_VERSION@ @COPYRIGHT_STRING@</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

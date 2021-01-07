@@ -133,7 +133,7 @@
      <item>
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>© 2001 - 2020  Mean / Eumagga0x2a</string>
+        <string>© 2001 - 2021  Mean / eumagga0x2a</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
