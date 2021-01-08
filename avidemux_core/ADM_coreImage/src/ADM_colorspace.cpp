@@ -39,6 +39,7 @@ extern "C" {
 #endif
 
 #define CONTEXT (SwsContext *)context
+#define BGR32_IS_SWAPPED 1
 
 /**
     \fn swapRGB
@@ -84,7 +85,11 @@ static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
     case ADM_COLOR_RGB555: return AV_PIX_FMT_RGB555LE;
     case ADM_COLOR_BGR555: return AV_PIX_FMT_BGR555LE;
     case ADM_COLOR_RGB32A: return AV_PIX_FMT_RGBA;
-    case ADM_COLOR_BGR32A: return AV_PIX_FMT_RGBA; // Faster that way...AV_PIX_FMT_BGR32;
+#ifdef BGR32_IS_SWAPPED
+    case ADM_COLOR_BGR32A: return AV_PIX_FMT_RGBA; // Faster that way...
+#else
+    case ADM_COLOR_BGR32A: return AV_PIX_FMT_BGR32;
+#endif
     case ADM_COLOR_RGB24: return AV_PIX_FMT_RGB24;
     case ADM_COLOR_BGR24: return AV_PIX_FMT_BGR24;
     case ADM_COLOR_YUV420_10BITS: return AV_PIX_FMT_YUV420P10LE;
@@ -240,44 +245,67 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
 #define swap16(x) x=((x>>8)&0xff)+(x<<8)
 bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
 {
-  uint8_t *srcData[3];
-  uint8_t *dstData[3];
-  int srcStride[3];
-  int dstStride[3];
-  
-  getStrideAndPointers(false,from,fromColor,srcData,srcStride);
-  getStrideAndPointers(true,to,toColor,dstData,dstStride);
- 
-  
-  sws_scale(CONTEXT,srcData,srcStride,0,srcHeight,dstData,dstStride);
-  if(toColor==ADM_COLOR_BGR32A)
-  {
-        swapRGB32(dstWidth,dstHeight,dstStride[0],to);
-  }
-  return true;
+    uint8_t *srcData[3];
+    uint8_t *dstData[3];
+    int srcStride[3];
+    int dstStride[3];
+
+    getStrideAndPointers(false,from,fromColor,srcData,srcStride);
+    getStrideAndPointers(true,to,toColor,dstData,dstStride);
+
+    if(fromColor == ADM_COLOR_YV12)
+    {
+        uint8_t *p=srcData[1];
+        srcData[1]=srcData[2];
+        srcData[2]=p;
+    }
+    if(toColor == ADM_COLOR_YV12)
+    {
+        uint8_t *p=dstData[1];
+        dstData[1]=dstData[2];
+        dstData[2]=p;
+    }
+
+#ifdef BGR32_IS_SWAPPED
+    if(fromColor != toColor && fromColor == ADM_COLOR_BGR32A)
+        swapRGB32(srcWidth,srcHeight,srcStride[0],srcData[0]);
+#endif
+    sws_scale(CONTEXT,srcData,srcStride,0,srcHeight,dstData,dstStride);
+#ifdef BGR32_IS_SWAPPED
+    if(fromColor != toColor && toColor==ADM_COLOR_BGR32A)
+        swapRGB32(dstWidth,dstHeight,dstStride[0],dstData[0]);
+#endif
+    return true;
 }
 /**
     \fn convertPlanes
-    \brief Same as convert but the 3 planes are given separately
+    \brief Same as convert but the 3 planes are given separately and the caller takes care of swapping planes
 */
-bool            ADMColorScalerFull::convertPlanes(int  sourceStride[3],int destStride[3],     
-                                  uint8_t   *sourceData[3], uint8_t *destData[3])
+bool ADMColorScalerFull::convertPlanes(int sourceStride[3], int destStride[3], uint8_t *sourceData[3], uint8_t *destData[3])
 {
     int xs[4]={(int)sourceStride[0],(int)sourceStride[1],(int)sourceStride[2],0};
     int xd[4]={(int)destStride[0],(int)destStride[1],(int)destStride[2],0};
     uint8_t *src[4]={NULL,NULL,NULL,NULL};
     uint8_t *dst[4]={NULL,NULL,NULL,NULL};
-     for(int i=0;i<3;i++)
-        {
-            src[i]=sourceData[i];
-            dst[i]=destData[i];
-        }
-     sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
-     return true;
+    for(int i=0;i<3;i++)
+    {
+        src[i]=sourceData[i];
+        dst[i]=destData[i];
+    }
+#ifdef BGR32_IS_SWAPPED
+    if(fromColor != toColor && fromColor == ADM_COLOR_BGR32A)
+        swapRGB32(srcWidth,srcHeight,xs[0],src[0]);
+#endif
+    sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
+#ifdef BGR32_IS_SWAPPED
+    if(fromColor != toColor && toColor == ADM_COLOR_BGR32A)
+        swapRGB32(dstWidth,dstHeight,xd[0],dst[0]);
+#endif
+    return true;
 }
 /**
-    \fn convertPlanes
-    \brief Same as convert but the 3 planes are given separately
+    \fn convertImage
+    \brief Both source and target are given as ADMImage
 */
 bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage *destImage)
 {
@@ -330,11 +358,21 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
                 ADM_warning("Cannot set colorspace details, %s --> %s\n",strSrc,strDst);
             }
         }
+#ifdef BGR32_IS_SWAPPED
+        if(fromColor == ADM_COLOR_BGR32A)
+            swapRGB32(srcWidth,srcHeight,xs[0],src[0]);
+#endif
     }else
     {
         destImage->_range = sourceImage->_range;
     }
+
     sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
+
+#ifdef BGR32_IS_SWAPPED
+    if(fromColor != toColor && toColor == ADM_COLOR_BGR32A)
+        swapRGB32(dstWidth,dstHeight,xd[0],dst[0]);
+#endif
     return true;
 }
 
@@ -465,13 +503,6 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
                 ADM_warning("Cannot set colorspace details, JPEG --> MPEG\n");
         }
     }
-
-    if(false==convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes)) return false;
-
-    if(toColor==ADM_COLOR_BGR32A)
-    {
-        swapRGB32(dstWidth,dstHeight,dstPitch[0],to);
-    }
-    return true;
+    return convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes);
 }
 //EOF
