@@ -88,7 +88,7 @@ static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
 #ifdef BGR32_IS_SWAPPED
     case ADM_COLOR_BGR32A: return AV_PIX_FMT_RGBA; // Faster that way...
 #else
-    case ADM_COLOR_BGR32A: return AV_PIX_FMT_BGR32;
+    case ADM_COLOR_BGR32A: return AV_PIX_FMT_BGRA;
 #endif
     case ADM_COLOR_RGB24: return AV_PIX_FMT_RGB24;
     case ADM_COLOR_BGR24: return AV_PIX_FMT_BGR24;
