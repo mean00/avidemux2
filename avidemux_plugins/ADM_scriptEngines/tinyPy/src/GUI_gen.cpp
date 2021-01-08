@@ -11,7 +11,7 @@ static tp_obj zzpy_fileWriteSelect(TP)
   IEditor *p0 = editor;
   const char *p1 = pm.asString();
   char *r =   pyFileSelWrite(p0,p1); 
-  if(!r) pm.raise("pyGui : null pointer");
+  if(!r) return tp_None;
 
   tp_obj o = tp_string_copy(tp, r, strlen(r));
   ADM_dealloc(r);
@@ -44,7 +44,7 @@ static tp_obj zzpy_dirSelect(TP)
   IEditor *p0 = editor;
   const char *p1 = pm.asString();
   char *r =   pyDirSelect(p0,p1); 
-  if(!r) pm.raise("pyGui : null pointer");
+  if(!r) return tp_None;
 
   tp_obj o = tp_string_copy(tp, r, strlen(r));
   ADM_dealloc(r);
@@ -77,7 +77,7 @@ static tp_obj zzpy_fileReadSelect(TP)
   IEditor *p0 = editor;
   const char *p1 = pm.asString();
   char *r =   pyFileSelRead(p0,p1); 
-  if(!r) pm.raise("pyGui : null pointer");
+  if(!r) return tp_None;
 
   tp_obj o = tp_string_copy(tp, r, strlen(r));
   ADM_dealloc(r);

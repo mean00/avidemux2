@@ -212,7 +212,7 @@ sub genReturn
         }
          if($retType=~m/str/)
         {
-                return "  if(!r) pm.raise(\"$className : null pointer\");\n
+                return "  if(!r) return tp_None;\n
   tp_obj o = tp_string_copy(tp, r, strlen(r));
   ADM_dealloc(r);
   return o;";
