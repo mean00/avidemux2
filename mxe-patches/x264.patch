@@ -11,8 +11,8 @@ index 0170301b..1189ccd0 100644
 -$(PKG)_SUBDIR   := $(PKG)-snapshot-$($(PKG)_VERSION)
 -$(PKG)_FILE     := $(PKG)-snapshot-$($(PKG)_VERSION).tar.bz2
 -$(PKG)_URL      := https://download.videolan.org/pub/videolan/$(PKG)/snapshots/$($(PKG)_FILE)
-+$(PKG)_VERSION  := 0.159-20200409git296494a
-+$(PKG)_CHECKSUM := 3c884571fccd7f5a4e3b4e08c6386ad356f15ea2c381cf464e87a70af263c144
++$(PKG)_VERSION  := 0.161-20200912gitd198931
++$(PKG)_CHECKSUM := 8b79f53fabbdb2192a2cd06193690c8f13440957ff4475720154baf343047b75
 +$(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 +$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 +$(PKG)_URL      :=
