@@ -141,6 +141,41 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
         aprintf("rubberband out of bounds, will be resized back\n");
     }
 
+    // keep aspect ratio only when dragged on the bottom-right corner
+    if (keep_aspect && !ignore && rightHandleMoved)
+    {
+        double ar = (double)_w / (double)_h;
+        int arW, arH;
+        aprintf("Keep aspect ratio: %d/%d == %f\n", _w, _h, ar);
+
+        if (normX<0) normX=0;
+        if (normY<0) normY=0;
+
+        if (((double)normW/(double)normH) > ar)
+        {
+            arW = normW;
+            arH = (int)((double)normW / ar);
+        } else {
+            arW = (int)((double)normH * ar);
+            arH = normH;
+        }
+
+        if (normX+arW>_w)
+        {
+            arW=_w-normX;
+            arH = (int)((double)arW / ar);
+        }
+        if (normY+arH>_h)
+        {
+            arH=_h-normY;
+            arW = (int)((double)arH * ar);
+        }
+
+        normW = arW;
+        normH = arH;
+        resizeRubber=true;
+    }
+
     if(ignore)
     {
         upload(false,resizeRubber);
@@ -370,6 +405,7 @@ uint32_t width,height;
     myCrop->top=param->top;
     myCrop->bottom=param->bottom;
     myCrop->rubber_is_hidden=param->rubber_is_hidden;
+    myCrop->keep_aspect=param->keep_aspect;
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
     myCrop->upload(false,true);
@@ -377,9 +413,11 @@ uint32_t width,height;
     myCrop->rubber->nestedIgnore=1;
 
     ui.checkBoxRubber->setChecked(myCrop->rubber_is_hidden);
+    ui.checkBoxKeepAspect->setChecked(myCrop->keep_aspect);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
+    connect( ui.checkBoxKeepAspect,SIGNAL(stateChanged(int)),this,SLOT(toggleKeepAspect(int)));
     connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
     connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
@@ -410,6 +448,7 @@ void Ui_cropWindow::gather(crop *param)
     param->top=myCrop->top;
     param->bottom=myCrop->bottom;
     param->rubber_is_hidden=myCrop->rubber_is_hidden;
+    param->keep_aspect=myCrop->keep_aspect;
 }
 /**
  * 
@@ -445,6 +484,22 @@ void Ui_cropWindow::toggleRubber(int checkState)
         visible=false;
     myCrop->rubber->rubberband->setVisible(visible);
     myCrop->rubber_is_hidden=!visible;
+}
+/**
+ * \fn toggleKeepAspect
+ */
+void Ui_cropWindow::toggleKeepAspect(int checkState)
+{
+    Ui_cropDialog *w=(Ui_cropDialog *)myCrop->_cookie;
+    bool keep_aspect=false;
+    QString label=QString("Keep aspect ratio");
+    if(checkState)
+    {
+        keep_aspect=true;
+        label=QString("Drag the bottom-right corner");
+    }
+    w->checkBoxKeepAspect->setText(label);
+    myCrop->keep_aspect=keep_aspect;
 }
 /**
  * 
