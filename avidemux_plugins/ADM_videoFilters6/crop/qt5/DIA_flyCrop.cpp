@@ -98,6 +98,63 @@ static int bound(int val, int other, int maxx)
    return r;
 }
 /**
+ * \fn boundChecked
+ */
+static int boundChecked(int val, int maxx)
+{
+    if(val<0) return 0;
+    if(val>maxx) return maxx;
+    return val;
+}
+/**
+ * \fn recomputeDimensions
+ * \brief Calculate width and height of output picture for given aspect ratio
+          and top-left corner position, bound-check left and top crop values.
+ * @param ar  : Aspect ratio
+ * @param inw : Input width
+ * @param inh : Input height
+ * @param left: Left crop value
+ * @param top : Top crop value
+ * @param outw: Output width
+ * @param outh: Output height
+ */
+static void recomputeDimensions(const double ar, const int inw, const int inh, int &left, int &top, int &outw, int &outh)
+{
+    int arW, arH;
+    aprintf("Keep aspect ratio: %d/%d == %f\n", inw, inh, ar);
+
+    left = boundChecked(left,inw);
+    top  = boundChecked(top,inh);
+    outw = boundChecked(outw,inw);
+    outh = boundChecked(outh,inh);
+    if(!outw || !outh)
+        return;
+
+    if((double)outw / outh > ar)
+    {
+        arW = outw;
+        arH = (double)outw / ar + 0.49;
+    }else
+    {
+        arW = (double)outh * ar + 0.49;
+        arH = outh;
+    }
+
+    if(left + arW > inw)
+    {
+        arW = inw - left;
+        arH = (double)arW / ar + 0.49;
+    }
+    if (top + arH > inh)
+    {
+        arH = inh - top;
+        arW = (double)arH * ar + 0.49;
+    }
+
+    outw = boundChecked(arW,inw);
+    outh = boundChecked(arH,inh);
+}
+/**
  * \fn bandResized
  * @param x
  * @param y
@@ -145,34 +202,7 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     // keep aspect ratio only when dragged on the bottom-right corner
     if (keep_aspect && !ignore && rightHandleMoved)
     {
-        int arW, arH;
-        aprintf("Keep aspect ratio: %d/%d == %f\n", _w, _h, ar);
-
-        if (normX<0) normX=0;
-        if (normY<0) normY=0;
-
-        if (((double)normW/(double)normH) > ar)
-        {
-            arW = normW;
-            arH = (int)((double)normW / ar);
-        } else {
-            arW = (int)((double)normH * ar);
-            arH = normH;
-        }
-
-        if (normX+arW>_w)
-        {
-            arW=_w-normX;
-            arH = (int)((double)arW / ar);
-        }
-        if (normY+arH>_h)
-        {
-            arH=_h-normY;
-            arW = (int)((double)arH * ar);
-        }
-
-        normW = arW;
-        normH = arH;
+        recomputeDimensions(ar,_w,_h,normX,normY,normW,normH);
         resizeRubber=true;
     }
 
@@ -497,28 +527,22 @@ void Ui_cropWindow::heightChanged(int val)
  */
 void Ui_cropWindow::updateRightBottomSpinners(int val, bool useHeightAsRef)
 {
-    int srcW = myCrop->_w;
-    int srcH = myCrop->_h;
+    const int srcW = myCrop->_w;
+    const int srcH = myCrop->_h;
     const double ar = myCrop->ar;
 
     if(useHeightAsRef)
     {
-        int h = srcH - myCrop->top - val;
-        if(h < 0) h = 0;
-
+        int h = boundChecked(srcH - myCrop->top - val, srcH);
         int w = (double)h * ar + 0.49;
-        w = srcW - w - myCrop->left;
-        if(w < 0) w = 0;
+        w = boundChecked(srcW - w - myCrop->left, srcW);
 
         ui.spinBoxRight->setValue(w);
     }else
     {
-        int w = srcW - myCrop->left - val;
-        if(w < 0) w = 0;
-
+        int w = boundChecked(srcW - myCrop->left - val, srcW);
         int h = (double)w / ar + 0.49;
-        h = srcH - h - myCrop->top;
-        if(h < 0) h = 0;
+        h = boundChecked(srcH - h - myCrop->top, srcH);
 
         ui.spinBoxBottom->setValue(h);
     }
