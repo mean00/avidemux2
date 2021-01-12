@@ -438,12 +438,15 @@ uint32_t width,height;
     myCrop->keep_aspect=param->keep_aspect;
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
-    myCrop->upload(false,true);
-    myCrop->sliderChanged();
-    myCrop->rubber->nestedIgnore=1;
 
     ui.checkBoxRubber->setChecked(myCrop->rubber_is_hidden);
     ui.checkBoxKeepAspect->setChecked(myCrop->keep_aspect);
+    if(myCrop->keep_aspect)
+        toggleKeepAspect(true);
+    else
+        myCrop->upload(false,true);
+    myCrop->sliderChanged();
+    myCrop->rubber->nestedIgnore=1;
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
@@ -569,6 +572,28 @@ void Ui_cropWindow::toggleKeepAspect(int checkState)
     if(checkState)
     {
         keep_aspect=true;
+
+        if(!lock)
+        {
+            lock++;
+            int left = myCrop->left;
+            int top  = myCrop->top;
+            int wout = myCrop->_w - left - myCrop->right;
+            int hout = myCrop->_h - top - myCrop->bottom;
+            recomputeDimensions(myCrop->ar,myCrop->_w,myCrop->_h,left,top,wout,hout);
+
+            myCrop->left = left;
+            myCrop->right = boundChecked(myCrop->_w - wout - left, myCrop->_w);
+            myCrop->top = top;
+            myCrop->bottom = boundChecked(myCrop->_h - hout - top, myCrop->_h);
+            myCrop->upload(true,true);
+
+            myCrop->rubber->nestedIgnore++;
+            myCrop->download();
+            myCrop->sameImage();
+            myCrop->rubber->nestedIgnore--;
+            lock--;
+        }
         label=QString("Drag the bottom-right corner");
     }
     w->checkBoxKeepAspect->setText(label);
