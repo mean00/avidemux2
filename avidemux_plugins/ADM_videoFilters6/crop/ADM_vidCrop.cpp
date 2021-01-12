@@ -74,6 +74,7 @@ CropFilter::CropFilter(ADM_coreVideoFilter *in,CONFcouple *couples) :ADM_coreVid
             configuration.left=0;
             configuration.right=0;
             configuration.rubber_is_hidden=false;
+            configuration.keep_aspect=false;
         }
         if(  in->getInfo()->width<(configuration.right+configuration.left))
                 {

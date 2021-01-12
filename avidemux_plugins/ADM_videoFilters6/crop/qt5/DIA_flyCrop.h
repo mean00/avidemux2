@@ -8,6 +8,7 @@ class flyCrop : public ADM_flyDialogRgb
   public:
    uint32_t left,right,top,bottom;
    bool rubber_is_hidden;
+   bool keep_aspect;
   public:
    uint8_t    processRgb(uint8_t *imageIn, uint8_t *imageOut);
    uint8_t    download(void) {return download(false);}

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>781</width>
     <height>300</height>
    </rect>
   </property>
@@ -46,7 +46,7 @@
      <property name="spacing">
       <number>6</number>
      </property>
-     <item row="1" column="8">
+     <item row="1" column="9">
       <widget class="QPushButton" name="pushButtonReset">
        <property name="text">
         <string>Reset</string>
@@ -127,7 +127,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="8">
+     <item row="0" column="9">
       <widget class="QPushButton" name="pushButtonAutoCrop">
        <property name="text">
         <string>Auto Crop</string>
@@ -171,7 +171,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="7">
+     <item row="0" column="8">
       <spacer name="horizontalSpacer_4">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -194,6 +194,16 @@
        </property>
        <property name="text">
         <string>&amp;Hide Rubber Band</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="7">
+      <widget class="QCheckBox" name="checkBoxKeepAspect">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Keep aspect ratio</string>
        </property>
       </widget>
      </item>

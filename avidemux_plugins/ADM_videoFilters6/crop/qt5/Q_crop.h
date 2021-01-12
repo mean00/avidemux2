@@ -38,6 +38,7 @@ private slots:
 	void autoCrop(bool f);
 	void reset(bool f);
 	void toggleRubber(int checkState);
+	void toggleKeepAspect(int checkState);
 
 private:
         void resizeEvent(QResizeEvent *event);
