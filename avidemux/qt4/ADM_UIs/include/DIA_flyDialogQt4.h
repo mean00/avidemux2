@@ -225,9 +225,18 @@ protected:
 class ADM_UIQT46_EXPORT ADM_QRubberBand : public QRubberBand
 {
 public:
+        typedef enum {
+             ADM_RUBBER_BAND_GRIPS_NONE=0,
+             ADM_RUBBER_BAND_GRIPS_FIRST=1,
+             ADM_RUBBER_BAND_GRIPS_SECOND=2,
+             ADM_RUBBER_BAND_GRIPS_MASK=3
+        } ADM_rubberBandFlags;
+
         ADM_QRubberBand(QWidget *parent);
         ~ADM_QRubberBand();
+        void drawGrips(int flags) { mode = (ADM_rubberBandFlags)(flags & ADM_RUBBER_BAND_GRIPS_MASK); }
 private:
+        ADM_rubberBandFlags mode;
         void paintEvent(QPaintEvent *event);
 };
 
@@ -248,7 +257,10 @@ public:
         {
             rubberband->blockSignals(block);
         }
+        void sizeGripEnable(bool topLeftEnabled, bool bottomRightEnabled);
 private:
+        void *grip1ptr;
+        void *grip2ptr;
         void resizeEvent(QResizeEvent *);
 };
 

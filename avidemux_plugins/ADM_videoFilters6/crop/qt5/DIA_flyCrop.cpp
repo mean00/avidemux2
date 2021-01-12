@@ -39,6 +39,7 @@ flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
     _oy=0;
     _ow=width;
     _oh=height;
+    ar = (double)_w / _h;
 }
 flyCrop::~flyCrop()
 {
@@ -97,6 +98,63 @@ static int bound(int val, int other, int maxx)
    return r;
 }
 /**
+ * \fn boundChecked
+ */
+static int boundChecked(int val, int maxx)
+{
+    if(val<0) return 0;
+    if(val>maxx) return maxx;
+    return val;
+}
+/**
+ * \fn recomputeDimensions
+ * \brief Calculate width and height of output picture for given aspect ratio
+          and top-left corner position, bound-check left and top crop values.
+ * @param ar  : Aspect ratio
+ * @param inw : Input width
+ * @param inh : Input height
+ * @param left: Left crop value
+ * @param top : Top crop value
+ * @param outw: Output width
+ * @param outh: Output height
+ */
+static void recomputeDimensions(const double ar, const int inw, const int inh, int &left, int &top, int &outw, int &outh)
+{
+    int arW, arH;
+    aprintf("Keep aspect ratio: %d/%d == %f\n", inw, inh, ar);
+
+    left = boundChecked(left,inw);
+    top  = boundChecked(top,inh);
+    outw = boundChecked(outw,inw);
+    outh = boundChecked(outh,inh);
+    if(!outw || !outh)
+        return;
+
+    if((double)outw / outh > ar)
+    {
+        arW = outw;
+        arH = (double)outw / ar + 0.49;
+    }else
+    {
+        arW = (double)outh * ar + 0.49;
+        arH = outh;
+    }
+
+    if(left + arW > inw)
+    {
+        arW = inw - left;
+        arH = (double)arW / ar + 0.49;
+    }
+    if (top + arH > inh)
+    {
+        arH = inh - top;
+        arW = (double)arH * ar + 0.49;
+    }
+
+    outw = boundChecked(arW,inw);
+    outh = boundChecked(arH,inh);
+}
+/**
  * \fn bandResized
  * @param x
  * @param y
@@ -144,35 +202,7 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     // keep aspect ratio only when dragged on the bottom-right corner
     if (keep_aspect && !ignore && rightHandleMoved)
     {
-        double ar = (double)_w / (double)_h;
-        int arW, arH;
-        aprintf("Keep aspect ratio: %d/%d == %f\n", _w, _h, ar);
-
-        if (normX<0) normX=0;
-        if (normY<0) normY=0;
-
-        if (((double)normW/(double)normH) > ar)
-        {
-            arW = normW;
-            arH = (int)((double)normW / ar);
-        } else {
-            arW = (int)((double)normH * ar);
-            arH = normH;
-        }
-
-        if (normX+arW>_w)
-        {
-            arW=_w-normX;
-            arH = (int)((double)arW / ar);
-        }
-        if (normY+arH>_h)
-        {
-            arH=_h-normY;
-            arW = (int)((double)arH * ar);
-        }
-
-        normW = arW;
-        normH = arH;
+        recomputeDimensions(ar,_w,_h,normX,normY,normW,normH);
         resizeRubber=true;
     }
 
@@ -408,23 +438,28 @@ uint32_t width,height;
     myCrop->keep_aspect=param->keep_aspect;
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
-    myCrop->upload(false,true);
-    myCrop->sliderChanged();
-    myCrop->rubber->nestedIgnore=1;
 
     ui.checkBoxRubber->setChecked(myCrop->rubber_is_hidden);
     ui.checkBoxKeepAspect->setChecked(myCrop->keep_aspect);
+    if(myCrop->keep_aspect)
+        toggleKeepAspect(true);
+    else
+        myCrop->upload(false,true);
+    myCrop->sliderChanged();
+    myCrop->rubber->nestedIgnore=1;
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
     connect( ui.checkBoxKeepAspect,SIGNAL(stateChanged(int)),this,SLOT(toggleKeepAspect(int)));
     connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
     connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
-#define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
-      SPINNER(Left);
-      SPINNER(Right);
-      SPINNER(Top);
-      SPINNER(Bottom);
+#define SPINNER(x) connect(ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(widthChanged(int)));
+    SPINNER(Left)
+    SPINNER(Right)
+#undef SPINNER
+#define SPINNER(x) connect(ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(heightChanged(int)));
+    SPINNER(Top)
+    SPINNER(Bottom)
 
     setModal(true);
 }
@@ -461,18 +496,59 @@ Ui_cropWindow::~Ui_cropWindow()
     canvas=NULL;
 }
 /**
- * 
- * @param f
+ * \fn widthChanged
  */
-void Ui_cropWindow::valueChanged( int f )
+void Ui_cropWindow::widthChanged(int val)
 {
     if(lock) return;
     lock++;
     myCrop->rubber->nestedIgnore++;
+    if(myCrop->keep_aspect)
+        updateRightBottomSpinners(val,false);
     myCrop->download();
     myCrop->sameImage();
     myCrop->rubber->nestedIgnore--;
     lock--;
+}
+/**
+ * \fn heightChanged
+ */
+void Ui_cropWindow::heightChanged(int val)
+{
+    if(lock) return;
+    lock++;
+    myCrop->rubber->nestedIgnore++;
+    if(myCrop->keep_aspect)
+        updateRightBottomSpinners(val,true);
+    myCrop->download();
+    myCrop->sameImage();
+    myCrop->rubber->nestedIgnore--;
+    lock--;
+}
+/**
+ * \fn updateRightBottomSpinners
+ */
+void Ui_cropWindow::updateRightBottomSpinners(int val, bool useHeightAsRef)
+{
+    const int srcW = myCrop->_w;
+    const int srcH = myCrop->_h;
+    const double ar = myCrop->ar;
+
+    if(useHeightAsRef)
+    {
+        int h = boundChecked(srcH - myCrop->top - val, srcH);
+        int w = (double)h * ar + 0.49;
+        w = boundChecked(srcW - w - myCrop->left, srcW);
+
+        ui.spinBoxRight->setValue(w);
+    }else
+    {
+        int w = boundChecked(srcW - myCrop->left - val, srcW);
+        int h = (double)w / ar + 0.49;
+        h = boundChecked(srcH - h - myCrop->top, srcH);
+
+        ui.spinBoxBottom->setValue(h);
+    }
 }
 /**
  * \fn toggleRubber
@@ -490,15 +566,37 @@ void Ui_cropWindow::toggleRubber(int checkState)
  */
 void Ui_cropWindow::toggleKeepAspect(int checkState)
 {
-    Ui_cropDialog *w=(Ui_cropDialog *)myCrop->_cookie;
     bool keep_aspect=false;
-    QString label=QString("Keep aspect ratio");
     if(checkState)
     {
         keep_aspect=true;
-        label=QString("Drag the bottom-right corner");
+
+        if(!lock)
+        {
+            lock++;
+            int left = myCrop->left;
+            int top  = myCrop->top;
+            int wout = myCrop->_w - left - myCrop->right;
+            int hout = myCrop->_h - top - myCrop->bottom;
+            recomputeDimensions(myCrop->ar,myCrop->_w,myCrop->_h,left,top,wout,hout);
+
+            myCrop->left = left;
+            myCrop->right = boundChecked(myCrop->_w - wout - left, myCrop->_w);
+            myCrop->top = top;
+            myCrop->bottom = boundChecked(myCrop->_h - hout - top, myCrop->_h);
+            myCrop->upload(true,true);
+
+            myCrop->rubber->nestedIgnore++;
+            myCrop->download();
+            myCrop->sameImage();
+            myCrop->rubber->nestedIgnore--;
+            lock--;
+        }
     }
-    w->checkBoxKeepAspect->setText(label);
+    ui.spinBoxLeft->setEnabled(!keep_aspect);
+    ui.spinBoxTop->setEnabled(!keep_aspect);
+    ui.pushButtonAutoCrop->setEnabled(!keep_aspect);
+    myCrop->rubber->sizeGripEnable(!keep_aspect,true);
     myCrop->keep_aspect=keep_aspect;
 }
 /**
