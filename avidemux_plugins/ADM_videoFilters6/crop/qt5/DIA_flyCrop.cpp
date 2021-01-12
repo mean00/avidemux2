@@ -566,9 +566,7 @@ void Ui_cropWindow::toggleRubber(int checkState)
  */
 void Ui_cropWindow::toggleKeepAspect(int checkState)
 {
-    Ui_cropDialog *w=(Ui_cropDialog *)myCrop->_cookie;
     bool keep_aspect=false;
-    QString label=QString("Keep aspect ratio");
     if(checkState)
     {
         keep_aspect=true;
@@ -594,9 +592,11 @@ void Ui_cropWindow::toggleKeepAspect(int checkState)
             myCrop->rubber->nestedIgnore--;
             lock--;
         }
-        label=QString("Drag the bottom-right corner");
     }
-    w->checkBoxKeepAspect->setText(label);
+    ui.spinBoxLeft->setEnabled(!keep_aspect);
+    ui.spinBoxTop->setEnabled(!keep_aspect);
+    ui.pushButtonAutoCrop->setEnabled(!keep_aspect);
+    myCrop->rubber->sizeGripEnable(!keep_aspect,true);
     myCrop->keep_aspect=keep_aspect;
 }
 /**
