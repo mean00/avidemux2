@@ -14,7 +14,6 @@
     #define aprintf(...) {}
 #endif
 
-#if 1
 class Ui_cropWindow : public QDialog
 {
 	Q_OBJECT
@@ -34,17 +33,17 @@ public slots:
 
 private slots:
 	void sliderUpdate(int foo);
-	void valueChanged(int foo);
+	void widthChanged(int foo);
+	void heightChanged(int foo);
 	void autoCrop(bool f);
 	void reset(bool f);
 	void toggleRubber(int checkState);
 	void toggleKeepAspect(int checkState);
 
 private:
+        void updateRightBottomSpinners(int foo, bool useHeightAsRef);
         void resizeEvent(QResizeEvent *event);
         void showEvent(QShowEvent *event);
 };
 
 #endif	// Q_crop_h
-#endif
-

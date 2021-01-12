@@ -39,6 +39,7 @@ flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
     _oy=0;
     _ow=width;
     _oh=height;
+    ar = (double)_w / _h;
 }
 flyCrop::~flyCrop()
 {
@@ -144,7 +145,6 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     // keep aspect ratio only when dragged on the bottom-right corner
     if (keep_aspect && !ignore && rightHandleMoved)
     {
-        double ar = (double)_w / (double)_h;
         int arW, arH;
         aprintf("Keep aspect ratio: %d/%d == %f\n", _w, _h, ar);
 
@@ -420,11 +420,13 @@ uint32_t width,height;
     connect( ui.checkBoxKeepAspect,SIGNAL(stateChanged(int)),this,SLOT(toggleKeepAspect(int)));
     connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
     connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
-#define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
-      SPINNER(Left);
-      SPINNER(Right);
-      SPINNER(Top);
-      SPINNER(Bottom);
+#define SPINNER(x) connect(ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(widthChanged(int)));
+    SPINNER(Left)
+    SPINNER(Right)
+#undef SPINNER
+#define SPINNER(x) connect(ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(heightChanged(int)));
+    SPINNER(Top)
+    SPINNER(Bottom)
 
     setModal(true);
 }
@@ -461,18 +463,65 @@ Ui_cropWindow::~Ui_cropWindow()
     canvas=NULL;
 }
 /**
- * 
- * @param f
+ * \fn widthChanged
  */
-void Ui_cropWindow::valueChanged( int f )
+void Ui_cropWindow::widthChanged(int val)
 {
     if(lock) return;
     lock++;
     myCrop->rubber->nestedIgnore++;
+    if(myCrop->keep_aspect)
+        updateRightBottomSpinners(val,false);
     myCrop->download();
     myCrop->sameImage();
     myCrop->rubber->nestedIgnore--;
     lock--;
+}
+/**
+ * \fn heightChanged
+ */
+void Ui_cropWindow::heightChanged(int val)
+{
+    if(lock) return;
+    lock++;
+    myCrop->rubber->nestedIgnore++;
+    if(myCrop->keep_aspect)
+        updateRightBottomSpinners(val,true);
+    myCrop->download();
+    myCrop->sameImage();
+    myCrop->rubber->nestedIgnore--;
+    lock--;
+}
+/**
+ * \fn updateRightBottomSpinners
+ */
+void Ui_cropWindow::updateRightBottomSpinners(int val, bool useHeightAsRef)
+{
+    int srcW = myCrop->_w;
+    int srcH = myCrop->_h;
+    const double ar = myCrop->ar;
+
+    if(useHeightAsRef)
+    {
+        int h = srcH - myCrop->top - val;
+        if(h < 0) h = 0;
+
+        int w = (double)h * ar + 0.49;
+        w = srcW - w - myCrop->left;
+        if(w < 0) w = 0;
+
+        ui.spinBoxRight->setValue(w);
+    }else
+    {
+        int w = srcW - myCrop->left - val;
+        if(w < 0) w = 0;
+
+        int h = (double)w / ar + 0.49;
+        h = srcH - h - myCrop->top;
+        if(h < 0) h = 0;
+
+        ui.spinBoxBottom->setValue(h);
+    }
 }
 /**
  * \fn toggleRubber
