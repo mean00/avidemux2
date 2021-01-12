@@ -47,6 +47,7 @@ void transparentSizeGrip::paintEvent(QPaintEvent *event)
 */
 ADM_QRubberBand::ADM_QRubberBand(QWidget *parent) : QRubberBand(QRubberBand::Rectangle, parent)
 {
+    mode = (ADM_rubberBandFlags)(ADM_RUBBER_BAND_GRIPS_FIRST | ADM_RUBBER_BAND_GRIPS_SECOND);
 }
 
 ADM_QRubberBand::~ADM_QRubberBand()
@@ -86,8 +87,10 @@ void ADM_QRubberBand::paintEvent(QPaintEvent *event)
 
     painter.setPen(Qt::NoPen);
     QBrush solid = QBrush(Qt::red, Qt::SolidPattern);
-    painter.fillPath(topLeft, solid);
-    painter.fillPath(bottomRight, solid);
+    if(mode & ADM_RUBBER_BAND_GRIPS_FIRST)
+        painter.fillPath(topLeft, solid);
+    if(mode & ADM_RUBBER_BAND_GRIPS_SECOND);
+        painter.fillPath(bottomRight, solid);
 
     painter.end();
 }
@@ -110,6 +113,8 @@ ADM_rubberControl::ADM_rubberControl(ADM_flyDialog *fly, QWidget *parent) : QWid
     layout->addWidget(grip1, 0, Qt::AlignLeft | Qt::AlignTop);
     layout->addWidget(grip2, 0, Qt::AlignRight | Qt::AlignBottom);
     rubberband = new ADM_QRubberBand(this);
+    grip1ptr = (void *)grip1;
+    grip2ptr = (void *)grip2;
 }
 
 /**
@@ -125,5 +130,23 @@ void ADM_rubberControl::resizeEvent(QResizeEvent *)
     rubberband->resize(size());
     if(!nestedIgnore)
         flyParent->bandResized(x, y, w, h);
+}
+
+/**
+    \fn sizeGripEnable
+*/
+void ADM_rubberControl::sizeGripEnable(bool topLeftEnabled, bool bottomRightEnabled)
+{
+    transparentSizeGrip *g1 = (transparentSizeGrip *)grip1ptr;
+    transparentSizeGrip *g2 = (transparentSizeGrip *)grip2ptr;
+    g1->setEnabled(topLeftEnabled);
+    g2->setEnabled(bottomRightEnabled);
+    int flags = ADM_QRubberBand::ADM_RUBBER_BAND_GRIPS_NONE;
+    if(topLeftEnabled)
+        flags |= ADM_QRubberBand::ADM_RUBBER_BAND_GRIPS_FIRST;
+    if(bottomRightEnabled)
+        flags |= ADM_QRubberBand::ADM_RUBBER_BAND_GRIPS_SECOND;
+    rubberband->drawGrips(flags);
+    rubberband->update();
 }
 //EOF
