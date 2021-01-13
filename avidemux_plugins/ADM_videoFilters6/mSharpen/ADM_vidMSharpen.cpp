@@ -59,6 +59,7 @@ Msharpen::Msharpen(ADM_coreVideoFilter *in,CONFcouple *couples)
     {
         _param.mask=0;       // Show mask
         _param.highq=1;
+        _param.chroma=0;
         _param.strength=100;	
         _param.threshold=15;	
     }
@@ -96,9 +97,9 @@ Msharpen::~Msharpen(void)
 */
 const char *Msharpen::getConfiguration(void)
 {
-   static char conf[80];
+   static char conf[160];
     conf[0]=0;
-    snprintf(conf,80," Msharpen Strength:%d Threshold:%d",_param.strength,_param.threshold);
+    snprintf(conf,160," Msharpen Strength:%d Threshold:%d Process chroma:%s",_param.strength,_param.threshold,(_param.chroma ? "true":"false"));
     return conf;
 }
 	
@@ -118,7 +119,7 @@ ADMImage *src,*blur,*dst;
 
     dst->Pts=src->Pts;
 	
-    for (int i=0;i<3;i++)
+    for (int i=0;i<(_param.chroma ? 3:1);i++)
     {
             
             blur_plane(src, blur, i,work);
@@ -127,6 +128,11 @@ ADMImage *src,*blur,*dst;
                 detect_edges_HiQ(blur, dst,  i,_param);
             if (!_param.mask) 
                 apply_filter(src, blur, dst,  i,_param,invstrength);
+    }
+    if (!_param.chroma)
+    {
+        dst->copyPlane(src,dst,PLANAR_U);
+        dst->copyPlane(src,dst,PLANAR_V);
     }
 
     *fn=nextFrame;

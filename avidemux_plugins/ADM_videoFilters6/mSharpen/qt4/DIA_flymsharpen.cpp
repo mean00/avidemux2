@@ -82,7 +82,7 @@ uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
         refOut._planes[i]     =out->_planes[i]+halfWidth;
     }
     
-    for (int i=0;i<3;i++)
+    for (int i=0;i<(param.chroma ? 3:1);i++)
     { 
             Msharpen::blur_plane(&refIn, blur, i,work);
             Msharpen::detect_edges(blur, &refOut,  i,param);
@@ -90,6 +90,11 @@ uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
                 Msharpen::detect_edges_HiQ(blur, &refOut,  i,param);
             if (!param.mask) 
                 Msharpen::apply_filter(&refIn, blur, &refOut,  i,param,invstrength);
+    }
+    if (!param.chroma)
+    {
+        (&refOut)->copyPlane(&refIn,&refOut,PLANAR_U);
+        (&refOut)->copyPlane(&refIn,&refOut,PLANAR_V);
     }
     out->copyInfo(in);
     out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
@@ -106,13 +111,17 @@ uint8_t flyMSharpen::upload()
 {
 #define MYSPIN(x) w->x
 #define MYTOGGLE(x) w->x
+#define MYSLIDER(x) w->horizontalSlider##x
     Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
     
     
     MYSPIN(spinBoxThreshold)->setValue(param.threshold);
     MYSPIN(spinBoxStrength)->setValue(param.strength);
+    MYSLIDER(Threshold)->setValue(param.threshold);
+    MYSLIDER(Strength)->setValue(param.strength);
     MYTOGGLE(CheckBoxHQ)->setChecked(param.highq);
     MYTOGGLE(checkBoxMask)->setChecked(param.mask);
+    MYTOGGLE(checkBoxChroma)->setChecked(param.chroma);
     invstrength=255-param.strength;	
     printf("Upload\n");
     return 1;
@@ -125,13 +134,17 @@ uint8_t flyMSharpen::download(void)
     
 #define MYSPIN(x) w->x
 #define MYTOGGLE(x) w->x
+#define MYSLIDER(x) w->horizontalSlider##x
     Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
     
     
     param.threshold=MYSPIN(spinBoxThreshold)->value();
     param.strength=MYSPIN(spinBoxStrength)->value();
+    MYSLIDER(Threshold)->setValue(MYSPIN(spinBoxThreshold)->value());
+    MYSLIDER(Strength)->setValue(MYSPIN(spinBoxStrength)->value());
     param.highq= MYTOGGLE(CheckBoxHQ)->isChecked();
     param.mask= MYTOGGLE(checkBoxMask)->isChecked();
+    param.chroma= MYTOGGLE(checkBoxChroma)->isChecked();
     invstrength=255-param.strength;	
     printf("Download\n");
     return true;

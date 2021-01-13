@@ -45,11 +45,13 @@
 
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
+#define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));\
+		   connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSlider(int)));
 #define TOGGLER(x) connect( ui.x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
         
         TOGGLER(CheckBoxHQ);
         TOGGLER(checkBoxMask);
+        TOGGLER(checkBoxChroma);
         
         SPINNER(Threshold);
         SPINNER(Strength);
@@ -100,8 +102,16 @@ void Ui_msharpenWindow::showEvent(QShowEvent *event)
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
-#define MYSPIN(x) w->doubleSpinBox##x
+#define MYSPIN(x) w->spinBox##x
+#define MYSLIDER(x) w->horizontalSlider##x
 
+void Ui_msharpenWindow::valueChangedSlider(int f)
+{
+	Ui_msharpenDialog *w=(Ui_msharpenDialog *)flymsharpen->_cookie;
+	MYSPIN(Threshold)->setValue(MYSLIDER(Threshold)->value());
+	MYSPIN(Strength)->setValue(MYSLIDER(Strength)->value());
+	valueChanged(0);
+}
 //____________________________________
 // EOF
 

@@ -4,6 +4,7 @@
 typedef struct {
 bool mask;
 bool highq;
+bool chroma;
 uint32_t threshold;
 uint32_t strength;
 }msharpen;
