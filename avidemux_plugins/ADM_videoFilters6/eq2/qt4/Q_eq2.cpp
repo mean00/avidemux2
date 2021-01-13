@@ -38,13 +38,20 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
 
     canvas=new ADM_QCanvas(ui.graphicsView,width,height);
 
-    myCrop=new flyEq2(this, width, height,in,canvas,ui.horizontalSlider);
+    scene=new QGraphicsScene(this);
+    ui.graphicsViewHistogram->setScene(scene);
+    ui.graphicsViewHistogram->scale(1.0,1.0);
+
+    myCrop=new flyEq2(this, width, height,in,canvas,ui.horizontalSlider,scene);
     memcpy(&(myCrop->param),param,sizeof(eq2));
     myCrop->_cookie=&ui;
+    myCrop->fullpreview = false;
     myCrop->addControl(ui.toolboxLayout);
     myCrop->upload();
     myCrop->sliderChanged();
     myCrop->update();
+
+    ui.checkBoxFullPreview->setChecked(myCrop->fullpreview);
 
     QSignalMapper *signalMapper = new QSignalMapper(this);
     connect( signalMapper,SIGNAL(mapped(QWidget*)),this,SLOT(resetSlider(QWidget*)));
@@ -66,6 +73,8 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
     SPINNER(Red);
     SPINNER(Blue);
     SPINNER(Green);
+
+    connect( ui.checkBoxFullPreview,SIGNAL(stateChanged(int)),this,SLOT(toggleFullPreview(int)));
 
     setResetSliderEnabledState();
 
@@ -149,6 +158,20 @@ void Ui_eq2Window::setResetSliderEnabledState(void)
 }
 
 /**
+ * \fn toggleFullPreview
+ */
+void Ui_eq2Window::toggleFullPreview(int checkState)
+{
+    bool fullpreview=false;
+    if(checkState)
+    {
+        fullpreview=true;
+    }
+    myCrop->fullpreview=fullpreview;
+    myCrop->sameImage();
+}
+
+/**
     \fn dtor
 */
 Ui_eq2Window::~Ui_eq2Window()
@@ -157,6 +180,7 @@ Ui_eq2Window::~Ui_eq2Window()
     myCrop=NULL;
     if(canvas) delete canvas;
     canvas=NULL;
+    scene=NULL;
 }
 
 /**

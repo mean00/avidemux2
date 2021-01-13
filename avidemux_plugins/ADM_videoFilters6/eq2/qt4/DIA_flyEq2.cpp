@@ -22,6 +22,7 @@
 #include "ADM_vidEq2.h"
 
 #include "DIA_flyEq2.h"
+#include "QGraphicsScene"
 typedef void lutMeType(oneSetting *par, ADMImage *i,ADMImage *o,ADM_PLANE plane);
 
 /************* COMMON PART *********************/
@@ -70,9 +71,54 @@ uint8_t    flyEq2::processYuv(ADMImage* in, ADMImage *out)
             lutMe(&(mySettings.param[1]),in,out,PLANAR_V);
 	        
 	        	
-#if 1
-	        in->copyLeftSideTo(out);
-#endif
+
+	if(scene)
+	{
+		// Draw luma histogram
+		uint8_t *luma=out->GetReadPtr(PLANAR_Y);
+		int     stride=out->GetPitch(PLANAR_Y);
+		int     decimate=4;
+		double  sumsum[256];    
+		for(int i=0;i<256;i++) sumsum[i]=0;
+
+		double  totalSum=(double)(out->_width*out->_height)/decimate; // # of sampling points
+		for(int y=0;y<in->_height;y+=decimate)
+		{
+			uint8_t *p=luma;
+			for(int x=0;x<in->_width;x++)
+			{
+				sumsum[*p]++;
+				p++;
+			}
+			luma+=stride*decimate;
+		}
+		// normalize
+		for(int i=0;i<256;i++)
+		{
+			// zoom factor =10
+			sumsum[i]=(10*sumsum[i]*(127))/totalSum;
+			if(sumsum[i]>127) sumsum[i]=127;
+		}
+		int toggle=0;
+
+		scene->clear();
+		for(int i=0;i<256;i++)
+		{
+			QLineF qline(i,127,i,127-sumsum[i]);
+			scene->addLine(qline);
+		}
+		// Draw 16 and 235 line
+		QLineF qline(16,100,16,126);
+		scene->addLine(qline);
+		QLineF qline2(235,100,235,126);
+		scene->addLine(qline2);
+	}
+
+	if (!fullpreview)
+	{
+		in->copyLeftSideTo(out);
+	}
+
 		return 1;
 }
 
