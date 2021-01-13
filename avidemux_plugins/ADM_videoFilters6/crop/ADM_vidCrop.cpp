@@ -89,6 +89,8 @@ CropFilter::CropFilter(ADM_coreVideoFilter *in,CONFcouple *couples) :ADM_coreVid
 
         info.width= in->getInfo()->width- configuration.right- configuration.left;		
         info.height=in->getInfo()->height-configuration.bottom-configuration.top;	
+
+        ADM_info("%s\n",getConfiguration());
 }
 /**
     \fn ~CropFilter
@@ -197,6 +199,7 @@ bool CropFilter::configure(void)
 			ADM_assert(h<previousFilter->getInfo()->height);
 			info.width=previousFilter->getInfo()->width-w;
 			info.height=previousFilter->getInfo()->height-h;
+			ADM_info("%s\n",getConfiguration());
         }
         return r;
 }
