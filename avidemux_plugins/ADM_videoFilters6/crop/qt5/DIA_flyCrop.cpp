@@ -35,6 +35,7 @@ flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
                 : ADM_flyDialogRgb(parent,width, height,in,canvas, slider,RESIZE_LAST)
 {
     rubber=new ADM_rubberControl(this,canvas);
+    left=right=top=bottom=0;
     _ox=0;
     _oy=0;
     _ow=width;
@@ -46,7 +47,73 @@ flyCrop::~flyCrop()
     delete rubber;
     rubber=NULL;
 }
-
+/**
+ * \fn getCropMargins
+ */
+bool flyCrop::getCropMargins(int *lf, int *rt, int *tp, int *bt)
+{
+    if(lf) *lf=left;
+    if(rt) *rt=right;
+    if(tp) *tp=top;
+    if(bt) *bt=bottom;
+    return true;
+}
+/**
+ * \fn setCropMargins
+ * \brief Negative input values will be ignored
+ */
+void flyCrop::setCropMargins(int lf, int rt, int tp, int bt)
+{
+    if(lf>=0) left=lf;
+    if(rt>=0) right=rt;
+    if(tp>=0) top=tp;
+    if(bt>=0) bottom=bt;
+}
+/**
+ * \fn initRubber
+ * \brief To be called on show event
+ */
+void flyCrop::initRubber(void)
+{
+    rubber->rubberband->show(); // must be called first
+    rubber->rubberband->setVisible(!rubber_is_hidden);
+    rubber->nestedIgnore = 0;
+}
+/**
+ * \fn hideRubber
+ */
+void flyCrop::hideRubber(bool hide)
+{
+    rubber_is_hidden = hide;
+    rubber->rubberband->setVisible(!hide);
+}
+/**
+ * \fn hideRubberGrips
+ */
+void flyCrop::hideRubberGrips(bool hideTopLeft, bool hideBottomRight)
+{
+    rubber->sizeGripEnable(!hideTopLeft, !hideBottomRight);
+}
+/**
+ * \fn adjustRubber
+ */
+void flyCrop::adjustRubber(int x, int y, int w, int h)
+{
+    rubber->move(x,y);
+    rubber->resize(w,h);
+}
+/**
+ * \fn lockRubber
+ */
+int flyCrop::lockRubber(bool lock)
+{
+    int old = rubber->nestedIgnore;
+    if(lock)
+        rubber->nestedIgnore++;
+    else
+        rubber->nestedIgnore--;
+    return old;
+}
 /**
  * \fn blank
  * \brief Green bars
@@ -391,8 +458,8 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
             }
         }
         rubber->nestedIgnore++;
-        rubber->move(_zoom*(float)left,_zoom*(float)top);
-        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+        rubber->move(_zoom*left+0.49,_zoom*top+0.49);
+        rubber->resize(_zoom*bound(left,right,_w)+0.49,_zoom*bound(top,bottom,_h)+0.49);
         rubber->nestedIgnore--;
         blockChanges(false);
     }
@@ -420,33 +487,29 @@ void flyCrop::dimensions(void)
 //
 Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *in) : QDialog(parent)
 {
-uint32_t width,height;
     ui.setupUi(this);
     lock=0;
     // Allocate space for green-ised video
-    width=in->getInfo()->width;
-    height=in->getInfo()->height;
+    inputWidth = in->getInfo()->width;
+    inputHeight = in->getInfo()->height;
 
-    canvas=new ADM_QCanvas(ui.graphicsView,width,height);
+    canvas = new ADM_QCanvas(ui.graphicsView, inputWidth, inputHeight);
 
-    myCrop=new flyCrop( this,width, height,in,canvas,ui.horizontalSlider);
-    myCrop->left=param->left;
-    myCrop->right=param->right;
-    myCrop->top=param->top;
-    myCrop->bottom=param->bottom;
-    myCrop->rubber_is_hidden=param->rubber_is_hidden;
-    myCrop->keep_aspect=param->keep_aspect;
+    myCrop = new flyCrop(this, inputWidth, inputHeight, in, canvas, ui.horizontalSlider);
+    myCrop->setCropMargins(param->left, param->right, param->top, param->bottom);
+    myCrop->hideRubber(param->rubber_is_hidden);
+    myCrop->setKeepAspect(param->keep_aspect);
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
 
-    ui.checkBoxRubber->setChecked(myCrop->rubber_is_hidden);
-    ui.checkBoxKeepAspect->setChecked(myCrop->keep_aspect);
-    if(myCrop->keep_aspect)
+    ui.checkBoxRubber->setChecked(param->rubber_is_hidden);
+    ui.checkBoxKeepAspect->setChecked(param->keep_aspect);
+    if(param->keep_aspect)
         toggleKeepAspect(true);
     else
         myCrop->upload(false,true);
     myCrop->sliderChanged();
-    myCrop->rubber->nestedIgnore=1;
+    myCrop->lockRubber(true);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
@@ -478,12 +541,14 @@ void Ui_cropWindow::sliderUpdate(int foo)
 void Ui_cropWindow::gather(crop *param)
 {
     myCrop->download(true);
-    param->left=myCrop->left;
-    param->right=myCrop->right;
-    param->top=myCrop->top;
-    param->bottom=myCrop->bottom;
-    param->rubber_is_hidden=myCrop->rubber_is_hidden;
-    param->keep_aspect=myCrop->keep_aspect;
+    int left,right,top,bottom;
+    myCrop->getCropMargins(&left,&right,&top,&bottom);
+    param->left = left;
+    param->right = right;
+    param->top = top;
+    param->bottom = bottom;
+    param->rubber_is_hidden = myCrop->stateOfRubber();
+    param->keep_aspect = myCrop->getKeepAspect();
 }
 /**
  * 
@@ -502,12 +567,12 @@ void Ui_cropWindow::widthChanged(int val)
 {
     if(lock) return;
     lock++;
-    myCrop->rubber->nestedIgnore++;
-    if(myCrop->keep_aspect)
+    myCrop->lockRubber(true);
+    if(myCrop->getKeepAspect())
         updateRightBottomSpinners(val,false);
     myCrop->download();
     myCrop->sameImage();
-    myCrop->rubber->nestedIgnore--;
+    myCrop->lockRubber(false);
     lock--;
 }
 /**
@@ -517,12 +582,12 @@ void Ui_cropWindow::heightChanged(int val)
 {
     if(lock) return;
     lock++;
-    myCrop->rubber->nestedIgnore++;
-    if(myCrop->keep_aspect)
+    myCrop->lockRubber(true);
+    if(myCrop->getKeepAspect())
         updateRightBottomSpinners(val,true);
     myCrop->download();
     myCrop->sameImage();
-    myCrop->rubber->nestedIgnore--;
+    myCrop->lockRubber(false);
     lock--;
 }
 /**
@@ -530,22 +595,22 @@ void Ui_cropWindow::heightChanged(int val)
  */
 void Ui_cropWindow::updateRightBottomSpinners(int val, bool useHeightAsRef)
 {
-    const int srcW = myCrop->_w;
-    const int srcH = myCrop->_h;
-    const double ar = myCrop->ar;
+    const double ar = myCrop->getAspectRatio();
+    int left,top;
+    myCrop->getCropMargins(&left,NULL,&top,NULL);
 
     if(useHeightAsRef)
     {
-        int h = boundChecked(srcH - myCrop->top - val, srcH);
+        int h = boundChecked(inputHeight - top - val, inputHeight);
         int w = (double)h * ar + 0.49;
-        w = boundChecked(srcW - w - myCrop->left, srcW);
+        w = boundChecked(inputWidth - w - left, inputWidth);
 
         ui.spinBoxRight->setValue(w);
     }else
     {
-        int w = boundChecked(srcW - myCrop->left - val, srcW);
+        int w = boundChecked(inputWidth - left - val, inputWidth);
         int h = (double)w / ar + 0.49;
-        h = boundChecked(srcH - h - myCrop->top, srcH);
+        h = boundChecked(inputHeight - h - top, inputHeight);
 
         ui.spinBoxBottom->setValue(h);
     }
@@ -558,8 +623,7 @@ void Ui_cropWindow::toggleRubber(int checkState)
     bool visible=true;
     if(checkState)
         visible=false;
-    myCrop->rubber->rubberband->setVisible(visible);
-    myCrop->rubber_is_hidden=!visible;
+    myCrop->hideRubber(!visible);
 }
 /**
  * \fn toggleKeepAspect
@@ -574,30 +638,29 @@ void Ui_cropWindow::toggleKeepAspect(int checkState)
         if(!lock)
         {
             lock++;
-            int left = myCrop->left;
-            int top  = myCrop->top;
-            int wout = myCrop->_w - left - myCrop->right;
-            int hout = myCrop->_h - top - myCrop->bottom;
-            recomputeDimensions(myCrop->ar,myCrop->_w,myCrop->_h,left,top,wout,hout);
+            int left,right,top,bottom;
+            myCrop->getCropMargins(&left,&right,&top,&bottom);
+            int wout = inputWidth - left - right;
+            int hout = inputHeight - top - bottom;
+            recomputeDimensions(myCrop->getAspectRatio(),inputWidth,inputHeight,left,top,wout,hout);
 
-            myCrop->left = left;
-            myCrop->right = boundChecked(myCrop->_w - wout - left, myCrop->_w);
-            myCrop->top = top;
-            myCrop->bottom = boundChecked(myCrop->_h - hout - top, myCrop->_h);
+            right = boundChecked(inputWidth - wout - left, inputWidth);
+            bottom = boundChecked(inputHeight - hout - top, inputHeight);
+            myCrop->setCropMargins(left,right,top,bottom);
             myCrop->upload(true,true);
 
-            myCrop->rubber->nestedIgnore++;
+            myCrop->lockRubber(true);
             myCrop->download();
             myCrop->sameImage();
-            myCrop->rubber->nestedIgnore--;
+            myCrop->lockRubber(false);
             lock--;
         }
     }
     ui.spinBoxLeft->setEnabled(!keep_aspect);
     ui.spinBoxTop->setEnabled(!keep_aspect);
     ui.pushButtonAutoCrop->setEnabled(!keep_aspect);
-    myCrop->rubber->sizeGripEnable(!keep_aspect,true);
-    myCrop->keep_aspect=keep_aspect;
+    myCrop->hideRubberGrips(keep_aspect,false);
+    myCrop->setKeepAspect(keep_aspect);
 }
 /**
  * 
@@ -615,10 +678,7 @@ void Ui_cropWindow::autoCrop( bool f )
  */
 void Ui_cropWindow::reset( bool f )
 {
-    myCrop->left=0;
-    myCrop->right=0;
-    myCrop->bottom=0;
-    myCrop->top=0;
+    myCrop->setCropMargins(0,0,0,0);
     lock++;
     myCrop->upload();
     myCrop->sameImage();
@@ -637,16 +697,19 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
     myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myCrop->adjustCanvasPosition();
 
-    int x=(int)((double)myCrop->left*myCrop->_zoom);
-    int y=(int)((double)myCrop->top*myCrop->_zoom);
-    int w=(int)((double)(myCrop->_w-(myCrop->left+myCrop->right))*myCrop->_zoom);
-    int h=(int)((double)(myCrop->_h-(myCrop->top+myCrop->bottom))*myCrop->_zoom);
+    int left,right,top,bottom;
+    myCrop->getCropMargins(&left,&right,&top,&bottom);
+
+    float z = myCrop->getZoomValue();
+    int x = (double)left * z + 0.49;
+    int y = (double)top * z + 0.49;
+    int w = (double)(inputWidth - (left + right)) * z + 0.49;
+    int h = (double)(inputHeight - (top + bottom)) * z + 0.49;
 
     myCrop->blockChanges(true);
-    myCrop->rubber->nestedIgnore++;
-    myCrop->rubber->move(x,y);
-    myCrop->rubber->resize(w,h);
-    myCrop->rubber->nestedIgnore--;
+    myCrop->lockRubber(true);
+    myCrop->adjustRubber(x,y,w,h);
+    myCrop->lockRubber(false);
     myCrop->blockChanges(false);
 }
 
@@ -656,12 +719,10 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
  */
 void Ui_cropWindow::showEvent(QShowEvent *event)
 {
-    myCrop->rubber->rubberband->show(); // must be called first
-    myCrop->rubber->rubberband->setVisible(!(myCrop->rubber_is_hidden));
+    myCrop->initRubber();
     QDialog::showEvent(event);
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
-    myCrop->rubber->nestedIgnore=0;
 }
 
 //EOF

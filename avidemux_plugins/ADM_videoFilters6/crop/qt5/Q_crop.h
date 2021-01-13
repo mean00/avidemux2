@@ -8,7 +8,7 @@
 
 
 
-#if 1
+#if 0
     #define aprintf ADM_info
 #else
     #define aprintf(...) {}
@@ -20,6 +20,7 @@ class Ui_cropWindow : public QDialog
 
 protected: 
 	int lock;
+	int inputWidth,inputHeight;
 
 public:
 	flyCrop *myCrop;
