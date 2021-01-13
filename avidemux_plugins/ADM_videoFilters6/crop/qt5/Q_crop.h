@@ -8,7 +8,7 @@
 
 
 
-#if 1
+#if 0
     #define aprintf ADM_info
 #else
     #define aprintf(...) {}
@@ -16,34 +16,34 @@
 
 class Ui_cropWindow : public QDialog
 {
-	Q_OBJECT
-
-protected: 
-	int lock;
-
-public:
-	flyCrop *myCrop;
-	ADM_QCanvas *canvas;
-	Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *in);
-	~Ui_cropWindow();
-	Ui_cropDialog ui;
-
-public slots:
-	void gather(crop *param);
-
-private slots:
-	void sliderUpdate(int foo);
-	void widthChanged(int foo);
-	void heightChanged(int foo);
-	void autoCrop(bool f);
-	void reset(bool f);
-	void toggleRubber(int checkState);
-	void toggleKeepAspect(int checkState);
+    Q_OBJECT
 
 private:
-        void updateRightBottomSpinners(int foo, bool useHeightAsRef);
-        void resizeEvent(QResizeEvent *event);
-        void showEvent(QShowEvent *event);
+    int             lock;
+    int             inputWidth,inputHeight;
+    flyCrop         *myCrop;
+    ADM_QCanvas     *canvas;
+    Ui_cropDialog   ui;
+
+    void updateRightBottomSpinners(int foo, bool useHeightAsRef);
+    void resizeEvent(QResizeEvent *event);
+    void showEvent(QShowEvent *event);
+
+public:
+    Ui_cropWindow(QWidget* parent, crop *param, ADM_coreVideoFilter *in);
+    ~Ui_cropWindow();
+
+public slots:
+    void gather(crop *param);
+
+private slots:
+    void sliderUpdate(int foo);
+    void widthChanged(int foo);
+    void heightChanged(int foo);
+    void autoCrop(bool f);
+    void reset(bool f);
+    void toggleRubber(int checkState);
+    void toggleKeepAspect(int checkState);
 };
 
 #endif	// Q_crop_h
