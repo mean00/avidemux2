@@ -13,13 +13,13 @@ class Ui_asharpWindow : public QDialog
 
 protected: 
 	int lock;
-
-public:
+	Ui_asharpDialog ui;
 	flyASharp *myCrop;
 	ADM_QCanvas *canvas;
+
+public:
 	Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFilter *in);
 	~Ui_asharpWindow();
-	Ui_asharpDialog ui;
 
 public slots:
 	void gather(asharp *param);
