@@ -60,6 +60,9 @@
      <property name="maximum">
       <double>16.000000000000000</double>
      </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="4">
@@ -104,6 +107,9 @@
      <property name="maximum">
       <double>4.000000000000000</double>
      </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
     </widget>
    </item>
    <item row="0" column="0">
@@ -120,6 +126,9 @@
     <widget class="QDoubleSpinBox" name="doubleSpinBoxTreshold">
      <property name="maximum">
       <double>32.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
      </property>
     </widget>
    </item>
@@ -138,6 +147,12 @@
      <property name="maximum">
       <number>3200</number>
      </property>
+     <property name="singleStep">
+      <number>32</number>
+     </property>
+     <property name="pageStep">
+      <number>320</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -155,6 +170,12 @@
      <property name="maximum">
       <number>400</number>
      </property>
+     <property name="singleStep">
+      <number>4</number>
+     </property>
+     <property name="pageStep">
+      <number>40</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -164,6 +185,12 @@
     <widget class="QSlider" name="horizontalSliderStrength">
      <property name="maximum">
       <number>1600</number>
+     </property>
+     <property name="singleStep">
+      <number>16</number>
+     </property>
+     <property name="pageStep">
+      <number>160</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -192,6 +219,17 @@
    <header>ADM_toolkitQt.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>horizontalSliderTreshold</tabstop>
+  <tabstop>doubleSpinBoxTreshold</tabstop>
+  <tabstop>horizontalSliderStrength</tabstop>
+  <tabstop>doubleSpinBoxStrength</tabstop>
+  <tabstop>horizontalSliderBlock</tabstop>
+  <tabstop>doubleSpinBoxBlock</tabstop>
+  <tabstop>checkBox</tabstop>
+  <tabstop>horizontalSlider</tabstop>
+  <tabstop>graphicsView</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
