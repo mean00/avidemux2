@@ -65,7 +65,7 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     }
 
     ui.lockArCheckBox->setChecked(_param->rsz.lockAR);
-    ui.checkBoxRoundup->setChecked(_param->rsz.roundup);
+    ui.comboBoxRoundup->setCurrentIndex(_param->rsz.roundup);
 
     ui.spinBoxWidth->setKeyboardTracking(false);
     ui.spinBoxHeight->setKeyboardTracking(false);
@@ -80,11 +80,11 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     if(_param->rsz.lockAR)
         updateWidthHeightSpinners();
     enableControls(_param->rsz.lockAR);
-    roundupToggled(_param->rsz.roundup);
+    roundupChanged(_param->rsz.roundup);
 
     connect(ui.comboBoxSource, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
     connect(ui.comboBoxDestination, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
-    connect(ui.checkBoxRoundup, SIGNAL(toggled(bool)), this, SLOT(roundupToggled(bool)));
+    connect(ui.comboBoxRoundup, SIGNAL(currentIndexChanged(int)), this, SLOT(roundupChanged(int)));
     connect(ui.lockArCheckBox, SIGNAL(toggled(bool)), this, SLOT(lockArToggled(bool)));
     connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
 
@@ -99,7 +99,7 @@ void resizeWindow::gather(void)
     _param->rsz.sourceAR=ui.comboBoxSource->currentIndex();
     _param->rsz.targetAR=ui.comboBoxDestination->currentIndex();
     _param->rsz.lockAR=ui.lockArCheckBox->isChecked();
-    _param->rsz.roundup=ui.checkBoxRoundup->isChecked();
+    _param->rsz.roundup=ui.comboBoxRoundup->currentIndex();
 }
 
 void resizeWindow::sliderChanged(int value)
@@ -123,15 +123,21 @@ void resizeWindow::percentageSpinBoxChanged(int value)
 
     uint32_t iw = floor(width);
 
-    if (ui.checkBoxRoundup->isChecked())
+    int roundup_index = ui.comboBoxRoundup->currentIndex();
+
+    if (roundup_index > 0)
     {
-        iw = (iw + 7) & 0xfffff0;
+        int mask = (0xfffff0 << 1) >> roundup_index;
+        int increment = (16 >> roundup_index) - 1;
+        int rmod = (16 << 1) >> roundup_index;
+
+        iw = (iw + increment) & mask;
         if ((int)iw == ui.spinBoxWidth->value())
         {
             if (lastPercentage > value)
-                iw = iw >= 32 ? iw - 16 : 16;
+                iw = iw >= 32 ? iw - rmod : rmod;
             else
-                iw += 16;
+                iw += rmod;
         }
     }
 
@@ -251,12 +257,16 @@ void resizeWindow::roundUp(int xx, int yy)
     float erx = 0.;
     float ery = 0.;
 
-    if (ui.checkBoxRoundup->checkState())
+    int roundup_index = ui.comboBoxRoundup->currentIndex();
+
+    if (roundup_index > 0)
     {
         int ox = xx, oy = yy;
+        int mask = (0xfffff0 << 1) >> roundup_index;
+        int increment = (16 >> roundup_index) - 1;
 
-        xx = (xx + 7) & 0xfffff0;
-        yy = (yy + 7) & 0xfffff0;
+        xx = (xx + increment) & mask;
+        yy = (yy + increment) & mask;
 
         erx = xx - ox;
         erx = erx / xx;
@@ -278,19 +288,21 @@ void resizeWindow::lockArToggled(bool toggled)
     if (ui.lockArCheckBox->isChecked())
         widthSpinBoxChanged(0);
     else
-        ui.checkBoxRoundup->setChecked(false);
+        ui.comboBoxRoundup->setCurrentIndex(0);
 
     enableControls(toggled);
 }
 
-void resizeWindow::roundupToggled(bool toggled)
+void resizeWindow::roundupChanged(int index)
 {
-    if (toggled)
+    if (index > 0)
     {
         disconnectDimensionControls();
 
-        ui.spinBoxWidth->setSingleStep(16);
-        ui.spinBoxHeight->setSingleStep(16);
+	int step = (16 << 1) >> index;
+
+        ui.spinBoxWidth->setSingleStep(step);
+        ui.spinBoxHeight->setSingleStep(step);
         widthSpinBoxChanged(0);
 
         connectDimensionControls();
@@ -314,7 +326,7 @@ void resizeWindow::enableControls(bool lockArChecked)
     ENABLE(label_10)
     ENABLE(horizontalSlider)
     ENABLE(percentageSpinBox)
-    ENABLE(checkBoxRoundup)
+    ENABLE(comboBoxRoundup)
     ENABLE(labelErrorXY)
     ENABLE(comboBoxSource)
     ENABLE(comboBoxDestination)

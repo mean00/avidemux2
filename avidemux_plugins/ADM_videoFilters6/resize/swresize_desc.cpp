@@ -6,6 +6,6 @@ extern const ADM_paramList swresize_param[]={
  {"sourceAR",offsetof(swresize,sourceAR),"uint32_t",ADM_param_uint32_t},
  {"targetAR",offsetof(swresize,targetAR),"uint32_t",ADM_param_uint32_t},
  {"lockAR",offsetof(swresize,lockAR),"bool",ADM_param_bool},
- {"roundup",offsetof(swresize,roundup),"bool",ADM_param_bool},
+ {"roundup",offsetof(swresize,roundup),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };
