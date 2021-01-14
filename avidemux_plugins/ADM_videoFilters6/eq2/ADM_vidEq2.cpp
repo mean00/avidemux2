@@ -146,15 +146,15 @@ void ADMVideoEq2::setCoupledConf(CONFcouple *couples)
   if(CpuCaps::hasMMX())
   {
         affine_1d_MMX(&(settings.param[0]),image,image,PLANAR_Y);
-        affine_1d_MMX(&(settings.param[2]),image,image,PLANAR_U);
-        affine_1d_MMX(&(settings.param[1]),image,image,PLANAR_V);
+        affine_1d_MMX(&(settings.param[1]),image,image,PLANAR_U);
+        affine_1d_MMX(&(settings.param[2]),image,image,PLANAR_V);
    }
    else
 #endif
    {
         apply_lut(&(settings.param[0]),image,image,PLANAR_Y);
-        apply_lut(&(settings.param[2]),image,image,PLANAR_U);
-        apply_lut(&(settings.param[1]),image,image,PLANAR_V);
+        apply_lut(&(settings.param[1]),image,image,PLANAR_U);
+        apply_lut(&(settings.param[2]),image,image,PLANAR_V);
     }
 
   return 1;
