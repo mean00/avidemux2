@@ -2,6 +2,7 @@
 extern const ADM_paramList msharpen_param[]={
  {"mask",offsetof(msharpen,mask),"bool",ADM_param_bool},
  {"highq",offsetof(msharpen,highq),"bool",ADM_param_bool},
+ {"chroma",offsetof(msharpen,chroma),"bool",ADM_param_bool},
  {"threshold",offsetof(msharpen,threshold),"uint32_t",ADM_param_uint32_t},
  {"strength",offsetof(msharpen,strength),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
