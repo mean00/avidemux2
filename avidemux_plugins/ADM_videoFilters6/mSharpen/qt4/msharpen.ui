@@ -125,9 +125,6 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <layout class="QHBoxLayout" name="toolboxLayout"/>
-   </item>
    <item row="2" column="0">
     <widget class="QCheckBox" name="CheckBoxHQ">
      <property name="text">
@@ -138,7 +135,7 @@
    <item row="0" column="2">
     <widget class="QSpinBox" name="spinBoxStrength">
      <property name="minimum">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="maximum">
       <number>255</number>
@@ -148,10 +145,40 @@
    <item row="1" column="2">
     <widget class="QSpinBox" name="spinBoxThreshold">
      <property name="minimum">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="maximum">
       <number>255</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QSlider" name="horizontalSliderThreshold">
+     <property name="maximum">
+      <number>255</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QSlider" name="horizontalSliderStrength">
+     <property name="maximum">
+      <number>255</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="4">
+    <layout class="QHBoxLayout" name="toolboxLayout"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="checkBoxChroma">
+     <property name="text">
+      <string>Process chroma</string>
      </property>
     </widget>
    </item>
@@ -164,6 +191,17 @@
    <header>ADM_toolkitQt.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>horizontalSliderStrength</tabstop>
+  <tabstop>spinBoxStrength</tabstop>
+  <tabstop>horizontalSliderThreshold</tabstop>
+  <tabstop>spinBoxThreshold</tabstop>
+  <tabstop>CheckBoxHQ</tabstop>
+  <tabstop>checkBoxChroma</tabstop>
+  <tabstop>checkBoxMask</tabstop>
+  <tabstop>horizontalSlider</tabstop>
+  <tabstop>graphicsView</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

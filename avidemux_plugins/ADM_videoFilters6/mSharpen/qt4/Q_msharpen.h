@@ -24,6 +24,7 @@ public slots:
 private slots:
         void sliderUpdate(int foo);
         void valueChanged(int foo);
+	void valueChangedSlider(int foo);
 
 private:
         void resizeEvent(QResizeEvent *event);
