@@ -12,6 +12,7 @@ class flyASharp : public ADM_flyDialogYuv
    asharp     param;
   public:
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
+    void       blockChanges(bool block);
 
    uint8_t    download(void);
    uint8_t    upload(void);

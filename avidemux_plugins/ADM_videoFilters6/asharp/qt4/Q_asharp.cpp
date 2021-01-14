@@ -79,7 +79,6 @@ void Ui_asharpWindow::valueChanged2( int f )
 }
 void Ui_asharpWindow::valueChanged( double f )
 {
-  printf("Update \n");
   if(lock) return;
   lock++;
   myCrop->download();
@@ -110,27 +109,39 @@ void Ui_asharpWindow::showEvent(QShowEvent *event)
 void Ui_asharpWindow::valueChangedSlider(int f)
 {
 	Ui_asharpDialog *w=(Ui_asharpDialog *)myCrop->_cookie;
+	myCrop->blockChanges(true);
 	MYSPIN(Treshold)->setValue((double)MYSLIDER(Treshold)->value() / 100.0);
 	MYSPIN(Strength)->setValue((double)MYSLIDER(Strength)->value() / 100.0);
 	MYSPIN(Block)->setValue((double)MYSLIDER(Block)->value() / 100.0);
+	myCrop->blockChanges(false);
 	valueChanged(0);
 }
 
 //************************
+#define APPLY_TO_ALL(x) { \
+    w->horizontalSliderTreshold->x; w->doubleSpinBoxTreshold->x; \
+    w->horizontalSliderStrength->x; w->doubleSpinBoxStrength->x; \
+    w->horizontalSliderBlock->x; w->doubleSpinBoxBlock->x; \
+}
+void flyASharp::blockChanges(bool block)
+{
+    Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
+    APPLY_TO_ALL(blockSignals(block));
+}
 uint8_t flyASharp::upload(void)
 {
       Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
-
+      blockChanges(true);
         MYSPIN(Treshold)->setValue(param.t);
         MYSPIN(Strength)->setValue(param.d);
         MYSPIN(Block)->setValue(param.b);
 	MYSLIDER(Treshold)->setValue(floor(param.t * 100.0));
 	MYSLIDER(Strength)->setValue(floor(param.d * 100.0));
 	MYSLIDER(Block)->setValue(floor(param.b * 100.0));
-        
-        //w->bf->w->checkBox->isChecked();
-        w->checkBox->setChecked(param.bf);
 
+        w->checkBox->setChecked(param.bf);
+        blockChanges(false);
+        sameImage();
         return 1;
 }
 uint8_t flyASharp::download(void)
@@ -139,13 +150,14 @@ uint8_t flyASharp::download(void)
        param.t= MYSPIN(Treshold)->value();
        param.d= MYSPIN(Strength)->value();
        param.b= MYSPIN(Block)->value();
+       param.bf=w->checkBox->isChecked();
+
+       blockChanges(true);
 	MYSLIDER(Treshold)->setValue(floor(MYSPIN(Treshold)->value() * 100.0));
 	MYSLIDER(Strength)->setValue(floor(MYSPIN(Strength)->value() * 100.0));
 	MYSLIDER(Block)->setValue(floor(MYSPIN(Block)->value() * 100.0));
-
-       //w->spinBoxBottom->setValue(bottom);
-       param.bf=w->checkBox->isChecked();
-       return true;
+       blockChanges(false);
+       return 1;
 }
 
 /**
