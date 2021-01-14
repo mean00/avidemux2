@@ -67,8 +67,8 @@ uint8_t    flyEq2::processYuv(ADMImage* in, ADMImage *out)
 	        }
 #endif	
 	        lutMe(&(mySettings.param[0]),in,out,PLANAR_Y);
-            lutMe(&(mySettings.param[2]),in,out,PLANAR_U);
-            lutMe(&(mySettings.param[1]),in,out,PLANAR_V);
+            lutMe(&(mySettings.param[1]),in,out,PLANAR_U);
+            lutMe(&(mySettings.param[2]),in,out,PLANAR_V);
 	        
 	        	
 
