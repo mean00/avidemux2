@@ -20,6 +20,7 @@
 
 #include "Q_asharp.h"
 #include "ADM_toolkitQt.h"
+#include "math.h"
 
 //
 //	Video is in YV12 Colorspace
@@ -45,7 +46,9 @@
 
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChanged(double))); 
+#define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChanged(double))); \
+		   connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSlider(int)));
+
           SPINNER(Treshold);
           SPINNER(Strength);
           SPINNER(Block);
@@ -102,6 +105,17 @@ void Ui_asharpWindow::showEvent(QShowEvent *event)
 }
 
 #define MYSPIN(x) w->doubleSpinBox##x
+#define MYSLIDER(x) w->horizontalSlider##x
+
+void Ui_asharpWindow::valueChangedSlider(int f)
+{
+	Ui_asharpDialog *w=(Ui_asharpDialog *)myCrop->_cookie;
+	MYSPIN(Treshold)->setValue((double)MYSLIDER(Treshold)->value() / 100.0);
+	MYSPIN(Strength)->setValue((double)MYSLIDER(Strength)->value() / 100.0);
+	MYSPIN(Block)->setValue((double)MYSLIDER(Block)->value() / 100.0);
+	valueChanged(0);
+}
+
 //************************
 uint8_t flyASharp::upload(void)
 {
@@ -110,6 +124,9 @@ uint8_t flyASharp::upload(void)
         MYSPIN(Treshold)->setValue(param.t);
         MYSPIN(Strength)->setValue(param.d);
         MYSPIN(Block)->setValue(param.b);
+	MYSLIDER(Treshold)->setValue(floor(param.t * 100.0));
+	MYSLIDER(Strength)->setValue(floor(param.d * 100.0));
+	MYSLIDER(Block)->setValue(floor(param.b * 100.0));
         
         //w->bf->w->checkBox->isChecked();
         w->checkBox->setChecked(param.bf);
@@ -122,7 +139,10 @@ uint8_t flyASharp::download(void)
        param.t= MYSPIN(Treshold)->value();
        param.d= MYSPIN(Strength)->value();
        param.b= MYSPIN(Block)->value();
-       
+	MYSLIDER(Treshold)->setValue(floor(MYSPIN(Treshold)->value() * 100.0));
+	MYSLIDER(Strength)->setValue(floor(MYSPIN(Strength)->value() * 100.0));
+	MYSLIDER(Block)->setValue(floor(MYSPIN(Block)->value() * 100.0));
+
        //w->spinBoxBottom->setValue(bottom);
        param.bf=w->checkBox->isChecked();
        return true;
