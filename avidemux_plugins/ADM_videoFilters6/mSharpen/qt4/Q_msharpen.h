@@ -8,15 +8,14 @@ class Ui_msharpenWindow : public QDialog
 {
         Q_OBJECT
 
-protected: 
-        int lock;
-
+protected:
+        int                 lock;
+        flyMSharpen         *flymsharpen;
+        ADM_QCanvas         *canvas;
+        Ui_msharpenDialog   ui;
 public:
-        flyMSharpen *flymsharpen;
-        ADM_QCanvas *canvas;
         Ui_msharpenWindow(QWidget *parent, msharpen *param, ADM_coreVideoFilter *in);
         ~Ui_msharpenWindow();
-        Ui_msharpenDialog ui;
 
 public slots:
         void gather(msharpen *param);
