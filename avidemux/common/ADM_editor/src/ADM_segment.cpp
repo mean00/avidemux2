@@ -706,8 +706,14 @@ bool ADM_EditorSegment::truncateVideo(uint64_t from)
 
     _SEGMENT *first=getSegment(startSeg);
     _VIDEOS *vid=getRefVideo(first->_reference);
-    // shorten the start segment
-    first->_durationUs=startOffset+vid->timeIncrementInUs;
+    if(startSeg && vid->firstFramePts >= startOffset)
+    { // "from" matches the first frame of the ref video
+        first->_durationUs=0; // kill this segment
+        ADM_info("Removing the whole segment.\n");
+    }else
+    { // shorten the start segment, the frame at "from" is dropped
+        first->_durationUs=startOffset; // +vid->timeIncrementInUs;
+    }
     // remove following segments
     int n=segments.size();
     for(int i=startSeg+1;i<n;i++)
