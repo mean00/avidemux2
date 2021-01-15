@@ -109,21 +109,20 @@ uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
  */
 uint8_t flyMSharpen::upload()
 {
-#define MYSPIN(x) w->x
-#define MYTOGGLE(x) w->x
-#define MYSLIDER(x) w->horizontalSlider##x
+#define MYSPIN(x,y) w->spinBox##x->setValue(param.y); w->horizontalSlider##x->setValue(param.y);
+#define MYTOGGLE(x,y) w->checkBox##x->setChecked(param.y);
     Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
-    
-    
-    MYSPIN(spinBoxThreshold)->setValue(param.threshold);
-    MYSPIN(spinBoxStrength)->setValue(param.strength);
-    MYSLIDER(Threshold)->setValue(param.threshold);
-    MYSLIDER(Strength)->setValue(param.strength);
-    MYTOGGLE(CheckBoxHQ)->setChecked(param.highq);
-    MYTOGGLE(checkBoxMask)->setChecked(param.mask);
-    MYTOGGLE(checkBoxChroma)->setChecked(param.chroma);
-    invstrength=255-param.strength;	
-    printf("Upload\n");
+    blockChanges(true);
+
+    MYSPIN(Strength,strength)
+    MYSPIN(Threshold,threshold)
+    MYTOGGLE(HQ,highq)
+    MYTOGGLE(Mask,mask)
+    MYTOGGLE(Chroma,chroma)
+#undef MYSPIN
+#undef MYTOGGLE
+    blockChanges(false);
+    invstrength = (param.strength < 255)? 255-param.strength : 0;
     return 1;
 }
 /**
@@ -131,25 +130,33 @@ uint8_t flyMSharpen::upload()
 */
 uint8_t flyMSharpen::download(void)
 {
-    
-#define MYSPIN(x) w->x
-#define MYTOGGLE(x) w->x
-#define MYSLIDER(x) w->horizontalSlider##x
+#define MYSPIN(x,y) param.y=w->spinBox##x->value(); w->horizontalSlider##x->setValue(param.y);
+#define MYTOGGLE(x,y) param.y=w->checkBox##x->isChecked();
     Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
-    
-    
-    param.threshold=MYSPIN(spinBoxThreshold)->value();
-    param.strength=MYSPIN(spinBoxStrength)->value();
-    MYSLIDER(Threshold)->setValue(param.threshold);
-    MYSLIDER(Strength)->setValue(param.strength);
-    param.highq= MYTOGGLE(CheckBoxHQ)->isChecked();
-    param.mask= MYTOGGLE(checkBoxMask)->isChecked();
-    param.chroma= MYTOGGLE(checkBoxChroma)->isChecked();
-    invstrength=255-param.strength;	
-    printf("Download\n");
+    blockChanges(true);
+
+    MYSPIN(Strength,strength)
+    MYSPIN(Threshold,threshold)
+    MYTOGGLE(HQ,highq)
+    MYTOGGLE(Mask,mask)
+    MYTOGGLE(Chroma,chroma)
+
+    blockChanges(false);
+    invstrength = (param.strength < 255)? 255-param.strength : 0;
     return true;
 }
+/**
+    \fn blockChanges
+*/
+#define APPLY_TO_ALL(x) w->horizontalSliderThreshold->x; w->horizontalSliderStrength->x; \
+                        w->spinBoxThreshold->x; w->spinBoxStrength->x; \
+                        w->checkBoxHQ->x; w->checkBoxChroma->x; w->checkBoxMask->x;
+void flyMSharpen::blockChanges(bool block)
+{
+    Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
 
+    APPLY_TO_ALL(blockSignals(block))
+}
 /**
       \fn     DIA_getMpDelogo
       \brief  Handle delogo dialog

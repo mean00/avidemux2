@@ -126,7 +126,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QCheckBox" name="CheckBoxHQ">
+    <widget class="QCheckBox" name="checkBoxHQ">
      <property name="text">
       <string>HighQuality</string>
      </property>
@@ -196,7 +196,7 @@
   <tabstop>spinBoxStrength</tabstop>
   <tabstop>horizontalSliderThreshold</tabstop>
   <tabstop>spinBoxThreshold</tabstop>
-  <tabstop>CheckBoxHQ</tabstop>
+  <tabstop>checkBoxHQ</tabstop>
   <tabstop>checkBoxChroma</tabstop>
   <tabstop>checkBoxMask</tabstop>
   <tabstop>horizontalSlider</tabstop>

@@ -20,15 +20,15 @@
 class flyMSharpen : public ADM_flyDialogYuv
 {
 protected:
-public:
-   msharpen    param;
-   bool        preview;
    uint32_t    invstrength;
    ADMImage    *blur,*work;
 public:
+   msharpen    param;
+
    uint8_t     processYuv(ADMImage* in, ADMImage *out);
    uint8_t     download(void);
    uint8_t     upload();
+   void        blockChanges(bool block);
                flyMSharpen (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider);
                 

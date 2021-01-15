@@ -47,12 +47,12 @@
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));\
 		   connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSlider(int)));
-#define TOGGLER(x) connect( ui.x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
-        
-        TOGGLER(CheckBoxHQ);
-        TOGGLER(checkBoxMask);
-        TOGGLER(checkBoxChroma);
-        
+#define TOGGLER(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
+
+        TOGGLER(HQ)
+        TOGGLER(Mask)
+        TOGGLER(Chroma)
+
         SPINNER(Threshold);
         SPINNER(Strength);
 
@@ -77,7 +77,6 @@ Ui_msharpenWindow::~Ui_msharpenWindow()
 }
 void Ui_msharpenWindow::valueChanged( int f )
 {
-  printf("Update \n");
   if(lock) return;
   lock++;
   flymsharpen->download();
@@ -105,8 +104,12 @@ void Ui_msharpenWindow::showEvent(QShowEvent *event)
 #define SYNCSPIN(x) ui.spinBox##x->setValue(ui.horizontalSlider##x->value());
 void Ui_msharpenWindow::valueChangedSlider(int f)
 {
+	flymsharpen->blockChanges(true);
+
 	SYNCSPIN(Threshold);
 	SYNCSPIN(Strength);
+
+	flymsharpen->blockChanges(false);
 	valueChanged(0);
 }
 //____________________________________
