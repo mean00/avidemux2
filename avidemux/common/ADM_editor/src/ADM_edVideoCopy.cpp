@@ -476,6 +476,10 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
             ADM_warning("Cannot get H.264 frame type and Picture Order Count Least Significant Bits value.\n");
             BOWOUT
         }
+        /* Even if the frame is an IDR, we should check for SPS mismatch in case
+        adjacent segments reference different videos. If the result is OK, we
+        will skip POC check. */
+        bool gotIdr = (img.flags & AVI_KEY_FRAME) && (img.flags & AVI_IDR_FRAME);
 
         /* Now we need to calculate the minimum POC among the early B-frames
         following the first frame of the segment. While not relevant for
@@ -701,6 +705,12 @@ ADM_cutPointType ADM_Composer::checkSegmentStartsOnIntra(uint32_t segNo)
                     }
 #undef MATCH
                 }
+            }
+            if(gotIdr) // If the first frame after the cut is IDR, we can ignore POC.
+            {
+                ADM_info("IDR verified, ref videos are different but probably compatible.\n");
+                cut=ADM_EDITOR_CUT_POINT_KEY;
+                BOWOUT
             }
         }
 
