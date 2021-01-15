@@ -131,6 +131,10 @@ void flyASharp::blockChanges(bool block)
     Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
     APPLY_TO_ALL(blockSignals(block));
 }
+#define ENABLE_NUM_INPUT(x,b) { \
+    w->doubleSpinBox##x->setEnabled(b); \
+    w->horizontalSlider##x->setEnabled(b); \
+}
 uint8_t flyASharp::upload(void)
 {
     Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
@@ -140,6 +144,7 @@ uint8_t flyASharp::upload(void)
     MYSLIDER(Treshold)->setValue(floor(param.t * 100.0));
 
     MYCHKBOX(Strength)->setChecked(param.d > 0);
+    ENABLE_NUM_INPUT(Strength, (param.d > 0));
     if (param.d > 0)  // if not enabled, keep numeric input values for user's convenience
     {
         MYSPIN(Strength)->setValue(param.d);
@@ -147,6 +152,7 @@ uint8_t flyASharp::upload(void)
     }
 
     MYCHKBOX(Block)->setChecked(param.b >= 0);
+    ENABLE_NUM_INPUT(Block, (param.b >= 0));
     if (param.b >= 0)  // if not enabled, keep numeric input values for user's convenience
     {
         MYSPIN(Block)->setValue(param.b);
@@ -174,6 +180,9 @@ uint8_t flyASharp::download(void)
     MYSLIDER(Treshold)->setValue(floor(MYSPIN(Treshold)->value() * 100.0));
     MYSLIDER(Strength)->setValue(floor(MYSPIN(Strength)->value() * 100.0));
     MYSLIDER(Block)->setValue(floor(MYSPIN(Block)->value() * 100.0));
+
+    ENABLE_NUM_INPUT(Strength, (param.d > 0));
+    ENABLE_NUM_INPUT(Block, (param.b >= 0));
 
     blockChanges(false);
     return 1;
