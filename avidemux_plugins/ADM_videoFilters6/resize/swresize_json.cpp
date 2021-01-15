@@ -11,7 +11,7 @@ json.addUint32("algo",key->algo);
 json.addUint32("sourceAR",key->sourceAR);
 json.addUint32("targetAR",key->targetAR);
 json.addBool("lockAR",key->lockAR);
-json.addBool("roundup",key->roundup);
+json.addUint32("roundup",key->roundup);
 return json.dumpToFile(file);
 };
 bool  swresize_jdeserialize(const char *file, const ADM_paramList *tmpl,swresize *key){

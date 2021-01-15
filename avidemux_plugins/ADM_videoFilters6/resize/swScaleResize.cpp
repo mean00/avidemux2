@@ -100,7 +100,7 @@ UNUSED_ARG(setup);
         configuration.sourceAR=0;
         configuration.targetAR=0;
         configuration.lockAR=true;
-        configuration.roundup=false;
+        configuration.roundup=0;
     }
     resizer=NULL;
 	reset(configuration.width,configuration.height,configuration.algo);

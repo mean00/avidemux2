@@ -250,11 +250,51 @@
        </layout>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBoxRoundup">
-        <property name="text">
-         <string>Round to the Nearest Multiple of 16</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QComboBox" name="comboBoxRoundup">
+          <property name="minimumSize">
+           <size>
+            <width>256</width>
+            <height>0</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>No rounding</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Round to the Nearest Multiple of 16</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Round to the Nearest Multiple of 8</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Round to the Nearest Multiple of 4</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
       <item>
        <spacer>
@@ -586,7 +626,7 @@
   <tabstop>comboBoxDestination</tabstop>
   <tabstop>spinBoxWidth</tabstop>
   <tabstop>spinBoxHeight</tabstop>
-  <tabstop>checkBoxRoundup</tabstop>
+  <tabstop>comboBoxRoundup</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>percentageSpinBox</tabstop>
   <tabstop>comboBoxAlgo</tabstop>
