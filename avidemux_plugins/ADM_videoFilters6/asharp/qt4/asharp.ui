@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>554</width>
-    <height>426</height>
+    <width>645</width>
+    <height>416</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -57,6 +57,9 @@
    </item>
    <item row="1" column="3">
     <widget class="QDoubleSpinBox" name="doubleSpinBoxStrength">
+     <property name="minimum">
+      <double>0.010000000000000</double>
+     </property>
      <property name="maximum">
       <double>16.000000000000000</double>
      </property>
@@ -66,7 +69,7 @@
     </widget>
    </item>
    <item row="3" column="0" colspan="4">
-    <widget class="QCheckBox" name="checkBox">
+    <widget class="QCheckBox" name="checkBoxHQBF">
      <property name="text">
       <string>High quality block filtering</string>
      </property>
@@ -132,13 +135,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Adaptive strength</string>
-     </property>
-    </widget>
-   </item>
    <item row="4" column="0" colspan="6">
     <layout class="QHBoxLayout" name="toolboxLayout"/>
    </item>
@@ -155,13 +151,6 @@
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Block adaptive</string>
      </property>
     </widget>
    </item>
@@ -183,6 +172,9 @@
    </item>
    <item row="1" column="1">
     <widget class="QSlider" name="horizontalSliderStrength">
+     <property name="minimum">
+      <number>1</number>
+     </property>
      <property name="maximum">
       <number>1600</number>
      </property>
@@ -210,6 +202,20 @@
      </property>
     </spacer>
    </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="checkBoxStrength">
+     <property name="text">
+      <string>Adaptive strength</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="checkBoxBlock">
+     <property name="text">
+      <string>Block adaptive</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -222,11 +228,13 @@
  <tabstops>
   <tabstop>horizontalSliderTreshold</tabstop>
   <tabstop>doubleSpinBoxTreshold</tabstop>
+  <tabstop>checkBoxStrength</tabstop>
   <tabstop>horizontalSliderStrength</tabstop>
   <tabstop>doubleSpinBoxStrength</tabstop>
+  <tabstop>checkBoxBlock</tabstop>
   <tabstop>horizontalSliderBlock</tabstop>
   <tabstop>doubleSpinBoxBlock</tabstop>
-  <tabstop>checkBox</tabstop>
+  <tabstop>checkBoxHQBF</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>graphicsView</tabstop>
  </tabstops>

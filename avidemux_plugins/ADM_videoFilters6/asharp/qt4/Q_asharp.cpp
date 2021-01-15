@@ -51,7 +51,7 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
     SPINNER(Strength)
     SPINNER(Block)
 
-    connect(ui.checkBox,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int)));
+    connect(ui.checkBoxHQBF,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int)));
     setModal(true);
 }
 void Ui_asharpWindow::sliderUpdate(int foo)
@@ -140,7 +140,7 @@ uint8_t flyASharp::upload(void)
     MYSLIDER(Strength)->setValue(floor(param.d * 100.0));
     MYSLIDER(Block)->setValue(floor(param.b * 100.0));
 
-    w->checkBox->setChecked(param.bf);
+    w->checkBoxHQBF->setChecked(param.bf);
     blockChanges(false);
     sameImage();
     return 1;
@@ -151,7 +151,7 @@ uint8_t flyASharp::download(void)
     param.t= MYSPIN(Treshold)->value();
     param.d= MYSPIN(Strength)->value();
     param.b= MYSPIN(Block)->value();
-    param.bf=w->checkBox->isChecked();
+    param.bf=w->checkBoxHQBF->isChecked();
 
     blockChanges(true);
 
