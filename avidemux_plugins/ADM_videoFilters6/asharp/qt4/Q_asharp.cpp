@@ -51,7 +51,10 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
     SPINNER(Strength)
     SPINNER(Block)
 
-    connect(ui.checkBoxHQBF,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int)));
+#define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int)));
+    CHKBOX(Strength);
+    CHKBOX(Block);
+    CHKBOX(HQBF);
     setModal(true);
 }
 void Ui_asharpWindow::sliderUpdate(int foo)
@@ -102,6 +105,7 @@ void Ui_asharpWindow::showEvent(QShowEvent *event)
 
 #define MYSPIN(x) w->doubleSpinBox##x
 #define MYSLIDER(x) w->horizontalSlider##x
+#define MYCHKBOX(x) w->checkBox##x
 
 void Ui_asharpWindow::valueChangedSlider(int f)
 {
@@ -133,14 +137,23 @@ uint8_t flyASharp::upload(void)
     blockChanges(true);
 
     MYSPIN(Treshold)->setValue(param.t);
-    MYSPIN(Strength)->setValue(param.d);
-    MYSPIN(Block)->setValue(param.b);
-
     MYSLIDER(Treshold)->setValue(floor(param.t * 100.0));
-    MYSLIDER(Strength)->setValue(floor(param.d * 100.0));
-    MYSLIDER(Block)->setValue(floor(param.b * 100.0));
 
-    w->checkBoxHQBF->setChecked(param.bf);
+    MYCHKBOX(Strength)->setChecked(param.d > 0);
+    if (param.d > 0)  // if not enabled, keep numeric input values for user's convenience
+    {
+        MYSPIN(Strength)->setValue(param.d);
+        MYSLIDER(Strength)->setValue(floor(param.d * 100.0));
+    }
+
+    MYCHKBOX(Block)->setChecked(param.b >= 0);
+    if (param.b >= 0)  // if not enabled, keep numeric input values for user's convenience
+    {
+        MYSPIN(Block)->setValue(param.b);
+        MYSLIDER(Block)->setValue(floor(param.b * 100.0));
+    }
+
+    MYCHKBOX(HQBF)->setChecked(param.bf);
     blockChanges(false);
     sameImage();
     return 1;
@@ -151,7 +164,10 @@ uint8_t flyASharp::download(void)
     param.t= MYSPIN(Treshold)->value();
     param.d= MYSPIN(Strength)->value();
     param.b= MYSPIN(Block)->value();
-    param.bf=w->checkBoxHQBF->isChecked();
+    param.bf=MYCHKBOX(HQBF)->isChecked();
+
+    if (!(MYCHKBOX(Strength)->isChecked())) param.d=0;
+    if (!(MYCHKBOX(Block)->isChecked())) param.b=-1;
 
     blockChanges(true);
 
