@@ -7,6 +7,7 @@ bool  msharpen_jserialize(const char *file, const msharpen *key){
 admJson json;
 json.addBool("mask",key->mask);
 json.addBool("highq",key->highq);
+json.addBool("chroma",key->chroma);
 json.addUint32("threshold",key->threshold);
 json.addUint32("strength",key->strength);
 return json.dumpToFile(file);
