@@ -9,6 +9,8 @@ json.addFloat("t",key->t);
 json.addFloat("d",key->d);
 json.addFloat("b",key->b);
 json.addBool("bf",key->bf);
+json.addFloat("d_shadow",key->d_shadow);
+json.addFloat("b_shadow",key->b_shadow);
 return json.dumpToFile(file);
 };
 bool  asharp_jdeserialize(const char *file, const ADM_paramList *tmpl,asharp *key){

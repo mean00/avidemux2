@@ -82,6 +82,8 @@ ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilte
             _param.d=4;
             _param.b=-1;
             _param.bf=false;
+            _param.d_shadow=4;
+            _param.b_shadow=0;
         }
         lineptr=new uint8_t[info.width];
         update();

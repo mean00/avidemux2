@@ -145,19 +145,13 @@ uint8_t flyASharp::upload(void)
 
     MYCHKBOX(Strength)->setChecked(param.d > 0);
     ENABLE_NUM_INPUT(Strength, (param.d > 0));
-    if (param.d > 0)  // if not enabled, keep numeric input values for user's convenience
-    {
-        MYSPIN(Strength)->setValue(param.d);
-        MYSLIDER(Strength)->setValue(floor(param.d * 100.0));
-    }
+    MYSPIN(Strength)->setValue(param.d_shadow);
+    MYSLIDER(Strength)->setValue(floor(param.d_shadow * 100.0));
 
     MYCHKBOX(Block)->setChecked(param.b >= 0);
     ENABLE_NUM_INPUT(Block, (param.b >= 0));
-    if (param.b >= 0)  // if not enabled, keep numeric input values for user's convenience
-    {
-        MYSPIN(Block)->setValue(param.b);
-        MYSLIDER(Block)->setValue(floor(param.b * 100.0));
-    }
+    MYSPIN(Block)->setValue(param.b_shadow);
+    MYSLIDER(Block)->setValue(floor(param.b_shadow * 100.0));
 
     MYCHKBOX(HQBF)->setChecked(param.bf);
     blockChanges(false);
@@ -168,12 +162,23 @@ uint8_t flyASharp::download(void)
 {
     Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
     param.t= MYSPIN(Treshold)->value();
-    param.d= MYSPIN(Strength)->value();
-    param.b= MYSPIN(Block)->value();
+    param.d_shadow= MYSPIN(Strength)->value();
+    param.b_shadow= MYSPIN(Block)->value();
     param.bf=MYCHKBOX(HQBF)->isChecked();
 
-    if (!(MYCHKBOX(Strength)->isChecked())) param.d=0;
-    if (!(MYCHKBOX(Block)->isChecked())) param.b=-1;
+    if (MYCHKBOX(Strength)->isChecked())
+    {
+        param.d=param.d_shadow;
+    } else {
+        param.d=0;
+    }
+
+    if (MYCHKBOX(Block)->isChecked())
+    {
+        param.b=param.b_shadow;
+    } else {
+        param.b=-1;
+    }
 
     blockChanges(true);
 
