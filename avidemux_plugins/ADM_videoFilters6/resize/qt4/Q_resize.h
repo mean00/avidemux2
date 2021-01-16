@@ -41,7 +41,7 @@ public slots:
     void widthSpinBoxChanged(int value);
     void heightSpinBoxChanged(int value);
     void lockArToggled(bool toggled);
-    void roundupToggled(bool toggled);
+    void roundupChanged(int index);
     void aspectRatioChanged(int index);
 };
 #endif // Q_resizing_h

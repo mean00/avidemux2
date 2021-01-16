@@ -1,62 +1,90 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>resizeDialog</class>
- <widget class="QDialog" name="resizeDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="resizeDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>350</width>
-    <height>342</height>
+    <width>522</width>
+    <height>405</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Resize</string>
   </property>
-  <layout class="QVBoxLayout" >
-   <property name="margin" >
-    <number>9</number>
-   </property>
-   <property name="spacing" >
+  <layout class="QVBoxLayout">
+   <property name="spacing">
     <number>6</number>
    </property>
+   <property name="leftMargin">
+    <number>9</number>
+   </property>
+   <property name="topMargin">
+    <number>9</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
+   </property>
+   <property name="bottomMargin">
+    <number>9</number>
+   </property>
    <item>
-    <widget class="QGroupBox" name="groupBox_2" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
       <string>Aspect Ratio</string>
      </property>
-     <layout class="QVBoxLayout" >
-      <property name="margin" >
-       <number>9</number>
-      </property>
-      <property name="spacing" >
+     <layout class="QVBoxLayout">
+      <property name="spacing">
        <number>6</number>
       </property>
+      <property name="leftMargin">
+       <number>9</number>
+      </property>
+      <property name="topMargin">
+       <number>9</number>
+      </property>
+      <property name="rightMargin">
+       <number>9</number>
+      </property>
+      <property name="bottomMargin">
+       <number>9</number>
+      </property>
       <item>
-       <widget class="QCheckBox" name="lockArCheckBox" >
-        <property name="text" >
+       <widget class="QCheckBox" name="lockArCheckBox">
+        <property name="text">
          <string>Lock Aspect Ratio</string>
         </property>
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" >
-        <property name="margin" >
-         <number>0</number>
-        </property>
-        <property name="spacing" >
+       <layout class="QHBoxLayout">
+        <property name="spacing">
          <number>6</number>
         </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
-         <widget class="QLabel" name="label_4" >
-          <property name="text" >
+         <widget class="QLabel" name="label_4">
+          <property name="text">
            <string>Source PAR:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBoxSource" >
+         <widget class="QComboBox" name="comboBoxSource">
           <item>
-           <property name="text" >
+           <property name="text">
             <string>1:1 (square pixels)</string>
            </property>
           </item>
@@ -64,13 +92,13 @@
         </item>
         <item>
          <spacer>
-          <property name="orientation" >
+          <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeType" >
+          <property name="sizeType">
            <enum>QSizePolicy::Fixed</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0">
            <size>
             <width>30</width>
             <height>20</height>
@@ -79,16 +107,16 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="label_3" >
-          <property name="text" >
+         <widget class="QLabel" name="label_3">
+          <property name="text">
            <string>Destination PAR:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBoxDestination" >
+         <widget class="QComboBox" name="comboBoxDestination">
           <item>
-           <property name="text" >
+           <property name="text">
             <string>1:1 (square pixels)</string>
            </property>
           </item>
@@ -96,10 +124,10 @@
         </item>
         <item>
          <spacer>
-          <property name="orientation" >
+          <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0">
            <size>
             <width>40</width>
             <height>20</height>
@@ -113,54 +141,72 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string>Resize Dimensions</string>
      </property>
-     <layout class="QVBoxLayout" >
-      <property name="margin" >
-       <number>9</number>
-      </property>
-      <property name="spacing" >
+     <layout class="QVBoxLayout">
+      <property name="spacing">
        <number>6</number>
       </property>
+      <property name="leftMargin">
+       <number>9</number>
+      </property>
+      <property name="topMargin">
+       <number>9</number>
+      </property>
+      <property name="rightMargin">
+       <number>9</number>
+      </property>
+      <property name="bottomMargin">
+       <number>9</number>
+      </property>
       <item>
-       <layout class="QHBoxLayout" >
-        <property name="margin" >
-         <number>0</number>
-        </property>
-        <property name="spacing" >
+       <layout class="QHBoxLayout">
+        <property name="spacing">
          <number>6</number>
         </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
-         <widget class="QLabel" name="label" >
-          <property name="text" >
+         <widget class="QLabel" name="label">
+          <property name="text">
            <string>Width:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="spinBoxWidth" >
-          <property name="maximum" >
-           <number>4096</number>
-          </property>
-          <property name="minimum" >
+         <widget class="QSpinBox" name="spinBoxWidth">
+          <property name="minimum">
            <number>16</number>
           </property>
-          <property name="singleStep" >
+          <property name="maximum">
+           <number>4096</number>
+          </property>
+          <property name="singleStep">
            <number>2</number>
           </property>
          </widget>
         </item>
         <item>
          <spacer>
-          <property name="orientation" >
+          <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeType" >
+          <property name="sizeType">
            <enum>QSizePolicy::Fixed</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0">
            <size>
             <width>30</width>
             <height>20</height>
@@ -169,31 +215,31 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="label_2" >
-          <property name="text" >
+         <widget class="QLabel" name="label_2">
+          <property name="text">
            <string>Height:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="spinBoxHeight" >
-          <property name="maximum" >
-           <number>2160</number>
-          </property>
-          <property name="minimum" >
+         <widget class="QSpinBox" name="spinBoxHeight">
+          <property name="minimum">
            <number>16</number>
           </property>
-          <property name="singleStep" >
+          <property name="maximum">
+           <number>2160</number>
+          </property>
+          <property name="singleStep">
            <number>2</number>
           </property>
          </widget>
         </item>
         <item>
          <spacer>
-          <property name="orientation" >
+          <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0">
            <size>
             <width>40</width>
             <height>20</height>
@@ -204,21 +250,61 @@
        </layout>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBoxRoundup" >
-        <property name="text" >
-         <string>Round to the Nearest Multiple of 16</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QComboBox" name="comboBoxRoundup">
+          <property name="minimumSize">
+           <size>
+            <width>256</width>
+            <height>0</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>No rounding</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Round to the Nearest Multiple of 16</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Round to the Nearest Multiple of 8</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Round to the Nearest Multiple of 4</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
       <item>
        <spacer>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeType" >
+        <property name="sizeType">
          <enum>QSizePolicy::Fixed</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>312</width>
           <height>4</height>
@@ -227,50 +313,86 @@
        </spacer>
       </item>
       <item>
-       <layout class="QVBoxLayout" >
-        <property name="margin" >
-         <number>0</number>
-        </property>
-        <property name="spacing" >
+       <layout class="QVBoxLayout">
+        <property name="spacing">
          <number>6</number>
         </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
-         <layout class="QHBoxLayout" >
-          <property name="margin" >
-           <number>0</number>
-          </property>
-          <property name="spacing" >
+         <layout class="QHBoxLayout">
+          <property name="spacing">
            <number>12</number>
           </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
-           <layout class="QVBoxLayout" >
-            <property name="margin" >
-             <number>0</number>
-            </property>
-            <property name="spacing" >
+           <layout class="QVBoxLayout">
+            <property name="spacing">
              <number>6</number>
             </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item>
-             <layout class="QHBoxLayout" >
-              <property name="margin" >
-               <number>0</number>
-              </property>
-              <property name="spacing" >
+             <layout class="QHBoxLayout">
+              <property name="spacing">
                <number>6</number>
               </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
               <item>
-               <widget class="QLabel" name="label_8" >
-                <property name="text" >
+               <widget class="QLabel" name="label_8">
+                <property name="text">
                  <string>1%</string>
                 </property>
                </widget>
               </item>
               <item>
                <spacer>
-                <property name="orientation" >
+                <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
-                <property name="sizeHint" >
+                <property name="sizeHint" stdset="0">
                  <size>
                   <width>40</width>
                   <height>20</height>
@@ -279,18 +401,18 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="label_5" >
-                <property name="text" >
+               <widget class="QLabel" name="label_5">
+                <property name="text">
                  <string>Percent</string>
                 </property>
                </widget>
               </item>
               <item>
                <spacer>
-                <property name="orientation" >
+                <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
-                <property name="sizeHint" >
+                <property name="sizeHint" stdset="0">
                  <size>
                   <width>40</width>
                   <height>20</height>
@@ -299,8 +421,8 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="label_9" >
-                <property name="text" >
+               <widget class="QLabel" name="label_9">
+                <property name="text">
                  <string>200%</string>
                 </property>
                </widget>
@@ -308,17 +430,17 @@
              </layout>
             </item>
             <item>
-             <widget class="QSlider" name="horizontalSlider" >
-              <property name="minimum" >
+             <widget class="QSlider" name="horizontalSlider">
+              <property name="minimum">
                <number>1</number>
               </property>
-              <property name="maximum" >
+              <property name="maximum">
                <number>200</number>
               </property>
-              <property name="value" >
+              <property name="value">
                <number>100</number>
               </property>
-              <property name="orientation" >
+              <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
@@ -326,14 +448,14 @@
            </layout>
           </item>
           <item>
-           <widget class="QSpinBox" name="percentageSpinBox" >
-            <property name="maximum" >
-             <number>200</number>
-            </property>
-            <property name="minimum" >
+           <widget class="QSpinBox" name="percentageSpinBox">
+            <property name="minimum">
              <number>1</number>
             </property>
-            <property name="value" >
+            <property name="maximum">
+             <number>200</number>
+            </property>
+            <property name="value">
              <number>100</number>
             </property>
            </widget>
@@ -341,33 +463,42 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" >
-          <property name="margin" >
-           <number>0</number>
-          </property>
-          <property name="spacing" >
+         <layout class="QHBoxLayout">
+          <property name="spacing">
            <number>6</number>
           </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
-           <widget class="QLabel" name="label_10" >
-            <property name="text" >
+           <widget class="QLabel" name="label_10">
+            <property name="text">
              <string>Error X / Y:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="labelErrorXY" >
-            <property name="text" >
+           <widget class="QLabel" name="labelErrorXY">
+            <property name="text">
              <string>0.00 / 0.00</string>
             </property>
            </widget>
           </item>
           <item>
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>40</width>
               <height>20</height>
@@ -384,13 +515,13 @@
    </item>
    <item>
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeType" >
+     <property name="sizeType">
       <enum>QSizePolicy::Fixed</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>332</width>
        <height>6</height>
@@ -399,39 +530,48 @@
     </spacer>
    </item>
    <item>
-    <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
-     <property name="spacing" >
+    <layout class="QHBoxLayout">
+     <property name="spacing">
       <number>6</number>
      </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item>
-      <widget class="QLabel" name="label_6" >
-       <property name="text" >
+      <widget class="QLabel" name="label_6">
+       <property name="text">
         <string>Resize Method:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBoxAlgo" >
+      <widget class="QComboBox" name="comboBoxAlgo">
        <item>
-        <property name="text" >
+        <property name="text">
          <string>Bilinear</string>
         </property>
        </item>
        <item>
-        <property name="text" >
+        <property name="text">
          <string>Bicubic</string>
         </property>
        </item>
        <item>
-        <property name="text" >
+        <property name="text">
          <string>Lanczos-3</string>
         </property>
        </item>
        <item>
-        <property name="text" >
+        <property name="text">
          <string>Spline</string>
         </property>
        </item>
@@ -439,10 +579,10 @@
      </item>
      <item>
       <spacer>
-       <property name="orientation" >
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>40</width>
          <height>20</height>
@@ -454,13 +594,13 @@
    </item>
    <item>
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeType" >
+     <property name="sizeType">
       <enum>QSizePolicy::MinimumExpanding</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>16</height>
@@ -469,12 +609,12 @@
     </spacer>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -486,7 +626,7 @@
   <tabstop>comboBoxDestination</tabstop>
   <tabstop>spinBoxWidth</tabstop>
   <tabstop>spinBoxHeight</tabstop>
-  <tabstop>checkBoxRoundup</tabstop>
+  <tabstop>comboBoxRoundup</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>percentageSpinBox</tabstop>
   <tabstop>comboBoxAlgo</tabstop>
@@ -500,11 +640,11 @@
    <receiver>resizeDialog</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>316</x>
      <y>260</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>
