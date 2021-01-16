@@ -813,6 +813,16 @@ void HandleAction (Action action)
                         current-=b-a+c;
                 }
             }
+            if(current>=after) // the current frame is gone
+            {
+                // Can we go to the last keyframe before the cut?
+                current=after;
+                if(!video_body->getPKFramePTS(&current))
+                { // nope
+                    A_Rewind();
+                    break;
+                }
+            }
             if(!video_body->goToTimeVideo(current))
             {
                 // If seek fails, we may crash in admPreview::samePicture()
