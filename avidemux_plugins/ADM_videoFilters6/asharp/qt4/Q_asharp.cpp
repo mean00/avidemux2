@@ -175,8 +175,8 @@ uint8_t flyASharp::download(void)
     MYSLIDER(Strength)->setValue(floor(MYSPIN(Strength)->value() * 100.0));
     MYSLIDER(Block)->setValue(floor(MYSPIN(Block)->value() * 100.0));
 
-    ENABLE_NUM_INPUT(Strength, (param.d > 0));
-    ENABLE_NUM_INPUT(Block, (param.b >= 0));
+    ENABLE_NUM_INPUT(Strength, param.d_enabled)
+    ENABLE_NUM_INPUT(Block, param.b_enabled)
 
     blockChanges(false);
     return 1;
