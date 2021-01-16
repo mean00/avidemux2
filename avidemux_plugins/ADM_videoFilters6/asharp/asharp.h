@@ -6,5 +6,7 @@ float t;
 float d;
 float b;
 bool bf;
+bool d_enabled;
+bool b_enabled;
 }asharp;
 #endif

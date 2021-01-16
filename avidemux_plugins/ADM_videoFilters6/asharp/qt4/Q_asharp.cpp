@@ -51,7 +51,10 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
     SPINNER(Strength)
     SPINNER(Block)
 
-    connect(ui.checkBox,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int)));
+#define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int)));
+    CHKBOX(Strength);
+    CHKBOX(Block);
+    CHKBOX(HQBF);
     setModal(true);
 }
 void Ui_asharpWindow::sliderUpdate(int foo)
@@ -102,6 +105,7 @@ void Ui_asharpWindow::showEvent(QShowEvent *event)
 
 #define MYSPIN(x) w->doubleSpinBox##x
 #define MYSLIDER(x) w->horizontalSlider##x
+#define MYCHKBOX(x) w->checkBox##x
 
 void Ui_asharpWindow::valueChangedSlider(int f)
 {
@@ -127,20 +131,29 @@ void flyASharp::blockChanges(bool block)
     Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
     APPLY_TO_ALL(blockSignals(block));
 }
+#define ENABLE_NUM_INPUT(x,b) { \
+    w->doubleSpinBox##x->setEnabled(b); \
+    w->horizontalSlider##x->setEnabled(b); \
+}
 uint8_t flyASharp::upload(void)
 {
     Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
     blockChanges(true);
 
     MYSPIN(Treshold)->setValue(param.t);
-    MYSPIN(Strength)->setValue(param.d);
-    MYSPIN(Block)->setValue(param.b);
-
     MYSLIDER(Treshold)->setValue(floor(param.t * 100.0));
+
+    MYCHKBOX(Strength)->setChecked(param.d_enabled);
+    ENABLE_NUM_INPUT(Strength, param.d_enabled);
+    MYSPIN(Strength)->setValue(param.d);
     MYSLIDER(Strength)->setValue(floor(param.d * 100.0));
+
+    MYCHKBOX(Block)->setChecked(param.b_enabled);
+    ENABLE_NUM_INPUT(Block, param.b_enabled);
+    MYSPIN(Block)->setValue(param.b);
     MYSLIDER(Block)->setValue(floor(param.b * 100.0));
 
-    w->checkBox->setChecked(param.bf);
+    MYCHKBOX(HQBF)->setChecked(param.bf);
     blockChanges(false);
     sameImage();
     return 1;
@@ -151,13 +164,19 @@ uint8_t flyASharp::download(void)
     param.t= MYSPIN(Treshold)->value();
     param.d= MYSPIN(Strength)->value();
     param.b= MYSPIN(Block)->value();
-    param.bf=w->checkBox->isChecked();
+    param.bf=MYCHKBOX(HQBF)->isChecked();
+
+    param.d_enabled=MYCHKBOX(Strength)->isChecked();
+    param.b_enabled=MYCHKBOX(Block)->isChecked();
 
     blockChanges(true);
 
     MYSLIDER(Treshold)->setValue(floor(MYSPIN(Treshold)->value() * 100.0));
     MYSLIDER(Strength)->setValue(floor(MYSPIN(Strength)->value() * 100.0));
     MYSLIDER(Block)->setValue(floor(MYSPIN(Block)->value() * 100.0));
+
+    ENABLE_NUM_INPUT(Strength, (param.d > 0));
+    ENABLE_NUM_INPUT(Block, (param.b >= 0));
 
     blockChanges(false);
     return 1;

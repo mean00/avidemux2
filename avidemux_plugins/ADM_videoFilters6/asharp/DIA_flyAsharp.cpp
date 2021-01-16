@@ -55,9 +55,9 @@ uint32_t ww,hh;
                 hh=in->GetHeight(PLANAR_Y);
                 // parameters floating point to fixed point convertion
                 T = (int)(param.t*(4<<7));
-                D = (int)(param.d*(4<<7));
-                B = (int)(256-param.b*64);
-                B2= (int)(256-param.b*48);
+                D = param.d_enabled ? (int)(param.d*(4<<7)) : 0;
+                B = param.b_enabled ? (int)(256-param.b*64) : 256;
+                B2= param.b_enabled ? (int)(256-param.b*48) : 256;
 
                 // clipping (recommended for SIMD code)
 

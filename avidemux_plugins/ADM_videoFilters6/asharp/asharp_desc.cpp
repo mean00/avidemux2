@@ -4,5 +4,7 @@ extern const ADM_paramList asharp_param[]={
  {"d",offsetof(asharp,d),"float",ADM_param_float},
  {"b",offsetof(asharp,b),"float",ADM_param_float},
  {"bf",offsetof(asharp,bf),"bool",ADM_param_bool},
+ {"d_enabled",offsetof(asharp,d_enabled),"bool",ADM_param_bool},
+ {"b_enabled",offsetof(asharp,b_enabled),"bool",ADM_param_bool},
 {NULL,0,NULL}
 };
