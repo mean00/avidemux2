@@ -82,6 +82,8 @@ ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilte
             _param.d=4;
             _param.b=-1;
             _param.bf=false;
+            _param.d_enabled = (_param.d > 0);
+            _param.b_enabled = (_param.b >= 0);
         }
         lineptr=new uint8_t[info.width];
         update();
@@ -105,9 +107,9 @@ void ASharp::update( void)
 {
                 // parameters floating point to fixed point conversion
                 T = (int)(_param.t*(4<<7));
-                D = (int)(_param.d*(4<<7));
-                B = (int)(256-_param.b*64);
-                B2= (int)(256-_param.b*48);
+                D = _param.d_enabled ? (int)(_param.d*(4<<7)) : 0;
+                B = _param.b_enabled ? (int)(256-_param.b*64) : 256;
+                B2= _param.b_enabled ? (int)(256-_param.b*48) : 256;
 
                 // clipping (recommended for SIMD code)
 
