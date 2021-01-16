@@ -6,7 +6,5 @@ float t;
 float d;
 float b;
 bool bf;
-float d_shadow;
-float b_shadow;
 }asharp;
 #endif
