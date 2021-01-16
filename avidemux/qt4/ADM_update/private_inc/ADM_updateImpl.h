@@ -22,7 +22,7 @@
 #if 0
 #define ADM_UPDATE_SERVER "http://192.168.0.9/"
 #else
-#define ADM_UPDATE_SERVER "http://www.avidemux.org/update/"
+#define ADM_UPDATE_SERVER "https://www.avidemux.org/update/"
 #endif
 
 // Helper defines to construct URL
