@@ -50,12 +50,16 @@ uint32_t sstride,dstride;
 int32_t T,D,B,B2;
 uint32_t ww,hh;
 
+#define ALMOST_ZERO 0.002
+    // fake a non-zero value for param.d
+    float faked = param.d;
+    if(faked < ALMOST_ZERO) faked = ALMOST_ZERO;
 
                 ww=in->GetWidth(PLANAR_Y);
                 hh=in->GetHeight(PLANAR_Y);
                 // parameters floating point to fixed point convertion
                 T = (int)(param.t*(4<<7));
-                D = param.d_enabled ? (int)(param.d*(4<<7)) : 0;
+                D = param.d_enabled ? (int)(faked*(4<<7)) : 0;
                 B = param.b_enabled ? (int)(256-param.b*64) : 256;
                 B2= param.b_enabled ? (int)(256-param.b*48) : 256;
 

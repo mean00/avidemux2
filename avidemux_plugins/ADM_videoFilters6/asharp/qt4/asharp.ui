@@ -57,9 +57,6 @@
    </item>
    <item row="1" column="3">
     <widget class="QDoubleSpinBox" name="doubleSpinBoxStrength">
-     <property name="minimum">
-      <double>0.010000000000000</double>
-     </property>
      <property name="maximum">
       <double>16.000000000000000</double>
      </property>
@@ -173,7 +170,7 @@
    <item row="1" column="1">
     <widget class="QSlider" name="horizontalSliderStrength">
      <property name="minimum">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="maximum">
       <number>1600</number>
