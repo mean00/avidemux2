@@ -163,8 +163,34 @@ bool r=false;
 */
 const char   *ASharp::getConfiguration(void)
 {
-    static char s[256];
-    snprintf(s,255,"Asharp by MarcFd");
+#define CONF_MAX_LEN 256
+    static char s[CONF_MAX_LEN];
+    int len = CONF_MAX_LEN;
+    char *c = s;
+
+    s[len-1]=0;
+    snprintf(c,len,"Threshold: %.02f ",_param.t);
+    len-=strlen(c);
+    if(len<2) return s;
+
+    c+=strlen(c);
+    if(_param.d_enabled)
+        snprintf(c,len," Adaptive strength: %.02f ",_param.d);
+    else
+        snprintf(c,len," Adaptive strength: disabled ");
+    len-=strlen(c);
+    if(len<2) return s;
+
+    c+=strlen(c);
+    if(_param.b_enabled)
+        snprintf(c,len," Block adaptive: %.02f ",_param.b);
+    else
+        snprintf(c,len," Block adaptive: disabled ");
+    len-=strlen(c);
+    if(len<2) return s;
+
+    c+=strlen(c);
+    snprintf(c,len," HQBF: %s",_param.bf? "enabled" : "disabled");
     return s;
 
 }
