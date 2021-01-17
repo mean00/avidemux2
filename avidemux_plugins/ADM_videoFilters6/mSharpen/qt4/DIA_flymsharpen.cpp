@@ -113,6 +113,7 @@ uint8_t flyMSharpen::upload()
 #define MYTOGGLE(x,y) w->checkBox##x->setChecked(param.y);
     Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
     blockChanges(true);
+    if(param.strength > 255) param.strength=255;
 
     MYSPIN(Strength,strength)
     MYSPIN(Threshold,threshold)
@@ -122,7 +123,7 @@ uint8_t flyMSharpen::upload()
 #undef MYSPIN
 #undef MYTOGGLE
     blockChanges(false);
-    invstrength = (param.strength < 255)? 255-param.strength : 0;
+    invstrength = 255-param.strength;
     return 1;
 }
 /**
@@ -142,7 +143,8 @@ uint8_t flyMSharpen::download(void)
     MYTOGGLE(Chroma,chroma)
 
     blockChanges(false);
-    invstrength = (param.strength < 255)? 255-param.strength : 0;
+    if(param.strength > 255) param.strength=255;
+    invstrength = 255-param.strength;
     return true;
 }
 /**

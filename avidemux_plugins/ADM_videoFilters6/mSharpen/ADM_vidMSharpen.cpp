@@ -63,11 +63,12 @@ Msharpen::Msharpen(ADM_coreVideoFilter *in,CONFcouple *couples)
         _param.strength=100;	
         _param.threshold=15;	
     }
-                
-    invstrength=255-_param.strength;	
+    if(_param.strength > 255) _param.strength=255;
+    if(_param.threshold > 255) _param.threshold=255;
+    invstrength=255-_param.strength;
     blurrImg=new ADMImageDefault(info.width,info.height);
     work=new ADMImageDefault(info.width,info.height);
-    
+    ADM_info("%s\n",getConfiguration());
 }
 /**
     \fn getCoupledConf
@@ -99,7 +100,11 @@ const char *Msharpen::getConfiguration(void)
 {
    static char conf[160];
     conf[0]=0;
-    snprintf(conf,160," Msharpen Strength:%d Threshold:%d Process chroma:%s",_param.strength,_param.threshold,(_param.chroma ? "true":"false"));
+    snprintf(conf,160,"Strength: %d, Threshold: %d, HQ: %s, Process chroma: %s, Mask: %s\n",
+                _param.strength,_param.threshold,
+                _param.highq ? "true" : "false",
+                _param.chroma ? "true":"false",
+                _param.mask ? "true":"false");
     return conf;
 }
 	
@@ -541,7 +546,10 @@ uint8_t r=0;
     if(DIA_msharpen(copy,this->previousFilter))
     {
         _param=copy;
-        invstrength=(_param.strength < 255)? 255-_param.strength : 0;
+        if(_param.threshold > 255) _param.threshold=255;
+        if(_param.strength > 255) _param.strength=255;
+        invstrength=255-_param.strength;
+        ADM_info("MSharpen %s\n",getConfiguration());
         return true;
     }
     return false;
