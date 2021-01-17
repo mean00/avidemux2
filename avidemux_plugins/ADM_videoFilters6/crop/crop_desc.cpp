@@ -6,5 +6,6 @@ extern const ADM_paramList crop_param[]={
  {"right",offsetof(crop,right),"uint32_t",ADM_param_uint32_t},
  {"rubber_is_hidden",offsetof(crop,rubber_is_hidden),"bool",ADM_param_bool},
  {"keep_aspect",offsetof(crop,keep_aspect),"bool",ADM_param_bool},
+ {"ar_select",offsetof(crop,ar_select),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };

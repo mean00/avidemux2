@@ -187,7 +187,7 @@
        </property>
       </spacer>
      </item>
-     <item row="1" column="6">
+     <item row="0" column="7">
       <widget class="QCheckBox" name="checkBoxRubber">
        <property name="enabled">
         <bool>true</bool>
@@ -197,7 +197,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="7">
+     <item row="1" column="6">
       <widget class="QCheckBox" name="checkBoxKeepAspect">
        <property name="enabled">
         <bool>true</bool>
@@ -205,6 +205,45 @@
        <property name="text">
         <string>Keep aspect ratio</string>
        </property>
+      </widget>
+     </item>
+     <item row="1" column="7">
+      <widget class="QComboBox" name="comboBoxAspectRatio">
+       <item>
+        <property name="text">
+         <string>source</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>21:9</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>18:9</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>16:9</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>4:3</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1:1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>9:16</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
@@ -248,10 +287,11 @@
   <tabstop>spinBoxBottom</tabstop>
   <tabstop>checkBoxRubber</tabstop>
   <tabstop>pushButtonAutoCrop</tabstop>
+  <tabstop>checkBoxKeepAspect</tabstop>
+  <tabstop>comboBoxAspectRatio</tabstop>
   <tabstop>pushButtonReset</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>graphicsView</tabstop>
-  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
  <connections>

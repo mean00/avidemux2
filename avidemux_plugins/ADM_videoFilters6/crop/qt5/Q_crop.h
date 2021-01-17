@@ -28,6 +28,7 @@ private:
     void updateRightBottomSpinners(int foo, bool useHeightAsRef);
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+    void applyAspectRatio(void);
 
 public:
     Ui_cropWindow(QWidget* parent, crop *param, ADM_coreVideoFilter *in);
@@ -44,6 +45,7 @@ private slots:
     void reset(bool f);
     void toggleRubber(int checkState);
     void toggleKeepAspect(int checkState);
+    void changeARSelect(int f);
 };
 
 #endif	// Q_crop_h
