@@ -22,5 +22,5 @@ SET(ADM_vf_GlGlyphy_SRCS glGlyphy.cpp ${LibGliphy_SRCS})
 
 ADD_DEFINITIONS(-DPKGDATADIR="")
 
-INIT_VIDEO_FILTER_GLQT4(ADM_vf_GlGlyphy "${ADM_vf_GlGlyphy_SRCS}" "" "glGlyphy" )
+INIT_VIDEO_FILTER_GLQT4(ADM_vf_GlGlyphy "${ADM_vf_GlGlyphy_SRCS}" "" "")
 
