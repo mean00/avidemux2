@@ -87,7 +87,7 @@ ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilte
         }
         lineptr=new uint8_t[info.width];
         update();
-
+        ADM_info("%s\n",getConfiguration());
 }
 /**
     \fn dtor
@@ -105,6 +105,12 @@ ASharp::~ASharp(void)
 
 void ASharp::update( void)
 {
+                if(_param.t<0) _param.t=0;
+                if(_param.t>32.) _param.t=32.;
+                if(_param.d<0) _param.d=0;
+                if(_param.d>16.) _param.d=16.;
+                if(_param.b>4.) _param.b=4;
+
 #define ALMOST_ZERO 0.002
                 // fake a non-zero value for param.d
                 float faked = _param.d;
@@ -150,13 +156,13 @@ extern uint8_t DIA_getASharp(asharp *param, ADM_coreVideoFilter *in);
 */
 bool ASharp::configure(void)
 {
-bool r=false;
-        if( DIA_getASharp(&_param, previousFilter))
-        {
-                r=true;
-        }
+    if(DIA_getASharp(&_param, previousFilter))
+    {
         update();
-        return r;
+        ADM_info("ASharp %s\n",getConfiguration());
+        return true;
+    }
+    return false;
 }
 /**
     \fn getConfiguration
