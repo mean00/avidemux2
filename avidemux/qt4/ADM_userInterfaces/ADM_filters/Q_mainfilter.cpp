@@ -713,6 +713,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));
 
     this->installEventFilter(this);
+    ui.pushButtonPreview->installEventFilter(this);
     originalTime = admPreview::getCurrentPts();
 
 #if 1
@@ -757,7 +758,9 @@ bool filtermainWindow::eventFilter(QObject* watched, QEvent* event)
                 accept();
                 return true;
             }
-            if(ui.listFilterCategory->hasFocus())
+            if(watched == ui.pushButtonPreview)
+                preview(true);
+            else if(ui.listFilterCategory->hasFocus())
                 filterFamilyClick(ui.listFilterCategory->currentRow());
             else if(availableList->hasFocus())
                 add(true);
