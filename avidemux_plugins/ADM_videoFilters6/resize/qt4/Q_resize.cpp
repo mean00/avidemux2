@@ -123,7 +123,9 @@ void resizeWindow::percentageSpinBoxChanged(int value)
 
     uint32_t iw = floor(width);
 
-    if (int roundup_index = ui.comboBoxRoundup->currentIndex(); roundup_index > 0)
+    int roundup_index = ui.comboBoxRoundup->currentIndex();
+
+    if (roundup_index > 0)
     {
         int mask = (0xfffff0 << 1) >> roundup_index;
         int increment = (16 >> roundup_index) - 1;
@@ -255,7 +257,9 @@ void resizeWindow::roundUp(int xx, int yy)
     float erx = 0.;
     float ery = 0.;
 
-    if (int roundup_index = ui.comboBoxRoundup->currentIndex(); roundup_index > 0)
+int roundup_index = ui.comboBoxRoundup->currentIndex();
+
+    if (roundup_index > 0)
     {
         int ox = xx, oy = yy;
         int mask = (0xfffff0 << 1) >> roundup_index;
