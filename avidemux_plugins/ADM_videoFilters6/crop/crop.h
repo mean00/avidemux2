@@ -8,4 +8,5 @@ uint32_t left;
 uint32_t right;
 bool rubber_is_hidden;
 bool keep_aspect;
+uint32_t ar_select;
 }crop;
