@@ -38,8 +38,8 @@ flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
     left=right=top=bottom=0;
     _ox=0;
     _oy=0;
-    _ow=width;
-    _oh=height;
+    _lw=_ow=width;
+    _lh=_oh=height;
     //ar = (double)_w / _h;
     setAspectRatioIndex(0);
 }
@@ -55,19 +55,21 @@ void flyCrop::setAspectRatioIndex(int index)
 {
     ar_select = index;
     switch(index) {
-        case 1: ar = (64.0/27.0);    // 21:9
+        case 1: ar = ((double)_w / _h);    // source
             break;
-        case 2: ar = (2.0);    // 18:9
+        case 2: ar = (64.0/27.0);    // 21:9
             break;
-        case 3: ar = (16.0/9.0);    // 16:9
+        case 3: ar = (2.0);    // 18:9
             break;
-        case 4: ar = (4.0/3.0);    // 4:3
+        case 4: ar = (16.0/9.0);    // 16:9
             break;
-        case 5: ar = (1.0);    // 1:1
+        case 5: ar = (4.0/3.0);    // 4:3
             break;
-        case 6: ar = (9.0/16.0);    // 9:16
+        case 6: ar = (1.0);    // 1:1
             break;
-        default : ar = ((double)_w / _h);    // source
+        case 7: ar = (9.0/16.0);    // 9:16
+            break;
+        default : ar = ((double)_lw / _lh);    // current selection
                 ar_select = 0;
             break;
     }
@@ -689,6 +691,8 @@ void Ui_cropWindow::toggleKeepAspect(int checkState)
     if(checkState)
     {
         keep_aspect=true;
+        myCrop->lockDimensions();
+        myCrop->setAspectRatioIndex(myCrop->getAspectRatioIndex());
         applyAspectRatio();
     }
     ui.spinBoxLeft->setEnabled(!keep_aspect);
@@ -703,8 +707,8 @@ void Ui_cropWindow::toggleKeepAspect(int checkState)
  */
 void Ui_cropWindow::changeARSelect(int f)
 {
+    myCrop->lockDimensions();
     myCrop->setAspectRatioIndex(f);
-
     applyAspectRatio();
 }
 /**
@@ -723,8 +727,10 @@ void Ui_cropWindow::autoCrop( bool f )
  */
 void Ui_cropWindow::reset( bool f )
 {
-    myCrop->setCropMargins(0,0,0,0);
     lock++;
+    ui.checkBoxKeepAspect->setChecked(false);
+    toggleKeepAspect(false);
+    myCrop->setCropMargins(0,0,0,0);
     myCrop->upload();
     myCrop->sameImage();
     lock--;
