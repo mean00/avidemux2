@@ -257,7 +257,7 @@ void resizeWindow::roundUp(int xx, int yy)
     float erx = 0.;
     float ery = 0.;
 
-int roundup_index = ui.comboBoxRoundup->currentIndex();
+    int roundup_index = ui.comboBoxRoundup->currentIndex();
 
     if (roundup_index > 0)
     {
