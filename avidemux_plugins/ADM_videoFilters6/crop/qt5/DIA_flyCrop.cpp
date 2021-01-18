@@ -330,7 +330,8 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
  * @param block
  * @return 
  */
-#define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x;rubber->x;}
+#define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x;rubber->x;\
+                         w->checkBoxRubber->x;w->checkBoxKeepAspect->x;w->comboBoxAspectRatio->x;}
 bool flyCrop::blockChanges(bool block)
 {
     Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
@@ -630,6 +631,7 @@ void Ui_cropWindow::updateRightBottomSpinners(int val, bool useHeightAsRef)
     const double ar = myCrop->getAspectRatio();
     int left,top;
     myCrop->getCropMargins(&left,NULL,&top,NULL);
+    myCrop->blockChanges(true);
 
     if(useHeightAsRef)
     {
@@ -646,6 +648,7 @@ void Ui_cropWindow::updateRightBottomSpinners(int val, bool useHeightAsRef)
 
         ui.spinBoxBottom->setValue(h);
     }
+    myCrop->blockChanges(false);
 }
 /**
  * \fn toggleRubber
@@ -728,9 +731,14 @@ void Ui_cropWindow::autoCrop( bool f )
 void Ui_cropWindow::reset( bool f )
 {
     lock++;
+    myCrop->blockChanges(true);
     ui.checkBoxKeepAspect->setChecked(false);
+    ui.comboBoxAspectRatio->setCurrentIndex(0);
     toggleKeepAspect(false);
     myCrop->setCropMargins(0,0,0,0);
+    myCrop->lockDimensions();
+    myCrop->setAspectRatioIndex(0);
+    myCrop->blockChanges(false);
     myCrop->upload();
     myCrop->sameImage();
     lock--;
