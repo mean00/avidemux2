@@ -631,7 +631,19 @@ void HandleAction (Action action)
               video_body->setMarkerAPts(markA);
               video_body->setMarkerBPts(markB);
               A_Resync();
-              GUI_GoToTime(currentPts);
+              if(!lastFrame)
+                  currentPts+=d;
+              if(!video_body->goToTimeVideo(currentPts))
+              {
+                  // If seek fails, we may crash in admPreview::samePicture()
+                  // due to _currentSegment and _currentPts going out of sync.
+                  // Rewind to get on firm ground again.
+                  A_Rewind();
+              }else
+              {
+                  admPreview::samePicture();
+                  GUI_setCurrentFrameAndTime();
+              }
             }
             break;
 
