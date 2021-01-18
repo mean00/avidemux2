@@ -723,8 +723,10 @@ void Ui_cropWindow::autoCrop( bool f )
  */
 void Ui_cropWindow::reset( bool f )
 {
-    myCrop->setCropMargins(0,0,0,0);
     lock++;
+    ui.checkBoxKeepAspect->setChecked(false);
+    toggleKeepAspect(false);
+    myCrop->setCropMargins(0,0,0,0);
     myCrop->upload();
     myCrop->sameImage();
     lock--;
