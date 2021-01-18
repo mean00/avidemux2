@@ -211,6 +211,11 @@
       <widget class="QComboBox" name="comboBoxAspectRatio">
        <item>
         <property name="text">
+         <string>current selection</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>source</string>
         </property>
        </item>

@@ -11,6 +11,7 @@ class flyCrop : public ADM_flyDialogRgb
     bool        rubber_is_hidden;
     bool        keep_aspect;
     int         ar_select;
+    int         _lw,_lh;
 
     void        dimensions();
     int         autoRun(uint8_t *in,int w,int h, int increment);
@@ -32,6 +33,7 @@ public:
     void        setAspectRatioIndex(int index);
     bool        getKeepAspect(void) {return keep_aspect;}
     void        setKeepAspect(bool keep) {keep_aspect=keep;}
+    void        lockDimensions(void) {_lw=_w-left-right; _lh=_h-top-bottom;};
 
     bool        getCropMargins(int *marginLeft, int *marginRight, int *marginTop, int *marginBottom);
     void        setCropMargins(int marginLeft, int marginRight, int marginTop, int marginBottom);
