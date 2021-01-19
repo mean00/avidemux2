@@ -410,6 +410,10 @@ uint8_t flyCrop::upload(bool redraw, bool toRubber)
     w->spinBoxRight->setValue(right);
     w->spinBoxTop->setValue(top);
     w->spinBoxBottom->setValue(bottom);
+    w->spinBoxLeft->setMaximum(_w-right-2);
+    w->spinBoxRight->setMaximum(_w-left-2);
+    w->spinBoxTop->setMaximum(_h-bottom-2);
+    w->spinBoxBottom->setMaximum(_h-top-2);
     dimensions();
 
     if(toRubber)
@@ -485,6 +489,10 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
                     bottom++;
             }
         }
+        w->spinBoxLeft->setMaximum(_w-right-2);
+        w->spinBoxRight->setMaximum(_w-left-2);
+        w->spinBoxTop->setMaximum(_h-bottom-2);
+        w->spinBoxBottom->setMaximum(_h-top-2);
         rubber->nestedIgnore++;
         rubber->move(_zoom*left+0.49,_zoom*top+0.49);
         rubber->resize(_zoom*bound(left,right,_w)+0.49,_zoom*bound(top,bottom,_h)+0.49);
