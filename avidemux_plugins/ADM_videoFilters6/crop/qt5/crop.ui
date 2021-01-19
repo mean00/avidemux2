@@ -221,16 +221,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="6">
-      <widget class="QCheckBox" name="checkBoxKeepAspect">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Keep aspect ratio</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="7">
       <widget class="QComboBox" name="comboBoxAspectRatio">
        <item>
@@ -271,6 +261,25 @@
        <item>
         <property name="text">
          <string>9:16</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="6">
+      <widget class="QComboBox" name="comboBoxRubberMode">
+       <item>
+        <property name="text">
+         <string>Free resize</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Free drag</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Keep aspect ratio</string>
         </property>
        </item>
       </widget>
@@ -316,7 +325,7 @@
   <tabstop>spinBoxBottom</tabstop>
   <tabstop>checkBoxRubber</tabstop>
   <tabstop>pushButtonAutoCrop</tabstop>
-  <tabstop>checkBoxKeepAspect</tabstop>
+  <tabstop>comboBoxRubberMode</tabstop>
   <tabstop>comboBoxAspectRatio</tabstop>
   <tabstop>pushButtonReset</tabstop>
   <tabstop>horizontalSlider</tabstop>
