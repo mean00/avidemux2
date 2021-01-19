@@ -485,6 +485,10 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
                     bottom++;
             }
         }
+        w->spinBoxLeft->setMaximum(_w-right-8);
+        w->spinBoxRight->setMaximum(_w-left-8);
+        w->spinBoxTop->setMaximum(_h-bottom-8);
+        w->spinBoxBottom->setMaximum(_h-top-8);
         rubber->nestedIgnore++;
         rubber->move(_zoom*left+0.49,_zoom*top+0.49);
         rubber->resize(_zoom*bound(left,right,_w)+0.49,_zoom*bound(top,bottom,_h)+0.49);
