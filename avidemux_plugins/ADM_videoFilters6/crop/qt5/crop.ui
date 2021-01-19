@@ -71,6 +71,12 @@
      </item>
      <item row="0" column="4">
       <widget class="QSpinBox" name="spinBoxRight">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximum">
         <number>2147483647</number>
        </property>
@@ -125,6 +131,12 @@
      </item>
      <item row="1" column="4">
       <widget class="QSpinBox" name="spinBoxBottom">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximum">
         <number>2147483647</number>
        </property>
@@ -142,6 +154,12 @@
      </item>
      <item row="0" column="1">
       <widget class="QSpinBox" name="spinBoxLeft">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximum">
         <number>2147483647</number>
        </property>
@@ -152,6 +170,12 @@
      </item>
      <item row="1" column="1">
       <widget class="QSpinBox" name="spinBoxTop">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximum">
         <number>2147483647</number>
        </property>
