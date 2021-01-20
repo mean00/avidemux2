@@ -64,7 +64,7 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
      w=s->getWidth();
      h=s->getHeight();
         
-     if(!isMpeg12Compatible(fcc) && !isH264Compatible(fcc) && !isH265Compatible(fcc))
+     if(!isMpeg12Compatible(fcc) && !isH264Compatible(fcc) && !isH265Compatible(fcc) && !isVC1Compatible(fcc))
      {
             printf("[ffTS] video not compatible\n");
             return false;
@@ -113,10 +113,11 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
             audio_st[i]->codecpar->bit_rate=a[i]->getInfo()->byterate*8;
        
         int erx = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
-
-        if (erx)
+        if (erx < 0)
         {
-            ADM_error("[Mp4]: Failed to open file :%s, er=%d\n",file,erx);
+            char str[AV_ERROR_MAX_STRING_SIZE]={0};
+            av_make_error_string(str, AV_ERROR_MAX_STRING_SIZE, erx);
+            ADM_error("[ffTS] Error %d (\"%s\") opening file \"%s\"\n", erx, str, file);
             return false;
         }
 
@@ -135,7 +136,16 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
 		av_dict_set(&dict, "preload", "3000", 0);
 		av_dict_set(&dict, "max_delay", "2000", 0);
 
-        ADM_assert(avformat_write_header(oc, &dict) >= 0);
+        erx = avformat_write_header(oc, &dict);
+        if (erx < 0)
+        {
+            char str[AV_ERROR_MAX_STRING_SIZE]={0};
+            av_make_error_string(str, AV_ERROR_MAX_STRING_SIZE, erx);
+            ADM_error("[ffTS] Writing header failed with error %d (\"%s\")\n", erx, str);
+            av_dict_free(&dict);
+            avio_close(oc->pb);
+            return false;
+        }
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
