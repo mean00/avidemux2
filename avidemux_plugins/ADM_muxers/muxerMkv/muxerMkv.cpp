@@ -110,6 +110,8 @@ bool MKVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
 #ifndef MUXER_IS_WEBM
     if(par->codec_tag == MKTAG('V','P','9',' '))
         par->codec_tag = MKTAG('V','P','9','0');
+    if(par->codec_tag == MKTAG('V','C','1',' '))
+        par->codec_tag = MKTAG('W','V','C','1');
 #endif
     rescaleFps(s->getAvgFps1000(),&(c->time_base));
     video_st->time_base=c->time_base;
