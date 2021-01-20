@@ -14,20 +14,34 @@ described in
 
     http://mxe.cc/#download
 
-to /opt:
+to a subdirectory of $HOME, e.g. to ~/adm:
 
-    cd /opt
-    git clone https://github.com/mxe/mxe.git
-
-(make /opt temporarily writable by the user or clone as root / using sudo).
-Change the owner and the group of /opt/mxe to those of the user. In the
-exemplary setup the 'mxe' folder has been subsequently moved elsewhere and
-then bind-mounted to /opt/mxe to save write cycles of an SSD where /opt
-resides. This has been done purely for convenience and is not required.
+    mkdir ~/adm && cd ~/adm && git clone https://github.com/mxe/mxe.git && cd mxe && export MX_ROOT_DIR=$(pwd)
 
 ##############################################################################
 
-2. Create /opt/mxe/settings.mk with
+2. The stock version of x264 in MXE is currently more than two years old.
+To update to the latest snapshot of the stable branch, run script
+'x264-snapshot.sh' located in the 'mxe-patches' subfolder of the Avidemux top
+source directory:
+
+    ./x264-snapshot.sh && patch --dry-run -d "${MX_ROOT_DIR}" -p1 < x264.patch && patch -d "${MX_ROOT_DIR}" -p1 < x264.patch && cp -uv x264-*.tar.bz2 "${MX_ROOT_DIR}/pkg/"
+
+x264 source is obtained from the git mirror at videolan.org.
+
+##############################################################################
+
+3. The stock version of x265 in MXE is 2.4. To update to 3.4, run script
+'x265-get-source.sh' from the folder 'mxe-patches' in Avidemux top source
+directory:
+
+    ./x265-get-source && cp -uv x265_3.4.tar.gz "${MX_ROOT_DIR}/pkg/" && patch --dry-run -d "${MX_ROOT_DIR}" -p1 < x265.patch && patch -d "${MX_ROOT_DIR}" -p1 < x265.patch
+
+x265 source is obtained from the mercurial mirror at videolan.org.
+
+##############################################################################
+
+4. Create ${MX_ROOT_DIR}/settings.mk with
 
 MXE_TARGETS :=  i686-w64-mingw32.shared x86_64-w64-mingw32.shared
 
@@ -41,26 +55,20 @@ to the settings.mk file.
 
 ##############################################################################
 
-3. Build required MXE packages for the targets specified above with
+5. Build required MXE packages for the targets specified above with
 
-    cd /opt/mxe
-    make qttools qtwinextras sdl2 ogg vorbis lame a52dec faad2 fdk-aac libmad opus fribidi libass xvidcore x264 x265 libvpx
+    cd "${MX_ROOT_DIR}" && MXE_SILENT_NO_NETWORK= make qttools qtwinextras sdl2 ogg vorbis lame a52dec faad2 fdk-aac libmad opus fribidi libass xvidcore x264 x265 libvpx
 
 This pulls in all the dependencies and can take a couple of hours. The final
-total size of the /opt/mxe folder may be about 2.2G. Please note that twolame
+total size of the $MX_ROOT_DIR folder may be about 2.2G. Please note that twolame
 is not available as a shared library.
 
-NB: To build version 3.4 of x265 instead of 2.4 provided by MXE as of this
-writing, apply the "x265.patch" patch from the "mxe-patches" subdirectory of
-Avidemux source tree prior to running make: in the MXE root directory, run
-
-    patch -p1 < /path/to/avidemux2/mxe-patches/x265.patch
-
-and on success proceed with the make command as shown above.
+The variable MXE_SILENT_NO_NETWORK is required to work around qtbase build
+failure, see https://github.com/mxe/mxe/issues/2590 for details.
 
 ##############################################################################
 
-4. To enable hardware-accelerated encoding provided by NVIDIA graphics cards of
+6. To enable hardware-accelerated encoding provided by NVIDIA graphics cards of
 the Kepler generation and later, clone the nv-codec-headers repository
 
     git clone https://github.com/FFmpeg/nv-codec-headers.git
@@ -75,23 +83,23 @@ delete the first line of the Makefile to remove a hardcoded PREFIX value
 
 and run
 
-    PREFIX="/opt/mxe/usr/i686-w64-mingw32.shared" make install
+    PREFIX="${MX_ROOT_DIR}/usr/i686-w64-mingw32.shared" make install
 
 for the 32 bit environment or
 
-    PREFIX="/opt/mxe/usr/x86_64-w64-mingw32.shared" make install
+    PREFIX="${MX_ROOT_DIR}/usr/x86_64-w64-mingw32.shared" make install
 
-for the 64 bit environment within /opt/mxe as MXE root correspondingly. Adjust
-the path specified as value of the PREFIX variable if MXE is installed
-elsewhere.
+for the 64 bit environment.
 
 ##############################################################################
 
-5. In order to enable the AV1 decoder plugin in Avidemux, libaom, not provided
-by MXE, needs to be installed. Run script "install-libaom.bash" from the
-"mxe-patches" subdirectory of Avidemux source tree with the path to the MXE
+7. In order to enable the AV1 decoder plugin in Avidemux, libaom, not provided
+by MXE, needs to be installed. Run script 'install-libaom.bash' from the
+'mxe-patches' subdirectory of Avidemux source tree with the path to the MXE
 root directory passed as argument to automatically build and install version
-2.0.0 of libaom in the 64 bit environment.
+2.0.1 of libaom in the 64 bit environment.
+
+    ./install-libaom.bash "${MX_ROOT_DIR}"
 
 The script will use the present working directory for all intermediate steps.
 
@@ -99,18 +107,13 @@ Build for the 32 bit environment has not been tested yet.
 
 ##############################################################################
 
-6. Create a user-writable directory 'out' in '/opt/mxe/usr/x86_64-w64-mingw32.shared'
-and in '/opt/mxe/usr/i686-w64-mingw32.shared' respectively.
+8. Enter the Avidemux top source directory and run
 
-##############################################################################
-
-7. Enter the Avidemux top source directory and run
-
-    bash bootStrapCrossMingwQt5_mxe.sh
+    bash bootStrapCrossMingwQt5_mxe.sh --with-system-libass --with-system-liba52 --with-system-libmad
 
 to cross-compile a 32 bit Avidemux version or
 
-    bash bootStrapCrossMingwQt5_mxe.sh --64
+    bash bootStrapCrossMingwQt5_mxe.sh --64 --with-system-libass --with-system-liba52 --with-system-libmad
 
 to cross-compile a 64 bit version. Run
 
@@ -123,8 +126,8 @@ partition, extract it on Windows and run 'avidemux.exe' from there.
 
 ##############################################################################
 
-8. Issues:
+9. Issues:
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2020-06-06 UTC 22:04
+2021-01-20
