@@ -59,8 +59,8 @@ bool pyHexDumpFrame(IEditor *editor, int framenumber);
 int pyPrintTiming(IEditor *editor, int framenumber);
 double pyGetPts(IEditor *editor, int frameNum);
 double pyGetDts(IEditor *editor, int frameNum);
-double pyGetPrevKFramePts(IEditor *editor);
-double pyGetNextKFramePts(IEditor *editor);
+double pyGetPrevKFramePts(IEditor *editor, double time);
+double pyGetNextKFramePts(IEditor *editor , double time);
 
 /* File operation */
 char *pyFileSelWrite(IEditor *editor, const char *title);

@@ -196,9 +196,13 @@ double pyGetDts(IEditor *editor, int frameNum)
 /**
     \fn pyGetPrevKFramePts
 */
-double pyGetPrevKFramePts(IEditor *editor)
+double pyGetPrevKFramePts(IEditor *editor, double time)
 {
-    uint64_t pts = editor->getCurrentFramePts();
+    uint64_t pts = ADM_NO_PTS;
+    if(time < 0.)
+        pts = editor->getCurrentFramePts();
+    else
+        pts = time;
     if(pts == ADM_NO_PTS)
         return -1;
 
@@ -211,9 +215,13 @@ double pyGetPrevKFramePts(IEditor *editor)
 /**
     \fn pyGetNextKFramePts
 */
-double pyGetNextKFramePts(IEditor *editor)
+double pyGetNextKFramePts(IEditor *editor, double time)
 {
-    uint64_t pts = editor->getCurrentFramePts();
+    uint64_t pts = ADM_NO_PTS;
+    if(time < 0.)
+        pts = editor->getCurrentFramePts();
+    else
+        pts = time;
     if(pts == ADM_NO_PTS)
         return -1;
 

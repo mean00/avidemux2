@@ -78,7 +78,7 @@ static tp_obj zzpy_getCurrentPts(TP)
   double r =   editor->getCurrentFramePts(); 
   return tp_number(r);
 }
-// getPrevKFramePts -> double pyGetPrevKFramePts (IEditor ) 
+// getPrevKFramePts -> double pyGetPrevKFramePts (IEditor double ) 
 static tp_obj zzpy_getPrevKFramePts(TP)
  {
   tp_obj self = tp_getraw(tp);
@@ -88,10 +88,11 @@ static tp_obj zzpy_getPrevKFramePts(TP)
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
   IEditor *p0 = editor;
-  double r =   pyGetPrevKFramePts(p0); 
+  double p1 = pm.asDouble();
+  double r =   pyGetPrevKFramePts(p0,p1); 
   return tp_number(r);
 }
-// getNextKFramePts -> double pyGetNextKFramePts (IEditor ) 
+// getNextKFramePts -> double pyGetNextKFramePts (IEditor double ) 
 static tp_obj zzpy_getNextKFramePts(TP)
  {
   tp_obj self = tp_getraw(tp);
@@ -101,7 +102,8 @@ static tp_obj zzpy_getNextKFramePts(TP)
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
   IEditor *p0 = editor;
-  double r =   pyGetNextKFramePts(p0); 
+  double p1 = pm.asDouble();
+  double r =   pyGetNextKFramePts(p0,p1); 
   return tp_number(r);
 }
 // getVideoDuration -> double editor->getVideoDuration (void ) 
@@ -281,8 +283,8 @@ static tp_obj zzpy__pyEditor_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getDts(IEditor,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPts(IEditor,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getCurrentPts(void)\n");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPrevKFramePts(IEditor)\n");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getNextKFramePts(IEditor)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPrevKFramePts(IEditor,double)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getNextKFramePts(IEditor,double)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getVideoDuration(void)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "nextFrame(IEditor)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpRefVideo(void)\n");
