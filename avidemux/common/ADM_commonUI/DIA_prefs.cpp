@@ -243,6 +243,7 @@ std::string currentSdlDriver=getSdlDriverName();
     #ifndef USE_VIDEOTOOLBOX
         diaElemReadOnlyText hwAccelText(NULL,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"),NULL);
     #endif
+        diaElemReadOnlyText hwAccelMultiThreadText(NULL,QT_TRANSLATE_NOOP("adm","Enabling Hw decoding disables multi-threading, restart application to apply changes"),NULL);
 #endif
         diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
@@ -286,8 +287,13 @@ std::string currentSdlDriver=getSdlDriverName();
 
         diaElemThreadCount lavcThreadCount(&lavcThreads, QT_TRANSLATE_NOOP("adm","_lavc threads:"));
 
+        diaElemReadOnlyText lavcMultiThreadHwText(NULL,
+            QT_TRANSLATE_NOOP("adm","Multi-threading is disabled internally if HW accelerated decoding is enabled, "
+                                    "restart application to apply changes"),NULL);
+
         diaElemFrame frameThread(QT_TRANSLATE_NOOP("adm","Multi-threading"));
         frameThread.swallow(&lavcThreadCount);
+        frameThread.swallow(&lavcMultiThreadHwText);
 
         diaMenuEntry priorityEntries[] = {
                      {0,       QT_TRANSLATE_NOOP("adm","High"),NULL}
@@ -504,14 +510,14 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),sizeof(diaVideo)/sizeof(diaElem *),(diaElem **)diaVideo);
         /* HW accel */
 #ifdef USE_DXVA2
-        diaElem *diaHwDecoding[]={&useDxva2,&dxva2OverrideVersion,&dxva2OverrideProfile,&hwAccelText};
-        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),4,(diaElem **)diaHwDecoding);
+        diaElem *diaHwDecoding[]={&useDxva2,&dxva2OverrideVersion,&dxva2OverrideProfile,&hwAccelMultiThreadText,&hwAccelText};
+        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),5,(diaElem **)diaHwDecoding);
 #elif defined(USE_VIDEOTOOLBOX)
-        diaElem *diaHwDecoding[]={&useVideoToolbox};
-        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),1,(diaElem **)diaHwDecoding);
+        diaElem *diaHwDecoding[]={&useVideoToolbox,&hwAccelMultiThreadText};
+        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),2,(diaElem **)diaHwDecoding);
 #elif defined(HW_ACCELERATED_DECODING)
-        diaElem *diaHwDecoding[]={&useVdpau,&useLibVA,&hwAccelText};
-        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),3,(diaElem **)diaHwDecoding);
+        diaElem *diaHwDecoding[]={&useVdpau,&useLibVA,&hwAccelMultiThreadText,&hwAccelText};
+        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),4,(diaElem **)diaHwDecoding);
 #endif
 
         /* CPU tab */
@@ -626,8 +632,6 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(DEFAULT_MULTILOAD_CUSTOM_SIZE_M, customFragmentSize);
             // Video cache
             prefs->set(FEATURES_CACHE_SIZE, editor_cache_size);
-            // number of threads
-            prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
             // Encoding priority
             prefs->set(PRIORITY_ENCODING, encodePriority);
             // Indexing / unpacking priority
@@ -644,21 +648,27 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifdef USE_VDPAU
             // VDPAU
             prefs->set(FEATURES_VDPAU,bvdpau);
+            if(bvdpau) lavcThreads=1; // disable multi-threaded decoding
 #endif
 #ifdef USE_DXVA2
             // DXVA2
             prefs->set(FEATURES_DXVA2,bdxva2);
             prefs->set(FEATURES_DXVA2_OVERRIDE_BLACKLIST_VERSION,bdxva2_override_version);
             prefs->set(FEATURES_DXVA2_OVERRIDE_BLACKLIST_PROFILE,bdxva2_override_profile);
+            if(bdxva2) lavcThreads=1;
 #endif
 #ifdef USE_LIBVA
             // LIBVA
             prefs->set(FEATURES_LIBVA,blibva);
+            if(blibva) lavcThreads=1;
 #endif
 #ifdef USE_VIDEOTOOLBOX
             // VideoToolbox
             prefs->set(FEATURES_VIDEOTOOLBOX,bvideotoolbox);
+            if(bvideotoolbox) lavcThreads=1;
 #endif
+            // number of threads
+            prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
             // Make users happy who prefer the output dir to be the same as the input dir
             prefs->set(FEATURES_USE_LAST_READ_DIR_AS_TARGET,lastReadDirAsTarget);
             // Enable alternate keyboard shortcuts
