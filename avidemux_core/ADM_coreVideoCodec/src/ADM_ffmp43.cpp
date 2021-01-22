@@ -19,6 +19,7 @@
 #include "ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_hwAccel.h"
+#include "prefs.h"
 
 #ifdef ADM_DEBUG
     #define LAV_VERBOSITY_LEVEL AV_LOG_DEBUG
@@ -97,23 +98,29 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
 */
 void decoderFF::decoderMultiThread (void)
 {
-  uint32_t threads = 0;
+    static uint32_t sessionThreads = 0;
+    uint32_t threads = 1;
 
- // prefs->get(FEATURE_THREADING_LAVC, &threads);
-//#warning Fixme
-    threads=1;
-  if (threads == 0)
-	  threads = ADM_cpu_num_processors();
-
-  if (threads == 1)
-	  threads = 0;
-
-  if (threads)
-  {
-      printf ("[lavc] Enabling MT decoder with %u threads\n", threads);
-      _threads = threads;
-      _usingMT = 1;
-  }
+    if(false == prefs->get(FEATURES_THREADING_LAVC, &threads))
+        threads = 1;
+    if(!threads)
+        threads = ADM_cpu_num_processors();
+    if(!sessionThreads)
+    {
+        sessionThreads = threads;
+    }else
+    {
+        if((threads > 1) != (sessionThreads > 1))
+            ADM_warning("Restart application to %s multithreaded decoding.\n",(threads>1)? "enable" : "disable");
+        else
+            sessionThreads = threads;
+    }
+    if(sessionThreads > 1)
+    {
+        printf ("[lavc] Enabling MT decoder with %u threads\n", sessionThreads);
+        _threads = sessionThreads;
+        _usingMT = 1;
+    }
 }
 uint8_t decoderFF::getPARWidth (void)
 {
@@ -377,7 +384,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
   int ret = 0;
   out->_noPicture = 0;
-  if(hwDecoder)
+  if(hwDecoder && !_usingMT)
         return hwDecoder->uncompress(in,out);
  
   //printf("Frame size : %d\n",in->dataLength);

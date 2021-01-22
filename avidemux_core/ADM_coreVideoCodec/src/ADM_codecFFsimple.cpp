@@ -56,7 +56,9 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         _refCopy=1;
     if(true==c->hasBFrame)
         hasBFrame=true;
- 
+    printf("[decoderFFSimple] context allocated with thread_count = %d\n",_context->thread_count);
+    decoderMultiThread();
+
     _context->width = _w;
     _context->height = _h;
     _context->pix_fmt = AV_PIX_FMT_YUV420P;

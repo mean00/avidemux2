@@ -58,6 +58,12 @@ ADM_hwAccelEntry    *ADM_hwAccelManager::lookup(struct AVCodecContext *avctx,  c
  */
 extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt)
 {
+    if(avctx->thread_count > 1)
+    {
+        ADM_info("Multithreading enabled, skipping hw accel lookup.\n");
+        return avcodec_default_get_format(avctx,fmt);
+    }
+
     enum AVPixelFormat outFmt;
     ADM_hwAccelEntry    *accel=ADM_hwAccelManager::lookup(avctx,fmt,outFmt);
     if(accel)
