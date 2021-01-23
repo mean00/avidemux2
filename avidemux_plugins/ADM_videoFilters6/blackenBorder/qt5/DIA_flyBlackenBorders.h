@@ -18,6 +18,7 @@ protected:
                 ADM_rubberControl *rubber;
     bool        blockChanges(bool block);
     bool        bandResized(int x,int y,int w, int h);
+    bool        bandMoved(int x,int y,int w, int h);
     int         _ox,_oy,_ow,_oh;
 
 };

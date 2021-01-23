@@ -172,6 +172,40 @@ bool    flyBlacken::bandResized(int x,int y,int w, int h)
     return true; 
 }
 /**
+ * \fn bandMoved
+ * @param x
+ * @param y
+ * @param w
+ * @param h
+ * @return 
+ */
+bool    flyBlacken::bandMoved(int x,int y,int w, int h)
+{
+    double halfzoom=_zoom/2-0.01;
+
+    int normX, normY, normW, normH;
+    normX=(int)(((double)x+halfzoom)/_zoom);
+    normY=(int)(((double)y+halfzoom)/_zoom);
+    normW=(int)(((double)w+halfzoom)/_zoom);
+    normH=(int)(((double)h+halfzoom)/_zoom);
+
+    // bound checks are done in rubber control
+
+    right=bound(normX,normW,_w)&0xfffe;
+    bottom=bound(normY,normH,_h)&0xfffe;
+
+    if(normX<0) normX=0;
+    if(normY<0) normY=0;
+
+    top=normY&0xfffe;
+    left=normX&0xfffe;
+
+    upload(false,false);
+    sameImage();
+  
+    return true; 
+}
+/**
  * \fn blockChanges
  * @param block
  * @return 
