@@ -139,7 +139,48 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
     //
     return true;
 }
+/**
+ * \fn bandMoved
+ * @param x
+ * @param y
+ * @param w
+ * @param h
+ * @return 
+ */
+bool    flyMpDelogo::bandMoved(int x,int y,int w, int h)
+{
+    int nw,nh,nx,ny;
+    double halfzoom=_zoom/2-0.01;
+    nw=(int)(((double)w-halfzoom)/_zoom);
+    nh=(int)(((double)h-halfzoom)/_zoom);
+    nx=(int)(((double)x+halfzoom)/_zoom);
+    ny=(int)(((double)y+halfzoom)/_zoom);
 
+    // bound checks are done in rubber control    bool resizeRubber=false;
+
+    uint32_t right=param.xoff+param.lw;
+    uint32_t bottom=param.yoff+param.lh;
+
+    if(nx+nw>_w)
+        nw=_w-nx;
+    if(ny+nh>_h)
+        nh=_h-ny;
+
+    if(nx<0) nx=0;
+    if(ny<0) ny=0;
+
+    param.xoff=nx;
+    param.yoff=ny;
+    param.lw=right-nx;
+    param.lh=bottom-ny;
+
+    param.lw=nw;
+    param.lh=nh;
+
+    upload(false,false);
+    //
+    return true;
+}
 
 /************* COMMON PART *********************/
 /**

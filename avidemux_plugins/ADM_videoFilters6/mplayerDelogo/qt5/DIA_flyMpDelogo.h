@@ -50,6 +50,7 @@ public:
                     return true;
                 }
     bool    bandResized(int x,int y,int w, int h);
+    bool    bandMoved(int x,int y,int w, int h);
 private:
     int _ox,_oy,_ow,_oh;
 };

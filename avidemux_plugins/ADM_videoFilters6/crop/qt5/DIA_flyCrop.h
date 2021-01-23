@@ -25,6 +25,7 @@ public:
     uint8_t     upload(bool redraw, bool toRubber);
     uint8_t     autocrop(void);
     bool        bandResized(int x,int y,int w, int h);
+    bool        bandMoved(int x,int y,int w, int h);
     bool        blockChanges(bool block);
 
     float       getZoomValue(void) {return _zoom;}
