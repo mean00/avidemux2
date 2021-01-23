@@ -30,6 +30,9 @@
 #include <QDialog>
 #include <QLabel>
 #include <QRubberBand>
+#include <QMouseEvent>
+#include <QPoint>
+#include <QRect>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -133,6 +136,7 @@ public:
 
   virtual bool       setCurrentPts(uint64_t pts) {return true;};
   virtual bool       bandResized(int x, int y, int w, int h) { return true; }
+  virtual bool       bandMoved(int x, int y, int w, int h) { return true; }
 
 
 // UI dependant part : They are implemented in ADM_flyDialogGtk/Qt/...
@@ -259,9 +263,18 @@ public:
         }
         void sizeGripEnable(bool topLeftEnabled, bool bottomRightEnabled);
 private:
+        QWidget * rubberControlParent;
         void *grip1ptr;
         void *grip2ptr;
+        bool drag;
+        QPoint dragOffset;
+        QRect dragGeometry;
         void resizeEvent(QResizeEvent *);
+        void enterEvent(QEvent *);
+        void leaveEvent(QEvent *);
+        void mousePressEvent(QMouseEvent *);
+        void mouseReleaseEvent(QMouseEvent *);
+        void mouseMoveEvent(QMouseEvent *);
 };
 
 //EOF
