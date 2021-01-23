@@ -69,6 +69,54 @@ flyMpDelogo::~flyMpDelogo()
     }
 }
 /**
+ * \fn setParam
+ */
+void flyMpDelogo::setParam(delogo *ps)
+{
+    if(!ps) return;
+#define CPY(x) param.x = ps->x;
+    CPY(xoff)
+    CPY(yoff)
+    CPY(lw)
+    CPY(lh)
+    CPY(band)
+    CPY(show)
+#undef CPY
+}
+/**
+ * \fn initRubber
+ * \brief To be called on show event
+ */
+void flyMpDelogo::initRubber(void)
+{
+    rubber->rubberband->show(); // must be called first
+    rubber->nestedIgnore = 0;
+}
+/**
+ * \fn adjustRubber
+ */
+void flyMpDelogo::adjustRubber(void)
+{
+    rubber->nestedIgnore++;
+    blockChanges(true);
+    rubber->move(_zoom * param.xoff + 0.49, _zoom * param.yoff + 0.49);
+    rubber->resize(_zoom * param.lw + 0.49, _zoom * param.lh + 0.49);
+    blockChanges(false);
+    rubber->nestedIgnore--;
+}
+/**
+ * \fn lockRubber
+ */
+int flyMpDelogo::lockRubber(bool lock)
+{
+    int old = rubber->nestedIgnore;
+    if(lock)
+        rubber->nestedIgnore++;
+    else
+        rubber->nestedIgnore--;
+    return old;
+}
+/**
  * \fn bandResized
  * @param w
  * @param h
@@ -92,12 +140,10 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
     if(leftGripMoved && rightGripMoved) // bogus event
         ignore=true;
 
-    int nw,nh,nx,ny;
-    double halfzoom=_zoom/2-0.01;
-    nw=(int)(((double)w-halfzoom)/_zoom);
-    nh=(int)(((double)h-halfzoom)/_zoom);
-    nx=(int)(((double)x+halfzoom)/_zoom);
-    ny=(int)(((double)y+halfzoom)/_zoom);
+    int nw = (double)w/_zoom + 0.49;
+    int nh = (double)h/_zoom + 0.49;
+    int nx = (double)x/_zoom + 0.49;
+    int ny = (double)y/_zoom + 0.49;
 
     aprintf("%d x %d => %d x %d, normalized offsets nx=%d, ny=%d, zoom=%f\n",param.lw,param.lh,nw,nh,nx,ny,_zoom);
     bool resizeRubber=false;
@@ -149,12 +195,10 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
  */
 bool    flyMpDelogo::bandMoved(int x,int y,int w, int h)
 {
-    int nw,nh,nx,ny;
-    double halfzoom=_zoom/2-0.01;
-    nw=(int)(((double)w-halfzoom)/_zoom);
-    nh=(int)(((double)h-halfzoom)/_zoom);
-    nx=(int)(((double)x+halfzoom)/_zoom);
-    ny=(int)(((double)y+halfzoom)/_zoom);
+    int nw = (double)w/_zoom + 0.49;
+    int nh = (double)h/_zoom + 0.49;
+    int nx = (double)x/_zoom + 0.49;
+    int ny = (double)y/_zoom + 0.49;
 
     // bound checks are done in rubber control    bool resizeRubber=false;
 
@@ -193,14 +237,7 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
         MPDelogo::doDelogo(out, param.xoff, param.yoff,
                              param.lw,  param.lh,param.band,param.show);        
     else
-    {
-        rubber->nestedIgnore++;
-        blockChanges(true);
-        rubber->move(_zoom*(float)param.xoff,_zoom*(float)param.yoff);
-        rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
-        blockChanges(false);
-        rubber->nestedIgnore--;
-    }
+        adjustRubber();
     return 1;
 }
 
@@ -226,20 +263,22 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
 
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);        
         myCrop=new flyMpDelogo(this, width, height,in,canvas,ui.horizontalSlider);
-        myCrop->param=*param;
+        myCrop->setParam(param);
         myCrop->_cookie=&ui;
         myCrop->addControl(ui.toolboxLayout);
         myCrop->setPreview(false);
-#define SPINENTRY(x) ui.x
-        SPINENTRY(spinX)->setMaximum(width);
-        SPINENTRY(spinW)->setMaximum(width);
-        SPINENTRY(spinY)->setMaximum(height);
-        SPINENTRY(spinH)->setMaximum(height);
+#define SPINENTRY(x,y) ui.spin##x->setMaximum(y);
+        SPINENTRY(X,width)
+        SPINENTRY(W,width)
+        SPINENTRY(Y,height)
+        SPINENTRY(H,height)
+
+        setSpinWidth(width,height);
 
         aprintf("Uploading\n");
         myCrop->upload();
         myCrop->sliderChanged();
-        myCrop->rubber->nestedIgnore=1;
+        myCrop->lockRubber(true);
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
@@ -270,24 +309,50 @@ void Ui_mpdelogoWindow::resizeEvent(QResizeEvent *event)
         return;
     uint32_t graphicsViewWidth = canvas->parentWidget()->width();
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myCrop->rubber->nestedIgnore++;
+    myCrop->lockRubber(true);
     myCrop->blockChanges(true);
     myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myCrop->adjustCanvasPosition();
     myCrop->blockChanges(false);
-    myCrop->rubber->nestedIgnore--;
+    myCrop->lockRubber(false);
 }
 
+/**
+ *  \fn setSpinWidth
+ *  \brief Try to avoid that spinboxes change width on setMaximum()
+ */
+void Ui_mpdelogoWindow::setSpinWidth(int inputWidth, int inputHeight)
+{
+    QString text;
+    int higher = (inputWidth > inputHeight)? inputWidth : inputHeight;
+    int maxpos = 1; // an extra one to account for buttons, not really correct
+    while(higher)
+    {
+        higher/=10;
+        maxpos++;
+    }
+    if(maxpos < 3) maxpos = 3;
+    while(maxpos-- > 0)
+    {
+        text+=QString("4"); // usually the widest digit with variable-width fonts
+    }
+    QFontMetrics fm = ui.spinX->fontMetrics();
+    int required = fm.boundingRect(text).width() + 20; // add some padding out of precaution
+#define SETME(x) ui.spin##x->setMinimumWidth(required);
+    SETME(X)
+    SETME(Y)
+    SETME(W)
+    SETME(H)
+}
 /**
     \fn showEvent
 */
 void Ui_mpdelogoWindow::showEvent(QShowEvent *event)
 {
-    myCrop->rubber->rubberband->show(); // must be called first
+    myCrop->initRubber();
     QDialog::showEvent(event);
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
-    myCrop->rubber->nestedIgnore=0;
 }
 
 /**
@@ -301,13 +366,12 @@ void Ui_mpdelogoWindow::showEvent(QShowEvent *event)
 /**
     \fn gather
 */
-
-  void Ui_mpdelogoWindow::gather(delogo *param)
-  {
-    
-        myCrop->download();
-        memcpy(param,&(myCrop->param),sizeof(delogo));
-  }
+void Ui_mpdelogoWindow::gather(delogo *param)
+{
+    myCrop->download();
+    if(param)
+        memcpy(param, myCrop->getParam(), sizeof(delogo));
+}
 /**
     \fn dtor
 */
@@ -324,7 +388,6 @@ Ui_mpdelogoWindow::~Ui_mpdelogoWindow()
 
 void Ui_mpdelogoWindow::valueChanged( int f )
 {
-    printf("Change (lock=%d)\n",lock);
   if(lock) return;
   lock++;
   myCrop->download();
@@ -350,23 +413,52 @@ void Ui_mpdelogoWindow::valueChanged( int f )
          myCrop->sameImage();
      }
  }
-
-#define MYSPIN(x) w->x
-//************************
 /**
-    \fn upload
-*/
-
-#define APPLY_TO_ALL(x) {w->spinX->x;w->spinY->x;w->spinW->x;w->spinH->x;w->spinBand->x;}
-
+ *  \fn blockChanges
+ *  \brief Break signal/slot loops
+ */
 bool flyMpDelogo::blockChanges(bool block)
 {
      Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+#define APPLY_TO_ALL(x) {w->spinX->x;w->spinY->x;w->spinW->x;w->spinH->x;w->spinBand->x;rubber->x;}
      APPLY_TO_ALL(blockSignals(block));
-     rubber->blockSignals(block);
      return true;
 }
+/**
+ *  \fn boundCheck
+ */
+bool flyMpDelogo::boundCheck(void)
+{
+    Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+    bool passed = true;
+    if(param.lw > _w)
+    {
+        param.lw = _w;
+        passed = false;
+    }
+    if(param.xoff + param.lw > _w)
+    {
+        param.xoff = _w - param.lw;
+        passed = false;
+    }
+    if(param.lh > _h)
+    {
+        param.lh = _h;
+        passed = false;
+    }
+    if(param.yoff + param.lh > _h)
+    {
+        param.yoff = _h - param.lh;
+        passed = false;
+    }
+    w->spinX->setMaximum(_w - param.lw);
+    w->spinY->setMaximum(_h - param.lh);
 
+    return passed;
+}
+/**
+ *  \fn upload
+ */
 uint8_t flyMpDelogo::upload(bool redraw, bool toRubber)
 {
     Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
@@ -374,46 +466,42 @@ uint8_t flyMpDelogo::upload(bool redraw, bool toRubber)
     {
         blockChanges(true);
     }
-    printf(">>>Upload event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
-
-    MYSPIN(spinX)->setValue(param.xoff);
-    MYSPIN(spinY)->setValue(param.yoff);
-    MYSPIN(spinW)->setValue(param.lw);
-    MYSPIN(spinH)->setValue(param.lh);   
-    MYSPIN(spinBand)->setValue(param.band);   
+    //printf(">>>Upload event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
+#define SETSPIN(x,y) w->spin##x->setValue(param.y);
+    SETSPIN(X,xoff)
+    SETSPIN(Y,yoff)
+    SETSPIN(W,lw)
+    SETSPIN(H,lh)
+    SETSPIN(Band,band)
 
     if(toRubber)
-    {
-        rubber->nestedIgnore++;
-        rubber->resize((float)(param.lw)*_zoom,(float)(param.lh)*_zoom);
-        rubber->move((float)(param.xoff)*_zoom,(float)(param.yoff)*_zoom);
-        rubber->nestedIgnore--;
-    }
-
+        adjustRubber();
     if(!redraw)
     {
          blockChanges(false);
     }
 
-        
-        printf("Upload\n");
-        return 1;
+    return 1;
 }
 /**
         \fn download
 */
 uint8_t flyMpDelogo::download(void)
 {
+    Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+    //printf(">>>Download event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
+#define GETSPIN(x,y) param.y=w->spin##x->value();
+    GETSPIN(X,xoff)
+    GETSPIN(Y,yoff)
+    GETSPIN(W,lw)
+    GETSPIN(H,lh)
+    GETSPIN(Band,band)
 
-        Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
-        param.xoff= MYSPIN(spinX)->value();
-        param.yoff= MYSPIN(spinY)->value();
-        param.lw= MYSPIN(spinW)->value();
-        param.lh= MYSPIN(spinH)->value();
-        param.band= MYSPIN(spinBand)->value();
-        printf(">>>Download event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
-        printf("Download\n");
-        return true;
+    blockChanges(true);
+    boundCheck();
+    adjustRubber();
+    blockChanges(false);
+    return 1;
 }
 
 /**

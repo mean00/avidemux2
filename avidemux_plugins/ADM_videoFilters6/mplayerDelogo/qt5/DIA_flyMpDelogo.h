@@ -12,12 +12,8 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
-
-/**
-    \class flyASharp
-*/
 #include "delogo.h"
-class ADM_rubberControl;
+
 class flyMpDelogo;
 
 /**
@@ -25,17 +21,20 @@ class flyMpDelogo;
 */
 class flyMpDelogo : public ADM_flyDialogYuv
 {
-public:
-    bool    blockChanges(bool block)  ;
-public:
-   delogo      param;
-   bool        preview;
-   ADM_rubberControl *rubber;
+private:
+    int         _ox,_oy,_ow,_oh;
+    delogo      param;
+    bool        preview;
+    ADM_rubberControl *rubber;
+
+    uint8_t     upload(bool update, bool toRubber);
+    bool        boundCheck(void);
+    void        adjustRubber(void);
+
 public:
    uint8_t     processYuv(ADMImage* in, ADMImage *out);
    uint8_t     download(void);
    uint8_t     upload() {return upload(true,true);}
-   uint8_t     upload(bool update, bool toRubber);
                flyMpDelogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider);
                 
@@ -51,7 +50,12 @@ public:
                 }
     bool    bandResized(int x,int y,int w, int h);
     bool    bandMoved(int x,int y,int w, int h);
-private:
-    int _ox,_oy,_ow,_oh;
+
+    bool    blockChanges(bool block);
+    void    initRubber(void);
+    int     lockRubber(bool lock);
+
+    delogo  *getParam(void) { return &param; }
+    void    setParam(delogo *ps);
 };
 // EOF

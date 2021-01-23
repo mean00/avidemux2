@@ -12,17 +12,21 @@ class Ui_mpdelogoWindow : public QDialog
 {
         Q_OBJECT
 
-protected: 
-       int lock;       
-
 public:
-
                             Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVideoFilter *in);
                             ~Ui_mpdelogoWindow();
+
+private:
+        int                 lock;
         Ui_mpdelogoDialog   ui;
         ADM_coreVideoFilter *_in;
         flyMpDelogo         *myCrop;
         ADM_QCanvas         *canvas;
+
+        void                resizeEvent(QResizeEvent *event);
+        void                showEvent(QShowEvent *event);
+        void                setSpinWidth(int w, int h);
+
 public slots:
         void                gather(delogo *param);
 
@@ -30,9 +34,5 @@ private slots:
         void                sliderUpdate(int foo);
         void                valueChanged(int foo);
         void                preview(int x);
-
-private:
-        void                resizeEvent(QResizeEvent *event);
-        void                showEvent(QShowEvent *event);
 };
 
