@@ -38,7 +38,7 @@
 
 
 /**
- * 
+ * \fn ctor
  * @param parent
  * @param width
  * @param height
@@ -46,20 +46,24 @@
  * @param canvas
  * @param slider
  */
- flyMpDelogo::flyMpDelogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider) :
-                ADM_flyDialogYuv(parent,width, height,in,canvas, slider,RESIZE_AUTO) 
- {
+flyMpDelogo::flyMpDelogo(
+    QDialog *parent,
+    uint32_t width,
+    uint32_t height,
+    ADM_coreVideoFilter *in,
+    ADM_QCanvas *canvas,
+    ADM_QSlider *slider) : ADM_flyDialogYuv(parent,width,height,in,canvas,slider,RESIZE_AUTO)
+{
     rubber=new ADM_rubberControl(this,canvas);
     rubber->resize(width,height);
     _ox=0;
     _oy=0;
     _ow=width/2;
     _oh=height/2;
- }
- /**
-  * 
-  */
+}
+/**
+ * \fn dtor
+ */
 flyMpDelogo::~flyMpDelogo()
 {
     if(rubber)
@@ -105,7 +109,8 @@ void flyMpDelogo::adjustRubber(void)
     rubber->nestedIgnore--;
 }
 /**
- * \fn lockRubber
+ * \fn      lockRubber
+ * \brief   Inhibit resize event callback
  */
 int flyMpDelogo::lockRubber(bool lock)
 {
@@ -117,12 +122,21 @@ int flyMpDelogo::lockRubber(bool lock)
     return old;
 }
 /**
- * \fn bandResized
- * @param w
- * @param h
- * @return 
+ * \fn      bandResized
+ * \brief   Handle resize event
+ *
+ * \details Identify which grip was used to resize the rubber band
+ *          by comparing to its previous position and size, resize
+ *          the rubber band back into bounds if necessary, calculate
+ *          delogo params from its bound-checked positon and size,
+ *          update spinboxes.
+ *
+ * @param x The new X axis offset relative to parent
+ * @param y The new Y axis offset
+ * @param w The new width of the rubber band
+ * @param h The new height
  */
-bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
+bool flyMpDelogo::bandResized(int x, int y, int w, int h)
 {
     bool leftGripMoved=false;
     bool rightGripMoved=false;
@@ -243,196 +257,6 @@ bool    flyMpDelogo::bandMoved(int x,int y,int w, int h)
     //
     return true;
 }
-
-/************* COMMON PART *********************/
-/**
-    \fn process
-*/
-uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
-{
-    out->duplicate(in);
-    if(preview)
-        MPDelogo::doDelogo(out, param.xoff, param.yoff,
-                             param.lw,  param.lh,param.band,param.show);        
-    else
-        adjustRubber();
-    return 1;
-}
-
-/**
-    \fn ctor
-*/
-
-  Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent,  delogo *param, ADM_coreVideoFilter *in) 
-            : QDialog(parent)
-  {
-    static bool doOnce=false;
-    uint32_t width,height;
-        
-        aprintf("Ctor @ %d: %d, %d x %d\n",param->xoff, param->yoff, param->lw,param->lh);
-        
-        ui.setupUi(this);
-        _in=in;
-        
-        lock=0;
-        // Allocate space for green-ised video
-        width=in->getInfo()->width;
-        height=in->getInfo()->height;
-
-        canvas=new ADM_QCanvas(ui.graphicsView,width,height);        
-        myCrop=new flyMpDelogo(this, width, height,in,canvas,ui.horizontalSlider);
-        myCrop->setParam(param);
-        myCrop->_cookie=&ui;
-        myCrop->addControl(ui.toolboxLayout);
-        myCrop->setPreview(false);
-#define SPINENTRY(x,y) ui.spin##x->setMaximum(y);
-        SPINENTRY(X,width)
-        SPINENTRY(W,width)
-        SPINENTRY(Y,height)
-        SPINENTRY(H,height)
-
-        setSpinWidth(width,height);
-
-        aprintf("Uploading\n");
-        myCrop->upload();
-        myCrop->sliderChanged();
-        myCrop->lockRubber(true);
-
-        connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x) connect( ui.x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
-        SPINNER(spinX);
-        SPINNER(spinY);
-        SPINNER(spinW);
-        SPINNER(spinH);
-        SPINNER(spinBand);
-
-        connect(ui.checkBoxPreview, SIGNAL(stateChanged(int )),this, SLOT(preview(int)));
-        
-        if(!doOnce)
-        {
-            Q_INIT_RESOURCE(delogo);
-            doOnce=true;
-        }
-        ui.labelHelp->setPixmap(QPixmap(":/images/grips.png"));
-
-        setModal(true);
-  }
-
-/**
-    \fn resizeEvent
-*/
-void Ui_mpdelogoWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myCrop->lockRubber(true);
-    myCrop->blockChanges(true);
-    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myCrop->adjustCanvasPosition();
-    myCrop->blockChanges(false);
-    myCrop->lockRubber(false);
-}
-
-/**
- *  \fn setSpinWidth
- *  \brief Try to avoid that spinboxes change width on setMaximum()
- */
-void Ui_mpdelogoWindow::setSpinWidth(int inputWidth, int inputHeight)
-{ // not needed when we don't set maximum dynamically
-#if 0
-    QString text;
-    int higher = (inputWidth > inputHeight)? inputWidth : inputHeight;
-    int maxpos = 1; // an extra one to account for buttons, not really correct
-    while(higher)
-    {
-        higher/=10;
-        maxpos++;
-    }
-    if(maxpos < 3) maxpos = 3;
-    while(maxpos-- > 0)
-    {
-        text+=QString("4"); // usually the widest digit with variable-width fonts
-    }
-    QFontMetrics fm = ui.spinX->fontMetrics();
-    int required = fm.boundingRect(text).width() + 20; // add some padding out of precaution
-#define SETME(x) ui.spin##x->setMinimumWidth(required);
-    SETME(X)
-    SETME(Y)
-    SETME(W)
-    SETME(H)
-#endif
-}
-/**
-    \fn showEvent
-*/
-void Ui_mpdelogoWindow::showEvent(QShowEvent *event)
-{
-    myCrop->initRubber();
-    QDialog::showEvent(event);
-    myCrop->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
-}
-
-/**
-    \fn sliderUpdate
-*/
-
-  void Ui_mpdelogoWindow::sliderUpdate(int foo)
-  {
-    myCrop->sliderChanged();
-  }
-/**
-    \fn gather
-*/
-void Ui_mpdelogoWindow::gather(delogo *param)
-{
-    myCrop->download();
-    if(param)
-        memcpy(param, myCrop->getParam(), sizeof(delogo));
-}
-/**
-    \fn dtor
-*/
-Ui_mpdelogoWindow::~Ui_mpdelogoWindow()
-{
-  if(myCrop) delete myCrop;
-  myCrop=NULL; 
-  if(canvas) delete canvas;
-  canvas=NULL;
-}
-/**
-    \fn valueChanged
-*/
-
-void Ui_mpdelogoWindow::valueChanged( int f )
-{
-  if(lock) return;
-  lock++;
-  myCrop->download();
-  myCrop->sameImage();
-  lock--;
-}
-
-/**
- * 
- * @param x
- */
- void Ui_mpdelogoWindow::preview(int x)
- {
-     aprintf("Preview = %d\n",x);
-     if(x==Qt::Checked)
-     {
-         myCrop->setPreview(true);
-         myCrop->sameImage();
-     }
-     else
-     {
-         myCrop->setPreview(false);
-         myCrop->sameImage();
-     }
- }
 /**
  *  \fn blockChanges
  *  \brief Break signal/slot loops
@@ -506,8 +330,8 @@ uint8_t flyMpDelogo::upload(bool redraw, bool toRubber)
     return 1;
 }
 /**
-        \fn download
-*/
+ *  \fn download
+ */
 uint8_t flyMpDelogo::download(void)
 {
     Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
@@ -524,25 +348,205 @@ uint8_t flyMpDelogo::download(void)
     return 1;
 }
 
+/************* COMMON PART *********************/
 /**
-      \fn     DIA_getMpDelogo
-      \brief  Handle delogo dialog
-*/
+ * \fn      processYuv
+ * \brief   Update preview
+ */
+uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
+{
+    out->duplicate(in);
+    if(preview)
+        MPDelogo::doDelogo(out, param.xoff, param.yoff, param.lw, param.lh, param.band, param.show);
+    else
+        adjustRubber();
+    return 1;
+}
+
+/************* Dialog window *******************/
+/**
+ *  \fn ctor
+ */
+Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVideoFilter *in) : QDialog(parent)
+{
+    static bool doOnce=false;
+    uint32_t width,height;
+
+    aprintf("Ctor @ %d: %d, %d x %d\n",param->xoff, param->yoff, param->lw,param->lh);
+    ui.setupUi(this);
+    _in=in;
+    lock=0;
+    // Allocate space for green-ised video
+    width=in->getInfo()->width;
+    height=in->getInfo()->height;
+
+    canvas = new ADM_QCanvas(ui.graphicsView,width,height);
+    myCrop = new flyMpDelogo(this,width,height,in,canvas,ui.horizontalSlider);
+    myCrop->setParam(param);
+    myCrop->_cookie=&ui;
+    myCrop->addControl(ui.toolboxLayout);
+    myCrop->setPreview(false);
+#define SPINENTRY(x,y) ui.spin##x->setMaximum(y);
+    SPINENTRY(X,width)
+    SPINENTRY(W,width)
+    SPINENTRY(Y,height)
+    SPINENTRY(H,height)
+
+    setSpinWidth(width,height);
+
+    aprintf("Uploading\n");
+    myCrop->upload();
+    myCrop->sliderChanged();
+    myCrop->lockRubber(true);
+
+    connect(ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
+#define SPINNER(x) connect(ui.spin##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
+    SPINNER(X)
+    SPINNER(Y)
+    SPINNER(W)
+    SPINNER(H)
+    SPINNER(Band)
+
+    connect(ui.checkBoxPreview, SIGNAL(stateChanged(int )),this, SLOT(preview(int)));
+    if(!doOnce)
+    {
+        Q_INIT_RESOURCE(delogo);
+        doOnce=true;
+    }
+    ui.labelHelp->setPixmap(QPixmap(":/images/grips.png"));
+
+    setModal(true);
+}
+/**
+ *  \fn dtor
+ */
+Ui_mpdelogoWindow::~Ui_mpdelogoWindow()
+{
+    if(myCrop) delete myCrop;
+    myCrop=NULL;
+    if(canvas) delete canvas;
+    canvas=NULL;
+}
+/**
+ *  \fn resizeEvent
+ */
+void Ui_mpdelogoWindow::resizeEvent(QResizeEvent *event)
+{
+    if(!canvas->height())
+        return;
+    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
+    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
+    myCrop->lockRubber(true);
+    myCrop->blockChanges(true);
+    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
+    myCrop->adjustCanvasPosition();
+    myCrop->blockChanges(false);
+    myCrop->lockRubber(false);
+}
+
+/**
+ *  \fn setSpinWidth
+ *  \brief Try to avoid that spinboxes change width on setMaximum()
+ */
+void Ui_mpdelogoWindow::setSpinWidth(int inputWidth, int inputHeight)
+{ // not needed when we don't set maximum dynamically
+#if 0
+    QString text;
+    int higher = (inputWidth > inputHeight)? inputWidth : inputHeight;
+    int maxpos = 1; // an extra one to account for buttons, not really correct
+    while(higher)
+    {
+        higher/=10;
+        maxpos++;
+    }
+    if(maxpos < 3) maxpos = 3;
+    while(maxpos-- > 0)
+    {
+        text+=QString("4"); // usually the widest digit with variable-width fonts
+    }
+    QFontMetrics fm = ui.spinX->fontMetrics();
+    int required = fm.boundingRect(text).width() + 20; // add some padding out of precaution
+#define SETME(x) ui.spin##x->setMinimumWidth(required);
+    SETME(X)
+    SETME(Y)
+    SETME(W)
+    SETME(H)
+#endif
+}
+/**
+ *  \fn showEvent
+ */
+void Ui_mpdelogoWindow::showEvent(QShowEvent *event)
+{
+    myCrop->initRubber();
+    QDialog::showEvent(event);
+    myCrop->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+}
+/**
+ *  \fn sliderUpdate
+ */
+void Ui_mpdelogoWindow::sliderUpdate(int foo)
+{
+    myCrop->sliderChanged();
+}
+/**
+ *  \fn gather
+ */
+void Ui_mpdelogoWindow::gather(delogo *param)
+{
+    myCrop->download();
+    if(param)
+        memcpy(param, myCrop->getParam(), sizeof(delogo));
+}
+/**
+ *  \fn valueChanged
+ */
+void Ui_mpdelogoWindow::valueChanged(int f)
+{
+    if(lock) return;
+    lock++;
+    myCrop->download();
+    myCrop->sameImage();
+    lock--;
+}
+/**
+ * \fn      preview
+ * \brief   Toggle preview
+ * @param x
+ */
+void Ui_mpdelogoWindow::preview(int x)
+{
+    aprintf("Preview = %d\n",x);
+    if(x==Qt::Checked)
+    {
+        myCrop->setPreview(true);
+        myCrop->sameImage();
+    }else
+    {
+        myCrop->setPreview(false);
+        myCrop->sameImage();
+    }
+}
+
+/**
+ * \fn      DIA_getMpDelogo
+ * \brief   Handle delogo dialog
+ */
 bool DIA_getMpDelogo(delogo *param, ADM_coreVideoFilter *in)
 {
-        bool ret=false;
-        
-        Ui_mpdelogoWindow dialog(qtLastRegisteredDialog(), param,in);
-		qtRegisterDialog(&dialog);
+    bool ret=false;
+    Ui_mpdelogoWindow dialog(qtLastRegisteredDialog(),param,in);
+    qtRegisterDialog(&dialog);
 
-        if(dialog.exec()==QDialog::Accepted)
-        {
-            dialog.gather(param); 
-            ret=true;
-        }
+    if(dialog.exec()==QDialog::Accepted)
+    {
+        dialog.gather(param);
+        ret=true;
+    }
 
-        qtUnregisterDialog(&dialog);
-        return ret;
+    qtUnregisterDialog(&dialog);
+    return ret;
 }
 
 //EOF
