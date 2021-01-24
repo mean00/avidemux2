@@ -220,21 +220,21 @@ bool    flyMpDelogo::bandMoved(int x,int y,int w, int h)
 {
     _ox = x;
     _oy = y;
+    _ow = w;
+    _oh = h;
 
-    int nw = (double)w/_zoom + 0.49;
-    int nh = (double)h/_zoom + 0.49;
     int nx = (double)x/_zoom + 0.49;
     int ny = (double)y/_zoom + 0.49;
 
     // bound checks are done in rubber control    bool resizeRubber=false;
 
-    if(nx+nw>_w)
-        nx=_w-nw;
-    if(ny+nh>_h)
-        ny=_h-nh;
-
     if(nx<0) nx=0;
     if(ny<0) ny=0;
+
+    if(nx+param.lw>_w)
+        nx=_w-param.lw;
+    if(ny+param.lh>_h)
+        ny=_h-param.lh;
 
     param.xoff=nx;
     param.yoff=ny;
@@ -340,7 +340,8 @@ void Ui_mpdelogoWindow::resizeEvent(QResizeEvent *event)
  *  \brief Try to avoid that spinboxes change width on setMaximum()
  */
 void Ui_mpdelogoWindow::setSpinWidth(int inputWidth, int inputHeight)
-{
+{ // not needed when we don't set maximum dynamically
+#if 0
     QString text;
     int higher = (inputWidth > inputHeight)? inputWidth : inputHeight;
     int maxpos = 1; // an extra one to account for buttons, not really correct
@@ -361,6 +362,7 @@ void Ui_mpdelogoWindow::setSpinWidth(int inputWidth, int inputHeight)
     SETME(Y)
     SETME(W)
     SETME(H)
+#endif
 }
 /**
     \fn showEvent
@@ -469,8 +471,10 @@ bool flyMpDelogo::boundCheck(void)
         param.yoff = _h - param.lh;
         passed = false;
     }
-    w->spinX->setMaximum(_w - param.lw);
-    w->spinY->setMaximum(_h - param.lh);
+    /* Setting maximum dynamically breaks auto-repeat of
+       spinbox buttons. Do not uncomment the lines below. */
+    //w->spinX->setMaximum(_w - param.lw);
+    //w->spinY->setMaximum(_h - param.lh);
 
     return passed;
 }
@@ -514,10 +518,9 @@ uint8_t flyMpDelogo::download(void)
     GETSPIN(H,lh)
     GETSPIN(Band,band)
 
-    blockChanges(true);
-    boundCheck();
+    if(!boundCheck())
+        upload(false,true);
     //printf(">>>Download event : x = %d y = %d w = %d h = %d\n",param.xoff,param.yoff,param.lw,param.lh);
-    blockChanges(false);
     return 1;
 }
 
