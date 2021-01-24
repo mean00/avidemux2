@@ -136,9 +136,26 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
     _ow=w;
     _oh=h;
 
-    bool ignore=false;
-    if(leftGripMoved && rightGripMoved) // bogus event
-        ignore=true;
+    bool resizeRubber=false;
+    if(x<0)
+    {
+        w+=x;
+        x=0;
+        resizeRubber=true;
+    }
+    if(y<0)
+    {
+        h+=y;
+        y=0;
+        resizeRubber=true;
+    }
+    if(resizeRubber)
+    {
+        rubber->nestedIgnore++;
+        rubber->move(x,y);
+        rubber->resize(w,h);
+        rubber->nestedIgnore--;
+    }
 
     int nw = (double)w/_zoom + 0.49;
     int nh = (double)h/_zoom + 0.49;
@@ -146,26 +163,28 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
     int ny = (double)y/_zoom + 0.49;
 
     aprintf("%d x %d => %d x %d, normalized offsets nx=%d, ny=%d, zoom=%f\n",param.lw,param.lh,nw,nh,nx,ny,_zoom);
-    bool resizeRubber=false;
+
+    resizeRubber=false;
     if(nx<0 || ny<0 || nx+nw>_w || ny+nh>_h)
         resizeRubber=true;
-
-    if(ignore)
-    {
-        upload(false,resizeRubber);
-        return false;
-    }
 
     uint32_t right=param.xoff+param.lw;
     uint32_t bottom=param.yoff+param.lh;
 
+    if(nx<0)
+    {
+        nw+=nx;
+        nx=0;
+    }
+    if(ny<0)
+    {
+        nh+=ny;
+        ny=0;
+    }
     if(nx+nw>_w)
         nw=_w-nx;
     if(ny+nh>_h)
         nh=_h-ny;
-
-    if(nx<0) nx=0;
-    if(ny<0) ny=0;
 
     if(leftGripMoved)
     {
@@ -173,12 +192,16 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
         param.yoff=ny;
         param.lw=right-nx;
         param.lh=bottom-ny;
-    }
-
-    if(rightGripMoved)
+    }else if(rightGripMoved)
     {
         param.lw=nw;
         param.lh=nh;
+    }else
+    {
+        param.xoff=nx;
+        param.yoff=ny;
+        param.lw=right-nx;
+        param.lh=bottom-ny;
     }
 
     upload(false,resizeRubber);
@@ -195,6 +218,9 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
  */
 bool    flyMpDelogo::bandMoved(int x,int y,int w, int h)
 {
+    _ox = x;
+    _oy = y;
+
     int nw = (double)w/_zoom + 0.49;
     int nh = (double)h/_zoom + 0.49;
     int nx = (double)x/_zoom + 0.49;
@@ -202,24 +228,16 @@ bool    flyMpDelogo::bandMoved(int x,int y,int w, int h)
 
     // bound checks are done in rubber control    bool resizeRubber=false;
 
-    uint32_t right=param.xoff+param.lw;
-    uint32_t bottom=param.yoff+param.lh;
-
     if(nx+nw>_w)
-        nw=_w-nx;
+        nx=_w-nw;
     if(ny+nh>_h)
-        nh=_h-ny;
+        ny=_h-nh;
 
     if(nx<0) nx=0;
     if(ny<0) ny=0;
 
     param.xoff=nx;
     param.yoff=ny;
-    param.lw=right-nx;
-    param.lh=bottom-ny;
-
-    param.lw=nw;
-    param.lh=nh;
 
     upload(false,false);
     //
@@ -466,7 +484,7 @@ uint8_t flyMpDelogo::upload(bool redraw, bool toRubber)
     {
         blockChanges(true);
     }
-    //printf(">>>Upload event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
+    //printf(">>>Upload event : x = %d y = %d w = %d h = %d\n",param.xoff,param.yoff,param.lw,param.lh);
 #define SETSPIN(x,y) w->spin##x->setValue(param.y);
     SETSPIN(X,xoff)
     SETSPIN(Y,yoff)
@@ -489,7 +507,6 @@ uint8_t flyMpDelogo::upload(bool redraw, bool toRubber)
 uint8_t flyMpDelogo::download(void)
 {
     Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
-    //printf(">>>Download event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
 #define GETSPIN(x,y) param.y=w->spin##x->value();
     GETSPIN(X,xoff)
     GETSPIN(Y,yoff)
@@ -499,7 +516,7 @@ uint8_t flyMpDelogo::download(void)
 
     blockChanges(true);
     boundCheck();
-    adjustRubber();
+    //printf(">>>Download event : x = %d y = %d w = %d h = %d\n",param.xoff,param.yoff,param.lw,param.lh);
     blockChanges(false);
     return 1;
 }
