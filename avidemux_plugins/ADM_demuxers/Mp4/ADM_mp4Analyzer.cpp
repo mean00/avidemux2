@@ -1251,9 +1251,16 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     break;
                                 }
                                 case MKFCCR('Q','D','M','2'):
+                                case MKFCCR('O','p','u','s'):
                                 {
                                     int64_t sz;
-                                    audioCodec(QDM2);
+                                    if(MKFCCR('Q','D','M','2') == entryName)
+                                    {
+                                        audioCodec(QDM2)
+                                    }else
+                                    {
+                                        audioCodec(OPUS)
+                                    }
                                     sz=son.getRemainingSize();
                                     _tracks[1+nbAudioTrack].extraDataSize=sz;
                                     _tracks[1+nbAudioTrack].extraData=new uint8_t[sz];
