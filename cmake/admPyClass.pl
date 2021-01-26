@@ -90,6 +90,7 @@ sub processMETHOD
         my $cfunc;
         $args=~s/^.*\(//g;
         $args=~s/\).*$//g;
+        $args=~s/ *//g;
         #print "args => $args\n";
         @params=split ",",$args;
         #print "params -> @params\n";
@@ -208,7 +209,7 @@ sub genReturn
         }
         if($retType=~m/void/)
         {
-                return " return tp_None;";
+                return "  return tp_None;";
         }
          if($retType=~m/str/)
         {
@@ -323,7 +324,7 @@ sub genGetSet
         print OUTPUT "  IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string(\"userdata\")).data.val;\n";
         print OUTPUT "  IEditor *editor = engine->editor();\n";
         print OUTPUT "  TinyParams pm(vm);\n";
-        print OUTPUT "  $cookieName *me=($cookieName *)pm.asThis(&self, $cookieId);\n";
+        print OUTPUT "  $cookieName *me = ($cookieName *)pm.asThis(&self, $cookieId);\n";
         print OUTPUT "  char const *key = pm.asString();\n";
         my @k=keys %typeVars;
         my $v;
@@ -361,7 +362,7 @@ sub genGetSet
                 $cfunk=$glueprefix.$f;
                 print OUTPUT "  if (!strcmp(key, \"$pyFunc\"))\n";
                 print OUTPUT "  {\n";
-                print OUTPUT "     return tp_method(vm, self, ".$cfunk.");\n";
+                print OUTPUT "    return tp_method(vm, self, ".$cfunk.");\n";
                 print OUTPUT "  }\n";
 
         }
@@ -435,10 +436,10 @@ sub genGlue
                 my $ret=$rType{$f};
                 my $nb=scalar(@params);
 
-                print "Generating $pyFunc -> $ret $cfunc (@params ) \n";
-                print OUTPUT "// $pyFunc -> $ret $cfunc (@params ) \n";
+                print "Generating $pyFunc -> $ret $cfunc(@params)\n";
+                print OUTPUT "// $pyFunc -> $ret $cfunc(@params)\n";
                 # start our function
-                print OUTPUT "static tp_obj ".$glueprefix.$f."(TP)\n {\n";
+                print OUTPUT "static tp_obj ".$glueprefix.$f."(TP)\n{\n";
 
                 debug("$f invoked\n");
                  print OUTPUT "  tp_obj self = tp_getraw(tp);\n";  # We need a this as we only deal with instance!
@@ -474,23 +475,26 @@ sub genGlue
                         {
                                 print OUTPUT "  ".$ret." r = ";
                         }
+                }else
+                {
+                        print OUTPUT "  ";
                 }
                 if($staticClass==1)
                 {
-                        print OUTPUT "  ".$functionPrefix.$cfunc."(";
+                        print OUTPUT $functionPrefix.$cfunc."(";
                 }else
                 {
-                        print OUTPUT "  me->".$functionPrefix.$cfunc."(";
+                        print OUTPUT "me->".$functionPrefix.$cfunc."(";
                 }
                 for($i=0;$i<$nb;$i++)
                 {
                         if($i)
                         {
-                                print OUTPUT ",";
+                                print OUTPUT ", ";
                         }
                         print OUTPUT "p".$i;
                 }
-                print OUTPUT "); \n";
+                print OUTPUT ");\n";
                 # return value (if any)
                 print OUTPUT genReturn($ret);
                 print OUTPUT "\n}\n";
@@ -572,15 +576,15 @@ my $f;
 my $cfunk;
 my $pyFunc;
                 print OUTPUT "static tp_obj ".$helpName."(TP)\n{\n";
-                print OUTPUT "\tPythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n\n";
+                print OUTPUT "  PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n\n";
 
                 foreach $f(  keys %cFuncs)
                 {
                         my @params=@{$funcParams{$f}};
-                        print OUTPUT "\tengine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$f(".join(",",@params) .")\\n\");\n";
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$f(".join(",",@params) .")\\n\");\n";
                 }
-                print OUTPUT "\n\treturn tp_None;\n";
-                print OUTPUT "};\n";
+                print OUTPUT "\n  return tp_None;\n";
+                print OUTPUT "}\n";
 #
 #  Create the init function that will register our class
 #
