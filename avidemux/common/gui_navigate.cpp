@@ -39,7 +39,6 @@ static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again 
 static void A_timedError(bool force, const char *s);
 
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
-bool   GUI_GoToTime(uint64_t time);
 bool   GUI_infiniteForward(uint64_t pts);
 bool   GUI_lastFrameBeforePts(uint64_t pts);
 bool   GUI_SeekByTime(int64_t time);
@@ -201,66 +200,69 @@ static int ignore_change=0;
     \fn GUI_NextFrame
     \brief next frame
 */
-void GUI_NextFrame(uint32_t frameCount)
+bool GUI_NextFrame(void)
 {
     if (playing)
-    return;
+        return false;
     if (!avifileinfo)
-    return;
+        return false;
 
-    admPreview::nextPicture();
+    if(!admPreview::nextPicture())
+        return false;
     GUI_setCurrentFrameAndTime();
     UI_purge();
+    return true;
 }
 
 
 /**
     \fn GUI_NextKeyFrame
     \brief Go to the next keyframe
-    
 */
-void GUI_NextKeyFrame(void)
+bool GUI_NextKeyFrame(void)
 {
     static bool firstError = true;
 
     if (playing)
-    return;
+        return false;
     if (!avifileinfo)
-    return;
+        return false;
 
     if (!admPreview::nextKeyFrame())
       {
         bool force = firstError;
         firstError = false;
         A_timedError(force, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
-        return;
+        return false;
       }
     GUI_setCurrentFrameAndTime();
     UI_purge();
+    return true;
 }
 
 /**
-    \fn GUI_GoToKFrame
-    \brief Go to the nearest previous keyframe
+    \fn GUI_GoToKFrameTime
+    \brief Go to keyframe at given exact time
 */
-void GUI_GoToKFrameTime(uint64_t timeFrame)
+bool GUI_GoToKFrameTime(uint64_t exactTime)
 {
-
     if (playing)
-    return;
+        return false;
     if (!avifileinfo)
-    return;
+        return false;
 
-    admPreview::seekToIntraPts(timeFrame);
-    admPreview::samePicture();
+    if(!admPreview::seekToIntraPts(exactTime))
+        return false;
+    //admPreview::samePicture(); // why a second time?
     GUI_setCurrentFrameAndTime();
     UI_purge();
+    return true;
 }
 /**
     \fn GUI_GoToFrame
     \brief go to a given frame. Half broken, do not use.
 */
-int GUI_GoToFrame(uint32_t frame)
+bool GUI_GoToFrame(uint32_t frame)
 {
 #if 0
     uint32_t flags;
@@ -285,27 +287,26 @@ int GUI_GoToFrame(uint32_t frame)
     \fn GUI_PreviousKeyFrame
     \brief Go to previous keyframe
 */
-
-void GUI_PreviousKeyFrame(void)
+bool GUI_PreviousKeyFrame(void)
 {
     static bool firstError = true;
 
     if (playing)
-    return;
+        return false;
     if (!avifileinfo)
-    return;
+        return false;
 
     if (!admPreview::previousKeyFrame())
       {
         bool force = firstError;
         firstError = false;
         A_timedError(force, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
-        return;
+        return false;
       }
     GUI_setCurrentFrameAndTime();
     UI_purge();
-
-};
+    return true;
+}
 
 uint8_t A_rebuildKeyFrame(void)
 {
@@ -316,19 +317,22 @@ uint8_t A_rebuildKeyFrame(void)
     \fn GUI_PrevFrame
     \brief Go to current frame -1
 */
-void GUI_PrevFrame(uint32_t frameCount)
+bool GUI_PrevFrame(void)
 {
-     if (playing)        return;
-    if (!avifileinfo)    return;
+    if (playing)
+        return false;
+    if (!avifileinfo)
+        return false;
 
     if (!admPreview::previousPicture())
       {
 //        We're probably at the beginning of the file ...
 //            GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),    QT_TRANSLATE_NOOP("navigate","Cannot go to previous frame"));
-            return;
+        return false;
       }
     GUI_setCurrentFrameAndTime();
     UI_purge();
+    return true;
 }
 /**
       \fn A_jogRead

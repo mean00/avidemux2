@@ -1077,15 +1077,6 @@ bool  ADM_Composer::rebuildDuration(void)
   return true;
 }
 /**
-    \fn getCurrentFramePts
-    \brief Get the PTS of current frame
-
-*/
-uint64_t    ADM_Composer::getCurrentFramePts(void)
-{
-   return _currentPts;
-}
-/**
     \fn remove
     \brief Remove part of the video
 */

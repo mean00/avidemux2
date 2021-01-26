@@ -20,13 +20,17 @@ void 			GUI_setAllFrameAndTime(void );
 
 
 
-void GUI_NextFrame( uint32_t frameCount = 1 );
-void GUI_PrevFrame( uint32_t frameCount = 1 );
-void GUI_NextKeyFrame( void ) ;
+bool GUI_NextFrame(void);
+bool GUI_PrevFrame(void);
+bool GUI_NextKeyFrame(void);
+bool GUI_PreviousKeyFrame(void);
+
+bool GUI_GoToTime(uint64_t time);
+uint8_t GUI_close(void);
+
 void GUI_PrevBlackFrame(void);
 void GUI_NextBlackFrame( ) ;
 void GUI_NextPrevBlackFrame( int ) ;
-void GUI_PreviousKeyFrame( void );
 uint8_t A_ListAllBlackFrames( char *name);
 void GUI_PlayAvi(bool quit = false);
 uint32_t GUI_GetScale( void );

@@ -123,6 +123,7 @@ class ADM_Composer : public IEditor
 
                     bool        nextPictureInternal(uint32_t ref,ADMImage *image,uint64_t time=0);
                     bool        samePictureInternal(uint32_t ref,ADMImage *image);
+                    bool        nextPicture(ADMImage *image, int flags); // 1 = don't cross segment, 2 = don't skip to next keyframe
                     bool        seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode=false);
                     // Some useful functions...
                     void        recalibrate(uint64_t *time,_SEGMENT *seg);
@@ -258,7 +259,7 @@ public:
                     bool        goToTimeVideo(uint64_t time);
                     void		getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser);
                     bool        goToIntraTimeVideo(uint64_t time);
-                    bool        nextPicture(ADMImage *image, int flags=0); // 1 = don't cross segment, 2 = don't skip to next keyframe
+                    bool        nextPicture(ADMImage *image);
                     bool        samePicture(ADMImage *image);
                     bool        previousPicture(ADMImage *image);
                     bool        rewind(void);
@@ -370,8 +371,8 @@ public:
         bool        addExternalAudioTrack(const char *fileName); /// Add audio track from a file
         void        updateDefaultAudioTrack(void);
 
-        void        seekFrame(int count);
-        void        seekKeyFrame(int count);
+        bool        seekFrame(int count);
+        bool        seekKeyFrame(int count);
         void        seekBlackFrame(int count);
 public:
         bool            setVar(const char *key, const char *value);

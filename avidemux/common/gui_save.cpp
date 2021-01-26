@@ -36,6 +36,7 @@
 #include "ADM_coreJobs.h"
 #include "ADM_audioWrite.h"
 #include "ADM_filterChain.h"
+#include "audioEncoderApi.h"
 // Local prototypes
 #include "A_functions.h"
 #include "ADM_script2/include/ADM_script.h"
