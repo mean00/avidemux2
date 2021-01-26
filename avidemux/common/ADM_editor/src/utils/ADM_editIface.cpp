@@ -537,26 +537,30 @@ bool ADM_Composer::seekKeyFrame(int count)
     uint64_t pts = admPreview::getCurrentPts();
     if(!pts && count < 0) // at the start of the video if any, nowhere to go
         return false;
-    if(!count)
+    if(count < 1)
     {
         uint32_t flags,quant;
         admPreview::getFrameFlags(&flags,&quant);
-        if(flags & AVI_KEY_FRAME) // already there, nothing to do
-            return true; // else we seek to the nearest earlier keyframe
+        if(flags & AVI_KEY_FRAME)
+        {
+            if(!count) // already there, nothing to do
+                return true;
+        }else
+        { // seek back -count keyframes starting with the closest earlier keyframe
+            count--;
+        }
     }
 
-    bool r = true;
+    int found = 0;
     if(count > 0)
     {
         for(int i = 0; i < count; i++)
         {
             uint64_t tmp = pts;
             if(!getNKFramePTS(&tmp))
-            {
-                r = false; // cannot find as many keyframes as requested
                 break;
-            }
             pts = tmp;
+            found++;
         }
     }else
     {
@@ -564,17 +568,15 @@ bool ADM_Composer::seekKeyFrame(int count)
         {
             uint64_t tmp = pts;
             if(!getPKFramePTS(&tmp))
-            {
-                r = false;
                 break;
-            }
             pts = tmp;
+            found--;
         }
     }
 
-    if(false == GUI_GoToKFrameTime(pts))
+    if(found && false == GUI_GoToKFrameTime(pts))
         return false;
-    return r;
+    return found == count;
 }
 
 void ADM_Composer::seekBlackFrame(int count)
