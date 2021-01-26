@@ -89,7 +89,7 @@ void ADM_QRubberBand::paintEvent(QPaintEvent *event)
     QBrush solid = QBrush(Qt::red, Qt::SolidPattern);
     if(mode & ADM_RUBBER_BAND_GRIPS_FIRST)
         painter.fillPath(topLeft, solid);
-    if(mode & ADM_RUBBER_BAND_GRIPS_SECOND);
+    if(mode & ADM_RUBBER_BAND_GRIPS_SECOND)
         painter.fillPath(bottomRight, solid);
 
     painter.end();
