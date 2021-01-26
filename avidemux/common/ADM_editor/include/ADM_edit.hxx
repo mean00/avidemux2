@@ -257,7 +257,7 @@ public:
                     uint64_t    getCurrentFramePts(void);
                     bool		setCurrentFramePts(uint64_t pts);
                     bool        goToTimeVideo(uint64_t time);
-                    void		getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser);
+                    bool        getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser);
                     bool        goToIntraTimeVideo(uint64_t time);
                     bool        nextPicture(ADMImage *image);
                     bool        samePicture(ADMImage *image);

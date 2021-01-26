@@ -45,7 +45,7 @@ public:
     virtual void dumpSegments(void) = 0;
     virtual bool dumpRefVideos(void) = 0;
     virtual bool dumpTiming(void) = 0;
-    virtual void getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser) = 0;
+    virtual bool getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser) = 0;
     virtual uint64_t getCurrentFramePts(void) = 0;
     virtual bool getDirectImageForDebug(uint32_t frameNum, ADMCompressedImage *img) = 0;
     virtual uint64_t getFrameIncrement(bool copy=false) = 0;

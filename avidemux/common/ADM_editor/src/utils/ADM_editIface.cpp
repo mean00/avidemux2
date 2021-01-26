@@ -476,7 +476,11 @@ uint64_t ADM_Composer::getCurrentFramePts(void)
 bool ADM_Composer::setCurrentFramePts(uint64_t pts)
 {
     if(admPreview::seekToTime(pts))
+    {
+        GUI_setCurrentFrameAndTime();
+        UI_purge();
         return true;
+    }
     // pts is not exact, can we seek to the previous keyframe?
     if(!getPKFramePTS(&pts)) // nope
         return false;
@@ -486,9 +490,13 @@ bool ADM_Composer::setCurrentFramePts(uint64_t pts)
  * \fn      getCurrentFrameFlags
  * \brief   Get flags from preview
  */
-void ADM_Composer::getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser)
+bool ADM_Composer::getCurrentFrameFlags(uint32_t *flags, uint32_t *quantizer)
 {
-    admPreview::getFrameFlags(flags, quantiser);
+    *flags = 0;
+    if(!admPreview::getBuffer)
+        return false;
+    admPreview::getFrameFlags(flags, quantizer);
+    return true;
 }
 
 _VIDEOS* ADM_Composer::getRefVideo(int videoIndex)
