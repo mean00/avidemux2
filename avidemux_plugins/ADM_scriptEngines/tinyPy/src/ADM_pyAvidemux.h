@@ -55,7 +55,7 @@ int pyGetWidth(IEditor *editor);
 int pyGetHeight(IEditor *editor);
 
 /* Detail info (debug) */
-bool pyHexDumpFrame(IEditor *editor, int framenumber);
+int pyHexDumpFrame(IEditor *editor, int framenumber);
 int pyPrintTiming(IEditor *editor, int framenumber);
 double pyGetPts(IEditor *editor, int frameNum);
 double pyGetDts(IEditor *editor, int frameNum);
@@ -78,6 +78,6 @@ int pyTestSub( char *subName);
 /* OS */
 char *pyGetEnv(IEditor *editor,const char *);
 /* Navigate */
-bool pyNextFrame(IEditor *editor);
+int pyNextFrame(IEditor *editor);
 #endif
 // EOF

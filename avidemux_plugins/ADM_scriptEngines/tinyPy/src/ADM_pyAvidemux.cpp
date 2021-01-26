@@ -56,8 +56,7 @@ int pyGetHeight(IEditor *editor)
 /**
     \fn pyHexDumpFrame
 */
-
-bool pyHexDumpFrame(IEditor *editor, int framenumber)
+int pyHexDumpFrame(IEditor *editor, int framenumber)
 {
     ADMCompressedImage img;
     notStackAllocator buf(ADM_COMPRESSED_MAX_DATA_LENGTH);
@@ -67,30 +66,27 @@ bool pyHexDumpFrame(IEditor *editor, int framenumber)
     if (!editor->getDirectImageForDebug(framenumber, &img))
     {
         ADM_error("Cannot get picture %d\n", framenumber);
-        return false;
+        return 0;
     }
 
     mixDump(img.data, img.dataLength);
 
-    return true;
+    return 1;
 }
 
 /**
- * 
- * @param editor
- * @param framenumber
- * @return 
+ * \fn      pyNextFrame
+ * \brief   decode next frame but do not update preview
+ * @param   editor
+ * @return  1 on success, else 0
  */
-bool pyNextFrame(IEditor *editor)
+int pyNextFrame(IEditor *editor)
 {
     aviInfo info;
     if(!editor->getVideoInfo(&info))
-        return false;
-    
+        return 0;
     ADMImageDefault img(info.width,info.height);
-    if(!editor->nextPicture(&img,false))
-       return false;
-    return true;
+    return editor->nextPicture(&img);
 }
 
 /**
