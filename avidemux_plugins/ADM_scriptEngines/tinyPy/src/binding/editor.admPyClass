@@ -3,6 +3,7 @@
 /* METHOD */ double pyGetPts:getPts            (int) 
 /* METHOD */ double pyGetDts:getDts            (int) 
 /* METHOD */ double editor->getCurrentFramePts:getCurrentPts (void)
+/* METHOD */ int pyGetCurrentFrameFlags:getCurrentFlags (void)
 /* METHOD */ double pyGetPrevKFramePts:getPrevKFramePts (double)
 /* METHOD */ double pyGetNextKFramePts:getNextKFramePts (double)
 /* METHOD */ int pyPrintTiming:printTiming      (int) 

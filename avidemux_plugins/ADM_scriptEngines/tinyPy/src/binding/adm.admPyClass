@@ -64,6 +64,7 @@
 # Seek
 /* METHOD */ int editor->seekKeyFrame:seekKeyFrame(int)
 /* METHOD */ int editor->seekFrame:seekFrame(int)
+/* METHOD */ int editor->setCurrentFramePts:setCurrentPts(double)
 #
 #       Variables
 #

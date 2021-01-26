@@ -54,13 +54,16 @@ int pyGetFps1000(IEditor *editor);
 int pyGetWidth(IEditor *editor);
 int pyGetHeight(IEditor *editor);
 
+/* Editing-related info */
+int pyGetCurrentFrameFlags(IEditor *editor);
+double pyGetPrevKFramePts(IEditor *editor, double time);
+double pyGetNextKFramePts(IEditor *editor, double time);
+
 /* Detail info (debug) */
 int pyHexDumpFrame(IEditor *editor, int framenumber);
 int pyPrintTiming(IEditor *editor, int framenumber);
 double pyGetPts(IEditor *editor, int frameNum);
 double pyGetDts(IEditor *editor, int frameNum);
-double pyGetPrevKFramePts(IEditor *editor, double time);
-double pyGetNextKFramePts(IEditor *editor , double time);
 
 /* File operation */
 char *pyFileSelWrite(IEditor *editor, const char *title);

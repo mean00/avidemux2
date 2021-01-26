@@ -188,6 +188,16 @@ double pyGetDts(IEditor *editor, int frameNum)
 
 	return (double)dts;
 }
+/**
+    \fn pyGetCurrentFrameFlags
+*/
+int pyGetCurrentFrameFlags(IEditor *editor)
+{
+    uint32_t flags,qz;
+    if(false == editor->getCurrentFrameFlags(&flags,&qz))
+        return -1;
+    return flags;
+}
 
 /**
     \fn pyGetPrevKFramePts
