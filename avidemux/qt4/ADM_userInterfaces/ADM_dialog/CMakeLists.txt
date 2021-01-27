@@ -4,19 +4,30 @@ SET(ADM_LIB ADM_dialogQt4)
 SET(
         uiFiles
         about.ui
-        calculator.ui
+#calculator.ui
         encoding.ui
         license.ui
         jobs.ui
-        props.ui  vobsub.ui  audioTracks.ui
+        props.ui
+#vobsub.ui
+        audioTracks.ui
         processing.ui
         working.ui)
 
 SET(headers
-	Q_about.h  Q_calculator.h
+        Q_about.h
+#Q_calculator.h
         Q_encoding.h
-        Q_audioTracks.h Q_audioTrackClass.h
-	Q_license.h  Q_jobs.h  Q_props.h  Q_vobsub.h  Q_working.h  Q_processing.h T_index_pg.h)
+        Q_audioTracks.h
+        Q_audioTrackClass.h
+        Q_license.h
+        Q_jobs.h
+        Q_props.h
+#Q_vobsub.h
+        Q_working.h
+        Q_processing.h
+#T_index_pg.h
+)
 
 ADM_QT_WRAP_UI(${ADM_LIB}_headers ${uiFiles})
 ADM_QT_WRAP_CPP(${ADM_LIB}_source ${headers})
@@ -26,12 +37,13 @@ SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS}
 	${${ADM_LIB}_headers}  ${${ADM_LIB}_source}  ${${ADM_LIB}_resource}
         Q_about.cpp
         Q_license.cpp
-        Q_jobs.cpp  Q_props.cpp
+        Q_jobs.cpp
+        Q_props.cpp
         Q_working.cpp
         Q_processing.cpp
-        T_index_pg.cpp
+#T_index_pg.cpp
         alert_qt4.cpp
-        DIA_busy.cpp
+#DIA_busy.cpp
         DIA_none.cpp
 #DIA_xvid4.cpp  OCR_none.cpp
 #Q_vobsub.cpp
