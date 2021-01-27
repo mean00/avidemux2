@@ -32,7 +32,6 @@ AUDMAudioFilterPal2Film::AUDMAudioFilterPal2Film(AUDMAudioFilter *previous) :
 {
     printf("[Pal2Film] Created\n");
 }
-#define CONTECT ((SRC_STATE *)context))
 //__________
 
 AUDMAudioFilterFilmChange::AUDMAudioFilterFilmChange(AUDMAudioFilter * instream,uint32_t from, uint32_t to):AUDMAudioFilter (instream)
