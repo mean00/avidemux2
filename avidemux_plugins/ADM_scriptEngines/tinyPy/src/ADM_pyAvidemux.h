@@ -68,6 +68,8 @@ double pyGetDts(IEditor *editor, int frameNum);
 /* File operation */
 char *pyFileSelWrite(IEditor *editor, const char *title);
 char *pyFileSelRead(IEditor *editor, const char *title);
+char *pyFileSelWriteEx(IEditor *editor, const char *title, const char *ext);
+char *pyFileSelReadEx(IEditor *editor, const char *title, const char *ext);
 char *pyDirSelect(IEditor *editor, const char *title);
 
 /* Display */

@@ -249,6 +249,7 @@ char *pyFileSelWrite(IEditor *editor, const char *title)
 
 	return me;
 }
+
 /**
     \fn pyFileSelRead
 */
@@ -261,20 +262,51 @@ char *pyFileSelRead(IEditor *editor, const char *title)
 
 	return me;
 }
+
+#if defined(__APPLE__)
+ #define MAX_LEN 1024
+#else
+ #define MAX_LEN 4096
+#endif
+
+/**
+    \fn pyFileSelWriteEx
+*/
+char *pyFileSelWriteEx(IEditor *editor, const char *title, const char *ext)
+{
+    char me[MAX_LEN] = {0};
+    const char *txt = QT_TRANSLATE_NOOP("tinypy","Save File");
+    if(!FileSel_SelectWrite((title && strlen(title)) ? title : txt, me, MAX_LEN, NULL, ext))
+        return NULL;
+
+    return ADM_strdup(me);
+}
+
+/**
+    \fn pyFileSelReadEx
+*/
+char *pyFileSelReadEx(IEditor *editor, const char *title, const char *ext)
+{
+    char me[MAX_LEN] = {0};
+    const char *txt = QT_TRANSLATE_NOOP("tinypy","Open File");
+    if(!FileSel_SelectRead((title && strlen(title)) ? title : txt, me, MAX_LEN, NULL, ext))
+        return NULL;
+
+    return ADM_strdup(me);
+}
+
 /**
     \fn pyDirSelect
 */
 
 char *pyDirSelect(IEditor *editor, const char *title)
 {
-	char me[1024] = {0};
+    char me[MAX_LEN] = {0};
+    const char *txt = QT_TRANSLATE_NOOP("tinypy","Select Directory");
+    if (!FileSel_SelectDir((title && strlen(title)) ? title : txt, me, MAX_LEN, NULL))
+        return NULL;
 
-	if (!FileSel_SelectDir((title && strlen(title)) ? title : QT_TR_NOOP("Select a directory"), me, 1023, NULL))
-	{
-		return NULL;
-	}
-
-	return ADM_strdup(me);
+    return ADM_strdup(me);
 }
 /**
     \fn pyDisplayError

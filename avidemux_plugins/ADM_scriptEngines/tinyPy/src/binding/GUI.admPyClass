@@ -3,7 +3,9 @@
 #              cname:pyname
 /* METHOD */ str pyDirSelect:dirSelect(str) 
 /* METHOD */ str pyFileSelRead:fileReadSelect(str) 
+/* METHOD */ str pyFileSelReadEx:fileReadSelectEx(str,str)
 /* METHOD */ str pyFileSelWrite:fileWriteSelect(str) 
+/* METHOD */ str pyFileSelWriteEx:fileWriteSelectEx(str,str)
 /* METHOD */ void pyDisplayError:displayError(str,str) 
 /* METHOD */ void pyDisplayInfo:displayInfo(str,str) 
 
