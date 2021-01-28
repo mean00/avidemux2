@@ -20,13 +20,7 @@
 #include "ADM_default.h"
 #include "ADM_image.h"
 #include "DIA_flyArtVHS.h"
-
-#include "ADM_assert.h"
-// FIXME
-#ifndef M_PI
-#define M_PI    3.14159265358979323846
-#endif
-extern void ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW, float unSync, bool lumaNoDelay, bool chromaNoDelay);
+#include "ADM_vidArtVHS.h"
 
 /************* COMMON PART *********************/
 uint8_t  flyArtVHS::update(void)
@@ -45,7 +39,7 @@ uint8_t   flyArtVHS::processYuv(ADMImage *in,ADMImage *out )
     out->copyPlane(in,out,PLANAR_V);
 
     // Do it!
-    ArtVHSProcess_C(out, param.lumaBW, param.chromaBW, param.unSync, param.lumaNoDelay, param.chromaNoDelay);
+    ADMVideoArtVHS::ArtVHSProcess_C(out, param.lumaBW, param.chromaBW, param.unSync, param.lumaNoDelay, param.chromaNoDelay);
     return 1;
 }
-//EOF
+

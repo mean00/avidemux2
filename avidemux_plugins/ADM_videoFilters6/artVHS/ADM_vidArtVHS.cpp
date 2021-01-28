@@ -22,41 +22,13 @@
 #include "DIA_factory.h"
 #include "artVHS.h"
 #include "artVHS_desc.cpp"
+#include "ADM_vidArtVHS.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 
 extern uint8_t DIA_getArtVHS(artVHS *param, ADM_coreVideoFilter *in);
-/**
-    \class ADMVideoArtVHS
-*/
-class  ADMVideoArtVHS:public ADM_coreVideoFilter
-{
-
-  protected:
-    void            update(void);
-    artVHS          _param;
-    float           _lumaBW;
-    float           _chromaBW;
-    bool            _lumaNoDelay;
-    bool            _chromaNoDelay;
-    float           _unSync;
-  public:
-    ADMVideoArtVHS(ADM_coreVideoFilter *in,CONFcouple *couples);
-    ~ADMVideoArtVHS();
-
-    virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
-    virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-    virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-    virtual void         setCoupledConf(CONFcouple *couples);
-    virtual bool         configure(void) ;                 /// Start graphical user interface
-
-  private:
-    float valueLimit(float val, float min, float max);
-};
-
-
 
 // Add the hook to make it valid plugin
 //DECLARE_VIDEO_FILTER(   ADMVideoArtVHS,   // Class
@@ -71,7 +43,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoArtVHS,   // Class
 /**
     \fn ArtVHSProcess_C
 */
-void ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW, float unSync, bool lumaNoDelay, bool chromaNoDelay)
+void ADMVideoArtVHS::ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW, float unSync, bool lumaNoDelay, bool chromaNoDelay)
 {
     int width=img->GetWidth(PLANAR_Y); 
     int height=img->GetHeight(PLANAR_Y);
