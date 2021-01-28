@@ -27,7 +27,11 @@ class ADM_UIQT46_EXPORT ADM_SliderIndicator : public QSlider
 {
 public:
     ADM_SliderIndicator(QWidget *parent);
+    void setScale(int num, int den, int precision = 0);
 private:
+    int _scaleNum;
+    int _scaleDen;
+    int _precision;
     virtual void sliderChange(SliderChange change);
 };
 #endif

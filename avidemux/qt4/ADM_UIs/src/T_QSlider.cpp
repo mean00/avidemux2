@@ -83,6 +83,24 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
 */
 ADM_SliderIndicator::ADM_SliderIndicator(QWidget *parent) : QSlider(parent)
 {
+    _scaleNum = _scaleDen = 1;
+    _precision = 0;
+}
+
+/**
+    \fn setScale
+*/
+void ADM_SliderIndicator::setScale(int num, int den, int precision)
+{
+    if(num > 0 && den > 0)
+    {
+        _scaleNum = num;
+        _scaleDen = den;
+    }
+    if(precision >= 0)
+        _precision = precision;
+    if(_precision > 3)
+        _precision = 3; // max 3 digits after decimal point
 }
 
 /**
@@ -105,8 +123,22 @@ void ADM_SliderIndicator::sliderChange(QAbstractSlider::SliderChange change)
         int xpos = bottomLeftCorner.x() + bottomRightCorner.x();
         int ypos = bottomLeftCorner.y();
 
+        QString text;
+        if(_scaleDen > 1)
+        {
+            double dv = value();
+            dv *= _scaleNum;
+            dv /= _scaleDen;
+            if(_precision)
+                text = QString::number(dv,'f',_precision);
+            else
+                text = QString::number((int)(dv + 0.49));
+        }else
+        {
+            text = QString::number(_scaleNum * value()); // precision is ignored
+        }
+
         QFontMetrics fm = fontMetrics();
-        QString text = QString::number(value());
         xpos -= fm.boundingRect(text).width() + 12;
         xpos /= 2;
 
