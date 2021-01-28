@@ -12,13 +12,13 @@ class Ui_artVHSWindow : public QDialog
 
   protected:
     int lock;
+    flyArtVHS *     myFly;
+    ADM_QCanvas *   canvas;
+    Ui_artVHSDialog ui;
 
   public:
-    flyArtVHS *     myFly;
-    ADM_QCanvas *      canvas;
     Ui_artVHSWindow(QWidget *parent, artVHS *param,ADM_coreVideoFilter *in);
     ~Ui_artVHSWindow();
-    Ui_artVHSDialog ui;
 
   public slots:
     void gather(artVHS *param);

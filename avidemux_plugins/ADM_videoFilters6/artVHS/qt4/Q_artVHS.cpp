@@ -109,7 +109,7 @@ uint8_t flyArtVHS::upload(void)
 
     MYSPIN(LumaBW)->setValue((int)round(param.lumaBW*100.0));
     MYSPIN(ChromaBW)->setValue((int)round(param.chromaBW*100.0));
-    MYSPIN(UnSync)->setValue((int)round(param.unSync*100.0));
+    MYSPIN(UnSync)->setValue((int)round(param.unSync*10.0));
     MYCHECK(LumaNoDelay)->setChecked(param.lumaNoDelay);
     MYCHECK(ChromaNoDelay)->setChecked(param.chromaNoDelay);
     return 1;
@@ -119,7 +119,7 @@ uint8_t flyArtVHS::download(void)
     Ui_artVHSDialog *w=(Ui_artVHSDialog *)_cookie;
     param.lumaBW=MYSPIN(LumaBW)->value() / 100.0;
     param.chromaBW=MYSPIN(ChromaBW)->value() / 100.0;
-    param.unSync=MYSPIN(UnSync)->value() / 100.0;
+    param.unSync=MYSPIN(UnSync)->value() / 10.0;
     param.lumaNoDelay=MYCHECK(LumaNoDelay)->isChecked();
     param.chromaNoDelay=MYCHECK(ChromaNoDelay)->isChecked();
     return 1;

@@ -82,14 +82,7 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <item row="3" column="2">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>zero delay filter</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
+     <item row="2" column="3">
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -139,7 +132,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="4">
+     <item row="3" column="3">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -162,17 +155,17 @@
      <item row="4" column="1">
       <widget class="QSlider" name="horizontalSliderUnSync">
        <property name="maximum">
-        <number>1600</number>
+        <number>160</number>
        </property>
        <property name="pageStep">
-        <number>100</number>
+        <number>20</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
-     <item row="4" column="4">
+     <item row="4" column="3">
       <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -185,24 +178,17 @@
        </property>
       </spacer>
      </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>zero delay filter</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QCheckBox" name="checkBoxLumaNoDelay">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
+     <item row="3" column="2">
       <widget class="QCheckBox" name="checkBoxChromaNoDelay">
        <property name="text">
-        <string/>
+        <string>Use zero delay filter for chroma</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="checkBoxLumaNoDelay">
+       <property name="text">
+        <string>Use zero delay filter for luma</string>
        </property>
       </widget>
      </item>

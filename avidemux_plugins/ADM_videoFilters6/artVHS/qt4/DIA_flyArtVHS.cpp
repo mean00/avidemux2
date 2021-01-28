@@ -46,11 +46,6 @@ uint8_t   flyArtVHS::processYuv(ADMImage *in,ADMImage *out )
 
     // Do it!
     ArtVHSProcess_C(out, param.lumaBW, param.chromaBW, param.unSync, param.lumaNoDelay, param.chromaNoDelay);
-    // Copy half source to display
-    //in->copyLeftSideTo(out);
-    out->printString(1,1,"Processed"); // printString can't handle non-ascii input, do not translate this!
-    //out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
-
     return 1;
 }
 //EOF
