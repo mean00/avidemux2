@@ -13,6 +13,7 @@
 /* METHOD */ int editor->getPARHeight:getPARHeight    (void)
 /* METHOD */ int pyGetFps1000:getFps1000        (void)
 /* METHOD */ str editor->getVideoCodec:getVideoCodec(void)
+/* METHOD */ str pyGetContainerEx:getOutputExtension(void)
 /* METHOD */ void editor->clearFilters:clearVideoFilters(void) 
 #
 # Audio filter and encoding 

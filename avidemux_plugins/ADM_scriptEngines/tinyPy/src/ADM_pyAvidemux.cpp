@@ -345,4 +345,17 @@ char *pyGetEnv(IEditor *editor,const char *key)
     return strdup(src);
 }
 
+/**
+ * \fn pyGetContainerEx
+ * \brief Get the default filename extension for the current muxer
+ */
+char *pyGetContainerEx(IEditor *editor)
+{
+    ADM_dynMuxer *container = editor->getCurrentMuxer();
+    if(!container)
+        return NULL;
+    if(!container->defaultExtension)
+        return NULL;
+    return strdup(container->defaultExtension);
+}
 // EOF
