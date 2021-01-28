@@ -493,7 +493,7 @@ bool ADM_Composer::setCurrentFramePts(uint64_t pts)
 bool ADM_Composer::getCurrentFrameFlags(uint32_t *flags, uint32_t *quantizer)
 {
     *flags = 0;
-    if(!admPreview::getBuffer)
+    if(!admPreview::getBuffer())
         return false;
     admPreview::getFrameFlags(flags, quantizer);
     return true;
