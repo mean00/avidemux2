@@ -456,15 +456,15 @@ bool x264Dialog::upload(void)
 
         DISABLE(spsiComboBox);
         DISABLE(openGopCheckBox);
-        DISABLE(groupBox_14); // quant matrix
+        DISABLE(groupBoxQuantMatrix)
         //DISABLE(tabAdvanced1);
         DISABLE(tabAdvanced2);
         DISABLE(tabOutput2);
         DISABLE(maxCrfCheckBox);
         DISABLE(sarAsInputRadioButton);
-        DISABLE(groupBox_3);
+        DISABLE(groupBoxQuantCurveCompress)
         DISABLE(accessUnitCheckBox);
-        
+        DISABLE(groupBoxZones)
         //
         MK_CHECKBOX(blueRayCompat,general.blueray_compatibility);
         MK_CHECKBOX(fakeInterlaced,general.fake_interlaced);

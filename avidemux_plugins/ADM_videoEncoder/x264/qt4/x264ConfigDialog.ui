@@ -2310,7 +2310,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_14">
+        <widget class="QGroupBox" name="groupBoxQuantMatrix">
          <property name="title">
           <string>Quantisation Matrix</string>
          </property>
@@ -2673,7 +2673,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
+        <widget class="QGroupBox" name="groupBoxQuantCurveCompress">
          <property name="title">
           <string>Quantiser Curve Compression</string>
          </property>
@@ -3181,7 +3181,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_21">
+        <widget class="QGroupBox" name="groupBoxZones">
          <property name="title">
           <string>Zones</string>
          </property>
