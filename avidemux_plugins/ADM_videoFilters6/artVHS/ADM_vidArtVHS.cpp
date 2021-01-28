@@ -52,6 +52,8 @@ class  ADMVideoArtVHS:public ADM_coreVideoFilter
     virtual void         setCoupledConf(CONFcouple *couples);
     virtual bool         configure(void) ;                 /// Start graphical user interface
 
+  private:
+    float valueLimit(float val, float min, float max);
 };
 
 
@@ -213,15 +215,24 @@ ADMVideoArtVHS::ADMVideoArtVHS(  ADM_coreVideoFilter *in,CONFcouple *couples)  :
     update();
 }
 /**
+    \fn valueLimit
+*/
+float ADMVideoArtVHS::valueLimit(float val, float min, float max)
+{
+    if (val < min) val = min;
+    if (val > max) val = max;
+    return val;
+}
+/**
     \fn update
 */
 void ADMVideoArtVHS::update(void)
 {
-    _lumaBW=_param.lumaBW;
-    _chromaBW=_param.chromaBW;
+    _lumaBW=valueLimit(_param.lumaBW, 0.0, 1.0);
+    _chromaBW=valueLimit(_param.chromaBW, 0.0, 1.0);
     _lumaNoDelay=_param.lumaNoDelay;
     _chromaNoDelay=_param.chromaNoDelay;
-    _unSync=_param.unSync;
+    _unSync=valueLimit(_param.unSync, 0.0, 16.0);
 }
 /**
     \fn dtor

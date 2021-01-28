@@ -47,10 +47,11 @@ Ui_artVHSWindow::Ui_artVHSWindow(QWidget *parent, artVHS *param,ADM_coreVideoFil
         myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x) connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
-        SPINNER(LumaBW);
-        SPINNER(ChromaBW);
-        SPINNER(UnSync);
+#define SPINNER(x,y) ui.horizontalSlider##x->setScale(1,y,2); \
+        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
+        SPINNER(LumaBW,100)
+        SPINNER(ChromaBW,100)
+        SPINNER(UnSync,10)
 
 #define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         CHKBOX(LumaNoDelay);
@@ -117,9 +118,9 @@ uint8_t flyArtVHS::upload(void)
 uint8_t flyArtVHS::download(void)
 {
     Ui_artVHSDialog *w=(Ui_artVHSDialog *)_cookie;
-    param.lumaBW=MYSPIN(LumaBW)->value() / 100.0;
-    param.chromaBW=MYSPIN(ChromaBW)->value() / 100.0;
-    param.unSync=MYSPIN(UnSync)->value() / 10.0;
+    param.lumaBW=((float)MYSPIN(LumaBW)->value()) / 100.0;
+    param.chromaBW=((float)MYSPIN(ChromaBW)->value()) / 100.0;
+    param.unSync=((float)MYSPIN(UnSync)->value()) / 10.0;
     param.lumaNoDelay=MYCHECK(LumaNoDelay)->isChecked();
     param.chromaNoDelay=MYCHECK(ChromaNoDelay)->isChecked();
     return 1;
