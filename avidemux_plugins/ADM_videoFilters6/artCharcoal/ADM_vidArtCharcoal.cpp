@@ -79,12 +79,13 @@ void ADMVideoArtCharcoal::ArtCharcoalProcess_C(ADMImage *img, ADMImage *tmp, int
     int stride, istride;
     uint8_t * ptr, * iptr;
     float pixel;
-    uint8_t pixelU8;
     int matrix[ 3 ][ 3 ];
     int sum1;
     int sum2;
-    float sum;
-    int val;
+    float sumsq, intensitysq;
+    int sum;
+
+    intensitysq = intensity*intensity;
 
     if(img->_range != ADM_COL_RANGE_MPEG)
         img->shrinkColorRange();
@@ -127,12 +128,12 @@ void ADMVideoArtCharcoal::ArtCharcoalProcess_C(ADMImage *img, ADMImage *tmp, int
 
             sum1 = (matrix[2][0] - matrix[0][0]) + ( (matrix[2][1] - matrix[0][1]) << 1 ) + (matrix[2][2] - matrix[2][0]);
             sum2 = (matrix[0][2] - matrix[0][0]) + ( (matrix[1][2] - matrix[1][0]) << 1 ) + (matrix[2][2] - matrix[2][0]);
-            sum = intensity * ArtCharcoalProcess_Sqrti( sum1 * sum1 + sum2 * sum2 );
-            if (sum < 16.0) sum = 16.0;
-            if (sum > 235.0) sum = 235.0;
-            pixelU8 = (uint8_t)std::round(sum);
-            if (!invert) pixelU8 = 251 - pixelU8;
-            iptr[x] = pixelU8;
+            sumsq = intensitysq * (float)( sum1 * sum1 + sum2 * sum2 );
+            sum = (int)std::sqrt(sumsq);
+            if (sum < 16) sum = 16;
+            if (sum > 235) sum = 235;
+            if (!invert) sum = 251 - sum;
+            iptr[x] = sum;
         }
         iptr+=istride;
     }
