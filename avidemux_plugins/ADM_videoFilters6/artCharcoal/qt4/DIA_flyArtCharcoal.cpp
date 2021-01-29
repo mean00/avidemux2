@@ -21,12 +21,7 @@
 #include "ADM_image.h"
 #include "DIA_flyArtCharcoal.h"
 
-#include "ADM_assert.h"
-// FIXME
-#ifndef M_PI
-#define M_PI    3.14159265358979323846
-#endif
-extern void ArtCharcoalProcess_C(ADMImage *img, ADMImage *tmp, int32_t scatterX, int32_t scatterY, float intensity, float color, bool invert);
+#include "ADM_vidArtCharcoal.h"
 
 /************* COMMON PART *********************/
 /**
@@ -70,7 +65,7 @@ uint8_t   flyArtCharcoal::processYuv(ADMImage *in,ADMImage *out )
     out->copyPlane(in,out,PLANAR_V);
 
     // Do it!
-    ArtCharcoalProcess_C(out, work, param.scatterX, param.scatterY, param.intensity, param.color, param.invert);
+    ADMVideoArtCharcoal::ArtCharcoalProcess_C(out, work, param.scatterX, param.scatterY, param.intensity, param.color, param.invert);
     return 1;
 }
-//EOF
+

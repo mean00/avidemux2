@@ -22,42 +22,13 @@
 #include "DIA_factory.h"
 #include "artCharcoal.h"
 #include "artCharcoal_desc.cpp"
+#include "ADM_vidArtCharcoal.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 
 extern uint8_t DIA_getArtCharcoal(artCharcoal *param, ADM_coreVideoFilter *in);
-/**
-    \class ADMVideoArtCharcoal
-*/
-class  ADMVideoArtCharcoal:public ADM_coreVideoFilter
-{
-
-  protected:
-    void            update(void);
-    artCharcoal     _param;
-    int32_t         _scatterX;
-    int32_t         _scatterY;
-    float           _intensity;
-    float           _color;
-    bool            _invert;
-    ADMImage        *work;
-  public:
-    ADMVideoArtCharcoal(ADM_coreVideoFilter *in,CONFcouple *couples);
-    ~ADMVideoArtCharcoal();
-
-    virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
-    virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-    virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-    virtual void         setCoupledConf(CONFcouple *couples);
-    virtual bool         configure(void) ;                 /// Start graphical user interface
-
-  private:
-    float   valueLimit(float val, float min, float max);
-    int32_t valueLimit(int32_t val, int32_t min, int32_t max);
-};
-
 
 
 // Add the hook to make it valid plugin
@@ -73,7 +44,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoArtCharcoal,   // Class
 /**
     \fn ArtCharcoalProcess_Sqrti
 */
-float ArtCharcoalProcess_Sqrti( int n )
+float ADMVideoArtCharcoal::ArtCharcoalProcess_Sqrti( int n )
 {
     int p = 0;
     int q = 1;
@@ -100,7 +71,7 @@ float ArtCharcoalProcess_Sqrti( int n )
 /**
     \fn ArtCharcoalProcess_C
 */
-void ArtCharcoalProcess_C(ADMImage *img, ADMImage *tmp, int32_t scatterX, int32_t scatterY, float intensity, float color, bool invert)
+void ADMVideoArtCharcoal::ArtCharcoalProcess_C(ADMImage *img, ADMImage *tmp, int32_t scatterX, int32_t scatterY, float intensity, float color, bool invert)
 {
     if (!img || !tmp) return;
     int width=img->GetWidth(PLANAR_Y); 
