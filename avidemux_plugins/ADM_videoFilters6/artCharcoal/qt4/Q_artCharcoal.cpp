@@ -22,7 +22,7 @@
 
 #include "Q_artCharcoal.h"
 #include "ADM_toolkitQt.h"
-#include "math.h"
+#include <cmath>
 
 //
 //	Video is in YV12 Colorspace
