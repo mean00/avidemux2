@@ -105,28 +105,26 @@ cglobal YUV444_chroma, 4,4,8, src, dst, dst2, w4
 ;
 INIT_MMX mmx
 cglobal nv12_to_u_v_one_line,4,4,4, w8, dstu, dstv, src
-
+       pxor           m4, m4
+       pcmpeqb        m4, m4
+       psllw          m4,8
+       psrlw          m4,8
 .nv12_again
        movq           m0 , [srcq]
        movq           m1 , 8[srcq]
        movq           m2, m0
        movq           m3, m1
 
-       psllw          m0,8
-       psrlw          m0,8
-
-       psllw          m1,8
-       psrlw          m1,8
-
+       pand           m0, m4
+       pand           m1, m4
 
        packuswb       m0,m1
+       movq           [dstvq],m0
 
        psrlw          m2,8
        psrlw          m3,8
 
        packuswb       m2,m3
-
-       movq           [dstvq],m0
        movq           [dstuq],m2
 
        add            srcq,16
