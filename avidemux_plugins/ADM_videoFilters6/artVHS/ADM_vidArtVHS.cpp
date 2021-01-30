@@ -43,7 +43,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoArtVHS,   // Class
 /**
     \fn ArtVHSProcess_C
 */
-void ADMVideoArtVHS::ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW, float unSync, bool lumaNoDelay, bool chromaNoDelay)
+void ADMVideoArtVHS::ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW, float unSync, float unSyncFilter, bool lumaNoDelay, bool chromaNoDelay)
 {
     int width=img->GetWidth(PLANAR_Y); 
     int height=img->GetHeight(PLANAR_Y);
@@ -55,6 +55,7 @@ void ADMVideoArtVHS::ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW
     int rndWalk = 0;
     float hShift;
     int lineShift;
+    float syncrc;
 
     // 
     lumaBW = std::exp(lumaBW*0.69314) - 1.0;
@@ -63,6 +64,9 @@ void ADMVideoArtVHS::ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW
     chromaBW = std::exp(chromaBW*0.69314) - 1.0;
     chromaBW *= chromaBW;
     if (chromaBW < 0.0001) chromaBW = 0.0001;
+    //unSyncFilter = std::exp(unSyncFilter*0.69314) - 1.0;
+    unSyncFilter = std::sqrt(std::sqrt(unSyncFilter));
+
 
     if(img->_range == ADM_COL_RANGE_MPEG)
         img->expandColorRange();
@@ -72,6 +76,7 @@ void ADMVideoArtVHS::ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW
     ptr=img->GetWritePtr(PLANAR_Y);
     smf = lumaBW;
     smfi = (1.0-lumaBW);
+    syncrc = 0.0;
     for(int y=0;y<height;y++)
     {
         rc = 0;
@@ -104,7 +109,8 @@ void ADMVideoArtVHS::ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW
         rndWalk += random;
         hShift = (random & 0x7F);    // [0..127]
         hShift = std::exp(hShift/184.0)-1.0;    // [0..1]
-        lineShift = std::round(hShift * unSync);
+        syncrc = (unSyncFilter)*syncrc + (1.0-unSyncFilter)*(hShift * unSync);
+        lineShift = std::round(syncrc);
         if (lineShift > 0)
         {
             if (rndWalk > 0) {
@@ -168,7 +174,7 @@ bool ADMVideoArtVHS::configure()
 const char   *ADMVideoArtVHS::getConfiguration(void)
 {
     static char s[256];
-    snprintf(s,255," LumaBW: %.2f%s, ChromaBW: %.2f%s, UnSync: %.2f",_param.lumaBW, (_param.lumaNoDelay ? " nodelay" : ""), _param.chromaBW, (_param.chromaNoDelay ? " nodelay" : ""), _param.unSync);
+    snprintf(s,255," LumaBW: %.2f%s, ChromaBW: %.2f%s, UnSync: %.2f filter: %.2f",_param.lumaBW, (_param.lumaNoDelay ? " nodelay" : ""), _param.chromaBW, (_param.chromaNoDelay ? " nodelay" : ""), _param.unSync,_param.unSyncFilter);
     return s;
 }
 /**
@@ -182,7 +188,8 @@ ADMVideoArtVHS::ADMVideoArtVHS(  ADM_coreVideoFilter *in,CONFcouple *couples)  :
         _param.chromaBW = 0.2;
         _param.lumaNoDelay = true;
         _param.chromaNoDelay = false;
-        _param.unSync = 1.0;
+        _param.unSync = 3.0;
+        _param.unSyncFilter=0.7;
     }
     update();
 }
@@ -205,6 +212,7 @@ void ADMVideoArtVHS::update(void)
     _lumaNoDelay=_param.lumaNoDelay;
     _chromaNoDelay=_param.chromaNoDelay;
     _unSync=valueLimit(_param.unSync, 0.0, 16.0);
+    _unSyncFilter=valueLimit(_param.unSyncFilter, 0.0, 1.0);
 }
 /**
     \fn dtor
@@ -252,7 +260,7 @@ bool ADMVideoArtVHS::getNextFrame(uint32_t *fn,ADMImage *image)
     */
     if(!previousFilter->getNextFrame(fn,image)) return false;
 
-    ArtVHSProcess_C(image, _lumaBW, _chromaBW, _unSync, _lumaNoDelay, _chromaNoDelay);
+    ArtVHSProcess_C(image, _lumaBW, _chromaBW, _unSync, _unSyncFilter, _lumaNoDelay, _chromaNoDelay);
 
     return 1;
 }

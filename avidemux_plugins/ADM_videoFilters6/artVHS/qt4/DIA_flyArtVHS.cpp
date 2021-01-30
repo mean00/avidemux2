@@ -39,7 +39,7 @@ uint8_t   flyArtVHS::processYuv(ADMImage *in,ADMImage *out )
     out->copyPlane(in,out,PLANAR_V);
 
     // Do it!
-    ADMVideoArtVHS::ArtVHSProcess_C(out, param.lumaBW, param.chromaBW, param.unSync, param.lumaNoDelay, param.chromaNoDelay);
+    ADMVideoArtVHS::ArtVHSProcess_C(out, param.lumaBW, param.chromaBW, param.unSync, param.unSyncFilter, param.lumaNoDelay, param.chromaNoDelay);
     return 1;
 }
 
