@@ -249,6 +249,7 @@ uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     int audStartCodeLen=5;
     int lastRefIdc=0;
     bool keepRunning=true;
+    bool warningIgnored=false;
     dmxPacketInfo packetInfo;
 
     int append=0;
@@ -434,12 +435,33 @@ resume:
                             {
                                 if(spsInfo.width!=tmpInfo.width || spsInfo.height!=tmpInfo.height)
                                 {
+#if 0
                                     GUI_Info_HIG(ADM_LOG_IMPORTANT, QT_TRANSLATE_NOOP("tsdemuxer","Size Change"),
                                                  QT_TRANSLATE_NOOP("tsdemuxer","The size of the video changes at frame %u from %ux%u to %ux%u. "
                                                                    "This is unsupported, stopping here."),
                                                  data.nbPics, spsInfo.width, spsInfo.height, tmpInfo.width, tmpInfo.height);
                                     result=1;
                                     goto the_end;
+#endif
+                                    ADM_warning("Size change %ux%u => %ux%u at frame %u, offset 0x%" PRIx64"\n",
+                                            spsInfo.width, spsInfo.height, tmpInfo.width, tmpInfo.height, data.nbPics, thisUnit.packetInfo.startAt);
+                                    char alert[1024];
+                                    alert[0]='\0';
+                                    snprintf(alert,1024,QT_TRANSLATE_NOOP("tsdemuxer","The size of the video changes at frame %u "
+                                            "from %ux%u to %ux%u. This is unsupported and will result in a crash.\n"
+                                            "Proceed nevertheless?\n"
+                                            "This warning won't be shown again for this video."),
+                                            data.nbPics, spsInfo.width, spsInfo.height, tmpInfo.width, tmpInfo.height);
+                                    alert[1023]='\0';
+                                    if(!warningIgnored && !GUI_Question(alert,true))
+                                    {
+                                        result=1;
+                                        goto the_end;
+                                    }
+
+                                    warningIgnored = true;
+                                    spsInfo.width = tmpInfo.width;
+                                    spsInfo.height = tmpInfo.height;
                                 }
                                 match=true;
 #define MATCH(x) if(spsInfo.x != tmpInfo.x) { ADM_warning("%s value does not match.\n",#x); spsInfo.x = tmpInfo.x; match=false; }

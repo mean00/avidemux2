@@ -109,6 +109,7 @@ uint8_t result=1;
     int lastStartCode=0xb3;
     bool seqEntryPending=false;
     bool picEntryPending=false;
+    bool warningIgnored=false;
 
 #define REMEMBER() { lastStartCode=startCode;}
 #define CHECK(x) if(false==x) { result=ADM_IGN; goto the_end; }
@@ -169,11 +170,22 @@ uint8_t result=1;
                                 CHECK(addUnit(data,unitTypeSps,spsUnit,4))
                                 if(widthToCheck != video.w || heightToCheck != video.h)
                                 {
-                                    GUI_Info_HIG(ADM_LOG_IMPORTANT, QT_TRANSLATE_NOOP("tsdemuxer","Size Change"),
-                                        QT_TRANSLATE_NOOP("tsdemuxer","The size of the video changes at frame %u from %ux%u to %ux%u. "
-                                            "This is unsupported, stopping here."),
+                                    ADM_warning("Size change %ux%u => %ux%u at frame %u, offset 0x%" PRIx64"\n",
+                                            video.w, video.h, widthToCheck, heightToCheck, data.nbPics, spsUnit.packetInfo.startAt);
+                                    char alert[1024];
+                                    alert[0]='\0';
+                                    snprintf(alert,1024,QT_TRANSLATE_NOOP("tsdemuxer","The size of the video changes at frame %u "
+                                            "from %ux%u to %ux%u. This is unsupported and will result in a crash.\n"
+                                            "Proceed nevertheless?\n"
+                                            "This warning won't be shown again for this video."),
                                             data.nbPics, video.w, video.h, widthToCheck, heightToCheck);
-                                    goto the_end;
+                                    alert[1023]='\0';
+                                    if(!warningIgnored && !GUI_Question(alert,true))
+                                        goto the_end;
+
+                                    warningIgnored = true;
+                                    video.w = widthToCheck;
+                                    video.h = heightToCheck;
                                 }
                                 continue;
                           }
