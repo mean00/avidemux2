@@ -21,6 +21,7 @@
  ***************************************************************************/
 
 #include "Q_artVignette.h"
+#include "ADM_vidArtVignette.h"
 #include "ADM_toolkitQt.h"
 #include "math.h"
 
@@ -106,15 +107,13 @@ void Ui_artVignetteWindow::showEvent(QShowEvent *event)
 #define MYCHECK(x) w->checkBox##x
 //************************
 
-extern void ArtVignetteCreateMask(float * mask, int w, int h, float aspect, float center, float soft);
-
 uint8_t flyArtVignette::upload(void)
 {
     Ui_artVignetteDialog *w=(Ui_artVignetteDialog *)_cookie;
     MYSPIN(Aspect)->setValue((int)round(param.aspect * 100.0));
     MYSPIN(Center)->setValue((int)round(param.center * 100.0));
     MYSPIN(Soft)->setValue((int)round(param.soft * 100.0));
-    ArtVignetteCreateMask(filterMask, filterW, filterH, param.aspect, param.center, param.soft);
+    ADMVideoArtVignette::ArtVignetteCreateMask(filterMask, filterW, filterH, param.aspect, param.center, param.soft);
     return 1;
 }
 uint8_t flyArtVignette::download(void)
@@ -123,7 +122,7 @@ uint8_t flyArtVignette::download(void)
     param.aspect=(float)MYSPIN(Aspect)->value() / 100.0;
     param.center=(float)MYSPIN(Center)->value() / 100.0;
     param.soft=(float)MYSPIN(Soft)->value() / 100.0;
-    ArtVignetteCreateMask(filterMask, filterW, filterH, param.aspect, param.center, param.soft);
+    ADMVideoArtVignette::ArtVignetteCreateMask(filterMask, filterW, filterH, param.aspect, param.center, param.soft);
     return 1;
 }
 

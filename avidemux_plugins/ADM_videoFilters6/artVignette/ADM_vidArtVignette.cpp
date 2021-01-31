@@ -22,6 +22,7 @@
 #include "DIA_factory.h"
 #include "artVignette.h"
 #include "artVignette_desc.cpp"
+#include "ADM_vidArtVignette.h"
 
 #ifndef M_PI
 #define M_PI   3.14159265358979323846
@@ -31,32 +32,6 @@
 #endif
 
 extern uint8_t DIA_getArtVignette(artVignette *param, ADM_coreVideoFilter *in);
-/**
-    \class ADMVideoArtVignette
-*/
-class  ADMVideoArtVignette:public ADM_coreVideoFilter
-{
-
-  protected:
-    void            update(void);
-    artVignette     _param;
-    float           _aspect;
-    float           _center;
-    float           _soft;
-    float *         _filterMask;
-  public:
-    ADMVideoArtVignette(ADM_coreVideoFilter *in,CONFcouple *couples);
-    ~ADMVideoArtVignette();
-
-    virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
-    virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-    virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-    virtual void         setCoupledConf(CONFcouple *couples);
-    virtual bool         configure(void) ;                 /// Start graphical user interface
-
-};
-
-
 
 // Add the hook to make it valid plugin
 //DECLARE_VIDEO_FILTER(   ADMVideoArtVignette,   // Class
@@ -71,7 +46,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoArtVignette,   // Class
 /**
     \fn ArtVignetteCreateMask
 */
-void ArtVignetteCreateMask(float * mask, int w, int h, float aspect, float center, float soft)
+void ADMVideoArtVignette::ArtVignetteCreateMask(float * mask, int w, int h, float aspect, float center, float soft)
 {
     if (!mask) return;
     float scaleX = 1;
@@ -137,7 +112,7 @@ void ArtVignetteCreateMask(float * mask, int w, int h, float aspect, float cente
 /**
     \fn ArtVignetteProcess_C
 */
-void ArtVignetteProcess_C(ADMImage *img, float * mask)
+void ADMVideoArtVignette::ArtVignetteProcess_C(ADMImage *img, float * mask)
 {
     int width=img->GetWidth(PLANAR_Y); 
     int height=img->GetHeight(PLANAR_Y);

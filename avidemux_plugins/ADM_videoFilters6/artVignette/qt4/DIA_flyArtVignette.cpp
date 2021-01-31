@@ -17,16 +17,8 @@
  *                                                                         *
  ***************************************************************************/
 #include "DIA_flyDialogQt4.h"
-#include "ADM_default.h"
-#include "ADM_image.h"
 #include "DIA_flyArtVignette.h"
-
-#include "ADM_assert.h"
-// FIXME
-#ifndef M_PI
-#define M_PI    3.14159265358979323846
-#endif
-extern void ArtVignetteProcess_C(ADMImage *img, float * mask);
+#include "ADM_vidArtVignette.h"
 
 /************* COMMON PART *********************/
 uint8_t  flyArtVignette::update(void)
@@ -45,10 +37,10 @@ uint8_t   flyArtVignette::processYuv(ADMImage *in,ADMImage *out )
     out->copyPlane(in,out,PLANAR_V);
 
     // Do it!
-    ArtVignetteProcess_C(out, filterMask);
+    ADMVideoArtVignette::ArtVignetteProcess_C(out, filterMask);
     // Copy half source to display
     //in->copyLeftSideTo(out);
-    out->printString(1,1,"Processed"); // printString can't handle non-ascii input, do not translate this!
+    //out->printString(1,1,"Processed"); // printString can't handle non-ascii input, do not translate this!
     //out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
 
     return 1;

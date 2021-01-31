@@ -1,8 +1,6 @@
 #ifndef Q_artVignette_h
 #define Q_artVignette_h
 #include "ui_artVignette.h"
-#include "ADM_image.h"
-#include "artVignette.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyArtVignette.h"
 
@@ -12,13 +10,13 @@ class Ui_artVignetteWindow : public QDialog
 
   protected:
     int lock;
-
-  public:
     flyArtVignette *   myFly;
     ADM_QCanvas *      canvas;
+    Ui_artVignetteDialog ui;
+
+  public:
     Ui_artVignetteWindow(QWidget *parent, artVignette *param,ADM_coreVideoFilter *in);
     ~Ui_artVignetteWindow();
-    Ui_artVignetteDialog ui;
 
   public slots:
     void gather(artVignette *param);
