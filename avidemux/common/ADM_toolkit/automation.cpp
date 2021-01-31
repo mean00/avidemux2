@@ -241,6 +241,9 @@ void call_scriptEngine(const char *scriptFile)
         BYE
     }
 
+    fclose(fd);
+    fd = NULL;
+
     std::vector<IScriptEngine*> engines = getScriptEngines();
     std::string root,ext;
     ADM_PathSplit(std::string(fullpath),root,ext);
