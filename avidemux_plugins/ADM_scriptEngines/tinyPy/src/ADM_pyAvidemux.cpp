@@ -356,6 +356,6 @@ char *pyGetContainerEx(IEditor *editor)
         return NULL;
     if(!container->defaultExtension)
         return NULL;
-    return strdup(container->defaultExtension);
+    return ADM_strdup(container->defaultExtension);
 }
 // EOF
