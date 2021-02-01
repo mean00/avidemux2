@@ -10,6 +10,7 @@ json.addFloat("chromaBW",key->chromaBW);
 json.addBool("lumaNoDelay",key->lumaNoDelay);
 json.addBool("chromaNoDelay",key->chromaNoDelay);
 json.addFloat("unSync",key->unSync);
+json.addFloat("unSyncFilter",key->unSyncFilter);
 return json.dumpToFile(file);
 };
 bool  artVHS_jdeserialize(const char *file, const ADM_paramList *tmpl,artVHS *key){

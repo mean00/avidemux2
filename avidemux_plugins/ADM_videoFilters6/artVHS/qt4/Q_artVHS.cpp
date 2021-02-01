@@ -52,6 +52,7 @@ Ui_artVHSWindow::Ui_artVHSWindow(QWidget *parent, artVHS *param,ADM_coreVideoFil
         SPINNER(LumaBW,100)
         SPINNER(ChromaBW,100)
         SPINNER(UnSync,10)
+        SPINNER(UnSyncFilter,100)
 
 #define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         CHKBOX(LumaNoDelay);
@@ -111,6 +112,7 @@ uint8_t flyArtVHS::upload(void)
     MYSPIN(LumaBW)->setValue((int)round(param.lumaBW*100.0));
     MYSPIN(ChromaBW)->setValue((int)round(param.chromaBW*100.0));
     MYSPIN(UnSync)->setValue((int)round(param.unSync*10.0));
+    MYSPIN(UnSyncFilter)->setValue((int)round(param.unSyncFilter*100.0));
     MYCHECK(LumaNoDelay)->setChecked(param.lumaNoDelay);
     MYCHECK(ChromaNoDelay)->setChecked(param.chromaNoDelay);
     return 1;
@@ -121,6 +123,7 @@ uint8_t flyArtVHS::download(void)
     param.lumaBW=((float)MYSPIN(LumaBW)->value()) / 100.0;
     param.chromaBW=((float)MYSPIN(ChromaBW)->value()) / 100.0;
     param.unSync=((float)MYSPIN(UnSync)->value()) / 10.0;
+    param.unSyncFilter=((float)MYSPIN(UnSyncFilter)->value()) / 100.0;
     param.lumaNoDelay=MYCHECK(LumaNoDelay)->isChecked();
     param.chromaNoDelay=MYCHECK(ChromaNoDelay)->isChecked();
     return 1;
