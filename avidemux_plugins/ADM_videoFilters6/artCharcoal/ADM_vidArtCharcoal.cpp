@@ -78,11 +78,11 @@ void ADMVideoArtCharcoal::ArtCharcoalProcess_C(ADMImage *img, ADMImage *tmp, int
     int height=img->GetHeight(PLANAR_Y);
     int stride, istride;
     uint8_t * ptr, * iptr;
-    float pixel;
+    uint8_t * pysm, *pys0, *pysp;
     int matrix[ 3 ][ 3 ];
     int sum1;
     int sum2;
-    float sumsq, intensitysq;
+    float  sumsq, intensitysq;
     int sum;
 
     intensitysq = intensity*intensity;
@@ -99,20 +99,21 @@ void ADMVideoArtCharcoal::ArtCharcoalProcess_C(ADMImage *img, ADMImage *tmp, int
     iptr=img->GetWritePtr(PLANAR_Y);
     for(int y=0;y<height;y++)
     {
+        pysm = ptr+((y - scatterY)*stride);
+        pys0 = ptr+((y           )*stride);
+        pysp = ptr+((y + scatterY)*stride);
         for (int x=0;x<width;x++)
         {
             if (((x - scatterX) >= 0) && ((x + scatterX) < width) && ((y - scatterY) >= 0) && ((y + scatterY) < height))    // safe range for speed-up
             {
-  #define get_Y(j,k) (ptr[(k)*stride + (j)])
-                matrix[ 0 ][ 0 ] = get_Y(x - scatterX, y - scatterY );
-                matrix[ 0 ][ 1 ] = get_Y(x           , y - scatterY );
-                matrix[ 0 ][ 2 ] = get_Y(x + scatterX, y - scatterY );
-                matrix[ 1 ][ 0 ] = get_Y(x - scatterX, y            );
-                matrix[ 1 ][ 2 ] = get_Y(x + scatterX, y            );
-                matrix[ 2 ][ 0 ] = get_Y(x - scatterX, y + scatterY );
-                matrix[ 2 ][ 1 ] = get_Y(x           , y + scatterY );
-                matrix[ 2 ][ 2 ] = get_Y(x + scatterX, y + scatterY );
-  #undef get_Y
+                matrix[ 0 ][ 0 ] = pysm[0-scatterX];
+                matrix[ 0 ][ 1 ] = pysm[0];
+                matrix[ 0 ][ 2 ] = pysm[0+scatterX];
+                matrix[ 1 ][ 0 ] = pys0[0-scatterX];
+                matrix[ 1 ][ 2 ] = pys0[0+scatterX];
+                matrix[ 2 ][ 0 ] = pysp[0-scatterX];
+                matrix[ 2 ][ 1 ] = pysp[0];
+                matrix[ 2 ][ 2 ] = pysp[0+scatterX];
             } else {
   #define get_Y(j,k) ( (((j)<0) || ((j)>=width) || ((k)<0) || ((k)>=height)) ? 235 : (ptr[(k)*stride + (j)]) )
                 matrix[ 0 ][ 0 ] = get_Y(x - scatterX, y - scatterY );
@@ -126,32 +127,44 @@ void ADMVideoArtCharcoal::ArtCharcoalProcess_C(ADMImage *img, ADMImage *tmp, int
   #undef get_Y
             }
 
+            pysm++;
+            pys0++;
+            pysp++;
+
             sum1 = (matrix[2][0] - matrix[0][0]) + ( (matrix[2][1] - matrix[0][1]) << 1 ) + (matrix[2][2] - matrix[2][0]);
             sum2 = (matrix[0][2] - matrix[0][0]) + ( (matrix[1][2] - matrix[1][0]) << 1 ) + (matrix[2][2] - matrix[2][0]);
             sumsq = intensitysq * (float)( sum1 * sum1 + sum2 * sum2 );
-            sum = (int)std::sqrt(sumsq);
-            if (sum < 16) sum = 16;
-            if (sum > 235) sum = 235;
+            if (sumsq < 289.0) {    // 17^2
+                sum = 16;
+            } else
+            if (sumsq >= 55225.0) {    // 235^2
+                sum = 235;
+            } else {
+                sum = (int)std::sqrt(sumsq);
+            }
             if (!invert) sum = 251 - sum;
             iptr[x] = sum;
         }
         iptr+=istride;
     }
 
+    int pixel;
+    int color_scale;
+    color_scale = color * (1<<8);
     // UV planes
-    for (int p=1; p<3; p++)
+   for (int p=1; p<3; p++)
     {
-        stride=img->GetPitch((ADM_PLANE)p);
-        ptr=img->GetWritePtr((ADM_PLANE)p);
+        istride=img->GetPitch((ADM_PLANE)p);
+        iptr=img->GetWritePtr((ADM_PLANE)p);
         for(int y=0;y<height/2;y++)	// 4:2:0
         {
             for (int x=0;x<width/2;x++)
             {
-                pixel = ptr[x];
+                pixel = iptr[x];
                 pixel -= 128;
-                ptr[x] = (uint8_t)std::round( (pixel * color) + 128);
+                iptr[x] = (uint8_t)(((pixel*color_scale)>>8) + 128);
             }
-            ptr+=stride;
+            iptr+=istride;
         }
     }
 
