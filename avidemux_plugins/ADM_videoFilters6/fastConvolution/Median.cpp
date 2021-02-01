@@ -47,13 +47,13 @@ const char 							*AVDMFastVideoMedian::getConfiguration(void)
                                     uint8_t *out,
                                     uint32_t w)
 {
-	uint8_t a1,a2,a3;
-	uint8_t b1,b2,b3;
-	uint8_t c1,c2,c3; //,i;
+	uint_fast8_t a1,a2,a3;
+	uint_fast8_t b1,b2,b3;
+	uint_fast8_t c1,c2,c3; //,i;
 	//int32_t o;
-	uint8_t temp;
+	uint_fast8_t temp;
 	
-	static uint8_t tab[9];
+	uint_fast8_t tab[9];
 	a2=*pred++;a3=*pred++;
 	b2=*cur++;b3=*cur++;
 	c2=*next++;c3=*next++;
@@ -76,15 +76,27 @@ const char 							*AVDMFastVideoMedian::getConfiguration(void)
 #define PIX_SORT(a,b) { if ((a)>(b)) PIX_SWAP((a),(b)); }
 #define PIX_SWAP(a,b) { temp=(a);(a)=(b);(b)=temp; }
 
-   uint8_t *p=(uint8_t *)tab;
+   uint_fast8_t *p=(uint_fast8_t *)tab;
 								
+/* 
     PIX_SORT(p[1], p[2]) ; PIX_SORT(p[4], p[5]) ; PIX_SORT(p[7], p[8]) ;
     PIX_SORT(p[0], p[1]) ; PIX_SORT(p[3], p[4]) ; PIX_SORT(p[6], p[7]) ;
     PIX_SORT(p[1], p[2]) ; PIX_SORT(p[4], p[5]) ; PIX_SORT(p[7], p[8]) ;
     PIX_SORT(p[0], p[3]) ; PIX_SORT(p[5], p[8]) ; PIX_SORT(p[4], p[7]) ;
     PIX_SORT(p[3], p[6]) ; PIX_SORT(p[1], p[4]) ; PIX_SORT(p[2], p[5]) ;
     PIX_SORT(p[4], p[7]) ; PIX_SORT(p[4], p[2]) ; PIX_SORT(p[6], p[4]) ;
-    PIX_SORT(p[4], p[2]) ; 
+    PIX_SORT(p[4], p[2]) ;
+*/
+
+    // rearrange so that there may be higher chanche that values are still in CPU register
+    // while keep consecutivity
+    PIX_SORT(p[1], p[2]) ; PIX_SORT(p[0], p[1]) ; PIX_SORT(p[1], p[2]) ;
+    PIX_SORT(p[4], p[5]) ; PIX_SORT(p[3], p[4]) ; PIX_SORT(p[4], p[5]) ;
+    PIX_SORT(p[7], p[8]) ; PIX_SORT(p[6], p[7]) ; PIX_SORT(p[7], p[8]) ;
+    PIX_SORT(p[4], p[7]) ; PIX_SORT(p[1], p[4]) ; PIX_SORT(p[4], p[7]) ;
+    PIX_SORT(p[0], p[3]) ; PIX_SORT(p[3], p[6]) ; PIX_SORT(p[5], p[8]) ; PIX_SORT(p[2], p[5]) ;
+    PIX_SORT(p[4], p[2]) ; PIX_SORT(p[6], p[4]) ; PIX_SORT(p[4], p[2]) ;
+
 		  
 		  *out++=tab[4];
 		  w--;
