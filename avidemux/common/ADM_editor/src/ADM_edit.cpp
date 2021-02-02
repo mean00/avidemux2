@@ -1141,7 +1141,7 @@ bool               ADM_Composer::dumpTiming(void)
 */
 bool                ADM_Composer::getVideoPtsDts(uint32_t frame, uint32_t *flags,uint64_t *pts, uint64_t *dts)
 {
-    if(!_segments.getNbRefVideos()) return true;
+    if(!_segments.getNbRefVideos()) return false;
     _VIDEOS *v=_segments.getRefVideo(0);
 
     aviInfo info;
