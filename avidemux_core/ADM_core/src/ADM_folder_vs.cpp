@@ -252,7 +252,6 @@ uint8_t buildDirectoryContent(const char *base, std::vector<std::string> *list, 
     {
         ADM_warning("Cannot list content of %s\n", base);
         delete[] base2;
-        *outnb = 0;
         return true;
     }
 
