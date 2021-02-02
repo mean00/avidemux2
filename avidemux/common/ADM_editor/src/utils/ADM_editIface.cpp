@@ -173,7 +173,9 @@ char *ADM_Composer::getVideoCodec(void)
 
 int ADM_Composer::appendFile(const char *name)
 {
-	return A_appendVideo(name);
+    if(!_segments.getNbRefVideos())
+        return A_openVideo(name);
+    return A_appendVideo(name);
 }
 /**
     \fn saveAudio
