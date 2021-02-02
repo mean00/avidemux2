@@ -60,7 +60,7 @@ SET(ADM_EXE_SRCS
 ../common/ADM_previewNavigate.cpp
 ../common/gui_main.cpp
 ../common/gui_autodrive.cpp
-../common/GUI_jobs.cpp
+#../common/GUI_jobs.cpp
 ../common/gui_navigate.cpp
 ../common/gui_play.cpp
 ../common/gui_save.cpp
