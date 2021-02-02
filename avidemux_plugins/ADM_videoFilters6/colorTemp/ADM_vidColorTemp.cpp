@@ -1,0 +1,199 @@
+/***************************************************************************
+                          colorTemp filter 
+    Algorithm:
+        Copyright (C) 1999 Winston Chang
+    Ported to Avidemux:
+        Copyright 2021 szlldm
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+#define _USE_MATH_DEFINES // some compilers do not export M_PI etc.. if GNU_SOURCE or that is defined, let's do that
+#include <cmath>
+#include "ADM_default.h"
+#include "ADM_coreVideoFilter.h"
+#include "ADM_coreVideoFilterInternal.h"
+#include "DIA_factory.h"
+#include "colorTemp.h"
+#include "colorTemp_desc.cpp"
+#include "ADM_vidColorTemp.h"
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+extern uint8_t DIA_getColorTemp(colorTemp *param, ADM_coreVideoFilter *in);
+
+
+// Add the hook to make it valid plugin
+//DECLARE_VIDEO_FILTER(   ADMVideoColorTemp,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoColorTemp,   // Class
+                                      1,0,0,              // Version
+                                      ADM_UI_TYPE_BUILD,         // UI
+                                      VF_COLORS,            // Category
+                                      "colorTemp",            // internal name (must be uniq!)
+                                      QT_TRANSLATE_NOOP("colorTemp","Color temperature"),            // Display name
+                                      QT_TRANSLATE_NOOP("colorTemp","Change color temperature.") // Description
+                                  );
+/**
+    \fn ColorTempProcess_C
+*/
+void ADMVideoColorTemp::ColorTempProcess_C(ADMImage *img, float temperature, float angle)
+{
+    int width=img->GetWidth(PLANAR_Y); 
+    int height=img->GetHeight(PLANAR_Y);
+    int ustride,vstride;
+    uint8_t * uptr, * vptr;
+    int pixel;
+
+    angle = angle*M_PI/180.;
+
+    int ushift = std::round(+50.0*std::cos(angle)*temperature);
+    int vshift = std::round(-50.0*std::sin(angle)*temperature);
+
+    if(img->_range == ADM_COL_RANGE_MPEG)
+        img->expandColorRange();
+
+    // Y plane unchanged
+
+    // UV planes
+    ustride=img->GetPitch(PLANAR_U);
+    uptr=img->GetWritePtr(PLANAR_U);
+    vstride=img->GetPitch(PLANAR_V);
+    vptr=img->GetWritePtr(PLANAR_V);
+    for(int y=0;y<height/2;y++)	// 4:2:0
+    {
+        for (int x=0;x<width/2;x++)
+        {
+            pixel = uptr[x];
+            pixel += ushift;
+            if (pixel < 0) pixel = 0;
+            if (pixel > 255) pixel = 255;
+            uptr[x] = pixel;
+
+            pixel = vptr[x];
+            pixel += vshift;
+            if (pixel < 0) pixel = 0;
+            if (pixel > 255) pixel = 255;
+            vptr[x] = pixel;
+        }
+        uptr+=ustride;
+        vptr+=vstride;
+    }
+}
+
+/**
+    \fn configure
+*/
+bool ADMVideoColorTemp::configure()
+{
+    uint8_t r=0;
+
+    r=  DIA_getColorTemp(&_param, previousFilter);
+    if(r) update();
+    return r;
+}
+/**
+    \fn getConfiguration
+*/
+const char   *ADMVideoColorTemp::getConfiguration(void)
+{
+    static char s[256];
+    snprintf(s,255," Temperature :%2.2f, Angle: %.0f",_param.temperature, _param.angle);
+    return s;
+}
+/**
+    \fn ctor
+*/
+ADMVideoColorTemp::ADMVideoColorTemp(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_coreVideoFilter(in,couples)
+{
+    if(!couples || !ADM_paramLoad(couples,colorTemp_param,&_param))
+    {
+        _param.temperature = 0.0;
+        _param.angle = 30.0;
+    }
+    update();
+}
+/**
+    \fn valueLimit
+*/
+float ADMVideoColorTemp::valueLimit(float val, float min, float max)
+{
+    if (val < min) val = min;
+    if (val > max) val = max;
+    return val;
+}
+/**
+    \fn valueLimit
+*/
+int32_t ADMVideoColorTemp::valueLimit(int32_t val, int32_t min, int32_t max)
+{
+    if (val < min) val = min;
+    if (val > max) val = max;
+    return val;
+}
+/**
+    \fn update
+*/
+void ADMVideoColorTemp::update(void)
+{
+    _temperature=valueLimit(_param.temperature,-1.0,1.0);
+    _angle=valueLimit(_param.angle,0.0,180.0);
+}
+/**
+    \fn dtor
+*/
+ADMVideoColorTemp::~ADMVideoColorTemp()
+{
+    
+}
+/**
+    \fn getCoupledConf
+*/
+bool ADMVideoColorTemp::getCoupledConf(CONFcouple **couples)
+{
+    return ADM_paramSave(couples, colorTemp_param,&_param);
+}
+
+void ADMVideoColorTemp::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, colorTemp_param, &_param);
+}
+
+/**
+    
+*/
+
+/**
+    \fn getNextFrame
+    \brief
+*/
+bool ADMVideoColorTemp::getNextFrame(uint32_t *fn,ADMImage *image)
+{
+    /*
+    ADMImage *src;
+    src=vidCache->getImage(nextFrame);
+    if(!src)
+        return false; // EOF
+    *fn=nextFrame++;
+    image->copyInfo(src);
+    image->copyPlane(src,image,PLANAR_Y); // Luma is untouched
+    src = image;
+
+    DoFilter(...);
+
+    vidCache->unlockAll();
+    */
+    if(!previousFilter->getNextFrame(fn,image)) return false;
+
+    ColorTempProcess_C(image, _temperature, _angle);
+
+    return 1;
+}
+
