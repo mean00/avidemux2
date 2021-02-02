@@ -112,28 +112,24 @@ er:
  */
 uint8_t ADM_mx_loadPlugins(const char *path)
 {
-#define MAX_EXTERNAL_FILTER 100
 // FIXME Factorize
+	std::vector<std::string> filelist;
+	ADM_info("Scanning directory %s\n",path);
 
-	char *files[MAX_EXTERNAL_FILTER];
-	uint32_t nbFile;
-
-	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
-	printf("[ADM_mx_plugin] Scanning directory %s\n",path);
-
-	if(!buildDirectoryContent(&nbFile, path, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+	if(!buildDirectoryContent(path, &filelist, SHARED_LIB_EXT))
 	{
-		printf("[ADM_av_plugin] Cannot parse plugin\n");
+		ADM_warning("Cannot open plugin directory\n");
 		return 0;
 	}
 
-	for(int i=0;i<nbFile;i++)
-		tryLoadingMuxerPlugin(files[i]);
+	for(int i=0;i<filelist.size();i++)
+		tryLoadingMuxerPlugin(filelist.at(i).c_str());
 
 	printf("[ADM_mx_plugin] Scanning done\n");
     // Sort muxers by displayName, bubble sort
     int nb=ListOfMuxers.size();
     for(int i=0;i<nb;i++)
+    {
         for(int j=i+1;j<nb;j++)
         {
              ADM_dynMuxer *a,*b;
@@ -145,8 +141,9 @@ uint8_t ADM_mx_loadPlugins(const char *path)
                 ListOfMuxers[i]=b;
              }
         }
-        clearDirectoryContent(nbFile,files);
-	return 1;
+    }
+    ADM_info("Scanning done, %d muxers found\n",nb);
+    return 1;
 }
 /**
     \fn ADM_mx_cleanup

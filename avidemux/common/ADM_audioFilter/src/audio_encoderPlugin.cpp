@@ -134,26 +134,23 @@ er:
  */
 uint8_t ADM_ae_loadPlugins(const char *path)
 {
-#define MAX_EXTERNAL_FILTER 100
 // FIXME Factorize
 
-	char *files[MAX_EXTERNAL_FILTER];
-	uint32_t nbFile;
+	std::vector<std::string> files;
     // Add the copy encoder
     ADM_AudioEncoderLoader *copy=new ADM_AudioEncoderLoader("copy","Copy");
     ListOfAudioEncoder.append(copy->encoderBlock);
     //
-	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
 	printf("[ADM_ae_plugin] Scanning directory %s\n",path);
 
-	if(!buildDirectoryContent(&nbFile, path, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+	if(!buildDirectoryContent(path, &files, SHARED_LIB_EXT))
 	{
-		printf("[ADM_ae_plugin] Cannot parse plugin\n");
+		printf("[ADM_ae_plugin] Cannot open plugin directory\n");
 		return 0;
 	}
 
-	for(int i=0;i<nbFile;i++)
-		tryLoadingFilterPlugin(files[i]);
+	for(int i=0;i<files.size();i++)
+		tryLoadingFilterPlugin(files.at(i).c_str());
 
 	printf("[ADM_ae_plugin] Scanning done\n");
     int nb=ListOfAudioEncoder.size();
@@ -169,7 +166,6 @@ uint8_t ADM_ae_loadPlugins(const char *path)
                 ListOfAudioEncoder[i]=b;
              }
         }
-        clearDirectoryContent(nbFile,files);
 	return 1;
 }
 /**

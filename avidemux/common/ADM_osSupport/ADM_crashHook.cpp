@@ -63,15 +63,15 @@ void checkCrashFile(void)
   strcpy(where,baseDir);
   strcat(where,name);
   
-#if 1  
-  uint32_t nbFile;
-  char *files[20];
-
-    if(buildDirectoryContent(&nbFile, baseDir, files, 20, "py"))
-     {
-        for(int i=0;i<nbFile;i++) printf("%d : %s\n",i,files[i]);
-        clearDirectoryContent(nbFile,files);
-      }
+#if 1
+  {
+    std::vector<std::string> files;
+    if(buildDirectoryContent(baseDir, &files, "py"))
+    {
+        for(int i=0; i < files.size(); i++)
+            printf("%d : %s\n",i,files.at(i).c_str());
+    }
+  }
 #endif
   
   

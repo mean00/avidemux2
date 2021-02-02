@@ -301,34 +301,28 @@ tp_obj PythonEngine::getFolderContent(tp_vm *tp)
 
 	ADM_info("Scanning %s for file with ext : %s\n", root, ext);
 
-	uint32_t nb;
-#define MAX_ELEM 200
-	char *items[MAX_ELEM];
+	std::vector<std::string> items;
 
-	if (!buildDirectoryContent(&nb, root, items, MAX_ELEM, ext))
+	if (!buildDirectoryContent(root, &items, ext))
 	{
 		ADM_warning("Cannot get content\n");
+		return tp_None;
+	}
+
+	if (items.empty())
+	{
+		ADM_warning("Folder empty\n");
 		return tp_None;
 	}
 
 	// create a list
 	tp_obj list = tp_list(tp);
 
-	if (!nb)
-	{
-		ADM_warning("Folder empty\n");
-		return tp_None;
-	}
-
 	// add items to the list
-	for (int i = 0; i < nb; i++)
+	for (int i = 0; i < items.size(); i++)
 	{
-		char *tem = items[i];
-		_tp_list_append(tp, list.list.val, tp_string_copy(tp, tem, strlen(tem)));
+		_tp_list_append(tp, list.list.val, tp_string_copy(tp, items.at(i).c_str(), items.at(i).size()));
 	}
-
-	// free the list
-	clearDirectoryContent(nb, items);
 
 	return list;
 }

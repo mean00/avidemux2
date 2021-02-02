@@ -44,23 +44,18 @@ bool compareEngineRank(IScriptEngine *engine1, IScriptEngine *engine2)
  */
 static void tryLoadingEngine(const char* path, IEditor *editor)
 {
-    const int maxEngineCount = 50;
-    char *files[maxEngineCount];
-    uint32_t fileCount;
-
-    memset(files, 0, sizeof(char *) * maxEngineCount);
+    std::vector<std::string> files;
     printf("[Script] Scanning directory %s\n", path);
 
-    if (!buildDirectoryContent(&fileCount, path, files, maxEngineCount, SHARED_LIB_EXT))
+    if (!buildDirectoryContent(path, &files, SHARED_LIB_EXT))
     {
-        printf("[Script] Cannot parse plugin\n");
-
+        printf("[Script] Cannot open plugin directory\n");
         return ;
     }
 
-    for (int index = 0; index < fileCount; index++)
+    for (int index = 0; index < files.size(); index++)
     {
-        ADM_ScriptEngineLoader *loader = new ADM_ScriptEngineLoader(files[index]);
+        ADM_ScriptEngineLoader *loader = new ADM_ScriptEngineLoader(files.at(index).c_str());
 
         if (loader->isAvailable())
         {
@@ -71,15 +66,14 @@ static void tryLoadingEngine(const char* path, IEditor *editor)
 
             engineLoaders.push_back(loader);
             engines.push_back(engine);
-            printf("[Script] loaded %s\n", files[index]);
+            printf("[Script] loaded %s\n", files.at(index).c_str());
         }
         else
         {
             delete loader;
-            printf("[Script] ERROR - Unable to load %s\n", files[index]);
+            printf("[Script] ERROR - Unable to load %s\n", files.at(index).c_str());
         }
     }
-    clearDirectoryContent(fileCount, files);
 }
 
 /**

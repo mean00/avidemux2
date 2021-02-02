@@ -68,23 +68,18 @@ er:
  */
 uint8_t ADM_dm_loadPlugins(const char *path)
 {
-#define MAX_EXTERNAL_FILTER 100
 // FIXME Factorize
+	std::vector<std::string> files;
+	ADM_info("Scanning directory %s\n",path);
 
-	char *files[MAX_EXTERNAL_FILTER];
-	uint32_t nbFile;
-
-	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
-	printf("[ADM_dm_plugin] Scanning directory %s\n",path);
-
-	if(!buildDirectoryContent(&nbFile, path, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+	if(!buildDirectoryContent(path, &files, SHARED_LIB_EXT))
 	{
-		printf("[ADM_av_plugin] Cannot parse plugin\n");
+		ADM_warning("Cannot open plugin directory\n");
 		return 0;
 	}
 
-	for(int i=0;i<nbFile;i++)
-		tryLoadingDemuxerPlugin(files[i]);
+	for(int i=0;i<files.size();i++)
+		tryLoadingDemuxerPlugin(files.at(i).c_str());
     int nb=ListOfDemuxers.size();
 	
     // Now sort them according to priority
@@ -101,8 +96,7 @@ uint8_t ADM_dm_loadPlugins(const char *path)
         }
     for(int i=0;i<nb;i++)
         ADM_info("Demuxer plugin : %s, priority :%d\n",ListOfDemuxers[i]->name,(int)ListOfDemuxers[i]->priority);
-    printf("[ADM_dm_plugin] Scanning done, %d demuxers found\n",(int)nb);
-        clearDirectoryContent(nbFile,files);
+    ADM_info("Scanning done, %d demuxers found\n",nb);
 	return 1;
 }
 /**
