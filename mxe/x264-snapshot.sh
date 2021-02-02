@@ -44,7 +44,7 @@ sha256sum "${outfile}" >/dev/null || failMsg "Cannot calculate checksum"
 # now for real
 checksum=$(sha256sum "${outfile}" | cut -d \  -f 1)
 
-cat > x264.patch <<EOF
+cat > x264_gen.patch <<EOF
 diff --git a/src/x264.mk b/src/x264.mk
 index 0170301b..1189ccd0 100644
 --- a/src/x264.mk
