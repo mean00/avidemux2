@@ -101,8 +101,8 @@ fi
 
 git clone https://github.com/FFmpeg/nv-codec-headers.git || fail "Cannot clone nv-codec-headers repository"
 cd nv-codec-headers \
-&& sed -i 1d Makefile \
-&& PREFIX="${MXE_ROOT_DIR}/usr/x86_64-w64-mingw32.shared" make install || fail "Cannot install nv-codec-headers"
+&& sed -i 's/\ \/usr\/local//' Makefile \
+&& DESTDIR="${MXE_ROOT_DIR}/usr/x86_64-w64-mingw32.shared" make install || fail "Cannot install nv-codec-headers"
 
 # the end
 cd "${cur}"
