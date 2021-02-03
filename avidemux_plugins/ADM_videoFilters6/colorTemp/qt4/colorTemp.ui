@@ -169,6 +169,7 @@
  </customwidgets>
  <tabstops>
   <tabstop>horizontalSliderTemperature</tabstop>
+  <tabstop>horizontalSliderAngle</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>graphicsView</tabstop>
  </tabstops>
