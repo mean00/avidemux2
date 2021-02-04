@@ -41,7 +41,7 @@ uint8_t   flyBlur::processYuv(ADMImage *in,ADMImage *out )
     out->copyPlane(in,out,PLANAR_V);
 
     // Do it!
-    ADMVideoBlur::BlurProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),param.radius, rgbBufStride, rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
+    ADMVideoBlur::BlurProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),param.algorithm, param.radius, rgbBufStride, rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
     return 1;
 }
 

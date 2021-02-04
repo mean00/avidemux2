@@ -48,6 +48,7 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
+        connect(ui.comboBoxAlgorithm, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
 #define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
         connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
         SPINNER(Radius,1,0)
@@ -106,12 +107,14 @@ void Ui_blurWindow::showEvent(QShowEvent *event)
 uint8_t flyBlur::upload(void)
 {
     Ui_blurDialog *w=(Ui_blurDialog *)_cookie;
+    MYCOMBOX(Algorithm)->setCurrentIndex(param.algorithm);
     MYSPIN(Radius)->setValue((int)param.radius);
     return 1;
 }
 uint8_t flyBlur::download(void)
 {
     Ui_blurDialog *w=(Ui_blurDialog *)_cookie;
+    param.algorithm=MYCOMBOX(Algorithm)->currentIndex();
     param.radius=(int)MYSPIN(Radius)->value();
     return 1;
 }

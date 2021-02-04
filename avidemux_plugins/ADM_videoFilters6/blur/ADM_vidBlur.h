@@ -29,6 +29,7 @@ class  ADMVideoBlur:public ADM_coreVideoFilter
   protected:
     void                  update(void);
     blur        _param;
+    uint32_t              _algorithm;
     uint32_t              _radius;
     int                   _rgbBufStride;
     ADM_byteBuffer *      _rgbBufRaw;
@@ -47,9 +48,10 @@ class  ADMVideoBlur:public ADM_coreVideoFilter
 
     static void BlurCreateBuffers(int w, int h, int * rgbBufStride, ADM_byteBuffer ** rgbBufRaw, ADMImageRef ** rgbBufImage, ADMColorScalerFull ** convertYuvToRgb, ADMColorScalerFull ** convertRgbToYuv);
     static void BlurDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv);
-    static void BlurProcess_C(ADMImage *img, int w, int h, unsigned int radius, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv);
+    static void BlurProcess_C(ADMImage *img, int w, int h, unsigned int algorithm, unsigned int radius, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv);
 
   private:
+    static void BoxBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius);
     static void StackBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius);
 
 };

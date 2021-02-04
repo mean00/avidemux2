@@ -119,6 +119,92 @@ void ADMVideoBlur::BlurDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * 
     if (rgbBufRaw) delete rgbBufRaw;
 }
 /**
+    \fn BoxBlurLine_C
+*/
+void ADMVideoBlur::BoxBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius)
+{
+    uint_fast32_t div;
+    uint_fast32_t mul_sum;
+    uint_fast32_t shr_sum;
+
+    uint_fast32_t l, p, i;
+    uint_fast32_t stack_ptr;
+
+    const uint8_t * src_pix_ptr;
+          uint8_t * dst_pix_ptr;
+    uint8_t *     stack_pix_ptr;
+
+    uint_fast32_t sum_r = 0;
+    uint_fast32_t sum_g = 0;
+    uint_fast32_t sum_b = 0;
+
+    uint_fast32_t lm  = len - 1;
+
+    if ((radius > 0) && (len > 1))
+    {
+        div = radius * 2 + 1;
+        shr_sum = 14;
+        mul_sum = (1 << shr_sum)/div;
+
+        for(i = 0; i <= radius; i++)
+        {
+            if ((radius - i) > lm)
+                src_pix_ptr = line + pixPitch*lm;
+            else
+                src_pix_ptr = line + pixPitch*(radius - i);    // fix flickering at the T/L edges, by reflecting the image backward
+            stack_pix_ptr    = (uint8_t *)&stack[i];
+            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+            sum_r       += src_pix_ptr[0];
+            sum_g       += src_pix_ptr[1];
+            sum_b       += src_pix_ptr[2];
+        }
+        src_pix_ptr = line;
+        for(i = 1; i <= radius; i++)
+        {
+            if(i <= lm) src_pix_ptr += pixPitch; 
+            stack_pix_ptr = (uint8_t *)&stack[i + radius];
+            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+            sum_r        += src_pix_ptr[0];
+            sum_g        += src_pix_ptr[1];
+            sum_b        += src_pix_ptr[2];
+        }
+
+        stack_ptr = 0;
+        p = radius;
+        if(p > lm) p = lm;
+        src_pix_ptr = line + pixPitch*p;
+        dst_pix_ptr = line;
+        for(l = 0; l < len; l++)
+        {
+            sum_r += src_pix_ptr[0];
+            sum_g += src_pix_ptr[1];
+            sum_b += src_pix_ptr[2];
+
+            stack_pix_ptr = (uint8_t *)&stack[stack_ptr];
+
+            sum_r  -= stack_pix_ptr[0];
+            sum_g  -= stack_pix_ptr[1];
+            sum_b  -= stack_pix_ptr[2];
+
+            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+
+            stack_ptr++;
+            if(stack_ptr >= div) stack_ptr = 0;
+
+            dst_pix_ptr[0] = (sum_r * mul_sum) >> shr_sum;
+            dst_pix_ptr[1] = (sum_g * mul_sum) >> shr_sum;
+            dst_pix_ptr[2] = (sum_b * mul_sum) >> shr_sum;
+            dst_pix_ptr   += pixPitch;
+
+            if(p < lm) 
+                src_pix_ptr += pixPitch;
+            else if(p < lm*2) 
+                src_pix_ptr -= pixPitch;    // fix flickering at the B/R edges, by reflecting the image backward
+            ++p;
+        }
+    }
+}
+/**
     \fn StackBlurLine_C
 */
 void ADMVideoBlur::StackBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius)
@@ -237,11 +323,12 @@ void ADMVideoBlur::StackBlurLine_C(uint8_t * line, int len, int pixPitch, uint32
 /**
     \fn BlurProcess_C
 */
-void ADMVideoBlur::BlurProcess_C(ADMImage *img, int w, int h, unsigned int radius, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
+void ADMVideoBlur::BlurProcess_C(ADMImage *img, int w, int h, unsigned int algorithm, unsigned int radius, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
 {
     if (!img || !rgbBufRaw || !rgbBufImage || !convertYuvToRgb || !convertRgbToYuv) return;
     uint8_t * line;
 
+    if (algorithm > 2) algorithm = 1;
     if (radius < 1) return;	// nothing to do
     if (radius > 254) radius = 254;
 
@@ -250,18 +337,54 @@ void ADMVideoBlur::BlurProcess_C(ADMImage *img, int w, int h, unsigned int radiu
 
     convertYuvToRgb->convertImage(img,rgbBufRaw->at(0));
 
-
     int x, y;
 
-    for(y = 0; y < h; y++)
-    {
-        StackBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
-    };
+    if (algorithm == 0) {    // Box blur
+        for(y = 0; y < h; y++)
+        {
+            BoxBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
+        };
 
-    for(x = 0; x < w; x++)
-    {
-        StackBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
-    };
+        for(x = 0; x < w; x++)
+        {
+            BoxBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
+        };
+    } else
+    if (algorithm == 1) {    // Gaussian blur
+        for(y = 0; y < h; y++)
+        {
+            StackBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
+        };
+
+        for(x = 0; x < w; x++)
+        {
+            StackBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
+        };
+    } else
+    if (algorithm == 2) {    // Gaussian blur 2 pass
+        radius = (int)((float)radius / 1.4142135623730950488);
+        for(y = 0; y < h; y++)
+        {
+            StackBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
+        };
+
+        for(x = 0; x < w; x++)
+        {
+            StackBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
+        };
+
+        radius++;
+        if (radius > 254) radius = 254;
+        for(y = 0; y < h; y++)
+        {
+            StackBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
+        };
+
+        for(x = 0; x < w; x++)
+        {
+            StackBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
+        };
+    }
 
     convertRgbToYuv->convertImage(rgbBufImage,img);
 
@@ -286,7 +409,17 @@ bool ADMVideoBlur::configure()
 const char   *ADMVideoBlur::getConfiguration(void)
 {
     static char s[256];
-    snprintf(s,255," Radius: %d",_param.radius);
+    const char * algo=NULL;
+    switch(_param.algorithm) {
+        default:
+        case 0: algo="Box";
+            break;
+        case 1: algo="Near Gaussian";
+            break;
+        case 2: algo="Gaussian 2 pass";
+            break;
+    }
+    snprintf(s,255,"%s blur, Radius: %d",algo,_param.radius);
     return s;
 }
 /**
@@ -296,6 +429,7 @@ ADMVideoBlur::ADMVideoBlur(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_
 {
     if(!couples || !ADM_paramLoad(couples,blur_param,&_param))
     {
+        _param.algorithm = 0;
         _param.radius = 1;
     }
     BlurCreateBuffers(info.width,info.height, &(_rgbBufStride), &(_rgbBufRaw), &(_rgbBufImage), &(_convertYuvToRgb), &(_convertRgbToYuv));
@@ -309,6 +443,8 @@ void ADMVideoBlur::update(void)
     _radius=_param.radius;
     if (_radius > 200) _radius = 200;
     if (_radius < 1) _radius = 1;
+    _algorithm=_param.algorithm;
+    if (_algorithm > 2) _algorithm = 2;
 }
 /**
     \fn dtor
@@ -357,7 +493,7 @@ bool ADMVideoBlur::getNextFrame(uint32_t *fn,ADMImage *image)
 
     if(!previousFilter->getNextFrame(fn,image)) return false;
 
-    BlurProcess_C(image,info.width,info.height,_radius,_rgbBufStride,_rgbBufRaw, _rgbBufImage, _convertYuvToRgb, _convertRgbToYuv);
+    BlurProcess_C(image,info.width,info.height,_algorithm,_radius,_rgbBufStride,_rgbBufRaw, _rgbBufImage, _convertYuvToRgb, _convertRgbToYuv);
  
     return 1;
 }

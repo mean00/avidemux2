@@ -5,6 +5,7 @@
 #include "blur.h"
 bool  blur_jserialize(const char *file, const blur *key){
 admJson json;
+json.addUint32("algorithm",key->algorithm);
 json.addUint32("radius",key->radius);
 return json.dumpToFile(file);
 };

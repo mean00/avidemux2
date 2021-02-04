@@ -70,14 +70,14 @@
    </item>
    <item row="2" column="0" rowspan="2" colspan="4">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
+     <item row="0" column="1">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Radius</string>
+        <string>radius</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="3">
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -90,7 +90,7 @@
        </property>
       </spacer>
      </item>
-     <item row="0" column="1">
+     <item row="0" column="2">
       <widget class="ADM_SliderIndicator" name="horizontalSliderRadius">
        <property name="minimum">
         <number>1</number>
@@ -104,6 +104,25 @@
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QComboBox" name="comboBoxAlgorithm">
+       <item>
+        <property name="text">
+         <string>Box blur</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Near Gaussian</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Gaussian 2 pass</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
@@ -123,6 +142,7 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>comboBoxAlgorithm</tabstop>
   <tabstop>horizontalSliderRadius</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>graphicsView</tabstop>
