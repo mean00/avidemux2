@@ -39,7 +39,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoColorTemp,   // Class
                                       VF_COLORS,            // Category
                                       "colorTemp",            // internal name (must be uniq!)
                                       QT_TRANSLATE_NOOP("colorTemp","Color temperature"),            // Display name
-                                      QT_TRANSLATE_NOOP("colorTemp","Change color temperature.") // Description
+                                      QT_TRANSLATE_NOOP("colorTemp","Adjust color temperature.") // Description
                                   );
 /**
     \fn ColorTempProcess_C
@@ -48,14 +48,16 @@ void ADMVideoColorTemp::ColorTempProcess_C(ADMImage *img, float temperature, flo
 {
     int width=img->GetWidth(PLANAR_Y); 
     int height=img->GetHeight(PLANAR_Y);
-    int ustride,vstride;
-    uint8_t * uptr, * vptr;
-    int pixel;
+    int ystride,ustride,vstride;
+    uint8_t * yptr, * uptr, * vptr;
+    int pixel,max;
 
     angle = angle*M_PI/180.;
 
-    int ushift = std::round(+50.0*std::cos(angle)*temperature);
-    int vshift = std::round(-50.0*std::sin(angle)*temperature);
+    float ushiftf = +100.0*std::cos(angle)*temperature;
+    float vshiftf = -100.0*std::sin(angle)*temperature;
+
+    int ushift, vshift;
 
     if(img->_range == ADM_COL_RANGE_MPEG)
         img->expandColorRange();
@@ -63,6 +65,8 @@ void ADMVideoColorTemp::ColorTempProcess_C(ADMImage *img, float temperature, flo
     // Y plane unchanged
 
     // UV planes
+    ystride=img->GetPitch(PLANAR_Y);
+    yptr=img->GetWritePtr(PLANAR_Y);
     ustride=img->GetPitch(PLANAR_U);
     uptr=img->GetWritePtr(PLANAR_U);
     vstride=img->GetPitch(PLANAR_V);
@@ -71,6 +75,16 @@ void ADMVideoColorTemp::ColorTempProcess_C(ADMImage *img, float temperature, flo
     {
         for (int x=0;x<width/2;x++)
         {
+            max = yptr[x*2];
+            pixel = yptr[x*2 + 1];
+            if (pixel > max) max = pixel;
+            pixel = yptr[x*2 + ystride];
+            if (pixel > max) max = pixel;
+            pixel = yptr[x*2 + ystride + 1];
+            if (pixel > max) max = pixel;
+            ushift = (int)(ushiftf * (float)max/255.0);
+            vshift = (int)(vshiftf * (float)max/255.0);
+
             pixel = uptr[x];
             pixel += ushift;
             if (pixel < 0) pixel = 0;
@@ -83,6 +97,7 @@ void ADMVideoColorTemp::ColorTempProcess_C(ADMImage *img, float temperature, flo
             if (pixel > 255) pixel = 255;
             vptr[x] = pixel;
         }
+        yptr+=2*ystride;
         uptr+=ustride;
         vptr+=vstride;
     }
