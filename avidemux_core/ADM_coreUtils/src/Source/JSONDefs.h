@@ -45,7 +45,7 @@
     #define json_try
     #define json_catch(exception, code)
 #else
-    #define json_throw(x) throw(x)
+    #define json_throw(x) throw x
     #define json_try try
     #define json_catch(exception, code) catch(exception){ code }
 #endif
