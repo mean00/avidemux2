@@ -51,9 +51,9 @@ bool movConfigure(void)
 
 #ifndef MUXER_IS_MOV
 #   define NB_OPTIMIZE 3
-#   define NB_TABS 6
+#   define NB_TABS 7
 #else
-#   define NB_TABS 5
+#   define NB_TABS 6
 #   define NB_OPTIMIZE 2
 #endif
         diaElemMenu  menuOptimize(&opt,QT_TRANSLATE_NOOP("mp4muxer","Optimize for Streaming"),NB_OPTIMIZE,streamOpt,"");
