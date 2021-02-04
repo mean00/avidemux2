@@ -119,6 +119,122 @@ void ADMVideoBlur::BlurDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * 
     if (rgbBufRaw) delete rgbBufRaw;
 }
 /**
+    \fn StackBlurLine_C
+*/
+void ADMVideoBlur::StackBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius)
+{
+    uint_fast32_t div;
+    uint_fast32_t mul_sum;
+    uint_fast32_t shr_sum;
+
+    uint_fast32_t l, p, i;
+    uint_fast32_t stack_ptr;
+    uint_fast32_t stack_start;
+
+    const uint8_t * src_pix_ptr;
+          uint8_t * dst_pix_ptr;
+    uint8_t *     stack_pix_ptr;
+
+    uint_fast32_t sum_r = 0;
+    uint_fast32_t sum_g = 0;
+    uint_fast32_t sum_b = 0;
+    uint_fast32_t sum_in_r = 0;
+    uint_fast32_t sum_in_g = 0;
+    uint_fast32_t sum_in_b = 0;
+    uint_fast32_t sum_out_r = 0;
+    uint_fast32_t sum_out_g = 0;
+    uint_fast32_t sum_out_b = 0;
+
+    uint_fast32_t lm  = len - 1;
+
+    if ((radius > 0) && (len > 1))
+    {
+        div = radius * 2 + 1;
+        mul_sum = g_stack_blur8_mul[radius];
+        shr_sum = g_stack_blur8_shr[radius];
+
+        for(i = 0; i <= radius; i++)
+        {
+            if ((radius - i) > lm)
+                src_pix_ptr = line + pixPitch*lm;
+            else
+                src_pix_ptr = line + pixPitch*(radius - i);    // fix flickering at the T/L edges, by reflecting the image backward
+            stack_pix_ptr    = (uint8_t *)&stack[i];
+            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+            sum_out_r       += src_pix_ptr[0];
+            sum_r           += src_pix_ptr[0] * (i + 1);
+            sum_out_g       += src_pix_ptr[1];
+            sum_g           += src_pix_ptr[1] * (i + 1);
+            sum_out_b       += src_pix_ptr[2];
+            sum_b           += src_pix_ptr[2] * (i + 1);
+        }
+        src_pix_ptr = line;
+        for(i = 1; i <= radius; i++)
+        {
+            if(i <= lm) src_pix_ptr += pixPitch; 
+            stack_pix_ptr = (uint8_t *)&stack[i + radius];
+            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+            sum_in_r        += src_pix_ptr[0];
+            sum_r           += src_pix_ptr[0] * (radius + 1 - i);
+            sum_in_g        += src_pix_ptr[1];
+            sum_g           += src_pix_ptr[1] * (radius + 1 - i);
+            sum_in_b        += src_pix_ptr[2];
+            sum_b           += src_pix_ptr[2] * (radius + 1 - i);
+        }
+
+        stack_ptr = radius;
+        p = radius;
+        if(p > lm) p = lm;
+        src_pix_ptr = line + pixPitch*p;
+        dst_pix_ptr = line;
+        for(l = 0; l < len; l++)
+        {
+            dst_pix_ptr[0] = (sum_r * mul_sum) >> shr_sum;
+            dst_pix_ptr[1] = (sum_g * mul_sum) >> shr_sum;
+            dst_pix_ptr[2] = (sum_b * mul_sum) >> shr_sum;
+            dst_pix_ptr   += pixPitch;
+
+            sum_r -= sum_out_r;
+            sum_g -= sum_out_g;
+            sum_b -= sum_out_b;
+   
+            stack_start = stack_ptr + div - radius;
+            if(stack_start >= div) stack_start -= div;
+            stack_pix_ptr = (uint8_t *)&stack[stack_start];
+
+            sum_out_r -= stack_pix_ptr[0];
+            sum_out_g -= stack_pix_ptr[1];
+            sum_out_b -= stack_pix_ptr[2];
+
+            if(p < lm) 
+                src_pix_ptr += pixPitch;
+            else if(p < lm*2) 
+                src_pix_ptr -= pixPitch;    // fix flickering at the B/R edges, by reflecting the image backward
+            ++p;
+
+            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+
+            sum_in_r += src_pix_ptr[0];
+            sum_in_g += src_pix_ptr[1];
+            sum_in_b += src_pix_ptr[2];
+            sum_r    += sum_in_r;
+            sum_g    += sum_in_g;
+            sum_b    += sum_in_b;
+
+            ++stack_ptr;
+            if(stack_ptr >= div) stack_ptr = 0;
+            stack_pix_ptr = (uint8_t *)&stack[stack_ptr];
+
+            sum_in_r  -= stack_pix_ptr[0];
+            sum_out_r += stack_pix_ptr[0];
+            sum_in_g  -= stack_pix_ptr[1];
+            sum_out_g += stack_pix_ptr[1];
+            sum_in_b  -= stack_pix_ptr[2];
+            sum_out_b += stack_pix_ptr[2];
+        }
+    }
+}
+/**
     \fn BlurProcess_C
 */
 void ADMVideoBlur::BlurProcess_C(ADMImage *img, int w, int h, unsigned int radius, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
@@ -129,218 +245,23 @@ void ADMVideoBlur::BlurProcess_C(ADMImage *img, int w, int h, unsigned int radiu
     if (radius < 1) return;	// nothing to do
     if (radius > 254) radius = 254;
 
+    uint32_t * stack = (uint32_t *)malloc(512 * sizeof(uint32_t));    // max 254*2+1=509 needed
+    if (!stack) return;
 
     convertYuvToRgb->convertImage(img,rgbBufRaw->at(0));
 
-    uint_fast32_t div;
-    uint_fast32_t mul_sum;
-    uint_fast32_t shr_sum;
 
-    div = radius * 2 + 1;
-    mul_sum = g_stack_blur8_mul[radius];
-    shr_sum = g_stack_blur8_shr[radius];
-
-    uint32_t * stack = (uint32_t *)malloc(div * sizeof(uint32_t));
-    if (!stack) return;
-
-    uint_fast32_t x, y, xp, yp, i;
-    uint_fast32_t stack_ptr;
-    uint_fast32_t stack_start;
-
-    const uint8_t * src_pix_ptr;
-          uint8_t * dst_pix_ptr;
-    uint8_t *     stack_pix_ptr;
-
-    uint_fast32_t sum_r;
-    uint_fast32_t sum_g;
-    uint_fast32_t sum_b;
-    uint_fast32_t sum_in_r;
-    uint_fast32_t sum_in_g;
-    uint_fast32_t sum_in_b;
-    uint_fast32_t sum_out_r;
-    uint_fast32_t sum_out_g;
-    uint_fast32_t sum_out_b;
-
-    uint_fast32_t wm  = w - 1;
-    uint_fast32_t hm  = h - 1;
+    int x, y;
 
     for(y = 0; y < h; y++)
     {
-        sum_r = 
-        sum_g = 
-        sum_b = 
-        sum_in_r = 
-        sum_in_g = 
-        sum_in_b = 
-        sum_out_r = 
-        sum_out_g = 
-        sum_out_b = 0;
-
-        src_pix_ptr = rgbBufRaw->at(y*rgbBufStride+ 4*0);
-        for(i = 0; i <= radius; i++)
-        {
-            stack_pix_ptr    = (uint8_t *)&stack[i];
-            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
-            sum_out_r       += src_pix_ptr[0];
-            sum_r           += src_pix_ptr[0] * (i + 1);
-            sum_out_g       += src_pix_ptr[1];
-            sum_g           += src_pix_ptr[1] * (i + 1);
-            sum_out_b       += src_pix_ptr[2];
-            sum_b           += src_pix_ptr[2] * (i + 1);
-        }
-        for(i = 1; i <= radius; i++)
-        {
-            if(i <= wm) src_pix_ptr += sizeof(uint32_t); 
-            stack_pix_ptr = (uint8_t *)&stack[i + radius];
-            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
-            sum_in_r        += src_pix_ptr[0];
-            sum_r           += src_pix_ptr[0] * (radius + 1 - i);
-            sum_in_g        += src_pix_ptr[1];
-            sum_g           += src_pix_ptr[1] * (radius + 1 - i);
-            sum_in_b        += src_pix_ptr[2];
-            sum_b           += src_pix_ptr[2] * (radius + 1 - i);
-        }
-
-        stack_ptr = radius;
-        xp = radius;
-        if(xp > wm) xp = wm;
-        src_pix_ptr = rgbBufRaw->at(y*rgbBufStride+ 4*xp);
-        dst_pix_ptr = rgbBufRaw->at(y*rgbBufStride+ 4*0);
-        for(x = 0; x < w; x++)
-        {
-            dst_pix_ptr[0] = (sum_r * mul_sum) >> shr_sum;
-            dst_pix_ptr[1] = (sum_g * mul_sum) >> shr_sum;
-            dst_pix_ptr[2] = (sum_b * mul_sum) >> shr_sum;
-            dst_pix_ptr   += sizeof(uint32_t);
-
-            sum_r -= sum_out_r;
-            sum_g -= sum_out_g;
-            sum_b -= sum_out_b;
-   
-            stack_start = stack_ptr + div - radius;
-            if(stack_start >= div) stack_start -= div;
-            stack_pix_ptr = (uint8_t *)&stack[stack_start];
-
-            sum_out_r -= stack_pix_ptr[0];
-            sum_out_g -= stack_pix_ptr[1];
-            sum_out_b -= stack_pix_ptr[2];
-
-            if(xp < wm) 
-            {
-                src_pix_ptr += sizeof(uint32_t);
-                ++xp;
-            }
-
-            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
-
-            sum_in_r += src_pix_ptr[0];
-            sum_in_g += src_pix_ptr[1];
-            sum_in_b += src_pix_ptr[2];
-            sum_r    += sum_in_r;
-            sum_g    += sum_in_g;
-            sum_b    += sum_in_b;
-
-            ++stack_ptr;
-            if(stack_ptr >= div) stack_ptr = 0;
-            stack_pix_ptr = (uint8_t *)&stack[stack_ptr];
-
-            sum_in_r  -= stack_pix_ptr[0];
-            sum_out_r += stack_pix_ptr[0];
-            sum_in_g  -= stack_pix_ptr[1];
-            sum_out_g += stack_pix_ptr[1];
-            sum_in_b  -= stack_pix_ptr[2];
-            sum_out_b += stack_pix_ptr[2];
-        }
-    }
+        StackBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
+    };
 
     for(x = 0; x < w; x++)
     {
-        sum_r = 
-        sum_g = 
-        sum_b = 
-        sum_in_r = 
-        sum_in_g = 
-        sum_in_b = 
-        sum_out_r = 
-        sum_out_g = 
-        sum_out_b = 0;
-
-        src_pix_ptr = rgbBufRaw->at(0*rgbBufStride+ 4*x);
-        for(i = 0; i <= radius; i++)
-        {
-            stack_pix_ptr    = (uint8_t *)&stack[i];
-            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
-            sum_out_r       += src_pix_ptr[0];
-            sum_r           += src_pix_ptr[0] * (i + 1);
-            sum_out_g       += src_pix_ptr[1];
-            sum_g           += src_pix_ptr[1] * (i + 1);
-            sum_out_b       += src_pix_ptr[2];
-            sum_b           += src_pix_ptr[2] * (i + 1);
-        }
-        for(i = 1; i <= radius; i++)
-        {
-            if(i <= hm) src_pix_ptr += rgbBufStride;
-            stack_pix_ptr = (uint8_t *)&stack[i + radius];
-            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
-            sum_in_r        += src_pix_ptr[0];
-            sum_r           += src_pix_ptr[0] * (radius + 1 - i);
-            sum_in_g        += src_pix_ptr[1];
-            sum_g           += src_pix_ptr[1] * (radius + 1 - i);
-            sum_in_b        += src_pix_ptr[2];
-            sum_b           += src_pix_ptr[2] * (radius + 1 - i);
-        }
-
-        stack_ptr = radius;
-        yp = radius;
-        if(yp > hm) yp = hm;
-        src_pix_ptr = rgbBufRaw->at(yp*rgbBufStride+ 4*x);
-        dst_pix_ptr = rgbBufRaw->at(0*rgbBufStride+ 4*x);
-        for(y = 0; y < h; y++)
-        {
-            dst_pix_ptr[0] = (sum_r * mul_sum) >> shr_sum;
-            dst_pix_ptr[1] = (sum_g * mul_sum) >> shr_sum;
-            dst_pix_ptr[2] = (sum_b * mul_sum) >> shr_sum;
-            dst_pix_ptr += rgbBufStride;
-
-            sum_r -= sum_out_r;
-            sum_g -= sum_out_g;
-            sum_b -= sum_out_b;
-   
-            stack_start = stack_ptr + div - radius;
-            if(stack_start >= div) stack_start -= div;
-
-            stack_pix_ptr = (uint8_t *)&stack[stack_start];
-            sum_out_r -= stack_pix_ptr[0];
-            sum_out_g -= stack_pix_ptr[1];
-            sum_out_b -= stack_pix_ptr[2];
-
-            if(yp < hm) 
-            {
-                src_pix_ptr += rgbBufStride;
-                ++yp;
-            }
-
-            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
-
-            sum_in_r += src_pix_ptr[0];
-            sum_in_g += src_pix_ptr[1];
-            sum_in_b += src_pix_ptr[2];
-            sum_r    += sum_in_r;
-            sum_g    += sum_in_g;
-            sum_b    += sum_in_b;
-
-            ++stack_ptr;
-            if(stack_ptr >= div) stack_ptr = 0;
-            stack_pix_ptr = (uint8_t *)&stack[stack_ptr];
-
-            sum_in_r  -= stack_pix_ptr[0];
-            sum_out_r += stack_pix_ptr[0];
-            sum_in_g  -= stack_pix_ptr[1];
-            sum_out_g += stack_pix_ptr[1];
-            sum_in_b  -= stack_pix_ptr[2];
-            sum_out_b += stack_pix_ptr[2];
-        }
-    }
+        StackBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
+    };
 
     convertRgbToYuv->convertImage(rgbBufImage,img);
 

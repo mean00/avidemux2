@@ -49,4 +49,7 @@ class  ADMVideoBlur:public ADM_coreVideoFilter
     static void BlurDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv);
     static void BlurProcess_C(ADMImage *img, int w, int h, unsigned int radius, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv);
 
+  private:
+    static void StackBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius);
+
 };
