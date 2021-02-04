@@ -2575,6 +2575,31 @@ void UI_resize(uint32_t w,uint32_t h)
 }
 
 /**
+    \fn UI_getMaximumPreviewSize
+    \brief Return maximum width and height available for video preview
+*/
+void UI_getMaximumPreviewSize(uint32_t *availWidth, uint32_t *availHeight)
+{
+    QSize frme = QuiMainWindows->frameSize();
+    int fwidth = frme.width() - QuiMainWindows->width();
+    int fheight = frme.height() - QuiMainWindows->height();
+    if(fwidth < 0) fwidth = 0;
+    if(fheight < 0) fheight = 0;
+
+    uint32_t reqw, reqh, screenWidth, screenHeight;
+
+    UI_getPhysicalScreenSize(QuiMainWindows, &screenWidth, &screenHeight);
+    ((MainWindow *)QuiMainWindows)->calcDockWidgetDimensions(reqw,reqh);
+
+    int w = screenWidth - reqw - fwidth;
+    int h = screenHeight - reqh - fheight;
+    if(w < 0) w = 0;
+    if(h < 0) h = 0;
+    *availWidth = w;
+    *availHeight = h;
+}
+
+/**
     \fn UI_getNeedsResizingFlag
 */
 bool UI_getNeedsResizingFlag(void)
