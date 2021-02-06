@@ -141,7 +141,7 @@ bool            qShell::evaluate(bool x)
     ui.textBrowser->append(text);
     ui.textBrowser->setFontItalic(false);
     ui.textBrowser_2->setPlainText("");
-    _engine->runScript(text.toLatin1().constData(), IScriptEngine::Normal);
+    _engine->runScript(text.toUtf8().constData(), IScriptEngine::Normal);
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
     dumpHistory();
 #endif
