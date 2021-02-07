@@ -60,6 +60,11 @@ int pyGetHeight(IEditor *editor);
 int pyGetCurrentFrameFlags(IEditor *editor);
 double pyGetPrevKFramePts(IEditor *editor, double time);
 double pyGetNextKFramePts(IEditor *editor, double time);
+int pySegmentGetRefIdx(IEditor *editor, int segment);
+double pySegmentGetTimeOffset(IEditor *editor, int segment);
+double pySegmentGetDuration(IEditor *editor, int segment);
+double pyGetRefVideoDuration(IEditor *editor, int refVideoIdx);
+char *pyGetRefVideoName(IEditor *editor, int idx);
 
 /* Detail info (debug) */
 int pyHexDumpFrame(IEditor *editor, int framenumber);
