@@ -34,18 +34,13 @@ uint8_t  flyHue::update(void)
 */
 uint8_t   flyHue::processYuv(ADMImage *in,ADMImage *out )
 {
-    uint8_t *src,*dst;
-    uint32_t stride;
-    int isin,icos;
-
-    ADMVideoHue::update(&param,&isin,&icos);
+    ADMVideoHue::update(&param);
     out->copyPlane(in,out,PLANAR_Y);
     // Do it!
     ADMVideoHue::HueProcess_C(out->GetWritePtr(PLANAR_V), out->GetWritePtr(PLANAR_U),
                  in->GetReadPtr(PLANAR_V), in->GetReadPtr(PLANAR_U),
-                 out->GetPitch(PLANAR_U),in->GetPitch(PLANAR_U), // assume u&v pitches are =
-                 in->GetWidth(PLANAR_U),in->GetHeight(PLANAR_U),
-                 isin, icos);
+                 out->GetPitch(PLANAR_U), in->GetPitch(PLANAR_U), // assume u&v pitches are =
+                 _w>>1, _h>>1, param.hue, param.saturation);
     // Copy half source to display
     in->copyLeftSideTo(out);
     out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
