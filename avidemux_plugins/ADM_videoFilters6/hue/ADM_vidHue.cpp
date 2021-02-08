@@ -50,11 +50,12 @@ static void buildLut(uint8_t utab[][256], uint8_t vtab[][256], const int s, cons
         for(j=0; j<256; j++)
         {
             u = i-128;
-            v = i-128;
+            v = j-128;
             uout = (c*u - s*v + (1 << 15) + (128 << 16)) >> 16;
             vout = (s*u + c*v + (1 << 15) + (128 << 16)) >> 16;
             if(uout & (~0xFF)) uout = (~uout) >> 31;
             if(vout & (~0xFF)) vout = (~vout) >> 31;
+
             utab[i][j] = uout;
             vtab[i][j] = vout;
         }
@@ -96,7 +97,7 @@ void ADMVideoHue::HueProcess_C(uint8_t *udst, uint8_t *vdst, uint8_t *usrc, uint
 
     int i;
 
-    while(h--);
+    while(h--)
     {
         for (i = 0; i < w; i++)
         {
@@ -187,8 +188,8 @@ ADMImage *src;
 
         image->copyPlane(src,image,PLANAR_Y); // Luma is untouched
 
-        HueProcess_C(image->GetWritePtr(PLANAR_V), image->GetWritePtr(PLANAR_U),
-                     src->GetReadPtr(PLANAR_V), src->GetReadPtr(PLANAR_U),
+        HueProcess_C(image->GetWritePtr(PLANAR_U), image->GetWritePtr(PLANAR_V),
+                     src->GetReadPtr(PLANAR_U), src->GetReadPtr(PLANAR_V),
                      image->GetPitch(PLANAR_U), src->GetPitch(PLANAR_U), // assume u&v pitches are =
                      info.width>>1, info.height>>1, _param.hue, _param.saturation);
 

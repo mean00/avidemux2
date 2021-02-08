@@ -34,11 +34,10 @@ uint8_t  flyHue::update(void)
 */
 uint8_t   flyHue::processYuv(ADMImage *in,ADMImage *out )
 {
-    ADMVideoHue::update(&param);
     out->copyPlane(in,out,PLANAR_Y);
     // Do it!
-    ADMVideoHue::HueProcess_C(out->GetWritePtr(PLANAR_V), out->GetWritePtr(PLANAR_U),
-                 in->GetReadPtr(PLANAR_V), in->GetReadPtr(PLANAR_U),
+    ADMVideoHue::HueProcess_C(out->GetWritePtr(PLANAR_U), out->GetWritePtr(PLANAR_V),
+                 in->GetReadPtr(PLANAR_U), in->GetReadPtr(PLANAR_V),
                  out->GetPitch(PLANAR_U), in->GetPitch(PLANAR_U), // assume u&v pitches are =
                  _w>>1, _h>>1, param.hue, param.saturation);
     // Copy half source to display

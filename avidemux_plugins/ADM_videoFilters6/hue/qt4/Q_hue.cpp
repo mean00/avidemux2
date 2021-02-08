@@ -135,6 +135,7 @@ uint8_t flyHue::download(void)
        Ui_hueDialog *w=(Ui_hueDialog *)_cookie;
          param.hue=MYSPIN(Hue)->value();
          param.saturation=MYSPIN(Saturation)->value()/10.;
+         ADMVideoHue::update(&param);
 return 1;
 }
 
