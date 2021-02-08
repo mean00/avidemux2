@@ -8,27 +8,27 @@
 
 class Ui_hueWindow : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 protected:
-	int lock;
-
+    int lock;
+    flyHue *myCrop;
+    ADM_QCanvas *canvas;
+    Ui_hueDialog ui;
 public:
-	flyHue *myCrop;
-	ADM_QCanvas *canvas;
-	Ui_hueWindow(QWidget *parent, hue *param,ADM_coreVideoFilter *in);
-	~Ui_hueWindow();
-	Ui_hueDialog ui;
+    Ui_hueWindow(QWidget *parent, hue *param,ADM_coreVideoFilter *in);
+    ~Ui_hueWindow();
 
 public slots:
-	void gather(hue *param);
+    void gather(hue *param);
 
 private slots:
-	void sliderUpdate(int foo);
-	void valueChanged(int foo);
+    void sliderUpdate(int foo);
+    void valueChanged(int foo);
+    void reset(void);
 
 private:
-        void resizeEvent(QResizeEvent *event);
-        void showEvent(QShowEvent *event);
+    void resizeEvent(QResizeEvent *event);
+    void showEvent(QShowEvent *event);
 };
 #endif	// Q_hue_h

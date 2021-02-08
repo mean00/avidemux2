@@ -22,16 +22,7 @@
 #include "ADM_default.h"
 #include "ADM_image.h"
 #include "DIA_flyHue.h"
-
-#include "ADM_assert.h"
-// FIXME
-#ifndef M_PI
-#define M_PI    3.14159265358979323846
-#endif
-extern void HueProcess_C( uint8_t *udst, uint8_t *vdst, 
-                            uint8_t *usrc, uint8_t *vsrc, 
-                            int dststride, int srcstride,   
-                            int w, int h, float hue, float sat);
+#include "../ADM_vidHue.h"
 
 /************* COMMON PART *********************/
 uint8_t  flyHue::update(void)
@@ -43,19 +34,18 @@ uint8_t  flyHue::update(void)
 */
 uint8_t   flyHue::processYuv(ADMImage *in,ADMImage *out )
 {
-uint8_t *src,*dst;
-uint32_t stride;
-float hue,sat;
-    hue=param.hue*M_PI/180.;
-    sat=(100+param.saturation)/100.;
+    uint8_t *src,*dst;
+    uint32_t stride;
+    int isin,icos;
+
+    ADMVideoHue::update(&param,&isin,&icos);
     out->copyPlane(in,out,PLANAR_Y);
-   
     // Do it!
-    HueProcess_C(out->GetWritePtr(PLANAR_V), out->GetWritePtr(PLANAR_U),
+    ADMVideoHue::HueProcess_C(out->GetWritePtr(PLANAR_V), out->GetWritePtr(PLANAR_U),
                  in->GetReadPtr(PLANAR_V), in->GetReadPtr(PLANAR_U),
                  out->GetPitch(PLANAR_U),in->GetPitch(PLANAR_U), // assume u&v pitches are =
                  in->GetWidth(PLANAR_U),in->GetHeight(PLANAR_U),
-                 hue, sat);
+                 isin, icos);
     // Copy half source to display
     in->copyLeftSideTo(out);
     out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!

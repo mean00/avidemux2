@@ -61,7 +61,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSliderHue">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderHue">
        <property name="minimum">
         <number>-90</number>
        </property>
@@ -81,7 +81,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSliderSaturation">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderSaturation">
        <property name="minimum">
         <number>-100</number>
        </property>
@@ -114,7 +114,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Reset</set>
      </property>
     </widget>
    </item>
@@ -148,7 +148,18 @@
    <extends>QSlider</extends>
    <header>ADM_toolkitQt.h</header>
   </customwidget>
+  <customwidget>
+   <class>ADM_SliderIndicator</class>
+   <extends>QSlider</extends>
+   <header>ADM_toolkitQt.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>horizontalSliderHue</tabstop>
+  <tabstop>horizontalSliderSaturation</tabstop>
+  <tabstop>horizontalSlider</tabstop>
+  <tabstop>graphicsView</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

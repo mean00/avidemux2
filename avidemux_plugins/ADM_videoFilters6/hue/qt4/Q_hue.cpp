@@ -20,8 +20,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QPushButton>
+
 #include "Q_hue.h"
 #include "ADM_toolkitQt.h"
+#include "../ADM_vidHue.h"
 
 //
 //	Video is in YV12 Colorspace
@@ -45,11 +48,14 @@
         myCrop->upload();
         myCrop->sliderChanged();
 
-
+        ui.horizontalSliderSaturation->setScale(1,10,1);
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
           SPINNER(Hue);
           SPINNER(Saturation);
+
+        QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
+        connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
         setModal(true);
   }
@@ -79,6 +85,16 @@ void Ui_hueWindow::valueChanged( int f )
   lock--;
 }
 
+void Ui_hueWindow::reset(void)
+{
+    if(lock) return;
+    lock++;
+    ADMVideoHue::reset(&myCrop->param);
+    myCrop->upload();
+    myCrop->sameImage();
+    lock--;
+}
+
 void Ui_hueWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -103,8 +119,15 @@ uint8_t flyHue::upload(void)
 {
       Ui_hueDialog *w=(Ui_hueDialog *)_cookie;
 
+        MYSPIN(Saturation)->blockSignals(true);
+        MYSPIN(Hue)->blockSignals(true);
+
         MYSPIN(Saturation)->setValue((int)(param.saturation*10));
         MYSPIN(Hue)->setValue((int)param.hue);
+
+        MYSPIN(Saturation)->blockSignals(false);
+        MYSPIN(Hue)->blockSignals(false);
+
         return 1;
 }
 uint8_t flyHue::download(void)

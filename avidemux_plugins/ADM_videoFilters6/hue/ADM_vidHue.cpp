@@ -16,6 +16,7 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
 #include "ADM_coreVideoFilterInternal.h"
+#include "ADM_vidHue.h"
 #include "DIA_factory.h"
 #include "hue.h"
 #include "hue_desc.cpp"
@@ -25,31 +26,6 @@
 #endif
 
 extern uint8_t DIA_getHue(hue *param, ADM_coreVideoFilter *in);
-/**
-    \class ADMVideoHue
-*/
-class  ADMVideoHue:public ADM_coreVideoFilterCached
-{
-
-  protected:
-            void            update(void);
-            hue             _param;    
-            float           _hue;
-            float           _saturation;
-  public:
-                             ADMVideoHue(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
-                             ~ADMVideoHue();
-
-               
-       virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-	   virtual void setCoupledConf(CONFcouple *couples);
-       virtual bool         configure(void) ;                 /// Start graphical user interface        
-
-}     ;
-
-
 
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   ADMVideoHue,   // Class
@@ -63,13 +39,14 @@ DECLARE_VIDEO_FILTER(   ADMVideoHue,   // Class
 /**
     \fn HueProcess_C
 */
-void HueProcess_C(uint8_t *udst, uint8_t *vdst, uint8_t *usrc, uint8_t *vsrc, int dststride, int srcstride,
-		    int w, int h, float hue, float sat)
+void ADMVideoHue::HueProcess_C(uint8_t *udst, uint8_t *vdst, uint8_t *usrc, uint8_t *vsrc, int dststride, int srcstride,
+                                int w, int h, const int s, const int c)
 {
 	int i;
+#if 0
 	const int s= (int)rint(sin(hue) * (1<<16) * sat);
 	const int c= (int)rint(cos(hue) * (1<<16) * sat);
-
+#endif
 	while (h--) {
 		for (i = 0; i<w; i++)
 		{
@@ -94,11 +71,12 @@ void HueProcess_C(uint8_t *udst, uint8_t *vdst, uint8_t *usrc, uint8_t *vsrc, in
 */
 bool ADMVideoHue::configure()
 {
-uint8_t r=0;
-  
-  r=  DIA_getHue(&_param, previousFilter);
-  if(r) update();
-  return r;  
+    if(DIA_getHue(&_param, previousFilter))
+    {
+        update(&_param,&_isinus,&_icosinus);
+        return true;
+    }
+    return false;
 }
 /**
     \fn getConfiguration
@@ -117,19 +95,24 @@ ADMVideoHue::ADMVideoHue(  ADM_coreVideoFilter *in,CONFcouple *couples) :
         ADM_coreVideoFilterCached(1,in,couples)
 {
     if(!couples || !ADM_paramLoad(couples,hue_param,&_param))
-    {
-        _param.hue =0.0;                
-        _param.saturation=1.0;
-    }      
-    update();
+        reset(&_param);
+    update(&_param,&_isinus,&_icosinus);
 }
 /**
     \fn update
 */
-void ADMVideoHue::update(void)
+void ADMVideoHue::update(hue *h, int *s, int *c)
 {
-    _hue=_param.hue*M_PI/180.;
-    _saturation=(100+_param.saturation)/100.;
+    if(h->hue > 90.0) h->hue = 90.0;
+    if(h->hue < -90.0) h->hue = -90.0;
+    if(h->saturation > 10.0) h->saturation = 10.0;
+    if(h->saturation < -10.0) h->saturation = -10.0;
+
+    float fhue=h->hue * M_PI / 180.;
+    float fsat=(10. + h->saturation)/10.;
+
+    *s = (int)rint(sin(fhue) * (1<<16) * fsat);
+    *c = (int)rint(cos(fhue) * (1<<16) * fsat);
 }
 /**
     \fn dtor
@@ -152,10 +135,6 @@ void ADMVideoHue::setCoupledConf(CONFcouple *couples)
 }
 
 /**
-    
-*/
-
-/**
     \fn getNextFrame
     \brief
 */
@@ -175,13 +154,9 @@ ADMImage *src;
                     
                 image->GetPitch(PLANAR_U),src->GetPitch(PLANAR_U), // assume u&v pitches are =
                 info.width>>1,info.height>>1, 
-                _hue, _saturation);
+                _isinus, _icosinus);
  
         vidCache->unlockAll();
         return 1;
 }
-//void HueProcess_C(uint8_t *udst, uint8_t *vdst, uint8_t *usrc, uint8_t *vsrc, 
-//int dststride, int srcstride,   int w, int h, float hue, float sat)
-
-  
-
+//EOF
