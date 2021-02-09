@@ -34,9 +34,7 @@ uint8_t   flyArtVHS::processYuv(ADMImage *in,ADMImage *out )
 {
     uint8_t *src,*dst;
     uint32_t stride;
-    out->copyPlane(in,out,PLANAR_Y);
-    out->copyPlane(in,out,PLANAR_U);
-    out->copyPlane(in,out,PLANAR_V);
+    out->duplicate(in);
 
     // Do it!
     ADMVideoArtVHS::ArtVHSProcess_C(out, param.lumaBW, param.chromaBW, param.unSync, param.unSyncFilter, param.lumaNoDelay, param.chromaNoDelay);
