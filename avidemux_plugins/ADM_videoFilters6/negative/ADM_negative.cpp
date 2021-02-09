@@ -104,6 +104,10 @@ bool negativeFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("Negative : Cannot get frame\n");
         return false;
     }
+
+    if(image->_range == ADM_COL_RANGE_MPEG)
+        image->expandColorRange();
+
     if(config.invertY)
     {
         invert_plane(image,PLANAR_Y);
