@@ -36,9 +36,7 @@ uint8_t   flyArtMirror::processYuv(ADMImage *in,ADMImage *out )
     uint8_t *src,*dst;
     uint32_t stride;
 
-    out->copyPlane(in,out,PLANAR_Y);
-    out->copyPlane(in,out,PLANAR_U);
-    out->copyPlane(in,out,PLANAR_V);
+    out->duplicate(in);
 
     // Do it!
     ADMVideoArtMirror::ArtMirrorProcess_C(out, param.method ,param.displacement);
