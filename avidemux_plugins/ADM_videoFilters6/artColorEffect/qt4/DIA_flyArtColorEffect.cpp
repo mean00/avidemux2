@@ -41,9 +41,7 @@ uint8_t *src,*dst;
 uint32_t stride;
 uint32_t effect;
     effect=param.effect;
-    out->copyPlane(in,out,PLANAR_Y);
-    out->copyPlane(in,out,PLANAR_U);
-    out->copyPlane(in,out,PLANAR_V);
+    out->duplicate(in);
 
     // Do it!
     ArtColorEffectProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),effect,rgbBufStride, rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
