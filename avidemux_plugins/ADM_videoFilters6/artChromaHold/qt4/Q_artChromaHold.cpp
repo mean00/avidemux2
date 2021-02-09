@@ -99,60 +99,67 @@ void Ui_artChromaHoldWindow::valueChanged( int f )
     myFly->sameImage();
     lock--;
 }
+
+#define PUSHHANDLER(x) \
+    QPalette indctrPalette(ui.lineEditC##x->palette()); \
+    QColor startColor = indctrPalette.color(QPalette::Background); \
+    QColor color = QColorDialog::getColor(startColor, this ); \
+    if( color.isValid() ) \
+    { \
+        int rgb[3],yuv[3]; \
+        color.getRgb(rgb+0,rgb+1,rgb+2, NULL); \
+        rgb2yuv(yuv, rgb); \
+        yuv[0] = 128; \
+        myFly->param.c##x##u = (float)yuv[1]/128.0; \
+        myFly->param.c##x##v = (float)yuv[2]/128.0; \
+        yuv2rgb(rgb, yuv); \
+        color.setRgb(rgb[0],rgb[1],rgb[2],255); \
+        indctrPalette.setColor(QPalette::Background,color); \
+        indctrPalette.setColor(QPalette::Base,color); \
+        indctrPalette.setColor(QPalette::AlternateBase,color); \
+        ui.lineEditC##x->setPalette(indctrPalette); \
+        if(!lock) \
+        { \
+            lock++; \
+            myFly->download(); \
+            myFly->sameImage(); \
+            lock--; \
+        } \
+    }
+
 void Ui_artChromaHoldWindow::pushedC1()
 {
-    pushed(ui.lineEditC1);
+    PUSHHANDLER(1);
 }
 void Ui_artChromaHoldWindow::pushedC2()
 {
-    pushed(ui.lineEditC2);
+    PUSHHANDLER(2);
 }
 void Ui_artChromaHoldWindow::pushedC3()
 {
-    pushed(ui.lineEditC3);
+    PUSHHANDLER(3);
 }
 void Ui_artChromaHoldWindow::rgb2yuv(int * yuv, int * rgb)
 {
-    yuv[0] = ( 77*rgb[0] +  150*rgb[1] +  29*rgb[2] + 128) >> 8;
-    yuv[1] = (-43*rgb[0] +  -84*rgb[1] + 127*rgb[2] + 128) >> 8;
-    yuv[2] = (127*rgb[0] + -106*rgb[1] + -21*rgb[2] + 128) >> 8;
+    yuv[0] = std::round( 0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]);
+    yuv[1] = std::round(-0.169*rgb[0] - 0.331*rgb[1] + 0.500*rgb[2]);
+    yuv[2] = std::round( 0.500*rgb[0] - 0.419*rgb[1] - 0.081*rgb[2]);
+    if (yuv[0] <   0) yuv[0] = 0;
+    if (yuv[0] > 255) yuv[0] = 255;
+    if (yuv[1] < -128) yuv[1] = -128;
+    if (yuv[1] >  127) yuv[1] = 127;
+    if (yuv[2] < -128) yuv[2] = -128;
+    if (yuv[2] >  127) yuv[2] = 127;
 }
 void Ui_artChromaHoldWindow::yuv2rgb(int * rgb, int * yuv)
 {
-    rgb[0] = (256*yuv[0] +   0*yuv[1] +  358*yuv[2] + 128) >> 8;
-    rgb[1] = (256*yuv[0] + -88*yuv[1] + -182*yuv[2] + 128) >> 8;
-    rgb[2] = (256*yuv[0] + 452*yuv[1] +    0*yuv[2] + 128) >> 8;
+    rgb[0] = std::round(yuv[0]                +   1.4*yuv[2]);
+    rgb[1] = std::round(yuv[0] - 0.343*yuv[1] - 0.711*yuv[2]);
+    rgb[2] = std::round(yuv[0] + 1.765*yuv[1]               );
     for (int i=0; i<3; i++)
     {
         if (rgb[i] < 0) rgb[i] = 0;
         if (rgb[i] > 255) rgb[i] = 255;
-    }
-}
-void Ui_artChromaHoldWindow::pushed(QLineEdit * indctr)
-{
-    if (!indctr) return;
-    QPalette indctrPalette(indctr->palette());
-    QColor startColor = indctrPalette.color(QPalette::Background);
-    QColor color = QColorDialog::getColor(startColor, this );
-    if( color.isValid() )
-    {
-        int rgb[3],yuv[3];
-        color.getRgb(rgb+0,rgb+1,rgb+2, NULL);
-        rgb2yuv(yuv, rgb);
-        yuv[0] = 128;
-        yuv2rgb(rgb, yuv);
-        color.setRgb(rgb[0],rgb[1],rgb[2],255);
-        indctrPalette.setColor(QPalette::Background,color);
-        indctrPalette.setColor(QPalette::Base,color);
-        indctrPalette.setColor(QPalette::AlternateBase,color);
-        indctr->setPalette(indctrPalette);
-        if(!lock)
-        {
-            lock++;
-            myFly->download();
-            myFly->sameImage();
-            lock--;
-        }
     }
 }
 
@@ -214,15 +221,6 @@ uint8_t flyArtChromaHold::upload(void)
     return 1;
 }
 
-#define DOWNLOADYUV(x) { \
-    QLineEdit * indctr = w->lineEditC##x; \
-    QPalette indctrPalette(indctr->palette()); \
-    QColor color = indctrPalette.color(QPalette::Background); \
-    color.getRgb(rgb+0,rgb+1,rgb+2, NULL); \
-    Ui_artChromaHoldWindow::rgb2yuv(yuv, rgb); \
-    param.c##x##u = (float)yuv[1]/128.0; \
-    param.c##x##v = (float)yuv[2]/128.0; \
-    }
 uint8_t flyArtChromaHold::download(void)
 {
     Ui_artChromaHoldDialog *w=(Ui_artChromaHoldDialog *)_cookie;
@@ -235,11 +233,6 @@ uint8_t flyArtChromaHold::download(void)
     param.c2slope=((float)MYSPIN(C2slope)->value()) / 100.0;
     param.c3dist=((float)MYSPIN(C3dist)->value()) / 100.0;
     param.c3slope=((float)MYSPIN(C3slope)->value()) / 100.0;
-
-    int rgb[3],yuv[3];
-    DOWNLOADYUV(1);
-    DOWNLOADYUV(2);
-    DOWNLOADYUV(3);
 
     drawScene();
     return 1;
