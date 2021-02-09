@@ -52,14 +52,15 @@ void ADMVideoArtChromaHold::ArtChromaHoldProcess_C(ADMImage *img, bool * cen, fl
     int ustride,vstride;
     uint8_t * uptr, * vptr;
     int upixel,vpixel,pixmul;
-    uint8_t * uvplane = (uint8_t *)malloc(256*256);
-    uint8_t uvcurr,uvnew;
+    unsigned int * uvplane = (unsigned int *)malloc(256*256*sizeof(unsigned int));
+    unsigned int uvcurr,uvnew;
     if (!uvplane) return;
 
     if (cen[0] || cen[1] || cen[2])
-        memset(uvplane, 0, 256*256);
+        memset(uvplane, 0, 256*256*sizeof(unsigned int));
     else
-        memset(uvplane, 255, 256*256);    // if no one enabled --> show full colors
+        for (int i=0; i<(256*256); i++)
+            uvplane[i]=256;    // if no one enabled --> show full colors
     for (int c=0; c<3; c++)
     {
         if (!cen[c]) continue;
@@ -74,13 +75,13 @@ void ADMVideoArtChromaHold::ArtChromaHoldProcess_C(ADMImage *img, bool * cen, fl
             for (j=0; j<256; j++)
             {
                 diff = std::sqrt(((iu-i)*(iu-i) + (iv-j)*(iv-j))) - cutdist;
-                if (diff <= 0) uvplane[i*256+j] = 255;
+                if (diff <= 0) uvplane[i*256+j] = 256;
                 else {
                     uvcurr = uvplane[i*256+j];
                     if ((diff > cutslope) || (cutslope == 0.0)) uvnew = 0;
                     else {
-                        // diff == 0 -> 255 ...... diff == cutslope --> 0
-                        uvnew = std::floor(255.0 - 255.0*valueLimit((diff / cutslope), 0.0, 1.0));
+                        // diff == 0 -> 256 ...... diff == cutslope --> 0
+                        uvnew = std::floor(256.0 - 256.0*valueLimit((diff / cutslope), 0.0, 1.0));
                     }
 
                     if (uvnew > uvcurr) uvplane[i*256+j] = uvnew;
@@ -105,7 +106,7 @@ void ADMVideoArtChromaHold::ArtChromaHoldProcess_C(ADMImage *img, bool * cen, fl
         {
             upixel = uptr[x];
             vpixel = vptr[x];
-            pixmul = (unsigned int)uvplane[upixel*256 + vpixel];
+            pixmul = uvplane[upixel*256 + vpixel];
             upixel -= 128;
             vpixel -= 128;
             upixel = (upixel * pixmul) >> 8;
