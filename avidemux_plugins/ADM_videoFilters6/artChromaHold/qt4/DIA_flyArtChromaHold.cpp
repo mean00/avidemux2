@@ -55,9 +55,7 @@ uint8_t   flyArtChromaHold::processYuv(ADMImage *in,ADMImage *out )
     cv[2] = param.c3v;
     cdist[2] = param.c3dist;
     cslope[2] = param.c3slope;
-    out->copyPlane(in,out,PLANAR_Y);
-    out->copyPlane(in,out,PLANAR_U);
-    out->copyPlane(in,out,PLANAR_V);
+    out->duplicate(in);
 
     // Do it!
     ADMVideoArtChromaHold::ArtChromaHoldProcess_C(out, cen, cu, cv, cdist, cslope);
