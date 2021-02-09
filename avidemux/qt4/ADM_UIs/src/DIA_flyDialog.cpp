@@ -249,6 +249,11 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
         QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
         QObject::connect(_control->pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
 
+        buttonList.push_back(_control->pushButton_back1mn);
+        buttonList.push_back(_control->pushButton_play);
+        buttonList.push_back(_control->pushButton_next);
+        buttonList.push_back(_control->pushButton_fwd1mn);
+
         return true;
 }
 
@@ -411,6 +416,7 @@ ADM_flyDialogYuv::~ADM_flyDialogYuv()
     _yuvBufferOut=NULL;
     if(_control)
     {
+        buttonList.clear();
         delete _control;
         _control=NULL;
     }

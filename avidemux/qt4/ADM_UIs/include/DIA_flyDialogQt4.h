@@ -96,7 +96,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           ADM_byteBuffer _rgbByteBufferDisplay;
 
           flyControl  *_control;
-          
+          std::vector<QWidget *> buttonList; // useful for manipulating tab order
           QDialog     *_parent;
 
 
