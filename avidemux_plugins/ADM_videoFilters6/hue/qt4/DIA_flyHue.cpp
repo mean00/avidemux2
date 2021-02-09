@@ -40,6 +40,8 @@ uint8_t   flyHue::processYuv(ADMImage *in,ADMImage *out )
                  in->GetReadPtr(PLANAR_U), in->GetReadPtr(PLANAR_V),
                  out->GetPitch(PLANAR_U), in->GetPitch(PLANAR_U), // assume u&v pitches are =
                  _w>>1, _h>>1, param.hue, param.saturation);
+    if(fullpreview)
+        return 1;
     // Copy half source to display
     in->copyLeftSideTo(out);
     out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!

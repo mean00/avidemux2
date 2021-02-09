@@ -54,6 +54,8 @@
           SPINNER(Hue);
           SPINNER(Saturation);
 
+        connect(ui.checkBoxFullPreview,SIGNAL(stateChanged(int)),this,SLOT(toggleFullPreview(int)));
+
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
@@ -84,12 +86,21 @@ void Ui_hueWindow::valueChanged( int f )
   myCrop->sameImage();
   lock--;
 }
+void Ui_hueWindow::toggleFullPreview(int state)
+{
+    if(lock) return;
+    lock++;
+    myCrop->fullpreview = state != Qt::Unchecked;
+    myCrop->sameImage();
+    lock--;
+}
 
 void Ui_hueWindow::reset(void)
 {
     if(lock) return;
     lock++;
     ADMVideoHue::reset(&myCrop->param);
+    ADMVideoHue::update(&myCrop->param);
     myCrop->upload();
     myCrop->sameImage();
     lock--;
@@ -121,12 +132,15 @@ uint8_t flyHue::upload(void)
 
         MYSPIN(Saturation)->blockSignals(true);
         MYSPIN(Hue)->blockSignals(true);
+        MYCHECK(FullPreview)->blockSignals(true);
 
         MYSPIN(Saturation)->setValue((int)(param.saturation*10));
         MYSPIN(Hue)->setValue((int)param.hue);
+        MYCHECK(FullPreview)->setChecked(fullpreview);
 
         MYSPIN(Saturation)->blockSignals(false);
         MYSPIN(Hue)->blockSignals(false);
+        MYCHECK(FullPreview)->blockSignals(false);
 
         return 1;
 }
