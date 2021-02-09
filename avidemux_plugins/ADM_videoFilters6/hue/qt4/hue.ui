@@ -134,12 +134,6 @@
    <header>ADM_toolkitQt.h</header>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>horizontalSliderHue</tabstop>
-  <tabstop>horizontalSliderSaturation</tabstop>
-  <tabstop>horizontalSlider</tabstop>
-  <tabstop>graphicsView</tabstop>
- </tabstops>
  <resources/>
  <connections>
   <connection>

@@ -45,6 +45,7 @@
         memcpy(&(myCrop->param),param,sizeof(hue));
         myCrop->_cookie=&ui;
         myCrop->addControl(ui.toolboxLayout);
+        myCrop->setTabOrder();
         myCrop->upload();
         myCrop->sliderChanged();
 
@@ -153,6 +154,37 @@ uint8_t flyHue::download(void)
 return 1;
 }
 
+void flyHue::setTabOrder(void)
+{
+    Ui_hueDialog *w=(Ui_hueDialog *)_cookie;
+    std::vector<QWidget *> controls;
+    controls.push_back(MYSPIN(Hue));
+    controls.push_back(MYSPIN(Saturation));
+    for(std::vector<QWidget *>::iterator it = buttonList.begin(); it != buttonList.end(); ++it)
+        controls.push_back(*it);
+    controls.push_back(w->horizontalSlider);
+    //controls.push_back(w->graphicsView);
+    controls.push_back(MYCHECK(FullPreview));
+    controls.push_back(w->buttonBox->button(QDialogButtonBox::Reset));
+#if 0
+    { // button box stuff
+    QList<QAbstractButton *> buttonBoxList = w->buttonBox->buttons();
+    QList<QAbstractButton *>::reverse_iterator bit;
+    for (bit = buttonBoxList.rbegin(); bit != buttonBoxList.rend(); ++bit)
+        controls.push_back(*bit);
+    }
+#endif
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
       \fn     DIA_getCropParams
       \brief  Handle crop dialog
