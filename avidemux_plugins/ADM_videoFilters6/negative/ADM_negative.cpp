@@ -105,8 +105,8 @@ bool negativeFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         return false;
     }
 
-    if(img->_range == ADM_COL_RANGE_MPEG)
-        img->expandColorRange();
+    if(image->_range == ADM_COL_RANGE_MPEG)
+        image->expandColorRange();
 
     if(config.invertY)
     {
