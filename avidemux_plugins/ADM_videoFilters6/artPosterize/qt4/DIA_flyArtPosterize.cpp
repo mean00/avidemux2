@@ -36,9 +36,7 @@ uint8_t   flyArtPosterize::processYuv(ADMImage *in,ADMImage *out )
 {
     uint8_t *src,*dst;
     uint32_t stride;
-    out->copyPlane(in,out,PLANAR_Y);
-    out->copyPlane(in,out,PLANAR_U);
-    out->copyPlane(in,out,PLANAR_V);
+    out->duplicate(in);
 
     // Do it!
     ADMVideoArtPosterize::ArtPosterizeProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),param.levels, rgbBufStride, rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
