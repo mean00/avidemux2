@@ -35,9 +35,7 @@ uint8_t   flyColorTemp::processYuv(ADMImage *in,ADMImage *out )
 {
     uint8_t *src,*dst;
     uint32_t stride;
-    out->copyPlane(in,out,PLANAR_Y);
-    out->copyPlane(in,out,PLANAR_U);
-    out->copyPlane(in,out,PLANAR_V);
+    out->duplicate(in);
 
     // Do it!
     ADMVideoColorTemp::ColorTempProcess_C(out, param.temperature, param.angle);
