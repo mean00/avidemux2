@@ -49,6 +49,7 @@
         myCrop->upload();
         myCrop->sliderChanged();
 
+        ui.horizontalSliderHue->setFocus();
         ui.horizontalSliderSaturation->setScale(1,10,1);
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
@@ -165,8 +166,8 @@ void flyHue::setTabOrder(void)
     controls.push_back(w->horizontalSlider);
     //controls.push_back(w->graphicsView);
     controls.push_back(MYCHECK(FullPreview));
+#if 0 /* don't mess with button box */
     controls.push_back(w->buttonBox->button(QDialogButtonBox::Reset));
-#if 0
     { // button box stuff
     QList<QAbstractButton *> buttonBoxList = w->buttonBox->buttons();
     QList<QAbstractButton *>::reverse_iterator bit;
