@@ -65,6 +65,5 @@ public:
        static  void    detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane,const msharpen &param);
        static  void    apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst,int plane,const msharpen &param,uint32_t invstrength) ;
 
-
-       
+       static  void    reset(msharpen *cfg);
 };

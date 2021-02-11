@@ -16,173 +16,130 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QGridLayout">
-   <property name="leftMargin">
-    <number>9</number>
-   </property>
-   <property name="topMargin">
-    <number>9</number>
-   </property>
-   <property name="rightMargin">
-    <number>9</number>
-   </property>
-   <property name="bottomMargin">
-    <number>9</number>
-   </property>
-   <property name="spacing">
-    <number>6</number>
-   </property>
-   <item row="2" column="3">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="2" column="0" rowspan="4" colspan="2">
+    <layout class="QHBoxLayout" name="toolboxLayout"/>
    </item>
-   <item row="1" column="3">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="3">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="3" column="0" colspan="3">
-    <widget class="QCheckBox" name="checkBoxMask">
-     <property name="text">
-      <string>Mask</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="5" column="0" colspan="4">
-    <widget class="ADM_QSlider" name="horizontalSlider">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1" colspan="3">
+   <item row="9" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Reset</set>
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Strength</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="4">
+   <item row="7" column="0" colspan="2">
     <widget class="QGraphicsView" name="graphicsView">
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Threshold</string>
-     </property>
-    </widget>
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="mainControls">
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBoxStrength">
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="1">
+      <widget class="QCheckBox" name="checkBoxChroma">
+       <property name="text">
+        <string>Process chroma</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelStrength">
+       <property name="text">
+        <string>Strength</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSlider" name="horizontalSliderStrength">
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="checkBoxHQ">
+       <property name="text">
+        <string>HighQuality</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelThreshold">
+       <property name="text">
+        <string>Threshold</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBoxThreshold">
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSlider" name="horizontalSliderThreshold">
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QCheckBox" name="checkBoxFullPreview">
+       <property name="text">
+        <string>Show full preview</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QCheckBox" name="checkBoxMask">
+       <property name="text">
+        <string>Mask</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="2" column="0">
-    <widget class="QCheckBox" name="checkBoxHQ">
-     <property name="text">
-      <string>HighQuality</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
-    <widget class="QSpinBox" name="spinBoxStrength">
-     <property name="minimum">
-      <number>0</number>
-     </property>
-     <property name="maximum">
-      <number>255</number>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QSpinBox" name="spinBoxThreshold">
-     <property name="minimum">
-      <number>0</number>
-     </property>
-     <property name="maximum">
-      <number>255</number>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QSlider" name="horizontalSliderThreshold">
-     <property name="maximum">
-      <number>255</number>
-     </property>
+   <item row="6" column="0">
+    <widget class="ADM_QSlider" name="horizontalSlider">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QSlider" name="horizontalSliderStrength">
-     <property name="maximum">
-      <number>255</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="4">
-    <layout class="QHBoxLayout" name="toolboxLayout"/>
-   </item>
-   <item row="2" column="1">
-    <widget class="QCheckBox" name="checkBoxChroma">
-     <property name="text">
-      <string>Process chroma</string>
      </property>
     </widget>
    </item>
