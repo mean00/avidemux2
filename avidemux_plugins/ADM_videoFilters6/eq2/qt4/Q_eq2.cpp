@@ -285,8 +285,7 @@ void flyEq2::setTabOrder(void)
     SLDR(Blue)
     SLDR(Weight)
 
-    for(std::vector<QWidget *>::iterator it = buttonList.begin(); it != buttonList.end(); ++it)
-        controls.push_back(*it);
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);
     controls.push_back(w->checkBoxFullPreview);
 
