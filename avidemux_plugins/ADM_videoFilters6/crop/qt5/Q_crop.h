@@ -1,5 +1,6 @@
 #ifndef Q_crop_h
 #define Q_crop_h
+#include <QPushButton>
 #include "ui_crop.h"
 #include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"
@@ -24,6 +25,7 @@ private:
     flyCrop         *myCrop;
     ADM_QCanvas     *canvas;
     Ui_cropDialog   ui;
+    QPushButton     *pushButtonAutoCrop;
 
     void updateRightBottomSpinners(int foo, bool useHeightAsRef);
     void resizeEvent(QResizeEvent *event);
@@ -44,7 +46,6 @@ private slots:
     void autoCrop(bool f);
     void reset(bool f);
     void toggleRubber(int checkState);
-    void toggleKeepAspect(int checkState);
     void changeARSelect(int f);
 };
 

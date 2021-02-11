@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
+    <width>647</width>
     <height>300</height>
    </rect>
   </property>
@@ -46,47 +46,59 @@
      <property name="spacing">
       <number>6</number>
      </property>
-     <item row="1" column="9">
-      <widget class="QPushButton" name="pushButtonReset">
+     <item row="0" column="3">
+      <widget class="QLabel" name="labelRight">
        <property name="text">
-        <string>Reset</string>
+        <string>Right:</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <spacer name="horizontalSpacer_1">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelLeft">
+       <property name="text">
+        <string>Left:</string>
        </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>26</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
-     <item row="0" column="4">
-      <widget class="QSpinBox" name="spinBoxRight">
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spinBoxLeft">
        <property name="maximum">
-        <number>2147483647</number>
+        <number>16384</number>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_4">
+     <item row="2" column="4">
+      <widget class="QSpinBox" name="spinBoxBottom">
+       <property name="maximum">
+        <number>16384</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelTop">
        <property name="text">
         <string>Top:</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="3">
-      <widget class="QLabel" name="label_2">
+     <item row="2" column="3">
+      <widget class="QLabel" name="labelBottom">
        <property name="text">
-        <string>Right:</string>
+        <string>Bottom:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="spinBoxTop">
+       <property name="maximum">
+        <number>16384</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QSpinBox" name="spinBoxRight">
+       <property name="maximum">
+        <number>16384</number>
        </property>
       </widget>
      </item>
@@ -106,50 +118,8 @@
        </property>
       </spacer>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Left:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Bottom:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QSpinBox" name="spinBoxBottom">
-       <property name="maximum">
-        <number>2147483647</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="9">
-      <widget class="QPushButton" name="pushButtonAutoCrop">
-       <property name="text">
-        <string>Auto Crop</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QSpinBox" name="spinBoxLeft">
-       <property name="maximum">
-        <number>2147483647</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="spinBoxTop">
-       <property name="maximum">
-        <number>2147483647</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <spacer name="horizontalSpacer_3">
+     <item row="0" column="2">
+      <spacer name="horizontalSpacer_1">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -164,12 +134,21 @@
        </property>
       </spacer>
      </item>
-     <item row="0" column="6">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Size: </string>
+     <item row="2" column="2">
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-      </widget>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>26</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item row="0" column="8">
       <spacer name="horizontalSpacer_4">
@@ -187,6 +166,13 @@
        </property>
       </spacer>
      </item>
+     <item row="0" column="6">
+      <widget class="QLabel" name="labelSize">
+       <property name="text">
+        <string>Size: </string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="7">
       <widget class="QCheckBox" name="checkBoxRubber">
        <property name="enabled">
@@ -197,26 +183,24 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="6">
-      <widget class="QCheckBox" name="checkBoxKeepAspect">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Keep aspect ratio</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="7">
+     <item row="2" column="7">
       <widget class="QComboBox" name="comboBoxAspectRatio">
+       <property name="currentText">
+        <string>Do not lock</string>
+       </property>
        <item>
         <property name="text">
-         <string>current selection</string>
+         <string>Do not lock</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>source</string>
+         <string>Current selection</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Source</string>
         </property>
        </item>
        <item>
@@ -251,6 +235,13 @@
        </item>
       </widget>
      </item>
+     <item row="2" column="6">
+      <widget class="QLabel" name="labelLockAR">
+       <property name="text">
+        <string>Lock Aspect Ratio:</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -264,7 +255,11 @@
     </widget>
    </item>
    <item>
-    <widget class="QGraphicsView" name="graphicsView"/>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -272,7 +267,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Reset</set>
      </property>
     </widget>
    </item>
@@ -291,12 +286,8 @@
   <tabstop>spinBoxTop</tabstop>
   <tabstop>spinBoxBottom</tabstop>
   <tabstop>checkBoxRubber</tabstop>
-  <tabstop>pushButtonAutoCrop</tabstop>
-  <tabstop>checkBoxKeepAspect</tabstop>
   <tabstop>comboBoxAspectRatio</tabstop>
-  <tabstop>pushButtonReset</tabstop>
   <tabstop>horizontalSlider</tabstop>
-  <tabstop>graphicsView</tabstop>
  </tabstops>
  <resources/>
  <connections>

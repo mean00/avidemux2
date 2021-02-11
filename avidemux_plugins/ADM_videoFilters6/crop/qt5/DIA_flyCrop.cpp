@@ -40,8 +40,7 @@ flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
     _oy=0;
     _lw=_ow=width;
     _lh=_oh=height;
-    //ar = (double)_w / _h;
-    setAspectRatioIndex(0);
+    ar = (double)width / height;
 }
 flyCrop::~flyCrop()
 {
@@ -55,22 +54,23 @@ void flyCrop::setAspectRatioIndex(int index)
 {
     ar_select = index;
     switch(index) {
-        case 1: ar = ((double)_w / _h);    // source
+        case 1: ar = ((double)_lw / _lh);    // current selection
             break;
-        case 2: ar = (64.0/27.0);    // 21:9
+        case 2: ar = ((double)_w / _h);    // source
             break;
-        case 3: ar = (2.0);    // 18:9
+        case 3: ar = (64.0/27.0);    // 21:9
             break;
-        case 4: ar = (16.0/9.0);    // 16:9
+        case 4: ar = (2.0);    // 18:9
             break;
-        case 5: ar = (4.0/3.0);    // 4:3
+        case 5: ar = (16.0/9.0);    // 16:9
             break;
-        case 6: ar = (1.0);    // 1:1
+        case 6: ar = (4.0/3.0);    // 4:3
             break;
-        case 7: ar = (9.0/16.0);    // 9:16
+        case 7: ar = (1.0);    // 1:1
             break;
-        default : ar = ((double)_lw / _lh);    // current selection
-                ar_select = 0;
+        case 8: ar = (9.0/16.0);    // 9:16
+            break;
+        default:ar_select = 0;
             break;
     }
 }
@@ -294,7 +294,7 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     }
 
     // keep aspect ratio only when dragged on the bottom-right corner
-    if (keep_aspect && !ignore && rightHandleMoved)
+    if (ar_select > 0 && !ignore && rightHandleMoved)
     {
         recomputeDimensions(ar,_w,_h,normX,normY,normW,normH);
         resizeRubber=true;
@@ -363,8 +363,8 @@ bool    flyCrop::bandMoved(int x,int y,int w, int h)
  * @param block
  * @return 
  */
-#define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x;rubber->x;\
-                         w->checkBoxRubber->x;w->checkBoxKeepAspect->x;w->comboBoxAspectRatio->x;}
+#define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x; \
+                         rubber->x;w->checkBoxRubber->x;w->comboBoxAspectRatio->x;}
 bool flyCrop::blockChanges(bool block)
 {
     Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
@@ -539,7 +539,7 @@ void flyCrop::dimensions(void)
     dim+=QString::number(_w-left-right);
     dim+=QString(" x ");
     dim+=QString::number(_h-top-bottom);
-    w->label_5->setText(dim);
+    w->labelSize->setText(dim);
 }
 
 //
@@ -559,28 +559,28 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
     myCrop = new flyCrop(this, inputWidth, inputHeight, in, canvas, ui.horizontalSlider);
     myCrop->setCropMargins(param->left, param->right, param->top, param->bottom);
     myCrop->hideRubber(param->rubber_is_hidden);
-    myCrop->setKeepAspect(param->keep_aspect);
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
 
     ui.checkBoxRubber->setChecked(param->rubber_is_hidden);
-    ui.checkBoxKeepAspect->setChecked(param->keep_aspect);
-    ui.comboBoxAspectRatio->setEnabled(param->keep_aspect);
     ui.comboBoxAspectRatio->setCurrentIndex(param->ar_select);
-    myCrop->setAspectRatioIndex(param->ar_select);
-    if(param->keep_aspect)
-        toggleKeepAspect(true);
-    else
+    if(!param->ar_select)
         myCrop->upload(false,true);
     myCrop->sliderChanged();
     myCrop->lockRubber(true);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
-    connect( ui.checkBoxKeepAspect,SIGNAL(stateChanged(int)),this,SLOT(toggleKeepAspect(int)));
     connect( ui.comboBoxAspectRatio,SIGNAL(currentIndexChanged(int)),this,SLOT(changeARSelect(int)));
-    connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
-    connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
+
+    QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
+    connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
+
+    const QString autorun = QT_TRANSLATE_NOOP("crop","Auto Crop");
+    pushButtonAutoCrop = ui.buttonBox->addButton(autorun,QDialogButtonBox::ActionRole);
+    changeARSelect(param->ar_select); // may be called only after pushButtonAutoCrop has become valid
+    connect(pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
+
 #define SPINNER(x) connect(ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(widthChanged(int)));
     SPINNER(Left)
     SPINNER(Right)
@@ -613,7 +613,6 @@ void Ui_cropWindow::gather(crop *param)
     param->top = top;
     param->bottom = bottom;
     param->rubber_is_hidden = myCrop->stateOfRubber();
-    param->keep_aspect = myCrop->getKeepAspect();
     param->ar_select = myCrop->getAspectRatioIndex();
 }
 /**
@@ -719,33 +718,20 @@ void Ui_cropWindow::applyAspectRatio(void) {
     }
 }
 /**
- * \fn toggleKeepAspect
- */
-void Ui_cropWindow::toggleKeepAspect(int checkState)
-{
-    bool keep_aspect=false;
-    if(checkState)
-    {
-        keep_aspect=true;
-        myCrop->lockDimensions();
-        myCrop->setAspectRatioIndex(myCrop->getAspectRatioIndex());
-        applyAspectRatio();
-    }
-    ui.spinBoxLeft->setEnabled(!keep_aspect);
-    ui.spinBoxTop->setEnabled(!keep_aspect);
-    ui.pushButtonAutoCrop->setEnabled(!keep_aspect);
-    ui.comboBoxAspectRatio->setEnabled(keep_aspect);
-    myCrop->hideRubberGrips(keep_aspect,false);
-    myCrop->setKeepAspect(keep_aspect);
-}
-/**
  * \fn changeARSelect
  */
 void Ui_cropWindow::changeARSelect(int f)
 {
     myCrop->lockDimensions();
     myCrop->setAspectRatioIndex(f);
-    applyAspectRatio();
+
+    bool keep_aspect = myCrop->getKeepAspect();
+    if(keep_aspect)
+        applyAspectRatio();
+    ui.spinBoxLeft->setEnabled(!keep_aspect);
+    ui.spinBoxTop->setEnabled(!keep_aspect);
+    pushButtonAutoCrop->setEnabled(!keep_aspect);
+    myCrop->hideRubberGrips(keep_aspect,false);
 }
 /**
  * 
@@ -765,12 +751,11 @@ void Ui_cropWindow::reset( bool f )
 {
     lock++;
     myCrop->blockChanges(true);
-    ui.checkBoxKeepAspect->setChecked(false);
     ui.comboBoxAspectRatio->setCurrentIndex(0);
-    toggleKeepAspect(false);
+    myCrop->setAspectRatioIndex(0);
+    changeARSelect(0);
     myCrop->setCropMargins(0,0,0,0);
     myCrop->lockDimensions();
-    myCrop->setAspectRatioIndex(0);
     myCrop->blockChanges(false);
     myCrop->upload();
     myCrop->sameImage();
