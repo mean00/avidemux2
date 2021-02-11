@@ -40,9 +40,11 @@
         memcpy(&(flymsharpen->param),param,sizeof(*param));
         flymsharpen->_cookie=&ui;
         flymsharpen->addControl(ui.toolboxLayout);
+        flymsharpen->setTabOrder();
         flymsharpen->upload();
         flymsharpen->sliderChanged();
 
+        ui.horizontalSliderStrength->setFocus();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));\

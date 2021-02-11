@@ -141,7 +141,8 @@ uint8_t flyMSharpen::download(void)
     MYTOGGLE(HQ,highq)
     MYTOGGLE(Mask,mask)
     MYTOGGLE(Chroma,chroma)
-
+#undef MYSPIN
+#undef MYTOGGLE
     blockChanges(false);
     if(param.strength > 255) param.strength=255;
     invstrength = 255-param.strength;
@@ -158,6 +159,37 @@ void flyMSharpen::blockChanges(bool block)
     Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
 
     APPLY_TO_ALL(blockSignals(block))
+}
+/**
+    \fn setTabOrder
+*/
+void flyMSharpen::setTabOrder(void)
+{
+    Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
+    std::vector<QWidget *> controls;
+
+#define MYSPIN(x) controls.push_back(w->horizontalSlider##x); \
+                  controls.push_back(w->spinBox##x);
+#define MYTOGGLE(x) controls.push_back(w->checkBox##x);
+    MYSPIN(Strength)
+    MYSPIN(Threshold)
+    MYTOGGLE(HQ)
+    MYTOGGLE(Chroma)
+    MYTOGGLE(Mask)
+
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
 }
 /**
       \fn     DIA_getMpDelogo

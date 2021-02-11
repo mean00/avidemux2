@@ -29,6 +29,7 @@ public:
    uint8_t     download(void);
    uint8_t     upload();
    void        blockChanges(bool block);
+   void        setTabOrder(void);
                flyMSharpen (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider);
                 
