@@ -33,6 +33,7 @@ class flyEq2 : public ADM_flyDialogYuv
                     {
                       scene=sc;
                     };
+    void      setTabOrder(void);
 };
 
 #endif

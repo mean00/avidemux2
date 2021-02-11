@@ -47,10 +47,12 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
     myCrop->_cookie=&ui;
     myCrop->fullpreview = false;
     myCrop->addControl(ui.toolboxLayout);
+    myCrop->setTabOrder();
     myCrop->upload();
     myCrop->sliderChanged();
     myCrop->update();
 
+    ui.horizontalSliderContrast->setFocus();
     ui.checkBoxFullPreview->setChecked(myCrop->fullpreview);
 
     QSignalMapper *signalMapper = new QSignalMapper(this);
@@ -265,6 +267,40 @@ uint8_t flyEq2::download(void)
     return 1;
 }
 
+/**
+    \fn setTabOrder
+*/
+void flyEq2::setTabOrder(void)
+{
+    Ui_eq2Dialog *w=(Ui_eq2Dialog *)_cookie;
+    std::vector<QWidget *> controls;
+
+#define SLDR(x) controls.push_back(w->horizontalSlider##x);
+    SLDR(Contrast)
+    SLDR(Brightness)
+    SLDR(Saturation)
+    SLDR(Initial)
+    SLDR(Red)
+    SLDR(Green)
+    SLDR(Blue)
+    SLDR(Weight)
+
+    for(std::vector<QWidget *>::iterator it = buttonList.begin(); it != buttonList.end(); ++it)
+        controls.push_back(*it);
+    controls.push_back(w->horizontalSlider);
+    controls.push_back(w->checkBoxFullPreview);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
       \fn     DIA_getEQ2Param
       \brief  Handle MPlayer EQ2 flyDialog
