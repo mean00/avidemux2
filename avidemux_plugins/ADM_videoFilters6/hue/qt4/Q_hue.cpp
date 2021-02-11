@@ -161,8 +161,7 @@ void flyHue::setTabOrder(void)
     std::vector<QWidget *> controls;
     controls.push_back(MYSPIN(Hue));
     controls.push_back(MYSPIN(Saturation));
-    for(std::vector<QWidget *>::iterator it = buttonList.begin(); it != buttonList.end(); ++it)
-        controls.push_back(*it);
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);
     //controls.push_back(w->graphicsView);
     controls.push_back(MYCHECK(FullPreview));
