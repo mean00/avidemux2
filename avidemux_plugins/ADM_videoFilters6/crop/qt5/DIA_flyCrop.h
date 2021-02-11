@@ -27,6 +27,8 @@ public:
     bool        bandMoved(int x,int y,int w, int h);
     bool        blockChanges(bool block);
 
+    void        setTabOrder(void);
+
     float       getZoomValue(void) {return _zoom;}
     double      getAspectRatio(void) {return ar;}
     int         getAspectRatioIndex(void) {return ar_select;}

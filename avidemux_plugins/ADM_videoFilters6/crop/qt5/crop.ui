@@ -280,15 +280,6 @@
    <header>ADM_toolkitQt.h</header>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>spinBoxLeft</tabstop>
-  <tabstop>spinBoxRight</tabstop>
-  <tabstop>spinBoxTop</tabstop>
-  <tabstop>spinBoxBottom</tabstop>
-  <tabstop>checkBoxRubber</tabstop>
-  <tabstop>comboBoxAspectRatio</tabstop>
-  <tabstop>horizontalSlider</tabstop>
- </tabstops>
  <resources/>
  <connections>
   <connection>
