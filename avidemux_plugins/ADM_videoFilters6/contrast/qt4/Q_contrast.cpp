@@ -39,6 +39,7 @@
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
 
         scene=new QGraphicsScene(this);
+        scene->setSceneRect(0,0,256,128);
         ui.graphicsViewHistogram->setScene(scene);
         ui.graphicsViewHistogram->scale(1.0,1.0);
 
@@ -195,6 +196,8 @@ uint8_t flyContrast::upload(void)
         CHECKSET(Y,doLuma);
         CHECKSET(U,doChromaU);
         CHECKSET(V,doChromaV);
+
+        tablesPopulated = false;
         return 1;
 }
 /**
@@ -206,6 +209,14 @@ uint8_t flyContrast::download(void)
        Ui_contrastDialog *w=(Ui_contrastDialog *)_cookie;
          param.coef=MYSPIN(Contrast)->value()/100.;
          param.offset=MYSPIN(Brightness)->value();
+
+        if(oldCoef != param.coef || oldOffset != param.offset)
+        {
+            tablesPopulated = false;
+            oldCoef = param.coef;
+            oldOffset = param.offset;
+        }
+
 #define CHECKGET(a,b) param.b=MYCHECK(a)->isChecked()
 
         CHECKGET(Y,doLuma);

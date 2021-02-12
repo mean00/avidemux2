@@ -14,29 +14,42 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <QGraphicsScene>
 
 #include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
-
 #include "ADM_vidContrast.h"
-#include "contrast.h"
-
 #include "DIA_flyContrast.h"
 
 /************* COMMON PART *********************/
+
+/**
+    \fn ctor
+*/
+flyContrast::flyContrast(QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+            ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene *sc)
+    : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
+{
+    scene = sc;
+    previewActivated = true;
+    tablesPopulated = false;
+    oldCoef = 1.;
+    oldOffset = 0;
+}
+
 uint8_t  flyContrast::update(void)
 {
     return 1;
 }
-// Ugly !
-static uint8_t tableluma[256], tablechroma[256];
 /**
     \fn processYuv
 */
 uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
 {
-    buildContrastTable (param.coef, param.offset, tableluma, tablechroma);
+    if(!tablesPopulated)
+    {
+        ADMVideoContrast::buildContrastTable (param.coef, param.offset, tableluma, tablechroma);
+        tablesPopulated = true;
+    }
 
     if(!previewActivated)
     {
@@ -46,18 +59,18 @@ uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
     {
         out->copyInfo(in);
         if(param.doLuma)
-            doContrast(in,out,tableluma,PLANAR_Y);
+            ADMVideoContrast::doContrast(in,out,tableluma,PLANAR_Y);
         else
             out->copyPlane(in,out,PLANAR_Y);
 
 
         if(param.doChromaU)
-            doContrast(in,out,tablechroma,PLANAR_U);
+            ADMVideoContrast::doContrast(in,out,tablechroma,PLANAR_U);
         else
             out->copyPlane(in,out,PLANAR_U);
 
         if(param.doChromaV)
-            doContrast(in,out,tablechroma,PLANAR_V);
+            ADMVideoContrast::doContrast(in,out,tablechroma,PLANAR_V);
         else
             out->copyPlane(in,out,PLANAR_V);
     }
@@ -95,10 +108,8 @@ uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
         scene->addLine(qline);
     }
     // Draw 16 and 235 line
-    QPen pen;
-    pen.setWidth(1);
     QColor color(Qt::red);
-    pen.setColor(color);
+    QPen pen(color);
     QLineF qline(16,100,16,126);
     scene->addLine(qline,pen);
     QLineF qline2(235,100,235,126);

@@ -17,9 +17,6 @@
 #ifndef _CONTRAST_
 #define _CONTRAST_
 #include "contrast.h"
-bool    doContrast (ADMImage * in, ADMImage * out, uint8_t * table,  ADM_PLANE plane);	
-uint8_t buildContrastTable( float coef,int8_t off, uint8_t *tableFlat,uint8_t *tableNZ);
-
 
 /**
 	\class ADMVideoContrast
@@ -43,6 +40,7 @@ uint8_t buildContrastTable( float coef,int8_t off, uint8_t *tableFlat,uint8_t *t
 	   virtual void setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;                 /// Start graphical user interface        
 
- 				
- }     ;
+               static bool  doContrast(ADMImage *in, ADMImage *out, uint8_t *table, ADM_PLANE plane);
+               static uint8_t buildContrastTable(float coef, int8_t off, uint8_t *tableFlat, uint8_t *tableNZ);
+ };
 #endif
