@@ -31,6 +31,7 @@ class flyContrast : public ADM_flyDialogYuv
   public:
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     void       setState(bool a){previewActivated=a;}
+    void       setTabOrder(void);
    uint8_t    download(void);
    uint8_t    upload(void);
    uint8_t    update(void);

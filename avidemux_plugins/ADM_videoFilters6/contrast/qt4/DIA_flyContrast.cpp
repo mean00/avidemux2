@@ -14,15 +14,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <QGraphicsScene>
+
 #include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
-#include "ADM_image.h"
 
 #include "ADM_vidContrast.h"
 #include "contrast.h"
 
 #include "DIA_flyContrast.h"
-#include "QGraphicsScene"
 
 /************* COMMON PART *********************/
 uint8_t  flyContrast::update(void)
@@ -38,16 +38,13 @@ uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
 {
     buildContrastTable (param.coef, param.offset, tableluma, tablechroma);
 
-
-    out->copyInfo(in);
     if(!previewActivated)
     {
-        out->copyPlane(in,out,PLANAR_Y);
-        out->copyPlane(in,out,PLANAR_U);
-        out->copyPlane(in,out,PLANAR_V);
+        out->duplicate(in);
     }
     else
     {
+        out->copyInfo(in);
         if(param.doLuma)
             doContrast(in,out,tableluma,PLANAR_Y);
         else
@@ -91,8 +88,6 @@ uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
         sumsum[i]=(10*sumsum[i]*(127))/totalSum;
         if(sumsum[i]>127) sumsum[i]=127;
     }
-    int toggle=0;
-    
     scene->clear();
     for(int i=0;i<256;i++)
     {
@@ -100,11 +95,15 @@ uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
         scene->addLine(qline);
     }
     // Draw 16 and 235 line
-        QLineF qline(16,100,16,126);
-        scene->addLine(qline);
-        QLineF qline2(235,100,235,126);
-        scene->addLine(qline2);
-    
+    QPen pen;
+    pen.setWidth(1);
+    QColor color(Qt::red);
+    pen.setColor(color);
+    QLineF qline(16,100,16,126);
+    scene->addLine(qline,pen);
+    QLineF qline2(235,100,235,126);
+    scene->addLine(qline2,pen);
+
     return 1;
 }
 /************* COMMON PART *********************/
