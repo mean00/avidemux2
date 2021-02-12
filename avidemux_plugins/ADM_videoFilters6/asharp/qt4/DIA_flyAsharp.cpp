@@ -18,14 +18,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
-#include "ADM_image.h"
-
-
-#include "asharp.h"
 #include "DIA_flyAsharp.h"
-
+#include "ADM_vidAsharp.h"
 
 /************* COMMON PART *********************/
 /**
@@ -77,7 +72,7 @@ uint32_t ww,hh;
 
                 out->duplicateFull(in);
                 uint8_t *line=new uint8_t[ww];
-                asharp_run_c(     
+                ASharp::asharp_run_c(
                         out->GetWritePtr(PLANAR_Y),
                         out->GetPitch(PLANAR_Y), 
                         hh,
@@ -88,7 +83,8 @@ uint32_t ww,hh;
                         B2,
                         param.bf,line);
                 delete [] line;
-    
+    if(fullpreview)
+        return 1;
     // Copy back half source to display
     dst=out->GetWritePtr(PLANAR_Y);
     src=in->GetReadPtr(PLANAR_Y);
