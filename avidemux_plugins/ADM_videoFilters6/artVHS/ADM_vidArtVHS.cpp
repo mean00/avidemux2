@@ -183,15 +183,20 @@ const char   *ADMVideoArtVHS::getConfiguration(void)
 ADMVideoArtVHS::ADMVideoArtVHS(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_coreVideoFilter(in,couples)
 {
     if(!couples || !ADM_paramLoad(couples,artVHS_param,&_param))
-    {
-        _param.lumaBW = 0.66;
-        _param.chromaBW = 0.2;
-        _param.lumaNoDelay = true;
-        _param.chromaNoDelay = false;
-        _param.unSync = 3.0;
-        _param.unSyncFilter=0.7;
-    }
+        reset(&_param);
     update();
+}
+/**
+    \fn reset
+*/
+void ADMVideoArtVHS::reset(artVHS *cfg)
+{
+    cfg->lumaBW = 0.66;
+    cfg->chromaBW = 0.2;
+    cfg->lumaNoDelay = true;
+    cfg->chromaNoDelay = false;
+    cfg->unSync = 3.0;
+    cfg->unSyncFilter = 0.7;
 }
 /**
     \fn valueLimit
