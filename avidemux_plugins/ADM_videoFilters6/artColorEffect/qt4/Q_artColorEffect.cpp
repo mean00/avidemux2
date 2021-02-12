@@ -46,6 +46,7 @@ Ui_artColorEffectWindow::Ui_artColorEffectWindow(QWidget *parent, artColorEffect
         memcpy(&(myFly->param),param,sizeof(artColorEffect));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
@@ -100,8 +101,6 @@ void Ui_artColorEffectWindow::showEvent(QShowEvent *event)
 }
 
 #define MYCOMBOX(x) w->comboBox##x
-#define MYSPIN(x) w->horizontalSlider##x
-#define MYCHECK(x) w->checkBox##x
 //************************
 uint8_t flyArtColorEffect::upload(void)
 {
@@ -116,7 +115,26 @@ uint8_t flyArtColorEffect::download(void)
     param.effect=MYCOMBOX(Effect)->currentIndex();
     return 1;
 }
+void flyArtColorEffect::setTabOrder(void)
+{
+    Ui_artColorEffectDialog *w=(Ui_artColorEffectDialog *)_cookie;
+    std::vector<QWidget *> controls;
 
+    controls.push_back(MYCOMBOX(Effect));
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
       \fn     DIA_getCropParams
       \brief  Handle crop dialog
