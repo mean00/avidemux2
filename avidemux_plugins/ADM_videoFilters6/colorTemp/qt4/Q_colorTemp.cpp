@@ -20,8 +20,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QPushButton>
 #include "Q_colorTemp.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_vidColorTemp.h"
 #include <cmath>
 
 //
@@ -43,6 +45,7 @@ Ui_colorTempWindow::Ui_colorTempWindow(QWidget *parent, colorTemp *param,ADM_cor
         memcpy(&(myFly->param),param,sizeof(colorTemp));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
@@ -51,6 +54,9 @@ Ui_colorTempWindow::Ui_colorTempWindow(QWidget *parent, colorTemp *param,ADM_cor
         connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
         SPINNER(Temperature,100,2)
         SPINNER(Angle,1,0)
+
+        QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
+        connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
         setModal(true);
 }
@@ -75,6 +81,15 @@ void Ui_colorTempWindow::valueChanged( int f )
     if(lock) return;
     lock++;
     myFly->download();
+    myFly->sameImage();
+    lock--;
+}
+void Ui_colorTempWindow::reset(void)
+{
+    if(lock) return;
+    lock++;
+    ADMVideoColorTemp::reset(&myFly->param);
+    myFly->upload();
     myFly->sameImage();
     lock--;
 }
@@ -113,7 +128,28 @@ uint8_t flyColorTemp::download(void)
     param.angle=MYSPIN(Angle)->value();
     return 1;
 }
+void flyColorTemp::setTabOrder(void)
+{
+    Ui_colorTempDialog *w=(Ui_colorTempDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
+    PUSH_SPIN(Temperature)
+    PUSH_SPIN(Angle)
 
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
     \fn     DIA_getCropParams
     \brief  Handle crop dialog

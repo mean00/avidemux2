@@ -1,7 +1,6 @@
 #ifndef Q_colorTemp_h
 #define Q_colorTemp_h
 #include "ui_colorTemp.h"
-#include "ADM_image.h"
 #include "colorTemp.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyColorTemp.h"
@@ -26,6 +25,7 @@ class Ui_colorTempWindow : public QDialog
   private slots:
     void sliderUpdate(int foo);
     void valueChanged(int foo);
+    void reset(void);
 
   private:
     void resizeEvent(QResizeEvent *event);

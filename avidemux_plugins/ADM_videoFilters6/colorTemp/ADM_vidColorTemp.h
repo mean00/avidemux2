@@ -38,6 +38,7 @@ class  ADMVideoColorTemp:public ADM_coreVideoFilter
     virtual bool         configure(void) ;                 /// Start graphical user interface
 
     static void          ColorTempProcess_C(ADMImage *img, float temperature, float angle);
+    static void          reset(colorTemp *cfg);
 
   private:
     float   valueLimit(float val, float min, float max);

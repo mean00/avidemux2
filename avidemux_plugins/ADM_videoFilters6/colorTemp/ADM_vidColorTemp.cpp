@@ -129,11 +129,16 @@ const char   *ADMVideoColorTemp::getConfiguration(void)
 ADMVideoColorTemp::ADMVideoColorTemp(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_coreVideoFilter(in,couples)
 {
     if(!couples || !ADM_paramLoad(couples,colorTemp_param,&_param))
-    {
-        _param.temperature = 0.0;
-        _param.angle = 30.0;
-    }
+        reset(&_param);
     update();
+}
+/**
+    \fn reset
+*/
+void ADMVideoColorTemp::reset(colorTemp *cfg)
+{
+    cfg->temperature = 0.0;
+    cfg->angle = 30.0;
 }
 /**
     \fn valueLimit
