@@ -68,56 +68,56 @@ uint8_t    flyEq2::processYuv(ADMImage* in, ADMImage *out)
     for(int i=0; i < 3; i++)
         ADMVideoEq2::processPlane(&(mySettings.param[i]),in,out,(ADM_PLANE)i);
 
-	if(scene)
-	{
-		// Draw luma histogram
-		uint8_t *luma=out->GetReadPtr(PLANAR_Y);
-		int     stride=out->GetPitch(PLANAR_Y);
-		int     decimate=4;
-		double  sumsum[256];    
-		for(int i=0;i<256;i++) sumsum[i]=0;
+    if(scene)
+    {
+        // Draw luma histogram
+        uint8_t *luma=out->GetReadPtr(PLANAR_Y);
+        int stride=out->GetPitch(PLANAR_Y);
+        int decimate=4;
+        double  sumsum[256];
+        for(int i=0;i<256;i++) sumsum[i]=0;
 
-		double  totalSum=(double)(out->_width*out->_height)/decimate; // # of sampling points
-		for(int y=0;y<in->_height;y+=decimate)
-		{
-			uint8_t *p=luma;
-			for(int x=0;x<in->_width;x++)
-			{
-				sumsum[*p]++;
-				p++;
-			}
-			luma+=stride*decimate;
-		}
-		// normalize
-		for(int i=0;i<256;i++)
-		{
-			// zoom factor =10
-			sumsum[i]=(10*sumsum[i]*(127))/totalSum;
-			if(sumsum[i]>127) sumsum[i]=127;
-		}
-		scene->clear();
-		for(int i=0;i<256;i++)
-		{
-			QLineF qline(i,127,i,127-sumsum[i]);
-			scene->addLine(qline);
-		}
-		// Draw 16 and 235 line
-		QColor color(Qt::red);
-		QPen pen(color);
-		QLineF qline(16,100,16,126);
-		scene->addLine(qline,pen);
-		QLineF qline2(235,100,235,126);
-		scene->addLine(qline2,pen);
-	}
+        double totalSum=(double)(out->_width*out->_height)/decimate; // # of sampling points
+        for(int y=0;y<in->_height;y+=decimate)
+        {
+            uint8_t *p=luma;
+            for(int x=0;x<in->_width;x++)
+            {
+                sumsum[*p]++;
+                p++;
+            }
+            luma+=stride*decimate;
+        }
+        // normalize
+        for(int i=0;i<256;i++)
+        {
+            // zoom factor =10
+            sumsum[i]=(10*sumsum[i]*(127))/totalSum;
+            if(sumsum[i]>127) sumsum[i]=127;
+        }
+        scene->clear();
+        for(int i=0;i<256;i++)
+        {
+            QLineF qline(i,127,i,127-sumsum[i]);
+            scene->addLine(qline);
+        }
+        // Draw 16 and 235 line
+        QColor color(Qt::red);
+        QPen pen(color);
+        QLineF qline(16,100,16,126);
+        scene->addLine(qline,pen);
+        QLineF qline2(235,100,235,126);
+        scene->addLine(qline2,pen);
+    }
 
-	if (!fullpreview)
-	{
-		in->copyLeftSideTo(out);
-		out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
-		out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
-	}
+    if (!fullpreview)
+    {
+        in->copyLeftSideTo(out);
+        out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
+        out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
+    }
 
-		return 1;
+    return 1;
 }
 
 /************* COMMON PART *********************/
