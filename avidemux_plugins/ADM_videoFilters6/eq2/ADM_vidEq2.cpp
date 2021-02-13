@@ -42,6 +42,7 @@ class  ADMVideoEq2:public ADM_coreVideoFilter
   protected:
             eq2             _param;    
             Eq2Settings     settings;   
+            ADMImage        *mysrc;
             void            update(void);
   public:
                 
@@ -105,6 +106,7 @@ ADMVideoEq2::ADMVideoEq2(ADM_coreVideoFilter *in,CONFcouple *couples)
     _param.bgamma =1.0;    
   }      
   update();
+  mysrc = new ADMImageDefault(info.width,info.height);
 }
 /**
     \fn update
@@ -119,7 +121,8 @@ void ADMVideoEq2::update(void)
 */
 ADMVideoEq2::~ADMVideoEq2()
 {
-  
+  if(mysrc) delete mysrc;
+  mysrc = NULL;
 }
 /**
     \fn getCoupledConf
@@ -140,21 +143,22 @@ void ADMVideoEq2::setCoupledConf(CONFcouple *couples)
 */
  bool         ADMVideoEq2::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-  if(!previousFilter->getNextFrame(fn,image)) return false;
+  if(!previousFilter->getNextFrame(fn,mysrc)) return false;
+  image->copyInfo(mysrc);
 
 #ifdef CAN_DO_INLINE_X86_ASM
   if(CpuCaps::hasMMX())
   {
-        affine_1d_MMX(&(settings.param[0]),image,image,PLANAR_Y);
-        affine_1d_MMX(&(settings.param[1]),image,image,PLANAR_U);
-        affine_1d_MMX(&(settings.param[2]),image,image,PLANAR_V);
+        affine_1d_MMX(&(settings.param[0]),mysrc,image,PLANAR_Y);
+        affine_1d_MMX(&(settings.param[1]),mysrc,image,PLANAR_U);
+        affine_1d_MMX(&(settings.param[2]),mysrc,image,PLANAR_V);
    }
    else
 #endif
    {
-        apply_lut(&(settings.param[0]),image,image,PLANAR_Y);
-        apply_lut(&(settings.param[1]),image,image,PLANAR_U);
-        apply_lut(&(settings.param[2]),image,image,PLANAR_V);
+        apply_lut(&(settings.param[0]),mysrc,image,PLANAR_Y);
+        apply_lut(&(settings.param[1]),mysrc,image,PLANAR_U);
+        apply_lut(&(settings.param[2]),mysrc,image,PLANAR_V);
     }
 
   return 1;
