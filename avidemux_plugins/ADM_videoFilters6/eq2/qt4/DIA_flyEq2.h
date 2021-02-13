@@ -12,28 +12,27 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef FLY_EQ2_H
-#define FLY_EQ2_H
+#pragma once
+#include <QGraphicsScene>
 #include "ADM_vidEq2.h"
-class QGraphicsScene;
+
 class flyEq2 : public ADM_flyDialogYuv
 {
-  
+  private:
+    Eq2Settings mySettings;
+    bool        tablesDone;
   public:
-   eq2         param;
-   QGraphicsScene *scene;
-   bool        fullpreview;
+    eq2         param;
+    QGraphicsScene *scene;
+    bool        fullpreview;
   public:
-   uint8_t    processYuv(ADMImage* in, ADMImage *out);
-   uint8_t    download(void);
-   uint8_t    upload(void);
-   uint8_t    update(void);
-              flyEq2 (QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in, ADM_QCanvas *canvas, ADM_QSlider *slider,QGraphicsScene*sc) :
-                  ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
-                    {
-                      scene=sc;
-                    };
-    void      setTabOrder(void);
+    uint8_t     processYuv(ADMImage* in, ADMImage *out);
+    uint8_t     download(void);
+    uint8_t     upload(void);
+    uint8_t     update(void);
+    void        setTabOrder(void);
+
+                flyEq2 (QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                        ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene *sc);
 };
 
-#endif

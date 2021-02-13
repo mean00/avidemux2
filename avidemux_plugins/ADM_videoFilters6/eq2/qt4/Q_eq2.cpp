@@ -39,6 +39,7 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
     canvas=new ADM_QCanvas(ui.graphicsView,width,height);
 
     scene=new QGraphicsScene(this);
+    scene->setSceneRect(0,0,256,128);
     ui.graphicsViewHistogram->setScene(scene);
     ui.graphicsViewHistogram->scale(1.0,1.0);
 
@@ -243,6 +244,8 @@ uint8_t flyEq2::upload(void)
     sliderSet(Green,ggamma);
     sliderSet(Blue,bgamma);
 
+    tablesDone = false;
+
     return 1;
 }
 
@@ -263,6 +266,8 @@ uint8_t flyEq2::download(void)
     sliderGet(Red,rgamma);
     sliderGet(Green,ggamma);
     sliderGet(Blue,bgamma);
+
+    tablesDone = false;
 
     return 1;
 }
