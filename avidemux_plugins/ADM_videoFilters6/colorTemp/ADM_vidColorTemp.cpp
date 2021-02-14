@@ -51,6 +51,8 @@ void ADMVideoColorTemp::ColorTempProcess_C(ADMImage *img, float temperature, flo
     int ystride,ustride,vstride;
     uint8_t * yptr, * uptr, * vptr;
     int pixel,max;
+    int limitL = 0;
+    int limitH = 255;
 
     angle = angle*M_PI/180.;
 
@@ -60,7 +62,12 @@ void ADMVideoColorTemp::ColorTempProcess_C(ADMImage *img, float temperature, flo
     int ushift, vshift;
 
     if(img->_range == ADM_COL_RANGE_MPEG)
-        img->expandColorRange();
+    {
+        ushiftf *= 224.0/256.0;
+        vshiftf *= 224.0/256.0;
+        limitL = 16;
+        limitH = 239;
+    }
 
     // Y plane unchanged
 
@@ -87,14 +94,14 @@ void ADMVideoColorTemp::ColorTempProcess_C(ADMImage *img, float temperature, flo
 
             pixel = uptr[x];
             pixel += ushift;
-            if (pixel < 0) pixel = 0;
-            if (pixel > 255) pixel = 255;
+            if (pixel < limitL) pixel = limitL;
+            if (pixel > limitH) pixel = limitH;
             uptr[x] = pixel;
 
             pixel = vptr[x];
             pixel += vshift;
-            if (pixel < 0) pixel = 0;
-            if (pixel > 255) pixel = 255;
+            if (pixel < limitL) pixel = limitL;
+            if (pixel > limitH) pixel = limitH;
             vptr[x] = pixel;
         }
         yptr+=2*ystride;
