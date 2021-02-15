@@ -23,9 +23,6 @@
 #include "Q_artColorEffect.h"
 #include "ADM_toolkitQt.h"
 
-extern void ArtColorEffectCreateBuffers(int w, int h, int * rgbBufStride, ADM_byteBuffer ** rgbBufRaw, ADMImageRef ** rgbBufImage, ADMColorScalerFull ** convertYuvToRgb, ADMColorScalerFull ** convertRgbToYuv);
-extern void ArtColorEffectDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv);
-
 //
 //	Video is in YV12 Colorspace
 //
@@ -42,7 +39,6 @@ Ui_artColorEffectWindow::Ui_artColorEffectWindow(QWidget *parent, artColorEffect
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
         myFly=new flyArtColorEffect( this,width, height,in,canvas,ui.horizontalSlider);
-        ArtColorEffectCreateBuffers(width,height, &(myFly->rgbBufStride), &(myFly->rgbBufRaw), &(myFly->rgbBufImage), &(myFly->convertYuvToRgb), &(myFly->convertRgbToYuv));
         memcpy(&(myFly->param),param,sizeof(artColorEffect));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
@@ -66,11 +62,8 @@ void Ui_artColorEffectWindow::gather(artColorEffect *param)
 }
 Ui_artColorEffectWindow::~Ui_artColorEffectWindow()
 {
-    if(myFly) {
-        ArtColorEffectDestroyBuffers(myFly->rgbBufRaw, myFly->rgbBufImage, myFly->convertYuvToRgb, myFly->convertRgbToYuv);
-        delete myFly;
-    }
-    myFly=NULL; 
+    if(myFly) delete myFly;
+    myFly=NULL;
     if(canvas) delete canvas;
     canvas=NULL;
 }

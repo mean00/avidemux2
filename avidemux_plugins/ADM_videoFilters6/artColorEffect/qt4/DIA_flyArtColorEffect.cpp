@@ -18,16 +18,33 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
-#include "ADM_image.h"
+#include "DIA_flyDialogQt4.h"
+#include "ADM_vidArtColorEffect.h"
 #include "DIA_flyArtColorEffect.h"
 
-#include "ADM_assert.h"
-
-extern void ArtColorEffectProcess_C(ADMImage *img, int w, int h, int effect, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv);
-
 /************* COMMON PART *********************/
+
+/**
+    \fn ctor
+*/
+flyArtColorEffect::flyArtColorEffect (QDialog *parent, uint32_t width, uint32_t height,
+        ADM_coreVideoFilter *in, ADM_QCanvas *canvas, ADM_QSlider *slider)
+        : ADM_flyDialogYuv (parent, width, height, in, canvas, slider, RESIZE_AUTO)
+{
+    ADMVideoArtColorEffect::ArtColorEffectCreateBuffers (width, height, &rgbBufStride,
+        &rgbBufRaw, &rgbBufImage, &convertYuvToRgb, &convertRgbToYuv);
+}
+/**
+    \fn dtor
+*/
+flyArtColorEffect::~flyArtColorEffect()
+{
+    ADMVideoArtColorEffect::ArtColorEffectDestroyBuffers (rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
+}
+/**
+    \fn update
+*/
 uint8_t  flyArtColorEffect::update(void)
 {
     return 1;
@@ -37,17 +54,14 @@ uint8_t  flyArtColorEffect::update(void)
 */
 uint8_t   flyArtColorEffect::processYuv(ADMImage *in,ADMImage *out )
 {
-uint8_t *src,*dst;
-uint32_t stride;
-uint32_t effect;
-    effect=param.effect;
     out->duplicate(in);
 
     // Do it!
-    ArtColorEffectProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),effect,rgbBufStride, rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
+    ADMVideoArtColorEffect::ArtColorEffectProcess_C (out, in->GetWidth(PLANAR_Y), in->GetHeight(PLANAR_Y),
+        param.effect, rgbBufStride, rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
     // Copy half source to display
     //in->copyLeftSideTo(out);
-    out->printString(1,1,"Processed"); // printString can't handle non-ascii input, do not translate this!
+    //out->printString(1,1,"Processed"); // printString can't handle non-ascii input, do not translate this!
     //out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
 
     return 1;
