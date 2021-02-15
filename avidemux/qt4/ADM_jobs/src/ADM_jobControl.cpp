@@ -58,12 +58,12 @@ void jobWindow::refreshList(void)
       listOfJob.clear();
       
 // set titles
-     QTableWidgetItem *jb=fromText("Job",255);
-     QTableWidgetItem *outputFile=fromText("Output",255);
-     QTableWidgetItem *status=fromText("Status",255);
-     QTableWidgetItem *start=fromText("Start Time",255);
-     QTableWidgetItem *end=fromText("End Time",255);
-     QTableWidgetItem *duration=fromText("Duration",255);
+     QTableWidgetItem *jb=fromText(QT_TRANSLATE_NOOP("jobs","Job"),255);
+     QTableWidgetItem *outputFile=fromText(QT_TRANSLATE_NOOP("jobs","Output"),255);
+     QTableWidgetItem *status=fromText(QT_TRANSLATE_NOOP("jobs","Status"),255);
+     QTableWidgetItem *start=fromText(QT_TRANSLATE_NOOP("jobs","Start Time"),255);
+     QTableWidgetItem *end=fromText(QT_TRANSLATE_NOOP("jobs","End Time"),255);
+     QTableWidgetItem *duration=fromText(QT_TRANSLATE_NOOP("jobs","Duration"),255);
      ui.tableWidget->setHorizontalHeaderItem(1,jb);
      ui.tableWidget->setHorizontalHeaderItem(2,outputFile);
      ui.tableWidget->setHorizontalHeaderItem(3,start);
@@ -98,13 +98,13 @@ void jobWindow::refreshList(void)
             switch(listOfJob[i].status)
             {
                 case ADM_JOB_IDLE:
-                            s=string("Ready");
+                            s=string(QT_TRANSLATE_NOOP("jobs","Ready"));
                             break;
                 case ADM_JOB_RUNNING:
-                            s=string("Running....");
+                            s=string(QT_TRANSLATE_NOOP("jobs","Running...."));
                             break;
                 case ADM_JOB_OK:
-                            s=string("Success");
+                            s=string(QT_TRANSLATE_NOOP("jobs","Success"));
                             start=date2String(listOfJob[i].startTime);
                             end=date2String(listOfJob[i].endTime);
                             timeTaken=listOfJob[i].endTime-listOfJob[i].startTime;
@@ -112,14 +112,14 @@ void jobWindow::refreshList(void)
                            
                             break;
                 case ADM_JOB_KO:
-                            s=string("Failed");
+                            s=string(QT_TRANSLATE_NOOP("jobs","Failed"));
                             start=date2String(listOfJob[i].startTime);
                             end=date2String(listOfJob[i].endTime);
                             timeTaken=listOfJob[i].endTime-listOfJob[i].startTime;
                             dur=duration2String(timeTaken);
                             break;
                 default:
-                            s=string("???");
+                            s=string(QT_TRANSLATE_NOOP("jobs","???"));
                             break;
             }
         QTableWidgetItem *status=fromText (s,i);
@@ -162,10 +162,10 @@ jobWindow::jobWindow(bool mode) : QDialog()
     // Add some right click menu...
     ui.tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     // Add some right click menu...
-   QAction *del = new  QAction(QString("Delete"),this);
-   QAction *runNow = new  QAction(QString("Run Now"),this);
-   QAction *setOk = new  QAction(QString("Force Status to success"),this);
-   QAction *setReady = new  QAction(QString("Force Status to ready"),this);
+   QAction *del = new  QAction(QString(QT_TRANSLATE_NOOP("jobs","Delete")),this);
+   QAction *runNow = new  QAction(QString(QT_TRANSLATE_NOOP("jobs","Run Now")),this);
+   QAction *setOk = new  QAction(QString(QT_TRANSLATE_NOOP("jobs","Force Status to success")),this);
+   QAction *setReady = new  QAction(QString(QT_TRANSLATE_NOOP("jobs","Force Status to ready")),this);
    ui.tableWidget->addAction(del);
    ui.tableWidget->addAction(runNow);
    ui.tableWidget->addAction(setOk);
@@ -179,7 +179,7 @@ jobWindow::jobWindow(bool mode) : QDialog()
    connect(ui.pushButtonRunAll,SIGNAL(pressed()),this,SLOT(runAllJob()));
    connect(ui.pushButtonCleanup,SIGNAL(pressed()),this,SLOT(cleanup()));
 
-    QAction *bye = new QAction(QString("Quit"),this);
+    QAction *bye = new QAction(QString(QT_TRANSLATE_NOOP("jobs","Quit")),this);
     bye->setShortcut(Qt::Key_Q | Qt::CTRL);
     connect(bye,SIGNAL(triggered()),this,SLOT(quit()));
     this->addAction(bye);
