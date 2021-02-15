@@ -53,6 +53,8 @@
 				<string>TS</string>
 				<string>VPY</string>
 			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 		</dict>
 	</array>
 	<key>CFBundleShortVersionString</key>
