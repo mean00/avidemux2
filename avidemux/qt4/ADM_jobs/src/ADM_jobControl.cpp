@@ -11,13 +11,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <QDir>
+#include <QAction>
+#include <QIcon>
+
 #include "T_jobs.h"
 #include "T_progress.h"
 #include "ADM_default.h"
 #include "ADM_coreJobs.h"
 #include "DIA_coreToolkit.h"
-#include <QtCore/QDir>
-#include <QAction>
 
 extern void loadTranslator(void);
 extern void initTranslator(void);
@@ -154,7 +156,9 @@ jobWindow::jobWindow(bool mode) : QDialog()
 {
     ui.setupUi(this);
     ui.tableWidget->setColumnCount(6); // Job name, fileName, Status
-
+#if ! defined(__APPLE__) && ! defined(_WIN32)
+    setWindowIcon(QIcon(":/jobs/jobs-window-icon-linux.png"));
+#endif
     // Add some right click menu...
     ui.tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     // Add some right click menu...
