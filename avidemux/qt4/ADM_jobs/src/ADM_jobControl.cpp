@@ -222,7 +222,11 @@ bool jobRun(int ac,char **av)
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     QApplication *app=new QApplication(ac,av,0);
+#if ! defined(_WIN32) && ! defined(__APPLE__)
+    Q_INIT_RESOURCE(jobs_linux);
+#else
     Q_INIT_RESOURCE(jobs);
+#endif
     loadTranslator();
     bool pmode=ac>1 && !strcmp(av[1],"--portable");
     jobWindow *jWindow=new jobWindow(pmode);
