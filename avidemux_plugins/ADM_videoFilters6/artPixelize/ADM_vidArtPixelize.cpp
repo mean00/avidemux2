@@ -124,9 +124,6 @@ void ArtPixelizeProcess_C(ADMImage *img, unsigned int pw, unsigned int ph)
     pw = pw & 0xFFFE;	// must be even
     ph = ph & 0xFFFE;	// must be even
 
-    if(img->_range == ADM_COL_RANGE_MPEG)
-        img->expandColorRange();
-
     // Y plane
     stride=img->GetPitch(PLANAR_Y);
     ptr=img->GetWritePtr(PLANAR_Y);
