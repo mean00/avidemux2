@@ -32,8 +32,6 @@ uint8_t  flyArtVHS::update(void)
 */
 uint8_t   flyArtVHS::processYuv(ADMImage *in,ADMImage *out )
 {
-    uint8_t *src,*dst;
-    uint32_t stride;
     out->duplicate(in);
 
     // Do it!
