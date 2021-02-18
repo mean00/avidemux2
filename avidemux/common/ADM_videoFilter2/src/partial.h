@@ -5,4 +5,5 @@ typedef struct {
 uint32_t startBlack;
 uint32_t endBlack;
 std::string filterName;
+std::string displayName;
 }partial;

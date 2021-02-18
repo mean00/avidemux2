@@ -8,6 +8,7 @@ admJson json;
 json.addUint32("startBlack",key->startBlack);
 json.addUint32("endBlack",key->endBlack);
 json.addString("filterName",key->filterName);
+json.addString("displayName",key->displayName);
 return json.dumpToFile(file);
 };
 bool  partial_jdeserialize(const char *file, const ADM_paramList *tmpl,partial *key){

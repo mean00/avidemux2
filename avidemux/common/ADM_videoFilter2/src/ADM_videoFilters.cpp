@@ -106,7 +106,7 @@ bool ADM_vf_moveFilterDown(int index)
 /**
  * 
  */
-extern ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples,ADM_coreVideoFilter *source);
+extern ADM_coreVideoFilter *createPartialFilter(const char *internalName,const char *displayName, CONFcouple *couples,ADM_coreVideoFilter *source);
 bool ADM_vf_partialize(int index)
 {
     ADM_info("Partializing filter at index %d\n",index);
@@ -116,6 +116,7 @@ bool ADM_vf_partialize(int index)
     
     ADM_VideoFilterElement scratch=ADM_VideoFilters[index];
     const char *internalName=ADM_vf_getInternalNameFromTag(scratch.tag);
+    const char *displayName=ADM_vf_getDisplayNameFromTag(scratch.tag);
     CONFcouple *conf=NULL;
     if(!scratch.instance->getCoupledConf (&conf))
       {
@@ -123,7 +124,7 @@ bool ADM_vf_partialize(int index)
         return false;
       }
     // Create
-    ADM_coreVideoFilter *partialized=createPartialFilter(internalName,conf,scratch.instance->getSource());
+    ADM_coreVideoFilter *partialized=createPartialFilter(internalName,displayName,conf,scratch.instance->getSource());
     if(!partialized)
     {
         return false;

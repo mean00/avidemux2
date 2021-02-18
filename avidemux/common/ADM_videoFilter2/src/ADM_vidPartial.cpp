@@ -25,7 +25,7 @@
 extern ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag, ADM_coreVideoFilter *last, CONFcouple *couples);
 extern uint32_t    ADM_vf_getTagFromInternalName(const char *name);
 
-ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples);
+ADM_coreVideoFilter *createPartialFilter(const char *internalName,const char *displayName,CONFcouple *couples);
 /**
     \class partialFilter
 */
@@ -108,7 +108,7 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
     // Step 1 : Load configuration
     if(!setup)
         ADM_assert(0);
-    // Only keep 3 parameters
+    // Only keep 4 parameters
     char *filterName=NULL;
     if(!setup->readAsString ("filterName",&filterName))
       {
@@ -117,6 +117,14 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
     configuration.filterName=std::string(filterName);
     delete [] filterName;
     filterName=NULL;
+    char *displayName=NULL;
+    if(!setup->readAsString ("displayName",&displayName))
+      {
+        ADM_assert(0);
+      }
+    configuration.displayName=std::string(displayName);
+    delete [] displayName;
+    displayName=NULL;
     if(!setup->readAsUint32("startBlack",&(configuration.startBlack)))
       {
         ADM_assert(0);
@@ -140,7 +148,7 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
     // Get tag from name
     uint32_t tag;
     // get tag from name
-    int nbSonParam=setup->getSize()-3;
+    int nbSonParam=setup->getSize()-4;
     ADM_assert(nbSonParam>=0);
 
     ADM_info("Creating partial filter for %s, with %d params\n",configuration.filterName.c_str(),nbSonParam);
@@ -151,7 +159,7 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
     for(int i=0;i<nbSonParam;i++)
     {
       char *key,*val;
-      setup->getInternalName (i+3,&key,&val);
+      setup->getInternalName (i+4,&key,&val);
       newParams.setInternalName (key,val);
     }
 
@@ -284,7 +292,8 @@ bool         partialFilter::getCoupledConf(CONFcouple **couples)
         if(configuration.endBlack > info.totalDuration)
             configuration.endBlack=info.totalDuration;
 
-        *couples=new CONFcouple(newParam->getSize()+3);
+        *couples=new CONFcouple(newParam->getSize()+4);
+        (*couples)->writeAsString("displayName",configuration.displayName.c_str());
         (*couples)->writeAsString("filterName",configuration.filterName.c_str());
         (*couples)->writeAsUint32("startBlack",configuration.startBlack);
         (*couples)->writeAsUint32("endBlack",configuration.endBlack);
@@ -312,9 +321,9 @@ void partialFilter::setCoupledConf(CONFcouple *couples)
 */
 const char *partialFilter::getConfiguration(void)
 {
-  sprintf(description,"Partial : %s -- ",ADM_us2plain((uint64_t)(configuration.startBlack)*1000));
+  sprintf(description,"[%s] : %s -- ",configuration.displayName.c_str(),ADM_us2plain((uint64_t)(configuration.startBlack)*1000));
   strcat(description,ADM_us2plain((uint64_t)(configuration.endBlack)*1000));
-  strcat(description," ");
+  strcat(description,"\n");
   strcat(description,sonFilter->getConfiguration());
   return description;
 }
@@ -405,13 +414,14 @@ bool         partialFilter::trampolineFilter::getNextFrame(uint32_t *frameNumber
 /**
  * \fn createPartialFilter
  * @param internalName
+ * @param displayName
  * @param couples
  * @return
  */
-ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples,ADM_coreVideoFilter *source)
+ADM_coreVideoFilter *createPartialFilter(const char *internalName,const char *displayName,CONFcouple *couples,ADM_coreVideoFilter *source)
 {
   int sonNbItems=couples->getSize();
-  CONFcouple tmp(3+sonNbItems);
+  CONFcouple tmp(4+sonNbItems);
 
   uint32_t start, end;
   if(source->getInfo()->totalDuration == video_body->getVideoDuration())
@@ -426,6 +436,7 @@ ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *co
   }
 
   tmp.writeAsString("filterName",internalName);
+  tmp.writeAsString("displayName",displayName);
   tmp.writeAsUint32 ("startBlack",start);
   tmp.writeAsUint32 ("endBlack",end);
   for(int i=0;i<sonNbItems;i++)
