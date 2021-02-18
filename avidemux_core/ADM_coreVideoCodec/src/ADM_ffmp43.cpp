@@ -105,6 +105,8 @@ void decoderFF::decoderMultiThread (void)
         threads = 1;
     if(!threads)
         threads = ADM_cpu_num_processors();
+    if(threads > LAVC_MAX_SAFE_THREAD_COUNT)
+        threads = LAVC_MAX_SAFE_THREAD_COUNT;
     if(!sessionThreads)
     {
         sessionThreads = threads;
