@@ -1892,6 +1892,10 @@ int UI_Init(int nargc, char **nargv)
     // like OpenGL support were fixed only in much later versions.
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+#if defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(5,10,0)
+    // Hide unhelpful context help buttons on Windows.
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+#endif
     myApplication=new myQApplication (global_argc, global_argv);
     myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
     myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
