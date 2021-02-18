@@ -44,16 +44,16 @@
       <number>0</number>
      </property>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="labelTemperature">
        <property name="text">
         <string>Color temperature</string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="labelChromaShiftAngle">
        <property name="text">
-        <string>U-V plane angle of attack</string>
+        <string>Chroma shift angle</string>
        </property>
       </widget>
      </item>
