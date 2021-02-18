@@ -57,7 +57,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoArtPixelize,   // Class
                                       VF_ART,            // Category
                                       "artPixelize",            // internal name (must be uniq!)
                                       QT_TRANSLATE_NOOP("artPixelize","Pixelize"),            // Display name
-                                      QT_TRANSLATE_NOOP("artPixelize","Pixelize")   // Description
+                                      QT_TRANSLATE_NOOP("artPixelize","Pixelize image")   // Description
                                   );
 /**
     \fn ArtPixelizeCore_C
