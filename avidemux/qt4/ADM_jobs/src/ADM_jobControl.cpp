@@ -221,6 +221,10 @@ bool jobRun(int ac,char **av)
 #if defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(5,11,0)
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+#if defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(5,10,0)
+    // Hide unhelpful context help buttons on Windows.
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+#endif
     QApplication *app=new QApplication(ac,av,0);
 #if ! defined(_WIN32) && ! defined(__APPLE__)
     Q_INIT_RESOURCE(jobs_linux);
