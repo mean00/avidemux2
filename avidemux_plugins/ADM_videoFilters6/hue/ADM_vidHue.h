@@ -15,13 +15,19 @@
 #pragma once
 #include "hue.h"
 
+typedef struct {
+    uint8_t lutU[256][256];
+    uint8_t lutV[256][256];
+    hue param;
+} huesettings;
+
 /**
     \class ADMVideoHue
 */
 class ADMVideoHue : public ADM_coreVideoFilterCached
 {
   protected:
-        hue         _param;
+        huesettings _settings;
 
   public:
                     ADMVideoHue(ADM_coreVideoFilter *in, CONFcouple *couples);
@@ -33,9 +39,9 @@ virtual bool        getCoupledConf(CONFcouple **couples); /// Return the current
 virtual void        setCoupledConf(CONFcouple *couples);
 virtual bool        configure(void); /// Start graphical user interface
 
-        static void update(hue *h);
+        static void update(huesettings *s);
         static void reset(hue *h) { h->hue = 0.0; h->saturation = 1.0; }
         static void HueProcess_C(uint8_t *udst, uint8_t *vdst, uint8_t *usrc, uint8_t *vsrc,
-                                 int dststride, int srcstride, int w, int h, float hue, float sat);
+                                 int dststride, int srcstride, int w, int h, huesettings *s);
 };
 

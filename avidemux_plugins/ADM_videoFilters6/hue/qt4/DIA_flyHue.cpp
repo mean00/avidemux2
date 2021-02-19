@@ -18,17 +18,27 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
-#include "ADM_image.h"
+#include "DIA_flyDialogQt4.h"
 #include "DIA_flyHue.h"
-#include "../ADM_vidHue.h"
 
 /************* COMMON PART *********************/
+/**
+    \fn update
+*/
 uint8_t  flyHue::update(void)
 {
+    ADMVideoHue::update(&flyset);
     return 1;
-}        
+}
+/**
+    \fn reset
+*/
+uint8_t flyHue::reset(void)
+{
+    ADMVideoHue::reset(&flyset.param);
+    return 1;
+}
 /**
     \fn processYuv
 */
@@ -39,7 +49,7 @@ uint8_t   flyHue::processYuv(ADMImage *in,ADMImage *out )
     ADMVideoHue::HueProcess_C(out->GetWritePtr(PLANAR_U), out->GetWritePtr(PLANAR_V),
                  in->GetReadPtr(PLANAR_U), in->GetReadPtr(PLANAR_V),
                  out->GetPitch(PLANAR_U), in->GetPitch(PLANAR_U), // assume u&v pitches are =
-                 _w>>1, _h>>1, param.hue, param.saturation);
+                 _w>>1, _h>>1, &flyset);
     if(fullpreview)
         return 1;
     // Copy half source to display

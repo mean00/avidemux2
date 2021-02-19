@@ -24,7 +24,6 @@
 
 #include "Q_hue.h"
 #include "ADM_toolkitQt.h"
-#include "../ADM_vidHue.h"
 
 //
 //	Video is in YV12 Colorspace
@@ -42,7 +41,7 @@
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
         myCrop=new flyHue( this,width, height,in,canvas,ui.horizontalSlider);
-        memcpy(&(myCrop->param),param,sizeof(hue));
+        myCrop->setParam(param);
         myCrop->_cookie=&ui;
         myCrop->addControl(ui.toolboxLayout);
         myCrop->setTabOrder();
@@ -69,9 +68,8 @@
   }
   void Ui_hueWindow::gather(hue *param)
   {
-    
         myCrop->download();
-        memcpy(param,&(myCrop->param),sizeof(hue));
+        myCrop->getParam(param);
   }
 Ui_hueWindow::~Ui_hueWindow()
 {
@@ -101,8 +99,7 @@ void Ui_hueWindow::reset(void)
 {
     if(lock) return;
     lock++;
-    ADMVideoHue::reset(&myCrop->param);
-    ADMVideoHue::update(&myCrop->param);
+    myCrop->reset();
     myCrop->upload();
     myCrop->sameImage();
     lock--;
@@ -130,29 +127,34 @@ void Ui_hueWindow::showEvent(QShowEvent *event)
 //************************
 uint8_t flyHue::upload(void)
 {
-      Ui_hueDialog *w=(Ui_hueDialog *)_cookie;
+    Ui_hueDialog *w=(Ui_hueDialog *)_cookie;
 
-        MYSPIN(Saturation)->blockSignals(true);
-        MYSPIN(Hue)->blockSignals(true);
-        MYCHECK(FullPreview)->blockSignals(true);
+    MYSPIN(Saturation)->blockSignals(true);
+    MYSPIN(Hue)->blockSignals(true);
+    MYCHECK(FullPreview)->blockSignals(true);
 
-        MYSPIN(Saturation)->setValue((int)(param.saturation*10));
-        MYSPIN(Hue)->setValue((int)param.hue);
-        MYCHECK(FullPreview)->setChecked(fullpreview);
+    MYSPIN(Saturation)->setValue((int)(flyset.param.saturation*10));
+    MYSPIN(Hue)->setValue((int)flyset.param.hue);
+    MYCHECK(FullPreview)->setChecked(fullpreview);
 
-        MYSPIN(Saturation)->blockSignals(false);
-        MYSPIN(Hue)->blockSignals(false);
-        MYCHECK(FullPreview)->blockSignals(false);
+    MYSPIN(Saturation)->blockSignals(false);
+    MYSPIN(Hue)->blockSignals(false);
+    MYCHECK(FullPreview)->blockSignals(false);
 
-        return 1;
+    update();
+
+    return 1;
 }
 uint8_t flyHue::download(void)
 {
-       Ui_hueDialog *w=(Ui_hueDialog *)_cookie;
-         param.hue=MYSPIN(Hue)->value();
-         param.saturation=MYSPIN(Saturation)->value()/10.;
-         ADMVideoHue::update(&param);
-return 1;
+    Ui_hueDialog *w=(Ui_hueDialog *)_cookie;
+
+    flyset.param.hue=MYSPIN(Hue)->value();
+    flyset.param.saturation=MYSPIN(Saturation)->value()/10.;
+
+    update();
+
+    return 1;
 }
 
 void flyHue::setTabOrder(void)
