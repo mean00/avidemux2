@@ -56,8 +56,15 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         _refCopy=1;
     if(true==c->hasBFrame)
         hasBFrame=true;
-    printf("[decoderFFSimple] context allocated with thread_count = %d\n",_context->thread_count);
+
     decoderMultiThread();
+    if (_usingMT) {
+        if(codecId==AV_CODEC_ID_VP9) { //TODO investigate what other codecs can be multithreaded!
+            _context->thread_count = _threads;
+            _context->thread_type = FF_THREAD_SLICE;    // this is important! the default FF_THREAD_FRAME wont work with Avidemux
+        }
+    }
+    printf("[decoderFFSimple] context allocated with thread_count = %d\n",_context->thread_count);
 
     _context->width = _w;
     _context->height = _h;
