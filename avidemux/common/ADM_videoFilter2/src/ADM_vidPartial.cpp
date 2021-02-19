@@ -15,15 +15,14 @@
 
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
+#include "ADM_coreVideoFilterFunc.h"
+#include "ADM_videoFilterApi.h"
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
 #include "partial.h"
 #include "partial_desc.cpp"
 #include "avi_vars.h"
-
-extern ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag, ADM_coreVideoFilter *last, CONFcouple *couples);
-extern uint32_t    ADM_vf_getTagFromInternalName(const char *name);
 
 ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples);
 /**
@@ -312,9 +311,12 @@ void partialFilter::setCoupledConf(CONFcouple *couples)
 */
 const char *partialFilter::getConfiguration(void)
 {
-  sprintf(description,"Partial : %s -- ",ADM_us2plain((uint64_t)(configuration.startBlack)*1000));
+  uint32_t id = ADM_vf_getTagFromInternalName(configuration.filterName.c_str());
+  sprintf(description,"[%s]: ",ADM_vf_getDisplayNameFromTag(id));
+  strcat(description,ADM_us2plain((uint64_t)(configuration.startBlack)*1000));
+  strcat(description," -- ");
   strcat(description,ADM_us2plain((uint64_t)(configuration.endBlack)*1000));
-  strcat(description," ");
+  strcat(description,"\n");
   strcat(description,sonFilter->getConfiguration());
   return description;
 }
