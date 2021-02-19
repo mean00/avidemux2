@@ -305,7 +305,7 @@ void flyArtChromaHold::drawScene()
             yuv[1] = std::floor(fi*128.0);
             yuv[2] = std::floor(fj*128.0);
             Ui_artChromaHoldWindow::yuv2rgb(rgb, yuv);
-            img->setPixel(i,j,qRgb(rgb[0],rgb[1],rgb[2]));
+            img->setPixel(i,(YUVmapSize-1-j),qRgb(rgb[0],rgb[1],rgb[2]));
         }
         scene->clear();
         scene->addPixmap( QPixmap::fromImage(*img)); 
