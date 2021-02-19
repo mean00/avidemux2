@@ -15,6 +15,8 @@
 
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
+#include "ADM_coreVideoFilterFunc.h"
+#include "ADM_videoFilterApi.h"
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
@@ -22,8 +24,7 @@
 #include "partial_desc.cpp"
 #include "avi_vars.h"
 
-extern ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag, ADM_coreVideoFilter *last, CONFcouple *couples);
-extern uint32_t    ADM_vf_getTagFromInternalName(const char *name);
+#define DESC_MAX_LENGTH 2048
 
 ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples);
 /**
@@ -55,7 +56,7 @@ protected:
                 ADM_coreVideoFilter *sonFilter;
                 partial      configuration;
                 bool         byPass;
-                char         description[2048];
+                char         description[DESC_MAX_LENGTH];
                 ADMImage     *intermediate;
                 bool         hasIntermediate;
                 uint32_t     intermediateFn;
@@ -312,11 +313,39 @@ void partialFilter::setCoupledConf(CONFcouple *couples)
 */
 const char *partialFilter::getConfiguration(void)
 {
-  sprintf(description,"Partial : %s -- ",ADM_us2plain((uint64_t)(configuration.startBlack)*1000));
-  strcat(description,ADM_us2plain((uint64_t)(configuration.endBlack)*1000));
-  strcat(description," ");
-  strcat(description,sonFilter->getConfiguration());
-  return description;
+    uint32_t id = ADM_vf_getTagFromInternalName(configuration.filterName.c_str());
+    int len = DESC_MAX_LENGTH;
+
+    snprintf(description,len,"%s: ",ADM_vf_getDisplayNameFromTag(id));
+
+    len -= strlen(description);
+    if(len < 1)
+        return description;
+
+    const char *str = ADM_us2plain((uint64_t)(configuration.startBlack)*1000);
+    len -= strlen(str)+4;
+    if(len < 1)
+        return description;
+
+    strcat(description,str);
+    strcat(description," -- ");
+
+    str = ADM_us2plain((uint64_t)(configuration.endBlack)*1000);
+    len -= strlen(str)+1;
+    if(len < 1)
+        return description;
+
+    strcat(description,str);
+    strcat(description,"\n");
+
+    str = sonFilter->getConfiguration();
+    len -= strlen(str);
+    if(len < 1)
+        return description;
+
+    strcat(description,str);
+
+    return description;
 }
 /**
  */
