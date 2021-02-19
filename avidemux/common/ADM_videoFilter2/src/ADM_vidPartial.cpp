@@ -368,13 +368,19 @@ void partialFilter::reconfigureSon(void)
 */
 bool partialFilter::configure( void)
 {
-        uint32_t mx=(uint32_t)(previousFilter->getInfo()->totalDuration/1000);
-        diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","_Start time:"),0,mx);
-        diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","_End time:"),0,mx);
-        diaElemButton    son(QT_TRANSLATE_NOOP("partial", "Configure filter"), partialFilter::reconfigureCallback,this);
+    uint32_t mx = (uint32_t)(previousFilter->getInfo()->totalDuration/1000);
+    uint32_t id = ADM_vf_getTagFromInternalName(configuration.filterName.c_str());
+    char str[256];
+    str[0] = '\0';
+    snprintf(str,256,QT_TRANSLATE_NOOP("partial","Partialize \"%s\""),ADM_vf_getDisplayNameFromTag(id));
+    str[255] = '\0';
 
-        diaElem *elems[3]={&start,&end,&son};
-        return diaFactoryRun(QT_TRANSLATE_NOOP("partial","Partial Filter"),3,elems);
+    diaElemTimeStamp start(&configuration.startBlack, QT_TRANSLATE_NOOP("partial","_Start time:"), 0, mx);
+    diaElemTimeStamp end(&configuration.endBlack, QT_TRANSLATE_NOOP("partial","_End time:"), 0, mx);
+    diaElemButton son(QT_TRANSLATE_NOOP("partial", "Configure filter"), partialFilter::reconfigureCallback, this);
+
+    diaElem *elems[3]={&start,&end,&son};
+    return diaFactoryRun(str,3,elems);
 }
 
 /**
