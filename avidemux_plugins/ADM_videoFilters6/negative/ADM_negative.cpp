@@ -42,7 +42,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   negativeFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_COLORS,            // Category
-                        "rplane",            // internal name (must be uniq!)
+                        "invplane",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("negative","Negative"),            // Display name
                         QT_TRANSLATE_NOOP("negative","Invert Y,U or V plane") // Description
                     );
