@@ -22,10 +22,11 @@
 /**
     \fn decoderFFSimple
 */
-decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp, bool staged)
         : decoderFF(w,h,fcc,extraDataLen,extraData,bpp)
 {
     hasBFrame=false;
+    codec = NULL;
     if(!_frame)
         return;
     const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
@@ -72,22 +73,25 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
      _context->get_format=ADM_FFgetFormat; 
      _context->opaque=this;
     //
+    if(!staged)
+        _initCompleted = finish();
 }
 /**
     \fn finish
 */
-void decoderFFSimple::finish(void)
+bool decoderFFSimple::finish(void)
 {
+    if (!codec || !_context)
+        return false;
     if (avcodec_open2(_context, codec, NULL) < 0)
     {
         printf("[lavc] Decoder init: %x video decoder failed!\n",_fcc);
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening 0x%x"),_fcc);
-        return;
-    }else
-    {
-        printf("[lavc] Decoder init: %x video decoder initialized with %d thread(s)! (%s)\n",_fcc,_context->thread_count,codec->long_name);
+        return false;
     }
+    printf("[lavc] Decoder init: %x video decoder initialized with %d thread(s)! (%s)\n",_fcc,_context->thread_count,codec->long_name);
     _initCompleted=true;
+    return true;
 }
 /**
     \fn admCreateFFSimple
@@ -99,7 +103,6 @@ decoders *admCreateFFSimple(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
     AVCodecID id=c->codecId;
     if(id==AV_CODEC_ID_NONE) return NULL;
     decoderFFSimple *ffdec=new decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp);
-    ffdec->finish();
     if(ffdec->initialized())
         return (decoders *)ffdec;
     delete ffdec;
