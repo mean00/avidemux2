@@ -35,10 +35,11 @@ class decoderFFSimple:public decoderFF
 {
 protected:
     bool hasBFrame;
-
+    AVCodec * codec;
 public:
                 decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
   virtual bool  bFramePossible (void)        {return hasBFrame; }
+           void finish(void);
   
 };
 

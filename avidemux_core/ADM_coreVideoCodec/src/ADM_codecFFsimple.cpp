@@ -33,7 +33,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         return;
 
     AVCodecID id=c->codecId;
-    AVCodec *codec=avcodec_find_decoder(id);
+    codec=avcodec_find_decoder(id);
     if(!codec)
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec 0x%x"),fcc);
@@ -56,8 +56,6 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         _refCopy=1;
     if(true==c->hasBFrame)
         hasBFrame=true;
-    printf("[decoderFFSimple] context allocated with thread_count = %d\n",_context->thread_count);
-    decoderMultiThread();
 
     _context->width = _w;
     _context->height = _h;
@@ -74,14 +72,20 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
      _context->get_format=ADM_FFgetFormat; 
      _context->opaque=this;
     //
+}
+/**
+    \fn finish
+*/
+void decoderFFSimple::finish(void)
+{
     if (avcodec_open2(_context, codec, NULL) < 0)
     {
-        printf("[lavc] Decoder init: %x video decoder failed!\n",fcc);
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening 0x%x"),fcc);
+        printf("[lavc] Decoder init: %x video decoder failed!\n",_fcc);
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening 0x%x"),_fcc);
         return;
     }else
     {
-        printf("[lavc] Decoder init: %x video decoder initialized! (%s)\n",fcc,codec->long_name);
+        printf("[lavc] Decoder init: %x video decoder initialized with %d thread(s)! (%s)\n",_fcc,_context->thread_count,codec->long_name);
     }
     _initCompleted=true;
 }
@@ -95,6 +99,7 @@ decoders *admCreateFFSimple(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
     AVCodecID id=c->codecId;
     if(id==AV_CODEC_ID_NONE) return NULL;
     decoderFFSimple *ffdec=new decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp);
+    ffdec->finish();
     if(ffdec->initialized())
         return (decoders *)ffdec;
     delete ffdec;

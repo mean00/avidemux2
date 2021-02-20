@@ -29,6 +29,15 @@
 decoderFFVP9::decoderFFVP9 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
     : decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp)
 {
+
+    decoderMultiThread();
+    if (_usingMT) {
+        _context->thread_count = _threads;
+        _context->thread_type = FF_THREAD_SLICE;    // this is important! the default FF_THREAD_FRAME wont work with Avidemux
+    }
+
+    this->finish();
+
     _parserContext=NULL;
     if(!_initCompleted)
         return;
