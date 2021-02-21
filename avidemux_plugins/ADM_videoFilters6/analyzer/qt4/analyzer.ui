@@ -42,7 +42,7 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="2">
-      <widget class="QGraphicsView" name="graphicsViewHystograms">
+      <widget class="QGraphicsView" name="graphicsViewHistograms">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>

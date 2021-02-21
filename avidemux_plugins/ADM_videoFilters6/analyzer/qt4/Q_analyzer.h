@@ -20,7 +20,7 @@ class Ui_analyzerWindow : public QDialog
     QGraphicsScene * sceneVectorScope;
     QGraphicsScene * sceneYUVparade;
     QGraphicsScene * sceneRGBparade;
-    QGraphicsScene * sceneHystograms;
+    QGraphicsScene * sceneHistograms;
 
   public:
     Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in);

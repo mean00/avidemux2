@@ -48,10 +48,10 @@ Ui_analyzerWindow::Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in) :
     ui.graphicsViewRGBparade->setScene(sceneRGBparade);
     ui.graphicsViewRGBparade->scale(0.5,0.5);
 
-    sceneHystograms=new QGraphicsScene(this);
-    sceneHystograms->setSceneRect(0,0,772,259);
-    ui.graphicsViewHystograms->setScene(sceneHystograms);
-    ui.graphicsViewHystograms->scale(0.5,0.5);
+    sceneHistograms=new QGraphicsScene(this);
+    sceneHistograms->setSceneRect(0,0,772,259);
+    ui.graphicsViewHistograms->setScene(sceneHistograms);
+    ui.graphicsViewHistograms->scale(0.5,0.5);
 
     myFly=NULL;    //new flyAnalyzer moved to ::showEvent
 
@@ -86,8 +86,8 @@ void Ui_analyzerWindow::resizeEvent(QResizeEvent *event)
     bounds = sceneRGBparade->itemsBoundingRect();
     ui.graphicsViewRGBparade->fitInView(bounds, Qt::KeepAspectRatio);
 
-    bounds = sceneHystograms->itemsBoundingRect();
-    ui.graphicsViewHystograms->fitInView(bounds, Qt::KeepAspectRatio);
+    bounds = sceneHistograms->itemsBoundingRect();
+    ui.graphicsViewHistograms->fitInView(bounds, Qt::KeepAspectRatio);
 
     if (!myFly)
         return;
@@ -105,7 +105,7 @@ void Ui_analyzerWindow::showEvent(QShowEvent *event)
 
     if (!myFly)
     {
-        myFly=new flyAnalyzer( this,_width, _height,_in,canvas,ui.horizontalSlider,sceneVectorScope, sceneYUVparade, sceneRGBparade, sceneHystograms);
+        myFly=new flyAnalyzer( this,_width, _height,_in,canvas,ui.horizontalSlider,sceneVectorScope, sceneYUVparade, sceneRGBparade, sceneHistograms);
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
         myFly->setTabOrder();
@@ -124,8 +124,8 @@ void Ui_analyzerWindow::showEvent(QShowEvent *event)
     bounds = sceneRGBparade->itemsBoundingRect();
     ui.graphicsViewRGBparade->fitInView(bounds, Qt::KeepAspectRatio);
 
-    bounds = sceneHystograms->itemsBoundingRect();
-    ui.graphicsViewHystograms->fitInView(bounds, Qt::KeepAspectRatio);
+    bounds = sceneHistograms->itemsBoundingRect();
+    ui.graphicsViewHistograms->fitInView(bounds, Qt::KeepAspectRatio);
 
     myFly->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled

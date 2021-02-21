@@ -27,7 +27,7 @@ class flyAnalyzer : public ADM_flyDialogYuv
     QGraphicsScene * sceneVectorScope;
     QGraphicsScene * sceneYUVparade;
     QGraphicsScene * sceneRGBparade;
-    QGraphicsScene * sceneHystograms;
+    QGraphicsScene * sceneHistograms;
 
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     uint8_t    download(void) {};
@@ -36,7 +36,7 @@ class flyAnalyzer : public ADM_flyDialogYuv
     void       setTabOrder(void);
                flyAnalyzer (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene * scVectorScope,
-                                    QGraphicsScene * scYUVparade, QGraphicsScene * scRGBparade, QGraphicsScene * scHystograms) ;
+                                    QGraphicsScene * scYUVparade, QGraphicsScene * scRGBparade, QGraphicsScene * scHistograms) ;
     virtual    ~flyAnalyzer() ;
   private:
     int                  rgbBufStride;
@@ -49,7 +49,7 @@ class flyAnalyzer : public ADM_flyDialogYuv
     QImage   * imgYUVparade;
     uint32_t * bufRGBparade;
     QImage   * imgRGBparade;
-    uint32_t * bufHystograms;
-    QImage   * imgHystograms;
+    uint32_t * bufHistograms;
+    QImage   * imgHistograms;
 };
 #endif

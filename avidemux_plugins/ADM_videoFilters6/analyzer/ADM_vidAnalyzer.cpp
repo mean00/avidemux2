@@ -30,7 +30,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoAnalyzer,   // Class
                                       VF_COLORS,            // Category
                                       "analyzer",            // internal name (must be uniq!)
                                       QT_TRANSLATE_NOOP("analyzer","Analyzer"),            // Display name
-                                      QT_TRANSLATE_NOOP("analyzer","Null filter. Vectorscope, Waveform scopes and Hystograms in Preview.") // Description
+                                      QT_TRANSLATE_NOOP("analyzer","Null filter. Vectorscope, Waveform scopes and Histograms in Preview.") // Description
                                   );
 
 /**

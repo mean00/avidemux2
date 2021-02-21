@@ -37,7 +37,7 @@
  */
 flyAnalyzer::flyAnalyzer (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene * scVectorScope,
-                                    QGraphicsScene * scYUVparade, QGraphicsScene * scRGBparade, QGraphicsScene * scHystograms ) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
+                                    QGraphicsScene * scYUVparade, QGraphicsScene * scRGBparade, QGraphicsScene * scHistograms ) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
 {
     sceneVectorScope = scVectorScope;
     bufVectorScope = (uint32_t*)malloc(620*600*sizeof(uint32_t));
@@ -51,13 +51,13 @@ flyAnalyzer::flyAnalyzer (QDialog *parent,uint32_t width,uint32_t height,ADM_cor
     bufRGBparade = (uint32_t*)malloc(772*258*sizeof(uint32_t));
     imgRGBparade = new QImage((uchar *)bufRGBparade, 772, 258, 772*sizeof(uint32_t), QImage::Format_RGB32);
 
-    sceneHystograms = scHystograms;
-    bufHystograms = (uint32_t*)malloc(772*259*sizeof(uint32_t));
-    imgHystograms = new QImage((uchar *)bufHystograms, 772, 259, 772*sizeof(uint32_t), QImage::Format_RGB32);
+    sceneHistograms = scHistograms;
+    bufHistograms = (uint32_t*)malloc(772*259*sizeof(uint32_t));
+    imgHistograms = new QImage((uchar *)bufHistograms, 772, 259, 772*sizeof(uint32_t), QImage::Format_RGB32);
 
     rgbWidth = width;
     rgbHeight = height;
-    // scopes and hystograms are limited, therefore full sized RGB may not required
+    // scopes and histograms are limited, therefore full sized RGB may not required
     //if (rgbWidth > 512)
     //    rgbWidth = 512;
     //if (rgbHeight > 1024)
@@ -80,8 +80,8 @@ flyAnalyzer::~flyAnalyzer()
     delete imgYUVparade;
     free(bufRGBparade);
     delete imgRGBparade;
-    free(bufHystograms);
-    delete imgHystograms;
+    free(bufHistograms);
+    delete imgHistograms;
 
     if (convertYuvToRgb) delete convertYuvToRgb;
     if (rgbBufRaw) rgbBufRaw->clean();
@@ -122,7 +122,7 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
 
         memset(bufVectorScope, 0, 620*600*sizeof(uint32_t));
 
-        // 2D U-V hystogram
+        // 2D U-V histogram
         for (y=0; y<height; y++)
         {
             for (x=0; x<width; x++)
@@ -144,7 +144,7 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
             }
         }
 
-        // interpolate hystogram
+        // interpolate histogram
         for (y=44; y<(44+512); y+=2)
         {
             uint32_t * ptr = bufVectorScope+620*y;
@@ -451,7 +451,7 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
     }
 
     if (convertYuvToRgb && rgbBufRaw && rgbBufRaw)
-    if (sceneHystograms && bufHystograms && imgHystograms)
+    if (sceneHistograms && bufHistograms && imgHistograms)
     {
         uint8_t * line;
         uint8_t * ptr;
@@ -461,7 +461,7 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
         int width=rgbWidth;
         int height=rgbHeight;
 
-        memset(bufHystograms, 0, 772*259*sizeof(uint32_t));
+        memset(bufHistograms, 0, 772*259*sizeof(uint32_t));
 
         // RGB
         for (y=0; y<height; y++)
@@ -469,9 +469,9 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
             line = rgbBufRaw->at(y*rgbBufStride);
             for (x=0; x<width; x++)
             {
-                bufHystograms[line[x*4 + 0]+(0*257+1)]++;
-                bufHystograms[line[x*4 + 1]+(1*257+1)]++;
-                bufHystograms[line[x*4 + 2]+(2*257+1)]++;
+                bufHistograms[line[x*4 + 0]+(0*257+1)]++;
+                bufHistograms[line[x*4 + 1]+(1*257+1)]++;
+                bufHistograms[line[x*4 + 2]+(2*257+1)]++;
             }
         }
 
@@ -491,7 +491,7 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
                 ptr = plane[p];
                 for (x=0; x<width; x++)
                 {
-                    bufHystograms[129*772+ptr[x]+(p*257+1)]++;
+                    bufHistograms[129*772+ptr[x]+(p*257+1)]++;
                 }
                 plane[p] += stride[p];
             }
@@ -511,7 +511,7 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
                 max = 0;
                 for (x=0; x<256; x++)
                 {
-                    q = bufHystograms[j*129*772+(p*257+1)+x];
+                    q = bufHistograms[j*129*772+(p*257+1)+x];
                     if (q > max) max = q;
                 }
                 if (max)
@@ -519,14 +519,14 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
                     max = (2080374784ULL)/max;
                     for (x=0; x<256; x++)
                     {
-                        bufHystograms[j*129*772+(p*257+1)+x] *= max;
-                        bufHystograms[j*129*772+(p*257+1)+x] >>= 24;
+                        bufHistograms[j*129*772+(p*257+1)+x] *= max;
+                        bufHistograms[j*129*772+(p*257+1)+x] >>= 24;
                     }
                 }
             }
         }
 
-        // draw hystograms
+        // draw histograms
         for (j=0; j<2; j++)
         {
             for (p=0; p<3; p++)
@@ -554,10 +554,10 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
                 }
                 for (x=0; x<256; x++)
                 {
-                    q = bufHystograms[j*129*772+(p*257+1)+x];
+                    q = bufHistograms[j*129*772+(p*257+1)+x];
                     for (y=0; y<128;y++)
                     {
-                        bufHystograms[(j*129+y+1)*772+(p*257+1)+x] = ((((127-y)-(int)q) > 0) ? 0xFF000000 : color);
+                        bufHistograms[(j*129+y+1)*772+(p*257+1)+x] = ((((127-y)-(int)q) > 0) ? 0xFF000000 : color);
                     }
                 }
             }
@@ -566,20 +566,20 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
         // add frame
         for (x=0; x<772; x++)
         {
-            bufHystograms[772*0+x] = FRAME_COLOR;
-            bufHystograms[772*129+x] = FRAME_COLOR;
-            bufHystograms[772*257+x] = FRAME_COLOR;
+            bufHistograms[772*0+x] = FRAME_COLOR;
+            bufHistograms[772*129+x] = FRAME_COLOR;
+            bufHistograms[772*257+x] = FRAME_COLOR;
         }
         for (y=1; y<257; y++)
         {
-            bufHystograms[772*y+0] = FRAME_COLOR;
-            bufHystograms[772*y+257] = FRAME_COLOR;
-            bufHystograms[772*y+514] = FRAME_COLOR;
-            bufHystograms[772*y+771] = FRAME_COLOR;
+            bufHistograms[772*y+0] = FRAME_COLOR;
+            bufHistograms[772*y+257] = FRAME_COLOR;
+            bufHistograms[772*y+514] = FRAME_COLOR;
+            bufHistograms[772*y+771] = FRAME_COLOR;
         }
 
-        sceneHystograms->clear();
-        sceneHystograms->addPixmap( QPixmap::fromImage(*imgHystograms));
+        sceneHistograms->clear();
+        sceneHistograms->addPixmap( QPixmap::fromImage(*imgHistograms));
     }
 
     return 1;
