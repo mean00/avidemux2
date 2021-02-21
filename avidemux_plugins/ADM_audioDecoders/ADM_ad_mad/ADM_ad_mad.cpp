@@ -128,7 +128,7 @@ signed int Sample;
         {
             if (MAD_RECOVERABLE(Stream->error))
             {
-                    ADM_info("[Mad:Error] %x \n",(int)Stream->error);
+                    ADM_warning("Mad error 0x%x: %s\n",(int)Stream->error,mad_stream_errorstr(Stream));
             } else
             {
                 if (Stream->error == MAD_ERROR_BUFLEN)	// we consumed everything
