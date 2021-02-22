@@ -604,7 +604,7 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   _refCopy = 1;			// YUV420 only
   _setFcc=true;
   decoderMultiThread ();
-  if(_threads > 2)
+  if(_usingMT && _threads > 2)
   {
         ADM_warning("%u threads requested, reducing to 2\n",_threads);
         _threads=2; // else we cannot handle placeholder frames following a keyframe. FIXME
