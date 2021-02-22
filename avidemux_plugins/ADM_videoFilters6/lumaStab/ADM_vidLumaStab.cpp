@@ -44,14 +44,14 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoLumaStab,   // Class
 /**
     \fn LumaStabProcess_C
 */
-void ADMVideoLumaStab::LumaStabProcess_C(ADMImage *img, uint32_t filterLength, float sceneThreshold, bool chroma, float * yHyst, int * yHystlen, float * prevChromaHist, bool * newScene, float * sceneDiff)
+void ADMVideoLumaStab::LumaStabProcess_C(ADMImage *img, uint32_t filterLength, float cbratio, float sceneThreshold, bool chroma, float * yHyst, int * yHystlen, float * prevChromaHist, bool * newScene, float * sceneDiff)
 {
     if ((!img) || (!yHyst) || (!yHystlen) || (!prevChromaHist)) return;
     int width=img->GetWidth(PLANAR_Y); 
     int height=img->GetHeight(PLANAR_Y);
     int ystride,ustride,vstride;
     uint8_t * yptr, * uptr, * vptr;
-    int pixel,pmul;
+    int pixel,cpmul,pmul,padd;
     int i,j,x,y;
     int limitL = 0;
     int limitH = 255;
@@ -63,7 +63,9 @@ void ADMVideoLumaStab::LumaStabProcess_C(ADMImage *img, uint32_t filterLength, f
     memset(currChromaHist, 0, 64*sizeof(float));
 
     if (filterLength < 2) filterLength = 2;
-    if (filterLength > 32) filterLength = 32;
+    if (filterLength > 256) filterLength = 256;
+    if (cbratio < 0.0) cbratio = 0.0;
+    if (cbratio > 1.0) cbratio = 1.0;
     if (sceneThreshold < 0.0) sceneThreshold = 0.0;
     if (sceneThreshold > 1.0) sceneThreshold = 1.0;
 
@@ -142,7 +144,7 @@ void ADMVideoLumaStab::LumaStabProcess_C(ADMImage *img, uint32_t filterLength, f
 
     if (scdet)
     {
-        for(i=0; i<32; i++)
+        for(i=0; i<256; i++)
         {
             yHyst[i] = avgY;
         }
@@ -152,12 +154,9 @@ void ADMVideoLumaStab::LumaStabProcess_C(ADMImage *img, uint32_t filterLength, f
         float filtY = 0.0;
 
         *yHystlen += 1;
-        if (*yHystlen > 32) *yHystlen = 32;
+        if (*yHystlen > 256) *yHystlen = 256;
 
-        for(i=31; i>0; i--)
-        {
-            yHyst[i] = yHyst[i-1];
-        }
+        memmove(&yHyst[1], &yHyst[0], 255*sizeof(float));
         yHyst[0] = avgY;
 
         for (i=0; i<filterLength; i++)
@@ -166,7 +165,9 @@ void ADMVideoLumaStab::LumaStabProcess_C(ADMImage *img, uint32_t filterLength, f
         }
         filtY /= filterLength;
 
-        pmul = (filtY/avgY)*256;
+        cpmul = (filtY/avgY)*256;
+        pmul = (((filtY/avgY)-1.0)*(1.0-cbratio)+1.0)*256;
+        padd = (filtY-avgY)*cbratio*256;
 
         // Y plane: apply changes
         yptr=img->GetWritePtr(PLANAR_Y);
@@ -175,7 +176,7 @@ void ADMVideoLumaStab::LumaStabProcess_C(ADMImage *img, uint32_t filterLength, f
             for (x=0;x<width;x++)
             {
                 pixel = yptr[x];
-                pixel = (pixel*pmul)>>8;
+                pixel = (pixel*pmul+padd)>>8;
                 if (pixel < limitL) pixel = limitL;
                 if (pixel > limitH) pixel = limitH;
                 yptr[x] = pixel;
@@ -192,12 +193,12 @@ void ADMVideoLumaStab::LumaStabProcess_C(ADMImage *img, uint32_t filterLength, f
                 for (x=0;x<width/2;x++)
                 {
                     pixel = uptr[x];
-                    pixel = (((pixel-128)*pmul)>>8)+128;
+                    pixel = (((pixel-128)*cpmul)>>8)+128;
                     if (pixel<limitcL) pixel = limitcL; 
                     if (pixel>limitcH) pixel = limitcH; 
                     uptr[x] = pixel;
                     pixel = vptr[x];
-                    pixel = (((pixel-128)*pmul)>>8)+128;
+                    pixel = (((pixel-128)*cpmul)>>8)+128;
                     if (pixel<limitcL) pixel = limitcL; 
                     if (pixel>limitcH) pixel = limitcH; 
                     vptr[x] = pixel;
@@ -228,7 +229,7 @@ bool ADMVideoLumaStab::configure()
 const char   *ADMVideoLumaStab::getConfiguration(void)
 {
     static char s[256];
-    snprintf(s,255," Filter length: %u frames, Scene threshold: %.2f, Apply to chroma: %s",_param.filterLength, _param.sceneThreshold, (_param.chroma ? "true":"false"));
+    snprintf(s,255," Filter length: %u frames, Contrast/Brightness ratio: %.2f, Scene threshold: %.2f, Apply to chroma: %s",_param.filterLength, _param.cbratio, _param.sceneThreshold, (_param.chroma ? "true":"false"));
     return s;
 }
 /**
@@ -240,6 +241,7 @@ ADMVideoLumaStab::ADMVideoLumaStab(  ADM_coreVideoFilter *in,CONFcouple *couples
         reset(&_param);
     update();
     _yHystlen = 0;
+    _yHyst = (float*)malloc(256*sizeof(float));
     memset(_prevChromaHist,0,128*sizeof(float));
 
 }
@@ -249,6 +251,7 @@ ADMVideoLumaStab::ADMVideoLumaStab(  ADM_coreVideoFilter *in,CONFcouple *couples
 void ADMVideoLumaStab::reset(lumaStab *cfg)
 {
     cfg->filterLength = 8;
+    cfg->cbratio = 0.0;
     cfg->sceneThreshold = 0.5;
     cfg->chroma = false;
 }
@@ -276,6 +279,7 @@ int32_t ADMVideoLumaStab::valueLimit(int32_t val, int32_t min, int32_t max)
 void ADMVideoLumaStab::update(void)
 {
     _filterLength=valueLimit(_param.filterLength,2,32);
+    _cbratio=valueLimit(_param.cbratio,0.0,1.0);
     _sceneThreshold=valueLimit(_param.sceneThreshold,0.0,1.0);
     _chroma=_param.chroma;
 }
@@ -284,7 +288,7 @@ void ADMVideoLumaStab::update(void)
 */
 ADMVideoLumaStab::~ADMVideoLumaStab()
 {
-    
+    free(_yHyst);
 }
 /**
     \fn getCoupledConf
@@ -325,7 +329,7 @@ bool ADMVideoLumaStab::getNextFrame(uint32_t *fn,ADMImage *image)
     */
     if(!previousFilter->getNextFrame(fn,image)) return false;
 
-    LumaStabProcess_C(image, _filterLength, _sceneThreshold, _chroma, _yHyst, &_yHystlen, _prevChromaHist, NULL, NULL);
+    LumaStabProcess_C(image, _filterLength, _cbratio, _sceneThreshold, _chroma, _yHyst, &_yHystlen, _prevChromaHist, NULL, NULL);
     return 1;
 }
 

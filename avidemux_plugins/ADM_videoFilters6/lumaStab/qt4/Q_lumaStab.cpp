@@ -56,6 +56,7 @@ Ui_lumaStabWindow::Ui_lumaStabWindow(QWidget *parent, lumaStab *param,ADM_coreVi
         connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
         SPINNER(FilterLength,1,0)
         SPINNER(SceneThreshold,100,2)
+        SPINNER(CBRatio,100,2)
 
 #define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         CHKBOX(Chroma);
@@ -87,7 +88,7 @@ void Ui_lumaStabWindow::valueChanged( int f )
     if(lock) return;
     lock++;
     myFly->download();
-    myFly->sameImage();
+    //myFly->sameImage();
     lock--;
 }
 void Ui_lumaStabWindow::reset(void)
@@ -96,7 +97,7 @@ void Ui_lumaStabWindow::reset(void)
     lock++;
     ADMVideoLumaStab::reset(&myFly->param);
     myFly->upload();
-    myFly->sameImage();
+    //myFly->sameImage();
     lock--;
 }
 
@@ -124,6 +125,7 @@ uint8_t flyLumaStab::upload(void)
 {
     Ui_lumaStabDialog *w=(Ui_lumaStabDialog *)_cookie;
     MYSPIN(FilterLength)->setValue((int)param.filterLength);
+    MYSPIN(CBRatio)->setValue((int)round(param.cbratio*100.0));
     MYSPIN(SceneThreshold)->setValue((int)round(param.sceneThreshold*100.0));
     MYCHECK(Chroma)->setChecked(param.chroma);
     return 1;
@@ -132,6 +134,7 @@ uint8_t flyLumaStab::download(void)
 {
     Ui_lumaStabDialog *w=(Ui_lumaStabDialog *)_cookie;
     param.filterLength=MYSPIN(FilterLength)->value();
+    param.cbratio=((float)MYSPIN(CBRatio)->value()) / 100.0;
     param.sceneThreshold=((float)MYSPIN(SceneThreshold)->value()) / 100.0;
     param.chroma=MYCHECK(Chroma)->isChecked();
     return 1;
@@ -143,6 +146,7 @@ void flyLumaStab::setTabOrder(void)
 #define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
 #define PUSH_TOG(x) controls.push_back(MYCHECK(x));
     PUSH_SPIN(FilterLength)
+    PUSH_SPIN(CBRatio)
     PUSH_SPIN(SceneThreshold)
     PUSH_TOG(Chroma)
 

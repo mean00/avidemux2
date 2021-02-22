@@ -6,6 +6,7 @@
 bool  lumaStab_jserialize(const char *file, const lumaStab *key){
 admJson json;
 json.addUint32("filterLength",key->filterLength);
+json.addFloat("cbratio",key->cbratio);
 json.addFloat("sceneThreshold",key->sceneThreshold);
 json.addBool("chroma",key->chroma);
 return json.dumpToFile(file);

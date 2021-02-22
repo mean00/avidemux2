@@ -26,9 +26,10 @@ class  ADMVideoLumaStab:public ADM_coreVideoFilter
     void            update(void);
     lumaStab       _param;
     uint32_t       _filterLength;
+    float          _cbratio;
     float          _sceneThreshold;
     bool           _chroma;
-    float          _yHyst[32];
+    float *        _yHyst;
     int            _yHystlen;
     float          _prevChromaHist[128];
   public:
@@ -41,7 +42,7 @@ class  ADMVideoLumaStab:public ADM_coreVideoFilter
     virtual void         setCoupledConf(CONFcouple *couples);
     virtual bool         configure(void) ;                 /// Start graphical user interface
 
-    static void          LumaStabProcess_C(ADMImage *img, uint32_t filterLength, float sceneThreshold, bool chroma, float * yHyst, int * yHystlen, float * prevChromaHist, bool * newScene, float * sceneDiff);
+    static void          LumaStabProcess_C(ADMImage *img, uint32_t filterLength, float cbratio, float sceneThreshold, bool chroma, float * yHyst, int * yHystlen, float * prevChromaHist, bool * newScene, float * sceneDiff);
     static void          reset(lumaStab *cfg);
 
   private:
