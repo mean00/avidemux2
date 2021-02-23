@@ -288,7 +288,11 @@ void filtermainWindow::preview(bool b)
 void filtermainWindow::closePreview()
 {
     if (previewDialog)
+    {
         qtUnregisterDialog(previewDialog);
+        delete previewDialog;
+        previewDialog = NULL;
+    }
 }
 
 /**
