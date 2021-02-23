@@ -230,10 +230,27 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             parser->readBin(readBuffer+rpt,size-3);
 
             // Search the frame type...
-            uint32_t nb,timeinc=16;
+            uint32_t timeIncBits=0;
+            const uint32_t u32 = sizeof(uint32_t);
+
+            if(_tracks[0].paramCache && _tracks[0].paramCacheSize == u32)
+                memcpy(&timeIncBits,_tracks[0].paramCache,u32);
+
             ADM_vopS vops[10];
             vops[0].type=AVI_KEY_FRAME;
-            ADM_searchVop(readBuffer,readBuffer+rpt+size-3,&nb,vops, &timeinc);
+
+            if(ADM_searchVop(readBuffer,readBuffer+rpt+size-3,10,vops,&timeIncBits))
+            {
+                if(!_tracks[0].paramCache)
+                {
+                    _tracks[0].paramCache = new uint8_t[u32];
+                    _tracks[0].paramCacheSize = u32;
+                }
+                memcpy(_tracks[0].paramCache,&timeIncBits,u32);
+            }else
+            {
+                ADM_warning("No VOP at index entry %u, corrupted data? Size: %d\n",Track->index.size(),rpt+size-3);
+            }
             ix.flags=vops[0].type;
 
         }else if(isH264Compatible(_videostream.fccHandler))
