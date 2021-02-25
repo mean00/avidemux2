@@ -288,7 +288,14 @@ void filtermainWindow::preview(bool b)
 void filtermainWindow::closePreview()
 {
     if (previewDialog)
+    {
+        if(previewDialog->seekablePreview)
+        {
+            previewDialog->seekablePreview->play(false);
+            previewDialog->seekablePreview->goToTime(0);
+        }
         qtUnregisterDialog(previewDialog);
+    }
 }
 
 /**
