@@ -21,6 +21,7 @@
 #include <QtCore/QDir>
 #include <QMessageBox>
 #include <QClipboard>
+#include <QFontDatabase>
 
 #ifdef __APPLE__
     #include <QFileOpenEvent>
@@ -464,18 +465,17 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(checkChanged(int)));
     connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
     connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
-
+#if 0 /* it is read-only */
     QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
     QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
     ui.currentTime->setValidator(timeValidator);
     ui.currentTime->setInputMask("99:99:99.999");
+#endif
     // set the size of the current time display to fit the content
     QString text=ui.currentTime->text();
-    QFontMetrics fm=ui.currentTime->fontMetrics();
-    int currentTimeWidth=fm.boundingRect(text).width()+20;
-    int currentTimeHeight=ui.currentTime->height();
-    ui.currentTime->setFixedSize(currentTimeWidth, currentTimeHeight);
-    ui.currentTime->adjustSize();
+    ui.currentTime->setFont(QFont("E1234")); // NB: the comma char is broken in this font, avoid using comma.
+    QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
+    ui.currentTime->setFixedSize(ctrect.width()+20, ctrect.height()+8);
 
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
@@ -1907,6 +1907,9 @@ int UI_Init(int nargc, char **nargv)
     Q_INIT_RESOURCE(avidemux);
 #endif
     Q_INIT_RESOURCE(filter);
+
+    if(-1 == QFontDatabase::addApplicationFont(":/new/prefix1/fonts/E1234.ttf"))
+        ADM_warning("LCD display font could not be loaded from resource.\n");
 
     loadTranslator();
 
