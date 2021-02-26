@@ -1,0 +1,4 @@
+Name   : E1234
+URL    : https://www.ggbot.net/
+License: SIL Open Font License, Version 1.1
+
