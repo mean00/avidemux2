@@ -21,7 +21,9 @@
 #include <QtCore/QDir>
 #include <QMessageBox>
 #include <QClipboard>
-#include <QFontDatabase>
+#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
+#   include <QFontDatabase>
+#endif
 
 #ifdef __APPLE__
     #include <QFileOpenEvent>
@@ -473,7 +475,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 #endif
     // set the size of the current time display to fit the content
     QString text = "00:00:00.000"; // Don't translate this.
+#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
     ui.currentTime->setFont(QFont("E1234")); // NB: the comma char is broken in this font, avoid using comma.
+#endif
     ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
     QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
     ui.currentTime->setFixedSize(ctrect.width()+20, ctrect.height()+8);
@@ -1912,9 +1916,10 @@ int UI_Init(int nargc, char **nargv)
 #endif
     Q_INIT_RESOURCE(filter);
 
+#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
     if(-1 == QFontDatabase::addApplicationFont(":/new/prefix1/fonts/E1234.ttf"))
         ADM_warning("LCD display font could not be loaded from resource.\n");
-
+#endif
     loadTranslator();
 
     return 1;

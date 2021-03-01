@@ -74,7 +74,9 @@ public:
             currentTime = new QLineEdit(zeros);
             currentTime->setReadOnly(true);
             currentTime->setAlignment(Qt::AlignCenter);
+#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
             currentTime->setFont(QFont("E1234"));
+#endif
             QRect ctrect = currentTime->fontMetrics().boundingRect(zeros);
             currentTime->setFixedSize(ctrect.width()+20, ctrect.height()+8);
 
