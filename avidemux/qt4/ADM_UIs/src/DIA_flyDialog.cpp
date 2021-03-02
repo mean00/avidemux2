@@ -11,30 +11,25 @@
 *   (at your option) any later version.                                   *
 *                                                                         *
 ***************************************************************************///
-#include "ADM_default.h"
-#include "ADM_assert.h"
-#include "ADM_inttype.h"
 
 #include <QEvent>
 #include <QGraphicsView>
 #include <QPushButton>
-#include <QRadioButton>
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QLineEdit>
 #include <QFontMetrics>
 #include <QRect>
 
+#include <cmath>
+
+#include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
-#define ADM_FLY_INTERNAL
 #include "DIA_flyDialogQt4.h"
 
 #include "ADM_toolkitQt.h"
 #include "ADM_vidMisc.h"
-extern "C" {
-#include "libavutil/common.h"
-#include "libavcodec/avcodec.h"
-}
+
 /**
  */
 class flyControl
