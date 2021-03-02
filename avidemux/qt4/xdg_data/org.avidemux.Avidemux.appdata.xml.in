@@ -29,6 +29,6 @@
     </screenshots>
     <content_rating type="oars-1.1"/>
     <releases>
-        <release version="${AVIDEMUX_VERSION}" date="2021-02-28"/>
+        <release version="${AVIDEMUX_VERSION}" date="2021-03-04"/>
     </releases>
 </component>
