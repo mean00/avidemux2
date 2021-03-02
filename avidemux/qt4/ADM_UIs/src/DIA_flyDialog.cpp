@@ -70,10 +70,10 @@ public:
             currentTime->setReadOnly(true);
             currentTime->setAlignment(Qt::AlignCenter);
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
-            currentTime->setFont(QFont("E1234"));
+            currentTime->setFont(QFont("ADM7SEG"));
 #endif
             QRect ctrect = currentTime->fontMetrics().boundingRect(zeros);
-            currentTime->setFixedSize(ctrect.width()+20, ctrect.height()+8);
+            currentTime->setFixedSize(1.15 * ctrect.width(), 1.75 * ctrect.height());
 
             labelDuration = new QLabel();
             labelDuration->setText(QString("/ ") + zeros);

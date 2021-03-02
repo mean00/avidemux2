@@ -1,8 +1,11 @@
-﻿Copyright © 2020 GGBot, with Reserved Font Name "E1234".
+Copyright (c) 2017, keshikan (http://www.keshikan.net),
+with Reserved Font Name "DSEG".
+
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
 http://scripts.sil.org/OFL
+
 
 -----------------------------------------------------------
 SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007

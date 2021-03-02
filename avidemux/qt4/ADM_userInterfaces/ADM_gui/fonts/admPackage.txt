@@ -1,4 +1,4 @@
-Name   : E1234
-URL    : https://www.ggbot.net/
+Name   : DSEG
+URL    : https://www.keshikan.net/fonts-e.html
 License: SIL Open Font License, Version 1.1
 

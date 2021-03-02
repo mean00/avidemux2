@@ -476,11 +476,11 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     // set the size of the current time display to fit the content
     QString text = "00:00:00.000"; // Don't translate this.
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
-    ui.currentTime->setFont(QFont("E1234")); // NB: the comma char is broken in this font, avoid using comma.
+    ui.currentTime->setFont(QFont("ADM7SEG"));
 #endif
     ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
     QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
-    ui.currentTime->setFixedSize(ctrect.width()+20, ctrect.height()+8);
+    ui.currentTime->setFixedSize(1.15 * ctrect.width(), 1.75 * ctrect.height());
 
     text = QString("/ ") + text;
     ui.totalTime->setText(text); // Override ui translations here too.
@@ -1917,7 +1917,7 @@ int UI_Init(int nargc, char **nargv)
     Q_INIT_RESOURCE(filter);
 
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
-    if(-1 == QFontDatabase::addApplicationFont(":/new/prefix1/fonts/E1234.ttf"))
+    if(-1 == QFontDatabase::addApplicationFont(":/new/prefix1/fonts/ADM7SEG.ttf"))
         ADM_warning("LCD display font could not be loaded from resource.\n");
 #endif
     loadTranslator();
