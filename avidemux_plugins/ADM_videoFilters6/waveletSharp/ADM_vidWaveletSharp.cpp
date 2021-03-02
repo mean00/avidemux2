@@ -140,7 +140,7 @@ void ADMVideoWaveletSharp::WaveletSharpProcess_C(ADMImage *img, float strength, 
     if(img->_range == ADM_COL_RANGE_MPEG)
     {
         limitL = 16;
-        limitH = 239;
+        limitH = 235;
     }
 
     strength = (strength*strength)*16.0;
