@@ -72,7 +72,7 @@ void ADMVideoLumaStab::LumaStabProcess_C(ADMImage *img, uint32_t filterLength, f
     if(img->_range == ADM_COL_RANGE_MPEG)
     {
         limitL = 16;
-        limitH = 234;
+        limitH = 235;
         limitcL = 16;
         limitcH = 239;
     }
