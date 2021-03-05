@@ -8,7 +8,7 @@
 <body>
   <div id="inner">
 
-    <h1>Changes in Avidemux v2.7.6 – v2.7.7</h1>
+    <h1>Changes in Avidemux v2.7.6 – v2.7.8</h1>
 
     <h2>New Features</h2>
 
@@ -87,6 +87,10 @@
           dropped anymore. This regression from enhanced protection against
           false positives, added 3 years ago, has been finally identified and
           fixed.</li>
+      <li>Indexing of MPEG-TS files with HEVC video was broken when video stream
+          lacked access unit delimiters. The issue was identified and fixed
+          right after 2.7.7 had been tagged as released and is the reason why
+          version 2.7.7 was superseded by 2.7.8.</li>
       <li>VU meter was grossly ahead of audio output on Windows, now it is just
           a tiny little bit ahead.</li>
       <li>Numerous other fixes and overall polish.</li>
