@@ -480,7 +480,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 #endif
     ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
     QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
-    ui.currentTime->setFixedSize(1.15 * ctrect.width(), 1.75 * ctrect.height());
+    ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
 
     text = QString("/ ") + text;
     ui.totalTime->setText(text); // Override ui translations here too.

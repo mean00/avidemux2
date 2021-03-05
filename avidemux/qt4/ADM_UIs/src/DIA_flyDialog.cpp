@@ -72,8 +72,10 @@ public:
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
             currentTime->setFont(QFont("ADM7SEG"));
 #endif
-            QRect ctrect = currentTime->fontMetrics().boundingRect(zeros);
-            currentTime->setFixedSize(1.15 * ctrect.width(), 1.75 * ctrect.height());
+            int ctWidth = 1.15 * currentTime->fontMetrics().boundingRect(zeros).width();
+            currentTime->setMaximumWidth(ctWidth);
+            currentTime->setMinimumWidth(ctWidth);
+            currentTime->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
             labelDuration = new QLabel();
             labelDuration->setText(QString("/ ") + zeros);
