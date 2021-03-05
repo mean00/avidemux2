@@ -830,19 +830,10 @@ bool    tsPacketLinear::seek(uint64_t packetStart, uint32_t offset)
     return true;
 }
 /**
-    \fn getConsumed
-    \brief returns the # of bytes consumed since the last call
-*/
-uint32_t tsPacketLinear::getConsumed(void)
-{
-    uint32_t c=consumed;
-    return c;
-}
-/**
     \fn setConsumed
     \brief set consumed bytes
 */
-bool tsPacketLinear::setConsumed(uint32_t v)
+bool tsPacketLinear::setConsumed(uint64_t v)
 {
     consumed=v;
     return true;
@@ -1156,7 +1147,7 @@ bool tsPacketLinearTracker::collectStats(void)
     bool success=false;
     uint32_t i,found=0,count=0;
     const uint32_t max=1<<24; // 16 MiB, should be enough
-    const uint32_t remember=consumed;
+    const uint64_t remember=consumed;
     dmxPacketInfo info;
     getInfo(&info);
 
