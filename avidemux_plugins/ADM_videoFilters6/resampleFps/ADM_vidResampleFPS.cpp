@@ -104,8 +104,8 @@ bool resampleFps::updateIncrement(void)
 */
 const char *resampleFps::getConfiguration( void )
 {
-static char buf[100];
- snprintf(buf,99," Resample to %2.2f fps",(double)configuration.newFpsNum/configuration.newFpsDen);
+static char buf[256];
+ snprintf(buf,255," Resample %sto %2.2f fps",(configuration.blend ? "with blending ":""),(double)configuration.newFpsNum/configuration.newFpsDen);
  return buf;  
 }
 /**
@@ -123,6 +123,7 @@ resampleFps::resampleFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) :
         configuration.mode=0;
         configuration.newFpsNum=ADM_Fps1000FromUs(previous->getInfo()->frameIncrement);
         configuration.newFpsDen=1000;
+        configuration.blend=false;
     }
     if(!frames[0]) frames[0]=new ADMImageDefault(info.width,info.height);
     if(!frames[1]) frames[1]=new ADMImageDefault(info.width,info.height);
@@ -217,15 +218,56 @@ again:
         *fn=nextFrame++;
         return true;
     }
+    if (configuration.blend)
+    {
+        double diff1=(double)thisTime-double(frame1Dts);
+        double diff2=(double)thisTime-double(frame2Dts);
+        if(diff1<0) diff1=-diff1;
+        if(diff2<0) diff2=-diff2;
+        int bl1,bl2;
+        bl1 = round((diff2/(diff1+diff2)) * 256.0);
+        bl2 = round((diff1/(diff1+diff2)) * 256.0);
+        if (bl1==0)
+            image->duplicate(frames[1]);
+        else
+        if (bl2==0)
+            image->duplicate(frames[0]);
+        else
+        {
+            image->duplicate(frames[0]);
+            for (int p=0; p<3; p++)
+            {
+                int width=image->GetWidth((ADM_PLANE)p); 
+                int height=image->GetHeight((ADM_PLANE)p);
+                int ipixel, bpixel;
+                int istride = image->GetPitch((ADM_PLANE)p);
+                int bstride = frames[1]->GetPitch((ADM_PLANE)p);
+                uint8_t * iptr = image->GetWritePtr((ADM_PLANE)p);
+                uint8_t * bptr = frames[1]->GetWritePtr((ADM_PLANE)p);
+                for (int y=0; y<height; y++)
+                {
+                    for(int x=0; x<width; x++)
+                    {
+                        ipixel = iptr[x];
+                        bpixel = bptr[x];
+                        iptr[x] = (ipixel*bl1 + bpixel*bl2) >> 8;
+                    }
+                    iptr += istride;
+                    bptr += bstride;
+                }
+            }
+        }
+    } else {
     // In between, take closer
-    double diff1=(double)thisTime-double(frame1Dts);
-    double diff2=(double)thisTime-double(frame2Dts);
-    if(diff1<0) diff1=-diff1;
-    if(diff2<0) diff2=-diff2;
-    int index=1;
-    if(diff1<diff2) index=0;
+        double diff1=(double)thisTime-double(frame1Dts);
+        double diff2=(double)thisTime-double(frame2Dts);
+        if(diff1<0) diff1=-diff1;
+        if(diff2<0) diff2=-diff2;
+        int index=1;
+        if(diff1<diff2) index=0;
 
-    image->duplicate(frames[index]);
+        image->duplicate(frames[index]);
+    }
     image->Pts=thisTime;
     *fn=nextFrame++;
     return true;
@@ -364,12 +406,13 @@ ADM_assert(nbPredefined == 6);
 
     diaElemMenu mFps(&(configuration.mode),   QT_TRANSLATE_NOOP("resampleFps","_Mode:"), 6,tFps);
     diaElemFloat fps(&f,QT_TRANSLATE_NOOP("resampleFps","_New frame rate:"),1,200.);
+    diaElemToggle blendEn(&(configuration.blend),QT_TRANSLATE_NOOP("resampleFps","Blend frames"));
 
     mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
 
-    diaElem *elems[2]={&mFps,&fps};
+    diaElem *elems[3]={&mFps,&fps,&blendEn};
   
-    if( diaFactoryRun(QT_TRANSLATE_NOOP("resampleFps","Resample fps"),2,elems))
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("resampleFps","Resample fps"),3,elems))
     {
       if(!configuration.mode) // Custom mode
       {
