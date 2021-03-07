@@ -17,15 +17,25 @@
 #include <math.h>
 #include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
-#include "ADM_image.h"
 
 #include "ADM_vidEq2.h"
-
 #include "DIA_flyEq2.h"
-#include "QGraphicsScene"
-typedef void lutMeType(oneSetting *par, ADMImage *i,ADMImage *o,ADM_PLANE plane);
 
 /************* COMMON PART *********************/
+
+/**
+    \fn ctor
+*/
+flyEq2::flyEq2(QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+    ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene *sc)
+    : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
+{
+    scene = sc;
+    tablesDone=false;
+}
+/**
+    \fn update
+*/
 uint8_t  flyEq2::update(void)
 {
     return 1;
@@ -35,8 +45,6 @@ uint8_t  flyEq2::update(void)
 */
 uint8_t    flyEq2::processYuv(ADMImage* in, ADMImage *out)
 {
-	Eq2Settings mySettings;
-
 #if 0
 	printf("Contrast   :%f\n",param.contrast);
 	printf("brightness :%f\n",param.brightness);
@@ -52,74 +60,64 @@ uint8_t    flyEq2::processYuv(ADMImage* in, ADMImage *out)
 	printf("ggamma :%f\n",param.ggamma);
 	printf("******************\n");
 #endif	
-	
-	        update_lut(&mySettings,&param);
-	        
+    if(!tablesDone)
+    {
+        ADMVideoEq2::update_lut(&mySettings,&param);
+        tablesDone = true;
+    }
+    for(int i=0; i < 3; i++)
+        ADMVideoEq2::processPlane(&(mySettings.param[i]),in,out,(ADM_PLANE)i);
 
+    if(scene)
+    {
+        // Draw luma histogram
+        uint8_t *luma=out->GetReadPtr(PLANAR_Y);
+        int stride=out->GetPitch(PLANAR_Y);
+        int decimate=4;
+        double  sumsum[256];
+        for(int i=0;i<256;i++) sumsum[i]=0;
 
-			lutMeType *lutMe=apply_lut;
-			
+        double totalSum=(double)(out->_width*out->_height)/decimate; // # of sampling points
+        for(int y=0;y<in->_height;y+=decimate)
+        {
+            uint8_t *p=luma;
+            for(int x=0;x<in->_width;x++)
+            {
+                sumsum[*p]++;
+                p++;
+            }
+            luma+=stride*decimate;
+        }
+        // normalize
+        for(int i=0;i<256;i++)
+        {
+            // zoom factor =10
+            sumsum[i]=(10*sumsum[i]*(127))/totalSum;
+            if(sumsum[i]>127) sumsum[i]=127;
+        }
+        scene->clear();
+        for(int i=0;i<256;i++)
+        {
+            QLineF qline(i,127,i,127-sumsum[i]);
+            scene->addLine(qline);
+        }
+        // Draw 16 and 235 line
+        QColor color(Qt::red);
+        QPen pen(color);
+        QLineF qline(16,100,16,126);
+        scene->addLine(qline,pen);
+        QLineF qline2(235,100,235,126);
+        scene->addLine(qline2,pen);
+    }
 
-#ifdef CAN_DO_INLINE_X86_ASM
-	        if(CpuCaps::hasMMX())
-	        {
-	        		lutMe=affine_1d_MMX;
-	        }
-#endif	
-	        lutMe(&(mySettings.param[0]),in,out,PLANAR_Y);
-            lutMe(&(mySettings.param[1]),in,out,PLANAR_U);
-            lutMe(&(mySettings.param[2]),in,out,PLANAR_V);
-	        
-	        	
+    if (!fullpreview)
+    {
+        in->copyLeftSideTo(out);
+        out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
+        out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
+    }
 
-	if(scene)
-	{
-		// Draw luma histogram
-		uint8_t *luma=out->GetReadPtr(PLANAR_Y);
-		int     stride=out->GetPitch(PLANAR_Y);
-		int     decimate=4;
-		double  sumsum[256];    
-		for(int i=0;i<256;i++) sumsum[i]=0;
-
-		double  totalSum=(double)(out->_width*out->_height)/decimate; // # of sampling points
-		for(int y=0;y<in->_height;y+=decimate)
-		{
-			uint8_t *p=luma;
-			for(int x=0;x<in->_width;x++)
-			{
-				sumsum[*p]++;
-				p++;
-			}
-			luma+=stride*decimate;
-		}
-		// normalize
-		for(int i=0;i<256;i++)
-		{
-			// zoom factor =10
-			sumsum[i]=(10*sumsum[i]*(127))/totalSum;
-			if(sumsum[i]>127) sumsum[i]=127;
-		}
-		int toggle=0;
-
-		scene->clear();
-		for(int i=0;i<256;i++)
-		{
-			QLineF qline(i,127,i,127-sumsum[i]);
-			scene->addLine(qline);
-		}
-		// Draw 16 and 235 line
-		QLineF qline(16,100,16,126);
-		scene->addLine(qline);
-		QLineF qline2(235,100,235,126);
-		scene->addLine(qline2);
-	}
-
-	if (!fullpreview)
-	{
-		in->copyLeftSideTo(out);
-	}
-
-		return 1;
+    return 1;
 }
 
 /************* COMMON PART *********************/

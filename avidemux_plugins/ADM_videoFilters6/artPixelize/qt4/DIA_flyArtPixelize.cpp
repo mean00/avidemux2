@@ -18,14 +18,8 @@
  ***************************************************************************/
 #include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
-#include "ADM_image.h"
 #include "DIA_flyArtPixelize.h"
 
-#include "ADM_assert.h"
-// FIXME
-#ifndef M_PI
-#define M_PI    3.14159265358979323846
-#endif
 extern void ArtPixelizeProcess_C(ADMImage *img, unsigned int pw, unsigned int ph);
 
 /************* COMMON PART *********************/
@@ -40,15 +34,13 @@ uint8_t   flyArtPixelize::processYuv(ADMImage *in,ADMImage *out )
 {
     uint8_t *src,*dst;
     uint32_t stride;
-    out->copyPlane(in,out,PLANAR_Y);
-    out->copyPlane(in,out,PLANAR_U);
-    out->copyPlane(in,out,PLANAR_V);
+    out->duplicate(in);
 
     // Do it!
     ArtPixelizeProcess_C(out, param.pw, param.ph);
     // Copy half source to display
     //in->copyLeftSideTo(out);
-    out->printString(1,1,"Processed"); // printString can't handle non-ascii input, do not translate this!
+    //out->printString(1,1,"Processed"); // printString can't handle non-ascii input, do not translate this!
     //out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
 
     return 1;

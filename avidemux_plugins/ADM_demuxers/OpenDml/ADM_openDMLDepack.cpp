@@ -116,8 +116,10 @@ uint8_t OpenDMLHeader::unpackPacked( void )
                                 img++;
                                 continue;
                 }
-                /* Cannot find vop, corrupted or WTF ...*/
-                if(!ADM_searchVop(buffer,buffer+image.dataLength,&nbVop,myVops,&timcincbits))
+
+                nbVop = ADM_searchVop(buffer,buffer+image.dataLength,MAX_VOP,myVops,&timcincbits);
+
+                if(!nbVop) /* Cannot find vop, corrupted or WTF ...*/
                 {
                     printf("[Avi] img :%u failed to find vop!\n",img);
                     memcpy(&newIndex[targetIndex],&_idx[img],sizeof(_idx[0]));

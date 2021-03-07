@@ -126,33 +126,36 @@ void PythonEngine::initialise(IEditor *editor)
 
 void PythonEngine::registerFunctions()
 {
-	tp_obj userdata = tp_data(_vm, ADM_PYID_USERDATA, this);
-	tp_set(_vm, _vm->builtins, tp_string("userdata"), userdata);
+    tp_obj userdata = tp_data(_vm, ADM_PYID_USERDATA, this);
+    tp_set(_vm, _vm->builtins, tp_string("userdata"), userdata);
 
-	pyFunc addonFunctions[] = {{"help", PythonEngine::dumpBuiltin},
-		{"get_folder_content", PythonEngine::getFolderContent},
-		{"get_file_size", PythonEngine::getFileSize},
-		{"basename", PythonEngine::basename},
-                {"dirname", PythonEngine::dirname},
-		{NULL, NULL}};
-        
-        pyFunc osStaticClassFunctions[] = {{"environ", PythonEngine::pyenviron},
-		{NULL, NULL}};
-        
-        
-        re_init(_vm);
-	this->registerFunction("addons", addonFunctions);
-        
-	this->registerClass("Avidemux", initClasspyAdm, "avidemux class");
-	this->registerClass("Editor", initClasspyEditor, "add, remove videos");
-	this->registerClass("Gui", initClasspyGui, "widget, alert boxes,..");
-	this->registerClass("DFToggle", initClasspyDFToggle, "UI element : toggle");
-	this->registerClass("DFInteger", initClasspyDFInteger, "UI element : integer");
-	this->registerClass("DFMenu", initClasspyDFMenu, "UI element : drop down menu");
-	this->registerClass("DFTimeStamp", initClasspyDFTimeStamp, "UI element : timestamp");
-	this->registerClass("DialogFactory", initClasspyDialogFactory, "UI manager, handle all UI elements");
-	this->registerFunction("test", pyHelpers_functions);
-        this->registerStaticClass("os",osStaticClassFunctions,"Access to operating system");
+    pyFunc addonFunctions[] = {
+        {"help", PythonEngine::dumpBuiltin},
+        {"get_folder_content", PythonEngine::getFolderContent},
+        {"get_file_size", PythonEngine::getFileSize},
+        {"basename", PythonEngine::basename},
+        {"dirname", PythonEngine::dirname},
+        {"splitext", PythonEngine::splitext},
+        {NULL, NULL}
+    };
+
+    pyFunc osStaticClassFunctions[] = {
+        {"environ", PythonEngine::pyenviron},
+        {NULL, NULL}
+    };
+
+    re_init(_vm);
+    this->registerFunction("addons", addonFunctions);
+    this->registerClass("Avidemux", initClasspyAdm, "load, save videos, seek with preview");
+    this->registerClass("Editor", initClasspyEditor, "segment, video info, debug");
+    this->registerClass("Gui", initClasspyGui, "widget, alert boxes,..");
+    this->registerClass("DFToggle", initClasspyDFToggle, "UI element : toggle");
+    this->registerClass("DFInteger", initClasspyDFInteger, "UI element : integer");
+    this->registerClass("DFMenu", initClasspyDFMenu, "UI element : drop down menu");
+    this->registerClass("DFTimeStamp", initClasspyDFTimeStamp, "UI element : timestamp");
+    this->registerClass("DialogFactory", initClasspyDialogFactory, "UI manager, handle all UI elements");
+    this->registerFunction("test", pyHelpers_functions);
+    this->registerStaticClass("os",osStaticClassFunctions,"Access to operating system");
 }
 
 void PythonEngine::registerClass(const char *className, pyRegisterClass classPy, const char *desc)
@@ -382,7 +385,24 @@ tp_obj PythonEngine::dirname(tp_vm *tp)
         free(copy);
         return r;
 }
+/**
+    \fn splitext
+    \brief similar to python os.path.splitext()
+*/
+tp_obj PythonEngine::splitext(tp_vm *tp)
+{
+    TinyParams pm(tp);
+    const char *path = pm.asString();
+    std::string root,fext;
+    ADM_PathSplit(path,root,fext);
 
+    tp_obj list = tp_list(tp);
+
+    _tp_list_append(tp, list.list.val, tp_string_copy(tp, root.c_str(), root.size()));
+    _tp_list_append(tp, list.list.val, tp_string_copy(tp, fext.c_str(), fext.size()));
+
+    return list;
+}
 /**
     \fn dumpBuiltin
 */

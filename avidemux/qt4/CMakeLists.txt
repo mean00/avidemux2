@@ -104,6 +104,13 @@ IF(USE_OPENGL)
     ADD_SUBDIRECTORY(ADM_openGL)
 ENDIF(USE_OPENGL)
 
+###########################################
+# Custom fixed width font for time display
+###########################################
+if (NOT WIN32)
+        SET(USE_CUSTOM_TIME_DISPLAY_FONT 1)
+endif (NOT WIN32)
+
 ########################################
 # Add common as a symlink or directly
 ########################################

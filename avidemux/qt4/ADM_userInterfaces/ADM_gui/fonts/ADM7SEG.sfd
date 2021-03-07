@@ -1,0 +1,836 @@
+SplineFontDB: 3.2
+FontName: ADM7SEG
+FullName: ADM7SEG based on DSEG7 Classic Mini-Bold
+FamilyName: ADM7SEG
+Weight: Bold
+Copyright: Created by Keshikan(https://twitter.com/keshinomi_88pro)\nwith FontForge 2.0 (http://fontforge.sf.net)\nModified by eumagga0x2a for Avidemux
+UComments: "2014-8-31: Created."
+Version: 0.46
+ItalicAngle: 0
+UnderlinePosition: -100
+UnderlineWidth: 50
+Ascent: 1012
+Descent: 12
+InvalidEm: 0
+LayerCount: 2
+Layer: 0 0 "+gMyXYgAA" 1
+Layer: 1 0 "+Uk2XYgAA" 0
+XUID: [1021 682 390630330 14528854]
+FSType: 8
+OS2Version: 0
+OS2_WeightWidthSlopeOnly: 0
+OS2_UseTypoMetrics: 1
+CreationTime: 1409488158
+ModificationTime: 1614695944
+PfmFamily: 17
+TTFWeight: 700
+TTFWidth: 5
+LineGap: 90
+VLineGap: 0
+OS2TypoAscent: 0
+OS2TypoAOffset: 1
+OS2TypoDescent: 0
+OS2TypoDOffset: 1
+OS2TypoLinegap: 90
+OS2WinAscent: 0
+OS2WinAOffset: 1
+OS2WinDescent: 0
+OS2WinDOffset: 1
+HheadAscent: 0
+HheadAOffset: 1
+HheadDescent: 0
+HheadDOffset: 1
+OS2Vendor: 'PfEd'
+MarkAttachClasses: 1
+DEI: 91125
+LangName: 1033 "Created by Keshikan+AAoA-with FontForge 2.0 (http://fontforge.sf.net)" "" "" "" "" "Version 0.46" "" "" "" "Keshikan(Twitter:@keshinomi_88pro)" "" "" "http://www.keshikan.net" "Copyright (c) 2018, keshikan (http://www.keshikan.net),+AAoA-with Reserved Font Name +ACIA-DSEG+ACIA.+AAoACgAA-This Font Software is licensed under the SIL Open Font License, Version 1.1.+AAoA-This license is copied below, and is also available with a FAQ at:+AAoA-http://scripts.sil.org/OFL+AAoACgAK------------------------------------------------------------+AAoA-SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007+AAoA------------------------------------------------------------+AAoACgAA-PREAMBLE+AAoA-The goals of the Open Font License (OFL) are to stimulate worldwide+AAoA-development of collaborative font projects, to support the font creation+AAoA-efforts of academic and linguistic communities, and to provide a free and+AAoA-open framework in which fonts may be shared and improved in partnership+AAoA-with others.+AAoACgAA-The OFL allows the licensed fonts to be used, studied, modified and+AAoA-redistributed freely as long as they are not sold by themselves. The+AAoA-fonts, including any derivative works, can be bundled, embedded, +AAoA-redistributed and/or sold with any software provided that any reserved+AAoA-names are not used by derivative works. The fonts and derivatives,+AAoA-however, cannot be released under any other type of license. The+AAoA-requirement for fonts to remain under this license does not apply+AAoA-to any document created using the fonts or their derivatives.+AAoACgAA-DEFINITIONS+AAoAIgAA-Font Software+ACIA refers to the set of files released by the Copyright+AAoA-Holder(s) under this license and clearly marked as such. This may+AAoA-include source files, build scripts and documentation.+AAoACgAi-Reserved Font Name+ACIA refers to any names specified as such after the+AAoA-copyright statement(s).+AAoACgAi-Original Version+ACIA refers to the collection of Font Software components as+AAoA-distributed by the Copyright Holder(s).+AAoACgAi-Modified Version+ACIA refers to any derivative made by adding to, deleting,+AAoA-or substituting -- in part or in whole -- any of the components of the+AAoA-Original Version, by changing formats or by porting the Font Software to a+AAoA-new environment.+AAoACgAi-Author+ACIA refers to any designer, engineer, programmer, technical+AAoA-writer or other person who contributed to the Font Software.+AAoACgAA-PERMISSION & CONDITIONS+AAoA-Permission is hereby granted, free of charge, to any person obtaining+AAoA-a copy of the Font Software, to use, study, copy, merge, embed, modify,+AAoA-redistribute, and sell modified and unmodified copies of the Font+AAoA-Software, subject to the following conditions:+AAoACgAA-1) Neither the Font Software nor any of its individual components,+AAoA-in Original or Modified Versions, may be sold by itself.+AAoACgAA-2) Original or Modified Versions of the Font Software may be bundled,+AAoA-redistributed and/or sold with any software, provided that each copy+AAoA-contains the above copyright notice and this license. These can be+AAoA-included either as stand-alone text files, human-readable headers or+AAoA-in the appropriate machine-readable metadata fields within text or+AAoA-binary files as long as those fields can be easily viewed by the user.+AAoACgAA-3) No Modified Version of the Font Software may use the Reserved Font+AAoA-Name(s) unless explicit written permission is granted by the corresponding+AAoA-Copyright Holder. This restriction only applies to the primary font name as+AAoA-presented to the users.+AAoACgAA-4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font+AAoA-Software shall not be used to promote, endorse or advertise any+AAoA-Modified Version, except to acknowledge the contribution(s) of the+AAoA-Copyright Holder(s) and the Author(s) or with their explicit written+AAoA-permission.+AAoACgAA-5) The Font Software, modified or unmodified, in part or in whole,+AAoA-must be distributed entirely under this license, and must not be+AAoA-distributed under any other license. The requirement for fonts to+AAoA-remain under this license does not apply to any document created+AAoA-using the Font Software.+AAoACgAA-TERMINATION+AAoA-This license becomes null and void if any of the above conditions are+AAoA-not met.+AAoACgAA-DISCLAIMER+AAoA-THE FONT SOFTWARE IS PROVIDED +ACIA-AS IS+ACIA, WITHOUT WARRANTY OF ANY KIND,+AAoA-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF+AAoA-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT+AAoA-OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE+AAoA-COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,+AAoA-INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL+AAoA-DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING+AAoA-FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM+AAoA-OTHER DEALINGS IN THE FONT SOFTWARE." "http://scripts.sil.org/OFL" "" "" "" "" "DSEG.7 12:34"
+Encoding: UnicodeBmp
+Compacted: 1
+UnicodeInterp: none
+NameList: Adobe Glyph List
+DisplaySize: -48
+AntiAlias: 1
+FitToEm: 1
+WinInfo: 0 32 11
+BeginPrivate: 0
+EndPrivate
+TeXData: 1 0 0 209715 104857 69905 513802 1048576 69905 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
+BeginChars: 65536 56
+
+StartChar: zero
+Encoding: 48 48 0
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 21 10272 S 1 0 0 1 6 0 2
+Refer: 20 10256 S 1 0 0 1 6 0 2
+Refer: 19 10248 S 1 0 0 1 6 0 2
+Refer: 18 10244 S 1 0 0 1 6 0 2
+Refer: 17 10242 S 1 0 0 1 6 0 2
+Refer: 16 10241 S 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: eight
+Encoding: 56 56 1
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 N 1 0 0 1 6 0 2
+Refer: 21 10272 N 1 0 0 1 6 0 2
+Refer: 20 10256 N 1 0 0 1 6 0 2
+Refer: 19 10248 N 1 0 0 1 6 0 2
+Refer: 18 10244 N 1 0 0 1 6 0 2
+Refer: 17 10242 N 1 0 0 1 6 0 2
+Refer: 16 10241 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: one
+Encoding: 49 49 2
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 18 10244 N 1 0 0 1 16 0 2
+Refer: 17 10242 N 1 0 0 1 16 0 2
+Validated: 1
+EndChar
+
+StartChar: two
+Encoding: 50 50 3
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 N 1 0 0 1 6 0 2
+Refer: 20 10256 N 1 0 0 1 6 0 2
+Refer: 19 10248 N 1 0 0 1 6 0 2
+Refer: 17 10242 N 1 0 0 1 6 0 2
+Refer: 16 10241 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: three
+Encoding: 51 51 4
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 N 1 0 0 1 6 0 2
+Refer: 19 10248 N 1 0 0 1 6 0 2
+Refer: 18 10244 N 1 0 0 1 6 0 2
+Refer: 17 10242 N 1 0 0 1 6 0 2
+Refer: 16 10241 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: four
+Encoding: 52 52 5
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 N 1 0 0 1 6 0 2
+Refer: 21 10272 N 1 0 0 1 6 0 2
+Refer: 18 10244 N 1 0 0 1 6 0 2
+Refer: 17 10242 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: five
+Encoding: 53 53 6
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 N 1 0 0 1 6 0 2
+Refer: 21 10272 N 1 0 0 1 6 0 2
+Refer: 19 10248 N 1 0 0 1 6 0 2
+Refer: 18 10244 N 1 0 0 1 6 0 2
+Refer: 16 10241 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: six
+Encoding: 54 54 7
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 N 1 0 0 1 6 0 2
+Refer: 21 10272 N 1 0 0 1 6 0 2
+Refer: 20 10256 N 1 0 0 1 6 0 2
+Refer: 19 10248 N 1 0 0 1 6 0 2
+Refer: 18 10244 N 1 0 0 1 6 0 2
+Refer: 16 10241 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: seven
+Encoding: 55 55 8
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 18 10244 N 1 0 0 1 6 0 2
+Refer: 17 10242 N 1 0 0 1 6 0 2
+Refer: 16 10241 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: nine
+Encoding: 57 57 9
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 N 1 0 0 1 6 0 2
+Refer: 21 10272 N 1 0 0 1 6 0 2
+Refer: 19 10248 N 1 0 0 1 6 0 2
+Refer: 18 10244 N 1 0 0 1 6 0 2
+Refer: 17 10242 N 1 0 0 1 6 0 2
+Refer: 16 10241 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: hyphen
+Encoding: 45 45 10
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: colon
+Encoding: 58 58 11
+Width: 400
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 34 126 N 1 0 0 1 0 0 2
+Refer: 36 59 N 1 0 0 1 0 0 2
+EndChar
+
+StartChar: period
+Encoding: 46 46 12
+Width: 400
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 23 10368 N 1 0 0 1 -224 0 2
+Validated: 1
+EndChar
+
+StartChar: space
+Encoding: 32 32 13
+Width: 400
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+Validated: 1
+EndChar
+
+StartChar: exclam
+Encoding: 33 33 14
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Validated: 1
+EndChar
+
+StartChar: underscore
+Encoding: 95 95 15
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 19 10248 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: uni2801
+Encoding: 10241 10241 16
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+200 969 m 1
+ 230 1000 l 1
+ 618 1000 l 5
+ 648 969 l 5
+ 556 876 l 5
+ 292 876 l 1
+ 200 969 l 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2802
+Encoding: 10242 10242 17
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+676 925 m 5
+ 707 895 l 5
+ 707 531 l 5
+ 689 531 l 5
+ 676 544 l 5
+ 583 636 l 5
+ 583 833 l 5
+ 676 925 l 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2804
+Encoding: 10244 10244 18
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+676 456 m 5
+ 689 469 l 5
+ 707 469 l 5
+ 707 105 l 5
+ 676 75 l 5
+ 583 167 l 5
+ 583 364 l 5
+ 676 456 l 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2808
+Encoding: 10248 10248 19
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+648 31 m 5
+ 618 0 l 5
+ 230 0 l 1
+ 200 31 l 1
+ 292 124 l 1
+ 556 124 l 5
+ 648 31 l 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2810
+Encoding: 10256 10256 20
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+160 75 m 5
+ 129 105 l 5
+ 129 469 l 5
+ 147 469 l 5
+ 160 456 l 5
+ 253 364 l 5
+ 253 167 l 5
+ 160 75 l 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2820
+Encoding: 10272 10272 21
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+160 544 m 5
+ 147 531 l 5
+ 129 531 l 5
+ 129 894 l 5
+ 160 925 l 5
+ 253 833 l 5
+ 253 636 l 5
+ 160 544 l 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2840
+Encoding: 10304 10304 22
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+587 562 m 5
+ 648 500 l 5
+ 587 438 l 5
+ 261 438 l 1
+ 200 500 l 1
+ 261 562 l 1
+ 587 562 l 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: uni2880
+Encoding: 10368 10368 23
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+498 74 m 4
+ 498 63 496 53 492 45 c 4
+ 488 37 484 28 477 21 c 4
+ 470 14 461 10 453 6 c 4
+ 445 2 435 0 424 0 c 4
+ 413 0 403 2 395 6 c 4
+ 387 10 378 14 371 21 c 4
+ 364 28 360 37 356 45 c 4
+ 352 53 350 63 350 74 c 4
+ 350 85 352 95 356 103 c 4
+ 360 111 364 120 371 127 c 4
+ 378 134 387 138 395 142 c 4
+ 403 146 413 148 424 148 c 4
+ 435 148 445 146 453 142 c 4
+ 461 138 470 134 477 127 c 4
+ 484 120 488 111 492 103 c 4
+ 496 95 498 85 498 74 c 4
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: parenleft
+Encoding: 40 40 24
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 16 10241 N 1 0 0 1 6 0 2
+Refer: 19 10248 N 1 0 0 1 6 0 2
+Refer: 20 10256 N 1 0 0 1 6 0 2
+Refer: 21 10272 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: parenright
+Encoding: 41 41 25
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 16 10241 N 1 0 0 1 6 0 2
+Refer: 17 10242 N 1 0 0 1 6 0 2
+Refer: 18 10244 N 1 0 0 1 6 0 2
+Refer: 19 10248 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: braceleft
+Encoding: 123 123 26
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 21 10272 N 1 0 0 1 0 0 2
+Refer: 16 10241 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: braceright
+Encoding: 125 125 27
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 17 10242 N 1 0 0 1 0 0 2
+Refer: 16 10241 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: macron
+Encoding: 175 175 28
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 16 10241 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: uni00AD
+Encoding: 173 173 29
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 S 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: slash
+Encoding: 47 47 30
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 17 10242 N 1 0 0 1 6 0 2
+Refer: 20 10256 N 1 0 0 1 6 0 2
+Validated: 1
+EndChar
+
+StartChar: bar
+Encoding: 124 124 31
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 20 10256 N 1 0 0 1 0 0 2
+Refer: 21 10272 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: brokenbar
+Encoding: 166 166 32
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 20 10256 N 1 0 0 1 233 0 2
+Refer: 21 10272 N 1 0 0 1 233 0 2
+Validated: 1
+EndChar
+
+StartChar: quotesingle
+Encoding: 39 39 33
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 21 10272 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: asciitilde
+Encoding: 126 126 34
+Width: 400
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+274 281 m 4
+ 274 270 272 260 268 252 c 4
+ 264 244 260 235 253 228 c 4
+ 246 221 237 217 229 213 c 4
+ 221 209 211 207 200 207 c 4
+ 189 207 179 209 171 213 c 4
+ 163 217 154 221 147 228 c 4
+ 140 235 136 244 132 252 c 4
+ 128 260 126 270 126 281 c 4
+ 126 292 128 302 132 310 c 4
+ 136 318 140 326 147 333 c 4
+ 154 340 163 346 171 350 c 4
+ 179 354 189 354 200 354 c 4
+ 211 354 221 354 229 350 c 4
+ 237 346 246 340 253 333 c 4
+ 260 326 264 318 268 310 c 4
+ 272 302 274 292 274 281 c 4
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: question
+Encoding: 63 63 35
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 N 1 0 0 1 16 0 2
+Refer: 20 10256 N 1 0 0 1 16 0 2
+Refer: 17 10242 N 1 0 0 1 16 0 2
+Refer: 16 10241 N 1 0 0 1 16 0 2
+Validated: 1
+EndChar
+
+StartChar: semicolon
+Encoding: 59 59 36
+Width: 400
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+274 693 m 4
+ 274 682 272 672 268 664 c 4
+ 264 656 260 647 253 640 c 4
+ 246 633 237 629 229 625 c 4
+ 221 621 211 619 200 619 c 4
+ 189 619 179 621 171 625 c 4
+ 163 629 154 633 147 640 c 4
+ 140 647 136 656 132 664 c 4
+ 128 672 126 682 126 693 c 4
+ 126 704 128 714 132 722 c 4
+ 136 730 140 738 147 745 c 4
+ 154 752 163 758 171 762 c 4
+ 179 766 189 766 200 766 c 4
+ 211 766 221 766 229 762 c 4
+ 237 758 246 752 253 745 c 4
+ 260 738 264 730 268 722 c 4
+ 272 714 274 704 274 693 c 4
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: comma
+Encoding: 44 44 37
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 20 10256 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: uni00A0
+Encoding: 160 160 38
+Width: 400
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+Validated: 1
+EndChar
+
+StartChar: uni200B
+Encoding: 8203 8203 39
+Width: 0
+Flags: W
+LayerCount: 2
+Fore
+Validated: 1
+EndChar
+
+StartChar: afii61664
+Encoding: 8204 8204 40
+Width: 0
+Flags: HW
+LayerCount: 2
+Fore
+Validated: 1
+EndChar
+
+StartChar: afii301
+Encoding: 8205 8205 41
+Width: 0
+Flags: HW
+LayerCount: 2
+Fore
+Validated: 1
+EndChar
+
+StartChar: quoteleft
+Encoding: 8216 8216 42
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 17 10242 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: quoteright
+Encoding: 8217 8217 43
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 21 10272 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: quotesinglbase
+Encoding: 8218 8218 44
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 20 10256 S 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: quotereversed
+Encoding: 8219 8219 45
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 17 10242 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: quotedblleft
+Encoding: 8220 8220 46
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 17 10242 N 1 0 0 1 0 0 2
+Refer: 21 10272 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: quotedblright
+Encoding: 8221 8221 47
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 17 10242 N 1 0 0 1 0 0 2
+Refer: 21 10272 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: quotedblbase
+Encoding: 8222 8222 48
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 18 10244 N 1 0 0 1 0 0 2
+Refer: 20 10256 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: uni201F
+Encoding: 8223 8223 49
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 17 10242 N 1 0 0 1 0 0 2
+Refer: 21 10272 N 1 0 0 1 0 0 2
+Validated: 1
+EndChar
+
+StartChar: uni2010
+Encoding: 8208 8208 50
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 S 1 0 0 1 16 0 2
+Validated: 1
+EndChar
+
+StartChar: uni2011
+Encoding: 8209 8209 51
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 S 1 0 0 1 16 0 2
+Validated: 1
+EndChar
+
+StartChar: figuredash
+Encoding: 8210 8210 52
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 S 1 0 0 1 16 0 2
+Validated: 1
+EndChar
+
+StartChar: afii00208
+Encoding: 8213 8213 53
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Refer: 22 10304 S 1 0 0 1 16 0 2
+Validated: 1
+EndChar
+
+StartChar: uni2007
+Encoding: 8199 8199 54
+Width: 848
+VWidth: 200
+Flags: HW
+LayerCount: 2
+Fore
+Validated: 1
+EndChar
+
+StartChar: uni2008
+Encoding: 8200 8200 55
+Width: 400
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+Validated: 1
+EndChar
+EndChars
+EndSplineFont

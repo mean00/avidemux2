@@ -22,10 +22,11 @@
 /**
     \fn decoderFFSimple
 */
-decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp, bool staged)
         : decoderFF(w,h,fcc,extraDataLen,extraData,bpp)
 {
     hasBFrame=false;
+    codec = NULL;
     if(!_frame)
         return;
     const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
@@ -33,7 +34,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         return;
 
     AVCodecID id=c->codecId;
-    AVCodec *codec=avcodec_find_decoder(id);
+    codec=avcodec_find_decoder(id);
     if(!codec)
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec 0x%x"),fcc);
@@ -56,34 +57,69 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         _refCopy=1;
     if(true==c->hasBFrame)
         hasBFrame=true;
-    printf("[decoderFFSimple] context allocated with thread_count = %d\n",_context->thread_count);
-    decoderMultiThread();
 
     _context->width = _w;
     _context->height = _h;
     _context->pix_fmt = AV_PIX_FMT_YUV420P;
     _context->codec_tag = fcc;
-    _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; 
-    _context->error_concealment=3; 
-    // Hack
-    if(codecId==AV_CODEC_ID_TSCC || codecId==AV_CODEC_ID_CSCD)
+    _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING;
+    _context->error_concealment=3;
+    _context->get_format=ADM_FFgetFormat;
+    _context->opaque=this;
+
+    if(!staged)
     {
-        ADM_warning("Forcing bit per coded sample to %d\n",bpp);
-         _context->bits_per_coded_sample = bpp;
+        applyQuirks(id);
+        _initCompleted = finish();
     }
-     _context->get_format=ADM_FFgetFormat; 
-     _context->opaque=this;
-    //
+}
+/**
+    \fn finish
+*/
+bool decoderFFSimple::finish(void)
+{
+    if (!codec || !_context)
+        return false;
     if (avcodec_open2(_context, codec, NULL) < 0)
     {
-        printf("[lavc] Decoder init: %x video decoder failed!\n",fcc);
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening 0x%x"),fcc);
-        return;
-    }else
-    {
-        printf("[lavc] Decoder init: %x video decoder initialized! (%s)\n",fcc,codec->long_name);
+        printf("[lavc] Decoder init: %x video decoder failed!\n",_fcc);
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening 0x%x"),_fcc);
+        return false;
     }
+    printf("[lavc] Decoder init: %x video decoder initialized with %d thread(s)! (%s)\n",_fcc,_context->thread_count,codec->long_name);
     _initCompleted=true;
+    return true;
+}
+/**
+    \fn applyQuirks
+    \brief All the codec-specific stuff which cannot be handled elsewhere
+*/
+void decoderFFSimple::applyQuirks(AVCodecID id)
+{
+    switch(id)
+    {
+        case AV_CODEC_ID_TSCC:
+        case AV_CODEC_ID_CSCD:
+            ADM_warning("Forcing bit per coded sample to %d\n",_bpp);
+            _context->bits_per_coded_sample = _bpp; // Hack
+            break;
+        case AV_CODEC_ID_PRORES:
+        case AV_CODEC_ID_DNXHD:
+            decoderMultiThread();
+            if(_usingMT)
+            {
+                if(codec->capabilities & AV_CODEC_CAP_SLICE_THREADS)
+                {
+                    _context->thread_count = _threads;
+                    _context->thread_type = FF_THREAD_SLICE;
+                    ADM_info("Enabling slice-based multi-threading.\n");
+                    break;
+                }
+                ADM_warning("Multi-threadig requested, but slice-based multi-threading unavailable.\n");
+            }
+            break;
+        default:break;
+    }
 }
 /**
     \fn admCreateFFSimple

@@ -34,12 +34,14 @@ extern "C" {
 class decoderFFSimple:public decoderFF
 {
 protected:
-    bool hasBFrame;
+    bool        hasBFrame;
+    AVCodec   * codec;
 
+    bool        finish(void);
+    void        applyQuirks(AVCodecID id);
 public:
-                decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-  virtual bool  bFramePossible (void)        {return hasBFrame; }
-  
+                decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp, bool staged = false);
+   virtual bool bFramePossible (void) {return hasBFrame; }
 };
 
 decoders *admCreateFFSimple(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);

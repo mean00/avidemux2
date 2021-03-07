@@ -14,50 +14,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#define _USE_MATH_DEFINES // some compilers do not export M_PI etc.. if GNU_SOURCE or that is defined, let's do that
-#include <math.h>
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
 #include "ADM_coreVideoFilterInternal.h"
-#include "DIA_factory.h"
-#include "ADM_byteBuffer.h"
-#include "ADM_image.h"
-#include "artColorEffect.h"
+#include "ADM_vidArtColorEffect.h"
 #include "artColorEffect_desc.cpp"
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+#include "DIA_factory.h"
 
 extern uint8_t DIA_getArtColorEffect(artColorEffect *param, ADM_coreVideoFilter *in);
-/**
-    \class ADMVideoArtColorEffect
-*/
-class  ADMVideoArtColorEffect:public ADM_coreVideoFilter
-{
-
-  protected:
-    void                  update(void);
-    artColorEffect        _param;
-    uint32_t              _effect;
-    int                   _rgbBufStride;
-    ADM_byteBuffer *      _rgbBufRaw;
-    ADMImageRef *         _rgbBufImage;
-    ADMColorScalerFull *  _convertYuvToRgb;
-    ADMColorScalerFull *  _convertRgbToYuv;
-  public:
-    ADMVideoArtColorEffect(ADM_coreVideoFilter *in,CONFcouple *couples);
-    ~ADMVideoArtColorEffect();
-
-    virtual const char    *getConfiguration(void);          /// Return  current configuration as a human readable string
-    virtual bool          getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-    virtual bool          getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-    virtual void          setCoupledConf(CONFcouple *couples);
-    virtual bool          configure(void) ;                 /// Start graphical user interface        
-
-};
-
-
 
 // Add the hook to make it valid plugin
 //DECLARE_VIDEO_FILTER(   ADMVideoArtColorEffect,   // Class
@@ -340,7 +304,7 @@ static const uint8_t esses_table[769] =
 /**
     \fn ArtColorEffectCreateBuffers
 */
-void ArtColorEffectCreateBuffers(int w, int h, int * rgbBufStride, ADM_byteBuffer ** rgbBufRaw, ADMImageRef ** rgbBufImage, ADMColorScalerFull ** convertYuvToRgb, ADMColorScalerFull ** convertRgbToYuv)
+void ADMVideoArtColorEffect::ArtColorEffectCreateBuffers(int w, int h, int * rgbBufStride, ADM_byteBuffer ** rgbBufRaw, ADMImageRef ** rgbBufImage, ADMColorScalerFull ** convertYuvToRgb, ADMColorScalerFull ** convertRgbToYuv)
 {
     *rgbBufStride = ADM_IMAGE_ALIGN(w * 4);
     *rgbBufRaw = new ADM_byteBuffer();
@@ -361,7 +325,7 @@ void ArtColorEffectCreateBuffers(int w, int h, int * rgbBufStride, ADM_byteBuffe
 /**
     \fn ArtColorEffectDestroyBuffers
 */
-void ArtColorEffectDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
+void ADMVideoArtColorEffect::ArtColorEffectDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
 {
     if (convertYuvToRgb) delete convertYuvToRgb;
     if (convertRgbToYuv) delete convertRgbToYuv;
@@ -372,7 +336,7 @@ void ArtColorEffectDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbB
 /**
     \fn ArtColorEffectProcess_C
 */
-void ArtColorEffectProcess_C(ADMImage *img, int w, int h, int effect, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
+void ADMVideoArtColorEffect::ArtColorEffectProcess_C(ADMImage *img, int w, int h, int effect, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
 {
     if (!img || !rgbBufRaw || !rgbBufImage || !convertYuvToRgb || !convertRgbToYuv) return;
     uint8_t * line;
@@ -437,11 +401,12 @@ void ArtColorEffectProcess_C(ADMImage *img, int w, int h, int effect, int rgbBuf
 */
 bool ADMVideoArtColorEffect::configure()
 {
-    uint8_t r=0;
-
-    r=  DIA_getArtColorEffect(&_param, previousFilter);
-    if(r) update();
-    return r;
+    if(DIA_getArtColorEffect(&_param, previousFilter))
+    {
+        update();
+        return true;
+    }
+    return false;
 }
 /**
     \fn getConfiguration

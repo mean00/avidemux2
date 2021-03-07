@@ -347,6 +347,36 @@ uint8_t flyMpDelogo::download(void)
     //printf(">>>Download event : x = %d y = %d w = %d h = %d\n",param.xoff,param.yoff,param.lw,param.lh);
     return 1;
 }
+/**
+ *  \fn setTabOrder
+ */
+void flyMpDelogo::setTabOrder(void)
+{
+    Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+    std::vector<QWidget *> controls;
+
+#define SPINNER(x) controls.push_back(w->spin##x);
+    SPINNER(X)
+    SPINNER(Y)
+    SPINNER(W)
+    SPINNER(H)
+    SPINNER(Band)
+#undef SPINNER
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+    controls.push_back(w->checkBoxPreview);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 
 /************* COMMON PART *********************/
 /**
@@ -369,7 +399,9 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
  */
 Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVideoFilter *in) : QDialog(parent)
 {
+#ifdef USAGE_HINT
     static bool doOnce=false;
+#endif
     uint32_t width,height;
 
     aprintf("Ctor @ %d: %d, %d x %d\n",param->xoff, param->yoff, param->lw,param->lh);
@@ -385,6 +417,7 @@ Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVid
     myCrop->setParam(param);
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
+    myCrop->setTabOrder();
     myCrop->setPreview(false);
 #define SPINENTRY(x,y) ui.spin##x->setMaximum(y);
     SPINENTRY(X,width)
@@ -408,13 +441,23 @@ Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVid
     SPINNER(Band)
 
     connect(ui.checkBoxPreview, SIGNAL(stateChanged(int )),this, SLOT(preview(int)));
+
+    helpLayout=NULL;
+#ifdef USAGE_HINT
     if(!doOnce)
     {
         Q_INIT_RESOURCE(delogo);
         doOnce=true;
     }
-    ui.labelHelp->setPixmap(QPixmap(":/images/grips.png"));
-
+    helpLayout = new QHBoxLayout(); // not a mistake, we cannot use the dialog as parent
+    ui.main->insertLayout(1,helpLayout);
+    QLabel *labelHelpText = new QLabel(QT_TRANSLATE_NOOP("mpdelogoDialog","You can resize the red rectangle using the grips "),this);
+    QLabel *labelHelpPic = new QLabel(NULL,this);
+    labelHelpPic->setPixmap(QPixmap(":/images/grips.png"));
+    helpLayout->addWidget(labelHelpText);
+    helpLayout->addWidget(labelHelpPic);
+    helpLayout->addStretch();
+#endif
     setModal(true);
 }
 /**
@@ -426,6 +469,8 @@ Ui_mpdelogoWindow::~Ui_mpdelogoWindow()
     myCrop=NULL;
     if(canvas) delete canvas;
     canvas=NULL;
+    if(helpLayout) delete helpLayout;
+    helpLayout=NULL;
 }
 /**
  *  \fn resizeEvent

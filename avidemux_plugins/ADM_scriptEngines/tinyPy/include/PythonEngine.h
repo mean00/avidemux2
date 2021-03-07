@@ -34,6 +34,7 @@ private:
 	static tp_obj getFolderContent(tp_vm *tp);
         static tp_obj basename(tp_vm *tp);
         static tp_obj dirname(tp_vm *tp);
+        static tp_obj splitext(tp_vm *tp);
         static tp_obj pyenviron(tp_vm *tp);
 
 public:

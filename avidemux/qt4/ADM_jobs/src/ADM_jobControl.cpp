@@ -11,13 +11,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <QDir>
+#include <QAction>
+#include <QIcon>
+
 #include "T_jobs.h"
 #include "T_progress.h"
 #include "ADM_default.h"
 #include "ADM_coreJobs.h"
 #include "DIA_coreToolkit.h"
-#include <QtCore/QDir>
-#include <QAction>
 
 extern void loadTranslator(void);
 extern void initTranslator(void);
@@ -56,12 +58,12 @@ void jobWindow::refreshList(void)
       listOfJob.clear();
       
 // set titles
-     QTableWidgetItem *jb=fromText("Job",255);
-     QTableWidgetItem *outputFile=fromText("Output",255);
-     QTableWidgetItem *status=fromText("Status",255);
-     QTableWidgetItem *start=fromText("Start Time",255);
-     QTableWidgetItem *end=fromText("End Time",255);
-     QTableWidgetItem *duration=fromText("Duration",255);
+     QTableWidgetItem *jb=fromText(QT_TRANSLATE_NOOP("jobs","Job"),255);
+     QTableWidgetItem *outputFile=fromText(QT_TRANSLATE_NOOP("jobs","Output"),255);
+     QTableWidgetItem *status=fromText(QT_TRANSLATE_NOOP("jobs","Status"),255);
+     QTableWidgetItem *start=fromText(QT_TRANSLATE_NOOP("jobs","Start Time"),255);
+     QTableWidgetItem *end=fromText(QT_TRANSLATE_NOOP("jobs","End Time"),255);
+     QTableWidgetItem *duration=fromText(QT_TRANSLATE_NOOP("jobs","Duration"),255);
      ui.tableWidget->setHorizontalHeaderItem(1,jb);
      ui.tableWidget->setHorizontalHeaderItem(2,outputFile);
      ui.tableWidget->setHorizontalHeaderItem(3,start);
@@ -96,13 +98,13 @@ void jobWindow::refreshList(void)
             switch(listOfJob[i].status)
             {
                 case ADM_JOB_IDLE:
-                            s=string("Ready");
+                            s=string(QT_TRANSLATE_NOOP("jobs","Ready"));
                             break;
                 case ADM_JOB_RUNNING:
-                            s=string("Running....");
+                            s=string(QT_TRANSLATE_NOOP("jobs","Running...."));
                             break;
                 case ADM_JOB_OK:
-                            s=string("Success");
+                            s=string(QT_TRANSLATE_NOOP("jobs","Success"));
                             start=date2String(listOfJob[i].startTime);
                             end=date2String(listOfJob[i].endTime);
                             timeTaken=listOfJob[i].endTime-listOfJob[i].startTime;
@@ -110,14 +112,14 @@ void jobWindow::refreshList(void)
                            
                             break;
                 case ADM_JOB_KO:
-                            s=string("Failed");
+                            s=string(QT_TRANSLATE_NOOP("jobs","Failed"));
                             start=date2String(listOfJob[i].startTime);
                             end=date2String(listOfJob[i].endTime);
                             timeTaken=listOfJob[i].endTime-listOfJob[i].startTime;
                             dur=duration2String(timeTaken);
                             break;
                 default:
-                            s=string("???");
+                            s=string(QT_TRANSLATE_NOOP("jobs","???"));
                             break;
             }
         QTableWidgetItem *status=fromText (s,i);
@@ -154,14 +156,16 @@ jobWindow::jobWindow(bool mode) : QDialog()
 {
     ui.setupUi(this);
     ui.tableWidget->setColumnCount(6); // Job name, fileName, Status
-
+#if ! defined(__APPLE__) && ! defined(_WIN32)
+    setWindowIcon(QIcon(":/jobs/jobs-window-icon-linux.png"));
+#endif
     // Add some right click menu...
     ui.tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     // Add some right click menu...
-   QAction *del = new  QAction(QString("Delete"),this);
-   QAction *runNow = new  QAction(QString("Run Now"),this);
-   QAction *setOk = new  QAction(QString("Force Status to success"),this);
-   QAction *setReady = new  QAction(QString("Force Status to ready"),this);
+   QAction *del = new  QAction(QString(QT_TRANSLATE_NOOP("jobs","Delete")),this);
+   QAction *runNow = new  QAction(QString(QT_TRANSLATE_NOOP("jobs","Run Now")),this);
+   QAction *setOk = new  QAction(QString(QT_TRANSLATE_NOOP("jobs","Force Status to success")),this);
+   QAction *setReady = new  QAction(QString(QT_TRANSLATE_NOOP("jobs","Force Status to ready")),this);
    ui.tableWidget->addAction(del);
    ui.tableWidget->addAction(runNow);
    ui.tableWidget->addAction(setOk);
@@ -175,7 +179,7 @@ jobWindow::jobWindow(bool mode) : QDialog()
    connect(ui.pushButtonRunAll,SIGNAL(pressed()),this,SLOT(runAllJob()));
    connect(ui.pushButtonCleanup,SIGNAL(pressed()),this,SLOT(cleanup()));
 
-    QAction *bye = new QAction(QString("Quit"),this);
+    QAction *bye = new QAction(QString(QT_TRANSLATE_NOOP("jobs","Quit")),this);
     bye->setShortcut(Qt::Key_Q | Qt::CTRL);
     connect(bye,SIGNAL(triggered()),this,SLOT(quit()));
     this->addAction(bye);
@@ -217,8 +221,16 @@ bool jobRun(int ac,char **av)
 #if defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(5,11,0)
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+#if defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(5,10,0)
+    // Hide unhelpful context help buttons on Windows.
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+#endif
     QApplication *app=new QApplication(ac,av,0);
+#if ! defined(_WIN32) && ! defined(__APPLE__)
+    Q_INIT_RESOURCE(jobs_linux);
+#else
     Q_INIT_RESOURCE(jobs);
+#endif
     loadTranslator();
     bool pmode=ac>1 && !strcmp(av[1],"--portable");
     jobWindow *jWindow=new jobWindow(pmode);

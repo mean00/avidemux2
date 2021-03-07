@@ -20,6 +20,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QPushButton>
 #include "Q_artVignette.h"
 #include "ADM_vidArtVignette.h"
 #include "ADM_toolkitQt.h"
@@ -47,6 +48,7 @@ Ui_artVignetteWindow::Ui_artVignetteWindow(QWidget *parent, artVignette *param,A
         myFly->filterMask = new float[width*height];
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
@@ -56,6 +58,10 @@ Ui_artVignetteWindow::Ui_artVignetteWindow(QWidget *parent, artVignette *param,A
         SPINNER(Center);
         SPINNER(Soft);
 
+        QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
+        connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
+
+        ui.horizontalSliderAspect->setFocus();
         setModal(true);
 }
 void Ui_artVignetteWindow::sliderUpdate(int foo)
@@ -85,7 +91,15 @@ void Ui_artVignetteWindow::valueChanged( int f )
     myFly->sameImage();
     lock--;
 }
-
+void Ui_artVignetteWindow::reset(void)
+{
+    if(lock) return;
+    lock++;
+    ADMVideoArtVignette::reset(&myFly->param);
+    myFly->upload();
+    myFly->sameImage();
+    lock--;
+}
 void Ui_artVignetteWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -124,6 +138,29 @@ uint8_t flyArtVignette::download(void)
     param.soft=(float)MYSPIN(Soft)->value() / 100.0;
     ADMVideoArtVignette::ArtVignetteCreateMask(filterMask, filterW, filterH, param.aspect, param.center, param.soft);
     return 1;
+}
+void flyArtVignette::setTabOrder(void)
+{
+    Ui_artVignetteDialog *w=(Ui_artVignetteDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSHME(x) controls.push_back(MYSPIN(x));
+    PUSHME(Aspect)
+    PUSHME(Center)
+    PUSHME(Soft)
+
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
 }
 
 /**

@@ -14,7 +14,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#define _USE_MATH_DEFINES // some compilers do not export M_PI etc.. if GNU_SOURCE or that is defined, let's do that
 #include <cmath>
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
@@ -23,10 +22,6 @@
 #include "artVHS.h"
 #include "artVHS_desc.cpp"
 #include "ADM_vidArtVHS.h"
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
 
 extern uint8_t DIA_getArtVHS(artVHS *param, ADM_coreVideoFilter *in);
 
@@ -67,10 +62,10 @@ void ADMVideoArtVHS::ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW
     //unSyncFilter = std::exp(unSyncFilter*0.69314) - 1.0;
     unSyncFilter = std::sqrt(std::sqrt(unSyncFilter));
 
-
+#if 0
     if(img->_range == ADM_COL_RANGE_MPEG)
         img->expandColorRange();
-
+#endif
     // Y plane
     stride=img->GetPitch(PLANAR_Y);
     ptr=img->GetWritePtr(PLANAR_Y);
@@ -183,15 +178,20 @@ const char   *ADMVideoArtVHS::getConfiguration(void)
 ADMVideoArtVHS::ADMVideoArtVHS(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_coreVideoFilter(in,couples)
 {
     if(!couples || !ADM_paramLoad(couples,artVHS_param,&_param))
-    {
-        _param.lumaBW = 0.66;
-        _param.chromaBW = 0.2;
-        _param.lumaNoDelay = true;
-        _param.chromaNoDelay = false;
-        _param.unSync = 3.0;
-        _param.unSyncFilter=0.7;
-    }
+        reset(&_param);
     update();
+}
+/**
+    \fn reset
+*/
+void ADMVideoArtVHS::reset(artVHS *cfg)
+{
+    cfg->lumaBW = 0.66;
+    cfg->chromaBW = 0.2;
+    cfg->lumaNoDelay = true;
+    cfg->chromaNoDelay = false;
+    cfg->unSync = 3.0;
+    cfg->unSyncFilter = 0.7;
 }
 /**
     \fn valueLimit

@@ -21,6 +21,9 @@
 #include <QtCore/QDir>
 #include <QMessageBox>
 #include <QClipboard>
+#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
+#   include <QFontDatabase>
+#endif
 
 #ifdef __APPLE__
     #include <QFileOpenEvent>
@@ -464,18 +467,23 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(checkChanged(int)));
     connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
     connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
-
+#if 0 /* it is read-only */
     QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
     QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
     ui.currentTime->setValidator(timeValidator);
     ui.currentTime->setInputMask("99:99:99.999");
+#endif
     // set the size of the current time display to fit the content
-    QString text=ui.currentTime->text();
-    QFontMetrics fm=ui.currentTime->fontMetrics();
-    int currentTimeWidth=fm.boundingRect(text).width()+20;
-    int currentTimeHeight=ui.currentTime->height();
-    ui.currentTime->setFixedSize(currentTimeWidth, currentTimeHeight);
-    ui.currentTime->adjustSize();
+    QString text = "00:00:00.000"; // Don't translate this.
+#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
+    ui.currentTime->setFont(QFont("ADM7SEG"));
+#endif
+    ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
+    QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
+    ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
+
+    text = QString("/ ") + text;
+    ui.totalTime->setText(text); // Override ui translations here too.
 
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
@@ -542,6 +550,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     widgetsUpdateTooltips();
 
     this->adjustSize();
+    ui.currentTime->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
 
     threshold = RESIZE_THRESHOLD;
     actZoomCalled = false;
@@ -1892,6 +1901,10 @@ int UI_Init(int nargc, char **nargv)
     // like OpenGL support were fixed only in much later versions.
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+#if defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(5,10,0)
+    // Hide unhelpful context help buttons on Windows.
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+#endif
     myApplication=new myQApplication (global_argc, global_argv);
     myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
     myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
@@ -1904,6 +1917,10 @@ int UI_Init(int nargc, char **nargv)
 #endif
     Q_INIT_RESOURCE(filter);
 
+#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
+    if(-1 == QFontDatabase::addApplicationFont(":/new/prefix1/fonts/ADM7SEG.ttf"))
+        ADM_warning("LCD display font could not be loaded from resource.\n");
+#endif
     loadTranslator();
 
     return 1;

@@ -35,23 +35,23 @@ class Ui_logoWindow : public QDialog
 	Q_OBJECT
 
 protected: 
-	int lock;
+        int                 lock;
         std::string         lastFolder;
-        bool                enableLowPart(bool enabled);
+        Ui_logoDialog       ui;
+        ADM_coreVideoFilter *_in;
+        flyLogo             *myLogo;
+        ADM_LogoCanvas      *canvas;
+
+        bool                enableLowPart(void);
         bool                tryToLoadimage(const char *image);
 public:
         ADMImage            *image;
+        std::string         imageName;
         int                 imageWidth,imageHeight;
 
 public:
-	
                             Ui_logoWindow(QWidget *parent, logo *param, ADM_coreVideoFilter *in);
                             ~Ui_logoWindow();
-	Ui_logoDialog        ui;
-        ADM_coreVideoFilter *_in;
-        flyLogo             *myLogo;
-	ADM_LogoCanvas      *canvas;
-        std::string         imageName;
 public slots:
 	void                gather(logo *param);
 

@@ -56,13 +56,7 @@ Msharpen::Msharpen(ADM_coreVideoFilter *in,CONFcouple *couples)
     : ADM_coreVideoFilterCached(5,in,couples)
 {
     if(!couples || !ADM_paramLoad(couples,msharpen_param,&_param))
-    {
-        _param.mask=0;       // Show mask
-        _param.highq=1;
-        _param.chroma=0;
-        _param.strength=100;	
-        _param.threshold=15;	
-    }
+        reset(&_param);
     if(_param.strength > 255) _param.strength=255;
     if(_param.threshold > 255) _param.threshold=255;
     invstrength=255-_param.strength;
@@ -107,7 +101,17 @@ const char *Msharpen::getConfiguration(void)
                 _param.mask ? "true":"false");
     return conf;
 }
-	
+/**
+    \fn reset
+*/
+void Msharpen::reset(msharpen *cfg)
+{
+    cfg->mask = 0; // don't show mask
+    cfg->highq = 1;
+    cfg->chroma = 0;
+    cfg->strength = 100;
+    cfg->threshold = 15;
+}
 /**
     \fn getNextFrame
 */

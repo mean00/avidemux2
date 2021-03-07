@@ -27,33 +27,13 @@
 #include "eq2_desc.cpp"
 #include <math.h>
 
-#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
-        #define CAN_DO_INLINE_X86_ASM
-        void affine_1d_MMX (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM_PLANE plane);
+#ifdef CAN_DO_INLINE_X86_ASM
+static void affine_1d_MMX (oneSetting *par, ADMImage *srcImage, ADMImage *destImage, ADM_PLANE plane);
 #endif
+static void create_lut(oneSetting *par);
+static void apply_lut (oneSetting *par, ADMImage *srcImage, ADMImage *destImage, ADM_PLANE plane);
 
-
-/**
-    \class ADMVideoEq2
-*/
-class  ADMVideoEq2:public ADM_coreVideoFilter
-{
-
-  protected:
-            eq2             _param;    
-            Eq2Settings     settings;   
-            void            update(void);
-  public:
-                
-                            ADMVideoEq2(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
-                            ~ADMVideoEq2();
-       virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-	   virtual void setCoupledConf(CONFcouple *couples);
-       virtual bool         configure(void) ;                 /// Start graphical user interface        
-
-}     ;
+extern uint8_t DIA_getEQ2Param(eq2 *param,ADM_coreVideoFilter *in);
 
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER_PARTIALIZABLE( ADMVideoEq2, // Class
@@ -64,6 +44,21 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE( ADMVideoEq2, // Class
                         QT_TRANSLATE_NOOP("eq2","MPlayer eq2"),            // Display name
                         QT_TRANSLATE_NOOP("eq2","Adjust contrast, brightness, saturation and gamma.") // Description
                     );
+/**
+    \fn processPlane
+*/
+bool ADMVideoEq2::processPlane(oneSetting *par, ADMImage *srcImage, ADMImage *destImage, ADM_PLANE plane)
+{
+#ifdef CAN_DO_INLINE_X86_ASM
+    if(CpuCaps::hasMMX())
+    {
+        affine_1d_MMX(par,srcImage,destImage,plane);
+        return true;
+    }
+#endif
+    apply_lut(par,srcImage,destImage,plane);
+    return true;
+}
 /**
     \fn configure
 */
@@ -105,6 +100,7 @@ ADMVideoEq2::ADMVideoEq2(ADM_coreVideoFilter *in,CONFcouple *couples)
     _param.bgamma =1.0;    
   }      
   update();
+  mysrc = new ADMImageDefault(info.width,info.height);
 }
 /**
     \fn update
@@ -119,7 +115,8 @@ void ADMVideoEq2::update(void)
 */
 ADMVideoEq2::~ADMVideoEq2()
 {
-  
+  if(mysrc) delete mysrc;
+  mysrc = NULL;
 }
 /**
     \fn getCoupledConf
@@ -140,70 +137,60 @@ void ADMVideoEq2::setCoupledConf(CONFcouple *couples)
 */
  bool         ADMVideoEq2::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-  if(!previousFilter->getNextFrame(fn,image)) return false;
+    if(!previousFilter->getNextFrame(fn,mysrc))
+        return false;
+    image->copyInfo(mysrc);
 
-#ifdef CAN_DO_INLINE_X86_ASM
-  if(CpuCaps::hasMMX())
-  {
-        affine_1d_MMX(&(settings.param[0]),image,image,PLANAR_Y);
-        affine_1d_MMX(&(settings.param[1]),image,image,PLANAR_U);
-        affine_1d_MMX(&(settings.param[2]),image,image,PLANAR_V);
-   }
-   else
-#endif
-   {
-        apply_lut(&(settings.param[0]),image,image,PLANAR_Y);
-        apply_lut(&(settings.param[1]),image,image,PLANAR_U);
-        apply_lut(&(settings.param[2]),image,image,PLANAR_V);
-    }
+    for(int i=0; i < 3; i++)
+        processPlane(&(settings.param[i]),mysrc,image,(ADM_PLANE)i);
 
-  return 1;
+    return true;
 }
 /**
     \fn update_lut
 */
-void update_lut(Eq2Settings *settings,eq2 *_param)
+bool ADMVideoEq2::update_lut(Eq2Settings *settings, eq2 *cfg)
 {
      memset(settings,0,sizeof(*settings));
 
     settings->param[0].lut_clean=0;
     settings->param[1].lut_clean=0;
     settings->param[2].lut_clean=0;
-    settings->contrast=_param->contrast;
-    settings->brightness=_param->brightness;
-    settings->saturation=_param->saturation;
-    
-    settings->ggamma=_param->ggamma;
-    settings->bgamma=_param->bgamma;
-    settings->rgamma=_param->rgamma;
-    settings->gamma=_param->gamma;
+    settings->contrast=cfg->contrast;
+    settings->brightness=cfg->brightness;
+    settings->saturation=cfg->saturation;
 
-    settings->gamma_weight=_param->gamma_weight;
-    
+    settings->ggamma=cfg->ggamma;
+    settings->bgamma=cfg->bgamma;
+    settings->rgamma=cfg->rgamma;
+    settings->gamma=cfg->gamma;
+
+    settings->gamma_weight=cfg->gamma_weight;
+
     if(settings->ggamma<0.1) settings->ggamma=0.1;
-    
-    settings->param[0].c=_param->contrast;  
-    settings->param[0].b=_param->brightness;;
+
+    settings->param[0].c=cfg->contrast;
+    settings->param[0].b=cfg->brightness;
     settings->param[0].g=settings->gamma*settings->ggamma;
     settings->param[0].w=settings->gamma_weight;
-    
-    
-    	
-    settings->param[1].c=_param->saturation;
+
+    settings->param[1].c=cfg->saturation;
     settings->param[1].b=0;
     settings->param[1].g=sqrt(settings->bgamma/settings->ggamma);
     settings->param[1].w=settings->gamma_weight;
-    
-    settings->param[2].c=_param->saturation;
+
+    settings->param[2].c=cfg->saturation;
     settings->param[2].b=0;
     settings->param[2].g=sqrt(settings->rgamma/settings->ggamma);
     settings->param[2].w=settings->gamma_weight;
-    
+
     //printf("GGamma:%f\n",settings->ggamma);
     create_lut(&(settings->param[0]));
     create_lut(&(settings->param[1]));
-    create_lut(&(settings->param[2])); 
-}          
+    create_lut(&(settings->param[2]));
+
+    return true;
+}
 /**
     \fn create_lut
 */

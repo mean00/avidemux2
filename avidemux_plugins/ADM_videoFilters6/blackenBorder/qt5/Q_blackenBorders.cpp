@@ -11,6 +11,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <QPushButton>
 #include "Q_blackenBorders.h"
 #include "ADM_toolkitQt.h"
 
@@ -39,6 +40,7 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     myBlacken->bottom=param->bottom&0xffffe;
     myBlacken->_cookie=&ui;
     myBlacken->addControl(ui.toolboxLayout);
+    myBlacken->setTabOrder();
     myBlacken->upload();
     myBlacken->sliderChanged();
 
@@ -48,7 +50,6 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
-    connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
     SPINNER(Left);
     SPINNER(Right);
@@ -61,6 +62,9 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     SPINNER(Top)
     SPINNER(Bottom)
 #undef SPINNER
+
+    QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
+    connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
     setModal(true);
 }
@@ -210,7 +214,7 @@ uint8_t flyBlacken::download(void)
         SPIN_GET(top,Top);
         SPIN_GET(bottom,Bottom);
 
-        printf("%d %d %d %d\n",left,right,top,bottom);
+        //printf("%d %d %d %d\n",left,right,top,bottom);
 
         if((top+bottom)>_h)
                 {
@@ -234,6 +238,32 @@ uint8_t flyBlacken::download(void)
                blockChanges(false);
            }        
                return true;
+}
+void flyBlacken::setTabOrder(void)
+{
+    Ui_blackenDialog *w=(Ui_blackenDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSH_SPIN(x) controls.push_back(w->spinBox##x);
+#define PUSH_TOG(x) controls.push_back(w->checkBox##x);
+    PUSH_SPIN(Left)
+    PUSH_SPIN(Right)
+    PUSH_SPIN(Top)
+    PUSH_SPIN(Bottom)
+    PUSH_TOG(Rubber)
+
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
 }
 
 /**

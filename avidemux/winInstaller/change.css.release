@@ -6,17 +6,26 @@ body {
 }
 
 #inner {
-    margin: 0% 1% 0% 1%;
+    margin: 0 2em 0 2em;
 }
 
 h1 {
     padding: 0.5em;
     font-family: Helvetica,Arial,sans-serif;
-    font-size: 1.8em;
+    font-size: 2em;
     font-weight: bold;
     color: #1B57B1;
     vertical-align: middle;
     margin: 1em;
+}
+
+ul {
+    margin-bottom: 3em;
+}
+
+li {
+    max-width: 48em;
+    margin-bottom: 0.5em;
 }
 
 table {

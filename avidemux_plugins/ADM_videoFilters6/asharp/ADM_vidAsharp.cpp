@@ -52,6 +52,10 @@ public:
        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
        virtual void         setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;                 /// Start graphical user interface
+
+        static void         reset(asharp *cfg);
+        static void         asharp_run_c(uc* planeptr, int pitch, int height, int width,
+                                        int T,int D, int B, int B2, bool bf, uint8_t *lineptr);
 };
 
 
@@ -66,9 +70,6 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ASharp,   // Class
                         QT_TRANSLATE_NOOP("asharp","Adaptative sharpener by MarcFD.") // Description
                     );
 
-void asharp_run_c(      uc* planeptr, int pitch,
-                                        int height, int width,
-                                        int     T,int D, int B, int B2, bool bf,uint8_t *lineptr );
 /**
     \fn ASharp
     \brief ctor
@@ -76,15 +77,7 @@ void asharp_run_c(      uc* planeptr, int pitch,
 ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilter(in,couples)
 {
         if(!couples || !ADM_paramLoad(couples,asharp_param,&_param))
-        {
-            // Default value
-            _param.t=2;
-            _param.d=4;
-            _param.b=-1;
-            _param.bf=false;
-            _param.d_enabled = true;
-            _param.b_enabled = false;
-        }
+            reset(&_param);
         lineptr=new uint8_t[info.width];
         update();
         ADM_info("%s\n",getConfiguration());
@@ -97,6 +90,18 @@ ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilte
 ASharp::~ASharp(void)
 {
     delete [] lineptr;
+}
+/**
+    \fn reset
+*/
+void ASharp::reset(asharp *cfg)
+{
+    cfg->t = 2;
+    cfg->d = 4;
+    cfg->b = -1;
+    cfg->bf = false;
+    cfg->d_enabled = true;
+    cfg->b_enabled = false;
 }
 /**
     \fn update
@@ -226,7 +231,7 @@ ADMImage *dst;
 /**
     \fn asharp_run_c
 */
-void asharp_run_c(      uc* planeptr,   int pitch,
+void ASharp::asharp_run_c(uc* planeptr, int pitch,
                         int height,     int width,
                         int     T,      int D, int B, int B2, bool bf , uint8_t *lineptr)
 {

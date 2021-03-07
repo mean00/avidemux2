@@ -2,9 +2,6 @@
 #define Q_asharp_h
 
 #include "ui_asharp.h"
-#include "DIA_flyDialogQt4.h"
-#include "ADM_image.h"
-#include "DIA_flyDialogQt4.h"
 #include "DIA_flyAsharp.h"
 
 class Ui_asharpWindow : public QDialog
@@ -29,6 +26,8 @@ private slots:
     void valueChanged(double foo);
     void valueChanged2(int foo);
     void valueChangedSlider(int foo);
+    void toggleFullPreview(int foo);
+    void reset(void);
 
 private:
     void resizeEvent(QResizeEvent *event);

@@ -67,13 +67,11 @@ echo "MXE_TARGETS :=  i686-w64-mingw32.shared x86_64-w64-mingw32.shared" > "${MX
 # now build MXE
 cd "${MXE_ROOT_DIR}" && MXE_SILENT_NO_NETWORK= \
 make \
-a52dec \
 faad2 \
 fdk-aac \
 fribidi \
 lame \
 libass \
-libmad \
 libvpx \
 ogg \
 opus \

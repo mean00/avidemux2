@@ -151,11 +151,12 @@ extractMpeg4Info (uint8_t * data, uint32_t dataSize, uint32_t * w,
     Warning this function expects data to start AFTER startcode, contrarily to other functions here!
 */
 
-ADM_COREUTILS6_EXPORT uint8_t extractVopInfo (uint8_t * data, uint32_t len, uint32_t timeincbits,
+static uint8_t extractVopInfo (uint8_t * data, uint32_t len, uint32_t timeincbits,
 		uint32_t * vopType, uint32_t * modulo, uint32_t * time_inc,
 		uint32_t * vopcoded)
 {
-  
+  if(!timeincbits) return 0;
+
   int vop;
   uint32_t vp, tinc;
   getBits bits(len,data );
@@ -330,87 +331,74 @@ extractH263Info (uint8_t * data, uint32_t dataSize, uint32_t * w,
     Used for packed bitstream and also to identify the frametype
 
 */
-uint32_t
-ADM_searchVop (uint8_t * begin, uint8_t * end, uint32_t * nb, ADM_vopS * vop,
-	       uint32_t * timeincbits)
+uint32_t ADM_searchVop(uint8_t * begin, uint8_t * end, const uint32_t max, ADM_vopS * vop, uint32_t * timeincbits)
 {
+    uint32_t off = 0;
+    uint32_t globalOff = 0;
+    uint32_t voptype;
+    uint8_t code;
+    uint32_t w, h;
+    uint32_t modulo, time_inc, vopcoded, vopType, nb = 0;
 
-  uint32_t off = 0;
-  uint32_t globalOff = 0;
-  uint32_t voptype;
-  uint8_t code;
-  uint32_t w, h;
-  uint32_t modulo, time_inc, vopcoded, vopType;
-  *nb = 0;
-  while (begin < end - 3)
+    while (begin < end - 3)
     {
-      if (ADM_findMpegStartCode (begin, end, &code, &off))
-	{
-	  if (code == MP4_VOP)
-	    {
-	      // Analyse a bit the vop header
-	      uint8_t coding_type = begin[off];
-	      coding_type >>= 6;
-	      aprintf ("\t at %u %d Img type:%s\n", off, *nb,
-		       s_voptype[coding_type]);
-	      switch (coding_type)
-		{
-		case 0:
-		  voptype = AVI_KEY_FRAME;
-		  break;
-		case 1: // P
-		case 3: // S
-		  voptype = 0;
-		  break;
-		case 2:
-		  voptype = AVI_B_FRAME;
-		  break;
-                default:
-                  ADM_warning("Unknown vop type\n");
+        if (ADM_findMpegStartCode (begin, end, &code, &off))
+        {
+            if (code == MP4_VOP)
+            {
+                // Analyse a bit the vop header
+                uint8_t coding_type = begin[off];
+                coding_type >>= 6;
+                switch (coding_type)
+                {
+                    case 0:
+                        voptype = AVI_KEY_FRAME;
+                        break;
+                    case 1: // P
+                    case 3: // S
+                        voptype = AVI_P_FRAME;
+                        break;
+                    case 2:
+                        voptype = AVI_B_FRAME;
+                        break;
+                    default:
+                        ADM_warning("Unknown vop type\n");
+                        break;
+                }
+                //printf ("\t at %u %u Img type: %s\n", off, nb, (voptype == AVI_KEY_FRAME)? "I" : (voptype == AVI_P_FRAME)? "P" : (voptype == AVI_B_FRAME)? "B" : "?");
+                vop[nb].offset = globalOff + off - 4;
+                vop[nb].type = voptype;
 
-		}
-	      vop[*nb].offset = globalOff + off - 4;
-	      vop[*nb].type = voptype;
+                /* Get more info */
+                if (extractVopInfo(begin + off, end - begin - off, *timeincbits, &vopType, &modulo, &time_inc, &vopcoded))
+                {
+                    aprintf(" frame found: vopType:%x modulo:%d time_inc:%d vopcoded:%d\n",
+                        vopType, modulo, time_inc, vopcoded);
+                    vop[nb].modulo = modulo;
+                    vop[nb].timeInc = time_inc;
+                    vop[nb].vopCoded = vopcoded;
+                }
+                nb++;
+                begin += off + 1;
+                globalOff += off + 1;
 
+                if(nb >= max) return max;
+                continue;
 
-
-	      /* Get more info */
-	      if (extractVopInfo
-		  (begin + off, end - begin - off, *timeincbits, &vopType,
-		   &modulo, &time_inc, &vopcoded))
-		{
-		  aprintf
-		    (" frame found: vopType:%x modulo:%d time_inc:%d vopcoded:%d\n",
-		     vopType, modulo, time_inc, vopcoded);
-		  vop[*nb].modulo = modulo;
-		  vop[*nb].timeInc = time_inc;
-		  vop[*nb].vopCoded = vopcoded;
-		}
-	      *nb = (*nb) + 1;
-	      begin += off + 1;
-	      globalOff += off + 1;
-	      continue;
-
-	    }
-	  else if (code == 0x20 && off >= 4)	// Vol start
-	    {
-
-	      if (extractMpeg4Info
-		  (begin + off - 4, end + 4 - off - begin, &w, &h,
-		   timeincbits))
-		{
-		  aprintf ("Found Vol header : w:%d h:%d timeincbits:%d\n", w,
-			   h, *timeincbits);
-		}
-
-	    }
-	  begin += off;
-	  globalOff += off;
-	  continue;
-	}
-      return 1;
+            } else if (code == 0x20 && off >= 4) // Vol start
+            {
+                if (extractMpeg4Info(begin + off - 4, end + 4 - off - begin, &w, &h, timeincbits))
+                {
+                    aprintf ("Found Vol header : w:%d h:%d timeincbits:%d\n", w, h, *timeincbits);
+                }
+            }
+            begin += off;
+            globalOff += off;
+            continue;
+        }
+        return nb;
     }
-  return 1;
+    return nb;
 }
 
 typedef struct

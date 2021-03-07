@@ -288,7 +288,14 @@ void filtermainWindow::preview(bool b)
 void filtermainWindow::closePreview()
 {
     if (previewDialog)
+    {
+        if(previewDialog->seekablePreview)
+        {
+            previewDialog->seekablePreview->play(false);
+            previewDialog->seekablePreview->goToTime(0);
+        }
         qtUnregisterDialog(previewDialog);
+    }
 }
 
 /**
@@ -721,7 +728,10 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     char hint[HINT_LENGTH];
     hint[0] = '\0';
     QKeySequence acc(Qt::ControlModifier + Qt::Key_Return);
-    snprintf(hint,HINT_LENGTH,QT_TRANSLATE_NOOP("qmainfilter","Press %s to accept the dialog"),acc.toString().toUtf8().constData());
+    snprintf(hint,
+        HINT_LENGTH,
+        QT_TRANSLATE_NOOP("qmainfilter","Press %s to accept the dialog"),
+        acc.toString(QKeySequence::NativeText).toUtf8().constData());
     hint[HINT_LENGTH-1] = '\0';
     ui.labelAcceptHint->setText(QString::fromUtf8(hint));
 #undef HINT_LENGTH
