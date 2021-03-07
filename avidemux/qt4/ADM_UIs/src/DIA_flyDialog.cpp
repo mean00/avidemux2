@@ -260,6 +260,9 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
 {
         _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
         _control=new flyControl(horizontalLayout_4);
+        _parent->adjustSize(); // force currentTime size calculation
+        _control->currentTime->setTextMargins(0,0,0,0); // counteract Adwaita messing with text margins
+
         QObject::connect(_control->pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
         QObject::connect(_control->pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
         QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
