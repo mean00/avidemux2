@@ -18,8 +18,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QPushButton>
 #include "Q_asharp.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_vidAsharp.h"
 #include "math.h"
 
 //
@@ -41,13 +43,15 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
     memcpy(&(myCrop->param),param,sizeof(asharp));
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
+    myCrop->setTabOrder();
     myCrop->upload();
     myCrop->sliderChanged();
 
     connect(ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
+    connect(ui.checkBoxFullPreview,SIGNAL(stateChanged(int)),this,SLOT(toggleFullPreview(int)));
 #define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChanged(double))); \
                    connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSlider(int)));
-    SPINNER(Treshold)
+    SPINNER(Threshold)
     SPINNER(Strength)
     SPINNER(Block)
 
@@ -55,6 +59,10 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
     CHKBOX(Strength);
     CHKBOX(Block);
     CHKBOX(HQBF);
+
+    QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
+    connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
+
     setModal(true);
 }
 void Ui_asharpWindow::sliderUpdate(int foo)
@@ -85,7 +93,23 @@ void Ui_asharpWindow::valueChanged( double f )
     myCrop->sameImage();
     lock--;
 }
-
+void Ui_asharpWindow::toggleFullPreview(int state)
+{
+    if(lock) return;
+    lock++;
+    myCrop->fullpreview = state != Qt::Unchecked;
+    myCrop->sameImage();
+    lock--;
+}
+void Ui_asharpWindow::reset(void)
+{
+    if(lock) return;
+    lock++;
+    ASharp::reset(&myCrop->param);
+    myCrop->upload();
+    myCrop->sameImage();
+    lock--;
+}
 void Ui_asharpWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -112,7 +136,7 @@ void Ui_asharpWindow::valueChangedSlider(int f)
     Ui_asharpDialog *w=(Ui_asharpDialog *)myCrop->_cookie;
     myCrop->blockChanges(true);
 
-    MYSPIN(Treshold)->setValue((double)MYSLIDER(Treshold)->value() / 100.0);
+    MYSPIN(Threshold)->setValue((double)MYSLIDER(Threshold)->value() / 100.0);
     MYSPIN(Strength)->setValue((double)MYSLIDER(Strength)->value() / 100.0);
     MYSPIN(Block)->setValue((double)MYSLIDER(Block)->value() / 100.0);
 
@@ -122,7 +146,7 @@ void Ui_asharpWindow::valueChangedSlider(int f)
 
 //************************
 #define APPLY_TO_ALL(x) { \
-    w->horizontalSliderTreshold->x; w->doubleSpinBoxTreshold->x; \
+    w->horizontalSliderThreshold->x; w->doubleSpinBoxThreshold->x; \
     w->horizontalSliderStrength->x; w->doubleSpinBoxStrength->x; \
     w->horizontalSliderBlock->x; w->doubleSpinBoxBlock->x; \
 }
@@ -140,8 +164,8 @@ uint8_t flyASharp::upload(void)
     Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
     blockChanges(true);
 
-    MYSPIN(Treshold)->setValue(param.t);
-    MYSLIDER(Treshold)->setValue(floor(param.t * 100.0));
+    MYSPIN(Threshold)->setValue(param.t);
+    MYSLIDER(Threshold)->setValue(floor(param.t * 100.0));
 
     MYCHKBOX(Strength)->setChecked(param.d_enabled);
     ENABLE_NUM_INPUT(Strength, param.d_enabled);
@@ -161,7 +185,7 @@ uint8_t flyASharp::upload(void)
 uint8_t flyASharp::download(void)
 {
     Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
-    param.t= MYSPIN(Treshold)->value();
+    param.t= MYSPIN(Threshold)->value();
     param.d= MYSPIN(Strength)->value();
     param.b= MYSPIN(Block)->value();
     param.bf=MYCHKBOX(HQBF)->isChecked();
@@ -171,7 +195,7 @@ uint8_t flyASharp::download(void)
 
     blockChanges(true);
 
-    MYSLIDER(Treshold)->setValue(floor(MYSPIN(Treshold)->value() * 100.0));
+    MYSLIDER(Threshold)->setValue(floor(MYSPIN(Threshold)->value() * 100.0));
     MYSLIDER(Strength)->setValue(floor(MYSPIN(Strength)->value() * 100.0));
     MYSLIDER(Block)->setValue(floor(MYSPIN(Block)->value() * 100.0));
 
@@ -181,7 +205,35 @@ uint8_t flyASharp::download(void)
     blockChanges(false);
     return 1;
 }
+void flyASharp::setTabOrder(void)
+{
+    Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
+    std::vector<QWidget *> controls;
+    controls.push_back(MYSLIDER(Threshold));
+    controls.push_back(MYSPIN(Threshold));
+    controls.push_back(MYCHKBOX(Strength));
+    controls.push_back(MYSLIDER(Strength));
+    controls.push_back(MYSPIN(Strength));
+    controls.push_back(MYCHKBOX(Block));
+    controls.push_back(MYSLIDER(Block));
+    controls.push_back(MYSPIN(Block));
+    controls.push_back(MYCHKBOX(HQBF));
+    controls.push_back(MYCHKBOX(FullPreview));
 
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
       \fn     DIA_getCropParams
       \brief  Handle crop dialog

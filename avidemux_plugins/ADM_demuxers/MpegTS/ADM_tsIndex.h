@@ -127,7 +127,7 @@ enum
 class TsIndexerBase
 {
 protected:
-        uint32_t        beginConsuming;
+        uint64_t        beginConsuming;
         uint64_t        fullSize;
         vector <H264Unit> listOfUnits;
         H264Unit        thisUnit;

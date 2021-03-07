@@ -1,4 +1,4 @@
-<RCC>
+<!DOCTYPE RCC><RCC version="1.0">
   <qresource prefix="jobs">
     <file>gtk-media-play.png</file>
     <file>gtk-ok.png</file>

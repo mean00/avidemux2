@@ -42,6 +42,7 @@ class  ADMVideoArtCharcoal:public ADM_coreVideoFilter
     virtual bool         configure(void) ;                 /// Start graphical user interface
 
     static  void         ArtCharcoalProcess_C(ADMImage *img, ADMImage *tmp, int32_t scatterX, int32_t scatterY, float intensity, float color, bool invert);
+    static  void         reset(artCharcoal *cfg);
 
   private:
     static  float         ArtCharcoalProcess_Sqrti( int n );

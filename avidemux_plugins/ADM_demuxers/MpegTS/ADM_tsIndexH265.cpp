@@ -318,6 +318,7 @@ uint8_t TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
     bool firstSps=true;
     uint64_t lastAudOffset=0;
     int audCount=0;
+    int audStartCodeLen=5;
     int lastRefIdc=0;
     dmxPacketInfo packetInfo;
 
@@ -387,8 +388,9 @@ uint8_t TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
             {
                 aprintf("AU DELIMITER\n");
                 decodingImage = false;
-                pkt->getInfo(&packetInfo);
+                pkt->getInfo(&packetInfo,startCodeLength);
                 lastAudOffset=pkt->getConsumed();
+                audStartCodeLen = startCodeLength;
                 audCount++;
                 break;
             }
@@ -418,6 +420,7 @@ uint8_t TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
                 }else
                 {
                     thisUnit.consumedSoFar=lastAudOffset;
+                    startCodeLength = audStartCodeLen;
                 }
                 // Read the beginning of the picture to get its type...
                 pkt->read(preRead,buffer);
@@ -458,13 +461,21 @@ uint8_t TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
                     {
                         pos+=pkt->getConsumed();
                         pos-=lastAudOffset;
+                        startCodeLength = audStartCodeLen;
                     }
                     pkt->setConsumed(pos); // reset consume counter
                     thisUnit.consumedSoFar=pos;
                     firstSps=false;
                 }else
                 {
-                    thisUnit.consumedSoFar=lastAudOffset;
+                    if(audCount)
+                    {
+                        thisUnit.consumedSoFar = lastAudOffset;
+                        startCodeLength = audStartCodeLen;
+                    }else
+                    {
+                        thisUnit.consumedSoFar = pkt->getConsumed();
+                    }
                 }
                 if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
                 {

@@ -249,6 +249,13 @@ static void fillComboBox(QComboBox *box, const ContainerT& items, const char* in
 x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
 {
        ui.setupUi(this);
+#if X265_BUILD < 178
+        {
+            int algos = ui.aqAlgoComboBox->count();
+            while(algos-- > 3)
+                ui.aqAlgoComboBox->removeItem(algos);
+        }
+#endif
         connect(ui.useAdvancedConfigurationCheckBox, SIGNAL(toggled(bool)), this, SLOT(useAdvancedConfigurationCheckBox_toggled(bool)));
         connect(ui.encodingModeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(encodingModeComboBox_currentIndexChanged(int)));
         connect(ui.quantiserSlider, SIGNAL(valueChanged(int)), this, SLOT(quantiserSlider_valueChanged(int)));

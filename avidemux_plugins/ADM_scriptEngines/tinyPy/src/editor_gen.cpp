@@ -96,6 +96,18 @@ static tp_obj zzpy_nbSegments(TP)
   int r = editor->getNbSegment();
   return tp_number(r);
 }
+// nbVideos -> int editor->getVideoCount(void)
+static tp_obj zzpy_nbVideos(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
+
+  int r = editor->getVideoCount();
+  return tp_number(r);
+}
 // getNextKFramePts -> double pyGetNextKFramePts(IEditor double)
 static tp_obj zzpy_getNextKFramePts(TP)
 {
@@ -305,6 +317,10 @@ tp_obj zzpy__pyEditor_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_nbSegments);
   }
+  if (!strcmp(key, "nbVideos"))
+  {
+    return tp_method(vm, self, zzpy_nbVideos);
+  }
   if (!strcmp(key, "getNextKFramePts"))
   {
     return tp_method(vm, self, zzpy_getNextKFramePts);
@@ -395,6 +411,7 @@ static tp_obj zzpy__pyEditor_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getVideoDuration(void)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getRefVideoName(IEditor,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "nbSegments(void)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "nbVideos(void)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getNextKFramePts(IEditor,double)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getCurrentPts(void)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "nextFrame(IEditor)\n");

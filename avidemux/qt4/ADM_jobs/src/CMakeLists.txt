@@ -17,7 +17,11 @@ INCLUDE(admWindRes)
 #
 SET(UI uiJobs.ui uiProgress.ui)
 SET(headers ../include/T_jobs.h ../include/T_progress.h)
-ADM_QT_ADD_RESOURCES(resource  jobs.rsc)
+IF(APPLE OR WIN32)
+    ADM_QT_ADD_RESOURCES(resource jobs.qrc)
+ELSE(APPLE OR WIN32)
+    ADM_QT_ADD_RESOURCES(resource jobs_linux.qrc)
+ENDIF(APPLE OR WIN32)
 ADM_QT_WRAP_UI(ADM_JOBS_headers ${UI})
 ADM_QT_WRAP_CPP(ADM_JOBS_source ${headers}
                 ADM_jobControl.cpp)

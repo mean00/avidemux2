@@ -1,5 +1,6 @@
 Avidemux is GPL V2.
 It contains other software included as source with the following licenses :
+
 Name   : liba52
 URL    : http://liba52.sf.net
 License: GPL
@@ -24,6 +25,7 @@ URL    : http://mp4v2.googlecode.com/svn
 License: LGPL
 Rev: 485
 Name    : libass
+
 URL     : https://github.com/libass/libass.git
 License : GPL >=2
 Version : commit 23de9995103c16ceceba19cae87e328be12fa8e4 / 3 August , slightly more recent than 0.12.3
@@ -35,6 +37,7 @@ License : GPL
 URL    : https://github.com/saintdev/libmkv.git
 License:  GPL
 Rev: 0.6.5.1 / d2906c03cc8f91fca0074e02bb14504a0e85bce6
+
 Name   : fglrx_info
 URL    : Splitted-Desktop Systems
 License: GPLv2
@@ -50,4 +53,8 @@ License : GPL
 Name   : BVecor
 URL    : http://berenger.eu/blog/
 License: LGPL
+
+Name   : DSEG
+URL    : https://www.keshikan.net/fonts-e.html
+License: SIL Open Font License, Version 1.1
 

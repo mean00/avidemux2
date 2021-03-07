@@ -13,7 +13,10 @@
   <property name="windowTitle">
    <string>Charcoal / Chalkboard</string>
   </property>
-  <layout class="QGridLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>6</number>
+   </property>
    <property name="leftMargin">
     <number>9</number>
    </property>
@@ -26,49 +29,7 @@
    <property name="bottomMargin">
     <number>9</number>
    </property>
-   <property name="spacing">
-    <number>6</number>
-   </property>
-   <item row="2" column="0" colspan="2">
-    <widget class="ADM_QSlider" name="horizontalSlider">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QGraphicsView" name="graphicsView"/>
-   </item>
-   <item row="4" column="1">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="0">
-    <layout class="QHBoxLayout" name="toolboxLayout"/>
-   </item>
-   <item row="0" column="0" colspan="2">
+   <item>
     <layout class="QGridLayout" name="gridLayout">
      <property name="leftMargin">
       <number>0</number>
@@ -83,21 +44,43 @@
       <number>0</number>
      </property>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="labelIntensity">
        <property name="text">
         <string>Intensity</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
+     <item row="3" column="1">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderColor">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelColor">
        <property name="text">
-        <string>Horizontal scatter</string>
+        <string>Color</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
       <widget class="ADM_SliderIndicator" name="horizontalSliderScatterX">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimum">
         <number>0</number>
        </property>
@@ -113,41 +96,27 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="labelVScatter">
        <property name="text">
         <string>Vertical scatter</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_4">
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelHScatter">
        <property name="text">
-        <string>Color</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QCheckBox" name="checkBoxInvert">
-       <property name="text">
-        <string>Chalkboard</string>
+        <string>Horizontal scatter</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
       <widget class="ADM_SliderIndicator" name="horizontalSliderScatterY">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimum">
         <number>0</number>
        </property>
@@ -164,6 +133,12 @@
      </item>
      <item row="2" column="1">
       <widget class="ADM_SliderIndicator" name="horizontalSliderIntensity">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="maximum">
         <number>100</number>
        </property>
@@ -172,17 +147,60 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="ADM_SliderIndicator" name="horizontalSliderColor">
-       <property name="maximum">
-        <number>100</number>
-       </property>
+     <item row="0" column="2">
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-      </widget>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="checkBoxInvert">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Chalkboard</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="toolboxLayout"/>
+   </item>
+   <item>
+    <widget class="ADM_QSlider" name="horizontalSlider">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Reset</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -198,15 +216,6 @@
    <header>ADM_toolkitQt.h</header>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>horizontalSliderScatterX</tabstop>
-  <tabstop>horizontalSliderScatterY</tabstop>
-  <tabstop>horizontalSliderIntensity</tabstop>
-  <tabstop>horizontalSliderColor</tabstop>
-  <tabstop>checkBoxInvert</tabstop>
-  <tabstop>horizontalSlider</tabstop>
-  <tabstop>graphicsView</tabstop>
- </tabstops>
  <resources/>
  <connections>
   <connection>

@@ -31,6 +31,7 @@ class flyLogo : public ADM_flyDialogYuv
                flyLogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider);
    virtual     ~flyLogo() {};
+   void         setTabOrder(void);
    bool         setXy(int x,int y);
    bool         setPreview(bool onoff)
                 {
