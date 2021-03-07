@@ -20,8 +20,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QPushButton>
 #include "Q_artCharcoal.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_vidArtCharcoal.h"
 #include <cmath>
 
 //
@@ -43,6 +45,7 @@ Ui_artCharcoalWindow::Ui_artCharcoalWindow(QWidget *parent, artCharcoal *param,A
         memcpy(&(myFly->param),param,sizeof(artCharcoal));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
@@ -56,6 +59,9 @@ Ui_artCharcoalWindow::Ui_artCharcoalWindow(QWidget *parent, artCharcoal *param,A
 
 #define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         CHKBOX(Invert);
+
+        QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
+        connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
         setModal(true);
 }
@@ -83,7 +89,15 @@ void Ui_artCharcoalWindow::valueChanged( int f )
     myFly->sameImage();
     lock--;
 }
-
+void Ui_artCharcoalWindow::reset(void)
+{
+    if(lock) return;
+    lock++;
+    ADMVideoArtCharcoal::reset(&myFly->param);
+    myFly->upload();
+    myFly->sameImage();
+    lock--;
+}
 void Ui_artCharcoalWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -125,7 +139,32 @@ uint8_t flyArtCharcoal::download(void)
     param.invert=MYCHECK(Invert)->isChecked();
     return 1;
 }
+void flyArtCharcoal::setTabOrder(void)
+{
+    Ui_artCharcoalDialog *w=(Ui_artCharcoalDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
+#define PUSH_TOG(x) controls.push_back(MYCHECK(x));
+    PUSH_SPIN(ScatterX)
+    PUSH_SPIN(ScatterY)
+    PUSH_SPIN(Intensity)
+    PUSH_SPIN(Color)
+    PUSH_TOG(Invert)
 
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
     \fn     DIA_getCropParams
     \brief  Handle crop dialog

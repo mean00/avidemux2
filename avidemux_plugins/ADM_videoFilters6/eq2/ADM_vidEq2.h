@@ -3,6 +3,10 @@
 
 #include "eq2.h"
 
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+#   define CAN_DO_INLINE_X86_ASM
+#endif
+
 typedef struct oneSetting {
   unsigned char lut[256];
 #ifdef LUT16
@@ -31,16 +35,28 @@ typedef struct Eq2Settings {
 
  
 } Eq2Settings;
-//*************************
-uint8_t DIA_getEQ2Param(eq2 *param,ADM_coreVideoFilter *in);
 
-void update_lut(Eq2Settings *settings,eq2 *_param);
-void apply_lut (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM_PLANE plane);
-void create_lut (oneSetting *par);
+/**
+    \class ADMVideoEq2
+*/
+class ADMVideoEq2:public ADM_coreVideoFilter
+{
+  protected:
+            eq2         _param;
+            Eq2Settings settings;
+            ADMImage    *mysrc;
 
-#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
-        #define CAN_DO_INLINE_X86_ASM
-        void affine_1d_MMX (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM_PLANE plane);
-#endif
+            void        update(void);
+  public:
+                        ADMVideoEq2(ADM_coreVideoFilter *in,CONFcouple *couples);
+                        ~ADMVideoEq2();
+    virtual const char  *getConfiguration(void); /// Return current configuration as a human readable string
+    virtual bool        getNextFrame(uint32_t *fn,ADMImage *image); /// Return the next image
+    virtual bool        getCoupledConf(CONFcouple **couples); /// Return the current filter configuration
+    virtual void        setCoupledConf(CONFcouple *couples);
+    virtual bool        configure(void); /// Start graphical user interface
 
+            static bool processPlane(oneSetting *par, ADMImage *srcImage, ADMImage *destImage, ADM_PLANE plane);
+            static bool update_lut(Eq2Settings *settings, eq2 *cfg);
 
+};

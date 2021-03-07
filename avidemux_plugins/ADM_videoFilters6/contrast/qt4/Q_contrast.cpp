@@ -39,6 +39,7 @@
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
 
         scene=new QGraphicsScene(this);
+        scene->setSceneRect(0,0,256,128);
         ui.graphicsViewHistogram->setScene(scene);
         ui.graphicsViewHistogram->scale(1.0,1.0);
 
@@ -46,6 +47,7 @@
         memcpy(&(myCrop->param),param,sizeof(contrast));
         myCrop->_cookie=&ui;
         myCrop->addControl(ui.toolboxLayout);
+        myCrop->setTabOrder();
         myCrop->upload();
         myCrop->sliderChanged();
 
@@ -194,6 +196,8 @@ uint8_t flyContrast::upload(void)
         CHECKSET(Y,doLuma);
         CHECKSET(U,doChromaU);
         CHECKSET(V,doChromaV);
+
+        tablesPopulated = false;
         return 1;
 }
 /**
@@ -205,6 +209,14 @@ uint8_t flyContrast::download(void)
        Ui_contrastDialog *w=(Ui_contrastDialog *)_cookie;
          param.coef=MYSPIN(Contrast)->value()/100.;
          param.offset=MYSPIN(Brightness)->value();
+
+        if(oldCoef != param.coef || oldOffset != param.offset)
+        {
+            tablesPopulated = false;
+            oldCoef = param.coef;
+            oldOffset = param.offset;
+        }
+
 #define CHECKGET(a,b) param.b=MYCHECK(a)->isChecked()
 
         CHECKGET(Y,doLuma);
@@ -212,7 +224,37 @@ uint8_t flyContrast::download(void)
         CHECKGET(V,doChromaV);
 return 1;
 }
+/**
+ * \fn setTabOrder
+ */
+void flyContrast::setTabOrder(void)
+{
+    Ui_contrastDialog *w=(Ui_contrastDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSH_SPIN(x) controls.push_back(w->dial##x);
+#define PUSH_CHECK(x) controls.push_back(w->checkBox##x);
+    PUSH_SPIN(Contrast)
+    PUSH_SPIN(Brightness)
+    PUSH_CHECK(Y)
+    PUSH_CHECK(U)
+    PUSH_CHECK(V)
+    PUSH_CHECK(_Enabled)
 
+    controls.push_back(w->toolButton__DVD2PC);
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
       \fn     DIA_getCropParams
       \brief  Handle crop dialog

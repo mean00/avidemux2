@@ -115,7 +115,16 @@ preferences::preferences()
             ADM_assert(rank!=-1);
             const optionDesc *opt=myOptions+rank;
             ADM_assert(myOptions[rank].type==param->type);
-            
+#ifdef __APPLE__
+            /* The default key for delete in Avidemux on macOS is Backspace and it shall not
+            change when alternative kbd shortcuts are enabled unless a user actively edits
+            the configuration file. Override prefs2.conf to avoid distressing users. */
+            if(!strcmp(name,"keyboard_shortcuts.alt_delete") && param->type == ADM_param_stdstring)
+            {
+                *(std::string *)(dummyPointer+offset)=std::string("Backspace");
+                continue;
+            }
+#endif
             switch(param->type)
             {
                 case ADM_param_uint32_t:

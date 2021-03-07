@@ -17,6 +17,11 @@
    	The maximum width/height is MAXIMUM_SIZE 768*768 for now
 */
 #define MAXIMUM_SIZE 8192
+/*
+    libavcodec doesn't recommend thread count > 16, but things start to fall apart already > 8
+    FIXME find a more suitable location
+*/
+#define LAVC_MAX_SAFE_THREAD_COUNT 8
 
 typedef unsigned char ADM_filename;
 

@@ -24,7 +24,7 @@ SET(AVIDEMUX_TOP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/..)
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common)
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_editor/include)
 
-target_link_libraries(ADM_script_tinyPy ADM_coreImage6 ADM_coreScript ADM_coreUtils6 ADM_core6 ADM_coreUI6 )
+target_link_libraries(ADM_script_tinyPy ADM_coreImage6 ADM_coreScript ADM_coreUtils6 ADM_core6 ADM_coreUI6 ADM_coreDemuxer6)
 IF(NOT MSVC)
         target_link_libraries(ADM_script_tinyPy m )
 ENDIF(NOT MSVC)

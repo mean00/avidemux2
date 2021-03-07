@@ -18,8 +18,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QPushButton>
 #include "Q_msharpen.h"
 #include "ADM_toolkitQt.h"
+#include "../ADM_vidMSharpen.h"
 
 //
 //	Video is in YV12 Colorspace
@@ -40,9 +42,11 @@
         memcpy(&(flymsharpen->param),param,sizeof(*param));
         flymsharpen->_cookie=&ui;
         flymsharpen->addControl(ui.toolboxLayout);
+        flymsharpen->setTabOrder();
         flymsharpen->upload();
         flymsharpen->sliderChanged();
 
+        ui.horizontalSliderStrength->setFocus();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));\
@@ -55,6 +59,10 @@
 
         SPINNER(Threshold);
         SPINNER(Strength);
+
+        QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
+        connect(resetButton,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
+        connect(ui.checkBoxFullPreview,SIGNAL(stateChanged(int)),this,SLOT(toggleFullPreview(int)));
 
         setModal(true);
   }
@@ -83,7 +91,23 @@ void Ui_msharpenWindow::valueChanged( int f )
   flymsharpen->sameImage();
   lock--;
 }
-
+void Ui_msharpenWindow::toggleFullPreview(int state)
+{
+    if(lock) return;
+    lock++;
+    flymsharpen->fullpreview = state != Qt::Unchecked;
+    flymsharpen->sameImage();
+    lock--;
+}
+void Ui_msharpenWindow::reset(bool checked)
+{
+    if(lock) return;
+    lock++;
+    Msharpen::reset(&flymsharpen->param);
+    flymsharpen->upload();
+    flymsharpen->sameImage();
+    lock--;
+}
 void Ui_msharpenWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())

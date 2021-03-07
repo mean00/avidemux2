@@ -26,6 +26,7 @@ class Ui_artCharcoalWindow : public QDialog
   private slots:
     void sliderUpdate(int foo);
     void valueChanged(int foo);
+    void reset(void);
 
   private:
     void resizeEvent(QResizeEvent *event);

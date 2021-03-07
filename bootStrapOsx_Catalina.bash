@@ -41,7 +41,7 @@ debug=0
 create_app_bundle=1
 external_libass=1
 external_liba52=1
-external_libmad=1
+external_libmad=0
 external_libmp4v2=1
 
 # /usr/include is no more on Catalina
@@ -157,7 +157,7 @@ usage()
         echo "  --without-plugins       : Don't build plugins"
         echo "  --with-internal-libass  : Use bundled libass instead of the system one"
         echo "  --with-internal-liba52  : Use bundled liba52 (a52dec) instead of the system one"
-        echo "  --with-internal-libmad  : Use bundled libmad instead of the system one"
+        echo "  --with-external-libmad  : Use system libmad instead of the bundled one"
         echo "  --with-internal-libmp4v2: Use bundled libmp4v2 instead of the system one"
         config
 }
@@ -241,8 +241,8 @@ while [ $# != 0 ] ;do
          --with-internal-liba52)
                 external_liba52=0
              ;;
-         --with-internal-libmad)
-                external_libmad=0
+         --with-external-libmad)
+                external_libmad=1
              ;;
          --with-internal-libmp4v2)
                 external_libmp4v2=0

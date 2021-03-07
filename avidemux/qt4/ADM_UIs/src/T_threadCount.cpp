@@ -51,8 +51,6 @@ ADM_QthreadCount::ADM_QthreadCount(QWidget *widget, const char *title, uint32_t 
 	buttonGroup->addButton(radiobutton2);
 	buttonGroup->addButton(radiobutton3);
 
-	// libavcodec doesn't recommend thread count > 16, but things start to fall apart already > 8
-#define LAVC_MAX_SAFE_THREAD_COUNT 8
 	spinBox = new QSpinBox();
 	spinBox->setRange(2, LAVC_MAX_SAFE_THREAD_COUNT);
 

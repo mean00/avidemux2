@@ -19,6 +19,7 @@ public:
 private:
         int                 lock;
         Ui_mpdelogoDialog   ui;
+        QHBoxLayout         *helpLayout;
         ADM_coreVideoFilter *_in;
         flyMpDelogo         *myCrop;
         ADM_QCanvas         *canvas;

@@ -18,6 +18,11 @@
 #include "ADM_inttype.h"
 #include <QKeyEvent>
 #include <QAction>
+
+#ifdef __APPLE__
+#include <QMenuBar>
+#endif
+
 #include "Q_shell.h"
 #include "ADM_default.h"
 #include "ui_shell.h"
@@ -55,6 +60,14 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine, std::vector <shellHistory
 #else
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or ⌘⏎.\n"));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use ⌥⌘▲ and ⌥⌘▼ to recall previous commands.\nReady.\n"));
+
+    /* On macOS, global menus containing actions with keyboard shortcuts assigned
+    are highlighted if corresponding keys are pressed. This happens even if menus
+    belong to the parent of a modal dialog, i.e. when all actions in a menu are
+    disabled and no key events are propagated to the parent. Add an empty menu bar
+    which will replace the menu bar from the main window as a crude hack to avoid
+    the "Go" menu flashing on every keypress of an arrow key. */
+    QMenuBar *dummyBar = new QMenuBar(this);
 #endif
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
     dumpHistory();
@@ -128,7 +141,7 @@ bool            qShell::evaluate(bool x)
     ui.textBrowser->append(text);
     ui.textBrowser->setFontItalic(false);
     ui.textBrowser_2->setPlainText("");
-    _engine->runScript(text.toLatin1().constData(), IScriptEngine::Normal);
+    _engine->runScript(text.toUtf8().constData(), IScriptEngine::Normal);
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
     dumpHistory();
 #endif

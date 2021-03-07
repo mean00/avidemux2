@@ -11,7 +11,7 @@ do_core=1
 do_qt=1
 do_cli=1
 do_plugins=1
-external_libass=0
+external_libass=1
 external_liba52=0
 external_libmad=0
 do_release_pkg=1
@@ -130,25 +130,25 @@ Process()
 usage()
 {
     echo "Usage: bash $0 [OPTION]"
-    echo "  --help                : Print usage"
-    echo "  --32                  : Build a 32 bit application (default)"
-    echo "  --64                  : Build a 64 bit application"
-    echo "  --debug               : Switch debugging on"
-    echo "  --mxe-root=DIR        : Use MXE installed in DIR (default: ${default_mxerootdir})"
-    echo "  --rebuild             : Preserve existing build directories"
-    echo "  --with-core           : Build core"
-    echo "  --without-core        : Don't build core"
-    echo "  --with-cli            : Build cli"
-    echo "  --without-cli         : Don't build cli"
-    echo "  --with-core           : Build core"
-    echo "  --without-qt          : Don't build qt5"
-    echo "  --with-plugins        : Build plugins"
-    echo "  --without-plugins     : Don't build plugins"
-    echo "  --with-system-libass  : Use the system libass instead of the bundled one"
-    echo "  --with-system-liba52  : Use the system liba52 (a52dec) instead of the bundled one"
-    echo "  --with-system-libmad  : Use the system libmad instead of the bundled one"
-    echo "  --nopkg               : Don't create a ZIP archive with all required libraries"
-    echo "  -a, --author          : Match the env setup used by the Author, implies --nopkg"
+    echo "  --help                 : Print usage"
+    echo "  --32                   : Build a 32 bit application (default)"
+    echo "  --64                   : Build a 64 bit application"
+    echo "  --debug                : Switch debugging on"
+    echo "  --mxe-root=DIR         : Use MXE installed in DIR (default: ${default_mxerootdir})"
+    echo "  --rebuild              : Preserve existing build directories"
+    echo "  --with-core            : Build core (default)"
+    echo "  --without-core         : Don't build core"
+    echo "  --with-cli             : Build cli (default)"
+    echo "  --without-cli          : Don't build cli application and plugins"
+    echo "  --with-qt              : Build Qt (default)"
+    echo "  --without-qt           : Don't build Qt application and plugins"
+    echo "  --with-plugins         : Build plugins (default)"
+    echo "  --without-plugins      : Don't build plugins"
+    echo "  --with-internal-libass : Use bundled libass instead of the system one"
+    echo "  --with-system-liba52   : Use the system liba52 (a52dec) instead of the bundled one"
+    echo "  --with-system-libmad   : Use the system libmad instead of the bundled one"
+    echo "  --nopkg                : Don't create a ZIP archive with all required libraries"
+    echo "  -a, --author           : Match the env setup used by the Author, implies --nopkg"
 }
 
 option_value()
@@ -339,8 +339,8 @@ while [ $# != 0 ]; do
         --with-core)
             do_core=1
             ;;
-        --with-system-libass)
-            export external_libass=1
+        --with-internal-libass)
+            export external_libass=0
             ;;
         --with-system-liba52)
             export external_liba52=1

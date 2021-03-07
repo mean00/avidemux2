@@ -20,8 +20,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QPushButton>
 #include "Q_artVHS.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_vidArtVHS.h"
 #include "math.h"
 
 //
@@ -43,6 +45,7 @@ Ui_artVHSWindow::Ui_artVHSWindow(QWidget *parent, artVHS *param,ADM_coreVideoFil
         memcpy(&(myFly->param),param,sizeof(artVHS));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
@@ -58,6 +61,10 @@ Ui_artVHSWindow::Ui_artVHSWindow(QWidget *parent, artVHS *param,ADM_coreVideoFil
         CHKBOX(LumaNoDelay);
         CHKBOX(ChromaNoDelay);
 
+        QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
+        connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
+
+        ui.horizontalSliderLumaBW->setFocus();
         setModal(true);
 }
 void Ui_artVHSWindow::sliderUpdate(int foo)
@@ -84,7 +91,15 @@ void Ui_artVHSWindow::valueChanged( int f )
     myFly->sameImage();
     lock--;
 }
-
+void Ui_artVHSWindow::reset(void)
+{
+    if(lock) return;
+    lock++;
+    ADMVideoArtVHS::reset(&myFly->param);
+    myFly->upload();
+    myFly->sameImage();
+    lock--;
+}
 void Ui_artVHSWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -128,7 +143,33 @@ uint8_t flyArtVHS::download(void)
     param.chromaNoDelay=MYCHECK(ChromaNoDelay)->isChecked();
     return 1;
 }
+void flyArtVHS::setTabOrder(void)
+{
+    Ui_artVHSDialog *w=(Ui_artVHSDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define SPUSH(x) controls.push_back(MYSPIN(x));
+#define TPUSH(x) controls.push_back(MYCHECK(x));
+    SPUSH(LumaBW)
+    TPUSH(LumaNoDelay)
+    SPUSH(ChromaBW)
+    TPUSH(ChromaNoDelay)
+    SPUSH(UnSync)
+    SPUSH(UnSyncFilter)
 
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
     \fn     DIA_getCropParams
     \brief  Handle crop dialog

@@ -15,6 +15,8 @@
 
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
+#include "ADM_coreVideoFilterFunc.h"
+#include "ADM_videoFilterApi.h"
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
@@ -22,8 +24,7 @@
 #include "partial_desc.cpp"
 #include "avi_vars.h"
 
-extern ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag, ADM_coreVideoFilter *last, CONFcouple *couples);
-extern uint32_t    ADM_vf_getTagFromInternalName(const char *name);
+#define DESC_MAX_LENGTH 2048
 
 ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples);
 /**
@@ -55,7 +56,7 @@ protected:
                 ADM_coreVideoFilter *sonFilter;
                 partial      configuration;
                 bool         byPass;
-                char         description[2048];
+                char         description[DESC_MAX_LENGTH];
                 ADMImage     *intermediate;
                 bool         hasIntermediate;
                 uint32_t     intermediateFn;
@@ -312,11 +313,39 @@ void partialFilter::setCoupledConf(CONFcouple *couples)
 */
 const char *partialFilter::getConfiguration(void)
 {
-  sprintf(description,"Partial : %s -- ",ADM_us2plain((uint64_t)(configuration.startBlack)*1000));
-  strcat(description,ADM_us2plain((uint64_t)(configuration.endBlack)*1000));
-  strcat(description," ");
-  strcat(description,sonFilter->getConfiguration());
-  return description;
+    uint32_t id = ADM_vf_getTagFromInternalName(configuration.filterName.c_str());
+    int len = DESC_MAX_LENGTH;
+
+    snprintf(description,len,"%s: ",ADM_vf_getDisplayNameFromTag(id));
+
+    len -= strlen(description);
+    if(len < 1)
+        return description;
+
+    const char *str = ADM_us2plain((uint64_t)(configuration.startBlack)*1000);
+    len -= strlen(str)+4;
+    if(len < 1)
+        return description;
+
+    strcat(description,str);
+    strcat(description," -- ");
+
+    str = ADM_us2plain((uint64_t)(configuration.endBlack)*1000);
+    len -= strlen(str)+1;
+    if(len < 1)
+        return description;
+
+    strcat(description,str);
+    strcat(description,"\n");
+
+    str = sonFilter->getConfiguration();
+    len -= strlen(str);
+    if(len < 1)
+        return description;
+
+    strcat(description,str);
+
+    return description;
 }
 /**
  */
@@ -339,13 +368,19 @@ void partialFilter::reconfigureSon(void)
 */
 bool partialFilter::configure( void)
 {
-        uint32_t mx=(uint32_t)(previousFilter->getInfo()->totalDuration/1000);
-        diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","_Start time:"),0,mx);
-        diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","_End time:"),0,mx);
-        diaElemButton    son(QT_TRANSLATE_NOOP("partial", "Configure filter"), partialFilter::reconfigureCallback,this);
+    uint32_t mx = (uint32_t)(previousFilter->getInfo()->totalDuration/1000);
+    uint32_t id = ADM_vf_getTagFromInternalName(configuration.filterName.c_str());
+    char str[256];
+    str[0] = '\0';
+    snprintf(str,256,QT_TRANSLATE_NOOP("partial","Partialize \"%s\""),ADM_vf_getDisplayNameFromTag(id));
+    str[255] = '\0';
 
-        diaElem *elems[3]={&start,&end,&son};
-        return diaFactoryRun(QT_TRANSLATE_NOOP("partial","Partial Filter"),3,elems);
+    diaElemTimeStamp start(&configuration.startBlack, QT_TRANSLATE_NOOP("partial","_Start time:"), 0, mx);
+    diaElemTimeStamp end(&configuration.endBlack, QT_TRANSLATE_NOOP("partial","_End time:"), 0, mx);
+    diaElemButton son(QT_TRANSLATE_NOOP("partial", "Configure filter"), partialFilter::reconfigureCallback, this);
+
+    diaElem *elems[3]={&start,&end,&son};
+    return diaFactoryRun(str,3,elems);
 }
 
 /**

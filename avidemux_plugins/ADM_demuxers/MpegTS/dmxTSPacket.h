@@ -161,12 +161,12 @@ protected:
         uint32_t oldBufferLen;
         uint64_t oldBufferPts;
         uint64_t oldBufferDts;
-        uint32_t consumed;
+        uint64_t consumed;
 
 public:
                 tsPacketLinear(uint32_t pid);
                 ~tsPacketLinear();
-        uint32_t getConsumed(void);
+        uint64_t getConsumed(void) {return consumed;}
         bool     stillOk(void) {return !eof;};
         bool     invalidatePtsDts(int startCodeLength=4);
  virtual bool    setPos(uint64_t pos)
@@ -223,7 +223,7 @@ uint16_t readi16(void)
         bool    getInfo(dmxPacketInfo *info,int startCodeLength=4);
         bool    seek(uint64_t packetStart, uint32_t offset);
         bool    changePid(uint32_t pid) ;
-        bool    setConsumed(uint32_t v);
+        bool    setConsumed(uint64_t v);
 };
 
 /**

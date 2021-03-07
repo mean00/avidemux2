@@ -3,7 +3,7 @@ SET(ADM_vdpau_SRCS
 ADM_coreVdpau.cpp
 ADM_coreVdpauMixer.cpp
 )	
-ADD_DEFINITIONS("-std=gnu++98")
+ADD_DEFINITIONS("-std=c++11")
 #*************************************************
 #*************************************************
 ADM_ADD_SHARED_LIBRARY(ADM_coreVDPAU6 ${ADM_vdpau_SRCS})

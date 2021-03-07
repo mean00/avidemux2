@@ -180,13 +180,18 @@ const char   *ADMVideoArtVignette::getConfiguration(void)
 ADMVideoArtVignette::ADMVideoArtVignette(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_coreVideoFilter(in,couples)
 {
     if(!couples || !ADM_paramLoad(couples,artVignette_param,&_param))
-    {
-        _param.aspect =0.5;
-        _param.center =0.0;
-        _param.soft   =0.6;
-    }
+        reset(&_param);
     _filterMask = new float[info.width * info.height];
     update();
+}
+/**
+    \fn reset
+*/
+void ADMVideoArtVignette::reset(artVignette *cfg)
+{
+    cfg->aspect = .5;
+    cfg->center = .0;
+    cfg->soft = .6;
 }
 /**
     \fn update

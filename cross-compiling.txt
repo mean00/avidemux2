@@ -39,11 +39,11 @@ An example for the case that Avidemux source was cloned as ~/avidemux2:
 
 2. Enter the Avidemux top source directory and run
 
-    bash bootStrapCrossMingwQt5_mxe.sh --mxe-root=${MXE_ROOT} --32 --with-system-libass --with-system-liba52 --with-system-libmad
+    bash bootStrapCrossMingwQt5_mxe.sh --mxe-root=${MXE_ROOT} --32
 
 to cross-compile a 32 bit Avidemux version or
 
-    bash bootStrapCrossMingwQt5_mxe.sh --mxe-root=${MXE_ROOT} --64 --with-system-libass --with-system-liba52 --with-system-libmad
+    bash bootStrapCrossMingwQt5_mxe.sh --mxe-root=${MXE_ROOT} --64
 
 to cross-compile a 64 bit version. Run
 
@@ -60,4 +60,4 @@ partition, extract it on Windows and run 'avidemux.exe' from there.
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2021-02-02
+2021-02-23

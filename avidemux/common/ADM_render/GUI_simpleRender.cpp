@@ -152,11 +152,7 @@ bool simpleRender::draw(QWidget *widget, QPaintEvent *ev)
     if (painter.isActive())
     {
         const QRect rec=ev->rect();
-        int x=rec.x();
-        int y=rec.y();
-        int w=rec.width();
-        int h=rec.height();
-        painter.drawImage(x,y,myImage,x,y,w,h);
+        painter.drawImage(rec,myImage);
     }else
     {
         ADM_warning("Painter inactive!\n");

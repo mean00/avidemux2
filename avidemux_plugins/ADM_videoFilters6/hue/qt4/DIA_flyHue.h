@@ -14,22 +14,28 @@
  ***************************************************************************/
 #ifndef FLY_HUE_H
 #define FLY_HUE_H
-#include "hue.h"
+#include "ADM_vidHue.h"
 /**
     \class flyHue
 */
 
 class flyHue : public ADM_flyDialogYuv
 {
-  
+  private:
+    huesettings flyset;
   public:
-   hue  param;
-  public:
-   uint8_t    processYuv(ADMImage* in, ADMImage *out);
-   uint8_t    download(void);
-   uint8_t    upload(void);
-   uint8_t    update(void);
-   flyHue (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO) {};
+    bool        fullpreview;
+
+    uint8_t     processYuv(ADMImage* in, ADMImage *out);
+    uint8_t     download(void);
+    uint8_t     upload(void);
+    uint8_t     update(void);
+    uint8_t     reset(void);
+                flyHue(QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                     ADM_QCanvas *canvas, ADM_QSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
+                { fullpreview = false; }
+    void        setTabOrder(void);
+    void        setParam(hue *par) { flyset.param.hue = par->hue; flyset.param.saturation = par->saturation; }
+    void        getParam(hue *par) { par->hue = flyset.param.hue; par->saturation = flyset.param.saturation; }
 };
 #endif
