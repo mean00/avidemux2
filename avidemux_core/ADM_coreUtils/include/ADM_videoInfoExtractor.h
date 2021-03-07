@@ -21,7 +21,6 @@
 ADM_COREUTILS6_EXPORT uint8_t extractMpeg4Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h,uint32_t *time_inc);
 ADM_COREUTILS6_EXPORT uint8_t extractH263Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h);
 ADM_COREUTILS6_EXPORT uint8_t extractH263FLVInfo (uint8_t * buffer, uint32_t len, uint32_t * w, uint32_t * h);
-ADM_COREUTILS6_EXPORT uint8_t extractVopInfo(uint8_t *data, uint32_t len,uint32_t timeincbits,uint32_t *vopType,uint32_t *modulo, uint32_t *time_inc);
 ADM_COREUTILS6_EXPORT bool    extractVolHeader(uint8_t *data,uint32_t dataSize,uint8_t **volStart, uint32_t *volLen);
 /**
     \struct ADM_SPSinfo
@@ -127,7 +126,7 @@ typedef struct
 }ADM_vopS;
 
 
-ADM_COREUTILS6_EXPORT uint32_t ADM_searchVop(uint8_t *begin, uint8_t *end,uint32_t *nb, ADM_vopS *vop,uint32_t *timeincbits);
+ADM_COREUTILS6_EXPORT uint32_t ADM_searchVop(uint8_t *begin, uint8_t *end, const uint32_t max, ADM_vopS *vop, uint32_t *timeincbits);
 ADM_COREUTILS6_EXPORT uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out);
 ADM_COREUTILS6_EXPORT uint32_t ADM_escapeH264 (uint32_t len, uint8_t * in, uint8_t * out);
 

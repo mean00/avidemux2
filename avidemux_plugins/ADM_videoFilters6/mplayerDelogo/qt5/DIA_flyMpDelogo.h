@@ -57,5 +57,6 @@ public:
 
     delogo  *getParam(void) { return &param; }
     void    setParam(delogo *ps);
+    void    setTabOrder(void);
 };
 // EOF

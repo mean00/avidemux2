@@ -94,11 +94,7 @@ er:
  */
 uint8_t ADM_av_loadPlugins(const char *path)
 {
-#define MAX_EXTERNAL_FILTER 100
-
-    char *files[MAX_EXTERNAL_FILTER];
-    uint32_t nbFile;
-
+    std::vector<std::string> files;
 
     // PushBack our dummy one : TODO FIXME
     ADM_AudioDevices *dummyDevice=new ADM_AudioDevices("Dummy","Dummy audio device", 
@@ -107,20 +103,19 @@ uint8_t ADM_av_loadPlugins(const char *path)
                                 DummyDeleteAudioDevice);
     
     ListOfAudioDevices.append(dummyDevice); 
-    memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
+
     ADM_info("[ADM_av_plugin] Scanning directory %s\n",path);
 
-    if(!buildDirectoryContent(&nbFile, path, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+    if(!buildDirectoryContent(path, &files, SHARED_LIB_EXT))
     {
-        ADM_info("[ADM_av_plugin] Cannot parse plugin\n");
+        ADM_info("[ADM_av_plugin] Cannot open plugin directory\n");
         return 0;
     }
 
-    for(int i=0;i<nbFile;i++)
-        tryLoadingFilterPlugin(files[i]);
+    for(int i=0; i < files.size(); i++)
+        tryLoadingFilterPlugin(files.at(i).c_str());
 
     ADM_info("[ADM_av_plugin] Scanning done\n");
-        clearDirectoryContent(nbFile,files);
 
     return 1;
 }

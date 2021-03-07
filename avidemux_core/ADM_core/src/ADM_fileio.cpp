@@ -84,19 +84,6 @@ int ADM_fclose(FILE *file)
 #endif
 
 /**
-    \fn clearDirectoryContent
-*/
-uint8_t    clearDirectoryContent(const uint32_t nb, char *jobName[])
-{
-    for(int i=0;i<(int)nb;i++)
-        if(jobName[i])
-        {
-            ADM_dealloc(jobName[i]);
-            jobName[i]=NULL;
-        }
-    return true;
-}
-/**
  * \fn ADM_PathSplit
  * \brief std::string version of the above
  * @param in

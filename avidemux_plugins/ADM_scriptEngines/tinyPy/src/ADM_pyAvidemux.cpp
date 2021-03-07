@@ -238,6 +238,79 @@ double pyGetNextKFramePts(IEditor *editor, double time)
 }
 
 /**
+    \fn pySegmentGetRefIdx
+*/
+int pySegmentGetRefIdx(IEditor *editor, int segment)
+{
+    if(segment >= editor->getNbSegment())
+        return -1;
+    _SEGMENT* seg = editor->getSegment(segment);
+    if(!seg)
+        return -1;
+    return seg->_reference;
+}
+
+/**
+    \fn pySegmentGetTimeOffset
+*/
+double pySegmentGetTimeOffset(IEditor *editor, int segment)
+{
+    if(segment >= editor->getNbSegment())
+        return -1;
+    _SEGMENT *seg = editor->getSegment(segment);
+    if(!seg)
+        return -1;
+    return seg->_refStartTimeUs;
+}
+
+/**
+    \fn pySegmentGetDuration
+*/
+double pySegmentGetDuration(IEditor *editor, int segment)
+{
+    if(segment >= editor->getNbSegment())
+        return -1;
+    _SEGMENT *seg = editor->getSegment(segment);
+    if(!seg)
+        return -1;
+    return seg->_durationUs;
+}
+
+/**
+    \fn pyGetRefVideoDuration
+*/
+double pyGetRefVideoDuration(IEditor *editor, int idx)
+{
+    if(idx >= editor->getVideoCount())
+        return -1;
+    _VIDEOS *vid = editor->getRefVideo(idx);
+    if(!vid)
+        return -1;
+    vidHeader *demuxer = vid->_aviheader;
+    if(!demuxer)
+        return -1;
+    return demuxer->getVideoDuration();
+}
+
+/**
+    \fn pyGetRefVideoName
+*/
+char *pyGetRefVideoName(IEditor *editor, int idx)
+{
+    if(idx >= editor->getVideoCount())
+        return NULL;
+    _VIDEOS *vid = editor->getRefVideo(idx);
+    if(!vid)
+        return NULL;
+    vidHeader *demuxer = vid->_aviheader;
+    if(!demuxer)
+        return NULL;
+    if(!demuxer->getMyName())
+        return NULL;
+    return ADM_strdup(demuxer->getMyName());
+}
+
+/**
     \fn pyFileSelWrite
 */
 

@@ -17,7 +17,6 @@
 #include <math.h>
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
-#include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
 #include "DIA_factory.h"
 
@@ -111,7 +110,7 @@ bool         ADMVideoContrast::getNextFrame(uint32_t *fn,ADMImage *image)
 /**
     \fn buildContrastTable
 */
-uint8_t buildContrastTable (float coef, int8_t off,  uint8_t * tableFlat, uint8_t * tableNZ)
+uint8_t ADMVideoContrast::buildContrastTable (float coef, int8_t off,  uint8_t * tableFlat, uint8_t * tableNZ)
 {
   double f;
 
@@ -141,9 +140,8 @@ uint8_t buildContrastTable (float coef, int8_t off,  uint8_t * tableFlat, uint8_
 /**
     \fn doContrast
 */
-bool doContrast (ADMImage * in, ADMImage * out, uint8_t * table,  ADM_PLANE plane)
+bool ADMVideoContrast::doContrast(ADMImage *in, ADMImage *out, uint8_t *table, ADM_PLANE plane)
 {
-
   int sourcePitch=in->GetPitch(plane);
   int destPitch=out->GetPitch(plane);
   uint8_t *s=in->GetReadPtr(plane);

@@ -27,11 +27,20 @@
  * \fn ctor
  */
 decoderFFVP9::decoderFFVP9 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
-    : decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp)
+    : decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp,true)
 {
     _parserContext=NULL;
-    if(!_initCompleted)
+    decoderMultiThread();
+
+    if (_context && _usingMT && (codec->capabilities & AV_CODEC_CAP_SLICE_THREADS))
+    {
+        _context->thread_count = _threads;
+        _context->thread_type = FF_THREAD_SLICE;    // this is important! the default FF_THREAD_FRAME wont work with Avidemux
+    }
+
+    if(!finish())
         return;
+
     _parserContext=av_parser_init(AV_CODEC_ID_VP9);
     if(!_parserContext)
         _initCompleted=false;

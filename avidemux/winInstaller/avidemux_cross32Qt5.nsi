@@ -14,6 +14,7 @@ Section "Avidemux Core" SecCore
     ${File} "./ChangeLog.html"
     ${File} "./change.css"
 
+    ${File} ${BINARY_FOLDER}/libass-5.dll
     ${File} ${BINARY_FOLDER}/libcrypto-1_1.dll
     ${File} ${BINARY_FOLDER}/libssl-1_1.dll
     ${File} ${BINARY_FOLDER}/libpcre2-16-0.dll

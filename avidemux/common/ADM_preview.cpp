@@ -94,23 +94,14 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h, float nzoom)
   rdrPhysicalH=h;
   if(nzoom==ZOOM_AUTO)
   {
-      uint32_t phyW,phyH;
-      UI_getPhysicalScreenSize(NULL, &phyW,&phyH);
-      if(3*phyW<4*w || 3*phyH<4*h)
-      {
-          if(5*phyW<4*w || 5*phyH<4*h)
-          {
-                    nzoom=ZOOM_1_4;
-          }else
-          {
-                    nzoom=ZOOM_1_2;
-          }
-         
-      }
-      else
-      {
-          nzoom=ZOOM_1_1;
-      }
+        uint32_t phyW,phyH;
+        UI_getMaximumPreviewSize(&phyW, &phyH);
+        if(phyW*2 < w || phyH*2 < h)
+            nzoom=ZOOM_1_4;
+        else if(phyW < w || phyH < h)
+            nzoom=ZOOM_1_2;
+        else
+            nzoom=ZOOM_1_1;
   }
   zoom=nzoom;
   renderDisplayResize(rdrPhysicalW,rdrPhysicalH,zoom);

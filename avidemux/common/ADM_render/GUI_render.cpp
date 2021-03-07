@@ -105,7 +105,7 @@ uint8_t ADM_renderLibInit(const UI_FUNCTIONS_T *funcs)
 //**************************************
 //**************************************
 #define RENDER_CHECK(x) {ADM_assert(HookFunc);ADM_assert(HookFunc->x);}
-void MUI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
+static void MUI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 {
   RENDER_CHECK(UI_getWindowInfo);
   HookFunc->UI_getWindowInfo(draw, xinfo);

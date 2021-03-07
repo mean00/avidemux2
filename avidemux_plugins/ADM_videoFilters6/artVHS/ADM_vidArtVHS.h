@@ -42,6 +42,7 @@ class  ADMVideoArtVHS:public ADM_coreVideoFilter
     virtual bool         configure(void) ;                 /// Start graphical user interface
 
     static  void         ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW, float unSync, float unSyncFilter, bool lumaNoDelay, bool chromaNoDelay);
+    static  void         reset(artVHS *cfg);
 
   private:
     float valueLimit(float val, float min, float max);

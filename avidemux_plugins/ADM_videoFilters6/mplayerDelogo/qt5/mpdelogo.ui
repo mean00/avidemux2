@@ -14,34 +14,14 @@
    <string>Mplayer Delogo</string>
   </property>
   <layout class="QGridLayout" name="gridLayoutMain">
-   <item row="2" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout"/>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item row="0" column="0" colspan="2">
+    <layout class="QVBoxLayout" name="main">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="panel">
        <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="1" column="4">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="labelX">
            <property name="text">
             <string>X</string>
            </property>
@@ -54,21 +34,21 @@
           <widget class="QSpinBox" name="spinW"/>
          </item>
          <item row="0" column="4">
-          <widget class="QLabel" name="label_5">
+          <widget class="QLabel" name="labelBorder">
            <property name="text">
             <string>Border Width</string>
            </property>
           </widget>
          </item>
          <item row="0" column="2">
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="labelWidth">
            <property name="text">
             <string>Width</string>
            </property>
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QLabel" name="label_4">
+          <widget class="QLabel" name="labelHeight">
            <property name="text">
             <string>Height</string>
            </property>
@@ -78,12 +58,9 @@
           <widget class="QSpinBox" name="spinH"/>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="label_2">
+          <widget class="QLabel" name="labelY">
            <property name="text">
             <string>Y</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::PlainText</enum>
            </property>
           </widget>
          </item>
@@ -111,51 +88,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>You can resize the red rectangle using the grips </string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labelHelp">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="toolboxLayout">
-       <property name="leftMargin">
-        <number>3</number>
-       </property>
-       <property name="topMargin">
-        <number>5</number>
-       </property>
-       <property name="rightMargin">
-        <number>9</number>
-       </property>
-       <property name="bottomMargin">
-        <number>11</number>
-       </property>
-      </layout>
+      <layout class="QHBoxLayout" name="toolboxLayout"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2"/>
@@ -168,7 +101,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QGraphicsView" name="graphicsView"/>
+      <widget class="QGraphicsView" name="graphicsView">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QCheckBox" name="checkBoxPreview">
@@ -179,6 +116,16 @@
      </item>
     </layout>
    </item>
+   <item row="1" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -188,19 +135,7 @@
    <header>ADM_toolkitQt.h</header>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>spinX</tabstop>
-  <tabstop>spinW</tabstop>
-  <tabstop>spinY</tabstop>
-  <tabstop>spinH</tabstop>
-  <tabstop>spinBand</tabstop>
-  <tabstop>horizontalSlider</tabstop>
-  <tabstop>graphicsView</tabstop>
-  <tabstop>checkBoxPreview</tabstop>
- </tabstops>
- <resources>
-  <include location="delogo.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

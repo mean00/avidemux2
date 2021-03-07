@@ -132,25 +132,19 @@ bool ADM_ad_getFilterInfo(int filter, std::string &name, uint32_t *major,uint32_
  */
 uint8_t ADM_ad_loadPlugins(const char *path)
 {
-#define MAX_EXTERNAL_FILTER 50
+	std::vector<std::string> files;
+	ADM_info("Scanning directory %s\n",path);
 
-	char *files[MAX_EXTERNAL_FILTER];
-	uint32_t nbFile;
-
-	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
-	printf("[ADM_ad_plugin] Scanning directory %s\n",path);
-
-	if(!buildDirectoryContent(&nbFile, path, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+	if(!buildDirectoryContent(path, &files, SHARED_LIB_EXT))
 	{
-		printf("[ADM_ad_plugin] Cannot parse plugin\n");
+		ADM_warning("Cannot open plugin directory\n");
 		return 0;
 	}
 
-	for(int i=0;i<nbFile;i++)
-		tryLoadingAudioPlugin(files[i]);
+	for(int i=0;i<files.size();i++)
+		tryLoadingAudioPlugin(files.at(i).c_str());
 
-	printf("[ADM_ad_plugin] Scanning done, found %d codec\n", (int)ADM_audioPlugins.size());
-        clearDirectoryContent(nbFile,files);
+	ADM_info("Scanning done, found %d audio decoders\n", (int)ADM_audioPlugins.size());
 	return 1;
 }
 /**

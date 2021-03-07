@@ -16,6 +16,7 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <string>
+#include <algorithm>
 
 #if defined(__APPLE__)
 #	include <Carbon/Carbon.h>
@@ -119,20 +120,21 @@ uint8_t ADM_mkdir(const char *dirname)
 }
 /**
  *  \fn buildDirectoryContent
- * 	\brief Returns the content of a dir with the extension ext. The receiving array must be allocated by caller
- * (just the array, not the names themselves)
+ *  \brief Returns the content of a dir with the extension ext. The receiving vector must be allocated by caller
  */
-uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[], int maxElems, const char *ext)
+uint8_t buildDirectoryContent(const char *base, std::vector<std::string> *list, const char *ext)
 {
 	DIR *dir;
 	struct dirent *direntry;
-	int dirmax = 0, len;
+	int len;
 	int extlen = strlen(ext)+1;
     ADM_assert(extlen>1);
 
     char *dotted=(char *)admAlloca(extlen+1);
     strcpy(dotted+1,ext);
     dotted[0]='.';
+
+    list->clear();
 
 	const char *base2 = base;
 
@@ -162,22 +164,14 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 			continue;
 		}
 
-		jobName[dirmax] = (char *)ADM_alloc(strlen(base) + strlen(d_name) + 2);
-		strcpy(jobName[dirmax], base);
-		AddSeparator(jobName[dirmax]);
-		strcat(jobName[dirmax], d_name);
-		dirmax++;
-
-		if (dirmax >= maxElems)
-		{
-			printf("[jobs]: Max # of jobs exceeded\n");
-			break;
-		}
+		std::string item = base;
+		item += ADM_SEPARATOR;
+		item += d_name;
+		list->push_back(item);
 	}
 
-
 	closedir(dir);
-	*outnb = dirmax;
+	std::sort(list->begin(),list->end());
 
 	return 1;
 }

@@ -35,6 +35,7 @@
 #include "ADM_cpuCap.h"
 #include "ADM_clock.h"
 #include "ADM_misc.h"
+#include "ADM_files.h"
 #endif
 
 #ifdef __cplusplus
@@ -55,11 +56,7 @@ ADM_CORE6_EXPORT const char *ADM_translate(const char *domain, const char *strin
 }
 #endif
 
-
-
 #include "ADM_mangle.h"
-#include "ADM_files.h"
-
 
 //
 #ifdef _MSC_VER

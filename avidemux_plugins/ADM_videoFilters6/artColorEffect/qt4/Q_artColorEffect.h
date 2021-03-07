@@ -1,7 +1,6 @@
 #ifndef Q_artColorEffect_h
 #define Q_artColorEffect_h
 #include "ui_artColorEffect.h"
-#include "ADM_image.h"
 #include "artColorEffect.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyArtColorEffect.h"
@@ -12,13 +11,13 @@ class Ui_artColorEffectWindow : public QDialog
 
   protected:
     int lock;
-
-  public:
     flyArtColorEffect *myFly;
     ADM_QCanvas *canvas;
+    Ui_artColorEffectDialog ui;
+
+  public:
     Ui_artColorEffectWindow(QWidget *parent, artColorEffect *param,ADM_coreVideoFilter *in);
     ~Ui_artColorEffectWindow();
-    Ui_artColorEffectDialog ui;
 
   public slots:
     void gather(artColorEffect *param);

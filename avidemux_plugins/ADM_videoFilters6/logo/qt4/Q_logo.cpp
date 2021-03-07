@@ -81,18 +81,31 @@ void ADM_LogoCanvas::moveEvent(QMoveEvent * event)
 }
 
 /**
- * 
- * @param enabled
+ * \fn enableLowPart
  * @return 
  */
-bool                Ui_logoWindow::enableLowPart(bool enabled)
+bool Ui_logoWindow::enableLowPart(void)
 {
-    ui.spinX->setEnabled(enabled);
-    ui.spinY->setEnabled(enabled);
-    if(false==enabled)
-        ui.spinAlpha->setEnabled(enabled);
-    ui.horizontalSlider->setEnabled(enabled);
-    return true;
+    bool enable = !imageName.empty();
+#if 0
+#define DOIT(x) ui.label##x->setEnabled(enable); ui.spin##x->setEnabled(enable);
+    DOIT(X)
+    DOIT(Y)
+    DOIT(Alpha)
+    DOIT(FadeInOut)
+#endif
+    if(enable)
+    {
+        std::string desc = QT_TRANSLATE_NOOP("logo","Image:");
+        desc += " ";
+        desc += imageName;
+        ui.labelImage->setText(desc.c_str());
+        ui.spinX->setFocus();
+        return true;
+    }
+    ui.labelImage->setText(QT_TRANSLATE_NOOP("logo","No image selected"));
+    ui.pushButtonSelect->setFocus();
+    return false;
 }
 /**
  * 
@@ -132,15 +145,14 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
             if(image) delete image;
             image=im2;
             imageWidth=image->GetWidth(PLANAR_Y);
-            imageHeight=image->GetHeight(PLANAR_Y);            
-            this->imageName=std::string(imageName);
-            ui.labelImage->setText(this->imageName.c_str());
+            imageHeight=image->GetHeight(PLANAR_Y);
+            this->imageName=imageName;
             if(image->GetReadPtr(PLANAR_ALPHA))
                 ADM_info("We have alpha\n");
             status=true;
         }
     }
-    enableLowPart(status);
+    enableLowPart();
     return status;
 }
 
@@ -158,13 +170,9 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         image=NULL;;
         admCoreUtils::getLastReadFolder(lastFolder);
         if(param->logoImageFile.size())
-        {
-            if(tryToLoadimage(param->logoImageFile.c_str()))
-            {
-                imageName=param->logoImageFile;
-            }
-        }
-        
+            tryToLoadimage(param->logoImageFile.c_str());
+        else
+            enableLowPart();
         lock=0;
         // Allocate space for green-ised video
         width=in->getInfo()->width;
@@ -173,25 +181,23 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         canvas=new ADM_LogoCanvas(ui.graphicsView,width,height);
         myLogo=new flyLogo(this, width, height,in,canvas,ui.horizontalSlider);
 
-#define SPINENTRY(x) ui.x
-        SPINENTRY(spinX)->setMaximum(width);        
-        SPINENTRY(spinY)->setMaximum(height);
-        SPINENTRY(spinAlpha)->setMaximum(255);
-        SPINENTRY(spinAlpha)->setMinimum(0);
-        SPINENTRY(spinFadeInOut)->setDecimals(1);
-        SPINENTRY(spinFadeInOut)->setSuffix(QT_TRANSLATE_NOOP("logo"," s"));
-        SPINENTRY(spinFadeInOut)->setSingleStep(.1);
-        SPINENTRY(spinFadeInOut)->setMaximum(10.);
-        SPINENTRY(spinFadeInOut)->setMinimum(0.);
-        SPINENTRY(spinX)->setSingleStep(1);
-        SPINENTRY(spinY)->setSingleStep(1);
+#define SPINENTRY(x) ui.spin##x
+        SPINENTRY(X)->setMaximum(width);
+        SPINENTRY(Y)->setMaximum(height);
+        SPINENTRY(Alpha)->setMaximum(255);
+        SPINENTRY(Alpha)->setMinimum(0);
+        SPINENTRY(FadeInOut)->setDecimals(1);
+        SPINENTRY(FadeInOut)->setSuffix(QT_TRANSLATE_NOOP("logo"," s"));
+        SPINENTRY(FadeInOut)->setSingleStep(.1);
+        SPINENTRY(FadeInOut)->setMaximum(10.);
+        SPINENTRY(FadeInOut)->setMinimum(0.);
 
         myLogo->param.x=param->x;
         myLogo->param.y=param->y;
         myLogo->param.alpha=param->alpha;
         myLogo->param.logoImageFile=param->logoImageFile;
         myLogo->param.fade=param->fade;
-        myLogo->_cookie=this;
+        myLogo->_cookie=&ui;
         myLogo->upload();
         myLogo->setPreview(false);
 
@@ -203,8 +209,9 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         SPINNER(spinAlpha,int);
         SPINNER(spinFadeInOut,double);
         connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
-
+#undef SPINNER
         myLogo->addControl(ui.toolboxLayout);
+        myLogo->setTabOrder();
         myLogo->sliderChanged();
 
         setModal(true);
@@ -331,7 +338,35 @@ flyLogo::flyLogo (QDialog *parent, uint32_t width, uint32_t height, ADM_coreVide
 {
     in->getTimeRange(&startOffset,&endOffset);
 }
+/**
+ *  \fn setTabOrder
+ */
+void flyLogo::setTabOrder(void)
+{
+    Ui_logoDialog *w=(Ui_logoDialog *)_cookie;
+    std::vector<QWidget *> controls;
 
+    controls.push_back(w->pushButtonSelect);
+#define SPINNER(x) controls.push_back(w->spin##x);
+    SPINNER(X)
+    SPINNER(Y)
+    SPINNER(Alpha)
+    SPINNER(FadeInOut)
+#undef SPINNER
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
  * 
  * @param x
@@ -342,8 +377,7 @@ bool flyLogo::setXy(int x,int y)
 {
     if(x<0) x=0;
     if(y<0) y=0;
-    Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
-    double scale=(double)(parent->canvas->width()) / parent->_in->getInfo()->width;
+    double scale=(double)(_canvas->width()) / _in->getInfo()->width;
     param.x= (int)((double)x / scale);
     param.y= (int)((double)y / scale);
     upload();
@@ -357,13 +391,13 @@ bool flyLogo::setXy(int x,int y)
 uint8_t flyLogo::upload(void)
 {
 
-    Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
-#define MYSPIN(x) parent->ui.x
-    MYSPIN(spinX)->setValue(param.x);
-    MYSPIN(spinY)->setValue(param.y);
-    MYSPIN(spinAlpha)->setValue(param.alpha);
-    MYSPIN(spinFadeInOut)->setValue((double)(param.fade)/1000);
-    parent->ui.labelImage->setText(parent->imageName.c_str());
+    Ui_logoDialog *w = (Ui_logoDialog *)this->_cookie;
+#define SETSPIN(u,v) w->spin##u->setValue(v);
+    SETSPIN(X,param.x)
+    SETSPIN(Y,param.y)
+    SETSPIN(Alpha,param.alpha)
+    SETSPIN(FadeInOut,(double)(param.fade)/1000)
+
     return 1;
 }
 /**
@@ -371,13 +405,14 @@ uint8_t flyLogo::upload(void)
 */
 uint8_t flyLogo::download(void)
 {
-    Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
-    param.x= MYSPIN(spinX)->value();
-    param.y= MYSPIN(spinY)->value();
-    param.alpha= MYSPIN(spinAlpha)->value();
+    Ui_logoDialog *w=(Ui_logoDialog *)this->_cookie;
+#define GETSPIN(u,v) param.v=w->spin##u->value();
+    GETSPIN(X,x)
+    GETSPIN(Y,y)
+    GETSPIN(Alpha,alpha)
 #define ROUNDUP 100
-    param.fade=(((uint32_t)(MYSPIN(spinFadeInOut)->value() * 1000.) + ROUNDUP/2)/ROUNDUP)*ROUNDUP;
-    return true;
+    param.fade=(((uint32_t)(w->spinFadeInOut->value() * 1000.) + ROUNDUP/2)/ROUNDUP)*ROUNDUP;
+    return 1;
 }
 
 /**
@@ -387,7 +422,7 @@ uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
 {
     out->duplicate(in);
     uint64_t pts=in->Pts;
-    Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
+    Ui_logoWindow *parent=(Ui_logoWindow *)_parent;
     if(!parent->image)
         return true;
     

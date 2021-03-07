@@ -13,6 +13,7 @@ Section "Avidemux Core" SecCore
     ${File} "./Build-Info.txt"
     ${File} "./change.css"
     ${File} "./ChangeLog.html"
+    ${File} ${BINARY_FOLDER}/libass-9.dll
     ${File} ${BINARY_FOLDER}/libcrypto-1_1-x64.dll     
     ${File} ${BINARY_FOLDER}/libpcre2-16-0.dll     
     ${File} ${BINARY_FOLDER}/libssl-1_1-x64.dll

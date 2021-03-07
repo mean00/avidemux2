@@ -12,23 +12,24 @@
 *                                                                         *
 ***************************************************************************///
 
-#include "ADM_default.h"
-#include "ADM_coreVideoFilter.h"
-#define ADM_FLY_INTERNAL
-#include "DIA_flyDialogQt4.h"
-#include "ADM_assert.h"
-#include <QtCore/QEvent>
-#include <QtCore/QCoreApplication>
+#include <QEvent>
 #include <QGraphicsView>
 #include <QPushButton>
-#include <QRadioButton>
 #include <QHBoxLayout>
 #include <QApplication>
+#include <QLineEdit>
+#include <QFontMetrics>
+#include <QRect>
+
+#include <cmath>
+
+#include "ADM_default.h"
+#include "ADM_coreVideoFilter.h"
+#include "DIA_flyDialogQt4.h"
+
 #include "ADM_toolkitQt.h"
 #include "ADM_vidMisc.h"
-extern "C" {
-#include "libavcodec/avcodec.h"
-}
+
 /**
  */
 class flyControl
@@ -64,9 +65,23 @@ public:
 
             horizontalLayout_4->addWidget(pushButton_fwd1mn);
             //
-            labelTime=new QLabel();
-            labelTime->setText("00:00:00.000 / 00:00:00.000");
-            horizontalLayout_4->addWidget(labelTime);
+            QString zeros = "00:00:00.000";
+            currentTime = new QLineEdit(zeros);
+            currentTime->setReadOnly(true);
+            currentTime->setAlignment(Qt::AlignCenter);
+#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
+            currentTime->setFont(QFont("ADM7SEG"));
+#endif
+            int ctWidth = 1.15 * currentTime->fontMetrics().boundingRect(zeros).width();
+            currentTime->setMaximumWidth(ctWidth);
+            currentTime->setMinimumWidth(ctWidth);
+            currentTime->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+            labelDuration = new QLabel();
+            labelDuration->setText(QString("/ ") + zeros);
+
+            horizontalLayout_4->addWidget(currentTime);
+            horizontalLayout_4->addWidget(labelDuration);
             //
             QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
             horizontalLayout_4->addItem(horizontalSpacer_4);
@@ -96,7 +111,8 @@ public:
         QPushButton *pushButton_play;
         QPushButton *pushButton_next;
         QPushButton *pushButton_fwd1mn;
-        QLabel       *labelTime;
+        QLineEdit   *currentTime;
+        QLabel      *labelDuration;
 };
 
 /**
@@ -244,10 +260,19 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
 {
         _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
         _control=new flyControl(horizontalLayout_4);
+        _parent->adjustSize(); // force currentTime size calculation
+        _control->currentTime->setTextMargins(0,0,0,0); // counteract Adwaita messing with text margins
+
         QObject::connect(_control->pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
         QObject::connect(_control->pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
         QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
         QObject::connect(_control->pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
+
+        buttonList.push_back(_control->pushButton_back1mn);
+        buttonList.push_back(_control->pushButton_play);
+        buttonList.push_back(_control->pushButton_next);
+        buttonList.push_back(_control->pushButton_fwd1mn);
+        buttonList.push_back(_control->currentTime);
 
         return true;
 }
@@ -278,9 +303,21 @@ bool ADM_flyDialog::nextImageInternal(void)
     lastPts=_yuvBuffer->Pts;
     setCurrentPts(lastPts);
     uint64_t duration=_in->getInfo()->totalDuration;
-    QString time=QString(ADM_us2plain(lastPts)) + QString(" / ") + QString(ADM_us2plain(duration));
     if(_control)
-        _control->labelTime->setText(time);
+    {
+        char text[80];
+        uint32_t mm,hh,ss,ms;
+        uint32_t milly = lastPts/1000;
+
+        ms2time(milly,&hh,&mm,&ss,&ms);
+        sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+        _control->currentTime->setText(text);
+
+        milly = duration/1000;
+        ms2time(milly,&hh,&mm,&ss,&ms);
+        sprintf(text, "/ %02d:%02d:%02d.%03d", hh, mm, ss, ms);
+        _control->labelDuration->setText(text);
+    }
     // Process...   
     process();
     return display(_rgbByteBufferDisplay.at(0));
@@ -411,6 +448,7 @@ ADM_flyDialogYuv::~ADM_flyDialogYuv()
     _yuvBufferOut=NULL;
     if(_control)
     {
+        buttonList.clear();
         delete _control;
         _control=NULL;
     }
@@ -774,12 +812,19 @@ void ADM_flyDialog::play(bool state)
     \fn timeout
     \brief play filtered video
 */
-void ADM_flyDialog::timeout()
+void ADM_flyDialog::timeout(void)
 {
     bool r=nextImage();
-    uint64_t duration=_in->getInfo()->totalDuration;
-    QString time=QString(ADM_us2plain(_yuvBuffer->Pts)) + QString(" / ") + QString(ADM_us2plain(duration));
-    _control->labelTime->setText(time);
+    if(_control)
+    {
+        char text[80];
+        uint32_t mm,hh,ss,ms;
+        uint32_t milly = _yuvBuffer->Pts/1000;
+
+        ms2time(milly,&hh,&mm,&ss,&ms);
+        sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+        _control->currentTime->setText(text);
+    }
     if(r)
     {
         int now=_clock.getElapsedMS();

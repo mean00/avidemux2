@@ -45,6 +45,7 @@ Ui_chromaShiftWindow::Ui_chromaShiftWindow(QWidget* parent, chromashift *param,A
         memcpy(&(myCrop->param),param,sizeof(chromashift));
         myCrop->_cookie=&ui;
         myCrop->addControl(ui.toolboxLayout);
+        myCrop->setTabOrder();
         myCrop->upload();
         myCrop->sliderChanged();
 
@@ -116,6 +117,28 @@ uint8_t flyChromaShift::download(void)
        param.u= MYSPIN(U)->value();
        param.v= MYSPIN(V)->value();
        return true;
+}
+void flyChromaShift::setTabOrder(void)
+{
+    Ui_chromashiftDialog *w=(Ui_chromashiftDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSH_SPIN(x) controls.push_back(w->spinBox##x);
+    PUSH_SPIN(U)
+    PUSH_SPIN(V)
+
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
 }
 
 /**

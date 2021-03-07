@@ -120,23 +120,18 @@ static void sortEncoder(void)
  */
 static void parseFolder(const char *folder) 
 {
-        char *files[MAX_EXTERNAL_FILTER];
-    uint32_t nbFile;
-
-    memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
+    std::vector<std::string> files;
     printf("[ADM_ve6_plugin] Scanning directory %s\n",folder);
 
-    if(!buildDirectoryContent(&nbFile, folder, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+    if(!buildDirectoryContent(folder, &files, SHARED_LIB_EXT))
     {
-        printf("[ADM_ve6_plugin] Cannot parse plugin\n");
-        return ;
-    }   
+        printf("[ADM_ve6_plugin] Cannot open plugin directory\n");
+        return;
+    }
 
-    for(int i=0;i<nbFile;i++)
-        tryLoadingEncoderPlugin(files[i]);
-        
-        printf("[ADM_ve6_plugin] Scanning done\n");
-        clearDirectoryContent(nbFile,files);        
+    for(int i=0;i<files.size();i++)
+        tryLoadingEncoderPlugin(files.at(i).c_str());
+    printf("[ADM_ve6_plugin] Scanning done\n");
 }
 /**
     \fn ADM_ve6_loadPlugins

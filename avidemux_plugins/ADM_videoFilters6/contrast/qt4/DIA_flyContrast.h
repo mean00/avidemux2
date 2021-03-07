@@ -16,30 +16,33 @@
  ***************************************************************************/
 
 #pragma once
+#include <QGraphicsScene>
 #include "contrast.h"
-class QGraphicsScene;
+
 /**
     \class flyContrast
 */
 class flyContrast : public ADM_flyDialogYuv
 {
+  private:
+    uint8_t     tableluma[256];
+    uint8_t     tablechroma[256];
+    float       oldCoef;
+    int32_t     oldOffset;
+    bool        tablesPopulated;
   public:
-   contrast     param;
-   QGraphicsScene *scene;
-   bool          previewActivated;
-   
+    contrast    param;
+    QGraphicsScene *scene;
+    bool        previewActivated;
   public:
-    uint8_t    processYuv(ADMImage* in, ADMImage *out);
-    void       setState(bool a){previewActivated=a;}
-   uint8_t    download(void);
-   uint8_t    upload(void);
-   uint8_t    update(void);
-                flyContrast (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider,QGraphicsScene*sc)
-                : ADM_flyDialogYuv(parent,width, height,in,canvas, slider,RESIZE_AUTO) 
-                {
-                  scene=sc;
-                  previewActivated=true;
-                };
+    uint8_t     processYuv(ADMImage* in, ADMImage *out);
+    void        setState(bool a){previewActivated=a;}
+    void        setTabOrder(void);
+    uint8_t     download(void);
+    uint8_t     upload(void);
+    uint8_t     update(void);
+                flyContrast(QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                            ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene *sc);
+
 };
 

@@ -6,139 +6,142 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
+    <width>750</width>
     <height>514</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Contrast</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,1">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayoutContrast">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QLabel" name="labelContrast">
+        <widget class="QLabel" name="labelContrast">
+         <property name="text">
+          <string>Contrast  </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacerContrast">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QDial" name="dialContrast">
+         <property name="toolTip">
+          <string>Contrast</string>
+         </property>
+         <property name="minimum">
+          <number>50</number>
+         </property>
+         <property name="maximum">
+          <number>150</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>50</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="notchTarget">
+          <double>2.000000000000000</double>
+         </property>
+         <property name="notchesVisible">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayoutBrightness">
+       <item>
+        <widget class="QLabel" name="labelBrightness">
+         <property name="text">
+          <string>Brightness  </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacerBrightness">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QDial" name="dialBrightness">
+         <property name="toolTip">
+          <string>Brightness</string>
+         </property>
+         <property name="minimum">
+          <number>-127</number>
+         </property>
+         <property name="maximum">
+          <number>127</number>
+         </property>
+         <property name="notchesVisible">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="checkBoxV">
            <property name="text">
-            <string>Contrast  </string>
+            <string>ChromaV</string>
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QDial" name="dialContrast">
-           <property name="toolTip">
-            <string>Contrast</string>
-           </property>
-           <property name="minimum">
-            <number>50</number>
-           </property>
-           <property name="maximum">
-            <number>150</number>
-           </property>
-           <property name="singleStep">
-            <number>1</number>
-           </property>
-           <property name="value">
-            <number>50</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="notchTarget">
-            <double>2.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="checkBoxU">
+           <property name="text">
+            <string>ChromaU</string>
            </property>
           </widget>
          </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <item>
-            <widget class="QLabel" name="labelBrightness">
-             <property name="text">
-              <string>Brightness  </string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDial" name="dialBrightness">
-             <property name="toolTip">
-              <string>Brightness</string>
-             </property>
-             <property name="minimum">
-              <number>-127</number>
-             </property>
-             <property name="maximum">
-              <number>127</number>
-             </property>
-             <property name="notchesVisible">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="checkBoxY">
+           <property name="text">
+            <string>Luma</string>
+           </property>
+          </widget>
          </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <layout class="QVBoxLayout">
-           <property name="spacing">
-            <number>6</number>
+         <item row="0" column="1">
+          <widget class="QToolButton" name="toolButton__DVD2PC">
+           <property name="text">
+            <string>MPEG2-&gt;PC</string>
            </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QCheckBox" name="checkBoxU">
-             <property name="text">
-              <string>ChromaU</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxV">
-             <property name="text">
-              <string>ChromaV</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxY">
-             <property name="text">
-              <string>Luma</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBox_Enabled">
-             <property name="text">
-              <string>Process</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          </widget>
          </item>
-         <item>
-          <spacer name="verticalSpacer">
+         <item row="4" column="0">
+          <spacer name="verticalSpacerChroma">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -150,84 +153,93 @@
            </property>
           </spacer>
          </item>
-         <item>
-          <widget class="QToolButton" name="toolButton__DVD2PC">
+         <item row="3" column="0">
+          <widget class="QCheckBox" name="checkBox_Enabled">
            <property name="text">
-            <string>MPEG2-&gt;PC</string>
+            <string>Process</string>
            </property>
           </widget>
          </item>
         </layout>
        </item>
-       <item>
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QGraphicsView" name="graphicsViewHistogram">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>256</width>
-           <height>128</height>
-          </size>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>256</width>
-           <height>128</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>256</width>
-           <height>256</height>
-          </size>
-         </property>
-         <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-         <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-        </widget>
-       </item>
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <item>
-        <widget class="ADM_QSlider" name="horizontalSlider">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="toolboxLayout"/>
-       </item>
-       <item>
-        <widget class="QGraphicsView" name="graphicsView"/>
-       </item>
-      </layout>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QGraphicsView" name="graphicsViewHistogram">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>256</width>
+         <height>128</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>256</width>
+         <height>128</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>256</width>
+         <height>192</height>
+        </size>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item>
+    <layout class="QHBoxLayout" name="toolboxLayout"/>
+   </item>
+   <item>
+    <widget class="ADM_QSlider" name="horizontalSlider">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

@@ -15,6 +15,7 @@ class flyChromaShift : public ADM_flyDialogYuv
    uint8_t    download(void);
    uint8_t    upload(void);
    uint8_t    update(void);
+   void       setTabOrder(void);
    flyChromaShift (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider)
                 : ADM_flyDialogYuv(parent,width, height,in,canvas, slider,RESIZE_AUTO) {};

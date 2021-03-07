@@ -40,5 +40,6 @@ class ADMVideoArtVignette:public ADM_coreVideoFilter
 
     static  void        ArtVignetteCreateMask(float *mask, int w, int h, float aspect, float center, float soft);
     static  void        ArtVignetteProcess_C(ADMImage *img, float *mask);
+    static  void        reset(artVignette *cfg);
 };
 

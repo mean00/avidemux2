@@ -221,25 +221,21 @@ bool ADM_vf_getFilterInfo(VF_CATEGORY cat,int filter, const char **name,const ch
  * \fn parseOneFolder
  * @param folder
  */
-#define MAX_EXTERNAL_FILTER 100
 static void parseOneFolder(const char *folder,uint32_t featureMask )
 {
-    char *files[MAX_EXTERNAL_FILTER];
-    uint32_t nbFile;
-    memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
-    if(!buildDirectoryContent(&nbFile, folder, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+    std::vector<std::string> files;
+    if(!buildDirectoryContent(folder, &files, SHARED_LIB_EXT))
     {
-            printf("[ADM_vf_plugin] Cannot parse plugin\n");
-            return ;
+        printf("[ADM_vf_plugin] Cannot open plugin directory\n");
+        return;
     }
 
-
     ADM_info("Feature Mask = 0x%x\n",featureMask);
-    for(int i=0;i<nbFile;i++)
-            tryLoadingVideoFilterPlugin(files[i],featureMask);
+    for(int i=0;i<files.size();i++)
+        tryLoadingVideoFilterPlugin(files.at(i).c_str(),featureMask);
 
-    printf("[ADM_vf_plugin] Scanning done, found %d video filer(s) so far\n", (int)ADM_vf_getNbFilters());
-    clearDirectoryContent(nbFile,files);
+    int nb = ADM_vf_getNbFilters();
+    printf("[ADM_vf_plugin] Scanning done, found %d video filter%s so far\n",nb,(nb==1)? "" : "s");
 }
 /**
  *     \fn ADM_ad_GetPluginVersion

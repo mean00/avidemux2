@@ -16,6 +16,7 @@
 
  #include <errno.h>
  #include <string>
+ #include <algorithm>
  #include <io.h>
  #include <direct.h>
  #include <shlobj.h>
@@ -227,19 +228,21 @@ extern char *ADM_getRelativePath(const char *base0, const char *base1, const cha
 
      return ansiStringLen;
  }
- /**
+/**
  *  \fn buildDirectoryContent
- * 	\brief Returns the content of a dir with the extension ext. The receiving array must be allocated by caller
- * (just the array, not the names themselves)
+ *  \brief Returns the content of a dir with the extension ext. The receiving vector must be allocated by caller
  */
- uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[], int maxElems, const char *ext)
+uint8_t buildDirectoryContent(const char *base, std::vector<std::string> *list, const char *ext)
  {
+    std::string joker = base;
+    joker += "/*.";
+    joker += ext;
 
-    std::string joker = std::string(base) + std::string("/*.") + std::string(ext);
+    list->clear();
+
  	int dirNameLength = utf8StringToWideChar(joker.c_str(), -1, NULL);
  	wchar_t *base2 = new wchar_t[dirNameLength];
     utf8StringToWideChar(joker.c_str(), -1, base2);
-    int dirmax = 0;
 //--
     HANDLE hFind;
     WIN32_FIND_DATAW FindFileData;
@@ -249,7 +252,6 @@ extern char *ADM_getRelativePath(const char *base0, const char *base1, const cha
     {
         ADM_warning("Cannot list content of %s\n", base);
         delete[] base2;
-        *outnb = 0;
         return true;
     }
 
@@ -260,22 +262,17 @@ extern char *ADM_getRelativePath(const char *base0, const char *base1, const cha
         int nameLength = wideCharStringToUtf8(wname, -1, NULL);
         char *shortName = new char[nameLength];
         nameLength = wideCharStringToUtf8(wname, -1, shortName);
-        std::string item = std::string(base) + std::string("/") + std::string(shortName);
+        std::string item = base;
+        item += ADM_SEPARATOR;
+        item += shortName;
+        list->push_back(item);
         delete[] shortName;
 
-        int targetLength = item.length();
-        jobName[dirmax] = (char *)ADM_alloc(targetLength);
-        strcpy(jobName[dirmax], item.c_str());
-        dirmax++;
-        if (dirmax > maxElems)
-            break;
-            
     } while (FindNextFileW(hFind, &FindFileData));
     FindClose(hFind);
-    
-    *outnb = dirmax;
 
     delete[] base2;
+    std::sort(list->begin(),list->end());
     return true;
  }
 

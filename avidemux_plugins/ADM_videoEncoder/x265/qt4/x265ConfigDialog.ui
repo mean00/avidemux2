@@ -2442,6 +2442,16 @@
                   <string>Auto Variance AQ</string>
                  </property>
                 </item>
+                <item>
+                 <property name="text">
+                  <string>Auto-Variance Biased</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Auto-Variance Edge</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item>

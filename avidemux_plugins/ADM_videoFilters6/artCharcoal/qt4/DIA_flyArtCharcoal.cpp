@@ -60,9 +60,7 @@ uint8_t   flyArtCharcoal::processYuv(ADMImage *in,ADMImage *out )
 {
     uint8_t *src,*dst;
     uint32_t stride;
-    out->copyPlane(in,out,PLANAR_Y);
-    out->copyPlane(in,out,PLANAR_U);
-    out->copyPlane(in,out,PLANAR_V);
+    out->duplicate(in);
 
     // Do it!
     ADMVideoArtCharcoal::ArtCharcoalProcess_C(out, work, param.scatterX, param.scatterY, param.intensity, param.color, param.invert);

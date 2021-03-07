@@ -57,7 +57,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoArtPixelize,   // Class
                                       VF_ART,            // Category
                                       "artPixelize",            // internal name (must be uniq!)
                                       QT_TRANSLATE_NOOP("artPixelize","Pixelize"),            // Display name
-                                      QT_TRANSLATE_NOOP("artPixelize","Pixelize")   // Description
+                                      QT_TRANSLATE_NOOP("artPixelize","Pixelize image.") // Description
                                   );
 /**
     \fn ArtPixelizeCore_C
@@ -123,9 +123,6 @@ void ArtPixelizeProcess_C(ADMImage *img, unsigned int pw, unsigned int ph)
 
     pw = pw & 0xFFFE;	// must be even
     ph = ph & 0xFFFE;	// must be even
-
-    if(img->_range == ADM_COL_RANGE_MPEG)
-        img->expandColorRange();
 
     // Y plane
     stride=img->GetPitch(PLANAR_Y);

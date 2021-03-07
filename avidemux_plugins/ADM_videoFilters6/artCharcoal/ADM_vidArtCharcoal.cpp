@@ -196,15 +196,20 @@ const char   *ADMVideoArtCharcoal::getConfiguration(void)
 ADMVideoArtCharcoal::ADMVideoArtCharcoal(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_coreVideoFilter(in,couples)
 {
     if(!couples || !ADM_paramLoad(couples,artCharcoal_param,&_param))
-    {
-        _param.scatterX = 2;
-        _param.scatterY = 2;
-        _param.intensity = 1.0;
-        _param.color = 0.0;
-        _param.invert = false;
-    }
+        reset(&_param);
     work=new ADMImageDefault(info.width,info.height);
     update();
+}
+/**
+    \fn reset
+*/
+void ADMVideoArtCharcoal::reset(artCharcoal *cfg)
+{
+    cfg->scatterX = 2;
+    cfg->scatterY = 2;
+    cfg->intensity = 1.0;
+    cfg->color = 0.0;
+    cfg->invert = false;
 }
 /**
     \fn valueLimit

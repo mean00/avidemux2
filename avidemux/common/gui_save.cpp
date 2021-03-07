@@ -217,17 +217,13 @@ int A_audioSave(const char *name)
         ADM_error("[A_audioSave] No stream\n");
         return 0;
     }
-	if (audioProcessMode(0))
-	{
-		// if we get here, either not compressed
-		// or decompressable
-		A_saveAudioProcessed(name);
-    }
-	else			// copy mode...
+    if (audioProcessMode(0))
     {
-        A_saveAudioCopy(name);
+        // if we get here, either not compressed or decompressible
+        return A_saveAudioProcessed(name);
     }
-	return 1;
+    // copy mode...
+    return A_saveAudioCopy(name);
 }
 
 /**
@@ -338,8 +334,13 @@ int A_saveAudioCopy (const char *name)
    ADM_info("Saving from %s \n",ADM_us2plain(timeStart));
    ADM_info("Saving to %s \n",ADM_us2plain(timeEnd));
    ADM_info("duration %s \n",ADM_us2plain((uint64_t)duration));
-   return A_saveAudioCommon (name,stream,duration);
 
+    if(false == A_saveAudioCommon(name,stream,duration))
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Audio"),QT_TRANSLATE_NOOP("adm","Saving failed"));
+        return 0;
+    }
+    return 1;
 }
 
 
