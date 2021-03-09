@@ -65,8 +65,6 @@ Ui_analyzerWindow::Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in) :
 }
 void Ui_analyzerWindow::sliderUpdate(int foo)
 {
-    if (!myFly)
-        return;
     myFly->sliderChanged();
 }
 Ui_analyzerWindow::~Ui_analyzerWindow()
