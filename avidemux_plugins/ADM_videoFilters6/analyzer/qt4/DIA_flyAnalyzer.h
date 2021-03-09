@@ -30,8 +30,8 @@ class flyAnalyzer : public ADM_flyDialogYuv
     QGraphicsScene * sceneHistograms;
 
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
-    uint8_t    download(void) {};
-    uint8_t    upload(void) {};
+    uint8_t    download(void) { return 1; }
+    uint8_t    upload(void) { return 1; }
     uint8_t    update(void);
     void       setTabOrder(void);
                flyAnalyzer (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
