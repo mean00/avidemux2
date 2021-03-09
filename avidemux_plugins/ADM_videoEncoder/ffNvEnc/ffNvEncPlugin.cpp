@@ -79,7 +79,7 @@ extern "C"
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffNvEncEncoder);
 #ifdef H265_ENCODER
-ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEnc",
+ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEncHEVC",
                                "Nvidia HEVC",
                                "Nvidia hw encoder",
                                 ffNvEncConfigure, // configuration
@@ -90,7 +90,7 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEnc",
                                 nvEncProbe
 );
 #else
-ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEnc",
+ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEncH264",
                                "Nvidia H264",
                                "Nvidia hw encoder",
                                 ffNvEncConfigure, // configuration
