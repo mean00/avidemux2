@@ -12,11 +12,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QPushButton>
 #include "Q_analyzer.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_vidAnalyzer.h"
-#include <cmath>
 
 //
 //	Video is in YV12 Colorspace
@@ -26,9 +24,10 @@ Ui_analyzerWindow::Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in) :
 {
     ui.setupUi(this);
     lock=0;
+    firstRun = true;
     // Allocate space for green-ised video
-    _width=in->getInfo()->width;
-    _height=in->getInfo()->height;
+    uint32_t _width=in->getInfo()->width;
+    uint32_t _height=in->getInfo()->height;
     _in = in;
 
     canvas=new ADM_QCanvas(ui.graphicsView,_width,_height);
@@ -53,7 +52,12 @@ Ui_analyzerWindow::Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in) :
     ui.graphicsViewHistograms->setScene(sceneHistograms);
     ui.graphicsViewHistograms->scale(0.5,0.5);
 
-    myFly=NULL;    //new flyAnalyzer moved to ::showEvent
+    myFly = new flyAnalyzer(this,_width, _height,_in,canvas,ui.horizontalSlider,sceneVectorScope, sceneYUVparade, sceneRGBparade, sceneHistograms);
+    myFly->_cookie=&ui;
+    myFly->addControl(ui.toolboxLayout);
+    myFly->setTabOrder();
+    myFly->upload();
+    myFly->sliderChanged();
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 
@@ -73,7 +77,7 @@ Ui_analyzerWindow::~Ui_analyzerWindow()
     if(canvas) delete canvas;
     canvas=NULL;
 }
-void Ui_analyzerWindow::resizeEvent(QResizeEvent *event)
+void Ui_analyzerWindow::adjustGraphs(void)
 {
     QRectF bounds;
 
@@ -88,49 +92,29 @@ void Ui_analyzerWindow::resizeEvent(QResizeEvent *event)
 
     bounds = sceneHistograms->itemsBoundingRect();
     ui.graphicsViewHistograms->fitInView(bounds, Qt::KeepAspectRatio);
+}
+void Ui_analyzerWindow::resizeEvent(QResizeEvent *event)
+{
+    adjustGraphs();
 
-    if (!myFly)
-        return;
     if(!canvas->height())
         return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
+    myFly->fitCanvasIntoView(ui.graphicsView->width(), ui.graphicsView->height());
     myFly->adjustCanvasPosition();
 }
 
 void Ui_analyzerWindow::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
-
-    if (!myFly)
-    {
-        myFly=new flyAnalyzer( this,_width, _height,_in,canvas,ui.horizontalSlider,sceneVectorScope, sceneYUVparade, sceneRGBparade, sceneHistograms);
-        myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
-        myFly->setTabOrder();
-        myFly->upload();
-        myFly->sliderChanged();
-    }
-
-    QRectF bounds;
-
-    bounds = sceneVectorScope->itemsBoundingRect();
-    ui.graphicsViewVectorScope->fitInView(bounds, Qt::KeepAspectRatio);
-
-    bounds = sceneYUVparade->itemsBoundingRect();
-    ui.graphicsViewYUVparade->fitInView(bounds, Qt::KeepAspectRatio);
-
-    bounds = sceneRGBparade->itemsBoundingRect();
-    ui.graphicsViewRGBparade->fitInView(bounds, Qt::KeepAspectRatio);
-
-    bounds = sceneHistograms->itemsBoundingRect();
-    ui.graphicsViewHistograms->fitInView(bounds, Qt::KeepAspectRatio);
+    adjustGraphs();
 
     myFly->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
-
-    this->resize(900,650);
+    if (firstRun)
+    {
+        adjustSize();
+        firstRun = false;
+    }
 }
 
 void flyAnalyzer::setTabOrder(void)

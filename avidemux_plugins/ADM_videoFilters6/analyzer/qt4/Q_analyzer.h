@@ -1,10 +1,8 @@
 #ifndef Q_analyzer_h
 #define Q_analyzer_h
 #include "ui_analyzer.h"
-#include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyAnalyzer.h"
-#include "QGraphicsScene"
 
 class Ui_analyzerWindow : public QDialog
 {
@@ -12,7 +10,7 @@ class Ui_analyzerWindow : public QDialog
 
   protected:
     int lock;
-    uint32_t         _width, _height;
+    bool firstRun;
     ADM_coreVideoFilter * _in;
     flyAnalyzer *     myFly;
     ADM_QCanvas *      canvas;
@@ -32,5 +30,6 @@ class Ui_analyzerWindow : public QDialog
   private:
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+    void adjustGraphs(void);
 };
 #endif    // Q_analyzer_h
