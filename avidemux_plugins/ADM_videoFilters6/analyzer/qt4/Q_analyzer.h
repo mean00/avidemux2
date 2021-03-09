@@ -9,7 +9,6 @@ class Ui_analyzerWindow : public QDialog
     Q_OBJECT
 
   protected:
-    int lock;
     bool firstRun;
     ADM_coreVideoFilter * _in;
     flyAnalyzer *     myFly;

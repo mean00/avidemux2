@@ -23,7 +23,6 @@
 Ui_analyzerWindow::Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in) : QDialog(parent)
 {
     ui.setupUi(this);
-    lock=0;
     firstRun = true;
     // Allocate space for green-ised video
     uint32_t _width=in->getInfo()->width;
