@@ -129,6 +129,8 @@ void Ui_analyzerWindow::showEvent(QShowEvent *event)
 
     myFly->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
+
+    this->resize(900,650);
 }
 
 void flyAnalyzer::setTabOrder(void)
