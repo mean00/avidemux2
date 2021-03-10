@@ -24,7 +24,6 @@
 #include "Q_artGrid.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_vidArtGrid.h"
-#include <cmath>
 
 //
 //	Video is in YV12 Colorspace
@@ -83,7 +82,7 @@ void Ui_artGridWindow::valueChanged( int f )
     if(lock) return;
     lock++;
     myFly->download();
-    myFly->work->blacken();
+    myFly->blacken();
     myFly->sameImage();
     lock--;
 }
@@ -93,7 +92,7 @@ void Ui_artGridWindow::reset(void)
     lock++;
     ADMVideoArtGrid::reset(&myFly->param);
     myFly->upload();
-    myFly->work->blacken();
+    myFly->blacken();
     myFly->sameImage();
     lock--;
 }

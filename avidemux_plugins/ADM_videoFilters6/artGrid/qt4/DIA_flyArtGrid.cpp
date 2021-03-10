@@ -55,6 +55,15 @@ uint8_t  flyArtGrid::update(void)
     return 1;
 }
 /**
+    \fn goToTime
+*/
+bool flyArtGrid::goToTime(uint64_t time)
+{
+    if(param.roll)
+        work->blacken();
+    return ADM_flyDialog::goToTime(time);
+}
+/**
     \fn processYuv
 */
 uint8_t   flyArtGrid::processYuv(ADMImage *in,ADMImage *out )

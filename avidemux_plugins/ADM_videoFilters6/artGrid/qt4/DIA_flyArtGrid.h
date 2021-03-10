@@ -20,18 +20,20 @@
 */
 class flyArtGrid : public ADM_flyDialogYuv
 {
+  private:
+    ADMImage   *work;
+  public:
+    artGrid    param;
 
-  public:
-    artGrid  param;
-     ADMImage    *work;
-  public:
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     uint8_t    download(void);
     uint8_t    upload(void);
     uint8_t    update(void);
+    void       blacken(void) { work->blacken(); }
     void       setTabOrder(void);
                flyArtGrid (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider);
     virtual    ~flyArtGrid() ;
+    virtual bool goToTime(uint64_t time);
 };
 #endif
