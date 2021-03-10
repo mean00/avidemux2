@@ -140,7 +140,9 @@ void ADMVideoArtGrid::ArtGridProcess_C(ADMImage *img, ADMImage *tmp, uint32_t si
     //duplicate
     if (roll)
     {
+        uint64_t keep = img->Pts;
         img->duplicate(tmp);
+        img->Pts = keep;
     } else {
         img->GetWritePlanes(plane);
         img->blacken();
