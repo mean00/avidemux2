@@ -14,8 +14,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#define _USE_MATH_DEFINES // some compilers do not export M_PI etc.. if GNU_SOURCE or that is defined, let's do that
-#include <cmath>
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
 #include "ADM_coreVideoFilterInternal.h"
@@ -23,10 +21,6 @@
 #include "artGrid.h"
 #include "artGrid_desc.cpp"
 #include "ADM_vidArtGrid.h"
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
 
 extern uint8_t DIA_getArtGrid(artGrid *param, ADM_coreVideoFilter *in);
 
@@ -251,9 +245,14 @@ void ADMVideoArtGrid::setCoupledConf(CONFcouple *couples)
 }
 
 /**
-    
+    \fn goToTime
 */
-
+bool ADMVideoArtGrid::goToTime(uint64_t usec)
+{
+    if(_roll)
+        work->blacken();
+    return previousFilter->goToTime(usec);
+}
 /**
     \fn getNextFrame
     \brief

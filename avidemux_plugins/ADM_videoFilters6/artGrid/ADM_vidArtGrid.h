@@ -37,6 +37,7 @@ class  ADMVideoArtGrid:public ADM_coreVideoFilter
     virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
     virtual void         setCoupledConf(CONFcouple *couples);
     virtual bool         configure(void) ;                 /// Start graphical user interface
+    virtual bool         goToTime(uint64_t usec);
 
     static  void         ArtGridProcess_C(ADMImage *img, ADMImage *tmp, uint32_t size, bool work);
     static  void         reset(artGrid *cfg);
