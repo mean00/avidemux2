@@ -135,8 +135,10 @@ void ADMVideoArtGrid::ArtGridProcess_C(ADMImage *img, ADMImage *tmp, uint32_t si
     if (roll)
     {
         uint64_t keep = img->Pts;
+        ADM_colorRange range = img->_range;
         img->duplicate(tmp);
         img->Pts = keep;
+        img->_range = range;
     } else {
         img->GetWritePlanes(plane);
         img->blacken();
