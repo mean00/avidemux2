@@ -53,6 +53,7 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
         myFly->showOriginal = false;
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
@@ -200,6 +201,33 @@ uint8_t flyDelogoHQ::download(void)
     param.blur=(int)MYSPIN(Blur)->value();
     param.gradient=(int)MYSPIN(Gradient)->value();
     return 1;
+}
+
+void flyDelogoHQ::setTabOrder(void)
+{
+    Ui_delogoHQDialog *w=(Ui_delogoHQDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
+#define PUSH_DIAL(x) controls.push_back(MYDIAL(x));
+#define PUSH_TOG(x) controls.push_back(MYCHECK(x));
+    controls.push_back(w->pushButtonSave);
+    controls.push_back(w->pushButtonLoad);
+    PUSH_SPIN(Blur)
+    PUSH_SPIN(Gradient)
+
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
 }
 
 /**
