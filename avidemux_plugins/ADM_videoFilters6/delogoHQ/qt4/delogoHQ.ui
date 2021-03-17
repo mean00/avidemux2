@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>568</width>
-    <height>475</height>
+    <width>585</width>
+    <height>424</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,56 +74,38 @@
       <string>Mask</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="4" column="0">
-       <widget class="QLabel" name="label4">
-        <property name="text">
-         <string>4)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label3">
-        <property name="text">
-         <string>3)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label2">
-        <property name="text">
-         <string>2)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label1">
-        <property name="text">
-         <string>1)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item row="1" column="1">
        <widget class="QPushButton" name="pushButtonSave">
         <property name="text">
          <string>Save selected frame...</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="1" column="2">
        <widget class="QPushButton" name="pushButtonLoad">
         <property name="text">
          <string>Load mask</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="2">
+      <item row="1" column="0">
+       <widget class="QPushButton" name="pushButtonHelp">
+        <property name="text">
+         <string>Help</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
        <widget class="QLineEdit" name="lineEditImage">
         <property name="enabled">
          <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="2" column="3">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -131,31 +113,10 @@
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
-          <height>20</height>
+          <height>1</height>
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QLabel" name="labelInstruction1">
-        <property name="text">
-         <string>Select a frame, where the logo is clearly visible.</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1" colspan="2">
-       <widget class="QLabel" name="labelInstruction3">
-        <property name="text">
-         <string>Create a mask with an image editor, such the logo area is white, everywhere else is black.</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1" colspan="2">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Note: for multiple distant logos (e.g. opposite corners), using separate filters will be faster.</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
@@ -218,8 +179,14 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>pushButtonHelp</tabstop>
+  <tabstop>pushButtonSave</tabstop>
+  <tabstop>pushButtonLoad</tabstop>
+  <tabstop>horizontalSliderBlur</tabstop>
+  <tabstop>horizontalSliderGradient</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>graphicsView</tabstop>
+  <tabstop>lineEditImage</tabstop>
  </tabstops>
  <resources/>
  <connections>
