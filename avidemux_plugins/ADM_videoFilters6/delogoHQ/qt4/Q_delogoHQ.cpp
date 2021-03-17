@@ -55,8 +55,6 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
         myFly->addControl(ui.toolboxLayout);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
-
         if(param->maskfile.size())
         {
             if(tryToLoadimage(param->maskfile.c_str()))
@@ -64,6 +62,7 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
                 maskFName=param->maskfile;
             }
         }
+        myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
@@ -77,7 +76,6 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
         connect( ui.pushButtonSave,SIGNAL(pressed()),this,SLOT(imageSave()));
         connect( ui.pushButtonLoad,SIGNAL(pressed()),this,SLOT(imageLoad()));
 
-        myFly->sameImage();
         setModal(true);
 }
 void Ui_delogoHQWindow::sliderUpdate(int foo)
