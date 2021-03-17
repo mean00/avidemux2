@@ -19,11 +19,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <QPushButton>
+#include <QMessageBox>
 #include "Q_delogoHQ.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_vidDelogoHQ.h"
-#include <cmath>
 #include "ADM_imageLoader.h"
 #include "DIA_fileSel.h"
 #include "ADM_last.h"
@@ -71,7 +71,9 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
         SPINNER(Blur,1,0)
         SPINNER(Gradient,1,0)
 
-        connect( ui.pushButtonHelp,SIGNAL(pressed()),this,SLOT(showHelp()));
+        QPushButton *helpButton = ui.buttonBox->button(QDialogButtonBox::Help);
+        connect(helpButton,SIGNAL(clicked()),this,SLOT(showHelp()));
+
         connect( ui.pushButtonSave,SIGNAL(pressed()),this,SLOT(imageSave()));
         connect( ui.pushButtonLoad,SIGNAL(pressed()),this,SLOT(imageLoad()));
 
@@ -104,16 +106,44 @@ Ui_delogoHQWindow::~Ui_delogoHQWindow()
 }
 void Ui_delogoHQWindow::showHelp()
 {
-    GUI_Info_HIG(ADM_LOG_NONE,QT_TRANSLATE_NOOP("delogoHQ","How to use DelogoHQ"),"%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n",
-                          QT_TRANSLATE_NOOP("delogoHQ","1) Select a frame in the preview, where the logo is clearly visible and does not blend into the background"),
-                          QT_TRANSLATE_NOOP("delogoHQ","2) Save the selected frame as a .png image."),
-                          QT_TRANSLATE_NOOP("delogoHQ","3) From the saved image you must create a mask, with an apropriate image editor."),
-                          QT_TRANSLATE_NOOP("delogoHQ","3.1) The mask is a black and white image, where white pixels coresponds to the logo area to be removed."),
-                          QT_TRANSLATE_NOOP("delogoHQ","3.2) The fastest mask creation method is using an image editor that supports layers. You should load the saved frame, then create a transparent layer on top of that. Draw white blobs over the logo area, then fill the rest with black color. Save the layer as a .png file."),
-                          QT_TRANSLATE_NOOP("delogoHQ","3.3) If the logo has fully transparent areas, it is recommended, to exclude them from the mask (fill black)."),
-                          QT_TRANSLATE_NOOP("delogoHQ","4) Load the mask image."),
-                          QT_TRANSLATE_NOOP("delogoHQ","Note: to remove multiple distant logos (e.g. opposite corners), using separate filters for each logo will be much faster.")
-                      );
+    QString usage = "<ol><li>";
+
+    const char *text = QT_TRANSLATE_NOOP("delogoHQ","Find a frame in the preview with the logo clearly visible and not blending into the background.");
+    usage += QString::fromUtf8(text);
+
+    usage += "<br></li><li>";
+
+    text = QT_TRANSLATE_NOOP("delogoHQ","Save this frame as a PNG image.");
+    usage += QString::fromUtf8(text);
+
+    usage += "<br></li><li>";
+
+    text = QT_TRANSLATE_NOOP("delogoHQ","Use an appropriate image editor to paint the area of the logo of any shape white and everything else solid black.");
+    usage += QString::fromUtf8(text);
+
+    usage += "<br><br>";
+
+    text = QT_TRANSLATE_NOOP("delogoHQ","This black and white image will serve as a mask where white pixels corespond to the logo to be removed.");
+    usage += QString::fromUtf8(text);
+
+    usage += "<br><br>";
+
+    text = QT_TRANSLATE_NOOP("delogoHQ","If the logo has fully transparent areas, it is recommended to exclude them from the mask by making them black.");
+    usage += QString::fromUtf8(text);
+
+    usage += "<br></li><li>";
+
+    text = QT_TRANSLATE_NOOP("delogoHQ","Load the mask image.");
+    usage += QString::fromUtf8(text);
+
+    usage += "<br></li></ol><p>";
+
+    text = QT_TRANSLATE_NOOP("delogoHQ","Note: To remove multiple distant logos (e.g. opposite corners), using separate filter instances for each logo will be much faster.");
+    usage += QString::fromUtf8(text);
+
+    usage += "<br></p>";
+
+    QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("delogoHQ","How to use DelogoHQ")), usage, QMessageBox::Ok);
 }
 void Ui_delogoHQWindow::imageSave()
 {
@@ -225,7 +255,6 @@ void flyDelogoHQ::setTabOrder(void)
 #define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
 #define PUSH_DIAL(x) controls.push_back(MYDIAL(x));
 #define PUSH_TOG(x) controls.push_back(MYCHECK(x));
-    controls.push_back(w->pushButtonHelp);
     controls.push_back(w->pushButtonSave);
     controls.push_back(w->pushButtonLoad);
     PUSH_SPIN(Blur)
