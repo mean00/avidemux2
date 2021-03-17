@@ -71,9 +71,11 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
         SPINNER(Blur,1,0)
         SPINNER(Gradient,1,0)
 
+        connect( ui.pushButtonHelp,SIGNAL(pressed()),this,SLOT(showHelp()));
         connect( ui.pushButtonSave,SIGNAL(pressed()),this,SLOT(imageSave()));
         connect( ui.pushButtonLoad,SIGNAL(pressed()),this,SLOT(imageLoad()));
 
+        myFly->sameImage();
         setModal(true);
 }
 void Ui_delogoHQWindow::sliderUpdate(int foo)
@@ -99,6 +101,19 @@ Ui_delogoHQWindow::~Ui_delogoHQWindow()
     myFly=NULL; 
     if(canvas) delete canvas;
     canvas=NULL;
+}
+void Ui_delogoHQWindow::showHelp()
+{
+    GUI_Info_HIG(ADM_LOG_NONE,QT_TRANSLATE_NOOP("delogoHQ","How to use DelogoHQ"),"%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n",
+                          QT_TRANSLATE_NOOP("delogoHQ","1) Select a frame in the preview, where the logo is clearly visible and does not blend into the background"),
+                          QT_TRANSLATE_NOOP("delogoHQ","2) Save the selected frame as a .png image."),
+                          QT_TRANSLATE_NOOP("delogoHQ","3) From the saved image you must create a mask, with an apropriate image editor."),
+                          QT_TRANSLATE_NOOP("delogoHQ","3.1) The mask is a black and white image, where white pixels coresponds to the logo area to be removed."),
+                          QT_TRANSLATE_NOOP("delogoHQ","3.2) The fastest mask creation method is using an image editor that supports layers. You should load the saved frame, then create a transparent layer on top of that. Draw white blobs over the logo area, then fill the rest with black color. Save the layer as a .png file."),
+                          QT_TRANSLATE_NOOP("delogoHQ","3.3) If the logo has fully transparent areas, it is recommended, to exclude them from the mask (fill black)."),
+                          QT_TRANSLATE_NOOP("delogoHQ","4) Load the mask image."),
+                          QT_TRANSLATE_NOOP("delogoHQ","Note: to remove multiple distant logos (e.g. opposite corners), using separate filters for each logo will be much faster.")
+                      );
 }
 void Ui_delogoHQWindow::imageSave()
 {
@@ -210,6 +225,7 @@ void flyDelogoHQ::setTabOrder(void)
 #define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
 #define PUSH_DIAL(x) controls.push_back(MYDIAL(x));
 #define PUSH_TOG(x) controls.push_back(MYCHECK(x));
+    controls.push_back(w->pushButtonHelp);
     controls.push_back(w->pushButtonSave);
     controls.push_back(w->pushButtonLoad);
     PUSH_SPIN(Blur)
