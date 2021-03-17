@@ -48,12 +48,24 @@ bool flyDelogoHQ::setMask(ADMImage * newMask)
     return true;
 }
 /**
+    \fn createBuffers
+*/
+void flyDelogoHQ::createBuffers(void)
+{
+    ADMVideoDelogoHQ::DelogoHQCreateBuffers(_w, _h, &rgbBufStride, &rgbBufRaw, &rgbBufImage, &convertYuvToRgb, &convertRgbToYuv);
+}
+/**
+    \fn destroyBuffers
+*/
+void flyDelogoHQ::destroyBuffers(void)
+{
+    ADMVideoDelogoHQ::DelogoHQDestroyBuffers(rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
+}
+/**
     \fn processYuv
 */
 uint8_t   flyDelogoHQ::processYuv(ADMImage *in,ADMImage *out )
 {
-    uint8_t *src,*dst;
-    uint32_t stride;
     out->duplicate(in);
 
     if (saveFilename)

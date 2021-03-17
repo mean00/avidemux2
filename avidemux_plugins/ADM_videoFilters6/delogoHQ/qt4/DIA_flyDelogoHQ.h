@@ -23,6 +23,7 @@ class flyDelogoHQ : public ADM_flyDialogYuv
   public:
     delogoHQ         param;
     bool             showOriginal;
+  private:
     int                    rgbBufStride;
     ADM_byteBuffer *       rgbBufRaw;
     ADMImageRef *          rgbBufImage;
@@ -30,8 +31,10 @@ class flyDelogoHQ : public ADM_flyDialogYuv
     ADMColorScalerFull *   convertRgbToYuv;
     int *                  mask;
     int                    maskHint[4];
-  private:
     char * saveFilename;
+
+    void       createBuffers(void);
+    void       destroyBuffers(void);
   public:
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     uint8_t    download(void);
@@ -43,9 +46,11 @@ class flyDelogoHQ : public ADM_flyDialogYuv
                           saveFilename = NULL;
                           mask=NULL;
                           maskHint[0] = maskHint[1] = maskHint[2] = maskHint[3] = -1;
+                          createBuffers();
                 };
     virtual ~flyDelogoHQ() {
                           if (mask) free(mask);
+                          destroyBuffers();
                 };
     void       saveCurrentFrame(char * filename) {saveFilename = filename;};
     bool       setMask(ADMImage * newMask);

@@ -46,7 +46,6 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
         myFly=new flyDelogoHQ( this,width, height,in,canvas,ui.horizontalSlider);
-        ADMVideoDelogoHQ::DelogoHQCreateBuffers(width,height, &(myFly->rgbBufStride), &(myFly->rgbBufRaw), &(myFly->rgbBufImage), &(myFly->convertYuvToRgb), &(myFly->convertRgbToYuv));
         //memcpy(&(myFly->param),param,sizeof(delogoHQ));
         myFly->param.blur = param->blur;
         myFly->param.gradient = param->gradient;
@@ -94,10 +93,7 @@ void Ui_delogoHQWindow::gather(delogoHQ *param)
 Ui_delogoHQWindow::~Ui_delogoHQWindow()
 {
     admCoreUtils::setLastReadFolder(lastFolder);
-    if(myFly) {
-        ADMVideoDelogoHQ::DelogoHQDestroyBuffers(myFly->rgbBufRaw, myFly->rgbBufImage, myFly->convertYuvToRgb, myFly->convertRgbToYuv);
-        delete myFly;
-    }
+    if(myFly) delete myFly;
     myFly=NULL; 
     if(canvas) delete canvas;
     canvas=NULL;
