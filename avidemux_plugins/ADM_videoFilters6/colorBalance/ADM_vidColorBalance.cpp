@@ -127,7 +127,7 @@ void ADMVideoColorBalance::quadraticCurve(int * map, float loPoint, float mdPoin
         {
             map[i] = map[16];
         }
-        for(int i = 236; i < 255; i++)
+        for(int i = 236; i < 256; i++)
         {
             map[i] = map[235];
         }
