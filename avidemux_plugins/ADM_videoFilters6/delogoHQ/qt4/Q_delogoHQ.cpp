@@ -137,7 +137,13 @@ void Ui_delogoHQWindow::showHelp()
 
     usage += "<br></p>";
 
-    QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("delogoHQ","How to use DelogoHQ")), usage, QMessageBox::Ok);
+    QString title = QString::fromUtf8(QT_TRANSLATE_NOOP("delogoHQ","How to use DelogoHQ"));
+    QMessageBox msgBoxUsage(QMessageBox::Information, title, usage, QMessageBox::Ok, qtLastRegisteredDialog());
+#ifdef __APPLE__
+    QWidget *forceTitle = static_cast<QWidget *>(&msgBoxUsage);
+    forceTitle->setWindowTitle(title);
+#endif
+    msgBoxUsage.exec();
 }
 void Ui_delogoHQWindow::imageSave()
 {
