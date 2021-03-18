@@ -34,6 +34,7 @@ public slots:
 private slots:
         void                sliderUpdate(int foo);
         void                valueChanged(int foo);
+        void                sizeChanged(int foo);
         void                preview(int x);
 };
 

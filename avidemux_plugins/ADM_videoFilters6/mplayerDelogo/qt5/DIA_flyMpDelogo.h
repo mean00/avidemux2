@@ -28,16 +28,16 @@ private:
     ADM_rubberControl *rubber;
 
     uint8_t     upload(bool update, bool toRubber);
-    bool        boundCheck(void);
+    bool        boundCheck(bool sizeHasPriority);
     void        adjustRubber(void);
 
 public:
    uint8_t     processYuv(ADMImage* in, ADMImage *out);
-   uint8_t     download(void);
+   uint8_t     download(bool sizeHasPriority);
+   uint8_t     download(void) {return download(true);}
    uint8_t     upload() {return upload(true,true);}
                flyMpDelogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider);
-                
    virtual     ~flyMpDelogo() ;
    bool         setPreview(bool onoff)
                 {

@@ -271,7 +271,7 @@ bool flyMpDelogo::blockChanges(bool block)
 /**
  *  \fn boundCheck
  */
-bool flyMpDelogo::boundCheck(void)
+bool flyMpDelogo::boundCheck(bool sizeHasPriority)
 {
     Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
     bool passed = true;
@@ -280,9 +280,17 @@ bool flyMpDelogo::boundCheck(void)
         param.lw = _w;
         passed = false;
     }
+    if(param.xoff > _w)
+    {
+        param.xoff = _w;
+        passed = false;
+    }
     if(param.xoff + param.lw > _w)
     {
-        param.xoff = _w - param.lw;
+        if(sizeHasPriority)
+            param.xoff = _w - param.lw;
+        else
+            param.lw = _w - param.xoff;
         passed = false;
     }
     if(param.lh > _h)
@@ -290,9 +298,17 @@ bool flyMpDelogo::boundCheck(void)
         param.lh = _h;
         passed = false;
     }
+    if(param.yoff > _h)
+    {
+        param.yoff = _h;
+        passed = false;
+    }
     if(param.yoff + param.lh > _h)
     {
-        param.yoff = _h - param.lh;
+        if(sizeHasPriority)
+            param.yoff = _h - param.lh;
+        else
+            param.lh = _h - param.yoff;
         passed = false;
     }
     /* Setting maximum dynamically breaks auto-repeat of
@@ -332,7 +348,7 @@ uint8_t flyMpDelogo::upload(bool redraw, bool toRubber)
 /**
  *  \fn download
  */
-uint8_t flyMpDelogo::download(void)
+uint8_t flyMpDelogo::download(bool sizeHasPriority)
 {
     Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
 #define GETSPIN(x,y) param.y=w->spin##x->value();
@@ -342,7 +358,7 @@ uint8_t flyMpDelogo::download(void)
     GETSPIN(H,lh)
     GETSPIN(Band,band)
 
-    if(!boundCheck())
+    if(!boundCheck(sizeHasPriority))
         upload(false,true);
     //printf(">>>Download event : x = %d y = %d w = %d h = %d\n",param.xoff,param.yoff,param.lw,param.lh);
     return 1;
@@ -419,7 +435,7 @@ Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVid
     myCrop->addControl(ui.toolboxLayout);
     myCrop->setTabOrder();
     myCrop->setPreview(false);
-#define SPINENTRY(x,y) ui.spin##x->setMaximum(y);
+#define SPINENTRY(x,y) ui.spin##x->setMaximum(y); ui.spin##x->setKeyboardTracking(false);
     SPINENTRY(X,width)
     SPINENTRY(W,width)
     SPINENTRY(Y,height)
@@ -434,11 +450,13 @@ Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVid
 
     connect(ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect(ui.spin##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
+    SPINNER(Band)
     SPINNER(X)
     SPINNER(Y)
+#undef SPINNER
+#define SPINNER(x) connect(ui.spin##x,SIGNAL(valueChanged(int)),this,SLOT(sizeChanged(int)));
     SPINNER(W)
     SPINNER(H)
-    SPINNER(Band)
 
     connect(ui.checkBoxPreview, SIGNAL(stateChanged(int )),this, SLOT(preview(int)));
 
@@ -545,13 +563,24 @@ void Ui_mpdelogoWindow::gather(delogo *param)
         memcpy(param, myCrop->getParam(), sizeof(delogo));
 }
 /**
+ *  \fn sizeChanged
+ */
+void Ui_mpdelogoWindow::sizeChanged(int f)
+{
+    if(lock) return;
+    lock++;
+    myCrop->download(true);
+    myCrop->sameImage();
+    lock--;
+}
+/**
  *  \fn valueChanged
  */
 void Ui_mpdelogoWindow::valueChanged(int f)
 {
     if(lock) return;
     lock++;
-    myCrop->download();
+    myCrop->download(false);
     myCrop->sameImage();
     lock--;
 }
