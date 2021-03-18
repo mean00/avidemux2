@@ -46,14 +46,10 @@
         myCrop=new flyContrast( this,width, height,in,canvas,ui.horizontalSlider,scene);
         memcpy(&(myCrop->param),param,sizeof(contrast));
         myCrop->_cookie=&ui;
-        myCrop->addControl(ui.toolboxLayout);
+        myCrop->addControl(ui.toolboxLayout, true);
         myCrop->setTabOrder();
         myCrop->upload();
         myCrop->sliderChanged();
-
-        previewState=true;
-        ui.checkBox_Enabled->setChecked(true);
-
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.dial##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
@@ -75,7 +71,6 @@
           connect( ui.checkBoxU,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
           connect( ui.checkBoxV,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
           connect( ui.checkBoxY,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));  
-          connect( ui.checkBox_Enabled,SIGNAL(stateChanged(int)),this,SLOT(previewActivated(int)));  
           connect( ui.toolButton__DVD2PC,SIGNAL(pressed()),this,SLOT(dvd2PC()));  
 
         setModal(true);
@@ -120,16 +115,6 @@ void Ui_contrastWindow::dvd2PC()
   myCrop->sameImage();
   setDialTitles();
   lock--;
-}
-/**
- * 
- * @param a
- */
-void Ui_contrastWindow::previewActivated(int a)
-{
-    previewState=a;
-    myCrop->setState(a);
-    myCrop->sameImage();
 }
 /**
  * 
@@ -238,7 +223,6 @@ void flyContrast::setTabOrder(void)
     PUSH_CHECK(Y)
     PUSH_CHECK(U)
     PUSH_CHECK(V)
-    PUSH_CHECK(_Enabled)
 
     controls.push_back(w->toolButton__DVD2PC);
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());

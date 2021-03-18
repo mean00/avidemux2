@@ -108,13 +108,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="checkBoxFullPreview">
-     <property name="text">
-      <string>Show full preview</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

@@ -24,7 +24,6 @@ class flyHue : public ADM_flyDialogYuv
   private:
     huesettings flyset;
   public:
-    bool        fullpreview;
 
     uint8_t     processYuv(ADMImage* in, ADMImage *out);
     uint8_t     download(void);
@@ -32,8 +31,7 @@ class flyHue : public ADM_flyDialogYuv
     uint8_t     update(void);
     uint8_t     reset(void);
                 flyHue(QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                     ADM_QCanvas *canvas, ADM_QSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
-                { fullpreview = false; }
+                     ADM_QCanvas *canvas, ADM_QSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO) {}
     void        setTabOrder(void);
     void        setParam(hue *par) { flyset.param.hue = par->hue; flyset.param.saturation = par->saturation; }
     void        getParam(hue *par) { par->hue = flyset.param.hue; par->saturation = flyset.param.saturation; }
