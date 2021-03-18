@@ -44,7 +44,7 @@ Ui_artCartoonWindow::Ui_artCartoonWindow(QWidget *parent, artCartoon *param,ADM_
         ADMVideoArtCartoon::ArtCartoonCreateBuffers(width,height, &(myFly->rgbBufStride), &(myFly->rgbBufRaw), &(myFly->rgbBufImage), &(myFly->convertYuvToRgb), &(myFly->convertRgbToYuv));
         memcpy(&(myFly->param),param,sizeof(artCartoon));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
+        myFly->addControl(ui.toolboxLayout, true);
         myFly->upload();
         myFly->sliderChanged();
 

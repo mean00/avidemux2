@@ -41,7 +41,7 @@ Ui_artColorEffectWindow::Ui_artColorEffectWindow(QWidget *parent, artColorEffect
         myFly=new flyArtColorEffect( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(artColorEffect));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
+        myFly->addControl(ui.toolboxLayout, true);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
