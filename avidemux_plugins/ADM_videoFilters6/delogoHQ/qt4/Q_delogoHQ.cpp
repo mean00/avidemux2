@@ -117,7 +117,7 @@ void Ui_delogoHQWindow::showHelp()
 
     usage += "<br><br>";
 
-    text = QT_TRANSLATE_NOOP("delogoHQ","This black and white image will serve as a mask where white pixels corespond to the logo to be removed.");
+    text = QT_TRANSLATE_NOOP("delogoHQ","This black and white image will serve as a mask where white pixels correspond to the logo to be removed.");
     usage += QString::fromUtf8(text);
 
     usage += "<br><br>";
