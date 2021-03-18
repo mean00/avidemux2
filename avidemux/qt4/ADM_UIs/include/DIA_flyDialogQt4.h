@@ -98,6 +98,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           flyControl  *_control;
           std::vector<QWidget *> buttonList; // useful for manipulating tab order
           QDialog     *_parent;
+          bool         _bypassFilter;
 
 
 
@@ -116,7 +117,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           virtual bool       sameImage(void);
                   uint64_t   getCurrentPts();
           ADM_coreVideoFilter *getUnderlyingFilter() {return _in;}
-                  bool        addControl(QHBoxLayout *layout);
+                  bool        addControl(QHBoxLayout *layout, bool addPeekOriginalButton = false);
 protected:
   virtual ADM_colorspace     toRgbColor(void);
           void               updateZoom(void);
@@ -161,6 +162,8 @@ public slots:
         virtual void backOneMinute(void);
         virtual void fwdOneMinute(void);
         virtual void play(bool status);
+        virtual void peekOriginalPressed(void);
+        virtual void peekOriginalReleased(void);
         virtual void timeout(void);
         virtual void adjustCanvasPosition(void);
         virtual void fitCanvasIntoView(uint32_t width, uint32_t height);
