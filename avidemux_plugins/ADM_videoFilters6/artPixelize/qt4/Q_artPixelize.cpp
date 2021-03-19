@@ -41,7 +41,7 @@ Ui_artPixelizeWindow::Ui_artPixelizeWindow(QWidget *parent, artPixelize *param,A
         myFly=new flyArtPixelize( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(artPixelize));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
+        myFly->addControl(ui.toolboxLayout, true);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

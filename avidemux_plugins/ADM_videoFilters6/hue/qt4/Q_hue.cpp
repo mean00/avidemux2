@@ -43,7 +43,7 @@
         myCrop=new flyHue( this,width, height,in,canvas,ui.horizontalSlider);
         myCrop->setParam(param);
         myCrop->_cookie=&ui;
-        myCrop->addControl(ui.toolboxLayout);
+        myCrop->addControl(ui.toolboxLayout, true);
         myCrop->setTabOrder();
         myCrop->upload();
         myCrop->sliderChanged();
@@ -54,8 +54,6 @@
 #define SPINNER(x) connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
           SPINNER(Hue);
           SPINNER(Saturation);
-
-        connect(ui.checkBoxFullPreview,SIGNAL(stateChanged(int)),this,SLOT(toggleFullPreview(int)));
 
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
@@ -85,14 +83,6 @@ void Ui_hueWindow::valueChanged( int f )
    myCrop->download();
   myCrop->sameImage();
   lock--;
-}
-void Ui_hueWindow::toggleFullPreview(int state)
-{
-    if(lock) return;
-    lock++;
-    myCrop->fullpreview = state != Qt::Unchecked;
-    myCrop->sameImage();
-    lock--;
 }
 
 void Ui_hueWindow::reset(void)
@@ -131,15 +121,12 @@ uint8_t flyHue::upload(void)
 
     MYSPIN(Saturation)->blockSignals(true);
     MYSPIN(Hue)->blockSignals(true);
-    MYCHECK(FullPreview)->blockSignals(true);
 
     MYSPIN(Saturation)->setValue((int)(flyset.param.saturation*10));
     MYSPIN(Hue)->setValue((int)flyset.param.hue);
-    MYCHECK(FullPreview)->setChecked(fullpreview);
 
     MYSPIN(Saturation)->blockSignals(false);
     MYSPIN(Hue)->blockSignals(false);
-    MYCHECK(FullPreview)->blockSignals(false);
 
     update();
 
@@ -166,7 +153,6 @@ void flyHue::setTabOrder(void)
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);
     //controls.push_back(w->graphicsView);
-    controls.push_back(MYCHECK(FullPreview));
 #if 0 /* don't mess with button box */
     controls.push_back(w->buttonBox->button(QDialogButtonBox::Reset));
     { // button box stuff

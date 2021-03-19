@@ -26,7 +26,6 @@ private slots:
     void valueChanged(double foo);
     void valueChanged2(int foo);
     void valueChangedSlider(int foo);
-    void toggleFullPreview(int foo);
     void reset(void);
 
 private:

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>481</width>
-    <height>454</height>
+    <width>551</width>
+    <height>382</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,30 +39,7 @@
    </item>
    <item row="0" column="0">
     <layout class="QGridLayout" name="mainControls">
-     <item row="0" column="2">
-      <widget class="QSpinBox" name="spinBoxStrength">
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>255</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
       <widget class="QCheckBox" name="checkBoxChroma">
        <property name="text">
         <string>Process chroma</string>
@@ -76,17 +53,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QSlider" name="horizontalSliderStrength">
-       <property name="maximum">
-        <number>255</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QCheckBox" name="checkBoxHQ">
        <property name="text">
         <string>HighQuality</string>
@@ -100,7 +67,24 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
+     <item row="3" column="2">
+      <widget class="QCheckBox" name="checkBoxMask">
+       <property name="text">
+        <string>Mask</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QSpinBox" name="spinBoxStrength">
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
       <widget class="QSpinBox" name="spinBoxThreshold">
        <property name="minimum">
         <number>0</number>
@@ -110,7 +94,30 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="0" column="5">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="1" colspan="3">
+      <widget class="QSlider" name="horizontalSliderStrength">
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="3">
       <widget class="QSlider" name="horizontalSliderThreshold">
        <property name="maximum">
         <number>255</number>
@@ -120,19 +127,18 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QCheckBox" name="checkBoxFullPreview">
-       <property name="text">
-        <string>Show full preview</string>
+     <item row="3" column="3">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QCheckBox" name="checkBoxMask">
-       <property name="text">
-        <string>Mask</string>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
        </property>
-      </widget>
+      </spacer>
      </item>
     </layout>
    </item>

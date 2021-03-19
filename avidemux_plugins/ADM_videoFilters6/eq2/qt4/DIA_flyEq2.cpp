@@ -110,13 +110,6 @@ uint8_t    flyEq2::processYuv(ADMImage* in, ADMImage *out)
         scene->addLine(qline2,pen);
     }
 
-    if (!fullpreview)
-    {
-        in->copyLeftSideTo(out);
-        out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
-        out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
-    }
-
     return 1;
 }
 

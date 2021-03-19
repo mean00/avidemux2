@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
-    <height>514</height>
+    <width>721</width>
+    <height>494</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -112,51 +112,31 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QCheckBox" name="checkBoxV">
            <property name="text">
             <string>ChromaV</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
+         <item row="2" column="0">
           <widget class="QCheckBox" name="checkBoxU">
            <property name="text">
             <string>ChromaU</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
+         <item row="1" column="0">
           <widget class="QCheckBox" name="checkBoxY">
            <property name="text">
             <string>Luma</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
+         <item row="0" column="0">
           <widget class="QToolButton" name="toolButton__DVD2PC">
            <property name="text">
             <string>MPEG2-&gt;PC</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <spacer name="verticalSpacerChroma">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>0</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="3" column="0">
-          <widget class="QCheckBox" name="checkBox_Enabled">
-           <property name="text">
-            <string>Process</string>
            </property>
           </widget>
          </item>

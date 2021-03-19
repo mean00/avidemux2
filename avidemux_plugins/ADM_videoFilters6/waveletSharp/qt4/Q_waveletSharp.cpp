@@ -43,9 +43,8 @@ Ui_waveletSharpWindow::Ui_waveletSharpWindow(QWidget *parent, waveletSharp *para
 
         myFly=new flyWaveletSharp( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(waveletSharp));
-        myFly->showOriginal = false;
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
+        myFly->addControl(ui.toolboxLayout, true);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
@@ -58,9 +57,6 @@ Ui_waveletSharpWindow::Ui_waveletSharpWindow(QWidget *parent, waveletSharp *para
 
 #define TOGGLER(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         TOGGLER(HQ)
-
-        connect( ui.pushButtonPeek,SIGNAL(pressed()),this,SLOT(peekPressed()));
-        connect( ui.pushButtonPeek,SIGNAL(released()),this,SLOT(peekReleased()));
 
 
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
@@ -98,22 +94,6 @@ void Ui_waveletSharpWindow::reset(void)
     lock++;
     ADMVideoWaveletSharp::reset(&myFly->param);
     myFly->upload();
-    myFly->sameImage();
-    lock--;
-}
-void Ui_waveletSharpWindow::peekPressed(void)
-{
-    myFly->showOriginal = true;
-    if(lock) return;
-    lock++;
-    myFly->sameImage();
-    lock--;
-}
-void Ui_waveletSharpWindow::peekReleased(void)
-{
-    myFly->showOriginal = false;
-    if(lock) return;
-    lock++;
     myFly->sameImage();
     lock--;
 }
@@ -163,7 +143,6 @@ void flyWaveletSharp::setTabOrder(void)
     PUSH_SPIN(Strength)
     PUSH_SPIN(Radius)
     PUSH_TOG(HQ)
-    controls.push_back(w->pushButtonPeek);
 
 
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());

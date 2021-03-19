@@ -24,7 +24,6 @@ class flyEq2 : public ADM_flyDialogYuv
   public:
     eq2         param;
     QGraphicsScene *scene;
-    bool        fullpreview;
   public:
     uint8_t     processYuv(ADMImage* in, ADMImage *out);
     uint8_t     download(void);

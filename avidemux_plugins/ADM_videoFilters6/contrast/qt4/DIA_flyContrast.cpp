@@ -30,7 +30,6 @@ flyContrast::flyContrast(QDialog *parent, uint32_t width, uint32_t height, ADM_c
     : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
 {
     scene = sc;
-    previewActivated = true;
     tablesPopulated = false;
     oldCoef = 1.;
     oldOffset = 0;
@@ -51,29 +50,23 @@ uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
         tablesPopulated = true;
     }
 
-    if(!previewActivated)
-    {
-        out->duplicate(in);
-    }
+    out->copyInfo(in);
+    if(param.doLuma)
+        ADMVideoContrast::doContrast(in,out,tableluma,PLANAR_Y);
     else
-    {
-        out->copyInfo(in);
-        if(param.doLuma)
-            ADMVideoContrast::doContrast(in,out,tableluma,PLANAR_Y);
-        else
-            out->copyPlane(in,out,PLANAR_Y);
+        out->copyPlane(in,out,PLANAR_Y);
 
 
-        if(param.doChromaU)
-            ADMVideoContrast::doContrast(in,out,tablechroma,PLANAR_U);
-        else
-            out->copyPlane(in,out,PLANAR_U);
+    if(param.doChromaU)
+        ADMVideoContrast::doContrast(in,out,tablechroma,PLANAR_U);
+    else
+        out->copyPlane(in,out,PLANAR_U);
 
-        if(param.doChromaV)
-            ADMVideoContrast::doContrast(in,out,tablechroma,PLANAR_V);
-        else
-            out->copyPlane(in,out,PLANAR_V);
-    }
+    if(param.doChromaV)
+        ADMVideoContrast::doContrast(in,out,tablechroma,PLANAR_V);
+    else
+        out->copyPlane(in,out,PLANAR_V);
+
     if(!scene) return true;
     
     // Draw luma histogram

@@ -24,7 +24,6 @@ protected:
    ADMImage    *blur,*work;
 public:
    msharpen    param;
-   bool        fullpreview;
 
    uint8_t     processYuv(ADMImage* in, ADMImage *out);
    uint8_t     download(void);

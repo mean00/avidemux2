@@ -35,7 +35,7 @@
 class flyControl
 {
 public:
-        flyControl(QHBoxLayout *horizontalLayout_4)
+        flyControl(QHBoxLayout *horizontalLayout_4, bool addPeekOriginalButton)
         {
             
             pushButton_back1mn = new QPushButton();
@@ -86,6 +86,17 @@ public:
             QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
             horizontalLayout_4->addItem(horizontalSpacer_4);
 
+            if (addPeekOriginalButton)
+            {
+                pushButton_peekOriginal = new QPushButton();
+                pushButton_peekOriginal->setObjectName(QString("pushButton_peekOriginal"));
+                pushButton_peekOriginal->setAutoRepeat(false);
+                pushButton_peekOriginal->setText(QApplication::translate("seekablePreviewDialog", "Peek Original", 0));
+                pushButton_peekOriginal->setToolTip(QApplication::translate("seekablePreviewDialog", "Show unprocessed input", 0));
+
+                horizontalLayout_4->addWidget(pushButton_peekOriginal);
+            }
+
             pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
             pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
             pushButton_play->setText(QApplication::translate("seekablePreviewDialog", "Play", 0));
@@ -113,6 +124,7 @@ public:
         QPushButton *pushButton_fwd1mn;
         QLineEdit   *currentTime;
         QLabel      *labelDuration;
+        QPushButton *pushButton_peekOriginal;
 };
 
 /**
@@ -256,10 +268,10 @@ ADM_colorspace ADM_flyDialog::toRgbColor(void)
  * @param frame
  * @return 
  */
-bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
+bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, bool addPeekOriginalButton)
 {
         _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-        _control=new flyControl(horizontalLayout_4);
+        _control=new flyControl(horizontalLayout_4, addPeekOriginalButton);
         _parent->adjustSize(); // force currentTime size calculation
         _control->currentTime->setTextMargins(0,0,0,0); // counteract Adwaita messing with text margins
 
@@ -267,12 +279,22 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
         QObject::connect(_control->pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
         QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
         QObject::connect(_control->pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
+        if (addPeekOriginalButton)
+        {
+            QObject::connect(_control->pushButton_peekOriginal ,SIGNAL(pressed()),this,SLOT(peekOriginalPressed()));
+            QObject::connect(_control->pushButton_peekOriginal ,SIGNAL(released()),this,SLOT(peekOriginalReleased()));
+        }
+
 
         buttonList.push_back(_control->pushButton_back1mn);
         buttonList.push_back(_control->pushButton_play);
         buttonList.push_back(_control->pushButton_next);
         buttonList.push_back(_control->pushButton_fwd1mn);
         buttonList.push_back(_control->currentTime);
+        if (addPeekOriginalButton)
+        {
+            buttonList.push_back(_control->pushButton_peekOriginal);
+        }
 
         return true;
 }
@@ -455,8 +477,13 @@ ADM_flyDialogYuv::~ADM_flyDialogYuv()
 }
 bool ADM_flyDialogYuv::process(void)
 {
-         processYuv(_yuvBuffer,_yuvBufferOut);
-        yuvToRgb->convertImage(_yuvBufferOut,_rgbByteBufferDisplay.at(0));
+        if (_bypassFilter)
+        {
+            yuvToRgb->convertImage(_yuvBuffer,_rgbByteBufferDisplay.at(0));
+        } else {
+            processYuv(_yuvBuffer,_yuvBufferOut);
+            yuvToRgb->convertImage(_yuvBufferOut,_rgbByteBufferDisplay.at(0));
+        }
         return true;
 }
 //*****************************************
@@ -501,14 +528,19 @@ ADM_flyDialogRgb::~ADM_flyDialogRgb()
 }
 bool ADM_flyDialogRgb::process(void)
 {
-    yuv2rgb->convertImage(_yuvBuffer,_rgbByteBuffer.at(0));
-    if (_resizeMethod != RESIZE_NONE)
+    if (_bypassFilter)
     {
-        processRgb(_rgbByteBuffer.at(0),_rgbByteBufferOut.at(0));
-        rgb2rgb->convert(_rgbByteBufferOut.at(0), _rgbByteBufferDisplay.at(0));
-    }else
-    {
-        processRgb(_rgbByteBuffer.at(0),_rgbByteBufferDisplay.at(0));
+        yuv2rgb->convertImage(_yuvBuffer,_rgbByteBufferDisplay.at(0));
+    } else {
+        yuv2rgb->convertImage(_yuvBuffer,_rgbByteBuffer.at(0));
+        if (_resizeMethod != RESIZE_NONE)
+        {
+            processRgb(_rgbByteBuffer.at(0),_rgbByteBufferOut.at(0));
+            rgb2rgb->convert(_rgbByteBufferOut.at(0), _rgbByteBufferDisplay.at(0));
+        }else
+        {
+            processRgb(_rgbByteBuffer.at(0),_rgbByteBufferDisplay.at(0));
+        }
     }
     return true;
 }
@@ -573,6 +605,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _yuvBuffer=new ADMImageDefault(_w,_h);
     _usedWidth= _usedHeight=0;
     lastPts=0;
+    _bypassFilter=false;
 
     QGraphicsScene *sc=new QGraphicsScene(this);
     sc->setBackgroundBrush(QBrush(Qt::darkGray, Qt::SolidPattern));
@@ -806,6 +839,28 @@ void ADM_flyDialog::play(bool state)
         slide->setEnabled(true);
     }
     
+}
+/**
+ * 
+ */
+void ADM_flyDialog::peekOriginalPressed(void)
+{
+    if (!_bypassFilter)
+    {
+        _bypassFilter = true;
+        this->sameImage();
+    }
+}
+/**
+ * 
+ */
+void ADM_flyDialog::peekOriginalReleased(void)
+{
+    if (_bypassFilter)
+    {
+        _bypassFilter = false;
+        this->sameImage();
+    }
 }
 
 /**

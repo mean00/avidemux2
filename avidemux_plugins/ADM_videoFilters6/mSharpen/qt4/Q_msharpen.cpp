@@ -41,7 +41,7 @@
         flymsharpen=new flyMSharpen( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(flymsharpen->param),param,sizeof(*param));
         flymsharpen->_cookie=&ui;
-        flymsharpen->addControl(ui.toolboxLayout);
+        flymsharpen->addControl(ui.toolboxLayout, true);
         flymsharpen->setTabOrder();
         flymsharpen->upload();
         flymsharpen->sliderChanged();
@@ -62,7 +62,6 @@
 
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
-        connect(ui.checkBoxFullPreview,SIGNAL(stateChanged(int)),this,SLOT(toggleFullPreview(int)));
 
         setModal(true);
   }
@@ -90,14 +89,6 @@ void Ui_msharpenWindow::valueChanged( int f )
   flymsharpen->download();
   flymsharpen->sameImage();
   lock--;
-}
-void Ui_msharpenWindow::toggleFullPreview(int state)
-{
-    if(lock) return;
-    lock++;
-    flymsharpen->fullpreview = state != Qt::Unchecked;
-    flymsharpen->sameImage();
-    lock--;
 }
 void Ui_msharpenWindow::reset(bool checked)
 {

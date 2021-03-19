@@ -35,14 +35,8 @@ uint8_t   flyWaveletSharp::processYuv(ADMImage *in,ADMImage *out )
 {
     out->duplicate(in);
 
-    if (showOriginal)
-    {
-        out->printString(1,1,"Original");
-    } else {
-        // Do it!
-        ADMVideoWaveletSharp::WaveletSharpProcess_C(out, param.strength, param.radius, param.highq);
-        out->printString(1,1,"Processed"); 
-    }
+    // Do it!
+    ADMVideoWaveletSharp::WaveletSharpProcess_C(out, param.strength, param.radius, param.highq);
 
     return 1;
 }

@@ -42,13 +42,12 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
 
     memcpy(&(myCrop->param),param,sizeof(asharp));
     myCrop->_cookie=&ui;
-    myCrop->addControl(ui.toolboxLayout);
+    myCrop->addControl(ui.toolboxLayout, true);
     myCrop->setTabOrder();
     myCrop->upload();
     myCrop->sliderChanged();
 
     connect(ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-    connect(ui.checkBoxFullPreview,SIGNAL(stateChanged(int)),this,SLOT(toggleFullPreview(int)));
 #define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChanged(double))); \
                    connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSlider(int)));
     SPINNER(Threshold)
@@ -90,14 +89,6 @@ void Ui_asharpWindow::valueChanged( double f )
     if(lock) return;
     lock++;
     myCrop->download();
-    myCrop->sameImage();
-    lock--;
-}
-void Ui_asharpWindow::toggleFullPreview(int state)
-{
-    if(lock) return;
-    lock++;
-    myCrop->fullpreview = state != Qt::Unchecked;
     myCrop->sameImage();
     lock--;
 }
@@ -218,7 +209,6 @@ void flyASharp::setTabOrder(void)
     controls.push_back(MYSLIDER(Block));
     controls.push_back(MYSPIN(Block));
     controls.push_back(MYCHKBOX(HQBF));
-    controls.push_back(MYCHKBOX(FullPreview));
 
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);

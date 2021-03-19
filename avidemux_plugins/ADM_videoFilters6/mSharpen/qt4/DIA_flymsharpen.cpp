@@ -49,7 +49,6 @@
  {
      blur=  new ADMImageDefault(_w/2,_h);
      work=  new ADMImageDefault(_w,_h);;     //<-dafuq ?
-     fullpreview = false;
  }
  /**
   * 
@@ -69,7 +68,6 @@ flyMSharpen::~flyMSharpen()
 uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
 {
     uint32_t outw = _w;
-    if(!fullpreview) outw >>= 1;
     if(blur->_width != outw)
     {
         delete blur;
@@ -79,15 +77,13 @@ uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
     ADMImageRef          refIn(outw,_h);
     ADMImageRefWrittable refOut(outw,_h);
 
-    if(!fullpreview)
-        in->copyLeftSideTo(out);
     for(int i=0;i<3;i++)
     {
         int halfWidth=in->GetWidth((ADM_PLANE)i)/2; // in and out have the same width
         refIn._planeStride[i] =in->_planeStride[i];
         refOut._planeStride[i]=out->_planeStride[i];
         refIn._planes[i]      =in->_planes[i];//+halfWidth;
-        refOut._planes[i] = fullpreview ? out->_planes[i] : out->_planes[i] + halfWidth;
+        refOut._planes[i] = out->_planes[i];
     }
     
     for (int i=0;i<(param.chroma ? 3:1);i++)
@@ -105,10 +101,6 @@ uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
         (&refOut)->copyPlane(&refIn,&refOut,PLANAR_V);
     }
     out->copyInfo(in);
-    if(fullpreview)
-        return 1;
-    out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
-    out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
 
     return 1;
 }
@@ -132,7 +124,6 @@ uint8_t flyMSharpen::upload()
     MYTOGGLE(Chroma,chroma)
 #undef MYSPIN
 #undef MYTOGGLE
-    w->checkBoxFullPreview->setChecked(fullpreview);
     blockChanges(false);
     invstrength = 255-param.strength;
     return 1;
@@ -154,7 +145,6 @@ uint8_t flyMSharpen::download(void)
     MYTOGGLE(Chroma,chroma)
 #undef MYSPIN
 #undef MYTOGGLE
-    fullpreview = w->checkBoxFullPreview->isChecked();
     blockChanges(false);
     if(param.strength > 255) param.strength=255;
     invstrength = 255-param.strength;
@@ -165,7 +155,7 @@ uint8_t flyMSharpen::download(void)
 */
 #define APPLY_TO_ALL(x) w->horizontalSliderThreshold->x; w->horizontalSliderStrength->x; \
                         w->spinBoxThreshold->x; w->spinBoxStrength->x; \
-                        w->checkBoxHQ->x; w->checkBoxChroma->x; w->checkBoxMask->x; w->checkBoxFullPreview;
+                        w->checkBoxHQ->x; w->checkBoxChroma->x; w->checkBoxMask->x;
 void flyMSharpen::blockChanges(bool block)
 {
     Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
@@ -188,7 +178,6 @@ void flyMSharpen::setTabOrder(void)
     MYTOGGLE(HQ)
     MYTOGGLE(Chroma)
     MYTOGGLE(Mask)
-    MYTOGGLE(FullPreview)
 
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);

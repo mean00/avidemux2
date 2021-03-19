@@ -83,29 +83,7 @@ uint32_t ww,hh;
                         B2,
                         param.bf,line);
                 delete [] line;
-    if(fullpreview)
-        return 1;
-    // Copy back half source to display
-    dst=out->GetWritePtr(PLANAR_Y);
-    src=in->GetReadPtr(PLANAR_Y);
-    sstride=in->GetPitch(PLANAR_Y);
-    dstride=out->GetPitch(PLANAR_Y);
-    for(uint32_t y=0;y<hh;y++)   // We do both u & v!
-    {
-        memcpy(dst,src,ww/2);
-        dst+=dstride;
-        src+=sstride;
-    }
-    // add separator
-    dst=out->GetWritePtr(PLANAR_Y)+ww/2;
-    for(int j=0;j<hh/2;j++)
-    {
-        dst[0]=0;
-        dst[dstride]=0xff;
-        dst+=dstride*2;
-    }
-    out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
-    out->printString(ww/24+1,1,"Processed"); // as above, don't try to translate
+
     return 1;
 }
 //EOF

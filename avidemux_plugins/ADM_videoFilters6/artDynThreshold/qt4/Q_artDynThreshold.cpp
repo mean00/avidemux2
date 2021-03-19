@@ -44,7 +44,7 @@ Ui_artDynThresholdWindow::Ui_artDynThresholdWindow(QWidget *parent, artDynThresh
         myFly=new flyArtDynThreshold( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(artDynThreshold));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
+        myFly->addControl(ui.toolboxLayout, true);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

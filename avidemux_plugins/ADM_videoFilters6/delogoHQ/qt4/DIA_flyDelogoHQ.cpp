@@ -77,7 +77,7 @@ uint8_t   flyDelogoHQ::processYuv(ADMImage *in,ADMImage *out )
     }
 
 
-    if (showOriginal || (!mask))
+    if (!mask)
     {
         //out->printString(1,1,"Original");
     } else {
