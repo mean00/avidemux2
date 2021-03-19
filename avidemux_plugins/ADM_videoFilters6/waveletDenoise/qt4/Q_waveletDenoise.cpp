@@ -43,9 +43,8 @@ Ui_waveletDenoiseWindow::Ui_waveletDenoiseWindow(QWidget *parent, waveletDenoise
 
         myFly=new flyWaveletDenoise( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(waveletDenoise));
-        myFly->showOriginal = false;
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
+        myFly->addControl(ui.toolboxLayout, true);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
@@ -59,9 +58,6 @@ Ui_waveletDenoiseWindow::Ui_waveletDenoiseWindow(QWidget *parent, waveletDenoise
 #define TOGGLER(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         TOGGLER(HQ)
         TOGGLER(Chroma)
-
-        connect( ui.pushButtonPeek,SIGNAL(pressed()),this,SLOT(peekPressed()));
-        connect( ui.pushButtonPeek,SIGNAL(released()),this,SLOT(peekReleased()));
 
 
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
@@ -99,22 +95,6 @@ void Ui_waveletDenoiseWindow::reset(void)
     lock++;
     ADMVideoWaveletDenoise::reset(&myFly->param);
     myFly->upload();
-    myFly->sameImage();
-    lock--;
-}
-void Ui_waveletDenoiseWindow::peekPressed(void)
-{
-    myFly->showOriginal = true;
-    if(lock) return;
-    lock++;
-    myFly->sameImage();
-    lock--;
-}
-void Ui_waveletDenoiseWindow::peekReleased(void)
-{
-    myFly->showOriginal = false;
-    if(lock) return;
-    lock++;
     myFly->sameImage();
     lock--;
 }
@@ -167,7 +147,6 @@ void flyWaveletDenoise::setTabOrder(void)
     PUSH_SPIN(Softness)
     PUSH_TOG(HQ)
     PUSH_TOG(Chroma)
-    controls.push_back(w->pushButtonPeek);
 
 
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());

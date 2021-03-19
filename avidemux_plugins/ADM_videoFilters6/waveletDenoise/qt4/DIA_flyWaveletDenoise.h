@@ -23,7 +23,6 @@ class flyWaveletDenoise : public ADM_flyDialogYuv
 
   public:
     waveletDenoise  param;
-    bool          showOriginal;
   public:
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     uint8_t    download(void);

@@ -26,8 +26,6 @@ class Ui_waveletSharpWindow : public QDialog
     void sliderUpdate(int foo);
     void valueChanged(int foo);
     void reset(void);
-    void peekPressed(void);
-    void peekReleased(void);
 
   private:
     void resizeEvent(QResizeEvent *event);

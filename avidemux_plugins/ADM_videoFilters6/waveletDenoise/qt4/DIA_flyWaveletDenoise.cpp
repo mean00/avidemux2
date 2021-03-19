@@ -35,14 +35,8 @@ uint8_t   flyWaveletDenoise::processYuv(ADMImage *in,ADMImage *out )
 {
     out->duplicate(in);
 
-    if (showOriginal)
-    {
-        out->printString(1,1,"Original");
-    } else {
-        // Do it!
-        ADMVideoWaveletDenoise::WaveletDenoiseProcess_C(out, param.threshold, param.softness, param.highq, param.chroma);
-        out->printString(1,1,"Processed"); 
-    }
+    // Do it!
+    ADMVideoWaveletDenoise::WaveletDenoiseProcess_C(out, param.threshold, param.softness, param.highq, param.chroma);
 
     return 1;
 }
