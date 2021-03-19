@@ -28,6 +28,10 @@
 #include <QString>
 #include <QImage>
 #include <QPixmap>
+
+static void rgb2yuv(int * yuv, int * rgb);
+static void yuv2rgb(int * rgb, int * yuv);
+
 //
 //	Video is in YV12 Colorspace
 //
@@ -51,6 +55,7 @@ Ui_artChromaHoldWindow::Ui_artChromaHoldWindow(QWidget *parent, artChromaHold *p
         memcpy(&(myFly->param),param,sizeof(artChromaHold));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout, true);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
@@ -139,7 +144,7 @@ void Ui_artChromaHoldWindow::pushedC3()
 {
     PUSHHANDLER(3);
 }
-void Ui_artChromaHoldWindow::rgb2yuv(int * yuv, int * rgb)
+void rgb2yuv(int * yuv, int * rgb)
 {
     yuv[0] = std::round( 0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]);
     yuv[1] = std::round(-0.169*rgb[0] - 0.331*rgb[1] + 0.500*rgb[2]);
@@ -151,7 +156,7 @@ void Ui_artChromaHoldWindow::rgb2yuv(int * yuv, int * rgb)
     if (yuv[2] < -128) yuv[2] = -128;
     if (yuv[2] >  127) yuv[2] = 127;
 }
-void Ui_artChromaHoldWindow::yuv2rgb(int * rgb, int * yuv)
+void yuv2rgb(int * rgb, int * yuv)
 {
     rgb[0] = std::round(yuv[0]                +   1.4*yuv[2]);
     rgb[1] = std::round(yuv[0] - 0.343*yuv[1] - 0.711*yuv[2]);
@@ -189,7 +194,7 @@ void Ui_artChromaHoldWindow::showEvent(QShowEvent *event)
     yuv[0] = 128; \
     yuv[1] = (int)round(param.c##x##u*128.0); \
     yuv[2] = (int)round(param.c##x##v*128.0); \
-    Ui_artChromaHoldWindow::yuv2rgb(rgb, yuv); \
+    yuv2rgb(rgb, yuv); \
     color.setRgb(rgb[0],rgb[1],rgb[2],255); \
     indctrPalette.setColor(QPalette::Background,color); \
     indctrPalette.setColor(QPalette::Base,color); \
@@ -304,7 +309,7 @@ void flyArtChromaHold::drawScene()
             yuv[0] = uvplane[i*YUVmapSize+j]>>1;
             yuv[1] = std::floor(fi*128.0);
             yuv[2] = std::floor(fj*128.0);
-            Ui_artChromaHoldWindow::yuv2rgb(rgb, yuv);
+            yuv2rgb(rgb, yuv);
             img->setPixel(i,(YUVmapSize-1-j),qRgb(rgb[0],rgb[1],rgb[2]));
         }
         scene->clear();
@@ -313,7 +318,33 @@ void flyArtChromaHold::drawScene()
     if (img) delete img;
     if (uvplane) free(uvplane);
 }
+void flyArtChromaHold::setTabOrder(void)
+{
+    Ui_artChromaHoldDialog *w=(Ui_artChromaHoldDialog *)_cookie;
+    std::vector<QWidget *> controls;
 
+#define PUSHME(x) controls.push_back(MYCHECK(x##en)); \
+                  controls.push_back(w->pushButton##x); \
+                  controls.push_back(MYSPIN(x##dist)); \
+                  controls.push_back(MYSPIN(x##slope));
+    PUSHME(C1)
+    PUSHME(C2)
+    PUSHME(C3)
+
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 
 /**
     \fn     DIA_getCropParams

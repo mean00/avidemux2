@@ -33,8 +33,6 @@ uint8_t  flyArtChromaHold::update(void)
 */
 uint8_t   flyArtChromaHold::processYuv(ADMImage *in,ADMImage *out )
 {
-    uint8_t *src,*dst;
-    uint32_t stride;
     bool cen[3];
     float cu[3];
     float cv[3];

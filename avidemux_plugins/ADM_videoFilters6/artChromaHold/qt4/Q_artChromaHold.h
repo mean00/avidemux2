@@ -5,7 +5,7 @@
 #include "artChromaHold.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyArtChromaHold.h"
-#include "QGraphicsScene"
+#include <QGraphicsScene>
 
 class Ui_artChromaHoldWindow : public QDialog
 {
@@ -21,8 +21,6 @@ class Ui_artChromaHoldWindow : public QDialog
   public:
     Ui_artChromaHoldWindow(QWidget *parent, artChromaHold *param,ADM_coreVideoFilter *in);
     ~Ui_artChromaHoldWindow();
-    static void rgb2yuv(int * yuv, int * rgb);
-    static void yuv2rgb(int * rgb, int * yuv);
 
   public slots:
     void gather(artChromaHold *param);
