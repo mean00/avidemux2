@@ -5,7 +5,7 @@
 #include "artChromaKey.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyArtChromaKey.h"
-#include "QGraphicsScene"
+#include <QGraphicsScene>
 
 class Ui_artChromaKeyWindow : public QDialog
 {
@@ -17,15 +17,14 @@ class Ui_artChromaKeyWindow : public QDialog
     flyArtChromaKey *      myFly;
     ADM_QCanvas *          canvas;
     QGraphicsScene *       scene;
+    Ui_artChromaKeyDialog  ui;
+
     bool                   tryToLoadimage(const char *filename);
 
   public:
     Ui_artChromaKeyWindow(QWidget *parent, artChromaKey *param,ADM_coreVideoFilter *in);
     ~Ui_artChromaKeyWindow();
-    static void rgb2yuv(int * yuv, int * rgb);
-    static void yuv2rgb(int * rgb, int * yuv);
 
-    Ui_artChromaKeyDialog  ui;
     std::string         imageName;
     ADMImage            *image;
     ADMImage            *testimage;
