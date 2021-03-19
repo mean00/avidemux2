@@ -22,7 +22,6 @@ class flyDelogoHQ : public ADM_flyDialogYuv
 {
   public:
     delogoHQ         param;
-    bool             showOriginal;
   private:
     int                    rgbBufStride;
     ADM_byteBuffer *       rgbBufRaw;

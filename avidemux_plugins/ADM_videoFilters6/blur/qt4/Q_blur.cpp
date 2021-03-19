@@ -43,7 +43,7 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         ADMVideoBlur::BlurCreateBuffers(width,height, &(myFly->rgbBufStride), &(myFly->rgbBufRaw), &(myFly->rgbBufImage), &(myFly->convertYuvToRgb), &(myFly->convertRgbToYuv));
         memcpy(&(myFly->param),param,sizeof(blur));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
+        myFly->addControl(ui.toolboxLayout, true);
         myFly->upload();
         myFly->sliderChanged();
 

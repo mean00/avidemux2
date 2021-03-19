@@ -49,9 +49,8 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
         //memcpy(&(myFly->param),param,sizeof(delogoHQ));
         myFly->param.blur = param->blur;
         myFly->param.gradient = param->gradient;
-        myFly->showOriginal = false;
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
+        myFly->addControl(ui.toolboxLayout, true);
         myFly->setTabOrder();
         myFly->upload();
         if(param->maskfile.size())
