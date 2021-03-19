@@ -22,7 +22,6 @@ public slots:
 private slots:
         void sliderUpdate(int foo);
         void valueChanged(int foo);
-        void toggleFullPreview(int state);
         void reset(bool checked);
 	void valueChangedSlider(int foo);
 
