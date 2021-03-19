@@ -12,13 +12,13 @@ class Ui_artCartoonWindow : public QDialog
 
   protected:
     int lock;
-
-  public:
     flyArtCartoon *myFly;
     ADM_QCanvas *canvas;
+    Ui_artCartoonDialog ui;
+
+  public:
     Ui_artCartoonWindow(QWidget *parent, artCartoon *param,ADM_coreVideoFilter *in);
     ~Ui_artCartoonWindow();
-    Ui_artCartoonDialog ui;
 
   public slots:
     void gather(artCartoon *param);

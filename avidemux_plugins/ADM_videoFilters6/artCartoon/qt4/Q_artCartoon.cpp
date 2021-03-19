@@ -39,12 +39,12 @@ Ui_artCartoonWindow::Ui_artCartoonWindow(QWidget *parent, artCartoon *param,ADM_
         height=in->getInfo()->height;
 
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
-        
-        myFly=new flyArtCartoon( this,width, height,in,canvas,ui.horizontalSlider);
-        ADMVideoArtCartoon::ArtCartoonCreateBuffers(width,height, &(myFly->rgbBufStride), &(myFly->rgbBufRaw), &(myFly->rgbBufImage), &(myFly->convertYuvToRgb), &(myFly->convertRgbToYuv));
+        myFly=new flyArtCartoon(this,width,height,in,canvas,ui.horizontalSlider);
+
         memcpy(&(myFly->param),param,sizeof(artCartoon));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout, true);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
@@ -68,11 +68,8 @@ void Ui_artCartoonWindow::gather(artCartoon *param)
 }
 Ui_artCartoonWindow::~Ui_artCartoonWindow()
 {
-    if(myFly) {
-        ADMVideoArtCartoon::ArtCartoonDestroyBuffers(myFly->rgbBufRaw, myFly->rgbBufImage, myFly->convertYuvToRgb, myFly->convertRgbToYuv);
-        delete myFly;
-    }
-    myFly=NULL; 
+    if(myFly) delete myFly;
+    myFly=NULL;
     if(canvas) delete canvas;
     canvas=NULL;
 }
@@ -122,6 +119,30 @@ uint8_t flyArtCartoon::download(void)
     param.scatter=MYSPIN(Scatter)->value();
     param.color=MYSPIN(Color)->value();
     return 1;
+}
+
+void flyArtCartoon::setTabOrder(void)
+{
+    Ui_artCartoonDialog *w=(Ui_artCartoonDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSHME(x) controls.push_back(MYSPIN(x));
+    PUSHME(Threshold)
+    PUSHME(Scatter)
+    PUSHME(Color)
+
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
 }
 
 /**

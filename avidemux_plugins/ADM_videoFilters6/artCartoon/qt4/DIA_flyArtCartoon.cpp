@@ -30,12 +30,24 @@ uint8_t  flyArtCartoon::update(void)
     return 1;
 }
 /**
+    \fn createBuffers
+*/
+void flyArtCartoon::createBuffers(void)
+{
+    ADMVideoArtCartoon::ArtCartoonCreateBuffers(_w, _h, &rgbBufStride, &rgbBufRaw, &rgbBufImage, &convertYuvToRgb, &convertRgbToYuv);
+}
+/**
+    \fn destroyBuffers
+*/
+void flyArtCartoon::destroyBuffers(void)
+{
+    ADMVideoArtCartoon::ArtCartoonDestroyBuffers(rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
+}
+/**
     \fn processYuv
 */
 uint8_t   flyArtCartoon::processYuv(ADMImage *in,ADMImage *out )
 {
-    uint8_t *src,*dst;
-    uint32_t stride;
     out->duplicate(in);
 
     // Do it!

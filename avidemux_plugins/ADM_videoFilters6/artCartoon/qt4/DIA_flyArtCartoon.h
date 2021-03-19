@@ -20,19 +20,27 @@
 */
 class flyArtCartoon : public ADM_flyDialogYuv
 {
-  public:
-    artCartoon         param;
+  private:
     int                    rgbBufStride;
     ADM_byteBuffer *       rgbBufRaw;
     ADMImageRef *          rgbBufImage;
     ADMColorScalerFull *   convertYuvToRgb;
     ADMColorScalerFull *   convertRgbToYuv;
+
+    void       createBuffers(void);
+    void       destroyBuffers(void);
+
   public:
+    artCartoon param;
+
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     uint8_t    download(void);
     uint8_t    upload(void);
     uint8_t    update(void);
-    flyArtCartoon (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO) {};
+    void       setTabOrder(void);
+
+    flyArtCartoon(QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in, ADM_QCanvas *canvas, ADM_QSlider *slider)
+        : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO) { createBuffers(); }
+    ~flyArtCartoon() { destroyBuffers(); }
 };
 #endif
