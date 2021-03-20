@@ -65,8 +65,9 @@ uint8_t    flyEq2::processYuv(ADMImage* in, ADMImage *out)
         ADMVideoEq2::update_lut(&mySettings,&param);
         tablesDone = true;
     }
-    for(int i=0; i < 3; i++)
-        ADMVideoEq2::processPlane(&(mySettings.param[i]),in,out,(ADM_PLANE)i);
+    ADMVideoEq2::processPlane(&(mySettings.param[0]),in,out,PLANAR_Y);
+    ADMVideoEq2::processPlane(&(mySettings.param[1]),in,out,PLANAR_U);
+    ADMVideoEq2::processPlane(&(mySettings.param[2]),in,out,PLANAR_V);
 
     if(scene)
     {

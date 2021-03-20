@@ -141,8 +141,9 @@ void ADMVideoEq2::setCoupledConf(CONFcouple *couples)
         return false;
     image->copyInfo(mysrc);
 
-    for(int i=0; i < 3; i++)
-        processPlane(&(settings.param[i]),mysrc,image,(ADM_PLANE)i);
+    processPlane(&(settings.param[0]),mysrc,image,PLANAR_Y);
+    processPlane(&(settings.param[1]),mysrc,image,PLANAR_U);
+    processPlane(&(settings.param[2]),mysrc,image,PLANAR_V);
 
     return true;
 }
