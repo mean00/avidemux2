@@ -754,7 +754,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                 son.read32(); // flags & version
                 int nbEntries=son.read32();
                 int left;
-                aprintf("[STSD]Found %d entries\n",nbEntries);
+                ADM_info("[STSD] Number of entries: %d\n",nbEntries);
                 for(int i=0;i<nbEntries;i++)
                 {
                     int entrySize=son.read32();
@@ -809,7 +809,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                             {
                                 son.read32();
                                 left-=4; // Depth & color Id
-                            }else left=0;
+                            }
 
                             printf("LEFT:%d\n",left);
 
@@ -1084,7 +1084,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     }
                                     break;
                             } // entryName
-
+                            son.skipBytes(left);
                             break;
                         } // trackType
 
