@@ -176,12 +176,12 @@ bool ADMVideoEq2::update_lut(Eq2Settings *settings, eq2 *cfg)
 
     settings->param[1].c=cfg->saturation;
     settings->param[1].b=0;
-    settings->param[1].g=sqrt(settings->bgamma/settings->ggamma);
+    settings->param[1].g=sqrt(settings->rgamma/settings->ggamma);
     settings->param[1].w=settings->gamma_weight;
 
     settings->param[2].c=cfg->saturation;
     settings->param[2].b=0;
-    settings->param[2].g=sqrt(settings->rgamma/settings->ggamma);
+    settings->param[2].g=sqrt(settings->bgamma/settings->ggamma);
     settings->param[2].w=settings->gamma_weight;
 
     //printf("GGamma:%f\n",settings->ggamma);
