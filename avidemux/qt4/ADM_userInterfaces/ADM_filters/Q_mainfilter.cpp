@@ -423,6 +423,8 @@ void filtermainWindow::moveUp( )
     int itag=getTagForActiveSelection();
     if(-1==itag)
         return;
+    if(0==itag) // already at the top
+        return;
     ADM_vf_moveFilterUp(itag);
     buildActiveFilterList ();
     setSelected(itag-1);
@@ -725,11 +727,28 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     addAction(rem);
     connect(rem,SIGNAL(triggered(bool)),this,SLOT(remove(bool)));
 
-    shortcutMoveUp = QKeySequence();
-    shortcutMoveDown = QKeySequence();
+    // TODO make configurable
+    shortcutMoveUp = QKeySequence(Qt::ShiftModifier + Qt::Key_Up);
+    shortcutMoveDown = QKeySequence(Qt::ShiftModifier + Qt::Key_Down);
     shortcutConfigure = QKeySequence(Qt::Key_Return);
     shortcutRemove = QKeySequence(keycode);
-    shortcutMakePartial = QKeySequence();
+    shortcutMakePartial = QKeySequence(Qt::ShiftModifier + Qt::Key_P);
+
+    QAction *movup = new QAction(this);
+    movup->setShortcut(shortcutMoveUp);
+    addAction(movup);
+    connect(movup,SIGNAL(triggered()),this,SLOT(moveUp()));
+
+    QAction *movdw = new QAction(this);
+    movdw->setShortcut(shortcutMoveDown);
+    addAction(movdw);
+    connect(movdw,SIGNAL(triggered()),this,SLOT(moveDown()));
+
+    QAction *mkpartl = new QAction(this);
+    mkpartl->setShortcut(shortcutMakePartial);
+    addAction(mkpartl);
+    connect(mkpartl,SIGNAL(triggered()),this,SLOT(makePartial()));
+
 
     activeList->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));
