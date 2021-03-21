@@ -368,7 +368,10 @@ void filtermainWindow::remove( bool b)
     buildActiveFilterList ();
     if(nb_active_filter)
     {
-          setSelected(nb_active_filter-1);
+        if (itag < nb_active_filter)
+            setSelected(itag);
+        else
+            setSelected(nb_active_filter-1);
     }
 }
 /**
@@ -419,6 +422,8 @@ void filtermainWindow::moveUp( )
 {
     int itag=getTagForActiveSelection();
     if(-1==itag)
+        return;
+    if(0==itag) // already at the top
         return;
     ADM_vf_moveFilterUp(itag);
     buildActiveFilterList ();
@@ -589,6 +594,12 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     QAction *remove = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),cm);
     QAction *partial = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),cm);
 
+    up->setShortcut(shortcutMoveUp);
+    down->setShortcut(shortcutMoveDown);
+    configure->setShortcut(shortcutConfigure);
+    remove->setShortcut(shortcutRemove);
+    partial->setShortcut(shortcutMakePartial);
+
     cm->addAction(up);
     cm->addAction(down);
     cm->addAction(configure);
@@ -715,6 +726,29 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     rem->setShortcut(seq);
     addAction(rem);
     connect(rem,SIGNAL(triggered(bool)),this,SLOT(remove(bool)));
+
+    // TODO make configurable
+    shortcutMoveUp = QKeySequence(Qt::ShiftModifier + Qt::Key_Up);
+    shortcutMoveDown = QKeySequence(Qt::ShiftModifier + Qt::Key_Down);
+    shortcutConfigure = QKeySequence(Qt::Key_Return);
+    shortcutRemove = QKeySequence(keycode);
+    shortcutMakePartial = QKeySequence(Qt::ShiftModifier + Qt::Key_P);
+
+    QAction *movup = new QAction(this);
+    movup->setShortcut(shortcutMoveUp);
+    addAction(movup);
+    connect(movup,SIGNAL(triggered()),this,SLOT(moveUp()));
+
+    QAction *movdw = new QAction(this);
+    movdw->setShortcut(shortcutMoveDown);
+    addAction(movdw);
+    connect(movdw,SIGNAL(triggered()),this,SLOT(moveDown()));
+
+    QAction *mkpartl = new QAction(this);
+    mkpartl->setShortcut(shortcutMakePartial);
+    addAction(mkpartl);
+    connect(mkpartl,SIGNAL(triggered()),this,SLOT(makePartial()));
+
 
     activeList->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));
