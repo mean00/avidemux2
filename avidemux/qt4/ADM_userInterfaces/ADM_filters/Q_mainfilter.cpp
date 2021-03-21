@@ -592,6 +592,12 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     QAction *remove = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),cm);
     QAction *partial = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),cm);
 
+    up->setShortcut(shortcutMoveUp);
+    down->setShortcut(shortcutMoveDown);
+    configure->setShortcut(shortcutConfigure);
+    remove->setShortcut(shortcutRemove);
+    partial->setShortcut(shortcutMakePartial);
+
     cm->addAction(up);
     cm->addAction(down);
     cm->addAction(configure);
@@ -718,6 +724,12 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     rem->setShortcut(seq);
     addAction(rem);
     connect(rem,SIGNAL(triggered(bool)),this,SLOT(remove(bool)));
+
+    shortcutMoveUp = QKeySequence();
+    shortcutMoveDown = QKeySequence();
+    shortcutConfigure = QKeySequence(Qt::Key_Return);
+    shortcutRemove = QKeySequence(keycode);
+    shortcutMakePartial = QKeySequence();
 
     activeList->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));

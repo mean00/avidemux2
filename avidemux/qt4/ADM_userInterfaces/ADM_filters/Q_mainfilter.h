@@ -110,5 +110,12 @@ private:
     void updateContextMenu(QMenu *contextMenu);
     bool eventFilter(QObject* watched, QEvent* event);
     uint64_t originalTime;
+private:
+    QKeySequence shortcutMoveUp;
+    QKeySequence shortcutMoveDown;
+    QKeySequence shortcutConfigure;
+    QKeySequence shortcutRemove;
+    QKeySequence shortcutMakePartial;
+
 };
 
