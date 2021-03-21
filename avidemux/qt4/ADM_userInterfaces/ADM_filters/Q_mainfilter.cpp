@@ -368,7 +368,10 @@ void filtermainWindow::remove( bool b)
     buildActiveFilterList ();
     if(nb_active_filter)
     {
-          setSelected(nb_active_filter-1);
+        if (itag < nb_active_filter)
+            setSelected(itag);
+        else
+            setSelected(nb_active_filter-1);
     }
 }
 /**
