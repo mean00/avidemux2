@@ -76,6 +76,21 @@ bool ADM_vf_removeFilterAtIndex(int index)
 }
 
 /**
+    \fn ADM_vf_toggleFilterEnabledAtIndex
+
+*/
+bool ADM_vf_toggleFilterEnabledAtIndex(int index)
+{
+    ADM_info("Toggle video filter enabled at index %d\n", index);
+
+    ADM_assert(index < ADM_VideoFilters.size());
+
+    ADM_VideoFilterElement *e = &(ADM_VideoFilters[index]);
+    e->enabled = !e->enabled;
+
+    return  ADM_vf_recreateChain();
+}
+/**
     \fn ADM_vf_recreateChain
     \brief Rebuild the whole filterchain
 */
@@ -92,12 +107,14 @@ bool ADM_vf_recreateChain(void)
         CONFcouple *c;
         ADM_coreVideoFilter *old = ADM_VideoFilters[i].instance;
         uint32_t tag = ADM_VideoFilters[i].tag;
+        bool enabled = ADM_VideoFilters[i].enabled;
 
         old->getCoupledConf(&c);
 
         ADM_coreVideoFilter *nw = ADM_vf_createFromTag(tag, f, c);
 
         ADM_VideoFilters[i].instance = nw;
+        ADM_VideoFilters[i].enabled = enabled;
         bin.append(old);
 
         if (c)
@@ -105,7 +122,7 @@ bool ADM_vf_recreateChain(void)
             delete c;
         }
 
-        f = nw;
+        if (enabled) f = nw;
     }
 
     // Now delete bin
@@ -150,6 +167,7 @@ ADM_VideoFilterElement* ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, C
 
     ADM_VideoFilterElement e;
     e.tag = tag;
+    e.enabled = true;
     e.instance = nw;
     e.objectId = objectCount++;
     ADM_VideoFilters.append(e);
@@ -167,6 +185,7 @@ ADM_VideoFilterElement* ADM_vf_insertFilterFromTag(IEditor *editor, uint32_t tag
     ADM_VideoFilterElement e;
 
     e.tag = tag;
+    e.enabled = true;
     e.instance = nw;
     e.objectId = objectCount++;
 
@@ -195,7 +214,15 @@ ADM_coreVideoFilter *ADM_vf_getLastVideoFilter(IEditor *editor)
     }
     else
     {
-        last = ADM_VideoFilters[ADM_VideoFilters.size() - 1].instance;
+        last = bridge;
+        for (int i=(ADM_VideoFilters.size() - 1); i>=0; i--)
+        {
+            if (ADM_VideoFilters[i].enabled)
+            {
+                last = ADM_VideoFilters[i].instance;
+                break;
+            }
+        }
     }
 
     return last;

@@ -43,6 +43,15 @@ ADM_coreVideoFilter     *ADM_vf_getInstance(int index)
     return ADM_VideoFilters[index].instance;
 }
 /**
+    \fn ADM_vf_getEnabled
+    \brief Return filter enabled status  of rank index
+*/
+bool ADM_vf_getEnabled(int index)
+{
+    ADM_assert(index<ADM_vf_getSize());
+    return ADM_VideoFilters[index].enabled;
+}
+/**
     \fn ADM_vf_getTag
     \brief Return tag of index active filter
 */
@@ -164,7 +173,7 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
             old->getCoupledConf(&c);
             ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,f,c);
             if(c) delete c;
-            f=nw;
+            if (ADM_VideoFilters[i].enabled) f=nw;
             chain->push_back(nw);
 
             VF_CATEGORY type=ADM_vf_getFilterCategoryFromTag(tag);
