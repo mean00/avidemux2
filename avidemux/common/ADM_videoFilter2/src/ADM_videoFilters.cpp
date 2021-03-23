@@ -167,6 +167,7 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
     bool openGl=false;
     for(int i=0;i<nb;i++)
     {
+            if (!(ADM_VideoFilters[i].enabled)) continue;
             // Get configuration
             CONFcouple *c;
             ADM_coreVideoFilter *old=ADM_VideoFilters[i].instance;
@@ -174,7 +175,7 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
             old->getCoupledConf(&c);
             ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,f,c);
             if(c) delete c;
-            if (ADM_VideoFilters[i].enabled) f=nw;
+            f=nw;
             chain->push_back(nw);
 
             VF_CATEGORY type=ADM_vf_getFilterCategoryFromTag(tag);
