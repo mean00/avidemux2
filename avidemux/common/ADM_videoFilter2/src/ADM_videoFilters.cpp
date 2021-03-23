@@ -140,6 +140,7 @@ bool ADM_vf_partialize(int index)
 
     //--
     ADM_VideoFilterElement scratch2;
+    scratch2.enabled = scratch.enabled;
     scratch2.instance=partialized;
     scratch2.tag=VF_PARTIAL_FILTER;
     scratch2.objectId=0;
