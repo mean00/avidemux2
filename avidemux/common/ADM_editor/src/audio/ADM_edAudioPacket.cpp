@@ -109,6 +109,9 @@ bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
 */
 bool ADM_edAudioTrackFromVideo::refillPacketBuffer(void)
 {
+    if(_audioSeg >= parent->_segments.getNbSegments())
+        return false;
+
     packetBufferSize=0;
     uint64_t dts;
     _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
@@ -154,7 +157,9 @@ bool ADM_edAudioTrackFromVideo::refillPacketBuffer(void)
 */
 uint8_t ADM_edAudioTrackFromVideo::getPacket(uint8_t  *dest, uint32_t *len,uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
 {
-zgain:        
+    if(_audioSeg >= parent->_segments.getNbSegments())
+        return 0;
+zgain:
     _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
     ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) return 0;
@@ -311,7 +316,11 @@ uint8_t ADM_edAudioTrackFromVideo::getAudioStream (ADM_audioStream ** audio)
 */
 WAVHeader       *ADM_edAudioTrackFromVideo::getInfo(void)
 {
-
+    if(_audioSeg >= parent->_segments.getNbSegments())
+    {
+        ADM_error("Audio segment %u out of range!\n",_audioSeg);
+        return NULL;
+    }
     _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
     ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) // this segment has no audio, try to get info from another one
@@ -328,8 +337,13 @@ WAVHeader       *ADM_edAudioTrackFromVideo::getInfo(void)
 */
  CHANNEL_TYPE    *ADM_edAudioTrackFromVideo::getChannelMapping(void )
 {
-  _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
-  ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
+    if(_audioSeg >= parent->_segments.getNbSegments())
+    {
+        ADM_error("Audio segment %u out of range!\n",_audioSeg);
+        return NULL;
+    }
+    _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
+    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) return NULL;
     return trk->codec->channelMapping;
 }
@@ -338,8 +352,13 @@ WAVHeader       *ADM_edAudioTrackFromVideo::getInfo(void)
 */
 bool            ADM_edAudioTrackFromVideo::getExtraData(uint32_t *l, uint8_t **d)
 {
-  _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
-  ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
+    if(_audioSeg >= parent->_segments.getNbSegments())
+    {
+        ADM_error("Audio segment %u out of range!\n",_audioSeg);
+        return false;
+    }
+    _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
+    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
 
     *l=0;
     *d=NULL;
@@ -366,6 +385,11 @@ ADM_audioStreamTrack *ADM_edAudioTrackFromVideo::getTrackAtVideoNumber(uint32_t 
 */
 ADM_audioStreamTrack *ADM_edAudioTrackFromVideo::getCurrentTrack()
 {
+    if(_audioSeg >= parent->_segments.getNbSegments())
+    {
+        ADM_error("Audio segment %u out of range!\n",_audioSeg);
+        return NULL;
+    }
     _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
     if(!seg) return NULL;
     _VIDEOS *v=parent->_segments.getRefVideo(seg->_reference);
@@ -380,6 +404,11 @@ ADM_audioStreamTrack *ADM_edAudioTrackFromVideo::getCurrentTrack()
 */
 bool ADM_edAudioTrackFromVideo::updateHeader(void)
 {
+    if(_audioSeg >= parent->_segments.getNbSegments())
+    {
+        ADM_error("Audio segment %u out of range!\n",_audioSeg);
+        return false;
+    }
     _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
     ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) return false;
