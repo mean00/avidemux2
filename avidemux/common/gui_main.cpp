@@ -667,7 +667,14 @@ void HandleAction (Action action)
                 A_Resync();
                 A_Rewind();
 
-                if(currentPts<=video_body->getVideoDuration()) GUI_GoToTime(currentPts);
+                if(currentPts<=video_body->getVideoDuration())
+                    r = GUI_GoToTime(currentPts);
+                else
+                    r = false;
+
+                EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+                if(ed && ed->edTrack)
+                    ed->edTrack->goToTime(r? currentPts : 0); // update audio segment
             }
         }
         break;
