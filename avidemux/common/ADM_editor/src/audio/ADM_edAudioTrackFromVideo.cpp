@@ -46,6 +46,11 @@ ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track
 */
 bool ADM_edAudioTrackFromVideo::isCBR()
 {
+    if(_audioSeg >= parent->_segments.getNbSegments())
+    {
+        ADM_error("Audio segment %u out of range!\n",_audioSeg);
+        return false;
+    }
     _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
     if(!seg) return false;
     ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
