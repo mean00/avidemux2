@@ -23,12 +23,14 @@
  * @param videoStream
  * @param defaultFrame
  */
-Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame) : QDialog(parent)
+Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, QString const& title, uint32_t defaultFrame) : QDialog(parent)
 {
     ui.setupUi(this);
 
     seekablePreview = NULL;
     canvas = NULL;
+
+    this->setWindowTitle(QT_TRANSLATE_NOOP("seekablePreviewDialog","Preview") + title);
 
     resetVideoStream(videoStream);
 
