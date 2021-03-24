@@ -283,12 +283,14 @@ void filtermainWindow::preview(bool b)
             previewDialog=NULL;
     }
 
-    QString title = QString(" / ");
+    QString title = QT_TRANSLATE_NOOP("qmainfilter","Preview");
+    title += QString(" / ");
     if (!enabled)
         title += QT_TRANSLATE_NOOP("qmainfilter","DISABLED ");
     title += QString::fromUtf8(name);
 
-    previewDialog = new Ui_seekablePreviewWindow(this, filter, title, 0);
+    previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
+    previewDialog->setWindowTitle(title);
     previewDialog->setModal(true);
     connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
     connect(previewDialog, SIGNAL(rejected()), this, SLOT(closePreview()));
