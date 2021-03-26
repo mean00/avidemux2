@@ -326,8 +326,9 @@ bool      ADM_tsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxS
                     {
                         if(outcome == ADM_latm2aac::LATM_ERROR)
                         {
-                            latm.flush();
                             ADM_warning("Error demuxing LATM frame, %d attempts remaining.\n",retries);
+                            if(--retries > 10 /* arbitrary cap */) continue; // consume pushed data first
+                            latm.flush();
                         }
                         if(false==demuxer.getNextPES(packet)) return false;
                         int avail=packet->payloadSize-packet->offset;
