@@ -27,6 +27,7 @@
 #include <cmath>
 #include <QPalette>
 #include <QColor>
+#include "math.h"
 
 //
 //	Video is in YV12 Colorspace
