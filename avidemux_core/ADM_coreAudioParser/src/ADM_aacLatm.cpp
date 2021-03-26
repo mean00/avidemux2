@@ -27,8 +27,11 @@ extern "C" {
 
 #if 0
 #define xdebug ADM_info
+#include "ADM_coreUtils.h"
+#define xhdump mixDump
 #else
 #define xdebug(...) {}
+#define xhdump(...) {}
 #endif
 
 static const int aacChannels[16]=
@@ -184,8 +187,7 @@ bool ADM_latm2aac::AudioSpecificConfig(getBits &bits,int &bitsConsumed)
 #endif
     
     xdebug("Got %d extraData \n",extraLen);
-    for(int i=0;i<extraLen;i++)
-        xdebug(" %02x",extraData[i]);
+    xhdump(extraData,extraLen);
     xdebug(" \nFrequency %d, channels %d\n",fq,channels);
     conf.gotConfig=true;
     return true;
@@ -284,9 +286,9 @@ bool ADM_latm2aac::readStreamMuxConfig(getBits &bits)
 
         xdebug("NumSubFrame=%d, numSubProgram=%d\n",numSubFrames,numbSubProgram);
 
-        if(numSubFrames!=1 || numbSubProgram!=1  )
+        if(numbSubProgram!=1)
         {
-            ADM_warning("LATM: only supports subframe=1, subprogram=1\n");
+            ADM_warning("LATM: only numProgram = 1 supported, got %d\n",numbSubProgram);
             return false;
         }
 
@@ -388,6 +390,8 @@ bool  ADM_latm2aac::readAudioMux( uint64_t dts,getBits &bits )
        }
     } // streamMuxConfig
 //    if(!numSubFrames) return false;
+    if(!conf.gotConfig)
+        return false;
     if(conf.audioMuxVersionA==0)
     {
        // only 1 subFrames ATM... for(int i=0;i<numSubFrames;i++)
@@ -488,7 +492,7 @@ ADM_latm2aac::LATM_STATE ADM_latm2aac::convert(uint64_t dts)
     xdebug("Found LATM : size %d\n",len);
     // Demux one LATM frame
     bool r = demuxLatm(dts,start,len);
-    tail+=len;
+    tail+=len+3;
     ADM_assert(head>=tail);
     xdebug("-- end of this LATM frame --\n");
     return r? LATM_OK : LATM_ERROR;
@@ -503,7 +507,6 @@ ADM_latm2aac::ADM_latm2aac(void)
                 channels=0;
                 extraLen=0;
                 memset(&conf,0,sizeof(conf));
-                conf.gotConfig=false;
                 for(int i=0;i<LATM_NB_BUFFERS;i++)
                     listOfFreeBuffers.pushBack(&(buffers[i]));
                 depot.setSize(INCOMING_BUFFER_SIZE + AV_INPUT_BUFFER_PADDING_SIZE);
