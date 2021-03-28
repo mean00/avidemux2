@@ -239,7 +239,7 @@ void Ui_artChromaKeyWindow::testImageChanged(int f)
 
 #define PUSHHANDLER(x) \
     QPalette indctrPalette(ui.lineEditC##x->palette()); \
-    QColor startColor = indctrPalette.color(QPalette::Background); \
+    QColor startColor = indctrPalette.color(QPalette::Window); \
     QColor color = QColorDialog::getColor(startColor, this ); \
     if( color.isValid() ) \
     { \
@@ -251,7 +251,7 @@ void Ui_artChromaKeyWindow::testImageChanged(int f)
         myFly->param.c##x##v = (float)yuv[2]/128.0; \
         yuv2rgb(rgb, yuv); \
         color.setRgb(rgb[0],rgb[1],rgb[2],255); \
-        indctrPalette.setColor(QPalette::Background,color); \
+        indctrPalette.setColor(QPalette::Window,color); \
         indctrPalette.setColor(QPalette::Base,color); \
         indctrPalette.setColor(QPalette::AlternateBase,color); \
         ui.lineEditC##x->setPalette(indctrPalette); \
@@ -373,7 +373,7 @@ void Ui_artChromaKeyWindow::showEvent(QShowEvent *event)
     yuv[2] = (int)round(param.c##x##v*128.0); \
     yuv2rgb(rgb, yuv); \
     color.setRgb(rgb[0],rgb[1],rgb[2],255); \
-    indctrPalette.setColor(QPalette::Background,color); \
+    indctrPalette.setColor(QPalette::Window,color); \
     indctrPalette.setColor(QPalette::Base,color); \
     indctrPalette.setColor(QPalette::AlternateBase,color); \
     indctr->setPalette(indctrPalette); \

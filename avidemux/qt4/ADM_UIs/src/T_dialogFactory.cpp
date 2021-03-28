@@ -217,9 +217,9 @@ bool qt4DiaFactoryTabsFinish(void *f)
     buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed);
     cookie->vboxlayout->addLayout(cookie->layout);
-    cookie->vboxlayout->addWidget(cookie->tabWidget,0,0);
+    cookie->vboxlayout->addWidget(cookie->tabWidget,0);
     cookie->vboxlayout->addItem(spacer);
-    cookie->vboxlayout->addWidget(buttonBox,1,0);
+    cookie->vboxlayout->addWidget(buttonBox,1);
 
      cookie->dialog->setLayout(cookie->vboxlayout);
 

@@ -224,7 +224,7 @@ void MainWindow::buildRecentMenu(QMenu *menu, std::vector<std::string>files, QAc
 	{
 		if (files[i].size())
 		{
-			actions[i] = menu->addAction(QString('1' + i) + QString(". ") + QString::fromUtf8(files[i].c_str()));
+			actions[i] = menu->addAction(QString(uint16_t(i + 1)) + QString(". ") + QString::fromUtf8(files[i].c_str()));
 		}
 		else
 		{

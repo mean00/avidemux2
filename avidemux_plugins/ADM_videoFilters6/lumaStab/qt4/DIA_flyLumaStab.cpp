@@ -44,7 +44,7 @@ uint8_t   flyLumaStab::processYuv(ADMImage *in,ADMImage *out )
     ADMVideoLumaStab::LumaStabProcess_C(out, param.filterLength, param.cbratio, param.sceneThreshold, param.chroma, yHyst, &yHystlen, prevChromaHist, &newScene, &sceneDiff);
 
     color.setRgb(0,(newScene ? 255:64),0,255);
-    indctrPalette.setColor(QPalette::Background,color);
+    indctrPalette.setColor(QPalette::Window,color);
     indctrPalette.setColor(QPalette::Base,color);
     indctrPalette.setColor(QPalette::AlternateBase,color);
     indctr->setPalette(indctrPalette);

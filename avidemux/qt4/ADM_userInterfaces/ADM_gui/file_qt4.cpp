@@ -43,7 +43,7 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
     QString fileName,dot=QString(".");
     QString separator = QString("/");
     QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
-    QFileDialog::Options opts = 0;
+    QFileDialog::Options opts = QFileDialog::Options();
     bool doFilter = !!(ext && strlen(ext));
     bool isProject=false;
     int extSize=1;
@@ -197,7 +197,7 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
     QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     bool doFilter = !!(ext && strlen(ext));
     bool isProject=false;
-    QFileDialog::Options opts = 0;
+    QFileDialog::Options opts = QFileDialog::Options();
 
     if(doFilter)
     {
