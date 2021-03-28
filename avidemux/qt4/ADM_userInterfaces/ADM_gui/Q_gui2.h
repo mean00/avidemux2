@@ -79,9 +79,7 @@ private:
                 void cleanup()
                 {
                   //ADM_ExitCleanup();
-                  emit quit();
                 }
-                
 };
 /**
  * \enum ADM_dragState
