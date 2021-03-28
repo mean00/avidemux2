@@ -1,6 +1,6 @@
 #include <QtCore/QStack>
 #include <QApplication>
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+#if QT_VERSION < QT_VERSION_CHECK(5,11,0)
 #   include <QDesktopWidget>
 #else
 #   include <QScreen>
@@ -62,7 +62,7 @@ QWidget* qtLastRegisteredDialog()
 
 uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h)
 {
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+#if QT_VERSION < QT_VERSION_CHECK(5,11,0)
 	QRect qrect = QApplication::desktop()->availableGeometry();
 #else
     QRect qrect = QApplication::primaryScreen()->availableGeometry();
