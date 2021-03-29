@@ -221,10 +221,10 @@ bool GUIPlayback::initialize(void)
     firstPts=admPreview::getCurrentPts();
     if(getPreviewMode()==ADM_PREVIEW_NONE) // copy
     {
-        videoChain=createEmptyVideoFilterChain(firstPts,1000*1000*1000*1000LL); 
+        videoChain=createEmptyVideoFilterChain(firstPts,ADM_NO_PTS);
     }else
     {
-        videoChain=createVideoFilterChain(firstPts,1000*1000*1000*1000LL); 
+        videoChain=createVideoFilterChain(firstPts,ADM_NO_PTS);
     }
     if(!videoChain)
     {
