@@ -19,6 +19,7 @@
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_videoFilterBridge.h"
+#include "ADM_vidMisc.h"
 
 /**
     \fn ADM_videoFilterBridge
@@ -26,17 +27,19 @@
 */
 ADM_videoFilterBridge::ADM_videoFilterBridge(IEditor *editor, uint64_t startTime, uint64_t endTime) : ADM_coreVideoFilter(NULL, NULL)
 {
-    printf("[VideoFilterBridge] Creating bridge from %" PRIu32" s to %" PRIu32" s\n", (uint32_t)(startTime / 1000000LL), (uint32_t)(endTime / 1000000LL));
-    this->startTime = startTime;
+    printf("[VideoFilterBridge] Creating instance at %p ",this);
     this->editor = editor;
 
-    if (endTime == -1LL)
+    if (endTime == ADM_NO_PTS)
     {
-        uint64_t total = editor->getVideoDuration();
-        endTime = total - startTime + 1;
+        printf("using video duration ");
+        endTime = editor->getVideoDuration();
+        if(endTime < startTime) startTime = endTime;
     }
-
+    this->startTime = startTime;
     this->endTime = endTime;
+    printf("from %s ",ADM_us2plain(this->startTime));
+    printf("to %s\n",ADM_us2plain(this->endTime));
     myName = "Bridge";
     aviInfo fo;
     editor->getVideoInfo(&fo);
@@ -112,7 +115,7 @@ bool ADM_videoFilterBridge::rewind(void)
 */
 ADM_videoFilterBridge::~ADM_videoFilterBridge()
 {
-
+    printf("[VideoFilterBridge] Destroying instance at %p\n",this);
 }
 /**
     \fn getNextFrame
