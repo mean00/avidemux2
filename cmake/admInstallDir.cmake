@@ -101,6 +101,7 @@ MACRO(ADM_INSTALL_CMAKE_FOLDER folder targetName)
                 DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/${targetName}
                 COMPONENT dev
                 FILES_MATCHING PATTERN "*.cmake*"
+                PATTERN "attic" EXCLUDE
                 )
 ENDMACRO(ADM_INSTALL_CMAKE_FOLDER )
 #

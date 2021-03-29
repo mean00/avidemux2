@@ -68,8 +68,10 @@ void initTranslator(void)
 static std::string flavor=std::string(
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0)
         "qt4"
-#else
+#elif QT_VERSION < QT_VERSION_CHECK(6,0,0)
         "qt5"
+#else
+        "qt6"
 #endif
 );
 

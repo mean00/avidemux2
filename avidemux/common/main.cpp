@@ -41,9 +41,10 @@ typedef struct
 {
         const char *qt4;
         const char *qt5;
+        const char *qt6;
 }flavors;
 
-static flavors myFlavors={"qt4","qt5"};
+static flavors myFlavors={"qt4","qt5","qt6"};
 
 #ifdef main
 extern "C"

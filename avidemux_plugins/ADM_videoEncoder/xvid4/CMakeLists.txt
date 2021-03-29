@@ -6,7 +6,7 @@ SET(xvid4_SRCS
         xvid4Plugin.cpp
         xvid4Dialog.cpp
 )
-include(FindThreads)
+include(admCheckThreads)
 include(admCheckXvid)
 checkXvid()
 IF(USE_XVID)

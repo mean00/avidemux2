@@ -23,13 +23,10 @@ export API_VERSION="${MAJOR}.${MINOR}"
 
 DAT=`date +"%y%m%d-%Hh%Mm"`
 gt=`git log --format=oneline -1 | head -c 11`
-export REV="${DAT}_$gt"
-#
-# To move as parameter
-#
-export FLAVOR="-DENABLE_QT5=True"
-export qt_ext=Qt5
-#
+REV="${DAT}_$gt"
+
+FLAVOR="-DENABLE_QT5=True"
+qt_ext="Qt5"
 packages_ext=""
 do_core=1
 do_cli=1
@@ -147,6 +144,7 @@ usage()
         echo "  --rebuild               : Preserve existing build directories"
         echo "  --output=NAME           : Specify a custom basename for dmg"
         echo "  --version=STRING        : Specify a custom Avidemux version string"
+        echo "  --enable-qt6            : Require Qt6 instead of Qt5"
         echo "  --with-core             : Build core (default)"
         echo "  --without-core          : Don't build core"
         echo "  --with-cli              : Build cli (default)"
@@ -210,6 +208,10 @@ while [ $# != 0 ] ;do
                 ;;
          --version=*)
                 adm_version=$(option_value "$config_option")
+                ;;
+         --enable-qt6)
+                FLAVOR="-DENABLE_QT6=True"
+                qt_ext=Qt6
                 ;;
          --without-qt)
                 do_qt4=0
