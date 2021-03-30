@@ -194,7 +194,7 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 
     bool disabled = index.data(DisabledRole).toBool();
     if (disabled)
-        fg = QColor("lightGray");
+        fg = pal.color(QPalette::Disabled, QPalette::WindowText);
 
     painter->fillRect(option.rect, bg);
     pen.setColor(fg);
