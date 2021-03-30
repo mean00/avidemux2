@@ -744,7 +744,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 #else
     keycode = Qt::Key_Delete;
 #endif
-    QKeySequence seq(keycode);
+    shortcutRemove = QKeySequence(keycode);
     bool alt = false;
     prefs->get(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,&alt);
     if(alt)
@@ -754,10 +754,10 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
         if(sc.size())
         {
             QString qs = QString::fromUtf8(sc.c_str());
-            seq = QKeySequence::fromString(qs);
+            shortcutRemove = QKeySequence::fromString(qs);
         }
     }
-    rem->setShortcut(seq);
+    rem->setShortcut(shortcutRemove);
     addAction(rem);
     connect(rem,SIGNAL(triggered(bool)),this,SLOT(remove(bool)));
 
@@ -765,7 +765,6 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     shortcutMoveUp = QKeySequence(Qt::ShiftModifier + Qt::Key_Up);
     shortcutMoveDown = QKeySequence(Qt::ShiftModifier + Qt::Key_Down);
     shortcutConfigure = QKeySequence(Qt::Key_Return);
-    shortcutRemove = QKeySequence(keycode);
     shortcutMakePartial = QKeySequence(Qt::ShiftModifier + Qt::Key_P);
     shortcutToggleEnabled = QKeySequence(Qt::ShiftModifier + Qt::Key_D);
 
