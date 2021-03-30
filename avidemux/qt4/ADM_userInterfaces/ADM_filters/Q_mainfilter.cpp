@@ -191,12 +191,18 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
         fg = pal.color(QPalette::Text);
         bg = pal.color(QPalette::Base);
     }
+
+    bool disabled = index.data(DisabledRole).toBool();
+    if (disabled)
+        fg = QColor("lightGray");
+
     painter->fillRect(option.rect, bg);
     pen.setColor(fg);
     painter->setPen(pen);
 
     QString filterNameText = index.data(FilterNameRole).toString();
     QString descText = index.data(DescriptionRole).toString();
+
 
     QFont filterNameFont = QApplication::font();
     QFont descFont = QApplication::font();
@@ -268,12 +274,23 @@ void filtermainWindow::preview(bool b)
      ADM_info("Rank : %d\n",itag);
      ADM_coreVideoFilter     *filter=ADM_vf_getInstance(itag);
      ADM_assert(filter);
+    bool                      enabled = ADM_vf_getEnabled(itag);
+    uint32_t                  instanceTag=ADM_vf_getTag(itag);
+    const char               *name= ADM_vf_getDisplayNameFromTag(instanceTag);
     if (previewDialog)
     {
             delete previewDialog;
             previewDialog=NULL;
     }
+
+    QString title = QT_TRANSLATE_NOOP("qmainfilter","Preview");
+    title += QString(" / ");
+    if (!enabled)
+        title += QT_TRANSLATE_NOOP("qmainfilter","DISABLED ");
+    title += QString::fromUtf8(name);
+
     previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
+    previewDialog->setWindowTitle(title);
     previewDialog->setModal(true);
     connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
     connect(previewDialog, SIGNAL(rejected()), this, SLOT(closePreview()));
@@ -457,7 +474,18 @@ void filtermainWindow::makePartial()
         ADM_info("CANCEL \n");
       }
 }
-
+/**
+ * 
+ */
+void filtermainWindow::toggleEnabled()
+{
+    int filterIndex=getTagForActiveSelection();
+    if(-1==filterIndex)
+        return;
+    ADM_vf_toggleFilterEnabledAtIndex(filterIndex);
+    buildActiveFilterList ();
+    setSelected(filterIndex);
+}
 /**
         \fn     down( bool b)
         \brief  Move selected filter one place down
@@ -565,6 +593,7 @@ void filtermainWindow::buildActiveFilterList(void)
     {
         uint32_t                instanceTag=ADM_vf_getTag(i);
         ADM_coreVideoFilter     *instance=ADM_vf_getInstance(i);
+        bool                    enabled = ADM_vf_getEnabled(i);
         const char *name= ADM_vf_getDisplayNameFromTag(instanceTag);
         const char *conf=instance->getConfiguration();
         printf("%d %s\n",i,name);
@@ -575,6 +604,7 @@ void filtermainWindow::buildActiveFilterList(void)
         QListWidgetItem *item=new QListWidgetItem(NULL,activeList,ACTIVE_FILTER_BASE+i);
         item->setData(FilterItemDelegate::FilterNameRole, s1);
         item->setData(FilterItemDelegate::DescriptionRole, s2);
+        item->setData(FilterItemDelegate::DisabledRole, !enabled);
         printf("Active item :%p\n",item);
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsEnabled);
         activeList->addItem(item);
@@ -593,24 +623,28 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     QAction *configure = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),cm);
     QAction *remove = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),cm);
     QAction *partial = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),cm);
+    QAction *enabled = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Enable/Disable")),cm);
 
     up->setShortcut(shortcutMoveUp);
     down->setShortcut(shortcutMoveDown);
     configure->setShortcut(shortcutConfigure);
     remove->setShortcut(shortcutRemove);
     partial->setShortcut(shortcutMakePartial);
+    enabled->setShortcut(shortcutToggleEnabled);
 
     cm->addAction(up);
     cm->addAction(down);
     cm->addAction(configure);
     cm->addAction(remove);
     cm->addAction(partial);
+    cm->addAction(enabled);
 
     connect(up,SIGNAL(triggered()),this,SLOT(moveUp()));
     connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
     connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
     connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
     connect(partial,SIGNAL(triggered()),this,SLOT(makePartial()));
+    connect(enabled,SIGNAL(triggered()),this,SLOT(toggleEnabled()));
 
     updateContextMenu(cm);
     cm->exec(activeList->viewport()->mapToGlobal(pos));
@@ -733,6 +767,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     shortcutConfigure = QKeySequence(Qt::Key_Return);
     shortcutRemove = QKeySequence(keycode);
     shortcutMakePartial = QKeySequence(Qt::ShiftModifier + Qt::Key_P);
+    shortcutToggleEnabled = QKeySequence(Qt::ShiftModifier + Qt::Key_D);
 
     QAction *movup = new QAction(this);
     movup->setShortcut(shortcutMoveUp);
@@ -748,6 +783,11 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     mkpartl->setShortcut(shortcutMakePartial);
     addAction(mkpartl);
     connect(mkpartl,SIGNAL(triggered()),this,SLOT(makePartial()));
+
+    QAction *tglenbl = new QAction(this);
+    tglenbl->setShortcut(shortcutToggleEnabled);
+    addAction(tglenbl);
+    connect(tglenbl,SIGNAL(triggered()),this,SLOT(toggleEnabled()));
 
 
     activeList->setContextMenuPolicy(Qt::CustomContextMenu);

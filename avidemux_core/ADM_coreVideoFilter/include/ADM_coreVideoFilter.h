@@ -30,6 +30,7 @@
 typedef struct
 {
     uint32_t            tag; // Temporary filter tag
+    bool                enabled;
     ADM_coreVideoFilter *instance;
     int objectId;
 }ADM_VideoFilterElement;

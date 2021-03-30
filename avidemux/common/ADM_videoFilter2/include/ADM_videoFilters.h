@@ -21,6 +21,7 @@
 // Get list
 uint32_t                ADM_vf_getSize(void);
 ADM_coreVideoFilter     *ADM_vf_getInstance(int index);
+bool                    ADM_vf_getEnabled(int index);
 uint32_t                ADM_vf_getTag(int index);
 bool                    ADM_vf_getConfigurationFromIndex(int index,CONFcouple **c);
 

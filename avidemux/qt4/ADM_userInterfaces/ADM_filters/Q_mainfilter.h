@@ -56,7 +56,7 @@ private:
 
 public:
     FilterItemDelegate(QWidget *parent = 0);
-    enum datarole { FilterNameRole = Qt::UserRole, DescriptionRole };
+    enum datarole { FilterNameRole = Qt::UserRole, DescriptionRole, DisabledRole };
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
     static int padding;
@@ -86,6 +86,7 @@ public slots:
     void moveUp();
     void moveDown();
     void makePartial();
+    void toggleEnabled();
     void remove(bool b);
     void configure(bool b);
     void activeDoubleClick( QListWidgetItem  *item);
@@ -116,6 +117,7 @@ private:
     QKeySequence shortcutConfigure;
     QKeySequence shortcutRemove;
     QKeySequence shortcutMakePartial;
+    QKeySequence shortcutToggleEnabled;
 
 };
 
