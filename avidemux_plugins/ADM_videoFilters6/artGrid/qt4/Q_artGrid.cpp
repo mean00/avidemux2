@@ -49,9 +49,10 @@ Ui_artGridWindow::Ui_artGridWindow(QWidget *parent, artGrid *param,ADM_coreVideo
         myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
-        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
-        SPINNER(Size,1,0)
+#define SPINNER(x) \
+        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
+        connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSpinBox(int)));
+        SPINNER(Size)
 
 #define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         CHKBOX(Roll);
@@ -77,10 +78,29 @@ Ui_artGridWindow::~Ui_artGridWindow()
     if(canvas) delete canvas;
     canvas=NULL;
 }
+#define COPY_VALUE_TO_SPINBOX(x) \
+        ui.spinBox##x->blockSignals(true); \
+        ui.spinBox##x->setValue(ui.horizontalSlider##x->value()); \
+        ui.spinBox##x->blockSignals(false);
 void Ui_artGridWindow::valueChanged( int f )
 {
     if(lock) return;
     lock++;
+    COPY_VALUE_TO_SPINBOX(Size);
+    myFly->download();
+    myFly->blacken();
+    myFly->sameImage();
+    lock--;
+}
+#define COPY_VALUE_TO_SLIDER(x) \
+        ui.horizontalSlider##x->blockSignals(true); \
+        ui.horizontalSlider##x->setValue(ui.spinBox##x->value()); \
+        ui.horizontalSlider##x->blockSignals(false);
+void Ui_artGridWindow::valueChangedSpinBox(int foo)
+{
+    if(lock) return;
+    lock++;
+    COPY_VALUE_TO_SLIDER(Size);
     myFly->download();
     myFly->blacken();
     myFly->sameImage();
@@ -113,21 +133,27 @@ void Ui_artGridWindow::showEvent(QShowEvent *event)
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
-#define MYSPIN(x) w->horizontalSlider##x
+#define MYSLIDER(x) w->horizontalSlider##x
+#define MYSPIN(x) w->spinBox##x
 #define MYCHECK(x) w->checkBox##x
+#define UPLOADSPIN(x, value) \
+        w->spinBox##x->blockSignals(true); \
+        w->spinBox##x->setValue(value); \
+        w->spinBox##x->blockSignals(false);
 //************************
 uint8_t flyArtGrid::upload(void)
 {
     Ui_artGridDialog *w=(Ui_artGridDialog *)_cookie;
 
-    MYSPIN(Size)->setValue((int)param.size);
+    MYSLIDER(Size)->setValue((int)param.size);
+    UPLOADSPIN(Size, param.size);
     MYCHECK(Roll)->setChecked(param.roll);
     return 1;
 }
 uint8_t flyArtGrid::download(void)
 {
     Ui_artGridDialog *w=(Ui_artGridDialog *)_cookie;
-    param.size=(int)MYSPIN(Size)->value();
+    param.size=(int)MYSLIDER(Size)->value();
     param.roll=MYCHECK(Roll)->isChecked();
     return 1;
 }
@@ -135,8 +161,10 @@ void flyArtGrid::setTabOrder(void)
 {
     Ui_artGridDialog *w=(Ui_artGridDialog *)_cookie;
     std::vector<QWidget *> controls;
+#define PUSH_SLIDER(x) controls.push_back(MYSLIDER(x));
 #define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
 #define PUSH_TOG(x) controls.push_back(MYCHECK(x));
+    PUSH_SLIDER(Size)
     PUSH_SPIN(Size)
     PUSH_TOG(Roll)
 
