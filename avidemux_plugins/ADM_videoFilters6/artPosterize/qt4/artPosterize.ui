@@ -77,7 +77,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="3">
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -91,7 +91,7 @@
       </spacer>
      </item>
      <item row="0" column="1">
-      <widget class="ADM_SliderIndicator" name="horizontalSliderLevels">
+      <widget class="QSlider" name="horizontalSliderLevels">
        <property name="minimum">
         <number>2</number>
        </property>
@@ -106,6 +106,16 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBoxLevels">
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>64</number>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
@@ -116,14 +126,10 @@
    <extends>QSlider</extends>
    <header>ADM_toolkitQt.h</header>
   </customwidget>
-  <customwidget>
-   <class>ADM_SliderIndicator</class>
-   <extends>QSlider</extends>
-   <header>ADM_toolkitQt.h</header>
-  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>horizontalSliderLevels</tabstop>
+  <tabstop>spinBoxLevels</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>graphicsView</tabstop>
  </tabstops>
