@@ -632,7 +632,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     partial->setShortcut(shortcutMakePartial);
     enabled->setShortcut(shortcutToggleEnabled);
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     up->setShortcutVisibleInContextMenu(true);
     down->setShortcutVisibleInContextMenu(true);
     configure->setShortcutVisibleInContextMenu(true);
