@@ -26,6 +26,7 @@ class Ui_artGridWindow : public QDialog
   private slots:
     void sliderUpdate(int foo);
     void valueChanged(int foo);
+    void valueChangedSpinBox(int foo);
     void reset(void);
 
   private:

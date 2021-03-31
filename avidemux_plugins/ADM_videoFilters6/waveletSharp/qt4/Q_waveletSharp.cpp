@@ -50,10 +50,11 @@ Ui_waveletSharpWindow::Ui_waveletSharpWindow(QWidget *parent, waveletSharp *para
         myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
-        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
-        SPINNER(Strength,100,2)
-        SPINNER(Radius,100,2)
+#define SPINNER(x) \
+        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
+        connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChangedSpinBox(double)));
+        SPINNER(Strength)
+        SPINNER(Radius)
 
 #define TOGGLER(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         TOGGLER(HQ)
@@ -80,10 +81,30 @@ Ui_waveletSharpWindow::~Ui_waveletSharpWindow()
     if(canvas) delete canvas;
     canvas=NULL;
 }
+#define COPY_VALUE_TO_SPINBOX(x) \
+        ui.doubleSpinBox##x->blockSignals(true); \
+        ui.doubleSpinBox##x->setValue((float)ui.horizontalSlider##x->value() / 100.0); \
+        ui.doubleSpinBox##x->blockSignals(false);
 void Ui_waveletSharpWindow::valueChanged( int f )
 {
     if(lock) return;
     lock++;
+    COPY_VALUE_TO_SPINBOX(Strength);
+    COPY_VALUE_TO_SPINBOX(Radius);
+    myFly->download();
+    myFly->sameImage();
+    lock--;
+}
+#define COPY_VALUE_TO_SLIDER(x) \
+        ui.horizontalSlider##x->blockSignals(true); \
+        ui.horizontalSlider##x->setValue((int)round(ui.doubleSpinBox##x->value() * 100.0)); \
+        ui.horizontalSlider##x->blockSignals(false);
+void Ui_waveletSharpWindow::valueChangedSpinBox( double f )
+{
+    if(lock) return;
+    lock++;
+    COPY_VALUE_TO_SLIDER(Strength);
+    COPY_VALUE_TO_SLIDER(Radius);
     myFly->download();
     myFly->sameImage();
     lock--;
@@ -116,13 +137,20 @@ void Ui_waveletSharpWindow::showEvent(QShowEvent *event)
 }
 
 #define MYSPIN(x) w->horizontalSlider##x
+#define MYDBLSPIN(x) w->doubleSpinBox##x
 #define MYCHECK(x) w->checkBox##x
+#define UPLOADDBLSPIN(x, value) \
+        w->doubleSpinBox##x->blockSignals(true); \
+        w->doubleSpinBox##x->setValue(value); \
+        w->doubleSpinBox##x->blockSignals(false);
 //************************
 uint8_t flyWaveletSharp::upload(void)
 {
     Ui_waveletSharpDialog *w=(Ui_waveletSharpDialog *)_cookie;
     MYSPIN(Strength)->setValue((int)round(param.strength*100.0));
+    UPLOADDBLSPIN(Strength, param.strength);
     MYSPIN(Radius)->setValue((int)round(param.radius*100.0));
+    UPLOADDBLSPIN(Radius, param.radius);
     MYCHECK(HQ)->setChecked(param.highq);
     return 1;
 }
@@ -139,9 +167,12 @@ void flyWaveletSharp::setTabOrder(void)
     Ui_waveletSharpDialog *w=(Ui_waveletSharpDialog *)_cookie;
     std::vector<QWidget *> controls;
 #define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
+#define PUSHDBLSPIN(x) controls.push_back(MYDBLSPIN(x));
 #define PUSH_TOG(x) controls.push_back(MYCHECK(x));
     PUSH_SPIN(Strength)
+    PUSHDBLSPIN(Strength)
     PUSH_SPIN(Radius)
+    PUSHDBLSPIN(Radius)
     PUSH_TOG(HQ)
 
 

@@ -26,6 +26,7 @@ class Ui_artPosterizeWindow : public QDialog
   private slots:
     void sliderUpdate(int foo);
     void valueChanged(int foo);
+    void valueChangedSpinBox(int foo);
 
   private:
     void resizeEvent(QResizeEvent *event);

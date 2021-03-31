@@ -44,13 +44,15 @@ Ui_artPosterizeWindow::Ui_artPosterizeWindow(QWidget *parent, artPosterize *para
         memcpy(&(myFly->param),param,sizeof(artPosterize));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout, true);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
-        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
-        SPINNER(Levels,1,0)
+#define SPINNER(x) \
+        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
+        connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSpinBox(int)));
+        SPINNER(Levels)
 
         setModal(true);
 }
@@ -73,15 +75,32 @@ Ui_artPosterizeWindow::~Ui_artPosterizeWindow()
     if(canvas) delete canvas;
     canvas=NULL;
 }
+#define COPY_VALUE_TO_SPINBOX(x) \
+        ui.spinBox##x->blockSignals(true); \
+        ui.spinBox##x->setValue(ui.horizontalSlider##x->value()); \
+        ui.spinBox##x->blockSignals(false);
 void Ui_artPosterizeWindow::valueChanged( int f )
 {
     if(lock) return;
     lock++;
+    COPY_VALUE_TO_SPINBOX(Levels);
     myFly->download();
     myFly->sameImage();
     lock--;
 }
-
+#define COPY_VALUE_TO_SLIDER(x) \
+        ui.horizontalSlider##x->blockSignals(true); \
+        ui.horizontalSlider##x->setValue(ui.spinBox##x->value()); \
+        ui.horizontalSlider##x->blockSignals(false);
+void Ui_artPosterizeWindow::valueChangedSpinBox(int foo)
+{
+    if(lock) return;
+    lock++;
+    COPY_VALUE_TO_SLIDER(Levels);
+    myFly->download();
+    myFly->sameImage();
+    lock--;
+}
 void Ui_artPosterizeWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -100,22 +119,50 @@ void Ui_artPosterizeWindow::showEvent(QShowEvent *event)
 }
 
 #define MYCOMBOX(x) w->comboBox##x
-#define MYSPIN(x) w->horizontalSlider##x
+#define MYSLIDER(x) w->horizontalSlider##x
+#define MYSPIN(x) w->spinBox##x
 #define MYCHECK(x) w->checkBox##x
+#define UPLOADSPIN(x, value) \
+        w->spinBox##x->blockSignals(true); \
+        w->spinBox##x->setValue(value); \
+        w->spinBox##x->blockSignals(false);
 //************************
 uint8_t flyArtPosterize::upload(void)
 {
     Ui_artPosterizeDialog *w=(Ui_artPosterizeDialog *)_cookie;
-    MYSPIN(Levels)->setValue((int)param.levels);
+    MYSLIDER(Levels)->setValue((int)param.levels);
+    UPLOADSPIN(Levels, param.levels);
     return 1;
 }
 uint8_t flyArtPosterize::download(void)
 {
     Ui_artPosterizeDialog *w=(Ui_artPosterizeDialog *)_cookie;
-    param.levels=(int)MYSPIN(Levels)->value();
+    param.levels=(int)MYSLIDER(Levels)->value();
     return 1;
 }
+void flyArtPosterize::setTabOrder(void)
+{
+    Ui_artPosterizeDialog *w=(Ui_artPosterizeDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSHSLIDER(x) controls.push_back(MYSLIDER(x));
+#define PUSHSPIN(x) controls.push_back(MYSPIN(x));
+    PUSHSLIDER(Levels)
+    PUSHSPIN(Levels)
 
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
+}
 /**
       \fn     DIA_getCropParams
       \brief  Handle crop dialog

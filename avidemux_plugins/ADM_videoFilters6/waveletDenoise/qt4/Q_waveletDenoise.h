@@ -25,6 +25,7 @@ class Ui_waveletDenoiseWindow : public QDialog
   private slots:
     void sliderUpdate(int foo);
     void valueChanged(int foo);
+    void valueChangedSpinBox(double foo);
     void reset(void);
 
   private:

@@ -50,10 +50,11 @@ Ui_waveletDenoiseWindow::Ui_waveletDenoiseWindow(QWidget *parent, waveletDenoise
         myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
-        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
-        SPINNER(Threshold,100,2)
-        SPINNER(Softness,100,2)
+#define SPINNER(x) \
+        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
+        connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChangedSpinBox(double)));
+        SPINNER(Threshold)
+        SPINNER(Softness)
 
 #define TOGGLER(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         TOGGLER(HQ)
@@ -81,10 +82,30 @@ Ui_waveletDenoiseWindow::~Ui_waveletDenoiseWindow()
     if(canvas) delete canvas;
     canvas=NULL;
 }
+#define COPY_VALUE_TO_SPINBOX(x) \
+        ui.doubleSpinBox##x->blockSignals(true); \
+        ui.doubleSpinBox##x->setValue((float)ui.horizontalSlider##x->value() / 100.0); \
+        ui.doubleSpinBox##x->blockSignals(false);
 void Ui_waveletDenoiseWindow::valueChanged( int f )
 {
     if(lock) return;
     lock++;
+    COPY_VALUE_TO_SPINBOX(Threshold);
+    COPY_VALUE_TO_SPINBOX(Softness);
+    myFly->download();
+    myFly->sameImage();
+    lock--;
+}
+#define COPY_VALUE_TO_SLIDER(x) \
+        ui.horizontalSlider##x->blockSignals(true); \
+        ui.horizontalSlider##x->setValue((int)round(ui.doubleSpinBox##x->value() * 100.0)); \
+        ui.horizontalSlider##x->blockSignals(false);
+void Ui_waveletDenoiseWindow::valueChangedSpinBox(double foo)
+{
+    if(lock) return;
+    lock++;
+    COPY_VALUE_TO_SLIDER(Threshold);
+    COPY_VALUE_TO_SLIDER(Softness);
     myFly->download();
     myFly->sameImage();
     lock--;
@@ -117,13 +138,20 @@ void Ui_waveletDenoiseWindow::showEvent(QShowEvent *event)
 }
 
 #define MYSPIN(x) w->horizontalSlider##x
+#define MYDBLSPIN(x) w->doubleSpinBox##x
 #define MYCHECK(x) w->checkBox##x
+#define UPLOADDBLSPIN(x, value) \
+        w->doubleSpinBox##x->blockSignals(true); \
+        w->doubleSpinBox##x->setValue(value); \
+        w->doubleSpinBox##x->blockSignals(false);
 //************************
 uint8_t flyWaveletDenoise::upload(void)
 {
     Ui_waveletDenoiseDialog *w=(Ui_waveletDenoiseDialog *)_cookie;
     MYSPIN(Threshold)->setValue((int)round(param.threshold*100.0));
+    UPLOADDBLSPIN(Threshold, param.threshold);
     MYSPIN(Softness)->setValue((int)round(param.softness*100.0));
+    UPLOADDBLSPIN(Softness, param.softness);
     MYCHECK(HQ)->setChecked(param.highq);
     MYCHECK(Chroma)->setChecked(param.chroma);
     return 1;
@@ -143,8 +171,11 @@ void flyWaveletDenoise::setTabOrder(void)
     std::vector<QWidget *> controls;
 #define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
 #define PUSH_TOG(x) controls.push_back(MYCHECK(x));
+#define PUSHDBLSPIN(x) controls.push_back(MYDBLSPIN(x));
     PUSH_SPIN(Threshold)
+    PUSHDBLSPIN(Threshold)
     PUSH_SPIN(Softness)
+    PUSHDBLSPIN(Softness)
     PUSH_TOG(HQ)
     PUSH_TOG(Chroma)
 

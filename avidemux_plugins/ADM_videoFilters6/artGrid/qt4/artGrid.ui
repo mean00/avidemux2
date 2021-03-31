@@ -44,7 +44,7 @@
       <number>0</number>
      </property>
      <item row="0" column="1">
-      <widget class="ADM_SliderIndicator" name="horizontalSliderSize">
+      <widget class="QSlider" name="horizontalSliderSize">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -72,7 +72,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="3">
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -84,6 +84,16 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBoxSize">
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>8</number>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -132,11 +142,6 @@
  <customwidgets>
   <customwidget>
    <class>ADM_QSlider</class>
-   <extends>QSlider</extends>
-   <header>ADM_toolkitQt.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ADM_SliderIndicator</class>
    <extends>QSlider</extends>
    <header>ADM_toolkitQt.h</header>
   </customwidget>
