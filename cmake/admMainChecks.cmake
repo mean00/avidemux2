@@ -163,7 +163,6 @@ SET(MSG_DISABLE_OPTION "Disabled per request")
 INCLUDE(admCheckRequiredLibs)
 IF(NOT PLUGINS)
 INCLUDE(admCheckMiscLibs)
-INCLUDE(admCheckThreads)
 
 if (NOT APPLE AND NOT ADM_CPU_ARMEL)
         INCLUDE(admCheckNvEnc)
