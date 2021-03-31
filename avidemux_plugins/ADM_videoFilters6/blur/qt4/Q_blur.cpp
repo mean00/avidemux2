@@ -44,14 +44,16 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         memcpy(&(myFly->param),param,sizeof(blur));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout, true);
+        myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect(ui.comboBoxAlgorithm, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
-#define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
-        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
-        SPINNER(Radius,1,0)
+#define SPINNER(x) \
+        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
+        connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSpinBox(int)));
+        SPINNER(Radius)
 
         setModal(true);
 }
@@ -74,15 +76,32 @@ Ui_blurWindow::~Ui_blurWindow()
     if(canvas) delete canvas;
     canvas=NULL;
 }
+#define COPY_VALUE_TO_SPINBOX(x) \
+        ui.spinBox##x->blockSignals(true); \
+        ui.spinBox##x->setValue(ui.horizontalSlider##x->value()); \
+        ui.spinBox##x->blockSignals(false);
 void Ui_blurWindow::valueChanged( int f )
 {
     if(lock) return;
     lock++;
+    COPY_VALUE_TO_SPINBOX(Radius);
     myFly->download();
     myFly->sameImage();
     lock--;
 }
-
+#define COPY_VALUE_TO_SLIDER(x) \
+        ui.horizontalSlider##x->blockSignals(true); \
+        ui.horizontalSlider##x->setValue(ui.spinBox##x->value()); \
+        ui.horizontalSlider##x->blockSignals(false);
+void Ui_blurWindow::valueChangedSpinBox(int foo)
+{
+    if(lock) return;
+    lock++;
+    COPY_VALUE_TO_SLIDER(Radius);
+    myFly->download();
+    myFly->sameImage();
+    lock--;
+}
 void Ui_blurWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -101,22 +120,53 @@ void Ui_blurWindow::showEvent(QShowEvent *event)
 }
 
 #define MYCOMBOX(x) w->comboBox##x
-#define MYSPIN(x) w->horizontalSlider##x
+#define MYSLIDER(x) w->horizontalSlider##x
+#define MYSPIN(x) w->spinBox##x
 #define MYCHECK(x) w->checkBox##x
+#define UPLOADSPIN(x, value) \
+        w->spinBox##x->blockSignals(true); \
+        w->spinBox##x->setValue(value); \
+        w->spinBox##x->blockSignals(false);
 //************************
 uint8_t flyBlur::upload(void)
 {
     Ui_blurDialog *w=(Ui_blurDialog *)_cookie;
     MYCOMBOX(Algorithm)->setCurrentIndex(param.algorithm);
-    MYSPIN(Radius)->setValue((int)param.radius);
+    MYSLIDER(Radius)->setValue((int)param.radius);
+    UPLOADSPIN(Radius, param.radius);
     return 1;
 }
 uint8_t flyBlur::download(void)
 {
     Ui_blurDialog *w=(Ui_blurDialog *)_cookie;
     param.algorithm=MYCOMBOX(Algorithm)->currentIndex();
-    param.radius=(int)MYSPIN(Radius)->value();
+    param.radius=(int)MYSLIDER(Radius)->value();
     return 1;
+}
+void flyBlur::setTabOrder(void)
+{
+    Ui_blurDialog *w=(Ui_blurDialog *)_cookie;
+    std::vector<QWidget *> controls;
+#define PUSHCOMBOX(x) controls.push_back(MYCOMBOX(x));
+#define PUSHSLIDER(x) controls.push_back(MYSLIDER(x));
+#define PUSHSPIN(x) controls.push_back(MYSPIN(x));
+    PUSHCOMBOX(Algorithm)
+    PUSHSLIDER(Radius)
+    PUSHSPIN(Radius)
+
+    controls.insert(controls.end(), buttonList.begin(), buttonList.end());
+    controls.push_back(w->horizontalSlider);
+
+    QWidget *first, *second;
+
+    for(std::vector<QWidget *>::iterator tor = controls.begin(); tor != controls.end(); ++tor)
+    {
+        if(tor+1 == controls.end()) break;
+        first = *tor;
+        second = *(tor+1);
+        _parent->setTabOrder(first,second);
+        //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
+    }
 }
 
 /**
