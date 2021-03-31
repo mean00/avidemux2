@@ -771,11 +771,11 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(rem,SIGNAL(triggered(bool)),this,SLOT(remove(bool)));
 
     // TODO make configurable
-    shortcutMoveUp = QKeySequence(Qt::ShiftModifier + Qt::Key_Up);
-    shortcutMoveDown = QKeySequence(Qt::ShiftModifier + Qt::Key_Down);
+    shortcutMoveUp = QKeySequence(Qt::ShiftModifier | Qt::Key_Up);
+    shortcutMoveDown = QKeySequence(Qt::ShiftModifier | Qt::Key_Down);
     shortcutConfigure = QKeySequence(Qt::Key_Return);
-    shortcutMakePartial = QKeySequence(Qt::ShiftModifier + Qt::Key_P);
-    shortcutToggleEnabled = QKeySequence(Qt::ShiftModifier + Qt::Key_D);
+    shortcutMakePartial = QKeySequence(Qt::ShiftModifier | Qt::Key_P);
+    shortcutToggleEnabled = QKeySequence(Qt::ShiftModifier | Qt::Key_D);
 
     QAction *movup = new QAction(this);
     movup->setShortcut(shortcutMoveUp);
@@ -809,7 +809,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 #define HINT_LENGTH 256
     char hint[HINT_LENGTH];
     hint[0] = '\0';
-    QKeySequence acc(Qt::ControlModifier + Qt::Key_Return);
+    QKeySequence acc(Qt::ControlModifier | Qt::Key_Return);
     snprintf(hint,
         HINT_LENGTH,
         QT_TRANSLATE_NOOP("qmainfilter","Press %s to accept the dialog"),

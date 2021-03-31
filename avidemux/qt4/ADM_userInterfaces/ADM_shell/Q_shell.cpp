@@ -48,7 +48,7 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine, std::vector <shellHistory
     ui.textBrowser_2->installEventFilter(this);
 
     QAction *ev = new QAction(this);
-    ev->setShortcut(Qt::CTRL + Qt::Key_Return);
+    ev->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(ev,SIGNAL(triggered(bool)),this,SLOT(evaluate(bool)));
     addAction(ev);
 
