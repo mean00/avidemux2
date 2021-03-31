@@ -12,7 +12,7 @@ ENDIF(MSVC)
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
 SET(UI_SUFFIX qt4)
-include_directories(./ ${QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(./ ${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 INCLUDE(admWindRes)
 ###########################################
 # Executable
@@ -53,8 +53,10 @@ SET_TARGET_PROPERTIES(vsProxy_gui_${QT_EXTENSION}  PROPERTIES LINK_FLAGS "${OLD}
 ###########################################
 TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ADM_core6 ADM_coreSocket6 ADM_coreUtils6)
 TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
-TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ${PTHREAD_LIBRARIES})
 TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ${LIBS_TO_LINK} )
+
+include(admCheckThreads)
+ADM_LINK_THREAD(vsProxy_gui_${QT_EXTENSION})
 
 IF (MINGW)
 	target_link_libraries(vsProxy_gui_${QT_EXTENSION} -lwsock32 winmm -mwindows )
