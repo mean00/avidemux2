@@ -690,9 +690,21 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
     if(row==nb_active_filter-1)
         canMoveDown=false;
 
-    contextMenu->actions().at(0)->setEnabled(canMoveUp);
-    contextMenu->actions().at(1)->setEnabled(canMoveDown);
-    contextMenu->actions().at(4)->setEnabled(canPartialize);
+    const char *textEnable = ADM_vf_getEnabled(itag) ?
+        QT_TRANSLATE_NOOP("qmainfilter","Disable") :
+        QT_TRANSLATE_NOOP("qmainfilter","Enable");
+
+    for(int i = 0; i < contextMenu->actions().size(); i++)
+    {
+        QAction *a = contextMenu->actions().at(i);
+#define MATCHME(x,y) if(a->shortcut() == shortcut##x) { a->setEnabled(y); continue; }
+        MATCHME(MoveUp,canMoveUp)
+        MATCHME(MoveDown,canMoveDown)
+        MATCHME(MakePartial,canPartialize)
+
+        if(a->shortcut() == shortcutToggleEnabled)
+            a->setText(QString::fromUtf8(textEnable));
+    }
 }
 
 /**
