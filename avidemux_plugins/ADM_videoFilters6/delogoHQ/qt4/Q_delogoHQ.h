@@ -29,6 +29,7 @@ class Ui_delogoHQWindow : public QDialog
   private slots:
     void sliderUpdate(int foo);
     void valueChanged(int foo);
+    void valueChangedSpinBox(int foo);
     void showHelp();
     void imageSave();
     void imageLoad();

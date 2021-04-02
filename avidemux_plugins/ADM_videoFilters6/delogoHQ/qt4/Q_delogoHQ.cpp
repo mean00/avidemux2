@@ -63,10 +63,11 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
         myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
-        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
-        SPINNER(Blur,1,0)
-        SPINNER(Gradient,1,0)
+#define SPINNER(x) \
+        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
+        connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSpinBox(int)));
+        SPINNER(Blur)
+        SPINNER(Gradient)
 
         QPushButton *helpButton = ui.buttonBox->button(QDialogButtonBox::Help);
         connect(helpButton,SIGNAL(clicked()),this,SLOT(showHelp()));
@@ -201,15 +202,34 @@ bool Ui_delogoHQWindow::tryToLoadimage(const char *filename)
     }
     return status;
 }
+#define COPY_VALUE_TO_SPINBOX(x) \
+        ui.spinBox##x->blockSignals(true); \
+        ui.spinBox##x->setValue(ui.horizontalSlider##x->value()); \
+        ui.spinBox##x->blockSignals(false);
 void Ui_delogoHQWindow::valueChanged( int f )
 {
     if(lock) return;
     lock++;
+    COPY_VALUE_TO_SPINBOX(Blur);
+    COPY_VALUE_TO_SPINBOX(Gradient);
     myFly->download();
     myFly->sameImage();
     lock--;
 }
-
+#define COPY_VALUE_TO_SLIDER(x) \
+        ui.horizontalSlider##x->blockSignals(true); \
+        ui.horizontalSlider##x->setValue(ui.spinBox##x->value()); \
+        ui.horizontalSlider##x->blockSignals(false);
+void Ui_delogoHQWindow::valueChangedSpinBox(int foo)
+{
+    if(lock) return;
+    lock++;
+    COPY_VALUE_TO_SLIDER(Blur);
+    COPY_VALUE_TO_SLIDER(Gradient);
+    myFly->download();
+    myFly->sameImage();
+    lock--;
+}
 void Ui_delogoHQWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -228,22 +248,29 @@ void Ui_delogoHQWindow::showEvent(QShowEvent *event)
 }
 
 #define MYCOMBOX(x) w->comboBox##x
-#define MYSPIN(x) w->horizontalSlider##x
+#define MYSLIDER(x) w->horizontalSlider##x
+#define MYSPIN(x) w->spinBox##x
 #define MYCHECK(x) w->checkBox##x
+#define UPLOADSPIN(x, value) \
+        w->spinBox##x->blockSignals(true); \
+        w->spinBox##x->setValue(value); \
+        w->spinBox##x->blockSignals(false);
 //************************
 uint8_t flyDelogoHQ::upload(void)
 {
     Ui_delogoHQDialog *w=(Ui_delogoHQDialog *)_cookie;
-    MYSPIN(Blur)->setValue((int)param.blur);
-    MYSPIN(Gradient)->setValue((int)param.gradient);
+    MYSLIDER(Blur)->setValue((int)param.blur);
+    UPLOADSPIN(Blur, param.blur);
+    MYSLIDER(Gradient)->setValue((int)param.gradient);
+    UPLOADSPIN(Gradient, param.gradient);
     return 1;
 }
 
 uint8_t flyDelogoHQ::download(void)
 {
     Ui_delogoHQDialog *w=(Ui_delogoHQDialog *)_cookie;
-    param.blur=(int)MYSPIN(Blur)->value();
-    param.gradient=(int)MYSPIN(Gradient)->value();
+    param.blur=(int)MYSLIDER(Blur)->value();
+    param.gradient=(int)MYSLIDER(Gradient)->value();
     return 1;
 }
 
@@ -251,12 +278,15 @@ void flyDelogoHQ::setTabOrder(void)
 {
     Ui_delogoHQDialog *w=(Ui_delogoHQDialog *)_cookie;
     std::vector<QWidget *> controls;
+#define PUSH_SLIDER(x) controls.push_back(MYSLIDER(x));
 #define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
 #define PUSH_DIAL(x) controls.push_back(MYDIAL(x));
 #define PUSH_TOG(x) controls.push_back(MYCHECK(x));
     controls.push_back(w->pushButtonSave);
     controls.push_back(w->pushButtonLoad);
+    PUSH_SLIDER(Blur)
     PUSH_SPIN(Blur)
+    PUSH_SLIDER(Gradient)
     PUSH_SPIN(Gradient)
 
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());
