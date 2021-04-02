@@ -75,7 +75,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="2">
-       <widget class="ADM_SliderIndicator" name="horizontalSliderBlur">
+       <widget class="QSlider" name="horizontalSliderBlur">
         <property name="maximum">
          <number>100</number>
         </property>
@@ -99,12 +99,26 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="ADM_SliderIndicator" name="horizontalSliderGradient">
+       <widget class="QSlider" name="horizontalSliderGradient">
         <property name="maximum">
          <number>100</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QSpinBox" name="spinBoxBlur">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QSpinBox" name="spinBoxGradient">
+        <property name="maximum">
+         <number>100</number>
         </property>
        </widget>
       </item>
@@ -139,11 +153,6 @@
  <customwidgets>
   <customwidget>
    <class>ADM_QSlider</class>
-   <extends>QSlider</extends>
-   <header>ADM_toolkitQt.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ADM_SliderIndicator</class>
    <extends>QSlider</extends>
    <header>ADM_toolkitQt.h</header>
   </customwidget>
