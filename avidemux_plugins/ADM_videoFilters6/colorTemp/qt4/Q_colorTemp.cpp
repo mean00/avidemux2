@@ -50,10 +50,11 @@ Ui_colorTempWindow::Ui_colorTempWindow(QWidget *parent, colorTemp *param,ADM_cor
         myFly->sliderChanged();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
-        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
-        SPINNER(Temperature,100,2)
-        SPINNER(Angle,1,0)
+#define SPINNER(x) \
+        connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
+        connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChangedSpinBox(double)));
+        SPINNER(Temperature)
+        SPINNER(Angle)
 
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
@@ -76,10 +77,30 @@ Ui_colorTempWindow::~Ui_colorTempWindow()
     if(canvas) delete canvas;
     canvas=NULL;
 }
+#define COPY_VALUE_TO_SPINBOX(x,y) \
+        ui.doubleSpinBox##x->blockSignals(true); \
+        ui.doubleSpinBox##x->setValue((float)ui.horizontalSlider##x->value() / y); \
+        ui.doubleSpinBox##x->blockSignals(false);
 void Ui_colorTempWindow::valueChanged( int f )
 {
     if(lock) return;
     lock++;
+    COPY_VALUE_TO_SPINBOX(Temperature, 100.0);
+    COPY_VALUE_TO_SPINBOX(Angle, 1.0);
+    myFly->download();
+    myFly->sameImage();
+    lock--;
+}
+#define COPY_VALUE_TO_SLIDER(x,y) \
+        ui.horizontalSlider##x->blockSignals(true); \
+        ui.horizontalSlider##x->setValue((int)round(ui.doubleSpinBox##x->value() * y)); \
+        ui.horizontalSlider##x->blockSignals(false);
+void Ui_colorTempWindow::valueChangedSpinBox(double foo)
+{
+    if(lock) return;
+    lock++;
+    COPY_VALUE_TO_SLIDER(Temperature, 100.0);
+    COPY_VALUE_TO_SLIDER(Angle, 1.0);
     myFly->download();
     myFly->sameImage();
     lock--;
@@ -112,13 +133,20 @@ void Ui_colorTempWindow::showEvent(QShowEvent *event)
 }
 
 #define MYSPIN(x) w->horizontalSlider##x
+#define MYDBLSPIN(x) w->doubleSpinBox##x
 #define MYCHECK(x) w->checkBox##x
+#define UPLOADDBLSPIN(x, value) \
+        w->doubleSpinBox##x->blockSignals(true); \
+        w->doubleSpinBox##x->setValue(value); \
+        w->doubleSpinBox##x->blockSignals(false);
 //************************
 uint8_t flyColorTemp::upload(void)
 {
     Ui_colorTempDialog *w=(Ui_colorTempDialog *)_cookie;
     MYSPIN(Temperature)->setValue((int)round(param.temperature*100.0));
+    UPLOADDBLSPIN(Temperature, param.temperature);
     MYSPIN(Angle)->setValue((int)param.angle);
+    UPLOADDBLSPIN(Angle, param.angle);
     return 1;
 }
 uint8_t flyColorTemp::download(void)
@@ -132,9 +160,12 @@ void flyColorTemp::setTabOrder(void)
 {
     Ui_colorTempDialog *w=(Ui_colorTempDialog *)_cookie;
     std::vector<QWidget *> controls;
-#define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
-    PUSH_SPIN(Temperature)
-    PUSH_SPIN(Angle)
+#define PUSHSLIDER(x) controls.push_back(MYSPIN(x));
+#define PUSHDBLSPIN(x) controls.push_back(MYDBLSPIN(x));
+    PUSHSLIDER(Temperature)
+    PUSHDBLSPIN(Temperature)
+    PUSHSLIDER(Angle)
+    PUSHDBLSPIN(Angle)
 
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);

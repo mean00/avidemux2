@@ -58,7 +58,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="ADM_SliderIndicator" name="horizontalSliderTemperature">
+      <widget class="QSlider" name="horizontalSliderTemperature">
        <property name="minimum">
         <number>-100</number>
        </property>
@@ -74,7 +74,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="ADM_SliderIndicator" name="horizontalSliderAngle">
+      <widget class="QSlider" name="horizontalSliderAngle">
        <property name="maximum">
         <number>180</number>
        </property>
@@ -86,7 +86,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
+     <item row="1" column="3">
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -99,7 +99,7 @@
        </property>
       </spacer>
      </item>
-     <item row="2" column="2">
+     <item row="2" column="3">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -111,6 +111,26 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="1" column="2">
+      <widget class="QDoubleSpinBox" name="doubleSpinBoxTemperature">
+       <property name="minimum">
+        <double>-1.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.010000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QDoubleSpinBox" name="doubleSpinBoxAngle">
+       <property name="maximum">
+        <double>180.000000000000000</double>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -146,11 +166,6 @@
  <customwidgets>
   <customwidget>
    <class>ADM_QSlider</class>
-   <extends>QSlider</extends>
-   <header>ADM_toolkitQt.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ADM_SliderIndicator</class>
    <extends>QSlider</extends>
    <header>ADM_toolkitQt.h</header>
   </customwidget>
