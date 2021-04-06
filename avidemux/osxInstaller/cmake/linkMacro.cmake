@@ -1,0 +1,5 @@
+MACRO(makeLink src dest pwd)
+    MESSAGE(STATUS " Creating symlink")
+    MESSAGE(STATUS " COMMAND ln -sf ${src} ${dest} COMMENT mklink ${src} -> ${dest}, pwd=${pwd}")
+    EXECUTE_PROCESS(COMMAND ln -sf ${src} ${dest} WORKING_DIRECTORY ${pwd})
+ENDMACRO()

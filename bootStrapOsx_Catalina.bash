@@ -1,15 +1,17 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
-fallback_qtdir=/usr/local/opt/qt5
+fallback_qtdir=/usr/local/opt/qt@5
 if [ "x$MYQT" != "x" ] && [ -e "${MYQT}/bin/qmake" ] ; then
     export PATH=$PATH:$MYQT/bin:/opt/local/libexec/qt5/bin # for macports; /usr/local/bin is in PATH by default anyway
+    export QTDIR="${MYQT}" # needed for translations
 else
     export PATH=$PATH:/opt/local/libexec/qt5/bin
 fi
 if ! $(which -s qmake) && [ -e "${fallback_qtdir}/bin/qmake" ] ; then
     echo "Using ${fallback_qtdir} as fallback qt5 install path"
     export PATH=$PATH:${fallback_qtdir}/bin
+    export QTDIR="${fallback_qtdir}"
 fi
 if ! $(which -s qmake) ; then
     echo "Error: No qmake executable found, aborting."
@@ -331,8 +333,8 @@ if [ "x$create_app_bundle" = "x1" ] ; then
     mkdir -p installer
     rm -Rf installer/*
     cd installer
-    cmake -DAVIDEMUX_VERSION="$ADM_VERSION" -DDMG_BASENAME="$output" -DBUILD_REV="$REV" ../avidemux/osxInstaller
-    make && make package
-echo "** Preparing packaging **"
+    cmake -DAVIDEMUX_VERSION="$ADM_VERSION" -DDMG_BASENAME="$output" -DBUILD_REV="$REV" $FLAVOR ../avidemux/osxInstaller
+    echo "** Preparing packaging **"
+    make install && make package
 fi
 echo "** ALL DONE **"
