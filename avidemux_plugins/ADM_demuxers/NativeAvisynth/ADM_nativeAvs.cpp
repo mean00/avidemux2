@@ -243,8 +243,8 @@ try{
                         {
                                 switch (sampleType)
                                 {
-                                    case SAMPLE_INT16: audioInfo.encoding = WAV_PCM; break;
-                                    case SAMPLE_FLOAT: audioInfo.encoding = WAV_PCM_FLOAT; break;
+                                    case SAMPLE_INT16: audioInfo.encoding = WAV_PCM; audioInfo.bitspersample = 16; break;
+                                    case SAMPLE_FLOAT: audioInfo.encoding = WAV_PCM_FLOAT; audioInfo.bitspersample = 32; break;
                                     default:
                                         return false;
                                 }
