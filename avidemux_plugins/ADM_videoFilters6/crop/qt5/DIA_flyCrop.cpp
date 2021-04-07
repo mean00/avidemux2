@@ -348,8 +348,8 @@ bool    flyCrop::bandMoved(int x,int y,int w, int h)
 
     // bound checks are done in rubber control
 
-    right=bound(normX,normW,_w)&0xfffe;
-    bottom=bound(normY,normH,_h)&0xfffe;
+    right=bound(normX&0xfffe,normW,_w)&0xfffe;
+    bottom=bound(normY&0xfffe,normH,_h)&0xfffe;
 
     if(normX<0) normX=0;
     if(normY<0) normY=0;
