@@ -27,6 +27,8 @@ class Ui_blurWindow : public QDialog
     void sliderUpdate(int foo);
     void valueChanged(int foo);
     void valueChangedSpinBox(int foo);
+    void reset(bool f);
+    void toggleRubber(int checkState);
 
   private:
     void resizeEvent(QResizeEvent *event);

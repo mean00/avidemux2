@@ -42,7 +42,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoBlur,   // Class
                                       VF_SHARPNESS,            // Category
                                       "blur",            // internal name (must be uniq!)
                                       QT_TRANSLATE_NOOP("blur","Blur"),            // Display name
-                                      QT_TRANSLATE_NOOP("blur","Based on Mario Klingemann's stack blur algorithm.") // Description
+                                      QT_TRANSLATE_NOOP("blur","Blur selected area.") // Description
                                   );
 
 
@@ -323,14 +323,29 @@ void ADMVideoBlur::StackBlurLine_C(uint8_t * line, int len, int pixPitch, uint32
 /**
     \fn BlurProcess_C
 */
-void ADMVideoBlur::BlurProcess_C(ADMImage *img, int w, int h, unsigned int algorithm, unsigned int radius, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
+void ADMVideoBlur::BlurProcess_C(ADMImage *img, int w, int h, blur param, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
 {
     if (!img || !rgbBufRaw || !rgbBufImage || !convertYuvToRgb || !convertRgbToYuv) return;
     uint8_t * line;
 
-    if (algorithm > 2) algorithm = 1;
-    if (radius < 1) return;	// nothing to do
+    unsigned int radius = param.radius;
     if (radius > 254) radius = 254;
+    if (radius < 1) return;	// nothing to do
+
+    unsigned int algorithm = param.algorithm;
+    if (algorithm > 2) algorithm = 2;
+
+    int left = param.left;
+    int right = param.right;
+    int top = param.top;
+    int bottom = param.bottom;
+
+    if ((left < 0) || (left >= w)) return;
+    if ((right < 0) || (right >= w)) return;
+    if ((top < 0) || (top >= h)) return;
+    if ((bottom < 0) || (bottom >= h)) return;
+    if ((left+right) >= w) return;
+    if ((top+bottom) >= h) return;
 
     uint32_t * stack = (uint32_t *)malloc(512 * sizeof(uint32_t));    // max 254*2+1=509 needed
     if (!stack) return;
@@ -338,51 +353,54 @@ void ADMVideoBlur::BlurProcess_C(ADMImage *img, int w, int h, unsigned int algor
     convertYuvToRgb->convertImage(img,rgbBufRaw->at(0));
 
     int x, y;
+    uint8_t * rgbPtr = rgbBufRaw->at(0) + left*4 + top*rgbBufStride;
+    w -= (left+right);
+    h -= (top+bottom);
 
     if (algorithm == 0) {    // Box blur
         for(y = 0; y < h; y++)
         {
-            BoxBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
+            BoxBlurLine_C((rgbPtr + y*rgbBufStride), w, 4, stack, radius);
         };
 
         for(x = 0; x < w; x++)
         {
-            BoxBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
+            BoxBlurLine_C((rgbPtr + x*4), h, rgbBufStride, stack, radius);
         };
     } else
     if (algorithm == 1) {    // Gaussian blur
         for(y = 0; y < h; y++)
         {
-            StackBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
+            StackBlurLine_C((rgbPtr + y*rgbBufStride), w, 4, stack, radius);
         };
 
         for(x = 0; x < w; x++)
         {
-            StackBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
+            StackBlurLine_C((rgbPtr + x*4), h, rgbBufStride, stack, radius);
         };
     } else
     if (algorithm == 2) {    // Gaussian blur 2 pass
         radius = (int)((float)radius / 1.4142135623730950488);
         for(y = 0; y < h; y++)
         {
-            StackBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
+            StackBlurLine_C((rgbPtr + y*rgbBufStride), w, 4, stack, radius);
         };
 
         for(x = 0; x < w; x++)
         {
-            StackBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
+            StackBlurLine_C((rgbPtr + x*4), h, rgbBufStride, stack, radius);
         };
 
         radius++;
         if (radius > 254) radius = 254;
         for(y = 0; y < h; y++)
         {
-            StackBlurLine_C(rgbBufRaw->at(y*rgbBufStride), w, 4, stack, radius);
+            StackBlurLine_C((rgbPtr + y*rgbBufStride), w, 4, stack, radius);
         };
 
         for(x = 0; x < w; x++)
         {
-            StackBlurLine_C(rgbBufRaw->at(x*4), h, rgbBufStride, stack, radius);
+            StackBlurLine_C((rgbPtr + x*4), h, rgbBufStride, stack, radius);
         };
     }
 
@@ -419,7 +437,8 @@ const char   *ADMVideoBlur::getConfiguration(void)
         case 2: algo="Gaussian 2 pass";
             break;
     }
-    snprintf(s,255,"%s blur, Radius: %d",algo,_param.radius);
+    snprintf(s,255,"%s blur, Radius: %d. Left: %u, right: %u, top: %u, bottom: %u ",algo,_param.radius, (unsigned int)_param.left, (unsigned int)_param.right, (unsigned int)_param.top, (unsigned int)_param.bottom);
+
     return s;
 }
 /**
@@ -429,6 +448,12 @@ ADMVideoBlur::ADMVideoBlur(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_
 {
     if(!couples || !ADM_paramLoad(couples,blur_param,&_param))
     {
+        // Default value
+        _param.left=0;
+        _param.right=0;
+        _param.top=0;
+        _param.bottom=0;
+        _param.rubber_is_hidden=false;
         _param.algorithm = 0;
         _param.radius = 1;
     }
@@ -440,11 +465,6 @@ ADMVideoBlur::ADMVideoBlur(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_
 */
 void ADMVideoBlur::update(void)
 {
-    _radius=_param.radius;
-    if (_radius > 200) _radius = 200;
-    if (_radius < 1) _radius = 1;
-    _algorithm=_param.algorithm;
-    if (_algorithm > 2) _algorithm = 2;
 }
 /**
     \fn dtor
@@ -493,7 +513,7 @@ bool ADMVideoBlur::getNextFrame(uint32_t *fn,ADMImage *image)
 
     if(!previousFilter->getNextFrame(fn,image)) return false;
 
-    BlurProcess_C(image,info.width,info.height,_algorithm,_radius,_rgbBufStride,_rgbBufRaw, _rgbBufImage, _convertYuvToRgb, _convertRgbToYuv);
+    BlurProcess_C(image,info.width,info.height,_param,_rgbBufStride,_rgbBufRaw, _rgbBufImage, _convertYuvToRgb, _convertRgbToYuv);
  
     return 1;
 }
