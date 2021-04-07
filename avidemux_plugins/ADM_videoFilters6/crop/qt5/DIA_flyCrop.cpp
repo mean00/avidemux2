@@ -148,15 +148,18 @@ int flyCrop::lockRubber(bool lock)
 
 static void blank(uint8_t *in, int w, int h, int stride)
 {
+    uint32_t * tmp;
     for(int y=0;y<h;y++)
     {
-        memset(in,0,4*w);
-        uint8_t *green=in+1;
+        tmp = (uint32_t*)in;
         for(int x=0;x<w;x++)
-            green[x<<2]=0xff;
-        uint8_t *alpha=in+3;
-        for(int x=0;x<w;x++)
-            alpha[x<<2]=0xff;
+        {
+            *tmp >>= 2;
+            *tmp &= 0xFF3F3F3F;
+            *tmp |= 0xFF000000;
+            *tmp += (192 << 8);
+            tmp += 1;
+        }
         in+=stride;
     }
 }
