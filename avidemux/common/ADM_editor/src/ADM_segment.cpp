@@ -74,7 +74,7 @@ bool        ADM_EditorSegment::updateRefVideo(void)
     for(frame = 0; frame < info.nb_frames; frame++)
     {
         demuxer->getFlags(frame,&flags);
-        if(frame & AVI_KEY_FRAME)
+        if(flags & AVI_KEY_FRAME)
         {
             found = true;
             break;
