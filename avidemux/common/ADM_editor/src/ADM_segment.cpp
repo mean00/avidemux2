@@ -27,6 +27,7 @@
 #include "ADM_codec.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
+#include "fourcc.h"
 #include "prefs.h"
 
 #if 1
@@ -65,17 +66,36 @@ bool        ADM_EditorSegment::updateRefVideo(void)
     ADM_assert(n);
     _VIDEOS *ref=getRefVideo(n-1);
     vidHeader *demuxer=ref->_aviheader;
-    uint64_t pts,dts;
 
-        demuxer->getPtsDts(0,&pts,&dts);
-        if(pts!=ADM_NO_PTS && pts >0)
+    aviInfo info;
+    demuxer->getVideoInfo(&info);
+    uint32_t frame,flags;
+    bool found = false;
+    for(frame = 0; frame < info.nb_frames; frame++)
+    {
+        demuxer->getFlags(frame,&flags);
+        if(frame & AVI_KEY_FRAME)
         {
-            ADM_warning("Updating firstFramePTS, The first frame has a PTS >0, adjusting to %" PRIu64" ms\n",pts/1000);
-            ref->firstFramePts=pts;
-        }else
-        {
-            ADM_info("First PTS is %s\n",ADM_us2plain(pts));
+            found = true;
+            break;
         }
+    }
+    if(!found)
+    {
+        ADM_warning("No frame in ref video %d is marked as keyframe.\n",n-1);
+        return false;
+    }
+
+    uint64_t pts,dts;
+    demuxer->getPtsDts(frame,&pts,&dts);
+    if(pts!=ADM_NO_PTS && pts >0)
+    {
+        ADM_warning("Updating firstFramePTS, The first keyframe has a PTS >0, adjusting to %" PRIu64" ms\n",pts/1000);
+        ref->firstFramePts=pts;
+    }else
+    {
+        ADM_info("First PTS is %s\n",ADM_us2plain(pts));
+    }
 
     //
     n=segments.size();
@@ -98,8 +118,8 @@ bool        ADM_EditorSegment::updateRefVideo(void)
 */
 bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
 {
-    uint32_t l, cacheSize;
-    uint8_t *d;
+    uint32_t l = 0, cacheSize;
+    uint8_t *d = NULL;
     aviInfo info;
     _SEGMENT seg;
 
@@ -107,6 +127,15 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     ref->dontTrustBFramePts=demuxer->unreliableBFramePts();
     demuxer->getVideoInfo (&info);
     demuxer->getExtraHeaderData (&l, &d);
+    printf("[ADM_EditorSegment::addReferenceVideo] Video FCC: ");
+    fourCC::print (info.fcc);
+    printf("\n");
+    // Printf some info about extradata
+    if(l && d)
+    {
+        printf("[ADM_EditorSegment::addReferenceVideo] The video codec has some extradata (%d bytes)\n",l);
+        mixDump(d,l);
+    }
     ref->decoder = ADM_getDecoder (info.fcc, info.width, info.height, l, d, info.bpp);
 
     if(false==prefs->get(FEATURES_CACHE_SIZE,&cacheSize))
@@ -134,8 +163,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
     uint64_t minDelta=100000;
     uint64_t maxDelta=0;
-    uint32_t flags,fmin=0,fmax=0;
-    for (uint32_t frame=0; frame<info.nb_frames; frame++)
+    uint32_t frame,flags,fmin=0,fmax=0;
+    for(frame = 0; frame < info.nb_frames; frame++)
     {
         if(!ref->fieldEncoded)
         {
@@ -197,8 +226,26 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     seg._durationUs=demuxer->getVideoDuration();
 
     // Set the default startTime to the pts of first Pic
-    demuxer->getFlags(0,&flags);
-    demuxer->getPtsDts(0,&pts,&dts);
+    bool found = false;
+    for(frame = 0; frame < info.nb_frames; frame++)
+    {
+        demuxer->getFlags(frame,&flags);
+        if(flags & AVI_KEY_FRAME)
+        {
+            found = true;
+            break;
+        }
+    }
+    if(!found)
+    {
+        ADM_warning("Reached the end of ref video while searching for the first keyframe.\n");
+        delete ref->_videoCache;
+        ref->_videoCache = NULL;
+        if(ref->decoder) delete ref->decoder;
+        ref->decoder = NULL;
+        return false;
+    }
+    demuxer->getPtsDts(frame,&pts,&dts);
     ref->firstFramePts=0;
     if(pts==ADM_NO_PTS) ADM_warning("First frame has unknown PTS\n");
     if(dts==ADM_NO_PTS) ADM_warning("The first frame DTS is not set\n");
@@ -422,15 +469,34 @@ bool         ADM_EditorSegment::updateStartTime(void)
         _SEGMENT *seg=getSegment(i);
         vidHeader *demuxer=vid->_aviheader;
 
+        aviInfo info;
+        demuxer->getVideoInfo(&info);
 
         uint64_t pts,dts;
         pts=seg->_refStartTimeUs;
+        // Skip to the first keyframe
+        uint32_t frame,flags;
+        bool found = false;
+        for(frame = 0; frame < info.nb_frames; frame++)
+        {
+            demuxer->getFlags(frame,&flags);
+            if(flags & AVI_KEY_FRAME)
+            {
+                found = true;
+                break;
+            }
+        }
+        if(!found)
+        {
+            ADM_error("No frame in ref %u is flagged as keyframe, crashing.\n",segments[i]._reference);
+            ADM_assert(0);
+        }
         // Special case : If pts=0 it might mean beginning of seg i, but the PTS might be not 0
         // in such a case the DTS is wrong
         if(!pts)
         {
             uint64_t pts2,dts2;
-            demuxer->getPtsDts(0,&pts2,&dts2);
+            demuxer->getPtsDts(frame,&pts2,&dts2);
             if(pts2 && pts2!=ADM_NO_PTS)
             {
                 ADM_info("Using pts2=%s to get dts, as this video does not start at zero\n",ADM_us2plain(pts2));

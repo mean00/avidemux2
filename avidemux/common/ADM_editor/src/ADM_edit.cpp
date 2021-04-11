@@ -471,8 +471,10 @@ uint8_t ADM_Composer::addFile (const char *name)
         return ret;
     }
 
+    bool first = !_segments.getNbRefVideos();
+
    /* check for resolution */
-   if( _segments.getNbRefVideos())
+   if(!first)
     {
       /* append operation */
       aviInfo info0, infox;
@@ -531,19 +533,8 @@ uint8_t ADM_Composer::addFile (const char *name)
   }
   video._aviheader->setMyName (name);
 
-  // Printf some info about extradata
-
-    uint32_t l=0;
-    uint8_t *d=NULL;
-    video._aviheader->getExtraHeaderData(&l,&d);
-    if(l && d)
-    {
-        printf("[Editor]The video codec has some extradata (%d bytes)\n",l);
-        mixDump(d,l);
-    }
-
   // 1st if it is our first video we update postproc
-    if(!_segments.getNbRefVideos())
+    if(first)
     {
         uint32_t type=0,value=0;
         prefs->get(DEFAULT_POSTPROC_TYPE,&type);
@@ -574,7 +565,6 @@ uint8_t ADM_Composer::addFile (const char *name)
         ADM_info("Clearing video filters\n");
         ADM_vf_clearFilters();
     }
-
 
   // Update audio infos
   // an spawn the appropriate decoder
@@ -661,23 +651,19 @@ uint8_t ADM_Composer::addFile (const char *name)
             }
 
             thisVid->audioTracks.push_back(track);
-            if(!_segments.getNbRefVideos()) // 1st video..
+            if(first) // 1st video..
             {
                 ADM_edAudioTrackFromVideo *trackFromVideo=new ADM_edAudioTrackFromVideo(track,i,this);
                 audioTrackPool.addInternalTrack(trackFromVideo);
             }
       }
-      if(!_segments.getNbRefVideos()) // only for 1st video
+      if(first) // only for 1st video
       {
         activeAudioTracks.clear();
         for(int i=0;i<audioTrackPool.size();i++)
             activeAudioTracks.addTrack(i,audioTrackPool.at(i)); // default add 1st track of video pool
       }
     }
-
-  printf ("[Editor] Decoder FCC: ");
-  fourCC::print (info.fcc);
-  printf("\n");
 
     // ugly hack
     bool fpsTooHigh=false;
@@ -689,7 +675,24 @@ uint8_t ADM_Composer::addFile (const char *name)
         info.fps1000 = 25 * 1000;
     }
 
-    _segments.addReferenceVideo(&video);
+    if(false == _segments.addReferenceVideo(&video))
+    {
+        ADM_warning("Cannot add video.\n");
+        delete video._aviheader;
+        video._aviheader = NULL;
+        for(uint32_t i = 0; i < video.audioTracks.size(); i++)
+        {
+            ADM_audioStreamTrack *track = video.audioTracks[i];
+            video.audioTracks[i] = NULL;
+            if(track)
+                delete track;
+            track = NULL;
+        }
+        video.audioTracks.clear();
+        if(first)
+            cleanup();
+        return 0;
+    }
 
     if(fpsTooHigh)
         updateVideoInfo(&info);
