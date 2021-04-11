@@ -1030,7 +1030,6 @@ uint32_t mkvHeader::getFlags(uint32_t frame,uint32_t *flags)
 {
   if(frame>=_tracks[0].index.size()) return 0;
   *flags=_tracks[0].index[frame].flags;
-  if(!frame) *flags=AVI_KEY_FRAME | (*flags & AVI_STRUCTURE_TYPE_MASK);
   return 1;
 }
 /**
