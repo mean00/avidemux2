@@ -748,6 +748,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
+    ADM_vf_rebuildBridge(video_body);
     displayFamily(0);
     buildActiveFilterList();
     setSelected(nb_active_filter - 1);
