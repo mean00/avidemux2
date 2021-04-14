@@ -229,6 +229,11 @@ bool AVDM_FadeTo::getNextFrame(uint32_t *fn,ADMImage *image)
     }
     if( out_of_scope || !first)
     {
+        if(first)
+        {
+            delete first;
+            first=NULL;
+        }
         image->duplicate(next);
         nextFrame++;
         vidCache->unlockAll();
