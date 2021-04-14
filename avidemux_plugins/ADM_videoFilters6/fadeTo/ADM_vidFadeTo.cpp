@@ -25,9 +25,11 @@ class AVDM_FadeTo : public  ADM_coreVideoFilterCached
 protected:
                 fade            param;
                 uint32_t        mx;
-                void            boundsCheck(void);
-                bool            buildLut(void);
                 ADMImage        *first;
+
+                void            boundsCheck(void);
+                void            cleanup(void);
+                bool            buildLut(void);
                 bool            process(ADMImage *source,ADMImage *source2, ADMImage *dest,int offset);
 public:
                                 AVDM_FadeTo(ADM_coreVideoFilter *previous,CONFcouple *conf);
@@ -38,6 +40,7 @@ public:
         virtual bool            getCoupledConf(CONFcouple **couples); /// Return the current filter configuration
         virtual void            setCoupledConf(CONFcouple *couples);
         virtual bool            configure(void); /// Start graphical user interface
+        virtual bool            goToTime(uint64_t time);
                 uint16_t        lookupLuma[256][256];
                 uint16_t        lookupChroma[256][256];
 
@@ -138,15 +141,31 @@ bool         AVDM_FadeTo::getCoupledConf(CONFcouple **couples)
 }
 
 /**
- * \fn dtor
+ * \fn cleanup
  */
-AVDM_FadeTo::~AVDM_FadeTo(void)
+void AVDM_FadeTo::cleanup(void)
 {
     if(first)
     {
         delete first;
         first=NULL;
     }
+}
+
+/**
+ * \fn dtor
+ */
+AVDM_FadeTo::~AVDM_FadeTo(void)
+{
+    cleanup();
+}
+/**
+ * \fn goToTime
+ */
+bool AVDM_FadeTo::goToTime(uint64_t time)
+{
+    cleanup();
+    return ADM_coreVideoFilterCached::goToTime(time);
 }
 /**
  * 
