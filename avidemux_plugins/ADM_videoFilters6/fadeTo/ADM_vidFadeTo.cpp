@@ -26,6 +26,7 @@ protected:
                 fade            param;
                 uint32_t        mx;
                 ADMImage        *first;
+                bool            keep;
 
                 void            boundsCheck(void);
                 void            cleanup(void);
@@ -119,6 +120,7 @@ AVDM_FadeTo::AVDM_FadeTo(ADM_coreVideoFilter *in,CONFcouple *setup) :  ADM_coreV
     buildLut();
     nextFrame=0;
     first=NULL;
+    keep=false;
 }
 /**
  * \fn setCoupledConf
@@ -164,7 +166,8 @@ AVDM_FadeTo::~AVDM_FadeTo(void)
  */
 bool AVDM_FadeTo::goToTime(uint64_t time)
 {
-    cleanup();
+    if(!keep)
+        cleanup();
     return ADM_coreVideoFilterCached::goToTime(time);
 }
 /**
@@ -245,6 +248,10 @@ bool AVDM_FadeTo::getNextFrame(uint32_t *fn,ADMImage *image)
     {
         first=new ADMImageDefault(next->GetWidth (PLANAR_Y),next->GetHeight(PLANAR_Y));
         first->duplicateFull (next);
+        int64_t delta = absPts;
+        delta -= 1000LL * param.startFade;
+        if(delta < info.frameIncrement)
+            keep = true; // the snapshot is good, doesn't need to be cleared on seek
     }
     if( out_of_scope || !first)
     {
