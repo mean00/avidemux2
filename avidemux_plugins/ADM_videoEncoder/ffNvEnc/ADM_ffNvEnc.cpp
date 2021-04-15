@@ -228,7 +228,7 @@ uint64_t ADM_ffNvEncEncoder::getEncoderDelay(void)
 {
     uint64_t delay=0;
     if(NvEncSettings.bframes)
-        delay=frameIncrement*2;
+        delay = frameIncrement * ((NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_DISABLED)? 2 : 3); // untested with NV_FF_BFRAME_REF_EACH
     return delay;
 }
 
