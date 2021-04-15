@@ -22,6 +22,7 @@ typedef struct cacheElem
 {
 	ADMImage *image;
     uint64_t pts;       // If set to ADM_NO_PTS -> unused entry
+    int instance;
 }cacheElem;
 /**
     \class EditorCache
@@ -30,9 +31,12 @@ typedef struct cacheElem
 class EditorCache
 {
 	private :
-			uint32_t     readIndex,writeIndex;
-			cacheElem	 *_elem;
-			uint32_t	_nbImage;
+            static int          _instanceCount;
+            int                 myInstance;
+			static uint32_t     readIndex,writeIndex;
+            static uint32_t     _commonW,_commonH;
+			static cacheElem	*_elem;
+			static uint32_t	    _nbImage;
             void        check(void);
 	public:
                         EditorCache(uint32_t size,uint32_t w, uint32_t h);

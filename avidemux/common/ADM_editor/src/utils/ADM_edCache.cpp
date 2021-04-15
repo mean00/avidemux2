@@ -25,20 +25,52 @@
 #define aprintf printf
 #define aADM_warning(...) ADM_warning
 #endif
+
+int EditorCache::_instanceCount = 0;
+uint32_t EditorCache::readIndex, EditorCache::writeIndex;
+uint32_t EditorCache::_commonW, EditorCache::_commonH;
+cacheElem *EditorCache::_elem;
+uint32_t  EditorCache::_nbImage;
 /**
     \fn EditorCache
     \brief Constructor
 */
-
 EditorCache::EditorCache(uint32_t size,uint32_t w, uint32_t h)
 {
-    _elem=new cacheElem[size];
-    for(uint32_t i=0;i<size;i++)
+    if (size > EDITOR_CACHE_MAX_SIZE)
+        size = EDITOR_CACHE_MAX_SIZE;
+    
+    if (_instanceCount == 0) // first instance
     {
-        _elem[i].image=new ADMImageDefault(w,h);
-        _elem[i].pts=ADM_NO_PTS;
+        _elem=new cacheElem[EDITOR_CACHE_MAX_SIZE];
+        _commonW = w;
+        _commonH = h;
+        
+        for(uint32_t i=0;i<size;i++)
+        {
+            _elem[i].image=new ADMImageDefault(w,h);
+            _elem[i].pts=ADM_NO_PTS;
+        }
+        _nbImage=size;
+    } else {
+        ADM_assert(_commonW == w);
+        ADM_assert(_commonH == h);
+        
+        if (size > _nbImage)
+        {
+            for(uint32_t i=_nbImage;i<size;i++)
+            {
+                _elem[i].image=new ADMImageDefault(w,h);
+                _elem[i].pts=ADM_NO_PTS;
+            }
+            _nbImage=size;          
+        }
     }
-    _nbImage=size;
+    
+    flush();
+    
+    myInstance = _instanceCount;
+    _instanceCount++;
     ADM_info("Video cache created for %u decoded images.\n",_nbImage);
 }
 /**
@@ -47,6 +79,10 @@ EditorCache::EditorCache(uint32_t size,uint32_t w, uint32_t h)
 */
 EditorCache::~EditorCache(void)
 {
+    _instanceCount--;
+    if (_instanceCount > 0)
+        return;
+    
     for(uint32_t i=0;i<_nbImage;i++)
     {
         delete _elem[i].image;
@@ -152,6 +188,7 @@ bool EditorCache::validate(ADMImage *image)
         {
             ADM_assert(_elem[i].pts==ADM_NO_PTS);
             _elem[i].pts=image->Pts;
+            _elem[i].instance=myInstance;
             aprintf("validate Index %" PRIu32" with pts=%" PRIu64"ms\n",i,image->Pts);
             return true;
         }
@@ -191,7 +228,7 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
     {
         int index=i%_nbImage;
         ADM_assert(_elem[index].pts!=ADM_NO_PTS);
-        if(_elem[index].pts==pts)
+        if ((_elem[index].pts==pts) && (_elem[index].instance == myInstance))
         {
             index++;
             index%=_nbImage;
@@ -229,7 +266,7 @@ ADMImage    *EditorCache::getBefore(uint64_t pts)
     {
         int index=i%_nbImage;
         ADM_assert(_elem[index].pts!=ADM_NO_PTS);
-        if(_elem[index].pts==pts)
+        if ((_elem[index].pts==pts) && (_elem[index].instance == myInstance))
         {
             index+=_nbImage-1;
             index%=_nbImage;
@@ -250,7 +287,7 @@ ADMImage *EditorCache::getByPts(uint64_t Pts)
     for(int i=readIndex;i<writeIndex;i++)
     {
         int index=i%_nbImage;
-        if(_elem[index].image->Pts==Pts)
+        if ((_elem[index].image->Pts==Pts) && (_elem[index].instance == myInstance))
         {
             return _elem[index].image;
         }
@@ -265,6 +302,8 @@ ADMImage *EditorCache::getLast(void)
 {
     if(readIndex==writeIndex) return NULL;
     int index=(writeIndex-1)%_nbImage;
+    if (_elem[index].instance != myInstance)
+        return NULL;
     return _elem[index].image;
 }
 // EOF
