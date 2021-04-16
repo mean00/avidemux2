@@ -579,6 +579,13 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       printf ("[lavc] Unhandled colorspace: %d (AV_PIX_FMT_YUV444P10BE=%d)\n", _context->pix_fmt,AV_PIX_FMT_YUV444P10BE);
       return 0;
     }
+    // make sure the output is not marked as a hw image
+    int count = 0;
+    while(out->refType != ADM_HW_NONE && count < 32 /* arbitrary limit */)
+    {
+        out->hwDecRefCount();
+        count++;
+    }
     clonePic(_frame, out, swap);
     //printf("[AvCodec] Pts : %"PRIu64" Out Pts:%"PRIu64" \n",_frame.pts,out->Pts);
 
