@@ -79,6 +79,7 @@ EditorCache::EditorCache(uint32_t size,uint32_t w, uint32_t h)
 */
 EditorCache::~EditorCache(void)
 {
+    flush();
     _instanceCount--;
     if (_instanceCount > 0)
         return;
@@ -134,6 +135,7 @@ ADMImage *EditorCache::getFreeImage(void)
     // Mark it as used
     if(found==-1) ADM_assert(0);
     _elem[found].pts=ADM_NO_PTS;;
+    _elem[found].image->hwDecRefCount();
     writeIndex++;
     aprintf("Using free image at index %d\n",found);
     return _elem[found].image;
