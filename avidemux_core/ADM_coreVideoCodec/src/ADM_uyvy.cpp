@@ -41,6 +41,13 @@ bool   decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
     ref->_planeStride[1] = 0;
     ref->_planeStride[2] = 0;
     out->Pts=in->demuxerPts;
+    // make sure the output is not marked as a hw image
+    int count = 0;
+    while(out->refType != ADM_HW_NONE && count < 32 /* arbitrary limit */)
+    {
+        out->hwDecRefCount();
+        count++;
+    }
     return true;
 }
 
@@ -67,5 +74,11 @@ bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
     ref->_planeStride[1] = 0;
     ref->_planeStride[2] = 0;
     out->Pts=in->demuxerPts;
+    int count = 0;
+    while(out->refType != ADM_HW_NONE && count < 32 /* arbitrary limit */)
+    {
+        out->hwDecRefCount();
+        count++;
+    }
     return true;
 }
