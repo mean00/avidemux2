@@ -136,6 +136,13 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
             r->_colorspace=color;
             r->Pts=in->demuxerPts;
             r->flags=in->flags;
+            // make sure the output is not marked as a hw image
+            int count = 0;
+            while(r->refType != ADM_HW_NONE && count < 32 /* arbitrary limit */)
+            {
+                r->hwDecRefCount();
+                count++;
+            }
             return true;
         }
         ADM_warning("AV1 decoder accepts ref image only.\n");
