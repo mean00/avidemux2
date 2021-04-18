@@ -20,8 +20,9 @@
 
 typedef struct cacheElem
 {
-	ADMImage *image;
+    ADMImage *image;
     uint64_t pts;       // If set to ADM_NO_PTS -> unused entry
+    int ref;
 }cacheElem;
 /**
     \class EditorCache
@@ -29,22 +30,27 @@ typedef struct cacheElem
 */
 class EditorCache
 {
-	private :
-			uint32_t     readIndex,writeIndex;
-			cacheElem	 *_elem;
-			uint32_t	_nbImage;
-            void        check(void);
-	public:
-                        EditorCache(uint32_t size,uint32_t w, uint32_t h);
-                        ~EditorCache(void);
-			ADMImage	*getFreeImage(void);	
-			bool		validate(ADMImage *image);
-			void		dump(void);
-            void        flush(void);
-            void        invalidate(ADMImage *image);
-            ADMImage    *getByPts(uint64_t Pts);            
-            ADMImage    *getAfter(uint64_t Pts);
-            ADMImage    *getBefore(uint64_t Pts);
-            ADMImage    *getLast(void);
+private :
+    uint32_t        readIndex,writeIndex;
+    uint32_t        commonWidth,commonHeight;
+    cacheElem       _elem[EDITOR_CACHE_MAX_SIZE];
+    uint32_t        _nbImage;
+
+    void            check(void);
+
+public:
+                    EditorCache(uint32_t w, uint32_t h);
+                    ~EditorCache(void);
+
+    bool            createBuffers(uint32_t size);
+    ADMImage        *getFreeImage(int vid);
+    bool            validate(ADMImage *image);
+    void            dump(void);
+    void            flush(void);
+    void            invalidate(ADMImage *image);
+    ADMImage        *getByPts(int vid, uint64_t Pts);
+    ADMImage        *getAfter(int vid, uint64_t Pts);
+    ADMImage        *getBefore(int vid, uint64_t Pts);
+    ADMImage        *getLast(int vid);
 };
 #endif

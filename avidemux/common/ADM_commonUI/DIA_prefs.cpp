@@ -73,6 +73,7 @@ bool     useCustomFragmentSize=false;
 uint32_t customFragmentSize=4000;
 
 uint32_t editor_cache_size=16;
+bool     editor_use_shared_cache=false;
 
 #ifdef USE_DXVA2
 bool     bdxva2=false;
@@ -157,6 +158,7 @@ std::string currentSdlDriver=getSdlDriverName();
             customFragmentSize=4000;
         // Video cache
         prefs->get(FEATURES_CACHE_SIZE,&editor_cache_size);
+        prefs->get(FEATURES_SHARED_CACHE,&editor_use_shared_cache);
 #ifdef USE_DXVA2
         // dxva2
         prefs->get(FEATURES_DXVA2,&bdxva2);
@@ -322,7 +324,9 @@ std::string currentSdlDriver=getSdlDriverName();
 
         diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
         diaElemUInteger cacheSize(&editor_cache_size,QT_TRANSLATE_NOOP("adm","_Cache size:"),8,16);
+        diaElemToggle toggleSharedCache(&editor_use_shared_cache,QT_TRANSLATE_NOOP("adm","Use _shared cache"));
         frameCache.swallow(&cacheSize);
+        frameCache.swallow(&toggleSharedCache);
 
         diaMenuEntry videoMode[]={
                              {RENDER_GTK, getNativeRendererDesc(0), NULL}
@@ -632,6 +636,7 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(DEFAULT_MULTILOAD_CUSTOM_SIZE_M, customFragmentSize);
             // Video cache
             prefs->set(FEATURES_CACHE_SIZE, editor_cache_size);
+            prefs->set(FEATURES_SHARED_CACHE, editor_use_shared_cache);
             // Encoding priority
             prefs->set(PRIORITY_ENCODING, encodePriority);
             // Indexing / unpacking priority

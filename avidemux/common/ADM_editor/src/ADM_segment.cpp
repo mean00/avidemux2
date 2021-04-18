@@ -38,6 +38,7 @@
 
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
+    _sharedVideoCache = NULL;
 }
 ADM_EditorSegment::~ADM_EditorSegment()
 {
@@ -145,7 +146,22 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     // For extremely short videos like individual image files, reduce cache size to the bare minimum.
     if(info.nb_frames && info.nb_frames < cacheSize) // should we be paranoid and check the fcc?
         cacheSize = info.nb_frames + 1;
-    ref->_videoCache = new EditorCache(cacheSize,info.width,info.height);
+
+    // Shall we use a shared cache?
+    bool shareCache = false;
+    if(false == prefs->get(FEATURES_SHARED_CACHE,&shareCache))
+        shareCache = false;
+    if(shareCache)
+    {
+        if(!videos.size())
+            _sharedVideoCache = new EditorCache(info.width,info.height);
+        ref->_videoCache = _sharedVideoCache;
+    }else
+    {
+        ref->_videoCache = new EditorCache(info.width,info.height);
+    }
+    ADM_assert(ref->_videoCache)
+    ref->_videoCache->createBuffers(cacheSize);
 
     // discard implausibly high fps, hardcode the value to 25 fps
     if (info.fps1000 > 2000 * 1000)
@@ -239,7 +255,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     if(!found)
     {
         ADM_warning("Reached the end of ref video while searching for the first keyframe.\n");
-        delete ref->_videoCache;
+        if(!videos.size())
+            delete ref->_videoCache;
         ref->_videoCache = NULL;
         if(ref->decoder) delete ref->decoder;
         ref->decoder = NULL;
@@ -295,54 +312,53 @@ bool        ADM_EditorSegment::addSegment(_SEGMENT *seg)
 */
 bool ADM_EditorSegment::deleteAll (void)
 {
-  ADM_info("[Editor] Deleting all videos\n");
-  int n=videos.size();
-  for (uint32_t vid = 0; vid < n; vid++)
+    ADM_info("[Editor] Deleting all videos\n");
+    // Delete cache 1st, might contain refs to decoder etc..
+    if(_sharedVideoCache)
+        delete _sharedVideoCache;
+    for (uint32_t vid = 0; vid < videos.size(); vid++)
     {
         _VIDEOS *v=&(videos[vid]);
-        // Delete cache 1st, might contain refs to decoder etc..
-      if(v->_videoCache)
-      	delete  v->_videoCache;
-      // if there is a video decoder...
-      if (v->decoder)
+        if(v->_videoCache && v->_videoCache != _sharedVideoCache) // per-video cache
+            delete v->_videoCache;
+        // if there is a video decoder...
+        if (v->decoder)
             delete v->decoder;
-      if(v->color)
+        if(v->color)
             delete v->color;
-      if(v->_aviheader)
-      {
-          v->_aviheader->close ();
-          delete v->_aviheader;
-      }
-      if(v->infoCache)
-          delete [] v->infoCache;
-      if(v->paramCache)
-          delete [] v->paramCache;
-      v->_videoCache=NULL;
-      v->color=NULL;
-      v->decoder=NULL;
-      v->_aviheader=NULL;
-      v->infoCache=NULL;
-      v->paramCache=NULL;
-     // Delete audio codec too
-     // audioStream will be deleted by the demuxer
+        if(v->_aviheader)
+        {
+            v->_aviheader->close ();
+            delete v->_aviheader;
+        }
+        if(v->infoCache)
+            delete [] v->infoCache;
+        if(v->paramCache)
+            delete [] v->paramCache;
+        v->_videoCache=NULL;
+        v->color=NULL;
+        v->decoder=NULL;
+        v->_aviheader=NULL;
+        v->infoCache=NULL;
+        v->paramCache=NULL;
+        // Delete audio codec too
+        // audioStream will be deleted by the demuxer
 
 
-            int nb=v->audioTracks.size();
-            for(int i=0;i<nb;i++)
-            {
+        int nb=v->audioTracks.size();
+        for(int i=0;i<nb;i++)
+        {
 
-                ADM_audioStreamTrack *t=v->audioTracks[i];
-                v->audioTracks[i]=NULL;
+            ADM_audioStreamTrack *t=v->audioTracks[i];
+            v->audioTracks[i]=NULL;
 #if 1 // Deleted elsewhere ?
-                if(t)
-                    delete t;
+            if(t)
+                delete t;
 #endif
-            }
-            v->audioTracks.clear();
-
-
+        }
+        v->audioTracks.clear();
     }
-
+    _sharedVideoCache = NULL;
     clipboard.clear();
     videos.clear();
     segments.clear();

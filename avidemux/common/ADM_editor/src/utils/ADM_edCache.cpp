@@ -29,17 +29,18 @@
     \fn EditorCache
     \brief Constructor
 */
-
-EditorCache::EditorCache(uint32_t size,uint32_t w, uint32_t h)
+EditorCache::EditorCache(uint32_t w, uint32_t h)
 {
-    _elem=new cacheElem[size];
-    for(uint32_t i=0;i<size;i++)
+    commonWidth = w;
+    commonHeight = h;
+    for(uint32_t i=0; i < EDITOR_CACHE_MAX_SIZE; i++)
     {
-        _elem[i].image=new ADMImageDefault(w,h);
-        _elem[i].pts=ADM_NO_PTS;
+        _elem[i].image = NULL;
+        _elem[i].pts = ADM_NO_PTS;
+        _elem[i].ref = -1;
     }
-    _nbImage=size;
-    ADM_info("Video cache created for %u decoded images.\n",_nbImage);
+    _nbImage = 0;
+    ADM_info("Video cache instance created at %p\n",this);
 }
 /**
     \fn EditorCache
@@ -51,10 +52,25 @@ EditorCache::~EditorCache(void)
     {
         delete _elem[i].image;
     }
-    delete[] _elem;
 }
-/**
 
+/**
+    \fn createBuffers
+*/
+bool EditorCache::createBuffers(uint32_t size)
+{
+    int added = 0;
+    while(_nbImage < size)
+    {
+        _elem[_nbImage++].image = new ADMImageDefault(commonWidth,commonHeight);
+        added++;
+    }
+    ADM_info("Added %d video cache buffers, %u total.\n",added,_nbImage);
+    return true;
+}
+
+/**
+    \fn check
 */
 void EditorCache::check()
 {
@@ -79,7 +95,7 @@ void EditorCache::check()
                 the cache is big enough to be immune
                 to reuse in the same go
 */
-ADMImage *EditorCache::getFreeImage(void)
+ADMImage *EditorCache::getFreeImage(int vid)
 {
     int found=-1;
     check();
@@ -97,9 +113,11 @@ ADMImage *EditorCache::getFreeImage(void)
     
     // Mark it as used
     if(found==-1) ADM_assert(0);
-    _elem[found].pts=ADM_NO_PTS;;
+    _elem[found].pts=ADM_NO_PTS;
+    _elem[found].image->hwDecRefCount(); // ??
     writeIndex++;
     aprintf("Using free image at index %d\n",found);
+    _elem[found].ref = vid;
     return _elem[found].image;
 
 }
@@ -114,6 +132,7 @@ ADMImage *EditorCache::getFreeImage(void)
     for(int i=0;i<_nbImage;i++)
     {
         _elem[i].pts=ADM_NO_PTS;
+        _elem[i].ref = -1;
         _elem[i].image->hwDecRefCount();
     }
     writeIndex=readIndex=0;
@@ -173,7 +192,7 @@ void EditorCache::dump( void)
         {
             case ADM_NO_PTS:  printf("Not used %02d\n",i);break;
             default:
-                printf("Edcache content[%02d]: PTS : %s %" PRIu64" ms\n",i,
+                printf("Edcache content[%02d]: ref: %d, PTS : %s %" PRIu64" ms\n",i,e->ref,
                                                                     ADM_us2plain(e->image->Pts),e->image->Pts/1000);
                 break;
         }
@@ -184,35 +203,36 @@ void EditorCache::dump( void)
     \brief Find the image with the closest PTS just above pts.
 
 */
-ADMImage    *EditorCache::getAfter(uint64_t pts)
+ADMImage    *EditorCache::getAfter(int vid, uint64_t pts)
 {
     if(!writeIndex) return NULL;
     for(uint32_t i=readIndex;i<writeIndex-1;i++)
     {
         int index=i%_nbImage;
         ADM_assert(_elem[index].pts!=ADM_NO_PTS);
-        if(_elem[index].pts==pts)
+        if(_elem[index].pts == pts && _elem[index].ref == vid)
         {
             index++;
             index%=_nbImage;
             ADMImage *candidate=_elem[index].image;
-            if(candidate->Pts<=pts)
+            if(_elem[index].ref == vid)
             {
+                if(candidate->Pts>pts)
+                    return candidate;
+
                 ADM_error("The next frame has a PTS <= the one we started from. We got timing %s\n", ADM_us2plain(candidate->Pts));
                 ADM_error("We are looking for the one after %s\n",ADM_us2plain(pts));
-                // in that case try to find a the next valid one
+                // in that case try to find the next valid one
                 for(int k=i+2;k<writeIndex-1;k++)
                 {
                     int otherIndex=k%_nbImage;
-                    if(_elem[otherIndex].pts>pts)
-                      {
+                    if(_elem[otherIndex].pts > pts && _elem[otherIndex].ref == vid)
                         return _elem[otherIndex].image;
-                      }
+
                     ADM_error("Cannot find a second valid candidate after bad timing\n");
                     dump();
                 }
-            }else
-                return candidate;
+            }
         }
     }
     aADM_warning("Cannot find image after %" PRIu64" ms in cache\n",pts/1000);
@@ -223,18 +243,19 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
     \brief Find the image with the closest PTS just above pts.
 
 */
-ADMImage    *EditorCache::getBefore(uint64_t pts)
+ADMImage    *EditorCache::getBefore(int vid, uint64_t pts)
 {
     for(int i=readIndex+1;i<writeIndex;i++)
     {
         int index=i%_nbImage;
         ADM_assert(_elem[index].pts!=ADM_NO_PTS);
-        if(_elem[index].pts==pts)
+        if(_elem[index].pts==pts && _elem[index].ref == vid)
         {
             index+=_nbImage-1;
             index%=_nbImage;
             printf("GetBefore : Looking for %" PRIu64" ms get %" PRIu64" ms\n",pts/1000,_elem[index].image->Pts/1000);
-            return _elem[index].image;
+            if(_elem[index].ref == vid)
+                return _elem[index].image;
         }
     }
     aADM_warning("Cannot find image before %" PRIu64" ms in cache\n",pts/1000);
@@ -245,15 +266,13 @@ ADMImage    *EditorCache::getBefore(uint64_t pts)
     \fn getByPts
     \brief returns the image that has exactly that PTS
 */
-ADMImage *EditorCache::getByPts(uint64_t Pts)
+ADMImage *EditorCache::getByPts(int vid, uint64_t Pts)
 {
     for(int i=readIndex;i<writeIndex;i++)
     {
         int index=i%_nbImage;
-        if(_elem[index].image->Pts==Pts)
-        {
+        if(_elem[index].image->Pts==Pts && _elem[index].ref == vid)
             return _elem[index].image;
-        }
     }
     return NULL;
 }
@@ -261,10 +280,12 @@ ADMImage *EditorCache::getByPts(uint64_t Pts)
     \fn getLast
     \brief Return the most recent image from cache
 */
-ADMImage *EditorCache::getLast(void)
+ADMImage *EditorCache::getLast(int vid)
 {
     if(readIndex==writeIndex) return NULL;
     int index=(writeIndex-1)%_nbImage;
-    return _elem[index].image;
+    if(_elem[index].ref == vid)
+        return _elem[index].image;
+    return NULL;
 }
 // EOF

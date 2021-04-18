@@ -43,7 +43,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
     bool found=false;
     if(timeToSeek>vid->firstFramePts && !dontdecode)
     {
-        ADMImage *image=cache->getByPts(timeToSeek);
+        ADMImage *image=cache->getByPts(ref,timeToSeek);
         if(image)
         {
             vid->lastDecodedPts=vid->lastReadPts=timeToSeek;
@@ -121,7 +121,7 @@ bool ADM_Composer::samePictureInternal(uint32_t ref,ADMImage *out)
     EditorCache   *cache =vid->_videoCache;
     ADM_assert(cache);
 
-  ADMImage *in=cache->getByPts(vid->lastDecodedPts);
+  ADMImage *in=cache->getByPts(ref,vid->lastDecodedPts);
   if(!in)
   {
     printf("[ADM_Composer::getSamePicture] Failed, while looking for Pts=%" PRIu64" ms\n",vid->lastDecodedPts);
@@ -164,7 +164,7 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
             continue;
         }
         // Search the lowest PTS above our current PTS...
-        ADMImage *img=cache->getAfter(vid->lastReadPts);
+        ADMImage *img=cache->getAfter(ref,vid->lastReadPts);
         if(img)
         {
             if(time && img->Pts!=ADM_NO_PTS && img->Pts>=time)
@@ -251,9 +251,9 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
     }
     // Be prepared for the case that the decoder doesn't output a picture
     // but tells us to repeat the previous one.
-    last=cache->getLast();
+    last=cache->getLast(ref);
     // Now uncompress it...
-    result=cache->getFreeImage();
+    result=cache->getFreeImage(ref);
     if(!result)
     {
         ADM_warning(" Cache full for frame %" PRIu32"\n",frame);
@@ -513,7 +513,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
             continue;
         }
         // Now uncompress it...
-        result=cache->getFreeImage();
+        result=cache->getFreeImage(ref);
         if(!result)
         {
             ADM_warning("Cache full for frame %" PRIu32"\n",vid->lastSentFrame);

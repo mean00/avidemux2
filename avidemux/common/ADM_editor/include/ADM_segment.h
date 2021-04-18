@@ -163,6 +163,8 @@ protected:
         ListOfSegments segments;
         ListOfSegments clipboard;
         ListOfVideos   videos;
+        EditorCache    *_sharedVideoCache;
+
         bool           updateStartTime(void);
 
 

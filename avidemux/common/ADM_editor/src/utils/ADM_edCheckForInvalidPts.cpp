@@ -185,7 +185,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
                 }
 
                 ADMImage *pic;
-                pic=cache->getFreeImage();
+                pic=cache->getFreeImage(seg->_reference);
                 if(!decompressImage(pic,&img,seg->_reference))
                 {
                     ADM_info("Decoding error for frame %" PRIu32"\n",frame);
