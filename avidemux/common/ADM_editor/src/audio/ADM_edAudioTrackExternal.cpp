@@ -202,6 +202,9 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
                 access=new ADM_audioAccessFileAACADTS(name,offset);
                 break;
         case WAV_PCM:
+                ADM_info("Found external PCM audio track, offset: %u\n",offset);
+                access=new ADM_audioAccessFilePCM(name,offset,&hdr);
+                break;
         case WAV_EAC3:
         case WAV_AC3:
         case WAV_DTS:
@@ -226,7 +229,7 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
     uint32_t extraDataLen=0;
     uint8_t  *extraData=NULL;
     access->getExtraData(&extraDataLen,&extraData);
-    ADM_info("Trying to create external audio track with %d bytes of extraData %d\n",extraDataLen);
+    ADM_info("Trying to create external audio track with %d bytes of extraData\n",extraDataLen);
     if(!external->create(extraDataLen,extraData))
     {
         delete external;

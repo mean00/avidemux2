@@ -65,6 +65,20 @@ public:
                                             uint64_t *dts);
 };
 
-
+class ADM_COREAUDIO6_EXPORT ADM_audioAccessFilePCM : public ADM_audioAccessFile
+{
+protected:
+            WAVHeader   _hdr;
+            uint64_t    _duration;
+public:
+                        ADM_audioAccessFilePCM(const char *fileName, int offset, WAVHeader *info);
+                        ~ADM_audioAccessFilePCM() { };
+    virtual bool        isCBR(void) { return true; }
+    virtual bool        canSeekTime(void) { return true; }
+    virtual bool        canGetDuration(void) { return true; }
+    virtual uint64_t    getDurationInUs(void) { return _duration; }
+    virtual bool        goToTime(uint64_t timeInUsecs);
+    virtual bool        getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize, uint64_t *dts);
+};
 // EOF
 
