@@ -77,6 +77,21 @@ void audioDeviceThreaded::Loop(void)
 */
 uint8_t audioDeviceThreaded::init(uint32_t channel, uint32_t fq ,CHANNEL_TYPE *channelMapping)
 {
+    if(!channel || channel > MAX_CHANNELS)
+    {
+        ADM_error("Invalid number of channels %u, not trying to init audio device.\n",channel);
+        return 0;
+    }
+    if(fq < MIN_SAMPLING_RATE || fq > MAX_SAMPLING_RATE)
+    {
+        ADM_error("Sampling frequency %u out of range %u - %u, not trying to init audio device.\n",fq,MIN_SAMPLING_RATE,MAX_SAMPLING_RATE);
+        return 0;
+    }
+    if(!channelMapping)
+    {
+        ADM_error("Channel mapping is NULL, not trying to init audio device.\n");
+        return 0;
+    }
     ADM_info("Initializing audioDeviceThreaded with channels=%d, fq=%d\n",(int)channel,(int)fq);
     // Allocate buffer
     memcpy(incomingMapping,channelMapping,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
