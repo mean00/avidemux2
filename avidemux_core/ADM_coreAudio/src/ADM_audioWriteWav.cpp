@@ -49,16 +49,17 @@ bool ADM_audioWriteWav::writeHeader(ADM_audioStream *stream)
               ADM_error("Invalid # of bits per sample %u\n",p->bitspersample);
               return false;
           }
-          wh.encoding=WAV_PCM;
-          wh.channels=p->channels;
-          wh.blockalign=p->channels*p->bitspersample;
-          wh.byterate=p->channels*p->frequency*p->bitspersample >> 3;
-          wh.frequency=p->frequency;
-          wh.bitspersample=p->bitspersample;
 
           channels = p->channels;
           bytesPerSample = p->bitspersample >> 3;
           swapBytes = p->encoding == WAV_LPCM;
+
+          wh.encoding = WAV_PCM;
+          wh.channels = channels;
+          wh.blockalign = bytesPerSample * channels;
+          wh.byterate = bytesPerSample * channels * p->frequency;
+          wh.frequency = p->frequency;
+          wh.bitspersample = p->bitspersample;
 
           writter->writeWavHeader("fmt ",&wh);
           writter->write32("data");
