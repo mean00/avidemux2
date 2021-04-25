@@ -311,8 +311,33 @@ int ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
 
     ADM_assert(out->bufferSize>=pkt.size);
     memcpy(out->data,pkt.data,pkt.size);
-    lavPtsFromPacket=pkt.pts; // some encoders don't set pts in coded_frame
-    packetFlags=pkt.flags;
+    lavPtsFromPacket = pkt.pts;
+    out->flags = (pkt.flags & AV_PKT_FLAG_KEY)? AVI_KEY_FRAME : AVI_P_FRAME;
+    out->out_quantizer = (int)floor(_frame->quality / (float) FF_QP2LAMBDA); // fallback
+
+    int sideDataSize;
+    uint8_t *sideData = av_packet_get_side_data(&pkt, AV_PKT_DATA_QUALITY_STATS, &sideDataSize);
+    if(sideData && sideDataSize > 5)
+    {
+        int quality = 0;
+        memcpy(&quality,sideData,4);
+        out->out_quantizer = (int)floor(quality / (float) FF_QP2LAMBDA);
+
+        AVPictureType pict_type = (AVPictureType)sideData[4];
+        switch(pict_type)
+        {
+            case AV_PICTURE_TYPE_I:
+                out->flags = AVI_KEY_FRAME;
+                break;
+            case AV_PICTURE_TYPE_B:
+                out->flags = AVI_B_FRAME;
+                break;
+            default: break;
+        }
+        aprintf("[ADM_coreVideoEncoderFFmpeg::encodeWrapper] Out Quant : %d, pic type %d (%s), keyf %d\n",out->out_quantizer,pict_type,
+                (out->flags == AVI_P_FRAME)? "P" : (out->flags == AVI_B_FRAME)? "B" : (out->flags == AVI_KEY_FRAME)? "I" : "?",
+                (pkt.flags & AV_PKT_FLAG_KEY)? 1 : 0);
+    }
     r=pkt.size;
     av_packet_unref(&pkt);
     return r;
@@ -499,26 +524,7 @@ bool ADM_coreVideoEncoderFFmpeg::loadStatFile(const char *file)
 */
 bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
 {
-    int pict_type=AV_PICTURE_TYPE_P;
-    int keyframe=false;
-    if(_context->coded_frame)
-    {
-        pict_type=_context->coded_frame->pict_type;
-    }else
-    {
-        out->len=0;
-        ADM_warning("No picture...\n");
-        return false;
-    }
-    if(packetFlags & AV_PKT_FLAG_KEY)
-        keyframe=true;
-    aprintf("[ffMpeg4] Out Quant :%d, pic type %d keyf %d %p\n",out->out_quantizer,pict_type,keyframe,_context->coded_frame);
     out->len=size;
-    out->flags=0;
-    if(keyframe)
-        out->flags=AVI_KEY_FRAME;
-    else if(pict_type==AV_PICTURE_TYPE_B)
-        out->flags=AVI_B_FRAME;
 
     // Update PTS/Dts
     if(!_context->max_b_frames)
@@ -546,14 +552,6 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     lastDts=out->dts;
 
     aprintf("Codec>Out pts=%" PRIu64" us, out Dts=%" PRIu64"\n",out->pts,out->dts);
-
-    // Update quant
-    if(!_context->coded_frame->quality)
-      out->out_quantizer=(int) floor (_frame->quality / (float) FF_QP2LAMBDA);
-    else
-      out->out_quantizer =(int) floor (_context->coded_frame->quality / (float) FF_QP2LAMBDA);
-
-
 
     // Update stats
     if(Settings.params.mode==COMPRESS_2PASS   || Settings.params.mode==COMPRESS_2PASS_BITRATE)
