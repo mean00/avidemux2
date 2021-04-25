@@ -1,5 +1,5 @@
---- libavcodec/hevc_parser.c.orig	2019-12-31 22:35:23.000000000 +0100
-+++ libavcodec/hevc_parser.c	2020-04-16 23:51:04.726124182 +0200
+--- libavcodec/hevc_parser.c.orig	2021-04-08 23:28:39.000000000 +0200
++++ libavcodec/hevc_parser.c	2021-04-21 23:44:27.228392923 +0200
 @@ -31,6 +31,13 @@
  #include "internal.h"
  #include "parser.h"
@@ -14,7 +14,7 @@
  #define START_CODE 0x000001 ///< start_code_prefix_one_3bytes
  
  #define IS_IRAP_NAL(nal) (nal->type >= 16 && nal->type <= 23)
-@@ -171,6 +178,156 @@
+@@ -174,6 +181,156 @@
  }
  
  /**

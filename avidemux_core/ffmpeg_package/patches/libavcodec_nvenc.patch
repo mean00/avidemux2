@@ -1,6 +1,6 @@
---- libavcodec/nvenc.c.orig	2019-09-08 19:21:09.585572028 +0200
-+++ libavcodec/nvenc.c	2019-09-08 19:21:09.590571998 +0200
-@@ -43,12 +43,12 @@
+--- libavcodec/nvenc.c.orig	2021-04-08 23:28:39.000000000 +0200
++++ libavcodec/nvenc.c	2021-04-22 19:46:58.676559249 +0200
+@@ -47,12 +47,12 @@
      AV_PIX_FMT_YUV420P,
      AV_PIX_FMT_NV12,
      AV_PIX_FMT_P010,
@@ -19,7 +19,7 @@
  #if CONFIG_D3D11VA
      AV_PIX_FMT_D3D11,
  #endif
-@@ -1243,12 +1243,13 @@
+@@ -1400,12 +1400,13 @@
  {
      switch (pix_fmt) {
      case AV_PIX_FMT_YUV420P:
@@ -34,7 +34,7 @@
      case AV_PIX_FMT_YUV444P:
          return NV_ENC_BUFFER_FORMAT_YUV444_PL;
      case AV_PIX_FMT_YUV444P16:
-@@ -1257,6 +1258,7 @@
+@@ -1414,6 +1415,7 @@
          return NV_ENC_BUFFER_FORMAT_ARGB;
      case AV_PIX_FMT_0BGR32:
          return NV_ENC_BUFFER_FORMAT_ABGR;
@@ -42,7 +42,7 @@
      default:
          return NV_ENC_BUFFER_FORMAT_UNDEFINED;
      }
-@@ -1522,10 +1524,33 @@
+@@ -1684,10 +1686,33 @@
      av_fifo_generic_read(ctx->unused_surface_queue, &tmp_surf, sizeof(tmp_surf), NULL);
      return tmp_surf;
  }
@@ -76,7 +76,7 @@
      int dst_linesize[4] = {
          lock_buffer_params->pitch,
          lock_buffer_params->pitch,
-@@ -1551,6 +1576,34 @@
+@@ -1713,6 +1738,34 @@
                    avctx->width, avctx->height);
  
      return 0;

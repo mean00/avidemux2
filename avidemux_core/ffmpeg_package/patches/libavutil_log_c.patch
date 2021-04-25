@@ -1,5 +1,5 @@
---- libavutil/log.c.orig	2018-04-20 12:02:58.000000000 +0200
-+++ libavutil/log.c	2018-07-16 20:28:17.928746112 +0200
+--- libavutil/log.c.orig	2020-07-11 12:39:30.000000000 +0200
++++ libavutil/log.c	2021-04-22 20:27:47.604676518 +0200
 @@ -39,6 +39,7 @@
  #include "common.h"
  #include "internal.h"
@@ -14,29 +14,25 @@
  static int use_color = -1;
 -
 +static AV_FATAL_HANDLER *fatalHandler=NULL; // MEANX
- static void check_color_terminal(void)
+ #if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
+ static void win_console_puts(const char *str)
  {
- #if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE
-@@ -433,3 +434,22 @@
+@@ -488,3 +489,18 @@
      missing_feature_sample(0, avc, msg, argument_list);
      va_end(argument_list);
  }
-+// MEANX
 +
-+void av_fatalHandler(const char *why,const char *filez, int lineno)
++// MEANX
++void av_fatalHandler(const char *why, const char *filez, int lineno)
 +{
-+char *cleartext[2048];
-+        if(!fatalHandler)
-+                printf("[CRASH] %s, file %s, lineno=%d\n",cleartext,filez,lineno);
-+        else
-+                (fatalHandler)(cleartext,lineno,filez);
++    if(!fatalHandler)
++        printf("[CRASH] %s, file %s, lineno=%d\n",why,filez,lineno);
++    else
++        (fatalHandler)(why,lineno,filez);
 +}
++
 +void av_setFatalHandler(AV_FATAL_HANDLER *func)
 +{
-+        fatalHandler=func;
++    fatalHandler=func;
 +}
 +//
-+
-+
-+
-+

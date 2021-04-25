@@ -1,6 +1,6 @@
---- libavformat/matroskaenc.c.orig	2019-09-08 19:44:28.818111882 +0200
-+++ libavformat/matroskaenc.c	2019-09-08 19:44:28.821111864 +0200
-@@ -2783,7 +2783,7 @@
+--- libavformat/matroskaenc.c.orig	2021-04-22 19:59:01.050122387 +0200
++++ libavformat/matroskaenc.c	2021-04-22 20:01:07.674346845 +0200
+@@ -2796,7 +2796,7 @@
          if (pkt->size > 2 && (AV_RB16(pkt->data) & 0xfff0) == 0xfff0)
              ret = ff_stream_add_bitstream_filter(st, "aac_adtstoasc", NULL);
      } else if (st->codecpar->codec_id == AV_CODEC_ID_VP9) {
