@@ -19,26 +19,34 @@
 class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
 {
   protected:
-     typedef enum 
-            {
-                asInt16,asFloat,asFloatPlanar
-            }ADM_outputFlavor;
-  protected:
+
+typedef enum {
+    asInt16,
+    asFloat,
+    asFloatPlanar,
+    unsupported
+} ADM_outputFlavor;
+
+typedef enum {
+    normal,
+    flushing,
+    flushed
+} ADM_encoderState;
+
     void                *_context;
+    AVFrame             *_frame;
+    AVPacket            *_pkt;
     uint32_t             _chunk;
     bool                 _globalHeader;
     ADM_outputFlavor     outputFlavor;
+    ADM_encoderState     encoderState;
     float                *planarBuffer;
     int                  planarBufferSize;
-    float               *i2p(int count);
-    bool                encodeBlock(int count, uint8_t *dest,int &encoded);
-    bool                encodeBlockSimple(int count, uint8_t *dest,int &encoded);
-    bool                encodeBlockMultiChannels(int count, uint8_t *dest,int &encoded);
-    bool                lastBlock(AVPacket *p,int &encoded);
-    bool                computeChannelLayout(void);
     CHANNEL_TYPE        channelMapping[8];
-    bool                needChannelRemapping;
-    AVFrame             *_frame;
+
+    float               *i2p(int count);
+    bool                fillFrame(int count);
+    bool                computeChannelLayout(void);
     void                printError(const char *s,int er);
 
   public:
