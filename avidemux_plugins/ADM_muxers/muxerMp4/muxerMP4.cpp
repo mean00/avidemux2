@@ -247,7 +247,13 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
             video_st->sample_aspect_ratio.den=den;
             ADM_info("Forcing pixel aspect ratio of %d:%d\n",den,num);
         }
-
+#ifdef MUXER_IS_MOV
+        for(int i = 0; i < nbAudioTrack; i++)
+        { // In MOV muxing mode, libavformat doesn't accept the standard ISO-639-2 code for German.
+            if(!strcmp("deu",a[i]->getLanguage().c_str()))
+                a[i]->setLanguage("ger"); // lavf wants it this way, are any other languages affected?
+        }
+#endif
         if(initAudio(nbAudioTrack,a)==false)
         {
             printf("[MP4] Failed to init audio\n");
