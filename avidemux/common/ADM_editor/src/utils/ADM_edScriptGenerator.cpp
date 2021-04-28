@@ -169,6 +169,7 @@ bool ADM_ScriptGenerator::saveVideoFilters()
     for (int i = 0; i < nbFilter; i++)
     {
 		ADM_VideoFilterElement *element = &ADM_VideoFilters[i];
+		if(!element->enabled) continue;
 		this->_scriptWriter->addVideoFilter(ADM_vf_getPluginFromTag(element->tag), element);
     }
     return true;
