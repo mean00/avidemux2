@@ -78,6 +78,7 @@ public:
     uint64_t    totalDataSize;
     int64_t     delay; // in movie scale units
     int64_t     startOffset; // media time in track scale units
+    std::string language;
     std::vector <mp4Fragment>     fragments;
                 MP4Track(void);
                 ~MP4Track();

@@ -94,6 +94,7 @@ MP4Track::MP4Track(void)
     memset(&_rdWav,0,sizeof(_rdWav));
     delay=0;
     totalDataSize=0;
+    language = ADM_UNKNOWN_LANGUAGE;
 }
 MP4Track::~MP4Track()
 {
@@ -731,7 +732,9 @@ uint8_t    MP4Header::open(const char *name)
                 break;
             }
             audioAccess[audio]=new ADM_mp4AudioAccess(name,&(_tracks[1+audio]));
-            audioStream[audio]=ADM_audioCreateStream(&(_tracks[1+audio]._rdWav), audioAccess[audio]);
+            ADM_audioStream *as = ADM_audioCreateStream(&(_tracks[1+audio]._rdWav), audioAccess[audio]);
+            as->setLanguage(_tracks[1+audio].language);
+            audioStream[audio] = as;
         }
         fseeko(_fd,0,SEEK_SET);
         uint64_t duration1=_movieDuration*1000LL;
