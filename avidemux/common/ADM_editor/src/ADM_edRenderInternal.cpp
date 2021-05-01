@@ -390,33 +390,33 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
     // Also, if the image is decoded through hw, dont do post proc
     if(tmpImage->refType!=ADM_HW_NONE || ((!tmpImage->quant || !tmpImage->_qStride) && tmpImage->_colorspace==ADM_COLOR_YV12))
     {
-        out->_Qp=2;
         out->duplicate(tmpImage);
         aprintf("[decompressImage] : No quant avail\n");
         return true;
     }
     // We got everything, let's go
-    // 1 compute average quant
-    int qz;
-    uint32_t sumit=0;
     // Dupe infos
     out->copyInfo(tmpImage);
-
+    // 1 compute average quant
+    if(tmpImage->_Qp == ADM_IMAGE_UNKNOWN_QP && tmpImage->_qSize)
+    {
+        int qz;
+        uint32_t z, sumit = 0;
+        for(z = 0; z < tmpImage->_qSize; z++)
+        {
+            qz=(int)tmpImage->quant[z];
+            sumit+=qz;
+        }
+        sumit+=(tmpImage->_qSize-1);
+        float sum=(float)sumit;
+        sum/=tmpImage->_qSize;
+        if(sum>31) sum=31;
+        if(sum<1) sum=1;
+        // update average Q
+        tmpImage->_Qp=out->_Qp=(uint32_t)floor(sum);
+    }
 
     // Do postprocessing if any
-    for(uint32_t z=0;z<tmpImage->_qSize;z++)
-    {
-        qz=(int)tmpImage->quant[z];
-        sumit+=qz;
-    }
-    sumit+=(tmpImage->_qSize-1);
-    float sum=(float)sumit;
-    sum/=tmpImage->_qSize;
-    if(sum>31) sum=31;
-    if(sum<1) sum=1;
-
-    // update average Q
-    tmpImage->_Qp=out->_Qp=(uint32_t)floor(sum);
     // Pp deactivated ?
     if(!_pp->postProcType || !_pp->postProcStrength || tmpImage->_colorspace!=ADM_COLOR_YV12)
     {

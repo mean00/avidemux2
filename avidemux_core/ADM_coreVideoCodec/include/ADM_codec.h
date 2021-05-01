@@ -38,13 +38,11 @@ class decoders
 protected:
   uint32_t _w;
   uint32_t _h;
-  uint8_t _lastQ;
 public:
     decoders (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
   {
     _w = w;
     _h = h;
-    _lastQ = 0;
   }
 
   virtual ~decoders() { }

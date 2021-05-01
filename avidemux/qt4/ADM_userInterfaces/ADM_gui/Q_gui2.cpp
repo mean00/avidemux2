@@ -2291,7 +2291,10 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 
                     break;
     }
-    sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s (%02d)"),c,f,qp);
+    if(qp == ADM_IMAGE_UNKNOWN_QP)
+        sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s"),c,f);
+    else
+        sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s (%02d)"),c,f,qp);
     WIDGET(label_8)->setText(string);
 
 }
