@@ -496,6 +496,7 @@ uint8_t    MP4Header::open(const char *name)
                 img.data=bfer;
                 uint32_t i,fields=0,nb=VDEO.nbIndex;
                 uint64_t processed=0;
+                bool secondField = false;
                 DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("mp4demuxer","Decoding frame type"),nb);
                 for(i=0;i<nb;i++)
                 {
@@ -561,6 +562,16 @@ uint8_t    MP4Header::open(const char *name)
                     {
                         if(flags & AVI_FIELD_STRUCTURE)
                         {
+                            if(flags & AVI_KEY_FRAME)
+                            {
+                                if(secondField)
+                                {
+                                    printf("Removing keyframe flag from second field at frame %u\n",i);
+                                    flags &= ~AVI_KEY_FRAME;
+                                }
+                                secondField = !secondField;
+                            }else
+                                secondField = false;
                             if(!fields)
                                 printf("First field at frame %u\n",i);
                             fields++;
