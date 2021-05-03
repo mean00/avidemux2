@@ -205,6 +205,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
     ix.Pts=timecodeMS*_timeBase;
     //printf("Track=%d, timecode=%d timeBase=%d, Pts=%d\n",track,(int)timecodeMS,(int)_timeBase,ix.Pts);
     uint32_t rpt=_tracks[0].headerRepeatSize;
+    uint32_t frameNo = Track->index.size();
 
     // expand buffer if needed
     if(size>readBufferSize)
@@ -249,7 +250,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 memcpy(_tracks[0].paramCache,&timeIncBits,u32);
             }else
             {
-                ADM_warning("No VOP at index entry %u, corrupted data? Size: %d\n",Track->index.size(),rpt+size-3);
+                ADM_warning("No VOP at index entry %u, corrupted data? Size: %d\n",frameNo,rpt+size-3);
             }
             ix.flags=vops[0].type;
 
@@ -314,7 +315,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                         MATCH(refFrames)
                         if(!match)
                         {
-                            ADM_warning("Codec parameters change on the fly at frame %u, expect problems.\n",Track->index.size());
+                            ADM_warning("Codec parameters change on the fly at frame %u, expect problems.\n",frameNo);
                             // Nevertheless, update the cached info
                             memcpy(_tracks[0].infoCache, &info2, sz);
                         }
@@ -333,8 +334,20 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 extractH264FrameType(readBuffer, rpt+size-3, nalSize, &flags, NULL, info, &_H264Recovery);
             if(flags & AVI_KEY_FRAME)
             {
-                printf("[MKV/H264] Frame %" PRIu32" is a keyframe\n",(uint32_t)Track->index.size());
-            }
+                if(flags & AVI_FIELD_STRUCTURE)
+                {
+                    if(Track->_secondField)
+                    {
+                        printf("[MKV/H264] Clearing keyframe flag from second field at index entry %" PRIu32"\n",frameNo);
+                        flags &= ~AVI_KEY_FRAME;
+                    }
+                    Track->_secondField = !Track->_secondField;
+                }
+                setFlag(frameNo,flags);
+                if(flags & AVI_KEY_FRAME)
+                    printf("[MKV/H264] Frame %" PRIu32" is a keyframe\n",frameNo);
+            }else
+                Track->_secondField = false;
             ix.flags=flags;
             if(Track->index.size()) ix.Dts=ADM_NO_PTS;
 
