@@ -44,7 +44,7 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
 
         _width=width;
         _height=height;
-        _Qp=2;
+        _Qp = ADM_IMAGE_UNKNOWN_QP;
         flags=0;
         _aspect=ADM_ASPECT_1_1;
         imgCurNb++;

@@ -49,7 +49,6 @@ protected:
                bool             _hasSettings;
                int64_t          lastLavPts;
                int64_t          lavPtsFromPacket;
-               int              packetFlags;
 
 protected:
                           int              encodeWrapper(AVFrame *in,ADMBitstream *out); // Returns encoded size of <0 for error

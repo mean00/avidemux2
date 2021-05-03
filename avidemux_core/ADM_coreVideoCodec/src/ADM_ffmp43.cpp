@@ -66,11 +66,11 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
 
   ref->_planes[2] = (uint8_t *) src->data[u];
   ref->_planeStride[2] = src->linesize[u];
-  
-  _lastQ = 0;			//_context->quality;
-  out->_Qp = (src->quality * 32) / FF_LAMBDA_MAX;
+
+  // out->_Qp = (src->quality * 32) / FF_LAMBDA_MAX;
   out->flags = frameType ();
 
+#if 0 /* deprecated and dead, removed upstream */
   // Quant ?
   if (src->qstride && src->qscale_table && codecId != AV_CODEC_ID_H264)
     {
@@ -80,6 +80,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
       out->_qSize *= (_h + 15) >> 4;	// FixME?
     }
   else
+#endif
     {
       out->_qSize = out->_qStride = 0;
       out->quant = NULL;
@@ -386,6 +387,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
   int ret = 0;
   out->_noPicture = 0;
+  out->_Qp = ADM_IMAGE_UNKNOWN_QP;
   if(hwDecoder && !_usingMT)
         return hwDecoder->uncompress(in,out);
  
@@ -447,7 +449,6 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
             (in->dataLength <= FRAPS_EMPTY_FRAME_THRESHOLD && codecId == AV_CODEC_ID_MPEG4))
         {
             printf ("[lavc] Probably placeholder frame (data length: %u)\n",in->dataLength);
-            out->_Qp = 2;
             out->Pts=ADM_NO_PTS; // not sure
             out->_noPicture = 1;
             return true;

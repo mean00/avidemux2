@@ -42,6 +42,7 @@ typedef enum
 //#define vi.IsYV12()   1
 #define GetRowSize GetPitch
 #define ADM_IMAGE_ALIGN(x) ((x+63)&(~63))
+#define ADM_IMAGE_UNKNOWN_QP 100
 
 typedef enum
 {
@@ -104,7 +105,7 @@ public: // half public/protected, only in  ADMImageRef case it is really public
 public:
         uint32_t	    _width;		/// Width of image
         uint32_t	    _height;	/// Height of image
-        uint32_t	    _Qp;		/// Average quantizer for this image, Default=2
+        uint32_t	    _Qp;    /// Average quantizer for this image
         uint32_t	    flags;		/// Flags for this image (AVI_KEY_FRAME/AVI_B_FRAME)
         uint64_t        Pts;        /// Presentation time in us
         ADM_IMAGE_TYPE  _imageType;     /// Plain image or reference or vdpau wrapper
