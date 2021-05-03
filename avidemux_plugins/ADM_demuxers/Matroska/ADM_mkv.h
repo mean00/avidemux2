@@ -68,6 +68,7 @@ public:
         _defaultFrameDuration=0;
         language=ADM_UNKNOWN_LANGUAGE;
         _needBuffering=0;
+        _secondField=false;
   }
   /* Index in mkv */
   uint32_t  streamIndex;
@@ -94,6 +95,7 @@ public:
   uint32_t  _defaultFrameDuration; // Duration of ONE frame in us!
   std::string language;
   int       _needBuffering;
+  bool      _secondField; // Used to clear keyframe flag from the second field
 };
 
 #define MKV_MAX_LACES 101 // ?
