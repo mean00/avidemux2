@@ -1271,6 +1271,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                         case TRACK_AUDIO:
                         {
                             uint32_t channels,bpp,encoding,fq,packSize;
+                            uint32_t lpcmFlags = 0;
 
                             // Put some defaults
                             ADIO.encoding=WAV_UNKNOWN;
@@ -1285,6 +1286,11 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
 
                             int atomVersion=son.read16(); // version
                             left-=2;
+                            if(atomVersion > 2)
+                            {
+                                ADM_warning("[stsd] Unsupported audio sample description version %d, skipping track.\n",atomVersion);
+                                break;
+                            }
                             printf("[STSD]Revision       :%d\n",atomVersion);
                             son.skipBytes(2); // Revision level
                             left-=2;
@@ -1292,25 +1298,41 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                             printf("[STSD]Vendor         : %s\n",fourCC::tostringBE(son.read32()));
                             left-=4;
 
-                            ADIO.channels=channels=son.read16(); // Number of channels
+                            channels = son.read16(); // Number of channels when version < 2
                             left-=2;
-                            printf("[STSD]Channels       :%d\n",ADIO.channels);
-                            ADIO.bitspersample=bpp=son.read16(); // Sample Size
+                            if(atomVersion < 2)
+                            {
+                                printf("[STSD]Channels       :%d\n",channels);
+                                ADIO.channels = channels;
+                            }else if(channels != 3)
+                                ADM_warning("[stsd] Audio sample description version 2, but always3 = %u\n",channels);
+
+                            bpp = son.read16(); // Sample Size
                             left-=2;
                             printf("[STSD]Bit per sample :%d\n",bpp);
+                            if(atomVersion < 2)
+                                ADIO.bitspersample = bpp;
 
-                            encoding=son.read16(); // Compression ID
+                            son.read16(); // Compression ID
                             left-=2;
-                            printf("[STSD]Encoding       :%d\n",encoding);
 
-                            packSize=son.read16(); // Packet Size
+                            son.read16(); // Packet Size
                             left-=2;
-                            printf("[STSD]Packet size    :%d\n",packSize);
 
-                            fq=ADIO.frequency=son.read16();
-                            printf("[STSD]Fq:%u\n",fq);
-                            if(ADIO.frequency<6000) ADIO.frequency=48000;
-                            printf("[STSD]Fq       :%d\n",ADIO.frequency); // Sample rate
+                            fq = son.read16();
+                            if(atomVersion < 2)
+                            {
+                                printf("[STSD]Fq:%u\n",fq);
+                                if(fq != trackScale)
+                                    ADM_warning("[stsd] Sampling rate in audio sample description doesn't match track scale!\n");
+                                if(fq < MIN_SAMPLING_RATE)
+                                {
+                                    ADM_warning("[stsd] Sampling rate below minimum supported, making something up.\n");
+                                    fq = 48000;
+                                }
+                                ADIO.frequency = fq;
+                                printf("[STSD]Fq       :%d\n",ADIO.frequency); // Sample rate
+                            }
                             son.skipBytes(2); // Fixed point
                             left-=4;
                             printf("Bytes left : %d\n",left);
@@ -1341,16 +1363,19 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                 }
                                 case 2:
                                 {
-                                    printf("v2.0 = %d\n",son.read32());
-                                    printf("v2.1 = %d\n",son.read32());
-                                    printf("v2.2 = %d\n",son.read32());
-#define MARK(x) {uint32_t v=son.read32(); printf(#x " => %d\n",v);x=v;}                                          
+                                    printf("v2.0 sizeOfStructOnly = %u\n",son.read32());
+                                    union { uint64_t i; double d; } freq64;
+                                    freq64.i = son.read64();
+                                    ADIO.frequency = fq = (((uint64_t)freq64.d) & 0xFFFFFFFF);
+#define MARK(x) {uint32_t v=son.read32(); printf(#x " => %d\n",v);x=v;}
                                     MARK(channels);
                                     printf("0x7f000 = 0x%x\n",son.read32());
                                     MARK(bpp);
-                                    printf("LPCM flags= %d\n",son.read32());
+                                    lpcmFlags = son.read32();
+                                    printf("LPCM flags= %d\n",lpcmFlags);
                                     printf("byte per frame = %d\n",son.read32());
                                     printf("sample per frame = %d\n",son.read32());
+                                    ADIO.bitspersample=bpp;
                                     ADIO.channels=channels;
                                     info.bytePerPacket=bpp/8;
                                     info.bytePerFrame=info.bytePerPacket*ADIO.channels;
@@ -1374,7 +1399,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     break;
                                 case MKFCCR('l','p','c','m'):
                                     ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
-                                    audioCodec(PCM);
+                                    ADIO.encoding = (lpcmFlags & 2)? WAV_LPCM : WAV_PCM;
 
                                     break;
                                 case MKFCCR('t','w','o','s'):
