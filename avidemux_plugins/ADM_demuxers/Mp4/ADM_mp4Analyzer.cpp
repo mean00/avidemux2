@@ -963,6 +963,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                 }
 //
                                 case MKFCCR('a','v','c','1'): // avc1
+                                case MKFCCR('a','v','c','3'): // avc3
                                 {
                                     commonPart(H264);
                                     // There is a avcC atom just after
