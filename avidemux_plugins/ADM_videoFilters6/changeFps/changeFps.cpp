@@ -192,6 +192,20 @@ bool changeFps::updateTimingInfo(void)
     timing/=configuration.oldFpsDen;
     info.totalDuration=(uint64_t)timing;
 
+    timing=previousFilter->getInfo()->markerA;
+    timing*=configuration.oldFpsNum;
+    timing*=configuration.newFpsDen;
+    timing/=configuration.newFpsNum;
+    timing/=configuration.oldFpsDen;
+    info.markerA=(uint64_t)timing;
+
+    timing=previousFilter->getInfo()->markerB;
+    timing*=configuration.oldFpsNum;
+    timing*=configuration.newFpsDen;
+    timing/=configuration.newFpsNum;
+    timing/=configuration.oldFpsDen;
+    info.markerB=(uint64_t)timing;
+
     // 3 update timebase
     info.timeBaseDen=configuration.newFpsNum;
     info.timeBaseNum=configuration.newFpsDen;
