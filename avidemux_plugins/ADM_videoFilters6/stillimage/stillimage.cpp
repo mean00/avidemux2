@@ -231,6 +231,11 @@ bool stillimage::updateTimingInfo(void)
     }
 
     info.totalDuration=old+end-begin;
+    if (info.markerA >= begin)
+        info.markerA += end-begin;
+    if (info.markerB >= begin)
+        info.markerB += end-begin;
+
     return true;
 }
 
