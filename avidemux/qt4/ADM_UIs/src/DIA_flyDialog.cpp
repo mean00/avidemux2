@@ -604,7 +604,10 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _zoomChangeCount = 0;        
     _yuvBuffer=new ADMImageDefault(_w,_h);
     _usedWidth= _usedHeight=0;
-    lastPts=0;
+    lastPts= _in->getInfo()->markerA;
+    setCurrentPts(lastPts);
+    _in->goToTime(lastPts);
+    updateSlider();
     _bypassFilter=false;
 
     QGraphicsScene *sc=new QGraphicsScene(this);
