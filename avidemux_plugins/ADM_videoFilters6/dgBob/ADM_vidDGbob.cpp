@@ -138,6 +138,8 @@ void DGbob::update(void)
             break;
         case 2:
             info.totalDuration*=2;
+            info.markerA *= 2;
+            info.markerB *= 2;
             break;
         default: ADM_assert(0);
     }
