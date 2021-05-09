@@ -61,6 +61,7 @@ protected:
                 bool         hasIntermediate;
                 uint32_t     intermediateFn;
                 bool         sonFilterPreview;
+                FilterInfo   previewFilterInfo;
 
 
                 bool        isInRange(uint64_t tme);
@@ -72,6 +73,7 @@ public:
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getNextFrameForSon(uint32_t *fn,ADMImage *image);    /// Return the next image
+        virtual FilterInfo   *getInfo(void);
         virtual bool         getCoupledConf(CONFcouple **couples) ;     /// Return the current filter configuration
         virtual void         setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void); /// Start graphical user interface
@@ -226,6 +228,20 @@ bool partialFilter::getNextFrame(uint32_t *fn,ADMImage *image)
          return false;
     }
     return true;
+}
+
+/**
+    \fn getInfo
+    \brief Get FilterInfo
+*/
+FilterInfo  *partialFilter::getInfo(void)
+{
+    if (!sonFilterPreview)
+        return previousFilter->getInfo();
+    
+    previewFilterInfo = *(previousFilter->getInfo());
+    getRange(&(previewFilterInfo.markerA), &(previewFilterInfo.markerB));
+    return &previewFilterInfo;
 }
 
 /**
