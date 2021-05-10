@@ -34,7 +34,7 @@ public:
 	Ui_seekablePreviewDialog ui;
         
 public:        
-                Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame = 0);
+                Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream);
                 ~Ui_seekablePreviewWindow();
 	void    resetVideoStream(ADM_coreVideoFilter *videoStream);
 	uint32_t frameIndex();

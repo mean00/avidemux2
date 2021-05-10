@@ -23,7 +23,7 @@
  * @param videoStream
  * @param defaultFrame
  */
-Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame) : QDialog(parent)
+Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream) : QDialog(parent)
 {
     ui.setupUi(this);
 
@@ -33,7 +33,6 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
     resetVideoStream(videoStream);
 
     seekablePreview->addControl(ui.toolLayout);
-    seekablePreview->sliderSet(defaultFrame);
     seekablePreview->sliderChanged();
 
     connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
