@@ -1,7 +1,7 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
-fallback_qtdir=/usr/local/opt/qt@5
+fallback_qtdir=/usr/local/opt/qt5
 if [ "x$MYQT" != "x" ] && [ -e "${MYQT}/bin/qmake" ] ; then
     export PATH=$PATH:$MYQT/bin:/opt/local/libexec/qt5/bin # for macports; /usr/local/bin is in PATH by default anyway
     export QTDIR="${MYQT}" # needed for translations
