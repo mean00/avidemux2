@@ -133,7 +133,10 @@ public:
 void ADM_flyDialog::updateZoom(void)
 {
         _rgbByteBufferDisplay.clean();
-        _rgbByteBufferDisplay.setSize(ADM_IMAGE_ALIGN(_zoomW * 4) * _zoomH);
+        uint32_t zoomW, zoomH;
+        zoomW = _zoomW * _canvas->devicePixelRatioF();
+        zoomH = _zoomH * _canvas->devicePixelRatioF();
+        _rgbByteBufferDisplay.setSize(ADM_IMAGE_ALIGN(zoomW * 4) * zoomH);
         resetScaler();
 }
 /**
@@ -448,12 +451,16 @@ void ADM_flyDialogYuv::resetScaler(void)
         delete yuvToRgb;
         yuvToRgb=NULL;
     }
-    
+
+    uint32_t zoomW, zoomH;
+    zoomW = _zoomW * _canvas->devicePixelRatioF();
+    zoomH = _zoomH * _canvas->devicePixelRatioF();
+
     yuvToRgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
                             _w,
                             _h,
-                            _zoomW,
-                            _zoomH,
+                            zoomW,
+                            zoomH,
                             ADM_COLOR_YV12,toRgbColor());
 }
 /**
@@ -506,11 +513,15 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
 void ADM_flyDialogRgb::resetScaler(void)
 {
     if(rgb2rgb) delete rgb2rgb;
+    uint32_t zoomW, zoomH;
+    zoomW = _zoomW * _canvas->devicePixelRatioF();
+    zoomH = _zoomH * _canvas->devicePixelRatioF();
+
     rgb2rgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
                             _w,
                             _h,
-                            _zoomW,
-                            _zoomH,
+                            zoomW,
+                            zoomH,
                             ADM_COLOR_RGB32A,ADM_COLOR_RGB32A);
 }
 /**
