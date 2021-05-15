@@ -289,7 +289,7 @@ void filtermainWindow::preview(bool b)
         title += QT_TRANSLATE_NOOP("qmainfilter","DISABLED ");
     title += QString::fromUtf8(name);
 
-    previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
+    previewDialog = new Ui_seekablePreviewWindow(this, filter);
     previewDialog->setWindowTitle(title);
     previewDialog->setModal(true);
     connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));

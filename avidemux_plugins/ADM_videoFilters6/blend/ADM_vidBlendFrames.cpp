@@ -63,6 +63,8 @@ bool AVDM_BlendFrames::configure()
   diaElem *elems[1]={&N};
   if(diaFactoryRun(QT_TRANSLATE_NOOP("blend","Blend"),1,elems)){
     info.totalDuration=previousFilter->getInfo()->totalDuration/((uint64_t)param.N);//This bad boy reports the proper duration to the loading bar
+    info.markerA=previousFilter->getInfo()->markerA/((uint64_t)param.N);
+    info.markerB=previousFilter->getInfo()->markerB/((uint64_t)param.N);
     return 1;
   }else
     return 0;
@@ -93,6 +95,8 @@ AVDM_BlendFrames::AVDM_BlendFrames(ADM_coreVideoFilter *in,CONFcouple *setup) : 
     accumulated=0;
     buffer=NULL;
     info.totalDuration=previousFilter->getInfo()->totalDuration/((uint64_t)param.N);
+    info.markerA=previousFilter->getInfo()->markerA/((uint64_t)param.N);
+    info.markerB=previousFilter->getInfo()->markerB/((uint64_t)param.N);
 }
 /**
  * \fn setCoupledConf
