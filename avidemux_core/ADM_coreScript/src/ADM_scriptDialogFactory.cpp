@@ -36,6 +36,7 @@ void ADM_scriptDialogFactoryHelper::addControl(ADM_scriptDFBaseHelper* control)
 diaElem** ADM_scriptDialogFactoryHelper::getControls(int *controlCount)
 {
 	*controlCount = (int)_controls.size();
+	if (! *controlCount) return NULL;
 
 	std::vector<ADM_scriptDFBaseHelper*>::iterator it;
 	int i = 0;
@@ -55,22 +56,23 @@ diaElem** ADM_scriptDialogFactoryHelper::getControls(int *controlCount)
 */
 int  ADM_scriptDialogFactoryHelper::run(void)
 {
-	int nb = (int)_controls.size();
+    diaElem **elems = NULL;
+    uint32_t nb = _controls.size();
 
-	std::vector<ADM_scriptDFBaseHelper*>::iterator it;
-	int i = 0;
-	diaElem **elems = new diaElem*[nb];
+    if (nb)
+    {
+        elems = new diaElem*[nb];
+        int i = 0;
+        std::vector<ADM_scriptDFBaseHelper*>::iterator it;
+        for (it = _controls.begin(); it != _controls.end(); it++)
+            elems[i++] = (*it)->getControl();
+    }
 
-	for (it = _controls.begin(); it != _controls.end(); it++)
-	{
-		elems[i] = (*it)->getControl();
-		i++;
-	}
     int ret = diaFactoryRun(_title, nb, elems);
 
-	delete [] elems;
+    delete [] elems;
 
-	return ret;
+    return ret;
 
 }
 const char* ADM_scriptDialogFactoryHelper::title(void)

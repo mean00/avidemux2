@@ -77,10 +77,8 @@ void * qt4DiaFactoryPrepare(const char *title,uint32_t nb,diaElem **elems)
 {
   factoryCookie *cookie=new factoryCookie(title);
 
-  ADM_assert(title);
-  ADM_assert(nb);
-  ADM_assert(elems);
-  
+    if(!nb) return cookie;
+
     int currentLayout = 0;
     int  v=0;
     for(int i=0;i<nb;i++)
@@ -124,6 +122,9 @@ void * qt4DiaFactoryPrepare(const char *title,uint32_t nb,diaElem **elems)
  */
 bool  qt4DiaFactoryFinish(void *finish)
 {
+    if(!finish)
+        return false;
+
   bool  r=false;
   factoryCookie *cookie=(factoryCookie *)  finish;
   QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed);
@@ -183,11 +184,7 @@ const char *shortkey(const char *in)
 void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs)
 {
     factoryCookie *cookie=new factoryCookie(title);
-  
-    ADM_assert(title);
-    ADM_assert(nb);
-    ADM_assert(tabs);
-  
+
     cookie->layout  = new QGridLayout();
     cookie->tabWidget = new QTabWidget();
     
@@ -208,6 +205,8 @@ void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs
   */ 
 bool qt4DiaFactoryTabsFinish(void *f)
 {
+    if(!f) return false;
+
     bool r=false;
     factoryCookie *cookie=(factoryCookie *)f;
     
