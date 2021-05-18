@@ -302,6 +302,14 @@ tp_obj PythonEngine::getFolderContent(tp_vm *tp)
 	const char *root = pm.asString();
 	const char *ext = pm.asString();
 
+	ADM_assert(ext);
+
+	if (!strlen(ext))
+	{
+		ADM_error("Invalid argument: extension cannot be empty\n");
+		return tp_None;
+	}
+
 	ADM_info("Scanning %s for file with ext : %s\n", root, ext);
 
 	std::vector<std::string> items;
