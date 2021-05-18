@@ -20,6 +20,11 @@
 #include <QGraphicsView>
 #include <QtCore/QDir>
 #include <QMessageBox>
+#if QT_VERSION < QT_VERSION_CHECK(5,11,0)
+#   include <QDesktopWidget>
+#else
+#   include <QScreen>
+#endif
 #include <QClipboard>
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
 #   include <QFontDatabase>
@@ -2560,11 +2565,13 @@ void UI_resize(uint32_t w,uint32_t h)
 #ifdef _WIN32
     QSize fs = QuiMainWindows->frameSize();
     QPoint p = QuiMainWindows->pos();
+#if QT_VERSION < QT_VERSION_CHECK(5,11,0)
+    QRect space = QApplication::desktop()->availableGeometry();
+#else
+    QRect space = QApplication::primaryScreen()->availableGeometry();
+#endif
 
-    uint32_t screenWidth,screenHeight;
-    UI_getPhysicalScreenSize(QuiMainWindows, &screenWidth, &screenHeight);
-
-    int x = p.x() + fs.width() - (int)screenWidth;
+    int x = p.x() + fs.width() - space.width();
     bool move=false;
     if(x > 0) // the right edge of the window doesn't fit into the screen
     {
@@ -2577,7 +2584,7 @@ void UI_resize(uint32_t w,uint32_t h)
     {
         x = p.x();
     }
-    int y = p.y() + fs.height() - (int)screenHeight;
+    int y = p.y() + fs.height() - space.height();
     if(y > 0) // the bottom edge of the window doesn't fit into the screen
     {
         move = true;
@@ -2591,6 +2598,8 @@ void UI_resize(uint32_t w,uint32_t h)
     }
     if(move)
     {
+        x += space.left(); // adjust for taskbar on the left side
+        y += space.top();  // adjust for taskbar on the top
         ADM_info("Moving the main window to position (%d, %d)\n",x,y);
         QuiMainWindows->move(x,y);
     }
