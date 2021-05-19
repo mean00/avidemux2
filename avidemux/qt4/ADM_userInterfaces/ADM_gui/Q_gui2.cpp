@@ -2563,43 +2563,42 @@ void UI_resize(uint32_t w,uint32_t h)
     QuiMainWindows->resize(reqw,reqh);
     ADM_info("Resizing the main window to %dx%d px\n",reqw,reqh);
 #ifdef _WIN32
-    QSize fs = QuiMainWindows->frameSize();
-    QPoint p = QuiMainWindows->pos();
+    QRect fs = QuiMainWindows->frameGeometry();
 #if QT_VERSION < QT_VERSION_CHECK(5,11,0)
     QRect space = QApplication::desktop()->availableGeometry();
 #else
     QRect space = QApplication::primaryScreen()->availableGeometry();
 #endif
 
-    int x = p.x() + fs.width() - space.width();
+    int x = fs.x() + fs.width() - space.x() - space.width();
     bool move=false;
     if(x > 0) // the right edge of the window doesn't fit into the screen
     {
         move = true;
-        if(x < p.x())
-            x = p.x() - x;
+        if(x < fs.x())
+            x = fs.x() - x;
         else
             x = 0;
     }else
     {
-        x = p.x();
+        x = fs.x();
     }
-    int y = p.y() + fs.height() - space.height();
+    int y = fs.y() + fs.height() - space.y() - space.height();
     if(y > 0) // the bottom edge of the window doesn't fit into the screen
     {
         move = true;
-        if(y < p.y())
-            y = p.y() - y;
+        if(y < fs.y())
+            y = fs.y() - y;
         else
             y = 0;
     }else
     {
-        y = p.y();
+        y = fs.y();
     }
     if(move)
     {
-        x += space.left(); // adjust for taskbar on the left side
-        y += space.top();  // adjust for taskbar on the top
+        if(x < space.x()) x = space.x(); // adjust for taskbar on the left side
+        if(y < space.y()) y = space.y(); // adjust for taskbar on the top
         ADM_info("Moving the main window to position (%d, %d)\n",x,y);
         QuiMainWindows->move(x,y);
     }
