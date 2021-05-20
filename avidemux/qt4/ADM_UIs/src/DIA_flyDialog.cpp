@@ -493,10 +493,16 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
 {
     uint32_t size = ADM_IMAGE_ALIGN(_w*4);
     size*=_h;
+    _scaledPts = ADM_NO_PTS;
     _rgbByteBuffer.setSize(size);
     _rgbByteBufferOut.setSize(size);
-     yuv2rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,
-                toRgbColor());
+    _algo = ((_h > ADM_FLYRGB_ALGO_CHANGE_THRESHOLD_RESOLUTION) ? ADM_CS_FAST_BILINEAR : ADM_CS_BICUBIC);
+     yuv2rgb =  new ADMColorScalerFull(_algo, 
+                            _w,
+                            _h,
+                            _w,
+                            _h,
+                            ADM_COLOR_YV12,toRgbColor());
     rgb2rgb=NULL;
     initializeSize();
     updateZoom();
@@ -506,7 +512,7 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
 void ADM_flyDialogRgb::resetScaler(void)
 {
     if(rgb2rgb) delete rgb2rgb;
-    rgb2rgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
+    rgb2rgb=new ADMColorScalerFull(_algo, 
                             _w,
                             _h,
                             _zoomW,
@@ -532,7 +538,11 @@ bool ADM_flyDialogRgb::process(void)
     {
         yuv2rgb->convertImage(_yuvBuffer,_rgbByteBufferDisplay.at(0));
     } else {
-        yuv2rgb->convertImage(_yuvBuffer,_rgbByteBuffer.at(0));
+        if (_scaledPts != lastPts)
+        {
+            yuv2rgb->convertImage(_yuvBuffer,_rgbByteBuffer.at(0));
+            _scaledPts = lastPts;
+        }
         if (_resizeMethod != RESIZE_NONE)
         {
             processRgb(_rgbByteBuffer.at(0),_rgbByteBufferOut.at(0));

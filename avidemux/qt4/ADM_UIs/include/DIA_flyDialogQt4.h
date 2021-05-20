@@ -40,6 +40,7 @@
 #include "ADM_coreVideoFilter.h"
 #include "ADM_imageResizer.h"
 #define ADM_FLY_SLIDER_MAX 1000
+#define ADM_FLYRGB_ALGO_CHANGE_THRESHOLD_RESOLUTION 720
 
 enum ResizeMethod 
 {
@@ -195,6 +196,9 @@ public:
 class ADM_UIQT46_EXPORT ADM_flyDialogRgb: public  ADM_flyDialog
 {
   Q_OBJECT
+protected:
+                    ADMColorScaler_algo _algo;
+                    uint64_t           _scaledPts;
 public:
                     ADM_byteBuffer     _rgbByteBuffer;
                     ADM_byteBuffer     _rgbByteBufferOut;
