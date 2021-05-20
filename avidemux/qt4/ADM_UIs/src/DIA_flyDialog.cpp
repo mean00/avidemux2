@@ -493,10 +493,10 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
 {
     uint32_t size = ADM_IMAGE_ALIGN(_w*4);
     size*=_h;
-    _scaledPts = -1LL;
+    _scaledPts = ADM_NO_PTS;
     _rgbByteBuffer.setSize(size);
     _rgbByteBufferOut.setSize(size);
-    _algo = ((_h > 720) ? ADM_CS_FAST_BILINEAR : ADM_CS_BICUBIC);
+    _algo = ((_h > ADM_FLYRGB_ALGO_CHANGE_THRESHOLD_RESOLUTION) ? ADM_CS_FAST_BILINEAR : ADM_CS_BICUBIC);
      yuv2rgb =  new ADMColorScalerFull(_algo, 
                             _w,
                             _h,

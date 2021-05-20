@@ -40,6 +40,7 @@
 #include "ADM_coreVideoFilter.h"
 #include "ADM_imageResizer.h"
 #define ADM_FLY_SLIDER_MAX 1000
+#define ADM_FLYRGB_ALGO_CHANGE_THRESHOLD_RESOLUTION 720
 
 enum ResizeMethod 
 {
