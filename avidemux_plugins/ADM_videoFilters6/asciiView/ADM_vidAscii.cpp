@@ -59,7 +59,7 @@ public:
 DECLARE_VIDEO_FILTER(   AsciiFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
-                        VF_TRANSFORM,            // Category
+                        VF_ART,             // Category
                         "AsciiView",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("asciiView","Ascii View"),            // Display name
                         QT_TRANSLATE_NOOP("asciiView","Ascii view") // Description
