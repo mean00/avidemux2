@@ -13,7 +13,7 @@ class Ui_flipWindow : public QDialog
   protected:
     int lock;
     flyFlip *     myFly;
-    ADM_QCanvas *      canvas;
+    ADM_QCanvas * canvas;
     Ui_flipDialog ui;
 
   public:

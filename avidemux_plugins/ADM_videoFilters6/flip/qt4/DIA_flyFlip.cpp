@@ -1,7 +1,7 @@
 /**/
 /***************************************************************************
                           DIA_Flip
-                             -------------------
+                          --------
 
     begin                : 08 Apr 2005
     copyright            : (C) 2004/7 by mean
@@ -49,21 +49,12 @@ flyFlip::~flyFlip()
 }
 
 /**
-    \fn update
-*/
-uint8_t  flyFlip::update(void)
-{
-    return 1;
-}
-
-/**
     \fn processYuv
 */
 uint8_t   flyFlip::processYuv(ADMImage *in,ADMImage *out )
 {
     out->duplicate(in);
 
-    // Do it!
     ADMVideoFlip::FlipProcess_C(out, scratch, param.flipdir);
     return 1;
 }

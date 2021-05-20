@@ -6,6 +6,5 @@
 #include "DIA_factory.h"
 uint8_t DIA_getFlip(flip *param, ADM_coreVideoFilter *in)
 {
-    
     return 0;
 }

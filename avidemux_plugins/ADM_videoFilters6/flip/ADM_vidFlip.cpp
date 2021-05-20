@@ -21,6 +21,7 @@
 #include "flip_desc.cpp"
 #include "ADM_vidFlip.h"
 
+#define ADMVideoFlip_HORIZONTAL_FLIP    0
 extern uint8_t DIA_getFlip(flip *param, ADM_coreVideoFilter *in);
 
 
@@ -34,6 +35,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoFlip,   // Class
                                       QT_TRANSLATE_NOOP("flip","Flip"),            // Display name
                                       QT_TRANSLATE_NOOP("flip","Vertically/Horizontally flip the image.") // Description
                                   );
+
 /**
     \fn FlipProcess_C
 */
@@ -48,7 +50,7 @@ void ADMVideoFlip::FlipProcess_C(ADMImage *img, uint8_t * scratch, uint32_t flip
     img->GetPitches(stride);
     img->GetWritePlanes(plane);
     
-    if (flipdir == 0)	// H
+    if (flipdir == ADMVideoFlip_HORIZONTAL_FLIP)
     {
         for (int p=0; p<3; p++)
         {
@@ -76,7 +78,7 @@ void ADMVideoFlip::FlipProcess_C(ADMImage *img, uint8_t * scratch, uint32_t flip
                 line += stride[p];
             }
         }
-    } else {	// V
+    } else {    // Vertical flip
         for (int p=0; p<3; p++)
         {
             if (p==1)
@@ -114,7 +116,7 @@ bool ADMVideoFlip::configure()
 */
 const char   *ADMVideoFlip::getConfiguration(void)
 {
-    if (_param.flipdir == 0)
+    if (_param.flipdir == ADMVideoFlip_HORIZONTAL_FLIP)
         return "Horizontal flip.";
     else
         return "Vertical flip.";
@@ -125,7 +127,7 @@ const char   *ADMVideoFlip::getConfiguration(void)
 ADMVideoFlip::ADMVideoFlip(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_coreVideoFilter(in,couples)
 {
     if(!couples || !ADM_paramLoad(couples,flip_param,&_param))
-        _param.flipdir = 0;
+        _param.flipdir = ADMVideoFlip_HORIZONTAL_FLIP;
     _scratch = (uint8_t*)malloc(info.width);
     update();
 }
@@ -159,32 +161,11 @@ void ADMVideoFlip::setCoupledConf(CONFcouple *couples)
 }
 
 /**
-    \fn goToTime
-*/
-bool ADMVideoFlip::goToTime(uint64_t usec)
-{
-    return previousFilter->goToTime(usec);
-}
-/**
     \fn getNextFrame
     \brief
 */
 bool ADMVideoFlip::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-    /*
-    ADMImage *src;
-    src=vidCache->getImage(nextFrame);
-    if(!src)
-        return false; // EOF
-    *fn=nextFrame++;
-    image->copyInfo(src);
-    image->copyPlane(src,image,PLANAR_Y); // Luma is untouched
-    src = image;
-
-    DoFilter(...);
-
-    vidCache->unlockAll();
-    */
     if(!previousFilter->getNextFrame(fn,image)) return false;
 
     FlipProcess_C(image, _scratch, _flipdir);

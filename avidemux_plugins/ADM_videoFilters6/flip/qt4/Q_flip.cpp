@@ -1,10 +1,8 @@
 /***************************************************************************
-                          DIA_crop.cpp  -  description
-                             -------------------
+                          Q_flip.cpp  -  description
+                          --------------------------
 
-			    GUI for cropping including autocrop
-			    +Revisted the Gtk2 way
-			     +Autocrop now in RGB space (more accurate)
+    GUI for flip
 
     begin                : Fri May 3 2002
     copyright            : (C) 2002/2007 by mean
@@ -20,7 +18,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QPushButton>
 #include "Q_flip.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_vidFlip.h"
@@ -34,7 +31,6 @@ Ui_flipWindow::Ui_flipWindow(QWidget *parent, flip *param,ADM_coreVideoFilter *i
     uint32_t width,height;
         ui.setupUi(this);
         lock=0;
-        // Allocate space for green-ised video
         width=in->getInfo()->width;
         height=in->getInfo()->height;
 
@@ -100,7 +96,6 @@ void Ui_flipWindow::showEvent(QShowEvent *event)
 uint8_t flyFlip::upload(void)
 {
     Ui_flipDialog *w=(Ui_flipDialog *)_cookie;
-
     MYCOMBOX(Flipdir)->setCurrentIndex(param.flipdir);
     return 1;
 }
