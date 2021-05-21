@@ -1,0 +1,14 @@
+INCLUDE(ve_plugin)
+
+SET(ffv1_SRCS 
+        ffv1Plugin.cpp
+        ADM_ffv1Encoder.cpp
+)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+
+ADD_VIDEO_ENCODER(ADM_ve_ffv1  ${ffv1_SRCS})
+
+INIT_VIDEO_ENCODER(ADM_ve_ffv1)
+INSTALL_VIDEO_ENCODER(ADM_ve_ffv1)
+TARGET_LINK_LIBRARIES(ADM_ve_ffv1 ADM_libavcodec ADM_libavutil)
+INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/")
