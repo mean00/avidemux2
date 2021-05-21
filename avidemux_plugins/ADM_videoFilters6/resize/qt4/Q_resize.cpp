@@ -157,7 +157,7 @@ void resizeWindow::widthSpinBoxChanged(int value)
     if (ui.lockArCheckBox->isChecked())
         updateWidthHeightSpinners(false);
     else
-        ui.spinBoxWidth->setValue((uint32_t)value & 0xfffffe);
+        roundUp(ui.spinBoxWidth->value(), ui.spinBoxHeight->value());
 
     connectDimensionControls();
 }
@@ -169,7 +169,7 @@ void resizeWindow::heightSpinBoxChanged(int value)
     if (ui.lockArCheckBox->isChecked())
         updateWidthHeightSpinners(true);
     else
-        ui.spinBoxHeight->setValue((uint32_t)value & 0xfffffe);
+        roundUp(ui.spinBoxWidth->value(), ui.spinBoxHeight->value());
 
     connectDimensionControls();
 }
@@ -287,8 +287,8 @@ void resizeWindow::lockArToggled(bool toggled)
 {
     if (ui.lockArCheckBox->isChecked())
         widthSpinBoxChanged(0);
-    else
-        ui.comboBoxRoundup->setCurrentIndex(0);
+    /*else
+        ui.comboBoxRoundup->setCurrentIndex(0);*/
 
     enableControls(toggled);
 }
@@ -324,7 +324,6 @@ void resizeWindow::enableControls(bool lockArChecked)
     ENABLE(label_10)
     ENABLE(horizontalSlider)
     ENABLE(percentageSpinBox)
-    ENABLE(comboBoxRoundup)
     ENABLE(labelErrorXY)
     ENABLE(comboBoxSource)
     ENABLE(comboBoxDestination)
