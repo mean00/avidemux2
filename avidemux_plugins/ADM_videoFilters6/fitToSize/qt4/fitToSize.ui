@@ -80,7 +80,7 @@
            <number>16</number>
           </property>
           <property name="maximum">
-           <number>4096</number>
+           <number>8192</number>
           </property>
           <property name="singleStep">
            <number>2</number>
@@ -116,7 +116,7 @@
            <number>16</number>
           </property>
           <property name="maximum">
-           <number>4096</number>
+           <number>8192</number>
           </property>
           <property name="singleStep">
            <number>2</number>
