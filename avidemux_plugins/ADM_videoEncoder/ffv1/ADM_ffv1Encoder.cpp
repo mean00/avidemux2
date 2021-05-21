@@ -120,10 +120,6 @@ bool ADM_ffv1Encoder::encode (ADMBitstream * out)
 
     out->len=sz;
     out->pts=out->dts=image->Pts;
-    if(_frame->key_frame)
-        out->flags=AVI_KEY_FRAME;
-    else
-        out->flags=0;
     return true;
 }
 /**
