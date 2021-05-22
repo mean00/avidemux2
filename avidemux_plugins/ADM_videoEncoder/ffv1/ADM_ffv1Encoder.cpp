@@ -49,6 +49,7 @@ bool ADM_ffv1Encoder::setup(void)
         case ADM_FFV1_CODER_RANGE:
                 av_dict_set(&_options, "coder", "range_def", 0);
             break;
+        default:break;
     }
     switch (ffv1config.context)
     {
@@ -58,6 +59,7 @@ bool ADM_ffv1Encoder::setup(void)
         case ADM_FFV1_CONTEXT_LARGE:
                 av_dict_set_int(&_options, "context", 1, 0);
             break;
+        default:break;
     }
     switch (ffv1config.threads)
     {
@@ -70,6 +72,7 @@ bool ADM_ffv1Encoder::setup(void)
         case ADM_FFV1_THREADS_4:
                 av_dict_set_int(&_options, "threads", 4, 0);
             break;
+        default:break;
     }
     av_dict_set_int(&_options, "slicecrc", (ffv1config.slicecrc ? 1:0), 0);
 
@@ -83,7 +86,6 @@ bool ADM_ffv1Encoder::setup(void)
 ADM_ffv1Encoder::~ADM_ffv1Encoder()
 {
     printf("[ffv1Encoder] Destroying.\n");
-    
 }
 /**
     \fn getFourcc
@@ -99,9 +101,9 @@ const char * ADM_ffv1Encoder::getFourcc(void)
 */
 bool ADM_ffv1Encoder::getExtraData(uint32_t *l,uint8_t **d)
 {
-     *l=_context->extradata_size;
-     *d=_context->extradata;
-     return true;
+    *l=_context->extradata_size;
+    *d=_context->extradata;
+    return true;
 };
 /**
     \fn encode
@@ -109,24 +111,15 @@ bool ADM_ffv1Encoder::getExtraData(uint32_t *l,uint8_t **d)
 bool ADM_ffv1Encoder::encode (ADMBitstream * out)
 {
     if(false==preEncode()) return false;
-    int sz=0,r,gotData;
-    r=encodeWrapper(_frame,out);
-    if(r<0)
-    {
-        ADM_warning("[ffv1] Error %d encoding video\n",r);
-        return false;
-    }
-    sz=r;     
 
-    out->len=sz;
+    int r = encodeWrapper(_frame,out);
+    if(r<0)
+        return false; // encodeWrapper prints a human-readable error message from libavcodec
+
+    out->len=r;
     out->pts=out->dts=image->Pts;
     return true;
 }
-/**
-    \fn huffConfigure
-    \brief UI configuration for huff encoder
-*/
-
 
 static const diaMenuEntry coderMenus[2]=
 {
@@ -145,7 +138,10 @@ static const diaMenuEntry threadsMenus[3]=
     {ADM_FFV1_THREADS_4,QT_TRANSLATE_NOOP("ffv1","4")},
 };
 
-
+/**
+    \fn ffv1Configure
+    \brief Configuration UI for ffv1 encoder
+*/
 bool ffv1Configure(void)
 {
     uint32_t coderM,contextM,threadsM;
@@ -155,22 +151,21 @@ bool ffv1Configure(void)
     contextM=(uint32_t)ffv1config.context;
     threadsM=(uint32_t)ffv1config.threads;
     slicecrc=ffv1config.slicecrc;
-    
 
     diaElemMenu      cd(&coderM,  QT_TRANSLATE_NOOP("ffv1","Coder:"),2,coderMenus);
     diaElemMenu      ct(&contextM,QT_TRANSLATE_NOOP("ffv1","Context:"),2,contextMenus);
     diaElemMenu      th(&threadsM,QT_TRANSLATE_NOOP("ffv1","Threads:"),3,threadsMenus);
     diaElemToggle    sc(&slicecrc,QT_TRANSLATE_NOOP("ffv1","Error correction/detection"));
     diaElem *elems[4]={&cd, &ct, &th, &sc};
-    
-      if( diaFactoryRun(QT_TRANSLATE_NOOP("ffv1","FFV1 Configuration"),4 ,elems))
-      {
+
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("ffv1","FFV1 Configuration"),4 ,elems))
+    {
         ffv1config.coder=coderM;
         ffv1config.context=contextM;
         ffv1config.threads=threadsM;
         ffv1config.slicecrc=slicecrc;
         return false;
-      }
-      return true;
+    }
+    return true;
 }
 // EOF
