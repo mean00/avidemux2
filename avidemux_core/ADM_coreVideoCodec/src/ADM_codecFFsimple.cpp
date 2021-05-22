@@ -105,6 +105,7 @@ void decoderFFSimple::applyQuirks(AVCodecID id)
             break;
         case AV_CODEC_ID_PRORES:
         case AV_CODEC_ID_DNXHD:
+        case AV_CODEC_ID_FFV1:
             decoderMultiThread();
             if(_usingMT)
             {
