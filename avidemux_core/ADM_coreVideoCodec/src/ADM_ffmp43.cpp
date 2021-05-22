@@ -271,10 +271,10 @@ uint32_t decoderFF::admFrameTypeFromLav (AVFrame *pic)
                 SET (AVI_KEY_FRAME);
                 if (!pic->key_frame)
                   {
-                    if (codecId == AV_CODEC_ID_H264)
+                    if (codecId == AV_CODEC_ID_H264 || codecId == AV_CODEC_ID_FFV1)
                         SET (AVI_P_FRAME)
                     else
-                      ADM_info ("\n But keyframe is not set\n");
+                        ADM_info("Picture type is I, but keyframe is not set\n");
                   }
                 break;
         case AV_PICTURE_TYPE_S:
