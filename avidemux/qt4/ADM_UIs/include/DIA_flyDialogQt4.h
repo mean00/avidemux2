@@ -68,6 +68,7 @@ public:
         ~ADM_QCanvas();
         void paintEvent(QPaintEvent *ev);
         void changeSize(uint32_t w, uint32_t h);
+        void getDisplaySize(uint32_t *w, uint32_t *h);
 };
 
 class flyControl;

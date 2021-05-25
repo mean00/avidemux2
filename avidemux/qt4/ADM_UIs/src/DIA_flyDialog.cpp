@@ -132,8 +132,10 @@ public:
 */
 void ADM_flyDialog::updateZoom(void)
 {
+        uint32_t displayW, displayH;
+        ((ADM_QCanvas*)_canvas)->getDisplaySize(&displayW, &displayH);
         _rgbByteBufferDisplay.clean();
-        _rgbByteBufferDisplay.setSize(ADM_IMAGE_ALIGN(_zoomW * 4) * _zoomH);
+        _rgbByteBufferDisplay.setSize(ADM_IMAGE_ALIGN(displayW * 4) * displayH);
         resetScaler();
 }
 /**
@@ -164,8 +166,8 @@ void ADM_flyDialog::recomputeSize(void)
         _zoom = 1;
         _zoomW = _w;
         _zoomH = _h;
-        updateZoom();
         postInit (true);
+        updateZoom();
         sliderChanged();
         return;
     }
@@ -194,8 +196,8 @@ void ADM_flyDialog::recomputeSize(void)
     _zoom = new_zoom;
     _zoomW = new_zoomW;
     _zoomH = new_zoomH;
-    updateZoom();
     postInit (true);
+    updateZoom();
     sliderChanged();
 }
 
@@ -437,8 +439,8 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
         _yuvBufferOut=new ADMImageDefault(_w,_h);
         yuvToRgb=NULL;  
         initializeSize();
-        updateZoom();
         postInit(false);
+        updateZoom();
         _nextRdv=0;
 }
 void ADM_flyDialogYuv::resetScaler(void)
@@ -449,11 +451,14 @@ void ADM_flyDialogYuv::resetScaler(void)
         yuvToRgb=NULL;
     }
     
+    uint32_t displayW, displayH;
+    ((ADM_QCanvas*)_canvas)->getDisplaySize(&displayW, &displayH);
+    
     yuvToRgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
                             _w,
                             _h,
-                            _zoomW,
-                            _zoomH,
+                            displayW,
+                            displayH,
                             ADM_COLOR_YV12,toRgbColor());
 }
 /**
@@ -505,18 +510,22 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
                             ADM_COLOR_YV12,toRgbColor());
     rgb2rgb=NULL;
     initializeSize();
-    updateZoom();
     postInit(false);
+    updateZoom();
 
 }
 void ADM_flyDialogRgb::resetScaler(void)
 {
     if(rgb2rgb) delete rgb2rgb;
+
+    uint32_t displayW, displayH;
+    ((ADM_QCanvas*)_canvas)->getDisplaySize(&displayW, &displayH);
+    
     rgb2rgb=new ADMColorScalerFull(_algo, 
                             _w,
                             _h,
-                            _zoomW,
-                            _zoomH,
+                            displayW,
+                            displayH,
                             ADM_COLOR_RGB32A,ADM_COLOR_RGB32A);
 }
 /**
@@ -708,8 +717,8 @@ void ADM_flyDialog::fitCanvasIntoView(uint32_t width, uint32_t height)
         _zoomW = tmpZoomW&0xfffffffe;
         _zoomH = tmpZoomH&0xfffffffe;
         _zoom = (float)_zoomW / _w;
-        updateZoom();
         _canvas->changeSize(_zoomW, _zoomH);
+        updateZoom();
         sameImage();
     }
 }
