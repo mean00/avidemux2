@@ -77,6 +77,7 @@ bool simpleRender::displayImage(ADMImage *pic)
     lock.lock();
     int stride=ADM_IMAGE_ALIGN(displayWidth*4);
     myImage=QImage(videoBuffer,displayWidth,displayHeight,stride,QImage::Format_RGB32).copy(0,0,displayWidth,displayHeight);
+    myImage.setDevicePixelRatio(info.scalingFactor);
     lock.unlock();
     refresh();
     return true;
@@ -120,6 +121,8 @@ bool simpleRender::changeZoom(float newZoom)
 {
         ADM_info("changing zoom, simple render.\n");
         calcDisplayFromZoom(newZoom);
+        displayWidth*=info.scalingFactor;
+        displayHeight*=info.scalingFactor;
         currentZoom=newZoom;
         allocateStuff();
         return true;
@@ -131,6 +134,8 @@ bool simpleRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float z
 {
     info=*window;
     baseInit(w,h,zoom);
+    displayWidth*=info.scalingFactor;
+    displayHeight*=info.scalingFactor;
     ADM_info("init, simple render. w=%d, h=%d,zoom=%.4f\n",(int)w,(int)h,zoom);
     allocateStuff();
     videoWidget=(ADM_Qvideo *)info.widget;
