@@ -73,8 +73,8 @@ bool simpleRender::refresh(void)
 */
 bool simpleRender::displayImage(ADMImage *pic)
 {
-    lock.lock();
     scaler->convertImage(pic,videoBuffer);
+    lock.lock();
     int stride=ADM_IMAGE_ALIGN(displayWidth*4);
     myImage=QImage(videoBuffer,displayWidth,displayHeight,stride,QImage::Format_RGB32).copy(0,0,displayWidth,displayHeight);
 #if QT_VERSION >= QT_VERSION_CHECK(5,5,0)
@@ -105,7 +105,6 @@ bool simpleRender::cleanup(void)
 */
 bool simpleRender::allocateStuff(void)
 {
-        lock.lock();
         cleanup();
         scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,displayWidth,displayHeight,
             ADM_COLOR_YV12,
@@ -114,7 +113,6 @@ bool simpleRender::allocateStuff(void)
         uint32_t sz=ADM_IMAGE_ALIGN(displayWidth*4);
         sz*=displayHeight;
         videoBuffer=new uint8_t[sz];
-        lock.unlock();
         return true;
 }
 
