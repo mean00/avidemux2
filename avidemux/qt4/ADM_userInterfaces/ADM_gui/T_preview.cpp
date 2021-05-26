@@ -22,6 +22,7 @@
 #include <QImage>
 #include <QPainter>
 #include <QPaintEngine>
+#include <QWindow>
 
 /* Probably on unix/X11 ..*/
 #ifdef __APPLE__
@@ -34,7 +35,6 @@ extern "C"
 {
         extern void *XOpenDisplay(    char *name);
 }
-#       include <QWindow>
 #   endif
 #endif
 
@@ -205,6 +205,13 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     QWidget* widget = videoWindow->parentWidget();
     xinfo->widget = videoWindow;
     xinfo->systemWindowId = 0;
+    xinfo->scalingFactor = 1.;
+
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0) && !defined(__APPLE__)
+    QWindow *window = QuiMainWindows->windowHandle();
+    if(window)
+        xinfo->scalingFactor = (double)window->devicePixelRatio();
+#endif
 
 #if defined(_WIN32)
     xinfo->display=(void *)videoWindow->winId();
@@ -218,7 +225,6 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     xinfo->systemWindowId= HIViewGetWindow(HIViewRef(widget->winId()));
 #   endif
 #else // linux
-    xinfo->scalingFactor = 1.;
 #   if QT_VERSION < QT_VERSION_CHECK(5,0,0)
     const QX11Info &info=videoWindow->x11Info();
     xinfo->display=info.display();
@@ -228,9 +234,6 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
         if(!myDisplay)
             myDisplay=XOpenDisplay(NULL);
         xinfo->display=myDisplay;
-        QWindow *window = QuiMainWindows->windowHandle();
-        if(window)
-            xinfo->scalingFactor = (double)window->devicePixelRatio();
     }
 #   endif
     xinfo->systemWindowId=videoWindow->winId();
