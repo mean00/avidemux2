@@ -21,13 +21,14 @@ class pulseSimpleAudioDevice : public audioDeviceThreaded
      protected :
                      void    *instance;
                      uint32_t latency;
+                     int32_t  volumeHack;
          virtual     bool     localInit(void);
          virtual     bool     localStop(void);
          virtual     void     sendData(void); 
          virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels);
       public:
                 pulseSimpleAudioDevice(void);
-                bool     hasVolumeControl(void) { return false; }
+                virtual     uint8_t setVolume(int volume);
                 uint32_t getLatencyMs(void);
      }     ;
 #endif

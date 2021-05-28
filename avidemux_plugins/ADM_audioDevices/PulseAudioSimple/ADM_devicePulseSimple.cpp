@@ -38,6 +38,7 @@ pulseSimpleAudioDevice::pulseSimpleAudioDevice()
 {
     instance=NULL;
     latency=0;
+    volumeHack = 32768;
 }
 /**
     \fn pulseSimpleAudioDevice
@@ -147,6 +148,17 @@ pa_channel_map map,*pmap=NULL;
 
 }
 
+
+uint8_t pulseSimpleAudioDevice::setVolume(int volume)
+{
+    if (volume < 0)
+        volume = 0;
+    if (volume > 100)
+        volume = 100;
+    volumeHack = (32768 * volume * volume) / 10000;
+    return 0;
+}
+
 /**
     \fn sendData
     \brief Playback samples
@@ -169,6 +181,14 @@ int er;
     if(avail>sizeOf10ms) avail=sizeOf10ms;
     
     uint8_t *data=audioBuffer.at(rdIndex);
+    int16_t * dataCast = (int16_t *)data;
+    for (int i=0; i<avail/sizeof(int16_t); i++)
+    {
+        int32_t vh;
+        vh = dataCast[i];
+        vh *= volumeHack;
+        dataCast[i] = vh/32768;
+    }
     mutex.unlock();
     pa_simple_write(INSTANCE,data, avail,&er);
     mutex.lock();
