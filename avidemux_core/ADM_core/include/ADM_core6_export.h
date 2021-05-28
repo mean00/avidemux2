@@ -50,4 +50,10 @@
 # define ADM_CORE6_NO_DEPRECATED
 #endif
 
+#ifdef __GNUC__
+#  define ADM_CORE6_NORETURN __attribute__((noreturn))
+#elif defined(_WIN32)
+#  define ADM_CORE6_NORETURN __declspec(noreturn)
+#endif
+
 #endif
