@@ -64,6 +64,8 @@ typedef enum
             bool        decodeToS32(float **outptr,uint32_t *nbOut);
             bool        decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut);
 
+            bool        setChannelMapping(void);
+
 public:
                         ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
     virtual             ~ADM_AudiocoderLavcodec() ;
@@ -547,6 +549,11 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
                 nbChannelsChecked=true;
                 reconfigureNeeded=true;
             }
+            if(reconfigureNeeded && _context->channels == channels && _context->sample_rate == outputFrequency)
+            {
+                ADM_info("Output frequency and # of channels match again, cancelling the reconfigure request\n");
+                reconfigureNeeded = false;
+            }
 
             bool invalid=false;
             int  toCheck=1;
@@ -598,32 +605,42 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
         }
     }
 
-    if(channels>=5)
-    {
-        CHANNEL_TYPE *p_ch_type = channelMapping;
-        if(!_context->channel_layout)
-            _context->channel_layout=av_get_default_channel_layout(channels);
-#define HAVE(chan) (_context->channel_layout & AV_CH_ ##chan)
-#define MAPIT(chan) *(p_ch_type++)=ADM_CH_ ##chan;
-#define DOIT(x,y) if HAVE(x) MAPIT(y)
-        DOIT(FRONT_LEFT,FRONT_LEFT)
-        DOIT(FRONT_RIGHT,FRONT_RIGHT)
-        DOIT(FRONT_CENTER,FRONT_CENTER)
-        DOIT(LOW_FREQUENCY,LFE)
-        if(HAVE(SIDE_LEFT) && !HAVE(BACK_LEFT))
-            MAPIT(REAR_LEFT) // see https://trac.ffmpeg.org/ticket/3160
-        if(HAVE(SIDE_RIGHT) && !HAVE(BACK_RIGHT))
-            MAPIT(REAR_RIGHT)
-        DOIT(BACK_LEFT,REAR_LEFT)
-        DOIT(BACK_RIGHT,REAR_RIGHT)
-        if(HAVE(SIDE_LEFT) && HAVE(BACK_LEFT))
-            MAPIT(SIDE_LEFT)
-        if(HAVE(SIDE_RIGHT) && HAVE(BACK_RIGHT))
-            MAPIT(SIDE_RIGHT)
-    }
+    setChannelMapping();
 
     return 1;
 }
+
+/**
+    \fn setChannelMapping
+*/
+bool ADM_AudiocoderLavcodec::setChannelMapping(void)
+{
+    memset(channelMapping,0,sizeof(CHANNEL_TYPE) * MAX_CHANNELS);
+
+    CHANNEL_TYPE *p_ch_type = channelMapping;
+    if(!_context->channel_layout)
+        _context->channel_layout=av_get_default_channel_layout(channels);
+#define HAVE(chan) (_context->channel_layout & AV_CH_ ##chan)
+#define MAPIT(chan) *(p_ch_type++)=ADM_CH_ ##chan;
+#define DOIT(x,y) if HAVE(x) MAPIT(y)
+    DOIT(FRONT_LEFT,FRONT_LEFT)
+    DOIT(FRONT_RIGHT,FRONT_RIGHT)
+    DOIT(FRONT_CENTER,FRONT_CENTER)
+    DOIT(LOW_FREQUENCY,LFE)
+    if(HAVE(SIDE_LEFT) && !HAVE(BACK_LEFT))
+        MAPIT(REAR_LEFT) // see https://trac.ffmpeg.org/ticket/3160
+    if(HAVE(SIDE_RIGHT) && !HAVE(BACK_RIGHT))
+        MAPIT(REAR_RIGHT)
+    DOIT(BACK_LEFT,REAR_LEFT)
+    DOIT(BACK_RIGHT,REAR_RIGHT)
+    if(HAVE(SIDE_LEFT) && HAVE(BACK_LEFT))
+        MAPIT(SIDE_LEFT)
+    if(HAVE(SIDE_RIGHT) && HAVE(BACK_RIGHT))
+        MAPIT(SIDE_RIGHT)
+
+    return true;
+}
+
 /**
     \fn getOutputFrequency
     \brief return sampling rate as seen by libavcodec
@@ -654,6 +671,7 @@ bool ADM_AudiocoderLavcodec::reconfigureCompleted(void)
     if(false==updateChannels(_context->channels))
         return false;
     channels=_context->channels;
+    setChannelMapping();
     reconfigureNeeded=false;
     frequencyChecked=false;
     nbChannelsChecked=false;
