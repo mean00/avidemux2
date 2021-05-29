@@ -79,6 +79,14 @@ bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
             codec=trk->codec;
     if(codec)
     {
+#if 1
+        /* If the codec requires extradata and codec parameters have changed,
+        we would need to respawn the decoder. However, doing so while unable to
+        handle on-the-fly changes means we cannot resume normal playback after
+        switch to the original channel layout present at the start of playback
+        prior to segment switch. FIXME */
+        codec->resetAfterSeek();
+#else
         /* If the codec requires extradata, we need to respawn the decoder
         to deal with a chance that codec parameters have changed. */
         uint32_t eLen=0;
@@ -97,6 +105,7 @@ bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
         }
         if(trk->codec)
             trk->codec->resetAfterSeek();
+#endif
     }
     ADM_info("Switched ok to audio segment %" PRIu32", with a ref time=%s\n",
             _audioSeg,ADM_us2plain(seg->_refStartTimeUs));
