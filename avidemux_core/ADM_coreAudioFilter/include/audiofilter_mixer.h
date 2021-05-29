@@ -20,6 +20,7 @@ class AUDMAudioFilterMixer : public AUDMAudioFilter
 {
     protected:
         bool            bypass;
+        uint32_t        input_channels;
         CHANNEL_CONF    _output;
         CHANNEL_CONF    _input;
         CHANNEL_TYPE    inputChannelMapping[MAX_CHANNELS];
