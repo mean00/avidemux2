@@ -337,11 +337,10 @@ void HandleAction (Action action)
           }
         ADM_info("Closing ui\n");
         UI_closeGui();
-        if(video_body && video_body->canUndo())
-        {
+        if(video_body && avifileinfo)
             A_saveSession();
+        if(video_body && video_body->canUndo())
             video_body->clearUndoQueue();
-        }
         return;
     case ACT_RESTORE_SESSION:
         if(playing) break;
@@ -1742,8 +1741,7 @@ uint8_t GUI_close(void)
       UI_setNeedsResizingFlag(false);
       uint32_t zero[8]={0};
       UI_setVUMeter(zero);
-      if(video_body->canUndo())
-        A_saveSession();
+      A_saveSession();
       delete avifileinfo;
       //delete wavinfo;
       avifileinfo = NULL;
