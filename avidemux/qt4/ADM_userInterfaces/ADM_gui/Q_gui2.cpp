@@ -288,6 +288,8 @@ void MainWindow::sliderReleased(void)
     dragTimer.stop();
     dragState=dragState_Normal;
     sendAction(ACT_Scale);
+    if (dragWhilePlay)
+        sendAction(ACT_PlayAvi); // resume playback
 }
 /**
  * \fn sliderPressed
@@ -296,6 +298,7 @@ void MainWindow::sliderPressed(void)
 {
     if(playing)
         sendAction(ACT_PlayAvi); // stop playback
+    dragWhilePlay=playing;
     dragTimer.stop();
     dragState=dragState_Active;
 //  ADM_info("Pressed\n");
@@ -562,6 +565,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ignoreResizeEvent = false;
     blockResizing = false;
     blockZoomChanges = true;
+    dragWhilePlay = false;
 
     QuiTaskBarProgress=createADMTaskBarProgress();
 }

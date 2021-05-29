@@ -179,6 +179,7 @@ protected:
     int  threshold; // track how much the window was resized
     /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
     void currentTimeToClipboard(void);
+    bool dragWhilePlay;
 
 public slots:
     void updateAvailableSlot(int version, std::string date, std::string url);
