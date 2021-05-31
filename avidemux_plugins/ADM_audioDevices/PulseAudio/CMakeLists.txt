@@ -1,0 +1,9 @@
+INCLUDE(av_plugin)
+
+SET(ADM_av_pulseAudio_SRCS ADM_devicePulse.cpp)
+
+ADD_AUDIO_DEVICE(ADM_av_pulseAudio ${ADM_av_pulseAudio_SRCS})
+ADD_DEFINITIONS(${PULSEAUDIO_DEFINITIONS})
+TARGET_LINK_LIBRARIES(ADM_av_pulseAudio ${PULSEAUDIO_LIBRARIES})
+INIT_AUDIO_DEVICE(ADM_av_pulseAudio)
+INSTALL_AUDIO_DEVICE(ADM_av_pulseAudio)
