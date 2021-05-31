@@ -28,6 +28,7 @@
             //	1-> device opened but init failed
             //	2->fully initialized
             uint32_t _init;
+            int32_t  volumeHack;
       public:
                                 alsaAudioDevice(void);
           
