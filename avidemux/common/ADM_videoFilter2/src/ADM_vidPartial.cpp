@@ -465,16 +465,14 @@ ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *co
   CONFcouple tmp(3+sonNbItems);
 
   uint32_t start, end;
-  if(source->getInfo()->totalDuration == video_body->getVideoDuration())
-  {
-      start=video_body->getMarkerAPts()/1000;
-      end=video_body->getMarkerBPts()/1000;
-  }else
-  {
-      double f=(double)(source->getInfo()->totalDuration) / video_body->getVideoDuration();
-      start=(uint32_t)(video_body->getMarkerAPts() * f / 1000);
-      end=(uint32_t)(video_body->getMarkerBPts() * f / 1000);
-  }
+  uint64_t startPts, endPts;
+  startPts = source->getInfo()->markerA;
+  endPts = source->getInfo()->markerB;
+
+  start = startPts/1000;
+  end = endPts/1000;
+  if (endPts % 1000)
+      end++;            // if endPts has fractional ms, dont miss the last frame
 
   tmp.writeAsString("filterName",internalName);
   tmp.writeAsUint32 ("startBlack",start);
