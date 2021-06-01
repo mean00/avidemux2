@@ -409,6 +409,18 @@ void A_jog(void)
 void GUI_setAllFrameAndTime(void)
 {
     UI_setTotalTime(video_body->getVideoDuration());
+    uint32_t numOfSegs = video_body->getNbSegment();
+    uint64_t * segPts = new uint64_t[numOfSegs];
+    for(int i=0; i<numOfSegs; i++)
+    {
+        _SEGMENT * seg = video_body->getSegment(i);
+        if (seg)
+            segPts[i] = seg->_startTimeUs;
+        else
+            segPts[i] = ADM_NO_PTS;
+    }
+    UI_setSegments(numOfSegs, segPts);
+    delete [] segPts;
     // progress bar
     GUI_setCurrentFrameAndTime(0);
 }

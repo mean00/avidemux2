@@ -19,18 +19,49 @@ Custom slider
 #include <QWheelEvent>
 #include "ADM_mwNavSlider.h"
 #include "ADM_assert.h"
+#include "ADM_default.h"
 /**
     \fn ADM_QSlider
 */
 ADM_mwNavSlider::ADM_mwNavSlider(QWidget *parent) : ADM_QSlider(parent)
 {
     totalDuration= markerATime= markerBTime =0;
+    segments = NULL;
+    numOfSegments = 0;
 }
 /**
     \fn paintEvent
 */
 void ADM_mwNavSlider::paintEvent(QPaintEvent *event)
 {
+    if (segments && (numOfSegments > 0) && (totalDuration > 0LL))
+    {
+        int pos, prevpos;
+        prevpos = -1;
+        QPainter painter(this);
+        for (uint32_t i=0; i<numOfSegments; i++)
+        {
+            if (i==0)    // do not draw at the start position
+                continue;
+            if (segments[i] == ADM_NO_PTS)
+                continue;
+            pos = (int)(((double)segments[i] * width()) / (double)totalDuration);
+            if(pos < 1) pos = 1;
+            if(pos > width() - 1) pos = width() - 1;
+            if (pos == prevpos)
+                painter.setPen(Qt::darkMagenta);
+            else
+                painter.setPen(Qt::red);
+            prevpos = pos;
+
+            if(layoutDirection() == Qt::LeftToRight)
+                painter.drawLine(pos, 1, pos, height() - 3);
+            else
+                painter.drawLine(width() - pos, 1, width() - pos, height() - 3);
+        }
+        painter.end();
+    }
+
     QSlider::paintEvent(event);
 
     uint64_t a = markerATime, b = markerBTime;
@@ -98,6 +129,18 @@ void ADM_mwNavSlider::setTotalDuration(uint64_t duration)
 {
     totalDuration = duration;
     repaint();
+}
+/**
+    \fn setSegments
+*/
+void ADM_mwNavSlider::setSegments(uint32_t numOfSegs, uint64_t * segPts)
+{
+    if (segments)
+        delete [] segments;
+    segments = new uint64_t[numOfSegs];
+    for (uint32_t i=0; i<numOfSegs; i++)
+        segments[i] = segPts[i];
+    numOfSegments = numOfSegs;
 }
 /*
     \fn wheelEvent

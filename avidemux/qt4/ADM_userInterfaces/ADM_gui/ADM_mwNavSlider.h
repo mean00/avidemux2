@@ -23,6 +23,8 @@ class ADM_mwNavSlider : public ADM_QSlider
     Q_OBJECT
 protected:
     uint64_t totalDuration, markerATime, markerBTime;
+    uint64_t * segments;
+    uint32_t numOfSegments;
     void paintEvent(QPaintEvent *event);
 
 public:
@@ -32,6 +34,7 @@ public:
     void setMarkerB(uint64_t frameIndex);
     void setMarkers(uint64_t frameIndexA, uint64_t frameIndexB);
     void setTotalDuration(uint64_t duration);
+    void setSegments(uint32_t numOfSegs, uint64_t * segPts);
     void wheelEvent(QWheelEvent *e);
 signals:
     void sliderAction(int value);
