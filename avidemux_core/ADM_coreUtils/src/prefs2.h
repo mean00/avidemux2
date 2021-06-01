@@ -28,6 +28,11 @@ struct  {
 	uint32_t cap_refresh_value;
 	std::string sdlDriver;
 	bool use_last_read_dir_as_target;
+	bool hide_audioMetre;
+	bool hide_codecOptions;
+	bool hide_navigation;
+	bool hide_selection;
+	bool hide_volume;
 }features;
 struct  {
 	bool use_alternate_kbd_shortcuts;

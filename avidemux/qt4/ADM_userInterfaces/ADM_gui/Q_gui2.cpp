@@ -1993,7 +1993,21 @@ void UI_closeGui(void)
 {
         if(!uiRunning) return;
         uiRunning=false;
-        
+
+    MainWindow * mw = (MainWindow*)QuiMainWindows;
+    
+    
+    #define saveHiddenElementPrefsMacro(arg1, arg2) \
+    { \
+        prefs->set(FEATURES_HIDE_##arg1, mw->ui.arg2##Widget->isHidden()); \
+    }
+    saveHiddenElementPrefsMacro(AUDIOMETRE, audioMetre)
+    saveHiddenElementPrefsMacro(CODECOPTIONS, codec)
+    saveHiddenElementPrefsMacro(NAVIGATION, navigation)
+    saveHiddenElementPrefsMacro(SELECTION, selection)
+    saveHiddenElementPrefsMacro(VOLUME, volume)
+    #undef saveHiddenElementPrefsMacro
+
     QuiMainWindows->close();
     qtUnregisterDialog(QuiMainWindows);
         
@@ -2097,6 +2111,25 @@ int UI_RunApp(void)
     ADM_info("Load default settings if any... \n");          
     A_loadDefaultSettings();
     UI_applySettings();
+
+    MainWindow * mw = (MainWindow*)QuiMainWindows;
+    bool hideElement;
+    #define hideElementMacro(arg1, arg2, arg3) \
+    if (prefs->get(FEATURES_HIDE_##arg1, &hideElement)) \
+    { \
+        if (hideElement) \
+        { \
+            mw->ui.arg2##Widget->setEnabled(false); \
+            mw->ui.arg2##Widget->hide(); \
+            mw->ui.actionView##arg3->setChecked(false); \
+        } \
+    }
+    hideElementMacro(AUDIOMETRE, audioMetre, AudioMetre)
+    hideElementMacro(CODECOPTIONS, codec, CodecOptions)
+    hideElementMacro(NAVIGATION, navigation, Navigation)
+    hideElementMacro(SELECTION, selection, Selection)
+    hideElementMacro(VOLUME, volume, Volume)
+    #undef hideElementMacro
     
     // start update checking..
     bool autoUpdateEnabled=false;
