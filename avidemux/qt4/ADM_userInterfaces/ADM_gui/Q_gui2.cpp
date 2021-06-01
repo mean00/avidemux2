@@ -2353,6 +2353,14 @@ void UI_setTotalTime(uint64_t curTime)
     slider->setTotalDuration(curTime);
 }
 /**
+    \fn UI_setSegments
+    \brief SEt segments boundaries
+*/
+void UI_setSegments(uint32_t numOfSegs, uint64_t * segPts)
+{
+    slider->setSegments(numOfSegs, segPts);
+}
+/**
     \fn     UI_setMarkers(uint64_t Ptsa, uint32_t Ptsb )
     \brief  Display frame # for marker A & B
 */
