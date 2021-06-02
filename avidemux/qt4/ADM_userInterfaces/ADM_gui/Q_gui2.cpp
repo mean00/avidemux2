@@ -959,6 +959,8 @@ void MainWindow::buildButtonLists(void)
     ADD_BUTTON_LOADED(toolButtonNextIntraFrame)
     ADD_BUTTON_LOADED(toolButtonSetMarkerA)
     ADD_BUTTON_LOADED(toolButtonSetMarkerB)
+    ADD_BUTTON_LOADED(toolButtonPreviousCutPoint)
+    ADD_BUTTON_LOADED(toolButtonNextCutPoint)
     ADD_BUTTON_LOADED(toolButtonPreviousBlackFrame)
     ADD_BUTTON_LOADED(toolButtonNextBlackFrame)
     ADD_BUTTON_LOADED(toolButtonFirstFrame)
@@ -972,6 +974,8 @@ void MainWindow::buildButtonLists(void)
     ADD_BUTTON_PLAYBACK(toolButtonNextIntraFrame)
     ADD_BUTTON_PLAYBACK(toolButtonSetMarkerA)
     ADD_BUTTON_PLAYBACK(toolButtonSetMarkerB)
+    ADD_BUTTON_PLAYBACK(toolButtonPreviousCutPoint)
+    ADD_BUTTON_PLAYBACK(toolButtonNextCutPoint)
     ADD_BUTTON_PLAYBACK(toolButtonPreviousBlackFrame)
     ADD_BUTTON_PLAYBACK(toolButtonNextBlackFrame)
     ADD_BUTTON_PLAYBACK(toolButtonFirstFrame)
@@ -1182,6 +1186,14 @@ void MainWindow::updateActionShortcuts(void)
         q = findAction(&myMenuGo, ACT_NextKFrame);
         if(q)
             q->setShortcut(swpud ? Qt::Key_Down : Qt::Key_Up);
+
+        q = findAction(&myMenuGo, ACT_PrevCutPoint);
+        if(q)
+            q->setShortcut(Qt::SHIFT + (swpud ? Qt::Key_Up : Qt::Key_Down));
+
+        q = findAction(&myMenuGo, ACT_NextCutPoint);
+        if(q)
+            q->setShortcut(Qt::SHIFT + (swpud ? Qt::Key_Down : Qt::Key_Up));
     }
 
     std::vector<MenuEntry *> defaultShortcuts;
@@ -1334,6 +1346,14 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QString(QT_TRANSLATE_NOOP("qgui2","Set end marker"));
     tt += SHORTCUT(ACT_MarkB,Edit)
     ui.toolButtonSetMarkerB->setToolTip(tt);
+
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to previous cut point"));
+    tt += SHORTCUT(ACT_PrevCutPoint,Go)
+    ui.toolButtonPreviousCutPoint->setToolTip(tt);
+
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to next cut point"));
+    tt += SHORTCUT(ACT_NextCutPoint,Go)
+    ui.toolButtonNextCutPoint->setToolTip(tt);
 
     // go to black frame tooltips are static, the actions don't have shortcuts
 
@@ -1498,6 +1518,13 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                             else
                                 sendAction(ACT_Back1Mn);
                         }else
+                        if (keyEvent->modifiers() & Qt::ShiftModifier)
+                        {
+                            if(!swpud)
+                                sendAction(ACT_NextCutPoint);
+                            else
+                                sendAction(ACT_PrevCutPoint);
+                        }else
                         {
                             if(!swpud)
                                 sendAction(ACT_NextKFrame);
@@ -1512,6 +1539,13 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                                 sendAction(ACT_Back1Mn);
                             else
                                 sendAction(ACT_Forward1Mn);
+                        }else
+                        if (keyEvent->modifiers() & Qt::ShiftModifier)
+                        {
+                            if(!swpud)
+                                sendAction(ACT_PrevCutPoint);
+                            else
+                                sendAction(ACT_NextCutPoint);
                         }else
                         {
                             if(!swpud)

@@ -132,6 +132,8 @@ static const MenuEntry _myMenuGo[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Next Frame"),          NULL,ACT_NextFrame,       MKICON(forward),       "Right",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Previous Intra Frame"),NULL,ACT_PreviousKFrame,  MKICON(player_rew),    "Down",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Next Intra Frame"),    NULL,ACT_NextKFrame,      MKICON(player_fwd),    "Up",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Previous Cut Point"),  NULL,ACT_PrevCutPoint,    MKICON(prev_cut),      NULL,0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Next Cut Point"),      NULL,ACT_NextCutPoint,    MKICON(next_cut),      NULL,0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Previous Black Frame"),NULL,ACT_PrevBlackFrame,  MKICON(prev_black),    NULL,0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Next Black Frame"),    NULL,ACT_NextBlackFrame,  MKICON(next_black),    NULL,0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","First Frame"),         NULL,ACT_Begin,           MKICON(player_start),  "Home",0},

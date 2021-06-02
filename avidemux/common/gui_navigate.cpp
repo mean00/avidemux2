@@ -42,6 +42,8 @@ extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *m
 bool   GUI_infiniteForward(uint64_t pts);
 bool   GUI_lastFrameBeforePts(uint64_t pts);
 bool   GUI_SeekByTime(int64_t time);
+void  GUI_PrevCutPoint();
+void  GUI_NextCutPoint();
 bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 /**
     \fn HandleAction_Navigate
@@ -156,6 +158,12 @@ static int ignore_change=0;
       break;
       case ACT_NextKFrame:
         GUI_NextKeyFrame();
+      break;
+      case ACT_PrevCutPoint:
+        GUI_PrevCutPoint();
+      break;
+      case ACT_NextCutPoint:
+        GUI_NextCutPoint();
       break;
       case ACT_NextBlackFrame:
         GUI_NextBlackFrame();
@@ -492,6 +500,59 @@ bool GUI_SeekByTime(int64_t time)
     }
     ADM_info("Seek to:%s ms \n",ADM_us2plain(pts));
     return GUI_lastFrameBeforePts(pts);
+}
+
+/**
+    \fn GUI_PrevCutPoint
+*/
+void GUI_PrevCutPoint()
+{
+    uint64_t pts=admPreview::getCurrentPts();
+    uint64_t last_prev_pts=ADM_NO_PTS;
+    uint32_t numOfSegs = video_body->getNbSegment();
+    for(int i=0; i<numOfSegs; i++)
+    {
+        _SEGMENT * seg = video_body->getSegment(i);
+        if (seg)
+        {
+            if (seg->_startTimeUs < pts)
+                last_prev_pts = seg->_startTimeUs;
+            else
+                break;
+        }
+    }
+    if (last_prev_pts!=ADM_NO_PTS)
+    {
+        ADM_info("Seek to cut point:%s ms \n",ADM_us2plain(last_prev_pts));
+        GUI_lastFrameBeforePts(last_prev_pts);
+    }
+}
+
+/**
+    \fn GUI_NextCutPoint
+*/
+void GUI_NextCutPoint()
+{
+    uint64_t pts=admPreview::getCurrentPts();
+    uint64_t first_next_pts=ADM_NO_PTS;
+    uint32_t numOfSegs = video_body->getNbSegment();
+    for(int i=0; i<numOfSegs; i++)
+    {
+        _SEGMENT * seg = video_body->getSegment(i);
+        if (seg)
+        {
+            if (seg->_startTimeUs > pts)
+            {
+                first_next_pts = seg->_startTimeUs;
+                break;
+            }
+        }
+    }
+    if (first_next_pts!=ADM_NO_PTS)
+    {
+        ADM_info("Seek to cut point:%s ms \n",ADM_us2plain(first_next_pts));
+        GUI_lastFrameBeforePts(first_next_pts);
+    }
 }
 
 /**
