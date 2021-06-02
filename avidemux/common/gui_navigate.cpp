@@ -507,10 +507,15 @@ bool GUI_SeekByTime(int64_t time)
 */
 void GUI_PrevCutPoint()
 {
+    if (playing)
+        return;
+    if (!avifileinfo)
+        return;
+
     uint64_t pts=admPreview::getCurrentPts();
     uint64_t last_prev_pts=ADM_NO_PTS;
-    uint32_t numOfSegs = video_body->getNbSegment();
-    for(int i=0; i<numOfSegs; i++)
+    int numOfSegs = video_body->getNbSegment();
+    for(int i=1; i<numOfSegs; i++) // we are not interested in the first segment
     {
         _SEGMENT * seg = video_body->getSegment(i);
         if (seg)
@@ -521,11 +526,43 @@ void GUI_PrevCutPoint()
                 break;
         }
     }
-    if (last_prev_pts!=ADM_NO_PTS)
+
+    if (last_prev_pts == ADM_NO_PTS)
+        return;
+
+    ADM_info("Seek to cut point:%s ms \n",ADM_us2plain(last_prev_pts));
+    // Does the start time of the segment match a keyframe?
+    uint64_t tmp = last_prev_pts + 1;
+    if (video_body->getPKFramePTS(&tmp) && tmp == last_prev_pts)
     {
-        ADM_info("Seek to cut point:%s ms \n",ADM_us2plain(last_prev_pts));
-        GUI_lastFrameBeforePts(last_prev_pts);
+        if(admPreview::seekToIntraPts(last_prev_pts))
+            GUI_setCurrentFrameAndTime();
+        return;
     }
+    // Nope, seek to the previous keyframe and decode from there
+    // until we have crossed the segment boundary.
+    admPreview::deferDisplay(true);
+    if (false == admPreview::seekToIntraPts(tmp))
+    {
+        admPreview::deferDisplay(false);
+        return;
+    }
+    while (true)
+    {
+        if (false == admPreview::nextPicture())
+            break;
+        tmp = admPreview::getCurrentPts();
+        if (!tmp || tmp == ADM_NO_PTS)
+        { // should never happen, try not to crash in admPreview::samePicture
+            video_body->rewind();
+            break;
+        }
+        if (tmp >= last_prev_pts) // we've crossed the segment boundary
+            break;
+    }
+    admPreview::deferDisplay(false);
+    admPreview::samePicture();
+    GUI_setCurrentFrameAndTime();
 }
 
 /**
@@ -533,10 +570,15 @@ void GUI_PrevCutPoint()
 */
 void GUI_NextCutPoint()
 {
+    if (playing)
+        return;
+    if (!avifileinfo)
+        return;
+
     uint64_t pts=admPreview::getCurrentPts();
     uint64_t first_next_pts=ADM_NO_PTS;
-    uint32_t numOfSegs = video_body->getNbSegment();
-    for(int i=0; i<numOfSegs; i++)
+    int numOfSegs = video_body->getNbSegment();
+    for(int i=1; i<numOfSegs; i++)
     {
         _SEGMENT * seg = video_body->getSegment(i);
         if (seg)
@@ -548,11 +590,43 @@ void GUI_NextCutPoint()
             }
         }
     }
-    if (first_next_pts!=ADM_NO_PTS)
+
+    if (first_next_pts == ADM_NO_PTS)
+        return;
+
+    ADM_info("Seek to cut point:%s ms \n",ADM_us2plain(first_next_pts));
+    // Does the start time of the segment match a keyframe?
+    uint64_t tmp = first_next_pts + 1;
+    if (video_body->getPKFramePTS(&tmp) && tmp == first_next_pts)
     {
-        ADM_info("Seek to cut point:%s ms \n",ADM_us2plain(first_next_pts));
-        GUI_lastFrameBeforePts(first_next_pts);
+        if(admPreview::seekToIntraPts(first_next_pts))
+            GUI_setCurrentFrameAndTime();
+        return;
     }
+    // Nope, seek to the previous keyframe and decode from there
+    // until we have crossed the segment boundary.
+    admPreview::deferDisplay(true);
+    if (false == admPreview::seekToIntraPts(tmp))
+    {
+        admPreview::deferDisplay(false);
+        return;
+    }
+    while (true)
+    {
+        if (false == admPreview::nextPicture())
+            break;
+        tmp = admPreview::getCurrentPts();
+        if (!tmp || tmp == ADM_NO_PTS)
+        { // should never happen, try not to crash in admPreview::samePicture
+            video_body->rewind();
+            break;
+        }
+        if (tmp >= first_next_pts) // we've crossed the segment boundary
+            break;
+    }
+    admPreview::deferDisplay(false);
+    admPreview::samePicture();
+    GUI_setCurrentFrameAndTime();
 }
 
 /**
@@ -607,30 +681,35 @@ bool GUI_lastFrameBeforePts(uint64_t pts)
     uint64_t tmp=pts;
     uint64_t current=admPreview::getCurrentPts();
     // Try to find a keyframe just before pts...
-    if(video_body->getPKFramePTS(&tmp))
+    if(!video_body->getPKFramePTS(&tmp))
+        return false;
+
+    if(tmp<=current && pts>current) // within the same GOP, seeking forward
+        tmp=current; // no need to go back to the keyframe
+    else if(!video_body->goToTimeVideo(tmp))
+        return false;
+
+    // Starting from tmp, approach the last frame before pts
+    admPreview::deferDisplay(true);
+    bool stepBack = false;
+    while(true)
     {
-        bool r=true;
-        if(tmp<=current && pts>current) // within the same GOP, seeking forward
-            tmp=current; // no need to go back to the keyframe
-        else
-            r=video_body->goToTimeVideo(tmp);
-        // Starting from tmp, approach the last frame before pts
-        if(r)
-        {
-            admPreview::deferDisplay(1);
-            uint64_t inc=video_body->getFrameIncrement();
-            while(tmp+inc <= pts) // otherwise we may overshoot
-            {
-                admPreview::nextPicture();
-                tmp=admPreview::getCurrentPts();
-            }
-            admPreview::deferDisplay(0);
-            admPreview::samePicture();
-            GUI_setCurrentFrameAndTime();
-            return true;
-        }
+        stepBack = admPreview::nextPicture();
+        if(!stepBack)
+            break;
+        tmp = admPreview::getCurrentPts();
+        if(tmp == ADM_NO_PTS)
+            break;
+        if(tmp >= pts)
+            break;
     }
-    return false;
+    if(stepBack)
+        admPreview::previousPicture();
+    admPreview::deferDisplay(false);
+    admPreview::samePicture();
+    GUI_setCurrentFrameAndTime();
+
+    return true;
 }
 
 /**
