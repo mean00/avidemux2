@@ -465,7 +465,7 @@ bool setPrefsDefault(void)
     #endif
 #endif
 #ifdef __linux__
-        prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("PulseAudioS"));
+        prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("PulseAudio"));
     #ifdef USE_VDPAU
         prefs->set(VIDEODEVICE,(uint32_t)RENDER_VDPAU);
     #elif defined(USE_XV)

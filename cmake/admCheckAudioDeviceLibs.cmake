@@ -154,6 +154,7 @@ ENDIF (UNIX AND NOT APPLE)
 # PulseAudioSimple
 ########################################
 IF (UNIX AND NOT APPLE)
+#[[
 	OPTION(PULSEAUDIOSIMPLE "" ON)
 
 	MESSAGE(STATUS "Checking for PULSEAUDIOSIMPLE")
@@ -191,6 +192,7 @@ IF (UNIX AND NOT APPLE)
         MARK_AS_ADVANCED(PULSEAUDIOSIMPLE_INCLUDE_DIR PULSEAUDIOSIMPLE_LIBRARIES)
 
 		APPEND_SUMMARY_LIST("Audio Device" "PulseAudioS" "${USE_PULSE_SIMPLE}")
+]]
     OPTION(PULSEAUDIO "" ON)
     MESSAGE(STATUS "Checking for PulseAudio")
     include(FindPkgConfig)
