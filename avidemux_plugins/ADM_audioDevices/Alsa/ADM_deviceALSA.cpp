@@ -58,11 +58,19 @@ ADM_DECLARE_AUDIODEVICE(AlsaDefault,alsaAudioDevice,1,0,0,"Alsa Audio Device (de
 /* Handle for the PCM device */
 snd_pcm_t *pcm_handle;
 
-    alsaAudioDevice::alsaAudioDevice( void )
-    {
-        _init=0;
-        volumeHack=0;
-    }
+alsaAudioDevice::alsaAudioDevice( void )
+{
+    _init=0;
+    volumeHack=0;
+    softVolumeBuffer = NULL;
+}
+
+alsaAudioDevice::~alsaAudioDevice( void )
+{
+    if (softVolumeBuffer)
+        delete [] softVolumeBuffer;
+    softVolumeBuffer = NULL;
+}
 /**
     \fn localInit
     \brief
@@ -224,6 +232,8 @@ If your hardware does not support a buffersize of 2^n, you can use the function 
 
     printf("[Alsa]Success initializing: fq :%u channel %u\n", _frequency,_channels);
 
+    softVolumeBuffer = new int16_t[sizeOf10ms];
+
     // 2=fully initialized
     _init=2;
     return 1;
@@ -239,7 +249,6 @@ void alsaAudioDevice::sendData(void)
     /* the PCM device pointed to by pcm_handle.       */
     /* Returns the number of frames actually written. */
     if(2!=_init) return;
-    bool volumeChanged = false;
     uint32_t lenInBytes,lenInSample;
     lenInBytes=sizeOf10ms*2; // 20 ms at a time
     mutex.lock();
@@ -258,22 +267,20 @@ _again:
     }
     uint8_t *start=audioBuffer.at(rdIndex);
     int ret;
+    
+    memcpy(softVolumeBuffer, start, lenInBytes);
+    mutex.unlock();
 
-    if (!volumeChanged)
+    for (int i=0; i<lenInSample*_channels; i++)
     {
-        int16_t * dataCast = (int16_t *)start;
-        for (int i=0; i<lenInSample*_channels; i++)
-        {
-            int32_t vh;
-            vh = dataCast[i];
-            vh *= volumeHack;
-            dataCast[i] = vh/32768;
-        }
-        volumeChanged = true;
+        int32_t vh;
+        vh = softVolumeBuffer[i];
+        vh *= volumeHack;
+        softVolumeBuffer[i] = vh/32768;
     }
 
     mutex.unlock(); // There is a race here....
-    ret=snd_pcm_writei(pcm_handle,start, lenInSample);
+    ret=snd_pcm_writei(pcm_handle,(uint8_t*)softVolumeBuffer, lenInSample);
     mutex.lock();
     if(ret==(int)lenInSample)
     {
