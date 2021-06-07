@@ -217,8 +217,6 @@ public slots:
     void audioToggled(bool checked);
     void previewModeChangedFromMenu(bool status);
     void previewModeChangedFromToolbar(bool status);
-    void previousIntraFrame(void);
-    void nextIntraFrame(void);
     void timeChangeFinished(void);
     void currentFrameChanged(void);
     void currentTimeChanged(void);

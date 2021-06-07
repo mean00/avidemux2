@@ -27,8 +27,9 @@ class ThumbSlider : public QAbstractSlider
 	Q_OBJECT
 
 private:
-	int timerId, count, lock, pos;
+	int timerId, count, lock, pos, stopping;
 
+	void stop(void);
 	void drawBackground(QPainter *painter);
 	void drawLines(QPainter *painter);
 	void drawBorders(QPainter *painter);
@@ -36,6 +37,7 @@ private:
 
 public:
 	ThumbSlider(QWidget *parent = 0);
+	void reset(void);
 
 protected:
 	void timerEvent(QTimerEvent *event);

@@ -22,7 +22,7 @@ ThumbSlider::ThumbSlider(QWidget *parent) : QAbstractSlider(parent)
 	setMinimum(-100);
 	setValue(0);
 
-	timerId = count = lock = pos = 0;
+	timerId = count = lock = pos = stopping = 0;
 }
 
 void ThumbSlider::timerEvent(QTimerEvent *event)
@@ -51,6 +51,16 @@ void ThumbSlider::timerEvent(QTimerEvent *event)
 	lock--;
 }
 
+void ThumbSlider::stop(void)
+{
+	if (timerId)
+		killTimer(timerId);
+	setValue(0);
+	timerId = count = pos = 0;
+
+	triggerAction(SliderNoAction);
+}
+
 void ThumbSlider::paintEvent(QPaintEvent *event)
 {
 	QPainter painter;
@@ -67,6 +77,7 @@ void ThumbSlider::paintEvent(QPaintEvent *event)
 
 void ThumbSlider::mousePressEvent(QMouseEvent *event)
 {
+	if (stopping) return;
 	if (event->buttons() & Qt::LeftButton)
 	{
 		int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
@@ -79,6 +90,7 @@ void ThumbSlider::mousePressEvent(QMouseEvent *event)
 
 void ThumbSlider::mouseMoveEvent(QMouseEvent *event)
 {
+	if (stopping) return;
 	if (event->buttons() & Qt::LeftButton)
 	{
 		int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
@@ -92,11 +104,9 @@ void ThumbSlider::mouseReleaseEvent(QMouseEvent *event)
 {
 	if (event->button() & Qt::LeftButton)
 	{
-		killTimer(timerId);
-		setValue(0);
-		timerId = count = pos = 0;
-
-		triggerAction(SliderNoAction);
+		stop();
+		stopping = 0;
+		emit valueEmitted(0);
 	}
 }
 
@@ -120,13 +130,22 @@ void ThumbSlider::wheelEvent(QWheelEvent *event)
 	{
 		if (timerId)
 			killTimer(timerId);
-		timerId = count = 0;
+		timerId = count = stopping = 0;
+		emit valueEmitted(0);
 	}
 
 	if (value)
 		triggerAction(SliderMove);
 	else
 		triggerAction(SliderNoAction);
+}
+
+void ThumbSlider::reset(void)
+{
+	stopping = 1;
+	stop();
+	setSliderPosition(0);
+	emit valueEmitted(0);
 }
 
 void ThumbSlider::drawBackground(QPainter *painter)

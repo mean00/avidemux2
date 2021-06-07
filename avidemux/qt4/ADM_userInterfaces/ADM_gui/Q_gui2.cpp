@@ -317,13 +317,59 @@ void MainWindow::sliderWheel(int way)
         sendAction(ACT_PreviousKFrame);
     
 }
-
+/**
+ * \fn thumbSlider_valueEmitted
+ * \brief Slot to handle signals from the thumb slider.
+ */
 void MainWindow::thumbSlider_valueEmitted(int value)
 {
-        if (value > 0)
-                nextIntraFrame();
-        else
-                previousIntraFrame();
+    if (!avifileinfo)
+    {
+        if (value)
+            thumbSlider->reset();
+        return;
+    }
+
+    if (playing)
+    {
+        if (getPreviewMode() != ADM_PREVIEW_NONE)
+            return;
+        sendAction(ACT_PlayAvi); // stop playback;
+        dragWhilePlay = true;
+        return;
+    } else if (dragWhilePlay && !value)
+    {
+        dragWhilePlay = false;
+        if (getPreviewMode() == ADM_PREVIEW_NONE)
+            sendAction(ACT_PlayAvi); // resume playback;
+        return;
+    }
+
+    if (!value) return;
+
+    bool success = true;
+    if (value > 0)
+        success = admPreview::nextKeyFrame();
+    else
+        success = admPreview::previousKeyFrame();
+    if (success)
+    {
+        uint64_t total = video_body->getVideoDuration();
+        if (total)
+        {
+            uint64_t pts = admPreview::getCurrentPts();
+            UI_setCurrentTime(pts);
+
+            double percentage = pts;
+            percentage /= total;
+            percentage *= 100;
+
+            UI_setScale(percentage);
+        }
+        return;
+    }
+    thumbSlider->reset();
+    dragWhilePlay = false;
 }
 
 void MainWindow::volumeChange( int u )
@@ -1852,22 +1898,6 @@ bool MainWindow::getBlockResizingFlag(void)
 void MainWindow::setBlockResizingFlag(bool block)
 {
     blockResizing = block;
-}
-
-void MainWindow::previousIntraFrame(void)
-{
-    if (ui.spinBox_TimeValue->hasFocus())
-        ui.spinBox_TimeValue->stepDown();
-    else
-        sendAction(ACT_PreviousKFrame);
-}
-
-void MainWindow::nextIntraFrame(void)
-{
-    if (ui.spinBox_TimeValue->hasFocus())
-        ui.spinBox_TimeValue->stepUp();
-    else
-        sendAction(ACT_NextKFrame);
 }
 
 /**
