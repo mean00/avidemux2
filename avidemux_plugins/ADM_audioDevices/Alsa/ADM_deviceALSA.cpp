@@ -294,7 +294,6 @@ _again:
         }
     }
 
-    mutex.unlock(); // There is a race here....
     ret=snd_pcm_writei(pcm_handle,start, lenInSample);
     mutex.lock();
     if(ret==(int)lenInSample)
