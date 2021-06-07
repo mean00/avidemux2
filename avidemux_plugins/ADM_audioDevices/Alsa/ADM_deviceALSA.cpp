@@ -2,8 +2,8 @@
                           ADM_deviceAlsa.cpp  -  description
                              -------------------
 
-	Strongly derivated from code sample from alsa-project.org with some bits
-		from mplayer concerning the swparams
+    Strongly derivated from code sample from alsa-project.org with some bits
+        from mplayer concerning the swparams
 
     begin                : Sat Sep 28 2002
     copyright            : (C) 2002 by mean
@@ -58,20 +58,29 @@ ADM_DECLARE_AUDIODEVICE(AlsaDefault,alsaAudioDevice,1,0,0,"Alsa Audio Device (de
 /* Handle for the PCM device */
 snd_pcm_t *pcm_handle;
 
-    alsaAudioDevice::alsaAudioDevice( void )
-    {
-		_init=0;
-    }
+alsaAudioDevice::alsaAudioDevice( void )
+{
+    _init=0;
+    volumeHack=0;
+    softVolumeBuffer = NULL;
+}
+
+alsaAudioDevice::~alsaAudioDevice( void )
+{
+    if (softVolumeBuffer)
+        delete [] softVolumeBuffer;
+    softVolumeBuffer = NULL;
+}
 /**
     \fn localInit
     \brief
 */
 bool alsaAudioDevice::localInit( void )
 {
-	int dir=0;
+    int dir=0;
 
 
-	_init=0;
+    _init=0;
    /* Playback stream */
     snd_pcm_stream_t stream = SND_PCM_STREAM_PLAYBACK;
 
@@ -84,7 +93,7 @@ bool alsaAudioDevice::localInit( void )
 
   static char *pcm_name;
 //  if( prefs->get(DEVICE_AUDIO_ALSA_DEVICE, &pcm_name) != RC_OK )
-               pcm_name = ADM_strdup(ADEVICE);
+        pcm_name = ADM_strdup(ADEVICE);
     printf("[Alsa] Using device :%s\n",pcm_name);
  /* Allocate the snd_pcm_hw_params_t structure on the stack. */
     snd_pcm_hw_params_alloca(&hwparams);
@@ -97,16 +106,16 @@ bool alsaAudioDevice::localInit( void )
     /* specified, SIGIO will be emitted whenever a period has     */
     /* been completely processed by the soundcard.                */
     if (snd_pcm_open(&pcm_handle, pcm_name, stream, 0*SND_PCM_NONBLOCK) < 0) {
-      fprintf(stderr, "[Alsa]Error opening PCM device %s\n", pcm_name);
-      return(0);
+        fprintf(stderr, "[Alsa]Error opening PCM device %s\n", pcm_name);
+        return(0);
     }
     // past this point we got _init=1 -> partially initialized
     _init=1;
       /* Init hwparams with full configuration space */
     if (snd_pcm_hw_params_any(pcm_handle, hwparams) < 0) {
-      fprintf(stderr, "[Alsa]Can not configure this PCM device.\n");
-      ADM_dealloc(pcm_name);
-      return(0);
+        fprintf(stderr, "[Alsa]Can not configure this PCM device.\n");
+        ADM_dealloc(pcm_name);
+        return(0);
     }
     ADM_dealloc(pcm_name);
     /* Set access type. This can be either    */
@@ -116,8 +125,8 @@ bool alsaAudioDevice::localInit( void )
     /* access, but this is beyond the scope   */
     /* of this introduction.                  */
     if (snd_pcm_hw_params_set_access(pcm_handle, hwparams, SND_PCM_ACCESS_RW_INTERLEAVED) < 0) {
-      fprintf(stderr, "[Alsa]Error setting access.\n");
-      return(0);
+        fprintf(stderr, "[Alsa]Error setting access.\n");
+        return(0);
     }
 
     /* Set sample format */
@@ -130,27 +139,27 @@ bool alsaAudioDevice::localInit( void )
     if (snd_pcm_hw_params_set_format(pcm_handle, hwparams, SND_PCM_FORMAT_S16_LE) < 0)
 #endif
     {
-      fprintf(stderr, "[Alsa]Error setting format.\n");
-      return(0);
+        fprintf(stderr, "[Alsa]Error setting format.\n");
+        return(0);
     }
-	//}
+    //}
     /* Set sample rate. If the exact rate is not supported */
     /* by the hardware, use nearest possible rate.         */
     int exact_rate;
     dir=0;
     exact_rate = snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &_frequency, &dir);
     if (dir != 0) {
-      fprintf(stderr, "[Alsa]The rate %" PRIu32" Hz is not supported by your hardware.\n  ==> Using %d Hz instead.\n", _frequency, exact_rate);
+        fprintf(stderr, "[Alsa]The rate %" PRIu32" Hz is not supported by your hardware.\n  ==> Using %d Hz instead.\n", _frequency, exact_rate);
     }
 
     /* Set number of channels */
     if (snd_pcm_hw_params_set_channels(pcm_handle, hwparams, _channels) < 0) {
-      fprintf(stderr, "[Alsa]Error setting channels.\n");
-      return(0);
+        fprintf(stderr, "[Alsa]Error setting channels.\n");
+        return(0);
     }
 #if 0
-    	uint32_t periods= _frequency*2*channel*10;
-	uint32_t periodsize=1;
+        uint32_t periods= _frequency*2*channel*10;
+    uint32_t periodsize=1;
     /* Set number of periods. Periods used to be called fragments. */
     if (snd_pcm_hw_params_set_periods(pcm_handle, hwparams, periods, 0) < 0) {
       fprintf(stderr, "[Alsa]Error setting periods.\n");
@@ -158,27 +167,27 @@ bool alsaAudioDevice::localInit( void )
     }
 #else
 
- 	unsigned int buffer_time = 1000LL*1000LL; // 60 Ms ?
-	int er;
-	unsigned int buff;
-	dir=0;
+    unsigned int buffer_time = 100LL*1000LL; // 60 Ms ?
+    int er;
+    unsigned int buff;
+    dir=0;
 
-	if ((er=snd_pcm_hw_params_set_buffer_time_near(pcm_handle, hwparams, &buffer_time, &dir)) < 0)
-	  {
-	    printf("[Alsa]Error : hw_params_set_buffer_time\n");
-	    return(0);
-	  }
-	  // unsigned ?
-	  dir=0;
-	  buff=buffer_time>>2;
-	snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, &buff, &dir) ;
+    if ((er=snd_pcm_hw_params_set_buffer_time_near(pcm_handle, hwparams, &buffer_time, &dir)) < 0)
+    {
+        printf("[Alsa]Error : hw_params_set_buffer_time\n");
+        return(0);
+    }
+    // unsigned ?
+    dir=0;
+    buff=buffer_time>>2;
+    snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, &buff, &dir) ;
 #if 0
-	if (snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, buffer_time>>2, 0) < 0)
-	  /* original: alsa_buffer_time/ao_data.bps */
-	  {
-	    printf("[Alsa]Error : hw_params_set_period_time\n");
-	    return(0);
-	  }
+    if (snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, buffer_time>>2, 0) < 0)
+      /* original: alsa_buffer_time/ao_data.bps */
+      {
+        printf("[Alsa]Error : hw_params_set_period_time\n");
+        return(0);
+      }
 #endif
 #endif
 
@@ -191,37 +200,39 @@ If your hardware does not support a buffersize of 2^n, you can use the function 
     /* Apply HW parameter settings to */
     /* PCM device and prepare device  */
     if (snd_pcm_hw_params(pcm_handle, hwparams) < 0) {
-      fprintf(stderr, "[Alsa]Error setting HW params.\n");
-      return(0);
+        fprintf(stderr, "[Alsa]Error setting HW params.\n");
+        return(0);
     }
 
- 	if (snd_pcm_sw_params_current(pcm_handle, swparams) < 0)
-	    {
-	      printf("[Alsa]Error setting SW params.\n");
-	      return(0);
-	    }
+    if (snd_pcm_sw_params_current(pcm_handle, swparams) < 0)
+    {
+        printf("[Alsa]Error setting SW params.\n");
+        return(0);
+    }
 
- 	// be sure that playback starts immediatly (or near)
-	  if (snd_pcm_sw_params_set_avail_min(pcm_handle, swparams, 4) < 0)
-	    {
-	      printf("[Alsa]Error setting set_avail_min \n");
-	      return(0);
-	    }
+    // be sure that playback starts immediatly (or near)
+    if (snd_pcm_sw_params_set_avail_min(pcm_handle, swparams, 4) < 0)
+    {
+        printf("[Alsa]Error setting set_avail_min \n");
+        return(0);
+    }
 
-	  if (snd_pcm_sw_params(pcm_handle, swparams) < 0)
-	    {
-	      printf("[Alsa]Error:snd_pcm_sw_params\n ");
-	      return(0);
-	    }
+    if (snd_pcm_sw_params(pcm_handle, swparams) < 0)
+    {
+        printf("[Alsa]Error:snd_pcm_sw_params\n ");
+        return(0);
+    }
 
 
-      if ( snd_pcm_prepare(pcm_handle) < 0)
-	{
-	  printf("[Alsa]Error : snd_pcm_prepare\n");
-	  return(0);
-	}
+    if ( snd_pcm_prepare(pcm_handle) < 0)
+    {
+        printf("[Alsa]Error : snd_pcm_prepare\n");
+        return(0);
+    }
 
-        printf("[Alsa]Success initializing: fq :%u channel %u\n", _frequency,_channels);
+    printf("[Alsa]Success initializing: fq :%u channel %u\n", _frequency,_channels);
+
+    softVolumeBuffer = new int16_t[sizeOf10ms];
 
     // 2=fully initialized
     _init=2;
@@ -234,61 +245,85 @@ If your hardware does not support a buffersize of 2^n, you can use the function 
 */
 void alsaAudioDevice::sendData(void)
 {
-	/* Write num_frames frames from buffer data to    */
-	/* the PCM device pointed to by pcm_handle.       */
-	/* Returns the number of frames actually written. */
-    if(2!=_init) return ;
+    /* Write num_frames frames from buffer data to    */
+    /* the PCM device pointed to by pcm_handle.       */
+    /* Returns the number of frames actually written. */
+    if(2!=_init) return;
     uint32_t lenInBytes,lenInSample;
     lenInBytes=sizeOf10ms*2; // 20 ms at a time
     mutex.lock();
     uint32_t avail;
 _again:
 
-	avail=wrIndex-rdIndex;
+    avail=wrIndex-rdIndex;
 
     if(lenInBytes>avail) lenInBytes=avail;
     lenInSample=lenInBytes/(_channels*2);
     if(!lenInSample)
     {
-       // printf("[Alsa] Underflow\n");
+        // printf("[Alsa] Underflow\n");
         mutex.unlock();
         return ;
     }
-        uint8_t *start=audioBuffer.at(rdIndex);
-        int ret;
+    uint8_t *start;
+    int ret;
+    
+    if ((0 < volumeHack) && (volumeHack < 32768))    // between 0 .. 100%
+    {
+        memcpy(softVolumeBuffer, audioBuffer.at(rdIndex), lenInBytes);
+    }
 
-        mutex.unlock(); // There is a race here....
-       	ret=snd_pcm_writei(pcm_handle,start, lenInSample);
-        mutex.lock();
-		if(ret==(int)lenInSample)
-		{
-			rdIndex+=lenInSample*2*_channels;
-            mutex.unlock();
-            return ;
-		}
+    if (volumeHack == 32768)    // 100%
+        start=audioBuffer.at(rdIndex);
+    else
+        start = (uint8_t *)softVolumeBuffer;
 
-		if(ret<0)
-		{
-			switch(ret)
-			{
-				case    -EAGAIN :
-					//wait a bit to flush datas
-					printf("[Alsa]ALSA EAGAIN\n");
-					snd_pcm_wait(pcm_handle, 1000);
-					goto _again;
+    mutex.unlock();
 
-				case    -EPIPE:
-					printf("[Alsa]ALSA EPIPE\n");
-					snd_pcm_prepare(pcm_handle);
-					goto _again;
-				default:
-					printf("[Alsa]ALSA Error %d : Play %s (len=%d)\n",ret, snd_strerror(ret),0);
+    if (0 == volumeHack)    // 0%
+        memset(softVolumeBuffer, 0, lenInBytes);
+    else
+    if (volumeHack < 32768)
+    {
+        for (int i=0; i<lenInSample*_channels; i++)
+        {
+            int32_t vh;
+            vh = softVolumeBuffer[i];
+            vh *= volumeHack;
+            softVolumeBuffer[i] = vh/32768;
+        }
+    }
 
-			}
-		}
+    ret=snd_pcm_writei(pcm_handle,start, lenInSample);
+    mutex.lock();
+    if(ret==(int)lenInSample)
+    {
+        rdIndex+=lenInSample*2*_channels;
+        mutex.unlock();
+        return ;
+    }
 
-	mutex.unlock();
-	return ;
+    if(ret<0)
+    {
+        switch(ret)
+        {
+            case -EAGAIN:
+                    //wait a bit to flush datas
+                    printf("[Alsa]ALSA EAGAIN\n");
+                    snd_pcm_wait(pcm_handle, 1000);
+                    goto _again;
+            case -EPIPE:
+                    printf("[Alsa]ALSA EPIPE\n");
+                    snd_pcm_prepare(pcm_handle);
+                    goto _again;
+            default:
+                    printf("[Alsa]ALSA Error %d : Play %s (len=%d)\n",ret, snd_strerror(ret),0);
+
+        }
+    }
+
+    mutex.unlock();
+    return ;
 }
 /**
     \fn getWantedChannelMapping
@@ -326,88 +361,95 @@ const CHANNEL_TYPE *alsaAudioDevice::getWantedChannelMapping(uint32_t channels)
  bool alsaAudioDevice::localStop( void )
  {
  // we have at least a partial initialization
- if(_init)
- {
-       /* Stop PCM device and drop pending frames */
-    snd_pcm_drop(pcm_handle);
-    /* Stop PCM device after pending frames have been played */
-    snd_pcm_drain(pcm_handle);
-    snd_pcm_hw_free(pcm_handle);
-    if (snd_pcm_close(pcm_handle) < 0)
+    if(_init)
     {
-        ADM_warning("[Alsa] Troubles closing alsa\n");
-
+        /* Stop PCM device and drop pending frames */
+        snd_pcm_drop(pcm_handle);
+        /* Stop PCM device after pending frames have been played */
+        snd_pcm_drain(pcm_handle);
+        snd_pcm_hw_free(pcm_handle);
+        if (snd_pcm_close(pcm_handle) < 0)
+        {
+            ADM_warning("[Alsa] Troubles closing alsa\n");
+        }
+        snd_config_update_free_global();
     }
-    snd_config_update_free_global();
-  }
-  _init=0;
-  return true;
+    _init=0;
+    return true;
 }
 
 uint8_t alsaAudioDevice::setVolume(int volume){
-  snd_mixer_t *mixer_handle;
-  char *pcm_name;
-  uint32_t which_vol;
-  int rc;
-/*
-	if( prefs->get(DEVICE_AUDIO_ALSA_DEVICE, &pcm_name) != RC_OK )
-		pcm_name = ADM_strdup("hw:0");
-	if( prefs->get(FEATURE_AUDIOBAR_USES_MASTER,&which_vol) != RC_OK )
-		which_vol = 0;
-*/
-    pcm_name = ADM_strdup("hw:0");
-    which_vol = 0;
-	if( (rc=snd_mixer_open(&mixer_handle,0)) < 0 ){
-		printf("[Alsa]: snd_mixer_open failed: %d\n",rc);
-		ADM_dealloc(pcm_name);
-		return 0;
-	}
-// MEANX: Cannot use the real name, does not work with dmix
-	if( (rc=snd_mixer_attach(mixer_handle,"hw:0")) < 0 ){
-		printf("[Alsa]: snd_mixer_attach failed: %d, %s\n",rc, snd_strerror (rc));
-		snd_mixer_close(mixer_handle);
-		ADM_dealloc(pcm_name);
-		return 0;
-}
-	ADM_dealloc(pcm_name);
-	if( (rc=snd_mixer_selem_register(mixer_handle,NULL,NULL)) < 0 ){
-		printf("[Alsa]: snd_mixer_selem_register failed: %d\n",rc);
-		snd_mixer_close(mixer_handle);
-		return 0;
-	}
-	if( (rc=snd_mixer_load(mixer_handle)) < 0 ){
-		printf("[Alsa]: snd_mixer_load failed: %d\n",rc);
-		snd_mixer_close(mixer_handle);
-		return 0;}
-	{ snd_mixer_elem_t *elem;
-	  snd_mixer_selem_id_t *sid;
-	  const char *str;
-		snd_mixer_selem_id_alloca(&sid);
-		for (elem = snd_mixer_first_elem(mixer_handle);
-		     elem;
-		     elem = snd_mixer_elem_next(elem)) {
-			snd_mixer_selem_get_id(elem, sid);
-			str = snd_mixer_selem_id_get_name(sid);
-			if( (which_vol == 0 && !strcmp(str,"PCM"))   ||
-			    (which_vol == 1 && !strcmp(str,"Master"))  ){
-			  long val=0, min=0, max=0;
-				snd_mixer_selem_get_playback_volume_range(elem,&min,&max);
-				/*
-				if( (rc=snd_mixer_selem_get_playback_volume(elem,SND_MIXER_SCHN_FRONT_LEFT,&val)) < 0 ){
-					printf("ALSA: snd_mixer_selem_get_playback_volume failed: %d\n",rc);
-				}
-				printf("ALSA: old val: %lu\n",val*100/max);
-				*/
-				if( (rc=snd_mixer_selem_set_playback_volume_all(elem,volume*max/100)) < 0 ){
-					printf("[Alsa]: snd_mixer_selem_set_playback_volume_all failed: %d\n",rc);
-				}
-				printf("[Alsa]: new %s val: %" PRIu32"\n",(which_vol?"master":"pcm"),volume);
-				break;
-			}
-		}
-	}
-	snd_mixer_close(mixer_handle);
-	return 0;
+
+    if (volume < 0)
+        volume = 0;
+    if (volume > 100)
+        volume = 100;
+    volumeHack = (32768 * volume * volume) / 10000;
+    return 0;
+
+//  snd_mixer_t *mixer_handle;
+//  char *pcm_name;
+//  uint32_t which_vol;
+//  int rc;
+///*
+//    if( prefs->get(DEVICE_AUDIO_ALSA_DEVICE, &pcm_name) != RC_OK )
+//        pcm_name = ADM_strdup("hw:0");
+//    if( prefs->get(FEATURE_AUDIOBAR_USES_MASTER,&which_vol) != RC_OK )
+//        which_vol = 0;
+//*/
+//    pcm_name = ADM_strdup("hw:0");
+//    which_vol = 0;
+//    if( (rc=snd_mixer_open(&mixer_handle,0)) < 0 ){
+//        printf("[Alsa]: snd_mixer_open failed: %d\n",rc);
+//        ADM_dealloc(pcm_name);
+//        return 0;
+//    }
+//// MEANX: Cannot use the real name, does not work with dmix
+//    if( (rc=snd_mixer_attach(mixer_handle,"hw:0")) < 0 ){
+//        printf("[Alsa]: snd_mixer_attach failed: %d, %s\n",rc, snd_strerror (rc));
+//        snd_mixer_close(mixer_handle);
+//        ADM_dealloc(pcm_name);
+//        return 0;
+//}
+//    ADM_dealloc(pcm_name);
+//    if( (rc=snd_mixer_selem_register(mixer_handle,NULL,NULL)) < 0 ){
+//        printf("[Alsa]: snd_mixer_selem_register failed: %d\n",rc);
+//        snd_mixer_close(mixer_handle);
+//        return 0;
+//    }
+//    if( (rc=snd_mixer_load(mixer_handle)) < 0 ){
+//        printf("[Alsa]: snd_mixer_load failed: %d\n",rc);
+//        snd_mixer_close(mixer_handle);
+//        return 0;}
+//    { snd_mixer_elem_t *elem;
+//      snd_mixer_selem_id_t *sid;
+//      const char *str;
+//        snd_mixer_selem_id_alloca(&sid);
+//        for (elem = snd_mixer_first_elem(mixer_handle);
+//             elem;
+//             elem = snd_mixer_elem_next(elem)) {
+//            snd_mixer_selem_get_id(elem, sid);
+//            str = snd_mixer_selem_id_get_name(sid);
+//            if( (which_vol == 0 && !strcmp(str,"PCM"))   ||
+//                (which_vol == 1 && !strcmp(str,"Master"))  ){
+//              long val=0, min=0, max=0;
+//                snd_mixer_selem_get_playback_volume_range(elem,&min,&max);
+//                /*
+//                if( (rc=snd_mixer_selem_get_playback_volume(elem,SND_MIXER_SCHN_FRONT_LEFT,&val)) < 0 ){
+//                    printf("ALSA: snd_mixer_selem_get_playback_volume failed: %d\n",rc);
+//                }
+//                printf("ALSA: old val: %lu\n",val*100/max);
+//                */
+//                if( (rc=snd_mixer_selem_set_playback_volume_all(elem,volume*max/100)) < 0 ){
+//                    printf("[Alsa]: snd_mixer_selem_set_playback_volume_all failed: %d\n",rc);
+//                }
+//                printf("[Alsa]: new %s val: %" PRIu32"\n",(which_vol?"master":"pcm"),volume);
+//                break;
+//            }
+//        }
+//    }
+//    snd_mixer_close(mixer_handle);
+//    return 0;
 }
 
 //EOF

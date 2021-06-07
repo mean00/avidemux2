@@ -28,9 +28,11 @@
             //	1-> device opened but init failed
             //	2->fully initialized
             uint32_t _init;
+            int32_t  volumeHack;
+            int16_t * softVolumeBuffer;
       public:
                                 alsaAudioDevice(void);
-          
+            virtual            ~alsaAudioDevice(void);
             virtual     uint8_t setVolume(int volume);
      }     ;
 #endif
