@@ -265,22 +265,37 @@ _again:
         mutex.unlock();
         return ;
     }
-    uint8_t *start=audioBuffer.at(rdIndex);
+    uint8_t *start;
     int ret;
     
-    memcpy(softVolumeBuffer, start, lenInBytes);
+    if ((0 < volumeHack) && (volumeHack < 32768))    // between 0 .. 100%
+    {
+        memcpy(softVolumeBuffer, audioBuffer.at(rdIndex), lenInBytes);
+    }
+
+    if (volumeHack == 32768)    // 100%
+        start=audioBuffer.at(rdIndex);
+    else
+        start = (uint8_t *)softVolumeBuffer;
+
     mutex.unlock();
 
-    for (int i=0; i<lenInSample*_channels; i++)
+    if (0 == volumeHack)    // 0%
+        memset(softVolumeBuffer, 0, lenInBytes);
+    else
+    if (volumeHack < 32768)
     {
-        int32_t vh;
-        vh = softVolumeBuffer[i];
-        vh *= volumeHack;
-        softVolumeBuffer[i] = vh/32768;
+        for (int i=0; i<lenInSample*_channels; i++)
+        {
+            int32_t vh;
+            vh = softVolumeBuffer[i];
+            vh *= volumeHack;
+            softVolumeBuffer[i] = vh/32768;
+        }
     }
 
     mutex.unlock(); // There is a race here....
-    ret=snd_pcm_writei(pcm_handle,(uint8_t*)softVolumeBuffer, lenInSample);
+    ret=snd_pcm_writei(pcm_handle,start, lenInSample);
     mutex.lock();
     if(ret==(int)lenInSample)
     {
