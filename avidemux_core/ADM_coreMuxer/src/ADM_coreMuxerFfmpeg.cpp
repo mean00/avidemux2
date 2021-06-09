@@ -183,7 +183,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
         par->sample_aspect_ratio.num=1;
         par->sample_aspect_ratio.den=1;
         video_st->sample_aspect_ratio=par->sample_aspect_ratio;
-        par->bit_rate=9000*1000;
+        //par->bit_rate=9000*1000;
         par->codec_type = AVMEDIA_TYPE_VIDEO;
         par->width = stream->getWidth();
         par->height =stream->getHeight();
