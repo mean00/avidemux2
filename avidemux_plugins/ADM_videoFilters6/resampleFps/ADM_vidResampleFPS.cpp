@@ -24,6 +24,7 @@
 
 #include "confResampleFps.h"
 #include "confResampleFps_desc.cpp"
+#include "motin.h"
 
 #if 1
     #define aprintf(...) {}
@@ -63,6 +64,7 @@ protected:
         ADMImage            *frames[2];
         bool                refill(void);   // Fetch next frame
         bool                prefillDone;        // If true we already have 2 frames fetched
+        motin *             motinp;
 public:
                             resampleFps(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~resampleFps();
@@ -105,7 +107,23 @@ bool resampleFps::updateIncrement(void)
 const char *resampleFps::getConfiguration( void )
 {
 static char buf[256];
- snprintf(buf,255," Resample %sto %2.2f fps",(configuration.blend ? "with blending ":""),(double)configuration.newFpsNum/configuration.newFpsDen);
+ const char * intpn = NULL;
+ switch (configuration.interpolation)
+ {
+     case 0:
+         intpn = "none";
+         break;
+     case 1:
+         intpn = "blend";
+         break;
+     case 2:
+         intpn = "motion compensation";
+         break;
+     default:
+         intpn = "INVALID";
+         break;
+ }
+ snprintf(buf,255," Resample to %2.2f fps. Interpolation: %s", (double)configuration.newFpsNum/configuration.newFpsDen, intpn);
  return buf;  
 }
 /**
@@ -123,10 +141,11 @@ resampleFps::resampleFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) :
         configuration.mode=0;
         configuration.newFpsNum=ADM_Fps1000FromUs(previous->getInfo()->frameIncrement);
         configuration.newFpsDen=1000;
-        configuration.blend=false;
+        configuration.interpolation=0;
     }
     if(!frames[0]) frames[0]=new ADMImageDefault(info.width,info.height);
     if(!frames[1]) frames[1]=new ADMImageDefault(info.width,info.height);
+    motinp = new motin(info.width,info.height);
     updateIncrement();
 }
 /**
@@ -138,6 +157,7 @@ resampleFps::~resampleFps()
     if(frames[0]) delete frames[0];
     if(frames[1]) delete frames[1];
     frames[0]=frames[1]=NULL;
+    delete motinp;
 }
 /**
      \fn refill
@@ -151,7 +171,14 @@ bool resampleFps::refill(void)
     uint32_t img=0;
     frames[0]=frames[1];
     frames[1]=nw;
-    return previousFilter->getNextFrame(&img,nw);
+    if (!previousFilter->getNextFrame(&img,nw))
+        return false;
+    if (configuration.interpolation == 2)
+    {
+        motinp->createPyramids(frames[0],frames[1]);
+        motinp->estimateMotion();
+    }
+    return true;
 }
 /**
     \fn goToTime
@@ -218,7 +245,7 @@ again:
         *fn=nextFrame++;
         return true;
     }
-    if (configuration.blend)
+    if (configuration.interpolation > 0)
     {
         double diff1=(double)thisTime-double(frame1Dts);
         double diff2=(double)thisTime-double(frame2Dts);
@@ -255,6 +282,11 @@ again:
                     iptr += istride;
                     bptr += bstride;
                 }
+            }
+            
+            if (configuration.interpolation == 2)
+            {
+                motinp->interpolate(image, bl2);
             }
         }
     } else {
@@ -401,16 +433,23 @@ ADM_assert(nbPredefined == 6);
                     Z(0),Z(1),Z(2),Z(3),Z(4),Z(5)
 
           };
+
+    diaMenuEntry tInterp[3]={
+            {0,QT_TRANSLATE_NOOP("resampleFps","none"),NULL},
+            {1,QT_TRANSLATE_NOOP("resampleFps","Blend"),NULL},
+            {2,QT_TRANSLATE_NOOP("resampleFps","Motion compensation"),NULL}
+    };
+                          
     uint32_t sel=configuration.mode;
     
 
     diaElemMenu mFps(&(configuration.mode),   QT_TRANSLATE_NOOP("resampleFps","_Mode:"), 6,tFps);
     diaElemFloat fps(&f,QT_TRANSLATE_NOOP("resampleFps","_New frame rate:"),1,200.);
-    diaElemToggle blendEn(&(configuration.blend),QT_TRANSLATE_NOOP("resampleFps","Blend frames"));
+    diaElemMenu mInterp(&(configuration.interpolation),   QT_TRANSLATE_NOOP("resampleFps","_Interpolation:"), 3,tInterp);
 
     mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
 
-    diaElem *elems[3]={&mFps,&fps,&blendEn};
+    diaElem *elems[3]={&mFps,&fps,&mInterp};
   
     if( diaFactoryRun(QT_TRANSLATE_NOOP("resampleFps","Resample fps"),3,elems))
     {

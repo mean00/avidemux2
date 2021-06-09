@@ -5,5 +5,5 @@ typedef struct {
 uint32_t mode;
 uint32_t newFpsDen;
 uint32_t newFpsNum;
-bool blend;
+uint32_t interpolation;
 }confResampleFps;
