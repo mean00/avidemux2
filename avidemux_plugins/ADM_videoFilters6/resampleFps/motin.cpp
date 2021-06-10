@@ -58,11 +58,7 @@ motin::motin(int width, int height)
     
     pyramidLevels = lv;
     
-    threads = 1;
-    if(false == prefs->get(FEATURES_THREADING_LAVC, &threads))
-        threads = 1;
-    if(!threads)
-        threads = ADM_cpu_num_processors();
+    threads = ADM_cpu_num_processors();
     threads /= 2;
     if (threads < 1)
         threads = 1;
