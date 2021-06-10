@@ -523,147 +523,173 @@ void motin::estimateMotion()
 }
 
 
+
 void motin::interpolate(ADMImage * dst, int alpha)
 {
     if (alpha > 256)
         alpha = 256;
         
-    int w,h,x,y,p,alphao;
+    int w,h,x,y,p,alpham;
+    alpham = 256-alpha;
     
     uint8_t * dplanes[3];
-    uint8_t * wplanes[3];
-    uint8_t * pplanes[3];
+    uint8_t * wAplanes[3];
+    uint8_t * wBplanes[3];
+    uint8_t * pAplanes[3];
+    uint8_t * pBplanes[3];
     int dstrides[3];
     int wstrides[3];
     int pstrides[3];
+    int error;
 
     dst->GetPitches(dstrides);
     dst->GetWritePlanes(dplanes);
-
     pyramidWA[0]->GetPitches(wstrides);
-    pyramidWA[0]->GetWritePlanes(wplanes);
+    pyramidWA[0]->GetWritePlanes(wAplanes);
+    pyramidWB[0]->GetWritePlanes(wBplanes);
     frameA->GetPitches(pstrides);
-    frameA->GetWritePlanes(pplanes);
+    frameA->GetWritePlanes(pAplanes);
+    frameB->GetWritePlanes(pBplanes);
 
-    for (y=0; y<frameH; y++)
+    for (y=0; y<frameH/2; y++)
     {
-        for (x=0; x<frameW; x++)
+        for (x=0; x<frameW/2; x++)
         {
-            int mx,my;
-            mx = (unsigned int)wplanes[1][x/2 + y/2*wstrides[1]];
-            my = (unsigned int)wplanes[2][x/2 + y/2*wstrides[2]];
-            mx -= 128;
-            my -= 128;
-            mx = (mx*alpha)/256;
-            my = (my*alpha)/256;
-            mx *= -1;
-            my *= -1;
-            mx += x;
-            my += y;
-            if ((mx < 0) || (mx >= frameW))
-                continue;
-            if ((my < 0) || (my >= frameH))
-                continue;
-            dplanes[0][x+y*dstrides[0]] = pplanes[0][mx+my*pstrides[0]];
-        }
-    }
-    
-    for (p=1; p<3; p++)
-    {
-        for (y=0; y<frameH/2; y++)
-        {
-            for (x=0; x<frameW/2; x++)
+            int mxA,myA,mxB,myB;
+            mxA = (unsigned int)wAplanes[1][x + y*wstrides[1]];
+            myA = (unsigned int)wAplanes[2][x + y*wstrides[2]];
+            mxB = (unsigned int)wBplanes[1][x + y*wstrides[1]];
+            myB = (unsigned int)wBplanes[2][x + y*wstrides[2]];
+            mxA -= 128;
+            myA -= 128;
+            mxB -= 128;
+            myB -= 128;
+            mxA = (mxA*alpha)/256;
+            myA = (myA*alpha)/256;
+            mxB = (mxB*alpham)/256;
+            myB = (myB*alpham)/256;
+            mxA *= -1;
+            myA *= -1;
+            mxB *= -1;
+            myB *= -1;
+            mxA += x*2;
+            myA += y*2;
+            mxB += x*2;
+            myB += y*2;
+
+            error = 0;
+            if ((mxA < 0) || (mxA >= frameW-1) || (myA < 0) || (myA >= frameH-1))
+                error += 1;
+            if ((mxB < 0) || (mxB >= frameW-1) || (myB < 0) || (myB >= frameH-1))
+                error += 2;
+
+            switch (error)
             {
-                int mx,my;
-                mx = (unsigned int)wplanes[1][x + y*wstrides[1]];
-                my = (unsigned int)wplanes[2][x + y*wstrides[2]];
-                mx -= 128;
-                my -= 128;
-                mx = (mx*alpha)/256;
-                my = (my*alpha)/256;
-                mx *= -1;
-                my *= -1;
-                mx /= 2;
-                my /= 2;
-                mx += x;
-                my += y;
-                if ((mx < 0) || (mx >= frameW/2))
-                    continue;
-                if ((my < 0) || (my >= frameH/2))
-                    continue;
-                dplanes[p][x+y*dstrides[p]] = pplanes[p][mx+my*pstrides[p]];
+                case 0:    // both valid
+                    {
+                        int px, pxA, pxB;
+                        uint8_t *ptrD, * ptrA, * ptrB;
+                        // Luma:
+                        ptrD = &dplanes[0][x*2+y*2*dstrides[0]];
+                        ptrA = &pAplanes[0][mxA+myA*pstrides[0]];
+                        ptrB = &pBplanes[0][mxB+myB*pstrides[0]];
+                        pxA = (unsigned int)(*(ptrA));
+                        pxB = (unsigned int)(*(ptrB));
+                        px = (pxA*alpham + pxB*alpha)/256;
+                        *(ptrD) = px;
+                        pxA = (unsigned int)(*(ptrA+1));
+                        pxB = (unsigned int)(*(ptrB+1));
+                        px = (pxA*alpham + pxB*alpha)/256;
+                        *(ptrD+1) = px;
+                        ptrD += dstrides[0];
+                        ptrA += pstrides[0];
+                        ptrB += pstrides[0];
+                        pxA = (unsigned int)(*(ptrA));
+                        pxB = (unsigned int)(*(ptrB));
+                        px = (pxA*alpham + pxB*alpha)/256;
+                        *(ptrD) = px;
+                        pxA = (unsigned int)(*(ptrA+1));
+                        pxB = (unsigned int)(*(ptrB+1));
+                        px = (pxA*alpham + pxB*alpha)/256;
+                        *(ptrD+1) = px;
+                        
+                        // Chroma:
+                        mxA /= 2;
+                        myA /= 2;
+                        mxB /= 2;
+                        myB /= 2;
+                        pxA = (unsigned int)pAplanes[1][mxA+myA*pstrides[1]];
+                        pxB = (unsigned int)pBplanes[1][mxB+myB*pstrides[1]];
+                        px = (pxA*alpham + pxB*alpha)/256;
+                        dplanes[1][x+y*dstrides[1]] = px;
+                        pxA = (unsigned int)pAplanes[2][mxA+myA*pstrides[2]];
+                        pxB = (unsigned int)pBplanes[2][mxB+myB*pstrides[2]];
+                        px = (pxA*alpham + pxB*alpha)/256;
+                        dplanes[2][x+y*dstrides[2]] = px;
+                    }
+                    break;
+                case 1:    // only B valid
+                    {
+                        int px, pxB;
+                        uint8_t *ptrD, * ptrB;
+                        // Luma:
+                        ptrD = &dplanes[0][x*2+y*2*dstrides[0]];
+                        ptrB = &pBplanes[0][mxB+myB*pstrides[0]];
+                        pxB = (unsigned int)(*(ptrB));
+                        *(ptrD) = pxB;
+                        pxB = (unsigned int)(*(ptrB+1));
+                        *(ptrD+1) = pxB;
+                        ptrD += dstrides[0];
+                        ptrB += pstrides[0];
+                        pxB = (unsigned int)(*(ptrB));
+                        *(ptrD) = pxB;
+                        pxB = (unsigned int)(*(ptrB+1));
+                        *(ptrD+1) = pxB;
+                        
+                        // Chroma:
+                        mxB /= 2;
+                        myB /= 2;
+                        pxB = (unsigned int)pBplanes[1][mxB+myB*pstrides[1]];
+                        dplanes[1][x+y*dstrides[1]] = pxB;
+                        pxB = (unsigned int)pBplanes[2][mxB+myB*pstrides[2]];
+                        dplanes[2][x+y*dstrides[2]] = pxB;
+
+                    }
+                    break;
+                case 2:    // only A valid
+                    {
+                        int px, pxA;
+                        uint8_t *ptrD, * ptrA;
+                        // Luma:
+                        ptrD = &dplanes[0][x*2+y*2*dstrides[0]];
+                        ptrA = &pAplanes[0][mxA+myA*pstrides[0]];
+                        pxA = (unsigned int)(*(ptrA));
+                        *(ptrD) = pxA;
+                        pxA = (unsigned int)(*(ptrA+1));
+                        *(ptrD+1) = pxA;
+                        ptrD += dstrides[0];
+                        ptrA += pstrides[0];
+                        pxA = (unsigned int)(*(ptrA));
+                        *(ptrD) = pxA;
+                        pxA = (unsigned int)(*(ptrA+1));
+                        *(ptrD+1) = pxA;
+                        
+                        // Chroma:
+                        mxA /= 2;
+                        myA /= 2;
+                        pxA = (unsigned int)pAplanes[1][mxA+myA*pstrides[1]];
+                        dplanes[1][x+y*dstrides[1]] = pxA;
+                        pxA = (unsigned int)pAplanes[2][mxA+myA*pstrides[2]];
+                        dplanes[2][x+y*dstrides[2]] = pxA;
+                    }
+                    break;
+                default:    // neither valid
+                    // use blend
+                    break;
             }
+
         }
     }
-
-    pyramidWB[0]->GetPitches(wstrides);
-    pyramidWB[0]->GetWritePlanes(wplanes);
-    frameB->GetPitches(pstrides);
-    frameB->GetWritePlanes(pplanes);
-    alphao = alpha;
-    alpha = 256-alpha;
-
-    for (y=0; y<frameH; y++)
-    {
-        for (x=0; x<frameW; x++)
-        {
-            int mx,my;
-            mx = (unsigned int)wplanes[1][x/2 + y/2*wstrides[1]];
-            my = (unsigned int)wplanes[2][x/2 + y/2*wstrides[2]];
-            mx -= 128;
-            my -= 128;
-            mx = (mx*alpha)/256;
-            my = (my*alpha)/256;
-            mx *= -1;
-            my *= -1;
-            mx += x;
-            my += y;
-            if ((mx < 0) || (mx >= frameW))
-                continue;
-            if ((my < 0) || (my >= frameH))
-                continue;
-            int px = dplanes[0][x+y*dstrides[0]];
-            px *= alpha;
-            px += ((unsigned int)pplanes[0][mx+my*pstrides[0]])*alphao;
-            dplanes[0][x+y*dstrides[0]] = px/(256);
-        }
-    }
-    
-    for (p=1; p<3; p++)
-    {
-        for (y=0; y<frameH/2; y++)
-        {
-            for (x=0; x<frameW/2; x++)
-            {
-                int mx,my;
-                mx = (unsigned int)wplanes[1][x + y*wstrides[1]];
-                my = (unsigned int)wplanes[2][x + y*wstrides[2]];
-                mx -= 128;
-                my -= 128;
-                mx = (mx*alpha)/256;
-                my = (my*alpha)/256;
-                mx *= -1;
-                my *= -1;
-                mx /= 2;
-                my /= 2;
-                mx += x;
-                my += y;
-                if ((mx < 0) || (mx >= frameW/2))
-                    continue;
-                if ((my < 0) || (my >= frameH/2))
-                    continue;
-                int px = dplanes[p][x+y*dstrides[p]];
-                px *= alpha;
-                px += ((unsigned int)pplanes[p][mx+my*pstrides[p]])*alphao;
-                dplanes[p][x+y*dstrides[p]] = px/(256);
-            }
-        }
-    }
-
-    /*pyramidWA[0]->copyPlane(pyramidWA[0], dst, (ADM_PLANE)0);
-
-    pyramidWA[0]->copyPlane(pyramidWA[0], dst, (ADM_PLANE)1);
-    pyramidWA[0]->copyPlane(pyramidWA[0], dst, (ADM_PLANE)2);*/
 }
 
 
