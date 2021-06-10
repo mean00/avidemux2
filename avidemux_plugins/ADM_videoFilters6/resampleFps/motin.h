@@ -14,7 +14,7 @@
  
 #pragma once
 
-#include <cmath>
+#include <pthread.h>
 #include "ADM_image.h"
 #include "ADM_default.h"
 
@@ -25,6 +25,7 @@ class  motin
 {
 
   protected:
+    uint32_t    threads;
     int         frameW, frameH;
     int         pyramidLevels;
     ADMImage *  frameA;
@@ -43,9 +44,16 @@ class  motin
         uint8_t * plW[3];
         int strides[3];
         uint32_t w,h;
+        uint32_t ystart, yincr;
     } worker_thread_arg;
     
-    static void *worker_thread( void *ptr );
+    pthread_t  * me_threads1;
+    pthread_t  * me_threads2;
+    worker_thread_arg * worker_thread_args1;
+    worker_thread_arg * worker_thread_args2;
+    
+    static void *me_worker_thread( void *ptr );
+    static void *spf_worker_thread( void *ptr );
     
     static int sad(uint8_t * p1, uint8_t * p2, int stride, int x1, int y1, int x2, int y2);
 

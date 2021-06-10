@@ -13,7 +13,8 @@
  ***************************************************************************/
 
 #include "motin.h"
-#include <pthread.h>
+#include "prefs.h"
+
 
 #if defined( ADM_CPU_X86) && !defined(_MSC_VER)
         #define CAN_DO_INLINE_X86_ASM
@@ -56,6 +57,23 @@ motin::motin(int width, int height)
     } while(1);
     
     pyramidLevels = lv;
+    
+    threads = 1;
+    if(false == prefs->get(FEATURES_THREADING_LAVC, &threads))
+        threads = 1;
+    if(!threads)
+        threads = ADM_cpu_num_processors();
+    threads /= 2;
+    if (threads < 1)
+        threads = 1;
+    if (threads > 64)
+        threads = 64;
+        
+    me_threads1 = new pthread_t [threads];
+    me_threads2 = new pthread_t [threads];
+    worker_thread_args1 = new worker_thread_arg [threads];
+    worker_thread_args2 = new worker_thread_arg [threads];
+
 }
 
 
@@ -81,6 +99,10 @@ motin::~motin()
     delete [] pyramidB;
     delete [] pyramidWA;
     delete [] pyramidWB;
+    delete [] me_threads1;
+    delete [] me_threads2;
+    delete [] worker_thread_args1;
+    delete [] worker_thread_args2;
 }
 
 
@@ -195,7 +217,7 @@ int motin::sad(uint8_t * p1, uint8_t * p2, int stride, int x1, int y1, int x2, i
 }
 
 
-void *motin::worker_thread( void *ptr )
+void *motin::me_worker_thread( void *ptr )
 {
     worker_thread_arg * arg = (worker_thread_arg*)ptr;
     int lv = arg->lv;
@@ -205,16 +227,15 @@ void *motin::worker_thread( void *ptr )
     int * strides = arg->strides;
     uint32_t w = arg->w;
     uint32_t h = arg->h;
+    uint32_t ystart = arg->ystart;
+    uint32_t yincr = arg->yincr;
     int x,y,bx,by;
 
-
-    for (y=0; y<h; y++)
-        memset(plW[0]+y*strides[0], 128, w);
     
     w /= 2;
     h /= 2;
     
-    for (y=0; y<h; y++)
+    for (y=ystart; y<h; y+=yincr)    // line-by-line threading faster than partitioning
     {
         for (x=0; x<w; x++)
         {
@@ -286,6 +307,26 @@ void *motin::worker_thread( void *ptr )
         }
     }
 
+    pthread_exit(NULL);
+}
+
+void *motin::spf_worker_thread( void *ptr )
+{
+    worker_thread_arg * arg = (worker_thread_arg*)ptr;
+    int lv = arg->lv;
+    uint8_t ** plA = arg->plA;
+    uint8_t ** plB = arg->plB;
+    uint8_t ** plW = arg->plW;
+    int * strides = arg->strides;
+    uint32_t w = arg->w;
+    uint32_t h = arg->h;
+    uint32_t ystart = arg->ystart;
+    uint32_t yincr = arg->yincr;
+    int x,y,bx,by;
+
+    w /= 2;
+    h /= 2;
+    
     // spatial filter
     for (y=0; y<h; y++)
     {
@@ -329,6 +370,7 @@ void *motin::worker_thread( void *ptr )
 
     pthread_exit(NULL);
 }
+
     
     
 void motin::estimateMotion()
@@ -359,31 +401,63 @@ void motin::estimateMotion()
 
     for (int lv=pyramidLevels-1; lv>=0; lv--)
     {
-    
-        pthread_t thread1, thread2;
-        worker_thread_arg arg1, arg2;
-        
-        arg1.lv = lv;
-        pyramidA[lv]->GetWritePlanes(arg1.plA);
-        pyramidB[lv]->GetWritePlanes(arg1.plB);
-        pyramidWA[lv]->GetWritePlanes(arg1.plW);
-        pyramidA[lv]->GetPitches(arg1.strides);
-        pyramidA[lv]->getWidthHeight(&arg1.w, &arg1.h);
-        
-        arg2.lv = lv;
-        pyramidB[lv]->GetWritePlanes(arg2.plA);
-        pyramidA[lv]->GetWritePlanes(arg2.plB);
-        pyramidWB[lv]->GetWritePlanes(arg2.plW);
-        pyramidA[lv]->GetPitches(arg2.strides);
-        pyramidA[lv]->getWidthHeight(&arg2.w, &arg2.h);
-        
-        pthread_create( &thread1, NULL, worker_thread, (void*) &arg1);
-        pthread_create( &thread2, NULL, worker_thread, (void*) &arg2);
+        {
+            uint8_t * plW[3];
+            int strides[3];
+            uint32_t w,h;
+            
+            
+            pyramidWA[lv]->GetWritePlanes(plW);
+            pyramidA[lv]->GetPitches(strides);
+            pyramidA[lv]->getWidthHeight(&w, &h);
+            for (int y=0; y<h; y++)
+                memset(plW[0]+y*strides[0], 128, w);
+            pyramidWB[lv]->GetWritePlanes(plW);
+            for (int y=0; y<h; y++)
+                memset(plW[0]+y*strides[0], 128, w);
+        }
+
+        for (int tr=0; tr<threads; tr++)
+        {
+            worker_thread_args1[tr].lv = lv;
+            pyramidA[lv]->GetWritePlanes(worker_thread_args1[tr].plA);
+            pyramidB[lv]->GetWritePlanes(worker_thread_args1[tr].plB);
+            pyramidWA[lv]->GetWritePlanes(worker_thread_args1[tr].plW);
+            pyramidA[lv]->GetPitches(worker_thread_args1[tr].strides);
+            pyramidA[lv]->getWidthHeight(&worker_thread_args1[tr].w, &worker_thread_args1[tr].h);
+            worker_thread_args1[tr].ystart = tr;
+            worker_thread_args1[tr].yincr = threads;
+
+            worker_thread_args2[tr].lv = lv;
+            pyramidB[lv]->GetWritePlanes(worker_thread_args2[tr].plA);
+            pyramidA[lv]->GetWritePlanes(worker_thread_args2[tr].plB);
+            pyramidWB[lv]->GetWritePlanes(worker_thread_args2[tr].plW);
+            pyramidA[lv]->GetPitches(worker_thread_args2[tr].strides);
+            pyramidA[lv]->getWidthHeight(&worker_thread_args2[tr].w, &worker_thread_args2[tr].h);
+            worker_thread_args2[tr].ystart = tr;
+            worker_thread_args2[tr].yincr = threads;
+        }
+        for (int tr=0; tr<threads; tr++)
+        {
+            pthread_create( &me_threads1[tr], NULL, me_worker_thread, (void*) &worker_thread_args1[tr]);
+            pthread_create( &me_threads2[tr], NULL, me_worker_thread, (void*) &worker_thread_args2[tr]);
+        }
         
         // work in thread workers...
         
-        pthread_join( thread1, NULL);
-        pthread_join( thread2, NULL); 
+        for (int tr=0; tr<threads; tr++)
+        {
+            pthread_join( me_threads1[tr], NULL);
+            pthread_join( me_threads2[tr], NULL); 
+        }
+        
+        // spatial filters (reuse pthread and arg variables)
+        pthread_create( &me_threads1[0], NULL, spf_worker_thread, (void*) &worker_thread_args1[0]);
+        pthread_create( &me_threads2[0], NULL, spf_worker_thread, (void*) &worker_thread_args2[0]);
+        // work in thread workers...
+        pthread_join( me_threads1[0], NULL);
+        pthread_join( me_threads2[0], NULL); 
+        
         
         // filter
         {
@@ -429,7 +503,6 @@ void motin::estimateMotion()
                 }
             }
         }
-        
         
         for (int dir=0; dir<2; dir++)
         {
