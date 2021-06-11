@@ -14,7 +14,7 @@
 
 #include "motin.h"
 #include "prefs.h"
-
+#include <cmath>
 
 #if defined( ADM_CPU_X86) && !defined(_MSC_VER)
         #define CAN_DO_INLINE_X86_ASM
@@ -111,6 +111,54 @@ void motin::createPyramids(ADMImage * imgA, ADMImage * imgB)
     pyramidA[0]->duplicateFull(imgA);
     pyramidB[0]->duplicateFull(imgB);
     
+    
+    long int histogramA[32], histogramB[32];
+    double sum = 0.0;
+    uint8_t * plA[3], *plB[3];
+    uint8_t * ptrA, * ptrB;
+    int strides[3];
+    uint32_t w,h;
+    frameA->getWidthHeight(&w,&h);
+    frameA->GetPitches(strides);
+    frameA->GetWritePlanes(plA);
+    frameB->GetWritePlanes(plB);
+    
+    for (int p=0; p<3; p++)
+    {
+        if (p == 1)
+        {
+            w /= 2;
+            h /= 2;
+        }
+        memset(histogramA, 0, sizeof(long int)*32);
+        memset(histogramB, 0, sizeof(long int)*32);
+        for (int y=0; y<h; y++)
+        {
+            ptrA = plA[p] + y*strides[p];
+            ptrB = plB[p] + y*strides[p];
+            for (int x=0; x<w; x++)
+            {
+                histogramA[(*ptrA) / 8]++;
+                histogramB[(*ptrB) / 8]++;
+                ptrA++;
+                ptrB++;
+            }
+        }
+        
+        double tmp_sum = 0.0;
+        for (int i=0; i<32; i++)
+            tmp_sum += abs(histogramA[i] - histogramB[i]);
+        tmp_sum /= w;
+        tmp_sum /= h;
+        sum += tmp_sum;
+    }
+    
+    sum = std::sqrt(sum);
+    sceneChanged = (sum > 0.5);
+
+    if (sceneChanged)
+        return;
+
     for (int lv=0; lv<(pyramidLevels-1); lv++)
     {
         upScalers[lv]->convertImage(pyramidA[lv], pyramidA[lv+1]);
@@ -260,7 +308,7 @@ void *motin::me_worker_thread( void *ptr )
             best[1] = initY;
             int sad0 = sad(plA[0], plB[0], strides[0], x*2, y*2, initX, initY);
             
-            int radius = MOTIN_SEARCH_RADIUS + lv/2;
+            int radius = MOTIN_SEARCH_RADIUS + ((lv > 0) ? 1:0);
             for (by=(initY-radius);by<=(initY+radius);by++)
             {
                 if (by < 0+3)
@@ -371,6 +419,9 @@ void *motin::spf_worker_thread( void *ptr )
     
 void motin::estimateMotion()
 {
+    if (sceneChanged)
+        return;
+
     uint8_t * planes[3];
     uint8_t * wplanes[3];
     int strides[3];
@@ -522,6 +573,9 @@ void motin::estimateMotion()
 
 void motin::interpolate(ADMImage * dst, int alpha)
 {
+    if (sceneChanged)
+        return;
+
     if (alpha > 256)
         alpha = 256;
         

@@ -28,6 +28,7 @@ class  motin
     uint32_t    threads;
     int         frameW, frameH;
     int         pyramidLevels;
+    bool        sceneChanged;
     ADMImage *  frameA;
     ADMImage *  frameB;
     ADMImage ** pyramidA;
