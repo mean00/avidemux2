@@ -40,7 +40,7 @@ motin::motin(int width, int height)
     do {
         pw = wp;
         ph = hp;
-        if ((wp < 128) || (hp < 128))
+        if ((wp < 32) || (hp < 32))
             break;
         pyramidA[lv] = new ADMImageDefault(wp, hp);
         pyramidB[lv] = new ADMImageDefault(wp, hp);
