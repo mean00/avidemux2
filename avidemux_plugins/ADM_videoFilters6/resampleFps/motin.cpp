@@ -125,6 +125,9 @@ void motin::createPyramids(ADMImage * imgA, ADMImage * imgB)
 {
     if (pyramidLevels < 1)
         return;
+    if ((frameW < 128) || (frameH < 128))    // can not handle small images
+        return;
+    
     frameA->duplicateFull(imgA);
     frameB->duplicateFull(imgB);
     pyramidA[0]->duplicateFull(imgA);
@@ -411,6 +414,38 @@ void *motin::spf_worker_thread( void *ptr )
     w /= 2;
     h /= 2;
     
+    // threat edges (motion estimate not working on the edges)
+    if (lv > 0)
+    {
+        // top edge
+        for (int p=1; p<3; p++)
+        {
+            memcpy(plW[p]+0*strides[p], plW[p]+4*strides[p], w);
+            memcpy(plW[p]+1*strides[p], plW[p]+4*strides[p], w);
+            memcpy(plW[p]+2*strides[p], plW[p]+4*strides[p], w);
+            memcpy(plW[p]+3*strides[p], plW[p]+4*strides[p], w);
+        }
+        // bottom edge
+        for (int p=1; p<3; p++)
+        {
+            memcpy(plW[p]+(h-4)*strides[p], plW[p]+(h-5)*strides[p], w);
+            memcpy(plW[p]+(h-3)*strides[p], plW[p]+(h-5)*strides[p], w);
+            memcpy(plW[p]+(h-2)*strides[p], plW[p]+(h-5)*strides[p], w);
+            memcpy(plW[p]+(h-1)*strides[p], plW[p]+(h-5)*strides[p], w);
+        }
+        // left-right edges
+        for (int p=1; p<3; p++)
+        {
+            for (y=0; y<h; y++)
+            {
+                for (x=0;x<4;x++)
+                    plW[p][x] = plW[p][4];
+                for (x=(w-4);x<w;x++)
+                    plW[p][x] = plW[p][w-5];
+            }
+        }
+    }
+    
     // spatial filter
     for (y=0; y<h; y++)
     {
@@ -460,6 +495,8 @@ void *motin::spf_worker_thread( void *ptr )
 void motin::estimateMotion()
 {
     if (sceneChanged)
+        return;
+    if ((frameW < 128) || (frameH < 128))    // can not handle small images
         return;
 
     uint8_t * planes[3];
@@ -614,6 +651,8 @@ void motin::estimateMotion()
 void motin::interpolate(ADMImage * dst, int alpha)
 {
     if (sceneChanged)
+        return;
+    if ((frameW < 128) || (frameH < 128))    // can not handle small images
         return;
 
     if (alpha > 256)
