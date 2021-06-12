@@ -8,7 +8,7 @@ admJson json;
 json.addUint32("mode",key->mode);
 json.addUint32("newFpsDen",key->newFpsDen);
 json.addUint32("newFpsNum",key->newFpsNum);
-json.addBool("blend",key->blend);
+json.addUint32("interpolation",key->interpolation);
 return json.dumpToFile(file);
 };
 bool  confResampleFps_jdeserialize(const char *file, const ADM_paramList *tmpl,confResampleFps *key){
