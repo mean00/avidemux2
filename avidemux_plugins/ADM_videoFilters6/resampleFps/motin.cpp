@@ -30,7 +30,8 @@ motin::motin(int width, int height)
     pyramidB = new ADMImage* [MOTIN_MAX_PYRAMID_LEVELS];
     pyramidWA = new ADMImage* [MOTIN_MAX_PYRAMID_LEVELS];
     pyramidWB = new ADMImage* [MOTIN_MAX_PYRAMID_LEVELS];
-    upScalers   = new ADMColorScalerFull* [MOTIN_MAX_PYRAMID_LEVELS];
+    upScalersA   = new ADMColorScalerFull* [MOTIN_MAX_PYRAMID_LEVELS];
+    upScalersB   = new ADMColorScalerFull* [MOTIN_MAX_PYRAMID_LEVELS];
     downScalers = new ADMColorScalerFull* [MOTIN_MAX_PYRAMID_LEVELS];
     
     int lv,wp,hp,pw,ph;
@@ -49,8 +50,9 @@ motin::motin(int width, int height)
         
         wp = ((wp /4) * 2);
         hp = ((hp /4) * 2);
-        upScalers[lv] = new ADMColorScalerFull(ADM_CS_BICUBIC,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
-        downScalers[lv] = new ADMColorScalerFull(ADM_CS_BICUBIC,wp,hp,pw,ph,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        upScalersA[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        upScalersB[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        downScalers[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,wp,hp,pw,ph,ADM_COLOR_YV12,ADM_COLOR_YV12);
         lv += 1;
         if (lv >= MOTIN_MAX_PYRAMID_LEVELS)
             break;
@@ -80,7 +82,8 @@ motin::~motin()
 
     for (int lv=0; lv<pyramidLevels; lv++)
     {
-        delete upScalers[lv];
+        delete upScalersA[lv];
+        delete upScalersB[lv];
         delete downScalers[lv];
         delete pyramidA[lv];
         delete pyramidB[lv];
@@ -89,7 +92,8 @@ motin::~motin()
     }
     
     
-    delete [] upScalers;
+    delete [] upScalersA;
+    delete [] upScalersB;
     delete [] downScalers;
     delete [] pyramidA;
     delete [] pyramidB;
@@ -101,6 +105,21 @@ motin::~motin()
     delete [] worker_thread_args2;
 }
 
+void *motin::scaler_thread( void *ptr )
+{
+    scaler_thread_arg * arg = (scaler_thread_arg*)ptr;
+    int levels = arg->levels;
+    ADMColorScalerFull ** scalers = arg->scalers;
+    ADMImage ** src = arg->src;
+    ADMImage ** dst = arg->dst;
+    
+    for (int lv=0; lv<levels; lv++)
+    {
+        scalers[lv]->convertImage(src[lv], dst[lv]);
+    }
+    
+    pthread_exit(NULL);
+}
 
 void motin::createPyramids(ADMImage * imgA, ADMImage * imgB)
 {
@@ -159,11 +178,30 @@ void motin::createPyramids(ADMImage * imgA, ADMImage * imgB)
     if (sceneChanged)
         return;
 
-    for (int lv=0; lv<(pyramidLevels-1); lv++)
+    pthread_t scth[2];
+    scaler_thread_arg args[2];
+    
+    args[0].levels = (pyramidLevels-1);
+    args[0].scalers = upScalersA;
+    args[0].src = pyramidA;
+    args[0].dst = pyramidA+1;
+    
+    args[1].levels = (pyramidLevels-1);
+    args[1].scalers = upScalersB;
+    args[1].src = pyramidB;
+    args[1].dst = pyramidB+1;
+
+    pthread_create( &scth[0], NULL, scaler_thread, (void*) &args[0]);
+    pthread_create( &scth[1], NULL, scaler_thread, (void*) &args[1]);
+    // work in thread workers...
+    pthread_join( scth[0], NULL);
+    pthread_join( scth[1], NULL);
+
+    /*for (int lv=0; lv<(pyramidLevels-1); lv++)
     {
         upScalers[lv]->convertImage(pyramidA[lv], pyramidA[lv+1]);
         upScalers[lv]->convertImage(pyramidB[lv], pyramidB[lv+1]);
-    }
+    }*/
 }
 
 int motin::sad(uint8_t * p1, uint8_t * p2, int stride, int x1, int y1, int x2, int y2)
@@ -325,6 +363,8 @@ void *motin::me_worker_thread( void *ptr )
                         continue;
                     
                     int sadc = sad(plA[0], plB[0], strides[0], x*2, y*2, bx, by);
+                    //sadc *= std::sqrt(std::sqrt((by-initY)*(by-initY) + (bx-initX)*(bx-initX)));  // add distance penalty
+                    sadc *= std::pow(((by-initY)*(by-initY) + (bx-initX)*(bx-initX)), 1/3.);  // add distance penalty <-- this looks like better than sqrt or double sqrt
                     
                     if (sadc < sad0)
                     {

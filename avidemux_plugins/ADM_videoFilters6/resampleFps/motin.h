@@ -35,8 +35,18 @@ class  motin
     ADMImage ** pyramidB;
     ADMImage ** pyramidWA;
     ADMImage ** pyramidWB;
-    ADMColorScalerFull ** upScalers;
+    ADMColorScalerFull ** upScalersA;
+    ADMColorScalerFull ** upScalersB;
     ADMColorScalerFull ** downScalers;
+    
+    typedef struct {
+        int levels;
+        ADMColorScalerFull ** scalers;
+        ADMImage ** src;
+        ADMImage ** dst;
+    } scaler_thread_arg;
+    
+    static void *scaler_thread( void *ptr );
     
     typedef struct {
         int lv;
