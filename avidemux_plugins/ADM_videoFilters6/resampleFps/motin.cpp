@@ -316,7 +316,15 @@ void *motin::me_worker_thread( void *ptr )
     uint32_t yincr = arg->yincr;
     int x,y,bx,by;
 
-    
+    int penaltyTable[MOTIN_SEARCH_RADIUS+2][MOTIN_SEARCH_RADIUS+2];
+
+    for (y=0; y<(MOTIN_SEARCH_RADIUS+2); y++)
+    {
+        for (x=0; x<(MOTIN_SEARCH_RADIUS+2); x++)
+        {
+            penaltyTable[y][x] = std::round(std::pow((y*y + x*x), 1/3.)  * 256);  // add distance penalty <-- this looks like better than sqrt or double sqrt
+        }
+    }
     w /= 2;
     h /= 2;
     
@@ -366,8 +374,7 @@ void *motin::me_worker_thread( void *ptr )
                         continue;
                     
                     int sadc = sad(plA[0], plB[0], strides[0], x*2, y*2, bx, by);
-                    //sadc *= std::sqrt(std::sqrt((by-initY)*(by-initY) + (bx-initX)*(bx-initX)));  // add distance penalty
-                    sadc *= std::pow(((by-initY)*(by-initY) + (bx-initX)*(bx-initX)), 1/3.);  // add distance penalty <-- this looks like better than sqrt or double sqrt
+                    sadc = (sadc * penaltyTable[abs(by-initY)][abs(bx-initX)]) / 256;
                     
                     if (sadc < sad0)
                     {
