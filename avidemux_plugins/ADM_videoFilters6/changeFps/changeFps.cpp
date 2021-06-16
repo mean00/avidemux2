@@ -182,7 +182,7 @@ bool changeFps::updateTimingInfo(void)
     double fps1000=configuration.newFpsNum*1000;
     fps1000/=configuration.newFpsDen;
     // 1 update frame increment...
-    info.frameIncrement=ADM_Fps1000FromUs( (uint64_t)fps1000);
+    info.frameIncrement=ADM_UsecFromFps1000((uint64_t)fps1000);
 
     // 2 update duration
     double timing=previousFilter->getInfo()->totalDuration;
@@ -236,12 +236,12 @@ ADM_assert(nbPredefined == 6);
     
 
     diaElemMenu mFps(&(configuration.oldMode),   QT_TRANSLATE_NOOP("changeFps","Source Fps:"), 6,tFps);
-    diaElemFloat fps(&oldFrac,QT_TRANSLATE_NOOP("changeFps","Source frame rate:"),1,240.,NULL,3);
+    diaElemFloat fps(&oldFrac,QT_TRANSLATE_NOOP("changeFps","Source frame rate:"),1,1000.,NULL,3);
 
     mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
 
     diaElemMenu targetmFps(&(configuration.newMode),   QT_TRANSLATE_NOOP("changeFps","Destination Fps:"), 6,tFps);
-    diaElemFloat targetfps(&newFrac,QT_TRANSLATE_NOOP("changeFps","Destination frame rate:"),1,200.);
+    diaElemFloat targetfps(&newFrac,QT_TRANSLATE_NOOP("changeFps","Destination frame rate:"),1,1000.);
 
     targetmFps.link(tFps+0,1,&targetfps); // only activate entry in custom mode
 
