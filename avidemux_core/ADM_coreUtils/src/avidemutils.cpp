@@ -315,7 +315,7 @@ bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB,
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000)
 {
 double f;
-      if(fps1000>250000) fps1000=25000; // safe default;
+      if(fps1000>1000000) fps1000=1000000; // safe default;
       if(!fps1000) fps1000=25000; // safe default;
 
       f=fps1000;
