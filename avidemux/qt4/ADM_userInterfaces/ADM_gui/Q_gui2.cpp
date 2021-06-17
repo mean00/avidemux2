@@ -1231,11 +1231,11 @@ void MainWindow::updateActionShortcuts(void)
 
         q = findAction(&myMenuGo, ACT_PrevCutPoint);
         if(q)
-            q->setShortcut(Qt::SHIFT + (swpud ? Qt::Key_Up : Qt::Key_Down));
+            q->setShortcut(Qt::SHIFT | (swpud ? Qt::Key_Up : Qt::Key_Down));
 
         q = findAction(&myMenuGo, ACT_NextCutPoint);
         if(q)
-            q->setShortcut(Qt::SHIFT + (swpud ? Qt::Key_Down : Qt::Key_Up));
+            q->setShortcut(Qt::SHIFT | (swpud ? Qt::Key_Down : Qt::Key_Up));
     }
 
     std::vector<MenuEntry *> defaultShortcuts;
