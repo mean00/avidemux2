@@ -444,7 +444,7 @@ ADM_assert(nbPredefined == 6);
     
 
     diaElemMenu mFps(&(configuration.mode),   QT_TRANSLATE_NOOP("resampleFps","_Mode:"), 6,tFps);
-    diaElemFloat fps(&f,QT_TRANSLATE_NOOP("resampleFps","_New frame rate:"),1,200.);
+    diaElemFloat fps(&f,QT_TRANSLATE_NOOP("resampleFps","_New frame rate:"),1,1000.);
     diaElemMenu mInterp(&(configuration.interpolation),   QT_TRANSLATE_NOOP("resampleFps","_Interpolation:"), 3,tInterp);
 
     mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
