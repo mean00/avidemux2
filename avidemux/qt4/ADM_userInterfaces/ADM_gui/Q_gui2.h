@@ -116,6 +116,7 @@ public:
     void setResizeThreshold(int value);
     void setActZoomCalledFlag(bool called);
     void setZoomToFit(void);
+    void syncToolbarsMenu(void);
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
 

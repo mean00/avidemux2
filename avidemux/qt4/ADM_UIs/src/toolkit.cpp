@@ -107,3 +107,15 @@ float UI_calcZoomToFitScreen(QWidget* window, QWidget* canvas, uint32_t imageWid
         return r;
 		
 }
+
+/**
+ * \fn qtSettingsCreate
+ * \brief Returns a pointer to QSettings object, the caller is responsible for deleting it after use.
+ */
+QSettings *qtSettingsCreate(void)
+{
+    QString path = ADM_getBaseDir();
+    path += "QtSettings.ini";
+    QSettings *settings = new QSettings(path, QSettings::IniFormat);
+    return settings;
+}

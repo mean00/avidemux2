@@ -1901,18 +1901,26 @@ void MainWindow::setBlockResizingFlag(bool block)
 */
 void MainWindow::volumeWidgetOperational(void)
 {
-    // Hide and disable the volume widget if the audio device doesn't support setting volume
-    if(!AVDM_hasVolumeControl())
-    {
-        ui.volumeWidget->setEnabled(false);
-        ui.volumeWidget->hide();
-        ui.actionViewVolume->setChecked(false);
-    }else
-    {
-        ui.volumeWidget->setEnabled(true);
-        ui.volumeWidget->show();
-        ui.actionViewVolume->setChecked(true);
-    }
+    // Disable the volume widget if the audio device doesn't support setting volume
+    ui.volumeWidget->setEnabled(AVDM_hasVolumeControl());
+}
+
+/**
+    \fn syncToolbarsMenu
+    \brief Make sure only visible widgets have check marks
+           in the Toolbars submenu of the View menu.
+*/
+void MainWindow::syncToolbarsMenu(void)
+{
+#define EXPAND(x) ui.x ## Widget
+#define CHECKMARK(x,y) ui.menuToolbars->actions().at(x)->setChecked(EXPAND(y)->isVisible());
+    CHECKMARK(0,audioMetre)
+    CHECKMARK(1,codec)
+    CHECKMARK(2,navigation)
+    CHECKMARK(3,selection)
+    CHECKMARK(4,volume)
+#undef CHECKMARK
+#undef EXPAND
 }
 
 MainWindow::~MainWindow()
@@ -2003,7 +2011,15 @@ int UI_Init(int nargc, char **nargv)
 uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 {
     MainWindow *mw = new MainWindow(scriptEngines);
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        mw->restoreState(qset->value("windowState").toByteArray());
+        delete qset;
+        qset = NULL;
+    }
     mw->show();
+    mw->syncToolbarsMenu();
 
     QuiMainWindows = (QWidget*)mw;
 
@@ -2051,12 +2067,19 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
  */
 void UI_closeGui(void)
 {
-        if(!uiRunning) return;
-        uiRunning=false;
-        
+    if(!uiRunning) return;
+    uiRunning=false;
+
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->setValue("windowState", ((QMainWindow *)QuiMainWindows)->saveState());
+        delete qset;
+        qset = NULL;
+    }
+
     QuiMainWindows->close();
     qtUnregisterDialog(QuiMainWindows);
-        
 }
 
 void destroyGUI(void)
