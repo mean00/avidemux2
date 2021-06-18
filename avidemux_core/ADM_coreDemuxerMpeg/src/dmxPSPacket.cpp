@@ -147,7 +147,11 @@ _again2:
         {
                 goto _again2;
         }
-        
+        if(!len)
+        {
+                printf("[psPacket::getPacket] Zero-length packet: corrupted data?\n");
+                goto _again2;
+        }
         //printf("Main Stream :%x substream :%x\n",stream,substream);
         switch(stream)
         {
@@ -178,44 +182,42 @@ _again2:
 
 uint8_t psPacket::getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts)
 {
-
-//uint32_t un ,deux;
-uint64_t size=0;
-uint8_t c,d;
-uint8_t align=0;
-                        
+uint32_t size=0;
+uint8_t c,align=0;
                 *substream=0xff;
                 *opts=ADM_NO_PTS;
                 *odts=ADM_NO_PTS;
                 
                                         
                 size=_file->read16i();
+                if(!size) return 0;
                 if((stream==PADDING_CODE) || 
                 	 (stream==PRIVATE_STREAM_2)
                         ||(stream==SYSTEM_START_CODE) //?
                         ) // special case, no header
                         {
-                                
-                                *olen=size;      
                                 if(PRIVATE_STREAM_2==stream)
                                 {
                                     *substream=_file->read8i()+0x60;
-                                    (*olen)--;
+                                    size--;
+                                    if(!size) return 0;
                                 }
+                                *olen=size;
                                 return 1;
                         }
                                 
                         //      remove padding if any                                           
-        
                 while((c=_file->read8i()) == 0xff) 
                 {
                         size--;
+                        if(!size) return 0;
                 }
 //----------------------------------------------------------------------------
 //-------------------------------MPEG-2 PES packet style----------------------
 //----------------------------------------------------------------------------
                 if(((c&0xC0)==0x80))
                 {
+                        if(size <= 3) return 0;
                         uint32_t ptsdts,len;
                         //printf("\n mpeg2 type \n");
                         //_muxTypeMpeg2=1;
@@ -234,6 +236,7 @@ uint8_t align=0;
                                 case 2: // PTS=1 DTS=0
                                         if(len>=5)
                                         {
+                                                if(size <= 5) return 0;
                                                 uint64_t pts1,pts2,pts0;
                                                 //      printf("\n PTS10\n");
                                                         pts0=_file->read8i();  
@@ -251,6 +254,7 @@ uint8_t align=0;
                                                 if(len>=PTS11_ADV)
                                                 {
                                                         uint32_t skip=PTS11_ADV;
+                                                        if(size <= skip) return 0;
                                                         uint64_t pts1,pts2,dts,pts0;
                                                                 //      printf("\n PTS10\n");
                                                                 pts0=_file->read8i();  
@@ -287,6 +291,7 @@ uint8_t align=0;
                         // Skip remaining headers if any
                         if(len) 
                         {
+                                if(size <= len) return 0;
                                 _file->forward(len);
                                 size=size-len;
                         }
@@ -297,6 +302,7 @@ uint8_t align=0;
                         {
                         // read sub id
                                *substream=_file->read8i();
+                               size--;
   //                    printf("\n Subid : %x",*subid);
                                 switch(*substream)
                                 {
@@ -335,14 +341,15 @@ uint8_t align=0;
                                 {
                                         if((*substream < 0xA0 || *substream > 0xA7) || !keepPcmHeader)
                                         {
+                                                if(size <= 3) return 0;
                                                 _file->forward(3);
                                                  size-=3;
                                         }
                                 }
-                                size--;
                         }
                 }
                //    printf(" pid %x size : %x len %x\n",sid,size,len);
+               if(!size) return 0;
                 *olen=size;
                 return 1;
         }
@@ -358,6 +365,7 @@ uint8_t align=0;
           // 01xxxxxxxxx
           if ((c>>6) == 1) 
           {       // 01
+                        if(size <= 2) return 0;
                         size-=2;
                         _file->read8i();                       // skip one byte
                         c=_file->read8i();   // then another
@@ -367,6 +375,7 @@ uint8_t align=0;
            {
                 case 2:
                 {
+                        if(size <= 4) return 0;
                         // 0010 xxxx PTS only
                         uint64_t pts1,pts2,pts0;
                                         size -= 4;
@@ -378,6 +387,7 @@ uint8_t align=0;
                   }
                   case 3:
                   {               // 0011 xxxx
+                        if(size <= 9) return 0;
                         uint64_t pts1,pts2,pts0;
                                         size -= 9;
                                                                         
@@ -397,8 +407,11 @@ uint8_t align=0;
                 }
                                                                 
 
-                if(!align)      
-                        size--;         
+    if(!align)
+    {
+        if(!size) return 0;
+        size--;
+    }
         *olen=size;
         return 1;
 }
