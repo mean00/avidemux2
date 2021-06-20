@@ -571,6 +571,13 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.menuVideo->actions().at(3),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromMenu(bool)));
     connect(ui.toolBar->actions().at(5),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromToolbar(bool)));
 
+    // Add action to show all dock widgets and move the toolbar to its default area
+    QAction *restoreDefaults = new QAction(QT_TRANSLATE_NOOP("qgui2","Restore defaults"),this);
+    ui.menuToolbars->addSeparator();
+    ui.menuToolbars->addAction(restoreDefaults);
+
+    connect(ui.menuToolbars->actions().at(6),SIGNAL(triggered(bool)),this,SLOT(restoreDefaultWidgetState(bool)));
+
     this->installEventFilter(this);
     slider->installEventFilter(this);
 
@@ -1438,6 +1445,26 @@ void MainWindow::widgetsUpdateTooltips(void)
 }
 
 /**
+    \fn     restoreDefaultWidgetState
+    \brief  Show all dock widgets and move toolbar to the default area
+*/
+void MainWindow::restoreDefaultWidgetState(bool b)
+{
+    ui.codecWidget->setVisible(true);
+    ui.navigationWidget->setVisible(true);
+    ui.selectionWidget->setVisible(true);
+    ui.volumeWidget->setVisible(true);
+    ui.audioMetreWidget->setVisible(true);
+
+    syncToolbarsMenu();
+
+    addToolBar(ui.toolBar);
+
+    if(!playing)
+        setZoomToFit();
+}
+
+/**
  * \fn checkChanged
  * \brief the checkbox protecting timeshift value has changed
  * @param state
@@ -2011,12 +2038,28 @@ int UI_Init(int nargc, char **nargv)
 uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 {
     MainWindow *mw = new MainWindow(scriptEngines);
+
+    bool openglEnabled = false;
+#ifdef USE_OPENGL
+    prefs->get(FEATURES_ENABLE_OPENGL,&openglEnabled);
+    ADM_info("OpenGL enabled at build time, checking whether we should run it... %s.\n",openglEnabled? "yes" : "no");
+#else
+    ADM_info("OpenGL: Not enabled at build time.\n");
+#endif
+
+    bool vuMeterIsHidden = false;
     QSettings *qset = qtSettingsCreate();
     if(qset)
     {
+        qset->beginGroup("MainWindow");
         mw->restoreState(qset->value("windowState").toByteArray());
+        qset->endGroup();
         delete qset;
         qset = NULL;
+        // Probing for OpenGL fails if VU meter is hidden, delay hiding it.
+        vuMeterIsHidden = !mw->ui.audioMetreWidget->isVisible();
+        if(openglEnabled && vuMeterIsHidden)
+            mw->ui.audioMetreWidget->setVisible(true);
     }
     mw->show();
     mw->syncToolbarsMenu();
@@ -2043,21 +2086,17 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
     UI_InitVUMeter(mw->ui.frameVU);
 
 #ifdef USE_OPENGL
-    ADM_info("OpenGL enabled at built time, checking if we should run it..\n");
-    bool enabled;
-    prefs->get(FEATURES_ENABLE_OPENGL,&enabled);
-
-    if(enabled)
+    if(openglEnabled)
     {
         ADM_info("OpenGL activated, initializing... \n");
         openGLStarted=true;
         UI_Qt4InitGl();
+        if(vuMeterIsHidden)
+            mw->ui.audioMetreWidget->setVisible(false);
     }else
     {
         ADM_info("OpenGL not activated, not initialized\n");
     }
-#else
-        ADM_info("OpenGL: Not enabled at built time.\n");
 #endif
 
     return 1;
@@ -2073,7 +2112,9 @@ void UI_closeGui(void)
     QSettings *qset = qtSettingsCreate();
     if(qset)
     {
+        qset->beginGroup("MainWindow");
         qset->setValue("windowState", ((QMainWindow *)QuiMainWindows)->saveState());
+        qset->endGroup();
         delete qset;
         qset = NULL;
     }

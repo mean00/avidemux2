@@ -236,6 +236,7 @@ public slots:
     void searchRecentFiles(QAction * action);
     void searchRecentProjects(QAction * action);
     void searchToolBar(QAction *);
+    void restoreDefaultWidgetState(bool b);
 
     void scriptFileActionHandler();
     void scriptReferenceActionHandler();
