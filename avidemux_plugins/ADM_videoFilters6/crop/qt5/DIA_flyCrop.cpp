@@ -593,12 +593,24 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
 
     myCrop = new flyCrop(this, inputWidth, inputHeight, in, canvas, ui.horizontalSlider);
     myCrop->setCropMargins(param->left, param->right, param->top, param->bottom);
-    myCrop->hideRubber(param->rubber_is_hidden);
+
+    bool rubberIsHidden = false;
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("crop");
+        rubberIsHidden = qset->value("rubberIsHidden", false).toBool();
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+
+    myCrop->hideRubber(rubberIsHidden);
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
     myCrop->setTabOrder();
 
-    ui.checkBoxRubber->setChecked(param->rubber_is_hidden);
+    ui.checkBoxRubber->setChecked(rubberIsHidden);
     ui.comboBoxAspectRatio->setCurrentIndex(param->ar_select);
     if(!param->ar_select)
         myCrop->upload(false,true);
@@ -648,16 +660,27 @@ void Ui_cropWindow::gather(crop *param)
     param->right = right;
     param->top = top;
     param->bottom = bottom;
-    param->rubber_is_hidden = myCrop->stateOfRubber();
     param->ar_select = myCrop->getAspectRatioIndex();
 }
 /**
- * 
+ * \fn dtor
  */
 Ui_cropWindow::~Ui_cropWindow()
 {
-    if(myCrop) delete myCrop;
-    myCrop=NULL; 
+    if(myCrop)
+    {
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("crop");
+            qset->setValue("rubberIsHidden", myCrop->stateOfRubber());
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }
+        delete myCrop;
+        myCrop=NULL;
+    }
     if(canvas) delete canvas;
     canvas=NULL;
 }
