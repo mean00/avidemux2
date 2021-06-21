@@ -6,5 +6,4 @@ uint32_t left;
 uint32_t right;
 uint32_t top;
 uint32_t bottom;
-bool rubber_is_hidden;
 }blackenBorder;

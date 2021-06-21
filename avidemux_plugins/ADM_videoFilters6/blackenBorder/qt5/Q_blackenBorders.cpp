@@ -44,8 +44,19 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     myBlacken->upload();
     myBlacken->sliderChanged();
 
+    bool rubberIsHidden = false;
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("blackenBorder");
+        rubberIsHidden = qset->value("rubberIsHidden", false).toBool();
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+
     myBlacken->rubber->nestedIgnore=1;
-    myBlacken->rubber_is_hidden=param->rubber_is_hidden;
+    myBlacken->rubber_is_hidden = rubberIsHidden;
     ui.checkBoxRubber->setChecked(myBlacken->rubber_is_hidden);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
@@ -73,12 +84,23 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
  */
 Ui_blackenWindow::~Ui_blackenWindow()
 {
-  if(myBlacken) 
-      delete myBlacken;
-  myBlacken=NULL; 
-  if(canvas) 
-      delete canvas;
-  canvas=NULL;
+    if(myBlacken)
+    {
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("blackenBorder");
+            qset->setValue("rubberIsHidden", myBlacken->rubber_is_hidden);
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }
+        delete myBlacken;
+        myBlacken=NULL;
+    }
+    if(canvas)
+        delete canvas;
+    canvas=NULL;
 }
 /**
  * \fn sliderUpdate
@@ -97,7 +119,6 @@ void Ui_blackenWindow::gather(blackenBorder *param)
     param->right=myBlacken->right;
     param->top=myBlacken->top;
     param->bottom=myBlacken->bottom;
-    param->rubber_is_hidden=myBlacken->rubber_is_hidden;
 }
 /**
  * \fn toggleRubber
