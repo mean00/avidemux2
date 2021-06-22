@@ -2054,6 +2054,10 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         qset->beginGroup("MainWindow");
         mw->restoreState(qset->value("windowState").toByteArray());
         qset->endGroup();
+        // Hack: allow to drop other Qt-specific settings on application restart
+        char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
+        if(dropSettingsOnLaunch && !strcmp("1",dropSettingsOnLaunch))
+            qset->clear();
         delete qset;
         qset = NULL;
         // Probing for OpenGL fails if VU meter is hidden, delay hiding it.
