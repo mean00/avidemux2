@@ -120,6 +120,7 @@ protected:
           uint8_t                       mpegReorder(void);
 	  uint8_t			unpackPacked( void );	
           bool                          removeEmptyFrames (void);
+          bool                          checkVideoWidthHeight(void);
 public:
 	  
 virtual   void 				Dump(void) ;

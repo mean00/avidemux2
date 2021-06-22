@@ -24,6 +24,7 @@
 #include "ADM_odml_audio.h"
 #include "ADM_coreUtils.h"
 #include "ADM_codecType.h"
+#include "ADM_videoInfoExtractor.h"
 #ifdef ADM_DEBUG
 	#define OPENDML_VERBOSE
     #define aprintf printf
@@ -526,6 +527,7 @@ uint32_t rd;
                   }
                 else
                 _videostream.fccHandler=_video_bih.biCompression;
+                checkVideoWidthHeight(); // Try to get width and height from codec, the container may lie.
                 printf("\nOpenDML file successfully read..\n");
                 if(ret==1) 
                 {
@@ -969,4 +971,86 @@ bool    OpenDMLHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
     _idx[frame].pts=pts;
     return true;
 
+}
+/**
+    \fn checkVideoWidthHeight
+    \brief Try to get video width and height from codec
+*/
+bool OpenDMLHeader::checkVideoWidthHeight(void)
+{
+    if(!isH264Compatible(_videostream.fccHandler))
+    {
+        ADM_info("Not H.264, not checking width and height.\n");
+        return true; // we care only for H.264 at the moment
+    }
+
+    ADM_SPSInfo sps;
+    memset(&sps,0,sizeof(sps));
+
+    if(!_videoExtraLen)
+    {
+        ADM_warning("No extradata, AnnexB type stream?\n");
+        uint32_t datasize = _idx[0].size;
+        if(datasize < 5)
+        {
+            ADM_warning("First frame too small, only %u bytes??\n",datasize);
+            return false;
+        }
+        if(datasize > ADM_COMPRESSED_MAX_DATA_LENGTH)
+        {
+            ADM_warning("First frame too large: %u bytes.\n",datasize);
+            return false;
+        }
+        fseeko(_fd,_idx[0].offset,SEEK_SET);
+        notStackAllocator buffer(datasize);
+        if(!fread(buffer.data, datasize, 1, _fd))
+        {
+            fseeko(_fd,0,SEEK_SET);
+            ADM_error("Cannot read the first frame!\n");
+            return false;
+        }
+        fseeko(_fd,0,SEEK_SET);
+
+        uint64_t marker = 0;
+        for(int i = 0; i < 5; i++)
+            marker = (marker << 8) + buffer.data[i];
+        if(marker != 1 && (marker >> 8) != 1)
+        {
+            ADM_warning("Not AnnexB H.264 stream and no extradata, cannot check.\n");
+            return false;
+        }
+
+        uint8_t spsBuf[MAX_H264_SPS_SIZE];
+
+        uint32_t inBandSpsLen = getRawH264SPS_startCode(buffer.data, datasize, spsBuf, MAX_H264_SPS_SIZE);
+
+        if(!inBandSpsLen)
+        {
+            ADM_warning("Could not extract raw SPS from the first frame.\n");
+            return false;
+        }
+        if(!extractSPSInfoFromData(spsBuf,inBandSpsLen,&sps))
+        {
+            ADM_warning("Could not decode H.264 SPS found in the first frame.\n");
+            return false;
+        }
+    }else if(!extractSPSInfo(_videoExtraData,_videoExtraLen,&sps))
+    {
+        ADM_warning("Could not decode H.264 extradata.\n");
+        return false;
+    }
+    if(!sps.width || !sps.height)
+    {
+        ADM_warning("Got invalid dimensions from SPS, cannot verify video width and height.\n");
+        return false;
+    }
+
+    if(_mainaviheader.dwWidth != sps.width)
+        ADM_warning("Width mismatch, container says %u, codec %u, trusting codec\n",_mainaviheader.dwWidth,sps.width);
+    _video_bih.biWidth = _mainaviheader.dwWidth = sps.width;
+    if(_mainaviheader.dwHeight != sps.height)
+        ADM_warning("Height mismatch, container says %u, codec %u, trusting codec\n",_mainaviheader.dwHeight,sps.height);
+    _video_bih.biHeight = _mainaviheader.dwHeight = sps.height;
+
+    return true;
 }
