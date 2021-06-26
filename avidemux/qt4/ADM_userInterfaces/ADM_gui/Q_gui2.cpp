@@ -2061,13 +2061,11 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         delete qset;
         qset = NULL;
         // Probing for OpenGL fails if VU meter is hidden, delay hiding it.
-        vuMeterIsHidden = !mw->ui.audioMetreWidget->isVisible();
+        vuMeterIsHidden = mw->ui.audioMetreWidget->isHidden();
         if(openglEnabled && vuMeterIsHidden)
             mw->ui.audioMetreWidget->setVisible(true);
     }
     mw->show();
-    mw->syncToolbarsMenu();
-
     QuiMainWindows = (QWidget*)mw;
 
     uint32_t w, h;
@@ -2102,6 +2100,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         ADM_info("OpenGL not activated, not initialized\n");
     }
 #endif
+mw->syncToolbarsMenu();
 
     return 1;
 }
