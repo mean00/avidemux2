@@ -88,6 +88,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           uint64_t      lastPts;
           double        _computedZoom;
           int           _usedWidth, _usedHeight;
+          int           _oldViewWidth, _oldViewHeight;
           int           _frameIncrement; // time between image in ms
           Clock         _clock;
           int           _nextRdv;

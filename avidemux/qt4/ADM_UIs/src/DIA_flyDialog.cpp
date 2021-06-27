@@ -369,12 +369,12 @@ bool ADM_flyDialog::nextImage(void)
 bool ADM_flyDialog::initializeSize()
 {
     _canvas->resize(1,1);
-    QSize qsize= _canvas->parentWidget()->parentWidget()->size();
+    QSize qsize= _canvas->parentWidget()->parentWidget()->frameSize();
     //_usedWidth = qsize.width();
     // Normally there is nothing interesting left and right, we can use a hardcoded value
     _usedWidth=64;
-    _usedHeight= 32+qsize.height(); // keep a border margin
-    
+    _usedHeight = qsize.height();
+
      if (_resizeMethod != RESIZE_NONE) 
     {
         _zoom = calcZoomFactor();
@@ -621,6 +621,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _zoomChangeCount = 0;        
     _yuvBuffer=new ADMImageDefault(_w,_h);
     _usedWidth= _usedHeight=0;
+    _oldViewWidth = _oldViewHeight = 0;
     lastPts= _in->getInfo()->markerA;
     setCurrentPts(lastPts);
     _in->goToTime(lastPts);
@@ -700,15 +701,24 @@ void ADM_flyDialog::fitCanvasIntoView(uint32_t width, uint32_t height)
 
     uint32_t tmpZoomW = 0;
     uint32_t tmpZoomH = 0;
+    bool skip = false;
     if(viewAr > ar)
     {
         tmpZoomW = (uint32_t)((double)height * ar);
         tmpZoomH = height;
+        if(_oldViewHeight && height == _oldViewHeight)
+            skip = true;
     }else
     {
         tmpZoomW = width;
         tmpZoomH = (uint32_t)((double)width / ar);
+        if(_oldViewWidth && width == _oldViewWidth)
+            skip = true;
     }
+    _oldViewWidth = width;
+    _oldViewHeight = height;
+    if(skip) return;
+
     _resizeMethod = RESIZE_AUTO;
     _zoomW = tmpZoomW&0xfffffffe;
     _zoomH = tmpZoomH&0xfffffffe;
