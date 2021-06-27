@@ -621,7 +621,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     if(!activeList->currentItem())
         return;
 
-    QMenu *cm=new QMenu();
+    QMenu *cm=new QMenu(this);
 
     QAction *up = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),cm);
     QAction *down = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),cm);
