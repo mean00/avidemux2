@@ -702,13 +702,12 @@ void ADM_flyDialog::fitCanvasIntoView(uint32_t width, uint32_t height)
     uint32_t tmpZoomW = 0;
     uint32_t tmpZoomH = 0;
     bool skip = false;
-#define EVEN(val) (val & 0xfffffffe)
     if(viewAr > ar)
     {
         tmpZoomW = (uint32_t)((double)height * ar);
         tmpZoomH = height;
         if(_oldViewHeight &&
-           _oldViewHeight == EVEN(height) &&
+           _oldViewHeight == height &&
            _oldViewHeight == _canvas->height())
             skip = true;
     }else
@@ -716,17 +715,17 @@ void ADM_flyDialog::fitCanvasIntoView(uint32_t width, uint32_t height)
         tmpZoomW = width;
         tmpZoomH = (uint32_t)((double)width / ar);
         if(_oldViewWidth &&
-           _oldViewWidth == EVEN(width) &&
+           _oldViewWidth == width &&
            _oldViewWidth == _canvas->width())
             skip = true;
     }
-    _oldViewWidth = EVEN(width);
-    _oldViewHeight = EVEN(height);
+    _oldViewWidth = width;
+    _oldViewHeight = height;
     if(skip) return;
 
     _resizeMethod = RESIZE_AUTO;
-    _zoomW = EVEN(tmpZoomW);
-    _zoomH = EVEN(tmpZoomH);
+    _zoomW = tmpZoomW;
+    _zoomH = tmpZoomH;
     _zoom = (float)_zoomW / _w;
     _canvas->changeSize(_zoomW, _zoomH);
     updateZoom();
