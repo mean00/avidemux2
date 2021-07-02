@@ -1,0 +1,11 @@
+--- libavcodec/videotoolboxenc.c.orig	2021-07-02 00:31:33.000000000 +0200
++++ libavcodec/videotoolboxenc.c	2021-07-02 00:46:32.000000000 +0200
+@@ -1389,7 +1389,7 @@
+     }
+ 
+     vtctx->codec_id = avctx->codec_id;
+-    avctx->max_b_frames = 16;
++    //avctx->max_b_frames = 16; // Do not overwrite the value set by user. // eum.
+ 
+     if (vtctx->codec_id == AV_CODEC_ID_H264) {
+         vtctx->get_param_set_func = CMVideoFormatDescriptionGetH264ParameterSetAtIndex;
