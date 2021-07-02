@@ -40,13 +40,13 @@ bool ADM_ffVTEncoder::configureContext(void)
 {
     switch(VTEncSettings.profile)
     {
-#define SAY(x,y) case FF_VT_PROFILE_##x: ADM_assert(!av_opt_set(_context->priv_data,"profile",y,0)); break;
+#define SAY(x,y) case FF_VT_PROFILE_##x: av_dict_set(&_options,"profile",y,0); break;
         SAY(BASELINE,"baseline")
         SAY(MAIN,"main")
         SAY(HIGH,"high")
         default:break;
 #undef SAY
-    };
+    }
 
     _context->bit_rate=VTEncSettings.bitrate*1000;
     _context->rc_max_rate=VTEncSettings.max_bitrate*1000;
@@ -64,14 +64,10 @@ bool ADM_ffVTEncoder::setup(void)
 {
     if(false== ADM_coreVideoEncoderFFmpeg::setupByName("h264_videotoolbox"))
     {
-        ADM_info("[FFmpeg] Encoder setup failed\n");
+        ADM_warning("Cannot set up h264_videotoolbox encoder.\n");
         return false;
     }
-
-    ADM_info("[FFmpeg] Setup OK\n");
-
-    int w = getWidth();
-    int h = getHeight();
+    ADM_info("h264_videotoolbox encoder set up successfully.\n");
     return true;
 }
 
