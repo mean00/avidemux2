@@ -107,9 +107,9 @@ inline void ADMVideoQuadTrans::bilinear(int w, int h, int stride, uint8_t * in, 
     int i,a,b,k,l,k1,l1;
     
     k  = y*stride+x*4;
-    k1 = k  + ((x < w-1) ? 4:0);
-    l  = k  + ((y < h-1) ? stride:0);
-    l1 = k1 + ((y < h-1) ? stride:0);
+    k1 = k  + 4;
+    l  = k  + stride;
+    l1 = k1 + stride;
     
     a=in[k+0]*256+(in[k1+0]-in[k+0])*fx;
     b=in[l+0]*256+(in[l1+0]-in[l+0])*fx;
@@ -300,20 +300,34 @@ void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTran
                 {
                     u *= w;
                     v *= h;
-                    buffers->integerMap[2*(y*w+x)]=floor(u);
-                    buffers->integerMap[2*(y*w+x)+1]=floor(v);
-                    buffers->fractionalMap[2*(y*w+x)]=(u-floor(u))*256.0 + 0.5;
-                    if (buffers->fractionalMap[2*(y*w+x)] > 255)
+                    int ui = floor(u);
+                    int vi = floor(v);
+                    int uf = (u-floor(u))*256.0 + 0.5;
+                    int vf = (v-floor(v))*256.0 + 0.5;
+                    if (uf > 255)
                     {
-                        buffers->integerMap[2*(y*w+x)] += 1;
-                        buffers->fractionalMap[2*(y*w+x)] = 0;
+                        ui++;
+                        uf = 0;
                     }
-                    buffers->fractionalMap[2*(y*w+x)+1]=(v-floor(v))*256.0 + 0.5;
-                    if (buffers->fractionalMap[2*(y*w+x)+1] > 255)
+                    if (vf > 255)
                     {
-                        buffers->integerMap[2*(y*w+x)+1] += 1;
-                        buffers->fractionalMap[2*(y*w+x)+1] = 0;
+                        vi++;
+                        vf = 0;
                     }
+                    if (ui >= w-1)
+                    {
+                        ui = w-2;
+                        uf = 255;
+                    }
+                    if (vi >= h-1)
+                    {
+                        vi = h-2;
+                        vf = 255;
+                    }
+                    buffers->integerMap[2*(y*w+x)]=ui;
+                    buffers->integerMap[2*(y*w+x)+1]=vi;
+                    buffers->fractionalMap[2*(y*w+x)]=uf;
+                    buffers->fractionalMap[2*(y*w+x)+1]=vf;
                 }
                 else
                 {
