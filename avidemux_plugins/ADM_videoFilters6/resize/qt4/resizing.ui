@@ -558,6 +558,11 @@
          <string>Spline</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Nearest neighbor</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>

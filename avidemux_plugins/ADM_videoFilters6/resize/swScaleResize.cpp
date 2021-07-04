@@ -43,7 +43,8 @@ alg algs[]={
 				DECLARE(BILINEAR),
 				DECLARE(BICUBIC),
 				DECLARE(LANCZOS),
-				DECLARE(SPLINE)
+				DECLARE(SPLINE),
+				DECLARE(POINT)
 		};
 
 
@@ -211,6 +212,8 @@ bool swScaleResizeFilter::reset(uint32_t nw, uint32_t nh,uint32_t algo)
                 scalerAlgo=ADM_CS_LANCZOS;break;
         case 3: //spline
                 scalerAlgo=ADM_CS_SPLINE;break;
+        case 4: //nearest neighbor
+                scalerAlgo=ADM_CS_POINT;break;
         default:
                 ADM_error("Invalid algo: %u\n",algo);
                 ADM_assert(0);
