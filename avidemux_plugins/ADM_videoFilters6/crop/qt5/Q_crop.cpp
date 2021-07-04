@@ -44,52 +44,34 @@ int DIA_getCropParams(	const char *name,crop *param,ADM_coreVideoFilter *in)
 
 /**
      \fn Metrics
-	\brief Compute the average value of pixels	and eqt is the "ecart type"
+	\brief Compute the average value, variance and maximum of pixels
 */
 
-uint8_t Metrics( uint8_t *in, uint32_t width,uint32_t *avg, uint32_t *eqt)
+uint8_t Metrics( uint8_t *in, uint32_t stride, uint32_t length, uint32_t *avg, uint32_t *var, uint32_t * max)
 {
-
-uint32_t x;
-uint32_t sum=0,eq=0;
-int v;
-              for(x=0;x<width;x++)
-              {
-                      sum+=*(in+x);
-              }
-              sum=sum/width;
-              *avg=sum;
-              for(x=0;x<width;x++)
-              {
-                      v=*(in+x)-sum;
-                      eq+=v*v;
-              }
-              eq=eq/(width*width);
-              *eqt=eq;
-              return 1;
-}
-/**
-     \fn MetricsV
-	\brief Compute the average value of pixels	and eqt is the "ecart type"
-*/
-uint8_t MetricsV( uint8_t *in,uint32_t width, uint32_t height,uint32_t *avg, uint32_t *eqt)
-{
-
-uint32_t x;
-uint32_t sum=0,eq=0;
-int v;
-    for(x=0;x<height;x++)
+    uint8_t * ptr;
+    uint32_t x;
+    uint32_t sum=0,eq=0,m=0;
+    int v;
+    ptr = in;
+    for(x=0; x<length; x++)
     {
-            sum+=*(in+x*width);
+        sum += *ptr;
+        if (m < *ptr)
+            m = *ptr;
+        ptr += stride;
     }
-    sum=sum/height;
-    *avg=sum;
-    for(x=0;x<height;x++)
+    sum /= length;
+    *avg = sum;
+    *max = m;
+    ptr = in;
+    for(x=0;x<length;x++)
     {
-            v=*(in+x*width)-sum;
-            eq+=v*v;
+        v = *ptr - sum;
+        eq += v*v;
+        ptr += stride;
     }
-    eq=eq/(height*height);
-    *eqt=eq;
+    eq /= length;
+    *var = eq;
     return 1;
 }
