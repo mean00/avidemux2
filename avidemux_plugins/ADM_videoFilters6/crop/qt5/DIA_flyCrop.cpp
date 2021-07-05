@@ -18,8 +18,7 @@
 #include "./Q_crop.h"
 #include "ADM_toolkitQt.h"
 
-uint8_t Metrics( uint8_t *in, uint32_t width,uint32_t *avg, uint32_t *eqt);
-uint8_t MetricsV( uint8_t *in, uint32_t width,uint32_t height,uint32_t *avg, uint32_t *eqt);
+uint8_t Metrics( uint8_t *in, uint32_t stride, uint32_t length, uint32_t *avg, uint32_t *var, uint32_t * max);
 
 /**
  * 
@@ -378,38 +377,43 @@ bool flyCrop::blockChanges(bool block)
      \fn autoRun
     \brief 
 */
-#define THRESH_AVG   30
-#define THRESH_EQT   50
+#define THRESH_AVG   8
+#define THRESH_VAR   30
+#define THRESH_MAX   24
 
-int flyCrop::autoRun(uint8_t *in,int w,int h, int increment)
+int flyCrop::autoRun(uint8_t *in,int w,int h, int increment, int blackLevel)
 {
-    uint32_t avg,eqt;
+    uint32_t avg,var,max;
+    uint32_t prev_avg = 999;
     int y;
-    for(y=0;y<h;y++)	
+    for(y=0;y<h;y++)
     {
-        Metrics(in,w,&avg,&eqt);
-        in+=increment;
-        if(avg> THRESH_AVG || eqt > THRESH_EQT)
-                break;
+        Metrics(in, 1, w, &avg, &var, &max);
+        avg = ((avg <= blackLevel) ? 0 : avg - blackLevel);
+        max = ((max <= blackLevel) ? 0 : max - blackLevel);
+        in += increment;
+        if(avg > (prev_avg+2)*2 || avg> THRESH_AVG || var > THRESH_VAR || max > THRESH_MAX)
+            break;
+        prev_avg = avg;
     }
-    if(y)
-        y=y-1;
-    return y&0xfffe;
+    return y;
 }
-int flyCrop::autoRunV(uint8_t *in, int stride, int w, int increment)
+int flyCrop::autoRunV(uint8_t *in, int stride, int w, int increment, int blackLevel)
 {
-    uint32_t avg,eqt;
+    uint32_t avg,var,max;
+    uint32_t prev_avg = 999;
     int y;
     for(y=0;y<w;y++)
     {
-        MetricsV(in,stride,_h,&avg,&eqt);
-        in+=increment;
-        if(avg> THRESH_AVG || eqt > THRESH_EQT)
-                break;
+        Metrics(in, stride, _h, &avg, &var, &max);
+        avg = ((avg <= blackLevel) ? 0 : avg - blackLevel);
+        max = ((max <= blackLevel) ? 0 : max - blackLevel);
+        in += increment;
+        if(avg > (prev_avg+2)*2 || avg> THRESH_AVG || var > THRESH_VAR || max > THRESH_MAX)
+            break;
+        prev_avg = avg;
     }
-    if(y)
-        y=y-1;
-    return y&0xfffe;
+    return y;
 }
 /**
  * 
@@ -420,11 +424,28 @@ uint8_t  flyCrop::autocrop(void)
     uint8_t *in;
     in=_yuvBuffer->GetReadPtr(PLANAR_Y);
     int stride=_yuvBuffer->GetPitch(PLANAR_Y);
+    int blackLevel = 0;
+    if(_yuvBuffer->_range == ADM_COL_RANGE_MPEG)
+        blackLevel = 16;
 
-    top=autoRun(in,_w,((_h>>1)-2),stride);
-    bottom=autoRun(in+stride*(_h-1),_w,((_h>>1)-2),-stride);
-    left=autoRunV(in,stride,((_w>>1)-2),1);
-    right=autoRunV(in+_w-1,stride,((_w>>1)-2),-1);
+    top=autoRun(in,_w,((_h>>1)-2),stride, blackLevel);
+    bottom=autoRun(in+stride*(_h-1),_w,((_h>>1)-2),-stride, blackLevel);
+    left=autoRunV(in,stride,((_w>>1)-2),1, blackLevel);
+    right=autoRunV(in+_w-1,stride,((_w>>1)-2),-1, blackLevel);
+    if ((top & 1) ^ (bottom & 1))    // both must have the same parity
+    {
+        if (top < bottom)
+            top++;
+        else
+            bottom++;
+    }
+    if ((left & 1) ^ (right & 1))    // both must have the same parity
+    {
+        if (left < right)
+            left++;
+        else
+            right++;
+    }
     upload(false,true);
     sameImage();
     return 1;

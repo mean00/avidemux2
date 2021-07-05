@@ -13,8 +13,8 @@ class flyCrop : public ADM_flyDialogRgb
     int         _lw,_lh;
 
     void        dimensions();
-    int         autoRun(uint8_t *in,int w,int h, int increment);
-    int         autoRunV(uint8_t *in, int stride, int w, int increment);
+    int         autoRun(uint8_t *in,int w,int h, int increment, int blackLevel);
+    int         autoRunV(uint8_t *in, int stride, int w, int increment, int blackLevel);
 
 public:
     uint8_t     processRgb(uint8_t *imageIn, uint8_t *imageOut);
