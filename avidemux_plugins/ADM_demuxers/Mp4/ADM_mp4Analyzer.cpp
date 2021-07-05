@@ -974,7 +974,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                             left-=4;
 
                             printf("[STSD] FrameCount :%u\n",son.read16());
-                            left-=4;
+                            left-=2;
 
                             // Codec name
                             uint32_t u32=son.read();
@@ -1265,9 +1265,8 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     }
                                     break;
                             } // entryName
-                            son.skipBytes(left);
                             break;
-                        } // trackType
+                        } // TRACK_VIDEO
 
                         case TRACK_AUDIO:
                         {
