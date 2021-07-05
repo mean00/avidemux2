@@ -427,6 +427,7 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
     SETAL(GAUSS);
     SETAL(SINC);
     SETAL(SPLINE);
+    SETAL(POINT);    // nearest neighbor
     default: ADM_assert(0);
     }
 #if 0 // this is gone, we need to patch av_get_cpu_flags directly now

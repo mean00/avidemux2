@@ -28,7 +28,8 @@ typedef enum
     ADM_CS_GAUSS,
     ADM_CS_SINC,
     ADM_CS_SPLINE,
-    ADM_CS_FAST_BILINEAR
+    ADM_CS_FAST_BILINEAR,
+    ADM_CS_POINT
 }ADMColorScaler_algo;
 
 typedef enum
