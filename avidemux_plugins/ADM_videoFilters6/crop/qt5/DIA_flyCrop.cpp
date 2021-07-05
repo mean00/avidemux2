@@ -646,7 +646,7 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
     connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
     const QString autorun = QT_TRANSLATE_NOOP("crop","Auto Crop");
-    pushButtonAutoCrop = ui.buttonBox->addButton(autorun,QDialogButtonBox::ResetRole);    // group together with the Reset button
+    pushButtonAutoCrop = ui.buttonBox->addButton(autorun,QDialogButtonBox::ActionRole);
     changeARSelect(param->ar_select); // may be called only after pushButtonAutoCrop has become valid
     connect(pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
 
