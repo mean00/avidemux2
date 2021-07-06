@@ -92,6 +92,7 @@ static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
 #endif
     case ADM_COLOR_RGB24: return AV_PIX_FMT_RGB24;
     case ADM_COLOR_BGR24: return AV_PIX_FMT_BGR24;
+    case ADM_COLOR_GBR24P: return AV_PIX_FMT_GBRP;
     case ADM_COLOR_YUV420_10BITS: return AV_PIX_FMT_YUV420P10LE;
     case ADM_COLOR_YUV420_12BITS: return AV_PIX_FMT_YUV420P12LE;
     case ADM_COLOR_NV12_10BITS:  return AV_PIX_FMT_P010LE;
@@ -140,6 +141,18 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcStride[0]=ADM_IMAGE_ALIGN(width*3);
             srcStride[1]=0;
             srcStride[2]=0;
+            break;
+    case ADM_COLOR_GBR24P:
+            srcData[0]=from;
+            width=ADM_IMAGE_ALIGN(width);
+            height=ADM_IMAGE_ALIGN(height);
+            from+=width*height;
+            srcData[1]=from;
+            from+=width*height;
+            srcData[2]=from;
+            srcStride[0]=width;
+            srcStride[1]=width;
+            srcStride[2]=width;
             break;
     case  ADM_COLOR_YV12:
             srcData[0]=from;

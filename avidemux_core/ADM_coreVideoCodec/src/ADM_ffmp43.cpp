@@ -526,6 +526,10 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       out->_colorspace = ADM_COLOR_RGB24;
       aprintf("colorspace is AV_PIX_FMT_RGB24 --> ADM_COLOR_RGB24\n");
       break;
+    case AV_PIX_FMT_GBRP:
+      out->_colorspace = ADM_COLOR_GBR24P;
+      aprintf("colorspace is AV_PIX_FMT_GBRP --> ADM_COLOR_GBR24P\n");
+      break;
     case AV_PIX_FMT_BGR0:
     case AV_PIX_FMT_BGRA:
       out->_colorspace = ADM_COLOR_BGR32A;
