@@ -47,7 +47,7 @@ Ui_imageStabWindow::Ui_imageStabWindow(QWidget *parent, imageStab *param,ADM_cor
         myFly->indctr=ui.lineEditNewScene;
         myFly->indctrPB=ui.progressBarScene;
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, false);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
