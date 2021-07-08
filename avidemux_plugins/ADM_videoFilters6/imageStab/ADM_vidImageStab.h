@@ -42,6 +42,7 @@ class  ADMVideoImageStab:public ADM_coreVideoFilter
     } worker_thread_arg;
 
     typedef struct {
+        uint64_t              prevPts;
         int                   rgbBufStride;
         ADM_byteBuffer *      rgbBufRawIn;
         ADM_byteBuffer *      rgbBufRawOut;
@@ -53,6 +54,9 @@ class  ADMVideoImageStab:public ADM_coreVideoFilter
         motest *              motestp;
         double                hist[3];
         double                last[3];
+        double                lastSameImage[3];
+        bool                  newSceneSameImage;
+        float                 sceneDiffSameImage;
         int threads;
         pthread_t  * worker_threads;
         worker_thread_arg * worker_thread_args;

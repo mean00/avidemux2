@@ -47,6 +47,7 @@ DECLARE_VIDEO_FILTER(   ADMVideoImageStab,   // Class
 */
 void ADMVideoImageStab::ImageStabCreateBuffers(int w, int h, imageStab_buffers_t * buffers)
 {
+    buffers->prevPts = ADM_NO_PTS;
     buffers->rgbBufStride = ADM_IMAGE_ALIGN(w * 4);
     buffers->rgbBufRawIn = new ADM_byteBuffer();
     if (buffers->rgbBufRawIn)
@@ -351,6 +352,7 @@ void * ADMVideoImageStab::worker_thread( void *ptr )
 void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageStab param, imageStab_buffers_t * buffers, bool * newScene, float * sceneDiff)
 {
     if (!img || !buffers || !buffers->rgbBufRawIn || !buffers->rgbBufRawOut || !buffers->rgbBufImage || !buffers->convertYuvToRgb || !buffers->convertRgbToYuv) return;
+    if (!buffers->bicubicWeights || !buffers->motestp || !buffers->worker_threads || !buffers->worker_thread_args) return;
     uint8_t * line;
 
     if (param.algo > 1) param.algo = 1;
@@ -373,6 +375,9 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
     float currChromaHist[64];
     bool scdet = false;
     int i,j,x,y;
+    
+    bool sameImage = (buffers->prevPts == img->Pts);
+    buffers->prevPts = img->Pts;
 
     memset(currChromaHist, 0, 64*sizeof(float));
     
@@ -414,8 +419,18 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
     memcpy(buffers->prevChromaHist, currChromaHist, 64*sizeof(float));
 
     if (newScene) *newScene= scdet;
+    
+    if (sameImage)
+    {
+        if (newScene) *newScene= buffers->newSceneSameImage;
+        if (sceneDiff) *sceneDiff = buffers->sceneDiffSameImage;
+    } else {
+        if (newScene) buffers->newSceneSameImage = *newScene;
+        if (sceneDiff) buffers->sceneDiffSameImage = *sceneDiff;
+    }
 
-    buffers->motestp->addNextImage(scdet ? NULL : img);
+    if (!sameImage)
+        buffers->motestp->addNextImage(scdet ? NULL : img);
 
     double xs[4],ys[4];
     xs[0] = 0;
@@ -435,7 +450,8 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
 
     if (!scdet)
     {
-        buffers->motestp->estimateMotion(motionEstimation);
+        if (!sameImage)
+            buffers->motestp->estimateMotion(motionEstimation);
 
         double globalMotion[2];
         double rotation;
@@ -454,9 +470,12 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
             decay = 0.99;
         
         // filter
-        buffers->hist[0] = alpha*globalMotion[0] + (1.0 - alpha)*buffers->hist[0];
-        buffers->hist[1] = alpha*globalMotion[1] + (1.0 - alpha)*buffers->hist[1];
-        buffers->hist[2] = alpha*rotation + (1.0 - alpha)*buffers->hist[2];
+        if (!sameImage)
+        {
+            buffers->hist[0] = alpha*globalMotion[0] + (1.0 - alpha)*buffers->hist[0];
+            buffers->hist[1] = alpha*globalMotion[1] + (1.0 - alpha)*buffers->hist[1];
+            buffers->hist[2] = alpha*rotation + (1.0 - alpha)*buffers->hist[2];
+        }
         
         globalMotion[0] -= buffers->hist[0];
         globalMotion[1] -= buffers->hist[1];
@@ -466,13 +485,24 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
         globalMotion[1] *= -1.0;
         rotation *= -1.0;
         
-        globalMotion[0] += buffers->last[0];
-        globalMotion[1] += buffers->last[1];
-        rotation += buffers->last[2];
+        if (sameImage)
+        {
+            globalMotion[0] += buffers->lastSameImage[0];
+            globalMotion[1] += buffers->lastSameImage[1];
+            rotation += buffers->lastSameImage[2];
+        } else {
+            globalMotion[0] += buffers->last[0];
+            globalMotion[1] += buffers->last[1];
+            rotation += buffers->last[2];
+        }
         
-        buffers->last[0] = globalMotion[0] * decay;
-        buffers->last[1] = globalMotion[1] * decay;
-        buffers->last[2] = rotation * decay;
+        if (!sameImage)
+        {
+            memcpy(buffers->lastSameImage, buffers->last, sizeof(double)*3);
+            buffers->last[0] = globalMotion[0] * decay;
+            buffers->last[1] = globalMotion[1] * decay;
+            buffers->last[2] = rotation * decay;
+        }
         
         double newx,newy;
         newx = std::cos(rotation)*globalMotion[0] - std::sin(rotation)*globalMotion[1];
@@ -498,6 +528,7 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
     {
         memset(buffers->hist, 0, sizeof(double)*3);
         memset(buffers->last, 0, sizeof(double)*3);
+        memset(buffers->lastSameImage, 0, sizeof(double)*3);
     }
     
     
