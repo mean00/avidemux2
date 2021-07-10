@@ -37,6 +37,9 @@ static ADM_Qvumeter *vuWidget = NULL;
 #define RED    0xFFFF0000
 #define BLACK  0xFF000000
 
+#define BAR_WIDTH  7
+#define OVERDRIVE_LEVEL  80
+
 ADM_Qvumeter::ADM_Qvumeter(QWidget *z, int width, int height) : QWidget(z)
 {
 	this->resize(width, height);
@@ -85,22 +88,28 @@ bool UI_vuUpdate(uint32_t volume[8])
 {
     // Draw lines
     int vol;
+    bool ovd;
     for(int i=0;i<8;i++)
     {
         vol=volume[i];
+        ovd = (vol > OVERDRIVE_LEVEL);
         if(vol>63) vol=63;
-        if(vol<3) vol=3;
-        uint8_t *ptr = vuWidget->rgbDataBuffer + vuWidget->width() * (8 + 10 * i) * 4;
-        uint32_t *data=(uint32_t *)(ptr);
-        for(int j=0;j<vol;j++)
+        if(vol<2) vol=2;
+        for (int w=0; w<BAR_WIDTH; w++)
         {
-            if(j<32) *data++=GREEN;
-            else if(j<50) *data++=YELLOW;
-            else *data++=RED;
-        }
-        for(int j=vol;j<64;j++)
-        {
-            *data++=BLACK;
+            uint8_t *ptr = vuWidget->rgbDataBuffer + vuWidget->width() * (8 + 10 * i + w - BAR_WIDTH/2) * 4;
+            uint32_t *data=(uint32_t *)(ptr);
+            for(int j=0;j<vol;j++)
+            {
+                if (ovd) *data++=RED;
+                else if(j<32) *data++=GREEN;
+                else if(j<50) *data++=YELLOW;
+                else *data++=RED;
+            }
+            for(int j=vol;j<64;j++)
+            {
+                *data++=BLACK;
+            }
         }
     }
 #if 0
