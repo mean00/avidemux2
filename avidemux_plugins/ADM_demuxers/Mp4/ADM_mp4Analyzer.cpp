@@ -1256,6 +1256,11 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     left=0;
                                     break;
 
+                                case MKFCCR('v','p','0','9'): // VP9
+                                    _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)"VP9 ");
+                                    /* TODO: extract color properties from vpcC */
+                                    break;
+
                                 default:
                                     if(left>10)
                                     {
