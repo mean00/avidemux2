@@ -30,6 +30,10 @@
 #include "ADM_iso639.h"
 #include "ADM_aacinfo.h"
 
+extern "C" {
+#include "libavutil/pixfmt.h"
+}
+
 #if 1
 #define aprintf(...) {}
 #else
@@ -1258,7 +1262,55 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
 
                                 case MKFCCR('v','p','0','9'): // VP9
                                     _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)"VP9 ");
-                                    /* TODO: extract color properties from vpcC */
+                                    while(!son.isDone())
+                                    {
+                                        adm_atom vpc(&son);
+                                        if(vpc.getFCC() != MKFCCR('v','p','c','C'))
+                                        {
+                                            vpc.skipAtom();
+                                            continue;
+                                        }
+                                        int64_t len = vpc.getRemainingSize();
+#define VPCC_SIZE 12
+                                        if(len != VPCC_SIZE)
+                                            ADM_warning("Unexpected vpcC size %" PRId64" instead of %u\n",len,VPCC_SIZE);
+                                        else
+                                        {
+                                            uint8_t *tmp = new uint8_t[VPCC_SIZE];
+                                            if(!vpc.readPayload(tmp,VPCC_SIZE))
+                                            {
+                                                delete [] tmp;
+                                                tmp = NULL;
+                                                ADM_warning("Cannot read vpcC.\n");
+                                                vpc.skipAtom();
+                                                continue;
+                                            }
+
+                                            ADM_info("Raw vpcC:\n");
+                                            mixDump(tmp,VPCC_SIZE);
+
+                                            uint8_t *p = tmp;
+                                            uint8_t version = *p++;
+                                            if(version != 1)
+                                                ADM_warning("Unsupported vpcC version, expected 1, got %u\n",version);
+                                            else
+                                            {
+                                                p += 3+1+1; // flags, profile and level
+                                                _videoColRange = (*p++ & 1) ? AVCOL_RANGE_JPEG : AVCOL_RANGE_MPEG;
+                                                _videoColPrimaries = *p++;
+                                                _videoColTransferCharacteristic = *p++;
+                                                _videoColMatrixCoefficients = *p;
+                                                _videoColFlags = ADM_COL_FLAG_RANGE_SET | ADM_COL_FLAG_PRIMARIES_SET | ADM_COL_FLAG_TRANSFER_SET | ADM_COL_FLAG_MATRIX_COEFF_SET;
+                                                ADM_info("Color properties from vpcC:\n\trange:\t\t%u\n\tprimaries:\t%u\n\ttransfer:\t%u\n\tmcoeff:\t\t%u\n",
+                                                    _videoColRange, _videoColPrimaries, _videoColTransferCharacteristic, _videoColMatrixCoefficients);
+                                            }
+                                            delete [] tmp;
+                                            tmp = NULL;
+                                            vpc.skipAtom();
+                                        }
+                                    }
+                                    son.skipAtom();
+                                    left = 0;
                                     break;
 
                                 default:
