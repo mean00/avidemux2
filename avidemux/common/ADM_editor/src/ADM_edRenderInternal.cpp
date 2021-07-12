@@ -428,7 +428,47 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
     _pp->process(tmpImage,out);
     return true;
 }
-
+//#define EDITOR_DEBUG_FRAME_TYPE
+#ifdef EDITOR_DEBUG_FRAME_TYPE
+static char *flags2string(uint32_t flags)
+{
+    char frameType[4] = {0};
+    char *p = frameType;
+    switch (flags & AVI_FRAME_TYPE_MASK)
+    {
+        case AVI_KEY_FRAME:
+            *p++ = 'I';
+            break;
+        case AVI_P_FRAME:
+            *p++ = 'P';
+            break;
+        case AVI_B_FRAME:
+        case AVI_B_FRAME + AVI_NON_REF_FRAME:
+            *p++ = 'B';
+            break;
+        default:
+            *p++ = '?';
+            break;
+    }
+    *p++ = '/';
+    switch (flags & AVI_STRUCTURE_TYPE_MASK)
+    {
+        case AVI_FIELD_STRUCTURE + AVI_TOP_FIELD:
+            *p = 'T';
+            break;
+        case AVI_FIELD_STRUCTURE + AVI_BOTTOM_FIELD:
+            *p = 'B';
+            break;
+        case AVI_FRAME_STRUCTURE:
+            *p = 'F';
+            break;
+        default:
+            *p = '?';
+            break;
+    }
+    return ADM_strdup(frameType);
+}
+#endif
 /**
     \fn DecodePictureUpToIntra
     \brief Decode pictures from frameno, which must be an intra and on
@@ -480,7 +520,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
     endOfStream=false;
     // The PTS associated with our frame is the one we are looking for
     uint64_t wantedPts=demuxer->estimatePts(frame);
-    uint32_t tries=15+7; // Max Ref frames for H264 + MaxRecovery , let's say 7 is ok for recovery
+    uint32_t tries = 32 + LAVC_MAX_SAFE_THREAD_COUNT; // Worst case, max ref fields for H.264 + max multi-threading delay
     bool syncFound=false;
     while(found==false && tries--)
     {
@@ -505,6 +545,13 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
             //cache->flush();
             vid->decoder->setDrainingState(true);
         }
+#ifdef EDITOR_DEBUG_FRAME_TYPE
+        {
+            char *z = flags2string(img.flags);
+            printf("[ADM_Composer::DecodePictureUpToIntra] %d tries left, img type: %s\n",tries,z);
+            ADM_dealloc(z);
+        }
+#endif
         if(!vid->decoder->getDrainingState() && !img.dataLength)
         {
             aprintf("Skipping zero-length frame %u\n",vid->lastSentFrame);
