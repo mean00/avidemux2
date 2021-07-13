@@ -125,20 +125,6 @@ void Ui_imageStabWindow::showEvent(QShowEvent *event)
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
-void Ui_imageStabWindow::setInfoBar(bool nextScene, float sceneDiff)
-{
-    QPalette indctrPalette(ui.lineEditNewScene->palette());
-    QColor color;
-
-    color.setRgb(0,(nextScene ? 255:64),0,255);
-    indctrPalette.setColor(QPalette::Window,color);
-    indctrPalette.setColor(QPalette::Base,color);
-    indctrPalette.setColor(QPalette::AlternateBase,color);
-
-    ui.lineEditNewScene->setPalette(indctrPalette);
-    ui.progressBarScene->setValue(round(sceneDiff*100.0));
-}
-
 #define MYCOMBOX(x) w->comboBox##x
 #define MYSLIDER(x) w->horizontalSlider##x
 #define UPLOADSLIDER(x, value) \
@@ -198,6 +184,20 @@ void flyImageStab::setTabOrder(void)
         _parent->setTabOrder(first,second);
         //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
     }
+}
+void flyImageStab::refreshIndicator(void)
+{
+    Ui_imageStabDialog *w=(Ui_imageStabDialog *)_cookie;
+    QPalette indctrPalette(w->lineEditNewScene->palette());
+    QColor color;
+
+    color.setRgb(0,(newScene ? 255:64),0,255);
+    indctrPalette.setColor(QPalette::Window,color);
+    indctrPalette.setColor(QPalette::Base,color);
+    indctrPalette.setColor(QPalette::AlternateBase,color);
+
+    w->lineEditNewScene->setPalette(indctrPalette);
+    w->progressBarScene->setValue(round(sceneDiff*100.0));
 }
 
 /**

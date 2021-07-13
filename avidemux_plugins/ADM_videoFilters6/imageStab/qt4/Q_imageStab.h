@@ -17,7 +17,6 @@ class Ui_imageStabWindow : public QDialog
   public:
     Ui_imageStabWindow(QWidget *parent, imageStab *param,ADM_coreVideoFilter *in);
     ~Ui_imageStabWindow();
-    void setInfoBar(bool nextScene, float sceneDiff);
 
   public slots:
     void gather(imageStab *param);

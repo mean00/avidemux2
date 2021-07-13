@@ -20,7 +20,6 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_image.h"
-#include "Q_imageStab.h"
 #include "DIA_flyImageStab.h"
 
 /************* COMMON PART *********************/
@@ -30,6 +29,8 @@
 flyImageStab::flyImageStab (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_QSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
 {
+    newScene = false;
+    sceneDiff = 0.;
     ADMVideoImageStab::ImageStabCreateBuffers(width,height,&buffers);
 }
 /**
@@ -49,15 +50,12 @@ uint8_t  flyImageStab::update(void)
 */
 uint8_t   flyImageStab::processYuv(ADMImage *in,ADMImage *out )
 {
-    bool newScene;
-    float sceneDiff;
-
     out->duplicate(in);
 
     // Do it!
     ADMVideoImageStab::ImageStabProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),param, &buffers, &newScene, &sceneDiff);
 
-    ((Ui_imageStabWindow *)_parent)->setInfoBar(newScene, sceneDiff);
+    refreshIndicator();
 
     return 1;
 }

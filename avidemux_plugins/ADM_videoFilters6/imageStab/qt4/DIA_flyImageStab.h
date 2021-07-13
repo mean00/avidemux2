@@ -24,8 +24,13 @@ class flyImageStab : public ADM_flyDialogYuv
 {
   private:
     ADMVideoImageStab::imageStab_buffers_t  buffers;
+    bool       newScene;
+    float      sceneDiff;
+
+    void       refreshIndicator(void);
+
   public:
-    imageStab            param;
+    imageStab  param;
 
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     uint8_t    download(void);
