@@ -218,6 +218,7 @@ const char *getStrFromAudioCodec( uint32_t codec)
               case WAV_MP2: return QT_TRANSLATE_NOOP("adm","MP2");
               case WAV_MP3: return QT_TRANSLATE_NOOP("adm","MP3");
               case WAV_WMAPRO:  return QT_TRANSLATE_NOOP("adm","WMAPRO");
+              case WAV_WMALOSSLESS: return QT_TRANSLATE_NOOP("adm","WMA Lossless");
               case WAV_WMA:  return QT_TRANSLATE_NOOP("adm","WMA");
               case WAV_LPCM: return QT_TRANSLATE_NOOP("adm","LPCM");
               case WAV_AC3:  return QT_TRANSLATE_NOOP("adm","AC3");

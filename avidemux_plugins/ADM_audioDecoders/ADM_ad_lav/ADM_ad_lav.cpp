@@ -85,6 +85,7 @@ public:
 static  ad_supportedFormat Formats[]={
         {WAV_WMA,AD_MEDIUM_QUAL},
         {WAV_WMAPRO,AD_MEDIUM_QUAL},
+        {WAV_WMALOSSLESS,AD_MEDIUM_QUAL},
         {WAV_QDM2,AD_MEDIUM_QUAL},
         {WAV_AMV_ADPCM,AD_MEDIUM_QUAL},
         {WAV_NELLYMOSER,AD_MEDIUM_QUAL},
@@ -139,6 +140,9 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     {
       case WAV_WMAPRO:
         codecID = AV_CODEC_ID_WMAPRO;
+        break;
+      case WAV_WMALOSSLESS:
+        codecID = AV_CODEC_ID_WMALOSSLESS;
         break;
       case WAV_WMA:
         codecID = AV_CODEC_ID_WMAV2;
@@ -528,7 +532,6 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
                 ADM_warning("[ADM_ad_lav] decoding error %d: %s\n",res,er);
                 break;
             }
-
             if(_context->sample_rate!=outputFrequency)
             {
                 if(!frequencyChecked)

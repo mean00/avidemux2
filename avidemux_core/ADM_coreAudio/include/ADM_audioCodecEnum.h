@@ -8,6 +8,7 @@
 #define WAV_MP2 	80
 #define WAV_WMA 	353
 #define WAV_WMAPRO 	354
+#define WAV_WMALOSSLESS 0x163
 #define WAV_PCM 	1
 #define WAV_MSADPCM 	2
 #define WAV_LPCM 	3
