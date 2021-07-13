@@ -91,7 +91,6 @@ ADM_COREUTILS6_EXPORT bool    ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,u
 
 ADM_COREUTILS6_EXPORT uint32_t ADM_getNalSizeH265(uint8_t *extra, uint32_t len);
 
-ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265_mp4Header(uint8_t *data, uint32_t len,ADM_SPSinfoH265 *info); 
 ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265(uint8_t *data, uint32_t len, ADM_SPSinfoH265 *info);
 ADM_COREUTILS6_EXPORT bool    extractH265FrameType(uint8_t *buffer, uint32_t len, uint32_t nalSize, ADM_SPSinfoH265 *info, uint32_t *flags, int *poc);
 ADM_COREUTILS6_EXPORT bool    extractH265FrameType_startCode(uint8_t *buffer, uint32_t len, ADM_SPSinfoH265 *info, uint32_t *flags, int *poc);
