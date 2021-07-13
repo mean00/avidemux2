@@ -22,6 +22,7 @@
 
 #define ENABLE_EVENT_FILTER
 
+#define NAVIGATION_ACTION_LOCK_THRESHOLD	(4)
 /**
  * \class myQApplication
  * \brief make sure the checkCrash & friends are done after Qt init
@@ -136,6 +137,7 @@ protected:
     
     bool     refreshCapEnabled;
     uint32_t refreshCapValue;
+    unsigned int actionLock;
 
     std::vector<QAction *>ActionsAvailableWhenFileLoaded;
     std::vector<QAction *>ActionsDisabledOnPlayback;
@@ -194,13 +196,21 @@ public slots:
             setMenuItemsEnabledState();
             playing=1-playing;
         }
+        actionLock++;
         HandleAction(a);
+        actionLock--;
         setMenuItemsEnabledState();
     }
     void sendAction(Action a)
     {
-        //printf("Sending internal event %d\n",(int)a);
-        emit actionSignal(a);
+        if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END && a!=ACT_Scale)
+        {
+            if (actionLock<=NAVIGATION_ACTION_LOCK_THRESHOLD)
+                emit actionSignal(a);
+        } else {
+            //printf("Sending internal event %d\n",(int)a);
+            emit actionSignal(a);
+        }
     }
     void timeChanged(int);
     void checkChanged(int);

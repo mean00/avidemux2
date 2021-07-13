@@ -458,6 +458,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     dragState=dragState_Normal;
     recentFiles = NULL;
     recentProjects = NULL;
+    actionLock = 0;
 
 #if defined(__APPLE__) && defined(USE_SDL)
     //ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
