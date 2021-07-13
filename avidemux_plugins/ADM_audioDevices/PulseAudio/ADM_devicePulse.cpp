@@ -41,11 +41,50 @@ pulseAudioDevice::pulseAudioDevice()
 }
 /**
     \fn pulseSimpleAudioDevice
-    \brief Returns delay in ms
+    \brief Returns delay in ms, code mostly stolen from mpv
 */
 uint32_t pulseAudioDevice::getLatencyMs(void)
 {
-   return ADM_PULSE_LATENCY; //latency;
+    if(!mainloop || !stream || !connection)
+        return ADM_PULSE_LATENCY;
+
+    pa_threaded_mainloop *ml = (pa_threaded_mainloop *)mainloop;
+    pa_stream *st = (pa_stream *)stream;
+    pa_context *ctx = (pa_context *)connection;
+
+    pa_threaded_mainloop_lock(ml);
+    pa_stream_update_timing_info(st, NULL, NULL);
+
+    pa_usec_t latency = (pa_usec_t) -1;
+
+    int attempts = 10;
+    while(pa_stream_get_latency(st, &latency, NULL) < 0 && attempts > 0)
+    {
+        if(pa_context_errno(ctx) != PA_ERR_NODATA)
+        {
+            ADM_warning("pa_stream_get_latency() failed.\n");
+            break;
+        }
+        /* Wait until latency data is available again */
+        //printf("[pulseAudioDevice::getLatencyMs] Waiting for latency data, %d attempts left\n",attempts);
+        pa_threaded_mainloop_wait(ml);
+        attempts--;
+    }
+
+    pa_threaded_mainloop_unlock(ml);
+
+    if(attempts < 1)
+    {
+        //printf("[pulseAudioDevice::getLatencyMs] All attempts consumed, using hardcoded value.\n");
+        return ADM_PULSE_LATENCY;
+    }
+    if(latency == (pa_usec_t) -1)
+    {
+        //printf("[pulseAudioDevice::getLatencyMs] Cannot query latency, using hardcoded value.\n");
+        return ADM_PULSE_LATENCY;
+    }
+
+    return (uint32_t)(latency / 1000.0);
 }
 
 /**
