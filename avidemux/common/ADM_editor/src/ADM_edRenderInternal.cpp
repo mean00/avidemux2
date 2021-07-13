@@ -529,8 +529,6 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
             ADM_warning("End of stream reached\n");
             break;
         }
-        // Last frame ? if so repeat
-        if(vid->lastSentFrame>=nbFrames-1) vid->lastSentFrame=nbFrames-1;
         // Fetch frame
         aprintf("[Editor] Decoding  frame %u\n",vid->lastSentFrame);
         img.dataLength=0;
