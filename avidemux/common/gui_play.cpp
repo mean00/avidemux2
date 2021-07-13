@@ -255,6 +255,8 @@ bool GUIPlayback::run(void)
 
     uint32_t movieTime;
     uint32_t systemTime;
+    uint32_t lastUIpurgeTime = 0;
+    int32_t delta;
     uint32_t fn;
     bool gotAudio=true;
     bool first=true;
@@ -308,12 +310,12 @@ bool GUIPlayback::run(void)
             {
                 UI_purge();
                 UI_purge();
+                lastUIpurgeTime = systemTime;
                 refreshCounter=0;
             }
         }
         else
         {
-        int32_t delta;
             delta=(int32_t)movieTime-(int32_t)systemTime;
             // a call to whatever sleep function will last at leat 10 ms
             // give some time to GTK
@@ -335,10 +337,18 @@ bool GUIPlayback::run(void)
                 }
 
                 UI_purge();
+                lastUIpurgeTime = systemTime;
                 refreshCounter=0;
                 systemTime = ticktock.getElapsedMS();
                 delta=(int32_t)movieTime-(int32_t)systemTime;
             }
+        }
+        
+        delta=(int32_t)systemTime-(int32_t)lastUIpurgeTime;
+        if (delta > 33)	// ~ 30 Hz rate
+        {
+            UI_purge();
+            lastUIpurgeTime = systemTime;
         }
     }
     while (!stop_req);
