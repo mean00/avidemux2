@@ -438,9 +438,6 @@ bool  GUIPlayback::initializeAudio(void)
     fill+=small_;
 
      state = AVDM_AudioSetup(frequency,  channels ,playbackAudio->getChannelMapping());
-     latency=AVDM_GetLayencyMs();
-     printf("[Playback] Latency : %d ms\n",latency);
-     audioLatency=latency; // ms -> us
       if (!state)
       {
           GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Trouble initializing audio device"), NULL);
@@ -459,6 +456,8 @@ bool  GUIPlayback::initializeAudio(void)
     // Let audio latency sets in...
     ticktock.reset();
     AVDM_AudioPlay(wavbuf, fill);
+    audioLatency = AVDM_GetLayencyMs();
+    printf("[GUIPlayback::initializeAudio] Initial latency : %" PRIu64" ms\n",audioLatency);
     updateVu();
 #if 0
     uint32_t slice=(frequency * channels)/100; // 10 ms
