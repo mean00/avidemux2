@@ -21,6 +21,8 @@
  ***************************************************************************/
 
 #include <QPushButton>
+#include <QPalette>
+#include "ADM_default.h"
 #include "Q_imageStab.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_vidImageStab.h"
@@ -42,10 +44,7 @@ Ui_imageStabWindow::Ui_imageStabWindow(QWidget *parent, imageStab *param,ADM_cor
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
         myFly=new flyImageStab( this,width, height,in,canvas,ui.horizontalSlider);
-        ADMVideoImageStab::ImageStabCreateBuffers(width,height, &(myFly->buffers));
         memcpy(&(myFly->param),param,sizeof(imageStab));
-        myFly->indctr=ui.lineEditNewScene;
-        myFly->indctrPB=ui.progressBarScene;
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout, false);
         myFly->setTabOrder();
@@ -79,11 +78,8 @@ void Ui_imageStabWindow::gather(imageStab *param)
 }
 Ui_imageStabWindow::~Ui_imageStabWindow()
 {
-    if(myFly) {
-        ADMVideoImageStab::ImageStabDestroyBuffers(&(myFly->buffers));
-        delete myFly;
-    }
-    myFly=NULL; 
+    if(myFly) delete myFly;
+    myFly=NULL;
     if(canvas) delete canvas;
     canvas=NULL;
 }
@@ -127,6 +123,20 @@ void Ui_imageStabWindow::showEvent(QShowEvent *event)
     QDialog::showEvent(event);
     myFly->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
+}
+
+void Ui_imageStabWindow::setInfoBar(bool nextScene, float sceneDiff)
+{
+    QPalette indctrPalette(ui.lineEditNewScene->palette());
+    QColor color;
+
+    color.setRgb(0,(nextScene ? 255:64),0,255);
+    indctrPalette.setColor(QPalette::Window,color);
+    indctrPalette.setColor(QPalette::Base,color);
+    indctrPalette.setColor(QPalette::AlternateBase,color);
+
+    ui.lineEditNewScene->setPalette(indctrPalette);
+    ui.progressBarScene->setValue(round(sceneDiff*100.0));
 }
 
 #define MYCOMBOX(x) w->comboBox##x

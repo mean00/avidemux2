@@ -18,8 +18,10 @@
 #pragma once
 
 #include <pthread.h>
+#include "ADM_default.h"
 #include "ADM_byteBuffer.h"
 #include "ADM_image.h"
+#include "ADM_coreVideoFilter.h"
 #include "motest.h"
 
 #define MOTION_ESTIMATION_CONTRAST_THRESHOLD	(16)
