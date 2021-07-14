@@ -2499,6 +2499,27 @@ bool UI_setDisplayName(const char *name)
 }
 
 /**
+    \fn UI_navigationButtonsPressed
+    \brief Allow to abstain from opening pop-up dialogs while
+           a button with auto-repeat enabled is pressed, else
+           the mouse release event gets eaten by the pop-up and
+           we keep firing the action assigned to the particular
+           button forever.
+*/
+bool UI_navigationButtonsPressed(void)
+{
+    if(WIDGET(toolButtonPreviousFrame)->isDown())
+        return true;
+    if(WIDGET(toolButtonNextFrame)->isDown())
+        return true;
+    if(WIDGET(toolButtonPreviousIntraFrame)->isDown())
+        return true;
+    if(WIDGET(toolButtonNextIntraFrame)->isDown())
+        return true;
+    return false;
+}
+
+/**
     \fn UI_hasOpengl
 */
 bool UI_hasOpenGl(void)

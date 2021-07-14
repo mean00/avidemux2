@@ -569,6 +569,8 @@ void A_timedError(bool force, const char *s)
 {
     if(force || NaggingCountDown.done()) // else still running, do not nag
     {
+        if(UI_navigationButtonsPressed()) // probably auto-repeat in action
+            return;
         NaggingCountDown.reset();
         GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
         return;
