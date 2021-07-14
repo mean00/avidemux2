@@ -183,6 +183,10 @@ bool  	UI_reset(void)
 {
     return true;
 }
+bool UI_navigationButtonsPressed(void)
+{
+    return false;
+}
 bool UI_setDisplayName(char const*)
 {
         return true;
