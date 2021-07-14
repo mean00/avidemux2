@@ -36,7 +36,7 @@
 #include "ADM_preview.h"
 
 static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again for cannot seek
-static void A_timedError(bool force, const char *s);
+static void A_timedError(bool *first, const char *s);
 
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
 bool   GUI_infiniteForward(uint64_t pts);
@@ -230,9 +230,7 @@ bool GUI_NextKeyFrame(void)
 
     if (!admPreview::nextKeyFrame())
       {
-        bool force = firstError;
-        firstError = false;
-        A_timedError(force, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
+        A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
         return false;
       }
     GUI_setCurrentFrameAndTime();
@@ -298,9 +296,7 @@ bool GUI_PreviousKeyFrame(void)
 
     if (!admPreview::previousKeyFrame())
       {
-        bool force = firstError;
-        firstError = false;
-        A_timedError(force, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
+        A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
         return false;
       }
     GUI_setCurrentFrameAndTime();
@@ -565,17 +561,19 @@ bool GUI_lastFrameBeforePts(uint64_t pts)
  * \brief display error unless the last error is too recent
  * @param s
  */
-void A_timedError(bool force, const char *s)
+void A_timedError(bool *first, const char *s)
 {
-    if(force || NaggingCountDown.done()) // else still running, do not nag
+    if(*first || NaggingCountDown.done()) // else still running, do not nag
     {
         if(UI_navigationButtonsPressed()) // probably auto-repeat in action
             return;
         NaggingCountDown.reset();
+        *first = false;
         GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
         return;
     }
     NaggingCountDown.reset();
+    *first = false;
 }
 
 // EOF
