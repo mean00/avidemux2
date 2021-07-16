@@ -1,22 +1,6 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
-fallback_qtdir=/usr/local/opt/qt5
-if [ "x$MYQT" != "x" ] && [ -e "${MYQT}/bin/qmake" ] ; then
-    export PATH=$PATH:$MYQT/bin:/opt/local/libexec/qt5/bin # for macports; /usr/local/bin is in PATH by default anyway
-    export QTDIR="${MYQT}" # needed for translations
-else
-    export PATH=$PATH:/opt/local/libexec/qt5/bin
-fi
-if ! $(which -s qmake) && [ -e "${fallback_qtdir}/bin/qmake" ] ; then
-    echo "Using ${fallback_qtdir} as fallback qt5 install path"
-    export PATH=$PATH:${fallback_qtdir}/bin
-    export QTDIR="${fallback_qtdir}"
-fi
-if ! $(which -s qmake) ; then
-    echo "Error: No qmake executable found, aborting."
-    exit 1
-fi
 
 export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
 export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
@@ -262,6 +246,35 @@ done
 validate adm_version "$adm_version" || exit 1
 validate output "$output" || exit 1
 config
+# Homebrew offers formulae both for Qt5 and Qt6. When the version we want
+# doesn't match the one linked into /usr/local, the build will fail.
+# Refuse to continue if Qt is not keg-only.
+if [ -f "/usr/local/bin/qmake" ]; then
+    echo -e "\n***************************************************************"
+    echo -e "It seems that you have a Qt installation linked into /usr/local"
+    echo -e "Please unlink it first, e.g. for Qt6 by executing\n"
+    echo -e "\tbrew unlink qt6\n"
+    echo -e "then rerun this script."
+    echo -e "***************************************************************\n"
+    exit 1
+fi
+if [ "x$MYQT" != "x" ] && [ -f "${MYQT}/bin/qmake" ] ; then
+    export QTDIR="${MYQT}" # needed for translations
+else
+    if [ $qt_ext = "Qt6" ]; then
+        export QTDIR=/usr/local/opt/qt6
+    else
+        export QTDIR=/usr/local/opt/qt5
+    fi
+fi
+export PATH=${PATH}:${QTDIR}/bin
+if $(which -s qmake) && [ -f "${QTDIR}/bin/qmake" ]; then
+    echo "Using ${QTDIR} as Qt install path"
+else
+    echo "Error: No matching qmake executable found, aborting."
+    exit 1
+fi
+#
 echo "** BootStrapping avidemux **"
 export TOP=$PWD
 export POSTFIX=""
@@ -330,10 +343,13 @@ if [ "x$create_app_bundle" = "x1" ] ; then
     echo "Copying icons"
     cp $TOP/cmake/osx/*.icns $PREFIX/
     mkdir -p $PREFIX/../MacOS
-    mkdir -p installer
-    rm -Rf installer/*
+    if [ -e installer ]; then
+        chmod -R +w installer || fail "making the old installer directory writable"
+        rm -Rf installer || fail "removing the old installer directory"
+    fi
+    mkdir installer || fail "creating new installer directory"
     cd installer
-    cmake -DAVIDEMUX_VERSION="$ADM_VERSION" -DDMG_BASENAME="$output" -DBUILD_REV="$REV" $FLAVOR ../avidemux/osxInstaller
+    cmake -DAVIDEMUX_VERSION="$ADM_VERSION" -DDMG_BASENAME="$output" -DBUILD_REV="$REV" $FLAVOR ../avidemux/osxInstaller || fail "cmake"
     echo "** Preparing packaging **"
     make install && make package
 fi
