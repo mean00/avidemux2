@@ -38,6 +38,10 @@ FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/MacOS")
 FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/Resources")
 # 
 LIST(APPEND bundleDirs  "${BUNDLE}/Contents/Resources/lib")
+IF(ENABLE_QT6)
+    # A gross hack to work around the failure to resolve @loader_path for libbrotli.
+    LIST(APPEND bundleDirs "/usr/local/lib")
+ENDIF(ENABLE_QT6)
 #
 
 #
@@ -55,9 +59,15 @@ makeLink("Resources/lib"  "." ${BUNDLE}/Contents/)
 #
 MESSAGE(STATUS "* Copying plugins *")
 #
-FILE(COPY  "${QT_PLUGINS_DIR}/platforms" DESTINATION "${BUNDLE}/Contents/PlugIns/")
+FILE(COPY "${QT_PLUGINS_DIR}/platforms" DESTINATION "${BUNDLE}/Contents/PlugIns/" DIRECTORY_PERMISSIONS
+    OWNER_WRITE OWNER_READ OWNER_EXECUTE
+    GROUP_WRITE GROUP_READ GROUP_EXECUTE
+    WORLD_WRITE WORLD_READ WORLD_EXECUTE)
 IF(EXISTS "${QT_PLUGINS_DIR}/styles")
-    FILE(COPY "${QT_PLUGINS_DIR}/styles" DESTINATION "${BUNDLE}/Contents/PlugIns/")
+    FILE(COPY "${QT_PLUGINS_DIR}/styles" DESTINATION "${BUNDLE}/Contents/PlugIns/" DIRECTORY_PERMISSIONS
+        OWNER_WRITE OWNER_READ OWNER_EXECUTE
+        GROUP_WRITE GROUP_READ GROUP_EXECUTE
+        WORLD_WRITE WORLD_READ WORLD_EXECUTE)
 ENDIF(EXISTS "${QT_PLUGINS_DIR}/styles")
 # Update Qt plugins
 #

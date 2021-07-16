@@ -122,7 +122,8 @@ ENDIF (NOT MSVC AND CMAKE_BUILD_TYPE STREQUAL "Release")
 # MacOsX stuff
 IF(APPLE)
 	set (CMAKE_OSX_ARCHITECTURES "x86_64")
-        SET(CMAKE_INSTALL_NAME_DIR @executable_path/../lib) # Make sure we are relative to bundle
+        #SET(CMAKE_INSTALL_NAME_DIR @executable_path/../lib) # Make sure we are relative to bundle
+        set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE) # Needed for Qt built with rpath like Qt6 from Homebrew.
 ENDIF(APPLE)
 
 ########################################

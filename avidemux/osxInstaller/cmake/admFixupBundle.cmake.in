@@ -1,7 +1,7 @@
 SET(CMAKE_MODULE_PATH @CMAKE_MODULE_PATH@)
-SET(BU_CHMOD_BUNDLE_ITEMS ON)
 include(linkMacro)
 include(BundleUtilities)
+SET(BU_CHMOD_BUNDLE_ITEMS TRUE)
 
 FIXUP_BUNDLE("@BUNDLE@" "@all@" "@bundleDirs@" IGNORE_ITEM "python3;python3.7m;python3.7;Python;")
 

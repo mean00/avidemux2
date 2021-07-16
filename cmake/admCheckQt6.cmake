@@ -10,19 +10,22 @@ MACRO(checkQt6)
         ELSE(CROSS)
             IF (QT6)
                 MESSAGE(STATUS "Checking for Qt6Core")
-                FIND_PACKAGE(Qt6Core)
+                FIND_PACKAGE(Qt6 COMPONENTS Core)
+
+                MESSAGE(STATUS "Checking for Qt6Gui")
+                FIND_PACKAGE(Qt6 COMPONENTS Gui)
 
                 MESSAGE(STATUS "Checking for Qt6Widgets")
-                FIND_PACKAGE(Qt6Widgets)
+                FIND_PACKAGE(Qt6 COMPONENTS Widgets)
 
                 MESSAGE(STATUS "Checking for OpenGLWidgets")
-                FIND_PACKAGE(Qt6OpenGLWidgets COMPONENTS OpenGLWidgets REQUIRED)
+                FIND_PACKAGE(Qt6 COMPONENTS OpenGLWidgets)
 
                 MESSAGE(STATUS "Checking for Qt6Network")
-                FIND_PACKAGE(Qt6Network)
+                FIND_PACKAGE(Qt6 COMPONENTS Network)
 
-                IF(Qt6Core_FOUND AND Qt6Widgets_FOUND AND Qt6OpenGLWidgets_FOUND AND Qt6Network_FOUND)
-                    MESSAGE(STATUS "Qt6 found ")
+                IF(Qt6Core_FOUND AND Qt6Gui_FOUND AND Qt6Widgets_FOUND AND Qt6OpenGLWidgets_FOUND AND Qt6Network_FOUND)
+                    MESSAGE(STATUS "Qt6 found")
                     SET(QT6_FOUND 1)
 
                     SET(QT_VERSION_MINOR ${Qt6Core_VERSION_MINOR})
@@ -32,7 +35,7 @@ MACRO(checkQt6)
 
                     SET(QT_QTCORE_LIBRARY ${Qt6Core_LIBRARIES})
                     SET(QT_QTNETWORK_LIBRARY ${Qt6Network_LIBRARIES})
-                    SET(QT_QTGUI_LIBRARY ${Qt6Widgets_LIBRARIES} ${Qt6OpenGLWidgets_LIBRARIES})
+                    SET(QT_QTGUI_LIBRARY ${Qt6Gui_LIBRARIES} ${Qt6Widgets_LIBRARIES} ${Qt6OpenGLWidgets_LIBRARIES})
 
                     SET(QT_DEFINITIONS ${Qt6Core_DEFINITIONS} ${Qt6Widgets_DEFINITIONS} ${Qt6OpenGLWidgets_DEFINITIONS} ${Qt6Network_DEFINITIONS})
 
@@ -64,9 +67,9 @@ MACRO(checkQt6)
                     exec_program(${QMAKE_EXECUTABLE} ARGS "-query QT_INSTALL_PLUGINS" RETURN_VALUE return_code OUTPUT_VARIABLE QT_PLUGINS_DIR )
                     MESSAGE(STATUS "plugin dir = ${QT_PLUGINS_DIR}")
 
-                ELSE(Qt6Core_FOUND AND Qt6Widgets_FOUND AND Qt6OpenGLWidgets_FOUND AND Qt6Network_FOUND)
+                ELSE(Qt6Core_FOUND AND Qt6Gui_FOUND AND Qt6Widgets_FOUND AND Qt6OpenGLWidgets_FOUND AND Qt6Network_FOUND)
                     MESSAGE(STATUS "Some Qt6 components are missing")
-                ENDIF(Qt6Core_FOUND AND Qt6Widgets_FOUND AND Qt6OpenGLWidgets_FOUND AND Qt6Network_FOUND)
+                ENDIF(Qt6Core_FOUND AND Qt6Gui_FOUND AND Qt6Widgets_FOUND AND Qt6OpenGLWidgets_FOUND AND Qt6Network_FOUND)
             ELSE (QT6)
                 MESSAGE("${MSG_DISABLE_OPTION}")
             ENDIF (QT6)
