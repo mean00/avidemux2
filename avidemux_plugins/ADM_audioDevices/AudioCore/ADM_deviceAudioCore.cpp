@@ -21,7 +21,6 @@
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
 
-#include <AudioUnit/AudioUnit.h>
 #include "ADM_default.h"
 #include "ADM_audiodevice.h"
 #include "ADM_audioDeviceInternal.h"
@@ -154,7 +153,7 @@ void coreAudioDevice::sendData()
 #define CHECK_RESULT(msg) \
     if (err != noErr) \
 	{ \
-		ADM_info("[CoreAudio] Failed to initialise CoreAudio: " msg "\n"); \
+		ADM_info("[CoreAudio] Failed to initialise CoreAudio: " msg " error %d\n",err); \
         return 0; \
     }
 /**
@@ -164,7 +163,7 @@ bool coreAudioDevice::localInit(void)
 {
 
 	OSStatus err;
-	ComponentDescription desc;
+	AudioComponentDescription desc;
 	AURenderCallbackStruct input;
 	AudioStreamBasicDescription streamFormat;
 	AudioDeviceID theDevice;
@@ -175,7 +174,7 @@ bool coreAudioDevice::localInit(void)
 	desc.componentFlags = 0;
 	desc.componentFlagsMask = 0;
 
-	comp = FindNextComponent(NULL, &desc);
+	comp = AudioComponentFindNext(NULL, &desc);
 
 	if (comp == NULL)
 	{
@@ -183,8 +182,8 @@ bool coreAudioDevice::localInit(void)
 		return 0;
 	}
 
-	err = OpenAComponent(comp, &theOutputUnit);
-	CHECK_RESULT("OpenAComponent")
+	err = AudioComponentInstanceNew(comp, &theOutputUnit);
+	CHECK_RESULT("AudioComponentInstanceNew")
 
 	err = AudioUnitInitialize(theOutputUnit);
 	CHECK_RESULT("AudioUnitInitialize")

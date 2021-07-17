@@ -18,7 +18,7 @@ class coreAudioDevice : public audioDeviceThreaded
          virtual     void     sendData(void); 
                      bool     sendMoreData(int nbSample, uint8_t *where);
                      AudioUnit  theOutputUnit;
-                     Component  comp ;
+                     AudioComponent comp;
  virtual const CHANNEL_TYPE    *getWantedChannelMapping(uint32_t channels);
       public:
                                 coreAudioDevice(void);  
