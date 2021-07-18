@@ -7,6 +7,7 @@ bool  imageStab_jserialize(const char *file, const imageStab *key){
 admJson json;
 json.addFloat("smoothing",key->smoothing);
 json.addFloat("gravity",key->gravity);
+json.addBool("autoGravity",key->autoGravity);
 json.addFloat("sceneThreshold",key->sceneThreshold);
 json.addFloat("zoom",key->zoom);
 json.addUint32("algo",key->algo);

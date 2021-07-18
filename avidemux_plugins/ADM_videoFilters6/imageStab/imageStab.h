@@ -4,6 +4,7 @@
 typedef struct {
 float smoothing;
 float gravity;
+bool autoGravity;
 float sceneThreshold;
 float zoom;
 uint32_t algo;

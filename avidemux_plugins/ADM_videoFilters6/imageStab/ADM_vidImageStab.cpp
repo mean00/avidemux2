@@ -459,15 +459,37 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
         buffers->motestp->getMotionParameters(globalMotion, &rotation);
 
         double alpha;
-        double decay;
+        double decay, decayr;
         // smoothing [0 .. 0.5 .. 1] -~> [0.5 .. 0.1 .. 0.001]
         alpha = 0.5 - std::sqrt(smoothing)/2.0;
         if (alpha < 0.001)
             alpha = 0.001;
-        // gravity   [0 .. 0.5 .. 1] -~> [0.99 .. 0.9 .. 0.5]
-        decay = 1.0 - (gravity*gravity*gravity)/2.0;
-        if (decay > 0.99)
-            decay = 0.99;
+        if (param.autoGravity)
+        {
+            double hdisp,vdisp;
+            hdisp = buffers->last[0]/w;
+            vdisp = buffers->last[1]/h;
+            hdisp *= 4.0;
+            vdisp *= 4.0;
+            double displacement = std::sqrt(hdisp*hdisp + vdisp*vdisp);
+            decay = 1.0 - displacement;
+            if (decay < 0.0) decay = 0.0;
+            decay = decay*decay;
+            if (decay > 0.99)
+                decay = 0.99;
+            
+            decayr = 1.0 - std::fabs(buffers->last[2] * 2.0);
+            if (decayr < 0.0) decayr = 0.0;
+            decayr = decayr*decayr;
+            if (decayr > 0.99)
+                decayr = 0.99;
+        } else {
+            // gravity   [0 .. 0.5 .. 1] -~> [0.99 .. 0.9 .. 0.5]
+            decay = 1.0 - (gravity*gravity*gravity)/2.0;
+            if (decay > 0.99)
+                decay = 0.99;
+            decayr = decay;
+        }
         
         // filter
         if (!sameImage)
@@ -501,7 +523,7 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
             memcpy(buffers->lastSameImage, buffers->last, sizeof(double)*3);
             buffers->last[0] = globalMotion[0] * decay;
             buffers->last[1] = globalMotion[1] * decay;
-            buffers->last[2] = rotation * decay;
+            buffers->last[2] = rotation * decayr;
         }
         
         double newx,newy;
@@ -605,8 +627,14 @@ const char   *ADMVideoImageStab::getConfiguration(void)
         case 1: motionEstimation="Fast";
             break;
     }
+    
+    char grav[16];
+    if (_param.autoGravity)
+        strcpy(grav, "auto");
+    else
+        snprintf(grav,15,"%.2f",_param.gravity);
 
-    snprintf(s,511,"Smoothing: %.2f, Gravity: %.2f, Scene threshold: %.2f, %s interpolation, Zoom: %.02f, %s motion estimation", _param.smoothing, _param.gravity, _param.sceneThreshold, algo, _param.zoom, motionEstimation);
+    snprintf(s,511,"Smoothing: %.2f, Gravity: %s, Scene threshold: %.2f, %s interpolation, Zoom: %.02f, %s motion estimation", _param.smoothing, grav, _param.sceneThreshold, algo, _param.zoom, motionEstimation);
 
     return s;
 }
@@ -620,6 +648,7 @@ ADMVideoImageStab::ADMVideoImageStab(  ADM_coreVideoFilter *in,CONFcouple *coupl
         // Default value
         _param.smoothing=0.5;
         _param.gravity=0.5;
+        _param.autoGravity=true;
         _param.sceneThreshold=0.5;
         _param.zoom=1;
         _param.algo = 0;

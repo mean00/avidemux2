@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>418</width>
+    <width>523</width>
     <height>364</height>
    </rect>
   </property>
@@ -129,6 +129,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxAutoGravity">
+       <property name="text">
+        <string>Auto Gravity</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
