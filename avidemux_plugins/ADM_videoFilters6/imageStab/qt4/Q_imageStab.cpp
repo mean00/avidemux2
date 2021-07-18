@@ -62,6 +62,9 @@ Ui_imageStabWindow::Ui_imageStabWindow(QWidget *parent, imageStab *param,ADM_cor
         connect(ui.comboBoxAlgo, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
         connect(ui.comboBoxMotionEstimation, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
 
+#define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
+        CHKBOX(AutoGravity);
+
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
@@ -99,6 +102,7 @@ void Ui_imageStabWindow::reset( bool f )
 {
     myFly->param.smoothing=0.5;
     myFly->param.gravity=0.5;
+    myFly->param.autoGravity=true;
     myFly->param.sceneThreshold=0.5;
     myFly->param.zoom=1;
     myFly->param.algo = 0;
@@ -127,6 +131,7 @@ void Ui_imageStabWindow::showEvent(QShowEvent *event)
 
 #define MYCOMBOX(x) w->comboBox##x
 #define MYSLIDER(x) w->horizontalSlider##x
+#define MYCHKBOX(x) w->checkBox##x
 #define UPLOADSLIDER(x, value) \
         w->horizontalSlider##x->blockSignals(true); \
         w->horizontalSlider##x->setValue(value); \
@@ -141,6 +146,8 @@ uint8_t flyImageStab::upload()
     UPLOADSLIDER(Gravity, (int)round(param.gravity*100.0));
     UPLOADSLIDER(Zoom, (int)round(param.zoom*100.0));
     UPLOADSLIDER(SceneThreshold, (int)round(param.sceneThreshold*100.0));
+    MYCHKBOX(AutoGravity)->setChecked(param.autoGravity);
+    MYSLIDER(Gravity)->setEnabled(!param.autoGravity);
 
     return 1;
 }
@@ -154,6 +161,8 @@ uint8_t flyImageStab::download(void)
     param.gravity = ((float)MYSLIDER(Gravity)->value()) / 100.0;
     param.zoom = ((float)MYSLIDER(Zoom)->value()) / 100.0;
     param.sceneThreshold = ((float)MYSLIDER(SceneThreshold)->value()) / 100.0;
+    param.autoGravity = MYCHKBOX(AutoGravity)->isChecked();
+    MYSLIDER(Gravity)->setEnabled(!param.autoGravity);
 
     upload();
     return 1;
@@ -164,10 +173,12 @@ void flyImageStab::setTabOrder(void)
     std::vector<QWidget *> controls;
 #define PUSHCOMBOX(x) controls.push_back(MYCOMBOX(x));
 #define PUSHSLIDER(x) controls.push_back(MYSLIDER(x));
+#define PUSHCHKBOX(x) controls.push_back(MYCHKBOX(x));
     PUSHSLIDER(Smoothing)
     PUSHSLIDER(Gravity)
     PUSHCOMBOX(Algo)
     PUSHCOMBOX(MotionEstimation)
+    PUSHCHKBOX(AutoGravity)
     PUSHSLIDER(Zoom)
     PUSHSLIDER(SceneThreshold)
 
