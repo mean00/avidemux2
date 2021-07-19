@@ -313,7 +313,7 @@ void resizeWindow::printOutAR(int w, int h)
     }
     
     double outar = xx/yy;
-    outar = std::round(outar*10000.0) / 10000.0;
+    outar = round(outar*10000.0) / 10000.0;
     
     double mindiff = 9999;
     int minindex = 0;
