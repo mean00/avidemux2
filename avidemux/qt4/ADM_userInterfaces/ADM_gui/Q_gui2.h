@@ -138,6 +138,7 @@ protected:
     bool     refreshCapEnabled;
     uint32_t refreshCapValue;
     unsigned int actionLock;
+    unsigned int busyCntr;
 
     std::vector<QAction *>ActionsAvailableWhenFileLoaded;
     std::vector<QAction *>ActionsDisabledOnPlayback;
@@ -196,10 +197,22 @@ public slots:
             setMenuItemsEnabledState();
             playing=1-playing;
         }
+        if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END)
+        {
+            busyCntr++;
+            if (!QApplication::overrideCursor())
+                QApplication::setOverrideCursor(Qt::WaitCursor);
+        }
         actionLock++;
         HandleAction(a);
         actionLock--;
         setMenuItemsEnabledState();
+        if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END)
+        {
+            busyCntr--;
+            if ((busyCntr == 0) && QApplication::overrideCursor())
+                QApplication::restoreOverrideCursor();
+        }
     }
     void sendAction(Action a)
     {
