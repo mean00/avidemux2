@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>571</width>
+    <width>643</width>
     <height>405</height>
    </rect>
   </property>
@@ -136,6 +136,19 @@
          </spacer>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelOutAR">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

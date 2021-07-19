@@ -24,6 +24,7 @@ private:
     void connectDimensionControls();
     void disconnectDimensionControls();
     void roundUp(int xx, int yy);
+    void printOutAR(int w, int h);
     void enableControls(bool enable);
 
 protected:
