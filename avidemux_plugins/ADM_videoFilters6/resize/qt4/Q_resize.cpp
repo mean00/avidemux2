@@ -333,10 +333,13 @@ void resizeWindow::printOutAR(int w, int h)
     else
         mindiff = lsar/outar - 1.0;
     
+    QString arstr=QString(QT_TRANSLATE_NOOP("resize","Aspect ratio: "));
     if (mindiff <= 0.005)
-        ui.labelOutAR->setText(QString("%1 x %2 => %3 (%4:%5)").arg(w).arg(h).arg(outar, 0, 'f', 4).arg(arlist[minindex][0]).arg(arlist[minindex][1]));
+        arstr += QString("%1 (%2:%3)").arg(outar, 0, 'f', 4).arg(arlist[minindex][0]).arg(arlist[minindex][1]);
     else
-        ui.labelOutAR->setText(QString("%1 x %2 => %3 (  ??  )").arg(w).arg(h).arg(outar, 0, 'f', 4));
+        arstr += QString("%1 (  ??  )").arg(outar, 0, 'f', 4);
+        
+    ui.labelOutAR->setText(arstr);
 }
 
 void resizeWindow::lockArToggled(bool toggled)
