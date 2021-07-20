@@ -46,6 +46,7 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
 {
     ui.setupUi(this);
     lastPercentage = 100;
+    labelOutArFWidth = labelOutArFWidth10 = 0;
     _param=param;
 
 #define ADD_PAR(x) ui.comboBoxSource->addItem(x); ui.comboBoxDestination->addItem(x);
@@ -91,6 +92,21 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
 
     connectDimensionControls();
+}
+
+void resizeWindow::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    /* Avoid shifting the layout displaying output aspect ratio
+    by setting a sufficient minimum width based on font metrics. */
+    QFontMetrics fm = ui.labelOutArFloat->fontMetrics(); // we may assume that both labels use the same font
+    QString text = "0.0000";
+    labelOutArFWidth = 1.05 * fm.boundingRect(text).width();
+    text = "00.0000";
+    labelOutArFWidth10 = 1.05 * fm.boundingRect(text).width();
+    ui.labelOutArFloat->setMinimumWidth(labelOutArFWidth);
+    text = "(00:00)";
+    ui.labelOutArDef->setMinimumWidth(1.05 * fm.boundingRect(text).width());
 }
 
 void resizeWindow::gather(void)
@@ -332,14 +348,24 @@ void resizeWindow::printOutAR(int w, int h)
         mindiff = outar/lsar - 1.0;
     else
         mindiff = lsar/outar - 1.0;
-    
-    QString arstr=QString(QT_TRANSLATE_NOOP("resize","Aspect ratio: "));
+
+    if (outar < 10.)
+    {
+        if (labelOutArFWidth > 0)
+            ui.labelOutArFloat->setMinimumWidth(labelOutArFWidth);
+    } else
+    {
+        if (labelOutArFWidth10 > 0)
+            ui.labelOutArFloat->setMinimumWidth(labelOutArFWidth10);
+    }
+
+    QString arfloat = QString("%1").arg(outar, 0, 'f', 4);
+    ui.labelOutArFloat->setText(arfloat);
+
+    QString arstr;
     if (mindiff <= 0.005)
-        arstr += QString("%1 (%2:%3)").arg(outar, 0, 'f', 4).arg(arlist[minindex][0]).arg(arlist[minindex][1]);
-    else
-        arstr += QString("%1 (  ??  )").arg(outar, 0, 'f', 4);
-        
-    ui.labelOutAR->setText(arstr);
+        arstr = QString("(%1:%2)").arg(arlist[minindex][0]).arg(arlist[minindex][1]);
+    ui.labelOutArDef->setText(arstr);
 }
 
 void resizeWindow::lockArToggled(bool toggled)
