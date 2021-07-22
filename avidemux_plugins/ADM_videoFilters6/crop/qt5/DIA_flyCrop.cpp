@@ -919,7 +919,21 @@ void Ui_cropWindow::showEvent(QShowEvent *event)
     by setting a sufficient minimum width based on font metrics. */
     QFontMetrics fm = ui.labelSize->fontMetrics(); // we may assume that both labels use the same font
     QString text = QString(QT_TRANSLATE_NOOP("crop","Size: "));
-    text += "10000 x 10000";
+
+    int w = inputWidth;
+    int h = inputHeight;
+    const char *str[5] = {"0","00","000","0000","00000"};
+
+    int pos = 0;
+    while((w = w / 10) && pos < 4)
+        pos++;
+    text += str[pos];
+    text += " x ";
+    pos = 0;
+    while((h = h / 10) && pos < 4)
+        pos++;
+    text += str[pos];
+
     ui.labelSize->setMinimumWidth(1.05 * fm.boundingRect(text).width());
     text = "00.0000";
     ui.labelOutArFloat->setMinimumWidth(1.05 * fm.boundingRect(text).width());
