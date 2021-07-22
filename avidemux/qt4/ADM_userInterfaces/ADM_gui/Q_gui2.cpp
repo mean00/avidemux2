@@ -1506,6 +1506,7 @@ void MainWindow::restoreDefaultWidgetState(bool b)
     ui.selectionWidget->setVisible(true);
     ui.volumeWidget->setVisible(true);
     ui.audioMetreWidget->setVisible(true);
+    ui.toolBar->setVisible(true);
 
     syncToolbarsMenu();
 
@@ -1997,6 +1998,7 @@ void MainWindow::syncToolbarsMenu(void)
     CHECKMARK(2,navigation)
     CHECKMARK(3,selection)
     CHECKMARK(4,volume)
+    ui.menuToolbars->actions().at(5)->setChecked(ui.toolBar->isVisible());
 #undef CHECKMARK
 #undef EXPAND
 }

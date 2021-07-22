@@ -99,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>858</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -133,6 +133,7 @@
      <addaction name="actionViewNavigation"/>
      <addaction name="actionViewSelection"/>
      <addaction name="actionViewVolume"/>
+     <addaction name="actionViewToolBar"/>
     </widget>
     <addaction name="menuToolbars"/>
    </widget>
@@ -1434,13 +1435,13 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>160</width>
+     <width>182</width>
      <height>120</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>200</width>
+     <width>182</width>
      <height>120</height>
     </size>
    </property>
@@ -1915,6 +1916,20 @@
     <string>Ctrl+Alt+V</string>
    </property>
   </action>
+  <action name="actionViewToolBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Toolbar</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+B</string>
+   </property>
+  </action>
   <action name="actionViewAudioMetre">
    <property name="checkable">
     <bool>true</bool>
@@ -2085,6 +2100,22 @@
     <hint type="destinationlabel">
      <x>601</x>
      <y>569</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionViewToolBar</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolBar</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
     </hint>
    </hints>
   </connection>
