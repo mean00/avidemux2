@@ -1924,7 +1924,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Tool Bar</string>
+    <string>&amp;Toolbar</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+B</string>
