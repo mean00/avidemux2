@@ -410,13 +410,6 @@ void MainWindow::timeChangeFinished(void)
     this->setFocus(Qt::OtherFocusReason);
 }
 
-void MainWindow::currentFrameChanged(void)
-{
-//    sendAction(ACT_JumpToFrame);
-
-    this->setFocus(Qt::OtherFocusReason);
-}
-
 void MainWindow::currentTimeChanged(void)
 {
     sendAction(ACT_GotoTime);

@@ -186,35 +186,33 @@ protected:
     void currentTimeToClipboard(void);
     bool dragWhilePlay;
 
-public slots:
-    void updateAvailableSlot(int version, std::string date, std::string url);
-    void dragTimerTimeout(void);
-    void setRefreshCap(void);
-    void busyTimerTimeout(void);
-    void actionSlot(Action a);
-    void sendAction(Action a);
-    
+private slots:
     void timeChanged(int);
+    void timeChangeFinished(void);
     void checkChanged(int);
+    void comboChanged(int z);
+
     void buttonPressed(void);
     void toolButtonPressed(bool z);
-    void setMenuItemsEnabledState(void);
 
-    void comboChanged(int z);
+    void previewModeChangedFromMenu(bool status);
+    void previewModeChangedFromToolbar(bool status);
+
+    void currentTimeChanged(void);
+
     void sliderValueChanged(int u);
     void sliderMoved(int value);
     void sliderReleased(void);
     void sliderPressed(void);
     void sliderWheel(int way);
-    void volumeChange( int u );
-    void audioToggled(bool checked);
-    void previewModeChangedFromMenu(bool status);
-    void previewModeChangedFromToolbar(bool status);
-    void timeChangeFinished(void);
-    void currentFrameChanged(void);
-    void currentTimeChanged(void);
 
-    void thumbSlider_valueEmitted(int value);
+    void dragTimerTimeout(void);
+    void busyTimerTimeout(void);
+    void sendAction(Action a);
+    void actionSlot(Action a);
+
+    void scriptFileActionHandler(void);
+    void scriptReferenceActionHandler(void);
 
     void searchFileMenu(QAction * action);
     void searchRecentMenu(QAction * action);
@@ -227,11 +225,9 @@ public slots:
     void searchGoMenu(QAction * action);
     void searchRecentFiles(QAction * action);
     void searchRecentProjects(QAction * action);
-    void searchToolBar(QAction *);
-    void restoreDefaultWidgetState(bool b);
+    void searchToolBar(QAction * action);
 
-    void scriptFileActionHandler();
-    void scriptReferenceActionHandler();
+    void restoreDefaultWidgetState(bool b);
 
     void closeEvent(QCloseEvent *event)
     {
@@ -239,6 +235,16 @@ public slots:
         //QMainWindow::closeEvent(event);
         sendAction(ACT_EXIT);
     }
+
+public slots:
+    void updateAvailableSlot(int version, std::string date, std::string url);
+    void setRefreshCap(void);
+    void setMenuItemsEnabledState(void);
+
+    void volumeChange(int u);
+    void audioToggled(bool checked);
+
+    void thumbSlider_valueEmitted(int value);
 
 signals:
     void actionSignal(Action a);
