@@ -138,6 +138,8 @@ protected:
     bool     refreshCapEnabled;
     uint32_t refreshCapValue;
     unsigned int actionLock;
+    unsigned int busyCntr;
+    QTimer busyTimer; 
 
     std::vector<QAction *>ActionsAvailableWhenFileLoaded;
     std::vector<QAction *>ActionsDisabledOnPlayback;
@@ -188,30 +190,10 @@ public slots:
     void updateAvailableSlot(int version, std::string date, std::string url);
     void dragTimerTimeout(void);
     void setRefreshCap(void);
-    void actionSlot(Action a)
-    {
-        if(a==ACT_PlayAvi) // ugly
-        {
-            playing=1-playing;
-            setMenuItemsEnabledState();
-            playing=1-playing;
-        }
-        actionLock++;
-        HandleAction(a);
-        actionLock--;
-        setMenuItemsEnabledState();
-    }
-    void sendAction(Action a)
-    {
-        if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END && a!=ACT_Scale)
-        {
-            if (actionLock<=NAVIGATION_ACTION_LOCK_THRESHOLD)
-                emit actionSignal(a);
-        } else {
-            //printf("Sending internal event %d\n",(int)a);
-            emit actionSignal(a);
-        }
-    }
+    void busyTimerTimeout(void);
+    void actionSlot(Action a);
+    void sendAction(Action a);
+    
     void timeChanged(int);
     void checkChanged(int);
     void buttonPressed(void);

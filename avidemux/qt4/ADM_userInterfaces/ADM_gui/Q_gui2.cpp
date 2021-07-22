@@ -448,6 +448,60 @@ void MainWindow::setRefreshCap(void)
 }
 
 /**
+    \fn busyTimerTimeout
+*/
+void MainWindow::busyTimerTimeout(void)
+{
+    if ((busyCntr == 0) && QApplication::overrideCursor())
+        QApplication::restoreOverrideCursor();
+}
+
+/**
+    \fn actionSlot
+*/
+void MainWindow::actionSlot(Action a)
+{
+    if(a==ACT_PlayAvi) // ugly
+    {
+        playing=1-playing;
+        setMenuItemsEnabledState();
+        playing=1-playing;
+    }
+    if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END)
+    {
+        busyTimer.stop();
+        busyCntr++;
+        if (!QApplication::overrideCursor())
+            QApplication::setOverrideCursor(Qt::WaitCursor);
+    }
+    actionLock++;
+    HandleAction(a);
+    actionLock--;
+    setMenuItemsEnabledState();
+    if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END)
+    {
+        busyCntr--;
+        if (busyCntr==0)
+            busyTimer.start(100);
+    }
+}
+
+/**
+    \fn sendAction
+*/
+void MainWindow::sendAction(Action a)
+{
+    if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END && a!=ACT_Scale)
+    {
+        if (actionLock<=NAVIGATION_ACTION_LOCK_THRESHOLD)
+            emit actionSignal(a);
+    } else {
+        //printf("Sending internal event %d\n",(int)a);
+        emit actionSignal(a);
+    }
+}
+
+/**
     \fn ctor
 */
 MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEngines(scriptEngines), QMainWindow()
@@ -459,6 +513,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     recentFiles = NULL;
     recentProjects = NULL;
     actionLock = 0;
+    busyCntr = 0;
+    busyTimer.setSingleShot(true);
 
 #if defined(__APPLE__) && defined(USE_SDL)
     //ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
@@ -497,6 +553,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
         connect( qslider,SIGNAL(sliderAction(int)),this,SLOT(sliderWheel(int)));
         
         connect( &dragTimer, SIGNAL(timeout()), this, SLOT(dragTimerTimeout()));
+        connect( &busyTimer, SIGNAL(timeout()), this, SLOT(busyTimerTimeout()));
     
 
    // Thumb slider
