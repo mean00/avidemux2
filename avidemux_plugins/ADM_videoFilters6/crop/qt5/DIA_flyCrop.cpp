@@ -11,6 +11,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <cmath>
 #include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
 #include "ADM_image.h"
@@ -564,6 +565,42 @@ void flyCrop::dimensions(void)
     dim+=QString(" x ");
     dim+=QString::number(_h-top-bottom);
     w->labelSize->setText(dim);
+    
+    static const double arlist[][2] = {
+        {9, 16}, {1, 1}, {6, 5}, {5, 4}, {4, 3}, {11, 8}, {1.43, 1}, {3, 2}, {14, 9}, {16, 10}, {5, 3}, {16, 9}, {1.85, 1}, {1.9, 1}, {2, 1}, {2.2, 1}, {64, 27}, {2.35, 1}, {2.39, 1}, {2.4, 1}, {2.76, 1}, {32, 9}, {18, 5}, {4, 1}
+    };
+    
+    double xx = (_w-left-right);
+    double yy = (_h-top-bottom);
+    
+    double outar = xx/yy;
+    outar = std::round(outar*10000.0) / 10000.0;
+    
+    double mindiff = 9999;
+    int minindex = 0;
+    for (int i=0; i<sizeof(arlist) / sizeof(arlist[0]); i++)
+    {
+        double lsar = arlist[i][0] / arlist[i][1];
+        if (mindiff > std::fabs(lsar - outar))
+        {
+            mindiff = std::fabs(lsar - outar);
+            minindex = i;
+        }
+    }
+    
+    double lsar = arlist[minindex][0] / arlist[minindex][1];
+    if (outar > lsar)
+        mindiff = outar/lsar - 1.0;
+    else
+        mindiff = lsar/outar - 1.0;
+    
+    dim = QString("%1").arg(outar, 0, 'f', 4);
+    w->labelOutArFloat->setText(dim);
+    
+    dim = QString("");
+    if ((mindiff <= 0.005) && (ar_select == 0))
+        dim += QString("(%1:%2)").arg(arlist[minindex][0]).arg(arlist[minindex][1]);
+    w->labelOutArDef->setText(dim);
 }
 
 /**
@@ -878,6 +915,17 @@ void Ui_cropWindow::showEvent(QShowEvent *event)
 {
     myCrop->initRubber();
     QDialog::showEvent(event);
+    /* Avoid shifting the layout displaying output aspect ratio
+    by setting a sufficient minimum width based on font metrics. */
+    QFontMetrics fm = ui.labelSize->fontMetrics(); // we may assume that both labels use the same font
+    QString text = QString(QT_TRANSLATE_NOOP("crop","Size: "));
+    text += "10000 x 10000";
+    ui.labelSize->setMinimumWidth(1.05 * fm.boundingRect(text).width());
+    text = "00.0000";
+    ui.labelOutArFloat->setMinimumWidth(1.05 * fm.boundingRect(text).width());
+    text = "(0.00:00)";
+    ui.labelOutArDef->setMinimumWidth(1.05 * fm.boundingRect(text).width());
+    
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
