@@ -142,6 +142,7 @@ finish:
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
+        setOutputFileName(file);
         return r;
 }
 

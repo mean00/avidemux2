@@ -51,10 +51,12 @@ protected:
     bool                firstPass;
     Ui_encodingDialog   *ui;    
     ADM_tray            *tray;
+    const char *        outputFileName;
 public:    
     void *WINDOW;
     
     void setPhasis(const char *n);
+    void setFileName(const char *n);
     void setAudioCodec(const char *n);
     void setVideoCodec(const char *n);
     void setBitrate(uint32_t br,uint32_t globalbr);

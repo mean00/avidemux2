@@ -149,6 +149,7 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
+        setOutputFileName(file);
         initialized=true;
         return true;
 }

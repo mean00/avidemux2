@@ -158,6 +158,7 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
         qtRegisterDialog(this);
         show();
         tray=NULL;
+        outputFileName=NULL;
 }
 /**
     \fn setFps(uint32_t fps)
@@ -220,6 +221,16 @@ void DIA_encodingQt4::setPhasis(const char *n)
         WRITEM(labelPhasis,n);
     }
 }
+
+/**
+    \fn setFileName(const char *n)
+*/
+void DIA_encodingQt4::setFileName(const char *n)
+{
+    outputFileName = n;    // dont copy string, just the pointer.
+    ui->labelFN->setText(QString::fromUtf8(outputFileName));
+}
+
 /**
     \fn    setFrameCount
     \brief display the # of processed frames
