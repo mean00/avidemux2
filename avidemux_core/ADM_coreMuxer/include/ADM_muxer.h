@@ -84,7 +84,7 @@ protected:
 
 public:
                           ADM_muxer() {vStream=NULL;aStreams=NULL;nbAStreams=0;encoding=NULL;outputFileName=NULL;};
-        virtual           ~ADM_muxer() {closeUI();};
+        virtual           ~ADM_muxer() {closeUI();  if (outputFileName) ADM_dezalloc(outputFileName); outputFileName=NULL;};
         virtual bool      open(const char *filename,   ADM_videoStream *videoStream,
                                 uint32_t nbAudioTrack, ADM_audioStream **audioStreams)=0;
 

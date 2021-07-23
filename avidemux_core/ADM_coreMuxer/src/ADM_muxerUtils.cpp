@@ -151,8 +151,6 @@ bool     ADM_muxer::closeUI(void)
         delete encoding;
     }
     encoding=NULL;
-    if (outputFileName)
-        ADM_dezalloc(outputFileName);
     return true;
 }
 // EOF
