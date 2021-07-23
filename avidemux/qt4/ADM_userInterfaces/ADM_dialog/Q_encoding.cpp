@@ -108,12 +108,18 @@ void DIA_encodingQt4::keepOpenChanged(int state)
 #endif
 }
 
+void DIA_encodingQt4::deleteStatsChanged(int state)
+{
+    deleteStats=!!state;
+}
+
 static char stringMe[80];
 
 DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 {
         stopRequest=false;
         stayOpen=false;
+        deleteStats=false;
         firstPass=false;
         UI_getTaskBarProgress()->enable();
         ui=new Ui_encodingDialog;
@@ -135,6 +141,7 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 #endif
 	connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
 	connect(ui->checkBoxKeepOpen, SIGNAL(stateChanged(int)), this, SLOT(keepOpenChanged(int)));
+	connect(ui->checkBoxDeleteStats, SIGNAL(stateChanged(int)), this, SLOT(deleteStatsChanged(int)));
 	connect(ui->pushButton1, SIGNAL(pressed()), this, SLOT(useTrayButtonPressed()));
 	connect(ui->pushButton2, SIGNAL(pressed()), this, SLOT(pauseButtonPressed()));
 	connect(ui->comboBoxPriority, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
@@ -227,8 +234,13 @@ void DIA_encodingQt4::setPhasis(const char *n)
 */
 void DIA_encodingQt4::setFileName(const char *n)
 {
-    outputFileName = n;    // dont copy string, just the pointer.
-    ui->labelFN->setText(QString::fromUtf8(outputFileName));
+    outputFileName = n;    // dont copy string, the pointer is fine.
+    ui->lineEditFN->clear();
+    if (outputFileName)
+    {
+        ui->lineEditFN->insert(QString::fromUtf8(outputFileName));
+        ui->lineEditFN->setCursorPosition(0);
+    }
 }
 
 /**
@@ -450,6 +462,22 @@ void DIA_encodingQt4::keepOpen(void)
             ADM_usleep(100*1000);
             QCoreApplication::processEvents();
         }
+    }
+
+    if (deleteStats && outputFileName)
+    {
+        // try to delete stats files (they may not exists):
+        // filename_with_extension.stats
+        // filename_with_extension.stats.mbtree
+        // filename_with_extension.stats.cutree
+        char * tmpfn = (char*)ADM_alloc(strlen(outputFileName)+32);
+        #define DELETE_MACRO(x)	strcpy(tmpfn, outputFileName); strcat(tmpfn, x); \
+                ADM_info("Delete %s: %s\n",tmpfn,(remove(tmpfn)? "failed":"succeeded"));
+        DELETE_MACRO(".stats");
+        DELETE_MACRO(".stats.mbtree");
+        DELETE_MACRO(".stats.cutree");
+        #undef DELETE_MACRO
+        ADM_dezalloc(tmpfn);
     }
 }
 

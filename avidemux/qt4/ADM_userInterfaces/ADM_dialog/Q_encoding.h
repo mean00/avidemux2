@@ -48,6 +48,7 @@ protected:
 
     bool                stopRequest;
     bool                stayOpen;
+    bool                deleteStats;
     bool                firstPass;
     Ui_encodingDialog   *ui;    
     ADM_tray            *tray;
@@ -70,6 +71,7 @@ public:
     void priorityChanged(int priorityLevel);
     void shutdownChanged(int state);
     void keepOpenChanged(int state);
+    void deleteStatsChanged(int state);
     void closeEvent(QCloseEvent *event);
     void reject(void);
 

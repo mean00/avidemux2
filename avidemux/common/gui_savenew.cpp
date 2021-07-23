@@ -206,6 +206,7 @@ bool abort=false;
             return NULL;
         }
         muxer->createUI(videoDuration);
+        muxer->getEncoding()->setFileName(fileName.c_str());
         muxer->getEncoding()->setPhasis("Pass 1"); // don't make it translatable here, this is done in the encoding dialog
 
         ADMBitstream bitstream;
