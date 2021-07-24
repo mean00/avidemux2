@@ -136,7 +136,7 @@ again:
                     continue;
                 offset = t->getPos();
                 // Update stored offsets if different PMTs share the same pid.
-                for(int z=0;z<size;z++)
+                for(int z=i+1;z<size;z++)
                 {
                     if(pid == listOfPmt[z].pid)
                     {

@@ -1,4 +1,5 @@
 include(dm_plugin)
+ADD_DEFINITIONS("-std=c++11")
 SET(ADM_ts_SRCS 
 	ADM_ts.cpp
 	ADM_tsPlugin.cpp
