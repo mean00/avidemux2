@@ -52,7 +52,7 @@ protected:
     bool                firstPass;
     Ui_encodingDialog   *ui;    
     ADM_tray            *tray;
-    const char *        outputFileName;
+    char *              outputFileName;
 public:    
     void *WINDOW;
     

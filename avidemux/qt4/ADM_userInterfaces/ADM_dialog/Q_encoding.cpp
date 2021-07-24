@@ -234,7 +234,13 @@ void DIA_encodingQt4::setPhasis(const char *n)
 */
 void DIA_encodingQt4::setFileName(const char *n)
 {
-    outputFileName = n;    // dont copy string, the pointer is fine.
+    if (outputFileName)
+        ADM_dezalloc(outputFileName);
+    if (n)
+    {
+        outputFileName = (char*)ADM_alloc(strlen(n)+1);
+        strcpy(outputFileName,n);
+    }
     ui->lineEditFN->clear();
     if (outputFileName)
     {
