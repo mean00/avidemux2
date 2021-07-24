@@ -312,17 +312,27 @@ nextPack2:
 
     DUMMY(tableId,8);
     int section_syntax_indicator=bits.get(1);
-#ifdef VERBOSE_PSI
+
     if(!section_syntax_indicator)
+    {
+#ifdef VERBOSE_PSI
         ADM_warning("Syntax section indicator not set\n");
 #endif
+        goto nextPack2;
+    }
+
     if(bits.get(1)) // Private bit
     {
         ADM_warning("Section syntax is set to private\n");
         goto nextPack2;
     }
-    bits.get(2); // 2 Reserved bits
-    sectionLength=bits.get(12); // Section Length
+    int reserved = bits.get(2); // 2 Reserved bits
+    if(reserved!=3)
+        printf("[getNextPSI] Invalid data: reserved bits = %d, should be 3\n",reserved);
+    int unused = bits.get(2); // 2 unused bits
+    if(unused)
+        printf("[getNextPSI] Invalid data: unused bits = %d, should be 0\n",unused);
+    sectionLength = bits.get(10); // Section Length
 #if 1
     if(sectionLength+3>pkt.payloadSize) 
     {

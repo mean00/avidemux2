@@ -80,7 +80,8 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
     uint32_t len;
     TS_PSIpacketInfo psi;
     listOfTsTracks   list;
-    std::vector <uint32_t> listOfPmt;
+    struct pmt { uint32_t pid; uint64_t lastOffset; };
+    std::vector <pmt> listOfPmt;
     ADM_TS_TRACK *tracks=NULL;
     *outTracks=NULL;
     *nbTracks=0;
@@ -112,7 +113,12 @@ again:
             len-=4;
             printf("[TsDemuxer] Pat : Prg:%d Pid: 0x%04x\n",prg,pid);
             if(prg) // if prg==0, it is network Pid, dont need it
-                listOfPmt.push_back(pid);
+            {
+                pmt p;
+                p.pid = pid;
+                p.lastOffset = offset;
+                listOfPmt.push_back(p);
+            }
         }
         start=list.size();
         int size=listOfPmt.size();
@@ -122,12 +128,24 @@ again:
             for(int i=0;i<size;i++) // First PMT is PCR lock ?
             {
                 printf("<<< PMT : %d/%d>>>\n",i,size);
-                uint32_t pid=listOfPmt[i];
-                t->setPos(offset); // Seek back to the position where we started to look for PAT
+                uint32_t pid = listOfPmt[i].pid;
+                t->setPos(listOfPmt[i].lastOffset);
                 if(false==TS_scanPmt(t,pid,&list))
                     continue;
                 if(list.empty())
                     continue;
+                offset = t->getPos();
+                // Update stored offsets if different PMTs share the same pid.
+                for(int z=0;z<size;z++)
+                {
+                    if(pid == listOfPmt[z].pid)
+                    {
+                        pmt p;
+                        p.pid = pid;
+                        p.lastOffset = offset;
+                        listOfPmt[z] = p;
+                    }
+                }
                 // Search the video track...
                 for(int j=start;j<list.size();j++)
                 {
@@ -150,7 +168,20 @@ again:
                         break;
                     }
                 }
-                if(videoIndex!=-1) break;
+                if(videoIndex!=-1)
+                {
+                    t->setPos(offset);
+                    TSpacketInfo pkt;
+                    printf("[TS_scanForPrograms] Checking track %d as video track candidate\n",videoIndex);
+                    if(false == t->getNextPacket_NoHeader(list[videoIndex].trackPid,&pkt,false))
+                    {
+                        printf("[TS_scanForPrograms] No packets matching video track pid 0x%x found, skipping PMT\n",list[videoIndex].trackPid);
+                        videoIndex = -1;
+                        continue;
+                    }
+                    printf("[TS_scanForPrograms] Using track %d as video track\n",videoIndex);
+                    break;
+                }
             }
         }
         if(videoIndex==-1)
@@ -253,7 +284,7 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
         len=psi.payloadSize;
         // We should be protected by CRC here
         int packLen=len;
-        printf("[TsDemuxer] PCR 0x%x, len=%d\n",(r[0]<<8)+r[1],packLen);
+        printf("[TsDemuxer] PCR 0x%x, len=%d\n",((r[0]<<8)+r[1])&0x1fff,packLen);
         r+=2;  
         int programInfoLength=(r[0]<<8)+r[1];
         programInfoLength&=0x3ff;
