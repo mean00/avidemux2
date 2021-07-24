@@ -205,6 +205,9 @@ DIA_encodingQt4::~DIA_encodingQt4( )
         if(!ADM_shutdown())
             ADM_warning("Shutdown request failed\n");
     }
+    if (outputFileName)
+        ADM_dezalloc(outputFileName);
+    outputFileName=NULL;
 }
 /**
     \fn setPhasis(const char *n)
