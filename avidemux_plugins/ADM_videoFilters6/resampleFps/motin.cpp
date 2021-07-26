@@ -50,9 +50,9 @@ motin::motin(int width, int height)
         
         wp = ((wp /4) * 2);
         hp = ((hp /4) * 2);
-        upScalersA[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
-        upScalersB[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
-        downScalers[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,wp,hp,pw,ph,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        upScalersA[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        upScalersB[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        downScalers[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,wp,hp,pw,ph,ADM_COLOR_YV12,ADM_COLOR_YV12);
         lv += 1;
         if (lv >= MOTIN_MAX_PYRAMID_LEVELS)
             break;
@@ -324,7 +324,7 @@ void *motin::me_worker_thread( void *ptr )
     {
         for (x=0; x<(MOTIN_SEARCH_RADIUS+2); x++)
         {
-            penaltyTable[y][x] = std::round(std::pow((y*y + x*x), 1/3.)  * 256);  // add distance penalty <-- this looks like better than sqrt or double sqrt
+            penaltyTable[y][x] = std::round(std::pow(((y+.5)*(y+.5) + (x+.5)*(x+.5)), 1/3.)  * 256);  // add distance penalty <-- this looks like better than sqrt or double sqrt
         }
     }
     w /= 2;
