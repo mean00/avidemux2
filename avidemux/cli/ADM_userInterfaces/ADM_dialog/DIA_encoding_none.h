@@ -51,6 +51,7 @@ public:
     
     void setPhasis(const char *n);
     void setFileName(const char *n) {};
+    void setFileName(const char *n, const char *l) {};
     void setAudioCodec(const char *n);
     void setVideoCodec(const char *n);
     void setBitrate(uint32_t br,uint32_t globalbr);

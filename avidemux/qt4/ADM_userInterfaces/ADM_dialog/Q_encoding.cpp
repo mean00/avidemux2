@@ -27,7 +27,6 @@
 #include "GUI_ui.h"
 #include "ADM_coreUtils.h"
 #include "ADM_prettyPrint.h"
-#include "ADM_encoderConf.h"
 #include "../ADM_gui/ADM_systemTrayProgress.h" // this is Qt only
 
 //*******************************************
@@ -167,6 +166,7 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
         show();
         tray=NULL;
         outputFileName=NULL;
+        logFileName=NULL;
 }
 /**
     \fn setFps(uint32_t fps)
@@ -209,6 +209,9 @@ DIA_encodingQt4::~DIA_encodingQt4( )
     if (outputFileName)
         ADM_dezalloc(outputFileName);
     outputFileName=NULL;
+    if (logFileName)
+        ADM_dezalloc(logFileName);
+    logFileName=NULL;
 }
 /**
     \fn setPhasis(const char *n)
@@ -234,22 +237,32 @@ void DIA_encodingQt4::setPhasis(const char *n)
 }
 
 /**
-    \fn setFileName(const char *n)
+    \fn setFileName(const char *n, const char *l)
 */
-void DIA_encodingQt4::setFileName(const char *n)
+void DIA_encodingQt4::setFileName(const char *n, const char *l)
 {
-    if (outputFileName)
-        ADM_dezalloc(outputFileName);
-    if (n)
+    if (!outputFileName)
     {
-        outputFileName = (char*)ADM_alloc(strlen(n)+1);
-        strcpy(outputFileName,n);
+        if (n)
+        {
+            outputFileName = (char*)ADM_alloc(strlen(n)+1);
+            strcpy(outputFileName,n);
+        }
+        ui->lineEditFN->clear();
+        if (outputFileName)
+        {
+            ui->lineEditFN->insert(QString::fromUtf8(outputFileName));
+            ui->lineEditFN->setCursorPosition(0);
+        }
     }
-    ui->lineEditFN->clear();
-    if (outputFileName)
+    
+    if (!logFileName)
     {
-        ui->lineEditFN->insert(QString::fromUtf8(outputFileName));
-        ui->lineEditFN->setCursorPosition(0);
+        if (l)
+        {
+            logFileName = (char*)ADM_alloc(strlen(l)+1);
+            strcpy(logFileName,l);
+        }
     }
 }
 
@@ -474,18 +487,18 @@ void DIA_encodingQt4::keepOpen(void)
         }
     }
 
-    if (deleteStats && outputFileName)
+    if (deleteStats && logFileName)
     {
         // try to delete stats files (they may not exists):
         // filename_with_extension.stats
         // filename_with_extension.stats.mbtree
         // filename_with_extension.stats.cutree
-        char * tmpfn = (char*)ADM_alloc(strlen(outputFileName)+strlen(ADM_2PASS_STATS_FILE_EXTENSION)+16);
-        #define DELETE_MACRO(x)	strcpy(tmpfn, outputFileName); strcat(tmpfn, x); \
+        char * tmpfn = (char*)ADM_alloc(strlen(logFileName)+16);
+        #define DELETE_MACRO(x)	strcpy(tmpfn, logFileName); strcat(tmpfn, x); \
                 ADM_info("Delete %s: %s\n",tmpfn,(remove(tmpfn)? "failed":"succeeded"));
-        DELETE_MACRO(ADM_2PASS_STATS_FILE_EXTENSION);
-        DELETE_MACRO(ADM_2PASS_STATS_FILE_EXTENSION".mbtree");
-        DELETE_MACRO(ADM_2PASS_STATS_FILE_EXTENSION".cutree");
+        DELETE_MACRO("");
+        DELETE_MACRO(".mbtree");
+        DELETE_MACRO(".cutree");
         #undef DELETE_MACRO
         ADM_dezalloc(tmpfn);
     }
