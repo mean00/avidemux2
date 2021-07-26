@@ -308,6 +308,7 @@ void filtermainWindow::closePreview()
     {
         if(previewDialog->seekablePreview)
         {
+            previewDialog->blockSignals(true); // we crash when this slot is invoked more than once
             previewDialog->seekablePreview->play(false);
             previewDialog->seekablePreview->goToTime(0);
         }
