@@ -117,7 +117,7 @@ int A_Save(const char *name)
         }
         fileName=std::string(out);
         logFileName=fileName;
-        logFileName+=std::string(".stats");
+        logFileName+=std::string(ADM_2PASS_STATS_FILE_EXTENSION);
         muxer=NULL;
         chain=NULL;
         audio=NULL;

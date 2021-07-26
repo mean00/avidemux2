@@ -27,6 +27,7 @@
 #include "GUI_ui.h"
 #include "ADM_coreUtils.h"
 #include "ADM_prettyPrint.h"
+#include "ADM_encoderConf.h"
 #include "../ADM_gui/ADM_systemTrayProgress.h" // this is Qt only
 
 //*******************************************
@@ -479,12 +480,12 @@ void DIA_encodingQt4::keepOpen(void)
         // filename_with_extension.stats
         // filename_with_extension.stats.mbtree
         // filename_with_extension.stats.cutree
-        char * tmpfn = (char*)ADM_alloc(strlen(outputFileName)+32);
+        char * tmpfn = (char*)ADM_alloc(strlen(outputFileName)+strlen(ADM_2PASS_STATS_FILE_EXTENSION)+16);
         #define DELETE_MACRO(x)	strcpy(tmpfn, outputFileName); strcat(tmpfn, x); \
                 ADM_info("Delete %s: %s\n",tmpfn,(remove(tmpfn)? "failed":"succeeded"));
-        DELETE_MACRO(".stats");
-        DELETE_MACRO(".stats.mbtree");
-        DELETE_MACRO(".stats.cutree");
+        DELETE_MACRO(ADM_2PASS_STATS_FILE_EXTENSION);
+        DELETE_MACRO(ADM_2PASS_STATS_FILE_EXTENSION".mbtree");
+        DELETE_MACRO(ADM_2PASS_STATS_FILE_EXTENSION".cutree");
         #undef DELETE_MACRO
         ADM_dezalloc(tmpfn);
     }
