@@ -165,8 +165,6 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
         qtRegisterDialog(this);
         show();
         tray=NULL;
-        outputFileName=NULL;
-        logFileName=NULL;
 }
 /**
     \fn setFps(uint32_t fps)
@@ -206,12 +204,6 @@ DIA_encodingQt4::~DIA_encodingQt4( )
         if(!ADM_shutdown())
             ADM_warning("Shutdown request failed\n");
     }
-    if (outputFileName)
-        ADM_dezalloc(outputFileName);
-    outputFileName=NULL;
-    if (logFileName)
-        ADM_dezalloc(logFileName);
-    logFileName=NULL;
 }
 /**
     \fn setPhasis(const char *n)
@@ -237,33 +229,36 @@ void DIA_encodingQt4::setPhasis(const char *n)
 }
 
 /**
-    \fn setFileName(const char *n, const char *l)
+    \fn setFileName
 */
-void DIA_encodingQt4::setFileName(const char *n, const char *l)
+void DIA_encodingQt4::setFileName(const char *n)
 {
-    if (!outputFileName)
+    ui->lineEditFN->clear();
+    if(!n)
     {
-        if (n)
-        {
-            outputFileName = (char*)ADM_alloc(strlen(n)+1);
-            strcpy(outputFileName,n);
-        }
-        ui->lineEditFN->clear();
-        if (outputFileName)
-        {
-            ui->lineEditFN->insert(QString::fromUtf8(outputFileName));
-            ui->lineEditFN->setCursorPosition(0);
-        }
+        outputFileName.clear();
+        ui->labelFileName->setVisible(false);
+        ui->lineEditFN->setVisible(false);
+        return;
     }
-    
-    if (!logFileName)
+    outputFileName = n;
+    ui->labelFileName->setVisible(true);
+    ui->lineEditFN->setVisible(true);
+    ui->lineEditFN->insert(QString::fromUtf8(outputFileName.c_str()));
+    ui->lineEditFN->setCursorPosition(0);
+}
+
+/**
+    \fn setLogFileName
+*/
+void DIA_encodingQt4::setLogFileName(const char *n)
+{
+    if(!n)
     {
-        if (l)
-        {
-            logFileName = (char*)ADM_alloc(strlen(l)+1);
-            strcpy(logFileName,l);
-        }
+        logFileName.clear();
+        return;
     }
+    logFileName = n;
 }
 
 /**
@@ -458,6 +453,19 @@ bool DIA_encodingQt4::isAlive( void )
     return false;
 }
 
+static bool tryDeleteLogFile(std::string fname)
+{
+    if(!ADM_fileExist(fname.c_str()))
+        return false;
+    if(ADM_eraseFile(fname.c_str()))
+    {
+        ADM_info("Deleting first pass log file \"%s\"\n",fname.c_str());
+        return true;
+    }
+    ADM_warning("Could not delete first pass log file \"%s\"\n",fname.c_str());
+    return false;
+}
+
 /**
     \fn keepOpen
     \brief Allow user to read the muxing stats calmly
@@ -487,20 +495,14 @@ void DIA_encodingQt4::keepOpen(void)
         }
     }
 
-    if (deleteStats && logFileName)
+    if (deleteStats && !logFileName.empty())
     {
-        // try to delete stats files (they may not exists):
-        // filename_with_extension.stats
-        // filename_with_extension.stats.mbtree
-        // filename_with_extension.stats.cutree
-        char * tmpfn = (char*)ADM_alloc(strlen(logFileName)+16);
-        #define DELETE_MACRO(x)	strcpy(tmpfn, logFileName); strcat(tmpfn, x); \
-                ADM_info("Delete %s: %s\n",tmpfn,(remove(tmpfn)? "failed":"succeeded"));
-        DELETE_MACRO("");
-        DELETE_MACRO(".mbtree");
-        DELETE_MACRO(".cutree");
-        #undef DELETE_MACRO
-        ADM_dezalloc(tmpfn);
+        // try to delete first pass log files
+        tryDeleteLogFile(logFileName);
+        // libx264 creates an additional log file with extension .mbtree appended
+        tryDeleteLogFile(logFileName + ".mbtree");
+        // libx265 creates an additional log file with extension .cutree appended
+        tryDeleteLogFile(logFileName + ".cutree");
     }
 }
 

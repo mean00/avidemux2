@@ -26,7 +26,7 @@ DIA_encodingCli::DIA_encodingCli(uint64_t fps1000) : DIA_encodingBase(fps1000)
 
 DIA_encodingCli::~DIA_encodingCli( )
 {
-
+    // TODO: optionally delete first pass log files
 }
 void DIA_encodingCli::setPhasis(const char *n)
 {
@@ -36,6 +36,15 @@ void DIA_encodingCli::setPhasis(const char *n)
         firstPass=false;
 
     fprintf(stderr,"Encoding Phase        : %s\n",n);
+}
+void DIA_encodingCli::setLogFileName(const char *name)
+{
+    if(!name)
+    {
+        logFileName.clear();
+        return;
+    }
+    logFileName = name;
 }
 void DIA_encodingCli::setPercent(uint32_t percent)
 {
