@@ -73,6 +73,21 @@ uint64_t rescaleLavPts(uint64_t us, AVRational *scale)
     i*=scale->num;
     return i;
 }
+
+/**
+    \fn     setOutputFileName
+*/
+void ADM_muxer::setOutputFileName(const char * fn)
+{
+    if (outputFileName)
+        ADM_dezalloc(outputFileName);
+    int fnlen = 0;
+    if (fn)
+        fnlen = strlen(fn)+1;
+    outputFileName = (char*)ADM_alloc(fnlen);
+    memcpy(outputFileName, fn, fnlen);
+}
+
 /**
     \fn     initUI
     \brief  initialize the progress bar
@@ -102,6 +117,7 @@ bool     ADM_muxer::initUI(const char *title)
 bool ADM_muxer::createUI(uint64_t duration)
 {
     encoding=createEncoding(duration);
+    encoding->setFileName(outputFileName);
     return true;
 }
 

@@ -74,6 +74,8 @@ public:
                 virtual void setPercent(uint32_t percent)=0;
                 virtual void setRemainingTimeMS(uint32_t nb)=0;
                 virtual void setPhasis(const char *n)=0;
+                virtual void setFileName(const char *n)=0;
+                virtual void setFileName(const char *n, const char *l)=0;
                 virtual void setVideoCodec(const char *n)=0;
                 virtual void setAudioCodec(const char *n)=0;
                 virtual void setContainer(const char *container)=0;

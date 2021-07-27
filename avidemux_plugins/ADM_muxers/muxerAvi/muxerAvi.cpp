@@ -89,6 +89,7 @@ bool muxerAvi::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         vStream=s;
         nbAStreams=nbAudioTrack;
         aStreams=a;
+        setOutputFileName(file);
         clocks=new audioClock*[nbAStreams];
         for(int i=0;i<nbAStreams;i++)
             clocks[i]=new audioClock(a[i]->getInfo()->frequency);

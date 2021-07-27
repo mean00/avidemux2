@@ -152,6 +152,7 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
         audioDelay=s->getVideoDelay();
         vStream=s;
         nbAStreams=nbAudioTrack;
+        setOutputFileName(file);
         aStreams=a;
         videoBufferSize=vStream->getWidth()*vStream->getHeight()*3;
         videoBuffer[0]=new uint8_t[videoBufferSize];

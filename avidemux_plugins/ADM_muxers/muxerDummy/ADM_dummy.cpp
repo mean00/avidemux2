@@ -7,6 +7,7 @@ bool muxerDummy::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
 {
                 printf("[DummyMuxer] Opening %s\n",file);
                 vStream=s;
+                setOutputFileName(file);
                 return true;
 }
 

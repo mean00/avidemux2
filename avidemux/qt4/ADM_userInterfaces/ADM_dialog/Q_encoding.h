@@ -48,13 +48,18 @@ protected:
 
     bool                stopRequest;
     bool                stayOpen;
+    bool                deleteStats;
     bool                firstPass;
     Ui_encodingDialog   *ui;    
     ADM_tray            *tray;
+    char *              outputFileName;
+    char *              logFileName;
 public:    
     void *WINDOW;
     
     void setPhasis(const char *n);
+    void setFileName(const char *n) {setFileName(n, NULL);};
+    void setFileName(const char *n, const char *l);
     void setAudioCodec(const char *n);
     void setVideoCodec(const char *n);
     void setBitrate(uint32_t br,uint32_t globalbr);
@@ -68,6 +73,7 @@ public:
     void priorityChanged(int priorityLevel);
     void shutdownChanged(int state);
     void keepOpenChanged(int state);
+    void deleteStatsChanged(int state);
     void closeEvent(QCloseEvent *event);
     void reject(void);
 

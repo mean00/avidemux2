@@ -62,6 +62,7 @@ bool muxerRaw::open(const char *fil, ADM_videoStream *s,uint32_t nbAudioTrack,AD
         printf("[RawMuxer] Cannot open %s\n",fil);
         return false;
     }
+    setOutputFileName(fil);
     return true;
 }
 

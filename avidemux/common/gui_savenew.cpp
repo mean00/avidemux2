@@ -117,7 +117,9 @@ int A_Save(const char *name)
         }
         fileName=std::string(out);
         logFileName=fileName;
-        logFileName+=std::string(".stats");
+        logFileName+=std::string(".");
+        logFileName+=std::string(videoEncoder6_GetCurrentEncoderName());
+        logFileName+=std::string(ADM_2PASS_STATS_FILE_EXTENSION);
         muxer=NULL;
         chain=NULL;
         audio=NULL;
@@ -206,6 +208,7 @@ bool abort=false;
             return NULL;
         }
         muxer->createUI(videoDuration);
+        muxer->getEncoding()->setFileName(fileName.c_str(), logFileName.c_str());
         muxer->getEncoding()->setPhasis("Pass 1"); // don't make it translatable here, this is done in the encoding dialog
 
         ADMBitstream bitstream;
