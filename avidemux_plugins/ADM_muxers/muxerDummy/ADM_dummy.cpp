@@ -7,7 +7,6 @@ bool muxerDummy::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
 {
                 printf("[DummyMuxer] Opening %s\n",file);
                 vStream=s;
-                setOutputFileName(file);
                 return true;
 }
 
@@ -26,7 +25,8 @@ bool muxerDummy::save(void)
     in.data=videoBuffer;
     ADM_info("[dummy]avg fps=%u\n",vStream->getAvgFps1000());
 
-    initUI("Saving dummy");
+    initUI(QT_TRANSLATE_NOOP("dummyMuxer","Simulated muxing"));
+    encoding->setFileName(QT_TRANSLATE_NOOP("dummyMuxer","(None)"));
     encoding->setContainer("dummy");
 
     while(1)
