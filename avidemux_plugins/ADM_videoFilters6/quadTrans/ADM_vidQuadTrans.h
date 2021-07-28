@@ -27,16 +27,30 @@ class  ADMVideoQuadTrans:public ADM_coreVideoFilter
 {
   public:
     typedef struct {
+        int         w,h;
+        int         ystart, yincr;
+        int         algo;
+        int *       integerMap;
+        int *       fractionalMap;
+        int         stride;
+        uint8_t *   in;
+        uint8_t *   out;
+        int *       bicubicWeights;
+        uint8_t     blackLevel;
+    } worker_thread_arg;
+
+    typedef struct {
         quadTrans             prevparam;
-        int                   rgbBufStride;
-        ADM_byteBuffer *      rgbBufRawIn;
-        ADM_byteBuffer *      rgbBufRawOut;
-        ADMImageRef *         rgbBufImage;
-        ADMColorScalerFull *  convertYuvToRgb;
-        ADMColorScalerFull *  convertRgbToYuv;
+        ADMImage *            imgCopy;
         int *                 integerMap;
         int *                 fractionalMap;
+        int *                 integerMapUV;
+        int *                 fractionalMapUV;
         int *                 bicubicWeights;
+        int                   threads;
+        int                   threadsUV;
+        pthread_t *           worker_threads;
+        worker_thread_arg *   worker_thread_args;
     } quadTrans_buffers_t;
 
   protected:
@@ -45,6 +59,8 @@ class  ADMVideoQuadTrans:public ADM_coreVideoFilter
     quadTrans_buffers_t   _buffers;
     static void           bilinear(int w, int h, int stride, uint8_t * in, int x, int y, int fx, int fy, uint8_t * out);
     static void           bicubic(int w, int h, int stride, uint8_t * in, int x, int y, int fx, int fy, int * weights, uint8_t * out);
+    
+    static void * worker_thread( void *ptr );
   public:
     ADMVideoQuadTrans(ADM_coreVideoFilter *in,CONFcouple *couples);
     ~ADMVideoQuadTrans();

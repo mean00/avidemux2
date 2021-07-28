@@ -49,27 +49,12 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoQuadTrans,   // Class
 void ADMVideoQuadTrans::QuadTransCreateBuffers(int w, int h, quadTrans_buffers_t * buffers)
 {
     buffers->prevparam.algo = 9999;  // invalidate
-    buffers->rgbBufStride = ADM_IMAGE_ALIGN(w * 4);
-    buffers->rgbBufRawIn = new ADM_byteBuffer();
-    if (buffers->rgbBufRawIn)
-        buffers->rgbBufRawIn->setSize(buffers->rgbBufStride * h);
-    buffers->rgbBufRawOut = new ADM_byteBuffer();
-    if (buffers->rgbBufRawOut)
-        buffers->rgbBufRawOut->setSize(buffers->rgbBufStride * h);
-    buffers->convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_COLOR_YV12,ADM_COLOR_RGB32A);
-    buffers->convertRgbToYuv = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_COLOR_RGB32A,ADM_COLOR_YV12);
-    buffers->rgbBufImage = new ADMImageRef(w,h);
-    if (buffers->rgbBufImage)
-    {
-        buffers->rgbBufImage->_colorspace = ADM_COLOR_RGB32A;
-        buffers->rgbBufImage->_planes[0] = buffers->rgbBufRawOut->at(0);
-        buffers->rgbBufImage->_planes[1] = buffers->rgbBufImage->_planes[2] = NULL;
-        buffers->rgbBufImage->_planeStride[0] = buffers->rgbBufStride;
-        buffers->rgbBufImage->_planeStride[1] = buffers->rgbBufImage->_planeStride[2] = 0;
-    }
-    
+    buffers->imgCopy = new ADMImageDefault(w,h);
+
     buffers->integerMap = new int [w*h*2+2];
     buffers->fractionalMap = new int [w*h*2+2];
+    buffers->integerMapUV = new int [(w/2)*(h/2)*2+2];
+    buffers->fractionalMapUV = new int [(w/2)*(h/2)*2+2];
     
     buffers->bicubicWeights = new int [257*4];
     for (int i=0; i<=256; i++)
@@ -80,22 +65,35 @@ void ADMVideoQuadTrans::QuadTransCreateBuffers(int w, int h, quadTrans_buffers_t
         tmp = 1.0 - tmp;        buffers->bicubicWeights[i*4+2] = ((1.25*tmp-2.25)*tmp*tmp+1.0)*256.0 + 0.5;
                                 buffers->bicubicWeights[i*4+3] = 256 - buffers->bicubicWeights[i*4+0] - buffers->bicubicWeights[i*4+1] - buffers->bicubicWeights[i*4+2];
     }
+    
+    buffers->threads = ADM_cpu_num_processors();
+    if (buffers->threads < 1)
+        buffers->threads = 1;
+    if (buffers->threads > 64)
+        buffers->threads = 64;
+    buffers->threads /= 2;
+    if (buffers->threads < 1)
+        buffers->threads = 1;
+    buffers->threadsUV = buffers->threads/2;
+    if (buffers->threadsUV < 1)
+        buffers->threadsUV = 1;
+
+    buffers->worker_threads = new pthread_t [buffers->threads + 2*buffers->threadsUV];
+    buffers->worker_thread_args = new worker_thread_arg [buffers->threads + 2*buffers->threadsUV];
 }
 /**
     \fn QuadTransDestroyBuffers
 */
 void ADMVideoQuadTrans::QuadTransDestroyBuffers(quadTrans_buffers_t * buffers)
 {
-    if (buffers->convertYuvToRgb) delete buffers->convertYuvToRgb;
-    if (buffers->convertRgbToYuv) delete buffers->convertRgbToYuv;
-    if (buffers->rgbBufRawIn) buffers->rgbBufRawIn->clean();
-    if (buffers->rgbBufRawOut) buffers->rgbBufRawOut->clean();
-    if (buffers->rgbBufImage) delete buffers->rgbBufImage;
-    if (buffers->rgbBufRawIn) delete buffers->rgbBufRawIn;
-    if (buffers->rgbBufRawOut) delete buffers->rgbBufRawOut;
+    delete buffers->imgCopy;
     delete [] buffers->integerMap;
     delete [] buffers->fractionalMap;
+    delete [] buffers->integerMapUV;
+    delete [] buffers->fractionalMapUV;
     delete [] buffers->bicubicWeights;
+    delete [] buffers->worker_threads;
+    delete [] buffers->worker_thread_args;
 }
 
 
@@ -106,27 +104,14 @@ inline void ADMVideoQuadTrans::bilinear(int w, int h, int stride, uint8_t * in, 
 {
     int i,a,b,k,l,k1,l1;
     
-    k  = y*stride+x*4;
-    k1 = k  + 4;
+    k  = y*stride+x;
+    k1 = k  + 1;
     l  = k  + stride;
     l1 = k1 + stride;
     
-    a=in[k+0]*256+(in[k1+0]-in[k+0])*fx;
-    b=in[l+0]*256+(in[l1+0]-in[l+0])*fx;
+    a=in[k]*256+(in[k1]-in[k])*fx;
+    b=in[l]*256+(in[l1]-in[l])*fx;
     out[0]=(a*256+(b-a)*fy)/65536;
-    
-    a=in[k+1]*256+(in[k1+1]-in[k+1])*fx;
-    b=in[l+1]*256+(in[l1+1]-in[l+1])*fx;
-    out[1]=(a*256+(b-a)*fy)/65536;
-
-    a=in[k+2]*256+(in[k1+2]-in[k+2])*fx;
-    b=in[l+2]*256+(in[l1+2]-in[l+2])*fx;
-    out[2]=(a*256+(b-a)*fy)/65536;
-
-    /*a=in[k+3]*256+(in[k1+3]-in[k+3])*fx;
-    b=in[l+3]*256+(in[l1+3]-in[l+3])*fx;
-    out[3]=(a*256+(b-a)*fy)/65536;*/
-    out[3]=0xFF;    // alpha channel
 }
 
 /**
@@ -150,59 +135,105 @@ inline void ADMVideoQuadTrans::bicubic(int w, int h, int stride, uint8_t * in, i
     wy = weights + fy*4;
     
     int b,i,k,l, p, pp;
-    k = n*stride + m*4;
+    k = n*stride + m;
 
-    for (b=0; b<3 ;b++)
+    l = k;
+    p  = wx[0] * in[l+0];
+    p += wx[1] * in[l+1];
+    p += wx[2] * in[l+2];
+    p += wx[3] * in[l+3];
+    pp = wy[0]*p;
+    l += stride;
+    p  = wx[0] * in[l+0];
+    p += wx[1] * in[l+1];
+    p += wx[2] * in[l+2];
+    p += wx[3] * in[l+3];
+    pp += wy[1]*p;
+    l += stride;
+    p  = wx[0] * in[l+0];
+    p += wx[1] * in[l+1];
+    p += wx[2] * in[l+2];
+    p += wx[3] * in[l+3];
+    pp += wy[2]*p;
+    l += stride;
+    p  = wx[0] * in[l+0];
+    p += wx[1] * in[l+1];
+    p += wx[2] * in[l+2];
+    p += wx[3] * in[l+3];
+    pp += wy[3]*p;
+    
+    pp /= 65536;
+    if (pp < 0)
+        pp = 0;
+    if (pp > 255)
+        pp = 255;
+    out[0] = pp;
+}
+
+/**
+    \fn worker_thread
+*/
+void * ADMVideoQuadTrans::worker_thread( void *ptr )
+{
+    worker_thread_arg * arg = (worker_thread_arg*)ptr;
+    int w = arg->w;
+    int h = arg->h;
+    int ystart = arg->ystart;
+    int yincr = arg->yincr;
+    int algo = arg->algo;
+    int * integerMap = arg->integerMap;
+    int * fractionalMap = arg->fractionalMap;
+    int stride = arg->stride;
+    uint8_t * in = arg->in;
+    uint8_t * out = arg->out;
+    int * bicubicWeights = arg->bicubicWeights;
+    uint8_t blackLevel = arg->blackLevel;
+
     {
-        l = k;
-        p  = wx[0] * in[l+0];
-        p += wx[1] * in[l+4];
-        p += wx[2] * in[l+8];
-        p += wx[3] * in[l+12];
-        pp = wy[0]*p;
-        l += stride;
-        p  = wx[0] * in[l+0];
-        p += wx[1] * in[l+4];
-        p += wx[2] * in[l+8];
-        p += wx[3] * in[l+12];
-        pp += wy[1]*p;
-        l += stride;
-        p  = wx[0] * in[l+0];
-        p += wx[1] * in[l+4];
-        p += wx[2] * in[l+8];
-        p += wx[3] * in[l+12];
-        pp += wy[2]*p;
-        l += stride;
-        p  = wx[0] * in[l+0];
-        p += wx[1] * in[l+4];
-        p += wx[2] * in[l+8];
-        p += wx[3] * in[l+12];
-        pp += wy[3]*p;
+        for (int y=ystart; y<h; y+=yincr)
+        {
+            for (int x=0; x<w; x++)
+            {
+                int ix=integerMap[2*(w*y+x)];
+                int iy=integerMap[2*(w*y+x)+1];
+                int fx=fractionalMap[2*(w*y+x)];
+                int fy=fractionalMap[2*(w*y+x)+1];
+                
+                if (ix>=0)
+                {
+                    switch(algo) {
+                        default:
+                        case 0:
+                                bilinear(w, h, stride, in, ix, iy, fx, fy, out + x + y*stride);
+                            break;
+                        case 1:
+                                bicubic(w, h, stride, in, ix, iy, fx, fy, bicubicWeights, out + x + y*stride);
+                            break;
+                    }
+                } else {
+                    out[x + y*stride] =  blackLevel;
+                }
+            }
+        }
         
-        pp /= 65536;
-        if (pp < 0)
-            pp = 0;
-        if (pp > 255)
-            pp = 255;
-        out[b] = pp;
-
-        k++;
     }
     
-    out[3]=0xFF;    // alpha channel
+    pthread_exit(NULL);
+    return NULL;
 }
+
 
 /**
     \fn QuadTransProcess_C
 */
 void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTrans param, quadTrans_buffers_t * buffers)
 {
-    if (!img || !buffers || !buffers->rgbBufRawIn || !buffers->rgbBufRawOut || !buffers->rgbBufImage || !buffers->convertYuvToRgb || !buffers->convertRgbToYuv) return;
+    if (!img || !buffers || !buffers->imgCopy || !buffers->integerMap || !buffers->fractionalMap || !buffers->integerMapUV || !buffers->fractionalMapUV) return;
     uint8_t * line;
 
     if (param.algo > 1) param.algo = 1;
     unsigned int algo = param.algo;
-    float xs[4],ys[4];
+    double xs[4],ys[4];
     xs[0] = param.dx1;
     ys[0] = param.dy1;
     xs[1] = param.dx2 + w;
@@ -212,7 +243,7 @@ void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTran
     xs[3] = param.dx4 + w;
     ys[3] = param.dy4 + h;
     
-    float midx, midy;
+    double midx, midy;
     midx = w-1;
     midx /= 2.0;
     midy = h-1;
@@ -338,48 +369,179 @@ void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTran
             }
         }
         
-        memcpy(&(buffers->prevparam), &param, sizeof(quadTrans));
-    }
-
-
-    buffers->convertYuvToRgb->convertImage(img,buffers->rgbBufRawIn->at(0));
-
-    int x,y;
-    for (y=0;y<h;y++)
-    {
-        for (x=0;x<w;x++)
+        de=0.0;v1=1000.0;v2=1000.0;
+        int wh = w/2;
+        int hh = h/2;
+        for (int y=0; y<hh; y++)
         {
-            int ix=buffers->integerMap[2*(w*y+x)];
-            int iy=buffers->integerMap[2*(w*y+x)+1];
-            int fx=buffers->fractionalMap[2*(w*y+x)];
-            int fy=buffers->fractionalMap[2*(w*y+x)+1];
-
-            if (ix>=0)
+            for (int x=0; x<wh; x++)
             {
-                if ((fx == 0) && (fy == 0))
+                a=xs[0]/2.0-x;
+                b=xs[1]/2.0-xs[0]/2.0;
+                c=xs[2]/2.0-xs[0]/2.0;
+                d=xs[3]/2.0-xs[1]/2.0-(xs[2]/2.0-xs[0]/2.0);
+                
+                e=ys[0]/2.0-y;
+                f=ys[1]/2.0-ys[0]/2.0;
+                g=ys[2]/2.0-ys[0]/2.0;
+                j=ys[3]/2.0-ys[1]/2.0-(ys[2]/2.0-ys[0]/2.0);
+                
+                a2=g*d-j*c; b2=e*d-f*c-j*a+g*b; c2=e*b-f*a;
+                
+                if ((fabs(a2*c2*c2/(b2*b2*b2))< 0.1/wh) && (fabs(a2)<1.0))
                 {
-                    memcpy(buffers->rgbBufRawOut->at(0) + x*4 + y*buffers->rgbBufStride, buffers->rgbBufRawIn->at(0) + ix*4 + iy*buffers->rgbBufStride, 4);
+                    v1 = (b2!=0.0) ? -c2/b2 : 1000.0;
+                    v2=1000.0;
                 }
                 else
                 {
-                    switch(algo) {
-                        default:
-                        case 0:
-                                bilinear(w, h, buffers->rgbBufStride, buffers->rgbBufRawIn->at(0), ix, iy, fx, fy, buffers->rgbBufRawOut->at(0) + x*4 + y*buffers->rgbBufStride);
-                            break;
-                        case 1:
-                                bicubic(w, h, buffers->rgbBufStride, buffers->rgbBufRawIn->at(0), ix, iy, fx, fy, buffers->bicubicWeights, buffers->rgbBufRawOut->at(0) + x*4 + y*buffers->rgbBufStride);
-                            break;
+                    de=b2*b2-4.0*a2*c2;
+                    if (de>=0.0)
+                    {
+                        sde=sqrt(de);
+                        v1=(-b2+sde)/2.0/a2;
+                        v2=(-b2-sde)/2.0/a2;
+                    }
+                    else
+                    {
+                        v1=1001.0;
+                        v2=1001.0;
                     }
                 }
-            } else {
-                memset(buffers->rgbBufRawOut->at(0) + x*4 + y*buffers->rgbBufStride, 0, 4);
+                aa=b+d*v1; bb=f+j*v1;
+                if (fabs(aa)>fabs(bb))
+                    u1 = (aa!=0.0) ? -(a+c*v1)/aa : 1000.0;
+                else
+                    u1 = (bb!=0.0) ? -(e+g*v1)/bb : 1000.0;
+                aa=b+d*v2; bb=f+j*v2;
+                if (fabs(aa)>fabs(bb))
+                    u2 = (aa!=0.0) ? -(a+c*v2)/aa : 1000.0;
+                else
+                    u2 = (bb!=0.0) ? -(e+g*v2)/bb : 1000.0;
+                
+                if ((u1>=0.0)&&(u1<1.0)&&(v1>=0.0)&&(v1<1.0))
+                {
+                    u=u1;
+                    v=v1;
+                }
+                else
+                {
+                    if ((u2>=0.0)&&(u2<1.0)&&(v2>=0.0)&&(v2<1.0))
+                    {
+                        u=u2;
+                        v=v2;
+                    }
+                    else
+                    {
+                        u=1002.0;
+                        v=1002.0;
+                    }
+                }
+                
+                
+                if ((u>=0.0)&&(u<1.0)&&(v>=0.0)&&(v<1.0))
+                {
+                    u *= wh;
+                    v *= hh;
+                    int ui = floor(u);
+                    int vi = floor(v);
+                    int uf = (u-floor(u))*256.0 + 0.5;
+                    int vf = (v-floor(v))*256.0 + 0.5;
+                    if (uf > 255)
+                    {
+                        ui++;
+                        uf = 0;
+                    }
+                    if (vf > 255)
+                    {
+                        vi++;
+                        vf = 0;
+                    }
+                    if (ui >= wh-1)
+                    {
+                        ui = wh-2;
+                        uf = 255;
+                    }
+                    if (vi >= hh-1)
+                    {
+                        vi = hh-2;
+                        vf = 255;
+                    }
+                    buffers->integerMapUV[2*(y*wh+x)]=ui;
+                    buffers->integerMapUV[2*(y*wh+x)+1]=vi;
+                    buffers->fractionalMapUV[2*(y*wh+x)]=uf;
+                    buffers->fractionalMapUV[2*(y*wh+x)+1]=vf;
+                }
+                else
+                {
+                    buffers->integerMapUV[2*(y*wh+x)]=-1;
+                    buffers->integerMapUV[2*(y*wh+x)+1]=-1;
+                }
+            
             }
+        }
+
+        memcpy(&(buffers->prevparam), &param, sizeof(quadTrans));
+    }
+
+    uint8_t * rplanes[3];
+    uint8_t * wplanes[3];
+    int strides[3];
+
+    buffers->imgCopy->duplicate(img);
+    buffers->imgCopy->GetPitches(strides);
+    buffers->imgCopy->GetWritePlanes(rplanes);
+    img->GetWritePlanes(wplanes);
+    
+    int totaltr = 0;
+    
+    for (int tr=0; tr<buffers->threads; tr++)
+    {
+        buffers->worker_thread_args[totaltr].w = w;
+        buffers->worker_thread_args[totaltr].h = h;
+        buffers->worker_thread_args[totaltr].ystart = tr;
+        buffers->worker_thread_args[totaltr].yincr = buffers->threads;
+        buffers->worker_thread_args[totaltr].algo = algo;
+        buffers->worker_thread_args[totaltr].integerMap = buffers->integerMap;
+        buffers->worker_thread_args[totaltr].fractionalMap = buffers->fractionalMap;
+        buffers->worker_thread_args[totaltr].blackLevel = 0;
+        buffers->worker_thread_args[totaltr].stride = strides[0];
+        buffers->worker_thread_args[totaltr].in = rplanes[0];
+        buffers->worker_thread_args[totaltr].out = wplanes[0];
+        buffers->worker_thread_args[totaltr].bicubicWeights = buffers->bicubicWeights;
+        totaltr++;
+    }
+
+    for (int p=1; p<3; p++)
+    {
+        for (int tr=0; tr<buffers->threadsUV; tr++)
+        {
+            buffers->worker_thread_args[totaltr].w = w/2;
+            buffers->worker_thread_args[totaltr].h = h/2;
+            buffers->worker_thread_args[totaltr].ystart = tr;
+            buffers->worker_thread_args[totaltr].yincr = buffers->threadsUV;
+            buffers->worker_thread_args[totaltr].algo = algo;
+            buffers->worker_thread_args[totaltr].integerMap = buffers->integerMapUV;
+            buffers->worker_thread_args[totaltr].fractionalMap = buffers->fractionalMapUV;
+            buffers->worker_thread_args[totaltr].blackLevel = 128;
+            buffers->worker_thread_args[totaltr].stride = strides[p];
+            buffers->worker_thread_args[totaltr].in = rplanes[p];
+            buffers->worker_thread_args[totaltr].out = wplanes[p];
+            buffers->worker_thread_args[totaltr].bicubicWeights = buffers->bicubicWeights;
+            totaltr++;
         }
     }
 
+    for (int tr=0; tr<totaltr; tr++)
+    {
+        pthread_create( &buffers->worker_threads[tr], NULL, worker_thread, (void*) &buffers->worker_thread_args[tr]);
+    }
+    // work in thread workers...
+    for (int tr=0; tr<totaltr; tr++)
+    {
+        pthread_join( buffers->worker_threads[tr], NULL);
+    }
 
-    buffers->convertRgbToYuv->convertImage(buffers->rgbBufImage,img);
 
 }
 
