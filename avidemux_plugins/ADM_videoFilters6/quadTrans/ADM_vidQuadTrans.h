@@ -36,20 +36,19 @@ class  ADMVideoQuadTrans:public ADM_coreVideoFilter
         uint8_t *   in;
         uint8_t *   out;
         int *       bicubicWeights;
+        uint8_t     blackLevel;
     } worker_thread_arg;
 
     typedef struct {
         quadTrans             prevparam;
-        int                   rgbBufStride;
-        ADM_byteBuffer *      rgbBufRawIn;
-        ADM_byteBuffer *      rgbBufRawOut;
-        ADMImageRef *         rgbBufImage;
-        ADMColorScalerFull *  convertYuvToRgb;
-        ADMColorScalerFull *  convertRgbToYuv;
+        ADMImage *            imgCopy;
         int *                 integerMap;
         int *                 fractionalMap;
+        int *                 integerMapUV;
+        int *                 fractionalMapUV;
         int *                 bicubicWeights;
         int                   threads;
+        int                   threadsUV;
         pthread_t *           worker_threads;
         worker_thread_arg *   worker_thread_args;
     } quadTrans_buffers_t;
