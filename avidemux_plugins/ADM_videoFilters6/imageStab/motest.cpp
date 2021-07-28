@@ -284,11 +284,21 @@ void *motest::me_worker_thread( void *ptr )
             if (y%8)
                 continue;
         }
+        if ((lv==1)&&(speedup>0))
+        {
+            if (y%4)
+                continue;
+        }
         for (x=0; x<w; x++)
         {
             if ((lv==0)&&(speedup>0))
             {
                 if (x%8)
+                    continue;
+            }
+            if ((lv==1)&&(speedup>0))
+            {
+                if (x%4)
                     continue;
             }
             
@@ -399,6 +409,27 @@ void *motest::me_worker_thread( void *ptr )
                 }
                 plW[1][y*strides[1]+x] = best[0];
                 plW[2][y*strides[2]+x] = best[1];
+                if ((lv==1)&&(speedup>0))
+                {
+                    for (by=(y-2);by<=(y+2);by++)
+                    {
+                        if (by < 0)
+                            continue;
+                        if (by >= h)
+                            continue;
+                        for (bx=(x-2);bx<=(x+2);bx++)
+                        {
+                            if (bx < 0)
+                                continue;
+                            if (bx >= w)
+                                continue;
+                            if ((bx == x) && (by == y))
+                                continue;
+                            plW[1][by*strides[1]+bx] = best[0];
+                            plW[2][by*strides[2]+bx] = best[1];
+                        }
+                    }
+                }
             }
         }
     }
