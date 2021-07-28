@@ -48,24 +48,7 @@ DECLARE_VIDEO_FILTER(   ADMVideoImageStab,   // Class
 void ADMVideoImageStab::ImageStabCreateBuffers(int w, int h, imageStab_buffers_t * buffers)
 {
     buffers->prevPts = ADM_NO_PTS;
-    buffers->rgbBufStride = ADM_IMAGE_ALIGN(w * 4);
-    buffers->rgbBufRawIn = new ADM_byteBuffer();
-    if (buffers->rgbBufRawIn)
-        buffers->rgbBufRawIn->setSize(buffers->rgbBufStride * h);
-    buffers->rgbBufRawOut = new ADM_byteBuffer();
-    if (buffers->rgbBufRawOut)
-        buffers->rgbBufRawOut->setSize(buffers->rgbBufStride * h);
-    buffers->convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_COLOR_YV12,ADM_COLOR_RGB32A);
-    buffers->convertRgbToYuv = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_COLOR_RGB32A,ADM_COLOR_YV12);
-    buffers->rgbBufImage = new ADMImageRef(w,h);
-    if (buffers->rgbBufImage)
-    {
-        buffers->rgbBufImage->_colorspace = ADM_COLOR_RGB32A;
-        buffers->rgbBufImage->_planes[0] = buffers->rgbBufRawOut->at(0);
-        buffers->rgbBufImage->_planes[1] = buffers->rgbBufImage->_planes[2] = NULL;
-        buffers->rgbBufImage->_planeStride[0] = buffers->rgbBufStride;
-        buffers->rgbBufImage->_planeStride[1] = buffers->rgbBufImage->_planeStride[2] = 0;
-    }
+    buffers->imgCopy = new ADMImageDefault(w,h);
     
     buffers->bicubicWeights = new int [257*4];
     for (int i=0; i<=256; i++)
@@ -86,22 +69,22 @@ void ADMVideoImageStab::ImageStabCreateBuffers(int w, int h, imageStab_buffers_t
         buffers->threads = 1;
     if (buffers->threads > 64)
         buffers->threads = 64;
+    buffers->threadsUV = buffers->threads/4;
+    if (buffers->threadsUV < 1)
+        buffers->threadsUV = 1;
+    buffers->threads -= buffers->threadsUV;
+    if (buffers->threads < 1)
+        buffers->threads = 1;
 
-    buffers->worker_threads = new pthread_t [buffers->threads];
-    buffers->worker_thread_args = new worker_thread_arg [buffers->threads];
+    buffers->worker_threads = new pthread_t [buffers->threads + buffers->threadsUV];
+    buffers->worker_thread_args = new worker_thread_arg [buffers->threads + buffers->threadsUV];
 }
 /**
     \fn ImageStabDestroyBuffers
 */
 void ADMVideoImageStab::ImageStabDestroyBuffers(imageStab_buffers_t * buffers)
 {
-    if (buffers->convertYuvToRgb) delete buffers->convertYuvToRgb;
-    if (buffers->convertRgbToYuv) delete buffers->convertRgbToYuv;
-    if (buffers->rgbBufRawIn) buffers->rgbBufRawIn->clean();
-    if (buffers->rgbBufRawOut) buffers->rgbBufRawOut->clean();
-    if (buffers->rgbBufImage) delete buffers->rgbBufImage;
-    if (buffers->rgbBufRawIn) delete buffers->rgbBufRawIn;
-    if (buffers->rgbBufRawOut) delete buffers->rgbBufRawOut;
+    delete buffers->imgCopy;
     delete [] buffers->bicubicWeights;
     delete buffers->motestp;
     delete [] buffers->worker_threads;
@@ -116,27 +99,14 @@ inline void ADMVideoImageStab::bilinear(int w, int h, int stride, uint8_t * in, 
 {
     int i,a,b,k,l,k1,l1;
     
-    k  = y*stride+x*4;
-    k1 = k  + 4;
+    k  = y*stride+x;
+    k1 = k  + 1;
     l  = k  + stride;
     l1 = k1 + stride;
     
-    a=in[k+0]*256+(in[k1+0]-in[k+0])*fx;
-    b=in[l+0]*256+(in[l1+0]-in[l+0])*fx;
+    a=in[k]*256+(in[k1]-in[k])*fx;
+    b=in[l]*256+(in[l1]-in[l])*fx;
     out[0]=(a*256+(b-a)*fy)/65536;
-    
-    a=in[k+1]*256+(in[k1+1]-in[k+1])*fx;
-    b=in[l+1]*256+(in[l1+1]-in[l+1])*fx;
-    out[1]=(a*256+(b-a)*fy)/65536;
-
-    a=in[k+2]*256+(in[k1+2]-in[k+2])*fx;
-    b=in[l+2]*256+(in[l1+2]-in[l+2])*fx;
-    out[2]=(a*256+(b-a)*fy)/65536;
-
-    /*a=in[k+3]*256+(in[k1+3]-in[k+3])*fx;
-    b=in[l+3]*256+(in[l1+3]-in[l+3])*fx;
-    out[3]=(a*256+(b-a)*fy)/65536;*/
-    out[3]=0xFF;    // alpha channel
 }
 
 /**
@@ -160,46 +130,39 @@ inline void ADMVideoImageStab::bicubic(int w, int h, int stride, uint8_t * in, i
     wy = weights + fy*4;
     
     int b,i,k,l, p, pp;
-    k = n*stride + m*4;
+    k = n*stride + m;
 
-    for (b=0; b<3 ;b++)
-    {
-        l = k;
-        p  = wx[0] * in[l+0];
-        p += wx[1] * in[l+4];
-        p += wx[2] * in[l+8];
-        p += wx[3] * in[l+12];
-        pp = wy[0]*p;
-        l += stride;
-        p  = wx[0] * in[l+0];
-        p += wx[1] * in[l+4];
-        p += wx[2] * in[l+8];
-        p += wx[3] * in[l+12];
-        pp += wy[1]*p;
-        l += stride;
-        p  = wx[0] * in[l+0];
-        p += wx[1] * in[l+4];
-        p += wx[2] * in[l+8];
-        p += wx[3] * in[l+12];
-        pp += wy[2]*p;
-        l += stride;
-        p  = wx[0] * in[l+0];
-        p += wx[1] * in[l+4];
-        p += wx[2] * in[l+8];
-        p += wx[3] * in[l+12];
-        pp += wy[3]*p;
-        
-        pp /= 65536;
-        if (pp < 0)
-            pp = 0;
-        if (pp > 255)
-            pp = 255;
-        out[b] = pp;
-
-        k++;
-    }
+    l = k;
+    p  = wx[0] * in[l+0];
+    p += wx[1] * in[l+1];
+    p += wx[2] * in[l+2];
+    p += wx[3] * in[l+3];
+    pp = wy[0]*p;
+    l += stride;
+    p  = wx[0] * in[l+0];
+    p += wx[1] * in[l+1];
+    p += wx[2] * in[l+2];
+    p += wx[3] * in[l+3];
+    pp += wy[1]*p;
+    l += stride;
+    p  = wx[0] * in[l+0];
+    p += wx[1] * in[l+1];
+    p += wx[2] * in[l+2];
+    p += wx[3] * in[l+3];
+    pp += wy[2]*p;
+    l += stride;
+    p  = wx[0] * in[l+0];
+    p += wx[1] * in[l+1];
+    p += wx[2] * in[l+2];
+    p += wx[3] * in[l+3];
+    pp += wy[3]*p;
     
-    out[3]=0xFF;    // alpha channel
+    pp /= 65536;
+    if (pp < 0)
+        pp = 0;
+    if (pp > 255)
+        pp = 255;
+    out[0] = pp;
 }
 
 
@@ -219,9 +182,12 @@ void * ADMVideoImageStab::worker_thread( void *ptr )
     double * ys = arg->ys;
     int stride = arg->stride;
     uint8_t * in = arg->in;
+    uint8_t * in2 = arg->in2;
     uint8_t * out = arg->out;
+    uint8_t * out2 = arg->out2;
     int * bicubicWeights = arg->bicubicWeights;
-
+    uint8_t blackLevel = arg->blackLevel;
+    
     {
         double a,b,c,d,e,f,g,j,a2,b2,c2,u,v,aa,bb,de,sde,v1,v2,u1,u2;
         de=0.0;v1=1000.0;v2=1000.0;
@@ -324,17 +290,23 @@ void * ADMVideoImageStab::worker_thread( void *ptr )
                     switch(algo) {
                         default:
                         case 0:
-                                bilinear(w, h, stride, in, ui, vi, uf, vf, out + x*4 + y*stride);
+                                bilinear(w, h, stride, in, ui, vi, uf, vf, out + x + y*stride);
+                                if (in2 && out2)
+                                    bilinear(w, h, stride, in2, ui, vi, uf, vf, out2 + x + y*stride);
                             break;
                         case 1:
-                                bicubic(w, h, stride, in, ui, vi, uf, vf, bicubicWeights, out + x*4 + y*stride);
+                                bicubic(w, h, stride, in, ui, vi, uf, vf, bicubicWeights, out + x + y*stride);
+                                if (in2 && out2)
+                                    bicubic(w, h, stride, in2, ui, vi, uf, vf, bicubicWeights, out2 + x + y*stride);
                             break;
                     }
 
                 }
                 else
                 {
-                    memset(out + x*4 + y*stride, 0, 4);
+                    out[x + y*stride] =  blackLevel;
+                    if (in2 && out2)
+                        out2[x + y*stride] =  blackLevel;
                 }
             
             }
@@ -351,7 +323,7 @@ void * ADMVideoImageStab::worker_thread( void *ptr )
 */
 void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageStab param, imageStab_buffers_t * buffers, bool * newScene, float * sceneDiff)
 {
-    if (!img || !buffers || !buffers->rgbBufRawIn || !buffers->rgbBufRawOut || !buffers->rgbBufImage || !buffers->convertYuvToRgb || !buffers->convertRgbToYuv) return;
+    if (!img || !buffers || !buffers->imgCopy) return;
     if (!buffers->bicubicWeights || !buffers->motestp || !buffers->worker_threads || !buffers->worker_thread_args) return;
     uint8_t * line;
 
@@ -560,34 +532,72 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
         ys[i] = (ys[i]-midy)*param.zoom + midy;
     }
 
-    buffers->convertYuvToRgb->convertImage(img,buffers->rgbBufRawIn->at(0));
-
-    for (int tr=0; tr<buffers->threads; tr++)
+    double xsh[4],ysh[4];
+    for (int i=0; i<4; i++)
     {
-        buffers->worker_thread_args[tr].w = w;
-        buffers->worker_thread_args[tr].h = h;
-        buffers->worker_thread_args[tr].ystart = tr;
-        buffers->worker_thread_args[tr].yincr = buffers->threads;
-        buffers->worker_thread_args[tr].algo = algo;
-        buffers->worker_thread_args[tr].xs = xs;
-        buffers->worker_thread_args[tr].ys = ys;
-        buffers->worker_thread_args[tr].stride = buffers->rgbBufStride;
-        buffers->worker_thread_args[tr].in = buffers->rgbBufRawIn->at(0);
-        buffers->worker_thread_args[tr].out = buffers->rgbBufRawOut->at(0);
-        buffers->worker_thread_args[tr].bicubicWeights = buffers->bicubicWeights;
+        xsh[i] = xs[i]/2.0;
+        ysh[i] = ys[i]/2.0;
     }
 
+    uint8_t * rplanes[3];
+    uint8_t * wplanes[3];
+    int strides[3];
+
+    buffers->imgCopy->duplicate(img);
+    buffers->imgCopy->GetPitches(strides);
+    buffers->imgCopy->GetWritePlanes(rplanes);
+    img->GetWritePlanes(wplanes);
+    
+    int totaltr = 0;
+    
     for (int tr=0; tr<buffers->threads; tr++)
+    {
+        buffers->worker_thread_args[totaltr].w = w;
+        buffers->worker_thread_args[totaltr].h = h;
+        buffers->worker_thread_args[totaltr].ystart = tr;
+        buffers->worker_thread_args[totaltr].yincr = buffers->threads;
+        buffers->worker_thread_args[totaltr].algo = algo;
+        buffers->worker_thread_args[totaltr].xs = xs;
+        buffers->worker_thread_args[totaltr].ys = ys;
+        buffers->worker_thread_args[totaltr].blackLevel = 0;
+        buffers->worker_thread_args[totaltr].stride = strides[0];
+        buffers->worker_thread_args[totaltr].in = rplanes[0];
+        buffers->worker_thread_args[totaltr].in2 = NULL;
+        buffers->worker_thread_args[totaltr].out = wplanes[0];
+        buffers->worker_thread_args[totaltr].out2 = NULL;
+        buffers->worker_thread_args[totaltr].bicubicWeights = buffers->bicubicWeights;
+        totaltr++;
+    }
+
+    for (int tr=0; tr<buffers->threadsUV; tr++)
+    {
+        buffers->worker_thread_args[totaltr].w = w/2;
+        buffers->worker_thread_args[totaltr].h = h/2;
+        buffers->worker_thread_args[totaltr].ystart = tr;
+        buffers->worker_thread_args[totaltr].yincr = buffers->threadsUV;
+        buffers->worker_thread_args[totaltr].algo = algo;
+        buffers->worker_thread_args[totaltr].xs = xsh;
+        buffers->worker_thread_args[totaltr].ys = ysh;
+        buffers->worker_thread_args[totaltr].blackLevel = 128;
+        buffers->worker_thread_args[totaltr].stride = strides[1];
+        buffers->worker_thread_args[totaltr].in = rplanes[1];
+        buffers->worker_thread_args[totaltr].in2 = rplanes[2];
+        buffers->worker_thread_args[totaltr].out = wplanes[1];
+        buffers->worker_thread_args[totaltr].out2 = wplanes[2];
+        buffers->worker_thread_args[totaltr].bicubicWeights = buffers->bicubicWeights;
+        totaltr++;
+    }
+
+    for (int tr=0; tr<totaltr; tr++)
     {
         pthread_create( &buffers->worker_threads[tr], NULL, worker_thread, (void*) &buffers->worker_thread_args[tr]);
     }
     // work in thread workers...
-    for (int tr=0; tr<buffers->threads; tr++)
+    for (int tr=0; tr<totaltr; tr++)
     {
         pthread_join( buffers->worker_threads[tr], NULL);
     }
 
-    buffers->convertRgbToYuv->convertImage(buffers->rgbBufImage,img);
 }
 
 /**
