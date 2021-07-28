@@ -28,14 +28,14 @@ DIA_encodingCli::~DIA_encodingCli( )
 {
     // TODO: optionally delete first pass log files
 }
-void DIA_encodingCli::setPhasis(const char *n)
+void DIA_encodingCli::setPhase(ADM_ENC_PHASE_TYPE phase, const char *n)
 {
-    if(!strcmp(n,"Pass 1"))
-        firstPass=true;
-    else
-        firstPass=false;
+    const char *desc = n;
+    firstPass = phase == ADM_ENC_PHASE_FIRST_PASS;
+    if(firstPass && !desc)
+        desc = "Pass 1";
 
-    fprintf(stderr,"Encoding Phase        : %s\n",n);
+    fprintf(stderr,"Encoding Phase        : %s\n",desc);
 }
 void DIA_encodingCli::setLogFileName(const char *name)
 {

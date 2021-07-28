@@ -224,7 +224,7 @@ bool muxerMp4v2::save(void)
    
 
     initUI("Saving MP4V2");
-    encoding->setPhasis(QT_TRANSLATE_NOOP("mp4v2muxer","Saving"));
+    encoding->setPhase(ADM_ENC_PHASE_LAST_PASS,QT_TRANSLATE_NOOP("mp4v2muxer","Saving"));
     encoding->setContainer("MP4 (libmp4v2)");
     uint64_t lastSentDts=0;
     
@@ -299,7 +299,7 @@ theEnd:
     
     if(muxerConfig.optimize && result==true)
     {
-        encoding->setPhasis("Optimizing");
+        encoding->setPhase(ADM_ENC_PHASE_OTHER,QT_TRANSLATE_NOOP("mp4v2muxer","Optimizing"));
         string tmpTargetFileName=targetFileName+string(".tmp");
         if(!ADM_renameFile(targetFileName.c_str(),tmpTargetFileName.c_str()))
         {

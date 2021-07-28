@@ -210,7 +210,7 @@ bool abort=false;
         muxer->createUI(videoDuration);
         muxer->getEncoding()->setFileName(logFileName.c_str()); // just being honest, the muxer will update it later
         muxer->getEncoding()->setLogFileName(logFileName.c_str()); // needed for cleanup afterwards
-        muxer->getEncoding()->setPhasis("Pass 1"); // don't make it translatable here, this is done in the encoding dialog
+        muxer->getEncoding()->setPhase(ADM_ENC_PHASE_FIRST_PASS,NULL);
 
         ADMBitstream bitstream;
         uint8_t *buffer=new uint8_t[BUFFER_SIZE];

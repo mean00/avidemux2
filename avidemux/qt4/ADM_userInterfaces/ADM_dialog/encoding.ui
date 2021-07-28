@@ -45,7 +45,7 @@
        <item>
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="1">
-          <widget class="QLabel" name="labelPhasis">
+          <widget class="QLabel" name="labelPhase">
            <property name="text">
             <string>None</string>
            </property>

@@ -49,6 +49,7 @@ protected:
     bool                stopRequest;
     bool                stayOpen;
     bool                deleteStats;
+    bool                multiPass;
     bool                firstPass;
     Ui_encodingDialog   *ui;    
     ADM_tray            *tray;
@@ -57,7 +58,7 @@ protected:
 public:    
     void *WINDOW;
     
-    void setPhasis(const char *n);
+    void setPhase(ADM_ENC_PHASE_TYPE phase, const char *n = NULL);
     void setFileName(const char *n);
     void setLogFileName(const char *n);
     void setAudioCodec(const char *n);

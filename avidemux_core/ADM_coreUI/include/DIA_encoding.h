@@ -30,6 +30,13 @@ typedef struct
     uint32_t qz;
 }encodingSample;
 
+typedef enum
+{
+    ADM_ENC_PHASE_OTHER = 0,
+    ADM_ENC_PHASE_FIRST_PASS,
+    ADM_ENC_PHASE_LAST_PASS
+} ADM_ENC_PHASE_TYPE;
+
 class ADM_COREUI6_EXPORT DIA_encodingBase
 {
 protected:
@@ -73,7 +80,7 @@ protected:
 public:
                 virtual void setPercent(uint32_t percent)=0;
                 virtual void setRemainingTimeMS(uint32_t nb)=0;
-                virtual void setPhasis(const char *n)=0;
+                virtual void setPhase(ADM_ENC_PHASE_TYPE phase, const char *n)=0;
                 virtual void setFileName(const char *n)=0;
                 virtual void setLogFileName(const char *n)=0;
                 virtual void setVideoCodec(const char *n)=0;

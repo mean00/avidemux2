@@ -88,7 +88,7 @@ bool     ADM_muxer::initUI(const char *title)
             createUI(videoDuration);
         }
         // Set video stream etc...
-        encoding->setPhasis(title);
+        encoding->setPhase(ADM_ENC_PHASE_LAST_PASS,title);
         encoding->setFileName(outputFileName.c_str());
         encoding->setVideoCodec(fourCC::tostring(vStream->getFCC()));
         
