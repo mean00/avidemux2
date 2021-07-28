@@ -80,6 +80,15 @@ void ADMVideoQuadTrans::QuadTransCreateBuffers(int w, int h, quadTrans_buffers_t
         tmp = 1.0 - tmp;        buffers->bicubicWeights[i*4+2] = ((1.25*tmp-2.25)*tmp*tmp+1.0)*256.0 + 0.5;
                                 buffers->bicubicWeights[i*4+3] = 256 - buffers->bicubicWeights[i*4+0] - buffers->bicubicWeights[i*4+1] - buffers->bicubicWeights[i*4+2];
     }
+    
+    buffers->threads = ADM_cpu_num_processors();
+    if (buffers->threads < 1)
+        buffers->threads = 1;
+    if (buffers->threads > 64)
+        buffers->threads = 64;
+
+    buffers->worker_threads = new pthread_t [buffers->threads];
+    buffers->worker_thread_args = new worker_thread_arg [buffers->threads];
 }
 /**
     \fn QuadTransDestroyBuffers
@@ -96,6 +105,8 @@ void ADMVideoQuadTrans::QuadTransDestroyBuffers(quadTrans_buffers_t * buffers)
     delete [] buffers->integerMap;
     delete [] buffers->fractionalMap;
     delete [] buffers->bicubicWeights;
+    delete [] buffers->worker_threads;
+    delete [] buffers->worker_thread_args;
 }
 
 
@@ -193,6 +204,58 @@ inline void ADMVideoQuadTrans::bicubic(int w, int h, int stride, uint8_t * in, i
 }
 
 /**
+    \fn worker_thread
+*/
+void * ADMVideoQuadTrans::worker_thread( void *ptr )
+{
+    worker_thread_arg * arg = (worker_thread_arg*)ptr;
+    int w = arg->w;
+    int h = arg->h;
+    int ystart = arg->ystart;
+    int yincr = arg->yincr;
+    int algo = arg->algo;
+    int * integerMap = arg->integerMap;
+    int * fractionalMap = arg->fractionalMap;
+    int stride = arg->stride;
+    uint8_t * in = arg->in;
+    uint8_t * out = arg->out;
+    int * bicubicWeights = arg->bicubicWeights;
+
+    {
+        for (int y=ystart; y<h; y+=yincr)
+        {
+            for (int x=0; x<w; x++)
+            {
+                int ix=integerMap[2*(w*y+x)];
+                int iy=integerMap[2*(w*y+x)+1];
+                int fx=fractionalMap[2*(w*y+x)];
+                int fy=fractionalMap[2*(w*y+x)+1];
+                
+                if (ix>=0)
+                {
+                    switch(algo) {
+                        default:
+                        case 0:
+                                bilinear(w, h, stride, in, ix, iy, fx, fy, out + x*4 + y*stride);
+                            break;
+                        case 1:
+                                bicubic(w, h, stride, in, ix, iy, fx, fy, bicubicWeights, out + x*4 + y*stride);
+                            break;
+                    }
+                } else {
+                    memset(out + x*4 + y*stride, 0, 4);
+                }
+            }
+        }
+        
+    }
+    
+    pthread_exit(NULL);
+    return NULL;
+}
+
+
+/**
     \fn QuadTransProcess_C
 */
 void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTrans param, quadTrans_buffers_t * buffers)
@@ -202,7 +265,7 @@ void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTran
 
     if (param.algo > 1) param.algo = 1;
     unsigned int algo = param.algo;
-    float xs[4],ys[4];
+    double xs[4],ys[4];
     xs[0] = param.dx1;
     ys[0] = param.dy1;
     xs[1] = param.dx2 + w;
@@ -212,7 +275,7 @@ void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTran
     xs[3] = param.dx4 + w;
     ys[3] = param.dy4 + h;
     
-    float midx, midy;
+    double midx, midy;
     midx = w-1;
     midx /= 2.0;
     midy = h-1;
@@ -344,40 +407,30 @@ void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTran
 
     buffers->convertYuvToRgb->convertImage(img,buffers->rgbBufRawIn->at(0));
 
-    int x,y;
-    for (y=0;y<h;y++)
+    for (int tr=0; tr<buffers->threads; tr++)
     {
-        for (x=0;x<w;x++)
-        {
-            int ix=buffers->integerMap[2*(w*y+x)];
-            int iy=buffers->integerMap[2*(w*y+x)+1];
-            int fx=buffers->fractionalMap[2*(w*y+x)];
-            int fy=buffers->fractionalMap[2*(w*y+x)+1];
-
-            if (ix>=0)
-            {
-                if ((fx == 0) && (fy == 0))
-                {
-                    memcpy(buffers->rgbBufRawOut->at(0) + x*4 + y*buffers->rgbBufStride, buffers->rgbBufRawIn->at(0) + ix*4 + iy*buffers->rgbBufStride, 4);
-                }
-                else
-                {
-                    switch(algo) {
-                        default:
-                        case 0:
-                                bilinear(w, h, buffers->rgbBufStride, buffers->rgbBufRawIn->at(0), ix, iy, fx, fy, buffers->rgbBufRawOut->at(0) + x*4 + y*buffers->rgbBufStride);
-                            break;
-                        case 1:
-                                bicubic(w, h, buffers->rgbBufStride, buffers->rgbBufRawIn->at(0), ix, iy, fx, fy, buffers->bicubicWeights, buffers->rgbBufRawOut->at(0) + x*4 + y*buffers->rgbBufStride);
-                            break;
-                    }
-                }
-            } else {
-                memset(buffers->rgbBufRawOut->at(0) + x*4 + y*buffers->rgbBufStride, 0, 4);
-            }
-        }
+        buffers->worker_thread_args[tr].w = w;
+        buffers->worker_thread_args[tr].h = h;
+        buffers->worker_thread_args[tr].ystart = tr;
+        buffers->worker_thread_args[tr].yincr = buffers->threads;
+        buffers->worker_thread_args[tr].algo = algo;
+        buffers->worker_thread_args[tr].integerMap = buffers->integerMap;
+        buffers->worker_thread_args[tr].fractionalMap = buffers->fractionalMap;
+        buffers->worker_thread_args[tr].stride = buffers->rgbBufStride;
+        buffers->worker_thread_args[tr].in = buffers->rgbBufRawIn->at(0);
+        buffers->worker_thread_args[tr].out = buffers->rgbBufRawOut->at(0);
+        buffers->worker_thread_args[tr].bicubicWeights = buffers->bicubicWeights;
     }
 
+    for (int tr=0; tr<buffers->threads; tr++)
+    {
+        pthread_create( &buffers->worker_threads[tr], NULL, worker_thread, (void*) &buffers->worker_thread_args[tr]);
+    }
+    // work in thread workers...
+    for (int tr=0; tr<buffers->threads; tr++)
+    {
+        pthread_join( buffers->worker_threads[tr], NULL);
+    }
 
     buffers->convertRgbToYuv->convertImage(buffers->rgbBufImage,img);
 
