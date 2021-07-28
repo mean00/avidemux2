@@ -39,18 +39,16 @@ class  ADMVideoImageStab:public ADM_coreVideoFilter
         double *    ys;
         int         stride;
         uint8_t *   in;
+        uint8_t *   in2;
         uint8_t *   out;
+        uint8_t *   out2;
         int *       bicubicWeights;
+        uint8_t     blackLevel;
     } worker_thread_arg;
 
     typedef struct {
         uint64_t              prevPts;
-        int                   rgbBufStride;
-        ADM_byteBuffer *      rgbBufRawIn;
-        ADM_byteBuffer *      rgbBufRawOut;
-        ADMImageRef *         rgbBufImage;
-        ADMColorScalerFull *  convertYuvToRgb;
-        ADMColorScalerFull *  convertRgbToYuv;
+        ADMImage *            imgCopy;
         int *                 bicubicWeights;
         float                 prevChromaHist[64];
         motest *              motestp;
@@ -60,6 +58,7 @@ class  ADMVideoImageStab:public ADM_coreVideoFilter
         bool                  newSceneSameImage;
         float                 sceneDiffSameImage;
         int threads;
+        int threadsUV;
         pthread_t  * worker_threads;
         worker_thread_arg * worker_thread_args;
     } imageStab_buffers_t;
