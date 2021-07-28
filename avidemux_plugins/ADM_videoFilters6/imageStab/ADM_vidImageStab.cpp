@@ -69,15 +69,15 @@ void ADMVideoImageStab::ImageStabCreateBuffers(int w, int h, imageStab_buffers_t
         buffers->threads = 1;
     if (buffers->threads > 64)
         buffers->threads = 64;
-    /*buffers->threads /= 2;
-    if (buffers->threads < 1)
-        buffers->threads = 1;*/
-    buffers->threadsUV = buffers->threads/2;
+    buffers->threadsUV = buffers->threads/4;
     if (buffers->threadsUV < 1)
         buffers->threadsUV = 1;
+    buffers->threads -= buffers->threadsUV;
+    if (buffers->threads < 1)
+        buffers->threads = 1;
 
-    buffers->worker_threads = new pthread_t [buffers->threads + 2*buffers->threadsUV];
-    buffers->worker_thread_args = new worker_thread_arg [buffers->threads + 2*buffers->threadsUV];
+    buffers->worker_threads = new pthread_t [buffers->threads + buffers->threadsUV];
+    buffers->worker_thread_args = new worker_thread_arg [buffers->threads + buffers->threadsUV];
 }
 /**
     \fn ImageStabDestroyBuffers
