@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>291</width>
-    <height>451</height>
+    <width>279</width>
+    <height>442</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -45,34 +45,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Frame Rate:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="labelVideoDuration">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Total Duration:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="LabelAspectRatio">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_6">
         <property name="text">
@@ -94,10 +66,10 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label4CC">
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Total Duration:</string>
         </property>
        </widget>
       </item>
@@ -105,6 +77,48 @@
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>Codec 4CC:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Frame Rate:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="LabelAspectRatio">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLabel" name="labelVideoDuration">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label4CC">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Average Bitrate:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="labelVideoBitrate">
+        <property name="text">
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
