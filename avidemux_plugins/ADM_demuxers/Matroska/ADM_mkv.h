@@ -91,7 +91,7 @@ public:
   uint8_t    headerRepeat[MKV_MAX_REPEAT_HEADER_SIZE];
   mkvListOfIndex  index;
 
-  uint32_t  _sizeInBytes; // Approximate size in bytes of that stream
+  uint64_t  _sizeInBytes; // Approximate size in bytes of that stream
   uint32_t  _defaultFrameDuration; // Duration of ONE frame in us!
   std::string language;
   int       _needBuffering;
@@ -301,6 +301,7 @@ virtual     uint8_t                 getNbAudioStreams(void);
     virtual uint64_t getTime(uint32_t frameNum);
 
     virtual uint64_t getVideoDuration(void);
+    virtual uint64_t getVideoTrackSize(void);
     virtual	uint8_t	 getExtraHeaderData(uint32_t *len, uint8_t **data);
 
 virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
