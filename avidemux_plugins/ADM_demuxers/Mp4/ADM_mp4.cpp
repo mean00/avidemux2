@@ -141,6 +141,13 @@ uint64_t                   MP4Header::getVideoDuration(void)
     return _movieDuration*1000LL; //VDEO.index[VDEO.nbIndex-1].time;
 
 }
+/**
+    \fn getVideoTrackSize
+*/
+uint64_t                   MP4Header::getVideoTrackSize(void)
+{
+    return _tracks[0].totalDataSize;
+}
 
 #ifdef DERIVE_TB_FROM_MINIMUM_DELTA
 /**
