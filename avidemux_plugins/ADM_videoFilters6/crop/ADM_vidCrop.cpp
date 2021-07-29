@@ -32,6 +32,8 @@ class  CropFilter:public ADM_coreVideoFilter
                 crop           configuration;
                 ADMImage       *original;
 
+                void            resetConfig(void);
+
  public:
 
                                 CropFilter(  ADM_coreVideoFilter *in,CONFcouple *couples);
@@ -66,14 +68,10 @@ CropFilter::CropFilter(ADM_coreVideoFilter *in,CONFcouple *couples) :ADM_coreVid
 {
 
         original=new ADMImageDefault(info.width,info.height);
-        if(!couples || !ADM_paramLoad(couples,crop_param,&configuration))
-		{
-            // Default value
-            configuration.top=0;
-            configuration.bottom=0;
-            configuration.left=0;
-            configuration.right=0;
-            configuration.ar_select=0;
+        resetConfig();
+        if(couples && !ADM_paramLoadPartial(couples,crop_param,&configuration))
+        {
+            resetConfig();
         }
         if(  in->getInfo()->width<(configuration.right+configuration.left))
                 {
@@ -99,7 +97,17 @@ CropFilter::~CropFilter()
     if(original) delete original;
     original=NULL;
 }
-
+/**
+   \fn resetConfig
+*/
+void CropFilter::resetConfig(void)
+{
+    configuration.top=0;
+    configuration.bottom=0;
+    configuration.left=0;
+    configuration.right=0;
+    configuration.ar_select=0;
+}
 /**
     \fn getNextFrame
 
