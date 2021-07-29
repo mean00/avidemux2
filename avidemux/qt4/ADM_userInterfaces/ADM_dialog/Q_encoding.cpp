@@ -119,7 +119,6 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 {
         stopRequest=false;
         stayOpen=false;
-        deleteStats=false;
         multiPass=false;
         firstPass=false;
         UI_getTaskBarProgress()->enable();
@@ -140,6 +139,11 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
         }
         ui->checkBoxShutdown->setVisible(false);
 #endif
+
+        if(!prefs->get(DEFAULT_DELETE_FIRST_PASS_LOG_FILES,&deleteStats))
+            deleteStats = false;
+        ui->checkBoxDeleteStats->setChecked(deleteStats);
+
 	connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
 	connect(ui->checkBoxKeepOpen, SIGNAL(stateChanged(int)), this, SLOT(keepOpenChanged(int)));
 	connect(ui->checkBoxDeleteStats, SIGNAL(stateChanged(int)), this, SLOT(deleteStatsChanged(int)));
