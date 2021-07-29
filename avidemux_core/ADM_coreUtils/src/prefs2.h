@@ -80,6 +80,7 @@ struct  {
 	bool warn_for_fonts;
 	bool multiload_use_custom_size;
 	uint32_t multiload_custom_size_m;
+	bool delete_first_pass_log_files;
 }Default;
 struct  {
 	bool avisynth_always_ask;

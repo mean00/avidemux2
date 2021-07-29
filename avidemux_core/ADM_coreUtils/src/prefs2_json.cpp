@@ -83,6 +83,7 @@ json.addString("language",key->Default.language);
 json.addBool("warn_for_fonts",key->Default.warn_for_fonts);
 json.addBool("multiload_use_custom_size",key->Default.multiload_use_custom_size);
 json.addUint32("multiload_custom_size_m",key->Default.multiload_custom_size_m);
+json.addBool("delete_first_pass_log_files",key->Default.delete_first_pass_log_files);
 json.endNode();
 json.addNode("avisynth");
 json.addBool("avisynth_always_ask",key->avisynth.avisynth_always_ask);

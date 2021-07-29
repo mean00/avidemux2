@@ -72,6 +72,7 @@ static optionDesc myOptions[]={
 { DEFAULT_WARN_FOR_FONTS,"Default.warn_for_fonts"                     ,ADM_param_bool    	,"1",	0,	1},
 { DEFAULT_MULTILOAD_USE_CUSTOM_SIZE,"Default.multiload_use_custom_size",ADM_param_bool    	,"0",	0,	1},
 { DEFAULT_MULTILOAD_CUSTOM_SIZE_M,"Default.multiload_custom_size_m"   ,ADM_param_uint32_t	,"4000",	250,	8192},
+{ DEFAULT_DELETE_FIRST_PASS_LOG_FILES,"Default.delete_first_pass_log_files",ADM_param_bool    	,"0",	0,	1},
 { AVISYNTH_AVISYNTH_ALWAYS_ASK,"avisynth.avisynth_always_ask"         ,ADM_param_bool    	,"0",	0,	1},
 { AVISYNTH_AVISYNTH_DEFAULTPORT,"avisynth.avisynth_defaultport"       ,ADM_param_uint32_t	,"9999",	1024,	65535},
 { AVISYNTH_AVISYNTH_LOCALPORT,"avisynth.avisynth_localport"           ,ADM_param_uint32_t	,"0",	1024,	65535},

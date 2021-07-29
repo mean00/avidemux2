@@ -61,6 +61,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"Default.warn_for_fonts",offsetof(my_prefs_struct,Default.warn_for_fonts),"bool",ADM_param_bool},
  {"Default.multiload_use_custom_size",offsetof(my_prefs_struct,Default.multiload_use_custom_size),"bool",ADM_param_bool},
  {"Default.multiload_custom_size_m",offsetof(my_prefs_struct,Default.multiload_custom_size_m),"uint32_t",ADM_param_uint32_t},
+ {"Default.delete_first_pass_log_files",offsetof(my_prefs_struct,Default.delete_first_pass_log_files),"bool",ADM_param_bool},
  {"avisynth.avisynth_always_ask",offsetof(my_prefs_struct,avisynth.avisynth_always_ask),"bool",ADM_param_bool},
  {"avisynth.avisynth_defaultport",offsetof(my_prefs_struct,avisynth.avisynth_defaultport),"uint32_t",ADM_param_uint32_t},
  {"avisynth.avisynth_localport",offsetof(my_prefs_struct,avisynth.avisynth_localport),"uint32_t",ADM_param_uint32_t},

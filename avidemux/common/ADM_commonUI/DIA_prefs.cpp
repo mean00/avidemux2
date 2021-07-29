@@ -63,6 +63,7 @@ bool     loadDefault=false;
 char     *alsaDevice=NULL;
 
 bool     lastReadDirAsTarget=false;
+bool     multiPassStatsAutoDelete=false;
 bool     altKeyboardShortcuts=false;
 bool     swapUpDown=false;
 
@@ -192,6 +193,9 @@ std::string currentSdlDriver=getSdlDriverName();
         // Make users happy who prefer the output dir to be the same as the input dir
         prefs->get(FEATURES_USE_LAST_READ_DIR_AS_TARGET,&lastReadDirAsTarget);
 
+        // Get the default state of the checkbox in the encoding dialog to auto-delete stats files
+        prefs->get(DEFAULT_DELETE_FIRST_PASS_LOG_FILES,&multiPassStatsAutoDelete);
+
         // PgUp and PgDown are cumbersome to reach on some laptops, offer alternative kbd shortcuts
         prefs->get(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,&altKeyboardShortcuts);
 
@@ -314,6 +318,7 @@ std::string currentSdlDriver=getSdlDriverName();
         framePriority.swallow(&menuPlaybackPriority);
 
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
+        diaElemToggle firstPassLogFilesAutoDelete(&multiPassStatsAutoDelete,QT_TRANSLATE_NOOP("adm","De_lete first pass log files by default"));
 
         diaElemFrame frameMultiLoad(QT_TRANSLATE_NOOP("adm","Auto-Append Settings"));
         diaElemToggle multiLoadUseCustomFragmentSize(&useCustomFragmentSize,QT_TRANSLATE_NOOP("adm","_Use custom fragment size for auto-append of MPEG-TS files"));
@@ -473,7 +478,7 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* Output */
-        diaElem *diaOutput[]={&allowAnyMpeg,&useLastReadAsTarget,&frameMultiLoad,&frameCache};
+        diaElem *diaOutput[]={&allowAnyMpeg, &useLastReadAsTarget, &firstPassLogFilesAutoDelete, &frameMultiLoad, &frameCache};
         diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
 
         /* Audio */
@@ -676,6 +681,8 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
             // Make users happy who prefer the output dir to be the same as the input dir
             prefs->set(FEATURES_USE_LAST_READ_DIR_AS_TARGET,lastReadDirAsTarget);
+            // Store the default state of the encoding dialog checkbox to auto-delete first pass stats
+            prefs->set(DEFAULT_DELETE_FIRST_PASS_LOG_FILES,multiPassStatsAutoDelete);
             // Enable alternate keyboard shortcuts
             prefs->set(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,altKeyboardShortcuts);
             // Allow to use the UP key to navigate back, DOWN to navigate forward
