@@ -245,32 +245,48 @@ bool ADM_paramValidate(CONFcouple *couples, const    ADM_paramList *params)
 }
 /**
     \fn ADM_paramValidatePartialList
-    \brief In that case couples is a sublist of params
+    \brief Return true if couples and params have some intersection
 */
 bool ADM_paramValidatePartialList(CONFcouple *couples, const    ADM_paramList *params)
 {
     int n=couples->getSize();
     int p=XgetParamSize(params);
-    if(n>p)
-    {
-        ADM_warning("Too many parameters in partial list\n");
-        return false;
-    }
     int found=0;
     for(int i=0;i<p;i++)
     {
         const char *name=params[i].paramName;
         if(true==couples->exist(name))
-        {
             found++;
-        }else
+        else
+            ADM_warning("Parameter \"%s\" not found in couples.\n",name);
+    }
+    if(!found)
+        return false; // no intersection
+    if(found==n)
+        return true;
+    int unmatched = 0;
+    for(int i=0;i<n;i++)
+    {
+        bool present = false;
+        char *key,*val;
+        couples->getInternalName(i,&key,&val);
+        for(int j=0;j<p;j++)
         {
-                ADM_warning("\tParam : <%s> not found\n",name);
+            const char *name = params[j].paramName;
+            if(!strcmp(key,name))
+            {
+                present = true;
+                break;
+            }
+        }
+        if(!present)
+        {
+            ADM_warning("Couple name \"%s\" absent in parameter list.\n",key);
+            unmatched++;
         }
     }
-    if(found==n) return true;
-    ADM_warning("Some parameters are not in the parameter list, typo ?(%d vs %d)\n",(int)found,(int)n);
-    return false;;
+    ADM_warning("Found %d/%d params, unmatched couples: %d/%d\n",found,p,unmatched,n);
+    return true;
 }
 
 /**
@@ -376,8 +392,18 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
 {
     if(!couples && !params)
     {
-          ADM_warning("Empty parameter list\n");
-          return true;
+        ADM_warning("No couples and empty parameter list\n");
+        return true; // ??
+    }
+    if(!couples)
+    {
+        ADM_warning("No couples\n");
+        return false;
+    }
+    if(!params)
+    {
+        ADM_warning("No parameter list\n");
+        return false;
     }
     if(false==ADM_paramValidate(couples,params)) return false;
     return ADM_paramLoadInternal(false,couples,params,s);
@@ -390,10 +416,26 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
 
 bool ADM_paramLoadPartial(CONFcouple *couples, const ADM_paramList *params,void *s)
 {
-   // don't reject too long or incomplete param lists, this does more harm than good
-   // e.g. on version update, but warnings are nice
-   ADM_paramValidatePartialList(couples,params);
-   return ADM_paramLoadInternal(true,couples,params,s);
+    if(!couples && !params)
+    {
+        ADM_warning("No couples and empty parameter list\n");
+        return true; // ??
+    }
+    if(!couples)
+    {
+        ADM_warning("No couples\n");
+        return false;
+    }
+    if(!params)
+    {
+        ADM_warning("No parameter list\n");
+        return false;
+    }
+    // don't reject too long or incomplete param lists, this does more harm than good
+    // e.g. on version update, but warnings are nice
+    if(ADM_paramValidatePartialList(couples,params))
+        return ADM_paramLoadInternal(true,couples,params,s);
+    return false;
 }
 /**
     \fn ADM_paramSave
