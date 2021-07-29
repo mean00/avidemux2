@@ -8,92 +8,62 @@
 <body>
   <div id="inner">
 
-    <h1>Changes in Avidemux v2.7.6 – v2.7.8</h1>
+    <h1>Changes in Avidemux v2.7.8 – v2.?.?</h1>
+
+    <h2>New Filters</h2>
+    
+    <ul>
+      <li>Analyzer</li>
+      <li>Blur (on selected area)</li>
+      <li>Cartoon</li>
+      <li>Color balance (adjust shadow, midtone and highlight)</li>
+      <li>Chroma hold (monochrome effect with kept colors)</li>
+      <li>Chroma key (replace "green screen" with an image)</li>
+      <li>DelogoHQ (clean up arbitrary shaped logo)</li>
+      <li>Dynamic threshold</li>
+      <li>Fit to size (resize and pad to the specified size)</li>
+      <li>Flip (vertically/horizontally flip the image)</li>
+      <li>Grid (video wall effect)</li>
+      <li>Image stabilizer (reduce camera shakiness)</li>
+      <li>Luma stabilizer (reduce flickering)</li>
+      <li>Mirror</li>
+      <li>Posterize</li>
+      <li>Quadrilateral transformation (four point transform)</li>
+      <li>Wavelet denoiser</li>
+      <li>Wavelet sharpener</li>
+    </ul>
 
     <h2>New Features</h2>
 
     <ul>
-      <li>Many new video filters added by courtesy of
-          <a href="https://github.com/szlldm">szlldm</a>.</li>
-      <li>A dedicated MOV muxer is now available, replacing silent fallback to
-          MOV muxing mode within the MP4 muxer.</li>
-      <li>A subset of color info relevant for HDR support is retained in copy
-          mode when both input and output video are stored in Matroska / WebM
-          containers. Settings to add or override color info have been added to
-          MKV and WebM muxers.</li>
-      <li>The indexer in the MPEG-TS demuxer now detects resolution changes in
-          MPEG-2 and H.264 streams which are entirely unsupported and suggests
-          aborting indexing. If the user chooses to continue, it records file
-          offsets of all resolution changes to the log. This allows advanced
-          users to split the file at these offsets using other tools like
-          <em>head</em> and <em>tail</em> into chunks which can be processed
-          with Avidemux.</li>
-      <li>YUV varieties of the lossless Ut Video codec are supported now for
-          decoding and encoding via bundled FFmpeg libraries.</li>
-      <li>Uncompressed 24-bit audio is now supported for a subset of file formats.</li>
-      <li>Limited support for 7.1 channel layout.</li>
-      <li>Decode and stream copy support for XLL substream in DTS audio tracks.</li>
-      <li>Audio properties are now updated on resuming playback. This allows to
-          start saving after an audio format change. When audio format changes
-          during playback, the FFmpeg-based audio decoder will output silence
-          and keep format rather than producing garbage.</li>
-      <li>An option to keep the identity of markers A and B instead of swapping
-          them automatically has been added to Preferences.</li>
-      <li>The keyboard shortcut for "Delete" action has been made customizable
-          with alternative keyboard shortcuts enabled.</li>
+      <li>Resample FPS filter has blend and motion interpolation options.</li>
+      <li>FFV1 encoder is available again.</li>
+      <li>Filter previews have got a unified method to quickly compare filtered
+          and unfiltered inputs via the "Peek Original" button.</li>
+      <li>Mark cut points (segment boundaries) on the navigation slider. New
+          buttons and shortcuts are provided to jump to these cut points.</li>
+      <li>In the Video Filter Manager the active filters can be enabled/disabled.</li>
     </ul>
 
     <h2>Other Enhancements</h2>
 
     <ul>
-      <li>Multi-threaded video decoding is now available for the bundled FFmpeg.
-          On powerful multi-core CPUs, this can drastically improve decoding
-          performance. A maximum of 8 threads can be created, but a conservative
-          custom upper limit of 4 is recommended. Values above 8 cause decoding
-          failures. Multi-threaded decoding and HW accelerated decoding are
-          mutually exclusive, changes require application restart to have
-          effect.</li>
-      <li>The maximum supported resolution has been increased to 8192x8192</li>
-      <li>The bundled FFmpeg has been updated to the 4.2.4 release.</li>
-      <li>Non-standard display aspect ratios can be configured in MP4 muxer by
-          specifying display width.</li>
-      <li>MP4 muxer accepts now MPEG-1 and MPEG-2.</li>
-      <li>The configuration dialog of the x265 video encoder plugin enjoyed
-          massive cleanup and refactoring by
-          <a href="https://github.com/xyzzy42">Trent Piepho</a>, more Adaptive
-          Quatization Variance methods have been added.</li>
-      <li>Python interface has been substantially extended, includes now methods
-          to query segment properties, the number and filenames of loaded
-          videos, PTS of keyframes, methods to seek to time with preview
-          updated, to open file dialogs filtered by extension and a built-in
-          method to split filename extension from a given path.</li>
-      <li>Scripting shell now supports unicode characters.</li>
-      <li>On macOS, files can be loaded via Finder context menu or by dropping
-          them onto Avidemux icon in the dock.</li>
-      <li>On Linux, Jobs GUI and the CLI executable can be launched from
-          AppImage by creating a symlink with _jobs or _cli in filename
-          respectively and running the AppImage via this symlink.</li>
+      <li>Resample FPS and Change FPS filters can handle up to 1000 fps.</li>
+      <li>Crop filter's preview has a translucent green masking.</li>
+      <li>Crop filter's Auto Crop function can achieve perfect crops (if the
+          selected frame is not too dark).</li>
+      <li>The maximum output resolution of the Resize filter has been increased
+          to 8192x8192</li>
+      <li>The Resize filter has a nearest neighbour scaling option.</li>
+      <li>Improved HiDPI scaling in previews.</li>
     </ul>
 
     <h2>Bugfixes</h2>
 
     <ul>
-      <li>Rate control was broken in some video encoders, especially in VP9 and
-          in NVENC-based encoders, fixed now.</li>
-      <li>Multiple issues in cut point checks for H.264 and HEVC streams in copy
-          mode, leading to incorrect check results, were identified and
-          resolved.</li>
-      <li>The first two frames of external AC3 or EAC3 audio tracks are not
-          dropped anymore. This regression from enhanced protection against
-          false positives, added 3 years ago, has been finally identified and
-          fixed.</li>
-      <li>Indexing of MPEG-TS files with HEVC video was broken when video stream
-          lacked access unit delimiters. The issue was identified and fixed
-          right after 2.7.7 had been tagged as released and is the reason why
-          version 2.7.7 was superseded by 2.7.8.</li>
-      <li>VU meter was grossly ahead of audio output on Windows, now it is just
-          a tiny little bit ahead.</li>
-      <li>Numerous other fixes and overall polish.</li>
+      <li>Volume control works with every audio device.</li>
+      <li>Occasional UI unrepsonsiveness during playback should be fixed.</li>
+      <li>Prevent navigation key events piling up.</li>
     </ul>
 
     </div>
