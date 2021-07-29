@@ -934,6 +934,13 @@ uint64_t flvHeader::getVideoDuration(void)
     pts+=frameToUs(1);
     return pts;
 }
+/**
+        \fn getVideoTrackSize
+*/
+uint64_t flvHeader::getVideoTrackSize(void)
+{
+    return videoTrack->_sizeInBytes;
+}
 
 /**
       \fn setVideoHeader

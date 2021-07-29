@@ -54,7 +54,7 @@ public:
   flvIndex  *_index;
   uint32_t  _nbIndex;  // current size of the index
   uint32_t  _indexMax; // Max size of the index
-  uint32_t  _sizeInBytes; // Approximate size in bytes of that stream
+  uint64_t  _sizeInBytes; // Approximate size in bytes of that stream
   uint32_t  _defaultFrameDuration; // in us!
 };
 /**
@@ -175,6 +175,7 @@ virtual     uint8_t                 getNbAudioStreams(void);
     virtual uint64_t getTime(uint32_t frame);
             uint8_t  getExtraHeaderData(uint32_t *len, uint8_t **data);
     virtual uint64_t getVideoDuration(void);
+    virtual uint64_t getVideoTrackSize(void);
 
 virtual   bool                    getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
 virtual   bool                    setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
