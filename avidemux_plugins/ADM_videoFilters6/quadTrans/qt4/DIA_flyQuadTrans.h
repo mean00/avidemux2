@@ -13,7 +13,7 @@
  *                                                                         *
  ***************************************************************************/
 #ifndef FLY_QUADTRANS_H
-#define QUADTRANS_H
+#define FLY_QUADTRANS_H
 #include "quadTrans.h"
 #include "ADM_vidQuadTrans.h"
 
