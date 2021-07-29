@@ -73,6 +73,17 @@ uint8_t vidHeader::getVideoInfo (aviInfo * info)
   info->nb_frames = _mainaviheader.dwTotalFrames;
   info->fcc = _videostream.fccHandler;
   info->bpp = _video_bih.biBitCount;
+  
+  info->bitrate = -1;
+  if ((getVideoDuration() > 0) && (getVideoTrackSize() > 0))
+  {
+      double sec = getVideoDuration() / 1000000.0;
+      double bytes = getVideoTrackSize();
+      double br = bytes/sec;
+      br *= 8.0;
+      br /= 1000.0;
+      info->bitrate = (br+0.49);
+  }
 
   info->colflags = _videoColFlags;
   if(_videoColFlags)

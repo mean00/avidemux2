@@ -55,6 +55,7 @@ typedef struct
     uint32_t   nb_frames;
     uint32_t   fcc;    
     uint32_t   bpp;
+    int32_t    bitrate;
     uint32_t   colflags; // color info flags (0 = no info present)
     uint32_t   range;    // color range
     uint32_t   prim;     // color primaries
@@ -136,6 +137,7 @@ virtual     uint64_t                estimatePts(uint32_t frame); // Returns or g
                                      /// Returns PTS of frame...
 virtual   uint64_t                   getTime(uint32_t frameNum)=0;
 virtual   uint64_t                   getVideoDuration(void)=0;
+virtual   uint64_t                   getVideoTrackSize(void) {return 0;};
 
 // Return false if the container doesn't provide pts information
 virtual   bool                       providePts(void) {return true;};

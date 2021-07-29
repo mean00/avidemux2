@@ -1050,6 +1050,16 @@ uint64_t mkvHeader::getVideoDuration(void)
     if(!limit) return 0;
     return _tracks[0].duration;
 }
+/**
+    \fn getVideoTrackSize
+
+*/
+uint64_t mkvHeader::getVideoTrackSize(void)
+{
+    uint32_t limit=_tracks[0].index.size();
+    if(!limit) return 0;
+    return _tracks[0]._sizeInBytes;
+}
 
 /**
     \fn getFrameSize
