@@ -1075,6 +1075,10 @@ uint8_t flvHeader::insertVideo(uint64_t pos,uint32_t size,uint32_t frameType,uin
     if(pts==0xffffffff) x->ptsUs=ADM_NO_PTS;
         else
       x->ptsUs=pts*1000LL;
+
+    videoTrack->_nbIndex++;
+    videoTrack->_sizeInBytes += size;
+
     if(videoCodec==FLV_CODECID_H264 && nalsize && spsinfo)
     {
         uint8_t *buffer=new uint8_t[size];
@@ -1089,7 +1093,6 @@ uint8_t flvHeader::insertVideo(uint64_t pos,uint32_t size,uint32_t frameType,uin
                 if(flags & AVI_B_FRAME)
                     bFramesPresent=true;
                 x->flags=flags;
-                videoTrack->_nbIndex++;
                 return 1;
             }
         }
@@ -1102,7 +1105,6 @@ uint8_t flvHeader::insertVideo(uint64_t pos,uint32_t size,uint32_t frameType,uin
     {
           x->flags=0;
     }
-    videoTrack->_nbIndex++;
     return 1;
 }
 /**
