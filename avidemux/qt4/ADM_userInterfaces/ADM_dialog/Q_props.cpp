@@ -37,6 +37,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
     text[0] = 0;
     gotExtraData = false;
     gotAudio = false;
+    firstTime = true;
     if (!avifileinfo)
         return;
 
@@ -206,9 +207,12 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 */
 void propWindow::showEvent(QShowEvent *event)
 {
-    int cmp,w = 0;
-
     QDialog::showEvent(event);
+
+    if(!firstTime) return;
+    firstTime = false;
+
+    int cmp,w = 0;
 
 #define MAXME(x) if(ui.x->isVisible()) { cmp = ui.x->width(); if(cmp > w) w = cmp; }
 
@@ -228,7 +232,15 @@ void propWindow::showEvent(QShowEvent *event)
     ui.label4CC->setMinimumWidth(w);
     ui.labelACodec->setMinimumWidth(w);
     // We don't force minimum width for the left column in the video extradata
-    // group box to give more space to QLineEdit with the actual extradata.
+    // group box to give more space to QLineEdit displaying extradata hexdump,
+    // unless we have no extradata.
+    if(!gotExtraData)
+    {
+        ui.labelExtraDataSize->setMinimumWidth(w);
+        // When QLineEdit is hidden, the copy to clipboard button gets the focus.
+        // Move focus back to the OK button.
+        ui.pushButton_ok->setFocus(Qt::OtherFocusReason);
+    }
 
     w = 0;
 
@@ -248,6 +260,9 @@ void propWindow::showEvent(QShowEvent *event)
     ui.label4CCValue->setMinimumWidth(w);
     ui.labelExtraDataSizeValue->setMinimumWidth(w);
     ui.labelACodecName->setMinimumWidth(w);
+
+    // work around dialog window not resized properly at least on macOS
+    resize(sizeHint());
 }
 
 #define ADDCATEGORY(a) props += "\n=====================================================\n" \

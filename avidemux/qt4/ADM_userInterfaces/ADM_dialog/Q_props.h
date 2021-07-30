@@ -12,6 +12,7 @@ public:
 private:
     bool gotExtraData;
     bool gotAudio;
+    bool firstTime;
     Ui_propsDialog ui;
 
     void showEvent(QShowEvent *event);
