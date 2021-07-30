@@ -189,6 +189,7 @@ OpenDMLHeader::OpenDMLHeader(void)
 	memset(&_regularIndex,0,sizeof(_regularIndex));
 	_videoExtraData=NULL;
 	_videoExtraLen=0;
+	_videoTrackLen=0;
 	_reordered=0;
 	_recHack=0;
     // Audio

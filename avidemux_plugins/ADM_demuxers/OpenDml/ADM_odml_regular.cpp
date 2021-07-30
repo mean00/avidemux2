@@ -168,6 +168,7 @@ int64_t startOfData=0;
                         if(offset & 1) printf("!!!! ODD !!!");	
 #endif			
                         videocount++;
+                        _videoTrackLen+=len;
                         break;
                 case MKFCC('w','b',0,0):
                         nb=backward[trackId];

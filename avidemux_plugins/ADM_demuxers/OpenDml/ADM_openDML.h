@@ -63,6 +63,7 @@ class OpenDMLHeader         :public vidHeader
 protected:
        				
 	  uint64_t			_fileSize;
+          uint64_t                      _videoTrackLen;
 	  FILE 				*_fd;
 	  odmlIndex 		*_idx;
 	  odmlAudioTrack                *_audioTracks;
@@ -154,6 +155,7 @@ virtual 	uint8_t  getFrameSize(uint32_t frame,uint32_t *size) ;
 virtual	    uint8_t	getExtraHeaderData(uint32_t *len, uint8_t **data);
 virtual     uint64_t    getTime(uint32_t frameNum);
 virtual     uint64_t    getVideoDuration(void);
+virtual     uint64_t    getVideoTrackSize(void) { return _videoTrackLen; }
 virtual     bool        providePts(void) {return ptsAvailable;};
 bool                    getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
 bool                    setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
