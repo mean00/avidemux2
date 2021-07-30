@@ -35,64 +35,80 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
     const char *s;
 
     text[0] = 0;
-    listOfValues.clear();
+    gotExtraData = false;
+    gotAudio = false;
     if (!avifileinfo)
         return;
 
-#define FILLTEXT(a,b,c) {snprintf(text,MXL,b,c); listOfValues.push_back(QString::fromUtf8(text)); ui.a->setText(QString::fromUtf8(text));}
-#define FILLTEXT4(a,b,c,d) {snprintf(text,MXL,b,c,d); listOfValues.push_back(QString::fromUtf8(text)); ui.a->setText(QString::fromUtf8(text));}
-#define FILLTEXT5(a,b,c,d,e) {snprintf(text,MXL,b,c,d,e); listOfValues.push_back(QString::fromUtf8(text)); ui.a->setText(QString::fromUtf8(text));}
-#define SET_YES(a,b) ui.a->setText(QString::fromUtf8(yesno[b]))
-#define FILLQT_TRANSLATE_NOOP(a,q) listOfValues.push_back(QString::fromUtf8(text)); ui.q->setText(QString::fromUtf8(text));
+#define FILL(a) ui.a->setText(QString::fromUtf8(text));
+#define FILLTEXT(a,b,c) { snprintf(text,MXL,b,c); FILL(a) }
+#define FILLTEXT4(a,b,c,d) { snprintf(text,MXL,b,c,d); FILL(a) }
+#define FILLTEXT5(a,b,c,d,e) { snprintf(text,MXL,b,c,d,e); FILL(a) }
+//#define SET_YES(a,b) ui.a->setText(QString::fromUtf8(yesno[b]))
 
     //------------------------------------
 
-    FILLTEXT(label4CC, "%s", fourCC::tostring(avifileinfo->fcc));
+    FILLTEXT(label4CCValue, "%s", fourCC::tostring(avifileinfo->fcc))
 
-    FILLTEXT4(labeImageSize,QT_TRANSLATE_NOOP("qprops","%" PRIu32" x %" PRIu32), avifileinfo->width,avifileinfo->height);
+    FILLTEXT4(labelImageSizeValue,QT_TRANSLATE_NOOP("qprops","%" PRIu32" x %" PRIu32), avifileinfo->width,avifileinfo->height)
 
     war=video_body->getPARWidth();
     har=video_body->getPARHeight();
     getAspectRatioFromAR(war,har, &s);
-    FILLTEXT5(LabelAspectRatio,QT_TRANSLATE_NOOP("qprops","%s (%u:%u)"), s,war,har);
 
-    FILLTEXT(labelFrameRate, QT_TRANSLATE_NOOP("qprops","%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F);
-    
+    FILLTEXT5(labelAspectRatioValue, QT_TRANSLATE_NOOP("qprops","%s (%u:%u)"), s, war, har)
+
+    FILLTEXT(labelFrameRateValue, QT_TRANSLATE_NOOP("qprops","%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F)
+
     if (avifileinfo->bitrate < 0)
     {
-        FILLTEXT(labelVideoBitrate, "%s", QT_TRANSLATE_NOOP("qprops","not available"));
+        FILLTEXT(labelVideoBitrateValue, "%s", QT_TRANSLATE_NOOP("qprops","n/a"))
     }
     else
     {
-        FILLTEXT(labelVideoBitrate, QT_TRANSLATE_NOOP("qprops","%d kbps"), avifileinfo->bitrate);
+        FILLTEXT(labelVideoBitrateValue, QT_TRANSLATE_NOOP("qprops","%d kbps"), avifileinfo->bitrate)
     }
 
     uint64_t duration=video_body->getVideoDuration();
     ms2time(duration/1000,&hh,&mm,&ss,&ms);
     snprintf(text, MXL, QT_TRANSLATE_NOOP("qprops","%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
-    listOfValues.push_back(text);
-    ui.labelVideoDuration->setText(text);
 
-    uint32_t extraLen;
+    FILL(labelVideoDurationValue)
+
+    uint32_t extraLen = 0;
     uint8_t *extraData;
     video_body->getExtraHeaderData(&extraLen,&extraData);
-    FILLTEXT(LabelExtraDataSize,"%02d",extraLen);
+
+    FILLTEXT(labelExtraDataSizeValue,"%d",extraLen)
 
     if(extraLen)
     {
         int capped=extraLen;
-        if(capped>10) capped=10;
+#define EXTRADATA_CAP 64
+        if(capped > EXTRADATA_CAP) capped = EXTRADATA_CAP;
+        int missing = extraLen - capped;
         QString string;
-        char smallx[10];
+        char smallx[4];
         for(int i=0;i<capped;i++)
         {
             snprintf(smallx,4,"%02X ",extraData[i]);
-            string+=QString(smallx);
+            string += smallx;
         }
-        listOfValues.push_back(string);
-        ui.LabelExtraData->setText(string);
+        if(missing)
+        {
+            char hint[32];
+            snprintf(hint, 32, QT_TRANSLATE_NOOP("qprops","(+%d bytes)"), missing);
+            string += hint;
+        }
+        ui.lineEditExtraData->insert(string);
+        ui.lineEditExtraData->setCursorPosition(0);
+        gotExtraData = true;
     }else
-        ui.LabelExtraData->clear();
+    {
+        ui.lineEditExtraData->clear();
+    }
+    ui.labelExtraData->setEnabled(gotExtraData);
+    ui.lineEditExtraData->setVisible(gotExtraData);
 
     //------------------------------------
     WAVHeader *wavinfo=NULL;
@@ -102,6 +118,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
         wavinfo=st->getInfo();
     if(wavinfo)
     {
+        gotAudio = true;
         int nbActive=video_body->getNumberOfActiveAudioTracks();
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
         QString titleAudio=QCoreApplication::translate("qprops","Audio (%n active track(s))",NULL,nbActive);
@@ -109,10 +126,10 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
         QString titleAudio=QCoreApplication::translate("qprops","Audio (%n active track(s))",NULL,QCoreApplication::UnicodeUTF8,nbActive);
 #endif
         ui.groupBoxAudio->setTitle(titleAudio);
-        listOfValues.push_back(titleAudio);
 
         snprintf(text, MXL, "%s", getStrFromAudioCodec(wavinfo->encoding));
-        FILLQT_TRANSLATE_NOOP("qprops",labelACodec);
+
+        FILL(labelACodecName)
 
         uint32_t channels=wavinfo->channels;
         uint32_t frequency=wavinfo->frequency;
@@ -150,32 +167,47 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
                 break;
         }
 
-        FILLQT_TRANSLATE_NOOP("qprops",labelChannels);
+        FILL(labelChannelsValue)
 
-        FILLTEXT4(labelBitrate, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Bps / %" PRIu32" kbps"), wavinfo->byterate, wavinfo->byterate * 8 / 1000);
+        FILLTEXT4(labelAudioBitrateValue, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Bps / %" PRIu32" kbps"), wavinfo->byterate, wavinfo->byterate * 8 / 1000)
 
-        FILLTEXT(labelVBR,"%s","n/a");
+        FILLTEXT(labelVBRDetected,"%s","n/a")
 
-        FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), frequency);
+        FILLTEXT(labelFrequencyValue, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), frequency)
 
         ms2time(duration/1000,&hh,&mm,&ss,&ms);
         sprintf(text, QT_TRANSLATE_NOOP("qprops","%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
-        FILLQT_TRANSLATE_NOOP("qprops",labelAudioDuration);
+
+        FILL(labelAudioDurationValue)
+
         ui.labelAudioDuration->setEnabled(!!duration);
 
 //                SET_YES(labelVBR,currentaudiostream->isVBR());
     } else
     {
         ui.groupBoxAudio->setEnabled(false);
+#define CLEAR(x) ui.x->clear();
+        CLEAR(labelACodecName)
+        CLEAR(labelChannelsValue)
+        CLEAR(labelAudioBitrateValue)
+        CLEAR(labelVBRDetected)
+        CLEAR(labelFrequencyValue)
+        CLEAR(labelAudioDurationValue)
+#undef CLEAR
     }
 
     connect(ui.pushButton_c2c,SIGNAL(clicked()),this,SLOT(propsCopyToClipboard()));
 }
 
-#define ADDCATEGORY(a) props += QString("\n=====================================================\n")\
-                               +QString::fromUtf8(a)\
-                               +QString("\n=====================================================\n");
-#define ADDNAMEVALUE(a,b) props += QString::fromUtf8(a)+QString("\t")+QString(b)+QString("\n");
+#define ADDCATEGORY(a) props += "\n=====================================================\n" \
+                             +  ui.a->title() \
+                             +  "\n=====================================================\n";
+#define ADDNAMEVALUE(a,b) { \
+    int l = ui.a->text().size(); \
+    props += ui.a->text(); \
+    do { props += "\t"; l += 8; } while(l < 24); /* assuming tab width of 8 characters */ \
+    props += ui.b->text() + "\n"; \
+}
 
 /**
     \fn propsCopyToClipboard
@@ -183,58 +215,36 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 */
 void propWindow::propsCopyToClipboard(void)
 {
-    if(listOfValues.size()<7) // something went wrong and the list is not sufficiently populated
-        return;
-
     QString props;
-    props = QString();
 
-    ADDCATEGORY(QT_TRANSLATE_NOOP("qprops","Video"))
+    ADDCATEGORY(groupBoxVideo)
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Codec 4CC:\t"),listOfValues.at(0))
+    ADDNAMEVALUE(label4CC,label4CCValue)
+    ADDNAMEVALUE(labelImageSize,labelImageSizeValue)
+    ADDNAMEVALUE(labelAspectRatio,labelAspectRatioValue)
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Image Size:\t"),listOfValues.at(1))
+    ADDNAMEVALUE(labelFrameRate,labelFrameRateValue)
+    ADDNAMEVALUE(labelVideoBitrate,labelVideoBitrateValue)
+    ADDNAMEVALUE(labelVideoDuration,labelVideoDurationValue)
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Aspect Ratio:\t"),listOfValues.at(2))
+    ADDCATEGORY(groupBoxExtradata)
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Frame Rate:\t"),listOfValues.at(3))
+    ADDNAMEVALUE(labelExtraDataSize,labelExtraDataSizeValue)
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Average Bitrate:\t"),listOfValues.at(4))
+    if(gotExtraData)
+        ADDNAMEVALUE(labelExtraData,lineEditExtraData)
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Total Duration:\t"),listOfValues.at(5))
+    ADDCATEGORY(groupBoxAudio)
 
-    ADDCATEGORY(QT_TRANSLATE_NOOP("qprops","Extra Video Properties"))
-
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","ExtraDataSize:\t"),listOfValues.at(6))
-
-    bool hasExtraData=false;
-    if((QString)listOfValues.at(5) != QString("00"))
+    if(gotAudio)
     {
-        hasExtraData=true;
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Extra data:\t"),listOfValues.at(7))
-    }
+        ADDNAMEVALUE(labelACodec,labelACodecName)
+        ADDNAMEVALUE(labelChannels,labelChannelsValue)
+        ADDNAMEVALUE(labelAudioBitrate,labelAudioBitrateValue)
 
-    QString aud;
-    if(listOfValues.size() == 14+hasExtraData)
-        aud=listOfValues.at(7+hasExtraData);
-    else
-        aud=QString::fromUtf8(QT_TRANSLATE_NOOP("qprops","Audio"));
-
-    ADDCATEGORY(aud.toUtf8().constData())
-
-    if(listOfValues.size() == 14+hasExtraData)
-    {
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Codec:\t\t"),listOfValues.at(8+hasExtraData))
-
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Channels:\t"),listOfValues.at(9+hasExtraData))
-
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Bitrate:\t"),listOfValues.at(10+hasExtraData))
-
-        //ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Variable Bitrate"),listOfValues.at(11+hasExtraData))
-
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Frequency:\t"),listOfValues.at(12+hasExtraData))
-
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Total Duration:\t"),listOfValues.at(13+hasExtraData))
+        //ADDNAMEVALUE(labelVBR,labelVBRDetected)
+        ADDNAMEVALUE(labelFrequency,labelFrequencyValue)
+        ADDNAMEVALUE(labelAudioDuration,labelAudioDurationValue)
     }else
     {
         props += QT_TRANSLATE_NOOP("qprops","No Audio");

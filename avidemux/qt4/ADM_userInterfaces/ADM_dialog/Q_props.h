@@ -1,7 +1,6 @@
 #ifndef Q_props_h
 #define Q_props_h
 
-#include <vector>
 #include "ui_props.h"
 
 class propWindow : public QDialog
@@ -12,7 +11,8 @@ public:
     propWindow(QWidget *parent);
     Ui_propsDialog ui;
 private:
-    std::vector <QString> listOfValues;
+    bool gotExtraData;
+    bool gotAudio;
 public slots:
     void propsCopyToClipboard(void);
 };
