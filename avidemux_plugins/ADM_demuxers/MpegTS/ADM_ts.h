@@ -130,6 +130,7 @@ class tsHeader         :public vidHeader
     bool            updatePtsDts(void);
     bool            updateIdr(void);
     bool            videoNeedEscaping;
+    uint64_t        sizeOfVideoInBytes;
 protected:
     vector <ADM_tsTrackDescriptor *>listOfAudioTracks;
     uint32_t        videoPid;             
@@ -164,6 +165,7 @@ virtual     uint8_t                 getNbAudioStreams(void);
     virtual uint64_t getTime(uint32_t frame);
 //            uint8_t  getExtraHeaderData(uint32_t *len, uint8_t **data);
     virtual uint64_t getVideoDuration(void);
+    virtual uint64_t getVideoTrackSize(void) { return sizeOfVideoInBytes; }
     virtual uint8_t  getFrameSize(uint32_t frame,uint32_t *size) ;
 virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
 virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);

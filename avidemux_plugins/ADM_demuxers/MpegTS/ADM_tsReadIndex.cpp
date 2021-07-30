@@ -182,6 +182,7 @@ bool tsHeader::processVideoIndex(char *buffer)
                         default: ADM_warning("Unknown picture structure %c\n",picStruct);break;
                 }
                 frame->len=len;
+                sizeOfVideoInBytes+=len;
                 if(frame->pictureType & AVI_FIELD_STRUCTURE)
                     fieldEncoded=true;
                 ListOfFrames.push_back(frame);

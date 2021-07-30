@@ -259,7 +259,7 @@ uint8_t tsHeader::close(void)
     lastFrame=0xffffffff;
     videoPid=0;
     videoNeedEscaping=false;
-    
+    sizeOfVideoInBytes=0;
 }
 /**
     \fn tsHeader
