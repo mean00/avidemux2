@@ -13,8 +13,8 @@
   <property name="windowTitle">
    <string>Properties</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="3">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
     <widget class="QGroupBox" name="groupBoxVideo">
      <property name="title">
       <string>Video</string>
@@ -125,7 +125,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0" colspan="3">
+   <item>
     <widget class="QGroupBox" name="groupBoxExtradata">
      <property name="title">
       <string>Video Codec Extradata</string>
@@ -177,7 +177,7 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0" colspan="3">
+   <item>
     <widget class="QGroupBox" name="groupBoxAudio">
      <property name="title">
       <string>Audio</string>
@@ -288,7 +288,7 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0" colspan="3">
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="pushButton_c2c">

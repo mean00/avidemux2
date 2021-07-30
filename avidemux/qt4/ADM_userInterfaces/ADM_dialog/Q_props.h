@@ -9,11 +9,14 @@ class propWindow : public QDialog
 
 public:
     propWindow(QWidget *parent);
-    Ui_propsDialog ui;
 private:
     bool gotExtraData;
     bool gotAudio;
-public slots:
+    Ui_propsDialog ui;
+
+    void showEvent(QShowEvent *event);
+
+private slots:
     void propsCopyToClipboard(void);
 };
 #endif	// Q_props_h

@@ -197,6 +197,57 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
     }
 
     connect(ui.pushButton_c2c,SIGNAL(clicked()),this,SLOT(propsCopyToClipboard()));
+
+    adjustSize(); // squeeze out all the air
+}
+/**
+    \fn showEvent
+    \brief Align the columns in the video and audio group boxes.
+*/
+void propWindow::showEvent(QShowEvent *event)
+{
+    int cmp,w = 0;
+
+    QDialog::showEvent(event);
+
+#define MAXME(x) if(ui.x->isVisible()) { cmp = ui.x->width(); if(cmp > w) w = cmp; }
+
+    MAXME(label4CC)
+    MAXME(labelImageSize)
+    MAXME(labelAspectRatio)
+    MAXME(labelFrameRate)
+    MAXME(labelVideoBitrate)
+    MAXME(labelVideoDuration)
+    MAXME(labelACodec)
+    MAXME(labelChannels)
+    MAXME(labelAudioBitrate)
+    MAXME(labelVBR)
+    MAXME(labelFrequency)
+    MAXME(labelAudioDuration)
+
+    ui.label4CC->setMinimumWidth(w);
+    ui.labelACodec->setMinimumWidth(w);
+    // We don't force minimum width for the left column in the video extradata
+    // group box to give more space to QLineEdit with the actual extradata.
+
+    w = 0;
+
+    MAXME(label4CCValue)
+    MAXME(labelImageSizeValue)
+    MAXME(labelAspectRatioValue)
+    MAXME(labelFrameRateValue)
+    MAXME(labelVideoBitrateValue)
+    MAXME(labelVideoDurationValue)
+    MAXME(labelACodecName)
+    MAXME(labelChannelsValue)
+    MAXME(labelAudioBitrateValue)
+    MAXME(labelVBRDetected)
+    MAXME(labelFrequencyValue)
+    MAXME(labelAudioDurationValue)
+
+    ui.label4CCValue->setMinimumWidth(w);
+    ui.labelExtraDataSizeValue->setMinimumWidth(w);
+    ui.labelACodecName->setMinimumWidth(w);
 }
 
 #define ADDCATEGORY(a) props += "\n=====================================================\n" \
