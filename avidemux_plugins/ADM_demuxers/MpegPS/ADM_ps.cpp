@@ -268,7 +268,7 @@ uint8_t psHeader::close(void)
 { 
     fieldEncoded=false;
     lastFrame=0xffffffff;
-    
+    videoTrackSize=0;
 }
 /**
     \fn psHeader

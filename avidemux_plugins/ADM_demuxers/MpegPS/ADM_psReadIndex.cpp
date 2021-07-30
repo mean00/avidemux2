@@ -171,6 +171,7 @@ bool psHeader::processVideoIndex(char *buffer)
                 if(!fieldEncoded && (frame->pictureType & AVI_FIELD_STRUCTURE))
                     fieldEncoded=true;
                 frame->len=len;
+                videoTrackSize+=len;
                 ListOfFrames.append(frame);
                 count++;
                 if(!next) 

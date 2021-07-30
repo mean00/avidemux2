@@ -111,65 +111,61 @@ public:
 /**
     \class psHeader
     \brief mpeg ps demuxer
-
 */
-class psHeader         :public vidHeader
+class psHeader : public vidHeader
 {
   protected:
-    bool    fieldEncoded;
-    bool    readVideo(indexFile *index);
-    bool    readAudio(indexFile *index,const char *name);
-    bool    readIndex(indexFile *index);
-    bool    readScrReset(indexFile *index);
+    bool                fieldEncoded;
+    uint32_t            lastFrame;
+    uint64_t            videoTrackSize;
+    fileParser          parser;
+    psPacketLinear      *psPacket;
 
-    bool    processVideoIndex(char *buffer);
-    bool    processAudioIndex(char *buffer);
+    BVector <dmxFrame *> ListOfFrames;
+    BVector <ADM_psTrackDescriptor *> listOfAudioTracks;
+    ListOfScr           listOfScrGap;
 
-    BVector <dmxFrame *> ListOfFrames;      
-    fileParser      parser;
-    uint32_t       lastFrame;
-    psPacketLinear *psPacket;
-    uint64_t        timeConvert(uint64_t x);
-    bool            updatePtsDts(void);
-protected:
-    ListOfScr                       listOfScrGap;
-    BVector <ADM_psTrackDescriptor *>listOfAudioTracks;
+    bool                readVideo(indexFile *index);
+    bool                readAudio(indexFile *index, const char *name);
+    bool                readIndex(indexFile *index);
+    bool                readScrReset(indexFile *index);
+
+    bool                processVideoIndex(char *buffer);
+    bool                processAudioIndex(char *buffer);
+
+    uint64_t            timeConvert(uint64_t x);
+    bool                updatePtsDts(void);
+
   public:
+                        psHeader();
+    virtual             ~psHeader();
 
+    virtual void        Dump(void);
 
-    virtual   void          Dump(void);
-
-            psHeader( void ) ;
-   virtual  ~psHeader(  ) ;
-// AVI io
-    virtual uint8_t  open(const char *name);
-    virtual uint8_t  close(void) ;
-  //__________________________
-  //  Info
-  //__________________________
-
+  // AVI io
+    virtual uint8_t     open(const char *name);
+    virtual uint8_t     close(void);
   //__________________________
   //  Audio
   //__________________________
-virtual 	WAVHeader              *getAudioInfo(uint32_t i )  ;
-virtual 	uint8_t                 getAudioStream(uint32_t i,ADM_audioStream  **audio);
-virtual     uint8_t                 getNbAudioStreams(void);
-// Frames
+    virtual WAVHeader   *getAudioInfo(uint32_t i);
+    virtual uint8_t     getAudioStream(uint32_t i, ADM_audioStream **audio);
+    virtual uint8_t     getNbAudioStreams(void);
+  // Frames
   //__________________________
   //  video
   //__________________________
 
-    virtual uint8_t  setFlag(uint32_t frame,uint32_t flags);
-    virtual uint32_t getFlags(uint32_t frame,uint32_t *flags);
-    virtual uint8_t  getFrame(uint32_t framenum,ADMCompressedImage *img);
-    virtual uint64_t getTime(uint32_t frame);
-            uint8_t  getExtraHeaderData(uint32_t *len, uint8_t **data);
-    virtual uint64_t getVideoDuration(void);
-    virtual uint8_t  getFrameSize(uint32_t frame,uint32_t *size) ;
-virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
-virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
+    virtual uint8_t     setFlag(uint32_t frame, uint32_t flags);
+    virtual uint32_t    getFlags(uint32_t frame, uint32_t *flags);
+    virtual uint8_t     getFrame(uint32_t framenum, ADMCompressedImage *img);
+    virtual uint64_t    getTime(uint32_t frame);
+            uint8_t     getExtraHeaderData(uint32_t *len, uint8_t **data);
 
+    virtual uint64_t    getVideoDuration(void);
+    virtual uint64_t    getVideoTrackSize(void) { return videoTrackSize; }
+    virtual uint8_t     getFrameSize(uint32_t frame, uint32_t *size);
+    virtual bool        getPtsDts(uint32_t frame, uint64_t *pts, uint64_t *dts);
+    virtual bool        setPtsDts(uint32_t frame, uint64_t pts, uint64_t dts);
 };
 #endif
-
-
