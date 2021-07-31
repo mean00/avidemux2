@@ -181,6 +181,7 @@ class asfHeader         :public vidHeader
     asfPacket               *_packet;
     //uint32_t                _currentAudioStream;
     uint64_t                _duration;  // Duration 100 ns
+    uint64_t                _videoTrackSize;
   protected:
                                 
     FILE                    *_fd;
@@ -232,6 +233,7 @@ class asfHeader         :public vidHeader
     virtual   void                       Dump(void);
     virtual   uint64_t                   getTime(uint32_t frameNum);
     virtual   uint64_t                   getVideoDuration(void);
+    virtual   uint64_t                   getVideoTrackSize(void) { return _videoTrackSize; }
 
     // Return true if the container provides pts informations
     virtual   bool                       providePts(void) {return false;};

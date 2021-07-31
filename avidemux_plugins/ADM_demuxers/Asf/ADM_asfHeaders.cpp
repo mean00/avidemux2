@@ -508,6 +508,7 @@ uint8_t asfHeader::buildIndex(void)
                         indexEntry.segNb,ADM_us2plain(indexEntry.pts));
                 aprintf("dts=%s\n",ADM_us2plain(indexEntry.dts));
                 _index.append(indexEntry);
+                _videoTrackSize+=len;
             }
             
             aprintf("New sequence\n");

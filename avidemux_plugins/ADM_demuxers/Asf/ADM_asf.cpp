@@ -127,7 +127,7 @@ uint8_t asfHeader::close(void)
   _packetSize=0;
   _videoStreamId=0;
   nbImage=0;
-  
+  _videoTrackSize=0;
   _packet=NULL;
   _nbPackets=0;
   memset(&(_allAudioTracks[0]),0,sizeof(_allAudioTracks));
