@@ -20,7 +20,6 @@
 #include "ADM_default.h"
 #include "ADM_image.h"
 #include "DIA_flyBlackenBorders.h"
-#include "ui_blackenBorders.h"
 
 #if 0 
     #define aprintf printf
@@ -47,6 +46,44 @@ flyBlacken::~flyBlacken()
 {
     delete rubber;
     rubber=NULL;
+}
+/**
+ * \fn initRubber
+ * \brief To be called on show event
+ */
+void flyBlacken::initRubber(void)
+{
+    rubber->rubberband->show(); // must be called first
+    rubber->rubberband->setVisible(!rubber_is_hidden);
+    rubber->nestedIgnore = 0;
+}
+/**
+ * \fn adjustRubber
+ */
+void flyBlacken::adjustRubber(int x, int y, int w, int h)
+{
+    rubber->move(x,y);
+    rubber->resize(w,h);
+}
+/**
+ * \fn lockRubber
+ */
+int flyBlacken::lockRubber(bool lock)
+{
+    int old = rubber->nestedIgnore;
+    if(lock)
+        rubber->nestedIgnore++;
+    else
+        rubber->nestedIgnore--;
+    return old;
+}
+/**
+ * \fn hideRubber
+ */
+void flyBlacken::hideRubber(bool hide)
+{
+    rubber_is_hidden = hide;
+    rubber->rubberband->setVisible(!hide);
 }
 
 /**
@@ -204,18 +241,6 @@ bool    flyBlacken::bandMoved(int x,int y,int w, int h)
     sameImage();
   
     return true; 
-}
-/**
- * \fn blockChanges
- * @param block
- * @return 
- */
-#define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x;rubber->x;}
-bool flyBlacken::blockChanges(bool block)
-{
-    Ui_blackenDialog *w=(Ui_blackenDialog *)_cookie;
-    APPLY_TO_ALL(blockSignals(block));
-    return true;
 }
 //EOF
 

@@ -35,18 +35,23 @@ const char *blackenBorders::getConfiguration(void)
     return conf;
 }
 /**
+   \fn resetConfig
+*/
+void blackenBorders::resetConfig(void)
+{
+    param.left=0;
+    param.right=0;
+    param.top=0;
+    param.bottom=0;
+}
+/**
     \fn ctor
 */
 blackenBorders::blackenBorders( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
 {
-    if(!setup || !ADM_paramLoad(setup,blackenBorder_param,&param))
-    {
-        // Default value
-        param.left=0;
-        param.right=0;
-        param.top=0;
-        param.bottom=0;
-    }
+    resetConfig();
+    if(setup && !ADM_paramLoadPartial(setup,blackenBorder_param,&param))
+        resetConfig();
 }
 /**
     \fn dtor

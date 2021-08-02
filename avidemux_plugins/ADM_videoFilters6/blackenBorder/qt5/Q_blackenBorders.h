@@ -9,14 +9,15 @@ class Ui_blackenWindow : public QDialog
     Q_OBJECT
 
 protected:
-    int lock;
+    int                 lock;
+    int                 inputWidth, inputHeight;
+    flyBlacken          *myBlacken;
+    ADM_QCanvas         *canvas;
+    Ui_blackenDialog    ui;
 
 public:
-    flyBlacken *myBlacken;
-    ADM_QCanvas *canvas;
     Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_coreVideoFilter *in);
     ~Ui_blackenWindow();
-    Ui_blackenDialog ui;
 
 public slots:
     void gather(blackenBorder *param);

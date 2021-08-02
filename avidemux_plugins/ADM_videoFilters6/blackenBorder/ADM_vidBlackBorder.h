@@ -20,6 +20,8 @@ class blackenBorders : public  ADM_coreVideoFilter
 {
 protected:
         blackenBorder       param;
+
+        void                resetConfig(void);
 public:
                             blackenBorders(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~blackenBorders();

@@ -24,16 +24,15 @@
  */
 Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_coreVideoFilter *in) : QDialog(parent)
 {
-    uint32_t width,height;
-    ui.setupUi(this);    
+    ui.setupUi(this);
     lock=0;
     // Allocate space for green-ised video
-    width=in->getInfo()->width;
-    height=in->getInfo()->height;
+    inputWidth = in->getInfo()->width;
+    inputHeight = in->getInfo()->height;
 
-    canvas=new ADM_QCanvas(ui.graphicsView,width,height);
-    
-    myBlacken=new flyBlacken( this,width, height,in,canvas,ui.horizontalSlider);
+    canvas = new ADM_QCanvas(ui.graphicsView,inputWidth,inputHeight);
+    myBlacken = new flyBlacken( this,inputWidth,inputHeight,in,canvas,ui.horizontalSlider);
+
     myBlacken->left=param->left&0xffffe;
     myBlacken->right=param->right&0xffffe;
     myBlacken->top=param->top&0xffffe;
@@ -55,7 +54,7 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
         qset = NULL;
     }
 
-    myBlacken->rubber->nestedIgnore=1;
+    //myBlacken->rubber->nestedIgnore=1;
     myBlacken->rubber_is_hidden = rubberIsHidden;
     ui.checkBoxRubber->setChecked(myBlacken->rubber_is_hidden);
 
@@ -128,8 +127,7 @@ void Ui_blackenWindow::toggleRubber(int checkState)
     bool visible=true;
     if(checkState)
         visible=false;
-    myBlacken->rubber->rubberband->setVisible(visible);
-    myBlacken->rubber_is_hidden=!visible;
+    myBlacken->hideRubber(!visible);
 }
 /**
  * \fn valueChanged
@@ -138,10 +136,10 @@ void Ui_blackenWindow::valueChanged( int f )
 {
     if(lock) return;
     lock++;
-    myBlacken->rubber->nestedIgnore++;
+    myBlacken->lockRubber(true);
     myBlacken->download();
     myBlacken->sameImage();
-    myBlacken->rubber->nestedIgnore--;
+    myBlacken->lockRubber(false);
     lock--;
 }
 /**
@@ -169,17 +167,17 @@ void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
     myBlacken->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myBlacken->adjustCanvasPosition();
-    
-     int x=(int)((double)myBlacken->left*myBlacken->_zoom);
-    int y=(int)((double)myBlacken->top*myBlacken->_zoom);
-    int w=(int)((double)(myBlacken->_w-(myBlacken->left+myBlacken->right))*myBlacken->_zoom);
-    int h=(int)((double)(myBlacken->_h-(myBlacken->top+myBlacken->bottom))*myBlacken->_zoom);
+
+    float zoom = myBlacken->getZoomValue();
+    int x = zoom * myBlacken->left;
+    int y = zoom * myBlacken->top;
+    int w = zoom * (inputWidth-(myBlacken->left+myBlacken->right));
+    int h = zoom * (inputHeight-(myBlacken->top+myBlacken->bottom));
 
     myBlacken->blockChanges(true);
-    myBlacken->rubber->nestedIgnore++;
-    myBlacken->rubber->move(x,y);
-    myBlacken->rubber->resize(w,h);
-    myBlacken->rubber->nestedIgnore--;
+    myBlacken->lockRubber(true);
+    myBlacken->adjustRubber(x,y,w,h);
+    myBlacken->lockRubber(false);
     myBlacken->blockChanges(false);
 }
 /**
@@ -187,16 +185,25 @@ void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
  */
 void Ui_blackenWindow::showEvent(QShowEvent *event)
 {
-    myBlacken->rubber->rubberband->show(); // must be called first
+    myBlacken->initRubber(); // must be called first
     QDialog::showEvent(event);
     myBlacken->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
-    myBlacken->rubber->nestedIgnore=0;
-    if(myBlacken->rubber_is_hidden)
-        myBlacken->rubber->rubberband->hide();
 }
 
 //************************
+/**
+ * \fn blockChanges
+ * @param block
+ * @return
+ */
+#define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x;rubber->x;}
+bool flyBlacken::blockChanges(bool block)
+{
+    Ui_blackenDialog *w=(Ui_blackenDialog *)_cookie;
+    APPLY_TO_ALL(blockSignals(block));
+    return true;
+}
 uint8_t flyBlacken::upload(bool redraw, bool toRubber)
 {
 Ui_blackenDialog *w=(Ui_blackenDialog *)_cookie;
@@ -214,8 +221,7 @@ Ui_blackenDialog *w=(Ui_blackenDialog *)_cookie;
     if(toRubber)
     {
         rubber->nestedIgnore++;
-        rubber->move(_zoom*(float)left,_zoom*(float)top);
-        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+        adjustRubber(_zoom * left, _zoom * top, _zoom * (_w-left-right), _zoom * (_h-top-bottom));
         rubber->nestedIgnore--;
     }
     if(!redraw)
@@ -253,8 +259,7 @@ uint8_t flyBlacken::download(void)
            {
                blockChanges(true);
                rubber->nestedIgnore++;
-               rubber->move(_zoom*(float)left,_zoom*(float)top);
-               rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+               adjustRubber(_zoom * left, _zoom * top, _zoom * (_w-left-right), _zoom * (_h-top-bottom));
                rubber->nestedIgnore--;
                blockChanges(false);
            }        
