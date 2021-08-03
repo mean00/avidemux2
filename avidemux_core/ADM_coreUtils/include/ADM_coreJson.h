@@ -26,11 +26,10 @@
 class ADM_COREUTILS6_EXPORT admJson
 {
 protected:
-       
-         vector <void *>cookies;
-         vector <string >nested;
-         void *cookie;
-        const char *locale;
+        vector <void *>cookies;
+        vector <string >nested;
+        void *cookie;
+        char *locale;
 public:
             admJson();
             ~admJson();
@@ -46,12 +45,8 @@ public:
         bool addNode(const char *nodeName);
         bool endNode(void);
 
-        
-
         bool dumpToFile(const char *file);
 
-      
-      
 };
 /**
     \class admJsonToCouple
