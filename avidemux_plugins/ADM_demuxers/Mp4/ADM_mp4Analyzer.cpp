@@ -1327,7 +1327,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
 
                         case TRACK_AUDIO:
                         {
-                            uint32_t channels,bpp,encoding,fq,packSize;
+                            uint32_t channels,bpp,fq,packSize;
                             uint32_t lpcmFlags = 0;
 
                             // Put some defaults
@@ -1441,7 +1441,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     break;
                                 }
                             } // atomVersion
-                            printf("[STSD] chan:%u bpp:%u encoding:%u fq:%u (left %u)\n",channels,bpp,encoding,fq,left);
+                            printf("[STSD] chan:%u bpp:%u fq:%u (left %u)\n",channels,bpp,fq,left);
 #define audioCodec(x) ADIO.encoding=WAV_##x;
                             switch(entryName)
                             {
