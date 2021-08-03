@@ -104,7 +104,12 @@ UNUSED_ARG(setup);
         configuration.roundup=0;
     }
     resizer=NULL;
-	reset(configuration.width,configuration.height,configuration.algo);
+    if(configuration.algo > 4)
+    {
+        ADM_warning("Invalid algo value %u, using default = 1\n",configuration.algo);
+        configuration.algo = 1;
+    }
+    reset(configuration.width,configuration.height,configuration.algo);
 }
 /**
     \fn swScaleResizeFilter

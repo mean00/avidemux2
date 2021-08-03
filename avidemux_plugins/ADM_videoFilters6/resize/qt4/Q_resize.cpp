@@ -66,7 +66,20 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     }
 
     ui.lockArCheckBox->setChecked(_param->rsz.lockAR);
-    ui.comboBoxRoundup->setCurrentIndex(_param->rsz.roundup);
+
+#define STR(x) #x
+#define MKSTRING(x) STR(x)
+#define CHECK_COMBO(x,y,z) if(_param->rsz.x>=ui.comboBox##y->count()) \
+    { \
+        ADM_warning("Invalid " MKSTRING(x) " index %d, using default = %d\n",_param->rsz.x,z); \
+        _param->rsz.x = z; \
+    } \
+    ui.comboBox##y->setCurrentIndex(_param->rsz.x);
+    CHECK_COMBO(roundup,Roundup,0)
+    CHECK_COMBO(algo,Algo,1) // bicubic
+    CHECK_COMBO(sourceAR,Source,0)
+    CHECK_COMBO(targetAR,Destination,0)
+#undef CHECK_COMBO
 
     ui.spinBoxWidth->setKeyboardTracking(false);
     ui.spinBoxHeight->setKeyboardTracking(false);
@@ -75,9 +88,6 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     ui.spinBoxWidth->setValue(_param->rsz.width & 0xfffffe);
     ui.spinBoxHeight->setValue(_param->rsz.height & 0xfffffe);
     ui.horizontalSlider->setValue(100);
-    ui.comboBoxAlgo->setCurrentIndex(_param->rsz.algo);
-    ui.comboBoxSource->setCurrentIndex(_param->rsz.sourceAR);
-    ui.comboBoxDestination->setCurrentIndex(_param->rsz.targetAR);
     if(_param->rsz.lockAR)
         updateWidthHeightSpinners();
     enableControls(_param->rsz.lockAR);
