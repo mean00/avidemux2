@@ -546,25 +546,20 @@ void GUI_PrevCutPoint()
             admPreview::deferDisplay(false);
             return;
         }
-        while (admPreview::nextPicture())
-        {
-            tmp = admPreview::getCurrentPts();
-            if (!tmp || tmp == ADM_NO_PTS)
-            { // should never happen, try not to crash in admPreview::samePicture
-                video_body->rewind();
-                break;
-            }
-            if (tmp >= last_prev_pts) // we've crossed the segment boundary
-                break;
-        }
     } else // no keyframe before the cut point
     {
         video_body->rewind();
-        while (admPreview::nextPicture())
-        {
-            if (admPreview::getCurrentPts() >= last_prev_pts)
-                break;
+    }
+    while (admPreview::nextPicture())
+    {
+        tmp = admPreview::getCurrentPts();
+        if (!tmp || tmp == ADM_NO_PTS)
+        { // should never happen, try not to crash in admPreview::samePicture
+            video_body->rewind();
+            break;
         }
+        if (tmp >= last_prev_pts) // we've crossed the segment boundary
+            break;
     }
     admPreview::deferDisplay(false);
     admPreview::samePicture();
@@ -620,25 +615,20 @@ void GUI_NextCutPoint()
             admPreview::deferDisplay(false);
             return;
         }
-        while (admPreview::nextPicture())
-        {
-            tmp = admPreview::getCurrentPts();
-            if (!tmp || tmp == ADM_NO_PTS)
-            { // should never happen, try not to crash in admPreview::samePicture
-                video_body->rewind();
-                break;
-            }
-            if (tmp >= first_next_pts) // we've crossed the segment boundary
-                break;
-        }
     } else // no keyframe before the cut point
     {
         video_body->rewind();
-        while (admPreview::nextPicture())
-        {
-            if (admPreview::getCurrentPts() >= first_next_pts)
-                break;
+    }
+    while (admPreview::nextPicture())
+    {
+        tmp = admPreview::getCurrentPts();
+        if (!tmp || tmp == ADM_NO_PTS)
+        { // should never happen, try not to crash in admPreview::samePicture
+            video_body->rewind();
+            break;
         }
+        if (tmp >= first_next_pts) // we've crossed the segment boundary
+            break;
     }
     admPreview::deferDisplay(false);
     admPreview::samePicture();
