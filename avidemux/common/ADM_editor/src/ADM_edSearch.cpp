@@ -542,6 +542,7 @@ uint64_t ADM_Composer::getFirstFrameInSegmentPts(uint32_t segment)
         return ADM_NO_PTS;
 #define MAX_REF_FRAMES (32) /* 16 max ref frames for H.264 * 2 fields */
     frame = (frame > MAX_REF_FRAMES)? frame - MAX_REF_FRAMES : 0;
+    int depth = MAX_REF_FRAMES;
     uint64_t candidate = ADM_NO_PTS;
     for(int i=frame; i < v->_nb_video_frames; i++)
     {
@@ -549,8 +550,14 @@ uint64_t ADM_Composer::getFirstFrameInSegmentPts(uint32_t segment)
         h->getPtsDts(i,&pts,&dts);
         if(pts == ADM_NO_PTS)
             continue;
-        if(pts >= start)
+        if(pts == start) // perfect match
+            return s->_startTimeUs;
+
+        if(pts > start)
         {
+            if(depth < 0)
+                break;
+            depth--;
             pts += s->_startTimeUs;
             pts -= start;
             if(pts >= s->_startTimeUs + s->_durationUs)
