@@ -37,6 +37,7 @@ typedef const char       *(ADM_vf_GetString)(void);
 typedef VF_CATEGORY       (ADM_vf_getCategory)(void);
 typedef void              (ADM_vf_getDefaultConfiguration)(CONFcouple **c);
 typedef bool              (ADM_vf_partializable)(void);
+typedef bool              (ADM_vf_bwrdCompatMapper)(std::string &oldname, CONFcouple **c);
 
 /**
  *  \class ADM_vf_plugin
@@ -56,6 +57,7 @@ class ADM_vf_plugin : public ADM_LibWrapper
         ADM_vf_GetString            *getDisplayName;
         ADM_vf_getCategory          *getCategory;
         ADM_vf_partializable        *partializable;
+        ADM_vf_bwrdCompatMapper     *redirector;
 
         const char                  *nameOfLibrary;
         VF_FILTERS                  tag;
@@ -117,7 +119,11 @@ class ADM_vf_plugin : public ADM_LibWrapper
     }\
     }
 
-    
-#define DECLARE_VIDEO_FILTER(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc) DECLARE_VIDEO_FILTER_INTERNAL(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc,false) 
-#define DECLARE_VIDEO_FILTER_PARTIALIZABLE(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc) DECLARE_VIDEO_FILTER_INTERNAL(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc,true) 
-    
+#define NOREDIRECTOR \
+extern "C" { \
+    ADM_PLUGIN_EXPORT bool redirector(std::string &oldname, CONFcouple **c) { return false; } \
+}
+#define DECLARE_VIDEO_FILTER(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc) \
+    DECLARE_VIDEO_FILTER_INTERNAL(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc,false) NOREDIRECTOR
+#define DECLARE_VIDEO_FILTER_PARTIALIZABLE(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc) \
+    DECLARE_VIDEO_FILTER_INTERNAL(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc,true) NOREDIRECTOR

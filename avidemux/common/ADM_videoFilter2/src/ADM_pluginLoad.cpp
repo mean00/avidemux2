@@ -43,7 +43,7 @@ extern ADM_vf_plugin *getFakePartialPlugin();
 
 ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 {
-	initialised = (loadLibrary(file) && getSymbols(11,
+	initialised = (loadLibrary(file) && getSymbols(12,
 		&create, "create",
 		&destroy, "destroy",
 		&getApiVersion, "getApiVersion",
@@ -54,7 +54,8 @@ ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 		&getInternalName, "getInternalName",
 		&getDisplayName, "getDisplayName",
         &getCategory,"getCategory",
-        &partializable,"partializable"
+        &partializable,"partializable",
+        &redirector,"redirector"
         ));
 };
 
@@ -320,7 +321,6 @@ static ADM_vf_plugin *ADM_vf_getPluginFromInternalName(const char *name)
         }
     }
     ADM_error("Cannot get video filter from name <%s>\n",name);
-    ADM_assert(0);
     return NULL;
 }
 /**
@@ -330,6 +330,7 @@ static ADM_vf_plugin *ADM_vf_getPluginFromInternalName(const char *name)
 const char *ADM_vf_getDisplayNameFromTag(uint32_t tag)
 {
     ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+    if(!plugin) return NULL;
     return plugin->info.displayName;
 }
 /**
@@ -338,6 +339,7 @@ const char *ADM_vf_getDisplayNameFromTag(uint32_t tag)
 VF_CATEGORY ADM_vf_getFilterCategoryFromTag(uint32_t tag)
 {
     ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+    if(!plugin) return VF_INVALID;
     return plugin->info.category;
 }
 
@@ -347,26 +349,43 @@ VF_CATEGORY ADM_vf_getFilterCategoryFromTag(uint32_t tag)
 */
 const char *ADM_vf_getInternalNameFromTag(uint32_t tag)
 {
-  ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
-  return plugin->getInternalName();
+    ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+    if(!plugin) return NULL;
+    return plugin->getInternalName();
 }
 /**
     \fn ADM_vf_getTagFromInternalName
-    \brief
 */
-uint32_t    ADM_vf_getTagFromInternalName(const char *name)
+uint32_t ADM_vf_getTagFromInternalName(const char *name)
 {
     ADM_vf_plugin *plg=ADM_vf_getPluginFromInternalName(name);
+    if(!plg) return -1;
     return plg->tag;
-
 }
+/**
+    \fn ADM_vf_canBePartialized
+*/
 bool ADM_vf_canBePartialized(uint32_t tag)
 {
-  ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
-  if(!plugin->partializable)
-        return false;
-  return plugin->partializable();
-
+    ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+    if(!plugin) return false;
+    return plugin->partializable();
 }
-
+/**
+    \fn ADM_vf_findCompatibleFilter
+*/
+bool ADM_vf_findCompatibleFilter(std::string &name, CONFcouple **c)
+{
+    for(int cat=0;cat<VF_HIDDEN;cat++)
+    {
+        int nb = ADM_videoFilterPluginsList[cat].size();
+        for(int i=0;i<nb;i++)
+        {
+            ADM_vf_plugin *a = ADM_videoFilterPluginsList[cat][i];
+            if(a->redirector(name,c))
+                return true;
+        }
+    }
+    return false;
+}
 //EOF

@@ -16,34 +16,30 @@
  ***************************************************************************/
 #include "ADM_cpp.h"
 #include "ADM_default.h"
-#include "A_functions.h"
-#include "ADM_audioFilterInterface.h"
-#include "audioEncoderApi.h"
-#include "ADM_muxerProto.h"
-#include "GUI_ui.h"
-#include "avi_vars.h"
-
-#include <fcntl.h>
-#include <errno.h>
 
 #include "fourcc.h"
 #include "ADM_edit.hxx"
 #include "ADM_edAudioTrackFromVideo.h"
-#include "DIA_coreToolkit.h"
-#include "prefs.h"
-
-
-//#include "ADM_outputfmt.h"
-#include "ADM_edPtsDts.h"
-#include "ADM_vidMisc.h"
-#include "ADM_confCouple.h"
-#include "ADM_videoFilters.h"
-#include "ADM_videoEncoderApi.h"
-#include "ADM_videoFilterApi.h"
-#include "ADM_preview.h"
 #include "ADM_edAudioTrackExternal.h"
+
+#include "ADM_confCouple.h"
+
+#include "ADM_filterCategory.h"
 #include "ADM_coreVideoFilterFunc.h"
-#include "ADM_coreVideoFilterFunc.h"
+#include "ADM_videoFilters.h"
+#include "ADM_videoFilterApi.h"
+
+#include "ADM_audioFilterInterface.h"
+
+#include "ADM_videoEncoderApi.h"
+#include "audioEncoderApi.h"
+
+#include "ADM_muxerProto.h"
+
+#include "A_functions.h"
+#include "GUI_ui.h"
+#include "avi_vars.h"
+#include "ADM_preview.h"
 
 #include "gtkgui.h"
 #include "prototype.h"
@@ -146,18 +142,41 @@ int ADM_Composer::changeVideoParam(const char *codec, CONFcouple *c)
 }
 int ADM_Composer::addVideoFilter(const char *filter, CONFcouple *c)
 {
-	uint32_t filterTag = ADM_vf_getTagFromInternalName(filter);
+    uint32_t filterTag = ADM_vf_getTagFromInternalName(filter);
 
-	printf("Adding Filter %s -> %" PRIu32"... \n", filter, filterTag);
+    std::string name = filter;
 
-	bool r = (ADM_vf_addFilterFromTag(this, filterTag, c, false) != NULL);
+    if (filterTag == VF_INVALID_FILTER)
+    {
+        if (false == ADM_vf_findCompatibleFilter(name, &c))
+        {
+            delete c;
+            c = NULL;
+            return 0;
+        }
+        // retry
+        filterTag = ADM_vf_getTagFromInternalName(name.c_str());
+        if (filterTag == VF_INVALID_FILTER)
+        {
+            ADM_warning("Cannot get valid tag for \"%s\".\n", name.c_str());
+            delete c;
+            c = NULL;
+            return 0;
+        }
+    }
+    ADM_info("Internal filter name \"%s\" matched to tag %" PRIu32"\n", name.c_str(), filterTag);
 
-	if (c)
-	{
-		delete c;
-	}
+    bool r = (ADM_vf_addFilterFromTag(this, filterTag, c, false) != NULL);
 
-	return r;
+    delete c;
+    c = NULL;
+
+    if (r)
+        ADM_info("Filter \"%s\" added.\n", name.c_str());
+    else
+        ADM_warning("Cannot add filter \"%s\".\n", name.c_str());
+
+    return r;
 }
 
 char *ADM_Composer::getVideoCodec(void)

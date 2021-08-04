@@ -153,11 +153,16 @@ ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag, ADM_coreVideoFilter *las
 */
 ADM_VideoFilterElement* ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, bool configure)
 {
+    if (tag == VF_INVALID_FILTER)
+        return NULL;
+
     ADM_info("Creating video filter using tag %" PRIu32" \n", tag);
     // Fetch the descriptor...
 
     ADM_coreVideoFilter *last = ADM_vf_getLastVideoFilter(editor);
     ADM_coreVideoFilter *nw = ADM_vf_createFromTag(tag, last, c);
+
+    if (!nw) return NULL;
 
     if (configure && nw->configure() == false)
     {
@@ -182,6 +187,9 @@ ADM_VideoFilterElement* ADM_vf_insertFilterFromTag(IEditor *editor, uint32_t tag
 
     ADM_coreVideoFilter *last = ADM_vf_getLastVideoFilter(editor);
     ADM_coreVideoFilter *nw = ADM_vf_createFromTag(tag, last, c);
+
+    if (!nw) return NULL;
+
     ADM_VideoFilterElement e;
 
     e.tag = tag;

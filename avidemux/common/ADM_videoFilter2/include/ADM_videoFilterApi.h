@@ -32,6 +32,6 @@ bool        ADM_vf_addFilter(uint32_t tag,CONFcouple *couples);
 VF_CATEGORY ADM_vf_getFilterCategoryFromTag(uint32_t tag);
 
 bool        ADM_vf_canBePartialized(uint32_t tag);
-
+bool        ADM_vf_findCompatibleFilter(std::string &name, CONFcouple **c);
 
 #endif //ADM_VIDEO_FILTER_API_H
