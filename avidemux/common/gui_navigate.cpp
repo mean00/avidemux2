@@ -588,7 +588,7 @@ void GUI_NextCutPoint()
 
     uint64_t pts=admPreview::getCurrentPts();
     uint64_t first_next_pts=ADM_NO_PTS;
-    int numOfSegs = video_body->getNbSegment();
+    int segNo, numOfSegs = video_body->getNbSegment();
     for(int i=1; i<numOfSegs; i++)
     {
         _SEGMENT * seg = video_body->getSegment(i);
@@ -597,6 +597,7 @@ void GUI_NextCutPoint()
             if (seg->_startTimeUs > pts)
             {
                 first_next_pts = seg->_startTimeUs;
+                segNo = i;
                 break;
             }
         }
@@ -605,9 +606,18 @@ void GUI_NextCutPoint()
     if (first_next_pts == ADM_NO_PTS)
         return;
 
-    ADM_info("Seek to cut point:%s ms \n",ADM_us2plain(first_next_pts));
+    ADM_info("Seeking to cut point at %s ms\n",ADM_us2plain(first_next_pts));
+
+    // Can we use the fast lane?
+    uint64_t tmp = video_body->getFirstFrameInSegmentPts(segNo);
+    if(tmp != ADM_NO_PTS && admPreview::seekToTime(tmp))
+    {
+        GUI_setCurrentFrameAndTime();
+        return;
+    }
+
     // Does the start time of the segment match a keyframe?
-    uint64_t tmp = first_next_pts + 1;
+    tmp = first_next_pts + 1;
     bool gotPreviousKeyFrame = video_body->getPKFramePTS(&tmp);
     if (gotPreviousKeyFrame && tmp == first_next_pts)
     {
@@ -615,8 +625,9 @@ void GUI_NextCutPoint()
             GUI_setCurrentFrameAndTime();
         return;
     }
-    // Nope, seek to the previous keyframe if it is after the current position
-    // and decode from there until we have crossed the segment boundary.
+    // Nope, seek to the last keyframe before the cut point if it is after
+    // the current position and decode from there until we have crossed
+    // the segment boundary.
     admPreview::deferDisplay(true);
     if (gotPreviousKeyFrame && tmp > pts)
     {
