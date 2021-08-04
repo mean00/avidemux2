@@ -605,19 +605,16 @@ void GUI_NextCutPoint()
             GUI_setCurrentFrameAndTime();
         return;
     }
-    // Nope, seek to the previous keyframe and decode from there
-    // until we have crossed the segment boundary.
+    // Nope, seek to the previous keyframe if it is after the current position
+    // and decode from there until we have crossed the segment boundary.
     admPreview::deferDisplay(true);
-    if (gotPreviousKeyFrame)
+    if (gotPreviousKeyFrame && tmp > pts)
     {
         if (false == admPreview::seekToIntraPts(tmp))
         {
             admPreview::deferDisplay(false);
             return;
         }
-    } else // no keyframe before the cut point
-    {
-        video_body->rewind();
     }
     while (admPreview::nextPicture())
     {
