@@ -510,15 +510,17 @@ void GUI_PrevCutPoint()
 
     uint64_t pts=admPreview::getCurrentPts();
     uint64_t last_prev_pts=ADM_NO_PTS;
-    int numOfSegs = video_body->getNbSegment();
+    int segNo, numOfSegs = video_body->getNbSegment();
     for(int i=1; i<numOfSegs; i++) // we are not interested in the first segment
     {
         _SEGMENT * seg = video_body->getSegment(i);
         if (seg)
         {
             if (seg->_startTimeUs < pts)
+            {
                 last_prev_pts = seg->_startTimeUs;
-            else
+                segNo = i;
+            } else
                 break;
         }
     }
@@ -526,9 +528,17 @@ void GUI_PrevCutPoint()
     if (last_prev_pts == ADM_NO_PTS)
         return;
 
-    ADM_info("Seek to cut point:%s ms \n",ADM_us2plain(last_prev_pts));
+    ADM_info("Seeking to cut point at %s ms\n",ADM_us2plain(last_prev_pts));
+
+    // Can we use a fast lane?
+    uint64_t tmp = video_body->getFirstFrameInSegmentPts(segNo);
+    if(tmp != ADM_NO_PTS && admPreview::seekToTime(tmp))
+    {
+        GUI_setCurrentFrameAndTime();
+        return;
+    }
     // Does the start time of the segment match a keyframe?
-    uint64_t tmp = last_prev_pts + 1;
+    tmp = last_prev_pts + 1;
     bool gotPreviousKeyFrame = video_body->getPKFramePTS(&tmp);
     if (gotPreviousKeyFrame && tmp == last_prev_pts)
     {

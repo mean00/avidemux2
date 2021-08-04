@@ -521,4 +521,49 @@ uint64_t    ADM_Composer::getLastKeyFramePts(void)
     ADM_info("Cannot find lastKeyFrame with a valid PTS\n");
     return ADM_NO_PTS;
 }
+/**
+ * \fn getFirstFrameInSegmentPts
+ */
+uint64_t ADM_Composer::getFirstFrameInSegmentPts(uint32_t segment)
+{
+    if(segment >= _segments.getNbSegments())
+        return ADM_NO_PTS;
+
+    _SEGMENT *s = _segments.getSegment(segment);
+    ADM_assert(s);
+    _VIDEOS  *v = _segments.getRefVideo(s->_reference);
+    ADM_assert(v);
+    vidHeader *h = v->_aviheader;
+    ADM_assert(h);
+
+    int frame = 0;
+    uint64_t start = s->_refStartTimeUs;
+    if(!getFrameNumFromPtsOrBefore(v,start,frame))
+        return ADM_NO_PTS;
+#define MAX_REF_FRAMES (32) /* 16 max ref frames for H.264 * 2 fields */
+    frame = (frame > MAX_REF_FRAMES)? frame - MAX_REF_FRAMES : 0;
+    uint64_t candidate = ADM_NO_PTS;
+    for(int i=frame; i < v->_nb_video_frames; i++)
+    {
+        uint64_t pts,dts;
+        h->getPtsDts(i,&pts,&dts);
+        if(pts == ADM_NO_PTS)
+            continue;
+        if(pts >= start)
+        {
+            pts += s->_startTimeUs;
+            pts -= start;
+            if(pts >= s->_startTimeUs + s->_durationUs)
+                continue;
+            if(candidate == ADM_NO_PTS)
+            {
+                candidate = pts;
+                continue;
+            }
+            if(candidate > pts)
+                candidate = pts;
+        }
+    }
+    return candidate;
+}
 //EOF
