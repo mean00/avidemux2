@@ -27,14 +27,20 @@ extern uint8_t DIA_getFlip(flip *param, ADM_coreVideoFilter *in);
 
 // Add the hook to make it valid plugin
 //DECLARE_VIDEO_FILTER(   ADMVideoFlip,   // Class
-DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoFlip,   // Class
-                                      1,0,0,              // Version
-                                      ADM_UI_TYPE_BUILD,         // UI
-                                      VF_TRANSFORM,            // Category
-                                      "flip",            // internal name (must be uniq!)
-                                      QT_TRANSLATE_NOOP("flip","Flip"),            // Display name
-                                      QT_TRANSLATE_NOOP("flip","Vertically/Horizontally flip the image.") // Description
-                                  );
+DECLARE_VIDEO_FILTER_INTERNAL(
+    ADMVideoFlip, // Class
+    1,0,0, // Version
+    ADM_UI_TYPE_BUILD, // UI
+    VF_TRANSFORM, // Category
+    "flip", // internal name (must be uniq!)
+    QT_TRANSLATE_NOOP("flip","Flip"), // Display name
+    QT_TRANSLATE_NOOP("flip","Vertically/Horizontally flip the image."), // Description
+    true // Partializable
+);
+extern "C"
+{
+    ADM_PLUGIN_EXPORT bool redirector(std::string &name, CONFcouple **c);
+}
 
 /**
     \fn FlipProcess_C
@@ -173,3 +179,21 @@ bool ADMVideoFlip::getNextFrame(uint32_t *fn,ADMImage *image)
     return 1;
 }
 
+/**
+    \fn redirector
+    \brief Make old scripts referencing obsolete hflip and vflip filters work.
+*/
+bool redirector(std::string &name, CONFcouple **c)
+{
+    if(!strcmp(name.c_str(),"hflip") || !strcmp(name.c_str(),"vflip"))
+    {
+        const char *alias = "flip";
+        ADM_info("Redirecting \"%s\" to \"%s\"\n",name.c_str(),alias);
+        delete *c;
+        const char *a = (!strcmp(name.c_str(),"vflip"))? "flipdir=1" : "flipdir=0";
+        stringsToConfCouple(1,c,&a); // failsafe
+        name = alias;
+        return true;
+    }
+    return false;
+}
