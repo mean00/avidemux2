@@ -1357,6 +1357,8 @@ bool A_checkSavedSession(bool load)
         {
             ADM_info("Restoring the last editing state from %s\n",where.c_str());
             r=A_parseScript(engine,where.c_str());
+            video_body->rewind();
+            admPreview::samePicture();
             A_Resync();
             if(!ADM_eraseFile(where.c_str()))
                 ADM_warning("Could not delete %s\n",where.c_str());
@@ -1927,10 +1929,12 @@ void A_Rewind(void)
 {
                admPreview::stop();
                video_body->rewind();
+#if 0 /* Should not be needed anymore after ADM_Composer::DecodePictureUpToIntra has been fixed. */
                video_body->rewind(); // do it twice, for interlaced content it may fail the 1st time
+#endif
                admPreview::start();
                admPreview::samePicture();
-               admPreview::samePicture();
+               //admPreview::samePicture();
                GUI_setCurrentFrameAndTime();
 }
 void brokenAct(void)
