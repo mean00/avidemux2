@@ -30,6 +30,15 @@ ADM_mwNavSlider::ADM_mwNavSlider(QWidget *parent) : ADM_QSlider(parent)
     numOfSegments = 0;
 }
 /**
+    \fn dtor
+*/
+ADM_mwNavSlider::~ADM_mwNavSlider()
+{
+    if (segments)
+        delete [] segments;
+    segments = NULL;
+}
+/**
     \fn paintEvent
 */
 void ADM_mwNavSlider::paintEvent(QPaintEvent *event)

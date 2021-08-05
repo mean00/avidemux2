@@ -29,6 +29,7 @@ protected:
 
 public:
     ADM_mwNavSlider(QWidget *parent);
+    virtual ~ADM_mwNavSlider();
 
     void setMarkerA(uint64_t frameIndex);
     void setMarkerB(uint64_t frameIndex);
