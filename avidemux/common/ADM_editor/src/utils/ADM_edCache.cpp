@@ -31,6 +31,7 @@
 */
 EditorCache::EditorCache(uint32_t w, uint32_t h)
 {
+    readIndex = writeIndex = 0;
     commonWidth = w;
     commonHeight = h;
     for(uint32_t i=0; i < EDITOR_CACHE_MAX_SIZE; i++)
