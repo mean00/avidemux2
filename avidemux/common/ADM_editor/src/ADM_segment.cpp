@@ -489,7 +489,7 @@ bool         ADM_EditorSegment::updateStartTime(void)
         demuxer->getVideoInfo(&info);
 
         uint64_t pts,dts;
-        pts=seg->_refStartTimeUs;
+        const uint64_t compare = pts = seg->_refStartDts = seg->_refStartTimeUs;
         // Skip to the first keyframe
         uint32_t frame,flags;
         bool found = false;
@@ -509,19 +509,54 @@ bool         ADM_EditorSegment::updateStartTime(void)
         }
         // Special case : If pts=0 it might mean beginning of seg i, but the PTS might be not 0
         // in such a case the DTS is wrong
-        if(!pts)
+        uint64_t pts2,dts2,start = pts;
+        // We need to ensure that start time in ref matches a frame exactly
+        int depth = 32; // H.264 max ref frames * 2 fields
+        uint64_t candidate = ADM_NO_PTS;
+        for(uint32_t i = frame; i < info.nb_frames; i++)
         {
-            uint64_t pts2,dts2;
-            demuxer->getPtsDts(frame,&pts2,&dts2);
-            if(pts2 && pts2!=ADM_NO_PTS)
+            demuxer->getPtsDts(i,&pts2,&dts2);
+            if(pts2 == ADM_NO_PTS)
+                continue;
+            if(i == frame)
             {
-                ADM_info("Using pts2=%s to get dts, as this video does not start at zero\n",ADM_us2plain(pts2));
-                pts=pts2;
+                start = pts2;
+                if(pts < start)
+                {
+                    pts = start;
+                    break;
+                }
             }
-
+            if(pts2 < start)
+                continue;
+            if(pts2 == pts)
+            {
+                candidate = ADM_NO_PTS;
+                break;
+            }
+            if(pts2 > pts)
+            {
+                if(candidate == ADM_NO_PTS)
+                {
+                    candidate = pts2;
+                    continue;
+                }
+                if(pts2 < candidate)
+                    candidate = pts2;
+                if(depth-- < 0) break;
+            }
         }
-        dtsFromPts(seg->_reference,pts,&dts);
-        seg->_refStartDts=dts;
+        if(candidate != ADM_NO_PTS)
+            pts = candidate;
+        if(pts != compare)
+        {
+            char *old = ADM_strdup(ADM_us2plain(compare));
+            ADM_warning("Updating start time in ref from %s to %s\n",old,ADM_us2plain(pts));
+            ADM_dealloc(old);
+        }
+        seg->_refStartTimeUs = pts;
+        if(dtsFromPts(seg->_reference,pts,&dts))
+            seg->_refStartDts = dts;
     }
 
     return true;
