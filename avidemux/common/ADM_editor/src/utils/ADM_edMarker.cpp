@@ -43,6 +43,12 @@ bool        ADM_Composer::setMarkerAPts(uint64_t pts)
 {
     if(pts!=markerAPts)
     {
+        uint64_t max = getVideoDuration();
+        if(pts > max)
+        {
+            ADM_warning("Marker A value %" PRIu64" out of bounds, correcting.\n",pts);
+            pts = max;
+        }
         markerAPts=pts;
         ADM_info("Selection's start point set to %s (%" PRIu64" us)\n",ADM_us2plain(markerAPts),markerAPts);
     }
@@ -56,6 +62,12 @@ bool        ADM_Composer::setMarkerBPts(uint64_t pts)
 {
     if(pts!=markerBPts)
     {
+        uint64_t max = getVideoDuration();
+        if(pts > max)
+        {
+            ADM_warning("Marker B value %" PRIu64" out of bounds, correcting.\n",pts);
+            pts = max;
+        }
         markerBPts=pts;
         ADM_info("Selection's end point set to %s (%" PRIu64" us)\n",ADM_us2plain(markerBPts),markerBPts);
     }
