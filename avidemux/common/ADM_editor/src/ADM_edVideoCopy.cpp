@@ -1112,7 +1112,10 @@ ADM_cutPointType ADM_Composer::checkCutsAreOnIntra(uint64_t startTime,uint64_t e
 
     ADM_assert(segNo<nbSeg);
     int startSeg=segNo;
-    if(false==_segments.convertLinearTimeToSeg(endTime,&segNo,&segTime))
+    // end time greater or equal video duration means the last segment
+    if(endTime >= getVideoDuration())
+        segNo = nbSeg-1;
+    else if(false==_segments.convertLinearTimeToSeg(endTime,&segNo,&segTime))
         return ADM_EDITOR_CUT_POINT_UNCHECKED;
 
     if(segNo==startSeg) // within one and the same segment, check only that codec matches
