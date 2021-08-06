@@ -46,6 +46,9 @@ ADM_ffMpeg2Encoder::ADM_ffMpeg2Encoder(ADM_coreVideoFilter *src,bool globalHeade
 */
 bool ADM_ffMpeg2Encoder::configureContext(void)
 {
+    presetContext(&Settings);
+    _context->rc_max_rate = Mp2Settings.lavcSettings.maxBitrate * 1000;
+
     switch(Settings.params.mode)
     {
       case COMPRESS_2PASS:
@@ -62,12 +65,13 @@ bool ADM_ffMpeg2Encoder::configureContext(void)
             _context->bit_rate = 0;
             break;
       case COMPRESS_CBR:
-              _context->bit_rate=Settings.params.bitrate*1000; // kb->b;
+            _context->bit_rate =
+            _context->rc_max_rate =
+            _context->rc_min_rate = Settings.params.bitrate*1000; // kb->b;
             break;
      default:
             return false;
     }
-    presetContext(&Settings);
     if(Settings.lavcSettings.interlaced)
         _context->flags |= (AV_CODEC_FLAG_INTERLACED_DCT | AV_CODEC_FLAG_INTERLACED_ME);
     if(!Settings.lavcSettings.widescreen)
@@ -120,11 +124,9 @@ bool ADM_ffMpeg2Encoder::configureContext(void)
     _context->rc_buffer_size=Mp2Settings.lavcSettings.bufferSize*8*1024;
     //_context->rc_buffer_size_header=Mp2Settings.lavcSettings.bufferSize*8*1024; // needs patched avcodec.h
     _context->rc_initial_buffer_occupancy=_context->rc_buffer_size;
-    _context->rc_max_rate=Mp2Settings.lavcSettings.maxBitrate*1000;
     _context->bit_rate_tolerance=Mp2Settings.lavcSettings.vratetol*1000;
     //_context->rc_max_rate_header=Mp2Settings.lavcSettings.maxBitrate*1000; // needs patched avcodec.h
     // /Override some parameters specific to this codec
-    
     return true;
 }
 
