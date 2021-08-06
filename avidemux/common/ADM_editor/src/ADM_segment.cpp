@@ -471,14 +471,9 @@ bool         ADM_EditorSegment::updateStartTime(void)
 {
     int n=segments.size();
     if(!n) return true;
-    
-    uint64_t t=0;
-    for(int i=0;i<n;i++)
-    {
-        segments[i]._startTimeUs=t;
-        t+=segments[i]._durationUs;
-    }
-    // Now set the _refStartDts field
+
+    uint64_t cumulated = 0;
+
     for(int i=0;i<n;i++)
     {
         _VIDEOS *vid=getRefVideo(segments[i]._reference);
@@ -553,12 +548,22 @@ bool         ADM_EditorSegment::updateStartTime(void)
             char *old = ADM_strdup(ADM_us2plain(compare));
             ADM_warning("Updating start time in ref from %s to %s\n",old,ADM_us2plain(pts));
             ADM_dealloc(old);
+            // adjust duration
+            uint64_t delta = (pts > compare)? pts - compare : compare - pts;
+            if(pts > compare)
+                seg->_durationUs = (seg->_durationUs > delta)? seg->_durationUs - delta : 0;
+            else
+                seg->_durationUs += delta;
         }
+        // adjust start time in ref
         seg->_refStartTimeUs = pts;
+        // set linear start time
+        seg->_startTimeUs = cumulated;
+        cumulated += seg->_durationUs;
+        // set the _refStartDts field
         if(dtsFromPts(seg->_reference,pts,&dts))
             seg->_refStartDts = dts;
     }
-
     return true;
 }
 /**
