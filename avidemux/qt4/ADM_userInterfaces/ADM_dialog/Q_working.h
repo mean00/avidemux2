@@ -24,6 +24,7 @@ class workWindow : public QDialog
     
 public:
                         workWindow(QWidget *parent);
+                        ~workWindow();
     Ui_workingDialog    *ui;
     bool                active;
 public slots:
