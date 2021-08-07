@@ -33,6 +33,12 @@ workWindow::workWindow(QWidget *parent) : QDialog(parent)
 #endif
  }
 
+workWindow::~workWindow()
+{
+    delete ui;
+    ui = NULL;
+}
+
 void workWindow::reject(void)
 {
     ADM_info("Stop Request\n");
