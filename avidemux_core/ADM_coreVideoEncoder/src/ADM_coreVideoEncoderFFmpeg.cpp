@@ -93,7 +93,7 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
         }
 
         avcodec_close(_context);
-
+        av_freep(&_context->stats_in);
         av_free (_context);
         _context = NULL;
     }
