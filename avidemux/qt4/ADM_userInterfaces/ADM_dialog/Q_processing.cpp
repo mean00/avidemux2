@@ -144,6 +144,8 @@ bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
 DIA_processingQt4::~DIA_processingQt4()
 {
      qtUnregisterDialog(this);
+     delete ui;
+     ui = NULL;
 }
 
 
