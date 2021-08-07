@@ -220,6 +220,7 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
     // PlaceHolder...
     ADMCompressedImage img;
     img.data=compBuffer;
+    img.dataLength=0;
     img.cleanup(vid->lastSentFrame+1);
 
     ADM_assert(cache);
@@ -232,7 +233,6 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
     drain=vid->decoder->getDrainingState();
     if(!drain)
     {
-        img.dataLength=0;
         if(demuxer->getFrameSize(frame,&(img.dataLength)) && img.dataLength > ADM_COMPRESSED_MAX_DATA_LENGTH)
         {
             ADM_warning("Frame %" PRIu32" length %" PRIu32" exceeds max %" PRIu32", skipping it.\n",
