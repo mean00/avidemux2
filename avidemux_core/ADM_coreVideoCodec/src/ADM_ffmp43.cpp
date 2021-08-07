@@ -438,15 +438,15 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 
     out->_qStride = 0; // Default = no quant
 
-    if (ret && !hurryUp)
+    if (!_drain && ret && !hurryUp)
     {
         // Some encoder code a vop header with the
         // vop flag set to 0
         // it is meant to mean frame skipped but very dubious
 #define MPEG4_EMPTY_FRAME_THRESHOLD 19 // MAX_NVOP_SIZE
 #define FRAPS_EMPTY_FRAME_THRESHOLD  8 // assumption
-        if ((in->dataLength <= MPEG4_EMPTY_FRAME_THRESHOLD && codecId == AV_CODEC_ID_MPEG4) ||
-            (in->dataLength <= FRAPS_EMPTY_FRAME_THRESHOLD && codecId == AV_CODEC_ID_MPEG4))
+        if ((codecId == AV_CODEC_ID_MPEG4 && in->dataLength <= MPEG4_EMPTY_FRAME_THRESHOLD) ||
+            (codecId == AV_CODEC_ID_FRAPS && in->dataLength <= FRAPS_EMPTY_FRAME_THRESHOLD))
         {
             printf ("[lavc] Probably placeholder frame (data length: %u)\n",in->dataLength);
             out->Pts=ADM_NO_PTS; // not sure
