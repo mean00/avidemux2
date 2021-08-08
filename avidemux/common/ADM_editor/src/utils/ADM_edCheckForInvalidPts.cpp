@@ -154,7 +154,6 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
 
             bool interlaced = false; // when true and less than ~ 2/3 of frames produce pics => field-encoded
             uint64_t bfdelay = 0;
-            vid->lastSentFrame = 0;
             std::map<uint64_t,uint32_t>::iterator it = timing.begin();
 
             DIA_workingBase *decoding=createWorking(QT_TRANSLATE_NOOP("ADM_Composer","Decoding video..."));
@@ -267,7 +266,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
                 if(pts != ADM_NO_PTS && dts != ADM_NO_PTS && dts > pts && bfdelay < dts-pts)
                     bfdelay = dts-pts;
 #if 0
-                printf("adding entry %d for frame %u with PTS %s ",i,it->second,ADM_us2plain(pts));
+                printf("adding entry %d for frame %u with PTS %s ",frame,it->second,ADM_us2plain(pts));
                 printf("DTS %s\n",ADM_us2plain(dts));
 #endif
                 hdr->setPtsDts(it->second,pts,dts);
