@@ -1,3 +1,4 @@
+add_definitions("-std=c++11")
 include_directories(../include)
 SET(ADM_editor_SRCS
 ADM_edit.cpp
