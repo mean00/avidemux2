@@ -57,9 +57,12 @@ _hasSettings=false;
 
     image=new ADMImageDefault(w,h);
     _frame=av_frame_alloc();
+    ADM_assert(_frame);
     _frame->pts = AV_NOPTS_VALUE;
     _frame->width=w;
     _frame->height=h;
+    _pkt = av_packet_alloc();
+    ADM_assert(_pkt);
     rgbByteBuffer.setSize((w+7)*(h+7)*4);
     colorSpace=NULL;
     pass=0;
@@ -77,6 +80,7 @@ _hasSettings=false;
         encoderDelay=0;
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
     lastLavPts=0;
+    encoderState = ADM_ENCODER_STATE_FEEDING;
 }
 /**
     \fn ADM_coreVideoEncoderFFmpeg
@@ -195,10 +199,14 @@ uint64_t         ADM_coreVideoEncoderFFmpeg::lavToTiming(int64_t val)
 */
 bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 {
+    if(encoderState != ADM_ENCODER_STATE_FEEDING)
+        return false;
+
     uint32_t nb;
     if(source->getNextFrame(&nb,image)==false)
     {
-        printf("[ff] Cannot get next image\n");
+        ADM_warning("[ff] Cannot get next image\n");
+        encoderState = ADM_ENCODER_STATE_START_FLUSHING;
         return false;
     }
     prolog(image);
@@ -293,30 +301,54 @@ static int printLavError(int er)
  */
 int ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
 {
-    int r=avcodec_send_frame(_context,in);
-    if(r<0)
-        return printLavError(r);
-
-    AVPacket pkt;
-    av_init_packet(&pkt);
-
-    r=avcodec_receive_packet(_context,&pkt);
-    if(r==AVERROR(EAGAIN))
+    int r = 0;
+    switch(encoderState)
     {
-        ADM_info("Encoder needs more input to produce data.\n");
-        return 0;
+        case ADM_ENCODER_STATE_FEEDING:
+            r = avcodec_send_frame(_context,in);
+            break;
+        case ADM_ENCODER_STATE_START_FLUSHING:
+            r = avcodec_send_frame(_context,NULL);
+            encoderState = ADM_ENCODER_STATE_FLUSHING;
+            break;
+        case ADM_ENCODER_STATE_FLUSHING:
+            break;
+        case ADM_ENCODER_STATE_FLUSHED:
+            return 0;
+        default:
+            ADM_assert(0);
+            return 0;
     }
     if(r<0)
         return printLavError(r);
 
-    ADM_assert(out->bufferSize>=pkt.size);
-    memcpy(out->data,pkt.data,pkt.size);
-    lavPtsFromPacket = pkt.pts;
-    out->flags = (pkt.flags & AV_PKT_FLAG_KEY)? AVI_KEY_FRAME : AVI_P_FRAME;
+    r = avcodec_receive_packet(_context, _pkt);
+
+    if(r < 0)
+    {
+        av_packet_unref(_pkt);
+        if(r == AVERROR(EAGAIN))
+        {
+            ADM_info("Encoder needs more input to produce data.\n");
+            return 0;
+        }
+        if(r == AVERROR_EOF)
+        {
+            encoderState = ADM_ENCODER_STATE_FLUSHED;
+            ADM_info("End of stream.\n");
+            return 0;
+        }
+        return printLavError(r);
+    }
+
+    ADM_assert(out->bufferSize >= _pkt->size);
+    memcpy(out->data, _pkt->data, _pkt->size);
+    lavPtsFromPacket = _pkt->pts;
+    out->flags = (_pkt->flags & AV_PKT_FLAG_KEY)? AVI_KEY_FRAME : AVI_P_FRAME;
     out->out_quantizer = (int)floor(_frame->quality / (float) FF_QP2LAMBDA); // fallback
 
     int sideDataSize;
-    uint8_t *sideData = av_packet_get_side_data(&pkt, AV_PKT_DATA_QUALITY_STATS, &sideDataSize);
+    uint8_t *sideData = av_packet_get_side_data(_pkt, AV_PKT_DATA_QUALITY_STATS, &sideDataSize);
     if(sideData && sideDataSize > 5)
     {
         int quality = 0;
@@ -336,10 +368,10 @@ int ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
         }
         aprintf("[ADM_coreVideoEncoderFFmpeg::encodeWrapper] Out Quant : %d, pic type %d (%s), keyf %d\n",out->out_quantizer,pict_type,
                 (out->flags == AVI_P_FRAME)? "P" : (out->flags == AVI_B_FRAME)? "B" : (out->flags == AVI_KEY_FRAME)? "I" : "?",
-                (pkt.flags & AV_PKT_FLAG_KEY)? 1 : 0);
+                (_pkt->flags & AV_PKT_FLAG_KEY)? 1 : 0);
     }
-    r=pkt.size;
-    av_packet_unref(&pkt);
+    r = _pkt->size;
+    av_packet_unref(_pkt);
     return r;
 }
 /**

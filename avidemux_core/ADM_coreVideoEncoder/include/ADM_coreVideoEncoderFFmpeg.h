@@ -32,14 +32,22 @@
 class ADM_COREVIDEOENCODER6_EXPORT ADM_coreVideoEncoderFFmpeg :public ADM_coreVideoEncoder
 {
 protected:
+
+typedef enum {
+    ADM_ENCODER_STATE_FEEDING,
+    ADM_ENCODER_STATE_START_FLUSHING,
+    ADM_ENCODER_STATE_FLUSHING,
+    ADM_ENCODER_STATE_FLUSHED
+} ADM_encoderState;
+
                FFcodecSettings  Settings;
                AVCodecContext   *_context;      // Context
                AVDictionary     *_options;
                AVFrame          *_frame;
+               AVPacket         *_pkt;
                ADMColorScalerSimple    *colorSpace;    // Colorspace converter if needed
                ADM_byteBuffer   rgbByteBuffer;     // Buffer for colorspace converter if needed
                ADM_colorspace   targetColorSpace; // Wanted colorspace
-               bool             loadStatFile(const char *file);
                char             *statFileName;
                FILE             *statFile;
                int              pass;   // Pass number = 1 or 2, valid only if we use 2 pass mode
@@ -49,6 +57,10 @@ protected:
                bool             _hasSettings;
                int64_t          lastLavPts;
                int64_t          lavPtsFromPacket;
+               ADM_encoderState encoderState;
+
+               bool             loadStatFile(const char *file);
+
 
 protected:
                           int              encodeWrapper(AVFrame *in,ADMBitstream *out); // Returns encoded size of <0 for error
