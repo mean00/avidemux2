@@ -101,14 +101,16 @@ again:
     if(false==preEncode()) // Pop out the frames stored in the queue due to B-frames
     {
         sz=encodeWrapper(NULL,out);
-        if (sz<= 0)
+
+        if (sz == 0)
+            return false;
+        if (sz < 0)
         {
             ADM_info("[ffvtenc] Error %d encoding video\n",sz);
             return false;
         }
         ADM_info("[ffvtenc] Popping delayed bframes (%d)\n",sz);
         goto link;
-        return false;
     }
     q = image->_Qp;
 
