@@ -160,22 +160,27 @@ ADM_ffMpeg2Encoder::~ADM_ffMpeg2Encoder()
 bool         ADM_ffMpeg2Encoder::encode (ADMBitstream * out)
 {
 int sz,q;
-int gotData;
 int r;
 again:
     sz=0;
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
     {
         r=encodeWrapper(NULL,out);
+
+        if(encoderState == ADM_ENCODER_STATE_FLUSHED)
+        {
+            ADM_info("[ffMpeg2] End of stream.\n");
+            return false;
+        }
         if(r<0)
         {
             ADM_warning("[ffMpeg2] Error %d encoding video\n",r);
             return false;
         }
         sz=r;
+        if(!sz) return false;
         ADM_info("[ffMpeg2] Popping delayed bframes (%d)\n",sz);
         goto link;
-        return false;
     }
     q=image->_Qp;
     
@@ -216,6 +221,12 @@ again:
     _frame->interlaced_frame=Settings.lavcSettings.interlaced;
     _frame->top_field_first=!Settings.lavcSettings.bff;
     r=encodeWrapper(_frame,out);
+
+    if(encoderState == ADM_ENCODER_STATE_FLUSHED)
+    {
+        ADM_info("[ffMpeg2] End of stream.\n");
+        return false;
+    }
     if(r<0)
     {
         ADM_warning("[ffMpeg2] Error %d encoding video\n",r);
