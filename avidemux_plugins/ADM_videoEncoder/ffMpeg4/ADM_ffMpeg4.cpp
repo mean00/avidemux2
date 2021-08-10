@@ -100,21 +100,27 @@ ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
 */
 bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
 {
-int sz,q,r,gotData;
+int sz,q,r;
 again:
     sz=0;
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
     {
         r=encodeWrapper(NULL,out);
+
+        if(encoderState == ADM_ENCODER_STATE_FLUSHED)
+        {
+            ADM_info("[ffMpeg4] End of stream.\n");
+            return false;
+        }
         if(r<0)
         {
             ADM_warning("[ffMpeg4] Error %d encoding video\n",r);
             return false;
         }
         sz=r;
+        if(!sz) return false;
         printf("[ffmpeg4] Popping delayed bframes (%d)\n",sz);
         goto link;
-        return false;
     }
     q=image->_Qp;
 
@@ -153,6 +159,11 @@ again:
 
     _frame->reordered_opaque=image->Pts;
     r=encodeWrapper(_frame,out);
+    if(encoderState == ADM_ENCODER_STATE_FLUSHED)
+    {
+        ADM_info("[ffMpeg4] End of stream.\n");
+        return false;
+    }
     if(r<0)
     {
         ADM_warning("[ffMpeg4] Error %d encoding video\n",r);
