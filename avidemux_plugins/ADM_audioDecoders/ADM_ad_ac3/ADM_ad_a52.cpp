@@ -75,6 +75,10 @@ ADM_AudiocodecAC3::ADM_AudiocodecAC3( uint32_t fourcc, WAVHeader *info,uint32_t 
 		:   ADM_Audiocodec(fourcc,*info)
 {
     ADM_assert(fourcc==WAV_AC3);
+
+    UNUSED_ARG(extraLength);
+    UNUSED_ARG(extraData);
+
     ac3_handle=NULL;
     ac3_sample=NULL;
     channels=wavHeader.channels;
