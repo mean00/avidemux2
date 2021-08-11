@@ -64,6 +64,9 @@ DECLARE_AUDIO_DECODER(ADM_AudiocodecMP3,						// Class
 ADM_AudiocodecMP3::ADM_AudiocodecMP3( uint32_t fourcc,WAVHeader *info,uint32_t extraLength,uint8_t *extraData) 
         :   ADM_Audiocodec(fourcc,*info)
 {
+    UNUSED_ARG(extraLength);
+    UNUSED_ARG(extraData);
+
         if((fourcc!=WAV_MP3) && (fourcc!=WAV_MP2))
             ADM_assert(0); 
         if(fourcc==WAV_MP2) printf("Mpeg1/2 audio codec created\n");
@@ -87,8 +90,7 @@ ADM_AudiocodecMP3::~ADM_AudiocodecMP3( )
     ADM_dealloc(_stream);
     ADM_dealloc(_frame);
     ADM_dealloc(_synth);
-    _synth=_synth=_stream=NULL;
-    
+    _synth=_frame=_stream=NULL;
 }
 bool ADM_AudiocodecMP3::resetAfterSeek( void )
 {
@@ -106,7 +108,6 @@ bool ADM_AudiocodecMP3::resetAfterSeek( void )
 uint8_t ADM_AudiocodecMP3::run(uint8_t * inptr, uint32_t nbIn, float *outptr, uint32_t * nbOut)
 {
 int i;
-signed int Sample;
      *nbOut = 0;
      // Shrink ?
      if(ADM_MP3_BUFFER<=_tail+nbIn)
