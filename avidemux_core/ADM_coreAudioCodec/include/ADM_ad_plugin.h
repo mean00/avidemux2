@@ -48,7 +48,7 @@ typedef struct
 	}\
 	ADM_PLUGIN_EXPORT int supportedFormat(uint32_t audioFourcc) \
 	{ \
-		for(int i=0;i<sizeof(Formats)/sizeof(ad_supportedFormat);i++)\
+		for(uint32_t i=0;i<sizeof(Formats)/sizeof(ad_supportedFormat);i++)\
 			if(Formats[i].fourcc==audioFourcc) \
 				return Formats[i].priority; \
 		return 0; \

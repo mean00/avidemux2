@@ -121,7 +121,7 @@ class ADM_vf_plugin : public ADM_LibWrapper
 
 #define NOREDIRECTOR \
 extern "C" { \
-    ADM_PLUGIN_EXPORT bool redirector(std::string &oldname, CONFcouple **c) { return false; } \
+    ADM_PLUGIN_EXPORT bool redirector(std::string &oldname, CONFcouple **c) { UNUSED_ARG(oldname); UNUSED_ARG(c); return false; } \
 }
 #define DECLARE_VIDEO_FILTER(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc) \
     DECLARE_VIDEO_FILTER_INTERNAL(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc,false) NOREDIRECTOR

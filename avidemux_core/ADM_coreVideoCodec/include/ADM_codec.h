@@ -43,6 +43,11 @@ public:
   {
     _w = w;
     _h = h;
+
+    UNUSED_ARG(fcc);
+    UNUSED_ARG(extraDataLen);
+    UNUSED_ARG(extraData);
+    UNUSED_ARG(bpp);
   }
 
   virtual ~decoders() { }
@@ -54,7 +59,7 @@ public:
 
   virtual bool getConfiguration(CONFcouple **conf) { *conf = NULL; return true; }
   virtual bool resetConfiguration() { return true; }
-  virtual bool setConfiguration(CONFcouple * conf) { return true; }
+  virtual bool setConfiguration(CONFcouple * conf) { UNUSED_ARG(conf); return true; }
 
   // does this codec *possibly* can have b-frame ?
   virtual bool dontcopy (void)
@@ -82,12 +87,12 @@ public:
   {
     return false;
   }
-  virtual void setEndOfStream(bool reached) { };
+  virtual void setEndOfStream(bool reached) { UNUSED_ARG(reached); }
   virtual bool getDrainingState(void)
   {
     return 0;
   }
-  virtual void setDrainingState(bool drain) { };
+  virtual void setDrainingState(bool drain) { UNUSED_ARG(drain); }
   virtual bool flush(void)
     {
         return true;

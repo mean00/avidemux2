@@ -100,7 +100,7 @@ class ADM_AudiocodecUnknown : public     ADM_Audiocodec
 	public:
 		ADM_AudiocodecUnknown(uint32_t fourcc,const WAVHeader &info) : ADM_Audiocodec(fourcc,info) {}
 		~ADM_AudiocodecUnknown() {}
-		uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut) {*nbOut=0;return 0;}
+		uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut) { *nbOut=0; UNUSED_ARG(inptr); UNUSED_ARG(nbIn); UNUSED_ARG(outptr); return 0; }
 		uint8_t isCompressed(void) {return 1;}
         bool    isDummy(void) {return true;}
 };
