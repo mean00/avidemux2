@@ -47,8 +47,12 @@ bool ffPSConfigure(void)
         #define TX(x) &(psMuxerConfig.x)
 
 
-        diaMenuEntry format[]={{MUXER_VCD,"VCD"},{MUXER_SVCD,"SVCD"},{MUXER_DVD,"DVD"},    
-                                {MUXER_FREE,QT_TRANSLATE_NOOP("ffpsmuxer","Free")}};
+        diaMenuEntry format[]={
+            {MUXER_VCD,"VCD",NULL},
+            {MUXER_SVCD,"SVCD",NULL},
+            {MUXER_DVD,"DVD",NULL},
+            {MUXER_FREE,QT_TRANSLATE_NOOP("ffpsmuxer","Free"),NULL}
+        };
 
         diaElemMenu  menuFormat(TX(muxingType),QT_TRANSLATE_NOOP("ffpsmuxer","Muxing Format"),4,format,"");
         diaElemToggle alternate(&tolerance,QT_TRANSLATE_NOOP("ffpsmuxer","Allow non compliant stream"));

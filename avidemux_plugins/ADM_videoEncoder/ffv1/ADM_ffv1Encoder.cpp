@@ -121,23 +121,6 @@ bool ADM_ffv1Encoder::encode (ADMBitstream * out)
     return true;
 }
 
-static const diaMenuEntry coderMenus[2]=
-{
-    {ADM_FFV1_CODER_GOLOMB,QT_TRANSLATE_NOOP("ffv1","Golomb-Rice")},
-    {ADM_FFV1_CODER_RANGE,QT_TRANSLATE_NOOP("ffv1","Range Coder")},
-};
-static const diaMenuEntry contextMenus[2]=
-{
-    {ADM_FFV1_CONTEXT_SMALL,QT_TRANSLATE_NOOP("ffv1","Small")},
-    {ADM_FFV1_CONTEXT_LARGE,QT_TRANSLATE_NOOP("ffv1","Large")},
-};
-static const diaMenuEntry threadsMenus[3]=
-{
-    {ADM_FFV1_THREADS_1,QT_TRANSLATE_NOOP("ffv1","1")},
-    {ADM_FFV1_THREADS_2,QT_TRANSLATE_NOOP("ffv1","2")},
-    {ADM_FFV1_THREADS_4,QT_TRANSLATE_NOOP("ffv1","4")},
-};
-
 /**
     \fn ffv1Configure
     \brief Configuration UI for ffv1 encoder
@@ -151,6 +134,20 @@ bool ffv1Configure(void)
     contextM=(uint32_t)ffv1config.context;
     threadsM=(uint32_t)ffv1config.threads;
     slicecrc=ffv1config.slicecrc;
+
+    const diaMenuEntry coderMenus[2]={
+        {ADM_FFV1_CODER_GOLOMB,QT_TRANSLATE_NOOP("ffv1","Golomb-Rice"),NULL},
+        {ADM_FFV1_CODER_RANGE,QT_TRANSLATE_NOOP("ffv1","Range Coder"),NULL}
+    };
+    const diaMenuEntry contextMenus[2]={
+        {ADM_FFV1_CONTEXT_SMALL,QT_TRANSLATE_NOOP("ffv1","Small"),NULL},
+        {ADM_FFV1_CONTEXT_LARGE,QT_TRANSLATE_NOOP("ffv1","Large"),NULL}
+    };
+    const diaMenuEntry threadsMenus[3]={
+        {ADM_FFV1_THREADS_1,QT_TRANSLATE_NOOP("ffv1","1"),NULL},
+        {ADM_FFV1_THREADS_2,QT_TRANSLATE_NOOP("ffv1","2"),NULL},
+        {ADM_FFV1_THREADS_4,QT_TRANSLATE_NOOP("ffv1","4"),NULL}
+    };
 
     diaElemMenu      cd(&coderM,  QT_TRANSLATE_NOOP("ffv1","Coder:"),2,coderMenus);
     diaElemMenu      ct(&contextM,QT_TRANSLATE_NOOP("ffv1","Context:"),2,contextMenus);

@@ -212,7 +212,7 @@ _again:
     \fn configure
 */
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("aften",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("aften",#x),NULL}
 
 bool configure (CONFcouple **setup)
 {

@@ -157,17 +157,17 @@ bool         ADM_ffFlv1Encoder::isDualPass(void)
 */
 
 bool         ffFlv1Configure(void)
-{         
+{
 diaMenuEntry qzE[]={
-  {0,QT_TRANSLATE_NOOP("flv1","H.263")},
-  {1,QT_TRANSLATE_NOOP("flv1","MPEG")}
-};       
+  {0,QT_TRANSLATE_NOOP("flv1","H.263"),NULL},
+  {1,QT_TRANSLATE_NOOP("flv1","MPEG"),NULL}
+};
 
 diaMenuEntry rdE[]={
-  {0,QT_TRANSLATE_NOOP("flv1","MB comparison")},
-  {1,QT_TRANSLATE_NOOP("flv1","Fewest bits (vhq)")},
-  {2,QT_TRANSLATE_NOOP("flv1","Rate distortion")}
-};     
+  {0,QT_TRANSLATE_NOOP("flv1","MB comparison"),NULL},
+  {1,QT_TRANSLATE_NOOP("flv1","Fewest bits (vhq)"),NULL},
+  {2,QT_TRANSLATE_NOOP("flv1","Rate distortion"),NULL}
+};
 
         FFcodecSettings *conf=&Flv1Settings;
 

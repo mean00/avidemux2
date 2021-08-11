@@ -335,10 +335,10 @@ bool ffVAEncHevcConfigure(void)
     ffvaHEVC_encoder *conf=&VaEncHevcSettings;
 
     diaMenuEntry rateControlMode[]={
-        {ADM_FFVAENC_RC_CRF,QT_TRANSLATE_NOOP("ffVAEncHEVC","Constant Rate Factor")},
-        {ADM_FFVAENC_RC_CBR,QT_TRANSLATE_NOOP("ffVAEncHEVC","Constant Bitrate")},
+        {ADM_FFVAENC_RC_CRF,QT_TRANSLATE_NOOP("ffVAEncHEVC","Constant Rate Factor"),NULL},
+        {ADM_FFVAENC_RC_CBR,QT_TRANSLATE_NOOP("ffVAEncHEVC","Constant Bitrate"),NULL},
 #ifdef USE_VBR
-        {ADM_FFVAENC_RC_VBR,QT_TRANSLATE_NOOP("ffVAEncHEVC","Variable Bitrate")}
+        {ADM_FFVAENC_RC_VBR,QT_TRANSLATE_NOOP("ffVAEncHEVC","Variable Bitrate"),NULL}
 #endif
     };
 

@@ -342,15 +342,15 @@ bool         ffVAEncConfigure(void)
     ffvaenc_encoder *conf=&VaEncSettings;
 
     diaMenuEntry h264Profile[]={
-        {FF_PROFILE_H264_CONSTRAINED_BASELINE,QT_TRANSLATE_NOOP("ffVAEncH264","Baseline")},
-        {FF_PROFILE_H264_MAIN,QT_TRANSLATE_NOOP("ffVAEncH264","Main")},
-        {FF_PROFILE_H264_HIGH,QT_TRANSLATE_NOOP("ffVAEncH264","High")}
+        {FF_PROFILE_H264_CONSTRAINED_BASELINE,QT_TRANSLATE_NOOP("ffVAEncH264","Baseline"),NULL},
+        {FF_PROFILE_H264_MAIN,QT_TRANSLATE_NOOP("ffVAEncH264","Main"),NULL},
+        {FF_PROFILE_H264_HIGH,QT_TRANSLATE_NOOP("ffVAEncH264","High"),NULL}
     };
     diaMenuEntry rateControlMode[]={
-        {ADM_FFVAENC_RC_CRF,QT_TRANSLATE_NOOP("ffVAEncH264","Constant Rate Factor")},
-        {ADM_FFVAENC_RC_CBR,QT_TRANSLATE_NOOP("ffVAEncH264","Constant Bitrate")},
+        {ADM_FFVAENC_RC_CRF,QT_TRANSLATE_NOOP("ffVAEncH264","Constant Rate Factor"),NULL},
+        {ADM_FFVAENC_RC_CBR,QT_TRANSLATE_NOOP("ffVAEncH264","Constant Bitrate"),NULL},
 #ifdef USE_VBR
-        {ADM_FFVAENC_RC_VBR,QT_TRANSLATE_NOOP("ffVAEncH264","Variable Bitrate")}
+        {ADM_FFVAENC_RC_VBR,QT_TRANSLATE_NOOP("ffVAEncH264","Variable Bitrate"),NULL}
 #endif
     };
 

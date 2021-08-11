@@ -176,7 +176,7 @@ bool 	AUDMEncoder_Twolame::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
   return true;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("twolame",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("twolame",#x),NULL}
 
 /**
     \fn configure

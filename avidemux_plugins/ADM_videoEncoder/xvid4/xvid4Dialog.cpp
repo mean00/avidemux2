@@ -26,54 +26,54 @@
 */
 extern xvid4_encoder xvid4Settings;
 bool         xvid4Configure(void)
-{         
+{
 
 diaMenuEntry meE[]={
-  {0,QT_TRANSLATE_NOOP("xvid4","None")},
-  {1,QT_TRANSLATE_NOOP("xvid4","Low")},
-  {2,QT_TRANSLATE_NOOP("xvid4","Medium")},
-  {3,QT_TRANSLATE_NOOP("xvid4","Full")}
-};       
+  {0,QT_TRANSLATE_NOOP("xvid4","None"),NULL},
+  {1,QT_TRANSLATE_NOOP("xvid4","Low"),NULL},
+  {2,QT_TRANSLATE_NOOP("xvid4","Medium"),NULL},
+  {3,QT_TRANSLATE_NOOP("xvid4","Full"),NULL}
+};
 
 diaMenuEntry qzE[]={
-  {0,QT_TRANSLATE_NOOP("xvid4","H.263")},
-  {1,QT_TRANSLATE_NOOP("xvid4","MPEG")},
-  {2,QT_TRANSLATE_NOOP("xvid4","Custom")}
-};      
+  {0,QT_TRANSLATE_NOOP("xvid4","H.263"),NULL},
+  {1,QT_TRANSLATE_NOOP("xvid4","MPEG"),NULL},
+  {2,QT_TRANSLATE_NOOP("xvid4","Custom"),NULL}
+};
 diaMenuEntry profileE[]={
-{ XVID_PROFILE_S_L0  ,"Simple Level0"},
-{ XVID_PROFILE_S_L1  ,"Simple Level1"},
-{ XVID_PROFILE_S_L2  ,"Simple Level2"},
-{ XVID_PROFILE_S_L3  ,"Simple Level3"},
-{ XVID_PROFILE_AS_L0 ,"Adv. Simple Level0"},
-{ XVID_PROFILE_AS_L1 ,"Adv. Simple Level1"},
-{ XVID_PROFILE_AS_L2 ,"Adv. Simple Level2"},
-{ XVID_PROFILE_AS_L3 ,"Adv. Simple Level3"},
-{ XVID_PROFILE_AS_L4 ,"Adv. Simple Level4"},
-}; 
+  { XVID_PROFILE_S_L0  ,"Simple Level0", NULL},
+  { XVID_PROFILE_S_L1  ,"Simple Level1", NULL},
+  { XVID_PROFILE_S_L2  ,"Simple Level2", NULL},
+  { XVID_PROFILE_S_L3  ,"Simple Level3", NULL},
+  { XVID_PROFILE_AS_L0 ,"Adv. Simple Level0", NULL},
+  { XVID_PROFILE_AS_L1 ,"Adv. Simple Level1", NULL},
+  { XVID_PROFILE_AS_L2 ,"Adv. Simple Level2", NULL},
+  { XVID_PROFILE_AS_L3 ,"Adv. Simple Level3", NULL},
+  { XVID_PROFILE_AS_L4 ,"Adv. Simple Level4", NULL}
+};
 
 diaMenuEntry rdE[]={
-  {0,QT_TRANSLATE_NOOP("xvid4","None")},
-  {1,QT_TRANSLATE_NOOP("xvid4","DCT")},
-  {2,QT_TRANSLATE_NOOP("xvid4","Qpel16")},
-  {3,QT_TRANSLATE_NOOP("xvid4","Qpel8")},
-  {4,QT_TRANSLATE_NOOP("xvid4","Square")}
-};    
+  {0,QT_TRANSLATE_NOOP("xvid4","None"),NULL},
+  {1,QT_TRANSLATE_NOOP("xvid4","DCT"),NULL},
+  {2,QT_TRANSLATE_NOOP("xvid4","Qpel16"),NULL},
+  {3,QT_TRANSLATE_NOOP("xvid4","Qpel8"),NULL},
+  {4,QT_TRANSLATE_NOOP("xvid4","Square"),NULL}
+};
 
 diaMenuEntry threads[]={
-  {1,QT_TRANSLATE_NOOP("xvid4","One thread")},
-  {2,QT_TRANSLATE_NOOP("xvid4","Two threads)")},
-  {3,QT_TRANSLATE_NOOP("xvid4","Three threads")},
-  {99,QT_TRANSLATE_NOOP("xvid4","Auto (#cpu)")}
-};  
+  {1,QT_TRANSLATE_NOOP("xvid4","One thread"),NULL},
+  {2,QT_TRANSLATE_NOOP("xvid4","Two threads)"),NULL},
+  {3,QT_TRANSLATE_NOOP("xvid4","Three threads"),NULL},
+  {99,QT_TRANSLATE_NOOP("xvid4","Auto (#cpu)"),NULL}
+};
 
 diaMenuEntry arModeE[]={
-  {XVID_PAR_11_VGA,QT_TRANSLATE_NOOP("xvid4","1:1 (PC)")},
-  {XVID_PAR_43_PAL,QT_TRANSLATE_NOOP("xvid4","4:3 (PAL)")},
-  {XVID_PAR_43_NTSC,QT_TRANSLATE_NOOP("xvid4","4:3 (NTSC)")},
-  {XVID_PAR_169_PAL,QT_TRANSLATE_NOOP("xvid4","16:9 (PAL)")},
-  {XVID_PAR_169_NTSC,QT_TRANSLATE_NOOP("xvid4","16:9 (NTSC)")},
-};  
+  {XVID_PAR_11_VGA,QT_TRANSLATE_NOOP("xvid4","1:1 (PC)"),NULL},
+  {XVID_PAR_43_PAL,QT_TRANSLATE_NOOP("xvid4","4:3 (PAL)"),NULL},
+  {XVID_PAR_43_NTSC,QT_TRANSLATE_NOOP("xvid4","4:3 (NTSC)"),NULL},
+  {XVID_PAR_169_PAL,QT_TRANSLATE_NOOP("xvid4","16:9 (PAL)"),NULL},
+  {XVID_PAR_169_NTSC,QT_TRANSLATE_NOOP("xvid4","16:9 (NTSC)"),NULL}
+};
 
 
 #define PX(x) &(xvid4Settings.x)

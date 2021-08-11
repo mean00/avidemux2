@@ -453,7 +453,7 @@ again:
     return true;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("lavcodec",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("lavcodec",#x),NULL}
 
 /**
     \fn configure

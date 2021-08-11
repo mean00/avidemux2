@@ -247,7 +247,7 @@ cont:
     \fn configure
 */
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("dcaenc",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("dcaenc",#x),NULL}
 
 bool configure (CONFcouple **setup)
 {

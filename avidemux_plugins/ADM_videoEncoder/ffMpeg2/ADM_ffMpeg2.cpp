@@ -261,37 +261,37 @@ bool         ffMpeg2Configure(void)
 
 diaMenuEntry  arE[]=
 {
-    {0,QT_TRANSLATE_NOOP("ffmpeg2","Normal (4:3)")},
-    {1,QT_TRANSLATE_NOOP("ffmpeg2","Wide (16:9)")}
+    {0,QT_TRANSLATE_NOOP("ffmpeg2","Normal (4:3)"),NULL},
+    {1,QT_TRANSLATE_NOOP("ffmpeg2","Wide (16:9)"),NULL}
 };
       
 diaMenuEntry  matrixE[]=
 {
-    {MPEG2_MATRIX_DEFAULT,QT_TRANSLATE_NOOP("ffmpeg2","Default")},
-    {MPEG2_MATRIX_TMPGENC,QT_TRANSLATE_NOOP("ffmpeg2","Tmpgenc")},
-    {MPEG2_MATRIX_ANIME,QT_TRANSLATE_NOOP("ffmpeg2","Animes")},
-    {MPEG2_MATRIX_KVCD,QT_TRANSLATE_NOOP("ffmpeg2","KVCD")},
+    {MPEG2_MATRIX_DEFAULT,QT_TRANSLATE_NOOP("ffmpeg2","Default"),NULL},
+    {MPEG2_MATRIX_TMPGENC,QT_TRANSLATE_NOOP("ffmpeg2","Tmpgenc"),NULL},
+    {MPEG2_MATRIX_ANIME,QT_TRANSLATE_NOOP("ffmpeg2","Animes"),NULL},
+    {MPEG2_MATRIX_KVCD,QT_TRANSLATE_NOOP("ffmpeg2","KVCD"),NULL}
 };
       
 diaMenuEntry rdE[]={
-  {0,QT_TRANSLATE_NOOP("ffmpeg2","MB comparison")},
-  {1,QT_TRANSLATE_NOOP("ffmpeg2","Fewest bits (vhq)")},
-  {2,QT_TRANSLATE_NOOP("ffmpeg2","Rate distortion")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg2","MB comparison"),NULL},
+  {1,QT_TRANSLATE_NOOP("ffmpeg2","Fewest bits (vhq)"),NULL},
+  {2,QT_TRANSLATE_NOOP("ffmpeg2","Rate distortion"),NULL}
 };     
 diaMenuEntry threads[]={
-  {0,QT_TRANSLATE_NOOP("ffmpeg2","One thread")},
-  {2,QT_TRANSLATE_NOOP("ffmpeg2","Two threads)")},
-  {3,QT_TRANSLATE_NOOP("ffmpeg2","Three threads")},
-  {99,QT_TRANSLATE_NOOP("ffmpeg2","Auto (#cpu)")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg2","One thread"),NULL},
+  {2,QT_TRANSLATE_NOOP("ffmpeg2","Two threads)"),NULL},
+  {3,QT_TRANSLATE_NOOP("ffmpeg2","Three threads"),NULL},
+  {99,QT_TRANSLATE_NOOP("ffmpeg2","Auto (#cpu)"),NULL}
 };     
    
 diaMenuEntry interE[]={
-  {0,QT_TRANSLATE_NOOP("ffmpeg2","Progressive")},
-  {1,QT_TRANSLATE_NOOP("ffmpeg2","Interlaced")},
+  {0,QT_TRANSLATE_NOOP("ffmpeg2","Progressive"),NULL},
+  {1,QT_TRANSLATE_NOOP("ffmpeg2","Interlaced"),NULL}
 };     
 diaMenuEntry foE[]={
-  {0,QT_TRANSLATE_NOOP("ffmpeg2","Top Field First")},
-  {1,QT_TRANSLATE_NOOP("ffmpeg2","Bottom Field First")},
+  {0,QT_TRANSLATE_NOOP("ffmpeg2","Top Field First"),NULL},
+  {1,QT_TRANSLATE_NOOP("ffmpeg2","Bottom Field First"),NULL}
 };     
 
         mpeg2_encoder *conf=&Mp2Settings;

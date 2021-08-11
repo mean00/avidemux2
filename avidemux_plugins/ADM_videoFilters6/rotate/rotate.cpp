@@ -202,13 +202,11 @@ uint32_t srcPitch,dstPitch;
 */
 bool rotateFilter::configure( void)
 {
-  uint8_t r;
-  
   diaMenuEntry rotateValues[]={
       {0,QT_TRANSLATE_NOOP("rotate","None"),QT_TRANSLATE_NOOP("rotate","None")},
-      {90,QT_TRANSLATE_NOOP("rotate","90 degrees"),QT_TRANSLATE_NOOP("rotate","90°")},
-      {180,QT_TRANSLATE_NOOP("rotate","180 degrees"),QT_TRANSLATE_NOOP("rotate","180°")},
-      {270,QT_TRANSLATE_NOOP("rotate","270 degrees"),QT_TRANSLATE_NOOP("rotate","270°")}
+      {90,QT_TRANSLATE_NOOP("rotate","90 degrees"),QT_TRANSLATE_NOOP("rotate","90° clockwise")},
+      {180,QT_TRANSLATE_NOOP("rotate","180 degrees"),NULL},
+      {270,QT_TRANSLATE_NOOP("rotate","270 degrees"),QT_TRANSLATE_NOOP("rotate","90° contraclockwise")}
   };
   diaElemMenu     rotate(&(param.angle),QT_TRANSLATE_NOOP("rotate","_Angle:"),4,rotateValues,NULL);
   diaElem *allWidgets[]={&rotate};

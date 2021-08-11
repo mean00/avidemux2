@@ -397,7 +397,7 @@ _again:
         return 1;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("FDK-AAC",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("FDK-AAC",#x),NULL}
 
 /**
     \fn configure
@@ -426,7 +426,7 @@ bool configure (CONFcouple **setup)
                               BITRATE(640)
                           };
     
-#define PROFILE(x,y) {y,QT_TRANSLATE_NOOP("FDK-AAC",x)}    
+#define PROFILE(x,y) {y,QT_TRANSLATE_NOOP("FDK-AAC",x),NULL}
      diaMenuEntry profileM[]={
          PROFILE("LC",AOT_AAC_LC),
          PROFILE("HE-AAC",AOT_SBR),

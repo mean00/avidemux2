@@ -202,8 +202,8 @@ bool configure(CONFcouple **setup)
         cfg = defaultConfig;
 
     diaMenuEntry outputMode[] = {
-        {OUTPUT_MODE_PCM, QT_TRANSLATE_NOOP("pcm","PCM")},
-        {OUTPUT_MODE_LPCM, QT_TRANSLATE_NOOP("pcm","LPCM")}
+        {OUTPUT_MODE_PCM, QT_TRANSLATE_NOOP("pcm","PCM"), NULL},
+        {OUTPUT_MODE_LPCM, QT_TRANSLATE_NOOP("pcm","LPCM"), NULL}
     };
     diaElemMenu oMode(&cfg.output_mode, QT_TRANSLATE_NOOP("pcm","Output format:"), 2, outputMode);
 

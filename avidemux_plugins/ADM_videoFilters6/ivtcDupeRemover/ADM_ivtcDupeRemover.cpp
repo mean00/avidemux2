@@ -425,14 +425,11 @@ bool ivtcDupeRemover::configure( void)
         diaElemUInteger   threshold(PX(threshold),QT_TRANSLATE_NOOP("ivtcRemover","_Noise:"),0,255);
         diaElemToggle     show(PX(show),QT_TRANSLATE_NOOP("ivtcRemover","_Show:"));
 
-
         diaMenuEntry menuMode[]={
-                {0,      QT_TRANSLATE_NOOP("ivtcRemover","Full")},
-                {1,      QT_TRANSLATE_NOOP("ivtcRemover","Fast")},
-                {2,      QT_TRANSLATE_NOOP("ivtcRemover","VeryFast")}
-                };
-
-
+                {0,      QT_TRANSLATE_NOOP("ivtcRemover","Full"), NULL},
+                {1,      QT_TRANSLATE_NOOP("ivtcRemover","Fast"), NULL},
+                {2,      QT_TRANSLATE_NOOP("ivtcRemover","VeryFast"), NULL}
+        };
 
         diaElemMenu      eMode(&configuration.mode,QT_TRANSLATE_NOOP("ivtcRemover","_Frame rate change:"),3,menuMode);
 

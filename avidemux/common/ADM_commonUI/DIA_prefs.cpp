@@ -373,7 +373,7 @@ std::string currentSdlDriver=getSdlDriverName();
                 {
                     current=i;
                 }
-                sdlMenuEntries[i]=new diaMenuEntryDynamic(i,listOfSdl[i].driverName.c_str(),"");
+                sdlMenuEntries[i]=new diaMenuEntryDynamic(i,listOfSdl[i].driverName.c_str(),NULL);
             }
             sdlMenuIndex=current;
             sdlMenu=new diaElemMenuDynamic(&sdlMenuIndex, QT_TRANSLATE_NOOP("adm","Sdl driver"),nbSDL,  sdlMenuEntries);
@@ -412,13 +412,13 @@ std::string currentSdlDriver=getSdlDriverName();
 //***AV
         uint32_t nbAudioDevice=ADM_av_getNbDevices();
         diaMenuEntryDynamic **audioDeviceItems=new diaMenuEntryDynamic *[nbAudioDevice+1];
-        audioDeviceItems[0]=new diaMenuEntryDynamic(0,"Dummy","Dummy");
+        audioDeviceItems[0]=new diaMenuEntryDynamic(0,"Dummy",NULL);
         for(int i=0;i<nbAudioDevice;i++)
         {
             std::string name;
             uint32_t major,minor,patch;
             ADM_av_getDeviceInfo(i, name, &major,&minor,&patch);
-            audioDeviceItems[i+1]=new diaMenuEntryDynamic(i+1,name.c_str(),name.c_str());
+            audioDeviceItems[i+1]=new diaMenuEntryDynamic(i+1,name.c_str(),NULL);
         }
         diaElemMenuDynamic menuAudio(&newdevice,QT_TRANSLATE_NOOP("adm","_AudioDevice"), nbAudioDevice+1,
                     audioDeviceItems,NULL);

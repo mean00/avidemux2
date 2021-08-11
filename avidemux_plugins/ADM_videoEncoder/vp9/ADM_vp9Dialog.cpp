@@ -25,9 +25,9 @@ bool vp9EncoderConfigure(void)
     int spdi = cfg->speed - 9;
 
     diaMenuEntry dltype[]={
-        {REALTIME,QT_TRANSLATE_NOOP("vp9encoder","Realtime")},
-        {GOOD_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Good quality")},
-        {BEST_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Best quality")}
+        {REALTIME,QT_TRANSLATE_NOOP("vp9encoder","Realtime"),NULL},
+        {GOOD_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Good quality"),NULL},
+        {BEST_QUALITY,QT_TRANSLATE_NOOP("vp9encoder","Best quality"),NULL}
     };
 #define PX(x) &(cfg->x)
     diaElemBitrate bitrate(PX(ratectl),NULL);

@@ -249,7 +249,7 @@ bool	AUDMEncoder_Opus::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
     return true;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("faac",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("faac",#x),NULL}
 
 /**
     \fn configure

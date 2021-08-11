@@ -427,12 +427,9 @@ bool resampleFps::configure(void)
     f/=configuration.newFpsDen;
 
 ADM_assert(nbPredefined == 6);
-  
-   diaMenuEntry tFps[]={
-#define Z(x)                 {x,     predefinedFps[x].desc}
-                    Z(0),Z(1),Z(2),Z(3),Z(4),Z(5)
 
-          };
+#define Z(x) {x, predefinedFps[x].desc, NULL}
+    diaMenuEntry tFps[]={Z(0),Z(1),Z(2),Z(3),Z(4),Z(5)};
 
     diaMenuEntry tInterp[3]={
             {0,QT_TRANSLATE_NOOP("resampleFps","none"),NULL},

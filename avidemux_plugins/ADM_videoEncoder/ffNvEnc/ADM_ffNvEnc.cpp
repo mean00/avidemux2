@@ -323,44 +323,44 @@ link:
 bool ffNvEncConfigure(void)
 {
     diaMenuEntry meRcMode[]={
-        {NV_FF_RC_AUTO,QT_TRANSLATE_NOOP("ffnvenc","Controlled by Preset")},
-        {NV_FF_RC_CONSTQP,QT_TRANSLATE_NOOP("ffnvenc","Constant Quantizer")},
-        {NV_FF_RC_CBR,QT_TRANSLATE_NOOP("ffnvenc","Constant Bitrate")},
-        {NV_FF_RC_VBR,QT_TRANSLATE_NOOP("ffnvenc","Variable Bitrate")}
+        {NV_FF_RC_AUTO,QT_TRANSLATE_NOOP("ffnvenc","Controlled by Preset"),NULL},
+        {NV_FF_RC_CONSTQP,QT_TRANSLATE_NOOP("ffnvenc","Constant Quantizer"),NULL},
+        {NV_FF_RC_CBR,QT_TRANSLATE_NOOP("ffnvenc","Constant Bitrate"),NULL},
+        {NV_FF_RC_VBR,QT_TRANSLATE_NOOP("ffnvenc","Variable Bitrate"),NULL}
     };
 
     diaMenuEntry mePreset[]={
-        {NV_FF_PRESET_DEFAULT,QT_TRANSLATE_NOOP("ffnvenc","Default")},
-        {NV_FF_PRESET_SLOW,QT_TRANSLATE_NOOP("ffnvenc","Slow")},
-        {NV_FF_PRESET_MEDIUM,QT_TRANSLATE_NOOP("ffnvenc","Medium")},
-        {NV_FF_PRESET_MEDIUM,QT_TRANSLATE_NOOP("ffnvenc","Fast")},
-        {NV_FF_PRESET_HP,QT_TRANSLATE_NOOP("ffnvenc","High Performance")},
-        {NV_FF_PRESET_HQ,QT_TRANSLATE_NOOP("ffnvenc","High Quality")},
-        {NV_FF_PRESET_BD,QT_TRANSLATE_NOOP("ffnvenc","BluRay")},
-        {NV_FF_PRESET_LL,QT_TRANSLATE_NOOP("ffnvenc","Low Latency")},
-        {NV_FF_PRESET_LLHP,QT_TRANSLATE_NOOP("ffnvenc","Low Latency (HP)")},
-        {NV_FF_PRESET_LLHQ,QT_TRANSLATE_NOOP("ffnvenc","Low Latency (HQ)")},
-        {NV_FF_PRESET_LOSSLESS,QT_TRANSLATE_NOOP("ffnvenc","Lossless")},
-        {NV_FF_PRESET_LOSSLESSHP,QT_TRANSLATE_NOOP("ffnvenc","Lossless (HP)")}
+        {NV_FF_PRESET_DEFAULT,QT_TRANSLATE_NOOP("ffnvenc","Default"),NULL},
+        {NV_FF_PRESET_SLOW,QT_TRANSLATE_NOOP("ffnvenc","Slow"),NULL},
+        {NV_FF_PRESET_MEDIUM,QT_TRANSLATE_NOOP("ffnvenc","Medium"),NULL},
+        {NV_FF_PRESET_MEDIUM,QT_TRANSLATE_NOOP("ffnvenc","Fast"),NULL},
+        {NV_FF_PRESET_HP,QT_TRANSLATE_NOOP("ffnvenc","High Performance"),NULL},
+        {NV_FF_PRESET_HQ,QT_TRANSLATE_NOOP("ffnvenc","High Quality"),NULL},
+        {NV_FF_PRESET_BD,QT_TRANSLATE_NOOP("ffnvenc","BluRay"),NULL},
+        {NV_FF_PRESET_LL,QT_TRANSLATE_NOOP("ffnvenc","Low Latency"),NULL},
+        {NV_FF_PRESET_LLHP,QT_TRANSLATE_NOOP("ffnvenc","Low Latency (HP)"),NULL},
+        {NV_FF_PRESET_LLHQ,QT_TRANSLATE_NOOP("ffnvenc","Low Latency (HQ)"),NULL},
+        {NV_FF_PRESET_LOSSLESS,QT_TRANSLATE_NOOP("ffnvenc","Lossless"),NULL},
+        {NV_FF_PRESET_LOSSLESSHP,QT_TRANSLATE_NOOP("ffnvenc","Lossless (HP)"),NULL}
     };
 
     diaMenuEntry meProfile[]={
 #ifdef H265_ENCODER
-        {NV_FF_PROFILE_MAIN,QT_TRANSLATE_NOOP("ffnvenc","Main")},
-        {NV_FF_PROFILE_MAIN10,QT_TRANSLATE_NOOP("ffnvenc","Main10")}
+        {NV_FF_PROFILE_MAIN,QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL},
+        {NV_FF_PROFILE_MAIN10,QT_TRANSLATE_NOOP("ffnvenc","Main10"),NULL},
 #else
-        {NV_FF_PROFILE_BASELINE,QT_TRANSLATE_NOOP("ffnvenc","Baseline")},
-        {NV_FF_PROFILE_MAIN,QT_TRANSLATE_NOOP("ffnvenc","Main")},
-        {NV_FF_PROFILE_HIGH,QT_TRANSLATE_NOOP("ffnvenc","High")}
+        {NV_FF_PROFILE_BASELINE,QT_TRANSLATE_NOOP("ffnvenc","Baseline"),NULL},
+        {NV_FF_PROFILE_MAIN,QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL},
+        {NV_FF_PROFILE_HIGH,QT_TRANSLATE_NOOP("ffnvenc","High"),NULL}
 #endif
     };
 
     diaMenuEntry meBframeRef[]={
-        {NV_FF_BFRAME_REF_DISABLED,QT_TRANSLATE_NOOP("ffnvenc","Disabled")},
+        {NV_FF_BFRAME_REF_DISABLED,QT_TRANSLATE_NOOP("ffnvenc","Disabled"),NULL},
 #ifdef H265_ENCODER
-        {NV_FF_BFRAME_REF_EACH,QT_TRANSLATE_NOOP("ffnvenc","Each")},
+        {NV_FF_BFRAME_REF_EACH,QT_TRANSLATE_NOOP("ffnvenc","Each"),NULL},
 #endif
-        {NV_FF_BFRAME_REF_MIDDLE,QT_TRANSLATE_NOOP("ffnvenc","Middle")}
+        {NV_FF_BFRAME_REF_MIDDLE,QT_TRANSLATE_NOOP("ffnvenc","Middle"),NULL}
     };
 
     ffnvenc_encoder *conf=&NvEncSettings;

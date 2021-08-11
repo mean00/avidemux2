@@ -21,7 +21,12 @@
 extern "C" bool AviConfigure(void)
 {
         uint32_t fmt=(uint32_t)muxerConfig.odmlType;
-        diaMenuEntry format[]={{AVI_MUXER_TYPE1,"Avi"},{AVI_MUXER_AUTO,"AUTO"},{AVI_MUXER_TYPE2,"OPENDML"}};
+        diaMenuEntry format[]={
+            {AVI_MUXER_TYPE1, QT_TRANSLATE_NOOP("avimuxer","AVI"), NULL},
+            {AVI_MUXER_AUTO, QT_TRANSLATE_NOOP("avimuxer","Auto"),
+                QT_TRANSLATE_NOOP("avimuxer","Start as legacy AVI and switch to OpenDML mode when approaching the 4 GiB file size limit")},
+            {AVI_MUXER_TYPE2, QT_TRANSLATE_NOOP("avimuxer","OpenDML"), NULL}
+        };
         diaElemMenu  menuFormat(&fmt,QT_TRANSLATE_NOOP("avimuxer","Muxing Format"),3,format,"");
 
         diaElem *tabs[]={&menuFormat};

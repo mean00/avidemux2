@@ -264,7 +264,7 @@ _again:
         return 1;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("faac",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("faac",#x),NULL}
 
 /**
     \fn configure

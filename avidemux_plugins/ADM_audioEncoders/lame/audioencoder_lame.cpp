@@ -312,7 +312,7 @@ bool configure (CONFcouple **setup)
   };
   diaElemMenu Mode (&ppreset, QT_TRANSLATE_NOOP("lame","Bit_rate mode:"),   SZT (encodingMode), encodingMode);
 
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("lame",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("lame",#x),NULL}
   diaMenuEntry bitrateM[] = {
     BITRATE (56),//56
     BITRATE (64),

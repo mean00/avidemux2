@@ -85,19 +85,16 @@ bool         ADM_jpegEncoder::encode (ADMBitstream * out)
     \fn jpegConfigure
     \brief UI configuration for jpeg encoder
 */
-static const diaMenuEntry colorMenus[2]=
-    {
-	{ADM_COLOR_YUV422P,QT_TRANSLATE_NOOP("jpeg","YUV422")},
-	{ADM_COLOR_YV12,QT_TRANSLATE_NOOP("jpeg","YUV420")},
-};
-/**
-    \fn jpegConfigure
-*/
 bool         jpegConfigure(void)
 {
 uint32_t colorM;
     printf("[jpeg] Configure\n");
     colorM=(uint32_t)jpegConf.colorSpace;
+
+    const diaMenuEntry colorMenus[2]={
+        {ADM_COLOR_YUV422P,QT_TRANSLATE_NOOP("jpeg","YUV422"),NULL},
+        {ADM_COLOR_YV12,QT_TRANSLATE_NOOP("jpeg","YUV420"),NULL}
+    };
 
     diaElemUInteger  q(&(jpegConf.quantizer),QT_TRANSLATE_NOOP("jpeg","_Quantizer:"),2,31);
     diaElemMenu      c(&colorM,QT_TRANSLATE_NOOP("jpeg","_ColorSpace:"),2,colorMenus);

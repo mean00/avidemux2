@@ -195,20 +195,20 @@ bool         ADM_ffMpeg4Encoder::isDualPass(void)
 bool         ffMpeg4Configure(void)
 {
 diaMenuEntry qzE[]={
-  {0,QT_TRANSLATE_NOOP("ffmpeg4","H.263")},
-  {1,QT_TRANSLATE_NOOP("ffmpeg4","MPEG")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg4","H.263"),NULL},
+  {1,QT_TRANSLATE_NOOP("ffmpeg4","MPEG"),NULL}
 };
 
 diaMenuEntry rdE[]={
-  {0,QT_TRANSLATE_NOOP("ffmpeg4","MB comparison")},
-  {1,QT_TRANSLATE_NOOP("ffmpeg4","Fewest bits (vhq)")},
-  {2,QT_TRANSLATE_NOOP("ffmpeg4","Rate distortion")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg4","MB comparison"),NULL},
+  {1,QT_TRANSLATE_NOOP("ffmpeg4","Fewest bits (vhq)"),NULL},
+  {2,QT_TRANSLATE_NOOP("ffmpeg4","Rate distortion"),NULL}
 };
 diaMenuEntry threads[]={
-  {0,QT_TRANSLATE_NOOP("ffmpeg4","One thread")},
-  {2,QT_TRANSLATE_NOOP("ffmpeg4","Two threads)")},
-  {3,QT_TRANSLATE_NOOP("ffmpeg4","Three threads")},
-  {99,QT_TRANSLATE_NOOP("ffmpeg4","Auto (#cpu)")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg4","One thread"),NULL},
+  {2,QT_TRANSLATE_NOOP("ffmpeg4","Two threads)"),NULL},
+  {3,QT_TRANSLATE_NOOP("ffmpeg4","Three threads"),NULL},
+  {99,QT_TRANSLATE_NOOP("ffmpeg4","Auto (#cpu)"),NULL}
 };
 
 

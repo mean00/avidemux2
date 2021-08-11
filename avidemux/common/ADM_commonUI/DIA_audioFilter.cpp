@@ -35,35 +35,36 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     
     //**********************************
     diaMenuEntry menuFPS[]={
-  {FILMCONV_NONE,     QT_TRANSLATE_NOOP("adm","None")},
-  {FILMCONV_FILM2PAL, QT_TRANSLATE_NOOP("adm","Film to PAL")},
-  {FILMCONV_PAL2FILM, QT_TRANSLATE_NOOP("adm","PAL to Film")}
+  {FILMCONV_NONE,     QT_TRANSLATE_NOOP("adm","None"), NULL},
+  {FILMCONV_FILM2PAL, QT_TRANSLATE_NOOP("adm","Film to PAL"), NULL},
+  {FILMCONV_PAL2FILM, QT_TRANSLATE_NOOP("adm","PAL to Film"), NULL}
     };
   
    diaElemMenu      eFPS(&vFilm,QT_TRANSLATE_NOOP("adm","_Frame rate change:"),3,menuFPS);
 
    //**********************************
     diaMenuEntry menuMixer[]={
-  {CHANNEL_INVALID,     QT_TRANSLATE_NOOP("adm","No change")},
-  {CHANNEL_MONO,        QT_TRANSLATE_NOOP("adm","Mono")},
-  {CHANNEL_STEREO,      QT_TRANSLATE_NOOP("adm","Stereo")},
-  {CHANNEL_2F_1R,       QT_TRANSLATE_NOOP("adm","Stereo+surround")},
-  {CHANNEL_3F,          QT_TRANSLATE_NOOP("adm","Stereo+center")},
-  {CHANNEL_3F_1R,           QT_TRANSLATE_NOOP("adm","Stereo+center+surround")},
-  {CHANNEL_2F_2R,           QT_TRANSLATE_NOOP("adm","Stereo front+stereo rear")},
-  {CHANNEL_3F_2R,           QT_TRANSLATE_NOOP("adm","5 channels")},
-  {CHANNEL_3F_2R_LFE,       QT_TRANSLATE_NOOP("adm","5.1")},
-  {CHANNEL_DOLBY_PROLOGIC,  QT_TRANSLATE_NOOP("adm","Dolby Pro Logic")},
-  {CHANNEL_DOLBY_PROLOGIC2, QT_TRANSLATE_NOOP("adm","Dolby Pro Logic II")}
+  {CHANNEL_INVALID,     QT_TRANSLATE_NOOP("adm","No change"), NULL},
+  {CHANNEL_MONO,        QT_TRANSLATE_NOOP("adm","Mono"), NULL},
+  {CHANNEL_STEREO,      QT_TRANSLATE_NOOP("adm","Stereo"), NULL},
+  {CHANNEL_2F_1R,       QT_TRANSLATE_NOOP("adm","Stereo+surround"), NULL},
+  {CHANNEL_3F,          QT_TRANSLATE_NOOP("adm","Stereo+center"), NULL},
+  {CHANNEL_3F_1R,           QT_TRANSLATE_NOOP("adm","Stereo+center+surround"), NULL},
+  {CHANNEL_2F_2R,           QT_TRANSLATE_NOOP("adm","Stereo front+stereo rear"), NULL},
+  {CHANNEL_3F_2R,           QT_TRANSLATE_NOOP("adm","5 channels"), NULL},
+  {CHANNEL_3F_2R_LFE,       QT_TRANSLATE_NOOP("adm","5.1"), NULL},
+  {CHANNEL_DOLBY_PROLOGIC,  QT_TRANSLATE_NOOP("adm","Dolby Pro Logic"), NULL},
+  {CHANNEL_DOLBY_PROLOGIC2, QT_TRANSLATE_NOOP("adm","Dolby Pro Logic II"), NULL}
     };
   //*************************
     diaElemToggle    tDRC(PX(drcEnabled),QT_TRANSLATE_NOOP("adm","DRC"));
 //*************************
   diaMenuEntry menuGain[]={
-  {ADM_NO_GAIN,       QT_TRANSLATE_NOOP("adm","None")},
-  {ADM_GAIN_AUTOMATIC,QT_TRANSLATE_NOOP("adm","Automatic")},
-  {ADM_GAIN_MANUAL,   QT_TRANSLATE_NOOP("adm","Manual (dB)")}};
-  
+  {ADM_NO_GAIN,       QT_TRANSLATE_NOOP("adm","None"), NULL},
+  {ADM_GAIN_AUTOMATIC,QT_TRANSLATE_NOOP("adm","Automatic"), NULL},
+  {ADM_GAIN_MANUAL,   QT_TRANSLATE_NOOP("adm","Manual (dB)"), NULL}
+    };
+
   diaElemFrame  frameGain(QT_TRANSLATE_NOOP("adm","Gain"));
   diaElemMenu   eGain(&vGainMode,QT_TRANSLATE_NOOP("adm","_Gain mode:"),3,menuGain);   
   diaElemFloat  eGainValue(&vGainValue,QT_TRANSLATE_NOOP("adm","G_ain value:"),-10,40);

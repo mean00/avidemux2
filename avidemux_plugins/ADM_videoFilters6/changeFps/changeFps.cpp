@@ -226,14 +226,9 @@ again:
 
 
 ADM_assert(nbPredefined == 6);
-  
-   diaMenuEntry tFps[]={
-#define Z(x)                 {x,     predefinedFps[x].desc}
-                    Z(0),Z(1),Z(2),Z(3),Z(4),Z(5)
 
-          };
-    
-    
+#define Z(x) {x, predefinedFps[x].desc, NULL}
+    diaMenuEntry tFps[]={Z(0),Z(1),Z(2),Z(3),Z(4),Z(5)};
 
     diaElemMenu mFps(&(configuration.oldMode),   QT_TRANSLATE_NOOP("changeFps","Source Fps:"), 6,tFps);
     diaElemFloat fps(&oldFrac,QT_TRANSLATE_NOOP("changeFps","Source frame rate:"),1,1000.,NULL,3);

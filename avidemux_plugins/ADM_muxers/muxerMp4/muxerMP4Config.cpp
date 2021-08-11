@@ -34,17 +34,17 @@ bool movConfigure(void)
         bool force   = muxerConfig.forceAspectRatio;
 
 #ifndef MUXER_IS_MOV
-        diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4"},{MP4_MUXER_PSP,"PSP"}};
+        diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4"},{MP4_MUXER_PSP,"PSP"},NULL};
         diaElemMenu  menuFormat(&fmt,QT_TRANSLATE_NOOP("mp4muxer","Muxing Format"),2,format,"");
         diaMenuEntry streamOpt[]={
-            {MP4_MUXER_OPT_NONE,QT_TRANSLATE_NOOP("mp4muxer","No optimization")},
-            {MP4_MUXER_OPT_FASTSTART,QT_TRANSLATE_NOOP("mp4muxer","Move index to the beginning of the file")},
-            {MP4_MUXER_OPT_FRAGMENT,QT_TRANSLATE_NOOP("mp4muxer","Use fragmentation")}
+            {MP4_MUXER_OPT_NONE,QT_TRANSLATE_NOOP("mp4muxer","No optimization"),NULL},
+            {MP4_MUXER_OPT_FASTSTART,QT_TRANSLATE_NOOP("mp4muxer","Move index to the beginning of the file"),NULL},
+            {MP4_MUXER_OPT_FRAGMENT,QT_TRANSLATE_NOOP("mp4muxer","Use fragmentation"),NULL}
         };
 #else
         diaMenuEntry streamOpt[]={
-            {MP4_MUXER_OPT_NONE,QT_TRANSLATE_NOOP("mp4muxer","No optimization")},
-            {MP4_MUXER_OPT_FASTSTART,QT_TRANSLATE_NOOP("mp4muxer","Move index to the beginning of the file")}
+            {MP4_MUXER_OPT_NONE,QT_TRANSLATE_NOOP("mp4muxer","No optimization"),NULL},
+            {MP4_MUXER_OPT_FASTSTART,QT_TRANSLATE_NOOP("mp4muxer","Move index to the beginning of the file"),NULL}
         };
 
 #endif
@@ -59,33 +59,33 @@ bool movConfigure(void)
         diaElemMenu  menuOptimize(&opt,QT_TRANSLATE_NOOP("mp4muxer","Optimize for Streaming"),NB_OPTIMIZE,streamOpt,"");
         diaElemToggle forceAR(&force,QT_TRANSLATE_NOOP("mp4muxer","Force aspect ratio"));
         diaMenuEntry aspect[]={
-            {STANDARD,"4:3"},
-            {WIDE,"16:9"},
-            {UNI,"18:9"},
-            {CINEMA,"64:27"},
-            {CUSTOM,QT_TRANSLATE_NOOP("mp4muxer","Derived from display width")}
+            {STANDARD,"4:3",NULL},
+            {WIDE,"16:9",NULL},
+            {UNI,"18:9",NULL},
+            {CINEMA,"64:27",NULL},
+            {CUSTOM,QT_TRANSLATE_NOOP("mp4muxer","Derived from display width"),NULL}
         };
         diaElemMenu  menuAspect(&dar,QT_TRANSLATE_NOOP("mp4muxer","Aspect Ratio (DAR)"),5,aspect,"");
         diaElemUInteger dWidth(&diw,QT_TRANSLATE_NOOP("mp4muxer","Display Width"),16,65535);
         forceAR.link(1,&menuAspect);
         menuAspect.link(aspect+4,1,&dWidth);
         diaMenuEntry rotation[]={
-            {MP4_MUXER_ROTATE_0,QT_TRANSLATE_NOOP("mp4muxer","Do not rotate")},
-            {MP4_MUXER_ROTATE_90,QT_TRANSLATE_NOOP("mp4muxer","90°")},
-            {MP4_MUXER_ROTATE_180,QT_TRANSLATE_NOOP("mp4muxer","180°")},
-            {MP4_MUXER_ROTATE_270,QT_TRANSLATE_NOOP("mp4muxer","270°")}
+            {MP4_MUXER_ROTATE_0,QT_TRANSLATE_NOOP("mp4muxer","Do not rotate"),NULL},
+            {MP4_MUXER_ROTATE_90,QT_TRANSLATE_NOOP("mp4muxer","90°"),NULL},
+            {MP4_MUXER_ROTATE_180,QT_TRANSLATE_NOOP("mp4muxer","180°"),NULL},
+            {MP4_MUXER_ROTATE_270,QT_TRANSLATE_NOOP("mp4muxer","270°"),NULL}
         };
         diaElemMenu menuRotation(&rot,QT_TRANSLATE_NOOP("mp4muxer","Rotate video"),4,rotation,"");
 
         diaMenuEntry clockFrequencies[]={
-            {MP4_MUXER_CLOCK_FREQ_AUTO,QT_TRANSLATE_NOOP("mp4muxer","Auto")},
-            {MP4_MUXER_CLOCK_FREQ_24KHZ,QT_TRANSLATE_NOOP("mp4muxer","24 kHz")},
-            {MP4_MUXER_CLOCK_FREQ_25KHZ,QT_TRANSLATE_NOOP("mp4muxer","25 kHz")},
-            {MP4_MUXER_CLOCK_FREQ_30KHZ,QT_TRANSLATE_NOOP("mp4muxer","30 kHz")},
-            {MP4_MUXER_CLOCK_FREQ_50KHZ,QT_TRANSLATE_NOOP("mp4muxer","50 kHz")},
-            {MP4_MUXER_CLOCK_FREQ_60KHZ,QT_TRANSLATE_NOOP("mp4muxer","60 kHz")},
-            {MP4_MUXER_CLOCK_FREQ_90KHZ,QT_TRANSLATE_NOOP("mp4muxer","90 kHz")},
-            {MP4_MUXER_CLOCK_FREQ_180KHZ,QT_TRANSLATE_NOOP("mp4muxer","180 kHz")},
+            {MP4_MUXER_CLOCK_FREQ_AUTO,QT_TRANSLATE_NOOP("mp4muxer","Auto"),NULL},
+            {MP4_MUXER_CLOCK_FREQ_24KHZ,QT_TRANSLATE_NOOP("mp4muxer","24 kHz"),NULL},
+            {MP4_MUXER_CLOCK_FREQ_25KHZ,QT_TRANSLATE_NOOP("mp4muxer","25 kHz"),NULL},
+            {MP4_MUXER_CLOCK_FREQ_30KHZ,QT_TRANSLATE_NOOP("mp4muxer","30 kHz"),NULL},
+            {MP4_MUXER_CLOCK_FREQ_50KHZ,QT_TRANSLATE_NOOP("mp4muxer","50 kHz"),NULL},
+            {MP4_MUXER_CLOCK_FREQ_60KHZ,QT_TRANSLATE_NOOP("mp4muxer","60 kHz"),NULL},
+            {MP4_MUXER_CLOCK_FREQ_90KHZ,QT_TRANSLATE_NOOP("mp4muxer","90 kHz"),NULL},
+            {MP4_MUXER_CLOCK_FREQ_180KHZ,QT_TRANSLATE_NOOP("mp4muxer","180 kHz"),NULL}
         };
         diaElemMenu menuClock(&clk,QT_TRANSLATE_NOOP("mp4muxer","Time scale"),8,clockFrequencies,NULL);
 

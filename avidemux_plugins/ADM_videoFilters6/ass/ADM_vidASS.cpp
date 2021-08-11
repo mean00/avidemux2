@@ -210,7 +210,13 @@ bool subAss::configure(void)
     diaElemFloat      dScale(&scale,QT_TRANSLATE_NOOP("ass","_Font scale:"),0.10,10.0);
     diaElemUInteger   dTop(PX(topMargin),QT_TRANSLATE_NOOP("ass","_Top margin:"),0,200);
     diaElemUInteger   dBottom(PX(bottomMargin),QT_TRANSLATE_NOOP("ass","Botto_m margin:"),0,200);
-    diaMenuEntry      aspect[]={{SQUARE_PIXELS,QT_TRANSLATE_NOOP("ass","Do not adjust")},{STANDARD,"4:3"},{WIDE,"16:9"},{UNI,"18:9"},{CINEMA,"64:27"}};
+    diaMenuEntry      aspect[]={
+        {SQUARE_PIXELS,QT_TRANSLATE_NOOP("ass","Do not adjust"),NULL},
+        {STANDARD,"4:3",NULL},
+        {WIDE,"16:9",NULL},
+        {UNI,"18:9",NULL},
+        {CINEMA,"64:27",NULL}
+    };
     diaElemMenu       menuAspect(PX(displayAspectRatio),QT_TRANSLATE_NOOP("ass","Adjust for display aspect ratio:"),5,aspect,"");
 
     diaElem *elems[6]={&file,&dSpacing,&dScale,&dTop,&dBottom,&menuAspect};
