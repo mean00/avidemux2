@@ -158,6 +158,8 @@ void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
   for(int i=0;i<nbMenu;i++)
   {
     combo->addItem(QString::fromUtf8(entries[i]->text));
+    if(entries[i]->desc)
+        combo->setItemData(i, QString::fromUtf8(entries[i]->desc), Qt::ToolTipRole);
     if( *(uint32_t *)param==entries[i]->val) mem=i;
   }
   int wdth=combo->minimumSizeHint().width();
