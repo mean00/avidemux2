@@ -1,5 +1,5 @@
 /***************************************************************************
-                          ImageStab filter ported from frei0r
+                          ImageStab filter
     Algorithm:
         Copyright 2010 Marko Cebokli
         Copyright 2021 szlldm
