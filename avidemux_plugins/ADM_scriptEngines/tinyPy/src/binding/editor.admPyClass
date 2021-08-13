@@ -7,6 +7,7 @@
 /* METHOD */ double pyGetPrevKFramePts:getPrevKFramePts (double)
 /* METHOD */ double pyGetNextKFramePts:getNextKFramePts (double)
 /* METHOD */ int pyPrintTiming:printTiming      (int) 
+/* METHOD */ int pyPrintFrameInfo:printFrameInfo(int)
 /* METHOD */ int editor->getNbSegment:nbSegments  (void)
 /* METHOD */ int editor->getVideoCount:nbVideos(void)
 /* METHOD */ int pySegmentGetRefIdx:getRefIdxForSegment(int)

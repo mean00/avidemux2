@@ -13,6 +13,20 @@ static tp_obj zzpy_printTiming(TP)
   int r = pyPrintTiming(p0, p1);
   return tp_number(r);
 }
+// printTiming -> int pyPrintTiming(IEditor int)
+static tp_obj zzpy_printFrameInfo(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int r = pyPrintFrameInfo(p0, p1);
+  return tp_number(r);
+}
 // hexDumpFrame -> int pyHexDumpFrame(IEditor int)
 static tp_obj zzpy_hexDumpFrame(TP)
 {
@@ -292,6 +306,10 @@ tp_obj zzpy__pyEditor_get(tp_vm *vm)
   if (!strcmp(key, "printTiming"))
   {
     return tp_method(vm, self, zzpy_printTiming);
+  }
+  if (!strcmp(key, "printFrameInfo"))
+  {
+    return tp_method(vm, self, zzpy_printFrameInfo);
   }
   if (!strcmp(key, "hexDumpFrame"))
   {

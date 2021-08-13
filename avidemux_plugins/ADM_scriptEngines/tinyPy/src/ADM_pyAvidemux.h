@@ -69,6 +69,7 @@ char *pyGetRefVideoName(IEditor *editor, int idx);
 /* Detail info (debug) */
 int pyHexDumpFrame(IEditor *editor, int framenumber);
 int pyPrintTiming(IEditor *editor, int framenumber);
+int pyPrintFrameInfo(IEditor *editor, int framenumber);
 double pyGetPts(IEditor *editor, int frameNum);
 double pyGetDts(IEditor *editor, int frameNum);
 
