@@ -17,6 +17,7 @@
     #error  MY_CLASS not defined
 #endif
 #include "ADM_vidMisc.h"
+
 /**
         \fn getVideoDuration
         \brief Returns duration of video in us
@@ -46,7 +47,10 @@ uint64_t MY_CLASS::getVideoDuration(void)
                 maxPtsIndex=i;
             }
     }
+//#define VERBOSE_DURATION
+#ifdef VERBOSE_DURATION
     ADM_info("Found maxPts =%s, %d frames from the end\n",ADM_us2plain(maxPts),lastFrame-maxPtsIndex);
+#endif
     for(int i=lastFrame;i>=start;i--)
     {
             uint64_t p=ListOfFrames[i]->dts;
@@ -56,7 +60,9 @@ uint64_t MY_CLASS::getVideoDuration(void)
             maxDts=p;
             break;
     }
+#ifdef VERBOSE_DURATION
     ADM_info("Found maxDts =%s, %d frames from the end\n",ADM_us2plain(maxDts),lastFrame-maxDtsIndex);
+#endif
     // Case 1: No Pts
     bool usePts=true;
     if(maxPtsIndex==-1)
@@ -66,13 +72,17 @@ uint64_t MY_CLASS::getVideoDuration(void)
     uint64_t refTime;
     double refDistance;
     if(usePts==true)
-    { 
+    {
+#ifdef VERBOSE_DURATION
         ADM_info("Using PTS..\n");
+#endif
         refTime=maxPts;
         refDistance=lastFrame-maxPtsIndex;
     }else   
     {
+#ifdef VERBOSE_DURATION
         ADM_info("Using DTS..\n");
+#endif
         refTime=maxDts;
         refDistance=lastFrame-maxDtsIndex;    
     }
@@ -83,7 +93,9 @@ uint64_t MY_CLASS::getVideoDuration(void)
     f=f*refDistance;
     g+=f;
     uint64_t duration=(uint64_t)g;
+#ifdef VERBOSE_DURATION
     ADM_info("Using duration of %s\n",ADM_us2plain(duration));
+#endif
     return duration+frameToUs(1);
 }
 
