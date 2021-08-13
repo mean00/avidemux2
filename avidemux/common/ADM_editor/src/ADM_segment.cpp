@@ -30,6 +30,8 @@
 #include "fourcc.h"
 #include "prefs.h"
 
+#define ADM_ZERO_OFFSET
+
 #if 1
 #define aprintf printf
 #else
@@ -104,9 +106,10 @@ bool        ADM_EditorSegment::updateRefVideo(void)
     {
     _SEGMENT *seg=getSegment(n-1);
     uint64_t dur=ref->_aviheader->getVideoDuration();
+    seg->_durationUs = dur;
 #ifdef ADM_ZERO_OFFSET
     seg->_refStartTimeUs=pts;
-    seg->_durationUs=dur-pts;
+    seg->_durationUs-=pts;
 #endif
     printf("Current duration %" PRIu64" ms real one %" PRIu64" ms\n",dur/1000,seg->_durationUs/1000);
     }
@@ -543,6 +546,7 @@ bool         ADM_EditorSegment::updateStartTime(void)
         }
         if(candidate != ADM_NO_PTS)
             pts = candidate;
+#ifdef ADM_ZERO_OFFSET
         if(pts != compare)
         {
             char *old = ADM_strdup(ADM_us2plain(compare));
@@ -557,13 +561,18 @@ bool         ADM_EditorSegment::updateStartTime(void)
         }
         // adjust start time in ref
         seg->_refStartTimeUs = pts;
+#endif
         // set linear start time
         seg->_startTimeUs = cumulated;
         cumulated += seg->_durationUs;
         // set the _refStartDts field
         if(dtsFromPts(seg->_reference,pts,&dts))
+        {
+            ADM_info("Setting DTS start in ref to %s\n",ADM_us2plain(dts));
             seg->_refStartDts = dts;
+        }
     }
+    ADM_info("New total duration = %s\n",ADM_us2plain(cumulated));
     return true;
 }
 /**
