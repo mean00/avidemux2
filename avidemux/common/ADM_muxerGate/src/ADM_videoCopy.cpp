@@ -186,7 +186,7 @@ again:
               }
 
           }
-        if(image.demuxerPts>endTimePts ) 
+        if(image.demuxerPts >= endTimePts)
         {
             eofMet=true;
             return false;
