@@ -83,19 +83,16 @@ ZoomFilter::ZoomFilter(ADM_coreVideoFilter *in,CONFcouple *couples) :ADM_coreVid
     {
         resetConfig();
     }
-    if(  in->getInfo()->width<(configuration.right+configuration.left))
+    if(info.width < (configuration.right+configuration.left))
     {
-        ADM_warning(QT_TRANSLATE_NOOP("zoom","Warning Zooming too much width ! Width reseted !\n"));
-            configuration.right=configuration.left=0;
+        ADM_warning("Cropped width for zoom exceeds image width. Resetting left and right crop values.\n");
+        configuration.right=configuration.left=0;
     }
-    if(  in->getInfo()->height<(configuration.bottom+configuration.top))
+    if(info.height < (configuration.bottom+configuration.top))
     {
-        ADM_warning(QT_TRANSLATE_NOOP("zoom","Warning Zooming too much height ! Height reseted !\n"));
+        ADM_warning("Cropped height for zoom exceeds image height. Resetting top and bottom crop values.\n");
         configuration.bottom=configuration.top=0;
     }
-
-    info.width= in->getInfo()->width;
-    info.height=in->getInfo()->height;
 
     resizer=NULL;
     resizerOrigToEcho=NULL;
