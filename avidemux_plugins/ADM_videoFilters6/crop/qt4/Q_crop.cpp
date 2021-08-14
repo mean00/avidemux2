@@ -56,10 +56,6 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
           SPINNER(Right);
           SPINNER(Top);
           SPINNER(Bottom);
-
-        show();
-        myCrop->adjustCanvasPosition();
-        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
   }
   void Ui_cropWindow::sliderUpdate(int foo)
   {
@@ -105,6 +101,13 @@ void Ui_cropWindow::reset( bool f )
          myCrop->upload();
          myCrop->sameImage();
          lock--;
+}
+
+void Ui_cropWindow::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    myCrop->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
 void Ui_cropWindow::resizeEvent(QResizeEvent *event)

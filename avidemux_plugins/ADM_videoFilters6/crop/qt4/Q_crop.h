@@ -12,13 +12,13 @@ class Ui_cropWindow : public QDialog
 
 protected: 
 	int lock;
-
-public:
 	flyCrop *myCrop;
 	ADM_QCanvas *canvas;
+	Ui_cropDialog ui;
+
+public:
 	Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *in);
 	~Ui_cropWindow();
-	Ui_cropDialog ui;
 
 public slots:
 	void gather(crop *param);
@@ -30,6 +30,7 @@ private slots:
 	void reset(bool f);
 
 private:
+        void showEvent(QShowEvent *event);
         void resizeEvent(QResizeEvent *event);
 };
 
