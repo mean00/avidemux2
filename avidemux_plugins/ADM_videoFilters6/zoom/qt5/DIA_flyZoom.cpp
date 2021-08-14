@@ -18,6 +18,7 @@
 #include "./DIA_flyZoom.h"
 #include "./Q_zoom.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_QSettings.h"
 
 /**
  * 
