@@ -122,7 +122,26 @@ uint64_t OpenDMLHeader::getTime(uint32_t frameNum)
 uint64_t  OpenDMLHeader::getVideoDuration(void)
 {
     if(!_videostream.dwLength) return 0;
-    return _idx[_videostream.dwLength-1].dts+frameToUs(1); 
+    int i, last = _videostream.dwLength-1;
+    uint64_t total = _idx[last].dts;
+    // Initially, we may not have valid PTS, but the editor might
+    // have set at least some of them.
+    uint64_t maxPts = ADM_NO_PTS;
+#define MAX_REORDER (32)
+    for(i = last; i > ((last > MAX_REORDER)? last - MAX_REORDER : 0); i--)
+    {
+        uint64_t pts = _idx[i].pts;
+        if(pts && pts != ADM_NO_PTS)
+        {
+            if(maxPts == ADM_NO_PTS || pts > maxPts)
+                maxPts = pts;
+        }
+    }
+#undef MAX_REORDER
+    if(maxPts != ADM_NO_PTS && maxPts > total)
+        total = maxPts;
+    total += frameToUs(1);
+    return total;
 }
 
 OpenDMLHeader::~OpenDMLHeader()
