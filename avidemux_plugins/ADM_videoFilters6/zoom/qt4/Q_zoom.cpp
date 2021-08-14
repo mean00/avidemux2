@@ -53,10 +53,6 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
           SPINNER(Right);
           SPINNER(Top);
           SPINNER(Bottom);
-
-        show();
-        myFly->adjustCanvasPosition();
-        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
   }
   void Ui_zoomWindow::sliderUpdate(int foo)
   {
@@ -96,6 +92,13 @@ void Ui_zoomWindow::reset( bool f )
          myFly->upload();
          myFly->sameImage();
          lock--;
+}
+
+void Ui_zoomWindow::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    myFly->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
 void Ui_zoomWindow::resizeEvent(QResizeEvent *event)

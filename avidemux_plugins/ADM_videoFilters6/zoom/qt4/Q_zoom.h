@@ -12,13 +12,13 @@ class Ui_zoomWindow : public QDialog
 
 protected: 
 	int lock;
-
-public:
 	flyZoom *myFly;
 	ADM_QCanvas *canvas;
+	Ui_zoomDialog ui;
+
+public:
 	Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *in);
 	~Ui_zoomWindow();
-	Ui_zoomDialog ui;
 
 public slots:
 	void gather(zoom *param);
@@ -29,6 +29,7 @@ private slots:
 	void reset(bool f);
 
 private:
+        void showEvent(QShowEvent *event);
         void resizeEvent(QResizeEvent *event);
 };
 
