@@ -18,6 +18,7 @@
 #include "./DIA_flyCrop.h"
 #include "./Q_crop.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_QSettings.h"
 
 uint8_t Metrics( uint8_t *in, uint32_t stride, uint32_t length, uint32_t *avg, uint32_t *var, uint32_t * max);
 

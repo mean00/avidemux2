@@ -7,6 +7,7 @@
 #endif
 
 #include "ADM_toolkitQt.h"
+#include "ADM_QSettings.h"
 #include "ADM_assert.h"
 #include "ADM_default.h"
 

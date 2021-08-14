@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include "Q_blackenBorders.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_QSettings.h"
 
 //
 //	Video is in RGB Colorspace

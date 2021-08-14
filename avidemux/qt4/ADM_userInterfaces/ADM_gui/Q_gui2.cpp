@@ -39,6 +39,7 @@
 #include "Q_gui2.h"
 #include "ADM_default.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_QSettings.h"
 
 #include "DIA_fileSel.h"
 #include "ADM_vidMisc.h"
