@@ -72,6 +72,7 @@ protected:
            int          _extraDataLen;
            uint32_t     _fcc;
            AVFrame      *_frame;
+           AVPacket     *_packet;
            uint32_t     _gmc;
            uint32_t     _usingMT;
            uint32_t     _threads;
@@ -135,6 +136,7 @@ public:
                           }
         // for hw accel
         AVFrame *getFramePointer() {return _frame;}
+        AVPacket *getPacketPointer(void) { return _packet; }
 };
 
 #define FF_SIMPLE_DECLARE(x,y) \

@@ -152,7 +152,7 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
 
-    int ret;
+    int ret = 0;
 
     if(_parent->getDrainingState())
     {
@@ -163,16 +163,19 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
         }
     }else if(!handover)
     {
-        AVPacket pkt;
-        av_init_packet(&pkt);
-        pkt.data=in->data;
-        pkt.size=in->dataLength;
-        if(in->flags&AVI_KEY_FRAME)
-            pkt.flags=AV_PKT_FLAG_KEY;
-        else
-            pkt.flags=0;
+        AVPacket *pkt = _parent->getPacketPointer();
+        ADM_assert(pkt);
+        pkt->data = in->data;
+        pkt->size = in->dataLength;
 
-        ret = avcodec_send_packet(_context, &pkt);
+        if(in->flags&AVI_KEY_FRAME)
+            pkt->flags = AV_PKT_FLAG_KEY;
+        else
+            pkt->flags = 0;
+
+        ret = avcodec_send_packet(_context, pkt);
+
+        av_packet_unref(pkt);
 
         /* libavcodec doesn't handle switching between field and frame encoded parts of H.264 streams
         in the way VideoToolbox expects. Proceeding with avcodec_receive_frame as if nothing happened
@@ -184,6 +187,12 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
                 return false; // avoid endless loop
             alive = false; // misuse, harmless
             return _parent->uncompress(in,out); // retry
+        }
+        if(ret)
+        {
+            char er[AV_ERROR_MAX_STRING_SIZE]={0};
+            av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, ret);
+            ADM_warning("Ignoring error %d submitting packet to decoder (\"%s\")\n",ret,er);
         }
     }else
     {

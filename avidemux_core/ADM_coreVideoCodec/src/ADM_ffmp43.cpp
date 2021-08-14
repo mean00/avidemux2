@@ -195,9 +195,11 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
 
   _frame=av_frame_alloc();
   if(!_frame)
-  {
       return;
-  }
+
+  _packet = av_packet_alloc();
+  if(!_packet)
+      return;
 
   printf ("[lavc] Build: %d\n", LIBAVCODEC_BUILD);
   _extraDataCopy=NULL;
@@ -229,13 +231,10 @@ decoderFF::~decoderFF ()
         _context=NULL;
         printf ("[lavc] Destroyed\n");
     }
-  
-  if(_frame)
-  {
-      av_frame_free(&_frame);
-      _frame=NULL;
-  }
-  
+  // NULL-safe and will set the pointer to NULL
+  av_frame_free(&_frame);
+  av_packet_free(&_packet);
+
   if(_extraDataCopy)
   {
       delete [] _extraDataCopy;
@@ -415,16 +414,25 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
         }
     }else
     {
-        AVPacket pkt;
-        av_init_packet(&pkt);
-        pkt.data=in->data;
-        pkt.size=in->dataLength;
-        if(in->flags&AVI_KEY_FRAME)
-            pkt.flags=AV_PKT_FLAG_KEY;
-        else
-            pkt.flags=0;
+        _packet->data = in->data;
+        _packet->size = in->dataLength;
 
-        avcodec_send_packet(_context, &pkt);
+        if(in->flags&AVI_KEY_FRAME)
+            _packet->flags = AV_PKT_FLAG_KEY;
+        else
+            _packet->flags = 0;
+
+        ret = avcodec_send_packet(_context, _packet);
+
+        if(ret)
+        {
+            char er[AV_ERROR_MAX_STRING_SIZE]={0};
+            av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, ret);
+            ADM_warning("Ignoring error %d submitting packet to decoder (\"%s\")\n",ret,er);
+        }
+
+        av_packet_unref(_packet);
+
         // HW accel may be setup by now if this has been the very first packet. In this case
         // ask the hw decoder to collect the decoded picture.
         if(hwDecoder)

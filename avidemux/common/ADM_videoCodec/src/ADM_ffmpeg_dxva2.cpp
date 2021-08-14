@@ -493,6 +493,8 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
 
+    int ret = 0;
+
     if(_parent->getDrainingState())
     {
         if(_parent->getDrainingInitiated()==false)
@@ -502,22 +504,30 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
         }
     }else if(!handover)
     {
-        AVPacket pkt;
-        av_init_packet(&pkt);
-        pkt.data=in->data;
-        pkt.size=in->dataLength;
-        if(in->flags&AVI_KEY_FRAME)
-            pkt.flags=AV_PKT_FLAG_KEY;
-        else
-            pkt.flags=0;
+        AVPacket *pkt = _parent->getPacketPointer();
+        ADM_assert(pkt);
+        pkt->data = in->data;
+        pkt->size = in->dataLength;
 
-        avcodec_send_packet(_context, &pkt);
+        if(in->flags&AVI_KEY_FRAME)
+            pkt->flags = AV_PKT_FLAG_KEY;
+        else
+            pkt->flags = 0;
+
+        ret = avcodec_send_packet(_context, pkt);
+        if(ret)
+        {
+            char er[AV_ERROR_MAX_STRING_SIZE]={0};
+            av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, ret);
+            ADM_warning("Ignoring error %d submitting packet to decoder (\"%s\")\n",ret,er);
+        }
+        av_packet_unref(pkt);
     }else
     {
         handover=false;
     }
 
-    int ret = avcodec_receive_frame(_context, frame);
+    ret = avcodec_receive_frame(_context, frame);
 
     if(!_parent->decodeErrorHandler(ret))
         return false;
