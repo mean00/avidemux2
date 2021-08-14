@@ -95,23 +95,18 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
           printf ("[lavc] killing threads\n");
           _isMT = false;
         }
-
-        avcodec_close(_context);
-        av_freep(&_context->stats_in);
-        av_free (_context);
-        _context = NULL;
+        char *stats = _context->stats_in;
+        avcodec_free_context(&_context);
+        av_freep(&stats);
     }
     if (_options)
     {
         av_dict_free(&_options);
         _options=NULL;
     }
-    if (_frame)
-    {
-        av_frame_free(&_frame);
-        _frame=NULL;
-    }
-    
+    av_frame_free(&_frame);
+    av_packet_free(&_pkt);
+
     if(colorSpace)
     {
         delete colorSpace;
@@ -123,7 +118,7 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
         fclose(statFile);
         statFile=NULL;
     }
-    if(statFileName) ADM_dealloc(statFileName);
+    ADM_dealloc(statFileName);
     statFileName=NULL;
 }
 /**
