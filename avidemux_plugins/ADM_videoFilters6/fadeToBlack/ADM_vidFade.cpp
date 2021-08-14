@@ -50,9 +50,9 @@ public:
 DECLARE_VIDEO_FILTER(AVDM_Fade,
                     1,0,0,          // Version
                     ADM_UI_ALL,     // UI
-                    VF_TRANSFORM,   // Category
+                    VF_TRANSITION,   // Category
                     "fadeToBlack",  // internal name (must be uniq!)
-                    QT_TRANSLATE_NOOP("fadeToBlack","Fade to black"), // Display name
+                    QT_TRANSLATE_NOOP("fadeToBlack","Fade to black (legacy)"), // Display name
                     QT_TRANSLATE_NOOP("fadeToBlack","Fade to black in/out.") // Description
 );
 /**
