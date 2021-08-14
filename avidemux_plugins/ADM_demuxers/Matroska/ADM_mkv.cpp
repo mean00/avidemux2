@@ -425,14 +425,13 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
     dmultiple*=den;
     dmultiple/=(1000000.*(double)num);
     zero=((uint64_t)dmultiple*1000000*num)/den;
-    track->index[first].Pts=zero;
   }
   ADM_info("Num=%d Den=%d half=%d zero=%d first=%d\n",num,den,half,(int)zero,first);
   for(int i=first+1;i<nb;i++)
   {
     uint64_t pts=track->index[i].Pts;
-    if(pts<zero) continue;
-    pts-=zero;
+    if(pts < track->index[first].Pts) continue;
+    pts-=track->index[first].Pts;
     double dmultiple=(pts+half);
     dmultiple*=den;
     dmultiple/=(1000000.*(double)num);
@@ -447,6 +446,8 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
 #endif
     track->index[i].Pts=reconstructed;
   }
+  track->index[first].Pts = zero;
+
   _videostream.dwScale=num;
   _videostream.dwRate=den;
   double f=num;
