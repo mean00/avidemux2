@@ -28,9 +28,10 @@ typedef enum
     VF_SUBTITLE=5,
     VF_OPENGL=6,
     VF_ART=7,
-    VF_MISC=8,
-    VF_HIDDEN=9,
-    VF_MAX=10
+    VF_TRANSITION=8,
+    VF_MISC=9,
+    VF_HIDDEN=10,
+    VF_MAX=11
 }VF_CATEGORY;
 
 #define VF_PARTIAL_FILTER 9999
