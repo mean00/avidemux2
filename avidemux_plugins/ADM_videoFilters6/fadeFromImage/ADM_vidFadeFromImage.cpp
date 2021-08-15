@@ -370,6 +370,8 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                     rng_state = img->Pts;
                 else
                     rng_state = startMs;
+                if (rng_state == 0)
+                    rng_state = 123456789;
 
                 for (int p=0; p<3; p++)
                 {
