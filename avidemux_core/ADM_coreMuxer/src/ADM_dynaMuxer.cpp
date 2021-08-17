@@ -191,12 +191,16 @@ bool ADM_mx_setExtraConf(int index,CONFcouple *c)
 */
 void ADM_MuxersCleanup(void)
 {
-        int nb=ListOfMuxers.size();
-        for(int i=0;i<nb;i++)
-                {
-                        if(ListOfMuxers[i]) delete ListOfMuxers[i];
-                        ListOfMuxers[i]=NULL;
-                }
+    int nb=ListOfMuxers.size();
+    for(int i=0;i<nb;i++)
+    {
+        ADM_dynMuxer *mx = ListOfMuxers[i];
+        if(!mx) continue;
+
+        ADM_dealloc(mx->getDefaultConfPointer());
+        delete mx;
+        ListOfMuxers[i]=NULL;
+    }
 }
 
 /**
