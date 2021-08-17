@@ -37,7 +37,7 @@ public:
         bool  (*getConfiguration)(CONFcouple **conf);
         bool  (*resetConfiguration)();
         bool  (*setConfiguration)(CONFcouple *conf);
-        uint8_t *(*getDefaultConfPointer)(void);
+        void  (*clearDefaultConfig)(void);
 
         ADM_dynMuxer(const char *file) : ADM_LibWrapper()
         {
@@ -62,7 +62,7 @@ public:
                 &getConfiguration,"getConfiguration",
 				&resetConfiguration,"resetConfiguration",
                 &getDefaultExtension,"getDefaultExtension",
-                &getDefaultConfPointer,"getDefaultConfPointer"
+                &clearDefaultConfig,"clearDefaultConfig"
                 ));
                 if(initialised)
                 {
@@ -77,6 +77,7 @@ public:
                     printf("[Muxer]Symbol loading failed for %s\n",file);
                 }
         }
+        virtual ~ADM_dynMuxer() { if(initialised) clearDefaultConfig(); }
 };
 
 #define ADM_MUXER_BEGIN( Ext,Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar,confSize) \
@@ -100,7 +101,7 @@ ADM_PLUGIN_EXPORT const char  *getName(void) {return name;} \
 ADM_PLUGIN_EXPORT const char  *getDescriptor(void) {return desc;} \
 ADM_PLUGIN_EXPORT const char  *getDisplayName(void) { return displayName;} \
 ADM_PLUGIN_EXPORT const char  *getDefaultExtension(void) { return Ext;} \
-ADM_PLUGIN_EXPORT uint8_t     *getDefaultConfPointer(void) { return (uint8_t *)defaultConfig; } \
+ADM_PLUGIN_EXPORT void        clearDefaultConfig(void) { ADM_dealloc(defaultConfig); defaultConfig = NULL; } \
 ADM_PLUGIN_EXPORT bool        getConfiguration(CONFcouple **conf) \
 {\
          if(confTemplate==NULL) {*conf=NULL;return true;} \

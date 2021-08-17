@@ -196,8 +196,6 @@ void ADM_MuxersCleanup(void)
     {
         ADM_dynMuxer *mx = ListOfMuxers[i];
         if(!mx) continue;
-
-        ADM_dealloc(mx->getDefaultConfPointer());
         delete mx;
         ListOfMuxers[i]=NULL;
     }
