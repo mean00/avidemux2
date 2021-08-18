@@ -511,13 +511,12 @@ bool admSaver::save(void)
         }
     if(false==setupAudio())
     {
-        if(video) delete video;
-        if(muxer) delete muxer;
+        delete video;
+        video=NULL;
+        delete muxer;
         muxer=NULL;
         return false;
     }
-   
-   
     if(!muxer->open(fileName.c_str(),video,nbAudioTracks,audioAccess))
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Muxer"),QT_TRANSLATE_NOOP("adm","Cannot open "));
@@ -527,9 +526,9 @@ bool admSaver::save(void)
         if(false==muxer->close())
             ret=false;
     }
-
-    if(video)
-        delete video;
+    delete muxer;
+    muxer=NULL;
+    delete video;
     video=NULL;
     for(int i=0;i<nbAudioTracks;i++)
     {
