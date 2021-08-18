@@ -1,9 +1,6 @@
 /***************************************************************************
-                          video_filters.h  -  description
-                             -------------------
-    begin                : Wed Mar 27 2002
-    copyright            : (C) 2002 by mean
-    email                : fixounet@free.fr
+                          FadeInOut filter
+    Copyright 2021 szlldm
  ***************************************************************************/
 
 /***************************************************************************
@@ -14,29 +11,19 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- #ifndef __VIDEO_FILTERS__CATEGORY__
- #define  __VIDEO_FILTERS__CATEGORY__
 
-typedef enum
-{
-    VF_INVALID=-1,
-    VF_TRANSFORM=0,
-    VF_INTERLACING=1,
-    VF_COLORS=2,
-    VF_NOISE=3,
-    VF_SHARPNESS=4,
-    VF_SUBTITLE=5,
-    VF_OPENGL=6,
-    VF_ART=7,
-    VF_TRANSITION=8,
-    VF_MISC=9,
-    VF_HIDDEN=10,
-    VF_MAX=11
-}VF_CATEGORY;
+#define FADEOUT
+#include "ADM_vidFadeInOut.cpp"
 
-#define VF_PARTIAL_FILTER 9999
-#define VF_INVALID_FILTER (-1)
+// Add the hook to make it valid plugin
+DECLARE_VIDEO_FILTER(   ADMVideoFadeInOut,   // Class
+                                      1,0,0,              // Version
+                                      ADM_UI_TYPE_BUILD,         // UI
+                                      VF_TRANSITION,            // Category
+                                      "fadeOut",            // internal name (must be uniq!)
+                                      QT_TRANSLATE_NOOP("fadeInOut","Fade out"),            // Display name
+                                      QT_TRANSLATE_NOOP("fadeInOut","Fade out to color.") // Description
+                                  );
 
-typedef uint32_t VF_FILTERS ;
 
- #endif
+

@@ -43,7 +43,7 @@ public:
 DECLARE_VIDEO_FILTER(AVDM_black,
                      1,0,0,              // Version
                      ADM_UI_ALL,         // UI
-                     VF_TRANSFORM,            // Category
+                     VF_TRANSITION,            // Category
                      "black",            // internal name (must be uniq!)
                      QT_TRANSLATE_NOOP("black","Black"),            // Display name
                      QT_TRANSLATE_NOOP("black","Replace a section by black.") // Description
@@ -97,8 +97,8 @@ AVDM_black::AVDM_black(ADM_coreVideoFilter *in,CONFcouple *setup) :  ADM_coreVid
     if(!setup || !ADM_paramLoad(setup,black_param,&param))
     {
         // Default value
-        param.startBlack=0; 
-        param.endBlack=0;
+        param.startBlack=info.markerA / 1000LL; 
+        param.endBlack=info.markerB / 1000LL;
     }
     nextFrame=0;
 }

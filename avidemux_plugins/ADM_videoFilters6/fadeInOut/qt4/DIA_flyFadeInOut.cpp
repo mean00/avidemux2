@@ -1,8 +1,12 @@
+/**/
 /***************************************************************************
-                          video_filters.h  -  description
+                          DIA_flyFadeInOut
                              -------------------
-    begin                : Wed Mar 27 2002
-    copyright            : (C) 2002 by mean
+
+			   Ui for FadeInOut
+
+    begin                : 08 Apr 2005
+    copyright            : (C) 2004/7 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -14,29 +18,25 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- #ifndef __VIDEO_FILTERS__CATEGORY__
- #define  __VIDEO_FILTERS__CATEGORY__
+#include "ADM_default.h"
+#include "ADM_image.h"
+#include "DIA_flyFadeInOut.h"
 
-typedef enum
+/************* COMMON PART *********************/
+uint8_t  flyFadeInOut::update(void)
 {
-    VF_INVALID=-1,
-    VF_TRANSFORM=0,
-    VF_INTERLACING=1,
-    VF_COLORS=2,
-    VF_NOISE=3,
-    VF_SHARPNESS=4,
-    VF_SUBTITLE=5,
-    VF_OPENGL=6,
-    VF_ART=7,
-    VF_TRANSITION=8,
-    VF_MISC=9,
-    VF_HIDDEN=10,
-    VF_MAX=11
-}VF_CATEGORY;
+    return 1;
+}
+/**
+    \fn processYuv
+*/
+uint8_t   flyFadeInOut::processYuv(ADMImage *in,ADMImage *out )
+{
+    out->duplicate(in);
 
-#define VF_PARTIAL_FILTER 9999
-#define VF_INVALID_FILTER (-1)
+    // Do it!
+    ADMVideoFadeInOut::FadeInOutProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),param);
 
-typedef uint32_t VF_FILTERS ;
+    return 1;
+}
 
- #endif

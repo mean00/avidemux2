@@ -177,6 +177,15 @@
        </item>
        <item>
         <property name="text">
+         <string>Transition</string>
+        </property>
+        <property name="icon">
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/9.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/9.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Miscellaneous</string>
         </property>
         <property name="icon">
