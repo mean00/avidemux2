@@ -52,7 +52,7 @@ DECLARE_VIDEO_FILTER(AVDM_Fade,
                     ADM_UI_ALL,     // UI
                     VF_TRANSITION,   // Category
                     "fadeToBlack",  // internal name (must be uniq!)
-                    QT_TRANSLATE_NOOP("fadeToBlack","Fade to black (legacy)"), // Display name
+                    QT_TRANSLATE_NOOP("fadeToBlack","Fade to black"), // Display name
                     QT_TRANSLATE_NOOP("fadeToBlack","Fade to black in/out.") // Description
 );
 /**
@@ -106,8 +106,8 @@ AVDM_Fade::AVDM_Fade(ADM_coreVideoFilter *in,CONFcouple *setup) :  ADM_coreVideo
     if(!setup || !ADM_paramLoad(setup,fade_param,&param))
     {
         // Default value
-        param.startFade=0;
-        param.endFade=max;
+        param.startFade=info.markerA / 1000LL;
+        param.endFade=info.markerB / 1000LL;
         param.inOut=0;
         param.toBlack=true;
 
