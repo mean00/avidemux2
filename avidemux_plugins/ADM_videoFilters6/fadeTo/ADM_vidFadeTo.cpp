@@ -56,7 +56,7 @@ DECLARE_VIDEO_FILTER(AVDM_FadeTo,
                     ADM_UI_ALL,     // UI
                     VF_TRANSITION,   // Category
                     "fadeTo",       // internal name (must be uniq!)
-                    QT_TRANSLATE_NOOP("fadeTo","Fade (legacy)"), // Display name
+                    QT_TRANSLATE_NOOP("fadeTo","Fade"), // Display name
                     QT_TRANSLATE_NOOP("fadeTo","Fade.") // Description
 );
 /**
@@ -113,8 +113,8 @@ AVDM_FadeTo::AVDM_FadeTo(ADM_coreVideoFilter *in,CONFcouple *setup) :  ADM_coreV
     if(!setup || !ADM_paramLoad(setup,fade_param,&param))
     {
         // Default value
-        param.startFade=0; 
-        param.endFade=0;
+        param.startFade=info.markerA / 1000LL; 
+        param.endFade=info.markerB / 1000LL;
         param.inOut=false;
     }
     buildLut();
