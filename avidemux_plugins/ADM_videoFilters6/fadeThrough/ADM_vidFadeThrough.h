@@ -49,6 +49,8 @@ class  ADMVideoFadeThrough:public ADM_coreVideoFilter
     } qtr_worker_thread_arg;
 
     typedef struct {
+        uint8_t *             lut[3];
+        
         int                   rgbBufStride;
         ADM_byteBuffer *      rgbBufRaw;
         ADMImageRef *         rgbBufImage;

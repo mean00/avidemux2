@@ -50,6 +50,9 @@ DECLARE_VIDEO_FILTER(   ADMVideoFadeThrough,   // Class
 */
 void ADMVideoFadeThrough::FadeThroughCreateBuffers(int w, int h, fadeThrough_buffers_t * buffers)
 {
+    for (int i=0; i<3; i++)
+        buffers->lut[i] = new uint8_t [256];
+    
     buffers->rgbBufStride = ADM_IMAGE_ALIGN(w * 4);
     buffers->rgbBufRaw = new ADM_byteBuffer();
     if (buffers->rgbBufRaw)
@@ -99,6 +102,9 @@ void ADMVideoFadeThrough::FadeThroughCreateBuffers(int w, int h, fadeThrough_buf
 */
 void ADMVideoFadeThrough::FadeThroughDestroyBuffers(fadeThrough_buffers_t * buffers)
 {
+    for (int i=0; i<3; i++)
+        delete [] buffers->lut[i];
+
     if (buffers->convertYuvToRgb) delete buffers->convertYuvToRgb;
     if (buffers->convertRgbToYuv) delete buffers->convertRgbToYuv;
     if (buffers->rgbBufRaw) buffers->rgbBufRaw->clean();
@@ -370,7 +376,68 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
     double frac = ((double)(imgMs - startMs)) / ((double)(endMs - startMs));
 
 
+    if (param.enableBright || param.enableSat || param.enableBlend)
+    {
+        for (int i=0; i<3; i++)
+            for (int j=0; j<256; j++)
+                buffers->lut[i][j] = j;
+    }
 
+    if (param.enableBright)
+    {
+        double level = TransientPoint(frac, param.transientBright, param.transientDurationBright);
+        level *= (param.peakBright-1.0);	// -1 .. +1
+        if(img->_range == ADM_COL_RANGE_MPEG)
+            level *= 220.0;	// +-220
+        else
+            level *= 255.0;	// +-255
+        
+        int px;
+        int intLevel = level + 0.49;
+        for (int j=0; j<256; j++)
+        {
+            px = buffers->lut[0][j];
+            px += intLevel;
+            if(img->_range == ADM_COL_RANGE_MPEG)
+            {
+                if (px < 16) px = 16;
+                if (px > 235) px = 235;
+            } else {
+                if (px < 0) px = 0;
+                if (px > 255) px = 255;
+            }
+            buffers->lut[0][j] = px;
+        }
+    }
+
+    if (param.enableSat)
+    {
+        double level = TransientPoint(frac, param.transientSat, param.transientDurationSat);
+        level *= (param.peakSat-1.0);
+        level += 1;	// 0..2
+        int satMul = level * 65536.0 + 0.49;
+        int px;
+        for (int i=1; i<3; i++)
+        {
+            for (int j=0; j<256; j++)
+            {
+                px = buffers->lut[i][j];
+                px -= 128;
+                px *= satMul;
+                px /= 65536;
+                px += 128;
+                if(img->_range == ADM_COL_RANGE_MPEG)
+                {
+                    if (px < 16) px = 16;
+                    if (px > 240) px = 240;
+                } else {
+                    if (px < 0) px = 0;
+                    if (px > 255) px = 255;
+                }
+                buffers->lut[i][j] = px;
+            }
+        }
+    }
     
     if (param.enableBlend)
     {
@@ -406,17 +473,27 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
         // fix swapped uv
         int uvswap = yuv[1]; yuv[1] = yuv[2]; yuv[2]=uvswap;
         
-        // premultiply yuv
+        int imgblend = (1.0-level)*256.0 + 0.49;
+        int px;
         for (int i=0; i<3; i++)
+        {
             yuv[i] = yuv[i]*level*256.0 + 0.49;
-
+            for (int j=0; j<256; j++)
+            {
+                px = imgblend*buffers->lut[i][j] + yuv[i];
+                buffers->lut[i][j] = px / 256;
+            }
+        }
+    }
+    
+    if (param.enableBright || param.enableSat || param.enableBlend)    // apply lut
+    {
         uint8_t * imgPlanes[3];
         int imgStrides[3];
 
         img->GetWritePlanes(imgPlanes);
         img->GetPitches(imgStrides);
 
-        int imgblend = (1.0-level)*256.0 + 0.49;
         for (int p=0; p<3; p++)
         {
             int width = ((p==0) ? w:(w/2));
@@ -427,88 +504,37 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
             {
                 for (int x=0; x<width; x++)
                 {
-                    px = imgblend*ipl[x] + yuv[p];
-                    ipl[x] = px / 256;
+                    ipl[x] = buffers->lut[p][ipl[x]];
                 }
                 ipl += imgStrides[p];
             }
         }
     }
-
-
-    if (param.enableSat)
-    {
-        double level = TransientPoint(frac, param.transientSat, param.transientDurationSat);
-        level *= param.peakSat;
-        level += 1;	// 0..2
-
-        uint8_t * imgPlanes[3];
-        int imgStrides[3];
-
-        img->GetWritePlanes(imgPlanes);
-        img->GetPitches(imgStrides);
-        
-        int satMul = level * 65536.0 + 0.49;
-        for (int p=1; p<3; p++)
-        {
-            int width = (w/2);
-            int height = (h/2);
-            int px;
-            uint8_t * ipl = imgPlanes[p];
-            for (int y=0; y<height; y++)
-            {
-                for (int x=0; x<width; x++)
-                {
-                    px = ipl[x];
-                    px -= 128;
-                    px *= satMul;
-                    px /= 65536;
-                    px += 128;
-                    if(img->_range == ADM_COL_RANGE_MPEG)
-                    {
-                        if (px < 16)
-                            ipl[x] = 16;
-                        else if (px > 240)
-                            ipl[x] = 240;
-                        else
-                            ipl[x] = px;
-                    } else {
-                        if (px < 0)
-                            ipl[x] = 0;
-                        else if (px > 255)
-                            ipl[x] = 255;
-                        else
-                            ipl[x] = px;
-                    }
-                }
-                ipl += imgStrides[p];
-            }
-        }
-    }
-
 
     if (param.enableBlur)
     {
         double level = TransientPoint(frac, param.transientBlur, param.transientDurationBlur);
-        buffers->convertYuvToRgb->convertImage(img,buffers->rgbBufRaw->at(0));
 
         unsigned int radius = level*param.peakBlur;
         if (radius > 254) radius = 254;
-        if (radius < 1) return;	// nothing to do
-        
-        int x, y;
-        uint8_t * rgbPtr = buffers->rgbBufRaw->at(0);
-        for(y = 0; y < h; y++)
+        if (radius >= 1)
         {
-            StackBlurLine_C((rgbPtr + y*buffers->rgbBufStride), w, 4, buffers->blurStack, radius);
-        };
+            buffers->convertYuvToRgb->convertImage(img,buffers->rgbBufRaw->at(0));
 
-        for(x = 0; x < w; x++)
-        {
-            StackBlurLine_C((rgbPtr + x*4), h, buffers->rgbBufStride, buffers->blurStack, radius);
-        };
+            int x, y;
+            uint8_t * rgbPtr = buffers->rgbBufRaw->at(0);
+            for(y = 0; y < h; y++)
+            {
+                StackBlurLine_C((rgbPtr + y*buffers->rgbBufStride), w, 4, buffers->blurStack, radius);
+            };
 
-        buffers->convertRgbToYuv->convertImage(buffers->rgbBufImage,img);
+            for(x = 0; x < w; x++)
+            {
+                StackBlurLine_C((rgbPtr + x*4), h, buffers->rgbBufStride, buffers->blurStack, radius);
+            };
+
+            buffers->convertRgbToYuv->convertImage(buffers->rgbBufImage,img);
+        }
     }
 
 
@@ -924,11 +950,11 @@ const char   *ADMVideoFadeThrough::getConfiguration(void)
     snprintf(s,1023,"%s - %s: ",startTimeStr,endTimeStr);
     
     bool first = true;
-    if (_param.enableBlend)
+    if (_param.enableBright)
     {
         if (!first)
             strcat(s," + ");
-        strcat(s,"Color blend");
+        strcat(s,"Brightness");
         first = false;
     }
     
@@ -937,6 +963,14 @@ const char   *ADMVideoFadeThrough::getConfiguration(void)
         if (!first)
             strcat(s," + ");
         strcat(s,"Saturation");
+        first = false;
+    }
+    
+    if (_param.enableBlend)
+    {
+        if (!first)
+            strcat(s," + ");
+        strcat(s,"Color blend");
         first = false;
     }
     
@@ -987,28 +1021,32 @@ ADMVideoFadeThrough::ADMVideoFadeThrough(  ADM_coreVideoFilter *in,CONFcouple *c
         // Default value
         _param.startTime = info.markerA / 1000LL;
         _param.endTime = info.markerB / 1000LL;
-        _param.enableBlend = false;
+        _param.enableBright = false;
         _param.enableSat = false;
+        _param.enableBlend = false;
         _param.enableBlur = false;
         _param.enableRot = false;
         _param.enableZoom = false;
         _param.enableVignette = false;
         _param.rgbColorBlend = 0;
         _param.rgbColorVignette = 0;
+        _param.peakBright = 1.0;
+        _param.peakSat = 1.0;
         _param.peakBlend = 1.0;
-        _param.peakSat = 0;
         _param.peakBlur = 0;
         _param.peakRot = 0;
         _param.peakZoom = 1.0;
         _param.peakVignette = 0;
-        _param.transientBlend = 0;
+        _param.transientBright = 0;
         _param.transientSat = 0;
+        _param.transientBlend = 0;
         _param.transientBlur = 0;
         _param.transientRot = 0;
         _param.transientZoom = 0;
         _param.transientVignette = 0;
-        _param.transientDurationBlend = 0.5;
+        _param.transientDurationBright = 0.5;
         _param.transientDurationSat = 0.5;
+        _param.transientDurationBlend = 0.5;
         _param.transientDurationBlur = 0.5;
         _param.transientDurationRot = 0.5;
         _param.transientDurationZoom = 0.5;
