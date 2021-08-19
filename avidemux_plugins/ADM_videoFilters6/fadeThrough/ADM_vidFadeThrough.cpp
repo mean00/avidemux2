@@ -50,6 +50,9 @@ DECLARE_VIDEO_FILTER(   ADMVideoFadeThrough,   // Class
 */
 void ADMVideoFadeThrough::FadeThroughCreateBuffers(int w, int h, fadeThrough_buffers_t * buffers)
 {
+    for (int i=0; i<3; i++)
+        buffers->lut[i] = new uint8_t [256];
+    
     buffers->rgbBufStride = ADM_IMAGE_ALIGN(w * 4);
     buffers->rgbBufRaw = new ADM_byteBuffer();
     if (buffers->rgbBufRaw)
@@ -99,6 +102,9 @@ void ADMVideoFadeThrough::FadeThroughCreateBuffers(int w, int h, fadeThrough_buf
 */
 void ADMVideoFadeThrough::FadeThroughDestroyBuffers(fadeThrough_buffers_t * buffers)
 {
+    for (int i=0; i<3; i++)
+        delete [] buffers->lut[i];
+
     if (buffers->convertYuvToRgb) delete buffers->convertYuvToRgb;
     if (buffers->convertRgbToYuv) delete buffers->convertRgbToYuv;
     if (buffers->rgbBufRaw) buffers->rgbBufRaw->clean();
@@ -370,58 +376,41 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
     double frac = ((double)(imgMs - startMs)) / ((double)(endMs - startMs));
 
 
-
+    if (param.enableSat || param.enableBlend)
+    {
+        for (int i=0; i<3; i++)
+            for (int j=0; j<256; j++)
+                buffers->lut[i][j] = j;
+    }
 
     if (param.enableSat)
     {
         double level = TransientPoint(frac, param.transientSat, param.transientDurationSat);
         level *= (param.peakSat-1.0);
         level += 1;	// 0..2
-
-        uint8_t * imgPlanes[3];
-        int imgStrides[3];
-
-        img->GetWritePlanes(imgPlanes);
-        img->GetPitches(imgStrides);
-        
         int satMul = level * 65536.0 + 0.49;
-        for (int p=1; p<3; p++)
+        int px;
+        for (int i=1; i<3; i++)
         {
-            int width = (w/2);
-            int height = (h/2);
-            int px;
-            uint8_t * ipl = imgPlanes[p];
-            for (int y=0; y<height; y++)
+            for (int j=0; j<256; j++)
             {
-                for (int x=0; x<width; x++)
+                px = buffers->lut[i][j];
+                px -= 128;
+                px *= satMul;
+                px /= 65536;
+                px += 128;
+                if(img->_range == ADM_COL_RANGE_MPEG)
                 {
-                    px = ipl[x];
-                    px -= 128;
-                    px *= satMul;
-                    px /= 65536;
-                    px += 128;
-                    if(img->_range == ADM_COL_RANGE_MPEG)
-                    {
-                        if (px < 16)
-                            ipl[x] = 16;
-                        else if (px > 240)
-                            ipl[x] = 240;
-                        else
-                            ipl[x] = px;
-                    } else {
-                        if (px < 0)
-                            ipl[x] = 0;
-                        else if (px > 255)
-                            ipl[x] = 255;
-                        else
-                            ipl[x] = px;
-                    }
+                    if (px < 16) px = 16;
+                    if (px > 240) px = 240;
+                } else {
+                    if (px < 0) px = 0;
+                    if (px > 255) px = 255;
                 }
-                ipl += imgStrides[p];
+                buffers->lut[i][j] = px;
             }
         }
     }
-
     
     if (param.enableBlend)
     {
@@ -457,17 +446,27 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
         // fix swapped uv
         int uvswap = yuv[1]; yuv[1] = yuv[2]; yuv[2]=uvswap;
         
-        // premultiply yuv
+        int imgblend = (1.0-level)*256.0 + 0.49;
+        int px;
         for (int i=0; i<3; i++)
+        {
             yuv[i] = yuv[i]*level*256.0 + 0.49;
-
+            for (int j=0; j<256; j++)
+            {
+                px = imgblend*buffers->lut[i][j] + yuv[i];
+                buffers->lut[i][j] = px / 256;
+            }
+        }
+    }
+    
+    if (param.enableSat || param.enableBlend)    // apply lut
+    {
         uint8_t * imgPlanes[3];
         int imgStrides[3];
 
         img->GetWritePlanes(imgPlanes);
         img->GetPitches(imgStrides);
 
-        int imgblend = (1.0-level)*256.0 + 0.49;
         for (int p=0; p<3; p++)
         {
             int width = ((p==0) ? w:(w/2));
@@ -478,8 +477,7 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
             {
                 for (int x=0; x<width; x++)
                 {
-                    px = imgblend*ipl[x] + yuv[p];
-                    ipl[x] = px / 256;
+                    ipl[x] = buffers->lut[p][ipl[x]];
                 }
                 ipl += imgStrides[p];
             }
