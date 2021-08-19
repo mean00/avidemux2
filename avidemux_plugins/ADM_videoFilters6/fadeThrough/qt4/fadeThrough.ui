@@ -105,7 +105,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tabBlend">
         <attribute name="title">
@@ -335,10 +335,10 @@
            <item>
             <widget class="QDoubleSpinBox" name="doubleSpinBoxPeakSat">
              <property name="minimum">
-              <double>-1.000000000000000</double>
+              <double>0.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1.000000000000000</double>
+              <double>10.000000000000000</double>
              </property>
              <property name="singleStep">
               <double>0.010000000000000</double>
@@ -348,10 +348,10 @@
            <item>
             <widget class="ADM_SliderIndicator" name="horizontalSliderPeakSat">
              <property name="minimum">
-              <number>-100</number>
+              <number>0</number>
              </property>
              <property name="maximum">
-              <number>100</number>
+              <number>1000</number>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>

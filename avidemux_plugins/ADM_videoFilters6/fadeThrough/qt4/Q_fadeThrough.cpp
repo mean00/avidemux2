@@ -283,7 +283,7 @@ void Ui_fadeThroughWindow::reset( bool f )
     myFly->param.rgbColorBlend = 0;
     myFly->param.rgbColorVignette = 0;
     myFly->param.peakBlend = 1.0;
-    myFly->param.peakSat = 0;
+    myFly->param.peakSat = 1.0;
     myFly->param.peakBlur = 0;
     myFly->param.peakRot = 0;
     myFly->param.peakZoom = 1.0;

@@ -439,7 +439,7 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
     if (param.enableSat)
     {
         double level = TransientPoint(frac, param.transientSat, param.transientDurationSat);
-        level *= param.peakSat;
+        level *= (param.peakSat-1.0);
         level += 1;	// 0..2
 
         uint8_t * imgPlanes[3];
@@ -996,7 +996,7 @@ ADMVideoFadeThrough::ADMVideoFadeThrough(  ADM_coreVideoFilter *in,CONFcouple *c
         _param.rgbColorBlend = 0;
         _param.rgbColorVignette = 0;
         _param.peakBlend = 1.0;
-        _param.peakSat = 0;
+        _param.peakSat = 1.0;
         _param.peakBlur = 0;
         _param.peakRot = 0;
         _param.peakZoom = 1.0;
