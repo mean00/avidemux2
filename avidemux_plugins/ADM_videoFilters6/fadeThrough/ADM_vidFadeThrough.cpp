@@ -487,25 +487,27 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
     if (param.enableBlur)
     {
         double level = TransientPoint(frac, param.transientBlur, param.transientDurationBlur);
-        buffers->convertYuvToRgb->convertImage(img,buffers->rgbBufRaw->at(0));
 
         unsigned int radius = level*param.peakBlur;
         if (radius > 254) radius = 254;
-        if (radius < 1) return;	// nothing to do
-        
-        int x, y;
-        uint8_t * rgbPtr = buffers->rgbBufRaw->at(0);
-        for(y = 0; y < h; y++)
+        if (radius >= 1)
         {
-            StackBlurLine_C((rgbPtr + y*buffers->rgbBufStride), w, 4, buffers->blurStack, radius);
-        };
+            buffers->convertYuvToRgb->convertImage(img,buffers->rgbBufRaw->at(0));
 
-        for(x = 0; x < w; x++)
-        {
-            StackBlurLine_C((rgbPtr + x*4), h, buffers->rgbBufStride, buffers->blurStack, radius);
-        };
+            int x, y;
+            uint8_t * rgbPtr = buffers->rgbBufRaw->at(0);
+            for(y = 0; y < h; y++)
+            {
+                StackBlurLine_C((rgbPtr + y*buffers->rgbBufStride), w, 4, buffers->blurStack, radius);
+            };
 
-        buffers->convertRgbToYuv->convertImage(buffers->rgbBufImage,img);
+            for(x = 0; x < w; x++)
+            {
+                StackBlurLine_C((rgbPtr + x*4), h, buffers->rgbBufStride, buffers->blurStack, radius);
+            };
+
+            buffers->convertRgbToYuv->convertImage(buffers->rgbBufImage,img);
+        }
     }
 
 
