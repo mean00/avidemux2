@@ -1,6 +1,5 @@
 <RCC>
   <qresource prefix="/new/prefix1">
-    <file>../../../common/ADM_icons/videoFilter/gl.png</file>
     <file>../../../common/ADM_icons/videoFilter/up.png</file>
     <file>../../../common/ADM_icons/videoFilter/add.png</file>
     <file>../../../common/ADM_icons/videoFilter/cd.png</file>
@@ -12,14 +11,15 @@
     <file>../../../common/ADM_icons/videoFilter/filesaveas.png</file>
     <file>../../../common/ADM_icons/videoFilter/remove.png</file>
     <file>../../../common/ADM_icons/videoFilter/thumbnail.png</file>
-    <file>../../../common/ADM_icons/videoFilter/1.png</file>
-    <file>../../../common/ADM_icons/videoFilter/2.png</file>
-    <file>../../../common/ADM_icons/videoFilter/3.png</file>
-    <file>../../../common/ADM_icons/videoFilter/4.png</file>
-    <file>../../../common/ADM_icons/videoFilter/5.png</file>
-    <file>../../../common/ADM_icons/videoFilter/6.png</file>
-    <file>../../../common/ADM_icons/videoFilter/7.png</file>
-    <file>../../../common/ADM_icons/videoFilter/8.png</file>
-    <file>../../../common/ADM_icons/videoFilter/9.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-transform.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-transition.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-interlacing.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-colors.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-noise.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-sharpness.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-subtitles.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-opengl.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-artistic.png</file>
+    <file>../../../common/ADM_icons/videoFilter/filter-category-misc.png</file>
   </qresource>
 </RCC>

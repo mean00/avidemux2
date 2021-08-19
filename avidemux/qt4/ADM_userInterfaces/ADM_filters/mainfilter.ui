@@ -109,70 +109,7 @@
         </property>
         <property name="icon">
          <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/1.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/1.png</iconset>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Interlacing</string>
-        </property>
-        <property name="icon">
-         <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/2.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/2.png</iconset>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Colors</string>
-        </property>
-        <property name="icon">
-         <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/4.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/4.png</iconset>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Noise</string>
-        </property>
-        <property name="icon">
-         <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/5.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/5.png</iconset>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Sharpness</string>
-        </property>
-        <property name="icon">
-         <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/3.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/3.png</iconset>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Subtitles</string>
-        </property>
-        <property name="icon">
-         <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/7.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/7.png</iconset>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>OpenGl</string>
-        </property>
-        <property name="icon">
-         <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/gl.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/gl.png</iconset>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Artistic</string>
-        </property>
-        <property name="icon">
-         <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/8.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/8.png</iconset>
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-transform.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-transform.png</iconset>
         </property>
        </item>
        <item>
@@ -181,7 +118,70 @@
         </property>
         <property name="icon">
          <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/9.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/9.png</iconset>
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-transition.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-transition.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Interlacing</string>
+        </property>
+        <property name="icon">
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-interlacing.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-interlacing.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Colors</string>
+        </property>
+        <property name="icon">
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-colors.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-colors.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Noise</string>
+        </property>
+        <property name="icon">
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-noise.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-noise.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Sharpness</string>
+        </property>
+        <property name="icon">
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-sharpness.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-sharpness.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Subtitles</string>
+        </property>
+        <property name="icon">
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-subtitles.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-subtitles.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>OpenGl</string>
+        </property>
+        <property name="icon">
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-opengl.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-opengl.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Artistic</string>
+        </property>
+        <property name="icon">
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-artistic.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-artistic.png</iconset>
         </property>
        </item>
        <item>
@@ -190,7 +190,7 @@
         </property>
         <property name="icon">
          <iconset resource="filter.qrc">
-          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/6.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/6.png</iconset>
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-misc.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filter-category-misc.png</iconset>
         </property>
        </item>
       </widget>
