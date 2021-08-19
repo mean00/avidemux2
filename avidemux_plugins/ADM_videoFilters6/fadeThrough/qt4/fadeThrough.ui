@@ -80,7 +80,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_3">
+      <spacer name="horizontalSpacer_1">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -122,7 +122,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer">
+            <spacer name="horizontalSpacer_2">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -187,7 +187,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_2">
+            <spacer name="horizontalSpacer_3">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -313,7 +313,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayoutSat">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
             <widget class="QCheckBox" name="checkBoxEnableSat">
              <property name="text">
@@ -324,7 +324,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
             <widget class="QLabel" name="labelSat">
              <property name="text">
@@ -361,7 +361,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
             <widget class="QLabel" name="labelTransientSat">
              <property name="text">
@@ -441,7 +441,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayoutBlur">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
             <widget class="QCheckBox" name="checkBoxEnableBlur">
              <property name="text">
@@ -452,7 +452,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
            <item>
             <widget class="QLabel" name="labelPeakBlur">
              <property name="text">
@@ -486,7 +486,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
            <item>
             <widget class="QLabel" name="labelTransientBlur">
              <property name="text">
@@ -566,7 +566,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayoutRot">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
            <item>
             <widget class="QCheckBox" name="checkBoxEnableRot">
              <property name="text">
@@ -577,7 +577,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_12">
            <item>
             <widget class="QLabel" name="labelPeakRot">
              <property name="text">
@@ -617,7 +617,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="horizontalLayout_13">
            <item>
             <widget class="QLabel" name="labelTransientRot">
              <property name="text">
@@ -692,7 +692,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayoutZoom">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_14">
            <item>
             <widget class="QCheckBox" name="checkBoxEnableZoom">
              <property name="text">
@@ -703,7 +703,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_15">
            <item>
             <widget class="QLabel" name="labelPeakZoom">
              <property name="text">
@@ -743,7 +743,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="horizontalLayout_16">
            <item>
             <widget class="QLabel" name="labelTransientZoom">
              <property name="text">
@@ -823,7 +823,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayoutVignette">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_17">
            <item>
             <widget class="QCheckBox" name="checkBoxEnableVignette">
              <property name="text">
@@ -832,7 +832,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer">
+            <spacer name="horizontalSpacer_4">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -897,7 +897,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_2">
+            <spacer name="horizontalSpacer_5">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -912,7 +912,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_18">
            <item>
             <widget class="QLabel" name="labelPeakVignette">
              <property name="text">
@@ -943,7 +943,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="horizontalLayout_19">
            <item>
             <widget class="QLabel" name="labelTransientVignette">
              <property name="text">

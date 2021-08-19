@@ -1006,7 +1006,7 @@ ADMVideoFadeThrough::ADMVideoFadeThrough(  ADM_coreVideoFilter *in,CONFcouple *c
         _param.transientBlur = 0;
         _param.transientRot = 0;
         _param.transientZoom = 0;
-        _param.transientVignette = 0.5;
+        _param.transientVignette = 0;
         _param.transientDurationBlend = 0.5;
         _param.transientDurationSat = 0.5;
         _param.transientDurationBlur = 0.5;

@@ -293,7 +293,7 @@ void Ui_fadeThroughWindow::reset( bool f )
     myFly->param.transientBlur = 0;
     myFly->param.transientRot = 0;
     myFly->param.transientZoom = 0;
-    myFly->param.transientVignette = 0.5;
+    myFly->param.transientVignette = 0;
     myFly->param.transientDurationBlend = 0.5;
     myFly->param.transientDurationSat = 0.5;
     myFly->param.transientDurationBlur = 0.5;
