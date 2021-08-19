@@ -72,6 +72,7 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         connect(ui.tabEffects,SIGNAL(currentChanged(int)),this,SLOT(tabChanged(int)));
         
 #define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
+        CHKBOX(EnableBright);
         CHKBOX(EnableSat);
         CHKBOX(EnableBlend);
         CHKBOX(EnableBlur);
@@ -87,6 +88,7 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
         connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChangedSpinBox(double)));
         
+        SPINNER(PeakBright,100,2);
         SPINNER(PeakSat,100,2);
         SPINNER(PeakBlend,100,2);
         SPINNER(PeakBlur,1,2);
@@ -96,6 +98,7 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
 
 #define COMBOX(x) connect(ui.comboBox##x,SIGNAL(currentIndexChanged(int)),this,SLOT(valueChanged(int)));
 
+        COMBOX(TransientBright);
         COMBOX(TransientSat);
         COMBOX(TransientBlend);
         COMBOX(TransientBlur);
@@ -103,6 +106,7 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         COMBOX(TransientZoom);
         COMBOX(TransientVignette);
 
+        SPINNER(TransientDurationBright,100,2);
         SPINNER(TransientDurationSat,100,2);
         SPINNER(TransientDurationBlend,100,2);
         SPINNER(TransientDurationBlur,100,2);
@@ -210,6 +214,7 @@ void Ui_fadeThroughWindow::valueChangedSpinBox(double f)
     ui.horizontalSliderPeak##x->setValue( std::round(ui.doubleSpinBoxPeak##x->value()*scale)); \
     ui.horizontalSliderTransientDuration##x->setValue( std::round(ui.doubleSpinBoxTransientDuration##x->value()*100.0));
 
+    UPDATESILDERSFROMSPINBOXES(Bright,100);
     UPDATESILDERSFROMSPINBOXES(Sat,100);
     UPDATESILDERSFROMSPINBOXES(Blend,100);
     UPDATESILDERSFROMSPINBOXES(Blur,1);
@@ -274,6 +279,7 @@ void Ui_fadeThroughWindow::pushedColorVignette()
  */
 void Ui_fadeThroughWindow::reset( bool f )
 {
+    myFly->param.enableBright = false;
     myFly->param.enableSat = false;
     myFly->param.enableBlend = false;
     myFly->param.enableBlur = false;
@@ -282,18 +288,21 @@ void Ui_fadeThroughWindow::reset( bool f )
     myFly->param.enableVignette = false;
     myFly->param.rgbColorBlend = 0;
     myFly->param.rgbColorVignette = 0;
+    myFly->param.peakBright = 1.0;
     myFly->param.peakSat = 1.0;
     myFly->param.peakBlend = 1.0;
     myFly->param.peakBlur = 0;
     myFly->param.peakRot = 0;
     myFly->param.peakZoom = 1.0;
     myFly->param.peakVignette = 0;
+    myFly->param.transientBright = 0;
     myFly->param.transientSat = 0;
     myFly->param.transientBlend = 0;
     myFly->param.transientBlur = 0;
     myFly->param.transientRot = 0;
     myFly->param.transientZoom = 0;
     myFly->param.transientVignette = 0;
+    myFly->param.transientDurationBright = 0.5;
     myFly->param.transientDurationSat = 0.5;
     myFly->param.transientDurationBlend = 0.5;
     myFly->param.transientDurationBlur = 0.5;
@@ -339,16 +348,18 @@ bool flyFadeThrough::getTabEnabled(int tabIndex)
     switch(tabIndex)
     {
         case 0:
-            return param.enableSat;
+            return param.enableBright;
         case 1:
-            return param.enableBlend;
+            return param.enableSat;
         case 2:
-            return param.enableBlur;
+            return param.enableBlend;
         case 3:
-            return param.enableRot;
+            return param.enableBlur;
         case 4:
-            return param.enableZoom;
+            return param.enableRot;
         case 5:
+            return param.enableZoom;
+        case 6:
             return param.enableVignette;
         default:
             return false;
@@ -360,16 +371,18 @@ int flyFadeThrough::getTabTransient(int tabIndex)
     switch(tabIndex)
     {
         case 0:
-            return param.transientSat;
+            return param.transientBright;
         case 1:
-            return param.transientBlend;
+            return param.transientSat;
         case 2:
-            return param.transientBlur;
+            return param.transientBlend;
         case 3:
-            return param.transientRot;
+            return param.transientBlur;
         case 4:
-            return param.transientZoom;
+            return param.transientRot;
         case 5:
+            return param.transientZoom;
+        case 6:
             return param.transientVignette;
         default:
             return 0;
@@ -381,16 +394,18 @@ double flyFadeThrough::getTabTransientDuration(int tabIndex)
     switch(tabIndex)
     {
         case 0:
-            return (double)param.transientDurationSat;
+            return (double)param.transientDurationBright;
         case 1:
-            return (double)param.transientDurationBlend;
+            return (double)param.transientDurationSat;
         case 2:
-            return (double)param.transientDurationBlur;
+            return (double)param.transientDurationBlend;
         case 3:
-            return (double)param.transientDurationRot;
+            return (double)param.transientDurationBlur;
         case 4:
-            return (double)param.transientDurationZoom;
+            return (double)param.transientDurationRot;
         case 5:
+            return (double)param.transientDurationZoom;
+        case 6:
             return (double)param.transientDurationVignette;
         default:
             return 0;
@@ -405,11 +420,11 @@ void flyFadeThrough::redrawScene()
     int activeTab = w->tabEffects->currentIndex();
     
     scene->clear();
-    for (int i=0; i<=6; i++)
+    for (int i=0; i<=7; i++)
     {
         if (i==activeTab)
             continue;
-        if (i==6)
+        if (i==7)
             i = activeTab;
 
         QColor color((i == activeTab) ? Qt::red : Qt::lightGray);
@@ -457,6 +472,7 @@ uint8_t flyFadeThrough::upload()
     w->horizontalSliderTransientDuration##x->setValue( std::round(param.transientDuration##x*100.0)); \
     w->doubleSpinBoxTransientDuration##x->setValue(param.transientDuration##x);
 
+    UPLOADALIKES(Bright,100);
     UPLOADALIKES(Sat,100);
     UPLOADALIKES(Blend,100);
     UPLOADALIKES(Blur,1);
@@ -525,6 +541,7 @@ uint8_t flyFadeThrough::download(void)
     param.peak##x = (double)w->horizontalSliderPeak##x->value() / scale; \
     param.transientDuration##x = (double)w->horizontalSliderTransientDuration##x->value() / 100.0;
 
+    DOWNLOADALIKES(Bright,100);
     DOWNLOADALIKES(Sat,100);
     DOWNLOADALIKES(Blend,100);
     DOWNLOADALIKES(Blur,1);
@@ -565,6 +582,7 @@ void flyFadeThrough::setTabOrder(void)
     controls.push_back(w->doubleSpinBoxTransientDuration##x); \
     controls.push_back(w->horizontalSliderTransientDuration##x);
 
+    PUSHWOCOLOR(Bright);
     PUSHWOCOLOR(Sat);
     PUSHWCOLOR(Blend);
     PUSHWOCOLOR(Blur);

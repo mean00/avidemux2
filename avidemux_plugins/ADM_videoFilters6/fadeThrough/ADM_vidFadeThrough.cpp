@@ -376,11 +376,38 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
     double frac = ((double)(imgMs - startMs)) / ((double)(endMs - startMs));
 
 
-    if (param.enableSat || param.enableBlend)
+    if (param.enableBright || param.enableSat || param.enableBlend)
     {
         for (int i=0; i<3; i++)
             for (int j=0; j<256; j++)
                 buffers->lut[i][j] = j;
+    }
+
+    if (param.enableBright)
+    {
+        double level = TransientPoint(frac, param.transientBright, param.transientDurationBright);
+        level *= (param.peakBright-1.0);	// -1 .. +1
+        if(img->_range == ADM_COL_RANGE_MPEG)
+            level *= 220.0;	// +-220
+        else
+            level *= 255.0;	// +-255
+        
+        int px;
+        int intLevel = level + 0.49;
+        for (int j=0; j<256; j++)
+        {
+            px = buffers->lut[0][j];
+            px += intLevel;
+            if(img->_range == ADM_COL_RANGE_MPEG)
+            {
+                if (px < 16) px = 16;
+                if (px > 235) px = 235;
+            } else {
+                if (px < 0) px = 0;
+                if (px > 255) px = 255;
+            }
+            buffers->lut[0][j] = px;
+        }
     }
 
     if (param.enableSat)
@@ -459,7 +486,7 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
         }
     }
     
-    if (param.enableSat || param.enableBlend)    // apply lut
+    if (param.enableBright || param.enableSat || param.enableBlend)    // apply lut
     {
         uint8_t * imgPlanes[3];
         int imgStrides[3];
@@ -923,6 +950,14 @@ const char   *ADMVideoFadeThrough::getConfiguration(void)
     snprintf(s,1023,"%s - %s: ",startTimeStr,endTimeStr);
     
     bool first = true;
+    if (_param.enableBright)
+    {
+        if (!first)
+            strcat(s," + ");
+        strcat(s,"Brightness");
+        first = false;
+    }
+    
     if (_param.enableSat)
     {
         if (!first)
@@ -986,6 +1021,7 @@ ADMVideoFadeThrough::ADMVideoFadeThrough(  ADM_coreVideoFilter *in,CONFcouple *c
         // Default value
         _param.startTime = info.markerA / 1000LL;
         _param.endTime = info.markerB / 1000LL;
+        _param.enableBright = false;
         _param.enableSat = false;
         _param.enableBlend = false;
         _param.enableBlur = false;
@@ -994,18 +1030,21 @@ ADMVideoFadeThrough::ADMVideoFadeThrough(  ADM_coreVideoFilter *in,CONFcouple *c
         _param.enableVignette = false;
         _param.rgbColorBlend = 0;
         _param.rgbColorVignette = 0;
+        _param.peakBright = 1.0;
         _param.peakSat = 1.0;
         _param.peakBlend = 1.0;
         _param.peakBlur = 0;
         _param.peakRot = 0;
         _param.peakZoom = 1.0;
         _param.peakVignette = 0;
+        _param.transientBright = 0;
         _param.transientSat = 0;
         _param.transientBlend = 0;
         _param.transientBlur = 0;
         _param.transientRot = 0;
         _param.transientZoom = 0;
         _param.transientVignette = 0;
+        _param.transientDurationBright = 0.5;
         _param.transientDurationSat = 0.5;
         _param.transientDurationBlend = 0.5;
         _param.transientDurationBlur = 0.5;
