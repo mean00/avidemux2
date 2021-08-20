@@ -80,8 +80,6 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
         endMs = startMs;
         startMs = tmp;
     }
-    //param.effect
-    //param.effectParam
     
     uint32_t imgMs = img->Pts/1000LL;
     
@@ -102,7 +100,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
     }
 
     double frac = ((double)(imgMs - startMs)) / ((double)(endMs - startMs));
-    double oclock = param.effectParam;
+    int dir = param.direction % 4;
 
     uint8_t * imgPlanes[3];
     uint8_t * copyPlanes[3];
@@ -143,7 +141,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
         case 1:		// slide
             {
                 // for now, only vertical and horizontal slide supported
-                if ((oclock > 10.5) || (oclock <= 1.5))  // up
+                if (dir==0)  // up
                 {
                     int displacement = (frac*h)/2 + 0.49;
                     displacement *= 2;
@@ -161,7 +159,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                     }
                 }
                 else
-                if ((oclock > 1.5) && (oclock <= 4.5))  // right
+                if (dir==1)  // right
                 {
                     int displacement = (frac*w)/2 + 0.49;
                     displacement *= 2;
@@ -179,7 +177,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                     }
                 }
                 else
-                if ((oclock > 4.5) && (oclock <= 7.5))  // down
+                if (dir==2)  // down
                 {
                     int displacement = (frac*h)/2 + 0.49;
                     displacement *= 2;
@@ -197,7 +195,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                     }
                 }
                 else
-                //if ((oclock > 7.5) && (oclock <= 10.5))  // left
+                //if (dir==3)  // left
                 {
                     int displacement = (frac*w)/2 + 0.49;
                     displacement *= 2;
@@ -219,7 +217,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
         case 2:		// wipe
             {
                 // for now, only vertical and horizontal wipe supported
-                if ((oclock > 10.5) || (oclock <= 1.5))  // up
+                if (dir==0)  // up
                 {
                     int displacement = (frac*h)/2 + 0.49;
                     displacement *= 2;
@@ -237,7 +235,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                     }
                 }
                 else
-                if ((oclock > 1.5) && (oclock <= 4.5))  // right
+                if (dir==1)  // right
                 {
                     int displacement = (frac*w)/2 + 0.49;
                     displacement *= 2;
@@ -255,7 +253,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                     }
                 }
                 else
-                if ((oclock > 4.5) && (oclock <= 7.5))  // down
+                if (dir==2)  // down
                 {
                     int displacement = (frac*h)/2 + 0.49;
                     displacement *= 2;
@@ -273,7 +271,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                     }
                 }
                 else
-                //if ((oclock > 7.5) && (oclock <= 10.5))  // left
+                //if (dir==3)  // left
                 {
                     int displacement = (frac*w)/2 + 0.49;
                     displacement *= 2;
@@ -292,10 +290,102 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                 }
             }
             break;
-        case 3:		// luma
-        case 4:		// inv. luma
+        case 3:		// push
             {
-                if (param.effect == 4)
+                // for now, only vertical and horizontal slide supported
+                if (dir==0)  // up
+                {
+                    int displacement = (frac*h)/2 + 0.49;
+                    displacement *= 2;
+                    for (int p=0; p<3; p++)
+                    {
+                        int width = ((p==0) ? w:(w/2));
+                        int height = ((p==0) ? h:(h/2));
+                        if (p==1)
+                            displacement /= 2;
+
+                        for (int y=(height-1); y>=(height-displacement); y--)
+                        {
+                            memcpy(imgPlanes[p]+y*imgStrides[p], imgPlanes[p]+(y-(height-displacement))*imgStrides[p], width);
+                        }
+                        for (int y=0; y<(height-displacement); y++)
+                        {
+                            memcpy(imgPlanes[p]+y*imgStrides[p], copyPlanes[p]+(y+displacement)*copyStrides[p], width);
+                        }
+                    }
+                }
+                else
+                if (dir==1)  // right
+                {
+                    int displacement = (frac*w)/2 + 0.49;
+                    displacement *= 2;
+                    for (int p=0; p<3; p++)
+                    {
+                        int width = ((p==0) ? w:(w/2));
+                        int height = ((p==0) ? h:(h/2));
+                        if (p==1)
+                            displacement /= 2;
+
+                        for (int y=0; y<height; y++)
+                        {
+                            memmove(imgPlanes[p]+y*imgStrides[p], imgPlanes[p]+y*imgStrides[p] + (width-displacement), displacement);
+                        }
+                        for (int y=0; y<height; y++)
+                        {
+                            memcpy(imgPlanes[p]+y*imgStrides[p] + displacement, copyPlanes[p]+y*copyStrides[p], (width-displacement));
+                        }
+                    }
+                }
+                else
+                if (dir==2)  // down
+                {
+                    int displacement = (frac*h)/2 + 0.49;
+                    displacement *= 2;
+                    for (int p=0; p<3; p++)
+                    {
+                        int width = ((p==0) ? w:(w/2));
+                        int height = ((p==0) ? h:(h/2));
+                        if (p==1)
+                            displacement /= 2;
+
+                        for (int y=0; y<displacement; y++)
+                        {
+                            memcpy(imgPlanes[p]+y*imgStrides[p], imgPlanes[p]+(y+(height-displacement))*imgStrides[p], width);
+                        }
+                        for (int y=displacement; y<height; y++)
+                        {
+                            memcpy(imgPlanes[p]+y*imgStrides[p], copyPlanes[p]+(y-displacement)*copyStrides[p], width);
+                        }
+                    }
+                }
+                else
+                //if (dir==3)  // left
+                {
+                    int displacement = (frac*w)/2 + 0.49;
+                    displacement *= 2;
+                    for (int p=0; p<3; p++)
+                    {
+                        int width = ((p==0) ? w:(w/2));
+                        int height = ((p==0) ? h:(h/2));
+                        if (p==1)
+                            displacement /= 2;
+
+                        for (int y=0; y<height; y++)
+                        {
+                            memmove(imgPlanes[p]+y*imgStrides[p] + (width-displacement), imgPlanes[p]+y*imgStrides[p], displacement);
+                        }
+                        for (int y=0; y<height; y++)
+                        {
+                            memcpy(imgPlanes[p]+y*imgStrides[p], copyPlanes[p]+y*copyStrides[p]+displacement, (width-displacement));
+                        }
+                    }
+                }
+            }
+            break;
+        case 4:		// luma
+        case 5:		// inv. luma
+            {
+                if (param.effect == 5)
                     frac = 1.0-frac;
                 
                 int threshold;
@@ -307,7 +397,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                 uint8_t * cpl = copyPlanes[0];
                 for (int y=0; y<h; y++)
                 {
-                    if (param.effect == 4)
+                    if (param.effect == 5)
                     {
                         for (int x=0; x<w; x++)
                         {
@@ -331,7 +421,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                 {
                     for (int x=0; x<w/2; x++)
                     {
-                        if (param.effect == 4)
+                        if (param.effect == 5)
                         {
                             chromaMix  = (cpl[2*x] < threshold) ? 1:0;
                             chromaMix += (cpl[2*x+1] < threshold) ? 1:0;
@@ -358,15 +448,15 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
                 
             }
             break;
-        case 5:		// static random dissolve
-        case 6:		// dynamic random dissolve
+        case 6:		// static random dissolve
+        case 7:		// dynamic random dissolve
             {
                 int threshold = frac*255.0 + 0.49;
                 uint32_t rng_state;
                 uint32_t rn;
                 uint64_t rng_product;
                 
-                if (param.effect == 6)
+                if (param.effect == 7)
                     rng_state = img->Pts;
                 else
                     rng_state = startMs;
@@ -439,16 +529,19 @@ const char   *ADMVideoFadeFromImage::getConfiguration(void)
         case 2:		// wipe
             effect = "Wipe";
             break;
-        case 3:		// luma
+        case 3:		// push
+            effect = "Push";
+            break;
+        case 4:		// luma
             effect = "Luma dissolve";
             break;
-        case 4:		// inv. luma
+        case 5:		// inv. luma
             effect = "Inverse luma dissolve";
             break;
-        case 5:		// static random dissolve
+        case 6:		// static random dissolve
             effect = "Static random dissolve";
             break;
-        case 6:		// dynamic random dissolve
+        case 7:		// dynamic random dissolve
             effect = "Dynamic random dissolve";
             break;
     }
@@ -468,7 +561,7 @@ ADMVideoFadeFromImage::ADMVideoFadeFromImage(  ADM_coreVideoFilter *in,CONFcoupl
         _param.startTime = info.markerA / 1000LL;
         _param.endTime = info.markerB / 1000LL;
         _param.effect = 0;
-        _param.effectParam = 0.0;
+        _param.direction = 0;
     }
     
     FadeFromImageCreateBuffers(info.width,info.height, &(_buffers));

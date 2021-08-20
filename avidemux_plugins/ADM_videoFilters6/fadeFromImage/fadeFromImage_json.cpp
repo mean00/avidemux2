@@ -8,7 +8,7 @@ admJson json;
 json.addUint32("startTime",key->startTime);
 json.addUint32("endTime",key->endTime);
 json.addUint32("effect",key->effect);
-json.addFloat("effectParam",key->effectParam);
+json.addUint32("direction",key->direction);
 return json.dumpToFile(file);
 };
 bool  fadeFromImage_jdeserialize(const char *file, const ADM_paramList *tmpl,fadeFromImage *key){

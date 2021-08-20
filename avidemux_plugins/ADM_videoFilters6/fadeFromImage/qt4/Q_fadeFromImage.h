@@ -27,7 +27,6 @@ class Ui_fadeFromImageWindow : public QDialog
     void manualTimeEntry(bool f);
     void timesFromMarkers(bool f);
     void valueChanged(int foo);
-    void valueChangedSpinBox(double f);
     void reset(bool f);
 
   private:
