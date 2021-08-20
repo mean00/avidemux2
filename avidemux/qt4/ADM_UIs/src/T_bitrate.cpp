@@ -212,7 +212,12 @@ void diaElemBitrate::setMaxQz(uint32_t qz)
   maxQ=qz; 
 }
 
-diaElemBitrate::~diaElemBitrate() {};
+diaElemBitrate::~diaElemBitrate()
+{
+  ADM_Qbitrate *b=(ADM_Qbitrate *)myWidget;
+  delete b;
+  myWidget=NULL;
+}
 
 void diaElemBitrate::setMe(void *dialog, void *opaque,uint32_t line)
 {
