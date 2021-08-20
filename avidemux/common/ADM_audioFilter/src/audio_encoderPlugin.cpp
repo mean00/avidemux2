@@ -139,6 +139,7 @@ uint8_t ADM_ae_loadPlugins(const char *path)
 	std::vector<std::string> files;
     // Add the copy encoder
     ADM_AudioEncoderLoader *copy=new ADM_AudioEncoderLoader("copy","Copy");
+    ListOfAudioEncoderLoader.append(copy);
     ListOfAudioEncoder.append(copy->encoderBlock);
     //
 	printf("[ADM_ae_plugin] Scanning directory %s\n",path);
