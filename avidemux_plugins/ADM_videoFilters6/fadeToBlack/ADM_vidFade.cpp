@@ -242,7 +242,8 @@ bool  AVDM_Fade::buildLut(void)
 
             f=r-128.;
             f=f*ration;
-            lookupChroma[i][r]=(128<<8)+(uint16_t)(f+0.4);
+            f+=(float)(128<<8);
+            lookupChroma[i][r]=(uint16_t)f;
         }
     }
     return true;
