@@ -62,7 +62,7 @@ Ui_fadeFromImageWindow::Ui_fadeFromImageWindow(QWidget *parent, fadeFromImage *p
         connect(ui.pushButtonTMarker,SIGNAL(clicked(bool)),this,SLOT(timesFromMarkers(bool)));
         
         connect(ui.comboBoxEffect, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
-        connect(ui.doubleSpinBoxEffectParam, SIGNAL(valueChanged(double)), this, SLOT(valueChangedSpinBox(double)));
+        connect(ui.comboBoxDirection, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
 
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
@@ -130,18 +130,13 @@ void Ui_fadeFromImageWindow::valueChanged( int f )
     lock--;
 }
 
-void Ui_fadeFromImageWindow::valueChangedSpinBox(double f)
-{
-    valueChanged(0);
-}
-
 /**
  * \fn reset
  */
 void Ui_fadeFromImageWindow::reset( bool f )
 {
     myFly->param.effect = 0;
-    myFly->param.effectParam = 0.0;
+    myFly->param.direction = 0;
     lock++;
     myFly->upload();
     myFly->sameImage();
@@ -180,8 +175,8 @@ uint8_t flyFadeFromImage::upload()
 {
     Ui_fadeFromImageDialog *w=(Ui_fadeFromImageDialog *)_cookie;
     MYCOMBOX(Effect)->setCurrentIndex(param.effect);
-    MYDBLSPIN(EffectParam)->setValue(param.effectParam);
-    MYDBLSPIN(EffectParam)->setEnabled(param.effect==1 || param.effect==2);
+    MYCOMBOX(Direction)->setCurrentIndex(param.direction);
+    MYCOMBOX(Direction)->setVisible(param.effect>=1 && param.effect<=3);
     
     QString tstr = QString(QT_TRANSLATE_NOOP("fadeFromImage","Time scope: "));
     tstr += QString(ADM_us2plain(param.startTime*1000LL));
@@ -199,7 +194,7 @@ uint8_t flyFadeFromImage::download(void)
 {
     Ui_fadeFromImageDialog *w=(Ui_fadeFromImageDialog *)_cookie;
     param.effect=MYCOMBOX(Effect)->currentIndex();
-    param.effectParam=MYDBLSPIN(EffectParam)->value();
+    param.direction=MYCOMBOX(Direction)->currentIndex();
 
     upload();
     return 1;
@@ -214,7 +209,7 @@ void flyFadeFromImage::setTabOrder(void)
     controls.push_back(w->pushButtonTManual);
     controls.push_back(w->pushButtonTMarker);
     PUSHCOMBOX(Effect)
-    PUSHDBLSPIN(EffectParam)
+    PUSHCOMBOX(Direction)
 
 
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());

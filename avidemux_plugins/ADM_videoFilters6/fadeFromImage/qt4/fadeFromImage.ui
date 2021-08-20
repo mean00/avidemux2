@@ -108,6 +108,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Push</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Luma dissolve</string>
         </property>
        </item>
@@ -129,33 +134,27 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="labelParam">
-       <property name="text">
-        <string>direction:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QDoubleSpinBox" name="doubleSpinBoxEffectParam">
-       <property name="decimals">
-        <number>1</number>
-       </property>
-       <property name="minimum">
-        <double>0.000000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>12.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.100000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="labelOClock">
-       <property name="text">
-        <string>o'clock</string>
-       </property>
+      <widget class="QComboBox" name="comboBoxDirection">
+       <item>
+        <property name="text">
+         <string>Up</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Right</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Down</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Left</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
