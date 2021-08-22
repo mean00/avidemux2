@@ -79,7 +79,7 @@ _hasSettings=false;
     else
         encoderDelay=0;
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
-    lastLavPts=0;
+    lastLavPts = AV_NOPTS_VALUE;
     encoderState = ADM_ENCODER_STATE_FEEDING;
 }
 /**
@@ -211,7 +211,6 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     aprintf("Incoming frame PTS=%" PRIu64", delay=%" PRIu64"\n",p,getEncoderDelay());
     p+=getEncoderDelay();
     _frame->pts= timingToLav(p);    //
-    if(!_frame->pts) _frame->pts=AV_NOPTS_VALUE;
     if(_frame->pts!=AV_NOPTS_VALUE && lastLavPts!=AV_NOPTS_VALUE && _frame->pts==lastLavPts)
     {
         ADM_warning("Lav PTS collision at frame %" PRIu32", lav PTS=%" PRId64", time %s\n",nb,_frame->pts,ADM_us2plain(p));
