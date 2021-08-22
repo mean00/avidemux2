@@ -22,6 +22,7 @@ do_plugins=1
 do_rebuild=0
 debug=0
 create_app_bundle=1
+create_dmg=1
 external_libass=1
 external_liba52=1
 external_libmad=0
@@ -124,8 +125,8 @@ usage()
         echo "Bootstrap avidemux ${API_VERSION}:"
         echo "***********************"
         echo "  --help                  : Print usage"
-        echo "  --tgz                   : Build tgz packages"
-        echo "  --nopkg                 : Don't create macOS app bundle"
+        echo "  --no-bundle             : Don't create macOS app bundle structure"
+        echo "  --nopkg                 : Don't make macOS app bundle self-contained and package it as DMG"
         echo "  --debug                 : Switch debugging on"
         echo "  --rebuild               : Preserve existing build directories"
         echo "  --output=NAME           : Specify a custom basename for dmg"
@@ -143,7 +144,6 @@ usage()
         echo "  --with-internal-liba52  : Use bundled liba52 (a52dec) instead of the system one"
         echo "  --with-external-libmad  : Use system libmad instead of the bundled one"
         echo "  --with-internal-libmp4v2: Use bundled libmp4v2 instead of the system one"
-        config
 }
 option_value()
 {
@@ -182,12 +182,11 @@ while [ $# != 0 ] ;do
          --rebuild)
                 do_rebuild=1
                 ;;
-         --tgz)
-                packages_ext=tar.gz
-                PKG="$PKG -DAVIDEMUX_PACKAGER=tgz"
+         --no-bundle)
+                create_app_bundle=0
                 ;;
          --nopkg)
-                create_app_bundle=0
+                create_dmg=0
                 ;;
          --output=*)
                 output=$(option_value "$config_option")
@@ -343,14 +342,31 @@ if [ "x$create_app_bundle" = "x1" ] ; then
     echo "Copying icons"
     cp $TOP/cmake/osx/*.icns $PREFIX/
     mkdir -p $PREFIX/../MacOS
-    if [ -e installer ]; then
-        chmod -R +w installer || fail "making the old installer directory writable"
-        rm -Rf installer || fail "removing the old installer directory"
+    if [ -d $PREFIX/../PlugIns ]; then
+        rm -Rf $PREFIX/../PlugIns
     fi
-    mkdir installer || fail "creating new installer directory"
-    cd installer
-    cmake -DAVIDEMUX_VERSION="$ADM_VERSION" -DDMG_BASENAME="$output" -DBUILD_REV="$REV" $FLAVOR ../avidemux/osxInstaller || fail "cmake"
-    echo "** Preparing packaging **"
-    make install && make package
+    mkdir -p $PREFIX/../PlugIns
+    # Symlink lib directory
+    if [ -e $PREFIX/../lib ]; then
+        rm $PREFIX/../lib
+    fi
+    ln -s $PREFIX/lib $PREFIX/../
+    # Symlink Qt plugins
+    ln -s ${QTDIR}/share/qt/plugins/platforms $PREFIX/../PlugIns/
+    ln -s ${QTDIR}/share/qt/plugins/styles $PREFIX/../PlugIns/
+    # Create qt.conf
+    echo "[Paths]" > $PREFIX/../Resources/qt.conf
+    echo "Plugins = PlugIns" >> $PREFIX/../Resources/qt.conf
+    if [ "x$create_dmg" = "x1" ] ; then
+        if [ -e installer ]; then
+            chmod -R +w installer || fail "making the old installer directory writable"
+            rm -Rf installer || fail "removing the old installer directory"
+        fi
+        mkdir installer || fail "creating new installer directory"
+        cd installer
+        cmake -DAVIDEMUX_VERSION="$ADM_VERSION" -DDMG_BASENAME="$output" -DBUILD_REV="$REV" $FLAVOR ../avidemux/osxInstaller || fail "cmake"
+        echo "** Preparing packaging **"
+        make install && make package
+    fi
 fi
 echo "** ALL DONE **"
