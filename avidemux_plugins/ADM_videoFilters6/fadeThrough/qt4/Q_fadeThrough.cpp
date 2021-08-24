@@ -114,18 +114,17 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         connect(ui.pushButtonColorBlend,SIGNAL(released()),this,SLOT(pushedColorBlend()));
         connect(ui.pushButtonColorVignette,SIGNAL(released()),this,SLOT(pushedColorVignette()));
         
-#define SPINNER(x,y,z) \
-        ui.horizontalSlider##x->setScale(1,y,z); \
+#define SPINNER(x) \
         connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
         connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChangedSpinBox(double)));
         
-        SPINNER(PeakBright,100,2);
-        SPINNER(PeakSat,100,2);
-        SPINNER(PeakBlend,100,2);
-        SPINNER(PeakBlur,1,2);
-        SPINNER(PeakRot,100,2);
-        SPINNER(PeakZoom,100,2);
-        SPINNER(PeakVignette,100,2);
+        SPINNER(PeakBright);
+        SPINNER(PeakSat);
+        SPINNER(PeakBlend);
+        SPINNER(PeakBlur);
+        SPINNER(PeakRot);
+        SPINNER(PeakZoom);
+        SPINNER(PeakVignette);
 
 #define COMBOX(x) connect(ui.comboBox##x,SIGNAL(currentIndexChanged(int)),this,SLOT(valueChanged(int)));
 
@@ -137,13 +136,13 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         COMBOX(TransientZoom);
         COMBOX(TransientVignette);
 
-        SPINNER(TransientDurationBright,100,2);
-        SPINNER(TransientDurationSat,100,2);
-        SPINNER(TransientDurationBlend,100,2);
-        SPINNER(TransientDurationBlur,100,2);
-        SPINNER(TransientDurationRot,100,2);
-        SPINNER(TransientDurationZoom,100,2);
-        SPINNER(TransientDurationVignette,100,2);
+        SPINNER(TransientDurationBright);
+        SPINNER(TransientDurationSat);
+        SPINNER(TransientDurationBlend);
+        SPINNER(TransientDurationBlur);
+        SPINNER(TransientDurationRot);
+        SPINNER(TransientDurationZoom);
+        SPINNER(TransientDurationVignette);
         
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
