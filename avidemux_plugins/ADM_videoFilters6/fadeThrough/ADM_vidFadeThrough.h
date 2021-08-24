@@ -50,6 +50,12 @@ class  ADMVideoFadeThrough:public ADM_coreVideoFilter
 
     typedef struct {
         uint8_t *             lut[3];
+        uint32_t              blendRGBcached;
+        bool                  blendRangeCached;
+        int                   blendYUVcached[3];
+        uint32_t              vignetteRGBcached;
+        bool                  vignetteRangeCached;
+        int                   vignetteYUVcached[3];
         
         int                   rgbBufStride;
         ADM_byteBuffer *      rgbBufRaw;

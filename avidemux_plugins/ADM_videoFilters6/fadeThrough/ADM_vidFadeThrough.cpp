@@ -48,6 +48,9 @@ void ADMVideoFadeThrough::FadeThroughCreateBuffers(int w, int h, fadeThrough_buf
     for (int i=0; i<3; i++)
         buffers->lut[i] = new uint8_t [256];
     
+    buffers->blendRGBcached = ~0;
+    buffers->vignetteRGBcached = ~0;
+    
     buffers->rgbBufStride = ADM_IMAGE_ALIGN(w * 4);
     buffers->rgbBufRaw = new ADM_byteBuffer();
     if (buffers->rgbBufRaw)
@@ -91,6 +94,7 @@ void ADMVideoFadeThrough::FadeThroughCreateBuffers(int w, int h, fadeThrough_buf
 
     buffers->qtr_worker_threads = new pthread_t [buffers->threads + buffers->threadsUV];
     buffers->qtr_worker_thread_args = new qtr_worker_thread_arg [buffers->threads + buffers->threadsUV];
+    
 }
 /**
     \fn FadeThroughDestroyBuffers
@@ -439,43 +443,51 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
         double level = TransientPoint(frac, param.transientBlend, param.transientDurationBlend);
         level *= param.peakBlend;
 
-        // rgb to yuv:
-        int rgb[3], yuv[3];
-        rgb[0] = (param.rgbColorBlend>>16)&0xFF;
-        rgb[1] = (param.rgbColorBlend>>8)&0xFF;
-        rgb[2] = (param.rgbColorBlend>>0)&0xFF;
-        if(img->_range == ADM_COL_RANGE_MPEG)
+        if ((buffers->blendRGBcached != (param.rgbColorBlend & 0x00FFFFFF)) || ((img->_range == ADM_COL_RANGE_MPEG) ^ buffers->blendRangeCached))
         {
-            yuv[0] = std::round( 0.257*rgb[0] + 0.504*rgb[1] + 0.098*rgb[2]) + 16;
-            yuv[1] = std::round(-0.148*rgb[0] - 0.291*rgb[1] + 0.439*rgb[2]) + 128;
-            yuv[2] = std::round( 0.439*rgb[0] - 0.368*rgb[1] - 0.071*rgb[2]) + 128;
-            for (int i=0; i<3; i++)
-                if (yuv[i] <   16) yuv[i] = 16;
-            if (yuv[0] > 235) yuv[0] = 235;
-            if (yuv[1] > 240) yuv[1] = 240;
-            if (yuv[2] > 240) yuv[2] = 240;
-        } else {
-            yuv[0] = std::round( 0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]);
-            yuv[1] = std::round(-0.169*rgb[0] - 0.331*rgb[1] + 0.500*rgb[2]) + 128;
-            yuv[2] = std::round( 0.500*rgb[0] - 0.419*rgb[1] - 0.081*rgb[2]) + 128;
-            for (int i=0; i<3; i++)
+            // rgb to yuv:
+            int rgb[3], yuv[3];
+            rgb[0] = (param.rgbColorBlend>>16)&0xFF;
+            rgb[1] = (param.rgbColorBlend>>8)&0xFF;
+            rgb[2] = (param.rgbColorBlend>>0)&0xFF;
+            if(img->_range == ADM_COL_RANGE_MPEG)
             {
-                if (yuv[i] <   0) yuv[i] = 0;
-                if (yuv[i] > 255) yuv[i] = 255;
+                yuv[0] = std::round( 0.257*rgb[0] + 0.504*rgb[1] + 0.098*rgb[2]) + 16;
+                yuv[1] = std::round(-0.148*rgb[0] - 0.291*rgb[1] + 0.439*rgb[2]) + 128;
+                yuv[2] = std::round( 0.439*rgb[0] - 0.368*rgb[1] - 0.071*rgb[2]) + 128;
+                for (int i=0; i<3; i++)
+                    if (yuv[i] <   16) yuv[i] = 16;
+                if (yuv[0] > 235) yuv[0] = 235;
+                if (yuv[1] > 240) yuv[1] = 240;
+                if (yuv[2] > 240) yuv[2] = 240;
+            } else {
+                yuv[0] = std::round( 0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]);
+                yuv[1] = std::round(-0.169*rgb[0] - 0.331*rgb[1] + 0.500*rgb[2]) + 128;
+                yuv[2] = std::round( 0.500*rgb[0] - 0.419*rgb[1] - 0.081*rgb[2]) + 128;
+                for (int i=0; i<3; i++)
+                {
+                    if (yuv[i] <   0) yuv[i] = 0;
+                    if (yuv[i] > 255) yuv[i] = 255;
+                }
             }
+            
+            // fix swapped uv
+            int uvswap = yuv[1]; yuv[1] = yuv[2]; yuv[2]=uvswap;
+            
+            buffers->blendRGBcached = param.rgbColorBlend & 0x00FFFFFF;
+            buffers->blendRangeCached = (img->_range == ADM_COL_RANGE_MPEG);
+            for (int i=0; i<3; i++)
+                buffers->blendYUVcached[i] = yuv[i];
         }
-        
-        // fix swapped uv
-        int uvswap = yuv[1]; yuv[1] = yuv[2]; yuv[2]=uvswap;
         
         int imgblend = (1.0-level)*256.0 + 0.49;
         int px;
         for (int i=0; i<3; i++)
         {
-            yuv[i] = yuv[i]*level*256.0 + 0.49;
+            int yuvi = buffers->blendYUVcached[i]*level*256.0 + 0.49;
             for (int j=0; j<256; j++)
             {
-                px = imgblend*buffers->lut[i][j] + yuv[i];
+                px = imgblend*buffers->lut[i][j] + yuvi;
                 buffers->lut[i][j] = px / 256;
             }
         }
@@ -651,35 +663,42 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
     {
         double level = TransientPoint(frac, param.transientVignette, param.transientDurationVignette);
 
-        // rgb to yuv:
-        int rgb[3], yuv[3];
-        rgb[0] = (param.rgbColorVignette>>16)&0xFF;
-        rgb[1] = (param.rgbColorVignette>>8)&0xFF;
-        rgb[2] = (param.rgbColorVignette>>0)&0xFF;
-        if(img->_range == ADM_COL_RANGE_MPEG)
+        if ((buffers->vignetteRGBcached != (param.rgbColorVignette & 0x00FFFFFF)) || ((img->_range == ADM_COL_RANGE_MPEG) ^ buffers->vignetteRangeCached))
         {
-            yuv[0] = std::round( 0.257*rgb[0] + 0.504*rgb[1] + 0.098*rgb[2]) + 16;
-            yuv[1] = std::round(-0.148*rgb[0] - 0.291*rgb[1] + 0.439*rgb[2]) + 128;
-            yuv[2] = std::round( 0.439*rgb[0] - 0.368*rgb[1] - 0.071*rgb[2]) + 128;
-            for (int i=0; i<3; i++)
-                if (yuv[i] <   16) yuv[i] = 16;
-            if (yuv[0] > 235) yuv[0] = 235;
-            if (yuv[1] > 240) yuv[1] = 240;
-            if (yuv[2] > 240) yuv[2] = 240;
-        } else {
-            yuv[0] = std::round( 0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]);
-            yuv[1] = std::round(-0.169*rgb[0] - 0.331*rgb[1] + 0.500*rgb[2]) + 128;
-            yuv[2] = std::round( 0.500*rgb[0] - 0.419*rgb[1] - 0.081*rgb[2]) + 128;
-            for (int i=0; i<3; i++)
+            // rgb to yuv:
+            int rgb[3], yuv[3];
+            rgb[0] = (param.rgbColorVignette>>16)&0xFF;
+            rgb[1] = (param.rgbColorVignette>>8)&0xFF;
+            rgb[2] = (param.rgbColorVignette>>0)&0xFF;
+            if(img->_range == ADM_COL_RANGE_MPEG)
             {
-                if (yuv[i] <   0) yuv[i] = 0;
-                if (yuv[i] > 255) yuv[i] = 255;
+                yuv[0] = std::round( 0.257*rgb[0] + 0.504*rgb[1] + 0.098*rgb[2]) + 16;
+                yuv[1] = std::round(-0.148*rgb[0] - 0.291*rgb[1] + 0.439*rgb[2]) + 128;
+                yuv[2] = std::round( 0.439*rgb[0] - 0.368*rgb[1] - 0.071*rgb[2]) + 128;
+                for (int i=0; i<3; i++)
+                    if (yuv[i] <   16) yuv[i] = 16;
+                if (yuv[0] > 235) yuv[0] = 235;
+                if (yuv[1] > 240) yuv[1] = 240;
+                if (yuv[2] > 240) yuv[2] = 240;
+            } else {
+                yuv[0] = std::round( 0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]);
+                yuv[1] = std::round(-0.169*rgb[0] - 0.331*rgb[1] + 0.500*rgb[2]) + 128;
+                yuv[2] = std::round( 0.500*rgb[0] - 0.419*rgb[1] - 0.081*rgb[2]) + 128;
+                for (int i=0; i<3; i++)
+                {
+                    if (yuv[i] <   0) yuv[i] = 0;
+                    if (yuv[i] > 255) yuv[i] = 255;
+                }
             }
+            
+            // fix swapped uv
+            int uvswap = yuv[1]; yuv[1] = yuv[2]; yuv[2]=uvswap;
+
+            buffers->vignetteRGBcached = param.rgbColorVignette & 0x00FFFFFF;
+            buffers->vignetteRangeCached = (img->_range == ADM_COL_RANGE_MPEG);
+            for (int i=0; i<3; i++)
+                buffers->vignetteYUVcached[i] = yuv[i];
         }
-        
-        // fix swapped uv
-        int uvswap = yuv[1]; yuv[1] = yuv[2]; yuv[2]=uvswap;
-        
             
         uint8_t * imgPlanes[3];
         int imgStrides[3];
@@ -720,7 +739,7 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
                         yuvblend = 256-imgblend;
                     }
                     
-                    px = imgblend*ipl[x] + yuvblend*yuv[p];
+                    px = imgblend*ipl[x] + yuvblend*buffers->vignetteYUVcached[p];
                     ipl[x] = px / 256;
                 }
                 ipl += imgStrides[p];
