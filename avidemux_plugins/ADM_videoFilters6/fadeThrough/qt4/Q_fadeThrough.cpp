@@ -40,6 +40,29 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
 {
     uint32_t width,height;
         ui.setupUi(this);
+        if (ADMVideoFadeThrough::IsFadeIn())
+            this->setWindowTitle(QString(QT_TRANSLATE_NOOP("fadeThrough","Fade in")));
+        if (ADMVideoFadeThrough::IsFadeOut())
+            this->setWindowTitle(QString(QT_TRANSLATE_NOOP("fadeThrough","Fade out")));
+
+        if (ADMVideoFadeThrough::IsFadeIn() || ADMVideoFadeThrough::IsFadeOut())
+        {
+        #define SETMAX(x) \
+            { \
+                ui.horizontalSlider##x->setMaximum(100); \
+                ui.doubleSpinBox##x->setMaximum(1.0); \
+            }
+
+            SETMAX(TransientDurationBright);
+            SETMAX(TransientDurationSat);
+            SETMAX(TransientDurationBlend);
+            SETMAX(TransientDurationBlur);
+            SETMAX(TransientDurationRot);
+            SETMAX(TransientDurationZoom);
+            SETMAX(TransientDurationVignette);
+        #undef SETMAX
+        }
+
         lock=0;
         // Allocate space for green-ised video
         width=in->getInfo()->width;
@@ -67,7 +90,15 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         
         connect(ui.pushButtonTManual,SIGNAL(clicked(bool)),this,SLOT(manualTimeEntry(bool)));
         connect(ui.pushButtonTMarker,SIGNAL(clicked(bool)),this,SLOT(timesFromMarkers(bool)));
-        connect(ui.pushButtonTCenter,SIGNAL(clicked(bool)),this,SLOT(centeredTimesFromMarkers(bool)));
+        if (!(ADMVideoFadeThrough::IsFadeIn() || ADMVideoFadeThrough::IsFadeOut()))
+        {
+            connect(ui.pushButtonTCenter,SIGNAL(clicked(bool)),this,SLOT(centeredTimesFromMarkers(bool)));
+        }
+        else
+        {
+            ui.pushButtonTCenter->setVisible(false);
+            ui.labelCenter->setVisible(false);
+        }
         
         connect(ui.tabEffects,SIGNAL(currentChanged(int)),this,SLOT(tabChanged(int)));
         
@@ -302,13 +333,17 @@ void Ui_fadeThroughWindow::reset( bool f )
     myFly->param.transientRot = 0;
     myFly->param.transientZoom = 0;
     myFly->param.transientVignette = 0;
-    myFly->param.transientDurationBright = 0.5;
-    myFly->param.transientDurationSat = 0.5;
-    myFly->param.transientDurationBlend = 0.5;
-    myFly->param.transientDurationBlur = 0.5;
-    myFly->param.transientDurationRot = 0.5;
-    myFly->param.transientDurationZoom = 0.5;
-    myFly->param.transientDurationVignette = 0.5;
+    
+    float defaultTrD = 0.5;
+    if (ADMVideoFadeThrough::IsFadeIn() || ADMVideoFadeThrough::IsFadeOut())
+        defaultTrD = 1.0;
+    myFly->param.transientDurationBright = defaultTrD;
+    myFly->param.transientDurationSat = defaultTrD;
+    myFly->param.transientDurationBlend = defaultTrD;
+    myFly->param.transientDurationBlur = defaultTrD;
+    myFly->param.transientDurationRot = defaultTrD;
+    myFly->param.transientDurationZoom = defaultTrD;
+    myFly->param.transientDurationVignette = defaultTrD;
     lock++;
     myFly->upload();
     myFly->sameImage();
@@ -337,7 +372,8 @@ void Ui_fadeThroughWindow::showEvent(QShowEvent *event)
     ui.labelTScope->setMinimumWidth(1.05 * fm.boundingRect(text).width());
     text = QString(QT_TRANSLATE_NOOP("fadeThrough","Duration: "));
     text += QString("000:00:00,000---");
-    ui.labelCenter->setMinimumWidth(1.05 * fm.boundingRect(text).width());
+    if (!(ADMVideoFadeThrough::IsFadeIn() || ADMVideoFadeThrough::IsFadeOut()))
+        ui.labelCenter->setMinimumWidth(1.05 * fm.boundingRect(text).width());
     ui.labelDuration->setMinimumWidth(1.05 * fm.boundingRect(text).width());
     
 }
@@ -521,9 +557,12 @@ uint8_t flyFadeThrough::upload()
     tstr += QString(ADM_us2plain(param.endTime*1000LL));
     w->labelTScope->setText(tstr);
     
-    tstr = QString(QT_TRANSLATE_NOOP("fadeThrough","Center: "));
-    tstr += QString(ADM_us2plain(((param.endTime + param.startTime)*1000LL)/2));
-    w->labelCenter->setText(tstr);
+    if (!(ADMVideoFadeThrough::IsFadeIn() || ADMVideoFadeThrough::IsFadeOut()))
+    {
+        tstr = QString(QT_TRANSLATE_NOOP("fadeThrough","Center: "));
+        tstr += QString(ADM_us2plain(((param.endTime + param.startTime)*1000LL)/2));
+        w->labelCenter->setText(tstr);
+    }
     
     tstr = QString(QT_TRANSLATE_NOOP("fadeThrough","Duration: "));
     tstr += QString(ADM_us2plain((param.endTime - param.startTime)*1000LL));
@@ -562,7 +601,8 @@ void flyFadeThrough::setTabOrder(void)
 #define PUSHDBLSPIN(x) controls.push_back(MYDBLSPIN(x));
     controls.push_back(w->pushButtonTManual);
     controls.push_back(w->pushButtonTMarker);
-    controls.push_back(w->pushButtonTCenter);
+    if (!(ADMVideoFadeThrough::IsFadeIn() || ADMVideoFadeThrough::IsFadeOut()))
+        controls.push_back(w->pushButtonTCenter);
     controls.push_back(w->tabEffects);
     
 #define PUSHWCOLOR(x) \

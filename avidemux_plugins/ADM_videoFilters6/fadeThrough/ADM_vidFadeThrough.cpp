@@ -32,18 +32,13 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+
+
+#if defined(FADETHROUGH) + defined(FADEIN) + defined(FADEOUT) != 1
+#error FADE DIRECTION NOT DEFINED!
+#endif
+
 extern uint8_t DIA_getFadeThrough(fadeThrough *param, ADM_coreVideoFilter *in);
-
-
-// Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   ADMVideoFadeThrough,   // Class
-                                      1,0,0,              // Version
-                                      ADM_UI_TYPE_BUILD,         // UI
-                                      VF_TRANSITION,            // Category
-                                      "fadeThrough",            // internal name (must be uniq!)
-                                      QT_TRANSLATE_NOOP("fadeThrough","Fade through"),            // Display name
-                                      QT_TRANSLATE_NOOP("fadeThrough","Fade through combination of multiple effects.") // Description
-                                  );
 
 /**
     \fn FadeThroughCreateBuffers
@@ -740,12 +735,25 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, fade
 */
 double ADMVideoFadeThrough::TransientPoint(double frac, int transient, double duration)
 {
+    if (duration == 0.0)
+        return 1.0;
+
+#if defined(FADETHROUGH)
     if ((frac > duration) && (frac < (1.0-duration)))
         return 1.0;
     
     if (frac >= 0.5)
         frac = 1.0-frac;
-        
+#endif
+
+#if defined(FADEIN) || defined(FADEOUT)
+  #if defined(FADEIN)
+    frac = 1.0 - frac;
+  #endif
+    if (frac > duration)
+        return 1.0;
+#endif
+
     frac /= duration;
     
     switch (transient)
@@ -925,6 +933,30 @@ void ADMVideoFadeThrough::StackBlurLine_C(uint8_t * line, int len, int pixPitch,
 }
 
 /**
+    \fn IsFadeIn
+*/
+bool ADMVideoFadeThrough::IsFadeIn()
+{
+#if defined(FADEIN)
+    return true;
+#else
+    return false;
+#endif
+}
+
+/**
+    \fn IsFadeOut
+*/
+bool ADMVideoFadeThrough::IsFadeOut()
+{
+#if defined(FADEOUT)
+    return true;
+#else
+    return false;
+#endif
+}
+
+/**
     \fn configure
 */
 bool ADMVideoFadeThrough::configure()
@@ -1044,13 +1076,18 @@ ADMVideoFadeThrough::ADMVideoFadeThrough(  ADM_coreVideoFilter *in,CONFcouple *c
         _param.transientRot = 0;
         _param.transientZoom = 0;
         _param.transientVignette = 0;
-        _param.transientDurationBright = 0.5;
-        _param.transientDurationSat = 0.5;
-        _param.transientDurationBlend = 0.5;
-        _param.transientDurationBlur = 0.5;
-        _param.transientDurationRot = 0.5;
-        _param.transientDurationZoom = 0.5;
-        _param.transientDurationVignette = 0.5;
+        
+        float defaultTrD = 0.5;
+#if defined(FADEIN) || defined(FADEOUT)
+        defaultTrD = 1.0;
+#endif
+        _param.transientDurationBright = defaultTrD;
+        _param.transientDurationSat = defaultTrD;
+        _param.transientDurationBlend = defaultTrD;
+        _param.transientDurationBlur = defaultTrD;
+        _param.transientDurationRot = defaultTrD;
+        _param.transientDurationZoom = defaultTrD;
+        _param.transientDurationVignette = defaultTrD;
     }
     
     FadeThroughCreateBuffers(info.width,info.height, &(_buffers));
