@@ -75,7 +75,7 @@
      <item>
       <widget class="QPushButton" name="pushButtonTCenter">
        <property name="text">
-        <string>Set center as A marker, duration is 2*|A-B|</string>
+        <string>Set center as A marker, duration is 2×|A-B|</string>
        </property>
       </widget>
      </item>
