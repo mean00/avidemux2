@@ -146,7 +146,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderPeakBright">
+            <widget class="ADM_QSlider" name="horizontalSliderPeakBright">
              <property name="minimum">
               <number>0</number>
              </property>
@@ -222,7 +222,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderTransientDurationBright">
+            <widget class="ADM_QSlider" name="horizontalSliderTransientDurationBright">
              <property name="maximum">
               <number>50</number>
              </property>
@@ -274,7 +274,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderPeakSat">
+            <widget class="ADM_QSlider" name="horizontalSliderPeakSat">
              <property name="minimum">
               <number>0</number>
              </property>
@@ -350,7 +350,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderTransientDurationSat">
+            <widget class="ADM_QSlider" name="horizontalSliderTransientDurationSat">
              <property name="maximum">
               <number>50</number>
              </property>
@@ -477,7 +477,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderPeakBlend">
+            <widget class="ADM_QSlider" name="horizontalSliderPeakBlend">
              <property name="maximum">
               <number>100</number>
              </property>
@@ -550,7 +550,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderTransientDurationBlend">
+            <widget class="ADM_QSlider" name="horizontalSliderTransientDurationBlend">
              <property name="maximum">
               <number>50</number>
              </property>
@@ -597,12 +597,12 @@
               <double>255.000000000000000</double>
              </property>
              <property name="singleStep">
-              <double>0.010000000000000</double>
+              <double>1.000000000000000</double>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderPeakBlur">
+            <widget class="ADM_QSlider" name="horizontalSliderPeakBlur">
              <property name="maximum">
               <number>255</number>
              </property>
@@ -675,7 +675,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderTransientDurationBlur">
+            <widget class="ADM_QSlider" name="horizontalSliderTransientDurationBlur">
              <property name="maximum">
               <number>50</number>
              </property>
@@ -727,7 +727,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderPeakRot">
+            <widget class="ADM_QSlider" name="horizontalSliderPeakRot">
              <property name="minimum">
               <number>-72000</number>
              </property>
@@ -801,7 +801,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderTransientDurationRot">
+            <widget class="ADM_QSlider" name="horizontalSliderTransientDurationRot">
              <property name="maximum">
               <number>50</number>
              </property>
@@ -853,7 +853,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderPeakZoom">
+            <widget class="ADM_QSlider" name="horizontalSliderPeakZoom">
              <property name="minimum">
               <number>100</number>
              </property>
@@ -932,7 +932,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderTransientDurationZoom">
+            <widget class="ADM_QSlider" name="horizontalSliderTransientDurationZoom">
              <property name="maximum">
               <number>50</number>
              </property>
@@ -1059,7 +1059,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderPeakVignette">
+            <widget class="ADM_QSlider" name="horizontalSliderPeakVignette">
              <property name="maximum">
               <number>100</number>
              </property>
@@ -1132,7 +1132,7 @@
             </widget>
            </item>
            <item>
-            <widget class="ADM_SliderIndicator" name="horizontalSliderTransientDurationVignette">
+            <widget class="ADM_QSlider" name="horizontalSliderTransientDurationVignette">
              <property name="maximum">
               <number>50</number>
              </property>
@@ -1213,11 +1213,6 @@
  <customwidgets>
   <customwidget>
    <class>ADM_QSlider</class>
-   <extends>QSlider</extends>
-   <header>ADM_toolkitQt.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ADM_SliderIndicator</class>
    <extends>QSlider</extends>
    <header>ADM_toolkitQt.h</header>
   </customwidget>
