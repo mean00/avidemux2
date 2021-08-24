@@ -363,8 +363,7 @@ void Ui_fadeThroughWindow::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
     myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
-    
+
     QFontMetrics fm = ui.labelTScope->fontMetrics();
     QString text = QString(QT_TRANSLATE_NOOP("fadeThrough","Time scope: "));
     text += QString("000:00:00,000 - 000:00:00,000");
@@ -374,7 +373,9 @@ void Ui_fadeThroughWindow::showEvent(QShowEvent *event)
     if (!(ADMVideoFadeThrough::IsFadeIn() || ADMVideoFadeThrough::IsFadeOut()))
         ui.labelCenter->setMinimumWidth(1.05 * fm.boundingRect(text).width());
     ui.labelDuration->setMinimumWidth(1.05 * fm.boundingRect(text).width());
-    
+
+    adjustSize();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 
