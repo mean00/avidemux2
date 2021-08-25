@@ -495,7 +495,7 @@ std::string currentSdlDriver=getSdlDriverName();
 
         /* Output */
         diaElem *diaOutput[]={&allowAnyMpeg, &useLastReadAsTarget, &firstPassLogFilesAutoDelete, &frameMultiLoad, &frameCache};
-        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
+        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),5,(diaElem **)diaOutput);
 
         /* Audio */
 
