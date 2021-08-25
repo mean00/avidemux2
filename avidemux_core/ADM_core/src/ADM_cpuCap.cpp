@@ -83,6 +83,19 @@ extern "C"
       	 myCpuCaps |= ADM_CPUCAP_SSE3;
        if (ecx & 0x00000200 )
       	 myCpuCaps |= ADM_CPUCAP_SSSE3;
+       if (ecx & (1<<19) )
+      	 myCpuCaps |= ADM_CPUCAP_SSE4;
+       if (ecx & (1<<20) )
+      	 myCpuCaps |= ADM_CPUCAP_SSE42;
+       if (ecx & (1<<28) )
+      	 myCpuCaps |= ADM_CPUCAP_AVX;
+   }
+   if(max_std_level >= 7)
+   {
+       ecx=0;
+       adm_cpu_cpuid(7, &eax, &ebx, &ecx, &edx);
+       if (ebx & (1<<5) )
+      	 myCpuCaps |= ADM_CPUCAP_AVX2;
    }
 
    adm_cpu_cpuid(0x80000000,& max_ext_level,& ebx, &ecx,& edx);
@@ -173,6 +186,10 @@ static int Cpu2Lav(uint32_t admMask)
     	LAV_CPU_CAPS(SSE2);
     	LAV_CPU_CAPS(SSE3);
     	LAV_CPU_CAPS(SSSE3);
+    	LAV_CPU_CAPS(SSE4);
+    	LAV_CPU_CAPS(SSE42);
+    	LAV_CPU_CAPS(AVX);
+    	LAV_CPU_CAPS(AVX2);
         return out;
 }
 
@@ -187,7 +204,8 @@ bool     CpuCaps::setMask(uint32_t mask)
     myCpuMask=mask;
 
     int lavCpuMask=Cpu2Lav(myCpuMask);
-    av_set_cpu_flags_mask(lavCpuMask);
+    //av_set_cpu_flags_mask(lavCpuMask); deprecated!
+    av_force_cpu_flags(lavCpuMask);
 
     return true;
 }

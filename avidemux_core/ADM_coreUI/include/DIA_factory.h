@@ -84,7 +84,7 @@ public:
   virtual int getRequiredLayout(void)=0;
 };
 /*********************************************/
-#define MENU_MAX_lINK 10
+#define MENU_MAX_lINK 16
 typedef struct dialElemLink
 {
   uint32_t  value;
