@@ -87,7 +87,7 @@ bool     blibva=false;
 bool     bvideotoolbox=false;
 #endif
 bool     hzd,vzd,dring;
-bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
+bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsSSE4,capsSSE42,capsAVX,capsAVX2,capsAll;
 bool     hasOpenGl=false;
 
 bool     refreshCapEnabled=false;
@@ -132,6 +132,10 @@ std::string currentSdlDriver=getSdlDriverName();
     	CPU_CAPS(SSE2);
     	CPU_CAPS(SSE3);
     	CPU_CAPS(SSSE3);
+    	CPU_CAPS(SSE4);
+    	CPU_CAPS(SSE42);
+    	CPU_CAPS(AVX);
+    	CPU_CAPS(AVX2);
 
     	//Avisynth
     	if(!prefs->get(AVISYNTH_AVISYNTH_ALWAYS_ASK, &askPortAvisynth))
@@ -271,6 +275,10 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle capsToggleSSE2(&capsSSE2, QT_TRANSLATE_NOOP("adm","Enable SSE2"));
         diaElemToggle capsToggleSSE3(&capsSSE3, QT_TRANSLATE_NOOP("adm","Enable SSE3"));
         diaElemToggle capsToggleSSSE3(&capsSSSE3, QT_TRANSLATE_NOOP("adm","Enable SSSE3"));
+        diaElemToggle capsToggleSSE4(&capsSSE4, QT_TRANSLATE_NOOP("adm","Enable SSE4"));
+        diaElemToggle capsToggleSSE42(&capsSSE42, QT_TRANSLATE_NOOP("adm","Enable SSE4.2"));
+        diaElemToggle capsToggleAVX(&capsAVX, QT_TRANSLATE_NOOP("adm","Enable AVX"));
+        diaElemToggle capsToggleAVX2(&capsAVX2, QT_TRANSLATE_NOOP("adm","Enable AVX2"));
 
         capsToggleAll.link(0, &capsToggleMMX);
         capsToggleAll.link(0, &capsToggleMMXEXT);
@@ -280,6 +288,10 @@ std::string currentSdlDriver=getSdlDriverName();
         capsToggleAll.link(0, &capsToggleSSE2);
         capsToggleAll.link(0, &capsToggleSSE3);
         capsToggleAll.link(0, &capsToggleSSSE3);
+        capsToggleAll.link(0, &capsToggleSSE4);
+        capsToggleAll.link(0, &capsToggleSSE42);
+        capsToggleAll.link(0, &capsToggleAVX);
+        capsToggleAll.link(0, &capsToggleAVX2);
 
         frameSimd.swallow(&capsToggleAll);
         frameSimd.swallow(&capsToggleMMX);
@@ -290,6 +302,10 @@ std::string currentSdlDriver=getSdlDriverName();
         frameSimd.swallow(&capsToggleSSE2);
         frameSimd.swallow(&capsToggleSSE3);
         frameSimd.swallow(&capsToggleSSSE3);
+        frameSimd.swallow(&capsToggleSSE4);
+        frameSimd.swallow(&capsToggleSSE42);
+        frameSimd.swallow(&capsToggleAVX);
+        frameSimd.swallow(&capsToggleAVX2);
 
         diaElemThreadCount lavcThreadCount(&lavcThreads, QT_TRANSLATE_NOOP("adm","_lavc threads:"));
 
@@ -589,6 +605,10 @@ std::string currentSdlDriver=getSdlDriverName();
                     CPU_CAPS(SSE2);
                     CPU_CAPS(SSE3);
                     CPU_CAPS(SSSE3);
+                    CPU_CAPS(SSE4);
+                    CPU_CAPS(SSE42);
+                    CPU_CAPS(AVX);
+                    CPU_CAPS(AVX2);
             }
             prefs->set(FEATURES_CPU_CAPS,cpuMaskOut);
             CpuCaps::setMask(cpuMaskOut);
