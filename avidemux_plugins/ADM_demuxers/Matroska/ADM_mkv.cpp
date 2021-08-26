@@ -420,6 +420,14 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
   int first=0;
   while(  track->index[first].Pts==ADM_NO_PTS && first<nb) first++; // we should have some at least
   uint64_t zero= track->index[first].Pts;
+  for(int i=0;i<32;i++)
+  {
+    if(first+i >= nb) break;
+    uint64_t pts = track->index[first+i].Pts;
+    if(pts == ADM_NO_PTS) continue;
+    if(pts < zero) zero = pts;
+  }
+  uint64_t minimumPts32 = zero;
   {
     double dmultiple=zero+half;
     dmultiple*=den;
@@ -427,11 +435,12 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
     zero=((uint64_t)dmultiple*1000000*num)/den;
   }
   ADM_info("Num=%d Den=%d half=%d zero=%d first=%d\n",num,den,half,(int)zero,first);
-  for(int i=first+1;i<nb;i++)
+  for(int i=first;i<nb;i++)
   {
     uint64_t pts=track->index[i].Pts;
-    if(pts < track->index[first].Pts) continue;
-    pts-=track->index[first].Pts;
+    if(pts == ADM_NO_PTS) continue;
+    if(pts < minimumPts32) continue;
+    pts -= minimumPts32;
     double dmultiple=(pts+half);
     dmultiple*=den;
     dmultiple/=(1000000.*(double)num);
@@ -446,8 +455,6 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
 #endif
     track->index[i].Pts=reconstructed;
   }
-  track->index[first].Pts = zero;
-
   _videostream.dwScale=num;
   _videostream.dwRate=den;
   double f=num;
@@ -568,6 +575,15 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             first++; // we should have some at least
         }
         uint64_t zero= track->index[first].Pts;
+        for(int i=0;i<32;i++)
+        {
+            if(first+i >= nb)
+                break;
+            uint64_t pts = track->index[first+i].Pts;
+            if(pts == ADM_NO_PTS)
+                continue;
+            if(pts < zero) zero = pts;
+        }
         ADM_info("Num=%d Den=%d zero=%d first=%d\n",num,den,(int)zero,first);
         int valid=0;
         for(int i=first;i<nb;i++)
@@ -578,7 +594,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
                 _framesNoPts.push_back(i);
                 continue;
             }
-            if(pts<zero) // early B-frames
+            if(pts<zero) // bogus timing
             {
                 _framesNoPts.push_back(i);
                 continue;
