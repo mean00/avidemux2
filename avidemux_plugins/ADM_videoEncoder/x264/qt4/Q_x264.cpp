@@ -38,7 +38,6 @@ typedef struct
 }idcToken;
 
 static const idcToken listOfIdc[]={
-        {(unsigned int)-1,"Auto"},
         {10,"1"},
         {11,"1.1"},
         {12,"1.2"},
@@ -453,16 +452,8 @@ bool x264Dialog::upload(void)
           MK_COMBOBOX_STR(tuningComboBox, general.tuning)
 
           // udate idc
-          QComboBox *idc=ui.idcLevelComboBox;
-          for(int i=0;i<NB_IDC;i++)
-          {
-                const idcToken *t=listOfIdc+i;
-                if(myCopy.level==t->idcValue)
-                {
-                        idc->setCurrentIndex(i);
-                        break;
-                }
-          }
+          MK_COMBOBOX_DATA(idcLevelComboBox, level);
+
         // update threads
           QComboBox *threads=ui.comboBoxThreads;
           for(int i=0;i<NB_THREADS;i++)
