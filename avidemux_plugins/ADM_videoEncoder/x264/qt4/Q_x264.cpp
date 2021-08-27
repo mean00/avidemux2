@@ -80,12 +80,60 @@ static const aspectRatio predefinedARs[]={
 
 };
 
+static const idcToken listOfPrimaries[] = {
+    {1, "BT.709 (HD)" },
+    {4, "BT.470M (old NTSC)" },
+    {5, "BT.470BG (PAL)" },
+    {6, "SMPTE 170M (NTSC)" }, /* Same as SMTPE 240M */
+    {7, "SMPTE 240M" },
+    {9, "BT.2020 (UHD)" },
+    {8, "Film" },
+    {10, "SMPTE 428" },
+    {11, "SMPTE 431-2 (DCI-P3)" },
+    {12, "SMPTE 432 (Display P3)" }
+};
+
+static const idcToken listOfXfers[] = {
+    {1,  "BT.709 (HD)" }, /* Same as SMPTE 170M, BT.2020-10, BT.2020-12 */
+    {4,  "BT.470M (NTSC)" },
+    {5,  "BT.470BG (PAL)" },
+    {6,  "SMPTE 170M (NTSC)" },
+    {7,  "SMPTE 240M" },
+    {14, "BT.2020 10bit (UHD)" },
+    {15, "BT.2020 12bit (UHD)" },
+    {13, "IEC 61966-2-1 (sRGB)" },
+    {11, "IEC 61966-2-4" },
+    {16, "SMPTE 2084 (HDR)" },
+    {12, "BT.1361e" },
+    {17, "SMPTE 428" },
+    {8,  "linear" },
+    {9,  "log100" },
+    {10, "log316" },
+    {18, "arib-std-b67" }
+};
+
+static const idcToken listOfMatrices[] = { /* Kr      Kb     */
+    {1,  "BT.709 (HD)" },                  /* 0.2126  0.0722 */
+    {4,  "FCC (old NTSC)" },               /* 0.30    0.11   */
+    {5,  "BT.470BG (PAL)" },               /* 0.299   0.114  */
+    {6,  "SMPTE 170M (NTSC)" },            /* 0.299   0.114  */
+    {7,  "SMPTE 240M" },                   /* 0.212   0.087  */
+    {9,  "BT.2020 NCL (UHD)" },            /* 0.2627  0.0593 */
+    {10, "BT.2020 CL" },                   /* Color difference uses different values than luma */
+    {11, "SMPTE 2085 (HDR)" },
+    {14, "ICtCp" },
+    {0,  "gbr" },
+    {8,  "YCGCO" },
+    {12, "Chroma Derived NCL" },
+    {13, "Chroma Derived CL" }
+};
+
 #define NB_SAR sizeof(predefinedARs)/sizeof(aspectRatio)
 
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
-static const char* listOfTunings[] = { "none", "film", "animation", "grain", "stillimage", "psnr", "ssim" };
+static const char* listOfTunings[] = { "film", "animation", "grain", "stillimage", "psnr", "ssim" };
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
 static const char* listOfProfiles[] = { "baseline", "main", "high", "high10", "high422", "high444" };
@@ -112,6 +160,60 @@ bool x264_ui(x264_encoder *settings)
     qtUnregisterDialog(&dialog);
     return success;
 }
+
+/**
+    \brief Set combo box items to be elements in container with data.
+
+    Elements of container should be idcToken.  The string will be the item name
+    and value will be added as item data.
+
+    One could design function that used a lambda to convert from element type
+    into label and value, so that any element type can be used, but that is
+    C++14.
+
+    If initial is non-NULL, it will be added first and the data used will be
+    initdata;
+
+    As a somewhat ugly hack for Qt4, the initial string will go through
+    fromUtf8() in case it has been translated to non-ASCII.  As none of the
+    items in the containers used are translated, they don't need this.
+
+    \param [in] box ComboBox to set items in
+    \param [in] items Container (array) of idcToken to use.
+    \param [in] initial An option first item to add.
+    \param [in] initdata The data to be assigned with optional first item, default is empty.
+*/
+template <typename ContainerT>
+static void fillComboBoxData(QComboBox *box, const ContainerT& items, const char* initial = NULL, const QVariant& initdata = QVariant())
+{
+    box->clear();
+    if (initial)
+        box->addItem(QString::fromUtf8(initial), initdata);
+    for (const idcToken *t = std::begin(items); t != std::end(items); t++)
+        box->addItem(t->idcString, QVariant(t->idcValue));
+}
+
+/**
+    \brief Set combo box items to be elements in container.
+
+    Elements should be const char*.  In C++11 we could use anything convertable
+    to a QString by changing "const char* const *" to "auto".
+
+    The data assigned to each item will be the index in items whence it came.
+
+    See fillComboBoxData().
+*/
+template <typename ContainerT>
+static void fillComboBox(QComboBox *box, const ContainerT& items, const char* initial = NULL)
+{
+    box->clear();
+    if (initial)
+        box->addItem(QString::fromUtf8(initial), -1);
+    int i = 0;
+    for (const char * const *t = std::begin(items); t != std::end(items); t++, i++)
+        box->addItem(*t, i);
+}
+
 /**
 
 */  
@@ -146,45 +248,22 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.saveAsButton, SIGNAL(pressed()), this, SLOT(saveAsButton_pressed()));
         connect(ui.configurationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(configurationComboBox_currentIndexChanged(int)));
 
+        const char *automatic = QT_TRANSLATE_NOOP("x264","Auto");
+        const char *none = QT_TRANSLATE_NOOP("x264","none");
+        const char *unknown = QT_TRANSLATE_NOOP("x264","Unknown");
+
         // Rebuild idc level list
-        QComboBox *idc=ui.idcLevelComboBox;
-        idc->clear();
-        for(int i=0;i<NB_IDC;i++)
-        {
-            const idcToken *t=listOfIdc+i;
-            idc->addItem(QString(t->idcString));
-        }
+        fillComboBoxData(ui.idcLevelComboBox, listOfIdc, automatic, -1);
 
-        QComboBox *threads=ui.comboBoxThreads;
-        threads->clear();
-        for(int i=0;i<NB_THREADS;i++)
-        {
-            const idcToken *t=listOfThreads+i;
-            threads->addItem(QString(t->idcString));
-        }
-        QComboBox* presets=ui.presetComboBox;
-        presets->clear();
-        for(int i=0;i<NB_PRESET;i++)
-        {
-            presets->addItem(QString(listOfPresets[i]));
-        }
+        fillComboBoxData(ui.comboBoxThreads, listOfThreads, automatic, 0U);
 
-        QComboBox* tunings=ui.tuningComboBox;
-        tunings->clear();
-        for(int i=0;i<NB_TUNE;i++)
-        {
-            const char* _tn=listOfTunings[i];
-            if(!strcmp(_tn,"none"))
-                _tn=QT_TRANSLATE_NOOP("x264","none");
-            tunings->addItem(QString(_tn));
-        }
+        fillComboBox(ui.presetComboBox, listOfPresets);
+        fillComboBox(ui.tuningComboBox, listOfTunings, none);
+        fillComboBox(ui.profileComboBox, listOfProfiles);
 
-        QComboBox* profiles=ui.profileComboBox;
-        profiles->clear();
-        for(int i=0;i<NB_PROFILE;i++)
-        {
-            profiles->addItem(QString(listOfProfiles[i]));
-        }
+        fillComboBoxData(ui.colourPrimariesComboBox, listOfPrimaries, unknown, 2);
+        fillComboBoxData(ui.transferCharacteristicsComboBox, listOfXfers, unknown, 2);
+        fillComboBoxData(ui.colourMatrixComboBox, listOfMatrices, unknown, 2);
 
         upload();
         ADM_pluginInstallSystem( std::string("x264"),std::string("json"),pluginVersion);
@@ -254,24 +333,16 @@ bool x264Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
 */
 #define MK_CHECKBOX(x,y) ui.x->setChecked(myCopy.y)
 #define MK_UINT(x,y)  ui.x->setValue(myCopy.y)
-#define DISABLE(x) ui.x->setEnabled(false);
+#define DISABLE(x) ui.x->setEnabled(false)
 #define MK_MENU(x,y) ui.x->setCurrentIndex(myCopy.y)
-#define MK_RADIOBUTTON(x) ui.x->setChecked(true);
-#define MK_COMBOBOX_STR(x,y,list,count) updateComboBox(ui.x,myCopy.y,count,list)
-/**
-
-*/
-static void updateComboBox(QComboBox *combo,const std::string &mine,int count,const char **list)
-{
-    for(int i=0;i<count;i++) 
-    { 
-      const char *p=list[i]; 
-      if(mine.size() && !strcmp(mine.c_str(), p)) 
-      { 
-        combo->setCurrentIndex(i); 
-      } 
-    } 
+#define MK_RADIOBUTTON(x) ui.x->setChecked(true)
+#define MK_COMBOBOX_STR(x,y) \
+{ \
+    const int idx = ui.x->findText(myCopy.y.c_str()); \
+    ui.x->setCurrentIndex(idx < 0 ? 0 : idx); \
 }
+#define MK_COMBOBOX_DATA(x,y) ui.x->setCurrentIndex(ui.x->findData(myCopy.y))
+
 bool x264Dialog::upload(void)
 {
           toogleAdvancedConfiguration(myCopy.useAdvancedConfiguration);
@@ -377,9 +448,9 @@ bool x264Dialog::upload(void)
           }
 
           // preset
-          MK_COMBOBOX_STR(presetComboBox, general.preset.c_str(), listOfPresets, NB_PRESET);
-          MK_COMBOBOX_STR(profileComboBox, general.profile.c_str(), listOfProfiles, NB_PROFILE);
-          MK_COMBOBOX_STR(tuningComboBox, general.tuning.c_str(), listOfTunings, NB_TUNE);
+          MK_COMBOBOX_STR(presetComboBox, general.preset)
+          MK_COMBOBOX_STR(profileComboBox, general.profile)
+          MK_COMBOBOX_STR(tuningComboBox, general.tuning)
 
           // udate idc
           QComboBox *idc=ui.idcLevelComboBox;
@@ -454,17 +525,27 @@ bool x264Dialog::upload(void)
                 MK_UINT(sarCustomSpinBox2,vui.sar_height);
         }
 
+        MK_COMBOBOX_DATA(colourPrimariesComboBox, vui.colorprim);
+        MK_COMBOBOX_DATA(transferCharacteristicsComboBox, vui.transfer);
+        MK_COMBOBOX_DATA(colourMatrixComboBox, vui.colmatrix);
+
+        MK_CHECKBOX(fullRangeSamplesCheckBox, vui.fullrange);
+
         DISABLE(spsiComboBox);
         DISABLE(openGopCheckBox);
-        DISABLE(groupBoxQuantMatrix)
+        DISABLE(groupBoxQuantMatrix);
         //DISABLE(tabAdvanced1);
         DISABLE(tabAdvanced2);
-        DISABLE(tabOutput2);
+        //DISABLE(tabOutput2);
+        DISABLE(overscanComboBox);
+        DISABLE(videoFormatComboBox);
+        DISABLE(hrdComboBox);
+        DISABLE(chromaSampleSpinBox);
         DISABLE(maxCrfCheckBox);
         DISABLE(sarAsInputRadioButton);
-        DISABLE(groupBoxQuantCurveCompress)
+        DISABLE(groupBoxQuantCurveCompress);
         DISABLE(accessUnitCheckBox);
-        DISABLE(groupBoxZones)
+        DISABLE(groupBoxZones);
         //
         MK_CHECKBOX(blueRayCompat,general.blueray_compatibility);
         MK_CHECKBOX(fakeInterlaced,general.fake_interlaced);
@@ -476,21 +557,23 @@ bool x264Dialog::upload(void)
 #undef MK_MENU
 #undef MK_RADIOBUTTON
 #undef MK_COMBOBOX_STR
+#undef MK_COMBOBOX_DATA
 #define MK_CHECKBOX(x,y)    myCopy.y=ui.x->isChecked()
 #define MK_UINT(x,y)        myCopy.y=ui.x->value()
 #define MK_MENU(x,y)        myCopy.y=ui.x->currentIndex()
 #define MK_RADIOBUTTON(x,y)   myCopy.y=ui.x->setChecked(true);
-#define MK_COMBOBOX_STR(x,y,list,count) x_readComboBox(ui.x,myCopy.y,count,list)
-
-static void x_readComboBox(QComboBox *combo, std::string &inout,int count,const char **list)
-{
-    int idx=combo->currentIndex(); 
-    ADM_assert(idx<count);    
-    inout = std::string(list[idx]); 
+#define MK_COMBOBOX_STR(x,y,list,count,none) \
+{ \
+    const QComboBox* combo=ui.x; \
+    const int idx = combo->itemData(combo->currentIndex()).toInt(); \
+    ADM_assert(idx < 0 || idx<count); \
+    myCopy.y = idx < 0 ? none : list[idx]; \
 }
-
-
-
+#define MK_COMBOBOX_DATA(x,y) \
+{ \
+    const QComboBox* combo=ui.x; \
+    myCopy.y = combo->itemData(combo->currentIndex()).toInt(); \
+}
 
 bool x264Dialog::download(void)
 {
@@ -585,14 +668,11 @@ bool x264Dialog::download(void)
           MK_UINT(intraLumaSpinBox,analyze.intra_luma);
           MK_UINT(interLumaSpinBox,analyze.inter_luma);
 
-          MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
-          MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);
-          MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE);
+          MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET, "");
+          MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE, "");
+          MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE, "none");
 
-          QComboBox *idc=ui.idcLevelComboBox;
-          int dex=idc->currentIndex();
-          ADM_assert(dex<NB_IDC);
-          myCopy.level=listOfIdc[dex].idcValue;
+          MK_COMBOBOX_DATA(idcLevelComboBox, level);
 
           switch(ui.encodingModeComboBox->currentIndex())
           {
@@ -603,10 +683,7 @@ bool x264Dialog::download(void)
             case 4: ENCODING(mode)=COMPRESS_2PASS_BITRATE;ENCODING(avg_bitrate)=ui.targetRateControlSpinBox->value();;break;
           }
           // update thread count
-          QComboBox *threads=ui.comboBoxThreads;
-          int threadIndex=threads->currentIndex();
-          myCopy.general.threads=listOfThreads[threadIndex].idcValue;
-
+          MK_COMBOBOX_DATA(comboBoxThreads, general.threads);
 
           int t=ui.trellisComboBox->currentIndex();
           if(!ui.trellisCheckBox->isChecked())
@@ -625,6 +702,13 @@ bool x264Dialog::download(void)
                 MK_UINT(sarCustomSpinBox1,vui.sar_width);
                 MK_UINT(sarCustomSpinBox2,vui.sar_height);
           }
+
+        MK_CHECKBOX(fullRangeSamplesCheckBox, vui.fullrange);
+
+        MK_COMBOBOX_DATA(colourPrimariesComboBox, vui.colorprim);
+        MK_COMBOBOX_DATA(transferCharacteristicsComboBox, vui.transfer);
+        MK_COMBOBOX_DATA(colourMatrixComboBox, vui.colmatrix);
+
         MK_CHECKBOX(blueRayCompat,general.blueray_compatibility);
         MK_CHECKBOX(fakeInterlaced,general.fake_interlaced);
         return true;

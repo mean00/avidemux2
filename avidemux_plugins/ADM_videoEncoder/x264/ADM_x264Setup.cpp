@@ -63,17 +63,17 @@ bool x264Encoder::setup(void)
   if(!x264Settings.useAdvancedConfiguration)
   {
         std::string tune;
-        if(x264Settings.general.tuning != std::string("none"))
+        if(x264Settings.general.tuning != "none")
             tune = x264Settings.general.tuning;
         if(x264Settings.general.fast_decode)
         {
-            tune += std::string(",");
-            tune += std::string("fastdecode");
+            tune += ",";
+            tune += "fastdecode";
         }
         if(x264Settings.general.zero_latency)
         {
-            tune += std::string(",");
-            tune += std::string("zerolatency");
+            tune += ",";
+            tune += "zerolatency";
         }
         if(tune.empty())
             x264_param_default_preset(&param, x264Settings.general.preset.c_str(), NULL);
@@ -126,6 +126,13 @@ bool x264Encoder::setup(void)
   #define MKPARAMB(x,y) {param.vui.x = x264Settings.vui.y ;aprintf("[x264] vui."#x" = %s\n",TrueFalse[param.vui.x&1]);}
   MKPARAM (i_sar_width,sar_width) 
   MKPARAM (i_sar_height,sar_height) 
+  MKPARAM (i_overscan,overscan)
+  MKPARAM (i_vidformat,vidformat)
+  MKPARAMB(b_fullrange,fullrange)
+  MKPARAM (i_colorprim,colorprim)
+  MKPARAM (i_transfer,transfer)
+  MKPARAM (i_colmatrix,colmatrix)
+  MKPARAM (i_chroma_loc,chroma_loc)
 
   // -------------- rate control------------
   switch(x264Settings.general.params.mode)
@@ -461,131 +468,131 @@ bool x264Encoder::setConstraintsByLevel(void)
 */
 static void dumpx264Setup(x264_param_t *param)
 {
-#define PI(x) printf(#x"\t:%d\n",(int)param->x);
-    PI(cpu);
-    PI(i_threads);
-    PI(b_sliced_threads);
-    PI(b_deterministic);
-    PI(i_sync_lookahead);
+#define STR(x) #x
+#define MKSTRING(x) STR(x)
+#define PI(x) printf("%-24s : %d\n",MKSTRING(x),(int)param->x);
+    PI(cpu)
+    PI(i_threads)
+    PI(b_sliced_threads)
+    PI(b_deterministic)
+    PI(i_sync_lookahead)
 
-    PI(i_width); 
-    PI(i_height); 
-    PI(i_width); 
-    PI(i_level_idc); 
-    PI(i_frame_total);
+    PI(i_width)
+    PI(i_height)
+    PI(i_width)
+    PI(i_level_idc)
+    PI(i_frame_total)
 
-#define VI(x) printf(#x"\t:%d\n",(int)param->vui.x);
+#define VI(x) printf("%-24s : %d\n",MKSTRING(x),(int)param->vui.x);
+    VI(i_sar_height)
+    VI(i_sar_width)
+    VI(i_overscan)
+    VI(i_vidformat)
+    VI(b_fullrange)
+    VI(i_colorprim)
+    VI(i_transfer)
+    VI(i_colmatrix)
+    VI(i_chroma_loc)
 
-    VI(i_sar_height);
-    VI(i_sar_width);
-    VI(i_overscan);
-    VI(i_vidformat);
-    VI(b_fullrange);
-    VI(i_colorprim);
-    VI(i_transfer);
-    VI(i_colmatrix);
-    VI(i_chroma_loc);
+    PI(i_fps_num)
+    PI(i_fps_den)
 
-    PI(i_fps_num);
-    PI(i_fps_den);
+    PI(i_timebase_num)
+    PI(i_timebase_den)
+    PI(b_vfr_input)
 
-    PI(i_timebase_num);
-    PI(i_timebase_den);
-    PI(b_vfr_input);
-        
-    PI(i_frame_reference);
-    PI(i_keyint_max);
-    PI(i_keyint_min);
-    PI(i_scenecut_threshold);
-    PI(b_intra_refresh);
+    PI(i_frame_reference)
+    PI(i_keyint_max)
+    PI(i_keyint_min)
+    PI(i_scenecut_threshold)
+    PI(b_intra_refresh)
 
-    PI(i_bframe);
-    PI(i_bframe_adaptive);
-    PI(i_bframe_bias);
-    PI(i_bframe_pyramid);
+    PI(i_bframe)
+    PI(i_bframe_adaptive)
+    PI(i_bframe_bias)
+    PI(i_bframe_pyramid)
 
-    PI(b_deblocking_filter);
-    PI(i_deblocking_filter_alphac0);
-    PI(i_deblocking_filter_beta);
+    PI(b_deblocking_filter)
+    PI(i_deblocking_filter_alphac0)
+    PI(i_deblocking_filter_beta)
 
-    PI(b_cabac);
-    PI(i_cabac_init_idc);
+    PI(b_cabac)
+    PI(i_cabac_init_idc)
 
-    PI(b_interlaced);
-    PI(b_tff);
-    PI(b_fake_interlaced);
-    PI(b_bluray_compat);
-    PI(b_constrained_intra);
+    PI(b_interlaced)
+    PI(b_tff)
+    PI(b_fake_interlaced)
+    PI(b_bluray_compat)
+    PI(b_constrained_intra)
 
-#define AI(x) printf(#x"\t:%d\n",(int)param->analyse.x);
-#define AF(x) printf(#x"\t:%f\n",(float)param->analyse.x);
+#define AI(x) printf("%-24s : %d\n",MKSTRING(x),(int)param->analyse.x);
+#define AF(x) printf("%-24s : %f\n",MKSTRING(x),(float)param->analyse.x);
     printf("*************************************\n");
     printf("*********     Analyse       *********\n");
     printf("*************************************\n");
 
-    AI(intra);
-    AI(inter);
+    AI(intra)
+    AI(inter)
 
-    AI(b_transform_8x8);
-    AI(i_weighted_pred);
-    AI(b_weighted_bipred);
-    AI(i_chroma_qp_offset);
-    
-    AI(i_me_method);
-    AI(i_me_range);
-    AI(i_mv_range);
-    AI(i_mv_range_thread);
-    AI(i_subpel_refine);
-    AI(b_chroma_me);
-    AI(b_mixed_references);
-    AI(i_trellis);
-    AI(b_fast_pskip);
+    AI(b_transform_8x8)
+    AI(i_weighted_pred)
+    AI(b_weighted_bipred)
+    AI(i_chroma_qp_offset)
 
-    AI(b_dct_decimate);
-    AI(i_noise_reduction);
-    AF(f_psy_rd);
-    AF(f_psy_trellis);
-    AI(b_psy);
+    AI(i_me_method)
+    AI(i_me_range)
+    AI(i_mv_range)
+    AI(i_mv_range_thread)
+    AI(i_subpel_refine)
+    AI(b_chroma_me)
+    AI(b_mixed_references)
+    AI(i_trellis)
+    AI(b_fast_pskip)
 
-    PI(b_aud);
-    PI(b_repeat_headers);
-    PI(b_annexb);
-    
-    AI(i_luma_deadzone[0]);
-    AI(i_luma_deadzone[1]);
+    AI(b_dct_decimate)
+    AI(i_noise_reduction)
+    AF(f_psy_rd)
+    AF(f_psy_trellis)
+    AI(b_psy)
 
-    PI(i_sps_id);
+    PI(b_aud)
+    PI(b_repeat_headers)
+    PI(b_annexb)
 
-    PI(i_slice_max_size);
-    PI(i_slice_max_mbs);
-    PI(i_slice_count);
+    AI(i_luma_deadzone[0])
+    AI(i_luma_deadzone[1])
 
-#define RI(x) printf(#x"\t:%d\n",(int)param->rc.x)
-#define RF(x) printf(#x"\t:%f\n",(float)param->rc.x)
+    PI(i_sps_id)
+
+    PI(i_slice_max_size)
+    PI(i_slice_max_mbs)
+    PI(i_slice_count)
+
+#define RI(x) printf("%-24s : %d\n",MKSTRING(x),(int)param->rc.x);
+#define RF(x) printf("%-24s : %f\n",MKSTRING(x),(float)param->rc.x);
     printf("*************************************\n");
     printf("*********     RC            *********\n");
     printf("*************************************\n");
-    RI(i_rc_method);
-    RI(i_qp_constant);
-    RF(f_rf_constant);
-    RI(i_qp_min);
-    RI(i_qp_max);
-    RI(i_qp_step);
+    RI(i_rc_method)
+    RI(i_qp_constant)
+    RF(f_rf_constant)
+    RI(i_qp_min)
+    RI(i_qp_max)
+    RI(i_qp_step)
 
-   
-    RI(i_bitrate);
-    RI(i_qp_constant);
-    RF(f_rate_tolerance);
-    RI(i_vbv_max_bitrate);
-    RI(i_vbv_buffer_size);
-    RF(f_vbv_buffer_init);
-    RF(f_ip_factor);
-    RF(f_pb_factor);
+    RI(i_bitrate)
+    RI(i_qp_constant)
+    RF(f_rate_tolerance)
+    RI(i_vbv_max_bitrate)
+    RI(i_vbv_buffer_size)
+    RF(f_vbv_buffer_init)
+    RF(f_ip_factor)
+    RF(f_pb_factor)
 
-    RI(i_aq_mode);
-    RF(f_aq_strength);
-    RI(b_mb_tree);
-    RI(i_lookahead);
+    RI(i_aq_mode)
+    RF(f_aq_strength)
+    RI(b_mb_tree)
+    RI(i_lookahead)
 
 }
 /**

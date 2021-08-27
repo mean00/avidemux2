@@ -19,6 +19,13 @@ int32_t level;
 struct  {
 	uint32_t sar_height;
 	uint32_t sar_width;
+	uint32_t overscan;
+	uint32_t vidformat;
+	bool fullrange;
+	uint32_t colorprim;
+	uint32_t transfer;
+	uint32_t colmatrix;
+	uint32_t chroma_loc;
 }vui;
 uint32_t MaxRefFrames;
 uint32_t MinIdr;

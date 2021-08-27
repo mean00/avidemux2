@@ -52,7 +52,16 @@ extern "C"
     true /* Fast first pass */ \
     }, \
     -1, /* Level */ \
-    {1,1}, /* Sar width/height */ \
+    { \
+        1,1, /* Sar width/height */ \
+        0, /* uint32_t overscan */ \
+        5, /* uint32_t vidformat = undefined */ \
+        false, /* fullrange */ \
+        2, /* colorprim */ \
+        2, /* transfer  */ \
+        2, /* colmatrix */ \
+        0 /* chroma location = left center */ \
+    }, \
     3, /* uint32_t MaxRefFrames */ \
     25, /* uint32_t MinIdr */ \
     250, /* uint32_t MaxIdr */ \
