@@ -660,6 +660,7 @@ bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint
             return true;
         }
     }
+#if 0 /* time matching the total duration doesn't belong to a segment */
     int max=segments.size();
     if(max)
     {
@@ -672,6 +673,7 @@ bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint
             return true;
         }
     }
+#endif
     ADM_warning("Cannot find segment matching time %" PRIu64"ms \n",frameTime/1000);
     dump();
     return false;
