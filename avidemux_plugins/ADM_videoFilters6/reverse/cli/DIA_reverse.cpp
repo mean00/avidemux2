@@ -12,10 +12,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
 
 #include "ADM_default.h"
-#include "DIA_coreToolkit.h"
+#include "ADM_coreVideoFilter.h"
 #include "reverse.h"
 /**
     \fn DIA_reverse
