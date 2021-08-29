@@ -92,30 +92,63 @@ static int ignore_change=0;
         break;
       case ACT_GotoMarkA:
       case ACT_GotoMarkB:
+        {
+            uint64_t pts = ADM_NO_PTS;
+            uint64_t rescue = admPreview::getCurrentPts();
+            if(action==ACT_GotoMarkA)
+                pts = video_body->getMarkerAPts();
+            else
+                pts = video_body->getMarkerBPts();
+            if(pts == ADM_NO_PTS) return;
+            // handle default values
+            if(!pts)
             {
-                uint64_t pts;
-                if(action==ACT_GotoMarkA) 
-                        pts=video_body->getMarkerAPts();
-                else  
-                        pts=video_body->getMarkerBPts();
-                if(false==video_body->goToTimeVideo(pts))
-                {
-                    if(action==ACT_GotoMarkA)
+                video_body->rewind();
+            }else if(pts == video_body->getVideoDuration())
+            {
+                pts = video_body->getLastKeyFramePts();
+                if(pts == ADM_NO_PTS) return;
+                GUI_infiniteForward(pts);
+            }else if(false == video_body->goToTimeVideo(pts))
+            {
+                ADM_warning("Marker %s PTS %s doesn't match a frame exactly or decoding failure, making something up.\n",
+                    (action == ACT_GotoMarkA)? "A" : "B",
+                    ADM_us2plain(pts));
+                uint64_t start = pts;
+                // Can we seek to previous keyframe and approach the marker from there?
+                if(false == video_body->getPKFramePTS(&start) || start == ADM_NO_PTS)
+                { // Nope, try to seek to the next keyframe instead.
+                    start = pts;
+                    if(false == video_body->getNKFramePTS(&start) || start == ADM_NO_PTS)
                     {
-                        ADM_warning("Go to Marker A: Seek to time %s ms failed\n",ADM_us2plain(pts));
-                    }else // PTS returned by getMarkerBPts() may be beyond the last frame.
-                          // Go to the last frame then.
-                    {
-                        pts=video_body->getLastKeyFramePts();
-                        if(pts==ADM_NO_PTS) 
-                                break;     
-                        GUI_infiniteForward(pts);
+                        ADM_warning("Seek to marker %s at %s failed.\n", (action == ACT_GotoMarkA)? "A" : "B", ADM_us2plain(pts));
+                        admPreview::seekToTime(rescue);
+                        return;
                     }
+                    if(false == admPreview::seekToIntraPts(start))
+                    { // try to recover
+                        admPreview::seekToTime(rescue);
+                        return;
+                    }
+                    GUI_setCurrentFrameAndTime();
+                    return;
                 }
-                admPreview::samePicture();
-                GUI_setCurrentFrameAndTime();
+                admPreview::deferDisplay(true);
+                if(false == admPreview::seekToIntraPts(start))
+                {
+                    admPreview::seekToTime(rescue);
+                    admPreview::deferDisplay(false);
+                    return;
+                }
+                while(pts > admPreview::getCurrentPts() && admPreview::nextPicture())
+                {
+                }
+                admPreview::deferDisplay(false);
             }
-            break;
+            admPreview::samePicture();
+            GUI_setCurrentFrameAndTime();
+        }
+        break;
 
       case ACT_PreviousKFrame:
         GUI_PreviousKeyFrame();
