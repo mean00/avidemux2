@@ -94,7 +94,7 @@ class  ADMVideoFadeThrough:public ADM_coreVideoFilter
 
     static void FadeThroughCreateBuffers(int w, int h, fadeThrough_buffers_t * buffers);
     static void FadeThroughDestroyBuffers(fadeThrough_buffers_t * buffers);
-    static void FadeThroughProcess_C(ADMImage *img, int w, int h, fadeThrough param, fadeThrough_buffers_t * buffers);
+    static void FadeThroughProcess_C(ADMImage *img, int w, int h, uint64_t absoluteStartPts, fadeThrough param, fadeThrough_buffers_t * buffers);
     static double TransientPoint(double frac, int transient, double duration);
     static void StackBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius);
     

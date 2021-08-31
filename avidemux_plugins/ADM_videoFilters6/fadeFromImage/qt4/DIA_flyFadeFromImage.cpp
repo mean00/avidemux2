@@ -51,7 +51,7 @@ uint8_t   flyFadeFromImage::processYuv(ADMImage *in,ADMImage *out )
     out->duplicate(in);
 
     // Do it!
-    ADMVideoFadeFromImage::FadeFromImageProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),param, &buffers);
+    ADMVideoFadeFromImage::FadeFromImageProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),0,param, &buffers);
 
     return 1;
 }

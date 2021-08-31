@@ -66,7 +66,7 @@ void ADMVideoFadeFromImage::FadeFromImageDestroyBuffers(fadeFromImage_buffers_t 
 /**
     \fn FadeFromImageProcess_C
 */
-void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, fadeFromImage param, fadeFromImage_buffers_t * buffers)
+void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h,  uint64_t absoluteStartPts, fadeFromImage param, fadeFromImage_buffers_t * buffers)
 {
     if (!img || !buffers || !buffers->imgCopy) return;
     uint8_t * line;
@@ -81,7 +81,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
         startMs = tmp;
     }
     
-    uint32_t imgMs = img->Pts/1000LL;
+    uint32_t imgMs = (img->Pts+absoluteStartPts)/1000LL;
     
     if (startMs == endMs)
         return;
@@ -605,7 +605,7 @@ bool ADMVideoFadeFromImage::getNextFrame(uint32_t *fn,ADMImage *image)
 {
     if(!previousFilter->getNextFrame(fn,image)) return false;
 
-    FadeFromImageProcess_C(image,info.width,info.height,_param, &(_buffers));
+    FadeFromImageProcess_C(image,info.width,info.height,getAbsoluteStartTime(),_param, &(_buffers));
  
     return 1;
 }

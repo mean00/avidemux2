@@ -52,7 +52,7 @@ uint8_t   flyFadeThrough::processYuv(ADMImage *in,ADMImage *out )
     out->duplicate(in);
 
     // Do it!
-    ADMVideoFadeThrough::FadeThroughProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),param, &buffers);
+    ADMVideoFadeThrough::FadeThroughProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),0,param, &buffers);
 
     return 1;
 }
