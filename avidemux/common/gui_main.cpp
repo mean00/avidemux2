@@ -835,6 +835,10 @@ void HandleAction (Action action)
             {
                 // Can we go to the last keyframe before the cut?
                 current=after;
+                // current equal segment duration does not belong to this segment or
+                // to any segment, when it matches video duration, triggering rewind.
+                if(current && current != ADM_NO_PTS)
+                    current--;
                 if(!video_body->getPKFramePTS(&current))
                 { // nope
                     A_Rewind();
