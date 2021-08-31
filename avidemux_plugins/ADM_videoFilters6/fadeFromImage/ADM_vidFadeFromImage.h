@@ -46,5 +46,5 @@ class  ADMVideoFadeFromImage:public ADM_coreVideoFilter
 
     static void FadeFromImageCreateBuffers(int w, int h, fadeFromImage_buffers_t * buffers);
     static void FadeFromImageDestroyBuffers(fadeFromImage_buffers_t * buffers);
-    static void FadeFromImageProcess_C(ADMImage *img, int w, int h, fadeFromImage param, fadeFromImage_buffers_t * buffers);
+    static void FadeFromImageProcess_C(ADMImage *img, int w, int h,  uint64_t absoluteStartPts, fadeFromImage param, fadeFromImage_buffers_t * buffers);
 };
