@@ -56,13 +56,15 @@ reverseWindow::reverseWindow(QWidget *parent, reverse *param, ADM_coreVideoFilte
     admCoreUtils::getLastReadFile(filePath);
     
     QString warning_text = QString("•");
+    warning_text += QString(QT_TRANSLATE_NOOP("reverse","The start time MUST match a presentation timestamp (PTS) of a frame. (Recommended to use the markers.)"));
+    warning_text += QString("\n•");
     warning_text += QString(QT_TRANSLATE_NOOP("reverse","This filter requires to buffer the entire section to be reversed, it could take a lot of memory."));
-    warning_text += QString("\n\n•");
+    warning_text += QString("\n•");
     warning_text += QString(QT_TRANSLATE_NOOP("reverse","If you select the 'Buffer to file' option, the temporary file will be saved in the same directory as the source video. Make sure there is enough space, and write premission."));
     warning_text += QString("\n•");
     warning_text += QString(QT_TRANSLATE_NOOP("reverse","If you select the 'Buffer to RAM' option, there MUST be at least the required free memory available."));
-    warning_text += QString("\n\n•");
-    warning_text += QString(QT_TRANSLATE_NOOP("reverse","The reversal in subsequent previews will not work, if you try to seek into the time scope. Start playing before the selection, if you want to see the reversal."));
+    warning_text += QString("\n•");
+    warning_text += QString(QT_TRANSLATE_NOOP("reverse","The preview of the reverseal is ONLY possible, if you start palying before (or exactly at the start of) the time scope. Else you will see a green screen."));
     warning_text += QString("\n•");
     warning_text += QString(QT_TRANSLATE_NOOP("reverse","When encoding or play in preview reaches the start time, the application may appear unresponsive, while buffering the section. Be patient."));
     ui.textEditWarnings->setText(warning_text);

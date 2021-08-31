@@ -165,7 +165,7 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
                 startMs = tmp;
             }
             
-            uint32_t imgMs = original->Pts/1000LL;
+            uint32_t imgMs = (original->Pts+getAbsoluteStartTime())/1000LL;
             
             if ((startMs == endMs) || (imgMs < startMs) || (imgMs > endMs))
             {
@@ -173,6 +173,13 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
                 image->duplicateFull(original);
                 aprintf("[reverse] getNextFrame (fn==%u) - out of scope\n",*fn);
                 return true;
+            }
+            
+            
+            if ((imgMs > startMs+1) && (imgMs <= endMs))
+            {
+                invalidatedBySeek = true;
+                clean();
             }
             
             if (invalidatedBySeek)
@@ -185,9 +192,10 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
                 int strides[3];
                 image->GetWritePlanes(wplanes);
                 image->GetPitches(strides);
-                memset(wplanes[0], 128, h*strides[0]);
+                memset(wplanes[0], 64, h*strides[0]);
                 memset(wplanes[1], 0, (h/2)*strides[1]);
                 memset(wplanes[2], 0, (h/2)*strides[2]);
+                image->printString(1,1,"[reverse] preview not available");
                 aprintf("[reverse] getNextFrame (fn==%u) - invalidated by seek\n",*fn);
                 return true;
             }
@@ -205,7 +213,7 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
             }
             
             do {
-                imgMs = original->Pts/1000LL;
+                imgMs = (original->Pts+getAbsoluteStartTime())/1000LL;
                 
                 if (imgMs > endMs)	// reached out of scope frame
                 {
@@ -217,7 +225,7 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
                 bufferCount = frameCount+1;
                 frameBuffer = (buffered_frame_t*)realloc(frameBuffer, bufferCount*sizeof(buffered_frame_t));
                 ADM_assert(frameBuffer != NULL);
-                frameBuffer[frameCount].Pts = original->Pts;
+                frameBuffer[frameCount].Pts = (original->Pts+getAbsoluteStartTime());
                 frameBuffer[frameCount]._colorspace = original->_colorspace;
                 frameBuffer[frameCount]._range = original->_range;
                 frameBuffer[frameCount].rawData = NULL;
@@ -301,6 +309,10 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
         image->Pts = 0;
     else
         image->Pts = (endPts - frameBuffer[frameCount].Pts)+startPts;
+    if (image->Pts < getAbsoluteStartTime())
+        image->Pts = 0;
+    else
+        image->Pts -= getAbsoluteStartTime();
     image->_colorspace = frameBuffer[frameCount]._colorspace;
     image->_range = frameBuffer[frameCount]._range;
     
