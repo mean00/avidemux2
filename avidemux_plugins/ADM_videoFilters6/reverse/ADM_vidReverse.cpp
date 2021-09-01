@@ -61,6 +61,7 @@ UNUSED_ARG(setup);
     overrun = false;
     overrunImg = new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
     invalidatedBySeek = false;
+    internalError = false;
     bufferCount = 0;
     frameBuffer = NULL;
     validFileBuffer = false;
@@ -132,11 +133,36 @@ bool ADMVideoReverse::goToTime(uint64_t time)
 }
 
 /**
+ * \fn wrongImage
+ */
+void ADMVideoReverse::wrongImage(ADMImage * img, int Y, int U, int V, const char * msg)
+{
+    uint32_t w, h;
+    img->getWidthHeight(&w, &h);
+    uint8_t * wplanes[3];
+    int strides[3];
+    img->GetWritePlanes(wplanes);
+    img->GetPitches(strides);
+    memset(wplanes[0], Y, h*strides[0]);
+    memset(wplanes[1], U, (h/2)*strides[1]);
+    memset(wplanes[2], V, (h/2)*strides[2]);
+    img->printString(1,1,msg);
+}
+
+/**
     \fn getFrame
     \brief Get a processed frame
 */
 bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
 {
+    if (internalError)
+    {
+        internalError = false;
+        clean();
+        cleanFile();
+        return false;
+    }
+    
     if (frameCount == 0)
     {
         clean();
@@ -186,16 +212,7 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
             {
                 image->copyInfo(original);
                 // make it green
-                uint32_t w, h;
-                image->getWidthHeight(&w, &h);
-                uint8_t * wplanes[3];
-                int strides[3];
-                image->GetWritePlanes(wplanes);
-                image->GetPitches(strides);
-                memset(wplanes[0], 64, h*strides[0]);
-                memset(wplanes[1], 0, (h/2)*strides[1]);
-                memset(wplanes[2], 0, (h/2)*strides[2]);
-                image->printString(1,1,"[reverse] preview not available");
+                wrongImage(image, 64, 0, 0, "[reverse] preview not available");
                 aprintf("[reverse] getNextFrame (fn==%u) - invalidated by seek\n",*fn);
                 return true;
             }
@@ -209,7 +226,15 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
             if (!param.bufferToRAM && !validFileBuffer)
             {
                 fd = ADM_fopen(param.fileBuffer.c_str(), "w+");
-                ADM_assert(fd != NULL);
+                if (fd == NULL)
+                {
+                    internalError = true;
+                    *fn = _fn;
+                    image->copyInfo(original);
+                    ADM_error("[reverse] file open error\n");
+                    wrongImage(image, 64, 255, 0, "[reverse] file open error\n");
+                    return true;
+                }
             }
             
             do {
@@ -224,7 +249,18 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
 
                 bufferCount = frameCount+1;
                 frameBuffer = (buffered_frame_t*)realloc(frameBuffer, bufferCount*sizeof(buffered_frame_t));
-                ADM_assert(frameBuffer != NULL);
+                if (frameBuffer == NULL)
+                {
+                    internalError = true;
+                    *fn = _fn;
+                    image->copyInfo(original);
+                    ADM_error("[reverse] realloc error\n");
+                    wrongImage(image, 64, 255, 0, "[reverse] realloc error\n");
+                    if (fd)
+                        ADM_fclose(fd);
+                    return true;
+                }
+
                 frameBuffer[frameCount].Pts = (original->Pts+getAbsoluteStartTime());
                 frameBuffer[frameCount]._colorspace = original->_colorspace;
                 frameBuffer[frameCount]._range = original->_range;
@@ -240,7 +276,17 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
                 if (param.bufferToRAM)
                 {
                     frameBuffer[frameCount].rawData = (uint8_t *)malloc(strides[0]*h + strides[1]*(h/2) + strides[2]*(h/2));
-                    ADM_assert(frameBuffer[frameCount].rawData != NULL);
+                    if (frameBuffer[frameCount].rawData == NULL)
+                    {
+                        internalError = true;
+                        *fn = _fn;
+                        image->copyInfo(original);
+                        ADM_error("[reverse] malloc error\n");
+                        wrongImage(image, 64, 255, 0, "[reverse] malloc error\n");
+                        if (fd)
+                            ADM_fclose(fd);
+                        return true;
+                    }
                     memcpy(frameBuffer[frameCount].rawData, wplanes[0], strides[0]*h);
                     memcpy(frameBuffer[frameCount].rawData + strides[0]*h, wplanes[1], strides[1]*(h/2));
                     memcpy(frameBuffer[frameCount].rawData + strides[0]*h + strides[1]*(h/2), wplanes[2], strides[2]*(h/2));
@@ -254,7 +300,17 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
                             if (i==1)
                                 h /= 2;
                             count = strides[i]*h;
-                            ADM_assert(ADM_fwrite(wplanes[i], 1, count, fd) == count);
+                            if (ADM_fwrite(wplanes[i], 1, count, fd) != count)
+                            {
+                                internalError = true;
+                                *fn = _fn;
+                                image->copyInfo(original);
+                                ADM_error("[reverse] file write error\n");
+                                wrongImage(image, 64, 255, 0, "[reverse] file write error\n");
+                                if (fd)
+                                    ADM_fclose(fd);
+                                return true;
+                            }
                         }
                     }
                 }
@@ -325,17 +381,40 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
     
     if (param.bufferToRAM)
     {
-        ADM_assert(frameBuffer[frameCount].rawData != NULL);
+        if (frameBuffer[frameCount].rawData == NULL)
+        {
+            internalError = true;
+            *fn = _fn;
+            ADM_error("[reverse] memory error\n");
+            wrongImage(image, 64, 255, 0, "[reverse] memory error\n");
+            return true;
+        }
         memcpy(wplanes[0], frameBuffer[frameCount].rawData, strides[0]*h);
         memcpy(wplanes[1], frameBuffer[frameCount].rawData + strides[0]*h, strides[1]*(h/2));
         memcpy(wplanes[2], frameBuffer[frameCount].rawData + strides[0]*h + strides[1]*(h/2), strides[2]*(h/2));
     } else {
         FILE * fd = ADM_fopen(param.fileBuffer.c_str(), "r");
-        ADM_assert(fd != NULL);
+        if (fd == NULL)
+        {
+            internalError = true;
+            *fn = _fn;
+            ADM_error("[reverse] file open error\n");
+            wrongImage(image, 64, 255, 0, "[reverse] file open error\n");
+            return true;
+        }
         
         long int offset = (strides[0]*h + strides[1]*(h/2) + strides[2]*(h/2));
         offset *= frameCount;
-        ADM_assert(fseek(fd, offset, SEEK_SET) == 0);
+        if (fseek(fd, offset, SEEK_SET) != 0)
+        {
+            internalError = true;
+            *fn = _fn;
+            ADM_error("[reverse] file seek error\n");
+            wrongImage(image, 64, 255, 0, "[reverse] file seek error\n");
+            if (fd)
+                ADM_fclose(fd);
+            return true;
+        }
         
         size_t count;
         for (int i=0; i<3; i++)
@@ -343,7 +422,16 @@ bool ADMVideoReverse::getNextFrame(uint32_t *fn,ADMImage *image)
             if (i==1)
                 h /= 2;
             count = strides[i]*h;
-            ADM_assert(ADM_fread(wplanes[i], 1, count, fd) == count);
+            if (ADM_fread(wplanes[i], 1, count, fd) != count)
+            {
+                internalError = true;
+                *fn = _fn;
+                ADM_error("[reverse] file read error\n");
+                wrongImage(image, 64, 255, 0, "[reverse] file read error\n");
+                if (fd)
+                    ADM_fclose(fd);
+                return true;
+            }
         }
         
         ADM_fclose(fd);

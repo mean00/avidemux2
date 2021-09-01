@@ -31,6 +31,7 @@ class ADMVideoReverse : public  ADM_coreVideoFilter
     bool                 overrun;
     ADMImage *           overrunImg;
     bool                 invalidatedBySeek;
+    bool                 internalError;
     bool                 seekToStart;
     uint32_t             _fn;
     unsigned int         bufferCount;
@@ -47,6 +48,7 @@ class ADMVideoReverse : public  ADM_coreVideoFilter
     
     void                 clean();
     void                 cleanFile();
+    void                 wrongImage(ADMImage * img, int Y, int U, int V, const char * msg);
 
   public:
     ADMVideoReverse(ADM_coreVideoFilter *previous,CONFcouple *conf);
