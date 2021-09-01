@@ -205,6 +205,8 @@ bool     CpuCaps::setMask(uint32_t mask)
 
     int lavCpuMask=Cpu2Lav(myCpuMask);
     //av_set_cpu_flags_mask(lavCpuMask); deprecated!
+    lavCpuMask &= av_get_cpu_flags();
+    ADM_info("[CpuCaps] Forcing lav cpu flags 0x%08x\n",lavCpuMask);
     av_force_cpu_flags(lavCpuMask);
 
     return true;
