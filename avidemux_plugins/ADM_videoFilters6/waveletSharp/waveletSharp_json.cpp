@@ -7,6 +7,7 @@ bool  waveletSharp_jserialize(const char *file, const waveletSharp *key){
 admJson json;
 json.addFloat("strength",key->strength);
 json.addFloat("radius",key->radius);
+json.addFloat("cutoff",key->cutoff);
 json.addBool("highq",key->highq);
 return json.dumpToFile(file);
 };

@@ -55,6 +55,7 @@ Ui_waveletSharpWindow::Ui_waveletSharpWindow(QWidget *parent, waveletSharp *para
         connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChangedSpinBox(double)));
         SPINNER(Strength)
         SPINNER(Radius)
+        SPINNER(Cutoff)
 
 #define TOGGLER(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         TOGGLER(HQ)
@@ -91,6 +92,7 @@ void Ui_waveletSharpWindow::valueChanged( int f )
     lock++;
     COPY_VALUE_TO_SPINBOX(Strength);
     COPY_VALUE_TO_SPINBOX(Radius);
+    COPY_VALUE_TO_SPINBOX(Cutoff);
     myFly->download();
     myFly->sameImage();
     lock--;
@@ -105,6 +107,7 @@ void Ui_waveletSharpWindow::valueChangedSpinBox( double f )
     lock++;
     COPY_VALUE_TO_SLIDER(Strength);
     COPY_VALUE_TO_SLIDER(Radius);
+    COPY_VALUE_TO_SLIDER(Cutoff);
     myFly->download();
     myFly->sameImage();
     lock--;
@@ -151,6 +154,8 @@ uint8_t flyWaveletSharp::upload(void)
     UPLOADDBLSPIN(Strength, param.strength);
     MYSPIN(Radius)->setValue((int)round(param.radius*100.0));
     UPLOADDBLSPIN(Radius, param.radius);
+    MYSPIN(Cutoff)->setValue((int)round(param.cutoff*100.0));
+    UPLOADDBLSPIN(Cutoff, param.cutoff);
     MYCHECK(HQ)->setChecked(param.highq);
     return 1;
 }
@@ -159,6 +164,7 @@ uint8_t flyWaveletSharp::download(void)
     Ui_waveletSharpDialog *w=(Ui_waveletSharpDialog *)_cookie;
     param.strength=((float)MYSPIN(Strength)->value()) / 100.0;
     param.radius=((float)MYSPIN(Radius)->value()) / 100.0;
+    param.cutoff=((float)MYSPIN(Cutoff)->value()) / 100.0;
     param.highq=MYCHECK(HQ)->isChecked();
     return 1;
 }
@@ -173,6 +179,8 @@ void flyWaveletSharp::setTabOrder(void)
     PUSHDBLSPIN(Strength)
     PUSH_SPIN(Radius)
     PUSHDBLSPIN(Radius)
+    PUSH_SPIN(Cutoff)
+    PUSHDBLSPIN(Cutoff)
     PUSH_TOG(HQ)
 
 

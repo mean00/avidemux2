@@ -28,11 +28,12 @@ class  ADMVideoWaveletSharp:public ADM_coreVideoFilter
     waveletSharp       _param;
     float           _strength;
     float           _radius;
+    float           _cutoff;
     bool            _highq;
 
     static void          WaveletSharpProcess_HatTransformHorizontal(int32_t *temp, int32_t *base, int size, int sc);
     static void          WaveletSharpProcess_HatTransformVertical(int i, int32_t *temp, int32_t *base, int st, int size, int sc);
-    static void          WaveletSharpProcess_Core(int32_t *buf[4], int levels, unsigned int width, unsigned int height, double amount, double radius);
+    static void          WaveletSharpProcess_Core(int32_t *buf[4], int levels, unsigned int width, unsigned int height, double amount, double radius, double cutoff);
   public:
     ADMVideoWaveletSharp(ADM_coreVideoFilter *in,CONFcouple *couples);
     ~ADMVideoWaveletSharp();
@@ -43,7 +44,7 @@ class  ADMVideoWaveletSharp:public ADM_coreVideoFilter
     virtual void         setCoupledConf(CONFcouple *couples);
     virtual bool         configure(void) ;                 /// Start graphical user interface
 
-    static void          WaveletSharpProcess_C(ADMImage *img, float strength, float radius, bool highq);
+    static void          WaveletSharpProcess_C(ADMImage *img, float strength, float radius, float cutoff, bool highq);
     static void          reset(waveletSharp *cfg);
 
   private:

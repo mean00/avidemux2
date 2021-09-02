@@ -36,7 +36,7 @@ uint8_t   flyWaveletSharp::processYuv(ADMImage *in,ADMImage *out )
     out->duplicate(in);
 
     // Do it!
-    ADMVideoWaveletSharp::WaveletSharpProcess_C(out, param.strength, param.radius, param.highq);
+    ADMVideoWaveletSharp::WaveletSharpProcess_C(out, param.strength, param.radius, param.cutoff, param.highq);
 
     return 1;
 }
