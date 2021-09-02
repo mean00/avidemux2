@@ -257,9 +257,14 @@ bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate, bool copyMode)
     *scale=1;
     *rate=MAX_STD_CLOCK_FREQ;
     /* Which segments does the selection span? */
-    uint64_t segTime,start,end;
+    uint64_t segTime,start,end,total;
     start=getMarkerAPts();
     end=getMarkerBPts();
+    total=_segments.getTotalDuration();
+    if(!total)
+        return false;
+    if(end >= total)
+        end = total-1;
     if(start>end)
     {
         uint64_t tmp=end;
