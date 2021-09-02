@@ -4,5 +4,6 @@
 typedef struct {
 float strength;
 float radius;
+float cutoff;
 bool highq;
 }waveletSharp;

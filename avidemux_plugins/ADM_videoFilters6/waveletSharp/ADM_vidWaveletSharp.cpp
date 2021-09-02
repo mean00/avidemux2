@@ -71,13 +71,14 @@ inline void ADMVideoWaveletSharp::WaveletSharpProcess_HatTransformVertical(int i
 /**
     \fn WaveletSharpProcess_Core
 */
-void ADMVideoWaveletSharp::WaveletSharpProcess_Core(int32_t *buf[4], int levels, unsigned int width, unsigned int height, double amount, double radius)
+void ADMVideoWaveletSharp::WaveletSharpProcess_Core(int32_t *buf[4], int levels, unsigned int width, unsigned int height, double amount, double radius, double cutoff)
 {
     int32_t amt;
     unsigned int i, lev, minDim, sc, lpass, hpass, size, col, row;
     minDim = ((width < height) ? width : height);
     size = width * height;
     hpass = 0;
+    int cutoffint = cutoff * 100.0;
 
     for (lev = 0; lev < levels; lev++)
     {
@@ -102,8 +103,11 @@ void ADMVideoWaveletSharp::WaveletSharpProcess_Core(int32_t *buf[4], int levels,
         for (i = 0; i < size; i++)
         {
             buf[hpass][i] -= buf[lpass][i];
-            buf[hpass][i] *= amt;
-            buf[hpass][i] >>= 8;
+            if (abs(buf[hpass][i]) > cutoffint)
+            {
+                buf[hpass][i] *= amt;
+                buf[hpass][i] >>= 8;
+            }
 
             if (hpass)
                 buf[0][i] += buf[hpass][i];
@@ -119,7 +123,7 @@ void ADMVideoWaveletSharp::WaveletSharpProcess_Core(int32_t *buf[4], int levels,
 /**
     \fn WaveletSharpProcess_C
 */
-void ADMVideoWaveletSharp::WaveletSharpProcess_C(ADMImage *img, float strength, float radius, bool highq)
+void ADMVideoWaveletSharp::WaveletSharpProcess_C(ADMImage *img, float strength, float radius, float cutoff, bool highq)
 {
     int width=img->GetWidth(PLANAR_Y); 
     int height=img->GetHeight(PLANAR_Y);
@@ -136,6 +140,8 @@ void ADMVideoWaveletSharp::WaveletSharpProcess_C(ADMImage *img, float strength, 
     if (strength > 1.0) strength = 1.0;
     if (radius < 0.0) radius = 0.0;
     if (radius > 2.0) radius = 2.0;
+    if (cutoff < 0.0) cutoff = 0.0;
+    if (cutoff > 10.0) cutoff = 10.0;
 
     if(img->_range == ADM_COL_RANGE_MPEG)
     {
@@ -168,7 +174,7 @@ void ADMVideoWaveletSharp::WaveletSharpProcess_C(ADMImage *img, float strength, 
     }
 
     // Algo
-    WaveletSharpProcess_Core(buffer, (highq ? 5:3), width, height, strength, radius);
+    WaveletSharpProcess_Core(buffer, (highq ? 5:3), width, height, strength, radius, cutoff);
 
     // Y plane
     stride=img->GetPitch(PLANAR_Y);
@@ -207,7 +213,7 @@ bool ADMVideoWaveletSharp::configure()
 const char   *ADMVideoWaveletSharp::getConfiguration(void)
 {
     static char s[256];
-    snprintf(s,255," Strength: %.2f, Radius: %.2f%s",_param.strength, _param.radius,(_param.highq ? ", High quality":""));
+    snprintf(s,255," Strength: %.2f, Radius: %.2f, Cutoff: %.2f%s",_param.strength, _param.radius, _param.cutoff,(_param.highq ? ", High quality":""));
     return s;
 }
 /**
@@ -226,6 +232,7 @@ void ADMVideoWaveletSharp::reset(waveletSharp *cfg)
 {
     cfg->strength = 0.0;
     cfg->radius = 0.5;
+    cfg->cutoff = 0.0;
     cfg->highq = false;
 }
 /**
@@ -253,6 +260,7 @@ void ADMVideoWaveletSharp::update(void)
 {
     _strength=valueLimit(_param.strength,0.0,1.0);
     _radius=valueLimit(_param.radius,0.0,2.0);
+    _cutoff=valueLimit(_param.cutoff,0.0,10.0);
     _highq=_param.highq;
 }
 /**
@@ -301,7 +309,7 @@ bool ADMVideoWaveletSharp::getNextFrame(uint32_t *fn,ADMImage *image)
     */
     if(!previousFilter->getNextFrame(fn,image)) return false;
 
-    WaveletSharpProcess_C(image, _strength, _radius, _highq);
+    WaveletSharpProcess_C(image, _strength, _radius, _cutoff, _highq);
 
     return 1;
 }

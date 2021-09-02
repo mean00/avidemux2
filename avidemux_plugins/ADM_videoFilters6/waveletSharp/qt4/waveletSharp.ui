@@ -43,20 +43,6 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <item row="1" column="0">
-      <widget class="QLabel" name="labelStrength">
-       <property name="text">
-        <string>Strength</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="labelRadius">
-       <property name="text">
-        <string>Radius</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="1">
       <widget class="QSlider" name="horizontalSliderStrength">
        <property name="minimum">
@@ -73,6 +59,19 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="3">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
      <item row="2" column="1">
       <widget class="QSlider" name="horizontalSliderRadius">
        <property name="maximum">
@@ -83,6 +82,13 @@
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelRadius">
+       <property name="text">
+        <string>Radius</string>
        </property>
       </widget>
      </item>
@@ -99,20 +105,7 @@
        </property>
       </spacer>
      </item>
-     <item row="2" column="3">
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QCheckBox" name="checkBoxHQ">
        <property name="text">
         <string>High quality</string>
@@ -133,6 +126,40 @@
       <widget class="QDoubleSpinBox" name="doubleSpinBoxRadius">
        <property name="maximum">
         <double>2.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.010000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelStrength">
+       <property name="text">
+        <string>Strength</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelCutoff">
+       <property name="text">
+        <string>Noise cutoff</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSlider" name="horizontalSliderCutoff">
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QDoubleSpinBox" name="doubleSpinBoxCutoff">
+       <property name="maximum">
+        <double>10.000000000000000</double>
        </property>
        <property name="singleStep">
         <double>0.010000000000000</double>

@@ -2,6 +2,7 @@
 extern const ADM_paramList waveletSharp_param[]={
  {"strength",offsetof(waveletSharp,strength),"float",ADM_param_float},
  {"radius",offsetof(waveletSharp,radius),"float",ADM_param_float},
+ {"cutoff",offsetof(waveletSharp,cutoff),"float",ADM_param_float},
  {"highq",offsetof(waveletSharp,highq),"bool",ADM_param_bool},
 {NULL,0,NULL}
 };
