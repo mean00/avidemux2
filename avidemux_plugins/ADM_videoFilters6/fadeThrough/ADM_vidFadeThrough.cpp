@@ -369,7 +369,7 @@ void ADMVideoFadeThrough::FadeThroughProcess_C(ADMImage *img, int w, int h, uint
         return;
     if (imgMs < startMs)
         return;
-    if (imgMs > endMs)
+    if (imgMs >= endMs)
         return;
 
     double frac = ((double)(imgMs - startMs)) / ((double)(endMs - startMs));
