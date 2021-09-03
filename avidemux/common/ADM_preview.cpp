@@ -107,9 +107,6 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h, float nzoom)
             float widthRatio = (float)phyW / (float)w;
             float heightRatio = (float)phyH / (float)h;
             nzoom = (widthRatio < heightRatio ? widthRatio : heightRatio);
-            // If we have to downscale anyway, leave some margin around the window.
-            // Opening a window which takes almost the entire desktop may feel intrusive.
-            nzoom *= 0.85; // looks about right
         }
         else
             nzoom = ZOOM_1_1;

@@ -2854,6 +2854,16 @@ void UI_getMaximumPreviewSize(uint32_t *availWidth, uint32_t *availHeight)
     int h = screenHeight - reqh - fheight;
     if(w < 0) w = 0;
     if(h < 0) h = 0;
+
+    // If we have to downscale anyway, leave some margin around the window.
+    // Opening a window which takes almost the entire desktop may feel intrusive.
+#define SHRINK_FACTOR 0.85
+    if(avifileinfo && !QuiMainWindows->isMaximized() && (avifileinfo->width > w || avifileinfo->height > h))
+    {
+        w = (float)w * SHRINK_FACTOR;
+        h = (float)h * SHRINK_FACTOR;
+    }
+#undef SHRINK_FACTOR
     *availWidth = w;
     *availHeight = h;
 }
