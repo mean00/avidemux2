@@ -162,7 +162,7 @@ bool AVDM_Fade::getNextFrame(uint32_t *fn,ADMImage *image)
     bool out_of_scope=false;
 
     if(absPtsMs < param.startFade) out_of_scope=true;
-    if(absPtsMs > param.endFade)   out_of_scope=true;
+    if(absPtsMs >= param.endFade)   out_of_scope=true;
 
     if( out_of_scope)
     {
