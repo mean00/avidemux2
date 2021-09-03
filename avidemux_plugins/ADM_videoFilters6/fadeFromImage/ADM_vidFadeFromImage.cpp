@@ -87,7 +87,7 @@ void ADMVideoFadeFromImage::FadeFromImageProcess_C(ADMImage *img, int w, int h, 
         return;
     if (imgMs < startMs)
         return;
-    if (imgMs > endMs)
+    if (imgMs >= endMs)
         return;
 
     if (!buffers->validImg)

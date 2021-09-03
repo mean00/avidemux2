@@ -239,10 +239,11 @@ bool AVDM_FadeTo::getNextFrame(uint32_t *fn,ADMImage *image)
     }
     image->Pts=next->Pts;
     uint64_t absPts=next->Pts+getAbsoluteStartTime();
+    uint32_t absPtsMs=absPts/1000LL;
     bool out_of_scope=false;
 
-    if(absPts<param.startFade*1000LL) out_of_scope=true;
-    if(absPts>param.endFade*1000LL)   out_of_scope=true;
+    if(absPtsMs < param.startFade) out_of_scope=true;
+    if(absPtsMs >= param.endFade)  out_of_scope=true;
 
     if(!out_of_scope && !first)
     {
@@ -260,7 +261,7 @@ bool AVDM_FadeTo::getNextFrame(uint32_t *fn,ADMImage *image)
         vidCache->unlockAll();
         return true;
     }
-    double scope=1000LL*(param.endFade-param.startFade);
+    double scope=(param.endFade-param.startFade);
     double in;
     if(!scope)
     {
@@ -268,7 +269,7 @@ bool AVDM_FadeTo::getNextFrame(uint32_t *fn,ADMImage *image)
         in=1;
     }else
     {
-        in=absPts-param.startFade*1000LL;
+        in=absPtsMs-param.startFade;
     }
     in=in/scope;
     in*=255;
