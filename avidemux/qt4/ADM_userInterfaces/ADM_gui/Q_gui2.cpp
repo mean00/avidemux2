@@ -2102,11 +2102,13 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 #endif
 
     bool vuMeterIsHidden = false;
+    bool maximize = false;
     QSettings *qset = qtSettingsCreate();
     if(qset)
     {
         qset->beginGroup("MainWindow");
         mw->restoreState(qset->value("windowState").toByteArray());
+        maximize = qset->value("showMaximized", false).toBool();
         qset->endGroup();
         // Hack: allow to drop other Qt-specific settings on application restart
         char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
@@ -2119,8 +2121,17 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         if(openglEnabled && vuMeterIsHidden)
             mw->ui.audioMetreWidget->setVisible(true);
     }
-    mw->show();
+
     QuiMainWindows = (QWidget*)mw;
+
+    if(maximize)
+    {
+        UI_setBlockZoomChangesFlag(false); // unblock zoom to fit
+        QuiMainWindows->showMaximized();
+    }else
+    {
+        QuiMainWindows->show();
+    }
 
     uint32_t w, h;
 
@@ -2171,6 +2182,7 @@ void UI_closeGui(void)
     {
         qset->beginGroup("MainWindow");
         qset->setValue("windowState", ((QMainWindow *)QuiMainWindows)->saveState());
+        qset->setValue("showMaximized", QuiMainWindows->isMaximized());
         qset->endGroup();
         delete qset;
         qset = NULL;
