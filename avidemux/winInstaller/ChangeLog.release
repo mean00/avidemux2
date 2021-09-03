@@ -21,6 +21,10 @@
       <li>Chroma key (replace "green screen" with an image)</li>
       <li>DelogoHQ (clean up arbitrary shaped logo)</li>
       <li>Dynamic threshold</li>
+      <li>Fade from first image</li>
+      <li>Fade in (combination of multiple effects)</li>
+      <li>Fade out (combination of multiple effects)</li>
+      <li>Fade through (combination of multiple effects)</li>
       <li>Fit to size (resize and pad to the specified size)</li>
       <li>Flip (vertically/horizontally flip the image)</li>
       <li>Grid (video wall effect)</li>
@@ -31,6 +35,7 @@
       <li>Quadrilateral transformation (four point transform)</li>
       <li>Wavelet denoiser</li>
       <li>Wavelet sharpener</li>
+      <li>Zoom (partializable crop filter)</li>
     </ul>
 
     <h2>New Features</h2>
