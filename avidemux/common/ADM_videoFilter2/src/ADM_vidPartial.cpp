@@ -135,8 +135,8 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
         configuration.startBlack=configuration.endBlack;
         configuration.endBlack=swap;
     }
-    if(configuration.endBlack > info.totalDuration)
-        configuration.endBlack=info.totalDuration;
+    if(configuration.endBlack > info.totalDuration / 1000LL)	// totalDuration is in usec, endBlack in ms.
+        configuration.endBlack=info.totalDuration / 1000LL;
     // Ok, create trampoline & son
     trampoline=new trampolineFilter(this,NULL);
     // Create swallowed filter
@@ -248,11 +248,10 @@ FilterInfo  *partialFilter::getInfo(void)
  */
 bool partialFilter::isInRange(uint64_t tme)
 {
-    uint64_t first=previousFilter->getAbsoluteStartTime();
-    uint64_t from=1000LL*configuration.startBlack;
-    uint64_t to=1000LL*configuration.endBlack;
+    tme += previousFilter->getAbsoluteStartTime();
+    uint32_t tmeMs = tme / 1000LL;	// we need to comprare at ms resolution, otherwise if usec part not zero, would mess up things
 
-    if(tme+first<from || tme+first>to)
+    if(tmeMs<configuration.startBlack || tmeMs>=configuration.endBlack)
     {
         return false;
     }
@@ -471,8 +470,6 @@ ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *co
 
   start = startPts/1000;
   end = endPts/1000;
-  if (endPts % 1000)
-      end++;            // if endPts has fractional ms, dont miss the last frame
 
   tmp.writeAsString("filterName",internalName);
   tmp.writeAsUint32 ("startBlack",start);
