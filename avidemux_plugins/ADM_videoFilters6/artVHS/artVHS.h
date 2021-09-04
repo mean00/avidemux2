@@ -8,4 +8,5 @@ bool lumaNoDelay;
 bool chromaNoDelay;
 float unSync;
 float unSyncFilter;
+float noise;
 }artVHS;
