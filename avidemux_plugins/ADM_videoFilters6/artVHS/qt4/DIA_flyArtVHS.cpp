@@ -35,7 +35,7 @@ uint8_t   flyArtVHS::processYuv(ADMImage *in,ADMImage *out )
     out->duplicate(in);
 
     // Do it!
-    ADMVideoArtVHS::ArtVHSProcess_C(out, param.lumaBW, param.chromaBW, param.unSync, param.unSyncFilter, param.lumaNoDelay, param.chromaNoDelay);
+    ADMVideoArtVHS::ArtVHSProcess_C(out, param.lumaBW, param.chromaBW, param.unSync, param.unSyncFilter, param.lumaNoDelay, param.chromaNoDelay, param.noise, noiseBuffer4k);
     return 1;
 }
 

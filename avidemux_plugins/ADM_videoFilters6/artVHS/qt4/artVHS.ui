@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>505</width>
-    <height>475</height>
+    <width>708</width>
+    <height>485</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,10 +43,24 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <item row="2" column="0">
-      <widget class="QLabel" name="labelLuma">
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="checkBoxLumaNoDelay">
        <property name="text">
-        <string>Luma bandwidth</string>
+        <string>Use zero delay filter for luma</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelChroma">
+       <property name="text">
+        <string>Chroma bandwidth</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QCheckBox" name="checkBoxChromaNoDelay">
+       <property name="text">
+        <string>Use zero delay filter for chroma</string>
        </property>
       </widget>
      </item>
@@ -57,6 +71,19 @@
        </property>
        <property name="maximum">
         <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderUnSync">
+       <property name="maximum">
+        <number>160</number>
+       </property>
+       <property name="pageStep">
+        <number>20</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -76,13 +103,6 @@
        </property>
       </spacer>
      </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="labelChroma">
-       <property name="text">
-        <string>Chroma bandwidth</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="1">
       <widget class="ADM_SliderIndicator" name="horizontalSliderChromaBW">
        <property name="maximum">
@@ -90,40 +110,6 @@
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="labelSync">
-       <property name="text">
-        <string>Sync error</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="ADM_SliderIndicator" name="horizontalSliderUnSync">
-       <property name="maximum">
-        <number>160</number>
-       </property>
-       <property name="pageStep">
-        <number>20</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QCheckBox" name="checkBoxChromaNoDelay">
-       <property name="text">
-        <string>Use zero delay filter for chroma</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QCheckBox" name="checkBoxLumaNoDelay">
-       <property name="text">
-        <string>Use zero delay filter for luma</string>
        </property>
       </widget>
      </item>
@@ -141,6 +127,37 @@
        </property>
        <property name="pageStep">
         <number>10</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="labelSync">
+       <property name="text">
+        <string>Sync error</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelLuma">
+       <property name="text">
+        <string>Luma bandwidth</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="labelNoise">
+       <property name="text">
+        <string>Noise</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="ADM_SliderIndicator" name="horizontalSliderNoise">
+       <property name="maximum">
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

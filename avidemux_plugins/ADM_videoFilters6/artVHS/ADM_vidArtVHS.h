@@ -31,6 +31,8 @@ class  ADMVideoArtVHS:public ADM_coreVideoFilter
     bool            _chromaNoDelay;
     float           _unSync;
     float           _unSyncFilter;
+    float           _noise;
+    int *           _noiseBuffer4k;
   public:
     ADMVideoArtVHS(ADM_coreVideoFilter *in,CONFcouple *couples);
     ~ADMVideoArtVHS();
@@ -41,7 +43,7 @@ class  ADMVideoArtVHS:public ADM_coreVideoFilter
     virtual void         setCoupledConf(CONFcouple *couples);
     virtual bool         configure(void) ;                 /// Start graphical user interface
 
-    static  void         ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW, float unSync, float unSyncFilter, bool lumaNoDelay, bool chromaNoDelay);
+    static  void         ArtVHSProcess_C(ADMImage *img, float lumaBW, float chromaBW, float unSync, float unSyncFilter, bool lumaNoDelay, bool chromaNoDelay, float noise, int * noiseBuffer4k);
     static  void         reset(artVHS *cfg);
 
   private:

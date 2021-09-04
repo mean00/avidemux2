@@ -6,5 +6,6 @@ extern const ADM_paramList artVHS_param[]={
  {"chromaNoDelay",offsetof(artVHS,chromaNoDelay),"bool",ADM_param_bool},
  {"unSync",offsetof(artVHS,unSync),"float",ADM_param_float},
  {"unSyncFilter",offsetof(artVHS,unSyncFilter),"float",ADM_param_float},
+ {"noise",offsetof(artVHS,noise),"float",ADM_param_float},
 {NULL,0,NULL}
 };
