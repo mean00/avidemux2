@@ -1,6 +1,9 @@
 /***************************************************************************
                           Motion interpolation
         Copyright 2021 szlldm
+    Blur algorithm:
+        Copyright Mario Klingemann
+        Copyright Maxim Shemanarev
  ***************************************************************************/
 
 /***************************************************************************
@@ -52,7 +55,7 @@ motin::motin(int width, int height)
         hp = ((hp /4) * 2);
         upScalersA[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
         upScalersB[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
-        downScalers[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,wp,hp,pw,ph,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        downScalers[lv] = new ADMColorScalerFull(ADM_CS_BILINEAR,wp,hp,pw,ph,ADM_COLOR_YV12,ADM_COLOR_YV12);
         lv += 1;
         if (lv >= MOTIN_MAX_PYRAMID_LEVELS)
             break;
@@ -61,6 +64,7 @@ motin::motin(int width, int height)
     pyramidLevels = lv;
     
     threads = ADM_cpu_num_processors();
+    unithreads = threads;
     threads /= 2;
     if (threads < 1)
         threads = 1;
@@ -71,6 +75,9 @@ motin::motin(int width, int height)
     me_threads2 = new pthread_t [threads];
     worker_thread_args1 = new worker_thread_arg [threads];
     worker_thread_args2 = new worker_thread_arg [threads];
+    
+    uniw_threads = new pthread_t [unithreads];
+    uniworker_thread_args = new uniworker_thread_arg [unithreads];
 
 }
 
@@ -103,6 +110,8 @@ motin::~motin()
     delete [] me_threads2;
     delete [] worker_thread_args1;
     delete [] worker_thread_args2;
+    delete [] uniw_threads;
+    delete [] uniworker_thread_args;
 }
 
 void *motin::scaler_thread( void *ptr )
@@ -202,11 +211,6 @@ void motin::createPyramids(ADMImage * imgA, ADMImage * imgB)
     pthread_join( scth[0], NULL);
     pthread_join( scth[1], NULL);
 
-    /*for (int lv=0; lv<(pyramidLevels-1); lv++)
-    {
-        upScalers[lv]->convertImage(pyramidA[lv], pyramidA[lv+1]);
-        upScalers[lv]->convertImage(pyramidB[lv], pyramidB[lv+1]);
-    }*/
 }
 
 int motin::sad(uint8_t * p1, uint8_t * p2, int stride, int x1, int y1, int x2, int y2)
@@ -408,6 +412,135 @@ void *motin::me_worker_thread( void *ptr )
     return NULL;
 }
 
+static const uint16_t g_stack_blur8_mul[255] = 
+    {
+        512,512,456,512,328,456,335,512,405,328,271,456,388,335,292,512,
+        454,405,364,328,298,271,496,456,420,388,360,335,312,292,273,512,
+        482,454,428,405,383,364,345,328,312,298,284,271,259,496,475,456,
+        437,420,404,388,374,360,347,335,323,312,302,292,282,273,265,512,
+        497,482,468,454,441,428,417,405,394,383,373,364,354,345,337,328,
+        320,312,305,298,291,284,278,271,265,259,507,496,485,475,465,456,
+        446,437,428,420,412,404,396,388,381,374,367,360,354,347,341,335,
+        329,323,318,312,307,302,297,292,287,282,278,273,269,265,261,512,
+        505,497,489,482,475,468,461,454,447,441,435,428,422,417,411,405,
+        399,394,389,383,378,373,368,364,359,354,350,345,341,337,332,328,
+        324,320,316,312,309,305,301,298,294,291,287,284,281,278,274,271,
+        268,265,262,259,257,507,501,496,491,485,480,475,470,465,460,456,
+        451,446,442,437,433,428,424,420,416,412,408,404,400,396,392,388,
+        385,381,377,374,370,367,363,360,357,354,350,347,344,341,338,335,
+        332,329,326,323,320,318,315,312,310,307,304,302,299,297,294,292,
+        289,287,285,282,280,278,275,273,271,269,267,265,263,261,259
+    };
+
+static const uint8_t g_stack_blur8_shr[255] = 
+    {
+          9, 11, 12, 13, 13, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 17, 
+         17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 
+         19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20,
+         20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21,
+         21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+         21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 
+         22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+         22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23, 
+         23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+         23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+         23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 
+         23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 
+         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24
+    };
+
+/**
+    \fn StackBlurLine_C
+*/
+void motin::StackBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius)
+{
+    uint_fast32_t div;
+    uint_fast32_t mul_sum;
+    uint_fast32_t shr_sum;
+
+    uint_fast32_t l, p, i;
+    uint_fast32_t stack_ptr;
+    uint_fast32_t stack_start;
+
+    const uint8_t * src_pix_ptr;
+          uint8_t * dst_pix_ptr;
+    uint8_t *     stack_pix_ptr;
+
+    uint_fast32_t sum_r = 0;
+    uint_fast32_t sum_in_r = 0;
+    uint_fast32_t sum_out_r = 0;
+
+    uint_fast32_t lm  = len - 1;
+
+    if ((radius > 0) && (len > 1))
+    {
+        div = radius * 2 + 1;
+        mul_sum = g_stack_blur8_mul[radius];
+        shr_sum = g_stack_blur8_shr[radius];
+
+        for(i = 0; i <= radius; i++)
+        {
+            if ((radius - i) > lm)
+                src_pix_ptr = line + pixPitch*lm;
+            else
+                src_pix_ptr = line + pixPitch*(radius - i);    // fix flickering at the T/L edges, by reflecting the image backward
+            stack_pix_ptr    = (uint8_t *)&stack[i];
+            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+            sum_out_r       += src_pix_ptr[0];
+            sum_r           += src_pix_ptr[0] * (i + 1);
+        }
+        src_pix_ptr = line;
+        for(i = 1; i <= radius; i++)
+        {
+            if(i <= lm) src_pix_ptr += pixPitch; 
+            stack_pix_ptr = (uint8_t *)&stack[i + radius];
+            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+            sum_in_r        += src_pix_ptr[0];
+            sum_r           += src_pix_ptr[0] * (radius + 1 - i);
+        }
+
+        stack_ptr = radius;
+        p = radius;
+        if(p > lm) p = lm;
+        src_pix_ptr = line + pixPitch*p;
+        dst_pix_ptr = line;
+        for(l = 0; l < len; l++)
+        {
+            dst_pix_ptr[0] = (sum_r * mul_sum) >> shr_sum;
+            dst_pix_ptr   += pixPitch;
+
+            sum_r -= sum_out_r;
+   
+            stack_start = stack_ptr + div - radius;
+            if(stack_start >= div) stack_start -= div;
+            stack_pix_ptr = (uint8_t *)&stack[stack_start];
+
+            sum_out_r -= stack_pix_ptr[0];
+
+            if(p < lm) 
+                src_pix_ptr += pixPitch;
+            else if(p < lm*2) 
+                src_pix_ptr -= pixPitch;    // fix flickering at the B/R edges, by reflecting the image backward
+            ++p;
+
+            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+
+            sum_in_r += src_pix_ptr[0];
+            sum_r    += sum_in_r;
+
+            ++stack_ptr;
+            if(stack_ptr >= div) stack_ptr = 0;
+            stack_pix_ptr = (uint8_t *)&stack[stack_ptr];
+
+            sum_in_r  -= stack_pix_ptr[0];
+            sum_out_r += stack_pix_ptr[0];
+        }
+    }
+}
+
 void *motin::spf_worker_thread( void *ptr )
 {
     worker_thread_arg * arg = (worker_thread_arg*)ptr;
@@ -420,81 +553,66 @@ void *motin::spf_worker_thread( void *ptr )
     uint32_t h = arg->h;
     uint32_t ystart = arg->ystart;
     uint32_t yincr = arg->yincr;
+    uint32_t plane = arg->plane;
     int x,y,bx,by;
 
     w /= 2;
     h /= 2;
     
-    // threat edges (motion estimate not working on the edges)
-    if (lv > 0)
-    {
-        // top edge
-        for (int p=1; p<3; p++)
-        {
-            memcpy(plW[p]+0*strides[p], plW[p]+4*strides[p], w);
-            memcpy(plW[p]+1*strides[p], plW[p]+4*strides[p], w);
-            memcpy(plW[p]+2*strides[p], plW[p]+4*strides[p], w);
-            memcpy(plW[p]+3*strides[p], plW[p]+4*strides[p], w);
-        }
-        // bottom edge
-        for (int p=1; p<3; p++)
-        {
-            memcpy(plW[p]+(h-4)*strides[p], plW[p]+(h-5)*strides[p], w);
-            memcpy(plW[p]+(h-3)*strides[p], plW[p]+(h-5)*strides[p], w);
-            memcpy(plW[p]+(h-2)*strides[p], plW[p]+(h-5)*strides[p], w);
-            memcpy(plW[p]+(h-1)*strides[p], plW[p]+(h-5)*strides[p], w);
-        }
-        // left-right edges
-        for (int p=1; p<3; p++)
-        {
-            for (y=0; y<h; y++)
-            {
-                for (x=0;x<4;x++)
-                    plW[p][x] = plW[p][4];
-                for (x=(w-4);x<w;x++)
-                    plW[p][x] = plW[p][w-5];
-            }
-        }
-    }
-    
     // spatial filter
-    for (y=0; y<h; y++)
+    #define MAX_BLUR_RADIUS (18)
+    uint32_t stack[MAX_BLUR_RADIUS*2+1];
+    int radius = 6*(lv+1);
+    if (radius > MAX_BLUR_RADIUS) radius= MAX_BLUR_RADIUS;
+    for(y = ystart; y < h; y+=yincr)
     {
-        for (x=0; x<w; x++)
-        {
-            unsigned int sumX, sumY, cnt;
-            sumX = 0;
-            sumY = 0;
-            cnt = 0;
-            for (by=y-2;by<=y+2;by++)
-            {
-                if (by < 0)
-                    continue;
-                if (by >= h)
-                    continue;
-                for (bx=x-2;bx<=x+2;bx++)
-                {
-                    if (bx < 0)
-                        continue;
-                    if (bx >= w)
-                        continue;
-                    sumX += plW[1][bx + by*strides[1]];
-                    sumY += plW[2][bx + by*strides[2]];
-                    cnt += 1;
-                }
-            }
-            sumX /= cnt;
-            sumY /= cnt;
-            plA[1][x + y*strides[1]] = sumX;
-            plA[2][x + y*strides[2]] = sumY;
-        }
+        StackBlurLine_C((plW[plane] + y*strides[plane]), w, 1, stack, radius);
     }
-    for (y=0; y<h; y++)
+
+    for(x = ystart; x < w; x+=yincr)
+    {
+        StackBlurLine_C((plW[plane] + x), h, strides[plane], stack, radius);
+    }
+    #undef MAX_BLUR_RADIUS
+
+    pthread_exit(NULL);
+
+    return NULL;
+}
+
+void *motin::tmf_worker_thread( void *ptr )
+{
+    uniworker_thread_arg * arg = (uniworker_thread_arg*)ptr;
+    uint8_t ** plA = arg->wAplanes;
+    uint8_t ** plB = arg->wBplanes;
+    int * strides = arg->wstrides;
+    uint32_t w = arg->w;
+    uint32_t h = arg->h;
+    uint32_t ystart = arg->ystart;
+    uint32_t yincr = arg->yincr;
+    uint32_t plane = arg->plane;
+    int x,y,bx,by;
+
+    w /= 2;
+    h /= 2;
+
+    // balance directional estimations
+
+    for (y=ystart; y<h; y+=yincr)
     {
         for (x=0; x<w; x++)
         {
-            plW[1][x + y*strides[1]] = plA[1][x + y*strides[1]];
-            plW[2][x + y*strides[2]] = plA[2][x + y*strides[2]];
+            int a = (unsigned int)plA[plane][y*strides[plane]+x];
+            int b = (unsigned int)plB[plane][y*strides[plane]+x];
+            a -= 128;
+            b -= 128;
+            a -= b;
+            a /= 2;
+            b = -1*a;
+            a += 128;
+            b += 128;
+            plA[plane][y*strides[plane]+x] = a;
+            plB[plane][y*strides[plane]+x] = b;
         }
     }
 
@@ -502,7 +620,6 @@ void *motin::spf_worker_thread( void *ptr )
 
     return NULL;
 }
-
     
     
 void motin::estimateMotion()
@@ -587,57 +704,99 @@ void motin::estimateMotion()
             pthread_join( me_threads1[tr], NULL);
             pthread_join( me_threads2[tr], NULL); 
         }
-        
-        // spatial filters (reuse pthread and arg variables)
-        pthread_create( &me_threads1[0], NULL, spf_worker_thread, (void*) &worker_thread_args1[0]);
-        pthread_create( &me_threads2[0], NULL, spf_worker_thread, (void*) &worker_thread_args2[0]);
-        // work in thread workers...
-        pthread_join( me_threads1[0], NULL);
-        pthread_join( me_threads2[0], NULL); 
-        
-        
-        // filter
+
+        for (int dir=0; dir<2; dir++)
         {
-            int x,y,bx,by;
-            uint8_t * plA[3];
-            uint8_t * plB[3];
             uint8_t * plW[3];
-            pyramidA[lv]->GetPitches(strides);
-            pyramidA[lv]->getWidthHeight(&w,&h);
+            int strides[3];
+            uint32_t w,h;
+
+            pyramidWA[lv]->GetPitches(strides);
+            pyramidWA[lv]->getWidthHeight(&w, &h);
+            if (dir==0)
+                pyramidWA[lv]->GetWritePlanes(plW);
+            else
+                pyramidWB[lv]->GetWritePlanes(plW);
+
             w /= 2;
             h /= 2;
 
-
-            // balance directional estimations
-            pyramidWA[lv]->GetWritePlanes(plA);
-            pyramidWB[lv]->GetWritePlanes(plB);
-            for (y=0; y<h; y++)
+            // threat edges (motion estimate not working on the edges)
+            if (lv > 0)
             {
-                for (x=0; x<w; x++)
+                // top edge
+                for (int p=1; p<3; p++)
                 {
-                    int ax = (unsigned int)plA[1][y*strides[1]+x];
-                    int ay = (unsigned int)plA[2][y*strides[2]+x];
-                    int bx = (unsigned int)plB[1][y*strides[1]+x];
-                    int by = (unsigned int)plB[2][y*strides[2]+x];
-                    ax -= 128;
-                    ay -= 128;
-                    bx -= 128;
-                    by -= 128;
-                    ax -= bx;
-                    ay -= by;
-                    ax /= 2;
-                    ay /= 2;
-                    bx = -1*ax;
-                    by = -1*ay;
-                    ax += 128;
-                    ay += 128;
-                    bx += 128;
-                    by += 128;
-                    plA[1][y*strides[1]+x] = ax;
-                    plA[2][y*strides[2]+x] = ay;
-                    plB[1][y*strides[1]+x] = bx;
-                    plB[2][y*strides[2]+x] = by;
+                    memcpy(plW[p]+0*strides[p], plW[p]+4*strides[p], w);
+                    memcpy(plW[p]+1*strides[p], plW[p]+4*strides[p], w);
+                    memcpy(plW[p]+2*strides[p], plW[p]+4*strides[p], w);
+                    memcpy(plW[p]+3*strides[p], plW[p]+4*strides[p], w);
                 }
+                // bottom edge
+                for (int p=1; p<3; p++)
+                {
+                    memcpy(plW[p]+(h-4)*strides[p], plW[p]+(h-5)*strides[p], w);
+                    memcpy(plW[p]+(h-3)*strides[p], plW[p]+(h-5)*strides[p], w);
+                    memcpy(plW[p]+(h-2)*strides[p], plW[p]+(h-5)*strides[p], w);
+                    memcpy(plW[p]+(h-1)*strides[p], plW[p]+(h-5)*strides[p], w);
+                }
+                // left-right edges
+                for (int p=1; p<3; p++)
+                {
+                    for (int y=0; y<h; y++)
+                    {
+                        for (int x=0;x<4;x++)
+                            plW[p][x] = plW[p][4];
+                        for (int x=(w-4);x<w;x++)
+                            plW[p][x] = plW[p][w-5];
+                    }
+                }
+            }
+        }
+
+        for (int dir=0; dir<2; dir++)
+        {
+        // spatial filters (reuse pthread and arg variables)
+            for (int tr=0; tr<threads; tr++)
+            {
+                worker_thread_args1[tr].plane = dir+1;
+                worker_thread_args2[tr].plane = dir+1;
+                pthread_create( &me_threads1[tr], NULL, spf_worker_thread, (void*) &worker_thread_args1[tr]);
+                pthread_create( &me_threads2[tr], NULL, spf_worker_thread, (void*) &worker_thread_args2[tr]);
+            }
+            
+            // work in thread workers...
+            
+            for (int tr=0; tr<threads; tr++)
+            {
+                pthread_join( me_threads1[tr], NULL);
+                pthread_join( me_threads2[tr], NULL); 
+            }
+        }
+        
+        // temporal filter
+        for (int tr=0; tr<unithreads; tr++)
+        {
+            pyramidWA[lv]->GetWritePlanes(uniworker_thread_args[tr].wAplanes);
+            pyramidWB[lv]->GetWritePlanes(uniworker_thread_args[tr].wBplanes);
+            pyramidWA[lv]->GetPitches(uniworker_thread_args[tr].wstrides);
+            pyramidWA[lv]->getWidthHeight(&uniworker_thread_args[tr].w, &uniworker_thread_args[tr].h);
+            uniworker_thread_args[tr].ystart = tr;
+            uniworker_thread_args[tr].yincr = unithreads;
+        }
+        for (int dir=0; dir<2; dir++)
+        {
+            for (int tr=0; tr<unithreads; tr++)
+            {
+                uniworker_thread_args[tr].plane = dir+1;
+                pthread_create( &uniw_threads[tr], NULL, tmf_worker_thread, (void*) &uniworker_thread_args[tr]);
+            }
+            
+            // work in thread workers...
+            
+            for (int tr=0; tr<unithreads; tr++)
+            {
+                pthread_join( uniw_threads[tr], NULL);
             }
         }
         
@@ -659,43 +818,31 @@ void motin::estimateMotion()
 
 }
 
-
-
-void motin::interpolate(ADMImage * dst, int alpha)
+void *motin::interp_worker_thread( void *ptr )
 {
-    if (sceneChanged)
-        return;
-    if ((frameW < 128) || (frameH < 128))    // can not handle small images
-        return;
+    uniworker_thread_arg * arg = (uniworker_thread_arg*)ptr;
+    uint8_t ** dplanes = arg->dplanes;
+    uint8_t ** wAplanes = arg->wAplanes;
+    uint8_t ** wBplanes = arg->wBplanes;
+    uint8_t ** pAplanes = arg->pAplanes;
+    uint8_t ** pBplanes = arg->pBplanes;
+    int * dstrides = arg->dstrides;
+    int * wstrides = arg->wstrides;
+    int * pstrides = arg->pstrides;
+    uint32_t w = arg->w;
+    uint32_t h = arg->h;
+    uint32_t ystart = arg->ystart;
+    uint32_t yincr = arg->yincr;
+    uint32_t plane = arg->plane;
+    int alpha = arg->alpha;
 
-    if (alpha > 256)
-        alpha = 256;
-        
-    int w,h,x,y,p,alpham;
+
+    int x,y,p,alpham,error;
     alpham = 256-alpha;
-    
-    uint8_t * dplanes[3];
-    uint8_t * wAplanes[3];
-    uint8_t * wBplanes[3];
-    uint8_t * pAplanes[3];
-    uint8_t * pBplanes[3];
-    int dstrides[3];
-    int wstrides[3];
-    int pstrides[3];
-    int error;
 
-    dst->GetPitches(dstrides);
-    dst->GetWritePlanes(dplanes);
-    pyramidWA[0]->GetPitches(wstrides);
-    pyramidWA[0]->GetWritePlanes(wAplanes);
-    pyramidWB[0]->GetWritePlanes(wBplanes);
-    frameA->GetPitches(pstrides);
-    frameA->GetWritePlanes(pAplanes);
-    frameB->GetWritePlanes(pBplanes);
-
-    for (y=0; y<frameH/2; y++)
+    for (y=ystart; y<h/2; y+=yincr)
     {
-        for (x=0; x<frameW/2; x++)
+        for (x=0; x<w/2; x++)
         {
             int mxA,myA,mxB,myB;
             mxA = (unsigned int)wAplanes[1][x + y*wstrides[1]];
@@ -720,9 +867,9 @@ void motin::interpolate(ADMImage * dst, int alpha)
             myB += y*2;
 
             error = 0;
-            if ((mxA < 0) || (mxA >= frameW-1) || (myA < 0) || (myA >= frameH-1))
+            if ((mxA < 0) || (mxA >= w-1) || (myA < 0) || (myA >= h-1))
                 error += 1;
-            if ((mxB < 0) || (mxB >= frameW-1) || (myB < 0) || (myB >= frameH-1))
+            if ((mxB < 0) || (mxB >= w-1) || (myB < 0) || (myB >= h-1))
                 error += 2;
 
             switch (error)
@@ -831,6 +978,49 @@ void motin::interpolate(ADMImage * dst, int alpha)
             }
 
         }
+    }
+
+    pthread_exit(NULL);
+
+    return NULL;
+}
+
+void motin::interpolate(ADMImage * dst, int alpha)
+{
+    if (sceneChanged)
+        return;
+    if ((frameW < 128) || (frameH < 128))    // can not handle small images
+        return;
+
+    if (alpha > 256)
+        alpha = 256;
+
+    for (int tr=0; tr<unithreads; tr++)
+    {
+        dst->GetPitches(uniworker_thread_args[tr].dstrides);
+        dst->GetWritePlanes(uniworker_thread_args[tr].dplanes);
+        pyramidWA[0]->GetPitches(uniworker_thread_args[tr].wstrides);
+        pyramidWA[0]->GetWritePlanes(uniworker_thread_args[tr].wAplanes);
+        pyramidWB[0]->GetWritePlanes(uniworker_thread_args[tr].wBplanes);
+        frameA->GetPitches(uniworker_thread_args[tr].pstrides);
+        frameA->GetWritePlanes(uniworker_thread_args[tr].pAplanes);
+        frameB->GetWritePlanes(uniworker_thread_args[tr].pBplanes);
+        frameA->getWidthHeight(&uniworker_thread_args[tr].w, &uniworker_thread_args[tr].h);
+        uniworker_thread_args[tr].ystart = tr;
+        uniworker_thread_args[tr].yincr = unithreads;
+        uniworker_thread_args[tr].alpha = alpha;
+    }
+
+    for (int tr=0; tr<unithreads; tr++)
+    {
+        pthread_create( &uniw_threads[tr], NULL, interp_worker_thread, (void*) &uniworker_thread_args[tr]);
+    }
+    
+    // work in thread workers...
+    
+    for (int tr=0; tr<unithreads; tr++)
+    {
+        pthread_join( uniw_threads[tr], NULL);
     }
 }
 

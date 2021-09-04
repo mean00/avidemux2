@@ -26,6 +26,7 @@ class  motin
 
   protected:
     uint32_t    threads;
+    uint32_t    unithreads;
     int         frameW, frameH;
     int         pyramidLevels;
     bool        sceneChanged;
@@ -55,7 +56,7 @@ class  motin
         uint8_t * plW[3];
         int strides[3];
         uint32_t w,h;
-        uint32_t ystart, yincr;
+        uint32_t ystart, yincr, plane;
     } worker_thread_arg;
     
     pthread_t  * me_threads1;
@@ -65,8 +66,29 @@ class  motin
     
     static void *me_worker_thread( void *ptr );
     static void *spf_worker_thread( void *ptr );
+    static void *tmf_worker_thread( void *ptr );
     
     static int sad(uint8_t * p1, uint8_t * p2, int stride, int x1, int y1, int x2, int y2);
+    static void StackBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius);
+    
+    typedef struct {
+        uint8_t * dplanes[3];
+        uint8_t * wAplanes[3];
+        uint8_t * wBplanes[3];
+        uint8_t * pAplanes[3];
+        uint8_t * pBplanes[3];
+        int dstrides[3];
+        int wstrides[3];
+        int pstrides[3];
+        uint32_t w,h;
+        uint32_t ystart, yincr, plane;
+        int alpha;
+    } uniworker_thread_arg;
+
+    pthread_t  * uniw_threads;
+    uniworker_thread_arg * uniworker_thread_args;
+    
+    static void *interp_worker_thread( void *ptr );
 
   public:
     motin(int width, int height);
