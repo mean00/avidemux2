@@ -135,8 +135,6 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
         configuration.startBlack=configuration.endBlack;
         configuration.endBlack=swap;
     }
-    if(configuration.endBlack > info.totalDuration / 1000LL)	// totalDuration is in usec, endBlack in ms.
-        configuration.endBlack=info.totalDuration / 1000LL;
     // Ok, create trampoline & son
     trampoline=new trampolineFilter(this,NULL);
     // Create swallowed filter
