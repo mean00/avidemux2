@@ -59,6 +59,7 @@ uint32_t msglevel=2;
 
 uint32_t mixer=0;
 bool     doAutoUpdate=false;
+bool     maximizedFilters=false;
 bool     loadDefault=false;
 char     *alsaDevice=NULL;
 
@@ -197,6 +198,9 @@ std::string currentSdlDriver=getSdlDriverName();
 
         prefs->get(UPDATE_ENABLED,&doAutoUpdate);
 
+        // Make users happy who prefer to see details in filters
+        prefs->get(FEATURES_MAXIMIZE_FILTERS,&maximizedFilters);
+
         prefs->get(RESET_ENCODER_ON_VIDEO_LOAD,&loadDefault);
 
         // Make users happy who prefer the output dir to be the same as the input dir
@@ -267,6 +271,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle swapUpDownKeys(&swapUpDown,QT_TRANSLATE_NOOP("adm","Re_verse UP and DOWN arrow keys for navigation"));
         diaElemToggle swapMarkers(&useSwap,QT_TRANSLATE_NOOP("adm","_Swap markers if marker A is set past marker B or marker B before A in video"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
+        diaElemToggle openFiltersMaximized(&maximizedFilters,QT_TRANSLATE_NOOP("adm","_Open filters maximized"));
 
 
         diaElemFrame frameSimd(QT_TRANSLATE_NOOP("adm","SIMD"));
@@ -502,8 +507,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMarkers, &checkForUpdate};
-        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),7,diaUser);
+        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMarkers, &checkForUpdate, &openFiltersMaximized};
+        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),8,diaUser);
 
          /* Automation */
 
@@ -669,6 +674,8 @@ std::string currentSdlDriver=getSdlDriverName();
             //
 
             prefs->set(UPDATE_ENABLED,doAutoUpdate);
+            // Make users happy who prefer to see details in filters
+            prefs->set(FEATURES_MAXIMIZE_FILTERS,maximizedFilters);
             // Video render
             prefs->set(VIDEODEVICE,render);
             // Auto-append
