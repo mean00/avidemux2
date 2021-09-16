@@ -596,23 +596,6 @@ std::string currentSdlDriver=getSdlDriverName();
         useOpenGl.enable(false);
 #endif
 
-#define CPU_CAP_AVAIL(x) \
-    if(cpuCaps & ADM_CPUCAP_##x) \
-        capsToggle##x.enable(!capsAll && (cpuCaps & ADM_CPUCAP_##x));
-
-        CPU_CAP_AVAIL(MMX)
-        CPU_CAP_AVAIL(MMXEXT)
-        CPU_CAP_AVAIL(3DNOW)
-        CPU_CAP_AVAIL(3DNOWEXT)
-        CPU_CAP_AVAIL(SSE)
-        CPU_CAP_AVAIL(SSE2)
-        CPU_CAP_AVAIL(SSE3)
-        CPU_CAP_AVAIL(SSSE3)
-        CPU_CAP_AVAIL(SSE4)
-        CPU_CAP_AVAIL(SSE42)
-        CPU_CAP_AVAIL(AVX)
-        CPU_CAP_AVAIL(AVX2)
-
         uint8_t dialogAccepted=0;
         if( diaFactoryRunTabsFinish(factoryCookiez))
         {
