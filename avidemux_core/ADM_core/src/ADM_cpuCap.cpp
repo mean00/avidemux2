@@ -117,14 +117,18 @@ skipIt:
   #define CHECK(x) if (myCpuCaps & ADM_CPUCAP_##x) { printf("\t\t"#x" detected"); \
                        if (!(myCpuMask & ADM_CPUCAP_##x)) printf(", but disabled"); \
                        printf("\n"); }
-      CHECK(MMX);
-      CHECK(3DNOW);
-      CHECK(3DNOWEXT);
-      CHECK(MMXEXT);
-      CHECK(SSE);
-      CHECK(SSE2);
-      CHECK(SSE3);
-      CHECK(SSSE3);
+    CHECK(MMX)
+    CHECK(3DNOW)
+    CHECK(3DNOWEXT)
+    CHECK(MMXEXT)
+    CHECK(SSE)
+    CHECK(SSE2)
+    CHECK(SSE3)
+    CHECK(SSSE3)
+    CHECK(SSE4)
+    CHECK(SSE42)
+    CHECK(AVX)
+    CHECK(AVX2)
 #endif // X86
     ADM_info("[CpuCaps] End of CPU capabilities check (cpuCaps: 0x%08x, cpuMask: 0x%08x)\n",myCpuCaps,myCpuMask);
     return ;
