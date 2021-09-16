@@ -29,8 +29,8 @@
 
 #include "ADM_toolkitQt.h"
 #include "ADM_vidMisc.h"
+#include "prefs.h"
 
-extern QWidget *QuiMainWindows;	// required to reach QuiMainWindows
 
 /**
  */
@@ -648,7 +648,10 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     ADM_info("Interval = %d ms\n",incrementUs);
     timer.stop();
 
-    if (QuiMainWindows->windowState() & Qt::WindowMaximized)
+    bool maximizedWindow;
+    if(!prefs->get(FEATURES_MAXIMIZE_FILTERS,&maximizedWindow))
+        maximizedWindow = false;
+    if (maximizedWindow)
     {
         parent->setWindowFlags(Qt::Window);
         parent->setWindowFlag(Qt::WindowMinimizeButtonHint, false);
