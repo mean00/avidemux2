@@ -220,6 +220,13 @@ uint32_t     CpuCaps::getMask( )
 {
     return myCpuMask;
 }
+/**
+ * \fn getCaps
+ */
+uint32_t CpuCaps::getCaps(void)
+{
+    return myCpuCaps;
+}
 extern "C"
 {
 extern void adm2_emms_yasm(void);

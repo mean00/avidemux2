@@ -120,9 +120,14 @@ std::string currentSdlDriver=getSdlDriverName();
     DOME(4,dring);
 
 // Cpu caps
-#define CPU_CAPS(x)    	if(cpuMask & ADM_CPUCAP_##x) caps##x=1; else caps##x=0;
+#define CPU_CAPS(x) \
+    if((cpuCaps & cpuMask) & ADM_CPUCAP_##x) \
+        caps##x = true; \
+    else \
+        caps##x = false;
 
         uint32_t cpuMask=CpuCaps::getMask();
+        uint32_t cpuCaps=CpuCaps::getCaps();
     	if(cpuMask==ADM_CPUCAP_ALL) capsAll=1; else capsAll=0;
     	CPU_CAPS(MMX);
     	CPU_CAPS(MMXEXT);
@@ -280,32 +285,42 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle capsToggleAVX(&capsAVX, QT_TRANSLATE_NOOP("adm","Enable AVX"));
         diaElemToggle capsToggleAVX2(&capsAVX2, QT_TRANSLATE_NOOP("adm","Enable AVX2"));
 
-        capsToggleAll.link(0, &capsToggleMMX);
-        capsToggleAll.link(0, &capsToggleMMXEXT);
-        capsToggleAll.link(0, &capsToggle3DNOW);
-        capsToggleAll.link(0, &capsToggle3DNOWEXT);
-        capsToggleAll.link(0, &capsToggleSSE);
-        capsToggleAll.link(0, &capsToggleSSE2);
-        capsToggleAll.link(0, &capsToggleSSE3);
-        capsToggleAll.link(0, &capsToggleSSSE3);
-        capsToggleAll.link(0, &capsToggleSSE4);
-        capsToggleAll.link(0, &capsToggleSSE42);
-        capsToggleAll.link(0, &capsToggleAVX);
-        capsToggleAll.link(0, &capsToggleAVX2);
+#define CPU_CAP_AVAIL(x) \
+    if(cpuCaps & ADM_CPUCAP_##x) \
+        capsToggleAll.link(0, &capsToggle##x);
+
+        CPU_CAP_AVAIL(MMX)
+        CPU_CAP_AVAIL(MMXEXT)
+        CPU_CAP_AVAIL(3DNOW)
+        CPU_CAP_AVAIL(3DNOWEXT)
+        CPU_CAP_AVAIL(SSE)
+        CPU_CAP_AVAIL(SSE2)
+        CPU_CAP_AVAIL(SSE3)
+        CPU_CAP_AVAIL(SSSE3)
+        CPU_CAP_AVAIL(SSE4)
+        CPU_CAP_AVAIL(SSE42)
+        CPU_CAP_AVAIL(AVX)
+        CPU_CAP_AVAIL(AVX2)
+#undef CPU_CAP_AVAIL
 
         frameSimd.swallow(&capsToggleAll);
-        frameSimd.swallow(&capsToggleMMX);
-        frameSimd.swallow(&capsToggleMMXEXT);
-        frameSimd.swallow(&capsToggle3DNOW);
-        frameSimd.swallow(&capsToggle3DNOWEXT);
-        frameSimd.swallow(&capsToggleSSE);
-        frameSimd.swallow(&capsToggleSSE2);
-        frameSimd.swallow(&capsToggleSSE3);
-        frameSimd.swallow(&capsToggleSSSE3);
-        frameSimd.swallow(&capsToggleSSE4);
-        frameSimd.swallow(&capsToggleSSE42);
-        frameSimd.swallow(&capsToggleAVX);
-        frameSimd.swallow(&capsToggleAVX2);
+#define CPU_CAP_AVAIL(x) \
+    if(cpuCaps & ADM_CPUCAP_##x) \
+        frameSimd.swallow(&capsToggle##x);
+
+        CPU_CAP_AVAIL(MMX)
+        CPU_CAP_AVAIL(MMXEXT)
+        CPU_CAP_AVAIL(3DNOW)
+        CPU_CAP_AVAIL(3DNOWEXT)
+        CPU_CAP_AVAIL(SSE)
+        CPU_CAP_AVAIL(SSE2)
+        CPU_CAP_AVAIL(SSE3)
+        CPU_CAP_AVAIL(SSSE3)
+        CPU_CAP_AVAIL(SSE4)
+        CPU_CAP_AVAIL(SSE42)
+        CPU_CAP_AVAIL(AVX)
+        CPU_CAP_AVAIL(AVX2)
+#undef CPU_CAP_AVAIL
 
         diaElemThreadCount lavcThreadCount(&lavcThreads, QT_TRANSLATE_NOOP("adm","_lavc threads:"));
 
@@ -580,6 +595,23 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifndef USE_OPENGL
         useOpenGl.enable(false);
 #endif
+
+#define CPU_CAP_AVAIL(x) \
+    if(cpuCaps & ADM_CPUCAP_##x) \
+        capsToggle##x.enable(!capsAll && (cpuCaps & ADM_CPUCAP_##x));
+
+        CPU_CAP_AVAIL(MMX)
+        CPU_CAP_AVAIL(MMXEXT)
+        CPU_CAP_AVAIL(3DNOW)
+        CPU_CAP_AVAIL(3DNOWEXT)
+        CPU_CAP_AVAIL(SSE)
+        CPU_CAP_AVAIL(SSE2)
+        CPU_CAP_AVAIL(SSE3)
+        CPU_CAP_AVAIL(SSSE3)
+        CPU_CAP_AVAIL(SSE4)
+        CPU_CAP_AVAIL(SSE42)
+        CPU_CAP_AVAIL(AVX)
+        CPU_CAP_AVAIL(AVX2)
 
         uint8_t dialogAccepted=0;
         if( diaFactoryRunTabsFinish(factoryCookiez))

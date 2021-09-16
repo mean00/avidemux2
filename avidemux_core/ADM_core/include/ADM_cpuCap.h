@@ -59,6 +59,7 @@ public:
 	static void 	init( void);
         static bool     setMask(uint32_t mask);
         static uint32_t getMask();
+        static uint32_t getCaps(void);
 	static uint8_t 	hasMMX (void) {CHECK_Z(MMX)};
 	static uint8_t 	hasMMXEXT (void){CHECK_Z(MMXEXT)};
 	static uint8_t 	has3DNOW (void) {CHECK_Z(3DNOW)};
