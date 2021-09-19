@@ -653,9 +653,6 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
         maximizedWindow = false;
     if (maximizedWindow)
     {
-        parent->setWindowFlags(Qt::Window);
-        parent->setWindowFlag(Qt::WindowMinimizeButtonHint, false);
-        parent->setWindowFlag(Qt::WindowMaximizeButtonHint, true);
         parent->setWindowState(Qt::WindowMaximized);
     }
 }
