@@ -13,6 +13,7 @@
  ***************************************************************************/
 #include "ADM_cpp.h"
 #include <math.h>
+#include <climits>
 
 #include "ADM_default.h"
 #include "ADM_Video.h"
@@ -183,6 +184,7 @@ static bool canRederiveFrameType(uint32_t fcc)
 {
     if(isMpeg4Compatible(fcc) || isVC1Compatible(fcc)) return true;
     if(isH264Compatible(fcc)) return true;
+    if(isH265Compatible(fcc)) return true;
     if(isMpeg12Compatible(fcc)) return true;
     return false;
 
@@ -328,45 +330,73 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                     _tracks[0].paramCacheSize=inBandSpsLen;
                 }
             }
+            bool r = false;
             if(AnnexB)
-                extractH264FrameType_startCode(readBuffer, rpt+size-3, &flags, NULL, info, &_H264Recovery);
+                r = extractH264FrameType_startCode(readBuffer, rpt+size-3, &flags, NULL, info, &_H264Recovery);
             else
-                extractH264FrameType(readBuffer, rpt+size-3, nalSize, &flags, NULL, info, &_H264Recovery);
-            if(flags & AVI_KEY_FRAME)
+                r = extractH264FrameType(readBuffer, rpt+size-3, nalSize, &flags, NULL, info, &_H264Recovery);
+            if(r)
             {
-                if(flags & AVI_FIELD_STRUCTURE)
-                {
-                    if(Track->_secondField)
-                    {
-                        printf("[MKV/H264] Clearing keyframe flag from second field at index entry %" PRIu32"\n",frameNo);
-                        flags &= ~AVI_KEY_FRAME;
-                    }
-                    Track->_secondField = !Track->_secondField;
-                }
-                setFlag(frameNo,flags);
                 if(flags & AVI_KEY_FRAME)
-                    printf("[MKV/H264] Frame %" PRIu32" is a keyframe\n",frameNo);
-            }else
-                Track->_secondField = false;
-            ix.flags=flags;
-            if(Track->index.size()) ix.Dts=ADM_NO_PTS;
-
-        }/*else if(isH265Compatible(_videostream.fccHandler))
+                {
+                    if(flags & AVI_FIELD_STRUCTURE)
+                    {
+                        if(Track->_secondField)
+                        {
+                            printf("[MKV/H264] Clearing keyframe flag from second field at index entry %" PRIu32"\n",frameNo);
+                            flags &= ~AVI_KEY_FRAME;
+                        }
+                        Track->_secondField = !Track->_secondField;
+                    }
+                    setFlag(frameNo,flags);
+                    if(flags & AVI_KEY_FRAME)
+                        printf("[MKV/H264] Frame %" PRIu32" is a keyframe\n",frameNo);
+                }else
+                    Track->_secondField = false;
+                ix.flags=flags;
+                if(Track->index.size()) ix.Dts=ADM_NO_PTS;
+            }
+        }else if(isH265Compatible(_videostream.fccHandler))
         {
             uint32_t flags=AVI_KEY_FRAME;
 
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
             parser->readBin(readBuffer+rpt,size-3);
-            extractH265FrameType(2,readBuffer,rpt+size-3,&flags); // Nal size is not used in that case
-            if(flags & AVI_KEY_FRAME)
-            {
-                printf("[MKV/H265] Frame %" PRIu32" is a keyframe\n",(uint32_t)Track->index.size());
-            }
-            ix.flags=flags;
-            if(Track->index.size()) ix.Dts=ADM_NO_PTS;
 
-        }*/else if(isMpeg12Compatible(_videostream.fccHandler))
+            // Deal with Matroska files containing Annex-B type of HEVC stream
+            bool AnnexB=false;
+            if(!_tracks[0].extraDataLen && rpt+size > 3 && !readBuffer[0] && !readBuffer[1])
+            {
+                uint32_t mark=(readBuffer[2] << 8) + readBuffer[3];
+                if(mark == 1 || (mark > 0xFF && mark < 0x200 && rpt+size-3 != mark+4))
+                    AnnexB=true;
+            }
+
+            uint32_t nalSize=0;
+            if(_tracks[0].extraDataLen)
+                nalSize = ADM_getNalSizeH265(_tracks[0].extraData, _tracks[0].extraDataLen);
+
+            ADM_SPSinfoH265 info; // TODO: check for inband VPS/PPS/SPS changing on the fly
+            int poc = INT_MIN;
+
+            bool r = false;
+            if(AnnexB)
+                r = extractH265FrameType_startCode(readBuffer, rpt+size-3, &info, &flags, &poc);
+            else
+                r = extractH265FrameType(readBuffer, rpt+size-3, nalSize, &info, &flags, &poc);
+
+            if(r)
+            {
+                if(flags & AVI_KEY_FRAME)
+                {
+                    printf("[MKV/H265] Frame %" PRIu32" is a keyframe",(uint32_t)Track->index.size());
+                    printf("%s\n",(flags & AVI_IDR_FRAME)? " (IDR)" : " (non-IDR)");
+                }
+                ix.flags=flags;
+                if(Track->index.size()) ix.Dts=ADM_NO_PTS;
+            }
+        }else if(isMpeg12Compatible(_videostream.fccHandler))
         {
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
