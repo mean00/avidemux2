@@ -441,7 +441,7 @@ static bool decodeSliceHeaderH265(uint8_t *head, uint8_t *tail, uint32_t *flags,
             *flags=AVI_P_FRAME;
             break;
         case 2:
-            *flags=AVI_KEY_FRAME; // intra
+            *flags = keyframe ? AVI_KEY_FRAME : AVI_P_FRAME; // non-keyframe intra
             break;
         default:
             ADM_warning("Unknown slice type %d\n",sliceType);
