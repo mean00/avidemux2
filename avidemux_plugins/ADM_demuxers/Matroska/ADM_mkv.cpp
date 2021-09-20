@@ -179,7 +179,10 @@ uint8_t mkvHeader::open(const char *name)
         return 0;
     }
 
-    if(!isH264Compatible(_videostream.fccHandler) && !isMpeg4Compatible(_videostream.fccHandler) && !isMpeg12Compatible(_videostream.fccHandler))
+    if(!isH264Compatible(_videostream.fccHandler) &&
+       !isH265Compatible(_videostream.fccHandler) &&
+       !isMpeg4Compatible(_videostream.fccHandler) &&
+       !isMpeg12Compatible(_videostream.fccHandler))
     {
         updateFlagsWithCue();
     }
