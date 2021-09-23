@@ -1,8 +1,11 @@
 ##########################################
 # Config
 ##########################################
-ADD_DEFINITIONS("-std=c++11")
-
+IF(ENABLE_QT6)
+    ADD_DEFINITIONS("-std=c++17")
+ELSE(ENABLE_QT6)
+    ADD_DEFINITIONS("-std=c++11")
+ENDIF(ENABLE_QT6)
 ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
 #
 IF(MSVC)
