@@ -72,6 +72,7 @@ uint32_t pp_value=5;
 
 bool     useCustomFragmentSize=false;
 uint32_t customFragmentSize=4000;
+bool     loadPicsInReverseOrder=false;
 
 uint32_t editor_cache_size=16;
 bool     editor_use_shared_cache=false;
@@ -166,6 +167,10 @@ std::string currentSdlDriver=getSdlDriverName();
             useCustomFragmentSize=false;
         if(!prefs->get(DEFAULT_MULTILOAD_CUSTOM_SIZE_M,&customFragmentSize))
             customFragmentSize=4000;
+        // Should the pics demuxer be used to reverse video?
+        if(!prefs->get(LOAD_PICTURES_REVERSE_ORDER,&loadPicsInReverseOrder))
+            loadPicsInReverseOrder = false;
+
         // Video cache
         prefs->get(FEATURES_CACHE_SIZE,&editor_cache_size);
         prefs->get(FEATURES_SHARED_CACHE,&editor_use_shared_cache);
@@ -352,6 +357,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
         diaElemToggle firstPassLogFilesAutoDelete(&multiPassStatsAutoDelete,QT_TRANSLATE_NOOP("adm","De_lete first pass log files by default"));
 
+        // Multiload
         diaElemFrame frameMultiLoad(QT_TRANSLATE_NOOP("adm","Auto-Append Settings"));
         diaElemToggle multiLoadUseCustomFragmentSize(&useCustomFragmentSize,QT_TRANSLATE_NOOP("adm","_Use custom fragment size for auto-append of MPEG-TS files"));
         diaElemUInteger multiLoadCustomFragmentSize(&customFragmentSize,QT_TRANSLATE_NOOP("adm","_Fragment size:"),250,8196);
@@ -359,6 +365,19 @@ std::string currentSdlDriver=getSdlDriverName();
         frameMultiLoad.swallow(&multiLoadCustomFragmentSize);
         multiLoadUseCustomFragmentSize.link(1,&multiLoadCustomFragmentSize);
 
+        // Pictures
+        diaElemFrame framePics(QT_TRANSLATE_NOOP("adm","Pictures")); // the purpose of this frame is to fix tab order
+        diaElemToggle toggleReversePicsOrder(&loadPicsInReverseOrder, QT_TRANSLATE_NOOP("adm","_Load sequentially named pictures in reverse order"));
+        framePics.swallow(&toggleReversePicsOrder);
+
+        // Avisynth
+        diaElemFrame frameAvisynth(QT_TRANSLATE_NOOP("adm","Avisynth"));
+        diaElemToggle togAskAvisynthPort(&askPortAvisynth,QT_TRANSLATE_NOOP("adm","_Always ask which port to use"));
+        diaElemUInteger uintDefaultPortAvisynth(&defaultPortAvisynth,QT_TRANSLATE_NOOP("adm","Default port to use"),1024,65535);
+        frameAvisynth.swallow(&togAskAvisynthPort);
+        frameAvisynth.swallow(&uintDefaultPortAvisynth);
+
+        // Editor cache
         diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
         diaElemUInteger cacheSize(&editor_cache_size,QT_TRANSLATE_NOOP("adm","_Cache size:"),8,16);
         diaElemToggle toggleSharedCache(&editor_use_shared_cache,QT_TRANSLATE_NOOP("adm","Use _shared cache"));
@@ -506,9 +525,12 @@ std::string currentSdlDriver=getSdlDriverName();
 
          /* Automation */
 
+        /* Import */
+        diaElem *diaImport[]={&frameMultiLoad, &framePics, &frameAvisynth};
+        diaElemTabs tabImport(QT_TRANSLATE_NOOP("adm","Import"),NB_ELEM(diaImport),diaImport);
 
         /* Output */
-        diaElem *diaOutput[]={&allowAnyMpeg, &useLastReadAsTarget, &firstPassLogFilesAutoDelete, &frameMultiLoad, &frameCache};
+        diaElem *diaOutput[]={&allowAnyMpeg, &useLastReadAsTarget, &firstPassLogFilesAutoDelete, &frameCache};
         diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),NB_ELEM(diaOutput),diaOutput);
 
         /* Audio */
@@ -567,17 +589,10 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElem *diaThreading[]={&frameThread, &framePriority};
         diaElemTabs tabThreading(QT_TRANSLATE_NOOP("adm","Threading"),NB_ELEM(diaThreading),diaThreading);
 
-        /* Avisynth tab */
-        diaElemToggle togAskAvisynthPort(&askPortAvisynth,QT_TRANSLATE_NOOP("adm","_Always ask which port to use"));
-        diaElemUInteger uintDefaultPortAvisynth(&defaultPortAvisynth,QT_TRANSLATE_NOOP("adm","Default port to use"),1024,65535);
-        diaElem *diaAvisynth[]={&togAskAvisynthPort, &uintDefaultPortAvisynth};
-        diaElemTabs tabAvisynth("Avisynth",NB_ELEM(diaAvisynth),diaAvisynth);
-
-        /* Global Glyph tab */
 #ifdef HW_ACCELERATED_DECODING
-        diaElemTabs *tabs[]={&tabUser, &tabOutput, &tabAudio, &tabVideo, &tabHwDecoding, &tabCpu, &tabThreading, &tabAvisynth};
+        diaElemTabs *tabs[]={&tabUser, &tabImport, &tabOutput, &tabAudio, &tabVideo, &tabHwDecoding, &tabCpu, &tabThreading};
 #else
-        diaElemTabs *tabs[]={&tabUser, &tabOutput, &tabAudio, &tabVideo, &tabCpu, &tabThreading, &tabAvisynth};
+        diaElemTabs *tabs[]={&tabUser, &tabImport, &tabOutput, &tabAudio, &tabVideo, &tabCpu, &tabThreading};
 #endif
 #undef NB_ELEM
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElemTabs *)
@@ -674,6 +689,8 @@ std::string currentSdlDriver=getSdlDriverName();
             // Auto-append
             prefs->set(DEFAULT_MULTILOAD_USE_CUSTOM_SIZE, useCustomFragmentSize);
             prefs->set(DEFAULT_MULTILOAD_CUSTOM_SIZE_M, customFragmentSize);
+            // Auto-load pictures in reverse order
+            prefs->set(LOAD_PICTURES_REVERSE_ORDER, loadPicsInReverseOrder);
             // Video cache
             prefs->set(FEATURES_CACHE_SIZE, editor_cache_size);
             prefs->set(FEATURES_SHARED_CACHE, editor_use_shared_cache);

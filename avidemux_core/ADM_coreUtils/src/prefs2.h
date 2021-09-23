@@ -88,4 +88,5 @@ struct  {
 	uint32_t avisynth_localport;
 }avisynth;
 bool reset_encoder_on_video_load;
+bool load_pictures_reverse_order;
 }my_prefs_struct;

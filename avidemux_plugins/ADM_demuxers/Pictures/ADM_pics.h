@@ -34,6 +34,7 @@ protected:
     int         _first;
     uint32_t    _w, _h;
     int         _bmpHeaderOffset;
+    bool        _reverseOrder;
     std::vector<uint32_t>    _imgSize;
     ADM_PICTURE_TYPE    _type;  
     FILE        *openFrameFile (uint32_t frameNum);

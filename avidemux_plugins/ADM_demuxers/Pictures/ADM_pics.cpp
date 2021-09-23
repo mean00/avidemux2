@@ -24,6 +24,7 @@
 #include "ADM_Video.h"
 #include "fourcc.h"
 #include "ADM_pics.h"
+#include "prefs.h"
 
 #if 1
 #define aprintf(...) {}
@@ -48,6 +49,7 @@ picHeader::picHeader(void)
 {
     _nbFiles = 0;
     _bmpHeaderOffset=0;
+    _reverseOrder = false;
 }
 /**
     \fn getTime
@@ -272,6 +274,10 @@ uint8_t picHeader::open(const char *inname)
         ADM_warning("\n Cannot open that file!\n");
 	return 0;
     }
+
+    if(!prefs->get(LOAD_PICTURES_REVERSE_ORDER,&_reverseOrder))
+        _reverseOrder = false;
+
     // Then spit the name in name and extension
     int nbOfDigits;
     std::string name,extension;
@@ -396,6 +402,10 @@ uint32_t picHeader::getFlags(uint32_t frame, uint32_t * flags)
  */
 FILE* picHeader::openFrameFile(uint32_t frameNum)
 {
+    if(frameNum >= _nbFiles)
+        return NULL;
+    if(_reverseOrder)
+        frameNum = _nbFiles - frameNum - 1;
     char filename[MAX_LEN];
     sprintf(filename, _filePrefix.c_str(), frameNum + _first);
     return ADM_fopen(filename, "rb");
