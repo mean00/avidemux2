@@ -1097,6 +1097,10 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     commonPart(MJPG);
                                     break;
 
+                                case MKFCCR('p','n','g',' '): // png
+                                    _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)"PNG ");
+                                    break;
+
                                 case MKFCCR('A','V','d','n'): // DNxHD
                                     commonPart(AVdn);
                                     break;
