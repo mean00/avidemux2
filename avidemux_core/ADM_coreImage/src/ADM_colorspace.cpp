@@ -500,7 +500,7 @@ void ADMColorScalerFull::scaleHDR(const uint8_t *const srcData[], const int srcS
     
     for (int q=0;q<ADM_IMAGE_ALIGN(srcWidth)*srcHeight*3;q++)
     {
-        sdrRGB[q] = hdrLUT[0x03FF&(hdrRGB[q]>>6)];
+        sdrRGB[q] = hdrLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrRGB[q]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
     }
     
     gbrData[0] = sdrRGB;
