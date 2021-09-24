@@ -521,13 +521,29 @@ void HandleAction (Action action)
         UI_setMarkers (markA, markB);
       break;
     }
+    case ACT_ResetMarkerA:
+        if(0 == video_body->getMarkerAPts())
+            break;
+        video_body->addToUndoQueue();
+        video_body->setMarkerAPts(0);
+        UI_setMarkers(0, video_body->getMarkerBPts());
+        break;
+    case ACT_ResetMarkerB:
+    {
+        uint64_t end = video_body->getVideoDuration();
+        if(end == video_body->getMarkerBPts())
+            break;
+        video_body->addToUndoQueue();
+        video_body->setMarkerBPts(end);
+        UI_setMarkers(video_body->getMarkerAPts(), end);
+        break;
+    }
     case ACT_ResetMarkers:
     {
         if(!video_body->getMarkerAPts() && video_body->getMarkerBPts()==video_body->getVideoDuration())
             break; // do nothing if the markers were not moved
         video_body->addToUndoQueue();
         A_ResetMarkers();
-        A_Resync();
         break;
     }
     case ACT_Copy:

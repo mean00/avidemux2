@@ -855,6 +855,12 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                                     case ACT_MarkB:
                                         prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_B,sc);
                                         break;
+                                    case ACT_ResetMarkerA:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARK_A,sc);
+                                        break;
+                                    case ACT_ResetMarkerB:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARK_B,sc);
+                                        break;
                                     case ACT_ResetMarkers:
                                         prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARKERS,sc);
                                         break;
@@ -965,6 +971,8 @@ void MainWindow::buildActionLists(void)
 
     PUSH_LOADED(Edit, ACT_MarkA)
     PUSH_LOADED(Edit, ACT_MarkB)
+    PUSH_LOADED(Edit, ACT_ResetMarkerA)
+    PUSH_LOADED(Edit, ACT_ResetMarkerB)
     PUSH_LOADED(Edit, ACT_ResetMarkers)
 
     PUSH_LOADED(View, ACT_ZOOM_1_4)
@@ -1312,6 +1320,8 @@ void MainWindow::updateActionShortcuts(void)
             case ACT_Delete:
             case ACT_MarkA:
             case ACT_MarkB:
+            case ACT_ResetMarkerA:
+            case ACT_ResetMarkerB:
             case ACT_ResetMarkers:
                 defaultShortcuts.push_back(m);
                 break;
@@ -1355,6 +1365,12 @@ void MainWindow::updateActionShortcuts(void)
                     break;
                 case ACT_MarkB:
                     prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_B,sc);
+                    break;
+                case ACT_ResetMarkerA:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARK_A,sc);
+                    break;
+                case ACT_ResetMarkerB:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARK_B,sc);
                     break;
                 case ACT_ResetMarkers:
                     prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARKERS,sc);

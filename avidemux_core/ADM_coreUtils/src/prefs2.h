@@ -34,6 +34,8 @@ struct  {
 	bool swap_up_down_keys;
 	std::string alt_mark_a;
 	std::string alt_mark_b;
+	std::string alt_reset_mark_a;
+	std::string alt_reset_mark_b;
 	std::string alt_reset_markers;
 	std::string alt_goto_mark_a;
 	std::string alt_goto_mark_b;
