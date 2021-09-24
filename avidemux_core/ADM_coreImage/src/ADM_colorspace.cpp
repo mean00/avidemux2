@@ -14,9 +14,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <cmath>
 #include "ADM_default.h"
 #include "ADM_colorspace.h"
 #include "ADM_image.h"
+#include "prefs.h"
 
 extern "C" {
 #include "libavcodec/avcodec.h"
@@ -39,6 +41,8 @@ extern "C" {
 #endif
 
 #define CONTEXT (SwsContext *)context
+#define HDRCONTEXT1 (SwsContext *)hdrContext1
+#define HDRCONTEXT2 (SwsContext *)hdrContext2
 #define BGR32_IS_SWAPPED 1
 
 /**
@@ -283,7 +287,15 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
     if(fromColor != toColor && fromColor == ADM_COLOR_BGR32A)
         swapRGB32(srcWidth,srcHeight,srcStride[0],srcData[0]);
 #endif
-    sws_scale(CONTEXT,srcData,srcStride,0,srcHeight,dstData,dstStride);
+    bool hdr_enabled;
+    if(!prefs->get(HDR_ENABLE,&hdr_enabled))
+        hdr_enabled = false;
+    if (hdrContent && hdr_enabled)
+    {
+        updateHDR_LUT();
+        scaleHDR(srcData,srcStride, dstData,dstStride);
+    } else
+        sws_scale(CONTEXT,srcData,srcStride,0,srcHeight,dstData,dstStride);
 #ifdef BGR32_IS_SWAPPED
     if(fromColor != toColor && toColor==ADM_COLOR_BGR32A)
         swapRGB32(dstWidth,dstHeight,dstStride[0],dstData[0]);
@@ -309,7 +321,15 @@ bool ADMColorScalerFull::convertPlanes(int sourceStride[3], int destStride[3], u
     if(fromColor != toColor && fromColor == ADM_COLOR_BGR32A)
         swapRGB32(srcWidth,srcHeight,xs[0],src[0]);
 #endif
-    sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
+    bool hdr_enabled;
+    if(!prefs->get(HDR_ENABLE,&hdr_enabled))
+        hdr_enabled = false;
+    if (hdrContent && hdr_enabled)
+    {
+        updateHDR_LUT();
+        scaleHDR(src,xs, dst,xd);
+    } else
+        sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
 #ifdef BGR32_IS_SWAPPED
     if(fromColor != toColor && toColor == ADM_COLOR_BGR32A)
         swapRGB32(dstWidth,dstHeight,xd[0],dst[0]);
@@ -380,7 +400,15 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
         destImage->_range = sourceImage->_range;
     }
 
-    sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
+    bool hdr_enabled;
+    if(!prefs->get(HDR_ENABLE,&hdr_enabled))
+        hdr_enabled = false;
+    if (hdrContent && hdr_enabled)
+    {
+        updateHDR_LUT();
+        scaleHDR(src,xs, dst,xd);
+    } else
+        sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
 
 #ifdef BGR32_IS_SWAPPED
     if(fromColor != toColor && toColor == ADM_COLOR_BGR32A)
@@ -388,6 +416,101 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
 #endif
     return true;
 }
+
+
+/**
+    \fn  updateHDR_LUT
+*/
+void ADMColorScalerFull::updateHDR_LUT()
+{
+    unsigned int method;
+    float preGainF, postGainF;
+    if(!prefs->get(HDR_TONEMAPPING,&method))
+        method = 2;
+    if(!prefs->get(HDR_PREGAIN,&preGainF))
+        preGainF = 32;
+    if(!prefs->get(HDR_POSTGAIN,&postGainF))
+        postGainF = 2;
+
+    double preGain = preGainF;
+    double postGain = postGainF;
+    
+    if ((method != hdrTMmethod) || (preGain != hdrTMpreGain) || (postGain != hdrTMpostGain))
+    {
+        for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+        {
+            double z = l;
+            // normalize:
+            z /= ADM_COLORSPACE_HDR_LUT_SIZE;
+            
+            // pq to lin:
+            z = std::pow((std::pow(z, 1/78.84375) - 0.8359375) / (18.8515625 - 18.6875*std::pow(z, 1/78.84375)) , 1/0.1593017578125);
+            
+            // preGain:
+            z *= preGain;
+            
+            // tonemapping:
+            switch (method)
+            {
+                default:
+                case 0:	// clip
+                        if (z > 1.0)
+                            z = 1.0;
+                    break;
+                case 1:	// reinhard
+                        z = z/(1.0+z);
+                    break;
+                case 2:	// hable
+                        z = (z * (z * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (z * (z * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
+                    break;
+            }
+            
+            // postGain:
+            z *= postGain;
+            
+            // gamma:
+            z = ((z > 0.0031308) ? (( 1.055 * std::pow(z, (1.0 / 2.4)) ) - 0.055) : (z * 12.92));
+            
+            // LUT value:
+            if (z >= 1.0)
+                hdrLUT[l] = 255;
+            else
+                hdrLUT[l] = std::round(255.0*z);
+        }
+        hdrTMmethod = method;
+        hdrTMpreGain = preGain;
+        hdrTMpostGain = postGain;
+    }
+}
+
+
+/**
+    \fn  scaleHDR
+*/
+void ADMColorScalerFull::scaleHDR(const uint8_t *const srcData[], const int srcStride[], uint8_t *const dstData[], const int dstStride[])
+{
+    uint8_t *gbrData[3];
+    int gbrStride[3];
+    gbrData[0] = (uint8_t*)hdrRGB;
+    gbrStride[0] = gbrStride[1] = gbrStride[2]= ADM_IMAGE_ALIGN(srcWidth)*2;
+    gbrData[1] = gbrData[0] + gbrStride[0]*srcHeight;
+    gbrData[2] = gbrData[1] + gbrStride[0]*srcHeight;
+    
+    sws_scale(HDRCONTEXT1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
+    
+    for (int q=0;q<ADM_IMAGE_ALIGN(srcWidth)*srcHeight*3;q++)
+    {
+        sdrRGB[q] = hdrLUT[0x03FF&(hdrRGB[q]>>6)];
+    }
+    
+    gbrData[0] = sdrRGB;
+    gbrStride[0] = gbrStride[1] = gbrStride[2]= ADM_IMAGE_ALIGN(srcWidth);
+    gbrData[1] = gbrData[0] + gbrStride[0]*srcHeight;
+    gbrData[2] = gbrData[1] + gbrStride[0]*srcHeight;
+    
+    sws_scale(HDRCONTEXT2,gbrData,gbrStride,0,srcHeight,dstData,dstStride);
+}
+
 
 /**
     \fn  ADMColorScaler
@@ -403,8 +526,15 @@ ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
             int dw, int dh,
             ADM_colorspace from,ADM_colorspace to)
 {
-   context=NULL;
-   reset(algo,sw,sh,dw,dh,from,to);
+    context=NULL;
+    hdrContent=false;
+    hdrLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+    hdrTMpreGain=hdrTMpostGain=-1.0;	// invalidate
+    hdrContext1=NULL;
+    hdrContext2=NULL;
+    hdrRGB=NULL;
+    sdrRGB=NULL;
+    reset(algo,sw,sh,dw,dh,from,to);
 
 }
 /**
@@ -413,11 +543,32 @@ ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
 */
 ADMColorScalerFull::~ADMColorScalerFull()
 {
-  if(context)
-  {
-     sws_freeContext(CONTEXT);
-     context=NULL;
-  }
+    if(context)
+    {
+        sws_freeContext(CONTEXT);
+        context=NULL;
+    }
+    delete [] hdrLUT;
+    if (hdrContext1)
+    {
+        sws_freeContext(HDRCONTEXT1);
+        hdrContext1=NULL;
+    }
+    if (hdrContext2)
+    {
+        sws_freeContext(HDRCONTEXT2);
+        hdrContext2=NULL;
+    }
+    if (hdrRGB)
+    {
+        delete [] hdrRGB;
+        hdrRGB = NULL;
+    }
+    if (sdrRGB)
+    {
+        delete [] sdrRGB;
+        sdrRGB = NULL;
+    }
 }
 /**
     \fn reset
@@ -426,6 +577,27 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
 {
     if(context) sws_freeContext(CONTEXT);
     context=NULL;
+    if (hdrContext1)
+    {
+        sws_freeContext(HDRCONTEXT1);
+        hdrContext1=NULL;
+    }
+    if (hdrContext2)
+    {
+        sws_freeContext(HDRCONTEXT2);
+        hdrContext2=NULL;
+    }
+    if (hdrRGB)
+    {
+        delete [] hdrRGB;
+        hdrRGB = NULL;
+    }
+    if (sdrRGB)
+    {
+        delete [] sdrRGB;
+        sdrRGB = NULL;
+    }
+    
     this->algo=algo;
     int flags;
     switch(algo)
@@ -448,7 +620,14 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
         FLAGS();
     }
 #endif
-  
+    
+    hdrContent = (from >= ADM_COLOR_YUV444_10BITS) && (from <= ADM_COLOR_YUV444_12BITS);
+    if (hdrContent)
+    {
+        hdrRGB = new uint16_t[ADM_IMAGE_ALIGN(sw)*sh*3];
+        sdrRGB = new uint8_t[ADM_IMAGE_ALIGN(sw)*sh*3];
+    }
+    
     srcWidth=sw;
     srcHeight=sh;
 
@@ -466,6 +645,25 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
                       dstWidth,dstHeight,
                       lavTo,
                       flags, NULL, NULL,NULL);
+    
+    if (hdrContent)
+    {
+        hdrContext1=(void *)sws_getContext(
+                          srcWidth,srcHeight,
+                          lavFrom ,
+                          srcWidth,srcHeight,
+                          AV_PIX_FMT_GBRP16LE,
+                          SWS_POINT, NULL, NULL,NULL);		// use fast n.n. scaling, as resolution will not change in the first step
+        hdrContext2=(void *)sws_getContext(
+                          srcWidth,srcHeight,
+                          AV_PIX_FMT_GBR24P ,
+                          dstWidth,dstHeight,
+                          lavTo,
+                          flags, NULL, NULL,NULL);
+        const int *coeffsrc = sws_getCoefficients(SWS_CS_BT2020);
+        const int *coeffdst = sws_getCoefficients(SWS_CS_ITU709);
+        sws_setColorspaceDetails(HDRCONTEXT1, coeffsrc, 0, coeffdst, 0, 0, (1 << 16), (1 << 16));
+    }
     return true;
 }
 //------------------------------

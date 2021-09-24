@@ -92,6 +92,12 @@ json.addUint32("avisynth_localport",key->avisynth.avisynth_localport);
 json.endNode();
 json.addBool("reset_encoder_on_video_load",key->reset_encoder_on_video_load);
 json.addBool("load_pictures_reverse_order",key->load_pictures_reverse_order);
+json.addNode("hdr");
+json.addBool("enable",key->hdr.enable);
+json.addUint32("tonemapping",key->hdr.tonemapping);
+json.addFloat("pregain",key->hdr.pregain);
+json.addFloat("postgain",key->hdr.postgain);
+json.endNode();
 return json.dumpToFile(file);
 };
 bool  my_prefs_struct_jdeserialize(const char *file, const ADM_paramList *tmpl,my_prefs_struct *key){

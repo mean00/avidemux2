@@ -51,6 +51,19 @@ class ADM_COREIMAGE6_EXPORT ADMColorScalerFull
     ADMColorScaler_algo algo;
     uint8_t         getStrideAndPointers(bool dst,uint8_t  *from,ADM_colorspace fromColor,
                                             uint8_t **srcData,int *srcStride);
+
+    #define ADM_COLORSPACE_HDR_LUT_WIDTH (10)	// bits
+    #define ADM_COLORSPACE_HDR_LUT_SIZE	(1<<ADM_COLORSPACE_HDR_LUT_WIDTH)
+    bool            hdrContent;
+    uint8_t         *hdrLUT;
+    double          hdrTMpreGain, hdrTMpostGain;
+    unsigned int    hdrTMmethod;
+    void            *hdrContext1;
+    void            *hdrContext2;
+    uint16_t        *hdrRGB;
+    uint8_t         *sdrRGB;
+    void            updateHDR_LUT();
+    void            scaleHDR(const uint8_t *const srcData[], const int srcStride[], uint8_t *const dstData[], const int dstStride[]);
   public :
     
                     ADMColorScalerFull(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_colorspace from,ADM_colorspace to);

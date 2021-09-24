@@ -89,4 +89,10 @@ struct  {
 }avisynth;
 bool reset_encoder_on_video_load;
 bool load_pictures_reverse_order;
+struct  {
+	bool enable;
+	uint32_t tonemapping;
+	float pregain;
+	float postgain;
+}hdr;
 }my_prefs_struct;
