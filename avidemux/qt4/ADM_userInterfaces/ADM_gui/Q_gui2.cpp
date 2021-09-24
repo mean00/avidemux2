@@ -965,15 +965,10 @@ void MainWindow::buildActionLists(void)
     PUSH_LOADED(File, ACT_CLOSE)
     PUSH_LOADED(File, ACT_VIDEO_PROPERTIES)
 
-    PUSH_LOADED(Edit, ACT_Cut)
     PUSH_LOADED(Edit, ACT_Copy)
-    PUSH_LOADED(Edit, ACT_Delete)
 
     PUSH_LOADED(Edit, ACT_MarkA)
     PUSH_LOADED(Edit, ACT_MarkB)
-    PUSH_LOADED(Edit, ACT_ResetMarkerA)
-    PUSH_LOADED(Edit, ACT_ResetMarkerB)
-    PUSH_LOADED(Edit, ACT_ResetMarkers)
 
     PUSH_LOADED(View, ACT_ZOOM_1_4)
     PUSH_LOADED(View, ACT_ZOOM_1_2)
@@ -1143,8 +1138,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         return;
     }
 
-    bool vid, undo, redo, paste, restore;
-    vid=undo=redo=paste=restore=false;
+    bool vid, undo, redo, paste, resetA, resetB;
+    vid = undo = redo = paste = resetA = resetB = false;
     if(avifileinfo)
         vid=true; // a video is loaded
 
@@ -1167,18 +1162,22 @@ void MainWindow::setMenuItemsEnabledState(void)
     {
         undo=video_body->canUndo();
         redo=video_body->canRedo();
+        if(video_body->getMarkerAPts())
+            resetA = true;
+        if(video_body->getMarkerBPts() != video_body->getVideoDuration())
+            resetB = true;
         paste=!video_body->clipboardEmpty();
     }
     ENABLE(Edit, ACT_Undo, undo)
     ENABLE(Edit, ACT_Redo, redo)
-    if(!vid || (!undo && !redo)) // if no edits have been performed, disable "Reset Edit" menu item
-    {
-        restore=A_checkSavedSession(false);
-        ENABLE(Edit, ACT_ResetSegments, false)
-    }else
-    {
-        ENABLE(Edit, ACT_ResetSegments, true)
-    }
+    ENABLE(Edit, ACT_ResetSegments, vid)
+    // TODO: Detect that segment layout matches the default one and disable "Reset Edit" then too.
+    ENABLE(Edit, ACT_ResetMarkerA, resetA)
+    ENABLE(Edit, ACT_ResetMarkerB, resetB)
+    ENABLE(Edit, ACT_ResetMarkers, (resetA || resetB))
+
+    ENABLE(Edit, ACT_Cut, (resetA || resetB))
+    ENABLE(Edit, ACT_Delete, (resetA || resetB))
     ENABLE(Edit, ACT_Paste, paste)
 
     n=ActionsAlwaysAvailable.size();
@@ -1194,7 +1193,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     if(recentProjects && recentProjects->actions().size())
         haveRecentItems=true;
     ENABLE(Recent, ACT_CLEAR_RECENT, haveRecentItems)
-    ENABLE(Recent, ACT_RESTORE_SESSION, restore)
+    ENABLE(Recent, ACT_RESTORE_SESSION, A_checkSavedSession(false))
 
     ui.selectionDuration->setEnabled(vid);
     slider->setEnabled(vid);
