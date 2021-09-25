@@ -509,6 +509,17 @@ void ADMColorScalerFull::scaleHDR(const uint8_t *const srcData[], const int srcS
     gbrData[2] = gbrData[1] + gbrStride[0]*srcHeight;
     
     sws_scale(HDRCONTEXT2,gbrData,gbrStride,0,srcHeight,dstData,dstStride);
+    
+    // dst is YUV420
+    for (int p=1; p<3; p++)
+    {
+        uint8_t * ptr = dstData[p];
+        for (int q=0; q<(dstStride[p] * dstHeight/2); q++)
+        {
+            *ptr = sdrChromaCorr[*ptr];
+            ptr++;
+        }
+    }
 }
 
 
@@ -534,6 +545,20 @@ ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
     hdrContext2=NULL;
     hdrRGB=NULL;
     sdrRGB=NULL;
+    sdrChromaCorr = new uint8_t[256];
+    for (int i=0; i<256; i++)
+    {
+        int v = i;
+        v -= 128;
+        v *= 18;	// *1.8
+        v /= 10;
+        v += 128;
+        if (v < 0)
+            v = 0;
+        if (v > 255)
+            v = 255;
+        sdrChromaCorr[i] = v;
+    }
     reset(algo,sw,sh,dw,dh,from,to);
 
 }
@@ -569,6 +594,7 @@ ADMColorScalerFull::~ADMColorScalerFull()
         delete [] sdrRGB;
         sdrRGB = NULL;
     }
+    delete [] sdrChromaCorr;
 }
 /**
     \fn reset
@@ -621,7 +647,7 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
     }
 #endif
     
-    hdrContent = (from >= ADM_COLOR_YUV444_10BITS) && (from <= ADM_COLOR_YUV444_12BITS);
+    hdrContent = (from >= ADM_COLOR_YUV444_10BITS) && (from <= ADM_COLOR_YUV444_12BITS) && (to == ADM_COLOR_IS_YUV);
     if (hdrContent)
     {
         hdrRGB = new uint16_t[ADM_IMAGE_ALIGN(sw)*sh*3];
