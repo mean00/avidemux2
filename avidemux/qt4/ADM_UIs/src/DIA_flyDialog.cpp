@@ -29,6 +29,7 @@
 
 #include "ADM_toolkitQt.h"
 #include "ADM_vidMisc.h"
+#include "prefs.h"
 
 /**
  */
@@ -646,6 +647,13 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     ADM_info("Interval = %d ms\n",incrementUs);
     timer.stop();
     
+    bool maximizedWindow;
+    if(!prefs->get(FEATURES_MAXIMIZE_FILTERS,&maximizedWindow))
+        maximizedWindow = false;
+    if (maximizedWindow)
+    {
+        parent->setWindowState(Qt::WindowMaximized);
+    }
 }
 /**
     \fn    postInit
