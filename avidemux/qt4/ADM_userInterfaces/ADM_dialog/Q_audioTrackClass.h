@@ -29,17 +29,16 @@ protected:
             void            enable(int i);
             void            disable(int i);
             void            setLanguageFromPool(int menuIndex, int poolIndex);
-            
+            bool            updateActive(void);
 public:
        
                             audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactive );
             virtual		~audioTrackQt4();
-                          
-                       bool  updateActive(void);
             virtual   bool  run(void);
-public slots:
+private slots:
                        bool  filtersClicked(bool a);
                        bool  codecConfClicked(bool a);
                        bool  enabledStateChanged(int state);
                        void  inputChanged(int signal);
+                       void  codecChanged(int idx);
 };

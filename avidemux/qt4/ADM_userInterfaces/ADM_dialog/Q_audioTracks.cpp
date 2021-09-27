@@ -68,6 +68,8 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
                             this,SLOT(enabledStateChanged(int)));
             QObject::connect( window->inputs[i],SIGNAL(currentIndexChanged(int)),
                             this,SLOT(inputChanged(int)));
+            QObject::connect( window->codec[i],SIGNAL(currentIndexChanged(int)),
+                            this,SLOT(codecChanged(int)));
 /*
             QObject::connect( window->languages[i],SIGNAL(currentIndexChanged(int)),
                             this,SLOT(languagesClicked(int)));   
@@ -102,7 +104,7 @@ void audioTrackQt4::inputChanged(int signal)
         int dex=-1;
         QObject *ptr=sender();
 
-        for(int i=0;i<NB_MENU;i++) if(ptr==window->inputs[i]) dex=i;
+        for(int i=0;i<NB_MENU;i++) if(ptr==window->inputs[i]) {dex=i;break;}
         if(dex==-1)
         {
             ADM_warning("Cannot find originating input\n");
@@ -197,7 +199,7 @@ bool  audioTrackQt4::enabledStateChanged(int state)
         int dex=-1;
         QObject *ptr=sender();
 
-        for(int i=0;i<NB_MENU;i++) if(ptr==window->enabled[i]) dex=i;
+        for(int i=0;i<NB_MENU;i++) if(ptr==window->enabled[i]) {dex=i;break;}
         if(dex==-1)
         {
             ADM_warning("No track found matching that enabling\n");
@@ -221,7 +223,7 @@ bool  audioTrackQt4::codecConfClicked(bool a)
 {
  QObject *ptr=sender();
         int dex=-1;
-        for(int i=0;i<NB_MENU;i++) if(ptr==window->codecConf[i]) dex=i;
+        for(int i=0;i<NB_MENU;i++) if(ptr==window->codecConf[i]) {dex=i;break;}
         if(dex==-1)
         {
             ADM_warning("No track found matching that codec\n");
@@ -248,7 +250,7 @@ bool       audioTrackQt4::filtersClicked(bool a)
 {
         QObject *ptr=sender();
         int dex=-1;
-        for(int i=0;i<NB_MENU;i++) if(ptr==window->filters[i]) dex=i;
+        for(int i=0;i<NB_MENU;i++) if(ptr==window->filters[i]) {dex=i;break;}
         if(dex==-1)
         {
             ADM_warning("No track found matching that filter\n");
@@ -391,10 +393,12 @@ void audioTrackQt4::enable(int i)
 #define ONOFF(x)  window->x[i]->setEnabled(true)
     window->enabled[i]->setCheckState(Qt::Checked);
     ONOFF(inputs);
+    ONOFF(languages);
     ONOFF(codec);
+#undef ONOFF
+#define ONOFF(x) window->x[i]->setEnabled(window->codec[i]->currentIndex() > 0)
     ONOFF(codecConf);
     ONOFF(filters);
-    ONOFF(languages);
 }
 /**
     \fn disable
@@ -458,22 +462,23 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
         if(hdr)
         {
             int bitrate=hdr->byterate;
-            QString sBitrate;
-            QString sChan;
+            QString sBitrate,sChan;
             switch(hdr->channels)
             {
-                case 1: sChan=QString("Mono");break;
-                case 2: sChan=QString("Stereo");break;
-                default: sChan.setNum(hdr->channels);sChan+=QString(" chan");break;
+                case 1: sChan="Mono";break;
+                case 2: sChan="Stereo";break;
+                default: sChan.setNum(hdr->channels);sChan+=" chan";break;
             }
             bitrate*=8;
             bitrate/=1000;
             sBitrate.setNum(bitrate);
-            str+=QString(" (")+QString(getStrFromAudioCodec(hdr->encoding))+QString(",");
-            str+=sChan+QString(",");
-            str+=sBitrate+QString("kbps)");
-            
-         
+            str += " (";
+            str += getStrFromAudioCodec(hdr->encoding);
+            str += ", ";
+            str += sChan;
+            str += ", ";
+            str += sBitrate;
+            str += " kbps)";
         }
         window->inputs[dex]->addItem(str); 
     }
@@ -526,10 +531,35 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
         int selected=active.atEditable(dex)->encoderIndex;
         enable(dex);
         window->codec[dex]->setCurrentIndex(selected);
-    }
-    else    
+        window->codecConf[dex]->setEnabled(selected > 0); // not copy
+        window->filters[dex]->setEnabled(selected > 0);
+    }else
         disable(dex);
     window->inputs[dex]->blockSignals(false);
+}
+/**
+    \fn codecChanged
+*/
+void audioTrackQt4::codecChanged(int ix)
+{
+    int dex = -1;
+    QObject *ptr = sender();
+
+    for(int i=0;i<NB_MENU;i++)
+    {
+        if(ptr == window->codec[i])
+        {
+            dex=i;
+            break;
+        }
+    }
+    if(dex == -1)
+    {
+        ADM_warning("Cannot find originating codec combobox\n");
+        return;
+    }
+    window->codecConf[dex]->setEnabled(ix > 0);
+    window->filters[dex]->setEnabled(ix > 0);
 }
 /**
         \fn createEncoding
