@@ -628,7 +628,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.menuToolbars->addSeparator();
     ui.menuToolbars->addAction(restoreDefaults);
 
-    connect(ui.menuToolbars->actions().at(6),SIGNAL(triggered(bool)),this,SLOT(restoreDefaultWidgetState(bool)));
+    connect(ui.menuToolbars->actions().last(),SIGNAL(triggered(bool)),this,SLOT(restoreDefaultWidgetState(bool)));
 
     this->installEventFilter(this);
     slider->installEventFilter(this);
