@@ -90,9 +90,10 @@ struct  {
 bool reset_encoder_on_video_load;
 bool load_pictures_reverse_order;
 struct  {
-	bool enable;
+	bool colorspace_conversion;
 	uint32_t tonemapping;
 	float pregain;
 	float postgain;
+	float saturation;
 }hdr;
 }my_prefs_struct;

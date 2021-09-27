@@ -97,10 +97,11 @@ uint32_t refreshCapValue=100;
 bool     askPortAvisynth=false;
 uint32_t defaultPortAvisynth = 9999;
 
-bool     enableHDR = false;
-uint32_t toneMapMethodHDR = 2;
-float    preGainHDR = 32.0;
+bool     enableCoCoHDR = false;
+uint32_t toneMapMethodHDR = 3;
+float    preGainHDR = 48.0;
 float    postGainHDR = 2.0;
+float    saturationHDR = 3.2;
 
 #ifdef USE_SDL
 std::string currentSdlDriver=getSdlDriverName();
@@ -163,10 +164,11 @@ std::string currentSdlDriver=getSdlDriverName();
     	ADM_info("Avisynth port: %d\n",defaultPortAvisynth);
 
         // HDR
-        if (!prefs->get(HDR_ENABLE,&enableHDR)) enableHDR=false;
-        if (!prefs->get(HDR_TONEMAPPING,&toneMapMethodHDR)) toneMapMethodHDR=2;
-        if (!prefs->get(HDR_PREGAIN,&preGainHDR)) preGainHDR=32;
+        if (!prefs->get(HDR_COLORSPACE_CONVERSION,&enableCoCoHDR)) enableCoCoHDR=false;
+        if (!prefs->get(HDR_TONEMAPPING,&toneMapMethodHDR)) toneMapMethodHDR=3;
+        if (!prefs->get(HDR_PREGAIN,&preGainHDR)) preGainHDR=48;
         if (!prefs->get(HDR_POSTGAIN,&postGainHDR)) postGainHDR=2;
+        if (!prefs->get(HDR_SATURATION,&saturationHDR)) saturationHDR=3.2;
 
         // Alsa
 #ifdef ALSA_SUPPORT
@@ -390,19 +392,22 @@ std::string currentSdlDriver=getSdlDriverName();
         
         // HDR
         diaElemFrame frameHDR(QT_TRANSLATE_NOOP("adm","HDR"));
-        diaElemToggle togEnableHDR(&enableHDR,QT_TRANSLATE_NOOP("adm","_Enable tone mapping"));
         diaMenuEntry toneMapEntries[]={
-                             {0,       QT_TRANSLATE_NOOP("adm","Clipping"),NULL}
-                             ,{1,      QT_TRANSLATE_NOOP("adm","Reinhard"),NULL}
-                             ,{2,      QT_TRANSLATE_NOOP("adm","Hable"),NULL}
+                              {0,       QT_TRANSLATE_NOOP("adm","disabled"),NULL}
+                             ,{1,       QT_TRANSLATE_NOOP("adm","Clipping"),NULL}
+                             ,{2,      QT_TRANSLATE_NOOP("adm","Reinhard"),NULL}
+                             ,{3,      QT_TRANSLATE_NOOP("adm","Hable"),NULL}
         };
-        diaElemMenu menuToneMapHDR(&toneMapMethodHDR,QT_TRANSLATE_NOOP("adm","_Tone mapping method:"),NB_ITEMS(toneMapEntries),toneMapEntries);
-        diaElemFloat  floatPreGain(&preGainHDR,QT_TRANSLATE_NOOP("adm","Pre gain:"),0.,1000.);
+        diaElemToggle togEnableCoCoHDR(&enableCoCoHDR,QT_TRANSLATE_NOOP("adm","_Enable BT.2020 to Rec.709 colorspace conversion (very slow)"));
+        diaElemMenu menuToneMapHDR(&toneMapMethodHDR,QT_TRANSLATE_NOOP("adm","_Tone mapping:"),NB_ITEMS(toneMapEntries),toneMapEntries);
+        diaElemFloat  floatPreGain(&preGainHDR,QT_TRANSLATE_NOOP("adm","Pre-mapping gain:"),0.,1000.);
         diaElemFloat floatPostGain(&postGainHDR,QT_TRANSLATE_NOOP("adm","Post gain:"),0.,1000.);
-        frameHDR.swallow(&togEnableHDR);
+        diaElemFloat floatSaturationHDR(&saturationHDR,QT_TRANSLATE_NOOP("adm","Saturation:"),0.,10.);
         frameHDR.swallow(&menuToneMapHDR);
+        frameHDR.swallow(&togEnableCoCoHDR);
         frameHDR.swallow(&floatPreGain);
         frameHDR.swallow(&floatPostGain);
+        frameHDR.swallow(&floatSaturationHDR);
 
         // Editor cache
         diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
@@ -774,10 +779,11 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(AVISYNTH_AVISYNTH_ALWAYS_ASK, askPortAvisynth);
             
             // HDR
-            prefs->set(HDR_ENABLE, enableHDR);
+            prefs->set(HDR_COLORSPACE_CONVERSION, enableCoCoHDR);
             prefs->set(HDR_TONEMAPPING, toneMapMethodHDR);
             prefs->set(HDR_PREGAIN, preGainHDR);
             prefs->set(HDR_POSTGAIN, postGainHDR);
+            prefs->set(HDR_SATURATION, saturationHDR);
 
                 // Initialise SDL again as driver may have changed
 #ifdef USE_SDL
