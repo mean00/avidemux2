@@ -101,7 +101,7 @@ bool     enableCoCoHDR = false;
 uint32_t toneMapMethodHDR = 3;
 float    preGainHDR = 48.0;
 float    postGainHDR = 2.0;
-float    saturationHDR = 3.2;
+float    saturationHDR = 6.0;
 
 #ifdef USE_SDL
 std::string currentSdlDriver=getSdlDriverName();
@@ -168,7 +168,7 @@ std::string currentSdlDriver=getSdlDriverName();
         if (!prefs->get(HDR_TONEMAPPING,&toneMapMethodHDR)) toneMapMethodHDR=3;
         if (!prefs->get(HDR_PREGAIN,&preGainHDR)) preGainHDR=48;
         if (!prefs->get(HDR_POSTGAIN,&postGainHDR)) postGainHDR=2;
-        if (!prefs->get(HDR_SATURATION,&saturationHDR)) saturationHDR=3.2;
+        if (!prefs->get(HDR_SATURATION,&saturationHDR)) saturationHDR=6.0;
 
         // Alsa
 #ifdef ALSA_SUPPORT

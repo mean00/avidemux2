@@ -82,6 +82,6 @@ static optionDesc myOptions[]={
 { HDR_TONEMAPPING,"hdr.tonemapping"                                   ,ADM_param_uint32_t	,"3",	0,	3},
 { HDR_PREGAIN,"hdr.pregain"                                           ,ADM_param_float   	,"48.0",	0.0,	1000.0},
 { HDR_POSTGAIN,"hdr.postgain"                                         ,ADM_param_float   	,"2.0",	0.0,	1000.0},
-{ HDR_SATURATION,"hdr.saturation"                                     ,ADM_param_float   	,"3.2",	0.0,	10.0},
+{ HDR_SATURATION,"hdr.saturation"                                     ,ADM_param_float   	,"6.0",	0.0,	10.0},
 };
 

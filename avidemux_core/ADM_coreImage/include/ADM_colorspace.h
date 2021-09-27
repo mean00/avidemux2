@@ -56,7 +56,7 @@ class ADM_COREIMAGE6_EXPORT ADMColorScalerFull
     #define ADM_COLORSPACE_HDR_LUT_SIZE	(1<<ADM_COLORSPACE_HDR_LUT_WIDTH)
     bool            hdrContent;
     uint8_t         *hdrLumaLUT;
-    uint8_t         *hdrChromaLUT;
+    uint8_t         *hdrChromaLUT[256];
     double          hdrTMpreGain, hdrTMpostGain, hdrTMsat;
     unsigned int    hdrTMmethod;
     void            *hdrContext;

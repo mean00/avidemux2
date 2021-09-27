@@ -434,7 +434,7 @@ void ADMColorScalerFull::updateHDR_LUT(bool extended_range)
     if(!prefs->get(HDR_POSTGAIN,&postGainF))
         postGainF = 2;
     if(!prefs->get(HDR_SATURATION,&satF))
-        satF = 3.2;
+        satF = 6.0;
 
     double preGain = preGainF;
     double postGain = postGainF;
@@ -487,21 +487,35 @@ void ADMColorScalerFull::updateHDR_LUT(bool extended_range)
             else
                 hdrLumaLUT[l] = std::round(219.0*z) + 16;
         }
-        for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+        for (int y=0; y<255; y++)
         {
-            double z = l;
-            z /= ADM_COLORSPACE_HDR_LUT_SIZE;
-            z -= 0.5;
-            z *= sat;
-            if (z < -0.5)
-                z = -0.5;
-            if (z > 0.5)
-                z = 0.5;
-            z += 0.5;
+            double yd = y;
             if (extended_range)
-                hdrChromaLUT[l] = std::round(255.0*z);
-            else
-                hdrChromaLUT[l] = std::round(224.0*z) + 16;
+                yd /= 255.0;
+            else {
+                yd -= 16.0;
+                yd /= 219.0;
+                if (yd < 0)
+                    yd = 0;
+                if (yd > 1)
+                    yd = 1;
+            }
+            for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+            {
+                double z = l;
+                z /= ADM_COLORSPACE_HDR_LUT_SIZE;
+                z -= 0.5;
+                z *= (1+yd*sat);
+                if (z < -0.5)
+                    z = -0.5;
+                if (z > 0.5)
+                    z = 0.5;
+                z += 0.5;
+                if (extended_range)
+                    hdrChromaLUT[y][l] = std::round(255.0*z);
+                else
+                    hdrChromaLUT[y][l] = std::round(224.0*z) + 16;
+            }
         }
         hdrTMmethod = method;
         hdrTMpreGain = preGain;
@@ -545,14 +559,32 @@ void ADMColorScalerFull::scaleHDR(const uint8_t *const srcData[], const int srcS
     {
         ptr[q] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptr[q]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
     }
-    for (int p=1; p<3; p++)
+    uint8_t * ptrU = dstData[1];
+    uint8_t * ptrV = dstData[2];
+    uint16_t * hptrU = (uint16_t *)gbrData[1];
+    uint16_t * hptrV = (uint16_t *)gbrData[2];
+    int ystride = ADM_IMAGE_ALIGN(dstWidth);
+    int uvstride = ADM_IMAGE_ALIGN(dstWidth/2);
+    uint8_t * ptrNext = dstData[0]+ystride;
+    for (int y=0; y<(dstHeight/2); y++)
     {
-        ptr = dstData[p];
-        hptr = (uint16_t *)gbrData[p];
-        for (int q=0;q<ADM_IMAGE_ALIGN(dstWidth/2)*(dstHeight/2);q++)
+        for (int x=0; x<(dstWidth/2); x++)
         {
-            ptr[q] = hdrChromaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptr[q]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            int luma = 0;
+            luma += ptr[x*2];
+            luma += ptr[x*2 +1];
+            luma += ptrNext[x*2];
+            luma += ptrNext[x*2 +1];
+            luma /= 4;
+            ptrU[x] = hdrChromaLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptrU[x]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            ptrV[x] = hdrChromaLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptrV[x]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
         }
+        ptr += ystride*2;
+        ptrNext += ystride*2;
+        ptrU += uvstride;
+        ptrV += uvstride;
+        hptrU += uvstride;
+        hptrV += uvstride;
     }
 }
 
@@ -574,7 +606,8 @@ ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
     context=NULL;
     hdrContent=false;
     hdrLumaLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
-    hdrChromaLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+    for (int i=0; i<256; i++)
+        hdrChromaLUT[i] = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
     hdrTMpreGain=hdrTMpostGain=hdrTMsat=-1.0;	// invalidate
     hdrContext=NULL;
     hdrYUV=NULL;
@@ -593,7 +626,8 @@ ADMColorScalerFull::~ADMColorScalerFull()
         context=NULL;
     }
     delete [] hdrLumaLUT;
-    delete [] hdrChromaLUT;
+    for (int i=0; i<256; i++)
+        delete [] hdrChromaLUT[i];
     if (hdrContext)
     {
         sws_freeContext(HDRCONTEXT);
