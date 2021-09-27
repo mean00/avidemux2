@@ -385,26 +385,24 @@ std::string currentSdlDriver=getSdlDriverName();
         frameCache.swallow(&toggleSharedCache);
 
         diaMenuEntry videoMode[]={
-                             {RENDER_GTK, getNativeRendererDesc(0), NULL}
+            {RENDER_GTK, getNativeRendererDesc(0), QT_TRANSLATE_NOOP("adm","This renderer provides no hardware acceleration")}
 #ifdef USE_XV
-                             ,{RENDER_XV,   QT_TRANSLATE_NOOP("adm","XVideo (best)"),NULL}
+            ,{RENDER_XV, QT_TRANSLATE_NOOP("adm","XVideo"),NULL}
 #endif
 #ifdef USE_VDPAU
-                             ,{RENDER_VDPAU,   QT_TRANSLATE_NOOP("adm","VDPAU (best)"),NULL}
+            ,{RENDER_VDPAU, QT_TRANSLATE_NOOP("adm","VDPAU"),NULL}
 #endif
 #ifdef USE_DXVA2
-                             ,{RENDER_DXVA2,   QT_TRANSLATE_NOOP("adm","DXVA2 (best)"),NULL}
+            ,{RENDER_DXVA2, QT_TRANSLATE_NOOP("adm","DXVA2"),NULL}
 #endif
 #ifdef USE_OPENGL
-                             ,{RENDER_QTOPENGL,   QT_TRANSLATE_NOOP("adm","OpenGL (best)"),NULL}
+            ,{RENDER_QTOPENGL, QT_TRANSLATE_NOOP("adm","OpenGL"),NULL}
 #endif
 #ifdef USE_LIBVA
-                             ,{RENDER_LIBVA,   QT_TRANSLATE_NOOP("adm","LIBVA (best)"),NULL}
+            ,{RENDER_LIBVA, QT_TRANSLATE_NOOP("adm","LibVA"),NULL}
 #endif
-
-
 #ifdef USE_SDL
-							 ,{RENDER_SDL,      QT_TRANSLATE_NOOP("adm","SDL (good)"),NULL}
+            ,{RENDER_SDL, QT_TRANSLATE_NOOP("adm","SDL"),NULL}
 #endif
         };
         diaElemMenu menuVideoMode(&render,QT_TRANSLATE_NOOP("adm","Video _display:"),NB_ITEMS(videoMode),videoMode);
