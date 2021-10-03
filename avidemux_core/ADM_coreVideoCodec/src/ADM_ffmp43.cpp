@@ -93,7 +93,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
     
     out->_hdrInfo.color_trc = ADM_HDR_TRC_DEFAULT;
     out->_hdrInfo.max_luminance = 0.0;
-    if (src->color_trc == AVCOL_TRC_SMPTE2084  || _hdrQuirk)
+    if (src->color_trc == AVCOL_TRC_SMPTE2084)
     {
         out->_hdrInfo.color_trc = ADM_HDR_TRC_SMPTE2084;
         ADM_info("HDR transfer characteristic found: SMPTE2084\n");
@@ -103,6 +103,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
         out->_hdrInfo.color_trc = ADM_HDR_TRC_HLG;
         ADM_info("HDR transfer characteristic found: HLG\n");
     }
+    
     for (int i = 0; i < src->nb_side_data; i++) {
         AVFrameSideData *sd = src->side_data[i];
         switch (sd->type) {
@@ -131,6 +132,10 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
                 break;
         }
     }
+
+    if ((out->_hdrInfo.color_trc == ADM_HDR_TRC_DEFAULT) && (out->_hdrInfo.max_luminance == 0.0) && (_hdrQuirk > 0.0))
+        out->_hdrInfo.max_luminance = _hdrQuirk;
+
 
     return 1;
 }
@@ -233,7 +238,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   _usingMT = 0;
   _bpp = bpp;
   _fcc = fcc;
-  _hdrQuirk = false;
+  _hdrQuirk = 0.0;
 
   _frame=av_frame_alloc();
   if(!_frame)

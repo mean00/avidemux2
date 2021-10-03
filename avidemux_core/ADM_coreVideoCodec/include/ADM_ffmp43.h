@@ -82,7 +82,7 @@ protected:
            uint32_t     _threads;
            ADM_acceleratedDecoderFF *hwDecoder;
            decoderFF_param_t decoderFF_params;
-           bool         _hdrQuirk;
+           double       _hdrQuirk;
 
 protected:
            uint32_t     frameType (void);

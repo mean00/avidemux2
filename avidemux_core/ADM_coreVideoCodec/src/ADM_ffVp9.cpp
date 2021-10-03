@@ -31,7 +31,7 @@ decoderFFVP9::decoderFFVP9 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
 {
     _parserContext=NULL;
     decoderMultiThread();
-     _hdrQuirk = true;	// ffmpeg's VP9 decoder does not set color_trc; assume PQ HDR if >8 bit
+     _hdrQuirk = 1000.0;	// [nits]; looks like ffmpeg's VP9 decoder does not set color_trc; assume HDR if >8 bit
 
     if (_context && _usingMT && (codec->capabilities & AV_CODEC_CAP_SLICE_THREADS))
     {
