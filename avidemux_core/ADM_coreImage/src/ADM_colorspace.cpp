@@ -14,9 +14,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <cmath>
 #include "ADM_default.h"
 #include "ADM_colorspace.h"
 #include "ADM_image.h"
+#include "prefs.h"
 
 extern "C" {
 #include "libavcodec/avcodec.h"
@@ -39,6 +41,7 @@ extern "C" {
 #endif
 
 #define CONTEXT (SwsContext *)context
+#define HDRYUVCONTEXT (SwsContext *)hdrYUVContext
 #define BGR32_IS_SWAPPED 1
 
 /**
@@ -380,7 +383,19 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
         destImage->_range = sourceImage->_range;
     }
 
-    sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
+    bool hdr_enabled = false;
+    unsigned int method;
+    if(prefs->get(HDR_TONEMAPPING,&method))
+        hdr_enabled = (method > 0);
+    if (possibleHdrContent && hdr_enabled && ((sourceImage->_hdrInfo.color_trc > ADM_HDR_TRC_DEFAULT) || (sourceImage->_hdrInfo.max_luminance > 0.0)))
+    {
+        updateHDR_LUT(destImage->_range, sourceImage->_hdrInfo.max_luminance);
+        scaleHDR(src,xs, dst,xd);
+    }
+    else
+    {
+        sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
+    }
 
 #ifdef BGR32_IS_SWAPPED
     if(fromColor != toColor && toColor == ADM_COLOR_BGR32A)
@@ -388,6 +403,217 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
 #endif
     return true;
 }
+
+
+/**
+    \fn  updateHDR_LUT
+*/
+void ADMColorScalerFull::updateHDR_LUT(bool extended_range,  double max_luminance)
+{
+    unsigned int method;
+    float trgtLumF, postGainF, satF;
+    if(!prefs->get(HDR_TONEMAPPING,&method))
+        method = 1;
+    if(!prefs->get(HDR_TARGET_LUMINANCE,&trgtLumF))
+        trgtLumF = 100.0;
+    if(!prefs->get(HDR_SATURATION,&satF))
+        satF = 1.0;
+    double trgtLum = trgtLumF;
+    double sat = satF;
+
+    if (max_luminance == 0.0)	// unspecified -> 10knits
+        max_luminance = 10000.0;
+
+
+    if ((method != hdrTMmethod) || (max_luminance != hdrTMsrcLum) || (trgtLum != hdrTMtrgtLum) || (sat != hdrTMsat))
+    {
+        int prevYSDRint = -1;
+        for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+        {
+            double LumHDR = max_luminance;	// peak mastering display luminance [nit]
+            double LumSDR = trgtLum;		// peak target display luminance [nit]
+
+            double Y = l;
+            // normalize:
+            Y /= ADM_COLORSPACE_HDR_LUT_SIZE;
+            Y -= 16.0/256.0;	// deal with limited range
+            Y *= 256.0/220.0;
+            if (Y < 0)
+                Y = 0.0;
+            if (Y > 1)
+                Y = 1.0;
+            
+            // WTF? step 0
+            Y = std::pow(Y, 2.4);
+
+            // Tone mapping step 1
+            double rhoHDR = 1 + 32*std::pow(LumHDR/10000.0, 1/2.4);
+            double Yp = std::log(1 + (rhoHDR-1)*Y) / std::log(rhoHDR);
+
+            // Tone mapping step 2
+            double Yc;
+            if (Yp < 0)
+                Yc = 0.0;
+            else if ((0 <= Yc) && (Yc <= 0.7399))
+                Yc = 1.0770*Yp;
+            else if ((0.7399 < Yc) && (Yc <  0.9909))
+                Yc = -1.1510*Yp*Yp + 2.7811*Yp - 0.6302;
+            else if (( 0.9909 <= Yc) && (Yc <= 1.0))
+                Yc = 0.5*Yp + 0.5;
+            else // Yc > 1
+                Yc = 1.0;
+            
+            // Tone mapping step 3
+            double rhoSDR = 1 + 32*std::pow(LumSDR/10000.0, 1/2.4);
+            double YSDR = (std::pow(rhoSDR, Yc) - 1) / (rhoSDR - 1);
+
+            // WTF? step 4
+            YSDR *= std::sqrt(2)*1.1;
+            if (YSDR < 0)
+                YSDR = 0;
+            if (YSDR > 1)
+                YSDR = 1.0;
+            
+            int YSDRint;
+            if (extended_range)
+                YSDRint = std::round(255.0*YSDR);
+            else
+                YSDRint = std::round(219.0*YSDR) + 16;
+            hdrLumaLUT[l] = YSDRint;
+
+            //if (prevYSDRint != YSDRint)
+            {
+                prevYSDRint = YSDRint;
+                for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+                {
+                    double C = l;
+                    C /= ADM_COLORSPACE_HDR_LUT_SIZE;
+                    C -= 16.0/256.0;	// deal with limited range
+                    C *= 256.0/224.0;
+                    if (C < 0)
+                        C = 0.0;
+                    if (C > 1)
+                        C = 1.0;
+                    C -= 0.5;
+                    
+                    double fYSDR = ((Y==0)||(YSDR==0)) ? 1.0 : (YSDR / (1.1*Y));
+                    C *= fYSDR;
+                    // WTF? step 5 prevent shadow glow
+                    C *= (std::pow(YSDR,1/2.4)+1/3.)*sat;
+                    if (C < -0.5)
+                        C = -0.5;
+                    if (C > 0.5)
+                        C = 0.5;
+                    C += 0.5;
+                    if (extended_range)
+                        hdrChromaLUT[YSDRint][l] = std::round(255.0*C);
+                    else
+                        hdrChromaLUT[YSDRint][l] = std::round(224.0*C) + 16;
+                }
+            }
+        }
+
+        for (int cr=0; cr<256; cr++)
+        {
+            for (int y=0; y<256; y++)
+            {
+                double yn, crn;
+                if (extended_range)
+                {
+                    crn = cr/255.0;
+                    yn = y/255.0;
+                }
+                else
+                {
+                    crn = cr;
+                    crn -= 16.0;
+                    crn /= 224.0;
+                    if (crn < 0) crn = 0;
+                    if (crn > 1) crn = 1;
+                    yn = y;
+                    yn -= 16.0;
+                    yn /= 219.0;
+                    if (yn < 0) yn = 0;
+                    if (yn > 1) yn = 1;
+                }
+                crn -= 0.5;
+                if (crn > 0)
+                    yn -= 0.1*crn;
+                if (yn < 0) yn = 0;
+                int YSDRint;
+                if (extended_range)
+                    YSDRint = std::round(255.0*yn);
+                else
+                    YSDRint = std::round(219.0*yn) + 16;
+                hdrLumaCrLUT[cr][y] = YSDRint;
+            }
+        }
+
+        hdrTMmethod = method;
+        hdrTMsrcLum = max_luminance;
+        hdrTMtrgtLum = trgtLum;
+        hdrTMsat = sat;
+    }
+}
+
+
+/**
+    \fn  scaleHDR
+*/
+void ADMColorScalerFull::scaleHDR(const uint8_t *const srcData[], const int srcStride[], uint8_t *const dstData[], const int dstStride[])
+{
+    uint8_t *gbrData[3];
+    int gbrStride[3];
+    gbrData[0] = (uint8_t*)hdrYUV;
+    gbrStride[0] = ADM_IMAGE_ALIGN(dstWidth)*2;
+    gbrStride[1] = gbrStride[2]= ADM_IMAGE_ALIGN(dstWidth/2)*2;
+    gbrData[1] = gbrData[0] + gbrStride[0]*(dstHeight);
+    gbrData[2] = gbrData[1] + gbrStride[1]*(dstHeight/2);
+
+    sws_scale(HDRYUVCONTEXT,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
+    
+    uint8_t * ptr = dstData[0];
+    uint16_t * hptr = (uint16_t *)gbrData[0];
+    for (int q=0;q<ADM_IMAGE_ALIGN(dstWidth)*dstHeight;q++)
+    {
+        ptr[q] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptr[q]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+    }
+    uint8_t * ptrU = dstData[1];
+    uint8_t * ptrV = dstData[2];
+    uint16_t * hptrU = (uint16_t *)gbrData[1];
+    uint16_t * hptrV = (uint16_t *)gbrData[2];
+    int ystride = ADM_IMAGE_ALIGN(dstWidth);
+    int uvstride = ADM_IMAGE_ALIGN(dstWidth/2);
+    uint8_t * ptrNext = dstData[0]+ystride;
+    for (int y=0; y<(dstHeight/2); y++)
+    {
+        for (int x=0; x<(dstWidth/2); x++)
+        {
+            int luma = 0;
+            luma += ptr[x*2];
+            luma += ptr[x*2 +1];
+            luma += ptrNext[x*2];
+            luma += ptrNext[x*2 +1];
+            luma /= 4;
+            ptrU[x] = hdrChromaLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptrU[x]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            ptrV[x] = hdrChromaLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptrV[x]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            
+            int Cr = ptrV[x];
+            ptr[x*2] = hdrLumaCrLUT[Cr][ptr[x*2]];
+            ptr[x*2+1] = hdrLumaCrLUT[Cr][ptr[x*2+1]];
+            ptrNext[x*2] = hdrLumaCrLUT[Cr][ptrNext[x*2]];
+            ptrNext[x*2+1] = hdrLumaCrLUT[Cr][ptrNext[x*2+1]];
+        }
+        ptr += ystride*2;
+        ptrNext += ystride*2;
+        ptrU += uvstride;
+        ptrV += uvstride;
+        hptrU += uvstride;
+        hptrV += uvstride;
+    }
+}
+
+
 
 /**
     \fn  ADMColorScaler
@@ -403,9 +629,18 @@ ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
             int dw, int dh,
             ADM_colorspace from,ADM_colorspace to)
 {
-   context=NULL;
-   reset(algo,sw,sh,dw,dh,from,to);
-
+    context=NULL;
+    possibleHdrContent=false;
+    hdrLumaLUT = NULL;
+    for (int i=0; i<256; i++)
+    {
+        hdrChromaLUT[i] = NULL;
+        hdrLumaCrLUT[i] = NULL;
+    }
+    hdrTMsrcLum = hdrTMtrgtLum = hdrTMsat = -1.0;	// invalidate
+    hdrYUVContext=NULL;
+    hdrYUV=NULL;
+    reset(algo,sw,sh,dw,dh,from,to);
 }
 /**
     \fn  ~ADMColorScaler
@@ -413,11 +648,27 @@ ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
 */
 ADMColorScalerFull::~ADMColorScalerFull()
 {
-  if(context)
-  {
-     sws_freeContext(CONTEXT);
-     context=NULL;
-  }
+    if(context)
+    {
+        sws_freeContext(CONTEXT);
+        context=NULL;
+    }
+    delete [] hdrLumaLUT;
+    for (int i=0; i<256; i++)
+    {
+        delete [] hdrChromaLUT[i];
+        delete [] hdrLumaCrLUT[i];
+    }
+    if (hdrYUVContext)
+    {
+        sws_freeContext(HDRYUVCONTEXT);
+        hdrYUVContext=NULL;
+    }
+    if (hdrYUV)
+    {
+        delete [] hdrYUV;
+        hdrYUV = NULL;
+    }
 }
 /**
     \fn reset
@@ -426,6 +677,17 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
 {
     if(context) sws_freeContext(CONTEXT);
     context=NULL;
+    if (hdrYUVContext)
+    {
+        sws_freeContext(HDRYUVCONTEXT);
+        hdrYUVContext=NULL;
+    }
+    if (hdrYUV)
+    {
+        delete [] hdrYUV;
+        hdrYUV = NULL;
+    }
+    
     this->algo=algo;
     int flags;
     switch(algo)
@@ -448,7 +710,22 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
         FLAGS();
     }
 #endif
-  
+    
+    possibleHdrContent = (from >= ADM_COLOR_YUV444_10BITS) && (from <= ADM_COLOR_YUV444_12BITS) && (to == ADM_COLOR_IS_YUV);
+    if (possibleHdrContent)
+    {
+        hdrYUV = new uint16_t[ADM_IMAGE_ALIGN(dw)*dh*2];
+        if (hdrLumaLUT == NULL)
+            hdrLumaLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+        for (int i=0; i<256; i++)
+        {
+            if (hdrChromaLUT[i] == NULL)
+                hdrChromaLUT[i] = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+            if (hdrLumaCrLUT[i] == NULL)
+                hdrLumaCrLUT[i] = new uint8_t[256];
+        }
+    }
+    
     srcWidth=sw;
     srcHeight=sh;
 
@@ -466,6 +743,17 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
                       dstWidth,dstHeight,
                       lavTo,
                       flags, NULL, NULL,NULL);
+
+    if (possibleHdrContent)
+    {
+        hdrYUVContext=(void *)sws_getContext(
+                          srcWidth,srcHeight,
+                          lavFrom ,
+                          dstWidth,dstHeight,
+                          AV_PIX_FMT_YUV420P16LE,
+                          flags, NULL, NULL,NULL);
+    }
+    
     return true;
 }
 //------------------------------
