@@ -85,6 +85,19 @@ typedef struct
         refDownloadFunction     *refDownload;
 }hwRefDescriptor;
 
+typedef enum
+{
+    ADM_HDR_TRC_DEFAULT=0,
+    ADM_HDR_TRC_SMPTE2084,
+    ADM_HDR_TRC_HLG
+}ADM_HDR_TRC;
+
+typedef struct
+{
+    ADM_HDR_TRC    color_trc;
+    double         max_luminance;
+} ADM_HDR_info;
+
 #define YPLANE(x) ((x)->GetReadPtr(PLANAR_Y))
 #define UPLANE(x) ((x)->GetReadPtr(PLANAR_U))
 #define VPLANE(x) ((x)->GetReadPtr(PLANAR_V))
@@ -111,6 +124,7 @@ public:
         ADM_IMAGE_TYPE  _imageType;     /// Plain image or reference or vdpau wrapper
         ADM_colorspace  _colorspace;    /// Colorspace we are moving, default is YV12
         ADM_colorRange  _range;     /// MPEG or JPEG
+        ADM_HDR_info    _hdrInfo;
         uint8_t         _noPicture;     /// No picture to display
         ADM_ASPECT	    _aspect;	/// Aspect ratio
         //

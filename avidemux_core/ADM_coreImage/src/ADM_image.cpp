@@ -53,6 +53,7 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
         _noPicture=0;
         _colorspace=ADM_COLOR_YV12;
         _range=ADM_COL_RANGE_MPEG;
+        memset(&_hdrInfo, 0, sizeof(_hdrInfo));
         Pts=0;
         _imageType=type;
         quant=NULL;
