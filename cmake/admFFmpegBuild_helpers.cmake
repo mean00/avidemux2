@@ -211,7 +211,8 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
             "${FFMPEG_SOURCE_DIR}/libavutil/hwcontext_vaapi.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/hwcontext_vdpau.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/hwcontext_dxva2.h"
-
+            "${FFMPEG_SOURCE_DIR}/libavutil/mastering_display_metadata.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/hdr_dynamic_metadata.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/rational.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavutil" COMPONENT dev)
 
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)

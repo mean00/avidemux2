@@ -90,6 +90,47 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
     //printf("[LAVC] pts: %"PRIu64"\n",src->pts);
     out->Pts= (uint64_t)(pts_opaque);
     out->_range=(src->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
+    
+    out->_hdrInfo.color_trc = ADM_HDR_TRC_DEFAULT;
+    out->_hdrInfo.max_luminance = 0.0;
+    if (src->color_trc == AVCOL_TRC_SMPTE2084  || _hdrQuirk)
+    {
+        out->_hdrInfo.color_trc = ADM_HDR_TRC_SMPTE2084;
+        ADM_info("HDR transfer characteristic found: SMPTE2084\n");
+    }
+    if (src->color_trc == AVCOL_TRC_ARIB_STD_B67)
+    {
+        out->_hdrInfo.color_trc = ADM_HDR_TRC_HLG;
+        ADM_info("HDR transfer characteristic found: HLG\n");
+    }
+    for (int i = 0; i < src->nb_side_data; i++) {
+        AVFrameSideData *sd = src->side_data[i];
+        switch (sd->type) {
+            case AV_FRAME_DATA_MASTERING_DISPLAY_METADATA:
+                {
+                    const AVMasteringDisplayMetadata *mastering_display;
+                    if (sd->size < sizeof(*mastering_display))
+                        break;
+                    mastering_display = (const AVMasteringDisplayMetadata *)sd->data;
+                    if (mastering_display->has_luminance)
+                    {
+                        out->_hdrInfo.max_luminance = av_q2d(mastering_display->max_luminance);
+                        ADM_info("HDR Mastering display max luminance: %f\n", out->_hdrInfo.max_luminance);
+                    }
+                }
+                break;
+            case AV_FRAME_DATA_DYNAMIC_HDR_PLUS:
+                {
+                    const AVDynamicHDRPlus *hdr_plus;
+                    if (sd->size < sizeof(*hdr_plus))
+                        break;
+                    hdr_plus = (const AVDynamicHDRPlus *)sd->data;
+                    out->_hdrInfo.max_luminance = av_q2d(hdr_plus->targeted_system_display_maximum_luminance);
+                    ADM_info("HDR Targeted display max luminance: %f\n", out->_hdrInfo.max_luminance);
+                }
+                break;
+        }
+    }
 
     return 1;
 }
@@ -192,6 +233,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   _usingMT = 0;
   _bpp = bpp;
   _fcc = fcc;
+  _hdrQuirk = false;
 
   _frame=av_frame_alloc();
   if(!_frame)

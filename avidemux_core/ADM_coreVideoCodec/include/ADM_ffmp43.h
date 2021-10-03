@@ -23,6 +23,10 @@ extern "C"
 {
 #include "libavcodec/avcodec.h"
 #include "libavutil/mem.h"
+#include "libavutil/pixfmt.h"
+#include "libavutil/mastering_display_metadata.h"
+#include "libavutil/hdr_dynamic_metadata.h"
+#include "libavutil/rational.h"
 }
 #include "ADM_hwAccel.h"
 
@@ -78,6 +82,7 @@ protected:
            uint32_t     _threads;
            ADM_acceleratedDecoderFF *hwDecoder;
            decoderFF_param_t decoderFF_params;
+           bool         _hdrQuirk;
 
 protected:
            uint32_t     frameType (void);
