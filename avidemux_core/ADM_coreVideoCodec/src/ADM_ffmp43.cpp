@@ -101,6 +101,87 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
     if (out->_colorSpace == ADM_COL_SPC_UNSPECIFIED)
         ADM_warning("Unspecified colorspace\n");
 #endif
+
+    // process side data
+    for (int i = 0; i < src->nb_side_data; i++)
+    {
+        AVFrameSideData *sd = src->side_data[i];
+        switch (sd->type)
+        {
+            case AV_FRAME_DATA_MASTERING_DISPLAY_METADATA:
+                {
+                    const AVMasteringDisplayMetadata *mastering_display;
+                    if (sd->size < sizeof(AVMasteringDisplayMetadata))
+                        break;
+                    mastering_display = (const AVMasteringDisplayMetadata *)sd->data;
+                    if (mastering_display->has_primaries)
+                    {
+                        for (int rgb=0; rgb<3; rgb++)
+                        {
+                            //TODO x = av_q2d(mastering_display->display_primaries[rgb][0]);
+                            //TODO y = av_q2d(mastering_display->display_primaries[rgb][1]);
+                        }
+                        //TODO x = av_q2d(mastering_display->white_point[0]);
+                        //TODO y = av_q2d(mastering_display->white_point[1]);
+                    }
+                    if (mastering_display->has_luminance)
+                    {
+                        //TODO = av_q2d(mastering_display->max_luminance);	// nits
+                        //TODO = av_q2d(mastering_display->min_luminance);
+                    }
+                }
+                break;
+            case AV_FRAME_DATA_CONTENT_LIGHT_LEVEL:
+                {
+                    const AVContentLightMetadata *content_light;
+                    if (sd->size < sizeof(AVContentLightMetadata))
+                        break;
+                    content_light = (const AVContentLightMetadata *)sd->data;
+                    //TODO = av_q2d(content_light->MaxCLL);	// nits
+                    //TODO = av_q2d(content_light->MaxFALL);
+                }
+                break;
+            case AV_FRAME_DATA_DYNAMIC_HDR_PLUS:
+                {
+                    const AVDynamicHDRPlus *hdr_plus;
+                    if (sd->size < sizeof(AVDynamicHDRPlus))
+                        break;
+                    hdr_plus = (const AVDynamicHDRPlus *)sd->data;
+                    if (hdr_plus->num_windows > 0)
+                    {
+                        // CHEATING: assume num_windows==1; ATSC S34-301r2 A/341 Amendment – 2094-40 says: "The value of num_windows shall be 1."
+                        //           ignore bullshit parameters, like "elliptical pixel selector"; hope it's ok :)
+                        for (int rgb=0; rgb<3; rgb++)
+                        {
+                            //TODO = av_q2d(hdr_plus->params[0].maxscl[rgb]);
+                        }
+                        //TODO = av_q2d(hdr_plus->params[0].average_maxrgb);
+                        if (hdr_plus->params[0].tone_mapping_flag)
+                        {
+                            //TODO = av_q2d(hdr_plus->params[0].knee_point_x);
+                            //TODO = av_q2d(hdr_plus->params[0].knee_point_y);
+                        }
+                        if (hdr_plus->params[0].num_bezier_curve_anchors > 0)
+                        {
+                            for (int b=0; b<hdr_plus->params[0].num_bezier_curve_anchors; b++)
+                            {
+                                //TODO = av_q2d(hdr_plus->params[0].bezier_curve_anchors[b]);
+                            }
+                        }
+                        if (hdr_plus->params[0].color_saturation_mapping_flag)
+                        {
+                            //TODO = av_q2d(hdr_plus->params[0].color_saturation_weight);
+                        }
+                    }
+                    //TODO = av_q2d(hdr_plus->targeted_system_display_maximum_luminance);
+                    
+                    //other fields are not implemented as of ATSC S34-301r2 A/341 Amendment – 2094-40 
+                }
+                break;
+        }
+        
+    }
+
     return 1;
 }
 /**

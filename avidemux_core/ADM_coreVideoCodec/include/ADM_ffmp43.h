@@ -23,6 +23,10 @@ extern "C"
 {
 #include "libavcodec/avcodec.h"
 #include "libavutil/mem.h"
+#include "libavutil/pixfmt.h"
+#include "libavutil/mastering_display_metadata.h"
+#include "libavutil/hdr_dynamic_metadata.h"
+#include "libavutil/rational.h"
 }
 #include "ADM_hwAccel.h"
 
