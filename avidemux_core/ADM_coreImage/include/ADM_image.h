@@ -111,6 +111,9 @@ public:
         ADM_IMAGE_TYPE  _imageType;     /// Plain image or reference or vdpau wrapper
         ADM_pixelFormat  _pixfrmt;    /// Pixel format we are moving, default is YV12
         ADM_colorRange  _range;     /// MPEG or JPEG
+        ADM_colorPrimaries _colorPrim;
+        ADM_colorTrC    _colorTrc;
+        ADM_colorSpace  _colorSpace;
         uint8_t         _noPicture;     /// No picture to display
         ADM_ASPECT	    _aspect;	/// Aspect ratio
         //

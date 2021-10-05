@@ -53,6 +53,9 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
         _noPicture=0;
         _pixfrmt=ADM_PIXFRMT_YV12;
         _range=ADM_COL_RANGE_MPEG;
+        _colorPrim=ADM_COL_PRI_BT709;
+        _colorTrc=ADM_COL_TRC_BT709;
+        _colorSpace=ADM_COL_SPC_BT709;
         Pts=0;
         _imageType=type;
         quant=NULL;

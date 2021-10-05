@@ -104,6 +104,9 @@ bool ADMImage::copyInfo(ADMImage *src)
     _aspect=src->_aspect;
     Pts=src->Pts;
     _range=src->_range;
+    _colorPrim=src->_colorPrim;
+    _colorTrc=src->_colorTrc;
+    _colorSpace=src->_colorSpace;
     return 1;
 }
 /**
