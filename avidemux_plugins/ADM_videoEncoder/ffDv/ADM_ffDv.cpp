@@ -81,7 +81,7 @@ bool ADM_ffDvEncoder::configureContext(void)
    }
    if(p->color==dvColor422)
    {
-       targetColorSpace=ADM_COLOR_YUV422P;
+       targetPixFrmt=ADM_PIXFRMT_YUV422P;
    }
    
    return true;

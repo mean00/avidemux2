@@ -135,7 +135,7 @@ bool vdpauVideoFilter::setupVdpau(void)
     }
     setIdentityCSC();
     tempBuffer=new uint8_t[info.width*info.height*4];
-    scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_RGB32A,ADM_COLOR_YV12);
+    scaler=new ADMColorScalerSimple( info.width,info.height, ADM_PIXFRMT_RGB32A,ADM_PIXFRMT_YV12);
     ADM_info("VDPAU setup ok\n");
     return true;
 badInit:

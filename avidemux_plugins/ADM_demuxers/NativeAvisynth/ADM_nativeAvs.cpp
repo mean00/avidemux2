@@ -210,12 +210,12 @@ try{
         
         if(inf.IsYV12())
         {
-            colorSpace=ADM_COLOR_YV12;
+            pixfrmt=ADM_PIXFRMT_YV12;
             _videostream.fccHandler = fourCC::get((uint8_t *) "YV12");
         }else
             if(inf.IsYUY2())
             {
-                colorSpace=ADM_COLOR_YUV422;
+                pixfrmt=ADM_PIXFRMT_YUV422;
                 _videostream.fccHandler = fourCC::get((uint8_t *) "YUY2");
             }
             else
@@ -367,10 +367,10 @@ uint8_t  nativeAvsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
     uint8_t *source;
     uint8_t *dst;
     int     sourcePitch;	
-    switch(colorSpace)
+    switch(pixfrmt)
    {
     
-    case ADM_COLOR_YV12:
+    case ADM_PIXFRMT_YV12:
         {
             // Y
             source= (uint8_t *)Aframe->GetReadPtr(AVS_PLANAR_Y);
@@ -392,7 +392,7 @@ uint8_t  nativeAvsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
             
         }
         break;
-    case ADM_COLOR_YUV422:
+    case ADM_PIXFRMT_YUV422:
         {
             source= (uint8_t *)Aframe->GetReadPtr();
             sourcePitch = Aframe->GetPitch();

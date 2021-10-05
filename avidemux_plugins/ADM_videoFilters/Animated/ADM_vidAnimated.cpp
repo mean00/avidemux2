@@ -297,7 +297,7 @@ uint8_t *rdBuffer=NULL;
         printf("[Animated]Decoding failed\n");
         goto skipIt;
     }
-    if(fullSize->_colorspace!=ADM_COLOR_YV12)
+    if(fullSize->_pixfrmt!=ADM_PIXFRMT_YV12)
     {
         printf("[Animated]Wrong colorspace, only yv12 supported\n");
         goto skipIt;

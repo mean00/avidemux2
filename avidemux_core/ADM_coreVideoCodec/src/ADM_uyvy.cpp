@@ -31,7 +31,7 @@ bool   decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
     
     ADMImageRef *ref=out->castToRef();
     out->flags = AVI_KEY_FRAME;
-    out->_colorspace = ADM_COLOR_UYVY422;
+    out->_pixfrmt = ADM_PIXFRMT_UYVY422;
 
     ref->_planes[0] = in->data;
     ref->_planes[1] = NULL;
@@ -64,7 +64,7 @@ bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
 
     ADMImageRef *ref=out->castToRef();
     out->flags = AVI_KEY_FRAME;
-    out->_colorspace = ADM_COLOR_YUV422;
+    out->_pixfrmt = ADM_PIXFRMT_YUV422;
 
     ref->_planes[0] = in->data;
     ref->_planes[1] = NULL;

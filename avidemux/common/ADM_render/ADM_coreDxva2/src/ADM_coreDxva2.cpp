@@ -776,7 +776,7 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
       case 10:
               {
               if(!color10Bits)
-                    color10Bits=new ADMColorScalerSimple(out->GetWidth(PLANAR_Y),out->GetHeight(PLANAR_Y),ADM_COLOR_NV12_10BITS,ADM_COLOR_YV12);
+                    color10Bits=new ADMColorScalerSimple(out->GetWidth(PLANAR_Y),out->GetHeight(PLANAR_Y),ADM_PIXFRMT_NV12_10BITS,ADM_PIXFRMT_YV12);
               ADMImageRef ref(out->GetWidth(PLANAR_Y),out->GetHeight(PLANAR_Y));
               ADMImageRefWrittable target(out->GetWidth(PLANAR_Y),out->GetHeight(PLANAR_Y));
               ref._planes[0]=data;

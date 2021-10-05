@@ -51,7 +51,7 @@ _hasSettings=false;
         _hasSettings=true;
     }
     _options=NULL;
-    targetColorSpace=ADM_COLOR_YV12;
+    targetPixFrmt=ADM_PIXFRMT_YV12;
     w=getWidth();
     h=getHeight();
 
@@ -129,25 +129,25 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
 {
     int w=getWidth();
 
-  switch(targetColorSpace)
+  switch(targetPixFrmt)
     {
-        case ADM_COLOR_YV12:    _frame->linesize[0] = img->GetPitch(PLANAR_Y);
+        case ADM_PIXFRMT_YV12:    _frame->linesize[0] = img->GetPitch(PLANAR_Y);
                                 _frame->linesize[1] = img->GetPitch(PLANAR_U);
                                 _frame->linesize[2] = img->GetPitch(PLANAR_V);
                                 _frame->format=AV_PIX_FMT_YUV420P;
                                 _context->pix_fmt =AV_PIX_FMT_YUV420P;break;
-        case ADM_COLOR_YUV422P: w = ADM_IMAGE_ALIGN(w);
+        case ADM_PIXFRMT_YUV422P: w = ADM_IMAGE_ALIGN(w);
                                 _frame->linesize[0] = w;
                                 _frame->linesize[1] = w>>1;
                                 _frame->linesize[2] = w>>1;
                                 _frame->format=AV_PIX_FMT_YUV422P;
                                 _context->pix_fmt =AV_PIX_FMT_YUV422P;break;
-        case ADM_COLOR_RGB32A : _frame->linesize[0] = ADM_IMAGE_ALIGN(w*4);
+        case ADM_PIXFRMT_RGB32A : _frame->linesize[0] = ADM_IMAGE_ALIGN(w*4);
                                 _frame->linesize[1] = 0;//w >> 1;
                                 _frame->linesize[2] = 0;//w >> 1;
                                 _frame->format=AV_PIX_FMT_RGB32;
                                 _context->pix_fmt =AV_PIX_FMT_RGB32;break;
-        case ADM_COLOR_RGB24:   _frame->linesize[0] = ADM_IMAGE_ALIGN(w*3);
+        case ADM_PIXFRMT_RGB24:   _frame->linesize[0] = ADM_IMAGE_ALIGN(w*3);
                                 _frame->linesize[1] = 0;
                                 _frame->linesize[2] = 0;
                                 _frame->format = AV_PIX_FMT_RGB24;
@@ -228,15 +228,15 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     //
     int w=getWidth();
     int h=getHeight();
-    switch(targetColorSpace)
+    switch(targetPixFrmt)
     {
-        case ADM_COLOR_YV12:
+        case ADM_PIXFRMT_YV12:
                 _frame->data[0] = image->GetWritePtr(PLANAR_Y);
                 _frame->data[1] = image->GetWritePtr(PLANAR_U);
                 _frame->data[2] = image->GetWritePtr(PLANAR_V);
                 break;
 
-        case ADM_COLOR_YUV422P:
+        case ADM_PIXFRMT_YUV422P:
         {
                 if(!colorSpace->convertImage(image,rgbByteBuffer.at(0)))
                 {
@@ -252,8 +252,8 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
                 _frame->data[2] = p;
                 break;
         }
-        case ADM_COLOR_RGB32A:
-        case ADM_COLOR_RGB24:
+        case ADM_PIXFRMT_RGB32A:
+        case ADM_PIXFRMT_RGB24:
         {
                 if(!colorSpace->convertImage(image,rgbByteBuffer.at(0)))
                 {
@@ -447,9 +447,9 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
     int w,h;
     w=info->width;
     h=info->height;
-    if(targetColorSpace!=ADM_COLOR_YV12)
+    if(targetPixFrmt!=ADM_PIXFRMT_YV12)
     {
-        colorSpace=new ADMColorScalerSimple(w,h,ADM_COLOR_YV12,targetColorSpace);
+        colorSpace=new ADMColorScalerSimple(w,h,ADM_PIXFRMT_YV12,targetPixFrmt);
         if(!colorSpace)
         {
             printf("[ADM_jpegEncoder] Cannot allocate colorspace\n");

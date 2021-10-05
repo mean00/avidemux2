@@ -877,7 +877,7 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
 #else
                     ADMColorScalerSimple *color=src->fromNv12ToYv12;
                     if(!color)
-                        color = new ADMColorScalerSimple(src->w, src->h, ADM_COLOR_NV12, ADM_COLOR_YV12);
+                        color = new ADMColorScalerSimple(src->w, src->h, ADM_PIXFRMT_NV12, ADM_PIXFRMT_YV12);
                     ADMImageRef ref(dest->_width,dest->_height);
                     for(int i=0;i<2;i++)
                     {
@@ -896,7 +896,7 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
                 {
                     ADMColorScalerSimple *color=src->color10bits;
                     if(!color)
-                        color = new ADMColorScalerSimple(src->w, src->h, ADM_COLOR_NV12_10BITS, ADM_COLOR_YV12);
+                        color = new ADMColorScalerSimple(src->w, src->h, ADM_PIXFRMT_NV12_10BITS, ADM_PIXFRMT_YV12);
                     ADMImageRef ref(dest->_width,dest->_height);
                     for(int i=0;i<2;i++)
                     {
@@ -1063,7 +1063,7 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADM_vaSurface *f
                     ADM_assert(face);
                     ADMColorScalerSimple *color=face->color10bits;
                     if(!color)
-                        color = new ADMColorScalerSimple(src->_width, src->_height, ADM_COLOR_NV12_10BITS, ADM_COLOR_YV12);
+                        color = new ADMColorScalerSimple(src->_width, src->_height, ADM_PIXFRMT_NV12_10BITS, ADM_PIXFRMT_YV12);
                     ADMImageRef ref(src->_width,src->_height);
                     for(int i=0;i<2;i++)
                     {
@@ -1084,7 +1084,7 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADM_vaSurface *f
                     ADM_assert(face);
                     ADMColorScalerSimple *color=face->fromNv12ToYv12;
                     if(!color)
-                        color = new ADMColorScalerSimple(src->_width, src->_height, ADM_COLOR_NV12, ADM_COLOR_YV12);
+                        color = new ADMColorScalerSimple(src->_width, src->_height, ADM_PIXFRMT_NV12, ADM_PIXFRMT_YV12);
                     ADMImageRef ref(src->_width,src->_height);
                     for(int i=0;i<2;i++)
                     {

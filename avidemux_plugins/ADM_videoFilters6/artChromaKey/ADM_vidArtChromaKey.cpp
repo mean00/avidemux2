@@ -411,7 +411,7 @@ bool ADMVideoArtChromaKey::reloadImage(void)
         }
         ADMImage *im2=createImageFromFile(_param.imagefile.c_str());
         if(!im2) return false;
-        ADMColorScalerFull * scaler = new ADMColorScalerFull(ADM_CS_BICUBIC,im2->GetWidth(PLANAR_Y),im2->GetHeight(PLANAR_Y),_backgrnd->GetWidth(PLANAR_Y),_backgrnd->GetHeight(PLANAR_Y),im2->_colorspace,ADM_COLOR_YV12);
+        ADMColorScalerFull * scaler = new ADMColorScalerFull(ADM_CS_BICUBIC,im2->GetWidth(PLANAR_Y),im2->GetHeight(PLANAR_Y),_backgrnd->GetWidth(PLANAR_Y),_backgrnd->GetHeight(PLANAR_Y),im2->_pixfrmt,ADM_PIXFRMT_YV12);
 
         if (scaler) {
             scaler->convertImage(im2, _backgrnd);

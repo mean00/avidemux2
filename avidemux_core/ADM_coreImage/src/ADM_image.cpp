@@ -51,7 +51,7 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
         if(imgCurNb>imgMaxNb)
             imgMaxNb=imgCurNb;
         _noPicture=0;
-        _colorspace=ADM_COLOR_YV12;
+        _pixfrmt=ADM_PIXFRMT_YV12;
         _range=ADM_COL_RANGE_MPEG;
         Pts=0;
         _imageType=type;

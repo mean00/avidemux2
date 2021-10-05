@@ -226,15 +226,15 @@ bool ZoomFilter::reset(int left, int right, int top, int bottom, uint32_t algo, 
     resizer=new ADMColorScalerFull(scalerAlgo, 
                         info.width - (left+right), info.height - (top+bottom),
                         stretchW,stretchH,
-                        ADM_COLOR_YV12,ADM_COLOR_YV12);
+                        ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
     resizerOrigToEcho=new ADMColorScalerFull(ADM_CS_BICUBIC, 
                         info.width - (left+right), info.height - (top+bottom),
                         16,16,
-                        ADM_COLOR_YV12,ADM_COLOR_YV12);
+                        ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
     resizerEchoToImage=new ADMColorScalerFull(ADM_CS_LANCZOS, 
                         16,16, 
                         info.width, info.height,
-                        ADM_COLOR_YV12,ADM_COLOR_YV12);
+                        ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
     stretch=new ADMImageDefault(stretchW,stretchH);
     return 1;
 }

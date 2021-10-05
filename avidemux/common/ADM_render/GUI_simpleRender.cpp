@@ -85,7 +85,7 @@ bool simpleRender::displayImage(ADMImage *pic)
     return true;
 }
 //#if (ADM_UI_TYPE_BUILD == ADM_UI_QT4)
-    #define IVERT ADM_COLOR_BGR32A
+    #define IVERT ADM_PIXFRMT_BGR32A
 //#else
 //    #define IVERT ADM_COLOR_RGB32A
 //#endif
@@ -107,7 +107,7 @@ bool simpleRender::allocateStuff(void)
 {
         cleanup();
         scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,displayWidth,displayHeight,
-            ADM_COLOR_YV12,
+            ADM_PIXFRMT_YV12,
             IVERT
         );
         uint32_t sz=ADM_IMAGE_ALIGN(displayWidth*4);

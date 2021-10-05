@@ -47,14 +47,14 @@ class ADM_COREIMAGE6_EXPORT ADMColorScalerFull
     void            *context;
     uint32_t        srcWidth,srcHeight;
     uint32_t        dstWidth,dstHeight;
-    ADM_colorspace  fromColor,toColor;
+    ADM_pixelFormat  fromPixFrmt,toPixFrmt;
     ADMColorScaler_algo algo;
-    uint8_t         getStrideAndPointers(bool dst,uint8_t  *from,ADM_colorspace fromColor,
+    uint8_t         getStrideAndPointers(bool dst,uint8_t  *from,ADM_pixelFormat fromPixFrmt,
                                             uint8_t **srcData,int *srcStride);
   public :
     
-                    ADMColorScalerFull(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_colorspace from,ADM_colorspace to);
-    bool            reset(ADMColorScaler_algo, int sw, int sh, int dw,int dh,ADM_colorspace from,ADM_colorspace to);
+                    ADMColorScalerFull(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
+    bool            reset(ADMColorScaler_algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
     
 
     bool            convert(uint8_t  *from, uint8_t *to);
@@ -72,7 +72,7 @@ class ADMColorScalerSimple :public ADMColorScalerFull
 {
 public:
     bool            changeWidthHeight(int newWidth, int newHeight);
-                    ADMColorScalerSimple( int width, int height, ADM_colorspace from,ADM_colorspace to,ADMColorScaler_algo algo=ADM_CS_BICUBIC):
+                    ADMColorScalerSimple( int width, int height, ADM_pixelFormat from,ADM_pixelFormat to,ADMColorScaler_algo algo=ADM_CS_BICUBIC):
                         ADMColorScalerFull(algo, width, height, width,height, from, to)
                      {
 

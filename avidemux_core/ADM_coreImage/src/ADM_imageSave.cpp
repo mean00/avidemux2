@@ -90,7 +90,7 @@ bool  ADMImage::saveAsBmpInternal(const char *filename)
         return 0;
     }
 
-    ADMColorScalerSimple converter(bmph.biWidth, bmph.biHeight, ADM_COLOR_YV12, ADM_COLOR_BGR24);
+    ADMColorScalerSimple converter(bmph.biWidth, bmph.biHeight, ADM_PIXFRMT_YV12, ADM_PIXFRMT_BGR24);
     converter.convertImage(this,tmp);
 
     // Pack data and swap lines
@@ -308,7 +308,7 @@ bool ADMImage::saveAsPngInternal(const char *filename)
     const uint32_t sz=ADM_IMAGE_ALIGN(_width*3)*_height;
     int r=0;
     uint8_t *out=NULL;
-    ADMColorScalerSimple converter(_width, _height, ADM_COLOR_YV12, ADM_COLOR_RGB24);
+    ADMColorScalerSimple converter(_width, _height, ADM_PIXFRMT_YV12, ADM_PIXFRMT_RGB24);
 
     frame=av_frame_alloc();
     if(!frame)

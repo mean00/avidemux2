@@ -66,7 +66,7 @@ flyAnalyzer::flyAnalyzer (QDialog *parent,uint32_t width,uint32_t height,ADM_cor
     rgbBufRaw = new ADM_byteBuffer();
     if (rgbBufRaw)
         (rgbBufRaw)->setSize(rgbBufStride * rgbHeight);
-    convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,width,height,rgbWidth,rgbHeight,ADM_COLOR_YV12,ADM_COLOR_RGB32A);
+    convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,width,height,rgbWidth,rgbHeight,ADM_PIXFRMT_YV12,ADM_PIXFRMT_RGB32A);
 
 }
 /**

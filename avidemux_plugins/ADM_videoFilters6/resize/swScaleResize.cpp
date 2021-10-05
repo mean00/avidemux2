@@ -226,7 +226,7 @@ bool swScaleResizeFilter::reset(uint32_t nw, uint32_t nh,uint32_t algo)
     resizer=new ADMColorScalerFull(scalerAlgo, 
                         previousFilter->getInfo()->width, previousFilter->getInfo()->height, 
                         nw,nh,
-                        ADM_COLOR_YV12,ADM_COLOR_YV12);
+                        ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
     return 1;
 }
 

@@ -32,13 +32,13 @@ class ADM_COREIMAGE6_EXPORT ADMImageResizer
 {
 	private:
 		ADMColorScalerFull   *resizer;
-        ADM_colorspace orgFormat, destFormat;
+        ADM_pixelFormat orgFormat, destFormat;
 		uint32_t orgWidth, orgHeight;
 		uint32_t destWidth, destHeight;
-        void        init(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, ADM_colorspace srcFormat, ADM_colorspace dstFormat);
+        void        init(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, ADM_pixelFormat srcFormat, ADM_pixelFormat dstFormat);
 	public:
 		ADMImageResizer(uint32_t ow,uint32_t oh, uint32_t dw, uint32_t dh);
-		ADMImageResizer(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, ADM_colorspace srcFormat, ADM_colorspace dstFormat);
+		ADMImageResizer(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, ADM_pixelFormat srcFormat, ADM_pixelFormat dstFormat);
 		~ADMImageResizer();
 		
 		uint8_t resize(ADMImage *src, ADMImage *dest);

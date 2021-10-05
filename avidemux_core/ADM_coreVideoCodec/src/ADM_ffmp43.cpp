@@ -495,26 +495,26 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   switch (_context->pix_fmt)
     {
     case AV_PIX_FMT_YUV411P:
-      out->_colorspace = ADM_COLOR_YUV411;
-      aprintf("colorspace is AV_PIX_FMT_YUV411P --> ADM_COLOR_YUV411\n");
+      out->_pixfrmt = ADM_PIXFRMT_YUV411;
+      aprintf("pixel format is AV_PIX_FMT_YUV411P --> ADM_PIXFRMT_YUV411\n");
       break;
     case AV_PIX_FMT_YUYV422:
-      out->_colorspace = ADM_COLOR_YUV422;
-      aprintf("colorspace is AV_PIX_FMT_YUYV422 --> ADM_COLOR_YUV422\n");
+      out->_pixfrmt = ADM_PIXFRMT_YUV422;
+      aprintf("pixel format is AV_PIX_FMT_YUYV422 --> ADM_PIXFRMT_YUV422\n");
       break;
     case AV_PIX_FMT_YUV422P:
     case AV_PIX_FMT_YUVJ422P:
-      out->_colorspace = ADM_COLOR_YUV422P;
-      aprintf("colorspace is AV_PIX_FMT_YUV422P or AV_PIX_FMT_YUVJ422P --> ADM_COLOR_YUV422P\n");
+      out->_pixfrmt = ADM_PIXFRMT_YUV422P;
+      aprintf("pixel format is AV_PIX_FMT_YUV422P or AV_PIX_FMT_YUVJ422P --> ADM_PIXFRMT_YUV422P\n");
       break;
     case AV_PIX_FMT_GRAY8:
-      out->_colorspace = ADM_COLOR_Y8;
-      aprintf("colorspace is AV_PIX_FMT_GRAY8 --> ADM_COLOR_Y8\n");
+      out->_pixfrmt = ADM_PIXFRMT_Y8;
+      aprintf("pixel format is AV_PIX_FMT_GRAY8 --> ADM_PIXFRMT_Y8\n");
       break;
     case AV_PIX_FMT_YUV444P:
     case AV_PIX_FMT_YUVJ444P:
-      out->_colorspace = ADM_COLOR_YUV444;
-      aprintf("colorspace is AV_PIX_FMT_YUV444P or AV_PIX_FMT_YUVJ444P --> ADM_COLOR_YUV444\n");
+      out->_pixfrmt = ADM_PIXFRMT_YUV444;
+      aprintf("pixel format is AV_PIX_FMT_YUV444P or AV_PIX_FMT_YUVJ444P --> ADM_PIXFRMT_YUV444\n");
       break;
     case AV_PIX_FMT_YUV420P:
     case AV_PIX_FMT_YUVJ420P:
@@ -522,34 +522,34 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       // Default is YV12 or I420
       // In that case depending on swap u/v
       // we do it or not
-      out->_colorspace = ADM_COLOR_YV12;
+      out->_pixfrmt = ADM_PIXFRMT_YV12;
       swap = true;
-      aprintf("colorspace is AV_PIX_FMT_YUV420P, AV_PIX_FMT_YUVJ420P or AV_PIX_FMT_YUVA420P --> ADM_COLOR_YV12\n");
+      aprintf("pixel format is AV_PIX_FMT_YUV420P, AV_PIX_FMT_YUVJ420P or AV_PIX_FMT_YUVA420P --> ADM_PIXFRMT_YV12\n");
       break;
     case AV_PIX_FMT_BGR24:
-      out->_colorspace = ADM_COLOR_BGR24;
-      aprintf("colorspace is AV_PIX_FMT_BGR24 --> ADM_COLOR_BGR24\n");
+      out->_pixfrmt = ADM_PIXFRMT_BGR24;
+      aprintf("pixel format is AV_PIX_FMT_BGR24 --> ADM_PIXFRMT_BGR24\n");
       break;
     case AV_PIX_FMT_RGB24:
-      out->_colorspace = ADM_COLOR_RGB24;
-      aprintf("colorspace is AV_PIX_FMT_RGB24 --> ADM_COLOR_RGB24\n");
+      out->_pixfrmt = ADM_PIXFRMT_RGB24;
+      aprintf("pixel format is AV_PIX_FMT_RGB24 --> ADM_PIXFRMT_RGB24\n");
       break;
     case AV_PIX_FMT_GBRP:
-      out->_colorspace = ADM_COLOR_GBR24P;
-      aprintf("colorspace is AV_PIX_FMT_GBRP --> ADM_COLOR_GBR24P\n");
+      out->_pixfrmt = ADM_PIXFRMT_GBR24P;
+      aprintf("pixel format is AV_PIX_FMT_GBRP --> ADM_PIXFRMT_GBR24P\n");
       break;
     case AV_PIX_FMT_BGR0:
     case AV_PIX_FMT_BGRA:
-      out->_colorspace = ADM_COLOR_BGR32A;
-      aprintf("colorspace is AV_PIX_FMT_BGR0 or AV_PIX_FMT_BGRA --> ADM_COLOR_BGR32A\n");
+      out->_pixfrmt = ADM_PIXFRMT_BGR32A;
+      aprintf("pixel format is AV_PIX_FMT_BGR0 or AV_PIX_FMT_BGRA --> ADM_PIXFRMT_BGR32A\n");
       break;
     case AV_PIX_FMT_RGBA: // ???PIX_FMT_RGBA32:
-      out->_colorspace = ADM_COLOR_RGB32A;
-      aprintf("colorspace is AV_PIX_FMT_RGBA --> ADM_COLOR_RGB32A\n");
+      out->_pixfrmt = ADM_PIXFRMT_RGB32A;
+      aprintf("pixel format is AV_PIX_FMT_RGBA --> ADM_PIXFRMT_RGB32A\n");
       break;
     case AV_PIX_FMT_RGB555:
-      out->_colorspace = ADM_COLOR_RGB555;
-      aprintf("colorspace is AV_PIX_FMT_RGB555 --> ADM_COLOR_RGB555\n");
+      out->_pixfrmt = ADM_PIXFRMT_RGB555;
+      aprintf("pixel format is AV_PIX_FMT_RGB555 --> ADM_PIXFRMT_RGB555\n");
       break;
 #if 0
     case AV_PIX_FMT_VDPAU_MPEG1:
@@ -558,38 +558,38 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     case AV_PIX_FMT_VDPAU_VC1:
     case AV_PIX_FMT_VDPAU_H264:
     case AV_PIX_FMT_VDPAU:
-        out->_colorspace=ADM_COLOR_VDPAU;
+        out->_pixfrmt=ADM_PIXFRMT_VDPAU;
         break;        
     case AV_PIX_FMT_VAAPI:
-        out->_colorspace=ADM_COLOR_LIBVA;
+        out->_pixfrmt=ADM_PIXFRMT_LIBVA;
         break;
         
 #ifdef USE_XVBA        
     case AV_PIX_FMT_XVBA_VLD:
-        out->_colorspace=ADM_COLOR_XVBA;
+        out->_pixfrmt=ADM_PIXFRMT_XVBA;
         break;
 #endif        
 #endif
   case AV_PIX_FMT_YUV444P10LE:
-        out->_colorspace=ADM_COLOR_YUV444_10BITS;
+        out->_pixfrmt=ADM_PIXFRMT_YUV444_10BITS;
         break;      
   case AV_PIX_FMT_YUV422P10LE:
-        out->_colorspace=ADM_COLOR_YUV422_10BITS;
+        out->_pixfrmt=ADM_PIXFRMT_YUV422_10BITS;
         break;
   case   AV_PIX_FMT_P010LE:      
-        out->_colorspace= ADM_COLOR_NV12_10BITS;
+        out->_pixfrmt= ADM_PIXFRMT_NV12_10BITS;
         break;
   case  AV_PIX_FMT_YUV420P10LE:
-        out->_colorspace=ADM_COLOR_YUV420_10BITS;
+        out->_pixfrmt=ADM_PIXFRMT_YUV420_10BITS;
         break;
   case  AV_PIX_FMT_YUV420P12LE:
-        out->_colorspace=ADM_COLOR_YUV420_12BITS;
+        out->_pixfrmt=ADM_PIXFRMT_YUV420_12BITS;
         break;
   case  AV_PIX_FMT_YUV444P12LE:
-        out->_colorspace=ADM_COLOR_YUV444_12BITS;
+        out->_pixfrmt=ADM_PIXFRMT_YUV444_12BITS;
         break;
     default:
-      printf ("[lavc] Unhandled colorspace: %d (AV_PIX_FMT_YUV444P10BE=%d)\n", _context->pix_fmt,AV_PIX_FMT_YUV444P10BE);
+      printf ("[lavc] Unhandled pixel format: %d (AV_PIX_FMT_YUV444P10BE=%d)\n", _context->pix_fmt,AV_PIX_FMT_YUV444P10BE);
       return 0;
     }
     // make sure the output is not marked as a hw image

@@ -20,7 +20,7 @@
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "jpeg_encoder.h"
 
-#define JPEG_CONF_DEFAULT {ADM_COLOR_YV12,2}
+#define JPEG_CONF_DEFAULT {ADM_PIXFRMT_YV12,2}
 
 /**
         \class ADM_jpegEncoder

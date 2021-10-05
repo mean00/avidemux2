@@ -110,7 +110,7 @@ bool    decoderVPX::uncompress (ADMCompressedImage * in, ADMImage * out)
                     r->_planeStride[0]=img->stride[0];
                     r->_planeStride[1]=img->stride[2];
                     r->_planeStride[2]=img->stride[1];
-                    r->_colorspace=ADM_COLOR_YV12;
+                    r->_pixfrmt=ADM_PIXFRMT_YV12;
                     r->Pts=in->demuxerPts;
                     r->flags=in->flags;
                     return true;

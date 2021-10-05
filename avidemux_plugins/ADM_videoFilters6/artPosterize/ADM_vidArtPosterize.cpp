@@ -54,12 +54,12 @@ void ADMVideoArtPosterize::ArtPosterizeCreateBuffers(int w, int h, int * rgbBufS
     *rgbBufRaw = new ADM_byteBuffer();
     if (*rgbBufRaw)
         (*rgbBufRaw)->setSize(*rgbBufStride * h);
-    *convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_COLOR_YV12,ADM_COLOR_RGB32A);
-    *convertRgbToYuv = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_COLOR_RGB32A,ADM_COLOR_YV12);
+    *convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_PIXFRMT_YV12,ADM_PIXFRMT_RGB32A);
+    *convertRgbToYuv = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_PIXFRMT_RGB32A,ADM_PIXFRMT_YV12);
     *rgbBufImage = new ADMImageRef(w,h);
     if (*rgbBufImage)
     {
-        (*rgbBufImage)->_colorspace = ADM_COLOR_RGB32A;
+        (*rgbBufImage)->_pixfrmt = ADM_PIXFRMT_RGB32A;
         (*rgbBufImage)->_planes[0] = (*rgbBufRaw)->at(0);
         (*rgbBufImage)->_planes[1] = (*rgbBufImage)->_planes[2] = NULL;
         (*rgbBufImage)->_planeStride[0] = *rgbBufStride;

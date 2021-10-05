@@ -122,7 +122,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           ADM_coreVideoFilter *getUnderlyingFilter() {return _in;}
                   bool        addControl(QHBoxLayout *layout, bool addPeekOriginalButton = false);
 protected:
-  virtual ADM_colorspace     toRgbColor(void);
+  virtual ADM_pixelFormat     toRgbPixFrmt(void);
           void               updateZoom(void);
           void               EndConstructor(void);
           uint8_t            cleanup(void);  

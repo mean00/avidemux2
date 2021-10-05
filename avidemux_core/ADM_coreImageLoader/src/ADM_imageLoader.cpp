@@ -76,9 +76,9 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
 {
    
     	ADMImageDefault *image=new ADMImageDefault(w,h);        
-        ADM_colorspace sourceFormat=source->_colorspace;   
+        ADM_pixelFormat sourceFormat=source->_pixfrmt;   
         
-        if(ADM_COLOR_RGB32A==sourceFormat)
+        if(ADM_PIXFRMT_RGB32A==sourceFormat)
         {
             image->addAlphaChannel();
             // Extract alpha channel
@@ -102,9 +102,9 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
                 }
             }
         }
-        ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);
+        ADMColorScalerSimple converter(w,h,sourceFormat,ADM_PIXFRMT_YV12);
         converter.convertImage(source,image);
-        if(ADM_COLOR_YV12==sourceFormat && source->_range==ADM_COL_RANGE_JPEG)
+        if(ADM_PIXFRMT_YV12==sourceFormat && source->_range==ADM_COL_RANGE_JPEG)
             image->shrinkColorRange();
 
         return image;

@@ -258,12 +258,12 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
     
 }
 /**
-    \fn toRgbColor
+    \fn toRgbPixFrmt
 */
-ADM_colorspace ADM_flyDialog::toRgbColor(void)
+ADM_pixelFormat ADM_flyDialog::toRgbPixFrmt(void)
 {
-    if(isRgbInverted()) return ADM_COLOR_BGR32A;
-    return ADM_COLOR_RGB32A;
+    if(isRgbInverted()) return ADM_PIXFRMT_BGR32A;
+    return ADM_PIXFRMT_RGB32A;
 }
 /**
  * 
@@ -457,7 +457,7 @@ void ADM_flyDialogYuv::resetScaler(void)
                             _h,
                             displayW,
                             displayH,
-                            ADM_COLOR_YV12,toRgbColor());
+                            ADM_PIXFRMT_YV12,toRgbPixFrmt());
 }
 /**
  * 
@@ -505,7 +505,7 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
                             _h,
                             _w,
                             _h,
-                            ADM_COLOR_YV12,toRgbColor());
+                            ADM_PIXFRMT_YV12,toRgbPixFrmt());
     rgb2rgb=NULL;
     initializeSize();
     postInit(false);
@@ -524,7 +524,7 @@ void ADM_flyDialogRgb::resetScaler(void)
                             _h,
                             displayW,
                             displayH,
-                            ADM_COLOR_RGB32A,ADM_COLOR_RGB32A);
+                            ADM_PIXFRMT_RGB32A,ADM_PIXFRMT_RGB32A);
 }
 /**
  * 

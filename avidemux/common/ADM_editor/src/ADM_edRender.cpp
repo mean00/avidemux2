@@ -531,12 +531,12 @@ uint32_t segNo;
 */
 uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
 {
-    if(src->_colorspace==ADM_COLOR_YV12)
+    if(src->_pixfrmt==ADM_PIXFRMT_YV12)
         return dst->duplicate(src);
     // We need to do some colorspace conversion
     // Is there already one ?
     if(!vid->color)
-        vid->color=new ADMColorScalerSimple(src->_width,src->_height,src->_colorspace,ADM_COLOR_YV12);
+        vid->color=new ADMColorScalerSimple(src->_width,src->_height,src->_pixfrmt,ADM_PIXFRMT_YV12);
     // Since it is not YV12 it MUST be a ref
     ADM_assert(src->isRef());
     dst->copyInfo(src);
