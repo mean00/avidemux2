@@ -90,7 +90,15 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
     //printf("[LAVC] pts: %"PRIu64"\n",src->pts);
     out->Pts= (uint64_t)(pts_opaque);
     out->_range=(src->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
-
+    out->_colorPrim = admColPriFromLav(src->color_primaries);
+    if (out->_colorPrim == ADM_COL_PRI_UNSPECIFIED)
+        ADM_warning("Unspecified color primaries\n");
+    out->_colorTrc = admColTrcFromLav(src->color_trc);
+    if (out->_colorTrc == ADM_COL_TRC_UNSPECIFIED)
+        ADM_warning("Unspecified color transfer characteristic\n");
+    out->_colorSpace = admColSpcFromLav(src->colorspace);
+    if (out->_colorSpace == ADM_COL_SPC_UNSPECIFIED)
+        ADM_warning("Unspecified colorspace\n");
     return 1;
 }
 /**
