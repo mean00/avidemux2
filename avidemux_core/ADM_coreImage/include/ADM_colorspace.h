@@ -53,7 +53,7 @@ typedef enum
     ADM_COL_PRI_SMPTE431,     ///< SMPTE ST 431-2 (2011) / DCI P3
     ADM_COL_PRI_SMPTE432,     ///< SMPTE ST 432-1 (2010) / P3 D65 / Display P3
     ADM_COL_PRI_EBU3213,      ///< EBU Tech. 3213-E / JEDEC P22 phosphors
-    ADM_COL_PRI_JEDEC_P22 = ADM_COL_PRI_EBU3213
+    //ADM_COL_PRI_JEDEC_P22 = ADM_COL_PRI_EBU3213
 }ADM_colorPrimaries;
 
 typedef enum
@@ -73,9 +73,9 @@ typedef enum
     ADM_COL_TRC_BT2020_10,        ///< ITU-R BT2020 for 10-bit system
     ADM_COL_TRC_BT2020_12,        ///< ITU-R BT2020 for 12-bit system
     ADM_COL_TRC_SMPTE2084,        ///< SMPTE ST 2084 for 10-, 12-, 14- and 16-bit systems
-    ADM_COL_TRC_SMPTEST2084 = ADM_COL_TRC_SMPTE2084,
+    //ADM_COL_TRC_SMPTEST2084 = ADM_COL_TRC_SMPTE2084,
     ADM_COL_TRC_SMPTE428,         ///< SMPTE ST 428-1
-    ADM_COL_TRC_SMPTEST428_1 = ADM_COL_TRC_SMPTE428,
+    //ADM_COL_TRC_SMPTEST428_1 = ADM_COL_TRC_SMPTE428,
     ADM_COL_TRC_ARIB_STD_B67      ///< ARIB STD-B67, known as "Hybrid log-gamma"
 }ADM_colorTrC;
 
@@ -89,7 +89,7 @@ typedef enum
     ADM_COL_SPC_SMPTE170M,            ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
     ADM_COL_SPC_SMPTE240M,            ///< functionally identical to above
     ADM_COL_SPC_YCGCO,                ///< Used by Dirac / VC-2 and H.264 FRext, see ITU-T SG16
-    ADM_COL_SPC_YCOCG = ADM_COL_SPC_YCGCO,
+    //ADM_COL_SPC_YCOCG = ADM_COL_SPC_YCGCO,
     ADM_COL_SPC_BT2020_NCL,           ///< ITU-R BT2020 non-constant luminance system
     ADM_COL_SPC_BT2020_CL,            ///< ITU-R BT2020 constant luminance system
     ADM_COL_SPC_SMPTE2085,            ///< SMPTE 2085, Y'D'zD'x

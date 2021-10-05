@@ -84,6 +84,10 @@ protected:
            uint8_t      clonePic (AVFrame * src, ADMImage * out, bool swap);
            void         decoderMultiThread ();
            uint32_t     admFrameTypeFromLav (AVFrame *pic);
+           ADM_pixelFormat      admPixFrmtFromLav(AVPixelFormat pix_fmt, bool * swap);
+           ADM_colorPrimaries   admColPriFromLav(AVColorPrimaries color_primaries);
+           ADM_colorTrC         admColTrcFromLav(AVColorTransferCharacteristic color_trc);
+           ADM_colorSpace       admColSpcFromLav(AVColorSpace colorspace);
 
 public:
                         decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);

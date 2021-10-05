@@ -250,6 +250,204 @@ bool decoderFF::initialized(void)
 {
     return _initCompleted;
 }
+
+
+ADM_pixelFormat decoderFF::admPixFrmtFromLav(AVPixelFormat pix_fmt, bool * swap)
+{
+  switch (pix_fmt)
+    {
+    case AV_PIX_FMT_YUV411P:
+      aprintf("pixel format is AV_PIX_FMT_YUV411P --> ADM_PIXFRMT_YUV411\n");
+      return ADM_PIXFRMT_YUV411;
+    case AV_PIX_FMT_YUYV422:
+      aprintf("pixel format is AV_PIX_FMT_YUYV422 --> ADM_PIXFRMT_YUV422\n");
+      return ADM_PIXFRMT_YUV422;
+    case AV_PIX_FMT_YUV422P:
+    case AV_PIX_FMT_YUVJ422P:
+      aprintf("pixel format is AV_PIX_FMT_YUV422P or AV_PIX_FMT_YUVJ422P --> ADM_PIXFRMT_YUV422P\n");
+      return ADM_PIXFRMT_YUV422P;
+    case AV_PIX_FMT_GRAY8:
+      aprintf("pixel format is AV_PIX_FMT_GRAY8 --> ADM_PIXFRMT_Y8\n");
+      return ADM_PIXFRMT_Y8;
+    case AV_PIX_FMT_YUV444P:
+    case AV_PIX_FMT_YUVJ444P:
+      aprintf("pixel format is AV_PIX_FMT_YUV444P or AV_PIX_FMT_YUVJ444P --> ADM_PIXFRMT_YUV444\n");
+      return ADM_PIXFRMT_YUV444;
+    case AV_PIX_FMT_YUV420P:
+    case AV_PIX_FMT_YUVJ420P:
+    case AV_PIX_FMT_YUVA420P:
+      // Default is YV12 or I420
+      // In that case depending on swap u/v
+      // we do it or not
+      aprintf("pixel format is AV_PIX_FMT_YUV420P, AV_PIX_FMT_YUVJ420P or AV_PIX_FMT_YUVA420P --> ADM_PIXFRMT_YV12\n");
+      if (swap)
+          *swap = true;
+      return ADM_PIXFRMT_YV12;
+    case AV_PIX_FMT_BGR24:
+      aprintf("pixel format is AV_PIX_FMT_BGR24 --> ADM_PIXFRMT_BGR24\n");
+      return ADM_PIXFRMT_BGR24;
+    case AV_PIX_FMT_RGB24:
+      aprintf("pixel format is AV_PIX_FMT_RGB24 --> ADM_PIXFRMT_RGB24\n");
+      return ADM_PIXFRMT_RGB24;
+    case AV_PIX_FMT_GBRP:
+      aprintf("pixel format is AV_PIX_FMT_GBRP --> ADM_PIXFRMT_GBR24P\n");
+      return ADM_PIXFRMT_GBR24P;
+    case AV_PIX_FMT_BGR0:
+    case AV_PIX_FMT_BGRA:
+      aprintf("pixel format is AV_PIX_FMT_BGR0 or AV_PIX_FMT_BGRA --> ADM_PIXFRMT_BGR32A\n");
+      return ADM_PIXFRMT_BGR32A;
+    case AV_PIX_FMT_RGBA: // ???PIX_FMT_RGBA32:
+      aprintf("pixel format is AV_PIX_FMT_RGBA --> ADM_PIXFRMT_RGB32A\n");
+      return ADM_PIXFRMT_RGB32A;
+    case AV_PIX_FMT_RGB555:
+      aprintf("pixel format is AV_PIX_FMT_RGB555 --> ADM_PIXFRMT_RGB555\n");
+      return ADM_PIXFRMT_RGB555;
+#if 0
+    case AV_PIX_FMT_VDPAU_MPEG1:
+    case AV_PIX_FMT_VDPAU_MPEG2:
+    case AV_PIX_FMT_VDPAU_WMV3:
+    case AV_PIX_FMT_VDPAU_VC1:
+    case AV_PIX_FMT_VDPAU_H264:
+    case AV_PIX_FMT_VDPAU:
+        return ADM_PIXFRMT_VDPAU;
+    case AV_PIX_FMT_VAAPI:
+        return ADM_PIXFRMT_LIBVA;
+        
+#ifdef USE_XVBA        
+    case AV_PIX_FMT_XVBA_VLD:
+        return ADM_PIXFRMT_XVBA;
+#endif        
+#endif
+  case AV_PIX_FMT_YUV444P10LE:
+        return ADM_PIXFRMT_YUV444_10BITS;
+  case AV_PIX_FMT_YUV422P10LE:
+        return ADM_PIXFRMT_YUV422_10BITS;
+  case   AV_PIX_FMT_P010LE:      
+        return ADM_PIXFRMT_NV12_10BITS;
+  case  AV_PIX_FMT_YUV420P10LE:
+        return ADM_PIXFRMT_YUV420_10BITS;
+  case  AV_PIX_FMT_YUV420P12LE:
+        return ADM_PIXFRMT_YUV420_12BITS;
+  case  AV_PIX_FMT_YUV444P12LE:
+        return ADM_PIXFRMT_YUV444_12BITS;
+    default:
+        return ADM_PIXFRMT_INVALID;
+    }
+}
+
+ADM_colorPrimaries decoderFF::admColPriFromLav(AVColorPrimaries color_primaries)
+{
+    switch(color_primaries)
+    {
+        case AVCOL_PRI_BT709:
+            return ADM_COL_PRI_BT709;
+        case AVCOL_PRI_BT470M:
+            return ADM_COL_PRI_BT470M;
+        case AVCOL_PRI_BT470BG:
+            return ADM_COL_PRI_BT470BG;
+        case AVCOL_PRI_SMPTE170M:
+            return ADM_COL_PRI_SMPTE170M;
+        case AVCOL_PRI_SMPTE240M:
+            return ADM_COL_PRI_SMPTE240M;
+        case AVCOL_PRI_FILM:
+            return ADM_COL_PRI_FILM;
+        case AVCOL_PRI_BT2020:
+            return ADM_COL_PRI_BT2020;
+        case AVCOL_PRI_SMPTE428:
+        //case AVCOL_PRI_SMPTEST428_1:
+            return ADM_COL_PRI_SMPTE428;
+        case AVCOL_PRI_SMPTE431:
+            return ADM_COL_PRI_SMPTE431;
+        case AVCOL_PRI_SMPTE432:
+            return ADM_COL_PRI_SMPTE432;
+        case AVCOL_PRI_EBU3213:
+        //case AVCOL_PRI_JEDEC_P22:
+            return ADM_COL_PRI_EBU3213;
+        default:
+            return ADM_COL_PRI_UNSPECIFIED;
+    }
+}
+
+ADM_colorTrC decoderFF::admColTrcFromLav(AVColorTransferCharacteristic color_trc)
+{
+    switch(color_trc)
+    {
+        case AVCOL_TRC_BT709:
+            return ADM_COL_TRC_BT709;
+        case AVCOL_TRC_GAMMA22:
+            return ADM_COL_TRC_GAMMA22;
+        case AVCOL_TRC_GAMMA28:
+            return ADM_COL_TRC_GAMMA28;
+        case AVCOL_TRC_SMPTE170M:
+            return ADM_COL_TRC_SMPTE170M;
+        case AVCOL_TRC_SMPTE240M:
+            return ADM_COL_TRC_SMPTE240M;
+        case AVCOL_TRC_LINEAR:
+            return ADM_COL_TRC_LINEAR;
+        case AVCOL_TRC_LOG:
+            return ADM_COL_TRC_LOG;
+        case AVCOL_TRC_LOG_SQRT:
+            return ADM_COL_TRC_LOG_SQRT;
+        case AVCOL_TRC_IEC61966_2_4:
+            return ADM_COL_TRC_IEC61966_2_4;
+        case AVCOL_TRC_BT1361_ECG:
+            return ADM_COL_TRC_BT1361_ECG;
+        case AVCOL_TRC_IEC61966_2_1:
+            return ADM_COL_TRC_IEC61966_2_1;
+        case AVCOL_TRC_BT2020_10:
+            return ADM_COL_TRC_BT2020_10;
+        case AVCOL_TRC_BT2020_12:
+            return ADM_COL_TRC_BT2020_12;
+        case AVCOL_TRC_SMPTE2084:
+        //case AVCOL_TRC_SMPTEST2084:
+            return ADM_COL_TRC_SMPTE2084;
+        case AVCOL_TRC_SMPTE428:
+        //case AVCOL_TRC_SMPTEST428_1:
+            return ADM_COL_TRC_SMPTE428;
+        case AVCOL_TRC_ARIB_STD_B67:
+            return ADM_COL_TRC_ARIB_STD_B67;
+        default:
+            return ADM_COL_TRC_UNSPECIFIED;
+    }
+}
+
+ADM_colorSpace decoderFF::admColSpcFromLav(AVColorSpace colorspace)
+{
+    switch(colorspace)
+    {
+        case AVCOL_SPC_RGB:
+            return ADM_COL_SPC_sRGB;
+        case AVCOL_SPC_BT709:
+            return ADM_COL_SPC_BT709;
+        case AVCOL_SPC_FCC:
+            return ADM_COL_SPC_FCC;
+        case AVCOL_SPC_BT470BG:
+            return ADM_COL_SPC_BT470BG;
+        case AVCOL_SPC_SMPTE170M:
+            return ADM_COL_SPC_SMPTE170M;
+        case AVCOL_SPC_SMPTE240M:
+            return ADM_COL_SPC_SMPTE240M;
+        case AVCOL_SPC_YCGCO:
+        //case AVCOL_SPC_YCOCG:
+            return ADM_COL_SPC_YCGCO;
+        case AVCOL_SPC_BT2020_NCL:
+            return ADM_COL_SPC_BT2020_NCL;
+        case AVCOL_SPC_BT2020_CL:
+            return ADM_COL_SPC_BT2020_CL;
+        case AVCOL_SPC_SMPTE2085:
+            return ADM_COL_SPC_SMPTE2085;
+        case AVCOL_SPC_CHROMA_DERIVED_NCL:
+            return ADM_COL_SPC_CHROMA_DERIVED_NCL;
+        case AVCOL_SPC_CHROMA_DERIVED_CL:
+            return ADM_COL_SPC_CHROMA_DERIVED_CL;
+        case AVCOL_SPC_ICTCP:
+            return ADM_COL_SPC_ICTCP;
+        default:
+            return ADM_COL_SPC_UNSPECIFIED;
+    }
+}
+
+
 /**
  * 
  * @param pic
@@ -490,108 +688,17 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
         _frame->reordered_opaque=(int64_t)in->demuxerPts;
     }
 
-  // We have an image....
-  bool swap = false;
-  switch (_context->pix_fmt)
+    // We have an image....
+    bool swap = false;
+    ADM_pixelFormat pix_fmt;
+    pix_fmt = admPixFrmtFromLav(_context->pix_fmt, &swap);
+    if (pix_fmt == ADM_PIXFRMT_INVALID)
     {
-    case AV_PIX_FMT_YUV411P:
-      out->_pixfrmt = ADM_PIXFRMT_YUV411;
-      aprintf("pixel format is AV_PIX_FMT_YUV411P --> ADM_PIXFRMT_YUV411\n");
-      break;
-    case AV_PIX_FMT_YUYV422:
-      out->_pixfrmt = ADM_PIXFRMT_YUV422;
-      aprintf("pixel format is AV_PIX_FMT_YUYV422 --> ADM_PIXFRMT_YUV422\n");
-      break;
-    case AV_PIX_FMT_YUV422P:
-    case AV_PIX_FMT_YUVJ422P:
-      out->_pixfrmt = ADM_PIXFRMT_YUV422P;
-      aprintf("pixel format is AV_PIX_FMT_YUV422P or AV_PIX_FMT_YUVJ422P --> ADM_PIXFRMT_YUV422P\n");
-      break;
-    case AV_PIX_FMT_GRAY8:
-      out->_pixfrmt = ADM_PIXFRMT_Y8;
-      aprintf("pixel format is AV_PIX_FMT_GRAY8 --> ADM_PIXFRMT_Y8\n");
-      break;
-    case AV_PIX_FMT_YUV444P:
-    case AV_PIX_FMT_YUVJ444P:
-      out->_pixfrmt = ADM_PIXFRMT_YUV444;
-      aprintf("pixel format is AV_PIX_FMT_YUV444P or AV_PIX_FMT_YUVJ444P --> ADM_PIXFRMT_YUV444\n");
-      break;
-    case AV_PIX_FMT_YUV420P:
-    case AV_PIX_FMT_YUVJ420P:
-    case AV_PIX_FMT_YUVA420P:
-      // Default is YV12 or I420
-      // In that case depending on swap u/v
-      // we do it or not
-      out->_pixfrmt = ADM_PIXFRMT_YV12;
-      swap = true;
-      aprintf("pixel format is AV_PIX_FMT_YUV420P, AV_PIX_FMT_YUVJ420P or AV_PIX_FMT_YUVA420P --> ADM_PIXFRMT_YV12\n");
-      break;
-    case AV_PIX_FMT_BGR24:
-      out->_pixfrmt = ADM_PIXFRMT_BGR24;
-      aprintf("pixel format is AV_PIX_FMT_BGR24 --> ADM_PIXFRMT_BGR24\n");
-      break;
-    case AV_PIX_FMT_RGB24:
-      out->_pixfrmt = ADM_PIXFRMT_RGB24;
-      aprintf("pixel format is AV_PIX_FMT_RGB24 --> ADM_PIXFRMT_RGB24\n");
-      break;
-    case AV_PIX_FMT_GBRP:
-      out->_pixfrmt = ADM_PIXFRMT_GBR24P;
-      aprintf("pixel format is AV_PIX_FMT_GBRP --> ADM_PIXFRMT_GBR24P\n");
-      break;
-    case AV_PIX_FMT_BGR0:
-    case AV_PIX_FMT_BGRA:
-      out->_pixfrmt = ADM_PIXFRMT_BGR32A;
-      aprintf("pixel format is AV_PIX_FMT_BGR0 or AV_PIX_FMT_BGRA --> ADM_PIXFRMT_BGR32A\n");
-      break;
-    case AV_PIX_FMT_RGBA: // ???PIX_FMT_RGBA32:
-      out->_pixfrmt = ADM_PIXFRMT_RGB32A;
-      aprintf("pixel format is AV_PIX_FMT_RGBA --> ADM_PIXFRMT_RGB32A\n");
-      break;
-    case AV_PIX_FMT_RGB555:
-      out->_pixfrmt = ADM_PIXFRMT_RGB555;
-      aprintf("pixel format is AV_PIX_FMT_RGB555 --> ADM_PIXFRMT_RGB555\n");
-      break;
-#if 0
-    case AV_PIX_FMT_VDPAU_MPEG1:
-    case AV_PIX_FMT_VDPAU_MPEG2:
-    case AV_PIX_FMT_VDPAU_WMV3:
-    case AV_PIX_FMT_VDPAU_VC1:
-    case AV_PIX_FMT_VDPAU_H264:
-    case AV_PIX_FMT_VDPAU:
-        out->_pixfrmt=ADM_PIXFRMT_VDPAU;
-        break;        
-    case AV_PIX_FMT_VAAPI:
-        out->_pixfrmt=ADM_PIXFRMT_LIBVA;
-        break;
-        
-#ifdef USE_XVBA        
-    case AV_PIX_FMT_XVBA_VLD:
-        out->_pixfrmt=ADM_PIXFRMT_XVBA;
-        break;
-#endif        
-#endif
-  case AV_PIX_FMT_YUV444P10LE:
-        out->_pixfrmt=ADM_PIXFRMT_YUV444_10BITS;
-        break;      
-  case AV_PIX_FMT_YUV422P10LE:
-        out->_pixfrmt=ADM_PIXFRMT_YUV422_10BITS;
-        break;
-  case   AV_PIX_FMT_P010LE:      
-        out->_pixfrmt= ADM_PIXFRMT_NV12_10BITS;
-        break;
-  case  AV_PIX_FMT_YUV420P10LE:
-        out->_pixfrmt=ADM_PIXFRMT_YUV420_10BITS;
-        break;
-  case  AV_PIX_FMT_YUV420P12LE:
-        out->_pixfrmt=ADM_PIXFRMT_YUV420_12BITS;
-        break;
-  case  AV_PIX_FMT_YUV444P12LE:
-        out->_pixfrmt=ADM_PIXFRMT_YUV444_12BITS;
-        break;
-    default:
-      printf ("[lavc] Unhandled pixel format: %d (AV_PIX_FMT_YUV444P10BE=%d)\n", _context->pix_fmt,AV_PIX_FMT_YUV444P10BE);
-      return 0;
+        printf ("[lavc] Unhandled pixel format: %d (AV_PIX_FMT_YUV444P10BE=%d)\n", _context->pix_fmt,AV_PIX_FMT_YUV444P10BE);
+        return 0;
     }
+    out->_pixfrmt = pix_fmt;
+
     // make sure the output is not marked as a hw image
     int count = 0;
     while(out->refType != ADM_HW_NONE && count < 32 /* arbitrary limit */)
