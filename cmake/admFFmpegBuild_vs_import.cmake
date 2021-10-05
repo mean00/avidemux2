@@ -80,7 +80,9 @@ INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/attributes.h"
         "${IMPORT_FOLDER}/include/libavutil/samplefmt.h"
         "${IMPORT_FOLDER}/include/libavutil/rational.h" 
         "${IMPORT_FOLDER}/include/libavutil/hwcontext_dxva2.h" 
-		"${IMPORT_FOLDER}/include/libavutil/hwcontext.h"
+        "${IMPORT_FOLDER}/include/libavutil/hwcontext.h"
+        "${IMPORT_FOLDER}/include/libavutil/mastering_display_metadata.h"
+        "${IMPORT_FOLDER}/include/libavutil/hdr_dynamic_metadata.h"
         DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavutil" COMPONENT dev)
 
 INSTALL(FILES "${IMPORT_FOLDER}/include/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
