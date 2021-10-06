@@ -57,6 +57,7 @@ extern "C" {
 #define ADM_PIXFRMT_BACKWARD 0x8000
 #define ADM_PIXFRMT_MASK     0x7FFF
 
+#define BGR32_IS_SWAPPED 1
 
 /**
     \fn ADMPixFrmt2LAVPixFmt

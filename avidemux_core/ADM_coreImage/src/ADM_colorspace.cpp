@@ -40,7 +40,6 @@ extern "C" {
 #endif
 
 #define CONTEXT (SwsContext *)context
-#define BGR32_IS_SWAPPED 1
 
 /**
     \fn swapRGB
