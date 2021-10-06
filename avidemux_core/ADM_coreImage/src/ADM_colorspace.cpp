@@ -281,6 +281,13 @@ bool ADMColorScalerFull::convertPlanes(int sourceStride[3], int destStride[3], u
 */
 bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage *destImage)
 {
+    bool enabeToneMapping = false;
+    if ((toneMapper != NULL) && enabeToneMapping)
+    {
+        if (toneMapper->toneMap(sourceImage, destImage))
+            return true;
+    }
+
     int xs[4];
     int xd[4];
     uint8_t *src[4];
@@ -362,9 +369,10 @@ ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
             int dw, int dh,
             ADM_pixelFormat from,ADM_pixelFormat to)
 {
-   context=NULL;
-   reset(algo,sw,sh,dw,dh,from,to);
-
+    context=NULL;
+    possibleHdrContent=false;
+    toneMapper=NULL;
+    reset(algo,sw,sh,dw,dh,from,to);
 }
 /**
     \fn  ~ADMColorScaler
@@ -372,11 +380,16 @@ ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
 */
 ADMColorScalerFull::~ADMColorScalerFull()
 {
-  if(context)
-  {
-     sws_freeContext(CONTEXT);
-     context=NULL;
-  }
+    if(context)
+    {
+        sws_freeContext(CONTEXT);
+        context=NULL;
+    }
+    if (toneMapper)
+    {
+        delete toneMapper;
+        toneMapper=NULL;
+    }
 }
 /**
     \fn reset
@@ -385,6 +398,11 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
 {
     if(context) sws_freeContext(CONTEXT);
     context=NULL;
+    if (toneMapper)
+    {
+        delete toneMapper;
+        toneMapper=NULL;
+    }
     this->algo=algo;
     int flags;
     switch(algo)
@@ -407,7 +425,12 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
         FLAGS();
     }
 #endif
-  
+    possibleHdrContent = (from >= ADM_PIXFRMT_YUV444_10BITS) && (from <= ADM_PIXFRMT_YUV444_12BITS) && (to == ADM_PIXFRMT_YV12);
+    if (possibleHdrContent)
+    {
+        toneMapper = new ADMToneMapper(algo, sw, sh, dw, dh, from, to);
+    }
+    
     srcWidth=sw;
     srcHeight=sh;
 
@@ -478,4 +501,83 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
     }
     return convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes);
 }
+
+
+
+
+
+#define CONTEXT1 (SwsContext *)context1
+#define CONTEXT2 (SwsContext *)context2
+
+/**
+    \fn  ADMToneMapper
+    \brief Ctor
+*/
+ADMToneMapper::ADMToneMapper(ADMColorScaler_algo algo,
+            int sw, int sh,
+            int dw, int dh,
+            ADM_pixelFormat from,ADM_pixelFormat to)
+{
+    context1=NULL;
+    this->algo=algo;
+    int flags;
+    switch(algo)
+    {
+#define SETAL(x) case ADM_CS_##x: flags=SWS_##x;break;
+
+    SETAL(BILINEAR);
+    SETAL(FAST_BILINEAR);
+    SETAL(BICUBIC);
+    SETAL(LANCZOS);
+    SETAL(BICUBLIN);
+    SETAL(GAUSS);
+    SETAL(SINC);
+    SETAL(SPLINE);
+    SETAL(POINT);    // nearest neighbor
+    default: ADM_assert(0);
+    }
+    srcWidth=sw;
+    srcHeight=sh;
+
+    dstWidth=dw;
+    dstHeight=dh;
+
+    fromPixFrmt=from;
+    toPixFrmt=to;
+
+    AVPixelFormat lavFrom=ADMPixFrmt2LAVPixFmt(fromPixFrmt );
+    AVPixelFormat lavTo=ADMPixFrmt2LAVPixFmt(toPixFrmt );
+    
+    context1=(void *)sws_getContext(
+                      srcWidth,srcHeight,
+                      lavFrom ,
+                      dstWidth,dstHeight,
+                      lavTo,
+                      flags, NULL, NULL,NULL);
+}
+
+
+/**
+    \fn  ~ADMToneMapper
+    \brief Destructor
+*/
+ADMToneMapper::~ADMToneMapper()
+{
+    if(context1)
+    {
+        sws_freeContext(CONTEXT1);
+        context1=NULL;
+    }
+}
+
+
+/**
+    \fn toneMap
+*/
+bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage)
+{
+    return false;
+}
+
+
 //EOF

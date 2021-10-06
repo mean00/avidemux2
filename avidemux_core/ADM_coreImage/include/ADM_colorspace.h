@@ -20,6 +20,7 @@
 #include "ADM_rgb.h" // To have colors
 
 class ADMImage;
+class ADMToneMapper;
 typedef enum 
 {
     ADM_CS_BILINEAR,
@@ -111,6 +112,8 @@ class ADM_COREIMAGE6_EXPORT ADMColorScalerFull
     ADMColorScaler_algo algo;
     uint8_t         getStrideAndPointers(bool dst,uint8_t  *from,ADM_pixelFormat fromPixFrmt,
                                             uint8_t **srcData,int *srcStride);
+    bool            possibleHdrContent;
+    ADMToneMapper * toneMapper;
   public :
     
                     ADMColorScalerFull(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
@@ -138,6 +141,25 @@ public:
 
                      }
                     
+};
+
+
+/**
+    \class ADMToneMapper
+*/
+class ADM_COREIMAGE6_EXPORT ADMToneMapper
+{
+  protected:
+    void            *context1;
+    void            *context2;
+    uint32_t        srcWidth,srcHeight;
+    uint32_t        dstWidth,dstHeight;
+    ADM_pixelFormat  fromPixFrmt,toPixFrmt;
+    ADMColorScaler_algo algo;
+  public :
+                    ADMToneMapper(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
+    bool            toneMap(ADMImage *sourceImage, ADMImage *destImage);
+                    ~ADMToneMapper();
 };
 
 #endif
