@@ -62,48 +62,7 @@ static void swapRGB32(uint32_t w, uint32_t h, uint32_t p, uint8_t *to)
         }
     }
 }
-/**
-    \fn ADMPixFrmt2LAVPixFmt
-    \brief Convert ADM colorspace type swscale/lavcodec colorspace name
 
-*/
-static AVPixelFormat ADMPixFrmt2LAVPixFmt(ADM_pixelFormat fromPixFrmt_)
-{
-  ADM_pixelFormat fromPixFrmt=fromPixFrmt_;
-  int intPixFrmt=(int)fromPixFrmt;
-  intPixFrmt&=ADM_PIXFRMT_MASK;
-  fromPixFrmt=(ADM_pixelFormat)intPixFrmt;
-  switch(fromPixFrmt)
-  {
-    case ADM_PIXFRMT_YUV444: return AV_PIX_FMT_YUV444P;
-    case ADM_PIXFRMT_YUV411: return AV_PIX_FMT_YUV411P;
-    case ADM_PIXFRMT_YUV422: return AV_PIX_FMT_YUYV422;
-    case ADM_PIXFRMT_UYVY422: return AV_PIX_FMT_UYVY422;
-    case ADM_PIXFRMT_YV12: return AV_PIX_FMT_YUV420P;
-    case ADM_PIXFRMT_NV12: return AV_PIX_FMT_NV12;
-    case ADM_PIXFRMT_YUV422P: return AV_PIX_FMT_YUV422P;
-    case ADM_PIXFRMT_RGB555: return AV_PIX_FMT_RGB555LE;
-    case ADM_PIXFRMT_BGR555: return AV_PIX_FMT_BGR555LE;
-    case ADM_PIXFRMT_RGB32A: return AV_PIX_FMT_RGBA;
-#ifdef BGR32_IS_SWAPPED
-    case ADM_PIXFRMT_BGR32A: return AV_PIX_FMT_RGBA; // Faster that way...
-#else
-    case ADM_PIXFRMT_BGR32A: return AV_PIX_FMT_BGRA;
-#endif
-    case ADM_PIXFRMT_RGB24: return AV_PIX_FMT_RGB24;
-    case ADM_PIXFRMT_BGR24: return AV_PIX_FMT_BGR24;
-    case ADM_PIXFRMT_GBR24P: return AV_PIX_FMT_GBRP;
-    case ADM_PIXFRMT_YUV420_10BITS: return AV_PIX_FMT_YUV420P10LE;
-    case ADM_PIXFRMT_YUV420_12BITS: return AV_PIX_FMT_YUV420P12LE;
-    case ADM_PIXFRMT_NV12_10BITS:  return AV_PIX_FMT_P010LE;
-    case ADM_PIXFRMT_YUV444_10BITS: return AV_PIX_FMT_YUV444P10LE;
-    case ADM_PIXFRMT_YUV422_10BITS: return AV_PIX_FMT_YUV422P10LE;
-    case ADM_PIXFRMT_YUV444_12BITS: return AV_PIX_FMT_YUV444P12LE;
-    case ADM_PIXFRMT_Y8: return AV_PIX_FMT_GRAY8;
-    default : ADM_assert(0); 
-  }
-  return AV_PIX_FMT_YUV420P;
-}
 /**
       \fn getStrideAndPointers
       \param dst=1 -> destination, =0 source
