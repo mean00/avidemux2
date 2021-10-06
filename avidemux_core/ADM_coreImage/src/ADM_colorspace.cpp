@@ -632,6 +632,8 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
     // Check if tone mapping is needed & can do 
     if (!((sourceImage->_colorTrc == ADM_COL_TRC_SMPTE2084) || (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_NCL) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_CL)))
         return false;
+    if ((sourceImage->_colorTrc == ADM_COL_TRC_BT2020_10) || (sourceImage->_colorTrc == ADM_COL_TRC_BT2020_12))	// excluding trc, not hdr
+        return false;
     if (!isnan(sourceImage->_hdrInfo.colorSaturationWeight))
         if (sourceImage->_hdrInfo.colorSaturationWeight > 0)
             saturationAdjust *= sourceImage->_hdrInfo.colorSaturationWeight;
