@@ -69,6 +69,21 @@ typedef enum
         ADM_HW_ANY=0xff
 }ADM_HW_IMAGE;
 
+typedef struct
+{
+    double primaries[3][2];	// [RGB][xy]
+    double whitePoint[2];	// [xy]
+    double maxLuminance;
+    double minLuminance;
+    double maxCLL;
+    double maxFALL;
+    double maxSCL[3];	// [RGB]
+    double avgMaxRGB;
+    double kneePoint[2];
+    double bezierCurveAnchors[15];
+    double colorSaturationWeight;
+    double targetMaxLuminance;
+} ADM_HDR_Info;
 
 typedef bool refFunction(void *instance,void *cookie);
 typedef bool refDownloadFunction(ADMImage *image, void *refCodec, void *refHwImage);
@@ -114,6 +129,7 @@ public:
         ADM_colorPrimaries _colorPrim;
         ADM_colorTrC    _colorTrc;
         ADM_colorSpace  _colorSpace;
+        ADM_HDR_Info    _hdrInfo;
         uint8_t         _noPicture;     /// No picture to display
         ADM_ASPECT	    _aspect;	/// Aspect ratio
         //

@@ -118,16 +118,24 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
                     {
                         for (int rgb=0; rgb<3; rgb++)
                         {
-                            //TODO x = av_q2d(mastering_display->display_primaries[rgb][0]);
-                            //TODO y = av_q2d(mastering_display->display_primaries[rgb][1]);
+                            out->_hdrInfo.primaries[rgb][0] = av_q2d(mastering_display->display_primaries[rgb][0]);
+                            out->_hdrInfo.primaries[rgb][1] = av_q2d(mastering_display->display_primaries[rgb][1]);
                         }
-                        //TODO x = av_q2d(mastering_display->white_point[0]);
-                        //TODO y = av_q2d(mastering_display->white_point[1]);
+                        out->_hdrInfo.whitePoint[0] = av_q2d(mastering_display->white_point[0]);
+                        out->_hdrInfo.whitePoint[1] = av_q2d(mastering_display->white_point[1]);
+#ifdef ADM_DEBUG
+                        ADM_info("HDR primaries: [%f,%f], [%f,%f], [%f,%f]\n",out->_hdrInfo.primaries[0][0],out->_hdrInfo.primaries[0][1], out->_hdrInfo.primaries[1][0],out->_hdrInfo.primaries[1][1], out->_hdrInfo.primaries[2][0],out->_hdrInfo.primaries[2][1]);
+                        ADM_info("HDR white point: [%f,%f]\n",out->_hdrInfo.whitePoint[0],out->_hdrInfo.whitePoint[1]);
+#endif
                     }
                     if (mastering_display->has_luminance)
                     {
-                        //TODO = av_q2d(mastering_display->max_luminance);	// nits
-                        //TODO = av_q2d(mastering_display->min_luminance);
+                        out->_hdrInfo.maxLuminance = av_q2d(mastering_display->max_luminance);	// nits
+                        out->_hdrInfo.minLuminance = av_q2d(mastering_display->min_luminance);
+#ifdef ADM_DEBUG
+                        ADM_info("HDR max luminance: %f\n",out->_hdrInfo.maxLuminance);
+                        ADM_info("HDR min luminance: %f\n",out->_hdrInfo.minLuminance);
+#endif
                     }
                 }
                 break;
@@ -137,8 +145,12 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
                     if (sd->size < sizeof(AVContentLightMetadata))
                         break;
                     content_light = (const AVContentLightMetadata *)sd->data;
-                    //TODO = av_q2d(content_light->MaxCLL);	// nits
-                    //TODO = av_q2d(content_light->MaxFALL);
+                    out->_hdrInfo.maxCLL = content_light->MaxCLL;	// integer, nits
+                    out->_hdrInfo.maxFALL = content_light->MaxFALL;
+#ifdef ADM_DEBUG
+                    ADM_info("HDR maxCLL: %f\n",out->_hdrInfo.maxCLL);
+                    ADM_info("HDR maxFALL: %f\n",out->_hdrInfo.maxFALL);
+#endif
                 }
                 break;
             case AV_FRAME_DATA_DYNAMIC_HDR_PLUS:
@@ -153,33 +165,41 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
                         //           ignore bullshit parameters, like "elliptical pixel selector"; hope it's ok :)
                         for (int rgb=0; rgb<3; rgb++)
                         {
-                            //TODO = av_q2d(hdr_plus->params[0].maxscl[rgb]);
+                            out->_hdrInfo.maxSCL[rgb] = av_q2d(hdr_plus->params[0].maxscl[rgb]);
                         }
-                        //TODO = av_q2d(hdr_plus->params[0].average_maxrgb);
+                        out->_hdrInfo.avgMaxRGB = av_q2d(hdr_plus->params[0].average_maxrgb);
                         if (hdr_plus->params[0].tone_mapping_flag)
                         {
-                            //TODO = av_q2d(hdr_plus->params[0].knee_point_x);
-                            //TODO = av_q2d(hdr_plus->params[0].knee_point_y);
+                            out->_hdrInfo.kneePoint[0] = av_q2d(hdr_plus->params[0].knee_point_x);
+                            out->_hdrInfo.kneePoint[1] = av_q2d(hdr_plus->params[0].knee_point_y);
                         }
                         if (hdr_plus->params[0].num_bezier_curve_anchors > 0)
                         {
                             for (int b=0; b<hdr_plus->params[0].num_bezier_curve_anchors; b++)
                             {
-                                //TODO = av_q2d(hdr_plus->params[0].bezier_curve_anchors[b]);
+                                if (b >= 15)
+                                    break;
+                                out->_hdrInfo.bezierCurveAnchors[b] = av_q2d(hdr_plus->params[0].bezier_curve_anchors[b]);
                             }
                         }
                         if (hdr_plus->params[0].color_saturation_mapping_flag)
                         {
-                            //TODO = av_q2d(hdr_plus->params[0].color_saturation_weight);
+                            out->_hdrInfo.colorSaturationWeight = av_q2d(hdr_plus->params[0].color_saturation_weight);
                         }
                     }
-                    //TODO = av_q2d(hdr_plus->targeted_system_display_maximum_luminance);
-                    
+                    out->_hdrInfo.targetMaxLuminance = av_q2d(hdr_plus->targeted_system_display_maximum_luminance);
+#ifdef ADM_DEBUG
+                    ADM_info("HDR maxSCL: %f, %f, %f\n",out->_hdrInfo.maxSCL[0],out->_hdrInfo.maxSCL[1],out->_hdrInfo.maxSCL[2]);
+                    ADM_info("HDR avgMaxRGB: %f\n",out->_hdrInfo.avgMaxRGB);
+                    ADM_info("HDR kneePoint: %f, %f\n",out->_hdrInfo.kneePoint[0],out->_hdrInfo.kneePoint[1]);
+                    ADM_info("HDR colorSaturationWeight: %f\n",out->_hdrInfo.colorSaturationWeight);
+                    ADM_info("HDR targetMaxLuminance: %f\n",out->_hdrInfo.targetMaxLuminance);
+#endif
+
                     //other fields are not implemented as of ATSC S34-301r2 A/341 Amendment – 2094-40 
                 }
                 break;
         }
-        
     }
 
     return 1;
