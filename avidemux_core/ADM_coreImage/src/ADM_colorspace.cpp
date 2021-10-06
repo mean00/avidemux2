@@ -14,9 +14,12 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <cmath>
 #include "ADM_default.h"
 #include "ADM_colorspace.h"
 #include "ADM_image.h"
+#include "ADM_rgb.h" 
+#include "prefs.h"
 
 extern "C" {
 #include "libavcodec/avcodec.h"
@@ -24,8 +27,6 @@ extern "C" {
 #include "libswscale/swscale.h"
 }
 
-#include "ADM_rgb.h" 
-#include "ADM_colorspace.h"
 
 #ifdef ADM_CPU_X86
 		#define ADD(x,y) if( CpuCaps::has##x()) flags|=SWS_CPU_CAPS_##y;
@@ -281,10 +282,17 @@ bool ADMColorScalerFull::convertPlanes(int sourceStride[3], int destStride[3], u
 */
 bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage *destImage)
 {
-    bool enabeToneMapping = false;
-    if ((toneMapper != NULL) && enabeToneMapping)
+    unsigned int toneMappingMethod;
+    if(!prefs->get(HDR_TONEMAPPING,&toneMappingMethod))
+        toneMappingMethod = 0;
+    if ((toneMapper != NULL) && (toneMappingMethod > 0))
     {
-        if (toneMapper->toneMap(sourceImage, destImage))
+        float targetLuminance, saturation;
+        if(!prefs->get(HDR_TARGET_LUMINANCE,&targetLuminance))
+            targetLuminance = 100.0;
+        if(!prefs->get(HDR_SATURATION,&saturation))
+            saturation = 1.0;
+        if (toneMapper->toneMap(sourceImage, destImage, toneMappingMethod, targetLuminance, saturation))
             return true;
     }
 
@@ -574,7 +582,7 @@ ADMToneMapper::~ADMToneMapper()
 /**
     \fn toneMap
 */
-bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage)
+bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust)
 {
     return false;
 }

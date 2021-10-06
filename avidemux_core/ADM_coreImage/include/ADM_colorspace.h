@@ -158,7 +158,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     ADMColorScaler_algo algo;
   public :
                     ADMToneMapper(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
-    bool            toneMap(ADMImage *sourceImage, ADMImage *destImage);
+    bool            toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust);
                     ~ADMToneMapper();
 };
 
