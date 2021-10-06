@@ -526,6 +526,17 @@ ADMToneMapper::ADMToneMapper(ADMColorScaler_algo algo,
             ADM_pixelFormat from,ADM_pixelFormat to)
 {
     context1=NULL;
+    hdrLumaLUT = NULL;
+    for (int i=0; i<256; i++)
+    {
+        hdrChromaBLUT[i] = NULL;
+        hdrChromaRLUT[i] = NULL;
+        hdrLumaCrLUT[i] = NULL;
+    }
+    hdrTMsrcLum = hdrTMtrgtLum = hdrTMsat = -1.0;	// invalidate
+    hdrTMmethod = 0;
+    hdrYUV=NULL;
+    
     this->algo=algo;
     int flags;
     switch(algo)
@@ -549,6 +560,7 @@ ADMToneMapper::ADMToneMapper(ADMColorScaler_algo algo,
     dstWidth=dw;
     dstHeight=dh;
 
+    ADM_assert(to==ADM_PIXFRMT_YV12);
     fromPixFrmt=from;
     toPixFrmt=to;
 
@@ -559,7 +571,7 @@ ADMToneMapper::ADMToneMapper(ADMColorScaler_algo algo,
                       srcWidth,srcHeight,
                       lavFrom ,
                       dstWidth,dstHeight,
-                      lavTo,
+                      AV_PIX_FMT_YUV420P16LE,
                       flags, NULL, NULL,NULL);
 }
 
@@ -575,6 +587,18 @@ ADMToneMapper::~ADMToneMapper()
         sws_freeContext(CONTEXT1);
         context1=NULL;
     }
+    delete [] hdrLumaLUT;
+    for (int i=0; i<256; i++)
+    {
+        delete [] hdrChromaBLUT[i];
+        delete [] hdrChromaRLUT[i];
+        delete [] hdrLumaCrLUT[i];
+    }
+    if (hdrYUV)
+    {
+        delete [] hdrYUV;
+        hdrYUV = NULL;
+    }
 }
 
 
@@ -583,8 +607,285 @@ ADMToneMapper::~ADMToneMapper()
 */
 bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust)
 {
-    return false;
+    if (hdrTMmethod != toneMappingMethod)
+    {
+        hdrTMmethod = toneMappingMethod;
+        hdrTMsrcLum = hdrTMtrgtLum = hdrTMsat = -1.0;	// invalidate
+    }
+
+    switch (toneMappingMethod)
+    {
+        case 1:	// fastYUV
+                return toneMap_fastYUV(sourceImage, destImage, targetLuminance, saturationAdjust);
+            break;
+        default:
+            return false;
+    }
 }
 
+
+/**
+    \fn toneMap_fastYUV
+*/
+bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust)
+{
+    // Check if tone mapping is needed & can do 
+    if (!((sourceImage->_colorTrc == ADM_COL_TRC_SMPTE2084) || (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_NCL) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_CL)))
+        return false;
+    if (!isnan(sourceImage->_hdrInfo.colorSaturationWeight))
+        if (sourceImage->_hdrInfo.colorSaturationWeight > 0)
+            saturationAdjust *= sourceImage->_hdrInfo.colorSaturationWeight;
+    
+    // Determine max luminance
+    double maxLuminance = 10000.0;
+    if (!isnan(sourceImage->_hdrInfo.maxLuminance))
+        if (sourceImage->_hdrInfo.maxLuminance > 0)
+            if (maxLuminance > sourceImage->_hdrInfo.maxLuminance)
+                maxLuminance = sourceImage->_hdrInfo.maxLuminance;
+    if (!isnan(sourceImage->_hdrInfo.maxCLL))
+        if (sourceImage->_hdrInfo.maxCLL > 0)
+            if (maxLuminance > sourceImage->_hdrInfo.maxCLL)
+                maxLuminance = sourceImage->_hdrInfo.maxCLL;
+    if (!isnan(sourceImage->_hdrInfo.targetMaxLuminance))
+        if (sourceImage->_hdrInfo.targetMaxLuminance > 0)
+            if (maxLuminance > sourceImage->_hdrInfo.targetMaxLuminance)
+                maxLuminance = sourceImage->_hdrInfo.targetMaxLuminance;
+
+    // Allocate if not done yet
+    if (hdrLumaLUT == NULL)
+    {
+        hdrLumaLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+        if (hdrLumaLUT == NULL)
+            return false;
+    }
+    for (int i=0; i<256; i++)
+    {
+        if (hdrChromaBLUT[i] == NULL)
+        {
+            hdrChromaBLUT[i] = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+            if (hdrChromaBLUT[i] == NULL)
+                return false;
+        }
+        if (hdrChromaRLUT[i] == NULL)
+        {
+            hdrChromaRLUT[i] = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+            if (hdrChromaRLUT[i] == NULL)
+                return false;
+        }
+        if (hdrLumaCrLUT[i] == NULL)
+        {
+            hdrLumaCrLUT[i] = new uint8_t[256];
+            if (hdrLumaCrLUT[i] == NULL)
+                return false;
+        }
+    }
+    if (hdrYUV == NULL)
+    {
+        hdrYUV = new uint16_t[ADM_IMAGE_ALIGN(dstWidth)*dstHeight*2];
+        if (hdrYUV == NULL)
+            return false;
+    }
+    
+    // Populate LUTs if parameters have changed
+    bool extended_range = false;
+    if ((maxLuminance != hdrTMsrcLum) || (targetLuminance != hdrTMtrgtLum) || (saturationAdjust != hdrTMsat))
+    {
+        hdrTMsrcLum = maxLuminance;
+        hdrTMtrgtLum = targetLuminance;
+        hdrTMsat = saturationAdjust;
+        
+        for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+        {
+            double LumHDR = maxLuminance;	// peak mastering display luminance [nit]
+            double LumSDR = targetLuminance;		// peak target display luminance [nit]
+
+            double Y = l;
+            // normalize:
+            Y /= ADM_COLORSPACE_HDR_LUT_SIZE;
+            Y -= 16.0/256.0;	// deal with limited range
+            Y *= 256.0/220.0;
+            if (Y < 0)
+                Y = 0.0;
+            if (Y > 1)
+                Y = 1.0;
+
+            // WTF? step 0
+            Y = std::pow(Y, 2.4);
+
+            // Tone mapping step 1
+            double rhoHDR = 1 + 32*std::pow(LumHDR/10000.0, 1/2.4);
+            double Yp = std::log(1 + (rhoHDR-1)*Y) / std::log(rhoHDR);
+
+            // Tone mapping step 2
+            double Yc;
+            if (Yp < 0)
+                Yc = 0.0;
+            else if ((0 <= Yc) && (Yc <= 0.7399))
+                Yc = 1.0770*Yp;
+            else if ((0.7399 < Yc) && (Yc <  0.9909))
+                Yc = -1.1510*Yp*Yp + 2.7811*Yp - 0.6302;
+            else if (( 0.9909 <= Yc) && (Yc <= 1.0))
+                Yc = 0.5*Yp + 0.5;
+            else // Yc > 1
+                Yc = 1.0;
+
+            // Tone mapping step 3
+            double rhoSDR = 1 + 32*std::pow(LumSDR/10000.0, 1/2.4);
+            double YSDR = (std::pow(rhoSDR, Yc) - 1) / (rhoSDR - 1);
+
+            // WTF? step 4
+            YSDR *= std::sqrt(2)*1.1;
+            if (YSDR < 0)
+                YSDR = 0;
+            if (YSDR > 1)
+                YSDR = 1.0;
+
+            int YSDRint;
+            if (extended_range)
+                YSDRint = std::round(255.0*YSDR);
+            else
+                YSDRint = std::round(219.0*YSDR) + 16;
+            hdrLumaLUT[l] = YSDRint;
+
+            for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+            {
+                double C = l;
+                C /= ADM_COLORSPACE_HDR_LUT_SIZE;
+                C -= 16.0/256.0;	// deal with limited range
+                C *= 256.0/224.0;
+                if (C < 0)
+                    C = 0.0;
+                if (C > 1)
+                    C = 1.0;
+                C -= 0.5;
+
+                double fYSDR = ((Y==0)||(YSDR==0)) ? 1.0 : (YSDR / (1.1*Y));
+                C *= fYSDR;
+                // WTF? step 5 prevent shadow glow
+                C *= (std::pow(YSDR,1/2.4)+1/3.)*saturationAdjust;
+                if (C < -0.5)
+                    C = -0.5;
+                if (C > 0.5)
+                    C = 0.5;
+                C += 0.5;
+                if (extended_range)
+                {
+                    hdrChromaBLUT[YSDRint][l] = std::round(255.0*C);
+                    hdrChromaRLUT[YSDRint][l] = std::round(255.0*C);
+                }
+                else
+                {
+                    hdrChromaBLUT[YSDRint][l] = std::round(224.0*C) + 16;
+                    hdrChromaRLUT[YSDRint][l] = std::round(224.0*C) + 16;
+                }
+            }
+        }
+
+        for (int cr=0; cr<256; cr++)
+        {
+            for (int y=0; y<256; y++)
+            {
+                double yn, crn;
+                if (extended_range)
+                {
+                    crn = cr/255.0;
+                    yn = y/255.0;
+                }
+                else
+                {
+                    crn = cr;
+                    crn -= 16.0;
+                    crn /= 224.0;
+                    if (crn < 0) crn = 0;
+                    if (crn > 1) crn = 1;
+                    yn = y;
+                    yn -= 16.0;
+                    yn /= 219.0;
+                    if (yn < 0) yn = 0;
+                    if (yn > 1) yn = 1;
+                }
+                crn -= 0.5;
+                if (crn > 0)
+                    yn -= 0.1*crn;
+                if (yn < 0) yn = 0;
+                int YSDRint;
+                if (extended_range)
+                    YSDRint = std::round(255.0*yn);
+                else
+                    YSDRint = std::round(219.0*yn) + 16;
+                hdrLumaCrLUT[cr][y] = YSDRint;
+            }
+        }
+    }
+    
+    // Do tone mapping
+    uint8_t * srcData[3];
+    int srcStride[3];
+    uint8_t * dstData[3];
+    int dstStride[3];
+    
+    sourceImage->GetPitches(srcStride);
+    destImage->GetPitches(dstStride);
+    sourceImage->GetReadPlanes(srcData);
+    destImage->GetWritePlanes(dstData);
+    
+    // ADM_PIXFRMT_YV12 swapped UV
+    uint8_t *p=dstData[1];
+    dstData[1]=dstData[2];
+    dstData[2]=p;
+    
+    uint8_t *gbrData[3];
+    int gbrStride[3];
+    gbrData[0] = (uint8_t*)hdrYUV;
+    gbrStride[0] = ADM_IMAGE_ALIGN(dstWidth)*2;
+    gbrStride[1] = gbrStride[2]= ADM_IMAGE_ALIGN(dstWidth/2)*2;
+    gbrData[1] = gbrData[0] + gbrStride[0]*(dstHeight);
+    gbrData[2] = gbrData[1] + gbrStride[1]*(dstHeight/2);
+
+    sws_scale(CONTEXT1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
+
+    uint8_t * ptr = dstData[0];
+    uint16_t * hptr = (uint16_t *)gbrData[0];
+    for (int q=0;q<ADM_IMAGE_ALIGN(dstWidth)*dstHeight;q++)
+    {
+        ptr[q] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptr[q]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+    }
+    uint8_t * ptrU = dstData[1];
+    uint8_t * ptrV = dstData[2];
+    uint16_t * hptrU = (uint16_t *)gbrData[1];
+    uint16_t * hptrV = (uint16_t *)gbrData[2];
+    int ystride = ADM_IMAGE_ALIGN(dstWidth);
+    int uvstride = ADM_IMAGE_ALIGN(dstWidth/2);
+    uint8_t * ptrNext = dstData[0]+ystride;
+    for (int y=0; y<(dstHeight/2); y++)
+    {
+        for (int x=0; x<(dstWidth/2); x++)
+        {
+            int luma = 0;
+            luma += ptr[x*2];
+            luma += ptr[x*2 +1];
+            luma += ptrNext[x*2];
+            luma += ptrNext[x*2 +1];
+            luma /= 4;
+            luma &= 0xFF;
+            ptrU[x] = hdrChromaBLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptrU[x]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            ptrV[x] = hdrChromaRLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptrV[x]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+
+            int Cr = ptrV[x]&0xFF;
+            ptr[x*2] = hdrLumaCrLUT[Cr][ptr[x*2]];
+            ptr[x*2+1] = hdrLumaCrLUT[Cr][ptr[x*2+1]];
+            ptrNext[x*2] = hdrLumaCrLUT[Cr][ptrNext[x*2]];
+            ptrNext[x*2+1] = hdrLumaCrLUT[Cr][ptrNext[x*2+1]];
+        }
+        ptr += ystride*2;
+        ptrNext += ystride*2;
+        ptrU += uvstride;
+        ptrV += uvstride;
+        hptrU += uvstride;
+        hptrV += uvstride;
+    }
+
+    return true;
+}
 
 //EOF

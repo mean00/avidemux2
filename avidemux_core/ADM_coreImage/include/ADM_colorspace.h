@@ -156,9 +156,19 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     uint32_t        dstWidth,dstHeight;
     ADM_pixelFormat  fromPixFrmt,toPixFrmt;
     ADMColorScaler_algo algo;
+    #define ADM_COLORSPACE_HDR_LUT_WIDTH (12)	// bits
+    #define ADM_COLORSPACE_HDR_LUT_SIZE	(1<<ADM_COLORSPACE_HDR_LUT_WIDTH)
+    uint8_t         *hdrLumaLUT;
+    uint8_t         *hdrChromaBLUT[256];
+    uint8_t         *hdrChromaRLUT[256];
+    uint8_t         *hdrLumaCrLUT[256];
+    double          hdrTMsrcLum, hdrTMtrgtLum, hdrTMsat;
+    unsigned int    hdrTMmethod;
+    uint16_t        *hdrYUV;
   public :
                     ADMToneMapper(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
     bool            toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust);
+    bool            toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust);
                     ~ADMToneMapper();
 };
 
