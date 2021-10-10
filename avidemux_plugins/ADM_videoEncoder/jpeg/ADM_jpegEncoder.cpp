@@ -29,7 +29,7 @@ jpeg_encoder jpegConf= JPEG_CONF_DEFAULT;
 ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src)
 {
     printf("[jpegEncoder] Creating.\n");
-    targetColorSpace=(ADM_colorspace)jpegConf.colorSpace;
+    targetPixFrmt=(ADM_pixelFormat)jpegConf.pixelFormat;
 }
 
 /**
@@ -87,23 +87,23 @@ bool         ADM_jpegEncoder::encode (ADMBitstream * out)
 */
 bool         jpegConfigure(void)
 {
-uint32_t colorM;
+uint32_t pixfrmtM;
     printf("[jpeg] Configure\n");
-    colorM=(uint32_t)jpegConf.colorSpace;
+    pixfrmtM=(uint32_t)jpegConf.pixelFormat;
 
-    const diaMenuEntry colorMenus[2]={
-        {ADM_COLOR_YUV422P,QT_TRANSLATE_NOOP("jpeg","YUV422"),NULL},
-        {ADM_COLOR_YV12,QT_TRANSLATE_NOOP("jpeg","YUV420"),NULL}
+    const diaMenuEntry pixfrmtMenus[2]={
+        {ADM_PIXFRMT_YUV422P,QT_TRANSLATE_NOOP("jpeg","YUV422"),NULL},
+        {ADM_PIXFRMT_YV12,QT_TRANSLATE_NOOP("jpeg","YUV420"),NULL}
     };
 
     diaElemUInteger  q(&(jpegConf.quantizer),QT_TRANSLATE_NOOP("jpeg","_Quantizer:"),2,31);
-    diaElemMenu      c(&colorM,QT_TRANSLATE_NOOP("jpeg","_ColorSpace:"),2,colorMenus);
+    diaElemMenu      c(&pixfrmtM,QT_TRANSLATE_NOOP("jpeg","_Pixel format:"),2,pixfrmtMenus);
 
     diaElem *elems[2]={&q,&c};
     
   if( diaFactoryRun(QT_TRANSLATE_NOOP("jpeg","Mjpeg Configuration"),2 ,elems))
   {
-    jpegConf.colorSpace=colorM;
+    jpegConf.pixelFormat=pixfrmtM;
     return false;
   }
   return true;

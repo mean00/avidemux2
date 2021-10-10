@@ -47,7 +47,7 @@ typedef enum {
                AVPacket         *_pkt;
                ADMColorScalerSimple    *colorSpace;    // Colorspace converter if needed
                ADM_byteBuffer   rgbByteBuffer;     // Buffer for colorspace converter if needed
-               ADM_colorspace   targetColorSpace; // Wanted colorspace
+               ADM_pixelFormat   targetPixFrmt; // Wanted pixel format
                char             *statFileName;
                FILE             *statFile;
                int              pass;   // Pass number = 1 or 2, valid only if we use 2 pass mode

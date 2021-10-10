@@ -23,10 +23,10 @@ extern "C" {
 
 ADMImageResizer::ADMImageResizer(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh)
 {
-	init(ow, oh, dw, dh, ADM_COLOR_YV12, ADM_COLOR_YV12);
+	init(ow, oh, dw, dh, ADM_PIXFRMT_YV12, ADM_PIXFRMT_YV12);
 }
 
-ADMImageResizer::ADMImageResizer(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh,ADM_colorspace srcFormat, ADM_colorspace destFormat)
+ADMImageResizer::ADMImageResizer(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh,ADM_pixelFormat srcFormat, ADM_pixelFormat destFormat)
 {
 	init(ow, oh, dw, dh, srcFormat, destFormat);
 }
@@ -40,7 +40,7 @@ ADMImageResizer::~ADMImageResizer()
    }
 }
 
-void ADMImageResizer::init(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, ADM_colorspace srcFormat, ADM_colorspace dstFormat)
+void ADMImageResizer::init(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, ADM_pixelFormat srcFormat, ADM_pixelFormat dstFormat)
 {
     orgWidth = ow;
     orgHeight = oh;

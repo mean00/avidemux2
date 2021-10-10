@@ -47,7 +47,7 @@ int admCoreVideoToolbox::copyData(AVCodecContext *s, AVFrame *src, ADMImage *des
             return AVERROR(ENOSYS);
     }
 
-    dest->_colorspace = ADM_COLOR_YV12; // we handle only YUV420P for now
+    dest->_pixfrmt = ADM_PIXFRMT_YV12; // we handle only YUV420P for now
     dest->_width  = CVPixelBufferGetWidth(pixbuf);
     dest->_height = CVPixelBufferGetHeight(pixbuf);
 

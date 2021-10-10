@@ -31,7 +31,7 @@ ffv1_encoder ffv1config = FFV1_CONF_DEFAULT;
 ADM_ffv1Encoder::ADM_ffv1Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src)
 {
     printf("[ffv1Encoder] Creating.\n");
-    targetColorSpace=ADM_COLOR_YV12;
+    targetPixFrmt=ADM_PIXFRMT_YV12;
 }
 
 /**

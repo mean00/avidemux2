@@ -355,15 +355,15 @@ bool ADMVideoFitToSize::reset(uint32_t nw, uint32_t nh,uint32_t algo, float tole
     resizer=new ADMColorScalerFull(scalerAlgo, 
                         previousFilter->getInfo()->width, previousFilter->getInfo()->height, 
                         stretchW,stretchH,
-                        ADM_COLOR_YV12,ADM_COLOR_YV12);
+                        ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
     resizerOrigToEcho=new ADMColorScalerFull(ADM_CS_BICUBIC, 
                         previousFilter->getInfo()->width, previousFilter->getInfo()->height, 
                         16,16,
-                        ADM_COLOR_YV12,ADM_COLOR_YV12);
+                        ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
     resizerEchoToImage=new ADMColorScalerFull(ADM_CS_LANCZOS, 
                         16,16, 
                         nw,nh,
-                        ADM_COLOR_YV12,ADM_COLOR_YV12);
+                        ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
     stretch=new ADMImageDefault(stretchW,stretchH);
     return 1;
 }

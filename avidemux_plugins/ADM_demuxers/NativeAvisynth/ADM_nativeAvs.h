@@ -103,7 +103,7 @@ class nativeAvsHeader         :public vidHeader
 
 protected:
               uint64_t                   frameNum2PTS(int frameNumber);
-              ADM_colorspace             colorSpace;
+              ADM_pixelFormat             pixfrmt;
 			  WAVHeader					 audioInfo;
 			  nativeAvsAudio			 *audioAccess;
 			  ADM_audioStream            *audioStream;

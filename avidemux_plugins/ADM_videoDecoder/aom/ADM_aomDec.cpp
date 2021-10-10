@@ -99,7 +99,7 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
         ADM_info("Draining AOM decoder, %s.\n", img? "delayed picture received" : "no delayed pictures left");
     if(img)
     {
-        ADM_colorspace color = ADM_COLOR_YV12;
+        ADM_pixelFormat pixfrmt = ADM_PIXFRMT_YV12;
         switch(img->fmt)
         {
             case AOM_IMG_FMT_I420:
@@ -109,20 +109,20 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
             case AOM_IMG_FMT_I42016:
                 if(img->bit_depth == 10)
                 {
-                    color = ADM_COLOR_YUV420_10BITS;
+                    pixfrmt = ADM_PIXFRMT_YUV420_10BITS;
                     break;
                 }
                 ADM_warning("Unsupported bit depth %u for AOM_IMG_FMT_I42016 image format.\n",img->bit_depth);
                 return false;
             default:
-                ADM_warning("Unsupported colorspace 0x%x, bit depth: %u\n",(int)img->fmt,img->bit_depth);
+                ADM_warning("Unsupported pixel format 0x%x, bit depth: %u\n",(int)img->fmt,img->bit_depth);
                 return false;
         }
         ADMImageRef *r=out->castToRef();
         if(r)
         {
             int u=1,v=2;
-            if(color != ADM_COLOR_YV12)
+            if(pixfrmt != ADM_PIXFRMT_YV12)
             {
                 u = 2;
                 v = 1;
@@ -133,7 +133,7 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
             r->_planeStride[0]=img->stride[0];
             r->_planeStride[v]=img->stride[1];
             r->_planeStride[u]=img->stride[2];
-            r->_colorspace=color;
+            r->_pixfrmt=pixfrmt;
             r->Pts=in->demuxerPts;
             r->flags=in->flags;
             // make sure the output is not marked as a hw image

@@ -320,8 +320,8 @@ bool dxvaRender::setup()
   }
 
   scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,displayWidth,displayHeight,
-          ADM_COLOR_YV12,
-          ADM_COLOR_RGB32A
+          ADM_PIXFRMT_YV12,
+          ADM_PIXFRMT_RGB32A
       );
   panScan.left  =0;
   panScan.right =imageWidth-1;

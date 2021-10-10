@@ -139,7 +139,7 @@ uint32_t border;
         type=3;
     else type=2;
 
-    ADM_assert(src->_colorspace==ADM_COLOR_YV12);
+    ADM_assert(src->_pixfrmt==ADM_PIXFRMT_YV12);
 
 	// we do postproc !
 	// keep

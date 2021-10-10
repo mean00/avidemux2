@@ -168,7 +168,7 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
         goto badInit;
     } 
     tempBuffer=new uint8_t[info.width*info.height*4];
-    scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_BGR32A,ADM_COLOR_YV12);
+    scaler=new ADMColorScalerSimple( info.width,info.height, ADM_PIXFRMT_BGR32A,ADM_PIXFRMT_YV12);
 
     freeSurface.clear();
     for(int i=0;i<ADM_NB_SURFACES;i++)  

@@ -51,8 +51,8 @@ motest::motest(int width, int height, int minContrast)
         
         wp = ((wp /4) * 2);
         hp = ((hp /4) * 2);
-        upScalers[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
-        downScalers[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,wp,hp,pw,ph,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        upScalers[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,pw,ph,wp,hp,ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
+        downScalers[lv] = new ADMColorScalerFull(ADM_CS_LANCZOS,wp,hp,pw,ph,ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
         lv += 1;
         if (lv >= MOTEST_MAX_PYRAMID_LEVELS)
             break;

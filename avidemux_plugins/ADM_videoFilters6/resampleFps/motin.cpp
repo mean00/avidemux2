@@ -53,9 +53,9 @@ motin::motin(int width, int height)
         
         wp = ((wp /4) * 2);
         hp = ((hp /4) * 2);
-        upScalersA[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
-        upScalersB[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,pw,ph,wp,hp,ADM_COLOR_YV12,ADM_COLOR_YV12);
-        downScalers[lv] = new ADMColorScalerFull(ADM_CS_BILINEAR,wp,hp,pw,ph,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        upScalersA[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,pw,ph,wp,hp,ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
+        upScalersB[lv] = new ADMColorScalerFull(ADM_CS_GAUSS,pw,ph,wp,hp,ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
+        downScalers[lv] = new ADMColorScalerFull(ADM_CS_BILINEAR,wp,hp,pw,ph,ADM_PIXFRMT_YV12,ADM_PIXFRMT_YV12);
         lv += 1;
         if (lv >= MOTIN_MAX_PYRAMID_LEVELS)
             break;

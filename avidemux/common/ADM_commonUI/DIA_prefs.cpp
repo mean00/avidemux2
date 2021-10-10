@@ -97,6 +97,10 @@ uint32_t refreshCapValue=100;
 bool     askPortAvisynth=false;
 uint32_t defaultPortAvisynth = 9999;
 
+uint32_t toneMappingHDR = 1;
+float    targetLumHDR = 100.0;
+float    saturationHDR = 1.0;
+
 #ifdef USE_SDL
 std::string currentSdlDriver=getSdlDriverName();
 #endif
@@ -156,6 +160,11 @@ std::string currentSdlDriver=getSdlDriverName();
                         defaultPortAvisynth=9999;
     	}
     	ADM_info("Avisynth port: %d\n",defaultPortAvisynth);
+
+    	// HDR
+    	if (!prefs->get(HDR_TONEMAPPING,&toneMappingHDR)) toneMappingHDR=1;
+    	if (!prefs->get(HDR_TARGET_LUMINANCE,&targetLumHDR)) targetLumHDR=100.0;
+    	if (!prefs->get(HDR_SATURATION,&saturationHDR)) saturationHDR=1.0;
 
         // Alsa
 #ifdef ALSA_SUPPORT
@@ -377,6 +386,20 @@ std::string currentSdlDriver=getSdlDriverName();
         frameAvisynth.swallow(&togAskAvisynthPort);
         frameAvisynth.swallow(&uintDefaultPortAvisynth);
 
+        // HDR
+        diaElemFrame frameHDR(QT_TRANSLATE_NOOP("adm","HDR"));
+        diaMenuEntry toneMapEntries[]={
+                              {0,       QT_TRANSLATE_NOOP("adm","disabled"),NULL}
+                             ,{1,       QT_TRANSLATE_NOOP("adm","Fast YUV"),NULL}
+                             //,{2,      QT_TRANSLATE_NOOP("adm","TODO"),NULL}
+        };
+        diaElemMenu menuToneMapHDR(&toneMappingHDR,QT_TRANSLATE_NOOP("adm","_Tone mapping:"),NB_ITEMS(toneMapEntries),toneMapEntries);
+        diaElemFloat floatTargetLumHDR(&targetLumHDR,QT_TRANSLATE_NOOP("adm","Target peak luminance (nits):"),0.,1000.);
+        diaElemFloat floatSaturationHDR(&saturationHDR,QT_TRANSLATE_NOOP("adm","Saturation:"),0.,10.);
+        frameHDR.swallow(&menuToneMapHDR);
+        frameHDR.swallow(&floatTargetLumHDR);
+        frameHDR.swallow(&floatSaturationHDR);
+
         // Editor cache
         diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
         diaElemUInteger cacheSize(&editor_cache_size,QT_TRANSLATE_NOOP("adm","_Cache size:"),8,16);
@@ -524,7 +547,7 @@ std::string currentSdlDriver=getSdlDriverName();
          /* Automation */
 
         /* Import */
-        diaElem *diaImport[]={&frameMultiLoad, &framePics, &frameAvisynth};
+        diaElem *diaImport[]={&frameMultiLoad, &framePics, &frameAvisynth, &frameHDR};
         diaElemTabs tabImport(QT_TRANSLATE_NOOP("adm","Import"),NB_ELEM(diaImport),diaImport);
 
         /* Output */
@@ -743,6 +766,11 @@ std::string currentSdlDriver=getSdlDriverName();
             // Avisynth
             prefs->set(AVISYNTH_AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
             prefs->set(AVISYNTH_AVISYNTH_ALWAYS_ASK, askPortAvisynth);
+
+            // HDR
+            prefs->set(HDR_TONEMAPPING, toneMappingHDR);
+            prefs->set(HDR_TARGET_LUMINANCE, targetLumHDR);
+            prefs->set(HDR_SATURATION, saturationHDR);
 
                 // Initialise SDL again as driver may have changed
 #ifdef USE_SDL

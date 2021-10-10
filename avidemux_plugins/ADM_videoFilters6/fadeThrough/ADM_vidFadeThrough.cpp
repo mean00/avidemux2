@@ -55,12 +55,12 @@ void ADMVideoFadeThrough::FadeThroughCreateBuffers(int w, int h, fadeThrough_buf
     buffers->rgbBufRaw = new ADM_byteBuffer();
     if (buffers->rgbBufRaw)
         buffers->rgbBufRaw->setSize(buffers->rgbBufStride * h);
-    buffers->convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_COLOR_YV12,ADM_COLOR_RGB32A);
-    buffers->convertRgbToYuv = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_COLOR_RGB32A,ADM_COLOR_YV12);
+    buffers->convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_PIXFRMT_YV12,ADM_PIXFRMT_RGB32A);
+    buffers->convertRgbToYuv = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_PIXFRMT_RGB32A,ADM_PIXFRMT_YV12);
     buffers->rgbBufImage = new ADMImageRef(w,h);
     if (buffers->rgbBufImage)
     {
-        buffers->rgbBufImage->_colorspace = ADM_COLOR_RGB32A;
+        buffers->rgbBufImage->_pixfrmt = ADM_PIXFRMT_RGB32A;
         buffers->rgbBufImage->_planes[0] = buffers->rgbBufRaw->at(0);
         buffers->rgbBufImage->_planes[1] = buffers->rgbBufImage->_planes[2] = NULL;
         buffers->rgbBufImage->_planeStride[0] = buffers->rgbBufStride;

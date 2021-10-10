@@ -104,6 +104,10 @@ bool ADMImage::copyInfo(ADMImage *src)
     _aspect=src->_aspect;
     Pts=src->Pts;
     _range=src->_range;
+    _colorPrim=src->_colorPrim;
+    _colorTrc=src->_colorTrc;
+    _colorSpace=src->_colorSpace;
+    memcpy(&_hdrInfo, &(src->_hdrInfo), sizeof(_hdrInfo));
     return 1;
 }
 /**
@@ -113,7 +117,7 @@ bool ADMImage::copyInfo(ADMImage *src)
 bool ADMImage::shrinkColorRange(void)
 {
     if(!isWrittable()) return false;
-    if(_colorspace!=ADM_COLOR_YV12) return false;
+    if(_pixfrmt!=ADM_PIXFRMT_YV12) return false;
     if(_range==ADM_COL_RANGE_MPEG) return true;
 
     static uint8_t shrinkLumaTable[256];
@@ -164,7 +168,7 @@ bool ADMImage::shrinkColorRange(void)
 bool ADMImage::expandColorRange(void)
 {
     if(!isWrittable()) return false;
-    if(_colorspace!=ADM_COLOR_YV12) return false;
+    if(_pixfrmt!=ADM_PIXFRMT_YV12) return false;
     if(_range==ADM_COL_RANGE_JPEG) return true;
 
     static uint8_t expandLumaTable[256];

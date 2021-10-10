@@ -43,7 +43,7 @@ decoderRGB16::~decoderRGB16()
 bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
 {
         int lineSize = (_w *bytePerPixel + 3) & ~3; // 4 bytes aligned ?
-        ADM_colorspace colorspace;
+        ADM_pixelFormat pixFrmt;
         int i, j;
         uint8_t *src = in->data;
         uint8_t *dst = decoded;
@@ -53,12 +53,12 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
         {
                 case 16:
                         // FIXME - 16-bit could use a BGR555 or BGR565 colour mask
-                        colorspace = ADM_COLOR_RGB555;
+                        pixFrmt = ADM_PIXFRMT_RGB555;
                         break;
                 case 24:
                 case 32: // BGRx
                 case 96: // fake bpp indicating xBGR
-                        colorspace = ADM_COLOR_BGR24;
+                        pixFrmt = ADM_PIXFRMT_BGR24;
                         break;
                 default:
                         printf("bpp %d not supported\n", _bpp);
@@ -113,7 +113,7 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
         ADM_assert(out->isRef());
         ADMImageRef *ref=out->castToRef();
         out->flags = AVI_KEY_FRAME;
-        out->_colorspace = colorspace;
+        out->_pixfrmt = pixFrmt;
         out->_range = ADM_COL_RANGE_JPEG; // full
 
         ref->_planes[0] = decoded;

@@ -301,7 +301,7 @@ bool Ui_artChromaKeyWindow::tryToLoadimage(const char *filename)
         ADMImage *im2=createImageFromFile(filename);
         if(im2)
         {
-            ADMColorScalerFull * scaler = new ADMColorScalerFull(ADM_CS_BICUBIC,im2->GetWidth(PLANAR_Y),im2->GetHeight(PLANAR_Y),image->GetWidth(PLANAR_Y),image->GetHeight(PLANAR_Y),im2->_colorspace,ADM_COLOR_YV12);
+            ADMColorScalerFull * scaler = new ADMColorScalerFull(ADM_CS_BICUBIC,im2->GetWidth(PLANAR_Y),im2->GetHeight(PLANAR_Y),image->GetWidth(PLANAR_Y),image->GetHeight(PLANAR_Y),im2->_pixfrmt,ADM_PIXFRMT_YV12);
             if (scaler)
             {
                 imageName=std::string(filename);

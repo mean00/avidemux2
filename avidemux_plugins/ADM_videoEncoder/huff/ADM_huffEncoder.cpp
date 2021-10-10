@@ -29,9 +29,9 @@ ADM_huffEncoder::ADM_huffEncoder(ADM_coreVideoFilter *src,bool globalHeader) : A
 {
     printf("[huffEncoder] Creating.\n");
     if(huffType.encoderType==ADM_HUFF_YUV)
-        targetColorSpace=ADM_COLOR_YUV422P;
+        targetPixFrmt=ADM_PIXFRMT_YUV422P;
     else
-        targetColorSpace=ADM_COLOR_YV12;
+        targetPixFrmt=ADM_PIXFRMT_YV12;
 }
 /**
     \fn setup
