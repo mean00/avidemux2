@@ -17,7 +17,6 @@
  ***************************************************************************/
 #pragma once
 
-#include "config.h"
 #include "ADM_default.h"
 #include "ADM_threads.h"
 #include "ADM_byteBuffer.h"
