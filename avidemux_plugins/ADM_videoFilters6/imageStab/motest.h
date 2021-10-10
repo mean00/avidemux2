@@ -14,9 +14,9 @@
  
 #pragma once
 
-#include <pthread.h>
-#include "ADM_image.h"
 #include "ADM_default.h"
+#include "ADM_threads.h"
+#include "ADM_image.h"
 
 #define MOTEST_MAX_PYRAMID_LEVELS  (7)
 #define MOTEST_SEARCH_RADIUS       (2)
