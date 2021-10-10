@@ -652,6 +652,15 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
         if (sourceImage->_hdrInfo.targetMaxLuminance > 0)
             if (maxLuminance > sourceImage->_hdrInfo.targetMaxLuminance)
                 maxLuminance = sourceImage->_hdrInfo.targetMaxLuminance;
+    
+    // P3 hack required?
+    bool p3_hack = false;
+    if ((sourceImage->_colorPrim == ADM_COL_PRI_SMPTE431) || (sourceImage->_colorPrim == ADM_COL_PRI_SMPTE432))
+        p3_hack = true;
+    if ((fabs(sourceImage->_hdrInfo.primaries[0][0] - 0.680) <= 0.001) && (fabs(sourceImage->_hdrInfo.primaries[0][1] - 0.320) <= 0.001) &&
+        (fabs(sourceImage->_hdrInfo.primaries[1][0] - 0.265) <= 0.001) && (fabs(sourceImage->_hdrInfo.primaries[1][1] - 0.690) <= 0.001) &&
+        (fabs(sourceImage->_hdrInfo.primaries[2][0] - 0.150) <= 0.001) && (fabs(sourceImage->_hdrInfo.primaries[2][1] - 0.060) <= 0.001) )
+        p3_hack = true;
 
     // Allocate if not done yet
     if (hdrLumaLUT == NULL)
@@ -765,20 +774,29 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
                 C *= fYSDR;
                 // WTF? step 5 prevent shadow glow
                 C *= (std::pow(YSDR,1/2.4)+1/3.)*saturationAdjust;
-                if (C < -0.5)
-                    C = -0.5;
-                if (C > 0.5)
-                    C = 0.5;
-                C += 0.5;
+                double CB,CR;
+                CB = CR = C;
+                if (p3_hack)
+                    CB *= (CB > 0) ? 1.2 : 1/1.2;
+                if (CB < -0.5)
+                    CB = -0.5;
+                if (CB > 0.5)
+                    CB = 0.5;
+                CB += 0.5;
+                if (CR < -0.5)
+                    CR = -0.5;
+                if (CR > 0.5)
+                    CR = 0.5;
+                CR += 0.5;
                 if (extended_range)
                 {
-                    hdrChromaBLUT[YSDRint][l] = std::round(255.0*C);
-                    hdrChromaRLUT[YSDRint][l] = std::round(255.0*C);
+                    hdrChromaBLUT[YSDRint][l] = std::round(255.0*CB);
+                    hdrChromaRLUT[YSDRint][l] = std::round(255.0*CR);
                 }
                 else
                 {
-                    hdrChromaBLUT[YSDRint][l] = std::round(224.0*C) + 16;
-                    hdrChromaRLUT[YSDRint][l] = std::round(224.0*C) + 16;
+                    hdrChromaBLUT[YSDRint][l] = std::round(224.0*CB) + 16;
+                    hdrChromaRLUT[YSDRint][l] = std::round(224.0*CR) + 16;
                 }
             }
         }
