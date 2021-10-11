@@ -887,6 +887,13 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
         hptrV += uvstride;
     }
 
+    // Reset output color properties
+    destImage->_pixfrmt=ADM_PIXFRMT_YV12;
+    destImage->_range=ADM_COL_RANGE_MPEG;
+    destImage->_colorPrim=ADM_COL_PRI_BT709;
+    destImage->_colorTrc=ADM_COL_TRC_BT709;
+    destImage->_colorSpace=ADM_COL_SPC_BT709;
+    
     return true;
 }
 
