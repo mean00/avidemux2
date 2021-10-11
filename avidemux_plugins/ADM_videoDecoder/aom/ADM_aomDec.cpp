@@ -18,6 +18,11 @@
 #include "aom/aom_decoder.h"
 #include "aom/aomdx.h"
 #define AX ((aom_codec_ctx_t *)cookie)
+
+static ADM_colorPrimaries mapColPriFromAom(aom_color_primaries_t color_primaries);
+static ADM_colorTrC mapColTrcFromAom(aom_transfer_characteristics_t color_trc);
+static ADM_colorSpace mapColSpcFromAom(aom_matrix_coefficients_t colorspace);
+
 /**
     \fn ctor
 */
@@ -134,6 +139,11 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
             r->_planeStride[v]=img->stride[1];
             r->_planeStride[u]=img->stride[2];
             r->_pixfrmt=pixfrmt;
+            r->_range = (img->range == AOM_CR_FULL_RANGE)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
+            r->_colorPrim = mapColPriFromAom(img->cp);
+            r->_colorTrc = mapColTrcFromAom(img->tc);
+            r->_colorSpace = mapColSpcFromAom(img->mc);
+
             r->Pts=in->demuxerPts;
             r->flags=in->flags;
             // make sure the output is not marked as a hw image
@@ -149,4 +159,112 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
     }
     return false;
 }
+
+ADM_colorPrimaries mapColPriFromAom(aom_color_primaries_t color_primaries)
+{
+    switch(color_primaries)
+    {
+        case AOM_CICP_CP_BT_709:
+            return ADM_COL_PRI_BT709;
+        case AOM_CICP_CP_BT_470_M:
+            return ADM_COL_PRI_BT470M;
+        case AOM_CICP_CP_BT_470_B_G:
+            return ADM_COL_PRI_BT470BG;
+        case AOM_CICP_CP_BT_601:
+            return ADM_COL_PRI_SMPTE170M;
+        case AOM_CICP_CP_SMPTE_240:
+            return ADM_COL_PRI_SMPTE240M;
+        case AOM_CICP_CP_GENERIC_FILM:
+            return ADM_COL_PRI_FILM;
+        case AOM_CICP_CP_BT_2020:
+            return ADM_COL_PRI_BT2020;
+        case AOM_CICP_CP_XYZ:
+            return ADM_COL_PRI_SMPTE428;
+        case AOM_CICP_CP_SMPTE_431:
+            return ADM_COL_PRI_SMPTE431;
+        case AOM_CICP_CP_SMPTE_432:
+            return ADM_COL_PRI_SMPTE432;
+        case AOM_CICP_CP_EBU_3213:
+            return ADM_COL_PRI_EBU3213;
+        default:
+            return ADM_COL_PRI_UNSPECIFIED;
+    }
+}
+
+ADM_colorTrC mapColTrcFromAom(aom_transfer_characteristics_t color_trc)
+{
+    switch(color_trc)
+    {
+        case AOM_CICP_TC_BT_709:
+            return ADM_COL_TRC_BT709;
+        case AOM_CICP_TC_BT_470_M:
+            return ADM_COL_TRC_GAMMA22;
+        case AOM_CICP_TC_BT_470_B_G:
+            return ADM_COL_TRC_GAMMA28;
+        case AOM_CICP_TC_BT_601:
+            return ADM_COL_TRC_SMPTE170M;
+        case AOM_CICP_TC_SMPTE_240:
+            return ADM_COL_TRC_SMPTE240M;
+        case AOM_CICP_TC_LINEAR:
+            return ADM_COL_TRC_LINEAR;
+        case AOM_CICP_TC_LOG_100:
+            return ADM_COL_TRC_LOG;
+        case AOM_CICP_TC_LOG_100_SQRT10:
+            return ADM_COL_TRC_LOG_SQRT;
+        case AOM_CICP_TC_IEC_61966:
+            return ADM_COL_TRC_IEC61966_2_4;
+        case AOM_CICP_TC_BT_1361:
+            return ADM_COL_TRC_BT1361_ECG;
+        case AOM_CICP_TC_SRGB:
+            return ADM_COL_TRC_IEC61966_2_1;
+        case AOM_CICP_TC_BT_2020_10_BIT:
+            return ADM_COL_TRC_BT2020_10;
+        case AOM_CICP_TC_BT_2020_12_BIT:
+            return ADM_COL_TRC_BT2020_12;
+        case AOM_CICP_TC_SMPTE_2084:
+            return ADM_COL_TRC_SMPTE2084;
+        case AOM_CICP_TC_SMPTE_428:
+            return ADM_COL_TRC_SMPTE428;
+        case AOM_CICP_TC_HLG:
+            return ADM_COL_TRC_ARIB_STD_B67;
+        default:
+            return ADM_COL_TRC_UNSPECIFIED;
+    }
+}
+
+ADM_colorSpace mapColSpcFromAom(aom_matrix_coefficients_t colorspace)
+{
+    switch(colorspace)
+    {
+        case AOM_CICP_MC_IDENTITY:
+            return ADM_COL_SPC_sRGB;
+        case AOM_CICP_MC_BT_709:
+            return ADM_COL_SPC_BT709;
+        case AOM_CICP_MC_FCC:
+            return ADM_COL_SPC_FCC;
+        case AOM_CICP_MC_BT_470_B_G:
+            return ADM_COL_SPC_BT470BG;
+        case AOM_CICP_MC_BT_601:
+            return ADM_COL_SPC_SMPTE170M;
+        case AOM_CICP_MC_SMPTE_240:
+            return ADM_COL_SPC_SMPTE240M;
+        case AOM_CICP_MC_SMPTE_YCGCO:
+            return ADM_COL_SPC_YCGCO;
+        case AOM_CICP_MC_BT_2020_NCL:
+            return ADM_COL_SPC_BT2020_NCL;
+        case AOM_CICP_MC_BT_2020_CL:
+            return ADM_COL_SPC_BT2020_CL;
+        case AOM_CICP_MC_SMPTE_2085:
+            return ADM_COL_SPC_SMPTE2085;
+        case AOM_CICP_MC_CHROMAT_NCL:
+            return ADM_COL_SPC_CHROMA_DERIVED_NCL;
+        case AOM_CICP_MC_CHROMAT_CL:
+            return ADM_COL_SPC_CHROMA_DERIVED_CL;
+        case AOM_CICP_MC_ICTCP:
+            return ADM_COL_SPC_ICTCP;
+        default:
+            return ADM_COL_SPC_UNSPECIFIED;
+    }
+}
+
 // EOF
