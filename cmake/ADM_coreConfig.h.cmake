@@ -10,6 +10,7 @@
 #cmakedefine ADM_CPU_64BIT
 #cmakedefine ADM_CPU_ARMEL
 #cmakedefine ADM_CPU_ARM64
+#cmakedefine ADM_CPU_RISCV64
 #cmakedefine ADM_CPU_X86
 #cmakedefine ADM_CPU_X86_32
 #cmakedefine ADM_CPU_X86_64
