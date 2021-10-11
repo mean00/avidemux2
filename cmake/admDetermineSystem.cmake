@@ -76,14 +76,19 @@ IF(NOT MSVC)
 
                                 IF(ARM64_SUPPORTED)
                                         set(ADM_CPU_ARM64 1)
+                                ELSE (ARM64_SUPPORTED)
+                                        PERFORM_SYSTEM_TEST(cpu_riscv64_check.cpp "RISCV64" RISCV64_SUPPORTED)
+                                        IF(RISCV64_SUPPORTED)
+                                                set(ADM_CPU_RISCV64 1)
+                                        endif(RISCV64_SUPPORTED)
                                 endif(ARM64_SUPPORTED)
                         ENDIF(ARMEL_SUPPORTED)
 	        ENDIF (X86_32_SUPPORTED)
         ENDIF (X86_64_SUPPORTED)
 
-        IF (NOT ADM_CPU_X86_32 AND NOT ADM_CPU_X86_64 AND NOT ADM_CPU_ARMEL AND NOT ADM_CPU_ARM64)
+        IF (NOT ADM_CPU_X86_32 AND NOT ADM_CPU_X86_64 AND NOT ADM_CPU_ARMEL AND NOT ADM_CPU_ARM64 AND NOT ADM_CPU_RISCV64)
 	        MESSAGE(FATAL_ERROR "CPU not supported")
-        ENDIF (NOT ADM_CPU_X86_32 AND NOT ADM_CPU_X86_64 AND NOT ADM_CPU_ARMEL AND NOT ADM_CPU_ARM64)
+        ENDIF (NOT ADM_CPU_X86_32 AND NOT ADM_CPU_X86_64 AND NOT ADM_CPU_ARMEL AND NOT ADM_CPU_ARM64 AND NOT ADM_CPU_RISCV64)
 
         TEST_BIG_ENDIAN(CMAKE_WORDS_BIGENDIAN)
 
