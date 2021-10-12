@@ -513,8 +513,9 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
 
 
 
-#define CONTEXT1 (SwsContext *)context1
-#define CONTEXT2 (SwsContext *)context2
+#define CONTEXTYUV (SwsContext *)contextYUV
+#define CONTEXTRGB1 (SwsContext *)contextRGB1
+#define CONTEXTRGB2 (SwsContext *)contextRGB2
 
 /**
     \fn  ADMToneMapper
@@ -525,8 +526,11 @@ ADMToneMapper::ADMToneMapper(ADMColorScaler_algo algo,
             int dw, int dh,
             ADM_pixelFormat from,ADM_pixelFormat to)
 {
-    context1=NULL;
+    contextYUV=NULL;
+    contextRGB1=NULL;
+    contextRGB2=NULL;
     hdrLumaLUT = NULL;
+    hdrRGBLUT = NULL;
     for (int i=0; i<256; i++)
     {
         hdrChromaBLUT[i] = NULL;
@@ -536,6 +540,11 @@ ADMToneMapper::ADMToneMapper(ADMColorScaler_algo algo,
     hdrTMsrcLum = hdrTMtrgtLum = hdrTMsat = -1.0;	// invalidate
     hdrTMmethod = 0;
     hdrYUV=NULL;
+    for (int i=0; i<3; i++)
+    {
+        hdrRGB[i]=NULL;
+        sdrRGB[i]=NULL;
+    }
     
     this->algo=algo;
     int flags;
@@ -567,11 +576,24 @@ ADMToneMapper::ADMToneMapper(ADMColorScaler_algo algo,
     AVPixelFormat lavFrom=ADMPixFrmt2LAVPixFmt(fromPixFrmt );
     AVPixelFormat lavTo=ADMPixFrmt2LAVPixFmt(toPixFrmt );
     
-    context1=(void *)sws_getContext(
+    contextYUV=(void *)sws_getContext(
                       srcWidth,srcHeight,
                       lavFrom ,
                       dstWidth,dstHeight,
                       AV_PIX_FMT_YUV420P16LE,
+                      flags, NULL, NULL,NULL);
+
+    contextRGB1=(void *)sws_getContext(
+                      srcWidth,srcHeight,
+                      lavFrom ,
+                      srcWidth,srcHeight,
+                      AV_PIX_FMT_GBRP16LE,
+                      SWS_POINT, NULL, NULL,NULL);		// use fast n.n. scaling, as resolution will not change in the first step
+    contextRGB2=(void *)sws_getContext(
+                      srcWidth,srcHeight,
+                      AV_PIX_FMT_GBR24P ,
+                      dstWidth,dstHeight,
+                      lavTo,
                       flags, NULL, NULL,NULL);
 }
 
@@ -582,12 +604,24 @@ ADMToneMapper::ADMToneMapper(ADMColorScaler_algo algo,
 */
 ADMToneMapper::~ADMToneMapper()
 {
-    if(context1)
+    if(contextYUV)
     {
-        sws_freeContext(CONTEXT1);
-        context1=NULL;
+        sws_freeContext(CONTEXTYUV);
+        contextYUV=NULL;
     }
+    if(contextRGB1)
+    {
+        sws_freeContext(CONTEXTRGB1);
+        contextRGB1=NULL;
+    }
+    if(contextRGB2)
+    {
+        sws_freeContext(CONTEXTRGB2);
+        contextRGB2=NULL;
+    }
+
     delete [] hdrLumaLUT;
+    delete [] hdrRGBLUT;
     for (int i=0; i<256; i++)
     {
         delete [] hdrChromaBLUT[i];
@@ -598,6 +632,11 @@ ADMToneMapper::~ADMToneMapper()
     {
         delete [] hdrYUV;
         hdrYUV = NULL;
+    }
+    for (int i=0; i<3; i++)
+    {
+        delete [] hdrRGB[i];
+        delete [] sdrRGB[i];
     }
 }
 
@@ -618,6 +657,10 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned
         case 1:	// fastYUV
                 return toneMap_fastYUV(sourceImage, destImage, targetLuminance, saturationAdjust);
             break;
+        case 2:
+        case 3:
+        case 4:
+                return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust);
         default:
             return false;
     }
@@ -844,7 +887,7 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
     gbrData[1] = gbrData[0] + gbrStride[0]*(dstHeight);
     gbrData[2] = gbrData[1] + gbrStride[1]*(dstHeight/2);
 
-    sws_scale(CONTEXT1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
+    sws_scale(CONTEXTYUV,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
 
     uint8_t * ptr = dstData[0];
     uint16_t * hptr = (uint16_t *)gbrData[0];
@@ -897,4 +940,214 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
     return true;
 }
 
+
+/**
+    \fn toneMap_fastYUV
+*/
+bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust)
+{
+    // Check if tone mapping is needed & can do 
+    if (!((sourceImage->_colorTrc == ADM_COL_TRC_SMPTE2084) || (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_NCL) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_CL)))
+        return false;
+    if ((sourceImage->_colorTrc == ADM_COL_TRC_BT2020_10) || (sourceImage->_colorTrc == ADM_COL_TRC_BT2020_12))	// excluding trc, not hdr
+        return false;
+    if (!isnan(sourceImage->_hdrInfo.colorSaturationWeight))
+        if (sourceImage->_hdrInfo.colorSaturationWeight > 0)
+            saturationAdjust *= sourceImage->_hdrInfo.colorSaturationWeight;
+    
+    // Determine max luminance
+    double maxLuminance = 10000.0;
+    if (!isnan(sourceImage->_hdrInfo.maxLuminance))
+        if (sourceImage->_hdrInfo.maxLuminance > 0)
+            if (maxLuminance > sourceImage->_hdrInfo.maxLuminance)
+                maxLuminance = sourceImage->_hdrInfo.maxLuminance;
+    if (!isnan(sourceImage->_hdrInfo.targetMaxLuminance))
+        if (sourceImage->_hdrInfo.targetMaxLuminance > 0)
+            if (maxLuminance > sourceImage->_hdrInfo.targetMaxLuminance)
+                maxLuminance = sourceImage->_hdrInfo.targetMaxLuminance;
+    double peakLuminance = maxLuminance;
+    if (!isnan(sourceImage->_hdrInfo.maxCLL))
+        if (sourceImage->_hdrInfo.maxCLL > 0)
+            if (peakLuminance > sourceImage->_hdrInfo.maxCLL)
+                peakLuminance = sourceImage->_hdrInfo.maxCLL;
+    double boost = 1;
+    if ((!isnan(sourceImage->_hdrInfo.maxCLL)) && (!isnan(sourceImage->_hdrInfo.maxFALL)))
+        if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
+            boost = sourceImage->_hdrInfo.maxCLL / sourceImage->_hdrInfo.maxFALL;
+
+    // Allocate if not done yet
+    if (hdrRGBLUT == NULL)
+    {
+        hdrRGBLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+        if (hdrRGBLUT == NULL)
+            return false;
+    }
+    for (int i=0; i<3; i++)
+    {
+        if (hdrRGB[i] == NULL)
+        {
+            hdrRGB[i] = new uint16_t[ADM_IMAGE_ALIGN(dstWidth)*dstHeight];
+            if (hdrRGB[i] == NULL)
+                return false;
+        }
+        if (sdrRGB[i] == NULL)
+        {
+            sdrRGB[i] = new uint8_t[ADM_IMAGE_ALIGN(dstWidth)*dstHeight];
+            if (sdrRGB[i] == NULL)
+                return false;
+        }
+    }
+
+
+    // Populate LUTs if parameters have changed
+    bool extended_range = false;
+    if ((maxLuminance != hdrTMsrcLum) || (targetLuminance != hdrTMtrgtLum) || (saturationAdjust != hdrTMsat))
+    {
+        hdrTMsrcLum = maxLuminance;
+        hdrTMtrgtLum = targetLuminance;
+        hdrTMsat = saturationAdjust;
+        
+        for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+        {
+            double LumHDR = maxLuminance;	// peak mastering display luminance [nit]
+            double LumSDR = targetLuminance;		// peak target display luminance [nit]
+
+            double Y = l;
+            // normalize:
+            Y /= ADM_COLORSPACE_HDR_LUT_SIZE;
+            
+            double Ylin;
+            // linearize
+            if (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67)	//HLG
+            {
+                if (Y <= 0.5)
+                    Ylin = Y*Y/3.0;
+                else
+                    Ylin = (std::exp((Y-0.55991073)/0.17883277) + 0.28466892)/12;
+            } else
+            if ((sourceImage->_colorTrc == ADM_COL_TRC_SMPTE2084) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_NCL) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_CL))	//PQ
+            {
+                Ylin = 0;
+                if ((std::pow(Y, 1/78.84375) - 0.8359375) > 0)
+                    Ylin = std::pow((std::pow(Y, 1/78.84375) - 0.8359375) / (18.8515625 - 18.6875*std::pow(Y, 1/78.84375)) , 1/0.1593017578125);
+            } else {
+                Ylin = std::pow(Y, 2.6);
+            }
+            
+            Ylin *= LumHDR/LumSDR;
+            double npl = peakLuminance/LumSDR;
+            
+            double Ytm = Ylin;
+            // tonemap
+            switch (method)
+            {
+                default:
+                case 2:	// clip
+                        Ytm *= std::sqrt(boost);
+                        if (Ytm > 1.0)
+                            Ytm = 1.0;
+                    break;
+                case 3:	// reinhard
+                        Ytm *= std::sqrt(boost);
+                        Ytm = Ytm/(1.0+Ytm);
+                        Ytm *= (npl+1)/npl;
+                    break;
+                case 4:	// hable
+                        Ytm = (Ytm * (Ytm * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (Ytm * (Ytm * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
+                        Ytm /= (npl * (npl * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (npl * (npl * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
+                        Ytm *= boost;
+                    break;
+            }
+            
+            // gamma
+            double YSDR;
+            YSDR = ((Ytm > 0.0031308) ? (( 1.055 * std::pow(Ytm, (1.0 / 2.4)) ) - 0.055) : (Ytm * 12.92));
+            if (YSDR < 0)
+                YSDR = 0;
+            if (YSDR > 1)
+                YSDR = 1;
+            hdrRGBLUT[l] = std::round(255.0*YSDR);
+        }
+        
+        for (int l=0; l<256; l+=1)
+        {
+            double C = l;
+            C -= 128;
+            C *= saturationAdjust;
+            C += 128;
+            if (C < 0)
+                C = 0;
+            if (C > 255)
+                C = 255;
+            sdrRGBSat[l] = std::round(C);
+        }
+    }
+
+    // Do tone mapping
+    uint8_t * srcData[3];
+    int srcStride[3];
+    uint8_t * dstData[3];
+    int dstStride[3];
+    
+    sourceImage->GetPitches(srcStride);
+    destImage->GetPitches(dstStride);
+    sourceImage->GetReadPlanes(srcData);
+    destImage->GetWritePlanes(dstData);
+    
+    // ADM_PIXFRMT_YV12 swapped UV
+    uint8_t *p=dstData[1];
+    dstData[1]=dstData[2];
+    dstData[2]=p;
+    
+    uint8_t *gbrData[3];
+    int gbrStride[3];
+
+    for (int p=0; p<3; p++)
+    {
+        gbrData[p] = (uint8_t*)hdrRGB[p];
+        gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth)*2;
+    }
+    sws_scale(CONTEXTRGB1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
+    
+    for (int p=0; p<3; p++)
+    {
+        uint8_t * sdr = sdrRGB[p];
+        uint16_t * hdr = hdrRGB[p];
+        for (int xy=0; xy<ADM_IMAGE_ALIGN(srcWidth)*srcHeight; xy++)
+        {
+            sdr[xy] = hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdr[xy]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+        }
+    }
+
+    for (int p=0; p<3; p++)
+    {
+        gbrData[p] = (uint8_t*)sdrRGB[p];
+        gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth);
+    }
+    const int *coeffsrc = sws_getCoefficients(SWS_CS_BT2020);
+    const int *coeffdst = sws_getCoefficients(SWS_CS_ITU709);
+    sws_setColorspaceDetails(CONTEXTRGB2, coeffsrc, 0, coeffdst, 0, 0, (1 << 16), (1 << 16));
+    sws_scale(CONTEXTRGB2,gbrData,gbrStride,0,srcHeight,dstData,dstStride);
+
+    // dst is YUV420
+    for (int p=1; p<3; p++)
+    {
+        uint8_t * ptr = dstData[p];
+        for (int q=0; q<(dstStride[p] * dstHeight/2); q++)
+        {
+            *ptr = sdrRGBSat[*ptr];
+            ptr++;
+        }
+    }
+
+    // Reset output color properties
+    destImage->_pixfrmt=ADM_PIXFRMT_YV12;
+    destImage->_range=ADM_COL_RANGE_MPEG;
+    destImage->_colorPrim=ADM_COL_PRI_BT709;
+    destImage->_colorTrc=ADM_COL_TRC_BT709;
+    destImage->_colorSpace=ADM_COL_SPC_BT709;
+    
+    return true;
+
+}
 //EOF
