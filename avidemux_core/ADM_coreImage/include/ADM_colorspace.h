@@ -150,8 +150,8 @@ public:
 class ADM_COREIMAGE6_EXPORT ADMToneMapper
 {
   protected:
-    void            *context1;
-    void            *context2;
+    void            *contextYUV;
+    void            *contextRGB1, *contextRGB2;
     uint32_t        srcWidth,srcHeight;
     uint32_t        dstWidth,dstHeight;
     ADM_pixelFormat  fromPixFrmt,toPixFrmt;
@@ -162,13 +162,18 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     uint8_t         *hdrChromaBLUT[256];
     uint8_t         *hdrChromaRLUT[256];
     uint8_t         *hdrLumaCrLUT[256];
+    uint8_t         *hdrRGBLUT;
     double          hdrTMsrcLum, hdrTMtrgtLum, hdrTMsat;
     unsigned int    hdrTMmethod;
     uint16_t        *hdrYUV;
+    uint16_t        *hdrRGB[3];
+    uint8_t         *sdrRGB[3];
+    uint8_t         sdrRGBSat[256];
   public :
                     ADMToneMapper(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
     bool            toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust);
     bool            toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust);
+    bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust);
                     ~ADMToneMapper();
 };
 

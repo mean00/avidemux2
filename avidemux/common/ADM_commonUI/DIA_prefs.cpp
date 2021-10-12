@@ -391,6 +391,9 @@ std::string currentSdlDriver=getSdlDriverName();
         diaMenuEntry toneMapEntries[]={
                               {0,       QT_TRANSLATE_NOOP("adm","disabled"),NULL}
                              ,{1,       QT_TRANSLATE_NOOP("adm","Fast YUV"),NULL}
+                             ,{2,       QT_TRANSLATE_NOOP("adm","RGB clipping"),NULL}
+                             ,{3,       QT_TRANSLATE_NOOP("adm","RGB Reinhard"),NULL}
+                             ,{4,       QT_TRANSLATE_NOOP("adm","RGB Hable"),NULL}
                              //,{2,      QT_TRANSLATE_NOOP("adm","TODO"),NULL}
         };
         diaElemMenu menuToneMapHDR(&toneMappingHDR,QT_TRANSLATE_NOOP("adm","_Tone mapping:"),NB_ITEMS(toneMapEntries),toneMapEntries);
