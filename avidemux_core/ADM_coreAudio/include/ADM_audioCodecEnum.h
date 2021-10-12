@@ -32,6 +32,7 @@
 #define WAV_NELLYMOSER   9901
 #define WAV_UNKNOWN     9999
 #define WAV_FLAC        61868 // dummy ID
+#define WAV_TRUEHD      0x5254 // 0x44485254
 
 #endif
 //EOF

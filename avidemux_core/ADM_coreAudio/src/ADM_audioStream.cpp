@@ -236,6 +236,7 @@ const char *getStrFromAudioCodec( uint32_t codec)
               case WAV_ULAW: return QT_TRANSLATE_NOOP("adm","ULAW");
               case WAV_IMAADPCM: return QT_TRANSLATE_NOOP("adm","IMA ADPCM");
               case WAV_8BITS_UNSIGNED:return QT_TRANSLATE_NOOP("adm","8-bit PCM");
+              case WAV_TRUEHD: return QT_TRANSLATE_NOOP("adm","TrueHD");
       }
       ADM_warning("Unkown audio codec :%d (0x%x)\n",codec,codec);
       return QT_TRANSLATE_NOOP("adm","Unknown codec");

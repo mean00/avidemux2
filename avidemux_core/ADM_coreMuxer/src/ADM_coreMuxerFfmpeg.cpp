@@ -418,6 +418,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                                   par->codec_id = AV_CODEC_ID_AAC;
                                   par->frame_size=audio[i]->getSamplesPerPacket();
                                   break;
+                  case WAV_TRUEHD: par->codec_id = AV_CODEC_ID_TRUEHD; par->frame_size = 40; break;
                   default:
                                  printf("[FF]: Unsupported audio\n");
                                  return false;

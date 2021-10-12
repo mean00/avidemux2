@@ -98,6 +98,7 @@ static  ad_supportedFormat Formats[]={
         {0x706D,AD_HIGH_QUAL},
         {WAV_EAC3,AD_MEDIUM_QUAL},
         {WAV_OGG_VORBIS,AD_HIGH_QUAL},
+        {WAV_TRUEHD,AD_MEDIUM_QUAL}
 };
 
 DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
@@ -190,6 +191,9 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
       case 0x706D:
         codecID = AV_CODEC_ID_AAC;
         _blockalign = 1;
+        break;
+      case WAV_TRUEHD:
+        codecID = AV_CODEC_ID_TRUEHD;
         break;
       default:
              ADM_assert(0);
