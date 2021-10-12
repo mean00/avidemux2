@@ -687,14 +687,14 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
         if (sourceImage->_hdrInfo.maxLuminance > 0)
             if (maxLuminance > sourceImage->_hdrInfo.maxLuminance)
                 maxLuminance = sourceImage->_hdrInfo.maxLuminance;
-    if (!isnan(sourceImage->_hdrInfo.maxCLL))
-        if (sourceImage->_hdrInfo.maxCLL > 0)
-            if (maxLuminance > sourceImage->_hdrInfo.maxCLL)
-                maxLuminance = sourceImage->_hdrInfo.maxCLL;
     if (!isnan(sourceImage->_hdrInfo.targetMaxLuminance))
         if (sourceImage->_hdrInfo.targetMaxLuminance > 0)
             if (maxLuminance > sourceImage->_hdrInfo.targetMaxLuminance)
                 maxLuminance = sourceImage->_hdrInfo.targetMaxLuminance;
+    double boost = 1;
+    if ((!isnan(sourceImage->_hdrInfo.maxCLL)) && (!isnan(sourceImage->_hdrInfo.maxFALL)))
+        if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
+            boost = sourceImage->_hdrInfo.maxCLL / sourceImage->_hdrInfo.maxFALL;
 
     // Allocate if not done yet
     if (hdrLumaLUT == NULL)
@@ -779,7 +779,10 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
             double YSDR = (std::pow(rhoSDR, Yc) - 1) / (rhoSDR - 1);
 
             // WTF? step 4
-            YSDR *= std::sqrt(2)*1.1;
+            double maxboost = std::sqrt(2)*1.1;
+            if (std::sqrt(boost) > maxboost)
+                maxboost = std::sqrt(boost);
+            YSDR *= maxboost;
             if (YSDR < 0)
                 YSDR = 0;
             if (YSDR > 1)
@@ -807,7 +810,7 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
                 double fYSDR = ((Y==0)||(YSDR==0)) ? 1.0 : (YSDR / (1.1*Y));
                 C *= fYSDR;
                 // WTF? step 5 prevent shadow glow
-                C *= (std::pow(YSDR,1/2.4)+1/3.)*saturationAdjust;
+                C *= std::pow(YSDR+0.001,1/2.4)*saturationAdjust;
                 if (C < -0.5)
                     C = -0.5;
                 if (C > 0.5)
