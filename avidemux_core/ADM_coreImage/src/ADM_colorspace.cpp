@@ -691,6 +691,9 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
         if (sourceImage->_hdrInfo.targetMaxLuminance > 0)
             if (maxLuminance > sourceImage->_hdrInfo.targetMaxLuminance)
                 maxLuminance = sourceImage->_hdrInfo.targetMaxLuminance;
+    if (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67)
+        if (maxLuminance == 10000.0)
+            maxLuminance=1000.0;
     double boost = 1;
     if ((!isnan(sourceImage->_hdrInfo.maxCLL)) && (!isnan(sourceImage->_hdrInfo.maxFALL)))
         if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
@@ -968,6 +971,9 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         if (sourceImage->_hdrInfo.targetMaxLuminance > 0)
             if (maxLuminance > sourceImage->_hdrInfo.targetMaxLuminance)
                 maxLuminance = sourceImage->_hdrInfo.targetMaxLuminance;
+    if (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67)
+        if (maxLuminance == 10000.0)
+            maxLuminance=1000.0;
     double peakLuminance = maxLuminance;
     if (!isnan(sourceImage->_hdrInfo.maxCLL))
         if (sourceImage->_hdrInfo.maxCLL > 0)
