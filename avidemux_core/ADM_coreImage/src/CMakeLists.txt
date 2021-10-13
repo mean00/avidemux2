@@ -7,6 +7,7 @@ SET(ADM_coreImage_SRCS
         ADM_print.cpp
         ADM_imageSave.cpp
         ADM_imageOperation.cpp
+        ADM_toneMapper.cpp
 )
 
 YASMIFY(bins ADM_imageUtils_asm)
