@@ -10,15 +10,29 @@
 
     <h1>Changes in Avidemux v2.7.8 – v2.?.?</h1>
 
-    <h2>New Filters</h2>
-    
+    <h2>Behavior</h2>
+
+    <ul>
+      <li>The part of video preceding the presentation time of the first frame
+          is now excluded from created segment, making all videos appear as if
+          they &quot;start at zero&quot;.</li>
+      <li>When saving video, the frame matching the B marker is now excluded
+          from the exported range. Therefore, if the B marker is set to the last
+          frame of the video, it needs to be reset to the full duration for the
+          last frame to be included into the output.</li>
+      <li>Loading Matroska files with HEVC video tracks takes longer as slice
+          headers are decoded to detect the frame type.</li>
+    </ul>
+
+    <h2>New Video Filters</h2>
+
     <ul>
       <li>Analyzer</li>
       <li>Blur (on selected area)</li>
       <li>Cartoon</li>
       <li>Color balance (adjust shadow, midtone and highlight)</li>
       <li>Chroma hold (monochrome effect with kept colors)</li>
-      <li>Chroma key (replace "green screen" with an image)</li>
+      <li>Chroma key (replace &quot;green screen&quot; with an image)</li>
       <li>DelogoHQ (clean up arbitrary shaped logo)</li>
       <li>Dynamic threshold</li>
       <li>Fade from first image</li>
@@ -41,36 +55,60 @@
     <h2>New Features</h2>
 
     <ul>
-      <li>Resample FPS filter has blend and motion interpolation options.</li>
-      <li>FFV1 encoder is available again.</li>
+      <li>HDR video can be converted to SDR with tone mapping using a variety of
+          methods.</li>
+      <li>FFV1 encoder is back (it was available in Avidemux 2.5.x).</li>
+      <li>TrueHD audio tracks can be decoded and are supported for Matroska
+          containers.</li>
+      <li>Decoding support for WMA9 Lossless codec.</li>
       <li>Filter previews have got a unified method to quickly compare filtered
-          and unfiltered inputs via the "Peek Original" button.</li>
+          and unfiltered inputs via the &quot;Peek Original&quot; button.</li>
+      <li>Blend and motion interpolation options added to &quot;Resample
+          FPS&quot; filter.</li>
       <li>Mark cut points (segment boundaries) on the navigation slider. New
           buttons and shortcuts are provided to jump to these cut points.</li>
-      <li>In the Video Filter Manager the active filters can be enabled/disabled.</li>
+      <li>In the Video Filter Manager, active filters can be temporarily disabled.</li>
+      <li>Preference added to load sequentially named pictures in reverse order,
+          allowing to reverse video by exporting selection as JPEG images and
+          loading the first one.</li>
     </ul>
 
     <h2>Other Enhancements</h2>
 
     <ul>
-      <li>Resample FPS and Change FPS filters can handle up to 1000 fps.</li>
-      <li>Crop filter's preview has a translucent green masking.</li>
-      <li>Crop filter's Auto Crop function can achieve perfect crops (if the
-          selected frame is not too dark).</li>
-      <li>The maximum output resolution of the Resize filter has been increased
-          to 8192x8192</li>
-      <li>The Resize filter has a nearest neighbour scaling option.</li>
+      <li>&quot;Resample FPS&quot; and &quot;Change FPS&quot; filters can handle
+          up to 1000 fps.</li>
+      <li>&quot;Crop&quot; filter's preview has got a translucent green
+          masking.</li>
+      <li>&quot;Crop&quot; filter's Auto Crop function can achieve perfect crops
+          (if the selected frame is not too dark).</li>
+      <li>The maximum output resolution of the &quot;Resize&quot; filter has
+          been increased to 8192x8192</li>
+      <li>The &quot;Resize&quot; filter has got a nearest neighbour scaling
+          option.</li>
       <li>Improved HiDPI scaling in previews.</li>
+      <li>x264 video encoder plugin now allows to specify color properties.</li>
+      <li>Maximized window state, widget visibility and toolbar position are
+          preserved after application restart.</li>
+      <li>PulseAudioSimple audio device has been replaced with full PulseAudio,
+          making an in-application volume control available (Linux only).</li>
+      <li>ALSA audio device plugin has been modified to use soft volume,
+          providing application-specific volume control which works with every
+          ALSA device.</li>
     </ul>
 
     <h2>Bugfixes</h2>
 
     <ul>
-      <li>Volume control works with every audio device.</li>
       <li>Occasional UI unrepsonsiveness during playback should be fixed.</li>
       <li>Prevent navigation key events piling up.</li>
+      <li>Thumb slider, displaced by mouse wheel, is now automatically reset if
+          the end of video is reached, stopping Avidemux log file from filling
+          disk space.</li>
+      <li>Purple tint in old &quot;Fade to&quot; and &quot;Fade to black&quot;
+          filters on macOS fixed.</li>
     </ul>
 
-    </div>
+  </div>
 </body>
 </html>
