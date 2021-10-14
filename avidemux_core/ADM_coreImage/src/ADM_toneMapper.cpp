@@ -95,6 +95,11 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
                       dstWidth,dstHeight,
                       lavTo,
                       sws_flag, NULL, NULL,NULL);
+    const int *coeffsrc = sws_getCoefficients(SWS_CS_BT2020);
+    const int *coeffdst = sws_getCoefficients(SWS_CS_BT2020);
+    sws_setColorspaceDetails(CONTEXTRGB1, coeffsrc, 0, coeffdst, 0, 0, (1 << 16), (1 << 16));
+    coeffdst = sws_getCoefficients(SWS_CS_ITU709);
+    sws_setColorspaceDetails(CONTEXTRGB2, coeffsrc, 0, coeffdst, 0, 0, (1 << 16), (1 << 16));
 }
 
 
@@ -633,9 +638,6 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         gbrData[p] = (uint8_t*)sdrRGB[p];
         gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth);
     }
-    const int *coeffsrc = sws_getCoefficients(SWS_CS_BT2020);
-    const int *coeffdst = sws_getCoefficients(SWS_CS_ITU709);
-    sws_setColorspaceDetails(CONTEXTRGB2, coeffsrc, 0, coeffdst, 0, 0, (1 << 16), (1 << 16));
     sws_scale(CONTEXTRGB2,gbrData,gbrStride,0,srcHeight,dstData,dstStride);
 
     // dst is YUV420
