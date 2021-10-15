@@ -204,6 +204,15 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
         if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
             boost = sourceImage->_hdrInfo.maxCLL / sourceImage->_hdrInfo.maxFALL;
 
+    // P3 primaries
+    bool p3_primaries = false;
+    if ((sourceImage->_colorPrim == ADM_COL_PRI_SMPTE431) || (sourceImage->_colorPrim == ADM_COL_PRI_SMPTE432))
+        p3_primaries = true;
+    if ((fabs(sourceImage->_hdrInfo.primaries[0][0] - 0.680) <= 0.001) && (fabs(sourceImage->_hdrInfo.primaries[0][1] - 0.320) <= 0.001) &&
+        (fabs(sourceImage->_hdrInfo.primaries[1][0] - 0.265) <= 0.001) && (fabs(sourceImage->_hdrInfo.primaries[1][1] - 0.690) <= 0.001) &&
+        (fabs(sourceImage->_hdrInfo.primaries[2][0] - 0.150) <= 0.001) && (fabs(sourceImage->_hdrInfo.primaries[2][1] - 0.060) <= 0.001) )
+        p3_primaries = true;
+
     // Allocate if not done yet
     if (hdrLumaLUT == NULL)
     {
@@ -400,45 +409,77 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
 
     sws_scale(CONTEXTYUV,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
 
-    uint8_t * ptr = dstData[0];
-    uint16_t * hptr = (uint16_t *)gbrData[0];
-    for (int q=0;q<ADM_IMAGE_ALIGN(dstWidth)*dstHeight;q++)
-    {
-        ptr[q] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptr[q]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-    }
-    uint8_t * ptrU = dstData[1];
-    uint8_t * ptrV = dstData[2];
-    uint16_t * hptrU = (uint16_t *)gbrData[1];
-    uint16_t * hptrV = (uint16_t *)gbrData[2];
     int ystride = ADM_IMAGE_ALIGN(dstWidth);
     int uvstride = ADM_IMAGE_ALIGN(dstWidth/2);
-    uint8_t * ptrNext = dstData[0]+ystride;
+    uint8_t * ptr, * ptrNext, * ptrU, * ptrV;
+    uint16_t * hptr, * hptrNext, * hptrU, * hptrV;
+    uint8_t ysdr[4];
+    int usdr,vsdr,urot,vrot,oormask;
+    oormask = 0xFF;
+    oormask = ~oormask;
     for (int y=0; y<(dstHeight/2); y++)
     {
+        ptr = dstData[0] + y*2*ystride;
+        ptrNext = ptr + ystride;
+        hptr = (uint16_t *)gbrData[0] + y*2*ystride;
+        hptrNext = hptr+ystride;
+        ptrU = dstData[1] + y*uvstride;
+        ptrV = dstData[2] + y*uvstride;
+        hptrU = (uint16_t *)gbrData[1] + y*uvstride;
+        hptrV = (uint16_t *)gbrData[2] + y*uvstride;
         for (int x=0; x<(dstWidth/2); x++)
         {
+            ysdr[0] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptr>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptr++;
+            ysdr[1] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptr>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptr++;
+            ysdr[2] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrNext>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptrNext++;
+            ysdr[3] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrNext>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptrNext++;
+
             int luma = 0;
-            luma += ptr[x*2];
-            luma += ptr[x*2 +1];
-            luma += ptrNext[x*2];
-            luma += ptrNext[x*2 +1];
+            luma += ysdr[0];
+            luma += ysdr[1];
+            luma += ysdr[2];
+            luma += ysdr[3];
             luma /= 4;
             luma &= 0xFF;
-            ptrU[x] = hdrChromaBLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptrU[x]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            ptrV[x] = hdrChromaRLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hptrV[x]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            usdr = hdrChromaBLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrU>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            vsdr = hdrChromaRLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrV>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptrU++; hptrV++;
 
-            int Cr = ptrV[x]&0xFF;
-            ptr[x*2] = hdrLumaCrLUT[Cr][ptr[x*2]];
-            ptr[x*2+1] = hdrLumaCrLUT[Cr][ptr[x*2+1]];
-            ptrNext[x*2] = hdrLumaCrLUT[Cr][ptrNext[x*2]];
-            ptrNext[x*2+1] = hdrLumaCrLUT[Cr][ptrNext[x*2+1]];
+            *ptr = hdrLumaCrLUT[vsdr][ysdr[0]];
+            ptr++;
+            *ptr = hdrLumaCrLUT[vsdr][ysdr[1]];
+            ptr++;
+            *ptrNext = hdrLumaCrLUT[vsdr][ysdr[2]];
+            ptrNext++;
+            *ptrNext = hdrLumaCrLUT[vsdr][ysdr[3]];
+            ptrNext++;
+
+            if (p3_primaries)	// -8 deg hue shift
+            {
+                usdr -= 128;
+                vsdr -= 128;
+                urot = 507*usdr + 71*vsdr;
+                vrot = 507*vsdr - 71*usdr;
+                usdr = (urot >> 9) + 128;
+                vsdr = (vrot >> 9) + 128;
+                if (usdr & oormask)
+                {
+                    usdr = (usdr < 0) ? 0:255;
+                }
+                if (vsdr & oormask)
+                {
+                    vsdr = (vsdr < 0) ? 0:255;
+                }
+            }
+
+            *ptrU = usdr;
+            *ptrV = vsdr;
+            ptrU++; ptrV++;
         }
-        ptr += ystride*2;
-        ptrNext += ystride*2;
-        ptrU += uvstride;
-        ptrV += uvstride;
-        hptrU += uvstride;
-        hptrV += uvstride;
     }
 
     // Reset output color properties
