@@ -100,6 +100,16 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
     sws_setColorspaceDetails(CONTEXTRGB1, coeffsrc, 0, coeffdst, 0, 0, (1 << 16), (1 << 16));
     coeffdst = sws_getCoefficients(SWS_CS_ITU709);
     sws_setColorspaceDetails(CONTEXTRGB2, coeffsrc, 0, coeffdst, 0, 0, (1 << 16), (1 << 16));
+    
+    threadCount = ADM_cpu_num_processors();
+    if (threadCount < 1)
+        threadCount = 1;
+    if (threadCount > 64)
+        threadCount = 64;
+    if (threadCount > 4)
+        threadCount = (threadCount-4)/2 + 4;
+    worker_threads = new pthread_t [threadCount];
+    fastYUV_worker_thread_args = new fastYUV_worker_thread_arg [threadCount];
 }
 
 
@@ -143,6 +153,8 @@ ADMToneMapper::~ADMToneMapper()
         delete [] hdrRGB[i];
         delete [] sdrRGB[i];
     }
+    delete [] worker_threads;
+    delete [] fastYUV_worker_thread_args;
 }
 
 
@@ -171,6 +183,93 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned
     }
 }
 
+
+
+/**
+    \fn toneMap_fastYUV_worker
+*/
+void * ADMToneMapper::toneMap_fastYUV_worker(void *argptr)
+{
+    fastYUV_worker_thread_arg * arg = (fastYUV_worker_thread_arg*)argptr;
+
+    int ystride = ADM_IMAGE_ALIGN(arg->dstWidth);
+    int uvstride = ADM_IMAGE_ALIGN(arg->dstWidth/2);
+    uint8_t * ptr, * ptrNext, * ptrU, * ptrV;
+    uint16_t * hptr, * hptrNext, * hptrU, * hptrV;
+    uint8_t ysdr[4];
+    int usdr,vsdr,urot,vrot,oormask;
+    oormask = 0xFF;
+    oormask = ~oormask;
+
+    for (int y=arg->ystart; y<(arg->dstHeight/2); y+=arg->yincr)
+    {
+        ptr = arg->dstData[0] + y*2*ystride;
+        ptrNext = ptr + ystride;
+        hptr = (uint16_t *)(arg->gbrData[0]) + y*2*ystride;
+        hptrNext = hptr+ystride;
+        ptrU = arg->dstData[1] + y*uvstride;
+        ptrV = arg->dstData[2] + y*uvstride;
+        hptrU = (uint16_t *)(arg->gbrData[1]) + y*uvstride;
+        hptrV = (uint16_t *)(arg->gbrData[2]) + y*uvstride;
+        for (int x=0; x<(arg->dstWidth/2); x++)
+        {
+            ysdr[0] = arg->hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptr>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptr++;
+            ysdr[1] = arg->hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptr>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptr++;
+            ysdr[2] = arg->hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrNext>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptrNext++;
+            ysdr[3] = arg->hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrNext>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptrNext++;
+
+            int luma = 0;
+            luma += ysdr[0];
+            luma += ysdr[1];
+            luma += ysdr[2];
+            luma += ysdr[3];
+            luma /= 4;
+            luma &= 0xFF;
+            usdr = arg->hdrChromaBLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrU>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            vsdr = arg->hdrChromaRLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrV>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hptrU++; hptrV++;
+
+            *ptr = arg->hdrLumaCrLUT[vsdr][ysdr[0]];
+            ptr++;
+            *ptr = arg->hdrLumaCrLUT[vsdr][ysdr[1]];
+            ptr++;
+            *ptrNext = arg->hdrLumaCrLUT[vsdr][ysdr[2]];
+            ptrNext++;
+            *ptrNext = arg->hdrLumaCrLUT[vsdr][ysdr[3]];
+            ptrNext++;
+
+            if (arg->p3_primaries)	// -8 deg hue shift
+            {
+                usdr -= 128;
+                vsdr -= 128;
+                urot = 507*usdr + 71*vsdr;
+                vrot = 507*vsdr - 71*usdr;
+                usdr = (urot >> 9) + 128;
+                vsdr = (vrot >> 9) + 128;
+                if (usdr & oormask)
+                {
+                    usdr = (usdr < 0) ? 0:255;
+                }
+                if (vsdr & oormask)
+                {
+                    vsdr = (vsdr < 0) ? 0:255;
+                }
+            }
+
+            *ptrU = usdr;
+            *ptrV = vsdr;
+            ptrU++; ptrV++;
+        }
+    }
+
+
+    pthread_exit(NULL);
+    return NULL;
+}
 
 /**
     \fn toneMap_fastYUV
@@ -409,77 +508,34 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
 
     sws_scale(CONTEXTYUV,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
 
-    int ystride = ADM_IMAGE_ALIGN(dstWidth);
-    int uvstride = ADM_IMAGE_ALIGN(dstWidth/2);
-    uint8_t * ptr, * ptrNext, * ptrU, * ptrV;
-    uint16_t * hptr, * hptrNext, * hptrU, * hptrV;
-    uint8_t ysdr[4];
-    int usdr,vsdr,urot,vrot,oormask;
-    oormask = 0xFF;
-    oormask = ~oormask;
-    for (int y=0; y<(dstHeight/2); y++)
+    for (int tr=0; tr<threadCount; tr++)
     {
-        ptr = dstData[0] + y*2*ystride;
-        ptrNext = ptr + ystride;
-        hptr = (uint16_t *)gbrData[0] + y*2*ystride;
-        hptrNext = hptr+ystride;
-        ptrU = dstData[1] + y*uvstride;
-        ptrV = dstData[2] + y*uvstride;
-        hptrU = (uint16_t *)gbrData[1] + y*uvstride;
-        hptrV = (uint16_t *)gbrData[2] + y*uvstride;
-        for (int x=0; x<(dstWidth/2); x++)
+        fastYUV_worker_thread_args[tr].dstWidth = dstWidth;
+        fastYUV_worker_thread_args[tr].dstHeight = dstHeight;
+        fastYUV_worker_thread_args[tr].ystart = tr;
+        fastYUV_worker_thread_args[tr].yincr = threadCount;
+        for (int i=0; i<3; i++)
         {
-            ysdr[0] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptr>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            hptr++;
-            ysdr[1] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptr>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            hptr++;
-            ysdr[2] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrNext>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            hptrNext++;
-            ysdr[3] = hdrLumaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrNext>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            hptrNext++;
-
-            int luma = 0;
-            luma += ysdr[0];
-            luma += ysdr[1];
-            luma += ysdr[2];
-            luma += ysdr[3];
-            luma /= 4;
-            luma &= 0xFF;
-            usdr = hdrChromaBLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrU>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            vsdr = hdrChromaRLUT[luma][(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hptrV>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            hptrU++; hptrV++;
-
-            *ptr = hdrLumaCrLUT[vsdr][ysdr[0]];
-            ptr++;
-            *ptr = hdrLumaCrLUT[vsdr][ysdr[1]];
-            ptr++;
-            *ptrNext = hdrLumaCrLUT[vsdr][ysdr[2]];
-            ptrNext++;
-            *ptrNext = hdrLumaCrLUT[vsdr][ysdr[3]];
-            ptrNext++;
-
-            if (p3_primaries)	// -8 deg hue shift
-            {
-                usdr -= 128;
-                vsdr -= 128;
-                urot = 507*usdr + 71*vsdr;
-                vrot = 507*vsdr - 71*usdr;
-                usdr = (urot >> 9) + 128;
-                vsdr = (vrot >> 9) + 128;
-                if (usdr & oormask)
-                {
-                    usdr = (usdr < 0) ? 0:255;
-                }
-                if (vsdr & oormask)
-                {
-                    vsdr = (vsdr < 0) ? 0:255;
-                }
-            }
-
-            *ptrU = usdr;
-            *ptrV = vsdr;
-            ptrU++; ptrV++;
+            fastYUV_worker_thread_args[tr].gbrData[i] = gbrData[i];
+            fastYUV_worker_thread_args[tr].dstData[i] = dstData[i];
         }
+        fastYUV_worker_thread_args[tr].p3_primaries = p3_primaries;
+        fastYUV_worker_thread_args[tr].hdrLumaLUT = hdrLumaLUT;
+        for (int i=0; i<256; i++)
+        {
+            fastYUV_worker_thread_args[tr].hdrChromaBLUT[i] = hdrChromaBLUT[i];
+            fastYUV_worker_thread_args[tr].hdrChromaRLUT[i] = hdrChromaRLUT[i];
+            fastYUV_worker_thread_args[tr].hdrLumaCrLUT[i] = hdrLumaCrLUT[i];
+        }
+    }
+    for (int tr=0; tr<threadCount; tr++)
+    {
+        pthread_create( &worker_threads[tr], NULL, toneMap_fastYUV_worker, (void*) &fastYUV_worker_thread_args[tr]);
+    }
+    // work in thread workers...
+    for (int tr=0; tr<threadCount; tr++)
+    {
+        pthread_join( worker_threads[tr], NULL);
     }
 
     // Reset output color properties
