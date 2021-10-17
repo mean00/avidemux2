@@ -166,7 +166,7 @@ ADMToneMapper::~ADMToneMapper()
 /**
     \fn toneMap
 */
-bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust)
+bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust, double boostAdjust)
 {
     if (hdrTMmethod != toneMappingMethod)
     {
@@ -177,12 +177,12 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned
     switch (toneMappingMethod)
     {
         case 1:	// fastYUV
-                return toneMap_fastYUV(sourceImage, destImage, targetLuminance, saturationAdjust);
+                return toneMap_fastYUV(sourceImage, destImage, targetLuminance, saturationAdjust, boostAdjust);
             break;
         case 2:
         case 3:
         case 4:
-                return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust);
+                return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust, boostAdjust);
         default:
             return false;
     }
@@ -279,7 +279,7 @@ void * ADMToneMapper::toneMap_fastYUV_worker(void *argptr)
 /**
     \fn toneMap_fastYUV
 */
-bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust)
+bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust, double boostAdjust)
 {
     // Check if tone mapping is needed & can do 
     if (!((sourceImage->_colorTrc == ADM_COL_TRC_SMPTE2084) || (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_NCL) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_CL)))
@@ -307,6 +307,7 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
     if ((!isnan(sourceImage->_hdrInfo.maxCLL)) && (!isnan(sourceImage->_hdrInfo.maxFALL)))
         if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
             boost = sourceImage->_hdrInfo.maxCLL / sourceImage->_hdrInfo.maxFALL;
+    boost *= boostAdjust*boostAdjust;
 
     // P3 primaries
     bool p3_primaries = false;
@@ -779,7 +780,7 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
 /**
     \fn toneMap_RGB
 */
-bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust)
+bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust)
 {
     // Check if tone mapping is needed & can do 
     if (!((sourceImage->_colorTrc == ADM_COL_TRC_SMPTE2084) || (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_NCL) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_CL)))
@@ -812,6 +813,7 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     if ((!isnan(sourceImage->_hdrInfo.maxCLL)) && (!isnan(sourceImage->_hdrInfo.maxFALL)))
         if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
             boost = sourceImage->_hdrInfo.maxCLL / sourceImage->_hdrInfo.maxFALL;
+    boost *= boostAdjust*boostAdjust;
 
     // Allocate if not done yet
     if (hdrRGBLUT == NULL)
