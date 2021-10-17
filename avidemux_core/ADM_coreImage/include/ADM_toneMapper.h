@@ -20,6 +20,7 @@
 #include "ADM_rgb.h" // To have colors
 #include "ADM_threads.h"
 
+
 class ADMImage;
 /**
     \class ADMToneMapper
@@ -39,8 +40,9 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     uint8_t         *hdrChromaBLUT[256];
     uint8_t         *hdrChromaRLUT[256];
     uint8_t         *hdrLumaCrLUT[256];
-    uint8_t         *hdrRGBLUT;
-    double          hdrTMsrcLum, hdrTMtrgtLum, hdrTMsat;
+    uint16_t        *hdrRGBLUT;
+    uint8_t         *hdrGammaLUT;
+    double          hdrTMsrcLum, hdrTMtrgtLum, hdrTMsat, hdrTMboost;
     unsigned int    hdrTMmethod;
     uint16_t        *hdrYUV;
     uint16_t        *hdrRGB[3];
@@ -65,6 +67,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
 
     static void *   toneMap_fastYUV_worker(void *argptr);
     bool            toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust);
+    void            toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries colorPrim, ADM_colorSpace colorSpace, double * primaries, double * whitePoint);
     bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust);
   public :
                     ADMToneMapper(int sws_flag, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
