@@ -16,10 +16,10 @@
 
 #include <cmath>
 #include "ADM_default.h"
-#include "ADM_colorspace.h"
-#include "ADM_image.h"
-#include "ADM_rgb.h" 
+#include "ADM_toneMapper.h" 
 #include "prefs.h"
+#include "ADM_image.h"
+#include "ADM_colorspace.h"
 
 extern "C" {
 #include "libavcodec/avcodec.h"
@@ -46,13 +46,14 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
     contextRGB2=NULL;
     hdrLumaLUT = NULL;
     hdrRGBLUT = NULL;
+    hdrGammaLUT = NULL;
     for (int i=0; i<256; i++)
     {
         hdrChromaBLUT[i] = NULL;
         hdrChromaRLUT[i] = NULL;
         hdrLumaCrLUT[i] = NULL;
     }
-    hdrTMsrcLum = hdrTMtrgtLum = hdrTMsat = -1.0;	// invalidate
+    hdrTMsrcLum = hdrTMtrgtLum = hdrTMsat = hdrTMboost = -1.0;	// invalidate
     hdrTMmethod = 0;
     hdrYUV=NULL;
     for (int i=0; i<3; i++)
@@ -98,6 +99,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
     const int *coeffsrc = sws_getCoefficients(SWS_CS_BT2020);
     const int *coeffdst = sws_getCoefficients(SWS_CS_BT2020);
     sws_setColorspaceDetails(CONTEXTRGB1, coeffsrc, 0, coeffdst, 0, 0, (1 << 16), (1 << 16));
+    coeffsrc = sws_getCoefficients(SWS_CS_ITU709);
     coeffdst = sws_getCoefficients(SWS_CS_ITU709);
     sws_setColorspaceDetails(CONTEXTRGB2, coeffsrc, 0, coeffdst, 0, 0, (1 << 16), (1 << 16));
     
@@ -137,6 +139,7 @@ ADMToneMapper::~ADMToneMapper()
 
     delete [] hdrLumaLUT;
     delete [] hdrRGBLUT;
+    delete [] hdrGammaLUT;
     for (int i=0; i<256; i++)
     {
         delete [] hdrChromaBLUT[i];
@@ -166,7 +169,7 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned
     if (hdrTMmethod != toneMappingMethod)
     {
         hdrTMmethod = toneMappingMethod;
-        hdrTMsrcLum = hdrTMtrgtLum = hdrTMsat = -1.0;	// invalidate
+        hdrTMsrcLum = hdrTMtrgtLum = hdrTMsat = hdrTMboost = -1.0;	// invalidate
     }
 
     switch (toneMappingMethod)
@@ -349,11 +352,12 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
     
     // Populate LUTs if parameters have changed
     bool extended_range = false;
-    if ((maxLuminance != hdrTMsrcLum) || (targetLuminance != hdrTMtrgtLum) || (saturationAdjust != hdrTMsat))
+    if ((maxLuminance != hdrTMsrcLum) || (targetLuminance != hdrTMtrgtLum) || (saturationAdjust != hdrTMsat) || (boost != hdrTMboost))
     {
         hdrTMsrcLum = maxLuminance;
         hdrTMtrgtLum = targetLuminance;
         hdrTMsat = saturationAdjust;
+        hdrTMboost = boost;
         
         for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
         {
@@ -548,9 +552,156 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
     return true;
 }
 
+/**
+    \fn toneMap_RGB_ColorMatrix
+*/
+void ADMToneMapper::toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries colorPrim, ADM_colorSpace colorSpace, double * primaries, double * whitePoint)
+{
+    double pri[3][2];
+    double wp[2];
+
+    // defaults to BT2020:
+    pri[0][0] = 0.708; pri[0][1] = 0.292;
+    pri[1][0] = 0.170; pri[1][1] = 0.797;
+    pri[2][0] = 0.131; pri[2][1] = 0.046;
+    wp[0]=0.3127; wp[1]=0.3290;
+
+    if (colorPrim == ADM_COL_PRI_SMPTE431)	//DCI P3
+    {
+        pri[0][0] = 0.680; pri[0][1] = 0.320;
+        pri[1][0] = 0.265; pri[1][1] = 0.690;
+        pri[2][0] = 0.150; pri[2][1] = 0.060;
+        wp[0]=0.314; wp[1]=0.351;
+    }
+
+    if (colorPrim == ADM_COL_PRI_SMPTE432)	//Display P3
+    {
+        pri[0][0] = 0.680; pri[0][1] = 0.320;
+        pri[1][0] = 0.265; pri[1][1] = 0.690;
+        pri[2][0] = 0.150; pri[2][1] = 0.060;
+        wp[0]=0.3127; wp[1]=0.3290;
+    }
+
+    if (primaries)
+    {
+        bool all = true;
+        for (int j=0; j<3; j++)
+            for (int k=0;k<2; k++)
+                if (isnan(primaries[j*2+k]) || (fabs(primaries[j*2+k])<0.001))
+                {
+                    all = false;
+                    break;
+                }
+        if (all)
+            for (int j=0; j<3; j++)
+                for (int k=0;k<2; k++)
+                    pri[j][k] = primaries[j*2+k];
+    }
+
+    if (whitePoint)
+    {
+        if (!(isnan(whitePoint[0]) || isnan(whitePoint[1])) && (whitePoint[0] != 0) && (whitePoint[1] != 0))
+        {
+            wp[0] = whitePoint[0];
+            wp[1] = whitePoint[1];
+        }
+    }
+
+    double bt709mx[3][3] = {
+            { 3.2410, -1.5374, -0.4986},
+            {-0.9692,  1.8759,  0.0416},
+            { 0.0556, -0.2040,  1.0571},
+        };
+
+    if ((fabs(wp[0] - 0.3127) > 0.001) || (fabs(wp[1] - 0.3290) > 0.001))	// need white point adaptation
+    {
+        float bradford[3][3] = {
+            { 0.8951,  0.2664, -0.1614},
+            {-0.7502,  1.7135,  0.0367},
+            { 0.0389, -0.0685,  1.0296},
+        };
+        float bradfordInv[3][3] = {
+            { 0.9870, -0.1471,  0.1600},
+            { 0.4323,  0.5184,  0.0493},
+            {-0.0085,  0.0400,  0.9685},
+        };
+
+        float dps[3][3] = {{0}};
+        for (int i=0; i<3; i++)
+        {
+            dps[i][i] = (bradford[i][0]*0.9505 + bradford[i][1] + bradford[i][2]*1.0891) / (bradford[i][0]*(wp[0]/wp[1]) + bradford[i][1] + bradford[i][2]*((1.0-wp[0]-wp[1])/wp[1]));
+        }
+        float dpsb[3][3] = {{0}};
+        for (int j=0; j<3; j++)
+            for (int k=0;k<3; k++)
+                for (int l=0;l<3; l++)
+                    dpsb[j][k] += dps[j][l] * bradford[l][k];
+        float tmpbt709mx[3][3] = {{0}};
+        for (int j=0; j<3; j++)
+            for (int k=0;k<3; k++)
+                for (int l=0;l<3; l++)
+                    tmpbt709mx[j][k] += bt709mx[j][l] * bradfordInv[l][k];
+        for (int j=0; j<3; j++)
+            for (int k=0;k<3; k++)
+                bt709mx[j][k] = 0;
+        for (int j=0; j<3; j++)
+            for (int k=0;k<3; k++)
+                for (int l=0;l<3; l++)
+                    bt709mx[j][k] += tmpbt709mx[j][l] * dpsb[l][k];
+    }
+    
+    double X[3], Z[3], S[3];
+    for (int i=0; i<3; i++)
+    {
+        X[i] = pri[i][0] / pri[i][1];
+        Z[i] = (1.0 - pri[i][0] - pri[i][1]) / pri[i][1];
+    }
+    double smx[3][3];
+    for (int i=0; i<3; i++)
+    {
+        smx[0][i] = X[i];
+        smx[1][i] = 1.0;
+        smx[2][i] = Z[i];
+    }
+    // invert smx
+    double smxInv[3][3];
+    smxInv[0][0] =  (smx[1][1]*smx[2][2] - smx[2][1]*smx[1][2]);
+    smxInv[0][1] = -(smx[0][1]*smx[2][2] - smx[2][1]*smx[0][2]);
+    smxInv[0][2] =  (smx[0][1]*smx[1][2] - smx[1][1]*smx[0][2]);
+    smxInv[1][0] = -(smx[1][0]*smx[2][2] - smx[2][0]*smx[1][2]);
+    smxInv[1][1] =  (smx[0][0]*smx[2][2] - smx[2][0]*smx[0][2]);
+    smxInv[1][2] = -(smx[0][0]*smx[1][2] - smx[1][0]*smx[0][2]);
+    smxInv[2][0] =  (smx[1][0]*smx[2][1] - smx[2][0]*smx[1][1]);
+    smxInv[2][1] = -(smx[0][0]*smx[2][1] - smx[2][0]*smx[0][1]);
+    smxInv[2][2] =  (smx[0][0]*smx[1][1] - smx[1][0]*smx[0][1]);
+    double determinant = smx[0][0] * smxInv[0][0] + smx[1][0] * smxInv[0][1] + smx[2][0] * smxInv[0][2];
+    if (determinant != 0.0)
+        for (int j=0; j<3; j++)
+            for (int k=0;k<3; k++)
+                smxInv[j][k] /= determinant;
+
+    for (int i=0; i<3; i++)
+        S[i] = smxInv[i][0]*(wp[0]/wp[1]) + smxInv[i][1] + smxInv[i][2]*((1.0-wp[0]-wp[1])/wp[1]);
+    for (int i=0; i<3; i++)
+    {
+        smx[0][i] = S[i]*X[i];
+        smx[1][i] = S[i];
+        smx[2][i] = S[i]*Z[i];
+    }
+    
+    double fmx[3][3] = {{0}};
+    for (int j=0; j<3; j++)
+        for (int k=0;k<3; k++)
+            for (int l=0;l<3; l++)
+                fmx[j][k] += bt709mx[j][l] * smx[l][k];
+
+    for (int j=0; j<3; j++)
+        for (int k=0;k<3; k++)
+            matrix[j*3+k] = std::round(fmx[j][k]*4096);
+}
 
 /**
-    \fn toneMap_fastYUV
+    \fn toneMap_RGB
 */
 bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust)
 {
@@ -589,8 +740,14 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     // Allocate if not done yet
     if (hdrRGBLUT == NULL)
     {
-        hdrRGBLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+        hdrRGBLUT = new uint16_t[ADM_COLORSPACE_HDR_LUT_SIZE];
         if (hdrRGBLUT == NULL)
+            return false;
+    }
+    if (hdrGammaLUT == NULL)
+    {
+        hdrGammaLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
+        if (hdrGammaLUT == NULL)
             return false;
     }
     for (int i=0; i<3; i++)
@@ -612,11 +769,12 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
 
     // Populate LUTs if parameters have changed
     bool extended_range = false;
-    if ((maxLuminance != hdrTMsrcLum) || (targetLuminance != hdrTMtrgtLum) || (saturationAdjust != hdrTMsat))
+    if ((maxLuminance != hdrTMsrcLum) || (targetLuminance != hdrTMtrgtLum) || (saturationAdjust != hdrTMsat) || (boost != hdrTMboost))
     {
         hdrTMsrcLum = maxLuminance;
         hdrTMtrgtLum = targetLuminance;
         hdrTMsat = saturationAdjust;
+        hdrTMboost = boost;
         
         for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
         {
@@ -664,20 +822,22 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
                         Ytm *= (npl+1)/npl;
                     break;
                 case 4:	// hable
+                        Ytm *= boost;
                         Ytm = (Ytm * (Ytm * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (Ytm * (Ytm * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
                         Ytm /= (npl * (npl * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (npl * (npl * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
-                        Ytm *= boost;
                     break;
             }
             
+            if (Ytm < 0)
+                Ytm = 0;
+            if (Ytm > 1)
+                Ytm = 1;
+            hdrRGBLUT[l] = std::round(65535.0*Ytm);
+            
             // gamma
-            double YSDR;
-            YSDR = ((Ytm > 0.0031308) ? (( 1.055 * std::pow(Ytm, (1.0 / 2.4)) ) - 0.055) : (Ytm * 12.92));
-            if (YSDR < 0)
-                YSDR = 0;
-            if (YSDR > 1)
-                YSDR = 1;
-            hdrRGBLUT[l] = std::round(255.0*YSDR);
+            double Ygamma;
+            Ygamma = ((Y > 0.0031308) ? (( 1.055 * std::pow(Y, (1.0 / 2.4)) ) - 0.055) : (Y * 12.92));
+            hdrGammaLUT[l] = std::round(255.0*Ygamma);
         }
         
         for (int l=0; l<256; l+=1)
@@ -720,14 +880,70 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     }
     sws_scale(CONTEXTRGB1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
     
-    for (int p=0; p<3; p++)
+    int32_t linR,linG,linB,linccR,linccG,linccB;
+    int32_t oormask;
+    oormask = 0xFFFF;
+    oormask = ~oormask;
+    int32_t ccmx[9];
+    
+    toneMap_RGB_ColorMatrix(ccmx, sourceImage->_colorPrim, sourceImage->_colorSpace, &(sourceImage->_hdrInfo.primaries[0][0]), sourceImage->_hdrInfo.whitePoint);
+    
+    uint8_t * sdrR = sdrRGB[0];
+    uint8_t * sdrG = sdrRGB[1];
+    uint8_t * sdrB = sdrRGB[2];
+    uint16_t * hdrR = hdrRGB[0];
+    uint16_t * hdrG = hdrRGB[1];
+    uint16_t * hdrB = hdrRGB[2];
+
+    for (int xy=0; xy<ADM_IMAGE_ALIGN(srcWidth)*srcHeight; xy++)
     {
-        uint8_t * sdr = sdrRGB[p];
-        uint16_t * hdr = hdrRGB[p];
-        for (int xy=0; xy<ADM_IMAGE_ALIGN(srcWidth)*srcHeight; xy++)
+        linR = hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrR[xy]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+        linG = hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrG[xy]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+        linB = hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrB[xy]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+        linccB = ccmx[0]*linB + ccmx[1]*linG + ccmx[2]*linR;
+        linccG = ccmx[3]*linB + ccmx[4]*linG + ccmx[5]*linR;
+        linccR = ccmx[6]*linB + ccmx[7]*linG + ccmx[8]*linR;
+        linccR >>= 12;
+        linccG >>= 12;
+        linccB >>= 12;
+        if ((linccR&oormask) || (linccG&oormask) || (linccB&oormask))
         {
-            sdr[xy] = hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdr[xy]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            int32_t min = (linccR < linccG) ? linccR : linccG;
+            min = (min < linccB) ? min : linccB;
+            if (min < 0)
+            {
+                int32_t luma = 54*linccB+183*linccG+18*linccR;
+                luma >>= 8;
+                int32_t coeff = ((min-luma)==0) ? 256: min*256/(min-luma);
+                int32_t icoeff = 256-coeff;
+                int32_t lc = luma*coeff;
+                linccR = icoeff*linccR + lc;
+                linccR >>= 8;
+                linccG = icoeff*linccG + lc;
+                linccG >>= 8;
+                linccB = icoeff*linccB + lc;
+                linccB >>= 8;
+            }
+            int32_t max = (linccR > linccG) ? linccR : linccG;
+            max = (max > linccB) ? max : linccB;
+            if (max > 65535)
+            {
+                int32_t coeff = (4096*65536)/max;
+                linccR *= coeff;
+                linccR >>= 12;
+                linccG *= coeff;
+                linccG >>= 12;
+                linccB *= coeff;
+                linccB >>= 12;
+            }
+            
+            linccR = (linccR < 0) ? 0 : ((linccR > 65535) ? 65535 : linccR);
+            linccG = (linccG < 0) ? 0 : ((linccG > 65535) ? 65535 : linccG);
+            linccB = (linccB < 0) ? 0 : ((linccB > 65535) ? 65535 : linccB);
         }
+        sdrR[xy] = hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+        sdrG[xy] = hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+        sdrB[xy] = hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
     }
 
     for (int p=0; p<3; p++)
