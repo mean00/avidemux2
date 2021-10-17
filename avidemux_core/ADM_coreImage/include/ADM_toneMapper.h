@@ -65,13 +65,26 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     
     fastYUV_worker_thread_arg *fastYUV_worker_thread_args;
 
+    typedef struct {
+        uint32_t        srcWidth,srcHeight;
+        uint32_t        ystart, yincr;
+        uint16_t        *hdrRGB[3];
+        uint8_t         *sdrRGB[3];
+        uint16_t        *hdrRGBLUT;
+        int             *ccmx;
+        uint8_t         *hdrGammaLUT;
+    } RGB_worker_thread_arg;
+    
+    RGB_worker_thread_arg *RGB_worker_thread_args;
+
     static void *   toneMap_fastYUV_worker(void *argptr);
-    bool            toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust);
+    bool            toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust, double boostAdjust);
+    static void *   toneMap_RGB_worker(void *argptr);
     void            toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries colorPrim, ADM_colorSpace colorSpace, double * primaries, double * whitePoint);
-    bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust);
+    bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust);
   public :
                     ADMToneMapper(int sws_flag, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
-    bool            toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust);
+    bool            toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust, double boostAdjust);
                     ~ADMToneMapper();
 };
 

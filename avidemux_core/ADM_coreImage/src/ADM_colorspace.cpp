@@ -285,12 +285,14 @@ bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage
         toneMappingMethod = 0;
     if ((toneMapper != NULL) && (toneMappingMethod > 0))
     {
-        float targetLuminance, saturation;
+        float targetLuminance, saturation, boost;
         if(!prefs->get(HDR_TARGET_LUMINANCE,&targetLuminance))
             targetLuminance = 100.0;
         if(!prefs->get(HDR_SATURATION,&saturation))
             saturation = 1.0;
-        if (toneMapper->toneMap(sourceImage, destImage, toneMappingMethod, targetLuminance, saturation))
+        if(!prefs->get(HDR_BOOST,&boost))
+            boost = 1.0;
+        if (toneMapper->toneMap(sourceImage, destImage, toneMappingMethod, targetLuminance, saturation, boost))
             return true;
     }
 

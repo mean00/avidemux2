@@ -112,6 +112,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
         threadCount = (threadCount-4)/2 + 4;
     worker_threads = new pthread_t [threadCount];
     fastYUV_worker_thread_args = new fastYUV_worker_thread_arg [threadCount];
+    RGB_worker_thread_args = new RGB_worker_thread_arg [threadCount];
 }
 
 
@@ -158,13 +159,14 @@ ADMToneMapper::~ADMToneMapper()
     }
     delete [] worker_threads;
     delete [] fastYUV_worker_thread_args;
+    delete [] RGB_worker_thread_args;
 }
 
 
 /**
     \fn toneMap
 */
-bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust)
+bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust, double boostAdjust)
 {
     if (hdrTMmethod != toneMappingMethod)
     {
@@ -175,12 +177,12 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned
     switch (toneMappingMethod)
     {
         case 1:	// fastYUV
-                return toneMap_fastYUV(sourceImage, destImage, targetLuminance, saturationAdjust);
+                return toneMap_fastYUV(sourceImage, destImage, targetLuminance, saturationAdjust, boostAdjust);
             break;
         case 2:
         case 3:
         case 4:
-                return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust);
+                return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust, boostAdjust);
         default:
             return false;
     }
@@ -277,7 +279,7 @@ void * ADMToneMapper::toneMap_fastYUV_worker(void *argptr)
 /**
     \fn toneMap_fastYUV
 */
-bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust)
+bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust, double boostAdjust)
 {
     // Check if tone mapping is needed & can do 
     if (!((sourceImage->_colorTrc == ADM_COL_TRC_SMPTE2084) || (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_NCL) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_CL)))
@@ -305,6 +307,7 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
     if ((!isnan(sourceImage->_hdrInfo.maxCLL)) && (!isnan(sourceImage->_hdrInfo.maxFALL)))
         if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
             boost = sourceImage->_hdrInfo.maxCLL / sourceImage->_hdrInfo.maxFALL;
+    boost *= boostAdjust*boostAdjust;
 
     // P3 primaries
     bool p3_primaries = false;
@@ -690,10 +693,94 @@ void ADMToneMapper::toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries
             matrix[j*3+k] = std::round(fmx[j][k]*4096);
 }
 
+
+
+/**
+    \fn toneMap_RGB_worker
+*/
+void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
+{
+    RGB_worker_thread_arg * arg = (RGB_worker_thread_arg*)argptr;
+
+    int stride = ADM_IMAGE_ALIGN(arg->srcWidth);
+    uint8_t * sdrR, * sdrG, * sdrB;
+    uint16_t * hdrR, * hdrG, * hdrB;
+    int32_t linR,linG,linB,linccR,linccG,linccB;
+    int32_t oormask;
+    oormask = 0xFFFF;
+    oormask = ~oormask;
+
+    for (int y=arg->ystart; y<(arg->srcHeight); y+=arg->yincr)
+    {
+        sdrR = arg->sdrRGB[0] + y*stride;
+        sdrG = arg->sdrRGB[1] + y*stride;
+        sdrB = arg->sdrRGB[2] + y*stride;
+        hdrR = arg->hdrRGB[0] + y*stride;
+        hdrG = arg->hdrRGB[1] + y*stride;
+        hdrB = arg->hdrRGB[2] + y*stride;
+
+        for (int x=0; x<(arg->srcWidth); x++)
+        {
+            linR = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            linG = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            linB = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            hdrR++; hdrG++; hdrB++;
+            linccB = arg->ccmx[0]*linB + arg->ccmx[1]*linG + arg->ccmx[2]*linR;
+            linccG = arg->ccmx[3]*linB + arg->ccmx[4]*linG + arg->ccmx[5]*linR;
+            linccR = arg->ccmx[6]*linB + arg->ccmx[7]*linG + arg->ccmx[8]*linR;
+            linccR >>= 12;
+            linccG >>= 12;
+            linccB >>= 12;
+            if ((linccR&oormask) || (linccG&oormask) || (linccB&oormask))
+            {
+                int32_t min = (linccR < linccG) ? linccR : linccG;
+                min = (min < linccB) ? min : linccB;
+                if (min < 0)
+                {
+                    int32_t luma = 54*linccB+183*linccG+18*linccR;
+                    luma >>= 8;
+                    int32_t coeff = ((min-luma)==0) ? 256: min*256/(min-luma);
+                    int32_t icoeff = 256-coeff;
+                    int32_t lc = luma*coeff;
+                    linccR = icoeff*linccR + lc;
+                    linccR >>= 8;
+                    linccG = icoeff*linccG + lc;
+                    linccG >>= 8;
+                    linccB = icoeff*linccB + lc;
+                    linccB >>= 8;
+                }
+                int32_t max = (linccR > linccG) ? linccR : linccG;
+                max = (max > linccB) ? max : linccB;
+                if (max > 65535)
+                {
+                    int32_t coeff = (4096*65536)/max;
+                    linccR *= coeff;
+                    linccR >>= 12;
+                    linccG *= coeff;
+                    linccG >>= 12;
+                    linccB *= coeff;
+                    linccB >>= 12;
+                }
+                
+                linccR = (linccR < 0) ? 0 : ((linccR > 65535) ? 65535 : linccR);
+                linccG = (linccG < 0) ? 0 : ((linccG > 65535) ? 65535 : linccG);
+                linccB = (linccB < 0) ? 0 : ((linccB > 65535) ? 65535 : linccB);
+            }
+            *sdrR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            *sdrG = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            *sdrB = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            sdrR++; sdrG++; sdrB++;
+        }
+    }
+
+    pthread_exit(NULL);
+    return NULL;
+}
+
 /**
     \fn toneMap_RGB
 */
-bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust)
+bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust)
 {
     // Check if tone mapping is needed & can do 
     if (!((sourceImage->_colorTrc == ADM_COL_TRC_SMPTE2084) || (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_NCL) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_CL)))
@@ -726,6 +813,7 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     if ((!isnan(sourceImage->_hdrInfo.maxCLL)) && (!isnan(sourceImage->_hdrInfo.maxFALL)))
         if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
             boost = sourceImage->_hdrInfo.maxCLL / sourceImage->_hdrInfo.maxFALL;
+    boost *= boostAdjust*boostAdjust;
 
     // Allocate if not done yet
     if (hdrRGBLUT == NULL)
@@ -861,71 +949,33 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth)*2;
     }
     sws_scale(CONTEXTRGB1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
-    
-    int32_t linR,linG,linB,linccR,linccG,linccB;
-    int32_t oormask;
-    oormask = 0xFFFF;
-    oormask = ~oormask;
-    int32_t ccmx[9];
-    
-    toneMap_RGB_ColorMatrix(ccmx, sourceImage->_colorPrim, sourceImage->_colorSpace, &(sourceImage->_hdrInfo.primaries[0][0]), sourceImage->_hdrInfo.whitePoint);
-    
-    uint8_t * sdrR = sdrRGB[0];
-    uint8_t * sdrG = sdrRGB[1];
-    uint8_t * sdrB = sdrRGB[2];
-    uint16_t * hdrR = hdrRGB[0];
-    uint16_t * hdrG = hdrRGB[1];
-    uint16_t * hdrB = hdrRGB[2];
 
-    for (int xy=0; xy<ADM_IMAGE_ALIGN(srcWidth)*srcHeight; xy++)
+    int32_t ccmx[9];
+    toneMap_RGB_ColorMatrix(ccmx, sourceImage->_colorPrim, sourceImage->_colorSpace, &(sourceImage->_hdrInfo.primaries[0][0]), sourceImage->_hdrInfo.whitePoint);
+
+    for (int tr=0; tr<threadCount; tr++)
     {
-        linR = hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrR[xy]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-        linG = hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrG[xy]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-        linB = hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrB[xy]>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-        linccB = ccmx[0]*linB + ccmx[1]*linG + ccmx[2]*linR;
-        linccG = ccmx[3]*linB + ccmx[4]*linG + ccmx[5]*linR;
-        linccR = ccmx[6]*linB + ccmx[7]*linG + ccmx[8]*linR;
-        linccR >>= 12;
-        linccG >>= 12;
-        linccB >>= 12;
-        if ((linccR&oormask) || (linccG&oormask) || (linccB&oormask))
+        RGB_worker_thread_args[tr].srcWidth = srcWidth;
+        RGB_worker_thread_args[tr].srcHeight = srcHeight;
+        RGB_worker_thread_args[tr].ystart = tr;
+        RGB_worker_thread_args[tr].yincr = threadCount;
+        for (int i=0; i<3; i++)
         {
-            int32_t min = (linccR < linccG) ? linccR : linccG;
-            min = (min < linccB) ? min : linccB;
-            if (min < 0)
-            {
-                int32_t luma = 54*linccB+183*linccG+18*linccR;
-                luma >>= 8;
-                int32_t coeff = ((min-luma)==0) ? 256: min*256/(min-luma);
-                int32_t icoeff = 256-coeff;
-                int32_t lc = luma*coeff;
-                linccR = icoeff*linccR + lc;
-                linccR >>= 8;
-                linccG = icoeff*linccG + lc;
-                linccG >>= 8;
-                linccB = icoeff*linccB + lc;
-                linccB >>= 8;
-            }
-            int32_t max = (linccR > linccG) ? linccR : linccG;
-            max = (max > linccB) ? max : linccB;
-            if (max > 65535)
-            {
-                int32_t coeff = (4096*65536)/max;
-                linccR *= coeff;
-                linccR >>= 12;
-                linccG *= coeff;
-                linccG >>= 12;
-                linccB *= coeff;
-                linccB >>= 12;
-            }
-            
-            linccR = (linccR < 0) ? 0 : ((linccR > 65535) ? 65535 : linccR);
-            linccG = (linccG < 0) ? 0 : ((linccG > 65535) ? 65535 : linccG);
-            linccB = (linccB < 0) ? 0 : ((linccB > 65535) ? 65535 : linccB);
+            RGB_worker_thread_args[tr].hdrRGB[i] = hdrRGB[i];
+            RGB_worker_thread_args[tr].sdrRGB[i] = sdrRGB[i];
         }
-        sdrR[xy] = hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-        sdrG[xy] = hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-        sdrB[xy] = hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+        RGB_worker_thread_args[tr].hdrRGBLUT = hdrRGBLUT;
+        RGB_worker_thread_args[tr].ccmx = ccmx;
+        RGB_worker_thread_args[tr].hdrGammaLUT = hdrGammaLUT;
+    }
+    for (int tr=0; tr<threadCount; tr++)
+    {
+        pthread_create( &worker_threads[tr], NULL, toneMap_RGB_worker, (void*) &RGB_worker_thread_args[tr]);
+    }
+    // work in thread workers...
+    for (int tr=0; tr<threadCount; tr++)
+    {
+        pthread_join( worker_threads[tr], NULL);
     }
 
     for (int p=0; p<3; p++)
