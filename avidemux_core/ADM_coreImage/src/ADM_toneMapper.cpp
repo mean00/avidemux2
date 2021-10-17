@@ -319,35 +319,25 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
     if (hdrLumaLUT == NULL)
     {
         hdrLumaLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
-        if (hdrLumaLUT == NULL)
-            return false;
     }
     for (int i=0; i<256; i++)
     {
         if (hdrChromaBLUT[i] == NULL)
         {
             hdrChromaBLUT[i] = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
-            if (hdrChromaBLUT[i] == NULL)
-                return false;
         }
         if (hdrChromaRLUT[i] == NULL)
         {
             hdrChromaRLUT[i] = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
-            if (hdrChromaRLUT[i] == NULL)
-                return false;
         }
         if (hdrLumaCrLUT[i] == NULL)
         {
             hdrLumaCrLUT[i] = new uint8_t[256];
-            if (hdrLumaCrLUT[i] == NULL)
-                return false;
         }
     }
     if (hdrYUV == NULL)
     {
         hdrYUV = new uint16_t[ADM_IMAGE_ALIGN(dstWidth)*dstHeight*2];
-        if (hdrYUV == NULL)
-            return false;
     }
     
     // Populate LUTs if parameters have changed
@@ -741,28 +731,20 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     if (hdrRGBLUT == NULL)
     {
         hdrRGBLUT = new uint16_t[ADM_COLORSPACE_HDR_LUT_SIZE];
-        if (hdrRGBLUT == NULL)
-            return false;
     }
     if (hdrGammaLUT == NULL)
     {
         hdrGammaLUT = new uint8_t[ADM_COLORSPACE_HDR_LUT_SIZE];
-        if (hdrGammaLUT == NULL)
-            return false;
     }
     for (int i=0; i<3; i++)
     {
         if (hdrRGB[i] == NULL)
         {
             hdrRGB[i] = new uint16_t[ADM_IMAGE_ALIGN(dstWidth)*dstHeight];
-            if (hdrRGB[i] == NULL)
-                return false;
         }
         if (sdrRGB[i] == NULL)
         {
             sdrRGB[i] = new uint8_t[ADM_IMAGE_ALIGN(dstWidth)*dstHeight];
-            if (sdrRGB[i] == NULL)
-                return false;
         }
     }
 
