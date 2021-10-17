@@ -33,6 +33,7 @@
       <li>Color balance (adjust shadow, midtone and highlight)</li>
       <li>Chroma hold (monochrome effect with kept colors)</li>
       <li>Chroma key (replace &quot;green screen&quot; with an image)</li>
+      <li>Deband (reduce banding artifacts)</li>
       <li>DelogoHQ (clean up arbitrary shaped logo)</li>
       <li>Dynamic threshold</li>
       <li>Fade from first image</li>
