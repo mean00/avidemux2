@@ -12,6 +12,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QDialog>
 #include <QDialogButtonBox>
 #include <QGridLayout>
 #include <QSpacerItem>
