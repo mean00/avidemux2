@@ -34,22 +34,24 @@ extern ADM_Composer *video_body; // Fixme!
 ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
 {
     aviInfo info;
+    aviColorInfo cfo;
     uint64_t ptsStart=startTime+1;
     uint64_t dtsStart;
     ADM_info("Creating copy video stream, start time: %s\n",ADM_us2plain(startTime));
     ADM_info("End time: %s\n",ADM_us2plain(endTime));
-    video_body->getVideoInfo(&info);
+    video_body->getVideoInfo(&info, &cfo);
     width=info.width;
     height=info.height;
     fourCC=info.fcc;
     averageFps1000=info.fps1000;
-    if(info.colflags)
+
+    if(cfo.colflags)
     {
         colorInfoPresent = true;
-        colorRange = info.range;
-        colorPrimaries = info.prim;
-        colorTransferCharacteristic = info.coltc;
-        colorMatrixCoefficients = info.mcoeff;
+        colorRange = cfo.range;
+        colorPrimaries = cfo.prim;
+        colorTransferCharacteristic = cfo.coltc;
+        colorMatrixCoefficients = cfo.mcoeff;
     }
     video_body->getTimeBase(&timeBaseNum,&timeBaseDen,true);
     frameIncrement=video_body->getFrameIncrement(true);
