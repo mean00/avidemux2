@@ -47,6 +47,7 @@
 ADM_Composer::ADM_Composer (void)
 {
   _pp=NULL;
+  _hdrConfig=NULL;
   _imageBuffer=NULL;
   _internalFlags=0;
   _currentSegment=0;
@@ -127,6 +128,8 @@ ADM_Composer::~ADM_Composer ()
 
     if(_pp) delete _pp;
     _pp=NULL;
+    if (_hdrConfig) delete _hdrConfig;
+    _hdrConfig=NULL;
    
 
 }
@@ -551,6 +554,9 @@ uint8_t ADM_Composer::addFile (const char *name)
         _pp->postProcStrength=value;
         _pp->forcedQuant=0;
         _pp->update();
+        
+        if (_hdrConfig) delete _hdrConfig;
+        _hdrConfig=new ADMToneMapperConfig(true);
 
         if(_imageBuffer)
         {

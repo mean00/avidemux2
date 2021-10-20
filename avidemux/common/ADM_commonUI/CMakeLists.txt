@@ -9,6 +9,7 @@ DIA_prefs.cpp
 DIA_builtin.cpp       
 DIA_jobs_save.cpp
 DIA_plugins.cpp
+DIA_HDRConfig.cpp
 )
 
 

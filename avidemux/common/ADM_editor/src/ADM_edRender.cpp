@@ -30,6 +30,7 @@
 #endif
 
 #include "ADM_pp.h"
+#include "ADM_toneMapper.h"
 
 /**
     \fn recalibrateSigned
@@ -567,6 +568,27 @@ uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, bool *swa
 	*strength=_pp->postProcStrength;
 	*swapuv=_pp->swapuv;
 	return 1;
+}
+/**
+    \fn setHDRConfig
+*/
+uint8_t ADM_Composer::setHDRConfig( uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust)
+{
+    if(!_segments.getNbRefVideos()) return 0;
+    if(!_hdrConfig) return 0;
+    _hdrConfig->setConfig(toneMappingMethod, saturationAdjust, boostAdjust);
+    return 1;
+}
+/**
+    \fn getHDRConfig
+*/
+
+uint8_t ADM_Composer::getHDRConfig( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust)
+{
+    if(!_segments.getNbRefVideos()) return 0;
+    if(!_hdrConfig) return 0;
+    _hdrConfig->getConfig(toneMappingMethod, saturationAdjust, boostAdjust);
+    return 1;
 }
 /**
     \fn switchToNextSegment

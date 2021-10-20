@@ -27,6 +27,42 @@ extern "C" {
 #include "libswscale/swscale.h"
 }
 
+unsigned int ADMToneMapperConfig::method;
+float ADMToneMapperConfig::saturation;
+float ADMToneMapperConfig::boost;
+
+ADMToneMapperConfig::ADMToneMapperConfig(bool init)
+{
+    if (init)
+    {
+        if (!prefs->get(HDR_TONEMAPPING,&method))
+            method = 1;
+        saturation = 1;
+        boost = 1;
+    }
+}
+
+void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, float * targetLuminance)
+{
+    if (toneMappingMethod)
+        *toneMappingMethod = method;
+    if (saturationAdjust)
+        *saturationAdjust = saturation;
+    if (boostAdjust)
+        *boostAdjust = boost;
+    if (targetLuminance)
+        if(!prefs->get(HDR_TARGET_LUMINANCE,targetLuminance))
+            *targetLuminance = 100.0;
+}
+
+void ADMToneMapperConfig::setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust)
+{
+    method = toneMappingMethod;
+    saturation = saturationAdjust;
+    boost = boostAdjust;
+}
+
+
 
 #define CONTEXTYUV (SwsContext *)contextYUV
 #define CONTEXTRGB1 (SwsContext *)contextRGB1
@@ -41,6 +77,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
             int dw, int dh,
             ADM_pixelFormat from,ADM_pixelFormat to)
 {
+    config = new ADMToneMapperConfig();
     contextYUV=NULL;
     contextRGB1=NULL;
     contextRGB2=NULL;
@@ -122,6 +159,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
 */
 ADMToneMapper::~ADMToneMapper()
 {
+    delete config;
     if(contextYUV)
     {
         sws_freeContext(CONTEXTYUV);
@@ -166,8 +204,15 @@ ADMToneMapper::~ADMToneMapper()
 /**
     \fn toneMap
 */
-bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust, double boostAdjust)
+bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage)
 {
+    uint32_t toneMappingMethod;
+    float targetLuminance;
+    float saturationAdjust;
+    float boostAdjust;
+    
+    config->getConfig(&toneMappingMethod, &saturationAdjust, &boostAdjust, &targetLuminance);
+    
     if (hdrTMmethod != toneMappingMethod)
     {
         hdrTMmethod = toneMappingMethod;

@@ -8,6 +8,7 @@ ACT(EXIT)
 ACT(PlayAvi)
 ACT(StopAvi)
 ACT(SetPostProcessing)
+ACT(SetHDRConfig)
 
 //----- SAVE -----
 ACT(SAVE_BEGIN)

@@ -94,7 +94,5 @@ bool load_pictures_reverse_order;
 struct  {
 	uint32_t tonemapping;
 	float target_luminance;
-	float saturation;
-	float boost;
 }hdr;
 }my_prefs_struct;

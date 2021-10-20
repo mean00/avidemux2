@@ -98,6 +98,7 @@ std::vector<MenuEntry> myMenuEdit(_myMenuEdit, _myMenuEdit + sizeof(_myMenuEdit)
 static const MenuEntry _myMenuVideo[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Decoder Option"),     NULL,ACT_DecoderOption,     NULL,NULL,0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","PostProcessing"),     NULL,ACT_SetPostProcessing, NULL,NULL,0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","HDR tone mapping"),   NULL,ACT_SetHDRConfig, NULL,NULL,0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Filters"),            NULL,ACT_VIDEO_FILTERS,     NULL,"Ctrl+Alt+F",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Play filtered"),      NULL,ACT_PreviewChanged,    NULL,NULL,0}
         };

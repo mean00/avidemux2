@@ -485,6 +485,9 @@ void HandleAction (Action action)
     case ACT_SetPostProcessing:
       A_setPostproc();
       break;
+    case ACT_SetHDRConfig:
+      A_setHDRConfig();
+      break;
     case ACT_MarkA:
     case ACT_MarkB:
     {
@@ -1483,6 +1486,24 @@ bool swap;
      if(DIA_getMPParams( &type, &strength,&swap))
      {
         video_body->setPostProc(type,strength,swap);
+     }
+
+}
+
+//
+extern int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust);
+//
+void    A_setHDRConfig( void )
+{
+    uint32_t method;
+    float saturation, boost;
+    if(!avifileinfo) return;
+
+    video_body->getHDRConfig(&method,&saturation,&boost);
+
+     if(DIA_getHDRParams( &method, &saturation,&boost))
+     {
+        video_body->setHDRConfig(method,saturation,boost);
      }
 
 }

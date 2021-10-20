@@ -77,6 +77,13 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorTy
         {
             this->_scriptWriter->setPostProcessing(pptype, ppstrength, ppswap);
         }
+        
+        // HDR config
+        printf("Scripting HDR tone mapping config\n");
+        uint32_t toneMappingMethod;
+        float saturationAdjust, boostAdjust;
+        this->_editor->getHDRConfig(&toneMappingMethod, &saturationAdjust, &boostAdjust);
+        this->_scriptWriter->setHDRConfig(toneMappingMethod, saturationAdjust, boostAdjust);
 
         // Video codec
     }
