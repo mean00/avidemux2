@@ -280,19 +280,9 @@ bool ADMColorScalerFull::convertPlanes(int sourceStride[3], int destStride[3], u
 */
 bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage *destImage)
 {
-    unsigned int toneMappingMethod;
-    if(!prefs->get(HDR_TONEMAPPING,&toneMappingMethod))
-        toneMappingMethod = 0;
-    if ((toneMapper != NULL) && (toneMappingMethod > 0))
+    if (toneMapper != NULL)
     {
-        float targetLuminance, saturation, boost;
-        if(!prefs->get(HDR_TARGET_LUMINANCE,&targetLuminance))
-            targetLuminance = 100.0;
-        if(!prefs->get(HDR_SATURATION,&saturation))
-            saturation = 1.0;
-        if(!prefs->get(HDR_BOOST,&boost))
-            boost = 1.0;
-        if (toneMapper->toneMap(sourceImage, destImage, toneMappingMethod, targetLuminance, saturation, boost))
+        if (toneMapper->toneMap(sourceImage, destImage))
             return true;
     }
 

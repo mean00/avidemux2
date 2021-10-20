@@ -82,7 +82,5 @@ static optionDesc myOptions[]={
 { LOAD_PICTURES_REVERSE_ORDER,"load_pictures_reverse_order"           ,ADM_param_bool    	,"0",	0,	1},
 { HDR_TONEMAPPING,"hdr.tonemapping"                                   ,ADM_param_uint32_t	,"1",	0,	99},
 { HDR_TARGET_LUMINANCE,"hdr.target_luminance"                         ,ADM_param_float   	,"100.0",	0.0,	1000.0},
-{ HDR_SATURATION,"hdr.saturation"                                     ,ADM_param_float   	,"1.0",	0.0,	10.0},
-{ HDR_BOOST,"hdr.boost"                                               ,ADM_param_float   	,"1.0",	0.0,	10.0},
 };
 

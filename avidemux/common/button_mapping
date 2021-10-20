@@ -123,6 +123,7 @@
 #     SelectDevOSS
 #     SelectEncoder
 #     SelectTrack1
+#     SetHDRConfig
 #     SetLogFile
 #     SetMuxParam
 #     SetPostProcessing

@@ -71,7 +71,5 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"load_pictures_reverse_order",offsetof(my_prefs_struct,load_pictures_reverse_order),"bool",ADM_param_bool},
  {"hdr.tonemapping",offsetof(my_prefs_struct,hdr.tonemapping),"uint32_t",ADM_param_uint32_t},
  {"hdr.target_luminance",offsetof(my_prefs_struct,hdr.target_luminance),"float",ADM_param_float},
- {"hdr.saturation",offsetof(my_prefs_struct,hdr.saturation),"float",ADM_param_float},
- {"hdr.boost",offsetof(my_prefs_struct,hdr.boost),"float",ADM_param_float},
 {NULL,0,NULL}
 };

@@ -36,6 +36,7 @@
  #include "ADM_edCache.h"
  #include "ADM_pp.h"
  #include "ADM_colorspace.h"
+ #include "ADM_toneMapper.h"
 
  #include "ADM_audioStream.h"
  #include "ADM_audiocodec.h"
@@ -158,6 +159,7 @@ protected:
                     uint8_t     dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid);
                     uint32_t	_internalFlags;  // Flags :
                     ADM_PP      *_pp;             // Postprocessing settings
+                    ADMToneMapperConfig    *_hdrConfig;
                     ADMImage	*_imageBuffer;   // Temp buffer used for decoding
                     uint64_t    _currentPts;        // Current image PTS
                     uint32_t    _currentSegment;    // Current video segment
@@ -316,6 +318,10 @@ public:
                     uint8_t             setPostProc( uint32_t type, uint32_t strength,	bool swapuv);
                     uint8_t             getPostProc( uint32_t *type, uint32_t *strength,bool  *swapuv);
 /******************************* /Post Processing ************************************/
+/******************************* HDR tonemaping config *******************************/
+                    uint8_t             setHDRConfig( uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust);
+                    uint8_t             getHDRConfig( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust);
+/******************************* /HDR tonemaping config ******************************/
 /******************************* Editing ************************************/
                     bool                remove(uint64_t start,uint64_t end);
                     bool                truncate(uint64_t start);

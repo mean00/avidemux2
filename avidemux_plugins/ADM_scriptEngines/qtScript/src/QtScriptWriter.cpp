@@ -169,6 +169,11 @@ namespace ADM_qtScript
     {
 
     }
+    
+    void QtScriptWriter::setHDRConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust)
+    {
+
+    }
 
     void QtScriptWriter::setVideoEncoder(ADM_videoEncoder6* videoEncoder)
     {

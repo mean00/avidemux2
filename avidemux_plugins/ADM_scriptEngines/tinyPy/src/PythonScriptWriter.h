@@ -29,6 +29,7 @@ public:
     void setMarkers(uint64_t markerA, uint64_t markerB);
     void setMuxer(ADM_dynMuxer *muxer);
     void setPostProcessing(uint32_t type, uint32_t strength, uint32_t swapUv);
+    void setHDRConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust);
     void setVideoEncoder(ADM_videoEncoder6* videoEncoder);
     void stretchAudio(int trackIndex, FILMCONV fps);
     void setAudioDrc(int trackIndex, bool active);

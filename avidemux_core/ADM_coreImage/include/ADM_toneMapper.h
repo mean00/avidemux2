@@ -20,6 +20,17 @@
 #include "ADM_rgb.h" // To have colors
 #include "ADM_threads.h"
 
+class ADM_COREIMAGE6_EXPORT ADMToneMapperConfig
+{
+  protected:
+    static uint32_t method;
+    static float saturation;
+    static float boost;
+  public:
+            ADMToneMapperConfig(bool init=false);
+    void    getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, float * targetLuminance=NULL);
+    void    setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust);
+};
 
 class ADMImage;
 /**
@@ -28,6 +39,7 @@ class ADMImage;
 class ADM_COREIMAGE6_EXPORT ADMToneMapper
 {
   protected:
+    ADMToneMapperConfig * config;
     void            *contextYUV;
     void            *contextRGB1, *contextRGB2;
     uint32_t        srcWidth,srcHeight;
@@ -84,7 +96,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust);
   public :
                     ADMToneMapper(int sws_flag, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
-    bool            toneMap(ADMImage *sourceImage, ADMImage *destImage, unsigned int toneMappingMethod, double targetLuminance, double saturationAdjust, double boostAdjust);
+    bool            toneMap(ADMImage *sourceImage, ADMImage *destImage);
                     ~ADMToneMapper();
 };
 

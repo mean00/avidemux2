@@ -15,6 +15,7 @@ int     A_openVideo2 (const char *name, uint8_t mode);
 int     A_appendVideo (const char *name);
 void    A_videoCheck( void);
 void	A_setPostproc( void );
+void	A_setHDRConfig( void );
 void    A_Resync(void);
 void    A_addJob(void);
 void    A_audioTrack(void);
