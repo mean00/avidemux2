@@ -42,7 +42,7 @@ static ADM_Qvumeter *vuWidget = NULL;
 
 #define VU_BAR_WIDTH  5
 #define VU_PEAK_WIDTH 7
-#define VU_DECAY      3
+#define VU_DECAY      3.0
 
 ADM_Qvumeter::ADM_Qvumeter(QWidget *z, int width, int height) : QWidget(z)
 {
@@ -92,9 +92,13 @@ bool UI_InitVUMeter(QFrame *host)
 */
 bool UI_vuUpdate(uint32_t volume[8])
 {
+    int width = vuWidget->width();
+    uint8_t * basePtr = vuWidget->rgbDataBuffer;
+
+    // Clear
     for(int i=0;i<88;i++)
     {
-        uint8_t *ptr = vuWidget->rgbDataBuffer + (vuWidget->width() * i * 4);
+        uint8_t *ptr = basePtr + (width * i * 4);
         uint32_t *data = (uint32_t *)ptr;
         for(int j=0;j<64;j++)
         {
@@ -124,7 +128,7 @@ bool UI_vuUpdate(uint32_t volume[8])
         if(vol<1) vol=1;
         for (int w=0; w<VU_BAR_WIDTH; w++)
         {
-            uint8_t *ptr = vuWidget->rgbDataBuffer + vuWidget->width() * (8 + 10 * i + w - VU_BAR_WIDTH/2) * 4;
+            uint8_t *ptr = basePtr + width * (8 + 10 * i + w - VU_BAR_WIDTH/2) * 4;
             uint32_t *data=(uint32_t *)(ptr);
             for(int j=0;j<vol;j++)
             {
@@ -135,11 +139,12 @@ bool UI_vuUpdate(uint32_t volume[8])
         }
         for (int w=0; w<VU_PEAK_WIDTH; w++)
         {
-            uint8_t *ptr = vuWidget->rgbDataBuffer + vuWidget->width() * (8 + 10 * i + w - VU_PEAK_WIDTH/2) * 4;
+            uint8_t *ptr = basePtr + width * (8 + 10 * i + w - VU_PEAK_WIDTH/2) * 4;
             uint32_t *data=(uint32_t *)(ptr);
-            if (vuWidget->peaks[i].maxPos > 0)
+            unsigned int pos = vuWidget->peaks[i].maxPos;
+            if (pos > 0)
             {
-                data[vuWidget->peaks[i].maxPos] = vuWidget->peaks[i].maxColor;
+                data[pos] = vuWidget->peaks[i].maxColor;
             }
         }
     }

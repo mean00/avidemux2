@@ -13,7 +13,7 @@ class  ADM_Qvumeter : public QWidget
     Q_OBJECT
 public:
     typedef struct {
-        int maxPos;
+        double maxPos;
         uint32_t maxColor;
     } peak_t;
 
