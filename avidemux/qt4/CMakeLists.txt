@@ -83,6 +83,11 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 #--
 
+INCLUDE(admCheckFreeType)
+checkFreeType()
+INCLUDE(admCheckFontConfig)
+checkFontConfig()
+
 #
 ##########################################
 # Config
