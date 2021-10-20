@@ -107,69 +107,164 @@ static AVPixelFormat ADMPixFrmt2LAVPixFmt(ADM_pixelFormat fromPixFrmt_)
 
 typedef enum
 {
+    ADM_COL_RANGE_UNSPECIFIED = 0,
     ADM_COL_RANGE_MPEG,
-    ADM_COL_RANGE_JPEG
+    ADM_COL_RANGE_JPEG,
 }ADM_colorRange;
 
 typedef enum
 {
-    ADM_COL_PRI_UNSPECIFIED = 0,
-    ADM_COL_PRI_BT709,        ///< also ITU-R BT1361 / IEC 61966-2-4 / SMPTE RP177 Annex B
-    ADM_COL_PRI_BT470M,       ///< also FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
-    ADM_COL_PRI_BT470BG,      ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM
-    ADM_COL_PRI_SMPTE170M,    ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
-    ADM_COL_PRI_SMPTE240M,    ///< functionally identical to above
-    ADM_COL_PRI_FILM,         ///< colour filters using Illuminant C
-    ADM_COL_PRI_BT2020,       ///< ITU-R BT2020
-    ADM_COL_PRI_SMPTE428,     ///< SMPTE ST 428-1 (CIE 1931 XYZ)
-    ADM_COL_PRI_SMPTE431,     ///< SMPTE ST 431-2 (2011) / DCI P3
-    ADM_COL_PRI_SMPTE432,     ///< SMPTE ST 432-1 (2010) / P3 D65 / Display P3
-    ADM_COL_PRI_EBU3213,      ///< EBU Tech. 3213-E / JEDEC P22 phosphors
+    ADM_COL_PRI_RESERVED0   = 0,
+    ADM_COL_PRI_BT709       = 1,  ///< also ITU-R BT1361 / IEC 61966-2-4 / SMPTE RP177 Annex B
+    ADM_COL_PRI_UNSPECIFIED = 2,
+    ADM_COL_PRI_RESERVED    = 3,
+    ADM_COL_PRI_BT470M      = 4,  ///< also FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
+    ADM_COL_PRI_BT470BG     = 5,  ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM
+    ADM_COL_PRI_SMPTE170M   = 6,  ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
+    ADM_COL_PRI_SMPTE240M   = 7,  ///< functionally identical to above
+    ADM_COL_PRI_FILM        = 8,  ///< colour filters using Illuminant C
+    ADM_COL_PRI_BT2020      = 9,  ///< ITU-R BT2020
+    ADM_COL_PRI_SMPTE428    = 10, ///< SMPTE ST 428-1 (CIE 1931 XYZ)
+    ADM_COL_PRI_SMPTE431    = 11, ///< SMPTE ST 431-2 (2011) / DCI P3
+    ADM_COL_PRI_SMPTE432    = 12, ///< SMPTE ST 432-1 (2010) / P3 D65 / Display P3
+    ADM_COL_PRI_EBU3213     = 22  ///< EBU Tech. 3213-E / JEDEC P22 phosphors
     //ADM_COL_PRI_JEDEC_P22 = ADM_COL_PRI_EBU3213
 }ADM_colorPrimaries;
 
 typedef enum
 {
-    ADM_COL_TRC_UNSPECIFIED  = 0,
-    ADM_COL_TRC_BT709,            ///< also ITU-R BT1361
-    ADM_COL_TRC_GAMMA22,          ///< also ITU-R BT470M / ITU-R BT1700 625 PAL & SECAM
-    ADM_COL_TRC_GAMMA28,          ///< also ITU-R BT470BG
-    ADM_COL_TRC_SMPTE170M,        ///< also ITU-R BT601-6 525 or 625 / ITU-R BT1358 525 or 625 / ITU-R BT1700 NTSC
-    ADM_COL_TRC_SMPTE240M,
-    ADM_COL_TRC_LINEAR,           ///< "Linear transfer characteristics"
-    ADM_COL_TRC_LOG,              ///< "Logarithmic transfer characteristic (100:1 range)"
-    ADM_COL_TRC_LOG_SQRT,         ///< "Logarithmic transfer characteristic (100 * Sqrt(10) : 1 range)"
-    ADM_COL_TRC_IEC61966_2_4,     ///< IEC 61966-2-4
-    ADM_COL_TRC_BT1361_ECG,       ///< ITU-R BT1361 Extended Colour Gamut
-    ADM_COL_TRC_IEC61966_2_1,     ///< IEC 61966-2-1 (sRGB or sYCC)
-    ADM_COL_TRC_BT2020_10,        ///< ITU-R BT2020 for 10-bit system
-    ADM_COL_TRC_BT2020_12,        ///< ITU-R BT2020 for 12-bit system
-    ADM_COL_TRC_SMPTE2084,        ///< SMPTE ST 2084 for 10-, 12-, 14- and 16-bit systems
+    ADM_COL_TRC_RESERVED0    = 0,
+    ADM_COL_TRC_BT709        = 1,  ///< also ITU-R BT1361
+    ADM_COL_TRC_UNSPECIFIED  = 2,
+    ADM_COL_TRC_RESERVED     = 3,
+    ADM_COL_TRC_GAMMA22      = 4,  ///< also ITU-R BT470M / ITU-R BT1700 625 PAL & SECAM
+    ADM_COL_TRC_GAMMA28      = 5,  ///< also ITU-R BT470BG
+    ADM_COL_TRC_SMPTE170M    = 6,  ///< also ITU-R BT601-6 525 or 625 / ITU-R BT1358 525 or 625 / ITU-R BT1700 NTSC
+    ADM_COL_TRC_SMPTE240M    = 7,
+    ADM_COL_TRC_LINEAR       = 8,  ///< "Linear transfer characteristics"
+    ADM_COL_TRC_LOG          = 9,  ///< "Logarithmic transfer characteristic (100:1 range)"
+    ADM_COL_TRC_LOG_SQRT     = 10, ///< "Logarithmic transfer characteristic (100 * Sqrt(10) : 1 range)"
+    ADM_COL_TRC_IEC61966_2_4 = 11, ///< IEC 61966-2-4
+    ADM_COL_TRC_BT1361_ECG   = 12, ///< ITU-R BT1361 Extended Colour Gamut
+    ADM_COL_TRC_IEC61966_2_1 = 13, ///< IEC 61966-2-1 (sRGB or sYCC)
+    ADM_COL_TRC_BT2020_10    = 14, ///< ITU-R BT2020 for 10-bit system
+    ADM_COL_TRC_BT2020_12    = 15, ///< ITU-R BT2020 for 12-bit system
+    ADM_COL_TRC_SMPTE2084    = 16, ///< SMPTE ST 2084 for 10-, 12-, 14- and 16-bit systems
     //ADM_COL_TRC_SMPTEST2084 = ADM_COL_TRC_SMPTE2084,
-    ADM_COL_TRC_SMPTE428,         ///< SMPTE ST 428-1
+    ADM_COL_TRC_SMPTE428     = 17, ///< SMPTE ST 428-1
     //ADM_COL_TRC_SMPTEST428_1 = ADM_COL_TRC_SMPTE428,
-    ADM_COL_TRC_ARIB_STD_B67      ///< ARIB STD-B67, known as "Hybrid log-gamma"
+    ADM_COL_TRC_ARIB_STD_B67 = 18  ///< ARIB STD-B67, known as "Hybrid log-gamma"
 }ADM_colorTrC;
 
 typedef enum
 {
-    ADM_COL_SPC_UNSPECIFIED = 0,
-    ADM_COL_SPC_sRGB,                 ///< order of coefficients is actually GBR, also IEC 61966-2-1 (sRGB)
-    ADM_COL_SPC_BT709,                ///< also ITU-R BT1361 / IEC 61966-2-4 xvYCC709 / SMPTE RP177 Annex B
-    ADM_COL_SPC_FCC,                  ///< FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
-    ADM_COL_SPC_BT470BG,              ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM / IEC 61966-2-4 xvYCC601
-    ADM_COL_SPC_SMPTE170M,            ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
-    ADM_COL_SPC_SMPTE240M,            ///< functionally identical to above
-    ADM_COL_SPC_YCGCO,                ///< Used by Dirac / VC-2 and H.264 FRext, see ITU-T SG16
+    ADM_COL_SPC_sRGB        = 0,  ///< order of coefficients is actually GBR, also IEC 61966-2-1 (sRGB)
+    ADM_COL_SPC_BT709       = 1,  ///< also ITU-R BT1361 / IEC 61966-2-4 xvYCC709 / SMPTE RP177 Annex B
+    ADM_COL_SPC_UNSPECIFIED = 2,
+    ADM_COL_SPC_RESERVED    = 3,
+    ADM_COL_SPC_FCC         = 4,  ///< FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
+    ADM_COL_SPC_BT470BG     = 5,  ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM / IEC 61966-2-4 xvYCC601
+    ADM_COL_SPC_SMPTE170M   = 6,  ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
+    ADM_COL_SPC_SMPTE240M   = 7,  ///< functionally identical to above
+    ADM_COL_SPC_YCGCO       = 8,  ///< Used by Dirac / VC-2 and H.264 FRext, see ITU-T SG16
     //ADM_COL_SPC_YCOCG = ADM_COL_SPC_YCGCO,
-    ADM_COL_SPC_BT2020_NCL,           ///< ITU-R BT2020 non-constant luminance system
-    ADM_COL_SPC_BT2020_CL,            ///< ITU-R BT2020 constant luminance system
-    ADM_COL_SPC_SMPTE2085,            ///< SMPTE 2085, Y'D'zD'x
-    ADM_COL_SPC_CHROMA_DERIVED_NCL,   ///< Chromaticity-derived non-constant luminance system
-    ADM_COL_SPC_CHROMA_DERIVED_CL,    ///< Chromaticity-derived constant luminance system
-    ADM_COL_SPC_ICTCP                 ///< ITU-R BT.2100-0, ICtCp    
+    ADM_COL_SPC_BT2020_NCL  = 9,  ///< ITU-R BT2020 non-constant luminance system
+    ADM_COL_SPC_BT2020_CL   = 10, ///< ITU-R BT2020 constant luminance system
+    ADM_COL_SPC_SMPTE2085   = 11, ///< SMPTE 2085, Y'D'zD'x
+    ADM_COL_SPC_CHROMA_DERIVED_NCL = 12, ///< Chromaticity-derived non-constant luminance system
+    ADM_COL_SPC_CHROMA_DERIVED_CL  = 13, ///< Chromaticity-derived constant luminance system
+    ADM_COL_SPC_ICTCP       = 14  ///< ITU-R BT.2100-0, ICtCp
 }ADM_colorSpace;
 
+static inline ADM_colorRange validateColorRange(uint32_t val)
+{
+    switch(val)
+    {
+        case ADM_COL_RANGE_UNSPECIFIED:
+        case ADM_COL_RANGE_MPEG:
+        case ADM_COL_RANGE_JPEG:
+            return (ADM_colorRange)val;
+        default:break;
+    }
+    return ADM_COL_RANGE_UNSPECIFIED;
+}
 
+static inline ADM_colorPrimaries validateColorPrimaries(uint32_t val)
+{
+    switch(val)
+    {
+        case ADM_COL_PRI_RESERVED0:
+        case ADM_COL_PRI_BT709:
+        case ADM_COL_PRI_UNSPECIFIED:
+        case ADM_COL_PRI_RESERVED:
+        case ADM_COL_PRI_BT470M:
+        case ADM_COL_PRI_BT470BG:
+        case ADM_COL_PRI_SMPTE170M:
+        case ADM_COL_PRI_SMPTE240M:
+        case ADM_COL_PRI_FILM:
+        case ADM_COL_PRI_BT2020:
+        case ADM_COL_PRI_SMPTE428:
+        case ADM_COL_PRI_SMPTE431:
+        case ADM_COL_PRI_SMPTE432:
+        case ADM_COL_PRI_EBU3213:
+            return (ADM_colorPrimaries)val;
+        default:break;
+    }
+    return ADM_COL_PRI_UNSPECIFIED;
+}
+
+static inline ADM_colorTrC validateColorTrC(uint32_t val)
+{
+    switch(val)
+    {
+        case ADM_COL_TRC_RESERVED0:
+        case ADM_COL_TRC_BT709:
+        case ADM_COL_TRC_UNSPECIFIED:
+        case ADM_COL_TRC_RESERVED:
+        case ADM_COL_TRC_GAMMA22:
+        case ADM_COL_TRC_GAMMA28:
+        case ADM_COL_TRC_SMPTE170M:
+        case ADM_COL_TRC_SMPTE240M:
+        case ADM_COL_TRC_LINEAR:
+        case ADM_COL_TRC_LOG:
+        case ADM_COL_TRC_LOG_SQRT:
+        case ADM_COL_TRC_IEC61966_2_4:
+        case ADM_COL_TRC_BT1361_ECG:
+        case ADM_COL_TRC_IEC61966_2_1:
+        case ADM_COL_TRC_BT2020_10:
+        case ADM_COL_TRC_BT2020_12:
+        case ADM_COL_TRC_SMPTE2084:
+        case ADM_COL_TRC_SMPTE428:
+        case ADM_COL_TRC_ARIB_STD_B67:
+            return (ADM_colorTrC)val;
+        default:break;
+    }
+    return ADM_COL_TRC_UNSPECIFIED;
+}
+
+static inline ADM_colorSpace validateColorSpace(uint32_t val)
+{
+    switch(val)
+    {
+        case ADM_COL_SPC_sRGB:
+        case ADM_COL_SPC_BT709:
+        case ADM_COL_SPC_UNSPECIFIED:
+        case ADM_COL_SPC_RESERVED:
+        case ADM_COL_SPC_FCC:
+        case ADM_COL_SPC_BT470BG:
+        case ADM_COL_SPC_SMPTE170M:
+        case ADM_COL_SPC_SMPTE240M:
+        case ADM_COL_SPC_YCGCO:
+        case ADM_COL_SPC_BT2020_NCL:
+        case ADM_COL_SPC_BT2020_CL:
+        case ADM_COL_SPC_SMPTE2085:
+        case ADM_COL_SPC_CHROMA_DERIVED_NCL:
+        case ADM_COL_SPC_CHROMA_DERIVED_CL:
+        case ADM_COL_SPC_ICTCP:
+            return (ADM_colorSpace)val;
+        default:break;
+    }
+    return ADM_COL_SPC_UNSPECIFIED;
+}
 
 #endif
