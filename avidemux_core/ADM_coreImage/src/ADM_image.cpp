@@ -33,6 +33,30 @@ void ADMImage_stat( void )
 	printf("Cur image used               : %" PRIu32"\n",imgCurNb);
 
 }
+
+/**
+    \fn ADM_HDR_Info
+    \brief Intialize all fields to NaNs
+*/
+ADM_HDR_Info::ADM_HDR_Info(void)
+{
+    int j,k;
+    for (j=0; j<3; j++)
+    {
+        for (k=0; k<2; k++)
+            primaries[j][k] = NAN;
+        maxSCL[j] = NAN;
+    }
+    for (j=0; j<2; j++)
+    {
+        whitePoint[j] = NAN;
+        kneePoint[j] = NAN;
+    }
+    for (j=0; j<15; j++)
+        bezierCurveAnchors[j] = NAN;
+    maxLuminance = minLuminance = maxCLL = maxFALL = avgMaxRGB = colorSaturationWeight = targetMaxLuminance = NAN;
+}
+
 /**
     \fn ADMImage
     \brief ctor
@@ -56,22 +80,6 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
         _colorPrim=ADM_COL_PRI_BT709;
         _colorTrc=ADM_COL_TRC_BT709;
         _colorSpace=ADM_COL_SPC_BT709;
-        // initialize hdrInfo to NaNs
-        for (int j=0; j<3; j++)
-        {
-            for (int k=0; k<2; k++)
-                _hdrInfo.primaries[j][k] = NAN;
-            _hdrInfo.maxSCL[j] = NAN;
-        }
-        for (int j=0; j<2; j++)
-        {
-            _hdrInfo.whitePoint[j] = NAN;
-            _hdrInfo.kneePoint[j] = NAN;
-        }
-        for (int j=0; j<15; j++)
-            _hdrInfo.bezierCurveAnchors[j] = NAN;
-        _hdrInfo.maxLuminance = _hdrInfo.minLuminance = _hdrInfo.maxCLL = _hdrInfo.maxFALL = _hdrInfo.avgMaxRGB = _hdrInfo.colorSaturationWeight = _hdrInfo.targetMaxLuminance = NAN;
-
         Pts=0;
         _imageType=type;
         quant=NULL;
