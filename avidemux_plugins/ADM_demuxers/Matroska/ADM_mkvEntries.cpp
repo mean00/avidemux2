@@ -37,6 +37,7 @@ class entryDesc
           uint32_t w,h,fps;
           uint32_t fq,chan,bpp;
           uint32_t colflags,colrange,colprim,coltc,colmcoeff;
+          ADM_HDR_Info hdrInfo;
           uint32_t defaultDuration;
           float    trackScale;
           uint8_t *extraData;
@@ -48,7 +49,7 @@ class entryDesc
           uint8_t    headerRepeat[MKV_MAX_REPEAT_HEADER_SIZE];
           entryDesc()
           {
-              codecId=language=std::string("");
+              language="und";
               trackNo=0;
               trackType=0;
               extraDataLen=0;
@@ -206,6 +207,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         _videoColPrimaries=entry.colprim;
         _videoColTransferCharacteristic=entry.coltc;
         _videoColMatrixCoefficients=entry.colmcoeff;
+        _videoColHDRInfo = entry.hdrInfo;
 
 #define AV1_EXTRADATA_OFFSET 4
 
@@ -446,6 +448,152 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
             entry->colflags |= ADM_COL_FLAG_PRIMARIES_SET;
             ADM_info("Primaries: %u\n",entry->colprim);
             break;
+        case  MKV_VIDEO_COLOUR_MAX_CLL:
+            {
+                uint32_t val = father.readUnsignedInt(len);
+                ADM_info("MaxCLL: %u\n",val);
+                entry->hdrInfo.maxCLL = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_MAX_FALL:
+            {
+                uint32_t val = father.readUnsignedInt(len);
+                ADM_info("MaxFALL: %u\n",val);
+                entry->hdrInfo.maxFALL = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_RED_X:
+            {
+                double val = father.readFloat(len);
+                if(val < 0. || val > 1.) // invalid data
+                {
+                    ADM_warning("Red X out of range\n");
+                    break;
+                }
+                ADM_info("Red X: %f\n",val);
+                entry->hdrInfo.primaries[0][0] = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_RED_Y:
+            {
+                double val = father.readFloat(len);
+                if(val < 0. || val > 1.) // invalid data
+                {
+                    ADM_warning("Red Y out of range\n");
+                    break;
+                }
+                ADM_info("Red Y: %f\n",val);
+                entry->hdrInfo.primaries[0][1] = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_GREEN_X:
+            {
+                double val = father.readFloat(len);
+                if(val < 0. || val > 1.) // invalid data
+                {
+                    ADM_warning("Green X out of range\n");
+                    break;
+                }
+                ADM_info("Green X: %f\n",val);
+                entry->hdrInfo.primaries[1][0] = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_GREEN_Y:
+            {
+                double val = father.readFloat(len);
+                if(val < 0. || val > 1.) // invalid data
+                {
+                    ADM_warning("Green Y out of range\n");
+                    break;
+                }
+                ADM_info("Green Y: %f\n",val);
+                entry->hdrInfo.primaries[1][1] = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_BLUE_X:
+            {
+                double val = father.readFloat(len);
+                if(val < 0. || val > 1.) // invalid data
+                {
+                    ADM_warning("Blue X out of range\n");
+                    break;
+                }
+                ADM_info("Blue X: %f\n",val);
+                entry->hdrInfo.primaries[2][0] = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_BLUE_Y:
+            {
+                double val = father.readFloat(len);
+                if(val < 0. || val > 1.) // invalid data
+                {
+                    ADM_warning("Blue Y out of range\n");
+                    break;
+                }
+                ADM_info("Blue Y: %f\n",val);
+                entry->hdrInfo.primaries[2][1] = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_WHITE_X:
+            {
+                double val = father.readFloat(len);
+                if(val < 0. || val > 1.) // invalid data
+                {
+                    ADM_warning("White point X out of range\n");
+                    break;
+                }
+                ADM_info("White point X: %f\n",val);
+                entry->hdrInfo.whitePoint[0] = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_WHITE_Y:
+            {
+                double val = father.readFloat(len);
+                if(val < 0. || val > 1.) // invalid data
+                {
+                    ADM_warning("White point Y out of range\n");
+                    break;
+                }
+                ADM_info("White point Y: %f\n",val);
+                entry->hdrInfo.whitePoint[1] = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_MAX_LUM:
+            {
+                double val = father.readFloat(len);
+                if(val < 0.) // invalid data
+                {
+                    ADM_warning("Max. luminance out of range\n");
+                    break;
+                }
+                ADM_info("Max. luminance: %f\n",val);
+                entry->hdrInfo.maxLuminance = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
+        case  MKV_VIDEO_COLOUR_MIN_LUM:
+            {
+                double val = father.readFloat(len);
+                if(val < 0.) // invalid data
+                {
+                    ADM_warning("Min. luminance out of range\n");
+                    break;
+                }
+                ADM_info("Min. luminance: %f\n",val);
+                entry->hdrInfo.minLuminance = val;
+            }
+            entry->colflags |= ADM_COL_FLAG_HDR_INFO_SET;
+            break;
 
         case  MKV_DISPLAY_HEIGHT: ADM_info("Display Height:%d\n",(int)father.readUnsignedInt(len));break;
         case  MKV_DISPLAY_WIDTH: ADM_info("Display Width:%d\n",(int)father.readUnsignedInt(len));break;
@@ -491,7 +639,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
                  {
                      ADM_info("Found language  = %s\n",s);
                  }
-                 entry->language=std::string(s);
+                 entry->language = s;
                 }
             break;
         case MKV_CODEC_ID:
@@ -499,8 +647,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
             uint8_t *codec=new uint8_t[len+1];
                   father.readBin(codec,len);
                   codec[len]=0;
-                  std::string codecAsString=std::string((char *)codec);
-                  entry->codecId=codecAsString;
+                  entry->codecId = (char *)codec;
                   entry->fcc=ADM_mkvCodecToFourcc((char *)codec);
                   
                   delete [] codec;
