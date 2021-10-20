@@ -85,15 +85,6 @@ uint8_t vidHeader::getVideoInfo (aviInfo * info)
       info->bitrate = (br+0.49);
   }
 
-  info->colflags = _videoColFlags;
-  if(_videoColFlags)
-  {
-    info->range = _videoColRange;
-    info->prim = _videoColPrimaries;
-    info->coltc = _videoColTransferCharacteristic;
-    info->mcoeff = _videoColMatrixCoefficients;
-  }
-
   info->timebase_den = _videostream.dwRate;
   info->timebase_num = _videostream.dwScale;
   if (_mainaviheader.dwMicroSecPerFrame)
@@ -114,6 +105,33 @@ uint8_t vidHeader::getVideoInfo (aviInfo * info)
 
 
   return 1;
+}
+
+uint8_t vidHeader::getColorInfo(aviColorInfo *info)
+{
+    if(!info)
+        return 1;
+    info->colflags = _videoColFlags;
+    if(_videoColFlags)
+    {
+        info->range = _videoColRange;
+        info->prim = _videoColPrimaries;
+        info->coltc = _videoColTransferCharacteristic;
+        info->mcoeff = _videoColMatrixCoefficients;
+    }
+    return 1;
+}
+
+uint8_t vidHeader::getHDRInfo(ADM_HDR_Info *hfo)
+{
+    if(!hfo)
+        return 1;
+    if(_videoColFlags & ADM_COL_FLAG_HDR_INFO_SET)
+    {
+        *hfo = _videoColHDRInfo;
+        return 1;
+    }
+    return 0;
 }
 
 uint8_t vidHeader::setMyName (const char *name)

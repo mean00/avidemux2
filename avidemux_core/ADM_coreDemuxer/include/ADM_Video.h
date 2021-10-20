@@ -30,12 +30,13 @@
 #include "avifmt2.h"
 #include "ADM_compressedImage.h"
 #include "ADM_audioStream.h"
-#include "ADM_colorspace.h"
+#include "ADM_image.h"
 
 #define ADM_COL_FLAG_RANGE_SET         1
 #define ADM_COL_FLAG_PRIMARIES_SET    (1<<1)
 #define ADM_COL_FLAG_TRANSFER_SET     (1<<2)
 #define ADM_COL_FLAG_MATRIX_COEFF_SET (1<<3)
+#define ADM_COL_FLAG_HDR_INFO_SET     (1<<4)
 
 typedef struct 
 {
@@ -56,13 +57,16 @@ typedef struct
     uint32_t   fcc;    
     uint32_t   bpp;
     int32_t    bitrate;
+} aviInfo;
+
+typedef struct
+{
     uint32_t   colflags; // color info flags (0 = no info present)
     uint32_t   range;    // color range
     uint32_t   prim;     // color primaries
     uint32_t   coltc;    // transfer characteristic
     uint32_t   mcoeff;   // matrix coefficients
-} aviInfo;
-
+} aviColorInfo;
 
 /**
     \class vidHeader
@@ -87,6 +91,7 @@ protected:
           uint32_t            _videoColPrimaries;
           uint32_t            _videoColTransferCharacteristic;
           uint32_t            _videoColMatrixCoefficients;
+          ADM_HDR_Info        _videoColHDRInfo;
 public:
                            vidHeader();
 virtual                    ~vidHeader() ;
@@ -109,6 +114,8 @@ virtual        bool             unreliableBFramePts (void) { return false;} // B
   //                 Info
   //__________________________
             uint8_t                 getVideoInfo(aviInfo *info);
+            uint8_t                 getColorInfo(aviColorInfo *cfo);
+            uint8_t                 getHDRInfo(ADM_HDR_Info *hfo);
             uint32_t                getWidth( void ) { return _mainaviheader.dwWidth;};
             uint32_t                getHeight( void ) { return _mainaviheader.dwHeight;};
             uint8_t                 setMyName( const char *name);
