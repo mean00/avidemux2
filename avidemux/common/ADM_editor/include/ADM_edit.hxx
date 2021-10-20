@@ -294,7 +294,7 @@ public:
                     MainAVIHeader   *getMainHeader(void );
                     ADM_BITMAPINFOHEADER *getBIH(void ) ;
 
-                    uint8_t     getVideoInfo(aviInfo *info); // for common timebase, call getTimeBase afterwards
+                    uint8_t     getVideoInfo(aviInfo *info, aviColorInfo *cfo=NULL); // for common timebase, call getTimeBase afterwards
                     _VIDEOS*    getRefVideo(int videoIndex);
                     uint64_t    getVideoDuration(void);
                     uint64_t    getFrameIncrement(bool forCopyMode=false); /// Returns the # of us between 2 frames or the smaller value of them

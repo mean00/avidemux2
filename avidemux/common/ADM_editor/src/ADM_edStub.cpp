@@ -72,10 +72,12 @@ uint8_t ADM_Composer::updateVideoInfo (aviInfo * info)
 /**
     \fn getVideoInfo
 */
-uint8_t ADM_Composer::getVideoInfo (aviInfo * info)
+uint8_t ADM_Composer::getVideoInfo (aviInfo * info, aviColorInfo * cfo)
 {
   uint8_t    ret;
   ret = STUBB->getVideoInfo (info);
+  if (cfo)
+      STUBB->getColorInfo (cfo);
   if (ret)
     {
       info->nb_frames = _segments.getNbFrames();

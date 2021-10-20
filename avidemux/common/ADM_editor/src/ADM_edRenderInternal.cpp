@@ -348,6 +348,10 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
 {
     ADMImage *tmpImage=NULL;
     _VIDEOS  *v=_segments.getRefVideo(ref);
+    ADM_assert(v);
+    vidHeader *demuxer = v->_aviheader;
+    ADM_assert(demuxer);
+
     bool refOnly=v->decoder->dontcopy(); // can we skip one memcpy ?
     // This is only an empty Shell
     if(refOnly)
@@ -371,6 +375,20 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
     }
 
     tmpImage->_pixfrmt=ADM_PIXFRMT_YV12;
+
+    aviColorInfo info;
+    demuxer->getColorInfo(&info);
+    if(info.colflags & ADM_COL_FLAG_RANGE_SET)
+        tmpImage->_range = validateColorRange(info.range);
+    if(info.colflags & ADM_COL_FLAG_PRIMARIES_SET)
+        tmpImage->_colorPrim = validateColorPrimaries(info.prim);
+    if(info.colflags & ADM_COL_FLAG_TRANSFER_SET)
+        tmpImage->_colorTrc = validateColorTrC(info.coltc);
+    if(info.colflags & ADM_COL_FLAG_MATRIX_COEFF_SET)
+        tmpImage->_colorSpace = validateColorSpace(info.mcoeff);
+
+    demuxer->getHDRInfo(&tmpImage->_hdrInfo);
+
     // Decode it
     if (!v->decoder->uncompress (in, tmpImage))
     {
