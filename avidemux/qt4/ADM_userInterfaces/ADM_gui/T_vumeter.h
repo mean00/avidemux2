@@ -10,14 +10,20 @@
 */
 class  ADM_Qvumeter : public QWidget
 {
-	Q_OBJECT
-
+    Q_OBJECT
 public:
-	uint8_t *rgbDataBuffer;
+    typedef struct {
+        double maxPos;
+        uint32_t maxColor;
+    } peak_t;
 
-	ADM_Qvumeter(QWidget *z, int width, int height);
-	~ADM_Qvumeter();
-	void paintEvent(QPaintEvent *ev);
+    peak_t peaks[8];
+
+    uint8_t *rgbDataBuffer;
+
+    ADM_Qvumeter(QWidget *z, int width, int height);
+    ~ADM_Qvumeter();
+    void paintEvent(QPaintEvent *ev);
 };
 
 bool UI_InitVUMeter(QFrame *host);
