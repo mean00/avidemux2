@@ -42,6 +42,21 @@ static tp_obj zzpy_setPostProc(TP)
   int r = editor->setPostProc(p0, p1, p2);
   return tp_number(r);
 }
+// setHDRConfig -> int editor->setHDRConfig(int double double)
+static tp_obj zzpy_setHDRConfig(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  int p0 = pm.asInt();
+  double p1 = pm.asDouble();
+  double p2 = pm.asDouble();
+  int r = editor->setHDRConfig(p0, p1, p2);
+  return tp_number(r);
+}
 // audioGetResample -> int pyGetResample(IEditor int)
 static tp_obj zzpy_audioGetResample(TP)
 {
@@ -685,6 +700,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_setPostProc);
   }
+  if (!strcmp(key, "setHDRConfig"))
+  {
+    return tp_method(vm, self, zzpy_setHDRConfig);
+  }
   if (!strcmp(key, "audioGetResample"))
   {
     return tp_method(vm, self, zzpy_audioGetResample);
@@ -907,6 +926,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "videoCodecSetProfile(str,str)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioBitrate(IEditor,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "setPostProc(int,int,int)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "setHDRConfig(int,double,double)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioGetResample(IEditor,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPARWidth(void)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "savePng(str)\n");

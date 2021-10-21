@@ -7,6 +7,7 @@
 /* METHOD */ int editor->appendFile:appendVideo      (str)
 /* METHOD */ int editor->addSegment:addSegment        (int, double, double)
 /* METHOD */ int editor->setPostProc:setPostProc      (int, int, int)
+/* METHOD */ int editor->setHDRConfig:setHDRConfig    (int, double, double)
 /* METHOD */ int pyGetWidth:getWidth            (void)
 /* METHOD */ int pyGetHeight:getHeight          (void)
 /* METHOD */ int editor->getPARWidth:getPARWidth      (void)
