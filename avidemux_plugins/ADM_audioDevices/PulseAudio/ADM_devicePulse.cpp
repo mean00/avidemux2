@@ -391,6 +391,12 @@ void pulseAudioDevice::sendData(void)
 {
     if(!stream) return;
     if(!mainloop) return;
+    // FIXME
+    if(!appetite)
+    {
+        ADM_usleep(1000);
+        return;
+    }
 
     int err;
     pa_stream *st = (pa_stream *)stream;
