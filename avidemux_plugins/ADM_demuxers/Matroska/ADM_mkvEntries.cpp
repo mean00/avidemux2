@@ -617,6 +617,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         case  MKV_AUDIO_SETTINGS:
         case  MKV_VIDEO_SETTINGS:
         case  MKV_VIDEO_COLOUR:
+        case  MKV_VIDEO_COLOUR_MASTERING_META:
         case  MKV_CONTENT_ONE_ENCODING:
         case  MKV_CONTENT_ENCODINGS:
         case  MKV_CONTENT_COMPRESSION:
