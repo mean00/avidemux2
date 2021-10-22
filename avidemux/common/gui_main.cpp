@@ -1782,8 +1782,8 @@ uint8_t GUI_close(void)
       }
       admPreview::setMainDimension(0, 0, ZOOM_1_1); // destroy preview
       UI_setNeedsResizingFlag(false);
-      uint32_t zero[8]={0};
-      UI_setVUMeter(zero);
+      int32_t inactiveVolume[8]={255,255,255,255,255,255,255,255};
+      UI_setVUMeter(inactiveVolume);
       A_saveSession();
       delete avifileinfo;
       //delete wavinfo;

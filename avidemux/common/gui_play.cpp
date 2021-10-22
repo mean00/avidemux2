@@ -389,8 +389,8 @@ bool  GUIPlayback::audioPump(bool wait)
              {
                   if(status==AUD_END_OF_STREAM)
                   {
-                      uint32_t stat[8]={0};
-                      UI_setVUMeter(stat);
+                      int32_t inactiveVolume[8]={255,255,255,255,255,255,255,255};
+                      UI_setVUMeter(inactiveVolume);
                       return false;
                   }
                   if(errorMet==false)
@@ -503,7 +503,7 @@ bool GUIPlayback::updateVu(void)
     if(!playbackAudio)  return true;
     if(time>(vuMeterPts+wait))
     {
-        uint32_t stat[8];
+        int32_t stat[8];
         AVDM_getStats(stat);
         UI_setVUMeter(stat);
         vuMeterPts=time;
