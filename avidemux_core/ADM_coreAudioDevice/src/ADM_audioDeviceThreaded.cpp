@@ -243,13 +243,14 @@ uint8_t     audioDeviceThreaded::play(uint32_t len, float *data)
 }
 /**
     \fn getVolumeStats
-    \brief Return stats about volume for each channel [8] between 0 & 255
+    \brief Return stats about volume for each channel [8] as integer dBFS (valid range -100 to +3), mark inactive channel with +255 (> 3)
 */
-bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
+bool        audioDeviceThreaded::getVolumeStats(int32_t *vol)
 {
-    float f[MAX_CHANNELS];
+    float f[MAX_CHANNELS],fsamp;
     uint32_t raw[MAX_CHANNELS];
-    memset(vol,0,sizeof(uint32_t)*8);
+    for(int i=0;i<8;i++)
+        vol[i] = 255;
     // 5 ms should be enough, i.e. fq/200
     uint32_t samples=_frequency/200;
     mutex.lock();
@@ -261,30 +262,29 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         mutex.unlock();
         return true;
     }
-#define USE_MEAN_SQUARE
     uint8_t *base8=audioBuffer.at(rdIndex);
     int16_t *base=(int16_t *)(base8);
     for(int i=0;i<samples;i++)
         for(int chan=0;chan<_channels;chan++)
         {
-#ifdef USE_MEAN_SQUARE
-                f[chan]+=base[0]*base[0];
-#else
-                f[chan]+=abs(*base);
-#endif
-                base++;
+            fsamp = base[0];	// multiply as float, to prevent theoretical overflow
+            f[chan]+=fsamp*fsamp;
+            base++;
         }
     mutex.unlock();
     // Normalize
     for(int i=0;i<MAX_CHANNELS;i++)
     {
         float d=f[i];
-        d/=samples; // d is now between 0 and 32768
-#ifdef USE_MEAN_SQUARE
-        d=sqrt(d);
-#endif
-        d/=128;     // D is now between 0 and 255
-        if(d>255) d=255;
+        d/=samples; // d is now between 0 and 32767^2
+        d=sqrt(d);  // d is now the RMS between 0 and 32767
+        if (d == 0.0)  // log(0) is invalid
+            d = -100.0;
+        else
+            d = 20.0*log10(d/32767.0) + 3.0;	// dBFS = 20*log10(rms(signal)) + 3 dB
+        if (d < -100.0)
+            d = -100.0;
+        d += 0.49;	// rounding
         raw[i]=(uint32_t)d;
     }
     // Assign mono to front center
@@ -293,10 +293,10 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         vol[1]=raw[0];
         return true;
     }
-    // Move channels around so that they fit Left / Center / Right / LFE / Rear Left / Rear Right / Side Left / Side Right
+    // Move channels around so that they fit Rear Left / Side Left / Front Left / Center / LFE / Front Right / Side Right / Rear Right
     const CHANNEL_TYPE *chans=this->getWantedChannelMapping(_channels);
-    static const CHANNEL_TYPE output[8]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_CENTER,ADM_CH_FRONT_RIGHT,ADM_CH_LFE,
-                                         ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_SIDE_LEFT,ADM_CH_SIDE_RIGHT};
+    static const CHANNEL_TYPE output[8]={ADM_CH_REAR_LEFT,ADM_CH_SIDE_LEFT,ADM_CH_FRONT_LEFT,ADM_CH_FRONT_CENTER,
+                                         ADM_CH_LFE,ADM_CH_FRONT_RIGHT,ADM_CH_SIDE_RIGHT,ADM_CH_REAR_RIGHT};
     for(int i=0;i<8;i++)
     {
         CHANNEL_TYPE wanted=output[i];

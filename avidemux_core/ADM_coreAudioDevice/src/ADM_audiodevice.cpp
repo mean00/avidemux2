@@ -294,7 +294,7 @@ uint32_t AVDM_getMsFullness(void)
 /**
     \fn AVDM_getStats
 */
-bool        AVDM_getStats(uint32_t *vol)
+bool        AVDM_getStats(int32_t *vol)
 {
     return device->getVolumeStats(vol);
 }
