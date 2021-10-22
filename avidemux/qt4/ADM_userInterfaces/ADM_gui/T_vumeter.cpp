@@ -95,18 +95,52 @@ bool UI_vuUpdate(uint32_t volume[8])
     int width = vuWidget->width();
     uint8_t * basePtr = vuWidget->rgbDataBuffer;
 
-    // Clear
+    // Update max
+    for(int i=0;i<8;i++)
+    {
+        if (volume[i] > 87)
+            volume[i] = 87;
+        if (volume[i] > vuWidget->peaks[i].maxPos)
+        {
+            vuWidget->peaks[i].maxPos = volume[i];
+            if(volume[i]<32) vuWidget->peaks[i].maxColor = GREEN;
+            else if(volume[i]<50) vuWidget->peaks[i].maxColor = YELLOW;
+            else vuWidget->peaks[i].maxColor = RED;
+        }
+        if (volume[i] < 1)
+            volume[i] = 1;
+    }
+
+    // Draw
     for(int i=0;i<88;i++)
     {
         uint8_t *ptr = basePtr + (width * i * 4);
         uint32_t *data = (uint32_t *)ptr;
+        int h = 87-i;
         for(int j=0;j<64;j++)
         {
-            *data++=BLACK;
+            *data=BLACK;
+            int v = j/8;
+            int w = j%8;
+            unsigned int maxpos = vuWidget->peaks[v].maxPos;
+            if (maxpos == h)
+            {
+                if ((w>=(4-VU_PEAK_WIDTH/2))&(w<(4+VU_PEAK_WIDTH/2)))
+                    *data = vuWidget->peaks[v].maxColor;
+            } else {
+                if (volume[v] >= h)
+                    if ((w>=(4-VU_BAR_WIDTH/2))&(w<(4+VU_BAR_WIDTH/2)))
+                    {
+                        if(h<32) *data=(i%4==3)?DGREEN:GREEN;
+                        else if(h<50) *data=(i%4==3)?DYELLOW:YELLOW;
+                        else *data=(i%4==3)?DRED:RED;
+                    }
+            }
+            data++;
         }
     }
-    // Draw lines
-    int vol;
+
+    // Decay
     for(int i=0;i<8;i++)
     {
         if (vuWidget->peaks[i].maxPos > 0)
@@ -116,38 +150,8 @@ bool UI_vuUpdate(uint32_t volume[8])
             else
                 vuWidget->peaks[i].maxPos = 0;
         }
-        vol=volume[i];
-        if(vol>63) vol=63;
-        if (vol > vuWidget->peaks[i].maxPos)
-        {
-            vuWidget->peaks[i].maxPos = vol;
-            if(vol<32) vuWidget->peaks[i].maxColor = GREEN;
-            else if(vol<50) vuWidget->peaks[i].maxColor = YELLOW;
-            else vuWidget->peaks[i].maxColor = RED;
-        }
-        if(vol<1) vol=1;
-        for (int w=0; w<VU_BAR_WIDTH; w++)
-        {
-            uint8_t *ptr = basePtr + width * (8 + 10 * i + w - VU_BAR_WIDTH/2) * 4;
-            uint32_t *data=(uint32_t *)(ptr);
-            for(int j=0;j<vol;j++)
-            {
-                if(j<32) *data++=(j%4==3)?DGREEN:GREEN;
-                else if(j<50) *data++=(j%4==3)?DYELLOW:YELLOW;
-                else *data++=(j%4==3)?DRED:RED;
-            }
-        }
-        for (int w=0; w<VU_PEAK_WIDTH; w++)
-        {
-            uint8_t *ptr = basePtr + width * (8 + 10 * i + w - VU_PEAK_WIDTH/2) * 4;
-            uint32_t *data=(uint32_t *)(ptr);
-            unsigned int pos = vuWidget->peaks[i].maxPos;
-            if (pos > 0)
-            {
-                data[pos] = vuWidget->peaks[i].maxColor;
-            }
-        }
     }
+
 #if 0
       ADM_info("VU : LEFT %"PRIu32" CENTER %"PRIu32" RIGHT %"PRIu32" REARLEFT %"PRIu32" REARRIGHT %"PRIu32"\n",
                     volume[0],volume[1],volume[2],volume[3],volume[4]);
