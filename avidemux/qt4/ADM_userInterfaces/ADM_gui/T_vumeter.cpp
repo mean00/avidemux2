@@ -190,11 +190,11 @@ bool UI_vuUpdate(int32_t volume[8])
             }
             if (peak[v] == h)
             {
-                if ((x >= (9-activeChannelCount)) && (x < (w-(9-activeChannelCount))))
+                if ((x >= (8/activeChannelCount)) && (x < (w-(8/activeChannelCount))))
                     *data = peakColor[v];
             } else {
                 if (vol[v] >= h)
-                    if ((x >= (10-activeChannelCount)) && (x < (w-(10-activeChannelCount))))
+                    if ((x >= (1+8/activeChannelCount)) && (x < (w-(1+8/activeChannelCount))))
                     {
                         if(h<headroom) *data=(i%4==3)?DGREEN:GREEN;
                         else if(h<overdrive) *data=(i%4==3)?DYELLOW:YELLOW;
