@@ -49,6 +49,7 @@ const ffVideoCodec ffCodec[]=
   {"apcs",  AV_CODEC_ID_PRORES,    false, false,    false},
   {"apco",  AV_CODEC_ID_PRORES,    false, false,    false},
   {"ap4h",  AV_CODEC_ID_PRORES,    false, false,    false},
+  {"ap4x",  AV_CODEC_ID_PRORES,    false, false,    false},
 // Need extradata
   {"av01", AV_CODEC_ID_AV1,        true, false,    false},
   {"ULY0", AV_CODEC_ID_UTVIDEO,    true, false,    false},

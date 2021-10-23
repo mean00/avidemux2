@@ -98,6 +98,7 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         FCC_IS_NOT("apcs") &&
         FCC_IS_NOT("apco") &&
         FCC_IS_NOT("ap4h") &&
+        FCC_IS_NOT("ap4x") &&
 #else
         !isMpeg12Compatible(fcc) && // poorly supported by players in MOV, reject
 #endif

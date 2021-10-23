@@ -1124,6 +1124,10 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                 case MKFCCR('a','p','4','h'): // ProRes 4444
                                     commonPart(ap4h);
                                     break;
+
+                                case MKFCCR('a','p','4','x'): // ProRes 4444 XQ
+                                    commonPart(ap4x);
+                                    break;
 //
                                 case MKFCCR('h','e','v','1'): // hev1 / hevc
                                 case MKFCCR('h','v','c','1'): // hev1 / hevc
