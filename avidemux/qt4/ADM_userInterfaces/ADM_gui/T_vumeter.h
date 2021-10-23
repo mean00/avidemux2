@@ -27,5 +27,5 @@ public:
 };
 
 bool UI_InitVUMeter(QFrame *host);
-bool UI_vuUpdate(uint32_t volume[8]);
+bool UI_vuUpdate(int32_t volume[8]);
 #endif	// T_preview_h
