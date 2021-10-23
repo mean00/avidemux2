@@ -96,18 +96,67 @@ bool UI_vuUpdate(int32_t volume[8])
     int width = vuWidget->width();
     uint8_t * basePtr = vuWidget->rgbDataBuffer;
     
-    int active_channel_count = 0;
-    int active_channels[8] = {0};
+    int headroom,overdrive;
+    float l;
+    l = -18; // headroom -18 dBFS (Digital broadcasts and ordinary digital recordings) (<84 & >= 66)
+    l -= VU_BOTTOM_SCALE;
+    l /= (3.0 - VU_BOTTOM_SCALE);
+    l *= 87.0;
+    headroom = l+0.49;
+    l = 0; // overdrive >= 0 dBFS
+    l -= VU_BOTTOM_SCALE;
+    l /= (3.0 - VU_BOTTOM_SCALE);
+    l *= 87.0;
+    overdrive = l+0.49;
+    
+    int activeChannelCount = 0;
+    int vol[8], peak[8];
+    uint32_t peakColor[8];
     for(int i=0;i<8;i++)
     {
         if (volume[i] <= 3)
         {
-            active_channel_count++;
-            active_channels[i] = 1;
+            //Decay
+            if (vuWidget->peaks[i].maxPos > 0)
+            {
+                if (vuWidget->peaks[i].maxPos > VU_DECAY)
+                    vuWidget->peaks[i].maxPos -= VU_DECAY;
+                else
+                    vuWidget->peaks[i].maxPos = 0;
+            }
+            // Map volume to display
+            // +3 -> 87
+            // VU_BOTTOM_SCALE -> 0
+            float v = volume[i];
+            v -= VU_BOTTOM_SCALE;
+            v /= (3.0 - VU_BOTTOM_SCALE);
+            v *= 87.0;
+            vol[activeChannelCount] = v+0.49;
+            if (vol[activeChannelCount] > 87)
+                vol[activeChannelCount] = 87;
+            if (vol[activeChannelCount] < 0)
+                vol[activeChannelCount] = 0;
+            if (vol[activeChannelCount] > vuWidget->peaks[i].maxPos)
+            {
+                vuWidget->peaks[i].maxPos = vol[activeChannelCount];
+                if(vol[activeChannelCount]<headroom) vuWidget->peaks[i].maxColor = GREEN;
+                else if(vol[activeChannelCount]<overdrive) vuWidget->peaks[i].maxColor = YELLOW;
+                else vuWidget->peaks[i].maxColor = RED;
+            }
+            if (vol[activeChannelCount] < 1)
+                vol[activeChannelCount] = 1;
+            peak[activeChannelCount] = vuWidget->peaks[i].maxPos;
+            peakColor[activeChannelCount] = vuWidget->peaks[i].maxColor;
+
+            activeChannelCount++;
+        }
+        else
+        {
+            vuWidget->peaks[i].maxPos = 0;
         }
     }
     
-    if (active_channel_count == 0)	// just clear
+    if (activeChannelCount == 0)	// just clear
     {
         for(int i=0;i<88;i++)
         {
@@ -118,40 +167,8 @@ bool UI_vuUpdate(int32_t volume[8])
                 *data++=BLACK;
             }
         }
-        for(int i=0;i<8;i++)
-            vuWidget->peaks[i].maxPos = 0;
         vuWidget->update();
         return true;
-    }
-
-    // Update max, adjust volume scale
-    for(int i=0;i<8;i++)
-    {
-        // +3 -> 87
-        // VU_BOTTOM_SCALE -> 0
-        float v = volume[i];
-        v -= VU_BOTTOM_SCALE;
-        v /= (3.0 - VU_BOTTOM_SCALE);
-        v *= 87.0;
-        volume[i] = v+0.49;
-        if (volume[i] > 87)
-            volume[i] = 87;
-        if (volume[i] < 0)
-            volume[i] = 0;
-        if (active_channels[i])
-        {
-            if (volume[i] > vuWidget->peaks[i].maxPos)
-            {
-                vuWidget->peaks[i].maxPos = volume[i];
-                if(volume[i]<66) vuWidget->peaks[i].maxColor = GREEN;
-                else if(volume[i]<84) vuWidget->peaks[i].maxColor = YELLOW;		// headroom -18 dBFS (Digital broadcasts and ordinary digital recordings) (<84 & >= 66)
-                else vuWidget->peaks[i].maxColor = RED;		// overdrive >= 0 dBFS (>= 84)
-            }
-        }
-        else
-            vuWidget->peaks[i].maxPos = 0;
-        if (volume[i] < 1)
-            volume[i] = 1;
     }
 
     // Draw
@@ -163,38 +180,28 @@ bool UI_vuUpdate(int32_t volume[8])
         for(int j=0;j<64;j++)
         {
             *data=BLACK;
-            int v = j/8;
-            int w = j%8;
-            if (active_channels[v])
+            int w = 64/activeChannelCount;
+            int v = j/w;
+            int x = j%w;
+            if (v >= activeChannelCount)
             {
-                unsigned int maxpos = vuWidget->peaks[v].maxPos;
-                if (maxpos == h)
-                {
-                    if ((w>=(4-VU_PEAK_WIDTH/2))&(w<(4+VU_PEAK_WIDTH/2)))
-                        *data = vuWidget->peaks[v].maxColor;
-                } else {
-                    if (volume[v] >= h)
-                        if ((w>=(4-VU_BAR_WIDTH/2))&(w<(4+VU_BAR_WIDTH/2)))
-                        {
-                            if(h<66) *data=(i%4==3)?DGREEN:GREEN;
-                            else if(h<84) *data=(i%4==3)?DYELLOW:YELLOW;
-                            else *data=(i%4==3)?DRED:RED;
-                        }
-                }
+                v = activeChannelCount - 1;
+                x = 0;
+            }
+            if (peak[v] == h)
+            {
+                if ((x >= (9-activeChannelCount)) && (x < (w-(9-activeChannelCount))))
+                    *data = peakColor[v];
+            } else {
+                if (vol[v] >= h)
+                    if ((x >= (10-activeChannelCount)) && (x < (w-(10-activeChannelCount))))
+                    {
+                        if(h<headroom) *data=(i%4==3)?DGREEN:GREEN;
+                        else if(h<overdrive) *data=(i%4==3)?DYELLOW:YELLOW;
+                        else *data=(i%4==3)?DRED:RED;
+                    }
             }
             data++;
-        }
-    }
-
-    // Decay
-    for(int i=0;i<8;i++)
-    {
-        if (vuWidget->peaks[i].maxPos > 0)
-        {
-            if (vuWidget->peaks[i].maxPos > VU_DECAY)
-                vuWidget->peaks[i].maxPos -= VU_DECAY;
-            else
-                vuWidget->peaks[i].maxPos = 0;
         }
     }
 
