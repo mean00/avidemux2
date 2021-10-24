@@ -258,9 +258,10 @@ void admPreview::destroy(void)
 */
 bool admPreview::updateImage(void)
 {
+    if(defered_display)
+        return true;
     UI_setFrameType(  rdrImage->flags,rdrImage->_Qp);
-    if(!defered_display) 
-        renderUpdateImage(rdrImage);                  
+    renderUpdateImage(rdrImage);
     return true;
 }
 
