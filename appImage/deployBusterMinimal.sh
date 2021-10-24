@@ -149,9 +149,8 @@ if [ -e "${FT_PROBE_LOCATION}/${FT_PROBE_EXE_NAME}" ]; then
     chmod +x "install/${FT_PROBE_EXE_NAME}"
 fi
 
-cd $ORG
 # Patch desktop file
-cat install/avidemux.desktop | sed 's/avidemux.png/avidemux/g' > install/avidemux.desktop
+sed -i 's/avidemux.png/avidemux/g' install/avidemux.desktop
 if [ -f /tmp/myappimage.squashfs ]; then
     rm -f /tmp/myappimage.squashfs || exit 1
 fi
