@@ -13,6 +13,8 @@ PROCESS(toolButtonSetMarkerA, ACT_MarkA) \
 PROCESS(toolButtonSetMarkerB, ACT_MarkB) \
 PROCESS(toolButtonPreviousCutPoint, ACT_PrevCutPoint) \
 PROCESS(toolButtonNextCutPoint, ACT_NextCutPoint) \
+PROCESS(toolButtonPreviousBlackFrame, ACT_PrevBlackFrame) \
+PROCESS(toolButtonNextBlackFrame, ACT_NextBlackFrame) \
 PROCESS(toolButtonFirstFrame, ACT_Begin) \
 PROCESS(toolButtonLastFrame, ACT_End) \
 PROCESS(pushButtonJumpToMarkerA, ACT_GotoMarkA) \
