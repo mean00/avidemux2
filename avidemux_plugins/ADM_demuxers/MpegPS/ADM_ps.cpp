@@ -269,6 +269,7 @@ uint8_t psHeader::close(void)
     fieldEncoded=false;
     lastFrame=0xffffffff;
     videoTrackSize=0;
+    videoDuration = ADM_NO_PTS;
 }
 /**
     \fn psHeader

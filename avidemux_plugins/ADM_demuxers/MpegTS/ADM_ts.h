@@ -131,6 +131,7 @@ class tsHeader         :public vidHeader
     bool            updateIdr(void);
     bool            videoNeedEscaping;
     uint64_t        sizeOfVideoInBytes;
+    uint64_t        videoDuration; // cached value in microseconds
 protected:
     vector <ADM_tsTrackDescriptor *>listOfAudioTracks;
     uint32_t        videoPid;             

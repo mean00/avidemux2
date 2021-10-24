@@ -118,6 +118,7 @@ class psHeader : public vidHeader
     bool                fieldEncoded;
     uint32_t            lastFrame;
     uint64_t            videoTrackSize;
+    uint64_t            videoDuration;
     fileParser          parser;
     psPacketLinear      *psPacket;
 

@@ -260,6 +260,7 @@ uint8_t tsHeader::close(void)
     videoPid=0;
     videoNeedEscaping=false;
     sizeOfVideoInBytes=0;
+    videoDuration = ADM_NO_PTS;
 }
 /**
     \fn tsHeader

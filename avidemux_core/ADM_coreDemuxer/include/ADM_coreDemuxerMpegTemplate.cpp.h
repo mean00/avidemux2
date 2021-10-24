@@ -24,6 +24,8 @@
 */
 uint64_t MY_CLASS::getVideoDuration(void)
 {
+    if(videoDuration != ADM_NO_PTS)
+        return videoDuration;
     int lastFrame=ListOfFrames.size();
     if(!lastFrame) return 0;
     lastFrame--;
@@ -92,11 +94,12 @@ uint64_t MY_CLASS::getVideoDuration(void)
     g=refTime;
     f=f*refDistance;
     g+=f;
-    uint64_t duration=(uint64_t)g;
+    videoDuration = (uint64_t)g;
+    videoDuration += frameToUs(1);
 #ifdef VERBOSE_DURATION
     ADM_info("Using duration of %s\n",ADM_us2plain(duration));
 #endif
-    return duration+frameToUs(1);
+    return videoDuration;
 }
 
 /**
@@ -228,6 +231,7 @@ bool    MY_CLASS::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 bool    MY_CLASS::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
     if(frame>=ListOfFrames.size()) return false;
+    videoDuration = ADM_NO_PTS; // invalidate
     dmxFrame *pk=ListOfFrames[frame];
 
     pk->dts=dts;
