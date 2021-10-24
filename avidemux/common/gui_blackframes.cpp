@@ -43,34 +43,32 @@
 
 static const int  sliceOrder[8]={3,4,2,5,1,6,0,7};
 /**
-        \fn sliceScanNotBlack
-        \brief The image is split into 8 slices, returns if the given slice is black or not
+    \fn sliceScanNotBlack
+    \brief The image is split into 8 slices, returns if the given slice is black or not
 */
 static int sliceScanNotBlack(int darkness, int maxnonb, int sliceNum,ADMImage *img)
 {
-    uint32_t width = img->_width;
-    int       stride=img->GetPitch(PLANAR_Y);
     uint32_t height = img->_height;
-    uint32_t sliceOffset = (stride * height)>>3 ;    // 1/8 of an image
-
-    uint8_t *buff,*start;
-
+    uint32_t width = img->_width;
+    int      stride = img->GetPitch(PLANAR_Y);
+    uint8_t *buff = img->GetReadPtr(PLANAR_Y)+ stride*(height>>3)*sliceNum;    // 1/8 of an image
     int cnt4=0;
 
-    start=img->GetReadPtr(PLANAR_Y)+ sliceOffset*sliceNum;
-    buff=start+sliceOffset;
-
-    while(--buff>start)
+    for (int y=0; y<(height>>3); y++)
     {
-      if(*buff > darkness )
-      {
-        cnt4++;
-        if(cnt4>=maxnonb)
-          return(1);
-      }
+        for (int x=0; x<width; x++)
+        {
+            if(buff[x] > darkness)
+            {
+                cnt4++;
+                if(cnt4>=maxnonb)
+                    return 1;
+            }
+        }
+        buff += stride;
     }
-    return(0);
 
+    return 0;
 }
 /**
     \fn fastIsNotBlack
@@ -82,17 +80,17 @@ uint8_t  fastIsNotBlack(int darkness,ADMImage *img)
     uint32_t width = img->_width;
     uint32_t height = img->_height;    
     uint32_t maxnonb=(width* height)>>8;
-    
-        maxnonb>>=3;
-        // Divide the screen in 8 part  : 0 1 2 3 4 5 6 7 
-        // Scan 2 & 3 first, if still good, go on
-        for(uint32_t i=0;i<6;i++)
-        {
-                if(sliceScanNotBlack(darkness,maxnonb,sliceOrder[i],img)) return 1;
-        }
-        // The slice 0 & 7 are particular and we admit twice as much
-        if(sliceScanNotBlack(darkness,maxnonb*2,0,img)) return 1;
-        if(sliceScanNotBlack(darkness,maxnonb*2,7,img)) return 1;
+
+    maxnonb>>=3;
+    // Divide the screen in 8 part  : 0 1 2 3 4 5 6 7 
+    // Scan 2 & 3 first, if still good, go on
+    for(uint32_t i=0;i<6;i++)
+    {
+        if(sliceScanNotBlack(darkness,maxnonb,sliceOrder[i],img)) return 1;
+    }
+    // The slice 0 & 7 are particular and we admit twice as much
+    if(sliceScanNotBlack(darkness,maxnonb*2,0,img)) return 1;
+    if(sliceScanNotBlack(darkness,maxnonb*2,7,img)) return 1;
 
     return(0);
 }
@@ -102,7 +100,73 @@ uint8_t  fastIsNotBlack(int darkness,ADMImage *img)
 */
 void GUI_PrevBlackFrame(void)
 {
-    GUI_Error_HIG(QT_TRANSLATE_NOOP("blackframes", "BlackFrame"), QT_TRANSLATE_NOOP("blackframes", "This function is unsupported at the moment"));
+    if (playing)
+        return;
+    if (! avifileinfo)
+        return;
+    const int darkness=40;
+    admPreview::deferDisplay(true);
+    ADMImage *rdr;
+
+    uint64_t startTime=admPreview::getCurrentPts();
+    uint64_t lastBlackPts=ADM_NO_PTS;
+    DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("blackframes", "Searching black frame.."),startTime);
+    
+    // search among (likely) cached images
+    for (int i=0; i<6; i++)
+    {
+        if(false==admPreview::previousPicture())
+            break;
+        rdr=admPreview::getBuffer();
+        if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
+        {
+            if(false==rdr->hwDownloadFromRef())
+            {
+                ADM_warning("Cannot convert hw image to yv12\n");
+                break;
+            }
+        }
+        if(!fastIsNotBlack(darkness,rdr))
+        {
+            lastBlackPts = admPreview::getCurrentPts();
+            break;
+        }
+    }
+    
+    if (lastBlackPts==ADM_NO_PTS)
+    {
+        video_body->rewind();
+        admPreview::samePicture();
+        while(1)
+        {
+            UI_purge();
+            if (admPreview::getCurrentPts() >= startTime)	// dont go beyond start frame
+                break;
+            rdr=admPreview::getBuffer();
+            if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
+            {
+                if(false==rdr->hwDownloadFromRef())
+                {
+                    ADM_warning("Cannot convert hw image to yv12\n");
+                    break;
+                }
+            }
+            if(!fastIsNotBlack(darkness,rdr))
+            {
+                lastBlackPts = admPreview::getCurrentPts();
+            }
+            if(work->update(1,admPreview::getCurrentPts()))
+                break;
+            if(false==admPreview::nextPicture())
+                break;
+        }
+    }
+    delete work;
+    admPreview::seekToTime((lastBlackPts==ADM_NO_PTS)?startTime:lastBlackPts);
+    admPreview::deferDisplay(false);
+    admPreview::samePicture();
+    GUI_setCurrentFrameAndTime();
+    return;
 }
 
 /**
@@ -112,27 +176,24 @@ void GUI_PrevBlackFrame(void)
 void GUI_NextBlackFrame(void)
 {
     if (playing)
-		return;
+        return;
     if (! avifileinfo)
-       return;
+        return;
     const int darkness=40;
     admPreview::deferDisplay(true);
     ADMImage *rdr;
-    
-//#warning set real fps
-    
-    // guess ~ number of frames
+
     uint64_t duration=video_body->getVideoDuration();    
     uint64_t startTime=admPreview::getCurrentPts();
     DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("blackframes", "Searching black frame.."),duration-startTime);
 
-    uint32_t count=0;
+    bool blackFound=false;
     while(1)
     {
         UI_purge();
 
         if(false==admPreview::nextPicture())
-                break;
+            break;
         rdr=admPreview::getBuffer();
         if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
         {
@@ -141,21 +202,22 @@ void GUI_NextBlackFrame(void)
                 ADM_warning("Cannot convert hw image to yv12\n");
                 break;
             }
-
         }
         if(!fastIsNotBlack(darkness,rdr))
         {
-                break;
+            blackFound = true;
+            break;
         }
         if(work->update(1,admPreview::getCurrentPts()-startTime))
-              break;
+            break;
     }
     delete work;
+    if (!blackFound)
+        admPreview::seekToTime(startTime);
     admPreview::deferDisplay(false);
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
     return;
-
 }
 
 //EOF
