@@ -13,7 +13,7 @@ PREFIX="/usr"
 
 # Avidemux version
 MAJOR="2"
-MINOR="7"
+MINOR="8"
 
 fail()
 {
