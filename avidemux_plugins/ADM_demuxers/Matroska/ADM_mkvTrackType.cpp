@@ -67,6 +67,7 @@ MKVCC mkvCC[]=
   {"V_MPEG4/ISO/ASP",1,0,"DIVX"},
   {"V_MJPEG",1,0,"MJPG"},
   {"V_AV1",1,0,"av01"},
+  {"V_PRORES",1,0,"apco"}, // dummy fourcc, we need to decode frame header to detect the real one
   // Filler
   {"AVIDEMUX_RULES",1,0,"DIV2"} // DUMMY
 };

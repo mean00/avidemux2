@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include "ADM_default.h"
 #include "ADM_Video.h"
+#include "fourcc.h"
 #include "ADM_mkv.h"
 #include "ADM_codecType.h"
 #include "mkv_tags.h"
@@ -63,6 +64,15 @@ static int getStdFrameRate(int interval)
   return bestMatch;
 }
 
+static bool isProRes(uint32_t fcc)
+{
+    return fourCC::check(fcc,(uint8_t *)"apco") ||
+           fourCC::check(fcc,(uint8_t *)"apcs") ||
+           fourCC::check(fcc,(uint8_t *)"apcn") ||
+           fourCC::check(fcc,(uint8_t *)"apch") ||
+           fourCC::check(fcc,(uint8_t *)"ap4h") ||
+           fourCC::check(fcc,(uint8_t *)"ap4x");
+}
 
 /**
     \fn open
@@ -192,6 +202,9 @@ uint8_t mkvHeader::open(const char *name)
   _parser=new ADM_ebml_file();
   ADM_assert(_parser->open(name));
   _filename=ADM_strdup(name);
+
+  if(isProRes(_videostream.fccHandler))
+        updateProResFourCC();
 
   // Now dump some infos about the track
     for(int i=0;i<1+_nbAudioTrack;i++)
@@ -1115,6 +1128,23 @@ uint8_t  mkvHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
   }
   img->dataLength=readAndRepeat(0,img->data, sz-3);
   ADM_assert(img->dataLength <= ADM_COMPRESSED_MAX_DATA_LENGTH);
+  // ProRes frames may have their container atom stripped, in this case we need to recreate it.
+  if(isProRes(_videostream.fccHandler) && !fourCC::check(img->data + 4, (uint8_t *)"icpf"))
+  {
+        sz = img->dataLength;
+        img->dataLength += 8;
+        ADM_assert(img->dataLength <= ADM_COMPRESSED_MAX_DATA_LENGTH);
+        memmove(img->data + 8, img->data, sz);
+        uint8_t *p = img->data;
+        *p++ = (sz>>24)&0xff;
+        *p++ = (sz>>16)&0xff;
+        *p++ = (sz>>8)&0xff;
+        *p++ = sz&0xff;
+        *p++ = 'i'; // 0x69;
+        *p++ = 'c'; // 0x63;
+        *p++ = 'p'; // 0x70;
+        *p   = 'f'; // 0x66;
+  }
   img->flags=dx->flags;
   img->demuxerDts=dx->Dts;
   img->demuxerPts=dx->Pts;
@@ -1364,5 +1394,129 @@ int mkvHeader::isBufferingNeeded(mkvTrak *trk)
    ADM_warning("Big packet detected : %d kBytes \n",max>>10);
    return max;
 }
+
+/**
+ * \fn updateProResFourCC
+ * \brief Guess FourCC based on bitrate and ProRes frame flags.
+ *        Derived from libavcodec ProRes encoder by Konstantin Shishkov.
+ */
+void mkvHeader::updateProResFourCC(void)
+{
+#define NUM_MB_LIMITS 4
+    const uint32_t prores_mb_limits[NUM_MB_LIMITS] = {
+        1620, // up to 720x576
+        2700, // up to 960x720
+        6075, // up to 1440x1080
+        9216  // up to 2048x1152
+    };
+
+    typedef struct {
+        const char *fourcc;
+        uint32_t bitrate[4];
+    } profileDesc;
+
+#define NUM_PROFILES 6
+#define FIRST_4444_PROFILE 4
+    const profileDesc profTab[NUM_PROFILES] {
+        {
+            "apc0", /* proxy */
+            { 300, 242, 220, 194 }
+        },
+        {
+            "apcs", /* light */
+            { 720, 560, 490, 440 }
+        },
+        {
+            "apcn", /* standard */
+            { 1050, 808, 710, 632 }
+        },
+        {
+            "apch", /* high quality */
+            { 1566, 1216, 1070, 950 }
+        },
+        {
+            "ap4h", /* 4444 */
+            { 2350, 1828, 1600, 1425 }
+        },
+        {
+            "ap4x", /* 4444 XQ */
+            { 3525, 2742, 2400, 2137 }
+        }
+    };
+
+    ADM_assert(_parser);
+    mkvTrak *t = &(_tracks[0]);
+    ADM_assert(t->index.size());
+
+#define MBALIGN(x) (((x+15)&(~15)) >> 4)
+    uint32_t mb = MBALIGN(_mainaviheader.dwWidth);
+    mb *= MBALIGN(_mainaviheader.dwHeight);
+
+    int level;
+    for(level=0; level < NUM_MB_LIMITS; level++)
+    {
+        if(prores_mb_limits[level] >= mb)
+            break;
+    }
+    if(level >= NUM_MB_LIMITS)
+    {
+        level = NUM_MB_LIMITS - 1;
+        ADM_warning("# of macroblocks %" PRIu32" exceeds max %d\n",mb,prores_mb_limits[level]);
+    }
+    // Get ProRes frame flags from the first image
+    mkvIndex *ix = &(t->index[0]);
+    if(ix->size < 44) // 8 frame container + 28 frame header + 8 picture header
+    {
+        ADM_warning("Invalid frame data length %u for ProRes\n",ix->size);
+        return; // invalid data
+    }
+    _parser->seek(ix->pos+3);
+#define PRORES_PROBESIZE 36
+    uint8_t buf[PRORES_PROBESIZE];
+    uint32_t len = t->headerRepeatSize;
+    ADM_assert(len < PRORES_PROBESIZE);
+    len = PRORES_PROBESIZE - len;
+    len = readAndRepeat(0,buf,len);
+    if(len != PRORES_PROBESIZE)
+    {
+        ADM_warning("Read failure, wanted %u bytes, got %u\n",PRORES_PROBESIZE,len);
+        return;
+    }
+    uint32_t off = 12; // hdrSize (2) + version (2) + creatorID (4) + width (2) + height (2)
+    if(fourCC::check(buf + 4, (uint8_t *)"icpf"))
+        off += 8; // frame container
+
+    uint8_t flags = buf[off];
+
+    uint64_t bitsPerMb = t->_sizeInBytes << 3; // Size of ProRes headers is usually negligible.
+    bitsPerMb /= mb * t->index.size();
+
+    if((flags >> 6) & 1) // ProRes 4444
+    {
+        for(int i = FIRST_4444_PROFILE; i < NUM_PROFILES; i++)
+        {
+            if(profTab[i].bitrate[level] >= bitsPerMb)
+            {
+                _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)profTab[i].fourcc);
+                return;
+            }
+        }
+        ADM_warning("Bits per macroblock value %" PRIu64" too high even for 4444 XQ?\n",bitsPerMb);
+        _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)"ap4x");
+        return;
+    }
+    // ProRes 422
+    for(int i = 0; i < FIRST_4444_PROFILE; i++)
+    {
+        if(profTab[i].bitrate[level] >= bitsPerMb)
+        {
+            _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)profTab[i].fourcc);
+            return;
+        }
+    }
+    ADM_warning("Bits per macroblock value %" PRIu64" too high even for HQ?\n",bitsPerMb);
+    _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)"apch");
+}
+
 //****************************************
 //EOF

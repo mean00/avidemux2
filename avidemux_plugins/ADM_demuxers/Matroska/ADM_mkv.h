@@ -255,6 +255,7 @@ class mkvHeader         :public vidHeader
 
     bool                    ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDeltaX, bool *bFramePresent);
     bool                    updateFlagsWithCue(void); // in case we can trust it, update KEY_FRAME_FLAGS
+    void                    updateProResFourCC(void);
     bool                    dumpVideoIndex(int maxIndex);
     bool                    goBeforeAtomAtPosition(ADM_ebml_file *parser, uint64_t position,uint64_t &outputLen,
                                                 MKV_ELEM_ID searchedId,const char *txt);
