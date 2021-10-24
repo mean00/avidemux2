@@ -127,6 +127,7 @@ void GUI_NextBlackFrame(void)
     DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("blackframes", "Searching black frame.."),duration-startTime);
 
     uint32_t count=0;
+    bool blackFound=false;
     while(1)
     {
         UI_purge();
@@ -145,12 +146,15 @@ void GUI_NextBlackFrame(void)
         }
         if(!fastIsNotBlack(darkness,rdr))
         {
+            blackFound = true;
                 break;
         }
         if(work->update(1,admPreview::getCurrentPts()-startTime))
               break;
     }
     delete work;
+    if (!blackFound)
+        admPreview::seekToTime(startTime);
     admPreview::deferDisplay(false);
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
