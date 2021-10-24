@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.0)
 
 PROJECT(Avidemux_Qt)
 
-SET(AVIDEMUX_API_VERSION 2.7)
+set(ORIGINAL_CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../../cmake" "${CMAKE_MODULE_PATH}")
+include(avidemuxVersion)
 
 MESSAGE("")
 MESSAGE("#########################################")
@@ -16,7 +18,7 @@ MESSAGE(STATUS "Checking for avidemux development files ..")
 IF(NOT FAKEROOT)
 	SET(AVIDEMUX_FAKEROOT "")
 else(NOT FAKEROOT)
-	SET(AVIDEMUX_FAKEROOT "${FAKEROOT}/")
+	SET(AVIDEMUX_FAKEROOT "${FAKEROOT}")
 endif(NOT FAKEROOT)
 
 
@@ -37,12 +39,11 @@ ENDIF(WIN32)
 # Set extra libs, system dependant
 #-----------------------------------
 ADM_PREBUILD()
-#
-#
+
+# Locate commonCmakeApplication.cmake
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
 SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
-# Common definitions...
-SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
+SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${ORIGINAL_CMAKE_MODULE_PATH}")
 MESSAGE(STATUS  "Checking for avidemux include folder (i.e. CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}, looking in ${ADM_HEADER_DIR}")
 if(NOT EXISTS "${ADM_HEADER_DIR}")
         MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")

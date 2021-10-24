@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 PROJECT(Avidemux_CLI)
 
-SET(AVIDEMUX_API_VERSION 2.7)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../../cmake" "${CMAKE_MODULE_PATH}")
+include(avidemuxVersion)
 
 MESSAGE("")
 MESSAGE("#########################################")
@@ -15,7 +16,7 @@ MESSAGE(STATUS "Checking for avidemux development files ..")
 IF(NOT FAKEROOT)
 	SET(AVIDEMUX_FAKEROOT "")
 else(NOT FAKEROOT)
-	SET(AVIDEMUX_FAKEROOT "${FAKEROOT}/")
+	SET(AVIDEMUX_FAKEROOT "${FAKEROOT}")
 endif(NOT FAKEROOT)
 
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
