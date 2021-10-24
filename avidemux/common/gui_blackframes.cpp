@@ -100,7 +100,48 @@ uint8_t  fastIsNotBlack(int darkness,ADMImage *img)
 */
 void GUI_PrevBlackFrame(void)
 {
-    GUI_Error_HIG(QT_TRANSLATE_NOOP("blackframes", "BlackFrame"), QT_TRANSLATE_NOOP("blackframes", "This function is unsupported at the moment"));
+    if (playing)
+        return;
+    if (! avifileinfo)
+        return;
+    const int darkness=40;
+    admPreview::deferDisplay(true);
+    ADMImage *rdr;
+
+    uint64_t startTime=admPreview::getCurrentPts();
+    uint64_t lastBlackPts=ADM_NO_PTS;
+    DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("blackframes", "Searching black frame.."),startTime);
+    
+    if (admPreview::seekToTime(0))
+    while(1)
+    {
+        UI_purge();
+        if (admPreview::getCurrentPts() >= startTime)	// dont go beyond start frame
+            break;
+        rdr=admPreview::getBuffer();
+        if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
+        {
+            if(false==rdr->hwDownloadFromRef())
+            {
+                ADM_warning("Cannot convert hw image to yv12\n");
+                break;
+            }
+        }
+        if(!fastIsNotBlack(darkness,rdr))
+        {
+            lastBlackPts = admPreview::getCurrentPts();
+        }
+        if(work->update(1,admPreview::getCurrentPts()))
+            break;
+        if(false==admPreview::nextPicture())
+            break;
+    }
+    delete work;
+    admPreview::seekToTime((lastBlackPts==ADM_NO_PTS)?startTime:lastBlackPts);
+    admPreview::deferDisplay(false);
+    admPreview::samePicture();
+    GUI_setCurrentFrameAndTime();
+    return;
 }
 
 /**
