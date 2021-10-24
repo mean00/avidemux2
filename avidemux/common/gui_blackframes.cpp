@@ -48,29 +48,27 @@ static const int  sliceOrder[8]={3,4,2,5,1,6,0,7};
 */
 static int sliceScanNotBlack(int darkness, int maxnonb, int sliceNum,ADMImage *img)
 {
-    uint32_t width = img->_width;
-    int      stride=img->GetPitch(PLANAR_Y);
     uint32_t height = img->_height;
-    uint32_t sliceOffset = (stride * height)>>3 ;    // 1/8 of an image
-
-    uint8_t *buff,*start;
-
+    uint32_t width = img->_width;
+    int      stride = img->GetPitch(PLANAR_Y);
+    uint8_t *buff = img->GetReadPtr(PLANAR_Y)+ stride*(height>>3)*sliceNum;    // 1/8 of an image
     int cnt4=0;
 
-    start=img->GetReadPtr(PLANAR_Y)+ sliceOffset*sliceNum;
-    buff=start+sliceOffset;
-
-    while(--buff>start)
+    for (int y=0; y<(height>>3); y++)
     {
-        if(*buff > darkness )
+        for (int x=0; x<width; x++)
         {
-            cnt4++;
-            if(cnt4>=maxnonb)
-                return(1);
+            if(buff[x] > darkness)
+            {
+                cnt4++;
+                if(cnt4>=maxnonb)
+                    return 1;
+            }
         }
+        buff += stride;
     }
-    return(0);
 
+    return 0;
 }
 /**
     \fn fastIsNotBlack
