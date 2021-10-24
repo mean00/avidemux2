@@ -267,6 +267,8 @@ bool GUIPlayback::run(void)
     ADMImage *previewBuffer=admPreview::getBuffer();
     ADM_HW_IMAGE hwImageFormat=admPreview::getPreferedHwImageFormat();
 
+    UI_setFrameType(CLEAR_FRAME_TYPE, ADM_IMAGE_UNKNOWN_QP);
+
     do
     {
         if(!first)

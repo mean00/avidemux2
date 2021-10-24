@@ -2494,6 +2494,12 @@ void UI_setTitle(const char *name)
 
 void UI_setFrameType( uint32_t frametype,uint32_t qp)
 {
+    if(frametype == CLEAR_FRAME_TYPE)
+    {
+        WIDGET(label_8)->clear();
+        return;
+    }
+
     char string[100];
     char    c='?';
     const char *f="???";
@@ -2502,7 +2508,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
     case AVI_KEY_FRAME: c='I';break;
     case AVI_B_FRAME: c='B';break;
     case 0: c='P';break;
-    default:c='?';break;
+    default:break;
 
     }
     switch(frametype&AVI_STRUCTURE_TYPE_MASK)

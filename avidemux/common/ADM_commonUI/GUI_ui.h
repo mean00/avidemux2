@@ -1,5 +1,7 @@
 #pragma once
 
+#define CLEAR_FRAME_TYPE 0xFFFFFFFF
+
 void UI_updateFrameCount(uint32_t curFrame);
 void UI_setFrameCount(uint32_t curFrame,uint32_t total);
 
