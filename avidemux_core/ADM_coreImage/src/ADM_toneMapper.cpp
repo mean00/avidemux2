@@ -331,17 +331,17 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
         return false;
     if ((sourceImage->_colorTrc == ADM_COL_TRC_BT2020_10) || (sourceImage->_colorTrc == ADM_COL_TRC_BT2020_12))	// excluding trc, not hdr
         return false;
-    if (!isnan(sourceImage->_hdrInfo.colorSaturationWeight))
+    if (!std::isnan(sourceImage->_hdrInfo.colorSaturationWeight))
         if (sourceImage->_hdrInfo.colorSaturationWeight > 0)
             saturationAdjust *= sourceImage->_hdrInfo.colorSaturationWeight;
     
     // Determine max luminance
     double maxLuminance = 10000.0;
-    if (!isnan(sourceImage->_hdrInfo.maxLuminance))
+    if (!std::isnan(sourceImage->_hdrInfo.maxLuminance))
         if (sourceImage->_hdrInfo.maxLuminance > 0)
             if (maxLuminance > sourceImage->_hdrInfo.maxLuminance)
                 maxLuminance = sourceImage->_hdrInfo.maxLuminance;
-    if (!isnan(sourceImage->_hdrInfo.targetMaxLuminance))
+    if (!std::isnan(sourceImage->_hdrInfo.targetMaxLuminance))
         if (sourceImage->_hdrInfo.targetMaxLuminance > 0)
             if (maxLuminance > sourceImage->_hdrInfo.targetMaxLuminance)
                 maxLuminance = sourceImage->_hdrInfo.targetMaxLuminance;
@@ -349,7 +349,7 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
         if (maxLuminance == 10000.0)
             maxLuminance=1000.0;
     double boost = 1;
-    if ((!isnan(sourceImage->_hdrInfo.maxCLL)) && (!isnan(sourceImage->_hdrInfo.maxFALL)))
+    if ((!std::isnan(sourceImage->_hdrInfo.maxCLL)) && (!std::isnan(sourceImage->_hdrInfo.maxFALL)))
         if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
             boost = sourceImage->_hdrInfo.maxCLL / sourceImage->_hdrInfo.maxFALL;
     boost *= boostAdjust*boostAdjust;
@@ -625,7 +625,7 @@ void ADMToneMapper::toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries
         bool all = true;
         for (int j=0; j<3; j++)
             for (int k=0;k<2; k++)
-                if (isnan(primaries[j*2+k]) || (fabs(primaries[j*2+k])<0.001))
+                if (std::isnan(primaries[j*2+k]) || (fabs(primaries[j*2+k])<0.001))
                 {
                     all = false;
                     break;
@@ -638,7 +638,7 @@ void ADMToneMapper::toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries
 
     if (whitePoint)
     {
-        if (!(isnan(whitePoint[0]) || isnan(whitePoint[1])) && (whitePoint[0] != 0) && (whitePoint[1] != 0))
+        if (!(std::isnan(whitePoint[0]) || std::isnan(whitePoint[1])) && (whitePoint[0] != 0) && (whitePoint[1] != 0))
         {
             wp[0] = whitePoint[0];
             wp[1] = whitePoint[1];
@@ -832,17 +832,17 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         return false;
     if ((sourceImage->_colorTrc == ADM_COL_TRC_BT2020_10) || (sourceImage->_colorTrc == ADM_COL_TRC_BT2020_12))	// excluding trc, not hdr
         return false;
-    if (!isnan(sourceImage->_hdrInfo.colorSaturationWeight))
+    if (!std::isnan(sourceImage->_hdrInfo.colorSaturationWeight))
         if (sourceImage->_hdrInfo.colorSaturationWeight > 0)
             saturationAdjust *= sourceImage->_hdrInfo.colorSaturationWeight;
     
     // Determine max luminance
     double maxLuminance = 10000.0;
-    if (!isnan(sourceImage->_hdrInfo.maxLuminance))
+    if (!std::isnan(sourceImage->_hdrInfo.maxLuminance))
         if (sourceImage->_hdrInfo.maxLuminance > 0)
             if (maxLuminance > sourceImage->_hdrInfo.maxLuminance)
                 maxLuminance = sourceImage->_hdrInfo.maxLuminance;
-    if (!isnan(sourceImage->_hdrInfo.targetMaxLuminance))
+    if (!std::isnan(sourceImage->_hdrInfo.targetMaxLuminance))
         if (sourceImage->_hdrInfo.targetMaxLuminance > 0)
             if (maxLuminance > sourceImage->_hdrInfo.targetMaxLuminance)
                 maxLuminance = sourceImage->_hdrInfo.targetMaxLuminance;
@@ -850,12 +850,12 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         if (maxLuminance == 10000.0)
             maxLuminance=1000.0;
     double peakLuminance = maxLuminance;
-    if (!isnan(sourceImage->_hdrInfo.maxCLL))
+    if (!std::isnan(sourceImage->_hdrInfo.maxCLL))
         if (sourceImage->_hdrInfo.maxCLL > 0)
             if (peakLuminance > sourceImage->_hdrInfo.maxCLL)
                 peakLuminance = sourceImage->_hdrInfo.maxCLL;
     double boost = 1;
-    if ((!isnan(sourceImage->_hdrInfo.maxCLL)) && (!isnan(sourceImage->_hdrInfo.maxFALL)))
+    if ((!std::isnan(sourceImage->_hdrInfo.maxCLL)) && (!std::isnan(sourceImage->_hdrInfo.maxFALL)))
         if ((sourceImage->_hdrInfo.maxCLL > 0) && (sourceImage->_hdrInfo.maxFALL > 0))
             boost = sourceImage->_hdrInfo.maxCLL / sourceImage->_hdrInfo.maxFALL;
     boost *= boostAdjust*boostAdjust;
