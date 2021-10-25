@@ -89,8 +89,8 @@ printModule()
 {
         value=$1
         name=$2
-        if [ "x$value" = "x1" ]; then echo "    $name will be built"
-        else echo "     $name will be skipped"
+        if [ "x$value" = "x1" ]; then echo -e "\t$name will be built"
+        else echo -e "\t$name will be skipped"
         fi
 }
 config()
@@ -98,7 +98,7 @@ config()
         setupPaths
         echo "Build configuration :"
         echo "******************* :"
-        echo "Build type :"
+        echo -n "Build type : "
         if [ "x$debug" = "x1" ] ; then echo   "Debug build"
         else echo   "Release build"
         fi
@@ -245,25 +245,49 @@ done
 validate adm_version "$adm_version" || exit 1
 validate output "$output" || exit 1
 config
-# Homebrew offers formulae both for Qt5 and Qt6. When the version we want
-# doesn't match the one linked into /usr/local, the build will fail.
-# Refuse to continue if Qt is not keg-only.
-if [ -f "/usr/local/bin/qmake" ]; then
-    echo -e "\n***************************************************************"
-    echo -e "It seems that you have a Qt installation linked into /usr/local"
-    echo -e "Please unlink it first, e.g. for Qt6 by executing\n"
+# If the path to a custom Qt installation is passed via MYQT variable,
+# check for a conflicting one from Homebrew.
+if [ "x${MYQT}" != "x" ] && [ -f "/usr/local/bin/qmake" ]; then
+    echo -e "\n****************************************************************"
+    echo -e "It seems that you have a Qt installation linked into /usr/local,"
+    echo -e "but MYQT variable is set. Please unlink it first by executing"
+    echo -e "in case of Homebrew and e.g. Qt6\n"
     echo -e "\tbrew unlink qt6\n"
     echo -e "then rerun this script."
-    echo -e "***************************************************************\n"
+    echo -e "****************************************************************\n"
     exit 1
+fi
+# Homebrew offers formulae both for Qt5 and Qt6. When the version we want
+# doesn't match the one linked into /usr/local, the build will fail.
+qmake_location=$(which qmake)
+if [ "$qmake_location" = "/usr/local/bin/qmake" ]; then
+    linked_qt_version_major=$(qmake -query QT_VERSION)
+    linked_qt_version_major=${linked_qt_version_major:0:1}
+    if [ "${qt_ext}" != "Qt${linked_qt_version_major}" ]; then
+        echo -e "\n*********************** Fatal Error ****************************"
+        echo -e "Qt version of the installation linked into /usr/local does not"
+        echo -e "match the one you are building for. If you use Homebrew, please"
+        echo -e "brew link the matching one and rerun this script."
+        echo -e "****************************************************************\n"
+        exit 1
+    fi
 fi
 if [ "x$MYQT" != "x" ] && [ -f "${MYQT}/bin/qmake" ] ; then
     export QTDIR="${MYQT}" # needed for translations
 else
-    if [ $qt_ext = "Qt6" ]; then
-        export QTDIR=/usr/local/opt/qt6
+    if [ "${qt_ext}" = "Qt6" ]; then
+        if [ "$qmake_location" != "/usr/local/bin/qmake" ]; then
+            echo -e "\n****************************************************************"
+            echo -e "When using Qt6 from Homebrew, please make sure it is linked into"
+            echo -e "/usr/local by executing\n"
+            echo -e "\tbrew link qt6\n"
+            echo -e "as qmake at least in Qt 6.2.0 reports a wrong path to plugins."
+            echo -e "****************************************************************\n"
+            exit 1
+        fi
+        export QTDIR="/usr/local/opt/qt@6"
     else
-        export QTDIR=/usr/local/opt/qt5
+        export QTDIR="/usr/local/opt/qt@5"
     fi
 fi
 export PATH=${PATH}:${QTDIR}/bin
