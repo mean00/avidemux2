@@ -1417,7 +1417,7 @@ void mkvHeader::updateProResFourCC(void)
 
 #define NUM_PROFILES 6
 #define FIRST_4444_PROFILE 4
-    const profileDesc profTab[NUM_PROFILES] {
+    const profileDesc profTab[NUM_PROFILES] = {
         {
             "apc0", /* proxy */
             { 300, 242, 220, 194 }
