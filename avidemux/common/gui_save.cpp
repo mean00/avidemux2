@@ -122,20 +122,9 @@ void HandleAction_Save(Action action)
                     GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Job"),QT_TRANSLATE_NOOP("adm","Cannot reach database. Do you have Job control running ?"));
                 }else
                 {
-                    std::string oFile;
-                    std::string prefilled=std::string("Job ")+ADM_getTimeDateAsString();
-                    const char *defaultExtension=ADM_MuxerGetDefaultExtension(UI_GetCurrentFormat());
-                    char *oText=ADM_strdup(prefilled.c_str());
-                    diaElemFile wFile(1,oFile,QT_TRANSLATE_NOOP("adm","Output file"),defaultExtension,NULL);
-                    diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
-                    diaElem *elems[2]={&wText,&wFile};
-
-                    if(  diaFactoryRun(QT_TRANSLATE_NOOP("adm","Queue job to jobList"),2,elems))
-                    {
-                        A_queueJob(oText,oFile.c_str());
-                    }
-                    ADM_dealloc(oText);
-                    ADMJob::jobShutDown();
+                    int  muxerIndex=UI_GetCurrentFormat();
+                    const char *defaultExtension=ADM_MuxerGetDefaultExtension(muxerIndex);
+                    GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select Output File of Job"),defaultExtension,(SELFILE_CB *)A_QueueWrapper);
                 }
             }
             break;
@@ -665,6 +654,32 @@ int A_SaveWrapper(const char *name)
         }
         return 1;
 }
+
+/**
+    \fn A_QueueWrapper
+
+*/
+int A_QueueWrapper(const char *name)
+{
+        std::string prefilled=std::string("Job ")+ADM_getTimeDateAsString();
+        char *oFile=ADM_strdup(name);
+        char *oText=ADM_strdup(prefilled.c_str());
+        diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
+        diaElemText wFile(&oFile,QT_TRANSLATE_NOOP("adm","Output file"));
+        diaElem *elems[2]={&wText,&wFile};
+
+        if(  diaFactoryRun(QT_TRANSLATE_NOOP("adm","Queue job to jobList"),2,elems))
+        {
+            A_queueJob(oText,oFile);
+        }
+        ADM_dealloc(oText);
+        ADM_dealloc(oFile);
+        ADMJob::jobShutDown();
+
+        return 1;
+}
+
+
 /**
     \fn A_queueJob
     \brief Save current stuff as py script and create the associated job

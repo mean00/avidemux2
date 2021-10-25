@@ -48,6 +48,7 @@ bool A_savePng(const char *name);
 int  ADM_saveRaw (const char *name);
 int  A_audioSave(const char *name);
 int  A_SaveWrapper(const char *name);
+int  A_QueueWrapper(const char *name);
 int  A_saveAudioProcessed (const char *name);
 int  A_Save(const char *name);
 
