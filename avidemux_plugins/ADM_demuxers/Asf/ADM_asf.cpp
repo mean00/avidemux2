@@ -37,7 +37,7 @@ WAVHeader *asfHeader::getAudioInfo(uint32_t i )
   if(!_nbAudioTrack) return NULL;
   
   ADM_assert(i<_nbAudioTrack);
-  if(NULL==_audioAccess) return NULL;
+  if(NULL==_audioAccess[i]) return NULL;
   return &(_allAudioTracks[i].wavHeader);
 }
 /**
