@@ -135,29 +135,66 @@ void GUI_PrevBlackFrame(void)
     
     if (lastBlackPts==ADM_NO_PTS)
     {
-        video_body->rewind();
-        admPreview::samePicture();
+        uint64_t anchorPts = startTime;
+        admPreview::seekToTime(anchorPts);
+        uint64_t gopPts;
+        bool firstBlock=false;
+        bool error=false;
         while(1)
         {
             UI_purge();
-            if (admPreview::getCurrentPts() >= startTime)	// dont go beyond start frame
+            if (firstBlock)
                 break;
-            rdr=admPreview::getBuffer();
-            if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
+            if (false==admPreview::previousKeyFrame())
             {
-                if(false==rdr->hwDownloadFromRef())
+                video_body->rewind();
+                admPreview::samePicture();
+                firstBlock = true;
+            }
+            gopPts = admPreview::getCurrentPts();
+            while(1)
+            {
+                UI_purge();
+                if (admPreview::getCurrentPts() >= anchorPts)
                 {
-                    ADM_warning("Cannot convert hw image to yv12\n");
+                    if (!firstBlock)
+                    {
+                        if (false==admPreview::previousKeyFrame())
+                            error = true;
+                        anchorPts = admPreview::getCurrentPts();
+                    }
+                    break;              
+                }
+                rdr=admPreview::getBuffer();
+                if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
+                {
+                    if(false==rdr->hwDownloadFromRef())
+                    {
+                        ADM_warning("Cannot convert hw image to yv12\n");
+                        break;
+                    }
+                }
+                if(!fastIsNotBlack(darkness,rdr))
+                {
+                    lastBlackPts = admPreview::getCurrentPts();
+                }
+                if(work->update(1,startTime-anchorPts + admPreview::getCurrentPts()-gopPts))
+                {
+                    error = true;
+                    break;
+                }
+                if(false==admPreview::nextPicture())
+                {
+                    error = true;
                     break;
                 }
             }
-            if(!fastIsNotBlack(darkness,rdr))
+            if (error)
             {
-                lastBlackPts = admPreview::getCurrentPts();
-            }
-            if(work->update(1,admPreview::getCurrentPts()))
+                lastBlackPts=ADM_NO_PTS;
                 break;
-            if(false==admPreview::nextPicture())
+            }
+            if (lastBlackPts!=ADM_NO_PTS)
                 break;
         }
     }
