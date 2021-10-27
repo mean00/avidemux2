@@ -549,6 +549,21 @@ void HandleAction (Action action)
         A_ResetMarkers();
         break;
     }
+    case ACT_MarkCut:
+    {
+        {
+            uint64_t current=video_body->getCurrentFramePts();
+            video_body->addToUndoQueue();
+            bool result = video_body->remove(current,current);
+            if(!result)
+            {
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Mark as cut point"),QT_TRANSLATE_NOOP("adm","Mark as cut point failed."));
+                break;
+            }
+            GUI_setAllFrameAndTime();
+        }
+        break;  
+    }
     case ACT_Copy:
     {
                 uint64_t markA,markB;

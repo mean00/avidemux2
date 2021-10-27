@@ -1135,6 +1135,29 @@
           </widget>
          </item>
          <item>
+          <widget class="QToolButton" name="toolButtonMarkAsCutPoint">
+           <property name="toolTip">
+            <string>Mark as cut point [SHIFT+M]</string>
+           </property>
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/markCut.png</normaloff>:/new/prefix1/pics/markCut.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QToolButton" name="toolButtonPreviousCutPoint">
            <property name="enabled">
             <bool>false</bool>
@@ -2056,6 +2079,7 @@
   <tabstop>toolButtonNextIntraFrame</tabstop>
   <tabstop>toolButtonSetMarkerA</tabstop>
   <tabstop>toolButtonSetMarkerB</tabstop>
+  <tabstop>toolButtonMarkAsCutPoint</tabstop>
   <tabstop>toolButtonPreviousCutPoint</tabstop>
   <tabstop>toolButtonNextCutPoint</tabstop>
   <tabstop>toolButtonPreviousBlackFrame</tabstop>
