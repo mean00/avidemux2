@@ -45,6 +45,7 @@ class flyAnalyzer : public ADM_flyDialogYuv
     ADMColorScalerFull * convertYuvToRgb;
     uint32_t * wrkVectorScope;
     uint32_t * bufVectorScope;
+    uint32_t * scaleVectorScope;
     QImage   * imgVectorScope;
     uint32_t * wrkYUVparade[3];
     uint32_t * bufYUVparade;

@@ -21,8 +21,6 @@
 #include <QColor>
 #include <cmath>
 
-#include "vectorscope_scale.h"
-
 #define FRAME_COLOR	(0xFF000000) //(0xFF7F7F7F)
 
 /************* COMMON PART *********************/
@@ -44,7 +42,65 @@ flyAnalyzer::flyAnalyzer (QDialog *parent,uint32_t width,uint32_t height,ADM_cor
     sceneVectorScope = scVectorScope;
     wrkVectorScope = new uint32_t [256*256];
     bufVectorScope = new uint32_t [620*600];
+    scaleVectorScope = new uint32_t [620*600];
     imgVectorScope = new QImage((uchar *)bufVectorScope, 620, 600, 620*sizeof(uint32_t), QImage::Format_RGB32);
+    
+    for (int y=0; y<600; y++)
+    {
+        for (int x=0; x<620; x++)
+        {
+            double xc = x-(64.0+256.0);
+            double yc = y-(44.0+256.0);
+            double r = std::sqrt(xc*xc + yc*yc);
+            uint32_t c = 0;
+            if ((r <= 300.0) && (r >= 284.0))   // hue ring
+            {
+                xc *= 127.0/r;
+                yc *= 127.0/r;
+                yc *= -1.0;
+                r = (8.0-std::abs(r-292.0))/8.0;  // 0..1..0 triangle
+                r = std::sqrt(r); // nonlinearity
+                r *= 166;
+                if (r > 128.0)
+                    r = 128.0;
+                int rgb[3];
+                rgb[0] = std::round(r            +   1.4*yc);
+                rgb[1] = std::round(r - 0.343*xc - 0.711*yc);
+                rgb[2] = std::round(r + 1.765*xc           );
+                for (int i=0; i<3; i++)
+                {
+                    if (rgb[i] < 0) rgb[i] = 0;
+                    if (rgb[i] > 255) rgb[i] = 255;
+                }
+                c = (rgb[0]<<16) + (rgb[1]<<8) + rgb[2];
+            }
+            
+            for (int pri=1; pri<=6; pri++)
+            {
+                int rgb[3];
+                rgb[0] = (pri&1)? 1:0;
+                rgb[1] = (pri&2)? 1:0;
+                rgb[2] = (pri&4)? 1:0;
+                double u = 64 + 256 + 2*224.0*(-0.1146*rgb[0] + -0.3854*rgb[1] +  0.5   *rgb[2]);
+                double v = 44 + 256 - 2*224.0*( 0.5   *rgb[0] + -0.4542*rgb[1] + -0.0458*rgb[2]);
+                u = x-u;
+                v = y-v;
+                r = std::sqrt(u*u + v*v);
+                if ((r <= 16.1) && (r >= 13.3))
+                {
+                    c = 0;
+                    if (pri&1)
+                        c += 0xFF0000;
+                    if (pri&2)
+                        c += 0x00FF00;
+                    if (pri&4)
+                        c += 0x0000FF;
+                }
+            }
+            
+            scaleVectorScope[y*620+x] = c;
+        }
+    }
 
     sceneYUVparade = scYUVparade;
     for (int i=0; i<3; i++)
@@ -98,6 +154,7 @@ flyAnalyzer::~flyAnalyzer()
 {
     delete [] wrkVectorScope;
     delete [] bufVectorScope;
+    delete [] scaleVectorScope;
     delete imgVectorScope;
     for (int i=0; i<3; i++)
         delete [] wrkYUVparade[i];
@@ -467,7 +524,7 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
     
     // Draw vectorscope
     {
-        uint32_t p;
+        uint32_t p,q,c;
         uint8_t argb[4];
         memset(bufVectorScope,0,620*600*sizeof(uint32_t));
         
@@ -495,48 +552,35 @@ uint8_t   flyAnalyzer::processYuv(ADMImage *in,ADMImage *out )
             }
         }
 
-        // convert to color 0xffRRGGBB
+        // convert to color 0xffRRGGBB and apply scale
         for (int i=0; i<620*600; i++)
         {
-            if (bufVectorScope[i])
+            p = bufVectorScope[i];
+            q = scaleVectorScope[i];
+            if (p)
             {
-                p = bufVectorScope[i];
                 if (p >= 765)
                 {
-                    bufVectorScope[i] = 0x00FFFFFF;
+                    c = 0x00FFFFFF;
                 } else
                 if (p >= 256)
                 {
                     p = (p-255)/2;
-                    bufVectorScope[i] = 0x0000FF00 + (p<<16) + p;
+                    c = 0x0000FF00 + (p<<16) + p;
                 } else {
-                    bufVectorScope[i] <<= 8;
+                    c = p<<8;
                 }
+                
+                if (q)
+                {
+                    c = (c>>1) & 0x007F7F7F;
+                    q = (q>>1) & 0x007F7F7F;
+                    q += c;
+                }
+                else
+                    q = c;
             }
-            bufVectorScope[i] |= 0xFF000000;
-        }
-
-        // apply scale
-        int i = 0;
-        while (1)
-        {
-            if (vectorscope_scale[i][0] < 0) break;
-            int x = vectorscope_scale[i][0];
-            int y = vectorscope_scale[i][1];
-            int k = vectorscope_scale[i][2]/2;
-
-
-            memcpy(argb, bufVectorScope+620*y+x, 4);
-
-            for (int j=0; j<3; j++)
-                argb[j] = (((unsigned int)argb[j])*(255-k))>>8;
-
-            argb[1] += k;
-            argb[2] += k;
-
-            memcpy(bufVectorScope+620*y+x, argb, 4);
-
-            i++;
+            bufVectorScope[i] = 0xFF000000 | q;
         }
 
         sceneVectorScope->clear();
