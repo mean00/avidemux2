@@ -93,7 +93,7 @@
         </brush>
        </property>
        <property name="renderHints">
-        <set>QPainter::TextAntialiasing</set>
+        <set>QPainter::Antialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing</set>
        </property>
       </widget>
      </item>
@@ -158,7 +158,7 @@
         </brush>
        </property>
        <property name="renderHints">
-        <set>QPainter::TextAntialiasing</set>
+        <set>QPainter::Antialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing</set>
        </property>
       </widget>
      </item>

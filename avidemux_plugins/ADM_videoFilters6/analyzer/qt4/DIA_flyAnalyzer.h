@@ -39,17 +39,24 @@ class flyAnalyzer : public ADM_flyDialogYuv
                                     QGraphicsScene * scYUVparade, QGraphicsScene * scRGBparade, QGraphicsScene * scHistograms) ;
     virtual    ~flyAnalyzer() ;
   private:
+    int                  width, height;
     int                  rgbBufStride;
     ADM_byteBuffer *     rgbBufRaw;
     ADMColorScalerFull * convertYuvToRgb;
-    int                  rgbWidth, rgbHeight;
+    uint32_t * wrkVectorScope;
     uint32_t * bufVectorScope;
+    uint32_t * scaleVectorScope;
     QImage   * imgVectorScope;
+    uint32_t * wrkYUVparade[3];
     uint32_t * bufYUVparade;
     QImage   * imgYUVparade;
+    uint32_t * wrkRGBparade[3];
     uint32_t * bufRGBparade;
     QImage   * imgRGBparade;
+    uint32_t * wrkHistograms[6];
     uint32_t * bufHistograms;
     QImage   * imgHistograms;
+    int      * paradeIndex;
+    int      * paradeIndexHalf;
 };
 #endif
