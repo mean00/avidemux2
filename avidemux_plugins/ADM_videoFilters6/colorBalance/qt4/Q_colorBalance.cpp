@@ -46,13 +46,17 @@ Ui_colorBalanceWindow::Ui_colorBalanceWindow(QWidget *parent, colorBalance *para
         height=in->getInfo()->height;
 
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
+        peekRangesBtn=new QPushButton();
+        peekRangesBtn->setObjectName(QString("peekRangesBtn"));
+        peekRangesBtn->setAutoRepeat(false);
+        peekRangesBtn->setText(QApplication::translate("colorBalance", "Peek Ranges", 0));
+        peekRangesBtn->setToolTip(QApplication::translate("colorBalance", "Show shadow, midtone and highlight areas in black,gray and white colors", 0));
 
         myFly=new flyColorBalance( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(colorBalance));
-        myFly->showOriginal = false;
         myFly->showRanges = false;
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::UserWidgetBeforePeekBtn, peekRangesBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
@@ -75,10 +79,8 @@ Ui_colorBalanceWindow::Ui_colorBalanceWindow(QWidget *parent, colorBalance *para
         DIAL(MdHue)
         DIAL(HiHue)
 
-        connect( ui.pushButtonPeek,SIGNAL(pressed()),this,SLOT(peekPressed()));
-        connect( ui.pushButtonPeek,SIGNAL(released()),this,SLOT(peekReleased()));
-        connect( ui.pushButtonRanges,SIGNAL(pressed()),this,SLOT(rangesPressed()));
-        connect( ui.pushButtonRanges,SIGNAL(released()),this,SLOT(rangesReleased()));
+        connect( peekRangesBtn,SIGNAL(pressed()),this,SLOT(peekRangesPressed()));
+        connect( peekRangesBtn,SIGNAL(released()),this,SLOT(peekRangesReleased()));
 
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
@@ -97,7 +99,9 @@ void Ui_colorBalanceWindow::gather(colorBalance *param)
 Ui_colorBalanceWindow::~Ui_colorBalanceWindow()
 {
     if(myFly) delete myFly;
-    myFly=NULL; 
+    myFly=NULL;
+    if (peekRangesBtn) delete peekRangesBtn;
+    peekRangesBtn=NULL;
     if(canvas) delete canvas;
     canvas=NULL;
 }
@@ -141,23 +145,8 @@ void Ui_colorBalanceWindow::reset(void)
     myFly->sameImage();
     lock--;
 }
-void Ui_colorBalanceWindow::peekPressed(void)
-{
-    myFly->showOriginal = true;
-    if(lock) return;
-    lock++;
-    myFly->sameImage();
-    lock--;
-}
-void Ui_colorBalanceWindow::peekReleased(void)
-{
-    myFly->showOriginal = false;
-    if(lock) return;
-    lock++;
-    myFly->sameImage();
-    lock--;
-}
-void Ui_colorBalanceWindow::rangesPressed(void)
+
+void Ui_colorBalanceWindow::peekRangesPressed(void)
 {
     myFly->showRanges = true;
     if(lock) return;
@@ -165,7 +154,7 @@ void Ui_colorBalanceWindow::rangesPressed(void)
     myFly->sameImage();
     lock--;
 }
-void Ui_colorBalanceWindow::rangesReleased(void)
+void Ui_colorBalanceWindow::peekRangesReleased(void)
 {
     myFly->showRanges = false;
     if(lock) return;
@@ -289,9 +278,6 @@ void flyColorBalance::setTabOrder(void)
     PUSH_DIAL(HiHue)
     PUSH_SPIN(HiChromaShift)
     PUSH_SPIN(HiSaturation)
-
-    controls.push_back(w->pushButtonRanges);
-    controls.push_back(w->pushButtonPeek);
 
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);

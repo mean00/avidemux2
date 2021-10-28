@@ -37,18 +37,10 @@ uint8_t   flyColorBalance::processYuv(ADMImage *in,ADMImage *out )
     out->duplicate(in);
 
     if (showRanges)
-    {
-        out->printString(1,1,"Ranges");
         ADMVideoColorBalance::ColorBalanceRanges_C(out);
-    } else
-    if (showOriginal)
-    {
-        out->printString(1,1,"Original");
-    } else {
-        // Do it!
+    else
         ADMVideoColorBalance::ColorBalanceProcess_C(out, param);
-        out->printString(1,1,"Processed"); 
-    }
+
     return 1;
 }
 

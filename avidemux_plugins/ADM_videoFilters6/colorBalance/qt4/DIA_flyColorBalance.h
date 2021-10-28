@@ -23,7 +23,6 @@ class flyColorBalance : public ADM_flyDialogYuv
 
   public:
     colorBalance  param;
-    bool          showOriginal;
     bool          showRanges;
   public:
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
