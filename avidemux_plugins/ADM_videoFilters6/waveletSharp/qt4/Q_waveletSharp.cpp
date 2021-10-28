@@ -44,7 +44,7 @@ Ui_waveletSharpWindow::Ui_waveletSharpWindow(QWidget *parent, waveletSharp *para
         myFly=new flyWaveletSharp( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(waveletSharp));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

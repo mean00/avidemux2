@@ -44,7 +44,7 @@ Ui_artCharcoalWindow::Ui_artCharcoalWindow(QWidget *parent, artCharcoal *param,A
         myFly=new flyArtCharcoal( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(artCharcoal));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

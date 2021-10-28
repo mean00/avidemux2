@@ -44,7 +44,7 @@ Ui_quadTransWindow::Ui_quadTransWindow(QWidget *parent, quadTrans *param,ADM_cor
         ADMVideoQuadTrans::QuadTransCreateBuffers(width,height, &(myFly->buffers));
         memcpy(&(myFly->param),param,sizeof(quadTrans));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

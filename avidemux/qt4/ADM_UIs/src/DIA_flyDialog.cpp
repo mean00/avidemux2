@@ -35,7 +35,7 @@
 class flyControl
 {
 public:
-        flyControl(QHBoxLayout *horizontalLayout_4, bool addPeekOriginalButton)
+        flyControl(QHBoxLayout *horizontalLayout_4, ControlOption controlOptions)
         {
             
             pushButton_back1mn = new QPushButton();
@@ -86,7 +86,7 @@ public:
             QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
             horizontalLayout_4->addItem(horizontalSpacer_4);
 
-            if (addPeekOriginalButton)
+            if (controlOptions & ControlOption::PeekOriginalBtn)
             {
                 pushButton_peekOriginal = new QPushButton();
                 pushButton_peekOriginal->setObjectName(QString("pushButton_peekOriginal"));
@@ -270,10 +270,10 @@ ADM_pixelFormat ADM_flyDialog::toRgbPixFrmt(void)
  * @param frame
  * @return 
  */
-bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, bool addPeekOriginalButton)
+bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption controlOptions)
 {
     _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-    _control=new flyControl(horizontalLayout_4, addPeekOriginalButton);
+    _control=new flyControl(horizontalLayout_4, controlOptions);
     _parent->adjustSize(); // force currentTime size calculation
     _control->currentTime->setTextMargins(0,0,0,0); // counteract Adwaita messing with text margins
 
@@ -281,7 +281,7 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, bool addP
     QObject::connect(_control->pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
     QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
     QObject::connect(_control->pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
-    if (addPeekOriginalButton)
+    if (controlOptions & ControlOption::PeekOriginalBtn)
     {
         QObject::connect(_control->pushButton_peekOriginal ,SIGNAL(pressed()),this,SLOT(peekOriginalPressed()));
         QObject::connect(_control->pushButton_peekOriginal ,SIGNAL(released()),this,SLOT(peekOriginalReleased()));
@@ -293,7 +293,7 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, bool addP
     buttonList.push_back(_control->pushButton_next);
     buttonList.push_back(_control->pushButton_fwd1mn);
     buttonList.push_back(_control->currentTime);
-    if (addPeekOriginalButton)
+    if (controlOptions & ControlOption::PeekOriginalBtn)
     {
         buttonList.push_back(_control->pushButton_peekOriginal);
     }

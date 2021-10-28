@@ -82,7 +82,7 @@ Ui_artChromaKeyWindow::Ui_artChromaKeyWindow(QWidget *parent, artChromaKey *para
 
         myFly->showTestImage = false;
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

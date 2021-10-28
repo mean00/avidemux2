@@ -42,7 +42,7 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
 
     memcpy(&(myCrop->param),param,sizeof(asharp));
     myCrop->_cookie=&ui;
-    myCrop->addControl(ui.toolboxLayout, true);
+    myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
     myCrop->setTabOrder();
     myCrop->upload();
     myCrop->sliderChanged();

@@ -43,7 +43,7 @@ Ui_artCartoonWindow::Ui_artCartoonWindow(QWidget *parent, artCartoon *param,ADM_
 
         memcpy(&(myFly->param),param,sizeof(artCartoon));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
