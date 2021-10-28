@@ -557,9 +557,20 @@ void HandleAction (Action action)
             bool result = video_body->remove(current,current);
             if(!result)
             {
-                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Mark as cut point"),QT_TRANSLATE_NOOP("adm","Mark as cut point failed."));
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Mark as cut point failed."),NULL);
                 break;
             }
+            ADM_cutPointType chk=ADM_EDITOR_CUT_POINT_KEY;
+            if(!UI_getCurrentVCodec())
+                chk=video_body->checkCutIsOnIntra(current);
+            if (chk != ADM_EDITOR_CUT_POINT_KEY)
+            {
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Mark as cut point failed."),QT_TRANSLATE_NOOP("adm","In Copy mode only key frames can be marked as cut points."));
+                video_body->undo();
+                break;
+            }
+            if (video_body->goToTimeVideo(current))
+                admPreview::samePicture();
             GUI_setAllFrameAndTime();
         }
         break;  
