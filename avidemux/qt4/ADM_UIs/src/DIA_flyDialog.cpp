@@ -35,7 +35,7 @@
 class flyControl
 {
 public:
-        flyControl(QHBoxLayout *horizontalLayout_4, ControlOption controlOptions)
+        flyControl(QHBoxLayout *horizontalLayout_4, ControlOption controlOptions, QWidget * userWidget)
         {
             
             pushButton_back1mn = new QPushButton();
@@ -86,6 +86,11 @@ public:
             QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
             horizontalLayout_4->addItem(horizontalSpacer_4);
 
+            if ((controlOptions & ControlOption::UserWidgetBeforePeekBtn) && (userWidget != NULL))
+            {
+                horizontalLayout_4->addWidget(userWidget);
+            }
+            
             if (controlOptions & ControlOption::PeekOriginalBtn)
             {
                 pushButton_peekOriginal = new QPushButton();
@@ -96,6 +101,8 @@ public:
 
                 horizontalLayout_4->addWidget(pushButton_peekOriginal);
             }
+            else
+                pushButton_peekOriginal = NULL;
 
             pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
             pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
@@ -116,6 +123,16 @@ public:
             pushButton_back1mn->setEnabled(true);
             pushButton_fwd1mn->setEnabled(true);
             pushButton_next->setEnabled(true);
+        }
+        ~flyControl(void)
+        {
+            delete pushButton_back1mn;
+            delete pushButton_play;
+            delete pushButton_next;
+            delete pushButton_fwd1mn;
+            delete currentTime;
+            delete labelDuration;
+            delete pushButton_peekOriginal;           
         }
 public:
         QPushButton *pushButton_back1mn;
@@ -270,10 +287,10 @@ ADM_pixelFormat ADM_flyDialog::toRgbPixFrmt(void)
  * @param frame
  * @return 
  */
-bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption controlOptions)
+bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption controlOptions, QWidget * userWidget)
 {
     _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-    _control=new flyControl(horizontalLayout_4, controlOptions);
+    _control=new flyControl(horizontalLayout_4, controlOptions, userWidget);
     _parent->adjustSize(); // force currentTime size calculation
     _control->currentTime->setTextMargins(0,0,0,0); // counteract Adwaita messing with text margins
 
@@ -293,6 +310,10 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOp
     buttonList.push_back(_control->pushButton_next);
     buttonList.push_back(_control->pushButton_fwd1mn);
     buttonList.push_back(_control->currentTime);
+    if ((controlOptions & ControlOption::UserWidgetBeforePeekBtn) && (userWidget != NULL))
+    {
+        buttonList.push_back(userWidget);
+    }
     if (controlOptions & ControlOption::PeekOriginalBtn)
     {
         buttonList.push_back(_control->pushButton_peekOriginal);

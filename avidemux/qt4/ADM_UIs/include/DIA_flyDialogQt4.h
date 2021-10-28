@@ -140,7 +140,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           virtual bool       sameImage(void);
                   uint64_t   getCurrentPts();
           ADM_coreVideoFilter *getUnderlyingFilter() {return _in;}
-                  bool        addControl(QHBoxLayout *layout, ControlOption controlOptions = ControlOption::None);
+                  bool        addControl(QHBoxLayout *layout, ControlOption controlOptions = ControlOption::None, QWidget * userWidget = NULL);
 protected:
   virtual ADM_pixelFormat     toRgbPixFrmt(void);
           void               updateZoom(void);
