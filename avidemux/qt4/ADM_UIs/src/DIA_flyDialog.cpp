@@ -124,16 +124,6 @@ public:
             pushButton_fwd1mn->setEnabled(true);
             pushButton_next->setEnabled(true);
         }
-        ~flyControl(void)
-        {
-            delete pushButton_back1mn;
-            delete pushButton_play;
-            delete pushButton_next;
-            delete pushButton_fwd1mn;
-            delete currentTime;
-            delete labelDuration;
-            delete pushButton_peekOriginal;           
-        }
 public:
         QPushButton *pushButton_back1mn;
         QPushButton *pushButton_play;
