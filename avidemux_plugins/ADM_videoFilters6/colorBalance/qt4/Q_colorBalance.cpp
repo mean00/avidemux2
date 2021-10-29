@@ -100,8 +100,7 @@ Ui_colorBalanceWindow::~Ui_colorBalanceWindow()
 {
     if(myFly) delete myFly;
     myFly=NULL;
-    if (peekRangesBtn) delete peekRangesBtn;
-    peekRangesBtn=NULL;
+    //delete peekRangesBtn;	// deleted as child of the window
     if(canvas) delete canvas;
     canvas=NULL;
 }
