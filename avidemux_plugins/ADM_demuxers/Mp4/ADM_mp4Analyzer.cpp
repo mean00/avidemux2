@@ -424,8 +424,9 @@ uint8_t MP4Header::parseTrex(void *ztom)
         DUMPX(defaultFlags)
         _trexData[nbTrex++]=trx;
         son.skipAtom();
-        return 1;
     }
+    if(nbTrex)
+        return 1;
     ADM_info("trex box not found.\n");
     return 0;
 }
@@ -602,12 +603,18 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t *trackId)
                         _tracks[0].language = language;
                         break;
                     case MKFCCR('s','o','u','n'): // 'soun'
-                        _tracks[1+nbAudioTrack].delay=_currentDelay;
-                        _tracks[1+nbAudioTrack].startOffset=_currentStartOffset;
-                        _tracks[1+nbAudioTrack].language = language;
-                        _tracks[1+nbAudioTrack].id=*trackId;
+                        if(nbAudioTrack + 1 >= _3GP_MAX_TRACKS)
+                        {
+                            ADM_warning("hdlr audio found, but the max # of audio tracks %" PRIu32" already reached, skipping.\n",nbAudioTrack);
+                            break;
+                        }
+                        nbAudioTrack++;
+                        _tracks[nbAudioTrack].delay=_currentDelay;
+                        _tracks[nbAudioTrack].startOffset=_currentStartOffset;
+                        _tracks[nbAudioTrack].language = language;
+                        _tracks[nbAudioTrack].id=*trackId;
                         if(!*trackId)
-                            ADM_warning("Invalid track ID for audio track %d\n",1+nbAudioTrack);
+                            ADM_warning("Invalid track ID for audio track %d\n",nbAudioTrack);
                         *trackType=TRACK_AUDIO;
                         ADM_info("hdlr audio found \n ");
                         break;
@@ -1532,9 +1539,9 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                         audioCodec(OPUS)
                                     }
                                     sz=son.getRemainingSize();
-                                    _tracks[1+nbAudioTrack].extraDataSize=sz;
-                                    _tracks[1+nbAudioTrack].extraData=new uint8_t[sz];
-                                    son.readPayload(_tracks[1+nbAudioTrack].extraData,sz);
+                                    _tracks[nbAudioTrack].extraDataSize=sz;
+                                    _tracks[nbAudioTrack].extraData=new uint8_t[sz];
+                                    son.readPayload(_tracks[nbAudioTrack].extraData,sz);
                                     left=0;
 
                                     break;
@@ -1642,7 +1649,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                             } // entryName
 
                             // all audio part read for current track, if it is AAC and we have extrdata, check the channels...
-                            refineAudio(&(ADIO),_tracks[1+nbAudioTrack].extraDataSize,_tracks[1+nbAudioTrack].extraData);
+                            refineAudio(&(ADIO),_tracks[nbAudioTrack].extraDataSize,_tracks[nbAudioTrack].extraData);
                             break;
                         } // TRACK_AUDIO
                         default:
@@ -1733,15 +1740,14 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
               info.SzIndentical=info.SzIndentical*ADIO.channels;
             }
 #endif
-            if(nbAudioTrack>=_3GP_MAX_TRACKS-1)
+            if(nbAudioTrack + 1 > _3GP_MAX_TRACKS)
             {
                 ADM_warning("Maximum number of tracks reached, cannot add audio track.\n");
                 r=1;
                 break;
             }
-            r=indexify(&(_tracks[1+nbAudioTrack]),trackScale,&info,1,&nbo);
+            r=indexify(&(_tracks[nbAudioTrack]),trackScale,&info,1,&nbo);
             ADM_info("Indexed audio, nb blocks:%u\n",nbo);
-            nbAudioTrack++;
             _tracks[nbAudioTrack].scale=trackScale;
             if(r)
             {
@@ -1756,7 +1762,6 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                     delete [] _tracks[nbAudioTrack].index;
                     _tracks[nbAudioTrack].index=NULL;
                 }
-                nbAudioTrack--;
             }
             r=1; // don't fail on audio
             break;
@@ -1865,15 +1870,15 @@ uint8_t MP4Header::decodeEsds(void *ztom,uint32_t trackType)
                         break;
                     case TRACK_AUDIO:
                         printf("Esds for audio\n");
-                        _tracks[1+nbAudioTrack].extraDataSize=l;
-                        _tracks[1+nbAudioTrack].extraData=new uint8_t[l];
-                        if(fread(_tracks[1+nbAudioTrack].extraData,
-                            _tracks[1+nbAudioTrack].extraDataSize,1,_fd)<1)
+                        _tracks[nbAudioTrack].extraDataSize=l;
+                        _tracks[nbAudioTrack].extraData=new uint8_t[l];
+                        if(fread(_tracks[nbAudioTrack].extraData,
+                            _tracks[nbAudioTrack].extraDataSize,1,_fd)<1)
                         {
                             ADM_warning("Error reading audio extradata from file.\n");
-                            delete [] _tracks[1+nbAudioTrack].extraData;
-                            _tracks[1+nbAudioTrack].extraData=NULL;
-                            _tracks[1+nbAudioTrack].extraDataSize=0;
+                            delete [] _tracks[nbAudioTrack].extraData;
+                            _tracks[nbAudioTrack].extraData=NULL;
+                            _tracks[nbAudioTrack].extraDataSize=0;
                         }else
                         {
                             ADM_info("%d bytes of audio extradata successfully read from file.\n",l);

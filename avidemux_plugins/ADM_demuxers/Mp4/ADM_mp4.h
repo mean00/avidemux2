@@ -121,7 +121,7 @@ public:
 
 #define _3GP_MAX_TRACKS 8
 #define VDEO _tracks[0]
-#define ADIO _tracks[nbAudioTrack+1]._rdWav
+#define ADIO _tracks[nbAudioTrack]._rdWav
 #define AUDIO_BYTERATE_UNSET 0xFFFFFFFF
 /**
  * 
