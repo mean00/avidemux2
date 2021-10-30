@@ -39,6 +39,7 @@
 
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
+#include "ADM_imageFlags.h"
 
 
 static const int  sliceOrder[8]={3,4,2,5,1,6,0,7};
@@ -112,17 +113,26 @@ void GUI_PrevBlackFrame(void)
     uint64_t lastBlackPts=ADM_NO_PTS;
     DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("blackframes", "Searching black frame.."),startTime);
     
+    bool error = false;
+    uint64_t anchorPts = startTime;
+    int keyFrameCount = 0;
+    
     // search among (likely) cached images
     for (int i=0; i<6; i++)
     {
+        UI_purge();
         if(false==admPreview::previousPicture())
+        {
+            error = true;
             break;
+        }
         rdr=admPreview::getBuffer();
         if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
         {
             if(false==rdr->hwDownloadFromRef())
             {
                 ADM_warning("Cannot convert hw image to yv12\n");
+                error = true;
                 break;
             }
         }
@@ -131,36 +141,114 @@ void GUI_PrevBlackFrame(void)
             lastBlackPts = admPreview::getCurrentPts();
             break;
         }
+        anchorPts = admPreview::getCurrentPts();
+        if(rdr->flags & AVI_KEY_FRAME)
+            keyFrameCount++;
     }
     
-    if (lastBlackPts==ADM_NO_PTS)
+    if (!error && (lastBlackPts==ADM_NO_PTS) && (keyFrameCount == 6))   // looks like an all-intra video
     {
-        video_body->rewind();
-        admPreview::samePicture();
-        while(1)
+        while (1)
         {
             UI_purge();
-            if (admPreview::getCurrentPts() >= startTime)	// dont go beyond start frame
+            if(false==admPreview::previousPicture())
+            {
+                error = true;
                 break;
+            }
             rdr=admPreview::getBuffer();
             if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
             {
                 if(false==rdr->hwDownloadFromRef())
                 {
                     ADM_warning("Cannot convert hw image to yv12\n");
+                    error = true;
                     break;
                 }
             }
             if(!fastIsNotBlack(darkness,rdr))
             {
                 lastBlackPts = admPreview::getCurrentPts();
-            }
-            if(work->update(1,admPreview::getCurrentPts()))
                 break;
-            if(false==admPreview::nextPicture())
+            }
+            if(work->update(1,startTime-admPreview::getCurrentPts()))
+            {
+                error = true;
+                break;
+            }
+            anchorPts = admPreview::getCurrentPts();
+            if(!(rdr->flags & AVI_KEY_FRAME))   // oops, it's not all-intra after all
                 break;
         }
     }
+    
+    if (!error && (lastBlackPts==ADM_NO_PTS))       // looks like a GOP-ed video, search backward GOP by GOP
+    {
+        uint64_t gopPts;
+        bool firstBlock=false;
+        while(1)
+        {
+            UI_purge();
+            if (firstBlock)
+                break;
+            if (false==admPreview::previousKeyFrame())
+            {
+                video_body->rewind();
+                admPreview::samePicture();
+                firstBlock = true;
+            }
+            gopPts = admPreview::getCurrentPts();
+            while(1)
+            {
+                UI_purge();
+                if (admPreview::getCurrentPts() >= anchorPts)
+                {
+                    if (!firstBlock)
+                    {
+                        if (false==admPreview::previousKeyFrame())
+                            error = true;
+                        anchorPts = admPreview::getCurrentPts();
+                    }
+                    break;              
+                }
+                rdr=admPreview::getBuffer();
+                if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
+                {
+                    if(false==rdr->hwDownloadFromRef())
+                    {
+                        ADM_warning("Cannot convert hw image to yv12\n");
+                        error = true;
+                        break;
+                    }
+                }
+                if(!fastIsNotBlack(darkness,rdr))
+                {
+                    lastBlackPts = admPreview::getCurrentPts();
+                }
+                if(work->update(1,startTime-anchorPts + admPreview::getCurrentPts()-gopPts))
+                {
+                    error = true;
+                    break;
+                }
+                if(false==admPreview::nextPicture())
+                {
+                    error = true;
+                    break;
+                }
+            }
+            if (error)
+            {
+                lastBlackPts=ADM_NO_PTS;
+                break;
+            }
+            if (lastBlackPts!=ADM_NO_PTS)
+                break;
+        }
+    }
+
+    if (error)
+        lastBlackPts=ADM_NO_PTS;
+    
     delete work;
     admPreview::seekToTime((lastBlackPts==ADM_NO_PTS)?startTime:lastBlackPts);
     admPreview::deferDisplay(false);
