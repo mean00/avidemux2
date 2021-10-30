@@ -108,7 +108,7 @@ bool muxerFFmpeg::closeMuxer()
         audio_st[i]=NULL;
     }
     video_st=NULL;
-    return !res;
+    return res >= 0;
 }
 /**
     \fn muxerFFmpeg
