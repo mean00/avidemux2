@@ -318,14 +318,14 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOp
     buttonList.push_back(_control->pushButton_next);
     buttonList.push_back(_control->pushButton_fwd1mn);
     buttonList.push_back(_control->currentTime);
-    if ((controlOptions & ControlOption::UserWidgetBeforePeekBtn) && (userWidget != NULL))
-    {
+    if ((controlOptions & ControlOption::UserWidgetAfterControls) && (userWidget != NULL))
         buttonList.push_back(userWidget);
-    }
+    if ((controlOptions & ControlOption::UserWidgetBeforePeekBtn) && (userWidget != NULL))
+        buttonList.push_back(userWidget);
     if (controlOptions & ControlOption::PeekOriginalBtn)
-    {
         buttonList.push_back(_control->pushButton_peekOriginal);
-    }
+    if ((controlOptions & ControlOption::UserWidgetAfterPeekBtn) && (userWidget != NULL))
+        buttonList.push_back(userWidget);
 
     return true;
 }
