@@ -53,7 +53,9 @@ enum class ControlOption
 {
     None = 0,
     PeekOriginalBtn = 1 << 0,
-    UserWidgetBeforePeekBtn = 1 << 1
+    UserWidgetAfterControls = 1 << 1,
+    UserWidgetBeforePeekBtn = 1 << 2,
+    UserWidgetAfterPeekBtn = 1 << 3
 };
 
 inline ControlOption operator|(ControlOption a, ControlOption b)

@@ -82,13 +82,22 @@ public:
 
             horizontalLayout_4->addWidget(currentTime);
             horizontalLayout_4->addWidget(labelDuration);
-            //
+
+            if (controlOptions & ControlOption::UserWidgetAfterControls)
+            {
+                ADM_assert(userWidget != NULL);
+                horizontalLayout_4->addWidget(userWidget);
+                userWidget = NULL;
+            }
+
             QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
             horizontalLayout_4->addItem(horizontalSpacer_4);
 
-            if ((controlOptions & ControlOption::UserWidgetBeforePeekBtn) && (userWidget != NULL))
+            if (controlOptions & ControlOption::UserWidgetBeforePeekBtn)
             {
+                ADM_assert(userWidget != NULL);
                 horizontalLayout_4->addWidget(userWidget);
+                userWidget = NULL;
             }
             
             if (controlOptions & ControlOption::PeekOriginalBtn)
@@ -103,6 +112,15 @@ public:
             }
             else
                 pushButton_peekOriginal = NULL;
+            
+            if (controlOptions & ControlOption::UserWidgetAfterPeekBtn)
+            {
+                ADM_assert(userWidget != NULL);
+                horizontalLayout_4->addWidget(userWidget);
+                userWidget = NULL;
+            }
+
+            ADM_assert(userWidget == NULL);	// should have been added to layout
 
             pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
             pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
