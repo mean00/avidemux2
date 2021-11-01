@@ -35,7 +35,7 @@
 class flyControl
 {
 public:
-        flyControl(QHBoxLayout *horizontalLayout_4, bool addPeekOriginalButton)
+        flyControl(QHBoxLayout *horizontalLayout_4, ControlOption controlOptions, QWidget * userWidget)
         {
             
             pushButton_back1mn = new QPushButton();
@@ -82,11 +82,25 @@ public:
 
             horizontalLayout_4->addWidget(currentTime);
             horizontalLayout_4->addWidget(labelDuration);
-            //
+
+            if (controlOptions & ControlOption::UserWidgetAfterControls)
+            {
+                ADM_assert(userWidget != NULL);
+                horizontalLayout_4->addWidget(userWidget);
+                userWidget = NULL;
+            }
+
             QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
             horizontalLayout_4->addItem(horizontalSpacer_4);
 
-            if (addPeekOriginalButton)
+            if (controlOptions & ControlOption::UserWidgetBeforePeekBtn)
+            {
+                ADM_assert(userWidget != NULL);
+                horizontalLayout_4->addWidget(userWidget);
+                userWidget = NULL;
+            }
+            
+            if (controlOptions & ControlOption::PeekOriginalBtn)
             {
                 pushButton_peekOriginal = new QPushButton();
                 pushButton_peekOriginal->setObjectName(QString("pushButton_peekOriginal"));
@@ -96,6 +110,17 @@ public:
 
                 horizontalLayout_4->addWidget(pushButton_peekOriginal);
             }
+            else
+                pushButton_peekOriginal = NULL;
+            
+            if (controlOptions & ControlOption::UserWidgetAfterPeekBtn)
+            {
+                ADM_assert(userWidget != NULL);
+                horizontalLayout_4->addWidget(userWidget);
+                userWidget = NULL;
+            }
+
+            ADM_assert(userWidget == NULL);	// should have been added to layout
 
             pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
             pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
@@ -270,10 +295,10 @@ ADM_pixelFormat ADM_flyDialog::toRgbPixFrmt(void)
  * @param frame
  * @return 
  */
-bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, bool addPeekOriginalButton)
+bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption controlOptions, QWidget * userWidget)
 {
     _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-    _control=new flyControl(horizontalLayout_4, addPeekOriginalButton);
+    _control=new flyControl(horizontalLayout_4, controlOptions, userWidget);
     _parent->adjustSize(); // force currentTime size calculation
     _control->currentTime->setTextMargins(0,0,0,0); // counteract Adwaita messing with text margins
 
@@ -281,7 +306,7 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, bool addP
     QObject::connect(_control->pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
     QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
     QObject::connect(_control->pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
-    if (addPeekOriginalButton)
+    if (controlOptions & ControlOption::PeekOriginalBtn)
     {
         QObject::connect(_control->pushButton_peekOriginal ,SIGNAL(pressed()),this,SLOT(peekOriginalPressed()));
         QObject::connect(_control->pushButton_peekOriginal ,SIGNAL(released()),this,SLOT(peekOriginalReleased()));
@@ -293,10 +318,14 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, bool addP
     buttonList.push_back(_control->pushButton_next);
     buttonList.push_back(_control->pushButton_fwd1mn);
     buttonList.push_back(_control->currentTime);
-    if (addPeekOriginalButton)
-    {
+    if ((controlOptions & ControlOption::UserWidgetAfterControls) && (userWidget != NULL))
+        buttonList.push_back(userWidget);
+    if ((controlOptions & ControlOption::UserWidgetBeforePeekBtn) && (userWidget != NULL))
+        buttonList.push_back(userWidget);
+    if (controlOptions & ControlOption::PeekOriginalBtn)
         buttonList.push_back(_control->pushButton_peekOriginal);
-    }
+    if ((controlOptions & ControlOption::UserWidgetAfterPeekBtn) && (userWidget != NULL))
+        buttonList.push_back(userWidget);
 
     return true;
 }

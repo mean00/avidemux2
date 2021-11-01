@@ -49,6 +49,28 @@ enum ResizeMethod
     RESIZE_LAST = 2        // Resize image after filter has been applied (slower for RGB)
 };
 
+enum class ControlOption
+{
+    None = 0,
+    PeekOriginalBtn = 1 << 0,
+    UserWidgetAfterControls = 1 << 1,
+    UserWidgetBeforePeekBtn = 1 << 2,
+    UserWidgetAfterPeekBtn = 1 << 3
+};
+
+inline ControlOption operator|(ControlOption a, ControlOption b)
+{
+    return static_cast<ControlOption>(static_cast<int>(a) | static_cast<int>(b));
+}
+inline ControlOption operator+(ControlOption a, ControlOption b)
+{
+    return static_cast<ControlOption>(static_cast<int>(a) + static_cast<int>(b));
+}
+inline int operator&(ControlOption a, ControlOption b)
+{
+    return (static_cast<int>(a) & static_cast<int>(b));
+}
+
 class ADM_flyDialog;
 
 class QHBoxLayout;
@@ -120,7 +142,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           virtual bool       sameImage(void);
                   uint64_t   getCurrentPts();
           ADM_coreVideoFilter *getUnderlyingFilter() {return _in;}
-                  bool        addControl(QHBoxLayout *layout, bool addPeekOriginalButton = false);
+                  bool        addControl(QHBoxLayout *layout, ControlOption controlOptions = ControlOption::None, QWidget * userWidget = NULL);
 protected:
   virtual ADM_pixelFormat     toRgbPixFrmt(void);
           void               updateZoom(void);

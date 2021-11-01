@@ -43,7 +43,7 @@ Ui_artPosterizeWindow::Ui_artPosterizeWindow(QWidget *parent, artPosterize *para
         ADMVideoArtPosterize::ArtPosterizeCreateBuffers(width,height, &(myFly->rgbBufStride), &(myFly->rgbBufRaw), &(myFly->rgbBufImage), &(myFly->convertYuvToRgb), &(myFly->convertRgbToYuv));
         memcpy(&(myFly->param),param,sizeof(artPosterize));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

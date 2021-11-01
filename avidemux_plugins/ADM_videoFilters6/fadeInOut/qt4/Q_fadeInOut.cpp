@@ -56,7 +56,7 @@ Ui_fadeInOutWindow::Ui_fadeInOutWindow(QWidget *parent, fadeInOut *param,ADM_cor
         myFly=new flyFadeInOut( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(fadeInOut));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

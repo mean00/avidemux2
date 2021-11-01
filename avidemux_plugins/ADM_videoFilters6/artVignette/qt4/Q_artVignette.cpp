@@ -47,7 +47,7 @@ Ui_artVignetteWindow::Ui_artVignetteWindow(QWidget *parent, artVignette *param,A
         myFly->filterH = height;
         myFly->filterMask = new float[width*height];
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

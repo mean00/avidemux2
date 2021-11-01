@@ -46,7 +46,7 @@ Ui_imageStabWindow::Ui_imageStabWindow(QWidget *parent, imageStab *param,ADM_cor
         myFly=new flyImageStab( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(imageStab));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, false);
+        myFly->addControl(ui.toolboxLayout);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

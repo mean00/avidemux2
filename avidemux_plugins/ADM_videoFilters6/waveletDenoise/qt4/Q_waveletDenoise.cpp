@@ -44,7 +44,7 @@ Ui_waveletDenoiseWindow::Ui_waveletDenoiseWindow(QWidget *parent, waveletDenoise
         myFly=new flyWaveletDenoise( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(waveletDenoise));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

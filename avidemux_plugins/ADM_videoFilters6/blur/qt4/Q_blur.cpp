@@ -48,7 +48,7 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         myFly->top=param->top;
         myFly->bottom=param->bottom;
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

@@ -54,7 +54,7 @@ Ui_artChromaHoldWindow::Ui_artChromaHoldWindow(QWidget *parent, artChromaHold *p
         myFly=new flyArtChromaHold( this,width, height,in,canvas,ui.horizontalSlider, scene);
         memcpy(&(myFly->param),param,sizeof(artChromaHold));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();

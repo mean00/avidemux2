@@ -13,6 +13,7 @@ class Ui_colorBalanceWindow : public QDialog
     int lock;
     flyColorBalance *     myFly;
     ADM_QCanvas *      canvas;
+    QPushButton *      peekRangesBtn;
     Ui_colorBalanceDialog ui;
 
   public:
@@ -30,10 +31,8 @@ class Ui_colorBalanceWindow : public QDialog
     void sliderUpdate(int foo);
     void valueChanged(int foo);
     void reset(void);
-    void peekPressed(void);
-    void peekReleased(void);
-    void rangesPressed(void);
-    void rangesReleased(void);
+    void peekRangesPressed(void);
+    void peekRangesReleased(void);
 
   private:
     void resizeEvent(QResizeEvent *event);

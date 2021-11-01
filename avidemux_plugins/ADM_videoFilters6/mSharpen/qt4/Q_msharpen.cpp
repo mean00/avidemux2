@@ -41,7 +41,7 @@
         flymsharpen=new flyMSharpen( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(flymsharpen->param),param,sizeof(*param));
         flymsharpen->_cookie=&ui;
-        flymsharpen->addControl(ui.toolboxLayout, true);
+        flymsharpen->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         flymsharpen->setTabOrder();
         flymsharpen->upload();
         flymsharpen->sliderChanged();

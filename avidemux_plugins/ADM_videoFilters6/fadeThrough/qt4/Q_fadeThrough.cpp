@@ -81,7 +81,7 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         myFly=new flyFadeThrough( this,width, height,in,canvas,ui.horizontalSlider,scene);
         memcpy(&(myFly->param),param,sizeof(fadeThrough));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, true);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
