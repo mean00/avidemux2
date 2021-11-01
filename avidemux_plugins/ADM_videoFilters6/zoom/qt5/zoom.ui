@@ -270,6 +270,11 @@
            <string>echo</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>none (stretch)</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>

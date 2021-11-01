@@ -34,9 +34,9 @@ class  ZoomFilter:public ADM_coreVideoFilter
     zoom                 configuration;
     ADMImage *           original;
     void                 resetConfig(void);
-    void                 getFitParameters(int inW, int inH, int outW, int outH, float tolerance, int * strW, int * strH, int * padLeft, int * padRight, int * padTop, int * padBottom);
+    void                 getFitParameters(int inW, int inH, int outW, int outH, float tolerance, bool stretching, int * strW, int * strH, int * padLeft, int * padRight, int * padTop, int * padBottom);
     ADMColorScalerFull * resizer;
-    bool                 reset(int left, int right, int top, int bottom, uint32_t algo, float tolerance);
+    bool                 reset(int left, int right, int top, int bottom, uint32_t algo, float tolerance, uint32_t pad);
     bool                 clean( void );
     ADMImage *           stretch;
     ADMImage *           echo;
@@ -98,7 +98,7 @@ ZoomFilter::ZoomFilter(ADM_coreVideoFilter *in,CONFcouple *couples) :ADM_coreVid
     resizerOrigToEcho=NULL;
     resizerEchoToImage=NULL;
     stretch=NULL;
-    reset(configuration.left,configuration.right,configuration.top,configuration.bottom,configuration.algo,configuration.tolerance);
+    reset(configuration.left,configuration.right,configuration.top,configuration.bottom,configuration.algo,configuration.tolerance,configuration.pad);
 
     ADM_info("%s\n",getConfiguration());
 }
@@ -116,7 +116,7 @@ ZoomFilter::~ZoomFilter()
 /**
     \fn getFitParameters
 */
-void ZoomFilter::getFitParameters(int inW, int inH, int outW, int outH, float tolerance, int * strW, int * strH, int * padLeft, int * padRight, int * padTop, int * padBottom)
+void ZoomFilter::getFitParameters(int inW, int inH, int outW, int outH, float tolerance, bool stretching, int * strW, int * strH, int * padLeft, int * padRight, int * padTop, int * padBottom)
 {
     float inAR,outAR;
     if (inW < 0)
@@ -129,7 +129,7 @@ void ZoomFilter::getFitParameters(int inW, int inH, int outW, int outH, float to
     //stretching
     if (inAR > outAR)    // vertical stretching/padding required
     {
-        if (inAR <= outAR*(1.0+tolerance)) {    // no padding required
+        if ((inAR <= outAR*(1.0+tolerance)) || stretching) {    // no padding required
             *strW = outW;
             *strH = outH;
         } else {
@@ -137,7 +137,7 @@ void ZoomFilter::getFitParameters(int inW, int inH, int outW, int outH, float to
             *strH = round(((float)outW/inAR)/2.0)*2;
         }
     } else {             // horizontal stretching/padding required
-        if (inAR*(1.0+tolerance) >= outAR) {    // no padding required
+        if ((inAR*(1.0+tolerance) >= outAR) || stretching) {    // no padding required
             *strW = outW;
             *strH = outH;
         } else {
@@ -202,12 +202,12 @@ bool ZoomFilter::clean(void)
     \brief reset resizer
 */
 
-bool ZoomFilter::reset(int left, int right, int top, int bottom, uint32_t algo, float tolerance)
+bool ZoomFilter::reset(int left, int right, int top, int bottom, uint32_t algo, float tolerance, uint32_t pad)
 {
     clean();
     ADMColorScaler_algo scalerAlgo;
 
-    getFitParameters(info.width - (left+right), info.height - (top+bottom), info.width, info.height, tolerance, &stretchW, &stretchH, pads+0, pads+1, pads+2, pads+3);
+    getFitParameters(info.width - (left+right), info.height - (top+bottom), info.width, info.height, tolerance, pad==2, &stretchW, &stretchH, pads+0, pads+1, pads+2, pads+3);
 
     switch(algo)
     {
@@ -407,7 +407,7 @@ bool ZoomFilter::configure(void)
         info.width=previousFilter->getInfo()->width;
         info.height=previousFilter->getInfo()->height;
         ADM_info("%s\n",getConfiguration());
-        reset(configuration.left,configuration.right,configuration.top,configuration.bottom,configuration.algo,configuration.tolerance);
+        reset(configuration.left,configuration.right,configuration.top,configuration.bottom,configuration.algo,configuration.tolerance,configuration.pad);
     }
     return r;
 }
