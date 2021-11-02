@@ -39,12 +39,41 @@ static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again 
 static void A_timedError(bool *first, const char *s);
 
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
+extern void A_setHDRConfig(void);
+
+static uint32_t jumpTarget[4] = {0};
+
 bool   GUI_infiniteForward(uint64_t pts);
 bool   GUI_lastFrameBeforePts(uint64_t pts);
 bool   GUI_SeekByTime(int64_t time);
 void  GUI_PrevCutPoint();
 void  GUI_NextCutPoint();
 bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
+
+/**
+    \fn HandleAction_Staged
+*/
+void HandleAction_Staged(Action action)
+{
+    switch(action)
+    {
+        case ACT_SetHDRConfig:
+            A_setHDRConfig();
+            break;
+        case ACT_SelectTime:
+            {
+                stagedActionSuccess = 0;
+                // Get current time
+                uint64_t pts = admPreview::getCurrentPts();
+                uint32_t *t = jumpTarget;
+                ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                if (DIA_gotoTime(t,t+1,t+2,t+3))
+                    stagedActionSuccess = 1;
+            }
+            break;
+        default:break;
+    }
+}
 /**
     \fn HandleAction_Navigate
 
@@ -221,17 +250,42 @@ static int ignore_change=0;
             break;
       case ACT_GotoTime:
       {
-           // Get current time
-            uint64_t pts=admPreview::getCurrentPts();
-
-          uint32_t mm, hh, ss, ms;
-            ms2time((uint32_t)(pts/1000),&hh,&mm,&ss,&ms);
-          if (DIA_gotoTime(&hh, &mm, &ss,&ms))
-          {
-            A_jumpToTime(hh, mm, ss, ms);
-          }
+            if(playing) break;
+            if(!stagedActionSuccess) break;
+            uint32_t *t = jumpTarget;
+            uint32_t hh,mm,ss,ms;
+            hh = *t++;
+            mm = *t++;
+            ss = *t++;
+            ms = *t;
+            A_jumpToTime(hh,mm,ss,ms);
+            stagedActionSuccess = 0;
       }
       break;
+      case ACT_Refresh:
+        { // Flush cache and seek to the current picture
+            if(playing) break;
+            if(!stagedActionSuccess) break;
+            ADMImage *pic = admPreview::getBuffer();
+            if(!pic) break;
+            uint64_t time = admPreview::getCurrentPts();
+            admPreview::deferDisplay(true);
+            if(pic->flags & AVI_KEY_FRAME)
+            {
+                admPreview::nextPicture();
+                admPreview::previousKeyFrame();
+            }else
+            {
+                admPreview::previousKeyFrame(); // flush cache
+                if(false == admPreview::seekToTime(time))
+                    video_body->rewind(); // avoid crash
+            }
+            admPreview::deferDisplay(false);
+            admPreview::samePicture();
+            GUI_setCurrentFrameAndTime();
+            stagedActionSuccess = 0;
+            break;
+        }
       default:
       ADM_assert(0);
       break;

@@ -145,7 +145,7 @@ static const MenuEntry _myMenuGo[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Marker A"),      NULL,ACT_GotoMarkA,       MKICON(markA),         "PgUp",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Marker B"),      NULL,ACT_GotoMarkB,       MKICON(markB),         "PgDown",0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY, NULL,NULL,1},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Time"),          NULL,ACT_GotoTime,        NULL,                  "Ctrl+T",0}
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Time"),          NULL,ACT_SelectTime,      NULL,                  "Ctrl+T",0}
         };
 
 std::vector<MenuEntry> myMenuGo(_myMenuGo, _myMenuGo + sizeof(_myMenuGo) / sizeof(_myMenuGo[0]));

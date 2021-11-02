@@ -32,6 +32,12 @@ EXTERN uint8_t 	playing
 #endif
 ;
 
+EXTERN uint8_t stagedActionSuccess
+#ifdef __DECLARE__
+=0
+#endif
+;
+
 EXTERN ADM_audioStream *currentaudiostream
 #ifdef __DECLARE__
 =(ADM_audioStream *)NULL

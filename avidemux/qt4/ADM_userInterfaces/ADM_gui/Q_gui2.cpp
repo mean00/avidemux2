@@ -461,6 +461,24 @@ void MainWindow::actionSlot(Action a)
         setMenuItemsEnabledState();
         playing=1-playing;
     }
+    if(a > ACT_STAGED_BEGIN && a < ACT_STAGED_END)
+    {
+        actionLock++;
+        HandleAction(a);
+        actionLock--;
+        if(!stagedActionSuccess)
+            return; // currently, no action requires enabling or disabling menu items
+        switch(a)
+        {
+            case ACT_SetHDRConfig:
+                a = ACT_Refresh;
+                break;
+            case ACT_SelectTime:
+                a = ACT_GotoTime;
+                break;
+            default:break;
+        }
+    }
     if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END)
     {
         busyTimer.stop();
@@ -1338,7 +1356,7 @@ void MainWindow::updateActionShortcuts(void)
         MenuEntry *m = &myMenuGo[i];
         if(m->type != MENU_ACTION)
             continue;
-        if(m->event == ACT_GotoTime)
+        if(m->event == ACT_SelectTime)
             break;
         switch(m->event)
         {

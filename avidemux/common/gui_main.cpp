@@ -101,6 +101,7 @@ void brokenAct(void);
 void HandleAction (Action action);
 void HandleAction_Navigate(Action action);
 void HandleAction_Save(Action action);
+void HandleAction_Staged(Action action);
 
 extern void call_scriptEngine(const char *scriptFile);
 
@@ -394,6 +395,10 @@ void HandleAction (Action action)
   {
     return HandleAction_Save(action);
   }
+  if(action > ACT_STAGED_BEGIN && action < ACT_STAGED_END)
+  {
+    return HandleAction_Staged(action);
+  }
 
   switch (action)
     {
@@ -484,9 +489,6 @@ void HandleAction (Action action)
       break;
     case ACT_SetPostProcessing:
       A_setPostproc();
-      break;
-    case ACT_SetHDRConfig:
-      A_setHDRConfig();
       break;
     case ACT_MarkA:
     case ACT_MarkB:
@@ -1497,6 +1499,7 @@ void    A_setHDRConfig( void )
 {
     uint32_t method;
     float saturation, boost;
+    stagedActionSuccess = 0;
     if(!avifileinfo) return;
 
     video_body->getHDRConfig(&method,&saturation,&boost);
@@ -1504,14 +1507,9 @@ void    A_setHDRConfig( void )
      if(DIA_getHDRParams( &method, &saturation,&boost))
      {
         video_body->setHDRConfig(method,saturation,boost);
-        admPreview::deferDisplay(true);
-        admPreview::nextPicture();
-        admPreview::previousKeyFrame();
-        admPreview::deferDisplay(false);
-        admPreview::samePicture();
-        GUI_setCurrentFrameAndTime();
+        stagedActionSuccess = 1;
+        return;
      }
-
 }
 
 /**

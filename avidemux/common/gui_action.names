@@ -8,7 +8,12 @@ ACT(EXIT)
 ACT(PlayAvi)
 ACT(StopAvi)
 ACT(SetPostProcessing)
+
+// Run the first stage, GUI may call the second one
+ACT(STAGED_BEGIN)
 ACT(SetHDRConfig)
+ACT(SelectTime)
+ACT(STAGED_END)
 
 //----- SAVE -----
 ACT(SAVE_BEGIN)
@@ -46,6 +51,7 @@ ACT(End)
 ACT(GotoMarkA)
 ACT(GotoMarkB)
 ACT(Scale)
+ACT(Refresh)
 ACT(NAVIGATE_END)
 //ACT(JumpToTime)
 
