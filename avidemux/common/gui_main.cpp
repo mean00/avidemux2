@@ -1509,6 +1509,7 @@ void    A_setHDRConfig( void )
         admPreview::previousKeyFrame();
         admPreview::deferDisplay(false);
         admPreview::samePicture();
+        GUI_setCurrentFrameAndTime();
      }
 
 }
