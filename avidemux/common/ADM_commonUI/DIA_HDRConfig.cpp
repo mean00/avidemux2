@@ -13,8 +13,12 @@
 
 int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust)
 {
+#ifdef EXPLAIN
+#   define NB_ELEMS 4
     diaElemReadOnlyText applicability(NULL,QT_TRANSLATE_NOOP("adm","Changing the options above will results the editor jumping to the nearest prior key frame."),NULL);
-    
+#else
+#   define NB_ELEMS 3
+#endif
     diaMenuEntry toneMapEntries[]={
                           {0,       QT_TRANSLATE_NOOP("adm","disabled"),NULL}
                          ,{1,       QT_TRANSLATE_NOOP("adm","Fast YUV"),NULL}
@@ -28,9 +32,16 @@ int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, fl
     diaElemFloat floatSaturationHDR(saturationAdjust,QT_TRANSLATE_NOOP("adm","_Saturation:"),0.,10.);
     diaElemFloat floatBoostHDR(boostAdjust,QT_TRANSLATE_NOOP("adm","_Boost (level multiplier):"),0.,10.);
 
-    diaElem *elems[6]={ &menuToneMapHDR, &floatSaturationHDR, &floatBoostHDR, &applicability };
+    diaElem *elems[NB_ELEMS]={
+         &menuToneMapHDR
+        ,&floatSaturationHDR
+        ,&floatBoostHDR
+#ifdef EXPLAIN
+        ,&applicability
+#endif
+    };
 
-    if(diaFactoryRun("HDR tone mapping",4,elems))
+    if(diaFactoryRun("HDR tone mapping",NB_ELEMS,elems))
     {
         return 1;
     }
