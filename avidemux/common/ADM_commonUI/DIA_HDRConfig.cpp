@@ -13,7 +13,7 @@
 
 int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust)
 {
-    diaElemReadOnlyText applicability(NULL,QT_TRANSLATE_NOOP("adm","The options above are not immediately effective on cached and displayed frames"),NULL);
+    diaElemReadOnlyText applicability(NULL,QT_TRANSLATE_NOOP("adm","Changing the options above will results the editor jumping to the nearest prior key frame."),NULL);
     
     diaMenuEntry toneMapEntries[]={
                           {0,       QT_TRANSLATE_NOOP("adm","disabled"),NULL}
