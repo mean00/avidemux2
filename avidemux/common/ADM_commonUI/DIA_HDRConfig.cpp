@@ -13,7 +13,7 @@
 
 int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust)
 {
-    diaElemReadOnlyText applicability(NULL,QT_TRANSLATE_NOOP("adm","The options above are not immediately effective on cached and displayed frames"),NULL);
+    //diaElemReadOnlyText applicability(NULL,QT_TRANSLATE_NOOP("adm","The options above are not immediately effective on cached and displayed frames"),NULL);
     
     diaMenuEntry toneMapEntries[]={
                           {0,       QT_TRANSLATE_NOOP("adm","disabled"),NULL}
@@ -28,9 +28,9 @@ int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, fl
     diaElemFloat floatSaturationHDR(saturationAdjust,QT_TRANSLATE_NOOP("adm","_Saturation:"),0.,10.);
     diaElemFloat floatBoostHDR(boostAdjust,QT_TRANSLATE_NOOP("adm","_Boost (level multiplier):"),0.,10.);
 
-    diaElem *elems[6]={ &menuToneMapHDR, &floatSaturationHDR, &floatBoostHDR, &applicability };
+    diaElem *elems[6]={ &menuToneMapHDR, &floatSaturationHDR, &floatBoostHDR, /*&applicability*/ };
 
-    if(diaFactoryRun("HDR tone mapping",4,elems))
+    if(diaFactoryRun("HDR tone mapping",3,elems))
     {
         return 1;
     }
