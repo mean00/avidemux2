@@ -33,6 +33,8 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <QRect>
+#include <QGraphicsScene>
+#include <QImage>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -53,9 +55,10 @@ enum class ControlOption
 {
     None = 0,
     PeekOriginalBtn = 1 << 0,
-    UserWidgetAfterControls = 1 << 1,
-    UserWidgetBeforePeekBtn = 1 << 2,
-    UserWidgetAfterPeekBtn = 1 << 3
+    AnalyzerBtn = 1 << 1,
+    UserWidgetAfterControls = 1 << 2,
+    UserWidgetBeforePeekBtn = 1 << 3,
+    UserWidgetAfterPeekBtn = 1 << 4
 };
 
 inline ControlOption operator|(ControlOption a, ControlOption b)
@@ -94,6 +97,7 @@ public:
 };
 
 class flyControl;
+class flyDialogsAnalyzer;
 /**
     \class ADM_flyDialog
     \brief Base class for flyDialog
@@ -124,6 +128,10 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           std::vector<QWidget *> buttonList; // useful for manipulating tab order
           QDialog     *_parent;
           bool         _bypassFilter;
+      // Analyzer
+          bool             _analyze;
+          QGraphicsScene * _analyzerScenes[4];
+          flyDialogsAnalyzer * _flyanal;
 
 
 
@@ -187,6 +195,8 @@ public slots:
         virtual void backOneMinute(void);
         virtual void fwdOneMinute(void);
         virtual void play(bool status);
+        virtual void analyzerReleased(void);
+        virtual void analyzerClosed(void);
         virtual void peekOriginalPressed(void);
         virtual void peekOriginalReleased(void);
         virtual void timeout(void);
@@ -306,6 +316,34 @@ private:
         void mousePressEvent(QMouseEvent *);
         void mouseReleaseEvent(QMouseEvent *);
         void mouseMoveEvent(QMouseEvent *);
+};
+
+class ADM_UIQT46_EXPORT flyDialogsAnalyzer
+{
+  private:
+    int                  width, height;
+    int                  rgbBufStride;
+    ADM_byteBuffer *     rgbBufRaw;
+    ADMColorScalerFull * convertYuvToRgb;
+    uint32_t * wrkVectorScope;
+    uint32_t * bufVectorScope;
+    uint32_t * scaleVectorScope;
+    QImage   * imgVectorScope;
+    uint32_t * wrkYUVparade[3];
+    uint32_t * bufYUVparade;
+    QImage   * imgYUVparade;
+    uint32_t * wrkRGBparade[3];
+    uint32_t * bufRGBparade;
+    QImage   * imgRGBparade;
+    uint32_t * wrkHistograms[6];
+    uint32_t * bufHistograms;
+    QImage   * imgHistograms;
+    int      * paradeIndex;
+    int      * paradeIndexHalf;
+  public:
+    flyDialogsAnalyzer(int width, int height);
+    virtual    ~flyDialogsAnalyzer() ;
+    void analyze(ADMImage *in, QGraphicsScene * sceneVectorScope, QGraphicsScene * sceneYUVparade, QGraphicsScene * sceneRGBparade, QGraphicsScene * sceneHistograms);
 };
 
 //EOF
