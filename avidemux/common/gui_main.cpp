@@ -1504,6 +1504,11 @@ void    A_setHDRConfig( void )
      if(DIA_getHDRParams( &method, &saturation,&boost))
      {
         video_body->setHDRConfig(method,saturation,boost);
+        admPreview::deferDisplay(true);
+        admPreview::nextPicture();
+        admPreview::previousKeyFrame();
+        admPreview::deferDisplay(false);
+        admPreview::samePicture();
      }
 
 }
