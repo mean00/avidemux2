@@ -56,7 +56,7 @@ Ui_colorBalanceWindow::Ui_colorBalanceWindow(QWidget *parent, colorBalance *para
         memcpy(&(myFly->param),param,sizeof(colorBalance));
         myFly->showRanges = false;
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::UserWidgetBeforePeekBtn, peekRangesBtn);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::AnalyzerBtn +ControlOption::UserWidgetBeforePeekBtn, peekRangesBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->sliderChanged();
