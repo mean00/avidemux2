@@ -46,7 +46,7 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
     myCrop=new flyEq2(this, width, height,in,canvas,ui.horizontalSlider,scene);
     memcpy(&(myCrop->param),param,sizeof(eq2));
     myCrop->_cookie=&ui;
-    myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
+    myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::AnalyzerBtn);
     myCrop->setTabOrder();
     myCrop->upload();
     myCrop->sliderChanged();
