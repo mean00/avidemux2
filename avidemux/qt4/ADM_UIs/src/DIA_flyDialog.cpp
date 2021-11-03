@@ -264,7 +264,7 @@ uint8_t ADM_flyDialog::cleanup(void)
 */
 ADM_flyDialog::~ADM_flyDialog(void)
 {
-    delete _flyanal;
+    delete _flyAnalyzer;
     cleanup(); 
 }
 
@@ -536,11 +536,11 @@ bool ADM_flyDialogYuv::process(void)
     {
         yuvToRgb->convertImage(_yuvBuffer,_rgbByteBufferDisplay.at(0));
         if (_analyze)
-            _flyanal->analyze(_yuvBuffer,_analyzerScenes[0],_analyzerScenes[1],_analyzerScenes[2],_analyzerScenes[3]);
+            _flyAnalyzer->analyze(_yuvBuffer,_analyzerScenes[0],_analyzerScenes[1],_analyzerScenes[2],_analyzerScenes[3]);
     } else {
         processYuv(_yuvBuffer,_yuvBufferOut);
         if (_analyze)
-            _flyanal->analyze(_yuvBufferOut,_analyzerScenes[0],_analyzerScenes[1],_analyzerScenes[2],_analyzerScenes[3]);
+            _flyAnalyzer->analyze(_yuvBufferOut,_analyzerScenes[0],_analyzerScenes[1],_analyzerScenes[2],_analyzerScenes[3]);
         yuvToRgb->convertImage(_yuvBufferOut,_rgbByteBufferDisplay.at(0));
     }
     return true;
@@ -686,7 +686,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _analyze=false;
     _analyzerDialog=NULL;
     _analyzerScenes[0]=_analyzerScenes[1]=_analyzerScenes[2]=_analyzerScenes[3]=NULL;
-    _flyanal = new flyDialogsAnalyzer(width,height);
+    _flyAnalyzer = new flyDialogsAnalyzer(width,height);
 
     QGraphicsScene *sc=new QGraphicsScene(this);
     sc->setBackgroundBrush(QBrush(Qt::darkGray, Qt::SolidPattern));
@@ -1014,7 +1014,7 @@ void ADM_flyDialog::timeout(void)
 /**
  * 
  */
-ADM_analyzerDialog::ADM_analyzerDialog(QWidget *parent) : QDialog(parent)
+ADM_analyzerDialog::ADM_analyzerDialog(QWidget *parent) : QDialog(parent, Qt::Tool)
 {
     vboxlayout = new QVBoxLayout(this);
     this->setWindowTitle(QApplication::translate("seekablePreviewDialog", "Analyzer", 0));

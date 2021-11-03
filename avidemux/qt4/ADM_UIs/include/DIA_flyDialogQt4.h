@@ -134,7 +134,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           bool                 _analyze;
           ADM_analyzerDialog * _analyzerDialog;
           QGraphicsScene     * _analyzerScenes[4];
-          flyDialogsAnalyzer * _flyanal;
+          flyDialogsAnalyzer * _flyAnalyzer;
 
 
 
