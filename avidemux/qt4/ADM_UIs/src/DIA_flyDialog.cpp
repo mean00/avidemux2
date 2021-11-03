@@ -1226,7 +1226,7 @@ void flyDialogsAnalyzer::analyze(ADMImage *in, QGraphicsScene * sceneVectorScope
     // Make Y plane statistics
     {
         memset(wrkYUVparade[0],0,256*256*sizeof(uint32_t));
-        memset(wrkHistograms[0],0,256*sizeof(uint32_t));
+        memset(wrkHistograms[3],0,256*sizeof(uint32_t));
         uint8_t * yp=in->GetReadPtr(PLANAR_Y);
         int stride=in->GetPitch(PLANAR_Y);
         uint8_t * ptr;
@@ -1312,15 +1312,17 @@ void flyDialogsAnalyzer::analyze(ADMImage *in, QGraphicsScene * sceneVectorScope
     {
         for (int csp=0; csp<2; csp++)
         {
-            uint32_t max = 0;
             for (int ch=0; ch<3; ch++)
                 for (int i=0; i<256; i++)
-                    if (max < wrkHistograms[csp*3+ch][i])
-                        max = wrkHistograms[csp*3+ch][i];
-            uint32_t norm = 2080374784ULL / max;    // 124 * 2<<24
-            for (int ch=0; ch<3; ch++)
-                for (int i=0; i<256; i++)
-                    wrkHistograms[csp*3+ch][i] = (wrkHistograms[csp*3+ch][i]*norm)>>24;
+                {
+                    double value = wrkHistograms[csp*3+ch][i];
+                    value /= height;
+                    value /= width;
+                    value *= 124*10;
+                    if (value > 124)
+                        value = 124;
+                    wrkHistograms[csp*3+ch][i] = value;
+                }
         }
     }
     
