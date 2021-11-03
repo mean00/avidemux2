@@ -20,6 +20,7 @@
 #include <QLineEdit>
 #include <QFontMetrics>
 #include <QRect>
+#include <QSizePolicy>
 
 #include <cmath>
 
@@ -683,6 +684,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     updateSlider();
     _bypassFilter=false;
     _analyze=false;
+    _analyzerDialog=NULL;
     _analyzerScenes[0]=_analyzerScenes[1]=_analyzerScenes[2]=_analyzerScenes[3]=NULL;
     _flyanal = new flyDialogsAnalyzer(width,height);
 
@@ -934,36 +936,15 @@ void ADM_flyDialog::play(bool state)
  */
 void ADM_flyDialog::analyzerReleased(void)
 {
-    _analyze=true;
     _control->pushButton_analyzer->setEnabled(false);
-    if (_analyze)
+    if (!_analyze)
     {
-        QDialog * dialog=new QDialog(_parent);
-        QVBoxLayout * vboxlayout = new QVBoxLayout(dialog);
-        dialog->setWindowTitle(QApplication::translate("seekablePreviewDialog", "Analyzer", 0));
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        QGraphicsView * gv[4];
+        _analyzerDialog = new ADM_analyzerDialog(_parent);
         for (int i=0; i<4; i++)
-        {
-            gv[i] = new QGraphicsView(dialog);
-            gv[i]->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-            gv[i]->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-            gv[i]->setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing);
-            gv[i]->setBackgroundBrush(QBrush(Qt::black,Qt::SolidPattern));
-            _analyzerScenes[i] = new QGraphicsScene(dialog);
-            if (i==0)
-                _analyzerScenes[i]->setSceneRect(0,0,620,600);
-            else if (i<=2)
-                _analyzerScenes[i]->setSceneRect(0,0,772,258);
-            else
-                _analyzerScenes[i]->setSceneRect(0,0,772,259);
-            gv[i]->setScene(_analyzerScenes[i]);
-            gv[i]->scale(0.5,0.5);
-            vboxlayout->addWidget(gv[i]);
-        }
-        dialog->setLayout(vboxlayout);
-        QObject::connect(dialog ,SIGNAL(destroyed()),this,SLOT(analyzerClosed()));
-        dialog->show();
+            _analyzerScenes[i] = _analyzerDialog->gsc[i];
+        QObject::connect(_analyzerDialog ,SIGNAL(destroyed()),this,SLOT(analyzerClosed()));
+        _analyzerDialog->show();
+        _analyze=true;
     }
     this->sameImage();
 }
@@ -1026,6 +1007,68 @@ void ADM_flyDialog::timeout(void)
     {
        _control->pushButton_play->setChecked(false);
     }
+}
+
+
+
+/**
+ * 
+ */
+ADM_analyzerDialog::ADM_analyzerDialog(QWidget *parent) : QDialog(parent)
+{
+    vboxlayout = new QVBoxLayout(this);
+    this->setWindowTitle(QApplication::translate("seekablePreviewDialog", "Analyzer", 0));
+    this->setAttribute(Qt::WA_DeleteOnClose);   // delete objets on closing the dialog
+    QSizePolicy policy;
+    for (int i=0; i<4; i++)
+    {
+        gv[i] = new QGraphicsView(this);
+        gv[i]->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        gv[i]->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        gv[i]->setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing);
+        gv[i]->setBackgroundBrush(QBrush(Qt::black,Qt::SolidPattern));
+        policy.setHorizontalPolicy(QSizePolicy::Expanding);
+        policy.setVerticalPolicy(QSizePolicy::Expanding);
+        policy.setVerticalStretch((i==0)?7:3);
+        gv[i]->setSizePolicy(policy);
+        gsc[i] = new QGraphicsScene(this);
+        if (i==0)
+            gsc[i]->setSceneRect(0,0,620,600);
+        else if (i<=2)
+            gsc[i]->setSceneRect(0,0,772,258);
+        else
+            gsc[i]->setSceneRect(0,0,772,259);
+        gv[i]->setScene(gsc[i]);
+        gv[i]->scale(0.5,0.5);
+        vboxlayout->addWidget(gv[i]);
+    }
+    this->setLayout(vboxlayout);
+}
+
+ADM_analyzerDialog::~ADM_analyzerDialog()
+{
+    
+}
+
+void ADM_analyzerDialog::adjustGraphs()
+{
+    QRectF bounds;
+    for (int i=0; i<4; i++)
+    {
+        bounds = gsc[i]->itemsBoundingRect();
+        gv[i]->fitInView(bounds, Qt::KeepAspectRatio);
+    }
+}
+
+void ADM_analyzerDialog::resizeEvent(QResizeEvent *event)
+{
+    adjustGraphs();
+}
+
+void ADM_analyzerDialog::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    adjustGraphs();
 }
 
 /**

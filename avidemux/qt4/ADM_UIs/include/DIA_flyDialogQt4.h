@@ -35,6 +35,7 @@
 #include <QRect>
 #include <QGraphicsScene>
 #include <QImage>
+#include <QVBoxLayout>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -97,6 +98,7 @@ public:
 };
 
 class flyControl;
+class ADM_analyzerDialog;
 class flyDialogsAnalyzer;
 /**
     \class ADM_flyDialog
@@ -129,8 +131,9 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           QDialog     *_parent;
           bool         _bypassFilter;
       // Analyzer
-          bool             _analyze;
-          QGraphicsScene * _analyzerScenes[4];
+          bool                 _analyze;
+          ADM_analyzerDialog * _analyzerDialog;
+          QGraphicsScene     * _analyzerScenes[4];
           flyDialogsAnalyzer * _flyanal;
 
 
@@ -316,6 +319,22 @@ private:
         void mousePressEvent(QMouseEvent *);
         void mouseReleaseEvent(QMouseEvent *);
         void mouseMoveEvent(QMouseEvent *);
+};
+
+class ADM_UIQT46_EXPORT ADM_analyzerDialog : public QDialog
+{
+    Q_OBJECT
+  private:
+    QVBoxLayout     * vboxlayout;
+    QGraphicsView   * gv[4];
+    void adjustGraphs();
+    void resizeEvent(QResizeEvent *event);
+    void showEvent(QShowEvent *event);
+  public:
+    QGraphicsScene  * gsc[4];
+    ADM_analyzerDialog(QWidget *parent);
+    ~ADM_analyzerDialog();
+    
 };
 
 class ADM_UIQT46_EXPORT flyDialogsAnalyzer
