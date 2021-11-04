@@ -187,6 +187,7 @@ public:
             bool        isEmpty(void);
 
             bool        removeEmptySegments(void);
+            bool        mergeContinuousSegments(void);
 
             _VIDEOS     *getRefVideo(int i);
             int         getNbRefVideos(void);

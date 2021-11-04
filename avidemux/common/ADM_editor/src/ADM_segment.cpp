@@ -805,6 +805,7 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
         segments.erase(segments.begin()+startSeg+1);
     }
     removeEmptySegments();
+    mergeContinuousSegments();
     updateStartTime();
     if(isEmpty())
     {
@@ -854,6 +855,7 @@ bool ADM_EditorSegment::truncateVideo(uint64_t from)
         segments.erase(segments.begin()+startSeg+1);
     }
     removeEmptySegments();
+    mergeContinuousSegments();
     updateStartTime();
     if(isEmpty())
     {
@@ -1010,6 +1012,44 @@ bool        ADM_EditorSegment::removeEmptySegments(void)
     return true;
 }
 /**
+    \fn mergeContinuousSegments
+    \brief Merge adjacent segments representing the same continuous video stream.
+*/
+bool ADM_EditorSegment::mergeContinuousSegments(void)
+{
+    uint32_t refIndex;
+    uint64_t refStart;
+    uint64_t segmentDuration;
+    bool res = false;
+    int i = 0;
+
+    while(i < getNbSegments())
+    {
+        _SEGMENT *seg = getSegment(i);
+        ADM_assert(seg);
+        bool erase = false;
+        if(i && refIndex == seg->_reference && refStart + segmentDuration == seg->_refStartTimeUs)
+        {
+            _SEGMENT *prevSeg = getSegment(i-1);
+            ADM_assert(prevSeg);
+            prevSeg->_durationUs += seg->_durationUs;
+            erase = true;
+            res = true;
+        }
+        refIndex = seg->_reference;
+        refStart = seg->_refStartTimeUs;
+        segmentDuration = seg->_durationUs;
+        if(erase)
+        {
+            ADM_info("Merging continuous segments %d and %d out of %d\n",i-1,i,getNbSegments());
+            segments.erase(segments.begin() + i);
+            continue; // we do not increment the index
+        }
+        i++;
+    }
+    return res;
+}
+/**
  * \fn isEmpty
  * @return 
  */
@@ -1150,6 +1190,7 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
     // If a video doesn't start at zero and we paste to its first frame,
     // we end up with an empty segment at the beginning. Remove it.
     removeEmptySegments();
+    mergeContinuousSegments();
     updateStartTime();
     dump();
     return true;
@@ -1168,8 +1209,8 @@ bool ADM_EditorSegment::appendFromClipBoard(void)
         return true;
     }
     ADM_info("Appending from clipboard\n");
-    ListOfSegments tmp=segments;
     for(int i=0;i<clipboard.size();i++) segments.push_back(clipboard[i]);
+    mergeContinuousSegments();
     updateStartTime();
     dump();
     return true;
