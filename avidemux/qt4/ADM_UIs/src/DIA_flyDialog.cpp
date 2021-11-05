@@ -14,7 +14,6 @@
 
 #include <QEvent>
 #include <QGraphicsView>
-#include <QPushButton>
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QLineEdit>
@@ -1017,20 +1016,34 @@ void ADM_flyDialog::timeout(void)
 ADM_analyzerDialog::ADM_analyzerDialog(QWidget *parent) : QDialog(parent, Qt::Tool)
 {
     vboxlayout = new QVBoxLayout(this);
+    hboxlayout = new QHBoxLayout(this);
     this->setWindowTitle(QApplication::translate("seekablePreviewDialog", "Analyzer", 0));
     this->setAttribute(Qt::WA_DeleteOnClose);   // delete objets on closing the dialog
-    QSizePolicy policy;
+    for (int i=0; i<4; i++)
+    {
+        btns[i] = new QPushButton(this);
+        switch(i)
+        {
+            case 0: btns[i]->setText(QApplication::translate("seekablePreviewDialog", "Vectorscope", 0)); break;
+            case 1: btns[i]->setText(QApplication::translate("seekablePreviewDialog", "YUV waveform", 0)); break;
+            case 2: btns[i]->setText(QApplication::translate("seekablePreviewDialog", "RGB waveform", 0)); break;
+            case 3: btns[i]->setText(QApplication::translate("seekablePreviewDialog", "Histograms", 0)); break;
+        }
+        btns[i]->setCheckable(true);
+        btns[i]->setChecked(true);
+        connect(btns[i],SIGNAL(toggled(bool)),this,SLOT(btnToggled(bool)));
+        hboxlayout->addWidget(btns[i]);
+        btnChkd[i] = true;
+    }
+    vboxlayout->addLayout(hboxlayout);
     for (int i=0; i<4; i++)
     {
         gv[i] = new QGraphicsView(this);
         gv[i]->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         gv[i]->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         gv[i]->setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing);
-        gv[i]->setBackgroundBrush(QBrush(Qt::black,Qt::SolidPattern));
-        policy.setHorizontalPolicy(QSizePolicy::Expanding);
-        policy.setVerticalPolicy(QSizePolicy::Expanding);
-        policy.setVerticalStretch((i==0)?7:3);
-        gv[i]->setSizePolicy(policy);
+        gv[i]->setBackgroundBrush(QBrush(QColor::fromRgb(20,20,20),Qt::SolidPattern));
+        gv[i]->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
         gsc[i] = new QGraphicsScene(this);
         if (i==0)
             gsc[i]->setSceneRect(0,0,620,600);
@@ -1039,7 +1052,7 @@ ADM_analyzerDialog::ADM_analyzerDialog(QWidget *parent) : QDialog(parent, Qt::To
         else
             gsc[i]->setSceneRect(0,0,772,259);
         gv[i]->setScene(gsc[i]);
-        gv[i]->scale(0.5,0.5);
+        gv[i]->scale(1/3.,1/3.);
         vboxlayout->addWidget(gv[i]);
     }
     this->setLayout(vboxlayout);
@@ -1048,6 +1061,26 @@ ADM_analyzerDialog::ADM_analyzerDialog(QWidget *parent) : QDialog(parent, Qt::To
 ADM_analyzerDialog::~ADM_analyzerDialog()
 {
     
+}
+
+void ADM_analyzerDialog::btnToggled(bool f)
+{
+    bool allOff = true;
+    for (int i=0; i<4; i++)
+        if(btns[i]->isChecked())
+            allOff = false;
+            
+    if (allOff)
+        for (int i=0; i<4; i++)
+            btns[i]->setChecked(btnChkd[i]);
+    
+    for (int i=0; i<4; i++)
+    {
+        gv[i]->setVisible(btns[i]->isChecked());
+        btnChkd[i] = btns[i]->isChecked();
+    }
+    QCoreApplication::processEvents ();
+    adjustGraphs();
 }
 
 void ADM_analyzerDialog::adjustGraphs()
@@ -1068,6 +1101,7 @@ void ADM_analyzerDialog::resizeEvent(QResizeEvent *event)
 void ADM_analyzerDialog::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
+    QCoreApplication::processEvents ();
     adjustGraphs();
 }
 
@@ -1087,7 +1121,7 @@ flyDialogsAnalyzer::flyDialogsAnalyzer(int width, int height)
     {
         for (int x=0; x<620; x++)
         {
-            double xc = x-(64.0+256.0);
+            double xc = x-(54.0+256.0);
             double yc = y-(44.0+256.0);
             double r = std::sqrt(xc*xc + yc*yc);
             uint32_t c = 0;
@@ -1119,7 +1153,7 @@ flyDialogsAnalyzer::flyDialogsAnalyzer(int width, int height)
                 rgb[0] = (pri&1)? 1:0;
                 rgb[1] = (pri&2)? 1:0;
                 rgb[2] = (pri&4)? 1:0;
-                double u = 64 + 256 + 2*224.0*(-0.1146*rgb[0] + -0.3854*rgb[1] +  0.5   *rgb[2]);
+                double u = 54 + 256 + 2*224.0*(-0.1146*rgb[0] + -0.3854*rgb[1] +  0.5   *rgb[2]);
                 double v = 44 + 256 - 2*224.0*( 0.5   *rgb[0] + -0.4542*rgb[1] + -0.0458*rgb[2]);
                 u = x-u;
                 v = y-v;
@@ -1565,13 +1599,13 @@ void flyDialogsAnalyzer::analyze(ADMImage *in, QGraphicsScene * sceneVectorScope
         
         for (int y=0; y<256; y++)
             for (int x=0; x<256; x++)
-                bufVectorScope[(2*y + 44)*620 + 2*x + 64] = wrkVectorScope[(255-y)*256+x];
+                bufVectorScope[(2*y + 44)*620 + 2*x + 54] = wrkVectorScope[(255-y)*256+x];
 
         // interpolate histogram
         for (int y=44; y<(44+512); y+=2)
         {
             uint32_t * ptr = bufVectorScope+620*y;
-            for (int x=(64-1); x<(64+512+1); x+=2)
+            for (int x=(54-1); x<(54+512+1); x+=2)
             {
                 *(ptr+x) = ( (*(ptr+x-1)) + (*(ptr+x+1)) )/2;
             }
@@ -1581,7 +1615,7 @@ void flyDialogsAnalyzer::analyze(ADMImage *in, QGraphicsScene * sceneVectorScope
             uint32_t * ptrm = bufVectorScope+620*(y-1);
             uint32_t * ptr  = bufVectorScope+620*y;
             uint32_t * ptrp = bufVectorScope+620*(y+1);
-            for (int x=64; x<(64+512); x+=1)
+            for (int x=54; x<(54+512); x+=1)
             {
                 *(ptr+x) = ( (*(ptrm+x)) + (*(ptrp+x)) )/2;
             }

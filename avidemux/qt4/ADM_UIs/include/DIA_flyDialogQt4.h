@@ -35,7 +35,9 @@
 #include <QRect>
 #include <QGraphicsScene>
 #include <QImage>
+#include <QPushButton>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -325,11 +327,16 @@ class ADM_UIQT46_EXPORT ADM_analyzerDialog : public QDialog
 {
     Q_OBJECT
   private:
+    QHBoxLayout     * hboxlayout;
     QVBoxLayout     * vboxlayout;
     QGraphicsView   * gv[4];
+    QPushButton     * btns[4];
+    bool              btnChkd[4];
     void adjustGraphs();
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+  private slots:
+    void btnToggled(bool f);
   public:
     QGraphicsScene  * gsc[4];
     ADM_analyzerDialog(QWidget *parent);
