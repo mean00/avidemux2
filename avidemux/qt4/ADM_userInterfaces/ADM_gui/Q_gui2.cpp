@@ -103,6 +103,7 @@ extern int A_appendVideo(const char *name);
 int SliderIsShifted=0;
 static void setupMenus(void);
 static int shiftKeyHeld=0;
+static int ctrlKeyHeld=0;
 static ADM_mwNavSlider *slider=NULL;
 static int _upd_in_progres=0;
 bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
@@ -219,7 +220,10 @@ void MainWindow::sliderValueChanged(int u)
         { 
             default:
             case dragState_Normal:
-                sendAction(ACT_Scale);
+                if (!dragWhilePlay && ctrlKeyHeld)
+                    sendAction(ACT_FineScale);
+                else
+                    sendAction(ACT_Scale);
                 break;
             case dragState_Active:
                 dragTimer.stop();
@@ -230,7 +234,10 @@ void MainWindow::sliderValueChanged(int u)
               break;            
           }
     else
-         sendAction(ACT_Scale);
+        if (!dragWhilePlay && ctrlKeyHeld)
+            sendAction(ACT_FineScale);
+        else
+            sendAction(ACT_Scale);
 }
 
 /**
@@ -267,7 +274,10 @@ void MainWindow::dragTimerTimeout(void)
             break;            
         case dragState_HoldOff:
             dragState=dragState_Active;
-            sendAction(ACT_Scale);
+            if (!dragWhilePlay && ctrlKeyHeld)
+                sendAction(ACT_FineScale);
+            else
+                sendAction(ACT_Scale);
             break;
     }
 }
@@ -288,7 +298,10 @@ void MainWindow::sliderReleased(void)
     SliderIsShifted = 0;
     dragTimer.stop();
     dragState=dragState_Normal;
-    sendAction(ACT_Scale);
+    if (!dragWhilePlay && ctrlKeyHeld)
+        sendAction(ACT_FineScale);
+    else
+        sendAction(ACT_Scale);
     if (dragWhilePlay)
         sendAction(ACT_PlayAvi); // resume playback
 }
@@ -311,11 +324,17 @@ void MainWindow::sliderWheel(int way)
 { 
     if(way>0)
     {
-        sendAction(ACT_NextKFrame);
+        if (ctrlKeyHeld)
+            sendAction(ACT_NextFrame);
+        else
+            sendAction(ACT_NextKFrame);
         return;
     }
     if(way<0)
-        sendAction(ACT_PreviousKFrame);
+        if (ctrlKeyHeld)
+            sendAction(ACT_PreviousFrame);
+        else
+            sendAction(ACT_PreviousKFrame);
     
 }
 /**
@@ -1721,6 +1740,9 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                     case Qt::Key_Shift:
                         shiftKeyHeld = 1;
                         break;
+                    case Qt::Key_Control:
+                        ctrlKeyHeld = 1;
+                        break;
 
                     case Qt::Key_PageUp:
                                                 if (keyEvent->modifiers() & Qt::ControlModifier)
@@ -1764,7 +1786,13 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
             if (keyEvent->key() == Qt::Key_Shift)
                 shiftKeyHeld = 0;
+            
+            if (keyEvent->key() == Qt::Key_Control)
+                ctrlKeyHeld = 0;
 
+            break;
+        case QEvent::ShortcutOverride:
+                ctrlKeyHeld = 0;
             break;
         case QEvent::User:
             this->openFiles(((FileDropEvent*)event)->files);
