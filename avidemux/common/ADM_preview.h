@@ -39,8 +39,8 @@ class admPreview
       static void cleanUp(void);
       static ADMImage *getBuffer(void);
       static uint64_t getCurrentPts(void);
-      static bool nextKeyFrame(void);
-      static bool previousKeyFrame(void);
+      static bool nextKeyFrame(bool * keyframeNotFound = NULL);
+      static bool previousKeyFrame(bool * keyframeNotFound = NULL);
       static bool previousFrame(void);
       static void destroy(void);
       static bool updateImage(void);

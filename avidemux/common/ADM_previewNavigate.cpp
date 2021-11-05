@@ -130,15 +130,19 @@ uint8_t admPreview::previousPicture(void)
     \fn nextKeyFrame
 
 */
-bool admPreview::nextKeyFrame(void)
+bool admPreview::nextKeyFrame(bool * keyframeNotFound)
 {
     uint64_t pts=getCurrentPts();
     ADM_info("Current PTS :%" PRId64" ms\n",pts/1000LL);
     if(false==video_body->getNKFramePTS(&pts))
     {
         ADM_warning("Cannot find next keyframe\n");
+        if (keyframeNotFound)
+            *keyframeNotFound = true;
         return false;
     }
+    if (keyframeNotFound)
+        *keyframeNotFound = false;
     ADM_info("next kf PTS :%" PRId64" ms\n",pts/1000LL);
     return seekToIntraPts(pts);
 }
@@ -146,15 +150,19 @@ bool admPreview::nextKeyFrame(void)
     \fn previousKeyFrame
 
 */
-bool admPreview::previousKeyFrame(void)
+bool admPreview::previousKeyFrame(bool * keyframeNotFound)
 {
     uint64_t pts=getCurrentPts();
     ADM_info("Current PTS :%" PRId64" ms\n",pts/1000LL);
     if(false==video_body->getPKFramePTS(&pts))
     {
         ADM_warning("Cannot find previous keyframe\n");
+        if (keyframeNotFound)
+            *keyframeNotFound = true;
         return false;
     }
+    if (keyframeNotFound)
+        *keyframeNotFound = false;
     ADM_info("next kf PTS :%" PRId64" ms\n",pts/1000LL);
     return seekToIntraPts(pts);
 }

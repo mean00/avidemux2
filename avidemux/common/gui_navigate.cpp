@@ -322,12 +322,15 @@ bool GUI_NextKeyFrame(void)
         return false;
     if (!avifileinfo)
         return false;
+    
+    bool keyframeNotFound;
 
-    if (!admPreview::nextKeyFrame())
-      {
-        A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
+    if (!admPreview::nextKeyFrame(&keyframeNotFound))
+    {
+        if (!keyframeNotFound)
+            A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
         return false;
-      }
+    }
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
@@ -388,12 +391,15 @@ bool GUI_PreviousKeyFrame(void)
         return false;
     if (!avifileinfo)
         return false;
+    
+    bool keyframeNotFound;
 
-    if (!admPreview::previousKeyFrame())
-      {
-        A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
+    if (!admPreview::previousKeyFrame(&keyframeNotFound))
+    {
+        if (!keyframeNotFound)
+            A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
         return false;
-      }
+    }
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
