@@ -31,6 +31,7 @@ typedef enum
   ELEM_TOGGLE,
   ELEM_INTEGER,
   ELEM_FLOAT,
+  ELEM_FLOAT_RESETTABLE,
   ELEM_MENU,
   ELEM_FILE_READ,
   ELEM_BITRATE,
@@ -317,6 +318,26 @@ public:
   void getMe(void);
   void      enable(uint32_t onoff) ;
   int getRequiredLayout(void);
+};
+/*********************************************/
+typedef diaElem *(CREATE_FLOAT_RESETTABLE_T)(ELEM_TYPE_FLOAT *value, const char *toggleTitle,
+    ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max, ELEM_TYPE_FLOAT reset,
+    const char *tip, int decimals);
+class ADM_COREUI6_EXPORT diaElemFloatResettable : public diaElem
+{
+protected:
+    int decimals;
+
+public:
+    ELEM_TYPE_FLOAT min,max,reset;
+    diaElemFloatResettable(ELEM_TYPE_FLOAT *value, const char *toggleTitle,
+        ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max, ELEM_TYPE_FLOAT reset,
+        const char *tip=NULL, int decimals = 2);
+    virtual ~diaElemFloatResettable() ;
+    void setMe(void *dialog, void *opaque, uint32_t line);
+    void getMe(void);
+    void enable(uint32_t onoff);
+    int getRequiredLayout(void);
 };
 /*************************************************/
 class diaMenuEntry

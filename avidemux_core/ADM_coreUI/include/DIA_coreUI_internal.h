@@ -73,6 +73,9 @@ typedef struct
 // Float
     CREATE_FLOAT_T       *CreateFloat;
     DELETE_DIA_ELEM_T    *DestroyFloat;
+// Float resettable
+    CREATE_FLOAT_RESETTABLE_T *CreateFloatResettable;
+    DELETE_DIA_ELEM_T    *DestroyFloatResettable;
 // Integer    
     CREATE_INTEGER_T     *CreateInteger;
     DELETE_DIA_ELEM_T    *DestroyInteger;

@@ -115,7 +115,7 @@ diaElemTimeStamp ::~diaElemTimeStamp()
 DIA_MKSTUBS(diaElemTimeStamp)
 
 
-// ****************** Buttons ********************
+// ****************** Float ********************
 diaElemFloat ::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min,
         ELEM_TYPE_FLOAT max,const char *tip, int decimals) :diaElem(ELEM_FLOAT)
 {
@@ -134,6 +134,26 @@ void      diaElemFloat::enable(uint32_t onoff)
 		internalPointer->enable(onoff); 
 	}
 DIA_MKSTUBS(diaElemFloat)
+// ************ Float resettable **************
+diaElemFloatResettable::diaElemFloatResettable(ELEM_TYPE_FLOAT *value, const char *title,
+    ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max, ELEM_TYPE_FLOAT reset, const char *tip, int decimals)
+    : diaElem(ELEM_FLOAT_RESETTABLE)
+{
+    ADM_assert(Factory);
+    internalPointer = Factory->CreateFloatResettable(value,title,min,max,reset,tip,decimals);
+}
+diaElemFloatResettable::~diaElemFloatResettable()
+{
+    ADM_assert(Factory);
+    Factory->DestroyFloatResettable(internalPointer);
+    internalPointer=NULL;
+}
+void diaElemFloatResettable::enable(uint32_t onoff)
+    {
+        ADM_assert(internalPointer);
+        internalPointer->enable(onoff);
+    }
+DIA_MKSTUBS(diaElemFloatResettable)
 // ****************** Integer ********************
 diaElemInteger ::diaElemInteger(int32_t *intValue,const char *toggleTitle, int32_t min, int32_t max,const char *tip) :
 	diaElem(ELEM_INTEGER)

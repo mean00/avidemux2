@@ -342,6 +342,8 @@ extern CREATE_BAR_T         qt4CreateBar;
 extern DELETE_DIA_ELEM_T    qt4DestroyBar;
 extern CREATE_FLOAT_T       qt4CreateFloat;
 extern DELETE_DIA_ELEM_T    qt4DestroyFloat;
+extern CREATE_FLOAT_RESETTABLE_T qt4CreateFloatResettable;
+extern DELETE_DIA_ELEM_T    qt4DestroyFloatResettable;
 extern CREATE_FRAME_T       qt4CreateFrame;
 extern DELETE_DIA_ELEM_T    qt4DestroyFrame;
 extern CREATE_HEX_T         qt4CreateHex;
@@ -403,6 +405,9 @@ static FactoryDescriptor Qt4FactoryDescriptor=
         // Float
         &qt4CreateFloat,
         &qt4DestroyFloat,
+        // Float resettable
+        &qt4CreateFloatResettable,
+        &qt4DestroyFloatResettable,
         // Integer
         &qt4CreateInteger,
         &qt4DestroyInteger,
