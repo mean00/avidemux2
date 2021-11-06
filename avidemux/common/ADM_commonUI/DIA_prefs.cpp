@@ -98,7 +98,8 @@ bool     askPortAvisynth=false;
 uint32_t defaultPortAvisynth = 9999;
 
 uint32_t toneMappingHDR = 1;
-float    targetLumHDR = 100.0;
+#define DEFAULT_TARGET_LUMINANCE_HDR 100.0
+float    targetLumHDR = DEFAULT_TARGET_LUMINANCE_HDR;
 
 #ifdef USE_SDL
 std::string currentSdlDriver=getSdlDriverName();
@@ -162,7 +163,7 @@ std::string currentSdlDriver=getSdlDriverName();
 
     	// HDR
     	if (!prefs->get(HDR_TONEMAPPING,&toneMappingHDR)) toneMappingHDR=1;
-    	if (!prefs->get(HDR_TARGET_LUMINANCE,&targetLumHDR)) targetLumHDR=100.0;
+    	if (!prefs->get(HDR_TARGET_LUMINANCE,&targetLumHDR)) targetLumHDR = DEFAULT_TARGET_LUMINANCE_HDR;
 
         // Alsa
 #ifdef ALSA_SUPPORT
@@ -387,7 +388,7 @@ std::string currentSdlDriver=getSdlDriverName();
         // HDR
         diaElemFrame frameHDR(QT_TRANSLATE_NOOP("adm","HDR"));
         diaMenuEntry toneMapEntries[]={
-                              {0,       QT_TRANSLATE_NOOP("adm","disabled"),NULL}
+                              {0,       QT_TRANSLATE_NOOP("adm","Disabled"),NULL}
                              ,{1,       QT_TRANSLATE_NOOP("adm","Fast YUV"),NULL}
                              ,{2,       QT_TRANSLATE_NOOP("adm","RGB clipping"),NULL}
                              ,{3,       QT_TRANSLATE_NOOP("adm","RGB Reinhard"),NULL}
@@ -395,7 +396,7 @@ std::string currentSdlDriver=getSdlDriverName();
                              //,{2,      QT_TRANSLATE_NOOP("adm","TODO"),NULL}
         };
         diaElemMenu menuToneMapHDR(&toneMappingHDR,QT_TRANSLATE_NOOP("adm","Default _tone mapping method:"),NB_ITEMS(toneMapEntries),toneMapEntries);
-        diaElemFloat floatTargetLumHDR(&targetLumHDR,QT_TRANSLATE_NOOP("adm","Target peak luminance (nits):"),0.,1000.);
+        diaElemFloatResettable floatTargetLumHDR(&targetLumHDR,QT_TRANSLATE_NOOP("adm","Target peak luminance (nits):"),0.,1000.,DEFAULT_TARGET_LUMINANCE_HDR);
         frameHDR.swallow(&menuToneMapHDR);
         frameHDR.swallow(&floatTargetLumHDR);
 
