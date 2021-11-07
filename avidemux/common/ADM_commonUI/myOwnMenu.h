@@ -145,7 +145,16 @@ static const MenuEntry _myMenuGo[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Marker A"),      NULL,ACT_GotoMarkA,       MKICON(markA),         "PgUp",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Marker B"),      NULL,ACT_GotoMarkB,       MKICON(markB),         "PgDown",0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY, NULL,NULL,1},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Time"),          NULL,ACT_SelectTime,      NULL,                  "Ctrl+T",0}
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Time"),          NULL,ACT_SelectTime,      NULL,                  "Ctrl+T",0},
+            {MENU_SEPARATOR,"-",NULL,ACT_DUMMY, NULL,NULL,1},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Backward 1 second"),   NULL,ACT_Back1Second,     NULL,                  "Shift+Left",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Forward 1 second"),    NULL,ACT_Forward1Second,  NULL,                  "Shift+Right",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Backward 2 seconds"),  NULL,ACT_Back2Seconds,    NULL,                  "Ctrl+Left",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Forward 2 seconds"),   NULL,ACT_Forward2Seconds, NULL,                  "Ctrl+Right",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Backward 4 seconds"),  NULL,ACT_Back4Seconds,    NULL,                  "Ctrl+Shift+Left",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Forward 4 seconds"),   NULL,ACT_Forward4Seconds, NULL,                  "Ctrl+Shift+Right",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Backward one minute"), NULL,ACT_Back1Mn,         MKICON(backward1mn),   NULL,0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Forward one minute"),  NULL,ACT_Forward1Mn,      MKICON(forward1mn),    NULL,0}
         };
 
 std::vector<MenuEntry> myMenuGo(_myMenuGo, _myMenuGo + sizeof(_myMenuGo) / sizeof(_myMenuGo[0]));
