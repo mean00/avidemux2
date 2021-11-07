@@ -119,6 +119,45 @@ static int ignore_change=0;
             ignore_change--;
         }
         break;
+      case ACT_FineScale:
+        if(playing) break;
+        if (!ignore_change)
+        {
+            uint32_t nf;
+            ignore_change++;
+            nf = GUI_GetScale ();
+            ADM_info("Fine Scale :%" PRIu32"\n",nf);
+            double tme=nf;
+            double totalDuration=(double) video_body->getVideoDuration();
+            tme*=totalDuration;
+            tme/=ADM_SCALE_SIZE;
+            uint64_t pts=5000+(uint64_t)tme; // aim a bit higher to avoid double "search previous" events
+            if(pts>totalDuration) pts=totalDuration;
+
+            ADM_info("Fine Scale Time:%" PRIu64" ms (total=%" PRIu64" ms)\n",pts/1000,video_body->getVideoDuration()/1000);
+            ADM_info("Fine Scale Time:%s ms \n",ADM_us2plain(pts));
+
+            uint64_t lastpts=pts;
+            if(false==video_body->getNKFramePTS(&lastpts)) // at the end of the video, be careful
+            {
+                if(false==video_body->getPKFramePTS(&lastpts))
+                {
+                    ignore_change--;
+                    break;
+                }
+                GUI_infiniteForward(lastpts);
+                lastpts=admPreview::getCurrentPts();
+                if(pts>=lastpts)
+                    pts=lastpts;
+            }
+            if(false==GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video,
+                video_body->rewind(); // go to the first frame then
+            admPreview::samePicture();
+            UI_setCurrentTime(pts);
+            UI_purge();
+            ignore_change--;
+        }
+        break;      
       case ACT_GotoMarkA:
       case ACT_GotoMarkB:
         {
