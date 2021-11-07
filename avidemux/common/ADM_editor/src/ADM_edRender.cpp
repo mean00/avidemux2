@@ -214,16 +214,26 @@ uint64_t tail;
     
         // Decode image...
         _SEGMENT *seg=_segments.getSegment(_currentSegment);
+        ADM_assert(seg);
         // Search it in the cache...
         _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
-        
+        ADM_assert(vid);
+
         uint64_t refPts;
-        _segments.LinearToRefTime(_currentSegment,_currentPts,&refPts);
-        ADMImage *cached=vid->_videoCache->getAfter(seg->_reference, refPts);
+
+        if(false == _segments.LinearToRefTime(_currentSegment,_currentPts,&refPts))
+        {
+            ADM_error("_currentSegment or _currentPts invalid or mismatched.\n");
+            return false;
+        }
+
+        EditorCache *cache = vid->_videoCache;
+        ADM_assert(cache);
+        ADMImage *cached = cache->getAfter(seg->_reference, refPts);
         if(cached)
         {
-            uint64_t delta=cached->Pts-seg->_refStartTimeUs;
-            if(delta<seg->_durationUs)
+            int64_t delta = cached->Pts - seg->_refStartTimeUs;
+            if(delta < (int64_t)seg->_durationUs)
             {
                 // Got it
                 image->duplicate(cached);
@@ -250,7 +260,7 @@ uint64_t tail;
                 if(frame && DecodePictureUpToIntra(seg->_reference,frame))
                 {
                     ADM_info("Successfully skipped to the next keyframe\n");
-                    cached=vid->_videoCache->getByPts(seg->_reference, nkfPts);
+                    cached = cache->getByPts(seg->_reference, nkfPts);
                     if(cached)
                         image->duplicate(cached);
                 }else
@@ -292,6 +302,7 @@ np_nextSeg:
             }
             ADM_info("Switched to next segment\n");
             seg=_segments.getSegment(_currentSegment);
+            ADM_assert(seg);
             samePictureInternal(seg->_reference,image);
             updateImageTiming(seg,image);
             SET_CURRENT_PTS(image->Pts);
@@ -367,12 +378,17 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
         uint64_t targetPts=_currentPts;
         // Decode image...
         _SEGMENT *seg=_segments.getSegment(_currentSegment);
+        ADM_assert(seg);
         // Search it in the cache...
         _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
-        
-        uint64_t refPts;
+        ADM_assert(vid);
 
-        _segments.LinearToRefTime(_currentSegment,_currentPts,&refPts);
+        uint64_t refPts;
+        if(false == _segments.LinearToRefTime(_currentSegment,_currentPts,&refPts))
+        {
+            ADM_error("_currentSegment or _currentPts invalid or mismatched.\n");
+            return false;
+        }
 
         if(refPts<=vid->firstFramePts) // at the first frame of segment too
         {
@@ -386,8 +402,10 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
             // and the segment boundary. Call a taxi then.
             targetPts=seg->_startTimeUs;
         }
-        ADMImage *cached=vid->_videoCache->getBefore(seg->_reference, refPts);
-       
+        EditorCache *cache = vid->_videoCache;
+        ADM_assert(cache);
+        ADMImage *cached = cache->getBefore(seg->_reference, refPts);
+
         if(cached && cached->Pts<refPts)
         {
             if(cached->Pts>=seg->_refStartTimeUs) // It might be in the cache but belonging to the previous seg
@@ -399,8 +417,8 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
                 return true;
             }
         }
-        ADM_info("while looking for frame %" PRIu64"\n",_currentPts);
-        vid->_videoCache->dump();
+        ADM_info("while looking for frame at PTS %s (%" PRIu64")\n",ADM_us2plain(_currentPts),_currentPts);
+        cache->dump();
         // The previous is not available
         // either it is in the same segment but we have decoded later in that segment
         // , or it is in the previous segment
@@ -416,17 +434,16 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
         // 1- we are still in the same segment, in that case, we have to go back
         // and decode forward 
         // 2- We are at a jum, i.e. what we want is the last image from the previous segment
-        seg=_segments.getSegment(segNo);
         if(segNo==_currentSegment) // Still in the same segment..
         {
                 switch(decodeTillPictureAtPts(targetPts,image))
                 {
                     case 1:
-                        cached=vid->_videoCache->getBefore(seg->_reference, refPts);
+                        cached = cache->getBefore(seg->_reference, refPts);
                         break;
                     case ADM_IGN:
                         ADM_warning("Cannot decode till our current pts\n");
-                        cached=vid->_videoCache->getLast(seg->_reference);
+                        cached = cache->getLast(seg->_reference);
                         break;
                     default:
                         return false;
@@ -444,7 +461,7 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
                     ADM_warning("The image found is before refStartTime ???\n");
                 }
                 ADM_error("Find our frame and its predecessor (%" PRIu64"), but it is out of range\n",refPts);
-                vid->_videoCache->dump();
+                cache->dump();
                 return false;
         }
         ADM_assert(segNo+1==_currentSegment);
@@ -456,20 +473,26 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
             ADM_error("Cannot switch to previous segment to get previous frame\n");
             return false;
         }
-        
         seg=_segments.getSegment(_currentSegment);
+        ADM_assert(seg);
         vid=_segments.getRefVideo(seg->_reference);
-        
+        ADM_assert(vid);
 
-        if(false==decodeTillPictureAtPts(targetPts,image))
+        if(0 == decodeTillPictureAtPts(targetPts,image))
         {
             ADM_error("Cannot decode to get a candidate.\n");
             return false;
         }
         _currentSegment=segNo;
         // We may have overshot...
-        _segments.LinearToRefTime(_currentSegment,targetPts,&refPts);
-        ADMImage *candidate=vid->_videoCache->getLast(seg->_reference);
+        if(false == _segments.LinearToRefTime(_currentSegment,targetPts,&refPts))
+        {
+            ADM_error("targetPts out of range for the ref video in segment %" PRIu32"\n",_currentSegment);
+            return false;
+        }
+        cache = vid->_videoCache;
+        ADM_assert(cache);
+        ADMImage *candidate = cache->getLast(seg->_reference);
         if(!candidate)
         {
             ADM_error("No frame in cache !\n");
@@ -482,7 +505,7 @@ bool        ADM_Composer::previousPicture(ADMImage *image)
                 break;
             }
             // Try to go before...
-            ADMImage *img=vid->_videoCache->getBefore(seg->_reference, candidate->Pts);
+            ADMImage *img = cache->getBefore(seg->_reference, candidate->Pts);
             if(!img) break;
             candidate=img;
         }
