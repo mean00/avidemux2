@@ -20,7 +20,7 @@ int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, fl
 #   define NB_ELEMS 3
 #endif
     diaMenuEntry toneMapEntries[]={
-                          {0,       QT_TRANSLATE_NOOP("adm","disabled"),NULL}
+                          {0,       QT_TRANSLATE_NOOP("adm","Disabled"),NULL}
                          ,{1,       QT_TRANSLATE_NOOP("adm","Fast YUV"),NULL}
                          ,{2,       QT_TRANSLATE_NOOP("adm","RGB clipping"),NULL}
                          ,{3,       QT_TRANSLATE_NOOP("adm","RGB Reinhard"),NULL}
@@ -29,8 +29,14 @@ int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, fl
     };
 
     diaElemMenu menuToneMapHDR(toneMappingMethod,QT_TRANSLATE_NOOP("adm","_Tone mapping:"),sizeof(toneMapEntries)/sizeof(diaMenuEntry),toneMapEntries);
-    diaElemFloat floatSaturationHDR(saturationAdjust,QT_TRANSLATE_NOOP("adm","_Saturation:"),0.,10.);
-    diaElemFloat floatBoostHDR(boostAdjust,QT_TRANSLATE_NOOP("adm","_Boost (level multiplier):"),0.,10.);
+    diaElemFloatResettable floatSaturationHDR(saturationAdjust,QT_TRANSLATE_NOOP("adm","_Saturation:"),0.,10.,1.);
+    diaElemFloatResettable floatBoostHDR(boostAdjust,QT_TRANSLATE_NOOP("adm","_Boost (level multiplier):"),0.,10.,1.);
+
+    for(int i=0; i < sizeof(toneMapEntries)/sizeof(diaMenuEntry); i++)
+    {
+        menuToneMapHDR.link(&(toneMapEntries[i]), i, &floatSaturationHDR);
+        menuToneMapHDR.link(&(toneMapEntries[i]), i, &floatBoostHDR);
+    }
 
     diaElem *elems[NB_ELEMS]={
          &menuToneMapHDR
