@@ -151,6 +151,9 @@ protected:
 
     ADM_dragState dragState;
     QTimer dragTimer;
+    int navigateWhilePlayingState;
+    Action navigateWhilePlayingAction;
+    QTimer navigateWhilePlayingTimer;
     const  std::vector<IScriptEngine*>& _scriptEngines;
 
     void addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts);
@@ -208,7 +211,9 @@ private slots:
 
     void dragTimerTimeout(void);
     void busyTimerTimeout(void);
+    void navigateWhilePlayingTimerTimeout(void);
     void sendAction(Action a);
+    void navigateWhilePlaying(Action a);
     void actionSlot(Action a);
 
     void scriptFileActionHandler(void);

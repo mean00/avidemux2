@@ -522,6 +522,9 @@ void MainWindow::actionSlot(Action a)
 */
 void MainWindow::sendAction(Action a)
 {
+    if ((a>=ACT_Back1Second)&&(a<=ACT_Forward1Mn)&&playing)
+        navigateWhilePlaying(a);
+    else
     if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END && a!=ACT_Scale)
     {
         if (actionLock<=NAVIGATION_ACTION_LOCK_THRESHOLD)
@@ -533,6 +536,49 @@ void MainWindow::sendAction(Action a)
 }
 
 /**
+    \fn navigateWhilePlaying
+*/
+void MainWindow::navigateWhilePlaying(Action a)
+{
+    if (navigateWhilePlayingState != 0)
+        return;
+    emit actionSignal(ACT_PlayAvi);
+    printf("navigateWhilePlaying\n");
+    navigateWhilePlayingState = 1;
+    navigateWhilePlayingAction = a;
+    navigateWhilePlayingTimer.stop();
+    navigateWhilePlayingTimer.start(10);
+}
+
+/**
+ * \fn navigateWhilePlayingTimerTimeout
+ */
+void MainWindow::navigateWhilePlayingTimerTimeout(void)
+{
+    switch(navigateWhilePlayingState)
+    {
+        case 1:
+            if (!playing)
+            {
+                navigateWhilePlayingState++;
+                emit actionSignal(navigateWhilePlayingAction);
+            }
+            break;
+        case 2:
+            if (actionLock == 0)
+            {
+                navigateWhilePlayingState = 0;
+                navigateWhilePlayingTimer.stop();
+                emit actionSignal(ACT_PlayAvi);
+            }
+            break;
+        default:
+            navigateWhilePlayingState = 0;
+            navigateWhilePlayingTimer.stop();
+            break;
+    }
+}
+/**
     \fn ctor
 */
 MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEngines(scriptEngines), QMainWindow()
@@ -541,6 +587,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     qtRegisterDialog(this);
     ui.setupUi(this);
     dragState=dragState_Normal;
+    navigateWhilePlayingState=0;
     recentFiles = NULL;
     recentProjects = NULL;
     actionLock = 0;
@@ -585,6 +632,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
         
         connect( &dragTimer, SIGNAL(timeout()), this, SLOT(dragTimerTimeout()));
         connect( &busyTimer, SIGNAL(timeout()), this, SLOT(busyTimerTimeout()));
+        connect( &navigateWhilePlayingTimer, SIGNAL(timeout()), this, SLOT(navigateWhilePlayingTimerTimeout()));
     
 
    // Thumb slider
@@ -1037,6 +1085,8 @@ void MainWindow::buildActionLists(void)
     for(int i=1;i<ui.menuGo->actions().size();i++)
     { // let "Play/Stop" stay enabled during playback
         ActionsDisabledOnPlayback.push_back(ui.menuGo->actions().at(i));
+        if (myMenuGo.at(i).event == ACT_SelectTime)
+            break;
     }
 
     PUSH_FULL_MENU_PLAYBACK(menuFile,1)
