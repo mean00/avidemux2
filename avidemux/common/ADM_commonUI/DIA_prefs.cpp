@@ -257,23 +257,6 @@ std::string currentSdlDriver=getSdlDriverName();
         olddevice=newdevice=AVDM_getCurrentDevice();
         // Audio device
         /************************ Build diaelems ****************************************/
-#ifdef HW_ACCELERATED_DECODING
-    #if defined(USE_DXVA2)
-        diaElemToggle useDxva2(&bdxva2,QT_TRANSLATE_NOOP("adm","Decode video using DXVA2 (windows)"));
-        diaElemToggle dxva2OverrideVersion(&bdxva2_override_version,QT_TRANSLATE_NOOP("adm","Ignore driver blacklist (Intel)"));
-        diaElemToggle dxva2OverrideProfile(&bdxva2_override_profile,QT_TRANSLATE_NOOP("adm","Ignore codec blacklist (Intel, HEVC 10bit)"));
-    #elif defined(USE_VIDEOTOOLBOX)
-        diaElemToggle useVideoToolbox(&bvideotoolbox,QT_TRANSLATE_NOOP("adm","Decode video using VideoToolbox (macOS)"));
-    #else
-        diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU (NVIDIA)"));
-        diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
-    #endif
-    #ifndef USE_VIDEOTOOLBOX
-        diaElemReadOnlyText hwAccelText(NULL,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"),NULL);
-    #endif
-        diaElemReadOnlyText hwAccelMultiThreadText(NULL,QT_TRANSLATE_NOOP("adm","Enabling Hw decoding disables multi-threading, restart application to apply changes"),NULL);
-#endif
-        diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
         diaElemToggle resetEncoder(&loadDefault,QT_TRANSLATE_NOOP("adm","_Revert to saved default output settings on video load"));
         diaElemToggle enableAltShortcuts(&altKeyboardShortcuts,QT_TRANSLATE_NOOP("adm","_Enable alternative keyboard shortcuts"));
@@ -385,21 +368,6 @@ std::string currentSdlDriver=getSdlDriverName();
         frameAvisynth.swallow(&togAskAvisynthPort);
         frameAvisynth.swallow(&uintDefaultPortAvisynth);
 
-        // HDR
-        diaElemFrame frameHDR(QT_TRANSLATE_NOOP("adm","HDR"));
-        diaMenuEntry toneMapEntries[]={
-                              {0,       QT_TRANSLATE_NOOP("adm","Disabled"),NULL}
-                             ,{1,       QT_TRANSLATE_NOOP("adm","Fast YUV"),NULL}
-                             ,{2,       QT_TRANSLATE_NOOP("adm","RGB clipping"),NULL}
-                             ,{3,       QT_TRANSLATE_NOOP("adm","RGB Reinhard"),NULL}
-                             ,{4,       QT_TRANSLATE_NOOP("adm","RGB Hable"),NULL}
-                             //,{2,      QT_TRANSLATE_NOOP("adm","TODO"),NULL}
-        };
-        diaElemMenu menuToneMapHDR(&toneMappingHDR,QT_TRANSLATE_NOOP("adm","Default _tone mapping method:"),NB_ITEMS(toneMapEntries),toneMapEntries);
-        diaElemFloatResettable floatTargetLumHDR(&targetLumHDR,QT_TRANSLATE_NOOP("adm","Target peak luminance (nits):"),0.,1000.,DEFAULT_TARGET_LUMINANCE_HDR);
-        frameHDR.swallow(&menuToneMapHDR);
-        frameHDR.swallow(&floatTargetLumHDR);
-
         // Editor cache
         diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
         diaElemUInteger cacheSize(&editor_cache_size,QT_TRANSLATE_NOOP("adm","_Cache size:"),8,16);
@@ -494,18 +462,6 @@ std::string currentSdlDriver=getSdlDriverName();
         }
         diaElemMenuDynamic menuAudio(&newdevice,QT_TRANSLATE_NOOP("adm","_AudioDevice"), nbAudioDevice+1,
                     audioDeviceItems,NULL);
-        // default Post proc
-     diaElemToggle     fhzd(&hzd,QT_TRANSLATE_NOOP("adm","_Horizontal deblocking"));
-     diaElemToggle     fvzd(&vzd,QT_TRANSLATE_NOOP("adm","_Vertical deblocking"));
-     diaElemToggle     fdring(&dring,QT_TRANSLATE_NOOP("adm","De_ringing"));
-     diaElemUInteger   postProcStrength(&pp_value,QT_TRANSLATE_NOOP("adm","_Strength:"),0,5);
-     diaElemFrame      framePP(QT_TRANSLATE_NOOP("adm","Default Postprocessing"));
-
-     framePP.swallow(&fhzd);
-     framePP.swallow(&fvzd);
-     framePP.swallow(&fdring);
-     framePP.swallow(&postProcStrength);
-
 
 //  -- select language
         typedef struct  { const char *lang;const char *desc;}languageDescriptor;
@@ -547,11 +503,11 @@ std::string currentSdlDriver=getSdlDriverName();
          /* Automation */
 
         /* Import */
-        diaElem *diaImport[]={&frameMultiLoad, &framePics, &frameAvisynth, &frameHDR};
+        diaElem *diaImport[]={&frameMultiLoad, &framePics, &frameAvisynth};
         diaElemTabs tabImport(QT_TRANSLATE_NOOP("adm","Import"),NB_ELEM(diaImport),diaImport);
 
         /* Output */
-        diaElem *diaOutput[]={&allowAnyMpeg, &useLastReadAsTarget, &firstPassLogFilesAutoDelete, &frameCache};
+        diaElem *diaOutput[]={&allowAnyMpeg, &useLastReadAsTarget, &firstPassLogFilesAutoDelete};
         diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),NB_ELEM(diaOutput),diaOutput);
 
         /* Audio */
@@ -569,10 +525,50 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemTabs tabAudio(QT_TRANSLATE_NOOP("adm","Audio"),NB_ELEM(diaAudio),diaAudio);
 #endif
 
+        /* Post-Processing */
+        diaElemToggle fhzd(&hzd,QT_TRANSLATE_NOOP("adm","_Horizontal deblocking"));
+        diaElemToggle fvzd(&vzd,QT_TRANSLATE_NOOP("adm","_Vertical deblocking"));
+        diaElemToggle fdring(&dring,QT_TRANSLATE_NOOP("adm","De_ringing"));
+        diaElemUInteger postProcStrength(&pp_value,QT_TRANSLATE_NOOP("adm","_Strength:"),0,5);
+
+        diaElemFrame framePP(QT_TRANSLATE_NOOP("adm","Default Postprocessing"));
+        framePP.swallow(&fhzd);
+        framePP.swallow(&fvzd);
+        framePP.swallow(&fdring);
+        framePP.swallow(&postProcStrength);
+
+        // HDR
+        diaMenuEntry toneMapEntries[] = {
+             {0,    QT_TRANSLATE_NOOP("adm","Disabled"),NULL}
+            ,{1,    QT_TRANSLATE_NOOP("adm","Fast YUV"),NULL}
+            ,{2,    QT_TRANSLATE_NOOP("adm","RGB clipping"),NULL}
+            ,{3,    QT_TRANSLATE_NOOP("adm","RGB Reinhard"),NULL}
+            ,{4,    QT_TRANSLATE_NOOP("adm","RGB Hable"),NULL}
+            //,{2,    QT_TRANSLATE_NOOP("adm","TODO"),NULL}
+        };
+        diaElemMenu menuToneMapHDR(&toneMappingHDR,QT_TRANSLATE_NOOP("adm","Default _tone mapping method:"),NB_ITEMS(toneMapEntries),toneMapEntries);
+        diaElemFloatResettable floatTargetLumHDR(&targetLumHDR,QT_TRANSLATE_NOOP("adm","Target peak luminance (nits):"),0.,1000.,DEFAULT_TARGET_LUMINANCE_HDR);
+
+        diaElemFrame frameHDR(QT_TRANSLATE_NOOP("adm","HDR"));
+        frameHDR.swallow(&menuToneMapHDR);
+        frameHDR.swallow(&floatTargetLumHDR);
+
+        diaElem *diaPostProc[] = { &framePP, &frameHDR };
+        diaElemTabs tabPostProc(QT_TRANSLATE_NOOP("adm","Post-Processing"),NB_ELEM(diaPostProc),diaPostProc);
 
         /* Display */
         diaElemToggle togDisplayRefreshCap(&refreshCapEnabled,QT_TRANSLATE_NOOP("adm","_Limit Refresh Rate"));
         diaElemUInteger displayRefreshCap(&refreshCapValue,QT_TRANSLATE_NOOP("adm","Refresh Rate Cap (ms)"),10,1000);
+
+#ifdef USE_OPENGL
+        diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
+        diaElemReadOnlyText openGlText(NULL,QT_TRANSLATE_NOOP("adm","OpenGL video display and filters require "
+            "OpenGL to be enabled and working at application startup to be available"));
+
+        diaElemFrame frameOpenGL(QT_TRANSLATE_NOOP("adm","OpenGL"));
+        frameOpenGL.swallow(&useOpenGl);
+        frameOpenGL.swallow(&openGlText);
+#endif
         diaElemFrame frameRC(QT_TRANSLATE_NOOP("adm","GUI Rendering Options")); // a hack to fix tabbing order
 
         // Packing the following elements into frameRC rectifies otherwise wrong tabbing order:
@@ -580,25 +576,55 @@ std::string currentSdlDriver=getSdlDriverName();
         // toggle resulting in a tabbing order 1-6-7-2-3-4-5-8, counting elements from top to bottom.
         // With this extra frame we get 1-2-3-4-5-6-7-8 (video mode, hor. deblocking, vert. delocking,
         // deringing, deringing strength, OpenGL toggle, refr. rate cap toggle, refr. rate spinbox).
-        frameRC.swallow(&useOpenGl);
         frameRC.swallow(&togDisplayRefreshCap);
         frameRC.swallow(&displayRefreshCap);
 
-#ifdef USE_SDL
-        diaElem *diaVideo[]={&menuVideoMode,sdlMenu,&framePP,&frameRC};
-#else
-        diaElem *diaVideo[]={&menuVideoMode,&framePP,&frameRC};
+        diaElem *diaVideo[] = {
+            &menuVideoMode,
+#ifdef USE_OPENGL
+            &frameOpenGL,
 #endif
+#ifdef USE_SDL
+            sdlMenu,
+#endif
+            &frameRC,
+            &frameCache
+        };
         diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),NB_ELEM(diaVideo),diaVideo);
+
         /* HW accel */
-#ifdef USE_DXVA2
-        diaElem *diaHwDecoding[]={&useDxva2,&dxva2OverrideVersion,&dxva2OverrideProfile,&hwAccelMultiThreadText,&hwAccelText};
-        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),NB_ELEM(diaHwDecoding),diaHwDecoding);
-#elif defined(USE_VIDEOTOOLBOX)
-        diaElem *diaHwDecoding[]={&useVideoToolbox,&hwAccelMultiThreadText};
-        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),NB_ELEM(diaHwDecoding),diaHwDecoding);
-#elif defined(HW_ACCELERATED_DECODING)
-        diaElem *diaHwDecoding[]={&useVdpau,&useLibVA,&hwAccelMultiThreadText,&hwAccelText};
+#ifdef HW_ACCELERATED_DECODING
+    #if defined(USE_DXVA2)
+        diaElemToggle useDxva2(&bdxva2,QT_TRANSLATE_NOOP("adm","Decode video using DXVA2 (windows)"));
+        diaElemToggle dxva2OverrideVersion(&bdxva2_override_version,QT_TRANSLATE_NOOP("adm","Ignore driver blacklist (Intel)"));
+        diaElemToggle dxva2OverrideProfile(&bdxva2_override_profile,QT_TRANSLATE_NOOP("adm","Ignore codec blacklist (Intel, HEVC 10bit)"));
+    #elif defined(USE_VIDEOTOOLBOX)
+        diaElemToggle useVideoToolbox(&bvideotoolbox,QT_TRANSLATE_NOOP("adm","Decode video using VideoToolbox (macOS)"));
+    #else
+        diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU (NVIDIA)"));
+        diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
+    #endif
+    #ifndef USE_VIDEOTOOLBOX
+        diaElemReadOnlyText hwAccelText(NULL,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"),NULL);
+    #endif
+        diaElemReadOnlyText hwAccelMultiThreadText(NULL,QT_TRANSLATE_NOOP("adm","Enabling Hw decoding disables multi-threading, restart application to apply changes"),NULL);
+
+        diaElem *diaHwDecoding[] = {
+    #ifdef USE_DXVA2
+            &useDxva2,
+            &dxva2OverrideVersion,
+            &dxva2OverrideProfile,
+    #elif defined(USE_VIDEOTOOLBOX)
+            &useVideoToolbox,
+    #else
+            &useVdpau,
+            &useLibVA,
+    #endif
+            &hwAccelMultiThreadText
+    #ifndef USE_VIDEOTOOLBOX
+            ,&hwAccelText
+    #endif
+        };
         diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),NB_ELEM(diaHwDecoding),diaHwDecoding);
 #endif
 
@@ -610,11 +636,20 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElem *diaThreading[]={&frameThread, &framePriority};
         diaElemTabs tabThreading(QT_TRANSLATE_NOOP("adm","Threading"),NB_ELEM(diaThreading),diaThreading);
 
+        diaElemTabs *tabs[] = {
+            &tabUser,
+            &tabImport,
+            &tabOutput,
+            &tabAudio,
+            &tabVideo,
+            &tabPostProc,
 #ifdef HW_ACCELERATED_DECODING
-        diaElemTabs *tabs[]={&tabUser, &tabImport, &tabOutput, &tabAudio, &tabVideo, &tabHwDecoding, &tabCpu, &tabThreading};
-#else
-        diaElemTabs *tabs[]={&tabUser, &tabImport, &tabOutput, &tabAudio, &tabVideo, &tabCpu, &tabThreading};
+            &tabHwDecoding,
 #endif
+            &tabCpu,
+            &tabThreading
+        };
+
 #undef NB_ELEM
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElemTabs *)
         void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),NB_ELEM(tabs),tabs);
@@ -626,10 +661,6 @@ std::string currentSdlDriver=getSdlDriverName();
     #ifndef USE_LIBVA
         useLibVA.enable(false);
     #endif
-#endif
-
-#ifndef USE_OPENGL
-        useOpenGl.enable(false);
 #endif
 
         uint8_t dialogAccepted=0;
