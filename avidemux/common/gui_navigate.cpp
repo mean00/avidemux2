@@ -46,6 +46,7 @@ static uint32_t jumpTarget[4] = {0};
 bool   GUI_infiniteForward(uint64_t pts);
 bool   GUI_lastFrameBeforePts(uint64_t pts);
 bool   GUI_SeekByTime(int64_t time);
+bool   GUI_CoarseSeekByTime(int64_t time);
 void  GUI_PrevCutPoint();
 void  GUI_NextCutPoint();
 bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
@@ -325,6 +326,12 @@ static int ignore_change=0;
             stagedActionSuccess = 0;
             break;
         }
+      case ACT_SeekBackward:
+            GUI_CoarseSeekByTime(-4000000LL);
+            break;
+      case ACT_SeekForward:
+            GUI_CoarseSeekByTime(4000000LL);
+            break;
       default:
       ADM_assert(0);
       break;
@@ -623,6 +630,54 @@ bool GUI_SeekByTime(int64_t time)
     ADM_info("Seek to:%s ms \n",ADM_us2plain(pts));
     return GUI_lastFrameBeforePts(pts);
 }
+
+/**
+    \fn GUI_SeekByTime
+*/
+bool GUI_CoarseSeekByTime(int64_t time)
+{
+    uint64_t pts=admPreview::getCurrentPts();
+
+    if (time < 0 && pts < -time)
+    {   // we can't assume that pts=0 were legitimate, rewind to the first frame instead
+        video_body->rewind();
+        admPreview::samePicture();
+        GUI_setCurrentFrameAndTime();
+        return true;
+    }else
+    {
+        pts += time;
+    }
+    uint64_t totalDuration = video_body->getVideoDuration();
+    if(pts>totalDuration) pts=totalDuration;
+    ADM_info("Coarse Seek to:%s ms \n",ADM_us2plain(pts));
+    if (time >= 0)
+    {
+        if(false==video_body->getNKFramePTS(&pts))
+        {
+            ADM_warning("Cannot seek to %" PRIu64" ms\n",pts/1000);
+            return false;
+        }
+    }
+    else
+    {
+        if(false==video_body->getPKFramePTS(&pts))
+        {
+            ADM_warning("Cannot seek to %" PRIu64" ms\n",pts/1000);
+            return false;
+        }
+    }
+    ADM_info("Actual Seeking to  Time:%s ms \n",ADM_us2plain(pts));
+    if(false==admPreview::seekToIntraPts(pts))
+    {
+        ADM_warning("Coarse Seeking: Seeking to intra at %" PRIu64" ms failed\n",pts/1000);
+        return false;
+    }
+    GUI_setCurrentFrameAndTime();
+    UI_purge();
+    return true;
+}
+
 
 /**
     \fn GUI_PrevCutPoint
