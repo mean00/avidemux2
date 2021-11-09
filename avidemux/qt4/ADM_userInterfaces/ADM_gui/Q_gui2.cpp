@@ -525,10 +525,10 @@ void MainWindow::sendAction(Action a)
     if (((a>=ACT_Back1Second)&&(a<=ACT_Forward1Mn) || (a==ACT_GotoMarkA) || (a==ACT_GotoMarkB)) && (playing || (navigateWhilePlayingState != 0)))
         navigateWhilePlaying(a);
     else
-    if ((a==ACT_PreviousFrame) && (playing || (navigateWhilePlayingState != 0)))
+    if (((a==ACT_PreviousFrame)||(a==ACT_PreviousKFrame)) && (playing || (navigateWhilePlayingState != 0)))
         navigateWhilePlaying(ACT_SeekBackward);
     else
-    if ((a==ACT_NextFrame) && (playing || (navigateWhilePlayingState != 0)))
+    if (((a==ACT_NextFrame)||(a==ACT_NextKFrame)) && (playing || (navigateWhilePlayingState != 0)))
         navigateWhilePlaying(ACT_SeekForward);
     else
     if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END && a!=ACT_Scale)
