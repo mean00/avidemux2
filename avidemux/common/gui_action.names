@@ -53,6 +53,8 @@ ACT(GotoMarkB)
 ACT(Scale)
 ACT(FineScale)
 ACT(Refresh)
+ACT(SeekBackward)
+ACT(SeekForward)
 ACT(NAVIGATE_END)
 //ACT(JumpToTime)
 
