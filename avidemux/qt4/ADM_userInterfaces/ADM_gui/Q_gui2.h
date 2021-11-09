@@ -153,6 +153,7 @@ protected:
     QTimer dragTimer;
     int navigateWhilePlayingState;
     Action navigateWhilePlayingAction;
+    Action navigateWhilePlayingPendingAction;
     QTimer navigateWhilePlayingTimer;
     const  std::vector<IScriptEngine*>& _scriptEngines;
 

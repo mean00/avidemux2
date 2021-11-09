@@ -522,13 +522,13 @@ void MainWindow::actionSlot(Action a)
 */
 void MainWindow::sendAction(Action a)
 {
-    if (((a>=ACT_Back1Second)&&(a<=ACT_Forward1Mn) || (a==ACT_GotoMarkA) || (a==ACT_GotoMarkB))&&playing)
+    if (((a>=ACT_Back1Second)&&(a<=ACT_Forward1Mn) || (a==ACT_GotoMarkA) || (a==ACT_GotoMarkB)) && (playing || (navigateWhilePlayingState != 0)))
         navigateWhilePlaying(a);
     else
-    if ((a==ACT_PreviousFrame) && playing)
+    if ((a==ACT_PreviousFrame) && (playing || (navigateWhilePlayingState != 0)))
         navigateWhilePlaying(ACT_SeekBackward);
     else
-    if ((a==ACT_NextFrame) && playing)
+    if ((a==ACT_NextFrame) && (playing || (navigateWhilePlayingState != 0)))
         navigateWhilePlaying(ACT_SeekForward);
     else
     if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END && a!=ACT_Scale)
@@ -547,11 +547,15 @@ void MainWindow::sendAction(Action a)
 void MainWindow::navigateWhilePlaying(Action a)
 {
     if (navigateWhilePlayingState != 0)
+    {
+        navigateWhilePlayingPendingAction = a;
         return;
+    }
     emit actionSignal(ACT_PlayAvi);
     printf("navigateWhilePlaying\n");
     navigateWhilePlayingState = 1;
     navigateWhilePlayingAction = a;
+    navigateWhilePlayingPendingAction = ACT_INVALID;
     navigateWhilePlayingTimer.stop();
     navigateWhilePlayingTimer.start(10);
 }
@@ -573,6 +577,13 @@ void MainWindow::navigateWhilePlayingTimerTimeout(void)
         case 2:
             if (actionLock == 0)    // wait for action to completed
             {
+                if (navigateWhilePlayingPendingAction != ACT_INVALID)
+                {
+                    navigateWhilePlayingAction = navigateWhilePlayingPendingAction;
+                    navigateWhilePlayingState = 1;
+                    navigateWhilePlayingPendingAction = ACT_INVALID;
+                    break;
+                }
                 navigateWhilePlayingState = 0;
                 navigateWhilePlayingTimer.stop();
                 emit actionSignal(ACT_PlayAvi);

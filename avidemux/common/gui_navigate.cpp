@@ -673,7 +673,7 @@ bool GUI_CoarseSeekByTime(int64_t time)
         ADM_warning("Coarse Seeking: Seeking to intra at %" PRIu64" ms failed\n",pts/1000);
         return false;
     }
-    UI_setCurrentTime(pts);
+    GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
 }
