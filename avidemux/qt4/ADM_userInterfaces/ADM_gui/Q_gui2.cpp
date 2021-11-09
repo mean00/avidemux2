@@ -421,7 +421,7 @@ void MainWindow::previewModeChangedFromMenu(bool flop)
 
 void MainWindow::previewModeChangedFromToolbar(bool flop)
 {
-    ui.menuVideo->actions().at(3)->setChecked(flop);
+    ui.menuVideo->actions().at(4)->setChecked(flop);
     sendAction(ACT_PreviewChanged);
 }
 
@@ -722,7 +722,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
 
     // Crash in some cases addScriptReferencesToHelpMenu();
-    connect(ui.menuVideo->actions().at(3),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromMenu(bool)));
+    connect(ui.menuVideo->actions().at(4),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromMenu(bool)));
     connect(ui.toolBar->actions().at(5),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromToolbar(bool)));
 
     // Add action to show all dock widgets and move the toolbar to its default area
@@ -2374,7 +2374,7 @@ void UI_applySettings(void)
 */
 int UI_getCurrentPreview(void)
 {
-    if(WIDGET(menuVideo)->actions().at(3)->isChecked() || WIDGET(toolBar)->actions().at(5)->isChecked())
+    if(WIDGET(menuVideo)->actions().at(4)->isChecked() || WIDGET(toolBar)->actions().at(5)->isChecked())
     {
         printf("Output is ON\n");
         return 1;
@@ -2389,7 +2389,7 @@ int UI_getCurrentPreview(void)
 */
 void UI_setCurrentPreview(int ne)
 {
-    WIDGET(menuVideo)->actions().at(3)->setChecked(!!ne);
+    WIDGET(menuVideo)->actions().at(4)->setChecked(!!ne);
     WIDGET(toolBar)->actions().at(5)->setChecked(!!ne);
 }
 /**
