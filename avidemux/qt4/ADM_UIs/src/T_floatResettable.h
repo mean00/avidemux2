@@ -17,6 +17,7 @@ namespace ADM_Qt4Factory
 
     private slots:
         void    reset(bool checked);
+        void    valueChangedSlot(double v);
 
     private:
         double  _rst;

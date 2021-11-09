@@ -126,7 +126,9 @@ ADM_QDoubleSpinboxResettable::ADM_QDoubleSpinboxResettable(
     QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     button = new QPushButton(QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Reset")), parent);
+    button->setEnabled(current != _rst);
 
+    QObject::connect(box, SIGNAL(valueChanged(double)), this, SLOT(valueChangedSlot(double)));
     QObject::connect(button, SIGNAL(clicked(bool)), this, SLOT(reset(bool)));
 
     QHBoxLayout *hboxLayout = new QHBoxLayout();
@@ -157,13 +159,22 @@ void ADM_QDoubleSpinboxResettable::reset(bool checked)
 }
 
 /**
+    \fn valueChangedSlot
+*/
+void ADM_QDoubleSpinboxResettable::valueChangedSlot(double v)
+{
+    if(box->isEnabled())
+        button->setEnabled(v != _rst);
+}
+
+/**
     \fn enable
 */
 void ADM_QDoubleSpinboxResettable::enable(bool onoff)
 {
     text->setEnabled(onoff);
     box->setEnabled(onoff);
-    button->setEnabled(onoff);
+    button->setEnabled(onoff ? box->value() != _rst : false);
 }
 
 /**
