@@ -1030,10 +1030,11 @@ ADM_analyzerDialog::ADM_analyzerDialog(QWidget *parent) : QDialog(parent, Qt::To
             case 3: btns[i]->setText(QApplication::translate("seekablePreviewDialog", "Histograms", 0)); break;
         }
         btns[i]->setCheckable(true);
-        btns[i]->setChecked(true);
+        btns[i]->setChecked(i%2==0);    // vectorscope + RGB
+        btns[i]->setStyleSheet("QPushButton { background-color: #888888; border: none; padding: 8px;}\nQPushButton:checked { background-color: #33FF33; border: none; padding: 8px;}");
         connect(btns[i],SIGNAL(toggled(bool)),this,SLOT(btnToggled(bool)));
         hboxlayout->addWidget(btns[i]);
-        btnChkd[i] = true;
+        btnChkd[i] = btns[i]->isChecked();
     }
     vboxlayout->addLayout(hboxlayout);
     for (int i=0; i<4; i++)
@@ -1054,6 +1055,7 @@ ADM_analyzerDialog::ADM_analyzerDialog(QWidget *parent) : QDialog(parent, Qt::To
         gv[i]->setScene(gsc[i]);
         gv[i]->scale(1/3.,1/3.);
         vboxlayout->addWidget(gv[i]);
+        gv[i]->setVisible(btns[i]->isChecked());
     }
     this->setLayout(vboxlayout);
 }
