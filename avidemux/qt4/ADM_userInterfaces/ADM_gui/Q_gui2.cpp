@@ -522,7 +522,7 @@ void MainWindow::actionSlot(Action a)
 */
 void MainWindow::sendAction(Action a)
 {
-    if ((a>=ACT_Back1Second)&&(a<=ACT_Forward1Mn)&&playing)
+    if (((a>=ACT_Back1Second)&&(a<=ACT_Forward1Mn) || (a==ACT_GotoMarkA) || (a==ACT_GotoMarkB))&&playing)
         navigateWhilePlaying(a);
     else
     if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END && a!=ACT_Scale)
@@ -558,14 +558,14 @@ void MainWindow::navigateWhilePlayingTimerTimeout(void)
     switch(navigateWhilePlayingState)
     {
         case 1:
-            if (!playing)
+            if (!playing)   // wait for stop
             {
                 navigateWhilePlayingState++;
                 emit actionSignal(navigateWhilePlayingAction);
             }
             break;
         case 2:
-            if (actionLock == 0)
+            if (actionLock == 0)    // wait for action to completed
             {
                 navigateWhilePlayingState = 0;
                 navigateWhilePlayingTimer.stop();
@@ -1084,6 +1084,10 @@ void MainWindow::buildActionLists(void)
 
     for(int i=1;i<ui.menuGo->actions().size();i++)
     { // let "Play/Stop" stay enabled during playback
+        if (myMenuGo.at(i).event == ACT_GotoMarkA)
+            continue;
+        if (myMenuGo.at(i).event == ACT_GotoMarkB)
+            continue;
         ActionsDisabledOnPlayback.push_back(ui.menuGo->actions().at(i));
         if (myMenuGo.at(i).event == ACT_SelectTime)
             break;
@@ -1175,8 +1179,8 @@ void MainWindow::buildButtonLists(void)
     ADD_BUTTON_PLAYBACK(toolButtonNextBlackFrame)
     ADD_BUTTON_PLAYBACK(toolButtonFirstFrame)
     ADD_BUTTON_PLAYBACK(toolButtonLastFrame)
-    ADD_BUTTON_PLAYBACK(toolButtonBackOneMinute)
-    ADD_BUTTON_PLAYBACK(toolButtonForwardOneMinute)
+    //ADD_BUTTON_PLAYBACK(toolButtonBackOneMinute)
+    //ADD_BUTTON_PLAYBACK(toolButtonForwardOneMinute)
 
 #define ADD_PUSHBUTTON_LOADED(x)    PushButtonsAvailableWhenFileLoaded.push_back(ui.x);
 #define ADD_PUSHBUTTON_PLAYBACK(x)    PushButtonsDisabledOnPlayback.push_back(ui.x);
