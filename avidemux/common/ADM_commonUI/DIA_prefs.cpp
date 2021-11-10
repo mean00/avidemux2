@@ -59,6 +59,7 @@ uint32_t msglevel=2;
 
 uint32_t mixer=0;
 bool     doAutoUpdate=false;
+bool     darkMode=false;
 bool     loadDefault=false;
 char     *alsaDevice=NULL;
 
@@ -209,6 +210,8 @@ std::string currentSdlDriver=getSdlDriverName();
         if(!prefs->get(FEATURES_MPEG_NO_LIMIT,&mpeg_no_limit)) mpeg_no_limit=0;
 
         prefs->get(UPDATE_ENABLED,&doAutoUpdate);
+        
+        prefs->get(FEATURES_DARK_MODE,&darkMode);
 
         prefs->get(RESET_ENCODER_ON_VIDEO_LOAD,&loadDefault);
 
@@ -263,6 +266,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle swapUpDownKeys(&swapUpDown,QT_TRANSLATE_NOOP("adm","Re_verse UP and DOWN arrow keys for navigation"));
         diaElemToggle swapMarkers(&useSwap,QT_TRANSLATE_NOOP("adm","_Swap markers if marker A is set past marker B or marker B before A in video"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
+        diaElemToggle darkModeOption(&darkMode,QT_TRANSLATE_NOOP("adm","_Dark mode (restart required)"));
 
 
         diaElemFrame frameSimd(QT_TRANSLATE_NOOP("adm","SIMD"));
@@ -497,7 +501,7 @@ std::string currentSdlDriver=getSdlDriverName();
 //--
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMarkers, &checkForUpdate};
+        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMarkers, &checkForUpdate, &darkModeOption};
         diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),NB_ELEM(diaUser),diaUser);
 
          /* Automation */
@@ -736,6 +740,8 @@ std::string currentSdlDriver=getSdlDriverName();
             //
 
             prefs->set(UPDATE_ENABLED,doAutoUpdate);
+            
+            prefs->set(FEATURES_DARK_MODE,darkMode);
             // Video render
             prefs->set(VIDEODEVICE,render);
             // Auto-append

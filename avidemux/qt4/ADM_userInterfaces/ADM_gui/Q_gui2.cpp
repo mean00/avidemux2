@@ -20,6 +20,8 @@
 #include <QGraphicsView>
 #include <QtCore/QDir>
 #include <QMessageBox>
+#include <QPalette>
+#include <QColor>
 #if QT_VERSION < QT_VERSION_CHECK(5,11,0)
 #   include <QDesktopWidget>
 #else
@@ -2228,6 +2230,38 @@ int UI_Init(int nargc, char **nargv)
     myApplication=new myQApplication (global_argc, global_argv);
     myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
     myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
+
+    bool darkMode=false;
+    if (prefs->get(FEATURES_DARK_MODE,&darkMode))
+    {
+        if (darkMode)
+        {
+            QPalette darkPalette;
+            darkPalette.setColor(QPalette::Window, QColor(32,32,32));
+            darkPalette.setColor(QPalette::WindowText, QColor(234,234,234));
+            darkPalette.setColor(QPalette::Base, QColor(55,55,55));
+            darkPalette.setColor(QPalette::AlternateBase, QColor(42,42,42));
+            darkPalette.setColor(QPalette::ToolTipBase, QColor(42, 130, 218));
+            darkPalette.setColor(QPalette::ToolTipText, QColor(234,234,234));
+            darkPalette.setColor(QPalette::Text, QColor(234,234,234));
+            darkPalette.setColor(QPalette::Button, QColor(42,42,42));
+            darkPalette.setColor(QPalette::ButtonText, QColor(234,234,234));
+            darkPalette.setColor(QPalette::BrightText, Qt::red);
+            darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
+
+            darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
+            darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+
+            darkPalette.setColor(QPalette::Active, QPalette::Button, QColor(128, 128, 128).darker());
+            darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(128, 128, 128));
+            darkPalette.setColor(QPalette::Disabled, QPalette::WindowText, QColor(128, 128, 128));
+            darkPalette.setColor(QPalette::Disabled, QPalette::Text, QColor(128, 128, 128));
+            darkPalette.setColor(QPalette::Disabled, QPalette::Light, QColor(42,42,42));
+
+            qApp->setPalette(darkPalette);
+        }
+    }
+    
 #ifdef __APPLE__
     Q_INIT_RESOURCE(avidemux_osx);
 #elif defined(_WIN32)
