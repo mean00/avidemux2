@@ -1224,7 +1224,7 @@ void MainWindow::buildButtonLists(void)
 */
 void MainWindow::setMenuItemsEnabledState(void)
 {
-    if(playing) // this actually doesn't work as it should
+    if(playing || (navigateWhilePlayingState != 0)) // this actually doesn't work as it should
     {
         int n=ActionsDisabledOnPlayback.size();
         for(int i=0;i<n;i++)
