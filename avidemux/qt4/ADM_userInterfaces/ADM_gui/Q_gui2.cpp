@@ -130,6 +130,9 @@ static bool uiIsMaximized=false;
 
 static bool needsResizing=false;
 
+static QAction *findAction(std::vector<MenuEntry> *list, Action action);
+static QAction *findActionInToolBar(QToolBar *tb, Action action);
+
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
 #define CONNECT(object,zzz) connect( (ui.object),SIGNAL(triggered()),this,SLOT(buttonPressed()));
@@ -415,13 +418,17 @@ void MainWindow::audioToggled(bool checked)
 
 void MainWindow::previewModeChangedFromMenu(bool flop)
 {
-    ui.toolBar->actions().at(5)->setChecked(flop);
+    QAction *previewFiltered = findActionInToolBar(ui.toolBar, ACT_PreviewChanged);
+    if(previewFiltered)
+        previewFiltered->setChecked(flop);
     sendAction(ACT_PreviewChanged);
 }
 
 void MainWindow::previewModeChangedFromToolbar(bool flop)
 {
-    ui.menuVideo->actions().at(3)->setChecked(flop);
+    QAction *previewFiltered = findAction(&myMenuVideo, ACT_PreviewChanged);
+    if(previewFiltered)
+        previewFiltered->setChecked(flop);
     sendAction(ACT_PreviewChanged);
 }
 
@@ -722,8 +729,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
 
     // Crash in some cases addScriptReferencesToHelpMenu();
-    connect(ui.menuVideo->actions().at(3),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromMenu(bool)));
-    connect(ui.toolBar->actions().at(5),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromToolbar(bool)));
+    QAction *previewFiltered = findAction(&myMenuVideo, ACT_PreviewChanged);
+    if(previewFiltered)
+        connect(previewFiltered, SIGNAL(toggled(bool)), this, SLOT(previewModeChangedFromMenu(bool)));
+    previewFiltered = findActionInToolBar(ui.toolBar, ACT_PreviewChanged);
+    if(previewFiltered)
+        connect(previewFiltered, SIGNAL(toggled(bool)), this, SLOT(previewModeChangedFromToolbar(bool)));
 
     // Add action to show all dock widgets and move the toolbar to its default area
     QAction *restoreDefaults = new QAction(QT_TRANSLATE_NOOP("qgui2","Restore defaults"),this);
@@ -818,7 +829,7 @@ void MainWindow::searchToolBar(QAction *action)
 /**
     \fn findActionInToolBar
 */
-static QAction *findActionInToolBar(QToolBar *tb, Action action)
+QAction *findActionInToolBar(QToolBar *tb, Action action)
 {
     toolBarTranslate *t = toolbar;
     const char *name = NULL;
@@ -851,7 +862,7 @@ static QAction *findActionInToolBar(QToolBar *tb, Action action)
 /**
     \fn getMenuEntryForAction
 */
-static const MenuEntry *getMenuEntryForAction(std::vector<MenuEntry> *list, QAction *action)
+const MenuEntry *getMenuEntryForAction(std::vector<MenuEntry> *list, QAction *action)
 {
     for(int i=0; i < list->size(); i++)
     {
@@ -2374,7 +2385,11 @@ void UI_applySettings(void)
 */
 int UI_getCurrentPreview(void)
 {
-    if(WIDGET(menuVideo)->actions().at(3)->isChecked() || WIDGET(toolBar)->actions().at(5)->isChecked())
+    QAction *a = findAction(&myMenuVideo, ACT_PreviewChanged);
+    QAction *b = findActionInToolBar(WIDGET(toolBar), ACT_PreviewChanged);
+    bool filtered = (a ? a->isChecked() : false) || (b ? b->isChecked() : false);
+
+    if(filtered)
     {
         printf("Output is ON\n");
         return 1;
@@ -2389,8 +2404,12 @@ int UI_getCurrentPreview(void)
 */
 void UI_setCurrentPreview(int ne)
 {
-    WIDGET(menuVideo)->actions().at(3)->setChecked(!!ne);
-    WIDGET(toolBar)->actions().at(5)->setChecked(!!ne);
+    QAction *preview = findAction(&myMenuVideo, ACT_PreviewChanged);
+    if(preview)
+        preview->setChecked(!!ne);
+    preview = findActionInToolBar(WIDGET(toolBar), ACT_PreviewChanged);
+    if(preview)
+        preview->setChecked(!!ne);
 }
 /**
         \fn FatalFunctionQt
