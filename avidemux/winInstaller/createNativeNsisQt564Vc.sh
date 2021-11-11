@@ -26,5 +26,5 @@ rm -f install/*
 #touch "Build Info.txt"
 #touch "ChangeLog.html"
 #touch "change.css"
-"${NSIS}"  -DAPI_VERSION=2.7  -DEXTRA=" VC++"  -DNSIDIR=${INSTALLER_FOLDER} -DSOURCE_FOLDER=${TOP_FOLDER}  -DDEV_FOLDER="$2" -DBINARY_FOLDER="$2" ${INSTALLER_FOLDER}/avidemux_nativeVcQt5.nsi -V4
+"${NSIS}"  -DAPI_VERSION=2.8  -DEXTRA=" VC++"  -DNSIDIR=${INSTALLER_FOLDER} -DSOURCE_FOLDER=${TOP_FOLDER}  -DDEV_FOLDER="$2" -DBINARY_FOLDER="$2" ${INSTALLER_FOLDER}/avidemux_nativeVcQt5.nsi -V4
 echo "Done"
