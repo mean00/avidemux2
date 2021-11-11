@@ -58,6 +58,38 @@ ADM_vf_plugin *ADM_vf_getPluginFromTag(uint32_t tag)
 }
 
 /**
+    \fn ADM_vf_duplicateFilterAtIndex
+
+*/
+bool ADM_vf_duplicateFilterAtIndex(IEditor *editor, int index)
+{
+    ADM_info("Duplicate video filter at index %d\n", index);
+
+    ADM_assert(index < ADM_VideoFilters.size());
+    
+    ADM_VideoFilterElement *e = &(ADM_VideoFilters[index]);
+    CONFcouple *conf=NULL;
+    if(!e->instance->getCoupledConf (&conf))
+    {
+        ADM_warning("Cannot get configuration\n");
+        return false;
+    }
+    
+    ADM_coreVideoFilter *last = ADM_vf_getLastVideoFilter(editor);
+    ADM_coreVideoFilter *nw = ADM_vf_createFromTag(e->tag, last, conf);
+
+    if (!nw) return NULL;
+
+    ADM_VideoFilterElement ne;
+    ne.tag = e->tag;
+    ne.enabled = e->enabled;
+    ne.instance = nw;
+    ne.objectId = objectCount++;
+    ADM_VideoFilters.append(ne);
+
+    return ADM_vf_recreateChain();
+}
+/**
     \fn ADM_vf_removeFilterAtIndex
 
 */

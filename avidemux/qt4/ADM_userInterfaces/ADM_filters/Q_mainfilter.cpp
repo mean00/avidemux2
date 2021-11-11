@@ -361,7 +361,19 @@ void filtermainWindow::add( bool b)
         }
    }
 }
-
+/**
+    \fn duplicate
+*/
+void filtermainWindow::duplicate()
+{
+    int filterIndex=getTagForActiveSelection();
+    if(-1==filterIndex)
+        return;
+    ADM_vf_duplicateFilterAtIndex(video_body, filterIndex);
+    buildActiveFilterList ();
+    if(nb_active_filter)
+        setSelected(nb_active_filter-1);
+}
 /**
     \fn removeAction
     \brief active filter context menu item
@@ -401,6 +413,14 @@ void filtermainWindow::configureAction(void)
     configure(true);
 }
 
+/**
+    \fn duplicateAction
+    \brief active filter context menu item
+*/
+void filtermainWindow::duplicateAction(void)
+{
+    duplicate();
+}
 /**
  * \fn getTagForActiveSelection
  */
@@ -671,6 +691,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     QAction *up = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),cm);
     QAction *down = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),cm);
     QAction *configure = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),cm);
+    QAction *duplicate = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Duplicate")),cm);
     QAction *remove = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),cm);
     QAction *partial = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),cm);
     QAction *enabled = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Enable/Disable")),cm);
@@ -678,6 +699,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     up->setShortcut(shortcutMoveUp);
     down->setShortcut(shortcutMoveDown);
     configure->setShortcut(shortcutConfigure);
+    duplicate->setShortcut(shortcutDuplicate);
     remove->setShortcut(shortcutRemove);
     partial->setShortcut(shortcutTogglePartial);
     enabled->setShortcut(shortcutToggleEnabled);
@@ -686,6 +708,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     up->setShortcutVisibleInContextMenu(true);
     down->setShortcutVisibleInContextMenu(true);
     configure->setShortcutVisibleInContextMenu(true);
+    duplicate->setShortcutVisibleInContextMenu(true);
     remove->setShortcutVisibleInContextMenu(true);
     partial->setShortcutVisibleInContextMenu(true);
     enabled->setShortcutVisibleInContextMenu(true);
@@ -694,6 +717,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     cm->addAction(up);
     cm->addAction(down);
     cm->addAction(configure);
+    cm->addAction(duplicate);
     cm->addAction(remove);
     cm->addAction(partial);
     cm->addAction(enabled);
@@ -701,6 +725,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     connect(up,SIGNAL(triggered()),this,SLOT(moveUp()));
     connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
     connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
+    connect(duplicate,SIGNAL(triggered()),this,SLOT(duplicateAction()));
     connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
     connect(partial,SIGNAL(triggered()),this,SLOT(togglePartial()));
     connect(enabled,SIGNAL(triggered()),this,SLOT(toggleEnabled()));
@@ -847,6 +872,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     shortcutMoveUp = QKeySequence(Qt::ShiftModifier | Qt::Key_Up);
     shortcutMoveDown = QKeySequence(Qt::ShiftModifier | Qt::Key_Down);
     shortcutConfigure = QKeySequence(Qt::Key_Return);
+    shortcutDuplicate = QKeySequence(Qt::ControlModifier | Qt::Key_D);
     shortcutTogglePartial = QKeySequence(Qt::ShiftModifier | Qt::Key_P);
     shortcutToggleEnabled = QKeySequence(Qt::ShiftModifier | Qt::Key_D);
 
@@ -859,6 +885,11 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     movdw->setShortcut(shortcutMoveDown);
     addAction(movdw);
     connect(movdw,SIGNAL(triggered()),this,SLOT(moveDown()));
+
+    QAction *dupl = new QAction(this);
+    dupl->setShortcut(shortcutDuplicate);
+    addAction(dupl);
+    connect(dupl,SIGNAL(triggered()),this,SLOT(duplicate()));
 
     QAction *mkpartl = new QAction(this);
     mkpartl->setShortcut(shortcutTogglePartial);

@@ -7,6 +7,7 @@
 
 ADM_COREVIDEOFILTER6_EXPORT bool ADM_vf_clearFilters(void);
 ADM_COREVIDEOFILTER6_EXPORT ADM_vf_plugin *ADM_vf_getPluginFromTag(uint32_t tag);
+ADM_COREVIDEOFILTER6_EXPORT bool ADM_vf_duplicateFilterAtIndex(IEditor *editor, int index);
 ADM_COREVIDEOFILTER6_EXPORT bool ADM_vf_removeFilterAtIndex(int index);
 ADM_COREVIDEOFILTER6_EXPORT bool ADM_vf_toggleFilterEnabledAtIndex(int index);
 ADM_COREVIDEOFILTER6_EXPORT bool ADM_vf_recreateChain(void);
