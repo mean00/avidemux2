@@ -968,6 +968,32 @@ bool filtermainWindow::eventFilter(QObject* watched, QEvent* event)
                 accept();
             return true;
         }
+        if(keyEvent->key() == Qt::Key_Left)
+        {
+            if(ui.listWidgetAvailable->hasFocus())
+            {
+                ui.listFilterCategory->setFocus();
+                return true;
+            }
+            if(ui.listWidgetActive->hasFocus())
+            {
+                ui.listWidgetAvailable->setFocus();
+                return true;
+            }
+        }
+        if(keyEvent->key() == Qt::Key_Right)
+        {
+            if(ui.listFilterCategory->hasFocus())
+            {
+                ui.listWidgetAvailable->setFocus();
+                return true;
+            }
+            if(ui.listWidgetAvailable->hasFocus())
+            {
+                ui.listWidgetActive->setFocus();
+                return true;
+            }
+        }
     }
     return QObject::eventFilter(watched, event);
 }
