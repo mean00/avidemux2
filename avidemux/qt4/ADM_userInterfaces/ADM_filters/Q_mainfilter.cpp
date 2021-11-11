@@ -821,6 +821,8 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
                 this,SLOT(filterFamilyClick(QListWidgetItem *)));
     connect(ui.listFilterCategory,SIGNAL(itemClicked(QListWidgetItem *)),
                 this,SLOT(filterFamilyClick(QListWidgetItem *)));
+    connect(ui.listFilterCategory,SIGNAL(currentRowChanged(int)),
+                this,SLOT(filterFamilyClick(int)));
 
     connect(activeList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(activeDoubleClick(QListWidgetItem *)));
     connect(availableList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(allDoubleClick(QListWidgetItem *)));
