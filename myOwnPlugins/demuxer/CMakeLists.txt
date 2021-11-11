@@ -3,14 +3,14 @@
 #
 ###################################################
 MESSAGE("#####################################")
-MESSAGE("Custom demuxer plugin template Started")
+MESSAGE("Own plugin demuxer Started")
 MESSAGE("#####################################")
 MESSAGE("")
 
 SET(ADM_PROJECT AdmAsfDemuxer)
 SET(PLUGINS TRUE)
 SET(DO_COMMON TRUE)
-SET(AVIDEMUX_VERSION 2.7)                 # important !
+SET(AVIDEMUX_VERSION 2.8)                 # important !
 SET(AVIDEMUX_EXTERNAL_BUILD True)         # important !
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0 FATAL_ERROR)
 ######################################################
