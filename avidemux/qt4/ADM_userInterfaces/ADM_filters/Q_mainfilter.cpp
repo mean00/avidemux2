@@ -447,6 +447,22 @@ void filtermainWindow::moveUp( )
     buildActiveFilterList ();
     setSelected(itag-1);
 }
+
+/**
+ * 
+ */
+void filtermainWindow::togglePartial()
+{
+    int filterIndex=getTagForActiveSelection();
+    if(-1==filterIndex)
+        return;
+    uint32_t tag=ADM_vf_getTag(filterIndex);
+    if (tag == VF_PARTIAL_FILTER)
+        absolvePartial();
+    else
+        makePartial();
+        
+}
 /**
  * 
  */
@@ -471,9 +487,37 @@ void filtermainWindow::makePartial()
         buildActiveFilterList ();
         setSelected(filterIndex);
     }else
-      {
+    {
         ADM_info("CANCEL \n");
-      }
+    }
+}
+/**
+ * 
+ */
+void filtermainWindow::absolvePartial()
+{
+    ADM_info("Absolve Partial\n");
+    int filterIndex=getTagForActiveSelection();
+    if(-1==filterIndex)
+        return;
+    ADM_info("Absolve Partial %d\n",filterIndex);
+    // Check we can partialize it...
+    uint32_t tag=ADM_vf_getTag(filterIndex);
+    if(tag!=VF_PARTIAL_FILTER)
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("qmainfilter","Partial"),QT_TRANSLATE_NOOP("qmainfilter","This filter is not partial"));
+        return;
+    }
+    // Get info about that filter..
+    if(ADM_vf_absolvePartialized(filterIndex))
+    {
+        ADM_info("Absolving partialized done, rebuilding \n");
+        buildActiveFilterList ();
+        setSelected(filterIndex);
+    }else
+    {
+        ADM_info("CANCEL \n");
+    }
 }
 /**
  * 
@@ -658,7 +702,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
     connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
     connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
-    connect(partial,SIGNAL(triggered()),this,SLOT(makePartial()));
+    connect(partial,SIGNAL(triggered()),this,SLOT(togglePartial()));
     connect(enabled,SIGNAL(triggered()),this,SLOT(toggleEnabled()));
 
     updateContextMenu(cm);
@@ -680,6 +724,7 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
     bool canMoveUp=true;
     bool canMoveDown=true;
     bool canPartialize=true;
+    bool partialized=false;
     QListWidgetItem *item=activeList->currentItem();
     if(!item)
         return;
@@ -689,6 +734,7 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
     itag -= ACTIVE_FILTER_BASE;
     uint32_t tag=ADM_vf_getTag(itag);
     canPartialize=ADM_vf_canBePartialized(tag);
+    partialized=(tag==VF_PARTIAL_FILTER);
 
     int row=item->listWidget()->row(item);
     if(!row)
@@ -699,14 +745,22 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
     const char *textEnable = ADM_vf_getEnabled(itag) ?
         QT_TRANSLATE_NOOP("qmainfilter","Disable") :
         QT_TRANSLATE_NOOP("qmainfilter","Enable");
+    
+    const char *textPartial = partialized ? 
+        QT_TRANSLATE_NOOP("qmainfilter","Absolve partial") :
+        QT_TRANSLATE_NOOP("qmainfilter","Make partial");
 
     for(int i = 0; i < contextMenu->actions().size(); i++)
     {
         QAction *a = contextMenu->actions().at(i);
+
+        if(a->shortcut() == shortcutMakePartial)
+            a->setText(QString::fromUtf8(textPartial));
+
 #define MATCHME(x,y) if(a->shortcut() == shortcut##x) { a->setEnabled(y); continue; }
         MATCHME(MoveUp,canMoveUp)
         MATCHME(MoveDown,canMoveDown)
-        MATCHME(MakePartial,canPartialize)
+        MATCHME(MakePartial,canPartialize||partialized)
 
         if(a->shortcut() == shortcutToggleEnabled)
             a->setText(QString::fromUtf8(textEnable));
@@ -809,7 +863,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     QAction *mkpartl = new QAction(this);
     mkpartl->setShortcut(shortcutMakePartial);
     addAction(mkpartl);
-    connect(mkpartl,SIGNAL(triggered()),this,SLOT(makePartial()));
+    connect(mkpartl,SIGNAL(triggered()),this,SLOT(togglePartial()));
 
     QAction *tglenbl = new QAction(this);
     tglenbl->setShortcut(shortcutToggleEnabled);

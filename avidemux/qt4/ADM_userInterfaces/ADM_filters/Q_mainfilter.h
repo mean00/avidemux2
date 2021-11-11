@@ -85,7 +85,9 @@ public slots:
     void add(bool b);
     void moveUp();
     void moveDown();
+    void togglePartial();
     void makePartial();
+    void absolvePartial();
     void toggleEnabled();
     void remove(bool b);
     void configure(bool b);

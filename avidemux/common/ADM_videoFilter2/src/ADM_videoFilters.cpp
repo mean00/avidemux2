@@ -150,6 +150,62 @@ bool ADM_vf_partialize(int index)
     //--
     return ADM_vf_recreateChain();
 }
+/**
+ * 
+ */
+extern uint32_t ADM_vf_getTagFromInternalName(const char *name);
+bool ADM_vf_absolvePartialized(int index)
+{
+    ADM_info("Absolving partialized filter at index %d\n",index);
+    //
+    ADM_assert(index<ADM_VideoFilters.size());
+    
+    
+    ADM_VideoFilterElement scratch=ADM_VideoFilters[index];
+    const char *internalName=ADM_vf_getInternalNameFromTag(scratch.tag);
+    CONFcouple *conf=NULL;
+    if(!scratch.instance->getCoupledConf (&conf))
+    {
+        ADM_warning("Cannot get configuration\n");
+        return false;
+    }
+    // first conf entry: filterName
+    // second and third are start and stop time
+    int confNb = conf->getSize();
+    ADM_assert(confNb>=3);
+    char * filterNameName, * filterNameValue;
+    conf->getInternalName(0, &filterNameName, &filterNameValue);
+    ADM_assert(strcmp(filterNameName,"filterName")==0);
+    
+    CONFcouple * newConf = new CONFcouple(confNb-3);
+    for (int i=3; i<confNb; i++)
+    {
+        char * name, * key;
+        conf->getInternalName(i, &name, &key);
+        newConf->setInternalName(name, key);
+    }
+    
+    uint32_t newTag = ADM_vf_getTagFromInternalName(filterNameValue);
+    
+    ADM_coreVideoFilter *unPartialized=ADM_vf_createFromTag(newTag, scratch.instance->getSource(), newConf);
+    delete newConf;
+    if(!unPartialized)
+    {
+        return false;
+    }
+
+    //--
+    ADM_VideoFilterElement scratch2;
+    scratch2.enabled = scratch.enabled;
+    scratch2.instance=unPartialized;
+    scratch2.tag=newTag;
+    scratch2.objectId=0;
+    ADM_VideoFilters[index]=scratch2;
+    delete scratch.instance;
+    scratch.instance=NULL;
+    //--
+    return ADM_vf_recreateChain();
+}
 
 /**
     \fn createVideoFilterChain
