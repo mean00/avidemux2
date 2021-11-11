@@ -9,7 +9,7 @@ MESSAGE("")
 
 SET(PLUGINS TRUE)
 SET(DO_COMMON TRUE)
-SET(AVIDEMUX_VERSION 2.7)                 # important !
+SET(AVIDEMUX_VERSION 2.8)                 # important !
 SET(AVIDEMUX_EXTERNAL_BUILD True)         # important !
 
 ######################################################
