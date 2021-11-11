@@ -679,7 +679,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     down->setShortcut(shortcutMoveDown);
     configure->setShortcut(shortcutConfigure);
     remove->setShortcut(shortcutRemove);
-    partial->setShortcut(shortcutMakePartial);
+    partial->setShortcut(shortcutTogglePartial);
     enabled->setShortcut(shortcutToggleEnabled);
 
 #if defined(__APPLE__) && QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
@@ -754,13 +754,13 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
     {
         QAction *a = contextMenu->actions().at(i);
 
-        if(a->shortcut() == shortcutMakePartial)
+        if(a->shortcut() == shortcutTogglePartial)
             a->setText(QString::fromUtf8(textPartial));
 
 #define MATCHME(x,y) if(a->shortcut() == shortcut##x) { a->setEnabled(y); continue; }
         MATCHME(MoveUp,canMoveUp)
         MATCHME(MoveDown,canMoveDown)
-        MATCHME(MakePartial,canPartialize||partialized)
+        MATCHME(TogglePartial,canPartialize||partialized)
 
         if(a->shortcut() == shortcutToggleEnabled)
             a->setText(QString::fromUtf8(textEnable));
@@ -847,7 +847,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     shortcutMoveUp = QKeySequence(Qt::ShiftModifier | Qt::Key_Up);
     shortcutMoveDown = QKeySequence(Qt::ShiftModifier | Qt::Key_Down);
     shortcutConfigure = QKeySequence(Qt::Key_Return);
-    shortcutMakePartial = QKeySequence(Qt::ShiftModifier | Qt::Key_P);
+    shortcutTogglePartial = QKeySequence(Qt::ShiftModifier | Qt::Key_P);
     shortcutToggleEnabled = QKeySequence(Qt::ShiftModifier | Qt::Key_D);
 
     QAction *movup = new QAction(this);
@@ -861,7 +861,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(movdw,SIGNAL(triggered()),this,SLOT(moveDown()));
 
     QAction *mkpartl = new QAction(this);
-    mkpartl->setShortcut(shortcutMakePartial);
+    mkpartl->setShortcut(shortcutTogglePartial);
     addAction(mkpartl);
     connect(mkpartl,SIGNAL(triggered()),this,SLOT(togglePartial()));
 

@@ -118,7 +118,7 @@ private:
     QKeySequence shortcutMoveDown;
     QKeySequence shortcutConfigure;
     QKeySequence shortcutRemove;
-    QKeySequence shortcutMakePartial;
+    QKeySequence shortcutTogglePartial;
     QKeySequence shortcutToggleEnabled;
 
 };
