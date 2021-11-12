@@ -397,7 +397,9 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
         hdrTMsat = saturationAdjust;
         hdrTMboost = boost;
         
-        for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+        int prevYSDRint=-1;
+        
+        for (int l=(ADM_COLORSPACE_HDR_LUT_SIZE-1); l>=0; l-=1)
         {
             double LumHDR = maxLuminance;	// peak mastering display luminance [nit]
             double LumSDR = targetLuminance;		// peak target display luminance [nit]
@@ -452,37 +454,41 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
             else
                 YSDRint = std::round(219.0*YSDR) + 16;
             hdrLumaLUT[l] = YSDRint;
-
-            for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+            
+            if (prevYSDRint != YSDRint)
             {
-                double C = l;
-                C /= ADM_COLORSPACE_HDR_LUT_SIZE;
-                C -= 16.0/256.0;	// deal with limited range
-                C *= 256.0/224.0;
-                if (C < 0)
-                    C = 0.0;
-                if (C > 1)
-                    C = 1.0;
-                C -= 0.5;
+                prevYSDRint = YSDRint;
+                for (int l=0; l<ADM_COLORSPACE_HDR_LUT_SIZE; l+=1)
+                {
+                    double C = l;
+                    C /= ADM_COLORSPACE_HDR_LUT_SIZE;
+                    C -= 16.0/256.0;	// deal with limited range
+                    C *= 256.0/224.0;
+                    if (C < 0)
+                        C = 0.0;
+                    if (C > 1)
+                        C = 1.0;
+                    C -= 0.5;
 
-                double fYSDR = ((Y==0)||(YSDR==0)) ? 1.0 : (YSDR / (1.1*Y));
-                C *= fYSDR;
-                // WTF? step 5 prevent shadow glow
-                C *= std::pow(YSDR+0.001,1/2.4)*saturationAdjust;
-                if (C < -0.5)
-                    C = -0.5;
-                if (C > 0.5)
-                    C = 0.5;
-                C += 0.5;
-                if (extended_range)
-                {
-                    hdrChromaBLUT[YSDRint][l] = std::round(255.0*C);
-                    hdrChromaRLUT[YSDRint][l] = std::round(255.0*C);
-                }
-                else
-                {
-                    hdrChromaBLUT[YSDRint][l] = std::round(224.0*C) + 16;
-                    hdrChromaRLUT[YSDRint][l] = std::round(224.0*C) + 16;
+                    double fYSDR = ((Y==0)||(YSDR==0)) ? 1.0 : (YSDR / (1.1*Y));
+                    C *= fYSDR;
+                    // WTF? step 5 prevent shadow glow
+                    C *= std::pow(YSDR+0.001,1/2.4)*saturationAdjust;
+                    if (C < -0.5)
+                        C = -0.5;
+                    if (C > 0.5)
+                        C = 0.5;
+                    C += 0.5;
+                    if (extended_range)
+                    {
+                        hdrChromaBLUT[YSDRint][l] = std::round(255.0*C);
+                        hdrChromaRLUT[YSDRint][l] = std::round(255.0*C);
+                    }
+                    else
+                    {
+                        hdrChromaBLUT[YSDRint][l] = std::round(224.0*C) + 16;
+                        hdrChromaRLUT[YSDRint][l] = std::round(224.0*C) + 16;
+                    }
                 }
             }
         }
