@@ -2231,6 +2231,7 @@ int UI_Init(int nargc, char **nargv)
     myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
     myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
 
+#if !defined(__APPLE__)
     bool darkMode=false;
     if (prefs->get(FEATURES_DARK_MODE,&darkMode))
     {
@@ -2261,6 +2262,7 @@ int UI_Init(int nargc, char **nargv)
             qApp->setPalette(darkPalette);
         }
     }
+#endif
     
 #ifdef __APPLE__
     Q_INIT_RESOURCE(avidemux_osx);
