@@ -85,8 +85,11 @@ public slots:
     void add(bool b);
     void moveUp();
     void moveDown();
+    void togglePartial();
     void makePartial();
+    void absolvePartial();
     void toggleEnabled();
+    void duplicate();
     void remove(bool b);
     void configure(bool b);
     void activeDoubleClick( QListWidgetItem  *item);
@@ -99,6 +102,7 @@ public slots:
     void addSlot(void);
     void removeAction(void);
     void configureAction(void);
+    void duplicateAction(void);
     void activeListContextMenu(const QPoint &pos);
     // reorder active filters using drag-n-drop
     void rowsMovedSlot(void);
@@ -115,8 +119,9 @@ private:
     QKeySequence shortcutMoveUp;
     QKeySequence shortcutMoveDown;
     QKeySequence shortcutConfigure;
+    QKeySequence shortcutDuplicate;
     QKeySequence shortcutRemove;
-    QKeySequence shortcutMakePartial;
+    QKeySequence shortcutTogglePartial;
     QKeySequence shortcutToggleEnabled;
 
 };

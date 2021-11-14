@@ -361,7 +361,19 @@ void filtermainWindow::add( bool b)
         }
    }
 }
-
+/**
+    \fn duplicate
+*/
+void filtermainWindow::duplicate()
+{
+    int filterIndex=getTagForActiveSelection();
+    if(-1==filterIndex)
+        return;
+    ADM_vf_duplicateFilterAtIndex(video_body, filterIndex);
+    buildActiveFilterList ();
+    if(nb_active_filter)
+        setSelected(nb_active_filter-1);
+}
 /**
     \fn removeAction
     \brief active filter context menu item
@@ -401,6 +413,14 @@ void filtermainWindow::configureAction(void)
     configure(true);
 }
 
+/**
+    \fn duplicateAction
+    \brief active filter context menu item
+*/
+void filtermainWindow::duplicateAction(void)
+{
+    duplicate();
+}
 /**
  * \fn getTagForActiveSelection
  */
@@ -447,6 +467,22 @@ void filtermainWindow::moveUp( )
     buildActiveFilterList ();
     setSelected(itag-1);
 }
+
+/**
+ * 
+ */
+void filtermainWindow::togglePartial()
+{
+    int filterIndex=getTagForActiveSelection();
+    if(-1==filterIndex)
+        return;
+    uint32_t tag=ADM_vf_getTag(filterIndex);
+    if (tag == VF_PARTIAL_FILTER)
+        absolvePartial();
+    else
+        makePartial();
+        
+}
 /**
  * 
  */
@@ -471,9 +507,37 @@ void filtermainWindow::makePartial()
         buildActiveFilterList ();
         setSelected(filterIndex);
     }else
-      {
+    {
         ADM_info("CANCEL \n");
-      }
+    }
+}
+/**
+ * 
+ */
+void filtermainWindow::absolvePartial()
+{
+    ADM_info("Absolve Partial\n");
+    int filterIndex=getTagForActiveSelection();
+    if(-1==filterIndex)
+        return;
+    ADM_info("Absolve Partial %d\n",filterIndex);
+    // Check we can partialize it...
+    uint32_t tag=ADM_vf_getTag(filterIndex);
+    if(tag!=VF_PARTIAL_FILTER)
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("qmainfilter","Partial"),QT_TRANSLATE_NOOP("qmainfilter","This filter is not partial"));
+        return;
+    }
+    // Get info about that filter..
+    if(ADM_vf_absolvePartialized(filterIndex))
+    {
+        ADM_info("Absolving partialized done, rebuilding \n");
+        buildActiveFilterList ();
+        setSelected(filterIndex);
+    }else
+    {
+        ADM_info("CANCEL \n");
+    }
 }
 /**
  * 
@@ -627,6 +691,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     QAction *up = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),cm);
     QAction *down = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),cm);
     QAction *configure = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),cm);
+    QAction *duplicate = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Duplicate")),cm);
     QAction *remove = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),cm);
     QAction *partial = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),cm);
     QAction *enabled = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Enable/Disable")),cm);
@@ -634,14 +699,16 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     up->setShortcut(shortcutMoveUp);
     down->setShortcut(shortcutMoveDown);
     configure->setShortcut(shortcutConfigure);
+    duplicate->setShortcut(shortcutDuplicate);
     remove->setShortcut(shortcutRemove);
-    partial->setShortcut(shortcutMakePartial);
+    partial->setShortcut(shortcutTogglePartial);
     enabled->setShortcut(shortcutToggleEnabled);
 
 #if defined(__APPLE__) && QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     up->setShortcutVisibleInContextMenu(true);
     down->setShortcutVisibleInContextMenu(true);
     configure->setShortcutVisibleInContextMenu(true);
+    duplicate->setShortcutVisibleInContextMenu(true);
     remove->setShortcutVisibleInContextMenu(true);
     partial->setShortcutVisibleInContextMenu(true);
     enabled->setShortcutVisibleInContextMenu(true);
@@ -650,6 +717,7 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     cm->addAction(up);
     cm->addAction(down);
     cm->addAction(configure);
+    cm->addAction(duplicate);
     cm->addAction(remove);
     cm->addAction(partial);
     cm->addAction(enabled);
@@ -657,8 +725,9 @@ void filtermainWindow::activeListContextMenu(const QPoint &pos)
     connect(up,SIGNAL(triggered()),this,SLOT(moveUp()));
     connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
     connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
+    connect(duplicate,SIGNAL(triggered()),this,SLOT(duplicateAction()));
     connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
-    connect(partial,SIGNAL(triggered()),this,SLOT(makePartial()));
+    connect(partial,SIGNAL(triggered()),this,SLOT(togglePartial()));
     connect(enabled,SIGNAL(triggered()),this,SLOT(toggleEnabled()));
 
     updateContextMenu(cm);
@@ -680,6 +749,7 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
     bool canMoveUp=true;
     bool canMoveDown=true;
     bool canPartialize=true;
+    bool partialized=false;
     QListWidgetItem *item=activeList->currentItem();
     if(!item)
         return;
@@ -689,6 +759,7 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
     itag -= ACTIVE_FILTER_BASE;
     uint32_t tag=ADM_vf_getTag(itag);
     canPartialize=ADM_vf_canBePartialized(tag);
+    partialized=(tag==VF_PARTIAL_FILTER);
 
     int row=item->listWidget()->row(item);
     if(!row)
@@ -699,14 +770,22 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
     const char *textEnable = ADM_vf_getEnabled(itag) ?
         QT_TRANSLATE_NOOP("qmainfilter","Disable") :
         QT_TRANSLATE_NOOP("qmainfilter","Enable");
+    
+    const char *textPartial = partialized ? 
+        QT_TRANSLATE_NOOP("qmainfilter","Make global") :
+        QT_TRANSLATE_NOOP("qmainfilter","Make partial");
 
     for(int i = 0; i < contextMenu->actions().size(); i++)
     {
         QAction *a = contextMenu->actions().at(i);
+
+        if(a->shortcut() == shortcutTogglePartial)
+            a->setText(QString::fromUtf8(textPartial));
+
 #define MATCHME(x,y) if(a->shortcut() == shortcut##x) { a->setEnabled(y); continue; }
         MATCHME(MoveUp,canMoveUp)
         MATCHME(MoveDown,canMoveDown)
-        MATCHME(MakePartial,canPartialize)
+        MATCHME(TogglePartial,canPartialize||partialized)
 
         if(a->shortcut() == shortcutToggleEnabled)
             a->setText(QString::fromUtf8(textEnable));
@@ -742,6 +821,8 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
                 this,SLOT(filterFamilyClick(QListWidgetItem *)));
     connect(ui.listFilterCategory,SIGNAL(itemClicked(QListWidgetItem *)),
                 this,SLOT(filterFamilyClick(QListWidgetItem *)));
+    connect(ui.listFilterCategory,SIGNAL(currentRowChanged(int)),
+                this,SLOT(filterFamilyClick(int)));
 
     connect(activeList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(activeDoubleClick(QListWidgetItem *)));
     connect(availableList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(allDoubleClick(QListWidgetItem *)));
@@ -793,7 +874,8 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     shortcutMoveUp = QKeySequence(Qt::ShiftModifier | Qt::Key_Up);
     shortcutMoveDown = QKeySequence(Qt::ShiftModifier | Qt::Key_Down);
     shortcutConfigure = QKeySequence(Qt::Key_Return);
-    shortcutMakePartial = QKeySequence(Qt::ShiftModifier | Qt::Key_P);
+    shortcutDuplicate = QKeySequence(Qt::ControlModifier | Qt::Key_D);
+    shortcutTogglePartial = QKeySequence(Qt::ShiftModifier | Qt::Key_P);
     shortcutToggleEnabled = QKeySequence(Qt::ShiftModifier | Qt::Key_D);
 
     QAction *movup = new QAction(this);
@@ -806,10 +888,15 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     addAction(movdw);
     connect(movdw,SIGNAL(triggered()),this,SLOT(moveDown()));
 
+    QAction *dupl = new QAction(this);
+    dupl->setShortcut(shortcutDuplicate);
+    addAction(dupl);
+    connect(dupl,SIGNAL(triggered()),this,SLOT(duplicate()));
+
     QAction *mkpartl = new QAction(this);
-    mkpartl->setShortcut(shortcutMakePartial);
+    mkpartl->setShortcut(shortcutTogglePartial);
     addAction(mkpartl);
-    connect(mkpartl,SIGNAL(triggered()),this,SLOT(makePartial()));
+    connect(mkpartl,SIGNAL(triggered()),this,SLOT(togglePartial()));
 
     QAction *tglenbl = new QAction(this);
     tglenbl->setShortcut(shortcutToggleEnabled);
@@ -880,6 +967,32 @@ bool filtermainWindow::eventFilter(QObject* watched, QEvent* event)
             else
                 accept();
             return true;
+        }
+        if(keyEvent->key() == Qt::Key_Left)
+        {
+            if(ui.listWidgetAvailable->hasFocus())
+            {
+                ui.listFilterCategory->setFocus();
+                return true;
+            }
+            if(ui.listWidgetActive->hasFocus())
+            {
+                ui.listWidgetAvailable->setFocus();
+                return true;
+            }
+        }
+        if(keyEvent->key() == Qt::Key_Right)
+        {
+            if(ui.listFilterCategory->hasFocus())
+            {
+                ui.listWidgetAvailable->setFocus();
+                return true;
+            }
+            if(ui.listWidgetAvailable->hasFocus())
+            {
+                ui.listWidgetActive->setFocus();
+                return true;
+            }
         }
     }
     return QObject::eventFilter(watched, event);
