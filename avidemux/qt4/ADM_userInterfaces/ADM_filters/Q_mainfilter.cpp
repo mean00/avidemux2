@@ -772,7 +772,7 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
         QT_TRANSLATE_NOOP("qmainfilter","Enable");
     
     const char *textPartial = partialized ? 
-        QT_TRANSLATE_NOOP("qmainfilter","Absolve partial") :
+        QT_TRANSLATE_NOOP("qmainfilter","Make global") :
         QT_TRANSLATE_NOOP("qmainfilter","Make partial");
 
     for(int i = 0; i < contextMenu->actions().size(); i++)
