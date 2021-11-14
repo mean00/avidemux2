@@ -1,6 +1,6 @@
---- libavcodec/mpegvideo_enc.c.orig	2021-04-21 23:50:33.492163927 +0200
-+++ libavcodec/mpegvideo_enc.c	2021-04-22 16:48:54.226003523 +0200
-@@ -524,14 +524,14 @@
+--- libavcodec/mpegvideo_enc.c.orig	2021-10-24 22:47:11.000000000 +0200
++++ libavcodec/mpegvideo_enc.c	2021-11-14 00:21:19.754422853 +0100
+@@ -528,14 +528,14 @@
                 "Warning vbv_delay will be set to 0xFFFF (=VBR) as the "
                 "specified vbv buffer is too large for the given bitrate!\n");
      }
@@ -17,7 +17,7 @@
      if (s->obmc && avctx->mb_decision != FF_MB_DECISION_SIMPLE) {
          av_log(avctx, AV_LOG_ERROR,
                 "OBMC is only supported with simple mb decision\n");
-@@ -630,7 +630,7 @@
+@@ -634,7 +634,7 @@
          s->mpeg_quant = 1;
      FF_ENABLE_DEPRECATION_WARNINGS
  #endif
@@ -26,7 +26,7 @@
      // FIXME mpeg2 uses that too
      if (s->mpeg_quant && (   s->codec_id != AV_CODEC_ID_MPEG4
                            && s->codec_id != AV_CODEC_ID_MPEG2VIDEO)) {
-@@ -638,7 +638,7 @@
+@@ -642,7 +642,7 @@
                 "mpeg2 style quantization not supported by codec\n");
          return AVERROR(EINVAL);
      }

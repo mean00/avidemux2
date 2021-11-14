@@ -1,6 +1,6 @@
---- libavcodec/internal.h.orig	2021-04-08 23:28:39.000000000 +0200
-+++ libavcodec/internal.h	2021-04-21 23:48:01.932086286 +0200
-@@ -274,7 +274,10 @@
+--- libavcodec/internal.h.orig	2021-10-24 22:47:11.000000000 +0200
++++ libavcodec/internal.h	2021-11-14 00:21:19.719423075 +0100
+@@ -279,7 +279,10 @@
  {
      if(samples == AV_NOPTS_VALUE)
          return AV_NOPTS_VALUE;

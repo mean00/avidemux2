@@ -1,6 +1,6 @@
---- ffbuild/common.mak.orig	2018-07-16 20:30:17.679881436 +0200
-+++ ffbuild/common.mak	2018-07-16 20:34:01.408202315 +0200
-@@ -118,7 +118,7 @@
+--- ffbuild/common.mak.orig	2021-10-24 22:47:11.000000000 +0200
++++ ffbuild/common.mak	2021-11-14 00:21:19.834422346 +0100
+@@ -125,7 +125,7 @@
  FFLIBS    := $($(NAME)_FFLIBS) $(FFLIBS-yes) $(FFLIBS)
  TESTPROGS += $(TESTPROGS-yes)
  

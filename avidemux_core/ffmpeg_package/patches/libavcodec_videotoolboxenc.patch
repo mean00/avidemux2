@@ -1,6 +1,6 @@
---- libavcodec/videotoolboxenc.c.orig	2021-07-02 00:31:33.000000000 +0200
-+++ libavcodec/videotoolboxenc.c	2021-07-02 00:46:32.000000000 +0200
-@@ -1389,7 +1389,7 @@
+--- libavcodec/videotoolboxenc.c.orig	2021-10-24 22:47:11.000000000 +0200
++++ libavcodec/videotoolboxenc.c	2021-11-14 00:21:19.782422676 +0100
+@@ -1393,7 +1393,7 @@
      }
  
      vtctx->codec_id = avctx->codec_id;
