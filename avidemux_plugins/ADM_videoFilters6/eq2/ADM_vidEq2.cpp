@@ -262,8 +262,8 @@ void affine_1d_MMX (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM
 //  printf("\nmmx: src=%p dst=%p w=%d h=%d ds=%d ss=%d\n",src,dst,w,h,dstride,sstride);
   if(par->g!=1.0) return apply_lut(par,srcImage,destImage,plane);
   //printf("MMX\n");
-  contrast = (int) (par->c * 256 * 16);
-  brightness = ((int) (100.0 * par->b + 100.0) * 511) / 200 - 128 - contrast / 32;
+  contrast = (int) (par->c * 256 * 16 + 0.4999);
+  brightness = ((int) (100.0 * par->b + 100.0 + 0.4999) * 512) / 200 - 128 - contrast / 32;
 
   brvec[0] = brvec[1] = brvec[2] = brvec[3] = brightness;
   contvec[0] = contvec[1] = contvec[2] = contvec[3] = contrast;
