@@ -258,7 +258,7 @@ bool ADM_QTimeStamp::eventFilter(QObject* watched, QEvent* event)
                 if(txt.size() == 12) // dd:dd:dd.ddd
                 {
                     int pos;
-                    uint64_t ms = 0;
+                    uint32_t ms = 0;
                     if(QValidator::Acceptable == timeValidator->validate(txt,pos))
                     {
                         bool success = false;
