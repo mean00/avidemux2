@@ -4,6 +4,8 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QGridLayout>
+#include <QRegExpValidator>
+#include <QKeyEvent>
 
 #include "DIA_factory.h"
 #include "ADM_dialogFactoryQt4.h"
@@ -51,7 +53,11 @@ protected :
     uint32_t        _min;
     uint32_t        _max;
     myTimeWidget    *myTWidget;
+    QRegExpValidator *timeValidator;
+
     void            setSelectionAndBuddy(QLabel *label);
+    void            setTime(uint32_t millisec);
+    void            blockChanges(bool block);
 
 public:
                     ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid, uint32_t min, uint32_t max, uint32_t time, uint32_t line);
@@ -59,6 +65,9 @@ public:
 
 public slots:
     void            updateRange(int i);
+
+private:
+    bool            eventFilter(QObject* watched, QEvent* event);
 };
 } // end of namespace
 #endif

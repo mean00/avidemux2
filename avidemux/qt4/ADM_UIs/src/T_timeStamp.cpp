@@ -13,6 +13,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QApplication>
+#include <QClipboard>
 #include "ADM_default.h"
 #include "ADM_vidMisc.h"
 #include "T_timeStamp.h"
@@ -66,6 +68,8 @@ diaElemTimeStamp::~diaElemTimeStamp()
 */
 void ADM_QTimeStamp::updateRange(int i)
 {
+    UNUSED_ARG(i);
+
     uint32_t hh1,mm1,ss1,msec1;
     uint32_t hh2,mm2,ss2,msec2;
     ms2time(_min,&hh1,&mm1,&ss1,&msec1);
@@ -196,24 +200,25 @@ ADM_QTimeStamp::ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid
     QLabel *text=new QLabel(title, dialog);
     text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
+    QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
+    timeValidator = new QRegExpValidator(timeRegExp, this);
+
     _min=min;
     _max=max;
     updateRange(0);
 
-    uint32_t hh,mm,ss,msec;
-    ms2time(time,&hh,&mm,&ss,&msec);
-
-    myTWidget->hours->setValue(hh);
-    myTWidget->minutes->setValue(mm);
-    myTWidget->seconds->setValue(ss);
-    myTWidget->mseconds->setValue(msec);
-
+    setTime(time);
     setSelectionAndBuddy(text);
 
     QObject::connect(myTWidget->hours, SIGNAL(valueChanged(int)), this, SLOT(updateRange(int)));
     QObject::connect(myTWidget->minutes, SIGNAL(valueChanged(int)), this, SLOT(updateRange(int)));
     QObject::connect(myTWidget->seconds, SIGNAL(valueChanged(int)), this, SLOT(updateRange(int)));
     QObject::connect(myTWidget->mseconds, SIGNAL(valueChanged(int)), this, SLOT(updateRange(int)));
+
+    myTWidget->hours->installEventFilter(this);
+    myTWidget->minutes->installEventFilter(this);
+    myTWidget->seconds->installEventFilter(this);
+    myTWidget->mseconds->installEventFilter(this);
 
     QHBoxLayout *hboxLayout = new QHBoxLayout();
     QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -233,6 +238,93 @@ ADM_QTimeStamp::ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid
 
     grid->addWidget(text,line,0);
     grid->addLayout(hboxLayout,line,1);
+}
+
+/**
+    \fn eventFilter
+*/
+bool ADM_QTimeStamp::eventFilter(QObject* watched, QEvent* event)
+{
+    QKeyEvent *keyEvent;
+    if(event->type() == QEvent::KeyPress)
+    {
+        keyEvent = (QKeyEvent*)event;
+        if(keyEvent->key() == Qt::Key_V)
+        {
+            if(keyEvent->modifiers() & Qt::ControlModifier)
+            {
+                QClipboard *clipboard = QApplication::clipboard();
+                QString txt = clipboard->text();
+                if(txt.size() == 12) // dd:dd:dd.ddd
+                {
+                    int pos;
+                    uint64_t ms = 0;
+                    if(QValidator::Acceptable == timeValidator->validate(txt,pos))
+                    {
+                        bool success = false;
+                        int mult = 3600 * 1000;
+                        QStringRef *ref = NULL;
+                        for(int i=0; i<4; i++)
+                        {
+                            ref = new QStringRef(&txt, i*3, (i < 3) ? 2 : 3);
+                            int val = ref->toInt(&success);
+                            delete ref;
+                            ref = NULL;
+                            if(!success) break;
+                            if(val < 0)
+                            {
+                                success = false;
+                                break;
+                            }
+                            if(i < 3)
+                            {
+                                val *= mult;
+                                ms += val;
+                                mult /= 60;
+                                continue;
+                            }
+                            ms += val;
+                        }
+                        if(success && ms >= _min && ms <= _max)
+                        {
+                            setTime(ms);
+                            updateRange(0);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return QObject::eventFilter(watched, event);
+}
+
+/**
+    \fn block
+*/
+void ADM_QTimeStamp::blockChanges(bool block)
+{
+#define BLOCK(x) myTWidget->x->blockSignals(block);
+    BLOCK(hours)
+    BLOCK(minutes)
+    BLOCK(seconds)
+    BLOCK(mseconds)
+}
+
+/**
+    \fn setTime
+*/
+void ADM_QTimeStamp::setTime(uint32_t time)
+{
+    uint32_t hh,mm,ss,msec;
+    ms2time(time,&hh,&mm,&ss,&msec);
+
+    blockChanges(true);
+    myTWidget->hours->setValue(hh);
+    myTWidget->minutes->setValue(mm);
+    myTWidget->seconds->setValue(ss);
+    myTWidget->mseconds->setValue(msec);
+    blockChanges(false);
 }
 
 /**
