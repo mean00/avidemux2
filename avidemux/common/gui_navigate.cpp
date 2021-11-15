@@ -584,30 +584,23 @@ void GUI_setCurrentFrameAndTime(uint64_t offset)
 */
 bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
 {
-    uint64_t pts;
+    uint64_t pts, total = video_body->getVideoDuration();
+    if(!total) return false;
+
     pts=hh*3600+mm*60+ss;
     pts*=1000;
     pts+=ms;
     pts*=1000;
-    if(pts > video_body->getVideoDuration())
-    {
-        ADM_warning("Cannot navigate beyond the end of the video\n");
-        return false;
-    }
-    uint64_t lastpts=pts;
-    if(false==video_body->getNKFramePTS(&lastpts)) // at the end of the video, be careful
-    {
-        if(false==video_body->getPKFramePTS(&lastpts))
-            return false;
-        GUI_infiniteForward(lastpts);
-        lastpts=admPreview::getCurrentPts();
-        if(pts>=lastpts) // if at or beyond the last frame but within the total duration
-            return GUI_GoToTime(lastpts); // go to the last frame
-    }
+
+    pts++;
+    if(pts >= total)
+        pts = total-1;
     if(false==GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video,
+    {
         video_body->rewind(); // go to the first frame then
-    admPreview::samePicture();
-    GUI_setCurrentFrameAndTime();
+        admPreview::samePicture();
+        GUI_setCurrentFrameAndTime();
+    }
     return true;
 }
 /**
