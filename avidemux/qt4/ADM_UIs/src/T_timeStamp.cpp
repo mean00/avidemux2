@@ -176,6 +176,8 @@ void ADM_QTimeStamp::setSelectionAndBuddy(QLabel *label)
 */
 ADM_QTimeStamp::ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid, uint32_t min, uint32_t max, uint32_t time, uint32_t line)
 {
+    timeValidator = NULL;
+
     myTWidget=new myTimeWidget;
     myTWidget->hours=new fixedNumDigitsSpinBox(dialog);
     myTWidget->minutes=new fixedNumDigitsSpinBox(dialog);
@@ -199,9 +201,6 @@ ADM_QTimeStamp::ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid
 
     QLabel *text=new QLabel(title, dialog);
     text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-    QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
-    timeValidator = new QRegExpValidator(timeRegExp, this);
 
     _min=min;
     _max=max;
@@ -259,6 +258,11 @@ bool ADM_QTimeStamp::eventFilter(QObject* watched, QEvent* event)
                 {
                     int pos;
                     uint32_t ms = 0;
+                    if(!timeValidator)
+                    {
+                        QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
+                        timeValidator = new QRegExpValidator(timeRegExp, this);
+                    }
                     if(QValidator::Acceptable == timeValidator->validate(txt,pos))
                     {
                         bool success = false;
