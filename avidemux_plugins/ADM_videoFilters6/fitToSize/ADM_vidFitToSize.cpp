@@ -139,7 +139,7 @@ UNUSED_ARG(setup);
         // Default value
         configuration.width=info.width;
         configuration.height=info.height;
-        configuration.algo=1; // bicubic
+        configuration.algo=-1; // default
         configuration.roundup=0;
         configuration.pad=0;
         configuration.tolerance=0.0;
@@ -294,10 +294,28 @@ const char *ADMVideoFitToSize::getConfiguration(void)
     static char conf[256];
     conf[0]=0;
 
-    snprintf(conf,255,"Fit %d x %d to %d x %d, algo %d, pad method %d\nResize input to: %d x %d, Padding: [%d,..,%d] x [%d,..,%d]",
+    const char * algos = "";
+    switch(configuration.algo)
+    {
+        case 0: //bilinear
+                algos="Bilinear";break;
+        case -1: // default algo
+        case 1: //bicubic
+                algos="Bicubic";break;
+        case 2: //Lanczos
+                algos="Lanczos";break;
+        case 3: //spline
+                algos="Spline";break;
+        case 4: //nearest neighbor
+                algos="Nearest neighbor";break;
+        default:
+                algos="INVALID!";break;
+    }
+
+    snprintf(conf,255,"Fit %d x %d to %d x %d, %s, pad method %d\nResize input to: %d x %d, Padding: [%d,..,%d] x [%d,..,%d]",
                 (int)previousFilter->getInfo()->width,
                 (int)previousFilter->getInfo()->height,
-                (int)configuration.width, (int)configuration.height,(int)configuration.algo,(int)configuration.pad,
+                (int)configuration.width, (int)configuration.height,algos,(int)configuration.pad,
                 stretchW,stretchH, pads[0], pads[1], pads[2], pads[3] );
     return conf;
 }
@@ -329,7 +347,7 @@ bool ADMVideoFitToSize::clean(void)
     \brief reset resizer
 */
 
-bool ADMVideoFitToSize::reset(uint32_t nw, uint32_t nh,uint32_t algo, float tolerance)
+bool ADMVideoFitToSize::reset(uint32_t nw, uint32_t nh,int32_t algo, float tolerance)
 {
     clean();
     ADMColorScaler_algo scalerAlgo;
@@ -342,6 +360,7 @@ bool ADMVideoFitToSize::reset(uint32_t nw, uint32_t nh,uint32_t algo, float tole
     {
         case 0: //bilinear
                 scalerAlgo=ADM_CS_BILINEAR;break;
+        case -1: // default algo
         case 1: //bicubic
                 scalerAlgo=ADM_CS_BICUBIC;break;
         case 2: //Lanczos
@@ -349,7 +368,7 @@ bool ADMVideoFitToSize::reset(uint32_t nw, uint32_t nh,uint32_t algo, float tole
         case 3: //spline
                 scalerAlgo=ADM_CS_SPLINE;break;
         default:
-                ADM_error("Invalid algo: %u\n",algo);
+                ADM_error("Invalid algo: %d\n",algo);
                 ADM_assert(0);
     }
     resizer=new ADMColorScalerFull(scalerAlgo, 

@@ -27,7 +27,7 @@ class ADMVideoFitToSize : public  ADM_coreVideoFilter
 {
   protected:
     ADMColorScalerFull * resizer;
-    bool                 reset(uint32_t nw, uint32_t nh,uint32_t algo, float tolerance);
+    bool                 reset(uint32_t nw, uint32_t nh,int32_t algo, float tolerance);
     bool                 clean( void );
     ADMImage *           original;
     ADMImage *           stretch;

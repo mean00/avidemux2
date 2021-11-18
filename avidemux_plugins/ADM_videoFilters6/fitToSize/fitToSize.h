@@ -4,7 +4,7 @@
 typedef struct {
 uint32_t width;
 uint32_t height;
-uint32_t algo;
+int32_t algo;
 uint32_t roundup;
 uint32_t pad;
 float tolerance;

@@ -19,6 +19,7 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_vidFitToSize.h"
+#include "ADM_QSettings.h"
 
 #if 0
 #define aprintf printf
@@ -30,6 +31,23 @@ fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(par
 {
     ui.setupUi(this);
     _param=param;
+
+    if (_param->rsz.algo < 0)
+    {
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("fitToSize");
+            _param->rsz.algo = qset->value("defaultAlgo", 1).toInt();
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }
+        else
+        {
+            _param->rsz.algo = 1;	// defaults to bicubic
+        }
+    }
 
     ui.comboBoxRoundup->setCurrentIndex(_param->rsz.roundup);
 
@@ -63,7 +81,16 @@ void fitToSizeWindow::gather(void)
     _param->rsz.pad=ui.comboBoxPad->currentIndex();
     _param->rsz.roundup=ui.comboBoxRoundup->currentIndex();
     _param->rsz.tolerance = (float)(ui.percentageSpinBox->value())/100.0;
-}
+    
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("fitToSize");
+        qset->setValue("defaultAlgo", _param->rsz.algo);
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }}
 
 void fitToSizeWindow::printInfo()
 {

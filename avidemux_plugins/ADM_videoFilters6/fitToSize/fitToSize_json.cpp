@@ -7,7 +7,7 @@ bool  fitToSize_jserialize(const char *file, const fitToSize *key){
 admJson json;
 json.addUint32("width",key->width);
 json.addUint32("height",key->height);
-json.addUint32("algo",key->algo);
+json.addInt32("algo",key->algo);
 json.addUint32("roundup",key->roundup);
 json.addUint32("pad",key->pad);
 json.addFloat("tolerance",key->tolerance);
