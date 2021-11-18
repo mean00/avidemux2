@@ -10,7 +10,7 @@ json.addUint32("bottom",key->bottom);
 json.addUint32("left",key->left);
 json.addUint32("right",key->right);
 json.addUint32("ar_select",key->ar_select);
-json.addUint32("algo",key->algo);
+json.addInt32("algo",key->algo);
 json.addUint32("pad",key->pad);
 json.addFloat("tolerance",key->tolerance);
 return json.dumpToFile(file);

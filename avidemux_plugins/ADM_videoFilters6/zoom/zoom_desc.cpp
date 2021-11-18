@@ -5,7 +5,7 @@ extern const ADM_paramList zoom_param[]={
  {"left",offsetof(zoom,left),"uint32_t",ADM_param_uint32_t},
  {"right",offsetof(zoom,right),"uint32_t",ADM_param_uint32_t},
  {"ar_select",offsetof(zoom,ar_select),"uint32_t",ADM_param_uint32_t},
- {"algo",offsetof(zoom,algo),"uint32_t",ADM_param_uint32_t},
+ {"algo",offsetof(zoom,algo),"int32_t",ADM_param_int32_t},
  {"pad",offsetof(zoom,pad),"uint32_t",ADM_param_uint32_t},
  {"tolerance",offsetof(zoom,tolerance),"float",ADM_param_float},
 {NULL,0,NULL}

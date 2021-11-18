@@ -36,7 +36,7 @@ class  ZoomFilter:public ADM_coreVideoFilter
     void                 resetConfig(void);
     void                 getFitParameters(int inW, int inH, int outW, int outH, float tolerance, bool stretching, int * strW, int * strH, int * padLeft, int * padRight, int * padTop, int * padBottom);
     ADMColorScalerFull * resizer;
-    bool                 reset(int left, int right, int top, int bottom, uint32_t algo, float tolerance, uint32_t pad);
+    bool                 reset(int left, int right, int top, int bottom, int32_t algo, float tolerance, uint32_t pad);
     bool                 clean( void );
     ADMImage *           stretch;
     ADMImage *           echo;
@@ -202,7 +202,7 @@ bool ZoomFilter::clean(void)
     \brief reset resizer
 */
 
-bool ZoomFilter::reset(int left, int right, int top, int bottom, uint32_t algo, float tolerance, uint32_t pad)
+bool ZoomFilter::reset(int left, int right, int top, int bottom, int32_t algo, float tolerance, uint32_t pad)
 {
     clean();
     ADMColorScaler_algo scalerAlgo;
@@ -213,6 +213,7 @@ bool ZoomFilter::reset(int left, int right, int top, int bottom, uint32_t algo, 
     {
         case 0: //bilinear
                 scalerAlgo=ADM_CS_BILINEAR;break;
+        case -1: // default algo
         case 1: //bicubic
                 scalerAlgo=ADM_CS_BICUBIC;break;
         case 2: //Lanczos
@@ -220,7 +221,7 @@ bool ZoomFilter::reset(int left, int right, int top, int bottom, uint32_t algo, 
         case 3: //spline
                 scalerAlgo=ADM_CS_SPLINE;break;
         default:
-                ADM_error("Invalid algo: %u\n",algo);
+                ADM_error("Invalid algo: %d\n",algo);
                 ADM_assert(0);
     }
     resizer=new ADMColorScalerFull(scalerAlgo, 
@@ -248,7 +249,7 @@ void ZoomFilter::resetConfig(void)
     configuration.left=0;
     configuration.right=0;
     configuration.ar_select=0;
-    configuration.algo=1;
+    configuration.algo=-1;
     configuration.tolerance=0.01;
     configuration.pad=0;
 }

@@ -544,6 +544,10 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
     {
         qset->beginGroup("zoom");
         rubberIsHidden = qset->value("rubberIsHidden", false).toBool();
+        if (param->algo < 0)
+        {
+            param->algo = qset->value("defaultAlgo", 1).toInt();
+        }
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -620,6 +624,7 @@ Ui_zoomWindow::~Ui_zoomWindow()
         {
             qset->beginGroup("zoom");
             qset->setValue("rubberIsHidden", myFly->stateOfRubber());
+            qset->setValue("defaultAlgo", ui.comboBoxAlgo->currentIndex());
             qset->endGroup();
             delete qset;
             qset = NULL;
