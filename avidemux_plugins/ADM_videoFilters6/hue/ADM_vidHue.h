@@ -40,7 +40,7 @@ virtual void        setCoupledConf(CONFcouple *couples);
 virtual bool        configure(void); /// Start graphical user interface
 
         static void update(huesettings *s);
-        static void reset(hue *h) { h->hue = 0.0; h->saturation = 1.0; }
+        static void reset(hue *h) { h->hue = 0.0; h->saturation = 0.0; }
         static void HueProcess_C(uint8_t *udst, uint8_t *vdst, uint8_t *usrc, uint8_t *vsrc,
                                  int dststride, int srcstride, int w, int h, huesettings *s);
 };
