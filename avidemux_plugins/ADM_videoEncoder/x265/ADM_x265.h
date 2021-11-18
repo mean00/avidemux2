@@ -27,7 +27,7 @@ extern "C"
 
 #define X265_DEFAULT_CONF \
 { \
-   true, /* bool UseAdvancedConfiguration */ \
+   false, /* bool UseAdvancedConfiguration */ \
    { /* General */ \
     { \
     COMPRESS_AQ, /* COMPRESSION_MODE  mode */ \
@@ -46,7 +46,7 @@ extern "C"
     99, /* Pool Threads : auto */ \
     99, /* Frame Threads : auto */ \
     0, /* output_bit_depth */ \
-    std::string(""), /* Preset */ \
+    std::string("medium"), /* Preset */ \
     std::string(""), /* Tuning */ \
     std::string(""), /* Profile */ \
     }, \
