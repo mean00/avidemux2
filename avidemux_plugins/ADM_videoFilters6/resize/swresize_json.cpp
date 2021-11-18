@@ -7,7 +7,7 @@ bool  swresize_jserialize(const char *file, const swresize *key){
 admJson json;
 json.addUint32("width",key->width);
 json.addUint32("height",key->height);
-json.addUint32("algo",key->algo);
+json.addInt32("algo",key->algo);
 json.addUint32("sourceAR",key->sourceAR);
 json.addUint32("targetAR",key->targetAR);
 json.addBool("lockAR",key->lockAR);

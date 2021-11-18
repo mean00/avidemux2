@@ -2,7 +2,7 @@
 extern const ADM_paramList swresize_param[]={
  {"width",offsetof(swresize,width),"uint32_t",ADM_param_uint32_t},
  {"height",offsetof(swresize,height),"uint32_t",ADM_param_uint32_t},
- {"algo",offsetof(swresize,algo),"uint32_t",ADM_param_uint32_t},
+ {"algo",offsetof(swresize,algo),"int32_t",ADM_param_int32_t},
  {"sourceAR",offsetof(swresize,sourceAR),"uint32_t",ADM_param_uint32_t},
  {"targetAR",offsetof(swresize,targetAR),"uint32_t",ADM_param_uint32_t},
  {"lockAR",offsetof(swresize,lockAR),"bool",ADM_param_bool},

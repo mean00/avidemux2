@@ -18,6 +18,7 @@
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_QSettings.h"
 
 static double aspectRatio[2][5]={
     {
@@ -66,6 +67,23 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     }
 
     ui.lockArCheckBox->setChecked(_param->rsz.lockAR);
+
+    if (_param->rsz.algo < 0)
+    {
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("resize");
+            _param->rsz.algo = qset->value("defaultAlgo", 1).toInt();
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }
+        else
+        {
+            _param->rsz.algo = 1;	// defaults to bicubic
+        }
+    }
 
 #define STR(x) #x
 #define MKSTRING(x) STR(x)
@@ -128,6 +146,16 @@ void resizeWindow::gather(void)
     _param->rsz.targetAR=ui.comboBoxDestination->currentIndex();
     _param->rsz.lockAR=ui.lockArCheckBox->isChecked();
     _param->rsz.roundup=ui.comboBoxRoundup->currentIndex();
+    
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("resize");
+        qset->setValue("defaultAlgo", _param->rsz.algo);
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
 }
 
 void resizeWindow::sliderChanged(int value)
