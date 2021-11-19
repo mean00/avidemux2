@@ -1362,12 +1362,14 @@ void MainWindow::updateCodecWidgetControlsState(void)
         ui.pushButtonVideoFilter->setEnabled(b);
         // take care of the "Filter" item in the menu "Video" as well
         ENABLE(Video, ACT_VIDEO_FILTERS, b)
+        ENABLE(Video, ACT_VIDEO_PARTIAL_FILTERS, b)
         ENABLE(Video, ACT_PreviewChanged, b)
         TOOLBAR_ENABLE(ACT_PreviewChanged, b)
     }else
     {
         ui.pushButtonVideoFilter->setEnabled(false);
         ENABLE(Video, ACT_VIDEO_FILTERS, false)
+        ENABLE(Video, ACT_VIDEO_PARTIAL_FILTERS, false)
         ENABLE(Video, ACT_PreviewChanged, false)
         TOOLBAR_ENABLE(ACT_PreviewChanged, false)
     }

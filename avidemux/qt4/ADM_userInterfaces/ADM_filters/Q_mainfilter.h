@@ -27,6 +27,7 @@
 #pragma once
 #include <QItemDelegate>
 #include "ui_mainfilter.h"
+#include "ui_quickfilter.h"
 #include "ADM_inttype.h"
 #include "Q_seekablePreview.h"
 /**
@@ -126,3 +127,28 @@ private:
 
 };
 
+
+
+
+class filterquickWindow : public QDialog
+{
+    Q_OBJECT
+
+public:
+            filterquickWindow(QWidget* parent);
+            ~filterquickWindow();
+
+    Ui_quickFilterDialog ui;
+    QListWidget *availableList;
+public slots:   
+    void add(bool b);
+    void allDoubleClick( QListWidgetItem  *item);
+    // context menu
+    void addSlot(void);
+private:
+    void displayPartialFilters(void);
+    void setupFilters(void);
+    bool eventFilter(QObject* watched, QEvent* event);
+    uint64_t originalTime;
+
+};

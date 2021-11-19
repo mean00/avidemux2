@@ -1118,3 +1118,1096 @@ void filtermainWindow::partial(bool b)
 }
 #endif
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+        \fn     add( bool b)
+        \brief  Retrieve the selected filter and add it to the active filters
+*/
+void filterquickWindow::add( bool b)
+{
+  /* Now that we have the tab, get the selection */
+   QListWidgetItem *item=availableList->currentItem();
+   VF_FILTERS tag;
+   if(item)
+   {
+     int itag=item->type();
+
+     if(itag<ALL_FILTER_BASE || itag >= ALL_FILTER_BASE+(VF_MAX*100))
+     {
+            ADM_assert(0);
+     }
+     // Extract family & index
+     itag-=ALL_FILTER_BASE;
+     int index=itag%100;
+     int family=(itag-index)/100;
+     ADM_assert(family<VF_MAX);
+     ADM_assert(index<ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family));
+     tag=index; //filterCategories[family][index]->tag;
+     ADM_info("Tag : %d->family=%d, index=%d\n",itag,family,tag);
+
+     if(ADM_vf_addFilterFromTag(video_body, itag,NULL,true) != NULL)
+        {
+         ADM_assert(ADM_vf_canBePartialized(itag));
+         ADM_vf_partialize(nb_active_filter-1, true);   // skip dialog
+            accept();
+        }else
+        {
+            ADM_warning("Cannot add filter from tag\n");
+        }
+   }
+}
+
+/**
+ * \fn displayFamily
+ * @param family
+ */
+void filterquickWindow::displayPartialFilters(void)
+{
+    int itemCount=0;
+    availableList->clear();
+    for (uint32_t family=0; family<VF_MAX; family++)
+    {
+        if (family==VF_HIDDEN)
+            continue;
+
+        uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
+        ADM_info("Video filter Family :%u, nb %d\n",family,nb);
+        for (uint32_t i = 0; i < nb; i++)
+        {
+            const char *name,*desc;
+            uint32_t major,minor,patch;
+            ADM_vf_getFilterInfo((VF_CATEGORY)family,i,&name, &desc,&major,&minor,&patch);
+            uint32_t tag = i+family*100;
+            if(!ADM_vf_canBePartialized(tag))
+                continue;
+
+            QString s1 = QString::fromUtf8(name);
+            QString s2 = QString::fromUtf8(desc);
+
+            QListWidgetItem *item;
+            item=new QListWidgetItem(NULL,availableList,ALL_FILTER_BASE+i+family*100);
+            item->setData(Qt::DisplayRole, s1); // for sorting
+            item->setData(FilterItemDelegate::FilterNameRole, s1);
+            item->setData(FilterItemDelegate::DescriptionRole, s2);
+            availableList->addItem(item);
+            itemCount++;
+        }
+    }
+
+    if (itemCount)
+    {
+       availableList->sortItems();
+       availableList->setCurrentRow(0);
+    }
+}
+
+/**
+        \fn     filterquickWindow::activeDoubleClick( QListWidgetItem  *item)
+        \brief  One of the active window has been double clicked, call configure
+*/
+void filterquickWindow::allDoubleClick( QListWidgetItem  *item)
+{
+    add(0);
+}
+
+/**
+        \fn setup
+        \brief Prepare
+*/
+void filterquickWindow::setupFilters(void)
+{
+
+}
+
+
+/**
+    \brief ctor
+*/
+filterquickWindow::filterquickWindow(QWidget* parent) : QDialog(parent)
+{
+    ui.setupUi(this);
+    setupFilters();
+
+    availableList=ui.listWidgetAvailable;
+    
+    
+
+    availableList->setItemDelegate(new FilterItemDelegate(availableList));
+
+    availableList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
+    connect(availableList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(allDoubleClick(QListWidgetItem *)));
+
+    connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
+
+    ADM_vf_rebuildBridge(video_body);
+    displayPartialFilters();
+
+    //____________________
+    //  Context Menu
+    //____________________
+    QAction *add = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Add")),this);
+    availableList->setContextMenuPolicy(Qt::ActionsContextMenu);
+    availableList->addAction(add );
+    connect(add,SIGNAL(triggered(bool )),this,SLOT(addSlot()));
+
+
+    this->installEventFilter(this);
+    originalTime = admPreview::getCurrentPts();
+
+}
+
+/**
+    \brief dtor
+*/
+filterquickWindow::~filterquickWindow()
+{
+    admPreview::seekToTime(originalTime);
+}
+
+/**
+    \fn eventFilter
+    \brief keyboard accessibility
+*/
+bool filterquickWindow::eventFilter(QObject* watched, QEvent* event)
+{
+    QKeyEvent *keyEvent;
+    if(event->type() == QEvent::KeyPress)
+    {
+        keyEvent = (QKeyEvent*)event;
+        if(keyEvent->key() == Qt::Key_Return)
+        {
+            if(availableList->hasFocus())
+                add(true);
+            return true;
+        }
+    }
+    return QObject::eventFilter(watched, event);
+}
+
+/**
+    \fn addSlot
+    \brief context menu item of an available filter
+*/
+void filterquickWindow::addSlot(void)
+{
+    add(true);
+}
+
+
+
+/*******************************************************/
+
+int GUI_handleVPartialFilter(void);
+/**
+      \fn     GUI_handleVPartialFilter(void)
+*/
+int GUI_handleVPartialFilter(void)
+{
+    // check markers
+    uint64_t totalDuration = video_body->getVideoDuration();
+    uint64_t markerA = video_body->getMarkerAPts();
+    uint64_t markerB = video_body->getMarkerBPts();
+    if (markerB < markerA)
+    {
+        uint64_t tmp = markerA;
+        markerA = markerB;
+        markerB = tmp;
+    }
+    
+    if (totalDuration == 0) // should be not possible
+        return 0;
+    if (markerA==0 && markerB >= totalDuration)
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("qmainfilter","Can not add partial filter"), QT_TRANSLATE_NOOP("qmainfilter","A selection by markers has to be made."));
+        return 0;
+    }
+    
+    filterquickWindow dialog(qtLastRegisteredDialog());
+    qtRegisterDialog(&dialog);
+    dialog.exec();
+    qtUnregisterDialog(&dialog);
+    return 0;
+}
+
