@@ -15,6 +15,11 @@
 
 #include <QApplication>
 #include <QClipboard>
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    #include <QStringRef>
+#else
+    #include <QStringView>
+#endif
 #include "ADM_default.h"
 #include "ADM_vidMisc.h"
 #include "T_timeStamp.h"
@@ -260,20 +265,43 @@ bool ADM_QTimeStamp::eventFilter(QObject* watched, QEvent* event)
                     uint32_t ms = 0;
                     if(!timeValidator)
                     {
-                        QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
-                        timeValidator = new QRegExpValidator(timeRegExp, this);
+#if QT_VERSION < QT_VERSION_CHECK(5,1,0)
+                        QRegExp
+#else
+                        QRegularExpression
+#endif
+                            timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
+
+                        timeValidator = new
+#if QT_VERSION < QT_VERSION_CHECK(5,1,0)
+                            QRegExpValidator(timeRegExp, this);
+#else
+                            QRegularExpressionValidator(timeRegExp, this);
+#endif
                     }
                     if(QValidator::Acceptable == timeValidator->validate(txt,pos))
                     {
                         bool success = false;
                         int mult = 3600 * 1000;
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
                         QStringRef *ref = NULL;
+#else
+                        QStringView *view = NULL;
+#endif
                         for(int i=0; i<4; i++)
                         {
+                            int val;
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
                             ref = new QStringRef(&txt, i*3, (i < 3) ? 2 : 3);
-                            int val = ref->toInt(&success);
+                            val = ref->toInt(&success);
                             delete ref;
                             ref = NULL;
+#else
+                            view = new QStringView(txt);
+                            val = view->sliced(i*3, (i < 3) ? 2 : 3).toInt(&success);
+                            delete view;
+                            view = NULL;
+#endif
                             if(!success) break;
                             if(val < 0)
                             {

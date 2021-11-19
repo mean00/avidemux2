@@ -4,7 +4,11 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QGridLayout>
-#include <QRegExpValidator>
+#if QT_VERSION < QT_VERSION_CHECK(5,1,0)
+    #include <QRegExpValidator>
+#else
+    #include <QRegularExpressionValidator>
+#endif
 #include <QKeyEvent>
 
 #include "DIA_factory.h"
@@ -53,7 +57,12 @@ protected :
     uint32_t        _min;
     uint32_t        _max;
     myTimeWidget    *myTWidget;
-    QRegExpValidator *timeValidator;
+#if QT_VERSION < QT_VERSION_CHECK(5,1,0)
+    QRegExpValidator
+#else
+    QRegularExpressionValidator
+#endif
+                    *timeValidator;
 
     void            setSelectionAndBuddy(QLabel *label);
     void            setTime(uint32_t millisec);
