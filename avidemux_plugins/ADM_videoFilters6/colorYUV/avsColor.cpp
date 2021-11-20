@@ -315,7 +315,7 @@ if (vi.IsPlanar())
     }
 	  srcp2 = (BYTE*) src->GetWritePtr(PLANAR_U);
     h=src->GetHeight(PLANAR_U);
-    w=src->GetRowSize(PLANAR_U);
+    w=src->GetWidth(PLANAR_U);
     pitch=src->GetPitch(PLANAR_U);
     for (j = 0; j < h; j++) {
 		  for (i=0; i<w; i++) {

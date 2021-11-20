@@ -214,7 +214,7 @@ bool kernelDeint::getNextFrame(uint32_t *fn,ADMImage *image)
 		src_pitch = src->GetPitch(plane);
 		dstp = dstp_saved = image->GetWritePtr(plane);
 		dst_pitch = image->GetPitch(plane);
-		w = image->GetRowSize(plane);
+		w = image->GetWidth(plane);
 		h = image->GetHeight(plane);
 		srcp = srcp_saved  + (1-order) * src_pitch;
 		dstp = dstp_saved  + (1-order) * dst_pitch;

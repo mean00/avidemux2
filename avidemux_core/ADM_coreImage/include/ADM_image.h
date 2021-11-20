@@ -40,7 +40,7 @@ typedef enum
 
 //#define vi.num_frames _info.nb_frames
 //#define vi.IsYV12()   1
-#define GetRowSize GetPitch
+// Nop #define GetRowSize GetPitch
 #define ADM_IMAGE_ALIGN(x) ((x+63)&(~63))
 #define ADM_IMAGE_UNKNOWN_QP 100
 
