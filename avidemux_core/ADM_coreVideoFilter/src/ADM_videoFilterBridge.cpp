@@ -86,7 +86,7 @@ again:
     // Translate pts if any
     int64_t pts = image->Pts;
 
-    if (pts > endTime)
+    if (pts >= endTime)
     {
         ADM_warning("[VideoBridge] This frame is too late (%" PRId64" vs %" PRIu64")\n", pts, endTime);
         return false;
