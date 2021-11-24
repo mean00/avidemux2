@@ -27,7 +27,7 @@ extern "C"
 
 #define X264_DEFAULT_CONF \
 { \
-   true, /* bool UseAdvancedConfiguration */ \
+   false, /* bool UseAdvancedConfiguration */ \
    { /* General */ \
     { \
     COMPRESS_AQ, /* COMPRESSION_MODE  mode */ \
@@ -44,7 +44,7 @@ extern "C"
         0*ADM_ENC_CAP_SAME \
     }, \
     99, /* Threads : auto */ \
-    std::string(""), /* Preset */ \
+    std::string("medium"), /* Preset */ \
     std::string(""), /* Tuning */ \
     std::string("high"), /* Profile */ \
     false, /* Fast decode */ \
