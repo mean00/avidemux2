@@ -106,7 +106,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QGroupBox" name="groupBox_7">
+        <widget class="QGroupBox" name="groupBoxBasic">
          <property name="title">
           <string>Basic</string>
          </property>
@@ -370,7 +370,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="groupBoxRateControl">
          <property name="title">
           <string>Rate Control</string>
          </property>
@@ -667,7 +667,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_12">
        <item>
-        <widget class="QGroupBox" name="groupBox_20">
+        <widget class="QGroupBox" name="groupBoxAdvRateControl">
          <property name="title">
           <string>Advanced Rate Control</string>
          </property>
@@ -961,7 +961,7 @@
       </attribute>
       <layout class="QVBoxLayout">
        <item>
-        <widget class="QGroupBox" name="groupBox_11">
+        <widget class="QGroupBox" name="groupBoxMotionEstimation">
          <property name="title">
           <string>Motion Estimation</string>
          </property>
@@ -1162,7 +1162,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_19">
+        <widget class="QGroupBox" name="groupBoxMV">
          <property name="title">
           <string>Motion Vector</string>
          </property>
@@ -1289,7 +1289,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_18">
+        <widget class="QGroupBox" name="groupBoxPred">
          <property name="title">
           <string>Prediction</string>
          </property>
@@ -1430,7 +1430,7 @@
       </attribute>
       <layout class="QVBoxLayout">
        <item>
-        <widget class="QGroupBox" name="groupBox_10">
+        <widget class="QGroupBox" name="groupBoxPart">
          <property name="title">
           <string>Partition Search</string>
          </property>
@@ -1505,7 +1505,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
-        <widget class="QGroupBox" name="groupBox_6">
+        <widget class="QGroupBox" name="groupBoxFrameEnc">
          <property name="title">
           <string>Frame Encoding</string>
          </property>
@@ -1695,7 +1695,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_30">
+             <widget class="QLabel" name="labelRefFrames">
               <property name="text">
                <string>Maximum Reference Frames:</string>
               </property>
@@ -1734,7 +1734,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_9">
+        <widget class="QGroupBox" name="groupBoxBframes">
          <property name="title">
           <string>B-frames</string>
          </property>
@@ -1894,7 +1894,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_8">
+        <widget class="QGroupBox" name="groupBoxKeyFrames">
          <property name="title">
           <string>I-frames</string>
          </property>
@@ -2042,7 +2042,7 @@
       </attribute>
       <layout class="QVBoxLayout">
        <item>
-        <widget class="QGroupBox" name="groupBox_12">
+        <widget class="QGroupBox" name="groupBoxAnalysis">
          <property name="title">
           <string>Analysis</string>
          </property>
@@ -2229,7 +2229,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_13">
+        <widget class="QGroupBox" name="groupBoxLumaQuant">
          <property name="title">
           <string>Luma Quantisation Deadzone</string>
          </property>
@@ -2394,7 +2394,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="QGroupBox" name="groupBox_4">
+        <widget class="QGroupBox" name="groupBoxQuant">
          <property name="title">
           <string>Quantiser Control</string>
          </property>
@@ -3249,7 +3249,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QGroupBox" name="groupBox_17">
+        <widget class="QGroupBox" name="groupBoxThreads">
          <property name="title">
           <string>Multithreading</string>
          </property>
@@ -3394,7 +3394,7 @@
       </attribute>
       <layout class="QVBoxLayout">
        <item>
-        <widget class="QGroupBox" name="groupBox_16">
+        <widget class="QGroupBox" name="groupBoxOutput">
          <property name="title">
           <string>Output</string>
          </property>
@@ -3424,7 +3424,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_15">
+        <widget class="QGroupBox" name="groupBoxAspectRatio">
          <property name="title">
           <string>Pixel Aspect Ratio</string>
          </property>
@@ -3602,7 +3602,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QGroupBox" name="groupBox_5">
+        <widget class="QGroupBox" name="groupBoxVui">
          <property name="title">
           <string>Video Usability Information</string>
          </property>
@@ -4296,70 +4296,6 @@
     <hint type="destinationlabel">
      <x>109</x>
      <y>228</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>loopFilterCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>alphaC0Label</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>84</x>
-     <y>169</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>117</x>
-     <y>168</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>loopFilterCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>alphaC0SpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>84</x>
-     <y>169</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>169</x>
-     <y>168</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>loopFilterCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>betaLabel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>84</x>
-     <y>169</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>235</x>
-     <y>168</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>loopFilterCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>betaSpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>84</x>
-     <y>169</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>331</x>
-     <y>168</y>
     </hint>
    </hints>
   </connection>

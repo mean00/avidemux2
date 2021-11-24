@@ -310,20 +310,35 @@ bool x264Dialog::updatePresetList(const char *match)
 
 bool x264Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
 {
-  ui.useAdvancedConfigurationCheckBox->setChecked(advancedEnabled);
-  ui.presetComboBox->setEnabled(!advancedEnabled);
-  ui.tuningComboBox->setEnabled(!advancedEnabled);
-  ui.profileComboBox->setEnabled(!advancedEnabled);
-  ui.fastDecodeCheckBox->setEnabled(!advancedEnabled);
-  ui.zeroLatencyCheckBox->setEnabled(!advancedEnabled);
-  ui.tabAdvancedRC->setEnabled(advancedEnabled);
-  ui.tabMotion->setEnabled(advancedEnabled);
-  ui.tabPartition->setEnabled(advancedEnabled);
-  ui.tabFrame->setEnabled(advancedEnabled);
-  ui.tabAnalysis->setEnabled(advancedEnabled);
-  ui.tabQuantiser->setEnabled(advancedEnabled);
-  ui.tabAdvanced1->setEnabled(advancedEnabled);
-  return true;
+    ui.useAdvancedConfigurationCheckBox->setChecked(advancedEnabled);
+#define SIMPLE(x) ui.x->setEnabled(!advancedEnabled);
+#define ADVANCED(x) ui.x->setEnabled(advancedEnabled);
+    SIMPLE(presetComboBox)
+    SIMPLE(tuningComboBox)
+    SIMPLE(profileComboBox)
+    SIMPLE(fastDecodeCheckBox)
+    SIMPLE(zeroLatencyCheckBox)
+    ADVANCED(tabAdvancedRC)
+    ADVANCED(tabMotion)
+    ADVANCED(tabPartition)
+#ifdef SIMPLE_MODE_EX
+    ADVANCED(cabacCheckBox)
+    ADVANCED(loopFilterCheckBox)
+    ADVANCED(alphaC0Label)
+    ADVANCED(alphaC0SpinBox)
+    ADVANCED(betaLabel)
+    ADVANCED(betaSpinBox)
+    ADVANCED(labelRefFrames)
+    ADVANCED(refFramesSpinBox)
+    ADVANCED(groupBoxBframes)
+#else
+    ADVANCED(tabFrame)
+#endif
+    ADVANCED(tabAnalysis)
+    ADVANCED(tabQuantiser)
+    ADVANCED(tabAdvanced1)
+
+    return true;
 }
 
 /**
@@ -794,6 +809,12 @@ void x264Dialog::targetRateControlSpinBox_valueChanged(int value)
 
 void x264Dialog::loopFilterCheckBox_toggled(bool checked)
 {
+    bool enable = checked && ui.useAdvancedConfigurationCheckBox->isChecked();
+    ui.alphaC0Label->setEnabled(enable);
+    ui.alphaC0SpinBox->setEnabled(enable);
+    ui.betaLabel->setEnabled(enable);
+    ui.betaSpinBox->setEnabled(enable);
+
         if (!checked)
         {
                 ui.alphaC0SpinBox->setValue(0);

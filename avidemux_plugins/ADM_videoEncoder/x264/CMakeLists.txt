@@ -2,6 +2,7 @@
 INCLUDE(ve_plugin)
 INCLUDE(ve_settings_plugin)
 ADD_DEFINITIONS(-DX264_USE_UTF8=1)
+ADD_DEFINITIONS(-DSIMPLE_MODE_EX=1)
 
 IF(WIN32) # This should be pulled by the .pc file if we were using pkg config. Oh well...
 	ADD_DEFINITIONS(-DX264_API_IMPORTS=1)
