@@ -369,189 +369,206 @@ bool x265Dialog::updatePresetList(const char *match)
 
 bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
 {
-  ui.useAdvancedConfigurationCheckBox->setChecked(advancedEnabled);
-  ui.presetComboBox->setEnabled(!advancedEnabled);
-  ui.tuningComboBox->setEnabled(!advancedEnabled);
-  ui.profileComboBox->setEnabled(!advancedEnabled);
-  ui.comboBoxBitDepth->setEnabled(advancedEnabled);
-  ui.tabAdvancedRC->setEnabled(advancedEnabled);
-  ui.tabMotion->setEnabled(advancedEnabled);
-  ui.tabFrame->setEnabled(advancedEnabled);
-  ui.tabAnalysis->setEnabled(advancedEnabled);
-  ui.tabQuantiser->setEnabled(advancedEnabled);
-  return true;
+    ui.useAdvancedConfigurationCheckBox->setChecked(advancedEnabled);
+#define SIMPLE(x) ui.x->setEnabled(!advancedEnabled);
+#define ADVANCED(x) ui.x->setEnabled(advancedEnabled);
+    SIMPLE(presetComboBox)
+    SIMPLE(tuningComboBox)
+    SIMPLE(profileComboBox)
+    ADVANCED(tabAdvancedRC)
+    ADVANCED(tabMotion)
+#ifdef SIMPLE_MODE_EX
+    ADVANCED(loopFilterCheckBox)
+    ADVANCED(maxRefFramesLabel)
+    ADVANCED(refFramesSpinBox)
+    ADVANCED(refLimitLabel)
+    ADVANCED(limitRefCUCheckBox)
+    ADVANCED(limitRefDepthCheckBox)
+    ADVANCED(groupBoxBframes)
+#else
+    ADVANCED(comboBoxBitDepth)
+    ADVANCED(tabFrame)
+#endif
+    ADVANCED(tabAnalysis)
+    ADVANCED(tabQuantiser)
+
+    return true;
 }
 
 /**
 
 */
-#define MK_CHECKBOX(x,y) ui.x->setChecked(myCopy.y)
-#define MK_UINT(x,y)  ui.x->setValue(myCopy.y)
+#define MK_CHECKBOX(x,y) ui.x->setChecked(myCopy.y);
+#define MK_UINT(x,y) ui.x->setValue(myCopy.y);
 #define DISABLE(x) ui.x->setEnabled(false);
-#define MK_MENU(x,y) ui.x->setCurrentIndex(myCopy.y)
+#define MK_MENU(x,y) ui.x->setCurrentIndex(myCopy.y);
 #define MK_RADIOBUTTON(x) ui.x->setChecked(true);
 #define MK_COMBOBOX_STR(x,y) \
     { \
         const int idx = ui.x->findText(myCopy.y.c_str()); \
         ui.x->setCurrentIndex(idx < 0 ? 0 : idx); \
     }
-#define MK_COMBOBOX_DATA(x,y) ui.x->setCurrentIndex(ui.x->findData(myCopy.y))
+#define MK_COMBOBOX_DATA(x,y) ui.x->setCurrentIndex(ui.x->findData(myCopy.y));
 
 bool x265Dialog::upload(void)
 {
-          toogleAdvancedConfiguration(myCopy.useAdvancedConfiguration);
-          MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
-          MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
-          MK_CHECKBOX(rectInterCheckBox,rect_inter);
-          MK_CHECKBOX(AMPInterCheckBox,amp_inter);
-          MK_CHECKBOX(limitInterModesCheckBox,limit_modes);
-          MK_UINT(rdoSpinBox,rd_level);
-          MK_UINT(psychoRdoSpinBox,psy_rd);
-          MK_UINT(rdoqSpinBox,rdoq_level);
-          MK_UINT(psychoRdoqSpinBox,psy_rdoq); /* double, not uint, but setValue() is the same */
+    toogleAdvancedConfiguration(myCopy.useAdvancedConfiguration);
 
-          if (myCopy.interlaced_mode > 0) {
-        	  ui.interlacedCheckBox->setChecked(true);
-                  ui.interlacedComboBox->setCurrentIndex(myCopy.interlaced_mode - 1);
-          } else {
-        	  ui.interlacedCheckBox->setChecked(false);
-          }
-    
-          MK_CHECKBOX(dctDecimateCheckBox,dct_decimate);
+    MK_CHECKBOX(fastPSkipCheckBox,fast_pskip)
+    MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred)
+    MK_CHECKBOX(rectInterCheckBox,rect_inter)
+    MK_CHECKBOX(AMPInterCheckBox,amp_inter)
+    MK_CHECKBOX(limitInterModesCheckBox,limit_modes)
 
-          MK_UINT(maxBFramesSpinBox,MaxBFrame);
-          MK_UINT(refFramesSpinBox,MaxRefFrames);
-          MK_CHECKBOX(limitRefDepthCheckBox,limit_refs & X265_REF_LIMIT_DEPTH);
-          MK_CHECKBOX(limitRefCUCheckBox,limit_refs & X265_REF_LIMIT_CU);
-          MK_UINT(minGopSizeSpinBox,MinIdr);
-          MK_UINT(maxGopSizeSpinBox,MaxIdr);
-          MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
-          MK_UINT(meSpinBox,subpel_refine);
+    MK_UINT(rdoSpinBox,rd_level)
+    MK_UINT(psychoRdoSpinBox,psy_rd)
+    MK_UINT(rdoqSpinBox,rdoq_level)
+    MK_UINT(psychoRdoqSpinBox,psy_rdoq) /* double, not uint, but setValue() is the same */
 
-          MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
-          MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
-          MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);
-          MK_UINT(cbChromaLumaOffsetSpinBox,cb_chroma_offset);
-          MK_UINT(crChromaLumaOffsetSpinBox,cr_chroma_offset);
-          uint32_t aq_mode = myCopy.ratecontrol.aq_mode;
-          if (aq_mode > 0)
-          {
-                ui.aqVarianceCheckBox->setChecked(true);
-                ui.aqAlgoComboBox->setCurrentIndex(aq_mode-1);
-                MK_UINT(aqStrengthSpinBox,ratecontrol.aq_strength);
-          }
+    if (myCopy.interlaced_mode > 0) {
+        ui.interlacedCheckBox->setChecked(true);
+        ui.interlacedComboBox->setCurrentIndex(myCopy.interlaced_mode - 1);
+    } else {
+        ui.interlacedCheckBox->setChecked(false);
+    }
 
-          MK_UINT(lookaheadSpinBox,lookahead);
-          MK_CHECKBOX(cuTreeCheckBox,ratecontrol.cu_tree);
+    MK_CHECKBOX(dctDecimateCheckBox,dct_decimate)
 
-          MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter);
-          MK_CHECKBOX(openGopCheckBox,b_open_gop);
+    MK_UINT(maxBFramesSpinBox,MaxBFrame)
+    MK_UINT(refFramesSpinBox,MaxRefFrames)
 
-          MK_MENU(meMethodComboBox,me_method);
-          MK_MENU(weightedPPredictComboBox,weighted_pred);
-          MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
-          MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
-          MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
-          MK_CHECKBOX(bIntraCheckBox,b_intra);
+    MK_CHECKBOX(limitRefDepthCheckBox,limit_refs & X265_REF_LIMIT_DEPTH)
+    MK_CHECKBOX(limitRefCUCheckBox,limit_refs & X265_REF_LIMIT_CU)
 
-          MK_UINT(mvRangeSpinBox,me_range);
+    MK_UINT(minGopSizeSpinBox,MinIdr)
+    MK_UINT(maxGopSizeSpinBox,MaxIdr)
+    MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold)
+    MK_UINT(meSpinBox,subpel_refine)
 
-          // preset
-          MK_COMBOBOX_STR(presetComboBox, general.preset);
-          MK_COMBOBOX_STR(profileComboBox, general.profile);
-          MK_COMBOBOX_STR(tuningComboBox, general.tuning);
+    MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step)
+    MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor)
+    MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor)
+    MK_UINT(cbChromaLumaOffsetSpinBox,cb_chroma_offset)
+    MK_UINT(crChromaLumaOffsetSpinBox,cr_chroma_offset)
 
-        // udate idc
-        MK_COMBOBOX_DATA(idcLevelComboBox, level);
+    uint32_t aq_mode = myCopy.ratecontrol.aq_mode;
+    if (aq_mode > 0)
+    {
+        ui.aqVarianceCheckBox->setChecked(true);
+        ui.aqAlgoComboBox->setCurrentIndex(aq_mode-1);
+        MK_UINT(aqStrengthSpinBox,ratecontrol.aq_strength)
+    }
 
-        // update threads
+    MK_UINT(lookaheadSpinBox,lookahead)
+    MK_CHECKBOX(cuTreeCheckBox,ratecontrol.cu_tree)
+
+    MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter)
+    MK_CHECKBOX(openGopCheckBox,b_open_gop)
+
+    MK_MENU(meMethodComboBox,me_method)
+    MK_MENU(weightedPPredictComboBox,weighted_pred)
+    MK_MENU(bFrameRefComboBox,i_bframe_pyramid)
+    MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive)
+    MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra)
+    MK_CHECKBOX(bIntraCheckBox,b_intra)
+
+    MK_UINT(mvRangeSpinBox,me_range)
+
+    // preset
+    MK_COMBOBOX_STR(presetComboBox, general.preset)
+    MK_COMBOBOX_STR(profileComboBox, general.profile)
+    MK_COMBOBOX_STR(tuningComboBox, general.tuning)
+
+    // udate idc
+    MK_COMBOBOX_DATA(idcLevelComboBox, level)
+
+    // update threads
 #if X265_BUILD >= 47
-        DISABLE(comboBoxPoolThreads);
+    DISABLE(comboBoxPoolThreads)
 #else
-        MK_COMBOBOX_DATA(comboBoxPoolThreads, general.poolThreads);
+    MK_COMBOBOX_DATA(comboBoxPoolThreads, general.poolThreads)
 #endif
-          
-        /* both 0 and 99 mean auto? */
-        const unsigned int framethreads = myCopy.general.frameThreads == 99 ? 0 : myCopy.general.frameThreads;
-        ui.comboBoxFrameThreads->setCurrentIndex(ui.comboBoxFrameThreads->findData(framethreads));
+    /* both 0 and 99 mean auto? */
+    const unsigned int framethreads = myCopy.general.frameThreads == 99 ? 0 : myCopy.general.frameThreads;
+    ui.comboBoxFrameThreads->setCurrentIndex(ui.comboBoxFrameThreads->findData(framethreads));
 
-        // update bit depth
-        QComboBox *bdc=ui.comboBoxBitDepth;
-        int i = bdc->findData(myCopy.general.output_bit_depth);
-        if(i == -1) /* Not found.  Maybe saved project and depth is not supported anymore?  Use default. */
-        {
-            ADM_warning("X265 output bit depth %u not supported, using default\n", myCopy.general.output_bit_depth);
-            i = 0;
-        }
-        bdc->setCurrentIndex(i);
+    // update bit depth
+    QComboBox *bdc=ui.comboBoxBitDepth;
+    int i = bdc->findData(myCopy.general.output_bit_depth);
+    if(i == -1) /* Not found.  Maybe saved project and depth is not supported anymore?  Use default. */
+    {
+        ADM_warning("X265 output bit depth %u not supported, using default\n", myCopy.general.output_bit_depth);
+        i = 0;
+    }
+    bdc->setCurrentIndex(i);
 
-        switch(ENCODING(mode))
-        {
-            case COMPRESS_AQ: // CRF
-                            ui.encodingModeComboBox->setCurrentIndex(2);
-                            ui.quantiserSpinBox->setValue(ENCODING(qz));
-                            break;
-            case COMPRESS_CBR:
-                            ui.encodingModeComboBox->setCurrentIndex(0);
-                            ui.targetRateControlSpinBox->setValue(ENCODING(bitrate));
-                            break;
-            case COMPRESS_2PASS:
-                            ui.encodingModeComboBox->setCurrentIndex(3);
-                            ui.targetRateControlSpinBox->setValue(ENCODING(finalsize));
-                            break;
-            case COMPRESS_SAME:
-                            ADM_assert(0);
-                            break;
-            case COMPRESS_2PASS_BITRATE:
-                            ui.encodingModeComboBox->setCurrentIndex(4);
-                            ui.targetRateControlSpinBox->setValue(ENCODING(avg_bitrate));
-                            break;
+    switch(ENCODING(mode))
+    {
+        case COMPRESS_AQ: // CRF
+            ui.encodingModeComboBox->setCurrentIndex(2);
+            ui.quantiserSpinBox->setValue(ENCODING(qz));
+            break;
+        case COMPRESS_CBR:
+            ui.encodingModeComboBox->setCurrentIndex(0);
+            ui.targetRateControlSpinBox->setValue(ENCODING(bitrate));
+            break;
+        case COMPRESS_2PASS:
+            ui.encodingModeComboBox->setCurrentIndex(3);
+            ui.targetRateControlSpinBox->setValue(ENCODING(finalsize));
+            break;
+        case COMPRESS_SAME:
+            ADM_assert(0);
+            break;
+        case COMPRESS_2PASS_BITRATE:
+            ui.encodingModeComboBox->setCurrentIndex(4);
+            ui.targetRateControlSpinBox->setValue(ENCODING(avg_bitrate));
+            break;
+        case COMPRESS_CQ:
+            ui.encodingModeComboBox->setCurrentIndex(1);
+            //encodingModeComboBox_currentIndexChanged(1);
+            ui.quantiserSpinBox->setValue(ENCODING(qz));
+            break;
 
-            case COMPRESS_CQ:
-                            ui.encodingModeComboBox->setCurrentIndex(1);
-                            //encodingModeComboBox_currentIndexChanged(1);
-                            ui.quantiserSpinBox->setValue(ENCODING(qz));
-                            break;
-
-            default: ADM_assert(0);break;
-        }
+        default: ADM_assert(0);break;
+    }
 
     if (myCopy.vui.sar_idc == 0)
     {
-        MK_RADIOBUTTON(sarUnspecifiedRadioButton);
+        MK_RADIOBUTTON(sarUnspecifiedRadioButton)
     } else if (myCopy.vui.sar_idc == X265_EXTENDED_SAR)
     {
-        MK_RADIOBUTTON(sarCustomRadioButton);
-        MK_UINT(sarCustomSpinBox1,vui.sar_width);
-        MK_UINT(sarCustomSpinBox2,vui.sar_height);
+        MK_RADIOBUTTON(sarCustomRadioButton)
+        MK_UINT(sarCustomSpinBox1,vui.sar_width)
+        MK_UINT(sarCustomSpinBox2,vui.sar_height)
     } else
     {
-        MK_RADIOBUTTON(sarPredefinedRadioButton);
-        MK_COMBOBOX_DATA(sarPredefinedComboBox,vui.sar_idc);
+        MK_RADIOBUTTON(sarPredefinedRadioButton)
+        MK_COMBOBOX_DATA(sarPredefinedComboBox,vui.sar_idc)
     }
 
-    MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
-    MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
+    MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra)
+    MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter)
 
-    MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
+    MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing)
 
-    MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
+    MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr)
 
     /* VUI */
-    MK_COMBOBOX_DATA(colourPrimariesComboBox,vui.color_primaries);
-    MK_COMBOBOX_DATA(transferCharacteristicsComboBox,vui.transfer_characteristics);
-    MK_COMBOBOX_DATA(colourMatrixComboBox,vui.matrix_coeffs);
-    DISABLE(tabOutput); /* These aren't implemented */
-    DISABLE(videoFormatComboBox);
-    DISABLE(sarAsInputRadioButton);
+    MK_COMBOBOX_DATA(colourPrimariesComboBox,vui.color_primaries)
+    MK_COMBOBOX_DATA(transferCharacteristicsComboBox,vui.transfer_characteristics)
+    MK_COMBOBOX_DATA(colourMatrixComboBox,vui.matrix_coeffs)
+    DISABLE(tabOutput) /* These aren't implemented */
+    DISABLE(videoFormatComboBox)
+    DISABLE(sarAsInputRadioButton)
 
-          DISABLE(spsiComboBox);
-          DISABLE(groupBox_14); // quant matrix
-          DISABLE(tabAdvanced1);
-          DISABLE(tabAdvanced2);
-          DISABLE(maxCrfCheckBox);
-          DISABLE(groupBox_3);
-          return true;
+    DISABLE(spsiComboBox)
+    DISABLE(groupBoxQuantMatrix)
+    DISABLE(tabAdvanced1)
+    DISABLE(tabAdvanced2)
+    DISABLE(maxCrfCheckBox)
+    DISABLE(groupBoxQuantCurveCompress)
+
+    return true;
 }
 #undef MK_CHECKBOX
 #undef MK_UINT
@@ -559,10 +576,10 @@ bool x265Dialog::upload(void)
 #undef MK_RADIOBUTTON
 #undef MK_COMBOBOX_STR
 #undef MK_COMBOBOX_DATA
-#define MK_CHECKBOX(x,y)    myCopy.y=ui.x->isChecked()
-#define MK_UINT(x,y)        myCopy.y=ui.x->value()
-#define MK_MENU(x,y)        myCopy.y=ui.x->currentIndex()
-#define MK_RADIOBUTTON(x,y)   myCopy.y=ui.x->setChecked(true);
+#define MK_CHECKBOX(x,y)    myCopy.y=ui.x->isChecked();
+#define MK_UINT(x,y)        myCopy.y=ui.x->value();
+#define MK_MENU(x,y)        myCopy.y=ui.x->currentIndex();
+#define MK_RADIOBUTTON(x,y) myCopy.y=ui.x->setChecked(true);
 #define MK_COMBOBOX_STR(x,y,list,count,none) \
     { \
         const QComboBox* combo=ui.x; \
@@ -578,113 +595,114 @@ bool x265Dialog::upload(void)
 
 bool x265Dialog::download(void)
 {
-          MK_CHECKBOX(useAdvancedConfigurationCheckBox,useAdvancedConfiguration);
-          MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
-          MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
-          MK_CHECKBOX(rectInterCheckBox,rect_inter);
-          MK_CHECKBOX(AMPInterCheckBox,amp_inter);
-          MK_CHECKBOX(limitInterModesCheckBox,limit_modes);
+    MK_CHECKBOX(useAdvancedConfigurationCheckBox,useAdvancedConfiguration)
+    MK_CHECKBOX(fastPSkipCheckBox,fast_pskip)
+    MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred)
+    MK_CHECKBOX(rectInterCheckBox,rect_inter)
+    MK_CHECKBOX(AMPInterCheckBox,amp_inter)
+    MK_CHECKBOX(limitInterModesCheckBox,limit_modes)
 
-          if (ui.interlacedCheckBox->isChecked()) {
-                  myCopy.interlaced_mode = ui.interlacedComboBox->currentIndex() + 1;
-          } else {
-        	  myCopy.interlaced_mode = 0;
-          }
-    
-          MK_CHECKBOX(dctDecimateCheckBox,dct_decimate);
+    if (ui.interlacedCheckBox->isChecked()) {
+        myCopy.interlaced_mode = ui.interlacedComboBox->currentIndex() + 1;
+    } else {
+        myCopy.interlaced_mode = 0;
+    }
 
-          MK_UINT(maxBFramesSpinBox,MaxBFrame);
-          MK_UINT(refFramesSpinBox,MaxRefFrames);
-          myCopy.limit_refs = (ui.limitRefDepthCheckBox->isChecked() ? X265_REF_LIMIT_DEPTH : 0) |
-                              (ui.limitRefCUCheckBox->isChecked() ? X265_REF_LIMIT_CU : 0);
-          MK_UINT(minGopSizeSpinBox,MinIdr);
-          MK_UINT(maxGopSizeSpinBox,MaxIdr);
-          MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
-          MK_UINT(meSpinBox,subpel_refine);
-          MK_UINT(BFrameBiasSpinBox,i_bframe_bias);
+    MK_CHECKBOX(dctDecimateCheckBox,dct_decimate)
 
-          MK_MENU(meMethodComboBox,me_method);
-          MK_MENU(weightedPPredictComboBox,weighted_pred);
-          MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
-          MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
-          MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
-          MK_CHECKBOX(bIntraCheckBox,b_intra);
+    MK_UINT(maxBFramesSpinBox,MaxBFrame)
+    MK_UINT(refFramesSpinBox,MaxRefFrames)
+    myCopy.limit_refs = (ui.limitRefDepthCheckBox->isChecked() ? X265_REF_LIMIT_DEPTH : 0) |
+                        (ui.limitRefCUCheckBox->isChecked() ? X265_REF_LIMIT_CU : 0);
+    MK_UINT(minGopSizeSpinBox,MinIdr)
+    MK_UINT(maxGopSizeSpinBox,MaxIdr)
+    MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold)
+    MK_UINT(meSpinBox,subpel_refine)
+    MK_UINT(BFrameBiasSpinBox,i_bframe_bias)
 
-          MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
-          
-          MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
-          
-          MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
-          MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);
-          MK_UINT(cbChromaLumaOffsetSpinBox,cb_chroma_offset);
-          MK_UINT(crChromaLumaOffsetSpinBox,cr_chroma_offset);
-          int a=ui.aqAlgoComboBox->currentIndex();
-          if(!ui.aqVarianceCheckBox->isChecked())
-          {
-                myCopy.ratecontrol.aq_mode=0;
-          }else
-          {
-                myCopy.ratecontrol.aq_mode=a+1;
-                MK_UINT(aqStrengthSpinBox,ratecontrol.aq_strength);
-          }
-          
-          MK_UINT(lookaheadSpinBox,lookahead);
-          MK_CHECKBOX(cuTreeCheckBox,ratecontrol.cu_tree);
+    MK_MENU(meMethodComboBox,me_method)
+    MK_MENU(weightedPPredictComboBox,weighted_pred)
+    MK_MENU(bFrameRefComboBox,i_bframe_pyramid)
+    MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive)
+    MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra)
+    MK_CHECKBOX(bIntraCheckBox,b_intra)
 
-          MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter);
-          MK_CHECKBOX(openGopCheckBox,b_open_gop);
+    MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step)
 
-          MK_UINT(mvRangeSpinBox,me_range);
+    MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr)
 
-          MK_UINT(rdoSpinBox,rd_level);
-          MK_UINT(psychoRdoSpinBox,psy_rd);
-          MK_UINT(rdoqSpinBox,rdoq_level);
-          MK_UINT(psychoRdoqSpinBox,psy_rdoq); /* double, not uint, but value() is the same */
-          
-          MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
-          MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
+    MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor)
+    MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor)
+    MK_UINT(cbChromaLumaOffsetSpinBox,cb_chroma_offset)
+    MK_UINT(crChromaLumaOffsetSpinBox,cr_chroma_offset)
 
-          MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
+    int a=ui.aqAlgoComboBox->currentIndex();
+    if(!ui.aqVarianceCheckBox->isChecked())
+    {
+        myCopy.ratecontrol.aq_mode=0;
+    }else
+    {
+        myCopy.ratecontrol.aq_mode=a+1;
+        MK_UINT(aqStrengthSpinBox,ratecontrol.aq_strength)
+    }
 
-          MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET, "");
-          MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE, "");
-          MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE, "none");
+    MK_UINT(lookaheadSpinBox,lookahead)
+    MK_CHECKBOX(cuTreeCheckBox,ratecontrol.cu_tree)
 
-          MK_COMBOBOX_DATA(idcLevelComboBox, level);
-          MK_COMBOBOX_DATA(comboBoxBitDepth, general.output_bit_depth);
+    MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter)
+    MK_CHECKBOX(openGopCheckBox,b_open_gop)
 
-          switch(ui.encodingModeComboBox->currentIndex())
-          {
-            case 0: ENCODING(mode)=COMPRESS_CBR; ENCODING(bitrate)=ui.targetRateControlSpinBox->value();break;
-            case 1: ENCODING(mode)=COMPRESS_CQ;ENCODING(qz)=ui.quantiserSpinBox->value();break;
-            case 2: ENCODING(mode)=COMPRESS_AQ;ENCODING(qz)=ui.quantiserSpinBox->value();break;
-            case 3: ENCODING(mode)=COMPRESS_2PASS;ENCODING(finalsize)=ui.targetRateControlSpinBox->value();;break;
-            case 4: ENCODING(mode)=COMPRESS_2PASS_BITRATE;ENCODING(avg_bitrate)=ui.targetRateControlSpinBox->value();;break;
-          }
-          
+    MK_UINT(mvRangeSpinBox,me_range)
+
+    MK_UINT(rdoSpinBox,rd_level)
+    MK_UINT(psychoRdoSpinBox,psy_rd)
+    MK_UINT(rdoqSpinBox,rdoq_level)
+    MK_UINT(psychoRdoqSpinBox,psy_rdoq) /* double, not uint, but value() is the same */
+
+    MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra)
+    MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter)
+
+    MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing)
+
+    MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET, "")
+    MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE, "")
+    MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE, "none")
+
+    MK_COMBOBOX_DATA(idcLevelComboBox, level)
+    MK_COMBOBOX_DATA(comboBoxBitDepth, general.output_bit_depth)
+
+    switch(ui.encodingModeComboBox->currentIndex())
+    {
+        case 0: ENCODING(mode)=COMPRESS_CBR; ENCODING(bitrate)=ui.targetRateControlSpinBox->value();break;
+        case 1: ENCODING(mode)=COMPRESS_CQ;ENCODING(qz)=ui.quantiserSpinBox->value();break;
+        case 2: ENCODING(mode)=COMPRESS_AQ;ENCODING(qz)=ui.quantiserSpinBox->value();break;
+        case 3: ENCODING(mode)=COMPRESS_2PASS;ENCODING(finalsize)=ui.targetRateControlSpinBox->value();;break;
+        case 4: ENCODING(mode)=COMPRESS_2PASS_BITRATE;ENCODING(avg_bitrate)=ui.targetRateControlSpinBox->value();;break;
+    }
+
 #if X265_BUILD < 47
-          MK_COMBOBOX_DATA(comboBoxPoolThreads, general.poolThreads);
+    MK_COMBOBOX_DATA(comboBoxPoolThreads, general.poolThreads)
 #endif
-          MK_COMBOBOX_DATA(comboBoxFrameThreads, general.frameThreads);
+    MK_COMBOBOX_DATA(comboBoxFrameThreads, general.frameThreads)
 
-          if(ui.sarUnspecifiedRadioButton->isChecked())
-          {
-              myCopy.vui.sar_idc = 0;
-          }else if(ui.sarCustomRadioButton->isChecked())
-          {
-              myCopy.vui.sar_idc = X265_EXTENDED_SAR;
-              MK_UINT(sarCustomSpinBox1,vui.sar_width);
-              MK_UINT(sarCustomSpinBox2,vui.sar_height);
-          }else
-          {
-              MK_COMBOBOX_DATA(sarPredefinedComboBox,vui.sar_idc);
-          }
+    if(ui.sarUnspecifiedRadioButton->isChecked())
+    {
+        myCopy.vui.sar_idc = 0;
+    }else if(ui.sarCustomRadioButton->isChecked())
+    {
+        myCopy.vui.sar_idc = X265_EXTENDED_SAR;
+        MK_UINT(sarCustomSpinBox1,vui.sar_width)
+        MK_UINT(sarCustomSpinBox2,vui.sar_height)
+    }else
+    {
+        MK_COMBOBOX_DATA(sarPredefinedComboBox,vui.sar_idc)
+    }
 
-          MK_COMBOBOX_DATA(colourPrimariesComboBox, vui.color_primaries);
-          MK_COMBOBOX_DATA(transferCharacteristicsComboBox, vui.transfer_characteristics);
-          MK_COMBOBOX_DATA(colourMatrixComboBox, vui.matrix_coeffs);
+    MK_COMBOBOX_DATA(colourPrimariesComboBox, vui.color_primaries)
+    MK_COMBOBOX_DATA(transferCharacteristicsComboBox, vui.transfer_characteristics)
+    MK_COMBOBOX_DATA(colourMatrixComboBox, vui.matrix_coeffs)
 
-          return true;
+    return true;
 }
 
 // General tab
@@ -777,7 +795,7 @@ void x265Dialog::rectInterCheckBox_toggled(bool checked)
 void x265Dialog::refFramesSpinBox_valueChanged(int value)
 {
     // Limiting reference frames doesn't have an effect when they are already limited to 1
-    const bool enable = value > 1;
+    const bool enable = value > 1 && ui.useAdvancedConfigurationCheckBox->isChecked();
     ui.limitRefDepthCheckBox->setEnabled(enable);
     ui.limitRefCUCheckBox->setEnabled(enable);
 }

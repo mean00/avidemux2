@@ -16,6 +16,7 @@ IF(USE_X265)
 
   MESSAGE(STATUS "x265 plugin activated, with cflags=${X265_CFLAGS}.")
   ADD_DEFINITIONS(${X265_CFLAGS})
+  ADD_DEFINITIONS(-DSIMPLE_MODE_EX=1)
   INCLUDE_DIRECTORIES(${X265_INCLUDE_DIR})
 
   #-----------------------QT4 VERSION---------------------

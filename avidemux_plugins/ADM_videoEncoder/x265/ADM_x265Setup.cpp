@@ -246,28 +246,38 @@ bool x265Encoder::setup(void)
   else
       param.bRepeatHeaders=1;
 
-  if(x265Settings.useAdvancedConfiguration)
-  {  
-
   #undef MKPARAM
   #undef MKPARAMD
   #undef MKPARAMB
   #define MKPARAM(x,y) {param.x = x265Settings.y;aprintf("[x265] "#x" = %d\n",param.x);}
   #define MKPARAMD(x,y) {param.x = (double)x265Settings.y; aprintf("[x265] "#x" = %.2f\n",param.x);}
   #define MKPARAMB(x,y) {param.x = x265Settings.y ;aprintf("[x265] "#x" = %s\n",TrueFalse[param.x&1]);}
-    MKPARAMB(interlaceMode,interlaced_mode)
+
+#ifdef SIMPLE_MODE_EX
+  MKPARAM(interlaceMode,interlaced_mode)
+  MKPARAM(maxNumReferences,MaxRefFrames)
+  MKPARAMB(bOpenGOP,b_open_gop)
+  MKPARAM(keyframeMin,MinIdr)
+  MKPARAM(keyframeMax,MaxIdr)
+  MKPARAM(scenecutThreshold,i_scenecut_threshold)
+#endif
+
+  if(x265Settings.useAdvancedConfiguration)
+  {
+#ifndef SIMPLE_MODE_EX
+    MKPARAM(interlaceMode,interlaced_mode)
     MKPARAM(maxNumReferences,MaxRefFrames)
     MKPARAMB(bOpenGOP,b_open_gop)
     MKPARAM(keyframeMin,MinIdr)
     MKPARAM(keyframeMax,MaxIdr)
-
+    MKPARAM(scenecutThreshold,i_scenecut_threshold)
+#endif
     MKPARAM(bframes,MaxBFrame)
     MKPARAM(bFrameAdaptive,i_bframe_adaptive)
     MKPARAM(bBPyramid,i_bframe_pyramid)
     MKPARAM(bFrameBias,i_bframe_bias)
 
     MKPARAM(lookaheadDepth,lookahead)
-    MKPARAM(scenecutThreshold,i_scenecut_threshold)
     MKPARAMB(bEnableConstrainedIntra,constrained_intra)
     MKPARAMB(bIntraInBFrames,b_intra)
 

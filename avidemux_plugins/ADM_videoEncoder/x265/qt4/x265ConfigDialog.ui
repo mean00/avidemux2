@@ -1377,7 +1377,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_30">
+             <widget class="QLabel" name="maxRefFramesLabel">
               <property name="text">
                <string>Maximum Reference Frames:</string>
               </property>
@@ -1411,7 +1411,7 @@
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_56">
+             <widget class="QLabel" name="refLimitLabel">
               <property name="text">
                <string>Limit References by:</string>
               </property>
@@ -1437,7 +1437,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_9">
+        <widget class="QGroupBox" name="groupBoxBframes">
          <property name="title">
           <string>B-frames</string>
          </property>
@@ -1995,7 +1995,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_14">
+        <widget class="QGroupBox" name="groupBoxQuantMatrix">
          <property name="title">
           <string>Quantisation Matrix</string>
          </property>
@@ -2276,7 +2276,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
+        <widget class="QGroupBox" name="groupBoxQuantCurveCompress">
          <property name="title">
           <string>Quantiser Curve Compression</string>
          </property>
