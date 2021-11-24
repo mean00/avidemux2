@@ -214,22 +214,34 @@ bool x264Encoder::setup(void)
   else
       param.b_repeat_headers=1;
 
-  if(x264Settings.useAdvancedConfiguration)
-  {  
-
   #undef MKPARAM
   #undef MKPARAMF
   #undef MKPARAMB
   #define MKPARAM(x,y) {param.x = x264Settings.y;aprintf("[x264] "#x" = %d\n",param.x);}
   #define MKPARAMF(x,y) {param.x = (float)x264Settings.y; aprintf("[x264] "#x" = %.2f\n",param.x);}
   #define MKPARAMB(x,y) {param.x = x264Settings.y ;aprintf("[x264] "#x" = %s\n",TrueFalse[param.x&1]);}
-    MKPARAM(i_frame_reference,MaxRefFrames);
-    MKPARAM(i_keyint_min,MinIdr);
-    MKPARAM(i_keyint_max,MaxIdr);
-    MKPARAM(i_scenecut_threshold,i_scenecut_threshold);
-    MKPARAMB(b_intra_refresh,intra_refresh);
-    MKPARAM(i_bframe,MaxBFrame);
 
+#ifdef SIMPLE_MODE_EX
+  MKPARAMB(b_interlaced,interlaced)
+  MKPARAMB(b_tff,tff)
+  MKPARAM(i_keyint_min,MinIdr)
+  MKPARAM(i_keyint_max,MaxIdr)
+  MKPARAM(i_scenecut_threshold,i_scenecut_threshold)
+  MKPARAMB(b_intra_refresh,intra_refresh)
+#endif
+
+  if(x264Settings.useAdvancedConfiguration)
+  {
+    MKPARAM(i_frame_reference,MaxRefFrames);
+#ifndef SIMPLE_MODE_EX
+    MKPARAMB(b_interlaced,interlaced)
+    MKPARAMB(b_tff,tff)
+    MKPARAM(i_keyint_min,MinIdr)
+    MKPARAM(i_keyint_max,MaxIdr)
+    MKPARAM(i_scenecut_threshold,i_scenecut_threshold)
+    MKPARAMB(b_intra_refresh,intra_refresh)
+#endif
+    MKPARAM(i_bframe,MaxBFrame);
     MKPARAM(i_bframe_adaptive,i_bframe_adaptive);
     MKPARAM(i_bframe_bias,i_bframe_bias);
     MKPARAM(i_bframe_pyramid,i_bframe_pyramid);
@@ -240,9 +252,7 @@ bool x264Encoder::setup(void)
       MKPARAM(i_deblocking_filter_beta,i_deblocking_filter_beta);
     }
     MKPARAMB(b_cabac,cabac);
-    MKPARAMB(b_interlaced,interlaced);
     MKPARAMB(b_constrained_intra,constrained_intra);
-    MKPARAMB(b_tff,tff);
     MKPARAMB(b_fake_interlaced,fake_interlaced);
 
     // -------------- analyze------------
