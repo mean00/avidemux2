@@ -8,7 +8,7 @@
 <body>
   <div id="inner">
 
-    <h1>Changes in Avidemux v2.7.8 – v2.?.?</h1>
+    <h1>Changes in Avidemux v2.7.8 – v2.8.0</h1>
 
     <h2>Behavior</h2>
 
@@ -91,6 +91,9 @@
       <li>x264 video encoder plugin now allows to specify color properties.</li>
       <li>Maximized window state, widget visibility and toolbar position are
           preserved after application restart.</li>
+      <li>Timestamps in format 00:00:00.000 like copied to clipboard by pressing
+          CTRL+SHIFT+C can be pasted into the "Go to Time" dialog using
+          CTRL+V.</li>
       <li>PulseAudioSimple audio device has been replaced with full PulseAudio,
           making an in-application volume control available (Linux only).</li>
       <li>ALSA audio device plugin has been modified to use soft volume,
@@ -108,6 +111,12 @@
           disk space.</li>
       <li>Purple tint in old &quot;Fade to&quot; and &quot;Fade to black&quot;
           filters on macOS fixed.</li>
+    </ul>
+
+    <h2>Miscellaneous</h2>
+
+    <ul>
+      <li>Bundled FFmpeg libraries have been updated to 4.4.1 release.</li>
     </ul>
 
   </div>
