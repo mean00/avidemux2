@@ -370,13 +370,15 @@ bool x265Encoder::setup(void)
 */
 void dumpx265Setup(x265_param *param)
 {
-#define PI(x) printf(#x"\t:%d\n",(int)param->x)
-#define PD(x) printf(#x"\t:%f\n",(double)param->x)
-#define PS(x) printf(#x"\t:%s\n",param->x)
-    printf("*************************************\n");
-    printf("***      Encoder Environment      ***\n");
-    printf("*************************************\n");
-    
+#define STR(x) #x
+#define MKSTRING(x) STR(x)
+#define PI(x) printf("%-32s : %d\n",MKSTRING(x),(int)param->x)
+#define PD(x) printf("%-32s : %f\n",MKSTRING(x),(double)param->x)
+#define PS(x) printf("%-32s : %s\n",MKSTRING(x),param->x)
+    printf("*********************************************\n");
+    printf("***          Encoder Environment          ***\n");
+    printf("*********************************************\n");
+
     PI(cpuid);
     PI(bEnableWavefront);
 #if X265_BUILD >= 47
@@ -390,11 +392,11 @@ void dumpx265Setup(x265_param *param)
     PI(bEnablePsnr); 
     PI(bEnableSsim); 
     PI(decodedPictureHashSEI);
-    
-    printf("*************************************\n");
-    printf("** Internal Picture Specification  **\n");
-    printf("*************************************\n");
-    
+
+    printf("*********************************************\n");
+    printf("***    Internal Picture Specification     ***\n");
+    printf("*********************************************\n");
+
     PI(internalBitDepth);
     PI(internalCsp);
     PI(fpsNum);
@@ -406,19 +408,19 @@ void dumpx265Setup(x265_param *param)
     PI(bRepeatHeaders);
     PI(bEnableAccessUnitDelimiters);
     PI(bEmitHRDSEI);
-    
-    printf("*************************************\n");
-    printf("*** Coding Unit (CU) Definitions  ***\n");
-    printf("*************************************\n");
-    
+
+    printf("*********************************************\n");
+    printf("***     Coding Unit (CU) Definitions      ***\n");
+    printf("*********************************************\n");
+
     PI(maxCUSize);
     PI(tuQTMaxInterDepth);
     PI(tuQTMaxIntraDepth);
-    
-    printf("*************************************\n");
-    printf("***  GOP Structure and Lookahead  ***\n");
-    printf("*************************************\n");
-    
+
+    printf("*********************************************\n");
+    printf("***      GOP Structure and Lookahead      ***\n");
+    printf("*********************************************\n");
+
     PI(bOpenGOP);
     PI(keyframeMin);
     PI(keyframeMax);
@@ -430,19 +432,19 @@ void dumpx265Setup(x265_param *param)
     PI(lookaheadDepth);
     PI(bFrameBias);
     PI(scenecutThreshold);
-    
-    printf("*************************************\n");
-    printf("***      Intra Coding Tools       ***\n");
-    printf("*************************************\n");
-    
+
+    printf("*********************************************\n");
+    printf("***          Intra Coding Tools           ***\n");
+    printf("*********************************************\n");
+
     PI(bEnableConstrainedIntra);
     PI(bIntraInBFrames);
     PI(bEnableStrongIntraSmoothing);
-    
-    printf("*************************************\n");
-    printf("***      Inter Coding Tools       ***\n");
-    printf("*************************************\n");
-    
+
+    printf("*********************************************\n");
+    printf("***          Inter Coding Tools           ***\n");
+    printf("*********************************************\n");
+
     PI(searchMethod);
     PI(subpelRefine);
     PI(searchRange);
@@ -453,11 +455,11 @@ void dumpx265Setup(x265_param *param)
     PI(bEnableRectInter);
     PI(bEnableAMP);
     PI(limitModes);
-    
-    printf("*************************************\n");
-    printf("***        Analysis Tools         ***\n");
-    printf("*************************************\n");
-    
+
+    printf("*********************************************\n");
+    printf("***            Analysis Tools             ***\n");
+    printf("*********************************************\n");
+
 #if X265_BUILD < 45
     PI(bEnableCbfFastMode);
 #endif
@@ -467,11 +469,11 @@ void dumpx265Setup(x265_param *param)
     PD(psyRd);
     PI(rdoqLevel);
     PD(psyRdoq);
-    
-    printf("*************************************\n");
-    printf("***         Coding Tools          ***\n");
-    printf("*************************************\n");
-    
+
+    printf("*********************************************\n");
+    printf("***             Coding Tools              ***\n");
+    printf("*********************************************\n");
+
     PI(bEnableSignHiding);
     PI(bEnableTransformSkip);
     PI(bEnableTSkipFast);
@@ -497,12 +499,12 @@ void dumpx265Setup(x265_param *param)
     PI(bLossless);
     PI(bCULossless);
 
-#define RI(x) printf(#x"\t:%d\n",(int)param->rc.x)
-#define RD(x) printf(#x"\t:%f\n",(double)param->rc.x)
-    printf("*************************************\n");
-    printf("***         Rate Control          ***\n");
-    printf("*************************************\n");
-    
+#define RI(x) printf("%-32s : %d\n",MKSTRING(x),(int)param->rc.x)
+#define RD(x) printf("%-32s : %f\n",MKSTRING(x),(double)param->rc.x)
+    printf("*********************************************\n");
+    printf("***             Rate Control              ***\n");
+    printf("*********************************************\n");
+
     RI(rateControlMode);
     RI(qp);
     RI(bitrate);
@@ -527,11 +529,11 @@ void dumpx265Setup(x265_param *param)
     RD(qblur);
     RD(complexityBlur);
 
-#define VI(x) printf(#x"\t:%d\n",(int)param->vui.x)
-    printf("*************************************\n");
-    printf("***  Video Usability Information  ***\n");
-    printf("*************************************\n");
-    
+#define VI(x) printf("%-32s : %d\n",MKSTRING(x),(int)param->vui.x)
+    printf("*********************************************\n");
+    printf("***      Video Usability Information      ***\n");
+    printf("*********************************************\n");
+
     VI(aspectRatioIdc);
     VI(sarWidth);
     VI(sarHeight);
