@@ -572,7 +572,7 @@ bool extractH265FrameType(uint8_t *buffer, uint32_t len, uint32_t nalSize, ADM_S
                 return decodeSliceHeaderH265(head, head+length, flags, spsinfo, poc);
             }
             default:
-                ADM_info("Skipping NALU of type %d (%s)\n",nalType,nalTypeToString(nalType));
+                //ADM_info("Skipping NALU of type %d (%s)\n",nalType,nalTypeToString(nalType));
                 break;
         }
         head+=length;
@@ -652,7 +652,7 @@ bool extractH265FrameType_startCode(uint8_t *buffer, uint32_t len, ADM_SPSinfoH2
                 return decodeSliceHeaderH265(buffer, buffer+length, flags, spsinfo, poc);
             }
             default:
-                ADM_info("Skipping NALU of type %d (%s)\n",nalType,nalTypeToString(nalType));
+                //ADM_info("Skipping NALU of type %d (%s)\n",nalType,nalTypeToString(nalType));
                 break;
         }
         buffer = head;
