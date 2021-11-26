@@ -15,9 +15,6 @@ typedef enum
     ADM_PREVIEW_SEPARATE
 }ADM_PREVIEW_MODE;
 
-ADM_PREVIEW_MODE  getPreviewMode(void);
-void             setPreviewMode(ADM_PREVIEW_MODE preview);
-void             changePreviewZoom(float nzoom);
 /**
     class admPreview
 */
@@ -46,6 +43,9 @@ class admPreview
       static bool updateImage(void);
       static ADM_HW_IMAGE getPreferedHwImageFormat(void);
       static float getCurrentZoom();
+      static void changePreviewZoom(float nzoom);
+      static ADM_PREVIEW_MODE getPreviewMode(void);
+      static void setPreviewMode(ADM_PREVIEW_MODE preview);
 	  static void getFrameFlags(uint32_t *flags, uint32_t *quantiser);
 };
 #endif

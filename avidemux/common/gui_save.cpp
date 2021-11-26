@@ -452,7 +452,7 @@ bool A_saveJpg (const char *name)
 {
     bool result=true;
     bool fromDisplayBuffer=false;
-    if(getPreviewMode()==ADM_PREVIEW_NONE)
+    if(ADM_PREVIEW_NONE == admPreview::getPreviewMode())
         fromDisplayBuffer=true;
     ADMImage *image;
     image=NULL;
@@ -516,7 +516,7 @@ int A_saveBunchJpg(const char *name)
     ADM_HW_IMAGE hw=admPreview::getPreferedHwImageFormat();
 
     ADM_videoFilterChain *chain;
-    if(getPreviewMode()==ADM_PREVIEW_NONE)
+    if(ADM_PREVIEW_NONE == admPreview::getPreviewMode())
         chain=createEmptyVideoFilterChain(start,end);
     else
         chain=createVideoFilterChain(start,end);
@@ -598,7 +598,7 @@ bool A_savePng (const char *name)
 {
     bool result=true;
     bool fromDisplayBuffer=false;
-    if(getPreviewMode()==ADM_PREVIEW_NONE)
+    if(ADM_PREVIEW_NONE == admPreview::getPreviewMode())
         fromDisplayBuffer=true;
     ADMImage *image;
     image=NULL;
@@ -627,7 +627,7 @@ bool A_saveImg (const char *name)
 {
     bool result=true;
     bool fromDisplayBuffer=false;
-    if(getPreviewMode()==ADM_PREVIEW_NONE)
+    if(ADM_PREVIEW_NONE == admPreview::getPreviewMode())
         fromDisplayBuffer=true;
     ADMImage *image;
     image=NULL;

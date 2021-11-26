@@ -441,7 +441,7 @@ void HandleAction (Action action)
         {
                 float currentZoom=(float)(2<<(action-ACT_ZOOM_1_4))/8;
                 UI_setBlockZoomChangesFlag(true);
-                changePreviewZoom(currentZoom);
+                admPreview::changePreviewZoom(currentZoom);
                 UI_setBlockZoomChangesFlag(false);
                 UI_resetZoomThreshold();
                 admPreview::samePicture();
@@ -470,7 +470,7 @@ void HandleAction (Action action)
 #define TOGGLE_PREVIEW ADM_PREVIEW_OUTPUT
     case ACT_PreviewChanged:
     {
-        ADM_PREVIEW_MODE oldpreview=getPreviewMode(),newpreview=(ADM_PREVIEW_MODE)UI_getCurrentPreview();
+        ADM_PREVIEW_MODE oldpreview = admPreview::getPreviewMode(),newpreview=(ADM_PREVIEW_MODE)UI_getCurrentPreview();
           printf("Old preview %d, New preview mode : %d\n",oldpreview,newpreview);
 
           if(oldpreview==newpreview)
@@ -478,7 +478,7 @@ void HandleAction (Action action)
             return;
           }
             admPreview::stop();
-            setPreviewMode(newpreview);
+            admPreview::setPreviewMode(newpreview);
             admPreview::start();
 //            admPreview::update(curframe);
       }
@@ -1779,10 +1779,10 @@ uint8_t GUI_close(void)
   if (avifileinfo)        // already opened ?
     {                // delete everything
       // if preview is on
-      if(getPreviewMode()!=ADM_PREVIEW_NONE)
+      if(ADM_PREVIEW_NONE != admPreview::getPreviewMode())
       {
         admPreview::stop();
-        setPreviewMode(ADM_PREVIEW_NONE);
+        admPreview::setPreviewMode(ADM_PREVIEW_NONE);
       }
       admPreview::setMainDimension(0, 0, ZOOM_1_1); // destroy preview
       UI_setNeedsResizingFlag(false);

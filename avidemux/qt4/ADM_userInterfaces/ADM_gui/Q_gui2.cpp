@@ -355,7 +355,7 @@ void MainWindow::thumbSlider_valueEmitted(int value)
 
     if (playing)
     {
-        if (getPreviewMode() != ADM_PREVIEW_NONE)
+        if (admPreview::getPreviewMode() != ADM_PREVIEW_NONE)
             return;
         sendAction(ACT_PlayAvi); // stop playback;
         dragWhilePlay = true;
@@ -363,7 +363,7 @@ void MainWindow::thumbSlider_valueEmitted(int value)
     } else if (dragWhilePlay && !value)
     {
         dragWhilePlay = false;
-        if (getPreviewMode() == ADM_PREVIEW_NONE)
+        if (admPreview::getPreviewMode() == ADM_PREVIEW_NONE)
             sendAction(ACT_PlayAvi); // resume playback;
         return;
     }
@@ -1255,7 +1255,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         ui.checkBox_TimeShift->setEnabled(false);
         ui.spinBox_TimeValue->setEnabled(false);
 
-        if(getPreviewMode()!=ADM_PREVIEW_NONE)
+        if(ADM_PREVIEW_NONE != admPreview::getPreviewMode())
             slider->setEnabled(false);
 
         return;

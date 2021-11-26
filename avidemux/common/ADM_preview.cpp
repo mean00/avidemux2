@@ -134,15 +134,14 @@ float admPreview::getCurrentZoom(void)
       @return current preview mode
 
 */
-
-ADM_PREVIEW_MODE getPreviewMode(void)
+ADM_PREVIEW_MODE admPreview::getPreviewMode(void)
 {
   return previewMode; 
 }
 /**
     \fn changePreviewZoom
 */
-void changePreviewZoom(float nzoom)
+void admPreview::changePreviewZoom(float nzoom)
 {
     admPreview::stop();
     ADM_info("Preview :: Change zoom %.4f->%.4f\n",zoom,nzoom);
@@ -157,8 +156,7 @@ void changePreviewZoom(float nzoom)
       @param mode  new preview mode
 
 */
-
- void setPreviewMode(ADM_PREVIEW_MODE mode)
+void admPreview::setPreviewMode(ADM_PREVIEW_MODE mode)
 {
   previewMode=mode; 
   UI_setCurrentPreview( (int)mode);

@@ -157,7 +157,7 @@ void GUI_PlayAvi(bool quit)
     // might not be matching a source video time => PROBLEM
     // Go back to the beginning to be on safe ground
     // In copy mode, we can keep the current position
-    if(getPreviewMode()!=ADM_PREVIEW_NONE)
+    if(ADM_PREVIEW_NONE != admPreview::getPreviewMode())
         admPreview::seekToTime(oldTimeFrame);
     else
     {
@@ -219,7 +219,7 @@ bool GUIPlayback::initialize(void)
     prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
 
     firstPts=admPreview::getCurrentPts();
-    if(getPreviewMode()==ADM_PREVIEW_NONE) // copy
+    if(ADM_PREVIEW_NONE == admPreview::getPreviewMode()) // copy
     {
         videoChain=createEmptyVideoFilterChain(firstPts,ADM_NO_PTS);
     }else
