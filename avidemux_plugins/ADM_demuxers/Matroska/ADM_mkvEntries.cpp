@@ -26,6 +26,8 @@
 
 #include "mkv_tags.h"
 #include "ADM_aacinfo.h"
+#include "ADM_iso639.h"
+
 class entryDesc
 {
   public:
@@ -644,8 +646,16 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
                      ADM_info("Found language  = %s\n",s);
                      if(id == MKV_LANGUAGE_IETF)
                      {
-                         ietfLanguageTagFound = true;
                          s[2] = 0; // hack, we don't support BCP 47 yet, so we strip it down to ISO-639-1
+                         if(!strcmp(s,"un")) break;
+                         const ADM_iso639_t *langTable = ADM_getLanguageList();
+                         int ix = ADM_getIndexForIso639(s);
+                         if(ix < 0 || ix >= ADM_getLanguageListSize())
+                             break; // maybe we have got valid ISO-639-2 and could use it
+                         ADM_info("Deriving language code from BCP 47: %s --> %s\n",s,langTable[ix].iso639_2);
+                         entry->language = langTable[ix].iso639_2;
+                         ietfLanguageTagFound = true;
+                         break;
                      }
                  }
                  entry->language = s;
