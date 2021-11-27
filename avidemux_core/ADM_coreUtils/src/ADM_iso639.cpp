@@ -236,8 +236,15 @@ int                 ADM_getLanguageListSize()
 const char *ADM_iso639b_toPlaintext(const char *iso)
 {
     iso639_lang_t *lang;
+    bool twochars = strlen(iso) == 2;
     for( lang = (iso639_lang_t*) languages; lang->eng_name; lang++ )
     {
+        if(twochars)
+        {
+            if(!strcmp(lang->iso639_1,iso))
+                return lang->eng_name;
+            continue;
+        }
         if(!strcmp(lang->iso639_2,iso))
             return lang->eng_name;
         if(lang->iso639_2b && !strcmp(lang->iso639_2b,iso))
@@ -253,8 +260,14 @@ const char *ADM_iso639b_toPlaintext(const char *iso)
 int                 ADM_getIndexForIso639(const char *iso)
 {
     int n=ADM_getLanguageListSize();
+    bool twochars = strlen(iso) == 2;
     for(int i=0;i<n;i++)
     {
+        if(twochars)
+        {
+            if(!strcmp(languages[i].iso639_1,iso)) return i;
+            continue;
+        }
         if(!strcmp(languages[i].iso639_2,iso)) return i;
         if(languages[i].iso639_2b && !strcmp(languages[i].iso639_2b,iso)) return i;
     }
