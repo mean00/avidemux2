@@ -399,6 +399,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
    uint64_t id,len;
   ADM_MKV_TYPE type;
   const char *ss;
+  bool ietfLanguageTagFound = false;
 
   while(!father.finished())
   {
@@ -624,7 +625,9 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
                   entryWalk(&father,len,entry);
                   break;
         case MKV_LANGUAGE:
+        case MKV_LANGUAGE_IETF:
                 {
+                 if(ietfLanguageTagFound) break;
                  char s[100];
                  s[99]=0;
                  father.readString(s,len);
@@ -639,6 +642,11 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
                  }else
                  {
                      ADM_info("Found language  = %s\n",s);
+                     if(id == MKV_LANGUAGE_IETF)
+                     {
+                         ietfLanguageTagFound = true;
+                         s[2] = 0; // hack, we don't support BCP 47 yet, so we strip it down to ISO-639-1
+                     }
                  }
                  entry->language = s;
                 }
