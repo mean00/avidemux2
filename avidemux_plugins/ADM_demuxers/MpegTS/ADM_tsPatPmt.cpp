@@ -311,6 +311,7 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
             pid&=0x1fff;
             uint8_t *base=r+5;
             r+=size+5;
+            if(packLen < size+5) break;
             packLen-=5+size;
             printf("[PMT]          Type=0x%x pid=%x size=%d\n",type,pid,size);
             const char *str;
