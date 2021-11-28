@@ -199,10 +199,11 @@ again:
 }
 
 /**
-    \fn getNextPsiPacket
-    \brief Take a raw packet of type pid & remove the header
+    \fn getNextPacket_NoHeader
+    \brief Get a raw packet with given pid & remove the header.
+    @param first: Make sure a payload unit starts in this packet, skip data preceding it.
 */
-bool tsPacket::getNextPacket_NoHeader(uint32_t pid,TSpacketInfo *pkt,bool psi)
+bool tsPacket::getNextPacket_NoHeader(uint32_t pid,TSpacketInfo *pkt,bool first)
 {
     uint8_t scratch[188+4];
     int count=0;
@@ -250,10 +251,22 @@ nextPack:
     start=scratch+3;
     end=scratch+TS_PACKET_LEN-1;
 
-    if((fieldControl & 2)|| psi) // Adaptation layer
+    if(fieldControl & 2) // Adaptation layer
     {
-        int payloadSize=*start++;
-        start+=payloadSize;
+        int adaptationFieldLength = *start++;
+        start += adaptationFieldLength;
+        if(start >= end)
+        {
+#ifdef TS_DEBUG2
+            printf("[getNextPacket_NoHeader] Adaptation field length %d out of bounds!\n",adaptationFieldLength);
+#endif
+            goto nextPack;
+        }
+    }
+    if(first && pkt->payloadStart) // skip to the start of new payload
+    {
+        int payloadOffset = *start++;
+        start += payloadOffset;
     }
     int size=(int)(end-start);
     if(size<=0)  
@@ -279,9 +292,34 @@ bool        tsPacket::updateStats(uint8_t *data)
 {
     return true;
 }
+
+#define PSI_TABLE_HEADER_SIZE 3
+#define PSI_TABLE_SYNTAX_SIZE 5
+#define PSI_CHECKSUM_SIZE 4
+
 /**
-    \fn getNextPsiPacket
-    \brief Take a raw packet of type pid & remove the header (PSI)
+    \fn verifyPsiChecksum
+    @param  data: Pointer to PSI table ID.
+    @param  len:  Size of payload starting with PSI table ID including CRC32 at its end.
+*/
+static bool verifyPsiChecksum(uint8_t *data, uint32_t len)
+{
+    if(len <= PSI_TABLE_HEADER_SIZE + PSI_TABLE_SYNTAX_SIZE + PSI_CHECKSUM_SIZE)
+        return false;
+    len -= PSI_CHECKSUM_SIZE;
+    uint8_t *c = data + len;
+    uint32_t crc1 = mpegTsCRC(data,len);
+    uint32_t crc2 = (c[0]<<24)+(c[1]<<16)+(c[2]<<8)+c[3];
+    if(crc1 == crc2)
+        return true;
+
+    ADM_warning("Bad checksum : %04x vs %04x\n",crc1,crc2);
+    return false;
+}
+
+/**
+    \fn getNextPSI
+    \brief Assemble PSI table data from raw packets with given pid, remove header and checksum.
 */
 #ifdef VERBOSE_PSI
 #define DUMMY(x,n) {dummy=bits.get(n);printf("[TS]: "#x" =0x%x %d\n",dummy,dummy);}
@@ -290,93 +328,127 @@ bool        tsPacket::updateStats(uint8_t *data)
 #endif
 bool tsPacket::getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi)
 {
+    const int hdr = PSI_TABLE_HEADER_SIZE + PSI_TABLE_SYNTAX_SIZE;
     int multiPacketPsi=0;
     int nbRetries=0;
     uint64_t startOffset=0;
+    uint32_t remaining,sectionLength=0;
+    uint32_t transportStreamId=0;
+    uint32_t dummy;
     TSpacketInfo pkt;
+    uint8_t *ptr = psi->payload;
 nextPack2:
     if(nbRetries && pkt.startAt-startOffset>(1<<25)) // max. 32 MiB
     {
         ADM_warning("Giving up after %d retries, consumed %" PRId64" bytes\n",nbRetries,pkt.startAt-startOffset);
         return false;
     }
-    if(false==getNextPacket_NoHeader(pid,&pkt,true)) return false;    
+    if(false == getNextPacket_NoHeader(pid,&pkt,!multiPacketPsi))
+        return false;
     if(!nbRetries)
         startOffset=pkt.startAt;
     nbRetries++;
-    uint32_t sectionLength=0;
-    uint32_t transportStreamId=0;
-    uint32_t dummy;
-    
-    getBits bits(pkt.payloadSize,pkt.payload);
 
-    DUMMY(tableId,8);
-    int section_syntax_indicator=bits.get(1);
+    if(!multiPacketPsi && !pkt.payloadStart)
+        goto nextPack2;
 
-    if(!section_syntax_indicator)
+    if(!multiPacketPsi)
     {
+        if(pkt.payloadSize < hdr)
+        {
+            ADM_warning("PSI packet size %" PRIu32" too small, need at least %d bytes.\n",pkt.payloadSize,hdr);
+            goto nextPack2;
+        }
+
+        getBits bits(pkt.payloadSize,pkt.payload);
+
+        DUMMY(tableId,8);
+        int section_syntax_indicator=bits.get(1);
+
+        if(!section_syntax_indicator)
+        {
 #ifdef VERBOSE_PSI
-        ADM_warning("Syntax section indicator not set\n");
+            ADM_warning("Syntax section indicator not set\n");
 #endif
-        goto nextPack2;
-    }
+            goto nextPack2;
+        }
 
-    if(bits.get(1)) // Private bit
-    {
-        ADM_warning("Section syntax is set to private\n");
-        goto nextPack2;
-    }
-    int reserved = bits.get(2); // 2 Reserved bits
-    if(reserved!=3)
-        printf("[getNextPSI] Invalid data: reserved bits = %d, should be 3\n",reserved);
-    int unused = bits.get(2); // 2 unused bits
-    if(unused)
-        printf("[getNextPSI] Invalid data: unused bits = %d, should be 0\n",unused);
-    sectionLength = bits.get(10); // Section Length
+        if(bits.get(1)) // Private bit
+        {
+            ADM_warning("Section syntax is set to private\n");
+            goto nextPack2;
+        }
+        int reserved = bits.get(2); // 2 Reserved bits
+        if(reserved!=3)
+            printf("[getNextPSI] Invalid data: reserved bits = %d, should be 3\n",reserved);
+        int unused = bits.get(2); // 2 unused bits
+        if(unused)
+            printf("[getNextPSI] Invalid data: unused bits = %d, should be 0\n",unused);
+        sectionLength = bits.get(10); // Section Length
+        if(sectionLength <= PSI_TABLE_SYNTAX_SIZE + PSI_CHECKSUM_SIZE ||
+           sectionLength > 0x3FF - PSI_TABLE_HEADER_SIZE)
+        {
+            printf("[getNextPSI] Invalid section length: %d\n",sectionLength);
+            goto nextPack2;
+        }
 #if 1
-    if(sectionLength+3>pkt.payloadSize) 
-    {
-        if(!multiPacketPsi)
-            ADM_warning("[MpegTs] Multi Packet PSI ? sectionLength=%d, len=%d\n",sectionLength,pkt.payloadSize);
-        multiPacketPsi++;
-        goto nextPack2;
-    }
-    if(multiPacketPsi>1)
-        ADM_warning("Multi packet PSI warning repeated %d times\n",multiPacketPsi);
-    multiPacketPsi=0;
+        if(sectionLength + PSI_TABLE_HEADER_SIZE > pkt.payloadSize)
+        {
+            if(!multiPacketPsi)
+                ADM_warning("[MpegTs] Multi Packet PSI ? sectionLength=%d, len=%d\n",sectionLength,pkt.payloadSize);
+            multiPacketPsi++;
+        }
 #endif
-    transportStreamId=bits.get(16);// transportStreamId
+        transportStreamId=bits.get(16);// transportStreamId
 #ifdef VERBOSE_PSI
-    printf("[MpegTs] Section length    =%d\n",sectionLength);
-    printf("[MpegTs] transportStreamId =%d\n",transportStreamId);
+        printf("[MpegTs] Section length    =%d\n",sectionLength);
+        printf("[MpegTs] transportStreamId =%d\n",transportStreamId);
 #endif
-    bits.skip(2);                  // ignored
-    DUMMY(VersionNumber,5);         // Version number
-    DUMMY(CurrentNext,1);           // Current Next indicator
-    psi->count=bits.get(8);           // Section number
-    psi->countMax=bits.get(8);        // Section last number
+        bits.skip(2); // ignored
+        DUMMY(VersionNumber,5); // Version number
+        DUMMY(CurrentNext,1); // Current Next indicator
+        psi->count=bits.get(8); // Section number
+        psi->countMax=bits.get(8); // Section last number
 #ifdef VERBOSE_PSI
-    printf("[MpegTs] Count=%d CountMax=%d\n",psi->count,psi->countMax);
+        printf("[MpegTs] Count=%d CountMax=%d\n",psi->count,psi->countMax);
 #endif
-    if(psi->count!=psi->countMax) return false; // we dont handle split psi at the moment
+        if(psi->count!=psi->countMax) return false; // we dont handle split psi at the moment
 
-    uint8_t *c=pkt.payload+sectionLength-4+3;
-
-// Verify CRC
-    uint32_t crc1=mpegTsCRC(pkt.payload,sectionLength-4+3);
-    uint32_t crc2=(c[0]<<24)+(c[1]<<16)+(c[2]<<8)+c[3];
-    if(crc1!=crc2)
-    {
-        printf("[MpegTs] getNextPSI bad checksum :%04x vs %04x\n",crc1,crc2);
-        goto nextPack2;
+        remaining = sectionLength + PSI_TABLE_HEADER_SIZE;
     }
 
+    if(!multiPacketPsi)
+    {
+        int payloadsize = sectionLength + PSI_TABLE_HEADER_SIZE;
+        if(false == verifyPsiChecksum(pkt.payload, payloadsize))
+            goto nextPack2;
+        payloadsize -= hdr + PSI_CHECKSUM_SIZE;
+        psi->payloadSize=payloadsize;
+        memcpy(psi->payload,pkt.payload+hdr,payloadsize);
+        return true;
+    }
 
-    int hdr=(8+16+16+8+8+8)/8;
-    int payloadsize=sectionLength-4-5; // Remove checksum & header
-    if(payloadsize<4) goto nextPack2;
-    psi->payloadSize=payloadsize;
-    memcpy(psi->payload,pkt.payload+hdr,psi->payloadSize);
+    // TODO: check continuity
+
+    // Copy packet payload
+    while(true)
+    {
+        int chunk = (pkt.payloadSize > remaining)? remaining : pkt.payloadSize;
+        memcpy(ptr, pkt.payload, chunk); // we keep PSI table header here
+        ptr += chunk;
+        remaining -= chunk;
+        if(remaining < 1) break;
+        goto nextPack2;
+    }
+    // Verify PSI table checksum.
+    if(false == verifyPsiChecksum(psi->payload, sectionLength + PSI_TABLE_HEADER_SIZE))
+    {
+        multiPacketPsi = 0;
+        goto nextPack2;
+    }
+    psi->payloadSize = sectionLength - PSI_TABLE_SYNTAX_SIZE + PSI_CHECKSUM_SIZE;
+    memmove(psi->payload, psi->payload + hdr, sectionLength - PSI_TABLE_SYNTAX_SIZE + PSI_CHECKSUM_SIZE);
+
     return true;
 }
 /**
