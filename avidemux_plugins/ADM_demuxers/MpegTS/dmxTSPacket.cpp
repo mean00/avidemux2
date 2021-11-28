@@ -359,8 +359,12 @@ nextPack2:
             ADM_warning("PSI packet size %" PRIu32" too small, need at least %d bytes.\n",pkt.payloadSize,hdr);
             goto nextPack2;
         }
-
-        getBits bits(pkt.payloadSize,pkt.payload);
+        // getBits needs AV_INPUT_BUFFER_PADDING_SIZE bytes past the end of payload
+        // zeroed out to be safe against overreads.
+        uint8_t paddedBuffer[TS_PACKET_LEN + 64];
+        memcpy(paddedBuffer, pkt.payload, pkt.payloadSize);
+        memset(paddedBuffer + pkt.payloadSize, 0, 64);
+        getBits bits(pkt.payloadSize, paddedBuffer);
 
         DUMMY(tableId,8);
         int section_syntax_indicator=bits.get(1);
