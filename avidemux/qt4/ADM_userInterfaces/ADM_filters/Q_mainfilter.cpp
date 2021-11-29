@@ -830,7 +830,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
-    ADM_vf_rebuildBridge(video_body);
+    ADM_vf_updateBridge(video_body);
     displayFamily(0);
     buildActiveFilterList();
     setSelected(nb_active_filter - 1);
@@ -1243,7 +1243,7 @@ filterquickWindow::filterquickWindow(QWidget* parent) : QDialog(parent)
 
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
 
-    ADM_vf_rebuildBridge(video_body);
+    ADM_vf_updateBridge(video_body);
     displayPartialFilters();
 
     //____________________

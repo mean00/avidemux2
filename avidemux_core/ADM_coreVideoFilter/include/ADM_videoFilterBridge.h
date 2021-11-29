@@ -50,6 +50,7 @@ public:
                                     return startTime;
                             }
        virtual bool         getTimeRange(uint64_t *start, uint64_t *end) { *start=startTime; *end=endTime; return true; }
+       virtual void         updateBridge(uint64_t startTime, uint64_t endTime);
        bool                 rewind(void);
 
 };
