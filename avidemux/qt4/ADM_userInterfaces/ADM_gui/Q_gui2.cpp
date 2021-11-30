@@ -762,6 +762,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     // Hook also the toolbar
     connect(ui.toolBar,  SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
+    connect(ui.toolBar,  SIGNAL(orientationChanged(Qt::Orientation)),this,SLOT(toolbarOrientationChangedSlot(Qt::Orientation)));
     //connect(ui.toolBar_2,SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
 
     QWidget* dummy0 = new QWidget();
@@ -2054,30 +2055,46 @@ void MainWindow::updateZoomIndicator(void)
     }
     if(false == ui.toolBar->isVisible())
         return;
+    float percent = admPreview::getCurrentZoom();
+    if(percent < 0)
+        return;
+    percent *= 100;
+    percent += 0.49;
+
+    QString s = QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Zoom: "));
+
 #define ZLEN 64
     char text[ZLEN];
-    snprintf(text,ZLEN,"%.4f",admPreview::getCurrentZoom());
+    snprintf(text,ZLEN,"%d%%",(int)percent); // Is this viable for RTL locales?
     text[ZLEN-1] = 0;
-    QString s = QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Zoom: "));
-    s += text;
+
     if(!displayZoom)
     {
-        QLabel *z = new QLabel(s);
+        QLabel *z = new QLabel(s + text);
         // Try to prevent zoom display from becoming hidden by setting
         // a sufficient minimum width as no extension popup is created
         // for added widgets when toolbar is detached.
         QFontMetrics fm = z->fontMetrics();
-        z->setMinimumWidth(1.15 * fm.boundingRect(z->text()).width());
+        z->setMinimumWidth(1.15 * fm.boundingRect(s + "00000%").width()); // assumed worst case
         // Make sure there is some space between separator and text.
         z->setIndent(fm.boundingRect("0").width());
         displayZoom = ui.toolBar->addWidget(z);
     }else
     {
         QLabel *z = (QLabel *)ui.toolBar->widgetForAction(displayZoom);
-        z->setText(s);
+        z->setText(s + text);
     }
     displayZoom->setVisible(true);
 #undef ZLEN
+}
+
+/**
+ *  \fn toolbarOrientationChangedSlot
+ */
+void MainWindow::toolbarOrientationChangedSlot(Qt::Orientation orientation)
+{
+    UNUSED_ARG(orientation);
+    updateZoomIndicator();
 }
 
 /**
