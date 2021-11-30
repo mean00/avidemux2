@@ -1101,7 +1101,7 @@ void  updateLoaded (bool resetMarker)
     UI_setAudioTrackCount( video_body->getNumberOfActiveAudioTracks() );
     ADM_info(" conf updated \n");
     UI_setDecoderName(video_body->getVideoDecoderName());
-
+    UI_displayZoomLevel();
 }
 
 //___________________________________________
@@ -1800,6 +1800,7 @@ uint8_t GUI_close(void)
 //      filterCleanUp ();
       UI_setTitle(NULL);
       UI_setDecoderName("XXXX");
+      UI_displayZoomLevel();
 
     A_ResetMarkers();
     ReSync();

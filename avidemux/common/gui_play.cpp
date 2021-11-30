@@ -158,8 +158,10 @@ void GUI_PlayAvi(bool quit)
     // Go back to the beginning to be on safe ground
     // In copy mode, we can keep the current position
     if(ADM_PREVIEW_NONE != admPreview::getPreviewMode())
+    {
+        UI_displayZoomLevel();
         admPreview::seekToTime(oldTimeFrame);
-    else
+    }else
     {
         if(false==admPreview::seekToTime(newTimeFrame))
             admPreview::nextPicture();
@@ -239,10 +241,13 @@ bool GUIPlayback::initialize(void)
     // if the video output has same width/height as input, we keep the same zoom
     aviInfo originalVideo;
     video_body->getVideoInfo(&originalVideo);
-    if(info->width==originalVideo.width && info->height==originalVideo.height)
+    bool keepZoom = info->width == originalVideo.width && info->height == originalVideo.height;
+    if(keepZoom)
         zoom=currentZoom;
     //
     admPreview::setMainDimension(info->width,info->height,zoom);
+    if(ADM_PREVIEW_NONE != admPreview::getPreviewMode() && !keepZoom)
+        UI_displayZoomLevel();
     initializeAudio();
     return true;
 }

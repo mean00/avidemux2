@@ -147,6 +147,7 @@ void admPreview::changePreviewZoom(float nzoom)
     ADM_info("Preview :: Change zoom %.4f->%.4f\n",zoom,nzoom);
     zoom=nzoom;
     renderDisplayResize(rdrPhysicalW,rdrPhysicalH,zoom);
+    UI_displayZoomLevel();
     admPreview::start();
 }
 

@@ -614,6 +614,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     navigateWhilePlayingState=0;
     recentFiles = NULL;
     recentProjects = NULL;
+    displayZoom = NULL;
     actionLock = 0;
     busyCntr = 0;
     busyTimer.setSingleShot(true);
@@ -727,6 +728,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     AUTOREPEAT_TOOLBUTTON(toolButtonNextFrame)
     AUTOREPEAT_TOOLBUTTON(toolButtonPreviousIntraFrame)
     AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
+
+    ui.toolBar->addSeparator();
 
     // Crash in some cases addScriptReferencesToHelpMenu();
     QAction *previewFiltered = findAction(&myMenuVideo, ACT_PreviewChanged);
@@ -1658,6 +1661,7 @@ void MainWindow::restoreDefaultWidgetState(bool b)
     ui.toolBar->setVisible(true);
 
     syncToolbarsMenu();
+    updateZoomIndicator();
 
     addToolBar(ui.toolBar);
 
@@ -2028,11 +2032,52 @@ bool MainWindow::adjustZoom(int oldWidth, int oldHeight)
         admPreview::setMainDimension(w,h,zoom);
         actZoomCalled = false;
         admPreview::samePicture(); // required at least for VDPAU
+        updateZoomIndicator();
         blockResizing = false;
 
         return true;
     }
     return false;
+}
+
+/**
+ *  \fn updateZoomIndicator
+ *  \brief Display zoom level in the toolbar.
+ */
+void MainWindow::updateZoomIndicator(void)
+{
+    if(!avifileinfo || ui.toolBar->orientation() == Qt::Vertical)
+    {
+        if(displayZoom)
+            displayZoom->setVisible(false);
+        return;
+    }
+    if(false == ui.toolBar->isVisible())
+        return;
+#define ZLEN 64
+    char text[ZLEN];
+    snprintf(text,ZLEN,"%.4f",admPreview::getCurrentZoom());
+    text[ZLEN-1] = 0;
+    QString s = QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Zoom: "));
+    s += text;
+    if(!displayZoom)
+    {
+        QLabel *z = new QLabel(s);
+        // Try to prevent zoom display from becoming hidden by setting
+        // a sufficient minimum width as no extension popup is created
+        // for added widgets when toolbar is detached.
+        QFontMetrics fm = z->fontMetrics();
+        z->setMinimumWidth(1.15 * fm.boundingRect(z->text()).width());
+        // Make sure there is some space between separator and text.
+        z->setIndent(fm.boundingRect("0").width());
+        displayZoom = ui.toolBar->addWidget(z);
+    }else
+    {
+        QLabel *z = (QLabel *)ui.toolBar->widgetForAction(displayZoom);
+        z->setText(s);
+    }
+    displayZoom->setVisible(true);
+#undef ZLEN
 }
 
 /**
@@ -3078,6 +3123,14 @@ void UI_resetZoomThreshold(void)
 void UI_setZoomToFitIntoWindow(void)
 {
     ((MainWindow *)QuiMainWindows)->setZoomToFit();
+}
+
+/**
+    \fn UI_displayZoomLevel
+*/
+void UI_displayZoomLevel(void)
+{
+    ((MainWindow *)QuiMainWindows)->updateZoomIndicator();
 }
 
 /**
