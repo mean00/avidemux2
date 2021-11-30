@@ -199,6 +199,8 @@ void UI_resetZoomThreshold(void)
 {}
 void UI_setZoomToFitIntoWindow(void)
 {}
+void UI_displayZoomLevel(void)
+{}
 void UI_getMaximumPreviewSize(uint32_t *availWidth, uint32_t *availHeight)
 {
     *availWidth = 0;
