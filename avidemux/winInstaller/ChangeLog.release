@@ -72,6 +72,8 @@
       <li>Preference added to load sequentially named pictures in reverse order,
           allowing to reverse video by exporting selection as JPEG images and
           loading the first one.</li>
+      <li>During playback navigation is possible via keys or by dragging
+          the navigation slider.</li>
     </ul>
 
     <h2>Other Enhancements</h2>
@@ -99,6 +101,8 @@
       <li>ALSA audio device plugin has been modified to use soft volume,
           providing application-specific volume control which works with every
           ALSA device.</li>
+      <li>In the Video Filter Manager, navigation by keyboard has been enhanced.</li>
+      <li>The VU meter (&quot;Audio Metre&quot;) has been redesigned.</li>
     </ul>
 
     <h2>Bugfixes</h2>
@@ -111,6 +115,7 @@
           disk space.</li>
       <li>Purple tint in old &quot;Fade to&quot; and &quot;Fade to black&quot;
           filters on macOS fixed.</li>
+      <li>Green tint in &quot;MPlayer eq2&quot; filter is fixed.</li>
     </ul>
 
     <h2>Miscellaneous</h2>
