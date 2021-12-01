@@ -36,7 +36,7 @@
  */
  ADM_LogoCanvas::ADM_LogoCanvas(QWidget *z, uint32_t w, uint32_t h) : ADM_QCanvas(z,w,h)
  {
-     
+     mouseButtonPressed = false;
  }
  /**
   * 
@@ -46,6 +46,20 @@
      
  }
 
+  /**
+  * 
+  */
+void ADM_LogoCanvas::sendMovedSignal(QMouseEvent * event)
+{
+    QPoint p=event->pos();
+    int x=p.x();
+    int y=p.y();
+
+    if(x<0) x=0;
+    if(y<0) y=0;      
+
+    emit movedSignal(x,y);
+}
 /**
  * 
  * @param event
@@ -53,23 +67,29 @@
 void ADM_LogoCanvas::mousePressEvent(QMouseEvent * event)
 {
     aprintf("Pressed\n");
+    mouseButtonPressed = true;
+    sendMovedSignal(event);
 }
+/**
+ * 
+ * @param event
+ */
+void ADM_LogoCanvas::mouseMoveEvent(QMouseEvent * event)
+{
+    aprintf("Moved\n");
+    if (mouseButtonPressed)
+        sendMovedSignal(event);
+}
+
 /**
  * 
  * @param event
  */
 void ADM_LogoCanvas::mouseReleaseEvent(QMouseEvent * event)
 {
-    QPoint p=event->pos();
-    int x=p.x();
-    int y=p.y();
-
-    if(x<0) x=0;
-    if(y<0) y=0;    
-
     aprintf("Released %d %d\n",x,y);
-    emit movedSignal(x,y);
-
+    mouseButtonPressed = false;
+    sendMovedSignal(event);
 }
 /**
  * 
@@ -281,8 +301,11 @@ void Ui_logoWindow::moved(int x,int y)
 {
       if(lock) return;
       lock++;
-      myLogo->setXy(x,y);
-      myLogo->sameImage();      
+      if (myLogo->wouldBeMoved(x,y))
+      {
+        myLogo->setXy(x,y);
+        myLogo->sameImage();      
+      }
       lock--;
 }
 /**
@@ -366,6 +389,24 @@ void flyLogo::setTabOrder(void)
         _parent->setTabOrder(first,second);
         //ADM_info("Tab order: %p (%s) --> %p (%s)\n",first,first->objectName().toUtf8().constData(),second,second->objectName().toUtf8().constData());
     }
+}
+
+/**
+ * 
+ * @param x
+ * @param y
+ * @return 
+ */
+bool flyLogo::wouldBeMoved(int x,int y)
+{
+    if(x<0) x=0;
+    if(y<0) y=0;
+    double scale=(double)(_canvas->width()) / _in->getInfo()->width;
+    if (param.x != (int)((double)x / scale))
+        return true;
+    if (param.y != (int)((double)y / scale))
+        return true;
+    return false;
 }
 /**
  * 

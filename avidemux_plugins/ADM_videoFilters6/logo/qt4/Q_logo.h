@@ -14,11 +14,14 @@ class  ADM_LogoCanvas : public ADM_QCanvas
 {
     Q_OBJECT
 protected:
+        bool mouseButtonPressed;
+        void sendMovedSignal(QMouseEvent * event);
 public:
 	
                 ADM_LogoCanvas(QWidget *z, uint32_t w, uint32_t h);
 	virtual ~ADM_LogoCanvas();
         void mousePressEvent(QMouseEvent * event);
+        void mouseMoveEvent(QMouseEvent * event);
         void mouseReleaseEvent(QMouseEvent * event);
         void moveEvent(QMoveEvent * event);        
 
