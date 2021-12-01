@@ -74,7 +74,7 @@ bool ADM_vf_configureFilterAtIndex(int index)
     ADM_coreVideoFilter *instance=e->instance;
     ADM_assert(instance);
 
-    if(instance->configure() && ((index < nb-1) || (e->tag == VF_PARTIAL_FILTER))) // not the last one
+    if(instance->configure() && ((index < nb-1) || (e->tag == VF_PARTIAL_FILTER))) // not the last one -OR- partial filter (if only partial timing were changed, the child filter might operate noughty, until next chain rebuild)
     {
         return ADM_vf_recreateChain();
     }
