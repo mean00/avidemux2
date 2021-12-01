@@ -37,7 +37,7 @@ bool         x264Configure(void)
 
 diaMenuEntry threads[]={
   {1,QT_TR_NOOP("One thread")},
-  {2,QT_TR_NOOP("Two threads)")},
+  {2,QT_TR_NOOP("Two threads")},
   {3,QT_TR_NOOP("Three threads")},
   {99,QT_TR_NOOP("Auto (#cpu)")}
 };     

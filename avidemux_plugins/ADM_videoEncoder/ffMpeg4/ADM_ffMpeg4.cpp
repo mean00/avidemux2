@@ -206,7 +206,7 @@ diaMenuEntry rdE[]={
 };
 diaMenuEntry threads[]={
   {0,QT_TRANSLATE_NOOP("ffmpeg4","One thread"),NULL},
-  {2,QT_TRANSLATE_NOOP("ffmpeg4","Two threads)"),NULL},
+  {2,QT_TRANSLATE_NOOP("ffmpeg4","Two threads"),NULL},
   {3,QT_TRANSLATE_NOOP("ffmpeg4","Three threads"),NULL},
   {99,QT_TRANSLATE_NOOP("ffmpeg4","Auto (#cpu)"),NULL}
 };
