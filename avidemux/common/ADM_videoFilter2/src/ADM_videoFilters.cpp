@@ -74,7 +74,7 @@ bool ADM_vf_configureFilterAtIndex(int index)
     ADM_coreVideoFilter *instance=e->instance;
     ADM_assert(instance);
 
-    if(instance->configure() && index < nb-1) // not the last one
+    if(instance->configure() && ((index < nb-1) || (e->tag == VF_PARTIAL_FILTER))) // not the last one
     {
         return ADM_vf_recreateChain();
     }
