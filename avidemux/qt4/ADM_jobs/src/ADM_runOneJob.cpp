@@ -31,10 +31,11 @@
     #define MKCLI() "avidemux_cli.exe"
     #define MKQT()  "avidemux.exe"
     const string slash=string("\\");
-#else    
-    
+#else
     #ifdef __APPLE__
-        #define MKQT()  admExecutable("avidemux")
+        #define STR(x) #x
+        #define MKSTRING(x) STR(x)
+        #define MKQT()  admExecutable("Avidemux" MKSTRING(AVIDEMUX_MAJOR_MINOR))
         #define MKCLI() admExecutable( "avidemux_cli")
     #else
         #define MKCLI() admExecutable("avidemux3_cli")

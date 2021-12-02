@@ -81,6 +81,7 @@ endif (WIN32 OR APPLE)
 
 
 IF (APPLE)
+	add_source_cflags(ADM_runOneJob.cpp "-DAVIDEMUX_MAJOR_MINOR=\"${AVIDEMUX_MAJOR_MINOR}\"")
 	target_link_libraries(avidemux3_jobs_${QT_EXTENSION} "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
 
 	# for Leopard but it doesn't hurt Tiger
