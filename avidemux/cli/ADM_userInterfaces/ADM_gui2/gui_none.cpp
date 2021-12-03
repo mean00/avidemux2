@@ -171,6 +171,10 @@ bool UI_visibleVUMeter(void)
 {
     return false;
 }
+bool UI_alwaysUpdateVUMeter(void)
+{
+    return false;
+}
 bool UI_setVUMeter(int32_t volume[8])
 {
     return true;
