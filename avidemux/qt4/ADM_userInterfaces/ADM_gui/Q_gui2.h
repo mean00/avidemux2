@@ -236,6 +236,7 @@ private slots:
     void searchToolBar(QAction * action);
 
     void restoreDefaultWidgetState(bool b);
+    void setVuMeterAlwaysUpdateState(bool b);
     void toolbarOrientationChangedSlot(Qt::Orientation hv);
 
     void closeEvent(QCloseEvent *event)

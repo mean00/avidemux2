@@ -167,6 +167,10 @@ void UI_setTotalTime(uint64_t t)
 void UI_setSegments(uint32_t numOfSegs, uint64_t * segPts)
 {
 }
+bool UI_visibleVUMeter(void)
+{
+    return false;
+}
 bool UI_setVUMeter(int32_t volume[8])
 {
     return true;

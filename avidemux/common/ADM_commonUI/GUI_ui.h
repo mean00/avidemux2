@@ -48,6 +48,8 @@ uint8_t UI_arrow_disabled(void);
 void UI_refreshCustomMenu(void);
 void UI_applySettings(void);
 
+bool UI_visibleVUMeter(void);
+bool UI_alwaysUpdateVUMeter(void);
 bool UI_setVUMeter( int32_t volume[8]); // Volume as integer dBFS (valid range -100 to +3), mark inactive channel with +255 (> 3)
 bool UI_setVolume(void);
 bool UI_setDecoderName(const char *name);

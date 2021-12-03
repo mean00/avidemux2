@@ -510,11 +510,128 @@ bool GUIPlayback::updateVu(void)
     if(!playbackAudio)  return true;
     if(time>(vuMeterPts+wait))
     {
-        int32_t stat[8];
-        AVDM_getStats(stat);
-        UI_setVUMeter(stat);
+        if (UI_visibleVUMeter())
+        {
+            int32_t stat[8];
+            AVDM_getStats(stat);
+            UI_setVUMeter(stat);
+        }
         vuMeterPts=time;
     }
     return true;
 }
-// EOF
+
+
+/**
+    \fn GUI_DisplayAudio
+*/
+void GUI_DisplayAudio(void)
+{
+    if (playing)
+        return;
+    if (!UI_visibleVUMeter())
+        return;
+    if (!UI_alwaysUpdateVUMeter())
+        return;
+    
+    uint64_t startPts=admPreview::getCurrentPts();
+    int32_t shift=0; // unit is ms, + => delay audio, -=> advance audio
+    uint32_t channels,frequency,preload,small_;
+
+    EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+    if(!ed)
+        return;
+    // if audio shift is activated, take it into account
+    if(ed->audioEncodingConfig.shiftEnabled)
+        shift=ed->audioEncodingConfig.shiftInMs;
+    AUDMAudioFilter * playbackAudio = createPlaybackFilter(startPts,shift);
+    if(!playbackAudio) 
+    {
+        ADM_info("No audio\n");
+        return;
+    }
+
+    channels= playbackAudio->getInfo()->channels;
+    frequency=playbackAudio->getInfo()->frequency;
+    preload=  (frequency * channels * 1000)/avifileinfo->fps1000;
+
+    float * wavbuf =  (float *)  ADM_alloc((20*sizeof(float)*preload));
+    ADM_assert(wavbuf);
+    // Read a at least one block to have the proper channel mapping
+    uint32_t fill=0;
+    AUD_Status status;
+
+    while(fill<preload)
+    {
+      if (!(small_ = playbackAudio->fill(preload-fill, wavbuf+fill,&status)))
+      {
+        break;
+      }
+      fill+=small_;
+    }
+
+    int32_t stat[8];
+    float f[8],fsamp;
+    for(int i=0;i<8;i++)
+    {
+        stat[i] = 255;
+        f[i] = 0;
+    }
+    
+    float * base = wavbuf;
+    for (int i=0; i<(preload/channels); i++)
+    {
+        for (int ch=0; ch<channels; ch++)
+        {
+             f[ch]+=base[0]*base[0];
+             base++;
+        }
+    }
+
+    // Normalize
+    int32_t raw[8];
+    for(int i=0;i<8;i++)
+    {
+        float d=f[i];
+        d/=(preload/channels);
+        d=sqrt(d);
+        if (d == 0.0)  // log(0) is invalid
+            d = -100.0;
+        else
+            d = 20.0*log10(d) + 3.0;	// dBFS = 20*log10(rms(signal)) + 3 dB
+        if (d < -100.0)
+            d = -100.0;
+        d += 0.49;	// rounding
+        raw[i]=(int32_t)d;
+    }
+
+    // Assign mono to front center
+    if(channels==1)
+    {
+        stat[1]=raw[0];
+    }
+    else
+    {
+        const CHANNEL_TYPE * inputCh = playbackAudio->getChannelMapping();
+        static const CHANNEL_TYPE outputCh[8]={ADM_CH_REAR_LEFT,ADM_CH_SIDE_LEFT,ADM_CH_FRONT_LEFT,ADM_CH_FRONT_CENTER,
+                                             ADM_CH_LFE,ADM_CH_FRONT_RIGHT,ADM_CH_SIDE_RIGHT,ADM_CH_REAR_RIGHT};
+        for(int i=0;i<8;i++)
+        {
+            CHANNEL_TYPE wanted=outputCh[i];
+            for(int j=0;j<channels;j++)
+            {
+                if(inputCh[j]==wanted)
+                {
+                    stat[i]=raw[j];
+                    break;
+                }
+            }
+        }        
+    }
+
+    UI_setVUMeter(stat);
+    
+    ADM_dealloc(wavbuf);
+    destroyPlaybackFilter();
+}
+

@@ -389,7 +389,9 @@ void HandleAction (Action action)
   // Dispatch actions, we have a file loaded
   if(action>ACT_NAVIGATE_BEGIN && action < ACT_NAVIGATE_END)
   {
-    return HandleAction_Navigate(action);
+    HandleAction_Navigate(action);
+    GUI_DisplayAudio();
+    return;
   }
   if(action>ACT_SAVE_BEGIN && action < ACT_SAVE_END)
   {

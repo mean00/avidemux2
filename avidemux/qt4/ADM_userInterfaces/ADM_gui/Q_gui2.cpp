@@ -112,6 +112,7 @@ void UI_refreshCustomMenu(void);
 admUITaskBarProgress *QuiTaskBarProgress;
 extern admUITaskBarProgress *createADMTaskBarProgress();
 QWidget *QuiMainWindows=NULL;
+static bool VuMeterAlwaysUpdate=false;
 QWidget *VuMeter=NULL;
 QGraphicsView *drawWindow=NULL;
 
@@ -745,6 +746,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.menuToolbars->addAction(restoreDefaults);
 
     connect(ui.menuToolbars->actions().last(),SIGNAL(triggered(bool)),this,SLOT(restoreDefaultWidgetState(bool)));
+    
+    QAction *alwaysUpdateVUmeter = new QAction(QT_TRANSLATE_NOOP("qgui2","Always update Audio Metre"),this);
+    alwaysUpdateVUmeter->setCheckable(true);
+    alwaysUpdateVUmeter->setChecked(false);
+    ui.menuAudio->addAction(alwaysUpdateVUmeter);
+    connect(ui.menuAudio->actions().last(),SIGNAL(toggled(bool)),this,SLOT(setVuMeterAlwaysUpdateState(bool)));
 
     this->installEventFilter(this);
     slider->installEventFilter(this);
@@ -1668,6 +1675,14 @@ void MainWindow::restoreDefaultWidgetState(bool b)
 
     if(!playing)
         setZoomToFit();
+}
+
+/**
+    \fn     setVuMeterAlwaysUpdateState
+*/
+void MainWindow::setVuMeterAlwaysUpdateState(bool b)
+{
+    VuMeterAlwaysUpdate = b;
 }
 
 /**
@@ -2909,6 +2924,22 @@ bool UI_setTimeShift(int onoff,int value)
         WIDGET(checkBox_TimeShift)->setCheckState(Qt::Unchecked);
     WIDGET(spinBox_TimeValue)->setValue(value);
     return 1;
+}
+/**
+    \fn UI_visibleVUMeter
+*/
+bool UI_visibleVUMeter(void)
+{
+    if (WIDGET(audioMetreWidget)->isHidden())
+        return false;
+    return true;
+}
+/**
+    \fn UI_alwaysUpdateVUMeter
+*/
+bool UI_alwaysUpdateVUMeter(void)
+{
+    return VuMeterAlwaysUpdate;
 }
 /**
     \fn UI_setVUMeter
