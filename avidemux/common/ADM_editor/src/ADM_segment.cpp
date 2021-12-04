@@ -258,7 +258,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     if(!found)
     {
         ADM_warning("Reached the end of ref video while searching for the first keyframe.\n");
-        if(!videos.size())
+        if(!videos.size() && (ref->_videoCache != _sharedVideoCache))
             delete ref->_videoCache;
         ref->_videoCache = NULL;
         if(ref->decoder) delete ref->decoder;
