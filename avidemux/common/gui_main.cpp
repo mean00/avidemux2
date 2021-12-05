@@ -1371,28 +1371,22 @@ bool A_saveSession(void)
 bool A_checkSavedSession(bool load)
 {
     std::string where=LAST_SESSION_FILE;
-    bool exists=ADM_fileExist(where.c_str());
+    if(false == ADM_fileExist(where.c_str()))
+        return false;
     if(!load)
-        return exists;
-    bool r=false;
-    if(exists)
-    {
-        IScriptEngine *engine=getPythonScriptEngine();
-        if(engine)
-        {
-            ADM_info("Restoring the last editing state from %s\n",where.c_str());
-            r=A_parseScript(engine,where.c_str());
-            if (r)
-            {
-                video_body->rewind();
-                admPreview::samePicture();
-                A_Resync();
-                if(!ADM_eraseFile(where.c_str()))
-                    ADM_warning("Could not delete %s\n",where.c_str());
-            }
-        }
-    }
-    return r;
+        return true;
+    IScriptEngine *engine=getPythonScriptEngine();
+    if(!engine)
+        return false;
+    ADM_info("Restoring the last editing state from %s\n",where.c_str());
+    if(false == A_parseScript(engine,where.c_str()))
+        return false;
+    video_body->rewind();
+    admPreview::samePicture();
+    A_Resync();
+    if(false == ADM_eraseFile(where.c_str()))
+        ADM_warning("Could not delete %s\n",where.c_str());
+    return true;
 }
 /**
     Unpack all frames without displaying them to check for error
