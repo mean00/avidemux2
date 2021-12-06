@@ -148,23 +148,32 @@ void ADM_Qvideo::setADMSize(int width,int height)
 #if !defined(__APPLE__) && !defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     // Work around an issue with Qt 6.2.1 which results in video frame displaying
     // garbage for all subsequently loaded videos after its size was set to zero.
-    char *runtimeQtVersion = ADM_strdup(qVersion()); // We need the runtime version, not the build version.
-    if(runtimeQtVersion && strlen(runtimeQtVersion) > 2)
+    static uint8_t workaround = 0;
+#define RUNTIME_VERSION_CHECKED 1
+#define WORKAROUND_NEEDED       2
+    if(!(workaround & RUNTIME_VERSION_CHECKED))
     {
-        char *major = runtimeQtVersion;
-        char *minor = strchr(runtimeQtVersion, '.');
-        if(minor)
+        char *runtimeQtVersion = ADM_strdup(qVersion()); // We need the runtime version, not the build version.
+        if(runtimeQtVersion && strlen(runtimeQtVersion) > 2)
         {
-            *minor++ = 0;
-            if(!strcmp(major,"6") && strlen(minor) && atoi(minor) > 1)
+            char *major = runtimeQtVersion;
+            char *minor = strchr(runtimeQtVersion, '.');
+            if(minor)
             {
-                if(width < 1) width = 1;
-                if(height < 1) height = 1;
+                *minor++ = 0;
+                if(!strcmp(major,"6") && strlen(minor) && atoi(minor) > 1)
+                    workaround |= WORKAROUND_NEEDED;
             }
         }
+        ADM_dealloc(runtimeQtVersion);
+        runtimeQtVersion = NULL;
+        workaround |= RUNTIME_VERSION_CHECKED;
     }
-    ADM_dealloc(runtimeQtVersion);
-    runtimeQtVersion = NULL;
+    if(workaround & WORKAROUND_NEEDED)
+    {
+        if(width < 1) width = 1;
+        if(height < 1) height = 1;
+    }
 #endif
     hostFrame->setFixedSize(width,height);
     setFixedSize(width,height);
