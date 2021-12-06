@@ -18,7 +18,7 @@ void qtRegisterDialog(QWidget *dialog)
     if (widgetStack.count())
     {
         Qt::WindowFlags flags = dialog->windowFlags();
-#if defined(__APPLE__) // && QT_VERSION == QT_VERSION_CHECK(5,10,1)
+#if defined(__APPLE__) && QT_VERSION == QT_VERSION_CHECK(5,10,1)
         //ADM_info("Working around Qt bug introduced in 5.10.1 resulting in non-resizable dialogs with Cocoa\n");
 
         // Work around a presumable Qt bug which allows application-modal parents of application-modal dialogs to receive focus.
@@ -31,13 +31,7 @@ void qtRegisterDialog(QWidget *dialog)
         dialog->setWindowFlags(flags);
         dialog->setWindowModality(Qt::ApplicationModal);
 #else
-        bool reparent = false;
-        bool isDialog = false;
-        if (dialog->parentWidget() != widgetStack.top())
-            reparent = true;
-        if (flags & Qt::Dialog)
-            isDialog = true;
-        if (reparent || !isDialog)
+        if (dialog->parentWidget() != widgetStack.top() || (flags & Qt::Dialog) != Qt::Dialog)
         {
             ADM_info("reparenting widget %s\n",dialog->objectName().toUtf8().constData());
             dialog->setParent(widgetStack.top(), Qt::Dialog);
