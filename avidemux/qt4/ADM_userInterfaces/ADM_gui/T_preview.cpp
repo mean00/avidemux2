@@ -138,6 +138,38 @@ void ADM_Qvideo::paintEvent(QPaintEvent *ev)
         renderExposeEventFromUI();
     }
 }
+/**
+    \fn setADMSize
+*/
+void ADM_Qvideo::setADMSize(int width,int height)
+{
+    _width = width;
+    _height = height;
+#if !defined(__APPLE__) && !defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    // Work around an issue with Qt 6.2.1 which results in video frame displaying
+    // garbage for all subsequently loaded videos after its size was set to zero.
+    char *runtimeQtVersion = ADM_strdup(qVersion()); // We need the runtime version, not the build version.
+    if(runtimeQtVersion && strlen(runtimeQtVersion) > 2)
+    {
+        char *major = runtimeQtVersion;
+        char *minor = strchr(runtimeQtVersion, '.');
+        if(minor)
+        {
+            *minor++ = 0;
+            if(!strcmp(major,"6") && strlen(minor) && atoi(minor) > 1)
+            {
+                if(width < 1) width = 1;
+                if(height < 1) height = 1;
+            }
+        }
+    }
+    ADM_dealloc(runtimeQtVersion);
+    runtimeQtVersion = NULL;
+#endif
+    hostFrame->setFixedSize(width,height);
+    setFixedSize(width,height);
+}
+
 
 void UI_QT4VideoWidget(QFrame *host)
 {

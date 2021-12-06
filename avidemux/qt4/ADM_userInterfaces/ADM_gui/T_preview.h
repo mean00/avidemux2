@@ -24,13 +24,13 @@ class  ADM_Qvideo : public QWidget
         ADM_QvideoDrawer *drawer;
         bool             doOnce;
         QFrame           *hostFrame;
-        QPaintEngine     *oldPaintEngine;
 protected:
         int _width,_height;
 public:
 	ADM_Qvideo(QFrame *z);
 	~ADM_Qvideo();
 	void paintEvent(QPaintEvent *ev);
+        void  setADMSize(int width,int height);
         void setDrawer(ADM_QvideoDrawer *d)
         {
             drawer=d;
@@ -46,13 +46,6 @@ public:
 #ifndef __APPLE__
                 setAttribute( Qt::WA_PaintOnScreen, external );
 #endif
-        }
-        void  setADMSize(int width,int height)
-        {
-             _width=width;
-             _height=height;
-             hostFrame->setFixedSize(_width,_height);
-             setFixedSize(_width,_height);
         }
         QSize sizeHint() const
         {
