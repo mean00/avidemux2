@@ -41,23 +41,23 @@ ADM_videoFilterQueue::ADM_videoFilterQueue(ADM_coreVideoFilter *previous,CONFcou
 */
 ADM_videoFilterQueue::~ADM_videoFilterQueue()
 {
-        stopThread();
-        int fCount;
-        fCount=freeList.size();
-        for(int j=0;j<fCount;j++)
-        {
-            ADMImage *image=(ADMImage *)freeList[j].data;
-            delete image;
-        }
-        freeList.clear();
-        int count=list.size();
-        for(int j=0;j<count;j++)
-        {
-            ADMImage *image=(ADMImage *)list[j].data;
-            delete image;
-        }
-        list.clear();
-
+    stopThread();
+    int fCount;
+    fCount=freeList.size();
+    for(int j=0;j<fCount;j++)
+    {
+        ADMImage *image=(ADMImage *)freeList[j].data;
+        delete image;
+    }
+    freeList.clear();
+    int count=list.size();
+    for(int j=0;j<count;j++)
+    {
+        ADMImage *image=(ADMImage *)list[j].data;
+        delete image;
+    }
+    list.clear();
+    if(backwardCond) delete backwardCond;
 }
 /**
     \fn     goToTime
