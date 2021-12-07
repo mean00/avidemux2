@@ -138,9 +138,9 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
             *size=pkt.dataLen;
             mutex->lock();
             freeList.append(pkt);
-            if(cond->iswaiting())
+            if(producerCond->iswaiting())
             {
-                cond->wakeup();
+                producerCond->wakeup();
             }
             mutex->unlock();
             return true;
@@ -152,8 +152,7 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
             mutex->unlock();
             return false;
         }
-        mutex->unlock();
-        ADM_usleep(2*1000); // wait 10 ms
+        consumerCond->wait();// Will unlock mutex
     }
     return false;
 }
@@ -173,7 +172,7 @@ bool ADM_audioAccess_thread::runAction(void)
         mutex->lock();
         if(!freeList.size())
         {
-            cond->wait();
+            producerCond->wait();
             continue;
         }
         ADM_queuePacket pkt=(freeList[0]);
@@ -191,6 +190,8 @@ bool ADM_audioAccess_thread::runAction(void)
         mutex->lock();
         list.append(pkt);
         //printf("Pushing Packet with DTS=%"PRId64",size=%d\n",dts,(int)size);
+        if (consumerCond->iswaiting())
+            consumerCond->wakeup();
         mutex->unlock();
     }
 

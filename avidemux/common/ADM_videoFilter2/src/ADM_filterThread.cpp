@@ -39,23 +39,22 @@ ADM_videoFilterQueue::ADM_videoFilterQueue(ADM_coreVideoFilter *previous,CONFcou
 */
 ADM_videoFilterQueue::~ADM_videoFilterQueue()
 {
-        stopThread();
-        int fCount;
-        fCount=freeList.size();
-        for(int j=0;j<fCount;j++)
-        {
-            ADMImage *image=(ADMImage *)freeList[j].data;
-            delete image;
-        }
-        freeList.clear();
-        int count=list.size();
-        for(int j=0;j<count;j++)
-        {
-            ADMImage *image=(ADMImage *)list[j].data;
-            delete image;
-        }
-        list.clear();
-
+    stopThread();
+    int fCount;
+    fCount=freeList.size();
+    for(int j=0;j<fCount;j++)
+    {
+        ADMImage *image=(ADMImage *)freeList[j].data;
+        delete image;
+    }
+    freeList.clear();
+    int count=list.size();
+    for(int j=0;j<count;j++)
+    {
+        ADMImage *image=(ADMImage *)list[j].data;
+        delete image;
+    }
+    list.clear();
 }
 /**
     \fn     goToTime
@@ -63,8 +62,8 @@ ADM_videoFilterQueue::~ADM_videoFilterQueue()
 */
 bool         ADM_videoFilterQueue::goToTime(uint64_t usSeek)
 {
-        ADM_assert(0);
-        return false;
+    ADM_assert(0);
+    return false;
 }
 /**
     \fn     getNextFrame
@@ -76,45 +75,43 @@ bool         ADM_videoFilterQueue::getNextFrame(uint32_t *frameNumber,ADMImage *
 }
 bool         ADM_videoFilterQueue::getNextFrameAs( ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image)
 {
-
-     if(false==started)
+    if(false==started)
+    {
+        startThread();      
+    }
+    while(1)
+    {
+        mutex->lock();
+        if(list.size())
         {
-            startThread();      
-        }
-        while(1)
-        {
-            mutex->lock();
-            if(list.size())
+            //
+            // Dequeue one item
+            ADM_queuePacket pkt=(list[0]);
+            ADM_assert(pkt.data);
+            ADMImage *source=(ADMImage *)pkt.data;
+            *frameNumber=pkt.pts;
+            image->duplicateFull(source);
+            if(type!=image->refType && type!=ADM_HW_ANY)
+                image->hwDownloadFromRef();
+            list.popFront();
+            freeList.append(pkt);
+            if(producerCond->iswaiting())
             {
-                //
-                // Dequeue one item
-                ADM_queuePacket pkt=(list[0]);
-                ADM_assert(pkt.data);
-                ADMImage *source=(ADMImage *)pkt.data;
-                *frameNumber=pkt.pts;
-                image->duplicateFull(source);
-                if(type!=image->refType && type!=ADM_HW_ANY)
-                    image->hwDownloadFromRef();
-                list.popFront();
-                freeList.append(pkt);
-                if(cond->iswaiting())
-                {
-                    cond->wakeup();
-                }
-                mutex->unlock();
-                return true;
-            }
-            // If no item, thread still alive ?
-            if(threadState==RunStateStopped)
-            {
-                ADM_info("Video thread stopped, no more data\n");
-                mutex->unlock();
-                return false;
+                producerCond->wakeup();
             }
             mutex->unlock();
-            ADM_usleep(10*1000); // wait 10 ms
+            return true;
         }
-        return false;
+        // If no item, thread still alive ?
+        if(threadState==RunStateStopped)
+        {
+            ADM_info("Video thread stopped, no more data\n");
+            mutex->unlock();
+            return false;
+        }
+        consumerCond->wait();// Will unlock mutex
+    }
+    return false;
 }
 /**
     \fn     getInfo
@@ -122,7 +119,7 @@ bool         ADM_videoFilterQueue::getNextFrameAs( ADM_HW_IMAGE type,uint32_t *f
 */
 FilterInfo   *ADM_videoFilterQueue::getInfo(void)    
 {
-        return previousFilter->getInfo();
+    return previousFilter->getInfo();
 }
 /**
     \fn
@@ -140,7 +137,7 @@ bool         ADM_videoFilterQueue::runAction(void)
         mutex->lock();
         if(!freeList.size())
         {
-            cond->wait(); // Will unlock mutex
+            producerCond->wait(); // Will unlock mutex
             continue;
         }
         if(threadState==RunStateStopOrder)  
@@ -169,8 +166,9 @@ bool         ADM_videoFilterQueue::runAction(void)
         mutex->lock();
         pkt.pts=fn;
         list.append(pkt);
+        if (consumerCond->iswaiting())
+            consumerCond->wakeup();
         mutex->unlock();
-
     }
 theEnd:
         ADM_info("Exiting video thread loop\n");
