@@ -174,7 +174,7 @@ again:
     {
         if(source->getNextFrame(&nb,image))
         {
-            if(image->_range==ADM_COL_RANGE_JPEG)
+            if(image->_range == ADM_COL_RANGE_JPEG && !param.vui.b_fullrange)
                 image->shrinkColorRange();
             // 2-preamble
             if(false==preAmble(image))
