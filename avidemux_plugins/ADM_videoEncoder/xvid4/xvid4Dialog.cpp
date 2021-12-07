@@ -62,7 +62,7 @@ diaMenuEntry rdE[]={
 
 diaMenuEntry threads[]={
   {1,QT_TRANSLATE_NOOP("xvid4","One thread"),NULL},
-  {2,QT_TRANSLATE_NOOP("xvid4","Two threads)"),NULL},
+  {2,QT_TRANSLATE_NOOP("xvid4","Two threads"),NULL},
   {3,QT_TRANSLATE_NOOP("xvid4","Three threads"),NULL},
   {99,QT_TRANSLATE_NOOP("xvid4","Auto (#cpu)"),NULL}
 };

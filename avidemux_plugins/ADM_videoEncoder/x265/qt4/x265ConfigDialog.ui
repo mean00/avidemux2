@@ -12,7 +12,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>x265 Configuraton</string>
+   <string>x265 Configuration</string>
   </property>
   <layout class="QVBoxLayout" name="_11">
    <item>
