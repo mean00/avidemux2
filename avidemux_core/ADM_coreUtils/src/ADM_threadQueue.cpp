@@ -30,7 +30,8 @@ static void *boomerang(void *x)
 ADM_threadQueue::ADM_threadQueue(void)
 {
     mutex=new admMutex("audioAccess");
-    cond=new admCond(mutex);
+    producerCond=new admCond(mutex);
+    consumerCond=new admCond(mutex);
     threadState=RunStateIdle;
     started=false;
 }
@@ -51,9 +52,9 @@ ADM_threadQueue::~ADM_threadQueue()
         {
             ADM_info("Asking the thread to stop\n");
             threadState=RunStateStopOrder;
-            if(cond->iswaiting())
+            if(producerCond->iswaiting())
             {
-                cond->wakeup();
+                producerCond->wakeup();
             }
             mutex->unlock();
             int count=100;
@@ -67,9 +68,11 @@ ADM_threadQueue::~ADM_threadQueue()
         pthread_join(myThread, &ret);
     }
     
-    if(cond) delete cond;
+    if(producerCond) delete producerCond;
+    if(consumerCond) delete consumerCond;
     if(mutex) delete mutex;
-    cond=NULL;
+    producerCond=NULL;
+    consumerCond=NULL;
     mutex=NULL;
 }
 
@@ -82,29 +85,58 @@ void ADM_threadQueue::run(void)
 
     threadState=RunStateRunning;
     runAction();
+
+    // wait til consumer done
+    do {
+        bool done=false;
+        mutex->lock();
+        if (consumerCond->iswaiting())
+            consumerCond->wakeup();
+        if(!list.size())
+            done = true;
+        mutex->unlock();
+        if (done)
+            break;
+        ADM_usleep(1*1000); // wait 1 ms        
+    } while(1);
+    
     threadState=RunStateStopped;
+
+    // wait til consumer exit
+    do {
+        bool done=false;
+        mutex->lock();
+        if (consumerCond->iswaiting())
+            consumerCond->wakeup();
+        else
+            done = true;
+        mutex->unlock();
+        ADM_usleep(1*1000); // wait 1 ms        
+        if (done)
+            break;
+    } while(1);
 }
 /**
     \fn startThread
 */
 bool ADM_threadQueue::startThread(void)
 {
-      ADM_info("Starting thread...\n");
-      pthread_attr_t attr;
-      pthread_attr_init(&attr);
-      pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-        if(pthread_create(&myThread,&attr, boomerang, this))
-        {
-            ADM_error("ERROR CREATING THREAD\n");
-            ADM_assert(0);
-        }
-        while(threadState==RunStateIdle)
-        {
-            ADM_usleep(10000);
-        }
-        ADM_info("Thread created and started\n");
-        started=true;
-        return true;
+    ADM_info("Starting thread...\n");
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    if(pthread_create(&myThread,&attr, boomerang, this))
+    {
+        ADM_error("ERROR CREATING THREAD\n");
+        ADM_assert(0);
+    }
+    while(threadState==RunStateIdle)
+    {
+        ADM_usleep(10000);
+    }
+    ADM_info("Thread created and started\n");
+    started=true;
+    return true;
 }
 
 /**
@@ -112,33 +144,34 @@ bool ADM_threadQueue::startThread(void)
 */
 bool ADM_threadQueue::stopThread(void)
 {
-        ADM_info("Destroying threadQueue\n");
-        mutex->lock();
+    ADM_info("Destroying threadQueue\n");
+    mutex->lock();
 
-        if(threadState==RunStateRunning)
+    if(threadState==RunStateRunning)
+    {
+        threadState=RunStateStopOrder;
+
+        if(producerCond->iswaiting())
         {
-            threadState=RunStateStopOrder;
-
-            if(cond->iswaiting())
-            {
-                cond->wakeup();
-            }
-
-            mutex->unlock();
-
-			int clockDown=10;
-
-            while(threadState!=RunStateStopped && clockDown)
-            {
-                ADM_usleep(50*1000);
-                clockDown--;
-            };
-
-            ADM_info("Thread stopped, continuing dtor\n");
-        }else
-        {
-                mutex->unlock();
+            producerCond->wakeup();
         }
-        return true;
+
+        mutex->unlock();
+
+        int clockDown=10;
+
+        while(threadState!=RunStateStopped && clockDown)
+        {
+            ADM_usleep(50*1000);
+            clockDown--;
+        };
+
+        ADM_info("Thread stopped, continuing dtor\n");
+    }
+    else
+    {
+            mutex->unlock();
+    }
+    return true;
 }
 // EOF

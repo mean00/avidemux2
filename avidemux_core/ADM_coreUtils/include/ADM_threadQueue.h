@@ -52,7 +52,8 @@ class ADM_COREUTILS6_EXPORT ADM_threadQueue
                 ListOfQueuePacket list;
                 ListOfQueuePacket freeList;
                 admMutex          *mutex;
-                admCond           *cond;
+                admCond           *producerCond;
+                admCond           *consumerCond;
                 bool              started;
 volatile       RunState          threadState;
                 pthread_t         myThread;
