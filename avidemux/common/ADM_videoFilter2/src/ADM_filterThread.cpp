@@ -32,6 +32,8 @@ ADM_videoFilterQueue::ADM_videoFilterQueue(ADM_coreVideoFilter *previous,CONFcou
         item.data=(uint8_t *)new ADMImageDefault(info.width,info.height);
         freeList.append(item);
     }
+    backwardCond=new admCond(mutex);
+    killSwitch=false;
 }
 /**
     \fn ~ADM_videoFilterQueue
@@ -105,14 +107,14 @@ bool         ADM_videoFilterQueue::getNextFrameAs( ADM_HW_IMAGE type,uint32_t *f
                 return true;
             }
             // If no item, thread still alive ?
-            if(threadState==RunStateStopped)
+            if(threadState==RunStateStopped || killSwitch)
             {
                 ADM_info("Video thread stopped, no more data\n");
                 mutex->unlock();
                 return false;
             }
-            mutex->unlock();
-            ADM_usleep(10*1000); // wait 10 ms
+            // We should wait for the producer thread...
+            backwardCond->wait();// Will unlock mutex
         }
         return false;
 }
@@ -169,10 +171,25 @@ bool         ADM_videoFilterQueue::runAction(void)
         mutex->lock();
         pkt.pts=fn;
         list.append(pkt);
+        if (backwardCond->iswaiting())
+            backwardCond->wakeup();
         mutex->unlock();
 
     }
 theEnd:
+        killSwitch=true;
+        do {
+            bool b=false;
+            mutex->lock();
+            if (backwardCond->iswaiting())
+                backwardCond->wakeup();
+            else
+                b=true;
+            mutex->unlock();
+            if (b)
+                break;
+            ADM_usleep(10*1000); // wait 10 ms
+        } while(1);
         ADM_info("Exiting video thread loop\n");
         return true;
 }
