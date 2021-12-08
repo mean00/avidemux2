@@ -179,13 +179,14 @@ bool BitBlitAlpha(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc
  */
 bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
 {
-#if 1
+#if 0
+    // av_image_copy_plane is just a wrapper around a wrapper of line-by-line memcpy
     // ffmpeg makes it better
      av_image_copy_plane(dst, (int) pitchDst,
                          src, (int) pitchSrc,
                          width, height);
 #else
-    for(int y=0;y<height;y++)
+    for (;height > 0; height--)
     {
         memcpy(dst,src,width);
         src+=pitchSrc;
