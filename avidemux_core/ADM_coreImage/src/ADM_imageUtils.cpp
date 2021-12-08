@@ -94,7 +94,10 @@ bool ADMImage::copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane)
             w>>=1;
             h>>=1;
         }
-        BitBlit(dst,dPitch,src,sPitch,w,h);
+        if (dPitch == sPitch)
+            memcpy(dst, src, dPitch*h);  // copying in one run is faster then line-by-line
+        else
+            BitBlit(dst,dPitch,src,sPitch,w,h);
         return true;
 }
 /**
