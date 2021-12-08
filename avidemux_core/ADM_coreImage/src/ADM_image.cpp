@@ -152,15 +152,16 @@ bool BitBlitAlpha(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc
     if(alpha>255) alpha=255;
     if(alpha==255) // take a shortcut
         return BitBlit(dst,pitchDst,src,pitchSrc,width,height);
+    float af = alpha * (256.0/255.0);
+    alpha = af+0.49;
+    uint32_t negalpha = 256-alpha;
+    uint32_t pix;
     for(int y=0;y<height;y++)
     {
         for(int x=0;x<width;x++)
         {
-            float s=src[x],d=dst[x];
-            d=s*alpha+(255.-alpha)*d;
-            d/=255.;
-            d+=0.49;
-            dst[x]=(uint8_t)d;
+            pix = alpha*src[x] + negalpha*dst[x];
+            dst[x]=(uint8_t)(pix>>8);
         }
         src+=pitchSrc;
         dst+=pitchDst;
