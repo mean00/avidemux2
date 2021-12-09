@@ -157,7 +157,8 @@ static uint8_t * findGivenStartCodeInBuffer(uint8_t *start, uint8_t *end,int mat
 bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
 {    
     dmxPacketInfo packetInfo;
-    uint8_t headerBuffer[512+5]={0,0,0,1,(NAL_H265_VPS<<1)}; // we are forcing some bits to be zero...
+#define MAX_PS_SIZE 1024
+    uint8_t headerBuffer[MAX_PS_SIZE+5]={0,0,0,1,(NAL_H265_VPS<<1)}; // we are forcing some bits to be zero...
     // This is a bit naive...
         
     if(!findGivenStartCode(pkt,NAL_H265_VPS ,"VPS"))
@@ -170,9 +171,9 @@ bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     thisUnit.consumedSoFar=0; // Head
     
     //uint64_t startExtraData=packetInfo.startAt-193; // /!\ It may be in the previous packet, very unlikely though
-    pkt->read(512,headerBuffer+5);
     uint8_t *pointer=headerBuffer+5;
-    uint8_t *end=headerBuffer+512;
+    uint8_t *end=pointer+MAX_PS_SIZE;
+    pkt->read(MAX_PS_SIZE,pointer);
     // Rewind
     if(packetInfo.offset>12) // 2 x 5 bytes long start code + 2 bytes AUD
         packetInfo.offset-=12;
