@@ -205,7 +205,9 @@ int pyPrintFrameInfo(IEditor *editor, int framenumber)
 
         if(offset)
         {
-            if(pts >= offset)
+            if(pts == ADM_NO_PTS)
+                printf(" / %s",ADM_us2plain(pts));
+            else if(pts >= offset)
                 printf(" / %s",ADM_us2plain(pts-offset));
             else
                 printf(" /-%s",ADM_us2plain(offset-pts));
