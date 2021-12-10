@@ -334,11 +334,12 @@ void MainWindow::sliderWheel(int way)
         return;
     }
     if(way<0)
+    {
         if (ctrlKeyHeld)
             sendAction(ACT_PreviousFrame);
         else
             sendAction(ACT_PreviousKFrame);
-    
+    }
 }
 /**
  * \fn thumbSlider_valueEmitted
@@ -481,11 +482,13 @@ void MainWindow::busyTimerTimeout(void)
 */
 void MainWindow::actionSlot(Action a)
 {
-    if(a==ACT_PlayAvi) // ugly
+    if(a==ACT_PlayAvi && avifileinfo) // ugly
     {
-        playing=1-playing;
+        playing = !playing;
         setMenuItemsEnabledState();
-        playing=1-playing;
+        playing = !playing;
+        if(busyCntr && QApplication::overrideCursor())
+            QApplication::restoreOverrideCursor();
     }
     if(a > ACT_STAGED_BEGIN && a < ACT_STAGED_END)
     {
@@ -515,7 +518,8 @@ void MainWindow::actionSlot(Action a)
     actionLock++;
     HandleAction(a);
     actionLock--;
-    setMenuItemsEnabledState();
+    if(a!=ACT_PlayAvi)
+        setMenuItemsEnabledState();
     if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END)
     {
         busyCntr--;
@@ -1856,7 +1860,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                         break;
                 }
             }
-            /* else */ if (keyEvent->key() == Qt::Key_Space)
+            /* else */ if (keyEvent->key() == Qt::Key_Space && avifileinfo)
             {
                 sendAction(ACT_PlayAvi);
                 return true;
