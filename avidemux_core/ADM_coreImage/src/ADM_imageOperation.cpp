@@ -60,7 +60,10 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
                         }
                     }
                 }
-                BitBlit(dest, destStride,source,sourceStride,opWidth, opHeight);
+                if (destStride == sourceStride)
+                    memcpy(dest, source, destStride*opHeight);  // copying in one run is faster then line-by-line
+                else
+                    BitBlit(dest, destStride,source,sourceStride,opWidth, opHeight);
             }
         }
          else // it is a hw surface

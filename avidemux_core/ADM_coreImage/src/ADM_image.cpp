@@ -152,15 +152,16 @@ bool BitBlitAlpha(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc
     if(alpha>255) alpha=255;
     if(alpha==255) // take a shortcut
         return BitBlit(dst,pitchDst,src,pitchSrc,width,height);
+    float af = alpha * (256.0/255.0);
+    alpha = af+0.49;
+    uint32_t negalpha = 256-alpha;
+    uint32_t pix;
     for(int y=0;y<height;y++)
     {
         for(int x=0;x<width;x++)
         {
-            float s=src[x],d=dst[x];
-            d=s*alpha+(255.-alpha)*d;
-            d/=255.;
-            d+=0.49;
-            dst[x]=(uint8_t)d;
+            pix = alpha*src[x] + negalpha*dst[x];
+            dst[x]=(uint8_t)(pix>>8);
         }
         src+=pitchSrc;
         dst+=pitchDst;
@@ -179,13 +180,14 @@ bool BitBlitAlpha(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc
  */
 bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
 {
-#if 1
+#if 0
+    // av_image_copy_plane is just a wrapper around a wrapper of line-by-line memcpy
     // ffmpeg makes it better
      av_image_copy_plane(dst, (int) pitchDst,
                          src, (int) pitchSrc,
                          width, height);
 #else
-    for(int y=0;y<height;y++)
+    for (;height > 0; height--)
     {
         memcpy(dst,src,width);
         src+=pitchSrc;
