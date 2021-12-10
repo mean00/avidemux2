@@ -60,7 +60,12 @@ ADM_threadQueue::~ADM_threadQueue()
             int count=100;
             while(count)
             {
-                if(threadState==RunStateStopped) break;
+                bool br=false;
+                mutex->lock();
+                br = (threadState==RunStateStopped);
+                mutex->unlock();
+                if (br)
+                    break;
                 ADM_usleep(1000*100); // Slep 100 ms
             }
         }else mutex->unlock();
@@ -83,11 +88,18 @@ ADM_threadQueue::~ADM_threadQueue()
 void ADM_threadQueue::run(void)
 {
 
+    mutex->lock();
     threadState=RunStateRunning;
+    mutex->unlock();
     runAction();
 
     // wait til consumer done
-    do {
+    bool waitForConsumer = false;
+    mutex->lock();
+    waitForConsumer = (threadState != RunStateStopOrder);
+    mutex->unlock();
+    if (waitForConsumer) do
+    {
         bool done=false;
         mutex->lock();
         if (consumerCond->iswaiting())
@@ -100,7 +112,9 @@ void ADM_threadQueue::run(void)
         ADM_usleep(1*1000); // wait 1 ms        
     } while(1);
     
+    mutex->lock();
     threadState=RunStateStopped;
+    mutex->unlock();
 
     // wait til consumer exit
     do {
@@ -130,8 +144,14 @@ bool ADM_threadQueue::startThread(void)
         ADM_error("ERROR CREATING THREAD\n");
         ADM_assert(0);
     }
-    while(threadState==RunStateIdle)
+    while(1)
     {
+        bool br = false;
+        mutex->lock();
+        br = !(threadState==RunStateIdle);
+        mutex->unlock();
+        if (br)
+            break;
         ADM_usleep(10000);
     }
     ADM_info("Thread created and started\n");
@@ -160,8 +180,14 @@ bool ADM_threadQueue::stopThread(void)
 
         int clockDown=10;
 
-        while(threadState!=RunStateStopped && clockDown)
+        while(1)
         {
+            bool br = false;
+            mutex->lock();
+            br = !(threadState!=RunStateStopped && clockDown);
+            mutex->unlock();
+            if (br)
+                break;
             ADM_usleep(50*1000);
             clockDown--;
         };
