@@ -518,8 +518,7 @@ void MainWindow::actionSlot(Action a)
     actionLock++;
     HandleAction(a);
     actionLock--;
-    if(a!=ACT_PlayAvi)
-        setMenuItemsEnabledState();
+    setMenuItemsEnabledState();
     if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END)
     {
         busyCntr--;
