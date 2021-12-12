@@ -13,7 +13,7 @@ ${MementoSection} "-Start menu Qt" SecStartMenuQt
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $INSTDIR
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${SHORTCUT_NAME}.lnk" $INSTDIR\avidemux.exe
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Avidemux job control (${BUILD_BITS} Bits).lnk" $INSTDIR\avidemux_jobs.exe
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Avidemux job control ${CORE_VERSION} (${BUILD_BITS} Bits).lnk" $INSTDIR\avidemux_jobs.exe
     !insertmacro MUI_STARTMENU_WRITE_END
 ${MementoSectionEnd}
 
