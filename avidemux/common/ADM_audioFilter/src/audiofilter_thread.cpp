@@ -122,6 +122,11 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
     while(1)
     {
         mutex->lock();
+        if(threadState==RunStateStopOrder)  
+        {
+            mutex->unlock();
+            return false;
+        }
         if(list.size())
         {
             //
@@ -164,12 +169,13 @@ bool ADM_audioAccess_thread::runAction(void)
 {
     while(1)
     {
+        mutex->lock();
         if(threadState==RunStateStopOrder)  
         {
             ADM_info("Audio Thread, received stop order\n");
+            mutex->unlock();
             goto theEnd;
         }
-        mutex->lock();
         if(!freeList.size())
         {
             producerCond->wait();

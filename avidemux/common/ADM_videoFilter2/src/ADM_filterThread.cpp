@@ -82,6 +82,11 @@ bool         ADM_videoFilterQueue::getNextFrameAs( ADM_HW_IMAGE type,uint32_t *f
     while(1)
     {
         mutex->lock();
+        if(threadState==RunStateStopOrder)  
+        {
+            mutex->unlock();
+            return false;
+        }
         if(list.size())
         {
             //
@@ -129,22 +134,17 @@ bool         ADM_videoFilterQueue::runAction(void)
 {
     while(1)
     {
-        if(threadState==RunStateStopOrder)  
-        {
-            ADM_info("Video thread, received stop order\n");
-            goto theEnd;
-        }
         mutex->lock();
-        if(!freeList.size())
-        {
-            producerCond->wait(); // Will unlock mutex
-            continue;
-        }
         if(threadState==RunStateStopOrder)  
         {
             ADM_info("Video thread, received stop order\n");
             mutex->unlock();
             goto theEnd;
+        }
+        if(!freeList.size())
+        {
+            producerCond->wait(); // Will unlock mutex
+            continue;
         }
         uint32_t fn=0;
         ADM_queuePacket pkt=(freeList[0]);

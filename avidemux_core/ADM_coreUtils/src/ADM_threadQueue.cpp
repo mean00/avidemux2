@@ -87,7 +87,8 @@ void ADM_threadQueue::run(void)
     runAction();
 
     // wait til consumer done
-    do {
+    if (threadState != RunStateStopOrder) do
+    {
         bool done=false;
         mutex->lock();
         if (consumerCond->iswaiting())

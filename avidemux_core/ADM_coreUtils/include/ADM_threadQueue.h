@@ -16,6 +16,7 @@
 #define ADM_THREAD_QUEUE_H
 #include "ADM_coreUtils6_export.h"
 #include "ADM_threads.h"
+#include <atomic>
 
 using namespace std;
 #include "BVector.h"
@@ -55,7 +56,7 @@ class ADM_COREUTILS6_EXPORT ADM_threadQueue
                 admCond           *producerCond;
                 admCond           *consumerCond;
                 bool              started;
-volatile       RunState          threadState;
+                std::atomic<RunState> threadState;
                 pthread_t         myThread;
   public:
 
