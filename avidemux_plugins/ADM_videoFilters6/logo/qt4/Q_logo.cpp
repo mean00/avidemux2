@@ -22,6 +22,7 @@
 #include "ADM_imageLoader.h"
 #include "DIA_fileSel.h"
 #include "ADM_last.h"
+#include "ADM_vidLogo.h"
 
 #if 0
 #define aprintf printf
@@ -120,7 +121,7 @@ bool Ui_logoWindow::enableLowPart(void)
         desc += " ";
         desc += imageName;
         ui.labelImage->setText(desc.c_str());
-        ui.spinX->setFocus();
+        //ui.spinX->setFocus();
         return true;
     }
     ui.labelImage->setText(QT_TRANSLATE_NOOP("logo","No image selected"));
@@ -163,13 +164,15 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         if(im2)
         {
             if(image) delete image;
+            if (scaledImage) delete scaledImage;
             image=im2;
             imageWidth=image->GetWidth(PLANAR_Y);
             imageHeight=image->GetHeight(PLANAR_Y);
             this->imageName=imageName;
             if(image->GetReadPtr(PLANAR_ALPHA))
                 ADM_info("We have alpha\n");
-            status=true;
+            scaledImage = addLogopFilter::scaleImage(image, imageScale);
+            status=(scaledImage!= NULL);
         }
     }
     enableLowPart();
@@ -187,8 +190,10 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         ui.setupUi(this);
         _in=in;
         
-        image=NULL;;
+        image=NULL;
+        scaledImage=NULL;
         admCoreUtils::getLastReadFolder(lastFolder);
+        imageScale = param->scale;
         if(param->logoImageFile.size())
             tryToLoadimage(param->logoImageFile.c_str());
         else
@@ -214,6 +219,7 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
 
         myLogo->param.x=param->x;
         myLogo->param.y=param->y;
+        myLogo->param.scale=param->scale;
         myLogo->param.alpha=param->alpha;
         myLogo->param.logoImageFile=param->logoImageFile;
         myLogo->param.fade=param->fade;
@@ -228,6 +234,7 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         SPINNER(spinY,int);
         SPINNER(spinAlpha,int);
         SPINNER(spinFadeInOut,double);
+        connect(ui.spinScale,SIGNAL(valueChanged(double)),this,SLOT(scaleChanged(double)));
         connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
 #undef SPINNER
         myLogo->addControl(ui.toolboxLayout);
@@ -252,6 +259,7 @@ void Ui_logoWindow::gather(logo *param)
 #define DUPE(x)     param->x=myLogo->param.x;
     DUPE(x)
     DUPE(y)
+    DUPE(scale)
     DUPE(alpha)
     DUPE(fade)
     param->logoImageFile=imageName;
@@ -288,6 +296,25 @@ void Ui_logoWindow::valueChanged(double f)
     if(lock) return;
     lock++;
     myLogo->download();
+    myLogo->sameImage();
+    lock--;
+}
+
+/**
+    \fn valueChanged
+*/
+void Ui_logoWindow::scaleChanged(double f)
+{
+    if(lock) return;
+    lock++;
+    myLogo->download();
+    imageScale = ui.spinScale->value();
+    if (image)
+    {
+        if (scaledImage) delete scaledImage;
+        scaledImage=NULL;
+        scaledImage = addLogopFilter::scaleImage(image, imageScale);
+    }
     myLogo->sameImage();
     lock--;
 }
@@ -373,6 +400,7 @@ void flyLogo::setTabOrder(void)
 #define SPINNER(x) controls.push_back(w->spin##x);
     SPINNER(X)
     SPINNER(Y)
+    SPINNER(Scale)
     SPINNER(Alpha)
     SPINNER(FadeInOut)
 #undef SPINNER
@@ -436,6 +464,7 @@ uint8_t flyLogo::upload(void)
 #define SETSPIN(u,v) w->spin##u->setValue(v);
     SETSPIN(X,param.x)
     SETSPIN(Y,param.y)
+    SETSPIN(Scale,param.scale)
     SETSPIN(Alpha,param.alpha)
     SETSPIN(FadeInOut,(double)(param.fade)/1000)
 
@@ -450,6 +479,7 @@ uint8_t flyLogo::download(void)
 #define GETSPIN(u,v) param.v=w->spin##u->value();
     GETSPIN(X,x)
     GETSPIN(Y,y)
+    GETSPIN(Scale,scale)
     GETSPIN(Alpha,alpha)
 #define ROUNDUP 100
     param.fade=(((uint32_t)(w->spinFadeInOut->value() * 1000.) + ROUNDUP/2)/ROUNDUP)*ROUNDUP;
@@ -464,7 +494,7 @@ uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
     out->duplicate(in);
     uint64_t pts=in->Pts;
     Ui_logoWindow *parent=(Ui_logoWindow *)_parent;
-    if(!parent->image)
+    if(!parent->scaledImage)
         return true;
     
     int targetHeight=out->GetHeight(PLANAR_Y);
@@ -476,7 +506,7 @@ uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
     if(param.x>targetWidth) 
         return true;
 
-    ADMImage *myImage=parent->image;
+    ADMImage *myImage=parent->scaledImage;
     double a=(double)param.alpha;
     uint64_t transition=param.fade*1000LL;
     uint64_t duration=endOffset-startOffset;

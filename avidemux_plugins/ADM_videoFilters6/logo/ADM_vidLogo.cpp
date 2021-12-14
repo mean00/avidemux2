@@ -14,6 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_vidLogo.h"
+#include "logo_desc.cpp"
 DECLARE_VIDEO_FILTER_PARTIALIZABLE(   addLogopFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
@@ -36,14 +37,11 @@ extern bool DIA_getLogo(logo *param, ADM_coreVideoFilter *in);
 addLogopFilter::addLogopFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
 {
     myImage=NULL;
-    if(!setup || !ADM_paramLoad(setup,logo_param,&configuration))
+    myScaledImage=NULL;
+    resetConfig();
+    if(!setup || !ADM_paramLoadPartial(setup,logo_param,&configuration))
     {
-        // Default value
-        configuration.x=0;
-        configuration.y=0;
-        configuration.alpha=255;
-        configuration.logoImageFile=std::string("");
-        configuration.fade=0;
+        resetConfig();
     }
     in->getTimeRange(&startOffset,&endOffset);
     from=in->getAbsoluteStartTime();
@@ -53,10 +51,72 @@ addLogopFilter::addLogopFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : AD
 /**
 
 */
+void addLogopFilter::resetConfig(void)
+{
+    // Default value
+    configuration.x=0;
+    configuration.y=0;
+    configuration.alpha=255;
+    configuration.logoImageFile=std::string("");
+    configuration.fade=0;   
+    configuration.scale=1.0;
+}
+
+/**
+
+*/
+ADMImage * addLogopFilter::scaleImage(ADMImage * img, float scale)
+{
+    uint32_t w,h,nw,nh;
+    img->getWidthHeight(&w, &h);
+    if (scale==1.0)
+    {
+        ADMImageDefault * scaledImg =new ADMImageDefault(w,h);
+        if (scaledImg)
+        {
+            scaledImg->duplicateFull(img);
+            if (img->GetReadPtr(PLANAR_ALPHA))
+            {
+                scaledImg->addAlphaChannel();
+                memcpy(scaledImg->_alpha, img->_alpha, img->_alphaStride*h);
+            }
+        }
+        return scaledImg;
+    }
+    nw = w*scale + 0.49;
+    nh = h*scale + 0.49;
+    if (nw < 16) nw = 16;
+    if (nh < 16) nh = 16;
+    if (nw > MAXIMUM_SIZE) nw = MAXIMUM_SIZE;
+    if (nh > MAXIMUM_SIZE) nh = MAXIMUM_SIZE;
+    nw = (nw/2)*2;
+    nh = (nh/2)*2;
+    ADMImageDefault * scaledImg =new ADMImageDefault(nw,nh);
+    if (!scaledImg) return NULL;
+    ADM_pixelFormat pfmt = ADM_PIXFRMT_YV12;
+    if (img->GetReadPtr(PLANAR_ALPHA))
+    {
+        scaledImg->addAlphaChannel();
+        pfmt = ADM_PIXFRMT_YUVA420P;    // dont care if UV swapped
+    }
+    ADMColorScalerFull converter(ADM_CS_BICUBIC, w,h,nw,nh,pfmt,pfmt);
+    if (!converter.convertImage(img, scaledImg))
+    {
+        delete scaledImg;
+        return NULL;
+    }
+    return scaledImg;
+}
+
+/**
+
+*/
 bool addLogopFilter::reloadImage(void)
 {
         if(myImage) delete myImage;
         myImage=NULL;
+        if (myScaledImage) delete myScaledImage;
+        myScaledImage=NULL;
 
         if(!configuration.logoImageFile.size())
         {
@@ -64,6 +124,10 @@ bool addLogopFilter::reloadImage(void)
         }
         myImage=createImageFromFile(configuration.logoImageFile.c_str());
         if(!myImage) return false;
+        myScaledImage = scaleImage(myImage, configuration.scale);
+        if (myScaledImage == NULL)
+            return false;
+        
         return true;
 }
 /**
@@ -74,6 +138,8 @@ addLogopFilter::~addLogopFilter()
 {
     if(myImage) delete myImage;
     myImage=NULL;
+    if (myScaledImage) delete myScaledImage;
+    myScaledImage=NULL;
 }
 
 /**
@@ -88,7 +154,7 @@ bool addLogopFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("logoFilter : Cannot get frame\n");
         return false;
     }
-    if(myImage)
+    if(myScaledImage)
     {
         double a=(double)configuration.alpha;
         uint64_t pts=image->Pts;
@@ -119,10 +185,10 @@ bool addLogopFilter::getNextFrame(uint32_t *fn,ADMImage *image)
             if(a > 255.)
                 a = 255.;
         }
-        if(myImage->GetReadPtr(PLANAR_ALPHA))
-            myImage->copyWithAlphaChannel(image,configuration.x,configuration.y,(uint32_t)a);
+        if(myScaledImage->GetReadPtr(PLANAR_ALPHA))
+            myScaledImage->copyWithAlphaChannel(image,configuration.x,configuration.y,(uint32_t)a);
         else
-            myImage->copyToAlpha(image,configuration.x,configuration.y,(uint32_t)a);
+            myScaledImage->copyToAlpha(image,configuration.x,configuration.y,(uint32_t)a);
     }
     return true;
 }
@@ -147,9 +213,9 @@ void addLogopFilter::setCoupledConf(CONFcouple *couples)
 const char *addLogopFilter::getConfiguration(void)
 {
     static char c[2560];
-    snprintf(c,2559,"X: %d; Y: %d; Alpha: %d; Fade-in/out: %d ms;\nimage: %s",
+    snprintf(c,2559,"X: %d; Y: %d; Alpha: %d; Fade-in/out: %d ms;\nimage (%.0f%%): %s",
             configuration.x,configuration.y,configuration.alpha,configuration.fade,
-            configuration.logoImageFile.c_str());
+            configuration.scale*100.0,configuration.logoImageFile.c_str());
     return c;
 
 }

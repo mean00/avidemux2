@@ -45,10 +45,12 @@ protected:
         flyLogo             *myLogo;
         ADM_LogoCanvas      *canvas;
 
-        bool                enableLowPart(void);
+        float               imageScale;
         bool                tryToLoadimage(const char *image);
+        bool                enableLowPart(void);
 public:
         ADMImage            *image;
+        ADMImage            *scaledImage;
         std::string         imageName;
         int                 imageWidth,imageHeight;
 
@@ -62,6 +64,7 @@ private slots:
 	void                sliderUpdate(int foo);
 	void                valueChanged(int foo);
         void                valueChanged(double foo);
+        void                scaleChanged(double foo);
         void                moved(int x,int y);
         void                preview(int x);
         void                imageSelect();
