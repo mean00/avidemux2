@@ -181,6 +181,7 @@ bool  ADMImage::saveAsJpgInternal(const char *filename)
     AVCodec *codec=NULL;
     int r=0;
     FILE *f=NULL;
+    uint32_t threads = 1;
 
     frame=av_frame_alloc();
     if(!frame)
@@ -213,6 +214,16 @@ bool  ADMImage::saveAsJpgInternal(const char *filename)
     context->width=_width;
     context->height=_height;
     context->flags |= AV_CODEC_FLAG_QSCALE;
+    threads = ADM_cpu_num_processors();
+    if (threads < 1)
+        threads = 1;
+    if (threads > LAVC_MAX_SAFE_THREAD_COUNT)
+        threads = LAVC_MAX_SAFE_THREAD_COUNT;
+    if (threads > 1)
+    {
+        context->thread_type = FF_THREAD_SLICE;
+        context->thread_count = threads;
+    }
 
     r=avcodec_open2(context, codec, NULL);
 
