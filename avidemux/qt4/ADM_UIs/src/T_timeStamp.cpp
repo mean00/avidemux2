@@ -290,10 +290,25 @@ bool ADM_QTimeStamp::eventFilter(QObject* watched, QEvent* event)
 #endif
                         for(int i=0; i<4; i++)
                         {
-                            int val;
+                            int val = 0;
 #if QT_VERSION < QT_VERSION_CHECK(6,0,0)
                             ref = new QStringRef(&txt, i*3, (i < 3) ? 2 : 3);
+    #if QT_VERSION < QT_VERSION_CHECK(5,1,0)
+                            success = true;
+                            for(int j=0; j < ref->length(); j++)
+                            {
+                                int d = ref->at(j).digitValue();
+                                if(d < 0)
+                                {
+                                    success = false;
+                                    break;
+                                }
+                                val *= 10;
+                                val += d;
+                            }
+    #else
                             val = ref->toInt(&success);
+    #endif
                             delete ref;
                             ref = NULL;
 #else
