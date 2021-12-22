@@ -70,6 +70,7 @@ protected :
 
 public:
                     ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid, uint32_t min, uint32_t max, uint32_t time, uint32_t line);
+    virtual         ~ADM_QTimeStamp();
     uint32_t        getTime(void);
 
 public slots:

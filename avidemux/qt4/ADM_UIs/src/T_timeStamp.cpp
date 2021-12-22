@@ -245,6 +245,15 @@ ADM_QTimeStamp::ADM_QTimeStamp(QString title, QWidget *dialog, QGridLayout *grid
 }
 
 /**
+    \fn dtor
+*/
+ADM_QTimeStamp::~ADM_QTimeStamp()
+{
+    delete myTWidget;
+    myTWidget = NULL;
+}
+
+/**
     \fn eventFilter
 */
 bool ADM_QTimeStamp::eventFilter(QObject* watched, QEvent* event)
