@@ -405,7 +405,8 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
 
   while(!father.finished())
   {
-      father.readElemId(&id,&len);
+      if(!father.readElemId(&id,&len))
+        continue;
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
         printf("[MKV/entryWalk] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
