@@ -425,13 +425,13 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
             double Yc;
             if (Yp < 0)
                 Yc = 0.0;
-            else if ((0 <= Yc) && (Yc <= 0.7399))
+            else if ((0 <= Yp) && (Yp <= 0.7399))
                 Yc = 1.0770*Yp;
-            else if ((0.7399 < Yc) && (Yc <  0.9909))
+            else if ((0.7399 < Yp) && (Yp <  0.9909))
                 Yc = -1.1510*Yp*Yp + 2.7811*Yp - 0.6302;
-            else if (( 0.9909 <= Yc) && (Yc <= 1.0))
+            else if (( 0.9909 <= Yp) && (Yp <= 1.0))
                 Yc = 0.5*Yp + 0.5;
-            else // Yc > 1
+            else // Yp > 1
                 Yc = 1.0;
 
             // Tone mapping step 3
