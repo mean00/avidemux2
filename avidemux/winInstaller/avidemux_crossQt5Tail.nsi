@@ -66,7 +66,7 @@ Section Uninstall
     Delete /REBOOTOK "$QUICKLAUNCH\${SHORTCUT_NAME}.lnk"
     Delete /REBOOTOK "$DESKTOP\${SHORTCUT_NAME}.lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\${SHORTCUT_NAME}.lnk"
-    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Avidemux job control (${BUILD_BITS} Bits).lnk"
+    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Avidemux job control ${CORE_VERSION} (${BUILD_BITS} Bits).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Change Log ${CORE_VERSION}.lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI ${CORE_VERSION}.lnk"
     RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup
