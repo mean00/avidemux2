@@ -189,7 +189,7 @@
     <enum>Qt::PreventContextMenu</enum>
    </property>
    <property name="styleSheet">
-    <string notr="true">QToolButton{border: none;margin-left:2px;margin-right:2px;}</string>
+    <string notr="true">QToolButton{border: none;margin-left:3px;margin-right:3px;}</string>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -983,8 +983,8 @@
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1012,8 +1012,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1041,8 +1041,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1070,8 +1070,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1099,8 +1099,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1128,8 +1128,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1157,8 +1157,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1189,8 +1189,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1218,8 +1218,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1250,8 +1250,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1279,8 +1279,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1308,8 +1308,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1337,8 +1337,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1366,8 +1366,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1398,8 +1398,8 @@ margin-right:2px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;
-margin-left:2px;
-margin-right:2px;</string>
+margin-left:3px;
+margin-right:3px;</string>
            </property>
            <property name="text">
             <string>...</string>
