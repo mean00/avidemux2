@@ -3,6 +3,28 @@
         <file>pics/add_sub_task.png</file>
         <file>pics/arts.png</file>
         <file alias="pics/avidemux-icon.png">pics/avidemux_icon_small.png</file>
+        <file>pics/active_back.png</file>
+        <file>pics/active_backward1mn.png</file>
+        <file>pics/active_fileopen.png</file>
+        <file>pics/active_filesave.png</file>
+        <file>pics/active_forward1mn.png</file>
+        <file>pics/active_forward.png</file>
+        <file>pics/active_info.png</file>
+        <file>pics/active_markA.png</file>
+        <file>pics/active_markB.png</file>
+        <file>pics/active_next_black.png</file>
+        <file>pics/active_next_cut.png</file>
+        <file>pics/active_player_end.png</file>
+        <file>pics/active_player_fwd.png</file>
+        <file>pics/active_player_play.png</file>
+        <file>pics/active_player_rew.png</file>
+        <file>pics/active_player_start.png</file>
+        <file>pics/active_player_stop.png</file>
+        <file>pics/active_play_filtered.png</file>
+        <file>pics/active_prev_black.png</file>
+        <file>pics/active_prev_cut.png</file>
+        <file>pics/active_on_play_filtered.png</file>
+        <file>pics/on_play_filtered.png</file>
         <file>pics/back.png</file>
         <file>pics/calc.png</file>
         <file>pics/fileopen.png</file>

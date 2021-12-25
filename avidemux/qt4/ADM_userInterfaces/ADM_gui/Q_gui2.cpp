@@ -1252,8 +1252,11 @@ void MainWindow::setMenuItemsEnabledState(void)
         for(int i=0;i<ntb;i++)
             ButtonsDisabledOnPlayback[i]->setEnabled(false);
 
-        ui.toolButtonPlay->setIcon(QIcon(MKICON(player_stop)));
-        ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_stop)));
+        QIcon stopIcon;
+        stopIcon.addFile(MKICON(player_stop),QSize(24,24),QIcon::Normal);
+        stopIcon.addFile(MKICON(active_player_stop),QSize(24,24),QIcon::Active);
+        ui.toolButtonPlay->setIcon(stopIcon);
+        ui.menuGo->actions().at(0)->setIcon(stopIcon);
 
         int npb=PushButtonsDisabledOnPlayback.size();
         for(int i=0;i<npb;i++)
@@ -1314,8 +1317,11 @@ void MainWindow::setMenuItemsEnabledState(void)
     for(int i=0;i<n;i++)
         ActionsAlwaysAvailable[i]->setEnabled(true);
 
-    ui.toolButtonPlay->setIcon(QIcon(MKICON(player_play)));
-    ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_play)));
+    QIcon playIcon;
+    playIcon.addFile(MKICON(player_play),QSize(24,24),QIcon::Normal);
+    playIcon.addFile(MKICON(active_player_play),QSize(24,24),QIcon::Active);
+    ui.toolButtonPlay->setIcon(playIcon);
+    ui.menuGo->actions().at(0)->setIcon(playIcon);
 
     bool haveRecentItems=false;
     if(recentFiles && recentFiles->actions().size())

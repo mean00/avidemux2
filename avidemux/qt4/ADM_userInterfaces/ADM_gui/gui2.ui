@@ -188,6 +188,9 @@
    <property name="contextMenuPolicy">
     <enum>Qt::PreventContextMenu</enum>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QToolButton{border: none;margin-left:2px;margin-right:2px;}</string>
+   </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
@@ -878,7 +881,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>453</width>
+     <width>502</width>
      <height>120</height>
     </size>
    </property>
@@ -978,12 +981,18 @@
            <property name="whatsThis">
             <string/>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/player_play.png</normaloff>:/new/prefix1/pics/player_play.png</iconset>
+             <normaloff>:/new/prefix1/pics/player_play.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_player_play.png</activeoff>:/new/prefix1/pics/player_play.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1001,12 +1010,18 @@
            <property name="toolTip">
             <string>Go to previous frame [LEFT]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/back.png</normaloff>:/new/prefix1/pics/back.png</iconset>
+             <normaloff>:/new/prefix1/pics/back.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_back.png</activeoff>:/new/prefix1/pics/back.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1024,12 +1039,18 @@
            <property name="toolTip">
             <string>Go to next frame [RIGHT]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/forward.png</normaloff>:/new/prefix1/pics/forward.png</iconset>
+             <normaloff>:/new/prefix1/pics/forward.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_forward.png</activeoff>:/new/prefix1/pics/forward.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1047,12 +1068,18 @@
            <property name="toolTip">
             <string>Go to previous keyframe [DOWN]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/player_rew.png</normaloff>:/new/prefix1/pics/player_rew.png</iconset>
+             <normaloff>:/new/prefix1/pics/player_rew.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_player_rew.png</activeoff>:/new/prefix1/pics/player_rew.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1070,12 +1097,18 @@
            <property name="toolTip">
             <string>Go to next keyframe [UP]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/player_fwd.png</normaloff>:/new/prefix1/pics/player_fwd.png</iconset>
+             <normaloff>:/new/prefix1/pics/player_fwd.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_player_fwd.png</activeoff>:/new/prefix1/pics/player_fwd.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1093,12 +1126,18 @@
            <property name="toolTip">
             <string>Set start marker [CTRL+PAGEUP]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/markA.png</normaloff>:/new/prefix1/pics/markA.png</iconset>
+             <normaloff>:/new/prefix1/pics/markA.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_markA.png</activeoff>:/new/prefix1/pics/markA.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1116,12 +1155,18 @@
            <property name="toolTip">
             <string>Set end marker [CTRL+PAGEDOWN]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/markB.png</normaloff>:/new/prefix1/pics/markB.png</iconset>
+             <normaloff>:/new/prefix1/pics/markB.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_markB.png</activeoff>:/new/prefix1/pics/markB.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1142,12 +1187,18 @@
            <property name="toolTip">
             <string>Go to previous cut point [SHIFT+DOWN]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/prev_cut.png</normaloff>:/new/prefix1/pics/prev_cut.png</iconset>
+             <normaloff>:/new/prefix1/pics/prev_cut.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_prev_cut.png</activeoff>:/new/prefix1/pics/prev_cut.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1165,12 +1216,18 @@
            <property name="toolTip">
             <string>Go to next cut point [SHIFT+UP]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/next_cut.png</normaloff>:/new/prefix1/pics/next_cut.png</iconset>
+             <normaloff>:/new/prefix1/pics/next_cut.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_next_cut.png</activeoff>:/new/prefix1/pics/next_cut.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1182,7 +1239,8 @@
             <bool>true</bool>
            </property>
           </widget>
-         </item>         <item>
+         </item>
+         <item>
           <widget class="QToolButton" name="toolButtonPreviousBlackFrame">
            <property name="enabled">
             <bool>false</bool>
@@ -1190,12 +1248,18 @@
            <property name="toolTip">
             <string>Search previous black frame</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/prev_black.png</normaloff>:/new/prefix1/pics/prev_black.png</iconset>
+             <normaloff>:/new/prefix1/pics/prev_black.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_prev_black.png</activeoff>:/new/prefix1/pics/prev_black.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1213,12 +1277,18 @@
            <property name="toolTip">
             <string>Search next black frame</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/next_black.png</normaloff>:/new/prefix1/pics/next_black.png</iconset>
+             <normaloff>:/new/prefix1/pics/next_black.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_next_black.png</activeoff>:/new/prefix1/pics/next_black.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1236,12 +1306,18 @@
            <property name="toolTip">
             <string>Go to first frame [HOME]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/player_start.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
+             <normaloff>:/new/prefix1/pics/player_start.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_player_start.png</activeoff>:/new/prefix1/pics/player_start.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1259,12 +1335,18 @@
            <property name="toolTip">
             <string>Go to last frame [END]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/player_end.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
+             <normaloff>:/new/prefix1/pics/player_end.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_player_end.png</activeoff>:/new/prefix1/pics/player_end.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1282,12 +1364,18 @@
            <property name="toolTip">
             <string>Backward one minute [CTRL+DOWN]</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/backward1mn.png</normaloff>:/new/prefix1/pics/backward1mn.png</iconset>
+             <normaloff>:/new/prefix1/pics/backward1mn.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_backward1mn.png</activeoff>:/new/prefix1/pics/backward1mn.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1308,12 +1396,18 @@
            <property name="accessibleDescription">
             <string>Forward one minute</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: none;
+margin-left:2px;
+margin-right:2px;</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/forward1mn.png</normaloff>:/new/prefix1/pics/forward1mn.png</iconset>
+             <normaloff>:/new/prefix1/pics/forward1mn.png</normaloff>
+             <activeoff>:/new/prefix1/pics/active_forward1mn.png</activeoff>:/new/prefix1/pics/forward1mn.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1806,7 +1900,8 @@
   <action name="actionOpen">
    <property name="icon">
     <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/fileopen.png</normaloff>:/new/prefix1/pics/fileopen.png</iconset>
+     <normaloff>:/new/prefix1/pics/fileopen.png</normaloff>
+     <activeoff>:/new/prefix1/pics/active_fileopen.png</activeoff>:/new/prefix1/pics/fileopen.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open...</string>
@@ -1818,7 +1913,8 @@
   <action name="actionProperties">
    <property name="icon">
     <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/info.png</normaloff>:/new/prefix1/pics/info.png</iconset>
+     <normaloff>:/new/prefix1/pics/info.png</normaloff>
+     <activeoff>:/new/prefix1/pics/active_info.png</activeoff>:/new/prefix1/pics/info.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Information...</string>
@@ -1827,7 +1923,8 @@
   <action name="actionSave_video">
    <property name="icon">
     <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/filesave.png</normaloff>:/new/prefix1/pics/filesave.png</iconset>
+     <normaloff>:/new/prefix1/pics/filesave.png</normaloff>
+     <activeoff>:/new/prefix1/pics/active_filesave.png</activeoff>:/new/prefix1/pics/filesave.png</iconset>
    </property>
    <property name="text">
     <string>Save &amp;Video...</string>
@@ -1845,7 +1942,10 @@
    </property>
    <property name="icon">
     <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/play_filtered.png</normaloff>:/new/prefix1/pics/play_filtered.png</iconset>
+     <normaloff>:/new/prefix1/pics/play_filtered.png</normaloff>
+     <normalon>:/new/prefix1/pics/on_play_filtered.png</normalon>
+     <activeoff>:/new/prefix1/pics/active_play_filtered.png</activeoff>
+     <activeon>:/new/prefix1/pics/active_on_play_filtered.png</activeon>:/new/prefix1/pics/play_filtered.png</iconset>
    </property>
    <property name="text">
     <string>Play filtered</string>
