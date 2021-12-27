@@ -73,11 +73,7 @@ Section Uninstall
     DeleteRegValue HKLM "${REGKEY}" StartMenuGroup
     
     DeleteRegKey HKLM "${UNINST_REGKEY}"
-    DeleteRegValue HKLM "${REGKEY}" Path
-	DeleteRegValue HKLM "${REGKEY}" CreateDesktopIcon
-	DeleteRegValue HKLM "${REGKEY}" CreateStartMenuGroup
-	DeleteRegValue HKLM "${REGKEY}" CreateQuickLaunchIcon
-    DeleteRegKey /IfEmpty HKLM "${REGKEY}"
+    DeleteRegKey HKLM "${REGKEY}"
 
 	FileOpen $UninstallLogHandle "${UninstallLogPath}" r
 UninstallLoop:
