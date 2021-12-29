@@ -65,6 +65,7 @@ bool     lastReadDirAsTarget=false;
 bool     multiPassStatsAutoDelete=false;
 bool     altKeyboardShortcuts=false;
 bool     swapUpDown=false;
+bool     swapWheel=false;
 
 uint32_t pp_type=3;
 uint32_t pp_value=5;
@@ -225,6 +226,9 @@ std::string currentSdlDriver=getSdlDriverName();
 
         // Optionally reverse UP and DOWN keys for navigation
         prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swapUpDown);
+        
+        // Optionally reverse mouse wheel for navigation
+        prefs->get(FEATURES_SWAP_MOUSE_WHEEL,&swapWheel);
 
         // Multithreads
         prefs->get(FEATURES_THREADING_LAVC, &lavcThreads);
@@ -263,6 +267,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle resetEncoder(&loadDefault,QT_TRANSLATE_NOOP("adm","_Revert to saved default output settings on video load"));
         diaElemToggle enableAltShortcuts(&altKeyboardShortcuts,QT_TRANSLATE_NOOP("adm","_Enable alternative keyboard shortcuts"));
         diaElemToggle swapUpDownKeys(&swapUpDown,QT_TRANSLATE_NOOP("adm","Re_verse UP and DOWN arrow keys for navigation"));
+        diaElemToggle swapMouseWheel(&swapWheel,QT_TRANSLATE_NOOP("adm","Reverse mouse _wheel for navigation"));
         diaElemToggle swapMarkers(&useSwap,QT_TRANSLATE_NOOP("adm","_Swap markers if marker A is set past marker B or marker B before A in video"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
 
@@ -510,7 +515,7 @@ std::string currentSdlDriver=getSdlDriverName();
 //--
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMarkers, &checkForUpdate};
+        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMouseWheel, &swapMarkers, &checkForUpdate};
         diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),NB_ELEM(diaUser),diaUser);
 
          /* Automation */
@@ -806,6 +811,8 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,altKeyboardShortcuts);
             // Allow to use the UP key to navigate back, DOWN to navigate forward
             prefs->set(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,swapUpDown);
+            // Optional reversed mouse wheel for navigation
+            prefs->set(FEATURES_SWAP_MOUSE_WHEEL,swapWheel);
 
             prefs->set(DEFAULT_LANGUAGE,std::string(myLanguages[languageIndex].lang));
 

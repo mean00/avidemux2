@@ -336,6 +336,10 @@ void MainWindow::sliderPressed(void)
  */
 void MainWindow::sliderWheel(int way)
 { 
+    bool swapWheel = false;
+    prefs->get(FEATURES_SWAP_MOUSE_WHEEL,&swapWheel);
+    if (swapWheel)
+        way *= -1;
     if(way>0)
     {
         if (ctrlKeyHeld)
