@@ -55,6 +55,7 @@ int main(int _argc, char *_argv[]);
 
 int main(int _argc, char *_argv[])
 {
+        ADM_debugInit();
 	ADM_initBaseDir(_argc, _argv);
 
 #if defined(_WIN32) && (ADM_UI_TYPE_BUILD == ADM_UI_GTK || ADM_UI_TYPE_BUILD == ADM_UI_QT4) 
@@ -116,7 +117,7 @@ int main(int _argc, char *_argv[])
 #endif
 
 	uninstallSigHandler();
-
+        ADM_debugFree();
 	return exitVal;
 }
 /**

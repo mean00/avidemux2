@@ -45,6 +45,9 @@ extern "C"
 ADM_CORE6_EXPORT void ADM_warning2(const char *f,const char *st, ...) ;
 ADM_CORE6_EXPORT void ADM_info2(const char *f,const char *st, ...) ;
 ADM_CORE6_EXPORT void ADM_error2(const char *f,const char *st, ...) ;
+ADM_CORE6_EXPORT void ADM_debugInit();
+ADM_CORE6_EXPORT void ADM_debugFree();
+ADM_CORE6_EXPORT const char * ADM_debugLogRead(void);
 
 #define ADM_warning(a,...)  ADM_warning2(__FUNCTION__,a, ##__VA_ARGS__)
 #define ADM_info(a,...)     ADM_info2(__FUNCTION__,a,    ##__VA_ARGS__)
