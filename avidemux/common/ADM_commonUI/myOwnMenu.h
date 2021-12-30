@@ -116,7 +116,7 @@ std::vector<MenuEntry> myMenuAudio(_myMenuAudio, _myMenuAudio + sizeof(_myMenuAu
 static const MenuEntry _myMenuHelp[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Build Option"),       NULL,ACT_BUILT_IN,          NULL,NULL,0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Plugins"),            NULL,ACT_PLUGIN_INFO,       NULL,NULL,0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Log"),            NULL,ACT_DEBUG_LOG,       NULL,NULL,0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Log"),                NULL,ACT_DEBUG_LOG,       NULL,NULL,0},
 #ifdef _WIN32
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
             {MENU_SUBMENU,QT_TRANSLATE_NOOP("adm","&Advanced"),         NULL,ACT_DUMMY,             NULL,NULL,0},
