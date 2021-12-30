@@ -61,6 +61,7 @@ static optionDesc myOptions[]={
 { LASTPROJECTS_FILE3,"lastprojects.file3"                             ,ADM_param_stdstring  	,"",	0,	0},
 { LASTPROJECTS_FILE4,"lastprojects.file4"                             ,ADM_param_stdstring  	,"",	0,	0},
 { MESSAGE_LEVEL,"message_level"                                       ,ADM_param_uint32_t	,"2",	0,	2},
+{ VERBOSE_LOG,"verbose_log"                                           ,ADM_param_bool    	,"0",	0,	1},
 { AUDIO_DEVICE_AUDIODEVICE,"audio_device.audiodevice"                 ,ADM_param_stdstring  	,"ALSA",	0,	0},
 { AUDIO_DEVICE_ALSA_DEVICE,"audio_device.alsa_device"                 ,ADM_param_stdstring  	,"dmix",	0,	0},
 { VIDEODEVICE,"videodevice"                                           ,ADM_param_uint32_t	,"0",	0,	10},

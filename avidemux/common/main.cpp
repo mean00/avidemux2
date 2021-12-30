@@ -280,6 +280,9 @@ int startAvidemux(int argc, char *argv[])
     {
         setPrefsDefault();
     }
+    bool verboseLog=false;
+    prefs->get(VERBOSE_LOG,&verboseLog);
+    ADM_setVerboseLog(verboseLog);
     uint32_t cpuMask;
      if(!prefs->get(FEATURES_CPU_CAPS,&cpuMask))
     {

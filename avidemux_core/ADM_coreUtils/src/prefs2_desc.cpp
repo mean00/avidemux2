@@ -50,6 +50,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"lastprojects.file3",offsetof(my_prefs_struct,lastprojects.file3),"std::string",ADM_param_stdstring},
  {"lastprojects.file4",offsetof(my_prefs_struct,lastprojects.file4),"std::string",ADM_param_stdstring},
  {"message_level",offsetof(my_prefs_struct,message_level),"uint32_t",ADM_param_uint32_t},
+ {"verbose_log",offsetof(my_prefs_struct,verbose_log),"bool",ADM_param_bool},
  {"audio_device.audiodevice",offsetof(my_prefs_struct,audio_device.audiodevice),"std::string",ADM_param_stdstring},
  {"audio_device.alsa_device",offsetof(my_prefs_struct,audio_device.alsa_device),"std::string",ADM_param_stdstring},
  {"videodevice",offsetof(my_prefs_struct,videodevice),"uint32_t",ADM_param_uint32_t},

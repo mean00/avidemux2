@@ -56,6 +56,7 @@ uint32_t playbackPriority=0;
 uint32_t downmix;
 bool     mpeg_no_limit=0;
 uint32_t msglevel=2;
+bool     logVerbosity=false;
 
 uint32_t mixer=0;
 bool     doAutoUpdate=false;
@@ -249,6 +250,8 @@ std::string currentSdlDriver=getSdlDriverName();
                 useSwap=0;
         // Get level of message verbosity
         prefs->get(MESSAGE_LEVEL,&msglevel);
+        // Get logging verbosity
+        prefs->get(VERBOSE_LOG,&logVerbosity);
         // Downmix default
         if(prefs->get(DEFAULT_DOWNMIXING,&downmix)!=RC_OK)
         {
@@ -263,7 +266,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle swapUpDownKeys(&swapUpDown,QT_TRANSLATE_NOOP("adm","Re_verse UP and DOWN arrow keys for navigation"));
         diaElemToggle swapMarkers(&useSwap,QT_TRANSLATE_NOOP("adm","_Swap markers if marker A is set past marker B or marker B before A in video"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
-
+        diaElemToggle enableVerboseLog(&logVerbosity,QT_TRANSLATE_NOOP("adm","Verbose debug logging"));
 
         diaElemFrame frameSimd(QT_TRANSLATE_NOOP("adm","SIMD"));
 
@@ -497,7 +500,7 @@ std::string currentSdlDriver=getSdlDriverName();
 //--
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMarkers, &checkForUpdate};
+        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMarkers, &checkForUpdate, &enableVerboseLog};
         diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),NB_ELEM(diaUser),diaUser);
 
          /* Automation */
@@ -757,6 +760,9 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_SWAP_IF_A_GREATER_THAN_B, useSwap);
             //
             prefs->set(MESSAGE_LEVEL,msglevel);
+            
+            prefs->set(VERBOSE_LOG,logVerbosity);
+            ADM_setVerboseLog(logVerbosity);
             // Discard changes to output config on video load
             prefs->set(RESET_ENCODER_ON_VIDEO_LOAD, loadDefault);
 #ifdef USE_VDPAU

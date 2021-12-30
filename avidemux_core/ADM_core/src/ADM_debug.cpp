@@ -139,6 +139,17 @@ static void ADM_prettyPrint(const char *func,const char *color, const char *p)
     ADM_debugLogWrite(p);
 }
 
+static bool verboseDebugLog=false;
+
+void ADM_setVerboseLog(bool verbose)
+{
+    verboseDebugLog = verbose;
+}
+
+bool ADM_verboseLogging(void)
+{
+    return verboseDebugLog;
+}
 
 void ADM_info2(const char *func, const char *prf, ...)
 {
