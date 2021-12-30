@@ -338,6 +338,7 @@ bool ADMImage::saveAsPngInternal(const char *filename)
     context->time_base.num=1;
     context->width=_width;
     context->height=_height;
+    context->compression_level=1;   // least compression -> faster
 
     r=avcodec_open2(context, codec, NULL);
 
