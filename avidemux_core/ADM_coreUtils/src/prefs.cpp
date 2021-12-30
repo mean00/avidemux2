@@ -74,9 +74,15 @@ static int searchOptionByName2(const char *name)
         if(!strcmp(myOptions[i].name2,name)) return i;
     return -1;
 }
-static int searchDescByName(const char *name)
+static int searchDescByName(const char *name, int searchHint=-1)
 {
     int nb=sizeof( my_prefs_struct_param) /sizeof(ADM_paramList  );
+    if ((searchHint >=0) && (searchHint < nb))
+    {
+        if(my_prefs_struct_param[searchHint].paramName)
+            if(!strcmp(my_prefs_struct_param[searchHint].paramName,name)) return searchHint;
+    }
+    // else do full search
     for(int i=0;i<nb;i++)
     {
         if(my_prefs_struct_param[i].paramName) 
@@ -89,6 +95,11 @@ static int searchDescByName(const char *name)
 static int searchOptionByEnum(int value)
 {
     int nb=sizeof( myOptions)/sizeof(optionDesc);
+    if ((value >=0) && (value<nb))
+    {
+        if(myOptions[value].enumerate==value) return value;
+    }
+    // else do full search
     for(int i=0;i<nb;i++)
         if(myOptions[i].enumerate==value) return i;
     return -1;
@@ -236,7 +247,7 @@ static bool lookupOption(options option, const ADM_paramList **desc, const optio
     ADM_assert(d!=-1);
     const optionDesc *o=myOptions+d;
     // Get full name
-    d=searchDescByName(o->name2);
+    d=searchDescByName(o->name2,d);
     if(d==-1)
         return false;
     const ADM_paramList *dsc=my_prefs_struct_param+d;
