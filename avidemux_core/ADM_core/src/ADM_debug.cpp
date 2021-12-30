@@ -83,8 +83,8 @@ const char * ADM_debugLogRead(void)
     if (debugLogBuffer==NULL || debugLogReadoutBuffer==NULL)
         return NULL;
     long unsigned int head,tail;
-    tail = debugLogBufferHead % ADM_DEBUG_LOG_SIZE;
-    head = debugLogBufferTail % ADM_DEBUG_LOG_SIZE;
+    head = debugLogBufferHead % ADM_DEBUG_LOG_SIZE;
+    tail = debugLogBufferTail % ADM_DEBUG_LOG_SIZE;
     long unsigned int i=0;
     for (i=0; i<ADM_DEBUG_LOG_SIZE; i++)
     {

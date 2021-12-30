@@ -7,6 +7,7 @@ SET(
 #calculator.ui
         encoding.ui
         license.ui
+        log.ui
         jobs.ui
         props.ui
 #vobsub.ui
@@ -21,6 +22,7 @@ SET(headers
         Q_audioTracks.h
         Q_audioTrackClass.h
         Q_license.h
+        Q_log.h
         Q_jobs.h
         Q_props.h
 #Q_vobsub.h
@@ -37,6 +39,7 @@ SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS}
 	${${ADM_LIB}_headers}  ${${ADM_LIB}_source}  ${${ADM_LIB}_resource}
         Q_about.cpp
         Q_license.cpp
+        Q_log.cpp
         Q_jobs.cpp
         Q_props.cpp
         Q_working.cpp

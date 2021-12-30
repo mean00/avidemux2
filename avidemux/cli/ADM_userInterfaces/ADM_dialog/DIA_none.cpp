@@ -45,6 +45,7 @@ uint8_t DIA_RecentFiles( char **name ) {return 0;}
 uint8_t DIA_about( void ) {return 0;}
 void DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate ) {}
 void DIA_properties(void) {}
+void DIA_log(void) {}
 int GUI_handleVFilter (void) {return 0;}
 uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines) {return 1;}
 void destroyGUI(void) {}

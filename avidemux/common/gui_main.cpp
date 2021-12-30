@@ -81,6 +81,7 @@ extern bool GUI_infiniteForward(uint64_t pts);
 //***********************************
 extern uint8_t DIA_about( void );
 extern void    DIA_properties( void);
+extern void    DIA_log( void);
 extern uint8_t DIA_Preferences(void);
 extern uint8_t DIA_builtin(void);
 extern uint8_t DIA_pluginsInfo(void);
@@ -295,6 +296,9 @@ void HandleAction (Action action)
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
             return;
+    case ACT_DEBUG_LOG:
+        DIA_log();
+          return;
     case ACT_OPEN_APP_LOG:
         GUI_OpenApplicationLog();
         return;
