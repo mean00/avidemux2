@@ -303,6 +303,7 @@ bool ADMImage::saveAsPngInternal(const char *filename)
     AVCodecContext *context=NULL;
     AVFrame *frame=NULL;
     AVCodec *codec=NULL;
+    AVDictionary * options = NULL;
     FILE *f=NULL;
     bool result=false;
     const uint32_t sz=ADM_IMAGE_ALIGN(_width*3)*_height;
@@ -339,8 +340,9 @@ bool ADMImage::saveAsPngInternal(const char *filename)
     context->width=_width;
     context->height=_height;
     context->compression_level=1;   // least compression -> faster
-
-    r=avcodec_open2(context, codec, NULL);
+    
+    av_dict_set(&options, "pred", "paeth", 0);
+    r=avcodec_open2(context, codec, &options);
 
     if(r<0)
     {
@@ -427,7 +429,11 @@ __cleanup:
         av_frame_free(&frame);
         frame=NULL;
     }
-
+    if (options)
+    {
+        av_dict_free(&options);
+        options=NULL;
+    }
     return result;
 }
 
