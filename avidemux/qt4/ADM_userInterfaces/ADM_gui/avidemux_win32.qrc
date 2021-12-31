@@ -58,6 +58,48 @@
         <file>pics/previous.png</file>
         <file>pics/project_open.png</file>
         <file>pics/thumbnail.png</file>
+        <file>pics/active_back@2x.png</file>
+        <file>pics/active_backward1mn@2x.png</file>
+        <file>pics/active_fileopen@2x.png</file>
+        <file>pics/active_filesave@2x.png</file>
+        <file>pics/active_forward1mn@2x.png</file>
+        <file>pics/active_forward@2x.png</file>
+        <file>pics/active_info@2x.png</file>
+        <file>pics/active_markA@2x.png</file>
+        <file>pics/active_markB@2x.png</file>
+        <file>pics/active_next_black@2x.png</file>
+        <file>pics/active_next_cut@2x.png</file>
+        <file>pics/active_on_play_filtered@2x.png</file>
+        <file>pics/active_player_end@2x.png</file>
+        <file>pics/active_player_fwd@2x.png</file>
+        <file>pics/active_player_play@2x.png</file>
+        <file>pics/active_player_rew@2x.png</file>
+        <file>pics/active_player_start@2x.png</file>
+        <file>pics/active_player_stop@2x.png</file>
+        <file>pics/active_play_filtered@2x.png</file>
+        <file>pics/active_prev_black@2x.png</file>
+        <file>pics/active_prev_cut@2x.png</file>
+        <file>pics/back@2x.png</file>
+        <file>pics/backward1mn@2x.png</file>
+        <file>pics/fileopen@2x.png</file>
+        <file>pics/filesave@2x.png</file>
+        <file>pics/forward1mn@2x.png</file>
+        <file>pics/forward@2x.png</file>
+        <file>pics/info@2x.png</file>
+        <file>pics/markA@2x.png</file>
+        <file>pics/markB@2x.png</file>
+        <file>pics/next_black@2x.png</file>
+        <file>pics/next_cut@2x.png</file>
+        <file>pics/on_play_filtered@2x.png</file>
+        <file>pics/player_end@2x.png</file>
+        <file>pics/player_fwd@2x.png</file>
+        <file>pics/player_play@2x.png</file>
+        <file>pics/player_rew@2x.png</file>
+        <file>pics/player_start@2x.png</file>
+        <file>pics/player_stop@2x.png</file>
+        <file>pics/play_filtered@2x.png</file>
+        <file>pics/prev_black@2x.png</file>
+        <file>pics/prev_cut@2x.png</file>
         <file>pics/volume.png</file>
     </qresource>
 </RCC>
