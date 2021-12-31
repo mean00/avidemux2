@@ -59,6 +59,7 @@
         <file>pics/project_open.png</file>
         <file>pics/thumbnail.png</file>
         <file>pics/volume.png</file>
+        <file>pics/volume_off.png</file>
         <file>pics/active_back@2x.png</file>
         <file>pics/active_backward1mn@2x.png</file>
         <file>pics/active_fileopen@2x.png</file>
@@ -101,6 +102,8 @@
         <file>pics/play_filtered@2x.png</file>
         <file>pics/prev_black@2x.png</file>
         <file>pics/prev_cut@2x.png</file>
+        <file>pics/volume@2x.png</file>
+        <file>pics/volume_off@2x.png</file>
         <file>fonts/ADM7SEG.ttf</file>
     </qresource>
 </RCC>
