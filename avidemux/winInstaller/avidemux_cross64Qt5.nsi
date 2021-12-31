@@ -14,9 +14,9 @@ Section "Avidemux Core" SecCore
     ${File} "./change.css"
     ${File} "./ChangeLog.html"
     ${File} ${BINARY_FOLDER}/libass-9.dll
-    ${File} ${BINARY_FOLDER}/libcrypto-1_1-x64.dll     
+    ${File} ${BINARY_FOLDER}/libcrypto-3-x64.dll     
     ${File} ${BINARY_FOLDER}/libpcre2-16-0.dll     
-    ${File} ${BINARY_FOLDER}/libssl-1_1-x64.dll
+    ${File} ${BINARY_FOLDER}/libssl-3-x64.dll
 
     ${File} ${BINARY_FOLDER}/libexpat-1.dll
     ${File} ${BINARY_FOLDER}/libffi-6.dll
@@ -29,7 +29,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}/libsqlite3-0.dll
     ${File} ${BINARY_FOLDER}/libstdc++-6.dll
     ${File} ${BINARY_FOLDER}/libwinpthread-1.dll
-    ${File} ${BINARY_FOLDER}/libz-1.dll
+    #${File} ${BINARY_FOLDER}/libz-1.dll
     ${File} ${BINARY_FOLDER}/libfreetype-6.dll
     ${File} ${BINARY_FOLDER}/libgcc_s_seh-1.dll
     ${File} ${BINARY_FOLDER}/libintl-8.dll
