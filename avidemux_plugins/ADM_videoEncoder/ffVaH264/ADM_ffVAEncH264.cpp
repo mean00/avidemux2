@@ -211,7 +211,7 @@ bool             ADM_ffVAEncH264Encoder::preEncode(void)
     swFrame->height=source->getInfo()->height;
     swFrame->format=AV_PIX_FMT_NV12;
 
-    int err=av_frame_get_buffer(swFrame, 32);
+    int err=av_frame_get_buffer(swFrame, 64);
     if(err<0)
     {
         CLEARTEXT(err)
