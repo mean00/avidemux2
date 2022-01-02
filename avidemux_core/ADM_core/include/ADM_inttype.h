@@ -18,10 +18,10 @@
 */
 #define MAXIMUM_SIZE 8192
 /*
-    libavcodec doesn't recommend thread count > 16, but things start to fall apart already > 8
+    libavcodec doesn't recommend thread count > 16
     FIXME find a more suitable location
 */
-#define LAVC_MAX_SAFE_THREAD_COUNT 8
+#define LAVC_MAX_SAFE_THREAD_COUNT 16
 
 typedef unsigned char ADM_filename;
 
