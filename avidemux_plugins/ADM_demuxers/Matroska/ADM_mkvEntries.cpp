@@ -307,14 +307,51 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                 wavSize+=2; // size of WAVEFORMATEX
                 int x=l-wavSize;
 
-                if(x>0) // If we have more than WAVEFORMATEX, it is extradata
+                if(t->wavHeader.encoding == 0xfffe) // WAVEFORMATEXTENSIBLE
+                {
+                    if(l < 40)
+                    {
+                        ADM_warning("Not enough data for WAVEFORMATEXTENSIBLE header, need 40, got %d, skipping track.\n",l);
+                        delete [] entry.extraData;
+                        return 0;
+                    }
+                    uint8_t *ptr = entry.extraData;
+                    ptr += wavSize + 6; // offset of GUID
+                    typedef struct { uint32_t data1; uint16_t data2; uint16_t data3; uint8_t data4[8]; } msGuid;
+                    typedef struct { uint16_t tag; msGuid guid; } tag2guid;
+#define NB_GUIDS 7
+                    const tag2guid supportedGuids[NB_GUIDS] = {
+                        { WAV_PCM,      { 0x1,0x0,0x10, { 0x80,0x0,0x0,0xaa,0x0,0x38,0x9b,0x71 } } /* KSDATAFORMAT_SUBTYPE_PCM */ },
+                        { WAV_MSADPCM,  { 0x2,0x0,0x10, { 0x80,0x0,0x0,0xaa,0x0,0x38,0x9b,0x71 } } /* KSDATAFORMAT_SUBTYPE_ADPCM */ },
+                        { WAV_ALAW,     { 0x6,0x0,0x10, { 0x80,0x0,0x0,0xaa,0x0,0x38,0x9b,0x71 } } /* KSDATAFORMAT_SUBTYPE_ALAW */ },
+                        { WAV_ULAW,     { 0x7,0x0,0x10, { 0x80,0x0,0x0,0xaa,0x0,0x38,0x9b,0x71 } } /* KSDATAFORMAT_SUBTYPE_MULAW */ },
+                        { WAV_LPCM,     { 0xe06d8032,0xdb46,0x11cf, { 0xb4,0xd1,0x0,0x80,0x5f,0x6c,0xbb,0xea } } /* KSDATAFORMAT_SUBTYPE_LPCM_AUDIO */ },
+                        { WAV_AC3,      { 0xe06d802c,0xdb46,0x11cf, { 0xb4,0xd1,0x0,0x80,0x5f,0x6c,0xbb,0xea } } /* KSDATAFORMAT_SUBTYPE_AC3_AUDIO */ },
+                        { WAV_MP2,      { 0xe06d802b,0xdb46,0x11cf, { 0xb4,0xd1,0x0,0x80,0x5f,0x6c,0xbb,0xea } } /* ,KSDATAFORMAT_SUBTYPE_MPEG2_AUDIO */ }
+                    };
+                    for(int i=0; i < NB_GUIDS; i++)
+                    {
+                        const msGuid *v1 = (msGuid *)ptr;
+                        const msGuid *v2 = &(supportedGuids[i].guid);
+                        if(v1->data1 == v2->data1 && v1->data2 == v2->data2 && !memcmp(v1->data4,v2->data4,8))
+                        {
+                            t->wavHeader.encoding = supportedGuids[i].tag;
+                            ADM_info("Encoding set from SubFormat GUID to 0x%x (%s)\n",t->wavHeader.encoding,getStrFromAudioCodec(t->wavHeader.encoding));
+                            break;
+                        }
+                    }
+                    if(t->wavHeader.encoding == 0xfffe) // unassigned
+                    {
+                        ADM_warning("SubFormat GUID not recognized, skipping track.\n");
+                        delete [] entry.extraData;
+                        return 0;
+                    }
+                }else if(x>0) // If we have more than WAVEFORMATEX but no WAVEFORMATEXTENSIBLE tag, it is extradata
                 {
                     ADM_info("Found %d bytes of extradata\n",x);
                     t->extraData=new uint8_t[x];
                     t->extraDataLen=x;
                     memcpy(t->extraData,entry.extraData+wavSize,x);
-                    if(t->wavHeader.encoding==0xfffe) // WAVE_FORMAT_EXTENSIBLE + extradata: might be AAC LATM
-                        t->wavHeader.encoding=MKV_MUX_LATM;
                 }
                 if(t->wavHeader.encoding==MKV_MUX_LATM)
                 {
