@@ -233,6 +233,7 @@ const char *getStrFromAudioCodec( uint32_t codec)
               case WAV_QDM2: return QT_TRANSLATE_NOOP("adm","QDM2");
               case WAV_AMRNB: return QT_TRANSLATE_NOOP("adm","AMR-NB");
               case WAV_MSADPCM: return QT_TRANSLATE_NOOP("adm","MSADPCM");
+              case WAV_ALAW: return QT_TRANSLATE_NOOP("adm","A-law");
               case WAV_ULAW: return QT_TRANSLATE_NOOP("adm","ULAW");
               case WAV_IMAADPCM: return QT_TRANSLATE_NOOP("adm","IMA ADPCM");
               case WAV_8BITS_UNSIGNED:return QT_TRANSLATE_NOOP("adm","8-bit PCM");

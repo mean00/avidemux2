@@ -25,6 +25,7 @@
 #define WAV_8BITS_UNSIGNED 	55 // dummy id
 #define WAV_AMRNB 	56 // dummy id
 #define WAV_AMRWB 	57 // dummy id
+#define WAV_ALAW        6
 #define WAV_ULAW	7 
 #define WAV_QDM2 	58
 #define WAV_IMAADPCM    17
