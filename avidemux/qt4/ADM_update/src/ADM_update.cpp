@@ -22,6 +22,7 @@
 ADMCheckUpdate::ADMCheckUpdate(ADM_updateComplete *up)
 {
     this->_updateCallback=up;
+    reply = NULL;
     connect(&manager, SIGNAL(finished(QNetworkReply*)),
             SLOT(downloadFinished(QNetworkReply*)));
 }
@@ -39,8 +40,20 @@ void ADMCheckUpdate::execute()
     std::string url=std::string(ADM_UPDATE_SERVER)+std::string("/")+std::string(ADM_UPDATE_TARGET);
     QUrl qurl = QUrl::fromUserInput(QString(url.c_str()));
     QNetworkRequest request(qurl);
-    QNetworkReply *reply = manager.get(request);
+    reply = manager.get(request);
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)),this,SLOT(downloadProgressCheck(qint64, qint64)));
 }
+
+void ADMCheckUpdate::downloadProgressCheck(qint64 bytesReceived, qint64 bytesTotal)
+{
+    if ((bytesTotal > ADM_UPDATE_SIZE_LIMIT) || (bytesReceived > ADM_UPDATE_SIZE_LIMIT))
+    {
+        if (reply)
+            reply->abort();
+        ADM_error("Aborting update check download...\n");
+    }
+}
+
 /**
  */
 void ADMCheckUpdate::downloadFinished(QNetworkReply *reply)
@@ -59,7 +72,7 @@ void ADMCheckUpdate::downloadFinished(QNetworkReply *reply)
         return;
     }
     ADM_warning("Success downloading update %s\n",st.toUtf8().constData());
-    QByteArray ba=reply->readAll();
+    QByteArray ba=reply->read(ADM_UPDATE_SIZE_LIMIT);   // limit read amount
     if(!ba.size())
    	return; 
     std::string output=std::string(ba.data());

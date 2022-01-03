@@ -47,6 +47,8 @@
 
 #define ADM_UPDATE_TARGET "update_for_" ADM_UPDATE_MACHINE ".html"
 
+#define ADM_UPDATE_SIZE_LIMIT   (65535)     // 64kB-1
+
 /**
  */
 class ADMCheckUpdate: public QObject
@@ -57,9 +59,11 @@ public:
         virtual     ~ADMCheckUpdate();
 protected:
         QNetworkAccessManager manager;
+        QNetworkReply *reply;
         ADM_updateComplete    *_updateCallback;
 
 public slots:
         void execute();
         void downloadFinished(QNetworkReply *reply);
+        void downloadProgressCheck(qint64 bytesReceived, qint64 bytesTotal);
 };
