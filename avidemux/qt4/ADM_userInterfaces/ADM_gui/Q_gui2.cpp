@@ -1756,12 +1756,12 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 {
     QKeyEvent *keyEvent;
     bool swpud=false;
-    prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swpud);
+    
     switch (event->type())
     {
         case QEvent::KeyPress:
             keyEvent = (QKeyEvent*)event;
-
+            prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swpud);
 //            if (watched == slider)
             {
                 switch (keyEvent->key())
