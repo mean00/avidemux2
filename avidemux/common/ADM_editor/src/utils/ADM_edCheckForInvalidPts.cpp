@@ -50,7 +50,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
         ADM_warning("Cannot navigate, cannot check file for broken PTS.\n");
         return false;
     }
-    vid->lastSentFrame=0;
+    //vid->lastSentFrame=0; // We may not touch this counter here else we confuse the decoder, esp. with MT enabled.
     vid->dontTrustBFramePts=false;
     uint64_t inc=vid->timeIncrementInUs;
 
