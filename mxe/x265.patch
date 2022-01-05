@@ -41,17 +41,21 @@ index d996a477..00000000
 - 
 - struct x265_encoder {};
 diff --git a/src/x265.mk b/src/x265.mk
-index 3b0329e0..9ff07def 100644
+index 3b0329e0..47cbbc5a 100644
 --- a/src/x265.mk
 +++ b/src/x265.mk
-@@ -3,8 +3,8 @@
+@@ -3,11 +3,11 @@
  PKG             := x265
  $(PKG)_WEBSITE  := http://x265.org/
  $(PKG)_IGNORE   :=
 -$(PKG)_VERSION  := 2.4
 -$(PKG)_CHECKSUM := 9c2aa718d78f6fecdd783f08ab83b98d3169e5f670404da4c16439306907d729
-+$(PKG)_VERSION  := 3.4
-+$(PKG)_CHECKSUM := c2047f23a6b729e5c70280d23223cb61b57bfe4ad4e8f1471eeee2a61d148672
++$(PKG)_VERSION  := 3.5
++$(PKG)_CHECKSUM := e70a3335cacacbba0b3a20ec6fecd6783932288ebc8163ad74bcc9606477cae8
  $(PKG)_SUBDIR   := x265_$($(PKG)_VERSION)
  $(PKG)_FILE     := x265_$($(PKG)_VERSION).tar.gz
- $(PKG)_URL      := https://bitbucket.org/multicoreware/x265/downloads/$($(PKG)_FILE)
+-$(PKG)_URL      := https://bitbucket.org/multicoreware/x265/downloads/$($(PKG)_FILE)
++$(PKG)_URL      := https://bitbucket.org/multicoreware/x265_git/downloads/$($(PKG)_FILE)
+ $(PKG)_DEPS     := cc yasm
+ 
+ define $(PKG)_UPDATE
