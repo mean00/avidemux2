@@ -78,7 +78,7 @@ bool ADM_VC1getFrameType(uint8_t *start, int size, int *frameType)
         if(code!=0x0D) // frame, field = 0xc , SLICE=0x0b
             continue;
         *frameType=toType[*start >> 4];
-        printf("VC1 : => %02x : 0x%02x %02x %02x %02x\n",*frameType,code,start[0],start[1],start[2]);
+        aprintf("VC1 : => %02x : 0x%02x %02x %02x %02x\n",*frameType,code,start[0],start[1],start[2]);
         return true;
         // 
     }
