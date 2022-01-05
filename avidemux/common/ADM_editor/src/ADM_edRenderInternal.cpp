@@ -324,9 +324,12 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
 
     if(old>vid->lastDecodedPts) 
     {
-        stats.nbPtsgoingBack++;
-        ADM_warning(">>>>> PTS going backward by %" PRId64" ms\n",(old-vid->lastDecodedPts)/1000);
-        ADM_warning("Dropping frame!\n");
+        if(vid->lastDecodedPts > vid->firstFramePts)
+        {
+            stats.nbPtsgoingBack++;
+            ADM_warning(">>>>> PTS going backward by %" PRId64" ms\n",(old-vid->lastDecodedPts)/1000);
+            ADM_warning("Dropping frame!\n");
+        }
         cache->invalidate(result);
         return false;
     }else
