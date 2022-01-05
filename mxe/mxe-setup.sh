@@ -13,11 +13,11 @@ check()
 cur=$(pwd)
 where="$(dirname $(realpath $0))"
 x264_script="x264-snapshot.sh"
-x265_script="x265-get-source.sh"
+#x265_script="x265-get-source.sh"
 libaom_script="install-libaom.bash"
 declare -a reqs
 reqs+=(${x264_script})
-reqs+=(${x265_script})
+#reqs+=(${x265_script})
 reqs+=(${libaom_script})
 
 # check prerequisites
@@ -56,10 +56,10 @@ patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
 && cp -uv x264-*.tar.bz2 "${MXE_ROOT_DIR}/pkg/" || fail "Failed at x264 patch"
 
 # get x265 source
-("${where}/${x265_script}") || fail "Failed at x265 source"
+#("${where}/${x265_script}") || fail "Failed at x265 source"
 # patch MXE
-cp -uv x265_3.4.tar.gz "${MXE_ROOT_DIR}/pkg/" \
-&& patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" \
+#cp -uv x265_3.4.tar.gz "${MXE_ROOT_DIR}/pkg/" && \
+   patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" \
 && patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" || fail "Failed at x265 patch"
 
 echo "MXE_TARGETS :=  i686-w64-mingw32.shared x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
