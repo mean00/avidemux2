@@ -78,6 +78,8 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
         DIA_workingBase *working=createWorking(QT_TRANSLATE_NOOP("ADM_Composer","Checking if timestamps are valid.."));
         for(int i=0;i<checkRange;i++)
         {
+            if(false == working->isAlive())
+                break;
             DecodeNextPicture(seg->_reference);
             working->update(i,checkRange);
         }
