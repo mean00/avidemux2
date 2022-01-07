@@ -416,6 +416,7 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
 
             // WTF? step 0
             Y = std::pow(Y, 2.4);
+            Y *= std::sqrt(boost);
 
             // Tone mapping step 1
             double rhoHDR = 1 + 32*std::pow(LumHDR/10000.0, 1/2.4);
@@ -439,10 +440,7 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
             double YSDR = (std::pow(rhoSDR, Yc) - 1) / (rhoSDR - 1);
 
             // WTF? step 4
-            double maxboost = std::sqrt(2)*1.1;
-            if (std::sqrt(boost) > maxboost)
-                maxboost = std::sqrt(boost);
-            YSDR *= maxboost;
+            YSDR *= std::sqrt(2);
             if (YSDR < 0)
                 YSDR = 0;
             if (YSDR > 1)
@@ -473,7 +471,7 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
                     double fYSDR = ((Y==0)||(YSDR==0)) ? 1.0 : (YSDR / (1.1*Y));
                     C *= fYSDR;
                     // WTF? step 5 prevent shadow glow
-                    C *= std::pow(YSDR+0.001,1/2.4)*saturationAdjust;
+                    C *= std::pow(YSDR+0.001,1/2.4)*saturationAdjust*std::sqrt(std::sqrt(boost))*std::sqrt(2);
                     if (C < -0.5)
                         C = -0.5;
                     if (C > 0.5)
