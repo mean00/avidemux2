@@ -38,14 +38,18 @@
     \fn videoIndexer
     \brief index the video Track
 */
-uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
+uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser, DIA_workingBase *work)
 {
     uint64_t len,id;
     ADM_MKV_TYPE type;
     const char *ss;
 
     parser->seek(0);
-    DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska Images"));
+    if (work == NULL)
+        return 0;
+    if(!work->isAlive())
+        return 0;
+    work->reuseAs(QT_TRANSLATE_NOOP("matroskademuxer","Matroska Images"));
     uint8_t res=1;
 
     readBufferSize=200*1024;
@@ -123,7 +127,6 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
    // printf("[MKV] ending cluster at 0x%llx\n",segment.tell());
     }
     printf("Found %" PRIu32" images in this video\n",(uint32_t)VIDEO.index.size());
-    delete work;
     delete [] readBuffer;
     readBuffer=NULL;
     return (res==ADM_IGN)? res : !!VIDEO.index.size();
@@ -602,7 +605,7 @@ bool mkvHeader::readCue(ADM_ebml_file *parser)
         \fn indexClusters
         \brief make a list of all clusters with there position & size
 */
-uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
+uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser, DIA_workingBase *work)
 {
     uint64_t fileSize,len;
     uint64_t alen,vlen;
@@ -631,7 +634,11 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
     }
     ADM_ebml_file segment(parser,vlen);
 
-    DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska clusters"));
+    if (work == NULL)
+        return 0;
+    if(!work->isAlive())
+        return 0;
+    work->reuseAs(QT_TRANSLATE_NOOP("matroskademuxer","Matroska clusters"));
     while(segment.simplefind(MKV_CLUSTER,&alen,0))
     {
         if(!work->isAlive())
@@ -674,7 +681,6 @@ tryAgain:
         segment.seek( _clusters[seekme].pos+ _clusters[seekme].size);
         //printf("Position :%u %u MB\n", _clusters[seekme].pos+ _clusters[seekme].size,( _clusters[seekme].pos+ _clusters[seekme].size)>>20);
     }
-    delete work;
     ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
     return res;
 }

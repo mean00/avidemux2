@@ -165,22 +165,26 @@ uint8_t mkvHeader::open(const char *name)
   }
   readCue(&ebml);
   printf("[MKV] Indexing clusters\n");
-  uint8_t result=indexClusters(&ebml);
+  DIA_workingBase *work = createWorking("");
+  uint8_t result=indexClusters(&ebml, work);
   if(result!=1)
   {
     if(!result)
         printf("[MKV] Cluster indexing failed\n");
+    delete work;
     return result;
   }
   printf("[MKV]Found %u clusters\n",_clusters.size());
   printf("[MKV] Indexing video\n");
-    result=videoIndexer(&ebml);
+    result=videoIndexer(&ebml, work);
     if(result!=1)
     {
         if(!result)
             printf("[MKV] Video indexing failed\n");
+        delete work;
         return result;
     }
+    delete work;
   // update some infos
   _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].index.size();;
     if(! _videostream.dwLength)

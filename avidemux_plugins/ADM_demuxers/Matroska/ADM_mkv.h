@@ -26,6 +26,7 @@
 #include "ADM_audioStream.h"
 #include "ADM_aacLatm.h"
 #include "ADM_ebml.h"
+#include "DIA_working.h"
 #include <BVector.h>
 #define MKV_MAX_REPEAT_HEADER_SIZE 16
 /**
@@ -244,9 +245,9 @@ class mkvHeader         :public vidHeader
 
     uint8_t                 addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t where, uint32_t size,uint32_t flags,
                                             uint32_t timecodeMS);
-    uint8_t                 videoIndexer(ADM_ebml_file *parser);
+    uint8_t                 videoIndexer(ADM_ebml_file *parser, DIA_workingBase *work);
     bool                    readCue(ADM_ebml_file *parser);
-    uint8_t                 indexClusters(ADM_ebml_file *parser);
+    uint8_t                 indexClusters(ADM_ebml_file *parser, DIA_workingBase *work);
     uint8_t                 indexBlock(ADM_ebml_file *parser,uint32_t count,uint32_t timecodeMS);
 
     uint8_t                 rescaleTrack(mkvTrak *track,uint32_t durationMs);
