@@ -41,6 +41,7 @@ class DIA_workingBase
             virtual uint8_t  	update(uint32_t percent) {ADM_assert(0);return 1;}
             virtual uint8_t 	update(uint32_t current,uint32_t total){ADM_assert(0);return 1;};
             virtual uint8_t  	isAlive (void ){ADM_assert(0);return 1;};
+            virtual void        reuseAs( const char *title=NULL ) {ADM_assert(0);};
             
 };
 /**

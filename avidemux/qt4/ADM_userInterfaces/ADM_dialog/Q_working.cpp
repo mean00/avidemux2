@@ -63,6 +63,7 @@ public:
         virtual uint8_t      update(uint32_t percent);  // If returns 1 -> Means aborted
         virtual uint8_t      update(uint32_t current,uint32_t total); // If returns 1 -> Means aborted
         virtual uint8_t      isAlive (void );
+        virtual void         reuseAs( const char *title=NULL );
                 void         closeDialog(void);
         
 };
@@ -181,6 +182,19 @@ uint8_t DIA_workingQt4::isAlive (void )
     workWindow *wind=(workWindow *)_priv; 
     ADM_assert(wind);
     return wind->active;
+}
+/**
+ * 
+ */
+void DIA_workingQt4::reuseAs( const char *title )
+{
+    lastper=0;
+    _nextUpdate=0; 
+    _clock.reset();
+    workWindow *wind=(workWindow *)_priv;
+    ADM_assert(wind);
+    ADM_assert(title!=NULL);
+    wind->setWindowTitle(QString::fromUtf8(title));    
 }
 /**
  * 

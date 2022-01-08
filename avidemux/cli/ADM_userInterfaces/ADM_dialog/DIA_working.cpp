@@ -39,6 +39,7 @@ public:
     virtual uint8_t     update(uint32_t percent);
     virtual uint8_t     update(uint32_t current,uint32_t total);
     virtual uint8_t     isAlive (void );
+    virtual void        reuseAs( const char *title=NULL );
 
 };
 //**********************************
@@ -119,6 +120,13 @@ uint8_t DIA_workingNone::update(uint32_t cur, uint32_t total)
 uint8_t DIA_workingNone::isAlive (void )
 {
     return 1;
+}
+
+void DIA_workingNone::reuseAs( const char *title )
+{
+    lastper=0;
+    _nextUpdate=0;
+    _clock.reset();
 }
 
 DIA_workingNone::~DIA_workingNone()
