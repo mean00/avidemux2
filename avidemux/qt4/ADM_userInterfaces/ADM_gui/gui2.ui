@@ -135,7 +135,13 @@
      <addaction name="actionViewVolume"/>
      <addaction name="actionViewToolBar"/>
     </widget>
+    <widget class="QMenu" name="menuThemes">
+     <property name="title">
+      <string>T&amp;hemes</string>
+     </property>
+    </widget>
     <addaction name="menuToolbars"/>
+    <addaction name="menuThemes"/>
    </widget>
    <widget class="QMenu" name="menuAuto">
     <property name="title">

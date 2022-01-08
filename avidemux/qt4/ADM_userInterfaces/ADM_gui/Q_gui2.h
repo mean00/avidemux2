@@ -191,6 +191,7 @@ protected:
     /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
     void currentTimeToClipboard(void);
     bool dragWhilePlay;
+    char * defaultStyle;
 
 private slots:
     void timeChanged(int);
@@ -237,6 +238,9 @@ private slots:
 
     void restoreDefaultWidgetState(bool b);
     void toolbarOrientationChangedSlot(Qt::Orientation hv);
+    void setNativeTheme(bool b);
+    void setLightTheme(bool b);
+    void setDarkTheme(bool b);
 
     void closeEvent(QCloseEvent *event)
     {
