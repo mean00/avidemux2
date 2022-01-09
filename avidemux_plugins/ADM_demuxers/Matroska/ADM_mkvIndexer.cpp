@@ -22,7 +22,6 @@
 #include "ADM_mkv.h"
 
 #include "mkv_tags.h"
-#include "DIA_working.h"
 #include "ADM_codecType.h"
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_vidMisc.h"
@@ -35,98 +34,85 @@
 #endif
 
 /**
-    \fn videoIndexer
-    \brief index the video Track
+    \fn indexLastCluster
+    \brief Parse the most recently found cluster.
 */
-uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
+uint8_t mkvHeader::indexLastCluster(ADM_ebml_file *parser)
 {
-    uint64_t len,id;
+    ADM_assert(readBuffer);
+    ADM_assert(_work);
+    ADM_assert(_clusters.size());
+
+    uint64_t len,id,off;
     ADM_MKV_TYPE type;
     const char *ss;
 
-    parser->seek(0);
-    DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska Images"));
-    uint8_t res=1;
+    uint64_t fileSize = parser->getFileSize();
+    int lastCluster = _clusters.size() - 1;
+    uint8_t res = 1;
 
-    readBufferSize=200*1024;
-    readBuffer=new uint8_t[readBufferSize];
-    //************
-    work->update(0);
-#if 0
-    int nbCluster=_clusters.size();
-    for(int clusters=0;clusters<nbCluster;clusters++)
+    mkvIndex *cdx = &(_clusters[lastCluster]);
+    parser->seek(cdx->pos);
+    ADM_ebml_file cluster(parser, cdx->size);
+
+    while(!cluster.finished())
     {
-        printf("[Cluster] %d/%d StartTimecode=%" PRIu64" ms\n",clusters,nbCluster,_clusters[clusters].Dts);
-    }
-#endif
-    int nbClusters=_clusters.size();
-    for(int clusters=0;clusters<nbClusters;clusters++)
-    {
-        parser->seek(_clusters[clusters].pos);
-        ADM_ebml_file cluster(parser,_clusters[clusters].size);
-        while(!cluster.finished())
+        if(!_work->isAlive())
+            return ADM_IGN;
+
+        off = cluster.tell();
+        _work->update(off >> 10, fileSize >> 10);
+        if(!cluster.readElemId(&id,&len))
+            break;
+        if(!ADM_searchMkvTag((MKV_ELEM_ID)id,&ss,&type))
         {
-            if(!work->isAlive())
-            {
-                res=ADM_IGN;
-                break;
-            }
-            work->update(clusters,nbClusters);
-            if(!cluster.readElemId(&id,&len))
-                break;
-            if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
-            {
-                printf("[MKV] Cluster %d, tag 0x%" PRIx64" at 0x%llx not found (len %" PRIu64")\n",clusters,id,cluster.tell()-2,len);
+            ADM_warning("Cluster %d, tag 0x%" PRIx64" at 0x%" PRIx64" not found (len %" PRIu64")\n",lastCluster,id,cluster.tell()-2,len);
+            cluster.skip(len);
+            continue;
+        }
+        //printf("\t\tFound %s\n",ss);
+        switch(id)
+        {
+            default:
+            case MKV_TIMECODE:
+                //printf("Skipping %s\n",ss);
                 cluster.skip(len);
-                continue;
-            }
-            //printf("\t\tFound %s\n",ss);
-            switch(id)
+                break;
+            case MKV_SIMPLE_BLOCK:
+                indexBlock(parser,len,cdx->Dts);
+                break;
+            case MKV_BLOCK_GROUP:
             {
-                default:
-                case MKV_TIMECODE:
-                    //printf("Skipping %s\n",ss);
-                    cluster.skip(len);
-                    break;
-                case MKV_SIMPLE_BLOCK:
-                    indexBlock(parser,len,_clusters[clusters].Dts);
-                    break;
-                case MKV_BLOCK_GROUP:
+                //printf("Block Group\n");
+                ADM_ebml_file blockGroup(parser,len);
+                while(!blockGroup.finished())
                 {
-                    //printf("Block Group\n");
-                    ADM_ebml_file blockGroup(parser,len);
-                    while(!blockGroup.finished())
+                    if(!blockGroup.readElemId(&id,&len))
+                        break;
+                    if(!ADM_searchMkvTag((MKV_ELEM_ID)id,&ss,&type))
                     {
-                        if(!blockGroup.readElemId(&id,&len))
-                            break;
-                        if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
-                        {
-                            printf("[MKV] Block group in cluster %d, tag 0x%" PRIx64" at 0x%llx not found (len %" PRIu64")\n",clusters,id,blockGroup.tell()-2,len);
+                        ADM_warning("Block group in cluster %d, tag 0x%" PRIx64" at 0x%" PRIx64" not found (len %" PRIu64")\n",lastCluster,id,blockGroup.tell()-2,len);
+                        blockGroup.skip(len);
+                        continue;
+                    }
+                    //printf("\t\t\t\tFound %s\n",ss);
+                    switch(id)
+                    {
+                        default:
                             blockGroup.skip(len);
-                            continue;
-                        }
-                        //printf("\t\t\t\tFound %s\n",ss);
-                        //printf(">%s\n",ss);
-                        switch(id)
-                        {
-                            default: blockGroup.skip(len);break;
-                            case MKV_BLOCK:
-                            case MKV_SIMPLE_BLOCK:
-                                indexBlock(&blockGroup,len,_clusters[clusters].Dts);
-                                break;
-                        }
+                            break;
+                        case MKV_BLOCK:
+                        case MKV_SIMPLE_BLOCK:
+                            indexBlock(&blockGroup,len,cdx->Dts);
+                            break;
                     }
                 }
-                break; // Block Group
             }
+            break; // Block Group
         }
-   // printf("[MKV] ending cluster at 0x%llx\n",segment.tell());
     }
-    printf("Found %" PRIu32" images in this video\n",(uint32_t)VIDEO.index.size());
-    delete work;
-    delete [] readBuffer;
-    readBuffer=NULL;
-    return (res==ADM_IGN)? res : !!VIDEO.index.size();
+    //printf("[MKV] ending cluster at 0x%" PRIx64"\n",parser->tell());
+    return res;
 }
 /**
       \fn indexBlock
@@ -599,8 +585,8 @@ bool mkvHeader::readCue(ADM_ebml_file *parser)
 
 }
 /**
-        \fn indexClusters
-        \brief make a list of all clusters with there position & size
+    \fn indexClusters
+    \brief Create a list of all clusters with there position & size, index each one.
 */
 uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
 {
@@ -613,6 +599,9 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
     uint8_t res=1;
 
     mkvIndex tmpCluster;
+
+    readBufferSize = 200*1024;
+    readBuffer = new uint8_t[readBufferSize];
 
     // Search segment
     fileSize=parser->getFileSize();
@@ -631,16 +620,16 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
     }
     ADM_ebml_file segment(parser,vlen);
 
-    DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska clusters"));
+    _work = createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Indexing Matroska Video Track"));
     while(segment.simplefind(MKV_CLUSTER,&alen,0))
     {
-        if(!work->isAlive())
+        if(!_work->isAlive())
         {
             res=ADM_IGN;
             break;
         }
         // UI update
-        work->update(segment.tell()>>10,fileSize>>10);
+        _work->update(segment.tell() >> 10, fileSize >> 10);
         tmpCluster.pos=segment.tell();
         tmpCluster.size=alen;
         _clusters.append(tmpCluster);
@@ -671,12 +660,16 @@ tryAgain:
             uint64_t timecode=segment.readUnsignedInt(len);
             _clusters[seekme].Dts=timecode;
         }
+        res = indexLastCluster(&segment);
+        if(res != 1)
+            break;
         segment.seek( _clusters[seekme].pos+ _clusters[seekme].size);
         //printf("Position :%u %u MB\n", _clusters[seekme].pos+ _clusters[seekme].size,( _clusters[seekme].pos+ _clusters[seekme].size)>>20);
     }
-    delete work;
-    ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
-    return res;
+    delete _work;
+    _work = NULL;
+    //ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
+    return (ADM_IGN == res)? res : !!VIDEO.index.size();
 }
 /**
  * \fn updateFlagsWithCue

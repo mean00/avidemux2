@@ -164,23 +164,15 @@ uint8_t mkvHeader::open(const char *name)
     return 0;
   }
   readCue(&ebml);
-  printf("[MKV] Indexing clusters\n");
+  printf("[MKV] Indexing video track\n");
   uint8_t result=indexClusters(&ebml);
   if(result!=1)
   {
     if(!result)
-        printf("[MKV] Cluster indexing failed\n");
+        printf("[MKV] Indexing video failed\n");
     return result;
   }
-  printf("[MKV]Found %u clusters\n",_clusters.size());
-  printf("[MKV] Indexing video\n");
-    result=videoIndexer(&ebml);
-    if(result!=1)
-    {
-        if(!result)
-            printf("[MKV] Video indexing failed\n");
-        return result;
-    }
+  printf("[MKV] Found %u frames in %u clusters\n",_tracks[0].index.size(),_clusters.size());
   // update some infos
   _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].index.size();;
     if(! _videostream.dwLength)
@@ -1029,6 +1021,7 @@ uint8_t mkvHeader::close(void)
   _audioStreams=NULL;
 
   readBuffer=NULL;
+  _work = NULL;
   _cuePosition=0;
   _segmentPosition=0;
   _trackPosition=0;

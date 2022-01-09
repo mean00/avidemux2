@@ -25,6 +25,7 @@
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
 #include "ADM_aacLatm.h"
+#include "DIA_working.h"
 #include "ADM_ebml.h"
 #include <BVector.h>
 #define MKV_MAX_REPEAT_HEADER_SIZE 16
@@ -218,6 +219,8 @@ class mkvHeader         :public vidHeader
     BVector <mkvIndex    >   _clusters;
     BVector <uint64_t>       _cueTime;
 
+    DIA_workingBase       * _work;
+
     std::vector <uint64_t>  _sortedPts;
     std::vector <uint32_t>  _framesNoPts;
 
@@ -244,9 +247,9 @@ class mkvHeader         :public vidHeader
 
     uint8_t                 addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t where, uint32_t size,uint32_t flags,
                                             uint32_t timecodeMS);
-    uint8_t                 videoIndexer(ADM_ebml_file *parser);
     bool                    readCue(ADM_ebml_file *parser);
     uint8_t                 indexClusters(ADM_ebml_file *parser);
+    uint8_t                 indexLastCluster(ADM_ebml_file *parser);
     uint8_t                 indexBlock(ADM_ebml_file *parser,uint32_t count,uint32_t timecodeMS);
 
     uint8_t                 rescaleTrack(mkvTrak *track,uint32_t durationMs);
@@ -309,6 +312,7 @@ virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
 virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
 
         // Temporary buffer for indexing
+private:
         uint8_t *readBuffer;
         int     readBufferSize;
 };
