@@ -79,7 +79,8 @@ static optionDesc myOptions[]={
 { AVISYNTH_AVISYNTH_DEFAULTPORT,"avisynth.avisynth_defaultport"       ,ADM_param_uint32_t	,"9999",	1024,	65535},
 { AVISYNTH_AVISYNTH_LOCALPORT,"avisynth.avisynth_localport"           ,ADM_param_uint32_t	,"0",	1024,	65535},
 { RESET_ENCODER_ON_VIDEO_LOAD,"reset_encoder_on_video_load"           ,ADM_param_bool    	,"0",	0,	1},
-{ LOAD_PICTURES_REVERSE_ORDER,"load_pictures_reverse_order"           ,ADM_param_bool    	,"0",	0,	1},
+{ PICTURES_LOAD_IN_REVERSE_ORDER,"pictures.load_in_reverse_order"     ,ADM_param_bool    	,"0",	0,	1},
+{ PICTURES_FPS_TYPE,"pictures.fps_type"                               ,ADM_param_uint32_t	,"1",	0,	6},
 { HDR_TONEMAPPING,"hdr.tonemapping"                                   ,ADM_param_uint32_t	,"1",	0,	99},
 { HDR_TARGET_LUMINANCE,"hdr.target_luminance"                         ,ADM_param_float   	,"100.0",	0.0,	1000.0},
 };

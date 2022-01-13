@@ -29,10 +29,11 @@
 class picHeader:public vidHeader
 {
 protected:
-    int         _nbFiles;
-    std::string _filePrefix;    
+    uint32_t    _nbFiles, _tbNum, _tbDen;
+    std::string _filePrefix;
     int         _first;
     uint32_t    _w, _h;
+    uint64_t    _duration, _totalSize;
     int         _bmpHeaderOffset;
     bool        _reverseOrder;
     std::vector<uint32_t>    _imgSize;
@@ -71,8 +72,9 @@ public:
   virtual uint8_t   getFrame (uint32_t framenum, ADMCompressedImage *);
 
   virtual uint64_t  getTime (uint32_t frameNum);
-  virtual uint64_t  getVideoDuration (void);
+  virtual uint64_t  getVideoDuration (void) { return _duration; }
   virtual uint8_t   getFrameSize (uint32_t frame, uint32_t * size);
+  virtual uint64_t  getVideoTrackSize (void) { return _totalSize; }
 
   virtual bool      getPtsDts (uint32_t frame, uint64_t * pts, uint64_t * dts);
   virtual bool      setPtsDts (uint32_t frame, uint64_t pts, uint64_t dts);

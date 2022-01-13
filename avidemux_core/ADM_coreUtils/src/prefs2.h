@@ -90,7 +90,10 @@ struct  {
 	uint32_t avisynth_localport;
 }avisynth;
 bool reset_encoder_on_video_load;
-bool load_pictures_reverse_order;
+struct  {
+	bool load_in_reverse_order;
+	uint32_t fps_type;
+}pictures;
 struct  {
 	uint32_t tonemapping;
 	float target_luminance;

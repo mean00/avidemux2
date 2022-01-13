@@ -14,10 +14,9 @@
 
 #include "config.h"
 #include "ADM_default.h"
-# include "prefs.h"
+#include "prefs.h"
 
 #include "audio_out.h"
-#include "ADM_assert.h"
 #include "ADM_render/GUI_render.h"
 
 #include "DIA_factory.h"
@@ -73,6 +72,7 @@ uint32_t pp_value=5;
 bool     useCustomFragmentSize=false;
 uint32_t customFragmentSize=4000;
 bool     loadPicsInReverseOrder=false;
+uint32_t loadPicsFpsType=1;
 
 uint32_t editor_cache_size=16;
 bool     editor_use_shared_cache=false;
@@ -176,8 +176,11 @@ std::string currentSdlDriver=getSdlDriverName();
         if(!prefs->get(DEFAULT_MULTILOAD_CUSTOM_SIZE_M,&customFragmentSize))
             customFragmentSize=4000;
         // Should the pics demuxer be used to reverse video?
-        if(!prefs->get(LOAD_PICTURES_REVERSE_ORDER,&loadPicsInReverseOrder))
+        if(!prefs->get(PICTURES_LOAD_IN_REVERSE_ORDER,&loadPicsInReverseOrder))
             loadPicsInReverseOrder = false;
+        // Which timebase should the pics demuxer use?
+        if(!prefs->get(PICTURES_FPS_TYPE,&loadPicsFpsType))
+            loadPicsFpsType = 1;
 
         // Video cache
         prefs->get(FEATURES_CACHE_SIZE,&editor_cache_size);
@@ -359,7 +362,18 @@ std::string currentSdlDriver=getSdlDriverName();
         // Pictures
         diaElemFrame framePics(QT_TRANSLATE_NOOP("adm","Pictures")); // the purpose of this frame is to fix tab order
         diaElemToggle toggleReversePicsOrder(&loadPicsInReverseOrder, QT_TRANSLATE_NOOP("adm","_Load sequentially named pictures in reverse order"));
+        diaMenuEntry standardFpsEntries[] = {
+            {0, QT_TRANSLATE_NOOP("adm","23.976 (Film)"), NULL },
+            {1, QT_TRANSLATE_NOOP("adm","25 (PAL)"), NULL },
+            {2, QT_TRANSLATE_NOOP("adm","29.970 (NTSC)"), NULL },
+            {3, QT_TRANSLATE_NOOP("adm","30"), NULL },
+            {4, QT_TRANSLATE_NOOP("adm","50 (PAL)"), NULL },
+            {5, QT_TRANSLATE_NOOP("adm","59.940 (NTSC)"), NULL },
+            {6, QT_TRANSLATE_NOOP("adm","60"), NULL }
+        };
+        diaElemMenu menuStandardFps(&loadPicsFpsType, QT_TRANSLATE_NOOP("adm","_Assign following standard frame rate:"), NB_ITEMS(standardFpsEntries), standardFpsEntries);
         framePics.swallow(&toggleReversePicsOrder);
+        framePics.swallow(&menuStandardFps);
 
         // Avisynth
         diaElemFrame frameAvisynth(QT_TRANSLATE_NOOP("adm","Avisynth"));
@@ -742,7 +756,9 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(DEFAULT_MULTILOAD_USE_CUSTOM_SIZE, useCustomFragmentSize);
             prefs->set(DEFAULT_MULTILOAD_CUSTOM_SIZE_M, customFragmentSize);
             // Auto-load pictures in reverse order
-            prefs->set(LOAD_PICTURES_REVERSE_ORDER, loadPicsInReverseOrder);
+            prefs->set(PICTURES_LOAD_IN_REVERSE_ORDER, loadPicsInReverseOrder);
+            // Standard FPS to use when auto-loading pictures
+            prefs->set(PICTURES_FPS_TYPE, loadPicsFpsType);
             // Video cache
             prefs->set(FEATURES_CACHE_SIZE, editor_cache_size);
             prefs->set(FEATURES_SHARED_CACHE, editor_use_shared_cache);

@@ -34,8 +34,6 @@
 
 #define MAX_ACCEPTED_OPEN_FILE 0x7FFFF
 
-#define US_PER_PIC (40*1000)
-
 #ifdef __APPLE__
  #define MAX_LEN 1024
 #else
@@ -48,7 +46,11 @@
 picHeader::picHeader(void)
 {
     _nbFiles = 0;
+    _duration = 0;
+    _totalSize = 0;
     _bmpHeaderOffset=0;
+    _tbNum = 1;
+    _tbDen = 25;
     _reverseOrder = false;
 }
 /**
@@ -57,30 +59,21 @@ picHeader::picHeader(void)
 
 uint64_t  picHeader::getTime(uint32_t frameNum)
 {
-    float f=    US_PER_PIC;
+    double f = _tbNum;
+    f*=1000000;
     f*=frameNum;
+    f /= _tbDen;
+    f += 0.49;
     return (uint64_t)f;
 
 }
-/**
-    \fn getVideoDuration
-*/
-
-uint64_t  picHeader::getVideoDuration(void)
-{
-    float f= US_PER_PIC;
-    f*=_videostream.dwLength;
-    return (uint64_t)f;
-}
-
-
 /**
     \fn getFrameSize
 */
 uint8_t  picHeader::getFrameSize(uint32_t frame,uint32_t *size)
 {
-    if (frame >= (uint32_t)_videostream.dwLength)
-		return 0;
+    if(frame >= _nbFiles)
+        return 0;
     *size= _imgSize[frame];
     return 1;
 }
@@ -89,8 +82,8 @@ uint8_t  picHeader::getFrameSize(uint32_t frame,uint32_t *size)
 */
 uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
 {
-    if (framenum >= (uint32_t)_videostream.dwLength)
-            return 0;
+    if(framenum >= _nbFiles)
+        return 0;
     FILE* fd = openFrameFile(framenum);
     if(!fd)
         return false;
@@ -111,9 +104,8 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
     }
     
     fclose(fd);
-    
-    uint64_t timeP=US_PER_PIC;
-    timeP*=framenum;
+
+    uint64_t timeP = getTime(framenum);
     img->dataLength = _imgSize[framenum];
     img->demuxerDts=timeP;
     img->demuxerPts=timeP;
@@ -252,6 +244,27 @@ static void splitImageSequence(std::string inname,int &nbOfDigits, int &first,st
     filePrefix=workName;
 }
 /**
+ * \fn setTimeBaseFromIdx
+ */
+static void setTimeBaseFromIdx(uint32_t idx, uint32_t &num, uint32_t &den)
+{
+    typedef struct { uint32_t n; uint32_t d; } tbase_t;
+    const tbase_t standardFps[] = {
+        {1001,24000},
+        {1000,25000},
+        {1001,30000},
+        {1000,30000},
+        {1000,50000},
+        {1001,60000},
+        {1000,60000}
+    };
+    if(idx >= sizeof(standardFps)/sizeof(tbase_t))
+        return;
+    num = standardFps[idx].n;
+    den = standardFps[idx].d;
+}
+
+/**
  * \fn open
  * @param inname
  * @return 
@@ -275,8 +288,13 @@ uint8_t picHeader::open(const char *inname)
 	return 0;
     }
 
-    if(!prefs->get(LOAD_PICTURES_REVERSE_ORDER,&_reverseOrder))
+    if(!prefs->get(PICTURES_LOAD_IN_REVERSE_ORDER,&_reverseOrder))
         _reverseOrder = false;
+    uint32_t fpsIdx = 1; // 25 fps
+    if(!prefs->get(PICTURES_FPS_TYPE,&fpsIdx))
+        fpsIdx = 1;
+
+    setTimeBaseFromIdx(fpsIdx,_tbNum,_tbDen);
 
     // Then spit the name in name and extension
     int nbOfDigits;
@@ -325,12 +343,14 @@ uint8_t picHeader::open(const char *inname)
     //__________________________________
     for (uint32_t i = 0; i < _nbFiles; i++)
     {
-            fd = openFrameFile(i);
-            ADM_assert(fd);
-            fseek(fd, 0, SEEK_END);
-            aprintf("Size %d, actual = 24 %d 32=%d offset=%d\n",ftell(fd)-_bmpHeaderOffset,_w*_h*3,_w*_h*4,_bmpHeaderOffset);
-            _imgSize.push_back(ftell(fd)-_bmpHeaderOffset);
-            fclose(fd);
+        fd = openFrameFile(i);
+        ADM_assert(fd);
+        fseek(fd, 0, SEEK_END);
+        int sz = ftell(fd)-_bmpHeaderOffset;
+        aprintf("Size %d, actual = 24 %d 32=%d offset=%d\n",sz,_w*_h*3,_w*_h*4,_bmpHeaderOffset);
+        _imgSize.push_back(sz);
+        _totalSize += sz;
+        fclose(fd);
     }
 //_______________________________________
 //              Now build header info
@@ -343,9 +363,9 @@ uint8_t picHeader::open(const char *inname)
     CLR(_videostream);
     CLR(_mainaviheader);
 
-    _videostream.dwScale = 1;
-    _videostream.dwRate = 25;
-    _mainaviheader.dwMicroSecPerFrame = US_PER_PIC;;	// 25 fps hard coded
+    _videostream.dwScale = _tbNum;
+    _videostream.dwRate = _tbDen;
+    _mainaviheader.dwMicroSecPerFrame = 0; // constant fps
     _videostream.fccType = fourCC::get((uint8_t *) "vids");
 
     if (bpp)
@@ -358,7 +378,9 @@ uint8_t picHeader::open(const char *inname)
     _videostream.dwStart = 0;
     _video_bih.biWidth = _mainaviheader.dwWidth = _w;
     _video_bih.biHeight = _mainaviheader.dwHeight = _h;
-    
+
+    _duration = getTime(_nbFiles);
+
     switch(_type)
     {
 #define SET_FCC(x,y) _video_bih.biCompression = _videostream.fccHandler =  fourCC::get((uint8_t *) x);ADM_info("Image type=%s\n",y);break;
@@ -419,8 +441,9 @@ FILE* picHeader::openFrameFile(uint32_t frameNum)
  */
 bool       picHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
- uint64_t timeP=US_PER_PIC;
-    timeP*=frame;
+    if(frame >= _nbFiles)
+        return false;
+    uint64_t timeP = getTime(frame);
     *pts=timeP;
     *dts=timeP;
     return true;
