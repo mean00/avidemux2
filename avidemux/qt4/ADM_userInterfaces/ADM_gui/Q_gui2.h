@@ -238,7 +238,7 @@ private slots:
 
     void restoreDefaultWidgetState(bool b);
     void toolbarOrientationChangedSlot(Qt::Orientation hv);
-    void setNativeTheme(bool b);
+    void setDefaultTheme(bool b);
     void setLightTheme(bool b);
     void setDarkTheme(bool b);
 

@@ -137,7 +137,7 @@
     </widget>
     <widget class="QMenu" name="menuThemes">
      <property name="title">
-      <string>T&amp;hemes</string>
+      <string>T&amp;heme</string>
      </property>
     </widget>
     <addaction name="menuToolbars"/>

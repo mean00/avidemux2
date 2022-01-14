@@ -759,9 +759,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
         if (strcmp(defaultStyle,"fusion"))
         {
-            QAction * nativeTh = new QAction(QT_TRANSLATE_NOOP("qgui2","Native theme"),this);
-            ui.menuThemes->addAction(nativeTh);
-            connect(ui.menuThemes->actions().last(),SIGNAL(triggered(bool)),this,SLOT(setNativeTheme(bool)));
+            QAction * defaultTh = new QAction(QT_TRANSLATE_NOOP("qgui2","Default theme"),this);
+            ui.menuThemes->addAction(defaultTh);
+            connect(ui.menuThemes->actions().last(),SIGNAL(triggered(bool)),this,SLOT(setDefaultTheme(bool)));
         }
     }
 
@@ -1716,10 +1716,10 @@ void MainWindow::restoreDefaultWidgetState(bool b)
 }
 
 /**
-    \fn     setNativeTheme
-    \brief  Set native theme
+    \fn     setDefaultTheme
+    \brief  Set default theme
 */
-void MainWindow::setNativeTheme(bool b)
+void MainWindow::setDefaultTheme(bool b)
 {
     QApplication::setStyle(defaultStyle);
     qApp->setPalette(this->style()->standardPalette());
