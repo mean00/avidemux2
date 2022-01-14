@@ -1094,12 +1094,21 @@ bool        ADM_EditorSegment::LinearToRefTime(int segNo,uint64_t linear,uint64_
  */
 bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endTime)
 {
-    ADM_info("Copy to clipboard from %s",ADM_us2plain(startTime));
-    ADM_info("to %s\n",ADM_us2plain(endTime));
+    char *plainStart = ADM_strdup(ADM_us2plain(startTime));
+    ADM_info("Copying from %s to %s\n",plainStart,ADM_us2plain(endTime));
+    ADM_dealloc(plainStart);
+    plainStart = NULL;
     uint32_t startSeg,endSeg;
     uint64_t startSegTime,endSegTime;
-    convertLinearTimeToSeg(  startTime, &startSeg,&startSegTime);
-    convertLinearTimeToSeg(  endTime, &endSeg,&endSegTime);
+    if(false == convertLinearTimeToSeg(startTime, &startSeg, &startSegTime))
+        return false;
+    uint64_t total = getTotalDuration();
+    if(endTime >= total)
+    {
+        endSeg = getNbSegments() - 1;
+        endTime = total;
+    }else if(false == convertLinearTimeToSeg(endTime, &endSeg, &endSegTime))
+        return false;
     dump();
     clipboard.clear();
     for(int seg=startSeg;seg<=endSeg;seg++)
@@ -1154,8 +1163,13 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
     }
     ADM_info("Pasting from clipboard to %s\n",ADM_us2plain(currentTime));
     uint32_t startSeg;
-    uint64_t startSegTime;
-    convertLinearTimeToSeg(  currentTime, &startSeg,&startSegTime);    
+    uint64_t startSegTime, total = getTotalDuration();
+    if(currentTime >= total)
+    {
+        startSeg = getNbSegments() - 1;
+        currentTime = total;
+    }else if(false == convertLinearTimeToSeg(currentTime, &startSeg, &startSegTime))
+        return false;
     ListOfSegments tmp=segments;
     ListOfSegments newSegs;
     int n=segments.size();
