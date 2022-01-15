@@ -20,6 +20,8 @@
 #include <QGraphicsView>
 #include <QtCore/QDir>
 #include <QMessageBox>
+#include <QPalette>
+#include <QColor>
 #if QT_VERSION < QT_VERSION_CHECK(5,11,0)
 #   include <QDesktopWidget>
 #else
@@ -748,7 +750,47 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.menuToolbars->addAction(restoreDefaults);
 
     connect(ui.menuToolbars->actions().last(),SIGNAL(triggered(bool)),this,SLOT(restoreDefaultWidgetState(bool)));
+    
+    QStyle *currentStyle = QApplication::style();
+    defaultStyle = (char*)ADM_alloc(strlen(qPrintable(currentStyle->objectName()))+1);
+    if (defaultStyle != NULL)
+    {
+        strcpy(defaultStyle, qPrintable(currentStyle->objectName()));
 
+        if (strcmp(defaultStyle,"fusion"))
+        {
+            QAction * defaultTh = new QAction(QT_TRANSLATE_NOOP("qgui2","Default theme"),this);
+            ui.menuThemes->addAction(defaultTh);
+            connect(ui.menuThemes->actions().last(),SIGNAL(triggered(bool)),this,SLOT(setDefaultTheme(bool)));
+        }
+    }
+
+    QAction * lightTh = new QAction(QT_TRANSLATE_NOOP("qgui2","Light theme"),this);
+    ui.menuThemes->addAction(lightTh);
+    connect(ui.menuThemes->actions().last(),SIGNAL(triggered(bool)),this,SLOT(setLightTheme(bool)));
+
+    QAction * darkTh = new QAction(QT_TRANSLATE_NOOP("qgui2","Dark theme"),this);
+    ui.menuThemes->addAction(darkTh);
+    connect(ui.menuThemes->actions().last(),SIGNAL(triggered(bool)),this,SLOT(setDarkTheme(bool)));
+    
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("MainWindow");
+        int theme = qset->value("theme", 0).toInt();
+        if (theme == 1)
+        {
+            setLightTheme(true);
+        }
+        if (theme == 2)
+        {
+            setDarkTheme(true);
+        }
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+    
     this->installEventFilter(this);
     slider->installEventFilter(this);
 
@@ -1112,7 +1154,7 @@ void MainWindow::buildActionLists(void)
     PUSH_FULL_MENU_LOADED(menuGo,0)
 
     // Item disabled on playback
-    for(int i=1;i<ui.menuView->actions().size();i++)
+    for(int i=2;i<ui.menuView->actions().size();i++)
     { // allow hiding widgets during playback
         ActionsDisabledOnPlayback.push_back(ui.menuView->actions().at(i));
     }
@@ -1674,6 +1716,88 @@ void MainWindow::restoreDefaultWidgetState(bool b)
 }
 
 /**
+    \fn     setDefaultTheme
+    \brief  Set default theme
+*/
+void MainWindow::setDefaultTheme(bool b)
+{
+    QApplication::setStyle(defaultStyle);
+    qApp->setPalette(this->style()->standardPalette());
+    
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("MainWindow");
+        qset->setValue("theme", 0);
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+}
+
+/**
+    \fn     setLightTheme
+    \brief  Set default fusion theme
+*/
+void MainWindow::setLightTheme(bool b)
+{
+    QApplication::setStyle("fusion");
+    qApp->setPalette(this->style()->standardPalette());
+
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("MainWindow");
+        qset->setValue("theme", 1);
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+}
+
+/**
+    \fn     setDarkTheme
+    \brief  Set dark fusion theme
+*/
+void MainWindow::setDarkTheme(bool b)
+{
+    QApplication::setStyle("fusion");
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::Window, QColor(32,32,32));
+    darkPalette.setColor(QPalette::WindowText, QColor(234,234,234));
+    darkPalette.setColor(QPalette::Base, QColor(55,55,55));
+    darkPalette.setColor(QPalette::AlternateBase, QColor(42,42,42));
+    darkPalette.setColor(QPalette::ToolTipBase, QColor(42, 130, 218));
+    darkPalette.setColor(QPalette::ToolTipText, QColor(234,234,234));
+    darkPalette.setColor(QPalette::Text, QColor(234,234,234));
+    darkPalette.setColor(QPalette::Button, QColor(42,42,42));
+    darkPalette.setColor(QPalette::ButtonText, QColor(234,234,234));
+    darkPalette.setColor(QPalette::BrightText, Qt::red);
+    darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
+
+    darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
+    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+
+    darkPalette.setColor(QPalette::Active, QPalette::Button, QColor(128, 128, 128).darker());
+    darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(128, 128, 128));
+    darkPalette.setColor(QPalette::Disabled, QPalette::WindowText, QColor(128, 128, 128));
+    darkPalette.setColor(QPalette::Disabled, QPalette::Text, QColor(128, 128, 128));
+    darkPalette.setColor(QPalette::Disabled, QPalette::Light, QColor(42,42,42));
+
+    qApp->setPalette(darkPalette);    
+
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("MainWindow");
+        qset->setValue("theme", 2);
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+}
+
+/**
  * \fn checkChanged
  * \brief the checkbox protecting timeshift value has changed
  * @param state
@@ -2231,6 +2355,8 @@ MainWindow::~MainWindow()
     renderDestroy(); // make sure render does not have back link to us
     delete thumbSlider;
     thumbSlider=NULL;
+    free(defaultStyle);
+    defaultStyle=NULL;
 }
 
 static const UI_FUNCTIONS_T UI_Hooks=
