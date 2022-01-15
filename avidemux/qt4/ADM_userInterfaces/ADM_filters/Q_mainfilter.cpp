@@ -1334,6 +1334,40 @@ bool filterquickWindow::eventFilter(QObject* watched, QEvent* event)
                 return true;
             }
         }
+        if(keyEvent->key() == Qt::Key_PageUp || keyEvent->key() == Qt::Key_PageDown)
+        {
+            bool up = keyEvent->key() == Qt::Key_PageUp;
+            if(ui.lineEditSearch->hasFocus())
+            {
+                if (availableList->count() > 0)
+                {
+                    int row = availableList->currentRow();
+                    row += (up ? -6:6);
+                    if (row < 0)
+                        row = 0;
+                    if (row >= availableList->count())
+                        row = availableList->count()-1;
+                    availableList->setCurrentRow(row);
+                }
+                return true;
+            }
+        }
+        if((keyEvent->key() == Qt::Key_Home) && (ui.lineEditSearch->hasFocus()))
+        {
+            if (availableList->count() > 0)
+            {
+                availableList->setCurrentRow(0);
+            }
+            return true;
+        }
+        if((keyEvent->key() == Qt::Key_End) && (ui.lineEditSearch->hasFocus()))
+        {
+            if (availableList->count() > 0)
+            {
+                availableList->setCurrentRow(availableList->count()-1);
+            }
+            return true;
+        }
     }
     return QObject::eventFilter(watched, event);
 }
