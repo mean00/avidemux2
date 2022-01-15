@@ -106,9 +106,10 @@ bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
  * 
  * @param parent
  */
-FilterItemDelegate::FilterItemDelegate(QWidget *parent) : QItemDelegate(parent)
+FilterItemDelegate::FilterItemDelegate(QWidget *parent, bool alwaysHighlight) : QItemDelegate(parent)
 {
     zprintf("Delegate : %p\n",this);
+    this->alwaysHighlight = alwaysHighlight;
     filter = new FilterItemEventFilter(parent);
 }
 
@@ -177,7 +178,7 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     QPalette pal;
     if(option.state & QStyle::State_Selected)
     {
-        if(option.state & QStyle::State_HasFocus)
+        if((option.state & QStyle::State_HasFocus) || alwaysHighlight)
         {
             fg = pal.color(QPalette::HighlightedText);
             bg = pal.color(QPalette::Highlight);
@@ -1164,7 +1165,7 @@ void filterquickWindow::add( bool b)
  * \fn displayFamily
  * @param family
  */
-void filterquickWindow::displayPartialFilters(void)
+void filterquickWindow::displayPartialFilters(const QString &search)
 {
     int itemCount=0;
     availableList->clear();
@@ -1186,21 +1187,46 @@ void filterquickWindow::displayPartialFilters(void)
 
             QString s1 = QString::fromUtf8(name);
             QString s2 = QString::fromUtf8(desc);
+            
+            bool show = false;
+            if (search.length() == 0)
+                show = true;
+            if (!show)
+                show = (s1.contains(search, Qt::CaseInsensitive) || s2.contains(search, Qt::CaseInsensitive));
+            
 
-            QListWidgetItem *item;
-            item=new QListWidgetItem(NULL,availableList,ALL_FILTER_BASE+i+family*100);
-            item->setData(Qt::DisplayRole, s1); // for sorting
-            item->setData(FilterItemDelegate::FilterNameRole, s1);
-            item->setData(FilterItemDelegate::DescriptionRole, s2);
-            availableList->addItem(item);
-            itemCount++;
+            if (show)
+            {
+                QListWidgetItem *item;
+                item=new QListWidgetItem(NULL,availableList,ALL_FILTER_BASE+i+family*100);
+                item->setData(Qt::DisplayRole, s1); // for sorting
+                item->setData(FilterItemDelegate::FilterNameRole, s1);
+                item->setData(FilterItemDelegate::DescriptionRole, s2);
+                availableList->addItem(item);
+                itemCount++;
+            }
         }
     }
 
     if (itemCount)
     {
-       availableList->sortItems();
-       availableList->setCurrentRow(0);
+        availableList->sortItems();
+        availableList->setCurrentRow(0);
+        if (search.length() > 0)
+        {
+            for (int i=0; i<availableList->count(); i++)
+            {
+                QListWidgetItem * item = availableList->item(i);
+                if (item)
+                {
+                    if (item->data(FilterItemDelegate::FilterNameRole).toString().startsWith(search, Qt::CaseInsensitive))
+                    {
+                        availableList->setCurrentRow(i);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -1235,7 +1261,7 @@ filterquickWindow::filterquickWindow(QWidget* parent) : QDialog(parent)
     
     
 
-    availableList->setItemDelegate(new FilterItemDelegate(availableList));
+    availableList->setItemDelegate(new FilterItemDelegate(availableList, true));
 
     availableList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
@@ -1244,7 +1270,7 @@ filterquickWindow::filterquickWindow(QWidget* parent) : QDialog(parent)
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
 
     ADM_vf_updateBridge(video_body);
-    displayPartialFilters();
+    displayPartialFilters(QString(""));
 
     //____________________
     //  Context Menu
@@ -1257,6 +1283,10 @@ filterquickWindow::filterquickWindow(QWidget* parent) : QDialog(parent)
 
     this->installEventFilter(this);
     originalTime = admPreview::getCurrentPts();
+    
+    ui.lineEditSearch->installEventFilter(this);
+    connect(ui.lineEditSearch, SIGNAL(textChanged(const QString &)), this, SLOT(searchChange(const QString &)));
+    ui.lineEditSearch->setFocus();
 
 }
 
@@ -1280,9 +1310,29 @@ bool filterquickWindow::eventFilter(QObject* watched, QEvent* event)
         keyEvent = (QKeyEvent*)event;
         if(keyEvent->key() == Qt::Key_Return)
         {
-            if(availableList->hasFocus())
+            if(availableList->hasFocus() || ui.lineEditSearch->hasFocus())
                 add(true);
             return true;
+        }
+        if(keyEvent->key() == Qt::Key_Escape)
+        {
+            reject();
+            return true;
+        }
+        if(keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down)
+        {
+            bool up = keyEvent->key() == Qt::Key_Up;
+            if(ui.lineEditSearch->hasFocus())
+            {
+                if (availableList->count() > 0)
+                {
+                    int row = availableList->currentRow();
+                    row += (up ? -1:1);
+                    if ((row >=0) && (row < availableList->count()))
+                        availableList->setCurrentRow(row);
+                }
+                return true;
+            }
         }
     }
     return QObject::eventFilter(watched, event);
@@ -1297,6 +1347,13 @@ void filterquickWindow::addSlot(void)
     add(true);
 }
 
+/**
+    \fn searchChange
+*/
+void filterquickWindow::searchChange(const QString &newValue)
+{
+    displayPartialFilters(newValue);
+}
 
 
 /*******************************************************/

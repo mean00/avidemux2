@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>360</width>
-    <height>459</height>
+    <height>463</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -123,9 +123,9 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="labelUserHint">
-       <property name="text">
-        <string>You can start typing filter name.</string>
+      <widget class="QLineEdit" name="lineEditSearch">
+       <property name="placeholderText">
+        <string>Type to narrow the list</string>
        </property>
       </widget>
      </item>
@@ -133,6 +133,9 @@
       <spacer name="bboxSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>

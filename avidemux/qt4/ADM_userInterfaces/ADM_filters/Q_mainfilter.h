@@ -54,9 +54,10 @@ class FilterItemDelegate : public QItemDelegate
 
 private:
     FilterItemEventFilter *filter;
+    bool alwaysHighlight;
 
 public:
-    FilterItemDelegate(QWidget *parent = 0);
+    FilterItemDelegate(QWidget *parent = 0, bool alwaysHighlight=false);
     enum datarole { FilterNameRole = Qt::UserRole, DescriptionRole, DisabledRole };
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -145,8 +146,9 @@ public slots:
     void allDoubleClick( QListWidgetItem  *item);
     // context menu
     void addSlot(void);
+    void searchChange(const QString &newValue);
 private:
-    void displayPartialFilters(void);
+    void displayPartialFilters(const QString &search);
     void setupFilters(void);
     bool eventFilter(QObject* watched, QEvent* event);
     uint64_t originalTime;
