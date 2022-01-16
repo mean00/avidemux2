@@ -76,6 +76,7 @@ public:
        virtual bool         configure(void) {return true;}             /// Start graphical user interface
        virtual uint64_t     getAbsoluteStartTime(void)                 /// Return the absolute offset of the current frame. Used to display time of for filter
                 {return previousFilter->getAbsoluteStartTime();}       /// Like subtitlers who need that
+       virtual void         updateBridge(uint64_t startTime, uint64_t endTime) {};
        virtual bool         getTimeRange(uint64_t *start, uint64_t *end) /// For partialized filters, the time they are active
                 { *start=0; *end=previousFilter->getInfo()->totalDuration; return true; }
                ADM_coreVideoFilter *getSource() {return previousFilter;} /// FOR INTERNAL USE ONLY

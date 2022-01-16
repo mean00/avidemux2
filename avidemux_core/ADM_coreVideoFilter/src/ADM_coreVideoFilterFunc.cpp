@@ -269,13 +269,12 @@ ADM_coreVideoFilter *ADM_vf_getLastVideoFilter(IEditor *editor)
 }
 
 /**
-    \fn rebuildBridge
+    \fn updateBridge
 */
-void ADM_vf_rebuildBridge(IEditor *editor)
+void ADM_vf_updateBridge(IEditor *editor)
 {
     if (!bridge)
         return;
-    delete bridge;
-    bridge = new ADM_videoFilterBridge(editor, 0, -1LL);
+    bridge->updateBridge(0, -1LL);
     ADM_vf_recreateChain();
 }

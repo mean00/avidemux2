@@ -46,6 +46,7 @@ uint8_t DIA_about( void ) {return 0;}
 void DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate ) {}
 void DIA_properties(void) {}
 int GUI_handleVFilter (void) {return 0;}
+int GUI_handleVPartialFilter (void) {return 0;}
 uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines) {return 1;}
 void destroyGUI(void) {}
 uint8_t DIA_job(uint32_t nb,char **name) {return 0;}

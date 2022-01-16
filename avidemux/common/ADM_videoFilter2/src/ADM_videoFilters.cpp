@@ -115,8 +115,8 @@ bool ADM_vf_moveFilterDown(int index)
 /**
  * 
  */
-extern ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples,ADM_coreVideoFilter *source);
-bool ADM_vf_partialize(int index)
+extern ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples,ADM_coreVideoFilter *source, bool omitConfigDialog);
+bool ADM_vf_partialize(int index, bool omitConfigDialog)
 {
     ADM_info("Partializing filter at index %d\n",index);
     //
@@ -132,7 +132,7 @@ bool ADM_vf_partialize(int index)
         return false;
       }
     // Create
-    ADM_coreVideoFilter *partialized=createPartialFilter(internalName,conf,scratch.instance->getSource());
+    ADM_coreVideoFilter *partialized=createPartialFilter(internalName,conf,scratch.instance->getSource(), omitConfigDialog);
     if(!partialized)
     {
         return false;

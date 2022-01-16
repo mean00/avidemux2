@@ -68,6 +68,7 @@ extern const char * GUI_getCustomPyScript(uint32_t nb);
 extern const char * GUI_getAutoPyScript(uint32_t nb);
 extern void call_scriptEngine(const char *scriptFile);
 extern int     GUI_handleVFilter (void);
+extern int     GUI_handleVPartialFilter (void);
 // Debug functions
        void    GUI_showCurrentFrameHex(void);
        void    GUI_showSize(void);
@@ -886,6 +887,9 @@ void HandleAction (Action action)
       break;
     case ACT_VIDEO_FILTERS:
         GUI_handleVFilter();
+        break;
+    case ACT_VIDEO_PARTIAL_FILTERS:
+        GUI_handleVPartialFilter();
         break;
 
    case ACT_HEX_DUMP:

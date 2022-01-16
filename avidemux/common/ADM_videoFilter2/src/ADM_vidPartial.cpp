@@ -26,7 +26,7 @@
 
 #define DESC_MAX_LENGTH 2048
 
-ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples);
+ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples, bool omitConfigDialog = false);
 /**
     \class partialFilter
 */
@@ -456,7 +456,7 @@ bool         partialFilter::trampolineFilter::getNextFrame(uint32_t *frameNumber
  * @param couples
  * @return
  */
-ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples,ADM_coreVideoFilter *source)
+ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples,ADM_coreVideoFilter *source, bool omitConfigDialog)
 {
   int sonNbItems=couples->getSize();
   CONFcouple tmp(3+sonNbItems);
@@ -479,11 +479,14 @@ ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *co
       tmp.setInternalName (key,val);
   }
   ADM_coreVideoFilter *p=new partialFilter(source,&tmp);
-  if(!p->configure())
+  if (!omitConfigDialog)
   {
-      delete p;
-      p=NULL;
-      return NULL;
+    if(!p->configure())
+    {
+        delete p;
+        p=NULL;
+        return NULL;
+    }
   }
   return p;
 }

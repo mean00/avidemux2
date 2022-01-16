@@ -55,6 +55,35 @@ ADM_videoFilterBridge::ADM_videoFilterBridge(IEditor *editor, uint64_t startTime
 }
 
 /**
+    \fn     updateBridge
+    \brief
+*/
+void ADM_videoFilterBridge::updateBridge(uint64_t startTime, uint64_t endTime)
+{
+    ADM_assert(this->editor);
+    if (endTime == ADM_NO_PTS)
+    {
+        printf("using video duration ");
+        endTime = editor->getVideoDuration();
+        if(endTime < startTime) startTime = endTime;
+    }   
+    this->startTime = startTime;
+    this->endTime = endTime;
+    printf("from %s ",ADM_us2plain(this->startTime));
+    printf("to %s\n",ADM_us2plain(this->endTime));
+
+    aviInfo fo;
+    editor->getVideoInfo(&fo);
+    bridgeInfo.width = fo.width;
+    bridgeInfo.height = fo.height;
+    bridgeInfo.frameIncrement = editor->getFrameIncrement();
+    editor->getTimeBase(&(bridgeInfo.timeBaseNum), &(bridgeInfo.timeBaseDen));
+    bridgeInfo.totalDuration = endTime - startTime;
+    bridgeInfo.markerA = editor->getMarkerAPts();
+    bridgeInfo.markerB = editor->getMarkerBPts();
+}
+
+/**
     \fn     getNextFrameBase
     \brief
 */
