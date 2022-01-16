@@ -1157,6 +1157,7 @@ void filterquickWindow::add( bool b)
         }else
         {
             ADM_warning("Cannot add filter from tag\n");
+            ui.lineEditSearch->clear();     // clear search
         }
    }
 }
@@ -1214,6 +1215,7 @@ void filterquickWindow::displayPartialFilters(const QString &search)
         availableList->setCurrentRow(0);
         if (search.length() > 0)
         {
+            bool found = false;
             for (int i=0; i<availableList->count(); i++)
             {
                 QListWidgetItem * item = availableList->item(i);
@@ -1222,7 +1224,24 @@ void filterquickWindow::displayPartialFilters(const QString &search)
                     if (item->data(FilterItemDelegate::FilterNameRole).toString().startsWith(search, Qt::CaseInsensitive))
                     {
                         availableList->setCurrentRow(i);
+                        found = true;
                         break;
+                    }
+                }
+            }
+            if (!found)
+            {
+                for (int i=0; i<availableList->count(); i++)
+                {
+                    QListWidgetItem * item = availableList->item(i);
+                    if (item)
+                    {
+                        if (item->data(FilterItemDelegate::FilterNameRole).toString().contains(search, Qt::CaseInsensitive))
+                        {
+                            availableList->setCurrentRow(i);
+                            found = true;
+                            break;
+                        }
                     }
                 }
             }
