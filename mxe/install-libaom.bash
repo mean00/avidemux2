@@ -105,15 +105,15 @@ if [ "x${FRESH}" = "x0" ]; then
 fi
 git checkout tags/${AOM_TAG} || failMsg "Cannot checkout ${AOM_TAG}"
 
-cd ..
-
 export PATH="${PATH}:${MXE_ROOT}/usr/bin"
 
 RESULT=0
 
+cd "${AOM_HOME}"
 if [ ${BUILD_32_BITS} -eq 1 ]; then
     process 32 || ( echo "32-bit build failed"; RESULT=1 )
 fi
+cd "${AOM_HOME}"
 if [ ${BUILD_64_BITS} -eq 1 ]; then
     process 64 || ( echo "64-bit build failed"; RESULT=1 )
 fi
