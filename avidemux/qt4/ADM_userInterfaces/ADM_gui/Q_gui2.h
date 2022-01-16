@@ -119,6 +119,10 @@ public:
     void setZoomToFit(void);
     void updateZoomIndicator(void);
     void syncToolbarsMenu(void);
+
+    void setLightTheme(void);
+    void setDarkTheme(void);
+
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
 
@@ -242,7 +246,9 @@ private slots:
 
     void restoreDefaultWidgetState(bool b);
     void toolbarOrientationChangedSlot(Qt::Orientation hv);
-    void setDefaultTheme(bool b);
+    void setDefaultThemeSlot(bool b);
+    void setLightThemeSlot(bool b);
+    void setDarkThemeSlot(bool b);
 
     void closeEvent(QCloseEvent *event)
     {
@@ -260,8 +266,6 @@ public slots:
     void audioToggled(bool checked);
 
     void thumbSlider_valueEmitted(int value);
-    void setLightTheme(bool b);
-    void setDarkTheme(bool b);
 
 signals:
     void actionSignal(Action a);

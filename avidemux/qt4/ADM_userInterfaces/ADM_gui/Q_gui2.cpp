@@ -763,18 +763,18 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
         defaultThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Default theme"),this);
         defaultThemeAction->setCheckable(true);
         ui.menuThemes->addAction(defaultThemeAction);
-        connect(defaultThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDefaultTheme(bool)));
+        connect(defaultThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDefaultThemeSlot(bool)));
     }
 
     lightThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Light theme"),this);
     lightThemeAction->setCheckable(true);
     ui.menuThemes->addAction(lightThemeAction);
-    connect(lightThemeAction,SIGNAL(triggered(bool)),this,SLOT(setLightTheme(bool)));
+    connect(lightThemeAction,SIGNAL(triggered(bool)),this,SLOT(setLightThemeSlot(bool)));
 
     darkThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Dark theme"),this);
     darkThemeAction->setCheckable(true);
     ui.menuThemes->addAction(darkThemeAction);
-    connect(darkThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDarkTheme(bool)));
+    connect(darkThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDarkThemeSlot(bool)));
 
     this->installEventFilter(this);
     slider->installEventFilter(this);
@@ -1703,10 +1703,10 @@ void MainWindow::restoreDefaultWidgetState(bool b)
 }
 
 /**
-    \fn     setDefaultTheme
-    \brief  Set default theme
+    \fn     setDefaultThemeSlot
+    \brief  Set default theme and update settings.
 */
-void MainWindow::setDefaultTheme(bool b)
+void MainWindow::setDefaultThemeSlot(bool b)
 {
     UNUSED_ARG(b);
     if(!defaultThemeAction)
@@ -1734,10 +1734,8 @@ void MainWindow::setDefaultTheme(bool b)
     \fn     setLightTheme
     \brief  Set default fusion theme
 */
-void MainWindow::setLightTheme(bool b)
+void MainWindow::setLightTheme(void)
 {
-    UNUSED_ARG(b);
-
     QApplication::setStyle("fusion");
     qApp->setPalette(this->style()->standardPalette());
 
@@ -1745,6 +1743,17 @@ void MainWindow::setLightTheme(bool b)
         defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(true);
     darkThemeAction->setChecked(false);
+}
+
+/**
+    \fn     setLightThemeSlot
+    \brief  Set default fusion theme and update settings.
+*/
+void MainWindow::setLightThemeSlot(bool b)
+{
+    UNUSED_ARG(b);
+
+    setLightTheme();
 
     QSettings *qset = qtSettingsCreate();
     if(qset)
@@ -1761,10 +1770,8 @@ void MainWindow::setLightTheme(bool b)
     \fn     setDarkTheme
     \brief  Set dark fusion theme
 */
-void MainWindow::setDarkTheme(bool b)
+void MainWindow::setDarkTheme(void)
 {
-    UNUSED_ARG(b);
-
     QApplication::setStyle("fusion");
     QPalette darkPalette;
     darkPalette.setColor(QPalette::Window, QColor(32,32,32));
@@ -1794,6 +1801,17 @@ void MainWindow::setDarkTheme(bool b)
         defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(false);
     darkThemeAction->setChecked(true);
+}
+
+/**
+    \fn     setDarkThemeSlot
+    \brief  Set dark fusion theme and update settings.
+*/
+void MainWindow::setDarkThemeSlot(bool b)
+{
+    UNUSED_ARG(b);
+
+    setDarkTheme();
 
     QSettings *qset = qtSettingsCreate();
     if(qset)
@@ -2467,10 +2485,10 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         switch(qset->value("theme", ADM_QT_THEME_DEFAULT).toInt())
         {
             case ADM_QT_THEME_LIGHT:
-                mw->setLightTheme(true);
+                mw->setLightTheme();
                 break;
             case ADM_QT_THEME_DARK:
-                mw->setDarkTheme(true);
+                mw->setDarkTheme();
                 break;
             default: break;
         }
