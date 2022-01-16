@@ -135,8 +135,13 @@ protected:
     QAction *recentFileAction[NB_LAST_FILES];
     QAction *recentProjectAction[NB_LAST_FILES];
     QAction *displayZoom;
+    QAction *defaultThemeAction;
+    QAction *lightThemeAction;
+    QAction *darkThemeAction;
+    QString defaultStyle;
+
     ThumbSlider *thumbSlider;
-    
+
     bool     refreshCapEnabled;
     uint32_t refreshCapValue;
     unsigned int actionLock;
@@ -191,7 +196,6 @@ protected:
     /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
     void currentTimeToClipboard(void);
     bool dragWhilePlay;
-    char * defaultStyle;
 
 private slots:
     void timeChanged(int);
@@ -239,8 +243,6 @@ private slots:
     void restoreDefaultWidgetState(bool b);
     void toolbarOrientationChangedSlot(Qt::Orientation hv);
     void setDefaultTheme(bool b);
-    void setLightTheme(bool b);
-    void setDarkTheme(bool b);
 
     void closeEvent(QCloseEvent *event)
     {
@@ -258,6 +260,8 @@ public slots:
     void audioToggled(bool checked);
 
     void thumbSlider_valueEmitted(int value);
+    void setLightTheme(bool b);
+    void setDarkTheme(bool b);
 
 signals:
     void actionSignal(Action a);

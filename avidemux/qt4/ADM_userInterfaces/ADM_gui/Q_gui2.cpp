@@ -70,6 +70,10 @@ using namespace std;
 // don't adjust zoom unless the window has been enlarged beyond a threshold
 #define RESIZE_THRESHOLD 20
 
+#define ADM_QT_THEME_DEFAULT 0
+#define ADM_QT_THEME_LIGHT 1
+#define ADM_QT_THEME_DARK 2
+
 #if defined(USE_SDL) && ( !defined(_WIN32) && !defined(__APPLE__))
     #define SDL_ON_LINUX
 #endif
@@ -750,47 +754,28 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.menuToolbars->addAction(restoreDefaults);
 
     connect(ui.menuToolbars->actions().last(),SIGNAL(triggered(bool)),this,SLOT(restoreDefaultWidgetState(bool)));
-    
+
+    defaultThemeAction = NULL;
     QStyle *currentStyle = QApplication::style();
-    defaultStyle = (char*)ADM_alloc(strlen(qPrintable(currentStyle->objectName()))+1);
-    if (defaultStyle != NULL)
+    defaultStyle = currentStyle->objectName();
+    if (defaultStyle.size() && defaultStyle != "fusion")
     {
-        strcpy(defaultStyle, qPrintable(currentStyle->objectName()));
-
-        if (strcmp(defaultStyle,"fusion"))
-        {
-            QAction * defaultTh = new QAction(QT_TRANSLATE_NOOP("qgui2","Default theme"),this);
-            ui.menuThemes->addAction(defaultTh);
-            connect(ui.menuThemes->actions().last(),SIGNAL(triggered(bool)),this,SLOT(setDefaultTheme(bool)));
-        }
+        defaultThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Default theme"),this);
+        defaultThemeAction->setCheckable(true);
+        ui.menuThemes->addAction(defaultThemeAction);
+        connect(defaultThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDefaultTheme(bool)));
     }
 
-    QAction * lightTh = new QAction(QT_TRANSLATE_NOOP("qgui2","Light theme"),this);
-    ui.menuThemes->addAction(lightTh);
-    connect(ui.menuThemes->actions().last(),SIGNAL(triggered(bool)),this,SLOT(setLightTheme(bool)));
+    lightThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Light theme"),this);
+    lightThemeAction->setCheckable(true);
+    ui.menuThemes->addAction(lightThemeAction);
+    connect(lightThemeAction,SIGNAL(triggered(bool)),this,SLOT(setLightTheme(bool)));
 
-    QAction * darkTh = new QAction(QT_TRANSLATE_NOOP("qgui2","Dark theme"),this);
-    ui.menuThemes->addAction(darkTh);
-    connect(ui.menuThemes->actions().last(),SIGNAL(triggered(bool)),this,SLOT(setDarkTheme(bool)));
-    
-    QSettings *qset = qtSettingsCreate();
-    if(qset)
-    {
-        qset->beginGroup("MainWindow");
-        int theme = qset->value("theme", 0).toInt();
-        if (theme == 1)
-        {
-            setLightTheme(true);
-        }
-        if (theme == 2)
-        {
-            setDarkTheme(true);
-        }
-        qset->endGroup();
-        delete qset;
-        qset = NULL;
-    }
-    
+    darkThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Dark theme"),this);
+    darkThemeAction->setCheckable(true);
+    ui.menuThemes->addAction(darkThemeAction);
+    connect(darkThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDarkTheme(bool)));
+
     this->installEventFilter(this);
     slider->installEventFilter(this);
 
@@ -1721,14 +1706,22 @@ void MainWindow::restoreDefaultWidgetState(bool b)
 */
 void MainWindow::setDefaultTheme(bool b)
 {
+    UNUSED_ARG(b);
+    if(!defaultThemeAction)
+        return;
+
     QApplication::setStyle(defaultStyle);
     qApp->setPalette(this->style()->standardPalette());
-    
+
+    defaultThemeAction->setChecked(true);
+    lightThemeAction->setChecked(false);
+    darkThemeAction->setChecked(false);
+
     QSettings *qset = qtSettingsCreate();
     if(qset)
     {
         qset->beginGroup("MainWindow");
-        qset->setValue("theme", 0);
+        qset->setValue("theme", ADM_QT_THEME_DEFAULT);
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -1741,14 +1734,21 @@ void MainWindow::setDefaultTheme(bool b)
 */
 void MainWindow::setLightTheme(bool b)
 {
+    UNUSED_ARG(b);
+
     QApplication::setStyle("fusion");
     qApp->setPalette(this->style()->standardPalette());
+
+    if(defaultThemeAction)
+        defaultThemeAction->setChecked(false);
+    lightThemeAction->setChecked(true);
+    darkThemeAction->setChecked(false);
 
     QSettings *qset = qtSettingsCreate();
     if(qset)
     {
         qset->beginGroup("MainWindow");
-        qset->setValue("theme", 1);
+        qset->setValue("theme", ADM_QT_THEME_LIGHT);
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -1761,6 +1761,8 @@ void MainWindow::setLightTheme(bool b)
 */
 void MainWindow::setDarkTheme(bool b)
 {
+    UNUSED_ARG(b);
+
     QApplication::setStyle("fusion");
     QPalette darkPalette;
     darkPalette.setColor(QPalette::Window, QColor(32,32,32));
@@ -1784,13 +1786,18 @@ void MainWindow::setDarkTheme(bool b)
     darkPalette.setColor(QPalette::Disabled, QPalette::Text, QColor(128, 128, 128));
     darkPalette.setColor(QPalette::Disabled, QPalette::Light, QColor(42,42,42));
 
-    qApp->setPalette(darkPalette);    
+    qApp->setPalette(darkPalette);
+
+    if(defaultThemeAction)
+        defaultThemeAction->setChecked(false);
+    lightThemeAction->setChecked(false);
+    darkThemeAction->setChecked(true);
 
     QSettings *qset = qtSettingsCreate();
     if(qset)
     {
         qset->beginGroup("MainWindow");
-        qset->setValue("theme", 2);
+        qset->setValue("theme", ADM_QT_THEME_DARK);
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -2355,8 +2362,6 @@ MainWindow::~MainWindow()
     renderDestroy(); // make sure render does not have back link to us
     delete thumbSlider;
     thumbSlider=NULL;
-    free(defaultStyle);
-    defaultStyle=NULL;
 }
 
 static const UI_FUNCTIONS_T UI_Hooks=
@@ -2457,6 +2462,16 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         qset->beginGroup("MainWindow");
         mw->restoreState(qset->value("windowState").toByteArray());
         maximize = qset->value("showMaximized", false).toBool();
+        switch(qset->value("theme", ADM_QT_THEME_DEFAULT).toInt())
+        {
+            case ADM_QT_THEME_LIGHT:
+                mw->setLightTheme(true);
+                break;
+            case ADM_QT_THEME_DARK:
+                mw->setDarkTheme(true);
+                break;
+            default: break;
+        }
         qset->endGroup();
         // Hack: allow to drop other Qt-specific settings on application restart
         char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
