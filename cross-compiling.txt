@@ -58,6 +58,11 @@ partition, extract it on Windows and run 'avidemux.exe' from there.
 
 3. Issues:
 
+Build of the mesa package in MXE fails with python3 >= 3.8. If the Linux
+distribution used to host MXE ships with Python at version 3.8 or later,
+make sure that python2 is installed and unversioned python command points
+to python2. See https://bugs.python.org/issue40350
+
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2021-02-23
+2022-01-17
