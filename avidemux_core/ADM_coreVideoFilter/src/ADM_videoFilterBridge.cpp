@@ -27,30 +27,12 @@
 */
 ADM_videoFilterBridge::ADM_videoFilterBridge(IEditor *editor, uint64_t startTime, uint64_t endTime) : ADM_coreVideoFilter(NULL, NULL)
 {
-    printf("[VideoFilterBridge] Creating instance at %p ",this);
-    this->editor = editor;
+    ADM_info("Creating instance at %p\n",this);
+    ADM_assert(editor);
 
-    if (endTime == ADM_NO_PTS)
-    {
-        printf("using video duration ");
-        endTime = editor->getVideoDuration();
-        if(endTime < startTime) startTime = endTime;
-    }
-    this->startTime = startTime;
-    this->endTime = endTime;
-    printf("from %s ",ADM_us2plain(this->startTime));
-    printf("to %s\n",ADM_us2plain(this->endTime));
+    this->editor = editor;
     myName = "Bridge";
-    aviInfo fo;
-    editor->getVideoInfo(&fo);
-    bridgeInfo.width = fo.width;
-    bridgeInfo.height = fo.height;
-    bridgeInfo.frameIncrement = editor->getFrameIncrement();
-    editor->getTimeBase(&(bridgeInfo.timeBaseNum), &(bridgeInfo.timeBaseDen));
-    bridgeInfo.totalDuration = endTime - startTime;
-    bridgeInfo.markerA = editor->getMarkerAPts();
-    bridgeInfo.markerB = editor->getMarkerBPts();
-    
+    updateBridge(startTime, endTime);
     rewind();
 }
 
@@ -60,17 +42,18 @@ ADM_videoFilterBridge::ADM_videoFilterBridge(IEditor *editor, uint64_t startTime
 */
 void ADM_videoFilterBridge::updateBridge(uint64_t startTime, uint64_t endTime)
 {
-    ADM_assert(this->editor);
     if (endTime == ADM_NO_PTS)
     {
-        printf("using video duration ");
         endTime = editor->getVideoDuration();
         if(endTime < startTime) startTime = endTime;
-    }   
+    }
     this->startTime = startTime;
     this->endTime = endTime;
-    printf("from %s ",ADM_us2plain(this->startTime));
-    printf("to %s\n",ADM_us2plain(this->endTime));
+
+    char *str = ADM_strdup(ADM_us2plain(this->startTime));
+    ADM_info("Using time range from %s to %s\n",str,ADM_us2plain(this->endTime));
+    ADM_dealloc(str);
+    str = NULL;
 
     aviInfo fo;
     editor->getVideoInfo(&fo);
