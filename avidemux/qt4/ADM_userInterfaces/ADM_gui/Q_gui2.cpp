@@ -2473,15 +2473,14 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 #else
     ADM_info("OpenGL: Not enabled at build time.\n");
 #endif
-
+    uiIsMaximized = false;
     bool vuMeterIsHidden = false;
-    bool maximize = false;
     QSettings *qset = qtSettingsCreate();
     if(qset)
     {
         qset->beginGroup("MainWindow");
         mw->restoreState(qset->value("windowState").toByteArray());
-        maximize = qset->value("showMaximized", false).toBool();
+        uiIsMaximized = qset->value("showMaximized", false).toBool();
         switch(qset->value("theme", ADM_QT_THEME_DEFAULT).toInt())
         {
             case ADM_QT_THEME_LIGHT:
@@ -2507,7 +2506,13 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 
     QuiMainWindows = (QWidget*)mw;
 
-    if(maximize)
+#ifdef _WIN32
+    // On Windows, trying to open the main window maximized from the start
+    // results in window state and window size going out of sync.
+    // As a workaround, open non-maximized and maximize later in UI_RunApp().
+    QuiMainWindows->show();
+#else
+    if(uiIsMaximized)
     {
         UI_setBlockZoomChangesFlag(false); // unblock zoom to fit
         QuiMainWindows->showMaximized();
@@ -2515,6 +2520,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
     {
         QuiMainWindows->show();
     }
+#endif
 
     uint32_t w, h;
 
@@ -2671,6 +2677,7 @@ int UI_RunApp(void)
     /* After d3d probing on startup, the host frame holding the video window
     cannot be shrunk to zero size unless the main window is resized, becoming
     visible as a white square if the main window is minimized and restored. */
+    if(!uiIsMaximized)
     {
         int w = QuiMainWindows->width();
         int h = QuiMainWindows->height();
@@ -2678,7 +2685,11 @@ int UI_RunApp(void)
         QuiMainWindows->resize(w,h);
     }
 #endif
-    ADM_info("Load default settings if any... \n");          
+#ifdef _WIN32
+    if(uiIsMaximized)
+        QuiMainWindows->showMaximized();
+#endif
+    ADM_info("Load default settings if any... \n");
     A_loadDefaultSettings();
     UI_applySettings();
     
