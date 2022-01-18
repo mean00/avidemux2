@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #ifndef _WIN32 // needed for unlink
 #include <unistd.h>
@@ -45,10 +46,18 @@ extern "C"
 ADM_CORE6_EXPORT void ADM_warning2(const char *f,const char *st, ...) ;
 ADM_CORE6_EXPORT void ADM_info2(const char *f,const char *st, ...) ;
 ADM_CORE6_EXPORT void ADM_error2(const char *f,const char *st, ...) ;
+ADM_CORE6_EXPORT void ADM_debugInit();
+ADM_CORE6_EXPORT void ADM_debugFree();
+ADM_CORE6_EXPORT const char * ADM_debugLogRead(void);
+ADM_CORE6_EXPORT void ADM_setVerboseLog(bool verbose);
+ADM_CORE6_EXPORT bool ADM_verboseLogging(void);
 
 #define ADM_warning(a,...)  ADM_warning2(__FUNCTION__,a, ##__VA_ARGS__)
 #define ADM_info(a,...)     ADM_info2(__FUNCTION__,a,    ##__VA_ARGS__)
 #define ADM_error(a,...)    ADM_error2(__FUNCTION__,a,   ##__VA_ARGS__)
+#define ADM_verboseWarning(a,...)  {if (ADM_verboseLogging()) ADM_warning2(__FUNCTION__,a, ##__VA_ARGS__);}
+#define ADM_verboseInfo(a,...)     {if (ADM_verboseLogging()) ADM_info2(__FUNCTION__,a,    ##__VA_ARGS__);}
+#define ADM_verboseError(a,...)    {if (ADM_verboseLogging()) ADM_error2(__FUNCTION__,a,   ##__VA_ARGS__);}
 
 ADM_CORE6_EXPORT const char *ADM_translate(const char *domain, const char *stringToTranslate);
 

@@ -67,6 +67,7 @@ json.addString("file3",key->lastprojects.file3);
 json.addString("file4",key->lastprojects.file4);
 json.endNode();
 json.addUint32("message_level",key->message_level);
+json.addBool("verbose_log",key->verbose_log);
 json.addNode("audio_device");
 json.addString("audiodevice",key->audio_device.audiodevice);
 json.addString("alsa_device",key->audio_device.alsa_device);

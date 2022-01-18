@@ -64,6 +64,7 @@ struct  {
 	std::string file4;
 }lastprojects;
 uint32_t message_level;
+bool verbose_log;
 struct  {
 	std::string audiodevice;
 	std::string alsa_device;
