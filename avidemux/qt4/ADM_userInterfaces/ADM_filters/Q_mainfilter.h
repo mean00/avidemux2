@@ -58,7 +58,7 @@ private:
 
 public:
     FilterItemDelegate(QWidget *parent = 0, bool alwaysHighlight=false);
-    enum datarole { FilterNameRole = Qt::UserRole, DescriptionRole, DisabledRole };
+    enum datarole { FilterNameRole = Qt::UserRole, DescriptionRole, InternalNameRole, DisabledRole };
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
     static int padding;

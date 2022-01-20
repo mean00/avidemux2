@@ -1188,63 +1188,61 @@ void filterquickWindow::displayPartialFilters(const QString &search)
 
             QString s1 = QString::fromUtf8(name);
             QString s2 = QString::fromUtf8(desc);
-            
-            bool show = false;
-            if (search.length() == 0)
-                show = true;
-            if (!show)
-                show = (s1.contains(search, Qt::CaseInsensitive) || s2.contains(search, Qt::CaseInsensitive));
-            
+            QString s3 = ADM_vf_getInternalNameFromTag(tag);
 
-            if (show)
-            {
-                QListWidgetItem *item;
-                item=new QListWidgetItem(NULL,availableList,ALL_FILTER_BASE+i+family*100);
-                item->setData(Qt::DisplayRole, s1); // for sorting
-                item->setData(FilterItemDelegate::FilterNameRole, s1);
-                item->setData(FilterItemDelegate::DescriptionRole, s2);
-                availableList->addItem(item);
-                itemCount++;
-            }
+            bool show = search.isEmpty() ||
+                s1.contains(search, Qt::CaseInsensitive) ||
+                s2.contains(search, Qt::CaseInsensitive) ||
+                s3.contains(search, Qt::CaseInsensitive);
+
+            if (!show) continue;
+
+            QListWidgetItem *item = new QListWidgetItem(NULL,availableList,ALL_FILTER_BASE+i+family*100);
+            item->setData(Qt::DisplayRole, s1); // for sorting
+            item->setData(FilterItemDelegate::FilterNameRole, s1);
+            item->setData(FilterItemDelegate::DescriptionRole, s2);
+            item->setData(FilterItemDelegate::InternalNameRole, s3);
+            availableList->addItem(item);
+            itemCount++;
         }
     }
 
-    if (itemCount)
+    if (!itemCount)
+        return;
+
+    availableList->sortItems();
+    availableList->setCurrentRow(0);
+    if (search.isEmpty())
+        return;
+
+    for (int i=0; i<availableList->count(); i++)
     {
-        availableList->sortItems();
-        availableList->setCurrentRow(0);
-        if (search.length() > 0)
+        QListWidgetItem * item = availableList->item(i);
+        if (!item) continue;
+        if (item->data(FilterItemDelegate::FilterNameRole).toString().startsWith(search, Qt::CaseInsensitive))
         {
-            bool found = false;
-            for (int i=0; i<availableList->count(); i++)
-            {
-                QListWidgetItem * item = availableList->item(i);
-                if (item)
-                {
-                    if (item->data(FilterItemDelegate::FilterNameRole).toString().startsWith(search, Qt::CaseInsensitive))
-                    {
-                        availableList->setCurrentRow(i);
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (!found)
-            {
-                for (int i=0; i<availableList->count(); i++)
-                {
-                    QListWidgetItem * item = availableList->item(i);
-                    if (item)
-                    {
-                        if (item->data(FilterItemDelegate::FilterNameRole).toString().contains(search, Qt::CaseInsensitive))
-                        {
-                            availableList->setCurrentRow(i);
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-            }
+            availableList->setCurrentRow(i);
+            return;
+        }
+    }
+    for (int i=0; i<availableList->count(); i++)
+    {
+        QListWidgetItem * item = availableList->item(i);
+        if (!item) continue;
+        if (item->data(FilterItemDelegate::FilterNameRole).toString().contains(search, Qt::CaseInsensitive))
+        {
+            availableList->setCurrentRow(i);
+            return;
+        }
+    }
+    for (int i=0; i<availableList->count(); i++)
+    {
+        QListWidgetItem * item = availableList->item(i);
+        if (!item) continue;
+        if (item->data(FilterItemDelegate::InternalNameRole).toString().contains(search, Qt::CaseInsensitive))
+        {
+            availableList->setCurrentRow(i);
+            return;
         }
     }
 }
