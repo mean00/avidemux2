@@ -98,7 +98,6 @@ bool     askPortAvisynth=false;
 uint32_t defaultPortAvisynth = 9999;
 
 uint32_t toneMappingHDR = 1;
-#define DEFAULT_TARGET_LUMINANCE_HDR 100.0
 float    targetLumHDR = DEFAULT_TARGET_LUMINANCE_HDR;
 
 #ifdef USE_SDL

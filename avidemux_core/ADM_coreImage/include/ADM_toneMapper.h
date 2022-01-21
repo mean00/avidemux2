@@ -20,12 +20,16 @@
 #include "ADM_rgb.h" // To have colors
 #include "ADM_threads.h"
 
+#define DEFAULT_TARGET_LUMINANCE_HDR 100.0
+
 class ADM_COREIMAGE6_EXPORT ADMToneMapperConfig
 {
   protected:
     static uint32_t method;
     static float saturation;
     static float boost;
+    float luminance;
+    bool changed;
   public:
             ADMToneMapperConfig(bool init=false);
     void    getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, float * targetLuminance=NULL);

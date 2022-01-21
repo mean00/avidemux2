@@ -33,13 +33,15 @@ float ADMToneMapperConfig::boost;
 
 ADMToneMapperConfig::ADMToneMapperConfig(bool init)
 {
-    if (init)
-    {
-        if (!prefs->get(HDR_TONEMAPPING,&method))
-            method = 1;
-        saturation = 1;
-        boost = 1;
-    }
+    changed = false;
+    if (!prefs->get(HDR_TARGET_LUMINANCE,&luminance))
+        luminance = DEFAULT_TARGET_LUMINANCE_HDR;
+    if (!init) return;
+
+    if (!prefs->get(HDR_TONEMAPPING,&method))
+        method = 1;
+    saturation = 1;
+    boost = 1;
 }
 
 void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, float * targetLuminance)
@@ -50,9 +52,16 @@ void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * satura
         *saturationAdjust = saturation;
     if (boostAdjust)
         *boostAdjust = boost;
-    if (targetLuminance)
-        if(!prefs->get(HDR_TARGET_LUMINANCE,targetLuminance))
-            *targetLuminance = 100.0;
+    if (!targetLuminance)
+        return;
+
+    if(changed)
+    {
+        if(!prefs->get(HDR_TARGET_LUMINANCE,&luminance))
+            luminance = DEFAULT_TARGET_LUMINANCE_HDR;
+        changed = false;
+    }
+    *targetLuminance = luminance;
 }
 
 void ADMToneMapperConfig::setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust)
@@ -60,6 +69,7 @@ void ADMToneMapperConfig::setConfig(uint32_t toneMappingMethod, float saturation
     method = toneMappingMethod;
     saturation = saturationAdjust;
     boost = boostAdjust;
+    changed = true;
 }
 
 
