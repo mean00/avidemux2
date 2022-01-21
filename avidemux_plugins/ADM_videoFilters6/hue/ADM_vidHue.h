@@ -24,7 +24,7 @@ typedef struct {
 /**
     \class ADMVideoHue
 */
-class ADMVideoHue : public ADM_coreVideoFilterCached
+class ADMVideoHue : public ADM_coreVideoFilter
 {
   protected:
         huesettings _settings;

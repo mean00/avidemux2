@@ -28,14 +28,14 @@
 extern uint8_t DIA_getHue(hue *param, ADM_coreVideoFilter *in);
 
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   ADMVideoHue,   // Class
-                        1,0,0,              // Version
-                        ADM_UI_TYPE_BUILD,         // UI
-                        VF_COLORS,            // Category
-                        "hue",            // internal name (must be uniq!)
-                        QT_TRANSLATE_NOOP("hue","Mplayer Hue"),            // Display name
-                        QT_TRANSLATE_NOOP("hue","Adjust hue and saturation.") // Description
-                    );
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(     ADMVideoHue,   // Class
+                                        1,0,0,              // Version
+                                        ADM_UI_TYPE_BUILD,         // UI
+                                        VF_COLORS,            // Category
+                                        "hue",            // internal name (must be uniq!)
+                                        QT_TRANSLATE_NOOP("hue","Mplayer Hue"),            // Display name
+                                        QT_TRANSLATE_NOOP("hue","Adjust hue and saturation.") // Description
+                                    );
 /**
     \fn     buildLut
     \brief  Populate lookup tables
@@ -119,8 +119,7 @@ const char   *ADMVideoHue::getConfiguration(void)
 /**
     \fn ctor
 */
-ADMVideoHue::ADMVideoHue(  ADM_coreVideoFilter *in,CONFcouple *couples) :
-        ADM_coreVideoFilterCached(1,in,couples)
+ADMVideoHue::ADMVideoHue(  ADM_coreVideoFilter *in,CONFcouple *couples) :ADM_coreVideoFilter(in,couples)
 {
     if(!couples || !ADM_paramLoad(couples,hue_param,&_settings.param))
         reset(&_settings.param);
@@ -167,21 +166,14 @@ void ADMVideoHue::setCoupledConf(CONFcouple *couples)
 */
 bool         ADMVideoHue::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-ADMImage *src;
-        src=vidCache->getImage(nextFrame);
-        if(!src)
-            return false; // EOF
-        *fn=nextFrame++;
-        image->copyInfo(src);
+    if(!previousFilter->getNextFrame(fn,image)) return false;
 
-        image->copyPlane(src,image,PLANAR_Y); // Luma is untouched
+    // Luma is untouched
 
-        HueProcess_C(image->GetWritePtr(PLANAR_U), image->GetWritePtr(PLANAR_V),
-                     src->GetReadPtr(PLANAR_U), src->GetReadPtr(PLANAR_V),
-                     image->GetPitch(PLANAR_U), src->GetPitch(PLANAR_U), // assume u&v pitches are =
-                     info.width>>1, info.height>>1, &_settings);
-
-        vidCache->unlockAll();
-        return 1;
+    HueProcess_C(image->GetWritePtr(PLANAR_U), image->GetWritePtr(PLANAR_V),
+                 image->GetReadPtr(PLANAR_U),  image->GetReadPtr(PLANAR_V),
+                 image->GetPitch(PLANAR_U),    image->GetPitch(PLANAR_U), // assume u&v pitches are =
+                 info.width>>1, info.height>>1, &_settings);
+    return 1;
 }
 //EOF
