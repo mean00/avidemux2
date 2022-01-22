@@ -54,6 +54,10 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine, std::vector <shellHistory
 
     connect((ui.evalute),SIGNAL(clicked(bool)),this,SLOT(evaluate(bool)));
     connect((ui.clear),SIGNAL(clicked(bool)),this,SLOT(clear(bool)));
+    // Work around wrong text color when a custom dark palette is used.
+    QColor col = palette().color(QPalette::Text);
+    ui.textBrowser->setTextColor(col);
+    //ADM_info("Setting text color to %d %d %d\n",qRed(col.rgb()),qGreen(col.rgb()),qBlue(col.rgb()));
 #ifndef __APPLE__
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or CTRL+ENTER.\n"));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n"));
@@ -175,14 +179,15 @@ bool qShell::dumpHistory(void)
 */
 bool qShell::print(IScriptEngine::EventType type,const char *s)
 {
+    QColor old = ui.textBrowser->textColor();
     switch(type)
     {
-        case IScriptEngine::Information: ui.textBrowser->setTextColor(QColor(0,0,0));break;
-        case IScriptEngine::Error: ui.textBrowser->setTextColor(QColor(255,0,0));break;
+        case IScriptEngine::Information: break;
+        case IScriptEngine::Error: ui.textBrowser->setTextColor(Qt::red); break;
         default: break;
     }
     ui.textBrowser->insertPlainText(QString::fromUtf8(s));
-    ui.textBrowser->setTextColor(QColor(0,0,0));
+    ui.textBrowser->setTextColor(old);
     return true;
 }
 /**
