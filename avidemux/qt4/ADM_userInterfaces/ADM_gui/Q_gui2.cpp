@@ -1714,6 +1714,8 @@ void MainWindow::setDefaultThemeSlot(bool b)
 
     QApplication::setStyle(defaultStyle);
     qApp->setPalette(this->style()->standardPalette());
+    QApplication::setStyle(defaultStyle);
+    qApp->setPalette(this->style()->standardPalette());
 
     defaultThemeAction->setChecked(true);
     lightThemeAction->setChecked(false);
@@ -1736,6 +1738,8 @@ void MainWindow::setDefaultThemeSlot(bool b)
 */
 void MainWindow::setLightTheme(void)
 {
+    QApplication::setStyle("fusion");
+    qApp->setPalette(this->style()->standardPalette());
     QApplication::setStyle("fusion");
     qApp->setPalette(this->style()->standardPalette());
 
@@ -1772,7 +1776,6 @@ void MainWindow::setLightThemeSlot(bool b)
 */
 void MainWindow::setDarkTheme(void)
 {
-    QApplication::setStyle("fusion");
     QPalette darkPalette;
     darkPalette.setColor(QPalette::Window, QColor(32,32,32));
     darkPalette.setColor(QPalette::WindowText, QColor(234,234,234));
@@ -1795,6 +1798,9 @@ void MainWindow::setDarkTheme(void)
     darkPalette.setColor(QPalette::Disabled, QPalette::Text, QColor(128, 128, 128));
     darkPalette.setColor(QPalette::Disabled, QPalette::Light, QColor(42,42,42));
 
+    QApplication::setStyle("fusion");
+    qApp->setPalette(darkPalette);
+    QApplication::setStyle("fusion");
     qApp->setPalette(darkPalette);
 
     if(defaultThemeAction)
