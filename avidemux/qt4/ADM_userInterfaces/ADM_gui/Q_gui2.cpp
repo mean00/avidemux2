@@ -39,6 +39,11 @@
 #include "ADM_cpp.h"
 #define MENU_DECLARE
 #include "Q_gui2.h"
+
+#ifdef BROKEN_PALETTE_PROPAGATION
+    #include <QAbstractItemView>
+#endif
+
 #include "ADM_default.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_QSettings.h"
@@ -951,6 +956,9 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
             case MENU_SUBMENU:
                 {
                     subMenu=root->addMenu(qs);
+#ifdef BROKEN_PALETTE_PROPAGATION
+                    subMenus.push_back(subMenu);
+#endif
                 }
                 break;
             case MENU_SUBACTION:
@@ -1713,8 +1721,39 @@ void MainWindow::setDefaultThemeSlot(bool b)
         return;
 
     QApplication::setStyle(defaultStyle);
-    qApp->setPalette(this->style()->standardPalette());
+    QPalette pal = style()->standardPalette();
+    qApp->setPalette(pal);
 
+#ifdef BROKEN_PALETTE_PROPAGATION
+    #define PROPAGATE_PALETTE(x) \
+    ui.currentTime->setPalette(x); \
+    ui.menuFile->setPalette(x); \
+    ui.menuRecent->setPalette(x); \
+    ui.menuEdit->setPalette(x); \
+    ui.menuView->setPalette(x); \
+    ui.menuToolbars->setPalette(x); \
+    ui.menuThemes->setPalette(x); \
+    ui.menuVideo->setPalette(x); \
+    ui.menuAudio->setPalette(x); \
+    ui.menuAuto->setPalette(x); \
+    ui.menuTools->setPalette(x); \
+    ui.menuGo->setPalette(x); \
+    ui.menuCustom->setPalette(x); \
+    ui.menuHelp->setPalette(x); \
+    ui.toolBar->setPalette(x); \
+    if(recentFiles) recentFiles->setPalette(x); \
+    if(recentProjects) recentProjects->setPalette(x); \
+    for(int i=0; i < subMenus.size(); i++) \
+    { \
+        QMenu *m = subMenus.at(i); \
+        if(m) m->setPalette(x); \
+    } \
+    ui.comboBoxVideo->view()->setPalette(x); \
+    ui.comboBoxAudio->view()->setPalette(x); \
+    ui.comboBoxFormat->view()->setPalette(x);
+
+    PROPAGATE_PALETTE(pal);
+#endif
     defaultThemeAction->setChecked(true);
     lightThemeAction->setChecked(false);
     darkThemeAction->setChecked(false);
@@ -1737,8 +1776,11 @@ void MainWindow::setDefaultThemeSlot(bool b)
 void MainWindow::setLightTheme(void)
 {
     QApplication::setStyle("fusion");
-    qApp->setPalette(this->style()->standardPalette());
-
+    QPalette pal = style()->standardPalette();
+    qApp->setPalette(pal);
+#ifdef BROKEN_PALETTE_PROPAGATION
+    PROPAGATE_PALETTE(pal)
+#endif
     if(defaultThemeAction)
         defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(true);
@@ -1796,7 +1838,9 @@ void MainWindow::setDarkTheme(void)
     darkPalette.setColor(QPalette::Disabled, QPalette::Light, QColor(42,42,42));
 
     qApp->setPalette(darkPalette);
-
+#ifdef BROKEN_PALETTE_PROPAGATION
+    PROPAGATE_PALETTE(darkPalette)
+#endif
     if(defaultThemeAction)
         defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(false);

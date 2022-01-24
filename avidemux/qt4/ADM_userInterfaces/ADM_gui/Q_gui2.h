@@ -23,6 +23,10 @@
 #define ENABLE_EVENT_FILTER
 
 #define NAVIGATION_ACTION_LOCK_THRESHOLD	(4)
+
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    #define BROKEN_PALETTE_PROPAGATION
+#endif
 /**
  * \class myQApplication
  * \brief make sure the checkCrash & friends are done after Qt init
@@ -143,7 +147,9 @@ protected:
     QAction *lightThemeAction;
     QAction *darkThemeAction;
     QString defaultStyle;
-
+#ifdef BROKEN_PALETTE_PROPAGATION
+    std::vector<QMenu *> subMenus;
+#endif
     ThumbSlider *thumbSlider;
 
     bool     refreshCapEnabled;
