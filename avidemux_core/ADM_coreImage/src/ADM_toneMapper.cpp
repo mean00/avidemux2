@@ -106,8 +106,8 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
     for (int i=0; i<3; i++)
     {
         hdrRGB[i]=NULL;
-        sdrRGB[i]=NULL;
     }
+    sdrRGB=NULL;
     
     this->sws_flag=sws_flag;
 
@@ -139,7 +139,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
                       SWS_POINT, NULL, NULL,NULL);		// use fast n.n. scaling, as resolution will not change in the first step
     contextRGB2=(void *)sws_getContext(
                       srcWidth,srcHeight,
-                      AV_PIX_FMT_GBR24P ,
+                      AV_PIX_FMT_BGR24 ,
                       dstWidth,dstHeight,
                       lavTo,
                       sws_flag, NULL, NULL,NULL);
@@ -203,8 +203,8 @@ ADMToneMapper::~ADMToneMapper()
     for (int i=0; i<3; i++)
     {
         delete [] hdrRGB[i];
-        delete [] sdrRGB[i];
     }
+    delete [] sdrRGB;
     delete [] worker_threads;
     delete [] fastYUV_worker_thread_args;
     delete [] RGB_worker_thread_args;
@@ -762,7 +762,7 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
     RGB_worker_thread_arg * arg = (RGB_worker_thread_arg*)argptr;
 
     int stride = ADM_IMAGE_ALIGN(arg->srcWidth);
-    uint8_t * sdrR, * sdrG, * sdrB;
+    uint8_t * sdrBGR, * sdrG, * sdrB;
     uint16_t * hdrR, * hdrG, * hdrB;
     int32_t linR,linG,linB,linccR,linccG,linccB;
     int32_t oormask;
@@ -771,9 +771,7 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
 
     for (int y=arg->ystart; y<(arg->srcHeight); y+=arg->yincr)
     {
-        sdrR = arg->sdrRGB[0] + y*stride;
-        sdrG = arg->sdrRGB[1] + y*stride;
-        sdrB = arg->sdrRGB[2] + y*stride;
+        sdrBGR = arg->sdrRGB + y*ADM_IMAGE_ALIGN(arg->srcWidth*3);
         hdrR = arg->hdrRGB[0] + y*stride;
         hdrG = arg->hdrRGB[1] + y*stride;
         hdrB = arg->hdrRGB[2] + y*stride;
@@ -825,10 +823,12 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
                 linccG = (linccG < 0) ? 0 : ((linccG > 65535) ? 65535 : linccG);
                 linccB = (linccB < 0) ? 0 : ((linccB > 65535) ? 65535 : linccB);
             }
-            *sdrR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            *sdrG = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            *sdrB = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            sdrR++; sdrG++; sdrB++;
+            *sdrBGR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            sdrBGR++;
+            *sdrBGR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            sdrBGR++;
+            *sdrBGR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            sdrBGR++;
         }
     }
 
@@ -887,12 +887,12 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     {
         if (hdrRGB[i] == NULL)
         {
-            hdrRGB[i] = new uint16_t[ADM_IMAGE_ALIGN(dstWidth)*dstHeight];
+            hdrRGB[i] = new uint16_t[ADM_IMAGE_ALIGN(srcWidth)*srcHeight];
         }
-        if (sdrRGB[i] == NULL)
-        {
-            sdrRGB[i] = new uint8_t[ADM_IMAGE_ALIGN(dstWidth)*dstHeight];
-        }
+    }
+    if (sdrRGB == NULL)
+    {
+        sdrRGB = new uint8_t[ADM_IMAGE_ALIGN(srcWidth*3)*srcHeight];
     }
 
 
@@ -1023,8 +1023,8 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         for (int i=0; i<3; i++)
         {
             RGB_worker_thread_args[tr].hdrRGB[i] = hdrRGB[i];
-            RGB_worker_thread_args[tr].sdrRGB[i] = sdrRGB[i];
         }
+        RGB_worker_thread_args[tr].sdrRGB = sdrRGB;
         RGB_worker_thread_args[tr].hdrRGBLUT = hdrRGBLUT;
         RGB_worker_thread_args[tr].ccmx = ccmx;
         RGB_worker_thread_args[tr].hdrGammaLUT = hdrGammaLUT;
@@ -1039,13 +1039,12 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         pthread_join( worker_threads[tr], NULL);
     }
 
-    for (int p=0; p<3; p++)
-    {
-        gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth);
-    }
-    gbrData[0] = (uint8_t*)sdrRGB[1];
-    gbrData[1] = (uint8_t*)sdrRGB[2];
-    gbrData[2] = (uint8_t*)sdrRGB[0];
+    gbrData[0] = sdrRGB;
+    gbrStride[0] = ADM_IMAGE_ALIGN(srcWidth*3);
+    gbrData[1] = NULL;
+    gbrStride[1] = 0;
+    gbrData[2] = NULL;
+    gbrStride[2] = 0;
     sws_scale(CONTEXTRGB2,gbrData,gbrStride,0,srcHeight,dstData,dstStride);
 
     // dst is YUV420
