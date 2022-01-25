@@ -784,9 +784,9 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
             linG = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
             linB = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
             hdrR++; hdrG++; hdrB++;
-            linccB = arg->ccmx[0]*linB + arg->ccmx[1]*linG + arg->ccmx[2]*linR;
-            linccG = arg->ccmx[3]*linB + arg->ccmx[4]*linG + arg->ccmx[5]*linR;
-            linccR = arg->ccmx[6]*linB + arg->ccmx[7]*linG + arg->ccmx[8]*linR;
+            linccR = arg->ccmx[0]*linR + arg->ccmx[1]*linG + arg->ccmx[2]*linB;
+            linccG = arg->ccmx[3]*linR + arg->ccmx[4]*linG + arg->ccmx[5]*linB;
+            linccB = arg->ccmx[6]*linR + arg->ccmx[7]*linG + arg->ccmx[8]*linB;
             linccR >>= 12;
             linccG >>= 12;
             linccB >>= 12;
@@ -796,7 +796,7 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
                 min = (min < linccB) ? min : linccB;
                 if (min < 0)
                 {
-                    int32_t luma = 54*linccB+183*linccG+18*linccR;
+                    int32_t luma = 54*linccR+183*linccG+18*linccB;
                     luma >>= 8;
                     int32_t coeff = ((min-luma)==0) ? 256: min*256/(min-luma);
                     int32_t icoeff = 256-coeff;
@@ -1004,9 +1004,11 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
 
     for (int p=0; p<3; p++)
     {
-        gbrData[p] = (uint8_t*)hdrRGB[p];
         gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth)*2;
     }
+    gbrData[0] = (uint8_t*)hdrRGB[1];
+    gbrData[1] = (uint8_t*)hdrRGB[2];
+    gbrData[2] = (uint8_t*)hdrRGB[0];
     sws_scale(CONTEXTRGB1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
 
     int32_t ccmx[9];
@@ -1039,9 +1041,11 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
 
     for (int p=0; p<3; p++)
     {
-        gbrData[p] = (uint8_t*)sdrRGB[p];
         gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth);
     }
+    gbrData[0] = (uint8_t*)sdrRGB[1];
+    gbrData[1] = (uint8_t*)sdrRGB[2];
+    gbrData[2] = (uint8_t*)sdrRGB[0];
     sws_scale(CONTEXTRGB2,gbrData,gbrStride,0,srcHeight,dstData,dstStride);
 
     // dst is YUV420
