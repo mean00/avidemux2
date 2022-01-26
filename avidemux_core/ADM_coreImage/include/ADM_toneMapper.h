@@ -62,7 +62,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     unsigned int    hdrTMmethod;
     uint16_t        *hdrYUV;
     uint16_t        *hdrRGB[3];
-    uint8_t         *sdrRGB[3];
+    uint8_t         *sdrRGB;
     uint8_t         sdrRGBSat[256];
     uint32_t        threadCount;
     pthread_t       *worker_threads;
@@ -85,7 +85,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
         uint32_t        srcWidth,srcHeight;
         uint32_t        ystart, yincr;
         uint16_t        *hdrRGB[3];
-        uint8_t         *sdrRGB[3];
+        uint8_t         *sdrRGB;
         uint16_t        *hdrRGBLUT;
         int             *ccmx;
         uint8_t         *hdrGammaLUT;
