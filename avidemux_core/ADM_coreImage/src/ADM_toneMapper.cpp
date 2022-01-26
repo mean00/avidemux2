@@ -135,7 +135,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
                       srcWidth,srcHeight,
                       lavFrom ,
                       srcWidth,srcHeight,
-                      AV_PIX_FMT_GBRP16LE,
+                      AV_PIX_FMT_YUV444P16LE,                   // when multithreaded libswscale available retest with AV_PIX_FMT_GBRP16LE,
                       SWS_POINT, NULL, NULL,NULL);		// use fast n.n. scaling, as resolution will not change in the first step
     contextRGB2=(void *)sws_getContext(
                       srcWidth,srcHeight,
@@ -763,7 +763,9 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
 
     int stride = ADM_IMAGE_ALIGN(arg->srcWidth);
     uint8_t * sdrBGR, * sdrG, * sdrB;
-    uint16_t * hdrR, * hdrG, * hdrB;
+    //uint16_t * hdrR, * hdrG, * hdrB;
+    int32_t hdrR, hdrG, hdrB, hY, hU, hV;
+    uint16_t * hdrY, * hdrU, * hdrV;
     int32_t linR,linG,linB,linccR,linccG,linccB;
     int32_t oormask;
     oormask = 0xFFFF;
@@ -772,16 +774,48 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
     for (int y=arg->ystart; y<(arg->srcHeight); y+=arg->yincr)
     {
         sdrBGR = arg->sdrRGB + y*ADM_IMAGE_ALIGN(arg->srcWidth*3);
-        hdrR = arg->hdrRGB[0] + y*stride;
-        hdrG = arg->hdrRGB[1] + y*stride;
-        hdrB = arg->hdrRGB[2] + y*stride;
+        // hdrRGB now is actually YUV
+        hdrY = arg->hdrRGB[0] + y*stride;
+        hdrU = arg->hdrRGB[1] + y*stride;
+        hdrV = arg->hdrRGB[2] + y*stride;
 
         for (int x=0; x<(arg->srcWidth); x++)
         {
-            linR = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            linG = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            linB = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            hdrR++; hdrG++; hdrB++;
+            // do YUV->RGB conversion here (multithreaded)
+            hY = *hdrY;
+            hU = *hdrU;
+            hV = *hdrV;
+            hdrY++; hdrU++; hdrV++;
+
+            hU -= 32768;
+            hV -= 32768;
+            // [RGB] = [BT.2020-NCL] * [Y'CbCr]
+            //  1       +0                  +1.4746
+            //  1       -0.16455312684366   -0.57135312684366
+            //  1       +1.8814             +0
+            hdrR = hY*8192            + hV*12080;
+            hdrG = hY*8192 - hU*1348  - hV*4681 ;
+            hdrB = hY*8192 + hU*15412           ;
+            hdrR /= 8192;
+            hdrG /= 8192;
+            hdrB /= 8192;
+            if ((hdrR&oormask) || (hdrG&oormask) || (hdrB&oormask))
+            {
+                hdrR = (hdrR<0) ? 0 : ((hdrR > 65535) ? 65535 : hdrR);
+                hdrG = (hdrG<0) ? 0 : ((hdrG > 65535) ? 65535 : hdrG);
+                hdrB = (hdrB<0) ? 0 : ((hdrB > 65535) ? 65535 : hdrB);
+            }
+            
+            linR = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            linG = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            linB = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+
+            
+            // when multithreaded libswscale available retest with AV_PIX_FMT_GBRP16LE,
+            //linR = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            //linG = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            //linB = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+            //hdrR++; hdrG++; hdrB++;
             linccR = arg->ccmx[0]*linR + arg->ccmx[1]*linG + arg->ccmx[2]*linB;
             linccG = arg->ccmx[3]*linR + arg->ccmx[4]*linG + arg->ccmx[5]*linB;
             linccB = arg->ccmx[6]*linR + arg->ccmx[7]*linG + arg->ccmx[8]*linB;
@@ -1004,11 +1038,12 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
 
     for (int p=0; p<3; p++)
     {
+        gbrData[p] = (uint8_t*)hdrRGB[p];   // convert to YUV444
         gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth)*2;
     }
-    gbrData[0] = (uint8_t*)hdrRGB[1];
-    gbrData[1] = (uint8_t*)hdrRGB[2];
-    gbrData[2] = (uint8_t*)hdrRGB[0];
+    //gbrData[0] = (uint8_t*)hdrRGB[1];     when multithreaded libswscale available retest with AV_PIX_FMT_GBRP16LE,
+    //gbrData[1] = (uint8_t*)hdrRGB[2];
+    //gbrData[2] = (uint8_t*)hdrRGB[0];
     sws_scale(CONTEXTRGB1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
 
     int32_t ccmx[9];
