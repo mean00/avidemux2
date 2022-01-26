@@ -1726,6 +1726,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
 
 #ifdef BROKEN_PALETTE_PROPAGATION
     #define PROPAGATE_PALETTE(x) \
+    ui.spinBox_TimeValue->setPalette(x); \
     ui.currentTime->setPalette(x); \
     ui.menuFile->setPalette(x); \
     ui.menuRecent->setPalette(x); \
@@ -1752,7 +1753,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
     ui.comboBoxAudio->view()->setPalette(x); \
     ui.comboBoxFormat->view()->setPalette(x);
 
-    PROPAGATE_PALETTE(pal);
+    PROPAGATE_PALETTE(pal)
 #endif
     defaultThemeAction->setChecked(true);
     lightThemeAction->setChecked(false);
