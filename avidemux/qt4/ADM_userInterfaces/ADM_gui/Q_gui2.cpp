@@ -768,12 +768,14 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
         defaultThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Default theme"),this);
         defaultThemeAction->setCheckable(true);
         ui.menuThemes->addAction(defaultThemeAction);
+        defaultThemeAction->setChecked(true);
         connect(defaultThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDefaultThemeSlot(bool)));
     }
 
     lightThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Light theme"),this);
     lightThemeAction->setCheckable(true);
     ui.menuThemes->addAction(lightThemeAction);
+    lightThemeAction->setChecked(defaultStyle == "fusion");
     connect(lightThemeAction,SIGNAL(triggered(bool)),this,SLOT(setLightThemeSlot(bool)));
 
     darkThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Dark theme"),this);
