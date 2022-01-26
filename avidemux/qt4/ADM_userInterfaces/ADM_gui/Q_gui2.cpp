@@ -1723,6 +1723,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
         return;
 
     QApplication::setStyle(defaultStyle);
+    ui.currentTime->setTextMargins(0,0,0,0);
     QPalette pal = style()->standardPalette();
     qApp->setPalette(pal);
 
