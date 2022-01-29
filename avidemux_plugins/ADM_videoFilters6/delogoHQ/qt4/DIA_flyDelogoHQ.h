@@ -23,11 +23,10 @@ class flyDelogoHQ : public ADM_flyDialogYuv
   public:
     delogoHQ         param;
   private:
-    int                    rgbBufStride;
-    ADM_byteBuffer *       rgbBufRaw;
-    ADMImageRef *          rgbBufImage;
-    ADMColorScalerFull *   convertYuvToRgb;
-    ADMColorScalerFull *   convertRgbToYuv;
+    int                    plYuvStride;
+    uint16_t *             plYuvBuf;
+    uint16_t *             toLinLut;
+    uint8_t *              toLumaLut;
     int *                  mask;
     int                    maskHint[4];
     char * saveFilename;
