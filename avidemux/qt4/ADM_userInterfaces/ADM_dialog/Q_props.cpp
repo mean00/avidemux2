@@ -202,31 +202,31 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
         }
         switch (colorSpace)
         {
-            case ADM_COL_SPC_sRGB://        = 0,  ///< order of coefficients is actually GBR, also IEC 61966-2-1 (sRGB)
+            case ADM_COL_SPC_sRGB:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","sRGB")) break;
-            case ADM_COL_SPC_BT709://       = 1,  ///< also ITU-R BT1361 / IEC 61966-2-4 xvYCC709 / SMPTE RP177 Annex B
+            case ADM_COL_SPC_BT709:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.709")) break;
-            case ADM_COL_SPC_FCC://         = 4,  ///< FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
+            case ADM_COL_SPC_FCC:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","FCC 73.682")) break;
-            case ADM_COL_SPC_BT470BG://     = 5,  ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM / IEC 61966-2-4 xvYCC601
+            case ADM_COL_SPC_BT470BG:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.470 System B/G")) break;
-            case ADM_COL_SPC_SMPTE170M://   = 6,  ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
+            case ADM_COL_SPC_SMPTE170M:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.601")) break;
-            case ADM_COL_SPC_SMPTE240M://   = 7,  ///< functionally identical to above
+            case ADM_COL_SPC_SMPTE240M:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","SMPTE 240M")) break;
-            case ADM_COL_SPC_YCGCO://       = 8,  ///< Used by Dirac / VC-2 and H.264 FRext, see ITU-T SG16
+            case ADM_COL_SPC_YCGCO:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","YCgCo")) break;
-            case ADM_COL_SPC_BT2020_NCL://  = 9,  ///< ITU-R BT2020 non-constant luminance system
+            case ADM_COL_SPC_BT2020_NCL:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.2020 non-constant")) break;
-            case ADM_COL_SPC_BT2020_CL://   = 10, ///< ITU-R BT2020 constant luminance system
+            case ADM_COL_SPC_BT2020_CL:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.2020 constant")) break;
-            case ADM_COL_SPC_SMPTE2085://   = 11, ///< SMPTE 2085, Y'D'zD'x
+            case ADM_COL_SPC_SMPTE2085:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","Y'D'zD'x")) break;
-            case ADM_COL_SPC_CHROMA_DERIVED_NCL:// = 12, ///< Chromaticity-derived non-constant luminance system
+            case ADM_COL_SPC_CHROMA_DERIVED_NCL:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","Chromaticity-derived non-constant")) break;
-            case ADM_COL_SPC_CHROMA_DERIVED_CL://  = 13, ///< Chromaticity-derived constant luminance system
+            case ADM_COL_SPC_CHROMA_DERIVED_CL:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","Chromaticity-derived constant")) break;
-            case ADM_COL_SPC_ICTCP://       = 14  ///< ITU-R BT.2100-0, ICtCp
+            case ADM_COL_SPC_ICTCP:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","ICtCp")) break;
             default:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
