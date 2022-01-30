@@ -42,6 +42,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
         return;
 
 #define FILL(a) ui.a->setText(QString::fromUtf8(text));
+#define FILLTEXT0(a,c) { snprintf(text,MXL,"%s",c); FILL(a) }
 #define FILLTEXT(a,b,c) { snprintf(text,MXL,b,c); FILL(a) }
 #define FILLTEXT4(a,b,c,d) { snprintf(text,MXL,b,c,d); FILL(a) }
 #define FILLTEXT5(a,b,c,d,e) { snprintf(text,MXL,b,c,d,e); FILL(a) }
@@ -75,6 +76,172 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
     snprintf(text, MXL, QT_TRANSLATE_NOOP("qprops","%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
 
     FILL(labelVideoDurationValue)
+
+    ADM_pixelFormat  pixfrmt;
+    ADM_colorRange  range;
+    ADM_colorPrimaries colorPrim;
+    ADM_colorTrC    colorTrc;
+    ADM_colorSpace  colorSpace;            
+    if (video_body->getVideoPixelAndColorInfo(&pixfrmt, &range, &colorPrim, &colorTrc, &colorSpace))
+    {
+        switch(pixfrmt)
+        {
+            case ADM_PIXFRMT_RGB24:
+            case ADM_PIXFRMT_BGR24:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","RGB, 8-bit")) break;
+            case ADM_PIXFRMT_GBR24P:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","planar RGB, 8-bit")) break;
+            case ADM_PIXFRMT_BGR32A:
+            case ADM_PIXFRMT_RGB32A:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","RGBA, 8-bit")) break;
+            case ADM_PIXFRMT_RGB555:
+            case ADM_PIXFRMT_BGR555:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","RGB, 5-bit")) break;
+            case ADM_PIXFRMT_YV12:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:2:0, 8-bit")) break;
+            case ADM_PIXFRMT_NV12:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:2:0 (NV12), 8-bit")) break;
+            case ADM_PIXFRMT_YUV422:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","packed YUV 4:2:2, 8-bit")) break;
+            case ADM_PIXFRMT_UYVY422:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","packed YUV 4:2:2, 8-bit")) break;
+            case ADM_PIXFRMT_YUV422P:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:2:2, 8-bit")) break;
+            case ADM_PIXFRMT_YUV411:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:1:1, 8-bit")) break;
+            case ADM_PIXFRMT_YUV444:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:4:4, 8-bit")) break;
+            case ADM_PIXFRMT_Y8:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","grayscale Y, 8-bit")) break;
+            case ADM_PIXFRMT_YUV444_10BITS:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:4:4, 10-bit")) break;
+            case ADM_PIXFRMT_NV12_10BITS:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:2:0 (P010), 10-bit")) break;
+            case ADM_PIXFRMT_YUV420_10BITS:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:2:0, 10-bit")) break;
+            case ADM_PIXFRMT_YUV420_12BITS:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:2:0, 12-bit")) break;
+            case ADM_PIXFRMT_YUV422_10BITS:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:2:2, 10-bit")) break;
+            case ADM_PIXFRMT_YUV444_12BITS :
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:4:4, 12-bit")) break;
+            default:
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+        }
+        switch (range)
+        {
+            case ADM_COL_RANGE_MPEG:
+                FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","limited (MPEG)")) break;
+            case ADM_COL_RANGE_JPEG:
+                FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","full (JPEG)")) break;
+            default:
+                FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+        }
+        switch (colorPrim)
+        {
+            case ADM_COL_PRI_BT709:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","BT.709")) break;
+            case ADM_COL_PRI_BT470M:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","BT.470 System M")) break;
+            case ADM_COL_PRI_BT470BG:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","BT.601 PAL")) break;
+            case ADM_COL_PRI_SMPTE170M:
+            case ADM_COL_PRI_SMPTE240M:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","BT.601 NTSC")) break;
+            case ADM_COL_PRI_FILM:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","Generic film")) break;
+            case ADM_COL_PRI_BT2020:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","BT.2020")) break;
+            case ADM_COL_PRI_SMPTE428:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","XYZ")) break;
+            case ADM_COL_PRI_SMPTE431:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","DCI P3")) break;
+            case ADM_COL_PRI_SMPTE432:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","Display P3")) break;
+            case ADM_COL_PRI_EBU3213:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","EBU Tech. 3213")) break;
+            default:
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+        }
+        switch (colorTrc)
+        {
+            case ADM_COL_TRC_BT709:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","BT.709")) break;
+            case ADM_COL_TRC_GAMMA22:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","BT.470 System M")) break;
+            case ADM_COL_TRC_GAMMA28:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","BT.470 System B/G")) break;
+            case ADM_COL_TRC_SMPTE170M:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","BT.601")) break;
+            case ADM_COL_TRC_SMPTE240M:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","SMPTE 240M")) break;
+            case ADM_COL_TRC_LINEAR:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","Linear")) break;
+            case ADM_COL_TRC_LOG:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","Logarithmic (100:1)")) break;
+            case ADM_COL_TRC_LOG_SQRT:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","Logarithmic (316.227:1)")) break;
+            case ADM_COL_TRC_IEC61966_2_4:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","xvYCC")) break;
+            case ADM_COL_TRC_BT1361_ECG:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","BT.1361")) break;
+            case ADM_COL_TRC_IEC61966_2_1:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","sRGB/sYCC")) break;
+            case ADM_COL_TRC_BT2020_10:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","BT.2020 (10-bit)")) break;
+            case ADM_COL_TRC_BT2020_12:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","BT.2020 (12-bit)")) break;
+            case ADM_COL_TRC_SMPTE2084:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","PQ")) break;
+            case ADM_COL_TRC_SMPTE428:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","SMPTE 428M")) break;
+            case ADM_COL_TRC_ARIB_STD_B67:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","HLG")) break;
+            default:
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+        }
+        switch (colorSpace)
+        {
+            case ADM_COL_SPC_sRGB://        = 0,  ///< order of coefficients is actually GBR, also IEC 61966-2-1 (sRGB)
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","sRGB")) break;
+            case ADM_COL_SPC_BT709://       = 1,  ///< also ITU-R BT1361 / IEC 61966-2-4 xvYCC709 / SMPTE RP177 Annex B
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.709")) break;
+            case ADM_COL_SPC_FCC://         = 4,  ///< FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","FCC 73.682")) break;
+            case ADM_COL_SPC_BT470BG://     = 5,  ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM / IEC 61966-2-4 xvYCC601
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.470 System B/G")) break;
+            case ADM_COL_SPC_SMPTE170M://   = 6,  ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.601")) break;
+            case ADM_COL_SPC_SMPTE240M://   = 7,  ///< functionally identical to above
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","SMPTE 240M")) break;
+            case ADM_COL_SPC_YCGCO://       = 8,  ///< Used by Dirac / VC-2 and H.264 FRext, see ITU-T SG16
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","YCgCo")) break;
+            case ADM_COL_SPC_BT2020_NCL://  = 9,  ///< ITU-R BT2020 non-constant luminance system
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.2020 non-constant")) break;
+            case ADM_COL_SPC_BT2020_CL://   = 10, ///< ITU-R BT2020 constant luminance system
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","BT.2020 constant")) break;
+            case ADM_COL_SPC_SMPTE2085://   = 11, ///< SMPTE 2085, Y'D'zD'x
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","Y'D'zD'x")) break;
+            case ADM_COL_SPC_CHROMA_DERIVED_NCL:// = 12, ///< Chromaticity-derived non-constant luminance system
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","Chromaticity-derived non-constant")) break;
+            case ADM_COL_SPC_CHROMA_DERIVED_CL://  = 13, ///< Chromaticity-derived constant luminance system
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","Chromaticity-derived constant")) break;
+            case ADM_COL_SPC_ICTCP://       = 14  ///< ITU-R BT.2100-0, ICtCp
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","ICtCp")) break;
+            default:
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+            
+        }
+    }
+    else
+    {
+        FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","n/a"))
+        FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","n/a"))
+        FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","n/a"))
+        FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","n/a"))
+        FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","n/a"))
+    }
+            
 
     uint32_t extraLen = 0;
     uint8_t *extraData;
@@ -222,6 +389,11 @@ void propWindow::showEvent(QShowEvent *event)
     MAXME(labelFrameRate)
     MAXME(labelVideoBitrate)
     MAXME(labelVideoDuration)
+    MAXME(labelPixelFormat)
+    MAXME(labelColorRange)
+    MAXME(labelColorPrimaries)
+    MAXME(labelTransferCharacteristics)
+    MAXME(labelColorSpace)
     MAXME(labelACodec)
     MAXME(labelChannels)
     MAXME(labelAudioBitrate)
@@ -250,6 +422,11 @@ void propWindow::showEvent(QShowEvent *event)
     MAXME(labelFrameRateValue)
     MAXME(labelVideoBitrateValue)
     MAXME(labelVideoDurationValue)
+    MAXME(labelPixelFormatValue)
+    MAXME(labelColorRangeValue)
+    MAXME(labelColorPrimariesValue)
+    MAXME(labelTransferCharacteristicsValue)
+    MAXME(labelColorSpaceValue)
     MAXME(labelACodecName)
     MAXME(labelChannelsValue)
     MAXME(labelAudioBitrateValue)
@@ -292,7 +469,12 @@ void propWindow::propsCopyToClipboard(void)
     ADDNAMEVALUE(labelFrameRate,labelFrameRateValue)
     ADDNAMEVALUE(labelVideoBitrate,labelVideoBitrateValue)
     ADDNAMEVALUE(labelVideoDuration,labelVideoDurationValue)
-
+    ADDNAMEVALUE(labelPixelFormat, labelPixelFormatValue)
+    ADDNAMEVALUE(labelColorRange, labelColorRangeValue)
+    ADDNAMEVALUE(labelColorPrimaries, labelColorPrimariesValue)
+    ADDNAMEVALUE(labelTransferCharacteristics, labelTransferCharacteristicsValue)
+    ADDNAMEVALUE(labelColorSpace, labelColorSpaceValue)
+            
     ADDCATEGORY(groupBoxExtradata)
 
     ADDNAMEVALUE(labelExtraDataSize,labelExtraDataSizeValue)
