@@ -54,6 +54,7 @@ ADM_Composer::ADM_Composer (void)
   _scratch=NULL;
   _undo_counter=0;
   currentProjectName=std::string("");
+  _blankImageForInfo=NULL;
 
   _currentPts = 0;
   markerAPts = 0;
@@ -389,6 +390,24 @@ bool ADM_Composer::getTimeBase(uint32_t *scale, uint32_t *rate, bool copyMode)
     *scale=myscale;
     *rate=myrate;
 
+    return true;
+}
+
+
+/**
+    \fn getVideoPixelAndColorInfo
+*/
+bool ADM_Composer::getVideoPixelAndColorInfo(ADM_pixelFormat * pixfrmt, ADM_colorRange * range, ADM_colorPrimaries * colorPrim, ADM_colorTrC * colorTrc, ADM_colorSpace * colorSpace)
+{
+    if (_blankImageForInfo == NULL)
+        return false;
+    if (pixfrmt==NULL || range==NULL || colorPrim==NULL || colorTrc==NULL || colorSpace==NULL)
+        return false;
+    *pixfrmt = _blankImageForInfo->_pixfrmt;
+    *range = _blankImageForInfo->_range;
+    *colorPrim = _blankImageForInfo->_colorPrim;
+    *colorTrc = _blankImageForInfo->_colorTrc;
+    *colorSpace = _blankImageForInfo->_colorSpace;
     return true;
 }
 
@@ -932,6 +951,11 @@ uint8_t ADM_Composer::cleanup (void)
          _imageBuffer=NULL;
      }  
   
+    if (_blankImageForInfo)
+    {
+        delete _blankImageForInfo;
+        _blankImageForInfo = NULL;
+    }
   _segments.deleteAll();
   _currentPts = 0;
   _currentSegment = 0;

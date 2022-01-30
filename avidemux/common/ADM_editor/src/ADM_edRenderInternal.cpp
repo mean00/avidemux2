@@ -406,6 +406,14 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         out->_noPicture=1;
         return true;
     }
+    
+    if (_blankImageForInfo==NULL)
+    {
+        _blankImageForInfo = new ADMImageRef(tmpImage->_width,tmpImage->_height);
+        _blankImageForInfo->copyInfo(tmpImage);
+        _blankImageForInfo->_pixfrmt = tmpImage->_pixfrmt;
+    }
+    
     aprintf("[::Decompress] in:%" PRIu64" out:%" PRIu64" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
     // If not quant and it is already YV12, we can stop here
     // Also, if the image is decoded through hw, dont do post proc

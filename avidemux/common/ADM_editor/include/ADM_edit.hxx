@@ -300,7 +300,11 @@ public:
                     uint64_t    getFrameIncrement(bool forCopyMode=false); /// Returns the # of us between 2 frames or the smaller value of them
                     int         getVideoCount(void);
                     bool        getTimeBase(uint32_t *scale, uint32_t *rate, bool forCopyMode=false); // common timebase or an approximation for all videos within the selection
-
+                    
+private:
+                    ADMImageRef * _blankImageForInfo;
+public:
+                    bool        getVideoPixelAndColorInfo(ADM_pixelFormat * pixfrmt, ADM_colorRange * range, ADM_colorPrimaries * colorPrim, ADM_colorTrC * colorTrc, ADM_colorSpace * colorSpace);
 /**************************************** /Video Info **************************/
 /***************************************** Project Handling ********************/
 public:
