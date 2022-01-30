@@ -52,14 +52,15 @@ bool flyDelogoHQ::setMask(ADMImage * newMask)
 */
 void flyDelogoHQ::createBuffers(void)
 {
-    ADMVideoDelogoHQ::DelogoHQCreateBuffers(_w, _h, &rgbBufStride, &rgbBufRaw, &rgbBufImage, &convertYuvToRgb, &convertRgbToYuv);
+    ADMVideoDelogoHQ::DelogoHQCreateBuffers(_w, _h, &plYuvStride, &plYuvBuf, &toLinLut, &toLumaLut);
+
 }
 /**
     \fn destroyBuffers
 */
 void flyDelogoHQ::destroyBuffers(void)
 {
-    ADMVideoDelogoHQ::DelogoHQDestroyBuffers(rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
+    ADMVideoDelogoHQ::DelogoHQDestroyBuffers(plYuvBuf, toLinLut, toLumaLut);
 }
 /**
     \fn processYuv
@@ -82,7 +83,7 @@ uint8_t   flyDelogoHQ::processYuv(ADMImage *in,ADMImage *out )
         //out->printString(1,1,"Original");
     } else {
         // Do it!
-        ADMVideoDelogoHQ::DelogoHQProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),mask,maskHint,param.blur,param.gradient, rgbBufStride, rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
+        ADMVideoDelogoHQ::DelogoHQProcess_C(out,in->GetWidth(PLANAR_Y),in->GetHeight(PLANAR_Y),mask,maskHint,param.blur,param.gradient, plYuvStride, plYuvBuf, toLinLut, toLumaLut);
         //out->printString(1,1,"Processed"); 
     }
 

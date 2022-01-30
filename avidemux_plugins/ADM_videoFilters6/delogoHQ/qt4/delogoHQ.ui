@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>585</width>
-    <height>424</height>
+    <width>641</width>
+    <height>456</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,13 +74,10 @@
       <string>Post-processing</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="2">
-       <widget class="QSlider" name="horizontalSliderBlur">
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="0" column="4">
+       <widget class="QLabel" name="labelGradient">
+        <property name="text">
+         <string>Gradient</string>
         </property>
        </widget>
       </item>
@@ -91,15 +88,18 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="labelGradient">
-        <property name="text">
-         <string>Gradient</string>
+      <item row="0" column="6">
+       <widget class="QSpinBox" name="spinBoxGradient">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QSlider" name="horizontalSliderGradient">
+      <item row="0" column="1">
+       <widget class="QSlider" name="horizontalSliderBlur">
         <property name="maximum">
          <number>100</number>
         </property>
@@ -108,19 +108,56 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
+      <item row="0" column="5">
+       <widget class="QSlider" name="horizontalSliderGradient">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="pageStep">
+         <number>10</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
        <widget class="QSpinBox" name="spinBoxBlur">
         <property name="maximum">
          <number>100</number>
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QSpinBox" name="spinBoxGradient">
-        <property name="maximum">
-         <number>100</number>
+      <item row="0" column="3">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-       </widget>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>30</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
@@ -161,7 +198,6 @@
   <tabstop>pushButtonSave</tabstop>
   <tabstop>pushButtonLoad</tabstop>
   <tabstop>horizontalSliderBlur</tabstop>
-  <tabstop>horizontalSliderGradient</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>graphicsView</tabstop>
   <tabstop>lineEditImage</tabstop>

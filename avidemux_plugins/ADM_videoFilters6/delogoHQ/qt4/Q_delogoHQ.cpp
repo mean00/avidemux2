@@ -230,6 +230,7 @@ void Ui_delogoHQWindow::valueChangedSpinBox(int foo)
     myFly->sameImage();
     lock--;
 }
+
 void Ui_delogoHQWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())
@@ -263,6 +264,9 @@ uint8_t flyDelogoHQ::upload(void)
     UPLOADSPIN(Blur, param.blur);
     MYSLIDER(Gradient)->setValue((int)param.gradient);
     UPLOADSPIN(Gradient, param.gradient);
+    MYSLIDER(Gradient)->setEnabled(param.blur > 0);
+    MYSPIN(Gradient)->setEnabled(param.blur > 0);
+    w->labelGradient->setEnabled(param.blur > 0);
     return 1;
 }
 
@@ -271,6 +275,9 @@ uint8_t flyDelogoHQ::download(void)
     Ui_delogoHQDialog *w=(Ui_delogoHQDialog *)_cookie;
     param.blur=(int)MYSLIDER(Blur)->value();
     param.gradient=(int)MYSLIDER(Gradient)->value();
+    MYSLIDER(Gradient)->setEnabled(param.blur > 0);
+    MYSPIN(Gradient)->setEnabled(param.blur > 0);
+    w->labelGradient->setEnabled(param.blur > 0);
     return 1;
 }
 
@@ -280,6 +287,7 @@ void flyDelogoHQ::setTabOrder(void)
     std::vector<QWidget *> controls;
 #define PUSH_SLIDER(x) controls.push_back(MYSLIDER(x));
 #define PUSH_SPIN(x) controls.push_back(MYSPIN(x));
+#define PUSH_COMBOX(x) controls.push_back(MYCOMBOX(x));
 #define PUSH_DIAL(x) controls.push_back(MYDIAL(x));
 #define PUSH_TOG(x) controls.push_back(MYCHECK(x));
     controls.push_back(w->pushButtonSave);

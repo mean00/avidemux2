@@ -48,61 +48,56 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoDelogoHQ,   // Class
 /**
     \fn DelogoHQCreateBuffers
 */
-void ADMVideoDelogoHQ::DelogoHQCreateBuffers(int w, int h, int * rgbBufStride, ADM_byteBuffer ** rgbBufRaw, ADMImageRef ** rgbBufImage, ADMColorScalerFull ** convertYuvToRgb, ADMColorScalerFull ** convertRgbToYuv)
+void ADMVideoDelogoHQ::DelogoHQCreateBuffers(int w, int h, int * plYuvStride, uint16_t ** plYuvBuf, uint16_t ** toLinLut, uint8_t ** toLumaLut)
 {
-    *rgbBufStride = ADM_IMAGE_ALIGN(w * 4);
-    *rgbBufRaw = new ADM_byteBuffer();
-    if (*rgbBufRaw)
-        (*rgbBufRaw)->setSize(*rgbBufStride * h * 2);
-    *convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_PIXFRMT_YV12,ADM_PIXFRMT_RGB32A);
-    *convertRgbToYuv = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_PIXFRMT_RGB32A,ADM_PIXFRMT_YV12);
-    *rgbBufImage = new ADMImageRef(w,h);
-    if (*rgbBufImage)
+    *plYuvStride = w*4;
+    *plYuvBuf = new uint16_t [w*h*4*3];
+    *toLinLut = new uint16_t [256];
+    *toLumaLut = new uint8_t [4096];
+    for (int i=0; i<256; i++)
     {
-        (*rgbBufImage)->_pixfrmt = ADM_PIXFRMT_RGB32A;
-        (*rgbBufImage)->_planes[0] = (*rgbBufRaw)->at(0);
-        (*rgbBufImage)->_planes[1] = (*rgbBufImage)->_planes[2] = NULL;
-        (*rgbBufImage)->_planeStride[0] = *rgbBufStride;
-        (*rgbBufImage)->_planeStride[1] = (*rgbBufImage)->_planeStride[2] = 0;
+        (*toLinLut)[i] = std::pow(i/255.0, 2.2)*65535.0 + 0.49;
+    }
+    for (int i=0; i<4096; i++)
+    {
+        (*toLumaLut)[i] = std::pow(i/4095.0, 1.0/2.2)*255.0 + 0.49;
     }
 }
 /**
     \fn DelogoHQDestroyBuffers
 */
-void ADMVideoDelogoHQ::DelogoHQDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
+void ADMVideoDelogoHQ::DelogoHQDestroyBuffers(uint16_t * plYuvBuf, uint16_t * toLinLut, uint8_t * toLumaLut)
 {
-    if (convertYuvToRgb) delete convertYuvToRgb;
-    if (convertRgbToYuv) delete convertRgbToYuv;
-    if (rgbBufRaw) rgbBufRaw->clean();
-    if (rgbBufImage) delete rgbBufImage;
-    if (rgbBufRaw) delete rgbBufRaw;
+    delete [] plYuvBuf;
+    delete [] toLinLut;
+    delete [] toLumaLut;
 }
 /**
     \fn BoxBlurLine_C
 */
-void ADMVideoDelogoHQ::BoxBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius)
+void ADMVideoDelogoHQ::BoxBlurLine_C(uint16_t * line, int len, int pixPitch, uint64_t * stack, unsigned int radius)
 {
-    uint_fast32_t div;
-    uint_fast32_t mul_sum;
-    uint_fast32_t shr_sum;
+    uint64_t div;
+    uint64_t mul_sum;
+    #define shr_sum (14)
 
-    uint_fast32_t l, p, i;
-    uint_fast32_t stack_ptr;
+    uint64_t l, p, i;
+    uint64_t stack_ptr;
 
-    const uint8_t * src_pix_ptr;
-          uint8_t * dst_pix_ptr;
-    uint8_t *     stack_pix_ptr;
+    const uint16_t * src_pix_ptr;
+          uint16_t * dst_pix_ptr;
+    uint16_t *     stack_pix_ptr;
 
-    uint_fast32_t sum_r = 0;
-    uint_fast32_t sum_g = 0;
-    uint_fast32_t sum_b = 0;
+    uint64_t sum_r = 0;
+    uint64_t sum_g = 0;
+    uint64_t sum_b = 0;
+    uint64_t mulsum_r,mulsum_g,mulsum_b;
 
-    uint_fast32_t lm  = len - 1;
+    uint64_t lm  = len - 1;
 
     if ((radius > 0) && (len > 1))
     {
         div = radius * 2 + 1;
-        shr_sum = 14;
         mul_sum = (1 << shr_sum)/div;
 
         for(i = 0; i <= radius; i++)
@@ -111,8 +106,8 @@ void ADMVideoDelogoHQ::BoxBlurLine_C(uint8_t * line, int len, int pixPitch, uint
                 src_pix_ptr = line + pixPitch*lm;
             else
                 src_pix_ptr = line + pixPitch*(radius - i);    // fix flickering at the T/L edges, by reflecting the image backward
-            stack_pix_ptr    = (uint8_t *)&stack[i];
-            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+            stack_pix_ptr    = (uint16_t *)&stack[i];
+            *(uint64_t*)stack_pix_ptr = *(uint64_t*)src_pix_ptr;
             sum_r       += src_pix_ptr[0];
             sum_g       += src_pix_ptr[1];
             sum_b       += src_pix_ptr[2];
@@ -121,8 +116,8 @@ void ADMVideoDelogoHQ::BoxBlurLine_C(uint8_t * line, int len, int pixPitch, uint
         for(i = 1; i <= radius; i++)
         {
             if(i <= lm) src_pix_ptr += pixPitch; 
-            stack_pix_ptr = (uint8_t *)&stack[i + radius];
-            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+            stack_pix_ptr = (uint16_t *)&stack[i + radius];
+            *(uint64_t*)stack_pix_ptr = *(uint64_t*)src_pix_ptr;
             sum_r        += src_pix_ptr[0];
             sum_g        += src_pix_ptr[1];
             sum_b        += src_pix_ptr[2];
@@ -139,20 +134,23 @@ void ADMVideoDelogoHQ::BoxBlurLine_C(uint8_t * line, int len, int pixPitch, uint
             sum_g += src_pix_ptr[1];
             sum_b += src_pix_ptr[2];
 
-            stack_pix_ptr = (uint8_t *)&stack[stack_ptr];
+            stack_pix_ptr = (uint16_t *)&stack[stack_ptr];
 
             sum_r  -= stack_pix_ptr[0];
             sum_g  -= stack_pix_ptr[1];
             sum_b  -= stack_pix_ptr[2];
 
-            *(uint32_t*)stack_pix_ptr = *(uint32_t*)src_pix_ptr;
+            *(uint64_t*)stack_pix_ptr = *(uint64_t*)src_pix_ptr;
 
             stack_ptr++;
             if(stack_ptr >= div) stack_ptr = 0;
 
-            dst_pix_ptr[0] = (sum_r * mul_sum) >> shr_sum;
-            dst_pix_ptr[1] = (sum_g * mul_sum) >> shr_sum;
-            dst_pix_ptr[2] = (sum_b * mul_sum) >> shr_sum;
+            mulsum_r = (sum_r * mul_sum);
+            mulsum_g = (sum_g * mul_sum);
+            mulsum_b = (sum_b * mul_sum);
+            dst_pix_ptr[0] = (mulsum_r >> shr_sum) + ((mulsum_r >> (shr_sum-1)) & 1);   // rounding
+            dst_pix_ptr[1] = (mulsum_g >> shr_sum) + ((mulsum_g >> (shr_sum-1)) & 1);
+            dst_pix_ptr[2] = (mulsum_b >> shr_sum) + ((mulsum_b >> (shr_sum-1)) & 1);
             dst_pix_ptr   += pixPitch;
 
             if(p < lm) 
@@ -166,13 +164,12 @@ void ADMVideoDelogoHQ::BoxBlurLine_C(uint8_t * line, int len, int pixPitch, uint
 /**
     \fn DelogoHQProcess_C
 */
-void ADMVideoDelogoHQ::DelogoHQProcess_C(ADMImage *img, int w, int h, int * mask, int * maskHint, uint32_t blur, uint32_t gradient, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv)
+void ADMVideoDelogoHQ::DelogoHQProcess_C(ADMImage *img, int w, int h, int * mask, int * maskHint, uint32_t blur, uint32_t gradient, int plYuvStride, uint16_t * plYuvBuf, uint16_t * toLinLut, uint8_t * toLumaLut)
 {
-    if (!img || !mask || !rgbBufRaw || !rgbBufImage || !convertYuvToRgb || !convertRgbToYuv) return;
-    uint8_t *p, * q, *s;
+    if (!img || !mask || !plYuvBuf || !toLinLut || !toLumaLut) return;
     int i,x,y,t;
 
-    uint32_t * stack = (uint32_t *)malloc(512 * sizeof(uint32_t));    // max 254*2+1=509 needed
+    uint64_t * stack = (uint64_t *)malloc(512 * sizeof(uint64_t));    // max 254*2+1=509 needed
     if (!stack) return;
 
     if (blur > 250) blur = 250;
@@ -202,130 +199,225 @@ void ADMVideoDelogoHQ::DelogoHQProcess_C(ADMImage *img, int w, int h, int * mask
     if (mAreaX <= 0) return;    // nothing to do
     if (mAreaY <= 0) return;    // nothing to do
 
-    convertYuvToRgb->convertImage(img,rgbBufRaw->at(0));
+    uint8_t * Yptr=img->GetWritePtr(PLANAR_Y);
+    int Ystride=img->GetPitch(PLANAR_Y);
+    uint8_t * Uptr=img->GetWritePtr(PLANAR_U);
+    int Ustride=img->GetPitch(PLANAR_U);
+    uint8_t * Vptr=img->GetWritePtr(PLANAR_V);
+    int Vstride=img->GetPitch(PLANAR_V);
+    
+    uint16_t * plYuvLine;
+    uint8_t * Yline, * Uline, * Vline;
+    for (int y=0; y<h; y++)
+    {
+        plYuvLine = plYuvBuf + y*plYuvStride;
+        Yline = Yptr + y*Ystride;
+        Uline = Uptr + (y/2)*Ustride;
+        Vline = Vptr + (y/2)*Vstride;
+        for (int x=0; x<w; x++)
+        {
+            *plYuvLine = toLinLut[*Yline];
+            plYuvLine++;
+            *plYuvLine = *Uline;
+            plYuvLine++;
+            *plYuvLine = *Vline;
+            plYuvLine++;
+            plYuvLine++;
+            Yline++;
+            if (x%2)
+            {
+                Uline++;
+                Vline++;
+            }
+        }
+    }
 
     int currLevel = 1;
     int radius;
     int nl,rx,ry;
-    int r,g,b,ravg,gavg,bavg,nsum,lum;
+    uint16_t *p, * q, *s;
+    int64_t sY,sU,sV,sumY,sumU,sumV,sumW,sumCW;
     radius = 3;
     do {
         nl = 0;
         for(y=maskMinY; y<=maskMaxY; y++)
         {
-            p = rgbBufRaw->at(y*rgbBufStride);
+            p = plYuvBuf + y*plYuvStride;
             for(x=maskMinX; x<=maskMaxX; x++)
             {
                 if (mask[y*w+x] == currLevel)
                 {
                     nl++;
-                    ravg = gavg = bavg = nsum = 0;
+                    sumY = sumU = sumV = sumW = sumCW = 0;
                     for (ry=-radius; ry<=radius; ry++)
                     {
                         if ((y+ry) < 0) continue;
                         if ((y+ry) >= h) continue;
-                        s = rgbBufRaw->at((y+ry)*rgbBufStride);
+                        s = plYuvBuf + (y+ry)*plYuvStride;
                         for (rx=-radius;rx<=radius; rx++)
                         {
                             if ((x+rx) < 0) continue;
                             if ((x+rx) >= w) continue;
                             if (mask[(y+ry)*w+(x+rx)] < currLevel)
                             {
-                                r = *(s+(x+rx)*4+0);
-                                g = *(s+(x+rx)*4+1);
-                                b = *(s+(x+rx)*4+2);
-                                lum = r+g+b;
-                                lum = std::sqrt(lum);//= 32;
-                                ravg += r * (lum+currLevel-mask[(y+ry)*w+(x+rx)]);
-                                gavg += g * (lum+currLevel-mask[(y+ry)*w+(x+rx)]);
-                                bavg += b * (lum+currLevel-mask[(y+ry)*w+(x+rx)]);
-                                nsum += (lum+currLevel-mask[(y+ry)*w+(x+rx)]);
+                                sY = *(s+(x+rx)*4+0);
+                                sU = *(s+(x+rx)*4+1);
+                                sV = *(s+(x+rx)*4+2);
+                                sumY += sY * (currLevel-mask[(y+ry)*w+(x+rx)]);
+                                sumU += sU * (currLevel-mask[(y+ry)*w+(x+rx)]) * sY;
+                                sumV += sV * (currLevel-mask[(y+ry)*w+(x+rx)]) * sY;
+                                sumW += (currLevel-mask[(y+ry)*w+(x+rx)]);
+                                sumCW += (currLevel-mask[(y+ry)*w+(x+rx)]) * sY;
+                                //sumW += (lum+currLevel-mask[(y+ry)*w+(x+rx)]);
                             }
                         }
                     }
-                    if (nsum > 0)
+                    if (sumW > 0)
                     {
-                        ravg /= nsum;
-                        gavg /= nsum;
-                        bavg /= nsum;
+                        lldiv_t res;
+                        res = lldiv(sumY,sumW); // slightly faster than doing division and modulo separately
+                        sumY = res.quot + ((res.rem > sumW/2) ? 1:0); // rounding
+                        res = lldiv(sumU,sumCW);
+                        sumU = res.quot + ((res.rem > sumCW/2) ? 1:0);
+                        res = lldiv(sumV,sumCW);
+                        sumV = res.quot + ((res.rem > sumCW/2) ? 1:0);
                     }
                     q = p + x*4;
-                    *(q+0) = ravg;
-                    *(q+1) = gavg;
-                    *(q+2) = bavg;
+                    *(q+0) = sumY;
+                    *(q+1) = sumU;
+                    *(q+2) = sumV;
                 }
             }
         }
         currLevel++;
     } while (nl > 0);
 
-    memcpy(rgbBufRaw->at(h*rgbBufStride), rgbBufRaw->at(0), h*rgbBufStride);
-
-    if (blur > 0)
+    //now currLevel == max+1
+    currLevel -= 1;
+    
+    if ((blur > 0) && (currLevel > 0))
     {
-        //for(y = 0; y < h; y++)
-        for(y=maskMinY; y<=maskMaxY; y++)
+        if (gradient == 0)
         {
-            //BoxBlurLine_C(rgbBufRaw->at((h+y)*rgbBufStride), w, 4, stack, blur);
-            BoxBlurLine_C(rgbBufRaw->at((h+y)*rgbBufStride+4*maskMinX), (maskMaxX-maskMinX), 4, stack, blur);
-        }
+            memcpy(plYuvBuf + h*plYuvStride, plYuvBuf, h*plYuvStride*sizeof(uint16_t));
+            for(y=maskMinY; y<=maskMaxY; y++)
+                BoxBlurLine_C(plYuvBuf + (h+y)*plYuvStride + 4*maskMinX, (maskMaxX-maskMinX), 4, stack, blur);
 
-        //for(x = 0; x < w; x++)
-        for(x=maskMinX; x<=maskMaxX; x++)
-        {
-            //BoxBlurLine_C(rgbBufRaw->at(h*rgbBufStride+x*4), h, rgbBufStride, stack, blur);
-            BoxBlurLine_C(rgbBufRaw->at((h+maskMinY)*rgbBufStride+(x)*4), (maskMaxY-maskMinY), rgbBufStride, stack, blur);
-        }
-
-
-        for(y=maskMinY; y<=maskMaxY; y++)
-        {
-            p = rgbBufRaw->at(y*rgbBufStride);
-            s = rgbBufRaw->at((h+y)*rgbBufStride);
             for(x=maskMinX; x<=maskMaxX; x++)
+                BoxBlurLine_C(plYuvBuf + (h+maskMinY)*plYuvStride + x*4, (maskMaxY-maskMinY), plYuvStride, stack, blur);
+
+            for(y=maskMinY; y<=maskMaxY; y++)
             {
-                if (mask[y*w+x] > 0)
+                p = plYuvBuf + y*plYuvStride;
+                s = plYuvBuf + (h+y)*plYuvStride;
+                for(x=maskMinX; x<=maskMaxX; x++)
                 {
-                    int a,b,c;
-                    //currLevel == max+1
-
-                    c = std::round(256.0-(5.12*gradient*((double)(currLevel - mask[y*w+x]))/currLevel));//std::pow(0.5,mask[y*w+x]*(1.0+gradient)/100.0)*256.0);
-                    if (c < 0) c = 0;
-                    c = (256-c);
-
-                    a = p[x*4+0];
-                    b = s[x*4+0];
-                    a *= c;
-                    b *= (256-c);
-                    a += b;
-                    a >>= 8;
-                    p[x*4+0] = a;
-
-                    a = p[x*4+1];
-                    b = s[x*4+1];
-                    a *= c;
-                    b *= (256-c);
-                    a += b;
-                    a >>= 8;
-                    p[x*4+1] = a;
-
-                    a = p[x*4+2];
-                    b = s[x*4+2];
-                    a *= c;
-                    b *= (256-c);
-                    a += b;
-                    a >>= 8;
-                    p[x*4+2] = a;
-
-                    /*p[x*4+0] = s[x*4+0];
-                    p[x*4+1] = s[x*4+1];
-                    p[x*4+2] = s[x*4+2];*/
+                    if (mask[y*w+x] > 0)
+                        memcpy(p+4*x, s+4*x, 4*sizeof(uint16_t));
                 }
+            }
+            
+        }
+        else    // gradient > 0
+        {
+            int lastBlur = -1;
+            double fracBlur = blur;
+            double fracBlur2 = blur;
+            fracBlur2 /= 2;
+            int currBlur;
+            double step,step2;
+            if (currLevel > 0)
+            {
+                step = 2.0*(gradient/100.0) * (double)blur / (double)currLevel;
+                step2 = (gradient/100.0) * (double)blur / (2.0*currLevel);
+            }
+            memcpy(plYuvBuf + h*plYuvStride, plYuvBuf, h*plYuvStride*sizeof(uint16_t));
+            while (currLevel > 0)
+            {
+                currBlur = std::round((fracBlur > fracBlur2) ? fracBlur:fracBlur2);
+                if (currBlur < 0)
+                    currBlur = 0;
+                if (currBlur > 250)
+                    currBlur = 250;
+                if (lastBlur != currBlur)
+                {
+                    lastBlur = currBlur;
+                    if (currBlur > 0)
+                    {
+                        memcpy(plYuvBuf + 2*h*plYuvStride, plYuvBuf + h*plYuvStride, h*plYuvStride*sizeof(uint16_t));
+                        for(y=maskMinY; y<=maskMaxY; y++)
+                            BoxBlurLine_C(plYuvBuf + (2*h+y)*plYuvStride + 4*maskMinX, (maskMaxX-maskMinX), 4, stack, currBlur);
+
+                        for(x=maskMinX; x<=maskMaxX; x++)
+                            BoxBlurLine_C(plYuvBuf + (2*h+maskMinY)*plYuvStride + x*4, (maskMaxY-maskMinY), plYuvStride, stack, currBlur);
+                    }
+                }
+                if (currBlur > 0)
+                {
+                    for(y=maskMinY; y<=maskMaxY; y++)
+                    {
+                        p = plYuvBuf + y*plYuvStride;
+                        s = plYuvBuf + (2*h+y)*plYuvStride;
+                        for(x=maskMinX; x<=maskMaxX; x++)
+                        {
+                            if (mask[y*w+x] == currLevel)
+                                memcpy(p+4*x, s+4*x, 4*sizeof(uint16_t));
+                        }
+                    }
+                }
+                fracBlur -= step;
+                fracBlur2 -= step2;
+                currLevel -= 1;
             }
         }
     }
 
-    convertRgbToYuv->convertImage(rgbBufImage,img);
+    for (int y=0; y<h; y++)
+    {
+        plYuvLine = plYuvBuf + y*plYuvStride;
+        Yline = Yptr + y*Ystride;
+        for (int x=0; x<w; x++)
+        {
+            *Yline = toLumaLut[*plYuvLine >> 4];
+            plYuvLine += 4;
+            Yline++;
+        }
+    }
+    
+    uint16_t * plYuvLineNext;
+    uint32_t avgU, avgV;
+    for (int y=0; y<h/2; y++)
+    {
+        Uline = Uptr + y*Ustride;
+        Vline = Vptr + y*Vstride;
+        plYuvLine = plYuvBuf + (y*2)*plYuvStride;
+        plYuvLineNext = plYuvBuf + (y*2+1)*plYuvStride;
+        for (int x=0; x<w/2; x++)
+        {
+            avgU  = plYuvLine[1];
+            avgU += plYuvLineNext[1];
+            avgU += plYuvLine[1+4];
+            avgU += plYuvLineNext[1+4];
+            avgV  = plYuvLine[2];
+            avgV += plYuvLineNext[2];
+            avgV += plYuvLine[2+4];
+            avgV += plYuvLineNext[2+4];
+            plYuvLine += 8;
+            plYuvLineNext += 8;
+            avgU /= 4;
+            avgV /= 4;
+            if (avgU > 255)
+                avgU = 255;
+            if (avgV > 255)
+                avgV = 255;
+            *Uline = avgU;
+            *Vline = avgV;
+            Uline++;
+            Vline++;
+        }
+        
+    }
+    
 
     free(stack);
 }
@@ -444,7 +536,7 @@ ADMVideoDelogoHQ::ADMVideoDelogoHQ(  ADM_coreVideoFilter *in,CONFcouple *couples
         _param.gradient = 0;
     }
     _mask = (int *)malloc(info.width * info.height * sizeof(int));
-    DelogoHQCreateBuffers(info.width,info.height, &(_rgbBufStride), &(_rgbBufRaw), &(_rgbBufImage), &(_convertYuvToRgb), &(_convertRgbToYuv));
+    DelogoHQCreateBuffers(info.width,info.height, &(_plYuvStride), &(_plYuvBuf), &(_toLinLut), &(_toLumaLut));
     reloadImage();
     update();
 }
@@ -482,7 +574,7 @@ void ADMVideoDelogoHQ::update(void)
 */
 ADMVideoDelogoHQ::~ADMVideoDelogoHQ()
 {
-    DelogoHQDestroyBuffers(_rgbBufRaw, _rgbBufImage, _convertYuvToRgb, _convertRgbToYuv);
+    DelogoHQDestroyBuffers(_plYuvBuf, _toLinLut, _toLumaLut);
     free(_mask);
 }
 /**
@@ -525,7 +617,7 @@ bool ADMVideoDelogoHQ::getNextFrame(uint32_t *fn,ADMImage *image)
 
     if(!previousFilter->getNextFrame(fn,image)) return false;
 
-    DelogoHQProcess_C(image,info.width,info.height,_mask,_maskHint,_blur,_gradient,_rgbBufStride,_rgbBufRaw, _rgbBufImage, _convertYuvToRgb, _convertRgbToYuv);
+    DelogoHQProcess_C(image,info.width,info.height,_mask,_maskHint,_blur,_gradient,_plYuvStride,_plYuvBuf, _toLinLut, _toLumaLut);
  
     return 1;
 }

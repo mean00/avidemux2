@@ -32,11 +32,10 @@ class  ADMVideoDelogoHQ:public ADM_coreVideoFilter
     int                   _maskHint[4];
     uint32_t              _blur;
     uint32_t              _gradient;
-    int                   _rgbBufStride;
-    ADM_byteBuffer *      _rgbBufRaw;
-    ADMImageRef *         _rgbBufImage;
-    ADMColorScalerFull *  _convertYuvToRgb;
-    ADMColorScalerFull *  _convertRgbToYuv;
+    int                   _plYuvStride;
+    uint16_t *            _plYuvBuf;
+    uint16_t *            _toLinLut;
+    uint8_t *             _toLumaLut;
   public:
     ADMVideoDelogoHQ(ADM_coreVideoFilter *in,CONFcouple *couples);
     ~ADMVideoDelogoHQ();
@@ -47,10 +46,10 @@ class  ADMVideoDelogoHQ:public ADM_coreVideoFilter
     virtual void          setCoupledConf(CONFcouple *couples);
     virtual bool          configure(void) ;                 /// Start graphical user interface        
 
-    static void DelogoHQCreateBuffers(int w, int h, int * rgbBufStride, ADM_byteBuffer ** rgbBufRaw, ADMImageRef ** rgbBufImage, ADMColorScalerFull ** convertYuvToRgb, ADMColorScalerFull ** convertRgbToYuv);
-    static void DelogoHQDestroyBuffers(ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv);
-    static void BoxBlurLine_C(uint8_t * line, int len, int pixPitch, uint32_t * stack, unsigned int radius);
-    static void DelogoHQProcess_C(ADMImage *img, int w, int h, int * mask, int * maskHint, uint32_t blur, uint32_t gradient, int rgbBufStride, ADM_byteBuffer * rgbBufRaw, ADMImageRef * rgbBufImage, ADMColorScalerFull * convertYuvToRgb, ADMColorScalerFull * convertRgbToYuv);
+    static void DelogoHQCreateBuffers(int w, int h, int * plYuvStride, uint16_t ** plYuvBuf, uint16_t ** toLinLut, uint8_t ** toLumaLut);
+    static void DelogoHQDestroyBuffers(uint16_t * plYuvBuf, uint16_t * toLinLut, uint8_t * toLumaLut);
+    static void BoxBlurLine_C(uint16_t * line, int len, int pixPitch, uint64_t * stack, unsigned int radius);
+    static void DelogoHQProcess_C(ADMImage *img, int w, int h, int * mask, int * maskHint, uint32_t blur, uint32_t gradient, int plYuvStride, uint16_t * plYuvBuf, uint16_t * toLinLut, uint8_t * toLumaLut);
     static void DelogoHQPrepareMask_C(int * mask, int * maskHint, int w, int h, ADMImage * maskImage);
 
   private:
