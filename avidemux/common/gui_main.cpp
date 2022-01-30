@@ -1503,7 +1503,11 @@ void    A_setHDRConfig( void )
     stagedActionSuccess = 0;
     if(!avifileinfo) return;
 
-    video_body->getHDRConfig(&method,&saturation,&boost);
+    if(!video_body->getHDRConfig(&method,&saturation,&boost))
+    {
+        method = 1;
+        saturation = boost = 1.;
+    }
 
      if(DIA_getHDRParams( &method, &saturation,&boost))
      {
