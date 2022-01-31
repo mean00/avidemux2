@@ -90,7 +90,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
             case ADM_PIXFRMT_BGR24:
                 FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","RGB, 8-bit")) break;
             case ADM_PIXFRMT_GBR24P:
-                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","planar RGB, 8-bit")) break;
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","Planar RGB, 8-bit")) break;
             case ADM_PIXFRMT_BGR32A:
             case ADM_PIXFRMT_RGB32A:
                 FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","RGBA, 8-bit")) break;
@@ -102,9 +102,9 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
             case ADM_PIXFRMT_NV12:
                 FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:2:0 (NV12), 8-bit")) break;
             case ADM_PIXFRMT_YUV422:
-                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","packed YUV 4:2:2, 8-bit")) break;
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","Packed YUV 4:2:2, 8-bit")) break;
             case ADM_PIXFRMT_UYVY422:
-                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","packed YUV 4:2:2, 8-bit")) break;
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","Packed YUV 4:2:2, 8-bit")) break;
             case ADM_PIXFRMT_YUV422P:
                 FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:2:2, 8-bit")) break;
             case ADM_PIXFRMT_YUV411:
@@ -112,7 +112,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
             case ADM_PIXFRMT_YUV444:
                 FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:4:4, 8-bit")) break;
             case ADM_PIXFRMT_Y8:
-                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","grayscale Y, 8-bit")) break;
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","Grayscale Y, 8-bit")) break;
             case ADM_PIXFRMT_YUV444_10BITS:
                 FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:4:4, 10-bit")) break;
             case ADM_PIXFRMT_NV12_10BITS:
@@ -126,16 +126,16 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
             case ADM_PIXFRMT_YUV444_12BITS :
                 FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","YUV 4:4:4, 12-bit")) break;
             default:
-                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+                FILLTEXT0(labelPixelFormatValue, QT_TRANSLATE_NOOP("qprops","Unknown")) break;
         }
         switch (range)
         {
             case ADM_COL_RANGE_MPEG:
-                FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","limited (MPEG)")) break;
+                FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","Limited (MPEG)")) break;
             case ADM_COL_RANGE_JPEG:
-                FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","full (JPEG)")) break;
+                FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","Full (JPEG)")) break;
             default:
-                FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+                FILLTEXT0(labelColorRangeValue, QT_TRANSLATE_NOOP("qprops","Unknown")) break;
         }
         switch (colorPrim)
         {
@@ -161,7 +161,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
             case ADM_COL_PRI_EBU3213:
                 FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","EBU Tech. 3213")) break;
             default:
-                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+                FILLTEXT0(labelColorPrimariesValue, QT_TRANSLATE_NOOP("qprops","Unknown")) break;
         }
         switch (colorTrc)
         {
@@ -198,7 +198,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
             case ADM_COL_TRC_ARIB_STD_B67:
                 FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","HLG")) break;
             default:
-                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+                FILLTEXT0(labelTransferCharacteristicsValue, QT_TRANSLATE_NOOP("qprops","Unknown")) break;
         }
         switch (colorSpace)
         {
@@ -229,7 +229,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
             case ADM_COL_SPC_ICTCP:
                 FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","ICtCp")) break;
             default:
-                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","unknown")) break;
+                FILLTEXT0(labelColorSpaceValue, QT_TRANSLATE_NOOP("qprops","Unknown")) break;
             
         }
     }
@@ -339,8 +339,6 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 
         FILLTEXT4(labelAudioBitrateValue, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Bps / %" PRIu32" kbps"), wavinfo->byterate, wavinfo->byterate * 8 / 1000)
 
-        FILLTEXT(labelVBRDetected,"%s","n/a")
-
         FILLTEXT(labelFrequencyValue, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), frequency)
 
         ms2time(duration/1000,&hh,&mm,&ss,&ms);
@@ -358,7 +356,6 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
         CLEAR(labelACodecName)
         CLEAR(labelChannelsValue)
         CLEAR(labelAudioBitrateValue)
-        CLEAR(labelVBRDetected)
         CLEAR(labelFrequencyValue)
         CLEAR(labelAudioDurationValue)
 #undef CLEAR
@@ -397,7 +394,6 @@ void propWindow::showEvent(QShowEvent *event)
     MAXME(labelACodec)
     MAXME(labelChannels)
     MAXME(labelAudioBitrate)
-    MAXME(labelVBR)
     MAXME(labelFrequency)
     MAXME(labelAudioDuration)
 
@@ -430,7 +426,6 @@ void propWindow::showEvent(QShowEvent *event)
     MAXME(labelACodecName)
     MAXME(labelChannelsValue)
     MAXME(labelAudioBitrateValue)
-    MAXME(labelVBRDetected)
     MAXME(labelFrequencyValue)
     MAXME(labelAudioDurationValue)
 
@@ -448,7 +443,7 @@ void propWindow::showEvent(QShowEvent *event)
 #define ADDNAMEVALUE(a,b) { \
     int l = ui.a->text().size(); \
     props += ui.a->text(); \
-    do { props += "\t"; l += 8; } while(l < 24); /* assuming tab width of 8 characters */ \
+    do { props += "\t"; l += 8; } while(l < 32); /* assuming tab width of 8 characters */ \
     props += ui.b->text() + "\n"; \
 }
 
@@ -490,7 +485,6 @@ void propWindow::propsCopyToClipboard(void)
         ADDNAMEVALUE(labelChannels,labelChannelsValue)
         ADDNAMEVALUE(labelAudioBitrate,labelAudioBitrateValue)
 
-        //ADDNAMEVALUE(labelVBR,labelVBRDetected)
         ADDNAMEVALUE(labelFrequency,labelFrequencyValue)
         ADDNAMEVALUE(labelAudioDuration,labelAudioDurationValue)
     }else

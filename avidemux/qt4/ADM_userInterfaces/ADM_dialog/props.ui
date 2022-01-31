@@ -38,6 +38,20 @@
       <property name="spacing">
        <number>6</number>
       </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label4CC">
+        <property name="text">
+         <string>Codec 4CC:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label4CCValue">
+        <property name="text">
+         <string>n/a</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="labelImageSize">
         <property name="text">
@@ -45,8 +59,8 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="labelVideoBitrateValue">
+      <item row="1" column="1">
+       <widget class="QLabel" name="labelImageSizeValue">
         <property name="text">
          <string>n/a</string>
         </property>
@@ -59,8 +73,8 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label4CCValue">
+      <item row="2" column="1">
+       <widget class="QLabel" name="labelAspectRatioValue">
         <property name="text">
          <string>n/a</string>
         </property>
@@ -73,8 +87,8 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
-       <widget class="QLabel" name="labelVideoDurationValue">
+      <item row="3" column="1">
+       <widget class="QLabel" name="labelFrameRateValue">
         <property name="text">
          <string>n/a</string>
         </property>
@@ -87,66 +101,10 @@
         </property>
        </widget>
       </item>
-      <item row="8" column="0">
-       <widget class="QLabel" name="labelColorPrimaries">
-        <property name="text">
-         <string>Color primaries:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="labelPixelFormat">
-        <property name="text">
-         <string>Pixel format:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QLabel" name="labelPixelFormatValue">
+      <item row="4" column="1">
+       <widget class="QLabel" name="labelVideoBitrateValue">
         <property name="text">
          <string>n/a</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="labelImageSizeValue">
-        <property name="text">
-         <string>n/a</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="labelAspectRatioValue">
-        <property name="text">
-         <string>n/a</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLabel" name="labelFrameRateValue">
-        <property name="text">
-         <string>n/a</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="labelColorRange">
-        <property name="text">
-         <string>Color range:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label4CC">
-        <property name="text">
-         <string>Codec 4CC:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="0">
-       <widget class="QLabel" name="labelTransferCharacteristics">
-        <property name="text">
-         <string>Transfer characteristics:</string>
         </property>
        </widget>
       </item>
@@ -157,35 +115,84 @@
         </property>
        </widget>
       </item>
-      <item row="10" column="0">
-       <widget class="QLabel" name="labelColorSpace">
+      <item row="5" column="1">
+       <widget class="QLabel" name="labelVideoDurationValue">
         <property name="text">
-         <string>Color space:</string>
+         <string>n/a</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="2">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="labelPixelFormat">
+        <property name="text">
+         <string>Pixel format:</string>
         </property>
        </widget>
       </item>
       <item row="7" column="1">
+       <widget class="QLabel" name="labelPixelFormatValue">
+        <property name="text">
+         <string>n/a</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="labelColorRange">
+        <property name="text">
+         <string>Color range:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
        <widget class="QLabel" name="labelColorRangeValue">
         <property name="text">
          <string>n/a</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
+      <item row="9" column="0">
+       <widget class="QLabel" name="labelColorPrimaries">
+        <property name="text">
+         <string>Color primaries:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
        <widget class="QLabel" name="labelColorPrimariesValue">
         <property name="text">
          <string>n/a</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
+      <item row="10" column="0">
+       <widget class="QLabel" name="labelTransferCharacteristics">
+        <property name="text">
+         <string>Transfer characteristics:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
        <widget class="QLabel" name="labelTransferCharacteristicsValue">
         <property name="text">
          <string>n/a</string>
         </property>
        </widget>
       </item>
-      <item row="10" column="1">
+      <item row="11" column="0">
+       <widget class="QLabel" name="labelColorSpace">
+        <property name="text">
+         <string>Color space:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
        <widget class="QLabel" name="labelColorSpaceValue">
         <property name="text">
          <string>n/a</string>
@@ -230,17 +237,17 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="labelExtraData">
-        <property name="text">
-         <string>Extradata:</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="lineEditExtraData">
         <property name="readOnly">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelExtraData">
+        <property name="text">
+         <string>Extradata:</string>
         </property>
        </widget>
       </item>
@@ -271,64 +278,15 @@
       <property name="spacing">
        <number>6</number>
       </property>
-      <item row="5" column="1">
-       <widget class="QLabel" name="labelAudioDurationValue">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelACodec">
         <property name="text">
-         <string>n/a</string>
+         <string>Codec:</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="labelAudioDuration">
-        <property name="text">
-         <string>Total Duration:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="labelFrequency">
-        <property name="text">
-         <string>Frequency:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="labelFrequencyValue">
-        <property name="text">
-         <string>n/a</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="labelVBR">
-        <property name="text">
-         <string>Variable Bitrate:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLabel" name="labelVBRDetected">
-        <property name="text">
-         <string>n/a</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="labelAudioBitrateValue">
-        <property name="text">
-         <string>n/a</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="labelAudioBitrate">
-        <property name="text">
-         <string>Bitrate:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="labelChannelsValue">
+      <item row="0" column="1">
+       <widget class="QLabel" name="labelACodecName">
         <property name="text">
          <string>n/a</string>
         </property>
@@ -341,17 +299,52 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="labelACodecName">
+      <item row="1" column="1">
+       <widget class="QLabel" name="labelChannelsValue">
         <property name="text">
          <string>n/a</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="labelACodec">
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelAudioBitrate">
         <property name="text">
-         <string>Codec:</string>
+         <string>Bitrate:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="labelAudioBitrateValue">
+        <property name="text">
+         <string>n/a</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="labelFrequency">
+        <property name="text">
+         <string>Frequency:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="labelFrequencyValue">
+        <property name="text">
+         <string>n/a</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="labelAudioDuration">
+        <property name="text">
+         <string>Total Duration:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="labelAudioDurationValue">
+        <property name="text">
+         <string>n/a</string>
         </property>
        </widget>
       </item>
