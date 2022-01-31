@@ -70,6 +70,7 @@ public:
         language=ADM_UNKNOWN_LANGUAGE;
         _needBuffering=0;
         _secondField=false;
+        _nalSize=-1;
   }
   /* Index in mkv */
   uint32_t  streamIndex;
@@ -97,6 +98,7 @@ public:
   std::string language;
   int       _needBuffering;
   bool      _secondField; // Used to clear keyframe flag from the second field
+  uint32_t  _nalSize; // Used to decode frame type in H.264 and HEVC streams
 };
 
 #define MKV_MAX_LACES 101 // ?

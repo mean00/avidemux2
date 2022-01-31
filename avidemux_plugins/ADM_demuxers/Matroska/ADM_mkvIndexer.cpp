@@ -257,9 +257,13 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 if(mark == 1 || (mark > 0xFF && mark < 0x200 && rpt+size-3 != mark+4))
                     AnnexB=true;
             }
-            uint32_t nalSize=0;
-            if(_tracks[0].extraDataLen)
-                nalSize=ADM_getNalSizeH264(_tracks[0].extraData, _tracks[0].extraDataLen);
+            if((int)Track->_nalSize == -1)
+            {
+                Track->_nalSize = 0;
+                if(Track->extraDataLen)
+                    Track->_nalSize = ADM_getNalSizeH264(Track->extraData, Track->extraDataLen);
+                ADM_info("H.264 NAL size set to %" PRIu32"\n",Track->_nalSize);
+            }
             ADM_SPSInfo *info=(ADM_SPSInfo *)_tracks[0].infoCache;
             uint8_t *sps=_tracks[0].paramCache;
             uint32_t spsLen=_tracks[0].paramCacheSize;
@@ -267,7 +271,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             uint8_t buf[MAX_H264_SPS_SIZE];
             uint32_t inBandSpsLen=0;
             if(!AnnexB)
-                inBandSpsLen=getRawH264SPS(readBuffer, rpt+size-3, nalSize, buf, MAX_H264_SPS_SIZE);
+                inBandSpsLen=getRawH264SPS(readBuffer, rpt+size-3, Track->_nalSize, buf, MAX_H264_SPS_SIZE);
             else
                 inBandSpsLen=getRawH264SPS_startCode(readBuffer, rpt+size-3, buf, MAX_H264_SPS_SIZE);
             bool match=true;
@@ -320,7 +324,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             if(AnnexB)
                 r = extractH264FrameType_startCode(readBuffer, rpt+size-3, &flags, NULL, info, &_H264Recovery);
             else
-                r = extractH264FrameType(readBuffer, rpt+size-3, nalSize, &flags, NULL, info, &_H264Recovery);
+                r = extractH264FrameType(readBuffer, rpt+size-3, Track->_nalSize, &flags, NULL, info, &_H264Recovery);
             if(r)
             {
                 if(flags & AVI_KEY_FRAME)
@@ -359,10 +363,13 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                     AnnexB=true;
             }
 
-            uint32_t nalSize=0;
-            if(_tracks[0].extraDataLen)
-                nalSize = ADM_getNalSizeH265(_tracks[0].extraData, _tracks[0].extraDataLen);
-
+            if((int)Track->_nalSize == -1)
+            {
+                Track->_nalSize = 0;
+                if(Track->extraDataLen)
+                    Track->_nalSize = ADM_getNalSizeH265(Track->extraData, Track->extraDataLen);
+                ADM_info("HEVC NAL size set to %" PRIu32"\n",Track->_nalSize);
+            }
             ADM_SPSinfoH265 info; // TODO: check for inband VPS/PPS/SPS changing on the fly
             int poc = INT_MIN;
 
@@ -370,7 +377,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             if(AnnexB)
                 r = extractH265FrameType_startCode(readBuffer, rpt+size-3, &info, &flags, &poc);
             else
-                r = extractH265FrameType(readBuffer, rpt+size-3, nalSize, &info, &flags, &poc);
+                r = extractH265FrameType(readBuffer, rpt+size-3, Track->_nalSize, &info, &flags, &poc);
 
             if(r)
             {
