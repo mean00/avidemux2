@@ -426,18 +426,16 @@ ADM_videoStreamCopyToAnnexB::ADM_videoStreamCopyToAnnexB(uint64_t startTime,uint
     
     myExtra=NULL;
     myExtraLen=0;
-    
-    AVCodec *codec=avcodec_find_decoder(AV_CODEC_ID_H264);
+
+    AVCodec *codec = avcodec_find_decoder(isH265Compatible(fourCC) ? AV_CODEC_ID_HEVC : AV_CODEC_ID_H264);
     ADM_assert(codec);
     AVCodecContext *context = avcodec_alloc_context3(codec);
     ADM_assert(context);
-    
-    aviInfo info;
-    video_body->getVideoInfo(&info);
-    context->width = info.width;
-    context->height = info.height;
-    context->pix_fmt = AV_PIX_FMT_YUV420P;
-    
+
+    context->width = width;
+    context->height = height;
+    context->pix_fmt = AV_PIX_FMT_YUV420P; // dummy
+
     video_body->getExtraHeaderData(&extraLen,&extraData);
     // duplicate extraData with malloc scheme, it will be freed by the bitstream filter
     context->extradata=(uint8_t*)av_malloc(extraLen);
@@ -447,9 +445,8 @@ ADM_videoStreamCopyToAnnexB::ADM_videoStreamCopyToAnnexB(uint64_t startTime,uint
     
 // #warning  Ok, should we open the codec by itself ?
 
-    
     AVBitStreamFilterContext *bsf;
-    bsf = av_bitstream_filter_init("h264_mp4toannexb");
+    bsf = av_bitstream_filter_init(isH265Compatible(fourCC) ? "hevc_mp4toannexb" : "h264_mp4toannexb");
     ADM_assert(bsf);
     bsfContext=bsf;
     ADM_info("Copy to annexB initialized\n");
