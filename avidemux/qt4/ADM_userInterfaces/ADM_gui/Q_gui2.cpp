@@ -763,7 +763,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     defaultThemeAction = NULL;
     QStyle *currentStyle = QApplication::style();
     defaultStyle = currentStyle->objectName();
-    if (defaultStyle.size() && defaultStyle != "fusion")
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+    #define BASIC_QT_STYLE "fusion"
+#else
+    #define BASIC_QT_STYLE "cleanlooks"
+#endif
+    if (defaultStyle.size() && defaultStyle != BASIC_QT_STYLE)
     {
         defaultThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Default theme"),this);
         defaultThemeAction->setCheckable(true);
@@ -775,7 +780,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     lightThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Light theme"),this);
     lightThemeAction->setCheckable(true);
     ui.menuThemes->addAction(lightThemeAction);
-    lightThemeAction->setChecked(defaultStyle == "fusion");
+    lightThemeAction->setChecked(defaultStyle == BASIC_QT_STYLE);
     connect(lightThemeAction,SIGNAL(triggered(bool)),this,SLOT(setLightThemeSlot(bool)));
 
     darkThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Dark theme"),this);
@@ -1732,6 +1737,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
 
 #ifdef BROKEN_PALETTE_PROPAGATION
     #define PROPAGATE_PALETTE(x) \
+    ui.checkBox_TimeShift->setPalette(x); \
     ui.spinBox_TimeValue->setPalette(x); \
     ui.currentTime->setPalette(x); \
     ui.menuFile->setPalette(x); \
@@ -1782,7 +1788,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
 */
 void MainWindow::setLightTheme(void)
 {
-    QApplication::setStyle("fusion");
+    QApplication::setStyle(BASIC_QT_STYLE);
     QPalette pal = style()->standardPalette();
     qApp->setPalette(pal);
 #ifdef BROKEN_PALETTE_PROPAGATION
@@ -1821,7 +1827,7 @@ void MainWindow::setLightThemeSlot(bool b)
 */
 void MainWindow::setDarkTheme(void)
 {
-    QApplication::setStyle("fusion");
+    QApplication::setStyle(BASIC_QT_STYLE);
     QPalette darkPalette;
     darkPalette.setColor(QPalette::Window, QColor(32,32,32));
     darkPalette.setColor(QPalette::WindowText, QColor(234,234,234));
