@@ -679,6 +679,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     bool swapWheel = false;
     prefs->get(FEATURES_SWAP_MOUSE_WHEEL,&swapWheel);
     slider->setInvertedWheel(swapWheel);
+    slider->setMarkers(_in->getInfo()->totalDuration,_in->getInfo()->markerA,_in->getInfo()->markerB);
     
 }
 /**
