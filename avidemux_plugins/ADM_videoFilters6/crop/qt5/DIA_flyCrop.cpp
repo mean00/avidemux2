@@ -32,7 +32,7 @@ uint8_t Metrics( uint8_t *in, uint32_t stride, uint32_t length, uint32_t *avg, u
  * @param slider
  */
 flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider)
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider)
                 : ADM_flyDialogRgb(parent,width, height,in,canvas, slider,RESIZE_LAST)
 {
     rubber=new ADM_rubberControl(this,canvas);

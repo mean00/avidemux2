@@ -32,7 +32,7 @@ class flyArtGrid : public ADM_flyDialogYuv
     void       blacken(void) { work->blacken(); }
     void       setTabOrder(void);
                flyArtGrid (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider);
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider);
     virtual    ~flyArtGrid() ;
     virtual bool goToTime(uint64_t time);
 };

@@ -37,7 +37,7 @@ public:
    uint8_t     download(void) {return download(true);}
    uint8_t     upload() {return upload(true,true);}
                flyMpDelogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider);
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider);
    virtual     ~flyMpDelogo() ;
    bool         setPreview(bool onoff)
                 {

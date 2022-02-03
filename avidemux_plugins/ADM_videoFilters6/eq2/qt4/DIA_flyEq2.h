@@ -32,6 +32,6 @@ class flyEq2 : public ADM_flyDialogYuv
     void        setTabOrder(void);
 
                 flyEq2 (QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                        ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene *sc);
+                        ADM_QCanvas *canvas, ADM_flyNavSlider *slider, QGraphicsScene *sc);
 };
 

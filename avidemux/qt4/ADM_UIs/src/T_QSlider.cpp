@@ -145,4 +145,37 @@ void ADM_SliderIndicator::sliderChange(QAbstractSlider::SliderChange change)
         QToolTip::showText(mapToGlobal(QPoint(xpos, ypos)), text, this);
     }
 }
+
+
+ADM_flyNavSlider::ADM_flyNavSlider(QWidget *parent) : ADM_QSlider(parent)
+{
+    _invertWheel = false;
+}
+
+void ADM_flyNavSlider::wheelEvent(QWheelEvent *e)
+{
+    int delta;
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+    //printf("Wheel : %d\n",e->delta());
+    delta = e->delta();
+#else
+    delta = e->angleDelta().ry();
+#endif   
+    if (_invertWheel)
+        delta *= -1;
+    
+    if (delta > 0)
+        this->triggerAction(QAbstractSlider::SliderSingleStepAdd);
+    else
+    if (delta < 0)
+        this->triggerAction(QAbstractSlider::SliderSingleStepSub);
+    
+    e->accept();
+}
+
+void ADM_flyNavSlider::setInvertedWheel(bool inverted)
+{
+    _invertWheel = inverted;
+}
+
 //EOF

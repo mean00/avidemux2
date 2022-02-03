@@ -29,7 +29,7 @@ class flyLogo : public ADM_flyDialogYuv
    uint8_t     download(void);
    uint8_t     upload(void);
                flyLogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider);
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider);
    virtual     ~flyLogo() {};
    void         setTabOrder(void);
    bool         setXy(int x,int y);

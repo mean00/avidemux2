@@ -31,7 +31,7 @@ class flyDeband : public ADM_flyDialogYuv
     uint8_t    update(void);
     void       setTabOrder(void);
                flyDeband (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider);
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider);
     virtual    ~flyDeband() ;
 };
 #endif

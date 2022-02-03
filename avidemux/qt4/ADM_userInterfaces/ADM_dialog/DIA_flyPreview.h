@@ -28,7 +28,7 @@ protected:
     void *cookie;
     CookieFunc cookieFunc;
 public:
-        flySeekablePreview(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *videoStream, ADM_QCanvas *canvas, ADM_QSlider *slider) :
+        flySeekablePreview(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *videoStream, ADM_QCanvas *canvas, ADM_flyNavSlider *slider) :
 	  ADM_flyDialogYuv(parent,width, height, videoStream, canvas, slider,  RESIZE_AUTO) 
         {
                 cookie=NULL;cookieFunc=NULL;

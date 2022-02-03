@@ -333,7 +333,7 @@ void Ui_logoWindow::showEvent(QShowEvent *event)
 /**
     \fn flyLogo ctor
 */
-flyLogo::flyLogo (QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in, ADM_QCanvas *canvas, ADM_QSlider *slider)
+flyLogo::flyLogo (QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in, ADM_QCanvas *canvas, ADM_flyNavSlider *slider)
     : ADM_flyDialogYuv(parent,width,height,in,canvas,slider,RESIZE_AUTO)
 {
     in->getTimeRange(&startOffset,&endOffset);

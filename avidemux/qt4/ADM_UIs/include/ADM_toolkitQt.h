@@ -34,4 +34,19 @@ private:
     int _precision;
     virtual void sliderChange(SliderChange change);
 };
+
+/**
+    \brief Specific navigation slider for flyDialogs
+*/
+class ADM_UIQT46_EXPORT ADM_flyNavSlider : public ADM_QSlider
+{
+protected:
+    bool _invertWheel;
+public:
+    ADM_flyNavSlider(QWidget *parent);
+    void wheelEvent(QWheelEvent *e);
+    void setInvertedWheel(bool inverted);
+
+};
+
 #endif
