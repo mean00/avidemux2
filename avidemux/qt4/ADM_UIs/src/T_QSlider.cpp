@@ -18,6 +18,7 @@ Custom slider
 #include <QStyleOptionSlider>
 #include <QToolTip>
 #include <QMouseEvent>
+#include <QPainter>
 #include "ADM_toolkitQt.h"
 #include "ADM_assert.h"
 /**
@@ -143,6 +144,110 @@ void ADM_SliderIndicator::sliderChange(QAbstractSlider::SliderChange change)
         xpos /= 2;
 
         QToolTip::showText(mapToGlobal(QPoint(xpos, ypos)), text, this);
+    }
+}
+
+
+ADM_flyNavSlider::ADM_flyNavSlider(QWidget *parent) : ADM_QSlider(parent)
+{
+    _invertWheel = false;
+}
+
+void ADM_flyNavSlider::wheelEvent(QWheelEvent *e)
+{
+    int delta;
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+    //printf("Wheel : %d\n",e->delta());
+    delta = e->delta();
+#else
+    delta = e->angleDelta().ry();
+#endif   
+    if (_invertWheel)
+        delta *= -1;
+    
+    if (delta > 0)
+        this->triggerAction(QAbstractSlider::SliderSingleStepAdd);
+    else
+    if (delta < 0)
+        this->triggerAction(QAbstractSlider::SliderSingleStepSub);
+    
+    e->accept();
+}
+
+void ADM_flyNavSlider::setInvertedWheel(bool inverted)
+{
+    _invertWheel = inverted;
+    totalDuration= markerATime= markerBTime =0;
+}
+
+void ADM_flyNavSlider::setMarkers(uint64_t totalDuration, uint64_t markerATime, uint64_t markerBTime)
+{
+    this->totalDuration = totalDuration;
+    this->markerATime = markerATime;
+    this->markerBTime = markerBTime;
+}
+
+/**
+    \fn paintEvent
+*/
+void ADM_flyNavSlider::paintEvent(QPaintEvent *event)
+{
+    /* TODO
+    if (segments && (numOfSegments > 0) && (totalDuration > 0LL))
+    {
+        int pos, prevpos;
+        prevpos = -1;
+        QPainter painter(this);
+        for (uint32_t i=0; i<numOfSegments; i++)
+        {
+            if (i==0)    // do not draw at the start position
+                continue;
+            if (segments[i] == ADM_NO_PTS)
+                continue;
+            pos = (int)(((double)segments[i] * width()) / (double)totalDuration);
+            if(pos < 1) pos = 1;
+            if(pos > width() - 1) pos = width() - 1;
+            if (pos == prevpos)
+                painter.setPen(Qt::darkMagenta);
+            else
+                painter.setPen(Qt::red);
+            prevpos = pos;
+
+            if(layoutDirection() == Qt::LeftToRight)
+                painter.drawLine(pos, 1, pos, height() - 3);
+            else
+                painter.drawLine(width() - pos, 1, width() - pos, height() - 3);
+        }
+        painter.end();
+    }*/
+
+    QSlider::paintEvent(event);
+
+    uint64_t a = markerATime, b = markerBTime;
+
+    if (markerATime > markerBTime)
+    {
+        b = markerATime;
+        a = markerBTime;
+    }
+
+    if (totalDuration > 0LL && (a != 0 || b != totalDuration))
+    {
+        int left  = (int)(((double)a * width()) / (double)totalDuration);
+        int right = (int)(((double)b * width()) / (double)totalDuration);
+
+        if(left < 1) left = 1;
+        if(right < 1) right = 1;
+        if(left > width() - 1) left = width() - 1;
+        if(right > width() - 1) right = width() - 1;
+
+        QPainter painter(this);
+        painter.setPen(Qt::blue);
+        if(layoutDirection() == Qt::LeftToRight)
+            painter.drawRect(left, 1, right - left, height() - 3);
+        else
+            painter.drawRect(width() - right, 1, right - left, height() - 3);
+        painter.end();
     }
 }
 //EOF

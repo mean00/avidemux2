@@ -34,7 +34,7 @@
  * @param slider
  */
 flyAnalyzer::flyAnalyzer (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene * scVectorScope,
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider, QGraphicsScene * scVectorScope,
                                     QGraphicsScene * scYUVparade, QGraphicsScene * scRGBparade, QGraphicsScene * scHistograms ) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
 {
     this->width = width;

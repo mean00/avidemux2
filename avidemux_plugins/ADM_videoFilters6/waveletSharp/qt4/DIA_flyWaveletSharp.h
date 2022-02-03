@@ -30,6 +30,6 @@ class flyWaveletSharp : public ADM_flyDialogYuv
     uint8_t    update(void);
     void       setTabOrder(void);
     flyWaveletSharp (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO) {};
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO) {};
 };
 #endif

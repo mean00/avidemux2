@@ -29,6 +29,7 @@
 
 #include "ADM_toolkitQt.h"
 #include "ADM_vidMisc.h"
+#include "prefs.h"
 
 /**
  */
@@ -381,7 +382,7 @@ bool ADM_flyDialog::nextImageInternal(void)
 */
 bool ADM_flyDialog::nextImage(void)
 {
-    ADM_QSlider  *slide=(ADM_QSlider *)_slider;
+    ADM_flyNavSlider  *slide=(ADM_flyNavSlider *)_slider;
     ADM_assert(slide);
     bool oldState=slide->blockSignals(true);
     bool r=nextImageInternal();
@@ -459,7 +460,7 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
 // i.e. yuv processing or RGB processing
 //************************************
   ADM_flyDialogYuv::ADM_flyDialogYuv(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                                ADM_QCanvas *canvas, ADM_QSlider *slider,
+                                ADM_QCanvas *canvas, ADM_flyNavSlider *slider,
                                 ResizeMethod resizeMethod) : ADM_flyDialog(parent,width,height,in,canvas,slider,resizeMethod)
 {
     _control=NULL;
@@ -520,7 +521,7 @@ bool ADM_flyDialogYuv::process(void)
 }
 //*****************************************
 ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                                ADM_QCanvas *canvas, ADM_QSlider *slider,
+                                ADM_QCanvas *canvas, ADM_flyNavSlider *slider,
                                 ResizeMethod resizeMethod) : ADM_flyDialog(parent,width,height,in,canvas,slider,resizeMethod)
 {
     uint32_t size = ADM_IMAGE_ALIGN(_w*4);
@@ -631,7 +632,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
 */
 
   ADM_flyDialog::ADM_flyDialog(QDialog *parent ,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                              ADM_QCanvas *canvas, ADM_QSlider *slider,  ResizeMethod resizeMethod)
+                              ADM_QCanvas *canvas, ADM_flyNavSlider *slider,  ResizeMethod resizeMethod)
 {  
     ADM_assert(canvas);
     {
@@ -675,6 +676,11 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     ADM_info("Interval = %d ms\n",incrementUs);
     timer.stop();
     
+    bool swapWheel = false;
+    prefs->get(FEATURES_SWAP_MOUSE_WHEEL,&swapWheel);
+    slider->setInvertedWheel(swapWheel);
+    slider->setMarkers(_in->getInfo()->totalDuration,_in->getInfo()->markerA,_in->getInfo()->markerB);
+    
 }
 /**
     \fn    postInit
@@ -684,7 +690,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
 void ADM_flyDialog::postInit(uint8_t reInit)
 {
     QWidget *graphicsView = _canvas->parentWidget();
-    ADM_QSlider  *slider=(ADM_QSlider *)_slider;
+    ADM_flyNavSlider  *slider=(ADM_flyNavSlider *)_slider;
 
     if (reInit)
     {
@@ -808,7 +814,7 @@ uint8_t  ADM_flyDialog::display(uint8_t *rgbData)
 
 uint32_t ADM_flyDialog::sliderGet(void)
 {
-    ADM_QSlider  *slide=(ADM_QSlider *)_slider;
+    ADM_flyNavSlider  *slide=(ADM_flyNavSlider *)_slider;
     ADM_assert(slide);
     return slide->value();
   
@@ -820,7 +826,7 @@ uint32_t ADM_flyDialog::sliderGet(void)
 
 uint8_t     ADM_flyDialog::sliderSet(uint32_t value)
 {
-    ADM_QSlider  *slide=(ADM_QSlider *)_slider;
+    ADM_flyNavSlider  *slide=(ADM_flyNavSlider *)_slider;
     ADM_assert(slide);
     if(value>ADM_FLY_SLIDER_MAX) value=ADM_FLY_SLIDER_MAX;
     slide->setValue(value);
@@ -882,7 +888,7 @@ void ADM_flyDialog::fwdOneMinute(void)
  */
 void ADM_flyDialog::play(bool state)
 {
-    ADM_QSlider *slide=(ADM_QSlider *)_slider;
+    ADM_flyNavSlider *slide=(ADM_flyNavSlider *)_slider;
     ADM_assert(slide);
     if(state)
     {

@@ -138,7 +138,7 @@
     <layout class="QHBoxLayout" name="toolboxLayout"/>
    </item>
    <item>
-    <widget class="ADM_QSlider" name="horizontalSlider">
+    <widget class="ADM_flyNavSlider" name="horizontalSlider">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -164,6 +164,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>ADM_flyNavSlider</class>
+   <extends>ADM_QSlider</extends>
+   <header>ADM_toolkitQt.h</header>
+  </customwidget>
   <customwidget>
    <class>ADM_QSlider</class>
    <extends>QSlider</extends>

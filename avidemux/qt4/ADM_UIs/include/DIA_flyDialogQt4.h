@@ -129,12 +129,12 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
 
   public:
           void          *_cookie; // whatever, usually the ui_xxx component
-          ADM_QSlider   *_slider; // widget
+          ADM_flyNavSlider   *_slider; // widget
           ADM_QCanvas   *_canvas; // Drawing zone
 
   public:
                             ADM_flyDialog(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                                 ADM_QCanvas *canvas, ADM_QSlider *slider, ResizeMethod resizeMethod);
+                                 ADM_QCanvas *canvas, ADM_flyNavSlider *slider, ResizeMethod resizeMethod);
           virtual           ~ADM_flyDialog(void);    
           void               recomputeSize(void);
           virtual bool       disableZoom(void);
@@ -207,7 +207,7 @@ public:
           virtual    void resetScaler(void);
 
                                 ADM_flyDialogYuv(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                                ADM_QCanvas *canvas, ADM_QSlider *slider,
+                                ADM_QCanvas *canvas, ADM_flyNavSlider *slider,
                                 ResizeMethod resizeMethod);
             virtual             ~ADM_flyDialogYuv();
             virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) =0;
@@ -233,7 +233,7 @@ public:
           virtual    void resetScaler(void);
 
                             ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t height, 
-                                 ADM_coreVideoFilter *in,  ADM_QCanvas *canvas,  ADM_QSlider *slider, ResizeMethod resizeMethod);
+                                 ADM_coreVideoFilter *in,  ADM_QCanvas *canvas,  ADM_flyNavSlider *slider, ResizeMethod resizeMethod);
            virtual          ~ADM_flyDialogRgb();
            virtual uint8_t  processRgb(uint8_t *in, uint8_t *out) =0;
 };

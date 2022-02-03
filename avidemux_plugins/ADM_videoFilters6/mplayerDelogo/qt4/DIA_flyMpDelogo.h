@@ -33,7 +33,7 @@ class flyMpDelogo : public ADM_flyDialogYuv
    uint8_t     download(void);
    uint8_t     upload(void);
                flyMpDelogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider) :
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider) :
                 ADM_flyDialogYuv(parent,width, height,in,canvas, slider,RESIZE_AUTO) 
                 {};
    virtual     ~flyMpDelogo() {};

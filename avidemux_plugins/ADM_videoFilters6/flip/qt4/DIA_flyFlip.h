@@ -31,7 +31,7 @@ class flyFlip : public ADM_flyDialogYuv
     uint8_t    update(void) {return 1;};
     void       setTabOrder(void);
                flyFlip (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider);
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider);
     virtual    ~flyFlip() ;
 };
 #endif

@@ -41,7 +41,7 @@ class flyFadeThrough : public ADM_flyDialogYuv
     double     getTabTransientDuration(int tabIndex);
     void       redrawScene();
                flyFadeThrough (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene *sc);
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider, QGraphicsScene *sc);
               ~flyFadeThrough();
 };
 #endif

@@ -29,7 +29,7 @@
     \fn ctor
 */
 flyArtColorEffect::flyArtColorEffect (QDialog *parent, uint32_t width, uint32_t height,
-        ADM_coreVideoFilter *in, ADM_QCanvas *canvas, ADM_QSlider *slider)
+        ADM_coreVideoFilter *in, ADM_QCanvas *canvas, ADM_flyNavSlider *slider)
         : ADM_flyDialogYuv (parent, width, height, in, canvas, slider, RESIZE_AUTO)
 {
     ADMVideoArtColorEffect::ArtColorEffectCreateBuffers (width, height, &rgbBufStride,

@@ -35,7 +35,7 @@ class flyAnalyzer : public ADM_flyDialogYuv
     uint8_t    update(void);
     void       setTabOrder(void);
                flyAnalyzer (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_QSlider *slider, QGraphicsScene * scVectorScope,
+                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider, QGraphicsScene * scVectorScope,
                                     QGraphicsScene * scYUVparade, QGraphicsScene * scRGBparade, QGraphicsScene * scHistograms) ;
     virtual    ~flyAnalyzer() ;
   private:
