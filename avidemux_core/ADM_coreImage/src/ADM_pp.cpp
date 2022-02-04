@@ -64,50 +64,64 @@ ADM_PP::~ADM_PP()
 */
 bool ADM_PP::update(void)
 {
-char stringMode[60];
+    char stringMode[60];
 
-	stringMode[0]=0;
-	cleanup();
-	aprintf("updating post proc\n");
+    stringMode[0]=0;
+    cleanup();
+    aprintf("updating post proc\n");
 
-	if(postProcType&1) strcat(stringMode,"ha:a:128:7,");
-	if(postProcType&2) strcat(stringMode,"va:a:128:7,");
-	if(postProcType&4) strcat(stringMode,"dr:a,");
-	if(postProcType&8) strcat(stringMode,"fd,");
-	if(forcedQuant)  
-		{
-			char stringFQ[60];
+    if((postProcType&1) && postProcStrength) strcat(stringMode,"ha:a:128:7,");
+    if((postProcType&2) && postProcStrength) strcat(stringMode,"va:a:128:7,");
+    if((postProcType&4) && postProcStrength) strcat(stringMode,"dr:a,");
+    if(postProcType&8) strcat(stringMode,"fd,");
+    if(forcedQuant && postProcStrength)  
+    {
+        char stringFQ[60];
 
-			sprintf(stringFQ,"fq:%d,",forcedQuant);
-			strcat(stringMode,stringFQ);
-		}
-			
-	if(strlen(stringMode))  // something to do ?
-		{
-		uint32_t ppCaps=0;
-		
+        sprintf(stringFQ,"fq:%d,",forcedQuant);
+        strcat(stringMode,stringFQ);
+    }
+    else
+    if ((postProcType&7)&&(postProcStrength>0)&&(postProcStrength<=5))
+    {
+        char stringFQ[60];
+        
+        sprintf(stringFQ,"fq:%d,",1<<postProcStrength);
+        strcat(stringMode,stringFQ);
+    }
+    
+    uint32_t actualStrength = postProcStrength;
+    if ((actualStrength == 0) && (postProcType&8))  // enable deinterlacing
+    {
+        actualStrength = 1;
+    }
+        
+
+    if(strlen(stringMode))  // something to do ?
+    {
+        uint32_t ppCaps=0;
+
 #ifdef ADM_CPU_X86
-		
-	#define ADD(x,y) if( CpuCaps::has##x()) ppCaps|=PP_CPU_CAPS_##y;
-		
-		ADD(MMX,MMX);		
-		ADD(3DNOW,3DNOW);
-		ADD(MMXEXT,MMX2);
+
+    #define ADD(x,y) if( CpuCaps::has##x()) ppCaps|=PP_CPU_CAPS_##y;
+
+            ADD(MMX,MMX);		
+            ADD(3DNOW,3DNOW);
+            ADD(MMXEXT,MMX2);
 #endif		
 #ifdef ADM_CPU_ALTIVEC
-		ppCaps|=PP_CPU_CAPS_ALTIVEC;
+            ppCaps|=PP_CPU_CAPS_ALTIVEC;
 #endif	
-			ppContext=pp_get_context(w, h, ppCaps  );		
-			ppMode=pp_get_mode_by_name_and_quality(
-			stringMode, postProcStrength);;
-			ADM_assert(ppMode);
-			aprintf("Enabled type:%d strength:%d\n",postProcType,postProcStrength);
-		}	   
-	else    // if nothing is selected we may as well set back every thing to 0
-		{
-			postProcStrength=0;
-			aprintf("Disabled\n");
-		}
+        ppContext=pp_get_context(w, h, ppCaps  );		
+        ppMode=pp_get_mode_by_name_and_quality(stringMode, actualStrength);
+        ADM_assert(ppMode);
+        aprintf("Enabled type:%d strength:%d\n",postProcType,postProcStrength);
+    }	   
+    else    // if nothing is selected we may as well set back every thing to 0
+    {
+        postProcStrength=0;
+        aprintf("Disabled\n");
+    }
     return false;
 }
 /**
@@ -129,8 +143,11 @@ uint32_t border;
     ADM_assert(src);
     ADM_assert(dest);
 
-    ADM_assert(ppMode);
-    ADM_assert(ppContext);
+    if ((ppMode==NULL) || (ppContext==NULL))
+    {
+        dest->duplicate(src);
+        return false;
+    }
 
 //	#warning FIXME should be FF_I_TYPE/B/P
     if(src->flags & AVI_KEY_FRAME) 
