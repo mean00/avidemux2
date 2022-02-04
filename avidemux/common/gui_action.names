@@ -7,11 +7,11 @@ ACT(EXIT)
 // Misc
 ACT(PlayAvi)
 ACT(StopAvi)
-ACT(SetPostProcessing)
 
 // Run the first stage, GUI may call the second one
 ACT(STAGED_BEGIN)
 ACT(SetHDRConfig)
+ACT(SetPostProcessing)
 ACT(SelectTime)
 ACT(STAGED_END)
 

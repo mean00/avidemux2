@@ -517,6 +517,9 @@ void MainWindow::actionSlot(Action a)
             case ACT_SetHDRConfig:
                 a = ACT_Refresh;
                 break;
+            case ACT_SetPostProcessing:
+                a = ACT_Refresh;
+                break;
             case ACT_SelectTime:
                 a = ACT_GotoTime;
                 break;

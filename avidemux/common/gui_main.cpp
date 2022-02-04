@@ -488,9 +488,6 @@ void HandleAction (Action action)
       if (playing)
     GUI_PlayAvi ();
       break;
-    case ACT_SetPostProcessing:
-      A_setPostproc();
-      break;
     case ACT_MarkA:
     case ACT_MarkB:
     {
@@ -1480,8 +1477,9 @@ extern int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,bool *swap);
 //
 void    A_setPostproc( void )
 {
-uint32_t type,strength;
-bool swap;
+    uint32_t type,strength;
+    bool swap;
+    stagedActionSuccess = 0;
     if(!avifileinfo) return;
 
     video_body->getPostProc(&type,&strength,&swap);
@@ -1489,6 +1487,8 @@ bool swap;
      if(DIA_getMPParams( &type, &strength,&swap))
      {
         video_body->setPostProc(type,strength,swap);
+        stagedActionSuccess = 1;
+        return;
      }
 
 }

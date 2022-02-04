@@ -40,6 +40,7 @@ static void A_timedError(bool *first, const char *s);
 
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
 extern void A_setHDRConfig(void);
+extern void A_setPostproc(void);
 
 static uint32_t jumpTarget[4] = {0};
 
@@ -60,6 +61,9 @@ void HandleAction_Staged(Action action)
     {
         case ACT_SetHDRConfig:
             A_setHDRConfig();
+            break;
+        case ACT_SetPostProcessing:
+            A_setPostproc();
             break;
         case ACT_SelectTime:
             {
