@@ -404,19 +404,9 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         return true;
     }
     aprintf("[::Decompress] in:%" PRIu64" out:%" PRIu64" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
-    // If not quant and it is already YV12, we can stop here
-    // Also, if the image is decoded through hw, dont do post proc
-    if(tmpImage->refType!=ADM_HW_NONE || ((!tmpImage->quant || !tmpImage->_qStride) && tmpImage->_pixfrmt==ADM_PIXFRMT_YV12))
-    {
-        out->duplicate(tmpImage);
-        aprintf("[decompressImage] : No quant avail\n");
-        return true;
-    }
     // We got everything, let's go
-    // Dupe infos
-    out->copyInfo(tmpImage);
-    // 1 compute average quant
-    if(tmpImage->_Qp == ADM_IMAGE_UNKNOWN_QP && tmpImage->_qSize)
+    // If we have quant but no _Qp from decoder, compute average
+    if(tmpImage->_Qp == ADM_IMAGE_UNKNOWN_QP && tmpImage->_qSize && tmpImage->quant)
     {
         int qz;
         uint32_t z, sumit = 0;
@@ -433,15 +423,23 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         // update average Q
         tmpImage->_Qp=out->_Qp=(uint32_t)floor(sum);
     }
-
+    // If the image is decoded through hw, dont do post proc
+    if(tmpImage->refType != ADM_HW_NONE)
+    {
+        out->duplicate(tmpImage);
+        aprintf("[decompressImage] : hw pic\n");
+        return true;
+    }
     // Do postprocessing if any
     // Pp deactivated ?
     if(!_pp->postProcType || !_pp->postProcStrength || tmpImage->_pixfrmt!=ADM_PIXFRMT_YV12)
     {
         dupe(tmpImage,out,v);
-        aprintf("EdCache: Postproc disabled\n");
+        aprintf("[decompressImage] Skipping post-processing because %s\n", (tmpImage->_pixfrmt != ADM_PIXFRMT_YV12) ? "not YV12" : "it is disabled");
         return true;
     }
+    // Dupe infos
+    out->copyInfo(tmpImage);
     /* Do it!*/
     _pp->process(tmpImage,out);
     return true;
