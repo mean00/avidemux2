@@ -40,10 +40,16 @@ int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,bool *swap)
      diaElemToggle     fvzd(&vzd,QT_TRANSLATE_NOOP("adm","_Vertical deblocking"));
      diaElemToggle     fdring(&dring,QT_TRANSLATE_NOOP("adm","_Deringing"));
      diaElemToggle     fdeint(&deint,QT_TRANSLATE_NOOP("adm","De_interlacing (ffmpegdeint)"));
+     
+     diaElemFrame frameDeblock(QT_TRANSLATE_NOOP("adm","Deblocking"));
+     frameDeblock.swallow(&postProcStrength);
+     frameDeblock.swallow(&fhzd);
+     frameDeblock.swallow(&fvzd);
+     frameDeblock.swallow(&fdring);
 
-    diaElem *elems[6]={ &postProcStrength, &fhzd, &fvzd, &fdring, &fdeint, &applicability };
+    diaElem *elems[3]={&frameDeblock , &fdeint, &applicability };
 
-   if(diaFactoryRun("Postprocessing",6,elems))
+   if(diaFactoryRun("Postprocessing",3,elems))
   {
 #undef DOME
 #define DOME(x,y) if(y) *pplevel |=x;

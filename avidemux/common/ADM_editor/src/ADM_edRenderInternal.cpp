@@ -443,7 +443,7 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
     }
     // Do postprocessing if any
     // Pp deactivated ?
-    if(!_pp->postProcType || !_pp->postProcStrength || tmpImage->_pixfrmt!=ADM_PIXFRMT_YV12)
+    if((!_pp->postProcType && !_pp->postProcStrength) || tmpImage->_pixfrmt!=ADM_PIXFRMT_YV12)
     {
         dupe(tmpImage,out,v);
         aprintf("[decompressImage] Skipping post-processing because %s\n", (tmpImage->_pixfrmt != ADM_PIXFRMT_YV12) ? "not YV12" : "it is disabled");
