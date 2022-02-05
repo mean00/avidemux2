@@ -209,6 +209,8 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
                 break;
         }
     }
+    out->_width = src->width;   // out is ref, we can do this
+    out->_height = src->height;
 
     return 1;
 }
