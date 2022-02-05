@@ -407,6 +407,80 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         return true;
     }
     
+    // handle if decoded frame resolution changed !?!
+    if ((tmpImage->_width != _imageBuffer->_width) || (tmpImage->_height != _imageBuffer->_height))
+    {
+        if (!refOnly)
+            ADM_assert(0);
+        if(tmpImage->refType == ADM_HW_NONE)
+        {
+            if (_rescueScaler == NULL)
+            {
+                _rescueScaler = new ADMColorScalerFull(ADM_CS_BICUBIC,tmpImage->_width,tmpImage->_height,_imageBuffer->_width,_imageBuffer->_height,tmpImage->_pixfrmt,ADM_PIXFRMT_YV12);
+                _rescueScalerWidth = tmpImage->_width;
+                _rescueScalerHeight = tmpImage->_height;
+                _rescueScalerPixFmt = tmpImage->_pixfrmt;
+                
+            }
+            else
+            if ((tmpImage->_width != _rescueScalerWidth) || (tmpImage->_height != _rescueScalerHeight) || (_rescueScalerPixFmt != tmpImage->_pixfrmt))
+            {
+                _rescueScaler->reset(ADM_CS_BICUBIC,tmpImage->_width,tmpImage->_height,_imageBuffer->_width,_imageBuffer->_height,tmpImage->_pixfrmt,ADM_PIXFRMT_YV12);
+                _rescueScalerWidth = tmpImage->_width;
+                _rescueScalerHeight = tmpImage->_height;
+                _rescueScalerPixFmt = tmpImage->_pixfrmt;
+            }
+
+            _rescueScaler->convertImage(tmpImage,_imageBuffer);
+            _imageBuffer->copyInfo(tmpImage);
+            tmpImage = _imageBuffer;
+        }
+        else    // HW image
+        {
+            ADM_assert(0);
+    // TODO make it work
+    // now fails at hwDownloadFromRef();
+            /*
+            if (_rescueImage != NULL)
+            {
+                if ((_rescueImage->_width != tmpImage->_width) || (_rescueImage->_height != tmpImage->_height))
+                {
+                    delete _rescueImage;
+                    _rescueImage = NULL;
+                }
+            }
+            if (_rescueImage == NULL)
+            {
+                _rescueImage = new ADMImageDefault(tmpImage->_width, tmpImage->_height);
+            }
+            _rescueImage->duplicateFull(tmpImage);
+            _rescueImage->hwDownloadFromRef();
+
+            if (_rescueScaler == NULL)
+            {
+                _rescueScaler = new ADMColorScalerFull(ADM_CS_BICUBIC,_rescueImage->_width,_rescueImage->_height,_imageBuffer->_width,_imageBuffer->_height,_rescueImage->_pixfrmt,ADM_PIXFRMT_YV12);
+                _rescueScalerWidth = _rescueImage->_width;
+                _rescueScalerHeight = _rescueImage->_height;
+                _rescueScalerPixFmt = _rescueImage->_pixfrmt;
+                
+            }
+            else
+            if ((_rescueImage->_width != _rescueScalerWidth) || (_rescueImage->_height != _rescueScalerHeight) || (_rescueScalerPixFmt != _rescueImage->_pixfrmt))
+            {
+                _rescueScaler->reset(ADM_CS_BICUBIC,_rescueImage->_width,_rescueImage->_height,_imageBuffer->_width,_imageBuffer->_height,_rescueImage->_pixfrmt,ADM_PIXFRMT_YV12);
+                _rescueScalerWidth = _rescueImage->_width;
+                _rescueScalerHeight = _rescueImage->_height;
+                _rescueScalerPixFmt = _rescueImage->_pixfrmt;
+            }
+
+            _rescueScaler->convertImage(_rescueImage,_imageBuffer);
+            _imageBuffer->copyInfo(tmpImage);
+            tmpImage = _imageBuffer;
+            */
+        }
+    }
+
+    
     if (_blankImageForInfo==NULL)
     {
         _blankImageForInfo = new ADMImageRef(tmpImage->_width,tmpImage->_height);
