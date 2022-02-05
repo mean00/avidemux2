@@ -44,6 +44,9 @@ public:
 //             2 Verti deblock
 //             4 Dering
 // strength between 0 and 5
- 
+#define ADM_POSTPROC_HORIZ_DEBLOCK 1
+#define ADM_POSTPROC_VERT_DEBLOCK  2
+#define ADM_POSTPROC_DERING        4
+#define ADM_POSTPROC_DEINT         8
 
 #endif

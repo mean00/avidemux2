@@ -13,11 +13,6 @@
  *                                                                         *
  ***************************************************************************/
 
-//	PostProc : 1 Horiz deblock
-//             2 Verti deblock
-//             4 Dering
-// strength between 0 and 5
-
 #include "ADM_default.h"
 
 extern "C" {
@@ -70,10 +65,17 @@ bool ADM_PP::update(void)
     cleanup();
     aprintf("updating post proc\n");
 
-    if((postProcType&1) && postProcStrength) strcat(stringMode,"ha:a:128:7,");
-    if((postProcType&2) && postProcStrength) strcat(stringMode,"va:a:128:7,");
-    if((postProcType&4) && postProcStrength) strcat(stringMode,"dr:a,");
-    if(postProcType&8) strcat(stringMode,"fd,");
+    if(postProcStrength)
+    {
+        if(postProcType & ADM_POSTPROC_HORIZ_DEBLOCK)
+            strcat(stringMode,"ha:a:128:7,");
+        if(postProcType & ADM_POSTPROC_VERT_DEBLOCK)
+            strcat(stringMode,"va:a:128:7,");
+        if(postProcType & ADM_POSTPROC_DERING)
+            strcat(stringMode,"dr:a,");
+    }
+    if(postProcType & ADM_POSTPROC_DEINT)
+        strcat(stringMode,"fd,");
     if(forcedQuant && postProcStrength)  
     {
         char stringFQ[60];
@@ -82,20 +84,20 @@ bool ADM_PP::update(void)
         strcat(stringMode,stringFQ);
     }
     else
-    if ((postProcType&7)&&(postProcStrength>0)&&(postProcStrength<=5))
+    if ((postProcType & (ADM_POSTPROC_HORIZ_DEBLOCK + ADM_POSTPROC_VERT_DEBLOCK + ADM_POSTPROC_DERING)) &&
+        (postProcStrength>0) && (postProcStrength<=5))
     {
         char stringFQ[60];
         
         sprintf(stringFQ,"fq:%d,",1<<postProcStrength);
         strcat(stringMode,stringFQ);
     }
-    
+
     uint32_t actualStrength = postProcStrength;
-    if ((actualStrength == 0) && (postProcType&8))  // enable deinterlacing
+    if ((actualStrength == 0) && (postProcType & ADM_POSTPROC_DEINT)) // enable deinterlacing
     {
         actualStrength = 1;
     }
-        
 
     if(strlen(stringMode))  // something to do ?
     {
@@ -127,20 +129,10 @@ bool ADM_PP::update(void)
 /**
     \fn process
 */
-bool        ADM_PP::process(class ADMImage *src, class ADMImage *dest)
+bool ADM_PP::process(ADMImage *src, ADMImage *dest)
 {
-int type;
-
-int ww,hh;
-uint32_t border;
-
-   // return dest->duplicate(src);
-
-    border=w&(7);
-    ww=w-border;
-    hh=h&(~1);
-    
     ADM_assert(src);
+    ADM_assert(src->_pixfrmt == ADM_PIXFRMT_YV12);
     ADM_assert(dest);
 
     if ((ppMode==NULL) || (ppContext==NULL))
@@ -149,14 +141,19 @@ uint32_t border;
         return false;
     }
 
-//	#warning FIXME should be FF_I_TYPE/B/P
-    if(src->flags & AVI_KEY_FRAME) 
-        type=1;
-    else if(src->flags & AVI_B_FRAME) 
-        type=3;
-    else type=2;
+    int type,ww,hh;
+    uint32_t border;
 
-    ADM_assert(src->_pixfrmt==ADM_PIXFRMT_YV12);
+    border=w&(7);
+    ww=w-border;
+    hh=h&(~1);
+
+
+    if(src->flags & AVI_KEY_FRAME)
+        type = AV_PICTURE_TYPE_I;
+    else if(src->flags & AVI_B_FRAME)
+        type = AV_PICTURE_TYPE_B;
+    else type = AV_PICTURE_TYPE_P;
 
 	// we do postproc !
 	// keep

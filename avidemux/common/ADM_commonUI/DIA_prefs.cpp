@@ -18,6 +18,7 @@
 
 #include "audio_out.h"
 #include "ADM_render/GUI_render.h"
+#include "ADM_pp.h"
 
 #include "DIA_factory.h"
 #ifdef USE_VDPAU
@@ -118,11 +119,11 @@ std::string currentSdlDriver=getSdlDriverName();
         // Default pp
          if(!prefs->get(DEFAULT_POSTPROC_TYPE,&pp_type)) pp_type=0;
          if(!prefs->get(DEFAULT_POSTPROC_VALUE,&pp_value)) pp_value=0;
-#define DOME(x,y) y=!!(pp_type & x)
+#define DOME(x,y) y=!!(pp_type & x);
 
-    DOME(1,hzd);
-    DOME(2,vzd);
-    DOME(4,dring);
+    DOME(ADM_POSTPROC_HORIZ_DEBLOCK,hzd)
+    DOME(ADM_POSTPROC_VERT_DEBLOCK,vzd)
+    DOME(ADM_POSTPROC_DERING,dring)
 
 // Cpu caps
 #define CPU_CAPS(x) \
@@ -720,9 +721,9 @@ std::string currentSdlDriver=getSdlDriverName();
             #undef DOME
             #define DOME(x,y) if(y) pp_type |=x;
             pp_type=0;
-            DOME(1,hzd);
-            DOME(2,vzd);
-            DOME(4,dring);
+            DOME(ADM_POSTPROC_HORIZ_DEBLOCK,hzd)
+            DOME(ADM_POSTPROC_VERT_DEBLOCK,vzd)
+            DOME(ADM_POSTPROC_DERING,dring)
             prefs->set(DEFAULT_POSTPROC_TYPE,pp_type);
             prefs->set(DEFAULT_POSTPROC_VALUE,pp_value);
 
