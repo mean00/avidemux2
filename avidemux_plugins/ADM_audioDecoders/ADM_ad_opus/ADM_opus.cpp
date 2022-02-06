@@ -83,14 +83,31 @@ ADM_AudiocodecOpus::ADM_AudiocodecOpus(uint32_t fourcc, WAVHeader *info, uint32_
     }
     CHANNEL_TYPE *p_ch_type = channelMapping;
 #define DOIT(y) *(p_ch_type++)=ADM_CH_##y;
-    if(info->channels>=5)
+    switch(info->channels)
     {
-        DOIT(FRONT_LEFT)
-        DOIT(FRONT_CENTER)
-        DOIT(FRONT_RIGHT)
-        DOIT(REAR_LEFT)
-        DOIT(REAR_RIGHT)
-        DOIT(LFE)
+        case 1:
+            DOIT(MONO)
+            break;
+        case 2: break; // stereo is default
+        case 3: // assuming CHANNEL_3F // FIXME
+            DOIT(FRONT_LEFT)
+            DOIT(FRONT_CENTER)
+            DOIT(FRONT_RIGHT)
+            break;
+        case 4: // assuming CHANNEL_2F_2R // FIXME
+            DOIT(FRONT_LEFT)
+            DOIT(FRONT_RIGHT)
+            DOIT(REAR_LEFT)
+            DOIT(REAR_RIGHT)
+            break;
+        default:
+            DOIT(FRONT_LEFT)
+            DOIT(FRONT_CENTER)
+            DOIT(FRONT_RIGHT)
+            DOIT(REAR_LEFT)
+            DOIT(REAR_RIGHT)
+            DOIT(LFE)
+            break;
     }
 }
 /**
