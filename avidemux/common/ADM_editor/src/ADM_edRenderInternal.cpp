@@ -436,11 +436,8 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
             tmpImage = _imageBuffer;
         }
         else    // HW image
+        if (/*(tmpImage->refType == ADM_HW_VDPAU) ||*/ (tmpImage->refType == ADM_HW_LIBVA) /*|| (tmpImage->refType == ADM_HW_DXVA)*/)
         {
-            ADM_assert(0);
-    // TODO make it work
-    // now fails at hwDownloadFromRef();
-            /*
             if (_rescueImage != NULL)
             {
                 if ((_rescueImage->_width != tmpImage->_width) || (_rescueImage->_height != tmpImage->_height))
@@ -476,7 +473,16 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
             _rescueScaler->convertImage(_rescueImage,_imageBuffer);
             _imageBuffer->copyInfo(tmpImage);
             tmpImage = _imageBuffer;
-            */
+            
+        }
+        else    // unsupported HW image
+        {
+            _imageBuffer->copyInfo(tmpImage);
+            _imageBuffer->blacken();
+            char msg[128];
+            sprintf(msg,"[%dx%d] <-> [%dx%d]",tmpImage->_width, tmpImage->_height, _imageBuffer->_width, _imageBuffer->_height);
+            _imageBuffer->printString(1,1,msg);
+            tmpImage = _imageBuffer;
         }
     }
 
