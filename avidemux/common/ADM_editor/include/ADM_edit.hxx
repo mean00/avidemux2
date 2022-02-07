@@ -162,7 +162,6 @@ protected:
                     ADMToneMapperConfig    *_hdrConfig;
                     ADMImage	*_imageBuffer;   // Temp buffer used for decoding
                     ADMColorScalerFull *_rescueScaler;
-                    ADMImage    *_rescueImage;
                     int         _rescueScalerWidth, _rescueScalerHeight;
                     ADM_pixelFormat _rescueScalerPixFmt;
                     uint64_t    _currentPts;        // Current image PTS

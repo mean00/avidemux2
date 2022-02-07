@@ -50,7 +50,6 @@ ADM_Composer::ADM_Composer (void)
   _hdrConfig=NULL;
   _imageBuffer=NULL;
   _rescueScaler=NULL;
-  _rescueImage=NULL;
   _internalFlags=0;
   _currentSegment=0;
   _scratch=NULL;
@@ -592,11 +591,6 @@ uint8_t ADM_Composer::addFile (const char *name)
             delete _rescueScaler;
             _rescueScaler=NULL;
         }
-        if (_rescueImage)
-        {
-            delete _rescueImage;
-            _rescueImage=NULL;
-        }
         _imageBuffer=new ADMImageDefault(info.width,info.height);
         _imageBuffer->_qSize= ((info.width+15)>>4)*((info.height+15)>>4);
         _imageBuffer->quant=new uint8_t[_imageBuffer->_qSize];
@@ -966,11 +960,6 @@ uint8_t ADM_Composer::cleanup (void)
     {
         delete _rescueScaler;
         _rescueScaler=NULL;
-    }
-    if (_rescueImage)
-    {
-        delete _rescueImage;
-        _rescueImage=NULL;
     }
   
     if (_blankImageForInfo)
