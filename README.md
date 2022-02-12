@@ -21,10 +21,14 @@ git submodule update --init --recursive
 ## Build on Linux
 
 Install build dependecies:
+> Debian / Ubuntu and variants:
 ```
 bash createDebFromSourceUbuntu.bash --deps-only
 ```
-
+> Fedora:
+```
+bash createRpmFromSourceFedora.bash --deps-only
+```
 Build Avidemux:
 ```
 bash bootStrap.bash --with-system-libass
