@@ -25,6 +25,9 @@ int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, fl
                          ,{2,       QT_TRANSLATE_NOOP("adm","RGB clipping"),NULL}
                          ,{3,       QT_TRANSLATE_NOOP("adm","RGB Reinhard"),NULL}
                          ,{4,       QT_TRANSLATE_NOOP("adm","RGB Hable"),NULL}
+                         ,{5,       QT_TRANSLATE_NOOP("adm","RGB clipping - adaptive"),NULL}
+                         ,{6,       QT_TRANSLATE_NOOP("adm","RGB Reinhard - adaptive"),NULL}
+                         ,{7,       QT_TRANSLATE_NOOP("adm","RGB Hable - adaptive"),NULL}
                          //,{2,      QT_TRANSLATE_NOOP("adm","TODO"),NULL}
     };
 

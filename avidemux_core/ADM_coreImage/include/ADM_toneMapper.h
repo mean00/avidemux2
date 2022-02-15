@@ -58,6 +58,11 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     uint8_t         *hdrLumaCrLUT[256];
     uint16_t        *hdrRGBLUT;
     uint8_t         *hdrGammaLUT;
+    #define ADM_ADAPTIVE_HDR_LIN_LUT_WIDTH (10)	// bits
+    #define ADM_ADAPTIVE_HDR_LIN_LUT_SIZE	(1<<ADM_ADAPTIVE_HDR_LIN_LUT_WIDTH)
+    uint16_t        *linearizeLUT;
+    double          adaptLLAvg,adaptLLMax;
+    int32_t         *adaptHistoPrev,*adaptHistoCurr;
     double          hdrTMsrcLum, hdrTMtrgtLum, hdrTMsat, hdrTMboost;
     unsigned int    hdrTMmethod;
     uint16_t        *hdrYUV;
@@ -97,7 +102,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     bool            toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust, double boostAdjust);
     static void *   toneMap_RGB_worker(void *argptr);
     void            toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries colorPrim, ADM_colorSpace colorSpace, double * primaries, double * whitePoint);
-    bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust);
+    bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust, bool adaptive);
   public :
                     ADMToneMapper(int sws_flag, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
     bool            toneMap(ADMImage *sourceImage, ADMImage *destImage);
