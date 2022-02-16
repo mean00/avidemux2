@@ -1136,12 +1136,12 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
                             Ytm = 1.0;
                     break;
                 case 3:	// reinhard
-                        Ytm *= std::sqrt(boost);
+                        Ytm *= std::sqrt(boost)*1.4;
                         Ytm = Ytm/(1.0+Ytm);
                         Ytm *= (npl+1)/npl;
                     break;
                 case 4:	// hable
-                        Ytm *= boost*2;
+                        Ytm *= boost*4.5;
                         Ytm = (Ytm * (Ytm * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (Ytm * (Ytm * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
                         Ytm /= (npl * (npl * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (npl * (npl * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
                     break;
