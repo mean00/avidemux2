@@ -54,7 +54,9 @@ static tp_obj zzpy_setHDRConfig(TP)
   int p0 = pm.asInt();
   double p1 = pm.asDouble();
   double p2 = pm.asDouble();
-  int r = editor->setHDRConfig(p0, p1, p2);
+  int p3 = pm.asInt();
+  int p4 = pm.asInt();
+  int r = editor->setHDRConfig(p0, p1, p2, p3, p4);
   return tp_number(r);
 }
 // audioGetResample -> int pyGetResample(IEditor int)
@@ -926,7 +928,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "videoCodecSetProfile(str,str)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioBitrate(IEditor,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "setPostProc(int,int,int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "setHDRConfig(int,double,double)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "setHDRConfig(int,double,double,bool,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioGetResample(IEditor,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPARWidth(void)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "savePng(str)\n");

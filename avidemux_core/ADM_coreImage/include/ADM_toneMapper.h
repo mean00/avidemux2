@@ -28,12 +28,14 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapperConfig
     static uint32_t method;
     static float saturation;
     static float boost;
+    static bool adaptive;
+    static uint32_t gamut;
     float luminance;
     bool changed;
   public:
             ADMToneMapperConfig(bool init=false);
-    void    getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, float * targetLuminance=NULL);
-    void    setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust);
+    void    getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB, uint32_t * gamutMethod, float * targetLuminance=NULL);
+    void    setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB, uint32_t gamutMethod);
 };
 
 class ADMImage;
@@ -66,7 +68,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     double          hdrTMsrcLum, hdrTMtrgtLum, hdrTMsat, hdrTMboost;
     unsigned int    hdrTMmethod;
     uint16_t        *hdrYUV;
-    uint16_t        *hdrRGB[3];
+    uint16_t        *hdrYCbCr[3];
     uint8_t         *sdrRGB;
     uint8_t         sdrRGBSat[256];
     uint32_t        threadCount;
@@ -89,11 +91,12 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     typedef struct {
         uint32_t        srcWidth,srcHeight;
         uint32_t        ystart, yincr;
-        uint16_t        *hdrRGB[3];
+        uint16_t        *hdrYCbCr[3];
         uint8_t         *sdrRGB;
         uint16_t        *hdrRGBLUT;
         int             *ccmx;
         uint8_t         *hdrGammaLUT;
+        unsigned int    gamutMethod;
     } RGB_worker_thread_arg;
     
     RGB_worker_thread_arg *RGB_worker_thread_args;
@@ -102,7 +105,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     bool            toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust, double boostAdjust);
     static void *   toneMap_RGB_worker(void *argptr);
     void            toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries colorPrim, ADM_colorSpace colorSpace, double * primaries, double * whitePoint);
-    bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust, bool adaptive);
+    bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust, bool adaptive, unsigned int gamutMethod);
   public :
                     ADMToneMapper(int sws_flag, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
     bool            toneMap(ADMImage *sourceImage, ADMImage *destImage);

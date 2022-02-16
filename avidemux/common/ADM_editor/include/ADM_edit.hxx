@@ -323,8 +323,8 @@ public:
                     uint8_t             getPostProc( uint32_t *type, uint32_t *strength,bool  *swapuv);
 /******************************* /Post Processing ************************************/
 /******************************* HDR tonemaping config *******************************/
-                    uint8_t             setHDRConfig( uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust);
-                    uint8_t             getHDRConfig( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust);
+                    uint8_t             setHDRConfig( uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB, uint32_t gamutMethod);
+                    uint8_t             getHDRConfig( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB, uint32_t * gamutMethod);
 /******************************* /HDR tonemaping config ******************************/
 /******************************* Editing ************************************/
                     bool                remove(uint64_t start,uint64_t end);

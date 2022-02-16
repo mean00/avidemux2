@@ -146,9 +146,9 @@ void PythonScriptWriter::setPostProcessing(uint32_t type, uint32_t strength, uin
     *(this->_stream) << "adm.setPostProc(" << type << ", " << strength << ", " << swapUv << ")" << std::endl;
 }
 
-void PythonScriptWriter::setHDRConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust)
+void PythonScriptWriter::setHDRConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB, uint32_t gamutMethod)
 {
-    *(this->_stream) << "adm.setHDRConfig(" << toneMappingMethod << ", " << saturationAdjust << ", " << boostAdjust << ")" << std::endl;
+    *(this->_stream) << "adm.setHDRConfig(" << toneMappingMethod << ", " << saturationAdjust << ", " << boostAdjust << ", " << adaptiveRGB << ", " << gamutMethod << ")" << std::endl;
 }
 
 void PythonScriptWriter::setVideoEncoder(ADM_videoEncoder6* videoEncoder)
