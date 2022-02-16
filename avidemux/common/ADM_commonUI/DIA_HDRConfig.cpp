@@ -38,14 +38,14 @@ int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, fl
                          ,{1,       QT_TRANSLATE_NOOP("adm","Compression"),NULL}
     };
     diaElemMenu menuGamutMapHDR(gamutMethod,QT_TRANSLATE_NOOP("adm","_RGB out of gamut handling:"),sizeof(gamutMapEntries)/sizeof(diaMenuEntry),gamutMapEntries);
-    
 
-    for(int i=0; i < sizeof(toneMapEntries)/sizeof(diaMenuEntry); i++)
+    for(int i=1; i < sizeof(toneMapEntries)/sizeof(diaMenuEntry); i++)
     {
-        menuToneMapHDR.link(&(toneMapEntries[i]), i, &floatSaturationHDR);
-        menuToneMapHDR.link(&(toneMapEntries[i]), i, &floatBoostHDR);
-        menuToneMapHDR.link(&(toneMapEntries[i]), i, &adaptive);
-        menuToneMapHDR.link(&(toneMapEntries[i]), i, &menuGamutMapHDR);
+        menuToneMapHDR.link(toneMapEntries + i, 1, &floatSaturationHDR);
+        menuToneMapHDR.link(toneMapEntries + i, 1, &floatBoostHDR);
+        if(i < 2) continue;
+        menuToneMapHDR.link(toneMapEntries + i, 1, &adaptive);
+        menuToneMapHDR.link(toneMapEntries + i, 1, &menuGamutMapHDR);
     }
 
     diaElem *elems[NB_ELEMS]={
