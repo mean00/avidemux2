@@ -30,6 +30,7 @@ extern "C" {
 unsigned int ADMToneMapperConfig::method;
 float ADMToneMapperConfig::saturation;
 float ADMToneMapperConfig::boost;
+bool ADMToneMapperConfig::adaptive;
 
 ADMToneMapperConfig::ADMToneMapperConfig(bool init)
 {
@@ -42,9 +43,10 @@ ADMToneMapperConfig::ADMToneMapperConfig(bool init)
         method = 1;
     saturation = 1;
     boost = 1;
+    adaptive = true;
 }
 
-void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, float * targetLuminance)
+void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB, float * targetLuminance)
 {
     if (toneMappingMethod)
         *toneMappingMethod = method;
@@ -52,6 +54,8 @@ void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * satura
         *saturationAdjust = saturation;
     if (boostAdjust)
         *boostAdjust = boost;
+    if (adaptiveRGB)
+        *adaptiveRGB = adaptive;
     if (!targetLuminance)
         return;
 
@@ -64,11 +68,12 @@ void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * satura
     *targetLuminance = luminance;
 }
 
-void ADMToneMapperConfig::setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust)
+void ADMToneMapperConfig::setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB)
 {
     method = toneMappingMethod;
     saturation = saturationAdjust;
     boost = boostAdjust;
+    adaptive = adaptiveRGB;
     changed = true;
 }
 
@@ -229,8 +234,9 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage)
     float targetLuminance;
     float saturationAdjust;
     float boostAdjust;
+    bool adaptiveRGB;
     
-    config->getConfig(&toneMappingMethod, &saturationAdjust, &boostAdjust, &targetLuminance);
+    config->getConfig(&toneMappingMethod, &saturationAdjust, &boostAdjust, &adaptiveRGB, &targetLuminance);
     
     if (hdrTMmethod != toneMappingMethod)
     {
@@ -246,11 +252,7 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage)
         case 2:
         case 3:
         case 4:
-                return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust, boostAdjust, false);
-        case 5:
-        case 6:
-        case 7:
-                return toneMap_RGB(sourceImage, destImage, toneMappingMethod-3, targetLuminance, saturationAdjust, boostAdjust, true);
+                return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust, boostAdjust, adaptiveRGB);
         default:
             return false;
     }

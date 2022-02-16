@@ -57,7 +57,7 @@ public:
     virtual bool getPKFramePTS(uint64_t *frameTime) = 0;
     virtual bool getNKFramePTS(uint64_t *frameTime) = 0;
     virtual uint8_t getPostProc(uint32_t *type, uint32_t *strength, bool *swapuv) = 0;
-    virtual uint8_t getHDRConfig( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust) = 0;
+    virtual uint8_t getHDRConfig( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB) = 0;
     virtual _SEGMENT* getSegment(int i) = 0;
     virtual char *getVideoCodec(void) = 0;
     virtual int getVideoCount(void) = 0;
@@ -83,7 +83,7 @@ public:
     virtual bool setMarkerAPts(uint64_t pts) = 0;
     virtual bool setMarkerBPts(uint64_t pts) = 0;
     virtual uint8_t setPostProc(uint32_t type, uint32_t strength, bool swapuv) = 0;
-    virtual uint8_t setHDRConfig( uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust) = 0;
+    virtual uint8_t setHDRConfig( uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB) = 0;
     virtual ADM_videoEncoder6* getCurrentVideoEncoder() = 0;
     virtual int setVideoCodec(const char *codec, CONFcouple *c) = 0;
     virtual int changeVideoParam(const char *codec, CONFcouple *c) = 0;

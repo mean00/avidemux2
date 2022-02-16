@@ -82,8 +82,9 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorTy
         printf("Scripting HDR tone mapping config\n");
         uint32_t toneMappingMethod;
         float saturationAdjust, boostAdjust;
-        if(this->_editor->getHDRConfig(&toneMappingMethod, &saturationAdjust, &boostAdjust))
-            this->_scriptWriter->setHDRConfig(toneMappingMethod, saturationAdjust, boostAdjust);
+        bool adaptiveRGB;
+        if(this->_editor->getHDRConfig(&toneMappingMethod, &saturationAdjust, &boostAdjust, &adaptiveRGB))
+            this->_scriptWriter->setHDRConfig(toneMappingMethod, saturationAdjust, boostAdjust, adaptiveRGB);
         else
             printf("No HDR tone mapping config available, skipping.\n");
 

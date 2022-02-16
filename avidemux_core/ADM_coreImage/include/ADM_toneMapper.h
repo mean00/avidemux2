@@ -28,12 +28,13 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapperConfig
     static uint32_t method;
     static float saturation;
     static float boost;
+    static bool adaptive;
     float luminance;
     bool changed;
   public:
             ADMToneMapperConfig(bool init=false);
-    void    getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, float * targetLuminance=NULL);
-    void    setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust);
+    void    getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB, float * targetLuminance=NULL);
+    void    setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB);
 };
 
 class ADMImage;

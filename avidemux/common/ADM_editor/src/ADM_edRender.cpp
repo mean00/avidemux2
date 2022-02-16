@@ -595,22 +595,22 @@ uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, bool *swa
 /**
     \fn setHDRConfig
 */
-uint8_t ADM_Composer::setHDRConfig( uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust)
+uint8_t ADM_Composer::setHDRConfig( uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB)
 {
     if(!_segments.getNbRefVideos()) return 0;
     if(!_hdrConfig) return 0;
-    _hdrConfig->setConfig(toneMappingMethod, saturationAdjust, boostAdjust);
+    _hdrConfig->setConfig(toneMappingMethod, saturationAdjust, boostAdjust, adaptiveRGB);
     return 1;
 }
 /**
     \fn getHDRConfig
 */
 
-uint8_t ADM_Composer::getHDRConfig( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust)
+uint8_t ADM_Composer::getHDRConfig( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB)
 {
     if(!_segments.getNbRefVideos()) return 0;
     if(!_hdrConfig) return 0;
-    _hdrConfig->getConfig(toneMappingMethod, saturationAdjust, boostAdjust);
+    _hdrConfig->getConfig(toneMappingMethod, saturationAdjust, boostAdjust, adaptiveRGB);
     return 1;
 }
 /**

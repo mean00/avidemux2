@@ -1494,24 +1494,26 @@ void    A_setPostproc( void )
 }
 
 //
-extern int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust);
+extern int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB);
 //
 void    A_setHDRConfig( void )
 {
     uint32_t method;
     float saturation, boost;
+    bool adaptiveRGB;
     stagedActionSuccess = 0;
     if(!avifileinfo) return;
 
-    if(!video_body->getHDRConfig(&method,&saturation,&boost))
+    if(!video_body->getHDRConfig(&method,&saturation,&boost,&adaptiveRGB))
     {
         method = 1;
         saturation = boost = 1.;
+        adaptiveRGB = true;
     }
 
-     if(DIA_getHDRParams( &method, &saturation,&boost))
+     if(DIA_getHDRParams( &method, &saturation,&boost,&adaptiveRGB))
      {
-        video_body->setHDRConfig(method,saturation,boost);
+        video_body->setHDRConfig(method,saturation,boost,adaptiveRGB);
         stagedActionSuccess = 1;
         return;
      }
