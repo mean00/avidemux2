@@ -203,27 +203,13 @@ void diaElemMenuDynamic::finalize(void)
   for(int i=0;i<nbLink;i++)
   {
     dialElemLink *l=&(links[i]);
-    if(l->value==val)
-    {
-      if(!l->onoff)  l->widget->enable(false);
-    }else
-    {
-       if(l->onoff)  l->widget->enable(false);
-    }
-    
+    l->widget->enable(false);
   }
   /* Then enable */
   for(int i=0;i<nbLink;i++)
   {
     dialElemLink *l=&(links[i]);
-    if(l->value==val)
-    {
-      if(l->onoff)  l->widget->enable(true);
-    }else
-    {
-       if(!l->onoff)  l->widget->enable(true);
-    }
-    
+    if(l->value == val) l->widget->enable(l->onoff);
   }
 }
 void diaElemMenuDynamic::enable(uint32_t onoff)
