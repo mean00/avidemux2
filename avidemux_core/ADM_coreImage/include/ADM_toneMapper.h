@@ -67,7 +67,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     double          hdrTMsrcLum, hdrTMtrgtLum, hdrTMsat, hdrTMboost;
     unsigned int    hdrTMmethod;
     uint16_t        *hdrYUV;
-    uint16_t        *hdrRGB[3];
+    uint16_t        *hdrYCbCr[3];
     uint8_t         *sdrRGB;
     uint8_t         sdrRGBSat[256];
     uint32_t        threadCount;
@@ -90,7 +90,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     typedef struct {
         uint32_t        srcWidth,srcHeight;
         uint32_t        ystart, yincr;
-        uint16_t        *hdrRGB[3];
+        uint16_t        *hdrYCbCr[3];
         uint8_t         *sdrRGB;
         uint16_t        *hdrRGBLUT;
         int             *ccmx;

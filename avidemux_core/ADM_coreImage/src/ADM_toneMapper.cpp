@@ -111,7 +111,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
     hdrYUV=NULL;
     for (int i=0; i<3; i++)
     {
-        hdrRGB[i]=NULL;
+        hdrYCbCr[i]=NULL;
     }
     sdrRGB=NULL;
     
@@ -141,7 +141,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
                       srcWidth,srcHeight,
                       lavFrom ,
                       srcWidth,srcHeight,
-                      AV_PIX_FMT_YUV444P16LE,                   // when multithreaded libswscale available retest with AV_PIX_FMT_GBRP16LE,
+                      AV_PIX_FMT_YUV444P16LE,
                       SWS_POINT, NULL, NULL,NULL);		// use fast n.n. scaling, as resolution will not change in the first step
     contextRGB2=(void *)sws_getContext(
                       srcWidth,srcHeight,
@@ -214,7 +214,7 @@ ADMToneMapper::~ADMToneMapper()
     }
     for (int i=0; i<3; i++)
     {
-        delete [] hdrRGB[i];
+        delete [] hdrYCbCr[i];
     }
     delete [] sdrRGB;
     delete [] worker_threads;
@@ -778,7 +778,6 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
 
     int stride = ADM_IMAGE_ALIGN(arg->srcWidth);
     uint8_t * sdrBGR, * sdrG, * sdrB;
-    //uint16_t * hdrR, * hdrG, * hdrB;
     int32_t hdrR, hdrG, hdrB, hY, hU, hV;
     uint16_t * hdrY, * hdrU, * hdrV;
     int32_t linR,linG,linB,linccR,linccG,linccB;
@@ -789,10 +788,9 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
     for (int y=arg->ystart; y<(arg->srcHeight); y+=arg->yincr)
     {
         sdrBGR = arg->sdrRGB + y*ADM_IMAGE_ALIGN(arg->srcWidth*3);
-        // hdrRGB now is actually YUV
-        hdrY = arg->hdrRGB[0] + y*stride;
-        hdrU = arg->hdrRGB[1] + y*stride;
-        hdrV = arg->hdrRGB[2] + y*stride;
+        hdrY = arg->hdrYCbCr[0] + y*stride;
+        hdrU = arg->hdrYCbCr[1] + y*stride;
+        hdrV = arg->hdrYCbCr[2] + y*stride;
 
         for (int x=0; x<(arg->srcWidth); x++)
         {
@@ -832,11 +830,6 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
             linB = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
 
             
-            // when multithreaded libswscale available retest with AV_PIX_FMT_GBRP16LE,
-            //linR = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            //linG = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            //linB = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(*hdrB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            //hdrR++; hdrG++; hdrB++;
             linccR = arg->ccmx[0]*linR + arg->ccmx[1]*linG + arg->ccmx[2]*linB;
             linccG = arg->ccmx[3]*linR + arg->ccmx[4]*linG + arg->ccmx[5]*linB;
             linccB = arg->ccmx[6]*linR + arg->ccmx[7]*linG + arg->ccmx[8]*linB;
@@ -940,9 +933,9 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     }
     for (int i=0; i<3; i++)
     {
-        if (hdrRGB[i] == NULL)
+        if (hdrYCbCr[i] == NULL)
         {
-            hdrRGB[i] = new uint16_t[ADM_IMAGE_ALIGN(srcWidth)*srcHeight];
+            hdrYCbCr[i] = new uint16_t[ADM_IMAGE_ALIGN(srcWidth)*srcHeight];
         }
     }
     if (sdrRGB == NULL)
@@ -972,19 +965,21 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
 
     for (int p=0; p<3; p++)
     {
-        gbrData[p] = (uint8_t*)hdrRGB[p];   // convert to YUV444
+        gbrData[p] = (uint8_t*)hdrYCbCr[p];   // convert to YUV444
         gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth)*2;
     }
-    //gbrData[0] = (uint8_t*)hdrRGB[1];     when multithreaded libswscale available retest with AV_PIX_FMT_GBRP16LE,
-    //gbrData[1] = (uint8_t*)hdrRGB[2];
-    //gbrData[2] = (uint8_t*)hdrRGB[0];
     sws_scale(CONTEXTRGB1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
     
     
     
     if (adaptive)
     {
-        boost = boostAdjust*boostAdjust;
+        // Adaptive RGB tonemapper constant. Defined here -> scope of the defines restricted to this file.
+        #define HDR_AVG_LOWER_LIMIT     (0.0004)        // lower value == brighter dark scenes
+        #define SDR_AVG                 (0.25)          // average is 50% (like a ramp from black to white) == 0.5 -> in linear intensity ~= 0.25
+        #define RC_FILTER_CONST         (0.1)           // filtering constant
+        
+        boost = boostAdjust*boostAdjust;    // don't use _hdrInfo, only user enforced parameter
         
         if (linearizeLUT == NULL)
         {
@@ -1032,13 +1027,14 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
             adaptHistoCurr = new int32_t[64];
         }
         
+        // measure peak and avg luminance of the current frame
         uint64_t linlumaMax = 0;
         uint64_t linLumaAvg = 0;
         uint16_t linLum;
         memset(adaptHistoCurr,0,64*sizeof(int32_t));
         for (int y=0; y<srcHeight; y++)
         {
-            uint16_t * hdrY = hdrRGB[0] + y*ADM_IMAGE_ALIGN(srcWidth);
+            uint16_t * hdrY = hdrYCbCr[0] + y*ADM_IMAGE_ALIGN(srcWidth);
 
             for (int x=0; x<srcWidth; x++)
             {
@@ -1054,12 +1050,13 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         lumaAvg /= 65535.0;
         lumaMax = linlumaMax;
         lumaMax /= 65535.0;
-        lumaAvg = (1.0-0.0004)*lumaAvg + 0.0004;    // soft limit
+        lumaAvg = (1.0-HDR_AVG_LOWER_LIMIT)*lumaAvg + HDR_AVG_LOWER_LIMIT;    // soft limit (differentiable knee)
 
+        // undersample chroma as it would be 4:2:0. its fine for scene detection histogram
         for (int y=0; y<srcHeight; y+=2)
         {
-            uint16_t * hdrU = hdrRGB[1] + y*ADM_IMAGE_ALIGN(srcWidth);
-            uint16_t * hdrV = hdrRGB[2] + y*ADM_IMAGE_ALIGN(srcWidth);
+            uint16_t * hdrU = hdrYCbCr[1] + y*ADM_IMAGE_ALIGN(srcWidth);
+            uint16_t * hdrV = hdrYCbCr[2] + y*ADM_IMAGE_ALIGN(srcWidth);
 
             for (int x=0; x<srcWidth; x+=2)
             {
@@ -1076,14 +1073,15 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         memcpy(adaptHistoPrev,adaptHistoCurr,64*sizeof(int32_t));
         //printf("scd = %.06f\n",scd);
 
-        double filterConst = 0.1;
-        if (scd > filterConst)
+        // low-pass filtering the measured avg and peak, to prevent flickering
+        double filterConst = RC_FILTER_CONST;
+        if (scd > filterConst)  // if scene changed, adapt quickly
             filterConst = scd;
-        if (filterConst > 1.0)
+        if (filterConst > 1.0)  // valid range: 0.0 .. 1.0
             filterConst = 1.0;
-        if (adaptLLAvg < 0)
+        if (adaptLLAvg < 0)     // if this is the first frame after the tonemapper kicks in, use the first measurement as is
             adaptLLAvg = lumaAvg;
-        else
+        else                    // else do filtering
             adaptLLAvg = (1.0-filterConst)*adaptLLAvg + filterConst*lumaAvg;
         if (adaptLLMax < 0)
             adaptLLMax = lumaMax;
@@ -1091,10 +1089,10 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
             adaptLLMax = (1.0-filterConst)*adaptLLMax + filterConst*lumaMax;
         
                     
-        if (adaptLLAvg < 0.0004)
-            adaptLLAvg = 0.0004;
+        if (adaptLLAvg < HDR_AVG_LOWER_LIMIT)
+            adaptLLAvg = HDR_AVG_LOWER_LIMIT;
         
-        peakLuminance = maxLuminance*adaptLLMax*(0.25/adaptLLAvg);
+        peakLuminance = maxLuminance*adaptLLMax*(SDR_AVG/adaptLLAvg);
         if (peakLuminance < targetLuminance)
             peakLuminance = targetLuminance;
 
@@ -1122,7 +1120,7 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
                 Ylin = std::pow(Y, 2.6);
             }
             
-            Ylin *= 0.25/adaptLLAvg;
+            Ylin *= SDR_AVG/adaptLLAvg;
             double npl = peakLuminance/targetLuminance;
             
             double Ytm = Ylin;
@@ -1136,12 +1134,12 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
                             Ytm = 1.0;
                     break;
                 case 3:	// reinhard
-                        Ytm *= std::sqrt(boost)*1.4;
+                        Ytm *= std::sqrt(boost)*1.4;    // multiplier const: try to match perceived brightness to clipping & hable
                         Ytm = Ytm/(1.0+Ytm);
                         Ytm *= (npl+1)/npl;
                     break;
                 case 4:	// hable
-                        Ytm *= boost*4.5;
+                        Ytm *= boost*4.5;    // multiplier const: try to match perceived brightness to clipping & reinhard
                         Ytm = (Ytm * (Ytm * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (Ytm * (Ytm * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
                         Ytm /= (npl * (npl * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (npl * (npl * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
                     break;
@@ -1272,7 +1270,7 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         RGB_worker_thread_args[tr].yincr = threadCount;
         for (int i=0; i<3; i++)
         {
-            RGB_worker_thread_args[tr].hdrRGB[i] = hdrRGB[i];
+            RGB_worker_thread_args[tr].hdrYCbCr[i] = hdrYCbCr[i];
         }
         RGB_worker_thread_args[tr].sdrRGB = sdrRGB;
         RGB_worker_thread_args[tr].hdrRGBLUT = hdrRGBLUT;
