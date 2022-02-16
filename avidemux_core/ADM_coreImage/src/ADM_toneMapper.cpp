@@ -31,6 +31,7 @@ unsigned int ADMToneMapperConfig::method;
 float ADMToneMapperConfig::saturation;
 float ADMToneMapperConfig::boost;
 bool ADMToneMapperConfig::adaptive;
+unsigned int ADMToneMapperConfig::gamut;
 
 ADMToneMapperConfig::ADMToneMapperConfig(bool init)
 {
@@ -44,9 +45,10 @@ ADMToneMapperConfig::ADMToneMapperConfig(bool init)
     saturation = 1;
     boost = 1;
     adaptive = true;
+    gamut = 0;
 }
 
-void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB, float * targetLuminance)
+void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB, uint32_t * gamutMethod, float * targetLuminance)
 {
     if (toneMappingMethod)
         *toneMappingMethod = method;
@@ -56,6 +58,8 @@ void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * satura
         *boostAdjust = boost;
     if (adaptiveRGB)
         *adaptiveRGB = adaptive;
+    if (gamutMethod)
+        *gamutMethod = gamut;
     if (!targetLuminance)
         return;
 
@@ -68,13 +72,14 @@ void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * satura
     *targetLuminance = luminance;
 }
 
-void ADMToneMapperConfig::setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB)
+void ADMToneMapperConfig::setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB, uint32_t gamutMethod)
 {
     method = toneMappingMethod;
     saturation = saturationAdjust;
     boost = boostAdjust;
     adaptive = adaptiveRGB;
     changed = true;
+    gamut = gamutMethod;
 }
 
 
@@ -230,13 +235,13 @@ ADMToneMapper::~ADMToneMapper()
 */
 bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage)
 {
-    uint32_t toneMappingMethod;
+    uint32_t toneMappingMethod, gamutMethod;
     float targetLuminance;
     float saturationAdjust;
     float boostAdjust;
     bool adaptiveRGB;
     
-    config->getConfig(&toneMappingMethod, &saturationAdjust, &boostAdjust, &adaptiveRGB, &targetLuminance);
+    config->getConfig(&toneMappingMethod, &saturationAdjust, &boostAdjust, &adaptiveRGB, &gamutMethod, &targetLuminance);
     
     if (hdrTMmethod != toneMappingMethod)
     {
@@ -252,7 +257,7 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage)
         case 2:
         case 3:
         case 4:
-                return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust, boostAdjust, adaptiveRGB);
+                return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust, boostAdjust, adaptiveRGB, gamutMethod);
         default:
             return false;
     }
@@ -838,35 +843,37 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
             linccB >>= 12;
             if ((linccR&oormask) || (linccG&oormask) || (linccB&oormask))
             {
-                int32_t min = (linccR < linccG) ? linccR : linccG;
-                min = (min < linccB) ? min : linccB;
-                if (min < 0)
+                if (arg->gamutMethod == 1)
                 {
-                    int32_t luma = 54*linccR+183*linccG+18*linccB;
-                    luma >>= 8;
-                    int32_t coeff = ((min-luma)==0) ? 256: min*256/(min-luma);
-                    int32_t icoeff = 256-coeff;
-                    int32_t lc = luma*coeff;
-                    linccR = icoeff*linccR + lc;
-                    linccR >>= 8;
-                    linccG = icoeff*linccG + lc;
-                    linccG >>= 8;
-                    linccB = icoeff*linccB + lc;
-                    linccB >>= 8;
+                    int32_t min = (linccR < linccG) ? linccR : linccG;
+                    min = (min < linccB) ? min : linccB;
+                    if (min < 0)
+                    {
+                        int32_t luma = 54*linccR+183*linccG+18*linccB;
+                        luma >>= 8;
+                        int32_t coeff = ((min-luma)==0) ? 256: min*256/(min-luma);
+                        int32_t icoeff = 256-coeff;
+                        int32_t lc = luma*coeff;
+                        linccR = icoeff*linccR + lc;
+                        linccR >>= 8;
+                        linccG = icoeff*linccG + lc;
+                        linccG >>= 8;
+                        linccB = icoeff*linccB + lc;
+                        linccB >>= 8;
+                    }
+                    int32_t max = (linccR > linccG) ? linccR : linccG;
+                    max = (max > linccB) ? max : linccB;
+                    if (max > 65535)
+                    {
+                        int32_t coeff = (4096*65536)/max;
+                        linccR *= coeff;
+                        linccR >>= 12;
+                        linccG *= coeff;
+                        linccG >>= 12;
+                        linccB *= coeff;
+                        linccB >>= 12;
+                    }
                 }
-                int32_t max = (linccR > linccG) ? linccR : linccG;
-                max = (max > linccB) ? max : linccB;
-                if (max > 65535)
-                {
-                    int32_t coeff = (4096*65536)/max;
-                    linccR *= coeff;
-                    linccR >>= 12;
-                    linccG *= coeff;
-                    linccG >>= 12;
-                    linccB *= coeff;
-                    linccB >>= 12;
-                }
-                
                 linccR = (linccR < 0) ? 0 : ((linccR > 65535) ? 65535 : linccR);
                 linccG = (linccG < 0) ? 0 : ((linccG > 65535) ? 65535 : linccG);
                 linccB = (linccB < 0) ? 0 : ((linccB > 65535) ? 65535 : linccB);
@@ -887,7 +894,7 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
 /**
     \fn toneMap_RGB
 */
-bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust, bool adaptive)
+bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust, bool adaptive, unsigned int gamutMethod)
 {
     // Check if tone mapping is needed & can do 
     if (!((sourceImage->_colorTrc == ADM_COL_TRC_SMPTE2084) || (sourceImage->_colorTrc == ADM_COL_TRC_ARIB_STD_B67) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_NCL) || (sourceImage->_colorSpace == ADM_COL_SPC_BT2020_CL)))
@@ -1276,6 +1283,7 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         RGB_worker_thread_args[tr].hdrRGBLUT = hdrRGBLUT;
         RGB_worker_thread_args[tr].ccmx = ccmx;
         RGB_worker_thread_args[tr].hdrGammaLUT = hdrGammaLUT;
+        RGB_worker_thread_args[tr].gamutMethod = gamutMethod;
     }
     for (int tr=0; tr<threadCount; tr++)
     {

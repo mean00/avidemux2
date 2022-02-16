@@ -29,12 +29,13 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapperConfig
     static float saturation;
     static float boost;
     static bool adaptive;
+    static uint32_t gamut;
     float luminance;
     bool changed;
   public:
             ADMToneMapperConfig(bool init=false);
-    void    getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB, float * targetLuminance=NULL);
-    void    setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB);
+    void    getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB, uint32_t * gamutMethod, float * targetLuminance=NULL);
+    void    setConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB, uint32_t gamutMethod);
 };
 
 class ADMImage;
@@ -95,6 +96,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
         uint16_t        *hdrRGBLUT;
         int             *ccmx;
         uint8_t         *hdrGammaLUT;
+        unsigned int    gamutMethod;
     } RGB_worker_thread_arg;
     
     RGB_worker_thread_arg *RGB_worker_thread_args;
@@ -103,7 +105,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     bool            toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust, double boostAdjust);
     static void *   toneMap_RGB_worker(void *argptr);
     void            toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries colorPrim, ADM_colorSpace colorSpace, double * primaries, double * whitePoint);
-    bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust, bool adaptive);
+    bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust, bool adaptive, unsigned int gamutMethod);
   public :
                     ADMToneMapper(int sws_flag, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
     bool            toneMap(ADMImage *sourceImage, ADMImage *destImage);

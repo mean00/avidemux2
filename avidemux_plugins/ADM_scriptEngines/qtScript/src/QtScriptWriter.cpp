@@ -170,7 +170,7 @@ namespace ADM_qtScript
 
     }
     
-    void QtScriptWriter::setHDRConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB)
+    void QtScriptWriter::setHDRConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB, uint32_t gamutMethod)
     {
 
     }
