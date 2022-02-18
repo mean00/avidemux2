@@ -257,6 +257,7 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage)
         case 2:
         case 3:
         case 4:
+        case 5:
                 return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust, boostAdjust, adaptiveRGB, gamutMethod);
         default:
             return false;
@@ -977,7 +978,8 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     }
     sws_scale(CONTEXTRGB1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
     
-    
+    // RGB tonemapper constant. Defined here -> scope of the defines restricted to this file.
+    #define SOFTLIMIT (0.5)       // must be < 1.0; if luminosity is under this value, then it is linear as clipping, above continue with a reinhard like compression, while keeping derivable around the breakpoint
     
     if (adaptive)
     {
@@ -1140,12 +1142,24 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
                         if (Ytm > 1.0)
                             Ytm = 1.0;
                     break;
-                case 3:	// reinhard
+                case 3:	// soft limit
+                        Ytm *= std::sqrt(boost);
+                        if (Ytm > SOFTLIMIT)
+                        {
+                            Ytm -= SOFTLIMIT;
+                            Ytm /= (1.0-SOFTLIMIT);
+                            Ytm = Ytm/(1.0+Ytm);
+                            Ytm *= (1.0-SOFTLIMIT);
+                            Ytm += SOFTLIMIT;
+                            
+                        }
+                    break;
+                case 4:	// reinhard
                         Ytm *= std::sqrt(boost)*1.4;    // multiplier const: try to match perceived brightness to clipping & hable
                         Ytm = Ytm/(1.0+Ytm);
                         Ytm *= (npl+1)/npl;
                     break;
-                case 4:	// hable
+                case 5:	// hable
                         Ytm *= boost*4.5;    // multiplier const: try to match perceived brightness to clipping & reinhard
                         Ytm = (Ytm * (Ytm * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (Ytm * (Ytm * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
                         Ytm /= (npl * (npl * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (npl * (npl * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
@@ -1226,12 +1240,24 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
                         if (Ytm > 1.0)
                             Ytm = 1.0;
                     break;
-                case 3:	// reinhard
+                case 3:	// soft limit
+                        Ytm *= std::sqrt(boost);
+                        if (Ytm > SOFTLIMIT)
+                        {
+                            Ytm -= SOFTLIMIT;
+                            Ytm /= (1.0-SOFTLIMIT);
+                            Ytm = Ytm/(1.0+Ytm);
+                            Ytm *= (1.0-SOFTLIMIT);
+                            Ytm += SOFTLIMIT;
+                            
+                        }
+                    break;
+                case 4:	// reinhard
                         Ytm *= std::sqrt(boost);
                         Ytm = Ytm/(1.0+Ytm);
                         Ytm *= (npl+1)/npl;
                     break;
-                case 4:	// hable
+                case 5:	// hable
                         Ytm *= boost;
                         Ytm = (Ytm * (Ytm * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (Ytm * (Ytm * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
                         Ytm /= (npl * (npl * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (npl * (npl * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
