@@ -1081,6 +1081,7 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         }
         scd /= (srcWidth*srcHeight)/4;
         memcpy(adaptHistoPrev,adaptHistoCurr,64*sizeof(int32_t));
+        scd = std::sqrt(scd);
         //printf("scd = %.06f\n",scd);
 
         // low-pass filtering the measured avg and peak, to prevent flickering
