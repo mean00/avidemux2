@@ -98,5 +98,6 @@ struct  {
 struct  {
 	uint32_t tonemapping;
 	float target_luminance;
+	uint32_t out_of_gamut_handling;
 }hdr;
 }my_prefs_struct;
