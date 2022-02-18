@@ -84,6 +84,6 @@ static optionDesc myOptions[]={
 { PICTURES_FPS_TYPE,"pictures.fps_type"                               ,ADM_param_uint32_t	,"1",	0,	6},
 { HDR_TONEMAPPING,"hdr.tonemapping"                                   ,ADM_param_uint32_t	,"1",	0,	99},
 { HDR_TARGET_LUMINANCE,"hdr.target_luminance"                         ,ADM_param_float   	,"100.0",	0.0,	1000.0},
-{ HDR_OUT_OF_GAMUT_HANDLING,"hdr.out_of_gamut_handling"               ,ADM_param_uint32_t	,"1",	0,	99},
+{ HDR_OUT_OF_GAMUT_HANDLING,"hdr.out_of_gamut_handling"               ,ADM_param_uint32_t	,"0",	0,	99},
 };
 
