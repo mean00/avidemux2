@@ -100,6 +100,7 @@ bool     askPortAvisynth=false;
 uint32_t defaultPortAvisynth = 9999;
 
 uint32_t toneMappingHDR = 1;
+uint32_t outOfGamutHDR = 0;
 float    targetLumHDR = DEFAULT_TARGET_LUMINANCE_HDR;
 
 #ifdef USE_SDL
@@ -165,6 +166,7 @@ std::string currentSdlDriver=getSdlDriverName();
     	// HDR
     	if (!prefs->get(HDR_TONEMAPPING,&toneMappingHDR)) toneMappingHDR=1;
     	if (!prefs->get(HDR_TARGET_LUMINANCE,&targetLumHDR)) targetLumHDR = DEFAULT_TARGET_LUMINANCE_HDR;
+        if (!prefs->get(HDR_OUT_OF_GAMUT_HANDLING,&outOfGamutHDR)) outOfGamutHDR=0;
 
         // Alsa
 #ifdef ALSA_SUPPORT
@@ -568,9 +570,15 @@ std::string currentSdlDriver=getSdlDriverName();
         };
         diaElemMenu menuToneMapHDR(&toneMappingHDR,QT_TRANSLATE_NOOP("adm","Default _tone mapping method:"),NB_ITEMS(toneMapEntries),toneMapEntries);
         diaElemFloatResettable floatTargetLumHDR(&targetLumHDR,QT_TRANSLATE_NOOP("adm","Target peak luminance (nits):"),0.,1000.,DEFAULT_TARGET_LUMINANCE_HDR);
+        diaMenuEntry outOfGamutEntries[] = {
+             {0,    QT_TRANSLATE_NOOP("adm","Clipping"),NULL}
+            ,{1,    QT_TRANSLATE_NOOP("adm","Compression"),NULL}
+        };
+        diaElemMenu menuOutOfGamutHDR(&outOfGamutHDR,QT_TRANSLATE_NOOP("adm","Default out of gamut handling:"),NB_ITEMS(outOfGamutEntries),outOfGamutEntries);
 
         diaElemFrame frameHDR(QT_TRANSLATE_NOOP("adm","HDR"));
         frameHDR.swallow(&menuToneMapHDR);
+        frameHDR.swallow(&menuOutOfGamutHDR);
         frameHDR.swallow(&floatTargetLumHDR);
 
         diaElem *diaPostProc[] = { &framePP, &frameHDR };
@@ -825,6 +833,7 @@ std::string currentSdlDriver=getSdlDriverName();
             // HDR
             prefs->set(HDR_TONEMAPPING, toneMappingHDR);
             prefs->set(HDR_TARGET_LUMINANCE, targetLumHDR);
+            prefs->set(HDR_OUT_OF_GAMUT_HANDLING, outOfGamutHDR);
 
                 // Initialise SDL again as driver may have changed
 #ifdef USE_SDL

@@ -45,7 +45,8 @@ ADMToneMapperConfig::ADMToneMapperConfig(bool init)
     saturation = 1;
     boost = 1;
     adaptive = true;
-    gamut = 0;
+    if (!prefs->get(HDR_OUT_OF_GAMUT_HANDLING,&gamut))
+        gamut = 0;
 }
 
 void ADMToneMapperConfig::getConfig(uint32_t * toneMappingMethod, float * saturationAdjust, float * boostAdjust, bool * adaptiveRGB, uint32_t * gamutMethod, float * targetLuminance)

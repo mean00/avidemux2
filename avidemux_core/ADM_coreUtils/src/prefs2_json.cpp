@@ -101,6 +101,7 @@ json.endNode();
 json.addNode("hdr");
 json.addUint32("tonemapping",key->hdr.tonemapping);
 json.addFloat("target_luminance",key->hdr.target_luminance);
+json.addUint32("out_of_gamut_handling",key->hdr.out_of_gamut_handling);
 json.endNode();
 return json.dumpToFile(file);
 };
