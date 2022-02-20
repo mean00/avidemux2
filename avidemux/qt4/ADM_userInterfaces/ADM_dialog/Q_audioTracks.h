@@ -48,12 +48,15 @@ public:
             filters[i] = new QPushButton(QT_TRANSLATE_NOOP("qaudiotracks","Filters"));
             ui.gridLayout->addWidget(filters[i],i,6);
         }
-        dupConfig = new QPushButton(QT_TRANSLATE_NOOP("qaudiotracks","Duplicate down"));
-        ui.gridLayout->addWidget(dupConfig,0,7);
+        dupConfig = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("qaudiotracks","Duplicate first track's settings"), QDialogButtonBox::ActionRole);
         delete [] plabel;
         showTracks(numOfTrack);
     }
-    
+    void showEvent(QShowEvent *event)
+    {
+        this->adjustSize();
+        this->layout()->setSizeConstraint( QLayout::SetFixedSize ); // make dialog unresizable & always fit to content
+    }
     void showTracks(int numOfTrack)
     {
         if (numOfTrack < trackCount)    // always show source tracks
@@ -70,8 +73,7 @@ public:
             codec[i]->setVisible(i<numOfTrack);
             codecConf[i]->setVisible(i<numOfTrack);
             filters[i]->setVisible(i<numOfTrack);
-        }            
-        this->resize(100,100);  // hacky way to set size to minimum-fit
+        }
     }
     
     ~audioTrackWindow()
