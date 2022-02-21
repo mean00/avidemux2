@@ -41,4 +41,5 @@ private slots:
                        bool  enabledStateChanged(int state);
                        void  inputChanged(int signal);
                        void  codecChanged(int idx);
+                       bool  dupConfigClicked(bool a);
 };

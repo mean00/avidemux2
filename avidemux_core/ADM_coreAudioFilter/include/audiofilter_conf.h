@@ -75,6 +75,7 @@ public: // accessor
     bool            audioFilterGetDrcMode(void) {return drcEnabled;};
     bool            audioFilterSetDrcMode(bool m) { drcEnabled=m;return true;};
     bool            audioFilterConfigure(void);
+    bool            audioFilterCopyConfig(ADM_AUDIOFILTER_CONFIG * other);
     bool            audioFilterSetResample(uint32_t newfq);  // Set 0 to disable frequency
     uint32_t        audioFilterGetResample(void);  // Set 0 to disable frequency
     bool            audioFilterSetFrameRate(FILMCONV conf);

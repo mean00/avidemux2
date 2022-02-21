@@ -31,6 +31,26 @@ bool ADM_AUDIOFILTER_CONFIG::audioFilterConfigure(void)
 }
 
 /**
+    \fn audioFilterCopyConfig
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterCopyConfig(ADM_AUDIOFILTER_CONFIG * other)
+{
+    startTimeInUs=other->startTimeInUs;
+    shiftInMs=other->shiftInMs;
+    mixerEnabled=other->mixerEnabled;
+    mixerConf=other->mixerConf;
+    resamplerEnabled=other->resamplerEnabled;
+    resamplerFrequency=other->resamplerFrequency;
+    film2pal=other->film2pal;
+    gainParam=other->gainParam;
+    drcEnabled=other->drcEnabled;
+    drcConf=other->drcConf;
+    shiftEnabled=other->shiftEnabled;
+    shiftInMs=other->shiftInMs;    
+    return true;
+}
+/**
     \fn audioFilterSetResample
     \brief
 */

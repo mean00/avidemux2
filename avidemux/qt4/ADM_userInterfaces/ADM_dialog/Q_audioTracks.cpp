@@ -36,7 +36,7 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
             active.addTrack(copy);
         }
         // create windows
-        window=new audioTrackWindow();
+        window=new audioTrackWindow(_srcActive->size());
         window->setModal(true);
 
         languages=ADM_getLanguageList();
@@ -75,6 +75,7 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
                             this,SLOT(languagesClicked(int)));   
  * */          
         }
+        QObject::connect( window->dupConfig,SIGNAL(clicked(bool)),this,SLOT(dupConfigClicked(bool)));
 };
 /**
  * \fn setLanguageFromPool
@@ -213,6 +214,16 @@ bool  audioTrackQt4::enabledStateChanged(int state)
         {
             disable(dex);
         }
+        
+        int lastChechked = -1;
+        for (int i=0; i<NB_MENU;i++)
+        {
+            if (window->enabled[i]->isChecked())
+                lastChechked = i;
+        }
+        lastChechked++;
+        window->showTracks(lastChechked);
+        
         return true;
 
 }
@@ -261,6 +272,44 @@ bool       audioTrackQt4::filtersClicked(bool a)
         ADM_assert(ed);
         ed->audioEncodingConfig.audioFilterConfigure();
         return true;
+}
+/**
+    \fn dupConfigClicked
+*/
+bool audioTrackQt4::dupConfigClicked(bool a)
+{
+    int codecIndex=window->codec[0]->currentIndex();
+    if(codecIndex<=0)
+    {
+        for (int i=0; i<NB_MENU; i++)
+        {
+            window->codec[i]->setCurrentIndex(0);
+            window->codecConf[i]->setEnabled(false);
+            window->filters[i]->setEnabled(false);           
+        }
+        
+        return true;
+    }
+    EditableAudioTrack *firstEd=active.atEditable(0);
+    ADM_assert(firstEd);
+    for (int i=0; i<NB_MENU; i++)
+    {
+        if (window->enabled[i]->isVisible()&& window->enabled[i]->isChecked())
+        {
+            window->codec[i]->blockSignals(true);
+            window->codec[i]->setCurrentIndex(codecIndex);
+            window->codecConf[i]->setEnabled(true);
+            window->filters[i]->setEnabled(true);
+            EditableAudioTrack *ed=active.atEditable(i);
+            if (ed)
+            {
+                ed->audioEncodingConfig.audioFilterCopyConfig(&(firstEd->audioEncodingConfig));
+                ed->encoderConf->duplicate(firstEd->encoderConf);
+            }
+            window->codec[i]->blockSignals(false);
+        }
+    }
+    return true;
 }
 /**
     \fn audioTrackQt4
@@ -395,6 +444,7 @@ void audioTrackQt4::enable(int i)
     ONOFF(inputs);
     ONOFF(languages);
     ONOFF(codec);
+    if (i==0) window->dupConfig->setEnabled(true);
 #undef ONOFF
 #define ONOFF(x) window->x[i]->setEnabled(window->codec[i]->currentIndex() > 0)
     ONOFF(codecConf);
@@ -414,7 +464,7 @@ void audioTrackQt4::disable(int i)
     ONOFF(codecConf);
     ONOFF(filters);
     ONOFF(languages);
-
+    if (i==0) window->dupConfig->setEnabled(false);
 }
 
 /**
