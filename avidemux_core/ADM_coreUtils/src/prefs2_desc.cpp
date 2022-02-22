@@ -55,6 +55,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"audio_device.alsa_device",offsetof(my_prefs_struct,audio_device.alsa_device),"std::string",ADM_param_stdstring},
  {"videodevice",offsetof(my_prefs_struct,videodevice),"uint32_t",ADM_param_uint32_t},
  {"priority.encoding",offsetof(my_prefs_struct,priority.encoding),"uint32_t",ADM_param_uint32_t},
+ {"priority.encoding_nix",offsetof(my_prefs_struct,priority.encoding_nix),"uint32_t",ADM_param_uint32_t},
  {"priority.indexing",offsetof(my_prefs_struct,priority.indexing),"uint32_t",ADM_param_uint32_t},
  {"priority.playback",offsetof(my_prefs_struct,priority.playback),"uint32_t",ADM_param_uint32_t},
  {"Default.postproc_type",offsetof(my_prefs_struct,Default.postproc_type),"uint32_t",ADM_param_uint32_t},

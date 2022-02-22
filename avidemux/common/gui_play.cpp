@@ -126,11 +126,11 @@ void GUI_PlayAvi(bool quit)
     oldTimeFrame=admPreview::getCurrentPts();
 	uint32_t priorityLevel;
 
-	#ifndef __HAIKU__
+#ifdef _WIN32
 	originalPriority = getpriority(PRIO_PROCESS, 0);
 	prefs->get(PRIORITY_PLAYBACK,&priorityLevel);
 	setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priorityLevel));
-	#endif
+#endif
 
     stop_req = 0;
     playing = 1;
@@ -204,9 +204,9 @@ bool GUIPlayback::cleanup(void)
         }
         videoFilter=NULL; // it has been destroyed by the chain
        // done.
-	   #ifndef __HAIKU__
+#ifdef _WIN32        
 	   setpriority(PRIO_PROCESS, 0, originalPriority);
-	   #endif
+#endif
        return true;
 }
 
