@@ -347,12 +347,12 @@ std::string currentSdlDriver=getSdlDriverName();
 };
 #define NB_ITEMS(x) sizeof(x)/sizeof(diaMenuEntry)
         diaElemMenu menuEncodePriority(&encodePriority, QT_TRANSLATE_NOOP("adm","_Encoding priority:"), NB_ITEMS(priorityEntries), priorityEntries);
-        diaElemMenu menuIndexPriority(&indexPriority, QT_TRANSLATE_NOOP("adm","_Indexing/unpacking priority:"), NB_ITEMS(priorityEntries), priorityEntries);
+        //diaElemMenu menuIndexPriority(&indexPriority, QT_TRANSLATE_NOOP("adm","_Indexing/unpacking priority:"), NB_ITEMS(priorityEntries), priorityEntries);
         diaElemMenu menuPlaybackPriority(&playbackPriority, QT_TRANSLATE_NOOP("adm","_Playback priority:"), NB_ITEMS(priorityEntries), priorityEntries);
 
         diaElemFrame framePriority(QT_TRANSLATE_NOOP("adm","Prioritisation"));
         framePriority.swallow(&menuEncodePriority);
-        framePriority.swallow(&menuIndexPriority);
+        //framePriority.swallow(&menuIndexPriority);
         framePriority.swallow(&menuPlaybackPriority);
 
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
