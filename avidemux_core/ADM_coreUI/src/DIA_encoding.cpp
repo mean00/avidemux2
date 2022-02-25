@@ -38,7 +38,8 @@ DIA_encodingBase::~DIA_encodingBase( )
     ADM_info("DiaEncodingBase: Destroying\n");
 #ifndef __HAIKU__
     // try to restore, at most nothing will happen
-    setpriority(PRIO_PROCESS, 0, _originalPriority);
+    if (setpriority(PRIO_PROCESS, 0, _originalPriority) < 0)
+        ADM_error("Can not restore original priority.\n");
 #endif
 }
 /**
