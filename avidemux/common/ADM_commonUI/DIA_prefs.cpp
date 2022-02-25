@@ -51,7 +51,7 @@ bool     useSwap=0;
 
 uint32_t lavcThreads=0;
 uint32_t encodePriority=2;
-uint32_t indexPriority=2;
+//uint32_t indexPriority=2;
 uint32_t playbackPriority=0;
 uint32_t downmix;
 bool     mpeg_no_limit=0;
@@ -241,8 +241,8 @@ std::string currentSdlDriver=getSdlDriverName();
         if(!prefs->get(PRIORITY_ENCODING, &encodePriority))
         encodePriority=2;
         // Indexing / unpacking priority
-        if(!prefs->get(PRIORITY_INDEXING, &indexPriority))
-        indexPriority=2;
+        //if(!prefs->get(PRIORITY_INDEXING, &indexPriority))
+        //indexPriority=2;
         // Playback priority
         if(!prefs->get(PRIORITY_PLAYBACK, &playbackPriority))
         playbackPriority=0;
@@ -338,23 +338,32 @@ std::string currentSdlDriver=getSdlDriverName();
         frameThread.swallow(&lavcThreadCount);
         frameThread.swallow(&lavcMultiThreadHwText);
 
+
+#define NB_ITEMS(x) sizeof(x)/sizeof(diaMenuEntry)        
         diaMenuEntry priorityEntries[] = {
-                     {0,       QT_TRANSLATE_NOOP("adm","High"),NULL}
-                     ,{1,      QT_TRANSLATE_NOOP("adm","Above normal"),NULL}
-                     ,{2,      QT_TRANSLATE_NOOP("adm","Normal"),NULL}
-                    ,{3,      QT_TRANSLATE_NOOP("adm","Below normal"),NULL}
-                    ,{4,      QT_TRANSLATE_NOOP("adm","Low"),NULL}
-};
-#define NB_ITEMS(x) sizeof(x)/sizeof(diaMenuEntry)
-        diaElemMenu menuEncodePriority(&encodePriority, QT_TRANSLATE_NOOP("adm","_Encoding priority:"), NB_ITEMS(priorityEntries), priorityEntries);
-        diaElemMenu menuIndexPriority(&indexPriority, QT_TRANSLATE_NOOP("adm","_Indexing/unpacking priority:"), NB_ITEMS(priorityEntries), priorityEntries);
-        diaElemMenu menuPlaybackPriority(&playbackPriority, QT_TRANSLATE_NOOP("adm","_Playback priority:"), NB_ITEMS(priorityEntries), priorityEntries);
+#ifdef _WIN32        
+                    {0,       QT_TRANSLATE_NOOP("adm","High"),NULL},
+                    {1,      QT_TRANSLATE_NOOP("adm","Above normal"),NULL},
+#endif
+                    {2,      QT_TRANSLATE_NOOP("adm","Normal"),NULL},
+                    {3,      QT_TRANSLATE_NOOP("adm","Below normal"),NULL},
+                    {4,      QT_TRANSLATE_NOOP("adm","Low"),NULL}
+        };
 
         diaElemFrame framePriority(QT_TRANSLATE_NOOP("adm","Prioritisation"));
+        diaElemMenu menuEncodePriority(&encodePriority, QT_TRANSLATE_NOOP("adm","_Encoding priority:"), NB_ITEMS(priorityEntries), priorityEntries);
         framePriority.swallow(&menuEncodePriority);
-        framePriority.swallow(&menuIndexPriority);
+        //diaElemMenu menuIndexPriority(&indexPriority, QT_TRANSLATE_NOOP("adm","_Indexing/unpacking priority:"), NB_ITEMS(priorityEntries), priorityEntries);
+        //framePriority.swallow(&menuIndexPriority);
+#ifdef _WIN32        
+        diaElemMenu menuPlaybackPriority(&playbackPriority, QT_TRANSLATE_NOOP("adm","_Playback priority:"), NB_ITEMS(priorityEntries), priorityEntries);
         framePriority.swallow(&menuPlaybackPriority);
-
+#else
+        diaElemReadOnlyText encodePriorityNixText(NULL,
+                QT_TRANSLATE_NOOP("adm","After an encoding is finished, the restoration of the original priority is only possible with the proper privileges."),NULL);
+        framePriority.swallow(&encodePriorityNixText);
+#endif
+        
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
         diaElemToggle firstPassLogFilesAutoDelete(&multiPassStatsAutoDelete,QT_TRANSLATE_NOOP("adm","De_lete first pass log files by default"));
 
@@ -779,7 +788,7 @@ std::string currentSdlDriver=getSdlDriverName();
             // Encoding priority
             prefs->set(PRIORITY_ENCODING, encodePriority);
             // Indexing / unpacking priority
-            prefs->set(PRIORITY_INDEXING, indexPriority);
+            //prefs->set(PRIORITY_INDEXING, indexPriority);
             // Playback priority
             prefs->set(PRIORITY_PLAYBACK, playbackPriority);
 

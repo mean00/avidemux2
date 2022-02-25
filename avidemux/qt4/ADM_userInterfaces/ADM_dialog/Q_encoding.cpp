@@ -126,6 +126,7 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 	ui->setupUi(this);
 
 #ifndef _WIN32
+#if 0   // running with root privileges is BAD
 	//check for root privileges
 	if (getuid() == 0)
 	{
@@ -133,6 +134,7 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 		ui->comboBoxPriority->setCurrentIndex(2);
                 
 	}else
+#endif
         {
             ui->comboBoxPriority->setVisible(false);
             ui->labelPrio->setVisible(false);
@@ -154,15 +156,23 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 	// set priority
 	uint32_t priority;
 
-	prefs->get(PRIORITY_ENCODING,&priority);	
-
 #ifndef _WIN32
+ #if 0  // running with root privileges is BAD
 	// check for root privileges
 	if (getuid() == 0)
 	{
 		ui->comboBoxPriority->setCurrentIndex(priority);
 	}
+ #endif
+ #ifndef __HAIKU__
+        // set priority here (base class constructor already has saved original priority)
+        if (prefs->get(PRIORITY_ENCODING, &priority))
+        {
+            setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priority));
+        }
+ #endif
 #else
+	prefs->get(PRIORITY_ENCODING,&priority);	
 	ui->comboBoxPriority->setCurrentIndex(priority);
 #endif
 

@@ -72,7 +72,6 @@ struct  {
 uint32_t videodevice;
 struct  {
 	uint32_t encoding;
-	uint32_t indexing;
 	uint32_t playback;
 }priority;
 struct  {

@@ -36,8 +36,10 @@ DIA_encodingBase::DIA_encodingBase(uint64_t duration)
 DIA_encodingBase::~DIA_encodingBase( )
 {
     ADM_info("DiaEncodingBase: Destroying\n");
-#ifdef _WIN32
-	setpriority(PRIO_PROCESS, 0, _originalPriority);
+#ifndef __HAIKU__
+    // try to restore, at most nothing will happen
+    if (setpriority(PRIO_PROCESS, 0, _originalPriority) < 0)
+        ADM_error("Can not restore original priority.\n");
 #endif
 }
 /**
