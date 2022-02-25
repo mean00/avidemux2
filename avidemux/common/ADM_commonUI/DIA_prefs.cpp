@@ -51,8 +51,7 @@ bool     useSwap=0;
 
 uint32_t lavcThreads=0;
 uint32_t encodePriority=2;
-uint32_t encodeNixPriority=2;
-uint32_t indexPriority=2;
+//uint32_t indexPriority=2;
 uint32_t playbackPriority=0;
 uint32_t downmix;
 bool     mpeg_no_limit=0;
@@ -241,11 +240,9 @@ std::string currentSdlDriver=getSdlDriverName();
         // Encoding priority
         if(!prefs->get(PRIORITY_ENCODING, &encodePriority))
         encodePriority=2;
-        if(!prefs->get(PRIORITY_ENCODING_NIX, &encodeNixPriority))
-        encodeNixPriority=2;
         // Indexing / unpacking priority
-        if(!prefs->get(PRIORITY_INDEXING, &indexPriority))
-        indexPriority=2;
+        //if(!prefs->get(PRIORITY_INDEXING, &indexPriority))
+        //indexPriority=2;
         // Playback priority
         if(!prefs->get(PRIORITY_PLAYBACK, &playbackPriority))
         playbackPriority=0;
@@ -343,37 +340,30 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
 #define NB_ITEMS(x) sizeof(x)/sizeof(diaMenuEntry)        
-#ifdef _WIN32        
         diaMenuEntry priorityEntries[] = {
-                     {0,       QT_TRANSLATE_NOOP("adm","High"),NULL}
-                     ,{1,      QT_TRANSLATE_NOOP("adm","Above normal"),NULL}
-                     ,{2,      QT_TRANSLATE_NOOP("adm","Normal"),NULL}
-                    ,{3,      QT_TRANSLATE_NOOP("adm","Below normal"),NULL}
-                    ,{4,      QT_TRANSLATE_NOOP("adm","Low"),NULL}
+#ifdef _WIN32        
+                    {0,       QT_TRANSLATE_NOOP("adm","High"),NULL},
+                    {1,      QT_TRANSLATE_NOOP("adm","Above normal"),NULL},
+#endif
+                    {2,      QT_TRANSLATE_NOOP("adm","Normal"),NULL},
+                    {3,      QT_TRANSLATE_NOOP("adm","Below normal"),NULL},
+                    {4,      QT_TRANSLATE_NOOP("adm","Low"),NULL}
         };
 
-        diaElemMenu menuEncodePriority(&encodePriority, QT_TRANSLATE_NOOP("adm","_Encoding priority:"), NB_ITEMS(priorityEntries), priorityEntries);
-        //diaElemMenu menuIndexPriority(&indexPriority, QT_TRANSLATE_NOOP("adm","_Indexing/unpacking priority:"), NB_ITEMS(priorityEntries), priorityEntries);
-        diaElemMenu menuPlaybackPriority(&playbackPriority, QT_TRANSLATE_NOOP("adm","_Playback priority:"), NB_ITEMS(priorityEntries), priorityEntries);
-
         diaElemFrame framePriority(QT_TRANSLATE_NOOP("adm","Prioritisation"));
+        diaElemMenu menuEncodePriority(&encodePriority, QT_TRANSLATE_NOOP("adm","_Encoding priority:"), NB_ITEMS(priorityEntries), priorityEntries);
         framePriority.swallow(&menuEncodePriority);
+        //diaElemMenu menuIndexPriority(&indexPriority, QT_TRANSLATE_NOOP("adm","_Indexing/unpacking priority:"), NB_ITEMS(priorityEntries), priorityEntries);
         //framePriority.swallow(&menuIndexPriority);
+#ifdef _WIN32        
+        diaElemMenu menuPlaybackPriority(&playbackPriority, QT_TRANSLATE_NOOP("adm","_Playback priority:"), NB_ITEMS(priorityEntries), priorityEntries);
         framePriority.swallow(&menuPlaybackPriority);
 #else
-        diaMenuEntry priorityEntries[] = {
-                     {2,      QT_TRANSLATE_NOOP("adm","Normal"),NULL}
-                    ,{3,      QT_TRANSLATE_NOOP("adm","Below normal"),NULL}
-                    ,{4,      QT_TRANSLATE_NOOP("adm","Low"),NULL}
-        };
-        diaElemMenu menuEncodePriority(&encodeNixPriority, QT_TRANSLATE_NOOP("adm","_Encoding priority:"), NB_ITEMS(priorityEntries), priorityEntries);
-        diaElemReadOnlyText encodePriorityText(NULL,
+        diaElemReadOnlyText encodePriorityNixText(NULL,
                 QT_TRANSLATE_NOOP("adm","After an encoding is finished, the restoration of the original priority is only possible with the proper privileges."),NULL);
-        
-        diaElemFrame framePriority(QT_TRANSLATE_NOOP("adm","Prioritisation"));
-        framePriority.swallow(&menuEncodePriority);
-        framePriority.swallow(&encodePriorityText);
+        framePriority.swallow(&encodePriorityNixText);
 #endif
+        
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
         diaElemToggle firstPassLogFilesAutoDelete(&multiPassStatsAutoDelete,QT_TRANSLATE_NOOP("adm","De_lete first pass log files by default"));
 
@@ -797,9 +787,8 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_SHARED_CACHE, editor_use_shared_cache);
             // Encoding priority
             prefs->set(PRIORITY_ENCODING, encodePriority);
-            prefs->set(PRIORITY_ENCODING_NIX, encodeNixPriority);
             // Indexing / unpacking priority
-            prefs->set(PRIORITY_INDEXING, indexPriority);
+            //prefs->set(PRIORITY_INDEXING, indexPriority);
             // Playback priority
             prefs->set(PRIORITY_PLAYBACK, playbackPriority);
 

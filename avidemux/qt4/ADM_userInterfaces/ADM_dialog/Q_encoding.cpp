@@ -166,7 +166,7 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
  #endif
  #ifndef __HAIKU__
         // set priority here (base class constructor already has saved original priority)
-        if (prefs->get(PRIORITY_ENCODING_NIX, &priority))
+        if (prefs->get(PRIORITY_ENCODING, &priority))
         {
             setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priority));
         }

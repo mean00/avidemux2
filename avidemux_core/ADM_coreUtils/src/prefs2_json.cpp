@@ -75,8 +75,6 @@ json.endNode();
 json.addUint32("videodevice",key->videodevice);
 json.addNode("priority");
 json.addUint32("encoding",key->priority.encoding);
-json.addUint32("encoding_nix",key->priority.encoding_nix);
-json.addUint32("indexing",key->priority.indexing);
 json.addUint32("playback",key->priority.playback);
 json.endNode();
 json.addNode("Default");

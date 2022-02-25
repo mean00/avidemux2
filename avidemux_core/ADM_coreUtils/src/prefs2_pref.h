@@ -66,8 +66,6 @@ static optionDesc myOptions[]={
 { AUDIO_DEVICE_ALSA_DEVICE,"audio_device.alsa_device"                 ,ADM_param_stdstring  	,"dmix",	0,	0},
 { VIDEODEVICE,"videodevice"                                           ,ADM_param_uint32_t	,"0",	0,	10},
 { PRIORITY_ENCODING,"priority.encoding"                               ,ADM_param_uint32_t	,"3",	0,	4},
-{ PRIORITY_ENCODING_NIX,"priority.encoding_nix"                       ,ADM_param_uint32_t	,"2",	0,	4},
-{ PRIORITY_INDEXING,"priority.indexing"                               ,ADM_param_uint32_t	,"3",	0,	4},
 { PRIORITY_PLAYBACK,"priority.playback"                               ,ADM_param_uint32_t	,"0",	0,	4},
 { DEFAULT_POSTPROC_TYPE,"Default.postproc_type"                       ,ADM_param_uint32_t	,"0",	0,	7},
 { DEFAULT_POSTPROC_VALUE,"Default.postproc_value"                     ,ADM_param_uint32_t	,"0",	0,	5},
