@@ -360,7 +360,9 @@ std::string currentSdlDriver=getSdlDriverName();
         framePriority.swallow(&menuPlaybackPriority);
 #else
         diaElemReadOnlyText encodePriorityNixText(NULL,
-                QT_TRANSLATE_NOOP("adm","After an encoding is finished, the restoration of the original priority is only possible with the proper privileges."),NULL);
+            /* advanced users know how to renice, we cannot do this ourselves */
+            QT_TRANSLATE_NOOP("adm","Priority can be only lowered and applies to the entire application for the current session"),
+            NULL);
         framePriority.swallow(&encodePriorityNixText);
 #endif
         
