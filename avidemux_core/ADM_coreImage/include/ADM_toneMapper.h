@@ -59,7 +59,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     uint8_t         *hdrChromaRLUT[256];
     uint8_t         *hdrLumaCrLUT[256];
     uint16_t        *hdrRGBLUT;
-    uint8_t         *hdrGammaLUT;
+    uint16_t         *hdrGammaLUT;
     #define ADM_ADAPTIVE_HDR_LIN_LUT_WIDTH (10)	// bits
     #define ADM_ADAPTIVE_HDR_LIN_LUT_SIZE	(1<<ADM_ADAPTIVE_HDR_LIN_LUT_WIDTH)
     uint16_t        *linearizeLUT;
@@ -69,7 +69,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     unsigned int    hdrTMmethod;
     uint16_t        *hdrYUV;
     uint16_t        *hdrYCbCr[3];
-    uint8_t         *sdrRGB;
+    uint8_t         *sdrYUV[3];
     uint8_t         sdrRGBSat[256];
     uint32_t        threadCount,threadCountYUV;
     pthread_t       *worker_threads;
@@ -92,11 +92,12 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
         uint32_t        srcWidth,srcHeight;
         uint32_t        ystart, yincr;
         uint16_t        *hdrYCbCr[3];
-        uint8_t         *sdrRGB;
+        uint8_t         *sdrYUV[3];
         uint16_t        *hdrRGBLUT;
         int             *ccmx;
-        uint8_t         *hdrGammaLUT;
+        uint16_t         *hdrGammaLUT;
         unsigned int    gamutMethod;
+        uint8_t         *sdrRGBSat;
     } RGB_worker_thread_arg;
     
     RGB_worker_thread_arg *RGB_worker_thread_args;
@@ -117,7 +118,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
         unsigned int    method;
         double          gain,npl,boost;
         uint16_t        *hdrRGBLUT;
-        uint8_t         *hdrGammaLUT;
+        uint16_t         *hdrGammaLUT;
     } RGB_LUTgen_thread_arg;
     RGB_LUTgen_thread_arg * RGB_LUTgen_thread_args;
     
