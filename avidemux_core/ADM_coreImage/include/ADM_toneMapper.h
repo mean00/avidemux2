@@ -111,10 +111,22 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     
     RGB_peak_measure_thread_arg * RGB_peak_measure_thread_args;
     
+    typedef struct {
+        ADMImage        *sourceImage;
+        uint32_t        lstart, lincr;
+        unsigned int    method;
+        double          gain,npl,boost;
+        uint16_t        *hdrRGBLUT;
+        uint8_t         *hdrGammaLUT;
+    } RGB_LUTgen_thread_arg;
+    RGB_LUTgen_thread_arg * RGB_LUTgen_thread_args;
+    
+    
     static void *   toneMap_fastYUV_worker(void *argptr);
     bool            toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, double targetLuminance, double saturationAdjust, double boostAdjust);
     static void *   toneMap_RGB_worker(void *argptr);
     static void *   toneMap_RGB_peak_measure_worker(void *argptr);
+    static void *   toneMap_RGB_LUTgen_worker(void *argptr);
     void            toneMap_RGB_ColorMatrix(int32_t * matrix, ADM_colorPrimaries colorPrim, ADM_colorSpace colorSpace, double * primaries, double * whitePoint);
     bool            toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust, bool adaptive, unsigned int gamutMethod);
   public :
