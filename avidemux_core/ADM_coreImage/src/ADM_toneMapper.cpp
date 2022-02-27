@@ -147,7 +147,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
                       srcWidth,srcHeight,
                       lavFrom ,
                       srcWidth,srcHeight,
-                      AV_PIX_FMT_YUV444P16LE,
+                      AV_PIX_FMT_YUV420P16LE,
                       SWS_POINT, NULL, NULL,NULL);		// use fast n.n. scaling, as resolution will not change in the first step
     contextRGB2=(void *)sws_getContext(
                       srcWidth,srcHeight,
@@ -784,8 +784,9 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
     RGB_worker_thread_arg * arg = (RGB_worker_thread_arg*)argptr;
 
     int stride = ADM_IMAGE_ALIGN(arg->srcWidth);
+    int stride2 = ADM_IMAGE_ALIGN(arg->srcWidth/2);
     uint8_t * sdrBGR, * sdrG, * sdrB;
-    int32_t hdrR, hdrG, hdrB, hY, hU, hV;
+    int32_t hdrR, hdrG, hdrB, hY, hU, hV, hUVR,hUVG,hUVB;
     uint16_t * hdrY, * hdrU, * hdrV;
     int32_t linR,linG,linB,linccR,linccG,linccB;
     int32_t oormask;
@@ -796,19 +797,26 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
     {
         sdrBGR = arg->sdrRGB + y*ADM_IMAGE_ALIGN(arg->srcWidth*3);
         hdrY = arg->hdrYCbCr[0] + y*stride;
-        hdrU = arg->hdrYCbCr[1] + y*stride;
-        hdrV = arg->hdrYCbCr[2] + y*stride;
+        hdrU = arg->hdrYCbCr[1] + (y/2)*stride2;
+        hdrV = arg->hdrYCbCr[2] + (y/2)*stride2;
 
         for (int x=0; x<(arg->srcWidth); x++)
         {
             // do YUV->RGB conversion here (multithreaded)
             hY = *hdrY;
-            hU = *hdrU;
-            hV = *hdrV;
-            hdrY++; hdrU++; hdrV++;
+            hdrY++;
+            if (x%2 == 0)
+            {
+                hU = *hdrU;
+                hV = *hdrV;
+                hdrU++; hdrV++;
+                hU -= 32768;
+                hV -= 32768;
+                hUVR = hV*13806;
+                hUVG = hU*1541  + hV*5349;
+                hUVB = hU*17614;
+            }
 
-            hU -= 32768;
-            hV -= 32768;
             
             // YUV is limited range
             // Y: 4096 .. 60416     -> substract 4096, then multiply by 256/220
@@ -819,9 +827,10 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
             //  1       +0                  +1.4746
             //  1       -0.16455312684366   -0.57135312684366
             //  1       +1.8814             +0
-            hdrR = hY*9533            + hV*13806;
-            hdrG = hY*9533 - hU*1541  - hV*5349 ;
-            hdrB = hY*9533 + hU*17614           ;
+            hY *= 9533;
+            hdrR = hY + hUVR;
+            hdrG = hY - hUVG;
+            hdrB = hY + hUVB;
             hdrR /= 8192;
             hdrG /= 8192;
             hdrB /= 8192;
@@ -974,8 +983,8 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
 
     for (int p=0; p<3; p++)
     {
-        gbrData[p] = (uint8_t*)hdrYCbCr[p];   // convert to YUV444
-        gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth)*2;
+        gbrData[p] = (uint8_t*)hdrYCbCr[p];   // convert to YUV420
+        gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth)*((p==0)?2:1);
     }
     sws_scale(CONTEXTRGB1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
     
@@ -1062,13 +1071,13 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         lumaMax /= 65535.0;
         lumaAvg = (1.0-HDR_AVG_LOWER_LIMIT)*lumaAvg + HDR_AVG_LOWER_LIMIT;    // soft limit (differentiable knee)
 
-        // undersample chroma as it would be 4:2:0. its fine for scene detection histogram
-        for (int y=0; y<srcHeight; y+=2)
+        // it is 4:2:0
+        for (int y=0; y<srcHeight/2; y++)
         {
-            uint16_t * hdrU = hdrYCbCr[1] + y*ADM_IMAGE_ALIGN(srcWidth);
-            uint16_t * hdrV = hdrYCbCr[2] + y*ADM_IMAGE_ALIGN(srcWidth);
+            uint16_t * hdrU = hdrYCbCr[1] + y*ADM_IMAGE_ALIGN(srcWidth/2);
+            uint16_t * hdrV = hdrYCbCr[2] + y*ADM_IMAGE_ALIGN(srcWidth/2);
 
-            for (int x=0; x<srcWidth; x+=2)
+            for (int x=0; x<srcWidth/2; x++)
             {
                 adaptHistoCurr[(hdrU[x]>>11)&0x1F +  0] += 1;
                 adaptHistoCurr[(hdrV[x]>>11)&0x1F + 32] += 1;
