@@ -71,7 +71,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
     uint16_t        *hdrYCbCr[3];
     uint8_t         *sdrRGB;
     uint8_t         sdrRGBSat[256];
-    uint32_t        threadCount;
+    uint32_t        threadCount,threadCountYUV;
     pthread_t       *worker_threads;
     
     typedef struct {

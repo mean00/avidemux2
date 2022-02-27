@@ -167,8 +167,10 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
         threadCount = 1;
     if (threadCount > 64)
         threadCount = 64;
-    if (threadCount > 4)
-        threadCount = (threadCount-4)/2 + 4;
+    // reduce thread count for fastYUV (wouldn't make faster)
+    threadCountYUV = threadCount;
+    if (threadCountYUV > 4)
+        threadCountYUV = (threadCountYUV-4)/2 + 4;    
     worker_threads = new pthread_t [threadCount];
     fastYUV_worker_thread_args = new fastYUV_worker_thread_arg [threadCount];
     RGB_worker_thread_args = new RGB_worker_thread_arg [threadCount];
@@ -586,12 +588,12 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
 
     sws_scale(CONTEXTYUV,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
 
-    for (int tr=0; tr<threadCount; tr++)
+    for (int tr=0; tr<threadCountYUV; tr++)
     {
         fastYUV_worker_thread_args[tr].dstWidth = dstWidth;
         fastYUV_worker_thread_args[tr].dstHeight = dstHeight;
         fastYUV_worker_thread_args[tr].ystart = tr;
-        fastYUV_worker_thread_args[tr].yincr = threadCount;
+        fastYUV_worker_thread_args[tr].yincr = threadCountYUV;
         for (int i=0; i<3; i++)
         {
             fastYUV_worker_thread_args[tr].gbrData[i] = gbrData[i];
@@ -606,12 +608,12 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
             fastYUV_worker_thread_args[tr].hdrLumaCrLUT[i] = hdrLumaCrLUT[i];
         }
     }
-    for (int tr=0; tr<threadCount; tr++)
+    for (int tr=0; tr<threadCountYUV; tr++)
     {
         pthread_create( &worker_threads[tr], NULL, toneMap_fastYUV_worker, (void*) &fastYUV_worker_thread_args[tr]);
     }
     // work in thread workers...
-    for (int tr=0; tr<threadCount; tr++)
+    for (int tr=0; tr<threadCountYUV; tr++)
     {
         pthread_join( worker_threads[tr], NULL);
     }
