@@ -791,113 +791,117 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
 
     int stride = ADM_IMAGE_ALIGN(arg->srcWidth);
     int stride2 = ADM_IMAGE_ALIGN(arg->srcWidth/2);
-    uint8_t * sdrBGR, * sdrG, * sdrB;
+    uint8_t * sdrBGR[2], * sdrG, * sdrB;
     int32_t hdrR, hdrG, hdrB, hY, hU, hV, hUVR,hUVG,hUVB;
-    uint16_t * hdrY, * hdrU, * hdrV;
+    uint16_t * hdrY[2], * hdrU, * hdrV;
     int32_t linR,linG,linB,linccR,linccG,linccB;
 
     int32_t outOfRange_u16i32;  // u16 stored in i32
     outOfRange_u16i32 = 0xFFFF0000;
 
-    for (int y=arg->ystart; y<(arg->srcHeight); y+=arg->yincr)
+    for (int y=arg->ystart; y<(arg->srcHeight/2); y+=arg->yincr)
     {
-        sdrBGR = arg->sdrRGB + y*ADM_IMAGE_ALIGN(arg->srcWidth*3);
-        hdrY = arg->hdrYCbCr[0] + y*stride;
-        hdrU = arg->hdrYCbCr[1] + (y/2)*stride2;
-        hdrV = arg->hdrYCbCr[2] + (y/2)*stride2;
+        sdrBGR[0] = arg->sdrRGB + (2*y+0)*ADM_IMAGE_ALIGN(arg->srcWidth*3);
+        sdrBGR[1] = arg->sdrRGB + (2*y+1)*ADM_IMAGE_ALIGN(arg->srcWidth*3);
+        hdrY[0] = arg->hdrYCbCr[0] + (2*y+0)*stride;
+        hdrY[1] = arg->hdrYCbCr[0] + (2*y+1)*stride;
+        hdrU = arg->hdrYCbCr[1] + y*stride2;
+        hdrV = arg->hdrYCbCr[2] + y*stride2;
 
-        for (int x=0; x<(arg->srcWidth); x++)
+        for (int x=0; x<(arg->srcWidth/2); x++)
         {
             // do YUV->RGB conversion here (multithreaded)
-            hY = *hdrY;
-            hdrY++;
-            if (x%2 == 0)
+            hU = *hdrU;
+            hV = *hdrV;
+            hdrU++; hdrV++;
+            hU -= 32768;
+            hV -= 32768;
+            hUVR = hV*13806;
+            hUVG = hU*1541  + hV*5349;
+            hUVB = hU*17614;
+            
+            for (int k=0; k<4; k++)
             {
-                hU = *hdrU;
-                hV = *hdrV;
-                hdrU++; hdrV++;
-                hU -= 32768;
-                hV -= 32768;
-                hUVR = hV*13806;
-                hUVG = hU*1541  + hV*5349;
-                hUVB = hU*17614;
-            }
+                int yk = k/2;
+            
+                hY = *hdrY[yk];
+                hdrY[yk]++;
 
-            
-            // YUV is limited range
-            // Y: 4096 .. 60416     -> substract 4096, then multiply by 256/220
-            // UV: 4096 .. 61440    -> multiply by 256/224
-            hY -= 4096;
-            
-            // [RGB] = [BT.2020-NCL] * [Y'CbCr]
-            //  1       +0                  +1.4746
-            //  1       -0.16455312684366   -0.57135312684366
-            //  1       +1.8814             +0
-            hY *= 9533;
-            hdrR = hY + hUVR;
-            hdrG = hY - hUVG;
-            hdrB = hY + hUVB;
-            hdrR /= 8192;
-            hdrG /= 8192;
-            hdrB /= 8192;
-            if (hdrR & outOfRange_u16i32) hdrR = (hdrR<0) ? 0 : 65535;
-            if (hdrG & outOfRange_u16i32) hdrG = (hdrG<0) ? 0 : 65535;
-            if (hdrB & outOfRange_u16i32) hdrB = (hdrB<0) ? 0 : 65535;
-            
-            linR = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            linG = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            linB = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+                // YUV is limited range
+                // Y: 4096 .. 60416     -> substract 4096, then multiply by 256/220
+                // UV: 4096 .. 61440    -> multiply by 256/224
+                hY -= 4096;
 
-            
-            linccR = arg->ccmx[0]*linR + arg->ccmx[1]*linG + arg->ccmx[2]*linB;
-            linccG = arg->ccmx[3]*linR + arg->ccmx[4]*linG + arg->ccmx[5]*linB;
-            linccB = arg->ccmx[6]*linR + arg->ccmx[7]*linG + arg->ccmx[8]*linB;
-            linccR >>= 12;
-            linccG >>= 12;
-            linccB >>= 12;
-            if (arg->gamutMethod == 1)
-            {
-                if ((linccR & outOfRange_u16i32) || (linccG & outOfRange_u16i32) || (linccB & outOfRange_u16i32))
+                // [RGB] = [BT.2020-NCL] * [Y'CbCr]
+                //  1       +0                  +1.4746
+                //  1       -0.16455312684366   -0.57135312684366
+                //  1       +1.8814             +0
+                hY *= 9533;
+                hdrR = hY + hUVR;
+                hdrG = hY - hUVG;
+                hdrB = hY + hUVB;
+                hdrR /= 8192;
+                hdrG /= 8192;
+                hdrB /= 8192;
+                if (hdrR & outOfRange_u16i32) hdrR = (hdrR<0) ? 0 : 65535;
+                if (hdrG & outOfRange_u16i32) hdrG = (hdrG<0) ? 0 : 65535;
+                if (hdrB & outOfRange_u16i32) hdrB = (hdrB<0) ? 0 : 65535;
+
+                linR = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+                linG = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+                linB = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+
+
+                linccR = arg->ccmx[0]*linR + arg->ccmx[1]*linG + arg->ccmx[2]*linB;
+                linccG = arg->ccmx[3]*linR + arg->ccmx[4]*linG + arg->ccmx[5]*linB;
+                linccB = arg->ccmx[6]*linR + arg->ccmx[7]*linG + arg->ccmx[8]*linB;
+                linccR >>= 12;
+                linccG >>= 12;
+                linccB >>= 12;
+                if (arg->gamutMethod == 1)
                 {
-                    int32_t min = (linccR < linccG) ? linccR : linccG;
-                    min = (min < linccB) ? min : linccB;
-                    if (min < 0)
+                    if ((linccR & outOfRange_u16i32) || (linccG & outOfRange_u16i32) || (linccB & outOfRange_u16i32))
                     {
-                        int32_t luma = 54*linccR+183*linccG+18*linccB;
-                        luma >>= 8;
-                        int32_t coeff = ((min-luma)==0) ? 256: min*256/(min-luma);
-                        int32_t icoeff = 256-coeff;
-                        int32_t lc = luma*coeff;
-                        linccR = icoeff*linccR + lc;
-                        linccR >>= 8;
-                        linccG = icoeff*linccG + lc;
-                        linccG >>= 8;
-                        linccB = icoeff*linccB + lc;
-                        linccB >>= 8;
-                    }
-                    int32_t max = (linccR > linccG) ? linccR : linccG;
-                    max = (max > linccB) ? max : linccB;
-                    if (max > 65535)
-                    {
-                        int32_t coeff = (4096*65536)/max;
-                        linccR *= coeff;
-                        linccR >>= 12;
-                        linccG *= coeff;
-                        linccG >>= 12;
-                        linccB *= coeff;
-                        linccB >>= 12;
+                        int32_t min = (linccR < linccG) ? linccR : linccG;
+                        min = (min < linccB) ? min : linccB;
+                        if (min < 0)
+                        {
+                            int32_t luma = 54*linccR+183*linccG+18*linccB;
+                            luma >>= 8;
+                            int32_t coeff = ((min-luma)==0) ? 256: min*256/(min-luma);
+                            int32_t icoeff = 256-coeff;
+                            int32_t lc = luma*coeff;
+                            linccR = icoeff*linccR + lc;
+                            linccR >>= 8;
+                            linccG = icoeff*linccG + lc;
+                            linccG >>= 8;
+                            linccB = icoeff*linccB + lc;
+                            linccB >>= 8;
+                        }
+                        int32_t max = (linccR > linccG) ? linccR : linccG;
+                        max = (max > linccB) ? max : linccB;
+                        if (max > 65535)
+                        {
+                            int32_t coeff = (4096*65536)/max;
+                            linccR *= coeff;
+                            linccR >>= 12;
+                            linccG *= coeff;
+                            linccG >>= 12;
+                            linccB *= coeff;
+                            linccB >>= 12;
+                        }
                     }
                 }
+                if (linccR & outOfRange_u16i32) linccR = (linccR<0) ? 0 : 65535;
+                if (linccG & outOfRange_u16i32) linccG = (linccG<0) ? 0 : 65535;
+                if (linccB & outOfRange_u16i32) linccB = (linccB<0) ? 0 : 65535;                
+                *sdrBGR[yk] = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+                sdrBGR[yk]++;
+                *sdrBGR[yk] = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+                sdrBGR[yk]++;
+                *sdrBGR[yk] = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
+                sdrBGR[yk]++;
             }
-            if (linccR & outOfRange_u16i32) linccR = (linccR<0) ? 0 : 65535;
-            if (linccG & outOfRange_u16i32) linccG = (linccG<0) ? 0 : 65535;
-            if (linccB & outOfRange_u16i32) linccB = (linccB<0) ? 0 : 65535;                
-            *sdrBGR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            sdrBGR++;
-            *sdrBGR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            sdrBGR++;
-            *sdrBGR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
-            sdrBGR++;
         }
     }
 
