@@ -795,9 +795,9 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
     int32_t hdrR, hdrG, hdrB, hY, hU, hV, hUVR,hUVG,hUVB;
     uint16_t * hdrY, * hdrU, * hdrV;
     int32_t linR,linG,linB,linccR,linccG,linccB;
-    int32_t oormask;
-    oormask = 0xFFFF;
-    oormask = ~oormask;
+
+    int32_t outOfRange_u16i32;  // u16 stored in i32
+    outOfRange_u16i32 = 0xFFFF0000;
 
     for (int y=arg->ystart; y<(arg->srcHeight); y+=arg->yincr)
     {
@@ -840,12 +840,9 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
             hdrR /= 8192;
             hdrG /= 8192;
             hdrB /= 8192;
-            if ((hdrR&oormask) || (hdrG&oormask) || (hdrB&oormask))
-            {
-                hdrR = (hdrR<0) ? 0 : ((hdrR > 65535) ? 65535 : hdrR);
-                hdrG = (hdrG<0) ? 0 : ((hdrG > 65535) ? 65535 : hdrG);
-                hdrB = (hdrB<0) ? 0 : ((hdrB > 65535) ? 65535 : hdrB);
-            }
+            if (hdrR & outOfRange_u16i32) hdrR = (hdrR<0) ? 0 : 65535;
+            if (hdrG & outOfRange_u16i32) hdrG = (hdrG<0) ? 0 : 65535;
+            if (hdrB & outOfRange_u16i32) hdrB = (hdrB<0) ? 0 : 65535;
             
             linR = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrR>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
             linG = arg->hdrRGBLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(hdrG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
@@ -858,9 +855,9 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
             linccR >>= 12;
             linccG >>= 12;
             linccB >>= 12;
-            if ((linccR&oormask) || (linccG&oormask) || (linccB&oormask))
+            if (arg->gamutMethod == 1)
             {
-                if (arg->gamutMethod == 1)
+                if ((linccR & outOfRange_u16i32) || (linccG & outOfRange_u16i32) || (linccB & outOfRange_u16i32))
                 {
                     int32_t min = (linccR < linccG) ? linccR : linccG;
                     min = (min < linccB) ? min : linccB;
@@ -891,10 +888,10 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
                         linccB >>= 12;
                     }
                 }
-                linccR = (linccR < 0) ? 0 : ((linccR > 65535) ? 65535 : linccR);
-                linccG = (linccG < 0) ? 0 : ((linccG > 65535) ? 65535 : linccG);
-                linccB = (linccB < 0) ? 0 : ((linccB > 65535) ? 65535 : linccB);
             }
+            if (linccR & outOfRange_u16i32) linccR = (linccR<0) ? 0 : 65535;
+            if (linccG & outOfRange_u16i32) linccG = (linccG<0) ? 0 : 65535;
+            if (linccB & outOfRange_u16i32) linccB = (linccB<0) ? 0 : 65535;                
             *sdrBGR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccB>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
             sdrBGR++;
             *sdrBGR = arg->hdrGammaLUT[(ADM_COLORSPACE_HDR_LUT_SIZE-1)&(linccG>>(16-ADM_COLORSPACE_HDR_LUT_WIDTH))];
