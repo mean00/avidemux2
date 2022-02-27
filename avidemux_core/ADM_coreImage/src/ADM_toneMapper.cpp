@@ -174,6 +174,7 @@ ADMToneMapper::ADMToneMapper(int sws_flag,
     worker_threads = new pthread_t [threadCount];
     fastYUV_worker_thread_args = new fastYUV_worker_thread_arg [threadCount];
     RGB_worker_thread_args = new RGB_worker_thread_arg [threadCount];
+    RGB_peak_measure_thread_args = new RGB_peak_measure_thread_arg [threadCount];
     
     adaptLLAvg = -1.0;
     adaptLLMax = -1.0;
@@ -228,6 +229,7 @@ ADMToneMapper::~ADMToneMapper()
     delete [] worker_threads;
     delete [] fastYUV_worker_thread_args;
     delete [] RGB_worker_thread_args;
+    delete [] RGB_peak_measure_thread_args;
     delete [] adaptHistoPrev;
     delete [] adaptHistoCurr;
 }
@@ -905,6 +907,31 @@ void * ADMToneMapper::toneMap_RGB_worker(void *argptr)
 }
 
 /**
+    \fn toneMap_RGB_peak_measure_worker
+*/
+void * ADMToneMapper::toneMap_RGB_peak_measure_worker(void *argptr)
+{
+    RGB_peak_measure_thread_arg * arg = (RGB_peak_measure_thread_arg*)argptr;
+    int stride = ADM_IMAGE_ALIGN(arg->srcWidth);
+    uint16_t linLum;
+    
+    for (int y=arg->ystart; y<(arg->srcHeight); y+=arg->yincr)
+    {
+        uint16_t * hdrY = arg->hdrY + y*stride;
+        for (int x=0; x<(arg->srcWidth); x++)
+        {
+            linLum = arg->linearizeLUT[(ADM_ADAPTIVE_HDR_LIN_LUT_SIZE-1)&(hdrY[x]>>(16-ADM_ADAPTIVE_HDR_LIN_LUT_WIDTH))];
+            arg->partialAvg += linLum;
+            if (arg->partialMax < linLum)
+                arg->partialMax = linLum;
+        }
+    }    
+        
+    pthread_exit(NULL);
+    return NULL;
+}
+
+/**
     \fn toneMap_RGB
 */
 bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsigned int method, double targetLuminance, double saturationAdjust, double boostAdjust, bool adaptive, unsigned int gamutMethod)
@@ -1049,30 +1076,23 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         }
         
         // measure peak and avg luminance of the current frame
-        uint64_t linlumaMax = 0;
-        uint64_t linLumaAvg = 0;
-        uint16_t linLum;
-        memset(adaptHistoCurr,0,64*sizeof(int32_t));
-        for (int y=0; y<srcHeight; y++)
+        for (int tr=0; tr<threadCount; tr++)
         {
-            uint16_t * hdrY = hdrYCbCr[0] + y*ADM_IMAGE_ALIGN(srcWidth);
-
-            for (int x=0; x<srcWidth; x++)
-            {
-                linLum = linearizeLUT[(ADM_ADAPTIVE_HDR_LIN_LUT_SIZE-1)&(hdrY[x]>>(16-ADM_ADAPTIVE_HDR_LIN_LUT_WIDTH))];
-                linLumaAvg += linLum;
-                if (linlumaMax < linLum)
-                    linlumaMax = linLum;
-            }
+            RGB_peak_measure_thread_args[tr].srcWidth = srcWidth;
+            RGB_peak_measure_thread_args[tr].srcHeight = srcHeight;
+            RGB_peak_measure_thread_args[tr].ystart = tr;
+            RGB_peak_measure_thread_args[tr].yincr = threadCount;
+            RGB_peak_measure_thread_args[tr].hdrY = hdrYCbCr[0];
+            RGB_peak_measure_thread_args[tr].linearizeLUT = linearizeLUT;
+            RGB_peak_measure_thread_args[tr].partialMax = 0;
+            RGB_peak_measure_thread_args[tr].partialAvg = 0;
         }
-        double lumaMax,lumaAvg;
-        lumaAvg = linLumaAvg;
-        lumaAvg /= (srcWidth*srcHeight);
-        lumaAvg /= 65535.0;
-        lumaMax = linlumaMax;
-        lumaMax /= 65535.0;
-        lumaAvg = (1.0-HDR_AVG_LOWER_LIMIT)*lumaAvg + HDR_AVG_LOWER_LIMIT;    // soft limit (differentiable knee)
-
+        for (int tr=0; tr<threadCount; tr++)
+        {
+            pthread_create( &worker_threads[tr], NULL, toneMap_RGB_peak_measure_worker, (void*) &RGB_peak_measure_thread_args[tr]);
+        }
+        // while work in thread workers, calculate SCD histogram
+        memset(adaptHistoCurr,0,64*sizeof(int32_t));
         // it is 4:2:0
         for (int y=0; y<srcHeight/2; y++)
         {
@@ -1095,6 +1115,25 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
         scd = std::sqrt(scd);
         //printf("scd = %.06f\n",scd);
 
+        // wait for peak measurement
+        for (int tr=0; tr<threadCount; tr++)
+        {
+            pthread_join( worker_threads[tr], NULL);
+        }
+        double lumaMax,lumaAvg;
+        lumaMax = 0;
+        lumaAvg = 0;
+        for (int tr=0; tr<threadCount; tr++)
+        {
+            if (lumaMax < RGB_peak_measure_thread_args[tr].partialMax)
+                lumaMax = RGB_peak_measure_thread_args[tr].partialMax;
+            lumaAvg += RGB_peak_measure_thread_args[tr].partialAvg;
+        }
+        lumaAvg /= (srcWidth*srcHeight);
+        lumaAvg /= 65535.0;
+        lumaMax /= 65535.0;
+        lumaAvg = (1.0-HDR_AVG_LOWER_LIMIT)*lumaAvg + HDR_AVG_LOWER_LIMIT;    // soft limit (differentiable knee)
+        
         // low-pass filtering the measured avg and peak, to prevent flickering
         double filterConst = RC_FILTER_CONST;
         if (scd > filterConst)  // if scene changed, adapt quickly
