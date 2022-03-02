@@ -42,19 +42,16 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
         languages=ADM_getLanguageList();
         nbLanguage=ADM_getLanguageListSize();
 
-         // Set language list
+        // Populate lists of languages, tracks and encoders.
         for(int i=0;i<NB_MENU;i++)
-        {                  
+        {
             for(int j=0;j<nbLanguage;j++)
             {
                 window->languages[i]->addItem(languages[j].eng_name);
             }
-        }
-        
-        
-        for(int i=0;i<NB_MENU;i++)
-        {
-            setupMenu(i);
+            buildTrackMenu(i);
+            setCurrentLanguage(i);
+            buildEncoderMenu(i);
         }
 
         // bind it
@@ -179,8 +176,9 @@ void audioTrackQt4::inputChanged(int signal)
             {
                 checked=true;
                 forced=poolIndex;
+                window->languages[i]->setCurrentIndex(0); // unknown
             }
-            setupMenu(i,forced);
+            buildTrackMenu(i,forced);
             // restore enabled / disabled state
             window->enabled[i]->blockSignals(true);
             if(checked)
@@ -466,19 +464,53 @@ void audioTrackQt4::disable(int i)
     ONOFF(languages);
     if (i==0) window->dupConfig->setEnabled(false);
 }
+/**
+    \fn setCurrentLanguage
+*/
+void audioTrackQt4::setCurrentLanguage(int dex)
+{
+    int idx = window->inputs[dex]->currentIndex();
+    if(idx == -1)
+    {
+        ADM_warning("Cannot setup language for track %d\n",dex);
+        return;
+    }
+    setLanguageFromPool(dex,idx);
+}
+/**
+    \fn buildEncoderMenu
+*/
+void audioTrackQt4::buildEncoderMenu(int dex)
+{
+    int nbAud = audioEncoderGetNumberOfEncoders();
+    window->codec[dex]->clear();
+    window->codec[dex]->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("qaudiotracks","copy")));
+    for(uint32_t i=1;i<nbAud;i++)
+    {
+        window->codec[dex]->addItem(audioEncoderGetDisplayName(i));
+    }
+    if(active.atEditable(dex)->edTrack)
+    {
+        int selected=active.atEditable(dex)->encoderIndex;
+        enable(dex);
+        window->codec[dex]->setCurrentIndex(selected);
+        window->codecConf[dex]->setEnabled(selected > 0); // not copy
+        window->filters[dex]->setEnabled(selected > 0);
+    }else
+    {
+        disable(dex);
+    }
+}
 
 /**
-    \fn setupMenu
+    \fn buildTrackMenu
 */
-void audioTrackQt4::setupMenu(int dex, int forcedIndex)
+void audioTrackQt4::buildTrackMenu(int dex, int forcedIndex)
 {
     ADM_edAudioTrack *edTrack;
     ADM_info("For track %d, index=%d\n",dex,forcedIndex);
-    
-    // 
     window->inputs[dex]->blockSignals(true);
     window->inputs[dex]->clear();
-
 
     for(int i=0;i<_pool->size();i++)
     {
@@ -556,35 +588,6 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
     {
                 window->inputs[dex]->setCurrentIndex(forcedIndex);  
     }
-     //-- set current language --
-    int currentIndex=window->inputs[dex]->currentIndex();
-    if(currentIndex!=-1)
-    {
-        setLanguageFromPool(dex,currentIndex);        
-    }else
-    {
-        ADM_warning("Cannot setup language for track %d\n",dex);
-    }
-    // -- language --
-    // now add codecs
-    int nbAud=audioEncoderGetNumberOfEncoders();
-    window->codec[dex]->clear();
-    window->codec[dex]->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("qaudiotracks","copy")));
-	for(uint32_t i=1;i<nbAud;i++)
-	{
-		QString name=QString(audioEncoderGetDisplayName(i));
-		window->codec[dex]->addItem(name);
-	}
-    
-    if(active.atEditable(dex)->edTrack)
-    {
-        int selected=active.atEditable(dex)->encoderIndex;
-        enable(dex);
-        window->codec[dex]->setCurrentIndex(selected);
-        window->codecConf[dex]->setEnabled(selected > 0); // not copy
-        window->filters[dex]->setEnabled(selected > 0);
-    }else
-        disable(dex);
     window->inputs[dex]->blockSignals(false);
 }
 /**

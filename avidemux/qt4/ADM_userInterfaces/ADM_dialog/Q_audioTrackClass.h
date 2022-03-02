@@ -25,7 +25,9 @@ protected:
             ActiveAudioTracks active;
             int                nbLanguage;
             const ADM_iso639_t *languages;
-            void            setupMenu(int dex,int forcedIndex=-1);
+            void            buildTrackMenu(int dex, int forcedIndex=-1);
+            void            buildEncoderMenu(int dex);
+            void            setCurrentLanguage(int dex);
             void            enable(int i);
             void            disable(int i);
             void            setLanguageFromPool(int menuIndex, int poolIndex);
