@@ -2496,6 +2496,7 @@ int UI_Init(int nargc, char **nargv)
     // like OpenGL support were fixed only in much later versions.
     // Enabled by default with Qt6.
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);   // allow HiDPI icons; deprecated >= Qt6
 #endif
 #if !defined(__APPLE__) && !defined(_WIN32) /* Linux */ && QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     // Fix video shown as solid black color with OpenGL display and Qt6.
