@@ -69,7 +69,7 @@ static optionDesc myOptions[]={
 { PRIORITY_PLAYBACK,"priority.playback"                               ,ADM_param_uint32_t	,"0",	0,	4},
 { DEFAULT_POSTPROC_TYPE,"Default.postproc_type"                       ,ADM_param_uint32_t	,"0",	0,	7},
 { DEFAULT_POSTPROC_VALUE,"Default.postproc_value"                     ,ADM_param_uint32_t	,"0",	0,	5},
-{ DEFAULT_DOWNMIXING,"Default.downmixing"                             ,ADM_param_uint32_t	,"2",	0,	3},
+{ DEFAULT_DOWNMIXING,"Default.downmixing"                             ,ADM_param_uint32_t	,"3",	0,	4},
 { DEFAULT_LANGUAGE,"Default.language"                                 ,ADM_param_stdstring  	,"",	0,	0},
 { DEFAULT_WARN_FOR_FONTS,"Default.warn_for_fonts"                     ,ADM_param_bool    	,"1",	0,	1},
 { DEFAULT_MULTILOAD_USE_CUSTOM_SIZE,"Default.multiload_use_custom_size",ADM_param_bool    	,"0",	0,	1},

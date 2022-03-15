@@ -35,6 +35,7 @@ typedef enum
     CHANNEL_INVALID=0,
     CHANNEL_MONO,
     CHANNEL_STEREO,
+    CHANNEL_STEREO_HEADPHONE,
     CHANNEL_2F_1R,
     CHANNEL_3F,
     CHANNEL_3F_1R,
@@ -102,6 +103,7 @@ const AudioChannelDesc mixerStringDescriptor[]=
 #define MUXERSTRING(x) {#x,CHANNEL_##x}
     MUXERSTRING(MONO),
     MUXERSTRING(STEREO),
+    MUXERSTRING(STEREO_HEADPHONE),
     MUXERSTRING(2F_1R),
     MUXERSTRING(3F),
     MUXERSTRING(3F_1R),
@@ -115,7 +117,8 @@ const AudioChannelDesc mixerStringDescriptor[]=
 const AudioChannelDesc localDownmixing[]=
 {
   {"No downmixing (multichannel)", CHANNEL_INVALID},
-  {"Stereo", CHANNEL_STEREO},
+  {"Stereo speaker", CHANNEL_STEREO},
+  {"Stereo headphone", CHANNEL_STEREO_HEADPHONE},
   {"Dolby Prologic", CHANNEL_DOLBY_PROLOGIC},
   {"Dolby Prologic II", CHANNEL_DOLBY_PROLOGIC2}
   
