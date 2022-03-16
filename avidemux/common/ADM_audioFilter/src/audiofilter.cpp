@@ -67,7 +67,7 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
                     break;  
             case 2:
                     
-                    playback.mixerConf=CHANNEL_STEREO_HEADPHONE;
+                    playback.mixerConf=CHANNEL_STEREO_HEADPHONES;
                     break;  
             case 3:
                     

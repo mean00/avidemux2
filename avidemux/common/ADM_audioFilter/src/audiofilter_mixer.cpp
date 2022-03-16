@@ -46,7 +46,7 @@ AUDMAudioFilterMixer::AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CON
 			outputChannelMapping[0] = ADM_CH_MONO;
 		break;
 		case CHANNEL_STEREO:
-		case CHANNEL_STEREO_HEADPHONE:
+		case CHANNEL_STEREO_HEADPHONES:
 			_wavHeader.channels = 2;
 			outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
 			outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;

@@ -474,8 +474,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
          diaMenuEntry mixerEntries[]={
                              {0,       QT_TRANSLATE_NOOP("adm","No downmixing"),NULL}
-                             ,{1,       QT_TRANSLATE_NOOP("adm","Stereo speaker"),NULL}
-                             ,{2,       QT_TRANSLATE_NOOP("adm","Stereo headphone"),NULL}
+                             ,{1,       QT_TRANSLATE_NOOP("adm","Stereo"),NULL}
+                             ,{2,       QT_TRANSLATE_NOOP("adm","Stereo headphones"),NULL}
                              ,{3,      QT_TRANSLATE_NOOP("adm","Pro Logic"),NULL}
                              ,{4,      QT_TRANSLATE_NOOP("adm","Pro Logic II"),NULL}
          };
