@@ -46,6 +46,7 @@ AUDMAudioFilterMixer::AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CON
 			outputChannelMapping[0] = ADM_CH_MONO;
 		break;
 		case CHANNEL_STEREO:
+		case CHANNEL_STEREO_HEADPHONES:
 			_wavHeader.channels = 2;
 			outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
 			outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
@@ -182,6 +183,44 @@ static int MStereo(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_
 
 	return nbSample*2;
 }
+
+static int MStereoHeadphone(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
+{
+	memset(out, 0, sizeof(float) * nbSample * 2);
+
+	for (int i = 0; i < nbSample; i++) {
+		for (int c = 0; c < chan; c++) {
+			switch (chanMap[c]) {
+				case ADM_CH_MONO:
+				case ADM_CH_FRONT_CENTER:
+				case ADM_CH_REAR_CENTER:
+				case ADM_CH_LFE:
+					out[0]  += *in * 0.707;
+					out[1]  += *in * 0.707;
+				break;
+				case ADM_CH_FRONT_LEFT:
+				case ADM_CH_REAR_LEFT:
+				case ADM_CH_SIDE_LEFT:
+					out[0]  += *in;
+					out[1]  += *in*0.1;
+				break;
+				case ADM_CH_FRONT_RIGHT:
+				case ADM_CH_REAR_RIGHT:
+				case ADM_CH_SIDE_RIGHT:
+					out[0]  += *in*0.1;
+					out[1]  += *in;
+				break;
+                default:
+                    break;
+			}
+			in++;
+		}
+		out += 2;
+	}
+
+	return nbSample*2;
+}
+
 
 static int M2F1R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
@@ -472,107 +511,125 @@ static int M3F2RLFE(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL
 
 static int MDolbyProLogic(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
-	memset(out, 0, sizeof(float) * nbSample * 2);
+    memset(out, 0, sizeof(float) * nbSample * 2);
+    float ds;
 
-	for (int i = 0; i < nbSample; i++) {
-		for (int c = 0; c < chan; c++) {
-			switch (chanMap[c]) {
-				case ADM_CH_MONO:
-				case ADM_CH_FRONT_CENTER:
-				case ADM_CH_LFE:
-					out[0]  += *in * 0.707;
-					out[1]  += *in * 0.707;
-				break;
-				case ADM_CH_FRONT_LEFT:
-					out[0]  += *in;
-				break;
-				case ADM_CH_FRONT_RIGHT:
-					out[1]  += *in;
-				break;
-				case ADM_CH_REAR_CENTER:
-				case ADM_CH_REAR_LEFT:
-				case ADM_CH_REAR_RIGHT:
-					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.707;
-					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.707;
-				break;
-				case ADM_CH_SIDE_LEFT:
-					out[0]  += *in * 0.707;
-					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.707 * 0.707;
-					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.707 * 0.707;
-				break;
-				case ADM_CH_SIDE_RIGHT:
-					out[1]  += *in * 0.5;
-					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.707 * 0.707;
-					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.707 * 0.707;
-				break;
+    for (int i = 0; i < nbSample; i++) {
+        for (int c = 0; c < chan; c++) {
+            switch (chanMap[c]) {
+                case ADM_CH_MONO:
+                case ADM_CH_FRONT_CENTER:
+                case ADM_CH_LFE:
+                    out[0]  += *in * 0.707;
+                    out[1]  += *in * 0.707;
+                    break;
+                case ADM_CH_FRONT_LEFT:
+                    out[0]  += *in;
+                    break;
+                case ADM_CH_FRONT_RIGHT:
+                    out[1]  += *in;
+                    break;
+                case ADM_CH_REAR_CENTER:
+                    ds = me->dolby.DolbyShift90(0, *in);
+                    out[0]  += ds        * 0.707;
+                    out[1]  += ds * -1.0 * 0.707;
+                    break;
+                case ADM_CH_REAR_LEFT:
+                    ds = me->dolby.DolbyShift90(1, *in);
+                    out[0]  += ds        * 0.707;
+                    out[1]  += ds * -1.0 * 0.707;
+                    break;
+                case ADM_CH_REAR_RIGHT:
+                    ds = me->dolby.DolbyShift90(2, *in);
+                    out[0]  += ds        * 0.707;
+                    out[1]  += ds * -1.0 * 0.707;
+                    break;
+                case ADM_CH_SIDE_LEFT:
+                    ds = me->dolby.DolbyShift90(3, *in);
+                    out[0]  += *in * 0.707;
+                    out[0]  += ds        * 0.707 * 0.707;
+                    out[1]  += ds * -1.0 * 0.707 * 0.707;
+                    break;
+                case ADM_CH_SIDE_RIGHT:
+                    ds = me->dolby.DolbyShift90(4, *in);
+                    out[1]  += *in * 0.5;
+                    out[0]  += ds        * 0.707 * 0.707;
+                    out[1]  += ds * -1.0 * 0.707 * 0.707;
+                    break;
                 default:
                     break;
-			}
-			in++;
-		}
-		out += 2;
-	}
+            }
+            in++;
+        }
+        out += 2;
+    }
 
-	return nbSample*2;
+    return nbSample*2;
 }
 
 static int MDolbyProLogic2(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
-	memset(out, 0, sizeof(float) * nbSample * 2);
+    memset(out, 0, sizeof(float) * nbSample * 2);
+    float ds;
 
-	for (int i = 0; i < nbSample; i++) {
-		for (int c = 0; c < chan; c++) {
-			switch (chanMap[c]) {
-				case ADM_CH_MONO:
-				case ADM_CH_FRONT_CENTER:
-				case ADM_CH_LFE:
-					out[0]  += *in * 0.707;
-					out[1]  += *in * 0.707;
-				break;
-				case ADM_CH_FRONT_LEFT:
-					out[0]  += *in;
-				break;
-				case ADM_CH_FRONT_RIGHT:
-					out[1]  += *in;
-				break;
-				case ADM_CH_REAR_CENTER:
-					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.707;
-					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.707;
-				break;
-				case ADM_CH_REAR_LEFT:
-					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.8165;
-					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.5774;
-				break;
-				case ADM_CH_REAR_RIGHT:
-					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.5774;
-					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.8165;
-				break;
-				case ADM_CH_SIDE_LEFT:
-					out[0]  += *in * 0.707;
-					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.8165 * 0.707;
-					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.5774 * 0.707;
-				break;
-				case ADM_CH_SIDE_RIGHT:
-					out[1]  += *in * 0.707;
-					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.5774 * 0.707;
-					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.8165 * 0.707;
-				break;
+    for (int i = 0; i < nbSample; i++) {
+        for (int c = 0; c < chan; c++) {
+            switch (chanMap[c]) {
+                case ADM_CH_MONO:
+                case ADM_CH_FRONT_CENTER:
+                case ADM_CH_LFE:
+                    out[0]  += *in * 0.707;
+                    out[1]  += *in * 0.707;
+                    break;
+                case ADM_CH_FRONT_LEFT:
+                    out[0]  += *in;
+                    break;
+                case ADM_CH_FRONT_RIGHT:
+                    out[1]  += *in;
+                    break;
+                case ADM_CH_REAR_CENTER:
+                    ds = me->dolby.DolbyShift90(0, *in);
+                    out[0]  += ds        * 0.707;
+                    out[1]  += ds * -1.0 * 0.707;
+                    break;
+                case ADM_CH_REAR_LEFT:
+                    ds = me->dolby.DolbyShift90(1, *in);
+                    out[0]  += ds        * 0.866;
+                    out[1]  += ds * -1.0 * 0.5;
+                    break;
+                case ADM_CH_REAR_RIGHT:
+                    ds = me->dolby.DolbyShift90(2, *in);
+                    out[0]  += ds        * 0.5;
+                    out[1]  += ds * -1.0 * 0.866;
+                    break;
+                case ADM_CH_SIDE_LEFT:
+                    ds = me->dolby.DolbyShift90(3, *in);
+                    out[0]  += *in * 0.707;
+                    out[0]  += ds        * 0.8165 * 0.707;
+                    out[1]  += ds * -1.0 * 0.5774 * 0.707;
+                    break;
+                case ADM_CH_SIDE_RIGHT:
+                    ds = me->dolby.DolbyShift90(4, *in);
+                    out[1]  += *in * 0.707;
+                    out[0]  += ds        * 0.5774 * 0.707;
+                    out[1]  += ds * -1.0 * 0.8165 * 0.707;
+                    break;
                 default:
                     break;
-			}
-			in++;
-		}
-		out += 2;
-	}
+            }
+            in++;
+        }
+        out += 2;
+    }
 
-	return nbSample*2;
+    return nbSample*2;
 }
 
 
 typedef int MIXER(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)  ;
 
 static MIXER *matrixCall[CHANNEL_LAST] = {
-NULL, MNto1, MStereo, M2F1R, M3F, M3F1R, M2F2R, M3F2R, M3F2RLFE, MDolbyProLogic, MDolbyProLogic2
+NULL, MNto1, MStereo, MStereoHeadphone, M2F1R, M3F, M3F1R, M2F2R, M3F2R, M3F2RLFE, MDolbyProLogic, MDolbyProLogic2
 };
 //_____________________________________________
 uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *status)

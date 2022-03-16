@@ -67,9 +67,13 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
                     break;  
             case 2:
                     
+                    playback.mixerConf=CHANNEL_STEREO_HEADPHONES;
+                    break;  
+            case 3:
+                    
                     playback.mixerConf=CHANNEL_DOLBY_PROLOGIC;
                     break;
-            case 3:
+            case 4:
                     
                     playback.mixerConf=CHANNEL_DOLBY_PROLOGIC2;
                     break;

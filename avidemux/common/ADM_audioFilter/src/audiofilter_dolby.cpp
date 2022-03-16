@@ -42,40 +42,44 @@ void ADMDolbyContext::DolbySkip(bool on)
  */
 void  ADMDolbyContext::reset()
 {
-     for(int j=0;j<4;j++)
-     {
-         float *l=xv_left[j];
-         float *r=xv_right[j];
-         for(int i=0;i<2*(NZEROS+1);i++)
-         {
-             l[i]=r[i]=0;
-         }
+    for (int k=0;k<8;k++)
+    {
+        for(int j=0;j<4;j++)
+        {
+            float *l=xv[k][j];
+            for(int i=0;i<2*(NZEROS+1);i++)
+            {
+                l[i]=0;
+            }
 
-     }    
-    posLeft=posRight=0;
+        }    
+        pos[k]=0;
+    }
 }
 /**
  * 
  */
  ADMDolbyContext::ADMDolbyContext()
 {
-     for(int j=0;j<4;j++)
-     {
-         xv_left[j]=(float *)ADM_alloc( sizeof(float)*(NZEROS*2+2));
-         xv_right[j]=(float *)ADM_alloc( sizeof(float)*(NZEROS*2+2));
-     }    
-     reset();
+    for (int k=0;k<8;k++)
+    {
+        for(int j=0;j<4;j++)
+        {
+            xv[k][j]=(float *)ADM_alloc( sizeof(float)*(NZEROS*2+2));
+        }    
+    }
+    reset();
 }
 ADMDolbyContext::~ADMDolbyContext()
 {
-     for(int j=0;j<4;j++)
-     {
-         float *l=xv_left[j];
-         float *r=xv_right[j];
-         ADM_dezalloc(l);
-         ADM_dezalloc(r);
-     }
-    
+    for (int k=0;k<8;k++)
+    {
+        for(int j=0;j<4;j++)
+        {
+            float *l=xv[k][j];
+            ADM_dezalloc(l);
+        }
+    }
 }
  /**
   * 
@@ -219,59 +223,33 @@ bool ADMDolbyContext::setValue(float **target,int offset, float value)
     return true;
 }
  /**
-  * 
+ * \fn DolbyShift90
   * @param isamp
   * @return  
   */
-float ADMDolbyContext::DolbyShiftLeft(float isamp)
+float ADMDolbyContext::DolbyShift90(unsigned int sel, float isamp)
 {
+    ADM_assert(sel<8);
         float sum;
         if(skip) return isamp;
-        setValue(xv_left,posLeft,isamp / GAIN);
+        setValue(xv[sel],pos[sel],isamp / GAIN);
 #ifdef ADM_CPU_X86
         if(CpuCaps::hasSSE2())
         {
-            int mod=posLeft&3;
-            int of2=posLeft-mod;
-            sum = DolbyShift_convolutionAlignSSE(xv_left[mod]+of2,xcoeffs);
+            int mod=pos[sel]&3;
+            int of2=pos[sel]-mod;
+            sum = DolbyShift_convolutionAlignSSE(xv[sel][mod]+of2,xcoeffs);
         }else
 #endif            
         {
-            sum= DolbyShift_convolution(posLeft,xv_left[0],xcoeffs);
+            sum= DolbyShift_convolution(pos[sel],xv[sel][0],xcoeffs);
         }
 //--
-	posLeft++;
-	if (posLeft > NZEROS)
-		posLeft = 0;
+	pos[sel]++;
+	if (pos[sel] > NZEROS)
+		pos[sel] = 0;
 
 	return sum;
-}
-/**
- * \fn DolbyShiftRight
- * @param isamp
- * @return 
- */
-float ADMDolbyContext::DolbyShiftRight(float isamp)
-{
-        float sum;
-        if(skip) return isamp;
-        setValue(xv_right,posRight,isamp / GAIN);
-#ifdef ADM_CPU_X86
-        if(CpuCaps::hasSSE2())
-        {
-            int mod=posRight&3;
-            int of2=posRight-mod;
-            sum = DolbyShift_convolutionAlignSSE(xv_right[mod]+of2,xcoeffs);
-        }else
-#endif            
-        {
-            sum= DolbyShift_convolution(posRight,xv_right[0],xcoeffs);
-        }
-//--
-	posRight++;
-	if (posRight > NZEROS)
-		posRight = 0;
-	return -sum;
 }
 
 #if defined( ADM_CPU_X86)

@@ -47,6 +47,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   {CHANNEL_INVALID,     QT_TRANSLATE_NOOP("adm","No change"), NULL},
   {CHANNEL_MONO,        QT_TRANSLATE_NOOP("adm","Mono"), NULL},
   {CHANNEL_STEREO,      QT_TRANSLATE_NOOP("adm","Stereo"), NULL},
+  {CHANNEL_STEREO_HEADPHONES, QT_TRANSLATE_NOOP("adm","Stereo headphones"), NULL},
   {CHANNEL_2F_1R,       QT_TRANSLATE_NOOP("adm","Stereo+surround"), NULL},
   {CHANNEL_3F,          QT_TRANSLATE_NOOP("adm","Stereo+center"), NULL},
   {CHANNEL_3F_1R,           QT_TRANSLATE_NOOP("adm","Stereo+center+surround"), NULL},

@@ -24,14 +24,11 @@ class ADMDolbyContext
 public:    
         ADMDolbyContext();
         ~ADMDolbyContext();
-        float *xv_left[4];
-        float *xv_right[4];
+        float *xv[8][4];
+        int    pos[8];
         static bool  skip;
-        int    posLeft;
-        int    posRight;
         
-        float DolbyShiftLeft(float isamp);
-        float DolbyShiftRight(float isamp);
+        float DolbyShift90(unsigned int sel, float isamp);
         void  DolbyInit();
         void  reset();
         
