@@ -259,9 +259,9 @@ std::string currentSdlDriver=getSdlDriverName();
         // Get level of message verbosity
         prefs->get(MESSAGE_LEVEL,&msglevel);
         // Downmix default
-        if(prefs->get(DEFAULT_DOWNMIXING,&downmix)!=RC_OK)
+        if(!prefs->get(DEFAULT_DOWNMIXING,&downmix))
         {
-            downmix=0;
+            downmix=1; // Stereo
         }
         olddevice=newdevice=AVDM_getCurrentDevice();
         // Audio device
