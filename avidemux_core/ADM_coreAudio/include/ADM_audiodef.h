@@ -44,6 +44,7 @@ typedef enum
     CHANNEL_3F_2R_LFE,
     CHANNEL_DOLBY_PROLOGIC,
     CHANNEL_DOLBY_PROLOGIC2,
+    CHANNEL_SURROUND_HEADPHONES,
     CHANNEL_LAST
 } CHANNEL_CONF;
 
@@ -111,7 +112,8 @@ const AudioChannelDesc mixerStringDescriptor[]=
     MUXERSTRING(3F_2R),
     MUXERSTRING(3F_2R_LFE),
     MUXERSTRING(DOLBY_PROLOGIC),
-    MUXERSTRING(DOLBY_PROLOGIC2)
+    MUXERSTRING(DOLBY_PROLOGIC2),
+    MUXERSTRING(SURROUND_HEADPHONES)
 };
 #undef MUXERSTRING
 const AudioChannelDesc localDownmixing[]=
@@ -120,7 +122,8 @@ const AudioChannelDesc localDownmixing[]=
   {"Stereo", CHANNEL_STEREO},
   {"Stereo headphones", CHANNEL_STEREO_HEADPHONES},
   {"Dolby Prologic", CHANNEL_DOLBY_PROLOGIC},
-  {"Dolby Prologic II", CHANNEL_DOLBY_PROLOGIC2}
+  {"Dolby Prologic II", CHANNEL_DOLBY_PROLOGIC2},
+  {"Surround headphones", CHANNEL_SURROUND_HEADPHONES}
   
 };
 

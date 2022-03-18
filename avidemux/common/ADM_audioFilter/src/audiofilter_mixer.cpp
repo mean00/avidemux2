@@ -47,6 +47,7 @@ AUDMAudioFilterMixer::AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CON
 		break;
 		case CHANNEL_STEREO:
 		case CHANNEL_STEREO_HEADPHONES:
+                case CHANNEL_SURROUND_HEADPHONES:
 			_wavHeader.channels = 2;
 			outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
 			outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
@@ -108,7 +109,15 @@ AUDMAudioFilterMixer::AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CON
     d*=_wavHeader.channels;
     _wavHeader.byterate = (uint32_t)ceil(d);
 
-
+    for (int k=0; k<8; k++)
+    {
+        sHphDelay[k] = new float [1024];
+        for (int i=0; i<1024; i++)
+        {
+            sHphDelay[k][i] = 0.0;
+        }
+        sHphPos[k] = 0;
+    }
 //    printf("[mixer]Input channels : %u : %u \n",_previous->getInfo()->channels,input_channels);
 //    printf("[mixer]Out   channels : %u : %u \n",_wavHeader.channels,ADM_CH_annel_mixer[_output]);
 
@@ -123,6 +132,10 @@ CHANNEL_TYPE    *AUDMAudioFilterMixer::getChannelMapping(void )
 }
 AUDMAudioFilterMixer::~AUDMAudioFilterMixer()
 {
+    for (int k=0; k<8; k++)
+    {
+        delete [] sHphDelay[k];
+    }    
 };
 
 static int MCOPY(float *in,float *out,uint32_t nbSample,uint32_t chan)
@@ -184,7 +197,7 @@ static int MStereo(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_
 	return nbSample*2;
 }
 
-static int MStereoHeadphone(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
+static int MStereoHeadphones(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 2);
 
@@ -626,10 +639,91 @@ static int MDolbyProLogic2(float *in,float *out,uint32_t nbSample,uint32_t chan,
 }
 
 
+float AUDMAudioFilterMixer::getSHphSample(int sel, float in, float alpha, int delay)
+{
+    float * dl = sHphDelay[sel];
+    int p = sHphPos[sel] & 1023;
+    int pNext = (p+1) & 1023;
+    int pPast = (pNext - delay)&1023;
+    dl[pNext] = (alpha * in) + ((1.0-alpha) * dl[p])*0.9999;
+    
+    sHphPos[sel] = pNext;
+    return dl[pPast];
+}
+
+static int MSurroundHeadphones(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
+{
+    memset(out, 0, sizeof(float) * nbSample * 2);
+    WAVHeader * info = me->getInfo();
+    float dt = 1.0/((float)info->frequency);
+    float cutoff = 700.0;
+    float alpha = 6.2831853*dt*cutoff/(6.2831853*dt*cutoff + 1.0);
+    int delayFront = 0.0003/dt;
+    int delaySide = 0.0006/dt;
+    int delayRear = 0.0004/dt;
+    
+    float ds;
+
+    for (int i = 0; i < nbSample; i++) {
+        for (int c = 0; c < chan; c++) {
+            switch (chanMap[c]) {
+                case ADM_CH_MONO:
+                case ADM_CH_FRONT_CENTER:
+                case ADM_CH_LFE:
+                    out[0]  += *in * 0.707;
+                    out[1]  += *in * 0.707;
+                    break;
+                case ADM_CH_REAR_CENTER:
+                    ds = me->getSHphSample(0,*in,alpha,0) + *in*0.05;
+                    out[0]  += ds        * 0.707;
+                    out[1]  += ds * -1.0 * 0.707;
+                    break;
+                case ADM_CH_FRONT_LEFT:
+                    ds = me->getSHphSample(1,*in,1.0,delayFront) + *in*0.05;
+                    out[0]  += *in * 0.866;
+                    out[1]  += ds  * 0.5;
+                    break;
+                case ADM_CH_FRONT_RIGHT:
+                    ds =  me->getSHphSample(2,*in,1.0,delayFront) + *in*0.05;
+                    out[0]  += ds  * 0.5;
+                    out[1]  += *in * 0.866;
+                    break;
+                case ADM_CH_SIDE_LEFT:
+                    ds = me->getSHphSample(3,*in,alpha,delaySide) + *in*0.05;
+                    out[0]  += *in * 0.866;
+                    out[1]  += ds  * 0.5;
+                    break;
+                case ADM_CH_SIDE_RIGHT:
+                    ds = me->getSHphSample(4,*in,alpha,delaySide) + *in*0.05;
+                    out[1]  += *in * 0.866;
+                    out[0]  += ds  * 0.5;
+                    break;
+                case ADM_CH_REAR_LEFT:
+                    ds = me->getSHphSample(5,*in,alpha,delayRear) + *in*0.05;
+                    out[0]  += *in * 0.707;
+                    out[1]  += ds  * -0.5;
+                    break;
+                case ADM_CH_REAR_RIGHT:
+                    ds = me->getSHphSample(6,*in,alpha,delayRear) + *in*0.05;
+                    out[0]  += ds  * -0.5;
+                    out[1]  += *in * 0.707;
+                    break;
+                default:
+                    break;
+            }
+            in++;
+        }
+        out += 2;
+    }
+
+    return nbSample*2;
+}
+
+
 typedef int MIXER(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)  ;
 
 static MIXER *matrixCall[CHANNEL_LAST] = {
-NULL, MNto1, MStereo, MStereoHeadphone, M2F1R, M3F, M3F1R, M2F2R, M3F2R, M3F2RLFE, MDolbyProLogic, MDolbyProLogic2
+NULL, MNto1, MStereo, MStereoHeadphones, M2F1R, M3F, M3F1R, M2F2R, M3F2R, M3F2RLFE, MDolbyProLogic, MDolbyProLogic2, MSurroundHeadphones
 };
 //_____________________________________________
 uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *status)

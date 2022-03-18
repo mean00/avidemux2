@@ -27,6 +27,9 @@ class AUDMAudioFilterMixer : public AUDMAudioFilter
         // output channel mapping
         CHANNEL_TYPE    outputChannelMapping[MAX_CHANNELS];
         // Dolby specific info
+        // Surround Headphones
+        float         * sHphDelay[8];
+        int             sHphPos[8];
     public:
        ADMDolbyContext dolby;
 
@@ -38,7 +41,16 @@ class AUDMAudioFilterMixer : public AUDMAudioFilter
       uint8_t  rewind(void)
                 {
                         dolby.reset();
+                        for (int k=0; k<8; k++)
+                        {
+                            for (int i=0; i<1024; i++)
+                            {
+                                sHphDelay[k][i] = 0.0;
+                            }
+                            sHphPos[k] = 0;
+                        }                        
                         return AUDMAudioFilter::rewind();
                 }
+        float  getSHphSample(int sel, float in, float alpha, int delay);
 };
 #endif
