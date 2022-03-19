@@ -665,7 +665,7 @@ uint8_t ADM_Composer::addFile (const char *name)
                 SKIP_TRACK
             }
 
-            if((track->wavheader).encoding==WAV_AAC || (track->wavheader).encoding==WAV_DTS)
+            if((track->wavheader).encoding==WAV_AAC || (track->wavheader).encoding==WAV_DTS || (track->wavheader).encoding==WAV_EAC3)
             {
                 checkSamplingFrequency(track);
                 track->codec->reconfigureCompleted();
