@@ -24,6 +24,7 @@ extern "C"
 bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_EAC3_INFO *info, bool plainAC3)
 {
     uint32_t of=0;
+    uint64_t channelLayout=0;
     *syncoff=0;
     uint8_t *buf=new uint8_t[len+AV_INPUT_BUFFER_PADDING_SIZE];
     memset(buf,0,len+AV_INPUT_BUFFER_PADDING_SIZE);
@@ -81,11 +82,19 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
         }
 //            printf("Sync found at offset %"PRIu32"\n",of);
         if(!info->frameSizeInBytes)
+        {
             *syncoff=of;
-        info->frequency=(uint32_t)hdr->sample_rate;
+            info->frequency = hdr->sample_rate;
+        }else if(hdr->frame_type != EAC3_FRAME_TYPE_DEPENDENT || hdr->sample_rate != info->frequency)
+        {
+            CLEANUP
+            return true;
+        }
         info->byterate += (uint32_t)hdr->bit_rate>>3;
-        if(hdr->channels > info->channels) // FIXME
-            info->channels = hdr->channels;
+        // The parser doesn't support a custom channel map.
+        // In this case channel_layout is wrong. FIXME
+        channelLayout |= hdr->channel_layout;
+        info->channels = av_get_channel_layout_nb_channels(channelLayout);
         info->frameSizeInBytes += hdr->frame_size;
         if(len > info->frameSizeInBytes)
         {
