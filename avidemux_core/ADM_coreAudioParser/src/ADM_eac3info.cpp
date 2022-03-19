@@ -28,6 +28,7 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
     uint8_t *buf=new uint8_t[len+AV_INPUT_BUFFER_PADDING_SIZE];
     memset(buf,0,len+AV_INPUT_BUFFER_PADDING_SIZE);
     memcpy(buf,data,len);
+    memset(info,0,sizeof(ADM_EAC3_INFO));
 #define CLEANUP delete [] buf; buf=NULL; av_free(hdr); hdr=NULL;
     //	printf("\n Syncing on %d \n",len);
     // Search for startcode
@@ -43,6 +44,12 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
         }
         if(*(buf+of)!=0x0b || *(buf+of+1)!=0x77)
         {
+            if(info->frameSizeInBytes)
+            {
+                delete [] buf;
+                buf = NULL;
+                return true;
+            }
             len--;
             of++;
             continue;
@@ -50,6 +57,11 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
         AC3HeaderInfo *hdr=NULL;
         if(avpriv_ac3_parse_header(&hdr,buf+of,len)<0)
         {
+            if(info->frameSizeInBytes)
+            {
+                CLEANUP
+                return true;
+            }
             len--;
             of++;
             ADM_info("Sync failed... continuing\n");
@@ -68,11 +80,21 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
             return false;
         }
 //            printf("Sync found at offset %"PRIu32"\n",of);
-        *syncoff=of;
+        if(!info->frameSizeInBytes)
+            *syncoff=of;
         info->frequency=(uint32_t)hdr->sample_rate;
-        info->byterate=(uint32_t)hdr->bit_rate>>3;
-        info->channels=hdr->channels;
-        info->frameSizeInBytes=hdr->frame_size;
+        info->byterate += (uint32_t)hdr->bit_rate>>3;
+        if(hdr->channels > info->channels) // FIXME
+            info->channels = hdr->channels;
+        info->frameSizeInBytes += hdr->frame_size;
+        if(len > info->frameSizeInBytes)
+        {
+            len -= hdr->frame_size;
+            of += hdr->frame_size;
+            av_free(hdr);
+            hdr = NULL;
+            continue;
+        }
         info->samples=265*6; // ??
         CLEANUP
         return true;
