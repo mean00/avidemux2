@@ -2555,6 +2555,9 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
                 break;
             default: break;
         }
+        mw->ui.horizontalSlider_2->blockSignals(true);
+        mw->ui.horizontalSlider_2->setValue(qset->value("volume", 100).toInt());
+        mw->ui.horizontalSlider_2->blockSignals(false);
         qset->endGroup();
         // Hack: allow to drop other Qt-specific settings on application restart
         char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
@@ -2636,6 +2639,7 @@ void UI_closeGui(void)
         qset->beginGroup("MainWindow");
         qset->setValue("windowState", ((QMainWindow *)QuiMainWindows)->saveState());
         qset->setValue("showMaximized", QuiMainWindows->isMaximized());
+        qset->setValue("volume", WIDGET(horizontalSlider_2)->value());
         qset->endGroup();
         delete qset;
         qset = NULL;
