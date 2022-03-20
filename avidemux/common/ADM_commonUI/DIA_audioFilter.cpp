@@ -105,13 +105,13 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
 
  //*** DRC tab *****
  diaElemToggle    eDrcNorm(&drcUseGain,QT_TRANSLATE_NOOP("adm","Normalize"));
- diaElemFloat     eDrcThres(&drcThresholdDB,QT_TRANSLATE_NOOP("adm","Threshold (dB):"),-60,-1);
- diaElemFloat     eDrcNFloor(&drcFloorDB,QT_TRANSLATE_NOOP("adm","Noise floor (dB):"),-80,-20);
- diaElemFloat     eDrcRatio(&drcRatio,QT_TRANSLATE_NOOP("adm","Ratio:"),1.1,10);
- diaElemFloat     eDrcAttack(&drcAttackTime,QT_TRANSLATE_NOOP("adm","Attack time (sec):"),0.1,5);
- diaElemFloat     eDrcDecay(&drcDecayTime,QT_TRANSLATE_NOOP("adm","Decay time (sec):"),1,30);
+ diaElemFloatResettable  eDrcThres(&drcThresholdDB,QT_TRANSLATE_NOOP("adm","Threshold (dB):"),-60,-1,-12);
+ diaElemFloatResettable  eDrcNFloor(&drcFloorDB,QT_TRANSLATE_NOOP("adm","Noise floor (dB):"),-80,-20,-30);
+ diaElemFloatResettable  eDrcRatio(&drcRatio,QT_TRANSLATE_NOOP("adm","Ratio:"),1.1,10,2);
+ diaElemFloatResettable  eDrcAttack(&drcAttackTime,QT_TRANSLATE_NOOP("adm","Attack time (sec):"),0.1,5,0.2);
+ diaElemFloatResettable  eDrcDecay(&drcDecayTime,QT_TRANSLATE_NOOP("adm","Decay time (sec):"),1,30,1);
  diaElem *drcElems[]={&eDrcNorm, &eDrcThres, &eDrcNFloor, &eDrcRatio, &eDrcAttack, &eDrcDecay};
- diaElemTabs tabDRC(QT_TRANSLATE_NOOP("adm","DRC"),NB_ELEM(drcElems),drcElems);
+ diaElemTabs tabDRC(QT_TRANSLATE_NOOP("adm","DRC parameters"),NB_ELEM(drcElems),drcElems);
  
  diaElemTabs *tabs[] = {
      &tabMain,
