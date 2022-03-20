@@ -107,9 +107,9 @@ void PythonScriptWriter::setAudioMixer(int trackIndex, CHANNEL_CONF mixer)
 
     *(this->_stream) << "adm.audioSetMixer(" << trackIndex << ", \"" << mixerString << "\");" << std::endl;
 }
-void PythonScriptWriter::setAudioDrc(int trackIndex, bool active)
+void PythonScriptWriter::setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
 {
-    *(this->_stream) << "adm.audioSetDrc(" << trackIndex << ", " << active << ")" << std::endl;
+    *(this->_stream) << "adm.audioSetDrc(" << trackIndex << ", " << active  << ", " << normalize << ", " << nFloor << ", " << attTime << ", " << decTime << ", " << ratio << ", " << thresDB << ")" << std::endl;
 }
 void PythonScriptWriter::setAudioShift(int trackIndex, bool active,int32_t value)
 {

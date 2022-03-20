@@ -96,8 +96,8 @@ public:
     virtual bool setAudioFilterFrameRate(int dex, FILMCONV conf) = 0;
     virtual bool setAudioFilterNormalise(int dex, ADM_GAINMode mode, int32_t gain, int32_t maxvalue) = 0;
     virtual int setAudioMixer(int dex, const char *s) = 0;
-    virtual bool setAudioDrc(int track, bool mode) = 0;
-    virtual bool getAudioDrc(int track) = 0;
+    virtual bool setAudioDrc(int track, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB) = 0;
+    virtual bool getAudioDrc(int track, bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB) = 0;
     virtual bool setAudioShift(int track, bool mode, int32_t value) = 0;
     virtual bool getAudioShift(int track, bool *mode, int32_t *value) = 0;
     virtual void setAudioResample(int dex, uint32_t newfq) = 0;

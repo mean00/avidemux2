@@ -138,7 +138,11 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorTy
             {
                     this->_scriptWriter->setAudioResample(i, track->audioEncodingConfig.audioFilterGetResample());
             }
-            this->_scriptWriter->setAudioDrc(i,track->audioEncodingConfig.audioFilterGetDrcMode());
+            bool drcActive;
+            int drcNormalize;
+            float drcNFloor, drcAttTime, drcDecTime, drcRatio, drcThresDB;
+            track->audioEncodingConfig.audioFilterGetDrcConfig(&drcActive, &drcNormalize, &drcNFloor, &drcAttTime, &drcDecTime, &drcRatio, &drcThresDB);
+            this->_scriptWriter->setAudioDrc(i, drcActive, drcNormalize, drcNFloor, drcAttTime, drcDecTime, drcRatio, drcThresDB);
             bool shiftEnabled=false;
             int32_t shiftValue=0;
             track->audioEncodingConfig.audioFilterGetShift(&shiftEnabled,&shiftValue);

@@ -124,7 +124,13 @@ static tp_obj zzpy_audioSetDrc(TP)
   IEditor *p0 = editor;
   int p1 = pm.asInt();
   int p2 = pm.asInt();
-  int r = pySetDrc(p0, p1, p2);
+  int p3 = pm.asInt();
+  double p4 = pm.asDouble();
+  double p5 = pm.asDouble();  
+  double p6 = pm.asDouble();
+  double p7 = pm.asDouble();  
+  double p8 = pm.asDouble();
+  int r = pySetDrc(p0, p1, p2, p3, p4, p5, p6, p7, p8);
   return tp_number(r);
 }
 // videoCodec -> int editor->setVideoCodec(str couples)
@@ -933,7 +939,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPARWidth(void)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "savePng(str)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetMixer(int,str)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetDrc(IEditor,int,int)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetDrc(IEditor,int,int,int,float,float,float,float,float)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "videoCodec(str,couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioEncoding(IEditor,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "addVideoFilter(str,couples)\n");

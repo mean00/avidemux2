@@ -335,18 +335,21 @@ int pySetResample(IEditor *editor,int track,int fq)
     \brief
 */
 
-int pyGetDrc(IEditor *editor,int track)
+int pyGetDrc(IEditor *editor,int track, int * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB)
 {
-    return editor->getAudioDrc(track);
+    bool bactive;
+    editor->getAudioDrc(track, &bactive, normalize, nFloor, attTime, decTime, ratio, thresDB);
+    *active = (bactive?1:0);
+    return true;
 }
 /**
     \fn
     \brief
 */
 
-int pySetDrc(IEditor *editor,int track, int onoff)
+int pySetDrc(IEditor *editor,int track, int active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
 {
-    editor->setAudioDrc(track,onoff);
+    editor->setAudioDrc(track, active, normalize, nFloor, attTime, decTime, ratio, thresDB);
     return true;
 }
 /**

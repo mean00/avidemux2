@@ -31,8 +31,8 @@ int pyGetNumberOfAvailableAudioTracks(IEditor *editor);
 /* Audio filters */
 int pySetAudioShift(IEditor *editor,int track, int onoff, int value);
 int pyGetAudioShift(IEditor *editor,int track, int *onoff, int *value);
-int pyGetDrc(IEditor *editor,int track);
-int pySetDrc(IEditor *editor,int track, int onoff);
+int pyGetDrc(IEditor *editor,int track, int * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
+int pySetDrc(IEditor *editor,int track, int active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
 int pyGetResample(IEditor *editor,int track);
 int pySetResample(IEditor *editor,int track,int fq);
 int32_t pyGetPal2Film(IEditor *editor);

@@ -36,7 +36,7 @@ public:
     virtual void setHDRConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB, uint32_t gamutMethod) = 0;
     virtual void setVideoEncoder(ADM_videoEncoder6* videoEncoder) = 0;
     virtual void stretchAudio(int trackIndex, FILMCONV fps) = 0;
-    virtual void setAudioDrc(int trackIndex, bool active) = 0;
+    virtual void setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB) = 0;
     virtual void setAudioShift(int trackIndex, bool active,int32_t shiftMs) = 0;
     virtual void setAudioPoolLanguage(int trackIndex, const char *lang)=0; // ! from pool, not activeAudioTrack
     virtual void addExternalAudioTrack(int trackIndex,const char *file)=0;

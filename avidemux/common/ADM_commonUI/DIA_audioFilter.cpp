@@ -16,6 +16,7 @@
 #include "ADM_default.h"
 #include "audiofilter_conf.h"
 #include "DIA_factory.h"
+#include <cmath>
 /**
     \fn DIA_getAudioFilter
     \brief Dialog to manage audio filters
@@ -29,6 +30,13 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   uint32_t bShiftEnabled=config->shiftEnabled;
   ELEM_TYPE_FLOAT vGainValue=config->gainParam.gain10/10.;
   ELEM_TYPE_FLOAT vGainMaxLevel=config->gainParam.maxlevel10/10.;
+  
+  bool drcUseGain = (config->drcConf.mUseGain != 0);
+  ELEM_TYPE_FLOAT drcFloorDB = 10.0*std::log10(config->drcConf.mFloor);     // convert to DB; factor of 10 because it's power
+  ELEM_TYPE_FLOAT drcAttackTime = config->drcConf.mAttackTime;
+  ELEM_TYPE_FLOAT drcDecayTime = config->drcConf.mDecayTime;
+  ELEM_TYPE_FLOAT drcRatio = config->drcConf.mRatio;
+  ELEM_TYPE_FLOAT drcThresholdDB = config->drcConf.mThresholdDB;
 
 #define PX(x) (&(config->x))
    diaElemToggleUint eResample(PX(resamplerEnabled),QT_TRANSLATE_NOOP("adm","R_esampling (Hz):"),PX(resamplerFrequency),QT_TRANSLATE_NOOP("adm","Resampling frequency (Hz)"),6000,64000);
@@ -92,8 +100,27 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  diaElemToggleInt eShift(&bShiftEnabled,QT_TRANSLATE_NOOP("adm","Shift audio:"),&vShift, QT_TRANSLATE_NOOP("adm","Shift Value (ms):"),-30000,30000);
  /************************************/
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
- diaElem *elems[]={&eFPS, &tDRC, &eResample,&eShift,&frameMixer,&frameGain};
-  if( diaFactoryRun(QT_TRANSLATE_NOOP("adm","Audio Filters"),NB_ELEM(elems),elems))
+ diaElem *mainElems[]={&eFPS, &tDRC, &eResample,&eShift,&frameMixer,&frameGain};
+ diaElemTabs tabMain(QT_TRANSLATE_NOOP("adm","Main"),NB_ELEM(mainElems),mainElems);
+
+ //*** DRC tab *****
+ diaElemToggle    eDrcNorm(&drcUseGain,QT_TRANSLATE_NOOP("adm","Normalize"));
+ diaElemFloat     eDrcThres(&drcThresholdDB,QT_TRANSLATE_NOOP("adm","Threshold (dB):"),-60,-1);
+ diaElemFloat     eDrcNFloor(&drcFloorDB,QT_TRANSLATE_NOOP("adm","Noise floor (dB):"),-80,-20);
+ diaElemFloat     eDrcRatio(&drcRatio,QT_TRANSLATE_NOOP("adm","Ratio:"),1.1,10);
+ diaElemFloat     eDrcAttack(&drcAttackTime,QT_TRANSLATE_NOOP("adm","Attack time (sec):"),0.1,5);
+ diaElemFloat     eDrcDecay(&drcDecayTime,QT_TRANSLATE_NOOP("adm","Decay time (sec):"),1,30);
+ diaElem *drcElems[]={&eDrcNorm, &eDrcThres, &eDrcNFloor, &eDrcRatio, &eDrcAttack, &eDrcDecay};
+ diaElemTabs tabDRC(QT_TRANSLATE_NOOP("adm","DRC"),NB_ELEM(drcElems),drcElems);
+ 
+ diaElemTabs *tabs[] = {
+     &tabMain,
+     &tabDRC
+ };
+ 
+#undef NB_ELEM
+#define NB_ELEM(x) sizeof(x)/sizeof(diaElemTabs *)
+  if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("adm","Audio Filters"),NB_ELEM(tabs),tabs))
     {
         config->mixerConf=(CHANNEL_CONF)vChan;
         config->film2pal=(FILMCONV)vFilm;
@@ -103,6 +130,15 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
         config->mixerEnabled=bMixer;
 	config->shiftInMs=vShift;
         config->shiftEnabled=bShiftEnabled;
+
+        config->drcConf.mUseGain = (drcUseGain ? 1:0);
+        config->drcConf.mFloor = pow(10.0, drcFloorDB/10.0);     // convert to linear; factor of 10 because it's power
+        config->drcConf.mAttackTime = drcAttackTime;
+        config->drcConf.mDecayTime = drcDecayTime;
+        config->drcConf.mRatio = drcRatio;
+        config->drcConf.mThresholdDB = drcThresholdDB;
+  
+
         
       return true;
     }

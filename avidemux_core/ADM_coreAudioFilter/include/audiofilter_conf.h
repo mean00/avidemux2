@@ -72,8 +72,8 @@ public    :
     DRCparam      drcConf;
 
 public: // accessor
-    bool            audioFilterGetDrcMode(void) {return drcEnabled;};
-    bool            audioFilterSetDrcMode(bool m) { drcEnabled=m;return true;};
+    bool            audioFilterSetDrcConfig(bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
+    bool            audioFilterGetDrcConfig(bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
     bool            audioFilterConfigure(void);
     bool            audioFilterCopyConfig(ADM_AUDIOFILTER_CONFIG * other);
     bool            audioFilterSetResample(uint32_t newfq);  // Set 0 to disable frequency

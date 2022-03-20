@@ -297,22 +297,22 @@ void ADM_Composer::resetAudioFilter(int dex)
     \fn setAudioDrc
 */
 
-bool        ADM_Composer::setAudioDrc(int dex, bool mode)
+bool        ADM_Composer::setAudioDrc(int dex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
 {
     EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
     if(!ed) return false;
-    return ed->audioEncodingConfig.audioFilterSetDrcMode(mode);
+    return ed->audioEncodingConfig.audioFilterSetDrcConfig(active, normalize, nFloor, attTime, decTime, ratio, thresDB);
 }
 
 /**
     \fn getAudioDrc
 */
 
-bool        ADM_Composer::getAudioDrc(int dex)
+bool        ADM_Composer::getAudioDrc(int dex, bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB)
 {
     EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
     if(!ed) return false;
-    return ed->audioEncodingConfig.audioFilterGetDrcMode();
+    return ed->audioEncodingConfig.audioFilterGetDrcConfig(active, normalize, nFloor, attTime, decTime, ratio, thresDB);
 }
 
 

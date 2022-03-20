@@ -50,6 +50,39 @@ bool ADM_AUDIOFILTER_CONFIG::audioFilterCopyConfig(ADM_AUDIOFILTER_CONFIG * othe
     shiftInMs=other->shiftInMs;    
     return true;
 }
+
+/**
+    \fn audioFilterSetDrcConfig
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterSetDrcConfig(bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
+{
+    drcEnabled = active;
+    drcConf.mUseGain = normalize;
+    drcConf.mFloor = nFloor;
+    drcConf.mAttackTime = attTime;
+    drcConf.mDecayTime = decTime;
+    drcConf.mRatio = ratio;
+    drcConf.mThresholdDB = thresDB;
+    return true;
+}
+
+/**
+    \fn audioFilterGetDrcConfig
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterGetDrcConfig(bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB)
+{
+    *active = drcEnabled;
+    *normalize = drcConf.mUseGain;
+    *nFloor = drcConf.mFloor;
+    *attTime = drcConf.mAttackTime;
+    *decTime = drcConf.mDecayTime;
+    *ratio = drcConf.mRatio;
+    *thresDB = drcConf.mThresholdDB;
+    return true;
+}
+
 /**
     \fn audioFilterSetResample
     \brief

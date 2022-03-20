@@ -367,8 +367,8 @@ public:
         bool        setAudioFilterNormalise(int dex, ADM_GAINMode mode, int32_t gain, int32_t maxlevel);
         uint32_t    getAudioResample(int dex);
         void        setAudioResample(int dex,uint32_t newfq);
-        bool        setAudioDrc(int track, bool mode);
-        bool        getAudioDrc(int track);
+        bool        setAudioDrc(int track, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
+        bool        getAudioDrc(int track, bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
         bool        setAudioShift(int track, bool mode,int32_t value);
         bool        getAudioShift(int track, bool *mode,int32_t *value);
         int         saveAudio(int dex,const char *name);

@@ -48,7 +48,7 @@ void SpiderMonkeyScriptWriter::appendVideo(const char* path)
 {
     *(this->_stream) << "adm.appendVideo(\"" << path << "\");" << std::endl;
 }
-void SpiderMonkeyScriptWriter::setAudioDrc(int trackIndex, bool active)
+void SpiderMonkeyScriptWriter::setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
 {
 
 }

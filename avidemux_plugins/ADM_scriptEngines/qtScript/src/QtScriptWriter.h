@@ -36,7 +36,7 @@ namespace ADM_qtScript
 		void setHDRConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB, uint32_t gamutMethod);
 		void setVideoEncoder(ADM_videoEncoder6* videoEncoder);
 		void stretchAudio(int trackIndex, FILMCONV fps);
-                void setAudioDrc(int trackIndex, bool active);
+                void setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
                 void setAudioShift(int trackIndex, bool active,int32_t value);
                 void setAudioPoolLanguage(int trackIndex, const char *lang); // ! from pool, not activeAudioTrack
                 void addExternalAudioTrack(int trackIndex,const char *file);

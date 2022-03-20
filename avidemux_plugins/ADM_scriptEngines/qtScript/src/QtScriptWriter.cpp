@@ -115,7 +115,7 @@ namespace ADM_qtScript
         }
     }
 
-    void QtScriptWriter::setAudioDrc(int trackIndex, bool active)
+    void QtScriptWriter::setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
     {
         *(this->_stream) << "Editor.audioOutputs[" << trackIndex << "].drcEnabled = " << (active ? "true" : "false") << ";" << std::endl;
     }
