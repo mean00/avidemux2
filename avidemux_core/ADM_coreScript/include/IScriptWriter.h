@@ -37,6 +37,7 @@ public:
     virtual void setVideoEncoder(ADM_videoEncoder6* videoEncoder) = 0;
     virtual void stretchAudio(int trackIndex, FILMCONV fps) = 0;
     virtual void setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB) = 0;
+    virtual void setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE) = 0;
     virtual void setAudioShift(int trackIndex, bool active,int32_t shiftMs) = 0;
     virtual void setAudioPoolLanguage(int trackIndex, const char *lang)=0; // ! from pool, not activeAudioTrack
     virtual void addExternalAudioTrack(int trackIndex,const char *file)=0;

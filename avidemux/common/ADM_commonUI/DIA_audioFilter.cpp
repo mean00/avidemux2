@@ -38,6 +38,11 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   ELEM_TYPE_FLOAT drcRatio = config->drcConf.mRatio;
   ELEM_TYPE_FLOAT drcThresholdDB = config->drcConf.mThresholdDB;
 
+  ELEM_TYPE_FLOAT chGainDB[ADM_CH_LAST];
+  for (int i=0; i<ADM_CH_LAST; i++)
+     chGainDB[i] = config->chansConf.chGainDB[i];
+
+  
 #define PX(x) (&(config->x))
    diaElemToggleUint eResample(PX(resamplerEnabled),QT_TRANSLATE_NOOP("adm","R_esampling (Hz):"),PX(resamplerFrequency),QT_TRANSLATE_NOOP("adm","Resampling frequency (Hz)"),6000,64000);
     
@@ -113,11 +118,28 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  diaElem *drcElems[]={&eDrcNorm, &eDrcThres, &eDrcNFloor, &eDrcRatio, &eDrcAttack, &eDrcDecay};
  diaElemTabs tabDRC(QT_TRANSLATE_NOOP("adm","DRC parameters"),NB_ELEM(drcElems),drcElems);
  
+ //*** Channel gains tab ******
+   diaElemFloat  eChGainFLValue(chGainDB+ADM_CH_FRONT_LEFT,QT_TRANSLATE_NOOP("adm","Front left (dB):"),-30,+30);
+  diaElemFloat  eChGainFRValue(chGainDB+ADM_CH_FRONT_RIGHT,QT_TRANSLATE_NOOP("adm","Front right (dB):"),-30,+30);
+  diaElemFloat  eChGainFCValue(chGainDB+ADM_CH_FRONT_CENTER,QT_TRANSLATE_NOOP("adm","Front center (dB):"),-30,+30);
+  diaElemFloat  eChGainRLValue(chGainDB+ADM_CH_REAR_LEFT,QT_TRANSLATE_NOOP("adm","Rear left (dB):"),-30,+30);
+  diaElemFloat  eChGainRRValue(chGainDB+ADM_CH_REAR_RIGHT,QT_TRANSLATE_NOOP("adm","Rear right (dB):"),-30,+30);
+  diaElemFloat  eChGainRCValue(chGainDB+ADM_CH_REAR_CENTER,QT_TRANSLATE_NOOP("adm","Rear center (dB):"),-30,+30);
+  diaElemFloat  eChGainSLValue(chGainDB+ADM_CH_SIDE_LEFT,QT_TRANSLATE_NOOP("adm","Side left (dB):"),-30,+30);
+  diaElemFloat  eChGainSRValue(chGainDB+ADM_CH_SIDE_RIGHT,QT_TRANSLATE_NOOP("adm","Side right (dB):"),-30,+30);
+  diaElemFloat  eChGainLFEValue(chGainDB+ADM_CH_LFE,QT_TRANSLATE_NOOP("adm","Low-frequency effects (LFE) (dB):"),-30,+30);
+ 
+  diaElem *chansElems[]={&eChGainFLValue, &eChGainFRValue, &eChGainFCValue, &eChGainSLValue, &eChGainSRValue, &eChGainRLValue, &eChGainRRValue, &eChGainRCValue, &eChGainLFEValue};
+  diaElemTabs tabChans(QT_TRANSLATE_NOOP("adm","Channel gains"),NB_ELEM(chansElems),chansElems);
+ 
+  //*** ALL TABS *************************
  diaElemTabs *tabs[] = {
      &tabMain,
-     &tabDRC
+     &tabDRC,
+     &tabChans
  };
  
+  //**************************************
 #undef NB_ELEM
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElemTabs *)
   if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("adm","Audio Filters"),NB_ELEM(tabs),tabs))
@@ -138,7 +160,12 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
         config->drcConf.mRatio = drcRatio;
         config->drcConf.mThresholdDB = drcThresholdDB;
   
-
+        for (int i=0; i<ADM_CH_LAST; i++)
+        {
+            if (i < ADM_CH_FRONT_LEFT) continue;
+            if (i > ADM_CH_LFE) continue;
+            config->chansConf.chGainDB[i] = chGainDB[i];
+        }
         
       return true;
     }

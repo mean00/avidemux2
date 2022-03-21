@@ -369,6 +369,8 @@ public:
         void        setAudioResample(int dex,uint32_t newfq);
         bool        setAudioDrc(int track, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
         bool        getAudioDrc(int track, bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
+        bool        setAudioChannelGains(int dex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
+        bool        getAudioChannelGains(int dex, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE);
         bool        setAudioShift(int track, bool mode,int32_t value);
         bool        getAudioShift(int track, bool *mode,int32_t *value);
         int         saveAudio(int dex,const char *name);

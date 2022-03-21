@@ -32,6 +32,7 @@ public:
     void setVideoEncoder(ADM_videoEncoder6* videoEncoder);
     void stretchAudio(int trackIndex, FILMCONV fps);
     void setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
+    void setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
     void setAudioShift(int trackIndex, bool active,int32_t value);
     void setAudioPoolLanguage(int trackIndex, const char *lang); // ! from pool, not activeAudioTrack
     void addExternalAudioTrack(int trackIndex,const char *file);

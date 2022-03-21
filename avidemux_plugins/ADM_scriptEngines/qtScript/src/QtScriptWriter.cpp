@@ -120,6 +120,11 @@ namespace ADM_qtScript
         *(this->_stream) << "Editor.audioOutputs[" << trackIndex << "].drcEnabled = " << (active ? "true" : "false") << ";" << std::endl;
     }
 
+    void QtScriptWriter::setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
+    {
+        
+    }
+    
     void QtScriptWriter::setAudioShift(int trackIndex, bool active, int32_t value)
     {
 		if (!active)

@@ -315,6 +315,27 @@ bool        ADM_Composer::getAudioDrc(int dex, bool * active, int * normalize, f
     return ed->audioEncodingConfig.audioFilterGetDrcConfig(active, normalize, nFloor, attTime, decTime, ratio, thresDB);
 }
 
+/**
+    \fn setAudioDrc
+*/
+
+bool        ADM_Composer::setAudioChannelGains(int dex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetChannelGains(fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
+    \fn getAudioDrc
+*/
+
+bool        ADM_Composer::getAudioChannelGains(int dex, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetChannelGains(fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
 
 /**
     \fn getAudioResample

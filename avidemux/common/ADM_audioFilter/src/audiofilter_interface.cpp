@@ -84,6 +84,42 @@ bool ADM_AUDIOFILTER_CONFIG::audioFilterGetDrcConfig(bool * active, int * normal
 }
 
 /**
+    \fn audioFilterSetChannelGains
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterSetChannelGains(float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
+{
+    chansConf.chGainDB[ADM_CH_FRONT_LEFT] = fL;
+    chansConf.chGainDB[ADM_CH_FRONT_RIGHT] = fR;
+    chansConf.chGainDB[ADM_CH_FRONT_CENTER] = fC;
+    chansConf.chGainDB[ADM_CH_SIDE_LEFT] = sL;
+    chansConf.chGainDB[ADM_CH_SIDE_RIGHT] = sR;
+    chansConf.chGainDB[ADM_CH_REAR_LEFT] = rL;
+    chansConf.chGainDB[ADM_CH_REAR_RIGHT] = rR;
+    chansConf.chGainDB[ADM_CH_REAR_CENTER] = rC;
+    chansConf.chGainDB[ADM_CH_LFE] = LFE;
+    return true;
+}
+
+/**
+    \fn audioFilterGetChannelGains
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterGetChannelGains(float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE)
+{
+    *fL = chansConf.chGainDB[ADM_CH_FRONT_LEFT];
+    *fR = chansConf.chGainDB[ADM_CH_FRONT_RIGHT];
+    *fC = chansConf.chGainDB[ADM_CH_FRONT_CENTER];
+    *sL = chansConf.chGainDB[ADM_CH_SIDE_LEFT];
+    *sR = chansConf.chGainDB[ADM_CH_SIDE_RIGHT];
+    *rL = chansConf.chGainDB[ADM_CH_REAR_LEFT];
+    *rR = chansConf.chGainDB[ADM_CH_REAR_RIGHT];
+    *rC = chansConf.chGainDB[ADM_CH_REAR_CENTER];
+    *LFE = chansConf.chGainDB[ADM_CH_LFE];
+    return true;
+}
+
+/**
     \fn audioFilterSetResample
     \brief
 */

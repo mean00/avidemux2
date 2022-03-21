@@ -52,6 +52,10 @@ void SpiderMonkeyScriptWriter::setAudioDrc(int trackIndex, bool active, int norm
 {
 
 }
+void SpiderMonkeyScriptWriter::setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
+{
+    
+}
 void SpiderMonkeyScriptWriter::setAudioShift(int trackIndex, bool active,int32_t value)
 {
 

@@ -22,6 +22,7 @@
 #include "audiofilter_SRC.h"
 #include "audiofilter_normalize.h"
 #include "audiofilter_limiter.h"
+#include "audiofilter_channels.h"
 
 /**
     \class ADM_AUDIOFILTER_CONFIG
@@ -48,6 +49,7 @@ public    :
                         gainParam.maxlevel10=-30;
                         drcEnabled=false;
                         drcConf=drcConfDefault;
+                        AUDMAudioFilterChannels::resetConf(&chansConf);
 			shiftEnabled=false;
     			shiftInMs=0;
                         return true;
@@ -70,10 +72,13 @@ public    :
     // DRC / limiter
     bool         drcEnabled;
     DRCparam      drcConf;
+    CHANSparam    chansConf;
 
 public: // accessor
     bool            audioFilterSetDrcConfig(bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
     bool            audioFilterGetDrcConfig(bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
+    bool            audioFilterSetChannelGains(float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
+    bool            audioFilterGetChannelGains(float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE);
     bool            audioFilterConfigure(void);
     bool            audioFilterCopyConfig(ADM_AUDIOFILTER_CONFIG * other);
     bool            audioFilterSetResample(uint32_t newfq);  // Set 0 to disable frequency

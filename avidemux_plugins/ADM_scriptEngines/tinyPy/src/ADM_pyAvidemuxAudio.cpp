@@ -352,6 +352,30 @@ int pySetDrc(IEditor *editor,int track, int active, int normalize, float nFloor,
     editor->setAudioDrc(track, active, normalize, nFloor, attTime, decTime, ratio, thresDB);
     return true;
 }
+
+/**
+    \fn
+    \brief
+*/
+
+int pyGetChGains(IEditor *editor,int track, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE)
+{
+    editor->getAudioChannelGains(track, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    return true;
+}
+/**
+    \fn
+    \brief
+*/
+
+int pySetChGains(IEditor *editor,int track, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
+{
+    editor->setAudioChannelGains(track, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    return true;
+}
+
+
+
 /**
     \fn
     \brief
