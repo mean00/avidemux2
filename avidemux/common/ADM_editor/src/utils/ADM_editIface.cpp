@@ -316,7 +316,7 @@ bool        ADM_Composer::getAudioDrc(int dex, bool * active, int * normalize, f
 }
 
 /**
-    \fn setAudioDrc
+    \fn setAudioChannelGains
 */
 
 bool        ADM_Composer::setAudioChannelGains(int dex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
@@ -327,7 +327,7 @@ bool        ADM_Composer::setAudioChannelGains(int dex, float fL, float fR, floa
 }
 
 /**
-    \fn getAudioDrc
+    \fn getAudioChannelGains
 */
 
 bool        ADM_Composer::getAudioChannelGains(int dex, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE)
