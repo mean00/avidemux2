@@ -31,7 +31,7 @@ vp9Encoder::vp9Encoder(ADM_coreVideoFilter *src, bool globalHeader) : ADM_coreVi
     passNumber=0;
     statFd=NULL;
     statBuf=NULL;
-    lastScaledPts=0;
+    lastScaledPts = ADM_NO_PTS;
 }
 
 static void dumpParams(vpx_codec_enc_cfg_t *cfg)
@@ -131,6 +131,10 @@ static int64_t scaleTime(uint32_t num, uint32_t den, uint64_t time)
 bool vp9Encoder::setup(void)
 {
     vpx_codec_err_t ret;
+
+    lastScaledPts = ADM_NO_PTS;
+    flush = false;
+    packetQueue.clear();
 
     image=new ADMImageDefault(getWidth(),getHeight());
     if(!image)
@@ -361,6 +365,10 @@ bool vp9Encoder::encode(ADMBitstream *out)
 
     // update
 again:
+    out->flags = 0;
+    if(packetQueue.size())
+        return postAmble(out);
+
     if(!flush && source->getNextFrame(&nb,image)==false)
     {
         ADM_warning("[vp9] Cannot get next image\n");
@@ -369,7 +377,8 @@ again:
     if(flush)
     {
         ADM_info("Flushing delayed frames\n");
-        pts+=scaledFrameDuration;
+        pts = lastScaledPts + scaledFrameDuration; // fake
+        lastScaledPts = pts;
         er=vpx_codec_encode(&context,NULL,pts,scaledFrameDuration,0,dline);
     }else
     {
@@ -394,7 +403,7 @@ again:
         queueOfDts.push_back(pts);
         uint64_t real=pts;
         pts=scaleTime(param.g_timebase.num, param.g_timebase.den, real);
-        if(pts<=lastScaledPts) // either wrong timebase or bogus pts
+        if(lastScaledPts != ADM_NO_PTS && pts <= lastScaledPts) // either wrong timebase or bogus pts
             pts=lastScaledPts+1;
         lastScaledPts=pts;
         ADM_timeMapping map;
@@ -409,9 +418,6 @@ again:
         ADM_error("Encoding error %d: %s\n",(int)er,vpx_codec_err_to_string(er));
         return false;
     }
-
-    out->flags=0;
-
     if(!postAmble(out))
     {
         if(flush) return false;
@@ -442,25 +448,28 @@ bool vp9Encoder::postAmble(ADMBitstream *out)
     const vpx_codec_cx_pkt *pkt;
     const void *iter=NULL;
 
-    while((pkt=vpx_codec_get_cx_data(&context,&iter)))
+    if(packetQueue.empty())
     {
-        if(passNumber != 1 && pkt->kind != VPX_CODEC_CX_FRAME_PKT)
+        while((pkt=vpx_codec_get_cx_data(&context,&iter)))
         {
-            const char *msg=packetTypeToString(pkt->kind);
-            ADM_info("Got packet of type: %s\n",msg);
-            ADM_dealloc(msg);
-            msg=NULL;
-            continue;
+            if(passNumber != 1 && pkt->kind != VPX_CODEC_CX_FRAME_PKT)
+            {
+                const char *msg=packetTypeToString(pkt->kind);
+                ADM_info("Got packet of type: %s\n",msg);
+                ADM_dealloc(msg);
+                msg=NULL;
+                continue;
+            }
+            if(passNumber == 1 && pkt->kind != VPX_CODEC_STATS_PKT)
+            {
+                const char *msg=packetTypeToString(pkt->kind);
+                ADM_warning("Unexpected packet type %s during the first pass.\n",msg);
+                ADM_dealloc(msg);
+                msg=NULL;
+                continue;
+            }
+            packetQueue.push_back(pkt);
         }
-        if(passNumber == 1 && pkt->kind != VPX_CODEC_STATS_PKT)
-        {
-            const char *msg=packetTypeToString(pkt->kind);
-            ADM_warning("Unexpected packet type %s during the first pass.\n",msg);
-            ADM_dealloc(msg);
-            msg=NULL;
-            continue;
-        }
-        packetQueue.push_back(pkt);
     }
 
     if(packetQueue.size())
