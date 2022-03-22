@@ -107,7 +107,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  frameMixer.swallow(&eMixer);
  
  //****************************
- diaElemToggleInt eShift(&bShiftEnabled,QT_TRANSLATE_NOOP("adm","Shift audio:"),&vShift, QT_TRANSLATE_NOOP("adm","Shift Value (ms):"),-30000,30000);
+ diaElemToggleInt eShift(&bShiftEnabled,QT_TRANSLATE_NOOP("adm","Shift audio (ms):"),&vShift, QT_TRANSLATE_NOOP("adm","Shift Value (ms):"),-30000,30000);
  diaElemToggle    eChRemap(&bChRemapEnabled,QT_TRANSLATE_NOOP("adm","Channel remap"));
  /************************************/
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
