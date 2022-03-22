@@ -338,6 +338,28 @@ bool        ADM_Composer::getAudioChannelGains(int dex, float * fL, float * fR, 
 }
 
 /**
+    \fn setAudioChannelRemap
+*/
+
+bool        ADM_Composer::setAudioChannelRemap(int dex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetChannelRemap(active, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
+    \fn getAudioChannelRemap
+*/
+
+bool        ADM_Composer::getAudioChannelRemap(int dex, bool * active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetChannelRemap(active, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
     \fn getAudioResample
 */
 uint32_t ADM_Composer::getAudioResample(int dex)

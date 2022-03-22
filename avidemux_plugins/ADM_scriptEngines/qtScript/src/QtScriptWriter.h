@@ -38,6 +38,7 @@ namespace ADM_qtScript
 		void stretchAudio(int trackIndex, FILMCONV fps);
                 void setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
                 void setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
+                void setAudioChannelRemap(int trackIndex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);
                 void setAudioShift(int trackIndex, bool active,int32_t value);
                 void setAudioPoolLanguage(int trackIndex, const char *lang); // ! from pool, not activeAudioTrack
                 void addExternalAudioTrack(int trackIndex,const char *file);

@@ -374,6 +374,19 @@ int pySetChGains(IEditor *editor,int track, float fL, float fR, float fC, float 
     return true;
 }
 
+int pyGetChRemap(IEditor *editor,int track, int * active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    bool bactive;
+    editor->getAudioChannelRemap(track, &bactive, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    *active = (bactive?1:0);
+    return true;    
+}
+
+int pySetChRemap(IEditor *editor,int track, int active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    editor->setAudioChannelRemap(track, active, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    return true;    
+}
 
 
 /**

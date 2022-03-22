@@ -19,6 +19,8 @@
 typedef struct
 {
     float chGainDB[ADM_CH_LAST];
+    bool  enableRemap;
+    int remap[9];   // fL, fR, fC, sL, sR, rL, rR, rC, LFE
     
 } CHANSparam;
 
@@ -31,6 +33,7 @@ class AUDMAudioFilterChannels : public AUDMAudioFilter
         float           chGain[ADM_CH_LAST];
         uint32_t        channels;
         CHANNEL_TYPE    channelMapping[MAX_CHANNELS];
+
 
     public:
       static void resetConf(CHANSparam * cfg);

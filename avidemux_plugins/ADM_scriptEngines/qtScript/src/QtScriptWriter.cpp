@@ -125,6 +125,11 @@ namespace ADM_qtScript
         
     }
     
+    void QtScriptWriter::setAudioChannelRemap(int trackIndex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+    {
+        
+    }
+    
     void QtScriptWriter::setAudioShift(int trackIndex, bool active, int32_t value)
     {
 		if (!active)

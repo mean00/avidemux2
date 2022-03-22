@@ -147,6 +147,11 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorTy
             float chg[9];
             track->audioEncodingConfig.audioFilterGetChannelGains(chg+0, chg+1, chg+2, chg+3, chg+4, chg+5, chg+6, chg+7, chg+8);
             this->_scriptWriter->setAudioChannelGains(i, chg[0], chg[1], chg[2], chg[3], chg[4], chg[5], chg[6], chg[7], chg[8]);
+
+            bool remapActive;
+            int chrm[9];
+            track->audioEncodingConfig.audioFilterGetChannelRemap(&remapActive, chrm+0, chrm+1, chrm+2, chrm+3, chrm+4, chrm+5, chrm+6, chrm+7, chrm+8);
+            this->_scriptWriter->setAudioChannelRemap(i, remapActive, chrm[0], chrm[1], chrm[2], chrm[3], chrm[4], chrm[5], chrm[6], chrm[7], chrm[8]);
             
             bool shiftEnabled=false;
             int32_t shiftValue=0;

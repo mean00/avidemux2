@@ -24,12 +24,18 @@ void AUDMAudioFilterChannels::resetConf(CHANSparam * cfg)
 {
     for (int i=0; i<ADM_CH_LAST; i++)
         cfg->chGainDB[i] = 0;
+    cfg->enableRemap = false;
+    for (int i=0; i<9; i++)
+        cfg->remap[i] = i;
 }
 
 AUDMAudioFilterChannels::AUDMAudioFilterChannels(AUDMAudioFilter *instream, CHANSparam * cfg):AUDMAudioFilter (instream)
 {
     for (int i=0; i<ADM_CH_LAST; i++)
         chGain[i] = pow(10.0, cfg->chGainDB[i]/20.0);
+    //cfg->enableRemap;
+    //cfg->remap[i];
+    
     channels = _wavHeader.channels;
     memset(channelMapping,0,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
     CHANNEL_TYPE *map=_previous->getChannelMapping();

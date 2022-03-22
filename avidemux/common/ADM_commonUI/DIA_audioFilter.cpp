@@ -41,6 +41,11 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   ELEM_TYPE_FLOAT chGainDB[ADM_CH_LAST];
   for (int i=0; i<ADM_CH_LAST; i++)
      chGainDB[i] = config->chansConf.chGainDB[i];
+  
+  bool bChRemapEnabled = config->chansConf.enableRemap;
+  uint32_t vChRemap[9];
+  for (int i=0; i<9; i++)
+      vChRemap[i] = config->chansConf.remap[i];
 
   
 #define PX(x) (&(config->x))
@@ -103,9 +108,10 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  
  //****************************
  diaElemToggleInt eShift(&bShiftEnabled,QT_TRANSLATE_NOOP("adm","Shift audio:"),&vShift, QT_TRANSLATE_NOOP("adm","Shift Value (ms):"),-30000,30000);
+ diaElemToggle    eChRemap(&bChRemapEnabled,QT_TRANSLATE_NOOP("adm","Channel remap"));
  /************************************/
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
- diaElem *mainElems[]={&eFPS, &tDRC, &eResample,&eShift,&frameMixer,&frameGain};
+ diaElem *mainElems[]={&eFPS, &tDRC, &eResample,&eShift,&eChRemap,&frameMixer,&frameGain};
  diaElemTabs tabMain(QT_TRANSLATE_NOOP("adm","Main"),NB_ELEM(mainElems),mainElems);
 
  //*** DRC tab *****
@@ -131,12 +137,38 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  
   diaElem *chansElems[]={&eChGainFLValue, &eChGainFRValue, &eChGainFCValue, &eChGainSLValue, &eChGainSRValue, &eChGainRLValue, &eChGainRRValue, &eChGainRCValue, &eChGainLFEValue};
   diaElemTabs tabChans(QT_TRANSLATE_NOOP("adm","Channel gains"),NB_ELEM(chansElems),chansElems);
- 
+
+ //*** Channel remap tab ******
+  diaMenuEntry menuRemap[]={
+    {0,     QT_TRANSLATE_NOOP("adm","Front left"), NULL},
+    {1,     QT_TRANSLATE_NOOP("adm","Front right"), NULL},
+    {2,     QT_TRANSLATE_NOOP("adm","Front center"), NULL},
+    {3,     QT_TRANSLATE_NOOP("adm","Side left"), NULL},
+    {4,     QT_TRANSLATE_NOOP("adm","Side right"), NULL},
+    {5,     QT_TRANSLATE_NOOP("adm","Rear left"), NULL},
+    {6,     QT_TRANSLATE_NOOP("adm","Rear right"), NULL},
+    {7,     QT_TRANSLATE_NOOP("adm","Rear center"), NULL},
+    {8,     QT_TRANSLATE_NOOP("adm","Low-frequency effects (LFE)"), NULL}
+  };
+  diaElemMenu   eRemapFL(vChRemap+0,QT_TRANSLATE_NOOP("adm","Front left to:"),NB_ITEMS(menuRemap),menuRemap);  
+  diaElemMenu   eRemapFR(vChRemap+1,QT_TRANSLATE_NOOP("adm","Front right to:"),NB_ITEMS(menuRemap),menuRemap);  
+  diaElemMenu   eRemapFC(vChRemap+2,QT_TRANSLATE_NOOP("adm","Front center to:"),NB_ITEMS(menuRemap),menuRemap);  
+  diaElemMenu   eRemapSL(vChRemap+3,QT_TRANSLATE_NOOP("adm","Side left to:"),NB_ITEMS(menuRemap),menuRemap);  
+  diaElemMenu   eRemapSR(vChRemap+4,QT_TRANSLATE_NOOP("adm","Side right to:"),NB_ITEMS(menuRemap),menuRemap);  
+  diaElemMenu   eRemapRL(vChRemap+5,QT_TRANSLATE_NOOP("adm","Rear left to:"),NB_ITEMS(menuRemap),menuRemap);  
+  diaElemMenu   eRemapRR(vChRemap+6,QT_TRANSLATE_NOOP("adm","Rear right to:"),NB_ITEMS(menuRemap),menuRemap);  
+  diaElemMenu   eRemapRC(vChRemap+7,QT_TRANSLATE_NOOP("adm","Rear center to:"),NB_ITEMS(menuRemap),menuRemap);  
+  diaElemMenu   eRemapLFE(vChRemap+8,QT_TRANSLATE_NOOP("adm","Low-frequency effects (LFE) to:"),NB_ITEMS(menuRemap),menuRemap); 
+  
+  diaElem *remapElems[]={&eRemapFL, &eRemapFR, &eRemapFC, &eRemapSL, &eRemapSR, &eRemapRL, &eRemapRR, &eRemapRC, &eRemapLFE};
+  diaElemTabs tabRemap(QT_TRANSLATE_NOOP("adm","Channel remap"),NB_ELEM(remapElems),remapElems);
+  
   //*** ALL TABS *************************
  diaElemTabs *tabs[] = {
      &tabMain,
      &tabDRC,
-     &tabChans
+     &tabChans,
+     &tabRemap
  };
  
   //**************************************
@@ -166,6 +198,10 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
             if (i > ADM_CH_LFE) continue;
             config->chansConf.chGainDB[i] = chGainDB[i];
         }
+
+        config->chansConf.enableRemap = bChRemapEnabled;
+        for (int i=0; i<9; i++)
+            config->chansConf.remap[i] = vChRemap[i];
         
       return true;
     }

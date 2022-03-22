@@ -120,6 +120,45 @@ bool ADM_AUDIOFILTER_CONFIG::audioFilterGetChannelGains(float * fL, float * fR, 
 }
 
 /**
+    \fn audioFilterSetChannelRemap
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterSetChannelRemap(bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    chansConf.enableRemap = active;
+    chansConf.remap[0] = fL;
+    chansConf.remap[1] = fR;
+    chansConf.remap[2] = fC;
+    chansConf.remap[3] = sL;
+    chansConf.remap[4] = sR;
+    chansConf.remap[5] = rL;
+    chansConf.remap[6] = rR;
+    chansConf.remap[7] = rC;
+    chansConf.remap[8] = LFE;
+    return true;
+}
+
+/**
+    \fn audioFilterGetChannelRemap
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterGetChannelRemap(bool * active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    *active = chansConf.enableRemap;
+    *fL = chansConf.remap[0];
+    *fR = chansConf.remap[1];
+    *fC = chansConf.remap[2];
+    *sL = chansConf.remap[3];
+    *sR = chansConf.remap[4];
+    *rL = chansConf.remap[5];
+    *rR = chansConf.remap[6];
+    *rC = chansConf.remap[7];
+    *LFE = chansConf.remap[8];
+    return true;
+}
+
+
+/**
     \fn audioFilterSetResample
     \brief
 */
