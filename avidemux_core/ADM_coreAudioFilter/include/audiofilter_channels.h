@@ -33,8 +33,9 @@ class AUDMAudioFilterChannels : public AUDMAudioFilter
         float           chGain[ADM_CH_LAST];
         uint32_t        channels;
         CHANNEL_TYPE    channelMapping[MAX_CHANNELS];
+        int             channelReMapping[MAX_CHANNELS];
 
-
+        CHANNEL_TYPE remapToADMChannel(int r);
     public:
       static void resetConf(CHANSparam * cfg);
       ~AUDMAudioFilterChannels();

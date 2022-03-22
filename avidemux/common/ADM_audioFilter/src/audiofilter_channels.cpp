@@ -29,12 +29,38 @@ void AUDMAudioFilterChannels::resetConf(CHANSparam * cfg)
         cfg->remap[i] = i;
 }
 
+CHANNEL_TYPE AUDMAudioFilterChannels::remapToADMChannel(int r)
+{
+    // fL, fR, fC, sL, sR, rL, rR, rC, LFE
+    switch(r)
+    {
+        case 0:
+            return ADM_CH_FRONT_LEFT;
+        case 1:
+            return ADM_CH_FRONT_RIGHT;
+        case 2:
+            return ADM_CH_FRONT_CENTER;
+        case 3:
+            return ADM_CH_SIDE_LEFT;
+        case 4:
+            return ADM_CH_SIDE_RIGHT;
+        case 5:
+            return ADM_CH_REAR_LEFT;
+        case 6:
+            return ADM_CH_REAR_RIGHT;
+        case 7:
+            return ADM_CH_REAR_CENTER;
+        case 8:
+            return ADM_CH_LFE;
+        default:
+            return ADM_CH_INVALID;
+    }
+}
+
 AUDMAudioFilterChannels::AUDMAudioFilterChannels(AUDMAudioFilter *instream, CHANSparam * cfg):AUDMAudioFilter (instream)
 {
     for (int i=0; i<ADM_CH_LAST; i++)
         chGain[i] = pow(10.0, cfg->chGainDB[i]/20.0);
-    //cfg->enableRemap;
-    //cfg->remap[i];
     
     channels = _wavHeader.channels;
     memset(channelMapping,0,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
@@ -44,6 +70,41 @@ AUDMAudioFilterChannels::AUDMAudioFilterChannels(AUDMAudioFilter *instream, CHAN
     {
         memcpy(channelMapping,map,sizeof(CHANNEL_TYPE)*_wavHeader.channels);
         bypass = false;
+    }
+
+    
+    /*printf("Input channel mapping: ");
+    for (int c = 0; c < channels; c++)
+        printf("%s ",ADM_printChannel(channelMapping[c]));
+    printf("\n");*/
+            
+    for (int c=0; c<channels; c++)
+        channelReMapping[c] = c;
+    if (cfg->enableRemap)
+    {
+        for (int c=0; c<channels; c++)
+        {
+            channelReMapping[c] = -1;
+        }
+        for (int i=0; i<9; i++)
+        {
+            CHANNEL_TYPE from = remapToADMChannel(i);
+            CHANNEL_TYPE to = remapToADMChannel(cfg->remap[i]);
+            //printf("map %s -> %s\n",ADM_printChannel(from),ADM_printChannel(to));
+            for (int c=0; c<channels; c++)
+            {
+                if (channelMapping[c] == from)
+                {
+                    for (int d=0; d<channels; d++)
+                    {
+                        if (channelMapping[d] == to)
+                        {
+                            channelReMapping[c] = d;
+                        }
+                    }
+                }
+            }
+        }
     }
     
     _previous->rewind();     // rewind
@@ -97,20 +158,20 @@ uint32_t AUDMAudioFilterChannels::fill(uint32_t max,float *output,AUD_Status *st
     if(available > nbSampleMax) available=nbSampleMax;
     
     ADM_assert(available);
-    
-    // TODO
+
+  
     float *in = _incomingBuffer.at(_head);
     float * out = output;
     memset(out, 0, sizeof(float) * available * channels);
     for (int i = 0; i < available; i++) {
         for (int c = 0; c < channels; c++) {
-            out[c] = chGain[channelMapping[c]] * *in;
+            if (channelReMapping[c] >= 0)
+                out[channelReMapping[c]] += chGain[channelMapping[c]] * *in;
             in++;
         }
         out += channels;
     }
     
-    //memcpy(output, _incomingBuffer.at(_head), available*channels *sizeof(float));
     rd = available*channels;
 
     _head+=available*channels;
