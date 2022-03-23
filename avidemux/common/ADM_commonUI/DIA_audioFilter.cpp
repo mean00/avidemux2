@@ -138,8 +138,10 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   diaElemFloat  eChGainSLValue(chGainDB+ADM_CH_SIDE_LEFT,QT_TRANSLATE_NOOP("adm","Side left (dB):"),-30,+30);
   diaElemFloat  eChGainSRValue(chGainDB+ADM_CH_SIDE_RIGHT,QT_TRANSLATE_NOOP("adm","Side right (dB):"),-30,+30);
   diaElemFloat  eChGainLFEValue(chGainDB+ADM_CH_LFE,QT_TRANSLATE_NOOP("adm","Low-frequency effects (LFE) (dB):"),-30,+30);
- 
-  diaElem *chanGainsElems[]={&eChGainFLValue, &eChGainFRValue, &eChGainFCValue, &eChGainSLValue, &eChGainSRValue, &eChGainRLValue, &eChGainRRValue, &eChGainRCValue, &eChGainLFEValue};
+  
+  diaElemReadOnlyText noteChGain(NULL,QT_TRANSLATE_NOOP("adm","Note:\n - it is highly recommended to enable normalization when positive gain values are used"),NULL);
+  
+  diaElem *chanGainsElems[]={&eChGainFLValue, &eChGainFRValue, &eChGainFCValue, &eChGainSLValue, &eChGainSRValue, &eChGainRLValue, &eChGainRRValue, &eChGainRCValue, &eChGainLFEValue, &noteChGain};
   diaElemTabs tabChanGains(QT_TRANSLATE_NOOP("adm","Channel gains"),NB_ELEM(chanGainsElems),chanGainsElems);
 
  //*** Channel delays tab ******
@@ -153,7 +155,9 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   diaElemInteger  eChDelaySRValue(chDelayMS+ADM_CH_SIDE_RIGHT,QT_TRANSLATE_NOOP("adm","Side right (ms):"),0,10000);
   diaElemInteger  eChDelayLFEValue(chDelayMS+ADM_CH_LFE,QT_TRANSLATE_NOOP("adm","Low-frequency effects (LFE) (ms):"),0,10000);
  
-  diaElem *chanDelaysElems[]={&eChDelayFLValue, &eChDelayFRValue, &eChDelayFCValue, &eChDelaySLValue, &eChDelaySRValue, &eChDelayRLValue, &eChDelayRRValue, &eChDelayRCValue, &eChDelayLFEValue};
+  diaElemReadOnlyText noteChDelay(NULL,QT_TRANSLATE_NOOP("adm","Note:\n - the final delay will be the sum of a value above and the \"Shift audio\" value provided on the Main tab"),NULL);
+
+  diaElem *chanDelaysElems[]={&eChDelayFLValue, &eChDelayFRValue, &eChDelayFCValue, &eChDelaySLValue, &eChDelaySRValue, &eChDelayRLValue, &eChDelayRRValue, &eChDelayRCValue, &eChDelayLFEValue, &noteChDelay};
   diaElemTabs tabChanDelays(QT_TRANSLATE_NOOP("adm","Channel delays"),NB_ELEM(chanDelaysElems),chanDelaysElems);
 
   
@@ -178,8 +182,14 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   diaElemMenu   eRemapRR(vChRemap+6,QT_TRANSLATE_NOOP("adm","Rear right to:"),NB_ITEMS(menuRemap),menuRemap);  
   diaElemMenu   eRemapRC(vChRemap+7,QT_TRANSLATE_NOOP("adm","Rear center to:"),NB_ITEMS(menuRemap),menuRemap);  
   diaElemMenu   eRemapLFE(vChRemap+8,QT_TRANSLATE_NOOP("adm","Low-frequency effects (LFE) to:"),NB_ITEMS(menuRemap),menuRemap); 
+
+  diaElemReadOnlyText noteRemap(NULL,QT_TRANSLATE_NOOP("adm","Note:\n - channel remap has to be enabled on the Main tab to be effective"
+                                                             "\n - remap will not change the channel layout, therefore:"
+                                                             "\n - mapping a channel to a non-existent will result loss"
+                                                             "\n - mapping a non-existent channel will result silence"
+                                                                ),NULL);
   
-  diaElem *remapElems[]={&eRemapFL, &eRemapFR, &eRemapFC, &eRemapSL, &eRemapSR, &eRemapRL, &eRemapRR, &eRemapRC, &eRemapLFE};
+  diaElem *remapElems[]={&eRemapFL, &eRemapFR, &eRemapFC, &eRemapSL, &eRemapSR, &eRemapRL, &eRemapRR, &eRemapRC, &eRemapLFE, &noteRemap};
   diaElemTabs tabRemap(QT_TRANSLATE_NOOP("adm","Channel remap"),NB_ELEM(remapElems),remapElems);
   
   //*** ALL TABS *************************
