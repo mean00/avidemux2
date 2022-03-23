@@ -338,6 +338,28 @@ bool        ADM_Composer::getAudioChannelGains(int dex, float * fL, float * fR, 
 }
 
 /**
+    \fn setAudioChannelDelays
+*/
+
+bool        ADM_Composer::setAudioChannelDelays(int dex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetChannelDelays(fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
+    \fn getAudioChannelDelays
+*/
+
+bool        ADM_Composer::getAudioChannelDelays(int dex, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetChannelDelays(fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
     \fn setAudioChannelRemap
 */
 

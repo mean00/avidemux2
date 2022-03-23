@@ -56,6 +56,10 @@ void SpiderMonkeyScriptWriter::setAudioChannelGains(int trackIndex, float fL, fl
 {
     
 }
+void SpiderMonkeyScriptWriter::setAudioChannelDelays(int trackIndex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    
+}
 void SpiderMonkeyScriptWriter::setAudioChannelRemap(int trackIndex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
 {
     

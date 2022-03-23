@@ -39,8 +39,12 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   ELEM_TYPE_FLOAT drcThresholdDB = config->drcConf.mThresholdDB;
 
   ELEM_TYPE_FLOAT chGainDB[ADM_CH_LAST];
+  int             chDelayMS[ADM_CH_LAST];
   for (int i=0; i<ADM_CH_LAST; i++)
+  {
      chGainDB[i] = config->chansConf.chGainDB[i];
+     chDelayMS[i] = config->chansConf.chDelayMS[i];
+  }
   
   bool bChRemapEnabled = config->chansConf.enableRemap;
   uint32_t vChRemap[9];
@@ -135,9 +139,24 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   diaElemFloat  eChGainSRValue(chGainDB+ADM_CH_SIDE_RIGHT,QT_TRANSLATE_NOOP("adm","Side right (dB):"),-30,+30);
   diaElemFloat  eChGainLFEValue(chGainDB+ADM_CH_LFE,QT_TRANSLATE_NOOP("adm","Low-frequency effects (LFE) (dB):"),-30,+30);
  
-  diaElem *chansElems[]={&eChGainFLValue, &eChGainFRValue, &eChGainFCValue, &eChGainSLValue, &eChGainSRValue, &eChGainRLValue, &eChGainRRValue, &eChGainRCValue, &eChGainLFEValue};
-  diaElemTabs tabChans(QT_TRANSLATE_NOOP("adm","Channel gains"),NB_ELEM(chansElems),chansElems);
+  diaElem *chanGainsElems[]={&eChGainFLValue, &eChGainFRValue, &eChGainFCValue, &eChGainSLValue, &eChGainSRValue, &eChGainRLValue, &eChGainRRValue, &eChGainRCValue, &eChGainLFEValue};
+  diaElemTabs tabChanGains(QT_TRANSLATE_NOOP("adm","Channel gains"),NB_ELEM(chanGainsElems),chanGainsElems);
 
+ //*** Channel delays tab ******
+  diaElemInteger  eChDelayFLValue(chDelayMS+ADM_CH_FRONT_LEFT,QT_TRANSLATE_NOOP("adm","Front left (ms):"),0,10000);
+  diaElemInteger  eChDelayFRValue(chDelayMS+ADM_CH_FRONT_RIGHT,QT_TRANSLATE_NOOP("adm","Front right (ms):"),0,10000);
+  diaElemInteger  eChDelayFCValue(chDelayMS+ADM_CH_FRONT_CENTER,QT_TRANSLATE_NOOP("adm","Front center (ms):"),0,10000);
+  diaElemInteger  eChDelayRLValue(chDelayMS+ADM_CH_REAR_LEFT,QT_TRANSLATE_NOOP("adm","Rear left (ms):"),0,10000);
+  diaElemInteger  eChDelayRRValue(chDelayMS+ADM_CH_REAR_RIGHT,QT_TRANSLATE_NOOP("adm","Rear right (ms):"),0,10000);
+  diaElemInteger  eChDelayRCValue(chDelayMS+ADM_CH_REAR_CENTER,QT_TRANSLATE_NOOP("adm","Rear center (ms):"),0,10000);
+  diaElemInteger  eChDelaySLValue(chDelayMS+ADM_CH_SIDE_LEFT,QT_TRANSLATE_NOOP("adm","Side left (ms):"),0,10000);
+  diaElemInteger  eChDelaySRValue(chDelayMS+ADM_CH_SIDE_RIGHT,QT_TRANSLATE_NOOP("adm","Side right (ms):"),0,10000);
+  diaElemInteger  eChDelayLFEValue(chDelayMS+ADM_CH_LFE,QT_TRANSLATE_NOOP("adm","Low-frequency effects (LFE) (ms):"),0,10000);
+ 
+  diaElem *chanDelaysElems[]={&eChDelayFLValue, &eChDelayFRValue, &eChDelayFCValue, &eChDelaySLValue, &eChDelaySRValue, &eChDelayRLValue, &eChDelayRRValue, &eChDelayRCValue, &eChDelayLFEValue};
+  diaElemTabs tabChanDelays(QT_TRANSLATE_NOOP("adm","Channel delays"),NB_ELEM(chanDelaysElems),chanDelaysElems);
+
+  
  //*** Channel remap tab ******
   diaMenuEntry menuRemap[]={
     {0,     QT_TRANSLATE_NOOP("adm","Front left"), NULL},
@@ -167,7 +186,8 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  diaElemTabs *tabs[] = {
      &tabMain,
      &tabDRC,
-     &tabChans,
+     &tabChanGains,
+     &tabChanDelays,
      &tabRemap
  };
  
@@ -197,6 +217,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
             if (i < ADM_CH_FRONT_LEFT) continue;
             if (i > ADM_CH_LFE) continue;
             config->chansConf.chGainDB[i] = chGainDB[i];
+            config->chansConf.chDelayMS[i] = chDelayMS[i];
         }
 
         config->chansConf.enableRemap = bChRemapEnabled;

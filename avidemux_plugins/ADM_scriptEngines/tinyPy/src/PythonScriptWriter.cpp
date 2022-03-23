@@ -115,6 +115,10 @@ void PythonScriptWriter::setAudioChannelGains(int trackIndex, float fL, float fR
 {
     *(this->_stream) << "adm.audioSetChannelGains(" << trackIndex << ", " << fL  << ", " << fR << ", " << fC << ", " << sL << ", " << sR << ", " << rL << ", " << rR << ", " << rC << ", " << LFE << ")" << std::endl;
 }
+void PythonScriptWriter::setAudioChannelDelays(int trackIndex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    *(this->_stream) << "adm.audioSetChannelDelays(" << trackIndex << ", " << fL  << ", " << fR << ", " << fC << ", " << sL << ", " << sR << ", " << rL << ", " << rR << ", " << rC << ", " << LFE << ")" << std::endl;
+}
 void PythonScriptWriter::setAudioChannelRemap(int trackIndex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
 {
     *(this->_stream) << "adm.audioSetChannelRemap(" << trackIndex << ", " << active  << ", " << fL  << ", " << fR << ", " << fC << ", " << sL << ", " << sR << ", " << rL << ", " << rR << ", " << rC << ", " << LFE << ")" << std::endl;

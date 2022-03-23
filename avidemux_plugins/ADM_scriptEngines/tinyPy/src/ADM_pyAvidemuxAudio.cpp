@@ -374,6 +374,19 @@ int pySetChGains(IEditor *editor,int track, float fL, float fR, float fC, float 
     return true;
 }
 
+int pyGetChDelays(IEditor *editor,int track, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    editor->getAudioChannelDelays(track, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    return true;    
+}
+
+int pySetChDelays(IEditor *editor,int track, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    editor->setAudioChannelDelays(track, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    return true;    
+}
+
+
 int pyGetChRemap(IEditor *editor,int track, int * active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
 {
     bool bactive;

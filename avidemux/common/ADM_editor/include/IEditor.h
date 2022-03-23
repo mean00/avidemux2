@@ -100,6 +100,8 @@ public:
     virtual bool getAudioDrc(int track, bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB) = 0;
     virtual bool setAudioChannelGains(int dex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE) = 0;
     virtual bool getAudioChannelGains(int dex, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE) = 0;
+    virtual bool setAudioChannelDelays(int dex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE) = 0;
+    virtual bool getAudioChannelDelays(int dex, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE) = 0;
     virtual bool setAudioChannelRemap(int dex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE) = 0;
     virtual bool getAudioChannelRemap(int dex, bool * active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE) = 0;
     virtual bool setAudioShift(int track, bool mode, int32_t value) = 0;

@@ -23,7 +23,10 @@
 void AUDMAudioFilterChannels::resetConf(CHANSparam * cfg)
 {
     for (int i=0; i<ADM_CH_LAST; i++)
+    {
         cfg->chGainDB[i] = 0;
+        cfg->chDelayMS[i] = 0;
+    }
     cfg->enableRemap = false;
     for (int i=0; i<9; i++)
         cfg->remap[i] = i;
@@ -57,10 +60,35 @@ CHANNEL_TYPE AUDMAudioFilterChannels::remapToADMChannel(int r)
     }
 }
 
-AUDMAudioFilterChannels::AUDMAudioFilterChannels(AUDMAudioFilter *instream, CHANSparam * cfg):AUDMAudioFilter (instream)
+uint8_t AUDMAudioFilterChannels::rewind(void)
 {
     for (int i=0; i<ADM_CH_LAST; i++)
+    {
+        delayPtr[i] = 0;
+        for (int j=0; j<chDelay[i]; j++)
+            delayLine[i][j] = 0.0;        
+    }
+    return AUDMAudioFilter::rewind();
+}
+
+AUDMAudioFilterChannels::AUDMAudioFilterChannels(AUDMAudioFilter *instream, CHANSparam * cfg):AUDMAudioFilter (instream)
+{
+    _previous->rewind();     // rewind
+    
+    for (int i=0; i<ADM_CH_LAST; i++)
+    {
         chGain[i] = pow(10.0, cfg->chGainDB[i]/20.0);
+        if (cfg->chDelayMS[i] < 0) cfg->chDelayMS[i] = 0;
+        if (cfg->chDelayMS[i] > 10000) cfg->chDelayMS[i] = 10000;
+        chDelay[i] = ((double)cfg->chDelayMS[i]/1000.0) * _wavHeader.frequency;
+        if (chDelay[i] < 1)
+            chDelay[i] = 1;
+        delayPtr[i] = 0;
+        delayLine[i] = new float [chDelay[i]];
+        for (int j=0; j<chDelay[i]; j++)
+            delayLine[i][j] = 0.0;
+        
+    }
     
     channels = _wavHeader.channels;
     memset(channelMapping,0,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
@@ -107,12 +135,15 @@ AUDMAudioFilterChannels::AUDMAudioFilterChannels(AUDMAudioFilter *instream, CHAN
         }
     }
     
-    _previous->rewind();     // rewind
+    
 };
 
 AUDMAudioFilterChannels::~AUDMAudioFilterChannels()
 {
-
+    for (int i=0; i<ADM_CH_LAST; i++)
+    {
+        delete [] delayLine[i];
+    }
 };
 
 
@@ -166,7 +197,15 @@ uint32_t AUDMAudioFilterChannels::fill(uint32_t max,float *output,AUD_Status *st
     for (int i = 0; i < available; i++) {
         for (int c = 0; c < channels; c++) {
             if (channelReMapping[c] >= 0)
-                out[channelReMapping[c]] += chGain[channelMapping[c]] * *in;
+            {
+                float samp = delayLine[channelMapping[c]][delayPtr[channelMapping[c]]];
+                delayLine[channelMapping[c]][delayPtr[channelMapping[c]]] = *in;
+                delayPtr[channelMapping[c]]++;
+                if (delayPtr[channelMapping[c]] >= chDelay[channelMapping[c]])
+                    delayPtr[channelMapping[c]] = 0;
+                
+                out[channelReMapping[c]] += chGain[channelMapping[c]] * samp;
+            }
             in++;
         }
         out += channels;

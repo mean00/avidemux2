@@ -120,6 +120,42 @@ bool ADM_AUDIOFILTER_CONFIG::audioFilterGetChannelGains(float * fL, float * fR, 
 }
 
 /**
+    \fn audioFilterSetChannelDelays
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterSetChannelDelays(int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    chansConf.chDelayMS[ADM_CH_FRONT_LEFT] = fL;
+    chansConf.chDelayMS[ADM_CH_FRONT_RIGHT] = fR;
+    chansConf.chDelayMS[ADM_CH_FRONT_CENTER] = fC;
+    chansConf.chDelayMS[ADM_CH_SIDE_LEFT] = sL;
+    chansConf.chDelayMS[ADM_CH_SIDE_RIGHT] = sR;
+    chansConf.chDelayMS[ADM_CH_REAR_LEFT] = rL;
+    chansConf.chDelayMS[ADM_CH_REAR_RIGHT] = rR;
+    chansConf.chDelayMS[ADM_CH_REAR_CENTER] = rC;
+    chansConf.chDelayMS[ADM_CH_LFE] = LFE;
+    return true;
+}
+
+/**
+    \fn audioFilterGetChannelDelays
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterGetChannelDelays(int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    *fL = chansConf.chDelayMS[ADM_CH_FRONT_LEFT];
+    *fR = chansConf.chDelayMS[ADM_CH_FRONT_RIGHT];
+    *fC = chansConf.chDelayMS[ADM_CH_FRONT_CENTER];
+    *sL = chansConf.chDelayMS[ADM_CH_SIDE_LEFT];
+    *sR = chansConf.chDelayMS[ADM_CH_SIDE_RIGHT];
+    *rL = chansConf.chDelayMS[ADM_CH_REAR_LEFT];
+    *rR = chansConf.chDelayMS[ADM_CH_REAR_RIGHT];
+    *rC = chansConf.chDelayMS[ADM_CH_REAR_CENTER];
+    *LFE = chansConf.chDelayMS[ADM_CH_LFE];
+    return true;
+}
+
+/**
     \fn audioFilterSetChannelRemap
     \brief
 */

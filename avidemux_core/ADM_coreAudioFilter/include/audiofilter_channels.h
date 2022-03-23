@@ -19,9 +19,10 @@
 typedef struct
 {
     float chGainDB[ADM_CH_LAST];
+    int   chDelayMS[ADM_CH_LAST];
     bool  enableRemap;
     int remap[9];   // fL, fR, fC, sL, sR, rL, rR, rC, LFE
-    
+
 } CHANSparam;
 
 extern const CHANSparam channelsConfDefault;
@@ -31,6 +32,9 @@ class AUDMAudioFilterChannels : public AUDMAudioFilter
     protected:
         bool            bypass;
         float           chGain[ADM_CH_LAST];
+        int             chDelay[ADM_CH_LAST];
+        float         * delayLine[ADM_CH_LAST];
+        int             delayPtr[ADM_CH_LAST];
         uint32_t        channels;
         CHANNEL_TYPE    channelMapping[MAX_CHANNELS];
         int             channelReMapping[MAX_CHANNELS];
@@ -41,6 +45,7 @@ class AUDMAudioFilterChannels : public AUDMAudioFilter
       ~AUDMAudioFilterChannels();
       AUDMAudioFilterChannels(AUDMAudioFilter *instream, CHANSparam * cfg);
       uint32_t   fill(uint32_t max,float *output,AUD_Status *status);
+      uint8_t    rewind(void);
 
 };
 #endif

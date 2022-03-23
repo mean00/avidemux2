@@ -156,6 +156,29 @@ static tp_obj zzpy_audioSetChannelGains(TP)
   int r = pySetChGains(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10);
   return tp_number(r);
 }
+// audioSetChannelDelays -> int pySetChDelays(IEditor int int int int int int int int int int)
+static tp_obj zzpy_audioSetChannelDelays(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int p2 = pm.asInt();
+  int p3 = pm.asInt();
+  int p4 = pm.asInt();
+  int p5 = pm.asInt();  
+  int p6 = pm.asInt();
+  int p7 = pm.asInt();  
+  int p8 = pm.asInt();
+  int p9 = pm.asInt();
+  int p10 = pm.asInt();
+  int r = pySetChDelays(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10);
+  return tp_number(r);
+}
 // audioSetChannelRemap -> int pySetChRemap(IEditor int int int int int int int int int int int)
 static tp_obj zzpy_audioSetChannelRemap(TP)
 {
@@ -167,16 +190,16 @@ static tp_obj zzpy_audioSetChannelRemap(TP)
 
   IEditor *p0 = editor;
   int p1 = pm.asInt();
-  double p2 = pm.asInt();
-  double p3 = pm.asInt();
-  double p4 = pm.asInt();
-  double p5 = pm.asInt();  
-  double p6 = pm.asInt();
-  double p7 = pm.asInt();  
-  double p8 = pm.asInt();
-  double p9 = pm.asInt();
-  double p10 = pm.asInt();
-  double p11 = pm.asInt();
+  int p2 = pm.asInt();
+  int p3 = pm.asInt();
+  int p4 = pm.asInt();
+  int p5 = pm.asInt();  
+  int p6 = pm.asInt();
+  int p7 = pm.asInt();  
+  int p8 = pm.asInt();
+  int p9 = pm.asInt();
+  int p10 = pm.asInt();
+  int p11 = pm.asInt();
   int r = pySetChRemap(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11);
   return tp_number(r);
 }
@@ -783,6 +806,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_audioSetChannelGains);
   }
+  if (!strcmp(key, "audioSetChannelDelays"))
+  {
+    return tp_method(vm, self, zzpy_audioSetChannelDelays);
+  }
   if (!strcmp(key, "audioSetChannelRemap"))
   {
     return tp_method(vm, self, zzpy_audioSetChannelRemap);
@@ -996,6 +1023,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetMixer(int,str)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetDrc(IEditor,int,int,int,float,float,float,float,float)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetChannelGains(IEditor,int,float,float,float,float,float,float,float,float,float)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetChannelDelays(IEditor,int,int,int,int,int,int,int,int,int,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetChannelRemap(IEditor,int,int,int,int,int,int,int,int,int,int,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "videoCodec(str,couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioEncoding(IEditor,int)\n");
