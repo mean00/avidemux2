@@ -144,6 +144,11 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorTy
             track->audioEncodingConfig.audioFilterGetDrcConfig(&drcActive, &drcNormalize, &drcNFloor, &drcAttTime, &drcDecTime, &drcRatio, &drcThresDB);
             this->_scriptWriter->setAudioDrc(i, drcActive, drcNormalize, drcNFloor, drcAttTime, drcDecTime, drcRatio, drcThresDB);
             
+            bool eqActive;
+            float eqLo, eqMd, eqHi, eqLmcut, eqMhcut;
+            track->audioEncodingConfig.audioFilterGetEqConfig(&eqActive, &eqLo, &eqMd, &eqHi, &eqLmcut, &eqMhcut);
+            this->_scriptWriter->setAudioEq(i, eqActive, eqLo, eqMd, eqHi, eqLmcut, eqMhcut);
+
             float chf[9];
             track->audioEncodingConfig.audioFilterGetChannelGains(chf+0, chf+1, chf+2, chf+3, chf+4, chf+5, chf+6, chf+7, chf+8);
             this->_scriptWriter->setAudioChannelGains(i, chf[0], chf[1], chf[2], chf[3], chf[4], chf[5], chf[6], chf[7], chf[8]);

@@ -98,6 +98,8 @@ public:
     virtual int setAudioMixer(int dex, const char *s) = 0;
     virtual bool setAudioDrc(int track, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB) = 0;
     virtual bool getAudioDrc(int track, bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB) = 0;
+    virtual bool setAudioEq(int track, bool active, float lo, float md, float hi, float lmcut, float mhcut) = 0;
+    virtual bool getAudioEq(int track, bool * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut) = 0;
     virtual bool setAudioChannelGains(int dex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE) = 0;
     virtual bool getAudioChannelGains(int dex, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE) = 0;
     virtual bool setAudioChannelDelays(int dex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE) = 0;

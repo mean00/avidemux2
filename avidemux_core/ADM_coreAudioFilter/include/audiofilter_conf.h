@@ -23,6 +23,7 @@
 #include "audiofilter_normalize.h"
 #include "audiofilter_limiter.h"
 #include "audiofilter_channels.h"
+#include "audiofilter_eq.h"
 
 /**
     \class ADM_AUDIOFILTER_CONFIG
@@ -49,6 +50,7 @@ public    :
                         gainParam.maxlevel10=-30;
                         drcEnabled=false;
                         drcConf=drcConfDefault;
+                        AUDMAudioFilterEq::resetConf(&eqConf);
                         AUDMAudioFilterChannels::resetConf(&chansConf);
 			shiftEnabled=false;
     			shiftInMs=0;
@@ -72,11 +74,14 @@ public    :
     // DRC / limiter
     bool         drcEnabled;
     DRCparam      drcConf;
+    EQparam       eqConf;
     CHANSparam    chansConf;
 
 public: // accessor
     bool            audioFilterSetDrcConfig(bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
     bool            audioFilterGetDrcConfig(bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
+    bool            audioFilterSetEqConfig(bool active, float lo, float md, float hi, float lmcut, float mhcut);
+    bool            audioFilterGetEqConfig(bool * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut);
     bool            audioFilterSetChannelGains(float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
     bool            audioFilterGetChannelGains(float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE);
     bool            audioFilterSetChannelDelays(int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);

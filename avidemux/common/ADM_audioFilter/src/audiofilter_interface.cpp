@@ -84,6 +84,37 @@ bool ADM_AUDIOFILTER_CONFIG::audioFilterGetDrcConfig(bool * active, int * normal
 }
 
 /**
+    \fn audioFilterSetEqConfig
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterSetEqConfig(bool active, float lo, float md, float hi, float lmcut, float mhcut)
+{
+    eqConf.enable = active;
+    eqConf.lowDB = lo;
+    eqConf.midDB = md;
+    eqConf.highDB = hi;
+    eqConf.cutOffLM = lmcut;
+    eqConf.cutOffMH = mhcut;
+    return true;
+}
+
+/**
+    \fn audioFilterGetEqConfig
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterGetEqConfig(bool * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut)
+{
+    *active = eqConf.enable;
+    *lo = eqConf.lowDB;
+    *md = eqConf.midDB;
+    *hi = eqConf.highDB;
+    *lmcut = eqConf.cutOffLM;
+    *mhcut = eqConf.cutOffMH;
+    return true;
+}
+
+
+/**
     \fn audioFilterSetChannelGains
     \brief
 */

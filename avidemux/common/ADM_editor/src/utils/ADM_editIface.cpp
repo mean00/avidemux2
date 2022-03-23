@@ -316,6 +316,29 @@ bool        ADM_Composer::getAudioDrc(int dex, bool * active, int * normalize, f
 }
 
 /**
+    \fn setAudioEq
+*/
+
+bool        ADM_Composer::setAudioEq(int dex, bool active, float lo, float md, float hi, float lmcut, float mhcut)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetEqConfig(active, lo, md, hi, lmcut, mhcut);
+}
+
+/**
+    \fn getAudioEq
+*/
+
+bool        ADM_Composer::getAudioEq(int dex, bool * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetEqConfig(active, lo, md, hi, lmcut, mhcut);
+}
+
+
+/**
     \fn setAudioChannelGains
 */
 

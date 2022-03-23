@@ -50,6 +50,13 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   uint32_t vChRemap[9];
   for (int i=0; i<9; i++)
       vChRemap[i] = config->chansConf.remap[i];
+  
+  bool vEqEnable = config->eqConf.enable;
+  ELEM_TYPE_FLOAT eqLowDB = config->eqConf.lowDB;
+  ELEM_TYPE_FLOAT eqMidDB = config->eqConf.midDB;
+  ELEM_TYPE_FLOAT eqHighDB = config->eqConf.highDB;
+  ELEM_TYPE_FLOAT eqCutLM = config->eqConf.cutOffLM;
+  ELEM_TYPE_FLOAT eqCutMH = config->eqConf.cutOffMH;
 
   
 #define PX(x) (&(config->x))
@@ -82,6 +89,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     };
   //*************************
     diaElemToggle    tDRC(PX(drcEnabled),QT_TRANSLATE_NOOP("adm","DRC"));
+    diaElemToggle    tEQ(&vEqEnable,QT_TRANSLATE_NOOP("adm","Equalizer"));
 //*************************
   diaMenuEntry menuGain[]={
   {ADM_NO_GAIN,       QT_TRANSLATE_NOOP("adm","None"), NULL},
@@ -115,7 +123,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  diaElemToggle    eChRemap(&bChRemapEnabled,QT_TRANSLATE_NOOP("adm","Channel remap"));
  /************************************/
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
- diaElem *mainElems[]={&eFPS, &tDRC, &eResample,&eShift,&eChRemap,&frameMixer,&frameGain};
+ diaElem *mainElems[]={&eFPS, &tDRC, &tEQ, &eResample,&eShift,&eChRemap,&frameMixer,&frameGain};
  diaElemTabs tabMain(QT_TRANSLATE_NOOP("adm","Main"),NB_ELEM(mainElems),mainElems);
 
  //*** DRC tab *****
@@ -127,6 +135,18 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  diaElemFloatResettable  eDrcDecay(&drcDecayTime,QT_TRANSLATE_NOOP("adm","Release time (sec):"),1,30,1);
  diaElem *drcElems[]={&eDrcNorm, &eDrcThres, &eDrcNFloor, &eDrcRatio, &eDrcAttack, &eDrcDecay};
  diaElemTabs tabDRC(QT_TRANSLATE_NOOP("adm","DRC parameters"),NB_ELEM(drcElems),drcElems);
+ 
+ //*** Equalizer tab ******
+ diaElemFloatResettable  eEqLow(&eqLowDB,QT_TRANSLATE_NOOP("adm","Bass (dB):"),-30,+30,0);
+ diaElemFloatResettable  eEqCutLM(&eqCutLM,QT_TRANSLATE_NOOP("adm","Bass/Mid cut-off (Hz):"),100,1000,880);
+ diaElemFloatResettable  eEqMid(&eqMidDB,QT_TRANSLATE_NOOP("adm","Mid (dB):"),-30,+30,0);
+ diaElemFloatResettable  eEqCutMH(&eqCutMH,QT_TRANSLATE_NOOP("adm","Mid/Treble cut-off (Hz):"),2000,10000,5000);
+ diaElemFloatResettable  eEqHigh(&eqHighDB,QT_TRANSLATE_NOOP("adm","Treble (dB):"),-30,+30,0);
+ 
+ diaElemReadOnlyText noteEq(NULL,QT_TRANSLATE_NOOP("adm","Note:\n - it is highly recommended to enable normalization when positive gain values are used"),NULL);
+
+  diaElem *eqElems[]={&eEqLow, &eEqMid, &eEqHigh, &eEqCutLM, &eEqCutMH, &noteEq};
+  diaElemTabs tabEq(QT_TRANSLATE_NOOP("adm","Equalizer"),NB_ELEM(eqElems),eqElems);
  
  //*** Channel gains tab ******
    diaElemFloat  eChGainFLValue(chGainDB+ADM_CH_FRONT_LEFT,QT_TRANSLATE_NOOP("adm","Front left (dB):"),-30,+30);
@@ -196,6 +216,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  diaElemTabs *tabs[] = {
      &tabMain,
      &tabDRC,
+     &tabEq,
      &tabChanGains,
      &tabChanDelays,
      &tabRemap
@@ -233,7 +254,13 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
         config->chansConf.enableRemap = bChRemapEnabled;
         for (int i=0; i<9; i++)
             config->chansConf.remap[i] = vChRemap[i];
-        
+
+        config->eqConf.enable = vEqEnable;
+        config->eqConf.lowDB = eqLowDB;
+        config->eqConf.midDB = eqMidDB;
+        config->eqConf.highDB = eqHighDB;        
+        config->eqConf.cutOffLM = eqCutLM;
+        config->eqConf.cutOffMH = eqCutMH;        
       return true;
     }
     

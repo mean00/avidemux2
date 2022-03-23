@@ -346,11 +346,32 @@ int pyGetDrc(IEditor *editor,int track, int * active, int * normalize, float * n
     \fn
     \brief
 */
-
 int pySetDrc(IEditor *editor,int track, int active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
 {
     editor->setAudioDrc(track, active, normalize, nFloor, attTime, decTime, ratio, thresDB);
     return true;
+}
+
+/**
+    \fn
+    \brief
+*/
+int pyGetEq(IEditor *editor,int track, int * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut)
+{
+    bool bactive;
+    editor->getAudioEq(track, &bactive, lo, md, hi, lmcut, mhcut);
+    *active = (bactive?1:0);
+    return true;    
+}
+
+/**
+    \fn
+    \brief
+*/
+int pySetEq(IEditor *editor,int track, int active, float lo, float md, float hi, float lmcut, float mhcut)
+{
+    editor->setAudioEq(track, active, lo, md, hi, lmcut, mhcut);
+    return true;    
 }
 
 /**

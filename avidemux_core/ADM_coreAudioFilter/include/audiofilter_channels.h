@@ -25,7 +25,6 @@ typedef struct
 
 } CHANSparam;
 
-extern const CHANSparam channelsConfDefault;
 
 class AUDMAudioFilterChannels : public AUDMAudioFilter
 {
