@@ -124,7 +124,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  diaElemFloatResettable  eDrcNFloor(&drcFloorDB,QT_TRANSLATE_NOOP("adm","Noise floor (dB):"),-80,-20,-30);
  diaElemFloatResettable  eDrcRatio(&drcRatio,QT_TRANSLATE_NOOP("adm","Ratio:"),1.1,10,2);
  diaElemFloatResettable  eDrcAttack(&drcAttackTime,QT_TRANSLATE_NOOP("adm","Attack time (sec):"),0.1,5,0.2);
- diaElemFloatResettable  eDrcDecay(&drcDecayTime,QT_TRANSLATE_NOOP("adm","Decay time (sec):"),1,30,1);
+ diaElemFloatResettable  eDrcDecay(&drcDecayTime,QT_TRANSLATE_NOOP("adm","Release time (sec):"),1,30,1);
  diaElem *drcElems[]={&eDrcNorm, &eDrcThres, &eDrcNFloor, &eDrcRatio, &eDrcAttack, &eDrcDecay};
  diaElemTabs tabDRC(QT_TRANSLATE_NOOP("adm","DRC parameters"),NB_ELEM(drcElems),drcElems);
  
