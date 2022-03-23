@@ -1014,6 +1014,13 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
 #define commonPart(x) _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)#x);
                             switch(entryName)
                             {
+                                case MKFCCR('2','v','u','y'): // 2vuy
+                                {
+                                    commonPart(UYVY);
+                                    left=0;
+                                    break;
+                                }
+
                                 case MKFCCR('h','d','v','5'): // hdv5
                                 {
                                     commonPart(MPEG);
