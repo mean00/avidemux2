@@ -88,9 +88,6 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
         {CHANNEL_SURROUND_HEADPHONES, QT_TRANSLATE_NOOP("adm","Surround headphones"), NULL}
     };
     //*************************
-    diaElemToggle    tDRC(PX(drcEnabled),QT_TRANSLATE_NOOP("adm","DRC"));
-    diaElemToggle    tEQ(&vEqEnable,QT_TRANSLATE_NOOP("adm","Equalizer"));
-    //*************************
     diaMenuEntry menuGain[]={
         {ADM_NO_GAIN,       QT_TRANSLATE_NOOP("adm","None"), NULL},
         {ADM_GAIN_AUTOMATIC,QT_TRANSLATE_NOOP("adm","Automatic"), NULL},
@@ -120,32 +117,46 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
 
     //****************************
     diaElemToggleInt eShift(&bShiftEnabled,QT_TRANSLATE_NOOP("adm","Shift audio (ms):"),&vShift, QT_TRANSLATE_NOOP("adm","Shift Value (ms):"),-30000,30000);
-    diaElemToggle    eChRemap(&bChRemapEnabled,QT_TRANSLATE_NOOP("adm","Channel remap"));
     /************************************/
     #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
-    diaElem *mainElems[]={&eFPS, &tDRC, &tEQ, &eResample,&eShift,&eChRemap,&frameMixer,&frameGain};
+    diaElem *mainElems[]={&eFPS, &eResample,&eShift,&frameMixer,&frameGain};
     diaElemTabs tabMain(QT_TRANSLATE_NOOP("adm","Main"),NB_ELEM(mainElems),mainElems);
 
     //*** DRC tab *****
+    diaElemReadOnlyText dirtyHack1(NULL," ",NULL);
+    diaElemToggle    tDRC(PX(drcEnabled),QT_TRANSLATE_NOOP("adm","Enable Compressor"));
     diaElemToggle    eDrcNorm(&drcUseGain,QT_TRANSLATE_NOOP("adm","Normalize"));
     diaElemFloatResettable  eDrcThres(&drcThresholdDB,QT_TRANSLATE_NOOP("adm","Threshold (dB):"),-60,-1,-12);
     diaElemFloatResettable  eDrcNFloor(&drcFloorDB,QT_TRANSLATE_NOOP("adm","Noise floor (dB):"),-80,-20,-30);
     diaElemFloatResettable  eDrcRatio(&drcRatio,QT_TRANSLATE_NOOP("adm","Ratio:"),1.1,10,2);
     diaElemFloatResettable  eDrcAttack(&drcAttackTime,QT_TRANSLATE_NOOP("adm","Attack time (sec):"),0.1,5,0.2);
     diaElemFloatResettable  eDrcDecay(&drcDecayTime,QT_TRANSLATE_NOOP("adm","Release time (sec):"),1,30,1);
-    diaElem *drcElems[]={&eDrcNorm, &eDrcThres, &eDrcNFloor, &eDrcRatio, &eDrcAttack, &eDrcDecay};
-    diaElemTabs tabDRC(QT_TRANSLATE_NOOP("adm","DRC parameters"),NB_ELEM(drcElems),drcElems);
+    tDRC.link(1, &eDrcNorm);
+    tDRC.link(1, &eDrcThres);
+    tDRC.link(1, &eDrcNFloor);
+    tDRC.link(1, &eDrcRatio);
+    tDRC.link(1, &eDrcAttack);
+    tDRC.link(1, &eDrcDecay);
+    diaElem *drcElems[]={&dirtyHack1, &tDRC, &eDrcNorm, &eDrcThres, &eDrcNFloor, &eDrcRatio, &eDrcAttack, &eDrcDecay};
+    diaElemTabs tabDRC(QT_TRANSLATE_NOOP("adm","DRC"),NB_ELEM(drcElems),drcElems);
 
     //*** Equalizer tab ******
+    diaElemReadOnlyText dirtyHack2(NULL," ",NULL);
+    diaElemToggle    tEQ(&vEqEnable,QT_TRANSLATE_NOOP("adm","Enable Equalizer"));
     diaElemFloatResettable  eEqLow(&eqLowDB,QT_TRANSLATE_NOOP("adm","Bass (dB):"),-30,+30,0);
     diaElemFloatResettable  eEqCutLM(&eqCutLM,QT_TRANSLATE_NOOP("adm","Bass/Mid cut-off (Hz):"),100,1000,880);
     diaElemFloatResettable  eEqMid(&eqMidDB,QT_TRANSLATE_NOOP("adm","Mid (dB):"),-30,+30,0);
     diaElemFloatResettable  eEqCutMH(&eqCutMH,QT_TRANSLATE_NOOP("adm","Mid/Treble cut-off (Hz):"),2000,10000,5000);
     diaElemFloatResettable  eEqHigh(&eqHighDB,QT_TRANSLATE_NOOP("adm","Treble (dB):"),-30,+30,0);
+    tEQ.link(1, &eEqLow);
+    tEQ.link(1, &eEqCutLM);
+    tEQ.link(1, &eEqMid);
+    tEQ.link(1, &eEqCutMH);
+    tEQ.link(1, &eEqHigh);
 
     diaElemReadOnlyText noteEq(NULL,QT_TRANSLATE_NOOP("adm","Note:\n - it is highly recommended to enable normalization when positive gain values are used"),NULL);
 
-    diaElem *eqElems[]={&eEqLow, &eEqMid, &eEqHigh, &eEqCutLM, &eEqCutMH, &noteEq};
+    diaElem *eqElems[]={&dirtyHack2, &tEQ, &eEqLow, &eEqMid, &eEqHigh, &eEqCutLM, &eEqCutMH, &noteEq};
     diaElemTabs tabEq(QT_TRANSLATE_NOOP("adm","Equalizer"),NB_ELEM(eqElems),eqElems);
 
     //*** Channel gains tab ******
@@ -182,6 +193,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
 
 
     //*** Channel remap tab ******
+    diaElemToggle    eChRemap(&bChRemapEnabled,QT_TRANSLATE_NOOP("adm","Enable Remap"));
     diaMenuEntry menuRemap[]={
         {0,     QT_TRANSLATE_NOOP("adm","Front left"), NULL},
         {1,     QT_TRANSLATE_NOOP("adm","Front right"), NULL},
@@ -202,14 +214,23 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     diaElemMenu   eRemapRR(vChRemap+6,QT_TRANSLATE_NOOP("adm","Rear right to:"),NB_ITEMS(menuRemap),menuRemap);  
     diaElemMenu   eRemapRC(vChRemap+7,QT_TRANSLATE_NOOP("adm","Rear center to:"),NB_ITEMS(menuRemap),menuRemap);  
     diaElemMenu   eRemapLFE(vChRemap+8,QT_TRANSLATE_NOOP("adm","Low-frequency effects (LFE) to:"),NB_ITEMS(menuRemap),menuRemap); 
-
-    diaElemReadOnlyText noteRemap(NULL,QT_TRANSLATE_NOOP("adm","Note:\n - channel remap has to be enabled on the Main tab to be effective"
+    eChRemap.link(1, &eRemapFL);
+    eChRemap.link(1, &eRemapFR);
+    eChRemap.link(1, &eRemapFC);
+    eChRemap.link(1, &eRemapSL);
+    eChRemap.link(1, &eRemapSR);
+    eChRemap.link(1, &eRemapRL);
+    eChRemap.link(1, &eRemapRR);
+    eChRemap.link(1, &eRemapRC);
+    eChRemap.link(1, &eRemapLFE);
+    
+    diaElemReadOnlyText noteRemap(NULL,QT_TRANSLATE_NOOP("adm","Note:"
                                                                "\n - remap will not change the channel layout, therefore:"
                                                                "\n - mapping a channel to a non-existent will result loss"
                                                                "\n - mapping a non-existent channel will result silence"
                                                                   ),NULL);
 
-    diaElem *remapElems[]={&eRemapFL, &eRemapFR, &eRemapFC, &eRemapSL, &eRemapSR, &eRemapRL, &eRemapRR, &eRemapRC, &eRemapLFE, &noteRemap};
+    diaElem *remapElems[]={&eChRemap, &eRemapFL, &eRemapFR, &eRemapFC, &eRemapSL, &eRemapSR, &eRemapRL, &eRemapRR, &eRemapRC, &eRemapLFE, &noteRemap};
     diaElemTabs tabRemap(QT_TRANSLATE_NOOP("adm","Channel remap"),NB_ELEM(remapElems),remapElems);
 
     //*** ALL TABS *************************
