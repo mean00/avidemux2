@@ -742,6 +742,11 @@ uint8_t    MP4Header::open(const char *name)
             {
                 MP4Index *dex=_tracks[1+audio].index;
                 int size=dex[0].size;
+                if(size < 4)
+                {
+                    ADM_warning("First MPEG audio track packet too short to probe properties.\n");
+                    break;
+                }
                 uint8_t *buffer=new uint8_t[size];
                 fseeko(_fd,dex[0].offset,SEEK_SET);
                 if(fread(buffer,1,size,_fd))
@@ -750,15 +755,25 @@ uint8_t    MP4Header::open(const char *name)
                     MpegAudioInfo mpeg;
                     if(getMpegFrameInfo(buffer, size, &mpeg, NULL, &off) && size >= off+mpeg.size)
                     {
-                        if(mpeg.mode == 3 && _tracks[1+audio]._rdWav.channels!=1)
+                        if(mpeg.layer == 2)
                         {
-                            uint32_t fq=mpeg.samplerate;
-                            uint32_t br=(mpeg.bitrate*1000)>>3; //
-                            ADM_info("Updating MP3 info : Fq=%u, br=%u, chan=%u\n",fq,br,1);
-                            _tracks[1+audio]._rdWav.channels=1;
-                            _tracks[1+audio]._rdWav.frequency=fq;
-                            _tracks[1+audio]._rdWav.byterate=br;
+                            ADM_info("Fixing MP2 audio track mislabeled as MP3\n");
+                            _tracks[1+audio]._rdWav.encoding = WAV_MP2;
                         }
+                        uint32_t chan = (mpeg.mode == 3)? 1 : 2;
+                        if(_tracks[1+audio]._rdWav.channels != chan)
+                        {
+                            ADM_info("Updating MP%u # of channels from %u to %u\n", mpeg.layer, _tracks[1+audio]._rdWav.channels, chan);
+                            _tracks[1+audio]._rdWav.channels = chan;
+                        }
+                        if(mpeg.samplerate != _tracks[1+audio]._rdWav.frequency)
+                        {
+                            ADM_info("Updating MP%u sampling frequency from %u to %u\n", mpeg.layer, _tracks[1+audio]._rdWav.frequency, mpeg.samplerate);
+                            _tracks[1+audio]._rdWav.frequency = mpeg.samplerate;
+                        }
+                        uint32_t br = (mpeg.bitrate * 1000) >> 3;
+                        ADM_info("MP%u byterate detected as %u = %u kbit/s\n", mpeg.layer, br, mpeg.bitrate);
+                        _tracks[1+audio]._rdWav.byterate = br;
                     }else
                     {
                         ADM_warning("Cannot get MP3 info from the first sample.\n");

@@ -53,7 +53,7 @@
 
     extraDataLen=track->extraDataSize;
     extraData=track->extraData;
-
+#if 0
     // Check if MP3 track is actually MP2
     if(track->_rdWav.encoding == WAV_MP3 && _nb_chunks && _index[0].size >= 4)
     {
@@ -68,7 +68,7 @@
         if (layer == 2)
             track->_rdWav.encoding = WAV_MP2;
     }
-
+#endif
     if(track->_rdWav.byterate == AUDIO_BYTERATE_UNSET || track->_rdWav.encoding == WAV_MP3)
     {
         int average = AUDIO_BYTERATE_UNSET;
