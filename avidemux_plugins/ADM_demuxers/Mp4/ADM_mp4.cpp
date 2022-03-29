@@ -69,7 +69,7 @@ version 2 media descriptor :
 
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_codecType.h"
-#include "ADM_a52info.h"
+#include "ADM_eac3info.h"
 #include "ADM_mp3info.h"
 #include "ADM_dcainfo.h"
 #include "ADM_audioXiphUtils.h"
@@ -701,9 +701,9 @@ uint8_t    MP4Header::open(const char *name)
         //
         for(int audio=0;audio<nbAudioTrack;audio++)
         {
-            switch(_tracks[1+audio]._rdWav.encoding)
+            WAVHeader *wave = &(_tracks[1+audio]._rdWav);
+            switch(wave->encoding)
             {
-                
             // Lookup if AAC is lying about # of channels
             case WAV_AAC:
                 {
@@ -718,25 +718,45 @@ uint8_t    MP4Header::open(const char *name)
                 }
                 break;
             case WAV_AC3: // same for ac3
+            case WAV_EAC3:
             {
-                 // read First chunk
-                
+                // read First chunk
                 MP4Index *dex=_tracks[1+audio].index;
                 int size=dex[0].size;
                 uint8_t *buffer=new uint8_t[size];
-                  fseeko(_fd,dex[0].offset,SEEK_SET);
-                  if(fread(buffer,1,size,_fd))
-                  {
-                      uint32_t fq,  br,  chan, syncoff;
-                      if(ADM_AC3GetInfo(buffer,size, &fq, &br, &chan,&syncoff))
-                      {
-                          ADM_info("Updating AC3 info : Fq=%d, br=%d, chan=%d\n",fq,br,chan);
-                          _tracks[1+audio]._rdWav.channels=chan;
-                          _tracks[1+audio]._rdWav.byterate=br;
-                      }
-                  }
-                  delete [] buffer;
-                  break;
+                fseeko(_fd,dex[0].offset,SEEK_SET);
+                if(fread(buffer,1,size,_fd))
+                {
+                    uint32_t syncoff;
+                    bool is_plain_ac3;
+                    ADM_EAC3_INFO efo;
+                    if(ADM_EAC3GetInfo(buffer, size, &syncoff, &efo, &is_plain_ac3))
+                    {
+                        uint16_t enc = is_plain_ac3 ? WAV_AC3 : WAV_EAC3;
+                        const char *codecStr = is_plain_ac3 ? "AC3" : "EAC3";
+                        if(wave->encoding != enc)
+                        {
+                            ADM_info("Fixing %s audio track mislabeled as %s\n", codecStr, is_plain_ac3 ? "EAC3" : "AC3");
+                            wave->encoding = enc;
+                        }
+                        if(wave->channels != efo.channels)
+                        {
+                            ADM_info("Updating # of %s channels from %u to %u\n", codecStr, wave->channels, efo.channels);
+                            wave->channels = efo.channels;
+                        }
+                        if(wave->frequency != efo.frequency)
+                        {
+                            ADM_info("Updating %s sampling rate from %u to %u\n", codecStr, wave->frequency, efo.frequency);
+                            wave->frequency = efo.frequency;
+                        }
+                        wave->byterate = efo.byterate;
+                    }else
+                    {
+                        ADM_warning("Could not confirm %s!\n",(wave->encoding == WAV_AC3)? "AC3" : "EAC3");
+                    }
+                }
+                delete [] buffer;
+                break;
             }
             case WAV_MP3: // same for mp3
             {
@@ -758,22 +778,22 @@ uint8_t    MP4Header::open(const char *name)
                         if(mpeg.layer == 2)
                         {
                             ADM_info("Fixing MP2 audio track mislabeled as MP3\n");
-                            _tracks[1+audio]._rdWav.encoding = WAV_MP2;
+                            wave->encoding = WAV_MP2;
                         }
                         uint32_t chan = (mpeg.mode == 3)? 1 : 2;
-                        if(_tracks[1+audio]._rdWav.channels != chan)
+                        if(wave->channels != chan)
                         {
-                            ADM_info("Updating MP%u # of channels from %u to %u\n", mpeg.layer, _tracks[1+audio]._rdWav.channels, chan);
-                            _tracks[1+audio]._rdWav.channels = chan;
+                            ADM_info("Updating MP%u # of channels from %u to %u\n", mpeg.layer, wave->channels, chan);
+                            wave->channels = chan;
                         }
-                        if(mpeg.samplerate != _tracks[1+audio]._rdWav.frequency)
+                        if(mpeg.samplerate != wave->frequency)
                         {
-                            ADM_info("Updating MP%u sampling frequency from %u to %u\n", mpeg.layer, _tracks[1+audio]._rdWav.frequency, mpeg.samplerate);
-                            _tracks[1+audio]._rdWav.frequency = mpeg.samplerate;
+                            ADM_info("Updating MP%u sampling frequency from %u to %u\n", mpeg.layer, wave->frequency, mpeg.samplerate);
+                            wave->frequency = mpeg.samplerate;
                         }
                         uint32_t br = (mpeg.bitrate * 1000) >> 3;
                         ADM_info("MP%u byterate detected as %u = %u kbit/s\n", mpeg.layer, br, mpeg.bitrate);
-                        _tracks[1+audio]._rdWav.byterate = br;
+                        wave->byterate = br;
                     }else
                     {
                         ADM_warning("Cannot get MP3 info from the first sample.\n");
@@ -798,9 +818,9 @@ uint8_t    MP4Header::open(const char *name)
                         uint32_t fq=dca.frequency;
                         uint32_t br=dca.bitrate>>3;
                         ADM_info("Updating DTS info: fq = %u, br = %u, chan = %u\n",fq,br,dca.channels);
-                        _tracks[1+audio]._rdWav.channels=dca.channels;
-                        _tracks[1+audio]._rdWav.frequency=fq;
-                        _tracks[1+audio]._rdWav.byterate=br;
+                        wave->channels=dca.channels;
+                        wave->frequency=fq;
+                        wave->byterate=br;
                     }else
                     {
                         ADM_warning("Cannot get DCA info from the first sample.\n");
@@ -817,7 +837,7 @@ uint8_t    MP4Header::open(const char *name)
                 if(false==ADMXiph::xiphExtraData2Adm(_tracks[1+audio].extraData, _tracks[1+audio].extraDataSize, &newExtra, &newExtraSize))
                 {
                     ADM_warning("Cannot reformat vorbis extra data, faking audio format to avoid crash.\n");
-                    _tracks[1+audio]._rdWav.encoding=WAV_UNKNOWN;
+                    wave->encoding = WAV_UNKNOWN;
                 }
                 // Destroy old extradata
                 delete [] _tracks[1+audio].extraData;
