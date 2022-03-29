@@ -17,7 +17,6 @@
 #include "ADM_default.h"
 #include "ADM_audiodef.h"
 #include "ADM_mp3info.h"
-#include "ADM_a52info.h"
 #include "ADM_eac3info.h"
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audioIdentify.h"
@@ -205,13 +204,18 @@ static bool detectAC3Internal(int bufferSize, const uint8_t *data, WAVHeader &oi
 {
     uint32_t syncOffset,nextOffset;
     ADM_EAC3_INFO info,info2;
+    bool isPlainAC3;
 
-    if( !ADM_EAC3GetInfo(data, bufferSize, &syncOffset, &info, !enhanced))
+    if(false == ADM_EAC3GetInfo(data, bufferSize, &syncOffset, &info, &isPlainAC3))
+        return false;
+    if(enhanced && isPlainAC3)
     {
-        if(enhanced)
-            ADM_info("Not EAC3\n");
-        else
-            ADM_info("Not AC3\n");
+        ADM_info("Not EAC3\n");
+        return false;
+    }
+    if(!enhanced && !isPlainAC3)
+    {
+        ADM_info("Not AC3\n");
         return false;
     }
     offset=syncOffset;
@@ -239,11 +243,22 @@ static bool detectAC3Internal(int bufferSize, const uint8_t *data, WAVHeader &oi
 
         const uint8_t *data2=(uint8_t *)tmp;
 
-        if( !ADM_EAC3GetInfo(data2, remaining, &syncOffset, &info2, !enhanced))
+        if(false == ADM_EAC3GetInfo(data2, remaining, &syncOffset, &info2, &isPlainAC3))
         {
             ADM_info("Cannot sync (pass %d)\n",i);
             confirmed=false;
             break;
+        }
+        if(enhanced && isPlainAC3)
+        {
+            ADM_info("Pass %d: expected EAC3, found AC3\n",i);
+            confirmed = false;
+            break;
+        }
+        if(!enhanced && !isPlainAC3)
+        {
+            ADM_info("Pass %d: expected AC3, found EAC3\n",i);
+            confirmed = false;
         }
         if(syncOffset)
         {
