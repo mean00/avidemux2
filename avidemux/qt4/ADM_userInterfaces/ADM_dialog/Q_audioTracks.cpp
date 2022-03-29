@@ -313,12 +313,11 @@ bool audioTrackQt4::dupConfigClicked(bool a)
     \fn audioTrackQt4
     \brief dtor
 */
-audioTrackQt4::		~audioTrackQt4()
+audioTrackQt4::~audioTrackQt4()
 {
-  
-        if(window) delete window;
-        window=NULL;
-  
+    active.clear();
+    if(window) delete window;
+    window=NULL;
 }
 /**
     \fn run
