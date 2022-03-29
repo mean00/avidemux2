@@ -22,6 +22,7 @@ ADM_audioStreamEAC3::ADM_audioStreamEAC3(WAVHeader *header,ADM_audioAccess *acce
         size*=1000; // s->us
         durationInUs=(uint64_t)size;
     }
+    lookahead = ADM_AC3_HEADER_SIZE; // Start with the bare minimum and increase later.
 }
 
 /**
@@ -38,6 +39,7 @@ ADM_audioStreamEAC3::~ADM_audioStreamEAC3()
 */
 bool         ADM_audioStreamEAC3::goToTime(uint64_t nbUs)
 {
+    lookahead = ADM_AC3_HEADER_SIZE;
     if(access->canSeekTime()==true)
     {
         if( access->goToTime(nbUs)==true)
@@ -61,41 +63,49 @@ uint8_t ADM_audioStreamEAC3::getPacket(uint8_t *obuffer,
                                        uint32_t *nbSample,
                                        uint64_t *dts)
 {
-#define ADM_LOOK_AHEAD 6 // Need 6 bytes...
-uint8_t data[ADM_LOOK_AHEAD];
-uint32_t offset;
-int size;
-ADM_EAC3_INFO info;
+    // In EAC3, an independent frame can be followed by dependent frame(s).
+    // A packet is complete when we encounter the next independent frame.
+    uint32_t offset;
+    bool isPlainAC3, gotFrame = false;
+    ADM_EAC3_INFO info;
+
     while(1)
     {
-        // Do we have sync ?
-        if(needBytes(ADM_LOOK_AHEAD)==false) return 0;
-        // Peek
-        peek(ADM_LOOK_AHEAD,data);
+        if(!gotFrame && !needBytes(lookahead))
+            return 0;
         // Search start seq
         if(buffer[start]!=0x0b || buffer[start+1]!=0x77)
         {
             read8();
             continue;
         }
-        if(!ADM_EAC3GetInfo(buffer.at(+start), limit-start, &offset,&info))
+        // Do we have an independent E-AC3 frame in the buffer?
+        if(false == ADM_EAC3GetInfo(buffer.at(start), limit-start, &offset, &info, &isPlainAC3) || isPlainAC3)
         {
             printf("[EAC3 Stream] Syncing...\n");
+            gotFrame = false;
             read8();
             continue;
         }
-        // 
-        size= info.frameSizeInBytes;
-        ADM_assert(size<=sizeMax);
-        if(needBytes(size)==false)
+        gotFrame = true;
+        if(!(info.flags & ADM_EAC3_FLAG_PKT_COMPLETE))
         {
-            return false;
+            skipBytes(offset); // The start sequence may belong to a dependent frame we need to skip.
+            offset = 0;
+            lookahead = info.frameSizeInBytes + ADM_AC3_HEADER_SIZE;
+            if(needBytes(lookahead))
+                continue;
         }
-        *osize=size;
-        read(size,obuffer);
-        *nbSample=256*6;
+        ADM_assert(info.frameSizeInBytes <= sizeMax);
+        if(!needBytes(offset + info.frameSizeInBytes))
+            return 0;
+
+        *osize = info.frameSizeInBytes;
+        skipBytes(offset);
+        read(info.frameSizeInBytes, obuffer);
+        *nbSample = info.samples;
         *dts=lastDts;
-        advanceDtsBySample(*nbSample);
+        advanceDtsBySample(info.samples);
         return 1;
     }
 }

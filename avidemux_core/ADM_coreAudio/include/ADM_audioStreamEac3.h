@@ -26,8 +26,9 @@
 */
 class ADM_audioStreamEAC3 : public ADM_audioStreamBuffered
 {
-        protected:
-        public:
+protected:
+        uint32_t        lookahead;
+public:
 /// Default constructor
                        ADM_audioStreamEAC3(WAVHeader *header,ADM_audioAccess *access);  
 /// Destructor
