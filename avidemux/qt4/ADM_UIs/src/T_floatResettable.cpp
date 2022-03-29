@@ -110,6 +110,9 @@ ADM_QDoubleSpinboxResettable::ADM_QDoubleSpinboxResettable(
     if(current < min) current = min;
 
     _rst = rst;
+    _tolerance = 0.1;
+    for(int i = 0; i < dec; i++)
+        _tolerance /= 10;
 
     box = new QDoubleSpinBox(parent);
     box->setMinimum(min);
@@ -126,7 +129,7 @@ ADM_QDoubleSpinboxResettable::ADM_QDoubleSpinboxResettable(
     QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     button = new QPushButton(QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Reset")), parent);
-    button->setEnabled(current != _rst);
+    button->setEnabled(!withinTolerance(current));
 
     QObject::connect(box, SIGNAL(valueChanged(double)), this, SLOT(valueChangedSlot(double)));
     QObject::connect(button, SIGNAL(clicked(bool)), this, SLOT(reset(bool)));
@@ -159,12 +162,20 @@ void ADM_QDoubleSpinboxResettable::reset(bool checked)
 }
 
 /**
+    \fn withinTolerance
+*/
+bool ADM_QDoubleSpinboxResettable::withinTolerance(double v)
+{
+    return v >_rst - _tolerance && v < _rst + _tolerance;
+}
+
+/**
     \fn valueChangedSlot
 */
 void ADM_QDoubleSpinboxResettable::valueChangedSlot(double v)
 {
     if(box->isEnabled())
-        button->setEnabled(v != _rst);
+        button->setEnabled(!withinTolerance(v));
 }
 
 /**
@@ -174,7 +185,7 @@ void ADM_QDoubleSpinboxResettable::enable(bool onoff)
 {
     text->setEnabled(onoff);
     box->setEnabled(onoff);
-    button->setEnabled(onoff ? box->value() != _rst : false);
+    button->setEnabled(onoff ? !withinTolerance(box->value()) : false);
 }
 
 /**

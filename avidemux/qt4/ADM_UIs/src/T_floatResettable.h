@@ -21,10 +21,13 @@ namespace ADM_Qt4Factory
 
     private:
         double  _rst;
+        double  _tolerance;
         QLabel  *text;
         QDoubleSpinBox *box;
         QPushButton *button;
         void    *cookie;
+
+        bool    withinTolerance(double v);
 
     public:
         ADM_QDoubleSpinboxResettable(QWidget *parent, QGridLayout *layout, void *elem, const char *title, const char *tip,
