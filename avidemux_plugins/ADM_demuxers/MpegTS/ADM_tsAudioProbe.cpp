@@ -19,8 +19,6 @@
 #include "ADM_audiodef.h"
 #include "dmxTSPacket.h"
 #include "ADM_tsAudioProbe.h"
-//
-#include "ADM_a52info.h"
 #include "ADM_eac3info.h"
 #include "ADM_mp3info.h"
 #include "ADM_dcainfo.h"
@@ -211,19 +209,6 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                                 trackInfo->wav.channels=2;
                                 trackInfo->wav.byterate=2*2*48000;
                                 break;
-            case ADM_TS_AC3:
-                            {
-                                trackInfo->wav.encoding=WAV_AC3;
-                                if(!ADM_AC3GetInfo(audioBuffer, rd, &fq, &br, &chan,&off))
-                                {
-                                    ADM_error("Failed to get info on track : 0x%x (AC3)\n",trackInfo->esId);
-                                    goto er;
-                                }
-                                trackInfo->wav.frequency=fq;
-                                trackInfo->wav.channels=chan;
-                                trackInfo->wav.byterate=(br);
-                                break;
-                            }
             case ADM_TS_DTS:
                             {
                                 trackInfo->wav.encoding=WAV_DTS;
@@ -238,21 +223,22 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                                 trackInfo->wav.byterate=dcainfo.bitrate/8;
                                 break;
                             }
-            case ADM_TS_EAC3: 
+            case ADM_TS_AC3:
+            case ADM_TS_EAC3:
                             {
-                                trackInfo->wav.encoding=WAV_EAC3;
+                                bool ac3;
                                 ADM_EAC3_INFO info;
-                                if(!ADM_EAC3GetInfo(audioBuffer, rd, &off,&info))
+                                if(!ADM_EAC3GetInfo(audioBuffer, rd, &off, &info, &ac3))
                                 {
-                                    ADM_error("Failed to get info on track : 0x%x (EAC3)\n",trackInfo->esId);
+                                    ADM_error("Failed to get info on track : 0x%x (%s)\n", trackInfo->esId, (trackInfo->trackType == ADM_TS_AC3)? "AC3" : "EAC3");
                                     goto er;
                                 }
+                                trackInfo->wav.encoding = ac3 ? WAV_AC3 : WAV_EAC3;
                                 trackInfo->wav.frequency=info.frequency;
                                 trackInfo->wav.channels=info.channels;
                                 trackInfo->wav.byterate=info.byterate;
                                 break;
                             }
-                            
             default:
                         ADM_error("Unsupported audio format pid %d (0x%x)\n",trackInfo->esId,trackInfo->esId);
                         return false;

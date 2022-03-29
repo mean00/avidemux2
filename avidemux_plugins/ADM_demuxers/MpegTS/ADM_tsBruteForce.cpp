@@ -20,7 +20,6 @@
 #include "ADM_demuxerInternal.h"
 #include "ADM_tsPatPmt.h"
 
-#include "ADM_a52info.h"
 #include "ADM_eac3info.h"
 #include "ADM_mp3info.h"
 
@@ -270,39 +269,25 @@ TS_PESpacket pes2(pid);
         uint32_t fq,br,chan,syncoff;
         uint32_t fq2,br2,chan2,syncoff2;
 
-        // Is it EAC3 ?? 
-        ADM_EAC3_INFO eac3,eac32;
-        if(ADM_EAC3GetInfo(ptr,  len, &syncoff,&eac3))
+        // Is it AC3 or EAC3 ??
+        bool plain;
+        ADM_EAC3_INFO eac3;
+        if(ADM_EAC3GetInfo(ptr, len, &syncoff, &eac3, &plain))
         {
-                ADM_info("Maybe EAC3... \n");
-                // Try on 2nd packet...
-                if(ADM_EAC3GetInfo(ptr2,  len2, &syncoff,&eac32))
+            ADM_info("Maybe %s...\n", plain ? "AC3" : "EAC3");
+            // Try on 2nd packet...
+            bool plain2;
+            ADM_EAC3_INFO eac32;
+            if(ADM_EAC3GetInfo(ptr2, len2, &syncoff, &eac32, &plain2))
+            {
+                if((eac3.frequency==eac32.frequency) && (eac3.byterate==eac32.byterate) && (eac3.channels==eac32.channels) && (plain == plain2))
                 {
-                    if((eac3.frequency==eac32.frequency) && (eac3.byterate==eac32.byterate) && (eac3.channels==eac32.channels))
-                    {
-                        ADM_warning("\tProbably EAC3 : Fq=%d br=%d chan=%d\n",(int)eac3.frequency,(int)eac3.byterate,(int)eac3.channels);
-                        trackType=ADM_TS_EAC3;
-                        return true;
-                    }
+                    ADM_warning("\tProbably %s : Fq=%u br=%u chan=%u\n", plain ? "AC3" : "EAC3", eac3.frequency, eac3.byterate, eac3.channels);
+                    trackType = plain ? ADM_TS_AC3 : ADM_TS_EAC3;
+                    return true;
                 }
+            }
         }
-        // AC3 maybe ?
-        if( ADM_AC3GetInfo(ptr,len, &fq, &br, &chan,&syncoff))
-        {
-                ADM_info("Maybe AC3... \n");
-                // Try on 2nd packet...
-                if( ADM_AC3GetInfo(ptr2,len2, &fq2, &br2, &chan2,&syncoff2))
-                {
-                    if((fq==fq2) && (br2==br) && (chan==chan2))
-                    {
-                        ADM_warning("\tProbably AC3 : Fq=%d br=%d chan=%d\n",(int)fq,(int)br,(int)chan);
-                        trackType=ADM_TS_AC3;
-                        return true;
-                    }
-                }
-
-        }
-       
         // Mpeg audio ?
         if(idMP2(pid,ts))
         {
