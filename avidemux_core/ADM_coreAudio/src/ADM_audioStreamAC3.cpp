@@ -59,24 +59,20 @@ bool         ADM_audioStreamAC3::goToTime(uint64_t nbUs)
 uint8_t ADM_audioStreamAC3::getPacket(uint8_t *obuffer,uint32_t *osize, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)
 {
 #define ADM_LOOK_AHEAD 6 // Need 6 bytes...
-uint8_t data[ADM_LOOK_AHEAD];
 uint32_t offset;
 int size;
 int flags,sample_rate,bit_rate;
 
     while(1)
     {
-        // Do we have sync ?
         if(needBytes(ADM_LOOK_AHEAD)==false) return 0;
-        // Peek
-        peek(ADM_LOOK_AHEAD,data);
         // Search start seq
         if(buffer[start]!=0x0b || buffer[start+1]!=0x77)
         {
             read8();
             continue;
         }
-        // 
+        // Do we have sync ?
         size= ADM_a52_syncinfo (buffer.at(start), &flags, &sample_rate, &bit_rate);
         
         if(!size)
