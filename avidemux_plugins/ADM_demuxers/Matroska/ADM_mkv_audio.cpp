@@ -17,7 +17,6 @@
 #include "ADM_Video.h"
 
 #include "ADM_mkv.h"
-#include "ADM_a52info.h"
 #include "ADM_eac3info.h"
 #include "ADM_dcainfo.h"
 
@@ -39,52 +38,35 @@ mkvAccess::mkvAccess(const char *name,mkvTrak *track)
     uint32_t len,sample;
     uint64_t timecode;
 
-   _parser=new ADM_ebml_file();
-   ADM_assert(_parser->open(name));
-  _track=track;
-  ADM_assert(_track);
-  _currentBlock=0;
-  _currentLace=_maxLace=0;
-  goToBlock(0);
+    _parser=new ADM_ebml_file();
+    ADM_assert(_parser->open(name));
+    _track=track;
+    ADM_assert(_track);
+    _currentBlock=0;
+    _currentLace=_maxLace=0;
+    goToBlock(0);
 
-  if(track->duration && !track->wavHeader.byterate)
-    track->wavHeader.byterate=(uint32_t)(track->_sizeInBytes*1000000LL/track->duration);
+    if(track->duration && !track->wavHeader.byterate)
+        track->wavHeader.byterate = (uint32_t)(track->_sizeInBytes * 1000000LL / track->duration);
 
-  /* Check that it is really EAC3 */
-  if(_track->wavHeader.encoding==WAV_EAC3)
-  {
-     if(getPacket(ac3Buffer, &len, 20000, &timecode))
-     {
-        uint32_t syncoff;
-        ADM_EAC3_INFO efo;
-        if(ADM_EAC3GetInfo(ac3Buffer, len, &syncoff, &efo, false))
+    /* Tell apart AC3 and E-AC3, the header cannot be trusted */
+    if(_track->wavHeader.encoding == WAV_AC3 || _track->wavHeader.encoding == WAV_EAC3)
+    {
+        if(getPacket(ac3Buffer, &len, 20000, &timecode))
         {
-            track->wavHeader.channels=efo.channels;
-            track->wavHeader.frequency=efo.frequency;
-            track->wavHeader.byterate=efo.byterate;
-        }else
-        {
-            track->wavHeader.encoding=WAV_AC3;
+            uint32_t syncoff;
+            bool ac3;
+            ADM_EAC3_INFO efo;
+            if(ADM_EAC3GetInfo(ac3Buffer, len, &syncoff, &efo, &ac3))
+            {
+                track->wavHeader.encoding = ac3 ? WAV_AC3 : WAV_EAC3;
+                track->wavHeader.channels = efo.channels;
+                track->wavHeader.frequency = efo.frequency;
+                track->wavHeader.byterate = efo.byterate;
+            }
         }
-     }
-     goToBlock(0);
-  }
-
-  /* In case of AC3, do not trust the header...*/
-  if(_track->wavHeader.encoding==WAV_AC3)
-  {
-     if( getPacket(ac3Buffer, &len, 20000,&timecode))
-     {
-       uint32_t fq,br,chan,syncoff;
-        if( ADM_AC3GetInfo(ac3Buffer, len, &fq, &br, &chan,&syncoff) )
-        {
-            track->wavHeader.channels=chan;
-            track->wavHeader.frequency=fq;
-            track->wavHeader.byterate=br;
-        }
-     }
-     goToBlock(0);
-  }
+        goToBlock(0);
+    }
 
   if(_track->wavHeader.encoding==WAV_DTS)
   {
