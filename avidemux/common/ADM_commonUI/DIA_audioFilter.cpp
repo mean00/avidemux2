@@ -124,7 +124,6 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
 
     //*** DRC tab *****
     diaElemToggle    tDRC(PX(drcEnabled),QT_TRANSLATE_NOOP("adm","Enable Compressor"));
-    diaElemFrame     frameDRC("");
     diaElemToggle    eDrcNorm(&drcUseGain,QT_TRANSLATE_NOOP("adm","Normalize"));
     diaElemFloatResettable  eDrcThres(&drcThresholdDB,QT_TRANSLATE_NOOP("adm","Threshold (dB):"),-60,-1,-12);
     diaElemFloatResettable  eDrcNFloor(&drcFloorDB,QT_TRANSLATE_NOOP("adm","Noise floor (dB):"),-80,-20,-30);
@@ -137,18 +136,11 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     tDRC.link(1, &eDrcRatio);
     tDRC.link(1, &eDrcAttack);
     tDRC.link(1, &eDrcDecay);
-    frameDRC.swallow(&eDrcNorm);
-    frameDRC.swallow(&eDrcThres);
-    frameDRC.swallow(&eDrcNFloor);
-    frameDRC.swallow(&eDrcRatio);
-    frameDRC.swallow(&eDrcAttack);
-    frameDRC.swallow(&eDrcDecay);
-    diaElem *drcElems[]={&tDRC, &frameDRC};
+    diaElem *drcElems[]={&tDRC, &eDrcNorm, &eDrcThres, &eDrcNFloor, &eDrcRatio, &eDrcAttack, &eDrcDecay};
     diaElemTabs tabDRC(QT_TRANSLATE_NOOP("adm","DRC"),NB_ELEM(drcElems),drcElems);
 
     //*** Equalizer tab ******
     diaElemToggle    tEQ(&vEqEnable,QT_TRANSLATE_NOOP("adm","Enable Equalizer"));
-    diaElemFrame     frameEQ("");
     diaElemFloatResettable  eEqLow(&eqLowDB,QT_TRANSLATE_NOOP("adm","Bass (dB):"),-30,+30,0);
     diaElemFloatResettable  eEqCutLM(&eqCutLM,QT_TRANSLATE_NOOP("adm","Bass/Mid cut-off (Hz):"),100,1000,880);
     diaElemFloatResettable  eEqMid(&eqMidDB,QT_TRANSLATE_NOOP("adm","Mid (dB):"),-30,+30,0);
@@ -159,15 +151,10 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     tEQ.link(1, &eEqMid);
     tEQ.link(1, &eEqCutMH);
     tEQ.link(1, &eEqHigh);
-    frameEQ.swallow(&eEqLow);
-    frameEQ.swallow(&eEqCutLM);
-    frameEQ.swallow(&eEqMid);
-    frameEQ.swallow(&eEqCutMH);
-    frameEQ.swallow(&eEqHigh);
 
     diaElemReadOnlyText noteEq(NULL,QT_TRANSLATE_NOOP("adm","Note:\n - it is highly recommended to enable normalization when positive gain values are used"),NULL);
 
-    diaElem *eqElems[]={&tEQ, &frameEQ, &noteEq};
+    diaElem *eqElems[]={&tEQ, &eEqLow, &eEqMid, &eEqHigh, &eEqCutLM, &eEqCutMH, &noteEq};
     diaElemTabs tabEq(QT_TRANSLATE_NOOP("adm","Equalizer"),NB_ELEM(eqElems),eqElems);
 
     //*** Channel gains tab ******
