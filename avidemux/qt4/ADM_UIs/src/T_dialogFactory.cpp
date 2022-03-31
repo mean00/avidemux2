@@ -252,14 +252,9 @@ void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
   int currentLayout = 0;
   QVBoxLayout *vboxLayout = new QVBoxLayout(wid);
   QLayout *layout = NULL;
-  
-  /* First compute the size of our window */
-  int vsize=0;
-  for(int i=0;i<tab->nbElems;i++)
-  {
-    ADM_assert(tab->dias[i]);
-     vsize+=tab->dias[i]->getSize(); 
-  }
+
+    // Work around the topmost checkbox being unclickable with some Qt themes.
+    wid->setContentsMargins(0,10,0,0);
 
     int  v=0;
 
