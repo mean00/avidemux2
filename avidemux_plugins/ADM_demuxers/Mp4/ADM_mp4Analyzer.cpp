@@ -1020,6 +1020,12 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     left=0;
                                     break;
                                 }
+                                case MKFCCR('v','2','1','0'): // v210
+                                {
+                                    commonPart(v210);
+                                    break;
+                                }
+
 
                                 case MKFCCR('h','d','v','5'): // hdv5
                                 {

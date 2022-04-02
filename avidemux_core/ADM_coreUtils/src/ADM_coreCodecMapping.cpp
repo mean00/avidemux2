@@ -79,6 +79,9 @@ const ffVideoCodec ffCodec[]=
   {"HFYU", AV_CODEC_ID_HUFFYUV,    true, true,    false},
   {"VC1 ", AV_CODEC_ID_VC1,        true, true,    true},
 
+  // V210
+  //
+  {"v210", AV_CODEC_ID_V210,        true, false,    false},
 
  //{AV_CODEC_ID_FFVHUFF,"FFVH"},
 //    {AV_CODEC_ID_HUFFYUV,"HFYU"},
