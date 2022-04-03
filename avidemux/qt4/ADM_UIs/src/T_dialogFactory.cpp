@@ -26,6 +26,9 @@
 #include "ADM_toolkitQt.h"
 #include "ADM_dialogFactoryQt4.h"
 
+#define UNCLICKABLE_FIRST_CHECKBOX_HACK
+#define SAFETY_MARGIN 15
+
 static void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab);
 /**
     \fn qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
@@ -76,44 +79,87 @@ public:
  */
 void * qt4DiaFactoryPrepare(const char *title,uint32_t nb,diaElem **elems)
 {
-  factoryCookie *cookie=new factoryCookie(title);
+    factoryCookie *cookie=new factoryCookie(title);
 
     if(!nb) return cookie;
 
     int currentLayout = 0;
-    int  v=0;
+    int v = 0;
+#ifdef UNCLICKABLE_FIRST_CHECKBOX_HACK
+    uint32_t workaroundNeeded = 0;
+#endif
     for(int i=0;i<nb;i++)
     {
-       ADM_assert(elems[i]);
-       if (elems[i]->getRequiredLayout() != currentLayout)
-       {
-           if (cookie->layout)
-               cookie->vboxlayout->addLayout(cookie->layout);
-
-           switch (elems[i]->getRequiredLayout())
-           {
-               case FAC_QT_GRIDLAYOUT:
-                   cookie->layout = new QGridLayout();
-                   break;
-               case FAC_QT_VBOXLAYOUT:
-                   cookie->layout = new QVBoxLayout();
-                   break;
-           }
-
-           currentLayout = elems[i]->getRequiredLayout();
-           v = 0;
-       }
-
-       elems[i]->setMe( (void *)(cookie->dialog),cookie->layout,v);
-       v+=elems[i]->getSize();
+        diaElem *e = elems[i];
+        ADM_assert(e);
+        if (e->getRequiredLayout() != currentLayout)
+        {
+            currentLayout = e->getRequiredLayout();
+            switch (currentLayout)
+            {
+                case FAC_QT_GRIDLAYOUT:
+                    cookie->layout = new QGridLayout();
+                    break;
+                case FAC_QT_VBOXLAYOUT:
+                    cookie->layout = new QVBoxLayout();
+                    break;
+            }
+            v = 0;
+        }
+#ifdef UNCLICKABLE_FIRST_CHECKBOX_HACK
+        if (!i && e->getRequiredLayout() == FAC_QT_VBOXLAYOUT)
+        { /* Weird stuff happens when some elements like resettable spinbox
+           * or button are not wrapped in a frame but instead added directly:
+           * the area accessible by mouse in the very first element is shifted
+           * down and to the right from the normal position and clipped approx.
+           * by the outline of the widgets building the element if this element
+           * needs to be put into a vertical layout. This means that e.g. in
+           * the topmost toggle the checkbox is not clickable. Work around this
+           * problem by increasing the top margin in the dialog. */
+            workaroundNeeded |= 1;
+        }
+        if(i && (workaroundNeeded & 1))
+        {
+            if(e->mySelf == ELEM_FLOAT_RESETTABLE || e->mySelf == ELEM_BUTTON)
+            {
+                workaroundNeeded |= 2;
+            }
+        }
+#endif
+        ADM_assert(cookie->layout);
+        e->setMe(cookie->dialog, cookie->layout, v);
+        if(!v)
+            cookie->vboxlayout->addLayout(cookie->layout);
+        v += e->getSize();
     }
-
+#ifdef UNCLICKABLE_FIRST_CHECKBOX_HACK
+    if (workaroundNeeded == 3)
+    {
+        QMargins m = cookie->dialog->contentsMargins();
+        if (m.top() < SAFETY_MARGIN) m.setTop(SAFETY_MARGIN);
+        cookie->dialog->setContentsMargins(m);
+    }
+#endif
     for(int i=0;i<nb;i++)
     {
-        ADM_assert(elems[i]);
-        elems[i]->finalize(); 
-        cookie->items.push_back(elems[i]);
+        diaElem *e = elems[i];
+        e->finalize();
+        cookie->items.push_back(e);
     }
+
+    QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox();
+    // Add buttons
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+    QObject::connect(buttonBox, SIGNAL(accepted()), cookie->dialog, SLOT(accept()));
+    QObject::connect(buttonBox, SIGNAL(rejected()), cookie->dialog, SLOT(reject()));
+
+    cookie->vboxlayout->addItem(spacer);
+    cookie->vboxlayout->addWidget(buttonBox,1);
+
+    cookie->dialog->adjustSize();
+
     return cookie;
 }
 /**
@@ -128,22 +174,6 @@ bool  qt4DiaFactoryFinish(void *finish)
 
   bool  r=false;
   factoryCookie *cookie=(factoryCookie *)  finish;
-  QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed);
-  QDialogButtonBox *buttonBox = new QDialogButtonBox();
-  
-  // Add buttons
-   buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-
-   QObject::connect(buttonBox, SIGNAL(accepted()), cookie->dialog, SLOT(accept()));
-   QObject::connect(buttonBox, SIGNAL(rejected()), cookie->dialog, SLOT(reject()));
-
-   if (cookie->layout)
-           cookie->vboxlayout->addLayout(cookie->layout);
-
-   cookie->vboxlayout->addItem(spacer);
-   cookie->vboxlayout->addWidget(buttonBox);
-
-   cookie->dialog->setLayout(cookie->vboxlayout);
 
    qtRegisterDialog(cookie->dialog);
 
@@ -180,7 +210,7 @@ const char *shortkey(const char *in)
 
 
 /**
- *         \fn qt4DiaFactoryRunTabs
+ *  \fn qt4DiaFactoryTabsPrepare
  */
 void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs)
 {
@@ -188,7 +218,6 @@ void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs
 
     cookie->layout  = new QGridLayout();
     cookie->tabWidget = new QTabWidget();
-    
 
     for(int i=0;i<nb;i++)
     {
@@ -196,11 +225,31 @@ void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs
         insertTab(i,tabs[i],cookie->tabWidget);
          for(int j=0;j<tabs[i]->nbElems;j++)
              cookie->items.push_back(tabs[i]->dias[j]);
-    }        
+    }
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox();
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+    QObject::connect(buttonBox, SIGNAL(accepted()), cookie->dialog, SLOT(accept()));
+    QObject::connect(buttonBox, SIGNAL(rejected()), cookie->dialog, SLOT(reject()));
+
+    QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+
+    cookie->vboxlayout->addWidget(cookie->tabWidget,0);
+    cookie->vboxlayout->addItem(spacer);
+    cookie->vboxlayout->addWidget(buttonBox,1);
+
+    // Expand to see all tabs but still allow the window to be resized smaller
+    cookie->tabWidget->setUsesScrollButtons(false);
+    cookie->dialog->adjustSize();
+    cookie->tabWidget->setUsesScrollButtons(true);
+    // Squeeze all the air vertically
+    cookie->dialog->resize(cookie->dialog->width(), cookie->dialog->minimumSizeHint().height());
+
     return cookie;
 }
  /**
-  * 
+  * \fn qt4DiaFactoryTabsFinish
   * @param f
   * @return 
   */ 
@@ -210,26 +259,6 @@ bool qt4DiaFactoryTabsFinish(void *f)
 
     bool r=false;
     factoryCookie *cookie=(factoryCookie *)f;
-    
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(); 
-    QObject::connect(buttonBox, SIGNAL(accepted()), cookie->dialog, SLOT(accept()));
-    QObject::connect(buttonBox, SIGNAL(rejected()), cookie->dialog, SLOT(reject()));    
-    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed);
-    cookie->vboxlayout->addLayout(cookie->layout);
-    cookie->vboxlayout->addWidget(cookie->tabWidget,0);
-    cookie->vboxlayout->addItem(spacer);
-    cookie->vboxlayout->addWidget(buttonBox,1);
-
-     cookie->dialog->setLayout(cookie->vboxlayout);
-
-     // Expand to see all tabs but still allow the window to be resized smaller
-     cookie->tabWidget->setUsesScrollButtons(false);
-     cookie->dialog->adjustSize();
-     cookie->tabWidget->setUsesScrollButtons(true);
-     // Squeeze all the air vertically
-     cookie->dialog->resize(cookie->dialog->width(), cookie->dialog->minimumSizeHint().height());
-
     qtRegisterDialog(cookie->dialog);
 
     if(cookie->dialog->exec()==QDialog::Accepted)
@@ -244,30 +273,30 @@ bool qt4DiaFactoryTabsFinish(void *f)
     delete cookie;
     return r;
 }
+/**
+    \fn insertTab
+*/
 void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
 {
+    QWidget *wid = new QWidget;
+    QSpacerItem *spacerItem = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    QVBoxLayout *vboxLayout = new QVBoxLayout(wid);
+    QLayout *layout = NULL;
 
-  QWidget *wid=new QWidget;  
-  QSpacerItem *spacerItem = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-  int currentLayout = 0;
-  QVBoxLayout *vboxLayout = new QVBoxLayout(wid);
-  QLayout *layout = NULL;
-
-    // Work around the topmost checkbox being unclickable with some Qt themes.
-    wid->setContentsMargins(0,10,0,0);
-
-    int  v=0;
-
+    int currentLayout = 0;
+    int v=0;
+#ifdef UNCLICKABLE_FIRST_CHECKBOX_HACK
+    uint32_t workaroundNeeded = 0;
+#endif
     for(int i=0;i<tab->nbElems;i++)
     {
-        ADM_assert(tab->dias[i]);
+        diaElem *e = tab->dias[i];
+        ADM_assert(e);
 
-        if (tab->dias[i]->getRequiredLayout() != currentLayout)
+        if (e->getRequiredLayout() != currentLayout)
         {
-            if (layout)
-                vboxLayout->addLayout(layout);
-
-            switch (tab->dias[i]->getRequiredLayout())
+            currentLayout = e->getRequiredLayout();
+            switch (currentLayout)
             {
                 case FAC_QT_GRIDLAYOUT:
                     layout = new QGridLayout();
@@ -276,25 +305,40 @@ void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
                     layout = new QVBoxLayout();
                     break;
             }
-
-            currentLayout = tab->dias[i]->getRequiredLayout();
             v = 0;
+#ifdef UNCLICKABLE_FIRST_CHECKBOX_HACK
+            if (!i && currentLayout == FAC_QT_VBOXLAYOUT)
+                workaroundNeeded |= 1;
+#endif
         }
-
-        tab->dias[i]->setMe( wid,layout,v); 
-        v+=tab->dias[i]->getSize();
+#ifdef UNCLICKABLE_FIRST_CHECKBOX_HACK
+        if(i && (workaroundNeeded & 1))
+        {
+            if(e->mySelf == ELEM_FLOAT_RESETTABLE || e->mySelf == ELEM_BUTTON)
+                workaroundNeeded |= 2;
+        }
+#endif
+        ADM_assert(layout);
+        e->setMe(wid,layout,v);
+        if(!v)
+            vboxLayout->addLayout(layout);
+        v += e->getSize();
     }
-  
-  wtab->addTab(wid,QString::fromUtf8(tab->title));
-  for(int i=0;i<tab->nbElems;i++)
-  {
-    tab->dias[i]->finalize(); 
-  }
+#ifdef UNCLICKABLE_FIRST_CHECKBOX_HACK
+    if(workaroundNeeded == 3)
+    {
+        QMargins m = wid->contentsMargins();
+        if (m.top() < SAFETY_MARGIN) m.setTop(SAFETY_MARGIN);
+        wid->setContentsMargins(m);
+    }
+#endif
+    wtab->addTab(wid,QString::fromUtf8(tab->title));
+    for(int i=0;i<tab->nbElems;i++)
+    {
+        tab->dias[i]->finalize();
+    }
 
-  if (layout)
-        vboxLayout->addLayout(layout);
-
-  vboxLayout->addItem(spacerItem);
+    vboxLayout->addItem(spacerItem);
 }
 /**
  * 
