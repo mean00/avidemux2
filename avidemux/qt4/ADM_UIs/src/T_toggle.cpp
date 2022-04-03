@@ -127,7 +127,8 @@ void diaElemToggle::setMe(void *dialog, void *opaque,uint32_t l)
  {
     box->setCheckState(Qt::Checked); 
  }
-
+ if(tip)
+    box->setToolTip(QString::fromUtf8(tip));
  layout->addWidget(box);
  box->connectMe();
 }
