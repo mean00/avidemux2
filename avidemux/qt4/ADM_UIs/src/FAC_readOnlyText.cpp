@@ -70,7 +70,7 @@ diaElemReadOnlyText::diaElemReadOnlyText(const char *readyOnly,const char *toggl
 
 diaElemReadOnlyText::~diaElemReadOnlyText()
 {
-
+    ADM_dealloc(param);
 }
 
 void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)
@@ -101,6 +101,9 @@ void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)
 
         myWidget=(void *)text;
     }
+    text = (QLabel *)myWidget;
+    if(tip)
+        text->setToolTip(QString::fromUtf8(tip));
 }
 
 void diaElemReadOnlyText::getMe(void)
