@@ -39,7 +39,6 @@ ADM_Qbutton::ADM_Qbutton(QWidget *z,QGridLayout *layout,const char *blah,int lin
 	_cb=cb;
 	_cookie=cookie;
 	button=new QPushButton(QString::fromUtf8(blah),z);
-	button->show();
 	layout->addWidget(button,line,0);
 	QObject::connect(button, SIGNAL(clicked(bool)), this, SLOT(clicked(bool )));
 }
