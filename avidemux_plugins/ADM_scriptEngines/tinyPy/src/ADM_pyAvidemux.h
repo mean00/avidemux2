@@ -31,8 +31,9 @@ int pyGetNumberOfAvailableAudioTracks(IEditor *editor);
 /* Audio filters */
 int pySetAudioShift(IEditor *editor,int track, int onoff, int value);
 int pyGetAudioShift(IEditor *editor,int track, int *onoff, int *value);
-int pyGetDrc(IEditor *editor,int track, int * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
-int pySetDrc(IEditor *editor,int track, int active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
+int pySetDrc(IEditor *editor,int track, int active);
+int pyGetDrc2(IEditor *editor,int track, int * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
+int pySetDrc2(IEditor *editor,int track, int active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
 int pyGetEq(IEditor *editor,int track, int * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut);
 int pySetEq(IEditor *editor,int track, int active, float lo, float md, float hi, float lmcut, float mhcut);
 int pyGetChGains(IEditor *editor,int track, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE);

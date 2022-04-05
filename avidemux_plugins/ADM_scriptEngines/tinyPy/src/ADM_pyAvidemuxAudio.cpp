@@ -335,7 +335,7 @@ int pySetResample(IEditor *editor,int track,int fq)
     \brief
 */
 
-int pyGetDrc(IEditor *editor,int track, int * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB)
+int pyGetDrc2(IEditor *editor,int track, int * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB)
 {
     bool bactive;
     editor->getAudioDrc(track, &bactive, normalize, nFloor, attTime, decTime, ratio, thresDB);
@@ -346,9 +346,19 @@ int pyGetDrc(IEditor *editor,int track, int * active, int * normalize, float * n
     \fn
     \brief
 */
-int pySetDrc(IEditor *editor,int track, int active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
+int pySetDrc2(IEditor *editor,int track, int active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
 {
     editor->setAudioDrc(track, active, normalize, nFloor, attTime, decTime, ratio, thresDB);
+    return true;
+}
+
+/**
+    \fn
+    \brief  preserve compatibility to project scripts created by older versions
+*/
+int pySetDrc(IEditor *editor,int track, int active)
+{
+    editor->setAudioDrc(track, active, 1, 0.001, 0.2, 1, 2, -12);
     return true;
 }
 
