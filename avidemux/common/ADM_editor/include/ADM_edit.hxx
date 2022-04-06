@@ -367,8 +367,16 @@ public:
         bool        setAudioFilterNormalise(int dex, ADM_GAINMode mode, int32_t gain, int32_t maxlevel);
         uint32_t    getAudioResample(int dex);
         void        setAudioResample(int dex,uint32_t newfq);
-        bool        setAudioDrc(int track, bool mode);
-        bool        getAudioDrc(int track);
+        bool        setAudioDrc(int track, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
+        bool        getAudioDrc(int track, bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
+        bool        setAudioEq(int track, bool active, float lo, float md, float hi, float lmcut, float mhcut);
+        bool        getAudioEq(int track, bool * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut);
+        bool        setAudioChannelGains(int dex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
+        bool        getAudioChannelGains(int dex, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE);
+        bool        setAudioChannelDelays(int dex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);
+        bool        getAudioChannelDelays(int dex, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE);
+        bool        setAudioChannelRemap(int dex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);
+        bool        getAudioChannelRemap(int dex, bool *active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE);
         bool        setAudioShift(int track, bool mode,int32_t value);
         bool        getAudioShift(int track, bool *mode,int32_t *value);
         int         saveAudio(int dex,const char *name);

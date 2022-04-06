@@ -297,24 +297,112 @@ void ADM_Composer::resetAudioFilter(int dex)
     \fn setAudioDrc
 */
 
-bool        ADM_Composer::setAudioDrc(int dex, bool mode)
+bool        ADM_Composer::setAudioDrc(int dex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
 {
     EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
     if(!ed) return false;
-    return ed->audioEncodingConfig.audioFilterSetDrcMode(mode);
+    return ed->audioEncodingConfig.audioFilterSetDrcConfig(active, normalize, nFloor, attTime, decTime, ratio, thresDB);
 }
 
 /**
     \fn getAudioDrc
 */
 
-bool        ADM_Composer::getAudioDrc(int dex)
+bool        ADM_Composer::getAudioDrc(int dex, bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB)
 {
     EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
     if(!ed) return false;
-    return ed->audioEncodingConfig.audioFilterGetDrcMode();
+    return ed->audioEncodingConfig.audioFilterGetDrcConfig(active, normalize, nFloor, attTime, decTime, ratio, thresDB);
 }
 
+/**
+    \fn setAudioEq
+*/
+
+bool        ADM_Composer::setAudioEq(int dex, bool active, float lo, float md, float hi, float lmcut, float mhcut)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetEqConfig(active, lo, md, hi, lmcut, mhcut);
+}
+
+/**
+    \fn getAudioEq
+*/
+
+bool        ADM_Composer::getAudioEq(int dex, bool * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetEqConfig(active, lo, md, hi, lmcut, mhcut);
+}
+
+
+/**
+    \fn setAudioChannelGains
+*/
+
+bool        ADM_Composer::setAudioChannelGains(int dex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetChannelGains(fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
+    \fn getAudioChannelGains
+*/
+
+bool        ADM_Composer::getAudioChannelGains(int dex, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetChannelGains(fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
+    \fn setAudioChannelDelays
+*/
+
+bool        ADM_Composer::setAudioChannelDelays(int dex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetChannelDelays(fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
+    \fn getAudioChannelDelays
+*/
+
+bool        ADM_Composer::getAudioChannelDelays(int dex, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetChannelDelays(fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
+    \fn setAudioChannelRemap
+*/
+
+bool        ADM_Composer::setAudioChannelRemap(int dex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetChannelRemap(active, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
+
+/**
+    \fn getAudioChannelRemap
+*/
+
+bool        ADM_Composer::getAudioChannelRemap(int dex, bool * active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetChannelRemap(active, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+}
 
 /**
     \fn getAudioResample

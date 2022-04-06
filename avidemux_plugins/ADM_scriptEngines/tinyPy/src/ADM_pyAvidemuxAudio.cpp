@@ -335,20 +335,104 @@ int pySetResample(IEditor *editor,int track,int fq)
     \brief
 */
 
-int pyGetDrc(IEditor *editor,int track)
+int pyGetDrc2(IEditor *editor,int track, int * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB)
 {
-    return editor->getAudioDrc(track);
+    bool bactive;
+    editor->getAudioDrc(track, &bactive, normalize, nFloor, attTime, decTime, ratio, thresDB);
+    *active = (bactive?1:0);
+    return true;
+}
+/**
+    \fn
+    \brief
+*/
+int pySetDrc2(IEditor *editor,int track, int active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
+{
+    editor->setAudioDrc(track, active, normalize, nFloor, attTime, decTime, ratio, thresDB);
+    return true;
+}
+
+/**
+    \fn
+    \brief  preserve compatibility to project scripts created by older versions
+*/
+int pySetDrc(IEditor *editor,int track, int active)
+{
+    editor->setAudioDrc(track, active, 1, 0.001, 0.2, 1, 2, -12);
+    return true;
+}
+
+/**
+    \fn
+    \brief
+*/
+int pyGetEq(IEditor *editor,int track, int * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut)
+{
+    bool bactive;
+    editor->getAudioEq(track, &bactive, lo, md, hi, lmcut, mhcut);
+    *active = (bactive?1:0);
+    return true;    
+}
+
+/**
+    \fn
+    \brief
+*/
+int pySetEq(IEditor *editor,int track, int active, float lo, float md, float hi, float lmcut, float mhcut)
+{
+    editor->setAudioEq(track, active, lo, md, hi, lmcut, mhcut);
+    return true;    
+}
+
+/**
+    \fn
+    \brief
+*/
+
+int pyGetChGains(IEditor *editor,int track, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE)
+{
+    editor->getAudioChannelGains(track, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    return true;
 }
 /**
     \fn
     \brief
 */
 
-int pySetDrc(IEditor *editor,int track, int onoff)
+int pySetChGains(IEditor *editor,int track, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
 {
-    editor->setAudioDrc(track,onoff);
+    editor->setAudioChannelGains(track, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
     return true;
 }
+
+int pyGetChDelays(IEditor *editor,int track, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    editor->getAudioChannelDelays(track, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    return true;    
+}
+
+int pySetChDelays(IEditor *editor,int track, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    editor->setAudioChannelDelays(track, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    return true;    
+}
+
+
+int pyGetChRemap(IEditor *editor,int track, int * active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE)
+{
+    bool bactive;
+    editor->getAudioChannelRemap(track, &bactive, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    *active = (bactive?1:0);
+    return true;    
+}
+
+int pySetChRemap(IEditor *editor,int track, int active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    editor->setAudioChannelRemap(track, active, fL, fR, fC, sL, sR, rL, rR, rC, LFE);
+    return true;    
+}
+
+
 /**
     \fn
     \brief

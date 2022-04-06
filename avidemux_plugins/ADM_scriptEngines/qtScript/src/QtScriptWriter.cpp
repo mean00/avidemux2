@@ -115,11 +115,29 @@ namespace ADM_qtScript
         }
     }
 
-    void QtScriptWriter::setAudioDrc(int trackIndex, bool active)
+    void QtScriptWriter::setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
     {
         *(this->_stream) << "Editor.audioOutputs[" << trackIndex << "].drcEnabled = " << (active ? "true" : "false") << ";" << std::endl;
     }
+    void QtScriptWriter::setAudioEq(int trackIndex, bool active, float lo, float md, float hi, float lmcut, float mhcut)
+    {
 
+    }
+    void QtScriptWriter::setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
+    {
+        
+    }
+    
+    void QtScriptWriter::setAudioChannelDelays(int trackIndex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+    {
+        
+    }
+    
+    void QtScriptWriter::setAudioChannelRemap(int trackIndex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+    {
+        
+    }
+    
     void QtScriptWriter::setAudioShift(int trackIndex, bool active, int32_t value)
     {
 		if (!active)

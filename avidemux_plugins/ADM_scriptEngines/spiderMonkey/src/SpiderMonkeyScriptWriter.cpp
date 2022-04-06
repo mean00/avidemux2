@@ -48,9 +48,25 @@ void SpiderMonkeyScriptWriter::appendVideo(const char* path)
 {
     *(this->_stream) << "adm.appendVideo(\"" << path << "\");" << std::endl;
 }
-void SpiderMonkeyScriptWriter::setAudioDrc(int trackIndex, bool active)
+void SpiderMonkeyScriptWriter::setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB)
 {
 
+}
+void SpiderMonkeyScriptWriter::setAudioEq(int trackIndex, bool active, float lo, float md, float hi, float lmcut, float mhcut)
+{
+    
+}
+void SpiderMonkeyScriptWriter::setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
+{
+    
+}
+void SpiderMonkeyScriptWriter::setAudioChannelDelays(int trackIndex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    
+}
+void SpiderMonkeyScriptWriter::setAudioChannelRemap(int trackIndex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE)
+{
+    
 }
 void SpiderMonkeyScriptWriter::setAudioShift(int trackIndex, bool active,int32_t value)
 {

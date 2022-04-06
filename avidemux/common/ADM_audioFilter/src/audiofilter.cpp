@@ -132,6 +132,17 @@ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_
     AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(source,(uint32_t)( config->startTimeInUs/1000),actualShift);
     ADD_FILTER(nw);
 
+    // Equalizer
+    if(config->eqConf.enable)
+    {
+        AUDMAudioFilterEq *eq=new AUDMAudioFilterEq(last,&config->eqConf);
+        ADD_FILTER(eq);
+    }
+    
+    // Channel manipulations
+    AUDMAudioFilterChannels * channelManipulation = new AUDMAudioFilterChannels(last, &config->chansConf);
+    ADD_FILTER(channelManipulation);
+    
     // Mixer
     if(config->mixerEnabled)
     {

@@ -64,7 +64,8 @@ typedef enum
 	ADM_CH_REAR_CENTER,
 	ADM_CH_SIDE_LEFT,
 	ADM_CH_SIDE_RIGHT,
-	ADM_CH_LFE
+	ADM_CH_LFE,
+        ADM_CH_LAST
 }CHANNEL_TYPE;
 // returns true if channel mapping is identical
 bool ADM_audioCompareChannelMapping(WAVHeader *wh1, WAVHeader *wh2,CHANNEL_TYPE *map1,CHANNEL_TYPE *map2);

@@ -138,7 +138,29 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorTy
             {
                     this->_scriptWriter->setAudioResample(i, track->audioEncodingConfig.audioFilterGetResample());
             }
-            this->_scriptWriter->setAudioDrc(i,track->audioEncodingConfig.audioFilterGetDrcMode());
+            bool drcActive;
+            int drcNormalize;
+            float drcNFloor, drcAttTime, drcDecTime, drcRatio, drcThresDB;
+            track->audioEncodingConfig.audioFilterGetDrcConfig(&drcActive, &drcNormalize, &drcNFloor, &drcAttTime, &drcDecTime, &drcRatio, &drcThresDB);
+            this->_scriptWriter->setAudioDrc(i, drcActive, drcNormalize, drcNFloor, drcAttTime, drcDecTime, drcRatio, drcThresDB);
+            
+            bool eqActive;
+            float eqLo, eqMd, eqHi, eqLmcut, eqMhcut;
+            track->audioEncodingConfig.audioFilterGetEqConfig(&eqActive, &eqLo, &eqMd, &eqHi, &eqLmcut, &eqMhcut);
+            this->_scriptWriter->setAudioEq(i, eqActive, eqLo, eqMd, eqHi, eqLmcut, eqMhcut);
+
+            float chf[9];
+            track->audioEncodingConfig.audioFilterGetChannelGains(chf+0, chf+1, chf+2, chf+3, chf+4, chf+5, chf+6, chf+7, chf+8);
+            this->_scriptWriter->setAudioChannelGains(i, chf[0], chf[1], chf[2], chf[3], chf[4], chf[5], chf[6], chf[7], chf[8]);
+
+            int chint[9];
+            track->audioEncodingConfig.audioFilterGetChannelDelays(chint+0, chint+1, chint+2, chint+3, chint+4, chint+5, chint+6, chint+7, chint+8);
+            this->_scriptWriter->setAudioChannelDelays(i, chint[0], chint[1], chint[2], chint[3], chint[4], chint[5], chint[6], chint[7], chint[8]);
+
+            bool remapActive;
+            track->audioEncodingConfig.audioFilterGetChannelRemap(&remapActive, chint+0, chint+1, chint+2, chint+3, chint+4, chint+5, chint+6, chint+7, chint+8);
+            this->_scriptWriter->setAudioChannelRemap(i, remapActive, chint[0], chint[1], chint[2], chint[3], chint[4], chint[5], chint[6], chint[7], chint[8]);
+            
             bool shiftEnabled=false;
             int32_t shiftValue=0;
             track->audioEncodingConfig.audioFilterGetShift(&shiftEnabled,&shiftValue);
