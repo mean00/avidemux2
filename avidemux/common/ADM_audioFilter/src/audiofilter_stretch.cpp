@@ -73,6 +73,7 @@ uint32_t AUDMAudioFilterStretch::fill( uint32_t max, float * buffer,AUD_Status *
         
         if (*status==AUD_END_OF_STREAM)
             reachedEnd = true;
+        *status=AUD_OK;
 
         len=len/channels; // in sample
         uint32_t maxSample=max/channels; // in sample
