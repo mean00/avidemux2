@@ -67,8 +67,8 @@ uint32_t AUDMAudioFilterStretch::fill( uint32_t max, float * buffer,AUD_Status *
     while (1)
     { 
         shrink();
-        if (!reachedEnd)
-            fillIncomingBuffer(status);
+        //if (!reachedEnd)
+        fillIncomingBuffer(status);
         len=_tail-_head;
         
         if (*status==AUD_END_OF_STREAM)
