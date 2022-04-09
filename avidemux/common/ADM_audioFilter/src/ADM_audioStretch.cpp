@@ -90,6 +90,7 @@ bool ADM_audioStretch::init(double tempoRatio, double pitchScale, uint32_t sampl
     tmpobj->setMaxProcessSize(REORDER_BUFSIZE);
     latency = tmpobj->getLatency();
     discard = latency;
+    feedInput = true;
     // 
     return true;
 }
@@ -131,6 +132,7 @@ bool ADM_audioStretch::reset(void)
 {
     ADM_assert(context);
     discard = latency;
+    feedInput = true;
     CONTEXT->reset();
     return true;
 
@@ -164,7 +166,10 @@ bool ADM_audioStretch::process(float *from, float *to, uint32_t nbSample,uint32_
     }
     *sampleProcessed = nbSample;
 
-    CONTEXT->process(inReorderBuf,nbSample,last);
+    if (feedInput)
+        CONTEXT->process(inReorderBuf,nbSample,last);
+    if (last)
+        feedInput = false;
     
     *outNbSample = 0;
     

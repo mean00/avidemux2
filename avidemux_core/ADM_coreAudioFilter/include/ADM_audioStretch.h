@@ -18,6 +18,7 @@ protected:
       float ** outReorderBuf;
       long int latency;
       long int discard;
+      bool     feedInput;
 public:
                 ADM_audioStretch(void);
                 ~ADM_audioStretch();
