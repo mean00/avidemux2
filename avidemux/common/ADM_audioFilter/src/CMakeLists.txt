@@ -23,6 +23,7 @@ ADM_libsamplerate/samplerate.cpp
 ADM_libsamplerate/src_linear.cpp 
 ADM_libsamplerate/src_sinc.cpp 
 ADM_libsamplerate/src_zoh.cpp
+ADM_rubberband/single/RubberBandSingle.cpp
 )
 YASMIFY(dolbyAsm audiofilter_dolby_asm)
 
