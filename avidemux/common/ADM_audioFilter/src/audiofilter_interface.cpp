@@ -42,7 +42,9 @@ bool ADM_AUDIOFILTER_CONFIG::audioFilterCopyConfig(ADM_AUDIOFILTER_CONFIG * othe
     mixerConf=other->mixerConf;
     resamplerEnabled=other->resamplerEnabled;
     resamplerFrequency=other->resamplerFrequency;
-    film2pal=other->film2pal;
+    filmConv=other->filmConv;
+    filmConvTempo=other->filmConvTempo;
+    filmConvPitch=other->filmConvPitch;
     gainParam=other->gainParam;
     drcEnabled=other->drcEnabled;
     drcConf=other->drcConf;
@@ -257,7 +259,7 @@ uint32_t        ADM_AUDIOFILTER_CONFIG::audioFilterGetResample(void)  // Set 0 t
 
 bool    ADM_AUDIOFILTER_CONFIG::audioFilterSetFrameRate(FILMCONV conf)
 {
-    film2pal=conf;
+    filmConv=conf;
     return true;
 }
 
@@ -268,8 +270,50 @@ bool    ADM_AUDIOFILTER_CONFIG::audioFilterSetFrameRate(FILMCONV conf)
 
 FILMCONV        ADM_AUDIOFILTER_CONFIG::audioFilterGetFrameRate(void)
 {
-    return film2pal;
+    return filmConv;
 }
+
+/**
+    \fn audioFilterSetCustomFrameRate
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterSetCustomFrameRate(double tempo, double pitch)
+{
+    // NaN safe limiting
+    if (tempo > 0.1)
+    {
+        if (tempo < 10.0)
+            filmConvTempo = tempo;
+        else
+            return false;
+    } else {
+        return false;
+    }    
+    // NaN safe limiting
+    if (pitch > 0.1)
+    {
+        if (pitch < 10.0)
+            filmConvPitch = pitch;
+        else
+            return false;
+    } else {
+        return false;
+    }    
+    return true;
+}
+
+/**
+    \fn audioFilterGetCustomFrameRate
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterGetCustomFrameRate(double * tempo, double * pitch)
+{
+    *tempo = filmConvTempo;
+    *pitch = filmConvPitch;
+    return true;
+}
+
+
 /**
     \fn audioFilterSetNormalize
     \brief 

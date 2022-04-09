@@ -157,7 +157,7 @@ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_
             ADD_FILTER(pdrc);
      }
     // Pal 2 film & friends
-    switch(config->film2pal)
+    switch(config->filmConv)
     {
         case FILMCONV_NONE:
             break;
@@ -171,6 +171,12 @@ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_
             {
             AUDMAudioFilterPal2FilmV2 *f2p=new AUDMAudioFilterPal2FilmV2(last);
             ADD_FILTER(f2p);
+            }
+            break;
+        case FILMCONV_CUSTOM:
+            {
+            AUDMAudioFilterStretch * stretch = new AUDMAudioFilterStretch(last,config->filmConvTempo, config->filmConvPitch);
+            ADD_FILTER(stretch);
             }
             break;
         default:
