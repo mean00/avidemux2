@@ -192,7 +192,13 @@ bool ADM_audioStretch::process(float *from, float *to, uint32_t nbSample,uint32_
     {
         int availSamp = CONTEXT->available();
         if (availSamp == 0) return true;
-        if (availSamp < 0) return false;    // EOF
+        if (availSamp < 0) 
+        {
+            if (*outNbSample > 0)
+                return true;
+            else
+                return false;    // EOF
+        }
         
         if (availSamp > (maxOutSample - *outNbSample))
             availSamp = (maxOutSample - *outNbSample);
