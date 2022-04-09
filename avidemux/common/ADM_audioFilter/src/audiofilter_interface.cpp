@@ -19,15 +19,15 @@
 #include "audiofilter_conf.h"
 
 
-extern int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config);
+extern int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config, double tempoHint);
 
 /**
     \fn audioFilterconfigure
     \brief
 */
-bool ADM_AUDIOFILTER_CONFIG::audioFilterConfigure(void)
+bool ADM_AUDIOFILTER_CONFIG::audioFilterConfigure(double tempoHint)
 {
-    return DIA_getAudioFilter(this);
+    return DIA_getAudioFilter(this, tempoHint);
 }
 
 /**

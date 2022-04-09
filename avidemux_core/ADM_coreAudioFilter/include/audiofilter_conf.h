@@ -92,7 +92,7 @@ public: // accessor
     bool            audioFilterGetChannelDelays(int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE);
     bool            audioFilterSetChannelRemap(bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);
     bool            audioFilterGetChannelRemap(bool * active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE);
-    bool            audioFilterConfigure(void);
+    bool            audioFilterConfigure(double tempoHint = 1.0);
     bool            audioFilterCopyConfig(ADM_AUDIOFILTER_CONFIG * other);
     bool            audioFilterSetResample(uint32_t newfq);  // Set 0 to disable frequency
     uint32_t        audioFilterGetResample(void);  // Set 0 to disable frequency

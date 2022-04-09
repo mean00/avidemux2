@@ -21,9 +21,9 @@
     \fn DIA_getAudioFilter
     \brief Dialog to manage audio filters
 */
-int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
+int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config, double tempoHint)
 {
-    double defaultConvTempo = 1.0;  // todo auto value
+    double defaultConvTempo = tempoHint;  // auto value (original duration / filtered duration)
     
     uint32_t vChan=config->mixerConf;
     uint32_t vFilm=config->filmConv;
