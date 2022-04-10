@@ -54,11 +54,12 @@ source.apply_resize(resizer)
 ############################
 # Handle audio....
 ############################
-adm.audioClearTracks()
-adm.audioAddTrack(0)
-adm.audioSetResample(0,48000)
-adm.audioSetMixer(0,"STEREO")
-adm.audioCodec(0,"LavAAC","bitrate=160")
+if adm.audioTracksCount() > 0:
+    adm.audioClearTracks()
+    adm.audioAddTrack(0)
+    adm.audioSetResample(0,48000)
+    adm.audioSetMixer(0,"STEREO")
+    adm.audioCodec(0,"LavAAC","bitrate=160")
 ##################################
 #  Video
 ##################################
