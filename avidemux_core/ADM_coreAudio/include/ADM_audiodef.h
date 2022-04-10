@@ -90,8 +90,9 @@ inline const char *ADM_printChannel(CHANNEL_TYPE c)
                 CX(SIDE_LEFT)
                 CX(SIDE_RIGHT)
                 CX(LFE)
+                default:break;
         }
-         return "unkown channel";
+        return "unknown channel";
 }
 
 typedef struct
