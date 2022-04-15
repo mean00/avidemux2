@@ -140,8 +140,14 @@
       <string>T&amp;heme</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuFilters">
+     <property name="title">
+      <string>F&amp;ilters</string>
+     </property>
+    </widget>
     <addaction name="menuToolbars"/>
     <addaction name="menuThemes"/>
+    <addaction name="menuFilters"/>
    </widget>
    <widget class="QMenu" name="menuAuto">
     <property name="title">

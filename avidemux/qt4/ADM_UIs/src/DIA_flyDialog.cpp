@@ -29,6 +29,7 @@
 
 #include "ADM_toolkitQt.h"
 #include "ADM_vidMisc.h"
+#include "ADM_QSettings.h"
 #include "prefs.h"
 
 /**
@@ -675,6 +676,19 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     
     ADM_info("Interval = %d ms\n",incrementUs);
     timer.stop();
+    
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("flyDialog");
+        if (qset->value("openMaximized", 0).toInt())
+        {
+            parent->setWindowState(Qt::WindowMaximized);
+        }
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
     
     bool swapWheel = false;
     prefs->get(FEATURES_SWAP_MOUSE_WHEEL,&swapWheel);

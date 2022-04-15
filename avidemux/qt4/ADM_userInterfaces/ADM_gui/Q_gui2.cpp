@@ -794,6 +794,11 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     darkThemeAction->setCheckable(true);
     ui.menuThemes->addAction(darkThemeAction);
     connect(darkThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDarkThemeSlot(bool)));
+    
+    filterPrefMaximizedAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Open filter dialogs maximized"),this);
+    filterPrefMaximizedAction->setCheckable(true);
+    ui.menuFilters->addAction(filterPrefMaximizedAction);
+    connect(filterPrefMaximizedAction,SIGNAL(triggered(bool)),this,SLOT(setMaximizedFiltersSlot(bool)));
 
     this->installEventFilter(this);
     slider->installEventFilter(this);
@@ -1753,6 +1758,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
     ui.menuView->setPalette(x); \
     ui.menuToolbars->setPalette(x); \
     ui.menuThemes->setPalette(x); \
+    ui.menuFilters->setPalette(x); \
     ui.menuVideo->setPalette(x); \
     ui.menuAudio->setPalette(x); \
     ui.menuAuto->setPalette(x); \
@@ -1886,6 +1892,35 @@ void MainWindow::setDarkThemeSlot(bool b)
         delete qset;
         qset = NULL;
     }
+}
+
+/**
+    \fn     setFilterSettings
+    \brief  Load Filter QSettings.
+*/
+void MainWindow::setFilterSettings(QSettings *qset)
+{
+    if (qset == NULL) return;
+    qset->beginGroup("flyDialog");
+    filterPrefMaximizedAction->setChecked(qset->value("openMaximized", 0).toInt());
+    qset->endGroup();    
+}
+
+/**
+    \fn     setMaximizedFiltersSlot
+    \brief  Update "Open filter dialogs maximized" settings.
+*/
+void MainWindow::setMaximizedFiltersSlot(bool b)
+{
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("flyDialog");
+        qset->setValue("openMaximized", (b?1:0));
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }   
 }
 
 /**
@@ -2559,6 +2594,9 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         mw->ui.horizontalSlider_2->setValue(qset->value("volume", 100).toInt());
         mw->ui.horizontalSlider_2->blockSignals(false);
         qset->endGroup();
+        
+        mw->setFilterSettings(qset);
+        
         // Hack: allow to drop other Qt-specific settings on application restart
         char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
         if(dropSettingsOnLaunch && !strcmp("1",dropSettingsOnLaunch))

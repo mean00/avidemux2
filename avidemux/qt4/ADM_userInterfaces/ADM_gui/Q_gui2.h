@@ -9,6 +9,7 @@
 #include <QSlider>
 #include <QWidget>
 #include <QtCore/QTimer>
+#include <QSettings>
 #include <string>
 
 #include "ADM_mwNavSlider.h"
@@ -126,6 +127,7 @@ public:
 
     void setLightTheme(void);
     void setDarkTheme(void);
+    void setFilterSettings(QSettings *qset);
 
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
@@ -146,6 +148,7 @@ protected:
     QAction *defaultThemeAction;
     QAction *lightThemeAction;
     QAction *darkThemeAction;
+    QAction *filterPrefMaximizedAction;
     QString defaultStyle;
 #ifdef BROKEN_PALETTE_PROPAGATION
     std::vector<QMenu *> subMenus;
@@ -255,6 +258,7 @@ private slots:
     void setDefaultThemeSlot(bool b);
     void setLightThemeSlot(bool b);
     void setDarkThemeSlot(bool b);
+    void setMaximizedFiltersSlot(bool b);
 
     void closeEvent(QCloseEvent *event)
     {
