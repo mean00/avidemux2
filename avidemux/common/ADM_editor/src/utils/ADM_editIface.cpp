@@ -498,10 +498,32 @@ bool ADM_Composer::setAudioFilterFrameRate(int dex,FILMCONV conf)
     if(!ed) return false;
     return ed->audioEncodingConfig.audioFilterSetFrameRate(conf);
 }
+
+/**
+    \fn getAudioFilterCustomFrameRate
+*/
+bool ADM_Composer::getAudioFilterCustomFrameRate(int dex, double * tempo, double * pitch)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetCustomFrameRate(tempo, pitch);
+}
+
+/**
+    \fn setAudioFilterCustomFrameRate
+*/
+bool ADM_Composer::setAudioFilterCustomFrameRate(int dex, double tempo, double pitch)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetCustomFrameRate(tempo, pitch);
+}
+
+
 /**
     \fn clearAudioTracks
 */
-
+       
 bool        ADM_Composer::clearAudioTracks(void)
 {
     // Remove all audio tracks

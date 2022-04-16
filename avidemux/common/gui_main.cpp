@@ -52,6 +52,8 @@
 #include "ADM_threads.h"
 #include "ADM_muxerProto.h"
 
+#include "ADM_filterChain.h"
+
 static admMutex singleThread("actionHandlerMutex");
 static int cutsNotOnIntraWarned;
 
@@ -314,7 +316,21 @@ void HandleAction (Action action)
             EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
             if(ed)
             {
-                ed->audioEncodingConfig.audioFilterConfigure();
+                double tempoHint = 1.0;
+                if(UI_getCurrentVCodec())
+                {
+                    ADM_videoFilterChain *videoChain=createVideoFilterChain(0,ADM_NO_PTS);
+                    ADM_coreVideoFilter * videoFilter=(*videoChain)[0];
+                    FilterInfo *info=videoFilter->getInfo();
+                    tempoHint = info->totalDuration;
+                    int nb=videoChain->size();
+                    videoFilter=(*videoChain)[nb-1];
+                    info=videoFilter->getInfo();
+                    tempoHint /= info->totalDuration;
+                    destroyVideoFilterChain(videoChain);
+                    //printf("[audioFilterConfigure] tempo hint: %f\n",tempoHint);
+                }
+                ed->audioEncodingConfig.audioFilterConfigure(tempoHint);
                 UI_setTimeShift(ed->audioEncodingConfig.shiftEnabled,ed->audioEncodingConfig.shiftInMs);
             }
         }

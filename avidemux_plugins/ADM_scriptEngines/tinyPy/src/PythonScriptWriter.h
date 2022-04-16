@@ -32,6 +32,7 @@ public:
     void setHDRConfig(uint32_t toneMappingMethod, float saturationAdjust, float boostAdjust, bool adaptiveRGB, uint32_t gamutMethod);
     void setVideoEncoder(ADM_videoEncoder6* videoEncoder);
     void stretchAudio(int trackIndex, FILMCONV fps);
+    void stretchAudioCustom(int trackIndex, double tempo, double pitch);
     void setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
     void setAudioEq(int trackIndex, bool active, float lo, float md, float hi, float lmcut, float mhcut);
     void setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);

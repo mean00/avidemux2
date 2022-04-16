@@ -383,6 +383,8 @@ public:
         bool        getAudioFilterNormalise(int dex, ADM_GAINMode *mode, int32_t *gain, int32_t *maxlevel);
         FILMCONV 	getAudioFilterFrameRate(int dex);
         bool 		setAudioFilterFrameRate(int dex,FILMCONV conf);
+        bool 		getAudioFilterCustomFrameRate(int dex, double * tempo, double * pitch);
+        bool 		setAudioFilterCustomFrameRate(int dex, double tempo, double pitch);
         EditableAudioTrack *getEditableAudioTrackAt(int i);
         ADM_audioStream    *getAudioStreamAt(int i);
         bool        clearAudioTracks(void); /// remove all audio tracks

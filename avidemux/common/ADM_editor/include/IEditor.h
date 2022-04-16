@@ -111,6 +111,8 @@ public:
     virtual void setAudioResample(int dex, uint32_t newfq) = 0;
     virtual FILMCONV getAudioFilterFrameRate(int dex) = 0;
     virtual bool getAudioFilterNormalise(int dex, ADM_GAINMode *mode, int32_t *gain, int32_t *maxvalue) = 0;
+    virtual bool getAudioFilterCustomFrameRate(int dex, double * tempo, double * pitch) = 0;
+    virtual bool setAudioFilterCustomFrameRate(int dex, double tempo, double pitch) = 0;
     virtual uint32_t getAudioResample(int dex) = 0;
     virtual void resetAudioFilter(int dex) = 0;
     virtual int saveAudio(int dex, const char *name) = 0;
