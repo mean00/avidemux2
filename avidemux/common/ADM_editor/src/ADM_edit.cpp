@@ -739,7 +739,7 @@ uint8_t ADM_Composer::addFile (const char *name)
         {
             printf("[Editor] B- frame possible with that codec \n");
 #define FCC_MATCHES(x) fourCC::check(info.fcc,(uint8_t *)x)
-            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || FCC_MATCHES("VC1 ") || FCC_MATCHES("WMV3"))
+            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || FCC_MATCHES("VC1 "))
             {
                 ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");
                 uint64_t delay;
@@ -766,7 +766,7 @@ uint8_t ADM_Composer::addFile (const char *name)
         }
      }
     int lastVideo=_segments.getNbSegments();
-    if(lastVideo && (isH264Compatible(info.fcc) || FCC_MATCHES("WVC1")))
+    if(lastVideo && (isH264Compatible(info.fcc) || FCC_MATCHES("WVC1") || FCC_MATCHES("WMV3")))
     {
         ADM_info("%s sometimes has invalid timestamps which confuse avidemux, checking\n",fourCC::tostring(info.fcc));
         checkForValidPts(_segments.getSegment(lastVideo-1)); 
