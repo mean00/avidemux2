@@ -219,8 +219,8 @@ int motin::sad(uint8_t * p1, uint8_t * p2, int stride, int x1, int y1, int x2, i
     unsigned int a,b,i,j;
     uint8_t * ptrb1, * ptrb2, * ptr1, * ptr2;
 
-    x1 -= 3;
-    y1 -= 3;
+    x1 -= 3;    // input parameters supposed to mark the center of the 8x8 patch
+    y1 -= 3;    // ajdust to patch relative 0;0 coordinates
     x2 -= 3;
     y2 -= 3;
     
@@ -336,7 +336,9 @@ void *motin::me_worker_thread( void *ptr )
     
     for (y=ystart; y<h; y+=yincr)    // line-by-line threading faster than partitioning
     {
-        for (x=0; x<w; x++)
+        if (y < 2) continue;        // protect against sad() reading outside the frame 
+        if (y >= h-2) continue;     // sad() shifts coordinates, to convert patch center to patch 0;0
+        for (x=2; x<w-2; x++)       // ensure x,y patch centered coordinates within (x*2 >= 0+3) && (y*2 < w*2-1-3) && (x*2 >= 0+3) && (y*2 < h*2-1-3)
         {
             int initX = (unsigned int)plW[1][y*strides[1]+x];
             int initY = (unsigned int)plW[2][y*strides[2]+x];
