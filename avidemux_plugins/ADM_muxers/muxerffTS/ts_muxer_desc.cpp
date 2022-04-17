@@ -3,5 +3,6 @@ extern const ADM_paramList ts_muxer_param[]={
  {"acceptNonCompliant",offsetof(ts_muxer,acceptNonCompliant),"bool",ADM_param_bool},
  {"vbr",offsetof(ts_muxer,vbr),"bool",ADM_param_bool},
  {"muxRateInMBits",offsetof(ts_muxer,muxRateInMBits),"uint32_t",ADM_param_uint32_t},
+ {"m2TsMode",offsetof(ts_muxer,m2TsMode),"bool",ADM_param_bool},
 {NULL,0,NULL}
 };

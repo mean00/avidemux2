@@ -24,17 +24,20 @@ bool ffTSConfigure(void)
 {
         uint32_t muxRate=(uint32_t)tsMuxerConfig.muxRateInMBits;
         bool     vbr=tsMuxerConfig.vbr;
-
+        bool     m2ts=tsMuxerConfig.m2TsMode;
+        diaElemToggle   m(&m2ts,QT_TRANSLATE_NOOP("fftsmuxer","M2TS mode"));
         diaElemToggle   v(&vbr,QT_TRANSLATE_NOOP("fftsmuxer","VBR muxing"));
         diaElemUInteger mux(&muxRate,QT_TRANSLATE_NOOP("fftsmuxer","Mux rate (MBits/s)"),3,60);
 
         v.link(0,&mux);
 
-        diaElem *tabs[]={&v,&mux};
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("fftsmuxer","TS Muxer"),2,tabs))
-        {            
+        diaElem *tabs[]={&m,&v,&mux};
+#define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
+        if(diaFactoryRun(QT_TRANSLATE_NOOP("fftsmuxer","TS Muxer"),NB_ELEM(tabs),tabs))
+        {
             tsMuxerConfig.muxRateInMBits=muxRate;
             tsMuxerConfig.vbr=vbr;
+            tsMuxerConfig.m2TsMode=m2ts;
             return true;
         }
         return false;
