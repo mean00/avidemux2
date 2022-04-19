@@ -2,7 +2,7 @@
 #include "config.h"
 #ifdef USE_OPENGL
 #include <QOpenGLWidget>
-#if defined(ADM_CPU_ARMEL) || defined(ADM_CPU_ARM64)
+#if (defined(ADM_CPU_ARMEL) || defined(ADM_CPU_ARM64)) && !defined(__APPLE__)
   #include "GL/gl.h" // not included via QOpenGLWidget on ES2 platforms
 #endif
 #include "Q_dummyWidget.h"

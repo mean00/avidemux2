@@ -30,10 +30,7 @@ ADM_UI_TYPE UI_GetCurrentUI(void)
 void getMainWindowHandles(intptr_t *handle, intptr_t *nativeHandle)
 {
 	*handle = (intptr_t)QuiMainWindows;
-
-#if defined(__APPLE__) && !defined(ADM_CPU_X86_64)
-	*nativeHandle = (intptr_t)HIViewGetWindow(HIViewRef(QuiMainWindows->winId()));
-#else
+#if defined(__APPLE__)
 	*nativeHandle = (intptr_t)QuiMainWindows->winId();
 #endif
 }
