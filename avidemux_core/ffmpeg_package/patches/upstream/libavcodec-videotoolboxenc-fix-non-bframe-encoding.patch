@@ -1,0 +1,34 @@
+From b786bc7433dfe082441a57c1ba9ae9ea47904b78 Mon Sep 17 00:00:00 2001
+From: NoHalfBits <ffmpeg-devel@fluthaus.com>
+Date: Sun, 26 Sep 2021 14:47:52 +0200
+Subject: [PATCH] avcodec/videotoolboxenc: Fixes non-B-Frame encoding
+
+Sets vtctx->has_b_frames to 0 if the VideoToolbox compression
+session will not emit B-frames (and, in consequence, no valid
+DTSs). Required for the handling of invalid DTSs in
+'vtenc_cm_to_avpacket' (line 2018ff) to work correctly and not
+abort encoding with "DTS is invalid." when no B-frames are
+generated.
+
+Signed-off-by: NoHalfBits <ffmpeg-devel@fluthaus.com>
+Signed-off-by: Rick Kern <kernrj@gmail.com>
+---
+ libavcodec/videotoolboxenc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/libavcodec/videotoolboxenc.c b/libavcodec/videotoolboxenc.c
+index 8dfd6e3d0c21..93c3898fb503 100644
+--- a/libavcodec/videotoolboxenc.c
++++ b/libavcodec/videotoolboxenc.c
+@@ -1516,7 +1516,10 @@ static av_cold int vtenc_init(AVCodecContext *avctx)
+     if (!status && has_b_frames_cfbool) {
+         //Some devices don't output B-frames for main profile, even if requested.
+         // HEVC has b-pyramid
+-        vtctx->has_b_frames = (CFBooleanGetValue(has_b_frames_cfbool) && avctx->codec_id == AV_CODEC_ID_HEVC) ? 2 : 1;
++        if (CFBooleanGetValue(has_b_frames_cfbool))
++            vtctx->has_b_frames = avctx->codec_id == AV_CODEC_ID_HEVC ? 2 : 1;
++        else
++            vtctx->has_b_frames = 0;
+         CFRelease(has_b_frames_cfbool);
+     }
+     avctx->has_b_frames = vtctx->has_b_frames;
