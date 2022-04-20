@@ -174,7 +174,8 @@ bool ffVTEncConfigure(void)
     frameControl.swallow(&gopSize);
     frameControl.swallow(&maxBframes);
 
-    profile.link(&vtProfile[0],0,&maxBframes);
+    profile.link(&vtProfile[1],1,&maxBframes);
+    profile.link(&vtProfile[2],1,&maxBframes);
 
     diaElem *diamode[] = {&profile,&rateControl,&frameControl};
 
