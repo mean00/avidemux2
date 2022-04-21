@@ -1151,23 +1151,31 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
 //
                                 case MKFCCR('h','e','v','1'): // hev1 / hevc
                                 case MKFCCR('h','v','c','1'): // hev1 / hevc
+                                case MKFCCR('d','v','h','e'): // HEVC with Dolby Vision
                                 {
                                     commonPart(H265);
+                                    char *hevc = ADM_strdup(fourCC::tostringBE(entryName));
                                     while(!son.isDone())
                                     {
                                         adm_atom avcc(&son);
-                                        const char *hevc = (entryName == MKFCCR('h','e','v','1'))? "hev1" : "hvc1";
-                                        printf("Reading %s, got %s\n",hevc,fourCC::tostringBE(avcc.getFCC()));
-                                        if( avcc.getFCC()== MKFCCR('h','v','c','C'))
+                                        int64_t remaining = avcc.getRemainingSize();
+                                        uint32_t fcc = avcc.getFCC();
+                                        if(fcc != MKFCCR('h','v','c','C'))
                                         {
-                                            VDEO.extraDataSize=avcc.getRemainingSize();
-                                            ADM_info("Found %d bytes of extradata \n",VDEO.extraDataSize);
-                                            VDEO.extraData=new uint8_t [VDEO.extraDataSize];
-                                            avcc.readPayload(VDEO.extraData,VDEO.extraDataSize);
-                                            mixDump(VDEO.extraData,VDEO.extraDataSize);
+                                            printf("Reading %s, skipping %s of size %" PRId64"\n", hevc, fourCC::tostringBE(fcc), remaining);
                                             avcc.skipAtom();
+                                            continue;
                                         }
+                                        printf("Reading %s, got hvcC of size %" PRId64"\n", hevc, remaining);
+                                        ADM_assert(remaining >= 0 && remaining <= 0xffffffff);
+                                        VDEO.extraDataSize = remaining;
+                                        ADM_info("Found %d bytes of extradata \n",VDEO.extraDataSize);
+                                        VDEO.extraData=new uint8_t [VDEO.extraDataSize];
+                                        avcc.readPayload(VDEO.extraData,VDEO.extraDataSize);
+                                        mixDump(VDEO.extraData,VDEO.extraDataSize);
+                                        avcc.skipAtom();
                                     } // while
+                                    ADM_dealloc(hevc);
                                     son.skipAtom();
                                     left=0;
 
