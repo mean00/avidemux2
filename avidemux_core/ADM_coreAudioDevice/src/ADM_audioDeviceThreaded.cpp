@@ -248,7 +248,7 @@ uint8_t     audioDeviceThreaded::play(uint32_t len, float *data)
 bool        audioDeviceThreaded::getVolumeStats(int32_t *vol)
 {
     float f[MAX_CHANNELS],fsamp;
-    uint32_t raw[MAX_CHANNELS];
+    int32_t raw[MAX_CHANNELS];
     for(int i=0;i<8;i++)
         vol[i] = 255;
     // 5 ms should be enough, i.e. fq/200
@@ -285,7 +285,7 @@ bool        audioDeviceThreaded::getVolumeStats(int32_t *vol)
         if (d < -100.0)
             d = -100.0;
         d += 0.49;	// rounding
-        raw[i]=(uint32_t)d;
+        raw[i] = d;
     }
     // Assign mono to front center
     if(_channels==1)
