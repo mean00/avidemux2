@@ -12,19 +12,35 @@
 
 enum FF_VTEncProfile
 {
-    FF_VT_PROFILE_BASELINE=1,
-    FF_VT_PROFILE_MAIN=2,
-    FF_VT_PROFILE_HIGH=3
+#ifdef H265_ENCODER
+    FF_VT_HEVC_PROFILE_MAIN=1,
+    FF_VT_HEVC_PROFILE_MAIN10=2
+#else
+    FF_VT_H264_PROFILE_BASELINE=1,
+    FF_VT_H264_PROFILE_MAIN=2,
+    FF_VT_H264_PROFILE_HIGH=3
+#endif
 };
 
+#ifdef H265_ENCODER
 #define VT_ENC_CONF_DEFAULT \
 { \
-    FF_VT_PROFILE_HIGH, \
+    FF_VT_HEVC_PROFILE_MAIN, \
     100, \
     0, \
     2000, \
     4000 \
 }
+#else
+#define VT_ENC_CONF_DEFAULT \
+{ \
+    FF_VT_H264_PROFILE_HIGH, \
+    100, \
+    0, \
+    2000, \
+    4000 \
+}
+#endif
 
 /**
         \class ADM_ffVTEncoder
@@ -40,7 +56,7 @@ public:
     virtual    bool        configureContext(void);
     virtual    bool        setup(void);
     virtual    bool        encode(ADMBitstream *out);
-    virtual const char     *getFourcc(void) { return "H264"; }
+    virtual const char     *getFourcc(void);
     virtual    bool        isDualPass(void);
     virtual    uint64_t    getEncoderDelay(void);
 };

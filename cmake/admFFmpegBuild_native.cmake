@@ -36,7 +36,7 @@ endif (USE_LIBVA)
 
 if (USE_VIDEOTOOLBOX)
     xadd(--enable-videotoolbox)
-    set(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} h264_videotoolbox)
+    set(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} h264_videotoolbox hevc_videotoolbox)
 endif (USE_VIDEOTOOLBOX)
 
 if (APPLE AND "$ENV{MACOSX_DEPLOYMENT_TARGET}" VERSION_EQUAL "10.15")

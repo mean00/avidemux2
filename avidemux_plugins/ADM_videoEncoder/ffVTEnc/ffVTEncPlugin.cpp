@@ -1,6 +1,6 @@
 /***************************************************************************
                   \fn     ffVTEnc
-                  \brief  Front end for the h264_videotoolbox lav encoder
+                  \brief  Front end for the *_videotoolbox lav encoders
                            -------------------
 
     copyright            : (C) 2002/2016 by mean
@@ -39,13 +39,28 @@ static bool ffVTEncProbe(void)
 }
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffVTEncoder);
-ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffVTEnc",
-                               "VideoToolbox H.264",
-                               "VideoToolbox H.264 HW Encoder",
-                                ffVTEncConfigure, // No configuration
-                                ADM_UI_ALL,
-                                1,0,0,
-                                ffvtenc_param, // conf template
-                                &VTEncSettings,NULL,NULL, // conf var
-                                ffVTEncProbe
+#ifdef H265_ENCODER
+ADM_DECLARE_VIDEO_ENCODER_MAIN_EX(
+    "ffVTEncHEVC",
+    "VideoToolbox HEVC",
+    "VideoToolbox HEVC HW Encoder",
+    ffVTEncConfigure,
+    ADM_UI_ALL,
+    1,0,0,
+    ffvtenc_param,
+    &VTEncSettings,NULL,NULL,
+    ffVTEncProbe
 );
+#else
+ADM_DECLARE_VIDEO_ENCODER_MAIN_EX(
+    "ffVTEncH264",
+    "VideoToolbox H.264",
+    "VideoToolbox H.264 HW Encoder",
+    ffVTEncConfigure,
+    ADM_UI_ALL,
+    1,0,0,
+    ffvtenc_param,
+    &VTEncSettings,NULL,NULL,
+    ffVTEncProbe
+);
+#endif

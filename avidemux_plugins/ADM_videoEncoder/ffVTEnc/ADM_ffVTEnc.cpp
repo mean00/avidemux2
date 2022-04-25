@@ -29,7 +29,11 @@ ffvtenc VTEncSettings = VT_ENC_CONF_DEFAULT;
 */
 ADM_ffVTEncoder::ADM_ffVTEncoder(ADM_coreVideoFilter *src, bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src, NULL, globalHeader)
 {
+#ifdef H265_ENCODER
+    ADM_info("Creating VideoToolbox HW accelerated HEVC encoder...\n");
+#else
     ADM_info("Creating VideoToolbox HW accelerated H.264 encoder...\n");
+#endif
     frameIncrement=src->getInfo()->frameIncrement;
 }
 
@@ -40,10 +44,16 @@ bool ADM_ffVTEncoder::configureContext(void)
 {
     switch(VTEncSettings.profile)
     {
-#define SAY(x,y) case FF_VT_PROFILE_##x: av_dict_set(&_options,"profile",y,0); break;
+#ifdef H265_ENCODER
+#define SAY(x,y) case FF_VT_HEVC_PROFILE_##x: av_dict_set(&_options,"profile",y,0); break;
+        SAY(MAIN,"main")
+        SAY(MAIN10,"main10")
+#else
+#define SAY(x,y) case FF_VT_H264_PROFILE_##x: av_dict_set(&_options,"profile",y,0); break;
         SAY(BASELINE,"baseline")
         SAY(MAIN,"main")
         SAY(HIGH,"high")
+#endif
         default:break;
 #undef SAY
     }
@@ -51,6 +61,9 @@ bool ADM_ffVTEncoder::configureContext(void)
     _context->bit_rate=VTEncSettings.bitrate*1000;
     _context->rc_max_rate=VTEncSettings.max_bitrate*1000;
     _context->gop_size=VTEncSettings.gopsize;
+    // We have no control about the exact # of consecutive B-frames.
+    // Even worse, the HEVC encoder, at least on some Intel Macs,
+    // ignores this parameter entirely, outputs B-frames no matter what.
     _context->max_b_frames=VTEncSettings.bframes;
     _context->pix_fmt=AV_PIX_FMT_YUV420P;
 
@@ -62,12 +75,18 @@ bool ADM_ffVTEncoder::configureContext(void)
 */
 bool ADM_ffVTEncoder::setup(void)
 {
-    if(false== ADM_coreVideoEncoderFFmpeg::setupByName("h264_videotoolbox"))
+    const char *encName =
+#ifdef H265_ENCODER
+    "hevc_videotoolbox";
+#else
+    "h264_videotoolbox";
+#endif
+    if(false == ADM_coreVideoEncoderFFmpeg::setupByName(encName))
     {
-        ADM_warning("Cannot set up h264_videotoolbox encoder.\n");
+        ADM_warning("Cannot set up %s encoder.\n",encName);
         return false;
     }
-    ADM_info("h264_videotoolbox encoder set up successfully.\n");
+    ADM_info("%s encoder set up successfully.\n",encName);
     return true;
 }
 
@@ -78,7 +97,12 @@ uint64_t ADM_ffVTEncoder::getEncoderDelay(void)
 {
     uint64_t delay=0;
     if(VTEncSettings.bframes)
-        delay=frameIncrement*2;
+        delay = frameIncrement *
+#ifdef H265_ENCODER
+        3;
+#else
+        2;
+#endif
     return delay;
 }
 
@@ -88,6 +112,18 @@ uint64_t ADM_ffVTEncoder::getEncoderDelay(void)
 ADM_ffVTEncoder::~ADM_ffVTEncoder()
 {
     ADM_info("[ffVTEncoder] Destroying\n");
+}
+
+/**
+    \fn getFourcc
+*/
+const char *ADM_ffVTEncoder::getFourcc(void)
+{
+#ifdef H265_ENCODER
+    return "HEVC";
+#else
+    return "H264";
+#endif
 }
 
 /**
@@ -154,16 +190,26 @@ bool ffVTEncConfigure(void)
     ffvtenc *conf=&VTEncSettings;
 
     diaMenuEntry vtProfile[]={
-        {FF_VT_PROFILE_BASELINE,QT_TRANSLATE_NOOP("ffvtenc","Baseline"),NULL},
-        {FF_VT_PROFILE_MAIN,QT_TRANSLATE_NOOP("ffvtenc","Main"),NULL},
-        {FF_VT_PROFILE_HIGH,QT_TRANSLATE_NOOP("ffvtenc","High"),NULL}
+#ifdef H265_ENCODER
+        {FF_VT_HEVC_PROFILE_MAIN,QT_TRANSLATE_NOOP("ffvtenc","Main"),NULL},
+        {FF_VT_HEVC_PROFILE_MAIN10,QT_TRANSLATE_NOOP("ffvtenc","Main10"),NULL}
+#else
+        {FF_VT_H264_PROFILE_BASELINE,QT_TRANSLATE_NOOP("ffvtenc","Baseline"),NULL},
+        {FF_VT_H264_PROFILE_MAIN,QT_TRANSLATE_NOOP("ffvtenc","Main"),NULL},
+        {FF_VT_H264_PROFILE_HIGH,QT_TRANSLATE_NOOP("ffvtenc","High"),NULL}
+#endif
 };
 
 #define PX(x) &(conf->x)
 
-    diaElemMenu profile(PX(profile),QT_TRANSLATE_NOOP("ffvtenc","Profile:"),3,vtProfile);
+    diaElemMenu profile(PX(profile),QT_TRANSLATE_NOOP("ffvtenc","Profile:"),sizeof(vtProfile)/sizeof(diaMenuEntry),vtProfile);
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffvtenc","GOP Size:"),1,250);
-    diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffvtenc","Maximum Consecutive B-Frames:"),0,1);
+
+    bool enableBf = conf->bframes;
+    diaElemToggle allowBframes(&enableBf,QT_TRANSLATE_NOOP("ffvtenc","Allow B-frames"));
+#ifdef H265_ENCODER
+    diaElemReadOnlyText bfWarning(NULL,QT_TRANSLATE_NOOP("ffvtenc","On some Macs, disabling B-frames is not possible"));
+#endif
     diaElemUInteger bitrate(PX(bitrate), QT_TRANSLATE_NOOP("ffvtenc","Bitrate (kbps):"),1,50000);
     diaElemUInteger maxBitrate(PX(max_bitrate), QT_TRANSLATE_NOOP("ffvtenc","Max Bitrate (kbps):"),1,50000);
     diaElemFrame rateControl(QT_TRANSLATE_NOOP("ffvtenc","Rate Control"));
@@ -172,17 +218,29 @@ bool ffVTEncConfigure(void)
     rateControl.swallow(&bitrate);
     rateControl.swallow(&maxBitrate);
     frameControl.swallow(&gopSize);
-    frameControl.swallow(&maxBframes);
+    frameControl.swallow(&allowBframes);
 
-    profile.link(&vtProfile[1],1,&maxBframes);
-    profile.link(&vtProfile[2],1,&maxBframes);
-
+#ifdef H265_ENCODER
+    frameControl.swallow(&bfWarning);
+#else
+    profile.link(&vtProfile[1],1,&allowBframes);
+    profile.link(&vtProfile[2],1,&allowBframes);
+#endif
     diaElem *diamode[] = {&profile,&rateControl,&frameControl};
 
-    if( diaFactoryRun(QT_TRANSLATE_NOOP("ffvtenc","VideoToolbox H.264 Encoder Configuration"),3,diamode))
+    if(diaFactoryRun(
+#ifdef H265_ENCODER
+        QT_TRANSLATE_NOOP("ffvtenc","VideoToolbox HEVC Encoder Configuration"),
+#else
+        QT_TRANSLATE_NOOP("ffvtenc","VideoToolbox H.264 Encoder Configuration"),
+#endif
+        3,diamode))
     {
-        if(conf->profile==FF_VT_PROFILE_BASELINE)
+        conf->bframes = enableBf ? 1 : 0;
+#ifndef H265_ENCODER
+        if(conf->profile==FF_VT_H264_PROFILE_BASELINE)
             conf->bframes=0;
+#endif
         return true;
     }
     return false;
