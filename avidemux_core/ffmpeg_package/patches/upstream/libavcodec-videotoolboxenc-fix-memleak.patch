@@ -1,0 +1,26 @@
+From 8a969e1280aa7aef31de6bd3db5ce46dc123fde0 Mon Sep 17 00:00:00 2001
+From: songyutong <songyutong@kuaishou.com>
+Date: Tue, 9 Nov 2021 18:51:58 +0800
+Subject: [PATCH] avcodec/videotoolboxenc: fix pixel buffer memory leak
+
+In function vtenc_populate_extradata(), there is a manually created
+pixel buffer that has not been released. So we should use CVPixelBufferRelease
+to release this pixel buffer at the end, otherwise will cause a memory leak.
+
+Signed-off-by: Rick Kern <kernrj@gmail.com>
+---
+ libavcodec/videotoolboxenc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/libavcodec/videotoolboxenc.c b/libavcodec/videotoolboxenc.c
+index bac36fda90e4..ebaa3ebdc8ab 100644
+--- a/libavcodec/videotoolboxenc.c
++++ b/libavcodec/videotoolboxenc.c
+@@ -2554,6 +2554,7 @@ static int vtenc_populate_extradata(AVCodecContext   *avctx,
+ 
+ 
+ pe_cleanup:
++    CVPixelBufferRelease(pix_buf);
+     if(vtctx->session)
+         CFRelease(vtctx->session);
+ 
