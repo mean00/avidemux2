@@ -32,33 +32,40 @@
 
 ** note: it modifies it's first argument
 */
-void simplify_path(char **buf)
+static void simplify_path(char **buf)
 {
-	unsigned int last1slash = 0;
-	unsigned int last2slash = 0;
+    int i;
+    int last1slash = -1;
+    int last2slash = -1;
 
-	while (!strncmp(*buf, "/../", 4))
-		memmove(*buf, *buf + 3, strlen(*buf + 3) + 1);
+    while (!strncmp(*buf, "/../", 4))
+        memmove(*buf, *buf + 3, strlen(*buf + 3) + 1);
 
-	for (unsigned int i = 0; i < strlen(*buf) - 2; i++)
-		while (!strncmp(*buf + i, "/./", 3))
-			memmove(*buf + i, *buf + i + 2, strlen(*buf + i + 2) + 1);
+    for (i = 0; i < strlen(*buf) - 2; i++)
+        while (!strncmp(*buf + i, "/./", 3))
+            memmove(*buf + i, *buf + i + 2, strlen(*buf + i + 2) + 1);
 
-	for (unsigned int i = 0; i < strlen(*buf) - 3; i++)
-	{
-		if (*(*buf + i) == '/')
-		{
-			last2slash = last1slash;
-			last1slash = i;
-		}
+    for (i = 0; i < strlen(*buf) - 3; i++)
+    {
+        if (*(*buf + i) == '/')
+        {
+            last2slash = last1slash;
+            last1slash = i;
+            if (last2slash >= 0 && last2slash + 1 == i)
+            {
+                memmove(*buf + last2slash, *buf + i, strlen(*buf + i) + 1);
+                return simplify_path(buf);
+            }
+        }
+        if (last2slash < 0)
+            continue;
+        if (strncmp(*buf + i, "/../", 4))
+            continue;
 
-		if (!strncmp(*buf + i, "/../", 4))
-		{
-			memmove(*buf + last2slash, *buf + i + 3, strlen(*buf + i + 3) + 1);
+        memmove(*buf + last2slash, *buf + i + 3, strlen(*buf + i + 3) + 1);
 
-			return simplify_path(buf);
-		}
-	}
+        return simplify_path(buf);
+    }
 }
 /**
     \fn ADM_fopen
@@ -182,10 +189,10 @@ uint8_t buildDirectoryContent(const char *base, std::vector<std::string> *list, 
 */
 char *ADM_PathCanonize(const char *tmpname)
 {
-	char path[300];
+	char path[1024];
 	char *out;
 
-	if (!getcwd(path, 300))
+	if (!getcwd(path, 1024))
 	{
 		fprintf(stderr, "\ngetcwd() failed with: %s (%u)\n", strerror(errno), errno);
 		path[0] = '\0';
@@ -198,12 +205,10 @@ char *ADM_PathCanonize(const char *tmpname)
 		strcat(out, "/");
 		printf("\n Canonizing null string ??? (%s)\n", out);
 	}
-	else if (tmpname[0] == '/'		)
+	else if (tmpname[0] == '/')
 	{
 		out = new char[strlen(tmpname) + 1];
 		strcpy(out, tmpname);
-
-		return out;
 	}
 	else
 	{
