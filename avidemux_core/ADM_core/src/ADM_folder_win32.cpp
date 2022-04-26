@@ -23,7 +23,6 @@
 
 #include "ADM_default.h"
 
-extern void simplify_path(char **buf);
 extern char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
 static char ADM_basedir[1024] = {0};
 static char ADM_logdir[1024] = {0};
@@ -229,37 +228,41 @@ const std::string ADM_getI8NDir(const std::string &flavor)
 #	include <fcntl.h>
 #	include "ADM_win32.h"
 
-/*
-
-** note: it modifies it's first argument
-*/
-void simplify_path(char **buf)
+static void simplify_path(char **buf)
 {
-	unsigned int last1slash = 0;
-	unsigned int last2slash = 0;
+    int i;
+    int last1backslash = -1;
+    int last2backslash = -1;
 
-	while (!strncmp(*buf, "/../", 4))
-		memmove(*buf, *buf + 3, strlen(*buf + 3) + 1);
+    while (!strncmp(*buf, "\\..\\", 4))
+        memmove(*buf, *buf + 3, strlen(*buf + 3) + 1);
 
-	for (unsigned int i = 0; i < strlen(*buf) - 2; i++)
-		while (!strncmp(*buf + i, "/./", 3))
-			memmove(*buf + i, *buf + i + 2, strlen(*buf + i + 2) + 1);
+    for (i = 0; i < strlen(*buf) - 2; i++)
+        while (!strncmp(*buf + i, "\\.\\", 3))
+            memmove(*buf + i, *buf + i + 2, strlen(*buf + i + 2) + 1);
 
-	for (unsigned int i = 0; i < strlen(*buf) - 3; i++)
-	{
-		if (*(*buf + i) == '/')
-		{
-			last2slash = last1slash;
-			last1slash = i;
-		}
+    for (i = 0; i < strlen(*buf) - 3; i++)
+    {
+        if (*(*buf + i) == '\\')
+        {
+            last2backslash = last1backslash;
+            last1backslash = i;
+            // remove consecutive backslashes but leave the leading two (UNC?) in place
+            if (last2backslash > 0 && last2backslash + 1 == i)
+            {
+                memmove(*buf + last2backslash, *buf + i, strlen(*buf + i) + 1);
+                return simplify_path(buf);
+            }
+        }
+        if (last2backslash < 0)
+            continue;
+        if (strncmp(*buf + i, "\\..\\", 4))
+            continue;
 
-		if (!strncmp(*buf + i, "/../", 4))
-		{
-			memmove(*buf + last2slash, *buf + i + 3, strlen(*buf + i + 3) + 1);
+        memmove(*buf + last2backslash, *buf + i + 3, strlen(*buf + i + 3) + 1);
 
-			return simplify_path(buf);
-		}
-	}
+        return simplify_path(buf);
+    }
 }
 
 
@@ -269,52 +272,62 @@ void simplify_path(char **buf)
 */
 char *ADM_PathCanonize(const char *tmpname)
 {
-	char path[300];
-	char *out;
+    char *out;
 
-	if (!getcwd(path, 300))
-	{
-		fprintf(stderr, "\ngetcwd() failed with: %s (%u)\n", strerror(errno), errno);
-		path[0] = '\0';
-	}
+    if (tmpname && strlen(tmpname) > 1 && (tmpname[0] == '\\' || tmpname[1] == ':')) // already an absolute path?
+    {
+        out = new char[strlen(tmpname) + 1];
+        strcpy(out, tmpname);
+        simplify_path(&out);
+        return out;
+    }
 
-	if (!tmpname || tmpname[0] == 0)
-	{
-		out = new char[strlen(path) + 2];
-		strcpy(out, path);
-#ifndef _WIN32
-		strcat(out, "/");
-#else
-		strcat(out, "\\");
-#endif
-		printf("\n Canonizing null string ??? (%s)\n", out);
-	}
-	else if (tmpname[0] == '/'
-#if defined(_WIN32)
-		|| tmpname[1] == ':'
-#endif
-		)
-	{
-		out = new char[strlen(tmpname) + 1];
-		strcpy(out, tmpname);
+    wchar_t *wcPath = NULL;
+    char *path = NULL;
 
-		return out;
-	}
-	else
-	{
-		out = new char[strlen(path) + strlen(tmpname) + 6];
-		strcpy(out, path);
-#ifndef _WIN32
-		strcat(out, "/");
-#else
-		strcat(out, "\\");
-#endif
-		strcat(out, tmpname);
-	}
+    wcPath = _wgetcwd(NULL, MAX_PATH);
 
-	simplify_path(&out);
+    if (!wcPath)
+    {
+        printf("[ADM_PathCanonize] _wgetcwd() failed with: %s (%u)\n", strerror(errno), errno);
+    } else
+    {
+        int utf8len = wideCharStringToUtf8(wcPath, -1, NULL);
+        if (utf8len > 0)
+        {
+            path = new char[utf8len];
+            wideCharStringToUtf8(wcPath, -1, path);
+            path[utf8len - 1] = 0;
+        }
+        free(wcPath);
+        wcPath = NULL;
+    }
 
-	return out;
+    if (!path)
+    {
+        path = new char[1];
+        path[0] = 0;
+    }
+
+    if (!tmpname || tmpname[0] == 0)
+    {
+        out = new char[strlen(path) + 2];
+        strcpy(out, path);
+        strcat(out, "\\");
+        printf("[ADM_PathCanonize] Canonizing null string ??? (%s)\n", out);
+    } else
+    {
+        out = new char[strlen(path) + strlen(tmpname) + 2];
+        strcpy(out, path);
+        strcat(out, "\\");
+        strcat(out, tmpname);
+    }
+    delete [] path;
+    path = NULL;
+
+    simplify_path(&out);
+
+    return out;
 }
 
 /**

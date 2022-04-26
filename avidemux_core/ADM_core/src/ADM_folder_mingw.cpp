@@ -25,7 +25,6 @@
 
 #include "ADM_default.h"
 
-extern void simplify_path(char **buf);
 char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
 static char ADM_basedir[1024] = {0};
 static char *ADM_autodir = NULL;
