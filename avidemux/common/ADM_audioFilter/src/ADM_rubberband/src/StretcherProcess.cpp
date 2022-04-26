@@ -42,6 +42,9 @@
 #include <deque>
 #include <algorithm>
 
+#undef min
+#undef max
+
 using namespace RubberBand;
 
 using std::cerr;
