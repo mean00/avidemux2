@@ -75,6 +75,9 @@
 
 #define BQ_R__ R__
 
+#undef min
+#undef max
+
 using namespace std;
 
 namespace RubberBand {

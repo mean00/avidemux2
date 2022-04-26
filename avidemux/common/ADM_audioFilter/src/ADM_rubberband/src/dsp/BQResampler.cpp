@@ -33,6 +33,9 @@
 
 #define BQ_R__ R__
 
+#undef min
+#undef max
+
 using std::vector;
 using std::cerr;
 using std::endl;
