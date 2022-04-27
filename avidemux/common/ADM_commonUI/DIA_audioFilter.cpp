@@ -21,10 +21,14 @@
     \fn DIA_getAudioFilter
     \brief Dialog to manage audio filters
 */
-int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
+int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config, double tempoHint)
 {
+    double defaultConvTempo = tempoHint;  // auto value (original duration / filtered duration)
+    
     uint32_t vChan=config->mixerConf;
-    uint32_t vFilm=config->film2pal;
+    uint32_t vFilm=config->filmConv;
+    ELEM_TYPE_FLOAT vConvTempo = config->filmConvTempo;
+    ELEM_TYPE_FLOAT vConvPitch = config->filmConvPitch;
     uint32_t vGainMode=(uint32_t)config->gainParam.mode;
     int32_t  vShift=config->shiftInMs;
     uint32_t bShiftEnabled=config->shiftEnabled;
@@ -66,11 +70,26 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     diaMenuEntry menuFPS[]={
         {FILMCONV_NONE,     QT_TRANSLATE_NOOP("adm","None"), NULL},
         {FILMCONV_FILM2PAL, QT_TRANSLATE_NOOP("adm","Film to PAL"), NULL},
-        {FILMCONV_PAL2FILM, QT_TRANSLATE_NOOP("adm","PAL to Film"), NULL}
+        {FILMCONV_PAL2FILM, QT_TRANSLATE_NOOP("adm","PAL to Film"), NULL},
+        {FILMCONV_CUSTOM,   QT_TRANSLATE_NOOP("adm","Custom"), NULL}
     };
     #define NB_ITEMS(x) sizeof(x)/sizeof(diaMenuEntry)
     diaElemMenu      eFPS(&vFilm,QT_TRANSLATE_NOOP("adm","_Frame rate change:"),NB_ITEMS(menuFPS),menuFPS);
+    
+    if (vFilm != FILMCONV_CUSTOM)
+    {
+        vConvTempo = defaultConvTempo;
+    }
+    diaElemFloatResettable  eCustomTempo(&vConvTempo,QT_TRANSLATE_NOOP("adm","Tempo multiplier:"),0.1,10.0,defaultConvTempo,QT_TRANSLATE_NOOP("adm","A value of 2.0 means twice as fast playback."),9);
+    diaElemFloatResettable  eCustomPitch(&vConvPitch,QT_TRANSLATE_NOOP("adm","Pitch multiplier:"),0.1,10.0,1.0,QT_TRANSLATE_NOOP("adm","Every doubling means one octave upshift"),9);
+    eFPS.link(menuFPS + 3, 1, &eCustomTempo);
+    eFPS.link(menuFPS + 3, 1, &eCustomPitch);
 
+    diaElemFrame frameFPS(QT_TRANSLATE_NOOP("adm","Frame rate change"));
+    frameFPS.swallow(&eFPS);
+    frameFPS.swallow(&eCustomTempo);
+    frameFPS.swallow(&eCustomPitch);
+    
     //**********************************
     diaMenuEntry menuMixer[]={
         {CHANNEL_INVALID,     QT_TRANSLATE_NOOP("adm","No change"), NULL},
@@ -119,7 +138,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     diaElemToggleInt eShift(&bShiftEnabled,QT_TRANSLATE_NOOP("adm","Shift audio (ms):"),&vShift, QT_TRANSLATE_NOOP("adm","Shift Value (ms):"),-30000,30000);
     /************************************/
     #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
-    diaElem *mainElems[]={&eFPS, &eResample,&eShift,&frameMixer,&frameGain};
+    diaElem *mainElems[]={&frameFPS, &eResample,&eShift,&frameMixer,&frameGain};
     diaElemTabs tabMain(QT_TRANSLATE_NOOP("adm","Main"),NB_ELEM(mainElems),mainElems);
 
     //*** DRC tab *****
@@ -251,7 +270,9 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("adm","Audio Filters"),NB_ELEM(tabs),tabs))
     {
         config->mixerConf=(CHANNEL_CONF)vChan;
-        config->film2pal=(FILMCONV)vFilm;
+        config->filmConv=(FILMCONV)vFilm;
+        config->filmConvTempo = vConvTempo;
+        config->filmConvPitch = vConvPitch;        
         config->gainParam.mode=(ADM_GAINMode)vGainMode;
         config->gainParam.gain10=vGainValue*10;
         config->gainParam.maxlevel10=vGainMaxLevel*10;

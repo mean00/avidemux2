@@ -23,7 +23,8 @@ using std::string;
 #include "audiofilter_access.h"
 #include "audiofilter_internal.h"
 #include "audiofilter_conf.h"
-#include "audiofilter_film2pal.h"
+//#include "audiofilter_film2pal.h"
+#include "audiofilter_stretch.h"
 #include "prefs.h"
 VectorOfAudioFilter PlaybackVector;
 extern ADM_Composer *video_body;
@@ -156,20 +157,26 @@ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_
             ADD_FILTER(pdrc);
      }
     // Pal 2 film & friends
-    switch(config->film2pal)
+    switch(config->filmConv)
     {
         case FILMCONV_NONE:
             break;
         case FILMCONV_FILM2PAL:
             {
-            AUDMAudioFilterFilm2Pal *f2p=new AUDMAudioFilterFilm2Pal(last);
+            AUDMAudioFilterFilm2PalV2 *f2p=new AUDMAudioFilterFilm2PalV2(last);
             ADD_FILTER(f2p);
             }
             break;
         case FILMCONV_PAL2FILM:
             {
-            AUDMAudioFilterPal2Film *f2p=new AUDMAudioFilterPal2Film(last);
+            AUDMAudioFilterPal2FilmV2 *f2p=new AUDMAudioFilterPal2FilmV2(last);
             ADD_FILTER(f2p);
+            }
+            break;
+        case FILMCONV_CUSTOM:
+            {
+            AUDMAudioFilterStretch * stretch = new AUDMAudioFilterStretch(last,config->filmConvTempo, config->filmConvPitch);
+            ADD_FILTER(stretch);
             }
             break;
         default:

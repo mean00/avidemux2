@@ -206,6 +206,11 @@ void PythonScriptWriter::stretchAudio(int trackIndex, FILMCONV fps)
     }
 }
 
+void PythonScriptWriter::stretchAudioCustom(int trackIndex, double tempo, double pitch)
+{
+    *(this->_stream) << "adm.audioSetCustomFrameRate(" << trackIndex << "," << tempo << "," << pitch << ")" << std::endl;
+}
+
 void PythonScriptWriter::dumpConfCouple(CONFcouple *c)
 {
     if (!c)

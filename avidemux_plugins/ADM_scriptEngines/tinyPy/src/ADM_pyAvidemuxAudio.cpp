@@ -175,6 +175,18 @@ int pySetFilm2Pal(IEditor *editor, int dex,int onoff)
 	}
     return true;
 }
+
+/**
+    \fn
+    \brief
+*/
+int pySetCustomAudioFrameRate(IEditor * editor,int track,double tempo, double pitch)
+{
+    editor->setAudioFilterFrameRate(track,FILMCONV_CUSTOM);
+    editor->setAudioFilterCustomFrameRate(track, tempo, pitch);
+    return true;
+}
+
 /**
     \fn
     \brief

@@ -157,7 +157,7 @@ namespace ADM_qtScript
     {
         if (this->verifyTrack())
         {
-            return _mapper->toScriptValue(this->_track->audioEncodingConfig.film2pal);
+            return _mapper->toScriptValue(this->_track->audioEncodingConfig.filmConv);
         }
         else
         {
@@ -343,7 +343,7 @@ namespace ADM_qtScript
 
         if (this->verifyTrack() && validateResult.isUndefined())
         {
-            this->_track->audioEncodingConfig.film2pal = _mapper->toAdmValue((StretchAudioMode)stretchAudioMode.toNumber());
+            this->_track->audioEncodingConfig.filmConv = _mapper->toAdmValue((StretchAudioMode)stretchAudioMode.toNumber());
         }
     }
 

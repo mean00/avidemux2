@@ -139,6 +139,11 @@ IF (MINGW)
 	target_link_libraries(avidemux3_cli winmm -mwindows -Wl,-subsystem,console -Wl,--export-all-symbols)
 ENDIF (MINGW)
 
+# Needed by RubberBand
+if (APPLE)
+	target_link_libraries(avidemux3_cli "-framework Accelerate")
+endif (APPLE)
+
 ###########################################
 # Install
 ###########################################

@@ -172,6 +172,15 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorTy
                     {
                             this->_scriptWriter->stretchAudio(i, fps);
                     }
+                    if (fps == FILMCONV_CUSTOM)
+                    {
+                        double tempo, pitch;
+                        if (!track->audioEncodingConfig.audioFilterGetCustomFrameRate(&tempo, &pitch))
+                        {
+                            tempo = pitch = 1.0;
+                        }
+                        this->_scriptWriter->stretchAudioCustom(i, tempo, pitch);
+                    }
 
                     // --------- Normalize ----------------
             ADM_GAINMode mode;

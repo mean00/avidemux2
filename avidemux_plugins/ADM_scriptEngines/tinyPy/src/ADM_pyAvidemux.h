@@ -58,6 +58,7 @@ int pySetNormalize(IEditor *, int track, int mode, int gain100);
 int pySetNormalize2(IEditor *, int track, int mode, int gain100, int maxlevel);
 int pySetFilm2Pal(IEditor *,int track,int onoff);
 int pySetPal2Film(IEditor *,int track,int onoff);
+int pySetCustomAudioFrameRate(IEditor *,int track,double tempo, double pitch);
 /* Output */
 char *pyGetContainerEx(IEditor *editor);
 /* Info */

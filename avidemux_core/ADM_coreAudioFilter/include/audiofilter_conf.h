@@ -44,7 +44,9 @@ public    :
                         mixerConf=CHANNEL_STEREO;
                         resamplerEnabled=false;
                         resamplerFrequency=44100;
-                        film2pal    =FILMCONV_NONE;
+                        filmConv    =FILMCONV_NONE;
+                        filmConvTempo =1.0;
+                        filmConvPitch =1.0;
                         gainParam.mode=ADM_NO_GAIN;
                         gainParam.gain10=10;
                         gainParam.maxlevel10=-30;
@@ -68,7 +70,9 @@ public    :
     uint32_t     resamplerEnabled;
     uint32_t     resamplerFrequency;
     // film2pal & pal2film
-    FILMCONV     film2pal;
+    FILMCONV     filmConv;
+    double       filmConvTempo;
+    double       filmConvPitch;
     // Gain filter
     GAINparam    gainParam;
     // DRC / limiter
@@ -88,12 +92,14 @@ public: // accessor
     bool            audioFilterGetChannelDelays(int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE);
     bool            audioFilterSetChannelRemap(bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);
     bool            audioFilterGetChannelRemap(bool * active, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE);
-    bool            audioFilterConfigure(void);
+    bool            audioFilterConfigure(double tempoHint = 1.0);
     bool            audioFilterCopyConfig(ADM_AUDIOFILTER_CONFIG * other);
     bool            audioFilterSetResample(uint32_t newfq);  // Set 0 to disable frequency
     uint32_t        audioFilterGetResample(void);  // Set 0 to disable frequency
     bool            audioFilterSetFrameRate(FILMCONV conf);
     FILMCONV        audioFilterGetFrameRate(void);
+    bool            audioFilterSetCustomFrameRate(double tempo, double pitch);
+    bool            audioFilterGetCustomFrameRate(double * tempo, double * pitch);
     bool            audioFilterSetShift( bool enabled ,int32_t shift);
     bool            audioFilterGetShift( bool *enabled,int32_t *shift);
     bool            audioFilterSetNormalize( ADM_GAINMode mode, int32_t gain, int32_t maxlevel);

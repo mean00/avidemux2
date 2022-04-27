@@ -785,6 +785,22 @@ static tp_obj zzpy_audioSetFilm2Pal(TP)
   int r = pySetFilm2Pal(p0, p1, p2);
   return tp_number(r);
 }
+//audioSetCustomFrameRate -> int pySetCustomAudioFrameRate(IEditor int double double)
+static tp_obj zzpy_audioSetCustomFrameRate(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  double p2 = pm.asDouble();
+  double p3= pm.asDouble();
+  int r = pySetCustomAudioFrameRate(p0, p1, p2, p3);
+  return tp_number(r);
+}
+
 tp_obj zzpy__pyAdm_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
@@ -1013,6 +1029,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_audioSetFilm2Pal);
   }
+  if (!strcmp(key, "audioSetCustomFrameRate"))
+  {
+    return tp_method(vm, self, zzpy_audioSetCustomFrameRate);
+  }
   return tp_get(vm, self, tp_string(key));
 }
 tp_obj zzpy__pyAdm_set(tp_vm *vm)
@@ -1109,6 +1129,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "loadVideo(str)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioCodec(int,str,couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetFilm2Pal(IEditor,int,int)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetCustomFrameRate(IEditor,int,double,double)\n");
 
   return tp_None;
 }
