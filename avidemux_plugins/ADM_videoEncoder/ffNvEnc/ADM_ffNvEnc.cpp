@@ -373,8 +373,8 @@ bool ffNvEncConfigure(void)
     diaElemMenu bFrameRef(PX(b_ref_mode),QT_TRANSLATE_NOOP("ffnvenc","Use B-Frames as References:"),MZ(meBframeRef),meBframeRef);
 
     diaElemUInteger qual(PX(quality),QT_TRANSLATE_NOOP("ffnvenc","Quality:"),0,51);
-    diaElemUInteger bitrate(PX(bitrate),QT_TRANSLATE_NOOP("ffnvenc","Bitrate (kbps):"),1,50000);
-    diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,50000);
+    diaElemUInteger bitrate(PX(bitrate),QT_TRANSLATE_NOOP("ffnvenc","Bitrate (kbps):"),1,500000);
+    diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,500000);
 
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),0,1000);
     diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,4);
