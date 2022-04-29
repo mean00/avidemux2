@@ -78,6 +78,7 @@ enum FF_NVencBframeRefMode
   5000, /* bitrate */ \
   10000, /* max_bitrate */ \
   100,   /* gopsize */ \
+  0, /* refs */ \
   0, /* bframes */ \
   2, /* b_ref_mode */ \
   0, /* lookahead */ \

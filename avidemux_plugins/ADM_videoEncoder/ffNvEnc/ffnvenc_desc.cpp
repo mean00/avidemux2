@@ -7,6 +7,7 @@ extern const ADM_paramList ffnvenc_encoder_param[]={
  {"bitrate",offsetof(ffnvenc_encoder,bitrate),"uint32_t",ADM_param_uint32_t},
  {"max_bitrate",offsetof(ffnvenc_encoder,max_bitrate),"uint32_t",ADM_param_uint32_t},
  {"gopsize",offsetof(ffnvenc_encoder,gopsize),"uint32_t",ADM_param_uint32_t},
+ {"refs",offsetof(ffnvenc_encoder,refs),"uint32_t",ADM_param_uint32_t},
  {"bframes",offsetof(ffnvenc_encoder,bframes),"uint32_t",ADM_param_uint32_t},
  {"b_ref_mode",offsetof(ffnvenc_encoder,b_ref_mode),"uint32_t",ADM_param_uint32_t},
  {"lookahead",offsetof(ffnvenc_encoder,lookahead),"uint32_t",ADM_param_uint32_t},

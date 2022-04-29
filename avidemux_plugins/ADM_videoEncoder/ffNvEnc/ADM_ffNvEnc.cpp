@@ -62,6 +62,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
     _context->rc_max_rate = -1;
 
     _context->gop_size = NvEncSettings.gopsize;
+    _context->refs = NvEncSettings.refs;
     _context->max_b_frames =
 #ifdef H265_ENCODER
         NvEncSettings.bframes;
@@ -377,6 +378,7 @@ bool ffNvEncConfigure(void)
     diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,500000);
 
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),0,1000);
+    diaElemUInteger maxRefs(PX(refs),QT_TRANSLATE_NOOP("ffnvenc","Maximum Reference Frames:"),0,7);
     diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,4);
 
     diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"),0,NV_MX_LOOKAHEAD);
@@ -417,6 +419,7 @@ bool ffNvEncConfigure(void)
     spatAq.link(1,&aqStrength);
 
     frameControl.swallow(&gopSize);
+    frameControl.swallow(&maxRefs);
     frameControl.swallow(&maxBframes);
 
     /* First Tab : basic settings */
