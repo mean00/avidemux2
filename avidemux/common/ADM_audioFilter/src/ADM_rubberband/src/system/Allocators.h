@@ -27,6 +27,7 @@
 #include "VectorOps.h"
 
 #include <new> // for std::bad_alloc
+#include <stddef.h> // needed for ptrdiff_t on some old Linux systems?
 #include <stdlib.h>
 
 #include <stdexcept>
