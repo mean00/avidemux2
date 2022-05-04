@@ -94,6 +94,9 @@ void * qt4DiaFactoryPrepare(const char *title,uint32_t nb,diaElem **elems)
         ADM_assert(e);
         if (e->getRequiredLayout() != currentLayout)
         {
+            if (cookie->layout)
+                cookie->vboxlayout->addLayout(cookie->layout);
+
             currentLayout = e->getRequiredLayout();
             switch (currentLayout)
             {
@@ -128,10 +131,10 @@ void * qt4DiaFactoryPrepare(const char *title,uint32_t nb,diaElem **elems)
 #endif
         ADM_assert(cookie->layout);
         e->setMe(cookie->dialog, cookie->layout, v);
-        if(!v)
-            cookie->vboxlayout->addLayout(cookie->layout);
         v += e->getSize();
     }
+    if (cookie->layout)
+        cookie->vboxlayout->addLayout(cookie->layout);
 #ifdef UNCLICKABLE_FIRST_CHECKBOX_HACK
     if (workaroundNeeded == 3)
     {
@@ -295,6 +298,9 @@ void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
 
         if (e->getRequiredLayout() != currentLayout)
         {
+            if (layout)
+                vboxLayout->addLayout(layout);
+
             currentLayout = e->getRequiredLayout();
             switch (currentLayout)
             {
@@ -320,10 +326,10 @@ void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
 #endif
         ADM_assert(layout);
         e->setMe(wid,layout,v);
-        if(!v)
-            vboxLayout->addLayout(layout);
         v += e->getSize();
     }
+    if (layout)
+        vboxLayout->addLayout(layout);
 #ifdef UNCLICKABLE_FIRST_CHECKBOX_HACK
     if(workaroundNeeded == 3)
     {
