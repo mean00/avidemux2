@@ -120,8 +120,6 @@ uint8_t mkvHeader::indexLastCluster(ADM_ebml_file *parser)
 */
 uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t clusterTimeCodeMs)
 {
-    int entryFlags=0;
-
     uint64_t tail=parser->tell()+len;
     // Read Track id
     uint32_t tid=parser->readEBMCode();
@@ -140,6 +138,8 @@ uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t cluste
     uint8_t flags=parser->readu8();
 
     //int lacing=((flags>>1)&3);
+
+    uint32_t entryFlags = (flags & 0x80)? AVI_KEY_FRAME : 0;
 
     addIndexEntry(track,parser,blockBegin,tail-blockBegin,entryFlags,clusterTimeCodeMs+timecode);
     parser->seek(tail);
@@ -188,7 +188,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
 
     ix.pos=where;
     ix.size=size;
-    ix.flags=0;
+    ix.flags=flags;
     ix.Dts=timecodeMS*_timeBase;
     ix.Pts=timecodeMS*_timeBase;
     //printf("Track=%d, timecode=%d timeBase=%d, Pts=%d\n",track,(int)timecodeMS,(int)_timeBase,ix.Pts);
