@@ -1311,7 +1311,7 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body, uint64_t *nexthead)
         }
         if(!ADM_searchMkvTag( (MKV_ELEM_ID)t,&ss,&type))
         {
-          printf("[MKV/SeekHead] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
+          printf("[MKV/SeekHead] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",t,len);
           return false;
         }
         ADM_info("Found entry for %s\n",ss);
