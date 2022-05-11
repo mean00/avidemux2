@@ -171,35 +171,54 @@ double AVDM_DecimateFrame::diff(ADMImage * a, ADMImage * b)
 {
     int width=a->GetWidth(PLANAR_Y); 
     int height=a->GetHeight(PLANAR_Y);
-    int stride;
-    uint8_t * ptr1, * ptr2;
-    stride=a->GetPitch(PLANAR_Y);
-    ptr1=a->GetReadPtr(PLANAR_Y);    
-    ptr2=b->GetReadPtr(PLANAR_Y);
 
+    uint8_t * ptrA[3];
+    uint8_t * ptrB[3];
+    int strides[3];
+
+    a->GetReadPlanes(ptrA);
+    b->GetReadPlanes(ptrB);
+    a->GetPitches(strides);
+
+    double metric = 0;
     long int p,q;
     long int sum, max;
-    max = 0;
-    for(int y=0;y<height;y++)
+    uint8_t * ptr1, * ptr2;
+    
+    for (int k=0; k<3; k++)
     {
-        sum = 0;
-        for (int x=0;x<width;x++)
+        max = 0;
+        
+        if (k == 1)
         {
-            p = ptr1[x];
-            q = ptr2[x];
-            sum += (p-q)*(p-q);
+            height /= 2;
+            width /= 2;
         }
         
-        if (sum > max)
+        ptr1 = ptrA[k];
+        ptr2 = ptrB[k];
+        
+        for(int y=0;y<height;y++)
         {
-            max = sum;
-        }
+            sum = 0;
+            for (int x=0;x<width;x++)
+            {
+                p = ptr1[x];
+                q = ptr2[x];
+                sum += (p-q)*(p-q);
+            }
 
-        ptr1+=stride;
-        ptr2+=stride;
+            if (sum > max)
+            {
+                max = sum;
+            }
 
+            ptr1+=strides[k];
+            ptr2+=strides[k];
+        }        
+        metric += (double)max/(double)width;
     }
-    return (double)max/(double)width;    
+    return metric;    
 }
 /**
  * \fn getNextFrame
