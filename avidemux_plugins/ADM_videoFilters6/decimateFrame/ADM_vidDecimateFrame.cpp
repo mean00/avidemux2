@@ -113,10 +113,10 @@ AVDM_DecimateFrame::AVDM_DecimateFrame(ADM_coreVideoFilter *in,CONFcouple *setup
     if(!setup || !ADM_paramLoad(setup,decimateFrame_param,&param))
     {
         // Default value
-        param.limitDropCount = false;
-        param.maxDropCount = 1;
+        param.limitDropCount = true;
+        param.maxDropCount = 10;
         param.threshold = 100;
-        param.evaluate = false;
+        param.evaluate = true;
         
     }
     nextFrame=0;
