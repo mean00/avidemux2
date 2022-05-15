@@ -62,18 +62,34 @@ DECLARE_VIDEO_FILTER(AVDM_DecimateFrame,
  */
 bool  AVDM_DecimateFrame::configure()
 {
+    uint32_t vMode = (param.evaluate ? 1:0);
+    uint32_t vEnLimit = (param.limitDropCount ? 1:0);
+    uint32_t vDropCnt = param.maxDropCount;
+    diaMenuEntry    menuMode[]={
+        {0, QT_TRANSLATE_NOOP("decimateFrame","Normal mode"), NULL},
+        {1, QT_TRANSLATE_NOOP("decimateFrame","Evaluation mode"), QT_TRANSLATE_NOOP("decimateFrame",
+                                                                    "Evaluation mode makes possible to examine the video "
+                                                                    "by printing duplicate metric, while omitting frame dropping.")}
+    };
+    diaElemMenu     eMode(&vMode,QT_TRANSLATE_NOOP("decimateFrame","Mode:"),2,menuMode);
+    
+    diaElemFrame  frameParam(QT_TRANSLATE_NOOP("decimateFrame","Parameters"));
+    
     diaElemInteger  eThreshold(&param.threshold,QT_TRANSLATE_NOOP("decimateFrame","Duplicate threshold:"),0,9999);
-    diaElemToggle eLimitDropCount(&param.limitDropCount,QT_TRANSLATE_NOOP("decimateFrame","Limit drop count"));
-    diaElemInteger  eMaxDropCount(&param.maxDropCount,QT_TRANSLATE_NOOP("decimateFrame","Consecutive frame drop limit:"),1,100);
-    eLimitDropCount.link(1, &eMaxDropCount);
-    diaElemToggle eEvaluate(&param.evaluate,QT_TRANSLATE_NOOP("decimateFrame","Evaluation mode (no drop + print difference info)"));
+    diaElemToggleUint eLimitDropCount(&vEnLimit, QT_TRANSLATE_NOOP("decimateFrame","Consecutive frame drop limit:"), &vDropCnt, NULL, 1, 100);
     diaElemReadOnlyText eNote(NULL,QT_TRANSLATE_NOOP("decimateFrame","Note: this filter won't change the reported frame rate"),NULL);
+    frameParam.swallow(&eThreshold);
+    frameParam.swallow(&eLimitDropCount);
+    eMode.link(menuMode+0, 1, &eThreshold);
+    eMode.link(menuMode+0, 1, &eLimitDropCount);
 
+    diaElem *elems[]={&eMode,&frameParam,&eNote};
 
-    diaElem *elems[5]={&eThreshold,&eLimitDropCount,&eMaxDropCount,&eEvaluate,&eNote};
-
-    if( diaFactoryRun(QT_TRANSLATE_NOOP("decimateFrame","Decimate"),5,elems))
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("decimateFrame","Decimate"),sizeof(elems)/sizeof(diaElem *),elems))
     {
+        param.evaluate = vMode;
+        param.limitDropCount = vEnLimit;
+        param.maxDropCount = vDropCnt;
         return 1;
     }
     return 0;
