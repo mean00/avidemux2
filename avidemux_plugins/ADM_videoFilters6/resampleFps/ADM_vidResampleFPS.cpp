@@ -64,6 +64,7 @@ protected:
         ADMImage            *frames[2];
         bool                refill(void);   // Fetch next frame
         bool                prefillDone;        // If true we already have 2 frames fetched
+        bool                validMotionEstimation;
         motin *             motinp;
 public:
                             resampleFps(ADM_coreVideoFilter *previous,CONFcouple *conf);
@@ -134,6 +135,7 @@ resampleFps::resampleFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) :
 {
     baseTime=0;
     prefillDone=false;
+    validMotionEstimation=false;
     frames[0]=frames[1]=NULL;
     if(!setup || !ADM_paramLoad(setup,confResampleFps_param,&configuration))
     {
@@ -167,17 +169,13 @@ resampleFps::~resampleFps()
 */
 bool resampleFps::refill(void)
 {
+    validMotionEstimation = false;
     ADMImage *nw=frames[0];
     uint32_t img=0;
     frames[0]=frames[1];
     frames[1]=nw;
     if (!previousFilter->getNextFrame(&img,nw))
         return false;
-    if (configuration.interpolation == 2)
-    {
-        motinp->createPyramids(frames[0],frames[1]);
-        motinp->estimateMotion();
-    }
     return true;
 }
 /**
@@ -191,6 +189,7 @@ bool         resampleFps::goToTime(uint64_t usSeek)
     usSeek*=scale;
     if(false==ADM_coreVideoFilterCached::goToTime(usSeek)) return false;
     prefillDone=false;
+    validMotionEstimation=false;
     return true;
 }
 
@@ -286,6 +285,12 @@ again:
             
             if (configuration.interpolation == 2)
             {
+                if (!validMotionEstimation)
+                {
+                    motinp->createPyramids(frames[0],frames[1]);
+                    motinp->estimateMotion();
+                    validMotionEstimation = true;
+                }
                 motinp->interpolate(image, bl2);
             }
         }
