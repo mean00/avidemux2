@@ -69,6 +69,7 @@ public:
         _defaultFrameDuration=0;
         language=ADM_UNKNOWN_LANGUAGE;
         _needBuffering=0;
+        _needExtraData=0;
         _secondField=false;
         _nalSize=-1;
   }
@@ -97,6 +98,7 @@ public:
   uint32_t  _defaultFrameDuration; // Duration of ONE frame in us!
   std::string language;
   int       _needBuffering;
+  int       _needExtraData; // Positive and no extradata: try to extract. Negative: give up.
   bool      _secondField; // Used to clear keyframe flag from the second field
   uint32_t  _nalSize; // Used to decode frame type in H.264 and HEVC streams
 };

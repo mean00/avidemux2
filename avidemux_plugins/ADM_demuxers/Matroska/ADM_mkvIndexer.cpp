@@ -201,10 +201,28 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
         delete [] readBuffer;
         readBufferSize=size*2;
         readBuffer=new uint8_t[readBufferSize];
+        memset(readBuffer,0,readBufferSize);
     }
     if(!track)
     {
         aprintf("adding image at 0x%llx , time = %d\n",where,timecodeMS);
+        if(Track->_needExtraData > 0 && (flags & AVI_KEY_FRAME))
+        {
+            if(rpt)
+                memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
+            parser->readBin(readBuffer+rpt,size-3);
+            uint8_t *dest = NULL;
+            int l = ADM_extractVideoExtraData(_videostream.fccHandler, size, readBuffer, &dest);
+            if(l < 0)
+            {
+                Track->_needExtraData = l;
+            }else if(l > 0)
+            {
+                Track->extraData = dest;
+                Track->extraDataLen = l;
+                Track->_needExtraData = 0;
+            }
+        }
     }
     // since frame type is unreliable for mkv, we scan each frame
     // For the 2 most common cases : mp4 & h264.
@@ -609,6 +627,7 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
 
     readBufferSize = 200*1024;
     readBuffer = new uint8_t[readBufferSize];
+    memset(readBuffer,0,readBufferSize);
 
     // Search segment
     fileSize=parser->getFileSize();

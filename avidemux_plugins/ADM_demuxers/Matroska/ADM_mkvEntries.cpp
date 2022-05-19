@@ -246,6 +246,8 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
         {
             _tracks[0].extraData=entry.extraData;
             _tracks[0].extraDataLen=entry.extraDataLen;
+            if(fourCC::check(entry.fcc,(uint8_t *)"av01") && !entry.extraDataLen)
+                _tracks[0]._needExtraData = 1; // try to extract it from the first keyframe during indexing
         }
         if(isH264Compatible(entry.fcc) && _tracks[0].extraData
             && _tracks[0].extraDataLen > 8 // FIXME
