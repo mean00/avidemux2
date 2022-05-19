@@ -5,6 +5,7 @@ ADM_bitstream.cpp
 avidemutils.cpp  
 ADM_quota.cpp
 fourcc.cpp
+ADM_extraDataExtractor.cpp
 ADM_infoExtractor.cpp
 ADM_infoExtractorH264.cpp
 ADM_infoExtractorH265.cpp

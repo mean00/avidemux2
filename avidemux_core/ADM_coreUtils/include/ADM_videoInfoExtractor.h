@@ -131,5 +131,7 @@ ADM_COREUTILS6_EXPORT uint32_t ADM_escapeH264 (uint32_t len, uint8_t * in, uint8
 
 
 ADM_COREUTILS6_EXPORT bool ADM_VC1getFrameType(uint8_t *start, int size, int *frameType);
+
+ADM_COREUTILS6_EXPORT int ADM_extractVideoExtraData(uint32_t fcc, uint32_t len, uint8_t *src, uint8_t **dest);
 #endif
 //EOF

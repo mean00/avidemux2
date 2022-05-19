@@ -36,7 +36,7 @@ set(FFMPEG_PARSERS      ac3  h263  h264  hevc  mpeg4video)
 
 set(FFMPEG_PROTOCOLS    file)
 
-set(FFMPEG_BSFS         h264_mp4toannexb hevc_mp4toannexb aac_adtstoasc)
+set(FFMPEG_BSFS         h264_mp4toannexb hevc_mp4toannexb aac_adtstoasc extract_extradata)
 
 #
 #
