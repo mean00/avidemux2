@@ -1002,6 +1002,11 @@ uint8_t mkvHeader::close(void)
     }
     ADM_dealloc(_filename);
     _filename=NULL;
+    if(readBuffer)
+    {
+        delete [] readBuffer;
+        readBuffer = NULL;
+    }
     return 1;
 }
 /**
