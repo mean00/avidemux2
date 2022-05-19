@@ -22,6 +22,8 @@ class vdpauRender: public VideoRenderBase
 {
       protected:
                         GUI_WindowInfo info;
+                        int widthToUse;
+                        int heightToUse;
                         bool cleanup(void);
                         bool reallocOutputSurface(void);
                         void rescaleDisplay(void);

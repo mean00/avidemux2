@@ -94,11 +94,10 @@ bool vdpauRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zo
     // Create couple of outputSurface
     surface[0]=surface[1]=VDP_INVALID_HANDLE;
     currentSurface=0;
-    
-    //
-    int widthToUse=admVdpau::dimensionRoundUp(w);
-    int heightToUse=admVdpau::dimensionRoundUp(h);
-    
+
+    widthToUse = admVdpau::dimensionRoundUp(w);
+    heightToUse = admVdpau::dimensionRoundUp(h);
+
     ADM_info("[VDpau] Allocating surfaces %d x%d , %d x %d, %d x x%d\n",w,h,widthToUse,heightToUse,displayWidth,displayHeight);
     
     if(!reallocOutputSurface())
@@ -196,6 +195,29 @@ bool vdpauRender::displayImage(ADMImage *pic)
         struct ADM_vdpauRenderState *rndr = (struct ADM_vdpauRenderState *)pic->refDescriptor.refHwImage;
         myInput=rndr->surface;
         aprintf("VDPAU: This is already vdpau image, just passing along surface=%d\n",rndr->surface);
+        VdpChromaType chroma;
+        uint32_t allocatedWidth, allocatedHeight;
+        if(VDP_STATUS_OK == admVdpau::surfaceGetParameters(myInput,&chroma,&allocatedWidth,&allocatedHeight))
+        {
+            if(allocatedWidth != widthToUse || allocatedHeight != heightToUse)
+            {
+                ADM_warning("[Vdpau] Surface size mismatch, re-creating mixer for %d x %d\n", allocatedWidth, allocatedHeight);
+                widthToUse = allocatedWidth;
+                heightToUse = allocatedHeight;
+                if(mixer != VDP_INVALID_HANDLE && VDP_STATUS_OK != admVdpau::mixerDestroy(mixer))
+                {
+                    ADM_error("Cannot destroy mixer.\n");
+                    return false;
+                }
+                mixer = VDP_INVALID_HANDLE;
+                if(VDP_STATUS_OK != admVdpau::mixerCreate(widthToUse,heightToUse,&mixer))
+                {
+                    ADM_error("Cannot re-create mixer.\n");
+                    mixer = VDP_INVALID_HANDLE; // probably redundant
+                    return false;
+                }
+            }
+        }
     }else
     {
         aprintf("VDPAU: This is NOT a  vdpau image, converting\n");
