@@ -26,6 +26,7 @@ private:
     ADM_QCanvas     *canvas;
     Ui_cropDialog   ui;
     QPushButton     *pushButtonAutoCrop;
+    bool            prefClick;
 
     void updateRightBottomSpinners(int foo, bool useHeightAsRef);
     void resizeEvent(QResizeEvent *event);
@@ -45,8 +46,8 @@ private slots:
     void heightChanged(int foo);
     void autoCrop(bool f);
     void reset(bool f);
-    void toggleRubber(int checkState);
     void changeARSelect(int f);
+    void setPreferences(bool f);
 };
 
 #endif	// Q_crop_h

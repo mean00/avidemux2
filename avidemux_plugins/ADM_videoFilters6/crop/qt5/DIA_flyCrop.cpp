@@ -19,6 +19,9 @@
 #include "./Q_crop.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_QSettings.h"
+#include <QPushButton>
+#include "ADM_QSettings.h"
+#include "DIA_factory.h"
 
 uint8_t Metrics( uint8_t *in, uint32_t stride, uint32_t length, uint32_t *avg, uint32_t *var, uint32_t * max);
 
@@ -368,7 +371,7 @@ bool    flyCrop::bandMoved(int x,int y,int w, int h)
  * @return 
  */
 #define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x; \
-                         rubber->x;w->checkBoxRubber->x;w->comboBoxAspectRatio->x;}
+                         rubber->x;w->comboBoxAspectRatio->x;}
 bool flyCrop::blockChanges(bool block)
 {
     Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
@@ -619,7 +622,6 @@ void flyCrop::setTabOrder(void)
     PUSHME(Top)
     PUSHME(Bottom)
 
-    controls.push_back(w->checkBoxRubber);
     controls.push_back(w->comboBoxAspectRatio);
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);
@@ -669,7 +671,6 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
     myCrop->addControl(ui.toolboxLayout);
     myCrop->setTabOrder();
 
-    ui.checkBoxRubber->setChecked(rubberIsHidden);
     ui.comboBoxAspectRatio->setCurrentIndex(param->ar_select);
     if(!param->ar_select)
         myCrop->upload(false,true);
@@ -677,7 +678,6 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
     myCrop->lockRubber(true);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-    connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
     connect( ui.comboBoxAspectRatio,SIGNAL(currentIndexChanged(int)),this,SLOT(changeARSelect(int)));
 
     QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
@@ -696,6 +696,10 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
     SPINNER(Top)
     SPINNER(Bottom)
 
+    QPushButton * prefBtn = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("crop","Preferences"),QDialogButtonBox::ResetRole);
+    connect(prefBtn,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
+    prefClick = false; 
+    
     setModal(true);
 }
 /**
@@ -799,16 +803,6 @@ void Ui_cropWindow::updateRightBottomSpinners(int val, bool useHeightAsRef)
         ui.spinBoxBottom->setValue(h);
     }
     myCrop->blockChanges(false);
-}
-/**
- * \fn toggleRubber
- */
-void Ui_cropWindow::toggleRubber(int checkState)
-{
-    bool visible=true;
-    if(checkState)
-        visible=false;
-    myCrop->hideRubber(!visible);
 }
 /**
  * \fn applyAspectRatio
@@ -943,6 +937,35 @@ void Ui_cropWindow::showEvent(QShowEvent *event)
     
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+}
+
+void Ui_cropWindow::setPreferences(bool f)
+{
+    if (prefClick) return;
+    prefClick = true;
+
+    bool bHideRubber = false;
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("crop");
+        bHideRubber = qset->value("rubberIsHidden", false).toBool();
+        
+        diaElemToggle    tHideRubber(&bHideRubber,QT_TRANSLATE_NOOP("crop","Hide Rubber Band"));
+        
+        diaElem *mainElems[]={&tHideRubber};
+        
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("crop","Preferences"),1,mainElems))
+        {
+            qset->setValue("rubberIsHidden", bHideRubber);
+            myCrop->hideRubber(bHideRubber);
+        }
+
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+    prefClick = false;
 }
 
 //EOF
