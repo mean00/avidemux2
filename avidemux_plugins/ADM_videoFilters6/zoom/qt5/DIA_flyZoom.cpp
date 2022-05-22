@@ -19,6 +19,9 @@
 #include "./Q_zoom.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_QSettings.h"
+#include <QPushButton>
+#include "ADM_QSettings.h"
+#include "DIA_factory.h"
 
 /**
  * 
@@ -366,7 +369,7 @@ bool    flyZoom::bandMoved(int x,int y,int w, int h)
  * @return 
  */
 #define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x; \
-                         rubber->x;w->checkBoxRubber->x;w->comboBoxAspectRatio->x;}
+                         rubber->x;w->comboBoxAspectRatio->x;}
 bool flyZoom::blockChanges(bool block)
 {
     Ui_zoomDialog *w=(Ui_zoomDialog *)_cookie;
@@ -504,7 +507,6 @@ void flyZoom::setTabOrder(void)
     PUSHME(Top)
     PUSHME(Bottom)
 
-    controls.push_back(w->checkBoxRubber);
     controls.push_back(w->comboBoxAspectRatio);
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);
@@ -544,9 +546,18 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
     {
         qset->beginGroup("zoom");
         rubberIsHidden = qset->value("rubberIsHidden", false).toBool();
+        if (param->algo > 3)   // first UI run
+        {
+            param->algo = qset->value("defaultAlgo", 1).toInt();
+            param->pad = qset->value("defaultPadding", 0).toInt();
+        }
         qset->endGroup();
         delete qset;
         qset = NULL;
+    }
+    if (param->algo > 3)
+    {
+        param->algo = 1;
     }
 
     myFly->hideRubber(rubberIsHidden);
@@ -554,7 +565,6 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
     myFly->addControl(ui.toolboxLayout);
     myFly->setTabOrder();
 
-    ui.checkBoxRubber->setChecked(rubberIsHidden);
     ui.comboBoxAspectRatio->setCurrentIndex(param->ar_select);
     if(!param->ar_select)
         myFly->upload(false,true);
@@ -562,7 +572,6 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
     myFly->lockRubber(true);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-    connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
     connect( ui.comboBoxAspectRatio,SIGNAL(currentIndexChanged(int)),this,SLOT(changeARSelect(int)));
 
     ui.comboBoxAlgo->setCurrentIndex(param->algo);
@@ -581,6 +590,10 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
     SPINNER(Top)
     SPINNER(Bottom)
 
+    QPushButton * prefBtn = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("fitToSize","Preferences"),QDialogButtonBox::ResetRole);
+    connect(prefBtn,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
+    prefClick = false; 
+    
     setModal(true);
 }
 /**
@@ -687,16 +700,7 @@ void Ui_zoomWindow::updateRightBottomSpinners(int val, bool useHeightAsRef)
     }
     myFly->blockChanges(false);
 }
-/**
- * \fn toggleRubber
- */
-void Ui_zoomWindow::toggleRubber(int checkState)
-{
-    bool visible=true;
-    if(checkState)
-        visible=false;
-    myFly->hideRubber(!visible);
-}
+
 /**
  * \fn applyAspectRatio
  */
@@ -752,8 +756,21 @@ void Ui_zoomWindow::reset( bool f )
     myFly->setZoomMargins(0,0,0,0);
     myFly->lockDimensions();
     myFly->blockChanges(false);
-    ui.comboBoxAlgo->setCurrentIndex(1);
-    ui.comboBoxPad->setCurrentIndex(0);
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("zoom");
+        
+        ui.comboBoxAlgo->setCurrentIndex(qset->value("defaultAlgo", 1).toInt());
+        ui.comboBoxPad->setCurrentIndex(qset->value("defaultPadding", 0).toInt());
+
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    } else {    
+        ui.comboBoxAlgo->setCurrentIndex(1);
+        ui.comboBoxPad->setCurrentIndex(0);
+    }
     myFly->upload();
     myFly->sameImage();
     lock--;
@@ -818,6 +835,60 @@ void Ui_zoomWindow::showEvent(QShowEvent *event)
 
     myFly->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+}
+
+void Ui_zoomWindow::setPreferences(bool f)
+{
+    if (prefClick) return;
+    prefClick = true;
+
+    uint32_t algo = 1;
+    uint32_t pad = 0;
+    bool bHideRubber = false;
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("zoom");
+        algo = qset->value("defaultAlgo", 1).toInt();
+        pad = qset->value("defaultPadding", 0).toInt();
+        bHideRubber = qset->value("rubberIsHidden", false).toBool();
+
+        diaMenuEntry menuAlgo[]={
+            {0, QT_TRANSLATE_NOOP("zoom","Bilinear"), NULL},
+            {1, QT_TRANSLATE_NOOP("zoom","Bicubic"), NULL},
+            {2, QT_TRANSLATE_NOOP("zoom","Lanczos"), NULL},
+            {3, QT_TRANSLATE_NOOP("zoom","Spline"), NULL}
+        };        
+        
+        diaElemMenu eAlgo(&algo,QT_TRANSLATE_NOOP("zoom","Default resize method:"), 4, menuAlgo);
+
+        diaMenuEntry menuPad[]={
+            {0, QT_TRANSLATE_NOOP("zoom","black bars"), NULL},
+            {1, QT_TRANSLATE_NOOP("zoom","echo"), NULL},
+            {2, QT_TRANSLATE_NOOP("zoom","none (stretch)"), NULL},
+        };
+        
+        diaElemMenu ePad(&pad,QT_TRANSLATE_NOOP("zoom","Default padding:"), 3, menuPad);
+        
+        diaElemToggle    tHideRubber(&bHideRubber,QT_TRANSLATE_NOOP("zoom","Hide Rubber Band"));
+        
+        diaElem *mainElems[]={&eAlgo, &ePad, &tHideRubber};
+        
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("zoom","Preferences"),3,mainElems))
+        {
+            qset->setValue("defaultAlgo", algo);
+            qset->setValue("defaultPadding", pad);
+            qset->setValue("rubberIsHidden", bHideRubber);
+            ui.comboBoxAlgo->setCurrentIndex(algo);
+            ui.comboBoxPad->setCurrentIndex(pad);
+            myFly->hideRubber(bHideRubber);
+        }
+
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+    prefClick = false;
 }
 
 //EOF

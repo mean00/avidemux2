@@ -213,15 +213,12 @@ bool ZoomFilter::reset(int left, int right, int top, int bottom, uint32_t algo, 
     {
         case 0: //bilinear
                 scalerAlgo=ADM_CS_BILINEAR;break;
-        case 1: //bicubic
+        default: //bicubic
                 scalerAlgo=ADM_CS_BICUBIC;break;
         case 2: //Lanczos
                 scalerAlgo=ADM_CS_LANCZOS;break;
         case 3: //spline
                 scalerAlgo=ADM_CS_SPLINE;break;
-        default:
-                ADM_error("Invalid algo: %u\n",algo);
-                ADM_assert(0);
     }
     resizer=new ADMColorScalerFull(scalerAlgo, 
                         info.width - (left+right), info.height - (top+bottom),
@@ -248,7 +245,7 @@ void ZoomFilter::resetConfig(void)
     configuration.left=0;
     configuration.right=0;
     configuration.ar_select=0;
-    configuration.algo=1;
+    configuration.algo=999; // invalid value == bicubic
     configuration.tolerance=0.01;
     configuration.pad=0;
 }

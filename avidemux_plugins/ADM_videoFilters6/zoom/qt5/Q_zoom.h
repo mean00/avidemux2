@@ -25,6 +25,7 @@ private:
     flyZoom         *myFly;
     ADM_QCanvas     *canvas;
     Ui_zoomDialog   ui;
+    bool            prefClick;
 
     void updateRightBottomSpinners(int foo, bool useHeightAsRef);
     void resizeEvent(QResizeEvent *event);
@@ -43,8 +44,8 @@ private slots:
     void widthChanged(int foo);
     void heightChanged(int foo);
     void reset(bool f);
-    void toggleRubber(int checkState);
     void changeARSelect(int f);
+    void setPreferences(bool f);
 };
 
 #endif	// Q_zoom_h
