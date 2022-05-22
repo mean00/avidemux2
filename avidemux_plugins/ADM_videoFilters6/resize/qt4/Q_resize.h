@@ -20,6 +20,7 @@ class resizeWindow : public QDialog
 private:
     int lastPercentage;
     int labelOutArFWidth,labelOutArFWidth10;
+    bool prefClick;
 
     void updateWidthHeightSpinners(bool useHeightAsRef = false);
     void updateSlider();
@@ -48,5 +49,6 @@ public slots:
     void lockArToggled(bool toggled);
     void roundupChanged(int index);
     void aspectRatioChanged(int index);
+    void setPreferences(bool f);
 };
 #endif // Q_resizing_h

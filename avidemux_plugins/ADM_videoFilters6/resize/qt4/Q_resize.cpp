@@ -18,6 +18,9 @@
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
+#include <QPushButton>
+#include "ADM_QSettings.h"
+#include "DIA_factory.h"
 
 static double aspectRatio[2][5]={
     {
@@ -67,6 +70,23 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
 
     ui.lockArCheckBox->setChecked(_param->rsz.lockAR);
 
+    if (_param->rsz.algo > 4)
+    {
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("resize");
+            _param->rsz.algo = qset->value("defaultAlgo", 1).toInt();
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }
+        else
+        {
+            _param->rsz.algo = 1;	// defaults to bicubic
+        }
+    }    
+    
 #define STR(x) #x
 #define MKSTRING(x) STR(x)
 #define CHECK_COMBO(x,y,z) if(_param->rsz.x>=ui.comboBox##y->count()) \
@@ -102,6 +122,10 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
 
     connectDimensionControls();
+    
+    QPushButton * prefBtn = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("resize","Preferences"),QDialogButtonBox::ResetRole);
+    connect(prefBtn,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
+    prefClick = false;
 }
 
 void resizeWindow::showEvent(QShowEvent *event)
@@ -434,6 +458,42 @@ void resizeWindow::okButtonClicked()
         GUI_Error_HIG(QT_TRANSLATE_NOOP("resize","Width and height cannot be odd"), NULL);
     else
         accept();
+}
+
+void resizeWindow::setPreferences(bool f)
+{
+    if (prefClick) return;
+    prefClick = true;
+
+    uint32_t algo = 1;
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("resize");
+        algo = qset->value("defaultAlgo", 1).toInt();
+
+        diaMenuEntry menuAlgo[]={
+            {0, QT_TRANSLATE_NOOP("resize","Bilinear"), NULL},
+            {1, QT_TRANSLATE_NOOP("resize","Bicubic"), NULL},
+            {2, QT_TRANSLATE_NOOP("resize","Lanczos"), NULL},
+            {3, QT_TRANSLATE_NOOP("resize","Spline"), NULL},
+            {4, QT_TRANSLATE_NOOP("resize","Nearest neighbor"), NULL}
+        };        
+        
+        diaElemMenu eAlgo(&algo,QT_TRANSLATE_NOOP("resize","Default resize method:"), 5, menuAlgo);
+        
+        diaElem *mainElems[]={&eAlgo};
+        
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("resize","Preferences"),1,mainElems))
+        {
+            qset->setValue("defaultAlgo", algo);
+        }
+
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+    prefClick = false;
 }
 
 /**
