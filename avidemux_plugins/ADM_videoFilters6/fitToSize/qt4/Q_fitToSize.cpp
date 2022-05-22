@@ -19,6 +19,9 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_vidFitToSize.h"
+#include <QPushButton>
+#include "ADM_QSettings.h"
+#include "DIA_factory.h"
 
 #if 0
 #define aprintf printf
@@ -30,7 +33,25 @@ fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(par
 {
     ui.setupUi(this);
     _param=param;
-
+    
+    if (_param->rsz.algo > 3)   // first UI run
+    {
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("fitToSize");
+            _param->rsz.algo = qset->value("defaultAlgo", 1).toInt();
+            _param->rsz.pad = qset->value("defaultPadding", 0).toInt();
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }
+        else
+        {
+            _param->rsz.algo = 1;	// defaults to bicubic
+        }
+    }   
+    
     ui.comboBoxRoundup->setCurrentIndex(_param->rsz.roundup);
 
     ui.spinBoxWidth->setKeyboardTracking(false);
@@ -53,6 +74,10 @@ fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(par
     printInfo();
 
     connectDimensionControls();
+    
+    QPushButton * prefBtn = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("fitToSize","Preferences"),QDialogButtonBox::ResetRole);
+    connect(prefBtn,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
+    prefClick = false;    
 }
 
 void fitToSizeWindow::gather(void)
@@ -186,6 +211,53 @@ void fitToSizeWindow::okButtonClicked()
         GUI_Error_HIG(QT_TRANSLATE_NOOP("fitToSize","Width and height cannot be odd"), NULL);
     else
         accept();
+}
+
+void fitToSizeWindow::setPreferences(bool f)
+{
+    if (prefClick) return;
+    prefClick = true;
+
+    uint32_t algo = 1;
+    uint32_t pad = 0;
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("fitToSize");
+        algo = qset->value("defaultAlgo", 1).toInt();
+        pad = qset->value("defaultPadding", 0).toInt();
+
+        diaMenuEntry menuAlgo[]={
+            {0, QT_TRANSLATE_NOOP("fitToSize","Bilinear"), NULL},
+            {1, QT_TRANSLATE_NOOP("fitToSize","Bicubic"), NULL},
+            {2, QT_TRANSLATE_NOOP("fitToSize","Lanczos"), NULL},
+            {3, QT_TRANSLATE_NOOP("fitToSize","Spline"), NULL}
+        };        
+        
+        diaElemMenu eAlgo(&algo,QT_TRANSLATE_NOOP("fitToSize","Default resize method:"), 4, menuAlgo);
+
+        diaMenuEntry menuPad[]={
+            {0, QT_TRANSLATE_NOOP("fitToSize","black bars"), NULL},
+            {1, QT_TRANSLATE_NOOP("fitToSize","echo"), NULL}
+        };        
+        
+        diaElemMenu ePad(&pad,QT_TRANSLATE_NOOP("fitToSize","Default padding:"), 2, menuPad);
+        
+        diaElem *mainElems[]={&eAlgo, &ePad};
+        
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("fitToSize","Preferences"),2,mainElems))
+        {
+            qset->setValue("defaultAlgo", algo);
+            qset->setValue("defaultPadding", pad);
+            ui.comboBoxAlgo->setCurrentIndex(algo);
+            ui.comboBoxPad->setCurrentIndex(pad);
+        }
+
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+    prefClick = false;
 }
 
 /**

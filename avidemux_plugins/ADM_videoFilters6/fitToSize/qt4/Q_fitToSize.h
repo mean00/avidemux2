@@ -16,6 +16,7 @@ class fitToSizeWindow : public QDialog
     Q_OBJECT
 
 private:
+    bool prefClick;    
     void connectDimensionControls();
     void disconnectDimensionControls();
     void roundUp();
@@ -35,5 +36,6 @@ public slots:
     void percentageSpinBoxChanged(int value);
     void dimensionSpinBoxChanged(int value);
     void roundupChanged(int index);
+    void setPreferences(bool f);
 };
 #endif // Q_fitToSize_h
