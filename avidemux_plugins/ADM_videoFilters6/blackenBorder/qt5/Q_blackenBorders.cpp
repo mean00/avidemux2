@@ -15,6 +15,9 @@
 #include "Q_blackenBorders.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_QSettings.h"
+#include <QPushButton>
+#include "ADM_QSettings.h"
+#include "DIA_factory.h"
 
 //
 //	Video is in RGB Colorspace
@@ -57,10 +60,8 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
 
     //myBlacken->rubber->nestedIgnore=1;
     myBlacken->rubber_is_hidden = rubberIsHidden;
-    ui.checkBoxRubber->setChecked(myBlacken->rubber_is_hidden);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-    connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
     SPINNER(Left);
     SPINNER(Right);
@@ -77,6 +78,10 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
     connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
+    QPushButton * prefBtn = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("blackenBorder","Preferences"),QDialogButtonBox::ResetRole);
+    connect(prefBtn,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
+    prefClick = false; 
+    
     setModal(true);
 }
 /**
@@ -119,16 +124,6 @@ void Ui_blackenWindow::gather(blackenBorder *param)
     param->right=myBlacken->right;
     param->top=myBlacken->top;
     param->bottom=myBlacken->bottom;
-}
-/**
- * \fn toggleRubber
- */
-void Ui_blackenWindow::toggleRubber(int checkState)
-{
-    bool visible=true;
-    if(checkState)
-        visible=false;
-    myBlacken->hideRubber(!visible);
 }
 /**
  * \fn valueChanged
@@ -192,6 +187,34 @@ void Ui_blackenWindow::showEvent(QShowEvent *event)
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
+void Ui_blackenWindow::setPreferences(bool f)
+{
+    if (prefClick) return;
+    prefClick = true;
+
+    bool bHideRubber = false;
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("blackenBorder");
+        bHideRubber = qset->value("rubberIsHidden", false).toBool();
+        
+        diaElemToggle    tHideRubber(&bHideRubber,QT_TRANSLATE_NOOP("blackenBorder","Hide Rubber Band"));
+        
+        diaElem *mainElems[]={&tHideRubber};
+        
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("blackenBorder","Preferences"),1,mainElems))
+        {
+            qset->setValue("rubberIsHidden", bHideRubber);
+            myBlacken->hideRubber(bHideRubber);
+        }
+
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+    prefClick = false;
+}
 //************************
 /**
  * \fn blockChanges
@@ -276,7 +299,6 @@ void flyBlacken::setTabOrder(void)
     PUSH_SPIN(Right)
     PUSH_SPIN(Top)
     PUSH_SPIN(Bottom)
-    PUSH_TOG(Rubber)
 
     controls.insert(controls.end(), buttonList.begin(), buttonList.end());
     controls.push_back(w->horizontalSlider);

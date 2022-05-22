@@ -14,6 +14,7 @@ protected:
     flyBlacken          *myBlacken;
     ADM_QCanvas         *canvas;
     Ui_blackenDialog    ui;
+    bool                prefClick;
 
 public:
     Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_coreVideoFilter *in);
@@ -26,7 +27,7 @@ private slots:
     void sliderUpdate(int foo);
     void valueChanged(int foo);
     void reset(bool f);
-    void toggleRubber(int checkState);
+    void setPreferences(bool f);
 
 private:
     void resizeEvent(QResizeEvent *event);
