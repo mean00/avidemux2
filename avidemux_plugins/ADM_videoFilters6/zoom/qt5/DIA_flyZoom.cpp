@@ -879,8 +879,6 @@ void Ui_zoomWindow::setPreferences(bool f)
             qset->setValue("defaultAlgo", algo);
             qset->setValue("defaultPadding", pad);
             qset->setValue("rubberIsHidden", bHideRubber);
-            ui.comboBoxAlgo->setCurrentIndex(algo);
-            ui.comboBoxPad->setCurrentIndex(pad);
             myFly->hideRubber(bHideRubber);
         }
 
