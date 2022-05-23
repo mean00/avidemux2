@@ -85,7 +85,7 @@ enum FF_NVencBframeRefMode
   0, /* aq_strength */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
-  1  /* weighted_pred */ \
+  0  /* weighted_pred */ \
 }
 #else
 #   define NVENC_CONF_DEFAULT \
@@ -97,13 +97,14 @@ enum FF_NVencBframeRefMode
   10000, /* bitrate */ \
   20000, /* max_bitrate */ \
   100,   /* gopsize */ \
+  0, /* refs */ \
   0, /* bframes */ \
-  2, /* b_ref_mode */ \
+  0, /* b_ref_mode */ \
   0, /* lookahead */ \
   0, /* aq_strength */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
-  1  /* weighted_pred */ \
+  0  /* weighted_pred */ \
 }
 #endif
 
