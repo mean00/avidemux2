@@ -487,7 +487,6 @@ void resizeWindow::setPreferences(bool f)
         if( diaFactoryRun(QT_TRANSLATE_NOOP("resize","Preferences"),1,mainElems))
         {
             qset->setValue("defaultAlgo", algo);
-            ui.comboBoxAlgo->setCurrentIndex(algo);
         }
 
         qset->endGroup();
