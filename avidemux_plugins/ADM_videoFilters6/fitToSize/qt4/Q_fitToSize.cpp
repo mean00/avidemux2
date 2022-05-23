@@ -249,8 +249,6 @@ void fitToSizeWindow::setPreferences(bool f)
         {
             qset->setValue("defaultAlgo", algo);
             qset->setValue("defaultPadding", pad);
-            ui.comboBoxAlgo->setCurrentIndex(algo);
-            ui.comboBoxPad->setCurrentIndex(pad);
         }
 
         qset->endGroup();
