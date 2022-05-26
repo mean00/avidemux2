@@ -30,8 +30,7 @@ extern "C" {
 
 #include "GUI_accelRender.h"
 #include "GUI_vdpauRender.h"
-#include "ADM_coreVdpau.h"
-#include "ADM_videoCodec/private_inc/ADM_ffmpeg_vdpau_internal.h"
+
 static VdpOutputSurface     surface[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
 static VdpVideoSurface      input=VDP_INVALID_HANDLE;
 static VdpVideoMixer        mixer=VDP_INVALID_HANDLE;
@@ -95,8 +94,8 @@ bool vdpauRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zo
     surface[0]=surface[1]=VDP_INVALID_HANDLE;
     currentSurface=0;
 
-    widthToUse = admVdpau::dimensionRoundUp(w);
-    heightToUse = admVdpau::dimensionRoundUp(h);
+    widthToUse = w;
+    heightToUse = h;
 
     ADM_info("[VDpau] Allocating surfaces %d x%d , %d x %d, %d x x%d\n",w,h,widthToUse,heightToUse,displayWidth,displayHeight);
     
@@ -172,6 +171,39 @@ bool vdpauRender::stop(void)
 	 return 1;
 }
 /**
+    \fn updateMixer
+    \brief Re-create mixer if dimensions of the input surface don't match those used to create mixer
+*/
+bool vdpauRender::updateMixer(VdpVideoSurface surface)
+{
+    VdpChromaType chroma;
+    uint32_t allocatedWidth, allocatedHeight;
+
+    if(VDP_STATUS_OK != admVdpau::surfaceGetParameters(surface,&chroma,&allocatedWidth,&allocatedHeight))
+        return false;
+
+    if(allocatedWidth != widthToUse || allocatedHeight != heightToUse)
+    {
+        ADM_warning("[Vdpau] Surface size mismatch, re-creating mixer for %d x %d\n", allocatedWidth, allocatedHeight);
+        widthToUse = allocatedWidth;
+        heightToUse = allocatedHeight;
+        if(mixer != VDP_INVALID_HANDLE && VDP_STATUS_OK != admVdpau::mixerDestroy(mixer))
+        {
+            ADM_error("Cannot destroy mixer.\n");
+            return false;
+        }
+        mixer = VDP_INVALID_HANDLE;
+        if(VDP_STATUS_OK != admVdpau::mixerCreate(widthToUse,heightToUse,&mixer))
+        {
+            ADM_error("Cannot re-create mixer.\n");
+            mixer = VDP_INVALID_HANDLE; // probably redundant
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
     \fn displayImage
 */
 bool vdpauRender::displayImage(ADMImage *pic)
@@ -195,29 +227,8 @@ bool vdpauRender::displayImage(ADMImage *pic)
         struct ADM_vdpauRenderState *rndr = (struct ADM_vdpauRenderState *)pic->refDescriptor.refHwImage;
         myInput=rndr->surface;
         aprintf("VDPAU: This is already vdpau image, just passing along surface=%d\n",rndr->surface);
-        VdpChromaType chroma;
-        uint32_t allocatedWidth, allocatedHeight;
-        if(VDP_STATUS_OK == admVdpau::surfaceGetParameters(myInput,&chroma,&allocatedWidth,&allocatedHeight))
-        {
-            if(allocatedWidth != widthToUse || allocatedHeight != heightToUse)
-            {
-                ADM_warning("[Vdpau] Surface size mismatch, re-creating mixer for %d x %d\n", allocatedWidth, allocatedHeight);
-                widthToUse = allocatedWidth;
-                heightToUse = allocatedHeight;
-                if(mixer != VDP_INVALID_HANDLE && VDP_STATUS_OK != admVdpau::mixerDestroy(mixer))
-                {
-                    ADM_error("Cannot destroy mixer.\n");
-                    return false;
-                }
-                mixer = VDP_INVALID_HANDLE;
-                if(VDP_STATUS_OK != admVdpau::mixerCreate(widthToUse,heightToUse,&mixer))
-                {
-                    ADM_error("Cannot re-create mixer.\n");
-                    mixer = VDP_INVALID_HANDLE; // probably redundant
-                    return false;
-                }
-            }
-        }
+        if(!updateMixer(myInput))
+            return false;
     }else
     {
         aprintf("VDPAU: This is NOT a  vdpau image, converting\n");
@@ -230,6 +241,8 @@ bool vdpauRender::displayImage(ADMImage *pic)
             ADM_warning("[Vdpau] video surface : Cannot putbits\n");
             return false;
         }
+        if(!updateMixer(input))
+            return false;
     }
     // Call mixer...
     //if(VDP_STATUS_OK!=admVdpau::mixerRender( mixer,myInput,surface[next], pic->_width,pic->_height))

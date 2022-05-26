@@ -154,8 +154,8 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
         render=new ADM_vdpauRenderState;
         memset(render,0,sizeof( ADM_vdpauRenderState));
         render->surface=VDP_INVALID_HANDLE;
-        int widthToUse = admVdpau::dimensionRoundUp(avctx->coded_width);
-        int heightToUse= admVdpau::dimensionRoundUp(avctx->coded_height);
+        int widthToUse = avctx->coded_width;
+        int heightToUse= avctx->coded_height;
         if(VDP_STATUS_OK!=admVdpau::surfaceCreate(widthToUse,heightToUse,&(render->surface)))
         {
             ADM_error("Cannot create surface \n");
@@ -232,7 +232,8 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
             switch(avctx->codec_id)
             {
                 FMT_V_CHECK(H264,      VDP_DECODER_PROFILE_H264_HIGH)
-                FMT_V_CHECK(HEVC,      VDP_DECODER_PROFILE_HEVC_MAIN) 
+                FMT_V_CHECK(HEVC,      VDP_DECODER_PROFILE_HEVC_MAIN)
+                FMT_V_CHECK(VP9,       VDP_DECODER_PROFILE_VP9_PROFILE_0)
                 FMT_V_CHECK(MPEG1VIDEO,VDP_DECODER_PROFILE_MPEG1)
                 FMT_V_CHECK(MPEG2VIDEO,VDP_DECODER_PROFILE_MPEG2_MAIN)
                 FMT_V_CHECK(WMV3,      VDP_DECODER_PROFILE_VC1_MAIN)
@@ -246,6 +247,27 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
     if(id==AV_CODEC_ID_NONE)
     {
         ADM_info("No matching colrospace compatible hw accelerator found \n");
+        return AV_PIX_FMT_NONE;
+    }
+    if(id == AV_CODEC_ID_VP9 && ((avctx->coded_width & 3) || (avctx->coded_height & 3)))
+    {
+#define MSGLEN 20
+        char dimensions[MSGLEN];
+        dimensions[0] = 0;
+        char *s = dimensions;
+        int l = MSGLEN;
+        if(avctx->coded_width & 3)
+        {
+            snprintf(s,l,"%s","width");
+            l -= strlen(dimensions);
+            s += strlen(dimensions);
+            if(avctx->coded_height & 3)
+                snprintf(s,l,"%s"," and height");
+        }else
+        {
+            snprintf(s,l,"%s","height");
+        }
+        ADM_info("Rejecting VP9 due to %s being not a multiple of 4.\n",dimensions);
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of Vdpau decoder
@@ -302,6 +324,9 @@ decoderFFVDPAU::decoderFFVDPAU(struct AVCodecContext *avctx,decoderFF *parent) :
             case AV_CODEC_ID_H264:
                  name="h264";
                  break;
+            case AV_CODEC_ID_VP9:
+                 name = "vp9";
+                 break;
             case AV_CODEC_ID_VC1:
                   name="vc1";
                   break;
@@ -327,7 +352,7 @@ decoderFFVDPAU::decoderFFVDPAU(struct AVCodecContext *avctx,decoderFF *parent) :
               
         _context->get_buffer2     = ADM_VDPAUgetBuffer;
         _context->draw_horiz_band = NULL;
-        ADM_info("Successfully setup hw accel\n");              
+        ADM_info("Successfully setup hw accel for %s\n",name);
 }
 /**
     \fn ~            void    goOn( const AVFrame *d);

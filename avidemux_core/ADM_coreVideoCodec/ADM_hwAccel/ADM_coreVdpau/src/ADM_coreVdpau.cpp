@@ -270,7 +270,7 @@ VdpStatus admVdpau::decoderCreate(  VdpDevice dev,VdpDecoderProfile profile,    
             uint32_t  max_references,VdpDecoder *      decoder)
 {
     VDP_TRACK("Creating decoder\n");
-    CHECK(ADM_coreVdpau::funcs.decoderCreate(dev,profile,dimensionRoundUp(width),dimensionRoundUp(height),max_references,decoder));
+    CHECK(ADM_coreVdpau::funcs.decoderCreate(dev,profile,width,height,max_references,decoder));
 }
 /**
     \fn decoderDestroy
@@ -293,20 +293,17 @@ VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurfac
         {ADM_error("vdpau is not operationnal\n");return VDP_STATUS_ERROR;}
     VDP_TRACK("[VDPAU] Creating surface %d x %d\n",(int)width,(int)height);
 
-    int widthToUse=dimensionRoundUp(width);
-    int heightToUse=dimensionRoundUp(height);
-
-    if(widthToUse > videoSurfaceMaxWidth)
+    if(width > videoSurfaceMaxWidth)
     {
-        ADM_warning("Width %d exceeds max supported %d\n",widthToUse,videoSurfaceMaxWidth);
+        ADM_warning("Width %d exceeds max supported %d\n",width,videoSurfaceMaxWidth);
         return VDP_STATUS_ERROR;
     }
-    if(heightToUse > videoSurfaceMaxHeight)
+    if(height > videoSurfaceMaxHeight)
     {
-        ADM_warning("Height %d exceeds max supported %d\n",heightToUse,videoSurfaceMaxHeight);
+        ADM_warning("Height %d exceeds max supported %d\n",height,videoSurfaceMaxHeight);
         return VDP_STATUS_ERROR;
     }
-    VdpStatus r=ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,widthToUse,heightToUse,surface);
+    VdpStatus r=ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface);
     if(VDP_STATUS_OK!=r) 
     {
         ADM_warning("ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface) call failed with error=%s\n",getErrorString(r));

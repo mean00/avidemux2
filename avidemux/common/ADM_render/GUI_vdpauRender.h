@@ -1,6 +1,6 @@
 
 /***************************************************************************
-    Class to handle Xv accelerated renderer
+    Class to handle VDPAU accelerated renderer
     
     copyright            : (C) 2006 by mean
     email                : fixounet@free.fr
@@ -15,8 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+
+#include "ADM_coreVdpau.h"
+
 /**
-    \fn class XvRender
+    \fn class vdpauRender
 */
 class vdpauRender: public VideoRenderBase
 {
@@ -26,6 +29,7 @@ class vdpauRender: public VideoRenderBase
                         int heightToUse;
                         bool cleanup(void);
                         bool reallocOutputSurface(void);
+                        bool updateMixer(VdpVideoSurface surface);
                         void rescaleDisplay(void);
       public:
                              vdpauRender( void ) ;

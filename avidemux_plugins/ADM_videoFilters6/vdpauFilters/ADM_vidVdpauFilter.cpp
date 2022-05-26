@@ -45,6 +45,7 @@ protected:
                     uint32_t             frameDesc[ADM_NB_SURFACES];
                     uint32_t             currentIndex;
                     VdpVideoMixer        mixer;
+                    uint32_t             mxrWidth, mxrHeight; // used to create mixer
                     bool                 uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t frameNumber) ;
                     bool                 setIdentityCSC(void);
 
@@ -124,14 +125,12 @@ bool vdpauVideoFilter::setupVdpau(void)
             goto badInit;
         }
     }
-    {
-    int paddedWidth = admVdpau::dimensionRoundUp(previousFilter->getInfo()->width);
-    int paddedHeight = admVdpau::dimensionRoundUp(previousFilter->getInfo()->height);
-    if(VDP_STATUS_OK!=admVdpau::mixerCreate(paddedWidth,paddedHeight,&mixer))
+    mxrWidth = previousFilter->getInfo()->width;
+    mxrHeight = previousFilter->getInfo()->height;
+    if(VDP_STATUS_OK!=admVdpau::mixerCreate(mxrWidth, mxrHeight, &mixer))
     {
         ADM_error("Cannot create mixer\n");
         goto badInit;
-    }
     }
     setIdentityCSC();
     tempBuffer=new uint8_t[info.width*info.height*4];
@@ -305,6 +304,32 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         
         struct ADM_vdpauRenderState *rndr = (struct ADM_vdpauRenderState *)next->refDescriptor.refHwImage;
         tmpSurface=rndr->surface;
+        // dimensions used to create mixer must match those of the input surface
+        VdpChromaType chroma;
+        uint32_t allocatedWidth, allocatedHeight;
+        if(VDP_STATUS_OK == admVdpau::surfaceGetParameters(tmpSurface,&chroma,&allocatedWidth,&allocatedHeight))
+        {
+            if(allocatedWidth != mxrWidth || allocatedHeight != mxrHeight)
+            {
+                ADM_warning("[vdpauVideoFilter] Surface size mismatch, re-creating mixer for %d x %d\n", allocatedWidth, allocatedHeight);
+                mxrWidth = allocatedWidth;
+                mxrHeight = allocatedHeight;
+                if(mixer != VDP_INVALID_HANDLE && VDP_STATUS_OK != admVdpau::mixerDestroy(mixer))
+                {
+                    ADM_error("Cannot destroy mixer.\n");
+                    return false;
+                }
+                mixer = VDP_INVALID_HANDLE;
+                if(VDP_STATUS_OK != admVdpau::mixerCreate(mxrWidth,mxrHeight,&mixer))
+                {
+                    ADM_error("Cannot re-create mixer.\n");
+                    mixer = VDP_INVALID_HANDLE; // probably redundant
+                    passThrough = true;
+                    return false;
+                }
+                setIdentityCSC();
+            }
+        }
         //printf("image is already vdpau %d\n",(int)tmpSurface);
     }else
     {

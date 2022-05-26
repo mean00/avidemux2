@@ -108,7 +108,8 @@ protected:
                     std::list <VdpVideoSurface> freeSurface;
                     VdpVideoSurface      surfacePool[ADM_NB_SURFACES];
                     VdpVideoMixer        mixer;
-protected:
+                    uint32_t             mxrWidth, mxrHeight; // used to create the mixer
+
                     bool                 rotateSlots(void);
                     bool                 clearSlots(void);
                     bool                 uploadImage(ADMImage *next,const VdpVideoSurface surface) ;
@@ -237,15 +238,16 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
     for(int i=0;i<ADM_NB_SLOTS;i++)
         slots[i].image=new ADMImageDefault( previousFilter->getInfo()->width, 
                                             previousFilter->getInfo()->height);
-    {
-    int paddedWidth = admVdpau::dimensionRoundUp(previousFilter->getInfo()->width);
-    int paddedHeight = admVdpau::dimensionRoundUp(previousFilter->getInfo()->height);
-    if(VDP_STATUS_OK!=admVdpau::mixerCreate(paddedWidth,paddedHeight,&mixer,true,configuration.enableIvtc))
+
+    mxrWidth = previousFilter->getInfo()->width;
+    mxrHeight = previousFilter->getInfo()->height;
+
+    if(VDP_STATUS_OK!=admVdpau::mixerCreate(mxrWidth,mxrHeight,&mixer,true,configuration.enableIvtc))
     {
         ADM_error("Cannot create mixer\n");
         goto badInit;
     }
-    }
+
     tempBuffer=new uint8_t[info.width*info.height*4];
 
     freeSurface.clear();
@@ -441,7 +443,7 @@ bool vdpauVideoFilterDeint::uploadImage(ADMImage *next,VdpVideoSurface surface)
 */
 bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
 {
-    VdpVideoSurface tgt;
+    VdpVideoSurface tgt = VDP_INVALID_HANDLE;
     bool external=false;
     if(image->refType!=ADM_HW_VDPAU)
     {   // Need to allocate a surface
@@ -461,10 +463,35 @@ bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
         ADMImage *img=slots[slot].image;
         img->duplicateFull(image); // increment ref count
         // get surface
-        img->hwDownloadFromRef();
+        img->hwDecRefCount();
         ADM_vdpauRenderState *render=(ADM_vdpauRenderState *)img->refDescriptor.refHwImage;
         ADM_assert(render->refCount);
         tgt=render->surface;
+        // Do the dimensions used to create mixer match those of the input surface?
+        VdpChromaType chroma;
+        uint32_t allocatedWidth, allocatedHeight;
+        if(VDP_STATUS_OK == admVdpau::surfaceGetParameters(tgt,&chroma,&allocatedWidth,&allocatedHeight))
+        {
+            if(allocatedWidth != mxrWidth || allocatedHeight != mxrHeight)
+            {
+                ADM_warning("[vdpauVideoFilterDeint] Surface size mismatch, re-creating mixer for %d x %d\n", allocatedWidth, allocatedHeight);
+                mxrWidth = allocatedWidth;
+                mxrHeight = allocatedHeight;
+                if(mixer != VDP_INVALID_HANDLE && VDP_STATUS_OK != admVdpau::mixerDestroy(mixer))
+                {
+                    ADM_error("Cannot destroy mixer.\n");
+                    return false;
+                }
+                mixer = VDP_INVALID_HANDLE;
+                if(VDP_STATUS_OK != admVdpau::mixerCreate(mxrWidth,mxrHeight,&mixer,true,configuration.enableIvtc))
+                {
+                    ADM_error("Cannot re-create mixer.\n");
+                    mixer = VDP_INVALID_HANDLE; // probably redundant
+                    return false;
+                }
+                setIdentityCSC();
+            }
+        }
         external=true;
     }
     slots[slot].pts=image->Pts;
