@@ -233,7 +233,9 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
             {
                 FMT_V_CHECK(H264,      VDP_DECODER_PROFILE_H264_HIGH)
                 FMT_V_CHECK(HEVC,      VDP_DECODER_PROFILE_HEVC_MAIN)
+#ifdef VDP_DECODER_PROFILE_VP9_PROFILE_0
                 FMT_V_CHECK(VP9,       VDP_DECODER_PROFILE_VP9_PROFILE_0)
+#endif
                 FMT_V_CHECK(MPEG1VIDEO,VDP_DECODER_PROFILE_MPEG1)
                 FMT_V_CHECK(MPEG2VIDEO,VDP_DECODER_PROFILE_MPEG2_MAIN)
                 FMT_V_CHECK(WMV3,      VDP_DECODER_PROFILE_VC1_MAIN)
