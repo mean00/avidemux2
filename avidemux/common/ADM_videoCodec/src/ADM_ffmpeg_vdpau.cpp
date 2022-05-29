@@ -213,7 +213,9 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
     AVPixelFormat c;
     AVPixelFormat outPix;
     int maxW,maxH;
-    if(avctx->sw_pix_fmt==AV_PIX_FMT_YUV420P) // doont even try non yv12 for the moment
+    if(avctx->sw_pix_fmt == AV_PIX_FMT_YUV420P ||
+       avctx->sw_pix_fmt == AV_PIX_FMT_YUVJ420P) // doont even try non yv12 for the moment
+    {
         for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
         {
             c=fmt[i];
@@ -246,9 +248,10 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
             }
             break;
         }
-    if(id==AV_CODEC_ID_NONE)
+    }
+    if(id == AV_CODEC_ID_NONE)
     {
-        ADM_info("No matching colrospace compatible hw accelerator found \n");
+        ADM_info("No matching pixel format compatible hw accelerator found\n");
         return AV_PIX_FMT_NONE;
     }
     if(id == AV_CODEC_ID_VP9 && ((avctx->coded_width & 3) || (avctx->coded_height & 3)))
