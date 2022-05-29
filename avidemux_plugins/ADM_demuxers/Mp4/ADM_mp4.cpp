@@ -220,8 +220,27 @@ uint8_t  MP4Header::getFrame(uint32_t framenum,ADMCompressedImage *img)
     }
 
     MP4Index *idx=&(VDEO.index[framenum]);
+
+    img->flags = idx->intra;
+    img->demuxerDts=idx->dts;
+    img->demuxerPts=idx->pts;
+
+    aprintf("[MP4] Pts=%s\n",ADM_us2plain(idx->pts));
+    aprintf("[MP4] Dts=%s\n",ADM_us2plain(idx->dts));
+
     uint64_t sz = idx->size;
-    if(sz > ADM_COMPRESSED_MAX_DATA_LENGTH)
+
+    // Some devices (Hisilicon surveillance cameras) produce files
+    // with zero-sized almost zero-duration placeholder(?) frames,
+    // very dubious. Do not fail on such frames.
+    if(!sz)
+    {
+        ADM_warning("Frame %" PRIu32" is empty.\n",framenum);
+        img->dataLength = 0;
+
+        return 1;
+
+    } else if(sz > ADM_COMPRESSED_MAX_DATA_LENGTH)
     {
         ADM_warning("Frame %u size %llu exceeds max %u, truncating.\n",framenum,sz,ADM_COMPRESSED_MAX_DATA_LENGTH);
         sz = ADM_COMPRESSED_MAX_DATA_LENGTH;
@@ -241,12 +260,6 @@ uint8_t  MP4Header::getFrame(uint32_t framenum,ADMCompressedImage *img)
         return 0;
     }
     img->dataLength=sz;
-    img->flags = idx->intra;
-
-    img->demuxerDts=idx->dts;
-    img->demuxerPts=idx->pts;
-    aprintf("[MP4] Pts=%s\n",ADM_us2plain(idx->pts));
-    aprintf("[MP4] Dts=%s\n",ADM_us2plain(idx->dts));
     /*
     if(img->demuxerPts==ADM_COMPRESSED_NO_PTS)
         img->demuxerPts=img->demuxerDts;
