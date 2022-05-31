@@ -45,6 +45,7 @@ class  ZoomFilter:public ADM_coreVideoFilter
     int                  stretchW;
     int                  stretchH;
     int                  pads[4];
+    bool                 firstRun;
 
   public:
                          ZoomFilter(  ADM_coreVideoFilter *in,CONFcouple *couples);
@@ -79,9 +80,11 @@ ZoomFilter::ZoomFilter(ADM_coreVideoFilter *in,CONFcouple *couples) :ADM_coreVid
     original=new ADMImageDefault(info.width,info.height);
     echo=new ADMImageDefault(16,16);
     resetConfig();
-    if(couples && !ADM_paramLoadPartial(couples,zoom_param,&configuration))
+    firstRun = false;
+    if(!couples || !ADM_paramLoadPartial(couples,zoom_param,&configuration))
     {
         resetConfig();
+        firstRun = true;
     }
     if(info.width < (configuration.right+configuration.left))
     {
@@ -213,15 +216,14 @@ bool ZoomFilter::reset(int left, int right, int top, int bottom, uint32_t algo, 
     {
         case 0: //bilinear
                 scalerAlgo=ADM_CS_BILINEAR;break;
+        default:
+                ADM_warning("Invalid algo: %d, fall back to bicubic.\n",algo);
         case 1: //bicubic
                 scalerAlgo=ADM_CS_BICUBIC;break;
         case 2: //Lanczos
                 scalerAlgo=ADM_CS_LANCZOS;break;
         case 3: //spline
                 scalerAlgo=ADM_CS_SPLINE;break;
-        default:
-                ADM_error("Invalid algo: %u\n",algo);
-                ADM_assert(0);
     }
     resizer=new ADMColorScalerFull(scalerAlgo, 
                         info.width - (left+right), info.height - (top+bottom),
@@ -390,14 +392,14 @@ const char *ZoomFilter::getConfiguration(void)
 /**
     \fn Configure
 */
-extern int DIA_getZoomParams(	const char *name,zoom *param,ADM_coreVideoFilter *in);
+extern int DIA_getZoomParams(	const char *name,zoom *param, bool firstRun,ADM_coreVideoFilter *in);
 
 bool ZoomFilter::configure(void)
 
 {
     uint8_t r;
     uint32_t w,h;
-    r = DIA_getZoomParams("Zoom Settings",&configuration,previousFilter );
+    r = DIA_getZoomParams("Zoom Settings",&configuration,firstRun,previousFilter );
     if(r)
     {
         w=configuration.left+configuration.right;

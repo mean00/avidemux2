@@ -19,6 +19,7 @@
 #include "./Q_zoom.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_QSettings.h"
+#include "DIA_factory.h"
 
 /**
  * 
@@ -525,7 +526,7 @@ void flyZoom::setTabOrder(void)
 //	Video is in YV12 Colorspace
 //
 //
-Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *in) : QDialog(parent)
+Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param, bool firstRun, ADM_coreVideoFilter *in) : QDialog(parent)
 {
     ui.setupUi(this);
     lock=0;
@@ -544,6 +545,11 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
     {
         qset->beginGroup("zoom");
         rubberIsHidden = qset->value("rubberIsHidden", false).toBool();
+        if (firstRun)
+        {
+            param->algo = qset->value("defaultAlgo", 1).toInt();
+            param->pad = qset->value("defaultPadding", 0).toInt();            
+        }
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -571,6 +577,9 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
     QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
     connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
+    preferencesButton = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("zoom","Preferences"),QDialogButtonBox::ResetRole);
+    connect(preferencesButton,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));    
+    
     changeARSelect(param->ar_select);
 
 #define SPINNER(x) connect(ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(widthChanged(int)));
@@ -736,6 +745,40 @@ void Ui_zoomWindow::changeARSelect(int f)
     ui.spinBoxLeft->setEnabled(!keep_aspect);
     ui.spinBoxTop->setEnabled(!keep_aspect);
     myFly->hideRubberGrips(keep_aspect,false);
+}
+
+/**
+ * \fn setPreferences
+ */
+void Ui_zoomWindow::setPreferences(bool f)
+{
+    if (!preferencesButton->isEnabled()) return;
+    preferencesButton->setEnabled(false);
+    
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("zoom");
+        
+        bool saveAlgo = qset->value("saveAlgo", 0).toInt();
+        bool savePad = qset->value("savePad", 0).toInt();
+        diaElemToggle    eSaveAlgo(&saveAlgo,QT_TRANSLATE_NOOP("zoom","Remember selected resize method"));
+        diaElemToggle    eSavePad(&savePad,QT_TRANSLATE_NOOP("zoom","Remember selected padding method"));
+        
+        diaElem *mainElems[]={&eSaveAlgo, &eSavePad};
+        
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("zoom","Preferences"),2,mainElems))
+        {
+            qset->setValue("saveAlgo", (saveAlgo ? 1:0));
+            qset->setValue("savePad", (savePad ? 1:0));
+        }        
+        
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+
+    preferencesButton->setEnabled(true);
 }
 
 /**
