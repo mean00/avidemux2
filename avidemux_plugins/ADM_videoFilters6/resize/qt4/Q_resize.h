@@ -4,6 +4,7 @@
 #include "ui_resizing.h"
 #include "ADM_default.h"
 #include "swresize.h"
+#include <QPushButton>
 
 typedef struct resParam
 {
@@ -11,6 +12,7 @@ typedef struct resParam
     uint32_t fps1000;
     uint32_t pal;
     swresize rsz;
+    bool     firstRun;
 } resParam;
 
 class resizeWindow : public QDialog
@@ -20,6 +22,7 @@ class resizeWindow : public QDialog
 private:
     int lastPercentage;
     int labelOutArFWidth,labelOutArFWidth10;
+    QPushButton * preferencesButton;
 
     void updateWidthHeightSpinners(bool useHeightAsRef = false);
     void updateSlider();
@@ -48,5 +51,6 @@ public slots:
     void lockArToggled(bool toggled);
     void roundupChanged(int index);
     void aspectRatioChanged(int index);
+    void setPreferences(bool f);
 };
 #endif // Q_resizing_h
