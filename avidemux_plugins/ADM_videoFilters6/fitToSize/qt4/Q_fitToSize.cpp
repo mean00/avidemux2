@@ -19,6 +19,8 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_vidFitToSize.h"
+#include "ADM_QSettings.h"
+#include "DIA_factory.h"
 
 #if 0
 #define aprintf printf
@@ -31,6 +33,20 @@ fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(par
     ui.setupUi(this);
     _param=param;
 
+    if (_param->firstRun)
+    {
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("fitToSize");
+            _param->rsz.algo = qset->value("defaultAlgo", 1).toInt();
+            _param->rsz.pad = qset->value("defaultPadding", 0).toInt();
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }
+    }    
+    
     ui.comboBoxRoundup->setCurrentIndex(_param->rsz.roundup);
 
     ui.spinBoxWidth->setKeyboardTracking(false);
@@ -52,6 +68,9 @@ fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(par
     ui.labelInputSize->setText(" " + QString("%1 x %2").arg(_param->originalWidth).arg(_param->originalHeight));
     printInfo();
 
+    preferencesButton = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("fitToSize","Preferences"),QDialogButtonBox::ResetRole);
+    connect(preferencesButton,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
+    
     connectDimensionControls();
 }
 
@@ -180,6 +199,37 @@ void fitToSizeWindow::roundupChanged(int index)
     connectDimensionControls();
 }
 
+void fitToSizeWindow::setPreferences(bool f)
+{
+    if (!preferencesButton->isEnabled()) return;
+    preferencesButton->setEnabled(false);
+    
+    QSettings *qset = qtSettingsCreate();
+    if(qset)
+    {
+        qset->beginGroup("fitToSize");
+        
+        bool saveAlgo = qset->value("saveAlgo", 0).toInt();
+        bool savePad = qset->value("savePad", 0).toInt();
+        diaElemToggle    eSaveAlgo(&saveAlgo,QT_TRANSLATE_NOOP("fitToSize","Remember selected resize method"));
+        diaElemToggle    eSavePad(&savePad,QT_TRANSLATE_NOOP("fitToSize","Remember selected padding method"));
+        
+        diaElem *mainElems[]={&eSaveAlgo, &eSavePad};
+        
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("fitToSize","Preferences"),2,mainElems))
+        {
+            qset->setValue("saveAlgo", (saveAlgo ? 1:0));
+            qset->setValue("savePad", (savePad ? 1:0));
+        }        
+        
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
+    }
+
+    preferencesButton->setEnabled(true);
+}
+
 void fitToSizeWindow::okButtonClicked()
 {
     if (ui.spinBoxWidth->value() & 1 || ui.spinBoxHeight->value() & 1)
@@ -191,13 +241,14 @@ void fitToSizeWindow::okButtonClicked()
 /**
     \fn DIA_fitToSize
 */
-bool DIA_fitToSize(uint32_t originalWidth,uint32_t originalHeight,fitToSize *param)
+bool DIA_fitToSize(uint32_t originalWidth,uint32_t originalHeight,fitToSize *param, bool firstRun)
 {
     bool r=false;
     resParam _param={
                         originalWidth,
                         originalHeight,
-                        *param
+                        *param,
+                        firstRun
                    };
 
 
@@ -209,6 +260,24 @@ bool DIA_fitToSize(uint32_t originalWidth,uint32_t originalHeight,fitToSize *par
     if(fitToSizeWindow.exec()==QDialog::Accepted)
     {
         fitToSizeWindow.gather();
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("fitToSize");
+
+            if (qset->value("saveAlgo", 0).toInt() == 1)
+            {
+                qset->setValue("defaultAlgo", _param.rsz.algo);
+            }
+            if (qset->value("savePad", 0).toInt() == 1)
+            {
+                qset->setValue("defaultPadding", _param.rsz.pad);
+            }
+
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }        
         *param=_param.rsz;
         r=true;
     }

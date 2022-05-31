@@ -38,6 +38,7 @@ class ADMVideoFitToSize : public  ADM_coreVideoFilter
     int                  stretchH;
     int                  pads[4];
     fitToSize            configuration;
+    bool                 firstRun;
 
   public:
     ADMVideoFitToSize(ADM_coreVideoFilter *previous,CONFcouple *conf);

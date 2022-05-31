@@ -4,11 +4,13 @@
 #include "ui_fitToSize.h"
 #include "ADM_default.h"
 #include "fitToSize.h"
+#include <QPushButton>
 
 typedef struct resParam
 {
     uint32_t originalWidth, originalHeight;
     fitToSize rsz;
+    bool      firstRun;
 } resParam;
 
 class fitToSizeWindow : public QDialog
@@ -20,6 +22,7 @@ private:
     void disconnectDimensionControls();
     void roundUp();
     void printInfo();
+    QPushButton * preferencesButton;
 
 protected:
     resParam *_param;
@@ -35,5 +38,6 @@ public slots:
     void percentageSpinBoxChanged(int value);
     void dimensionSpinBoxChanged(int value);
     void roundupChanged(int index);
+    void setPreferences(bool f);
 };
 #endif // Q_fitToSize_h
