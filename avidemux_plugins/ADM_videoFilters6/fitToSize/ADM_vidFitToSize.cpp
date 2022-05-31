@@ -403,10 +403,11 @@ bool ADMVideoFitToSize::configure(void)
 {
     if(true==DIA_fitToSize(previousFilter->getInfo()->width,previousFilter->getInfo()->height,&configuration, firstRun))
     {
-       
+        firstRun = false;
         reset(configuration.width,configuration.height,configuration.algo,configuration.tolerance);
         return true;
-    }   
+    }
+    firstRun = false;
     return false;
 }
 //EOF

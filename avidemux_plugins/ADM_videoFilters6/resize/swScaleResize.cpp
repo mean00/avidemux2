@@ -257,10 +257,11 @@ bool         swScaleResizeFilter::configure(void)
     if(true==DIA_resize(previousFilter->getInfo()->width,previousFilter->getInfo()->height,
                         fps1000,&configuration, firstRun))
     {
-       
+        firstRun = false;
         reset(configuration.width,configuration.height,configuration.algo);
         return true;
-    }   
+    }
+    firstRun = false;
     return false;
 }
 //EOF

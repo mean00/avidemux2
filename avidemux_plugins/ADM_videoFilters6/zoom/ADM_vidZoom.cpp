@@ -400,6 +400,7 @@ bool ZoomFilter::configure(void)
     uint8_t r;
     uint32_t w,h;
     r = DIA_getZoomParams("Zoom Settings",&configuration,firstRun,previousFilter );
+    firstRun = false;
     if(r)
     {
         w=configuration.left+configuration.right;
