@@ -22,20 +22,40 @@
 #include "DIA_flyZoom.h"
 #include "Q_zoom.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_QSettings.h"
+
 /**
       \fn     DIA_getZoomParams
       \brief  Handle zoom dialog
 */
-int DIA_getZoomParams(	const char *name,zoom *param,ADM_coreVideoFilter *in)
+int DIA_getZoomParams(	const char *name,zoom *param, bool firstRun,ADM_coreVideoFilter *in)
 {
     uint8_t ret=0;
 
-    Ui_zoomWindow dialog(qtLastRegisteredDialog(), param,in);
+    Ui_zoomWindow dialog(qtLastRegisteredDialog(), param, firstRun, in);
     qtRegisterDialog(&dialog);
 
     if(dialog.exec()==QDialog::Accepted)
     {
-        dialog.gather(param); 
+        dialog.gather(param);
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("zoom");
+
+            if (qset->value("saveAlgo", 0).toInt() == 1)
+            {
+                qset->setValue("defaultAlgo", param->algo);
+            }
+            if (qset->value("savePad", 0).toInt() == 1)
+            {
+                qset->setValue("defaultPadding", param->pad);
+            }
+
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }          
         ret=1;
     }
     qtUnregisterDialog(&dialog);

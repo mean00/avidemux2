@@ -20,7 +20,7 @@
 /**
     \fn DIA_fitToSize
 */
-bool         DIA_fitToSize(uint32_t originalWidth,uint32_t originalHeight,fitToSize *param)
+bool         DIA_fitToSize(uint32_t originalWidth,uint32_t originalHeight,fitToSize *param, bool firstRun)
 {
      return true;
 }  

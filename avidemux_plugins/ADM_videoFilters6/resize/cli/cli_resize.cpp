@@ -21,7 +21,7 @@
     \fn DIA_resize
     \brief Handle resize dialo
 */
-bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize)
+bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize, bool firstRun)
 {
      return true;
 }  

@@ -60,6 +60,7 @@ protected:
 				bool        clean( void );
                 ADMImage    *original;
                 swresize    configuration;
+                bool        firstRun;
 
 public:
                     swScaleResizeFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
@@ -92,6 +93,7 @@ swScaleResizeFilter::swScaleResizeFilter(  ADM_coreVideoFilter *in,CONFcouple *s
 UNUSED_ARG(setup);
 
     original=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
+    firstRun = false;
     if(!setup || !ADM_paramLoad(setup,swresize_param,&configuration))
     {
         // Default value
@@ -102,6 +104,7 @@ UNUSED_ARG(setup);
         configuration.targetAR=0;
         configuration.lockAR=true;
         configuration.roundup=0;
+        firstRun = true;
     }
     resizer=NULL;
     if(configuration.algo > 4)
@@ -168,12 +171,26 @@ void swScaleResizeFilter::setCoupledConf(CONFcouple *couples)
 */
 const char *swScaleResizeFilter::getConfiguration(void)
 {
-    static char conf[80];
+    static char conf[180];
     conf[0]=0;
-    snprintf(conf,80,"swscale Resize : %d x %d  => %d x %d, algo %d\n",
+    const char * algos = "";
+    switch(configuration.algo)
+    {
+        case 0: //bilinear
+                algos="Bilinear";break;
+        default: //bicubic
+                algos="Bicubic";break;
+        case 2: //Lanczos
+                algos="Lanczos";break;
+        case 3: //spline
+                algos="Spline";break;
+        case 4: //nearest neighbor
+                algos="Nearest neighbor";break;
+    }
+    snprintf(conf,180,"swscale Resize : %d x %d  => %d x %d, %s\n",
                 (int)previousFilter->getInfo()->width,
                 (int)previousFilter->getInfo()->height,
-                (int)configuration.width, (int)configuration.height,(int)configuration.algo);
+                (int)configuration.width, (int)configuration.height, algos);
     return conf;
 }
 /**
@@ -211,6 +228,8 @@ bool swScaleResizeFilter::reset(uint32_t nw, uint32_t nh,uint32_t algo)
     {
         case 0: //bilinear
                 scalerAlgo=ADM_CS_BILINEAR;break;
+        default:
+                ADM_warning("Invalid algo: %d, fall back to bicubic.\n",algo);
         case 1: //bicubic
                 scalerAlgo=ADM_CS_BICUBIC;break;
         case 2: //Lanczos
@@ -219,9 +238,6 @@ bool swScaleResizeFilter::reset(uint32_t nw, uint32_t nh,uint32_t algo)
                 scalerAlgo=ADM_CS_SPLINE;break;
         case 4: //nearest neighbor
                 scalerAlgo=ADM_CS_POINT;break;
-        default:
-                ADM_error("Invalid algo: %u\n",algo);
-                ADM_assert(0);
     }
     resizer=new ADMColorScalerFull(scalerAlgo, 
                         previousFilter->getInfo()->width, previousFilter->getInfo()->height, 
@@ -230,7 +246,7 @@ bool swScaleResizeFilter::reset(uint32_t nw, uint32_t nh,uint32_t algo)
     return 1;
 }
 
-extern bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize);
+extern bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize, bool firstRun);
 /**
     \fn configure
 
@@ -239,12 +255,13 @@ bool         swScaleResizeFilter::configure(void)
 {
     uint32_t fps1000=ADM_Fps1000FromUs(info.frameIncrement);
     if(true==DIA_resize(previousFilter->getInfo()->width,previousFilter->getInfo()->height,
-                        fps1000,&configuration))
+                        fps1000,&configuration, firstRun))
     {
-       
+        firstRun = false;
         reset(configuration.width,configuration.height,configuration.algo);
         return true;
-    }   
+    }
+    firstRun = false;
     return false;
 }
 //EOF
