@@ -42,9 +42,9 @@
      inkscape:document-units="mm"
      showgrid="true"
      width="100mm"
-     inkscape:zoom="0.45254834"
-     inkscape:cx="118.21941"
-     inkscape:cy="445.2563"
+     inkscape:zoom="2.1669375"
+     inkscape:cx="188.97638"
+     inkscape:cy="188.97638"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="0"
@@ -460,7 +460,7 @@
     </g>
     <path
        sodipodi:type="star"
-       style="fill:#001b7b;stroke:#001b7b;stroke-width:30.6688;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;fill-opacity:1;filter:url(#filter943)"
+       style="fill:#001b7b;fill-opacity:1;stroke:#001b7b;stroke-width:30.6688;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter943)"
        id="path891"
        inkscape:flatsided="true"
        sodipodi:sides="3"
@@ -473,16 +473,16 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="M 200,90 50,176.60254 50,3.3974596 Z"
-       transform="matrix(-0.10707158,0,0,0.21701714,39.945787,30.906936)"
+       transform="matrix(-0.10707158,0,0,0.21701714,38.887453,30.906936)"
        inkscape:transform-center-x="2.6767898" />
     <rect
-       style="fill:#001b7b;stroke:#001b7b;stroke-width:4.675;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1;filter:url(#filter939)"
+       style="fill:#001b7b;fill-opacity:1;stroke:#001b7b;stroke-width:4.675;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter939)"
        id="rect893"
        width="39.581665"
        height="39.581665"
        x="-74.925697"
        y="30.651697"
-       transform="scale(-1,1)" />
+       transform="matrix(-1,0,0,1,-1.0583333,0)" />
     <path
        sodipodi:type="star"
        style="fill:#ffffff;stroke:#ffffff;stroke-width:30.6688;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -498,26 +498,26 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="M 200,90 50,176.60254 50,3.3974596 Z"
-       transform="matrix(-0.10707158,0,0,0.21701714,39.945787,30.906936)"
+       transform="matrix(-0.10707158,0,0,0.21701714,38.887453,30.906936)"
        inkscape:transform-center-x="2.6767898" />
     <rect
        style="fill:#ffffff;stroke:#ffffff;stroke-width:4.675;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect1098"
        width="39.581665"
        height="39.581665"
-       x="-74.925697"
+       x="-73.867363"
        y="30.651697"
        transform="scale(-1,1)" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:39.5816px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.247386"
-       x="30.145857"
+       x="28.073479"
        y="63.801876"
        id="text5353-4"><tspan
          sodipodi:role="line"
          id="tspan5351-9"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:39.5816px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';stroke-width:0.247386"
-         x="30.145857"
+         x="28.073479"
          y="63.801876"
          dx="0 0">60</tspan></text>
   </g>
