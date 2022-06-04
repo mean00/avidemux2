@@ -134,8 +134,8 @@ static bool checkSupportedFunctionsAndImageFormat(void)
     // Check direct upload/Download works
     ADM_info("--Trying direct operations --\n");
     ADM_coreLibVA::directOperation      =tryDirect("direct",admSurface, image1,  image2);
-    ADM_info("-- Trying indirect (YV12) --\n");
-    ADM_coreLibVA::indirectOperationYV12=tryIndirect(0,admSurface, image1 ,image2);
+    ADM_info("-- Trying indirect (YV12) --\nSKIPPED\n");
+    ADM_coreLibVA::indirectOperationYV12=false; //tryIndirect(0,admSurface, image1 ,image2);
     ADM_info("-- Trying indirect (NV12) --\nSKIPPED\n");
     ADM_coreLibVA::indirectOperationNV12=false; //tryIndirect(1,admSurface, image1, image2 );
 
