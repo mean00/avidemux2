@@ -565,6 +565,29 @@ void HandleAction (Action action)
         A_ResetMarkers();
         break;
     }
+    case ACT_MarkCut:
+    {
+        {
+            if(!UI_getCurrentVCodec())
+            {
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Mark as cut point failed."),QT_TRANSLATE_NOOP("adm","This function is currently not available in Copy mode."));
+                video_body->undo();
+                break;
+            }
+            uint64_t current=video_body->getCurrentFramePts();
+            video_body->addToUndoQueue();
+            bool result = video_body->remove(current,current);
+            if(!result)
+            {
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Mark as cut point failed."),NULL);
+                break;
+            }
+            if (video_body->goToTimeVideo(current))
+                admPreview::samePicture();
+            GUI_setAllFrameAndTime();
+        }
+        break;  
+    }
     case ACT_Copy:
     {
                 uint64_t markA,markB;

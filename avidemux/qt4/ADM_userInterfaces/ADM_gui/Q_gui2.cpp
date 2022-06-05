@@ -1245,6 +1245,7 @@ void MainWindow::buildButtonLists(void)
     ADD_BUTTON_LOADED(toolButtonNextIntraFrame)
     ADD_BUTTON_LOADED(toolButtonSetMarkerA)
     ADD_BUTTON_LOADED(toolButtonSetMarkerB)
+    ADD_BUTTON_LOADED(toolButtonMarkAsCutPoint)
     ADD_BUTTON_LOADED(toolButtonPreviousCutPoint)
     ADD_BUTTON_LOADED(toolButtonNextCutPoint)
     ADD_BUTTON_LOADED(toolButtonPreviousBlackFrame)
@@ -1260,6 +1261,7 @@ void MainWindow::buildButtonLists(void)
     ADD_BUTTON_PLAYBACK(toolButtonNextIntraFrame)
     ADD_BUTTON_PLAYBACK(toolButtonSetMarkerA)
     ADD_BUTTON_PLAYBACK(toolButtonSetMarkerB)
+    ADD_BUTTON_PLAYBACK(toolButtonMarkAsCutPoint)
     ADD_BUTTON_PLAYBACK(toolButtonPreviousCutPoint)
     ADD_BUTTON_PLAYBACK(toolButtonNextCutPoint)
     ADD_BUTTON_PLAYBACK(toolButtonPreviousBlackFrame)
@@ -1657,9 +1659,13 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt += SHORTCUT(ACT_MarkB,Edit)
     ui.toolButtonSetMarkerB->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to previous cut point"));
-    tt += SHORTCUT(ACT_PrevCutPoint,Go)
-    ui.toolButtonPreviousCutPoint->setToolTip(tt);
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Set end marker"));
+    tt += SHORTCUT(ACT_MarkB,Edit)
+    ui.toolButtonSetMarkerB->setToolTip(tt);
+
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Mark as cut point"));
+    tt += SHORTCUT(ACT_MarkCut,Edit)
+    ui.toolButtonMarkAsCutPoint->setToolTip(tt);
 
     tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to next cut point"));
     tt += SHORTCUT(ACT_NextCutPoint,Go)

@@ -11,6 +11,7 @@ PROCESS(toolButtonPreviousIntraFrame, ACT_PreviousKFrame) \
 PROCESS(toolButtonNextIntraFrame, ACT_NextKFrame) \
 PROCESS(toolButtonSetMarkerA, ACT_MarkA) \
 PROCESS(toolButtonSetMarkerB, ACT_MarkB) \
+PROCESS(toolButtonMarkAsCutPoint, ACT_MarkCut) \
 PROCESS(toolButtonPreviousCutPoint, ACT_PrevCutPoint) \
 PROCESS(toolButtonNextCutPoint, ACT_NextCutPoint) \
 PROCESS(toolButtonPreviousBlackFrame, ACT_PrevBlackFrame) \
