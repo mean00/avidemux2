@@ -1692,7 +1692,8 @@
          </property>
          <property name="icon">
           <iconset resource="avidemux.qrc">
-           <normaloff>:/new/prefix1/pics/arts.png</normaloff>:/new/prefix1/pics/arts.png</iconset>
+           <normaloff>:/new/prefix1/pics/volume_off.png</normaloff>
+           <normalon>:/new/prefix1/pics/volume.png</normalon>:/new/prefix1/pics/volume_off.png</iconset>
          </property>
          <property name="checkable">
           <bool>true</bool>
