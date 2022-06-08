@@ -37,6 +37,29 @@
         <file>pics/project_open.png</file>
         <file>pics/thumbnail.png</file>
         <file>pics/volume.png</file>
+        <file>pics/volume_off.png</file>
+        <file>pics/back@2x.png</file>
+        <file>pics/backward1mn@2x.png</file>
+        <file>pics/fileopen@2x.png</file>
+        <file>pics/filesave@2x.png</file>
+        <file>pics/forward1mn@2x.png</file>
+        <file>pics/forward@2x.png</file>
+        <file>pics/info@2x.png</file>
+        <file>pics/markA@2x.png</file>
+        <file>pics/markB@2x.png</file>
+        <file>pics/next_black@2x.png</file>
+        <file>pics/next_cut@2x.png</file>
+        <file>pics/player_end@2x.png</file>
+        <file>pics/player_fwd@2x.png</file>
+        <file>pics/player_play@2x.png</file>
+        <file>pics/player_rew@2x.png</file>
+        <file>pics/player_start@2x.png</file>
+        <file>pics/player_stop@2x.png</file>
+        <file>pics/play_filtered@2x.png</file>
+        <file>pics/prev_black@2x.png</file>
+        <file>pics/prev_cut@2x.png</file>
+        <file>pics/volume@2x.png</file>
+        <file>pics/volume_off@2x.png</file>
         <file>fonts/ADM7SEG.ttf</file>
     </qresource>
 </RCC>
