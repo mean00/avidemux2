@@ -60,5 +60,9 @@
         <file>pics/prev_cut@2x.png</file>
         <file>pics/volume@2x.png</file>
         <file>pics/volume_off@2x.png</file>
+        <file>pics/goMarkA.png</file>
+        <file>pics/goMarkB.png</file>
+        <file>pics/goMarkA@2x.png</file>
+        <file>pics/goMarkB@2x.png</file>
     </qresource>
 </RCC>
