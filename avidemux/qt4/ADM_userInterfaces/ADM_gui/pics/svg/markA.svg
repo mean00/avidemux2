@@ -7,7 +7,7 @@
    viewBox="0 0 100 100"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
    sodipodi:docname="markA.svg"
    inkscape:export-filename="markA2.png"
    inkscape:export-xdpi="32.512001"
@@ -42,15 +42,17 @@
      inkscape:document-units="mm"
      showgrid="true"
      width="100mm"
-     inkscape:zoom="2.1669375"
-     inkscape:cx="188.97638"
-     inkscape:cy="188.97638"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:zoom="0.54173438"
+     inkscape:cx="1413.9771"
+     inkscape:cy="333.18912"
+     inkscape:window-width="3440"
+     inkscape:window-height="1383"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1">
+     inkscape:current-layer="layer1"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1">
     <inkscape:grid
        type="xygrid"
        id="grid9"
@@ -58,6 +60,26 @@
   </sodipodi:namedview>
   <defs
      id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1346">
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="0"
+         id="stop1342" />
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0.25"
+         id="stop1350" />
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0.75"
+         id="stop1352" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop1344" />
+    </linearGradient>
     <linearGradient
        id="linearGradient3386"
        x1="393"
@@ -1060,6 +1082,16 @@
        y1="14.742719"
        x2="-24.88096"
        y2="82.72657" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1346"
+       id="linearGradient1348"
+       x1="-24.141008"
+       y1="3.239619"
+       x2="-23.868311"
+       y2="52.992695"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.51575551,0,0,1.671605,37.220126,3.3074205)" />
   </defs>
   <g
      inkscape:label="Réteg 1"
@@ -1217,6 +1249,13 @@
        y="-134.59601"
        ry="24.432568"
        transform="rotate(90,0.99999803,0.99999803)" />
+    <rect
+       style="fill:url(#linearGradient1348);fill-opacity:1;stroke:none;stroke-width:1.67133"
+       id="rect760"
+       width="6"
+       height="83.80584"
+       x="21.925013"
+       y="8.2991152" />
     <path
        d="m 6.7624994,47.88548 c -0.0873,12.629997 31.5491596,-2.786833 44.9791596,-2.637833 13.21,0.1309 84.424681,17.312676 84.424681,1.670679 0,-7.442058 -0.22997,-8.970732 -0.63084,-27.226168 C 135.36056,11.725366 129.18869,4.9716932 121.26861,4.8127399 108.35068,4.5534817 47.713821,4.6276652 36.727291,4.6276652 8.0172924,4.6276652 6.8724994,28.45348 6.7624994,47.89348 Z"
        fill="url(#radialGradient3140)"
