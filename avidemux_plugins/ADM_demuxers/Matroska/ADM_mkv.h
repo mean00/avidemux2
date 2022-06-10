@@ -103,7 +103,7 @@ public:
   uint32_t  _nalSize; // Used to decode frame type in H.264 and HEVC streams
 };
 
-#define MKV_MAX_LACES 101 // ?
+#define MKV_MAX_LACES 256
 #define MKV_MUX_LATM 0x1602
 /**
  */
