@@ -160,13 +160,14 @@ typedef struct
     Action     action;
 }adm_qt4_translation;
 
-const adm_qt4_translation myTranslationTable[]=
+adm_qt4_translation myTranslationTable[]=
 {
 #define PROCESS DECLARE_VAR
     LIST_OF_BUTTONS
 #undef PROCESS
 };
 static Action searchTranslationTable(const char *name);
+static bool modifyTranslationTable(const char *name, Action a);
 #define SIZEOF_MY_TRANSLATION sizeof(myTranslationTable)/sizeof(adm_qt4_translation)
 
 class FileDropEvent : public QEvent
@@ -632,6 +633,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     qtRegisterDialog(this);
     ui.setupUi(this);
     dragState=dragState_Normal;
+    navigateByTimeButtonsState=0;
     navigateWhilePlayingState=0;
     recentFiles = NULL;
     recentProjects = NULL;
@@ -679,7 +681,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
         connect( &dragTimer, SIGNAL(timeout()), this, SLOT(dragTimerTimeout()));
         connect( &busyTimer, SIGNAL(timeout()), this, SLOT(busyTimerTimeout()));
         connect( &navigateWhilePlayingTimer, SIGNAL(timeout()), this, SLOT(navigateWhilePlayingTimerTimeout()));
-    
+    // Navigation
+    ui.toolButtonBackOneMinute->installEventFilter(this);
+    ui.toolButtonForwardOneMinute->installEventFilter(this);
 
    // Thumb slider
         ui.sliderPlaceHolder->installEventFilter(this);
@@ -1686,22 +1690,75 @@ void MainWindow::widgetsUpdateTooltips(void)
 #undef SHORTCUT
 
     // special case one minute back and forward buttons, their action shortcuts are not defined via myOwnMenu.h
+    navigateByTimeButtonsState %= 4;
     bool swpud=false;
     prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swpud);
-    QString back, forward;
-    if(!swpud)
+    QString backtext, forwardtext, modifier, back, forward;
+    if (navigateByTimeButtonsState == 0)
     {
-        back="DOWN";
-        forward="UP";
-    }else
-    {
-        back="UP";
-        forward="DOWN";
+        if(!swpud)
+        {
+            back="DOWN";
+            forward="UP";
+        }else
+        {
+            back="UP";
+            forward="DOWN";
+        }
     }
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Backward one minute"))+QString(" [CTRL+")+back+QString("]");
+    else
+    {
+        back="LEFT";
+        forward="RIGHT";
+    }
+
+    switch (navigateByTimeButtonsState)
+    {
+        case 0:
+            ui.toolButtonBackOneMinute->setIcon(QIcon(MKICON(backward1mn)));
+            ui.toolButtonForwardOneMinute->setIcon(QIcon(MKICON(forward1mn)));
+            modifyTranslationTable("toolButtonBackOneMinute", ACT_Back1Mn);
+            modifyTranslationTable("toolButtonForwardOneMinute", ACT_Forward1Mn);
+            backtext = QString(QT_TRANSLATE_NOOP("qgui2","Backward one minute"));
+            forwardtext = QString(QT_TRANSLATE_NOOP("qgui2","Forward one minute"));
+            modifier = QString(QT_TRANSLATE_NOOP("qgui2","CTRL"));
+            break;
+        case 1:
+            ui.toolButtonBackOneMinute->setIcon(QIcon(MKICON(backward1s)));
+            ui.toolButtonForwardOneMinute->setIcon(QIcon(MKICON(forward1s)));
+            modifyTranslationTable("toolButtonBackOneMinute", ACT_Back1Second);
+            modifyTranslationTable("toolButtonForwardOneMinute", ACT_Forward1Second);
+            backtext = QString(QT_TRANSLATE_NOOP("qgui2","Backward 1 second"));
+            forwardtext = QString(QT_TRANSLATE_NOOP("qgui2","Forward 1 second"));
+            modifier = QString(QT_TRANSLATE_NOOP("qgui2","SHIFT"));
+            break;
+        case 2:
+            ui.toolButtonBackOneMinute->setIcon(QIcon(MKICON(backward2s)));
+            ui.toolButtonForwardOneMinute->setIcon(QIcon(MKICON(forward2s)));
+            modifyTranslationTable("toolButtonBackOneMinute", ACT_Back2Seconds);
+            modifyTranslationTable("toolButtonForwardOneMinute", ACT_Forward2Seconds);
+            backtext = QString(QT_TRANSLATE_NOOP("qgui2","Backward 2 seconds"));
+            forwardtext = QString(QT_TRANSLATE_NOOP("qgui2","Forward 2 seconds"));
+            modifier = QString(QT_TRANSLATE_NOOP("qgui2","CTRL"));
+            break;
+        case 3:
+            ui.toolButtonBackOneMinute->setIcon(QIcon(MKICON(backward4s)));
+            ui.toolButtonForwardOneMinute->setIcon(QIcon(MKICON(forward4s)));
+            modifyTranslationTable("toolButtonBackOneMinute", ACT_Back4Seconds);
+            modifyTranslationTable("toolButtonForwardOneMinute", ACT_Forward4Seconds);
+            backtext = QString(QT_TRANSLATE_NOOP("qgui2","Backward 4 seconds"));
+            forwardtext = QString(QT_TRANSLATE_NOOP("qgui2","Forward 4 seconds"));
+            modifier = QString(QT_TRANSLATE_NOOP("qgui2","CTRL+SHIFT"));
+            break;
+        default:
+            ADM_assert(0);
+            break;
+    }
+
+    tt=backtext+QString(" [")+modifier+QString("+")+back+QString("]");
     ui.toolButtonBackOneMinute->setToolTip(tt);
 
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Forward one minute"))+QString(" [CTRL+")+forward+QString("]");
+    tt=forwardtext+QString(" [")+modifier+QString("+")+forward+QString("]");
     ui.toolButtonForwardOneMinute->setToolTip(tt);
 }
 
@@ -2110,6 +2167,30 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
             break;
         case QEvent::User:
             this->openFiles(((FileDropEvent*)event)->files);
+            break;
+        case QEvent::Wheel:
+            if ((watched == ui.toolButtonBackOneMinute) || (watched == ui.toolButtonForwardOneMinute))
+            {
+                QWheelEvent * e = (QWheelEvent *)event;
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+                if (e->delta() == 0) {} else
+                if (e->delta() > 0)
+#else
+                if (e->angleDelta().ry() == 0) {} else
+                if (e->angleDelta().ry() > 0)
+#endif
+                {
+                    navigateByTimeButtonsState += 1;
+                    navigateByTimeButtonsState %= 4;
+                    updateActionShortcuts();
+                }
+                else
+                {
+                    navigateByTimeButtonsState -= 1;
+                    navigateByTimeButtonsState %= 4;
+                    updateActionShortcuts();
+                }
+            }
             break;
         default:
             break;
@@ -2833,6 +2914,25 @@ Action searchTranslationTable(const char *name)
     printf("WARNING: Signal not found in translation table %s\n",name);
     return ACT_DUMMY;
 }
+
+/**
+    \fn modifyTranslationTable(const char *name, Action a))
+    \brief modify the action corresponding to a give button. The translation table is in translation_table.h
+*/
+bool modifyTranslationTable(const char *name, Action a)
+{
+    for(int i=0;i< SIZEOF_MY_TRANSLATION;i++)
+    {
+        if(!strcmp(name, myTranslationTable[i].name))
+        {
+            myTranslationTable[i].action = a;
+            return true;
+        }
+    }
+    printf("WARNING: Signal not found in translation table %s\n",name);
+    return false;
+}
+
 /**
     \fn     UI_updateRecentMenu( void )
     \brief  Update the recent submenu with the latest files loaded

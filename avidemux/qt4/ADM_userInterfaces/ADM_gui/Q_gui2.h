@@ -166,6 +166,7 @@ protected:
     std::vector<QPushButton *>PushButtonsAvailableWhenFileLoaded;
     std::vector<QPushButton *>PushButtonsDisabledOnPlayback;
 
+    unsigned int navigateByTimeButtonsState;
     ADM_dragState dragState;
     QTimer dragTimer;
     int navigateWhilePlayingState;
