@@ -1633,57 +1633,57 @@ void MainWindow::widgetsUpdateTooltips(void)
 
 #define SHORTCUT(x,y) QString(" [") + getActionShortcutString(ui.menu ##y, &myMenu ##y, x) + QString("]");
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Play/Stop"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Play/Stop");
     tt += SHORTCUT(ACT_PlayAvi,Go)
     ui.toolButtonPlay->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to previous frame"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to previous frame");
     tt += SHORTCUT(ACT_PreviousFrame,Go)
     ui.toolButtonPreviousFrame->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to next frame"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to next frame");
     tt += SHORTCUT(ACT_NextFrame,Go)
     ui.toolButtonNextFrame->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to previous keyframe"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to previous keyframe");
     tt += SHORTCUT(ACT_PreviousKFrame,Go)
     ui.toolButtonPreviousIntraFrame->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to next keyframe"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to next keyframe");
     tt += SHORTCUT(ACT_NextKFrame,Go)
     ui.toolButtonNextIntraFrame->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Set start marker"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Set start marker");
     tt += SHORTCUT(ACT_MarkA,Edit)
     ui.toolButtonSetMarkerA->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Set end marker"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Set end marker");
     tt += SHORTCUT(ACT_MarkB,Edit)
     ui.toolButtonSetMarkerB->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to previous cut point"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to previous cut point");
     tt += SHORTCUT(ACT_PrevCutPoint,Go)
     ui.toolButtonPreviousCutPoint->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to next cut point"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to next cut point");
     tt += SHORTCUT(ACT_NextCutPoint,Go)
     ui.toolButtonNextCutPoint->setToolTip(tt);
 
     // go to black frame tooltips are static, the actions don't have shortcuts
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to first frame"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to first frame");
     tt += SHORTCUT(ACT_Begin,Go)
     ui.toolButtonFirstFrame->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to last frame"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to last frame");
     tt += SHORTCUT(ACT_End,Go)
     ui.toolButtonLastFrame->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to marker A"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to marker A");
     tt += SHORTCUT(ACT_GotoMarkA,Go)
     ui.pushButtonJumpToMarkerA->setToolTip(tt);
 
-    tt = QString(QT_TRANSLATE_NOOP("qgui2","Go to marker B"));
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to marker B");
     tt += SHORTCUT(ACT_GotoMarkB,Go)
     ui.pushButtonJumpToMarkerB->setToolTip(tt);
 
@@ -1707,8 +1707,8 @@ void MainWindow::widgetsUpdateTooltips(void)
             ui.toolButtonForwardOneMinute->setIcon(QIcon(MKICON(forward1s)));
             actBack = ACT_Back1Second;
             actForward = ACT_Forward1Second;
-            backtext = QString(QT_TRANSLATE_NOOP("qgui2","Backward 1 second"));
-            forwardtext = QString(QT_TRANSLATE_NOOP("qgui2","Forward 1 second"));
+            backtext = QT_TRANSLATE_NOOP("qgui2","Backward 1 second");
+            forwardtext = QT_TRANSLATE_NOOP("qgui2","Forward 1 second");
             break;
         case 2:
             ui.toolButtonBackOneMinute->setIcon(QIcon(MKICON(backward2s)));
