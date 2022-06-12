@@ -16,33 +16,42 @@
 
 #include <QStyle>
 
-ThumbSlider::ThumbSlider(QWidget *parent) : QAbstractSlider(parent)
+ThumbSlider::ThumbSlider(QWidget *parent, QToolButton * resolutionChangeBtn) : QAbstractSlider(parent)
 {
 	setMaximum(100);
 	setMinimum(-100);
 	setValue(0);
 
 	timerId = count = lock = pos = stopping = 0;
+        resChgBtn = resolutionChangeBtn;
 }
 
 void ThumbSlider::timerEvent(QTimerEvent *event)
 {
-	static const int jogScale[10] = {20, 15, 11, 8, 6, 5, 4, 3, 2, 0};
-	int r = abs(value()) / 10;
+	static const int jogScale[10] = {20, 15, 11, 8, 6, 5, 4, 3, 2, 1};
+
+	int r = (abs(value()) + 5)/10;
 
 	if (!r)
 		return;
+
 	if (lock)
 		return;
 
+        int level = (r > 9 ? jogScale[9] : jogScale[r]);
+        if (!resChgBtn->isChecked())
+            level *= 2;
+        
+        if (count > level)
+            count = level;
+        
 	if (count)
 		count--;
 
 	if (count)
 		return;
 
-	count = (r > 9 ? jogScale[9] : jogScale[r]);
-
+	count = level;
 
 	lock++;
 
@@ -83,7 +92,8 @@ void ThumbSlider::mousePressEvent(QMouseEvent *event)
 		int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
 
 		setSliderPosition(value);
-		timerId = startTimer(20);
+                if (!timerId)
+                    timerId = startTimer(8,Qt::PreciseTimer);
 		triggerAction(SliderMove);
 	}
 }
@@ -118,13 +128,15 @@ void ThumbSlider::wheelEvent(QWheelEvent *event)
 #else
 	value = event->angleDelta().ry();
 #endif
-	value /= 12;
-	pos += value;
+        value /= 12;
+        pos += value;
+        if (pos > 100) pos = 100;
+        if (pos < -100) pos = -100;
 	setSliderPosition(pos);
 	if (pos)
 	{
 		if (!timerId)
-			timerId = startTimer(20);
+			timerId = startTimer(8,Qt::PreciseTimer);
 	}
 	else
 	{

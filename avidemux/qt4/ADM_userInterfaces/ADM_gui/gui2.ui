@@ -884,7 +884,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>453</width>
+     <width>502</width>
      <height>120</height>
     </size>
    </property>
@@ -1188,7 +1188,8 @@
             <bool>true</bool>
            </property>
           </widget>
-         </item>         <item>
+         </item>
+         <item>
           <widget class="QToolButton" name="toolButtonPreviousBlackFrame">
            <property name="enabled">
             <bool>false</bool>
@@ -1489,13 +1490,13 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>182</width>
+     <width>202</width>
      <height>120</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>182</width>
+     <width>202</width>
      <height>120</height>
     </size>
    </property>
@@ -1532,20 +1533,54 @@
       <number>9</number>
      </property>
      <item>
-      <widget class="QWidget" name="sliderPlaceHolder" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>160</width>
-         <height>20</height>
-        </size>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QToolButton" name="toolButtonThumbSliderResolution">
+         <property name="minimumSize">
+          <size>
+           <width>13</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>13</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Change between frame/keyframe resolution</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="avidemux.qrc">
+           <normaloff>:/new/prefix1/pics/thumbs_off.png</normaloff>
+           <normalon>:/new/prefix1/pics/thumbs_on.png</normalon>:/new/prefix1/pics/thumbs_off.png</iconset>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="sliderPlaceHolder" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>20</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_6">

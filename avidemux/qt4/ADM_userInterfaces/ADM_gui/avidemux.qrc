@@ -60,6 +60,8 @@
         <file>pics/prev_cut@2x.png</file>
         <file>pics/volume@2x.png</file>
         <file>pics/volume_off@2x.png</file>
+        <file>pics/thumbs_off.png</file>
+        <file>pics/thumbs_on.png</file>
         <file>fonts/ADM7SEG.ttf</file>
     </qresource>
 </RCC>

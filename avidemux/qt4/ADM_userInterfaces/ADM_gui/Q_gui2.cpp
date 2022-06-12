@@ -386,11 +386,23 @@ void MainWindow::thumbSlider_valueEmitted(int value)
 
     if (!value) return;
 
+    bool hiRes = ui.toolButtonThumbSliderResolution->isChecked();
+    
     bool success = true;
     if (value > 0)
-        success = admPreview::nextKeyFrame();
+    {
+        if (hiRes)
+            success = admPreview::nextPicture();
+        else
+            success = admPreview::nextKeyFrame();
+    }
     else
-        success = admPreview::previousKeyFrame();
+    {
+        if (hiRes)
+            success = admPreview::previousPicture();
+        else
+            success = admPreview::previousKeyFrame();
+    }
     if (success)
     {
         uint64_t total = video_body->getVideoDuration();
@@ -683,7 +695,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
    // Thumb slider
         ui.sliderPlaceHolder->installEventFilter(this);
-        thumbSlider = new ThumbSlider(ui.sliderPlaceHolder);
+        thumbSlider = new ThumbSlider(ui.sliderPlaceHolder, ui.toolButtonThumbSliderResolution);
         connect(thumbSlider, SIGNAL(valueEmitted(int)), this, SLOT(thumbSlider_valueEmitted(int)));
 
     // Volume slider

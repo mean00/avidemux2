@@ -21,6 +21,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QSlider>
+#include <QToolButton>
 
 class ThumbSlider : public QAbstractSlider
 {
@@ -28,6 +29,7 @@ class ThumbSlider : public QAbstractSlider
 
 private:
 	int timerId, count, lock, pos, stopping;
+        QToolButton * resChgBtn;
 
 	void stop(void);
 	void drawBackground(QPainter *painter);
@@ -36,7 +38,7 @@ private:
 	void drawEdges(QPainter *painter);
 
 public:
-	ThumbSlider(QWidget *parent = 0);
+	ThumbSlider(QWidget *parent, QToolButton * resolutionChangeBtn);
 	void reset(void);
 
 protected:
