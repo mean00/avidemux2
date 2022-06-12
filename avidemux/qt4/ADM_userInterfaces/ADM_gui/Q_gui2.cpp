@@ -1687,78 +1687,63 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt += SHORTCUT(ACT_GotoMarkB,Go)
     ui.pushButtonJumpToMarkerB->setToolTip(tt);
 
-#undef SHORTCUT
+    QString backtext, forwardtext, hint = "\n";
+    Action actBack, actForward;
 
-    // special case one minute back and forward buttons, their action shortcuts are not defined via myOwnMenu.h
     navigateByTimeButtonsState %= 4;
-    bool swpud=false;
-    prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swpud);
-    QString backtext, forwardtext, modifier, back, forward;
-    if (navigateByTimeButtonsState == 0)
-    {
-        if(!swpud)
-        {
-            back="DOWN";
-            forward="UP";
-        }else
-        {
-            back="UP";
-            forward="DOWN";
-        }
-    }
-    else
-    {
-        back="LEFT";
-        forward="RIGHT";
-    }
 
     switch (navigateByTimeButtonsState)
     {
         case 0:
             ui.toolButtonBackOneMinute->setIcon(QIcon(MKICON(backward1mn)));
             ui.toolButtonForwardOneMinute->setIcon(QIcon(MKICON(forward1mn)));
-            modifyTranslationTable("toolButtonBackOneMinute", ACT_Back1Mn);
-            modifyTranslationTable("toolButtonForwardOneMinute", ACT_Forward1Mn);
-            backtext = QString(QT_TRANSLATE_NOOP("qgui2","Backward one minute"));
-            forwardtext = QString(QT_TRANSLATE_NOOP("qgui2","Forward one minute"));
-            modifier = QString(QT_TRANSLATE_NOOP("qgui2","CTRL"));
+            actBack = ACT_Back1Mn;
+            actForward = ACT_Forward1Mn;
+            backtext = QT_TRANSLATE_NOOP("qgui2","Backward one minute");
+            forwardtext = QT_TRANSLATE_NOOP("qgui2","Forward one minute");
             break;
         case 1:
             ui.toolButtonBackOneMinute->setIcon(QIcon(MKICON(backward1s)));
             ui.toolButtonForwardOneMinute->setIcon(QIcon(MKICON(forward1s)));
-            modifyTranslationTable("toolButtonBackOneMinute", ACT_Back1Second);
-            modifyTranslationTable("toolButtonForwardOneMinute", ACT_Forward1Second);
+            actBack = ACT_Back1Second;
+            actForward = ACT_Forward1Second;
             backtext = QString(QT_TRANSLATE_NOOP("qgui2","Backward 1 second"));
             forwardtext = QString(QT_TRANSLATE_NOOP("qgui2","Forward 1 second"));
-            modifier = QString(QT_TRANSLATE_NOOP("qgui2","SHIFT"));
             break;
         case 2:
             ui.toolButtonBackOneMinute->setIcon(QIcon(MKICON(backward2s)));
             ui.toolButtonForwardOneMinute->setIcon(QIcon(MKICON(forward2s)));
-            modifyTranslationTable("toolButtonBackOneMinute", ACT_Back2Seconds);
-            modifyTranslationTable("toolButtonForwardOneMinute", ACT_Forward2Seconds);
-            backtext = QString(QT_TRANSLATE_NOOP("qgui2","Backward 2 seconds"));
-            forwardtext = QString(QT_TRANSLATE_NOOP("qgui2","Forward 2 seconds"));
-            modifier = QString(QT_TRANSLATE_NOOP("qgui2","CTRL"));
+            actBack = ACT_Back2Seconds;
+            actForward = ACT_Forward2Seconds;
+            backtext = QT_TRANSLATE_NOOP("qgui2","Backward 2 seconds");
+            forwardtext = QT_TRANSLATE_NOOP("qgui2","Forward 2 seconds");
             break;
         case 3:
             ui.toolButtonBackOneMinute->setIcon(QIcon(MKICON(backward4s)));
             ui.toolButtonForwardOneMinute->setIcon(QIcon(MKICON(forward4s)));
-            modifyTranslationTable("toolButtonBackOneMinute", ACT_Back4Seconds);
-            modifyTranslationTable("toolButtonForwardOneMinute", ACT_Forward4Seconds);
-            backtext = QString(QT_TRANSLATE_NOOP("qgui2","Backward 4 seconds"));
-            forwardtext = QString(QT_TRANSLATE_NOOP("qgui2","Forward 4 seconds"));
-            modifier = QString(QT_TRANSLATE_NOOP("qgui2","CTRL+SHIFT"));
+            actBack = ACT_Back4Seconds;
+            actForward = ACT_Forward4Seconds;
+            backtext = QT_TRANSLATE_NOOP("qgui2","Backward 4 seconds");
+            forwardtext = QT_TRANSLATE_NOOP("qgui2","Forward 4 seconds");
             break;
         default:
             ADM_assert(0);
             break;
     }
 
-    tt=backtext+QString(" [")+modifier+QString("+")+back+QString("]");
+    modifyTranslationTable("toolButtonBackOneMinute", actBack);
+    modifyTranslationTable("toolButtonForwardOneMinute", actForward);
+
+    hint += QT_TRANSLATE_NOOP("qgui2","Rotate mouse wheel to switch mode");
+
+    tt = backtext;
+    tt += SHORTCUT(actBack,Go)
+    tt += hint;
     ui.toolButtonBackOneMinute->setToolTip(tt);
 
-    tt=forwardtext+QString(" [")+modifier+QString("+")+forward+QString("]");
+    tt = forwardtext;
+    tt += SHORTCUT(actForward,Go)
+    tt += hint;
     ui.toolButtonForwardOneMinute->setToolTip(tt);
 }
 
