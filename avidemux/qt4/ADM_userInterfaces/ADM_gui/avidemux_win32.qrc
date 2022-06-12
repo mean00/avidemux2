@@ -60,5 +60,21 @@
         <file>pics/prev_cut@2x.png</file>
         <file>pics/volume@2x.png</file>
         <file>pics/volume_off@2x.png</file>
+        <file>pics/goMarkA.png</file>
+        <file>pics/goMarkB.png</file>
+        <file>pics/goMarkA@2x.png</file>
+        <file>pics/goMarkB@2x.png</file>
+        <file>pics/forward1s.png</file>
+        <file>pics/backward1s.png</file>
+        <file>pics/forward1s@2x.png</file>
+        <file>pics/backward1s@2x.png</file>
+        <file>pics/forward2s.png</file>
+        <file>pics/backward2s.png</file>
+        <file>pics/forward2s@2x.png</file>
+        <file>pics/backward2s@2x.png</file>
+        <file>pics/forward4s.png</file>
+        <file>pics/backward4s.png</file>
+        <file>pics/forward4s@2x.png</file>
+        <file>pics/backward4s@2x.png</file>
     </qresource>
 </RCC>
