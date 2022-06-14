@@ -1099,9 +1099,6 @@
            <property name="toolTip">
             <string>Set start marker [CTRL+PAGEUP]</string>
            </property>
-           <property name="styleSheet">
-            <string notr="true">margin-right: 0px;</string>
-           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -1125,10 +1122,6 @@
            <property name="toolTip">
             <string>Delete selection [DEL]</string>
            </property>
-           <property name="styleSheet">
-            <string notr="true">margin-left: 0px;
-margin-right: 0px;</string>
-           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -1151,9 +1144,6 @@ margin-right: 0px;</string>
           <widget class="QToolButton" name="toolButtonSetMarkerB">
            <property name="toolTip">
             <string>Set end marker [CTRL+PAGEDOWN]</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">margin-left: 0px;</string>
            </property>
            <property name="text">
             <string>...</string>
