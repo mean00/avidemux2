@@ -1248,6 +1248,7 @@ void MainWindow::buildButtonLists(void)
     ADD_BUTTON_LOADED(toolButtonPreviousIntraFrame)
     ADD_BUTTON_LOADED(toolButtonNextIntraFrame)
     ADD_BUTTON_LOADED(toolButtonSetMarkerA)
+    ADD_BUTTON_LOADED(toolButtonDeleteSelection)
     ADD_BUTTON_LOADED(toolButtonSetMarkerB)
     ADD_BUTTON_LOADED(toolButtonPreviousCutPoint)
     ADD_BUTTON_LOADED(toolButtonNextCutPoint)
@@ -1263,6 +1264,7 @@ void MainWindow::buildButtonLists(void)
     ADD_BUTTON_PLAYBACK(toolButtonPreviousIntraFrame)
     ADD_BUTTON_PLAYBACK(toolButtonNextIntraFrame)
     ADD_BUTTON_PLAYBACK(toolButtonSetMarkerA)
+    ADD_BUTTON_PLAYBACK(toolButtonDeleteSelection)
     ADD_BUTTON_PLAYBACK(toolButtonSetMarkerB)
     ADD_BUTTON_PLAYBACK(toolButtonPreviousCutPoint)
     ADD_BUTTON_PLAYBACK(toolButtonNextCutPoint)
@@ -1324,8 +1326,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         return;
     }
 
-    bool vid, undo, redo, paste, resetA, resetB;
-    vid = undo = redo = paste = resetA = resetB = false;
+    bool vid, undo, redo, paste, resetA, resetB, canDelete;
+    vid = undo = redo = paste = resetA = resetB = canDelete = false;
     if(avifileinfo)
         vid=true; // a video is loaded
 
@@ -1352,6 +1354,8 @@ void MainWindow::setMenuItemsEnabledState(void)
             resetA = true;
         if(video_body->getMarkerBPts() != video_body->getVideoDuration())
             resetB = true;
+        if((resetA || resetB) && video_body->getMarkerAPts() != video_body->getMarkerBPts())
+            canDelete = true;
         paste=!video_body->clipboardEmpty();
     }
     ENABLE(Edit, ACT_Undo, undo)
@@ -1362,8 +1366,8 @@ void MainWindow::setMenuItemsEnabledState(void)
     ENABLE(Edit, ACT_ResetMarkerB, resetB)
     ENABLE(Edit, ACT_ResetMarkers, (resetA || resetB))
 
-    ENABLE(Edit, ACT_Cut, (resetA || resetB))
-    ENABLE(Edit, ACT_Delete, (resetA || resetB))
+    ENABLE(Edit, ACT_Cut, canDelete)
+    ENABLE(Edit, ACT_Delete, canDelete)
     ENABLE(Edit, ACT_Paste, paste)
 
     n=ActionsAlwaysAvailable.size();
@@ -1372,6 +1376,8 @@ void MainWindow::setMenuItemsEnabledState(void)
 
     ui.toolButtonPlay->setIcon(QIcon(MKICON(player_play)));
     ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_play)));
+
+    ui.toolButtonDeleteSelection->setEnabled(canDelete);
 
     bool haveRecentItems=false;
     if(recentFiles && recentFiles->actions().size())
@@ -1652,6 +1658,10 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Go to next keyframe");
     tt += SHORTCUT(ACT_NextKFrame,Go)
     ui.toolButtonNextIntraFrame->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Delete selection");
+    tt += SHORTCUT(ACT_Delete,Edit)
+    ui.toolButtonDeleteSelection->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Set start marker");
     tt += SHORTCUT(ACT_MarkA,Edit)
