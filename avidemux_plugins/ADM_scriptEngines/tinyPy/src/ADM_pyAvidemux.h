@@ -36,6 +36,8 @@ int pyGetDrc2(IEditor *editor,int track, int * active, int * normalize, float * 
 int pySetDrc2(IEditor *editor,int track, int active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
 int pyGetEq(IEditor *editor,int track, int * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut);
 int pySetEq(IEditor *editor,int track, int active, float lo, float md, float hi, float lmcut, float mhcut);
+int pyGetFade(IEditor *editor,int track, float * fadeIn, float * fadeOut, int * videoFilterBridge);
+int pySetFade(IEditor *editor,int track, float fadeIn, float fadeOut, int videoFilterBridge);
 int pyGetChGains(IEditor *editor,int track, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE);
 int pySetChGains(IEditor *editor,int track, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
 int pyGetChDelays(IEditor *editor,int track, int * fL, int * fR, int * fC, int * sL, int * sR, int * rL, int * rR, int * rC, int * LFE);

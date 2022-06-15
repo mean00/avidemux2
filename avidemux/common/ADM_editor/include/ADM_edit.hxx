@@ -371,6 +371,8 @@ public:
         bool        getAudioDrc(int track, bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
         bool        setAudioEq(int track, bool active, float lo, float md, float hi, float lmcut, float mhcut);
         bool        getAudioEq(int track, bool * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut);
+        bool        setAudioFade(int track, float fadeIn, float fadeOut, bool videoFilterBridge);
+        bool        getAudioFade(int track, float * fadeIn, float * fadeOut, bool * videoFilterBridge);
         bool        setAudioChannelGains(int dex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
         bool        getAudioChannelGains(int dex, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE);
         bool        setAudioChannelDelays(int dex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);

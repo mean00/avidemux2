@@ -47,6 +47,7 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
     //
     uint32_t downmix;
     ADM_AUDIOFILTER_CONFIG playback;
+    playback.playBack = true;
     playback.startTimeInUs=startTime;
     playback.shiftInMs=shift;
     if(shift)
@@ -132,6 +133,12 @@ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_
         actualShift=0;
     AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(source,(uint32_t)( config->startTimeInUs/1000),actualShift);
     ADD_FILTER(nw);
+
+    if (!config->playBack)
+    {
+        AUDMAudioFilterFade *fade=new AUDMAudioFilterFade(last,&config->fadeConf);
+        ADD_FILTER(fade);
+    }
 
     // Equalizer
     if(config->eqConf.enable)

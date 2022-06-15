@@ -115,6 +115,10 @@ void PythonScriptWriter::setAudioEq(int trackIndex, bool active, float lo, float
 {
     *(this->_stream) << "adm.audioSetEq(" << trackIndex << ", " << active  << ", " << lo << ", " << md << ", " << hi << ", " << lmcut << ", " << mhcut << ")" << std::endl;
 }
+void PythonScriptWriter::setAudioFade(int trackIndex, float fadeIn, float fadeOut, bool videoFilterBridge)
+{
+    *(this->_stream) << "adm.audioSetFade(" << trackIndex << ", " << fadeIn  << ", " << fadeOut << ", " << videoFilterBridge <<  ")" << std::endl;
+}
 void PythonScriptWriter::setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE)
 {
     *(this->_stream) << "adm.audioSetChannelGains(" << trackIndex << ", " << fL  << ", " << fR << ", " << fC << ", " << sL << ", " << sR << ", " << rL << ", " << rR << ", " << rC << ", " << LFE << ")" << std::endl;

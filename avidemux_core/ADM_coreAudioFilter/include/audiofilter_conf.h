@@ -24,6 +24,7 @@
 #include "audiofilter_limiter.h"
 #include "audiofilter_channels.h"
 #include "audiofilter_eq.h"
+#include "audiofilter_fade.h"
 
 /**
     \class ADM_AUDIOFILTER_CONFIG
@@ -38,6 +39,7 @@ public    :
                 }
     bool        reset()
                 {
+                        playBack = false;
                         startTimeInUs=0;
                         shiftInMs=0;
                         mixerEnabled=false;
@@ -53,12 +55,14 @@ public    :
                         drcEnabled=false;
                         drcConf=drcConfDefault;
                         AUDMAudioFilterEq::resetConf(&eqConf);
+                        AUDMAudioFilterFade::resetConf(&fadeConf);
                         AUDMAudioFilterChannels::resetConf(&chansConf);
 			shiftEnabled=false;
     			shiftInMs=0;
                         return true;
                 }
 
+    bool         playBack;
     uint64_t     startTimeInUs;
     //
     bool         shiftEnabled;
@@ -79,6 +83,7 @@ public    :
     bool         drcEnabled;
     DRCparam      drcConf;
     EQparam       eqConf;
+    FADEparam     fadeConf;
     CHANSparam    chansConf;
 
 public: // accessor
@@ -86,6 +91,8 @@ public: // accessor
     bool            audioFilterGetDrcConfig(bool * active, int * normalize, float * nFloor, float * attTime, float * decTime, float * ratio, float * thresDB);
     bool            audioFilterSetEqConfig(bool active, float lo, float md, float hi, float lmcut, float mhcut);
     bool            audioFilterGetEqConfig(bool * active, float * lo, float * md, float * hi, float * lmcut, float * mhcut);
+    bool            audioFilterSetFadeConfig(float fadeIn, float fadeOut, bool videoFilterBridge);
+    bool            audioFilterGetFadeConfig(float * fadeIn, float * fadeOut, bool * videoFilterBridge);
     bool            audioFilterSetChannelGains(float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
     bool            audioFilterGetChannelGains(float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE);
     bool            audioFilterSetChannelDelays(int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);

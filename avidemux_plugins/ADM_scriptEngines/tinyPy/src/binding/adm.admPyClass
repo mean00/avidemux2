@@ -35,6 +35,7 @@
 /* METHOD */ int  pySetDrc:audioSetDrc(int,int)
 /* METHOD */ int  pySetDrc:audioSetDrc2(int,int,int,float,float,float,float,float)
 /* METHOD */ int  pySetEq:audioSetEq(int,int,float,float,float,float,float)
+/* METHOD */ int  pySetEq:audioSetFade(int,float,float,int)
 /* METHOD */ int  pySetChGains:audioSetChannelGains(int,float,float,float,float,float,float,float,float,float)
 /* METHOD */ int  pySetChDelays:audioSetChannelDelays(int,int,int,int,int,int,int,int,int,int)
 /* METHOD */ int  pySetChRemap:audioSetChannelRemap(int,int,int,int,int,int,int,int,int,int,int)

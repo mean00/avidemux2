@@ -61,6 +61,10 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config, double tempoHint)
     ELEM_TYPE_FLOAT eqHighDB = config->eqConf.highDB;
     ELEM_TYPE_FLOAT eqCutLM = config->eqConf.cutOffLM;
     ELEM_TYPE_FLOAT eqCutMH = config->eqConf.cutOffMH;
+    
+    bool vFadeVideoFilterBridge = config->fadeConf.videoFilterBridge;
+    ELEM_TYPE_FLOAT fadeIn = config->fadeConf.fadeIn;
+    ELEM_TYPE_FLOAT fadeOut = config->fadeConf.fadeOut;
 
 
     #define PX(x) (&(config->x))
@@ -178,6 +182,14 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config, double tempoHint)
     diaElem *eqElems[]={&tEQ, &eEqLow, &eEqMid, &eEqHigh, &eEqCutLM, &eEqCutMH, &noteEq};
     diaElemTabs tabEq(QT_TRANSLATE_NOOP("adm","Equalizer"),NB_ELEM(eqElems),eqElems);
 
+    //*** Fade tab ******
+    diaElemFloatResettable  eFadeIn(&fadeIn,QT_TRANSLATE_NOOP("adm","Fade in (sec):"),0,1000,0,NULL,3);
+    diaElemFloatResettable  eFadeOut(&fadeOut,QT_TRANSLATE_NOOP("adm","Fade out (sec):"),0,1000,0,NULL,3);
+    //diaElemToggle    tFadeVideoFilterBridge(&vFadeVideoFilterBridge,QT_TRANSLATE_NOOP("adm","Enable Video Filter Audio fading"));
+
+    diaElem *fadeElems[]={&eFadeIn, &eFadeOut /*, &tFadeVideoFilterBridge*/};
+    diaElemTabs tabFade(QT_TRANSLATE_NOOP("adm","Fade"),NB_ELEM(fadeElems),fadeElems);
+
     //*** Channel gains tab ******
     diaElemFloat  eChGainFLValue(chGainDB+ADM_CH_FRONT_LEFT,QT_TRANSLATE_NOOP("adm","Front left (dB):"),-30,+30);
     diaElemFloat  eChGainFRValue(chGainDB+ADM_CH_FRONT_RIGHT,QT_TRANSLATE_NOOP("adm","Front right (dB):"),-30,+30);
@@ -258,6 +270,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config, double tempoHint)
     diaElemTabs *tabs[] = {
         &tabMain,
         &tabDRC,
+        &tabFade,
         &tabEq,
         &tabChanGains,
         &tabChanDelays,
@@ -304,7 +317,12 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config, double tempoHint)
         config->eqConf.midDB = eqMidDB;
         config->eqConf.highDB = eqHighDB;        
         config->eqConf.cutOffLM = eqCutLM;
-        config->eqConf.cutOffMH = eqCutMH;        
+        config->eqConf.cutOffMH = eqCutMH;  
+        
+        config->fadeConf.fadeIn = fadeIn;
+        config->fadeConf.fadeOut = fadeOut;        
+        config->fadeConf.videoFilterBridge = vFadeVideoFilterBridge;
+        
         return true;
     }
 
