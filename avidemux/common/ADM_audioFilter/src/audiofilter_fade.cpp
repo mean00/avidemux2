@@ -139,7 +139,7 @@ uint32_t AUDMAudioFilterFade::fill(uint32_t max,float *output,AUD_Status *status
     float *in = _incomingBuffer.at(_head);
     float * out = output;
     
-    if ((_currentSampleCount >= fadeInSamples) && ((_totalSampleCount > 0) && ((_totalSampleCount - fadeOutSamples) > (_currentSampleCount + available))))
+    if ( (_currentSampleCount >= fadeInSamples) && ((fadeOutSamples <= 0) || (_totalSampleCount <= 0) || ((fadeOutSamples > 0) && (_totalSampleCount > 0) && ((_totalSampleCount - fadeOutSamples) > (_currentSampleCount + available))) )  )
     {
         memcpy(out, in, sizeof(float) * available * channels);
     }
