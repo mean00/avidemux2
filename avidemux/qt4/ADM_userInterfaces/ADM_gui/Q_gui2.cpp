@@ -647,6 +647,14 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     //ui.actionPreferences->setMenuRole(QAction::NoRole);
     //ui.actionQuit->setMenuRole(QAction::NoRole);
 #endif
+
+    ui.navButtonsLayout->setSpacing(
+#ifdef __APPLE__
+        2
+#else
+        0
+#endif
+    );
         //
         connect( this,SIGNAL(actionSignal(Action )),this,SLOT(actionSlot(Action )));
         //

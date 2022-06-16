@@ -957,10 +957,7 @@
         <number>0</number>
        </property>
        <item>
-        <layout class="QHBoxLayout" name="_3">
-         <property name="spacing">
-          <number>0</number>
-         </property>
+        <layout class="QHBoxLayout" name="navButtonsLayout">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -1165,9 +1162,6 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonPreviousCutPoint">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="toolTip">
             <string>Go to previous cut point [SHIFT+DOWN]</string>
            </property>
@@ -1214,9 +1208,6 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonPreviousBlackFrame">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="toolTip">
             <string>Search previous black frame</string>
            </property>
