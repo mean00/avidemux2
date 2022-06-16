@@ -27,22 +27,24 @@ ThumbSlider::ThumbSlider(QWidget *parent) : QAbstractSlider(parent)
 
 void ThumbSlider::timerEvent(QTimerEvent *event)
 {
-	static const int jogScale[10] = {20, 15, 11, 8, 6, 5, 4, 3, 2, 0};
-	int r = abs(value()) / 10;
+	static const int jogScale[11] = {0, 20, 15, 11, 8, 6, 5, 4, 3, 2, 1};
+	int r = (abs(value()) + 5)/10;
+        int level = (r > 10 ? jogScale[10] : jogScale[r]);
 
 	if (!r)
 		return;
 	if (lock)
 		return;
 
+        if (count > level)
+            count = level;
 	if (count)
 		count--;
 
 	if (count)
 		return;
 
-	count = (r > 9 ? jogScale[9] : jogScale[r]);
-
+	count = level;
 
 	lock++;
 
@@ -83,7 +85,8 @@ void ThumbSlider::mousePressEvent(QMouseEvent *event)
 		int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
 
 		setSliderPosition(value);
-		timerId = startTimer(20);
+                if (!timerId)
+                    timerId = startTimer(16);
 		triggerAction(SliderMove);
 	}
 }
@@ -120,11 +123,13 @@ void ThumbSlider::wheelEvent(QWheelEvent *event)
 #endif
 	value /= 12;
 	pos += value;
+        if (pos > 100) pos = 100;
+        if (pos < -100) pos = -100;
 	setSliderPosition(pos);
 	if (pos)
 	{
 		if (!timerId)
-			timerId = startTimer(20);
+			timerId = startTimer(16);
 	}
 	else
 	{
