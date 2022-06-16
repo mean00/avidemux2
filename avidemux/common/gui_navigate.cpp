@@ -910,7 +910,7 @@ bool GUI_lastFrameBeforePts(uint64_t pts)
     admPreview::deferDisplay(false);
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
-
+    UI_purge();
     return true;
 }
 
