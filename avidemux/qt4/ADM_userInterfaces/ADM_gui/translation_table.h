@@ -10,6 +10,7 @@ PROCESS(toolButtonNextFrame, ACT_NextFrame) \
 PROCESS(toolButtonPreviousIntraFrame, ACT_PreviousKFrame) \
 PROCESS(toolButtonNextIntraFrame, ACT_NextKFrame) \
 PROCESS(toolButtonSetMarkerA, ACT_MarkA) \
+PROCESS(toolButtonDeleteSelection, ACT_Delete) \
 PROCESS(toolButtonSetMarkerB, ACT_MarkB) \
 PROCESS(toolButtonPreviousCutPoint, ACT_PrevCutPoint) \
 PROCESS(toolButtonNextCutPoint, ACT_NextCutPoint) \

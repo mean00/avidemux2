@@ -2,7 +2,7 @@
 
 convertsvg()
 {
-    flatpak run org.inkscape.Inkscape --export-width=$1 --export-type=png --export-background-opacity=0 --export-filename=$2 $3
+    flatpak run org.inkscape.Inkscape --export-height=$1 --export-type=png --export-background-opacity=0 --export-filename=$2 $3
 }
 
 for i in *.svg; do

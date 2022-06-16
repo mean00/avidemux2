@@ -78,6 +78,8 @@
         <file>pics/backward4s.png</file>
         <file>pics/forward4s@2x.png</file>
         <file>pics/backward4s@2x.png</file>
+        <file>pics/delete_selection.png</file>
+        <file>pics/delete_selection@2x.png</file>
         <file>fonts/ADM7SEG.ttf</file>
     </qresource>
 </RCC>
