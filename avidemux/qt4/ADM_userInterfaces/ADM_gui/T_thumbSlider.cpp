@@ -126,6 +126,7 @@ void ThumbSlider::wheelEvent(QWheelEvent *event)
         if (pos > 100) pos = 100;
         if (pos < -100) pos = -100;
 	setSliderPosition(pos);
+	stopping = 0;
 	if (pos)
 	{
 		if (!timerId)
@@ -135,7 +136,7 @@ void ThumbSlider::wheelEvent(QWheelEvent *event)
 	{
 		if (timerId)
 			killTimer(timerId);
-		timerId = count = stopping = 0;
+		timerId = count = 0;
 		emit valueEmitted(0);
 	}
 
@@ -147,6 +148,7 @@ void ThumbSlider::wheelEvent(QWheelEvent *event)
 
 void ThumbSlider::reset(void)
 {
+	if (stopping) return;
 	stopping = 1;
 	stop();
 	setSliderPosition(0);
