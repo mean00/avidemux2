@@ -18,278 +18,277 @@
 
 ThumbSlider::ThumbSlider(QWidget *parent) : QAbstractSlider(parent)
 {
-	setMaximum(100);
-	setMinimum(-100);
-	setValue(0);
+    setMaximum(100);
+    setMinimum(-100);
+    setValue(0);
 
-	timerId = count = lock = pos = stopping = 0;
+    timerId = count = lock = pos = stopping = 0;
 }
 
 void ThumbSlider::timerEvent(QTimerEvent *event)
 {
-	static const int jogScale[11] = {0, 20, 15, 11, 8, 6, 5, 4, 3, 2, 1};
-	int r = (abs(value()) + 5)/10;
-        int level = (r > 10 ? jogScale[10] : jogScale[r]);
+    static const int jogScale[11] = {0, 20, 15, 11, 8, 6, 5, 4, 3, 2, 1};
+    int r = (abs(value()) + 5)/10;
+    int level = (r > 10 ? jogScale[10] : jogScale[r]);
 
-	if (!r)
-		return;
-	if (lock)
-		return;
+    if (!r)
+        return;
+    if (lock)
+        return;
 
-        if (count > level)
-            count = level;
-	if (count)
-		count--;
+    if (count > level)
+        count = level;
+    if (count)
+        count--;
 
-	if (count)
-		return;
+    if (count)
+        return;
 
-	count = level;
+    count = level;
 
-	lock++;
+    lock++;
 
-	emit valueEmitted(value());
+    emit valueEmitted(value());
 
-	lock--;
+    lock--;
 }
 
 void ThumbSlider::stop(void)
 {
-	if (timerId)
-		killTimer(timerId);
-	setValue(0);
-	timerId = count = pos = 0;
+    if (timerId)
+        killTimer(timerId);
+    setValue(0);
+    timerId = count = pos = 0;
 
-	triggerAction(SliderNoAction);
+    triggerAction(SliderNoAction);
 }
 
 void ThumbSlider::paintEvent(QPaintEvent *event)
 {
-	QPainter painter;
+    QPainter painter;
 
-	painter.begin(this);
-	painter.setClipRect(event->rect());
-	painter.setPen(Qt::NoPen);
+    painter.begin(this);
+    painter.setClipRect(event->rect());
+    painter.setPen(Qt::NoPen);
 
-	drawBackground(&painter);
-	drawLines(&painter);
-	drawBorders(&painter);
-	drawEdges(&painter);
+    drawBackground(&painter);
+    drawLines(&painter);
+    drawBorders(&painter);
+    drawEdges(&painter);
 }
 
 void ThumbSlider::mousePressEvent(QMouseEvent *event)
 {
-	if (stopping) return;
-	if (event->buttons() & Qt::LeftButton)
-	{
-		int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
+    if (stopping) return;
+    if (event->buttons() & Qt::LeftButton)
+    {
+        int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
 
-		setSliderPosition(value);
-                if (!timerId)
-                    timerId = startTimer(16);
-		triggerAction(SliderMove);
-	}
+        setSliderPosition(value);
+        if (!timerId)
+            timerId = startTimer(16);
+        triggerAction(SliderMove);
+    }
 }
 
 void ThumbSlider::mouseMoveEvent(QMouseEvent *event)
 {
-	if (stopping) return;
-	if (event->buttons() & Qt::LeftButton)
-	{
-		int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
+    if (stopping) return;
+    if (event->buttons() & Qt::LeftButton)
+    {
+        int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
 
-		setSliderPosition(value);
-		triggerAction(SliderMove);
-	}
+        setSliderPosition(value);
+        triggerAction(SliderMove);
+    }
 }
 
 void ThumbSlider::mouseReleaseEvent(QMouseEvent *event)
 {
-	if (event->button() & Qt::LeftButton)
-	{
-		stop();
-		stopping = 0;
-		emit valueEmitted(0);
-	}
+    if (event->button() & Qt::LeftButton)
+    {
+        stop();
+        stopping = 0;
+        emit valueEmitted(0);
+    }
 }
 
 void ThumbSlider::wheelEvent(QWheelEvent *event)
 {
-	int value;
+    int value;
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0)
-	value = event->delta();
+    value = event->delta();
 #else
-	value = event->angleDelta().ry();
+    value = event->angleDelta().ry();
 #endif
-	value /= 12;
-	pos += value;
-        if (pos > 100) pos = 100;
-        if (pos < -100) pos = -100;
-	setSliderPosition(pos);
-	stopping = 0;
-	if (pos)
-	{
-		if (!timerId)
-			timerId = startTimer(16);
-	}
-	else
-	{
-		if (timerId)
-			killTimer(timerId);
-		timerId = count = 0;
-		emit valueEmitted(0);
-	}
+    value /= 12;
+    pos += value;
+    if (pos > 100) pos = 100;
+    if (pos < -100) pos = -100;
+    setSliderPosition(pos);
+    stopping = 0;
+    if (pos)
+    {
+        if (!timerId)
+            timerId = startTimer(16);
+    } else
+    {
+        if (timerId)
+            killTimer(timerId);
+        timerId = count = 0;
+        emit valueEmitted(0);
+    }
 
-	if (value)
-		triggerAction(SliderMove);
-	else
-		triggerAction(SliderNoAction);
+    if (value)
+        triggerAction(SliderMove);
+    else
+        triggerAction(SliderNoAction);
 }
 
 void ThumbSlider::reset(void)
 {
-	if (stopping) return;
-	stopping = 1;
-	stop();
-	setSliderPosition(0);
-	emit valueEmitted(0);
+    if (stopping) return;
+    stopping = 1;
+    stop();
+    setSliderPosition(0);
+    emit valueEmitted(0);
 }
 
 void ThumbSlider::drawBackground(QPainter *painter)
 {
-	int middle = width() / 2;
-	QLinearGradient base1 = QLinearGradient(0, 1, middle - 5, 1);
-	QLinearGradient base2 = QLinearGradient(width() - 1, 1, middle + 5, 1);
-	QColor color1, color2;
+    int middle = width() / 2;
+    QLinearGradient base1 = QLinearGradient(0, 1, middle - 5, 1);
+    QLinearGradient base2 = QLinearGradient(width() - 1, 1, middle + 5, 1);
+    QColor color1, color2;
 
-	color1.setRgbF(0.33, 0.33, 0.33);
-	color2.setRgbF(0.88, 0.88, 0.88);
+    color1.setRgbF(0.33, 0.33, 0.33);
+    color2.setRgbF(0.88, 0.88, 0.88);
 
-	base1.setColorAt(0, color1);
-	base1.setColorAt(1, color2);
-	base2.setColorAt(0, color1);
-	base2.setColorAt(1, color2);
+    base1.setColorAt(0, color1);
+    base1.setColorAt(1, color2);
+    base2.setColorAt(0, color1);
+    base2.setColorAt(1, color2);
 
-	painter->setBrush(base1);
-	painter->drawRect(1, 0, middle - 1, height() - 1);
+    painter->setBrush(base1);
+    painter->drawRect(1, 0, middle - 1, height() - 1);
 
-	painter->setBrush(base2);
-	painter->drawRect(middle, 0, middle - 1, height() - 1);
+    painter->setBrush(base2);
+    painter->drawRect(middle, 0, middle - 1, height() - 1);
 
-	painter->setBrush(Qt::NoBrush);
+    painter->setBrush(Qt::NoBrush);
 }
 
 void ThumbSlider::drawLines(QPainter *painter)
 {
-	float offset = (float)width() / 6.0;
-	int pos = QStyle::sliderPositionFromValue(minimum(), maximum(), value(), width(), false);
-	int middle = width() / 2;
-	int start = pos - (width() / 2);
-	float colourF;
-	QPen pen;
-	QColor color;
+    float offset = (float)width() / 6.0;
+    int pos = QStyle::sliderPositionFromValue(minimum(), maximum(), value(), width(), false);
+    int middle = width() / 2;
+    int start = pos - (width() / 2);
+    float colourF;
+    QPen pen;
+    QColor color;
 
-	pen.setCapStyle(Qt::FlatCap);
+    pen.setCapStyle(Qt::FlatCap);
 
-	for (int i = 0; i < 6; i++)
-	{
-		if (start > width())
-			start -= width();
-		else if (start < 0)
-			start = width() + start;
+    for (int i = 0; i < 6; i++)
+    {
+        if (start > width())
+            start -= width();
+        else if (start < 0)
+            start = width() + start;
 
-		if (start <= middle)
-			colourF = (float)start / (float)middle * 0.85;
-		else
-			colourF = ((float)(width() - start)) / (float)middle * 0.85;
+        if (start <= middle)
+            colourF = (float)start / (float)middle * 0.85;
+        else
+            colourF = ((float)(width() - start)) / (float)middle * 0.85;
 
-		if (i == 3)
-		{
-			color.setRgbF(colourF, 0, 0);
-			pen.setWidth(2);
-		}
-		else
-		{
-			color.setRgbF(colourF, colourF, colourF);
-			pen.setWidth(1);
-		}
+        if (i == 3)
+        {
+            color.setRgbF(colourF, 0, 0);
+            pen.setWidth(2);
+        }
+        else
+        {
+            color.setRgbF(colourF, colourF, colourF);
+            pen.setWidth(1);
+        }
 
-		pen.setColor(color);
-		painter->setPen(pen);
-		painter->drawLine(start, 2, start, height() - 2);
+        pen.setColor(color);
+        painter->setPen(pen);
+        painter->drawLine(start, 2, start, height() - 2);
 
-		start += offset;
-	}
+        start += offset;
+    }
 
-	painter->setPen(Qt::NoPen);
+    painter->setPen(Qt::NoPen);
 }
 
 void ThumbSlider::drawBorders(QPainter *painter)
 {
-	int middle = width() / 2;
-	QColor color;
+    int middle = width() / 2;
+    QColor color;
 
-	color.setRgbF(0.53, 0.53, 0.53);
+    color.setRgbF(0.53, 0.53, 0.53);
 
-	painter->setPen(QPen(QBrush(color), 1, Qt::SolidLine, Qt::FlatCap));
-	painter->drawLine(1, 0, width() - 1, 0);
-	painter->drawLine(1, height() - 1, width() - 1, height() - 1);
-	painter->drawLine(0, 1, 0, height() - 1);
-	painter->drawLine(width() - 1, 1, width() - 1, height() - 1);
+    painter->setPen(QPen(QBrush(color), 1, Qt::SolidLine, Qt::FlatCap));
+    painter->drawLine(1, 0, width() - 1, 0);
+    painter->drawLine(1, height() - 1, width() - 1, height() - 1);
+    painter->drawLine(0, 1, 0, height() - 1);
+    painter->drawLine(width() - 1, 1, width() - 1, height() - 1);
 
-	QLinearGradient grad1 = QLinearGradient(0, 1, middle - 6, 1);
-	QLinearGradient grad2 = QLinearGradient(width() - 1, 1, middle + 6, 1);
-	QLinearGradient grad3 = QLinearGradient(0, height() - 2, middle - 6, height() - 2);
-	QLinearGradient grad4 = QLinearGradient(width() - 1, height() - 2, middle + 6, height() - 2);
-	QColor color1, color2;
+    QLinearGradient grad1 = QLinearGradient(0, 1, middle - 6, 1);
+    QLinearGradient grad2 = QLinearGradient(width() - 1, 1, middle + 6, 1);
+    QLinearGradient grad3 = QLinearGradient(0, height() - 2, middle - 6, height() - 2);
+    QLinearGradient grad4 = QLinearGradient(width() - 1, height() - 2, middle + 6, height() - 2);
+    QColor color1, color2;
 
-	color1.setRgbF(0.00, 0.00, 0.00);
-	color2.setRgbF(0.98, 0.98, 0.98);
+    color1.setRgbF(0.00, 0.00, 0.00);
+    color2.setRgbF(0.98, 0.98, 0.98);
 
-	grad1.setColorAt(0, color1);
-	grad1.setColorAt(1, color2);
+    grad1.setColorAt(0, color1);
+    grad1.setColorAt(1, color2);
 
-	grad2.setColorAt(0, color1);
-	grad2.setColorAt(1, color2);
+    grad2.setColorAt(0, color1);
+    grad2.setColorAt(1, color2);
 
-	grad3.setColorAt(1, color2);
-	grad3.setColorAt(0, color1);
+    grad3.setColorAt(1, color2);
+    grad3.setColorAt(0, color1);
 
-	grad4.setColorAt(1, color2);
-	grad4.setColorAt(0, color1);
+    grad4.setColorAt(1, color2);
+    grad4.setColorAt(0, color1);
 
-	painter->setPen(QPen(grad1, 1, Qt::SolidLine, Qt::FlatCap));
-	painter->drawLine(1, 1, middle, 1);
-	painter->setPen(QPen(grad3, 1, Qt::SolidLine, Qt::FlatCap));
-	painter->drawLine(1, height() - 2, middle, height() - 2);
-	painter->setPen(QPen(grad2, 1, Qt::SolidLine, Qt::FlatCap));
-	painter->drawLine(middle, 1, width() - 1, 1);
-	painter->setPen(QPen(grad4, 1, Qt::SolidLine, Qt::FlatCap));
-	painter->drawLine(middle, height() - 2, width() - 1, height() - 2);
+    painter->setPen(QPen(grad1, 1, Qt::SolidLine, Qt::FlatCap));
+    painter->drawLine(1, 1, middle, 1);
+    painter->setPen(QPen(grad3, 1, Qt::SolidLine, Qt::FlatCap));
+    painter->drawLine(1, height() - 2, middle, height() - 2);
+    painter->setPen(QPen(grad2, 1, Qt::SolidLine, Qt::FlatCap));
+    painter->drawLine(middle, 1, width() - 1, 1);
+    painter->setPen(QPen(grad4, 1, Qt::SolidLine, Qt::FlatCap));
+    painter->drawLine(middle, height() - 2, width() - 1, height() - 2);
 
-	painter->setPen(Qt::NoPen);
+    painter->setPen(Qt::NoPen);
 }
 
 void ThumbSlider::drawEdges(QPainter *painter)
 {
-	QLinearGradient grad1 = QLinearGradient(0, 2, 6, 2);
-	QLinearGradient grad2 = QLinearGradient(width() - 1, 2, width() - 6, 2);
-	QColor color1, color2;
+    QLinearGradient grad1 = QLinearGradient(0, 2, 6, 2);
+    QLinearGradient grad2 = QLinearGradient(width() - 1, 2, width() - 6, 2);
+    QColor color1, color2;
 
-	color1.setRgbF(0.00, 0.00, 0.00);
-	color2.setRgbF(0.23, 0.23, 0.23);
+    color1.setRgbF(0.00, 0.00, 0.00);
+    color2.setRgbF(0.23, 0.23, 0.23);
 
-	grad1.setColorAt(0, color1);
-	grad1.setColorAt(1, color2);
+    grad1.setColorAt(0, color1);
+    grad1.setColorAt(1, color2);
 
-	grad2.setColorAt(0, color1);
-	grad2.setColorAt(1, color2);
+    grad2.setColorAt(0, color1);
+    grad2.setColorAt(1, color2);
 
-	painter->setBrush(grad1);
-	painter->drawRect(1, 2, 6, height() - 4);
+    painter->setBrush(grad1);
+    painter->drawRect(1, 2, 6, height() - 4);
 
-	painter->setBrush(grad2);
-	painter->drawRect(width() - 7, 2, 6, height() - 4);
+    painter->setBrush(grad2);
+    painter->drawRect(width() - 7, 2, 6, height() - 4);
 
-	painter->setBrush(Qt::NoBrush);
+    painter->setBrush(Qt::NoBrush);
 }
