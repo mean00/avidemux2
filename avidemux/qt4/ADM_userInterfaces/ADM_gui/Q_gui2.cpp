@@ -498,6 +498,8 @@ void MainWindow::busyTimerTimeout(void)
 */
 void MainWindow::actionSlot(Action a)
 {
+    if(a == ACT_EXIT || a == ACT_CLOSE || (a == ACT_PlayAvi && !playing) || (a > ACT_NAVIGATE_BEGIN && a < ACT_NAVIGATE_END))
+        thumbSlider->reset();
     if(a==ACT_PlayAvi && avifileinfo) // ugly
     {
         playing = !playing;
