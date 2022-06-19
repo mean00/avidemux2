@@ -10,6 +10,10 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#include <QPainter>
+#include <QPaintEngine>
+
 #include "config.h"
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
@@ -17,8 +21,6 @@
 #include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
 #include "GUI_simpleRender.h"
-#include "QPainter"
-#include "QPaintEngine"
 
 extern void *MUI_getDrawWidget(void);
 

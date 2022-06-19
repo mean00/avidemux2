@@ -13,6 +13,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
+
 #include "ADM_coreD3DApi.h"
 #include "config.h"
 #include "ADM_default.h"
@@ -26,9 +29,6 @@
 #include <dxva2api.h>
 #include <d3d9types.h>
 #include "ADM_coreDxva2.h"
-#include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
-
-
 
 #if 0
 #define aprintf printf
@@ -161,7 +161,7 @@ bool dxvaRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoo
     info=*window;
     baseInit(w,h,zoom);
 
-    windowId=(HWND)window->systemWindowId;
+    windowId=(HWND)window->display; // specific to UI_getWindowInfo() implementation
 
     if(!d3dHandle)
     {
