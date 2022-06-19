@@ -136,11 +136,8 @@ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_
 
     if (!config->playBack)
     {
-        if ((config->fadeConf.fadeIn > 0) || (config->fadeConf.fadeOut > 0))
-        {
-            AUDMAudioFilterFade *fade=new AUDMAudioFilterFade(last,&config->fadeConf);
-            ADD_FILTER(fade);
-        }
+        AUDMAudioFilterFade *fade=new AUDMAudioFilterFade(last,&config->fadeConf);
+        ADD_FILTER(fade);
     }
 
     // Equalizer

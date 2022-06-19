@@ -98,6 +98,11 @@ uint32_t AUDMAudioFilterFade::fill(uint32_t max,float *output,AUD_Status *status
         return 0;
     }
     
+    if ((fadeInSamples <= 0) && (fadeOutSamples <= 0))  // nothing to do
+    {
+        return _previous->fill(max, output, status);
+    }
+    
     if(!_scanned) preprocess();
 
     uint32_t rd = 0;
