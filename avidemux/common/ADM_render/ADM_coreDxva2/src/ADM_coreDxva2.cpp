@@ -124,6 +124,7 @@ typedef struct
            GUID      guid;
 }Dxv2SupportMap;
 
+static Dxv2SupportMap dxva2VP9={AV_CODEC_ID_VP9,false,0,0,INT_MAX,INT_MAX};
 static Dxv2SupportMap dxva2H265={AV_CODEC_ID_HEVC,false,0,0,INT_MAX,INT_MAX};
 static Dxv2SupportMap dxva2H264={AV_CODEC_ID_H264,false,0,0,INT_MAX,INT_MAX};
 static Dxv2SupportMap dxva2H265_10Bits={AV_CODEC_ID_HEVC,false,0,0,INT_MAX,INT_MAX};
@@ -391,6 +392,7 @@ bool admDxva2::init(GUI_WindowInfo *x)
         lookupCodec("H264",&dxva2H264,guid_count,guid_list,8,dummyCodedW,dummyCodedH);
         lookupCodec("H265",&dxva2H265,guid_count,guid_list,8,dummyCodedW,dummyCodedH);
         lookupCodec("H265",&dxva2H265_10Bits,guid_count,guid_list,10,dummyCodedW,dummyCodedH);
+        lookupCodec("VP9",&dxva2VP9,guid_count,guid_list,8,dummyCodedW,dummyCodedH);
         CoTaskMemFree(guid_list);
     }
     ADM_info("Scanning supported format done\n");
@@ -569,6 +571,7 @@ bool admDxva2::supported(AVCodecID codec, int bits, int width, int height)
     SUPSUP(AV_CODEC_ID_H264,dxva2H264,8)
     SUPSUP(AV_CODEC_ID_HEVC,dxva2H265,8)
     SUPSUP(AV_CODEC_ID_HEVC,dxva2H265_10Bits,10)
+    SUPSUP(AV_CODEC_ID_VP9,dxva2VP9,8)
 
     unsigned int guid_count = 0;
     GUID *guid_list = NULL;
@@ -586,6 +589,8 @@ bool admDxva2::supported(AVCodecID codec, int bits, int width, int height)
         r = lookupCodec("H265",&dxva2H265,guid_count,guid_list,8,width,height);
     else if(codec == AV_CODEC_ID_HEVC && bits == 10)
         r = lookupCodec("H265",&dxva2H265_10Bits,guid_count,guid_list,10,width,height);
+    else if(codec == AV_CODEC_ID_VP9 && bits == 8)
+        r = lookupCodec("VP9",&dxva2VP9,guid_count,guid_list,8,width,height);
     CoTaskMemFree(guid_list);
     return r;
 }
@@ -598,6 +603,7 @@ DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec,int bits)
     switch(codec)
     {
         case AV_CODEC_ID_H264: cmap=&dxva2H264;break;
+        case AV_CODEC_ID_VP9: cmap=&dxva2VP9;break;
         case AV_CODEC_ID_H265:
               if(10==bits)
                 cmap=&dxva2H265_10Bits;
@@ -642,6 +648,10 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
                     cmap=&dxva2H265;
                 }
                 break;
+        case AV_CODEC_ID_VP9:
+            ADM_info("Creating decoder DXVA2/VP9/8 Bits\n");
+            cmap=&dxva2VP9;
+            break;
         default:
             ADM_assert(0);
             break;
