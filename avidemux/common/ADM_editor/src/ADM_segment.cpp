@@ -182,6 +182,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
     uint64_t minDelta=100000;
     uint64_t maxDelta=0;
+    uint64_t dtsPtsDelta=0;
     uint32_t frame,flags,fmin=0,fmax=0;
     for(frame = 0; frame < info.nb_frames; frame++)
     {
@@ -196,6 +197,10 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
         }
         if (demuxer->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
         {
+            if(pts != ADM_NO_PTS && dts > pts &&
+               dts - pts < 32 * ref->timeIncrementInUs /* a rough sanity check */ &&
+               dts - pts > dtsPtsDelta)
+                dtsPtsDelta = dts - pts;
             if (firstNonZeroDts==ADM_NO_PTS)
             {
                 firstNonZeroDts=dts;
@@ -231,6 +236,19 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
 
     ADM_info("About %" PRIu64" microseconds per frame, %" PRIu32" frames\n",ref->timeIncrementInUs,info.nb_frames);
     ref->_nb_video_frames = info.nb_frames;
+
+    if(dtsPtsDelta)
+    {
+        ADM_warning("We have some DTS > PTS, delaying video by %" PRIu64" microseconds\n",dtsPtsDelta);
+        for(frame = 0; frame < info.nb_frames; frame++)
+        {
+            if(!demuxer->getPtsDts(frame,&pts,&dts)) continue;
+            if(pts == ADM_NO_PTS) continue;
+            pts += dtsPtsDelta;
+            demuxer->setPtsDts(frame,pts,dts);
+        }
+    }
+
     //
     //  And automatically create the segment
     //
