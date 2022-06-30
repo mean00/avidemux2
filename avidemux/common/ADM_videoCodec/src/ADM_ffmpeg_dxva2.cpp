@@ -344,19 +344,13 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     switch(avctx->codec_id)
     {
         case AV_CODEC_ID_H265:
-                align=128;
-                num_surfaces+=16;
-                break;
         case AV_CODEC_ID_H264:
-                align=16;
                 num_surfaces+=16;
                 break;
         case AV_CODEC_ID_VP9:
-                align=16;
                 num_surfaces+=8;
                 break;
         default:
-                align=16;
                 num_surfaces+=2;
                 break;
     }
@@ -365,12 +359,12 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     int bits=dxvaBitDepthFromContext(avctx);
     std::vector<admDx2Surface *>dmSurfaces;
     bool er=false;
-    if(!admDxva2::allocateDecoderSurface(this,avctx->coded_width,avctx->coded_height,align,num_surfaces,surfaces,dmSurfaces, bits))
+    if(!admDxva2::allocateDecoderSurface(this, avctx->coded_width, avctx->coded_height, num_surfaces, surfaces, dmSurfaces, bits))
         {
                 ADM_warning("Cannot allocate surfaces\n");
                 return ;
         }
-    dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,avctx->coded_width, avctx->coded_height,num_surfaces,surfaces,align,bits);
+    dx_context->decoder=admDxva2::createDecoder(avctx->codec_id, avctx->coded_width, avctx->coded_height, num_surfaces, surfaces, bits);
     aprintf("Decoder=%p\n",dx_context->decoder);
     if(!dx_context->decoder)
     {
@@ -673,14 +667,9 @@ bool           ADM_hwAccelEntryDxva2::canSupportThis(struct AVCodecContext *avct
         return false;
 
     outputFormat=ofmt;
-    int align=16;
-    if(avctx->codec_id == AV_CODEC_ID_H265)
-        align=128;
     int width=avctx->width;
     int height=avctx->height;
-    width=(width+align-1)&~(align-1);
-    height=(height+align-1)&~(align-1);
-    ADM_info("This is maybe supported by DXVA2, padded width: %d padded height: %d\n",width,height);
+    ADM_info("This is maybe supported by DXVA2, width: %d height: %d\n",width,height);
     int bits=dxvaBitDepthFromContext(avctx);
     if(!admDxva2::supported(avctx->codec_id, bits, width, height)) // not sure either
     {

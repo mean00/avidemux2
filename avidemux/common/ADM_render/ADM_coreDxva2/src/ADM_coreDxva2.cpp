@@ -71,15 +71,6 @@ typedef struct dxva2_mode
   enum AVCodecID codec;
   int            bitsPerChannel;
 } dxva2_mode;
-/**
- */
-static int ALIGN(int x,int align,bool verbose=false)
-{
-    int y= ((x+(align-1)) &(~(align-1)));
-    if(verbose)
-        printf("Align %d,%d => %d\n",x,align,y);
-    return y;
-}
 
 /**
  */
@@ -439,12 +430,10 @@ return NULL;
 
 /**
  */
-bool admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int num, LPDIRECT3DSURFACE9 *surfaces, std::vector<admDx2Surface *>&listOf,int bits)
+bool admDxva2::allocateDecoderSurface(void *parent, int width, int height, int num, LPDIRECT3DSURFACE9 *surfaces, std::vector<admDx2Surface *>&listOf, int bits)
 {
     HRESULT hr;
     HANDLE sh=NULL;
-    int width=ALIGN(w,align);
-    int height=ALIGN(h,align);
     D3DFORMAT fmt;
     fmt=dxvaBitsToFormat(bits);
 
@@ -481,10 +470,10 @@ bool admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int nu
          ADM_warning("Cannot allocate D3D9 surfaces\n");
          return false;
      }
-     ADM_info("Allocated surface %p with shared handle=%p\n",surfaces,sh);
+     ADM_info("Allocated surface %p with shared handle=%p and dimensions %d x %d\n",surfaces,sh,width,height);
      for(int i=0;i<num;i++)
      {
-         admDx2Surface *s=new admDx2Surface(parent,align);
+         admDx2Surface *s=new admDx2Surface(parent);
          s->surface=surfaces[i];
          s->width=width;
          s->height=height;
@@ -625,11 +614,9 @@ DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec,int bits)
 /**
  * \fn createDecoder
  */
-IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int height, int numSurface, LPDIRECT3DSURFACE9 *surface,int align,int bits)
+IDirectXVideoDecoder *admDxva2::createDecoder(AVCodecID codec, int width, int height, int numSurface, LPDIRECT3DSURFACE9 *surface, int bits)
 {
     Dxv2SupportMap *cmap;
-    int paddedWidth=ALIGN(with,align,true);
-    int paddedHeight=ALIGN(height,align,true);
     switch(codec)
     {
         case AV_CODEC_ID_H264:
@@ -670,8 +657,8 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
 
 #endif
     // update with real values
-    cmap->desc.SampleWidth=paddedWidth; // does not work with multiple video ?
-    cmap->desc.SampleHeight=paddedHeight;
+    cmap->desc.SampleWidth = width;
+    cmap->desc.SampleHeight = height;
     //
     hr = D3DCall(IDirectXVideoDecoderService,CreateVideoDecoder,decoder_service,
                                                          (cmap->device_guid),
@@ -709,10 +696,9 @@ bool admDxva2_exitCleanup()
 /**
  * \fn ctor
  */
-admDx2Surface::admDx2Surface(void *par,int alig)
+admDx2Surface::admDx2Surface(void *par)
 {
     parent=par;
-    alignment=alig;
     surface=NULL;
     decoder=NULL;
     refCount=0;
@@ -781,7 +767,7 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
     int sourcePitch=LockedRect.Pitch;
     switch(bits)
     {
-      case 8:   out->convertFromNV12(data,data+sourcePitch*ALIGN(out->GetHeight(PLANAR_Y),alignment), sourcePitch, sourcePitch);
+      case 8:   out->convertFromNV12(data, data + sourcePitch * height, sourcePitch, sourcePitch);
                 break;
       case 10:
               {
