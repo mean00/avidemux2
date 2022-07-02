@@ -595,8 +595,10 @@ bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
     pts*=1000;
     pts+=ms;
     pts*=1000;
+    // Aim higher to avoid rejecting the target picture if PTS is not a multiple of 1000 us.
+    // We can overshoot if two pics are less than 1ms apart, an unlikely scenario.
+    pts+=999;
 
-    pts++;
     if(pts >= total)
         pts = total-1;
     if(false==GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video,
