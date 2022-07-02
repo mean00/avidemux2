@@ -437,6 +437,10 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw
 
     fromPixFrmt=from;
     toPixFrmt=to;
+
+    if (fromPixFrmt == ADM_PIXFRMT_BGR24 && toPixFrmt == ADM_PIXFRMT_YV12)
+        flags |= SWS_ACCURATE_RND; // work around an issue of output color range being always limited
+
     AVPixelFormat lavFrom=ADMPixFrmt2LAVPixFmt(fromPixFrmt );
     AVPixelFormat lavTo=ADMPixFrmt2LAVPixFmt(toPixFrmt );
     
