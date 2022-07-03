@@ -870,9 +870,13 @@ bool GUI_infiniteForward(uint64_t pts)
             return false;
         }
     }
+    bool refreshNeeded = true;
     while(admPreview::nextPicture())
     {
+        refreshNeeded = false;
     }
+    if(refreshNeeded)
+        admPreview::samePicture();
     admPreview::deferDisplay(0);
     return true;
 }
