@@ -743,7 +743,7 @@ void HandleAction (Action action)
                 a=b;
                 b=p;
             }
-            // Special case of B being at or beyond the last frame
+            // Special case of B being beyond the last frame
             bool lastFrame=false;
             if(b==before)
             {
@@ -755,7 +755,7 @@ void HandleAction (Action action)
                 {
                     GUI_infiniteForward(pts);
                     uint64_t lastFramePts=video_body->getCurrentFramePts();
-                    if(b>=lastFramePts) lastFrame=true; // B is at or beyond the last frame
+                    if(b > lastFramePts) lastFrame=true; // B is beyond the last frame
                 }
             }
             if(!a && lastFrame)
