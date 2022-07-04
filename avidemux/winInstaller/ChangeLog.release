@@ -8,120 +8,49 @@
 <body>
   <div id="inner">
 
-    <h1>Changes in Avidemux v2.7.8 – v2.8.0</h1>
-
-    <h2>Behavior</h2>
-
-    <ul>
-      <li>The part of video preceding the presentation time of the first frame
-          is now excluded from created segment, making all videos appear as if
-          they &quot;start at zero&quot;.</li>
-      <li>When saving video, the frame matching the B marker is now excluded
-          from the exported range. Therefore, if the B marker is set to the last
-          frame of the video, it needs to be reset to the full duration for the
-          last frame to be included into the output.</li>
-      <li>Loading Matroska files with HEVC video tracks takes longer as slice
-          headers are decoded to detect the frame type.</li>
-    </ul>
-
-    <h2>New Video Filters</h2>
-
-    <ul>
-      <li>Analyzer</li>
-      <li>Blur (on selected area)</li>
-      <li>Cartoon</li>
-      <li>Color balance (adjust shadow, midtone and highlight)</li>
-      <li>Chroma hold (monochrome effect with kept colors)</li>
-      <li>Chroma key (replace &quot;green screen&quot; with an image)</li>
-      <li>Deband (reduce banding artifacts)</li>
-      <li>DelogoHQ (clean up arbitrary shaped logo)</li>
-      <li>Dynamic threshold</li>
-      <li>Fade from first image</li>
-      <li>Fade in (combination of multiple effects)</li>
-      <li>Fade out (combination of multiple effects)</li>
-      <li>Fade through (combination of multiple effects)</li>
-      <li>Fit to size (resize and pad to the specified size)</li>
-      <li>Flip (vertically/horizontally flip the image)</li>
-      <li>Grid (video wall effect)</li>
-      <li>Image stabilizer (reduce camera shakiness)</li>
-      <li>Luma stabilizer (reduce flickering)</li>
-      <li>Mirror</li>
-      <li>Posterize</li>
-      <li>Quadrilateral transformation (four point transform)</li>
-      <li>Wavelet denoiser</li>
-      <li>Wavelet sharpener</li>
-      <li>Zoom (partializable crop filter)</li>
-    </ul>
+    <h1>Changes in Avidemux v2.8.0 – v2.8.1</h1>
 
     <h2>New Features</h2>
 
     <ul>
-      <li>HDR video can be converted to SDR with tone mapping using a variety of
-          methods.</li>
-      <li>FFV1 encoder is back (it was available in Avidemux 2.5.x).</li>
-      <li>TrueHD audio tracks can be decoded and are supported for Matroska
-          containers.</li>
-      <li>Decoding support for WMA9 Lossless codec.</li>
-      <li>Filter previews have got a unified method to quickly compare filtered
-          and unfiltered inputs via the &quot;Peek Original&quot; button.</li>
-      <li>Blend and motion interpolation options added to &quot;Resample
-          FPS&quot; filter.</li>
-      <li>Mark cut points (segment boundaries) on the navigation slider. New
-          buttons and shortcuts are provided to jump to these cut points.</li>
-      <li>In the Video Filter Manager, active filters can be temporarily disabled.</li>
-      <li>Preference added to load sequentially named pictures in reverse order,
-          allowing to reverse video by exporting selection as JPEG images and
-          loading the first one.</li>
-      <li>During playback navigation is possible via keys or by dragging
-          the navigation slider.</li>
+      <li>New HiDPI compatible button set</li>
+      <li>Fast method to add partial filters via CTRL+F shortcut</li>
+      <li>Audio department improvements
+        <ul>
+          <li>custom frame rate change (audio stretch with pitch control)</li>
+          <li>configurable compressor (DRC)</li>
+          <li>3-band equalizer</li>
+          <li>independent channel gain options</li>
+          <li>independent channel delay options</li>
+          <li>channel remap options</li>
+          <li>new downmix options: stereo headphone and headphone virtual surround</li>
+          <li>audio track configuration up to 32 tracks</li>
+          <li>volume setting is saved upon exit</li>
+        </ul>
+      </li>
+      <li>Light and dark theme options in View menu</li>
+      <li>Option to remember selected resize method in &quot;Resize&quot;, &quot;Fit to size&quot; and &quot;Zoom&quot; filters</li>
+      <li>New filter: 3D LUT</li>
+      <li>New filter: Decimate</li>
     </ul>
 
     <h2>Other Enhancements</h2>
 
     <ul>
-      <li>&quot;Resample FPS&quot; and &quot;Change FPS&quot; filters can handle
-          up to 1000 fps.</li>
-      <li>&quot;Crop&quot; filter's preview has got a translucent green
-          masking.</li>
-      <li>&quot;Crop&quot; filter's Auto Crop function can achieve perfect crops
-          (if the selected frame is not too dark).</li>
-      <li>The maximum output resolution of the &quot;Resize&quot; filter has
-          been increased to 8192x8192</li>
-      <li>The &quot;Resize&quot; filter has got a nearest neighbour scaling
-          option.</li>
-      <li>Improved HiDPI scaling in previews.</li>
-      <li>x264 video encoder plugin now allows to specify color properties.</li>
-      <li>Maximized window state, widget visibility and toolbar position are
-          preserved after application restart.</li>
-      <li>Timestamps in format 00:00:00.000 like copied to clipboard by pressing
-          CTRL+SHIFT+C can be pasted into the "Go to Time" dialog using
-          CTRL+V.</li>
-      <li>PulseAudioSimple audio device has been replaced with full PulseAudio,
-          making an in-application volume control available (Linux only).</li>
-      <li>ALSA audio device plugin has been modified to use soft volume,
-          providing application-specific volume control which works with every
-          ALSA device.</li>
-      <li>In the Video Filter Manager, navigation by keyboard has been enhanced.</li>
-      <li>The VU meter (&quot;Audio Metre&quot;) has been redesigned.</li>
+      <li>HDR tonemapping performance and quality improvements</li>
+      <li>Extended file info</li>
     </ul>
 
     <h2>Bugfixes</h2>
 
     <ul>
-      <li>Occasional UI unrepsonsiveness during playback should be fixed.</li>
-      <li>Prevent navigation key events piling up.</li>
-      <li>Thumb slider, displaced by mouse wheel, is now automatically reset if
-          the end of video is reached, stopping Avidemux log file from filling
-          disk space.</li>
-      <li>Purple tint in old &quot;Fade to&quot; and &quot;Fade to black&quot;
-          filters on macOS fixed.</li>
-      <li>Green tint in &quot;MPlayer eq2&quot; filter is fixed.</li>
+      <li>Crashing in &quot;Resample FPS &quot; / motion interpolation should be fixed</li>
     </ul>
 
     <h2>Miscellaneous</h2>
 
     <ul>
-      <li>Bundled FFmpeg libraries have been updated to 4.4.1 release.</li>
+      <li>Bundled FFmpeg libraries have been updated to 4.4.2 release.</li>
     </ul>
 
   </div>
