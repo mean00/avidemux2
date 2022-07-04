@@ -20,7 +20,6 @@
 #include "ADM_toolkitQt.h"
 #include "ADM_vidFitToSize.h"
 #include "ADM_QSettings.h"
-#include "DIA_factory.h"
 
 #if 0
 #define aprintf printf
@@ -41,6 +40,11 @@ fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(par
             qset->beginGroup("fitToSize");
             _param->rsz.algo = qset->value("defaultAlgo", 1).toInt();
             _param->rsz.pad = qset->value("defaultPadding", 0).toInt();
+            // sanitize
+            if(_param->rsz.algo >= ui.comboBoxAlgo->count())
+                _param->rsz.algo = 1;
+            if(_param->rsz.pad >= ui.comboBoxPad->count())
+                _param->rsz.pad = 0;
             qset->endGroup();
             delete qset;
             qset = NULL;
@@ -69,6 +73,7 @@ fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(par
     printInfo();
 
     preferencesButton = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("fitToSize","Preferences"),QDialogButtonBox::ResetRole);
+    preferencesButton->setCheckable(true);
     connect(preferencesButton,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
     
     connectDimensionControls();
@@ -201,33 +206,98 @@ void fitToSizeWindow::roundupChanged(int index)
 
 void fitToSizeWindow::setPreferences(bool f)
 {
-    if (!preferencesButton->isEnabled()) return;
-    preferencesButton->setEnabled(false);
-    
+    UNUSED_ARG(f);
+
     QSettings *qset = qtSettingsCreate();
-    if(qset)
+    if(!qset)
     {
-        qset->beginGroup("fitToSize");
-        
-        bool saveAlgo = qset->value("saveAlgo", 0).toInt();
-        bool savePad = qset->value("savePad", 0).toInt();
-        diaElemToggle    eSaveAlgo(&saveAlgo,QT_TRANSLATE_NOOP("fitToSize","Remember selected resize method"));
-        diaElemToggle    eSavePad(&savePad,QT_TRANSLATE_NOOP("fitToSize","Remember selected padding method"));
-        
-        diaElem *mainElems[]={&eSaveAlgo, &eSavePad};
-        
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("fitToSize","Preferences"),2,mainElems))
-        {
-            qset->setValue("saveAlgo", (saveAlgo ? 1:0));
-            qset->setValue("savePad", (savePad ? 1:0));
-        }        
-        
-        qset->endGroup();
-        delete qset;
-        qset = NULL;
+        preferencesButton->setChecked(false);
+        return;
     }
 
-    preferencesButton->setEnabled(true);
+    qset->beginGroup("fitToSize");
+
+    QDialog dialog(preferencesButton);
+    dialog.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Preferences")));
+
+    QGroupBox *frameDefaults = new QGroupBox(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Defaults for new filter instances")));
+
+    QLabel *textAlgo = new QLabel(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Resize method:")));
+
+    QComboBox *saveAlgoComboBox = new QComboBox();
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Most recently accepted")),-1);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Bilinear")),0);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Bicubic")),1);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Lanczos")),2);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Spline")),3);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Nearest Neighbor")),4);
+
+    int userData = (qset->value("saveAlgo", 0).toInt() > 0)? -1 : qset->value("defaultAlgo", 1).toInt();
+
+    for(int i = 0; i < saveAlgoComboBox->count(); i++)
+    {
+        if(userData != saveAlgoComboBox->itemData(i).toInt()) continue;
+        saveAlgoComboBox->setCurrentIndex(i);
+        break;
+    }
+
+    QLabel *textPaddingType = new QLabel(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Padding type:")));
+
+    QComboBox *savePadComboBox = new QComboBox();
+    savePadComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Most recently accepted")),-1);
+    savePadComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to black bars")),0);
+    savePadComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to echo")),1);
+
+    userData = (qset->value("savePad", 0).toInt() > 0)? -1 : qset->value("defaultPadding", 0).toInt();
+
+    for(int i = 0; i < savePadComboBox->count(); i++)
+    {
+        if(userData != savePadComboBox->itemData(i).toInt()) continue;
+        savePadComboBox->setCurrentIndex(i);
+        break;
+    }
+
+    QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox();
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+    QObject::connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+    QObject::connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+
+    QGridLayout *grid = new QGridLayout();
+
+    grid->addWidget(textAlgo,0,0);
+    grid->addWidget(saveAlgoComboBox,0,1);
+    grid->addWidget(textPaddingType,1,0);
+    grid->addWidget(savePadComboBox,1,1);
+    grid->setColumnStretch(1,1);
+
+    frameDefaults->setLayout(grid);
+
+    QVBoxLayout *vboxLayout = new QVBoxLayout();
+
+    vboxLayout->addWidget(frameDefaults);
+    vboxLayout->addSpacerItem(spacer);
+    vboxLayout->addWidget(buttonBox);
+    dialog.setLayout(vboxLayout);
+
+    if(QDialog::Accepted == dialog.exec())
+    {
+        int idx = saveAlgoComboBox->currentIndex();
+        qset->setValue("saveAlgo", saveAlgoComboBox->itemData(idx).toInt() == -1);
+        if(idx > 0)
+            qset->setValue("defaultAlgo", saveAlgoComboBox->itemData(idx));
+        idx = savePadComboBox->currentIndex();
+        qset->setValue("savePad", savePadComboBox->itemData(idx).toInt() == -1);
+        if(idx > 0)
+            qset->setValue("defaultPadding", savePadComboBox->itemData(idx));
+    }
+    qset->endGroup();
+    delete qset;
+    qset = NULL;
+
+    preferencesButton->setChecked(false);
 }
 
 void fitToSizeWindow::okButtonClicked()
