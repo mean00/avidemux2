@@ -19,7 +19,6 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
 #include "ADM_QSettings.h"
-#include "DIA_factory.h"
 
 static double aspectRatio[2][5]={
     {
@@ -117,6 +116,7 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
 
     preferencesButton = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("resize","Preferences"),QDialogButtonBox::ResetRole);
+    preferencesButton->setCheckable(true);
     connect(preferencesButton,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
     
     connectDimensionControls();
@@ -240,30 +240,76 @@ void resizeWindow::aspectRatioChanged(int index)
 
 void resizeWindow::setPreferences(bool f)
 {
-    if (!preferencesButton->isEnabled()) return;
-    preferencesButton->setEnabled(false);
-    
+    UNUSED_ARG(f);
+
     QSettings *qset = qtSettingsCreate();
-    if(qset)
+    if(!qset)
     {
-        qset->beginGroup("resize");
-        
-        bool saveAlgo = qset->value("saveAlgo", 0).toInt();
-        diaElemToggle    eSaveAlgo(&saveAlgo,QT_TRANSLATE_NOOP("resize","Remember selected resize method"));
-        
-        diaElem *mainElems[]={&eSaveAlgo};
-        
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("resize","Preferences"),1,mainElems))
-        {
-            qset->setValue("saveAlgo", (saveAlgo ? 1:0));
-        }        
-        
-        qset->endGroup();
-        delete qset;
-        qset = NULL;
+        preferencesButton->setChecked(false);
+        return;
     }
 
-    preferencesButton->setEnabled(true);
+    qset->beginGroup("resize");
+
+    QDialog dialog(preferencesButton);
+    dialog.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("resize","Preferences")));
+
+    QGroupBox *frameDefaults = new QGroupBox(QString::fromUtf8(QT_TRANSLATE_NOOP("resize","Defaults for new filter instances")));
+
+    QLabel *textAlgo = new QLabel(QString::fromUtf8(QT_TRANSLATE_NOOP("resize","Resize method:")));
+
+    QComboBox *saveAlgoComboBox = new QComboBox();
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("resize","Most recently accepted")),-1);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("resize","Bilinear")),0);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("resize","Bicubic")),1);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("resize","Lanczos-3")),2);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("resize","Spline")),3);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("resize","Nearest neighbor")),4);
+
+    int userData = (qset->value("saveAlgo", 0).toInt() > 0)? -1 : qset->value("defaultAlgo", 1).toInt();
+
+    for(int i = 0; i < saveAlgoComboBox->count(); i++)
+    {
+        if(userData != saveAlgoComboBox->itemData(i).toInt()) continue;
+        saveAlgoComboBox->setCurrentIndex(i);
+        break;
+    }
+
+    QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox();
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+    QObject::connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+    QObject::connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+
+    QHBoxLayout *hbox = new QHBoxLayout();
+
+    hbox->addWidget(textAlgo);
+    hbox->addWidget(saveAlgoComboBox,1);
+
+    frameDefaults->setLayout(hbox);
+
+    QVBoxLayout *vboxLayout = new QVBoxLayout();
+
+    vboxLayout->addWidget(frameDefaults);
+    vboxLayout->addSpacerItem(spacer);
+    vboxLayout->addWidget(buttonBox);
+    dialog.setLayout(vboxLayout);
+
+    if(QDialog::Accepted == dialog.exec())
+    {
+        int idx = saveAlgoComboBox->currentIndex();
+        qset->setValue("saveAlgo", saveAlgoComboBox->itemData(idx).toInt() == -1);
+        if(idx > 0)
+            qset->setValue("defaultAlgo", saveAlgoComboBox->itemData(idx));
+    }
+
+    qset->endGroup();
+    delete qset;
+    qset = NULL;
+
+    preferencesButton->setChecked(false);
 }
 
 void resizeWindow::disconnectDimensionControls()
