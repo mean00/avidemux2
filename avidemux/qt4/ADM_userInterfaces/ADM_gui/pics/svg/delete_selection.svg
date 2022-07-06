@@ -5,7 +5,7 @@
    version="1.1"
    viewBox="0 0 100 100"
    id="svg45"
-   sodipodi:docname="cut_selection.svg"
+   sodipodi:docname="delete_selection.svg"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -21,9 +21,9 @@
      inkscape:pagecheckerboard="1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.78951421"
-     inkscape:cx="302.08449"
-     inkscape:cy="158.95851"
+     inkscape:zoom="1.5790284"
+     inkscape:cx="231.47145"
+     inkscape:cy="215.63893"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="0"
@@ -159,13 +159,13 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter2912"
-       x="-0.075"
-       y="-0.075"
-       width="1.15"
-       height="1.15">
+       x="-0.108"
+       y="-0.108"
+       width="1.216"
+       height="1.216">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.5625"
+         stdDeviation="2.25"
          id="feGaussianBlur2914" />
     </filter>
   </defs>
@@ -213,7 +213,7 @@
      id="rect43"
      style="filter:url(#filter1160)" />
   <g
-     id="g2918">
+     id="g855">
     <path
        id="path2802"
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.11819;stroke-linecap:round;stroke-linejoin:round;filter:url(#filter2912)"

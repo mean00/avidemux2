@@ -279,26 +279,26 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter2033"
-       x="-0.34635989"
-       y="-17.950059"
-       width="1.6927198"
-       height="36.900119">
+       x="-0.40892096"
+       y="-21.192279"
+       width="1.8178419"
+       height="43.384558">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.3655213"
+         stdDeviation="2.0062755"
          id="feGaussianBlur2035" />
     </filter>
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter2037"
-       x="-0.34976446"
-       y="-18.1265"
-       width="1.6995289"
-       height="37.253001">
+       x="-0.413922"
+       y="-21.451457"
+       width="1.827844"
+       height="43.902914">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.3655213"
+         stdDeviation="2.0062755"
          id="feGaussianBlur2039" />
     </filter>
     <linearGradient
@@ -489,13 +489,13 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter926"
-       x="-0.31049453"
-       y="-0.14309587"
-       width="1.6209891"
-       height="1.2861917">
+       x="-0.37896299"
+       y="-0.17465055"
+       width="1.757926"
+       height="1.3493011">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.2411218"
+         stdDeviation="1.8540215"
          id="feGaussianBlur928" />
     </filter>
   </defs>
@@ -545,7 +545,7 @@
          x="1.5143057e-06" />
     </g>
     <rect
-       style="fill:#001b7b;stroke:#001b7b;stroke-width:10.2127;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1;filter:url(#filter2037)"
+       style="fill:#000b33;stroke:#000b33;stroke-width:10.2127;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1;filter:url(#filter2037)"
        id="rect1993"
        width="23.969276"
        height="0.46250522"
@@ -553,7 +553,7 @@
        y="76.388458"
        transform="matrix(-0.79694228,0.60405547,0.71164061,0.70254369,0,0)" />
     <rect
-       style="fill:#001b7b;stroke:#001b7b;stroke-width:10.4732;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1;filter:url(#filter2033)"
+       style="fill:#000b33;stroke:#000b33;stroke-width:10.4732;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1;filter:url(#filter2033)"
        id="rect1995"
        width="24.580938"
        height="0.47430769"
@@ -577,7 +577,7 @@
        y="-5.4565864"
        transform="matrix(-0.79694228,-0.60405547,0.71164061,-0.70254369,0,0)" />
     <rect
-       style="fill:#001b7b;fill-opacity:1;stroke:#001b7b;stroke-width:7.38379;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter926)"
+       style="fill:#000b33;fill-opacity:1;stroke:#000b33;stroke-width:7.38379;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter926)"
        id="rect893"
        width="21.483751"
        height="46.616211"

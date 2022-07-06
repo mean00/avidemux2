@@ -268,13 +268,13 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter926"
-       x="-0.13405511"
-       y="-0.1340551"
-       width="1.2681102"
-       height="1.2681102">
+       x="-0.16705511"
+       y="-0.1670551"
+       width="1.3341102"
+       height="1.3341102">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.2330619"
+         stdDeviation="1.7756091"
          id="feGaussianBlur928" />
     </filter>
     <linearGradient
@@ -525,7 +525,7 @@
          id="rect43" />
     </g>
     <rect
-       style="fill:#001b7b;fill-opacity:1;stroke:#001b7b;stroke-width:4.66039;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter926)"
+       style="fill:#000b33;fill-opacity:1;stroke:#000b33;stroke-width:4.66039;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter926)"
        id="rect888"
        width="39.457977"
        height="39.457981"

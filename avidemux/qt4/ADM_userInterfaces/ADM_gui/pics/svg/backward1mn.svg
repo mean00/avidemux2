@@ -42,9 +42,9 @@
      inkscape:document-units="mm"
      showgrid="true"
      width="100mm"
-     inkscape:zoom="2.1854583"
-     inkscape:cx="188.7476"
-     inkscape:cy="188.7476"
+     inkscape:zoom="1.5453524"
+     inkscape:cx="141.3917"
+     inkscape:cy="193.80693"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="0"
@@ -268,26 +268,26 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter939"
-       x="-0.14998348"
-       y="-0.14998348"
-       width="1.299967"
-       height="1.299967">
+       x="-0.18999197"
+       y="-0.18999197"
+       width="1.3799839"
+       height="1.3799839">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.4996233"
+         stdDeviation="2.1594576"
          id="feGaussianBlur941" />
     </filter>
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter943"
-       x="-0.25963417"
-       y="-0.2248433"
-       width="1.5192581"
-       height="1.4496866">
+       x="-0.32889228"
+       y="-0.28482259"
+       width="1.6577743"
+       height="1.5696452">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="9.8378015"
+         stdDeviation="14.166434"
          id="feGaussianBlur945" />
     </filter>
     <linearGradient
@@ -539,7 +539,7 @@
     </g>
     <path
        sodipodi:type="star"
-       style="fill:#001b7b;fill-opacity:1;stroke:#001b7b;stroke-width:30.6688;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter943)"
+       style="fill:#000b33;fill-opacity:1;stroke:#000b33;stroke-width:30.6688;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter943)"
        id="path891"
        inkscape:flatsided="true"
        sodipodi:sides="3"
@@ -555,7 +555,7 @@
        transform="matrix(-0.10707158,0,0,0.21701714,38.887453,30.906936)"
        inkscape:transform-center-x="2.6767898" />
     <rect
-       style="fill:#001b7b;fill-opacity:1;stroke:#001b7b;stroke-width:4.675;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter939)"
+       style="fill:#000b33;fill-opacity:1;stroke:#000b33;stroke-width:4.675;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter939)"
        id="rect893"
        width="39.581665"
        height="39.581665"

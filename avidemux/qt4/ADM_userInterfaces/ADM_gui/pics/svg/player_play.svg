@@ -268,13 +268,13 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter926"
-       x="-0.14861277"
-       y="-0.12869814"
-       width="1.2972188"
-       height="1.2573963">
+       x="-0.18415264"
+       y="-0.15947657"
+       width="1.3682985"
+       height="1.3189531">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="5.0482775"
+         stdDeviation="7.2695195"
          id="feGaussianBlur928" />
     </filter>
     <linearGradient
@@ -526,7 +526,7 @@
     </g>
     <path
        sodipodi:type="star"
-       style="fill:#001b7b;stroke:#001b7b;stroke-width:20.3521;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;fill-opacity:1;filter:url(#filter926)"
+       style="fill:#000b33;stroke:#000b33;stroke-width:20.3521;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;fill-opacity:1;filter:url(#filter926)"
        id="path888"
        inkscape:flatsided="true"
        sodipodi:sides="3"

@@ -41,9 +41,9 @@
      inkscape:document-units="mm"
      showgrid="true"
      width="100mm"
-     inkscape:zoom="0.64"
-     inkscape:cx="-124.21875"
-     inkscape:cy="211.71875"
+     inkscape:zoom="1.28"
+     inkscape:cx="203.51563"
+     inkscape:cy="251.95313"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="0"
@@ -157,26 +157,26 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter1224"
-       x="-0.53802881"
-       y="-0.12964546"
-       width="2.0760576"
-       height="1.2592909">
+       x="-0.65924163"
+       y="-0.15885336"
+       width="2.3184833"
+       height="1.3177067">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.3308904"
+         stdDeviation="1.8654052"
          id="feGaussianBlur1226" />
     </filter>
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter1228"
-       x="-0.19963356"
-       y="-0.19963356"
-       width="1.3992671"
-       height="1.3992671">
+       x="-0.3"
+       y="-0.3"
+       width="1.6"
+       height="1.6">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.3308904"
+         stdDeviation="2"
          id="feGaussianBlur1230" />
     </filter>
     <linearGradient
@@ -347,7 +347,7 @@
          id="rect43" />
     </g>
     <circle
-       style="fill:#001b7b;fill-opacity:1;stroke:none;stroke-width:4.65171;stroke-linecap:round;stroke-linejoin:round;filter:url(#filter1228)"
+       style="fill:#000b33;fill-opacity:1;stroke:none;stroke-width:4.65171;stroke-linecap:round;stroke-linejoin:round;filter:url(#filter1228)"
        id="circle1184"
        cx="50"
        cy="22.166769"
@@ -360,7 +360,7 @@
        cy="25.675362"
        r="8.3599997" />
     <rect
-       style="fill:#001b7b;fill-opacity:1;stroke:#001b7b;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter1224)"
+       style="fill:#000b33;fill-opacity:1;stroke:#000b33;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter1224)"
        id="rect1186"
        width="10.583331"
        height="43.920837"

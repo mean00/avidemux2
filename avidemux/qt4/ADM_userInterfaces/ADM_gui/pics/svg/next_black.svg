@@ -42,9 +42,9 @@
      inkscape:document-units="mm"
      showgrid="true"
      width="100mm"
-     inkscape:zoom="2.1854583"
-     inkscape:cx="188.7476"
-     inkscape:cy="188.7476"
+     inkscape:zoom="0.54636458"
+     inkscape:cx="-19.217937"
+     inkscape:cy="-330.36549"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="0"
@@ -268,13 +268,13 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter940"
-       x="-0.31378517"
-       y="-0.17219914"
-       width="1.6275703"
-       height="1.3443983">
+       x="-0.42841387"
+       y="-0.23510512"
+       width="1.8568277"
+       height="1.4702102">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.5207641"
+         stdDeviation="2.6360423"
          id="feGaussianBlur942" />
     </filter>
     <linearGradient
@@ -292,26 +292,26 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter1104"
-       x="-0.34976456"
-       y="-18.126505"
-       width="1.6995291"
-       height="37.253011">
+       x="-0.41392217"
+       y="-21.451466"
+       width="1.8278443"
+       height="43.902932">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.3655223"
+         stdDeviation="2.006277"
          id="feGaussianBlur1106" />
     </filter>
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter1108"
-       x="-0.34635998"
-       y="-17.950064"
-       width="1.69272"
-       height="36.900128">
+       x="-0.40892112"
+       y="-21.192288"
+       width="1.8178422"
+       height="43.384575">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.3655223"
+         stdDeviation="2.006277"
          id="feGaussianBlur1110" />
     </filter>
     <linearGradient
@@ -565,7 +565,7 @@
        x="53.764622"
        y="29.601957" />
     <rect
-       style="fill:#001b7b;stroke:#001b7b;stroke-width:10.4732;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1;filter:url(#filter1108)"
+       style="fill:#000b33;stroke:#000b33;stroke-width:10.4732;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1;filter:url(#filter1108)"
        id="rect1064"
        width="24.580938"
        height="0.47430769"
@@ -573,7 +573,7 @@
        y="-66.196953"
        transform="matrix(0.79694228,-0.60405547,-0.71164061,-0.70254369,0,0)" />
     <rect
-       style="fill:#001b7b;stroke:#001b7b;stroke-width:10.2127;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1;filter:url(#filter1104)"
+       style="fill:#000b33;stroke:#000b33;stroke-width:10.2127;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1;filter:url(#filter1104)"
        id="rect1066"
        width="23.969276"
        height="0.46250522"

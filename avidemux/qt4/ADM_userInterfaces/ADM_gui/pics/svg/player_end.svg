@@ -268,26 +268,26 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter929"
-       x="-0.54653312"
-       y="-0.13330073"
-       width="2.0930662"
-       height="1.2666015">
+       x="-0.68307065"
+       y="-0.16660256"
+       width="2.3661413"
+       height="1.3332051">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="1.2794465"
+         stdDeviation="1.8424029"
          id="feGaussianBlur931" />
     </filter>
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter933"
-       x="-0.17666511"
-       y="-0.15299151"
-       width="1.3533224"
-       height="1.305983">
+       x="-0.2199302"
+       y="-0.19046018"
+       width="1.4398526"
+       height="1.3809204">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="6.1456107"
+         stdDeviation="8.8496794"
          id="feGaussianBlur935" />
     </filter>
     <linearGradient
@@ -539,7 +539,7 @@
     </g>
     <path
        sodipodi:type="star"
-       style="fill:#001b7b;stroke:#001b7b;stroke-width:23.5006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;fill-opacity:1;filter:url(#filter933)"
+       style="fill:#000b33;stroke:#000b33;stroke-width:23.5006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;fill-opacity:1;filter:url(#filter933)"
        id="path889"
        inkscape:flatsided="true"
        sodipodi:sides="3"
@@ -555,7 +555,7 @@
        transform="matrix(0.18966216,0,0,0.22852487,20.309866,29.789585)"
        inkscape:transform-center-x="-4.7415544" />
     <rect
-       style="fill:#001b7b;stroke:#001b7b;stroke-width:4.675;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1;stroke-opacity:1;filter:url(#filter929)"
+       style="fill:#000b33;stroke:#000b33;stroke-width:4.675;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1;stroke-opacity:1;filter:url(#filter929)"
        id="rect891"
        width="9.8954144"
        height="40.571209"
