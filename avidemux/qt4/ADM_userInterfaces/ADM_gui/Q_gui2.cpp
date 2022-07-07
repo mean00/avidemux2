@@ -759,6 +759,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     AUTOREPEAT_TOOLBUTTON(toolButtonNextFrame)
     AUTOREPEAT_TOOLBUTTON(toolButtonPreviousIntraFrame)
     AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
+    AUTOREPEAT_TOOLBUTTON(toolButtonBackOneMinute)
+    AUTOREPEAT_TOOLBUTTON(toolButtonForwardOneMinute)
 
     ui.toolBar->addSeparator();
 
