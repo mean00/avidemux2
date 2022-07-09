@@ -58,6 +58,7 @@ typedef struct
     uint32_t frameCount;
     uint32_t fieldCount;
     uint32_t ar;
+    uint32_t type; // 0: MPEG-1, 1: MPEG-2
 }PSVideo;
 
 typedef enum
@@ -307,6 +308,7 @@ uint8_t PsIndexer::run(const char *file)
                                     switch(id)
                                     {
                                         case 1: // Sequence extension
+                                            video.type = 1; // MPEG-2
                                             break;
                                         case 2: // Sequence display extension
                                             if(firstByte&1)
@@ -433,7 +435,11 @@ uint8_t PsIndexer::run(const char *file)
                           }
                           //
 #if 0
-                            printf("Found pic of type %d at 0x%" PRIx64" dts=%s pts=%s\n",type,info.startAt,ADM_us2plain(timeConvert(info.dts)),ADM_us2plain(timeConvert(info.pts)));
+                          {
+                              char *dtstxt = ADM_strdup(ADM_us2plain(timeConvert(info.dts)));
+                              printf("Found pic %" PRIu32" of type %d at 0x%" PRIx64" dts=%s pts=%s\n",data.nbPics,type,info.startAt,dtstxt,ADM_us2plain(timeConvert(info.pts)));
+                              ADM_dealloc(dtstxt);
+                          }
 #endif
                           //
                           if(lastValidVideoDts!=ADM_NO_PTS && info.dts!=ADM_NO_PTS)
@@ -584,6 +590,7 @@ bool PsIndexer::writeVideo(PSVideo *video)
     qfprintf(index,"Fps=%d\n",video->fps);
     qfprintf(index,"Interlaced=%d\n",video->interlaced);
     qfprintf(index,"AR=%d\n",video->ar);
+    qfprintf(index,"VideoCodec=%s\n",video->type ? "Mpeg2" : "Mpeg1");
     return true;
 }
 

@@ -204,6 +204,25 @@ bool    psHeader::readVideo(indexFile *index)
     if(index->getAsUint32("Interlaced"))
         printf("[psDemuxer] This video is interlaced.\n");
 
+    char *type = index->getAsString("VideoCodec");
+    if(type)
+    {
+        if(!strcmp(type,"Mpeg2"))
+        {
+            _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)"MPEG");
+        }else if(!strcmp(type,"Mpeg1"))
+        {
+            _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)"mp1v");
+        }else
+        {
+            ADM_warning("Unknown video codec \"%s\"\n",type);
+            return false;
+        }
+    }else
+    {
+        _videostream.fccHandler = _video_bih.biCompression = fourCC::get((uint8_t *)"MPEG");
+    }
+
     _video_bih.biWidth=_mainaviheader.dwWidth=w ;
     _video_bih.biHeight=_mainaviheader.dwHeight=h;             
 
@@ -211,7 +230,6 @@ bool    psHeader::readVideo(indexFile *index)
     _mainaviheader.dwMicroSecPerFrame=0;
     _videostream.dwScale=1000;
     _videostream.dwRate=fps;
-    _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"MPEG");
 
     return true;
 }
