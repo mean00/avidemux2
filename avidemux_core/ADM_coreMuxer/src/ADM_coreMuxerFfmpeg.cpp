@@ -279,7 +279,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 
                                         }else
                                         {
-                                            if(fourCC::check(stream->getFCC(),(uint8_t *)"mpg1"))
+                                            if(fourCC::check(stream->getFCC(),(uint8_t *)"mp1v"))
                                             {
                                                 c->has_b_frames=1; // No PTS=cannot handle CTS...
                                                 c->max_b_frames=2;

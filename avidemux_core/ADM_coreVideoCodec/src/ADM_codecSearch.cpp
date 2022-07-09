@@ -82,7 +82,7 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
         ffdec = new decoderFFMpeg4 (w,h,fcc,extraLen,extraData,bpp);
     else if (isMpeg12Compatible (fcc))
     {
-        if (fourCC::check (fcc, (uint8_t *) "mpg1"))
+        if (fourCC::check (fcc, (uint8_t *) "mp1v"))
             ffdec = new decoderFFMpg1 (w,h,fcc,extraLen,extraData,bpp);
         else
             ffdec = new decoderFFMpeg12 (w,h,fcc,extraLen,extraData,bpp);

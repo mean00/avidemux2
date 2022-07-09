@@ -1833,10 +1833,10 @@ uint8_t MP4Header::decodeEsds(void *ztom,uint32_t trackType)
                             commonPart(MPEG);
                             break;
                         case 0x6A: // Visual ISO/IEC 11172-2 (MPEG Video)
-                            ADM_info("Changing FourCC from %s to mpg1 (object type indication: 0x%x)\n",
+                            ADM_info("Changing FourCC from %s to mp1v (object type indication: 0x%x)\n",
                                     fourCC::tostring(_videostream.fccHandler),
                                     objectTypeIndication);
-                            commonPart(mpg1);
+                            commonPart(mp1v);
                             break;
                         default:
                             ADM_warning("Object type indication 0x%x not handled\n",objectTypeIndication);

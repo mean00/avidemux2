@@ -49,8 +49,8 @@ bool  isMpeg4Compatible (uint32_t fourcc)
 bool isMpeg12Compatible (uint32_t fourcc)
 {
   CHECK ("MPEG");
-  CHECK ("mpg1");
-  CHECK ("mpg2");
+  CHECK ("mp1v");
+  CHECK ("mp2v");
   SWAP32 (fourcc);
   if (fourcc == 0x10000002 || fourcc==0x10000001) //Mplayer fourcc
     return true;
