@@ -26,6 +26,7 @@
 typedef enum
 {
     ADM_TS_UNKNOWN=0,
+    ADM_TS_MPEG1,
     ADM_TS_MPEG2,
     ADM_TS_H264,
     ADM_TS_H265,

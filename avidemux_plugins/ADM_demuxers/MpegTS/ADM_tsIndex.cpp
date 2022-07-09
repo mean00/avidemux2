@@ -82,7 +82,8 @@ uint8_t   tsIndexer(const char *file)
     TsIndexerBase *dx=NULL;
     switch(tracks[0].trackType)
     {
-            case ADM_TS_MPEG2: 
+            case ADM_TS_MPEG1:
+            case ADM_TS_MPEG2:
                             dx=new TsIndexerMpeg2(&audioTrack);
                             break;
             case ADM_TS_VC1: 
@@ -170,7 +171,8 @@ bool TsIndexerBase::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
     }
  switch(trkType)
     {
-        case ADM_TS_MPEG2: qfprintf(index,"VideoCodec=Mpeg2\n");break;;
+        case ADM_TS_MPEG1: qfprintf(index,"VideoCodec=Mpeg1\n");break;
+        case ADM_TS_MPEG2: qfprintf(index,"VideoCodec=Mpeg2\n");break;
         case ADM_TS_H264:  qfprintf(index,"VideoCodec=H264\n");break;
         case ADM_TS_H265:  qfprintf(index,"VideoCodec=H265\n");break;
         case ADM_TS_VC1:   qfprintf(index,"VideoCodec=VC1\n");break;

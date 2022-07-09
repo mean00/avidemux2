@@ -53,9 +53,9 @@ uint8_t result=1;
     listOfUnits.clear();
 
     if(!videoTrac) return false;
-    if(videoTrac[0].trackType!=ADM_TS_MPEG2)
+    if(videoTrac[0].trackType!=ADM_TS_MPEG1 && videoTrac[0].trackType!=ADM_TS_MPEG2)
     {
-        printf("[Ts Indexer] Only Mpeg2 video supported\n");
+        printf("[Ts Indexer] Only Mpeg1/2 video supported\n");
         return false;
     }
     video.pid=videoTrac[0].trackPid;
@@ -122,7 +122,7 @@ uint8_t result=1;
         {
             if(seqEntryPending)
             {
-                writeVideo(&video,ADM_TS_MPEG2);
+                writeVideo(&video, video.type ? ADM_TS_MPEG2 : ADM_TS_MPEG1);
                 writeAudio();
                 qfprintf(index,"[Data]");
                 seqEntryPending=false;
@@ -203,6 +203,7 @@ uint8_t result=1;
                                 case 1: // Sequence extension
                                     REMEMBER()
                                     val=(val>>3)&1; // gop type progressive, unreliable, not used
+                                    video.type = 1; // MPEG-2
                                     break;
                                 case 8: // picture coding extension (mpeg2)
                                 {
@@ -228,7 +229,7 @@ uint8_t result=1;
                                         if(seqEntryPending)
                                         {
                                             video.interlaced=(picture_structure!=3);
-                                            writeVideo(&video,ADM_TS_MPEG2);
+                                            writeVideo(&video, video.type ? ADM_TS_MPEG2 : ADM_TS_MPEG1);
                                             writeAudio();
                                             qfprintf(index,"[Data]");
                                             seqEntryPending=false;

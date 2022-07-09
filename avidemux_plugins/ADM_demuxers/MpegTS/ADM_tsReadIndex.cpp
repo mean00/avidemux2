@@ -219,14 +219,16 @@ bool    tsHeader::readVideo(indexFile *index)
         if(!strcmp(type,"H264") || !strcmp(type,"H265"))
         {
              _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)type);
-        }else
-        if(!strcmp(type,"VC1"))
+        }else if(!strcmp(type,"VC1"))
         {
             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"VC1 ");
             videoNeedEscaping=true;
-        }else
+        }else if(!strcmp(type,"Mpeg2"))
         {
             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"MPEG");
+        }else if(!strcmp(type,"Mpeg1"))
+        {
+            _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"mp1v");
         }
     }else
     {

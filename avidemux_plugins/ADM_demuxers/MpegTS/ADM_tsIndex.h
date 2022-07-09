@@ -50,13 +50,14 @@ static const char Type[5]={'X','I','P','B','D'};
 class TSVideo
 {
 public:
-    TSVideo(void) {w=h=fps=interlaced=ar=pid=frameCount=fieldCount=0;extraDataLength=0;}
+    TSVideo(void) {w=h=fps=interlaced=ar=pid=type=frameCount=fieldCount=extraDataLength=0;}
     uint32_t w;
     uint32_t h;
     uint32_t fps;
     uint32_t interlaced;
     uint32_t ar;
     uint32_t pid;
+    uint32_t type; // to tell MPEG-1 (0) from MPEG-2 (1)
     uint32_t frameCount;
     uint32_t fieldCount;
     uint32_t extraDataLength;
