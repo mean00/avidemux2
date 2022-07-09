@@ -108,71 +108,94 @@ bool        psPacket::getPacket(uint32_t maxSize, uint8_t *pid, uint32_t *packet
 uint32_t globstream,len;
 uint8_t  stream,substream;
 uint64_t pts,dts;
-        // Resync on our stream
+    // Resync on our stream
 _again2:
-        *pid=0;
-        if(!_file->sync(&stream)) 
-        {
-                uint64_t pos;
-                _file->getpos(&pos);
-                printf("[DmxPS] cannot sync  at %" PRIu64"/%" PRIu64"\n",pos,_size);
-                return false;
-        }
-// Position of this packet just before startcode
-        _file->getpos(startAt);
-        *startAt-=4;
-// Handle out of band stuff        
-        if(stream==PACK_START_CODE) 
-        {
-        		_file->forward(8);
-        		goto _again2;
-        }
-        if( stream==PADDING_CODE ||stream==SYSTEM_START_CODE) 
-        {
-                        len=_file->read16i();
-                        //printf("\tForwarding %lu bytes\n",len);
-        		_file->forward(len);
-        		goto _again2;
-        }
-        // Only keep relevant parts
-        // i.e. a/v : C0 C9 E0 E9
-        // subs 20-29
-        // private data 1/2
-#define INSIDE(min,max) (stream>=min && stream<max)
-        if(!(  INSIDE(0xC0,0xC9) || INSIDE(0xE0,0xE9) || INSIDE(0x20,0x29) || 
-                    stream==PRIVATE_STREAM_1 || stream==PRIVATE_STREAM_2
-        			)) goto _again2;
-        // Ok we got a candidate
-        if(!getPacketInfo(stream,&substream,&len,&pts,&dts))   
-        {
-                goto _again2;
-        }
-        if(!len)
-        {
-                printf("[psPacket::getPacket] Zero-length packet: corrupted data?\n");
-                goto _again2;
-        }
-        //printf("Main Stream :%x substream :%x\n",stream,substream);
-        switch(stream)
-        {
-                case PRIVATE_STREAM_1: globstream=0xFF00+substream; break;
-                case PRIVATE_STREAM_2: globstream=0xF000+substream; break;
-                default:               globstream=stream;break;
-                        
-        }
-        *pid=globstream; // Keep only LSB 8 BITS
-        *opts=pts;
-        *odts=dts;
-        *packetSize=len;
-        if(len>     maxSize)
-        {
-                printf("[DmxPS] Packet too big %d vs %d\n",len,maxSize);
-                goto _again2;
-        }
-        if(!_file->read32(len,buffer)) return false;
+    *pid=0;
+    if(!_file->sync(&stream))
+    {
+        uint64_t pos;
+        _file->getpos(&pos);
+        printf("[DmxPS] cannot sync  at %" PRIu64"/%" PRIu64"\n",pos,_size);
+        return false;
+    }
+    // Position of this packet just before startcode
+    _file->getpos(startAt);
+    *startAt-=4;
+    // Handle out of band stuff
+    if(stream == PACK_START_CODE)
+    {
+        _file->forward(8); // Unsafe assumption? libavformat crawls here.
+        goto _again2;
+    }
+    if(stream == PADDING_CODE || stream == SYSTEM_START_CODE)
+    {
+        len = _file->read16i();
+        //printf("\tForwarding %lu bytes\n",len);
+        _file->forward(len);
+        goto _again2;
+    }
+    // Only keep relevant parts
+    // i.e. a/v : C0 C9 E0 E9
+    // subs 20-29
+    // private data 1/2
+#define INSIDE(min,max) (stream>=min && stream<=max)
+    if(!(INSIDE(0xC0,0xDF) || INSIDE(0xE0,0xEF) || INSIDE(0x20,0x29) || stream == PRIVATE_STREAM_1 || stream == PRIVATE_STREAM_2))
+    {
+        //printf("[psPacket::getPacket] stream = 0x%x, resyncing\n",stream);
+        goto _again2;
+    }
+    // Ok we got a candidate
+    if(!getPacketInfo(stream,&substream,&len,&pts,&dts))
+    {
+        //printf("[psPacket::getPacket] Cannot get info, resyncing\n");
+        goto _again2;
+    }
+    if(!len)
+    {
+        printf("[psPacket::getPacket] Zero-length packet: corrupted data?\n");
+        goto _again2;
+    }
+    //printf("Main Stream :%x substream :%x len: %" PRIu32"\n",stream,substream,len);
+    switch(stream)
+    {
+        case PRIVATE_STREAM_1: globstream=0xFF00+substream; break;
+        case PRIVATE_STREAM_2: globstream=0xF000+substream; break;
+        default:               globstream=stream;break;
+    }
+    *pid=globstream; // Keep only LSB 8 BITS
+    *opts=pts;
+    *odts=dts;
+    *packetSize=len;
+    if(len > maxSize)
+    {
+        printf("[DmxPS] Packet too big %d vs %d\n",len,maxSize);
+        goto _again2;
+    }
+
+    if(_file->read32(len,buffer))
         return true;
-       
+
+    return false;
 }
+
+/**
+    \fn readTime
+    \brief Extract PES timestamp
+*/
+uint64_t psPacket::readTime(uint8_t *c)
+{
+    uint64_t time,tmp;
+
+    tmp = c ? *c : _file->read8i();
+    time = ((tmp & 6) >> 1) << 30;
+    tmp = _file->read16i();
+    time += (tmp >> 1) << 15;
+    tmp = _file->read16i();
+    time += tmp >> 1;
+
+    return time;
+}
+
 /**
 
     \fn getPacketInfo
@@ -183,7 +206,7 @@ _again2:
 uint8_t psPacket::getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts)
 {
     uint32_t size=0;
-    uint8_t c,align=0;
+    uint8_t c;
     *substream = 0xff;
     *opts = ADM_NO_PTS;
     *odts = ADM_NO_PTS;
@@ -206,87 +229,69 @@ uint8_t psPacket::getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen
         return 1;
     }
     // remove padding if any
-    while((c = _file->read8i()) == 0xff)
+    while(true)
     {
-        size--;
         if(!size) return 0;
+        size--;
+        c = _file->read8i();
+        if(c != 0xff) break;
     }
+    // now look at STD buffer size if present
+    if ((c>>6) == 1)
+    { // 01
+        if(size <= 2) return 0;
+        size-=2;
+        _file->read8i(); // skip one byte
+        c=_file->read8i(); // then another
+    }
+//----------------------------------------------------------------------------
+//-------------------------------MPEG-1 PES packet style----------------------
+//----------------------------------------------------------------------------
+    // 01xxxxxxxxx
+    // PTS/DTS
+    if ((c>>5) == 1)
+    {
+        if(size <= 4) return 0;
+        size -= 4;
+        // PTS only
+        *odts = *opts = readTime(&c);
+        if (c & 0x10) // DTS provided separately
+        {
+            if(size <= 5) return 0;
+            size -= 5;
+            *odts = readTime();
+        }
+    } else
 //----------------------------------------------------------------------------
 //-------------------------------MPEG-2 PES packet style----------------------
 //----------------------------------------------------------------------------
     if((c&0xC0) == 0x80)
     {
-        if(size <= 3) return 0;
+        if(size <= 2) return 0;
+        size -= 2;
 
-        uint32_t ptsdts,len;
-        //printf("\n mpeg2 type \n");
-        // c= copyright and stuff
-        //printf(" %x align\n",c);
-        if(c & 4) align=1;
         c = _file->read8i(); // PTS/DTS
-        //printf("%x ptsdts\n",c
-        ptsdts = c >> 6;
         // header len
-        len = _file->read8i();
-        size -= 3;
+        uint32_t len = _file->read8i();
 
-        switch(ptsdts)
+        if(size <= len) return 0;
+
+        if(c & 0x80)
         {
-            case 2: // PTS=1 DTS=0
-                if(len>=5)
-                {
-                    if(size <= 5) return 0;
+            if(len < 5) return 0;
+            len -= 5;
+            size -= 5;
 
-                    uint64_t pts1,pts2,pts0;
-                    // printf("\n PTS10\n");
-                    pts0=_file->read8i();
-                    pts1=_file->read16i();
-                    pts2=_file->read16i();
+            *odts = *opts = readTime();
+            if(c & 0x40) // DTS provided separately
+            {
+                if(len < 5) return 0;
+                if(size <= len) return 0;
+                len -= 5;
+                size -= 5;
 
-                    len-=5;
-                    size-=5;
-
-                    *opts=(pts1>>1)<<15;
-                    *opts+=pts2>>1;
-                    *opts+=(((pts0&6)>>1)<<30);
-                }
-                break;
-            case 3: // PTS=1 DTS=1
-#define PTS11_ADV 10 // nut monkey
-                if(len >= PTS11_ADV)
-                {
-                    uint32_t skip=PTS11_ADV;
-                    if(size <= skip) return 0;
-                    uint64_t pts1,pts2,dts,pts0;
-                    // printf("\n PTS10\n");
-                    pts0=_file->read8i();
-                    pts1=_file->read16i();
-                    pts2=_file->read16i();
-
-                    *opts=(pts1>>1)<<15;
-                    *opts+=pts2>>1;
-                    *opts+=(((pts0&6)>>1)<<30);
-
-                    pts0=_file->read8i();
-                    pts1=_file->read16i();
-                    pts2=_file->read16i();
-
-                    dts=(pts1>>1)<<15;
-                    dts+=pts2>>1;
-                    dts+=(((pts0&6)>>1)<<30);
-
-                    len-=skip;
-                    size-=skip;
-                    *odts=dts;
-                    //printf("DTS: %lx\n",dts);
-                }
-                break;
-            case 0:
-                // printf("\n PTS00\n");
-                break; // no pts nor dts
-            case 1:
-            default:
-                return 0;//ADM_assert(0); // forbidden !
+                *odts = readTime();
+            }
         }
 // Extension bit
 // >stealthdave<
@@ -298,115 +303,61 @@ uint8_t psPacket::getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen
             _file->forward(len);
             size-=len;
         }
-        if(stream == PRIVATE_STREAM_1)
-        {
-            if(size>5)
-            { // read sub id
-                *substream=_file->read8i();
-                size--;
-  //            printf("\n Subid : %x",*subid);
-                switch(*substream)
-                {
-                    // DTS
-                    case 0x88:case 0x89:case 0x8A:case 0x8B:
-                        *substream -= 0x48;
-                        break;
+    } else if(c != 0xf) // https://github.com/FFmpeg/FFmpeg/commit/df70de1f61c844f3ceb34abe5b424d9acd50d0f2 but why?
+    {
+        return 0;
+    }
 
-                    //AC3
-                    case 0x80:case 0x81:case 0x82:case 0x83:
-                    case 0x84:case 0x85:case 0x86:case 0x87:
-                        *substream -= 0x80;
-                        break;
-                    // PCM
-                    case 0xA0:case 0xA1:case 0xa2:case 0xa3:
-                    case 0xA4:case 0xA5:case 0xa6:case 0xa7:
-                        // we have an additionnal header of 3 bytes
-                        _file->forward(3);
-                        size-=3;
-                        break;
-                    // Subs
-                    case 0x20:case 0x21:case 0x22:case 0x23:
-                    case 0x24:case 0x25:case 0x26:case 0x27:
-                        break;
-                    default:
-                        doNoComplainAnyMore++;
-                        if(doNoComplainAnyMore<10)
-                            printf("[DmxPS]Unkown substream %x\n",*substream);
-                        *substream=0xff;
-                }
-                // skip audio header (if not sub)
-                if(*substream>0x26 || *substream<0x20)
-                {
-                    if((*substream < 0xA0 || *substream > 0xA7) || !keepPcmHeader)
-                    {
-                        if(size <= 3) return 0;
-                        _file->forward(3);
-                        size-=3;
-                    }
-                }
+    if(stream == PRIVATE_STREAM_1)
+    {
+        if(!size) return 0;
+        // read sub id
+        *substream=_file->read8i();
+        size--;
+        //printf("\n Subid : %x",*subid);
+        switch(*substream)
+        {
+            // DTS
+            case 0x88:case 0x89:case 0x8A:case 0x8B:
+                *substream -= 0x48;
+                break;
+
+            //AC3
+            case 0x80:case 0x81:case 0x82:case 0x83:
+            case 0x84:case 0x85:case 0x86:case 0x87:
+                *substream -= 0x80;
+                break;
+            // PCM
+            case 0xA0:case 0xA1:case 0xa2:case 0xa3:
+            case 0xA4:case 0xA5:case 0xa6:case 0xa7:
+                // we have an additionnal header of 3 bytes
+                if(size <= 3) return 0;
+                _file->forward(3);
+                size-=3;
+                break;
+            // Subs
+            case 0x20:case 0x21:case 0x22:case 0x23:
+            case 0x24:case 0x25:case 0x26:case 0x27:
+                break;
+            default:
+                doNoComplainAnyMore++;
+                if(doNoComplainAnyMore<10)
+                    printf("[DmxPS]Unkown substream %x\n",*substream);
+                *substream=0xff;
+        }
+        // skip audio header (if not sub)
+        if(*substream>0x26 || *substream<0x20)
+        {
+            if((*substream < 0xA0 || *substream > 0xA7) || !keepPcmHeader)
+            {
+                if(size <= 3) return 0;
+                _file->forward(3);
+                size-=3;
             }
         }
+    }
 
-        if(!size) return 0;
-
-        *olen=size;
-        return 1;
-    }
-//----------------------------------------------------------------------------------------------
-//-------------------------------MPEG-1 PES packet style----------------------
-//----------------------------------------------------------------------------------------------
-    if(0) //_muxTypeMpeg2)
-    {
-        printf("[DmxPS]*** packet type 1 inside type 2 ?????*****\n");
-        return 0; // mmmm
-    }
-    // now look at  STD buffer size if present
-    // 01xxxxxxxxx
-    if ((c>>6) == 1)
-    { // 01
-        if(size <= 2) return 0;
-        size-=2;
-        _file->read8i(); // skip one byte
-        c=_file->read8i(); // then another
-    }
-    // PTS/DTS
-    switch(c>>4)
-    {
-        case 2:
-        {
-            if(size <= 4) return 0;
-            // 0010 xxxx PTS only
-            uint64_t pts1,pts2,pts0;
-            size -= 4;
-            pts0=(c>>1) &7;
-            pts1=_file->read16i()>>1;
-            pts2=_file->read16i()>>1;
-            *opts=pts2+(pts1<<15)+(pts0<<30);
-            break;
-        }
-        case 3:
-        { // 0011 xxxx
-            if(size <= 9) return 0;
-            uint64_t pts1,pts2,pts0;
-            size -= 9;
-            pts0=(c>>1) &7;
-            pts1=_file->read16i()>>1;
-            pts2=_file->read16i()>>1;
-            *opts=pts2+(pts1<<15)+(pts0<<30);
-            _file->forward(5);
-            break;
-        }
-        case 1:
-        default:
-            // 0001 xxx
-            // PTSDTS=01 not allowed
-            return 0;
-    }
-    if(!align)
-    {
-        if(!size) return 0;
-        size--;
-    }
+    if(!size) return 0;
     *olen=size;
     return 1;
 }

@@ -20,6 +20,7 @@ class ADM_COREDEMUXER6_EXPORT psPacket : public ADMMpegPacket
 {
 protected:
     bool                keepPcmHeader;
+    uint64_t            readTime(uint8_t *c = NULL);
     uint8_t             getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts);
 public:
                         psPacket(void);
