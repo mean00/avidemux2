@@ -904,7 +904,13 @@ void ADM_flyDialog::play(bool state)
         _control->enableButtons();
         slide->setEnabled(true);
     }
-    
+    // Allow to stop or start playback from the parent dialog cleanly.
+    if(_control->pushButton_play->isChecked() != state)
+    {
+        _control->pushButton_play->blockSignals(true);
+        _control->pushButton_play->setChecked(state);
+        _control->pushButton_play->blockSignals(false);
+    }
 }
 /**
  * 
