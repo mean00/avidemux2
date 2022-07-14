@@ -392,14 +392,13 @@ const char *ZoomFilter::getConfiguration(void)
 /**
     \fn Configure
 */
-extern int DIA_getZoomParams(	const char *name,zoom *param, bool firstRun,ADM_coreVideoFilter *in);
+extern bool DIA_getZoomParams(const char *name, zoom *param, bool firstRun, ADM_coreVideoFilter *in);
 
 bool ZoomFilter::configure(void)
 
 {
-    uint8_t r;
     uint32_t w,h;
-    r = DIA_getZoomParams("Zoom Settings",&configuration,firstRun,previousFilter );
+    bool r = DIA_getZoomParams("Zoom Settings",&configuration,firstRun,previousFilter);
     firstRun = false;
     if(r)
     {

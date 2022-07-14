@@ -2,12 +2,9 @@
 #define Q_zoom_h
 #include <QPushButton>
 #include "ui_zoom.h"
-#include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyZoom.h"
 #include "zoom.h"
-#include <QPushButton>
-
 
 #if 0
     #define aprintf ADM_info
@@ -35,6 +32,8 @@ private:
 public:
     Ui_zoomWindow(QWidget* parent, zoom *param, bool firstRun, ADM_coreVideoFilter *in);
     ~Ui_zoomWindow();
+
+    bool rubberIsHidden(void);
 
 public slots:
     void gather(zoom *param);
