@@ -408,9 +408,9 @@ DECLARE_VIDEO_FILTER(   rotateFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
-                        "rotate",            // internal name (must be uniq!)
-                        QT_TRANSLATE_NOOP("rotate","Rotate"),            // Display name
-                        QT_TRANSLATE_NOOP("rotate","Rotate the image by 90/180/270 degrees or by arbitrary angle.") // Description
+                        "aarotate",            // internal name (must be uniq!)
+                        QT_TRANSLATE_NOOP("aarotate","Arbitrary Rotate"),            // Display name
+                        QT_TRANSLATE_NOOP("aarotate","Rotate the image by arbitrary angle.") // Description
                     );
 
 /**
@@ -596,16 +596,16 @@ uint32_t srcPitch,dstPitch;
 bool rotateFilter::configure( void)
 {
     diaMenuEntry rotateValues[]={
-        {0,QT_TRANSLATE_NOOP("rotate","None"),QT_TRANSLATE_NOOP("rotate","None")},
-        {1,QT_TRANSLATE_NOOP("rotate","90 degrees"),QT_TRANSLATE_NOOP("rotate","90° clockwise")},
-        {2,QT_TRANSLATE_NOOP("rotate","180 degrees"),NULL},
-        {3,QT_TRANSLATE_NOOP("rotate","270 degrees"),QT_TRANSLATE_NOOP("rotate","90° contraclockwise")},
-        {4,QT_TRANSLATE_NOOP("rotate","Custom value"),QT_TRANSLATE_NOOP("rotate","clockwise")}
+        {0,QT_TRANSLATE_NOOP("aarotate","None"),QT_TRANSLATE_NOOP("rotate","None")},
+        {1,QT_TRANSLATE_NOOP("aarotate","90 degrees"),QT_TRANSLATE_NOOP("rotate","90° clockwise")},
+        {2,QT_TRANSLATE_NOOP("aarotate","180 degrees"),NULL},
+        {3,QT_TRANSLATE_NOOP("aarotate","270 degrees"),QT_TRANSLATE_NOOP("rotate","90° contraclockwise")},
+        {4,QT_TRANSLATE_NOOP("aarotate","Custom value"),QT_TRANSLATE_NOOP("rotate","clockwise")}
     };
 
     diaMenuEntry paddingValues[]={
-        {0,QT_TRANSLATE_NOOP("rotate","Black"),NULL},
-        {1,QT_TRANSLATE_NOOP("rotate","Echo"),NULL}
+        {0,QT_TRANSLATE_NOOP("aarotate","Black"),NULL},
+        {1,QT_TRANSLATE_NOOP("aarotate","Echo"),NULL}
     };
     
     uint32_t rotSelect;
@@ -631,15 +631,15 @@ bool rotateFilter::configure( void)
     
     ELEM_TYPE_FLOAT customAngle = param.angle;
     
-    diaElemMenu     rotate(&(rotSelect),QT_TRANSLATE_NOOP("rotate","_Angle:"),5,rotateValues,NULL);
-    diaElemFloat    arbAngle(&customAngle,QT_TRANSLATE_NOOP("rotate","Arbitrary angle:"),0,360,NULL,3);
-    diaElemMenu     padding(&(param.pad),QT_TRANSLATE_NOOP("rotate","Padding:"),2,paddingValues,NULL);
+    diaElemMenu     rotate(&(rotSelect),QT_TRANSLATE_NOOP("aarotate","_Angle:"),5,rotateValues,NULL);
+    diaElemFloat    arbAngle(&customAngle,QT_TRANSLATE_NOOP("aarotate","Arbitrary angle:"),0,360,NULL,3);
+    diaElemMenu     padding(&(param.pad),QT_TRANSLATE_NOOP("aarotate","Padding:"),2,paddingValues,NULL);
     
     rotate.link(&(rotateValues[4]),1,&arbAngle);
     rotate.link(&(rotateValues[4]),1,&padding);
     
     diaElem *allWidgets[]={&rotate, &arbAngle, &padding};
-    if( !diaFactoryRun(QT_TRANSLATE_NOOP("rotate","Rotate"),3,allWidgets)) return false;
+    if( !diaFactoryRun(QT_TRANSLATE_NOOP("aarotate","Rotate"),3,allWidgets)) return false;
     switch (rotSelect)
     {
         case 0: param.angle = 0; break;
