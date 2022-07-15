@@ -331,6 +331,31 @@ void arbitraryRotate::rotate(ADMImage *source,ADMImage *target)
     if (doEcho)
     {
         resizerOrigToEcho->convertImage(source,echo);
+        for (int p=0; p<3; p++)
+        {
+            uint8_t * ptr = echo->GetWritePtr((ADM_PLANE)p);
+            uint32_t stride = echo->GetPitch((ADM_PLANE)p);
+            int d = ((p>0) ? 8:16);
+            int bias = ((p>0) ? 2:3);
+            int biasX=((_iw>_ih) ? 0:bias);
+            int biasY=((_iw>_ih) ? bias:0);
+            for (int y=1; y<(d-1); y++)
+            {
+                int sy = ((y<(d/2))?0:(d-1));
+                for (int x=1; x<(d-1); x++)
+                {
+                    int sx = ((x<(d/2))?0:(d-1));
+                    if ((abs(x-d/2)+biasX)<(abs(y-d/2)+biasY))
+                    {
+                        ptr[y*stride+x] = ptr[sy*stride+x];
+                    }
+                    else
+                    {
+                        ptr[y*stride+x] = ptr[y*stride+sx];
+                    }
+                }
+            }
+        }
         resizerEchoToGreat->convertImage(echo,greatBuf);
     }
     else
