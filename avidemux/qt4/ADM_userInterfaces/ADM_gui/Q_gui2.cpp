@@ -867,6 +867,7 @@ static toolBarTranslate toolbar[]=
 {"actionLoad_run_project",  ACT_RUN_SCRIPT},
 {"actionSave_project",      ACT_SAVE_PY_SCRIPT},
 {"actionPlayFiltered",      ACT_PreviewChanged},
+{"actionHDRSettings",       ACT_SetHDRConfig},
 
 {NULL,ACT_DUMMY}
 };
@@ -1163,6 +1164,7 @@ void MainWindow::buildActionLists(void)
         PUSH_LOADED_TOOLBAR(ACT_SAVE_VIDEO)
     PUSH_LOADED_TOOLBAR(ACT_VIDEO_PROPERTIES)
     PUSH_LOADED_TOOLBAR(ACT_PreviewChanged)
+    PUSH_LOADED_TOOLBAR(ACT_SetHDRConfig)
 
 #define PUSH_FULL_MENU_LOADED(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++) \
     { QAction *a = ui.x->actions().at(i); if(a->objectName().isEmpty()) continue; ActionsAvailableWhenFileLoaded.push_back(a); }

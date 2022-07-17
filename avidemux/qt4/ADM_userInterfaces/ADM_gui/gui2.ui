@@ -209,6 +209,7 @@
    <addaction name="actionProperties"/>
    <addaction name="separator"/>
    <addaction name="actionPlayFiltered"/>
+   <addaction name="actionHDRSettings"/>
   </widget>
   <widget class="QDockWidget" name="codecWidget">
    <property name="styleSheet">
@@ -1874,6 +1875,15 @@
    </property>
    <property name="text">
     <string>Play filtered</string>
+   </property>
+  </action>
+  <action name="actionHDRSettings">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/hdr.png</normaloff>:/new/prefix1/pics/hdr.png</iconset>
+   </property>
+   <property name="text">
+    <string>HDR tone mapping</string>
    </property>
   </action>
   <action name="actionLoad_run_project">
