@@ -1354,6 +1354,7 @@ void MainWindow::setMenuItemsEnabledState(void)
 #define ENABLE(x,y,z) { QAction *a = findAction(&myMenu ##x, y); if(a) a->setEnabled(z); }
 #define TOOLBAR_ENABLE(x,y) { QAction *a = findActionInToolBar(ui.toolBar, x); if(a) a->setEnabled(y); }
     ENABLE(File, ACT_SAVE_VIDEO, vid && ADM_mx_getNbMuxers()) // disable saving video if there are no muxers
+    ui.actionHDRSettings->setVisible(false);
     if(vid)
     {
         undo=video_body->canUndo();
@@ -1365,6 +1366,19 @@ void MainWindow::setMenuItemsEnabledState(void)
         if((resetA || resetB) && video_body->getMarkerAPts() != video_body->getMarkerBPts())
             canDelete = true;
         paste=!video_body->clipboardEmpty();
+        
+        // check HDR
+        {
+            ADM_pixelFormat pixfrmt;
+            ADM_colorRange range;
+            ADM_colorPrimaries colorPrim;
+            ADM_colorTrC colorTrc;
+            ADM_colorSpace colorSpace;
+            if (video_body->getVideoPixelAndColorInfo(&pixfrmt, &range, &colorPrim, &colorTrc, &colorSpace))
+            {
+                ui.actionHDRSettings->setVisible((pixfrmt >= ADM_PIXFRMT_YUV444_10BITS) && (pixfrmt <= ADM_PIXFRMT_YUV444_12BITS));
+            }
+        }
     }
     ENABLE(Edit, ACT_Undo, undo)
     ENABLE(Edit, ACT_Redo, redo)
