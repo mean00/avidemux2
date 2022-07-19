@@ -63,7 +63,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="labelIcon">
        <property name="text">
         <string/>
        </property>
@@ -92,11 +92,10 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="versionLabel">
+      <widget class="QLabel" name="labelVersion">
        <property name="font">
         <font>
          <pointsize>18</pointsize>
-         <weight>75</weight>
          <italic>false</italic>
          <bold>true</bold>
          <underline>false</underline>
@@ -104,7 +103,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Avidemux </string>
+        <string>Avidemux</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -112,10 +111,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="labelCategory">
        <property name="font">
         <font>
-         <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
          <underline>false</underline>
@@ -131,7 +129,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="labelCopy">
        <property name="text">
         <string>© 2001 - 2021  Mean / eumagga0x2a</string>
        </property>
@@ -141,21 +139,23 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="labelUrl">
        <property name="font">
         <font>
-         <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
          <underline>false</underline>
          <strikeout>false</strikeout>
         </font>
        </property>
-       <property name="text">
-        <string>http://www.avidemux.org</string>
+       <property name="textFormat">
+        <enum>Qt::RichText</enum>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+       <property name="openExternalLinks">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
