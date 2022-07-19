@@ -105,7 +105,6 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           QTimer        timer;
           uint32_t      _w, _h, _zoomW, _zoomH;
           float         _zoom;
-          uint32_t      _zoomChangeCount;
           ResizeMethod  _resizeMethod;
           uint64_t      lastPts;
           double        _computedZoom;

@@ -399,10 +399,10 @@ bool ADM_flyDialog::nextImage(void)
 bool ADM_flyDialog::initializeSize()
 {
     _canvas->resize(1,1);
+    _canvas->parentWidget()->parentWidget()->adjustSize();
     QSize qsize= _canvas->parentWidget()->parentWidget()->frameSize();
-    //_usedWidth = qsize.width();
     // Normally there is nothing interesting left and right, we can use a hardcoded value
-    _usedWidth=64;
+    _usedWidth = 32;
     _usedHeight = qsize.height();
 
      if (_resizeMethod != RESIZE_NONE) 
@@ -648,7 +648,6 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _cookie = NULL;
     _computedZoom=0;
     _resizeMethod = resizeMethod;
-    _zoomChangeCount = 0;        
     _yuvBuffer=new ADMImageDefault(_w,_h);
     _usedWidth= _usedHeight=0;
     _oldViewWidth = _oldViewHeight = 0;
