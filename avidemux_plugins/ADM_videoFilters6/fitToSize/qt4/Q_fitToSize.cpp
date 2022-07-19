@@ -226,11 +226,11 @@ void fitToSizeWindow::setPreferences(bool f)
 
     QComboBox *saveAlgoComboBox = new QComboBox();
     saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Most recently accepted")),-1);
-    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Bilinear")),0);
-    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Bicubic")),1);
-    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Lanczos")),2);
-    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Spline")),3);
-    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to Nearest Neighbor")),4);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Bilinear")),0);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Bicubic")),1);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Lanczos")),2);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Spline")),3);
+    saveAlgoComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Nearest Neighbor")),4);
 
     int userData = (qset->value("saveAlgo", 0).toInt() > 0)? -1 : qset->value("defaultAlgo", 1).toInt();
 
@@ -245,8 +245,8 @@ void fitToSizeWindow::setPreferences(bool f)
 
     QComboBox *savePadComboBox = new QComboBox();
     savePadComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Most recently accepted")),-1);
-    savePadComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to black bars")),0);
-    savePadComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Set to echo")),1);
+    savePadComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Black Bars")),0);
+    savePadComboBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("fitToSize","Echo")),1);
 
     userData = (qset->value("savePad", 0).toInt() > 0)? -1 : qset->value("defaultPadding", 0).toInt();
 
