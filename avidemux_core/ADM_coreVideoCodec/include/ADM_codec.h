@@ -52,8 +52,8 @@ public:
 
   virtual ~decoders() { }
   virtual bool initializedOk(void) { return true; }
-  virtual uint8_t getPARWidth (void) { return 1; }
-  virtual uint8_t getPARHeight (void) { return 1; }
+  virtual uint32_t getPARWidth (void) { return 1; }
+  virtual uint32_t getPARHeight (void) { return 1; }
   virtual bool setParam (void) { return false; }
   virtual bool uncompress (ADMCompressedImage * in, ADMImage * out) = 0;
 

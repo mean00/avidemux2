@@ -244,16 +244,29 @@ void decoderFF::decoderMultiThread (void)
         _usingMT = 1;
     }
 }
-uint8_t decoderFF::getPARWidth (void)
+uint32_t decoderFF::getPARWidth (void)
 {
-  if(!_context->sample_aspect_ratio.num) return 1;
-  return _context->sample_aspect_ratio.num;
+    int n,d;
+    n = _context->sample_aspect_ratio.num;
+    d = _context->sample_aspect_ratio.den;
+    if (n < 1 || d < 1)
+        return 1;
+    int dstn,dstd;
+    if (av_reduce(&dstn, &dstd, n, d, INT_MAX))
+        return dstn;
+    return n;
 }
-uint8_t decoderFF::getPARHeight (void)
+uint32_t decoderFF::getPARHeight (void)
 {
-  if(!_context->sample_aspect_ratio.den) return 1;
-  return _context->sample_aspect_ratio.den;
-
+    int n,d;
+    n = _context->sample_aspect_ratio.num;
+    d = _context->sample_aspect_ratio.den;
+    if (n < 1 || d < 1)
+        return 1;
+    int dstn,dstd;
+    if (av_reduce(&dstn, &dstd, n, d, INT_MAX))
+        return dstd;
+    return d;
 }
 
 //________________________________________________

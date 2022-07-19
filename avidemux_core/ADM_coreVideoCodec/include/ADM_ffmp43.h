@@ -125,8 +125,8 @@ public:
         virtual bool decodeHeaderOnly (void);
         virtual bool decodeFull (void);
       //  virtual uint32_t getSpecificMpeg4Info (void);
-        virtual uint8_t getPARWidth (void);
-        virtual uint8_t getPARHeight (void);
+        virtual uint32_t getPARWidth (void);
+        virtual uint32_t getPARHeight (void);
         virtual bool decodeErrorHandler(int code);
         virtual bool keepFeeding(void) { return _keepFeeding; }
         virtual bool endOfStreamReached(void) { return _endOfStream; }
