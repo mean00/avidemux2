@@ -1426,7 +1426,7 @@ void MainWindow::updateCodecWidgetControlsState(void)
                    // VideoToolbox decoder always downloads decoded image immediately
         b=true;
     ENABLE(Video, ACT_SetPostProcessing, b)
-    ENABLE(Video, ACT_SetHDRConfig, b)
+    ENABLE(Video, ACT_SetHDRConfig, video_body->possibleHdrContent())
 
     b=false;
     if(ui.comboBoxVideo->currentIndex())
