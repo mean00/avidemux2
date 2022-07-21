@@ -305,6 +305,7 @@ private:
                     ADMImageRef * _blankImageForInfo;
 public:
                     bool        getVideoPixelAndColorInfo(ADM_pixelFormat * pixfrmt, ADM_colorRange * range, ADM_colorPrimaries * colorPrim, ADM_colorTrC * colorTrc, ADM_colorSpace * colorSpace);
+                    bool        possibleHdrContent(void);
 /**************************************** /Video Info **************************/
 /***************************************** Project Handling ********************/
 public:
