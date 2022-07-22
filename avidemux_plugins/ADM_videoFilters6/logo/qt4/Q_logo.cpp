@@ -161,7 +161,6 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         myLogo->param.fade=param->fade;
         myLogo->_cookie=&ui;
         myLogo->upload();
-        myLogo->setPreview(false);
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect( ui.pushButtonSelect,SIGNAL(pressed()),this,SLOT(imageSelect()));
@@ -258,16 +257,6 @@ void Ui_logoWindow::scaleChanged(double f)
     }
     myLogo->sameImage();
     lock--;
-}
-
-/**
- * 
- * @param x
- */
-void Ui_logoWindow::preview(int x)
-{
-    myLogo->setPreview(x == Qt::Checked);
-    myLogo->sameImage();
 }
 
 /**

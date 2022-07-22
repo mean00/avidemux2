@@ -187,13 +187,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="labelHelp">
-     <property name="text">
-      <string>You can click in the image to approximately position the logo</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

@@ -45,7 +45,6 @@ class flyLogo : public ADM_flyDialogYuv
 {
 public:
     logo        param;
-    bool        preview;
     int         imageWidth, imageHeight;
 
     uint8_t     processYuv(ADMImage* in, ADMImage *out);
@@ -59,7 +58,6 @@ public:
     bool        bandMoved(int x, int y, int w, int h);
     void        setTabOrder(void);
     void        adjustFrame(void);
-    bool        setPreview(bool onoff) { preview = onoff; return true; }
 private:
     draggableFrame *frame;
     uint64_t    startOffset;

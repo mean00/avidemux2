@@ -44,7 +44,6 @@ private slots:
 	void                valueChanged(int foo);
         void                valueChanged(double foo);
         void                scaleChanged(double foo);
-        void                preview(int x);
         void                imageSelect();
 
 private:
