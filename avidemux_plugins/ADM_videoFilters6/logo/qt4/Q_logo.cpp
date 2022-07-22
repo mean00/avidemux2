@@ -29,77 +29,6 @@
 #else
 #define aprintf(...) {}
 #endif
-/**
- * 
- * @param z
- * @param w
- * @param h
- */
- ADM_LogoCanvas::ADM_LogoCanvas(QWidget *z, uint32_t w, uint32_t h) : ADM_QCanvas(z,w,h)
- {
-     mouseButtonPressed = false;
- }
- /**
-  * 
-  */
- ADM_LogoCanvas::~ADM_LogoCanvas()
- {
-     
- }
-
-  /**
-  * 
-  */
-void ADM_LogoCanvas::sendMovedSignal(QMouseEvent * event)
-{
-    QPoint p=event->pos();
-    int x=p.x();
-    int y=p.y();
-
-    if(x<0) x=0;
-    if(y<0) y=0;      
-
-    emit movedSignal(x,y);
-}
-/**
- * 
- * @param event
- */
-void ADM_LogoCanvas::mousePressEvent(QMouseEvent * event)
-{
-    aprintf("Pressed\n");
-    mouseButtonPressed = true;
-    sendMovedSignal(event);
-}
-/**
- * 
- * @param event
- */
-void ADM_LogoCanvas::mouseMoveEvent(QMouseEvent * event)
-{
-    aprintf("Moved\n");
-    if (mouseButtonPressed)
-        sendMovedSignal(event);
-}
-
-/**
- * 
- * @param event
- */
-void ADM_LogoCanvas::mouseReleaseEvent(QMouseEvent * event)
-{
-    aprintf("Released %d %d\n",x,y);
-    mouseButtonPressed = false;
-    sendMovedSignal(event);
-}
-/**
- * 
- * @param event
- */
-void ADM_LogoCanvas::moveEvent(QMoveEvent * event)
-{
-    aprintf("Move\n");
-}
 
 /**
  * \fn enableLowPart
@@ -146,6 +75,7 @@ void                   Ui_logoWindow::imageSelect()
         admCoreUtils::setLastReadFolder(std::string(buffer));
         if(tryToLoadimage(buffer))
         {
+            myLogo->adjustFrame();
             myLogo->sameImage();
         }
     }
@@ -166,13 +96,19 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
             if(image) delete image;
             if (scaledImage) delete scaledImage;
             image=im2;
-            imageWidth=image->GetWidth(PLANAR_Y);
-            imageHeight=image->GetHeight(PLANAR_Y);
+            ADM_assert(myLogo);
+            myLogo->imageWidth = image->GetWidth(PLANAR_Y);
+            myLogo->imageHeight = image->GetHeight(PLANAR_Y);
             this->imageName=imageName;
             if(image->GetReadPtr(PLANAR_ALPHA))
                 ADM_info("We have alpha\n");
             scaledImage = addLogopFilter::scaleImage(image, imageScale);
-            status=(scaledImage!= NULL);
+            if(scaledImage)
+            {
+                myLogo->imageWidth = scaledImage->GetWidth(PLANAR_Y);
+                myLogo->imageHeight = scaledImage->GetHeight(PLANAR_Y);
+                status = true;
+            }
         }
     }
     enableLowPart();
@@ -188,23 +124,23 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
   {
         uint32_t width,height;
         ui.setupUi(this);
-        _in=in;
-        
         image=NULL;
         scaledImage=NULL;
+        myLogo=NULL;
+        lock=0;
+        // Allocate space for green-ised video
+        width=in->getInfo()->width;
+        height=in->getInfo()->height;
+
+        canvas=new ADM_QCanvas(ui.graphicsView,width,height);
+        myLogo=new flyLogo(this, width, height,in,canvas,ui.horizontalSlider);
+
         admCoreUtils::getLastReadFolder(lastFolder);
         imageScale = param->scale;
         if(param->logoImageFile.size())
             tryToLoadimage(param->logoImageFile.c_str());
         else
             enableLowPart();
-        lock=0;
-        // Allocate space for green-ised video
-        width=in->getInfo()->width;
-        height=in->getInfo()->height;
-
-        canvas=new ADM_LogoCanvas(ui.graphicsView,width,height);
-        myLogo=new flyLogo(this, width, height,in,canvas,ui.horizontalSlider);
 
 #define SPINENTRY(x) ui.spin##x
         SPINENTRY(X)->setMaximum(width);
@@ -235,7 +171,6 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         SPINNER(spinAlpha,int);
         SPINNER(spinFadeInOut,double);
         connect(ui.spinScale,SIGNAL(valueChanged(double)),this,SLOT(scaleChanged(double)));
-        connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
 #undef SPINNER
         myLogo->addControl(ui.toolboxLayout);
         myLogo->setTabOrder();
@@ -314,6 +249,12 @@ void Ui_logoWindow::scaleChanged(double f)
         if (scaledImage) delete scaledImage;
         scaledImage=NULL;
         scaledImage = addLogopFilter::scaleImage(image, imageScale);
+        if (scaledImage)
+        {
+            myLogo->imageWidth = scaledImage->GetWidth(PLANAR_Y);
+            myLogo->imageHeight = scaledImage->GetHeight(PLANAR_Y);
+            myLogo->adjustFrame();
+        }
     }
     myLogo->sameImage();
     lock--;
@@ -322,36 +263,12 @@ void Ui_logoWindow::scaleChanged(double f)
 /**
  * 
  * @param x
- * @param y
  */
-void Ui_logoWindow::moved(int x,int y)
+void Ui_logoWindow::preview(int x)
 {
-      if(lock) return;
-      lock++;
-      if (myLogo->wouldBeMoved(x,y))
-      {
-        myLogo->setXy(x,y);
-        myLogo->sameImage();      
-      }
-      lock--;
+    myLogo->setPreview(x == Qt::Checked);
+    myLogo->sameImage();
 }
-/**
- * 
- * @param x
- */
- void Ui_logoWindow::preview(int x)
- {
-     if(x==Qt::Checked)
-     {
-         myLogo->setPreview(true);
-         myLogo->sameImage();
-     }
-     else
-     {
-         myLogo->setPreview(false);
-         myLogo->sameImage();
-     }
- }
 
 /**
     \fn resizeEvent
@@ -366,6 +283,8 @@ void Ui_logoWindow::resizeEvent(QResizeEvent *event)
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
     myLogo->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myLogo->adjustCanvasPosition();
+    myLogo->adjustFrame();
+
     lock--;
 }
 
@@ -380,14 +299,158 @@ void Ui_logoWindow::showEvent(QShowEvent *event)
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
+/*********************************************************************/
+
 /**
-    \fn flyLogo ctor
+    \fn ctor
 */
+draggableFrame::draggableFrame(ADM_flyDialog *fly, QWidget *parent) : QWidget(parent)
+{
+    flyParent = fly;
+    drag = false;
+}
+
+/**
+    \fn paintEvent
+*/
+void draggableFrame::paintEvent(QPaintEvent *event)
+{
+    if (!drag) return;
+
+    QPainter painter(this);
+    QPen pen;
+    QColor color(Qt::red);
+    pen.setColor(color);
+    pen.setWidth(4);
+    painter.setPen(pen);
+    painter.drawRect(rect());
+    painter.end();
+}
+
+/**
+    \fn enterEvent
+*/
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+void draggableFrame::enterEvent(QEvent *event)
+#else
+void draggableFrame::enterEvent(QEnterEvent *event)
+#endif
+{
+    setCursor(Qt::SizeAllCursor);
+}
+
+/**
+    \fn leaveEvent
+*/
+void draggableFrame::leaveEvent(QEvent *event)
+{
+    setCursor(Qt::ArrowCursor);
+}
+
+/**
+    \fn mousePressEvent
+*/
+void draggableFrame::mousePressEvent(QMouseEvent *event)
+{
+    dragOffset = event->globalPosition().toPoint() - pos();
+    dragGeometry = rect();
+    drag = true;
+    update();
+}
+
+/**
+    \fn calculatePosition
+*/
+void draggableFrame::calculatePosition(QMouseEvent *event, int &xpos, int &ypos)
+{
+    int w, h, pw, ph;
+    QPoint delta = event->globalPosition().toPoint() - dragOffset;
+    xpos = delta.x();
+    ypos = delta.y();
+    w = dragGeometry.width();
+    h = dragGeometry.height();
+    QSize sz = parentWidget()->size();
+    pw = sz.width();
+    ph = sz.height();
+    if (xpos < 0) xpos = 0;
+    if (ypos < 0) ypos = 0;
+    if ((xpos + w) > pw) xpos = pw - w;
+    if ((ypos + h) > ph) ypos = ph - h;
+    // double check
+    if (xpos < 0) xpos = 0;
+    if (ypos < 0) ypos = 0;
+}
+
+/**
+    \fn mouseReleaseEvent
+*/
+void draggableFrame::mouseReleaseEvent(QMouseEvent *event)
+{
+    drag = false;
+
+    int x, y;
+    calculatePosition(event,x,y);
+
+    flyParent->bandMoved(x, y, width(), height());
+}
+
+/**
+    \fn mouseMoveEvent
+*/
+void draggableFrame::mouseMoveEvent(QMouseEvent *event)
+{
+    if (!drag) return;
+
+    int x, y;
+    calculatePosition(event,x,y);
+
+    move(x,y);
+}
+
+/*********************************************************************/
+
+/**
+ *  \fn flyLogo ctor
+ */
 flyLogo::flyLogo (QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in, ADM_QCanvas *canvas, ADM_flyNavSlider *slider)
     : ADM_flyDialogYuv(parent,width,height,in,canvas,slider,RESIZE_AUTO)
 {
+    frame = NULL;
+    imageWidth = imageHeight = 0;
     in->getTimeRange(&startOffset,&endOffset);
 }
+
+/**
+ *  \fn flyLogo dtor
+ */
+flyLogo::~flyLogo()
+{
+    if (frame) delete frame;
+    frame = NULL;
+}
+
+/**
+ *  \fn bandMoved
+ */
+bool flyLogo::bandMoved(int x, int y, int w, int h)
+{
+    UNUSED_ARG(w);
+    UNUSED_ARG(h);
+
+    int normX,normY;
+    normX = ((double)x / _zoom) + 0.49;
+    normY = ((double)y / _zoom) + 0.49;
+    if (normX < 0) normX = 0;
+    if (normY < 0) normY = 0;
+    param.x = normX;
+    param.y = normY;
+
+    upload(false);
+    sameImage();
+
+    return true;
+}
+
 /**
  *  \fn setTabOrder
  */
@@ -420,53 +483,54 @@ void flyLogo::setTabOrder(void)
 }
 
 /**
- * 
- * @param x
- * @param y
- * @return 
+ *  \fn adjustFrame
  */
-bool flyLogo::wouldBeMoved(int x,int y)
+void flyLogo::adjustFrame(void)
 {
-    if(x<0) x=0;
-    if(y<0) y=0;
-    double scale=(double)(_canvas->width()) / _in->getInfo()->width;
-    if (param.x != (int)((double)x / scale))
-        return true;
-    if (param.y != (int)((double)y / scale))
-        return true;
-    return false;
-}
-/**
- * 
- * @param x
- * @param y
- * @return 
- */
-bool flyLogo::setXy(int x,int y)
-{
-    if(x<0) x=0;
-    if(y<0) y=0;
-    double scale=(double)(_canvas->width()) / _in->getInfo()->width;
-    param.x= (int)((double)x / scale);
-    param.y= (int)((double)y / scale);
-    upload();
-    return true;
+    if(imageWidth < 1 | imageHeight < 1)
+        return;
+
+    if(!frame)
+    {
+        frame = new draggableFrame(this, _canvas);
+        frame->show();
+    }
+
+    Ui_logoDialog *w = (Ui_logoDialog *) _cookie;
+#define APPLY_TO_ALL(c) { w->spinX->c; w->spinY->c; w->spinScale->c; w->spinAlpha->c; w->spinFadeInOut->c; if(frame) frame->c; }
+    APPLY_TO_ALL(blockSignals(true))
+
+    int a = _zoom * param.x + 0.49;
+    int b = _zoom * param.y + 0.49;
+
+    frame->move(a,b);
+
+    a = _zoom * imageWidth + 0.49;
+    b = _zoom * imageHeight + 0.49;
+
+    frame->resize(a,b);
+
+    APPLY_TO_ALL(blockSignals(false))
 }
 
-//************************
 /**
     \fn upload
 */
-uint8_t flyLogo::upload(void)
+uint8_t flyLogo::upload(bool toDraggableFrame)
 {
-
-    Ui_logoDialog *w = (Ui_logoDialog *)this->_cookie;
+    Ui_logoDialog *w = (Ui_logoDialog *) _cookie;
+    APPLY_TO_ALL(blockSignals(true))
 #define SETSPIN(u,v) w->spin##u->setValue(v);
     SETSPIN(X,param.x)
     SETSPIN(Y,param.y)
     SETSPIN(Scale,param.scale)
     SETSPIN(Alpha,param.alpha)
     SETSPIN(FadeInOut,(double)(param.fade)/1000)
+
+    if(toDraggableFrame)
+        adjustFrame();
+
+    APPLY_TO_ALL(blockSignals(false))
 
     return 1;
 }
@@ -475,7 +539,7 @@ uint8_t flyLogo::upload(void)
 */
 uint8_t flyLogo::download(void)
 {
-    Ui_logoDialog *w=(Ui_logoDialog *)this->_cookie;
+    Ui_logoDialog *w = (Ui_logoDialog *) _cookie;
 #define GETSPIN(u,v) param.v=w->spin##u->value();
     GETSPIN(X,x)
     GETSPIN(Y,y)

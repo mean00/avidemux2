@@ -1,33 +1,13 @@
 #ifndef Q_mpdelogo_h
 #define Q_mpdelogo_h
 
+#include <QMouseEvent>
+#include <QPainter>
+
 #include "ui_logo.h"
 #include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyLogo.h"
-#include "QMouseEvent"
-/**
- * 
- * @return 
- */
-class  ADM_LogoCanvas : public ADM_QCanvas
-{
-    Q_OBJECT
-protected:
-        bool mouseButtonPressed;
-        void sendMovedSignal(QMouseEvent * event);
-public:
-	
-                ADM_LogoCanvas(QWidget *z, uint32_t w, uint32_t h);
-	virtual ~ADM_LogoCanvas();
-        void mousePressEvent(QMouseEvent * event);
-        void mouseMoveEvent(QMouseEvent * event);
-        void mouseReleaseEvent(QMouseEvent * event);
-        void moveEvent(QMoveEvent * event);        
-
-signals:
-        void movedSignal(int newx, int newy);                
-};
 
 /**
  * 
@@ -43,7 +23,7 @@ protected:
         Ui_logoDialog       ui;
         ADM_coreVideoFilter *_in;
         flyLogo             *myLogo;
-        ADM_LogoCanvas      *canvas;
+        ADM_QCanvas         *canvas;
 
         float               imageScale;
         bool                tryToLoadimage(const char *image);
@@ -52,7 +32,6 @@ public:
         ADMImage            *image;
         ADMImage            *scaledImage;
         std::string         imageName;
-        int                 imageWidth,imageHeight;
 
 public:
                             Ui_logoWindow(QWidget *parent, logo *param, ADM_coreVideoFilter *in);
@@ -65,7 +44,6 @@ private slots:
 	void                valueChanged(int foo);
         void                valueChanged(double foo);
         void                scaleChanged(double foo);
-        void                moved(int x,int y);
         void                preview(int x);
         void                imageSelect();
 

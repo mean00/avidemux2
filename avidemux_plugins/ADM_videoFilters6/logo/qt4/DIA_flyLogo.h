@@ -14,32 +14,54 @@
 
 #pragma once
 #include "logo.h"
+
+class draggableFrame : public QWidget
+{
+public:
+                draggableFrame(ADM_flyDialog *fly, QWidget *parent);
+private:
+    ADM_flyDialog *flyParent;
+    bool        drag;
+    QPoint      dragOffset;
+    QRect       dragGeometry;
+
+    void        paintEvent(QPaintEvent *event);
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    void        enterEvent(QEvent *event);
+#else
+    void        enterEvent(QEnterEvent *event);
+#endif
+    void        leaveEvent(QEvent *event);
+    void        calculatePosition(QMouseEvent *event, int &xpos, int &ypos);
+    void        mousePressEvent(QMouseEvent *event);
+    void        mouseReleaseEvent(QMouseEvent *event);
+    void        mouseMoveEvent(QMouseEvent *event);
+};
+
 /**
     \class flyLogo
 */
-
 class flyLogo : public ADM_flyDialogYuv
 {
-  
-  public:
-   logo        param;
-   bool        preview;
-  public:
-   uint8_t     processYuv(ADMImage* in, ADMImage *out);
-   uint8_t     download(void);
-   uint8_t     upload(void);
-               flyLogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
+public:
+    logo        param;
+    bool        preview;
+    int         imageWidth, imageHeight;
+
+    uint8_t     processYuv(ADMImage* in, ADMImage *out);
+    uint8_t     download(void);
+    uint8_t     upload(void) { return upload(true); }
+    uint8_t     upload(bool toDraggableFrame);
+                flyLogo (QDialog *parent, uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_flyNavSlider *slider);
-   virtual     ~flyLogo() {};
-   void         setTabOrder(void);
-   bool         wouldBeMoved(int x,int y);
-   bool         setXy(int x,int y);
-   bool         setPreview(bool onoff)
-                {
-                    preview=onoff;
-                    return true;
-                }
-   private:
+    virtual     ~flyLogo();
+
+    bool        bandMoved(int x, int y, int w, int h);
+    void        setTabOrder(void);
+    void        adjustFrame(void);
+    bool        setPreview(bool onoff) { preview = onoff; return true; }
+private:
+    draggableFrame *frame;
     uint64_t    startOffset;
     uint64_t    endOffset;
 };
