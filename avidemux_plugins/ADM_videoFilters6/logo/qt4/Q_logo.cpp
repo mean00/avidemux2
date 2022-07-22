@@ -352,7 +352,13 @@ void draggableFrame::leaveEvent(QEvent *event)
 */
 void draggableFrame::mousePressEvent(QMouseEvent *event)
 {
-    dragOffset = event->globalPosition().toPoint() - pos();
+    dragOffset =
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    event->globalPos()
+#else
+    event->globalPosition().toPoint()
+#endif
+    - pos();
     dragGeometry = rect();
     drag = true;
     update();
@@ -364,7 +370,13 @@ void draggableFrame::mousePressEvent(QMouseEvent *event)
 void draggableFrame::calculatePosition(QMouseEvent *event, int &xpos, int &ypos)
 {
     int w, h, pw, ph;
-    QPoint delta = event->globalPosition().toPoint() - dragOffset;
+    QPoint delta =
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    event->globalPos()
+#else
+    event->globalPosition().toPoint()
+#endif
+    - dragOffset;
     xpos = delta.x();
     ypos = delta.y();
     w = dragGeometry.width();
