@@ -300,7 +300,11 @@ private:
         QPoint dragOffset;
         QRect dragGeometry;
         void resizeEvent(QResizeEvent *);
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
         void enterEvent(QEvent *);
+#else
+        void enterEvent(QEnterEvent *);
+#endif
         void leaveEvent(QEvent *);
         void mousePressEvent(QMouseEvent *);
         void mouseReleaseEvent(QMouseEvent *);

@@ -137,7 +137,11 @@ void ADM_rubberControl::resizeEvent(QResizeEvent *)
 /**
     \fn enterEvent
 */
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
 void ADM_rubberControl::enterEvent(QEvent *event)
+#else
+void ADM_rubberControl::enterEvent(QEnterEvent *event)
+#endif
 {
     setCursor(Qt::SizeAllCursor);
 }
@@ -155,7 +159,13 @@ void ADM_rubberControl::leaveEvent(QEvent *event)
 */
 void ADM_rubberControl::mousePressEvent(QMouseEvent *event)
 {
-    dragOffset = event->globalPos() - pos();
+    dragOffset =
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    event->globalPos()
+#else
+    event->globalPosition().toPoint()
+#endif
+    - pos();
     dragGeometry = rect();
     drag = true;
 }
@@ -176,7 +186,13 @@ void ADM_rubberControl::mouseMoveEvent(QMouseEvent *event)
     if (drag)
     {
         int x, y, w, h, pw, ph;
-        QPoint delta = (event->globalPos() - dragOffset);
+        QPoint delta =
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+        event->globalPos()
+#else
+        event->globalPosition().toPoint()
+#endif
+        - dragOffset;
         x = delta.x();
         y = delta.y();
         w = dragGeometry.width();
