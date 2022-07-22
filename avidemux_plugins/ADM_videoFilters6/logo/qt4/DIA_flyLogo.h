@@ -32,6 +32,7 @@ class flyLogo : public ADM_flyDialogYuv
                                     ADM_QCanvas *canvas, ADM_flyNavSlider *slider);
    virtual     ~flyLogo() {};
    void         setTabOrder(void);
+   bool         wouldBeMoved(int x,int y);
    bool         setXy(int x,int y);
    bool         setPreview(bool onoff)
                 {

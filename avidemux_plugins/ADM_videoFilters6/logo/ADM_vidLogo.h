@@ -17,7 +17,6 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
 #include "logo.h"
-#include "logo_desc.cpp"
 #include "ADM_imageLoader.h"
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
@@ -28,11 +27,13 @@ class addLogopFilter : public  ADM_coreVideoFilter
 {
 protected:
                 ADMImage    *myImage;
+                ADMImage    *myScaledImage;
                 logo        configuration;
                 bool        reloadImage(void);
                 uint64_t    from;
                 uint64_t    startOffset;
                 uint64_t    endOffset;
+                void        resetConfig(void);
 public:
                     addLogopFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
                     ~addLogopFilter();
@@ -43,4 +44,5 @@ public:
         virtual bool         getCoupledConf(CONFcouple **couples) ;     /// Return the current filter configuration
 		virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void);                           /// Start graphical user interface
+        static  ADMImage *   scaleImage(ADMImage * img, float scale);
 };

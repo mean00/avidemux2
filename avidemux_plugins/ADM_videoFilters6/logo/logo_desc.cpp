@@ -5,5 +5,6 @@ extern const ADM_paramList logo_param[]={
  {"alpha",offsetof(logo,alpha),"uint32_t",ADM_param_uint32_t},
  {"logoImageFile",offsetof(logo,logoImageFile),"std::string",ADM_param_stdstring},
  {"fade",offsetof(logo,fade),"uint32_t",ADM_param_uint32_t},
+ {"scale",offsetof(logo,scale),"float",ADM_param_float},
 {NULL,0,NULL}
 };

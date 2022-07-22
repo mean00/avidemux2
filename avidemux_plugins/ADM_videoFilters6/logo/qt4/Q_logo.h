@@ -14,11 +14,14 @@ class  ADM_LogoCanvas : public ADM_QCanvas
 {
     Q_OBJECT
 protected:
+        bool mouseButtonPressed;
+        void sendMovedSignal(QMouseEvent * event);
 public:
 	
                 ADM_LogoCanvas(QWidget *z, uint32_t w, uint32_t h);
 	virtual ~ADM_LogoCanvas();
         void mousePressEvent(QMouseEvent * event);
+        void mouseMoveEvent(QMouseEvent * event);
         void mouseReleaseEvent(QMouseEvent * event);
         void moveEvent(QMoveEvent * event);        
 
@@ -42,10 +45,12 @@ protected:
         flyLogo             *myLogo;
         ADM_LogoCanvas      *canvas;
 
-        bool                enableLowPart(void);
+        float               imageScale;
         bool                tryToLoadimage(const char *image);
+        bool                enableLowPart(void);
 public:
         ADMImage            *image;
+        ADMImage            *scaledImage;
         std::string         imageName;
         int                 imageWidth,imageHeight;
 
@@ -59,6 +64,7 @@ private slots:
 	void                sliderUpdate(int foo);
 	void                valueChanged(int foo);
         void                valueChanged(double foo);
+        void                scaleChanged(double foo);
         void                moved(int x,int y);
         void                preview(int x);
         void                imageSelect();
