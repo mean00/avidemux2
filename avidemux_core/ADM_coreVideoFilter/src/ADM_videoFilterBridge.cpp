@@ -188,7 +188,22 @@ bool         ADM_videoFilterBridge::goToTime(uint64_t usSeek)
     else
     {
         uint64_t seek = usSeek;
+        uint64_t marker, markerDiff;
+        if (bridgeInfo.markerA <= bridgeInfo.markerB)
+            marker = bridgeInfo.markerA;
+        else
+            marker = bridgeInfo.markerB;
+        
+        if (marker > seek)
+            markerDiff = marker - seek;
+        else
+            markerDiff = seek - marker;
 
+        if (markerDiff < 100)
+        {
+            editor->goToTimeVideo(marker);
+        }
+        else
         if (true == editor->getPKFramePTS(&seek))
         {
             editor->goToIntraTimeVideo(seek);

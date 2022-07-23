@@ -46,6 +46,12 @@ public:
 
             horizontalLayout_4->addWidget(pushButton_back1mn);
 
+            pushButton_gotosel = new QPushButton();
+            pushButton_gotosel->setObjectName(QString("pushButton_gotosel"));
+            pushButton_gotosel->setAutoRepeat(false);
+            
+            horizontalLayout_4->addWidget(pushButton_gotosel);
+            
             pushButton_play = new QPushButton();
             pushButton_play->setObjectName(QString("pushButton_play"));
             pushButton_play->setCheckable(true);
@@ -65,6 +71,7 @@ public:
             pushButton_fwd1mn->setAutoRepeatDelay(1000);
 
             horizontalLayout_4->addWidget(pushButton_fwd1mn);
+            
             //
             QString zeros = "00:00:00.000";
             currentTime = new QLineEdit(zeros);
@@ -125,6 +132,8 @@ public:
 
             pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
             pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
+            pushButton_gotosel->setText(QApplication::translate("seekablePreviewDialog", "[<", 0));
+            pushButton_gotosel->setToolTip(QApplication::translate("seekablePreviewDialog", "Go to the start of the selection", 0));
             pushButton_play->setText(QApplication::translate("seekablePreviewDialog", "Play", 0));
             pushButton_next->setToolTip(QApplication::translate("seekablePreviewDialog", "Next image", 0));
             pushButton_next->setText(QApplication::translate("seekablePreviewDialog", ">", 0));
@@ -133,17 +142,20 @@ public:
          }
         void disableButtons()
         {
+            pushButton_gotosel->setEnabled(false);
             pushButton_back1mn->setEnabled(false);
             pushButton_fwd1mn->setEnabled(false);
             pushButton_next->setEnabled(false);
         }
         void enableButtons()
         {
+            pushButton_gotosel->setEnabled(true);
             pushButton_back1mn->setEnabled(true);
             pushButton_fwd1mn->setEnabled(true);
             pushButton_next->setEnabled(true);
         }
 public:
+        QPushButton *pushButton_gotosel;
         QPushButton *pushButton_back1mn;
         QPushButton *pushButton_play;
         QPushButton *pushButton_next;
@@ -306,6 +318,7 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOp
     QObject::connect(_control->pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
     QObject::connect(_control->pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
     QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
+    QObject::connect(_control->pushButton_gotosel ,SIGNAL(clicked()),this,SLOT(gotoSelectionStart()));
     QObject::connect(_control->pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
     if (controlOptions & ControlOption::PeekOriginalBtn)
     {
@@ -315,6 +328,7 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOp
 
 
     buttonList.push_back(_control->pushButton_back1mn);
+    buttonList.push_back(_control->pushButton_gotosel);
     buttonList.push_back(_control->pushButton_play);
     buttonList.push_back(_control->pushButton_next);
     buttonList.push_back(_control->pushButton_fwd1mn);
@@ -881,6 +895,22 @@ void ADM_flyDialog::fwdOneMinute(void)
     pts+=JUMP_LENGTH;
     goToTime(pts);
     updateSlider();
+}
+
+/**
+ * 
+ */
+void ADM_flyDialog::gotoSelectionStart(void)
+{
+    ADM_flyNavSlider  *slide=(ADM_flyNavSlider *)_slider;
+    ADM_assert(slide);
+    bool oldState=slide->blockSignals(true);
+    uint64_t pts = _in->getInfo()->markerA;
+    if (_in->getInfo()->markerB < _in->getInfo()->markerA)
+        pts = _in->getInfo()->markerB;
+    goToTime(pts);
+    updateSlider();
+    slide->blockSignals(oldState);    
 }
 /**
  * 
