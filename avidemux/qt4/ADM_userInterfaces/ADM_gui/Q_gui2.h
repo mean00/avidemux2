@@ -142,6 +142,7 @@ protected:
     QMenu *recentProjects;
     QAction *recentFileAction[NB_LAST_FILES];
     QAction *recentProjectAction[NB_LAST_FILES];
+    QAction *actionHDRSeparator;
     QAction *displayZoom;
     QAction *defaultThemeAction;
     QAction *lightThemeAction;

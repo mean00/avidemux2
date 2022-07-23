@@ -761,6 +761,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
 
     ui.toolBar->addSeparator();
+    actionHDRSeparator = ui.toolBar->insertSeparator(ui.actionHDRSettings);
 
     // Crash in some cases addScriptReferencesToHelpMenu();
     QAction *previewFiltered = findAction(&myMenuVideo, ACT_PreviewChanged);
@@ -1164,7 +1165,6 @@ void MainWindow::buildActionLists(void)
         PUSH_LOADED_TOOLBAR(ACT_SAVE_VIDEO)
     PUSH_LOADED_TOOLBAR(ACT_VIDEO_PROPERTIES)
     PUSH_LOADED_TOOLBAR(ACT_PreviewChanged)
-    PUSH_LOADED_TOOLBAR(ACT_SetHDRConfig)
 
 #define PUSH_FULL_MENU_LOADED(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++) \
     { QAction *a = ui.x->actions().at(i); if(a->objectName().isEmpty()) continue; ActionsAvailableWhenFileLoaded.push_back(a); }
@@ -1428,8 +1428,12 @@ void MainWindow::updateCodecWidgetControlsState(void)
                    // VideoToolbox decoder always downloads decoded image immediately
         b=true;
     ENABLE(Video, ACT_SetPostProcessing, b)
-    ENABLE(Video, ACT_SetHDRConfig, video_body->possibleHdrContent())
-    ui.actionHDRSettings->setVisible(video_body->possibleHdrContent());
+    // HDR tone mapper settings action in the menu "Video" and the toolbar button
+    b = video_body->possibleHdrContent();
+    ENABLE(Video, ACT_SetHDRConfig, b)
+    actionHDRSeparator->setVisible(b);
+    ui.actionHDRSettings->setVisible(b);
+    ui.actionHDRSettings->setEnabled(b && !playing && !navigateWhilePlayingState);
 
     b=false;
     if(ui.comboBoxVideo->currentIndex())
