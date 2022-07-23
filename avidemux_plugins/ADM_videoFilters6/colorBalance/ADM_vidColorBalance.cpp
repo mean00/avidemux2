@@ -171,9 +171,9 @@ void ADMVideoColorBalance::ColorBalanceProcess_C(ADMImage *img, colorBalance cfg
         limitcH = 239;
     }
 
-    cfg.loLuma = valueLimit(cfg.loLuma,0.0,1.0);
-    cfg.mdLuma = valueLimit(cfg.mdLuma,0.0,1.0);
-    cfg.hiLuma = valueLimit(cfg.hiLuma,0.0,1.0);
+    cfg.loLuma = valueLimit(cfg.loLuma,-1.0,1.0);
+    cfg.mdLuma = valueLimit(cfg.mdLuma,-1.0,1.0);
+    cfg.hiLuma = valueLimit(cfg.hiLuma,-1.0,1.0);
     cfg.loShift = valueLimit(cfg.loShift,0.0,1.0);
     cfg.mdShift = valueLimit(cfg.mdShift,0.0,1.0);
     cfg.hiShift = valueLimit(cfg.hiShift,0.0,1.0);
@@ -182,7 +182,7 @@ void ADMVideoColorBalance::ColorBalanceProcess_C(ADMImage *img, colorBalance cfg
     cfg.hiSaturation = valueLimit(cfg.hiSaturation,-1.0,1.0)+1.0;
 
     // Luma MAP
-    quadraticCurve(mapY, cfg.loLuma, cfg.mdLuma, cfg.hiLuma, 0.0, 1.0, (img->_range == ADM_COL_RANGE_MPEG), 255.0, 220.0, 16.0);
+    quadraticCurve(mapY, cfg.loLuma, cfg.mdLuma+0.5, cfg.hiLuma+1.0, 0.0, 1.0, (img->_range == ADM_COL_RANGE_MPEG), 255.0, 220.0, 16.0);
 
     // Chroma MAP
     double vecU[3],vecV[3];
@@ -329,7 +329,7 @@ bool ADMVideoColorBalance::configure()
 const char   *ADMVideoColorBalance::getConfiguration(void)
 {
     static char s[2560];
-    snprintf(s,2559,"              [Luma; Angle; Shift; Saturation]\nShadow:   [%.2f; %.0f; %.2f; %.2f]\nMidtone:  [%.2f; %.0f; %.2f; %.2f]\nHighlight: [%.2f; %.0f; %.2f; %.2f]\n", 
+    snprintf(s,2559,"              [Luma; Angle; Shift; Saturation]\nShadow:   [%+.2f; %.0f; %.2f; %.2f]\nMidtone:  [%+.2f; %.0f; %.2f; %.2f]\nHighlight: [%+.2f; %.0f; %.2f; %.2f]\n", 
                                         _param.loLuma, _param.loAngle, _param.loShift, _param.loSaturation, 
                                         _param.mdLuma, _param.mdAngle, _param.mdShift, _param.mdSaturation, 
                                         _param.hiLuma, _param.hiAngle, _param.hiShift, _param.hiSaturation );
@@ -350,8 +350,8 @@ ADMVideoColorBalance::ADMVideoColorBalance(  ADM_coreVideoFilter *in,CONFcouple 
 void ADMVideoColorBalance::reset(colorBalance *cfg)
 {
     cfg->loLuma = 0.0;
-    cfg->mdLuma = 0.5;
-    cfg->hiLuma = 1.0;
+    cfg->mdLuma = 0.0;
+    cfg->hiLuma = 0.0;
     cfg->loAngle = 150.0;
     cfg->mdAngle = 150.0;
     cfg->hiAngle = 150.0;
@@ -385,9 +385,9 @@ int32_t ADMVideoColorBalance::valueLimit(int32_t val, int32_t min, int32_t max)
 */
 void ADMVideoColorBalance::update(void)
 {
-    _internalparam.loLuma = valueLimit(_param.loLuma,0.0,1.0);
-    _internalparam.mdLuma = valueLimit(_param.mdLuma,0.0,1.0);
-    _internalparam.hiLuma = valueLimit(_param.hiLuma,0.0,1.0);
+    _internalparam.loLuma = valueLimit(_param.loLuma,-1.0,1.0);
+    _internalparam.mdLuma = valueLimit(_param.mdLuma,-1.0,1.0);
+    _internalparam.hiLuma = valueLimit(_param.hiLuma,-1.0,1.0);
     _internalparam.loAngle = _param.loAngle;
     _internalparam.mdAngle = _param.mdAngle;
     _internalparam.hiAngle = _param.hiAngle;

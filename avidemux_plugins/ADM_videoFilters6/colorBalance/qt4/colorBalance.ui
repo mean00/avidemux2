@@ -57,6 +57,9 @@
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0" rowspan="2">
          <widget class="ADM_SliderIndicator" name="sliderHiLuma">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
           <property name="maximum">
            <number>100</number>
           </property>
@@ -166,6 +169,9 @@
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0" rowspan="2">
          <widget class="ADM_SliderIndicator" name="sliderLoLuma">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
           <property name="maximum">
            <number>100</number>
           </property>
@@ -285,6 +291,9 @@
         </item>
         <item row="0" column="0" rowspan="2">
          <widget class="ADM_SliderIndicator" name="sliderMdLuma">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
           <property name="maximum">
            <number>100</number>
           </property>
@@ -456,11 +465,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ADM_flyNavSlider</class>
-   <extends>ADM_QSlider</extends>
-   <header>ADM_toolkitQt.h</header>
-  </customwidget>
-  <customwidget>
    <class>ADM_QSlider</class>
    <extends>QSlider</extends>
    <header>ADM_toolkitQt.h</header>
@@ -468,6 +472,11 @@
   <customwidget>
    <class>ADM_SliderIndicator</class>
    <extends>QSlider</extends>
+   <header>ADM_toolkitQt.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ADM_flyNavSlider</class>
+   <extends>ADM_QSlider</extends>
    <header>ADM_toolkitQt.h</header>
   </customwidget>
  </customwidgets>
