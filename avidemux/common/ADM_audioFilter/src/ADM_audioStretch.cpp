@@ -153,6 +153,12 @@ bool ADM_audioStretch::process(float *from, float *to, uint32_t nbSample,uint32_
 {
     ADM_assert(context);
     
+    if (discard <= 0)
+    {
+        // prevent high peak memory usage by starving RubberBand
+        if (CONTEXT->available()) nbSample=0;
+    }
+    
     if (nbSample > REORDER_BUFSIZE)
         nbSample = REORDER_BUFSIZE;
     // de-interleave input
