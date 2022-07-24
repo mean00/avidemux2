@@ -176,20 +176,23 @@ bool stillimage::getNextFrame(uint32_t *fn, ADMImage *image)
     if(!previousFilter->getNextFrame(fn,image))
         return false;
     uint64_t pts=image->Pts;
-    if(pts==ADM_NO_PTS || pts < begin)
+    if(pts==ADM_NO_PTS || (pts+100 < begin))
     {
-        *fn+=nbStillImages;
         return true;
     }
     aprintf("[stillimage] original image PTS = %" PRIu64" ms\n",pts/1000);
     // now in range, create our image
     if(!stillPicture)
     {
-        aprintf("[stillimage] creating stillPicture\n");
-        stillPicture=new ADMImageDefault(previousFilter->getInfo()->width, previousFilter->getInfo()->height);
-        stillPicture->duplicate(image);
-        frameNb=*fn;
-        return true;
+        if ((pts+100 > begin) && (pts < begin+100))
+        {
+            aprintf("[stillimage] creating stillPicture\n");
+            stillPicture=new ADMImageDefault(previousFilter->getInfo()->width, previousFilter->getInfo()->height);
+            stillPicture->duplicate(image);
+            frameNb=*fn;
+            nbStillImages = 0;
+            return true;
+        }
     }
     // past the end, adjust the PTS and the frame count
     pts+=end-begin;
@@ -231,9 +234,11 @@ bool stillimage::updateTimingInfo(void)
     }
 
     info.totalDuration=old+end-begin;
-    if (info.markerA >= begin)
+    info.markerA = previousFilter->getInfo()->markerA;
+    info.markerB = previousFilter->getInfo()->markerB;
+    if (info.markerA > begin)
         info.markerA += end-begin;
-    if (info.markerB >= begin)
+    if (info.markerB > begin)
         info.markerB += end-begin;
 
     return true;
