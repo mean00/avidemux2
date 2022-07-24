@@ -23,7 +23,7 @@ using std::string;
 #include "audiofilter_access.h"
 #include "audiofilter_internal.h"
 #include "audiofilter_conf.h"
-//#include "audiofilter_film2pal.h"
+#include "audiofilter_film2pal.h"
 #include "audiofilter_stretch.h"
 #include "prefs.h"
 VectorOfAudioFilter PlaybackVector;
@@ -163,13 +163,13 @@ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_
             break;
         case FILMCONV_FILM2PAL:
             {
-            AUDMAudioFilterFilm2PalV2 *f2p=new AUDMAudioFilterFilm2PalV2(last);
+            AUDMAudioFilterFilm2Pal *f2p=new AUDMAudioFilterFilm2Pal(last);
             ADD_FILTER(f2p);
             }
             break;
         case FILMCONV_PAL2FILM:
             {
-            AUDMAudioFilterPal2FilmV2 *f2p=new AUDMAudioFilterPal2FilmV2(last);
+            AUDMAudioFilterPal2Film *f2p=new AUDMAudioFilterPal2Film(last);
             ADD_FILTER(f2p);
             }
             break;
