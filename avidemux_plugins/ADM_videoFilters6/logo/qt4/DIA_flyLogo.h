@@ -18,12 +18,18 @@
 class draggableFrame : public QWidget
 {
 public:
+    float       opacity;
+    bool        setImage(ADMImage *pic);
                 draggableFrame(ADM_flyDialog *fly, QWidget *parent);
+    virtual     ~draggableFrame();
+
 private:
     ADM_flyDialog *flyParent;
     bool        drag;
     QPoint      dragOffset;
     QRect       dragGeometry;
+    uint8_t     *rgbdata;
+    int         pitch;
 
     void        paintEvent(QPaintEvent *event);
 #if QT_VERSION < QT_VERSION_CHECK(6,0,0)
@@ -56,8 +62,10 @@ public:
     virtual     ~flyLogo();
 
     bool        bandMoved(int x, int y, int w, int h);
+    bool        setXy(int x, int y);
     void        setTabOrder(void);
-    void        adjustFrame(void);
+    void        adjustFrame(ADMImage *pic = NULL);
+    void        updateFrameOpacity(void);
 private:
     draggableFrame *frame;
     uint64_t    startOffset;

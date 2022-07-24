@@ -31,6 +31,24 @@
 #endif
 
 /**
+ * \fn mouseReleaseEvent
+ * @param event
+ */
+void ADM_LogoCanvas::mouseReleaseEvent(QMouseEvent * event)
+{
+    QPoint p=event->pos();
+    int x=p.x();
+    int y=p.y();
+
+    if(x<0) x=0;
+    if(y<0) y=0;
+
+    aprintf("Released %d %d\n",x,y);
+    emit movedSignal(x,y);
+
+}
+
+/**
  * \fn enableLowPart
  * @return 
  */
@@ -74,10 +92,7 @@ void                   Ui_logoWindow::imageSelect()
     {
         admCoreUtils::setLastReadFolder(std::string(buffer));
         if(tryToLoadimage(buffer))
-        {
-            myLogo->adjustFrame();
             myLogo->sameImage();
-        }
     }
 }
 /**
@@ -107,6 +122,8 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
             {
                 myLogo->imageWidth = scaledImage->GetWidth(PLANAR_Y);
                 myLogo->imageHeight = scaledImage->GetHeight(PLANAR_Y);
+                myLogo->adjustFrame(scaledImage);
+                myLogo->updateFrameOpacity();
                 status = true;
             }
         }
@@ -132,15 +149,8 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         width=in->getInfo()->width;
         height=in->getInfo()->height;
 
-        canvas=new ADM_QCanvas(ui.graphicsView,width,height);
+        canvas=new ADM_LogoCanvas(ui.graphicsView,width,height);
         myLogo=new flyLogo(this, width, height,in,canvas,ui.horizontalSlider);
-
-        admCoreUtils::getLastReadFolder(lastFolder);
-        imageScale = param->scale;
-        if(param->logoImageFile.size())
-            tryToLoadimage(param->logoImageFile.c_str());
-        else
-            enableLowPart();
 
 #define SPINENTRY(x) ui.spin##x
         SPINENTRY(X)->setMaximum(width);
@@ -160,6 +170,14 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         myLogo->param.logoImageFile=param->logoImageFile;
         myLogo->param.fade=param->fade;
         myLogo->_cookie=&ui;
+
+        admCoreUtils::getLastReadFolder(lastFolder);
+        imageScale = param->scale;
+        if(param->logoImageFile.size())
+            tryToLoadimage(param->logoImageFile.c_str());
+        else
+            enableLowPart();
+
         myLogo->upload();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
@@ -169,8 +187,11 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         SPINNER(spinY,int);
         SPINNER(spinAlpha,int);
         SPINNER(spinFadeInOut,double);
-        connect(ui.spinScale,SIGNAL(valueChanged(double)),this,SLOT(scaleChanged(double)));
 #undef SPINNER
+
+        connect(ui.spinScale,SIGNAL(valueChanged(double)),this,SLOT(scaleChanged(double)));
+        connect(canvas,SIGNAL(movedSignal(int,int)),this,SLOT(moved(int,int)));
+
         myLogo->addControl(ui.toolboxLayout);
         myLogo->setTabOrder();
         myLogo->sliderChanged();
@@ -218,6 +239,8 @@ void Ui_logoWindow::valueChanged( int f )
     if(lock) return;
     lock++;
     myLogo->download();
+    myLogo->updateFrameOpacity();
+    myLogo->adjustFrame();
     myLogo->sameImage();
     lock--;
 }
@@ -235,7 +258,21 @@ void Ui_logoWindow::valueChanged(double f)
 }
 
 /**
-    \fn valueChanged
+ * \fn moved
+ * @param x
+ * @param y
+ */
+void Ui_logoWindow::moved(int x, int y)
+{
+    if(lock) return;
+    lock++;
+    myLogo->setXy(x,y);
+    myLogo->sameImage();
+    lock--;
+}
+
+/**
+    \fn scaleChanged
 */
 void Ui_logoWindow::scaleChanged(double f)
 {
@@ -252,7 +289,7 @@ void Ui_logoWindow::scaleChanged(double f)
         {
             myLogo->imageWidth = scaledImage->GetWidth(PLANAR_Y);
             myLogo->imageHeight = scaledImage->GetHeight(PLANAR_Y);
-            myLogo->adjustFrame();
+            myLogo->adjustFrame(scaledImage);
         }
     }
     myLogo->sameImage();
@@ -297,6 +334,36 @@ draggableFrame::draggableFrame(ADM_flyDialog *fly, QWidget *parent) : QWidget(pa
 {
     flyParent = fly;
     drag = false;
+    pitch = 0;
+    opacity = 1;
+    rgbdata = NULL;
+}
+
+/**
+    \fn dtor
+*/
+draggableFrame::~draggableFrame()
+{
+    ADM_dealloc(rgbdata);
+    rgbdata = NULL;
+}
+
+/**
+    \fn setImage
+*/
+bool draggableFrame::setImage(ADMImage *pic)
+{
+    if (!pic) return false;
+    ADM_dealloc(rgbdata);
+    rgbdata = NULL;
+    pitch = width();
+    pitch = ADM_IMAGE_ALIGN(pitch * 4);
+    rgbdata = (uint8_t *)ADM_alloc(pitch * height());
+    if (!rgbdata) return false;
+    ADMColorScalerFull scaler(ADM_CS_BICUBIC, pic->GetWidth(PLANAR_Y), pic->GetHeight(PLANAR_Y),
+        width(), height(), ADM_PIXFRMT_YV12, ADM_PIXFRMT_BGR32A);
+
+    return scaler.convertImage(pic,rgbdata);
 }
 
 /**
@@ -307,6 +374,13 @@ void draggableFrame::paintEvent(QPaintEvent *event)
     if (!drag) return;
 
     QPainter painter(this);
+    if (rgbdata)
+    {
+        painter.setOpacity(opacity);
+        QImage replica(rgbdata, width(), height(), pitch, QImage::Format_RGB32);
+        painter.drawImage(rect(),replica);
+        painter.setOpacity(1.0);
+    }
     QPen pen;
     QColor color(Qt::red);
     pen.setColor(color);
@@ -375,11 +449,8 @@ void draggableFrame::calculatePosition(QMouseEvent *event, int &xpos, int &ypos)
     ph = sz.height();
     if (xpos < 0) xpos = 0;
     if (ypos < 0) ypos = 0;
-    if ((xpos + w) > pw) xpos = pw - w;
-    if ((ypos + h) > ph) ypos = ph - h;
-    // double check
-    if (xpos < 0) xpos = 0;
-    if (ypos < 0) ypos = 0;
+    if (xpos > pw) xpos = pw;
+    if (ypos > ph) ypos = ph;
 }
 
 /**
@@ -393,6 +464,7 @@ void draggableFrame::mouseReleaseEvent(QMouseEvent *event)
     calculatePosition(event,x,y);
 
     flyParent->bandMoved(x, y, width(), height());
+    update();
 }
 
 /**
@@ -453,6 +525,22 @@ bool flyLogo::bandMoved(int x, int y, int w, int h)
 }
 
 /**
+ *  \fn setXy
+ */
+bool flyLogo::setXy(int x, int y)
+{
+    if(x<0) x=0;
+    if(y<0) y=0;
+    x = ((double)x / _zoom) + 0.49;
+    y = ((double)y / _zoom) + 0.49;
+    param.x = (x > _w)? _w : x;
+    param.y = (y > _h)? _h : y;
+    upload();
+
+    return true;
+}
+
+/**
  *  \fn setTabOrder
  */
 void flyLogo::setTabOrder(void)
@@ -486,7 +574,7 @@ void flyLogo::setTabOrder(void)
 /**
  *  \fn adjustFrame
  */
-void flyLogo::adjustFrame(void)
+void flyLogo::adjustFrame(ADMImage *pic)
 {
     if(imageWidth < 1 | imageHeight < 1)
         return;
@@ -511,7 +599,22 @@ void flyLogo::adjustFrame(void)
 
     frame->resize(a,b);
 
+    if(pic && frame->setImage(pic))
+        frame->update();
+
     APPLY_TO_ALL(blockSignals(false))
+}
+
+/**
+ *  \fn updateFrameOpacity
+ */
+void flyLogo::updateFrameOpacity(void)
+{
+    if (!frame) return;
+    float f = param.alpha;
+    f /= 256 * 2; // only half as opaque as the logo
+    if (f > 1.0) f = 1.0;
+    frame->opacity = f;
 }
 
 /**

@@ -9,10 +9,22 @@
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyLogo.h"
 
-/**
- * 
- * @return 
- */
+
+class ADM_LogoCanvas : public ADM_QCanvas
+{
+    Q_OBJECT
+
+public:
+                ADM_LogoCanvas(QWidget *parent, uint32_t w, uint32_t h) : ADM_QCanvas(parent,w,h) {};
+        virtual ~ADM_LogoCanvas() {};
+
+protected:
+        void    mouseReleaseEvent(QMouseEvent * event);
+
+signals:
+        void    movedSignal(int newx, int newy);
+};
+
 class Ui_logoWindow : public QDialog
 {
 	Q_OBJECT
@@ -23,7 +35,7 @@ protected:
         Ui_logoDialog       ui;
         ADM_coreVideoFilter *_in;
         flyLogo             *myLogo;
-        ADM_QCanvas         *canvas;
+        ADM_LogoCanvas      *canvas;
 
         float               imageScale;
         bool                tryToLoadimage(const char *image);
@@ -43,6 +55,7 @@ private slots:
 	void                sliderUpdate(int foo);
 	void                valueChanged(int foo);
         void                valueChanged(double foo);
+        void                moved(int x, int y);
         void                scaleChanged(double foo);
         void                imageSelect();
 

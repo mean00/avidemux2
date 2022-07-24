@@ -43,6 +43,12 @@ addLogopFilter::addLogopFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : AD
     {
         resetConfig();
     }
+    if(configuration.x > info.width)
+        configuration.x = info.width;
+    if(configuration.y > info.height)
+        configuration.y = info.height;
+    if(configuration.alpha > 255)
+        configuration.alpha = 255;
     in->getTimeRange(&startOffset,&endOffset);
     from=in->getAbsoluteStartTime();
     myName="logo";
@@ -57,8 +63,8 @@ void addLogopFilter::resetConfig(void)
     configuration.x=0;
     configuration.y=0;
     configuration.alpha=255;
-    configuration.logoImageFile=std::string("");
-    configuration.fade=0;   
+    configuration.logoImageFile.clear();
+    configuration.fade=0;
     configuration.scale=1.0;
 }
 
