@@ -38,6 +38,7 @@ protected:
     uint64_t            from, begin, end;
     uint64_t            timeIncrement;
     uint32_t            frameNb, nbStillImages;
+    bool                seekAfter;
     ADMImage            *stillPicture;
 
     bool                updateTimingInfo(void);
@@ -93,6 +94,7 @@ stillimage::stillimage( ADM_coreVideoFilter *in, CONFcouple *setup ) : ADM_coreV
     stillPicture=NULL;
     frameNb=0;
     nbStillImages=0;
+    seekAfter=false;
 }
 
 /**
@@ -136,6 +138,7 @@ bool stillimage::goToTime(uint64_t usSeek)
 {
     cleanup();
     uint64_t time=usSeek;
+    seekAfter = (time > end);
     if(time >= begin && time <= end)
         time=begin;
     else if(time > end)
@@ -176,7 +179,11 @@ bool stillimage::getNextFrame(uint32_t *fn, ADMImage *image)
     if(!previousFilter->getNextFrame(fn,image))
         return false;
     uint64_t pts=image->Pts;
-    if(pts==ADM_NO_PTS || (pts+100 < begin))
+    if (pts <= begin)
+    {
+        seekAfter = false;  // actual seek is before
+    }
+    if(pts==ADM_NO_PTS || (pts < begin))
     {
         return true;
     }
@@ -184,7 +191,7 @@ bool stillimage::getNextFrame(uint32_t *fn, ADMImage *image)
     // now in range, create our image
     if(!stillPicture)
     {
-        if ((pts+100 > begin) && (pts < begin+100))
+        if (!seekAfter)
         {
             aprintf("[stillimage] creating stillPicture\n");
             stillPicture=new ADMImageDefault(previousFilter->getInfo()->width, previousFilter->getInfo()->height);
