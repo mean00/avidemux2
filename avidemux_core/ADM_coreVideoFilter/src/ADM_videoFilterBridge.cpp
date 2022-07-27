@@ -187,15 +187,35 @@ bool         ADM_videoFilterBridge::goToTime(uint64_t usSeek)
     }
     else
     {
+        bool coarseSeek = true;
         uint64_t seek = usSeek;
-
-        if (true == editor->getPKFramePTS(&seek))
-        {
-            editor->goToIntraTimeVideo(seek);
-        }
+        uint64_t marker, markerDiff;
+        if (bridgeInfo.markerA <= bridgeInfo.markerB)
+            marker = bridgeInfo.markerA;
         else
+            marker = bridgeInfo.markerB;
+        
+        if (marker > seek)
+            markerDiff = marker - seek;
+        else
+            markerDiff = seek - marker;
+
+        if (markerDiff < 100)
         {
-            ADM_warning("Cannot find previous keyframe\n");
+            if (editor->goToTimeVideo(marker))
+                coarseSeek = false;
+        }
+        
+        if (coarseSeek)
+        {
+            if (true == editor->getPKFramePTS(&seek))
+            {
+                editor->goToIntraTimeVideo(seek);
+            }
+            else
+            {
+                ADM_warning("Cannot find previous keyframe\n");
+            }
         }
     }
 
