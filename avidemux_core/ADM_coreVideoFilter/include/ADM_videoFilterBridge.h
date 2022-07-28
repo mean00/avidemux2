@@ -39,7 +39,7 @@ protected:
 public:
                             ADM_videoFilterBridge(IEditor *editor, uint64_t startTime, uint64_t endTime);
        virtual             ~ADM_videoFilterBridge();
-       virtual bool         goToTime(uint64_t usSeek);
+       virtual bool         goToTime(uint64_t usSeek, bool fineSeek = false);
        virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image);
                bool         getNextFrameAs(ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image);
        virtual FilterInfo  *getInfo(void);                                      /// Return picture parameters after this filter

@@ -179,38 +179,26 @@ FilterInfo  *ADM_videoFilterBridge::getInfo(void)
 /**
     \fn goToTime
 */
-bool         ADM_videoFilterBridge::goToTime(uint64_t usSeek)
+bool         ADM_videoFilterBridge::goToTime(uint64_t usSeek, bool fineSeek)
 {
     if (!usSeek)
     {
-        editor->goToTimeVideo(startTime + usSeek);
+        editor->goToTimeVideo(startTime);
     }
     else
     {
-        bool coarseSeek = true;
-        uint64_t seek = usSeek;
-        uint64_t marker, markerDiff;
-        if (bridgeInfo.markerA <= bridgeInfo.markerB)
-            marker = bridgeInfo.markerA;
-        else
-            marker = bridgeInfo.markerB;
-        
-        if (marker > seek)
-            markerDiff = marker - seek;
-        else
-            markerDiff = seek - marker;
-
-        if (markerDiff < 100)
+        usSeek += startTime;
+        if (fineSeek)
         {
-            if (editor->goToTimeVideo(marker))
-                coarseSeek = false;
+            if (false == editor->goToTimeVideo(usSeek))
+                fineSeek = false;
         }
-        
-        if (coarseSeek)
+        if (!fineSeek)
         {
-            if (true == editor->getPKFramePTS(&seek))
+            usSeek++; // avoid skipping to the previous keyframe on repeated calls
+            if (editor->getPKFramePTS(&usSeek))
             {
-                editor->goToIntraTimeVideo(seek);
+                editor->goToIntraTimeVideo(usSeek);
             }
             else
             {

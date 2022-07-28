@@ -80,7 +80,7 @@ FilterInfo  *ADM_coreVideoFilter::getInfo(void)
     \fn goToTime
     \brief sort of seek, used for preview video filters, does not have to be frame accurate
 */
-bool         ADM_coreVideoFilter::goToTime(uint64_t usSeek)
+bool ADM_coreVideoFilter::goToTime(uint64_t usSeek, bool fineSeek)
 {
     ADM_info("%s:Video filter seeking\n",myName);
     double thisIncrement=info.frameIncrement;
@@ -89,11 +89,12 @@ bool         ADM_coreVideoFilter::goToTime(uint64_t usSeek)
     ADM_assert(oldIncrement);
     nextFrame=0;
 
-    if(thisIncrement==oldIncrement) return previousFilter->goToTime(usSeek);
+    if(thisIncrement == oldIncrement)
+        return previousFilter->goToTime(usSeek,fineSeek);
     double newSeek=usSeek;
     newSeek/=thisIncrement;
     newSeek*=oldIncrement;
-    return  previousFilter->goToTime((uint64_t)newSeek);
+    return previousFilter->goToTime((uint64_t)newSeek,fineSeek);
 
 }
 /**
@@ -116,10 +117,10 @@ ADM_coreVideoFilterCached::~ADM_coreVideoFilterCached()
     \fn goToTime
     \brief flush the cache as frameNum goes back to 0 after a seek
 */
-bool         ADM_coreVideoFilterCached::goToTime(uint64_t usSeek)
+bool ADM_coreVideoFilterCached::goToTime(uint64_t usSeek, bool fineSeek)
 {
     vidCache->flush();
-    return ADM_coreVideoFilter::goToTime(usSeek);
+    return ADM_coreVideoFilter::goToTime(usSeek,fineSeek);
 }
 
 // Some useful functions often used by Donald Graft filters

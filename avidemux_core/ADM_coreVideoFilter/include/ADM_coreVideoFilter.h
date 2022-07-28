@@ -67,7 +67,7 @@ public:
        virtual             ~ADM_coreVideoFilter();
 
        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-       virtual bool         goToTime(uint64_t usSeek);                 /// Overide this if you have cleanup to do after a jump
+       virtual bool         goToTime(uint64_t usSeek, bool fineSeek = false); /// Override this if you have cleanup to do after a jump
        virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image)=0;              /// Dont mix getFrame & getNextFrame !
        virtual bool         getNextFrameAs(ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image);              /// Request frame as type (hw accel)
        virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
@@ -95,7 +95,7 @@ public:
                             ADM_coreVideoFilterCached(int cacheSize,ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
        virtual             ~ADM_coreVideoFilterCached();
 
-       virtual bool         goToTime(uint64_t usSeek);                 /// Overide this if you have cleanup to do after a jump
+       virtual bool         goToTime(uint64_t usSeek, bool fineSeek = false); // Override this if you have cleanup to do after a jump
 };
 
 // Avisynth compatibility functions
