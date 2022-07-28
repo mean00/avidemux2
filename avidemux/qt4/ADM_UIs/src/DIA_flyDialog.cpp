@@ -204,9 +204,10 @@ void ADM_flyDialog::recomputeSize(void)
         _zoom = 1;
         _zoomW = _w;
         _zoomH = _h;
-        postInit (true);
+        _canvas->changeSize(_zoomW, _zoomH);
+        _canvas->parentWidget()->setMinimumSize(_zoomW, _zoomH);
         updateZoom();
-        sliderChanged();
+        refreshImage();
         return;
     }
     
@@ -234,9 +235,10 @@ void ADM_flyDialog::recomputeSize(void)
     _zoom = new_zoom;
     _zoomW = new_zoomW;
     _zoomH = new_zoomH;
-    postInit (true);
+    _canvas->changeSize(_zoomW, _zoomH);
+    _canvas->parentWidget()->setMinimumSize(_zoomW, _zoomH);
     updateZoom();
-    sliderChanged();
+    refreshImage();
 }
 
 /**
@@ -275,25 +277,45 @@ bool    ADM_flyDialog::goToTime(uint64_t tme)
 }
 
 /**
+    \fn goToExactTime
+*/
+bool ADM_flyDialog::goToExactTime(uint64_t tme)
+{
+    _in->goToTime(tme,true);
+    return nextImageInternal();
+}
+
+/**
+    \fn refresh
+    \brief Seek to the current position, re-process the image and sync the slider
+*/
+bool ADM_flyDialog::refreshImage(void)
+{
+    if(goToExactTime(lastPts))
+    {
+        updateSlider();
+        return true;
+    }
+    return false;
+}
+
+/**
     \fn sliderChanged
     \brief callback to handle image changes
 */
-uint8_t    ADM_flyDialog::sliderChanged(void)
+bool ADM_flyDialog::sliderChanged(void)
 {
     uint32_t fn= sliderGet();
-    uint32_t frameNumber;
     uint32_t len,flags;
 
     ADM_assert(_yuvBuffer);
     ADM_assert(_in);
-
 
     double time;
     time=fn;
     time/=ADM_FLY_SLIDER_MAX;
     time*=_in->getInfo()->totalDuration;
     return goToTime(time);
-    
 }
 /**
     \fn toRgbPixFrmt
@@ -407,10 +429,10 @@ bool ADM_flyDialog::nextImage(void)
 }
 
 /**
- * 
- * @return 
+ * \fn initializeSize
+ * \brief Get the width and height of the parts of the dialog above and below the canvas
  */
-bool ADM_flyDialog::initializeSize()
+bool ADM_flyDialog::initializeSize(void)
 {
     _canvas->resize(1,1);
     _canvas->parentWidget()->parentWidget()->adjustSize();
@@ -418,8 +440,9 @@ bool ADM_flyDialog::initializeSize()
     // Normally there is nothing interesting left and right, we can use a hardcoded value
     _usedWidth = 32;
     _usedHeight = qsize.height();
+    if (_usedHeight > 0) _usedHeight--;
 
-     if (_resizeMethod != RESIZE_NONE) 
+    if (_resizeMethod != RESIZE_NONE)
     {
         _zoom = calcZoomFactor();
         if (_zoom == 1) 
@@ -481,9 +504,8 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
     _yuvBufferOut=new ADMImageDefault(_w,_h);
     yuvToRgb=NULL;  
     initializeSize();
-    postInit(false);
+    _canvas->parentWidget()->setMinimumSize(_zoomW, _zoomH);
     updateZoom();
-    _nextRdv=0;
 }
 void ADM_flyDialogYuv::resetScaler(void)
 {
@@ -552,9 +574,8 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
                             ADM_PIXFRMT_YV12,toRgbPixFrmt());
     rgb2rgb=NULL;
     initializeSize();
-    postInit(false);
+    _canvas->parentWidget()->setMinimumSize(_zoomW, _zoomH);
     updateZoom();
-
 }
 void ADM_flyDialogRgb::resetScaler(void)
 {
@@ -606,40 +627,6 @@ bool ADM_flyDialogRgb::process(void)
     return true;
 }
 
-
-
-
-/**
-    \fn    FlyDialogEventFilter
-    \brief
-*/
-
-FlyDialogEventFilter::FlyDialogEventFilter(ADM_flyDialog *flyDialog)
-{
-    recomputed = false;
-    this->flyDialog = flyDialog;
-}
-/**
-    \fn    eventFilter
-    \brief
-*/
-
-bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::Show && !recomputed)
-    {
-        recomputed = true;
-        QWidget* parent = (QWidget*)obj;
-        uint32_t screenWidth, screenHeight;
-
-        UI_getPhysicalScreenSize(parent, &screenWidth, &screenHeight);
-        flyDialog->recomputeSize();
-        QCoreApplication::processEvents();
-        parent->move((((int)screenWidth) - parent->frameSize().width()) / 2, (((int)screenHeight) - parent->frameSize().height()) / 2);
-    }
-
-    return QObject::eventFilter(obj, event);
-}
 /**
     \fn    ADM_flyDialog
     \brief
@@ -665,10 +652,14 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _yuvBuffer=new ADMImageDefault(_w,_h);
     _usedWidth= _usedHeight=0;
     _oldViewWidth = _oldViewHeight = 0;
+    _nextRdv=0;
     lastPts= _in->getInfo()->markerA;
+    uint64_t startTime = _in->getAbsoluteStartTime();
+    printf("[ADM_flyDialog::ctor] Bridge start time: %s\n",ADM_us2plain(startTime));
+    if(lastPts > startTime)
+        lastPts -= startTime;
     setCurrentPts(lastPts);
-    _in->goToTime(lastPts);
-    updateSlider();
+    // Seek is delegated to the user
     _bypassFilter=false;
 
     QGraphicsScene *sc=new QGraphicsScene(this);
@@ -694,29 +685,6 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     slider->setInvertedWheel(swapWheel);
     slider->setMarkers(_in->getInfo()->totalDuration,_in->getInfo()->markerA,_in->getInfo()->markerB);
     
-}
-/**
-    \fn    postInit
-    \brief
-*/
-
-void ADM_flyDialog::postInit(uint8_t reInit)
-{
-    QWidget *graphicsView = _canvas->parentWidget();
-    ADM_flyNavSlider  *slider=(ADM_flyNavSlider *)_slider;
-
-    if (reInit)
-    {
-        FlyDialogEventFilter *eventFilter = new FlyDialogEventFilter(this);
-
-        if (slider)
-            slider->setMaximum(ADM_FLY_SLIDER_MAX);
-
-        graphicsView->parentWidget()->installEventFilter(eventFilter);
-    }
-
-    _canvas->changeSize(_zoomW, _zoomH);
-    graphicsView->setMinimumSize(_zoomW, _zoomH);
 }
 
 /**
@@ -853,11 +821,8 @@ uint8_t     ADM_flyDialog::sliderSet(uint32_t value)
 void ADM_flyDialog::updateSlider(void)
 {
     ADM_assert(_in);
-    uint64_t dur=_in->getInfo()->totalDuration;
-    uint64_t pts=getCurrentPts();
-    double pos;
-    pos=pts;
-    pos/=dur;
+    double pos=lastPts;
+    pos/=_in->getInfo()->totalDuration;
     pos*=ADM_FLY_SLIDER_MAX;
     pos+=0.5; // round up
     sliderSet((uint32_t)pos);
@@ -883,8 +848,13 @@ void ADM_flyDialog::backOneMinute(void)
     uint64_t pts=getCurrentPts();
     if(pts<JUMP_LENGTH) pts=0;
     else pts-=JUMP_LENGTH;
+
+    ADM_assert(_slider);
+
+    bool oldState = _slider->blockSignals(true);
     goToTime(pts);
     updateSlider();
+    _slider->blockSignals(oldState);
 }
 /**
  * 
@@ -893,8 +863,13 @@ void ADM_flyDialog::fwdOneMinute(void)
 {
     uint64_t pts=getCurrentPts();
     pts+=JUMP_LENGTH;
+
+    ADM_assert(_slider);
+
+    bool oldState = _slider->blockSignals(true);
     goToTime(pts);
     updateSlider();
+    _slider->blockSignals(oldState);
 }
 
 /**
@@ -908,9 +883,11 @@ void ADM_flyDialog::gotoSelectionStart(void)
     uint64_t pts = _in->getInfo()->markerA;
     if (_in->getInfo()->markerB < _in->getInfo()->markerA)
         pts = _in->getInfo()->markerB;
-    goToTime(pts);
+    if (pts > _in->getAbsoluteStartTime())
+        pts -= _in->getAbsoluteStartTime();
+    goToExactTime(pts);
     updateSlider();
-    slide->blockSignals(oldState);    
+    slide->blockSignals(oldState);
 }
 /**
  * 
