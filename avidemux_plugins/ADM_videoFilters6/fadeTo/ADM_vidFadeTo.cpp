@@ -41,7 +41,7 @@ public:
         virtual bool            getCoupledConf(CONFcouple **couples); /// Return the current filter configuration
         virtual void            setCoupledConf(CONFcouple *couples);
         virtual bool            configure(void); /// Start graphical user interface
-        virtual bool            goToTime(uint64_t time);
+        virtual bool            goToTime(uint64_t time, bool exact = false);
                 uint16_t        lookupLuma[256][256];
                 uint16_t        lookupChroma[256][256];
 
@@ -164,11 +164,11 @@ AVDM_FadeTo::~AVDM_FadeTo(void)
 /**
  * \fn goToTime
  */
-bool AVDM_FadeTo::goToTime(uint64_t time)
+bool AVDM_FadeTo::goToTime(uint64_t time, bool exact)
 {
     if(!keep)
         cleanup();
-    return ADM_coreVideoFilterCached::goToTime(time);
+    return ADM_coreVideoFilterCached::goToTime(time,exact);
 }
 /**
  * 
