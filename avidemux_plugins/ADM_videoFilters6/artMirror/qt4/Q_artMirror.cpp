@@ -44,7 +44,7 @@ Ui_artMirrorWindow::Ui_artMirrorWindow(QWidget *parent, artMirror *param,ADM_cor
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect(ui.comboBoxMethod, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
