@@ -59,7 +59,7 @@ Ui_fadeInOutWindow::Ui_fadeInOutWindow(QWidget *parent, fadeInOut *param,ADM_cor
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         
