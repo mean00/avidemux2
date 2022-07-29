@@ -47,7 +47,7 @@ Ui_chromaShiftWindow::Ui_chromaShiftWindow(QWidget* parent, chromashift *param,A
         myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myCrop->setTabOrder();
         myCrop->upload();
-        myCrop->sliderChanged();
+        myCrop->refreshImage();
 
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
