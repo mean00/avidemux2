@@ -47,7 +47,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
         if(image)
         {
             vid->lastDecodedPts=vid->lastReadPts=timeToSeek;
-            ADM_info("Image found in cache, pts=%" PRIu64" ms, last sent frame: %" PRIu32"\n",timeToSeek/1000,vid->lastSentFrame);
+            ADM_info("Image found in cache, pts = %s, last sent frame: %" PRIu32"\n",ADM_us2plain(timeToSeek),vid->lastSentFrame);
             endOfStream=false;
             return true;
         }
@@ -57,18 +57,18 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
     if(_segments.isKeyFrameByTime(ref,timeToSeek))
     {
         seekTime=timeToSeek;
-        ADM_info("Seeking to a keyframe at %" PRIu64" ms\n",seekTime/1000);
+        ADM_info("Seeking to a keyframe at %s\n",ADM_us2plain(seekTime));
         found=true;
     }else   
     {
         if(false==searchPreviousKeyFrameInRef(ref,timeToSeek,&seekTime))
         {
-            ADM_warning("Cannot identify the keyframe before %" PRIu64" ms\n",timeToSeek/1000);
+            ADM_warning("Cannot identify the keyframe before %s\n",ADM_us2plain(timeToSeek));
             return false;
         }
     }
     uint32_t frame=_segments.intraTimeToFrame(ref,seekTime);
-    ADM_info("Seeking to frame %" PRIu32" at %" PRIu64" ms\n",frame,seekTime/1000);
+    ADM_info("Seeking to frame %" PRIu32" at %s\n",frame,ADM_us2plain(seekTime));
     if(dontdecode==true)
     {
         vid->lastSentFrame=frame;
@@ -79,7 +79,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
     
     if(false==DecodePictureUpToIntra(ref,frame))
     {
-        ADM_warning("Cannot decode up to intra %" PRIu32" at %" PRIu64" ms\n",frame,seekTime/1000);
+        ADM_warning("Cannot decode up to intra %" PRIu32" at %s\n",frame,ADM_us2plain(seekTime));
         return false;
     }
     if(found==true) return true;
@@ -95,7 +95,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
         vid->lastReadPts=pts;
         if(pts==timeToSeek)
         {
-            ADM_info("Image found, pts=%" PRIu64" ms, last sent frame: %" PRIu32"\n",pts/1000,vid->lastSentFrame);
+            ADM_info("Image found, pts = %s, last sent frame: %" PRIu32"\n",ADM_us2plain(pts),vid->lastSentFrame);
             return true;
         }
         if(pts>timeToSeek)
@@ -104,7 +104,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
             return false;
         }
     }
-    ADM_warning("seekToFrame failed for frame at PTS= %" PRIu64" ms, next image failed\n",timeToSeek/1000);
+    ADM_warning("seekToFrame failed for frame at PTS %s, next image failed\n",ADM_us2plain(timeToSeek));
     return false;
 }
 /**

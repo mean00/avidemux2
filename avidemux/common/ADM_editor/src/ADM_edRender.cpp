@@ -197,7 +197,7 @@ uint32_t seg;
     }
     _currentSegment=seg;
     int64_t newTime=(int64_t)v->lastDecodedPts+(int64_t)s->_startTimeUs-(int64_t)s->_refStartTimeUs;
-    ADM_info("Seek done, in reference, gone to %" PRIu64" with segment start at %" PRIu64"\n",v->lastDecodedPts,s->_refStartTimeUs);
+    ADM_info("Seek done, decoded to %" PRIu64" us in ref (%s linear) with segment start at %" PRIu64" us\n", v->lastDecodedPts, ADM_us2plain(newTime), s->_refStartTimeUs);
     SET_CURRENT_PTS(newTime);
     return true;
 
