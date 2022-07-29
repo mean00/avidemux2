@@ -47,7 +47,7 @@ Ui_artVHSWindow::Ui_artVHSWindow(QWidget *parent, artVHS *param,ADM_coreVideoFil
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x,y) ui.horizontalSlider##x->setScale(1,y,2); \
