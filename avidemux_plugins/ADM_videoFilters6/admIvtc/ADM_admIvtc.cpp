@@ -161,12 +161,12 @@ const char *admIvtc::getConfiguration(void)
  * @param usSeek
  * @return
  */
-bool         admIvtc::goToTime(uint64_t usSeek)
+bool admIvtc::goToTime(uint64_t usSeek, bool fineSeek)
 {
     vidCache->flush();
     nextFrame=0;
     state=IVTC_SYNCING;
-    return previousFilter->goToTime(usSeek);
+    return previousFilter->goToTime(usSeek,fineSeek);
 }
 /**
     \fn configure
