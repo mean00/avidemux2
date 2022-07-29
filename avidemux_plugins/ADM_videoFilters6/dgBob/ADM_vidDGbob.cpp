@@ -43,7 +43,7 @@ public:
        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
 	   virtual void setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;                 /// Start graphical user interface        
-       virtual bool         goToTime(uint64_t usSeek);
+       virtual bool         goToTime(uint64_t usSeek, bool fineSeek = false);
 };
 
 // DECLARE FILTER 
@@ -148,7 +148,7 @@ void DGbob::update(void)
     \fn goToTime
     \brief Seek in filter preview mode
 */
-bool DGbob::goToTime(uint64_t usSeek)
+bool DGbob::goToTime(uint64_t usSeek, bool fineSeek)
 {
     uint32_t oldFrameIncrement=info.frameIncrement;
     switch(_param.mode)
@@ -157,7 +157,7 @@ bool DGbob::goToTime(uint64_t usSeek)
         case 2: usSeek/=2;break;
         default:break;
     }
-    bool r=ADM_coreVideoFilterCached::goToTime(usSeek);
+    bool r=ADM_coreVideoFilterCached::goToTime(usSeek,fineSeek);
     info.frameIncrement=oldFrameIncrement;
     return r;
 }
