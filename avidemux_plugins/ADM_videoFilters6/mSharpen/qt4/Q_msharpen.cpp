@@ -44,7 +44,7 @@
         flymsharpen->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         flymsharpen->setTabOrder();
         flymsharpen->upload();
-        flymsharpen->sliderChanged();
+        flymsharpen->refreshImage();
 
         ui.horizontalSliderStrength->setFocus();
 
