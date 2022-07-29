@@ -43,7 +43,7 @@
         myCrop=new flyHue( this,width, height,in,canvas,ui.horizontalSlider);
         myCrop->setParam(param);
         myCrop->_cookie=&ui;
-        myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
+        myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::AnalyzerBtn);
         myCrop->setTabOrder();
         myCrop->upload();
         myCrop->refreshImage();

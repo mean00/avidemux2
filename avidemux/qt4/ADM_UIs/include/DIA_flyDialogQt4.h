@@ -33,6 +33,11 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <QRect>
+#include <QGraphicsScene>
+#include <QImage>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -53,9 +58,10 @@ enum class ControlOption
 {
     None = 0,
     PeekOriginalBtn = 1 << 0,
-    UserWidgetAfterControls = 1 << 1,
-    UserWidgetBeforePeekBtn = 1 << 2,
-    UserWidgetAfterPeekBtn = 1 << 3
+    AnalyzerBtn = 1 << 1,
+    UserWidgetAfterControls = 1 << 2,
+    UserWidgetBeforePeekBtn = 1 << 3,
+    UserWidgetAfterPeekBtn = 1 << 4
 };
 
 inline ControlOption operator|(ControlOption a, ControlOption b)
@@ -94,6 +100,8 @@ public:
 };
 
 class flyControl;
+class ADM_analyzerDialog;
+class flyDialogsAnalyzer;
 /**
     \class ADM_flyDialog
     \brief Base class for flyDialog
@@ -123,6 +131,11 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           std::vector<QWidget *> buttonList; // useful for manipulating tab order
           QDialog     *_parent;
           bool         _bypassFilter;
+      // Analyzer
+          bool                 _analyze;
+          ADM_analyzerDialog * _analyzerDialog;
+          QGraphicsScene     * _analyzerScenes[4];
+          flyDialogsAnalyzer * _flyAnalyzer;
 
 
 
@@ -190,6 +203,8 @@ public slots:
         virtual void fwdOneMinute(void);
         virtual void gotoSelectionStart(void);
         virtual void play(bool status);
+        virtual void analyzerReleased(void);
+        virtual void analyzerClosed(void);
         virtual void peekOriginalPressed(void);
         virtual void peekOriginalReleased(void);
         virtual void timeout(void);
@@ -298,6 +313,55 @@ private:
         void mousePressEvent(QMouseEvent *);
         void mouseReleaseEvent(QMouseEvent *);
         void mouseMoveEvent(QMouseEvent *);
+};
+
+class ADM_UIQT46_EXPORT ADM_analyzerDialog : public QDialog
+{
+    Q_OBJECT
+  private:
+    QHBoxLayout     * hboxlayout;
+    QVBoxLayout     * vboxlayout;
+    QGraphicsView   * gv[4];
+    QPushButton     * btns[4];
+    bool              btnChkd[4];
+    void adjustGraphs();
+    void resizeEvent(QResizeEvent *event);
+    void showEvent(QShowEvent *event);
+  private slots:
+    void btnToggled(bool f);
+  public:
+    QGraphicsScene  * gsc[4];
+    ADM_analyzerDialog(QWidget *parent);
+    ~ADM_analyzerDialog();
+    
+};
+
+class ADM_UIQT46_EXPORT flyDialogsAnalyzer
+{
+  private:
+    int                  width, height;
+    int                  rgbBufStride;
+    ADM_byteBuffer *     rgbBufRaw;
+    ADMColorScalerFull * convertYuvToRgb;
+    uint32_t * wrkVectorScope;
+    uint32_t * bufVectorScope;
+    uint32_t * scaleVectorScope;
+    QImage   * imgVectorScope;
+    uint32_t * wrkYUVparade[3];
+    uint32_t * bufYUVparade;
+    QImage   * imgYUVparade;
+    uint32_t * wrkRGBparade[3];
+    uint32_t * bufRGBparade;
+    QImage   * imgRGBparade;
+    uint32_t * wrkHistograms[6];
+    uint32_t * bufHistograms;
+    QImage   * imgHistograms;
+    int      * paradeIndex;
+    int      * paradeIndexHalf;
+  public:
+    flyDialogsAnalyzer(int width, int height);
+    virtual    ~flyDialogsAnalyzer() ;
+    void analyze(ADMImage *in, QGraphicsScene * sceneVectorScope, QGraphicsScene * sceneYUVparade, QGraphicsScene * sceneRGBparade, QGraphicsScene * sceneHistograms);
 };
 
 //EOF

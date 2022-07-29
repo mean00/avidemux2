@@ -44,7 +44,7 @@ Ui_colorTempWindow::Ui_colorTempWindow(QWidget *parent, colorTemp *param,ADM_cor
         myFly=new flyColorTemp( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(colorTemp));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::AnalyzerBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->refreshImage();

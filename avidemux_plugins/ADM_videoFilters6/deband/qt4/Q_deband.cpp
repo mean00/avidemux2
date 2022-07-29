@@ -43,7 +43,7 @@ Ui_debandWindow::Ui_debandWindow(QWidget *parent, deband *param,ADM_coreVideoFil
         myFly=new flyDeband( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myFly->param),param,sizeof(deband));
         myFly->_cookie=&ui;
-        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
+        myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::AnalyzerBtn);
         myFly->setTabOrder();
         myFly->upload();
         myFly->refreshImage();

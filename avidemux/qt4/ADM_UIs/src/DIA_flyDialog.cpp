@@ -14,12 +14,12 @@
 
 #include <QEvent>
 #include <QGraphicsView>
-#include <QPushButton>
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QLineEdit>
 #include <QFontMetrics>
 #include <QRect>
+#include <QSizePolicy>
 
 #include <cmath>
 
@@ -101,6 +101,19 @@ public:
             QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
             horizontalLayout_4->addItem(horizontalSpacer_4);
 
+            if (controlOptions & ControlOption::AnalyzerBtn)
+            {
+                pushButton_analyzer = new QPushButton();
+                pushButton_analyzer->setObjectName(QString("pushButton_analyzer"));
+                pushButton_analyzer->setAutoRepeat(false);
+                pushButton_analyzer->setText(QApplication::translate("seekablePreviewDialog", "Analyzer", 0));
+                pushButton_analyzer->setToolTip(QApplication::translate("seekablePreviewDialog", "Show scopes", 0));
+
+                horizontalLayout_4->addWidget(pushButton_analyzer);
+            }
+            else
+                pushButton_analyzer = NULL;
+
             if (controlOptions & ControlOption::UserWidgetBeforePeekBtn)
             {
                 ADM_assert(userWidget != NULL);
@@ -162,6 +175,7 @@ public:
         QPushButton *pushButton_fwd1mn;
         QLineEdit   *currentTime;
         QLabel      *labelDuration;
+        QPushButton *pushButton_analyzer;
         QPushButton *pushButton_peekOriginal;
 };
 
@@ -264,6 +278,7 @@ uint8_t ADM_flyDialog::cleanup(void)
 */
 ADM_flyDialog::~ADM_flyDialog(void)
 {
+    delete _flyAnalyzer;
     cleanup(); 
 }
 
@@ -342,6 +357,11 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOp
     QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
     QObject::connect(_control->pushButton_gotosel ,SIGNAL(clicked()),this,SLOT(gotoSelectionStart()));
     QObject::connect(_control->pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
+    
+    if (controlOptions & ControlOption::AnalyzerBtn)
+    {
+        QObject::connect(_control->pushButton_analyzer ,SIGNAL(released()),this,SLOT(analyzerReleased()));
+    }
     if (controlOptions & ControlOption::PeekOriginalBtn)
     {
         QObject::connect(_control->pushButton_peekOriginal ,SIGNAL(pressed()),this,SLOT(peekOriginalPressed()));
@@ -357,6 +377,8 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOp
     buttonList.push_back(_control->currentTime);
     if ((controlOptions & ControlOption::UserWidgetAfterControls) && (userWidget != NULL))
         buttonList.push_back(userWidget);
+    if (controlOptions & ControlOption::AnalyzerBtn)
+        buttonList.push_back(_control->pushButton_analyzer);
     if ((controlOptions & ControlOption::UserWidgetBeforePeekBtn) && (userWidget != NULL))
         buttonList.push_back(userWidget);
     if (controlOptions & ControlOption::PeekOriginalBtn)
@@ -549,8 +571,12 @@ bool ADM_flyDialogYuv::process(void)
     if (_bypassFilter)
     {
         yuvToRgb->convertImage(_yuvBuffer,_rgbByteBufferDisplay.at(0));
+        if (_analyze)
+            _flyAnalyzer->analyze(_yuvBuffer,_analyzerScenes[0],_analyzerScenes[1],_analyzerScenes[2],_analyzerScenes[3]);
     } else {
         processYuv(_yuvBuffer,_yuvBufferOut);
+        if (_analyze)
+            _flyAnalyzer->analyze(_yuvBufferOut,_analyzerScenes[0],_analyzerScenes[1],_analyzerScenes[2],_analyzerScenes[3]);
         yuvToRgb->convertImage(_yuvBufferOut,_rgbByteBufferDisplay.at(0));
     }
     return true;
@@ -661,6 +687,10 @@ bool ADM_flyDialogRgb::process(void)
     setCurrentPts(lastPts);
     // Seek is delegated to the user
     _bypassFilter=false;
+    _analyze=false;
+    _analyzerDialog=NULL;
+    _analyzerScenes[0]=_analyzerScenes[1]=_analyzerScenes[2]=_analyzerScenes[3]=NULL;
+    _flyAnalyzer = new flyDialogsAnalyzer(width,height);
 
     QGraphicsScene *sc=new QGraphicsScene(this);
     sc->setBackgroundBrush(QBrush(Qt::darkGray, Qt::SolidPattern));
@@ -921,6 +951,29 @@ void ADM_flyDialog::play(bool state)
 /**
  * 
  */
+void ADM_flyDialog::analyzerReleased(void)
+{
+    _control->pushButton_analyzer->setEnabled(false);
+    if (!_analyze)
+    {
+        _analyzerDialog = new ADM_analyzerDialog(_parent);
+        for (int i=0; i<4; i++)
+            _analyzerScenes[i] = _analyzerDialog->gsc[i];
+        QObject::connect(_analyzerDialog ,SIGNAL(destroyed()),this,SLOT(analyzerClosed()));
+        _analyzerDialog->show();
+        _analyze=true;
+    }
+    this->sameImage();
+}
+void ADM_flyDialog::analyzerClosed(void)
+{
+    _analyze = false;
+    _analyzerScenes[0]=_analyzerScenes[1]=_analyzerScenes[2]=_analyzerScenes[3]=NULL;
+    _control->pushButton_analyzer->setEnabled(true);
+}
+/**
+ * 
+ */
 void ADM_flyDialog::peekOriginalPressed(void)
 {
     if (!_bypassFilter)
@@ -973,6 +1026,657 @@ void ADM_flyDialog::timeout(void)
     }
 }
 
+
+
+/**
+ * 
+ */
+ADM_analyzerDialog::ADM_analyzerDialog(QWidget *parent) : QDialog(parent, Qt::Tool)
+{
+    vboxlayout = new QVBoxLayout(this);
+    hboxlayout = new QHBoxLayout(this);
+    this->setWindowTitle(QApplication::translate("seekablePreviewDialog", "Analyzer", 0));
+    this->setAttribute(Qt::WA_DeleteOnClose);   // delete objets on closing the dialog
+    for (int i=0; i<4; i++)
+    {
+        btns[i] = new QPushButton(this);
+        switch(i)
+        {
+            case 0: btns[i]->setText(QApplication::translate("seekablePreviewDialog", "Vectorscope", 0)); break;
+            case 1: btns[i]->setText(QApplication::translate("seekablePreviewDialog", "YUV waveform", 0)); break;
+            case 2: btns[i]->setText(QApplication::translate("seekablePreviewDialog", "RGB waveform", 0)); break;
+            case 3: btns[i]->setText(QApplication::translate("seekablePreviewDialog", "Histograms", 0)); break;
+        }
+        btns[i]->setCheckable(true);
+        btns[i]->setChecked(i%2==0);    // vectorscope + RGB
+        btns[i]->setStyleSheet("QPushButton { background-color: #888888; border: none; padding: 8px;}\nQPushButton:checked { background-color: #33FF33; border: none; padding: 8px;}");
+        connect(btns[i],SIGNAL(toggled(bool)),this,SLOT(btnToggled(bool)));
+        hboxlayout->addWidget(btns[i]);
+        btnChkd[i] = btns[i]->isChecked();
+    }
+    vboxlayout->addLayout(hboxlayout);
+    for (int i=0; i<4; i++)
+    {
+        gv[i] = new QGraphicsView(this);
+        gv[i]->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        gv[i]->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        gv[i]->setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing);
+        gv[i]->setBackgroundBrush(QBrush(QColor::fromRgb(20,20,20),Qt::SolidPattern));
+        gv[i]->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
+        gsc[i] = new QGraphicsScene(this);
+        if (i==0)
+            gsc[i]->setSceneRect(0,0,620,600);
+        else if (i<=2)
+            gsc[i]->setSceneRect(0,0,772,258);
+        else
+            gsc[i]->setSceneRect(0,0,772,259);
+        gv[i]->setScene(gsc[i]);
+        gv[i]->scale(1/3.,1/3.);
+        vboxlayout->addWidget(gv[i]);
+        gv[i]->setVisible(btns[i]->isChecked());
+    }
+    this->setLayout(vboxlayout);
+}
+
+ADM_analyzerDialog::~ADM_analyzerDialog()
+{
+    
+}
+
+void ADM_analyzerDialog::btnToggled(bool f)
+{
+    bool allOff = true;
+    for (int i=0; i<4; i++)
+        if(btns[i]->isChecked())
+            allOff = false;
+            
+    if (allOff)
+        for (int i=0; i<4; i++)
+            btns[i]->setChecked(btnChkd[i]);
+    
+    for (int i=0; i<4; i++)
+    {
+        gv[i]->setVisible(btns[i]->isChecked());
+        btnChkd[i] = btns[i]->isChecked();
+    }
+    QCoreApplication::processEvents ();
+    adjustGraphs();
+}
+
+void ADM_analyzerDialog::adjustGraphs()
+{
+    QRectF bounds;
+    for (int i=0; i<4; i++)
+    {
+        bounds = gsc[i]->itemsBoundingRect();
+        gv[i]->fitInView(bounds, Qt::KeepAspectRatio);
+    }
+}
+
+void ADM_analyzerDialog::resizeEvent(QResizeEvent *event)
+{
+    adjustGraphs();
+}
+
+void ADM_analyzerDialog::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    QCoreApplication::processEvents ();
+    adjustGraphs();
+}
+
+/**
+ * 
+ */
+flyDialogsAnalyzer::flyDialogsAnalyzer(int width, int height)
+{
+    this->width = width;
+    this->height = height;
+    wrkVectorScope = new uint32_t [256*256];
+    bufVectorScope = new uint32_t [620*600];
+    scaleVectorScope = new uint32_t [620*600];
+    imgVectorScope = new QImage((uchar *)bufVectorScope, 620, 600, 620*sizeof(uint32_t), QImage::Format_RGB32);
+    
+    for (int y=0; y<600; y++)
+    {
+        for (int x=0; x<620; x++)
+        {
+            double xc = x-(54.0+256.0);
+            double yc = y-(44.0+256.0);
+            double r = std::sqrt(xc*xc + yc*yc);
+            uint32_t c = 0;
+            if ((r <= 300.0) && (r >= 284.0))   // hue ring
+            {
+                xc *= 127.0/r;
+                yc *= 127.0/r;
+                yc *= -1.0;
+                r = (8.0-std::abs(r-292.0))/8.0;  // 0..1..0 triangle
+                r = std::sqrt(r); // nonlinearity
+                r *= 166;
+                if (r > 128.0)
+                    r = 128.0;
+                int rgb[3];
+                rgb[0] = std::round(r            +   1.4*yc);
+                rgb[1] = std::round(r - 0.343*xc - 0.711*yc);
+                rgb[2] = std::round(r + 1.765*xc           );
+                for (int i=0; i<3; i++)
+                {
+                    if (rgb[i] < 0) rgb[i] = 0;
+                    if (rgb[i] > 255) rgb[i] = 255;
+                }
+                c = (rgb[0]<<16) + (rgb[1]<<8) + rgb[2];
+            }
+            
+            for (int pri=1; pri<=6; pri++)
+            {
+                int rgb[3];
+                rgb[0] = (pri&1)? 1:0;
+                rgb[1] = (pri&2)? 1:0;
+                rgb[2] = (pri&4)? 1:0;
+                double u = 54 + 256 + 2*224.0*(-0.1146*rgb[0] + -0.3854*rgb[1] +  0.5   *rgb[2]);
+                double v = 44 + 256 - 2*224.0*( 0.5   *rgb[0] + -0.4542*rgb[1] + -0.0458*rgb[2]);
+                u = x-u;
+                v = y-v;
+                r = std::sqrt(u*u + v*v);
+                if ((r <= 16.1) && (r >= 13.3))
+                {
+                    c = 0;
+                    if (pri&1)
+                        c += 0xFF0000;
+                    if (pri&2)
+                        c += 0x00FF00;
+                    if (pri&4)
+                        c += 0x0000FF;
+                }
+            }
+            
+            scaleVectorScope[y*620+x] = c;
+        }
+    }
+
+    for (int i=0; i<3; i++)
+        wrkYUVparade[i] = new uint32_t [256*256];
+    bufYUVparade = new uint32_t [772*258];
+    imgYUVparade = new QImage((uchar *)bufYUVparade, 772, 258, 772*sizeof(uint32_t), QImage::Format_RGB32);
+
+    for (int i=0; i<3; i++)
+        wrkRGBparade[i] = new uint32_t [256*256];
+    bufRGBparade = new uint32_t [772*258];
+    imgRGBparade = new QImage((uchar *)bufRGBparade, 772, 258, 772*sizeof(uint32_t), QImage::Format_RGB32);
+
+    for (int i=0; i<6; i++)
+        wrkHistograms[i] = new uint32_t [256];
+    bufHistograms = new uint32_t [772*259];
+    imgHistograms = new QImage((uchar *)bufHistograms, 772, 259, 772*sizeof(uint32_t), QImage::Format_RGB32);
+    
+    paradeIndex = new int [width];
+    for (int i=0; i<width; i++)
+    {
+        double fpos = i;
+        fpos /= width;
+        fpos *= 256.0;
+        paradeIndex[i] = fpos;
+        if (paradeIndex[i] > 255)
+            paradeIndex[i] = 255;
+    }
+    paradeIndexHalf = new int [width/2];
+    for (int i=0; i<width/2; i++)
+    {
+        double fpos = i;
+        fpos *= 2.0;
+        fpos /= width;
+        fpos *= 256.0;
+        paradeIndexHalf[i] = fpos;
+        if (paradeIndexHalf[i] > 255)
+            paradeIndexHalf[i] = 255;
+    }
+
+    rgbBufStride = ADM_IMAGE_ALIGN(width * 4);
+    rgbBufRaw = new ADM_byteBuffer();
+    rgbBufRaw->setSize(rgbBufStride * height);
+    convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BILINEAR,width,height,width,height,ADM_PIXFRMT_YV12,ADM_PIXFRMT_RGB32A);
+}
+/**
+ * 
+ */
+flyDialogsAnalyzer::~flyDialogsAnalyzer()
+{
+    delete [] wrkVectorScope;
+    delete [] bufVectorScope;
+    delete [] scaleVectorScope;
+    delete imgVectorScope;
+    for (int i=0; i<3; i++)
+        delete [] wrkYUVparade[i];
+    delete [] bufYUVparade;
+    delete imgYUVparade;
+    for (int i=0; i<3; i++)
+        delete [] wrkRGBparade[i];
+    delete [] bufRGBparade;
+    delete imgRGBparade;
+    for (int i=0; i<6; i++)
+        delete [] wrkHistograms[i];
+    delete [] bufHistograms;
+    delete imgHistograms;
+    
+    delete [] paradeIndex;
+    delete [] paradeIndexHalf;
+
+    delete convertYuvToRgb;
+    rgbBufRaw->clean();
+    delete rgbBufRaw;
+
+}
+/**
+ * 
+ */
+void flyDialogsAnalyzer::analyze(ADMImage *in, QGraphicsScene * sceneVectorScope, QGraphicsScene * sceneYUVparade, QGraphicsScene * sceneRGBparade, QGraphicsScene * sceneHistograms)
+{
+    if (in == NULL) return;
+    if (sceneVectorScope == NULL) return;
+    if (sceneYUVparade == NULL) return;
+    if (sceneRGBparade == NULL) return;
+    if (sceneHistograms == NULL) return;
+    #define FRAME_COLOR	(0xFF000000) //(0xFF7F7F7F)
+    // Make Y plane statistics
+    {
+        memset(wrkYUVparade[0],0,256*256*sizeof(uint32_t));
+        memset(wrkHistograms[3],0,256*sizeof(uint32_t));
+        uint8_t * yp=in->GetReadPtr(PLANAR_Y);
+        int stride=in->GetPitch(PLANAR_Y);
+        uint8_t * ptr;
+        int value;
+        
+        for (int y=0; y<height; y++)
+        {
+            ptr = yp + y*stride;
+            for (int x=0; x<width; x++)
+            {
+                value = *ptr++;
+                wrkHistograms[3][value]++;
+                wrkYUVparade[0][value*256 + paradeIndex[x]]++;
+            }
+        }
+    }
+
+    // Make U-V plane statistics
+    {
+        memset(wrkVectorScope,0,256*256*sizeof(uint32_t));
+        memset(wrkYUVparade[1],0,256*256*sizeof(uint32_t));
+        memset(wrkYUVparade[2],0,256*256*sizeof(uint32_t));
+        memset(wrkHistograms[4],0,256*sizeof(uint32_t));
+        memset(wrkHistograms[5],0,256*sizeof(uint32_t));
+        uint8_t * up=in->GetReadPtr(PLANAR_U);
+        uint8_t * vp=in->GetReadPtr(PLANAR_V);
+        int ustride=in->GetPitch(PLANAR_U);
+        int vstride=in->GetPitch(PLANAR_V);
+        uint8_t * uptr, * vptr;
+        int uvalue, vvalue;
+        int width=in->GetWidth(PLANAR_U); 
+        int height=in->GetHeight(PLANAR_U);
+        
+        for (int y=0; y<height; y++)
+        {
+            uptr = up + y*ustride;
+            vptr = vp + y*vstride;
+            for (int x=0; x<width; x++)
+            {
+                uvalue = *uptr++;
+                vvalue = *vptr++;
+                wrkHistograms[4][uvalue]+=4;    // num of chroma pixels are quarter of luma pixels
+                wrkHistograms[5][vvalue]+=4;
+                wrkYUVparade[1][uvalue*256 + paradeIndexHalf[x]]+=4;
+                wrkYUVparade[2][vvalue*256 + paradeIndexHalf[x]]+=4;
+                wrkVectorScope[vvalue*256 + uvalue]++;
+            }
+        }
+    }
+    
+    // Make RGB statistics
+    {
+        convertYuvToRgb->convertImage(in,rgbBufRaw->at(0));
+        memset(wrkRGBparade[0],0,256*256*sizeof(uint32_t));
+        memset(wrkRGBparade[1],0,256*256*sizeof(uint32_t));
+        memset(wrkRGBparade[2],0,256*256*sizeof(uint32_t));
+        memset(wrkHistograms[0],0,256*sizeof(uint32_t));
+        memset(wrkHistograms[1],0,256*sizeof(uint32_t));
+        memset(wrkHistograms[2],0,256*sizeof(uint32_t));
+        uint8_t * ptr;
+        int rvalue, gvalue, bvalue;
+ 
+        for (int y=0; y<height; y++)
+        {
+            ptr = rgbBufRaw->at(y*rgbBufStride);
+            for (int x=0; x<width; x++)
+            {
+                rvalue = *ptr++;
+                gvalue = *ptr++;
+                bvalue = *ptr++;
+                ptr++;
+                wrkHistograms[0][rvalue]++;
+                wrkHistograms[1][gvalue]++;
+                wrkHistograms[2][bvalue]++;
+                wrkRGBparade[0][rvalue*256 + paradeIndex[x]]++;
+                wrkRGBparade[1][gvalue*256 + paradeIndex[x]]++;
+                wrkRGBparade[2][bvalue*256 + paradeIndex[x]]++;
+            }
+        }
+    }
+    
+    // Normalize histograms to 0 .. 124
+    {
+        for (int csp=0; csp<2; csp++)
+        {
+            for (int ch=0; ch<3; ch++)
+                for (int i=0; i<256; i++)
+                {
+                    double value = wrkHistograms[csp*3+ch][i];
+                    value /= height;
+                    value /= width;
+                    value *= 124*10;
+                    if (value > 124)
+                        value = 124;
+                    wrkHistograms[csp*3+ch][i] = value;
+                }
+        }
+    }
+    
+    // Normalize parades
+    {
+        uint32_t norm = 2147483648ULL/(width*height);
+        for (int ch=0; ch<3; ch++)
+            for (int i=0; i<256; i++)
+            {
+                wrkYUVparade[ch][i] = (wrkYUVparade[ch][i]*norm)>>8;
+                wrkRGBparade[ch][i] = (wrkRGBparade[ch][i]*norm)>>8;
+            }
+    }
+
+    // Normalize vectorscope
+    {
+        uint32_t norm = 1073741824ULL/(width*height);
+        for (int y=0; y<256; y++)
+            for (int x=0; x<256; x++)
+                wrkVectorScope[y*256 + x] = (wrkVectorScope[y*256 + x]*norm)>>8;
+    }
+
+    // Draw histograms
+    {
+        memset(bufHistograms, 0, 772*259*sizeof(uint32_t));
+        uint32_t q,color;
+
+        for (int csp=0; csp<2; csp++)
+        {
+            for (int ch=0; ch<3; ch++)
+            {
+                switch(ch+csp*3)
+                {
+                    case 0:    //R
+                            color = 0xFFFF0000;
+                        break;
+                    case 1:    //G
+                            color = 0xFF00FF00;
+                        break;
+                    case 2:    //B
+                            color = 0xFF0000FF;
+                        break;
+                    case 3:    //Y
+                            color = 0xFFFFFFFF;
+                        break;
+                    case 4:    //U
+                            color = 0xFF7F3FFF;
+                        break;
+                    case 5:    //V
+                            color = 0xFFFF3F7F;
+                        break;
+                }
+                for (int x=0; x<256; x++)
+                {
+                    q = wrkHistograms[csp*3+ch][x];
+                    for (int y=0; y<128;y++)
+                    {
+                        bufHistograms[(csp*129+y+1)*772+(ch*257+1)+x] = ((((127-y)-(int)q) > 0) ? 0xFF000000 : color);
+                    }
+                }
+            }
+        }
+
+        // add frame
+        for (int x=0; x<772; x++)
+        {
+            bufHistograms[772*0+x] = FRAME_COLOR;
+            bufHistograms[772*129+x] = FRAME_COLOR;
+            bufHistograms[772*258+x] = FRAME_COLOR;
+        }
+        for (int y=1; y<257; y++)
+        {
+            bufHistograms[772*y+0] = FRAME_COLOR;
+            bufHistograms[772*y+257] = FRAME_COLOR;
+            bufHistograms[772*y+514] = FRAME_COLOR;
+            bufHistograms[772*y+771] = FRAME_COLOR;
+        }
+
+        sceneHistograms->clear();
+        sceneHistograms->addPixmap( QPixmap::fromImage(*imgHistograms));
+    }
+    
+    // Draw YUV parade
+    {
+        uint32_t p,c;
+        // convert to color 0xffRRGGBB
+        for (int y=1; y<257; y++)
+        {
+            //Y
+            for (int x=1; x<257; x++)
+            {
+                p = wrkYUVparade[0][(256-y)*256 + x-1];
+                c = 0;
+                if (p)
+                {
+                    p /= 2;
+                    if (p >= 256)
+                        c = 0x00FFFFFF;
+                    else
+                        c = (p << 16) + (p << 8) + (p << 0);
+                }
+                bufYUVparade[772*y+x] = 0xFF000000 | c;
+            }
+            //U
+            for (int x=258; x<514; x++)
+            {
+                p = wrkYUVparade[1][(256-y)*256 + x-258];
+                c = 0;
+                if (p)
+                {
+                    if (p >= 1020)
+                        c = 0x00FFFFFF;
+                    else
+                    if (p >= 510)
+                        c = 0x00FF00FF + ((p/4) << 8);
+                    else
+                    if (p >= 256)
+                        c = 0x000000FF + ((p/2) << 16) + ((p/4) << 8);
+                    else
+                        c = ((p/2) << 16) + ((p/4) << 8) + (p << 0);
+                }
+                bufYUVparade[772*y+x] = 0xFF000000 | c;
+            }
+            //V
+            for (int x=515; x<771; x++)
+            {
+                p = wrkYUVparade[2][(256-y)*256 + x-515];
+                c = 0;
+                if (p)
+                {
+                    if (p >= 1020)
+                        c = 0x00FFFFFF;
+                    else
+                    if (p >= 510)
+                        c = 0x00FF00FF + ((p/4) << 8);
+                    else
+                    if (p >= 256)
+                        c = 0x00FF0000 + ((p/4) << 8) + ((p/2) << 0);
+                    else
+                        c = (p << 16) + ((p/4) << 8) + ((p/2) << 0);
+                }
+                bufYUVparade[772*y+x] = 0xFF000000 | c;
+            }
+        }
+
+        // add frame
+        for (int x=0; x<772; x++)
+        {
+            bufYUVparade[772*0+x] = FRAME_COLOR;
+            bufYUVparade[772*257+x] = FRAME_COLOR;
+        }
+        for (int y=1; y<257; y++)
+        {
+            bufYUVparade[772*y+0] = FRAME_COLOR;
+            bufYUVparade[772*y+257] = FRAME_COLOR;
+            bufYUVparade[772*y+514] = FRAME_COLOR;
+            bufYUVparade[772*y+771] = FRAME_COLOR;
+        }
+
+        sceneYUVparade->clear();
+        sceneYUVparade->addPixmap( QPixmap::fromImage(*imgYUVparade));
+    }
+    
+    // Draw RGB parade
+    {
+         uint32_t p,c;
+       // convert to color 0xffRRGGBB
+        for (int y=1; y<257; y++)
+        {
+            //R
+            for (int x=1; x<257; x++)
+            {
+                p = wrkRGBparade[0][(256-y)*256 + x-1];
+                if (p >= 765)
+                    c = 0x00FFFFFF;
+                else
+                if (p >= 256)
+                {
+                    p = (p-255)/2;
+                    c = 0x00FF0000 + (p<<8) + p;
+                } else
+                    c = p << 16;
+                bufRGBparade[772*y+x] = 0xFF000000 | c;
+            }
+            //G
+            for (int x=258; x<514; x++)
+            {
+                p =wrkRGBparade[1][(256-y)*256 + x-258];
+                if (p >= 765)
+                    c = 0x00FFFFFF;
+                else
+                if (p >= 256)
+                {
+                    p = (p-255)/2;
+                    c = 0x0000FF00 + (p<<16) + p;
+                } else
+                    c = p << 8;
+                bufRGBparade[772*y+x] = 0xFF000000 | c;
+            }
+            //B
+            for (int x=515; x<771; x++)
+            {
+                p = wrkRGBparade[2][(256-y)*256 + x-515];
+                if (p >= 765)
+                    c = 0x00FFFFFF;
+                else
+                if (p >= 256)
+                {
+                    p = (p-255)/2;
+                    c = 0x000000FF + (p<<16) + (p<<8);
+                } else
+                    c = p << 0;
+                bufRGBparade[772*y+x] = 0xFF000000 | c;
+            }
+        }
+
+        // add frame
+        for (int x=0; x<772; x++)
+        {
+            bufRGBparade[772*0+x] = FRAME_COLOR;
+            bufRGBparade[772*257+x] = FRAME_COLOR;
+        }
+        for (int y=1; y<257; y++)
+        {
+            bufRGBparade[772*y+0] = FRAME_COLOR;
+            bufRGBparade[772*y+257] = FRAME_COLOR;
+            bufRGBparade[772*y+514] = FRAME_COLOR;
+            bufRGBparade[772*y+771] = FRAME_COLOR;
+        }
+
+        sceneRGBparade->clear();
+        sceneRGBparade->addPixmap( QPixmap::fromImage(*imgRGBparade));
+    }
+    
+    // Draw vectorscope
+    {
+        uint32_t p,q,c;
+        uint8_t argb[4];
+        memset(bufVectorScope,0,620*600*sizeof(uint32_t));
+        
+        for (int y=0; y<256; y++)
+            for (int x=0; x<256; x++)
+                bufVectorScope[(2*y + 44)*620 + 2*x + 54] = wrkVectorScope[(255-y)*256+x];
+
+        // interpolate histogram
+        for (int y=44; y<(44+512); y+=2)
+        {
+            uint32_t * ptr = bufVectorScope+620*y;
+            for (int x=(54-1); x<(54+512+1); x+=2)
+            {
+                *(ptr+x) = ( (*(ptr+x-1)) + (*(ptr+x+1)) )/2;
+            }
+        }
+        for (int y=(44-1); y<(44+512+1); y+=2)
+        {
+            uint32_t * ptrm = bufVectorScope+620*(y-1);
+            uint32_t * ptr  = bufVectorScope+620*y;
+            uint32_t * ptrp = bufVectorScope+620*(y+1);
+            for (int x=54; x<(54+512); x+=1)
+            {
+                *(ptr+x) = ( (*(ptrm+x)) + (*(ptrp+x)) )/2;
+            }
+        }
+
+        // convert to color 0xffRRGGBB and apply scale
+        for (int i=0; i<620*600; i++)
+        {
+            p = bufVectorScope[i];
+            q = scaleVectorScope[i];
+            if (p)
+            {
+                if (p >= 765)
+                {
+                    c = 0x00FFFFFF;
+                } else
+                if (p >= 256)
+                {
+                    p = (p-255)/2;
+                    c = 0x0000FF00 + (p<<16) + p;
+                } else {
+                    c = p<<8;
+                }
+                
+                if (q)
+                {
+                    c = (c>>1) & 0x007F7F7F;
+                    q = (q>>1) & 0x007F7F7F;
+                    q += c;
+                }
+                else
+                    q = c;
+            }
+            bufVectorScope[i] = 0xFF000000 | q;
+        }
+
+        sceneVectorScope->clear();
+        sceneVectorScope->addPixmap( QPixmap::fromImage(*imgVectorScope));
+    }
+    #undef FRAME_COLOR
+}
 
 //******************************
 //EOF

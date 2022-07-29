@@ -46,7 +46,7 @@
         myCrop=new flyContrast( this,width, height,in,canvas,ui.horizontalSlider,scene);
         memcpy(&(myCrop->param),param,sizeof(contrast));
         myCrop->_cookie=&ui;
-        myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
+        myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::AnalyzerBtn);
         myCrop->setTabOrder();
         myCrop->upload();
         myCrop->refreshImage();
