@@ -45,7 +45,7 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
     myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
     myCrop->setTabOrder();
     myCrop->upload();
-    myCrop->sliderChanged();
+    myCrop->refreshImage();
 
     connect(ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChanged(double))); \
