@@ -44,7 +44,7 @@ Ui_artColorEffectWindow::Ui_artColorEffectWindow(QWidget *parent, artColorEffect
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect(ui.comboBoxEffect, SIGNAL(currentIndexChanged(int)), this, SLOT(effectChanged(int)));
