@@ -113,7 +113,7 @@ public:
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
 		virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) ;                        /// Start graphical user interface
-        virtual bool         goToTime(uint64_t usSeek);
+        virtual bool         goToTime(uint64_t usSeek, bool fineSeek = false);
         
 protected:
     void (*filter_line) (uint8_t *dst, const uint8_t  *prev, const uint8_t  *cur, const uint8_t  *next, int w, int prefs, int mrefs, int parity, int mode);
@@ -254,12 +254,12 @@ const char *yadifFilter::getConfiguration(void)
     \fn goToTime
     \brief Seek in filter preview mode
 */
-bool yadifFilter::goToTime(uint64_t usSeek)
+bool yadifFilter::goToTime(uint64_t usSeek, bool fineSeek)
 {
     uint32_t oldFrameIncrement=info.frameIncrement;
     if(configuration.mode &1) // Bob
         info.frameIncrement*=2;
-    bool r=ADM_coreVideoFilterCached::goToTime(usSeek);
+    bool r=ADM_coreVideoFilterCached::goToTime(usSeek,fineSeek);
     info.frameIncrement=oldFrameIncrement;
     return r;
 }
