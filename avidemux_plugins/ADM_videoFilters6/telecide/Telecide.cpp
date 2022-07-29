@@ -164,10 +164,10 @@ void Telecide::setCoupledConf(CONFcouple *couples)
     \fn goToTime
     \brief Need to reset internals in case of seek
 */
-bool                Telecide::goToTime(uint64_t usSeek)
+bool Telecide::goToTime(uint64_t usSeek, bool fineSeek)
 {
     aprintf("Go to time %s\n",ADM_us2plain(usSeek));
     CachePurge();
-    return ADM_coreVideoFilterCached::goToTime(usSeek);
+    return ADM_coreVideoFilterCached::goToTime(usSeek,fineSeek);
 }
 // EOF
