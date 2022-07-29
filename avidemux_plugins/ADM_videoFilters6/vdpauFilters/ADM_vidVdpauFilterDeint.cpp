@@ -119,7 +119,7 @@ protected:
                     bool                 setIdentityCSC(void);
 
 public:
-        virtual bool         goToTime(uint64_t usSeek); 
+        virtual bool         goToTime(uint64_t usSeek, bool fineSeek = false);
                              vdpauVideoFilterDeint(ADM_coreVideoFilter *previous,CONFcouple *conf);
                              ~vdpauVideoFilterDeint();
 
@@ -175,7 +175,7 @@ bool vdpauVideoFilterDeint::updateConf(void)
     \fn goToTime
     \brief called when seeking. Need to cleanup our stuff.
 */
-bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
+bool vdpauVideoFilterDeint::goToTime(uint64_t usSeek, bool fineSeek)
 {
     secondField=false;
     eof=false;
@@ -183,7 +183,7 @@ bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
     uint32_t oldFrameIncrement=info.frameIncrement;
     if(configuration.deintMode==ADM_KEEP_BOTH)
         info.frameIncrement*=2;
-    bool r=ADM_coreVideoFilterCached::goToTime(usSeek);
+    bool r=ADM_coreVideoFilterCached::goToTime(usSeek,fineSeek);
     info.frameIncrement=oldFrameIncrement;
     return r;
 }
