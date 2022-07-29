@@ -45,7 +45,7 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
         myCrop->_cookie=&ui;
         myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
-        myCrop->sliderChanged();
+        myCrop->refreshImage();
 
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));

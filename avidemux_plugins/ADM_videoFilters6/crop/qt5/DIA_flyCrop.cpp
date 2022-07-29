@@ -673,7 +673,7 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
     ui.comboBoxAspectRatio->setCurrentIndex(param->ar_select);
     if(!param->ar_select)
         myCrop->upload(false,true);
-    myCrop->sliderChanged();
+    myCrop->refreshImage();
     myCrop->lockRubber(true);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
