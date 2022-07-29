@@ -120,7 +120,7 @@ void ADM_LogoCanvas::moveEvent(QMoveEvent * event)
         SPINENTRY(spinH)->setSingleStep(5);
         
         myCrop->upload();
-        myCrop->sliderChanged();
+        myCrop->refreshImage();
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
         SPINNER(spinX);

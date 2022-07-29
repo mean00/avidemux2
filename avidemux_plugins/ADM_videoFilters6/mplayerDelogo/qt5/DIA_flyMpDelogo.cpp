@@ -445,7 +445,7 @@ Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVid
 
     aprintf("Uploading\n");
     myCrop->upload();
-    myCrop->sliderChanged();
+    myCrop->refreshImage();
     myCrop->lockRubber(true);
 
     connect(ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
