@@ -1325,7 +1325,7 @@ bool filterquickWindow::eventFilter(QObject* watched, QEvent* event)
     if(event->type() == QEvent::KeyPress)
     {
         keyEvent = (QKeyEvent*)event;
-        if(keyEvent->key() == Qt::Key_Return)
+        if(keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)
         {
             if(availableList->hasFocus() || ui.lineEditSearch->hasFocus())
                 add(true);
