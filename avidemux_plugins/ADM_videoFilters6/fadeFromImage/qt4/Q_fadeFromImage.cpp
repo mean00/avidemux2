@@ -54,7 +54,7 @@ Ui_fadeFromImageWindow::Ui_fadeFromImageWindow(QWidget *parent, fadeFromImage *p
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         
