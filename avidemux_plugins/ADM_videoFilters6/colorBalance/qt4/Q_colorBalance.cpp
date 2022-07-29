@@ -59,7 +59,7 @@ Ui_colorBalanceWindow::Ui_colorBalanceWindow(QWidget *parent, colorBalance *para
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::UserWidgetBeforePeekBtn, peekRangesBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x,y,z) ui.slider##x->setScale(1,y,z); \
