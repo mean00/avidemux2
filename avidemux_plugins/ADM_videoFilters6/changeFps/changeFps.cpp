@@ -59,7 +59,7 @@ protected:
 public:
                             changeFps(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~changeFps();
-        bool                goToTime(uint64_t usSeek);
+        bool                goToTime(uint64_t usSeek, bool fineSeek = false);
         virtual bool        getTimeRange(uint64_t *start, uint64_t *end);
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
@@ -119,14 +119,14 @@ changeFps::~changeFps()
     \fn goToTime
     \brief called when seeking. Need to cleanup our stuff.
 */
-bool         changeFps::goToTime(uint64_t usSeek)
+bool         changeFps::goToTime(uint64_t usSeek, bool fineSeek)
 {
     double timing=(double)usSeek;
     timing/=configuration.oldFpsNum;
     timing/=configuration.newFpsDen;
     timing*=configuration.newFpsNum;
     timing*=configuration.oldFpsDen;
-    return  previousFilter->goToTime((uint64_t)timing);
+    return previousFilter->goToTime((uint64_t)timing, fineSeek);
 }
 
 /**
