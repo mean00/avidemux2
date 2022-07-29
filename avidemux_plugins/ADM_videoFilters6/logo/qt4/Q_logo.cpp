@@ -179,9 +179,13 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
             enableLowPart();
 
         myLogo->upload();
+        myLogo->addControl(ui.toolboxLayout);
+        myLogo->setTabOrder();
+        myLogo->refreshImage();
 
-        connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect( ui.pushButtonSelect,SIGNAL(pressed()),this,SLOT(imageSelect()));
+        connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
+
 #define SPINNER(x,y) connect(ui.x,SIGNAL(valueChanged(y)),this,SLOT(valueChanged(y)));
         SPINNER(spinX,int);
         SPINNER(spinY,int);
@@ -191,10 +195,6 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
 
         connect(ui.spinScale,SIGNAL(valueChanged(double)),this,SLOT(scaleChanged(double)));
         connect(canvas,SIGNAL(movedSignal(int,int)),this,SLOT(moved(int,int)));
-
-        myLogo->addControl(ui.toolboxLayout);
-        myLogo->setTabOrder();
-        myLogo->sliderChanged();
 
         setModal(true);
   }
