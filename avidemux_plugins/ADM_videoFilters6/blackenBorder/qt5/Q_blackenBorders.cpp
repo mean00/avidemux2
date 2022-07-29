@@ -42,7 +42,7 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     myBlacken->addControl(ui.toolboxLayout);
     myBlacken->setTabOrder();
     myBlacken->upload();
-    myBlacken->sliderChanged();
+    myBlacken->refreshImage();
 
     bool rubberIsHidden = false;
     QSettings *qset = qtSettingsCreate();

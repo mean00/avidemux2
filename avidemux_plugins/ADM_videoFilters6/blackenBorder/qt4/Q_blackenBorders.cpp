@@ -37,8 +37,7 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     myBlacken->_cookie=&ui;
     myBlacken->addControl(ui.toolboxLayout);
     myBlacken->upload();
-    myBlacken->sliderChanged();
-
+    myBlacken->refreshImage();
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
