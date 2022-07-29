@@ -69,7 +69,7 @@ protected:
 public:
                             resampleFps(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~resampleFps();
-        bool                goToTime(uint64_t usSeek);
+        bool                goToTime(uint64_t usSeek, bool fineSeek = false);
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
@@ -182,12 +182,13 @@ bool resampleFps::refill(void)
     \fn goToTime
     \brief called when seeking. Need to cleanup our stuff.
 */
-bool         resampleFps::goToTime(uint64_t usSeek)
+bool         resampleFps::goToTime(uint64_t usSeek, bool fineSeek)
 {
     double scale=info.frameIncrement;
     scale/=(double)previousFilter->getInfo()->frameIncrement;
     usSeek*=scale;
-    if(false==ADM_coreVideoFilterCached::goToTime(usSeek)) return false;
+    if(false==ADM_coreVideoFilterCached::goToTime(usSeek,fineSeek))
+        return false;
     prefillDone=false;
     validMotionEstimation=false;
     return true;
