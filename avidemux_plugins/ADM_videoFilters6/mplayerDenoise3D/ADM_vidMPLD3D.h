@@ -55,7 +55,7 @@ public:
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
 		virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) ;                        /// Start graphical user interface
-        virtual bool         goToTime(uint64_t usSeek);  
+        virtual bool         goToTime(uint64_t usSeek, bool fineSeek = false);
 };
 
 			

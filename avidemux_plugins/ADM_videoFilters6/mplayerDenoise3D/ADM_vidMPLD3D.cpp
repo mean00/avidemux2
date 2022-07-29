@@ -407,7 +407,7 @@ bool ADMVideoMPD3D::getNextFrame(uint32_t *fn,ADMImage *image)
     \fn goToTime
     \brief flush acc if seeking
 */
-bool         ADMVideoMPD3D::goToTime(uint64_t usSeek)
+bool ADMVideoMPD3D::goToTime(uint64_t usSeek, bool fineSeek)
 {
     for(int i=0;i<3;i++)
     {
@@ -417,7 +417,7 @@ bool         ADMVideoMPD3D::goToTime(uint64_t usSeek)
     }
 
     // Flush 
-    return ADM_coreVideoFilterCached::goToTime(usSeek);
+    return ADM_coreVideoFilterCached::goToTime(usSeek,fineSeek);
 }
 // EOF
 
