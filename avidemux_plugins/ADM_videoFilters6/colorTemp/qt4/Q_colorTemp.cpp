@@ -47,7 +47,7 @@ Ui_colorTempWindow::Ui_colorTempWindow(QWidget *parent, colorTemp *param,ADM_cor
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) \
