@@ -55,7 +55,7 @@ public:
     virtual bool        getNextFrame(uint32_t *fn, ADMImage *image); // Get the next image
     virtual bool        getCoupledConf(CONFcouple **couples); // Get the current filter configuration
     virtual void        setCoupledConf(CONFcouple *couples);
-    virtual bool        goToTime(uint64_t usSeek);
+    virtual bool        goToTime(uint64_t usSeek, bool fineSeek = false);
     virtual bool        getTimeRange(uint64_t *startTme, uint64_t *endTme); // Provide an updated time range for the next filter
     virtual bool        configure(void); // Start graphical user interface
 };
@@ -203,7 +203,7 @@ void stillimage::setCoupledConf(CONFcouple *couples)
 /**
     \fn goToTime
 */
-bool stillimage::goToTime(uint64_t usSeek)
+bool stillimage::goToTime(uint64_t usSeek, bool fineSeek)
 {
     cleanup();
     uint64_t time=usSeek;
@@ -211,7 +211,7 @@ bool stillimage::goToTime(uint64_t usSeek)
         time=begin;
     else if(time > end)
         time-=end-begin;
-    if(previousFilter->goToTime(time))
+    if(previousFilter->goToTime(time,fineSeek))
     {
         seek = true;
         capture = true;
