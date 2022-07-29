@@ -49,13 +49,17 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
     myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
     myCrop->setTabOrder();
     myCrop->upload();
-    myCrop->sliderChanged();
+    myCrop->refreshImage();
     myCrop->update();
 
     ui.horizontalSliderContrast->setFocus();
 
     QSignalMapper *signalMapper = new QSignalMapper(this);
-    connect( signalMapper,SIGNAL(mapped(QWidget*)),this,SLOT(resetSlider(QWidget*)));
+#if QT_VERSION < QT_VERSION_CHECK(5,15,0)
+    connect( signalMapper,SIGNAL(mapped(QObject*)),this,SLOT(resetSlider(QObject*)));
+#else
+    connect( signalMapper,SIGNAL(mappedObject(QObject*)),this,SLOT(resetSlider(QObject*)));
+#endif
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     QString rst = QString(QT_TRANSLATE_NOOP("eq2","Reset"));
 #define SPINNER(x) connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));\
@@ -119,7 +123,7 @@ const int Ui_eq2Window::initialValues[]=
     \fn resetSlider
 */
 #define RESET_SLIDER(x,y) if(control == ui.horizontalSlider##x) qobject_cast<QSlider*>(ui.horizontalSlider##x)->setValue(y);
-void Ui_eq2Window::resetSlider(QWidget *control)
+void Ui_eq2Window::resetSlider(QObject *control)
 {
     if(!control)
         return;

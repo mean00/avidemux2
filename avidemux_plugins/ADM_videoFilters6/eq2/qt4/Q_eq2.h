@@ -46,7 +46,7 @@ public slots:
 private slots:
     void sliderUpdate(int foo);
     void valueChanged(int foo);
-    void resetSlider(QWidget *control);
+    void resetSlider(QObject *control);
 
 private:
     void resizeEvent(QResizeEvent *event);
