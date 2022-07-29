@@ -38,7 +38,7 @@ public:
         virtual bool            getCoupledConf(CONFcouple **couples); /// Return the current filter configuration
         virtual void            setCoupledConf(CONFcouple *couples);
         virtual bool            configure(void); /// Start graphical user interface
-        virtual bool            goToTime(uint64_t time);
+        virtual bool            goToTime(uint64_t time, bool exact = false);
 
 };
 
@@ -173,11 +173,11 @@ AVDM_DecimateFrame::~AVDM_DecimateFrame(void)
 /**
  * \fn goToTime
  */
-bool AVDM_DecimateFrame::goToTime(uint64_t time)
+bool AVDM_DecimateFrame::goToTime(uint64_t time, bool exact)
 {
     count=0;
     cIndex=0;
-    return ADM_coreVideoFilter::goToTime(time);
+    return ADM_coreVideoFilter::goToTime(time,exact);
 }
 
 /**
