@@ -47,7 +47,7 @@ Ui_waveletDenoiseWindow::Ui_waveletDenoiseWindow(QWidget *parent, waveletDenoise
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) \
