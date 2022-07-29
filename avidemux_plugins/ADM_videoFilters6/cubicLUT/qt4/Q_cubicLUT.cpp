@@ -68,7 +68,7 @@ Ui_cubicLUTWindow::Ui_cubicLUTWindow(QWidget *parent, cubicLUT *param,ADM_coreVi
                 }
             }
         }
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 
