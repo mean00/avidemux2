@@ -109,7 +109,7 @@ public:
     virtual bool            getCoupledConf(CONFcouple **couples); // Return the current filter configuration
     virtual void            setCoupledConf(CONFcouple *couples);
     virtual bool            configure(void); // Start graphical user interface
-    virtual bool            goToTime(uint64_t usSeek);
+    virtual bool            goToTime(uint64_t usSeek, bool fineSeek = false);
 };
 
 // Add the hook to make it valid plugin
@@ -535,7 +535,7 @@ const char *vaapiVideoFilterDeint::getConfiguration(void)
     \fn goToTime
     \brief called when seeking. Need to cleanup our stuff.
 */
-bool vaapiVideoFilterDeint::goToTime(uint64_t usSeek)
+bool vaapiVideoFilterDeint::goToTime(uint64_t usSeek, bool fineSeek)
 {
     secondField=false;
     preloadCompleted=false;
@@ -543,7 +543,7 @@ bool vaapiVideoFilterDeint::goToTime(uint64_t usSeek)
     uint32_t oldFrameIncrement=info.frameIncrement;
     if(!passThrough && configuration.framePerField==ADM_VAAPI_DEINT_SEND_FIELD)
         info.frameIncrement*=2;
-    bool r=ADM_coreVideoFilterCached::goToTime(usSeek);
+    bool r=ADM_coreVideoFilterCached::goToTime(usSeek,fineSeek);
     info.frameIncrement=oldFrameIncrement;
     return r;
 }
