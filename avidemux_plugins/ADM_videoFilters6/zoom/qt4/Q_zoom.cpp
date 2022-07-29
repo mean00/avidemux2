@@ -43,8 +43,7 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
         myFly->upload();
-        myFly->sliderChanged();
-
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
