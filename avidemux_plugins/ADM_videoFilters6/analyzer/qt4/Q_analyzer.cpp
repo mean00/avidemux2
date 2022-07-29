@@ -56,7 +56,7 @@ Ui_analyzerWindow::Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in) :
     myFly->addControl(ui.toolboxLayout);
     myFly->setTabOrder();
     myFly->upload();
-    myFly->sliderChanged();
+    myFly->refreshImage();
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 
