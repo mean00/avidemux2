@@ -46,7 +46,7 @@ Ui_artGridWindow::Ui_artGridWindow(QWidget *parent, artGrid *param,ADM_coreVideo
         myFly->addControl(ui.toolboxLayout);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) \

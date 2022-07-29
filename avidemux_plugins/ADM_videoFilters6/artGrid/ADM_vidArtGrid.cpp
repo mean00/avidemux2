@@ -249,11 +249,11 @@ void ADMVideoArtGrid::setCoupledConf(CONFcouple *couples)
 /**
     \fn goToTime
 */
-bool ADMVideoArtGrid::goToTime(uint64_t usec)
+bool ADMVideoArtGrid::goToTime(uint64_t usec, bool exact)
 {
     if(_roll)
         work->blacken();
-    return previousFilter->goToTime(usec);
+    return previousFilter->goToTime(usec,exact);
 }
 /**
     \fn getNextFrame
