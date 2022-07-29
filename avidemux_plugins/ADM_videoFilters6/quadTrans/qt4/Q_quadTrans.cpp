@@ -47,7 +47,7 @@ Ui_quadTransWindow::Ui_quadTransWindow(QWidget *parent, quadTrans *param,ADM_cor
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChangedSpinBox(double))); ui.doubleSpinBox##x->setKeyboardTracking(true);
