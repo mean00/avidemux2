@@ -71,7 +71,7 @@ protected:
 public:
                                    ivtcDupeRemover(ADM_coreVideoFilter *previous,CONFcouple *conf);
                                    ~ivtcDupeRemover();
-                bool               goToTime(uint64_t usSeek);
+                bool               goToTime(uint64_t usSeek, bool fineSeek = false);
         virtual const char         *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool               getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
@@ -407,13 +407,13 @@ const char *ivtcDupeRemover::getConfiguration(void)
  * @param usSeek
  * @return
  */
-bool         ivtcDupeRemover::goToTime(uint64_t usSeek)
+bool ivtcDupeRemover::goToTime(uint64_t usSeek, bool fineSeek)
 {
     vidCache->flush();
     state=dupeSyncing;
     incomingNum=0;
     currentNum=0;
-    return previousFilter->goToTime(usSeek);
+    return previousFilter->goToTime(usSeek,fineSeek);
 }
 /**
     \fn configure
