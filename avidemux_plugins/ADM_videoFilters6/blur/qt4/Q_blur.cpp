@@ -51,7 +51,7 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         myFly->rubber->nestedIgnore=1;
         myFly->rubber_is_hidden=param->rubber_is_hidden;
