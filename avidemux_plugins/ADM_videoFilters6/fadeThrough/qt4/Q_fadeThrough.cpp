@@ -84,7 +84,7 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->sliderChanged();
+        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         
