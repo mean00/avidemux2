@@ -46,7 +46,7 @@
         myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myCrop->setTabOrder();
         myCrop->upload();
-        myCrop->sliderChanged();
+        myCrop->refreshImage();
 
         ui.horizontalSliderHue->setFocus();
         ui.horizontalSliderSaturation->setScale(1,10,1);
