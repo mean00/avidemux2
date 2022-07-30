@@ -210,6 +210,10 @@ bool         ADM_videoFilterBridge::goToTime(uint64_t usSeek, bool fineSeek)
         if (!fineSeek)
         {
             usSeek++; // avoid skipping to the previous keyframe on repeated calls
+            // don't fail if target time matches marker B at default position, i.e. the full duration of the video
+            uint64_t maxDur = editor->getVideoDuration();
+            if (maxDur && usSeek >= maxDur)
+                usSeek = maxDur - 1;
             if (editor->getPKFramePTS(&usSeek))
             {
                 editor->goToIntraTimeVideo(usSeek);
