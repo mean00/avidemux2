@@ -189,6 +189,7 @@ public slots:
         virtual void backOneMinute(void);
         virtual void fwdOneMinute(void);
         virtual void gotoSelectionStart(void);
+        virtual void gotoSelectionEnd(void);
         virtual void play(bool status);
         virtual void peekOriginalPressed(void);
         virtual void peekOriginalReleased(void);
