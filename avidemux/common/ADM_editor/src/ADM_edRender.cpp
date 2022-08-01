@@ -567,6 +567,7 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
     {
         vid->color=new ADMColorScalerSimple(src->_width,src->_height,src->_pixfrmt,ADM_PIXFRMT_YV12);
         vid->srcPixFrmt = src->_pixfrmt;
+        vid->srcColSpace = src->_colorSpace;
     }else if(vid->srcPixFrmt != ADM_PIXFRMT_INVALID && vid->srcPixFrmt != src->_pixfrmt)
     { // We need to refresh the converter
         delete vid->color;

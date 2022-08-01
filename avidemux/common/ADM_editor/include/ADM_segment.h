@@ -67,6 +67,7 @@ public:
       bool              dontTrustBFramePts;
       bool              fieldEncoded;
       ADM_pixelFormat   srcPixFrmt;
+      ADM_colorSpace    srcColSpace;
       /* Audio part */
       uint32_t currentAudioStream;
       std::vector <ADM_audioStreamTrack *>  audioTracks;
@@ -94,6 +95,7 @@ public:
         dontTrustBFramePts=false;
         fieldEncoded=false;
         srcPixFrmt=ADM_PIXFRMT_INVALID;
+        srcColSpace=ADM_COL_SPC_UNSPECIFIED;
         currentAudioStream=0;
         _aviheader=NULL;
         decoder=NULL;

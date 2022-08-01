@@ -423,7 +423,8 @@ bool ADM_Composer::possibleHdrContent(void)
     {
         _VIDEOS *vid = _segments.getRefVideo(i);
         ADM_assert(vid);
-        if((vid->srcPixFrmt >= ADM_PIXFRMT_YUV444_10BITS) && (vid->srcPixFrmt <= ADM_PIXFRMT_YUV444_12BITS))
+        if((vid->srcPixFrmt >= ADM_PIXFRMT_YUV444_10BITS) && (vid->srcPixFrmt <= ADM_PIXFRMT_YUV444_12BITS) &&
+           (vid->srcColSpace >= ADM_COL_SPC_BT2020_NCL) && (vid->srcColSpace <= ADM_COL_SPC_ICTCP))
             return true;
     }
     return false;
@@ -798,7 +799,7 @@ uint8_t ADM_Composer::addFile (const char *name)
             if(!seg->_refStartTimeUs && video.firstFramePts)
                 start += video.firstFramePts;
             if(goToTimeVideo(start))
-                getVideoPixelAndColorInfo(&(video.srcPixFrmt),NULL,NULL,NULL,NULL);
+                getVideoPixelAndColorInfo(&(video.srcPixFrmt),NULL,NULL,NULL,&(video.srcColSpace));
         }
         // now we should be able to query whether HDR tone mapping may be needed
     }
