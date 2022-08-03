@@ -1,0 +1,29 @@
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/STTypes.h b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/STTypes.h
+index 71dd0ebd1..b843d9a1f 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/STTypes.h
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/STTypes.h
+@@ -172,9 +172,10 @@ namespace soundtouch
+ // #define ST_NO_EXCEPTION_HANDLING    1
+ #ifdef ST_NO_EXCEPTION_HANDLING
+     // Exceptions disabled. Throw asserts instead if enabled.
+-    #include <assert.h>
+-    #define ST_THROW_RT_ERROR(x)    {assert((const char *)x);}
++    #include "ADM_default.h"
++    #define ST_THROW_RT_ERROR(x)    {ADM_assert((x) && 0);}
+ #else
++    #error only ADM_assert can be used
+     // use c++ standard exceptions
+     #include <stdexcept>
+     #include <string>
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/soundtouch_config.h b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/soundtouch_config.h
+index e5aaeab5f..6bdc035d7 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/soundtouch_config.h
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/soundtouch_config.h
+@@ -1,6 +1,6 @@
+ /* Use Float as Sample type */
+ #define SOUNDTOUCH_FLOAT_SAMPLES 1
+ 
+-
++#define ST_NO_EXCEPTION_HANDLING
+ /* Use ARM NEON extension */
+ /* #undef SOUNDTOUCH_USE_NEON */
