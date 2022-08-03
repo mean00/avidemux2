@@ -32,7 +32,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <memory.h>
-#include <assert.h>
+#include "ADM_default.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "RateTransposer.h"
@@ -146,7 +146,7 @@ void RateTransposer::processSamples(const SAMPLETYPE *src, uint nSamples)
         return;
     }
 
-    assert(pAAFilter);
+    ADM_assert(pAAFilter);
 
     // Transpose with anti-alias filter
     if (pTransposer->rate < 1.0f) 
@@ -255,7 +255,7 @@ int TransposerBase::transpose(FIFOSampleBuffer &dest, FIFOSampleBuffer &src)
     else 
 #endif // USE_MULTICH_ALWAYS
     {
-        assert(numChannels > 0);
+        ADM_assert(numChannels > 0);
         numOutput = transposeMulti(pdest, psrc, numSrcSamples);
     }
     dest.putSamples(numOutput);
@@ -308,7 +308,7 @@ TransposerBase *TransposerBase::newInstance()
             return new InterpolateShannon;
 
         default:
-            assert(false);
+            ADM_assert(false);
             return NULL;
     }
 #endif

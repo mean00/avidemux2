@@ -37,6 +37,7 @@
 #include <math.h>
 #include "InterpolateShannon.h"
 #include "STTypes.h"
+#include "ADM_default.h"
 
 using namespace soundtouch;
 
@@ -85,7 +86,7 @@ int InterpolateShannon::transposeMono(SAMPLETYPE *pdest,
     while (srcCount < srcSampleEnd)
     {
         double out;
-        assert(fract < 1.0);
+        ADM_assert(fract < 1.0);
 
         out  = psrc[0] * sinc(-3.0 - fract) * _kaiser8[0];
         out += psrc[1] * sinc(-2.0 - fract) * _kaiser8[1];
@@ -133,7 +134,7 @@ int InterpolateShannon::transposeStereo(SAMPLETYPE *pdest,
     while (srcCount < srcSampleEnd)
     {
         double out0, out1, w;
-        assert(fract < 1.0);
+        ADM_assert(fract < 1.0);
 
         w = sinc(-3.0 - fract) * _kaiser8[0];
         out0 = psrc[0] * w; out1 = psrc[1] * w;
@@ -176,6 +177,6 @@ int InterpolateShannon::transposeMulti(SAMPLETYPE *pdest,
                     int &srcSamples)
 {
     // not implemented
-    assert(false);
+    ADM_assert(false);
     return 0;
 }

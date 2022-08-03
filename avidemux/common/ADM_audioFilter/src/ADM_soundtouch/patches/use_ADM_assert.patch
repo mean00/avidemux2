@@ -1,0 +1,552 @@
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/AAFilter.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/AAFilter.cpp
+index 76a3da65d..3f29fe571 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/AAFilter.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/AAFilter.cpp
+@@ -34,7 +34,7 @@
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+ #include <memory.h>
+-#include <assert.h>
++#include "ADM_default.h"
+ #include <math.h>
+ #include <stdlib.h>
+ #include "AAFilter.h"
+@@ -116,10 +116,10 @@ void AAFilter::calculateCoeffs()
+     double *work;
+     SAMPLETYPE *coeffs;
+ 
+-    assert(length >= 2);
+-    assert(length % 4 == 0);
+-    assert(cutoffFreq >= 0);
+-    assert(cutoffFreq <= 0.5);
++    ADM_assert(length >= 2);
++    ADM_assert(length % 4 == 0);
++    ADM_assert(cutoffFreq >= 0);
++    ADM_assert(cutoffFreq <= 0.5);
+ 
+     work = new double[length];
+     coeffs = new SAMPLETYPE[length];
+@@ -151,12 +151,12 @@ void AAFilter::calculateCoeffs()
+     }
+ 
+     // ensure the sum of coefficients is larger than zero
+-    assert(sum > 0);
++    ADM_assert(sum > 0);
+ 
+     // ensure we've really designed a lowpass filter...
+-    assert(work[length/2] > 0);
+-    assert(work[length/2 + 1] > -1e-6);
+-    assert(work[length/2 - 1] > -1e-6);
++    ADM_assert(work[length/2] > 0);
++    ADM_assert(work[length/2 + 1] > -1e-6);
++    ADM_assert(work[length/2 - 1] > -1e-6);
+ 
+     // Calculate a scaling coefficient in such a way that the result can be
+     // divided by 16384
+@@ -168,7 +168,7 @@ void AAFilter::calculateCoeffs()
+         // scale & round to nearest integer
+         temp += (temp >= 0) ? 0.5 : -0.5;
+         // ensure no overfloods
+-        assert(temp >= -32768 && temp <= 32767);
++        ADM_assert(temp >= -32768 && temp <= 32767);
+         coeffs[i] = (SAMPLETYPE)temp;
+     }
+ 
+@@ -203,7 +203,7 @@ uint AAFilter::evaluate(FIFOSampleBuffer &dest, FIFOSampleBuffer &src) const
+     uint result;
+     int numChannels = src.getChannels();
+ 
+-    assert(numChannels == dest.getChannels());
++    ADM_assert(numChannels == dest.getChannels());
+ 
+     numSrcSamples = src.numSamples();
+     psrc = src.ptrBegin();
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIFOSampleBuffer.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIFOSampleBuffer.cpp
+index 15d1fc743..84ab7dd51 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIFOSampleBuffer.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIFOSampleBuffer.cpp
+@@ -39,7 +39,7 @@
+ #include <stdlib.h>
+ #include <memory.h>
+ #include <string.h>
+-#include <assert.h>
++#include "ADM_default.h"
+ 
+ #include "FIFOSampleBuffer.h"
+ 
+@@ -48,7 +48,7 @@ using namespace soundtouch;
+ // Constructor
+ FIFOSampleBuffer::FIFOSampleBuffer(int numChannels)
+ {
+-    assert(numChannels > 0);
++    ADM_assert(numChannels > 0);
+     sizeInBytes = 0; // reasonable initial value
+     buffer = NULL;
+     bufferUnaligned = NULL;
+@@ -147,7 +147,7 @@ SAMPLETYPE *FIFOSampleBuffer::ptrEnd(uint slackCapacity)
+ // 'receiveSamples(numSamples)' function
+ SAMPLETYPE *FIFOSampleBuffer::ptrBegin()
+ {
+-    assert(buffer);
++    ADM_assert(buffer);
+     return buffer + bufferPos * channels;
+ }
+ 
+@@ -164,7 +164,7 @@ void FIFOSampleBuffer::ensureCapacity(uint capacityRequirement)
+     {
+         // enlarge the buffer in 4kbyte steps (round up to next 4k boundary)
+         sizeInBytes = (capacityRequirement * channels * sizeof(SAMPLETYPE) + 4095) & (uint)-4096;
+-        assert(sizeInBytes % 2 == 0);
++        ADM_assert(sizeInBytes % 2 == 0);
+         tempUnaligned = new SAMPLETYPE[sizeInBytes / sizeof(SAMPLETYPE) + 16 / sizeof(SAMPLETYPE)];
+         if (tempUnaligned == NULL)
+         {
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIRFilter.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIRFilter.cpp
+index 383bdc50d..d303fb095 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIRFilter.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIRFilter.cpp
+@@ -39,7 +39,6 @@
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+ #include <memory.h>
+-#include <assert.h>
+ #include <math.h>
+ #include <stdlib.h>
+ #include "FIRFilter.h"
+@@ -84,7 +83,7 @@ uint FIRFilter::evaluateFilterStereo(SAMPLETYPE *dest, const SAMPLETYPE *src, ui
+     // hint compiler autovectorization that loop length is divisible by 8
+     int ilength = length & -8;
+ 
+-    assert((length != 0) && (length == ilength) && (src != NULL) && (dest != NULL) && (filterCoeffs != NULL));
++    ADM_assert((length != 0) && (length == ilength) && (src != NULL) && (dest != NULL) && (filterCoeffs != NULL));
+ 
+     end = 2 * (numSamples - ilength);
+ 
+@@ -131,7 +130,7 @@ uint FIRFilter::evaluateFilterMono(SAMPLETYPE *dest, const SAMPLETYPE *src, uint
+     // hint compiler autovectorization that loop length is divisible by 8
+     int ilength = length & -8;
+ 
+-    assert(ilength != 0);
++    ADM_assert(ilength != 0);
+ 
+     end = numSamples - ilength;
+     #pragma omp parallel for
+@@ -167,11 +166,11 @@ uint FIRFilter::evaluateFilterMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, uin
+     double dScaler = 1.0 / (double)resultDivider;
+ #endif
+ 
+-    assert(length != 0);
+-    assert(src != NULL);
+-    assert(dest != NULL);
+-    assert(filterCoeffs != NULL);
+-    assert(numChannels < 16);
++    ADM_assert(length != 0);
++    ADM_assert(src != NULL);
++    ADM_assert(dest != NULL);
++    ADM_assert(filterCoeffs != NULL);
++    ADM_assert(numChannels < 16);
+ 
+     // hint compiler autovectorization that loop length is divisible by 8
+     int ilength = length & -8;
+@@ -220,7 +219,7 @@ uint FIRFilter::evaluateFilterMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, uin
+ // Throws an exception if filter length isn't divisible by 8
+ void FIRFilter::setCoefficients(const SAMPLETYPE *coeffs, uint newLength, uint uResultDivFactor)
+ {
+-    assert(newLength > 0);
++    ADM_assert(newLength > 0);
+     if (newLength % 8) ST_THROW_RT_ERROR("FIR filter length not divisible by 8");
+ 
+     #ifdef SOUNDTOUCH_FLOAT_SAMPLES
+@@ -232,7 +231,7 @@ void FIRFilter::setCoefficients(const SAMPLETYPE *coeffs, uint newLength, uint u
+ 
+     lengthDiv8 = newLength / 8;
+     length = lengthDiv8 * 8;
+-    assert(length == newLength);
++    ADM_assert(length == newLength);
+ 
+     resultDivFactor = uResultDivFactor;
+     resultDivider = (SAMPLETYPE)::pow(2.0, (int)resultDivFactor);
+@@ -264,8 +263,8 @@ uint FIRFilter::getLength() const
+ // smaller than the amount of input samples.
+ uint FIRFilter::evaluate(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSamples, uint numChannels) 
+ {
+-    assert(length > 0);
+-    assert(lengthDiv8 * 8 == length);
++    ADM_assert(length > 0);
++    ADM_assert(lengthDiv8 * 8 == length);
+ 
+     if (numSamples < length) return 0;
+ 
+@@ -281,7 +280,7 @@ uint FIRFilter::evaluate(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSample
+     else
+ #endif // USE_MULTICH_ALWAYS
+     {
+-        assert(numChannels > 0);
++        ADM_assert(numChannels > 0);
+         return evaluateFilterMulti(dest, src, numSamples, numChannels);
+     }
+ }
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateCubic.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateCubic.cpp
+index fe4968481..10597f926 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateCubic.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateCubic.cpp
+@@ -33,6 +33,7 @@
+ #include <math.h>
+ #include "InterpolateCubic.h"
+ #include "STTypes.h"
++#include "ADM_default.h"
+ 
+ using namespace soundtouch;
+ 
+@@ -76,7 +77,7 @@ int InterpolateCubic::transposeMono(SAMPLETYPE *pdest,
+         const float x0 = x1*x2;           // x^3
+         float y0, y1, y2, y3;
+ 
+-        assert(fract < 1.0);
++        ADM_assert(fract < 1.0);
+ 
+         y0 =  _coeffs[0] * x0 +  _coeffs[1] * x1 +  _coeffs[2] * x2 +  _coeffs[3] * x3;
+         y1 =  _coeffs[4] * x0 +  _coeffs[5] * x1 +  _coeffs[6] * x2 +  _coeffs[7] * x3;
+@@ -121,7 +122,7 @@ int InterpolateCubic::transposeStereo(SAMPLETYPE *pdest,
+         float y0, y1, y2, y3;
+         float out0, out1;
+ 
+-        assert(fract < 1.0);
++        ADM_assert(fract < 1.0);
+ 
+         y0 =  _coeffs[0] * x0 +  _coeffs[1] * x1 +  _coeffs[2] * x2 +  _coeffs[3] * x3;
+         y1 =  _coeffs[4] * x0 +  _coeffs[5] * x1 +  _coeffs[6] * x2 +  _coeffs[7] * x3;
+@@ -167,7 +168,7 @@ int InterpolateCubic::transposeMulti(SAMPLETYPE *pdest,
+         const float x0 = x1*x2;           // x^3
+         float y0, y1, y2, y3;
+ 
+-        assert(fract < 1.0);
++        ADM_assert(fract < 1.0);
+ 
+         y0 =  _coeffs[0] * x0 +  _coeffs[1] * x1 +  _coeffs[2] * x2 +  _coeffs[3] * x3;
+         y1 =  _coeffs[4] * x0 +  _coeffs[5] * x1 +  _coeffs[6] * x2 +  _coeffs[7] * x3;
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateLinear.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateLinear.cpp
+index a11a493a9..e727f9f98 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateLinear.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateLinear.cpp
+@@ -29,7 +29,7 @@
+ //
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+-#include <assert.h>
++#include "ADM_default.h"
+ #include <stdlib.h>
+ #include "InterpolateLinear.h"
+ 
+@@ -74,7 +74,7 @@ int InterpolateLinearInteger::transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *
+     {
+         LONG_SAMPLETYPE temp;
+     
+-        assert(iFract < SCALE);
++        ADM_assert(iFract < SCALE);
+ 
+         temp = (SCALE - iFract) * src[0] + iFract * src[1];
+         dest[i] = (SAMPLETYPE)(temp / SCALE);
+@@ -108,7 +108,7 @@ int InterpolateLinearInteger::transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE
+         LONG_SAMPLETYPE temp0;
+         LONG_SAMPLETYPE temp1;
+     
+-        assert(iFract < SCALE);
++        ADM_assert(iFract < SCALE);
+ 
+         temp0 = (SCALE - iFract) * src[0] + iFract * src[2];
+         temp1 = (SCALE - iFract) * src[1] + iFract * src[3];
+@@ -141,7 +141,7 @@ int InterpolateLinearInteger::transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE
+     {
+         LONG_SAMPLETYPE temp, vol1;
+     
+-        assert(iFract < SCALE);
++        ADM_assert(iFract < SCALE);
+         vol1 = (LONG_SAMPLETYPE)(SCALE - iFract);
+         for (int c = 0; c < numChannels; c ++)
+         {
+@@ -209,7 +209,7 @@ int InterpolateLinearFloat::transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *sr
+     while (srcCount < srcSampleEnd)
+     {
+         double out;
+-        assert(fract < 1.0);
++        ADM_assert(fract < 1.0);
+ 
+         out = (1.0 - fract) * src[0] + fract * src[1];
+         dest[i] = (SAMPLETYPE)out;
+@@ -241,7 +241,7 @@ int InterpolateLinearFloat::transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE *
+     while (srcCount < srcSampleEnd)
+     {
+         double out0, out1;
+-        assert(fract < 1.0);
++        ADM_assert(fract < 1.0);
+ 
+         out0 = (1.0 - fract) * src[0] + fract * src[2];
+         out1 = (1.0 - fract) * src[1] + fract * src[3];
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateShannon.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateShannon.cpp
+index 1d69a2e88..fa253f8ad 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateShannon.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/InterpolateShannon.cpp
+@@ -37,6 +37,7 @@
+ #include <math.h>
+ #include "InterpolateShannon.h"
+ #include "STTypes.h"
++#include "ADM_default.h"
+ 
+ using namespace soundtouch;
+ 
+@@ -85,7 +86,7 @@ int InterpolateShannon::transposeMono(SAMPLETYPE *pdest,
+     while (srcCount < srcSampleEnd)
+     {
+         double out;
+-        assert(fract < 1.0);
++        ADM_assert(fract < 1.0);
+ 
+         out  = psrc[0] * sinc(-3.0 - fract) * _kaiser8[0];
+         out += psrc[1] * sinc(-2.0 - fract) * _kaiser8[1];
+@@ -133,7 +134,7 @@ int InterpolateShannon::transposeStereo(SAMPLETYPE *pdest,
+     while (srcCount < srcSampleEnd)
+     {
+         double out0, out1, w;
+-        assert(fract < 1.0);
++        ADM_assert(fract < 1.0);
+ 
+         w = sinc(-3.0 - fract) * _kaiser8[0];
+         out0 = psrc[0] * w; out1 = psrc[1] * w;
+@@ -176,6 +177,6 @@ int InterpolateShannon::transposeMulti(SAMPLETYPE *pdest,
+                     int &srcSamples)
+ {
+     // not implemented
+-    assert(false);
++    ADM_assert(false);
+     return 0;
+ }
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/PeakFinder.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/PeakFinder.cpp
+index 5423c859a..a3a81602f 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/PeakFinder.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/PeakFinder.cpp
+@@ -33,7 +33,7 @@
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+ #include <math.h>
+-#include <assert.h>
++#include "ADM_default.h"
+ 
+ #include "PeakFinder.h"
+ 
+@@ -140,7 +140,7 @@ int PeakFinder::findCrossingLevel(const float *data, float level, int peakpos, i
+     int pos;
+ 
+     peaklevel = data[peakpos];
+-    assert(peaklevel >= level);
++    ADM_assert(peaklevel >= level);
+     pos = peakpos;
+     while ((pos >= minPos) && (pos + direction < maxPos))
+     {
+@@ -189,7 +189,7 @@ double PeakFinder::getPeakCenter(const float *data, int peakpos) const
+     if (gp1 == gp2) 
+     {
+         // avoid rounding errors when all are equal
+-        assert(gp1 == peakpos);
++        ADM_assert(gp1 == peakpos);
+         cutLevel = groundLevel = peakLevel;
+     } else {
+         // get average of the ground levels
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/RateTransposer.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/RateTransposer.cpp
+index e91cd6343..0e2348d20 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/RateTransposer.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/RateTransposer.cpp
+@@ -32,7 +32,7 @@
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+ #include <memory.h>
+-#include <assert.h>
++#include "ADM_default.h"
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include "RateTransposer.h"
+@@ -146,7 +146,7 @@ void RateTransposer::processSamples(const SAMPLETYPE *src, uint nSamples)
+         return;
+     }
+ 
+-    assert(pAAFilter);
++    ADM_assert(pAAFilter);
+ 
+     // Transpose with anti-alias filter
+     if (pTransposer->rate < 1.0f) 
+@@ -255,7 +255,7 @@ int TransposerBase::transpose(FIFOSampleBuffer &dest, FIFOSampleBuffer &src)
+     else 
+ #endif // USE_MULTICH_ALWAYS
+     {
+-        assert(numChannels > 0);
++        ADM_assert(numChannels > 0);
+         numOutput = transposeMulti(pdest, psrc, numSrcSamples);
+     }
+     dest.putSamples(numOutput);
+@@ -308,7 +308,7 @@ TransposerBase *TransposerBase::newInstance()
+             return new InterpolateShannon;
+ 
+         default:
+-            assert(false);
++            ADM_assert(false);
+             return NULL;
+     }
+ #endif
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/SoundTouch.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/SoundTouch.cpp
+index 11b7a50a0..af84c3b87 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/SoundTouch.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/SoundTouch.cpp
+@@ -62,7 +62,7 @@
+ //
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+-#include <assert.h>
++#include "ADM_default.h"
+ #include <stdlib.h>
+ #include <memory.h>
+ #include <math.h>
+@@ -232,7 +232,7 @@ void SoundTouch::calcEffectiveRateAndTempo()
+         {
+             FIFOSamplePipe *tempoOut;
+ 
+-            assert(output == pRateTransposer);
++            ADM_assert(output == pRateTransposer);
+             // move samples in the current output buffer to the output of pTDStretch
+             tempoOut = pTDStretch->getOutput();
+             tempoOut->moveSamples(*output);
+@@ -249,7 +249,7 @@ void SoundTouch::calcEffectiveRateAndTempo()
+         {
+             FIFOSamplePipe *transOut;
+ 
+-            assert(output == pTDStretch);
++            ADM_assert(output == pTDStretch);
+             // move samples in the current output buffer to the output of pRateTransposer
+             transOut = pRateTransposer->getOutput();
+             transOut->moveSamples(*output);
+@@ -292,7 +292,7 @@ void SoundTouch::putSamples(const SAMPLETYPE *samples, uint nSamples)
+     if (rate <= 1.0f) 
+     {
+         // transpose the rate down, output the transposed sound to tempo changer buffer
+-        assert(output == pTDStretch);
++        ADM_assert(output == pTDStretch);
+         pRateTransposer->putSamples(samples, nSamples);
+         pTDStretch->moveSamples(*pRateTransposer);
+     } 
+@@ -300,7 +300,7 @@ void SoundTouch::putSamples(const SAMPLETYPE *samples, uint nSamples)
+ #endif
+     {
+         // evaluate the tempo changer, then transpose the rate up, 
+-        assert(output == pRateTransposer);
++        ADM_assert(output == pRateTransposer);
+         pTDStretch->putSamples(samples, nSamples);
+         pRateTransposer->moveSamples(*pTDStretch);
+     }
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/TDStretch.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/TDStretch.cpp
+index ea5c966ca..d394b99bf 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/TDStretch.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/TDStretch.cpp
+@@ -42,7 +42,6 @@
+ 
+ #include <string.h>
+ #include <limits.h>
+-#include <assert.h>
+ #include <math.h>
+ #include <float.h>
+ 
+@@ -281,7 +280,7 @@ inline void TDStretch::overlap(SAMPLETYPE *pOutput, const SAMPLETYPE *pInput, ui
+     else 
+ #endif // USE_MULTICH_ALWAYS
+     {
+-        assert(channels > 0);
++        ADM_assert(channels > 0);
+         overlapMulti(pOutput, pInput + channels * ovlPos);
+     }
+ }
+@@ -605,7 +604,7 @@ void TDStretch::setChannels(int numChannels)
+ /*
+ void TDStretch::processNominalTempo()
+ {
+-    assert(tempo == 1.0f);
++    ADM_assert(tempo == 1.0f);
+ 
+     if (bMidBufferDirty) 
+     {
+@@ -709,7 +708,7 @@ void TDStretch::processSamples()
+         // Copies the end of the current sequence from 'inputBuffer' to 
+         // 'midBuffer' for being mixed with the beginning of the next 
+         // processing sequence and so on
+-        assert((offset + temp + overlapLength) <= (int)inputBuffer.numSamples());
++        ADM_assert((offset + temp + overlapLength) <= (int)inputBuffer.numSamples());
+         memcpy(pMidBuffer, inputBuffer.ptrBegin() + channels * (offset + temp), 
+             channels * sizeof(SAMPLETYPE) * overlapLength);
+ 
+@@ -741,7 +740,7 @@ void TDStretch::acceptNewOverlapLength(int newOverlapLength)
+ {
+     int prevOvl;
+ 
+-    assert(newOverlapLength >= 0);
++    ADM_assert(newOverlapLength >= 0);
+     prevOvl = overlapLength;
+     overlapLength = newOverlapLength;
+ 
+@@ -855,7 +854,7 @@ void TDStretch::calculateOverlapLength(int aoverlapMs)
+ {
+     int newOvl;
+ 
+-    assert(aoverlapMs >= 0);
++    ADM_assert(aoverlapMs >= 0);
+ 
+     // calculate overlap length so that it's power of 2 - thus it's easy to do
+     // integer division by right-shifting. Term "-1" at end is to account for 
+@@ -1026,7 +1025,7 @@ void TDStretch::calculateOverlapLength(int overlapInMsec)
+ {
+     int newOvl;
+ 
+-    assert(overlapInMsec >= 0);
++    ADM_assert(overlapInMsec >= 0);
+     newOvl = (sampleRate * overlapInMsec) / 1000;
+     if (newOvl < 16) newOvl = 16;
+ 
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/sse_optimized.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/sse_optimized.cpp
+index 80b737078..cbfa96c55 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/sse_optimized.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/sse_optimized.cpp
+@@ -45,6 +45,7 @@
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+ #include "STTypes.h"
++#include "ADM_default.h"
+ 
+ using namespace soundtouch;
+ 
+@@ -94,7 +95,7 @@ double TDStretchSSE::calcCrossCorr(const float *pV1, const float *pV2, double &a
+ #endif 
+ 
+     // ensure overlapLength is divisible by 8
+-    assert((overlapLength % 8) == 0);
++    ADM_assert((overlapLength % 8) == 0);
+ 
+     // Calculates the cross-correlation value between 'pV1' and 'pV2' vectors
+     // Note: pV2 _must_ be aligned to 16-bit boundary, pV1 need not.
+@@ -240,15 +241,15 @@ uint FIRFilterSSE::evaluateFilterStereo(float *dest, const float *source, uint n
+     int count = (int)((numSamples - length) & (uint)-2);
+     int j;
+ 
+-    assert(count % 2 == 0);
++    ADM_assert(count % 2 == 0);
+ 
+     if (count < 2) return 0;
+ 
+-    assert(source != NULL);
+-    assert(dest != NULL);
+-    assert((length % 8) == 0);
+-    assert(filterCoeffsAlign != NULL);
+-    assert(((ulongptr)filterCoeffsAlign) % 16 == 0);
++    ADM_assert(source != NULL);
++    ADM_assert(dest != NULL);
++    ADM_assert((length % 8) == 0);
++    ADM_assert(filterCoeffsAlign != NULL);
++    ADM_assert(((ulongptr)filterCoeffsAlign) % 16 == 0);
+ 
+     // filter is evaluated for two stereo samples with each iteration, thus use of 'j += 2'
+     #pragma omp parallel for

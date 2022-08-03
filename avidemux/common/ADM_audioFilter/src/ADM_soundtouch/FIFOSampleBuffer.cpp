@@ -39,7 +39,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <string.h>
-#include <assert.h>
+#include "ADM_default.h"
 
 #include "FIFOSampleBuffer.h"
 
@@ -48,7 +48,7 @@ using namespace soundtouch;
 // Constructor
 FIFOSampleBuffer::FIFOSampleBuffer(int numChannels)
 {
-    assert(numChannels > 0);
+    ADM_assert(numChannels > 0);
     sizeInBytes = 0; // reasonable initial value
     buffer = NULL;
     bufferUnaligned = NULL;
@@ -147,7 +147,7 @@ SAMPLETYPE *FIFOSampleBuffer::ptrEnd(uint slackCapacity)
 // 'receiveSamples(numSamples)' function
 SAMPLETYPE *FIFOSampleBuffer::ptrBegin()
 {
-    assert(buffer);
+    ADM_assert(buffer);
     return buffer + bufferPos * channels;
 }
 
@@ -164,7 +164,7 @@ void FIFOSampleBuffer::ensureCapacity(uint capacityRequirement)
     {
         // enlarge the buffer in 4kbyte steps (round up to next 4k boundary)
         sizeInBytes = (capacityRequirement * channels * sizeof(SAMPLETYPE) + 4095) & (uint)-4096;
-        assert(sizeInBytes % 2 == 0);
+        ADM_assert(sizeInBytes % 2 == 0);
         tempUnaligned = new SAMPLETYPE[sizeInBytes / sizeof(SAMPLETYPE) + 16 / sizeof(SAMPLETYPE)];
         if (tempUnaligned == NULL)
         {

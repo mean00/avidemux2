@@ -62,7 +62,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <assert.h>
+#include "ADM_default.h"
 #include <stdlib.h>
 #include <memory.h>
 #include <math.h>
@@ -232,7 +232,7 @@ void SoundTouch::calcEffectiveRateAndTempo()
         {
             FIFOSamplePipe *tempoOut;
 
-            assert(output == pRateTransposer);
+            ADM_assert(output == pRateTransposer);
             // move samples in the current output buffer to the output of pTDStretch
             tempoOut = pTDStretch->getOutput();
             tempoOut->moveSamples(*output);
@@ -249,7 +249,7 @@ void SoundTouch::calcEffectiveRateAndTempo()
         {
             FIFOSamplePipe *transOut;
 
-            assert(output == pTDStretch);
+            ADM_assert(output == pTDStretch);
             // move samples in the current output buffer to the output of pRateTransposer
             transOut = pRateTransposer->getOutput();
             transOut->moveSamples(*output);
@@ -292,7 +292,7 @@ void SoundTouch::putSamples(const SAMPLETYPE *samples, uint nSamples)
     if (rate <= 1.0f) 
     {
         // transpose the rate down, output the transposed sound to tempo changer buffer
-        assert(output == pTDStretch);
+        ADM_assert(output == pTDStretch);
         pRateTransposer->putSamples(samples, nSamples);
         pTDStretch->moveSamples(*pRateTransposer);
     } 
@@ -300,7 +300,7 @@ void SoundTouch::putSamples(const SAMPLETYPE *samples, uint nSamples)
 #endif
     {
         // evaluate the tempo changer, then transpose the rate up, 
-        assert(output == pRateTransposer);
+        ADM_assert(output == pRateTransposer);
         pTDStretch->putSamples(samples, nSamples);
         pRateTransposer->moveSamples(*pTDStretch);
     }

@@ -34,7 +34,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <memory.h>
-#include <assert.h>
+#include "ADM_default.h"
 #include <math.h>
 #include <stdlib.h>
 #include "AAFilter.h"
@@ -116,10 +116,10 @@ void AAFilter::calculateCoeffs()
     double *work;
     SAMPLETYPE *coeffs;
 
-    assert(length >= 2);
-    assert(length % 4 == 0);
-    assert(cutoffFreq >= 0);
-    assert(cutoffFreq <= 0.5);
+    ADM_assert(length >= 2);
+    ADM_assert(length % 4 == 0);
+    ADM_assert(cutoffFreq >= 0);
+    ADM_assert(cutoffFreq <= 0.5);
 
     work = new double[length];
     coeffs = new SAMPLETYPE[length];
@@ -151,12 +151,12 @@ void AAFilter::calculateCoeffs()
     }
 
     // ensure the sum of coefficients is larger than zero
-    assert(sum > 0);
+    ADM_assert(sum > 0);
 
     // ensure we've really designed a lowpass filter...
-    assert(work[length/2] > 0);
-    assert(work[length/2 + 1] > -1e-6);
-    assert(work[length/2 - 1] > -1e-6);
+    ADM_assert(work[length/2] > 0);
+    ADM_assert(work[length/2 + 1] > -1e-6);
+    ADM_assert(work[length/2 - 1] > -1e-6);
 
     // Calculate a scaling coefficient in such a way that the result can be
     // divided by 16384
@@ -168,7 +168,7 @@ void AAFilter::calculateCoeffs()
         // scale & round to nearest integer
         temp += (temp >= 0) ? 0.5 : -0.5;
         // ensure no overfloods
-        assert(temp >= -32768 && temp <= 32767);
+        ADM_assert(temp >= -32768 && temp <= 32767);
         coeffs[i] = (SAMPLETYPE)temp;
     }
 
@@ -203,7 +203,7 @@ uint AAFilter::evaluate(FIFOSampleBuffer &dest, FIFOSampleBuffer &src) const
     uint result;
     int numChannels = src.getChannels();
 
-    assert(numChannels == dest.getChannels());
+    ADM_assert(numChannels == dest.getChannels());
 
     numSrcSamples = src.numSamples();
     psrc = src.ptrBegin();

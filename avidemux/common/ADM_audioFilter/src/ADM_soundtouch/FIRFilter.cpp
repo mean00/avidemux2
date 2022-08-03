@@ -39,7 +39,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <memory.h>
-#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 #include "FIRFilter.h"
@@ -84,7 +83,7 @@ uint FIRFilter::evaluateFilterStereo(SAMPLETYPE *dest, const SAMPLETYPE *src, ui
     // hint compiler autovectorization that loop length is divisible by 8
     int ilength = length & -8;
 
-    assert((length != 0) && (length == ilength) && (src != NULL) && (dest != NULL) && (filterCoeffs != NULL));
+    ADM_assert((length != 0) && (length == ilength) && (src != NULL) && (dest != NULL) && (filterCoeffs != NULL));
 
     end = 2 * (numSamples - ilength);
 
@@ -131,7 +130,7 @@ uint FIRFilter::evaluateFilterMono(SAMPLETYPE *dest, const SAMPLETYPE *src, uint
     // hint compiler autovectorization that loop length is divisible by 8
     int ilength = length & -8;
 
-    assert(ilength != 0);
+    ADM_assert(ilength != 0);
 
     end = numSamples - ilength;
     #pragma omp parallel for
@@ -167,11 +166,11 @@ uint FIRFilter::evaluateFilterMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, uin
     double dScaler = 1.0 / (double)resultDivider;
 #endif
 
-    assert(length != 0);
-    assert(src != NULL);
-    assert(dest != NULL);
-    assert(filterCoeffs != NULL);
-    assert(numChannels < 16);
+    ADM_assert(length != 0);
+    ADM_assert(src != NULL);
+    ADM_assert(dest != NULL);
+    ADM_assert(filterCoeffs != NULL);
+    ADM_assert(numChannels < 16);
 
     // hint compiler autovectorization that loop length is divisible by 8
     int ilength = length & -8;
@@ -220,7 +219,7 @@ uint FIRFilter::evaluateFilterMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, uin
 // Throws an exception if filter length isn't divisible by 8
 void FIRFilter::setCoefficients(const SAMPLETYPE *coeffs, uint newLength, uint uResultDivFactor)
 {
-    assert(newLength > 0);
+    ADM_assert(newLength > 0);
     if (newLength % 8) ST_THROW_RT_ERROR("FIR filter length not divisible by 8");
 
     #ifdef SOUNDTOUCH_FLOAT_SAMPLES
@@ -232,7 +231,7 @@ void FIRFilter::setCoefficients(const SAMPLETYPE *coeffs, uint newLength, uint u
 
     lengthDiv8 = newLength / 8;
     length = lengthDiv8 * 8;
-    assert(length == newLength);
+    ADM_assert(length == newLength);
 
     resultDivFactor = uResultDivFactor;
     resultDivider = (SAMPLETYPE)::pow(2.0, (int)resultDivFactor);
@@ -264,8 +263,8 @@ uint FIRFilter::getLength() const
 // smaller than the amount of input samples.
 uint FIRFilter::evaluate(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSamples, uint numChannels) 
 {
-    assert(length > 0);
-    assert(lengthDiv8 * 8 == length);
+    ADM_assert(length > 0);
+    ADM_assert(lengthDiv8 * 8 == length);
 
     if (numSamples < length) return 0;
 
@@ -281,7 +280,7 @@ uint FIRFilter::evaluate(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSample
     else
 #endif // USE_MULTICH_ALWAYS
     {
-        assert(numChannels > 0);
+        ADM_assert(numChannels > 0);
         return evaluateFilterMulti(dest, src, numSamples, numChannels);
     }
 }

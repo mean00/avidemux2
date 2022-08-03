@@ -45,6 +45,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "STTypes.h"
+#include "ADM_default.h"
 
 using namespace soundtouch;
 
@@ -94,7 +95,7 @@ double TDStretchSSE::calcCrossCorr(const float *pV1, const float *pV2, double &a
 #endif 
 
     // ensure overlapLength is divisible by 8
-    assert((overlapLength % 8) == 0);
+    ADM_assert((overlapLength % 8) == 0);
 
     // Calculates the cross-correlation value between 'pV1' and 'pV2' vectors
     // Note: pV2 _must_ be aligned to 16-bit boundary, pV1 need not.
@@ -240,15 +241,15 @@ uint FIRFilterSSE::evaluateFilterStereo(float *dest, const float *source, uint n
     int count = (int)((numSamples - length) & (uint)-2);
     int j;
 
-    assert(count % 2 == 0);
+    ADM_assert(count % 2 == 0);
 
     if (count < 2) return 0;
 
-    assert(source != NULL);
-    assert(dest != NULL);
-    assert((length % 8) == 0);
-    assert(filterCoeffsAlign != NULL);
-    assert(((ulongptr)filterCoeffsAlign) % 16 == 0);
+    ADM_assert(source != NULL);
+    ADM_assert(dest != NULL);
+    ADM_assert((length % 8) == 0);
+    ADM_assert(filterCoeffsAlign != NULL);
+    ADM_assert(((ulongptr)filterCoeffsAlign) % 16 == 0);
 
     // filter is evaluated for two stereo samples with each iteration, thus use of 'j += 2'
     #pragma omp parallel for
