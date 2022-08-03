@@ -24,7 +24,6 @@ ADM_libsamplerate/src_linear.cpp
 ADM_libsamplerate/src_sinc.cpp 
 ADM_libsamplerate/src_zoh.cpp
 ADM_soundtouch/AAFilter.cpp
-ADM_soundtouch/cpu_detect_x86.cpp
 ADM_soundtouch/FIFOSampleBuffer.cpp
 ADM_soundtouch/FIRFilter.cpp
 ADM_soundtouch/InterpolateCubic.cpp

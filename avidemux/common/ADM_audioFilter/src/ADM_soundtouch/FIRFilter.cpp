@@ -43,7 +43,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include "FIRFilter.h"
-#include "cpu_detect.h"
+
+#include "ADM_default.h"
 
 using namespace soundtouch;
 
@@ -298,15 +299,11 @@ void * FIRFilter::operator new(size_t s)
 
 FIRFilter * FIRFilter::newInstance()
 {
-    uint uExtensions;
-
-    uExtensions = detectCPUextensions();
-
     // Check if MMX/SSE instruction set extensions supported by CPU
 
 #ifdef SOUNDTOUCH_ALLOW_MMX
     // MMX routines available only with integer sample types
-    if (uExtensions & SUPPORT_MMX)
+    if (CpuCaps::hasMMX())
     {
         return ::new FIRFilterMMX;
     }
@@ -314,7 +311,7 @@ FIRFilter * FIRFilter::newInstance()
 #endif // SOUNDTOUCH_ALLOW_MMX
 
 #ifdef SOUNDTOUCH_ALLOW_SSE
-    if (uExtensions & SUPPORT_SSE)
+    if (CpuCaps::hasSSE())
     {
         // SSE support
         return ::new FIRFilterSSE;
