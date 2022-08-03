@@ -14,11 +14,7 @@ protected:
       double   tempo;
       double   pitch;
       uint32_t nbChannels;
-      float ** inReorderBuf;
-      float ** outReorderBuf;
-      long int latency;
-      long int discard;
-      bool     feedInput;
+      bool     reachedEOF;
 public:
                 ADM_audioStretch(void);
                 ~ADM_audioStretch();
