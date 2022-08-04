@@ -1,17 +1,14 @@
 /**
     \fn ADM_audioStretch.h
-    \brief Wrapper around rubberband
+    \brief Wrapper around SoundTouch
 
 
 */
 #include "ADM_default.h"
 #include "ADM_coreAudio.h"
 #include "ADM_audioStretch.h"
-#include "ADM_rubberband/rubberband/RubberBandStretcher.h"
+#include "ADM_soundtouch/SoundTouch.h"
 #include <math.h>
-
-#define REORDER_BUFSIZE     (65536)
-#define OUTP_REORDER_BUFSIZE     (REORDER_BUFSIZE * 11)
 
 /**
     \fn ADM_audioStretch
@@ -23,11 +20,9 @@ ADM_audioStretch::ADM_audioStretch(void)
     pitch=1.0;
     nbChannels=0;
     context=NULL;
-    inReorderBuf = NULL;
-    outReorderBuf = NULL;    
 }
 
-#define CONTEXT ((RubberBand::RubberBandStretcher* )context)
+#define CONTEXT ((soundtouch::SoundTouch* )context)
 
 /**
     \fn init
@@ -65,32 +60,21 @@ bool ADM_audioStretch::init(double tempoRatio, double pitchScale, uint32_t sampl
 
     nbChannels=channel;
 
-    inReorderBuf = new float* [nbChannels];
-    outReorderBuf = new float* [nbChannels];   
-
-    for (int i=0; i<nbChannels; i++)
-    {
-        inReorderBuf[i] = new float [REORDER_BUFSIZE];
-        outReorderBuf[i] = new float [OUTP_REORDER_BUFSIZE];
-    }
-
     printf("[AudioStretch] Creating x%f, with %d channels\n",tempo,nbChannels);
-    RubberBand::RubberBandStretcher * tmpobj = NULL;
-    tmpobj = new RubberBand::RubberBandStretcher(sampleRate, nbChannels, 
-                                                    RubberBand::RubberBandStretcher::OptionProcessRealTime | 
-                                                    RubberBand::RubberBandStretcher::OptionPitchHighQuality | 
-                                                    RubberBand::RubberBandStretcher::OptionStretchPrecise, 
-                                                (1.0/tempo), pitch);
+    soundtouch::SoundTouch * tmpobj = NULL;
+    tmpobj = new soundtouch::SoundTouch();
+    tmpobj->setSampleRate(sampleRate);
+    tmpobj->setChannels(channel);
+    tmpobj->setTempo(tempo);
+    tmpobj->setPitch(pitch);
+
     context=(void *)tmpobj;
     if(!context) 
     {
         printf("[AudioStretch] Failed ctor\n");
         return false;
     }
-    tmpobj->setMaxProcessSize(REORDER_BUFSIZE);
-    latency = tmpobj->getLatency();
-    discard = latency;
-    feedInput = true;
+    reachedEOF = false;
     // 
     return true;
 }
@@ -103,25 +87,6 @@ ADM_audioStretch::~ADM_audioStretch(void)
     if(context)
         delete (CONTEXT);
     context=NULL;
-    if (inReorderBuf)
-    {
-        for (int i=0; i<nbChannels; i++)
-        {
-            delete [] inReorderBuf[i];
-        }
-        delete [] inReorderBuf;
-    }
-    inReorderBuf = NULL;
-
-    if (outReorderBuf)
-    {
-        for (int i=0; i<nbChannels; i++)
-        {
-            delete [] outReorderBuf[i];
-        }
-        delete [] outReorderBuf;
-    }
-    outReorderBuf = NULL;
     printf("[AudioStretch] Deleted\n");
 }
 /**
@@ -131,9 +96,8 @@ ADM_audioStretch::~ADM_audioStretch(void)
 bool ADM_audioStretch::reset(void)
 {
     ADM_assert(context);
-    discard = latency;
-    feedInput = true;
-    CONTEXT->reset();
+    reachedEOF = false;
+    CONTEXT->clear();
     return true;
 
 }
@@ -153,77 +117,38 @@ bool ADM_audioStretch::process(float *from, float *to, uint32_t nbSample,uint32_
 {
     ADM_assert(context);
     
-    if (discard <= 0)
-    {
-        // prevent high peak memory usage by starving RubberBand
-        if (CONTEXT->available()) nbSample=0;
-    }
-    
-    if (nbSample > REORDER_BUFSIZE)
-        nbSample = REORDER_BUFSIZE;
-    // de-interleave input
-    for (int s=0; s<nbSample; s++)
-    {
-        for (int c=0; c<nbChannels; c++)
-        {
-            inReorderBuf[c][s] = *from;
-            from++;
-        }
-    }
-    *sampleProcessed = nbSample;
-
-    if (feedInput)
-        CONTEXT->process(inReorderBuf,nbSample,last);
-    if (last)
-        feedInput = false;
-    
+    *sampleProcessed=0;
     *outNbSample = 0;
-    
-    while (discard > 0)
+    if (!reachedEOF)
     {
-        int availSamp = CONTEXT->available();
-        if (availSamp == 0) return true;
-        if (availSamp < 0) return false;    // EOF
+        int nSamples = CONTEXT->receiveSamples(to, maxOutSample);
         
-        if (availSamp > discard)
-            availSamp = discard;
-        if (availSamp > OUTP_REORDER_BUFSIZE)
-            availSamp = OUTP_REORDER_BUFSIZE;
-        availSamp = CONTEXT->retrieve(outReorderBuf, availSamp);
-        ADM_assert(discard >= availSamp);
-        discard -= availSamp;
+        if (nSamples > 0)
+        {
+            *outNbSample = nSamples;
+            return true;
+        }
+        
+        CONTEXT->putSamples(from, nbSample);
+        *sampleProcessed = nbSample;
+        if (last)
+        {
+            CONTEXT->flush();
+            reachedEOF = true;
+        }
+        return true;
+    }
+    else
+    {
+        int nSamples = CONTEXT->receiveSamples(to, maxOutSample);
+        if (nSamples > 0)
+        {
+            *outNbSample = nSamples;
+            return true;
+        }
+        return false;
     }
 
-    while (*outNbSample < maxOutSample)
-    {
-        int availSamp = CONTEXT->available();
-        if (availSamp == 0) return true;
-        if (availSamp < 0) 
-        {
-            if (*outNbSample > 0)
-                return true;
-            else
-                return false;    // EOF
-        }
-        
-        if (availSamp > (maxOutSample - *outNbSample))
-            availSamp = (maxOutSample - *outNbSample);
-        if (availSamp > OUTP_REORDER_BUFSIZE)
-            availSamp = OUTP_REORDER_BUFSIZE;
-        availSamp = CONTEXT->retrieve(outReorderBuf, availSamp);
-        ADM_assert(availSamp <= (maxOutSample - *outNbSample));
-        ADM_assert(availSamp <= OUTP_REORDER_BUFSIZE);
-        // interleave output
-        for (int s=0; s<availSamp; s++)
-        {
-            for (int c=0; c<nbChannels; c++)
-            {
-                *to = outReorderBuf[c][s];
-                to++;
-            }
-        }
-        *outNbSample += availSamp;
-    }
     return true;
 }
 //EOF
