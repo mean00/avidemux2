@@ -32,6 +32,8 @@
       <li>Option to remember selected resize method in &quot;Resize&quot;, &quot;Fit to size&quot; and &quot;Zoom&quot; filters</li>
       <li>New filter: 3D LUT</li>
       <li>New filter: Decimate</li>
+      <li>New filter: Arbitrary Rotate</li>
+      <li>New video encoder: VideoToolbox HEVC (&quot;ffVTEncHEVC&quot;, macOS only)</li>
     </ul>
 
     <h2>Other Enhancements</h2>
@@ -39,12 +41,23 @@
     <ul>
       <li>HDR tonemapping performance and quality improvements</li>
       <li>Extended file info</li>
+      <li>Rotating mouse wheel over buttons to seek by 60 seconds cycles through 1/2/4/60 seconds seek modes</li>
+      <li>Support for decoding 8-bit VP9 in hardware via DXVA2 on Windows and via VDPAU on Linux with graphics cards featuring a VP9 decoder</li>
+      <li>Buttons to seek to selection start (A) and end (B) in on-the-fly video filter preview</li>
+      <li>Logo image in &quot;Add logo&quot; video filter configuration dialog is now scalable, can be repositioned by dragging</li>
     </ul>
 
     <h2>Bugfixes</h2>
 
     <ul>
-      <li>Crashing in &quot;Resample FPS &quot; / motion interpolation should be fixed</li>
+      <li>Crashes in &quot;Resample FPS&quot; video filter with motion interpolation enabled</li>
+      <li>Crash on finishing encoding with the vp9 encoder</li>
+      <li>Avidemux falling victim to a crash in VA-API driver triggered by probing on application startup on Linux with some recent hardware</li>
+      <li>Crash loading MPEG-TS or MPEG-PS file with MPEG-1 video track and HW decoder via VDPAU enabled</li>
+      <li>Wrong number of channels or wrong channel layout with some E-AC3 streams</li>
+      <li>Reduced contrast and desaturated colors in loaded BMP images</li>
+      <li>Selection starting at zero and ending at the last picture of video cannot be deleted</li>
+      <li>Disabling B-frames breaks VideoToolbox HW encoder (macOS only)</li>
     </ul>
 
     <h2>Miscellaneous</h2>
