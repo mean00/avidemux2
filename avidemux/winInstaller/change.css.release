@@ -23,6 +23,11 @@ ul {
     margin-bottom: 3em;
 }
 
+ul ul {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
 li {
     max-width: 48em;
     margin-bottom: 0.5em;
