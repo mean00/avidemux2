@@ -29,9 +29,12 @@ int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, fl
                          //,{2,      QT_TRANSLATE_NOOP("adm","TODO"),NULL}
     };
 
+    ELEM_TYPE_FLOAT dSaturationAdjust = *saturationAdjust;
+    ELEM_TYPE_FLOAT dBoostAdjust = *boostAdjust;
+
     diaElemMenu menuToneMapHDR(toneMappingMethod,QT_TRANSLATE_NOOP("adm","_Tone mapping:"),sizeof(toneMapEntries)/sizeof(diaMenuEntry),toneMapEntries);
-    diaElemFloatResettable floatSaturationHDR(saturationAdjust,QT_TRANSLATE_NOOP("adm","_Saturation:"),0.,10.,1.);
-    diaElemFloatResettable floatBoostHDR(boostAdjust,QT_TRANSLATE_NOOP("adm","_Boost (level multiplier):"),0.,10.,1.);
+    diaElemFloatResettable floatSaturationHDR(&dSaturationAdjust,QT_TRANSLATE_NOOP("adm","_Saturation:"),0.,10.,1.);
+    diaElemFloatResettable floatBoostHDR(&dBoostAdjust,QT_TRANSLATE_NOOP("adm","_Boost (level multiplier):"),0.,10.,1.);
     diaElemToggle adaptive(adaptiveRGB,QT_TRANSLATE_NOOP("adm","_Adaptive RGB tonemappers"));
 
     diaMenuEntry gamutMapEntries[]={
@@ -62,6 +65,8 @@ int DIA_getHDRParams( uint32_t * toneMappingMethod, float * saturationAdjust, fl
 
     if(diaFactoryRun("HDR tone mapping",NB_ELEMS,elems))
     {
+        *saturationAdjust = dSaturationAdjust;
+        *boostAdjust = dBoostAdjust;
         return 1;
     }
     return 0;

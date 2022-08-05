@@ -582,7 +582,9 @@ std::string currentSdlDriver=getSdlDriverName();
             //,{2,    QT_TRANSLATE_NOOP("adm","TODO"),NULL}
         };
         diaElemMenu menuToneMapHDR(&toneMappingHDR,QT_TRANSLATE_NOOP("adm","Default _tone mapping method:"),NB_ITEMS(toneMapEntries),toneMapEntries);
-        diaElemFloatResettable floatTargetLumHDR(&targetLumHDR,QT_TRANSLATE_NOOP("adm","Target peak luminance (nits):"),0.,1000.,DEFAULT_TARGET_LUMINANCE_HDR);
+
+        ELEM_TYPE_FLOAT dTargetLumHDR = targetLumHDR;
+        diaElemFloatResettable floatTargetLumHDR(&dTargetLumHDR,QT_TRANSLATE_NOOP("adm","Target peak luminance (nits):"),0.,1000.,DEFAULT_TARGET_LUMINANCE_HDR);
         diaMenuEntry outOfGamutEntries[] = {
              {0,    QT_TRANSLATE_NOOP("adm","Clipping"),NULL}
             ,{1,    QT_TRANSLATE_NOOP("adm","Compression"),NULL}
@@ -845,6 +847,7 @@ std::string currentSdlDriver=getSdlDriverName();
 
             // HDR
             prefs->set(HDR_TONEMAPPING, toneMappingHDR);
+            targetLumHDR = dTargetLumHDR;
             prefs->set(HDR_TARGET_LUMINANCE, targetLumHDR);
             prefs->set(HDR_OUT_OF_GAMUT_HANDLING, outOfGamutHDR);
 

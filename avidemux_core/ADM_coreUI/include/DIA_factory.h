@@ -55,7 +55,7 @@ typedef enum
 }elemEnum;
 typedef void ADM_FAC_CALLBACK(void *cookie);
 
-#define ELEM_TYPE_FLOAT float
+#define ELEM_TYPE_FLOAT double
 
 /*********************************************/
 class ADM_COREUI6_EXPORT diaElem
