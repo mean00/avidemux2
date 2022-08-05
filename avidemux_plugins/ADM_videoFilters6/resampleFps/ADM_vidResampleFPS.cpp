@@ -429,7 +429,7 @@ again:
 bool resampleFps::configure(void)
 {
 
-    float f=configuration.newFpsNum; 
+    ELEM_TYPE_FLOAT f=configuration.newFpsNum;
     f/=configuration.newFpsDen;
 
 ADM_assert(nbPredefined == 6);

@@ -171,7 +171,8 @@ diaMenuEntry rdE[]={
 
         FFcodecSettings *conf=&Flv1Settings;
 
-#define PX(x) &(conf->lavcSettings.x)
+#define LAVS(x) (conf->lavcSettings.x)
+#define PX(x) &LAVS(x)
 
          diaElemBitrate   bitrate(&(Flv1Settings.params),NULL);
          diaElemUInteger  qminM(PX(qmin),QT_TRANSLATE_NOOP("flv1","Mi_n. quantizer:"),1,31);
@@ -179,10 +180,13 @@ diaMenuEntry rdE[]={
          diaElemUInteger  qdiffM(PX(max_qdiff),QT_TRANSLATE_NOOP("flv1","Max. quantizer _difference:"),1,31);
          diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TRANSLATE_NOOP("flv1","_Trellis quantization"));
          diaElemUInteger filetol(PX(vratetol),QT_TRANSLATE_NOOP("flv1","_Filesize tolerance (kb):"),0,100000);
-         
-         diaElemFloat    qzComp(PX(qcompress),QT_TRANSLATE_NOOP("flv1","_Quantizer compression:"),0,1);
-         diaElemFloat    qzBlur(PX(qblur),QT_TRANSLATE_NOOP("flv1","Quantizer _blur:"),0,1);
-         
+
+        ELEM_TYPE_FLOAT dqc = LAVS(qcompress);
+        ELEM_TYPE_FLOAT dqb = LAVS(qblur);
+
+        diaElemFloat    qzComp(&dqc,QT_TRANSLATE_NOOP("flv1","_Quantizer compression:"),0,1);
+        diaElemFloat    qzBlur(&dqb,QT_TRANSLATE_NOOP("flv1","Quantizer _blur:"),0,1);
+
         diaElemUInteger GopSize(PX(gop_size),QT_TRANSLATE_NOOP("flv1","_Gop Size:"),1,500); 
           /* First Tab : encoding mode */
         diaElem *diamode[]={&GopSize,&bitrate};
@@ -201,6 +205,8 @@ diaMenuEntry rdE[]={
          diaElemTabs *tabs[]={&tabMode,&tabQz,&tabRC};
         if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("flv1","libavcodec FLV1 configuration"),3,tabs))
         {
+          LAVS(qcompress) = dqc;
+          LAVS(qblur) = dqb;
           return true;
         }
          return false;

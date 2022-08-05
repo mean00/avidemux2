@@ -296,7 +296,8 @@ diaMenuEntry foE[]={
 
         mpeg2_encoder *conf=&Mp2Settings;
 
-#define PX(x) &(conf->lavcSettings.x)
+#define LAVS(x) (conf->lavcSettings.x)
+#define PX(x) &LAVS(x)
 
          diaElemBitrate   bitrate(&(Mp2Settings.params),NULL);
 
@@ -317,10 +318,13 @@ diaMenuEntry foE[]={
          diaElemMenu     arM(&(widescreen),QT_TRANSLATE_NOOP("ffmpeg2","Aspect ratio:"),2,arE);
          diaElemMenu     matrixM(&(Mp2Settings.matrix),QT_TRANSLATE_NOOP("ffmpeg2","Matrices:"),MPEG2_MATRIX_LAST,matrixE);
          diaElemUInteger filetol(PX(vratetol),QT_TRANSLATE_NOOP("ffmpeg2","_Filesize tolerance (kb):"),0,100000);
-         
-         diaElemFloat    qzComp(PX(qcompress),QT_TRANSLATE_NOOP("ffmpeg2","_Quantizer compression:"),0,1);
-         diaElemFloat    qzBlur(PX(qblur),QT_TRANSLATE_NOOP("ffmpeg2","Quantizer _blur:"),0,1);
-         
+
+         ELEM_TYPE_FLOAT dqc = LAVS(qcompress);
+         ELEM_TYPE_FLOAT dqb = LAVS(qblur);
+
+         diaElemFloat    qzComp(&dqc,QT_TRANSLATE_NOOP("ffmpeg2","_Quantizer compression:"),0,1);
+         diaElemFloat    qzBlur(&dqb,QT_TRANSLATE_NOOP("ffmpeg2","Quantizer _blur:"),0,1);
+
         diaElemUInteger GopSize(PX(gop_size),QT_TRANSLATE_NOOP("ffmpeg2","_Gop Size:"),1,30); 
 
         diaElemMenu     interlaced(&(iinterlaced),QT_TRANSLATE_NOOP("ffmpeg2","_Interlaced:"),2,interE);
@@ -353,9 +357,11 @@ diaMenuEntry foE[]={
          diaElemTabs *tabs[]={&tabMode,&tabAdv,&tabInter,&tabQz,&tabRC};
         if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("ffmpeg2","libavcodec MPEG-2 configuration"),5,tabs))
         {
-          conf->lavcSettings.widescreen= widescreen;
-          conf->lavcSettings.interlaced= iinterlaced;
-          conf->lavcSettings.bff= bff;
+          LAVS(widescreen) = widescreen;
+          LAVS(interlaced) = iinterlaced;
+          LAVS(bff) = bff;
+          LAVS(qcompress) = dqc;
+          LAVS(qblur) = dqb;
           return true;
         }
          return false;

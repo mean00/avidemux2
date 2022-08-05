@@ -214,7 +214,8 @@ diaMenuEntry threads[]={
 
         FFcodecSettings *conf=&Mp4Settings;
 
-#define PX(x) &(conf->lavcSettings.x)
+#define LAVS(x) (conf->lavcSettings.x)
+#define PX(x) &LAVS(x)
 
          diaElemBitrate   bitrate(&(Mp4Settings.params),NULL);
          diaElemMenu      threadM(PX(MultiThreaded),QT_TRANSLATE_NOOP("ffmpeg4","Threading"),4,threads);
@@ -234,8 +235,11 @@ diaMenuEntry threads[]={
 
          diaElemUInteger filetol(PX(vratetol),QT_TRANSLATE_NOOP("ffmpeg4","_Filesize tolerance (kb):"),0,100000);
 
-         diaElemFloat    qzComp(PX(qcompress),QT_TRANSLATE_NOOP("ffmpeg4","_Quantizer compression:"),0,1);
-         diaElemFloat    qzBlur(PX(qblur),QT_TRANSLATE_NOOP("ffmpeg4","Quantizer _blur:"),0,1);
+         ELEM_TYPE_FLOAT dqc = LAVS(qcompress);
+         ELEM_TYPE_FLOAT dqb = LAVS(qblur);
+
+         diaElemFloat    qzComp(&dqc,QT_TRANSLATE_NOOP("ffmpeg4","_Quantizer compression:"),0,1);
+         diaElemFloat    qzBlur(&dqb,QT_TRANSLATE_NOOP("ffmpeg4","Quantizer _blur:"),0,1);
 
         diaElemUInteger GopSize(PX(gop_size),QT_TRANSLATE_NOOP("ffmpeg4","_Gop Size:"),1,500);
           /* First Tab : encoding mode */
@@ -263,6 +267,8 @@ diaMenuEntry threads[]={
          diaElemTabs *tabs[]={&tabMode,&tabME,&tabQz,&tabRC};
         if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("ffmpeg4","libavcodec MPEG-4 configuration"),4,tabs))
         {
+          LAVS(qcompress) = dqc;
+          LAVS(qblur) = dqb;
           return true;
         }
          return false;

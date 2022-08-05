@@ -85,28 +85,44 @@ bool         vidColorYuv::configure(void)
 //               ELEM_TYPE_FLOAT max,const char *tip=NULL, int decimals = 2);
 
 // --- Tab 2 ----
+    ELEM_TYPE_FLOAT y_gainf, y_brightf, y_gammaf, y_contrastf;
 
-    diaElemFloat        yGain(PX(y_gain),QT_TRANSLATE_NOOP("coloryuv","Y gain"),0,256*3,NULL,3);
-    diaElemFloat        yBright(PX(y_bright),QT_TRANSLATE_NOOP("coloryuv","Y Brightness"),0,256*3,NULL,3);
-    diaElemFloat        yGamma(PX(y_gamma),QT_TRANSLATE_NOOP("coloryuv","Y Gamma"),0,256*2,NULL,3);
-    diaElemFloat        yContrast(PX(y_contrast),QT_TRANSLATE_NOOP("coloryuv","Y Contrast"),-256*3,256*3,NULL,3);
+    y_gainf = param.y_gain;
+    y_brightf = param.y_bright;
+    y_gammaf = param.y_gamma;
+    y_contrastf = param.y_contrast;
+
+    diaElemFloat        yGain(&y_gainf,QT_TRANSLATE_NOOP("coloryuv","Y gain"),0,256*3,NULL,3);
+    diaElemFloat        yBright(&y_brightf,QT_TRANSLATE_NOOP("coloryuv","Y Brightness"),0,256*3,NULL,3);
+    diaElemFloat        yGamma(&y_gammaf,QT_TRANSLATE_NOOP("coloryuv","Y Gamma"),0,256*2,NULL,3);
+    diaElemFloat        yContrast(&y_contrastf,QT_TRANSLATE_NOOP("coloryuv","Y Contrast"),-256*3,256*3,NULL,3);
  
     diaElem *dia2[]={&yGain,&yBright,&yGamma,&yContrast};
 // --- Tab 3 ----
+    ELEM_TYPE_FLOAT u_gainf, u_brightf, u_contrastf;
 
-    diaElemFloat        uGain(PX(u_gain),QT_TRANSLATE_NOOP("coloryuv","U gain"),0,256*3,NULL,3);
-    diaElemFloat        uBright(PX(u_bright),QT_TRANSLATE_NOOP("coloryuv","U Brightness"),0,256*3,NULL,3);
+    u_gainf = param.u_gain;
+    u_brightf = param.u_bright;
+    u_contrastf = param.u_contrast;
+
+    diaElemFloat        uGain(&u_gainf,QT_TRANSLATE_NOOP("coloryuv","U gain"),0,256*3,NULL,3);
+    diaElemFloat        uBright(&u_brightf,QT_TRANSLATE_NOOP("coloryuv","U Brightness"),0,256*3,NULL,3);
     //diaElemFloat        uGamma(PX(u_gamma),QT_TRANSLATE_NOOP("coloryuv","U Gamma"),0,100,NULL,3);
-    diaElemFloat        uContrast(PX(u_contrast),QT_TRANSLATE_NOOP("coloryuv","U Contrast"),-256*3,256*3,NULL,3);
+    diaElemFloat        uContrast(&u_contrastf,QT_TRANSLATE_NOOP("coloryuv","U Contrast"),-256*3,256*3,NULL,3);
  
     diaElem *dia3[]={&uGain,&uBright,&uContrast};
 
 // --- Tab 4 ----
+    ELEM_TYPE_FLOAT v_gainf, v_brightf, v_contrastf;
 
-    diaElemFloat        vGain(PX(v_gain),QT_TRANSLATE_NOOP("coloryuv","V gain"),0,256*3,NULL,3);
-    diaElemFloat        vBright(PX(v_bright),QT_TRANSLATE_NOOP("coloryuv","V Brightness"),0,256*3,NULL,3);
+    v_gainf = param.v_gain;
+    v_brightf = param.v_bright;
+    v_contrastf = param.v_contrast;
+
+    diaElemFloat        vGain(&v_gainf,QT_TRANSLATE_NOOP("coloryuv","V gain"),0,256*3,NULL,3);
+    diaElemFloat        vBright(&v_brightf,QT_TRANSLATE_NOOP("coloryuv","V Brightness"),0,256*3,NULL,3);
     //diaElemFloat        vGamma(PX(u_gamma),QT_TRANSLATE_NOOP("coloryuv","V Gamma"),0,100,NULL,3);
-    diaElemFloat        vContrast(PX(v_contrast),QT_TRANSLATE_NOOP("coloryuv","V Contrast"),-256*3,256*3,NULL,3);
+    diaElemFloat        vContrast(&v_contrastf,QT_TRANSLATE_NOOP("coloryuv","V Contrast"),-256*3,256*3,NULL,3);
  
     diaElem *dia4[]={&vGain,&vBright,&vContrast};
 //
@@ -118,6 +134,19 @@ bool         vidColorYuv::configure(void)
     diaElemTabs *tabs[]={&tab1,&tab2,&tab3,&tab4};
     if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("coloryuv","colorYuv"),4,tabs))
     {
+        param.y_gain = y_gainf;
+        param.y_bright = y_brightf;
+        param.y_gamma = y_gammaf;
+        param.y_contrast = y_contrastf;
+
+        param.u_gain = u_gainf;
+        param.u_bright = u_brightf;
+        param.u_contrast = u_contrastf;
+
+        param.v_gain = v_gainf;
+        param.v_bright = v_brightf;
+        param.v_contrast = v_contrastf;
+
         r=true;
     }
 
