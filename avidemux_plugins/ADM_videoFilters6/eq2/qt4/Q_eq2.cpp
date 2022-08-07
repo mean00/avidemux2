@@ -66,7 +66,7 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
                    ui.horizontalSlider##x->setContextMenuPolicy(Qt::ActionsContextMenu);\
                    QAction *reset##x = new QAction(rst,this);\
                    ui.horizontalSlider##x->addAction(reset##x);\
-                   signalMapper->setMapping(reset##x,ui.horizontalSlider##x);\
+                   signalMapper->setMapping(reset##x,(QObject *)ui.horizontalSlider##x);\
                    connect( reset##x,SIGNAL(triggered(bool)),signalMapper,SLOT(map()));
     SPINNER(Contrast);
     SPINNER(Brightness);
