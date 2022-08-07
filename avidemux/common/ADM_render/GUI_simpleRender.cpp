@@ -11,6 +11,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_inttype.h"
+
 #include <QPainter>
 #include <QPaintEngine>
 
