@@ -631,6 +631,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
 
         if(!gotVideoPacket) break;
 
+        ret = true; // ignore possible errors from writing audio packets
         if(out.pts==ADM_NO_PTS)
         {
             ADM_warning("No PTS information for frame %" PRIu32"\n",written);
