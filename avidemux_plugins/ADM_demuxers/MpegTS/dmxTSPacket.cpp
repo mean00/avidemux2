@@ -51,11 +51,13 @@ static int score(fileParser *parser, int nbTry, int extraData)
 {
 int count=0;
 int round=nbTry;
+    if(parser->read8i()!=TS_MARKER)
+        return 0;
     while(round--)
     {
+        if(!parser->forward(TS_PACKET_LEN-1+extraData)) break;
         if(parser->read8i()!=TS_MARKER) break;
         count++;
-        parser->forward(TS_PACKET_LEN-1+extraData);
     }
     return count;
 }
@@ -96,17 +98,27 @@ bool tsPacket::open(const char *filenames, int append)
             return true;
         }
         uint64_t startPos=getPos()-1;
+        printf("[tsPacket::open] Sync byte found at offset %" PRIu64"\n",startPos);
         int score1,score2;
 
         setPos(startPos);
-        score1=score(_file,20,0);
+#define NB_CONTIGUOUS_PACKETS 20
+#define SYNC_THRESHOLD 2 /* require at least 2 consecutive packets */
+        score1=score(_file,NB_CONTIGUOUS_PACKETS,0);
         setPos(startPos);
-        score2=score(_file,20,4);
-        printf("[TsPacket] Score : 188:%d, 192:%d out of 20\n",score1,score2);
-        if(score1==1 && score2==1)
+        score2=score(_file,NB_CONTIGUOUS_PACKETS,4);
+        printf("[TsPacket] Score : 188:%d, 192:%d out of %d\n",score1,score2,NB_CONTIGUOUS_PACKETS);
+        if(!score1 && !score2)
         {
             startPos++;
             ADM_info("Probably bogus sync byte detection, retrying at offset %" PRIu64"\n",startPos);
+            setPos(startPos);
+            continue;
+        }
+        if(score1 < SYNC_THRESHOLD && score2 < SYNC_THRESHOLD)
+        {
+            startPos++;
+            ADM_info("Unconclusive results, retrying at offset %" PRIu64"\n",startPos);
             setPos(startPos);
             continue;
         }
@@ -118,6 +130,7 @@ bool tsPacket::open(const char *filenames, int append)
         {
             printf("[TsPacket] Probably TS1 (188)...\n");
         }
+        printf("[tsPacket::open] Sync established at offset %" PRIu64"\n",startPos);
         break;
     }
     setPos(0);
