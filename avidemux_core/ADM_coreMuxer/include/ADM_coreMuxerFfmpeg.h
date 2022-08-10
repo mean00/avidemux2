@@ -36,7 +36,6 @@ extern "C"
 class ADM_COREMUXER6_EXPORT muxerFFmpeg : public ADM_muxer
 {
 protected:
-        bool    writePacket(AVPacket *pkt);
         virtual bool muxerRescaleVideoTime(uint64_t *time)
         {
              AVRational *scale=&(video_st->time_base);
@@ -68,9 +67,11 @@ protected:
 protected:
         AVOutputFormat *fmt;
         AVFormatContext *oc;
-        int             roundup;
         AVStream *audio_st[ADM_MAX_AUDIO_STREAM];
         AVStream *video_st;
+        AVPacket *pkt;
+        int roundup;
+        int lavfError;
         double audio_pts, video_pts;
 
         bool closeMuxer(void);

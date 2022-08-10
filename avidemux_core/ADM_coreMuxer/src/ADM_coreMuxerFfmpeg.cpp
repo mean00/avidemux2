@@ -56,21 +56,6 @@ bool ffmpuxerSetExtradata(AVCodecParameters *params, int size, const uint8_t *da
 }
 
 /**
-    \fn writePacket
-*/
-bool muxerFFmpeg::writePacket(AVPacket *pkt)
-{
-#if 0
-        printf("Track :%d size :%d PTS:%"PRId64" DTS:%"PRId64"\n",
-                    pkt->stream_index,pkt->size,pkt->pts,pkt->dts);
-#endif
-    int ret =av_write_frame(oc, pkt);
-    if(ret)
-        return false;
-    return true;
-}
-
-/**
     \fn muxerFFmpeg
 */
 muxerFFmpeg::muxerFFmpeg()
@@ -80,9 +65,11 @@ muxerFFmpeg::muxerFFmpeg()
     for(int i=0;i<ADM_MAX_AUDIO_STREAM;i++)
         audio_st[i]=NULL;
     video_st=NULL;
+    pkt=NULL;
     audioDelay=0;
     initialized=false;
     roundup=0;
+    lavfError=0;
 }
 /**
     \fn closeMuxer
@@ -102,7 +89,7 @@ bool muxerFFmpeg::closeMuxer()
         avformat_free_context(oc);
         oc=NULL;
     }
-    
+    av_packet_free(&pkt);
     for(int i=0;i<ADM_MAX_AUDIO_STREAM;i++)
     {
         audio_st[i]=NULL;
@@ -179,6 +166,15 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 		printf("[FF] new stream failed\n");
 		return false;
 	}
+    if(!pkt)
+    {
+        pkt = av_packet_alloc();
+        if(!pkt)
+        {
+            printf("[muxerFFmpeg::initVideo] Cannot allocate AVPacket\n");
+            return false;
+        }
+    }
     AVCodecParameters *par;
         par = video_st->codecpar;
         par->sample_aspect_ratio.num=1;
@@ -319,7 +315,8 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
             }
         }
 
-        printf("[FF] Video initialized\n");
+    lavfError = 0;
+    printf("[muxerFFmpeg::initVideo] Video initialized\n");
 
     return true;
 }
@@ -484,9 +481,8 @@ public:
 */
 bool muxerFFmpeg::saveLoop(const char *title)
 {
-
-
     printf("[FF] Saving\n");
+    ADM_assert(pkt);
     uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
     uint8_t *buffer=new uint8_t[bufSize];
     uint64_t rawDts;
@@ -593,7 +589,6 @@ bool muxerFFmpeg::saveLoop(const char *title)
                         if(audioTrack->dts>maxAudioDts) break; // This packet is in the future
                     }
                     // Write...
-                    AVPacket pkt;
                     uint64_t rescaledDts;
                     rescaledDts=audioTrack->dts;
                     if(rescaledDts==ADM_NO_PTS)
@@ -605,19 +600,28 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     muxerRescaleAudioTime(audio,&rescaledDts,a->getInfo()->frequency);
                    //printf("[FF] A: Video frame  %d, audio Dts :%"PRIu64" size :%"PRIu32" nbSample : %"PRIu32" rescaled:%"PRIu64"\n",
                      //               written,audioTrack->dts,audioTrack->size,audioTrack->samples,rescaledDts);
-                    av_init_packet(&pkt);
+                    av_packet_unref(pkt);
 
-                    pkt.dts=rescaledDts;
-                    pkt.pts=rescaledDts;
-                    pkt.stream_index=1+audio;
-                    pkt.data= audioTrack->buffer;
-                    pkt.size= audioTrack->size;
-                    pkt.flags |= AV_PKT_FLAG_KEY; // Assume all audio are keyframe, which is slightly wrong
-                    ret =writePacket( &pkt);
+                    pkt->dts = rescaledDts;
+                    pkt->pts = rescaledDts;
+                    pkt->stream_index = 1+audio;
+                    pkt->data = audioTrack->buffer;
+                    pkt->size = audioTrack->size;
+                    pkt->flags |= AV_PKT_FLAG_KEY; // Assume all audio are keyframe, which is slightly wrong
+
+                    lavfError = av_write_frame(oc,pkt);
+
                     audioTrack->present=false; // consumed
-                    if(false==ret)
+                    if(lavfError)
                     {
-                        ADM_warning("[FF]Error writing audio packet\n");
+                        ret = false;
+                        if(lavfError < 0)
+                        {
+                            char er[AV_ERROR_MAX_STRING_SIZE]={0};
+                            av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, lavfError);
+                            printf("[muxerFFmpeg::saveLoop] Error %d (%s) writing audio packet\n",lavfError,er);
+                        }
+                        lavfError = 0; // errors from writing audio packets are nonfatal
                         break;
                     }
                    // printf("[FF] A:%"PRIu32" ms vs V: %"PRIu32" ms\n",(uint32_t)audioTrack->dts/1000,(uint32_t)(lastVideoDts+videoIncrement)/1000);
@@ -656,46 +660,62 @@ bool muxerFFmpeg::saveLoop(const char *title)
         aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,out.dts);
         aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%" PRIu64" Dts:%" PRIu64"\n",out.len,out.flags,out.pts,out.dts);
 
-        AVPacket pkt;
-
-        av_init_packet(&pkt);
-        pkt.dts=out.dts;
+        av_packet_unref(pkt);
+        pkt->dts = out.dts;
         if(vStream->providePts()==true)
         {
-            pkt.pts=out.pts;
+            pkt->pts = out.pts;
         }else
         {
-            pkt.pts=pkt.dts;
+            pkt->pts = pkt->dts;
         }
-        pkt.stream_index=0;
-        pkt.data = buffer;
-        pkt.size = out.len;
+        pkt->stream_index = 0;
+        pkt->data = buffer;
+        pkt->size = out.len;
         if(out.flags & 0x10) // FIXME AVI_KEY_FRAME
-            pkt.flags |= AV_PKT_FLAG_KEY;
-        ret = writePacket( &pkt);
+            pkt->flags |= AV_PKT_FLAG_KEY;
+
+        lavfError = av_write_frame(oc,pkt);
+
         aprintf("[FF]Frame:%u, DTS=%08lu PTS=%08lu\n",written,out.dts,out.pts);
-        if(false==ret)
+        if(lavfError)
         {
-            printf("[FF]Error writing video packet\n");
+            ret = false;
+            if(lavfError < 0)
+            {
+                char er[AV_ERROR_MAX_STRING_SIZE]={0};
+                av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, lavfError);
+                printf("[muxerFFmpeg::saveLoop] Error %d (%s) writing audio packet\n",lavfError,er);
+            }
             break;
         }
         if(!written)
         {
             audioDelay=vStream->getVideoDelay();
-            printf("[muxerFFmpeg::initVideo] Final audio delay: %" PRIu64" ms\n",audioDelay/1000);
+            printf("[muxerFFmpeg::saveLoop] Final audio delay: %" PRIu64" ms\n",audioDelay/1000);
         }
         written++;
     }
     delete [] buffer;
     if(false==ret)
     {
-        char msg[512+1];
+        char msg[512 + AV_ERROR_MAX_STRING_SIZE];
         snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
             "The saved video is incomplete. "
             "The error occured at %s (%d\%). "
             "This may happen as result of invalid time stamps in the video."),
             ADM_us2plain(lastVideoDts),
             (int)(lastVideoDts*100/videoDuration));
+        if(lavfError < 0)
+        { // TODO: Replace hardcoded guess above with a more sensible solution.
+            char *s = msg;
+            s += strlen(msg);
+            int left = 512 - strlen(msg);
+            left += AV_ERROR_MAX_STRING_SIZE;
+            char er[AV_ERROR_MAX_STRING_SIZE]={0};
+            av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, lavfError);
+            snprintf(s,left,"\n\nError %d (\"%s\")",lavfError,er);
+        }
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Too short"),msg);
         result=false;
     }
