@@ -16,7 +16,16 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#pragma once
+
+// The following directives must be kept safe from the header guard
+// to make sure we can always override definitions from Qt headers.
+#undef QT_TR_NOOP
+#undef QT_TRANSLATE_NOOP
+#define QT_TR_NOOP(x) ADM_translate("adm",x)
+#define QT_TRANSLATE_NOOP(a,x) ADM_translate(a,x)
+
+#ifndef ADM_DEFAULT_H
+#define ADM_DEFAULT_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -67,10 +76,6 @@ ADM_CORE6_EXPORT const char *ADM_translate(const char *domain, const char *strin
         #define admAlloca alloca
         #define ADM_PLUGIN_EXPORT 
 #endif
-#undef QT_TR_NOOP
-#undef QT_TRANSLATE_NOOP
-#define QT_TR_NOOP(x) ADM_translate("adm",x)
-#define QT_TRANSLATE_NOOP(a,x) ADM_translate(a,x)
 
 #ifdef __cplusplus
 
@@ -89,3 +94,4 @@ public:
     uint8_t *data;
 };
 #endif
+#endif /* ADM_DEFAULT_H */
