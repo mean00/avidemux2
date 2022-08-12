@@ -61,8 +61,8 @@ namespace soundtouch
 
     /// Activate these undef's to overrule the possible sampletype 
     /// setting inherited from some other header file:
-    //#undef SOUNDTOUCH_INTEGER_SAMPLES
-    //#undef SOUNDTOUCH_FLOAT_SAMPLES
+    #undef SOUNDTOUCH_INTEGER_SAMPLES
+    #undef SOUNDTOUCH_FLOAT_SAMPLES
 
     /// If following flag is defined, always uses multichannel processing 
     /// routines also for mono and stero sound. This is for routine testing 
@@ -169,7 +169,7 @@ namespace soundtouch
 }
 
 // define ST_NO_EXCEPTION_HANDLING switch to disable throwing std exceptions:
-// #define ST_NO_EXCEPTION_HANDLING    1
+#define ST_NO_EXCEPTION_HANDLING    1
 #ifdef ST_NO_EXCEPTION_HANDLING
     // Exceptions disabled. Throw asserts instead if enabled.
     #include "ADM_default.h"

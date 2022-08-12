@@ -1,6 +1,3 @@
-/* Use Float as Sample type */
-#define SOUNDTOUCH_FLOAT_SAMPLES 1
-
-#define ST_NO_EXCEPTION_HANDLING
-/* Use ARM NEON extension */
-/* #undef SOUNDTOUCH_USE_NEON */
+// autotools configuration step replaces this file with a configured version.
+// this empty file stub is provided to avoid error about missing include file
+// when not using autotools build
