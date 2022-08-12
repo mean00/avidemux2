@@ -14,6 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_inttype.h" /* must be included prior to Qt headers for VC++ */
 #include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
 
 #include "ADM_coreD3DApi.h"

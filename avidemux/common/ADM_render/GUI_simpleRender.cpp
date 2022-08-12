@@ -11,6 +11,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_inttype.h" /* must be included prior to Qt headers for VC++ */
+
 #include <QPainter>
 #include <QPaintEngine>
 
