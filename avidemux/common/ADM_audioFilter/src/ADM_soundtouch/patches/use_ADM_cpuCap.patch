@@ -1,0 +1,119 @@
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIRFilter.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIRFilter.cpp
+index 260003e1f..383bdc50d 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIRFilter.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/FIRFilter.cpp
+@@ -43,7 +43,8 @@
+ #include <math.h>
+ #include <stdlib.h>
+ #include "FIRFilter.h"
+-#include "cpu_detect.h"
++
++#include "ADM_default.h"
+ 
+ using namespace soundtouch;
+ 
+@@ -298,15 +299,11 @@ void * FIRFilter::operator new(size_t s)
+ 
+ FIRFilter * FIRFilter::newInstance()
+ {
+-    uint uExtensions;
+-
+-    uExtensions = detectCPUextensions();
+-
+     // Check if MMX/SSE instruction set extensions supported by CPU
+ 
+ #ifdef SOUNDTOUCH_ALLOW_MMX
+     // MMX routines available only with integer sample types
+-    if (uExtensions & SUPPORT_MMX)
++    if (CpuCaps::hasMMX())
+     {
+         return ::new FIRFilterMMX;
+     }
+@@ -314,7 +311,7 @@ FIRFilter * FIRFilter::newInstance()
+ #endif // SOUNDTOUCH_ALLOW_MMX
+ 
+ #ifdef SOUNDTOUCH_ALLOW_SSE
+-    if (uExtensions & SUPPORT_SSE)
++    if (CpuCaps::hasSSE())
+     {
+         // SSE support
+         return ::new FIRFilterSSE;
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/SoundTouch.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/SoundTouch.cpp
+index 1618884cf..11b7a50a0 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/SoundTouch.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/SoundTouch.cpp
+@@ -71,7 +71,6 @@
+ #include "SoundTouch.h"
+ #include "TDStretch.h"
+ #include "RateTransposer.h"
+-#include "cpu_detect.h"
+ 
+ using namespace soundtouch;
+     
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/TDStretch.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/TDStretch.cpp
+index 243f7cc30..ea5c966ca 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/TDStretch.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/TDStretch.cpp
+@@ -47,9 +47,10 @@
+ #include <float.h>
+ 
+ #include "STTypes.h"
+-#include "cpu_detect.h"
+ #include "TDStretch.h"
+ 
++#include "ADM_default.h"
++
+ using namespace soundtouch;
+ 
+ #define max(x, y) (((x) > (y)) ? (x) : (y))
+@@ -769,24 +770,19 @@ void * TDStretch::operator new(size_t s)
+ 
+ TDStretch * TDStretch::newInstance()
+ {
+-    uint uExtensions;
+-
+-    uExtensions = detectCPUextensions();
+-
+     // Check if MMX/SSE instruction set extensions supported by CPU
+ 
+ #ifdef SOUNDTOUCH_ALLOW_MMX
+     // MMX routines available only with integer sample types
+-    if (uExtensions & SUPPORT_MMX)
++    if (CpuCaps::hasMMX())
+     {
+         return ::new TDStretchMMX;
+     }
+     else
+ #endif // SOUNDTOUCH_ALLOW_MMX
+ 
+-
+ #ifdef SOUNDTOUCH_ALLOW_SSE
+-    if (uExtensions & SUPPORT_SSE)
++    if (CpuCaps::hasSSE())
+     {
+         // SSE support
+         return ::new TDStretchSSE;
+diff --git a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/sse_optimized.cpp b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/sse_optimized.cpp
+index c17f44395..80b737078 100644
+--- a/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/sse_optimized.cpp
++++ b/avidemux/common/ADM_audioFilter/src/ADM_soundtouch/sse_optimized.cpp
+@@ -44,7 +44,6 @@
+ //
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+-#include "cpu_detect.h"
+ #include "STTypes.h"
+ 
+ using namespace soundtouch;
+diff --git a/avidemux/common/ADM_audioFilter/src/CMakeLists.txt b/avidemux/common/ADM_audioFilter/src/CMakeLists.txt
+index 6f2458b41..f0a908670 100644
+--- a/avidemux/common/ADM_audioFilter/src/CMakeLists.txt
++++ b/avidemux/common/ADM_audioFilter/src/CMakeLists.txt
+@@ -24,7 +24,6 @@ ADM_libsamplerate/src_linear.cpp
+ ADM_libsamplerate/src_sinc.cpp 
+ ADM_libsamplerate/src_zoh.cpp
+ ADM_soundtouch/AAFilter.cpp
+-ADM_soundtouch/cpu_detect_x86.cpp
+ ADM_soundtouch/FIFOSampleBuffer.cpp
+ ADM_soundtouch/FIRFilter.cpp
+ ADM_soundtouch/InterpolateCubic.cpp
