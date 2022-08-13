@@ -4,8 +4,8 @@
 
 #include "../zoom.h"
 
-int DIA_getZoomParams(const char *name, zoom *param, bool firstRun, ADM_coreVideoFilter *in)
+bool DIA_getZoomParams(const char *name, zoom *param, bool firstRun, ADM_coreVideoFilter *in)
 {
-	return 0;
+	return false;
 }
 
