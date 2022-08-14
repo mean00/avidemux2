@@ -24,6 +24,9 @@
 #include "GUI_accelRender.h"
 #include "GUI_simpleRender.h"
 
+#undef SIMPLE_RENDER_SWSCALE_RESIZE
+#undef SIMPLE_RENDER_TARGET_SIZE_IN_DEVICE_PIXELS
+
 extern void *MUI_getDrawWidget(void);
 
 
@@ -79,8 +82,13 @@ bool simpleRender::displayImage(ADMImage *pic)
 {
     scaler->convertImage(pic,videoBuffer);
     lock.lock();
+#ifdef SIMPLE_RENDER_SWSCALE_RESIZE
     int stride=ADM_IMAGE_ALIGN(displayWidth*4);
     myImage=QImage(videoBuffer,displayWidth,displayHeight,stride,QImage::Format_RGB32).copy(0,0,displayWidth,displayHeight);
+#else
+    int stride=ADM_IMAGE_ALIGN(imageWidth*4);
+    myImage=QImage(videoBuffer,imageWidth,imageHeight,stride,QImage::Format_RGB32).copy(0,0,imageWidth,imageHeight);
+#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5,5,0)
     myImage.setDevicePixelRatio(info.scalingFactor);
 #endif
@@ -109,15 +117,20 @@ bool simpleRender::cleanup(void)
 */
 bool simpleRender::allocateStuff(void)
 {
-        cleanup();
-        scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,displayWidth,displayHeight,
+    cleanup();
+#ifdef SIMPLE_RENDER_SWSCALE_RESIZE
+    scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,displayWidth,displayHeight,
             ADM_PIXFRMT_YV12,
-            IVERT
-        );
-        uint32_t sz=ADM_IMAGE_ALIGN(displayWidth*4);
-        sz*=displayHeight;
-        videoBuffer=new uint8_t[sz];
-        return true;
+            IVERT);
+    uint32_t sz=ADM_IMAGE_ALIGN(displayWidth*4);
+    sz*=displayHeight;
+#else
+    scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,imageWidth,imageHeight,ADM_PIXFRMT_YV12,IVERT);
+    uint32_t sz=ADM_IMAGE_ALIGN(imageWidth*4);
+    sz*=imageHeight;
+#endif
+    videoBuffer=new uint8_t[sz];
+    return true;
 }
 
 /**
@@ -128,11 +141,15 @@ bool simpleRender::changeZoom(float newZoom)
         ADM_info("changing zoom, simple render.\n");
         calcDisplayFromZoom(newZoom);
 #if QT_VERSION >= QT_VERSION_CHECK(5,5,0)
+  #ifdef SIMPLE_RENDER_TARGET_SIZE_IN_DEVICE_PIXELS
         displayWidth*=info.scalingFactor;
         displayHeight*=info.scalingFactor;
+  #endif
 #endif
         currentZoom=newZoom;
+#ifdef SIMPLE_RENDER_SWSCALE_RESIZE
         allocateStuff();
+#endif
         return true;
 }
 /**
@@ -143,8 +160,10 @@ bool simpleRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float z
     info=*window;
     baseInit(w,h,zoom);
 #if QT_VERSION >= QT_VERSION_CHECK(5,5,0)
+  #ifdef SIMPLE_RENDER_TARGET_SIZE_IN_DEVICE_PIXELS
     displayWidth*=info.scalingFactor;
     displayHeight*=info.scalingFactor;
+  #endif
 #endif
     ADM_info("init, simple render. w=%d, h=%d,zoom=%.4f\n",(int)w,(int)h,zoom);
     allocateStuff();
