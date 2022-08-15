@@ -24,8 +24,8 @@
 #include "GUI_accelRender.h"
 #include "GUI_simpleRender.h"
 
-#undef SIMPLE_RENDER_SWSCALE_RESIZE
-#undef SIMPLE_RENDER_TARGET_SIZE_IN_DEVICE_PIXELS
+#define SIMPLE_RENDER_SWSCALE_RESIZE
+#define SIMPLE_RENDER_TARGET_SIZE_IN_DEVICE_PIXELS
 
 extern void *MUI_getDrawWidget(void);
 
