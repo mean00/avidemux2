@@ -603,12 +603,17 @@ void ADM_flyDialogRgb::resetScaler(void)
     uint32_t displayW, displayH;
     _canvas->getDisplaySize(&displayW, &displayH);
     
-    rgb2rgb=new ADMColorScalerFull(_algo, 
-                            _w,
-                            _h,
-                            displayW,
-                            displayH,
-                            ADM_PIXFRMT_RGB32A,ADM_PIXFRMT_RGB32A);
+#ifdef ADN_FLYRGB_USE_FASTER_RGB2RGB_SCALER    
+    rgb2rgb=new ADMRGB32Scaler(
+#else
+    rgb2rgb=new ADMColorScalerFull(
+#endif            
+                                _algo, 
+                                _w,
+                                _h,
+                                displayW,
+                                displayH,
+                                ADM_PIXFRMT_RGB32A,ADM_PIXFRMT_RGB32A);
 }
 /**
  * 

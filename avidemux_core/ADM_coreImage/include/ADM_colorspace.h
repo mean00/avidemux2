@@ -79,6 +79,42 @@ public:
 };
 
 
+#include "ADM_threads.h"
+
+/**
+    \class ADMColorScaler
+*/
+class ADM_COREIMAGE6_EXPORT ADMRGB32Scaler
+{
+  protected:
+    void                *context[3];
+    ADMColorScaler_algo algo;
+    uint32_t            srcWidth,srcHeight;
+    uint32_t            dstWidth,dstHeight;
+    pthread_t           worker_threads[3];
+    uint8_t             *inputPlanes[3];
+    uint8_t             *outputPlanes[3];
+    typedef struct {
+        void            *context;
+        uint8_t         *sourceData;
+        uint8_t         *destData;
+        uint8_t         *iPlane;
+        uint8_t         *oPlane;
+        uint32_t        srcWidth,srcHeight;
+        uint32_t        dstWidth,dstHeight;
+    } worker_thread_arg;
+    worker_thread_arg   worker_thread_args[3];
+    
+    static void *       planeWorker(void *argptr);
+    void                cleanUp();
+  public :
+    
+                    ADMRGB32Scaler(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
+    bool            reset(ADMColorScaler_algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to);
+    bool            convert(uint8_t *sourceData, uint8_t *destData);
+                    ~ADMRGB32Scaler();
+};
+
 #endif
 //EOF
 
