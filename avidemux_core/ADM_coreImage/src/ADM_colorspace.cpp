@@ -504,4 +504,191 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
     return convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes);
 }
 
+
+
+// ADMRGB32Scaler
+// faster than libswscale rgb2rgb resizing, using libswscale XD
+// for use in ADM_flyDialogRgb
+// only support RGB32 format ("ADM_PIXFRMT_RGB32A")
+
+/**
+    \fn  ADMRGB32Scaler
+    \brief Constructor
+  @param w width
+  @param h height
+  @param from colorspace to convert from
+  @param to colorspace to concert to
+*/
+
+ADMRGB32Scaler::ADMRGB32Scaler(ADMColorScaler_algo algo,
+            int sw, int sh,
+            int dw, int dh,
+            ADM_pixelFormat from,ADM_pixelFormat to)
+{
+    for (int i=0; i<3; i++)
+    {
+        context[i]=NULL;
+        inputPlanes[i]=NULL;
+        outputPlanes[i]=NULL;
+    }
+    reset(algo,sw,sh,dw,dh,from,to);
+}
+/**
+    \fn  ~ADMRGB32Scaler
+    \brief Destructor
+*/
+ADMRGB32Scaler::~ADMRGB32Scaler()
+{
+    cleanUp();
+}
+
+/**
+    \fn cleanUp
+*/
+void ADMRGB32Scaler::cleanUp()
+{
+    for (int i=0; i<3; i++)
+    {
+        if(context[i])
+        {
+            sws_freeContext((SwsContext *)context[i]);
+            context[i]=NULL;
+        }
+        if (inputPlanes[i])
+        {
+            delete [] inputPlanes[i];
+            inputPlanes[i] = NULL;
+        }
+        if (outputPlanes[i])
+        {
+            delete [] outputPlanes[i];
+            outputPlanes[i] = NULL;
+        }
+    }    
+}
+
+/**
+    \fn reset
+*/
+bool  ADMRGB32Scaler::reset(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_pixelFormat from,ADM_pixelFormat to)
+{
+    cleanUp();
+    this->algo=algo;
+    int flags;
+    switch(algo)
+    {
+#define SETAL(x) case ADM_CS_##x: flags=SWS_##x;break;
+
+    SETAL(BILINEAR);
+    SETAL(FAST_BILINEAR);
+    SETAL(BICUBIC);
+    SETAL(LANCZOS);
+    SETAL(BICUBLIN);
+    SETAL(GAUSS);
+    SETAL(SINC);
+    SETAL(SPLINE);
+    SETAL(POINT);    // nearest neighbor
+    default: ADM_assert(0);
+    }
+#if 0 // this is gone, we need to patch av_get_cpu_flags directly now
+    {
+        FLAGS();
+    }
+#endif
+
+    srcWidth=sw;
+    srcHeight=sh;
+
+    dstWidth=dw;
+    dstHeight=dh;
+
+    ADM_assert(to == ADM_PIXFRMT_RGB32A);
+    ADM_assert(from == ADM_PIXFRMT_RGB32A);
+
+    for (int i=0; i<3; i++)
+    {
+        context[i]=(void *)sws_getContext(
+                            srcWidth,srcHeight,
+                            AV_PIX_FMT_GRAY8 ,
+                            dstWidth,dstHeight,
+                            AV_PIX_FMT_GRAY8,
+                            flags, NULL, NULL,NULL);
+        inputPlanes[i]  = new uint8_t [ADM_IMAGE_ALIGN(srcWidth)*srcHeight];
+        outputPlanes[i] = new uint8_t [ADM_IMAGE_ALIGN(dstWidth)*dstHeight];
+    }    
+    return true;
+}
+
+void * ADMRGB32Scaler::planeWorker(void *argptr)
+{
+    worker_thread_arg * arg = (worker_thread_arg*)argptr;
+    
+    // copy packed data to plane
+    for (int y=0; y<arg->srcHeight; y++)
+    {
+        uint8_t * p = arg->sourceData + y*(ADM_IMAGE_ALIGN(arg->srcWidth*4));
+        uint8_t * q = arg->iPlane + y*(ADM_IMAGE_ALIGN(arg->srcWidth));
+        for (int x=0; x<arg->srcWidth; x++)
+        {
+            *q = *p;
+            q++;
+            p+=4;
+        }
+    }
+    
+    // resize plane
+    int xs[4]={ADM_IMAGE_ALIGN(arg->srcWidth),0,0,0};
+    int xd[4]={ADM_IMAGE_ALIGN(arg->dstWidth),0,0,0};
+    uint8_t *src[4]={NULL,NULL,NULL,NULL};
+    uint8_t *dst[4]={NULL,NULL,NULL,NULL};
+    src[0]=arg->iPlane;
+    dst[0]=arg->oPlane;
+    sws_scale((SwsContext *)arg->context,src,xs,0,arg->srcHeight,dst,xd);
+
+    // copy plane to packed format
+    for (int y=0; y<arg->dstHeight; y++)
+    {
+        uint8_t * p = arg->destData + y*(ADM_IMAGE_ALIGN(arg->dstWidth*4));
+        uint8_t * q = arg->oPlane + y*(ADM_IMAGE_ALIGN(arg->dstWidth));
+        for (int x=0; x<arg->dstWidth; x++)
+        {
+            *p = *q;
+            q++;
+            p+=4;
+        }
+    }
+    
+    pthread_exit(NULL);
+    return NULL;
+}
+/**
+    \fn convert
+*/
+bool  ADMRGB32Scaler::convert(uint8_t *sourceData, uint8_t *destData)
+{
+    for (int i=0; i<3; i++)
+    {
+        worker_thread_args[i].context = context[i];
+        worker_thread_args[i].sourceData = sourceData+i;
+        worker_thread_args[i].destData = destData+i;
+        worker_thread_args[i].dstHeight = dstHeight;
+        worker_thread_args[i].dstWidth = dstWidth;
+        worker_thread_args[i].iPlane = inputPlanes[i];
+        worker_thread_args[i].oPlane = outputPlanes[i];
+        worker_thread_args[i].srcHeight = srcHeight;
+        worker_thread_args[i].srcWidth = srcWidth;
+    }
+    for (int i=0; i<3; i++)
+    {
+        pthread_create( &worker_threads[i], NULL, planeWorker, (void*) &worker_thread_args[i]);
+    }
+    // work in thread workers...
+    for (int i=0; i<3; i++)
+    {
+        pthread_join( worker_threads[i], NULL);
+    }    
+
+    return true;
+}
+
 //EOF
