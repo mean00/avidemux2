@@ -41,6 +41,7 @@
 #include "ADM_imageResizer.h"
 #define ADM_FLY_SLIDER_MAX 1000
 #define ADM_FLYRGB_ALGO_CHANGE_THRESHOLD_RESOLUTION 720
+#define ADN_FLYRGB_USE_FASTER_RGB2RGB_SCALER
 
 enum ResizeMethod 
 {
@@ -231,7 +232,11 @@ public:
                     ADM_byteBuffer     _rgbByteBuffer;
                     ADM_byteBuffer     _rgbByteBufferOut;
                     ADMColorScalerFull *yuv2rgb;
-                    ADMColorScalerFull *rgb2rgb;
+#ifdef ADN_FLYRGB_USE_FASTER_RGB2RGB_SCALER
+                    ADMRGB32Scaler     *rgb2rgb;
+#else
+                    ADMColorScalerFull     *rgb2rgb;
+#endif
 public:
           virtual    bool process(void);
           virtual    void resetScaler(void);
