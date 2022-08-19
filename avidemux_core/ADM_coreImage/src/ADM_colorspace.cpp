@@ -666,6 +666,12 @@ void * ADMRGB32Scaler::planeWorker(void *argptr)
 */
 bool  ADMRGB32Scaler::convert(uint8_t *sourceData, uint8_t *destData)
 {
+    if ((srcWidth == dstWidth) && (srcHeight == dstHeight))
+    {
+        memcpy(destData, sourceData, ADM_IMAGE_ALIGN(srcWidth*4)*srcHeight);
+        return true;
+    }
+    
     for (int i=0; i<3; i++)
     {
         worker_thread_args[i].context = context[i];
