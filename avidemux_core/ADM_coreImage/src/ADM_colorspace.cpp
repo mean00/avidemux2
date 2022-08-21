@@ -689,6 +689,18 @@ bool  ADMRGB32Scaler::convert(uint8_t *sourceData, uint8_t *destData)
         pthread_create( &worker_threads[i], NULL, planeWorker, (void*) &worker_thread_args[i]);
     }
     // work in thread workers...
+    
+    // set alpha channel; required even if QImage::Format_RGB32 used
+    for (int y=0; y<dstHeight; y++)
+    {
+        uint8_t * p = destData + 3 + y*(ADM_IMAGE_ALIGN(dstWidth*4));
+        for (int x=0; x<dstWidth; x++)
+        {
+            *p = 0xFF;
+            p+=4;
+        }
+    }
+    
     for (int i=0; i<3; i++)
     {
         pthread_join( worker_threads[i], NULL);
