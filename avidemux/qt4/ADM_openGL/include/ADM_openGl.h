@@ -17,6 +17,7 @@
 #include "ADM_openGL_export.h"
 
 #ifdef __APPLE__
+#   define GL_SILENCE_DEPRECATION
 #	include <OpenGL/gl.h>
 #   include <OpenGL/glu.h>
 #	include <OpenGL/glext.h>
@@ -42,6 +43,7 @@ typedef void (* PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, cons
 #include <QOpenGLWidget>
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
+#include <QOpenGLShader>
 #include <QOpenGLShaderProgram>
 #include <math.h>
 #include "ADM_image.h"
@@ -105,7 +107,28 @@ public:
                             bool initTextures(void);
 };
 
+/**
+    \class QtGlAccelWidget
+*/
+class ADM_OPENGL6_EXPORT QtGlAccelWidget : public QOpenGLWidget, public ADM_coreQtGl
+{
+private:
+        int             imageWidth, imageHeight;
+        int             displayWidth, displayHeight;
 
+        QOpenGLShaderProgram *glProgram;
+        bool            renderFirstRun;
+        bool            operational;
 
+protected:
+        void initializeGL();
+        void paintGL() attribute_align_arg;
+        void updateTexture(ADMImage *pic);
 
-
+public:
+             QtGlAccelWidget(QWidget *parent, int imagew, int imageh);
+             ~QtGlAccelWidget();
+        bool isOperational(void) { return operational; }
+        bool setImage(ADMImage *pic);
+        bool setDisplaySize(int width, int height);
+};

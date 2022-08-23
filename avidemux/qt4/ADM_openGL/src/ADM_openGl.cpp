@@ -7,6 +7,11 @@
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 
+static bool initedOnced=false;
+static bool initedValue=false;
+
+static bool initOnce(QOpenGLWidget *widget);
+
 /**
 
 */
@@ -230,4 +235,181 @@ void ADM_coreQtGl::uploadAllPlanes(ADMImage *image)
                 }
         }
 }
+/****************************************************************************/
+
+static const char *yuvToRgb =
+    "#extension GL_ARB_texture_rectangle: enable\n"
+
+    "uniform sampler2DRect texY, texU, texV;\n"
+
+    "uniform float height;\n"
+
+    "const mat4 mytrix=mat4( 1.1643,   0,         1.5958,   0,"
+                            "1.1643,  -0.39173,  -0.81290,  0,"
+                            "1.1643,   2.017,      0,       0,"
+                            "0,        0,     0,       1);\n"
+    "const vec2 divby2=vec2( 0.5  ,0.5);\n"
+    "const vec4 offsetx=vec4(-0.07276875,-0.5,-0.5,0);\n"
+
+    "void main(void) {\n"
+    "  float nx = gl_TexCoord[0].x;\n"
+    "  float ny = height - gl_TexCoord[0].y;\n"
+    "\n"
+    "  vec2 coord=vec2(nx,ny);"
+    "  vec2 coord2=coord*divby2;"
+    "  float y = texture2DRect(texY, coord).r;\n"
+    "  float u = texture2DRect(texU, coord2).r;\n"
+    "  float v = texture2DRect(texV, coord2).r;\n"
+
+    "  vec4 inx=vec4(y,u,v,1.0);\n"
+    "  vec4 outx=(inx+offsetx)*mytrix;\n"
+    "  gl_FragColor = outx;\n"
+    "}\n";
+
+/**
+    \fn initOnce
+*/
+bool initOnce(QOpenGLWidget *widget)
+{
+    if(initedOnced) return initedValue;
+    initedOnced=initedValue=true;
+    ADM_info("[GL Render] OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
+    ADM_info("[GL Render] OpenGL Renderer: %s\n", glGetString(GL_RENDERER));
+    ADM_info("[GL Render] OpenGL Version: %s\n", glGetString(GL_VERSION));
+    ADM_info("[GL Render] OpenGL Extensions:\n");
+    printf("%s\n",(const char *)glGetString(GL_EXTENSIONS)); // too long for ADM_info
+    return true;
+}
+/**
+    \fn ctor
+*/
+QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QOpenGLWidget(parent), ADM_coreQtGl(this,true)
+{
+    ADM_info("[QTGL]\t Creating glWidget\n");
+
+    imageWidth = w;
+    imageHeight = h;
+    glProgram = NULL;
+    renderFirstRun=true;
+    operational = false;
+}
+/**
+        \fn dtor
+*/
+QtGlAccelWidget::~QtGlAccelWidget()
+{
+    ADM_info("[QTGL]\t Deleting glWidget\n");
+    if(glProgram)
+    {
+        glProgram->release();
+        delete glProgram;
+        glProgram = NULL;
+    }
+}
+/**
+    \fn setDisplaySize
+*/
+bool QtGlAccelWidget::setDisplaySize(int width,int height)
+{
+    displayWidth=width;
+    displayHeight=height;
+    resize(displayWidth,displayHeight);
+    renderFirstRun = true;
+    return true;
+}
+
+/**
+    \fn setImage
+*/
+bool QtGlAccelWidget::setImage(ADMImage *pic)
+{
+    if (!operational)
+        return false;
+    imageWidth = pic->_width;
+    imageHeight = pic->_height;
+    updateTexture(pic);
+    return true;
+}
+/**
+    \fn initializeGL
+*/
+void QtGlAccelWidget::initializeGL()
+{
+    if(!initTextures() || !initOnce(this))
+    {
+        ADM_warning("No QtGl support\n");
+        return;
+    }
+
+    glProgram = new QOpenGLShaderProgram(this);
+
+    if (!glProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, yuvToRgb))
+    {
+        ADM_info("[GL Render] Fragment log: %s\n", glProgram->log().toUtf8().constData());
+        return;
+    }
+
+    if (!glProgram->link())
+    {
+        ADM_info("[GL Render] Link log: %s\n", glProgram->log().toUtf8().constData());
+        return;
+    }
+
+    if (!glProgram->bind())
+    {
+        ADM_info("[GL Render] Binding FAILED\n");
+        return;
+    }
+
+    glProgram->setUniformValue("texY", 0);
+    glProgram->setUniformValue("texU", 2);
+    glProgram->setUniformValue("texV", 1);
+
+    ADM_info("[GL Render] Init successful\n");
+    operational = true;
+}
+/**
+    \fn updateTexture
+*/
+void QtGlAccelWidget::updateTexture(ADMImage *pic)
+{
+    if (!operational)
+        return;
+    if (renderFirstRun)
+    {
+        glViewport(0, 0, width(), height());
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, width(), 0, height(), -1, 1);
+        renderFirstRun=false;
+    }
+
+    uploadAllPlanes(pic);
+
+    glProgram->setUniformValue("texY", 0);
+    glProgram->setUniformValue("texU", 2);
+    glProgram->setUniformValue("texV", 1);
+    glProgram->setUniformValue("height", (float)imageHeight);
+
+    checkGlError("setUniformValue");
+}
+/**
+    \fn paintGL
+*/
+void QtGlAccelWidget::paintGL()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glBegin(GL_QUADS);
+    glTexCoord2i(0, 0);
+    glVertex2i(0, 0);
+    glTexCoord2i(imageWidth, 0);
+    glVertex2i(width(), 0);
+    glTexCoord2i(imageWidth, imageHeight);
+    glVertex2i(width(), height());
+    glTexCoord2i(0, imageHeight);
+    glVertex2i(0, height());
+    glEnd();
+    checkGlError("draw");
+}
+
 // EOF
