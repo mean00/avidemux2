@@ -19,6 +19,7 @@ public:
         virtual ~ADM_LogoCanvas() {};
 
 protected:
+        bool    initAccel(void) { return false; }
         void    mouseReleaseEvent(QMouseEvent * event);
 
 signals:
