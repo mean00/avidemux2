@@ -1,6 +1,9 @@
 
 #include "config.h"
 #ifdef USE_OPENGL
+#ifdef __APPLE__
+    #define GL_SILENCE_DEPRECATION
+#endif
 #include <QOpenGLWidget>
 #if (defined(ADM_CPU_ARMEL) || defined(ADM_CPU_ARM64)) && !defined(__APPLE__)
   #include "GL/gl.h" // not included via QOpenGLWidget on ES2 platforms

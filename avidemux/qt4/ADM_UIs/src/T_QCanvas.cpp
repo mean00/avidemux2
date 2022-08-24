@@ -16,8 +16,15 @@
 #include <QGraphicsView>
 #include <QSlider>
 
+#include "config.h"
+
+#ifdef USE_OPENGL
+    #include "ADM_openGl.h"
+#endif
+
 #include "ADM_default.h"
 #include "DIA_flyDialogQt4.h"
+#include "prefs.h"
 
 void ADM_QCanvas::changeSize(uint32_t w,uint32_t h)
 {
@@ -29,6 +36,11 @@ void ADM_QCanvas::changeSize(uint32_t w,uint32_t h)
 #endif
 	_l=ADM_IMAGE_ALIGN(_w*4);
 	dataBuffer=NULL;
+#ifdef USE_OPENGL
+	QtGlAccelWidget *gl = (QtGlAccelWidget *)accel;
+	if(gl)
+		gl->setDisplaySize(w,h);
+#endif
 	resize(w,h);
 }
 
@@ -40,11 +52,64 @@ void ADM_QCanvas::getDisplaySize(uint32_t *w,uint32_t *h)
 
 ADM_QCanvas::ADM_QCanvas(QWidget *z,uint32_t w,uint32_t h) : QWidget(z) 
 {
+	accel = NULL;
 	changeSize(w,h);
 }
 
-ADM_QCanvas::~ADM_QCanvas() 
+ADM_QCanvas::~ADM_QCanvas()
 {
+	uninitAccel();
+}
+
+bool ADM_QCanvas::initAccel(void)
+{
+#ifdef USE_OPENGL
+    if(!ADM_glHasActiveTexture())
+        return false;
+    bool r = false;
+    if(!prefs->get(FEATURES_ENABLE_OPENGL,&r) || !r)
+        return false;
+    QtGlAccelWidget *gl = new QtGlAccelWidget(this, width(), height());
+    gl->setDisplaySize(width(), height());
+    gl->show();
+    r = QOpenGLShaderProgram::hasOpenGLShaderPrograms(gl->context());
+    printf("[ADM_QCanvas::initAccel] Init %s\n", r? "succeeded" : "failed: OpenGL shader program not supported");
+    gl->doneCurrent();
+    accel = (void *)gl;
+    return r;
+#else
+    return false;
+#endif
+}
+
+void ADM_QCanvas::uninitAccel(void)
+{
+#ifdef USE_OPENGL
+    QtGlAccelWidget *gl = (QtGlAccelWidget *)accel;
+    if(!gl) return;
+    gl->setParent(NULL);
+    delete gl;
+    accel = NULL;
+#endif
+}
+
+bool ADM_QCanvas::displayImage(ADMImage *pic)
+{
+#ifdef USE_OPENGL
+    QtGlAccelWidget *gl = (QtGlAccelWidget *)accel;
+    if(!gl) return false;
+    gl->makeCurrent();
+    if(!gl->setImage(pic))
+    {
+        gl->doneCurrent();
+        return false;
+    }
+    gl->update();
+    gl->doneCurrent();
+    return true;
+#else
+    return false;
+#endif
 }
 
 /**

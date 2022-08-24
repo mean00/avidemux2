@@ -31,6 +31,9 @@
 #include "ADM_vidMisc.h"
 #include "prefs.h"
 
+#define ACCEL_CANVAS_FLAG_PROBED 1
+#define ACCEL_CANVAS_FLAG_USABLE 2
+
 /**
  */
 class flyControl
@@ -392,7 +395,7 @@ bool ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption co
 bool ADM_flyDialog::sameImage(void)
 {
     process();
-    return display(_rgbByteBufferDisplay.at(0));
+    return display();
 }
 uint64_t ADM_flyDialog::getCurrentPts()
 {
@@ -429,7 +432,7 @@ bool ADM_flyDialog::nextImageInternal(void)
     }
     // Process...   
     process();
-    return display(_rgbByteBufferDisplay.at(0));
+    return display();
 }
 
 /**
@@ -522,6 +525,7 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
     _control=NULL;
     _yuvBufferOut=new ADMImageDefault(_w,_h);
     yuvToRgb=NULL;  
+    accelCanvasFlags = 0;
     initializeSize();
     _canvas->parentWidget()->setMinimumSize(_zoomW, _zoomH);
     updateZoom();
@@ -565,13 +569,37 @@ ADM_flyDialogYuv::~ADM_flyDialogYuv()
 }
 bool ADM_flyDialogYuv::process(void)
 {
-    if (_bypassFilter)
-    {
-        yuvToRgb->convertImage(_yuvBuffer,_rgbByteBufferDisplay.at(0));
-    } else {
+    if (!_bypassFilter)
         processYuv(_yuvBuffer,_yuvBufferOut);
-        yuvToRgb->convertImage(_yuvBufferOut,_rgbByteBufferDisplay.at(0));
+    if (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE)
+        return true;
+
+    yuvToRgb->convertImage(_bypassFilter ? _yuvBuffer : _yuvBufferOut, _rgbByteBufferDisplay.at(0));
+    return true;
+}
+/**
+    \fn display
+*/
+bool ADM_flyDialogYuv::display(void)
+{
+    ADM_QCanvas *v = _canvas;
+    if (!(accelCanvasFlags & ACCEL_CANVAS_FLAG_PROBED) && v->isVisible())
+    {
+        accelCanvasFlags |= ACCEL_CANVAS_FLAG_PROBED;
+        if (v->initAccel())
+            accelCanvasFlags |= ACCEL_CANVAS_FLAG_USABLE;
     }
+    if (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE)
+    {
+        v->dataBuffer = NULL;
+        if (v->displayImage(_bypassFilter ? _yuvBuffer : _yuvBufferOut))
+            return true;
+        ADM_warning("Disabling accelerated canvas\n");
+        accelCanvasFlags &= ~ACCEL_CANVAS_FLAG_USABLE;
+        yuvToRgb->convertImage(_bypassFilter ? _yuvBuffer : _yuvBufferOut, _rgbByteBufferDisplay.at(0));
+    }
+    v->dataBuffer = _rgbByteBufferDisplay.at(0);
+    v->repaint();
     return true;
 }
 //*****************************************
@@ -650,6 +678,17 @@ bool ADM_flyDialogRgb::process(void)
     }
     return true;
 }
+/**
+    \fn display
+*/
+bool ADM_flyDialogRgb::display(void)
+{
+    _canvas->dataBuffer = _rgbByteBufferDisplay.at(0);
+    _canvas->repaint();
+    return true;
+}
+
+/*********************************************************/
 
 /**
     \fn    ADM_flyDialog
@@ -795,23 +834,7 @@ float ADM_flyDialog::calcZoomFactor(void)
     return _computedZoom;
     
 }
-/**
-    \fn    display
-    \brief
-*/
 
-uint8_t  ADM_flyDialog::display(uint8_t *rgbData)
-{
-    ADM_QCanvas *view=_canvas;
-    ADM_assert(view);
-    view->dataBuffer=rgbData;
-    if(!rgbData)
-    {
-        ADM_info("flyDialog: No rgbuffer ??\n"); 
-    } 
-    view->repaint();
-    return 1; 
-}
 /**
     \fn    sliderGet
     \brief

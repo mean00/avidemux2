@@ -78,17 +78,20 @@ class QHBoxLayout;
 class QPushButton;
 class QRadioButton;
 
-
 class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
 {
 protected:
         uint32_t _w,_h;
         uint32_t _l; // bytes per line
+        void *accel;
 public:
         uint8_t *dataBuffer;
 
         ADM_QCanvas(QWidget *z, uint32_t w, uint32_t h);
         ~ADM_QCanvas();
+virtual bool initAccel(void);
+virtual void uninitAccel(void);
+virtual bool displayImage(ADMImage *pic);
         void paintEvent(QPaintEvent *ev);
         void changeSize(uint32_t w, uint32_t h);
         void getDisplaySize(uint32_t *w, uint32_t *h);
@@ -168,7 +171,7 @@ public:
 public:  
 
   virtual bool     isRgbInverted(void);
-  virtual uint8_t  display(uint8_t *rgbData);
+  virtual bool     display(void) = 0;
   virtual float    calcZoomFactor(void);  
   virtual uint32_t sliderGet(void);             // Return the slider value between 0 and ADM_FLY_SLIDER_MAX
   virtual uint8_t  sliderSet(uint32_t value);  // Set slider value between 0 and ADM_FLY_SLIDE_MAX
@@ -204,11 +207,14 @@ public slots:
 class ADM_UIQT46_EXPORT ADM_flyDialogYuv: public  ADM_flyDialog
 {
   Q_OBJECT
-public:
+protected:
+                    int                  accelCanvasFlags;
                     ADMImage              *_yuvBufferOut;
                     ADMColorScalerFull    *yuvToRgb;  
+
 public:
           virtual    bool process(void);
+          virtual    bool display(void);
           virtual    void resetScaler(void);
 
                                 ADM_flyDialogYuv(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
@@ -239,6 +245,7 @@ public:
 #endif
 public:
           virtual    bool process(void);
+          virtual    bool display(void);
           virtual    void resetScaler(void);
 
                             ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t height, 
