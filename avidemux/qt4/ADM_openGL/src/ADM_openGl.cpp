@@ -290,7 +290,6 @@ QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QOpenGLWidget(
     imageWidth = w;
     imageHeight = h;
     glProgram = NULL;
-    renderFirstRun=true;
     operational = false;
 }
 /**
@@ -311,10 +310,7 @@ QtGlAccelWidget::~QtGlAccelWidget()
 */
 bool QtGlAccelWidget::setDisplaySize(int width,int height)
 {
-    displayWidth=width;
-    displayHeight=height;
-    resize(displayWidth,displayHeight);
-    renderFirstRun = true;
+    resize(width,height);
     return true;
 }
 
@@ -375,14 +371,6 @@ void QtGlAccelWidget::updateTexture(ADMImage *pic)
 {
     if (!operational)
         return;
-    if (renderFirstRun)
-    {
-        glViewport(0, 0, width(), height());
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(0, width(), 0, height(), -1, 1);
-        renderFirstRun=false;
-    }
 
     uploadAllPlanes(pic);
 
@@ -411,5 +399,14 @@ void QtGlAccelWidget::paintGL()
     glEnd();
     checkGlError("draw");
 }
-
+/**
+    \fn resizeGL
+*/
+void QtGlAccelWidget::resizeGL(int width, int height)
+{
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, width, 0, height, -1, 1);
+}
 // EOF

@@ -114,15 +114,14 @@ class ADM_OPENGL6_EXPORT QtGlAccelWidget : public QOpenGLWidget, public ADM_core
 {
 private:
         int             imageWidth, imageHeight;
-        int             displayWidth, displayHeight;
 
         QOpenGLShaderProgram *glProgram;
-        bool            renderFirstRun;
         bool            operational;
 
 protected:
         void initializeGL();
         void paintGL() attribute_align_arg;
+        void resizeGL(int width, int height);
         void updateTexture(ADMImage *pic);
 
 public:
