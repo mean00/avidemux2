@@ -64,6 +64,9 @@ ADM_QCanvas::~ADM_QCanvas()
 bool ADM_QCanvas::initAccel(void)
 {
 #ifdef USE_OPENGL
+    char *noaccel = getenv("ADM_QCANVAS_NOACCEL");
+    if(noaccel && !strcmp("1",noaccel))
+        return false;
     if(!ADM_glHasActiveTexture())
         return false;
     bool r = false;
