@@ -102,6 +102,7 @@ bool ADM_QCanvas::displayImage(ADMImage *pic)
     QtGlAccelWidget *gl = (QtGlAccelWidget *)accel;
     if(!gl) return false;
     gl->makeCurrent();
+    pic->shrinkColorRange();
     if(!gl->setImage(pic))
     {
         gl->doneCurrent();
