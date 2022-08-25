@@ -88,7 +88,7 @@ public:
         uint8_t *dataBuffer;
 
         ADM_QCanvas(QWidget *z, uint32_t w, uint32_t h);
-        ~ADM_QCanvas();
+virtual ~ADM_QCanvas();
 virtual bool initAccel(void);
 virtual void uninitAccel(void);
 virtual bool displayImage(ADMImage *pic);
@@ -127,7 +127,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           std::vector<QWidget *> buttonList; // useful for manipulating tab order
           QDialog     *_parent;
           bool         _bypassFilter;
-
+          bool         _reprocess;
 
 
   public:
@@ -142,13 +142,13 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           void               recomputeSize(void);
           virtual bool       disableZoom(void);
           virtual bool       enableZoom(void);          
-          virtual bool       sameImage(void);
+          virtual bool       sameImage(bool reprocess = true);
                   uint64_t   getCurrentPts();
           ADM_coreVideoFilter *getUnderlyingFilter() {return _in;}
                   bool        addControl(QHBoxLayout *layout, ControlOption controlOptions = ControlOption::None, QWidget * userWidget = NULL);
 protected:
   virtual ADM_pixelFormat     toRgbPixFrmt(void);
-          void               updateZoom(void);
+  virtual void               updateZoom(void) = 0;
           uint8_t            cleanup(void);  
           bool               initializeSize();
           float              calcZoomToBeDisplayable(uint32_t imageWidth, uint32_t imageHeight);
@@ -212,6 +212,8 @@ protected:
                     ADMImage              *_yuvBufferOut;
                     ADMColorScalerFull    *yuvToRgb;  
 
+            virtual void updateZoom(void);
+
 public:
           virtual    bool process(void);
           virtual    bool display(void);
@@ -234,7 +236,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialogRgb: public  ADM_flyDialog
 protected:
                     ADMColorScaler_algo _algo;
                     uint64_t           _scaledPts;
-public:
+
                     ADM_byteBuffer     _rgbByteBuffer;
                     ADM_byteBuffer     _rgbByteBufferOut;
                     ADMColorScalerFull *yuv2rgb;
@@ -243,6 +245,8 @@ public:
 #else
                     ADMColorScalerFull     *rgb2rgb;
 #endif
+            virtual void updateZoom(void);
+
 public:
           virtual    bool process(void);
           virtual    bool display(void);

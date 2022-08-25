@@ -186,17 +186,6 @@ public:
 };
 
 /**
-    \fn updateZoom
-*/
-void ADM_flyDialog::updateZoom(void)
-{
-    uint32_t displayW, displayH;
-    _canvas->getDisplaySize(&displayW, &displayH);
-    _rgbByteBufferDisplay.clean();
-    _rgbByteBufferDisplay.setSize(ADM_IMAGE_ALIGN(displayW * 4) * displayH);
-    resetScaler();
-}
-/**
  * 
  * @return 
  */
@@ -392,8 +381,9 @@ bool ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption co
 /**
     \fn sameImage
 */
-bool ADM_flyDialog::sameImage(void)
+bool ADM_flyDialog::sameImage(bool reprocess)
 {
+    _reprocess = reprocess;
     process();
     return display();
 }
@@ -430,9 +420,8 @@ bool ADM_flyDialog::nextImageInternal(void)
         sprintf(text, "/ %02d:%02d:%02d.%03d", hh, mm, ss, ms);
         _control->labelDuration->setText(text);
     }
-    // Process...   
-    process();
-    return display();
+    // Process...
+    return sameImage(true);
 }
 
 /**
@@ -570,7 +559,13 @@ ADM_flyDialogYuv::~ADM_flyDialogYuv()
 bool ADM_flyDialogYuv::process(void)
 {
     if (!_bypassFilter)
-        processYuv(_yuvBuffer,_yuvBufferOut);
+    {
+        if (_reprocess)
+        {
+            processYuv(_yuvBuffer,_yuvBufferOut);
+            _reprocess = false;
+        }
+    }
     if (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE)
         return true;
 
@@ -601,6 +596,20 @@ bool ADM_flyDialogYuv::display(void)
     v->dataBuffer = _rgbByteBufferDisplay.at(0);
     v->repaint();
     return true;
+}
+/**
+    \fn updateZoom
+*/
+void ADM_flyDialogYuv::updateZoom(void)
+{
+    if (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE)
+        return;
+
+    uint32_t displayW, displayH;
+    _canvas->getDisplaySize(&displayW, &displayH);
+    _rgbByteBufferDisplay.clean();
+    _rgbByteBufferDisplay.setSize(ADM_IMAGE_ALIGN(displayW * 4) * displayH);
+    resetScaler();
 }
 //*****************************************
 ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
@@ -669,7 +678,11 @@ bool ADM_flyDialogRgb::process(void)
         }
         if (_resizeMethod != RESIZE_NONE)
         {
-            processRgb(_rgbByteBuffer.at(0),_rgbByteBufferOut.at(0));
+            if (_reprocess)
+            {
+                processRgb(_rgbByteBuffer.at(0),_rgbByteBufferOut.at(0));
+                _reprocess = false;
+            }
             rgb2rgb->convert(_rgbByteBufferOut.at(0), _rgbByteBufferDisplay.at(0));
         }else
         {
@@ -687,7 +700,17 @@ bool ADM_flyDialogRgb::display(void)
     _canvas->repaint();
     return true;
 }
-
+/**
+    \fn updateZoom
+*/
+void ADM_flyDialogRgb::updateZoom(void)
+{
+    uint32_t displayW, displayH;
+    _canvas->getDisplaySize(&displayW, &displayH);
+    _rgbByteBufferDisplay.clean();
+    _rgbByteBufferDisplay.setSize(ADM_IMAGE_ALIGN(displayW * 4) * displayH);
+    resetScaler();
+}
 /*********************************************************/
 
 /**
@@ -724,6 +747,7 @@ bool ADM_flyDialogRgb::display(void)
     setCurrentPts(lastPts);
     // Seek is delegated to the user
     _bypassFilter=false;
+    _reprocess = true;
 
     QGraphicsScene *sc=new QGraphicsScene(this);
     sc->setBackgroundBrush(QBrush(Qt::darkGray, Qt::SolidPattern));
@@ -808,7 +832,7 @@ void ADM_flyDialog::fitCanvasIntoView(uint32_t width, uint32_t height)
     _zoom = (float)_zoomW / _w;
     _canvas->changeSize(_zoomW, _zoomH);
     updateZoom();
-    sameImage();
+    sameImage(_reprocess);
 }
 
 /**
