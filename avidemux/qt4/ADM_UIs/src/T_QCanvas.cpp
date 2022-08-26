@@ -75,6 +75,7 @@ bool ADM_QCanvas::initAccel(void)
     QtGlAccelWidget *gl = new QtGlAccelWidget(this, width(), height());
     gl->setDisplaySize(width(), height());
     gl->show();
+    gl->lower();
     r = QOpenGLShaderProgram::hasOpenGLShaderPrograms(gl->context());
     printf("[ADM_QCanvas::initAccel] Init %s\n", r? "succeeded" : "failed: OpenGL shader program not supported");
     gl->doneCurrent();
