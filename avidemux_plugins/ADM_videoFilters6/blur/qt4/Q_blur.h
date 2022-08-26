@@ -6,6 +6,13 @@
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyBlur.h"
 
+class ADM_QCanvas_NoAccel : public ADM_QCanvas
+{
+  public:
+    ADM_QCanvas_NoAccel(QWidget *z, uint32_t w, uint32_t h) : ADM_QCanvas(z,w,h) {};
+    virtual bool initAccel(void) { return false; }
+};
+
 class Ui_blurWindow : public QDialog
 {
     Q_OBJECT
@@ -15,7 +22,7 @@ class Ui_blurWindow : public QDialog
 
   public:
     flyBlur *myFly;
-    ADM_QCanvas *canvas;
+    ADM_QCanvas_NoAccel *canvas;
     Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *in);
     ~Ui_blurWindow();
     Ui_blurDialog ui;

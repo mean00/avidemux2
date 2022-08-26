@@ -38,8 +38,8 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         width=in->getInfo()->width;
         height=in->getInfo()->height;
 
-        canvas=new ADM_QCanvas(ui.graphicsView,width,height);
-        
+        canvas=new ADM_QCanvas_NoAccel(ui.graphicsView,width,height);
+
         myFly=new flyBlur( this,width, height,in,canvas,ui.horizontalSlider);
         ADMVideoBlur::BlurCreateBuffers(width,height, &(myFly->rgbBufStride), &(myFly->rgbBufRaw), &(myFly->rgbBufImage), &(myFly->convertYuvToRgb), &(myFly->convertRgbToYuv));
         memcpy(&(myFly->param),param,sizeof(blur));
