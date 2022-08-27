@@ -244,12 +244,12 @@ static const char *yuvToRgb =
 
     "uniform float height;\n"
 
-    "const mat4 mytrix=mat4( 1.1643,   0,         1.5958,   0,"
-                            "1.1643,  -0.39173,  -0.81290,  0,"
-                            "1.1643,   2.017,      0,       0,"
-                            "0,        0,     0,       1);\n"
+    "const mat4 mytrix=mat4( 1.164383561643836,  0,                  1.792741071428571,  0,"
+                            "1.164383561643836, -0.213248614273730, -0.532909328559444,  0,"
+                            "1.164383561643836,  2.112401785714286f, 0,                  0,"
+                            "0,                  0,                  0,                  1);\n"
     "const vec2 divby2=vec2( 0.5  ,0.5);\n"
-    "const vec4 offsetx=vec4(-0.07276875,-0.5,-0.5,0);\n"
+    "const vec4 offsetx=vec4(-0.0627450980392157, -0.5, -0.5, 0);\n"
 
     "void main(void) {\n"
     "  float nx = gl_TexCoord[0].x;\n"
