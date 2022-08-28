@@ -591,6 +591,7 @@ bool ADM_flyDialogYuv::display(void)
             return true;
         ADM_warning("Disabling accelerated canvas\n");
         accelCanvasFlags &= ~ACCEL_CANVAS_FLAG_USABLE;
+        updateZoom(); // Setup scaler and display buffer, they may be invalid.
         yuvToRgb->convertImage(_bypassFilter ? _yuvBuffer : _yuvBufferOut, _rgbByteBufferDisplay.at(0));
     }
     v->dataBuffer = _rgbByteBufferDisplay.at(0);
@@ -629,6 +630,7 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
                             _h,
                             ADM_PIXFRMT_YV12,toRgbPixFrmt());
     rgb2rgb=NULL;
+    accelCanvasFlags = 0;
     initializeSize();
     _canvas->parentWidget()->setMinimumSize(_zoomW, _zoomH);
     updateZoom();
@@ -669,7 +671,8 @@ bool ADM_flyDialogRgb::process(void)
 {
     if (_bypassFilter)
     {
-        yuv2rgb->convertImage(_yuvBuffer,_rgbByteBufferDisplay.at(0));
+        uint8_t *target = (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE) ? _rgbByteBuffer.at(0) : _rgbByteBufferDisplay.at(0);
+        yuv2rgb->convertImage(_yuvBuffer, target);
     } else {
         if (_scaledPts != lastPts)
         {
@@ -683,6 +686,8 @@ bool ADM_flyDialogRgb::process(void)
                 processRgb(_rgbByteBuffer.at(0),_rgbByteBufferOut.at(0));
                 _reprocess = false;
             }
+            if (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE)
+                return true;
             rgb2rgb->convert(_rgbByteBufferOut.at(0), _rgbByteBufferDisplay.at(0));
         }else
         {
@@ -696,6 +701,27 @@ bool ADM_flyDialogRgb::process(void)
 */
 bool ADM_flyDialogRgb::display(void)
 {
+    ADM_QCanvas *v = _canvas;
+    if (!(accelCanvasFlags & ACCEL_CANVAS_FLAG_PROBED) && v->isVisible())
+    {
+        accelCanvasFlags |= ACCEL_CANVAS_FLAG_PROBED;
+        if (v->initAccel(false))
+            accelCanvasFlags |= ACCEL_CANVAS_FLAG_USABLE;
+    }
+    if (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE)
+    {
+        v->dataBuffer = NULL;
+        ADMImageRef ref(_w,_h);
+        ref._planes[0] = _bypassFilter ? _rgbByteBuffer.at(0) : _rgbByteBufferOut.at(0);
+        ref._planeStride[0] = ADM_IMAGE_ALIGN(_w * 4);
+        if (v->displayImage(&ref))
+            return true;
+        ADM_warning("Disabling accelerated canvas\n");
+        accelCanvasFlags &= ~ACCEL_CANVAS_FLAG_USABLE;
+        updateZoom();
+        rgb2rgb->convert(_bypassFilter ? _rgbByteBuffer.at(0) : _rgbByteBufferOut.at(0),
+                         _rgbByteBufferDisplay.at(0));
+    }
     _canvas->dataBuffer = _rgbByteBufferDisplay.at(0);
     _canvas->repaint();
     return true;
@@ -705,6 +731,9 @@ bool ADM_flyDialogRgb::display(void)
 */
 void ADM_flyDialogRgb::updateZoom(void)
 {
+    if (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE)
+        return;
+
     uint32_t displayW, displayH;
     _canvas->getDisplaySize(&displayW, &displayH);
     _rgbByteBufferDisplay.clean();

@@ -61,7 +61,7 @@ ADM_QCanvas::~ADM_QCanvas()
 	uninitAccel();
 }
 
-bool ADM_QCanvas::initAccel(void)
+bool ADM_QCanvas::initAccel(bool inputIsYuv)
 {
 #ifdef USE_OPENGL
     char *noaccel = getenv("ADM_QCANVAS_NOACCEL");
@@ -72,7 +72,7 @@ bool ADM_QCanvas::initAccel(void)
     bool r = false;
     if(!prefs->get(FEATURES_ENABLE_OPENGL,&r) || !r)
         return false;
-    QtGlAccelWidget *gl = new QtGlAccelWidget(this, width(), height());
+    QtGlAccelWidget *gl = new QtGlAccelWidget(this, width(), height(), inputIsYuv? ADM_PIXFRMT_YV12 : ADM_PIXFRMT_RGB32A);
     gl->setDisplaySize(width(), height());
     gl->show();
     gl->lower();

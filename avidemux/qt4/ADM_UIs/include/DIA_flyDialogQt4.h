@@ -89,7 +89,7 @@ public:
 
         ADM_QCanvas(QWidget *z, uint32_t w, uint32_t h);
 virtual ~ADM_QCanvas();
-virtual bool initAccel(void);
+virtual bool initAccel(bool inputIsYuv = true);
 virtual void uninitAccel(void);
 virtual bool displayImage(ADMImage *pic);
         void paintEvent(QPaintEvent *ev);
@@ -234,6 +234,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialogRgb: public  ADM_flyDialog
 {
   Q_OBJECT
 protected:
+                    int                 accelCanvasFlags;
                     ADMColorScaler_algo _algo;
                     uint64_t           _scaledPts;
 
