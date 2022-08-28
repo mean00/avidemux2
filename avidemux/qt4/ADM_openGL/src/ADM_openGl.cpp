@@ -292,8 +292,6 @@ static const char *yuvToRgb =
 static const char *rgbToRgb =
     "#extension GL_ARB_texture_rectangle: enable\n"
 
-    "precision highp float;\n"
-
     "uniform sampler2DRect texRgb;\n"
     "uniform float height;\n"
 
