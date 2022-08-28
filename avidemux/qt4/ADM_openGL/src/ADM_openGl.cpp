@@ -299,10 +299,8 @@ static const char *rgbToRgb =
     "    float nx = gl_TexCoord[0].x;\n"
     "    float ny = height - gl_TexCoord[0].y;\n"
     "    vec2 coord = vec2(nx,ny);"
-    "    float red   = texture2DRect(texRgb, coord).r;\n"
-    "    float green = texture2DRect(texRgb, coord).g;\n"
-    "    float blue  = texture2DRect(texRgb, coord).b;\n"
-    "    gl_FragColor = vec4(red, green, blue, 1.0);\n"
+    "    gl_FragColor = texture2DRect(texRgb, coord);\n"
+    "    gl_FragColor.a = 1.0;\n"
     "}\n";
 
 /**
