@@ -140,10 +140,27 @@ bool ADM_glHasARB(void)
  * 
  * @param parent
  */
-ADM_coreQtGl::ADM_coreQtGl(QOpenGLWidget *parent, bool delayedInit)
+ADM_coreQtGl::ADM_coreQtGl(QOpenGLWidget *parent, bool delayedInit, ADM_pixelFormat fmt)
 {
     _parentQGL=parent;
     firstRun=0;
+    switch(fmt)
+    {
+        case ADM_PIXFRMT_YV12:
+            glPixFrmt = GL_LUMINANCE;
+            nbTex = 3;
+            nbComponents = 1;
+            break;
+        case ADM_PIXFRMT_RGB32A:
+            glPixFrmt = GL_BGRA;
+            nbTex = 1;
+            nbComponents = 4;
+            break;
+        default:
+            ADM_error("Fatal error: unsupported pixel format %d\n",(int)fmt);
+            ADM_assert(0);
+            break;
+    }
     if(!delayedInit)
     {
         _parentQGL->makeCurrent();
@@ -153,7 +170,7 @@ ADM_coreQtGl::ADM_coreQtGl(QOpenGLWidget *parent, bool delayedInit)
 }
 ADM_coreQtGl::~ADM_coreQtGl()
 {
-    glDeleteTextures(3,texName);
+    glDeleteTextures(nbTex,texName);
     _parentQGL=NULL;
     // MEMLEAK : CAUSE A CRASH
     // Will be deleted when top level widget is cleared out by Qt
@@ -169,71 +186,77 @@ bool ADM_coreQtGl::initTextures(void)
     _context=QOpenGLContext::currentContext();
     if(!_context)
         return false;
-    glGenTextures(3,texName);
+    glGenTextures(nbTex,texName);
     checkGlError("GenTex");
     checkGlError("GenBuffer");
     return true;
 }
 /**
-    \fn uploadTexture
+    \fn uploadOnePlane
 */
 void ADM_coreQtGl::uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum )
 {
-        ADM_glExt::activeTexture(tex);  // Activate texture unit "tex"
-        glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum); // Use texture "texNum"
+    ADM_assert(texNum < nbTex);
+    ADM_glExt::activeTexture(tex);  // Activate texture unit "tex"
+    glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum); // Use texture "texNum"
 
+    glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+#define ALIGNX(x,y) ((x+y-1)&~(y-1))
+    int pitch = (nbComponents == 1)? image->GetPitch(plane) : ALIGNX(image->GetWidth(plane),16); // ???
+
+    if(!firstRun)
+    {
+        glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, nbComponents,
+            pitch,
+            image->GetHeight(plane), 0, glPixFrmt, GL_UNSIGNED_BYTE,
+            image->GetReadPtr(plane));
+    }else
+    {
+        glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0,
+            pitch,
+            image->GetHeight(plane),
+            glPixFrmt, GL_UNSIGNED_BYTE,
+            image->GetReadPtr(plane));
+    }
+}
+/**
+    \fn uploadAllPlanes
+*/
+void ADM_coreQtGl::uploadAllPlanes(ADMImage *image)
+{
+    for(int xplane=nbTex-1;xplane>=0;xplane--)
+    {
+        ADM_glExt::activeTexture(GL_TEXTURE0+xplane);
+        ADM_PLANE plane=(ADM_PLANE)xplane;
+        glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[xplane]); // Use tex engine "texNum"
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        int pitch = (nbComponents == 1)? image->GetPitch(plane) : ALIGNX(image->GetWidth(plane),16); // ???
+
         if(!firstRun)
         {
-            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                            image->GetPitch(plane),
-                            image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                            image->GetReadPtr(plane));
+            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, nbComponents,
+                pitch,
+                image->GetHeight(plane), 0, glPixFrmt, GL_UNSIGNED_BYTE,
+                image->GetReadPtr(plane));
         }else
         {
-            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                image->GetPitch(plane),
+            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0,
+                pitch,
                 image->GetHeight(plane),
-                GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                glPixFrmt, GL_UNSIGNED_BYTE,
                 image->GetReadPtr(plane));
         }
-}
-/**
-    \fn uploadTexture
-*/
-void ADM_coreQtGl::uploadAllPlanes(ADMImage *image)
-{
-          // Activate texture unit "tex"
-        for(int xplane=2;xplane>=0;xplane--)
-        {
-            ADM_glExt::activeTexture(GL_TEXTURE0+xplane);
-            ADM_PLANE plane=(ADM_PLANE)xplane;
-            glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[xplane]); // Use tex engine "texNum"
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-                if(!firstRun)
-                {
-                    glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                                    image->GetPitch(plane),
-                                    image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                                    image->GetReadPtr(plane));
-                }else
-                {
-                    glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                        image->GetPitch(plane),
-                        image->GetHeight(plane),
-                        GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                        image->GetReadPtr(plane));
-                }
-        }
+    }
 }
 /****************************************************************************/
 
@@ -266,6 +289,24 @@ static const char *yuvToRgb =
     "  gl_FragColor = outx;\n"
     "}\n";
 
+static const char *rgbToRgb =
+    "#extension GL_ARB_texture_rectangle: enable\n"
+
+    "precision highp float;\n"
+
+    "uniform sampler2DRect texRgb;\n"
+    "uniform float height;\n"
+
+    "void main(void) {\n"
+    "    float nx = gl_TexCoord[0].x;\n"
+    "    float ny = height - gl_TexCoord[0].y;\n"
+    "    vec2 coord = vec2(nx,ny);"
+    "    float red   = texture2DRect(texRgb, coord).r;\n"
+    "    float green = texture2DRect(texRgb, coord).g;\n"
+    "    float blue  = texture2DRect(texRgb, coord).b;\n"
+    "    gl_FragColor = vec4(red, green, blue, 1.0);\n"
+    "}\n";
+
 /**
     \fn initOnce
 */
@@ -283,12 +324,23 @@ bool initOnce(QOpenGLWidget *widget)
 /**
     \fn ctor
 */
-QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QOpenGLWidget(parent), ADM_coreQtGl(this,true)
+QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h, ADM_pixelFormat fmt) : QOpenGLWidget(parent), ADM_coreQtGl(this,true,fmt)
 {
     ADM_info("[QTGL]\t Creating glWidget\n");
+    switch(fmt)
+    {
+        case ADM_PIXFRMT_YV12:
+        case ADM_PIXFRMT_RGB32A:
+            break;
+        default:
+            ADM_error("Fatal error: unsupported pixel format %d\n",(int)fmt);
+            ADM_assert(0);
+            break;
+    }
 
     imageWidth = w;
     imageHeight = h;
+    pixelFormat = fmt;
     glProgram = NULL;
     operational = false;
 }
@@ -339,7 +391,9 @@ void QtGlAccelWidget::initializeGL()
 
     glProgram = new QOpenGLShaderProgram(this);
 
-    if (!glProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, yuvToRgb))
+    const char *shader = (pixelFormat == ADM_PIXFRMT_RGB32A)? rgbToRgb : yuvToRgb;
+
+    if (!glProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, shader))
     {
         ADM_info("[GL Render] Fragment log: %s\n", glProgram->log().toUtf8().constData());
         return;
@@ -357,9 +411,16 @@ void QtGlAccelWidget::initializeGL()
         return;
     }
 
-    glProgram->setUniformValue("texY", 0);
-    glProgram->setUniformValue("texU", 2);
-    glProgram->setUniformValue("texV", 1);
+    if (pixelFormat == ADM_PIXFRMT_RGB32A)
+    {
+        glProgram->setUniformValue("texRgb", 0);
+    } else
+    {
+        glProgram->setUniformValue("texY", 0);
+        glProgram->setUniformValue("texU", 2);
+        glProgram->setUniformValue("texV", 1);
+    }
+    glProgram->setUniformValue("height", (float)imageHeight);
 
     ADM_info("[GL Render] Init successful\n");
     operational = true;
@@ -374,9 +435,15 @@ void QtGlAccelWidget::updateTexture(ADMImage *pic)
 
     uploadAllPlanes(pic);
 
-    glProgram->setUniformValue("texY", 0);
-    glProgram->setUniformValue("texU", 2);
-    glProgram->setUniformValue("texV", 1);
+    if (pixelFormat == ADM_PIXFRMT_RGB32A)
+    {
+        glProgram->setUniformValue("texRgb", 0);
+    } else
+    {
+        glProgram->setUniformValue("texY", 0);
+        glProgram->setUniformValue("texU", 2);
+        glProgram->setUniformValue("texV", 1);
+    }
     glProgram->setUniformValue("height", (float)imageHeight);
 
     checkGlError("setUniformValue");

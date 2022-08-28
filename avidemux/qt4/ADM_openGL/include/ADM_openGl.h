@@ -83,10 +83,12 @@ public:
 class  ADM_OPENGL6_EXPORT ADM_coreQtGl
 {
 protected:
-                            
+                            GLuint                glPixFrmt;
                             QOpenGLWidget         *_parentQGL;
                     const   QOpenGLContext        *_context;
                             int                   firstRun;
+                            int                   nbTex;
+                            int                   nbComponents;
                             GLuint                texName[3];
 protected:
                             // image <--> texture
@@ -99,7 +101,7 @@ protected:
                             bool downloadTexturesQt(ADMImage *image, QOpenGLFramebufferObject *fbo);
 
 public:
-                            ADM_coreQtGl(QOpenGLWidget *parentWidget, bool delayedInit=false);
+                            ADM_coreQtGl(QOpenGLWidget *parentWidget, bool delayedInit=false, ADM_pixelFormat fmt = ADM_PIXFRMT_YV12);
        virtual             ~ADM_coreQtGl();
 
         
@@ -114,6 +116,7 @@ class ADM_OPENGL6_EXPORT QtGlAccelWidget : public QOpenGLWidget, public ADM_core
 {
 private:
         int             imageWidth, imageHeight;
+        ADM_pixelFormat pixelFormat;
 
         QOpenGLShaderProgram *glProgram;
         bool            operational;
@@ -125,7 +128,7 @@ protected:
         void updateTexture(ADMImage *pic);
 
 public:
-             QtGlAccelWidget(QWidget *parent, int imagew, int imageh);
+             QtGlAccelWidget(QWidget *parent, int imagew, int imageh, ADM_pixelFormat fmt = ADM_PIXFRMT_YV12);
              ~QtGlAccelWidget();
         bool isOperational(void) { return operational; }
         bool setImage(ADMImage *pic);
