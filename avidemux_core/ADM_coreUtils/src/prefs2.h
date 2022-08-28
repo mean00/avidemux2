@@ -24,6 +24,7 @@ struct  {
 	bool libva;
 	bool videotoolbox;
 	bool enable_opengl;
+	bool filter_preview_canvas_opengl;
 	bool cap_refresh_enabled;
 	uint32_t cap_refresh_value;
 	std::string sdlDriver;

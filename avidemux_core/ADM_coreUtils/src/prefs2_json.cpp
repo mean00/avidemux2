@@ -27,6 +27,7 @@ json.addBool("xvba",key->features.xvba);
 json.addBool("libva",key->features.libva);
 json.addBool("videotoolbox",key->features.videotoolbox);
 json.addBool("enable_opengl",key->features.enable_opengl);
+json.addBool("filter_preview_canvas_opengl",key->features.filter_preview_canvas_opengl);
 json.addBool("cap_refresh_enabled",key->features.cap_refresh_enabled);
 json.addUint32("cap_refresh_value",key->features.cap_refresh_value);
 json.addString("sdlDriver",key->features.sdlDriver);

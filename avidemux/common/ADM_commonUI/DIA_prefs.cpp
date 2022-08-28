@@ -92,6 +92,7 @@ bool     bvideotoolbox=false;
 bool     hzd,vzd,dring;
 bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsSSE4,capsSSE42,capsAVX,capsAVX2,capsAll;
 bool     hasOpenGl=false;
+bool     filterPreviewAccel=true;
 
 bool     refreshCapEnabled=false;
 uint32_t refreshCapValue=100;
@@ -108,7 +109,10 @@ std::string currentSdlDriver=getSdlDriverName();
 #endif
 
 #ifdef USE_OPENGL
-          prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl);
+        if(!prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl))
+            hasOpenGl = false;
+        if(!prefs->get(FEATURES_FILTER_PREVIEW_CANVAS_OPENGL,&filterPreviewAccel))
+            filterPreviewAccel = true;
 #endif
 
 	olddevice=newdevice=AVDM_getCurrentDevice();
@@ -604,12 +608,14 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemUInteger displayRefreshCap(&refreshCapValue,QT_TRANSLATE_NOOP("adm","Refresh Rate Cap (ms)"),10,1000);
 
 #ifdef USE_OPENGL
-        diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
+        diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable OpenGL support"));
+        diaElemToggle filterPreviewAccelToggle(&filterPreviewAccel,QT_TRANSLATE_NOOP("adm","Enable OpenGL display in filter preview dialogs"));
         diaElemReadOnlyText openGlText(NULL,QT_TRANSLATE_NOOP("adm","OpenGL video display and filters require "
             "OpenGL to be enabled and working at application startup to be available"));
 
         diaElemFrame frameOpenGL(QT_TRANSLATE_NOOP("adm","OpenGL"));
         frameOpenGL.swallow(&useOpenGl);
+        frameOpenGL.swallow(&filterPreviewAccelToggle);
         frameOpenGL.swallow(&openGlText);
 #endif
         diaElemFrame frameRC(QT_TRANSLATE_NOOP("adm","GUI Rendering Options")); // a hack to fix tabbing order
@@ -711,6 +717,7 @@ std::string currentSdlDriver=getSdlDriverName();
         {
 #ifdef USE_OPENGL
             prefs->set(FEATURES_ENABLE_OPENGL,hasOpenGl);
+            prefs->set(FEATURES_FILTER_PREVIEW_CANVAS_OPENGL,filterPreviewAccel);
 #endif
     // cpu caps
             uint32_t cpuMaskOut;

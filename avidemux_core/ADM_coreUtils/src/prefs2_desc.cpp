@@ -19,6 +19,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"features.libva",offsetof(my_prefs_struct,features.libva),"bool",ADM_param_bool},
  {"features.videotoolbox",offsetof(my_prefs_struct,features.videotoolbox),"bool",ADM_param_bool},
  {"features.enable_opengl",offsetof(my_prefs_struct,features.enable_opengl),"bool",ADM_param_bool},
+ {"features.filter_preview_canvas_opengl",offsetof(my_prefs_struct,features.filter_preview_canvas_opengl),"bool",ADM_param_bool},
  {"features.cap_refresh_enabled",offsetof(my_prefs_struct,features.cap_refresh_enabled),"bool",ADM_param_bool},
  {"features.cap_refresh_value",offsetof(my_prefs_struct,features.cap_refresh_value),"uint32_t",ADM_param_uint32_t},
  {"features.sdlDriver",offsetof(my_prefs_struct,features.sdlDriver),"std::string",ADM_param_stdstring},

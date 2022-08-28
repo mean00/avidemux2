@@ -67,10 +67,12 @@ bool ADM_QCanvas::initAccel(bool inputIsYuv)
     char *noaccel = getenv("ADM_QCANVAS_NOACCEL");
     if(noaccel && !strcmp("1",noaccel))
         return false;
-    if(!ADM_glHasActiveTexture())
-        return false;
     bool r = false;
     if(!prefs->get(FEATURES_ENABLE_OPENGL,&r) || !r)
+        return false;
+    if(!prefs->get(FEATURES_FILTER_PREVIEW_CANVAS_OPENGL,&r) || !r)
+        return false;
+    if(!ADM_glHasActiveTexture())
         return false;
     QtGlAccelWidget *gl = new QtGlAccelWidget(this, width(), height(), inputIsYuv? ADM_PIXFRMT_YV12 : ADM_PIXFRMT_RGB32A);
     gl->setDisplaySize(width(), height());
