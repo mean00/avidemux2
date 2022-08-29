@@ -24,6 +24,7 @@ bool GUI_NextFrame(void);
 bool GUI_PrevFrame(void);
 bool GUI_NextKeyFrame(void);
 bool GUI_PreviousKeyFrame(void);
+bool GUI_FastForward(void);
 
 bool GUI_GoToTime(uint64_t time);
 uint8_t GUI_close(void);

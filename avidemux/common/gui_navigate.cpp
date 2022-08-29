@@ -265,6 +265,9 @@ static int ignore_change=0;
       case ACT_NextKFrame:
         GUI_NextKeyFrame();
       break;
+      case ACT_FastForward:
+        GUI_FastForward();
+      break;
       case ACT_PrevCutPoint:
         GUI_PrevCutPoint();
       break;
@@ -378,6 +381,32 @@ bool GUI_NextKeyFrame(void)
         A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
         return false;
       }
+    GUI_setCurrentFrameAndTime();
+    UI_purge();
+    return true;
+}
+
+/**
+    \fn GUI_FastForward
+    \brief next N frame
+*/
+bool GUI_FastForward(void)
+{
+    if (playing)
+        return false;
+    if (!avifileinfo)
+        return false;
+    
+    admPreview::deferDisplay(true);
+    int i=0;
+    for (; i<10; i++)
+    {
+        if(!admPreview::nextPicture()) break;
+    }
+    admPreview::deferDisplay(false);
+    if (i==0)
+        return false;
+    admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;

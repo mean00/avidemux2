@@ -2066,6 +2066,8 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                             sendAction(ACT_Forward1Second);
                         else if (keyEvent->modifiers() & Qt::ControlModifier)
                             sendAction(ACT_Forward2Seconds);
+                        else if (keyEvent->modifiers() & Qt::AltModifier)
+                            sendAction(ACT_FastForward);
                         else 
                             sendAction(ACT_NextFrame);
 

@@ -155,7 +155,8 @@ static const MenuEntry _myMenuGo[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Backward 4 seconds"),  NULL,ACT_Back4Seconds,    MKICON(backward4s),    "Ctrl+Shift+Left",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Forward 4 seconds"),   NULL,ACT_Forward4Seconds, MKICON(forward4s),     "Ctrl+Shift+Right",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Backward one minute"), NULL,ACT_Back1Mn,         MKICON(backward1mn),   NULL,0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Forward one minute"),  NULL,ACT_Forward1Mn,      MKICON(forward1mn),    NULL,0}
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Forward one minute"),  NULL,ACT_Forward1Mn,      MKICON(forward1mn),    NULL,0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Fast Forward"),        NULL,ACT_FastForward,     MKICON(fastforward),   "Alt+Right",0}
         };
 
 std::vector<MenuEntry> myMenuGo(_myMenuGo, _myMenuGo + sizeof(_myMenuGo) / sizeof(_myMenuGo[0]));
