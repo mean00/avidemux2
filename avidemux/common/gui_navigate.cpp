@@ -397,14 +397,22 @@ bool GUI_FastForward(void)
     if (!avifileinfo)
         return false;
     
+    uint64_t pts=admPreview::getCurrentPts();
     admPreview::deferDisplay(true);
-    int i=0;
-    for (; i<10; i++)
+    bool nextError=false;
+    for (int i=0; i<999; i++)
     {
-        if(!admPreview::nextPicture()) break;
+        if(!admPreview::nextPicture()) 
+        {
+            nextError = (i==0);
+            break;
+        }
+        if (admPreview::getCurrentPts() < pts) break;
+        if (admPreview::getCurrentPts() >= (pts+200000LL)) break;
+        
     }
     admPreview::deferDisplay(false);
-    if (i==0)
+    if (nextError)
         return false;
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
