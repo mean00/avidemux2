@@ -297,8 +297,6 @@ void filtermainWindow::preview(bool b)
     connect(previewDialog, SIGNAL(rejected()), this, SLOT(closePreview()));
     qtRegisterDialog(previewDialog);
     previewDialog->show();
-    previewDialog->seekablePreview->adjustCanvasPosition();
-    previewDialog->canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 /**
  * \fn closePreview

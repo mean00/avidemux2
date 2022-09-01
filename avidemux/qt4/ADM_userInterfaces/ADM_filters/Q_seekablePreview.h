@@ -40,6 +40,4 @@ public:
 	uint32_t frameIndex();
 public slots:
 	void sliderChanged(int value);
-private:
-        void resizeEvent(QResizeEvent *event);
 };

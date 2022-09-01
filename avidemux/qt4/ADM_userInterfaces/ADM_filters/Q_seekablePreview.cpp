@@ -80,15 +80,4 @@ void Ui_seekablePreviewWindow::sliderChanged(int value)
     seekablePreview->sliderChanged();
 }
 
-
-void Ui_seekablePreviewWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    seekablePreview->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    seekablePreview->adjustCanvasPosition();
-}
-
 // EOF
