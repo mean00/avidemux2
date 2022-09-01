@@ -47,7 +47,6 @@ Ui_waveletDenoiseWindow::Ui_waveletDenoiseWindow(QWidget *parent, waveletDenoise
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) \
@@ -118,23 +117,6 @@ void Ui_waveletDenoiseWindow::reset(void)
     myFly->upload();
     myFly->sameImage();
     lock--;
-}
-
-void Ui_waveletDenoiseWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_waveletDenoiseWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYSPIN(x) w->horizontalSlider##x

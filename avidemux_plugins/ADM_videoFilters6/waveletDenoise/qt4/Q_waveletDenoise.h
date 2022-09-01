@@ -27,9 +27,5 @@ class Ui_waveletDenoiseWindow : public QDialog
     void valueChanged(int foo);
     void valueChangedSpinBox(double foo);
     void reset(void);
-
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_waveletDenoise_h
