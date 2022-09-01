@@ -41,7 +41,9 @@ void ADM_QCanvas::changeSize(uint32_t w,uint32_t h)
 	if(gl)
 		gl->setDisplaySize(w,h);
 #endif
+	bool old = blockSignals(true);
 	resize(w,h);
+	blockSignals(old);
 }
 
 void ADM_QCanvas::getDisplaySize(uint32_t *w,uint32_t *h)
