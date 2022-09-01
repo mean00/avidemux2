@@ -38,6 +38,7 @@ flyBlacken::flyBlacken (QDialog *parent,uint32_t width,uint32_t height,ADM_coreV
     _oy=0;
     _ow=width;
     _oh=height;
+    clearEventFilter();
   }
 /**
  * 
@@ -46,16 +47,6 @@ flyBlacken::~flyBlacken()
 {
     delete rubber;
     rubber=NULL;
-}
-/**
- * \fn initRubber
- * \brief To be called on show event
- */
-void flyBlacken::initRubber(void)
-{
-    rubber->rubberband->show(); // must be called first
-    rubber->rubberband->setVisible(!rubber_is_hidden);
-    rubber->nestedIgnore = 0;
 }
 /**
  * \fn adjustRubber

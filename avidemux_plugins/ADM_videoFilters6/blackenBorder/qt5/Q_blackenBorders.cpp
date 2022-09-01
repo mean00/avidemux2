@@ -27,6 +27,7 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
 {
     ui.setupUi(this);
     lock=0;
+    shown = false;
     // Allocate space for green-ised video
     inputWidth = in->getInfo()->width;
     inputHeight = in->getInfo()->height;
@@ -42,7 +43,6 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     myBlacken->addControl(ui.toolboxLayout);
     myBlacken->setTabOrder();
     myBlacken->upload();
-    myBlacken->refreshImage();
 
     bool rubberIsHidden = false;
     QSettings *qset = qtSettingsCreate();
@@ -55,8 +55,7 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
         qset = NULL;
     }
 
-    //myBlacken->rubber->nestedIgnore=1;
-    myBlacken->rubber_is_hidden = rubberIsHidden;
+    myBlacken->hideRubber(rubberIsHidden);
     ui.checkBoxRubber->setChecked(myBlacken->rubber_is_hidden);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
@@ -186,10 +185,18 @@ void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
  */
 void Ui_blackenWindow::showEvent(QShowEvent *event)
 {
-    myBlacken->initRubber(); // must be called first
     QDialog::showEvent(event);
+
+    if(shown) return;
+    shown = true;
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    myBlacken->refreshImage();
+
     myBlacken->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+
+    QApplication::restoreOverrideCursor();
 }
 
 //************************

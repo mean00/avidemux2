@@ -9,6 +9,7 @@ class Ui_blackenWindow : public QDialog
     Q_OBJECT
 
 protected:
+    bool                shown;
     int                 lock;
     int                 inputWidth, inputHeight;
     flyBlacken          *myBlacken;
