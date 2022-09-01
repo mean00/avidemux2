@@ -35,6 +35,49 @@
 #define ACCEL_CANVAS_FLAG_USABLE 2
 
 /**
+ * \fn      FlyDialogEventFilter
+ * \brief   ctor
+ */
+FlyDialogEventFilter::FlyDialogEventFilter(ADM_flyDialog *flyDialog)
+{
+    recomputed = false;
+    this->flyDialog = flyDialog;
+}
+/**
+ * \fn      eventFilter
+ * \brief   Default handling of show and resize events
+ */
+bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
+{
+    switch(event->type())
+    {
+        case QEvent::Show:
+            if (!recomputed)
+            {
+                recomputed = true;
+                QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+                flyDialog->adjustCanvasPosition();
+                QWidget *view = flyDialog->_canvas->parentWidget();
+                view->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+                flyDialog->refreshImage();
+                QApplication::restoreOverrideCursor();
+            }
+            break;
+        case QEvent::Resize:
+            if (flyDialog->_canvas->height() > 0)
+            {
+                QWidget *view = flyDialog->_canvas->parentWidget();
+                flyDialog->fitCanvasIntoView(view->width(), view->height());
+                flyDialog->adjustCanvasPosition();
+            }
+            break;
+        default:break;
+    }
+
+    return QObject::eventFilter(obj, event);
+}
+
+/**
  */
 class flyControl
 {
@@ -674,10 +717,11 @@ bool ADM_flyDialogRgb::process(void)
         uint8_t *target = (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE) ? _rgbByteBuffer.at(0) : _rgbByteBufferDisplay.at(0);
         yuv2rgb->convertImage(_yuvBuffer, target);
     } else {
-        if (_scaledPts != lastPts)
+        if (_reprocess || _scaledPts != lastPts)
         {
             yuv2rgb->convertImage(_yuvBuffer,_rgbByteBuffer.at(0));
             _scaledPts = lastPts;
+            _reprocess = true;
         }
         if (_resizeMethod != RESIZE_NONE)
         {
@@ -800,9 +844,27 @@ void ADM_flyDialogRgb::updateZoom(void)
     prefs->get(FEATURES_SWAP_MOUSE_WHEEL,&swapWheel);
     slider->setInvertedWheel(swapWheel);
     slider->setMarkers(_in->getInfo()->totalDuration,_in->getInfo()->markerA,_in->getInfo()->markerB);
-    
+
+    _eventFilter = new FlyDialogEventFilter(this);
+    _canvas->parentWidget()->parentWidget()->installEventFilter(_eventFilter);
 }
 
+/**
+    \fn clearEventFilter
+    \brief Convenience function for dialogs which need to handle show and resize events in a different way
+*/
+void ADM_flyDialog::clearEventFilter(void)
+{
+    if(!_eventFilter) return;
+
+    _canvas->parentWidget()->parentWidget()->removeEventFilter(_eventFilter);
+
+    if(_eventFilter)
+    {
+        delete _eventFilter;
+        _eventFilter = NULL;
+    }
+}
 /**
     \fn adjustCanvasPosition
     \brief center canvas within the viewport (graphicsView)
@@ -910,8 +972,10 @@ uint8_t     ADM_flyDialog::sliderSet(uint32_t value)
     ADM_flyNavSlider  *slide=(ADM_flyNavSlider *)_slider;
     ADM_assert(slide);
     if(value>ADM_FLY_SLIDER_MAX) value=ADM_FLY_SLIDER_MAX;
+    slide->blockSignals(true);
     slide->setValue(value);
-    return 1; 
+    slide->blockSignals(false);
+    return 1;
 }
 
 /**

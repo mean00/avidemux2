@@ -97,6 +97,22 @@ virtual bool displayImage(ADMImage *pic);
         void getDisplaySize(uint32_t *w, uint32_t *h);
 };
 
+/**
+ * \class FlyDialogEventFilter
+ * \brief Default handling for show and resize events
+ */
+class ADM_UIQT46_EXPORT FlyDialogEventFilter : public QObject
+{
+    ADM_flyDialog *flyDialog;
+    bool recomputed;
+
+public:
+    FlyDialogEventFilter(ADM_flyDialog *flyDialog);
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+};
+
 class flyControl;
 /**
     \class ADM_flyDialog
@@ -126,6 +142,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           flyControl  *_control;
           std::vector<QWidget *> buttonList; // useful for manipulating tab order
           QDialog     *_parent;
+          FlyDialogEventFilter *_eventFilter;
           bool         _bypassFilter;
           bool         _reprocess;
 
@@ -152,6 +169,8 @@ protected:
           uint8_t            cleanup(void);  
           bool               initializeSize();
           float              calcZoomToBeDisplayable(uint32_t imageWidth, uint32_t imageHeight);
+          void               clearEventFilter(void);
+
   /* Filter dependant : you have to implement them*/
 //
            virtual           void resetScaler(void)=0; // dont bother, implemented by yuv or rgb subclass
@@ -175,9 +194,8 @@ public:
   virtual float    calcZoomFactor(void);  
   virtual uint32_t sliderGet(void);             // Return the slider value between 0 and ADM_FLY_SLIDER_MAX
   virtual uint8_t  sliderSet(uint32_t value);  // Set slider value between 0 and ADM_FLY_SLIDE_MAX
-
-// Either refreshImage(), sliderChanged() or gotoSelectionStart() must be called
-// before valueChanged(int) signal from the slider is connected to its slot.
+  virtual void     adjustCanvasPosition(void);
+  virtual void     fitCanvasIntoView(uint32_t width, uint32_t height);
 
   virtual bool     refreshImage(void);
   virtual bool     sliderChanged(void);
@@ -198,8 +216,6 @@ public slots:
         virtual void peekOriginalPressed(void);
         virtual void peekOriginalReleased(void);
         virtual void timeout(void);
-        virtual void adjustCanvasPosition(void);
-        virtual void fitCanvasIntoView(uint32_t width, uint32_t height);
 };
 /**
  * \class ADM_flyDialogYuv
@@ -307,6 +323,7 @@ private:
         QPoint dragOffset;
         QRect dragGeometry;
         void resizeEvent(QResizeEvent *);
+        void showEvent(QShowEvent *);
 #if QT_VERSION < QT_VERSION_CHECK(6,0,0)
         void enterEvent(QEvent *);
 #else
