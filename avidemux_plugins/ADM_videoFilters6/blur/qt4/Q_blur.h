@@ -1,7 +1,6 @@
 #ifndef Q_blur_h
 #define Q_blur_h
 #include "ui_blur.h"
-#include "ADM_image.h"
 #include "blur.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyBlur.h"

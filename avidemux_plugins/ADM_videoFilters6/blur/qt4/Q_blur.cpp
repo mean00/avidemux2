@@ -21,9 +21,10 @@
  ***************************************************************************/
 
 #include <QPushButton>
-#include "Q_blur.h"
 #include "ADM_toolkitQt.h"
-#include "ADM_vidBlur.h"
+#include "ADM_QSettings.h"
+#include "ADM_default.h"
+#include "Q_blur.h"
 
 //
 //	Video is in YV12 Colorspace
@@ -41,7 +42,6 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
 
         myFly=new flyBlur( this,width, height,in,canvas,ui.horizontalSlider);
-        ADMVideoBlur::BlurCreateBuffers(width,height, &(myFly->rgbBufStride), &(myFly->rgbBufRaw), &(myFly->rgbBufImage), &(myFly->convertYuvToRgb), &(myFly->convertRgbToYuv));
         memcpy(&(myFly->param),param,sizeof(blur));
         myFly->left=param->left;
         myFly->right=param->right;
@@ -52,9 +52,19 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         myFly->setTabOrder();
         myFly->upload();
 
-        myFly->rubber_is_hidden=param->rubber_is_hidden;
-        ui.checkBoxRubber->setChecked(myFly->rubber_is_hidden);
-        myFly->rubber->rubberband->setVisible(!myFly->rubber_is_hidden);
+        bool rubberIsHidden = false;
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("blur");
+            rubberIsHidden = qset->value("rubberIsHidden", false).toBool();
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }
+
+        myFly->hideRubber(rubberIsHidden);
+        ui.checkBoxRubber->setChecked(rubberIsHidden);
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
@@ -87,17 +97,28 @@ void Ui_blurWindow::gather(blur *param)
     param->right=myFly->right;
     param->top=myFly->top;
     param->bottom=myFly->bottom;
-    param->rubber_is_hidden=myFly->rubber_is_hidden;
 }
 Ui_blurWindow::~Ui_blurWindow()
 {
-    if(myFly) {
-        ADMVideoBlur::BlurDestroyBuffers(myFly->rgbBufRaw, myFly->rgbBufImage, myFly->convertYuvToRgb, myFly->convertRgbToYuv);
+    if(myFly)
+    {
+        QSettings *qset = qtSettingsCreate();
+        if(qset)
+        {
+            qset->beginGroup("blur");
+            qset->setValue("rubberIsHidden", myFly->rubberIsHidden());
+            qset->endGroup();
+            delete qset;
+            qset = NULL;
+        }
         delete myFly;
+        myFly = NULL;
     }
-    myFly=NULL; 
-    if(canvas) delete canvas;
-    canvas=NULL;
+    if(canvas)
+    {
+        delete canvas;
+        canvas=NULL;
+    }
 }
 #define COPY_VALUE_TO_SPINBOX(x) \
         ui.spinBox##x->blockSignals(true); \
@@ -144,25 +165,14 @@ void Ui_blurWindow::reset( bool f )
  */
 void Ui_blurWindow::toggleRubber(int checkState)
 {
-    bool visible=true;
-    if(checkState)
-        visible=false;
-    myFly->rubber->rubberband->setVisible(visible);
-    myFly->rubber_is_hidden=!visible;
+    myFly->hideRubber(checkState);
 }
+/**
+ * \fn resizeEvent
+ */
 void Ui_blurWindow::resizeEvent(QResizeEvent *event)
 {
-    int x=(int)((double)myFly->left*myFly->_zoom);
-    int y=(int)((double)myFly->top*myFly->_zoom);
-    int w=(int)((double)(myFly->_w-(myFly->left+myFly->right))*myFly->_zoom);
-    int h=(int)((double)(myFly->_h-(myFly->top+myFly->bottom))*myFly->_zoom);
-
-    myFly->blockChanges(true);
-    myFly->rubber->nestedIgnore++;
-    myFly->rubber->move(x,y);
-    myFly->rubber->resize(w,h);
-    myFly->rubber->nestedIgnore--;
-    myFly->blockChanges(false);
+    myFly->adjustRubber();
 }
 
 #define MYCOMBOX(x) w->comboBox##x
@@ -193,10 +203,7 @@ uint8_t flyBlur::upload(bool redraw, bool toRubber)
 
     if(toRubber)
     {
-        rubber->nestedIgnore++;
-        rubber->move(_zoom*(float)left,_zoom*(float)top);
-        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
-        rubber->nestedIgnore--;
+        adjustRubber();
     }
 
     if(!redraw)
@@ -232,14 +239,8 @@ uint8_t flyBlur::download(void)
     if(reject)
         upload();
     else
-   {
-       blockChanges(true);
-       rubber->nestedIgnore++;
-       rubber->move(_zoom*(float)left,_zoom*(float)top);
-       rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
-       rubber->nestedIgnore--;
-       blockChanges(false);
-   }
+        adjustRubber();
+
     return 1;
 }
 void flyBlur::setTabOrder(void)
