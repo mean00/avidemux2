@@ -518,6 +518,8 @@ ADM_latm2aac::ADM_latm2aac(void)
 
 ADM_latm2aac::~ADM_latm2aac()
 {
+    listOfFreeBuffers.clear();
+    listOfUsedBuffers.clear();
 }
 
 /**
