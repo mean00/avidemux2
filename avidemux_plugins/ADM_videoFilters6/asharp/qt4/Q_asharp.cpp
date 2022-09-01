@@ -45,7 +45,6 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
     myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
     myCrop->setTabOrder();
     myCrop->upload();
-    myCrop->refreshImage();
 
     connect(ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChanged(double))); \
@@ -100,22 +99,6 @@ void Ui_asharpWindow::reset(void)
     myCrop->upload();
     myCrop->sameImage();
     lock--;
-}
-void Ui_asharpWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myCrop->adjustCanvasPosition();
-}
-
-void Ui_asharpWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myCrop->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYSPIN(x) w->doubleSpinBox##x

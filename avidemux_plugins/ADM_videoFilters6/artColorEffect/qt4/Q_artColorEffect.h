@@ -26,8 +26,5 @@ class Ui_artColorEffectWindow : public QDialog
     void sliderUpdate(int foo);
     void effectChanged(int foo);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_artColorEffect_h

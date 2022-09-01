@@ -41,9 +41,5 @@ class Ui_artChromaKeyWindow : public QDialog
     void pushedC3();
     void imageSelect();
 
-
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_artChromaKey_h

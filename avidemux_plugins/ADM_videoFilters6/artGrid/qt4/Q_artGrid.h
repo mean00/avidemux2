@@ -29,8 +29,5 @@ class Ui_artGridWindow : public QDialog
     void valueChangedSpinBox(int foo);
     void reset(void);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_artGrid_h

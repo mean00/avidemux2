@@ -85,7 +85,6 @@ Ui_artChromaKeyWindow::Ui_artChromaKeyWindow(QWidget *parent, artChromaKey *para
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
@@ -342,23 +341,6 @@ void yuv2rgb(int * rgb, int * yuv)
         if (rgb[i] < 0) rgb[i] = 0;
         if (rgb[i] > 255) rgb[i] = 255;
     }
-}
-
-void Ui_artChromaKeyWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_artChromaKeyWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYCOMBOX(x) w->comboBox##x

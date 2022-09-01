@@ -32,9 +32,5 @@ class Ui_artChromaHoldWindow : public QDialog
     void pushedC2();
     void pushedC3();
 
-
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_artChromaHold_h

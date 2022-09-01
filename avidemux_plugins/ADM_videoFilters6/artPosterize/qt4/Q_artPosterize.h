@@ -28,8 +28,5 @@ class Ui_artPosterizeWindow : public QDialog
     void valueChanged(int foo);
     void valueChangedSpinBox(int foo);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_artPosterize_h
