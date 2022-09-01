@@ -33,7 +33,6 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
     resetVideoStream(videoStream);
 
     seekablePreview->addControl(ui.toolLayout);
-    seekablePreview->refreshImage();
 
     connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
 }
