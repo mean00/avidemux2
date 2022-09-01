@@ -308,6 +308,7 @@ uint8_t ADM_flyDialog::cleanup(void)
         delete _control;
         _control=NULL;
     }
+    clearEventFilter();
     return 1;
 }
 /**
@@ -426,6 +427,8 @@ bool ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption co
 */
 bool ADM_flyDialog::sameImage(bool reprocess)
 {
+    if(!_gotPic)
+        return true;
     _reprocess = reprocess;
     process();
     return display();
@@ -445,6 +448,7 @@ bool ADM_flyDialog::nextImageInternal(void)
         ADM_warning("[FlyDialog] Cannot get frame %u\n",frameNumber); 
         return 0;
     }
+    _gotPic = true;
     lastPts=_yuvBuffer->Pts;
     setCurrentPts(lastPts);
     uint64_t duration=_in->getInfo()->totalDuration;
@@ -620,6 +624,8 @@ bool ADM_flyDialogYuv::process(void)
 */
 bool ADM_flyDialogYuv::display(void)
 {
+    if(!_gotPic)
+        return true;
     ADM_QCanvas *v = _canvas;
     if (!(accelCanvasFlags & ACCEL_CANVAS_FLAG_PROBED) && v->isVisible())
     {
@@ -821,6 +827,7 @@ void ADM_flyDialogRgb::updateZoom(void)
     // Seek is delegated to the user
     _bypassFilter=false;
     _reprocess = true;
+    _gotPic = false;
 
     QGraphicsScene *sc=new QGraphicsScene(this);
     sc->setBackgroundBrush(QBrush(Qt::darkGray, Qt::SolidPattern));

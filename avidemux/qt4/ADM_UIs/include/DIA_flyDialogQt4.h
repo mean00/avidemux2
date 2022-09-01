@@ -145,7 +145,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           FlyDialogEventFilter *_eventFilter;
           bool         _bypassFilter;
           bool         _reprocess;
-
+          bool         _gotPic;
 
   public:
           void          *_cookie; // whatever, usually the ui_xxx component
