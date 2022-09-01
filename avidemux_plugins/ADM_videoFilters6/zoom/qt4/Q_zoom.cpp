@@ -43,7 +43,6 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param,ADM_coreVideoFilter *i
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
@@ -91,23 +90,6 @@ void Ui_zoomWindow::reset( bool f )
          myFly->upload();
          myFly->sameImage();
          lock--;
-}
-
-void Ui_zoomWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
-}
-
-void Ui_zoomWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
 }
 
 //************************

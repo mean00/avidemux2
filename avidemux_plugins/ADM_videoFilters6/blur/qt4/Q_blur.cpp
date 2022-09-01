@@ -51,9 +51,7 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
-        myFly->rubber->nestedIgnore=1;
         myFly->rubber_is_hidden=param->rubber_is_hidden;
         ui.checkBoxRubber->setChecked(myFly->rubber_is_hidden);
         myFly->rubber->rubberband->setVisible(!myFly->rubber_is_hidden);
@@ -154,13 +152,6 @@ void Ui_blurWindow::toggleRubber(int checkState)
 }
 void Ui_blurWindow::resizeEvent(QResizeEvent *event)
 {
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-
     int x=(int)((double)myFly->left*myFly->_zoom);
     int y=(int)((double)myFly->top*myFly->_zoom);
     int w=(int)((double)(myFly->_w-(myFly->left+myFly->right))*myFly->_zoom);
@@ -172,16 +163,6 @@ void Ui_blurWindow::resizeEvent(QResizeEvent *event)
     myFly->rubber->resize(w,h);
     myFly->rubber->nestedIgnore--;
     myFly->blockChanges(false);
-}
-
-void Ui_blurWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
-    myFly->rubber->nestedIgnore=0;
-    if(myFly->rubber_is_hidden)
-        myFly->rubber->rubberband->hide();
 }
 
 #define MYCOMBOX(x) w->comboBox##x

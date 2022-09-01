@@ -44,7 +44,6 @@
         flymsharpen->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         flymsharpen->setTabOrder();
         flymsharpen->upload();
-        flymsharpen->refreshImage();
 
         ui.horizontalSliderStrength->setFocus();
 
@@ -98,22 +97,6 @@ void Ui_msharpenWindow::reset(bool checked)
     flymsharpen->upload();
     flymsharpen->sameImage();
     lock--;
-}
-void Ui_msharpenWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    flymsharpen->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    flymsharpen->adjustCanvasPosition();
-}
-
-void Ui_msharpenWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    flymsharpen->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define SYNCSPIN(x) ui.spinBox##x->setValue(ui.horizontalSlider##x->value());

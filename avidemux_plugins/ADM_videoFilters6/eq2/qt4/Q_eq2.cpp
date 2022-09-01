@@ -49,7 +49,6 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
     myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
     myCrop->setTabOrder();
     myCrop->upload();
-    myCrop->refreshImage();
     myCrop->update();
 
     ui.horizontalSliderContrast->setFocus();
@@ -184,29 +183,6 @@ void Ui_eq2Window::valueChanged( int f )
     myCrop->sameImage();
     setResetSliderEnabledState();
     lock--;
-}
-
-/**
-    \fn resizeEvent
-*/
-void Ui_eq2Window::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myCrop->adjustCanvasPosition();
-}
-
-/**
-    \fn showEvent
-*/
-void Ui_eq2Window::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myCrop->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
 #define sliderSet(x,y) w->horizontalSlider##x->setValue((int)(param.y*100));

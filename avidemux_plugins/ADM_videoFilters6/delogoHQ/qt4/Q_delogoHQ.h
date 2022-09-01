@@ -35,8 +35,6 @@ class Ui_delogoHQWindow : public QDialog
     void imageLoad();
 
   private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
     bool tryToLoadimage(const char *filename);
 };
 #endif    // Q_delogoHQ_h

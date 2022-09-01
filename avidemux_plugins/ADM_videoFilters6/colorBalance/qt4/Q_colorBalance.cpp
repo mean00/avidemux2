@@ -59,7 +59,6 @@ Ui_colorBalanceWindow::Ui_colorBalanceWindow(QWidget *parent, colorBalance *para
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn + ControlOption::UserWidgetBeforePeekBtn, peekRangesBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x,y,z) ui.slider##x->setScale(1,y,z); \
@@ -161,23 +160,6 @@ void Ui_colorBalanceWindow::peekRangesReleased(void)
     myFly->sameImage();
     lock--;
 }
-void Ui_colorBalanceWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_colorBalanceWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
-}
-
 void Ui_colorBalanceWindow::setHueColor(QDial * d, int angle)
 {
     int rgb[3],yuv[3];

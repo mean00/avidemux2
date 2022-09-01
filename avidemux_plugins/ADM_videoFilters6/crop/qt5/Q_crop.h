@@ -20,6 +20,7 @@ class Ui_cropWindow : public QDialog
     Q_OBJECT
 
 private:
+    bool            shown;
     int             lock;
     int             inputWidth,inputHeight;
     flyCrop         *myCrop;

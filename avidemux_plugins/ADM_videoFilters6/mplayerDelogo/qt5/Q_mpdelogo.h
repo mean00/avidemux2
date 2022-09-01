@@ -25,7 +25,6 @@ private:
         ADM_QCanvas         *canvas;
 
         void                resizeEvent(QResizeEvent *event);
-        void                showEvent(QShowEvent *event);
         void                setSpinWidth(int w, int h);
 
 public slots:

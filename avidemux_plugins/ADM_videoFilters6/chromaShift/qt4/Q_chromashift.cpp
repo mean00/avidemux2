@@ -84,23 +84,6 @@ void Ui_chromaShiftWindow::valueChanged( int f )
   lock--;
 }
 
-void Ui_chromaShiftWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myCrop->adjustCanvasPosition();
-}
-
-void Ui_chromaShiftWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myCrop->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
-}
-
 #define MYSPIN(x) w->spinBox##x
 //************************
 uint8_t flyChromaShift::upload(void)

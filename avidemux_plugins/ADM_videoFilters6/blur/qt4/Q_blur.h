@@ -32,6 +32,5 @@ class Ui_blurWindow : public QDialog
 
   private:
     void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_blur_h

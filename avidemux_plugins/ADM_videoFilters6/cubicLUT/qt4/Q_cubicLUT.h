@@ -32,8 +32,6 @@ class Ui_cubicLUTWindow : public QDialog
     void cubeLoad();
 
   private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
     bool tryToLoadImage(const char *filename);
     bool tryToLoadCube(const char *filename);
 };

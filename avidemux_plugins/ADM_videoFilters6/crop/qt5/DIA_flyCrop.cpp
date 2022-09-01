@@ -42,6 +42,7 @@ flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
     _lw=_ow=width;
     _lh=_oh=height;
     ar = (double)width / height;
+    clearEventFilter();
 }
 flyCrop::~flyCrop()
 {
@@ -96,16 +97,6 @@ void flyCrop::setCropMargins(int lf, int rt, int tp, int bt)
     if(rt>=0) right=rt;
     if(tp>=0) top=tp;
     if(bt>=0) bottom=bt;
-}
-/**
- * \fn initRubber
- * \brief To be called on show event
- */
-void flyCrop::initRubber(void)
-{
-    rubber->rubberband->show(); // must be called first
-    rubber->rubberband->setVisible(!rubber_is_hidden);
-    rubber->nestedIgnore = 0;
 }
 /**
  * \fn hideRubber
@@ -644,6 +635,7 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
 {
     ui.setupUi(this);
     lock=0;
+    shown = false;
     // Allocate space for green-ised video
     inputWidth = in->getInfo()->width;
     inputHeight = in->getInfo()->height;
@@ -673,8 +665,6 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
     ui.comboBoxAspectRatio->setCurrentIndex(param->ar_select);
     if(!param->ar_select)
         myCrop->upload(false,true);
-    myCrop->refreshImage();
-    myCrop->lockRubber(true);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
@@ -914,8 +904,14 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
  */
 void Ui_cropWindow::showEvent(QShowEvent *event)
 {
-    myCrop->initRubber();
     QDialog::showEvent(event);
+
+    if(shown) return;
+    shown = true;
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    myCrop->refreshImage();
+
     /* Avoid shifting the layout displaying output aspect ratio
     by setting a sufficient minimum width based on font metrics. */
     QFontMetrics fm = ui.labelSize->fontMetrics(); // we may assume that both labels use the same font
@@ -943,6 +939,8 @@ void Ui_cropWindow::showEvent(QShowEvent *event)
     
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+
+    QApplication::restoreOverrideCursor();
 }
 
 //EOF

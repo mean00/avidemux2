@@ -28,9 +28,5 @@ class Ui_quadTransWindow : public QDialog
     void valueChanged(int foo);
     void valueChangedSpinBox(double foo);
     void reset(bool f);
-
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_quadTrans_h

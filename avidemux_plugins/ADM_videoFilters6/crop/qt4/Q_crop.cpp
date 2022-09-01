@@ -45,8 +45,6 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
         myCrop->_cookie=&ui;
         myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
-        myCrop->refreshImage();
-
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
@@ -101,23 +99,6 @@ void Ui_cropWindow::reset( bool f )
          myCrop->upload();
          myCrop->sameImage();
          lock--;
-}
-
-void Ui_cropWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myCrop->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
-}
-
-void Ui_cropWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myCrop->adjustCanvasPosition();
 }
 
 //************************

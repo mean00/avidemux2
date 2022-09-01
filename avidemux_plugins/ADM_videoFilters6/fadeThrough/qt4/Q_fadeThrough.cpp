@@ -84,7 +84,6 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         
@@ -349,20 +348,9 @@ void Ui_fadeThroughWindow::reset( bool f )
     lock--;
 }
 
-void Ui_fadeThroughWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
 void Ui_fadeThroughWindow::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
 
     QFontMetrics fm = ui.labelTScope->fontMetrics();
     QString text = QString(QT_TRANSLATE_NOOP("fadeThrough","Time scope: "));
@@ -373,11 +361,7 @@ void Ui_fadeThroughWindow::showEvent(QShowEvent *event)
     if (!(ADMVideoFadeThrough::IsFadeIn() || ADMVideoFadeThrough::IsFadeOut()))
         ui.labelCenter->setMinimumWidth(1.05 * fm.boundingRect(text).width());
     ui.labelDuration->setMinimumWidth(1.05 * fm.boundingRect(text).width());
-
-    adjustSize();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
-
 
 bool flyFadeThrough::getTabEnabled(int tabIndex)
 {

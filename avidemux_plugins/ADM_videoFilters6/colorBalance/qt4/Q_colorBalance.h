@@ -34,8 +34,5 @@ class Ui_colorBalanceWindow : public QDialog
     void peekRangesPressed(void);
     void peekRangesReleased(void);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_colorBalance_h

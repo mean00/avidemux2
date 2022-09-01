@@ -26,8 +26,5 @@ class Ui_imageStabWindow : public QDialog
     void valueChanged(int foo);
     void reset(bool f);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_imageStab_h

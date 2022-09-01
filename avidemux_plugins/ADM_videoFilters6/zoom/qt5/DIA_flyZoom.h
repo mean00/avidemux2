@@ -36,7 +36,6 @@ public:
     bool        getZoomMargins(int *marginLeft, int *marginRight, int *marginTop, int *marginBottom);
     void        setZoomMargins(int marginLeft, int marginRight, int marginTop, int marginBottom);
 
-    void        initRubber(void);
     void        hideRubber(bool hidden);
     void        hideRubberGrips(bool hideTopLeft, bool hideBottomRight);
     void        adjustRubber(int x, int y, int w, int h);

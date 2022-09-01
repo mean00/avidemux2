@@ -30,7 +30,6 @@ class Ui_fadeFromImageWindow : public QDialog
     void reset(bool f);
 
   private:
-    void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
 };
 #endif    // Q_fadeFromImage_h

@@ -29,9 +29,6 @@ private slots:
 	void autoCrop(bool f);
 	void reset(bool f);
 
-private:
-        void showEvent(QShowEvent *event);
-        void resizeEvent(QResizeEvent *event);
 };
 
 #endif	// Q_crop_h

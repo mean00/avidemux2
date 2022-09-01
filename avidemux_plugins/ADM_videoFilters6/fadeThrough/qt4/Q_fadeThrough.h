@@ -37,7 +37,6 @@ class Ui_fadeThroughWindow : public QDialog
     void reset(bool f);
 
   private:
-    void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
 };
 #endif    // Q_fadeThrough_h

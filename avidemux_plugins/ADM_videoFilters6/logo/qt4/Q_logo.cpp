@@ -181,7 +181,6 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         myLogo->upload();
         myLogo->addControl(ui.toolboxLayout);
         myLogo->setTabOrder();
-        myLogo->refreshImage();
 
         connect( ui.pushButtonSelect,SIGNAL(pressed()),this,SLOT(imageSelect()));
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
@@ -302,27 +301,9 @@ void Ui_logoWindow::scaleChanged(double f)
 void Ui_logoWindow::resizeEvent(QResizeEvent *event)
 {
     if(lock) return;
-    if(!canvas->height())
-        return;
     lock++;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myLogo->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myLogo->adjustCanvasPosition();
     myLogo->adjustFrame();
-
     lock--;
-}
-
-/**
-    \fn showEvent
-    \brief set canvas initial size and position
-*/
-void Ui_logoWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myLogo->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
 /*********************************************************************/
