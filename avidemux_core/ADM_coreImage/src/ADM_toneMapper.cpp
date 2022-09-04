@@ -270,6 +270,7 @@ bool ADMToneMapper::toneMap(ADMImage *sourceImage, ADMImage *destImage)
         case 3:
         case 4:
         case 5:
+        case 6:
                 return toneMap_RGB(sourceImage, destImage, toneMappingMethod, targetLuminance, saturationAdjust, boostAdjust, adaptiveRGB, gamutMethod);
         default:
             return false;
@@ -1042,7 +1043,10 @@ void * ADMToneMapper::toneMap_RGB_LUTgen_worker(void *argptr)
                     Ytm *= (npl+1)/npl;
                 break;
             case 5:	// hable
+            case 6:     // "movie"
                     Ytm *= arg->boost*4.5;    // multiplier const: try to match perceived brightness to clipping & reinhard
+                    if (arg->method == 6)
+                        Ytm /= 2.0;
                     Ytm = (Ytm * (Ytm * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (Ytm * (Ytm * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
                     Ytm /= (npl * (npl * 0.15 + 0.50 * 0.10) + 0.20 * 0.02) / (npl * (npl * 0.15 + 0.50) + 0.20 * 0.30) - 0.02 / 0.30;
                 break;
@@ -1154,6 +1158,10 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     
     if (adaptive)
     {
+        // ignore primaries & whitepoint from Mastering metadata
+        // TODO add control for it
+        sourceImage->_hdrInfo.primaries[0][0] = 0;
+        sourceImage->_hdrInfo.whitePoint[0] = 0;
         
         boost = boostAdjust*boostAdjust;    // don't use _hdrInfo, only user enforced parameter
         
