@@ -1373,7 +1373,11 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     // Do tone mapping
 
     int32_t ccmx[9];
-    toneMap_RGB_ColorMatrix(ccmx, sourceImage->_colorPrim, sourceImage->_colorSpace, &(sourceImage->_hdrInfo.primaries[0][0]), sourceImage->_hdrInfo.whitePoint);
+    // TODO use dedicated control
+    if (adaptive)
+        toneMap_RGB_ColorMatrix(ccmx, sourceImage->_colorPrim, sourceImage->_colorSpace, NULL, NULL);
+    else
+        toneMap_RGB_ColorMatrix(ccmx, sourceImage->_colorPrim, sourceImage->_colorSpace, &(sourceImage->_hdrInfo.primaries[0][0]), sourceImage->_hdrInfo.whitePoint);
 
     for (int tr=0; tr<threadCount; tr++)
     {
