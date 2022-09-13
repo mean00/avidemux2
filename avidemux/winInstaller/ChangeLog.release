@@ -45,11 +45,13 @@
       <li>Support for decoding 8-bit VP9 in hardware via DXVA2 on Windows and via VDPAU on Linux with graphics cards featuring a VP9 decoder</li>
       <li>Buttons to seek to selection start (A) and end (B) in on-the-fly video filter preview</li>
       <li>Logo image in &quot;Add logo&quot; video filter configuration dialog is now scalable, can be repositioned by dragging</li>
+      <li>By default, on-the-fly preview in video filter configuration dialogs is now rendered using OpenGL to improve performance in HiDPI conditions</li>
     </ul>
 
     <h2>Bugfixes</h2>
 
     <ul>
+      <li>Crash on copy to clipboard if selection extends to the end of video, a regression introduced in v2.8.0</li>
       <li>Crashes in &quot;Resample FPS&quot; video filter with motion interpolation enabled</li>
       <li>Crash on finishing encoding with the vp9 encoder</li>
       <li>Avidemux falling victim to a crash in VA-API driver triggered by probing on application startup on Linux with some recent hardware</li>
