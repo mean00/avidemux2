@@ -1428,7 +1428,7 @@ int GUI_handleVPartialFilter(void)
         return 0;
     if (markerA==0 && markerB >= totalDuration)
     {
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("qmainfilter","Cannot add partial filter"), QT_TRANSLATE_NOOP("qmainfilter","A selection by markers has to be made."));
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("qmainfilter","Can not add partial filter"), QT_TRANSLATE_NOOP("qmainfilter","A selection by markers has to be made."));
         return 0;
     }
     
