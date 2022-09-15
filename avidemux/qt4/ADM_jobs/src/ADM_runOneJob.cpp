@@ -39,7 +39,9 @@
         #define MKCLI() admExecutable( "avidemux_cli")
     #else
         #define MKCLI() admExecutable("avidemux3_cli")
-        #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+        #if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+            #define MKQT() admExecutable("avidemux3_qt6")
+        #elif QT_VERSION >= QT_VERSION_CHECK(5,0,0)
             #define MKQT() admExecutable("avidemux3_qt5")
         #else
             #define MKQT() admExecutable("avidemux3_qt4")
