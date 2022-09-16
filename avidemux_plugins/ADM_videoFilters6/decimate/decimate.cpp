@@ -394,7 +394,7 @@ bool Decimate::get1(uint32_t *fn,ADMImage *data)
     if(!next)
         data->duplicate(src);
     else
-        data->blend(src,next);
+        blend(data, src,next);
     vidCache->unlockAll();		
     if (configuration.show == true)
     {
@@ -584,7 +584,7 @@ bool Decimate::get3(uint32_t *fn,ADMImage *data)
                     GETFRAME(sourceFrame, next);
                     if(!src) src=next;
                 }
-                data->blend(src,next);
+                blend(data, src,next);
                 vidCache->unlockAll();
                 break;
             default:
@@ -607,5 +607,35 @@ bool                Decimate::goToTime(uint64_t usSeek)
 {
     reset();
     return ADM_coreVideoFilterCached::goToTime(usSeek);
+}
+
+
+
+void  Decimate::blend(ADMImage *dst, ADMImage *src1, ADMImage *src2)
+{
+    for (int p=0; p<3; p++)
+    {
+        int width=dst->GetWidth((ADM_PLANE)p); 
+        int height=dst->GetHeight((ADM_PLANE)p);
+        int d0stride = dst->GetPitch((ADM_PLANE)p);
+        int s1stride = src1->GetPitch((ADM_PLANE)p);
+        int s2stride = src2->GetPitch((ADM_PLANE)p);
+        uint8_t * d0ptr = dst->GetWritePtr((ADM_PLANE)p);
+        uint8_t * s1ptr = src1->GetReadPtr((ADM_PLANE)p);
+        uint8_t * s2ptr = src2->GetReadPtr((ADM_PLANE)p);
+        for (int y=0; y<height; y++)
+        {
+            for (int x=0; x<width; x++)
+            {
+                unsigned int s1,s2;
+                s1 = s1ptr[x];
+                s2 = s2ptr[x];
+                d0ptr[x] = ((s1 + s2) >> 1);
+            }
+            d0ptr += d0stride;
+            s1ptr += s1stride;
+            s2ptr += s2stride;
+        }
+    }
 }
 // EOF

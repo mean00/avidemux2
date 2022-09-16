@@ -77,4 +77,5 @@ protected:
         bool        get1(uint32_t *fn,ADMImage *data);
         bool        get2(uint32_t *fn,ADMImage *data);
         bool        get3(uint32_t *fn,ADMImage *data);
+        void        blend(ADMImage *dst, ADMImage *src1, ADMImage *src2);
 };
