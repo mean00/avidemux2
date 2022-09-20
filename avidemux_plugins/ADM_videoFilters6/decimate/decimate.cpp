@@ -637,5 +637,6 @@ void  Decimate::blend(ADMImage *dst, ADMImage *src1, ADMImage *src2)
             s2ptr += s2stride;
         }
     }
+    dst->copyInfo(src1);
 }
 // EOF
