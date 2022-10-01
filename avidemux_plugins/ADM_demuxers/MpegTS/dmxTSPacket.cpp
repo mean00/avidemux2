@@ -461,10 +461,12 @@ nextPack2:
     if(false == verifyPsiChecksum(psi->payload, sectionLength + PSI_TABLE_HEADER_SIZE))
     {
         multiPacketPsi = 0;
+        // Reset pointer
+        ptr = psi->payload;
         goto nextPack2;
     }
-    psi->payloadSize = sectionLength - PSI_TABLE_SYNTAX_SIZE + PSI_CHECKSUM_SIZE;
-    memmove(psi->payload, psi->payload + hdr, sectionLength - PSI_TABLE_SYNTAX_SIZE + PSI_CHECKSUM_SIZE);
+    psi->payloadSize = sectionLength - PSI_TABLE_SYNTAX_SIZE - PSI_CHECKSUM_SIZE;
+    memmove(psi->payload, psi->payload + hdr, psi->payloadSize);
 
     return true;
 }
