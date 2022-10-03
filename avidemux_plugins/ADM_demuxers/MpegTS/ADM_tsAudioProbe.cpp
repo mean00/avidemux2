@@ -47,7 +47,7 @@ static bool tsCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize);
 */
 bool tsGetAudioInfo(tsPacketLinear *p,tsAudioTrackInfo *trackInfo)
 {
-#define PROBE_ANALYZE_SIZE 6000 // Should be enough in all cases (need ~ 2 blocks)
+#define PROBE_ANALYZE_SIZE 8000 // Should be enough in all cases (need ~ 2 blocks)
 uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
         
         trackInfo->extraDataLen=0;
