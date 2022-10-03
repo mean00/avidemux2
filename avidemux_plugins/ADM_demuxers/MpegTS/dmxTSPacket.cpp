@@ -350,6 +350,7 @@ bool tsPacket::getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi)
     uint32_t dummy;
     TSpacketInfo pkt;
     uint8_t *ptr = psi->payload;
+    uint8_t *end = ptr + TS_PSI_MAX_LEN;
 nextPack2:
     if(nbRetries && pkt.startAt-startOffset>(1<<25)) // max. 32 MiB
     {
@@ -451,6 +452,7 @@ nextPack2:
     while(true)
     {
         int chunk = (pkt.payloadSize > remaining)? remaining : pkt.payloadSize;
+        ADM_assert(ptr + chunk < end);
         memcpy(ptr, pkt.payload, chunk); // we keep PSI table header here
         ptr += chunk;
         remaining -= chunk;
