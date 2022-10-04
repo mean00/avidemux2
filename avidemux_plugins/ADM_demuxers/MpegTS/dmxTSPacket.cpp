@@ -347,10 +347,8 @@ bool tsPacket::getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi)
     uint64_t startOffset=0;
     uint32_t remaining,sectionLength=0;
     uint32_t transportStreamId=0;
-    uint32_t dummy;
+    uint32_t dummy,tail = 0;
     TSpacketInfo pkt;
-    uint8_t *ptr = psi->payload;
-    uint8_t *end = ptr + TS_PSI_MAX_LEN;
 nextPack2:
     if(nbRetries && pkt.startAt-startOffset>(1<<25)) // max. 32 MiB
     {
@@ -452,9 +450,9 @@ nextPack2:
     while(true)
     {
         int chunk = (pkt.payloadSize > remaining)? remaining : pkt.payloadSize;
-        ADM_assert(ptr + chunk < end);
-        memcpy(ptr, pkt.payload, chunk); // we keep PSI table header here
-        ptr += chunk;
+        ADM_assert(tail + chunk < TS_PSI_MAX_LEN);
+        memcpy(psi->payload + tail, pkt.payload, chunk); // we keep PSI table header here
+        tail += chunk;
         remaining -= chunk;
         if(remaining < 1) break;
         goto nextPack2;
@@ -463,8 +461,7 @@ nextPack2:
     if(false == verifyPsiChecksum(psi->payload, sectionLength + PSI_TABLE_HEADER_SIZE))
     {
         multiPacketPsi = 0;
-        // Reset pointer
-        ptr = psi->payload;
+        tail = 0;
         goto nextPack2;
     }
     psi->payloadSize = sectionLength - PSI_TABLE_SYNTAX_SIZE - PSI_CHECKSUM_SIZE;
