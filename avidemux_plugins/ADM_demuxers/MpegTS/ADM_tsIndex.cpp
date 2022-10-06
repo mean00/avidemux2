@@ -165,6 +165,7 @@ bool TsIndexerBase::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
     if(video->extraDataLength)
     {
         qfprintf(index,"ExtraData=%d ",video->extraDataLength);
+        ADM_assert(video->extraData);
         uint8_t *p = video->extraData;
         for(int i=0;i<video->extraDataLength;i++)
             qfprintf(index," %02x",*p++);
