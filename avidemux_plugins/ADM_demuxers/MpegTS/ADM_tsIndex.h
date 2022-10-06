@@ -43,14 +43,13 @@ using std::string;
 #endif
 static const char Structure[6]={'X','T','B','F','C','S'}; // Invalid, Top, Bottom, Frame, Frame+TFF, Frame+BFF
 static const char Type[5]={'X','I','P','B','D'};
-#define VC1_MAX_SEQ_SIZE 64
 #if 1
 #define ASK_APPEND_SEQUENCED
 #endif
 class TSVideo
 {
 public:
-    TSVideo(void) {w=h=fps=interlaced=ar=pid=type=frameCount=fieldCount=extraDataLength=0;}
+    TSVideo(void) {w=h=fps=interlaced=ar=pid=type=frameCount=fieldCount=extraDataLength=0;extraData=NULL;}
     uint32_t w;
     uint32_t h;
     uint32_t fps;
@@ -61,7 +60,7 @@ public:
     uint32_t frameCount;
     uint32_t fieldCount;
     uint32_t extraDataLength;
-    uint8_t  extraData[VC1_MAX_SEQ_SIZE];
+    uint8_t  *extraData;
 };
 
 

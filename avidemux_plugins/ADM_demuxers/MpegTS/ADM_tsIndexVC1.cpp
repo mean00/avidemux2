@@ -108,6 +108,7 @@ dmxPacketInfo info;
 
                           seqSize=bits.getConsumed();
                           video.extraDataLength=seqSize+4+1;
+                          video.extraData = new uint8_t[video.extraDataLength];
                           memcpy(video.extraData+4,bits.data,seqSize);
                             // Add info so that ffmpeg is happy
                           video.extraData[0]=0;
@@ -121,6 +122,8 @@ dmxPacketInfo info;
                           printf("[VC1] FPS : %d\n",(int)video.fps);
                           printf("[VC1] sequence header is %d bytes\n",(int)seqSize);
                           writeVideo(&video,ADM_TS_VC1);
+                          delete [] video.extraData;
+                          video.extraData = NULL;
                           writeAudio();
                           qfprintf(index,"[Data]");
                           pkt->collectStats();
@@ -191,7 +194,7 @@ bool TsIndexerVC1::decodeVC1Seq(tsGetBits &bits,TSVideo &video)
 {
 
 int v;
-int consumed;
+int consumed = 0;
     vc1Context.advanced=true;
 
 #define VX(a,b) v=bits.getBits(a);printf("[VC1] %d "#b"\n",v);consumed+=a;
@@ -335,6 +338,7 @@ int consumed;
     if(v) VX(3,mappy_flags);
     VX(1,range_mappuv_flags);
     if(v) VX(3,mappuv_flags);
+    ADM_info("Sequence header length: %d bits\n", consumed);
     return true;
 
 }
