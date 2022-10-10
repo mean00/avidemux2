@@ -281,7 +281,6 @@ private:
                     bool        getOpenGopDelayForSegment(uint32_t segNo, uint64_t segTime, uint32_t *delay, int *frameNo=NULL);
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
-                    uint32_t 	getSpecificMpeg4Info( void );
                     bool        getNonClosedGopDelay(uint64_t time,uint32_t *delay);
                     bool        videoCopyPrepare(void);
                     bool        getUserDataUnregistered(uint64_t start,uint8_t *buffer,uint32_t max,uint32_t *length);
