@@ -1304,6 +1304,24 @@ bool ADM_Composer::getOpenGopDelayForSegment(uint32_t segNo, uint64_t segTime, u
 }
 
 /**
+ * \fn      videoCopyPrepare
+ * \brief   Whatever is needed to be done internally in the editor prior to adjusting
+ *          the start point and video delay. In particular, reset the field holding
+ *          minimum ref PTS in stream order for earch segment in range, used to avoid
+ *          PTS overlap across segment boundaries.
+ */
+bool ADM_Composer::videoCopyPrepare(void)
+{
+    for(int i=0; i < _segments.getNbSegments(); i++)
+    {
+        _SEGMENT *seg = _segments.getSegment(i);
+        ADM_assert(seg);
+        seg->_refMinimumPts = 0;
+    }
+    return true;
+}
+
+/**
  * 
  * @param time
  * @param delay

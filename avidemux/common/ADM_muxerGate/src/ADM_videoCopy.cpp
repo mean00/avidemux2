@@ -56,6 +56,7 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     video_body->getTimeBase(&timeBaseNum,&timeBaseDen,true);
     frameIncrement=video_body->getFrameIncrement(true);
     isCFR=false;
+    video_body->videoCopyPrepare();
     // Estimate start frame
     if(false==video_body->getPKFramePTS(&ptsStart))
     {
