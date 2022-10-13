@@ -211,7 +211,18 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         }else
             rescaleFps(s->getAvgFps1000(),&(c->time_base));
         myTimeBase=video_st->time_base=c->time_base;
-        ADM_info("Video stream time base :%d,%d\n",video_st->time_base.num,video_st->time_base.den);
+        // set average frame rate else the track duration in the edit list may be too short
+        rescaleFps(s->getAvgFps1000(), &video_st->avg_frame_rate);
+        // swap numerator and denominator
+        if(video_st->avg_frame_rate.num && video_st->avg_frame_rate.den)
+        {
+            int den = video_st->avg_frame_rate.num;
+            video_st->avg_frame_rate.num = video_st->avg_frame_rate.den;
+            video_st->avg_frame_rate.den = den;
+        }
+        ADM_info("Video stream time base :%d / %d, average frame rate: %d / %d\n",
+            video_st->time_base.num, video_st->time_base.den,
+            video_st->avg_frame_rate.num, video_st->avg_frame_rate.den);
         c->gop_size=15;
 
         if(true==muxerConfig.forceAspectRatio)
