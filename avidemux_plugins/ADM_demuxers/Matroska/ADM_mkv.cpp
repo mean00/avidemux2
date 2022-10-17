@@ -842,7 +842,7 @@ bool mkvHeader::analyzeTracks(ADM_ebml_file *parser)
         father.skip(len);
         continue;
       }
-      if(!analyzeOneTrack(&father,len)) return 0;
+      analyzeOneTrack(&father,len);
     }
  return 1;
 }

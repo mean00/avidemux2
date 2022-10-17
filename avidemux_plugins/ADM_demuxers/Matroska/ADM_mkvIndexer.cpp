@@ -196,10 +196,12 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
     uint32_t frameNo = Track->index.size();
 
     // expand buffer if needed
-    if(size>readBufferSize)
+    if(size + rpt > readBufferSize)
     {
+        ADM_info("Expanding read buffer for frame %" PRIu32" of size %" PRIu32" in track %" PRIu32" from %" PRIu32" to %" PRIu32" bytes.\n",
+            frameNo, size, track, readBufferSize, rpt + size*2);
         delete [] readBuffer;
-        readBufferSize=size*2;
+        readBufferSize = rpt + size*2;
         readBuffer=new uint8_t[readBufferSize];
         memset(readBuffer,0,readBufferSize);
     }
