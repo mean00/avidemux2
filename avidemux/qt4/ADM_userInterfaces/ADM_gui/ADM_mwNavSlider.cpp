@@ -43,6 +43,9 @@ ADM_mwNavSlider::~ADM_mwNavSlider()
 */
 void ADM_mwNavSlider::paintEvent(QPaintEvent *event)
 {
+    QColor bgColor = this->palette().color(QPalette::Window);
+    bool darkMode = (bgColor.value() < 128);
+    
     if (segments && (numOfSegments > 0) && (totalDuration > 0LL))
     {
         int pos, prevpos;
@@ -92,7 +95,10 @@ void ADM_mwNavSlider::paintEvent(QPaintEvent *event)
         if(right > width() - 1) right = width() - 1;
 
         QPainter painter(this);
-        painter.setPen(Qt::blue);
+        if (darkMode)
+            painter.setPen(QColor(16,64,255));
+        else
+            painter.setPen(Qt::blue);
         if(layoutDirection() == Qt::LeftToRight)
             painter.drawRect(left, 1, right - left, height() - 3);
         else
