@@ -16,9 +16,10 @@ ADM_UIQT46_EXPORT uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uin
 class ADM_UIQT46_EXPORT ADM_QSlider : public QSlider
 {
 public:
-    ADM_QSlider(QWidget *parent);
+            ADM_QSlider(QWidget *parent);
+    bool    isDarkMode();
 private:
-    void mousePressEvent(QMouseEvent *e);
+    void    mousePressEvent(QMouseEvent *e);
 };
 /**
     \brief QSlider with value indicator in a tooltip

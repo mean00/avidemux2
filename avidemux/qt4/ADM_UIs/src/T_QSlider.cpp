@@ -79,6 +79,11 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
     }
 }
 
+bool ADM_QSlider::isDarkMode()
+{
+    QColor bgColor = this->palette().color(QPalette::Window);
+    return (bgColor.value() < 128);
+}
 /**
     \fn ADM_SliderIndicator
 */
