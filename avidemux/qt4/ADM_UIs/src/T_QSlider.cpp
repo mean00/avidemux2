@@ -247,7 +247,10 @@ void ADM_flyNavSlider::paintEvent(QPaintEvent *event)
         if(right > width() - 1) right = width() - 1;
 
         QPainter painter(this);
-        painter.setPen(Qt::blue);
+        if (this->isDarkMode())
+            painter.setPen(QColor(30,144,255));
+        else
+            painter.setPen(Qt::blue);
         if(layoutDirection() == Qt::LeftToRight)
             painter.drawRect(left, 1, right - left, height() - 3);
         else
