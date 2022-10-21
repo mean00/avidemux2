@@ -46,7 +46,12 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
         if (orientation() == Qt::Horizontal)
         {
             double halfHandleWidth = (0.5 * sr.width()) + 0.5;
-            int adjPosX = e->position().x();
+            int adjPosX =
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+            e->x();
+#else
+            e->position().x();
+#endif
             if (adjPosX < halfHandleWidth)
                 adjPosX = halfHandleWidth;
             if (adjPosX > width() - halfHandleWidth)
@@ -58,7 +63,12 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
         }else
         {
             double halfHandleHeight = (0.5 * sr.height()) + 0.5;
-            int adjPosY = height() - e->position().y();
+            int adjPosY = height() -
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+            e->y();
+#else
+            e->position().y();
+#endif
             if (adjPosY < halfHandleHeight)
                 adjPosY = halfHandleHeight;
             if (adjPosY > height() - halfHandleHeight)
