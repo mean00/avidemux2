@@ -43,13 +43,15 @@ class ADM_UIQT46_EXPORT ADM_flyNavSlider : public ADM_QSlider
 protected:
     bool _invertWheel;
     uint64_t totalDuration, markerATime, markerBTime;
+
+    void drawSelection(void);
+    virtual void wheelEvent(QWheelEvent *e);
+    virtual void paintEvent(QPaintEvent *event);
+
 public:
     ADM_flyNavSlider(QWidget *parent);
-    void wheelEvent(QWheelEvent *e);
     void setInvertedWheel(bool inverted);
     void setMarkers(uint64_t totalDuration, uint64_t markerATime, uint64_t markerBTime);
-    void paintEvent(QPaintEvent *event);
-
 };
 
 #endif

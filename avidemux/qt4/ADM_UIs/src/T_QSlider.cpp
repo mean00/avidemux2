@@ -46,7 +46,7 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
         if (orientation() == Qt::Horizontal)
         {
             double halfHandleWidth = (0.5 * sr.width()) + 0.5;
-            int adjPosX = e->x();
+            int adjPosX = e->position().x();
             if (adjPosX < halfHandleWidth)
                 adjPosX = halfHandleWidth;
             if (adjPosX > width() - halfHandleWidth)
@@ -58,7 +58,7 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
         }else
         {
             double halfHandleHeight = (0.5 * sr.height()) + 0.5;
-            int adjPosY = height() - e->y();
+            int adjPosY = height() - e->position().y();
             if (adjPosY < halfHandleHeight)
                 adjPosY = halfHandleHeight;
             if (adjPosY > height() - halfHandleHeight)
@@ -188,6 +188,39 @@ void ADM_flyNavSlider::setMarkers(uint64_t totalDuration, uint64_t markerATime, 
 }
 
 /**
+    \fn drawSelection
+*/
+void ADM_flyNavSlider::drawSelection(void)
+{
+    if (!totalDuration) return;
+
+    uint64_t a = markerATime, b = markerBTime;
+
+    if (markerATime > markerBTime)
+    {
+        b = markerATime;
+        a = markerBTime;
+    }
+
+    if (a == 0 && b >= totalDuration) return;
+
+    int left  = (int)(((double)a * width()) / (double)totalDuration);
+    int right = (int)(((double)b * width()) / (double)totalDuration);
+
+    if (left < 1) left = 1;
+    if (right < 1) right = 1;
+    if (left > width() - 1) left = width() - 1;
+    if (right > width() - 1) right = width() - 1;
+
+    QPainter painter(this);
+    painter.setPen(Qt::blue);
+    if (layoutDirection() == Qt::LeftToRight)
+        painter.drawRect(left, 1, right - left, height() - 3);
+    else
+        painter.drawRect(width() - right, 1, right - left, height() - 3);
+}
+
+/**
     \fn paintEvent
 */
 void ADM_flyNavSlider::paintEvent(QPaintEvent *event)
@@ -223,31 +256,6 @@ void ADM_flyNavSlider::paintEvent(QPaintEvent *event)
 
     QSlider::paintEvent(event);
 
-    uint64_t a = markerATime, b = markerBTime;
-
-    if (markerATime > markerBTime)
-    {
-        b = markerATime;
-        a = markerBTime;
-    }
-
-    if (totalDuration > 0LL && (a != 0 || b != totalDuration))
-    {
-        int left  = (int)(((double)a * width()) / (double)totalDuration);
-        int right = (int)(((double)b * width()) / (double)totalDuration);
-
-        if(left < 1) left = 1;
-        if(right < 1) right = 1;
-        if(left > width() - 1) left = width() - 1;
-        if(right > width() - 1) right = width() - 1;
-
-        QPainter painter(this);
-        painter.setPen(Qt::blue);
-        if(layoutDirection() == Qt::LeftToRight)
-            painter.drawRect(left, 1, right - left, height() - 3);
-        else
-            painter.drawRect(width() - right, 1, right - left, height() - 3);
-        painter.end();
-    }
+    drawSelection();
 }
 //EOF

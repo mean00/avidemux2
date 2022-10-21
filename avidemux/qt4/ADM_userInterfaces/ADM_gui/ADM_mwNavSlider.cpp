@@ -23,9 +23,8 @@ Custom slider
 /**
     \fn ADM_QSlider
 */
-ADM_mwNavSlider::ADM_mwNavSlider(QWidget *parent) : ADM_QSlider(parent)
+ADM_mwNavSlider::ADM_mwNavSlider(QWidget *parent) : ADM_flyNavSlider(parent)
 {
-    totalDuration= markerATime= markerBTime =0;
     segments = NULL;
     numOfSegments = 0;
 }
@@ -39,66 +38,48 @@ ADM_mwNavSlider::~ADM_mwNavSlider()
     segments = NULL;
 }
 /**
+    \fn drawCutPoints
+*/
+void ADM_mwNavSlider::drawCutPoints(void)
+{
+    if (!segments || !numOfSegments || !totalDuration)
+        return;
+
+    int pos, prevpos;
+    prevpos = -1;
+    QPainter painter(this);
+    for (uint32_t i=0; i<numOfSegments; i++)
+    {
+        if (i==0)    // do not draw at the start position
+            continue;
+        if (segments[i] == ADM_NO_PTS)
+            continue;
+        pos = (int)(((double)segments[i] * width()) / (double)totalDuration);
+        if (pos < 1) pos = 1;
+        if (pos > width() - 1) pos = width() - 1;
+        if (pos == prevpos)
+            painter.setPen(Qt::darkMagenta);
+        else
+            painter.setPen(Qt::red);
+        prevpos = pos;
+
+        if(layoutDirection() == Qt::LeftToRight)
+            painter.drawLine(pos, 1, pos, height() - 3);
+        else
+            painter.drawLine(width() - pos, 1, width() - pos, height() - 3);
+    }
+}
+
+/**
     \fn paintEvent
 */
 void ADM_mwNavSlider::paintEvent(QPaintEvent *event)
 {
-    if (segments && (numOfSegments > 0) && (totalDuration > 0LL))
-    {
-        int pos, prevpos;
-        prevpos = -1;
-        QPainter painter(this);
-        for (uint32_t i=0; i<numOfSegments; i++)
-        {
-            if (i==0)    // do not draw at the start position
-                continue;
-            if (segments[i] == ADM_NO_PTS)
-                continue;
-            pos = (int)(((double)segments[i] * width()) / (double)totalDuration);
-            if(pos < 1) pos = 1;
-            if(pos > width() - 1) pos = width() - 1;
-            if (pos == prevpos)
-                painter.setPen(Qt::darkMagenta);
-            else
-                painter.setPen(Qt::red);
-            prevpos = pos;
-
-            if(layoutDirection() == Qt::LeftToRight)
-                painter.drawLine(pos, 1, pos, height() - 3);
-            else
-                painter.drawLine(width() - pos, 1, width() - pos, height() - 3);
-        }
-        painter.end();
-    }
+    drawCutPoints();
 
     QSlider::paintEvent(event);
 
-    uint64_t a = markerATime, b = markerBTime;
-
-    if (markerATime > markerBTime)
-    {
-        b = markerATime;
-        a = markerBTime;
-    }
-
-    if (totalDuration > 0LL && (a != 0 || b != totalDuration))
-    {
-        int left  = (int)(((double)a * width()) / (double)totalDuration);
-        int right = (int)(((double)b * width()) / (double)totalDuration);
-
-        if(left < 1) left = 1;
-        if(right < 1) right = 1;
-        if(left > width() - 1) left = width() - 1;
-        if(right > width() - 1) right = width() - 1;
-
-        QPainter painter(this);
-        painter.setPen(Qt::blue);
-        if(layoutDirection() == Qt::LeftToRight)
-            painter.drawRect(left, 1, right - left, height() - 3);
-        else
-            painter.drawRect(width() - right, 1, right - left, height() - 3);
-        painter.end();
-    }
+    drawSelection();
 }
 /**
     \fn setMarkerA
