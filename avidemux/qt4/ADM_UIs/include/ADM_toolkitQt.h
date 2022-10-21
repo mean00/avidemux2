@@ -47,6 +47,7 @@ protected:
     void drawSelection(void);
     virtual void wheelEvent(QWheelEvent *e);
     virtual void paintEvent(QPaintEvent *event);
+            bool isDarkMode();
 
 public:
     ADM_flyNavSlider(QWidget *parent);

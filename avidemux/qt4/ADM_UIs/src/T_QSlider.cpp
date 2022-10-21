@@ -223,7 +223,10 @@ void ADM_flyNavSlider::drawSelection(void)
     if (right > width() - 1) right = width() - 1;
 
     QPainter painter(this);
-    painter.setPen(Qt::blue);
+    if (this->isDarkMode())
+        painter.setPen(QColor(30,144,255));
+    else
+        painter.setPen(Qt::blue);
     if (layoutDirection() == Qt::LeftToRight)
         painter.drawRect(left, 1, right - left, height() - 3);
     else
@@ -268,4 +271,14 @@ void ADM_flyNavSlider::paintEvent(QPaintEvent *event)
 
     drawSelection();
 }
+
+/**
+    \fn isDarkMode
+*/
+bool ADM_flyNavSlider::isDarkMode()
+{
+    QColor bgColor = this->palette().color(QPalette::Window);
+    return (bgColor.value() < 128);
+}
+
 //EOF
