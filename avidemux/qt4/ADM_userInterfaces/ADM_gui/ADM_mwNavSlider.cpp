@@ -42,16 +42,14 @@ ADM_mwNavSlider::~ADM_mwNavSlider()
 */
 void ADM_mwNavSlider::drawCutPoints(void)
 {
-    if (!segments || !numOfSegments || !totalDuration)
+    if (!segments || numOfSegments < 2 || !totalDuration)
         return;
 
     int pos, prevpos;
     prevpos = -1;
     QPainter painter(this);
-    for (uint32_t i=0; i<numOfSegments; i++)
+    for (uint32_t i=1; i<numOfSegments; i++)
     {
-        if (i==0)    // do not draw at the start position
-            continue;
         if (segments[i] == ADM_NO_PTS)
             continue;
         pos = (int)(((double)segments[i] * width()) / (double)totalDuration);
