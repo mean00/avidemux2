@@ -161,6 +161,7 @@ void ADM_SliderIndicator::sliderChange(QAbstractSlider::SliderChange change)
 ADM_flyNavSlider::ADM_flyNavSlider(QWidget *parent) : ADM_QSlider(parent)
 {
     _invertWheel = false;
+    totalDuration = markerATime = markerBTime = 0;
 }
 
 void ADM_flyNavSlider::wheelEvent(QWheelEvent *e)
