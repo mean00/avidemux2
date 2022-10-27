@@ -207,6 +207,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
                     //other fields are not implemented as of ATSC S34-301r2 A/341 Amendment – 2094-40 
                 }
                 break;
+            default: break;
         }
     }
 
@@ -988,7 +989,6 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 
 //***************
 extern void     avcodec_init(void );
-extern  void    avcodec_register_all(void );
 extern "C"
 {
   void adm_lavLogCallback(void  *instance, int level, const char* fmt, va_list list);
@@ -1009,7 +1009,6 @@ static  void ffFatalError(const char *what,int lineno, const char *filez)
 */
 void ADM_lavInit(void)
 {
-    avcodec_register_all();
     av_log_set_callback(adm_lavLogCallback);
     av_setFatalHandler(ffFatalError);
     av_log_set_level(LAV_VERBOSITY_LEVEL);

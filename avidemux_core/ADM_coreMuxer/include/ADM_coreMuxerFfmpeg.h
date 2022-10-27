@@ -65,7 +65,7 @@ protected:
 protected:
         bool saveLoop(const char *title);
 protected:
-        AVOutputFormat *fmt;
+        const AVOutputFormat *fmt;
         AVFormatContext *oc;
         AVStream *audio_st[ADM_MAX_AUDIO_STREAM];
         AVStream *video_st;

@@ -62,7 +62,7 @@ protected:
     uint8_t *myData;
     AVCodecParserContext *parser;
     AVCodecContext *ctx;
-    AVCodec *codec;
+    const AVCodec *codec;
 };
 
 

@@ -35,7 +35,7 @@ class decoderFFSimple:public decoderFF
 {
 protected:
     bool        hasBFrame;
-    AVCodec   * codec;
+    const AVCodec   * codec;
 
     bool        finish(void);
     void        applyQuirks(AVCodecID id);

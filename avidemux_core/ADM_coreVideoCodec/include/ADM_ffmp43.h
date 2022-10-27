@@ -182,7 +182,7 @@ FF_SIMPLE_DECLARE(decoderFFH265,
 
 #define WRAP_Open_Template(funcz,argz,display,codecid,extra) \
 {\
-AVCodec *codec=funcz(argz);\
+  const AVCodec *codec=funcz(argz);\
   if(!codec) {GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec" display));return;} \
   if(!_frame) { ADM_error("Could not allocate AVFrame.\n"); return; } \
   codecId=codecid; \

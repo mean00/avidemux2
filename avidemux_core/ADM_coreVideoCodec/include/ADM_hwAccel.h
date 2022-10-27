@@ -38,8 +38,6 @@ protected:
         struct AVCodecContext  *_context;
                 decoderFF       *_parent;
                 bool            handover; // taking over from sw decoder, compressed frame has been already sent to hw decoder
-public:                
-  static const AVHWAccel *parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id,AVPixelFormat searchedItem);
 };
 
 /**

@@ -16,6 +16,7 @@
 #include "ADM_default.h"
 
 extern "C" {
+#include "libavutil/avutil.h"
 #include "libpostproc/postprocess.h"
 }
 
