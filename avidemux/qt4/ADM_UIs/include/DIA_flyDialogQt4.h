@@ -123,7 +123,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
   Q_OBJECT
  protected:     
           QTimer        timer;
-          uint32_t      _w, _h, _zoomW, _zoomH;
+          uint32_t      _w, _h, _zoomW, _zoomH, _inW, _inH;
           float         _zoom;
           ResizeMethod  _resizeMethod;
           uint64_t      lastPts;
@@ -227,6 +227,7 @@ protected:
                     int                  accelCanvasFlags;
                     ADMImage              *_yuvBufferOut;
                     ADMColorScalerFull    *yuvToRgb;  
+                    ADMColorScalerFull    *yuvInputToRgb;  
 
             virtual void updateZoom(void);
 

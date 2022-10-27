@@ -560,6 +560,7 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
 {
     _control=NULL;
     _yuvBufferOut=new ADMImageDefault(_w,_h);
+    yuvInputToRgb = NULL;
     yuvToRgb=NULL;  
     accelCanvasFlags = 0;
     initializeSize();
@@ -568,6 +569,11 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
 }
 void ADM_flyDialogYuv::resetScaler(void)
 {
+    if(yuvInputToRgb) 
+    {
+        delete yuvInputToRgb;
+        yuvInputToRgb=NULL;
+    }    
     if(yuvToRgb) 
     {
         delete yuvToRgb;
@@ -576,7 +582,13 @@ void ADM_flyDialogYuv::resetScaler(void)
     
     uint32_t displayW, displayH;
     _canvas->getDisplaySize(&displayW, &displayH);
-    
+
+    yuvInputToRgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
+                            _inW,
+                            _inH,
+                            displayW,
+                            displayH,
+                            ADM_PIXFRMT_YV12,toRgbPixFrmt());    
     yuvToRgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
                             _w,
                             _h,
@@ -602,6 +614,11 @@ ADM_flyDialogYuv::~ADM_flyDialogYuv()
         delete _control;
         _control=NULL;
     }
+    if (yuvInputToRgb)
+    {
+        delete yuvInputToRgb;
+        yuvInputToRgb = NULL;    
+    }
 }
 bool ADM_flyDialogYuv::process(void)
 {
@@ -615,8 +632,14 @@ bool ADM_flyDialogYuv::process(void)
     }
     if (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE)
         return true;
-
-    yuvToRgb->convertImage(_bypassFilter ? _yuvBuffer : _yuvBufferOut, _rgbByteBufferDisplay.at(0));
+    if (_bypassFilter)
+    {
+        yuvInputToRgb->convertImage(_yuvBuffer, _rgbByteBufferDisplay.at(0));
+    }
+    else
+    {
+        yuvToRgb->convertImage(_yuvBufferOut, _rgbByteBufferDisplay.at(0));
+    }
     return true;
 }
 /**
@@ -641,7 +664,14 @@ bool ADM_flyDialogYuv::display(void)
         ADM_warning("Disabling accelerated canvas\n");
         accelCanvasFlags &= ~ACCEL_CANVAS_FLAG_USABLE;
         updateZoom(); // Setup scaler and display buffer, they may be invalid.
-        yuvToRgb->convertImage(_bypassFilter ? _yuvBuffer : _yuvBufferOut, _rgbByteBufferDisplay.at(0));
+        if (_bypassFilter)
+        {
+            yuvInputToRgb->convertImage(_yuvBuffer, _rgbByteBufferDisplay.at(0));
+        }
+        else
+        {
+            yuvToRgb->convertImage(_yuvBufferOut, _rgbByteBufferDisplay.at(0));
+        }
     }
     v->dataBuffer = _rgbByteBufferDisplay.at(0);
     v->repaint();
@@ -673,8 +703,8 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
     _rgbByteBufferOut.setSize(size);
     _algo = ((_h > ADM_FLYRGB_ALGO_CHANGE_THRESHOLD_RESOLUTION) ? ADM_CS_FAST_BILINEAR : ADM_CS_BICUBIC);
      yuv2rgb =  new ADMColorScalerFull(_algo, 
-                            _w,
-                            _h,
+                            _inW,
+                            _inH,
                             _w,
                             _h,
                             ADM_PIXFRMT_YV12,toRgbPixFrmt());
@@ -814,7 +844,9 @@ void ADM_flyDialogRgb::updateZoom(void)
     _cookie = NULL;
     _computedZoom=0;
     _resizeMethod = resizeMethod;
-    _yuvBuffer=new ADMImageDefault(_w,_h);
+    _inW = in->getInfo()->width;
+    _inH = in->getInfo()->height;
+    _yuvBuffer=new ADMImageDefault(_inW,_inH);
     _usedWidth= _usedHeight=0;
     _oldViewWidth = _oldViewHeight = 0;
     _nextRdv=0;
