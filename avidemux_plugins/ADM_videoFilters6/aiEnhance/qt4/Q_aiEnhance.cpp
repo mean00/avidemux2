@@ -123,7 +123,7 @@ uint8_t flyAiEnhance::upload()
     
     QString wt=QString(QT_TRANSLATE_NOOP("aiEnhance", "Warning: the preview scaled back to x2"));
     
-    if (ADMVideoAiEnhance::getScaling(param) > 2)
+    if (ADMVideoAiEnhance::getScaling(param.algo) > 2)
         w->labelWarning->setText(wt);
     else
         w->labelWarning->clear();
