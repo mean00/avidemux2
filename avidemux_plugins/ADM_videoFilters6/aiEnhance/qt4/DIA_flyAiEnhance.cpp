@@ -51,7 +51,7 @@ uint8_t   flyAiEnhance::processYuv(ADMImage *in,ADMImage *out )
     out->copyInfo(in);
 
     // Do it!
-    ADMVideoAiEnhance::AiEnhanceProcess_C(in, out, true, showOriginal, param, &buffers);
+    ADMVideoAiEnhance::AiEnhanceProcess_C(in, out, true, previewScale, showOriginal, param, &buffers);
     return 1;
 }
 

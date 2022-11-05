@@ -11,8 +11,10 @@ class Ui_aiEnhanceWindow : public QDialog
     Q_OBJECT
 
   protected:
-    int lock;
-    QPushButton *      peekOriginalBtn;
+    int                 lock;
+    int                 previewScale;
+    QPushButton *       peekOriginalBtn;
+    QPushButton *       preferencesButton;
 
   public:
     flyAiEnhance *myFly;
@@ -29,5 +31,6 @@ class Ui_aiEnhanceWindow : public QDialog
     void valueChanged(int foo);
     void peekOriginalPressed(void);
     void peekOriginalReleased(void);
+    void setPreferences(bool f);
 };
 #endif    // Q_aiEnhance_h

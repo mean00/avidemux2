@@ -66,7 +66,7 @@ void ADMVideoAiEnhance::AiEnhanceDestroyBuffers(aiEnhance_buffers_t * buffers)
 /**
     \fn AiEnhanceProcess_C
 */
-void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, bool previewMode, bool skipProcess, aiEnhance param, aiEnhance_buffers_t * buffers)
+void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, bool previewMode, int previewScale, bool skipProcess, aiEnhance param, aiEnhance_buffers_t * buffers)
 {
     if (!srcImg || !dstImg || !buffers) return;
 
@@ -88,7 +88,7 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
         delete buffers->upScaler;
         buffers->upScaler = new ADMColorScalerFull(ADM_CS_LANCZOS, buffers->w, buffers->h, buffers->w*scaling, buffers->h*scaling, ADM_PIXFRMT_YV12, ADM_PIXFRMT_YV12);
         delete buffers->previewScaler;
-        buffers->previewScaler = new ADMColorScalerFull(ADM_CS_LANCZOS, buffers->w*scaling, buffers->h*scaling, buffers->w*2, buffers->h*2, ADM_PIXFRMT_YV12, ADM_PIXFRMT_YV12);
+        buffers->previewScaler = new ADMColorScalerFull(ADM_CS_LANCZOS, buffers->w*scaling, buffers->h*scaling, buffers->w*previewScale, buffers->h*previewScale, ADM_PIXFRMT_YV12, ADM_PIXFRMT_YV12);
     }
     
     buffers->upScaler->convertImage(srcImg, buffers->targetImg);
@@ -198,7 +198,7 @@ bool ADMVideoAiEnhance::getNextFrame(uint32_t *fn,ADMImage *image)
 {
     if(!previousFilter->getNextFrame(fn,inputImg)) return false;
 
-    AiEnhanceProcess_C(inputImg, image, false, false, _param, &(_buffers));
+    AiEnhanceProcess_C(inputImg, image, false, 1, false, _param, &(_buffers));
  
     return 1;
 }

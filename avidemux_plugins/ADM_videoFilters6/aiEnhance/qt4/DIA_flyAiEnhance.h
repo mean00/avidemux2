@@ -26,6 +26,7 @@ class flyAiEnhance : public ADM_flyDialogYuv
   public:
     aiEnhance            param;
     bool                 showOriginal;
+    int                  previewScale;
     ADMVideoAiEnhance::aiEnhance_buffers_t  buffers;
   public:
     uint8_t    processYuv(ADMImage* in, ADMImage *out);

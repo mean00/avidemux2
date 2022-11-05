@@ -53,6 +53,6 @@ class  ADMVideoAiEnhance:public ADM_coreVideoFilter
 
     static void AiEnhanceInitializeBuffers(int w, int h, aiEnhance_buffers_t * buffers);
     static void AiEnhanceDestroyBuffers(aiEnhance_buffers_t * buffers);
-    static void AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, bool previewMode, bool skipProcess, aiEnhance param, aiEnhance_buffers_t * buffers);
+    static void AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, bool previewMode, int previewScale, bool skipProcess, aiEnhance param, aiEnhance_buffers_t * buffers);
     static int  getScaling(int algo);
 };
