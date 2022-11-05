@@ -22,6 +22,7 @@
 #include "ADM_vidAiEnhance.h"
 
 #include "FSRCNN.h"
+#include "fastFSRCNN.h"
 
 extern uint8_t DIA_getAiEnhance(aiEnhance *param, ADM_coreVideoFilter *in);
 
@@ -72,7 +73,7 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
 
     ADM_assert(srcImg->_width == buffers->w);
     ADM_assert(srcImg->_height == buffers->h);
-    ADM_assert(param.algo < 6);
+    ADM_assert(param.algo < 7);
     unsigned int algo = param.algo;
     
     if (buffers->algo != algo)
@@ -80,7 +81,14 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
         buffers->algo = algo;
         int scaling = getScaling(algo);
         delete buffers->ai;
-        buffers->ai = new FSRCNN(buffers->w, buffers->h, buffers->algo);
+        if (algo == 0)
+        {
+            buffers->ai = new fastFSRCNN(buffers->w, buffers->h, buffers->algo);
+        }
+        else
+        {
+            buffers->ai = new FSRCNN(buffers->w, buffers->h, buffers->algo - 1);
+        }
         delete buffers->targetImg;
         buffers->targetImg = new ADMImageDefault(buffers->w*scaling, buffers->h*scaling);
         delete buffers->previewImg;
@@ -140,7 +148,7 @@ ADMVideoAiEnhance::ADMVideoAiEnhance(  ADM_coreVideoFilter *in,CONFcouple *coupl
     if(!couples || !ADM_paramLoad(couples,aiEnhance_param,&_param))
     {
         // Default value
-        _param.algo = 3;
+        _param.algo = 0;
     }
     
     inputImg = new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
@@ -162,7 +170,9 @@ void ADMVideoAiEnhance::update(void)
 */
 int ADMVideoAiEnhance::getScaling(int algo)
 {
-    return FSRCNN::getScaling(algo);
+    if (algo == 0)
+        return fastFSRCNN::getScaling(algo);
+    return FSRCNN::getScaling(algo - 1);
 }
 
 /**

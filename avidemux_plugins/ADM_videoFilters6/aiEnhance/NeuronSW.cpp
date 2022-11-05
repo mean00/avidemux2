@@ -40,6 +40,17 @@ void NeuronSW::m_load1_bias(m_vec_base_t * t, float * bias)
 }
 
 
+void NeuronSW::m_load2_bias(m_vec_base_t * t, float * bias)
+{
+#ifdef USE_SSE2
+    t[0] = _mm_load_ps(bias + 0);
+    t[1] = _mm_load_ps(bias + 4);
+#else    
+    memcpy(t, bias, 4*2*sizeof(float));
+#endif 
+}
+
+
 void NeuronSW::m_load3_bias(m_vec_base_t * t, float * bias)
 {
 #ifdef USE_SSE2
@@ -65,6 +76,22 @@ void NeuronSW::m_load4_bias(m_vec_base_t * t, float * bias)
 }
 
 
+void NeuronSW::m_add2_vec(m_vec_base_t * t, float * vec)
+{
+#ifdef USE_SSE2
+    __m128 v1 = _mm_load_ps(vec + 0);
+    __m128 v2 = _mm_load_ps(vec + 4);
+    t[0] = _mm_add_ps(t[0], v1);
+    t[1] = _mm_add_ps(t[1], v2);
+#else    
+    for (int i=0; i<4*2; i++)
+    {
+        t[i] += vec[i];
+    }
+#endif 
+}
+
+
 void NeuronSW::m_add4_vec(m_vec_base_t * t, float * vec)
 {
 #ifdef USE_SSE2
@@ -80,6 +107,23 @@ void NeuronSW::m_add4_vec(m_vec_base_t * t, float * vec)
     for (int i=0; i<4*4; i++)
     {
         t[i] += vec[i];
+    }
+#endif 
+}
+
+
+void NeuronSW::m_add2_vecXs(m_vec_base_t * t, float * vec, float scalar)
+{
+#ifdef USE_SSE2
+    __m128 s = _mm_load1_ps(&scalar);
+    __m128 v1 = _mm_load_ps(vec + 0);
+    __m128 v2 = _mm_load_ps(vec + 4);
+    t[0] = _mm_add_ps(t[0], _mm_mul_ps(v1, s));
+    t[1] = _mm_add_ps(t[1], _mm_mul_ps(v2, s));
+#else    
+    for (int i=0; i<4*2; i++)
+    {
+        t[i] += (vec[i] * scalar);
     }
 #endif 
 }
@@ -116,6 +160,17 @@ void NeuronSW::m_store1(m_vec_base_t * t, float * layer)
 }
 
 
+void NeuronSW::m_store2(m_vec_base_t * t, float * layer)
+{
+#ifdef USE_SSE2
+    _mm_store_ps(layer + 0, t[0]);
+    _mm_store_ps(layer + 4, t[1]);
+#else    
+    memcpy(layer, t, 4*2*sizeof(float));
+#endif 
+}
+
+
 void NeuronSW::m_store3(m_vec_base_t * t, float * layer)
 {
 #ifdef USE_SSE2
@@ -137,6 +192,52 @@ void NeuronSW::m_store4(m_vec_base_t * t, float * layer)
     _mm_store_ps(layer + 12, t[3]);
 #else    
     memcpy(layer, t, 4*4*sizeof(float));
+#endif 
+}
+
+
+void NeuronSW::m_add1_mxXvec2(m_vec_base_t * t, float * mx, float * vec)
+{
+#ifdef USE_SSE2
+    for (int i=0; i<2; i++)
+    {
+        __m128 v4 = _mm_load_ps(vec);
+        for (int m=0; m<1; m++)
+        {
+            __m128 u1 = _mm_shuffle_ps(v4,v4, _MM_SHUFFLE(0,0,0,0));
+            __m128 u2 = _mm_shuffle_ps(v4,v4, _MM_SHUFFLE(1,1,1,1));
+            __m128 u3 = _mm_shuffle_ps(v4,v4, _MM_SHUFFLE(2,2,2,2));
+            __m128 u4 = _mm_shuffle_ps(v4,v4, _MM_SHUFFLE(3,3,3,3));
+            __m128 prod1 = _mm_mul_ps(u1, _mm_load_ps(mx));
+            mx+=4;
+            __m128 prod2 = _mm_mul_ps(u2, _mm_load_ps(mx));
+            mx+=4;
+            __m128 prod3 = _mm_mul_ps(u3, _mm_load_ps(mx));
+            mx+=4;
+            __m128 prod4 = _mm_mul_ps(u4, _mm_load_ps(mx));            
+            mx+=4;
+            t[m] = _mm_add_ps(t[m],_mm_add_ps(_mm_add_ps(prod1, prod2), _mm_add_ps(prod3, prod4)));
+        }
+        vec += 4;
+    }      
+#else    
+    for (int i=0; i<2; i++)
+    {
+        for (int m=0; m<1; m++)
+        {
+            for (int j=0; j<4; j++)
+            {
+                float sum = 0;
+                for (int k=0; k<4; k++)
+                {
+                    sum += *mx * vec[k];
+                    mx++;
+                }
+                t[m*4+j] += sum;
+            }
+        }
+        vec += 4;
+    }
 #endif 
 }
 
@@ -169,6 +270,52 @@ void NeuronSW::m_add1_mxXvec4(m_vec_base_t * t, float * mx, float * vec)
     for (int i=0; i<4; i++)
     {
         for (int m=0; m<1; m++)
+        {
+            for (int j=0; j<4; j++)
+            {
+                float sum = 0;
+                for (int k=0; k<4; k++)
+                {
+                    sum += *mx * vec[k];
+                    mx++;
+                }
+                t[m*4+j] += sum;
+            }
+        }
+        vec += 4;
+    }
+#endif 
+}
+
+
+void NeuronSW::m_add2_mxXvec2(m_vec_base_t * t, float * mx, float * vec)
+{
+#ifdef USE_SSE2
+    for (int i=0; i<2; i++)
+    {
+        __m128 v4 = _mm_load_ps(vec);
+        for (int m=0; m<2; m++)
+        {
+            __m128 u1 = _mm_shuffle_ps(v4,v4, _MM_SHUFFLE(0,0,0,0));
+            __m128 u2 = _mm_shuffle_ps(v4,v4, _MM_SHUFFLE(1,1,1,1));
+            __m128 u3 = _mm_shuffle_ps(v4,v4, _MM_SHUFFLE(2,2,2,2));
+            __m128 u4 = _mm_shuffle_ps(v4,v4, _MM_SHUFFLE(3,3,3,3));
+            __m128 prod1 = _mm_mul_ps(u1, _mm_load_ps(mx));
+            mx+=4;
+            __m128 prod2 = _mm_mul_ps(u2, _mm_load_ps(mx));
+            mx+=4;
+            __m128 prod3 = _mm_mul_ps(u3, _mm_load_ps(mx));
+            mx+=4;
+            __m128 prod4 = _mm_mul_ps(u4, _mm_load_ps(mx));            
+            mx+=4;
+            t[m] = _mm_add_ps(t[m],_mm_add_ps(_mm_add_ps(prod1, prod2), _mm_add_ps(prod3, prod4)));
+        }
+        vec += 4;
+    }      
+#else    
+    for (int i=0; i<2; i++)
+    {
+        for (int m=0; m<2; m++)
         {
             for (int j=0; j<4; j++)
             {
@@ -274,6 +421,23 @@ void NeuronSW::m_add4_mxXvec4(m_vec_base_t * t, float * mx, float * vec)
             }
         }
         vec += 4;
+    }
+#endif 
+}
+
+
+void NeuronSW::m_alpha2(m_vec_base_t * t, float * alpha)
+{
+#ifdef USE_SSE2
+    __m128 zero = _mm_setzero_ps();
+    __m128 a1 = _mm_load_ps(alpha + 0);
+    __m128 a2 = _mm_load_ps(alpha + 4);
+    t[0] = _mm_add_ps(_mm_max_ps(t[0], zero), _mm_mul_ps(_mm_min_ps(t[0], zero), a1));
+    t[1] = _mm_add_ps(_mm_max_ps(t[1], zero), _mm_mul_ps(_mm_min_ps(t[1], zero), a2));
+#else    
+    for (int i=0; i<4*2; i++)
+    {
+        t[i] = ((t[i] < 0) ? 0.0 : t[i]) + alpha[i]*((t[i] > 0) ? 0.0 : t[i]);
     }
 #endif 
 }
@@ -466,3 +630,4 @@ void NeuronSW::m_integerize4(m_vec_base_t * t, uint8_t * plane, unsigned int str
     }
 #endif 
 }
+

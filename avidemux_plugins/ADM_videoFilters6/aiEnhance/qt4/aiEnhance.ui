@@ -42,6 +42,11 @@
       <widget class="QComboBox" name="comboBoxAlgo">
        <item>
         <property name="text">
+         <string>fast-FSRCNN x2 upscale</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>FSRCNN x2 upscale for anime</string>
         </property>
        </item>
