@@ -84,10 +84,7 @@ bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         printf("[ffPS] Failed to init video\n");
         return false;
     }
-  
-    
-        AVCodecContext *c;
-        c = video_st->codec;
+
         AVCodecParameters *par;
         par = video_st->codecpar;
 
@@ -96,13 +93,22 @@ bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         uint32_t nbTicks=s->getTimeBaseNum();
         if(clockFreq && nbTicks)
         {
-            c->time_base.den=clockFreq;
-            c->time_base.num=nbTicks;
-        }else
-        {
-            rescaleFps(s->getAvgFps1000(),&(c->time_base));
+            video_st->time_base.den = clockFreq;
+            video_st->time_base.num = nbTicks;
         }
-        video_st->time_base=c->time_base;
+        rescaleFps(s->getAvgFps1000(), &video_st->avg_frame_rate);
+        // swap numerator and denominator
+        if(video_st->avg_frame_rate.num && video_st->avg_frame_rate.den)
+        {
+            int den = video_st->avg_frame_rate.num;
+            video_st->avg_frame_rate.num = video_st->avg_frame_rate.den;
+            video_st->avg_frame_rate.den = den;
+            if(video_st->time_base.num < 1 || video_st->time_base.den < 1)
+            { // time base is invalid, try to fix
+                video_st->time_base.num = video_st->avg_frame_rate.den;
+                video_st->time_base.den = video_st->avg_frame_rate.num;
+            }
+        }
 
         size_t propSize;
         AVCPBProperties *props = av_cpb_properties_alloc(&propSize);
@@ -114,9 +120,6 @@ bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
                 ADM_warning("Failed to add side data to video stream, error %d\n", err);
         }
         par->bit_rate=psMuxerConfig.videoRatekBits*1000;
-        c->rc_buffer_size=psMuxerConfig.bufferSizekBytes*8*1024;
-        //c->rc_buffer_size_header=psMuxerConfig.bufferSizekBytes*8*1024; // depends on avcodec.h patch
-        //c->gop_size=15;
 
         // Audio
         if(initAudio(nbAudioTrack,a)==false)
