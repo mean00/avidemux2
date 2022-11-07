@@ -152,7 +152,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
         ADM_error("[Lavcodec] Too many channels\n");
         return false;
     }
-    AVCodec *codec = NULL;
+    const AVCodec *codec = NULL;
     AVCodecID codecID = avMakeName;
     // Try to find an encoder
     codec = avcodec_find_encoder(codecID);
