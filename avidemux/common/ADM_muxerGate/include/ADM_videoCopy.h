@@ -76,8 +76,9 @@ protected:
         ADMBitstream    *myBitstream;
         uint8_t         *myExtra;
         uint32_t        myExtraLen;
-        void            *bsfContext;    
-        void            *codecContext;
+        void            *bsfContext;
+        void            *pktIn;
+        void            *pktOut;
 
 public:
                         ADM_videoStreamCopyToAnnexB(uint64_t startTime,uint64_t endTime);
