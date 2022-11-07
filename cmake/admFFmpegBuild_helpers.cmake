@@ -183,13 +183,16 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
             "${FFMPEG_SOURCE_DIR}/libavcodec/codec_desc.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/codec_id.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/codec_par.h"
+            "${FFMPEG_SOURCE_DIR}/libavcodec/defs.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/packet.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/vdpau.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/videotoolbox.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/version.h"
+            "${FFMPEG_SOURCE_DIR}/libavcodec/version_major.h"
             DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h"
             "${FFMPEG_SOURCE_DIR}/libavformat/version.h"
+            "${FFMPEG_SOURCE_DIR}/libavformat/version_major.h"
             "${FFMPEG_SOURCE_DIR}/libavformat/flv.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavformat" COMPONENT dev)
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR}/libavutil/avutil.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/buffer.h"
@@ -218,8 +221,10 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
 
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
+    INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version_major.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/swscale.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libswscale" COMPONENT dev)
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libswscale" COMPONENT dev)
+    INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/version_major.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libswscale" COMPONENT dev)
 ENDMACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
 #
 #
