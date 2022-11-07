@@ -179,10 +179,6 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         return false;
     }
 
-
-        AVCodecContext *c;
-        AVRational myTimeBase;
-        c = video_st->codec;
         AVCodecParameters *par;
         par = video_st->codecpar;
         if(isH265Compatible(fcc))
@@ -206,11 +202,13 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         }
         if(clockFreq && nbTicks)
         {
-            c->time_base.den=clockFreq;
-            c->time_base.num=nbTicks;
+            video_st->time_base.den = clockFreq;
+            video_st->time_base.num = nbTicks;
         }else
-            rescaleFps(s->getAvgFps1000(),&(c->time_base));
-        myTimeBase=video_st->time_base=c->time_base;
+        {
+            rescaleFps(s->getAvgFps1000(), &video_st->time_base);
+        }
+        AVRational myTimeBase = video_st->time_base; // FIXME TODO should be retrieved from codec
         // set average frame rate else the track duration in the edit list may be too short
         rescaleFps(s->getAvgFps1000(), &video_st->avg_frame_rate);
         // swap numerator and denominator
@@ -223,7 +221,6 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         ADM_info("Video stream time base :%d / %d, average frame rate: %d / %d\n",
             video_st->time_base.num, video_st->time_base.den,
             video_st->avg_frame_rate.num, video_st->avg_frame_rate.den);
-        c->gop_size=15;
 
         if(true==muxerConfig.forceAspectRatio)
         {
@@ -340,7 +337,6 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
             return false;
         }
 
-        ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);
         ADM_info("Timebase stream = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
         // Rounding may result in timestamp collisions due to bad choice of timebase, handle with care.
         if(myTimeBase.den>1 && myTimeBase.den==video_st->time_base.den && video_st->time_base.num==1)
