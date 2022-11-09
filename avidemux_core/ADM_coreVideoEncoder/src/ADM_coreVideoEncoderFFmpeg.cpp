@@ -50,6 +50,7 @@ _hasSettings=false;
         memcpy(&Settings,set,sizeof(*set));
         _hasSettings=true;
     }
+    _context=NULL;
     _options=NULL;
     targetPixFrmt=ADM_PIXFRMT_YV12;
     w=getWidth();
