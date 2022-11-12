@@ -80,7 +80,9 @@ uint8_t ADM_audioStreamEAC3::getPacket(uint8_t *obuffer,
             continue;
         }
         // Do we have an independent E-AC3 frame in the buffer?
-        if(false == ADM_EAC3GetInfo(buffer.at(start), limit-start, &offset, &info, &isPlainAC3) || isPlainAC3)
+        if(false == ADM_EAC3GetInfo(buffer.at(start), limit-start, &offset, &info, &isPlainAC3)
+            || isPlainAC3
+            || (info.flags & ADM_EAC3_FLAG_PKT_DAMAGED))
         {
             printf("[EAC3 Stream] Syncing...\n");
             gotFrame = false;

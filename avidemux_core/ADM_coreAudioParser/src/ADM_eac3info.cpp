@@ -140,6 +140,7 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
                 /* There are two possibilities: either we've got a valid frame followed
                  * by garbage or the frame is damaged and the size is bogus. As we don't
                  * check CRC, we cannot tell one from the other. */
+                info->flags |= ADM_EAC3_FLAG_PKT_DAMAGED;
                 goto _cleanup;
             }
             len--;
