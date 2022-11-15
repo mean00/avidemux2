@@ -180,7 +180,8 @@ void * ADMVideoImageStab::worker_thread( void *ptr )
     int algo = arg->algo;
     double * xs = arg->xs;
     double * ys = arg->ys;
-    int stride = arg->stride;
+    int istride = arg->istride;
+    int ostride = arg->ostride;
     uint8_t * in = arg->in;
     uint8_t * in2 = arg->in2;
     uint8_t * out = arg->out;
@@ -290,23 +291,23 @@ void * ADMVideoImageStab::worker_thread( void *ptr )
                     switch(algo) {
                         default:
                         case 0:
-                                bilinear(w, h, stride, in, ui, vi, uf, vf, out + x + y*stride);
+                                bilinear(w, h, istride, in, ui, vi, uf, vf, out + x + y*ostride);
                                 if (in2 && out2)
-                                    bilinear(w, h, stride, in2, ui, vi, uf, vf, out2 + x + y*stride);
+                                    bilinear(w, h, istride, in2, ui, vi, uf, vf, out2 + x + y*ostride);
                             break;
                         case 1:
-                                bicubic(w, h, stride, in, ui, vi, uf, vf, bicubicWeights, out + x + y*stride);
+                                bicubic(w, h, istride, in, ui, vi, uf, vf, bicubicWeights, out + x + y*ostride);
                                 if (in2 && out2)
-                                    bicubic(w, h, stride, in2, ui, vi, uf, vf, bicubicWeights, out2 + x + y*stride);
+                                    bicubic(w, h, istride, in2, ui, vi, uf, vf, bicubicWeights, out2 + x + y*ostride);
                             break;
                     }
 
                 }
                 else
                 {
-                    out[x + y*stride] =  blackLevel;
+                    out[x + y*ostride] =  blackLevel;
                     if (in2 && out2)
-                        out2[x + y*stride] =  blackLevel;
+                        out2[x + y*ostride] =  blackLevel;
                 }
             
             }
@@ -541,12 +542,13 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
 
     uint8_t * rplanes[3];
     uint8_t * wplanes[3];
-    int strides[3];
+    int strides[3], imgStrides[3];
 
     buffers->imgCopy->duplicate(img);
     buffers->imgCopy->GetPitches(strides);
     buffers->imgCopy->GetWritePlanes(rplanes);
     img->GetWritePlanes(wplanes);
+    img->GetPitches(imgStrides);
     
     int totaltr = 0;
     
@@ -560,7 +562,8 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
         buffers->worker_thread_args[totaltr].xs = xs;
         buffers->worker_thread_args[totaltr].ys = ys;
         buffers->worker_thread_args[totaltr].blackLevel = 0;
-        buffers->worker_thread_args[totaltr].stride = strides[0];
+        buffers->worker_thread_args[totaltr].istride = strides[0];
+        buffers->worker_thread_args[totaltr].ostride = imgStrides[0];
         buffers->worker_thread_args[totaltr].in = rplanes[0];
         buffers->worker_thread_args[totaltr].in2 = NULL;
         buffers->worker_thread_args[totaltr].out = wplanes[0];
@@ -579,7 +582,8 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
         buffers->worker_thread_args[totaltr].xs = xsh;
         buffers->worker_thread_args[totaltr].ys = ysh;
         buffers->worker_thread_args[totaltr].blackLevel = 128;
-        buffers->worker_thread_args[totaltr].stride = strides[1];
+        buffers->worker_thread_args[totaltr].istride = strides[1];
+        buffers->worker_thread_args[totaltr].ostride = imgStrides[1];
         buffers->worker_thread_args[totaltr].in = rplanes[1];
         buffers->worker_thread_args[totaltr].in2 = rplanes[2];
         buffers->worker_thread_args[totaltr].out = wplanes[1];

@@ -37,7 +37,7 @@ class  ADMVideoImageStab:public ADM_coreVideoFilter
         int         algo;
         double *    xs;
         double *    ys;
-        int         stride;
+        int         istride,ostride;
         uint8_t *   in;
         uint8_t *   in2;
         uint8_t *   out;

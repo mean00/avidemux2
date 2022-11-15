@@ -33,7 +33,7 @@ class  ADMVideoQuadTrans:public ADM_coreVideoFilter
         int         algo;
         int *       integerMap;
         int *       fractionalMap;
-        int         stride;
+        int         istride,ostride;
         uint8_t *   in;
         uint8_t *   out;
         int *       bicubicWeights;

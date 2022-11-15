@@ -279,6 +279,8 @@ void *motest::me_worker_thread( void *ptr )
     
     for (y=ystart; y<h; y+=yincr)    // line-by-line threading faster than partitioning
     {
+        if (y < 2) continue;        // protect against sad() reading outside the frame 
+        if (y >= h-2) continue;     // sad() shifts coordinates, to convert patch center to patch 0;0
         if ((lv==0)&&(speedup>0))
         {
             if (y%8)
@@ -289,7 +291,7 @@ void *motest::me_worker_thread( void *ptr )
             if (y%4)
                 continue;
         }
-        for (x=0; x<w; x++)
+        for (x=2; x<(w-2); x++)
         {
             if ((lv==0)&&(speedup>0))
             {
