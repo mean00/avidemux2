@@ -35,15 +35,12 @@ int admCoreVideoToolbox::copyData(AVCodecContext *s, AVFrame *src, ADMImage *des
 
     switch (pixel_format)
     {
-#if PREFER_NV12
         case kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange:
-#else
         case kCVPixelFormatType_420YpCbCr8Planar:
-#endif
             //ADM_info("pixel format: %s (%d)\n", (pixel_format == kCVPixelFormatType_420YpCbCr8Planar)? "YUV420P" : "NV12", pixel_format);
             break;
         default:
-            ADM_error("%s: Unsupported pixel format: %d\n", av_fourcc2str(s->codec_tag), pixel_format);
+            ADM_error("%s: Unsupported pixel format: %d\n", avcodec_get_name(s->codec_id), pixel_format);
             return AVERROR(ENOSYS);
     }
 
@@ -78,16 +75,17 @@ int admCoreVideoToolbox::copyData(AVCodecContext *s, AVFrame *src, ADMImage *des
         ref._planes[i] = data[i];
         ref._planeStride[i] = linesize[i];
     }
-#if PREFER_NV12
-    dest->convertFromNV12(ref._planes[0], ref._planes[1], ref._planeStride[0], ref._planeStride[1]);
-#else
-    dest->duplicateMacro(&ref, true);
-#endif
+    if (pixel_format == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
+        dest->convertFromNV12(ref._planes[0], ref._planes[1], ref._planeStride[0], ref._planeStride[1]);
+    else
+        dest->duplicateMacro(&ref, true);
 
     CVPixelBufferUnlockBaseAddress(pixbuf, kCVPixelBufferLock_ReadOnly);
 
     return 0;
 }
+
+#ifdef USE_OLD_HWACCEL_API
 
 void admCoreVideoToolbox::uninit(AVCodecContext *s)
 {
@@ -121,3 +119,4 @@ fail:
     uninit(s);
     return ret;
 }
+#endif

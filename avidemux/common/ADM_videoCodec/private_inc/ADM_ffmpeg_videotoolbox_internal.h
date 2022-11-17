@@ -19,6 +19,7 @@ class decoderFFVT : public ADM_acceleratedDecoderFF
 {
 protected:
                     ADMImage    *copy;
+                    AVBufferRef *hwctx;
 public:
                     bool        alive;
                                 decoderFFVT (AVCodecContext *avctx,decoderFF *parent);

@@ -18,6 +18,7 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavcodec/videotoolbox.h"
 #include "libavutil/pixdesc.h"
+#include "libavutil/hwcontext.h"
 }
 
 #include "ADM_codec.h"
@@ -43,8 +44,8 @@ static enum AVPixelFormat ADM_VT_getFormat(struct AVCodecContext *avctx, const e
         char name[300]={0};
         av_get_pix_fmt_string(name,sizeof(name),c);
         ADM_info("[VideoToolbox]: Evaluating PIX_FMT %d,%s\n",c,name);
-        av_get_codec_tag_string(name,sizeof(name),avctx->codec_id);
-        ADM_info("\t  Evaluating codec %d,%s\n",avctx->codec_id,name);
+        snprintf(name,300,"%s",avcodec_get_name(avctx->codec_id));
+        ADM_info("\t  Evaluating codec %d, %s\n",avctx->codec_id,name);
         if(c!=AV_PIX_FMT_VIDEOTOOLBOX) continue;
 #define FMT_V_CHECK(x,y) case AV_CODEC_ID_##x: outPix=AV_PIX_FMT_VIDEOTOOLBOX; id=avctx->codec_id; break;
 
@@ -58,7 +59,7 @@ static enum AVPixelFormat ADM_VT_getFormat(struct AVCodecContext *avctx, const e
 #endif
             FMT_V_CHECK(VC1,VC1)
             default:
-                ADM_info("No hw support for format %d\n",avctx->codec_id);
+                ADM_info("No hw support for %s\n",name);
                 continue;
                 break;
         }
@@ -92,6 +93,7 @@ decoderFFVT::decoderFFVT(struct AVCodecContext *avctx, decoderFF *parent) : ADM_
     const char *name="";
     alive = false;
     copy = NULL;
+    hwctx = NULL;
 
     switch(_context->codec_id)
     {
@@ -112,11 +114,13 @@ decoderFFVT::decoderFFVT(struct AVCodecContext *avctx, decoderFF *parent) : ADM_
             ADM_warning("codec not in the list\n");
             break;
     }
-    if(admCoreVideoToolbox::initVideoToolbox(avctx))
+    int err = av_hwdevice_ctx_create(&hwctx, AV_HWDEVICE_TYPE_VIDEOTOOLBOX, NULL, NULL, 0);
+    if(err < 0)
     {
-        ADM_error("VideoToolbox init failed\n");
+        ADM_error("Cannot initialize VideoToolbox\n");
         return;
     }
+    _context->hw_device_ctx = av_buffer_ref(hwctx);
     alive = true;
     copy = new ADMImageDefault(avctx->width, avctx->height);
     ADM_info("Successfully setup hw accel\n");
@@ -127,6 +131,11 @@ decoderFFVT::decoderFFVT(struct AVCodecContext *avctx, decoderFF *parent) : ADM_
 decoderFFVT::~decoderFFVT()
 {
     ADM_info("Destroying VideoToolbox decoder\n");
+    if(hwctx)
+    {
+        av_buffer_unref(&hwctx);
+        hwctx = NULL;
+    }
     if(copy)
     {
         delete copy;
@@ -213,6 +222,11 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
         return false;
     }
 
+    if(frame->format != AV_PIX_FMT_VIDEOTOOLBOX)
+    {
+        ADM_warning("No hw image in the AVFrame\n");
+        return false;
+    }
     int result=admCoreVideoToolbox::copyData(_context, frame, copy);
     if(result)
     {
@@ -280,8 +294,11 @@ ADM_acceleratedDecoderFF *ADM_hwAccelEntryVideoToolbox::spawn( struct AVCodecCon
     decoderFF *ff=(decoderFF *)avctx->opaque;
     decoderFFVT *dec=new decoderFFVT(avctx,ff);
     if(!dec->alive)
+    {
+        delete dec;
+        dec = NULL;
         return NULL;
-
+    }
     return (ADM_acceleratedDecoderFF *)dec;
 }
 

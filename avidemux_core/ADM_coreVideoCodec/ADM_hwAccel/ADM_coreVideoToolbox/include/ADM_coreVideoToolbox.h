@@ -23,10 +23,11 @@ public:
     static bool         init(GUI_WindowInfo *x) { return true; }
     static bool         isOperationnal(void) { return true; }
     static bool         cleanup(void) {return true; }
-
+#ifdef USE_OLD_HWACCEL_API
     static int          initVideoToolbox(AVCodecContext *avctx);
-    static int          copyData(AVCodecContext *avctx, AVFrame *src, ADMImage *dest);
     static void         uninit(AVCodecContext *avctx);
+#endif
+    static int          copyData(AVCodecContext *avctx, AVFrame *src, ADMImage *dest);
 };
 
 #endif
