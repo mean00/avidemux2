@@ -51,6 +51,7 @@ x264Encoder::x264Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreV
     logFile=NULL;
     flush=false;
     firstIdr=true;
+    image10=NULL;
 }
 
 /**
@@ -136,6 +137,11 @@ x264Encoder::~x264Encoder()
         ADM_dealloc(logFile);
         logFile=NULL;
   }
+    if (image10)
+    {
+        delete image10;
+        image10=NULL;
+    }
 }
 /**
     \fn setPassAndLogFile
@@ -176,11 +182,40 @@ again:
         {
             if(image->_range == ADM_COL_RANGE_JPEG && !param.vui.b_fullrange)
                 image->shrinkColorRange();
-            // 2-preamble
-            if(false==preAmble(image))
+            if (image10 != NULL)
             {
-                ADM_warning("[x264] preAmble failed\n");
-                return false;
+                // use double-width ADMImage "image10" as a fake 10/16bit image
+                for (int p=0; p<3; p++)
+                {
+                    int w = image->_width / ((p>0)?2:1);
+                    int h = image->_height / ((p>0)?2:1);
+                    
+                    for (int y=0; y<h; y++)
+                    {
+                        uint8_t * src = image->_planes[p] + y*image->_planeStride[p];
+                        uint16_t * dst = ((uint16_t*)(image10->_planes[p] + y*image10->_planeStride[p]));
+                        for (int x=0; x<w; x++)
+                        {
+                            dst[x] = (((uint16_t)src[x]) << 2);
+                        }
+                    }
+                }
+                image10->copyInfo(image);
+                // 2-preamble
+                if(false==preAmble(image10, 10))
+                {
+                    ADM_warning("[x264] preAmble failed\n");
+                    return false;
+                }                
+            }
+            else
+            {
+                // 2-preamble
+                if(false==preAmble(image, 8))
+                {
+                    ADM_warning("[x264] preAmble failed\n");
+                    return false;
+                }
             }
         }else
         {
@@ -247,10 +282,14 @@ bool         x264Encoder::isDualPass(void)
         \fn preAmble
         \fn prepare a frame to be encoded
 */
-bool  x264Encoder::preAmble (ADMImage * in)
+bool  x264Encoder::preAmble (ADMImage * in, int bitDepth)
 {
     MMSET(pic);
       pic.img.i_csp = X264_CSP_I420;
+      if (bitDepth > 8)
+      {
+          pic.img.i_csp |= X264_CSP_HIGH_DEPTH;
+      }
       pic.img.i_plane = 3;
       pic.img.plane[0] = YPLANE(in);
       pic.img.plane[1] = UPLANE(in);

@@ -138,10 +138,11 @@ protected:
                x264_param_t     param;
                x264_t          *handle;
                x264_picture_t  pic;
+               ADMImage        *image10;
                int             plane;
                bool            globalHeader;
                bool            flush;
-               bool            preAmble (ADMImage * in);
+               bool            preAmble (ADMImage * in, int bitDepth);
                bool            postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,x264_picture_t *picout);
                bool            createHeader(void);
                int             encodeNals(uint8_t *buf, int size, x264_nal_t *nals, int nalCount, bool skipSei);

@@ -351,6 +351,14 @@ bool x264Encoder::setup(void)
   if(!x264Settings.useAdvancedConfiguration)
   {
     x264_param_apply_profile(&param, x264Settings.general.profile.c_str());
+    if (x264Settings.general.profile == std::string("high10"))
+    {
+        param.i_bitdepth = 10;
+        param.i_csp |= X264_CSP_HIGH_DEPTH;
+        if (image10 != NULL) delete image10;
+        image10=new ADMImageDefault(getWidth()*2,getHeight());
+    }
+            
   }
 
   setConstraintsByLevel();
