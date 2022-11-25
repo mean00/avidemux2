@@ -21,7 +21,6 @@
 #include "../include/ADM_coreLibVA_internal.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_windowInfo.h"
-#include "libavcodec/vaapi.h"
 #include "ADM_imageFlags.h"
 
 #include "fourcc.h"
@@ -414,38 +413,6 @@ bool admLibVA::setupImageFormat()
         delete [] list;
         return r;
 }
-/**
- * \fn fillContext
- * @param c
- * @return
- */
-bool admLibVA::fillContext(VAProfile profile ,vaapi_context *c)
-{
-    CHECK_WORKING(false);
-    VAConfigID cid;
-    switch(profile)
-    {
-       case VAProfileMPEG2Main:     cid=ADM_coreLibVA::configMpeg2;break;
-       case VAProfileH264High:      cid=ADM_coreLibVA::configH264;break;
-       case VAProfileVC1Advanced:   cid=ADM_coreLibVA::configVC1;break;
-#ifdef LIBVA_HEVC_DEC
-       case VAProfileHEVCMain:      cid=ADM_coreLibVA::configH265;break;
-       case VAProfileHEVCMain10:    cid=ADM_coreLibVA::configH26510Bits;break;
-#endif
-
-#ifdef LIBVA_VP9_DEC
-       case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;
-#endif
-       default:
-                ADM_assert(0);
-
-    }
-    c->config_id=cid;
-    c->display=ADM_coreLibVA::display;
-    return true;
-}
-
-
 
 /**
     \fn     init

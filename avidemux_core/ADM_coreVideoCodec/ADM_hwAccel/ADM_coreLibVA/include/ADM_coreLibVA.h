@@ -20,7 +20,6 @@
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixfmt.h"
-#include "libavcodec/vaapi.h"
 }
 
 #include "ADM_windowInfo.h"
@@ -75,7 +74,6 @@ static  VAImage    *allocateImage( int w, int h);
 
 
 static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
-static bool        fillContext(VAProfile profile,vaapi_context *c);
 
 // Indirect access through image
 static bool        uploadToImage(ADMImage *src,VAImage *dest );

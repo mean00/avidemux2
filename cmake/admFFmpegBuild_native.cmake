@@ -86,7 +86,7 @@ FF_ADD_SUBLIB(      "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"     )
 ADM_FF_INSTALL_LIBS_AND_HEADERS()
 
 IF(USE_LIBVA)
-                INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
+                #INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
                 #INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
 ENDIF(USE_LIBVA)
 # EOF
