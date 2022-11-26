@@ -270,14 +270,35 @@ static void simplify_path(char **buf)
         \fn ADM_PathCanonize
         \brief Canonize the path, returns a copy of the absolute path given as parameter
 */
-char *ADM_PathCanonize(const char *tmpname)
+char *ADM_PathCanonize(const char *namein)
 {
     char *out;
+    char *tmpname = NULL;
+
+    if (namein && strlen(namein))
+    {
+        tmpname = new char[strlen(namein) + 1];
+        strcpy(tmpname, namein);
+    }
+
+    // replace forward slashes as passed by Qt with backslashes
+    if (tmpname)
+    {
+        char *slash = strchr(tmpname, '/');
+        uintptr_t end = (uintptr_t)strchr(tmpname, 0);
+        while(slash && (uintptr_t)slash < end)
+        {
+            *slash = '\\';
+            slash = strchr(slash, '/');
+        }
+    }
 
     if (tmpname && strlen(tmpname) > 1 && (tmpname[0] == '\\' || tmpname[1] == ':')) // already an absolute path?
     {
         out = new char[strlen(tmpname) + 1];
         strcpy(out, tmpname);
+        delete [] tmpname;
+        tmpname = NULL;
         simplify_path(&out);
         return out;
     }
@@ -322,6 +343,13 @@ char *ADM_PathCanonize(const char *tmpname)
         strcat(out, "\\");
         strcat(out, tmpname);
     }
+
+    if (tmpname)
+    {
+        delete [] tmpname;
+        tmpname = NULL;
+    }
+
     delete [] path;
     path = NULL;
 
