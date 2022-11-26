@@ -353,15 +353,26 @@ bool x264Encoder::setup(void)
     x264_param_apply_profile(&param, x264Settings.general.profile.c_str());
     if (x264Settings.general.profile == std::string("high10"))
     {
-        param.i_bitdepth = 10;
-        param.i_csp |= X264_CSP_HIGH_DEPTH;
-        if (image10 != NULL) delete image10;
-        image10=new ADMImageDefault(getWidth()*2,getHeight());
+        outputBitDepth = 10;
     }
-            
   }
 
   setConstraintsByLevel();
+  
+  if (outputBitDepth > 8)
+  {
+    param.i_bitdepth = outputBitDepth;
+    param.i_csp |= X264_CSP_HIGH_DEPTH;
+    highBitDepthImage = new ADMImageRefWrittable(getWidth(),getHeight());
+    int pitch = ADM_IMAGE_ALIGN(getWidth());
+    highBitDepthImage->_planeStride[0] = pitch*2;
+    highBitDepthImage->_planeStride[1] = pitch;
+    highBitDepthImage->_planeStride[2] = pitch;
+    highBitDepthBuffers.setSize(pitch*2*getHeight() + 2*((getHeight()/2) * pitch) + 64);
+    highBitDepthImage->_planes[0] = highBitDepthBuffers.at(0);
+    highBitDepthImage->_planes[1] = highBitDepthBuffers.at(pitch*2*getHeight());
+    highBitDepthImage->_planes[2] = highBitDepthBuffers.at(pitch*2*getHeight() + ((getHeight()/2) * pitch));
+  }
 
   dumpx264Setup(&param);
   ADM_info("Creating x264 encoder\n");
