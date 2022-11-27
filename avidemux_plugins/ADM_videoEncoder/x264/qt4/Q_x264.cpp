@@ -21,6 +21,11 @@ using std::vector;
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
 
+extern "C"
+{
+#include "x264.h"
+};
+
 static int pluginVersion=3;
 
 static x264_encoder myCopy; // ugly...
@@ -134,7 +139,14 @@ static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "fa
 static const char* listOfTunings[] = { "film", "animation", "grain", "stillimage", "psnr", "ssim" };
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
-static const char* listOfProfiles[] = { "baseline", "main", "high", "high10", "high422", "high444" };
+static const char* listOfProfiles[] = { "baseline", "main", "high"
+  #if X264_BUILD >= 153
+    , "high10"
+  #endif
+  #if 0
+    , "high422", "high444"
+  #endif
+    };
 #define NB_PROFILE sizeof(listOfProfiles)/sizeof(char*)
 
 /**
