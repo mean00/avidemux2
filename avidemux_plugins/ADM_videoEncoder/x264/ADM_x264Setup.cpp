@@ -359,6 +359,7 @@ bool x264Encoder::setup(void)
 
   setConstraintsByLevel();
   
+#if X264_BUILD >= 153
   if (outputBitDepth > 8)
   {
     param.i_bitdepth = outputBitDepth;
@@ -373,7 +374,8 @@ bool x264Encoder::setup(void)
     highBitDepthImage->_planes[1] = highBitDepthBuffers.at(pitch*2*getHeight());
     highBitDepthImage->_planes[2] = highBitDepthBuffers.at(pitch*2*getHeight() + ((getHeight()/2) * pitch));
   }
-
+#endif
+  
   dumpx264Setup(&param);
   ADM_info("Creating x264 encoder\n");
   handle = x264_encoder_open (&param);

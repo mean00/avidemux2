@@ -263,6 +263,8 @@ bool  x264Encoder::preAmble (ADMImage * in)
     pic.i_type = X264_TYPE_AUTO;
     pic.i_pts = in->Pts;
     ADMImage * srcImg = in;
+    
+#if X264_BUILD >= 153    
     if (outputBitDepth > 8)
     {
         ADM_assert(highBitDepthImage);
@@ -289,7 +291,7 @@ bool  x264Encoder::preAmble (ADMImage * in)
             }
         }
     }
-    
+#endif    
     pic.img.plane[0] = YPLANE(srcImg);
     pic.img.plane[1] = UPLANE(srcImg);
     pic.img.plane[2] = VPLANE(srcImg);
