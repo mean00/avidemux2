@@ -22,13 +22,14 @@
 */
 class flyAiEnhance : public ADM_flyDialogYuv
 {
-  friend class Ui_aiEnhanceWindow;
+  protected:
+    ADMVideoAiEnhance::aiEnhance_buffers_t  buffers;
+
   public:
     aiEnhance            param;
     bool                 showOriginal;
     int                  previewScale;
-    ADMVideoAiEnhance::aiEnhance_buffers_t  buffers;
-  public:
+
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     uint8_t    download(void);
     uint8_t    upload(void);

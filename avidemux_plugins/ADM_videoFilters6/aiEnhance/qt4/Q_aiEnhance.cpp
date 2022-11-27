@@ -23,7 +23,6 @@
 #include <QPushButton>
 #include "Q_aiEnhance.h"
 #include "ADM_toolkitQt.h"
-#include "ADM_vidAiEnhance.h"
 #include "ADM_QSettings.h"
 #include <QGroupBox>
 
@@ -65,7 +64,6 @@ Ui_aiEnhanceWindow::Ui_aiEnhanceWindow(QWidget *parent, aiEnhance *param,ADM_cor
     peekOriginalBtn->setText(QT_TRANSLATE_NOOP("aiEnhance", "Peek Original"));
 
     myFly=new flyAiEnhance( this,width, height,in,canvas,ui.horizontalSlider);
-    ADMVideoAiEnhance::AiEnhanceInitializeBuffers(in->getInfo()->width,in->getInfo()->height, &(myFly->buffers));
     memcpy(&(myFly->param),param,sizeof(aiEnhance));
     myFly->showOriginal = false;
     myFly->previewScale = previewScale;
@@ -197,11 +195,8 @@ void Ui_aiEnhanceWindow::setPreferences(bool f)
 
 Ui_aiEnhanceWindow::~Ui_aiEnhanceWindow()
 {
-    if(myFly) {
-        ADMVideoAiEnhance::AiEnhanceDestroyBuffers(&(myFly->buffers));
-        delete myFly;
-    }
-    myFly=NULL; 
+    if(myFly) delete myFly;
+    myFly=NULL;
     if(canvas) delete canvas;
     canvas=NULL;
 }

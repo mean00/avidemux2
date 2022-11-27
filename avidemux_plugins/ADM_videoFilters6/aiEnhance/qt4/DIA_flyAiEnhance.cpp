@@ -28,15 +28,16 @@
 /**
  */
 flyAiEnhance::flyAiEnhance (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, ADM_flyNavSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
-  {
-  }
+    ADM_QCanvas *canvas, ADM_flyNavSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
+{
+    ADMVideoAiEnhance::AiEnhanceInitializeBuffers(_inW, _inH, &buffers);
+}
 /**
  * 
  */
 flyAiEnhance::~flyAiEnhance()
 {
-
+    ADMVideoAiEnhance::AiEnhanceDestroyBuffers(&buffers);
 }
 
 uint8_t  flyAiEnhance::update(void)

@@ -15,10 +15,10 @@ class Ui_aiEnhanceWindow : public QDialog
     int                 previewScale;
     QPushButton *       peekOriginalBtn;
     QPushButton *       preferencesButton;
-
-  public:
     flyAiEnhance *myFly;
     ADM_QCanvas *canvas;
+
+  public:
     Ui_aiEnhanceWindow(QWidget *parent, aiEnhance *param,ADM_coreVideoFilter *in);
     ~Ui_aiEnhanceWindow();
     Ui_aiEnhanceDialog ui;
