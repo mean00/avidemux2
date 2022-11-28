@@ -286,7 +286,7 @@ static bool checkProfile(const VAProfile &profile,VAConfigID *cid,const char *na
     CHECK_RT(YUV420);
     CHECK_RT(YUV422);
     CHECK_RT(YUV444);
-    CHECK_RT(YUV420_10BPP);
+    CHECK_RT(YUV420_10);
     CHECK_RT(RGB32);
     
     CHECK_ERROR(vaCreateConfig( ADM_coreLibVA::display, profile, VAEntrypointVLD,&attrib, 1,cid));
@@ -693,12 +693,31 @@ VASurfaceID        admLibVA::allocateSurface(int w, int h, int fmt)
 
        aprintf("Creating surface %d x %d (fmt=%d)\n",w,h,fmt);
        VASurfaceID s;
+       VASurfaceAttrib attr;
+       attr.type = VASurfaceAttribPixelFormat;
+       attr.flags = VA_SURFACE_ATTRIB_SETTABLE;
+       VAGenericValue gv;
+       gv.type = VAGenericValueTypeInteger;
+       int fcc;
+       switch(fmt)
+       {
+           case VA_RT_FORMAT_YUV420:    fcc = VA_FOURCC_YV12 /* VA_FOURCC_I420 */; break;
+           case VA_RT_FORMAT_YUV420_10: fcc = VA_FOURCC_I010; break; // UV swapped?
+           case VA_RT_FORMAT_YUV422:    fcc = VA_FOURCC_422H; break;
+           case VA_RT_FORMAT_YUV444:    fcc = VA_FOURCC_444P; break;
+           case VA_RT_FORMAT_RGB32:     fcc = VA_FOURCC_BGRX; break;
+           default:
+              ADM_warning("Unsupported format 0x%08x requested\n",fmt);
+              return VA_INVALID;
+       }
+       gv.value.i = fcc;
+       attr.value = gv;
 
         CHECK_ERROR(vaCreateSurfaces(ADM_coreLibVA::display,
                         fmt,
                         w,h,
                         &s,1,
-                        NULL,0));
+                        &attr,1));
 
         if(!xError)
         {
