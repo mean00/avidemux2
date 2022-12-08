@@ -51,6 +51,8 @@ Ui_artMirrorWindow::Ui_artMirrorWindow(QWidget *parent, artMirror *param,ADM_cor
         connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
         SPINNER(Displacement,100,2)
 
+        QT6_CRASH_WORKAROUND(artMirrorWindow)
+
         setModal(true);
 }
 void Ui_artMirrorWindow::sliderUpdate(int foo)

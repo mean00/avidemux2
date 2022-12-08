@@ -62,6 +62,8 @@ Ui_artVignetteWindow::Ui_artVignetteWindow(QWidget *parent, artVignette *param,A
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+        QT6_CRASH_WORKAROUND(artVignetteWindow)
+
         ui.horizontalSliderAspect->setFocus();
         setModal(true);
 }

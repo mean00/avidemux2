@@ -63,6 +63,8 @@ Ui_waveletDenoiseWindow::Ui_waveletDenoiseWindow(QWidget *parent, waveletDenoise
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+        QT6_CRASH_WORKAROUND(waveletDenoiseWindow)
+
         setModal(true);
 }
 void Ui_waveletDenoiseWindow::sliderUpdate(int foo)

@@ -120,6 +120,13 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     connect(preferencesButton,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
     
     connectDimensionControls();
+
+#if !(defined(__APPLE__) && QT_VERSION >= QT_VERSION_CHECK(6,3,0))
+    disconnect(ui.buttonBox, &QDialogButtonBox::accepted, this, &resizeWindow::accept);
+    disconnect(ui.buttonBox, &QDialogButtonBox::rejected, this, &resizeWindow::reject);
+    connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(ui.buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+#endif
 }
 
 void resizeWindow::showEvent(QShowEvent *event)

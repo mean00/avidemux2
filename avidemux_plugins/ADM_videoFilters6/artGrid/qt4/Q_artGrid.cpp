@@ -59,6 +59,8 @@ Ui_artGridWindow::Ui_artGridWindow(QWidget *parent, artGrid *param,ADM_coreVideo
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+        QT6_CRASH_WORKAROUND(artGridWindow)
+
         setModal(true);
 }
 void Ui_artGridWindow::sliderUpdate(int foo)

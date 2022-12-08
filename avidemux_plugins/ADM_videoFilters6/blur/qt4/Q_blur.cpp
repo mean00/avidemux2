@@ -83,6 +83,8 @@ Ui_blurWindow::Ui_blurWindow(QWidget *parent, blur *param,ADM_coreVideoFilter *i
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
+        QT6_CRASH_WORKAROUND(blurWindow)
+
         setModal(true);
 }
 void Ui_blurWindow::sliderUpdate(int foo)

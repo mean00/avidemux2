@@ -53,6 +53,8 @@ Ui_artPosterizeWindow::Ui_artPosterizeWindow(QWidget *parent, artPosterize *para
         connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSpinBox(int)));
         SPINNER(Levels)
 
+        QT6_CRASH_WORKAROUND(artPosterizeWindow)
+
         setModal(true);
 }
 void Ui_artPosterizeWindow::sliderUpdate(int foo)

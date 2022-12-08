@@ -70,6 +70,8 @@ Ui_fadeInOutWindow::Ui_fadeInOutWindow(QWidget *parent, fadeInOut *param,ADM_cor
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
+        QT6_CRASH_WORKAROUND(fadeInOutWindow)
+
         setModal(true);
 }
 

@@ -64,6 +64,8 @@ Ui_lumaStabWindow::Ui_lumaStabWindow(QWidget *parent, lumaStab *param,ADM_coreVi
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+        QT6_CRASH_WORKAROUND(lumaStabWindow)
+
         setModal(true);
 }
 void Ui_lumaStabWindow::sliderUpdate(int foo)

@@ -50,6 +50,8 @@ Ui_artPixelizeWindow::Ui_artPixelizeWindow(QWidget *parent, artPixelize *param,A
         SPINNER(PW);
         SPINNER(PH);
 
+        QT6_CRASH_WORKAROUND(artPixelizeWindow)
+
         ui.spinBoxPW->setFocus();
         setModal(true);
 }

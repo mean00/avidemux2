@@ -78,6 +78,7 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
     SPINNER(Blue);
     SPINNER(Green);
 
+    QT6_CRASH_WORKAROUND(eq2Window)
 
     setResetSliderEnabledState();
 

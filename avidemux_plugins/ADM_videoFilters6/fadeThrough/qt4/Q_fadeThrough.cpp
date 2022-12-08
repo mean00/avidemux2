@@ -146,6 +146,8 @@ Ui_fadeThroughWindow::Ui_fadeThroughWindow(QWidget *parent, fadeThrough *param,A
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
+        QT6_CRASH_WORKAROUND(fadeThroughWindow)
+
         setModal(true);
 }
 

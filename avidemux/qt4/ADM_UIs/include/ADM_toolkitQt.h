@@ -1,9 +1,27 @@
 #ifndef QT_TOOLKIT_H
 #define QT_TOOLKIT_H
-#include <QWidget>
+#include <QDialog>
 #include <QSlider>
 #include "ADM_UIQT46_export.h"
 #include "ADM_inttype.h"
+
+/* Since Qt 6.3.0, accepting or rejecting a video filter preview dialog
+by pressing "OK" or "Cancel" button of the QDialogButtonBox crashes Avidemux.
+macOS builds are not affected.
+
+As a workaround, disconnect PMF-style connections to these slots and reconnect
+them the old way.
+
+Probably related to https://bugreports.qt.io/browse/QTBUG-33908 */
+#if !(defined(__APPLE__) && QT_VERSION >= QT_VERSION_CHECK(6,3,0))
+    #define QT6_CRASH_WORKAROUND(desc) \
+    disconnect(ui.buttonBox, &QDialogButtonBox::accepted, this, &Ui_ ## desc ::accept); \
+    disconnect(ui.buttonBox, &QDialogButtonBox::rejected, this, &Ui_ ## desc ::reject); \
+    connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept())); \
+    connect(ui.buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+#else
+    #define QT6_CRASH_WORKAROUND(desc) {}
+#endif
 
 ADM_UIQT46_EXPORT void qtRegisterDialog(QWidget *dialog);
 ADM_UIQT46_EXPORT void qtUnregisterDialog(QWidget *dialog);

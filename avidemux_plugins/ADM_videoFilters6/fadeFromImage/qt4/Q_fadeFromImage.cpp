@@ -66,6 +66,8 @@ Ui_fadeFromImageWindow::Ui_fadeFromImageWindow(QWidget *parent, fadeFromImage *p
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
+        QT6_CRASH_WORKAROUND(fadeFromImageWindow)
+
         setModal(true);
 }
 

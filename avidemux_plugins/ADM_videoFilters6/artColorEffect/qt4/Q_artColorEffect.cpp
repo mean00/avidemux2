@@ -48,6 +48,8 @@ Ui_artColorEffectWindow::Ui_artColorEffectWindow(QWidget *parent, artColorEffect
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect(ui.comboBoxEffect, SIGNAL(currentIndexChanged(int)), this, SLOT(effectChanged(int)));
 
+        QT6_CRASH_WORKAROUND(artColorEffectWindow)
+
         setModal(true);
 }
 void Ui_artColorEffectWindow::sliderUpdate(int foo)

@@ -465,6 +465,9 @@ Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVid
     helpLayout->addWidget(labelHelpPic);
     helpLayout->addStretch();
 #endif
+
+    QT6_CRASH_WORKAROUND(mpdelogoWindow)
+
     setModal(true);
 }
 /**

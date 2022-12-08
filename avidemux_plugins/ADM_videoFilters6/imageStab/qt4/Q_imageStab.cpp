@@ -67,6 +67,8 @@ Ui_imageStabWindow::Ui_imageStabWindow(QWidget *parent, imageStab *param,ADM_cor
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
+        QT6_CRASH_WORKAROUND(imageStabWindow)
+
         setModal(true);
 }
 void Ui_imageStabWindow::sliderUpdate(int foo)

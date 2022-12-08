@@ -61,6 +61,8 @@ Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, asharp *param, ADM_coreVideoFi
     QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
     connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+    QT6_CRASH_WORKAROUND(asharpWindow)
+
     setModal(true);
 }
 void Ui_asharpWindow::sliderUpdate(int foo)

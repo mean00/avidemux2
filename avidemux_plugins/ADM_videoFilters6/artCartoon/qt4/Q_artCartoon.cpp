@@ -54,6 +54,8 @@ Ui_artCartoonWindow::Ui_artCartoonWindow(QWidget *parent, artCartoon *param,ADM_
         SPINNER(Scatter,1,0)
         SPINNER(Color,1,0)
 
+        QT6_CRASH_WORKAROUND(artCartoonWindow)
+
         setModal(true);
 }
 void Ui_artCartoonWindow::sliderUpdate(int foo)

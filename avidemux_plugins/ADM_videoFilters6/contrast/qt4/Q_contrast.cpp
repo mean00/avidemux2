@@ -72,6 +72,8 @@
           connect( ui.checkBoxY,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));  
           connect( ui.toolButton__DVD2PC,SIGNAL(pressed()),this,SLOT(dvd2PC()));  
 
+        QT6_CRASH_WORKAROUND(contrastWindow)
+
         setModal(true);
   }
 /**

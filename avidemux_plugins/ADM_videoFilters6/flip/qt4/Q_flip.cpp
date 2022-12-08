@@ -46,6 +46,8 @@ Ui_flipWindow::Ui_flipWindow(QWidget *parent, flip *param,ADM_coreVideoFilter *i
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect(ui.comboBoxFlipdir, SIGNAL(currentIndexChanged(int)), this, SLOT(flipdirChanged(int)));
 
+        QT6_CRASH_WORKAROUND(flipWindow)
+
         setModal(true);
 }
 void Ui_flipWindow::sliderUpdate(int foo)

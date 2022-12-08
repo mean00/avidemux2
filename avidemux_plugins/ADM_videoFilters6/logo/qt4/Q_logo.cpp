@@ -195,6 +195,8 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         connect(ui.spinScale,SIGNAL(valueChanged(double)),this,SLOT(scaleChanged(double)));
         connect(canvas,SIGNAL(movedSignal(int,int)),this,SLOT(moved(int,int)));
 
+        QT6_CRASH_WORKAROUND(logoWindow)
+
         setModal(true);
   }
 /**

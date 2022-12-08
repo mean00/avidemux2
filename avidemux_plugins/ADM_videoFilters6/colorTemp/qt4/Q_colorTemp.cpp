@@ -58,6 +58,8 @@ Ui_colorTempWindow::Ui_colorTempWindow(QWidget *parent, colorTemp *param,ADM_cor
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+        QT6_CRASH_WORKAROUND(colorTempWindow)
+
         setModal(true);
 }
 void Ui_colorTempWindow::sliderUpdate(int foo)

@@ -76,6 +76,8 @@ Ui_cubicLUTWindow::Ui_cubicLUTWindow(QWidget *parent, cubicLUT *param,ADM_coreVi
         disconnect( ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
         connect( ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
 
+        QT6_CRASH_WORKAROUND(cubicLUTWindow)
+
         setModal(true);
 }
 void Ui_cubicLUTWindow::sliderUpdate(int foo)

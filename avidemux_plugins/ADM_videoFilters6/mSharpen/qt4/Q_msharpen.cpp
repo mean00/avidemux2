@@ -62,6 +62,8 @@
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
+        QT6_CRASH_WORKAROUND(msharpenWindow)
+
         setModal(true);
   }
   void Ui_msharpenWindow::sliderUpdate(int foo)

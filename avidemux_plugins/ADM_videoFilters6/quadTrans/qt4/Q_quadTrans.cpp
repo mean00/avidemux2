@@ -65,6 +65,8 @@ Ui_quadTransWindow::Ui_quadTransWindow(QWidget *parent, quadTrans *param,ADM_cor
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 
+        QT6_CRASH_WORKAROUND(quadTransWindow)
+
         setModal(true);
 }
 void Ui_quadTransWindow::sliderUpdate(int foo)

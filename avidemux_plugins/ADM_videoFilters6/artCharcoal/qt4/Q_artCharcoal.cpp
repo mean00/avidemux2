@@ -62,6 +62,8 @@ Ui_artCharcoalWindow::Ui_artCharcoalWindow(QWidget *parent, artCharcoal *param,A
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+        QT6_CRASH_WORKAROUND(artCharcoalWindow)
+
         setModal(true);
 }
 void Ui_artCharcoalWindow::sliderUpdate(int foo)

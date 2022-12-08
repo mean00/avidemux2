@@ -59,6 +59,8 @@ Ui_analyzerWindow::Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in) :
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 
+    QT6_CRASH_WORKAROUND(analyzerWindow)
+
     setModal(true);
 
 }

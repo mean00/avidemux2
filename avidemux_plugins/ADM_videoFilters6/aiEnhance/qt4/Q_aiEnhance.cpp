@@ -82,6 +82,8 @@ Ui_aiEnhanceWindow::Ui_aiEnhanceWindow(QWidget *parent, aiEnhance *param,ADM_cor
     preferencesButton->setCheckable(true);
     connect(preferencesButton,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
 
+    QT6_CRASH_WORKAROUND(aiEnhanceWindow)
+
     setModal(true);
 }
 void Ui_aiEnhanceWindow::sliderUpdate(int foo)

@@ -64,6 +64,8 @@ Ui_waveletSharpWindow::Ui_waveletSharpWindow(QWidget *parent, waveletSharp *para
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+        QT6_CRASH_WORKAROUND(waveletSharpWindow)
+
         setModal(true);
 }
 void Ui_waveletSharpWindow::sliderUpdate(int foo)

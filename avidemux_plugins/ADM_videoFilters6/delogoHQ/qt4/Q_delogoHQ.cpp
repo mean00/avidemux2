@@ -74,6 +74,8 @@ Ui_delogoHQWindow::Ui_delogoHQWindow(QWidget *parent, delogoHQ *param,ADM_coreVi
         connect( ui.pushButtonSave,SIGNAL(pressed()),this,SLOT(imageSave()));
         connect( ui.pushButtonLoad,SIGNAL(pressed()),this,SLOT(imageLoad()));
 
+        QT6_CRASH_WORKAROUND(delogoHQWindow)
+
         setModal(true);
 }
 void Ui_delogoHQWindow::sliderUpdate(int foo)

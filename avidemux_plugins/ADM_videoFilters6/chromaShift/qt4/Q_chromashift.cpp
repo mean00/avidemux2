@@ -55,6 +55,8 @@ Ui_chromaShiftWindow::Ui_chromaShiftWindow(QWidget* parent, chromashift *param,A
           SPINNER(U);
           SPINNER(V);
 
+        QT6_CRASH_WORKAROUND(chromaShiftWindow)
+
         setModal(true);
   }
   void Ui_chromaShiftWindow::sliderUpdate(int foo)

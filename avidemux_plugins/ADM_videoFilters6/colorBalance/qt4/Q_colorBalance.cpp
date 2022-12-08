@@ -84,6 +84,8 @@ Ui_colorBalanceWindow::Ui_colorBalanceWindow(QWidget *parent, colorBalance *para
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+        QT6_CRASH_WORKAROUND(colorBalanceWindow)
+
         setModal(true);
 }
 void Ui_colorBalanceWindow::sliderUpdate(int foo)

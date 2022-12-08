@@ -589,6 +589,8 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param, bool firstRun, ADM_co
     SPINNER(Top)
     SPINNER(Bottom)
 
+    QT6_CRASH_WORKAROUND(zoomWindow)
+
     setModal(true);
 }
 /**

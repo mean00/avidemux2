@@ -686,6 +686,8 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
     SPINNER(Top)
     SPINNER(Bottom)
 
+    QT6_CRASH_WORKAROUND(cropWindow)
+
     setModal(true);
 }
 /**

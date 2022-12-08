@@ -76,6 +76,8 @@ Ui_artChromaHoldWindow::Ui_artChromaHoldWindow(QWidget *parent, artChromaHold *p
         PUSHB(C2);
         PUSHB(C3);
 
+        QT6_CRASH_WORKAROUND(artChromaHoldWindow)
+
         setModal(true);
 }
 void Ui_artChromaHoldWindow::sliderUpdate(int foo)

@@ -57,6 +57,8 @@ Ui_artDynThresholdWindow::Ui_artDynThresholdWindow(QWidget *parent, artDynThresh
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
 
+        QT6_CRASH_WORKAROUND(artDynThresholdWindow)
+
         setModal(true);
 }
 void Ui_artDynThresholdWindow::sliderUpdate(int foo)

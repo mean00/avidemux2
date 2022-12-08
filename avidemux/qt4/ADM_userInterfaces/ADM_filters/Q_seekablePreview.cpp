@@ -35,6 +35,8 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
     seekablePreview->addControl(ui.toolLayout);
 
     connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
+
+    QT6_CRASH_WORKAROUND(seekablePreviewWindow)
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()

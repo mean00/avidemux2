@@ -108,7 +108,7 @@ Ui_artChromaKeyWindow::Ui_artChromaKeyWindow(QWidget *parent, artChromaKey *para
         connect(ui.checkBoxTest,SIGNAL(stateChanged(int)),this,SLOT(testImageChanged(int)));
         connect(ui.comboBoxSpill, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
 
-
+        QT6_CRASH_WORKAROUND(artChromaKeyWindow)
 
         setModal(true);
 }
