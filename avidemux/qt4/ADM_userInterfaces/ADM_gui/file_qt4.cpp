@@ -39,9 +39,9 @@ static QWidget *fileSelGetParent(void)
  */
 static int fileSelWriteInternal(const char *label, char *target, uint32_t max, const char *location, const char *ext)
 {
-    QString str,outputPath,outputExt=QString("");
-    QString fileName,dot=QString(".");
-    QString separator = QString("/");
+    QString str,outputPath,outputExt; // null strings
+    QString fileName,dot = ".";
+    QString separator = "/"; // Qt uses forward slash on Windows too
     QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     QFileDialog::Options opts = QFileDialog::Options();
     bool doFilter = !!(ext && strlen(ext));
@@ -106,18 +106,22 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
     if(outputPath.isEmpty() || !QDir(outputPath).exists())
         outputPath = QDir::homePath();
 
-    QString inputBaseName = QString("");
+    QString inputBaseName;
     std::string lastRead;
     admCoreUtils::getLastReadFile(lastRead);
     if(lastRead.size())
     {
         inputBaseName = QFileInfo(QString::fromUtf8(lastRead.c_str())).completeBaseName();
         str = outputPath+separator+inputBaseName+outputExt;
+        char *canonicalNew = ADM_PathCanonize(str.toUtf8().constData());
+        char *canonicalLast = ADM_PathCanonize(lastRead.c_str());
 
-        if(str==QString::fromUtf8(lastRead.c_str()))
+        if(!strcmp(canonicalNew, canonicalLast))
         { // try to avoid name collision when saving in the same directory as the currently loaded video
             str = outputPath+separator+inputBaseName+QString("_edit")+outputExt;
         }
+        delete [] canonicalNew;
+        delete [] canonicalLast;
     }else
     {
         str = QDir::homePath()+separator+QString("out")+dot+outputExt;
