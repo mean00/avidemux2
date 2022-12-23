@@ -342,6 +342,43 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
     {
         return AV_PIX_FMT_NONE;
     }
+    // Check that the profile is supported
+    VAProfile profile = VAProfileNone;
+    switch(avctx->codec_id)
+    {
+        case AV_CODEC_ID_MPEG2VIDEO: profile = VAProfileMPEG2Main; break;
+        case AV_CODEC_ID_H264: profile = VAProfileH264High; break;
+#ifdef LIBVA_HEVC_DEC
+        case AV_CODEC_ID_H265:
+            switch(avctx->pix_fmt)
+            {
+                case AV_PIX_FMT_YUV420P:
+                    profile = VAProfileHEVCMain;
+                    break;
+                case AV_PIX_FMT_YUV420P10LE:
+                    ADM_info("10 bits H265\n");
+                    profile = VAProfileHEVCMain10;
+                    break;
+                default:
+                    ADM_warning("FF/LibVa: unknown pixel format %d\n",(int)avctx->pix_fmt);
+                    return AV_PIX_FMT_NONE;
+               break;
+            }
+            break;
+#endif
+        case AV_CODEC_ID_VC1: profile = VAProfileVC1Advanced; break;
+#ifdef LIBVA_VP9_DEC
+        case AV_CODEC_ID_VP9: profile = VAProfileVP9Profile0; break;
+#endif
+        default:
+            ADM_info("Unknown codec (libVA)\n");
+            return AV_PIX_FMT_NONE;
+    }
+    if(!admLibVA::supported(profile))
+    {
+        ADM_warning("Not supported by libVA\n");
+        return AV_PIX_FMT_NONE;
+    }
     // Finish intialization of LIBVA decoder
     AVBufferRef *devRef = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
     if(!devRef)
@@ -369,7 +406,7 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
     }
     AVHWFramesContext *frameCtx = (AVHWFramesContext *)frameRef->data;
     frameCtx->format = AV_PIX_FMT_VAAPI;
-    frameCtx->sw_format = AV_PIX_FMT_YUV420P;
+    frameCtx->sw_format = (avctx->codec_id == AV_CODEC_ID_VP9)? AV_PIX_FMT_NV12 : AV_PIX_FMT_YUV420P;
     frameCtx->width = avctx->width;
     frameCtx->height = avctx->height;
 
@@ -594,43 +631,6 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
     if(ofmt==AV_PIX_FMT_NONE)
         return false;
     outputFormat=ofmt;
-    ADM_info("This is maybe supported by LIBVA\n");
-    VAProfile profile=VAProfileNone;
-    switch(avctx->codec_id)
-    {
-       case AV_CODEC_ID_MPEG2VIDEO: profile= VAProfileMPEG2Main;break;
-       case AV_CODEC_ID_H264: profile= VAProfileH264High;break;
-#ifdef LIBVA_HEVC_DEC       
-       case AV_CODEC_ID_H265: 
-           switch(avctx->pix_fmt)
-           {
-            case AV_PIX_FMT_YUV420P:
-                profile= VAProfileHEVCMain;
-                break;;
-            case AV_PIX_FMT_YUV420P10LE:
-                ADM_info("10 bits H265\n");
-                profile= VAProfileHEVCMain10;
-                break;
-           default:
-               ADM_warning("FF/LibVa: unknown colorspace %d\n",(int)avctx->pix_fmt);
-               return false;
-               break;
-           }
-           break;
-#endif       
-       case AV_CODEC_ID_VC1: profile= VAProfileVC1Advanced;break;
-#ifdef LIBVA_VP9_DEC
-       case AV_CODEC_ID_VP9: profile= VAProfileVP9Profile3;break;
-#endif
-       default:
-           ADM_info("Unknown codec (libVA)\n");
-           return false;
-    }
-    if(!admLibVA::supported(profile))
-    {
-        ADM_warning("Not supported by libVA\n");
-        return false;
-    }
     return true;
 }
 
