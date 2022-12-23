@@ -339,7 +339,7 @@ bool admLibVA::setupConfig(void)
 #endif
 
 #ifdef LIBVA_VP9_DEC
-    checkProfile(VAProfileVP9Profile3,  &ADM_coreLibVA::configVP9 ,     "VP9");
+    checkProfile(VAProfileVP9Profile0,  &ADM_coreLibVA::configVP9 ,     "VP9");
 #endif
     return true;
 }
@@ -503,7 +503,7 @@ bool        admLibVA::supported(VAProfile profile)
 #endif
 
 #ifdef LIBVA_VP9_DEC
-        SUPSUP(VAProfileVP9Profile3,configVP9)
+        SUPSUP(VAProfileVP9Profile0,configVP9)
 #endif
         default:
             ADM_info("This profile is not supported by libva\n");
@@ -540,7 +540,7 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
        case VAProfileHEVCMain10:  cid=ADM_coreLibVA::configH26510Bits;break;
 #endif
 #ifdef LIBVA_VP9_DEC
-       case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;
+       case VAProfileVP9Profile0: cid=ADM_coreLibVA::configVP9;break;
 #endif
        default:
                 ADM_assert(0);
@@ -703,7 +703,7 @@ VASurfaceID        admLibVA::allocateSurface(int w, int h, int fmt)
        int fcc;
        switch(fmt)
        {
-           case VA_RT_FORMAT_YUV420:    fcc = VA_FOURCC_YV12 /* VA_FOURCC_I420 */; break;
+           case VA_RT_FORMAT_YUV420:    fcc = VA_FOURCC_NV12; break;
            case VA_RT_FORMAT_YUV420_10: fcc = VA_FOURCC_I010; break; // UV swapped?
            case VA_RT_FORMAT_YUV422:    fcc = VA_FOURCC_422H; break;
            case VA_RT_FORMAT_YUV444:    fcc = VA_FOURCC_444P; break;
