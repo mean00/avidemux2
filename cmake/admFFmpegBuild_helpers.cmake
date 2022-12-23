@@ -204,6 +204,7 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
             "${FFMPEG_SOURCE_DIR}/libavutil/channel_layout.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/error.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/dict.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/display.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/version.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/time.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/opt.h"

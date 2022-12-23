@@ -306,24 +306,31 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
             default: break;
         }
 
-        const char *angle=NULL;
+        int angle = 0;
         switch(muxerConfig.rotation)
         {
             case(MP4_MUXER_ROTATE_90):
-                angle="90";
+                angle = 90;
                 break;
             case(MP4_MUXER_ROTATE_180):
-                angle="180";
+                angle = 180;
                 break;
             case(MP4_MUXER_ROTATE_270):
-                angle="270";
+                angle = 270;
                 break;
             default: break;
         }
         if(angle)
         {
-            ADM_info("Setting rotation to %s degrees clockwise\n",angle);
-            av_dict_set(&(video_st->metadata), "rotate", angle, 0);
+            uint8_t *sideData = av_stream_new_side_data(video_st, AV_PKT_DATA_DISPLAYMATRIX, sizeof(int32_t) * 9);
+            if (sideData)
+            {
+                ADM_info("Setting rotation to %d degrees clockwise\n",angle);
+                av_display_rotation_set((int32_t *)sideData, angle);
+            } else
+            {
+                ADM_warning("Could not allocate display matrix side data\n");
+            }
         }
         //ADM_assert(avformat_write_header(oc, &dict) >= 0);
         er = avformat_write_header(oc, &dict);

@@ -26,7 +26,8 @@
 
 extern "C"
 {
-	#include "libavutil/avutil.h"
+    #include "libavutil/avutil.h"
+    #include "libavutil/display.h"
     #include "libavformat/avformat.h"
 };
 #define ADM_MAX_AUDIO_STREAM 10
