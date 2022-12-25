@@ -66,7 +66,10 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     {
         uint64_t delta=0;
         video_body->getPtsDtsDelta(ptsStart,&delta);
-        ADM_info("PTS/DTS delta=%" PRIu64" us\n",delta);
+        char *ptsStartString = ADM_strdup(ADM_us2plain(ptsStart));
+        ADM_info("PTS/DTS delta = %" PRIu64" us (%s) for PTS start = %" PRIu64" (%s)\n", delta, ADM_us2plain(delta), ptsStart, ptsStartString);
+        ADM_dealloc(ptsStartString);
+        ptsStartString = NULL;
         // Do we have non droppable b frame ?
         uint32_t bframeDelay;
         if(true==video_body->getNonClosedGopDelay(ptsStart,&bframeDelay) && bframeDelay)
