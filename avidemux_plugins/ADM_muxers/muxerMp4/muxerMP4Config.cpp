@@ -34,7 +34,7 @@ bool movConfigure(void)
         bool force   = muxerConfig.forceAspectRatio;
 
 #ifndef MUXER_IS_MOV
-        diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4"},{MP4_MUXER_PSP,"PSP"},NULL};
+        diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4",NULL},{MP4_MUXER_PSP,"PSP",NULL}};
         diaElemMenu  menuFormat(&fmt,QT_TRANSLATE_NOOP("mp4muxer","Muxing Format"),2,format,"");
         diaMenuEntry streamOpt[]={
             {MP4_MUXER_OPT_NONE,QT_TRANSLATE_NOOP("mp4muxer","No optimization"),NULL},
