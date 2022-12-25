@@ -299,7 +299,10 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             {
                 if(inBandSpsLen!=spsLen)
                     ADM_warning("SPS length mismatch: %u (old) vs %u (new)\n",spsLen,inBandSpsLen);
-                match=!memcmp(buf, sps, (spsLen>inBandSpsLen)? inBandSpsLen : spsLen);
+                if(spsLen)
+                    match=!memcmp(buf, sps, (spsLen>inBandSpsLen)? inBandSpsLen : spsLen);
+                else
+                    match=false;
             }
             if(!match)
             {
