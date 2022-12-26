@@ -1202,30 +1202,39 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                         VDEO.extraDataSize=avcc.getRemainingSize();
                                         VDEO.extraData=new uint8_t [VDEO.extraDataSize];
                                         avcc.readPayload(VDEO.extraData,VDEO.extraDataSize);
-                                        printf("avcC size:%d\n",VDEO.extraDataSize);
+                                        printf("avcC size                  : %d\n",VDEO.extraDataSize);
                                         // Dump some info
 #define MKD8(x) VDEO.extraData[x]
 #define MKD16(x) ((MKD8(x)<<8)+MKD8(x+1))
 #define MKD32(x) ((MKD16(x)<<16)+MKD16(x+2))
 
-                                        printf("avcC Revision             :%x\n", MKD8(0));
-                                        printf("avcC AVCProfileIndication :%x\n", MKD8(1));
-                                        printf("avcC profile_compatibility:%x\n", MKD8(2));
-                                        printf("avcC AVCLevelIndication   :%x\n", MKD8(3));
+                                        printf("avcC Revision              : 0x%x\n", MKD8(0));
+                                        printf("avcC AVCProfileIndication  : 0x%x\n", MKD8(1));
+                                        printf("avcC profile_compatibility : 0x%x\n", MKD8(2));
+                                        printf("avcC AVCLevelIndication    : 0x%x\n", MKD8(3));
 
-                                        printf("avcC lengthSizeMinusOne   :%x\n", MKD8(4));
-                                        printf("avcC NumSeq               :%x\n", MKD8(5));
-                                        len=MKD16(6);
-                                        printf("avcC sequenceParSetLen    :%x ",len );
-                                        offset=8;
-                                        mixDump(VDEO.extraData+offset,len);
-
-                                        offset=8+len;
-                                        printf("avcC numOfPictureParSets  :%x\n", MKD8(offset++));
-                                        len=MKD16(offset);
-                                        offset++;
-                                        printf("avcC Pic len              :%x\n",len);
-                                        mixDump(VDEO.extraData+offset,len);
+                                        printf("avcC NAL length            : %d\n", (MKD8(4) & 3) + 1);
+                                        offset = 5;
+                                        int numPs = MKD8(offset++) & 0x1F;
+                                        printf("avcC NumSequenceParSets    : %d\n", numPs);
+                                        for(int i=0; i < numPs; i++)
+                                        {
+                                            len = MKD16(offset);
+                                            offset += 2;
+                                            printf("avcC SPS (%d) len           : %d\n", i, len);
+                                            mixDump(VDEO.extraData + offset, len);
+                                            offset += len;
+                                        }
+                                        numPs = MKD8(offset++) & 0x1F;
+                                        printf("avcC numOfPictureParSets   : %d\n", numPs);
+                                        for(int i=0; i < numPs; i++)
+                                        {
+                                            len = MKD16(offset);
+                                            offset += 2;
+                                            printf("avcC PPS (%d) len           : %d\n", i, len);
+                                            mixDump(VDEO.extraData + offset, len);
+                                            offset += len;
+                                        }
                                         // Verify width and height, the values from the container may be wrong.
                                         ADM_SPSInfo sps;
                                         if(false==extractSPSInfo(VDEO.extraData,VDEO.extraDataSize,&sps))
