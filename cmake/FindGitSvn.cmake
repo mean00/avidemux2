@@ -47,7 +47,7 @@ MACRO(admGetGitRevision _dir _rev)
        MESSAGE(STATUS "Top dir is <${topdir}>")
        #MESSAGE(STATUS "COMMAND  ${GIT_EXECUTABLE} log --format=oneline -1   ${topdir}")
        EXECUTE_PROCESS(
-               COMMAND echo  log --format=oneline -1   ${topdir}
+               COMMAND echo  log --format=oneline --no-abbrev -1   ${topdir}
                COMMAND xargs ${GIT_EXECUTABLE} 
                COMMAND head -c 11
                WORKING_DIRECTORY ${_dir} 
