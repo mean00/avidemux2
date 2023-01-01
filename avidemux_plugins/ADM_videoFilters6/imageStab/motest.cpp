@@ -15,10 +15,7 @@
 #include "motest.h"
 #include "prefs.h"
 #include <cmath>
-
-#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
-        #define CAN_DO_INLINE_X86_ASM
-#endif
+#include "ADM_cpuSIMD.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -153,60 +150,50 @@ void motest::addNextImage(ADMImage * img)
 
 int motest::sad(uint8_t * p1, uint8_t * p2, int stride, int x1, int y1, int x2, int y2)
 {
-    volatile int tmp = 0;
-    unsigned int a,b,i,j;
-    uint8_t * ptrb1, * ptrb2, * ptr1, * ptr2;
+    int tmp = 0;
+    uint8_t * ptrb1, * ptrb2;
 
-    x1 -= 3;
-    y1 -= 3;
+    x1 -= 3;    // input parameters supposed to mark the center of the 8x8 patch
+    y1 -= 3;    // ajdust to patch relative 0;0 coordinates
     x2 -= 3;
     y2 -= 3;
     
     ptrb1 = p1 + x1 + y1*stride;
     ptrb2 = p2 + x2 + y2*stride;
     
-#ifdef CAN_DO_INLINE_X86_ASM
- if(CpuCaps::hasMMX())
+#ifdef ADM_CPU_HAS_SIMD
+ #ifdef ADM_CPU_X86
+ if(CpuCaps::hasSSE2())
+ #else
+ if (1)
+ #endif
  {
-    __asm__(
-    ADM_ASM_ALIGN16
-    "pxor %%mm7,%%mm7\n"
-    ::);
-    
-    uint8_t * ptrb3, * ptrb4;
-    ptrb3 = ptrb1 + stride;
-    ptrb4 = ptrb2 + stride;
-
-    for (j=0; j<4; j++)
+    __m128i sum = _mm_setzero_si128();
+    __m128i l641,l642,l643,l644;
+    for (int i=0; i<4; i++)
     {
-        __asm__(
-        ADM_ASM_ALIGN16
-        "movq (%0),%%mm0 \n"
-        "movq (%1),%%mm1 \n"
-        "psadbw %%mm1,%%mm0\n"
-        "movq (%2),%%mm2 \n"
-        "movq (%3),%%mm3 \n"
-        "psadbw %%mm3,%%mm2\n"
-        "paddd %%mm0,%%mm7 \n"
-        "paddd %%mm2,%%mm7 \n"
-        : : "r" (ptrb1) , "r" (ptrb2) , "r" (ptrb3) , "r" (ptrb4)
-        );
-        ptrb1 += stride*2;
-        ptrb2 += stride*2;
-        ptrb3 += stride*2;
-        ptrb4 += stride*2;
+        l641 = _mm_loadu_si64(ptrb1);
+        l642 = _mm_loadu_si64(ptrb2);
+       ptrb1 += stride;
+       ptrb2 += stride;
+        l643 = _mm_loadu_si64(ptrb1);
+        l644 = _mm_loadu_si64(ptrb2);
+       ptrb1 += stride;
+       ptrb2 += stride;
+       __m128i tl1 = _mm_add_epi8(_mm_slli_si128(l641,8),l643);
+       __m128i tl2 = _mm_add_epi8(_mm_slli_si128(l642,8),l644);
+       sum = _mm_add_epi64(sum, _mm_sad_epu8(tl1, tl2));
     }
-    
-    __asm__(
-    ADM_ASM_ALIGN16
-    "movd %%mm7,(%0)\n"
-    "emms \n"
-    :: "r" (&tmp)
-    );
+    sum = _mm_add_epi64(sum, _mm_srli_si128(sum,8));
+    uint64_t tmp64;
+    _mm_storeu_si64(&tmp64, sum);
+    tmp = tmp64;
  }
  else
 #endif 
  {
+    unsigned int a,b,i,j;
+    uint8_t * ptr1, * ptr2;
     for (j=0; j<8; j++)
     {
             ptr1 = ptrb1;
