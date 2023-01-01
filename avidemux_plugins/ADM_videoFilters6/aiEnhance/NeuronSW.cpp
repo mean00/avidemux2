@@ -32,7 +32,7 @@ NeuronSW::~NeuronSW()
 
 void NeuronSW::m_load1_bias(m_vec_base_t * t, float * bias)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     t[0] = _mm_load_ps(bias);
 #else    
     memcpy(t, bias, 4*1*sizeof(float));
@@ -42,7 +42,7 @@ void NeuronSW::m_load1_bias(m_vec_base_t * t, float * bias)
 
 void NeuronSW::m_load2_bias(m_vec_base_t * t, float * bias)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     t[0] = _mm_load_ps(bias + 0);
     t[1] = _mm_load_ps(bias + 4);
 #else    
@@ -53,7 +53,7 @@ void NeuronSW::m_load2_bias(m_vec_base_t * t, float * bias)
 
 void NeuronSW::m_load3_bias(m_vec_base_t * t, float * bias)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     t[0] = _mm_load_ps(bias + 0);
     t[1] = _mm_load_ps(bias + 4);
     t[2] = _mm_load_ps(bias + 8);
@@ -65,7 +65,7 @@ void NeuronSW::m_load3_bias(m_vec_base_t * t, float * bias)
    
 void NeuronSW::m_load4_bias(m_vec_base_t * t, float * bias)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     t[0] = _mm_load_ps(bias + 0);
     t[1] = _mm_load_ps(bias + 4);
     t[2] = _mm_load_ps(bias + 8);
@@ -78,7 +78,7 @@ void NeuronSW::m_load4_bias(m_vec_base_t * t, float * bias)
 
 void NeuronSW::m_add2_vec(m_vec_base_t * t, float * vec)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     __m128 v1 = _mm_load_ps(vec + 0);
     __m128 v2 = _mm_load_ps(vec + 4);
     t[0] = _mm_add_ps(t[0], v1);
@@ -94,7 +94,7 @@ void NeuronSW::m_add2_vec(m_vec_base_t * t, float * vec)
 
 void NeuronSW::m_add4_vec(m_vec_base_t * t, float * vec)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     __m128 v1 = _mm_load_ps(vec + 0);
     __m128 v2 = _mm_load_ps(vec + 4);
     __m128 v3 = _mm_load_ps(vec + 8);
@@ -114,7 +114,7 @@ void NeuronSW::m_add4_vec(m_vec_base_t * t, float * vec)
 
 void NeuronSW::m_add2_vecXs(m_vec_base_t * t, float * vec, float scalar)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     __m128 s = _mm_load1_ps(&scalar);
     __m128 v1 = _mm_load_ps(vec + 0);
     __m128 v2 = _mm_load_ps(vec + 4);
@@ -131,7 +131,7 @@ void NeuronSW::m_add2_vecXs(m_vec_base_t * t, float * vec, float scalar)
 
 void NeuronSW::m_add4_vecXs(m_vec_base_t * t, float * vec, float scalar)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     __m128 s = _mm_load1_ps(&scalar);
     __m128 v1 = _mm_load_ps(vec + 0);
     __m128 v2 = _mm_load_ps(vec + 4);
@@ -152,7 +152,7 @@ void NeuronSW::m_add4_vecXs(m_vec_base_t * t, float * vec, float scalar)
 
 void NeuronSW::m_store1(m_vec_base_t * t, float * layer)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     _mm_store_ps(layer, t[0]);
 #else    
     memcpy(layer, t, 4*1*sizeof(float));
@@ -162,7 +162,7 @@ void NeuronSW::m_store1(m_vec_base_t * t, float * layer)
 
 void NeuronSW::m_store2(m_vec_base_t * t, float * layer)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     _mm_store_ps(layer + 0, t[0]);
     _mm_store_ps(layer + 4, t[1]);
 #else    
@@ -173,7 +173,7 @@ void NeuronSW::m_store2(m_vec_base_t * t, float * layer)
 
 void NeuronSW::m_store3(m_vec_base_t * t, float * layer)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     _mm_store_ps(layer + 0, t[0]);
     _mm_store_ps(layer + 4, t[1]);
     _mm_store_ps(layer + 8, t[2]);
@@ -185,7 +185,7 @@ void NeuronSW::m_store3(m_vec_base_t * t, float * layer)
 
 void NeuronSW::m_store4(m_vec_base_t * t, float * layer)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     _mm_store_ps(layer + 0, t[0]);
     _mm_store_ps(layer + 4, t[1]);
     _mm_store_ps(layer + 8, t[2]);
@@ -210,7 +210,7 @@ void NeuronSW::m_store4(m_vec_base_t * t, float * layer)
 
 void NeuronSW::m_add1_mxXvec2(m_vec_base_t * t, float * mx, float * vec)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     for (int i=0; i<2; i++)
     {
         __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
@@ -241,7 +241,7 @@ void NeuronSW::m_add1_mxXvec2(m_vec_base_t * t, float * mx, float * vec)
 
 void NeuronSW::m_add1_mxXvec4(m_vec_base_t * t, float * mx, float * vec)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     for (int i=0; i<4; i++)
     {
         __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
@@ -272,7 +272,7 @@ void NeuronSW::m_add1_mxXvec4(m_vec_base_t * t, float * mx, float * vec)
 
 void NeuronSW::m_add2_mxXvec2(m_vec_base_t * t, float * mx, float * vec)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     for (int i=0; i<2; i++)
     {
         __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
@@ -304,7 +304,7 @@ void NeuronSW::m_add2_mxXvec2(m_vec_base_t * t, float * mx, float * vec)
 
 void NeuronSW::m_add3_mxXvec4(m_vec_base_t * t, float * mx, float * vec)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     for (int i=0; i<4; i++)
     {
         __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
@@ -337,7 +337,7 @@ void NeuronSW::m_add3_mxXvec4(m_vec_base_t * t, float * mx, float * vec)
 
 void NeuronSW::m_add4_mxXvec4(m_vec_base_t * t, float * mx, float * vec)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     for (int i=0; i<4; i++)
     {
         __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
@@ -371,7 +371,7 @@ void NeuronSW::m_add4_mxXvec4(m_vec_base_t * t, float * mx, float * vec)
 
 void NeuronSW::m_alpha2(m_vec_base_t * t, float * alpha)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     __m128 zero = _mm_setzero_ps();
     __m128 a1 = _mm_load_ps(alpha + 0);
     __m128 a2 = _mm_load_ps(alpha + 4);
@@ -388,7 +388,7 @@ void NeuronSW::m_alpha2(m_vec_base_t * t, float * alpha)
 
 void NeuronSW::m_alpha4(m_vec_base_t * t, float * alpha)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     __m128 zero = _mm_setzero_ps();
     __m128 a1 = _mm_load_ps(alpha + 0);
     __m128 a2 = _mm_load_ps(alpha + 4);
@@ -409,7 +409,7 @@ void NeuronSW::m_alpha4(m_vec_base_t * t, float * alpha)
 
 void NeuronSW::m_integerize1(m_vec_base_t * t, uint8_t * plane, unsigned int stride)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     float c255 = 255;
     __m128 zero = _mm_setzero_ps();
     __m128 v255 = _mm_load1_ps(&c255);
@@ -447,7 +447,7 @@ void NeuronSW::m_integerize1(m_vec_base_t * t, uint8_t * plane, unsigned int str
 
 void NeuronSW::m_integerize3(m_vec_base_t * t, uint8_t * plane, unsigned int stride)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     float c255 = 255;
     __m128 zero = _mm_setzero_ps();
     __m128 v255 = _mm_load1_ps(&c255);
@@ -505,7 +505,7 @@ void NeuronSW::m_integerize3(m_vec_base_t * t, uint8_t * plane, unsigned int str
 
 void NeuronSW::m_integerize4(m_vec_base_t * t, uint8_t * plane, unsigned int stride)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     float c255 = 255;
     __m128 zero = _mm_setzero_ps();
     __m128 v255 = _mm_load1_ps(&c255);

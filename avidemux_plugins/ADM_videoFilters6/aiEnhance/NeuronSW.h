@@ -16,18 +16,14 @@
 #include "ADM_default.h"
 #include "ADM_threads.h"
 #include "ADM_image.h"
-
-#ifdef ADM_CPU_X86_64
-#include <immintrin.h>
-#define USE_SSE2
-#endif
+#include "ADM_cpuSIMD.h"
 
 class NeuronSW
 {
 protected:
     unsigned int            w,h,threads;
 
-#ifdef USE_SSE2       
+#ifdef ADM_CPU_HAS_SIMD       
     typedef __m128 m_vec_base_t;
   #define DECLARE_M_VEC_T(x)    __m128 x [4]
 #else
