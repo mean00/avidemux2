@@ -1144,6 +1144,7 @@ void MainWindow::buildActionLists(void)
     PUSH_LOADED(File, ACT_SAVE_PNG)
     PUSH_LOADED(File, ACT_SAVE_JPG)
     PUSH_LOADED(File, ACT_SAVE_BUNCH_OF_JPG)
+    PUSH_LOADED(File, ACT_SAVE_BUNCH_OF_PNG)
 
     for(uint32_t engineIdx = 0; engineIdx < _scriptEngines.size(); engineIdx++)
         PUSH_LOADED(File, (Action)(ACT_SCRIPT_ENGINE_FIRST + (engineIdx * 3) + 2))

@@ -170,6 +170,12 @@ void HandleAction_Save(Action action)
       GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select JPEG Sequence to Save"),defaultExtension,(SELFILE_CB *)A_saveBunchJpg);
     }
       break;
+    case ACT_SAVE_BUNCH_OF_PNG:
+    {
+      const char *defaultExtension="png";
+      GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select PNG Sequence to Save"),defaultExtension,(SELFILE_CB *)A_saveBunchPng);
+    }
+      break;
     case ACT_SAVE_BMP:
     {
       const char *defaultExtension="bmp";
@@ -474,12 +480,7 @@ bool A_saveJpg (const char *name)
 }
 
 
-/**
-      \fn A_saveBunchJpg
-      \brief Save the selection  as a bunch of jpeg 95% qual
-
-*/
-int A_saveBunchJpg(const char *name)
+int saveSelectionAsImages(const char *name, bool saveAsPng)
 {
 #if defined(__APPLE__)
  #define MAX_LEN 1024
@@ -549,7 +550,11 @@ int A_saveBunchJpg(const char *name)
     uint32_t fn;
     DIA_workingBase *working;
 
-    working=createWorking(QT_TRANSLATE_NOOP("adm","Saving selection as set of JPEG images"));
+    if (saveAsPng)
+        working=createWorking(QT_TRANSLATE_NOOP("adm","Saving selection as set of PNG images"));
+    else
+        working=createWorking(QT_TRANSLATE_NOOP("adm","Saving selection as set of JPEG images"));
+    
     while(true)
     {
         if(!filter->getNextFrameAs(hw,&fn,src))
@@ -565,8 +570,15 @@ int A_saveBunchJpg(const char *name)
         working->update((uint32_t)pts,range);
         success++;
         if(!working->isAlive()) break;
-        sprintf(fullName,"%s-%05d.jpg",baseName.c_str(),success);
-        if(!src->saveAsJpg(fullName)) break;
+        sprintf(fullName,"%s-%05d.%s",baseName.c_str(),success, saveAsPng ? "png":"jpg");
+        if (saveAsPng)
+        {
+            if(!src->saveAsPng(fullName)) break;
+        }
+        else
+        {
+            if(!src->saveAsJpg(fullName)) break;
+        }
         if(success==99999) break;
     }
 
@@ -588,6 +600,26 @@ int A_saveBunchJpg(const char *name)
     admPreview::seekToTime(original);
     admPreview::deferDisplay(false);
     return success;
+}
+
+/**
+      \fn A_saveBunchJpg
+      \brief Save the selection  as a bunch of jpeg 95% qual
+
+*/
+int A_saveBunchJpg(const char *name)
+{
+    return saveSelectionAsImages(name, false);
+}
+
+/**
+      \fn A_saveBunchPng
+      \brief Save the selection  as bunch of png
+
+*/
+int A_saveBunchPng(const char *name)
+{
+    return saveSelectionAsImages(name, true);
 }
 
 /**

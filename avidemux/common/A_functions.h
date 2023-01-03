@@ -43,6 +43,7 @@ void    A_queueJob      (void);
 int  A_saveAudioCopy (const char *name);
 bool A_saveJpg (const char *name);
 int  A_saveBunchJpg(const char *name);
+int  A_saveBunchPng(const char *name);
 bool A_saveImg (const char *name);
 bool A_savePng(const char *name);
 int  ADM_saveRaw (const char *name);
