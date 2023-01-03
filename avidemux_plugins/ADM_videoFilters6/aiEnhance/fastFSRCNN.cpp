@@ -582,7 +582,7 @@ void * fastFSRCNN::subconv4_worker_thread( void *ptr )
 
 void fastFSRCNN::transposeWeights(float * weights, int weightCount)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     return;
 #else
     float tmp[16];

@@ -711,7 +711,7 @@ void * FSRCNN::subconv4_worker_thread( void *ptr )
 
 void FSRCNN::transposeWeights(float * weights, int weightCount)
 {
-#ifdef USE_SSE2
+#ifdef ADM_CPU_HAS_SIMD
     return;
 #else
     float tmp[16];
