@@ -234,12 +234,12 @@ int motin::sad(uint8_t * p1, uint8_t * p2, int stride, int x1, int y1, int x2, i
     __m128i l641,l642,l643,l644;
     for (int i=0; i<4; i++)
     {
-        l641 = _mm_loadu_si64(ptrb1);
-        l642 = _mm_loadu_si64(ptrb2);
+        l641 = _mm_loadl_epi64(reinterpret_cast<__m128i*>(ptrb1));
+        l642 = _mm_loadl_epi64(reinterpret_cast<__m128i*>(ptrb2));
        ptrb1 += stride;
        ptrb2 += stride;
-        l643 = _mm_loadu_si64(ptrb1);
-        l644 = _mm_loadu_si64(ptrb2);
+        l643 = _mm_loadl_epi64(reinterpret_cast<__m128i*>(ptrb1));
+        l644 = _mm_loadl_epi64(reinterpret_cast<__m128i*>(ptrb2));
        ptrb1 += stride;
        ptrb2 += stride;
        __m128i tl1 = _mm_add_epi8(_mm_slli_si128(l641,8),l643);
@@ -248,7 +248,7 @@ int motin::sad(uint8_t * p1, uint8_t * p2, int stride, int x1, int y1, int x2, i
     }
     sum = _mm_add_epi64(sum, _mm_srli_si128(sum,8));
     uint64_t tmp64;
-    _mm_storeu_si64(&tmp64, sum);
+    _mm_storel_epi64(reinterpret_cast<__m128i*>(&tmp64), sum);
     tmp = tmp64;
  }
  else
