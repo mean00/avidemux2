@@ -37,7 +37,7 @@ Process()
         rm -Rf ./$BUILDDIR
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        cmake $PKG -DCMAKE_EDIT_COMMAND=mcedit -DCMAKE_CXX_FLAGS="-D__STDC_CONSTANT_MACROS" -DPTHREAD_INCLUDE_DIR=/boot/develop/headers/posix -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX="$BASE_INSTALL_DIR" $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $PKG -DCMAKE_CXX_FLAGS="-D__STDC_CONSTANT_MACROS" -DPTHREAD_INCLUDE_DIR=/boot/develop/headers/posix -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX="$BASE_INSTALL_DIR" $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make -j 2 > /tmp/log$BUILDDIR || fail make
 }
 printModule()
