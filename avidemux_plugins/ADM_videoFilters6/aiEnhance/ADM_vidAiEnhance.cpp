@@ -34,7 +34,7 @@ DECLARE_VIDEO_FILTER(   ADMVideoAiEnhance,   // Class
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_TRANSFORM,            // Category
                         "aiEnhance",            // internal name (must be uniq!)
-                        QT_TRANSLATE_NOOP("aiEnhance","A.I. Enhace (sw)"),            // Display name
+                        QT_TRANSLATE_NOOP("aiEnhance","A.I. Enhance (sw)"),            // Display name
                         QT_TRANSLATE_NOOP("aiEnhance","Neural network upscalers for low resolution videos.") // Description
                     );
 
