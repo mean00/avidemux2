@@ -73,7 +73,7 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
 
     ADM_assert(srcImg->_width == buffers->w);
     ADM_assert(srcImg->_height == buffers->h);
-    ADM_assert(param.algo < 7);
+    ADM_assert(param.algo < 8);
     unsigned int algo = param.algo;
     
     if (buffers->algo != algo)
@@ -81,13 +81,13 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
         buffers->algo = algo;
         int scaling = getScaling(algo);
         delete buffers->ai;
-        if (algo == 0)
+        if (algo < 2)
         {
             buffers->ai = new fastFSRCNN(buffers->w, buffers->h, buffers->algo);
         }
         else
         {
-            buffers->ai = new FSRCNN(buffers->w, buffers->h, buffers->algo - 1);
+            buffers->ai = new FSRCNN(buffers->w, buffers->h, buffers->algo - 2);
         }
         delete buffers->targetImg;
         buffers->targetImg = new ADMImageDefault(buffers->w*scaling, buffers->h*scaling);
@@ -170,9 +170,9 @@ void ADMVideoAiEnhance::update(void)
 */
 int ADMVideoAiEnhance::getScaling(int algo)
 {
-    if (algo == 0)
+    if (algo < 2)
         return fastFSRCNN::getScaling(algo);
-    return FSRCNN::getScaling(algo - 1);
+    return FSRCNN::getScaling(algo - 2);
 }
 
 /**

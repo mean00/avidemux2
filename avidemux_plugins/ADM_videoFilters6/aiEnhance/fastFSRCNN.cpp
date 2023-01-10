@@ -15,12 +15,16 @@
 #include "fastFSRCNN.h"
 
 #include "ffx2.h"
+#include "ffx2d.h"
 
 int fastFSRCNN::getScaling(int algo)
 {
     int scaling = -1;
     switch(algo) {
         case 0:
+            scaling = 2;
+            break;
+        case 1:
             scaling = 2;
             break;
         default:
@@ -30,7 +34,12 @@ int fastFSRCNN::getScaling(int algo)
     return scaling;
 }
 
-
+#define dLOAD_PARAM(PREFIXEDNAME, PARNAME, AMOUNT) \
+        for (int i=0; i<(AMOUNT); i++) \
+        { \
+            PARNAME[i] = PREFIXEDNAME[i] / 8192.0; \
+        }
+#define LOAD_PARAM(PREFIX, PARNAME, AMOUNT)   dLOAD_PARAM(PREFIX ## _ ## PARNAME, PARNAME, AMOUNT)  
 
 fastFSRCNN::fastFSRCNN(int w, int h, int algo) : NeuronSW(w,h)
 {
@@ -79,36 +88,58 @@ fastFSRCNN::fastFSRCNN(int w, int h, int algo) : NeuronSW(w,h)
     
     switch(algo) {
         case 0:
-            memcpy(paramFeatureBias, ffx2_paramFeatureBias, 8 * sizeof(float));
-            memcpy(paramFeatureWeights, ffx2_paramFeatureWeights, 25 * 4 * 2 * sizeof(float));
-            memcpy(paramModel1Bias, ffx2_paramModel1Bias, 8 * sizeof(float));
-            memcpy(paramModel1Weights, ffx2_paramModel1Weights, 18 * 16 * 2 * sizeof(float));
-            memcpy(paramModel1Alpha, ffx2_paramModel1Alpha, 8 * sizeof(float));
-            memcpy(paramModel2Bias, ffx2_paramModel2Bias, 8 * sizeof(float));
-            memcpy(paramModel2Weights, ffx2_paramModel2Weights, 18 * 16 * 2 * sizeof(float));
-            memcpy(paramModel2Alpha, ffx2_paramModel2Alpha, 8 * sizeof(float));
-            memcpy(paramModel3Bias, ffx2_paramModel3Bias, 8 * sizeof(float));
-            memcpy(paramModel3Weights, ffx2_paramModel3Weights, 18 * 16 * 2 * sizeof(float));
-            memcpy(paramModel3Alpha, ffx2_paramModel3Alpha, 8 * sizeof(float));
-            memcpy(paramModel4Bias, ffx2_paramModel4Bias, 8 * sizeof(float));
-            memcpy(paramModel4Weights, ffx2_paramModel4Weights, 18 * 16 * 2 * sizeof(float));
-            memcpy(paramModel4Alpha, ffx2_paramModel4Alpha, 8 * sizeof(float));
-            memcpy(paramResidualBias, ffx2_paramResidualBias, 8 * sizeof(float));
-            memcpy(paramResidualWeights, ffx2_paramResidualWeights, 16 * 2 * 2 * sizeof(float));
-            memcpy(paramResidualAlpha, ffx2_paramResidualAlpha, 8 * sizeof(float));
-            memcpy(paramSubConvolutionBias, ffx2_paramSubConvolutionBias, 4*1 * sizeof(float));
-            memcpy(paramSubConvolutionWeights, ffx2_paramSubConvolutionWeights, 18 * 16 * 1 * sizeof(float));
-            transposeWeights(paramSubConvolutionWeights, 36 * 16 * 1);
+            LOAD_PARAM(ffx2, paramFeatureBias,      8);
+            LOAD_PARAM(ffx2, paramFeatureWeights,   25*4*2);
+            LOAD_PARAM(ffx2, paramModel1Bias,       8);
+            LOAD_PARAM(ffx2, paramModel1Weights,    18*16*2);
+            LOAD_PARAM(ffx2, paramModel1Alpha,      8);
+            LOAD_PARAM(ffx2, paramModel2Bias,       8);
+            LOAD_PARAM(ffx2, paramModel2Weights,    18*16*2);
+            LOAD_PARAM(ffx2, paramModel2Alpha,      8);
+            LOAD_PARAM(ffx2, paramModel3Bias,       8);
+            LOAD_PARAM(ffx2, paramModel3Weights,    18*16*2);
+            LOAD_PARAM(ffx2, paramModel3Alpha,      8);
+            LOAD_PARAM(ffx2, paramModel4Bias,       8);
+            LOAD_PARAM(ffx2, paramModel4Weights,    18*16*2);
+            LOAD_PARAM(ffx2, paramModel4Alpha,      8);
+            LOAD_PARAM(ffx2, paramResidualBias,     8);
+            LOAD_PARAM(ffx2, paramResidualWeights,  16*2*2);
+            LOAD_PARAM(ffx2, paramResidualAlpha,    8);
+            LOAD_PARAM(ffx2, paramSubConvolutionBias,    4*1);
+            LOAD_PARAM(ffx2, paramSubConvolutionWeights, 18*16*1);
+            transposeWeights(paramSubConvolutionWeights, 18*16*1);
+            break;
+        case 1:
+            LOAD_PARAM(ffx2d, paramFeatureBias,      8);
+            LOAD_PARAM(ffx2d, paramFeatureWeights,   25*4*2);
+            LOAD_PARAM(ffx2d, paramModel1Bias,       8);
+            LOAD_PARAM(ffx2d, paramModel1Weights,    18*16*2);
+            LOAD_PARAM(ffx2d, paramModel1Alpha,      8);
+            LOAD_PARAM(ffx2d, paramModel2Bias,       8);
+            LOAD_PARAM(ffx2d, paramModel2Weights,    18*16*2);
+            LOAD_PARAM(ffx2d, paramModel2Alpha,      8);
+            LOAD_PARAM(ffx2d, paramModel3Bias,       8);
+            LOAD_PARAM(ffx2d, paramModel3Weights,    18*16*2);
+            LOAD_PARAM(ffx2d, paramModel3Alpha,      8);
+            LOAD_PARAM(ffx2d, paramModel4Bias,       8);
+            LOAD_PARAM(ffx2d, paramModel4Weights,    18*16*2);
+            LOAD_PARAM(ffx2d, paramModel4Alpha,      8);
+            LOAD_PARAM(ffx2d, paramResidualBias,     8);
+            LOAD_PARAM(ffx2d, paramResidualWeights,  16*2*2);
+            LOAD_PARAM(ffx2d, paramResidualAlpha,    8);
+            LOAD_PARAM(ffx2d, paramSubConvolutionBias,    4*1);
+            LOAD_PARAM(ffx2d, paramSubConvolutionWeights, 18*16*1);
+            transposeWeights(paramSubConvolutionWeights, 18*16*1);
             break;
         default:
             ADM_assert(0);
             break;
     }    
-    transposeWeights(paramModel1Weights, 18 * 16 * 2);
-    transposeWeights(paramModel2Weights, 18 * 16 * 2);
-    transposeWeights(paramModel3Weights, 18 * 16 * 2);
-    transposeWeights(paramModel4Weights, 18 * 16 * 2);
-    transposeWeights(paramResidualWeights, 16 * 2 * 2);
+    transposeWeights(paramModel1Weights,    18*16*2);
+    transposeWeights(paramModel2Weights,    18*16*2);
+    transposeWeights(paramModel3Weights,    18*16*2);
+    transposeWeights(paramModel4Weights,    18*16*2);
+    transposeWeights(paramResidualWeights,  16* 2*2);
 }
 
 
