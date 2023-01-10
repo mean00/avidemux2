@@ -47,6 +47,11 @@
        </item>
        <item>
         <property name="text">
+         <string>fast-FSRCNN x2 upscale with denoising</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>FSRCNN x2 upscale for anime</string>
         </property>
        </item>
