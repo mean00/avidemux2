@@ -416,6 +416,9 @@ ADM_pixelFormat decoderFF::admPixFrmtFromLav(AVPixelFormat pix_fmt, bool * swap)
       if (swap)
           *swap = true;
       return ADM_PIXFRMT_YV12;
+    case AV_PIX_FMT_NV12:
+      aprintf("pixel format is AV_PIX_FMT_NV12 --> ADM_PIXFRMT_NV12\n");
+      return ADM_PIXFRMT_NV12;
     case AV_PIX_FMT_BGR24:
       aprintf("pixel format is AV_PIX_FMT_BGR24 --> ADM_PIXFRMT_BGR24\n");
       return ADM_PIXFRMT_BGR24;

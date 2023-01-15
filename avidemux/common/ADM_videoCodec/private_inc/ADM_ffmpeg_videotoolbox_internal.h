@@ -10,7 +10,7 @@
 #include "ADM_hwAccel.h"
 
 #ifdef USE_VIDEOTOOLBOX
-
+#define NB_SW_FRAMES 16
 /**
  *  \class decoderFFVT
  */
@@ -18,16 +18,14 @@
 class decoderFFVT : public ADM_acceleratedDecoderFF
 {
 protected:
-                    ADMImage    *copy;
-                    AVBufferRef *hwctx;
+                    AVFrame     *swframes[NB_SW_FRAMES];
+                    int         swframeIdx;
 public:
                     bool        alive;
                                 decoderFFVT (AVCodecContext *avctx,decoderFF *parent);
                                 ~decoderFFVT();
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
     virtual const   char        *getName(void) {return "VideoToolbox";}
-                    //bool        markSurfaceUsed(ADM_VTSurface *s);
-                    //bool        markSurfaceUnused(ADM_VTSurface *s);
 };
 #endif
 //EOF

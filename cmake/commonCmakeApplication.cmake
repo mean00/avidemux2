@@ -118,9 +118,6 @@ if (USE_LIBVA)
 	SET(commonLibs1 ${commonLibs1} ADM_coreLibVA6)
 	SET(commonLibs1 ${commonLibs1} ADM_coreLibVAEnc6)
 endif (USE_LIBVA)
-if (USE_VIDEOTOOLBOX)
-	SET(commonLibs1 ${commonLibs1} ADM_coreVideoToolbox6)
-endif (USE_VIDEOTOOLBOX)
 
 SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
 
