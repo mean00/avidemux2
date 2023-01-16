@@ -20,12 +20,13 @@ class decoderFFVT : public ADM_acceleratedDecoderFF
 protected:
                     AVFrame     *swframes[NB_SW_FRAMES];
                     int         swframeIdx;
-public:
                     bool        alive;
+public:
                                 decoderFFVT (AVCodecContext *avctx,decoderFF *parent);
                                 ~decoderFFVT();
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
     virtual const   char        *getName(void) {return "VideoToolbox";}
+    virtual         bool        isAlive(void) {return alive;}
 };
 #endif
 //EOF

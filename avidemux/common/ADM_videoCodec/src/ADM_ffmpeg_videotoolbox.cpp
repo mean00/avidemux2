@@ -198,6 +198,7 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
     if(frame->format != AV_PIX_FMT_VIDEOTOOLBOX)
     {
         ADM_warning("No hw image in the AVFrame\n");
+        alive = false;
         return false;
     }
 
@@ -268,6 +269,13 @@ bool ADM_hwAccelEntryVideoToolbox::canSupportThis( struct AVCodecContext *avctx,
         return false;
     }
 
+    decoderFF *ff = (decoderFF *)avctx->opaque;
+    if(ff && ff->hwDecoderIsBlacklisted())
+    {
+        ADM_info("VideoToolbox is blacklisted for this video.\n");
+        return false;
+    }
+
     enum AVPixelFormat ofmt=ADM_VT_getFormat(avctx,fmt);
     if(ofmt==AV_PIX_FMT_NONE)
         return false;
@@ -280,7 +288,7 @@ ADM_acceleratedDecoderFF *ADM_hwAccelEntryVideoToolbox::spawn( struct AVCodecCon
 {
     decoderFF *ff=(decoderFF *)avctx->opaque;
     decoderFFVT *dec=new decoderFFVT(avctx,ff);
-    if(!dec->alive)
+    if(!dec->isAlive())
     {
         delete dec;
         dec = NULL;
