@@ -345,7 +345,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
             memcpy(_extraDataCopy,extraData,extraDataLen);
     }
    hwDecoder=NULL;
-
+    _blacklistHwDecoder = false;
 }
 
 //_____________________________________________________
@@ -722,8 +722,22 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   out->_noPicture = 0;
   out->_Qp = ADM_IMAGE_UNKNOWN_QP;
   if(hwDecoder && !_usingMT)
-        return hwDecoder->uncompress(in,out);
- 
+  {
+        if(!hwDecoder->isAlive())
+        {
+            delete hwDecoder;
+            hwDecoder = NULL;
+            _blacklistHwDecoder = true;
+            return uncompress(in,out);
+        }
+        if(hwDecoder)
+        {
+            if(!hwDecoder->uncompress(in,out))
+                return false;
+            _blacklistHwDecoder = false;
+            return true;
+        }
+  }
   //printf("Frame size : %d\n",in->dataLength);
 
     if (!_drain && in->dataLength == 0 && !_allowNull) // Null frame, silently skipped
@@ -772,7 +786,16 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
         if(hwDecoder)
         {
             hwDecoder->skipSendFrame();
-            return hwDecoder->uncompress(in,out);
+            if(hwDecoder->uncompress(in,out))
+                return true;
+            if(hwDecoder->isAlive())
+                return false;
+            ADM_warning("HW decoder failed, blacklisting it\n");
+            delete hwDecoder;
+            hwDecoder = NULL;
+            _blacklistHwDecoder = true;
+            flush();
+            return uncompress(in,out);
         }
     }
 

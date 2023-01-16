@@ -34,6 +34,7 @@ public:
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
         virtual bool dontcopy() {return true;} // by default take a ref, dont copy
                 void skipSendFrame(void) {handover=true;}
+        virtual bool isAlive(void) { return true; }
 protected:
         struct AVCodecContext  *_context;
                 decoderFF       *_parent;

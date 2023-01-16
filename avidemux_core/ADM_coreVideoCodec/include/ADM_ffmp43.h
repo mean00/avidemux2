@@ -81,6 +81,7 @@ protected:
            uint32_t     _usingMT;
            uint32_t     _threads;
            ADM_acceleratedDecoderFF *hwDecoder;
+           bool         _blacklistHwDecoder;
            decoderFF_param_t decoderFF_params;
 
 protected:
@@ -144,6 +145,7 @@ public:
         ADM_colorTrC    admColTrcFromLav(AVColorTransferCharacteristic color_trc);
         ADM_colorSpace  admColSpcFromLav(AVColorSpace colorspace);
         uint8_t         clonePic(AVFrame *src, ADMImage *out, bool swap);
+        bool            hwDecoderIsBlacklisted(void) { return _blacklistHwDecoder; }
 };
 
 #define FF_SIMPLE_DECLARE(x,y) \
