@@ -83,6 +83,8 @@ extern "C"
       	 myCpuCaps |= ADM_CPUCAP_SSE3;
        if (ecx & 0x00000200 )
       	 myCpuCaps |= ADM_CPUCAP_SSSE3;
+       if (ecx & (1<<12) )
+      	 myCpuCaps |= ADM_CPUCAP_FMA3;
        if (ecx & (1<<19) )
       	 myCpuCaps |= ADM_CPUCAP_SSE4;
        if (ecx & (1<<20) )
@@ -129,6 +131,7 @@ skipIt:
     CHECK(SSE42)
     CHECK(AVX)
     CHECK(AVX2)
+    CHECK(FMA3)
 #endif // X86
     ADM_info("[CpuCaps] End of CPU capabilities check (cpuCaps: 0x%08x, cpuMask: 0x%08x)\n",myCpuCaps,myCpuMask);
     return ;
@@ -194,6 +197,7 @@ static int Cpu2Lav(uint32_t admMask)
     	LAV_CPU_CAPS(SSE42);
     	LAV_CPU_CAPS(AVX);
     	LAV_CPU_CAPS(AVX2);
+    	LAV_CPU_CAPS(FMA3);
         return out;
 }
 

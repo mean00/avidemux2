@@ -43,6 +43,7 @@ typedef enum
         ADM_CPUCAP_SSE42  =1<<11,
         ADM_CPUCAP_AVX    =1<<12,
         ADM_CPUCAP_AVX2    =1<<13,
+        ADM_CPUCAP_FMA3    =1<<14,
         
         ADM_CPUCAP_ALL=0x0fffffff
 } ADM_CPUCAP;
@@ -72,6 +73,7 @@ public:
 	static uint8_t 	hasSSE42 (void){CHECK_Z(SSE42)};
 	static uint8_t 	hasAVX (void){CHECK_Z(AVX)};
 	static uint8_t 	hasAVX2 (void){CHECK_Z(AVX2)};
+	static uint8_t 	hasFMA3 (void){CHECK_Z(FMA3)};
 
 
 };
