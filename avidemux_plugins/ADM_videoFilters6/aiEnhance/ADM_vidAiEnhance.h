@@ -29,10 +29,13 @@ class  ADMVideoAiEnhance:public ADM_coreVideoFilter
         unsigned int          w,h;
         int                   algo;
         NeuronSW *            ai;
+        ADMImage *            srcImg;
         ADMImage *            targetImg;
+        ADMImage *            chromaUpScaleImg;
         ADMImage *            previewImg;
         ADMColorScalerFull *  upScaler;
         ADMColorScalerFull *  previewScaler;
+        pthread_t             upScalerThread;
     } aiEnhance_buffers_t;
 
   protected:
@@ -55,4 +58,5 @@ class  ADMVideoAiEnhance:public ADM_coreVideoFilter
     static void AiEnhanceDestroyBuffers(aiEnhance_buffers_t * buffers);
     static void AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, bool previewMode, int previewScale, bool skipProcess, aiEnhance param, aiEnhance_buffers_t * buffers);
     static int  getScaling(int algo);
+    static void * chromaUpscalerThread( void *ptr );
 };
