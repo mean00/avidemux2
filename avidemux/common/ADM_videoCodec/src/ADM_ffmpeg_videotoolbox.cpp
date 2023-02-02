@@ -68,6 +68,11 @@ static enum AVPixelFormat ADM_VT_getFormat(struct AVCodecContext *avctx, const e
     {
         return AV_PIX_FMT_NONE;
     }
+    if(avctx->hw_device_ctx)
+    {
+        ADM_info("hw device context already exists\n");
+        return AV_PIX_FMT_VIDEOTOOLBOX;
+    }
     // Finish intialization of VideoToolbox decoder
     AVBufferRef *hwDevRef = NULL;
     int err = av_hwdevice_ctx_create(&hwDevRef, AV_HWDEVICE_TYPE_VIDEOTOOLBOX, NULL, NULL, 0);
@@ -89,14 +94,11 @@ static enum AVPixelFormat ADM_VT_getFormat(struct AVCodecContext *avctx, const e
 decoderFFVT::decoderFFVT(struct AVCodecContext *avctx, decoderFF *parent) : ADM_acceleratedDecoderFF(avctx,parent)
 {
     swframeIdx = 0;
-    alive = false;
+    alive = true;
     for(int i = 0; i < NB_SW_FRAMES; i++)
     {
-        AVFrame *cpy = av_frame_alloc();
-        if(!cpy) return;
-        swframes[i] = cpy;
+        swframes[i] = NULL;
     }
-    alive = true;
     ADM_info("VideoToolbox hw accel decoder object created with hw dev ctx at %p\n", avctx->hw_device_ctx);
 }
 /**
@@ -105,9 +107,7 @@ decoderFFVT::decoderFFVT(struct AVCodecContext *avctx, decoderFF *parent) : ADM_
 decoderFFVT::~decoderFFVT()
 {
     ADM_info("Destroying VideoToolbox decoder\n");
-    if(_context && _context->hw_device_ctx)
-        av_buffer_unref(&_context->hw_device_ctx);
-
+    // hw device context will be uninited and freed when AVCodecContext gets closed
     for(int i = 0; i < NB_SW_FRAMES; i++)
     {
         AVFrame *cpy = swframes[i];
@@ -159,16 +159,15 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
 
         av_packet_unref(pkt);
 
-        /* libavcodec doesn't handle switching between field and frame encoded parts of H.264 streams
-        in the way VideoToolbox expects. Proceeding with avcodec_receive_frame as if nothing happened
-        triggers a segfault. As a workaround, retry once with the same data. We do lose one picture. */
+        /* VideoToolbox does not support field encoded H.264 streams. While on Ventura / arm64,
+        this can be caught in get_format() and we just continue with the sw decoding path,
+        on Monterey / x86_64, the hw decoder fails only after we have fed a number of frames
+        to it, which is fatal. */
         if(ret == AVERROR_UNKNOWN)
         {
-            ADM_warning("Unknown error from avcodec_send_packet, retrying...\n");
-            if(!alive)
-                return false; // avoid endless loop
-            alive = false; // misuse, harmless
-            return _parent->uncompress(in,out); // retry
+            ADM_warning("Unknown error from avcodec_send_packet, bailing out.\n");
+            alive = false;
+            return false;
         }
         if(ret)
         {
@@ -206,9 +205,13 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
     swframeIdx++;
     swframeIdx %= NB_SW_FRAMES;
     if(!copy)
-        return false;
-
-    av_frame_unref(copy);
+    {
+        copy = av_frame_alloc();
+        ADM_assert(copy);
+    }else
+    {
+        av_frame_unref(copy);
+    }
 
     ret = av_hwframe_transfer_data(copy, frame, 0);
 
@@ -227,7 +230,7 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
     pix_fmt = _parent->admPixFrmtFromLav((AVPixelFormat)copy->format, &swap);
     if (pix_fmt == ADM_PIXFRMT_INVALID)
     {
-        printf("[decoderFFVT::uncompress] Unhandled pixel format: %d\n", copy->format);
+        printf("[decoderFFVT::uncompress] Unhandled pixel format: %d (%s)\n", copy->format, av_get_pix_fmt_name((AVPixelFormat)copy->format));
         return false;
     }
     out->_pixfrmt = pix_fmt;
@@ -268,32 +271,19 @@ bool ADM_hwAccelEntryVideoToolbox::canSupportThis( struct AVCodecContext *avctx,
         ADM_info("VideoToolbox not enabled\n");
         return false;
     }
-
-    decoderFF *ff = (decoderFF *)avctx->opaque;
-    if(ff && ff->hwDecoderIsBlacklisted())
-    {
-        ADM_info("VideoToolbox is blacklisted for this video.\n");
-        return false;
-    }
-
     enum AVPixelFormat ofmt=ADM_VT_getFormat(avctx,fmt);
     if(ofmt==AV_PIX_FMT_NONE)
         return false;
     outputFormat=ofmt;
-    ADM_info("Assuming that this is supported by VideoToolbox\n");
+    ADM_info("Seems to be supported by VideoToolbox\n");
     return true;
 }
 
 ADM_acceleratedDecoderFF *ADM_hwAccelEntryVideoToolbox::spawn( struct AVCodecContext *avctx, const enum AVPixelFormat *fmt )
 {
     decoderFF *ff=(decoderFF *)avctx->opaque;
+    ADM_assert(ff);
     decoderFFVT *dec=new decoderFFVT(avctx,ff);
-    if(!dec->isAlive())
-    {
-        delete dec;
-        dec = NULL;
-        return NULL;
-    }
     return (ADM_acceleratedDecoderFF *)dec;
 }
 
