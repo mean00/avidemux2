@@ -68,7 +68,8 @@ protected:
            bool         _endOfStream;
            bool         _setBpp;
            bool         _setFcc;
-           int          codecId;
+           AVCodecID    codecId;
+           const AVCodec *_codec;
            uint8_t      _refCopy;
            uint32_t     _bpp;
            AVCodecContext *_context;
@@ -88,11 +89,14 @@ protected:
            uint32_t     frameType (void);
            void         decoderMultiThread ();
            uint32_t     admFrameTypeFromLav (AVFrame *pic);
+           bool         lavSetupPrepare(AVCodecID cid);
+           bool         lavSetupFinish(void);
+           void         lavFree(void);
 
 public:
                         decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
         virtual         ~ decoderFF ();
-        virtual bool initialized(void);
+        virtual bool    initialized(void) { return _initCompleted; }
             bool        setHwDecoder(ADM_acceleratedDecoderFF *h)
                         {
                             if(h)
@@ -181,7 +185,7 @@ FF_SIMPLE_DECLARE(decoderFFH265,
                                  virtual bool bFramePossible (void)   {   return true;    }
                                 )
 
-
+/*
 #define WRAP_Open_Template(funcz,argz,display,codecid,extra) \
 {\
   const AVCodec *codec=funcz(argz);\
@@ -228,7 +232,9 @@ FF_SIMPLE_DECLARE(decoderFFH265,
 
 #define WRAP_Open(x)            {WRAP_Open_Template(avcodec_find_decoder,x,#x,x,;)}
 #define WRAP_OpenByName(x,y)    {WRAP_Open_Template(avcodec_find_decoder_by_name,#x,#x,y,;)}
+*/
 
+#define WRAP_Open(x) if(lavSetupPrepare(x)) { _initCompleted = lavSetupFinish(); }
 
 // EOF
 

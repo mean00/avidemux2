@@ -63,12 +63,18 @@ extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const e
         ADM_info("Multithreading enabled, skipping hw accel lookup.\n");
         return avcodec_default_get_format(avctx,fmt);
     }
+    decoderFF *ff = (decoderFF *)avctx->opaque;
+    ADM_assert(ff);
+    if(ff->hwDecoderIsBlacklisted())
+    {
+        ADM_info("Hw accel blacklisted, skipping lookup.\n");
+        return avcodec_default_get_format(avctx,fmt);
+    }
 
     enum AVPixelFormat outFmt;
     ADM_hwAccelEntry    *accel=ADM_hwAccelManager::lookup(avctx,fmt,outFmt);
     if(accel)
     {
-        decoderFF *ff=(decoderFF *)avctx->opaque;
         if(ff->getHwDecoder())
         {
             ADM_info("Reusing existing setup\n");        
