@@ -2217,16 +2217,19 @@ void MainWindow::mousePressEvent(QMouseEvent* event)
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasFormat("text/uri-list"))
-        event->acceptProposedAction();
+    {
+        event->setDropAction(Qt::CopyAction);
+        event->accept();
+    }
 }
 
 void MainWindow::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->hasUrls())
     {
+        event->setDropAction(Qt::CopyAction);
         QCoreApplication::postEvent(this, new FileDropEvent(event->mimeData()->urls()));
-
-        event->acceptProposedAction();
+        event->accept();
     }
 }
 
