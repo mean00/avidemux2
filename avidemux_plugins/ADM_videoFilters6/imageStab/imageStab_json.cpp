@@ -12,6 +12,7 @@ json.addFloat("sceneThreshold",key->sceneThreshold);
 json.addFloat("zoom",key->zoom);
 json.addUint32("algo",key->algo);
 json.addUint32("motionEstimation",key->motionEstimation);
+json.addBool("pad",key->pad);
 return json.dumpToFile(file);
 };
 bool  imageStab_jdeserialize(const char *file, const ADM_paramList *tmpl,imageStab *key){

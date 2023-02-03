@@ -7,5 +7,6 @@ extern const ADM_paramList imageStab_param[]={
  {"zoom",offsetof(imageStab,zoom),"float",ADM_param_float},
  {"algo",offsetof(imageStab,algo),"uint32_t",ADM_param_uint32_t},
  {"motionEstimation",offsetof(imageStab,motionEstimation),"uint32_t",ADM_param_uint32_t},
+ {"pad",offsetof(imageStab,pad),"bool",ADM_param_bool},
 {NULL,0,NULL}
 };

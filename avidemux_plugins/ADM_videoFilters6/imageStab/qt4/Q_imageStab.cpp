@@ -63,6 +63,7 @@ Ui_imageStabWindow::Ui_imageStabWindow(QWidget *parent, imageStab *param,ADM_cor
 
 #define CHKBOX(x) connect(ui.checkBox##x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
         CHKBOX(AutoGravity);
+        CHKBOX(Pad);
 
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
@@ -108,6 +109,7 @@ void Ui_imageStabWindow::reset( bool f )
     myFly->param.zoom=1;
     myFly->param.algo = 0;
     myFly->param.motionEstimation = 0;
+    myFly->param.pad=false;
     lock++;
     myFly->upload();
     myFly->sameImage();
@@ -133,6 +135,7 @@ uint8_t flyImageStab::upload()
     UPLOADSLIDER(SceneThreshold, (int)round(param.sceneThreshold*100.0));
     MYCHKBOX(AutoGravity)->setChecked(param.autoGravity);
     MYSLIDER(Gravity)->setEnabled(!param.autoGravity);
+    MYCHKBOX(Pad)->setChecked(param.pad);
 
     return 1;
 }
@@ -148,6 +151,7 @@ uint8_t flyImageStab::download(void)
     param.sceneThreshold = ((float)MYSLIDER(SceneThreshold)->value()) / 100.0;
     param.autoGravity = MYCHKBOX(AutoGravity)->isChecked();
     MYSLIDER(Gravity)->setEnabled(!param.autoGravity);
+    param.pad = MYCHKBOX(Pad)->isChecked();
 
     upload();
     return 1;
@@ -163,6 +167,7 @@ void flyImageStab::setTabOrder(void)
     PUSHSLIDER(Gravity)
     PUSHCOMBOX(Algo)
     PUSHCOMBOX(MotionEstimation)
+    PUSHCHKBOX(Pad)
     PUSHCHKBOX(AutoGravity)
     PUSHSLIDER(Zoom)
     PUSHSLIDER(SceneThreshold)
