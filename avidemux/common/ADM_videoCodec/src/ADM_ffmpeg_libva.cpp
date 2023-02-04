@@ -374,10 +374,15 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
             ADM_info("Unknown codec (libVA)\n");
             return AV_PIX_FMT_NONE;
     }
-    if(!admLibVA::supported(profile))
+    if(!admLibVA::supported(profile, avctx->coded_width, avctx->coded_height))
     {
         ADM_warning("Not supported by libVA\n");
         return AV_PIX_FMT_NONE;
+    }
+    if(avctx->hw_frames_ctx)
+    {
+        ADM_info("Re-using existing hw frames context.\n");
+        return AV_PIX_FMT_VAAPI;
     }
     // Finish intialization of LIBVA decoder
     AVBufferRef *devRef = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
