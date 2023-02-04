@@ -91,7 +91,7 @@ static bool        admImageToSurface( ADMImage *src,ADM_vaSurface *dest);
 static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 
 //
-static bool        supported(VAProfile profile);
+static bool        supported(VAProfile profile, int width = -1, int height = -1);
 
 //-- config for filters --
 static VAConfigID  createFilterConfig();
