@@ -24,6 +24,7 @@
 
 uint32_t CpuCaps::myCpuCaps=0;
 uint32_t CpuCaps::myCpuMask=0xffffffff;
+uint32_t CpuCaps::myCpuManufacturer=0;
 
 extern "C"
 {
@@ -49,6 +50,7 @@ extern "C"
     printf("[CpuCaps] Checking CPU capabilities\n");
     myCpuCaps=0;
     myCpuMask=0xffffffff;
+    myCpuManufacturer=0;
     bool available=true;
 
 #ifdef ADM_CPU_X86
@@ -68,6 +70,16 @@ extern "C"
 
 
    adm_cpu_cpuid(0, &max_std_level, &ebx, &ecx, &edx);
+   char x86ManufacturerIDstring[13];    // string stored in EBX, EDX, ECX (in that order)
+   memcpy(x86ManufacturerIDstring + 0, &ebx, 4);
+   memcpy(x86ManufacturerIDstring + 4, &edx, 4);
+   memcpy(x86ManufacturerIDstring + 8, &ecx, 4);
+   x86ManufacturerIDstring[12] = 0;
+   if (memcmp(x86ManufacturerIDstring, "GenuineIntel", 12) == 0)
+       myCpuManufacturer = ADM_CPUMFR_INTEL;
+   if (memcmp(x86ManufacturerIDstring, "AuthenticAMD", 12) == 0)
+       myCpuManufacturer = ADM_CPUMFR_AMD;
+   
    if(max_std_level >= 1)
    {
   	 int std_caps = 0;
@@ -132,6 +144,8 @@ skipIt:
     CHECK(AVX)
     CHECK(AVX2)
     CHECK(FMA3)
+
+    printf("[CpuCaps] CPU MFR-ID: %u, \"%s\"\n",myCpuManufacturer,x86ManufacturerIDstring);
 #endif // X86
     ADM_info("[CpuCaps] End of CPU capabilities check (cpuCaps: 0x%08x, cpuMask: 0x%08x)\n",myCpuCaps,myCpuMask);
     return ;
