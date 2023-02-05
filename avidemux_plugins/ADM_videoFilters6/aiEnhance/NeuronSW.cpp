@@ -311,7 +311,7 @@ void NeuronSW::fsrcnn_feature_layer_16(int kernel_size, uint8_t * input, int inp
 {
 #ifdef ADM_CPU_HAS_SIMD
 # ifdef ADM_CPU_HAS_X86_SIMD
-    if (CpuCaps::hasFMA3()) return fsrcnn_feature_layer_16_FMA(kernel_size, input, input_stride, output, bias, weights);
+    if (CpuCaps::isAMD() && CpuCaps::hasFMA3()) return fsrcnn_feature_layer_16_FMA(kernel_size, input, input_stride, output, bias, weights);
     if (CpuCaps::hasAVX()) return fsrcnn_feature_layer_16_AVX(kernel_size, input, input_stride, output, bias, weights);
 # endif
     return fsrcnn_feature_layer_16_SSE(kernel_size, input, input_stride, output, bias, weights);
@@ -532,7 +532,7 @@ void NeuronSW::fsrcnn_model_layer_16(int kernel_size, float * input, int input_s
 {
 #ifdef ADM_CPU_HAS_SIMD
 # ifdef ADM_CPU_HAS_X86_SIMD
-    if (CpuCaps::hasFMA3()) return fsrcnn_model_layer_16_FMA(kernel_size, input, input_stride, output, bias, weights, alpha);
+    if (CpuCaps::isAMD() && CpuCaps::hasFMA3()) return fsrcnn_model_layer_16_FMA(kernel_size, input, input_stride, output, bias, weights, alpha);
     if (CpuCaps::hasAVX()) return fsrcnn_model_layer_16_AVX(kernel_size, input, input_stride, output, bias, weights, alpha);
 # endif
     return fsrcnn_model_layer_16_SSE(kernel_size, input, input_stride, output, bias, weights, alpha);
@@ -778,7 +778,7 @@ void NeuronSW::fsrcnn_residual_layer_16(int kernel_size, float * input, int inpu
 {
 #ifdef ADM_CPU_HAS_SIMD
 # ifdef ADM_CPU_HAS_X86_SIMD
-    if (CpuCaps::hasFMA3()) return fsrcnn_residual_layer_16_FMA(kernel_size, input, input_stride, residual, output, bias, weights, alpha);
+    if (CpuCaps::isAMD() && CpuCaps::hasFMA3()) return fsrcnn_residual_layer_16_FMA(kernel_size, input, input_stride, residual, output, bias, weights, alpha);
     if (CpuCaps::hasAVX()) return fsrcnn_residual_layer_16_AVX(kernel_size, input, input_stride, residual, output, bias, weights, alpha);
 # endif
     return fsrcnn_residual_layer_16_SSE(kernel_size, input, input_stride, residual, output, bias, weights, alpha);
@@ -1173,7 +1173,7 @@ void NeuronSW::fsrcnn_subconvolutional_layer_16(int kernel_size, int scale, floa
     if (scale == 4)
     {
 # ifdef ADM_CPU_HAS_X86_SIMD
-        if (CpuCaps::hasFMA3()) return fsrcnn_subconvolutional_layer_4x_16_FMA(kernel_size, input, input_stride, output, output_stride, bias, weights);
+        if (CpuCaps::isAMD() && CpuCaps::hasFMA3()) return fsrcnn_subconvolutional_layer_4x_16_FMA(kernel_size, input, input_stride, output, output_stride, bias, weights);
 # endif        
         return fsrcnn_subconvolutional_layer_4x_16_SSE(kernel_size, input, input_stride, output, output_stride, bias, weights);
     }
@@ -1215,7 +1215,7 @@ void NeuronSW::shuffleWeights(int features, float * weights, int weightCount)
 {
 #ifdef ADM_CPU_HAS_SIMD
 # ifdef ADM_CPU_HAS_X86_SIMD
-    if (CpuCaps::hasFMA3())
+    if (CpuCaps::isAMD() && CpuCaps::hasFMA3())
     {
         if (features==16) return;   // SSE+FMA faster than AVX on 16 feature
     }
