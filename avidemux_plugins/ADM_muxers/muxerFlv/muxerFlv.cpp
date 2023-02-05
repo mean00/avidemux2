@@ -100,15 +100,17 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         return false;
     }
 
-    AVCodecContext *c = video_st->codec;
     AVCodecParameters *par = video_st->codecpar;
     AVDictionary *dict = NULL;
 
-    rescaleFps(s->getAvgFps1000(),&(c->time_base));
-    video_st->time_base=c->time_base;
-    
-    
-    c->gop_size=15;
+    rescaleFps(s->getAvgFps1000(), &video_st->avg_frame_rate);
+    // swap numerator and denominator
+    if(video_st->avg_frame_rate.num && video_st->avg_frame_rate.den)
+    {
+        int den = video_st->avg_frame_rate.num;
+        video_st->avg_frame_rate.num = video_st->avg_frame_rate.den;
+        video_st->avg_frame_rate.den = den;
+    }
 
     if(initAudio(nbAudioTrack,a)==false)
     {

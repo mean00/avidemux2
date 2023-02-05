@@ -79,8 +79,20 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
     
     if(false==DecodePictureUpToIntra(ref,frame))
     {
+#if 1
+        // The hw decoder on macOS may fail late in the process and get therefore blacklisted.
+        // We should try to seek again, this time using the sw decoder
+        vid->lastSentFrame = frame;
+        ADM_info("Retrying to seek to keyframe\n");
+        if(false == DecodePictureUpToIntra(ref,frame))
+        {
+            ADM_warning("Cannot decode up to intra %" PRIu32" at %s\n",frame,ADM_us2plain(seekTime));
+            return false;
+        }
+#else
         ADM_warning("Cannot decode up to intra %" PRIu32" at %s\n",frame,ADM_us2plain(seekTime));
         return false;
+#endif
     }
     if(found==true) return true;
     // Now forward...
@@ -595,12 +607,14 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
                                                                     img.demuxerPts);
         if(!decompressImage(result,&img,ref))
         {
-            if(false==vid->decoder->keepFeeding())
-                ADM_info("Error decoding frame %" PRIu32"\n",vid->lastSentFrame);
-            //cache->dump();
             cache->invalidate(result);
             //cache->dump();
             vid->lastSentFrame++;
+            if(false==vid->decoder->keepFeeding())
+            {
+                ADM_info("Error decoding frame %" PRIu32"\n",vid->lastSentFrame);
+                break;
+            }
             vid->decoderDelay++;
             continue;
         }else

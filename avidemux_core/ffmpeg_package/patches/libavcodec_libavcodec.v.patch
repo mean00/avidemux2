@@ -1,17 +1,19 @@
---- libavcodec/libavcodec.v.orig	2019-02-09 21:56:02.000000000 +0100
-+++ libavcodec/libavcodec.v	2019-02-25 12:14:12.177349940 +0100
-@@ -1,6 +1,13 @@
+--- libavcodec/libavcodec.v.orig	2022-07-22 19:58:39.000000000 +0200
++++ libavcodec/libavcodec.v	2022-10-23 22:33:01.000000000 +0200
+@@ -1,9 +1,15 @@
 -LIBAVCODEC_MAJOR {
 +ADM_LIBAVCODEC_MAJOR {
      global:
-         av*;
+         av_*;
+         avcodec_*;
+         avpriv_*;
+         avsubtitle_free;
 +# Avidemux
 +        ff_h264_info;
 +        ff_golomb_vlc_len;
 +        ff_ue_golomb_vlc_code;
 +        ff_se_golomb_vlc_code;
 +        ff_hevc_parser_get_*;
-+        avpriv_ac3_parse_header;
      local:
          *;
  };

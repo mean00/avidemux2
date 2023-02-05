@@ -105,7 +105,6 @@ bool MKVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         return false;
     }
 
-    AVCodecContext *c = video_st->codec;
     AVCodecParameters *par = video_st->codecpar;
 #ifndef MUXER_IS_WEBM
     if(par->codec_tag == MKTAG('V','P','9',' '))
@@ -113,11 +112,21 @@ bool MKVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
     if(par->codec_tag == MKTAG('V','C','1',' '))
         par->codec_tag = MKTAG('W','V','C','1');
 #endif
-    rescaleFps(s->getAvgFps1000(),&(c->time_base));
-    video_st->time_base=c->time_base;
-    video_st->avg_frame_rate.den =c->time_base.num;
-    video_st->avg_frame_rate.num =c->time_base.den;
-    //c->gop_size=15; // ??
+    video_st->time_base.num = s->getTimeBaseNum();
+    video_st->time_base.den = s->getTimeBaseDen();
+    rescaleFps(s->getAvgFps1000(), &video_st->avg_frame_rate);
+    // swap numerator and denominator
+    if(video_st->avg_frame_rate.num && video_st->avg_frame_rate.den)
+    {
+        int den = video_st->avg_frame_rate.num;
+        video_st->avg_frame_rate.num = video_st->avg_frame_rate.den;
+        video_st->avg_frame_rate.den = den;
+        if(video_st->time_base.num < 1 || video_st->time_base.den < 1)
+        { // time base is invalid, try to fix
+            video_st->time_base.num = video_st->avg_frame_rate.den;
+            video_st->time_base.den = video_st->avg_frame_rate.num;
+        }
+    }
 
     /* DAR / SAR code */
     if(muxerConfig.forceAspectRatio && (muxerConfig.displayWidth || muxerConfig.displayAspectRatio))
@@ -202,8 +211,7 @@ bool MKVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         avio_close(oc->pb);
         return false;
     }
-    ADM_info("Timebase codec = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
-    ADM_info("Timebase codec2 = %d/%d\n",c->time_base.num,c->time_base.den);
+    ADM_info("Video stream timebase = %d/%d\n", video_st->time_base.num, video_st->time_base.den);
     av_dict_free(&dict);
     vStream=s;
     aStreams=a;

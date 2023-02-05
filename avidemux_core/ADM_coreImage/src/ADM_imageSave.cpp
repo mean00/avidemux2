@@ -178,7 +178,7 @@ bool  ADMImage::saveAsJpgInternal(const char *filename)
     AVCodecContext *context=NULL;
     AVFrame *frame=NULL;
     bool result=false;
-    AVCodec *codec=NULL;
+    const AVCodec *codec=NULL;
     int r=0;
     FILE *f=NULL;
     uint32_t threads = 1;
@@ -313,7 +313,7 @@ bool ADMImage::saveAsPngInternal(const char *filename)
 {
     AVCodecContext *context=NULL;
     AVFrame *frame=NULL;
-    AVCodec *codec=NULL;
+    const AVCodec *codec=NULL;
     FILE *f=NULL;
     bool result=false;
     const uint32_t sz=ADM_IMAGE_ALIGN(_width*3)*_height;

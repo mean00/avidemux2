@@ -50,6 +50,7 @@ _hasSettings=false;
         memcpy(&Settings,set,sizeof(*set));
         _hasSettings=true;
     }
+    _context=NULL;
     _options=NULL;
     targetPixFrmt=ADM_PIXFRMT_YV12;
     w=getWidth();
@@ -341,7 +342,7 @@ int ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
     out->flags = (_pkt->flags & AV_PKT_FLAG_KEY)? AVI_KEY_FRAME : AVI_P_FRAME;
     out->out_quantizer = (int)floor(_frame->quality / (float) FF_QP2LAMBDA); // fallback
 
-    int sideDataSize;
+    size_t sideDataSize;
     uint8_t *sideData = av_packet_get_side_data(_pkt, AV_PKT_DATA_QUALITY_STATS, &sideDataSize);
     if(sideData && sideDataSize > 5)
     {
@@ -373,7 +374,7 @@ int ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
  * @param codecId
  * @return 
  */
-bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
+bool ADM_coreVideoEncoderFFmpeg::setupInternal(const AVCodec *codec)
 {
     int res;
     _context = avcodec_alloc_context3 (codec);
@@ -464,8 +465,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
 */
 bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
 {
-   
-    AVCodec *codec=avcodec_find_encoder(codecId);
+    const AVCodec *codec = avcodec_find_encoder(codecId);
     if(!codec)
     {
         printf("[ff] Cannot find codec\n");
@@ -480,7 +480,7 @@ bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
 */
 bool ADM_coreVideoEncoderFFmpeg::setupByName(const char *name)
 {
-    AVCodec *codec=avcodec_find_encoder_by_name(name);
+    const AVCodec *codec = avcodec_find_encoder_by_name(name);
     if(!codec)
     {
         ADM_warning("[ff] Cannot find codec with name %s\n",name);
@@ -602,7 +602,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
       SETX (qmin);
       SETX (qmax);
       SETX (max_b_frames);
-      SETX (mpeg_quant);
+      //SETX (mpeg_quant);
       SETX (max_qdiff);
       SETX (gop_size);
 
@@ -658,9 +658,8 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 #undef SETX
   _context->bit_rate_tolerance = 8000000;
   _context->b_quant_factor = 1.25;
-  _context->b_frame_strategy = 0;
+  //_context->b_frame_strategy = 0; // is no more
   _context->b_quant_offset = 1.25;
-  _context->rtp_payload_size = 0;
   _context->strict_std_compliance = 0;
   _context->i_quant_factor = 0.8;
   _context->i_quant_offset = 0.0;

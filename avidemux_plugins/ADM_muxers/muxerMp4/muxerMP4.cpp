@@ -179,10 +179,6 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         return false;
     }
 
-
-        AVCodecContext *c;
-        AVRational myTimeBase;
-        c = video_st->codec;
         AVCodecParameters *par;
         par = video_st->codecpar;
         if(isH265Compatible(fcc))
@@ -206,11 +202,13 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         }
         if(clockFreq && nbTicks)
         {
-            c->time_base.den=clockFreq;
-            c->time_base.num=nbTicks;
+            video_st->time_base.den = clockFreq;
+            video_st->time_base.num = nbTicks;
         }else
-            rescaleFps(s->getAvgFps1000(),&(c->time_base));
-        myTimeBase=video_st->time_base=c->time_base;
+        {
+            rescaleFps(s->getAvgFps1000(), &video_st->time_base);
+        }
+        AVRational myTimeBase = video_st->time_base; // FIXME TODO should be retrieved from codec
         // set average frame rate else the track duration in the edit list may be too short
         rescaleFps(s->getAvgFps1000(), &video_st->avg_frame_rate);
         // swap numerator and denominator
@@ -223,7 +221,6 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         ADM_info("Video stream time base :%d / %d, average frame rate: %d / %d\n",
             video_st->time_base.num, video_st->time_base.den,
             video_st->avg_frame_rate.num, video_st->avg_frame_rate.den);
-        c->gop_size=15;
 
         if(true==muxerConfig.forceAspectRatio)
         {
@@ -309,24 +306,31 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
             default: break;
         }
 
-        const char *angle=NULL;
+        int angle = 0;
         switch(muxerConfig.rotation)
         {
             case(MP4_MUXER_ROTATE_90):
-                angle="90";
+                angle = 90;
                 break;
             case(MP4_MUXER_ROTATE_180):
-                angle="180";
+                angle = 180;
                 break;
             case(MP4_MUXER_ROTATE_270):
-                angle="270";
+                angle = 270;
                 break;
             default: break;
         }
         if(angle)
         {
-            ADM_info("Setting rotation to %s degrees clockwise\n",angle);
-            av_dict_set(&(video_st->metadata), "rotate", angle, 0);
+            uint8_t *sideData = av_stream_new_side_data(video_st, AV_PKT_DATA_DISPLAYMATRIX, sizeof(int32_t) * 9);
+            if (sideData)
+            {
+                ADM_info("Setting rotation to %d degrees clockwise\n",angle);
+                av_display_rotation_set((int32_t *)sideData, angle);
+            } else
+            {
+                ADM_warning("Could not allocate display matrix side data\n");
+            }
         }
         //ADM_assert(avformat_write_header(oc, &dict) >= 0);
         er = avformat_write_header(oc, &dict);
@@ -340,7 +344,6 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
             return false;
         }
 
-        ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);
         ADM_info("Timebase stream = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
         // Rounding may result in timestamp collisions due to bad choice of timebase, handle with care.
         if(myTimeBase.den>1 && myTimeBase.den==video_st->time_base.den && video_st->time_base.num==1)

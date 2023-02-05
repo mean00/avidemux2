@@ -1,6 +1,6 @@
---- libavcodec/ratecontrol.c.orig	2020-07-11 12:39:30.000000000 +0200
-+++ libavcodec/ratecontrol.c	2021-08-16 01:38:18.549877733 +0200
-@@ -604,7 +604,11 @@
+--- libavcodec/ratecontrol.c.orig	2022-07-22 19:58:39.000000000 +0200
++++ libavcodec/ratecontrol.c	2022-10-26 10:22:46.000000000 +0200
+@@ -603,7 +603,11 @@
          }
  
          if (init_pass2(s) < 0) {

@@ -19,6 +19,7 @@
 #include "ADM_default.h"
 extern "C" {
 #include "libavcodec/avcodec.h"
+#include "libavcodec/bsf.h"
 }
 #include "ADM_aacLatm.h"
 

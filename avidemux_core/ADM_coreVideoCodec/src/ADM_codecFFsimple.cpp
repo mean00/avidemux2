@@ -14,7 +14,6 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_codecFFsimple.h"
-#include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_coreCodecMapping.h"
 
@@ -26,77 +25,33 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h, uint32_t fcc, uint32_t
         : decoderFF(w,h,fcc,extraDataLen,extraData,bpp)
 {
     hasBFrame=false;
-    codec = NULL;
-    if(!_frame)
+    if(!_frame || !_packet)
         return;
     const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
     if(!c)
         return;
 
-    AVCodecID id=c->codecId;
-    codec=avcodec_find_decoder(id);
-    if(!codec)
-    {
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec 0x%x"),fcc);
-        return;
-    }
-    codecId=id;
-    if(id==AV_CODEC_ID_NONE)
-        return;
+    hasBFrame = c->hasBFrame;
+    if(c->refCopy)
+        _refCopy = 1;
 
-    _context = avcodec_alloc_context3(codec);
-    if(!_context)
+    if(false == lavSetupPrepare(c->codecId))
         return;
-
-    if(true==c->extraData)
-    {
-         _context->extradata = (uint8_t *) _extraDataCopy;
-         _context->extradata_size = (int) extraDataLen;
-    }
-    if(true==c->refCopy)
-        _refCopy=1;
-    if(true==c->hasBFrame)
-        hasBFrame=true;
-
-    _context->width = _w;
-    _context->height = _h;
-    _context->pix_fmt = AV_PIX_FMT_YUV420P;
-    _context->codec_tag = fcc;
-    _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING;
-    _context->error_concealment=3;
-    _context->get_format=ADM_FFgetFormat;
-    _context->opaque=this;
 
     if(!staged)
     {
-        applyQuirks(id);
-        _initCompleted = finish();
+        applyQuirks();
+        _initCompleted = lavSetupFinish();
     }
 }
-/**
-    \fn finish
-*/
-bool decoderFFSimple::finish(void)
-{
-    if (!codec || !_context)
-        return false;
-    if (avcodec_open2(_context, codec, NULL) < 0)
-    {
-        printf("[lavc] Decoder init: %x video decoder failed!\n",_fcc);
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening 0x%x"),_fcc);
-        return false;
-    }
-    printf("[lavc] Decoder init: %x video decoder initialized with %d thread(s)! (%s)\n",_fcc,_context->thread_count,codec->long_name);
-    _initCompleted=true;
-    return true;
-}
+
 /**
     \fn applyQuirks
     \brief All the codec-specific stuff which cannot be handled elsewhere
 */
-void decoderFFSimple::applyQuirks(AVCodecID id)
+void decoderFFSimple::applyQuirks(void)
 {
-    switch(id)
+    switch(codecId)
     {
         case AV_CODEC_ID_TSCC:
         case AV_CODEC_ID_CSCD:
@@ -109,7 +64,7 @@ void decoderFFSimple::applyQuirks(AVCodecID id)
             decoderMultiThread();
             if(_usingMT)
             {
-                if(codec->capabilities & AV_CODEC_CAP_SLICE_THREADS)
+                if(_codec->capabilities & AV_CODEC_CAP_SLICE_THREADS)
                 {
                     _context->thread_count = _threads;
                     _context->thread_type = FF_THREAD_SLICE;

@@ -21,6 +21,7 @@
 extern "C"
 {
 #include "libavcodec/avcodec.h"
+#include "libavcodec/bsf.h"
 }
 
 /**
@@ -120,7 +121,11 @@ int ADM_extractVideoExtraData(uint32_t fcc, uint32_t len, uint8_t *src, uint8_t 
         goto _cleanup;
     }
 
-    sideData = av_packet_get_side_data(dpkt, AV_PKT_DATA_NEW_EXTRADATA, &r);
+    {
+        size_t sz = r;
+        sideData = av_packet_get_side_data(dpkt, AV_PKT_DATA_NEW_EXTRADATA, &sz);
+        r = sz;
+    }
 
     if(!sideData)
     {

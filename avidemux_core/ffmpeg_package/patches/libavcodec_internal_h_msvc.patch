@@ -1,13 +1,15 @@
---- libavcodec/internal.h.orig	2021-10-24 22:47:11.000000000 +0200
-+++ libavcodec/internal.h	2021-11-14 00:21:19.719423075 +0100
-@@ -279,7 +279,10 @@
+--- libavcodec/internal.h.orig	2022-07-22 19:58:39.000000000 +0200
++++ libavcodec/internal.h	2022-10-23 23:38:42.000000000 +0200
+@@ -173,9 +173,12 @@
+ static av_always_inline int64_t ff_samples_to_time_base(AVCodecContext *avctx,
+                                                         int64_t samples)
  {
++    AVRational rat;
      if(samples == AV_NOPTS_VALUE)
          return AV_NOPTS_VALUE;
 -    return av_rescale_q(samples, (AVRational){ 1, avctx->sample_rate },
-+    AVRational rat;
-+    rat.num=1;
-+    rat.den=avctx->sample_rate;
++    rat.num = 1;
++    rat.den = avctx->sample_rate;
 +    return av_rescale_q(samples, rat,
                          avctx->time_base);
  }

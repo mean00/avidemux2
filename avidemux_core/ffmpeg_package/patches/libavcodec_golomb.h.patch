@@ -1,12 +1,11 @@
---- libavcodec/golomb.h.orig	2017-10-20 21:08:20.663723256 +0200
-+++ libavcodec/golomb.h	2017-10-20 21:07:29.184053505 +0200
-@@ -32,14 +32,22 @@
+--- libavcodec/golomb.h.orig	2022-07-22 19:58:39.000000000 +0200
++++ libavcodec/golomb.h	2022-10-23 22:12:31.000000000 +0200
+@@ -32,13 +32,20 @@
  
  #include <stdint.h>
  
 +#include "libavutil/internal.h"
  #include "get_bits.h"
- #include "put_bits.h"
  
  #define INVALID_VLC           0x80000000
  
@@ -19,7 +18,6 @@
  extern const uint8_t ff_ue_golomb_vlc_code[512];
  extern const  int8_t ff_se_golomb_vlc_code[512];
 +#endif
-+
- extern const uint8_t ff_ue_golomb_len[256];
  
  extern const uint8_t ff_interleaved_golomb_vlc_len[256];
+ extern const uint8_t ff_interleaved_ue_golomb_vlc_code[256];

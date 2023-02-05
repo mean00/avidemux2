@@ -20,11 +20,6 @@
 #ifndef ADM_CODEC_FF_SIMPLE
 #define ADM_CODEC_FF_SIMPLE
 #include "ADM_default.h"
-
-extern "C" {
-#include "libavcodec/avcodec.h"
-}
-
 #include "ADM_codec.h"
 #include "ADM_ffmp43.h"
 
@@ -35,10 +30,7 @@ class decoderFFSimple:public decoderFF
 {
 protected:
     bool        hasBFrame;
-    AVCodec   * codec;
-
-    bool        finish(void);
-    void        applyQuirks(AVCodecID id);
+    void        applyQuirks(void);
 public:
                 decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp, bool staged = false);
    virtual bool bFramePossible (void) {return hasBFrame; }

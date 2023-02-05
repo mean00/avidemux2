@@ -24,7 +24,7 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixfmt.h"
 #include "libavutil/pixdesc.h"
-#include "libavcodec/vaapi.h"
+#include "libavutil/hwcontext_vaapi.h"
 }
 
 #include "ADM_codec.h"
@@ -318,13 +318,10 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
         char name[300]={0};
         av_get_pix_fmt_string(name,sizeof(name),c);
         ADM_info("[LIBVA]: Evaluating PIX_FMT %d,%s\n",c,name);  
-        av_get_codec_tag_string(name,sizeof(name),avctx->codec_id);
-        ADM_info("\t  Evaluating codec %d,%s\n",avctx->codec_id,name);  
-        
-        if(c!=AV_PIX_FMT_VAAPI_VLD) continue;
-#define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VAAPI_VLD;id=avctx->codec_id;break;
-        
-        
+        snprintf(name,300,"%s",avcodec_get_name(avctx->codec_id));
+        ADM_info("\t  Evaluating codec %d, %s\n",avctx->codec_id,name);
+        if(c!=AV_PIX_FMT_VAAPI) continue;
+#define FMT_V_CHECK(x,y) case AV_CODEC_ID_##x: outPix = AV_PIX_FMT_VAAPI; id = avctx->codec_id; break;
         switch(avctx->codec_id)  //AV_CODEC_ID_H265
         {
             FMT_V_CHECK(H264,H264)
@@ -343,21 +340,91 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
     }
     if(id==AV_CODEC_ID_NONE)
     {
-        
         return AV_PIX_FMT_NONE;
     }
-    // Finish intialization of LIBVA decoder
-#if 0 // The lavc functions we rely on in ADM_acceleratedDecoderFF::parseHwAccel are no more
-    const AVHWAccel *accel=ADM_acceleratedDecoderFF::parseHwAccel(outPix,id,AV_PIX_FMT_VAAPI_VLD);
-    if(accel)
+    // Check that the profile is supported
+    VAProfile profile = VAProfileNone;
+    switch(avctx->codec_id)
     {
-        ADM_info("Found matching hw accelerator : %s\n",accel->name);
-        ADM_info("Successfully setup hw accel\n");
-        return AV_PIX_FMT_VAAPI_VLD;
-    }
-    return AV_PIX_FMT_NONE;
+        case AV_CODEC_ID_MPEG2VIDEO: profile = VAProfileMPEG2Main; break;
+        case AV_CODEC_ID_H264: profile = VAProfileH264High; break;
+#ifdef LIBVA_HEVC_DEC
+        case AV_CODEC_ID_H265:
+            switch(avctx->pix_fmt)
+            {
+                case AV_PIX_FMT_YUV420P:
+                    profile = VAProfileHEVCMain;
+                    break;
+                case AV_PIX_FMT_YUV420P10LE:
+                    ADM_info("10 bits H265\n");
+                    profile = VAProfileHEVCMain10;
+                    break;
+                default:
+                    ADM_warning("FF/LibVa: unknown pixel format %d\n",(int)avctx->pix_fmt);
+                    return AV_PIX_FMT_NONE;
+               break;
+            }
+            break;
 #endif
-    return AV_PIX_FMT_VAAPI_VLD;
+        case AV_CODEC_ID_VC1: profile = VAProfileVC1Advanced; break;
+#ifdef LIBVA_VP9_DEC
+        case AV_CODEC_ID_VP9: profile = VAProfileVP9Profile0; break;
+#endif
+        default:
+            ADM_info("Unknown codec (libVA)\n");
+            return AV_PIX_FMT_NONE;
+    }
+    if(!admLibVA::supported(profile, avctx->coded_width, avctx->coded_height))
+    {
+        ADM_warning("Not supported by libVA\n");
+        return AV_PIX_FMT_NONE;
+    }
+    if(avctx->hw_frames_ctx)
+    {
+        ADM_info("Re-using existing hw frames context.\n");
+        return AV_PIX_FMT_VAAPI;
+    }
+    // Finish intialization of LIBVA decoder
+    AVBufferRef *devRef = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
+    if(!devRef)
+    {
+        ADM_warning("Cannot allocate hw device context\n");
+        return AV_PIX_FMT_NONE;
+    }
+
+    AVHWDeviceContext *dc = (AVHWDeviceContext *)devRef->data;
+    AVVAAPIDeviceContext *vaCtx = (AVVAAPIDeviceContext *)dc->hwctx;
+    vaCtx->display = admLibVA::getVADisplay();
+    if(av_hwdevice_ctx_init(devRef) < 0)
+    {
+        ADM_warning("Cannot init VA-API device context\n");
+        av_buffer_unref(&devRef);
+        return AV_PIX_FMT_NONE;
+    }
+
+    AVBufferRef *frameRef = av_hwframe_ctx_alloc(devRef);
+    if(!frameRef)
+    {
+        ADM_warning("Cannot allocate hw frame context\n");
+        av_buffer_unref(&devRef);
+        return AV_PIX_FMT_NONE;
+    }
+    AVHWFramesContext *frameCtx = (AVHWFramesContext *)frameRef->data;
+    frameCtx->format = AV_PIX_FMT_VAAPI;
+    frameCtx->sw_format = (avctx->codec_id == AV_CODEC_ID_VP9)? AV_PIX_FMT_NV12 : AV_PIX_FMT_YUV420P;
+    frameCtx->width = avctx->width;
+    frameCtx->height = avctx->height;
+
+    if(av_hwframe_ctx_init(frameRef) < 0)
+    {
+        ADM_warning("Cannot init VA-API frame context\n");
+        av_buffer_unref(&frameRef);
+        av_buffer_unref(&devRef);
+        return AV_PIX_FMT_NONE;
+    }
+
+    avctx->hw_frames_ctx = av_buffer_ref(frameRef);
+    return AV_PIX_FMT_VAAPI;
 }
 }
 
@@ -374,77 +441,31 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
 : ADM_acceleratedDecoderFF(avctx,parent)
 {
     alive=false;
-    hwctx=NULL;
+    // hw_frames_ctx should have been set up by get_format()
+    if(!_context->hw_frames_ctx)
+    {
+        ADM_warning("hw_frames_ctx is NULL, cannot use lavc VA-API hw decoder.\n");
+        return;
+    }
+
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-    
+
     for(int i=0;i<ADM_DEFAULT_SURFACE;i++)
         initSurfaceID[i]=VA_INVALID;
-    
+
     for(int i=0;i<ADM_DEFAULT_SURFACE;i++)
     {
         ADM_vaSurface *admSurface=allocateADMVaSurface(avctx);
         if(!admSurface)
         {
             ADM_warning("Cannot allocate dummy surface\n");
-            alive=false;
-            return ;
+            return;
         }
         aprintf("Created initial pool, %d : %x\n",i,admSurface->surface);
         initSurfaceID[i]=admSurface->surface;
         vaPool.allSurfaceQueue.append(admSurface);
         vaPool.freeSurfaceQueue.append(admSurface);
     }
-    
-   
-    // create decoder
-    vaapi_context *va_context=new vaapi_context;
-    memset(va_context,0,sizeof(*va_context)); // dangerous...
-    hwctx=(void *)va_context;
-    
-    VAProfile profile; 
-    switch(avctx->codec_id)
-    {
-        default:
-        case AV_CODEC_ID_MPEG2VIDEO:
-                                profile=VAProfileMPEG2Main;
-                                break;
-            
-        case AV_CODEC_ID_H264:
-                                profile=VAProfileH264High;
-                                break;
-#ifdef LIBVA_HEVC_DEC       
-        case AV_CODEC_ID_H265:
-                                profile=VAProfileHEVCMain; // TODO VAProfileHEVCMain10
-                                break;
-#endif                                
-#ifdef LIBVA_VP9_DEC
-        case AV_CODEC_ID_VP9:
-                                profile=VAProfileVP9Profile3;
-                                break;
-#endif
-        case AV_CODEC_ID_VC1:
-                                profile=VAProfileVC1Advanced;
-                                break;
-                                
-    } 
-    
-    va_context->context_id=admLibVA::createDecoder(profile,avctx->coded_width,avctx->coded_height,ADM_DEFAULT_SURFACE,initSurfaceID); // this is most likely wrong
-    if(va_context->context_id==VA_INVALID)
-    {
-        ADM_warning("Cannot create decoder\n");
-        alive=false;
-        return;
-    }
-    
-    
-    if(!admLibVA::fillContext(profile,va_context))
-    {
-        ADM_warning("Cannot get va context initialized for libavcodec\n");
-        alive=false;
-        return ;
-    }    
-    
-    _context->hwaccel_context=va_context;
     alive=true;
     _context->get_buffer2     = ADM_LIBVAgetBuffer;
     _context->draw_horiz_band = NULL;
@@ -468,10 +489,6 @@ decoderFFLIBVA::~decoderFFLIBVA()
         delete vaPool.freeSurfaceQueue[i];
     }
     vaPool.freeSurfaceQueue.clear();
-    vaapi_context *v=(vaapi_context *)hwctx;
-    if(v)
-        delete v;
-    hwctx=NULL;
     imageMutex.unlock();
 }
 /**
@@ -619,43 +636,6 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
     if(ofmt==AV_PIX_FMT_NONE)
         return false;
     outputFormat=ofmt;
-    ADM_info("This is maybe supported by LIBVA\n");
-    VAProfile profile=VAProfileNone;
-    switch(avctx->codec_id)
-    {
-       case AV_CODEC_ID_MPEG2VIDEO: profile= VAProfileMPEG2Main;break;
-       case AV_CODEC_ID_H264: profile= VAProfileH264High;break;
-#ifdef LIBVA_HEVC_DEC       
-       case AV_CODEC_ID_H265: 
-           switch(avctx->pix_fmt)
-           {
-            case AV_PIX_FMT_YUV420P:
-                profile= VAProfileHEVCMain;
-                break;;
-            case AV_PIX_FMT_YUV420P10LE:
-                ADM_info("10 bits H265\n");
-                profile= VAProfileHEVCMain10;
-                break;
-           default:
-               ADM_warning("FF/LibVa: unknown colorspace %d\n",(int)avctx->pix_fmt);
-               return false;
-               break;
-           }
-           break;
-#endif       
-       case AV_CODEC_ID_VC1: profile= VAProfileVC1Advanced;break;
-#ifdef LIBVA_VP9_DEC
-       case AV_CODEC_ID_VP9: profile= VAProfileVP9Profile3;break;
-#endif
-       default:
-           ADM_info("Unknown codec (libVA)\n");
-           return false;
-    }
-    if(!admLibVA::supported(profile))
-    {
-        ADM_warning("Not supported by libVA\n");
-        return false;
-    }
     return true;
 }
 

@@ -1,11 +1,11 @@
---- libavformat/matroskaenc.c.orig	2021-11-14 00:21:19.797422581 +0100
-+++ libavformat/matroskaenc.c	2021-11-14 00:21:19.800422562 +0100
-@@ -2797,7 +2797,7 @@
+--- libavformat/matroskaenc.c.orig	2022-10-26 10:28:39.000000000 +0200
++++ libavformat/matroskaenc.c	2022-10-26 11:30:19.000000000 +0200
+@@ -3258,7 +3258,7 @@
          if (pkt->size > 2 && (AV_RB16(pkt->data) & 0xfff0) == 0xfff0)
              ret = ff_stream_add_bitstream_filter(st, "aac_adtstoasc", NULL);
      } else if (st->codecpar->codec_id == AV_CODEC_ID_VP9) {
 -        ret = ff_stream_add_bitstream_filter(st, "vp9_superframe", NULL);
 +        // MEANX ret = ff_stream_add_bitstream_filter(st, "vp9_superframe", NULL);
-     }
- 
-     return ret;
+     } else if (CONFIG_MATROSKA_MUXER &&
+                st->codecpar->codec_id == AV_CODEC_ID_HDMV_PGS_SUBTITLE) {
+         ret = ff_stream_add_bitstream_filter(st, "pgs_frame_merge", NULL);

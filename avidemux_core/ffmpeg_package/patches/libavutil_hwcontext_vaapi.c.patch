@@ -1,0 +1,36 @@
+--- libavutil/hwcontext_vaapi.c.orig	2022-07-22 19:58:39.000000000 +0200
++++ libavutil/hwcontext_vaapi.c	2023-02-05 22:30:11.265111500 +0100
+@@ -522,7 +522,7 @@
+     VASurfaceID test_surface_id;
+     VAImage test_image;
+     VAStatus vas;
+-    int err, i;
++    int err, i, destroy_test_surface;
+ 
+     desc = vaapi_format_from_pix_fmt(hwfc->sw_format);
+     if (!desc) {
+@@ -607,6 +607,7 @@
+ 
+     // Allocate a single surface to test whether vaDeriveImage() is going
+     // to work for the specific configuration.
++    destroy_test_surface = 0;
+     if (hwfc->pool) {
+         test_surface = av_buffer_pool_get(hwfc->pool);
+         if (!test_surface) {
+@@ -623,6 +624,7 @@
+             err = AVERROR(ENOMEM);
+             goto fail;
+         }
++        destroy_test_surface = 1;
+     }
+     test_surface_id = (VASurfaceID)(uintptr_t)test_surface->data;
+ 
+@@ -653,6 +655,8 @@
+                "image format is not supported.\n");
+     }
+ 
++    if (destroy_test_surface)
++        vaapi_buffer_free(hwfc, test_surface->data);
+     av_buffer_unref(&test_surface);
+     return 0;
+ 

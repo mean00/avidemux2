@@ -1,6 +1,6 @@
---- libavutil/log.c.orig	2020-07-11 12:39:30.000000000 +0200
-+++ libavutil/log.c	2021-04-22 20:27:47.604676518 +0200
-@@ -39,6 +39,7 @@
+--- libavutil/log.c.orig	2022-07-22 19:58:39.000000000 +0200
++++ libavutil/log.c	2022-10-26 11:55:54.000000000 +0200
+@@ -41,6 +41,7 @@
  #include "common.h"
  #include "internal.h"
  #include "log.h"
@@ -8,7 +8,7 @@
  #include "thread.h"
  
  static AVMutex mutex = AV_MUTEX_INITIALIZER;
-@@ -119,7 +120,7 @@
+@@ -121,7 +122,7 @@
  
  #endif
  static int use_color = -1;
@@ -17,7 +17,7 @@
  #if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
  static void win_console_puts(const char *str)
  {
-@@ -488,3 +489,18 @@
+@@ -490,3 +491,18 @@
      missing_feature_sample(0, avc, msg, argument_list);
      va_end(argument_list);
  }
