@@ -107,7 +107,7 @@ fastFSRCNN::fastFSRCNN(int w, int h, int algo) : NeuronSW(w,h)
             LOAD_PARAM(ffx2, paramResidualAlpha,    8);
             LOAD_PARAM(ffx2, paramSubConvolutionBias,    4*1);
             LOAD_PARAM(ffx2, paramSubConvolutionWeights, 18*16*1);
-            transposeWeights(paramSubConvolutionWeights, 18*16*1);
+            transposeWeights(8, paramSubConvolutionWeights, 18*16*1);
             break;
         case 1:
             LOAD_PARAM(ffx2d, paramFeatureBias,      8);
@@ -129,17 +129,22 @@ fastFSRCNN::fastFSRCNN(int w, int h, int algo) : NeuronSW(w,h)
             LOAD_PARAM(ffx2d, paramResidualAlpha,    8);
             LOAD_PARAM(ffx2d, paramSubConvolutionBias,    4*1);
             LOAD_PARAM(ffx2d, paramSubConvolutionWeights, 18*16*1);
-            transposeWeights(paramSubConvolutionWeights, 18*16*1);
+            transposeWeights(8, paramSubConvolutionWeights, 18*16*1);
             break;
         default:
             ADM_assert(0);
             break;
     }    
-    transposeWeights(paramModel1Weights,    18*16*2);
-    transposeWeights(paramModel2Weights,    18*16*2);
-    transposeWeights(paramModel3Weights,    18*16*2);
-    transposeWeights(paramModel4Weights,    18*16*2);
-    transposeWeights(paramResidualWeights,  16* 2*2);
+    transposeWeights(8, paramModel1Weights,    18*16*2);
+    shuffleWeights(8, paramModel1Weights,      18*16*2);
+    transposeWeights(8, paramModel2Weights,    18*16*2);
+    shuffleWeights(8, paramModel2Weights,      18*16*2);
+    transposeWeights(8, paramModel3Weights,    18*16*2);
+    shuffleWeights(8, paramModel3Weights,      18*16*2);
+    transposeWeights(8, paramModel4Weights,    18*16*2);
+    shuffleWeights(8, paramModel4Weights,      18*16*2);
+    transposeWeights(8, paramResidualWeights,  16* 2*2);
+    shuffleWeights(8, paramResidualWeights,    16* 2*2);
 }
 
 
@@ -396,17 +401,10 @@ void fastFSRCNN::upscaleY(ADMImage *srcImg, ADMImage *dstImg)
         worker_thread_args[tr].outputLayer = NULL;
     }
 
+    ADM_assert(scaling == 2);
     for (int tr=0; tr<threads; tr++)
     {
-        switch (scaling)
-        {
-            case 2:
-                pthread_create( &worker_threads[tr], NULL, subconv2_worker_thread, (void*) &worker_thread_args[tr]);
-                break;
-            default:
-                ADM_assert(0);
-                break;
-        }
+        pthread_create( &worker_threads[tr], NULL, subconv_worker_thread, (void*) &worker_thread_args[tr]);
     }
     // work in thread workers...
     for (int tr=0; tr<threads; tr++)
@@ -427,25 +425,11 @@ void * fastFSRCNN::feature_worker_thread( void *ptr )
     int ystart = arg->ystart;
     int yincr = arg->yincr;
     
-    DECLARE_M_VEC_T(t);
-    float pix;
-    
     for (int y=ystart; y<h; y+=yincr)
     {
         for (int x=0; x<w; x++)
         {    
-            m_load2_bias(t, arg->bias);
-            int ws = 0;
-            for (int p=-2; p<=2; p++)
-            {
-                for (int q=-2; q<=2; q++)
-                {
-                    pix = arg->imgPlane[x + 2 + p + (y + 2 + q)*arg->imgStride] / 255.0;
-                    m_add2_vecXs(t, arg->weights + ws, pix);
-                    ws += 8; 
-                }
-            }
-            m_store2(t, arg->outputLayer + ((y+1)*(w+2) + (x+1))*4*2);
+            fsrcnn_feature_layer_8(5, arg->imgPlane + x + 2 + (y + 2)*arg->imgStride, arg->imgStride, arg->outputLayer + ((y+1)*(w+2) + (x+1))*8, arg->bias, arg->weights);
         }
     }
     
@@ -460,25 +444,12 @@ void * fastFSRCNN::model_worker_thread( void *ptr )
     int h = arg->h;
     int ystart = arg->ystart;
     int yincr = arg->yincr;
-    
-    DECLARE_M_VEC_T(t);
-   
+
     for (int y=ystart; y<h; y+=yincr)
     {
         for (int x=0; x<w; x++)
         {    
-            m_load2_bias(t, arg->bias);
-            int ws = 0;
-            for (int p=-1; p<=1; p++)
-            {
-                for (int q=-1; q<=1; q++)
-                {
-                    m_add2_mxXvec2(t, arg->weights + ws, arg->inputLayer + ((y+1+q)*(w+2) + (x+1+p))*4*2);
-                    ws += 64;
-                }
-            }
-            m_alpha2(t, arg->alpha);
-            m_store2(t, arg->outputLayer + ((y+1)*(w+2) + (x+1))*4*2);
+            fsrcnn_model_layer_8(3, arg->inputLayer + (x + 1 + (y + 1)*(w+2))*8, (w+2)*8, arg->outputLayer + (x + 1 + (y + 1)*(w+2))*8, arg->bias, arg->weights, arg->alpha);
         }
     }
     
@@ -493,18 +464,12 @@ void * fastFSRCNN::residual_worker_thread( void *ptr )
     int h = arg->h;
     int ystart = arg->ystart;
     int yincr = arg->yincr;
-    
-    DECLARE_M_VEC_T(t);
    
     for (int y=ystart; y<h; y+=yincr)
     {
         for (int x=0; x<w; x++)
         {    
-            m_load2_bias(t, arg->bias);
-            m_add2_mxXvec2(t, arg->weights, arg->inputLayer + ((y+1)*(w+2) + (x+1))*4*2);
-            m_add2_vec(t, arg->featureLayer + ((y+1)*(w+2) + (x+1))*4*2);
-            m_alpha2(t, arg->alpha);
-            m_store2(t, arg->outputLayer + ((y+1)*(w+2) + (x+1))*4*2);
+            fsrcnn_residual_layer_8(1, arg->inputLayer + (x + 1 + (y + 1)*(w+2))*8, (w+2)*8, arg->featureLayer + ((y+1)*(w+2) + (x+1))*8, arg->outputLayer + (x + 1 + (y + 1)*(w+2))*8, arg->bias, arg->weights, arg->alpha);
         }
     }
     
@@ -512,7 +477,7 @@ void * fastFSRCNN::residual_worker_thread( void *ptr )
     return NULL;    
 }
 
-void * fastFSRCNN::subconv2_worker_thread( void *ptr )
+void * fastFSRCNN::subconv_worker_thread( void *ptr )
 {
     worker_thread_arg * arg = (worker_thread_arg*)ptr;
     int w = arg->w;
@@ -520,24 +485,11 @@ void * fastFSRCNN::subconv2_worker_thread( void *ptr )
     int ystart = arg->ystart;
     int yincr = arg->yincr;
     
-    DECLARE_M_VEC_T(t);
-   
     for (int y=ystart; y<h; y+=yincr)
     {
         for (int x=0; x<w; x++)
         {    
-            m_load1_bias(t, arg->bias);
-            int ws = 0;
-            for (int p=-1; p<=1; p++)
-            {
-                for (int q=-1; q<=1; q++)
-                {
-
-                    m_add1_mxXvec2(t, arg->weights + ws, arg->inputLayer + ((y+1+q)*(w+2) + (x+1+p))*4*2);
-                    ws += 32;
-                }
-            }
-            m_integerize1(t, arg->imgPlane + ((y*2)*arg->imgStride + (x*2)), arg->imgStride);
+            fsrcnn_subconvolutional_layer_8(3, arg->scaling, arg->inputLayer + (x + 1 + (y + 1)*(w+2))*8, (w+2)*8, arg->imgPlane + (y*arg->imgStride + x)*arg->scaling, arg->imgStride, arg->bias, arg->weights);
         }
     }
     
@@ -545,92 +497,3 @@ void * fastFSRCNN::subconv2_worker_thread( void *ptr )
     return NULL;    
 }
 
-void * fastFSRCNN::subconv3_worker_thread( void *ptr )
-{
-    worker_thread_arg * arg = (worker_thread_arg*)ptr;
-    int w = arg->w;
-    int h = arg->h;
-    int ystart = arg->ystart;
-    int yincr = arg->yincr;
-    
-    DECLARE_M_VEC_T(t);
-    
-    for (int y=ystart; y<h; y+=yincr)
-    {
-        for (int x=0; x<w; x++)
-        {    
-            m_load4_bias(t, arg->bias);
-            int ws = 0;
-            for (int p=-1; p<=1; p++)
-            {
-                for (int q=-1; q<=1; q++)
-                {
-
-                    m_add3_mxXvec4(t, arg->weights + ws, arg->inputLayer + ((y+1+q)*(w+2) + (x+1+p))*4*4);
-                    ws += 192;
-                }
-            }
-            m_integerize3(t, arg->imgPlane + ((y*3)*arg->imgStride + (x*3)), arg->imgStride);
-        }
-    }
-    
-    pthread_exit(NULL);
-    return NULL;    
-}
-
-void * fastFSRCNN::subconv4_worker_thread( void *ptr )
-{
-    worker_thread_arg * arg = (worker_thread_arg*)ptr;
-    int w = arg->w;
-    int h = arg->h;
-    int ystart = arg->ystart;
-    int yincr = arg->yincr;
-    
-    DECLARE_M_VEC_T(t);
-    
-    for (int y=ystart; y<h; y+=yincr)
-    {
-        for (int x=0; x<w; x++)
-        {    
-            m_load4_bias(t, arg->bias);
-            int ws = 0;
-            for (int p=-1; p<=1; p++)
-            {
-                for (int q=-1; q<=1; q++)
-                {
-
-                    m_add4_mxXvec4(t, arg->weights + ws, arg->inputLayer + ((y+1+q)*(w+2) + (x+1+p))*4*4);
-                    ws += 256;
-                }
-            }
-            m_integerize4(t, arg->imgPlane + ((y*4)*arg->imgStride + (x*4)), arg->imgStride);
-        }
-    }
-    
-    pthread_exit(NULL);
-    return NULL;    
-}
-
-void fastFSRCNN::transposeWeights(float * weights, int weightCount)
-{
-#ifdef ADM_CPU_HAS_SIMD
-    return;
-#else
-    float tmp[16];
-    for (int k=0; k<(weightCount/16); k++)
-    {
-        for (int i=0; i<4; i++)
-        {
-            for (int j=0; j<4; j++)
-            {
-                tmp[j*4+i] = weights[i*4+j];
-            }
-        }
-        for (int i=0; i<16; i++)
-        {
-            weights[i] = tmp[i];
-        }
-        weights += 16;
-    }
-#endif
-}

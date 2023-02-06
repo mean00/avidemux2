@@ -48,6 +48,7 @@ void ADMVideoAiEnhance::AiEnhanceInitializeBuffers(int w, int h, aiEnhance_buffe
     buffers->algo = -1; // invalidate
     buffers->ai = NULL;
     buffers->targetImg = NULL;
+    buffers->chromaUpScaleImg = NULL;
     buffers->previewImg = NULL;
     buffers->upScaler = NULL;
     buffers->previewScaler = NULL;
@@ -59,6 +60,7 @@ void ADMVideoAiEnhance::AiEnhanceDestroyBuffers(aiEnhance_buffers_t * buffers)
 {
     delete buffers->ai;
     delete buffers->targetImg;
+    delete buffers->chromaUpScaleImg;
     delete buffers->previewImg;
     delete buffers->upScaler;
     delete buffers->previewScaler;
@@ -91,6 +93,8 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
         }
         delete buffers->targetImg;
         buffers->targetImg = new ADMImageDefault(buffers->w*scaling, buffers->h*scaling);
+        delete buffers->chromaUpScaleImg;
+        buffers->chromaUpScaleImg = new ADMImageDefault(buffers->w*scaling, buffers->h*scaling);
         delete buffers->previewImg;
         buffers->previewImg = new ADMImageDefault(buffers->w, buffers->h);
         delete buffers->upScaler;
@@ -99,12 +103,20 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
         buffers->previewScaler = new ADMColorScalerFull(ADM_CS_LANCZOS, buffers->w*scaling, buffers->h*scaling, buffers->w*previewScale, buffers->h*previewScale, ADM_PIXFRMT_YV12, ADM_PIXFRMT_YV12);
     }
     
-    buffers->upScaler->convertImage(srcImg, buffers->targetImg);
+    buffers->srcImg = srcImg;
+    pthread_create( &buffers->upScalerThread, NULL, chromaUpscalerThread, (void*) buffers);
     
     if (!skipProcess)
     {
         buffers->ai->upscaleY(srcImg, buffers->targetImg);
     }
+
+    pthread_join( buffers->upScalerThread, NULL);
+    
+    if (skipProcess)
+        buffers->chromaUpScaleImg->copyPlane(buffers->chromaUpScaleImg, buffers->targetImg, PLANAR_Y);
+    buffers->chromaUpScaleImg->copyPlane(buffers->chromaUpScaleImg, buffers->targetImg, PLANAR_U);
+    buffers->chromaUpScaleImg->copyPlane(buffers->chromaUpScaleImg, buffers->targetImg, PLANAR_V);
     
     if (previewMode)
     {
@@ -115,6 +127,16 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
     {
         dstImg->duplicate(buffers->targetImg);
     }
+}
+
+void * ADMVideoAiEnhance::chromaUpscalerThread( void *ptr )
+{
+    aiEnhance_buffers_t * buffers = (aiEnhance_buffers_t*)ptr;
+    
+    buffers->upScaler->convertImage(buffers->srcImg, buffers->chromaUpScaleImg);
+    
+    pthread_exit(NULL);
+    return NULL;   
 }
 
 /**

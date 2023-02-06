@@ -65,16 +65,12 @@ private:
     float *                 paramResidualAlpha;
     float *                 paramSubConvolutionBias;
     float *                 paramSubConvolutionWeights;
-    
-    
-           void     transposeWeights(float * weights, int weightCount);
+
            
     static void *   feature_worker_thread( void *ptr );
     static void *   model_worker_thread( void *ptr );
     static void *   residual_worker_thread( void *ptr );
-    static void *   subconv2_worker_thread( void *ptr );
-    static void *   subconv3_worker_thread( void *ptr );
-    static void *   subconv4_worker_thread( void *ptr );
+    static void *   subconv_worker_thread( void *ptr );
 
 public:
     fastFSRCNN(int w, int h, int algo);
