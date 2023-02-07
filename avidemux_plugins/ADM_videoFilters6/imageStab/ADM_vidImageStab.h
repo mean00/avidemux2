@@ -43,7 +43,8 @@ class  ADMVideoImageStab:public ADM_coreVideoFilter
         uint8_t *   out;
         uint8_t *   out2;
         int *       bicubicWeights;
-        uint8_t     blackLevel;
+        bool        chromaPlanes;
+        bool        pad;
     } worker_thread_arg;
 
     typedef struct {
@@ -69,6 +70,7 @@ class  ADMVideoImageStab:public ADM_coreVideoFilter
     imageStab_buffers_t   _buffers;
     static void           bilinear(int w, int h, int stride, uint8_t * in, int x, int y, int fx, int fy, uint8_t * out);
     static void           bicubic(int w, int h, int stride, uint8_t * in, int x, int y, int fx, int fy, int * weights, uint8_t * out);
+    static void           padGen(int w, int h, int stride, uint8_t * in, int x, int y, int radius, uint8_t * out);
     
 
     static void * worker_thread( void *ptr );
