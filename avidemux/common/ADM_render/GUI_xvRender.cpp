@@ -272,6 +272,8 @@ bool XvRender::lowLevelXvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
             return false;
     }
     memset(xvimage->data, 0, xvimage->data_size);
+    memset(xvimage->data + xvimage->offsets[1], 128, xvimage->pitches[1]*(xvimage->height/2));
+    memset(xvimage->data + xvimage->offsets[2], 128, xvimage->pitches[2]*(xvimage->height/2));
     xv_xgc.graphics_exposures = False;
     xv_gc = XCreateGC(xv_display, xv_win, 0L, &xv_xgc);
     }
