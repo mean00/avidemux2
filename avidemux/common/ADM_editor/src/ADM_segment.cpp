@@ -185,7 +185,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     uint64_t dtsPtsDelta=0;
     uint64_t previousFrameDts = ADM_NO_PTS; // may be estimated, not usable for probing
     uint64_t minDts = ADM_NO_PTS;
-    uint32_t frame,flags,fmin=0,fmax=0;
+    uint32_t frame,flags,fmin,fmax,fdlta;
+    fmin = fmax = fdlta = 0;
     for(frame = 0; frame < info.nb_frames; frame++)
     {
         if(!ref->fieldEncoded)
@@ -220,6 +221,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
                 {
                     dtsPtsDelta = dts - pts;
                     ignored = 0;
+                    fdlta = frame;
                 }
             }
             if(estimated) continue;
@@ -275,7 +277,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
         }
         if(dtsShift)
         {
-            ADM_warning("We have some DTS > PTS, reducing DTS by %" PRIu64" microseconds (%s)\n", dtsShift, ADM_us2plain(dtsShift));
+            ADM_warning("We have some DTS > PTS, reducing DTS based on frame %" PRIu32" by %" PRIu64" microseconds (%s)\n", fdlta, dtsShift, ADM_us2plain(dtsShift));
             for(frame = 0; frame < info.nb_frames; frame++)
             {
                 if(!demuxer->getPtsDts(frame,&pts,&dts)) continue;
@@ -287,7 +289,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     }
     if(dtsPtsDelta)
     {
-        ADM_warning("We have some DTS > PTS, delaying video by %" PRIu64" microseconds (%s)\n", dtsPtsDelta, ADM_us2plain(dtsPtsDelta));
+        ADM_warning("We have some DTS > PTS, delaying video based on frame %" PRIu32" by %" PRIu64" microseconds (%s)\n", fdlta, dtsPtsDelta, ADM_us2plain(dtsPtsDelta));
         for(frame = 0; frame < info.nb_frames; frame++)
         {
             if(!demuxer->getPtsDts(frame,&pts,&dts)) continue;
