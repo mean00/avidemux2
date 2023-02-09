@@ -129,7 +129,7 @@ NeuronSW::~NeuronSW()
 
 void NeuronSW::fsrcnn_feature_layer_C(int features, int kernel_size, uint8_t * input, int input_stride, float * output, float * bias, float * weights)
 {
-    float t[features];
+    float * t = (float*)admAlloca(sizeof(float) * features);
     int radius = kernel_size/2;
     float pix;
     
@@ -323,7 +323,7 @@ void NeuronSW::fsrcnn_feature_layer_16(int kernel_size, uint8_t * input, int inp
 
 void NeuronSW::fsrcnn_model_layer_C(int features, int kernel_size, float * input, int input_stride, float * output, float * bias, float * weights, float * alpha)
 {
-    float t[features];
+    float * t = (float*)admAlloca(sizeof(float) * features);
     int radius = kernel_size/2;
     
     for (int i=0; i<features; i++)
@@ -544,7 +544,7 @@ void NeuronSW::fsrcnn_model_layer_16(int kernel_size, float * input, int input_s
 
 void NeuronSW::fsrcnn_residual_layer_C(int features, int kernel_size, float * input, int input_stride, float * residual, float * output, float * bias, float * weights, float * alpha)
 {
-    float t[features];
+    float * t = (float*)admAlloca(sizeof(float) * features);
     int radius = kernel_size/2;
     
     for (int i=0; i<features; i++)
@@ -789,7 +789,7 @@ void NeuronSW::fsrcnn_residual_layer_16(int kernel_size, float * input, int inpu
 
 void NeuronSW::fsrcnn_subconvolutional_layer_C(int features, int kernel_size, int scale, float * input, int input_stride, uint8_t * output, int output_stride, float * bias, float * weights)
 {
-    float t[features];
+    float * t = (float*)admAlloca(sizeof(float) * features);
     int radius = kernel_size/2;
     int scs = scale;
     if (scs == 2)
