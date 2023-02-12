@@ -35,6 +35,8 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h, uint32_t fcc, uint32_t
     if(c->refCopy)
         _refCopy = 1;
 
+    _setFcc = true;
+
     if(false == lavSetupPrepare(c->codecId))
         return;
 
