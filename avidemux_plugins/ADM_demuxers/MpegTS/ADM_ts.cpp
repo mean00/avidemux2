@@ -224,7 +224,7 @@ void tsHeader::Dump(void)
 
 uint8_t tsHeader::close(void)
 {
-    ADM_info("Destroying TS demuxer\n");
+    ADM_info("Closing TS demuxer\n");
     // Destroy index
     int n=ListOfFrames.size();
     for(int i=0;i<n;i++)
@@ -254,7 +254,8 @@ uint8_t tsHeader::close(void)
 */
 
  tsHeader::tsHeader( void ) : vidHeader()
-{ 
+{
+    tsPacket = NULL;
     fieldEncoded=false;
     lastFrame=0xffffffff;
     videoPid=0;
@@ -269,7 +270,8 @@ uint8_t tsHeader::close(void)
 
  tsHeader::~tsHeader(  )
 {
-  close();
+    ADM_info("Destroying TS demuxer\n");
+    close();
 }
 
 
