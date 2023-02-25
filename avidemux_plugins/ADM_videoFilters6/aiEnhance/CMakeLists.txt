@@ -1,6 +1,6 @@
 INCLUDE(vf_plugin)
 
-SET(AiEnhanceCommon_SRCS ADM_vidAiEnhance.cpp NeuronSW.cpp FSRCNN.cpp fastFSRCNN.cpp)
+SET(AiEnhanceCommon_SRCS ADM_vidAiEnhance.cpp NeuronSW.cpp FSRCNN.cpp fastFSRCNN.cpp PL3NET.cpp)
 IF(DO_QT4)
     include(admCheckThreads)
 ENDIF(DO_QT4)

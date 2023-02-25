@@ -80,6 +80,11 @@
          <string>FSRCNN x4 upscale</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>PL3NET x2 upscale</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>

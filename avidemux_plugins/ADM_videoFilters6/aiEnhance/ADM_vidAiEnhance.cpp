@@ -23,6 +23,7 @@
 
 #include "FSRCNN.h"
 #include "fastFSRCNN.h"
+#include "PL3NET.h"
 
 extern uint8_t DIA_getAiEnhance(aiEnhance *param, ADM_coreVideoFilter *in);
 
@@ -75,7 +76,7 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
 
     ADM_assert(srcImg->_width == buffers->w);
     ADM_assert(srcImg->_height == buffers->h);
-    ADM_assert(param.algo < 8);
+    ADM_assert(param.algo < 9);
     unsigned int algo = param.algo;
     
     if (buffers->algo != algo)
@@ -88,8 +89,13 @@ void ADMVideoAiEnhance::AiEnhanceProcess_C(ADMImage *srcImg, ADMImage *dstImg, b
             buffers->ai = new fastFSRCNN(buffers->w, buffers->h, buffers->algo);
         }
         else
+        if (algo < 8)
         {
             buffers->ai = new FSRCNN(buffers->w, buffers->h, buffers->algo - 2);
+        }
+        else
+        {
+            buffers->ai = new PL3NET(buffers->w, buffers->h, buffers->algo - 8);
         }
         delete buffers->targetImg;
         buffers->targetImg = new ADMImageDefault(buffers->w*scaling, buffers->h*scaling);
@@ -194,7 +200,9 @@ int ADMVideoAiEnhance::getScaling(int algo)
 {
     if (algo < 2)
         return fastFSRCNN::getScaling(algo);
-    return FSRCNN::getScaling(algo - 2);
+    if (algo < 8)
+        return FSRCNN::getScaling(algo - 2);
+    return PL3NET::getScaling(algo - 8);
 }
 
 /**
