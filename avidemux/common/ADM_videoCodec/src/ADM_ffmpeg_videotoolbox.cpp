@@ -202,16 +202,17 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
     }
 
     AVFrame *copy = swframes[swframeIdx];
-    swframeIdx++;
-    swframeIdx %= NB_SW_FRAMES;
     if(!copy)
     {
         copy = av_frame_alloc();
         ADM_assert(copy);
+        swframes[swframeIdx] = copy;
     }else
     {
         av_frame_unref(copy);
     }
+    swframeIdx++;
+    swframeIdx %= NB_SW_FRAMES;
 
     ret = av_hwframe_transfer_data(copy, frame, 0);
 
