@@ -35,6 +35,10 @@ NeuronSW::~NeuronSW()
 #define MM_LOAD_8_BIAS_SSE()        t[0] = _mm_load_ps(bias + 0); \
                                     t[1] = _mm_load_ps(bias + 4);
 
+#define MM_LOAD_12_BIAS_SSE()       t[0] = _mm_load_ps(bias + 0); \
+                                    t[1] = _mm_load_ps(bias + 4); \
+                                    t[2] = _mm_load_ps(bias + 8);
+
 #define MM_LOAD_16_BIAS_SSE()       t[0] = _mm_load_ps(bias + 0); \
                                     t[1] = _mm_load_ps(bias + 4); \
                                     t[2] = _mm_load_ps(bias + 8); \
@@ -47,6 +51,10 @@ NeuronSW::~NeuronSW()
 
 #define MM_STORE_8_OUT_SSE()        _mm_store_ps(output + 0, t[0]); \
                                     _mm_store_ps(output + 4, t[1]);
+
+#define MM_STORE_12_OUT_SSE()       _mm_store_ps(output + 0, t[0]); \
+                                    _mm_store_ps(output + 4, t[1]); \
+                                    _mm_store_ps(output + 8, t[2]);
 
 #define MM_STORE_16_OUT_SSE()       _mm_store_ps(output + 0, t[0]); \
                                     _mm_store_ps(output + 4, t[1]); \
@@ -74,6 +82,14 @@ NeuronSW::~NeuronSW()
                                     t[0] = _mm_add_ps(_mm_max_ps(t[0], zero), _mm_mul_ps(_mm_min_ps(t[0], zero), alpha1)); \
                                     t[1] = _mm_add_ps(_mm_max_ps(t[1], zero), _mm_mul_ps(_mm_min_ps(t[1], zero), alpha2));
 
+#define MM_ALPHA_12_SSE()           __m128 zero = _mm_setzero_ps(); \
+                                    __m128 alpha1 = _mm_load_ps(alpha + 0); \
+                                    __m128 alpha2 = _mm_load_ps(alpha + 4); \
+                                    __m128 alpha3 = _mm_load_ps(alpha + 8); \
+                                    t[0] = _mm_add_ps(_mm_max_ps(t[0], zero), _mm_mul_ps(_mm_min_ps(t[0], zero), alpha1)); \
+                                    t[1] = _mm_add_ps(_mm_max_ps(t[1], zero), _mm_mul_ps(_mm_min_ps(t[1], zero), alpha2)); \
+                                    t[2] = _mm_add_ps(_mm_max_ps(t[2], zero), _mm_mul_ps(_mm_min_ps(t[2], zero), alpha3));
+
 #define MM_ALPHA_16_SSE()           __m128 zero = _mm_setzero_ps(); \
                                     __m128 alpha1 = _mm_load_ps(alpha + 0); \
                                     __m128 alpha2 = _mm_load_ps(alpha + 4); \
@@ -95,6 +111,19 @@ NeuronSW::~NeuronSW()
                                     prod3 = _mm_mul_ps(_mm_load_ps(mx), u3);    mx+=4;\
                                     prod4 = _mm_mul_ps(_mm_load_ps(mx), u4);    mx+=4;\
                                     t = _mm_add_ps(t,_mm_add_ps(_mm_add_ps(prod1, prod2), _mm_add_ps(prod3, prod4)));
+
+#define MM_FMA_3x_MX_V_MULT(mx)     t[0] = _mm_fmadd_ps(_mm_load_ps(mx),u1, t[0]);     mx += 16; \
+                                    t[1] = _mm_fmadd_ps(_mm_load_ps(mx),u1, t[1]);     mx += 16; \
+                                    t[2] = _mm_fmadd_ps(_mm_load_ps(mx),u1, t[2]);     mx -= 28; \
+                                    t[0] = _mm_fmadd_ps(_mm_load_ps(mx),u2, t[0]);     mx += 16; \
+                                    t[1] = _mm_fmadd_ps(_mm_load_ps(mx),u2, t[1]);     mx += 16; \
+                                    t[2] = _mm_fmadd_ps(_mm_load_ps(mx),u2, t[2]);     mx -= 28; \
+                                    t[0] = _mm_fmadd_ps(_mm_load_ps(mx),u3, t[0]);     mx += 16; \
+                                    t[1] = _mm_fmadd_ps(_mm_load_ps(mx),u3, t[1]);     mx += 16; \
+                                    t[2] = _mm_fmadd_ps(_mm_load_ps(mx),u3, t[2]);     mx -= 28; \
+                                    t[0] = _mm_fmadd_ps(_mm_load_ps(mx),u4, t[0]);     mx += 16; \
+                                    t[1] = _mm_fmadd_ps(_mm_load_ps(mx),u4, t[1]);     mx += 16; \
+                                    t[2] = _mm_fmadd_ps(_mm_load_ps(mx),u4, t[2]);     mx += 4;
 
 #define MM_FMA_4x_MX_V_MULT(mx)     t[0] = _mm_fmadd_ps(_mm_load_ps(mx),u1, t[0]);     mx += 16; \
                                     t[1] = _mm_fmadd_ps(_mm_load_ps(mx),u1, t[1]);     mx += 16; \
@@ -424,6 +453,64 @@ void NeuronSW::fsrcnn_model_layer_8_SSE(int kernel_size, float * input, int inpu
 
 
 # ifdef ADM_CPU_HAS_X86_SIMD
+ADM_CPU_X86_SIMD_TARGET("fma")
+void NeuronSW::fsrcnn_model_layer_12_FMA(int kernel_size, float * input, int input_stride, float * output, float * bias, float * weights, float * alpha)
+{
+    __m128 t[4];
+    int radius = kernel_size/2;
+
+    MM_LOAD_12_BIAS_SSE();
+
+    for (int p=-radius; p<=radius; p++)
+    {
+        for (int q=-radius; q<=radius; q++)
+        {
+            float * vec = input + q*input_stride + p*12;
+            __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
+            for (int i=0; i<3; i++)
+            {
+                MM_SSE2_LOAD_V(vec);
+                MM_FMA_3x_MX_V_MULT(weights);
+            }
+
+        }
+    }
+
+    MM_ALPHA_12_SSE();
+    
+    MM_STORE_12_OUT_SSE();
+}
+# endif
+
+void NeuronSW::fsrcnn_model_layer_12_SSE(int kernel_size, float * input, int input_stride, float * output, float * bias, float * weights, float * alpha)
+{
+    __m128 t[4];
+    int radius = kernel_size/2;
+
+    MM_LOAD_12_BIAS_SSE();
+
+    for (int p=-radius; p<=radius; p++)
+    {
+        for (int q=-radius; q<=radius; q++)
+        {
+            float * vec = input + q*input_stride + p*12;
+            for (int i=0; i<3; i++)
+            {
+                __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
+                MM_SSE2_LOAD_V(vec);
+                MM_SSE2_MX_V_MULT(t[0], weights);
+                MM_SSE2_MX_V_MULT(t[1], weights);
+                MM_SSE2_MX_V_MULT(t[2], weights);
+            }            
+        }
+    }
+
+    MM_ALPHA_12_SSE();
+    
+    MM_STORE_12_OUT_SSE();
+}
+
+# ifdef ADM_CPU_HAS_X86_SIMD
 ADM_CPU_X86_SIMD_TARGET("avx")
 void NeuronSW::fsrcnn_model_layer_16_AVX(int kernel_size, float * input, int input_stride, float * output, float * bias, float * weights, float * alpha)
 {
@@ -526,6 +613,17 @@ void NeuronSW::fsrcnn_model_layer_8(int kernel_size, float * input, int input_st
     return fsrcnn_model_layer_8_SSE(kernel_size, input, input_stride, output, bias, weights, alpha);
 #endif    
     return fsrcnn_model_layer_C(8, kernel_size, input, input_stride, output, bias, weights, alpha);
+}
+
+void NeuronSW::fsrcnn_model_layer_12(int kernel_size, float * input, int input_stride, float * output, float * bias, float * weights, float * alpha)
+{
+#ifdef ADM_CPU_HAS_SIMD
+# ifdef ADM_CPU_HAS_X86_SIMD
+    if (CpuCaps::hasFMA3()) return fsrcnn_model_layer_12_FMA(kernel_size, input, input_stride, output, bias, weights, alpha);
+# endif
+    return fsrcnn_model_layer_12_SSE(kernel_size, input, input_stride, output, bias, weights, alpha);
+#endif    
+    return fsrcnn_model_layer_C(12, kernel_size, input, input_stride, output, bias, weights, alpha);
 }
 
 void NeuronSW::fsrcnn_model_layer_16(int kernel_size, float * input, int input_stride, float * output, float * bias, float * weights, float * alpha)
@@ -654,6 +752,73 @@ void NeuronSW::fsrcnn_residual_layer_8_SSE(int kernel_size, float * input, int i
 }
 
 
+
+# ifdef ADM_CPU_HAS_X86_SIMD
+ADM_CPU_X86_SIMD_TARGET("fma")
+void NeuronSW::fsrcnn_residual_layer_12_FMA(int kernel_size, float * input, int input_stride, float * residual, float * output, float * bias, float * weights, float * alpha)
+{
+    __m128 t[4];
+    int radius = kernel_size/2;
+
+    MM_LOAD_12_BIAS_SSE();
+
+    for (int p=-radius; p<=radius; p++)
+    {
+        for (int q=-radius; q<=radius; q++)
+        {
+            float * vec = input + q*input_stride + p*12;
+            __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
+            for (int i=0; i<3; i++)
+            {
+                MM_SSE2_LOAD_V(vec);
+                MM_FMA_3x_MX_V_MULT(weights);
+            }
+
+        }
+    }
+
+    t[0] = _mm_add_ps(t[0], _mm_load_ps(residual + 0));
+    t[1] = _mm_add_ps(t[1], _mm_load_ps(residual + 4));
+    t[2] = _mm_add_ps(t[2], _mm_load_ps(residual + 8));
+    
+    MM_ALPHA_12_SSE();
+    
+    MM_STORE_12_OUT_SSE();
+}
+# endif
+
+void NeuronSW::fsrcnn_residual_layer_12_SSE(int kernel_size, float * input, int input_stride, float * residual, float * output, float * bias, float * weights, float * alpha)
+{
+    __m128 t[4];
+    int radius = kernel_size/2;
+
+    MM_LOAD_12_BIAS_SSE();
+
+    for (int p=-radius; p<=radius; p++)
+    {
+        for (int q=-radius; q<=radius; q++)
+        {
+            float * vec = input + q*input_stride + p*12;
+            for (int i=0; i<3; i++)
+            {
+                __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
+                MM_SSE2_LOAD_V(vec);
+                MM_SSE2_MX_V_MULT(t[0], weights);
+                MM_SSE2_MX_V_MULT(t[1], weights);
+                MM_SSE2_MX_V_MULT(t[2], weights);
+            }            
+        }
+    }
+    
+    t[0] = _mm_add_ps(t[0], _mm_load_ps(residual + 0));
+    t[1] = _mm_add_ps(t[1], _mm_load_ps(residual + 4));
+    t[2] = _mm_add_ps(t[2], _mm_load_ps(residual + 8));
+    
+    MM_ALPHA_12_SSE();
+    
+    MM_STORE_12_OUT_SSE();
+}
+
 # ifdef ADM_CPU_HAS_X86_SIMD
 ADM_CPU_X86_SIMD_TARGET("avx")
 void NeuronSW::fsrcnn_residual_layer_16_AVX(int kernel_size, float * input, int input_stride, float * residual, float * output, float * bias, float * weights, float * alpha)
@@ -772,6 +937,18 @@ void NeuronSW::fsrcnn_residual_layer_8(int kernel_size, float * input, int input
     return fsrcnn_residual_layer_C(8, kernel_size, input, input_stride, residual, output, bias, weights, alpha);
 }
 
+
+
+void NeuronSW::fsrcnn_residual_layer_12(int kernel_size, float * input, int input_stride, float * residual, float * output, float * bias, float * weights, float * alpha)
+{
+#ifdef ADM_CPU_HAS_SIMD
+# ifdef ADM_CPU_HAS_X86_SIMD
+    if (CpuCaps::hasFMA3()) return fsrcnn_residual_layer_12_FMA(kernel_size, input, input_stride, residual, output, bias, weights, alpha);
+# endif
+    return fsrcnn_residual_layer_12_SSE(kernel_size, input, input_stride, residual, output, bias, weights, alpha);
+#endif    
+    return fsrcnn_residual_layer_C(12, kernel_size, input, input_stride, residual, output, bias, weights, alpha);
+}
 
 
 void NeuronSW::fsrcnn_residual_layer_16(int kernel_size, float * input, int input_stride, float * residual, float * output, float * bias, float * weights, float * alpha)
@@ -1184,8 +1361,248 @@ void NeuronSW::fsrcnn_subconvolutional_layer_16(int kernel_size, int scale, floa
 
 
 
+void NeuronSW::plxnet_feature_layer_C(int features, int kernel_size, int scale, uint8_t * input, int input_stride, float * output, float * bias, float * weights, float * output2, float * bias2, float * weights2)
+{
+    float * t = (float*)admAlloca(sizeof(float) * features);
+    float * t2 = (float*)admAlloca(sizeof(float) * scale*scale);
+    int radius = kernel_size/2;
+    float pix;
+    
+    for (int i=0; i<features; i++)
+        t[i] = bias[i];
+
+    for (int i=0; i<scale*scale; i++)
+        t2[i] = bias2[i];
+    
+    for (int p=-radius; p<=radius; p++)
+    {
+        for (int q=-radius; q<=radius; q++)
+        {
+            pix = *(input + q*input_stride + p) / 255.0;
+            for (int i=0; i<features; i++)
+            {
+                t[i] += pix * *weights;
+                weights++;
+            }
+            for (int i=0; i<scale*scale; i++)
+            {
+                t2[i] += pix * *weights2;
+                weights2++;
+            }
+        }
+    }
+    
+    for (int i=0; i<features; i++)
+    {
+        *output = t[i];
+        output++;
+    }      
+    for (int i=0; i<scale*scale; i++)
+    {
+        *output2 = t2[i];
+        output2++;
+    }      
+}
+
+#ifdef ADM_CPU_HAS_SIMD
+# ifdef ADM_CPU_HAS_X86_SIMD
+ADM_CPU_X86_SIMD_TARGET("fma")
+void NeuronSW::plxnet_feature_layer_2x_12_FMA(int kernel_size, uint8_t * input, int input_stride, float * output, float * bias, float * weights, float * output2, float * bias2, float * weights2)
+{
+    __m128 t[4];
+    int radius = kernel_size/2;
+    float pix;
+
+    MM_LOAD_12_BIAS_SSE();
+    t[3] = _mm_load_ps(bias2 + 0);
+
+    for (int p=-radius; p<=radius; p++)
+    {
+        for (int q=-radius; q<=radius; q++)
+        {
+            pix = *(input + q*input_stride + p) / 255.0;
+
+            __m128 s = _mm_load1_ps(&pix);
+            __m128 v1 = _mm_load_ps(weights);   weights += 4;
+            __m128 v2 = _mm_load_ps(weights);   weights += 4;
+            __m128 v3 = _mm_load_ps(weights);   weights += 4;
+            __m128 v4 = _mm_load_ps(weights2);  weights2 += 4;
+            t[0] = _mm_fmadd_ps(v1, s, t[0]);
+            t[1] = _mm_fmadd_ps(v2, s, t[1]);
+            t[2] = _mm_fmadd_ps(v3, s, t[2]);
+            t[3] = _mm_fmadd_ps(v4, s, t[3]);
+        }
+    }
+    
+    MM_STORE_12_OUT_SSE();
+    _mm_store_ps(output2 + 0, t[3]);
+}
+# endif
+
+void NeuronSW::plxnet_feature_layer_2x_12_SSE(int kernel_size, uint8_t * input, int input_stride, float * output, float * bias, float * weights, float * output2, float * bias2, float * weights2)
+{
+    __m128 t[4];
+    int radius = kernel_size/2;
+    float pix;
+
+    MM_LOAD_12_BIAS_SSE();
+    t[3] = _mm_load_ps(bias2 + 0);
+
+    for (int p=-radius; p<=radius; p++)
+    {
+        for (int q=-radius; q<=radius; q++)
+        {
+            pix = *(input + q*input_stride + p) / 255.0;
+
+            __m128 s = _mm_load1_ps(&pix);
+            __m128 v1 = _mm_load_ps(weights);   weights += 4;
+            __m128 v2 = _mm_load_ps(weights);   weights += 4;
+            __m128 v3 = _mm_load_ps(weights);   weights += 4;
+            __m128 v4 = _mm_load_ps(weights2);  weights2 += 4;
+            t[0] = _mm_add_ps(t[0], _mm_mul_ps(v1, s));
+            t[1] = _mm_add_ps(t[1], _mm_mul_ps(v2, s));
+            t[2] = _mm_add_ps(t[2], _mm_mul_ps(v3, s));
+            t[3] = _mm_add_ps(t[3], _mm_mul_ps(v4, s));            
+        }
+    }
+    
+    MM_STORE_12_OUT_SSE();
+    _mm_store_ps(output2 + 0, t[3]);
+}
+
+#endif 
+
+void NeuronSW::plxnet_feature_layer_12(int kernel_size, int scale, uint8_t * input, int input_stride, float * output, float * bias, float * weights, float * output2, float * bias2, float * weights2)
+{
+#ifdef ADM_CPU_HAS_SIMD
+    if (scale == 2)
+    {
+# ifdef ADM_CPU_HAS_X86_SIMD
+        if (CpuCaps::hasFMA3()) return plxnet_feature_layer_2x_12_FMA(kernel_size, input, input_stride, output, bias, weights, output2, bias2, weights2);
+# endif   
+        return plxnet_feature_layer_2x_12_SSE(kernel_size, input, input_stride, output, bias, weights, output2, bias2, weights2);
+    }    
+#endif
+    return plxnet_feature_layer_C(12, kernel_size, scale, input, input_stride, output, bias, weights, output2, bias2, weights2);
+}
 
 
+
+void NeuronSW::plxnet_subconvolutional_layer_C(int features, int kernel_size, int scale, float * input, int input_stride, float * ptFeatures, uint8_t * output, int output_stride, float * bias, float * weights)
+{
+    float * t = (float*)admAlloca(sizeof(float) * features);
+    int radius = kernel_size/2;
+    int scs = scale;
+    if (scs == 2)
+        scs = 1;
+    
+    for (int i=0; i<4*scs; i++)
+        t[i] = bias[i];
+    
+    for (int p=-radius; p<=radius; p++)
+    {
+        for (int q=-radius; q<=radius; q++)
+        {
+            float * vec = input + q*input_stride + p*features;
+            for (int i=0; i<(features/4); i++)
+            {
+                for (int m=0; m<scs; m++)
+                {
+                    for (int j=0; j<4; j++)
+                    {
+                        float sum = 0;
+                        for (int k=0; k<4; k++)
+                        {
+                            sum += *weights * vec[k];
+                            weights++;
+                        }
+                        t[m*4+j] += sum;
+                    }
+                }
+                vec += 4;
+            }
+        }
+    }
+
+    for (int i=0; i<4*scs; i++)
+    {
+        t[i] += ptFeatures[i];
+        t[i] *= 255.0;
+        t[i] = std::round(t[i]);
+        if (t[i] < 0) t[i] = 0;
+        if (t[i] > 255) t[i] = 255;
+    }
+    for (int i=0; i<scale; i++)
+    {
+        for (int j=0; j<scale; j++)
+        {
+            if (scale > 2)
+                output[j*output_stride + i] = t[i*4+j];
+            else
+                output[j*output_stride + i] = t[i*2+j];
+        }
+    }    
+}
+
+#ifdef ADM_CPU_HAS_SIMD
+
+void NeuronSW::plxnet_subconvolutional_layer_2x_12_SSE(int kernel_size, float * input, int input_stride, float * ptFeatures, uint8_t * output, int output_stride, float * bias, float * weights)
+{
+    __m128 t[1];
+    int radius = kernel_size/2;
+
+    t[0] = _mm_load_ps(bias + 0);
+
+    for (int p=-radius; p<=radius; p++)
+    {
+        for (int q=-radius; q<=radius; q++)
+        {
+            float * vec = input + q*input_stride + p*12;
+            __m128 v4, u1, u2, u3, u4, prod1, prod2, prod3, prod4;
+            MM_SSE2_LOAD_V(vec);
+            MM_SSE2_MX_V_MULT(t[0], weights);
+            MM_SSE2_LOAD_V(vec);
+            MM_SSE2_MX_V_MULT(t[0], weights);
+            MM_SSE2_LOAD_V(vec);
+            MM_SSE2_MX_V_MULT(t[0], weights);
+        }
+    }
+    
+    __m128 pv = _mm_load_ps(ptFeatures);
+    t[0] = _mm_add_ps(t[0], pv);
+
+    float c255 = 255;
+    __m128 zero = _mm_setzero_ps();
+    __m128 v255 = _mm_load1_ps(&c255);
+    t[0] = _mm_mul_ps(t[0], v255);
+    t[0] = _mm_max_ps(t[0], zero);
+    t[0] = _mm_min_ps(t[0], v255);
+    __m128i intvalue;
+    uint32_t pixels;
+    uint8_t * pix = ((uint8_t*)&pixels);
+    intvalue = _mm_cvtps_epi32(t[0]);
+    intvalue = _mm_packs_epi32(intvalue,intvalue);
+    intvalue = _mm_packus_epi16(intvalue,intvalue);
+    pixels = _mm_cvtsi128_si32(intvalue);
+    output[0+0] = pix[0];
+    output[0+1] = pix[2];
+    output[output_stride+0] = pix[1];
+    output[output_stride+1] = pix[3];
+}
+#endif
+
+
+void NeuronSW::plxnet_subconvolutional_layer_12(int kernel_size, int scale, float * input, int input_stride, float * ptFeatures, uint8_t * output, int output_stride, float * bias, float * weights)
+{
+#ifdef ADM_CPU_HAS_SIMD
+    if (scale == 2)
+    {
+        return plxnet_subconvolutional_layer_2x_12_SSE(kernel_size, input, input_stride, ptFeatures, output, output_stride, bias, weights);
+    }    
+#endif
+    return plxnet_subconvolutional_layer_C(12, kernel_size, scale, input, input_stride, ptFeatures, output, output_stride, bias, weights);
+    
+}
 
 void NeuronSW::transposeWeights(int features, float * weights, int weightCount)
 {
