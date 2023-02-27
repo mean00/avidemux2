@@ -379,51 +379,69 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
         ADM_warning("Not supported by libVA\n");
         return AV_PIX_FMT_NONE;
     }
-    if(avctx->hw_frames_ctx)
+    if(admLibVA::directTransferSupported())
     {
-        ADM_info("Re-using existing hw frames context.\n");
-        return AV_PIX_FMT_VAAPI;
-    }
-    // Finish intialization of LIBVA decoder
-    AVBufferRef *devRef = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
-    if(!devRef)
-    {
-        ADM_warning("Cannot allocate hw device context\n");
-        return AV_PIX_FMT_NONE;
-    }
+        if(avctx->hw_frames_ctx)
+        {
+            ADM_info("Re-using existing hw frames context.\n");
+            return AV_PIX_FMT_VAAPI;
+        }
+        // Finish intialization of LIBVA decoder
+        AVBufferRef *devRef = av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
+        if(!devRef)
+        {
+            ADM_warning("Cannot allocate hw device context\n");
+            return AV_PIX_FMT_NONE;
+        }
 
-    AVHWDeviceContext *dc = (AVHWDeviceContext *)devRef->data;
-    AVVAAPIDeviceContext *vaCtx = (AVVAAPIDeviceContext *)dc->hwctx;
-    vaCtx->display = admLibVA::getVADisplay();
-    if(av_hwdevice_ctx_init(devRef) < 0)
-    {
-        ADM_warning("Cannot init VA-API device context\n");
-        av_buffer_unref(&devRef);
-        return AV_PIX_FMT_NONE;
-    }
+        AVHWDeviceContext *dc = (AVHWDeviceContext *)devRef->data;
+        AVVAAPIDeviceContext *vaCtx = (AVVAAPIDeviceContext *)dc->hwctx;
+        vaCtx->display = admLibVA::getVADisplay();
+        if(av_hwdevice_ctx_init(devRef) < 0)
+        {
+            ADM_warning("Cannot init VA-API device context\n");
+            av_buffer_unref(&devRef);
+            return AV_PIX_FMT_NONE;
+        }
 
-    AVBufferRef *frameRef = av_hwframe_ctx_alloc(devRef);
-    if(!frameRef)
-    {
-        ADM_warning("Cannot allocate hw frame context\n");
-        av_buffer_unref(&devRef);
-        return AV_PIX_FMT_NONE;
-    }
-    AVHWFramesContext *frameCtx = (AVHWFramesContext *)frameRef->data;
-    frameCtx->format = AV_PIX_FMT_VAAPI;
-    frameCtx->sw_format = (avctx->codec_id == AV_CODEC_ID_VP9)? AV_PIX_FMT_NV12 : AV_PIX_FMT_YUV420P;
-    frameCtx->width = avctx->width;
-    frameCtx->height = avctx->height;
+        AVBufferRef *frameRef = av_hwframe_ctx_alloc(devRef);
+        if(!frameRef)
+        {
+            ADM_warning("Cannot allocate hw frame context\n");
+            av_buffer_unref(&devRef);
+            return AV_PIX_FMT_NONE;
+        }
+        AVHWFramesContext *frameCtx = (AVHWFramesContext *)frameRef->data;
+        frameCtx->format = AV_PIX_FMT_VAAPI;
+        frameCtx->sw_format = (avctx->codec_id == AV_CODEC_ID_VP9)? AV_PIX_FMT_NV12 : AV_PIX_FMT_YUV420P;
+        frameCtx->width = avctx->width;
+        frameCtx->height = avctx->height;
 
-    if(av_hwframe_ctx_init(frameRef) < 0)
+        if(av_hwframe_ctx_init(frameRef) < 0)
+        {
+            ADM_warning("Cannot init VA-API frame context\n");
+            av_buffer_unref(&frameRef);
+            av_buffer_unref(&devRef);
+            return AV_PIX_FMT_NONE;
+        }
+        avctx->hw_frames_ctx = av_buffer_ref(frameRef);
+    }else
     {
-        ADM_warning("Cannot init VA-API frame context\n");
-        av_buffer_unref(&frameRef);
-        av_buffer_unref(&devRef);
-        return AV_PIX_FMT_NONE;
+        if(avctx->hw_device_ctx)
+        {
+            ADM_info("Re-using existing hw device context.\n");
+            return AV_PIX_FMT_VAAPI;
+        }
+        AVBufferRef *hwDevRef = NULL;
+        int err = av_hwdevice_ctx_create(&hwDevRef, AV_HWDEVICE_TYPE_VAAPI, NULL, NULL, 0);
+        if(err < 0)
+        {
+            ADM_error("Cannot initialize VA-API device context.\n");
+            avctx->hw_device_ctx = NULL;
+            return AV_PIX_FMT_NONE;
+        }
+        avctx->hw_device_ctx = av_buffer_ref(hwDevRef);
     }
-
-    avctx->hw_frames_ctx = av_buffer_ref(frameRef);
     return AV_PIX_FMT_VAAPI;
 }
 }
@@ -440,36 +458,52 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
 decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
 : ADM_acceleratedDecoderFF(avctx,parent)
 {
+    int i;
     alive=false;
-    // hw_frames_ctx should have been set up by get_format()
-    if(!_context->hw_frames_ctx)
+    indirectOperation = !admLibVA::directTransferSupported();
+    swframeIdx = 0;
+    for(i = 0; i < NB_SW_FRAMES; i++)
     {
-        ADM_warning("hw_frames_ctx is NULL, cannot use lavc VA-API hw decoder.\n");
-        return;
+        swframes[i] = NULL;
     }
-
-    _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-
-    for(int i=0;i<ADM_DEFAULT_SURFACE;i++)
-        initSurfaceID[i]=VA_INVALID;
-
-    for(int i=0;i<ADM_DEFAULT_SURFACE;i++)
+    // either hw_frames_ctx or hw_device_ctx should have been set up by get_format()
+    if(indirectOperation)
     {
-        ADM_vaSurface *admSurface=allocateADMVaSurface(avctx);
-        if(!admSurface)
+        if(!_context->hw_device_ctx)
         {
-            ADM_warning("Cannot allocate dummy surface\n");
+            ADM_warning("hw_device_ctx is NULL, cannot use lavc VA-API hw decoder.\n");
             return;
         }
-        aprintf("Created initial pool, %d : %x\n",i,admSurface->surface);
-        initSurfaceID[i]=admSurface->surface;
-        vaPool.allSurfaceQueue.append(admSurface);
-        vaPool.freeSurfaceQueue.append(admSurface);
+    }else
+    {
+        if(!_context->hw_frames_ctx)
+        {
+            ADM_warning("hw_frames_ctx is NULL, cannot use lavc VA-API hw decoder.\n");
+            return;
+        }
+
+        for(i = 0; i < ADM_DEFAULT_SURFACE; i++)
+            initSurfaceID[i]=VA_INVALID;
+
+        for(i = 0; i < ADM_DEFAULT_SURFACE; i++)
+        {
+            ADM_vaSurface *admSurface=allocateADMVaSurface(avctx);
+            if(!admSurface)
+            {
+                ADM_warning("Cannot allocate dummy surface\n");
+                return;
+            }
+            aprintf("Created initial pool, %d : %x\n",i,admSurface->surface);
+            initSurfaceID[i]=admSurface->surface;
+            vaPool.allSurfaceQueue.append(admSurface);
+            vaPool.freeSurfaceQueue.append(admSurface);
+        }
+        _context->get_buffer2 = ADM_LIBVAgetBuffer;
     }
-    alive=true;
-    _context->get_buffer2     = ADM_LIBVAgetBuffer;
+    _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     _context->draw_horiz_band = NULL;
-    ADM_info("Successfully setup LIBVA hw accel\n");             
+    alive = true;
+    ADM_info("Successfully setup LIBVA hw accel, %s mode\n", indirectOperation ? "indirect" : "direct");
 }
 
 /**
@@ -490,6 +524,12 @@ decoderFFLIBVA::~decoderFFLIBVA()
     }
     vaPool.freeSurfaceQueue.clear();
     imageMutex.unlock();
+    for(int i = 0; i < NB_SW_FRAMES; i++)
+    {
+        AVFrame *cpy = swframes[i];
+        if(!cpy) continue;
+        av_frame_free(&cpy);
+    }
 }
 /**
  * \fn uncompress
@@ -587,8 +627,53 @@ bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->Pts= (uint64_t)(pts_opaque);        
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->_range=(decodedFrame->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
-    out->refType=ADM_HW_LIBVA;
     out->refDescriptor.refCodec=this;
+
+    if(indirectOperation) // immediately download from hw surface
+    {
+        AVFrame *frame = NULL;
+        if(decodedFrame->format == AV_PIX_FMT_VAAPI)
+        {
+            frame = swframes[swframeIdx];
+            if(!frame)
+            {
+                frame = av_frame_alloc();
+                ADM_assert(frame);
+                swframes[swframeIdx] = frame;
+            }else
+            {
+                av_frame_unref(frame);
+            }
+            swframeIdx++;
+            swframeIdx %= NB_SW_FRAMES;
+
+            int ret = av_hwframe_transfer_data(frame, decodedFrame, 0);
+
+            if(ret)
+            {
+                char er[AV_ERROR_MAX_STRING_SIZE]={0};
+                av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, ret);
+                ADM_error("Error %d downloading from hw surface (\"%s\")\n", ret, er);
+                return false;
+            }
+
+            av_frame_copy_props(frame, decodedFrame);
+        }
+
+        bool swap = false;
+        ADM_pixelFormat pix_fmt;
+        pix_fmt = _parent->admPixFrmtFromLav((AVPixelFormat)frame->format, &swap);
+        if (pix_fmt == ADM_PIXFRMT_INVALID)
+        {
+            printf("[decoderFFLIBVA::uncompress] Unhandled pixel format: %d (%s)\n", frame->format, av_get_pix_fmt_name((AVPixelFormat)frame->format));
+            return false;
+        }
+        out->_pixfrmt = pix_fmt;
+        out->refType = ADM_HW_NONE;
+        _parent->clonePic(frame, out, swap);
+        return true;
+    }
+    // normal operation, keeping decoded picture as hw surface
     ADM_vaSurface *img=(ADM_vaSurface *)(decodedFrame->data[0]);
     out->refDescriptor.refHwImage=img; // the ADM_vaImage in disguise
     markSurfaceUsed(img); // one ref for us too, it will be free when the image is cycled
@@ -596,6 +681,7 @@ bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
+    out->refType = ADM_HW_LIBVA;
     return true;
 }
 

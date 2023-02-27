@@ -13,6 +13,7 @@
  * \class decoderFFLIBVA
  */
 #define ADM_MAX_SURFACE 16+6+1
+#define NB_SW_FRAMES 16
 
 typedef struct 
 {
@@ -27,6 +28,9 @@ friend class ADM_vaSurface;
 protected:
 protected:
                     bool          alive;
+                    bool          indirectOperation;
+                    AVFrame       *swframes[NB_SW_FRAMES];
+                    int           swframeIdx;
                     libvaContext  vaPool;
                     VASurfaceID   initSurfaceID[ADM_DEFAULT_SURFACE];
 

@@ -544,6 +544,13 @@ bool admLibVA::isOperationnal(void)
     return coreLibVAWorking;
 }
 /**
+ * \fn directTransferSupported
+ */
+bool admLibVA::directTransferSupported(void)
+{
+    return ADM_coreLibVA::directOperation;
+}
+/**
  *
  * @param profile
  * @return

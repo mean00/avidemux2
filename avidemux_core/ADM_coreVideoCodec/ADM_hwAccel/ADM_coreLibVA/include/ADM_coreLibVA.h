@@ -72,8 +72,8 @@ static  VAImage    *allocateYV12Image( int w, int h);
 static  void       destroyImage(  VAImage *image);
 static  VAImage    *allocateImage( int w, int h);
 
-
-static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
+static bool        directTransferSupported(void);
+//static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
 
 // Indirect access through image
 static bool        uploadToImage(ADMImage *src,VAImage *dest );
