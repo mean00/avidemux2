@@ -353,7 +353,10 @@ bool GUI_NextFrame(void)
         return false;
 
     if(!admPreview::nextPicture())
+    {
+        UI_showNavigationError(QT_TRANSLATE_NOOP("navigate","next frame"));
         return false;
+    }
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
@@ -375,7 +378,8 @@ bool GUI_NextKeyFrame(void)
 
     if (!admPreview::nextKeyFrame())
       {
-        A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
+        UI_showNavigationError(QT_TRANSLATE_NOOP("navigate","next keyframe"));
+        //A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
         return false;
       }
     GUI_setCurrentFrameAndTime();
@@ -441,7 +445,8 @@ bool GUI_PreviousKeyFrame(void)
 
     if (!admPreview::previousKeyFrame())
       {
-        A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
+        UI_showNavigationError(QT_TRANSLATE_NOOP("navigate","previous keyframe"));
+        //A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
         return false;
       }
     GUI_setCurrentFrameAndTime();
@@ -469,6 +474,7 @@ bool GUI_PrevFrame(void)
       {
 //        We're probably at the beginning of the file ...
 //            GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),    QT_TRANSLATE_NOOP("navigate","Cannot go to previous frame"));
+        UI_showNavigationError(QT_TRANSLATE_NOOP("navigate","previous frame"));
         return false;
       }
     GUI_setCurrentFrameAndTime();

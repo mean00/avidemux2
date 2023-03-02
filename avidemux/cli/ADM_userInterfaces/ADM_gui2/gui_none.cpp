@@ -206,4 +206,8 @@ void UI_getMaximumPreviewSize(uint32_t *availWidth, uint32_t *availHeight)
     *availWidth = 0;
     *availHeight = 0;
 }
+
+void UI_showNavigationError(const char *message)
+{}
+
 // EOF

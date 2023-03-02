@@ -494,6 +494,32 @@ void MainWindow::busyTimerTimeout(void)
 }
 
 /**
+    \fn navigationErrorTimerTick
+*/
+void MainWindow::navigationErrorTimerTick(void)
+{
+    if (ui.stackedNavDisplay->currentIndex() != 1)
+    {
+        navigationErrorTimer.stop();
+        return;
+    }
+    QPalette pal = ui.lineEditNavError->palette();
+    QColor basecolor = pal.color(QPalette::Base);
+    int gr = basecolor.green();
+    int delta = (256-gr)/16;
+    if (delta < 1) delta = 1;
+    gr += delta;
+    if (gr > 255) gr = 255;
+    basecolor.setGreen(gr);
+    pal.setColor(QPalette::Base, basecolor);
+    ui.lineEditNavError->setPalette(pal);
+    if (gr == 255)
+    {
+        ui.stackedNavDisplay->setCurrentIndex(0);
+    }
+}
+
+/**
     \fn actionSlot
 */
 void MainWindow::actionSlot(Action a)
@@ -688,6 +714,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
         
         connect( &dragTimer, SIGNAL(timeout()), this, SLOT(dragTimerTimeout()));
         connect( &busyTimer, SIGNAL(timeout()), this, SLOT(busyTimerTimeout()));
+        connect( &navigationErrorTimer, SIGNAL(timeout()), this, SLOT(navigationErrorTimerTick()));
         connect( &navigateWhilePlayingTimer, SIGNAL(timeout()), this, SLOT(navigateWhilePlayingTimerTimeout()));
     // Navigation
     ui.toolButtonBackOneMinute->installEventFilter(this);
@@ -1407,7 +1434,11 @@ void MainWindow::setMenuItemsEnabledState(void)
     ignoreResizeEvent = true;
     // en passant reset frame type label if no video is loaded
     if(!vid)
+    {
         ui.label_8->setText(QT_TRANSLATE_NOOP("qgui2","?"));
+        navigationErrorTimer.stop();
+        ui.stackedNavDisplay->setCurrentIndex(0);
+    }
 }
 
 /**
@@ -1953,6 +1984,22 @@ void MainWindow::setDarkThemeSlot(bool b)
         delete qset;
         qset = NULL;
     }
+}
+
+/**
+    \fn     showNavigationError
+    \brief  Show navigation error messages.
+*/
+void MainWindow::showNavigationError(const char *message)
+{
+    ui.lineEditNavError->setText(message);
+    QPalette pal = ui.lineEditNavError->palette();
+    pal.setColor(QPalette::Base, QColor(255,128,0,255));
+    pal.setColor(QPalette::Text, QColor(0,0,0));
+    ui.lineEditNavError->setPalette(pal);
+    //ui.lineEditNavError->show();
+    ui.stackedNavDisplay->setCurrentIndex(1);
+    navigationErrorTimer.start(33);
 }
 
 /**
@@ -3062,6 +3109,7 @@ void UI_setTitle(const char *name)
 
 void UI_setFrameType( uint32_t frametype,uint32_t qp)
 {
+    WIDGET(stackedNavDisplay)->setCurrentIndex(0);
     if(frametype == CLEAR_FRAME_TYPE)
     {
         WIDGET(label_8)->clear();
@@ -3519,6 +3567,15 @@ void UI_setAudioTrackCount( int nb )
 #endif
     WIDGET(TrackCountLabel)->setText(text);
 }
+
+/**
+    \fn UI_showNavigationError
+*/
+void UI_showNavigationError(const char *message)
+{
+    ((MainWindow *)QuiMainWindows)->showNavigationError(message);
+}
+
 /**
  * \fn dtor
  */

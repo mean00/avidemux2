@@ -126,6 +126,7 @@ public:
 
     void setLightTheme(void);
     void setDarkTheme(void);
+    void showNavigationError(const char *message);
 
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
@@ -158,6 +159,7 @@ protected:
     unsigned int actionLock;
     unsigned int busyCntr;
     QTimer busyTimer; 
+    QTimer navigationErrorTimer; 
 
     std::vector<QAction *>ActionsAvailableWhenFileLoaded;
     std::vector<QAction *>ActionsDisabledOnPlayback;
@@ -231,6 +233,7 @@ private slots:
 
     void dragTimerTimeout(void);
     void busyTimerTimeout(void);
+    void navigationErrorTimerTick(void);
     void navigateWhilePlayingTimerTimeout(void);
     void sendAction(Action a);
     void navigateWhilePlaying(Action a);

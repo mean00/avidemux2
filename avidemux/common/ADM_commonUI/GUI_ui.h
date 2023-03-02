@@ -57,6 +57,7 @@ void UI_closeGui(void);
 bool UI_getTimeShift(int *onoff,int *value);
 bool UI_setTimeShift(int onoff,int value);
 void UI_setAudioTrackCount( int nb );
+void UI_showNavigationError(const char *message);
 
 /* We need to know whether auto-repeat is firing */
 bool UI_navigationButtonsPressed(void);
