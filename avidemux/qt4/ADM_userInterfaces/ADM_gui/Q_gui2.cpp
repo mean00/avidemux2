@@ -534,7 +534,7 @@ void MainWindow::actionSlot(Action a)
         busyTimer.stop();
         busyCntr++;
         if (!QApplication::overrideCursor())
-            QApplication::setOverrideCursor(Qt::WaitCursor);
+            QApplication::setOverrideCursor(Qt::BusyCursor);
     }
     actionLock++;
     HandleAction(a);
