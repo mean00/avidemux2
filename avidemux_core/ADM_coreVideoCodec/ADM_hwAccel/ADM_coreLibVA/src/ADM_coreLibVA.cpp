@@ -76,6 +76,7 @@ typedef struct {
  bool                   indirectOperationYV12;
  bool                   indirectOperationNV12;
 admLibVA::LIBVA_TRANSFER_MODE    transferMode;
+admLibVA::LIBVA_DRIVER_QUIRK     driverQuirks;
 
  namespace decoders
  {
@@ -485,7 +486,7 @@ bool admLibVA::init(GUI_WindowInfo *x)
     ADM_coreLibVA::decoders::h264=false;
     ADM_coreLibVA::directOperation=true;
     ADM_coreLibVA::transferMode=ADM_LIBVA_NONE;
-
+    ADM_coreLibVA::driverQuirks=ADM_LIBVA_DRIVER_QUIRK_NONE;
     ADM_coreLibVA::decoderConfig *c;
 
 #define INVALIDATE(x) { c=&ADM_coreLibVA::x; c->cid=VA_INVALID; c->min_width=-1; c->min_height=-1; c->max_width=-1; c->max_height=-1; }
@@ -505,7 +506,24 @@ bool admLibVA::init(GUI_WindowInfo *x)
         ADM_warning("VA: init failed\n");
         return false;
     }
-    ADM_info("VA %d.%d, Vendor = %s\n",majv,minv,vaQueryVendorString(ADM_coreLibVA::display));
+
+    const char *vendorString = vaQueryVendorString(ADM_coreLibVA::display);
+    ADM_info("VA %d.%d, Vendor = %s\n",majv,minv,vendorString);
+    if(vendorString)
+    {
+        if(strstr(vendorString, "ubit"))
+        {
+            ADM_coreLibVA::driverQuirks = ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE;
+            ADM_info("Not setting VASurfaceAttribMemoryType attribute when allocating surfaces with this driver.\n");
+        }else if(strstr(vendorString, "Splitted-Desktop Systems VDPAU backend for VA-API"))
+        {
+            ADM_coreLibVA::driverQuirks = ADM_LIBVA_DRIVER_QUIRK_SURFACE_ATTRIBUTES;
+            ADM_info("Not setting any surface attributes with this driver.\n");
+        }else
+        {
+            ADM_info("Using standard behavior with this driver.\n");
+        }
+    }
 
     if(setupConfig() && setupImageFormat())
     {
@@ -786,51 +804,71 @@ bool admLibVA::destroyDecoder(VAContextID session)
  */
 VASurfaceID        admLibVA::allocateSurface(int w, int h, int fmt)
 {
-       int xError;
-       CHECK_WORKING(VA_INVALID);
+    int xError;
+    CHECK_WORKING(VA_INVALID)
 
-       aprintf("Creating surface %d x %d (fmt=%d)\n",w,h,fmt);
-       VASurfaceID s;
-       VASurfaceAttrib attr;
-       attr.type = VASurfaceAttribPixelFormat;
-       attr.flags = VA_SURFACE_ATTRIB_SETTABLE;
-       VAGenericValue gv;
-       gv.type = VAGenericValueTypeInteger;
-       int fcc;
-       switch(fmt)
-       {
-           case VA_RT_FORMAT_YUV420:    fcc = VA_FOURCC_NV12; break;
-           case VA_RT_FORMAT_YUV420_10: fcc = VA_FOURCC_I010; break; // UV swapped?
-           case VA_RT_FORMAT_YUV422:    fcc = VA_FOURCC_422H; break;
-           case VA_RT_FORMAT_YUV444:    fcc = VA_FOURCC_444P; break;
-           case VA_RT_FORMAT_RGB32:     fcc = VA_FOURCC_BGRX; break;
-           default:
-              ADM_warning("Unsupported format 0x%08x requested\n",fmt);
-              return VA_INVALID;
-       }
-       gv.value.i = fcc;
-       attr.value = gv;
-
-        CHECK_ERROR(vaCreateSurfaces(ADM_coreLibVA::display,
-                        fmt,
-                        w,h,
-                        &s,1,
-                        &attr,1));
-
-        if(!xError)
+    aprintf("Creating surface %d x %d (fmt=%d)\n",w,h,fmt);
+    VASurfaceID s;
+    VASurfaceAttrib *attr = NULL;
+    unsigned int nbAttr = 2;
+    switch(ADM_coreLibVA::driverQuirks)
+    {
+        case ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE:
+            nbAttr = 1;
+            break;
+        case ADM_LIBVA_DRIVER_QUIRK_SURFACE_ATTRIBUTES:
+            nbAttr = 0;
+            break;
+        case ADM_LIBVA_DRIVER_QUIRK_NONE:
+        default:break;
+    }
+    if(nbAttr)
+    {
+        int fcc;
+        switch(fmt)
         {
-            surfaceList::iterator already;
-            already=listOfAllocatedSurface.find(s);
-            if(already!=listOfAllocatedSurface.end())
-            {
-                ADM_warning("Doubly allocated va surface\n");
-                ADM_assert(0);
-            }
-            listOfAllocatedSurface[s]=true;
-            return s;
+            case VA_RT_FORMAT_YUV420:    fcc = VA_FOURCC_NV12; break;
+            case VA_RT_FORMAT_YUV420_10: fcc = VA_FOURCC_I010; break; // UV swapped?
+            case VA_RT_FORMAT_YUV422:    fcc = VA_FOURCC_422H; break;
+            case VA_RT_FORMAT_YUV444:    fcc = VA_FOURCC_444P; break;
+            case VA_RT_FORMAT_RGB32:     fcc = VA_FOURCC_BGRX; break;
+            default:
+                ADM_warning("Unsupported format 0x%08x requested\n",fmt);
+                return VA_INVALID;
         }
-        aprintf("Error creating surface\n");
-        return VA_INVALID;
+        attr = (VASurfaceAttrib *)admAlloca(sizeof(VASurfaceAttrib) * nbAttr);
+        attr->type = VASurfaceAttribPixelFormat;
+        attr->flags = VA_SURFACE_ATTRIB_SETTABLE;
+        attr->value.type = VAGenericValueTypeInteger;
+        attr->value.value.i = fcc;
+
+        if(ADM_coreLibVA::driverQuirks != ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE)
+        {
+            attr++;
+            attr->type = VASurfaceAttribMemoryType;
+            attr->flags = VA_SURFACE_ATTRIB_SETTABLE;
+            attr->value.type = VAGenericValueTypeInteger;
+            attr->value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_VA;
+            attr--;
+        }
+    }
+
+    CHECK_ERROR(vaCreateSurfaces(ADM_coreLibVA::display, fmt, w, h, &s, 1, attr, nbAttr))
+
+    if(!xError)
+    {
+        surfaceList::iterator already;
+        already=listOfAllocatedSurface.find(s);
+        if(already!=listOfAllocatedSurface.end())
+        {
+            ADM_warning("Doubly allocated va surface\n");
+            ADM_assert(0);
+        }
+        listOfAllocatedSurface[s]=true;
+        return s;
+    }
+    aprintf("Error creating surface\n");
+    return VA_INVALID;
 }
 /**
  * \fn destroySurface

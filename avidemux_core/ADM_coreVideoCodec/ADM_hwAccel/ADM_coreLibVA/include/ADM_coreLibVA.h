@@ -42,7 +42,11 @@ class admLibVA
 protected:
     static GUI_WindowInfo      myWindowInfo;
 public:
-    
+    typedef enum {
+        ADM_LIBVA_DRIVER_QUIRK_NONE = 0,
+        ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE = 1,
+        ADM_LIBVA_DRIVER_QUIRK_SURFACE_ATTRIBUTES = 2
+    } LIBVA_DRIVER_QUIRK; // see libavutil/hwcontext_vaapi.h
     typedef enum 
     {
         ADM_LIBVA_NONE,
