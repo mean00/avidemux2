@@ -1404,7 +1404,6 @@ void MainWindow::setMenuItemsEnabledState(void)
     ENABLE(Recent, ACT_CLEAR_RECENT, haveRecentItems)
     ENABLE(Recent, ACT_RESTORE_SESSION, A_checkSavedSession(false))
 
-    ui.selectionDuration->setEnabled(vid);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
