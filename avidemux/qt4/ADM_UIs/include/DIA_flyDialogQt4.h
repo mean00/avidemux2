@@ -147,6 +147,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           bool         _bypassFilter;
           bool         _reprocess;
           bool         _gotPic;
+          bool         _darkMode;
 
   public:
           void          *_cookie; // whatever, usually the ui_xxx component
@@ -164,7 +165,6 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
                   uint64_t   getCurrentPts();
           ADM_coreVideoFilter *getUnderlyingFilter() {return _in;}
                   bool        addControl(QHBoxLayout *layout, ControlOption controlOptions = ControlOption::None, QWidget * userWidget = NULL);
-          virtual void        lighten(QGraphicsScene *histogram);
 protected:
   virtual ADM_pixelFormat     toRgbPixFrmt(void);
   virtual void               updateZoom(void) = 0;

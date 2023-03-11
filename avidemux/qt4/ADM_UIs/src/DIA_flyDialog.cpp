@@ -424,17 +424,6 @@ bool ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption co
 }
 
 /**
-    \fn lighten
-    \brief Make background of a histogram easier to read with dark theme
-*/
-void ADM_flyDialog::lighten(QGraphicsScene *hist)
-{
-    QColor base = qobject_cast<QWidget *>(hist->parent())->palette().base().color();
-    if (base.value() < 100)
-        hist->setBackgroundBrush(QBrush(base.lighter(200), Qt::SolidPattern));
-}
-
-/**
     \fn sameImage
 */
 bool ADM_flyDialog::sameImage(bool reprocess)
@@ -872,6 +861,7 @@ void ADM_flyDialogRgb::updateZoom(void)
     _bypassFilter=false;
     _reprocess = true;
     _gotPic = false;
+    _darkMode = _parent->palette().base().color().value() < 128;
 
     QGraphicsScene *sc=new QGraphicsScene(this);
     sc->setBackgroundBrush(QBrush(Qt::darkGray, Qt::SolidPattern));
