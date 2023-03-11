@@ -829,14 +829,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.toolBar,  SIGNAL(orientationChanged(Qt::Orientation)),this,SLOT(toolbarOrientationChangedSlot(Qt::Orientation)));
     //connect(ui.toolBar_2,SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
 
-    QWidget* dummy0 = new QWidget();
-    QWidget* dummy1 = new QWidget();
     QWidget* dummy2 = new QWidget();
     QWidget* dummy3 = new QWidget();
     QWidget* dummy4 = new QWidget();
 
-    ui.codecWidget->setTitleBarWidget(dummy0);
-    ui.navigationWidget->setTitleBarWidget(dummy1);
     ui.selectionWidget->setTitleBarWidget(dummy2);
     ui.volumeWidget->setTitleBarWidget(dummy3);
     ui.audioMeterWidget->setTitleBarWidget(dummy4);
