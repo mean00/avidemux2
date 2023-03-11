@@ -49,7 +49,6 @@
         myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myCrop->setTabOrder();
         myCrop->upload();
-        myCrop->lighten(scene);
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.dial##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
