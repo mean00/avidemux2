@@ -737,13 +737,14 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.selectionMarkerB->setFont(QFont("ADM7SEG"));
 #endif
     ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
-    QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
-    ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
-
     ui.totalTime->setText(text); // Override ui translations here too.
     ui.selectionDuration->setText(text); // Override ui translations here too.
     ui.selectionMarkerA->setText(text); // Override ui translations here too.
     ui.selectionMarkerB->setText(text); // Override ui translations here too.
+
+    // Disabling to not cut off the text when adding action buttons
+    //QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
+    //ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
 
     // Put an edit time button inside the element
     pushButtonTime = ui.currentTime->addAction(QIcon(MKICON(time)), QLineEdit::LeadingPosition);
