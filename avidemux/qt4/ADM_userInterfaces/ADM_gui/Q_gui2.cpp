@@ -420,7 +420,7 @@ void MainWindow::volumeChange( int u )
 
     _upd_in_progres++;
 
-    int vol = ui.horizontalSlider_2->value();
+    int vol = ui.volumeSlider->value();
 
     AVDM_setVolume(vol);
     _upd_in_progres--;
@@ -429,7 +429,7 @@ void MainWindow::volumeChange( int u )
 void MainWindow::audioToggled(bool checked)
 {
     if (checked)
-        AVDM_setVolume(ui.horizontalSlider_2->value());
+        AVDM_setVolume(ui.volumeSlider->value());
     else
         AVDM_setVolume(0);
 }
@@ -674,7 +674,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect( ui.comboBoxAudio,SIGNAL(activated(int)),this,SLOT(comboChanged(int)));
 
     // Slider
-    slider=ui.horizontalSlider;
+    slider=ui.navigationSlider;
         ADM_mwNavSlider *qslider=(ADM_mwNavSlider *)slider;
     slider->setMinimum(0);
     slider->setMaximum(ADM_LARGE_SCALE);
@@ -696,12 +696,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.toolButtonForwardOneMinute->installEventFilter(this);
 
    // Thumb slider
-        ui.sliderPlaceHolder->installEventFilter(this);
-        thumbSlider = new ThumbSlider(ui.sliderPlaceHolder);
+        ui.thumbSliderHolder->installEventFilter(this);
+        thumbSlider = new ThumbSlider(ui.thumbSliderHolder);
         connect(thumbSlider, SIGNAL(valueEmitted(int)), this, SLOT(thumbSlider_valueEmitted(int)));
 
     // Volume slider
-    QSlider *volSlider=ui.horizontalSlider_2;
+    QSlider *volSlider=ui.volumeSlider;
     volSlider->setMinimum(0);
     volSlider->setMaximum(100);
     connect(volSlider,SIGNAL(valueChanged(int)),this,SLOT(volumeChange(int)));
@@ -1409,7 +1409,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     ignoreResizeEvent = true;
     // en passant reset frame type label if no video is loaded
     if(!vid)
-        ui.label_8->setText(QT_TRANSLATE_NOOP("qgui2","?"));
+        ui.frameTypeValue->setText(QT_TRANSLATE_NOOP("qgui2","?"));
 }
 
 /**
@@ -2157,10 +2157,10 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 adjustZoom(os.width(),os.height());
                 break;
             }
-            if (watched == ui.sliderPlaceHolder)
+            if (watched == ui.thumbSliderHolder)
             {
-                thumbSlider->resize(ui.sliderPlaceHolder->width(), 16);
-                thumbSlider->move(0, (ui.sliderPlaceHolder->height() - thumbSlider->height()) / 2);
+                thumbSlider->resize(ui.thumbSliderHolder->width(), 16);
+                thumbSlider->move(0, (ui.thumbSliderHolder->height() - thumbSlider->height()) / 2);
             }
             break;
 
@@ -2734,9 +2734,9 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
                 break;
             default: break;
         }
-        mw->ui.horizontalSlider_2->blockSignals(true);
-        mw->ui.horizontalSlider_2->setValue(qset->value("volume", 100).toInt());
-        mw->ui.horizontalSlider_2->blockSignals(false);
+        mw->ui.volumeSlider->blockSignals(true);
+        mw->ui.volumeSlider->setValue(qset->value("volume", 100).toInt());
+        mw->ui.volumeSlider->blockSignals(false);
         qset->endGroup();
         // Hack: allow to drop other Qt-specific settings on application restart
         char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
@@ -2819,7 +2819,7 @@ void UI_closeGui(void)
         qset->beginGroup("MainWindow");
         qset->setValue("windowState", ((QMainWindow *)QuiMainWindows)->saveState());
         qset->setValue("showMaximized", QuiMainWindows->isMaximized());
-        qset->setValue("volume", WIDGET(horizontalSlider_2)->value());
+        qset->setValue("volume", WIDGET(volumeSlider)->value());
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -3149,7 +3149,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 {
     if(frametype == CLEAR_FRAME_TYPE)
     {
-        WIDGET(label_8)->clear();
+        WIDGET(frameTypeValue)->clear();
         return;
     }
 
@@ -3177,7 +3177,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
         sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s"),c,f);
     else
         sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s (%02d)"),c,f,qp);
-    WIDGET(label_8)->setText(string);
+    WIDGET(frameTypeValue)->setText(string);
 
 }
 /**
