@@ -50,6 +50,7 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
     myCrop->setTabOrder();
     myCrop->upload();
     myCrop->update();
+    myCrop->lighten(scene);
 
     ui.horizontalSliderContrast->setFocus();
 
