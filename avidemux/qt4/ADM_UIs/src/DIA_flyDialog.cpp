@@ -20,6 +20,7 @@
 #include <QLineEdit>
 #include <QFontMetrics>
 #include <QRect>
+#include <QColor>
 
 #include <cmath>
 
@@ -420,6 +421,17 @@ bool ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption co
         buttonList.push_back(userWidget);
 
     return true;
+}
+
+/**
+    \fn lighten
+    \brief Make background of a histogram easier to read with dark theme
+*/
+void ADM_flyDialog::lighten(QGraphicsScene *hist)
+{
+    QColor base = qobject_cast<QWidget *>(hist->parent())->palette().base().color();
+    if (base.value() < 100)
+        hist->setBackgroundBrush(QBrush(base.lighter(200), Qt::SolidPattern));
 }
 
 /**

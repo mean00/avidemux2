@@ -33,6 +33,7 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <QRect>
+#include <QGraphicsScene>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -163,6 +164,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
                   uint64_t   getCurrentPts();
           ADM_coreVideoFilter *getUnderlyingFilter() {return _in;}
                   bool        addControl(QHBoxLayout *layout, ControlOption controlOptions = ControlOption::None, QWidget * userWidget = NULL);
+          virtual void        lighten(QGraphicsScene *histogram);
 protected:
   virtual ADM_pixelFormat     toRgbPixFrmt(void);
   virtual void               updateZoom(void) = 0;
