@@ -159,6 +159,8 @@ static QAction *pushButtonEditMarkerA;
 static QAction *pushButtonEditMarkerB;
 static QAction *pushButtonJumpToMarkerA;
 static QAction *pushButtonJumpToMarkerB;
+static QAction *pushButtonResetMarkerA;
+static QAction *pushButtonResetMarkerB;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -812,6 +814,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonJumpToMarkerB = ui.selectionMarkerB->addAction(QIcon(MKICON(goMarkB)), QLineEdit::LeadingPosition);
     connect(pushButtonJumpToMarkerB,SIGNAL(triggered()),this,SLOT(gotoMarkerB()));
 
+    // Put a reset marker button inside the text elements
+    pushButtonResetMarkerA = ui.selectionMarkerA->addAction(QIcon(MKICON(reset_markA)), QLineEdit::LeadingPosition);
+    connect(pushButtonResetMarkerA,SIGNAL(triggered()),this,SLOT(resetMarkerA()));
+    pushButtonResetMarkerB = ui.selectionMarkerB->addAction(QIcon(MKICON(reset_markB)), QLineEdit::LeadingPosition);
+    connect(pushButtonResetMarkerB,SIGNAL(triggered()),this,SLOT(resetMarkerB()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1432,6 +1440,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonEditMarkerB->setEnabled(false);
         pushButtonJumpToMarkerA->setEnabled(false);
         pushButtonJumpToMarkerB->setEnabled(false);
+        pushButtonResetMarkerA->setEnabled(false);
+        pushButtonResetMarkerB->setEnabled(false);
 
         return;
     }
@@ -1510,6 +1520,8 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonEditMarkerB->setEnabled(vid);
     pushButtonJumpToMarkerA->setEnabled(vid);
     pushButtonJumpToMarkerB->setEnabled(vid);
+    pushButtonResetMarkerA->setEnabled(resetA);
+    pushButtonResetMarkerB->setEnabled(resetB);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1831,6 +1843,14 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Go to Marker B");
     tt += SHORTCUT(ACT_GotoMarkB,Go)
     pushButtonJumpToMarkerB->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Reset Marker A (time 0)");
+    tt += SHORTCUT(ACT_ResetMarkerA,Edit)
+    pushButtonResetMarkerA->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Reset Marker B (total time)");
+    tt += SHORTCUT(ACT_ResetMarkerB,Edit)
+    pushButtonResetMarkerB->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Save tinyPy script");
     pushButtonSaveScript->setToolTip(tt);
@@ -2264,6 +2284,22 @@ void MainWindow::gotoMarkerA(void)
 void MainWindow::gotoMarkerB(void)
 {
     sendAction (ACT_GotoMarkB) ;
+}
+/**
+    \fn resetMarkerA
+    \brief Called to reset the marker A
+*/
+void MainWindow::resetMarkerA(void)
+{
+    sendAction (ACT_ResetMarkerA) ;
+}
+/**
+    \fn resetMarkerB
+    \brief Called to reset the marker B
+*/
+void MainWindow::resetMarkerB(void)
+{
+    sendAction (ACT_ResetMarkerB) ;
 }
 /**
     \fn searchMenu

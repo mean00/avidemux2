@@ -240,6 +240,8 @@ private slots:
     void editMarkerB(void);
     void gotoMarkerA(void);
     void gotoMarkerB(void);
+    void resetMarkerA(void);
+    void resetMarkerB(void);
 
     void buttonPressed(void);
     void toolButtonPressed(bool z);
