@@ -729,12 +729,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     QString text = "00:00:00.000"; // Don't translate this.
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
     ui.currentTime->setFont(QFont("ADM7SEG"));
+    ui.totalTime->setFont(QFont("ADM7SEG"));
 #endif
     ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
     QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
     ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
 
-    text = QString("/ ") + text;
     ui.totalTime->setText(text); // Override ui translations here too.
 
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
@@ -840,6 +840,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     this->adjustSize();
     ui.currentTime->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
+    ui.totalTime->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
 
     threshold = RESIZE_THRESHOLD;
     actZoomCalled = false;
@@ -1710,6 +1711,9 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Current time");
     ui.currentTime->setToolTip(tt);
 
+    tt = QT_TRANSLATE_NOOP("qgui2","Total time");
+    ui.totalTime->setToolTip(tt);
+
     QString backtext, forwardtext, hint = "\n";
     Action actBack, actForward;
 
@@ -1808,6 +1812,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
 
     QApplication::setStyle(defaultStyle);
     ui.currentTime->setTextMargins(0,0,0,0);
+    ui.totalTime->setTextMargins(0,0,0,0);
     QPalette pal = style()->standardPalette();
     qApp->setPalette(pal);
 
@@ -1816,6 +1821,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
     ui.checkBox_TimeShift->setPalette(x); \
     ui.spinBox_TimeValue->setPalette(x); \
     ui.currentTime->setPalette(x); \
+    ui.totalTime->setPalette(x); \
     ui.menuFile->setPalette(x); \
     ui.menuRecent->setPalette(x); \
     ui.menuEdit->setPalette(x); \
@@ -3225,7 +3231,7 @@ void UI_setTotalTime(uint64_t curTime)
  uint32_t shorty=(uint32_t)(curTime/1000);
 
     ms2time(shorty,&hh,&mm,&ss,&ms);
-      sprintf(text, "/ %02d:%02d:%02d.%03d", hh, mm, ss, ms);
+    sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
     WIDGET(totalTime)->setText(text);
     slider->setTotalDuration(curTime);
 }
