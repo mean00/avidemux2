@@ -730,12 +730,14 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
     ui.currentTime->setFont(QFont("ADM7SEG"));
     ui.totalTime->setFont(QFont("ADM7SEG"));
+    ui.selectionDuration->setFont(QFont("ADM7SEG"));
 #endif
     ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
     QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
     ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
 
     ui.totalTime->setText(text); // Override ui translations here too.
+    ui.selectionDuration->setText(text); // Override ui translations here too.
 
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
@@ -841,6 +843,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     this->adjustSize();
     ui.currentTime->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
     ui.totalTime->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
+    ui.selectionDuration->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
 
     threshold = RESIZE_THRESHOLD;
     actZoomCalled = false;
@@ -1714,6 +1717,9 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Total time");
     ui.totalTime->setToolTip(tt);
 
+    tt = QT_TRANSLATE_NOOP("qgui2","Time from Marker A to B");
+    ui.selectionDuration->setToolTip(tt);
+
     QString backtext, forwardtext, hint = "\n";
     Action actBack, actForward;
 
@@ -1813,6 +1819,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
     QApplication::setStyle(defaultStyle);
     ui.currentTime->setTextMargins(0,0,0,0);
     ui.totalTime->setTextMargins(0,0,0,0);
+    ui.selectionDuration->setTextMargins(0,0,0,0);
     QPalette pal = style()->standardPalette();
     qApp->setPalette(pal);
 
@@ -1822,6 +1829,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
     ui.spinBox_TimeValue->setPalette(x); \
     ui.currentTime->setPalette(x); \
     ui.totalTime->setPalette(x); \
+    ui.selectionDuration->setPalette(x); \
     ui.menuFile->setPalette(x); \
     ui.menuRecent->setPalette(x); \
     ui.menuEdit->setPalette(x); \
@@ -3269,8 +3277,7 @@ void UI_setMarkers(uint64_t a, uint64_t b)
     timems=(uint32_t)(b-a);
     ms2time(timems,&hh,&mm,&ss,&ms);
     snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    QString duration=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Selection: "))+QString(text);
-    WIDGET(selectionDuration)->setText(duration);
+    WIDGET(selectionDuration)->setText(text);
 
     slider->setMarkers(absoluteA, absoluteB);
 }
