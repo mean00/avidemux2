@@ -146,7 +146,7 @@ static const MenuEntry _myMenuGo[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Marker A"),      NULL,ACT_GotoMarkA,       MKICON(goMarkA),         "PgUp",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Marker B"),      NULL,ACT_GotoMarkB,       MKICON(goMarkB),         "PgDown",0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY, NULL,NULL,1},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Time"),          NULL,ACT_SelectTime,      NULL,                  "Ctrl+T",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Time"),          NULL,ACT_SelectTime,      MKICON(time),          "Ctrl+T",0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY, NULL,NULL,1},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Backward 1 second"),   NULL,ACT_Back1Second,     MKICON(backward1s),    "Shift+Left",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Forward 1 second"),    NULL,ACT_Forward1Second,  MKICON(forward1s),     "Shift+Right",0},
