@@ -39,6 +39,8 @@ json.addBool("use_alternate_kbd_shortcuts",key->keyboard_shortcuts.use_alternate
 json.addBool("swap_up_down_keys",key->keyboard_shortcuts.swap_up_down_keys);
 json.addString("alt_mark_a",key->keyboard_shortcuts.alt_mark_a);
 json.addString("alt_mark_b",key->keyboard_shortcuts.alt_mark_b);
+json.addString("alt_edit_mark_a",key->keyboard_shortcuts.alt_edit_mark_a);
+json.addString("alt_edit_mark_b",key->keyboard_shortcuts.alt_edit_mark_b);
 json.addString("alt_reset_mark_a",key->keyboard_shortcuts.alt_reset_mark_a);
 json.addString("alt_reset_mark_b",key->keyboard_shortcuts.alt_reset_mark_b);
 json.addString("alt_reset_markers",key->keyboard_shortcuts.alt_reset_markers);

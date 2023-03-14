@@ -29,6 +29,8 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"keyboard_shortcuts.swap_up_down_keys",offsetof(my_prefs_struct,keyboard_shortcuts.swap_up_down_keys),"bool",ADM_param_bool},
  {"keyboard_shortcuts.alt_mark_a",offsetof(my_prefs_struct,keyboard_shortcuts.alt_mark_a),"std::string",ADM_param_stdstring},
  {"keyboard_shortcuts.alt_mark_b",offsetof(my_prefs_struct,keyboard_shortcuts.alt_mark_b),"std::string",ADM_param_stdstring},
+ {"keyboard_shortcuts.alt_edit_mark_a",offsetof(my_prefs_struct,keyboard_shortcuts.alt_edit_mark_a),"std::string",ADM_param_stdstring},
+ {"keyboard_shortcuts.alt_edit_mark_b",offsetof(my_prefs_struct,keyboard_shortcuts.alt_edit_mark_b),"std::string",ADM_param_stdstring},
  {"keyboard_shortcuts.alt_reset_mark_a",offsetof(my_prefs_struct,keyboard_shortcuts.alt_reset_mark_a),"std::string",ADM_param_stdstring},
  {"keyboard_shortcuts.alt_reset_mark_b",offsetof(my_prefs_struct,keyboard_shortcuts.alt_reset_mark_b),"std::string",ADM_param_stdstring},
  {"keyboard_shortcuts.alt_reset_markers",offsetof(my_prefs_struct,keyboard_shortcuts.alt_reset_markers),"std::string",ADM_param_stdstring},
