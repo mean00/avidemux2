@@ -41,7 +41,7 @@ static ADM_Qvumeter *vuWidget = NULL;
 #define BLACK   0xFF000000
 
 #define VU_WIDTH     64
-#define VU_HEIGHT    88
+#define VU_HEIGHT   107
 #define VU_BAR_WIDTH  5
 #define VU_PEAK_WIDTH 7
 #define VU_BOTTOM_SCALE -60.0	// dBFS, must be negative
