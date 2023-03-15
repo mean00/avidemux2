@@ -7,9 +7,9 @@
    viewBox="0 0 100 100"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    sodipodi:docname="goMarkB.svg"
-   inkscape:export-filename="markB.png"
+   inkscape:export-filename="goMarkB.png"
    inkscape:export-xdpi="6.0959997"
    inkscape:export-ydpi="6.0959997"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -42,11 +42,11 @@
      inkscape:document-units="mm"
      showgrid="true"
      width="100mm"
-     inkscape:zoom="1.5322563"
-     inkscape:cx="190.24233"
-     inkscape:cy="181.75811"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:zoom="1.0834688"
+     inkscape:cx="353.49426"
+     inkscape:cy="311.96099"
+     inkscape:window-width="1436"
+     inkscape:window-height="861"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -985,10 +985,10 @@
        style="color-interpolation-filters:sRGB"
        inkscape:label="Lightness-Contrast"
        id="filter7311"
-       x="0"
-       y="0"
-       width="1"
-       height="1">
+       x="-0.010012527"
+       y="-0.021965465"
+       width="1.0200251"
+       height="1.0439309">
       <feColorMatrix
          type="hueRotate"
          values="0"
@@ -1206,6 +1206,18 @@
          cy="50"
          cx="176.85091" />
     </g>
+    <rect
+       x="58.765007"
+       y="84.803329"
+       width="97.059998"
+       height="97.059998"
+       color="#000000"
+       fill="none"
+       opacity="0.6538"
+       stroke-width="0.8323"
+       id="rect43"
+       style="display:inline"
+       transform="translate(2.595099)" />
     <g
        id="g2324"
        transform="translate(2.595099)">
@@ -1232,13 +1244,8 @@
          x="41.456036"
          y="75.35659"
          id="text6826"
-         transform="matrix(0.84710934,0,0,0.86445915,12.439162,6.6293162)"
-         clip-path="url(#clipPath1053-3)"><tspan
-           sodipodi:role="line"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:70.638px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.22222;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-           x="41.456036"
-           y="75.35659"
-           id="tspan1736">B</tspan></text>
+         transform="matrix(0.84710934,0,0,0.86445915,10.427892,6.6293162)"
+         clip-path="url(#clipPath1053-3)">B</text>
     </g>
     <g
        id="g2590"
