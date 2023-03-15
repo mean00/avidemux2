@@ -637,8 +637,8 @@ void * ADMRGB32Scaler::planeWorker(void *argptr)
     }
     
     // resize plane
-    int xs[4]={ADM_IMAGE_ALIGN(arg->srcWidth),0,0,0};
-    int xd[4]={ADM_IMAGE_ALIGN(arg->dstWidth),0,0,0};
+    int xs[4]={static_cast<int>(ADM_IMAGE_ALIGN(arg->srcWidth)),0,0,0};
+    int xd[4]={static_cast<int>(ADM_IMAGE_ALIGN(arg->dstWidth)),0,0,0};
     uint8_t *src[4]={NULL,NULL,NULL,NULL};
     uint8_t *dst[4]={NULL,NULL,NULL,NULL};
     src[0]=arg->iPlane;
