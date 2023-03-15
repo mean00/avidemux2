@@ -23,6 +23,8 @@
         <file>pics/cut.png</file>
         <file>pics/copy.png</file>
         <file>pics/paste.png</file>
+        <file>pics/reset_markA.png</file>
+        <file>pics/reset_markB.png</file>
         <file>pics/next.png</file>
         <file>pics/next_black.png</file>
         <file>pics/next_cut.png</file>
@@ -65,6 +67,8 @@
         <file>pics/cut@2x.png</file>
         <file>pics/copy@2x.png</file>
         <file>pics/paste@2x.png</file>
+        <file>pics/reset_markA@2x.png</file>
+        <file>pics/reset_markB@2x.png</file>
         <file>pics/next_black@2x.png</file>
         <file>pics/next_cut@2x.png</file>
         <file>pics/player_end@2x.png</file>
