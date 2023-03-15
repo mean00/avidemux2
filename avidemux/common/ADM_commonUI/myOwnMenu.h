@@ -72,9 +72,9 @@ static const MenuEntry _myMenuEdit[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Copy"),               NULL,ACT_Copy,          MKICON(copy),"Ctrl+C",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Paste"),              NULL,ACT_Paste,         MKICON(paste),"Ctrl+V",0},
 #ifdef __APPLE__
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete,        NULL,"Backspace",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete,        MKICON(delete_selection),"Backspace",0},
 #else
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete,        NULL,"Delete",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete,        MKICON(delete_selection),"Delete",0},
 #endif
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker A"),       NULL,ACT_MarkA,         MKICON(markA), "Ctrl+PgUp",0},
