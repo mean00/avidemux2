@@ -7,11 +7,11 @@
    viewBox="0 0 100 100"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    sodipodi:docname="goMarkA.svg"
-   inkscape:export-filename="markA2.png"
-   inkscape:export-xdpi="32.512001"
-   inkscape:export-ydpi="32.512001"
+   inkscape:export-filename="goMarkA.png"
+   inkscape:export-xdpi="6.0959997"
+   inkscape:export-ydpi="6.0959997"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -43,11 +43,11 @@
      showgrid="true"
      width="100mm"
      inkscape:zoom="1.5322563"
-     inkscape:cx="61.021124"
-     inkscape:cy="158.91598"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="0"
+     inkscape:cx="168.37914"
+     inkscape:cy="210.80024"
+     inkscape:window-width="716"
+     inkscape:window-height="861"
+     inkscape:window-x="720"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
@@ -1285,10 +1285,10 @@
        style="color-interpolation-filters:sRGB"
        inkscape:label="Lightness-Contrast"
        id="filter7311"
-       x="0"
-       y="0"
-       width="1"
-       height="1">
+       x="-0.010012527"
+       y="-0.021965465"
+       width="1.0200251"
+       height="1.0439309">
       <feColorMatrix
          type="hueRotate"
          values="0"
@@ -1482,9 +1482,20 @@
          cy="50"
          cx="176.85091" />
     </g>
+    <rect
+       x="3.4453681"
+       y="-32.989193"
+       width="97.059998"
+       height="97.059998"
+       color="#000000"
+       fill="none"
+       opacity="0.6538"
+       stroke-width="0.8323"
+       id="rect43"
+       style="display:inline" />
     <g
        id="g2078"
-       transform="translate(2.3373562)">
+       transform="translate(-37.735644)">
       <rect
          style="mix-blend-mode:normal;fill:#010000;fill-opacity:1;stroke:none;stroke-width:2.26569;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke;filter:url(#filter4677)"
          id="rect3991"
@@ -1508,30 +1519,16 @@
          x="41.456036"
          y="75.35659"
          id="text6826"
-         transform="matrix(0.81013241,0,0,0.88349737,13.858674,5.2408136)"
-         clip-path="url(#clipPath1053)"><tspan
-           sodipodi:role="line"
-           id="tspan6824"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:70.638px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.22222;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
-           x="41.456036"
-           y="75.35659">A</tspan></text>
+         transform="matrix(0.81013241,0,0,0.88349737,11.969649,5.2408136)"
+         clip-path="url(#clipPath1053)">A</text>
     </g>
-    <rect
-       x="86.133667"
-       y="104.6555"
-       width="97.059998"
-       height="97.059998"
-       color="#000000"
-       fill="none"
-       opacity="0.6538"
-       stroke-width="0.8323"
-       id="rect43" />
     <g
        id="g2590"
        transform="translate(-0.4580355)">
       <g
          id="g4623"
-         transform="translate(3.5025505,-2.6516693)">
+         transform="matrix(-1,0,0,1,97.413687,-2.6516693)"
+         style="display:inline">
         <path
            sodipodi:type="star"
            style="fill:#001b7b;fill-opacity:1;stroke:#001b7b;stroke-width:38.2035;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter7574)"
