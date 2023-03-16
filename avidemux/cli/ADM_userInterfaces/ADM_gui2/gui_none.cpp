@@ -206,4 +206,12 @@ void UI_getMaximumPreviewSize(uint32_t *availWidth, uint32_t *availHeight)
     *availWidth = 0;
     *availHeight = 0;
 }
+
+void UI_notifyInfo(const char *message, int timeoutMs)
+{}
+void UI_notifyWarning(const char *message, int timeoutMs)
+{}
+void UI_notifyError(const char *message, int timeoutMs)
+{}
+
 // EOF

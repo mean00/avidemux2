@@ -127,6 +127,10 @@ public:
     void setLightTheme(void);
     void setDarkTheme(void);
 
+    void notifyInfo(const char *message, int timeoutMs);
+    void notifyWarning(const char *message, int timeoutMs);
+    void notifyError(const char *message, int timeoutMs);
+
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
 
@@ -257,7 +261,7 @@ private slots:
     void setDefaultThemeSlot(bool b);
     void setLightThemeSlot(bool b);
     void setDarkThemeSlot(bool b);
-
+    
     void closeEvent(QCloseEvent *event)
     {
         printf("Close event!\n");

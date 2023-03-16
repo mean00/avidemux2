@@ -66,6 +66,7 @@
 #include "DIA_defaultAskAvisynthPort.hxx"
 #include "ADM_systemTrayProgress.h"
 #include "../../ADM_update/include/ADM_update.h"
+#include "ADM_notification.h"
 using namespace std;
 
 #define ADM_SLIDER_REFRESH_PERIOD 500
@@ -1955,6 +1956,45 @@ void MainWindow::setDarkThemeSlot(bool b)
     }
 }
 
+
+/**
+    \fn     notifyInfo
+*/
+void MainWindow::notifyInfo(const char *message, int timeoutMs)
+{
+    bool transparent_widget_for_rounded_notification = false;
+    ADM_notification * n = new ADM_notification(this, transparent_widget_for_rounded_notification);
+    n->setStyle(ADM_notification::NOTIFICATION_STYLE::INFO);
+    n->setText(message);
+    n->setDuration(timeoutMs);
+    n->show(ADM_notification::NOTIFICATION_DIRECTION::RIGHT_TO_LEFT);
+}
+/**
+    \fn     notifyWarning
+*/
+void MainWindow::notifyWarning(const char *message, int timeoutMs)
+{
+    bool transparent_widget_for_rounded_notification = false;
+    ADM_notification * n = new ADM_notification(this, transparent_widget_for_rounded_notification);
+    n->setStyle(ADM_notification::NOTIFICATION_STYLE::WARNING);
+    n->setText(message);
+    n->setDuration(timeoutMs);
+    n->show(ADM_notification::NOTIFICATION_DIRECTION::RIGHT_TO_LEFT);
+}
+/**
+    \fn     notifyError
+*/
+void MainWindow::notifyError(const char *message, int timeoutMs)
+{
+    bool transparent_widget_for_rounded_notification = false;
+    ADM_notification * n = new ADM_notification(this, transparent_widget_for_rounded_notification);
+    n->setStyle(ADM_notification::NOTIFICATION_STYLE::ERROR);
+    n->setText(message);
+    n->setDuration(timeoutMs);
+    n->show(ADM_notification::NOTIFICATION_DIRECTION::RIGHT_TO_LEFT);
+}
+
+
 /**
  * \fn checkChanged
  * \brief the checkbox protecting timeshift value has changed
@@ -2153,6 +2193,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
             {
                 QSize os = static_cast<QResizeEvent *>(event)->oldSize();
                 adjustZoom(os.width(),os.height());
+                ADM_notification::updateAllLocations();
                 break;
             }
             if (watched == ui.sliderPlaceHolder)
@@ -3519,6 +3560,29 @@ void UI_setAudioTrackCount( int nb )
 #endif
     WIDGET(TrackCountLabel)->setText(text);
 }
+
+/**
+    \fn UI_notifyInfo
+*/
+void UI_notifyInfo(const char *message, int timeoutMs)
+{
+    ((MainWindow *)QuiMainWindows)->notifyInfo(message, timeoutMs);
+}
+/**
+    \fn UI_notifyWarning
+*/
+void UI_notifyWarning(const char *message, int timeoutMs)
+{
+    ((MainWindow *)QuiMainWindows)->notifyWarning(message, timeoutMs);
+}
+/**
+    \fn UI_notifyError
+*/
+void UI_notifyError(const char *message, int timeoutMs)
+{
+    ((MainWindow *)QuiMainWindows)->notifyError(message, timeoutMs);
+}
+
 /**
  * \fn dtor
  */

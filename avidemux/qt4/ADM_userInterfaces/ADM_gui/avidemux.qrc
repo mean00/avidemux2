@@ -80,6 +80,12 @@
         <file>pics/delete_selection@2x.png</file>
         <file>pics/hdr.png</file>
         <file>pics/hdr@2x.png</file>
+        <file>pics/notify_error.png</file>
+        <file>pics/notify_error@2x.png</file>
+        <file>pics/notify_info.png</file>
+        <file>pics/notify_info@2x.png</file>
+        <file>pics/notify_warning.png</file>
+        <file>pics/notify_warning@2x.png</file>
         <file>fonts/ADM7SEG.ttf</file>
     </qresource>
 </RCC>
