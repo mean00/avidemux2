@@ -35,7 +35,7 @@
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 
-static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again for cannot seek
+static ADMCountdown  NaggingCountDown(250); // Wait 0.25 sec before nagging again for cannot seek
 static void A_timedError(bool *first, const char *s);
 
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
@@ -933,7 +933,8 @@ void A_timedError(bool *first, const char *s)
             return;
         NaggingCountDown.reset();
         *first = false;
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
+        //GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
+        UI_notifyError(s, 2500);
         return;
     }
     NaggingCountDown.reset();
