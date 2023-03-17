@@ -1861,6 +1861,12 @@ void MainWindow::setLightTheme(void)
 {
     QApplication::setStyle(BASIC_QT_STYLE);
     QPalette pal = style()->standardPalette();
+    // FIXME: This is a hack to have dock widgets' resize handle more
+    // visible on light themes.  A better solution would be to change
+    // the resize handle color directly.  In the meantime, a slightly
+    // darker window's color than that of the standard palette is
+    // applied.
+    pal.setColor(QPalette::Window, QColor(167,167,167));
     qApp->setPalette(pal);
 #ifdef BROKEN_PALETTE_PROPAGATION
     PROPAGATE_PALETTE(pal)
