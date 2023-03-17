@@ -40,6 +40,7 @@
 #include "ADM_cpp.h"
 #define MENU_DECLARE
 #include "Q_gui2.h"
+#include "Q_titleBar.h"
 
 #ifdef BROKEN_PALETTE_PROPAGATION
     #include <QAbstractItemView>
@@ -828,6 +829,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.toolBar,  SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
     connect(ui.toolBar,  SIGNAL(orientationChanged(Qt::Orientation)),this,SLOT(toolbarOrientationChangedSlot(Qt::Orientation)));
     //connect(ui.toolBar_2,SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
+
+    TitleBar *codecTitleBar = new TitleBar(ui.codecWidget->windowTitle());
+    ui.codecWidget->setTitleBarWidget(codecTitleBar);
+
+    TitleBar *navigationTitleBar = new TitleBar(ui.navigationWidget->windowTitle());
+    ui.navigationWidget->setTitleBarWidget(navigationTitleBar);
 
     widgetsUpdateTooltips();
 
