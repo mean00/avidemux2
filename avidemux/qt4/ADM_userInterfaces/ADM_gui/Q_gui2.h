@@ -123,7 +123,7 @@ public:
     void setZoomToFit(void);
     void updateZoomIndicator(void);
     void syncToolbarsMenu(void);
-    void addStatusBar(void);
+    void initStatusBar(void);
     void updateStatusBarInfo(void);
     void updateStatusBarDisplayInfo(const char * display);
     void updateStatusBarDecoderInfo(const char * decoder);

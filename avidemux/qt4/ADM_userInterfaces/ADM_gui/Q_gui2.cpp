@@ -1776,6 +1776,7 @@ void MainWindow::widgetsUpdateTooltips(void)
 void MainWindow::restoreDefaultWidgetState(bool b)
 {
     ui.toolBar->setVisible(true);
+    ui.statusBarWidget->setVisible(true);
     ui.codecWidget->setVisible(true);
     ui.navigationWidget->setVisible(true);
     ui.audioMeterWidget->setVisible(true);
@@ -2535,35 +2536,31 @@ void MainWindow::syncToolbarsMenu(void)
 #define EXPAND(x) ui.x ## Widget
 #define CHECKMARK(x,y) ui.menuToolbars->actions().at(x)->setChecked(EXPAND(y)->isVisible());
     ui.menuToolbars->actions().at(0)->setChecked(ui.toolBar->isVisible());
-    CHECKMARK(1,codec)
-    CHECKMARK(2,navigation)
+    CHECKMARK(1,statusBar)
+    CHECKMARK(2,codec)
+    CHECKMARK(3,navigation)
     // separator
-    CHECKMARK(4,audioMeter)
-    CHECKMARK(5,volume)
-    CHECKMARK(6,controls)
-    CHECKMARK(7,selection)
-    CHECKMARK(8,time)
-    CHECKMARK(9,slider)
-    CHECKMARK(10,frameType)
+    CHECKMARK(5,audioMeter)
+    CHECKMARK(6,volume)
+    CHECKMARK(7,controls)
+    CHECKMARK(8,selection)
+    CHECKMARK(9,time)
+    CHECKMARK(10,slider)
+    CHECKMARK(11,frameType)
 #undef CHECKMARK
 #undef EXPAND
 }
 
 /**
-    \fn addStatusBar
-    \brief Add status bar to the main window
+    \fn initStatusBar
+    \brief Initialize the main window's status bar
 */
-void MainWindow::addStatusBar(void)
+void MainWindow::initStatusBar(void)
 {
-    QStatusBar * statusBar = new QStatusBar(this);
-    statusBar->setSizeGripEnabled(false);
-
     this->statusBarInfo = new QLabel("");
-    statusBar->addWidget(this->statusBarInfo);
-
-    statusBar->setContentsMargins(4,0,4,0);
-
-    this->setStatusBar(statusBar);
+    ui.statusBarWidget->setSizeGripEnabled(false);
+    ui.statusBarWidget->addWidget(this->statusBarInfo);
+    ui.statusBarWidget->setContentsMargins(4,0,4,0);
     updateStatusBarInfo();
 }
 
@@ -2811,7 +2808,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
     }
 #endif
     mw->syncToolbarsMenu();
-    mw->addStatusBar();
+    mw->initStatusBar();
 
     return 1;
 }

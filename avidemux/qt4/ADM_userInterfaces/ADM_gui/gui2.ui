@@ -120,6 +120,7 @@
       <string>&amp;Toolbars</string>
      </property>
      <addaction name="actionViewToolBar"/>
+     <addaction name="actionViewStatusBar"/>
      <addaction name="actionViewCodecOptions"/>
      <addaction name="actionViewNavigation"/>
      <addaction name="separator"/>
@@ -1892,6 +1893,7 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusBarWidget"/>
   <action name="actionOpen">
    <property name="icon">
     <iconset resource="avidemux.qrc">
@@ -2035,6 +2037,20 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+N</string>
+   </property>
+  </action>
+  <action name="actionViewStatusBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Status &amp;Bar</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+B</string>
    </property>
   </action>
   <action name="actionViewSlider">
@@ -2271,6 +2287,22 @@
    <sender>actionViewNavigation</sender>
    <signal>toggled(bool)</signal>
    <receiver>navigationWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>79</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionViewStatusBar</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>statusBarWidget</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
