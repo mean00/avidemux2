@@ -70,7 +70,7 @@ static const MenuEntry _myMenuEdit[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Edit"),         NULL,ACT_ResetSegments, NULL,NULL,0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Cut"),                NULL,ACT_Cut,           MKICON(cut),"Ctrl+X",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Copy"),               NULL,ACT_Copy,          MKICON(copy),"Ctrl+C",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Paste"),              NULL,ACT_Paste,         NULL,"Ctrl+V",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Paste"),              NULL,ACT_Paste,         MKICON(paste),"Ctrl+V",0},
 #ifdef __APPLE__
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete,        NULL,"Backspace",0},
 #else
