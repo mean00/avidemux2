@@ -154,6 +154,7 @@ static QAction *pushButtonUndo;
 static QAction *pushButtonRedo;
 static QAction *pushButtonCut;
 static QAction *pushButtonCopy;
+static QAction *pushButtonPaste;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -785,6 +786,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonCopy = ui.selectionDuration->addAction(QIcon(MKICON(copy)), QLineEdit::LeadingPosition);
     connect(pushButtonCopy,SIGNAL(triggered()),this,SLOT(copySelection()));
 
+    // Put a paste button inside the text element
+    pushButtonPaste = ui.selectionDuration->addAction(QIcon(MKICON(paste)), QLineEdit::LeadingPosition);
+    connect(pushButtonPaste,SIGNAL(triggered()),this,SLOT(pasteClipboard()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1406,6 +1411,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonRedo->setEnabled(false);
         pushButtonCut->setEnabled(false);
         pushButtonCopy->setEnabled(false);
+        pushButtonPaste->setEnabled(false);
 
         return;
     }
@@ -1479,6 +1485,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonRedo->setEnabled(redo);
     pushButtonCut->setEnabled(canDelete);
     pushButtonCopy->setEnabled(vid);
+    pushButtonPaste->setEnabled(paste);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1820,6 +1827,10 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Copy selection");
     tt += SHORTCUT(ACT_Copy,Edit)
     pushButtonCopy->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Paste clipboard");
+    tt += SHORTCUT(ACT_Paste,Edit)
+    pushButtonPaste->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Current time");
     ui.currentTime->setToolTip(tt);
@@ -2183,6 +2194,14 @@ void MainWindow::cutSelection(void)
 void MainWindow::copySelection(void)
 {
     sendAction (ACT_Copy) ;
+}
+/**
+    \fn pasteClipboard
+    \brief Called to paste the clipboard
+*/
+void MainWindow::pasteClipboard(void)
+{
+    sendAction (ACT_Paste) ;
 }
 /**
     \fn searchMenu

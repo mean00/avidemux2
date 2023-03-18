@@ -235,6 +235,7 @@ private slots:
     void redoAction(void);
     void cutSelection(void);
     void copySelection(void);
+    void pasteClipboard(void);
 
     void buttonPressed(void);
     void toolButtonPressed(bool z);
