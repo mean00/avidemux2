@@ -233,6 +233,7 @@ private slots:
     void appendAction(void);
     void undoAction(void);
     void redoAction(void);
+    void cutSelection(void);
 
     void buttonPressed(void);
     void toolButtonPressed(bool z);

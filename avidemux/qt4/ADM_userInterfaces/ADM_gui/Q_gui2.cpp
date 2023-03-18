@@ -152,6 +152,7 @@ static QAction *pushButtonRunScript;
 static QAction *pushButtonAppend;
 static QAction *pushButtonUndo;
 static QAction *pushButtonRedo;
+static QAction *pushButtonCut;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -775,6 +776,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonRedo = ui.totalTime->addAction(QIcon(MKICON(redo)), QLineEdit::LeadingPosition);
     connect(pushButtonRedo,SIGNAL(triggered()),this,SLOT(redoAction()));
 
+    // Put a cut button inside the element
+    pushButtonCut = ui.selectionDuration->addAction(QIcon(MKICON(cut)), QLineEdit::LeadingPosition);
+    connect(pushButtonCut,SIGNAL(triggered()),this,SLOT(cutSelection()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1394,6 +1399,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonAppend->setEnabled(false);
         pushButtonUndo->setEnabled(false);
         pushButtonRedo->setEnabled(false);
+        pushButtonCut->setEnabled(false);
 
         return;
     }
@@ -1465,6 +1471,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonAppend->setEnabled(vid);
     pushButtonUndo->setEnabled(undo);
     pushButtonRedo->setEnabled(redo);
+    pushButtonCut->setEnabled(canDelete);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1798,6 +1805,10 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Redo action");
     tt += SHORTCUT(ACT_Redo,Edit)
     pushButtonRedo->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Cut selection");
+    tt += SHORTCUT(ACT_Cut,Edit)
+    pushButtonCut->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Current time");
     ui.currentTime->setToolTip(tt);
@@ -2145,6 +2156,14 @@ void MainWindow::undoAction(void)
 void MainWindow::redoAction(void)
 {
     sendAction (ACT_Redo) ;
+}
+/**
+    \fn cutSelection
+    \brief Called to cut the selection
+*/
+void MainWindow::cutSelection(void)
+{
+    sendAction (ACT_Cut) ;
 }
 /**
     \fn searchMenu
