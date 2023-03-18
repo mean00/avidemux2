@@ -153,6 +153,7 @@ static QAction *pushButtonAppend;
 static QAction *pushButtonUndo;
 static QAction *pushButtonRedo;
 static QAction *pushButtonCut;
+static QAction *pushButtonCopy;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -780,6 +781,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonCut = ui.selectionDuration->addAction(QIcon(MKICON(cut)), QLineEdit::LeadingPosition);
     connect(pushButtonCut,SIGNAL(triggered()),this,SLOT(cutSelection()));
 
+    // Put a copy button inside the text element
+    pushButtonCopy = ui.selectionDuration->addAction(QIcon(MKICON(copy)), QLineEdit::LeadingPosition);
+    connect(pushButtonCopy,SIGNAL(triggered()),this,SLOT(copySelection()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1400,6 +1405,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonUndo->setEnabled(false);
         pushButtonRedo->setEnabled(false);
         pushButtonCut->setEnabled(false);
+        pushButtonCopy->setEnabled(false);
 
         return;
     }
@@ -1472,6 +1478,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonUndo->setEnabled(undo);
     pushButtonRedo->setEnabled(redo);
     pushButtonCut->setEnabled(canDelete);
+    pushButtonCopy->setEnabled(vid);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1809,6 +1816,10 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Cut selection");
     tt += SHORTCUT(ACT_Cut,Edit)
     pushButtonCut->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Copy selection");
+    tt += SHORTCUT(ACT_Copy,Edit)
+    pushButtonCopy->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Current time");
     ui.currentTime->setToolTip(tt);
@@ -2164,6 +2175,14 @@ void MainWindow::redoAction(void)
 void MainWindow::cutSelection(void)
 {
     sendAction (ACT_Cut) ;
+}
+/**
+    \fn copySelection
+    \brief Called to copy the selection
+*/
+void MainWindow::copySelection(void)
+{
+    sendAction (ACT_Copy) ;
 }
 /**
     \fn searchMenu
