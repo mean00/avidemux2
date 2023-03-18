@@ -20,6 +20,7 @@
         <file>pics/markB.png</file>
         <file>pics/undo.png</file>
         <file>pics/redo.png</file>
+        <file>pics/cut.png</file>
         <file>pics/next.png</file>
         <file>pics/next_black.png</file>
         <file>pics/next_cut.png</file>
@@ -59,6 +60,7 @@
         <file>pics/markB@2x.png</file>
         <file>pics/undo@2x.png</file>
         <file>pics/redo@2x.png</file>
+        <file>pics/cut@2x.png</file>
         <file>pics/next_black@2x.png</file>
         <file>pics/next_cut@2x.png</file>
         <file>pics/player_end@2x.png</file>

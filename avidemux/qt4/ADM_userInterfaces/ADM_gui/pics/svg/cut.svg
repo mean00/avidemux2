@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg16890"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="cut.svg"
+   inkscape:export-filename="cut.png"
+   inkscape:export-xdpi="6.0959997"
+   inkscape:export-ydpi="6.0959997"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#">
+  <sodipodi:namedview
+     id="namedview16892"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="1"
+     inkscape:cx="157.5"
+     inkscape:cy="263"
+     inkscape:window-width="1436"
+     inkscape:window-height="861"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg16890">
+    <inkscape:grid
+       type="xygrid"
+       id="grid17382"
+       originx="0"
+       originy="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs16887" />
+  <rect
+     x="1.4700012"
+     y="1.4700012"
+     width="97.059998"
+     height="97.059998"
+     color="#000000"
+     fill="none"
+     opacity="0.6538"
+     stroke-width="0.8323"
+     id="rect43" />
+  <g
+     id="g17814"
+     transform="matrix(0.28488596,-1.0052409,1.0632093,0.26935351,-14.854724,87.876327)"
+     inkscape:label="scissors">
+    <g
+       id="g16880"
+       transform="matrix(-3.8112006,-13.530196,-13.530196,3.8112006,1238.933,-0.97442617)"
+       inkscape:transform-center-x="-3.6359774"
+       inkscape:transform-center-y="-1.5706759"
+       inkscape:label="bottom">
+      <path
+         id="path16874"
+         style="fill:#cccccc;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;stop-color:#000000"
+         d="m 19.964673,79.188965 c 0,0 -0.432489,0.166904 -0.751375,0.507462 -0.303705,0.324347 -0.318844,0.900721 -0.318844,0.900721 v 2.958475 0.33073 a 0.70618886,0.8660121 0 0 1 0.535368,-0.301791 0.70618886,0.8660121 0 0 1 0.534851,0.300757 v -1.399915 z"
+         inkscape:label="blade" />
+      <circle
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;stop-color:#000000"
+         id="circle16876"
+         cx="19.429541"
+         cy="82.608208"
+         r="0.1827134"
+         inkscape:label="screw" />
+      <path
+         id="ellipse172949"
+         style="fill:none;stroke:#000000;stroke-width:0.52916;stroke-dasharray:none;stop-color:#000000"
+         inkscape:label="outset"
+         d="m 19.410156,83.517578 c -1.055398,0.07531 -0.938467,1.991733 0.136989,1.844974 0.915492,-0.193259 0.853211,-1.835062 -0.136989,-1.844974 z" />
+      <path
+         id="ellipse172964"
+         style="fill:none;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;stop-color:#000000"
+         inkscape:label="inset"
+         d="m 19.345703,83.685547 c -0.929417,0.128337 -0.546003,1.875329 0.347904,1.474584 0.602155,-0.296782 0.435587,-1.601772 -0.347904,-1.474584 z" />
+      <ellipse
+         style="fill:none;stroke:#ff0000;stroke-width:0.529167;stroke-dasharray:none;stop-color:#000000"
+         id="ellipse16878"
+         cx="19.429564"
+         cy="84.450661"
+         rx="0.70618886"
+         ry="0.8660121"
+         inkscape:label="handle" />
+    </g>
+    <g
+       id="g16872"
+       transform="matrix(14.056723,0,0,14.056723,-225.93827,-1110.2242)"
+       style="display:inline"
+       inkscape:label="top">
+      <path
+         id="path16835"
+         style="fill:#cccccc;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;stop-color:#000000"
+         d="m 19.964673,79.188965 c 0,0 -0.432489,0.166904 -0.751375,0.507462 -0.303705,0.324347 -0.318844,0.900721 -0.318844,0.900721 v 2.958475 0.33073 a 0.70618886,0.8660121 0 0 1 0.535368,-0.301791 0.70618886,0.8660121 0 0 1 0.534851,0.300757 v -1.399915 z"
+         inkscape:label="blade" />
+      <circle
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;stop-color:#000000"
+         id="path16839"
+         cx="19.429541"
+         cy="82.608208"
+         r="0.1827134"
+         inkscape:label="screw" />
+      <path
+         id="ellipse16882"
+         style="fill:none;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;stop-color:#000000"
+         inkscape:label="outset"
+         d="m 19.410156,83.517578 c -1.055398,0.07531 -0.938467,1.991733 0.136989,1.844974 0.915492,-0.193259 0.853211,-1.835062 -0.136989,-1.844974 z" />
+      <path
+         id="ellipse172981"
+         style="fill:none;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;stop-color:#000000"
+         inkscape:label="inset"
+         d="m 19.345703,83.685547 c -0.929417,0.128337 -0.546003,1.875329 0.347904,1.474584 0.602155,-0.296782 0.435587,-1.601772 -0.347904,-1.474584 z" />
+      <ellipse
+         style="fill:none;stroke:#ff0000;stroke-width:0.529167;stroke-dasharray:none;stop-color:#000000"
+         id="ellipse172983"
+         cx="19.429564"
+         cy="84.450661"
+         rx="0.70618886"
+         ry="0.8660121"
+         inkscape:label="handle" />
+    </g>
+  </g>
+  <metadata
+     id="metadata17384">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>
