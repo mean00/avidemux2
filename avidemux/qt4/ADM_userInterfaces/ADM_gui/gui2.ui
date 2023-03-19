@@ -123,7 +123,7 @@
      <addaction name="actionViewCodecOptions"/>
      <addaction name="actionViewNavigation"/>
      <addaction name="separator"/>
-     <addaction name="actionViewAudioMetre"/>
+     <addaction name="actionViewAudioMeter"/>
      <addaction name="actionViewVolume"/>
      <addaction name="actionViewControls"/>
      <addaction name="actionViewSelection"/>
@@ -825,7 +825,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="audioMetreWidget">
+        <widget class="QFrame" name="audioMeterWidget">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -835,7 +835,7 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
-         <layout class="QHBoxLayout" name="audioMetreWidgetLayout">
+         <layout class="QHBoxLayout" name="audioMeterWidgetLayout">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -852,12 +852,12 @@
            <number>0</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="audioMetreLayout">
+           <layout class="QVBoxLayout" name="audioMeterLayout">
             <property name="spacing">
              <number>0</number>
             </property>
             <item>
-             <spacer name="audioMetreTopSpacer">
+             <spacer name="audioMeterTopSpacer">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -886,7 +886,7 @@
              </widget>
             </item>
             <item>
-             <spacer name="audioMetreBottomSpacer">
+             <spacer name="audioMeterBottomSpacer">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -898,7 +898,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="audioMetreRightSpacer">
+           <spacer name="audioMeterRightSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -2135,7 +2135,7 @@
     <string>Ctrl+Alt+B</string>
    </property>
   </action>
-  <action name="actionViewAudioMetre">
+  <action name="actionViewAudioMeter">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -2143,7 +2143,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Audio Metre</string>
+    <string>&amp;Audio Meter</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+M</string>
@@ -2236,9 +2236,9 @@
  </resources>
  <connections>
   <connection>
-   <sender>actionViewAudioMetre</sender>
+   <sender>actionViewAudioMeter</sender>
    <signal>toggled(bool)</signal>
-   <receiver>audioMetreWidget</receiver>
+   <receiver>audioMeterWidget</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">

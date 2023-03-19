@@ -839,7 +839,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.navigationWidget->setTitleBarWidget(dummy1);
     ui.selectionWidget->setTitleBarWidget(dummy2);
     ui.volumeWidget->setTitleBarWidget(dummy3);
-    ui.audioMetreWidget->setTitleBarWidget(dummy4);
+    ui.audioMeterWidget->setTitleBarWidget(dummy4);
 
     widgetsUpdateTooltips();
 
@@ -1784,7 +1784,7 @@ void MainWindow::restoreDefaultWidgetState(bool b)
     ui.navigationWidget->setVisible(true);
     ui.selectionWidget->setVisible(true);
     ui.volumeWidget->setVisible(true);
-    ui.audioMetreWidget->setVisible(true);
+    ui.audioMeterWidget->setVisible(true);
     ui.toolBar->setVisible(true);
 
     syncToolbarsMenu();
@@ -2466,7 +2466,7 @@ void MainWindow::calcDockWidgetDimensions(uint32_t &width, uint32_t &height)
         reqh += ui.menubar->height();
     if(ui.toolBar->isVisible() && false==ui.toolBar->isFloating() && ui.toolBar->orientation()==Qt::Horizontal)
         reqh += ui.toolBar->frameSize().height();
-    if(ui.navigationWidget->isVisible() || ui.selectionWidget->isVisible() || ui.volumeWidget->isVisible() || ui.audioMetreWidget->isVisible())
+    if(ui.navigationWidget->isVisible() || ui.selectionWidget->isVisible() || ui.volumeWidget->isVisible() || ui.audioMeterWidget->isVisible())
        reqh += ui.navigationWidget->frameSize().height();
     height = reqh;
 }
@@ -2529,7 +2529,7 @@ void MainWindow::syncToolbarsMenu(void)
 {
 #define EXPAND(x) ui.x ## Widget
 #define CHECKMARK(x,y) ui.menuToolbars->actions().at(x)->setChecked(EXPAND(y)->isVisible());
-    CHECKMARK(0,audioMetre)
+    CHECKMARK(0,audioMeter)
     CHECKMARK(1,codec)
     CHECKMARK(2,navigation)
     CHECKMARK(3,selection)
@@ -2745,9 +2745,9 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         delete qset;
         qset = NULL;
         // Probing for OpenGL fails if VU meter is hidden, delay hiding it.
-        vuMeterIsHidden = mw->ui.audioMetreWidget->isHidden();
+        vuMeterIsHidden = mw->ui.audioMeterWidget->isHidden();
         if(openglEnabled && vuMeterIsHidden)
-            mw->ui.audioMetreWidget->setVisible(true);
+            mw->ui.audioMeterWidget->setVisible(true);
     }
 
     QuiMainWindows = (QWidget*)mw;
@@ -2794,7 +2794,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         openGLStarted=true;
         UI_Qt4InitGl();
         if(vuMeterIsHidden)
-            mw->ui.audioMetreWidget->setVisible(false);
+            mw->ui.audioMeterWidget->setVisible(false);
     }else
     {
         ADM_info("OpenGL not activated, not initialized\n");
