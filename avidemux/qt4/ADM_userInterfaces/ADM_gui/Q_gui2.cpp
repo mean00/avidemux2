@@ -150,6 +150,7 @@ static QAction *pushButtonTime;
 static QAction *pushButtonSaveScript;
 static QAction *pushButtonRunScript;
 static QAction *pushButtonAppend;
+static QAction *pushButtonUndo;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -764,6 +765,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     // Put an append button inside the element
     pushButtonAppend = ui.totalTime->addAction(QIcon(MKICON(append)), QLineEdit::LeadingPosition);
     connect(pushButtonAppend,SIGNAL(triggered()),this,SLOT(appendAction()));
+
+    // Put an undo button inside the element
+    pushButtonUndo = ui.totalTime->addAction(QIcon(MKICON(undo)), QLineEdit::LeadingPosition);
+    connect(pushButtonUndo,SIGNAL(triggered()),this,SLOT(undoAction()));
 
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
@@ -1382,6 +1387,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonSaveScript->setEnabled(false);
         pushButtonRunScript->setEnabled(false);
         pushButtonAppend->setEnabled(false);
+        pushButtonUndo->setEnabled(false);
 
         return;
     }
@@ -1451,6 +1457,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonSaveScript->setEnabled(vid && tinyPy);
     pushButtonRunScript->setEnabled(engines);
     pushButtonAppend->setEnabled(vid);
+    pushButtonUndo->setEnabled(undo);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1776,6 +1783,10 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Append media");
     tt += SHORTCUT(ACT_APPEND_VIDEO,File)
     pushButtonAppend->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Undo action");
+    tt += SHORTCUT(ACT_Undo,Edit)
+    pushButtonUndo->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Current time");
     ui.currentTime->setToolTip(tt);
@@ -2107,6 +2118,14 @@ void MainWindow::runScriptAction(void)
 void MainWindow::appendAction(void)
 {
     sendAction (ACT_APPEND_VIDEO) ;
+}
+/**
+    \fn undoAction
+    \brief Called to undo the action
+*/
+void MainWindow::undoAction(void)
+{
+    sendAction (ACT_Undo) ;
 }
 /**
     \fn searchMenu

@@ -231,6 +231,7 @@ private slots:
     void saveScriptAction(void);
     void runScriptAction(void);
     void appendAction(void);
+    void undoAction(void);
 
     void buttonPressed(void);
     void toolButtonPressed(bool z);
