@@ -65,7 +65,7 @@ static const MenuEntry _myMenuRecent[] = {
 std::vector<MenuEntry> myMenuRecent(_myMenuRecent, _myMenuRecent + sizeof(_myMenuRecent) / sizeof(_myMenuRecent[0]));
 
 static const MenuEntry _myMenuEdit[] = {
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Undo"),               NULL,ACT_Undo,          NULL,"Ctrl+Z",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Undo"),               NULL,ACT_Undo,          MKICON(undo),"Ctrl+Z",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Redo"),               NULL,ACT_Redo,          NULL,"Ctrl+Y",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Edit"),         NULL,ACT_ResetSegments, NULL,NULL,0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Cut"),                NULL,ACT_Cut,           NULL,"Ctrl+X",0},
