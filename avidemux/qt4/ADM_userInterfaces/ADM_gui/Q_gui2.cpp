@@ -151,6 +151,7 @@ static QAction *pushButtonSaveScript;
 static QAction *pushButtonRunScript;
 static QAction *pushButtonAppend;
 static QAction *pushButtonUndo;
+static QAction *pushButtonRedo;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -770,6 +771,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonUndo = ui.totalTime->addAction(QIcon(MKICON(undo)), QLineEdit::LeadingPosition);
     connect(pushButtonUndo,SIGNAL(triggered()),this,SLOT(undoAction()));
 
+    // Put a redo button inside the element
+    pushButtonRedo = ui.totalTime->addAction(QIcon(MKICON(redo)), QLineEdit::LeadingPosition);
+    connect(pushButtonRedo,SIGNAL(triggered()),this,SLOT(redoAction()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1388,6 +1393,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonRunScript->setEnabled(false);
         pushButtonAppend->setEnabled(false);
         pushButtonUndo->setEnabled(false);
+        pushButtonRedo->setEnabled(false);
 
         return;
     }
@@ -1458,6 +1464,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonRunScript->setEnabled(engines);
     pushButtonAppend->setEnabled(vid);
     pushButtonUndo->setEnabled(undo);
+    pushButtonRedo->setEnabled(redo);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1787,6 +1794,10 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Undo action");
     tt += SHORTCUT(ACT_Undo,Edit)
     pushButtonUndo->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Redo action");
+    tt += SHORTCUT(ACT_Redo,Edit)
+    pushButtonRedo->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Current time");
     ui.currentTime->setToolTip(tt);
@@ -2126,6 +2137,14 @@ void MainWindow::appendAction(void)
 void MainWindow::undoAction(void)
 {
     sendAction (ACT_Undo) ;
+}
+/**
+    \fn redoAction
+    \brief Called to redo the action
+*/
+void MainWindow::redoAction(void)
+{
+    sendAction (ACT_Redo) ;
 }
 /**
     \fn searchMenu
