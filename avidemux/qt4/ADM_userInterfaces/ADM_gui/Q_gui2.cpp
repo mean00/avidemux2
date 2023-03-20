@@ -149,6 +149,7 @@ static QAction *findActionInToolBar(QToolBar *tb, Action action);
 static QAction *pushButtonTime;
 static QAction *pushButtonSaveScript;
 static QAction *pushButtonRunScript;
+static QAction *pushButtonAppend;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -759,6 +760,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     // Put a run script button inside the element
     pushButtonRunScript = ui.currentTime->addAction(QIcon(MKICON(runscript)), QLineEdit::LeadingPosition);
     connect(pushButtonRunScript,SIGNAL(triggered()),this,SLOT(runScriptAction()));
+
+    // Put an append button inside the element
+    pushButtonAppend = ui.totalTime->addAction(QIcon(MKICON(append)), QLineEdit::LeadingPosition);
+    connect(pushButtonAppend,SIGNAL(triggered()),this,SLOT(appendAction()));
 
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
@@ -1376,6 +1381,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonTime->setEnabled(false);
         pushButtonSaveScript->setEnabled(false);
         pushButtonRunScript->setEnabled(false);
+        pushButtonAppend->setEnabled(false);
 
         return;
     }
@@ -1444,6 +1450,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonTime->setEnabled(vid);
     pushButtonSaveScript->setEnabled(vid && tinyPy);
     pushButtonRunScript->setEnabled(engines);
+    pushButtonAppend->setEnabled(vid);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1765,6 +1772,10 @@ void MainWindow::widgetsUpdateTooltips(void)
 
     tt = QT_TRANSLATE_NOOP("qgui2","Run script/project");
     pushButtonRunScript->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Append media");
+    tt += SHORTCUT(ACT_APPEND_VIDEO,File)
+    pushButtonAppend->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Current time");
     ui.currentTime->setToolTip(tt);
@@ -2088,6 +2099,14 @@ void MainWindow::saveScriptAction(void)
 void MainWindow::runScriptAction(void)
 {
     sendAction (ACT_RUN_SCRIPT) ;
+}
+/**
+    \fn appendAction
+    \brief Called to append a mendia
+*/
+void MainWindow::appendAction(void)
+{
+    sendAction (ACT_APPEND_VIDEO) ;
 }
 /**
     \fn searchMenu
