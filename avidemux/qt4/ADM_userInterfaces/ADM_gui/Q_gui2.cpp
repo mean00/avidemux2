@@ -1122,6 +1122,12 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                                     case ACT_MarkB:
                                         prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_B,sc);
                                         break;
+                                    case ACT_SelectMarkerA:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_A,sc);
+                                        break;
+                                    case ACT_SelectMarkerB:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_B,sc);
+                                        break;
                                     case ACT_ResetMarkerA:
                                         prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARK_A,sc);
                                         break;
@@ -1482,6 +1488,8 @@ void MainWindow::setMenuItemsEnabledState(void)
     ENABLE(Edit, ACT_Redo, redo)
     ENABLE(Edit, ACT_ResetSegments, vid)
     // TODO: Detect that segment layout matches the default one and disable "Reset Edit" then too.
+    ENABLE(Edit, ACT_SelectMarkerA, vid)
+    ENABLE(Edit, ACT_SelectMarkerB, vid)
     ENABLE(Edit, ACT_ResetMarkerA, resetA)
     ENABLE(Edit, ACT_ResetMarkerB, resetB)
     ENABLE(Edit, ACT_ResetMarkers, (resetA || resetB))
@@ -1660,6 +1668,8 @@ void MainWindow::updateActionShortcuts(void)
             case ACT_Delete:
             case ACT_MarkA:
             case ACT_MarkB:
+            case ACT_SelectMarkerA:
+            case ACT_SelectMarkerB:
             case ACT_ResetMarkerA:
             case ACT_ResetMarkerB:
             case ACT_ResetMarkers:
@@ -1705,6 +1715,12 @@ void MainWindow::updateActionShortcuts(void)
                     break;
                 case ACT_MarkB:
                     prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_B,sc);
+                    break;
+                case ACT_SelectMarkerA:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_A,sc);
+                    break;
+                case ACT_SelectMarkerB:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_B,sc);
                     break;
                 case ACT_ResetMarkerA:
                     prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARK_A,sc);
@@ -1831,9 +1847,11 @@ void MainWindow::widgetsUpdateTooltips(void)
     pushButtonTime->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Edit Marker A");
+    tt += SHORTCUT(ACT_SelectMarkerA,Edit)
     pushButtonEditMarkerA->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Edit Marker B");
+    tt += SHORTCUT(ACT_SelectMarkerB,Edit)
     pushButtonEditMarkerB->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Go to Marker A");

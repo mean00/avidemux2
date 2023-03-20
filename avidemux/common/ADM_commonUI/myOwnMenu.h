@@ -79,6 +79,8 @@ static const MenuEntry _myMenuEdit[] = {
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker A"),       NULL,ACT_MarkA,         MKICON(markA), "Ctrl+PgUp",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker B"),       NULL,ACT_MarkB,         MKICON(markB), "Ctrl+PgDown",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Edit Marker A"),      NULL,ACT_SelectMarkerA, MKICON(time), "Ctrl+Alt+PgUp",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Edit Marker B"),      NULL,ACT_SelectMarkerB, MKICON(time), "Ctrl+Alt+PgDown",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Marker A"),     NULL,ACT_ResetMarkerA,  MKICON(reset_markA),"Ctrl+Shift+PgUp",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Marker B"),     NULL,ACT_ResetMarkerB,  MKICON(reset_markB),"Ctrl+Shift+PgDown",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Markers"),      NULL,ACT_ResetMarkers,  NULL,"Ctrl+Home",0},
