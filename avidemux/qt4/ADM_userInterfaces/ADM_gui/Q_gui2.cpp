@@ -155,6 +155,8 @@ static QAction *pushButtonRedo;
 static QAction *pushButtonCut;
 static QAction *pushButtonCopy;
 static QAction *pushButtonPaste;
+static QAction *pushButtonEditMarkerA;
+static QAction *pushButtonEditMarkerB;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -796,6 +798,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonPaste = ui.selectionDuration->addAction(QIcon(MKICON(paste)), QLineEdit::LeadingPosition);
     connect(pushButtonPaste,SIGNAL(triggered()),this,SLOT(pasteClipboard()));
 
+    // Put an edit marker button inside the text elements
+    pushButtonEditMarkerA = ui.selectionMarkerA->addAction(QIcon(MKICON(time)), QLineEdit::LeadingPosition);
+    connect(pushButtonEditMarkerA,SIGNAL(triggered()),this,SLOT(editMarkerA()));
+    pushButtonEditMarkerB = ui.selectionMarkerB->addAction(QIcon(MKICON(time)), QLineEdit::LeadingPosition);
+    connect(pushButtonEditMarkerB,SIGNAL(triggered()),this,SLOT(editMarkerB()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1418,6 +1426,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonCut->setEnabled(false);
         pushButtonCopy->setEnabled(false);
         pushButtonPaste->setEnabled(false);
+        pushButtonEditMarkerA->setEnabled(false);
+        pushButtonEditMarkerB->setEnabled(false);
 
         return;
     }
@@ -1492,6 +1502,8 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonCut->setEnabled(canDelete);
     pushButtonCopy->setEnabled(vid);
     pushButtonPaste->setEnabled(paste);
+    pushButtonEditMarkerA->setEnabled(vid);
+    pushButtonEditMarkerB->setEnabled(vid);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1799,6 +1811,12 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Go to Time");
     tt += SHORTCUT(ACT_SelectTime,Go)
     pushButtonTime->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Edit Marker A");
+    pushButtonEditMarkerA->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Edit Marker B");
+    pushButtonEditMarkerB->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Go to marker A");
     tt += SHORTCUT(ACT_GotoMarkA,Go)
@@ -2208,6 +2226,22 @@ void MainWindow::copySelection(void)
 void MainWindow::pasteClipboard(void)
 {
     sendAction (ACT_Paste) ;
+}
+/**
+    \fn editMarkerA
+    \brief Called to edit the marker A
+*/
+void MainWindow::editMarkerA(void)
+{
+    sendAction (ACT_SelectMarkerA) ;
+}
+/**
+    \fn editMarkerB
+    \brief Called to edit the marker B
+*/
+void MainWindow::editMarkerB(void)
+{
+    sendAction (ACT_SelectMarkerB) ;
 }
 /**
     \fn searchMenu
