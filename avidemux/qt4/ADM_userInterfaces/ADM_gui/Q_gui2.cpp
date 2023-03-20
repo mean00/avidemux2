@@ -731,6 +731,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.currentTime->setFont(QFont("ADM7SEG"));
     ui.totalTime->setFont(QFont("ADM7SEG"));
     ui.selectionDuration->setFont(QFont("ADM7SEG"));
+    ui.selectionMarkerA->setFont(QFont("ADM7SEG"));
+    ui.selectionMarkerB->setFont(QFont("ADM7SEG"));
 #endif
     ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
     QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
@@ -738,6 +740,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     ui.totalTime->setText(text); // Override ui translations here too.
     ui.selectionDuration->setText(text); // Override ui translations here too.
+    ui.selectionMarkerA->setText(text); // Override ui translations here too.
+    ui.selectionMarkerB->setText(text); // Override ui translations here too.
 
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
@@ -844,6 +848,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.currentTime->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
     ui.totalTime->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
     ui.selectionDuration->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
+    ui.selectionMarkerA->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
+    ui.selectionMarkerB->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
 
     threshold = RESIZE_THRESHOLD;
     actZoomCalled = false;
@@ -1720,6 +1726,12 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Time from Marker A to B");
     ui.selectionDuration->setToolTip(tt);
 
+    tt = QT_TRANSLATE_NOOP("qgui2","Marker A");
+    ui.selectionMarkerA->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Marker B");
+    ui.selectionMarkerB->setToolTip(tt);
+
     QString backtext, forwardtext, hint = "\n";
     Action actBack, actForward;
 
@@ -1820,6 +1832,8 @@ void MainWindow::setDefaultThemeSlot(bool b)
     ui.currentTime->setTextMargins(0,0,0,0);
     ui.totalTime->setTextMargins(0,0,0,0);
     ui.selectionDuration->setTextMargins(0,0,0,0);
+    ui.selectionMarkerA->setTextMargins(0,0,0,0);
+    ui.selectionMarkerB->setTextMargins(0,0,0,0);
     QPalette pal = style()->standardPalette();
     qApp->setPalette(pal);
 
@@ -1830,6 +1844,8 @@ void MainWindow::setDefaultThemeSlot(bool b)
     ui.currentTime->setPalette(x); \
     ui.totalTime->setPalette(x); \
     ui.selectionDuration->setPalette(x); \
+    ui.selectionMarkerA->setPalette(x); \
+    ui.selectionMarkerB->setPalette(x); \
     ui.menuFile->setPalette(x); \
     ui.menuRecent->setPalette(x); \
     ui.menuEdit->setPalette(x); \
@@ -3267,12 +3283,12 @@ void UI_setMarkers(uint64_t a, uint64_t b)
     timems=(uint32_t)(a);
     ms2time(timems,&hh,&mm,&ss,&ms);
     snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    WIDGET(pushButtonJumpToMarkerA)->setText(text);
+    WIDGET(selectionMarkerA)->setText(text);
 
     timems=(uint32_t)(b);
     ms2time(timems,&hh,&mm,&ss,&ms);
     snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    WIDGET(pushButtonJumpToMarkerB)->setText(text);
+    WIDGET(selectionMarkerB)->setText(text);
 
     timems=(uint32_t)(b-a);
     ms2time(timems,&hh,&mm,&ss,&ms);
