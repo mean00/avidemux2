@@ -375,7 +375,8 @@ bool GUI_NextKeyFrame(void)
 
     if (!admPreview::nextKeyFrame())
       {
-        A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
+        UI_notifyError(QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"),2500);
+        //A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
         return false;
       }
     GUI_setCurrentFrameAndTime();
@@ -441,7 +442,8 @@ bool GUI_PreviousKeyFrame(void)
 
     if (!admPreview::previousKeyFrame())
       {
-        A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
+        UI_notifyError(QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"),2500);
+        //A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
         return false;
       }
     GUI_setCurrentFrameAndTime();
