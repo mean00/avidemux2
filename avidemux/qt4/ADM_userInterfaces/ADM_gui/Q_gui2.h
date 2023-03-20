@@ -229,6 +229,7 @@ private slots:
 
     void seekTime(void);
     void saveScriptAction(void);
+    void runScriptAction(void);
 
     void buttonPressed(void);
     void toolButtonPressed(bool z);

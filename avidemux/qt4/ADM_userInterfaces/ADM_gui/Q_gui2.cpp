@@ -148,6 +148,7 @@ static QAction *findActionInToolBar(QToolBar *tb, Action action);
 
 static QAction *pushButtonTime;
 static QAction *pushButtonSaveScript;
+static QAction *pushButtonRunScript;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -755,6 +756,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonSaveScript = ui.currentTime->addAction(QIcon(MKICON(savescript)), QLineEdit::LeadingPosition);
     connect(pushButtonSaveScript,SIGNAL(triggered()),this,SLOT(saveScriptAction()));
 
+    // Put a run script button inside the element
+    pushButtonRunScript = ui.currentTime->addAction(QIcon(MKICON(runscript)), QLineEdit::LeadingPosition);
+    connect(pushButtonRunScript,SIGNAL(triggered()),this,SLOT(runScriptAction()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1327,11 +1332,14 @@ void MainWindow::buildButtonLists(void)
 */
 void MainWindow::setMenuItemsEnabledState(void)
 {
+    bool engines = false;
     bool tinyPy = false;
 
     // Implementation of getPythonScriptEngine()
     if(_scriptEngines.size() > 0)
     {
+        engines = true;
+
         for(int i = 0; i < _scriptEngines.size(); i++)
         {
             if (!_scriptEngines[i]->defaultFileExtension().compare("py"))
@@ -1367,6 +1375,7 @@ void MainWindow::setMenuItemsEnabledState(void)
 
         pushButtonTime->setEnabled(false);
         pushButtonSaveScript->setEnabled(false);
+        pushButtonRunScript->setEnabled(false);
 
         return;
     }
@@ -1434,6 +1443,7 @@ void MainWindow::setMenuItemsEnabledState(void)
 
     pushButtonTime->setEnabled(vid);
     pushButtonSaveScript->setEnabled(vid && tinyPy);
+    pushButtonRunScript->setEnabled(engines);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1753,6 +1763,9 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Save tinyPy script");
     pushButtonSaveScript->setToolTip(tt);
 
+    tt = QT_TRANSLATE_NOOP("qgui2","Run script/project");
+    pushButtonRunScript->setToolTip(tt);
+
     tt = QT_TRANSLATE_NOOP("qgui2","Current time");
     ui.currentTime->setToolTip(tt);
 
@@ -2067,6 +2080,14 @@ void MainWindow::seekTime(void)
 void MainWindow::saveScriptAction(void)
 {
     sendAction (ACT_SAVE_PY_SCRIPT) ;
+}
+/**
+    \fn runScriptAction
+    \brief Called to run a script (aka project)
+*/
+void MainWindow::runScriptAction(void)
+{
+    sendAction (ACT_RUN_SCRIPT) ;
 }
 /**
     \fn searchMenu
