@@ -1707,6 +1707,9 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt += SHORTCUT(ACT_GotoMarkB,Go)
     ui.pushButtonJumpToMarkerB->setToolTip(tt);
 
+    tt = QT_TRANSLATE_NOOP("qgui2","Current time");
+    ui.currentTime->setToolTip(tt);
+
     QString backtext, forwardtext, hint = "\n";
     Action actBack, actForward;
 
