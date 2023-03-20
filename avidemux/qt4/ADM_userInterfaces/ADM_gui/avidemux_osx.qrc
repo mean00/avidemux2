@@ -5,6 +5,7 @@
         <file>pics/avidemux.icns</file>
         <file>pics/back.png</file>
         <file>pics/calc.png</file>
+        <file>pics/append.png</file>
         <file>pics/fileopen.png</file>
         <file>pics/filesave.png</file>
         <file>pics/filesaveas.png</file>
@@ -40,6 +41,7 @@
         <file>pics/volume_off.png</file>
         <file>pics/back@2x.png</file>
         <file>pics/backward1mn@2x.png</file>
+        <file>pics/append@2x.png</file>
         <file>pics/fileopen@2x.png</file>
         <file>pics/filesave@2x.png</file>
         <file>pics/forward1mn@2x.png</file>
