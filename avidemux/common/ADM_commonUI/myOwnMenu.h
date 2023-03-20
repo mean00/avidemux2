@@ -34,7 +34,7 @@ typedef struct
 #ifdef MENU_DECLARE
 static const MenuEntry _myMenuFile[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Open"),               NULL,ACT_OPEN_VIDEO,    MKICON(fileopen),"Ctrl+O",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Append"),             NULL,ACT_APPEND_VIDEO,  NULL,"Ctrl+A",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Append"),             NULL,ACT_APPEND_VIDEO,  MKICON(append),"Ctrl+A",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Save"),               NULL,ACT_SAVE_VIDEO,    MKICON(filesave),"Ctrl+S",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Queue"),              NULL,ACT_SAVE_QUEUE,    NULL,"Ctrl+U",0},
             {MENU_SUBMENU,QT_TRANSLATE_NOOP("adm","Save as Image"),     NULL,ACT_DUMMY,         NULL,NULL,0},
