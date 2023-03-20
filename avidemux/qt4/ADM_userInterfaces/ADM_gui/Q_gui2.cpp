@@ -157,6 +157,8 @@ static QAction *pushButtonCopy;
 static QAction *pushButtonPaste;
 static QAction *pushButtonEditMarkerA;
 static QAction *pushButtonEditMarkerB;
+static QAction *pushButtonJumpToMarkerA;
+static QAction *pushButtonJumpToMarkerB;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -804,6 +806,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonEditMarkerB = ui.selectionMarkerB->addAction(QIcon(MKICON(time)), QLineEdit::LeadingPosition);
     connect(pushButtonEditMarkerB,SIGNAL(triggered()),this,SLOT(editMarkerB()));
 
+    // Put a jump marker button inside the text elements
+    pushButtonJumpToMarkerA = ui.selectionMarkerA->addAction(QIcon(MKICON(goMarkA)), QLineEdit::LeadingPosition);
+    connect(pushButtonJumpToMarkerA,SIGNAL(triggered()),this,SLOT(gotoMarkerA()));
+    pushButtonJumpToMarkerB = ui.selectionMarkerB->addAction(QIcon(MKICON(goMarkB)), QLineEdit::LeadingPosition);
+    connect(pushButtonJumpToMarkerB,SIGNAL(triggered()),this,SLOT(gotoMarkerB()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1356,12 +1364,6 @@ void MainWindow::buildButtonLists(void)
 #define ADD_PUSHBUTTON_LOADED(x)    PushButtonsAvailableWhenFileLoaded.push_back(ui.x);
 #define ADD_PUSHBUTTON_PLAYBACK(x)    PushButtonsDisabledOnPlayback.push_back(ui.x);
 
-    ADD_PUSHBUTTON_LOADED(pushButtonJumpToMarkerA)
-    ADD_PUSHBUTTON_LOADED(pushButtonJumpToMarkerB)
-
-    ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerA)
-    ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerB)
-
     ADD_PUSHBUTTON_PLAYBACK(pushButtonDecoderConf)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoConf)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoFilter)
@@ -1428,6 +1430,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonPaste->setEnabled(false);
         pushButtonEditMarkerA->setEnabled(false);
         pushButtonEditMarkerB->setEnabled(false);
+        pushButtonJumpToMarkerA->setEnabled(false);
+        pushButtonJumpToMarkerB->setEnabled(false);
 
         return;
     }
@@ -1504,6 +1508,8 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonPaste->setEnabled(paste);
     pushButtonEditMarkerA->setEnabled(vid);
     pushButtonEditMarkerB->setEnabled(vid);
+    pushButtonJumpToMarkerA->setEnabled(vid);
+    pushButtonJumpToMarkerB->setEnabled(vid);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1818,13 +1824,13 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Edit Marker B");
     pushButtonEditMarkerB->setToolTip(tt);
 
-    tt = QT_TRANSLATE_NOOP("qgui2","Go to marker A");
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to Marker A");
     tt += SHORTCUT(ACT_GotoMarkA,Go)
-    ui.pushButtonJumpToMarkerA->setToolTip(tt);
+    pushButtonJumpToMarkerA->setToolTip(tt);
 
-    tt = QT_TRANSLATE_NOOP("qgui2","Go to marker B");
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to Marker B");
     tt += SHORTCUT(ACT_GotoMarkB,Go)
-    ui.pushButtonJumpToMarkerB->setToolTip(tt);
+    pushButtonJumpToMarkerB->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Save tinyPy script");
     pushButtonSaveScript->setToolTip(tt);
@@ -2242,6 +2248,22 @@ void MainWindow::editMarkerA(void)
 void MainWindow::editMarkerB(void)
 {
     sendAction (ACT_SelectMarkerB) ;
+}
+/**
+    \fn gotoMarkerA
+    \brief Called to jump to the marker A in the player
+*/
+void MainWindow::gotoMarkerA(void)
+{
+    sendAction (ACT_GotoMarkA) ;
+}
+/**
+    \fn gotoMarkerB
+    \brief Called to jump to the marker B in the player
+*/
+void MainWindow::gotoMarkerB(void)
+{
+    sendAction (ACT_GotoMarkB) ;
 }
 /**
     \fn searchMenu

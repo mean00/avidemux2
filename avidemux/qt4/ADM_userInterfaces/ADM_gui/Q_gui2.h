@@ -238,6 +238,8 @@ private slots:
     void pasteClipboard(void);
     void editMarkerA(void);
     void editMarkerB(void);
+    void gotoMarkerA(void);
+    void gotoMarkerB(void);
 
     void buttonPressed(void);
     void toolButtonPressed(bool z);
