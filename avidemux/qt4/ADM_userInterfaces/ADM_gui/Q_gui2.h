@@ -228,6 +228,7 @@ private slots:
     void comboChanged(int z);
 
     void seekTime(void);
+    void saveScriptAction(void);
 
     void buttonPressed(void);
     void toolButtonPressed(bool z);

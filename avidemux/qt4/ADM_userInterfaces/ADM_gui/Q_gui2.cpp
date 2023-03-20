@@ -147,6 +147,7 @@ static QAction *findAction(std::vector<MenuEntry> *list, Action action);
 static QAction *findActionInToolBar(QToolBar *tb, Action action);
 
 static QAction *pushButtonTime;
+static QAction *pushButtonSaveScript;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -750,6 +751,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonTime = ui.currentTime->addAction(QIcon(MKICON(time)), QLineEdit::LeadingPosition);
     connect(pushButtonTime,SIGNAL(triggered()),this,SLOT(seekTime()));
 
+    // Put a save script button inside the element
+    pushButtonSaveScript = ui.currentTime->addAction(QIcon(MKICON(savescript)), QLineEdit::LeadingPosition);
+    connect(pushButtonSaveScript,SIGNAL(triggered()),this,SLOT(saveScriptAction()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1322,6 +1327,21 @@ void MainWindow::buildButtonLists(void)
 */
 void MainWindow::setMenuItemsEnabledState(void)
 {
+    bool tinyPy = false;
+
+    // Implementation of getPythonScriptEngine()
+    if(_scriptEngines.size() > 0)
+    {
+        for(int i = 0; i < _scriptEngines.size(); i++)
+        {
+            if (!_scriptEngines[i]->defaultFileExtension().compare("py"))
+            {
+                tinyPy = true;
+                break;
+            }
+        }
+    }
+
     if(playing || (navigateWhilePlayingState != 0)) // this actually doesn't work as it should
     {
         int n=ActionsDisabledOnPlayback.size();
@@ -1346,6 +1366,7 @@ void MainWindow::setMenuItemsEnabledState(void)
             slider->setEnabled(false);
 
         pushButtonTime->setEnabled(false);
+        pushButtonSaveScript->setEnabled(false);
 
         return;
     }
@@ -1412,6 +1433,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     ENABLE(Recent, ACT_RESTORE_SESSION, A_checkSavedSession(false))
 
     pushButtonTime->setEnabled(vid);
+    pushButtonSaveScript->setEnabled(vid && tinyPy);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1728,6 +1750,9 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt += SHORTCUT(ACT_GotoMarkB,Go)
     ui.pushButtonJumpToMarkerB->setToolTip(tt);
 
+    tt = QT_TRANSLATE_NOOP("qgui2","Save tinyPy script");
+    pushButtonSaveScript->setToolTip(tt);
+
     tt = QT_TRANSLATE_NOOP("qgui2","Current time");
     ui.currentTime->setToolTip(tt);
 
@@ -2034,6 +2059,14 @@ void MainWindow::timeChanged(int)
 void MainWindow::seekTime(void)
 {
     sendAction (ACT_SelectTime) ;
+}
+/**
+    \fn saveScriptAction
+    \brief Called to save the project as a script
+*/
+void MainWindow::saveScriptAction(void)
+{
+    sendAction (ACT_SAVE_PY_SCRIPT) ;
 }
 /**
     \fn searchMenu
