@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <QPalette>
 #include <QColor>
+#include <QStatusBar>
 #if QT_VERSION < QT_VERSION_CHECK(5,11,0)
 #   include <QDesktopWidget>
 #else
@@ -2372,6 +2373,7 @@ void MainWindow::updateZoomIndicator(void)
         return;
     percent *= 100;
     percent += 0.49;
+    updateStatusBarZoomInfo((int)percent);
 
     QString s = QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Zoom: "));
 
@@ -2396,6 +2398,7 @@ void MainWindow::updateZoomIndicator(void)
         QLabel *z = (QLabel *)ui.toolBar->widgetForAction(displayZoom);
         z->setText(s + text);
     }
+
     displayZoom->setVisible(true);
 #undef ZLEN
 }
@@ -2534,6 +2537,87 @@ void MainWindow::syncToolbarsMenu(void)
 #undef CHECKMARK
 #undef EXPAND
 }
+
+/**
+    \fn addStatusBar
+    \brief Add status bar to the main window
+*/
+void MainWindow::addStatusBar(void)
+{
+    QStatusBar * statusBar = new QStatusBar(this);
+    statusBar->setSizeGripEnabled(false);
+    statusBar->setStyleSheet("QStatusBar{border-top: 1px outset grey;}");   // add horizontal separator
+    QFont sbf= statusBar->font();
+    sbf.setPointSizeF(sbf.pointSizeF() * 0.875);  // reduce font size
+    statusBar->setFont(sbf);
+
+    this->statusBarInfo = new QLabel("");
+    this->statusBarInfo->setFont(sbf); 
+    statusBar->addWidget(this->statusBarInfo);
+
+    this->setStatusBar(statusBar);
+    updateStatusBarInfo();
+}
+
+
+/**
+    \fn updateStatusBarInfo
+*/
+void MainWindow::updateStatusBarInfo(void)
+{
+    QString s;
+    if (avifileinfo)
+    {
+        s = QString(QT_TRANSLATE_NOOP("qgui2","Input: %1x%2, %3fps  |  Decoder: %4  |  Display: %5  |  Zoom: %6%"))
+            .arg(avifileinfo->width).arg(avifileinfo->height).arg(avifileinfo->fps1000/1000.0)
+            .arg(statusBarInfo_Decoder).arg(statusBarInfo_Display).arg(statusBarInfo_Zoom);
+    }
+    else
+    {
+        s = QString(QT_TRANSLATE_NOOP("qgui2","No file loaded"));
+    }
+
+    if (this->statusBarInfo)
+        this->statusBarInfo->setText(s);
+}
+
+/**
+    \fn updateStatusBarDisplayInfo
+*/
+void MainWindow::updateStatusBarDisplayInfo(const char * display)
+{
+    statusBarInfo_Display = QString(display);
+    updateStatusBarInfo();
+}
+
+/**
+    \fn updateStatusBarDecoderInfo
+*/
+void MainWindow::updateStatusBarDecoderInfo(const char * decoder)
+{
+    statusBarInfo_Decoder = QString(decoder);
+    updateStatusBarInfo();
+}
+
+/**
+    \fn updateStatusBarZoomInfo
+*/
+void MainWindow::updateStatusBarZoomInfo(int zoom)
+{
+    statusBarInfo_Zoom = zoom;
+    updateStatusBarInfo();
+}
+
+/**
+    \fn notifyStatusBar
+*/
+void MainWindow::notifyStatusBar(const char * lead, const char * msg, int timeout)
+{
+    QString s = QString(lead).arg(msg);
+    statusBar()->showMessage(s, timeout);
+}
+
+
 
 MainWindow::~MainWindow()
 {
@@ -2716,7 +2800,8 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         ADM_info("OpenGL not activated, not initialized\n");
     }
 #endif
-mw->syncToolbarsMenu();
+    mw->syncToolbarsMenu();
+    mw->addStatusBar();
 
     return 1;
 }
@@ -3294,6 +3379,7 @@ bool UI_setVolume(void)
 bool UI_setDecoderName(const char *name)
 {
     WIDGET(labelVideoDecoder)->setText(name);
+    ((MainWindow *)QuiMainWindows)->updateStatusBarDecoderInfo(name);
     return true;
 }
 /**
@@ -3303,6 +3389,7 @@ bool UI_setDecoderName(const char *name)
 bool UI_setDisplayName(const char *name)
 {
     WIDGET(labelDisplay)->setText(name);
+    ((MainWindow *)QuiMainWindows)->updateStatusBarDisplayInfo(name);
     return true;
 }
 
@@ -3518,6 +3605,28 @@ void UI_setAudioTrackCount( int nb )
     QString text=QCoreApplication::translate("qgui2"," (%n track(s))",NULL,QCoreApplication::UnicodeUTF8,nb);
 #endif
     WIDGET(TrackCountLabel)->setText(text);
+}
+
+/**
+    \fn UI_notifyInfo
+*/
+void UI_notifyInfo(const char *message, int timeoutMs)
+{
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(QT_TRANSLATE_NOOP("qgui2","INFO: %1"), message, timeoutMs);
+}
+/**
+    \fn UI_notifyWarning
+*/
+void UI_notifyWarning(const char *message, int timeoutMs)
+{
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(QT_TRANSLATE_NOOP("qgui2","WARNING: %1"), message, timeoutMs);
+}
+/**
+    \fn UI_notifyError
+*/
+void UI_notifyError(const char *message, int timeoutMs)
+{
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(QT_TRANSLATE_NOOP("qgui2","ERROR: %1"), message, timeoutMs);
 }
 /**
  * \fn dtor
