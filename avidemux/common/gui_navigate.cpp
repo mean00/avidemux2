@@ -35,6 +35,8 @@
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 
+#include "prefs.h"
+
 static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again for cannot seek
 static void A_timedError(bool *first, const char *s);
 
@@ -43,6 +45,8 @@ extern void A_setHDRConfig(void);
 extern void A_setPostproc(void);
 
 static uint32_t jumpTarget[4] = {0};
+static uint32_t jumpMarkerA[4] = {0};
+static uint32_t jumpMarkerB[4] = {0};
 
 bool   GUI_infiniteForward(uint64_t pts);
 bool   GUI_lastFrameBeforePts(uint64_t pts);
@@ -76,6 +80,27 @@ void HandleAction_Staged(Action action)
                     stagedActionSuccess = 1;
             }
             break;
+        case ACT_SelectMarkerA:
+        case ACT_SelectMarkerB:
+            {
+                uint64_t pts;
+                uint32_t *t;
+                stagedActionSuccess = 0;
+                // Get current marker A time
+                pts = video_body->getMarkerAPts();
+                t = jumpMarkerA;
+                ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                // Get current marker B time
+                pts = video_body->getMarkerBPts();
+                t = jumpMarkerB;
+                ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                // Always initialize both, but select only one
+                if(action == ACT_SelectMarkerA)
+                    t = jumpMarkerA;
+                if (DIA_gotoTime(t,t+1,t+2,t+3))
+                    stagedActionSuccess = 1;
+            }
+            break;
         default:break;
     }
 }
@@ -86,6 +111,7 @@ void HandleAction_Staged(Action action)
 void HandleAction_Navigate(Action action)
 {
 static int ignore_change=0;
+
     switch (action)
       {
     
@@ -306,6 +332,126 @@ static int ignore_change=0;
             stagedActionSuccess = 0;
       }
       break;
+      case ACT_ChangeMarkerA:
+      case ACT_ChangeMarkerB:
+        if(!playing && stagedActionSuccess)
+        {
+            // Selected marker A/B time
+            uint32_t *t = jumpMarkerA;
+            uint32_t *tB = jumpMarkerB;
+            uint32_t hh,mm,ss,ms;
+            uint64_t ptsA, ptsB;
+
+            // Selected marker A/B time chooser
+            uint64_t *sel = &ptsA;
+
+            // Total time (beyond the last frame)
+            uint64_t tot = video_body->getVideoDuration();
+
+            // Current marker A/B to verify changes
+            uint64_t preA = ptsA = video_body->getMarkerAPts();
+            uint64_t preB = ptsB = video_body->getMarkerBPts();
+
+            // Backup the current time to restore it later
+            uint32_t time[4] = {0};
+            uint64_t pts = admPreview::getCurrentPts();
+            ms2time((uint32_t)(pts/1000),time,time+1,time+2,time+3);
+
+            // Jump to time to find the correct marker A/B time, then
+            // restore the previous current time after procesing.
+            while(t)
+            {
+                hh = t[0];
+                mm = t[1];
+                ss = t[2];
+                ms = t[3];
+
+                // Check if outside boundaries when jumping to A/B
+                if(sel)
+                {
+                    uint64_t x = ((hh*3600+mm*60+ss)*1000+ms)*1000;
+
+                    if(x == 0)
+                        *sel = 0;
+                    else if(x >= tot)
+                        *sel = tot;
+                    else if(x != *sel)
+                        sel = NULL;
+                }
+
+                // Inside boundaries or restoring previous time
+                if(!sel)
+                {
+                    // FIXME: Don't jump to find the correct marker
+                    // A/B time, rather find the closest frame then
+                    // frame2time.
+                    A_jumpToTime(hh,mm,ss,ms);
+                }
+
+                // Exit the loop after restoring previous time
+                if(!tB)
+                {
+                    break;
+                }
+                else if(t != tB)
+                {
+                    // When inside boundaries find marker A time
+                    if(!sel)
+                        ptsA = admPreview::getCurrentPts();
+
+                    // Switch to marker B
+                    t = tB;
+                    sel = &ptsB;
+                    continue;
+                }
+                else
+                {
+                    // When inside boundaries find marker B time
+                    if(!sel)
+                        ptsB = admPreview::getCurrentPts();
+
+                    // Swap marker A and B when necessary
+                    if(ptsA > ptsB)
+                    {
+                        bool swapit = false;
+
+                        if(!prefs->get(FEATURES_SWAP_IF_A_GREATER_THAN_B, &swapit))
+                            swapit = true;
+
+                        if(swapit) // auto swap
+                        {
+                            uint64_t y = ptsA;
+                            ptsA = ptsB;
+                            ptsB = y;
+                        }
+                        else
+                        {
+                            if(action == ACT_ChangeMarkerA)
+                                ptsB = tot; // reset B
+                            else
+                                ptsA = 0; // reset A
+                        }
+                    }
+
+                    // Restore the previous time breaking the loop
+                    t = time;
+                    tB = NULL;
+                    sel = NULL;
+                }
+            }
+
+            // Check if any marker A/B has been changed
+            if(preA != ptsA || preB != ptsB)
+            {
+                video_body->addToUndoQueue();
+                video_body->setMarkerAPts(ptsA);
+                video_body->setMarkerBPts(ptsB);
+                UI_setMarkers(ptsA, ptsB);
+            }
+
+            stagedActionSuccess = 0;
+        }
+        break;
       case ACT_Refresh:
         { // Flush cache and seek to the current picture
             if(playing) break;

@@ -538,6 +538,12 @@ void MainWindow::actionSlot(Action a)
             case ACT_SelectTime:
                 a = ACT_GotoTime;
                 break;
+            case ACT_SelectMarkerA:
+                a = ACT_ChangeMarkerA;
+                break;
+            case ACT_SelectMarkerB:
+                a = ACT_ChangeMarkerB;
+                break;
             default:break;
         }
     }
