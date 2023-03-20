@@ -1775,12 +1775,16 @@ void MainWindow::widgetsUpdateTooltips(void)
 */
 void MainWindow::restoreDefaultWidgetState(bool b)
 {
+    ui.toolBar->setVisible(true);
     ui.codecWidget->setVisible(true);
     ui.navigationWidget->setVisible(true);
-    ui.selectionWidget->setVisible(true);
-    ui.volumeWidget->setVisible(true);
     ui.audioMeterWidget->setVisible(true);
-    ui.toolBar->setVisible(true);
+    ui.volumeWidget->setVisible(true);
+    ui.controlsWidget->setVisible(true);
+    ui.selectionWidget->setVisible(true);
+    ui.timeWidget->setVisible(true);
+    ui.sliderWidget->setVisible(true);
+    ui.frameTypeWidget->setVisible(true);
 
     syncToolbarsMenu();
     updateZoomIndicator();
