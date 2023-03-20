@@ -58,7 +58,7 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
                 MenuEntry dummyEntry = {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL, true};
                 it = fileMenu.insert(it, dummyEntry);
 
-                MenuEntry runProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","&Run Project..."), NULL, firstMenuId, NULL, NULL, true};
+                MenuEntry runProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","&Run Project..."), NULL, firstMenuId, MKICON(runscript), NULL, true};
                 it = fileMenu.insert(it + 1, runProjectEntry);
 
                 if ((this->_scriptEngines[engineIndex]->capabilities() & IScriptEngine::Debugger) == IScriptEngine::Debugger)
