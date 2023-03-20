@@ -2530,12 +2530,17 @@ void MainWindow::syncToolbarsMenu(void)
 {
 #define EXPAND(x) ui.x ## Widget
 #define CHECKMARK(x,y) ui.menuToolbars->actions().at(x)->setChecked(EXPAND(y)->isVisible());
-    CHECKMARK(0,audioMeter)
+    ui.menuToolbars->actions().at(0)->setChecked(ui.toolBar->isVisible());
     CHECKMARK(1,codec)
     CHECKMARK(2,navigation)
-    CHECKMARK(3,selection)
-    CHECKMARK(4,volume)
-    ui.menuToolbars->actions().at(5)->setChecked(ui.toolBar->isVisible());
+    // separator
+    CHECKMARK(4,audioMeter)
+    CHECKMARK(5,volume)
+    CHECKMARK(6,controls)
+    CHECKMARK(7,selection)
+    CHECKMARK(8,time)
+    CHECKMARK(9,slider)
+    CHECKMARK(10,frameType)
 #undef CHECKMARK
 #undef EXPAND
 }
