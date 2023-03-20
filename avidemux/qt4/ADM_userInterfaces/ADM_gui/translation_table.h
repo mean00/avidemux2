@@ -20,7 +20,6 @@ PROCESS(toolButtonFirstFrame, ACT_Begin) \
 PROCESS(toolButtonLastFrame, ACT_End) \
 PROCESS(pushButtonJumpToMarkerA, ACT_GotoMarkA) \
 PROCESS(pushButtonJumpToMarkerB, ACT_GotoMarkB) \
-PROCESS(pushButtonTime, ACT_SelectTime) \
 PROCESS(toolButtonBackOneMinute, ACT_Back1Mn) \
 PROCESS(toolButtonForwardOneMinute, ACT_Forward1Mn) \
 

@@ -146,6 +146,8 @@ static bool needsResizing=false;
 static QAction *findAction(std::vector<MenuEntry> *list, Action action);
 static QAction *findActionInToolBar(QToolBar *tb, Action action);
 
+static QAction *pushButtonTime;
+
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
 #define CONNECT(object,zzz) connect( (ui.object),SIGNAL(triggered()),this,SLOT(buttonPressed()));
@@ -743,6 +745,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.selectionMarkerA->setText(text); // Override ui translations here too.
     ui.selectionMarkerB->setText(text); // Override ui translations here too.
 
+    // Put an edit time button inside the element
+    pushButtonTime = ui.currentTime->addAction(QIcon(MKICON(time)), QLineEdit::LeadingPosition);
+    connect(pushButtonTime,SIGNAL(triggered()),this,SLOT(seekTime()));
+
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
@@ -1295,11 +1301,9 @@ void MainWindow::buildButtonLists(void)
 #define ADD_PUSHBUTTON_LOADED(x)    PushButtonsAvailableWhenFileLoaded.push_back(ui.x);
 #define ADD_PUSHBUTTON_PLAYBACK(x)    PushButtonsDisabledOnPlayback.push_back(ui.x);
 
-    ADD_PUSHBUTTON_LOADED(pushButtonTime)
     ADD_PUSHBUTTON_LOADED(pushButtonJumpToMarkerA)
     ADD_PUSHBUTTON_LOADED(pushButtonJumpToMarkerB)
 
-    ADD_PUSHBUTTON_PLAYBACK(pushButtonTime)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerA)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerB)
 
@@ -1339,6 +1343,8 @@ void MainWindow::setMenuItemsEnabledState(void)
 
         if(ADM_PREVIEW_NONE != admPreview::getPreviewMode())
             slider->setEnabled(false);
+
+        pushButtonTime->setEnabled(false);
 
         return;
     }
@@ -1404,6 +1410,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     ENABLE(Recent, ACT_CLEAR_RECENT, haveRecentItems)
     ENABLE(Recent, ACT_RESTORE_SESSION, A_checkSavedSession(false))
 
+    pushButtonTime->setEnabled(vid);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1707,6 +1714,10 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt = QT_TRANSLATE_NOOP("qgui2","Go to last frame");
     tt += SHORTCUT(ACT_End,Go)
     ui.toolButtonLastFrame->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to Time");
+    tt += SHORTCUT(ACT_SelectTime,Go)
+    pushButtonTime->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Go to marker A");
     tt += SHORTCUT(ACT_GotoMarkA,Go)
@@ -2014,6 +2025,14 @@ void MainWindow::checkChanged(int state)
 void MainWindow::timeChanged(int)
 {
     sendAction (ACT_TimeShift) ;
+}
+/**
+    \fn seekTime
+    \brief Called to seek a position in the player
+*/
+void MainWindow::seekTime(void)
+{
+    sendAction (ACT_SelectTime) ;
 }
 /**
     \fn searchMenu

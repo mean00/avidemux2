@@ -227,6 +227,8 @@ private slots:
     void checkChanged(int);
     void comboChanged(int z);
 
+    void seekTime(void);
+
     void buttonPressed(void);
     void toolButtonPressed(bool z);
 
