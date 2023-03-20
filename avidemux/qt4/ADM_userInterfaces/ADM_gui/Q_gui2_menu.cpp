@@ -68,7 +68,7 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
                     i++;
                 }
 
-                MenuEntry saveAsProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","Save &As Project..."), NULL, (Action)(firstMenuId + 2), NULL, NULL, true};
+                MenuEntry saveAsProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","Save &As Project..."), NULL, (Action)(firstMenuId + 2), MKICON(savescript), NULL, true};
                 it = fileMenu.insert(it + 1, saveAsProjectEntry);
                 i += 3;
             }
