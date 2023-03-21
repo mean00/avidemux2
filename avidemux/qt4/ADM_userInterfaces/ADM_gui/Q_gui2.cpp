@@ -644,6 +644,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     actionLock = 0;
     busyCntr = 0;
     busyTimer.setSingleShot(true);
+    statusBarInfo = NULL;
 
 #if defined(__APPLE__) && defined(USE_SDL)
     //ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
@@ -2546,13 +2547,8 @@ void MainWindow::addStatusBar(void)
 {
     QStatusBar * statusBar = new QStatusBar(this);
     statusBar->setSizeGripEnabled(false);
-    statusBar->setStyleSheet("QStatusBar{border-top: 1px outset grey;}");   // add horizontal separator
-    QFont sbf= statusBar->font();
-    sbf.setPointSizeF(sbf.pointSizeF() * 0.875);  // reduce font size
-    statusBar->setFont(sbf);
 
     this->statusBarInfo = new QLabel("");
-    this->statusBarInfo->setFont(sbf); 
     statusBar->addWidget(this->statusBarInfo);
 
     this->setStatusBar(statusBar);
