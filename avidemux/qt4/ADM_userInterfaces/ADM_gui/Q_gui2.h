@@ -136,6 +136,8 @@ public:
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
 
+    QString statusBarFrame_Type;
+
 #ifdef __APPLE__
     void fileOpenWrapper(QList<QUrl> list) { openFiles(list); }
 #endif

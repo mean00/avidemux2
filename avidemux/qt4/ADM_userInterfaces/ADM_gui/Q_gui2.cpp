@@ -1403,8 +1403,6 @@ void MainWindow::setMenuItemsEnabledState(void)
     // or loading a video with small dimensions, so ignore just this one resize event
     ignoreResizeEvent = true;
     // en passant reset frame type label if no video is loaded
-    if(!vid)
-        ui.frameTypeValue->setText(QT_TRANSLATE_NOOP("qgui2","?"));
 }
 
 /**
@@ -1785,7 +1783,6 @@ void MainWindow::restoreDefaultWidgetState(bool b)
     ui.selectionWidget->setVisible(true);
     ui.timeWidget->setVisible(true);
     ui.sliderWidget->setVisible(true);
-    ui.frameTypeWidget->setVisible(true);
 
     syncToolbarsMenu();
     updateZoomIndicator();
@@ -2546,7 +2543,6 @@ void MainWindow::syncToolbarsMenu(void)
     CHECKMARK(8,selection)
     CHECKMARK(9,time)
     CHECKMARK(10,slider)
-    CHECKMARK(11,frameType)
 #undef CHECKMARK
 #undef EXPAND
 }
@@ -2576,6 +2572,8 @@ void MainWindow::updateStatusBarInfo(void)
         s += QString(QT_TRANSLATE_NOOP("qgui2","Input: %1x%2, %3fps  |  Decoder: %4  |  Display: %5  |  Zoom: %6%"))
             .arg(avifileinfo->width).arg(avifileinfo->height).arg(avifileinfo->fps1000/1000.0)
             .arg(statusBarInfo_Decoder).arg(statusBarInfo_Display).arg(statusBarInfo_Zoom);
+        if(!statusBarFrame_Type.isEmpty())
+            s += QString(QT_TRANSLATE_NOOP("qgui2"," | Frame type: %1")).arg(statusBarFrame_Type);
     }
     else
     {
@@ -3156,7 +3154,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 {
     if(frametype == CLEAR_FRAME_TYPE)
     {
-        WIDGET(frameTypeValue)->clear();
+        ((MainWindow *)QuiMainWindows)->statusBarFrame_Type = "";
         return;
     }
 
@@ -3184,8 +3182,9 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
         sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s"),c,f);
     else
         sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s (%02d)"),c,f,qp);
-    WIDGET(frameTypeValue)->setText(string);
 
+    ((MainWindow *)QuiMainWindows)->statusBarFrame_Type = QString(string);
+    ((MainWindow *)QuiMainWindows)->updateStatusBarInfo();
 }
 /**
  * 

@@ -130,7 +130,6 @@
      <addaction name="actionViewSelection"/>
      <addaction name="actionViewTime"/>
      <addaction name="actionViewSlider"/>
-     <addaction name="actionViewFrameType"/>
     </widget>
     <widget class="QMenu" name="menuThemes">
      <property name="title">
@@ -1743,62 +1742,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QFrame" name="frameTypeWidget">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <layout class="QHBoxLayout" name="frameTypeWidgetLayout">
-               <property name="spacing">
-                <number>6</number>
-               </property>
-               <property name="leftMargin">
-                <number>9</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="frameTypeLabel">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Frame type:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="frameTypeValue">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>?</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
              <spacer name="timeWidgetSpacer">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -2109,20 +2052,6 @@
     <string>Ctrl+Alt+T</string>
    </property>
   </action>
-  <action name="actionViewFrameType">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Frame T&amp;ype</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+Y</string>
-   </property>
-  </action>
   <action name="actionViewControls">
    <property name="checkable">
     <bool>true</bool>
@@ -2367,22 +2296,6 @@
    <sender>actionViewTime</sender>
    <signal>toggled(bool)</signal>
    <receiver>timeWidget</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>601</x>
-     <y>569</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionViewFrameType</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>frameTypeWidget</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
