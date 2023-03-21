@@ -2551,6 +2551,8 @@ void MainWindow::addStatusBar(void)
     this->statusBarInfo = new QLabel("");
     statusBar->addWidget(this->statusBarInfo);
 
+    statusBar->setContentsMargins(4,0,4,0);
+
     this->setStatusBar(statusBar);
     updateStatusBarInfo();
 }
@@ -2561,7 +2563,7 @@ void MainWindow::addStatusBar(void)
 */
 void MainWindow::updateStatusBarInfo(void)
 {
-    QString s = QString(" ");   // spacer
+    QString s = QString("");
     if (avifileinfo)
     {
         s += QString(QT_TRANSLATE_NOOP("qgui2","Input: %1x%2, %3fps  |  Decoder: %4  |  Display: %5  |  Zoom: %6%"))
@@ -2611,8 +2613,7 @@ void MainWindow::notifyStatusBar(const char * lead, const char * msg, int timeou
 {
     if (timeout <= 0)   // prevent permament message
         timeout = 2500;
-    QString s = QString(" ");   // spacer
-    s += QString(lead).arg(msg);
+    QString s = QString(lead).arg(msg);
     statusBar()->showMessage(s, timeout);
 }
 
