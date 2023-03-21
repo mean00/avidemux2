@@ -40,6 +40,7 @@
 static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again for cannot seek
 static void A_timedError(bool *first, const char *s);
 
+extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms, const char *title);
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
 extern void A_setHDRConfig(void);
 extern void A_setPostproc(void);
@@ -85,6 +86,7 @@ void HandleAction_Staged(Action action)
             {
                 uint64_t pts;
                 uint32_t *t;
+                const char *DIA_title = "Set Marker A Time";
                 stagedActionSuccess = 0;
                 // Get current marker A time
                 pts = video_body->getMarkerAPts();
@@ -97,7 +99,9 @@ void HandleAction_Staged(Action action)
                 // Always initialize both, but select only one
                 if(action == ACT_SelectMarkerA)
                     t = jumpMarkerA;
-                if (DIA_gotoTime(t,t+1,t+2,t+3))
+                else
+                    DIA_title = "Set Marker B Time";
+                if (DIA_gotoTime(t,t+1,t+2,t+3,DIA_title))
                     stagedActionSuccess = 1;
             }
             break;
