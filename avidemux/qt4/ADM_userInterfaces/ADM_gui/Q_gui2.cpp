@@ -2561,16 +2561,16 @@ void MainWindow::addStatusBar(void)
 */
 void MainWindow::updateStatusBarInfo(void)
 {
-    QString s;
+    QString s = QString(" ");   // spacer
     if (avifileinfo)
     {
-        s = QString(QT_TRANSLATE_NOOP("qgui2","Input: %1x%2, %3fps  |  Decoder: %4  |  Display: %5  |  Zoom: %6%"))
+        s += QString(QT_TRANSLATE_NOOP("qgui2","Input: %1x%2, %3fps  |  Decoder: %4  |  Display: %5  |  Zoom: %6%"))
             .arg(avifileinfo->width).arg(avifileinfo->height).arg(avifileinfo->fps1000/1000.0)
             .arg(statusBarInfo_Decoder).arg(statusBarInfo_Display).arg(statusBarInfo_Zoom);
     }
     else
     {
-        s = QString(QT_TRANSLATE_NOOP("qgui2","No file loaded"));
+        s += QString(QT_TRANSLATE_NOOP("qgui2","No file loaded"));
     }
 
     if (this->statusBarInfo)
@@ -2609,7 +2609,10 @@ void MainWindow::updateStatusBarZoomInfo(int zoom)
 */
 void MainWindow::notifyStatusBar(const char * lead, const char * msg, int timeout)
 {
-    QString s = QString(lead).arg(msg);
+    if (timeout <= 0)   // prevent permament message
+        timeout = 2500;
+    QString s = QString(" ");   // spacer
+    s += QString(lead).arg(msg);
     statusBar()->showMessage(s, timeout);
 }
 
