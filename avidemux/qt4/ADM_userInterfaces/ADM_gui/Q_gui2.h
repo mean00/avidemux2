@@ -123,6 +123,12 @@ public:
     void setZoomToFit(void);
     void updateZoomIndicator(void);
     void syncToolbarsMenu(void);
+    void addStatusBar(void);
+    void updateStatusBarInfo(void);
+    void updateStatusBarDisplayInfo(const char * display);
+    void updateStatusBarDecoderInfo(const char * decoder);
+    void updateStatusBarZoomInfo(int zoom);
+    void notifyStatusBar(const char * lead, const char * msg, int timeout = 2500);
 
     void setLightTheme(void);
     void setDarkTheme(void);
@@ -208,6 +214,10 @@ protected:
     /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
     void currentTimeToClipboard(void);
     bool dragWhilePlay;
+    
+    QLabel * statusBarInfo;
+    int statusBarInfo_Zoom;
+    QString statusBarInfo_Display, statusBarInfo_Decoder;
 
 private slots:
     void timeChanged(int);
