@@ -70,6 +70,15 @@ void HandleAction_Staged(Action action)
         case ACT_SetPostProcessing:
             A_setPostproc();
             break;
+        case ACT_GetTime:
+            {
+                stagedActionSuccess = 0;
+                // Read the time set in the UI, not the real PTS
+                uint32_t *t = jumpTarget;
+                if(UI_getCurrentTime(t,t+1,t+2,t+3))
+                    stagedActionSuccess = 1;
+            }
+            break;
         case ACT_SelectTime:
             {
                 stagedActionSuccess = 0;

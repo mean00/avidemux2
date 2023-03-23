@@ -143,6 +143,8 @@ static bool uiIsMaximized=false;
 
 static bool needsResizing=false;
 
+static QRegExp timeRegExp("^([0-9]{2}):([0-5][0-9]):([0-5][0-9])\\.([0-9]{3})$");
+
 static QAction *findAction(std::vector<MenuEntry> *list, Action action);
 static QAction *findActionInToolBar(QToolBar *tb, Action action);
 
@@ -474,9 +476,20 @@ void MainWindow::timeChangeFinished(void)
 
 void MainWindow::currentTimeChanged(void)
 {
-    sendAction(ACT_GotoTime);
+    sendAction(ACT_GetTime);
 
-    this->setFocus(Qt::OtherFocusReason);
+    // NOTE: QLineEdit::editingFinished() is emitted when Enter is
+    // pressed or the focus is lost.  Pressing Enter alone doesn't
+    // change focus.  Hence, changing focus programmatically after
+    // pressing Enter will emit the signal one more time.  This is
+    // like pressing Enter followed by pressing Tab (two signals).
+    // Pressing Tab alone will send only one signal while changing
+    // focus.  Keep this in mind when you expect to receive only 1
+    // signal after pressing Enter.
+
+    // Disabling to stay on the field after pressing Enter, the user
+    // may want to try different edits.  To change field use Tab.
+    //this->setFocus(Qt::OtherFocusReason);
 }
 
 /**
@@ -541,6 +554,7 @@ void MainWindow::actionSlot(Action a)
             case ACT_SetPostProcessing:
                 a = ACT_Refresh;
                 break;
+            case ACT_GetTime:
             case ACT_SelectTime:
                 a = ACT_GotoTime;
                 break;
@@ -741,8 +755,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(checkChanged(int)));
     connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
     connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
-#if 0 /* it is read-only */
-    QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
+#if 1 /* disable if read-only */
     QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
     ui.currentTime->setValidator(timeValidator);
     ui.currentTime->setInputMask("99:99:99.999");
@@ -820,7 +833,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     pushButtonResetMarkerB = ui.selectionMarkerB->addAction(QIcon(MKICON(reset_markB)), QLineEdit::LeadingPosition);
     connect(pushButtonResetMarkerB,SIGNAL(triggered()),this,SLOT(resetMarkerB()));
 
-    //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
+    // Get the time the user sets directly in the text element
+    connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
     addScriptEnginesToFileMenu(myMenuFile);
@@ -1433,6 +1447,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         if(ADM_PREVIEW_NONE != admPreview::getPreviewMode())
             slider->setEnabled(false);
 
+        ui.currentTime->setReadOnly(true);
         pushButtonTime->setEnabled(false);
         pushButtonSaveScript->setEnabled(false);
         pushButtonRunScript->setEnabled(false);
@@ -1515,6 +1530,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     ENABLE(Recent, ACT_CLEAR_RECENT, haveRecentItems)
     ENABLE(Recent, ACT_RESTORE_SESSION, A_checkSavedSession(false))
 
+    ui.currentTime->setReadOnly(!vid);
     pushButtonTime->setEnabled(vid);
     pushButtonSaveScript->setEnabled(vid && tinyPy);
     pushButtonRunScript->setEnabled(engines);
@@ -3529,6 +3545,42 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 admUITaskBarProgress *UI_getTaskBarProgress()
 {
     return QuiTaskBarProgress;
+}
+
+/**
+    \fn UI_getCurrentTime
+    \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
+*/
+bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+{
+    QRegExp rx(timeRegExp);
+
+    // Previous state
+    uint64_t pts = admPreview::getCurrentPts();
+
+    if(rx.exactMatch(WIDGET(currentTime)->text()))
+    {
+        QStringList results = rx.capturedTexts();
+
+        *hh = results.at(1).toInt(NULL, 10);
+        *mm = results.at(2).toInt(NULL, 10);
+        *ss = results.at(3).toInt(NULL, 10);
+        *ms = results.at(4).toInt(NULL, 10);
+
+        uint64_t x = (((*hh)*3600+(*mm)*60+(*ss))*1000+(*ms))*1000;
+
+        // Abort if there are no changes
+        if(x == pts)
+            return false;
+    }
+    else
+    {
+        // On failure revert to previous state
+        UI_setCurrentTime(pts);
+        return false;
+    }
+
+    return true;
 }
 
 /**
