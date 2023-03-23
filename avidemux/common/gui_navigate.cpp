@@ -90,6 +90,36 @@ void HandleAction_Staged(Action action)
                     stagedActionSuccess = 1;
             }
             break;
+        case ACT_GetMarkerA:
+            {
+                stagedActionSuccess = 0;
+                // Read the time set in the UI, not the real PTS
+                uint32_t *t = jumpMarkerA;
+                if(UI_getMarkerA(t,t+1,t+2,t+3))
+                {
+                    // Never leave the other marker uninitialized
+                    uint64_t pts = video_body->getMarkerBPts();
+                    t = jumpMarkerB;
+                    ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                    stagedActionSuccess = 1;
+                }
+            }
+            break;
+        case ACT_GetMarkerB:
+            {
+                stagedActionSuccess = 0;
+                // Read the time set in the UI, not the real PTS
+                uint32_t *t = jumpMarkerB;
+                if(UI_getMarkerB(t,t+1,t+2,t+3))
+                {
+                    // Never leave the other marker uninitialized
+                    uint64_t pts = video_body->getMarkerAPts();
+                    t = jumpMarkerA;
+                    ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                    stagedActionSuccess = 1;
+                }
+            }
+            break;
         case ACT_SelectMarkerA:
         case ACT_SelectMarkerB:
             {

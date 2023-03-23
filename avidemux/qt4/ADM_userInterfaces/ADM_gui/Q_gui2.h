@@ -250,6 +250,8 @@ private slots:
     void previewModeChangedFromToolbar(bool status);
 
     void currentTimeChanged(void);
+    void markerAChanged(void);
+    void markerBChanged(void);
 
     void sliderValueChanged(int u);
     void sliderMoved(int value);
