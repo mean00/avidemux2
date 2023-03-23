@@ -8,6 +8,7 @@
         <file>pics/append.png</file>
         <file>pics/savescript.png</file>
         <file>pics/runscript.png</file>
+        <file>pics/debugscript.png</file>
         <file>pics/fileopen.png</file>
         <file>pics/filesave.png</file>
         <file>pics/filesaveas.png</file>
@@ -46,6 +47,7 @@
         <file>pics/append@2x.png</file>
         <file>pics/savescript@2x.png</file>
         <file>pics/runscript@2x.png</file>
+        <file>pics/debugscript@2x.png</file>
         <file>pics/fileopen@2x.png</file>
         <file>pics/filesave@2x.png</file>
         <file>pics/forward1mn@2x.png</file>
