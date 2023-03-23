@@ -122,7 +122,7 @@ public:
     void setActZoomCalledFlag(bool called);
     void setZoomToFit(void);
     void updateZoomIndicator(void);
-    void syncToolbarsMenu(void);
+    void initWidgetsVisibility(void);
     void initStatusBar(void);
     void updateStatusBarInfo(void);
     void updateStatusBarDisplayInfo(const char * display);
@@ -221,6 +221,24 @@ protected:
     int statusBarInfo_Zoom;
     QString statusBarInfo_Display, statusBarInfo_Decoder;
 
+    // Reflects the items order set in View->Toolbars
+    enum ADM_Toolbars_Item
+    {
+        FIRST=0,     // begin (for iterations)
+        TOOLBAR=0,    // toolBar
+        STATUSBAR=1,  // statusBarWidget
+        CODEC=2,      // codecWidget
+        NAVIGATION=3, // navigationWidget
+        // separator
+        AUDIOMETER=5, // audioMeterWidget
+        VOLUME=6,     // volumeWidget
+        CONTROLS=7,   // controlsWidget
+        SELECTION=8,  // selectionWidget
+        TIME=9,       // timeWidget
+        SLIDER=10,    // sliderWidget
+        LAST=10       // end (for iterations)
+    };
+
 private slots:
     void timeChanged(int);
     void timeChangeFinished(void);
@@ -254,6 +272,17 @@ private slots:
     void markerBChanged(void);
     void selectionDurationChanged(void);
     void totalTimeChanged(void);
+
+    void toolBarVisibilityChanged(bool);
+    void statusBarVisibilityChanged(bool);
+    void codecVisibilityChanged(bool);
+    void navigationVisibilityChanged(bool);
+    void audioMeterVisibilityChanged(bool);
+    void volumeVisibilityChanged(bool);
+    void controlsVisibilityChanged(bool);
+    void selectionVisibilityChanged(bool);
+    void timeVisibilityChanged(bool);
+    void sliderVisibilityChanged(bool);
 
     void sliderValueChanged(int u);
     void sliderMoved(int value);

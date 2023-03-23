@@ -920,6 +920,18 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.menuToolbars->addSeparator();
     ui.menuToolbars->addAction(restoreDefaults);
 
+    // On visibility change by connected checkboxes update preferences
+    connect(ui.actionViewToolBar, SIGNAL(toggled(bool)), this, SLOT(toolBarVisibilityChanged(bool)));
+    connect(ui.actionViewStatusBar, SIGNAL(toggled(bool)), this, SLOT(statusBarVisibilityChanged(bool)));
+    connect(ui.actionViewCodecOptions, SIGNAL(toggled(bool)), this, SLOT(codecVisibilityChanged(bool)));
+    connect(ui.actionViewNavigation, SIGNAL(toggled(bool)), this, SLOT(navigationVisibilityChanged(bool)));
+    connect(ui.actionViewAudioMeter, SIGNAL(toggled(bool)), this, SLOT(audioMeterVisibilityChanged(bool)));
+    connect(ui.actionViewVolume, SIGNAL(toggled(bool)), this, SLOT(volumeVisibilityChanged(bool)));
+    connect(ui.actionViewControls, SIGNAL(toggled(bool)), this, SLOT(controlsVisibilityChanged(bool)));
+    connect(ui.actionViewSelection, SIGNAL(toggled(bool)), this, SLOT(selectionVisibilityChanged(bool)));
+    connect(ui.actionViewTime, SIGNAL(toggled(bool)), this, SLOT(timeVisibilityChanged(bool)));
+    connect(ui.actionViewSlider, SIGNAL(toggled(bool)), this, SLOT(sliderVisibilityChanged(bool)));
+
     connect(ui.menuToolbars->actions().last(),SIGNAL(triggered(bool)),this,SLOT(restoreDefaultWidgetState(bool)));
 
     defaultThemeAction = NULL;
@@ -2047,24 +2059,106 @@ void MainWindow::widgetsUpdateTooltips(void)
 */
 void MainWindow::restoreDefaultWidgetState(bool b)
 {
-    ui.toolBar->setVisible(true);
-    ui.statusBarWidget->setVisible(true);
-    ui.codecWidget->setVisible(true);
-    ui.navigationWidget->setVisible(true);
-    ui.audioMeterWidget->setVisible(true);
-    ui.volumeWidget->setVisible(true);
-    ui.controlsWidget->setVisible(true);
-    ui.selectionWidget->setVisible(true);
-    ui.timeWidget->setVisible(true);
-    ui.sliderWidget->setVisible(true);
+    // Set visibility via connected checkboxes
+    for(int i = ADM_Toolbars_Item::FIRST; i <= ADM_Toolbars_Item::LAST; i++)
+        ui.menuToolbars->actions().at(i)->setChecked(true);
 
-    syncToolbarsMenu();
     updateZoomIndicator();
 
     addToolBar(ui.toolBar);
 
     if(!playing)
         setZoomToFit();
+}
+
+/**
+    \fn     toolBarVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::toolBarVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_TOOLBAR_VISIBLE, checked);
+}
+
+/**
+    \fn     statusBarVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::statusBarVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_STATUSBAR_VISIBLE, checked);
+}
+
+/**
+    \fn     codecVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::codecVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_CODEC_VISIBLE, checked);
+}
+
+/**
+    \fn     navigationVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::navigationVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_NAVIGATION_VISIBLE, checked);
+}
+
+/**
+    \fn     audioMeterVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::audioMeterVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_AUDIOMETER_VISIBLE, checked);
+}
+
+/**
+    \fn     volumeVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::volumeVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_VOLUME_VISIBLE, checked);
+}
+
+/**
+    \fn     controlsVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::controlsVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_CONTROLS_VISIBLE, checked);
+}
+
+/**
+    \fn     selectionVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::selectionVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_SELECTION_VISIBLE, checked);
+}
+
+/**
+    \fn     timeVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::timeVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_TIME_VISIBLE, checked);
+}
+
+/**
+    \fn     sliderVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::sliderVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_SLIDER_VISIBLE, checked);
 }
 
 /**
@@ -2926,27 +3020,31 @@ void MainWindow::volumeWidgetOperational(void)
 }
 
 /**
-    \fn syncToolbarsMenu
-    \brief Make sure only visible widgets have check marks
-           in the Toolbars submenu of the View menu.
+    \fn initWidgetsVisibility
+    \brief Initialize widgets visibility from preferences.
 */
-void MainWindow::syncToolbarsMenu(void)
+void MainWindow::initWidgetsVisibility(void)
 {
-#define EXPAND(x) ui.x ## Widget
-#define CHECKMARK(x,y) ui.menuToolbars->actions().at(x)->setChecked(EXPAND(y)->isVisible());
-    ui.menuToolbars->actions().at(0)->setChecked(ui.toolBar->isVisible());
-    CHECKMARK(1,statusBar)
-    CHECKMARK(2,codec)
-    CHECKMARK(3,navigation)
-    // separator
-    CHECKMARK(5,audioMeter)
-    CHECKMARK(6,volume)
-    CHECKMARK(7,controls)
-    CHECKMARK(8,selection)
-    CHECKMARK(9,time)
-    CHECKMARK(10,slider)
-#undef CHECKMARK
-#undef EXPAND
+    bool visible;
+
+    // Changing checked state automatically shows/hides the widget,
+    // there's no need to explicitly set a widget's visibility.
+#define PREF_SET_VISIBLE(preference)                                    \
+    prefs->get(TOOLBARS_ ## preference ## _VISIBLE, &visible);          \
+    ui.menuToolbars->actions().at(ADM_Toolbars_Item::preference)->setChecked(visible)
+
+    PREF_SET_VISIBLE(TOOLBAR);
+    PREF_SET_VISIBLE(STATUSBAR);
+    PREF_SET_VISIBLE(CODEC);
+    PREF_SET_VISIBLE(NAVIGATION);
+    PREF_SET_VISIBLE(AUDIOMETER);
+    PREF_SET_VISIBLE(VOLUME);
+    PREF_SET_VISIBLE(CONTROLS);
+    PREF_SET_VISIBLE(SELECTION);
+    PREF_SET_VISIBLE(TIME);
+    PREF_SET_VISIBLE(SLIDER);
+
+#undef PREF_SET_VISIBLE
 }
 
 /**
@@ -3207,7 +3305,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         ADM_info("OpenGL not activated, not initialized\n");
     }
 #endif
-    mw->syncToolbarsMenu();
+    mw->initWidgetsVisibility();
     mw->initStatusBar();
 
     return 1;
