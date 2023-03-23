@@ -76,5 +76,15 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"hdr.tonemapping",offsetof(my_prefs_struct,hdr.tonemapping),"uint32_t",ADM_param_uint32_t},
  {"hdr.target_luminance",offsetof(my_prefs_struct,hdr.target_luminance),"float",ADM_param_float},
  {"hdr.out_of_gamut_handling",offsetof(my_prefs_struct,hdr.out_of_gamut_handling),"uint32_t",ADM_param_uint32_t},
+ {"toolbars.toolbar_visible",offsetof(my_prefs_struct,toolbars.toolbar_visible),"bool",ADM_param_bool},
+ {"toolbars.statusbar_visible",offsetof(my_prefs_struct,toolbars.statusbar_visible),"bool",ADM_param_bool},
+ {"toolbars.codec_visible",offsetof(my_prefs_struct,toolbars.codec_visible),"bool",ADM_param_bool},
+ {"toolbars.navigation_visible",offsetof(my_prefs_struct,toolbars.navigation_visible),"bool",ADM_param_bool},
+ {"toolbars.audiometer_visible",offsetof(my_prefs_struct,toolbars.audiometer_visible),"bool",ADM_param_bool},
+ {"toolbars.volume_visible",offsetof(my_prefs_struct,toolbars.volume_visible),"bool",ADM_param_bool},
+ {"toolbars.controls_visible",offsetof(my_prefs_struct,toolbars.controls_visible),"bool",ADM_param_bool},
+ {"toolbars.selection_visible",offsetof(my_prefs_struct,toolbars.selection_visible),"bool",ADM_param_bool},
+ {"toolbars.time_visible",offsetof(my_prefs_struct,toolbars.time_visible),"bool",ADM_param_bool},
+ {"toolbars.slider_visible",offsetof(my_prefs_struct,toolbars.slider_visible),"bool",ADM_param_bool},
 {NULL,0,NULL}
 };

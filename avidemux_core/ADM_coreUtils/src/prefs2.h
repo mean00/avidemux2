@@ -102,4 +102,16 @@ struct  {
 	float target_luminance;
 	uint32_t out_of_gamut_handling;
 }hdr;
+struct  {
+	bool toolbar_visible;
+	bool statusbar_visible;
+	bool codec_visible;
+	bool navigation_visible;
+	bool audiometer_visible;
+	bool volume_visible;
+	bool controls_visible;
+	bool selection_visible;
+	bool time_visible;
+	bool slider_visible;
+}toolbars;
 }my_prefs_struct;

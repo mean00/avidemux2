@@ -87,5 +87,15 @@ static optionDesc myOptions[]={
 { HDR_TONEMAPPING,"hdr.tonemapping"                                   ,ADM_param_uint32_t	,"1",	0,	99},
 { HDR_TARGET_LUMINANCE,"hdr.target_luminance"                         ,ADM_param_float   	,"100.0",	0.0,	1000.0},
 { HDR_OUT_OF_GAMUT_HANDLING,"hdr.out_of_gamut_handling"               ,ADM_param_uint32_t	,"0",	0,	99},
+{ TOOLBARS_TOOLBAR_VISIBLE,"toolbars.toolbar_visible"                 ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_STATUSBAR_VISIBLE,"toolbars.statusbar_visible"             ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_CODEC_VISIBLE,"toolbars.codec_visible"                     ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_NAVIGATION_VISIBLE,"toolbars.navigation_visible"           ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_AUDIOMETER_VISIBLE,"toolbars.audiometer_visible"           ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_VOLUME_VISIBLE,"toolbars.volume_visible"                   ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_CONTROLS_VISIBLE,"toolbars.controls_visible"               ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_SELECTION_VISIBLE,"toolbars.selection_visible"             ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_TIME_VISIBLE,"toolbars.time_visible"                       ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_SLIDER_VISIBLE,"toolbars.slider_visible"                   ,ADM_param_bool    	,"1",	0,	1},
 };
 

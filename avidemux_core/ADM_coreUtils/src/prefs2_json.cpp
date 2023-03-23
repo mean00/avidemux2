@@ -105,6 +105,18 @@ json.addUint32("tonemapping",key->hdr.tonemapping);
 json.addFloat("target_luminance",key->hdr.target_luminance);
 json.addUint32("out_of_gamut_handling",key->hdr.out_of_gamut_handling);
 json.endNode();
+json.addNode("toolbars");
+json.addBool("toolbar_visible",key->toolbars.toolbar_visible);
+json.addBool("statusbar_visible",key->toolbars.statusbar_visible);
+json.addBool("codec_visible",key->toolbars.codec_visible);
+json.addBool("navigation_visible",key->toolbars.navigation_visible);
+json.addBool("audiometer_visible",key->toolbars.audiometer_visible);
+json.addBool("volume_visible",key->toolbars.volume_visible);
+json.addBool("controls_visible",key->toolbars.controls_visible);
+json.addBool("selection_visible",key->toolbars.selection_visible);
+json.addBool("time_visible",key->toolbars.time_visible);
+json.addBool("slider_visible",key->toolbars.slider_visible);
+json.endNode();
 return json.dumpToFile(file);
 };
 bool  my_prefs_struct_jdeserialize(const char *file, const ADM_paramList *tmpl,my_prefs_struct *key){
