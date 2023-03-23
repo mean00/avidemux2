@@ -163,6 +163,24 @@ void HandleAction_Staged(Action action)
                 }
             }
             break;
+        case ACT_GetTotal:
+            {
+                stagedActionSuccess = 0;
+                // Read the time set in the UI, not the real PTS
+                uint32_t time[4] = {0}, *t = time;
+                if(UI_getTotalTime(t,t+1,t+2,t+3))
+                {
+                    // Never leave the markers uninitialized
+                    uint64_t ptsA = ((t[0]*3600+t[1]*60+t[2])*1000+t[3])*1000;
+                    uint64_t ptsB = video_body->getVideoDuration();
+                    t = jumpMarkerA;
+                    ms2time((uint32_t)(ptsA/1000),t,t+1,t+2,t+3);
+                    t = jumpMarkerB;
+                    ms2time((uint32_t)(ptsB/1000),t,t+1,t+2,t+3);
+                    stagedActionSuccess = 1;
+                }
+            }
+            break;
         default:break;
     }
 }

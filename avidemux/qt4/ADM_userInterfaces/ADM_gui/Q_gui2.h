@@ -253,6 +253,7 @@ private slots:
     void markerAChanged(void);
     void markerBChanged(void);
     void selectionDurationChanged(void);
+    void totalTimeChanged(void);
 
     void sliderValueChanged(int u);
     void sliderMoved(int value);

@@ -507,6 +507,11 @@ void MainWindow::selectionDurationChanged(void)
     sendAction(ACT_GetSelection);
 }
 
+void MainWindow::totalTimeChanged(void)
+{
+    sendAction(ACT_GetTotal);
+}
+
 /**
     \fn currentTimeToClipboard
 */
@@ -574,6 +579,7 @@ void MainWindow::actionSlot(Action a)
                 a = ACT_GotoTime;
                 break;
             case ACT_GetMarkerA:
+            case ACT_GetTotal:
             case ACT_SelectMarkerA:
                 a = ACT_ChangeMarkerA;
                 break;
@@ -783,6 +789,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.selectionMarkerB->setInputMask("99:99:99.999");
     ui.selectionDuration->setValidator(timeValidator);
     ui.selectionDuration->setInputMask("99:99:99.999");
+    ui.totalTime->setValidator(timeValidator);
+    ui.totalTime->setInputMask("99:99:99.999");
 #endif
     // set the size of the current time display to fit the content
     QString text = "00:00:00.000"; // Don't translate this.
@@ -866,6 +874,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     // Get the time the user sets directly in the text element
     connect(ui.selectionDuration, SIGNAL(editingFinished()), this, SLOT(selectionDurationChanged()));
+
+    // Get the time the user sets directly in the text element
+    connect(ui.totalTime, SIGNAL(editingFinished()), this, SLOT(totalTimeChanged()));
 
     // Build file,... menu
     addScriptEnginesToFileMenu(myMenuFile);
@@ -1482,6 +1493,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         ui.selectionMarkerA->setReadOnly(true);
         ui.selectionMarkerB->setReadOnly(true);
         ui.selectionDuration->setReadOnly(true);
+        ui.totalTime->setReadOnly(true);
         pushButtonTime->setEnabled(false);
         pushButtonSaveScript->setEnabled(false);
         pushButtonRunScript->setEnabled(false);
@@ -1568,6 +1580,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     ui.selectionMarkerA->setReadOnly(!vid);
     ui.selectionMarkerB->setReadOnly(!vid);
     ui.selectionDuration->setReadOnly(!vid);
+    ui.totalTime->setReadOnly(!vid);
     pushButtonTime->setEnabled(vid);
     pushButtonSaveScript->setEnabled(vid && tinyPy);
     pushButtonRunScript->setEnabled(engines);
@@ -3729,6 +3742,43 @@ bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
     }
 
     return true;
+}
+
+/**
+    \fn UI_getTotalTime
+    \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
+*/
+bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+{
+    bool status = true;
+    QRegExp rx(timeRegExp);
+
+    // Previous state
+    uint64_t tot = video_body->getVideoDuration();
+
+    if(rx.exactMatch(WIDGET(totalTime)->text()))
+    {
+        QStringList results = rx.capturedTexts();
+
+        *hh = results.at(1).toInt(NULL, 10);
+        *mm = results.at(2).toInt(NULL, 10);
+        *ss = results.at(3).toInt(NULL, 10);
+        *ms = results.at(4).toInt(NULL, 10);
+
+        uint64_t x = (((*hh)*3600+(*mm)*60+(*ss))*1000+(*ms))*1000;
+
+        // Abort if there are no changes
+        if(x == tot)
+            return false;
+    }
+    else
+    {
+        status = false;
+    }
+
+    // Always revert to previous state
+    UI_setTotalTime(tot);
+    return status;
 }
 
 /**
