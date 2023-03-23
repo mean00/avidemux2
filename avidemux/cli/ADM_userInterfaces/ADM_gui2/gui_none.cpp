@@ -166,6 +166,10 @@ bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 {
     return false;
 }
+bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+{
+    return false;
+}
 void UI_setCurrentTime(uint64_t x)
 {
 
