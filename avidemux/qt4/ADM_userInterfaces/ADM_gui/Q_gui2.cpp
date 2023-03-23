@@ -2454,7 +2454,7 @@ void MainWindow::calcDockWidgetDimensions(uint32_t &width, uint32_t &height)
         reqh += ui.menubar->height();
     if(ui.toolBar->isVisible() && false==ui.toolBar->isFloating() && ui.toolBar->orientation()==Qt::Horizontal)
         reqh += ui.toolBar->frameSize().height();
-    if(ui.navigationWidget->isVisible() || ui.selectionWidget->isVisible() || ui.volumeWidget->isVisible() || ui.audioMeterWidget->isVisible())
+    if(ui.navigationWidget->isVisible())
        reqh += ui.navigationWidget->frameSize().height();
     height = reqh;
 }
