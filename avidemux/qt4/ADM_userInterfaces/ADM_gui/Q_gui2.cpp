@@ -1245,6 +1245,18 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
 }
 
 /**
+    \fn createPopupMenu
+    \bries Override the application default context menu.
+*/
+QMenu *MainWindow::createPopupMenu()
+{
+    QMenu *menu = QMainWindow::createPopupMenu();
+    menu->clear();
+    menu->addActions(ui.menuToolbars->actions());
+    return menu;
+}
+
+/**
     buildFileMenu
 */
 bool MainWindow::buildMyMenu(void)
