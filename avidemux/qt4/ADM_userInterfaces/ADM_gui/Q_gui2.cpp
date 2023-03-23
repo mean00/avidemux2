@@ -920,6 +920,11 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.menuToolbars->addSeparator();
     ui.menuToolbars->addAction(restoreDefaults);
 
+    // Workaround to set checkboxes when changing the visibility elsewhere
+    connect(ui.toolBar, SIGNAL(visibilityChanged(bool)), this, SLOT(toolBarVisibilityChanged(bool)));
+    connect(ui.codecWidget, SIGNAL(visibilityChanged(bool)), this, SLOT(codecVisibilityChanged(bool)));
+    connect(ui.navigationWidget, SIGNAL(visibilityChanged(bool)), this, SLOT(navigationVisibilityChanged(bool)));
+
     // On visibility change by connected checkboxes update preferences
     connect(ui.actionViewToolBar, SIGNAL(toggled(bool)), this, SLOT(toolBarVisibilityChanged(bool)));
     connect(ui.actionViewStatusBar, SIGNAL(toggled(bool)), this, SLOT(statusBarVisibilityChanged(bool)));
@@ -2078,6 +2083,9 @@ void MainWindow::restoreDefaultWidgetState(bool b)
 void MainWindow::toolBarVisibilityChanged(bool checked)
 {
     prefs->set(TOOLBARS_TOOLBAR_VISIBLE, checked);
+    // Workaround to set/unset the checkbox when changing the
+    // visibility elsewhere.
+    ui.menuToolbars->actions().at(ADM_Toolbars_Item::TOOLBAR)->setChecked(checked);
 }
 
 /**
@@ -2096,6 +2104,9 @@ void MainWindow::statusBarVisibilityChanged(bool checked)
 void MainWindow::codecVisibilityChanged(bool checked)
 {
     prefs->set(TOOLBARS_CODEC_VISIBLE, checked);
+    // Workaround to set/unset the checkbox when changing the
+    // visibility elsewhere.
+    ui.menuToolbars->actions().at(ADM_Toolbars_Item::CODEC)->setChecked(checked);
 }
 
 /**
@@ -2105,6 +2116,9 @@ void MainWindow::codecVisibilityChanged(bool checked)
 void MainWindow::navigationVisibilityChanged(bool checked)
 {
     prefs->set(TOOLBARS_NAVIGATION_VISIBLE, checked);
+    // Workaround to set/unset the checkbox when changing the
+    // visibility elsewhere.
+    ui.menuToolbars->actions().at(ADM_Toolbars_Item::NAVIGATION)->setChecked(checked);
 }
 
 /**
