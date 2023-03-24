@@ -81,5 +81,6 @@
         <file>pics/hdr.png</file>
         <file>pics/hdr@2x.png</file>
         <file>fonts/ADM7SEG.ttf</file>
+        <file>sounds/notify.wav</file>
     </qresource>
 </RCC>
