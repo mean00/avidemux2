@@ -1,7 +1,7 @@
 SET(ADM_LIB ADM_gui${QT_LIBRARY_EXTENSION})
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/../common/ADM_icons/")
 ADM_QT_WRAP_UI(${ADM_LIB}_header  gui2.ui titleBar.ui )
-ADM_QT_WRAP_CPP(${ADM_LIB}_source  Q_gui2.h Q_titleBar.h ADM_mwNavSlider.h T_preview.h T_vumeter.h T_thumbSlider.h ADM_qtray.h FileAction.h)
+ADM_QT_WRAP_CPP(${ADM_LIB}_source  Q_gui2.h Q_titleBar.h ADM_QLineEditPTS.h ADM_mwNavSlider.h T_preview.h T_vumeter.h T_thumbSlider.h ADM_qtray.h FileAction.h)
 IF(APPLE)
         ADM_QT_ADD_RESOURCES(${ADM_LIB}_resource  avidemux_osx.qrc)
 ELSEIF(WIN32)
@@ -32,6 +32,7 @@ SET(${ADM_LIB}_SRCS
 	Q_gui2.cpp   Q_gui2GL.cpp
 	Q_gui2_menu.cpp  
         Q_titleBar.cpp
+        ADM_QLineEditPTS.cpp
         T_preview.cpp  
         T_vumeter.cpp  
         #stubs.cpp

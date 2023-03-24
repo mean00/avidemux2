@@ -1515,7 +1515,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QLineEdit" name="selectionMarkerA">
+               <widget class="ADM_QLineEditPTS" name="selectionMarkerA">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -1524,12 +1524,6 @@
                 </property>
                 <property name="toolTip">
                  <string>Go to Marker A [PAGE UP]</string>
-                </property>
-                <property name="inputMask">
-                 <string>99:99:99.999</string>
-                </property>
-                <property name="text">
-                 <string>00:00:00.000</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -1540,7 +1534,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="selectionMarkerB">
+               <widget class="ADM_QLineEditPTS" name="selectionMarkerB">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -1549,12 +1543,6 @@
                 </property>
                 <property name="toolTip">
                  <string>Go to Marker B [PAGE DOWN]</string>
-                </property>
-                <property name="inputMask">
-                 <string>99:99:99.999</string>
-                </property>
-                <property name="text">
-                 <string>00:00:00.000</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -1616,18 +1604,12 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QLineEdit" name="selectionDuration">
+                 <widget class="ADM_QLineEditPTS" name="selectionDuration">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
-                  </property>
-                  <property name="inputMask">
-                   <string>99:99:99.999</string>
-                  </property>
-                  <property name="text">
-                   <string>00:00:00.000</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -1682,18 +1664,12 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLineEdit" name="currentTime">
+             <widget class="ADM_QLineEditPTS" name="currentTime">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
-              </property>
-              <property name="inputMask">
-               <string>99:99:99.999</string>
-              </property>
-              <property name="text">
-               <string>00:00:00.000</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -1720,18 +1696,12 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLineEdit" name="totalTime">
+             <widget class="ADM_QLineEditPTS" name="totalTime">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
-              </property>
-              <property name="inputMask">
-               <string>99:99:99.999</string>
-              </property>
-              <property name="text">
-               <string>00:00:00.000</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -2136,6 +2106,11 @@
    <class>ADM_mwNavSlider</class>
    <extends>QSlider</extends>
    <header>ADM_mwNavSlider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ADM_QLineEditPTS</class>
+   <extends>QLineEdit</extends>
+   <header>ADM_QLineEditPTS.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

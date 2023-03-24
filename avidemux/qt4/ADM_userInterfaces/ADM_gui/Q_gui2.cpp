@@ -41,6 +41,7 @@
 #define MENU_DECLARE
 #include "Q_gui2.h"
 #include "Q_titleBar.h"
+#include "ADM_QLineEditPTS.h"
 
 #ifdef BROKEN_PALETTE_PROPAGATION
     #include <QAbstractItemView>
@@ -142,8 +143,6 @@ static bool uiRunning=false;
 static bool uiIsMaximized=false;
 
 static bool needsResizing=false;
-
-static QRegExp timeRegExp("^([0-9]{2}):([0-5][0-9]):([0-5][0-9])\\.([0-9]{3})$");
 
 static QAction *findAction(std::vector<MenuEntry> *list, Action action);
 static QAction *findActionInToolBar(QToolBar *tb, Action action);
@@ -779,21 +778,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(checkChanged(int)));
     connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
     connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
-#if 1 /* disable if read-only */
-    QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
-    ui.currentTime->setValidator(timeValidator);
-    ui.currentTime->setInputMask("99:99:99.999");
-    ui.selectionMarkerA->setValidator(timeValidator);
-    ui.selectionMarkerA->setInputMask("99:99:99.999");
-    ui.selectionMarkerB->setValidator(timeValidator);
-    ui.selectionMarkerB->setInputMask("99:99:99.999");
-    ui.selectionDuration->setValidator(timeValidator);
-    ui.selectionDuration->setInputMask("99:99:99.999");
-    ui.totalTime->setValidator(timeValidator);
-    ui.totalTime->setInputMask("99:99:99.999");
-#endif
-    // set the size of the current time display to fit the content
-    QString text = "00:00:00.000"; // Don't translate this.
+
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
     ui.currentTime->setFont(QFont("ADM7SEG"));
     ui.totalTime->setFont(QFont("ADM7SEG"));
@@ -801,11 +786,11 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.selectionMarkerA->setFont(QFont("ADM7SEG"));
     ui.selectionMarkerB->setFont(QFont("ADM7SEG"));
 #endif
-    ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
-    ui.totalTime->setText(text); // Override ui translations here too.
-    ui.selectionDuration->setText(text); // Override ui translations here too.
-    ui.selectionMarkerA->setText(text); // Override ui translations here too.
-    ui.selectionMarkerB->setText(text); // Override ui translations here too.
+    ui.currentTime->setPTS(0);
+    ui.totalTime->setPTS(0);
+    ui.selectionMarkerA->setPTS(0);
+    ui.selectionMarkerB->setPTS(0);
+    ui.selectionDuration->setPTS(0);
 
     // Disabling to not cut off the text when adding action buttons
     //QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
@@ -3727,34 +3712,15 @@ admUITaskBarProgress *UI_getTaskBarProgress()
 */
 bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 {
-    QRegExp rx(timeRegExp);
-
-    // Previous state
-    uint64_t pts = admPreview::getCurrentPts();
-
-    if(rx.exactMatch(WIDGET(currentTime)->text()))
+    if(WIDGET(currentTime)->isTextEdited())
     {
-        QStringList results = rx.capturedTexts();
-
-        *hh = results.at(1).toInt(NULL, 10);
-        *mm = results.at(2).toInt(NULL, 10);
-        *ss = results.at(3).toInt(NULL, 10);
-        *ms = results.at(4).toInt(NULL, 10);
-
-        uint64_t x = (((*hh)*3600+(*mm)*60+(*ss))*1000+(*ms))*1000;
-
-        // Abort if there are no changes
-        if(x == pts)
-            return false;
-    }
-    else
-    {
-        // On failure revert to previous state
-        UI_setCurrentTime(pts);
-        return false;
+        uint32_t us;
+        WIDGET(currentTime)->PTS(hh, mm, ss, ms, &us);
+        return true;
     }
 
-    return true;
+    WIDGET(currentTime)->resetEdit();
+    return false;
 }
 
 /**
@@ -3763,35 +3729,15 @@ bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 */
 bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 {
-    QRegExp rx(timeRegExp);
-
-    // Previous state
-    uint64_t ptsA = video_body->getMarkerAPts();
-    uint64_t ptsB = video_body->getMarkerBPts();
-
-    if(rx.exactMatch(WIDGET(selectionMarkerA)->text()))
+    if(WIDGET(selectionMarkerA)->isTextEdited())
     {
-        QStringList results = rx.capturedTexts();
-
-        *hh = results.at(1).toInt(NULL, 10);
-        *mm = results.at(2).toInt(NULL, 10);
-        *ss = results.at(3).toInt(NULL, 10);
-        *ms = results.at(4).toInt(NULL, 10);
-
-        uint64_t x = (((*hh)*3600+(*mm)*60+(*ss))*1000+(*ms))*1000;
-
-        // Abort if there are no changes
-        if(x == ptsA)
-            return false;
-    }
-    else
-    {
-        // On failure revert to previous state
-        UI_setMarkers(ptsA, ptsB);
-        return false;
+        uint32_t us;
+        WIDGET(selectionMarkerA)->PTS(hh, mm, ss, ms, &us);
+        return true;
     }
 
-    return true;
+    WIDGET(selectionMarkerA)->resetEdit();
+    return false;
 }
 
 /**
@@ -3800,35 +3746,15 @@ bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 */
 bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 {
-    QRegExp rx(timeRegExp);
-
-    // Previous state
-    uint64_t ptsA = video_body->getMarkerAPts();
-    uint64_t ptsB = video_body->getMarkerBPts();
-
-    if(rx.exactMatch(WIDGET(selectionMarkerB)->text()))
+    if(WIDGET(selectionMarkerB)->isTextEdited())
     {
-        QStringList results = rx.capturedTexts();
-
-        *hh = results.at(1).toInt(NULL, 10);
-        *mm = results.at(2).toInt(NULL, 10);
-        *ss = results.at(3).toInt(NULL, 10);
-        *ms = results.at(4).toInt(NULL, 10);
-
-        uint64_t x = (((*hh)*3600+(*mm)*60+(*ss))*1000+(*ms))*1000;
-
-        // Abort if there are no changes
-        if(x == ptsB)
-            return false;
-    }
-    else
-    {
-        // On failure revert to previous state
-        UI_setMarkers(ptsA, ptsB);
-        return false;
+        uint32_t us;
+        WIDGET(selectionMarkerB)->PTS(hh, mm, ss, ms, &us);
+        return true;
     }
 
-    return true;
+    WIDGET(selectionMarkerB)->resetEdit();
+    return false;
 }
 
 /**
@@ -3837,35 +3763,15 @@ bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 */
 bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 {
-    QRegExp rx(timeRegExp);
-
-    // Previous state
-    uint64_t ptsA = video_body->getMarkerAPts();
-    uint64_t ptsB = video_body->getMarkerBPts();
-
-    if(rx.exactMatch(WIDGET(selectionDuration)->text()))
+    if(WIDGET(selectionDuration)->isTextEdited())
     {
-        QStringList results = rx.capturedTexts();
-
-        *hh = results.at(1).toInt(NULL, 10);
-        *mm = results.at(2).toInt(NULL, 10);
-        *ss = results.at(3).toInt(NULL, 10);
-        *ms = results.at(4).toInt(NULL, 10);
-
-        uint64_t x = (((*hh)*3600+(*mm)*60+(*ss))*1000+(*ms))*1000;
-
-        // Abort if there are no changes
-        if(ptsB == (ptsA + x))
-            return false;
-    }
-    else
-    {
-        // On failure revert to previous state
-        UI_setMarkers(ptsA, ptsB);
-        return false;
+        uint32_t us;
+        WIDGET(selectionDuration)->PTS(hh, mm, ss, ms, &us);
+        return true;
     }
 
-    return true;
+    WIDGET(selectionDuration)->resetEdit();
+    return false;
 }
 
 /**
@@ -3874,35 +3780,15 @@ bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 */
 bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 {
-    bool status = true;
-    QRegExp rx(timeRegExp);
-
-    // Previous state
-    uint64_t tot = video_body->getVideoDuration();
-
-    if(rx.exactMatch(WIDGET(totalTime)->text()))
+    if(WIDGET(totalTime)->isTextEdited())
     {
-        QStringList results = rx.capturedTexts();
-
-        *hh = results.at(1).toInt(NULL, 10);
-        *mm = results.at(2).toInt(NULL, 10);
-        *ss = results.at(3).toInt(NULL, 10);
-        *ms = results.at(4).toInt(NULL, 10);
-
-        uint64_t x = (((*hh)*3600+(*mm)*60+(*ss))*1000+(*ms))*1000;
-
-        // Abort if there are no changes
-        if(x == tot)
-            return false;
-    }
-    else
-    {
-        status = false;
+        uint32_t us;
+        WIDGET(totalTime)->PTS(hh, mm, ss, ms, &us);
+        return true;
     }
 
-    // Always revert to previous state
-    UI_setTotalTime(tot);
-    return status;
+    WIDGET(totalTime)->resetEdit();
+    return false;
 }
 
 /**
@@ -3911,14 +3797,7 @@ bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 */
 void UI_setCurrentTime(uint64_t curTime)
 {
-  char text[80];
- uint32_t mm,hh,ss,ms;
- uint32_t shorty=(uint32_t)(curTime/1000);
-
-    ms2time(shorty,&hh,&mm,&ss,&ms);
-      sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-    WIDGET(currentTime)->setText(text);
-
+    WIDGET(currentTime)->setPTS(curTime);
 }
 
 /**
@@ -3927,13 +3806,7 @@ void UI_setCurrentTime(uint64_t curTime)
 */
 void UI_setTotalTime(uint64_t curTime)
 {
-  char text[80];
- uint32_t mm,hh,ss,ms;
- uint32_t shorty=(uint32_t)(curTime/1000);
-
-    ms2time(shorty,&hh,&mm,&ss,&ms);
-    sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-    WIDGET(totalTime)->setText(text);
+    WIDGET(totalTime)->setPTS(curTime);
     slider->setTotalDuration(curTime);
 }
 /**
@@ -3950,29 +3823,11 @@ void UI_setSegments(uint32_t numOfSegs, uint64_t * segPts)
 */
 void UI_setMarkers(uint64_t a, uint64_t b)
 {
-    char text[80];
-    uint64_t absoluteA=a,absoluteB=b;
-    uint32_t hh,mm,ss,ms;
-    uint32_t timems;
-    a/=1000;
-    b/=1000;
-
-    timems=(uint32_t)(a);
-    ms2time(timems,&hh,&mm,&ss,&ms);
-    snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    WIDGET(selectionMarkerA)->setText(text);
-
-    timems=(uint32_t)(b);
-    ms2time(timems,&hh,&mm,&ss,&ms);
-    snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    WIDGET(selectionMarkerB)->setText(text);
-
-    timems=(uint32_t)(b-a);
-    ms2time(timems,&hh,&mm,&ss,&ms);
-    snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    WIDGET(selectionDuration)->setText(text);
-
-    slider->setMarkers(absoluteA, absoluteB);
+    WIDGET(selectionMarkerA)->setPTS(a);
+    WIDGET(selectionMarkerB)->setPTS(b);
+    // NOTE: To cut the us use (uint64_t)((uint32_t)(a/1000))*1000
+    WIDGET(selectionDuration)->setPTS(b - a);
+    slider->setMarkers(a, b);
 }
 
 /**
