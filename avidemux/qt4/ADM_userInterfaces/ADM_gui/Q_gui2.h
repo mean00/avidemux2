@@ -9,6 +9,7 @@
 #include <QSlider>
 #include <QWidget>
 #include <QtCore/QTimer>
+#include <QStatusBar>
 #include <string>
 
 #include "ADM_mwNavSlider.h"
@@ -124,6 +125,7 @@ public:
     void updateZoomIndicator(void);
     void syncToolbarsMenu(void);
     void addStatusBar(void);
+    void removeStatusBar(void);
     void updateStatusBarInfo(void);
     void updateStatusBarDisplayInfo(const char * display);
     void updateStatusBarDecoderInfo(const char * decoder);
@@ -214,6 +216,7 @@ protected:
     void currentTimeToClipboard(void);
     bool dragWhilePlay;
     
+    QStatusBar * statusBarWidget;
     QLabel * statusBarInfo;
     int statusBarInfo_Zoom;
     QString statusBarInfo_Display, statusBarInfo_Decoder;

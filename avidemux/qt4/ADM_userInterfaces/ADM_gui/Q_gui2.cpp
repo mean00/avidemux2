@@ -22,7 +22,6 @@
 #include <QMessageBox>
 #include <QPalette>
 #include <QColor>
-#include <QStatusBar>
 #if QT_VERSION < QT_VERSION_CHECK(5,11,0)
 #   include <QDesktopWidget>
 #else
@@ -643,6 +642,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     actionLock = 0;
     busyCntr = 0;
     busyTimer.setSingleShot(true);
+    statusBarWidget = NULL;
     statusBarInfo = NULL;
 
 #if defined(__APPLE__) && defined(USE_SDL)
@@ -2509,24 +2509,42 @@ void MainWindow::syncToolbarsMenu(void)
 */
 void MainWindow::addStatusBar(void)
 {
-    QStatusBar * statusBar = new QStatusBar(this);
-    statusBar->setSizeGripEnabled(false);
+    if (statusBarWidget)
+        return;
+    statusBarWidget = new QStatusBar(this);
+    statusBarWidget->setSizeGripEnabled(false);
 
-    this->statusBarInfo = new QLabel("");
-    statusBar->addWidget(this->statusBarInfo);
+    statusBarInfo = new QLabel("");
+    statusBarWidget->addWidget(statusBarInfo);
 
-    statusBar->setContentsMargins(4,0,4,0);
+    statusBarWidget->setContentsMargins(4,0,4,0);
 
-    this->setStatusBar(statusBar);
+    this->setStatusBar(statusBarWidget);
     updateStatusBarInfo();
 }
 
+/**
+    \fn removeStatusBar
+    \brief Remove status bar from the main window
+*/
+void MainWindow::removeStatusBar(void)
+{
+    if (!statusBarWidget)
+        return;
+    
+    this->setStatusBar(NULL);   // Qt should take care of deleting nested objects
+    
+    statusBarWidget = NULL;
+    statusBarInfo = NULL;
+}
 
 /**
     \fn updateStatusBarInfo
 */
 void MainWindow::updateStatusBarInfo(void)
 {
+    if (!statusBarWidget)
+        return;
     QString s = QString("");
     if (avifileinfo)
     {
@@ -2539,8 +2557,8 @@ void MainWindow::updateStatusBarInfo(void)
         s += QString(QT_TRANSLATE_NOOP("qgui2","No file loaded"));
     }
 
-    if (this->statusBarInfo)
-        this->statusBarInfo->setText(s);
+    if (statusBarInfo)
+        statusBarInfo->setText(s);
 }
 
 /**
@@ -2578,7 +2596,8 @@ void MainWindow::notifyStatusBar(const char * lead, const char * msg, int timeou
     if (timeout <= 0)   // prevent permament message
         timeout = 2500;
     QString s = QString(lead).arg(msg);
-    statusBar()->showMessage(s, timeout);
+    if (statusBarWidget)
+        statusBarWidget->showMessage(s, timeout);
 }
 
 
