@@ -1783,6 +1783,7 @@ void MainWindow::restoreDefaultWidgetState(bool b)
     ui.volumeWidget->setVisible(true);
     ui.audioMetreWidget->setVisible(true);
     ui.toolBar->setVisible(true);
+    addStatusBar();
 
     syncToolbarsMenu();
     updateZoomIndicator();
@@ -2499,8 +2500,30 @@ void MainWindow::syncToolbarsMenu(void)
     CHECKMARK(3,selection)
     CHECKMARK(4,volume)
     ui.menuToolbars->actions().at(5)->setChecked(ui.toolBar->isVisible());
+    ui.menuToolbars->actions().at(6)->setChecked(statusBarEnabled());
 #undef CHECKMARK
 #undef EXPAND
+}
+
+
+/**
+    \fn setStatusBarEnabled
+    \brief public slot for setStatusBarEnabled
+*/
+void MainWindow::setStatusBarEnabled(bool enabled)
+{
+    if (enabled)
+        addStatusBar();
+    else
+        removeStatusBar();
+}
+
+/**
+    \fn statusBarEnabled
+*/
+bool MainWindow::statusBarEnabled(void)
+{
+    return (statusBarWidget != NULL);
 }
 
 /**
@@ -2701,6 +2724,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 #endif
     uiIsMaximized = false;
     bool vuMeterIsHidden = false;
+    bool statusbarHidden = false;
     QSettings *qset = qtSettingsCreate();
     if(qset)
     {
@@ -2720,6 +2744,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         mw->ui.horizontalSlider_2->blockSignals(true);
         mw->ui.horizontalSlider_2->setValue(qset->value("volume", 100).toInt());
         mw->ui.horizontalSlider_2->blockSignals(false);
+        statusbarHidden = qset->value("statusbarHidden", false).toBool();
         qset->endGroup();
         // Hack: allow to drop other Qt-specific settings on application restart
         char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
@@ -2783,8 +2808,9 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         ADM_info("OpenGL not activated, not initialized\n");
     }
 #endif
+    if (!statusbarHidden)
+        mw->addStatusBar();
     mw->syncToolbarsMenu();
-    mw->addStatusBar();
 
     return 1;
 }
@@ -2803,6 +2829,7 @@ void UI_closeGui(void)
         qset->setValue("windowState", ((QMainWindow *)QuiMainWindows)->saveState());
         qset->setValue("showMaximized", QuiMainWindows->isMaximized());
         qset->setValue("volume", WIDGET(horizontalSlider_2)->value());
+        qset->setValue("statusbarHidden", !(((MainWindow*)QuiMainWindows)->statusBarEnabled()));
         qset->endGroup();
         delete qset;
         qset = NULL;

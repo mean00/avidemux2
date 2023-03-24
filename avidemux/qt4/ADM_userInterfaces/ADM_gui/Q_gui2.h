@@ -124,6 +124,7 @@ public:
     void setZoomToFit(void);
     void updateZoomIndicator(void);
     void syncToolbarsMenu(void);
+    bool statusBarEnabled(void);
     void addStatusBar(void);
     void removeStatusBar(void);
     void updateStatusBarInfo(void);
@@ -286,6 +287,8 @@ public slots:
     void audioToggled(bool checked);
 
     void thumbSlider_valueEmitted(int value);
+    
+    void setStatusBarEnabled(bool enabled);
 
 signals:
     void actionSignal(Action a);
