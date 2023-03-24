@@ -2,7 +2,6 @@
 PROCESS(pushButtonVideoFilter, ACT_VIDEO_FILTERS) \
 PROCESS(pushButtonAudioConf, ACT_AUDIO_CODEC_CONFIGURE) \
 PROCESS(pushButtonAudioFilter, ACT_AUDIO_FILTERS) \
-PROCESS(pushButtonDecoderConf, ACT_DecoderOption) \
 PROCESS(pushButtonFormatConfigure, ACT_ContainerConfigure) \
 PROCESS(toolButtonPlay, ACT_PlayAvi) \
 PROCESS(toolButtonPreviousFrame, ACT_PreviousFrame) \

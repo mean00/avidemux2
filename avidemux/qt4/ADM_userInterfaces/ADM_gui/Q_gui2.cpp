@@ -1297,7 +1297,6 @@ void MainWindow::buildButtonLists(void)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerA)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerB)
 
-    ADD_PUSHBUTTON_PLAYBACK(pushButtonDecoderConf)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoConf)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoFilter)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonAudioConf)
@@ -1420,7 +1419,6 @@ void MainWindow::updateCodecWidgetControlsState(void)
     // currently only lavc provides some decoder options
     if(avifileinfo && !strcmp(video_body->getVideoDecoderName(),"Lavcodec"))
         b=true;
-    ui.pushButtonDecoderConf->setEnabled(b);
     // take care of the "Decoder Options" item in the menu "Video"
     ENABLE(Video, ACT_DecoderOption, b)
     // post-processing is available only for software decoding
@@ -3344,7 +3342,6 @@ bool UI_setVolume(void)
 */
 bool UI_setDecoderName(const char *name)
 {
-    WIDGET(labelVideoDecoder)->setText(name);
     ((MainWindow *)QuiMainWindows)->updateStatusBarDecoderInfo(name);
     return true;
 }
@@ -3354,7 +3351,6 @@ bool UI_setDecoderName(const char *name)
  */
 bool UI_setDisplayName(const char *name)
 {
-    WIDGET(labelDisplay)->setText(name);
     ((MainWindow *)QuiMainWindows)->updateStatusBarDisplayInfo(name);
     return true;
 }
