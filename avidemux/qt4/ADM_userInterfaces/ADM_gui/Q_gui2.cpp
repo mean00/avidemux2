@@ -714,7 +714,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 #endif
 
 #ifdef __APPLE__
-    ui.navButtonsLayout->setSpacing(2);
+    ui.controlsWidgetLayout->setSpacing(2);
     // Qt upscales 2x sized icons in the toolbar, making them huge and pixelated in HiDPI conditions, WTF?
     ui.toolBar->setIconSize(QSize(24,24));
 #endif
