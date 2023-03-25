@@ -153,7 +153,7 @@ void HandleAction_Staged(Action action)
                 {
                     // Never leave the markers uninitialized
                     uint64_t ptsA = video_body->getMarkerAPts();
-                    uint64_t ptsB, delta = ((t[0]*3600+t[1]*60+t[2])*1000+t[3])*1000;
+                    uint64_t ptsB, delta = (((uint64_t)t[0]*3600+t[1]*60+t[2])*1000+t[3])*1000;
                     t = jumpMarkerA;
                     ms2time((uint32_t)(ptsA/1000),t,t+1,t+2,t+3);
                     t = jumpMarkerB;
@@ -171,7 +171,7 @@ void HandleAction_Staged(Action action)
                 if(UI_getTotalTime(t,t+1,t+2,t+3))
                 {
                     // Never leave the markers uninitialized
-                    uint64_t ptsA = ((t[0]*3600+t[1]*60+t[2])*1000+t[3])*1000;
+                    uint64_t ptsA = (((uint64_t)t[0]*3600+t[1]*60+t[2])*1000+t[3])*1000;
                     uint64_t ptsB = video_body->getVideoDuration();
                     t = jumpMarkerA;
                     ms2time((uint32_t)(ptsA/1000),t,t+1,t+2,t+3);
@@ -449,7 +449,7 @@ static int ignore_change=0;
                 // Check if outside boundaries when jumping to A/B
                 if(sel)
                 {
-                    uint64_t x = ((hh*3600+mm*60+ss)*1000+ms)*1000;
+                    uint64_t x = (((uint64_t)hh*3600+mm*60+ss)*1000+ms)*1000;
 
                     if(x == 0)
                         *sel = 0;
