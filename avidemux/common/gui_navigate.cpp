@@ -532,6 +532,10 @@ static int ignore_change=0;
             // directly by changing the text.  Avoiding a refresh will
             // leave a value that may not match the real position.
             UI_setMarkers(ptsA, ptsB);
+            // Refresh the total time field too.  It is used to select
+            // from A to B starting from the end of the video to set a
+            // cut range to redure the duration of the video.
+            UI_setTotalTime(tot);
 
             stagedActionSuccess = 0;
         }
