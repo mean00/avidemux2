@@ -6,6 +6,7 @@ struct  {
 	uint32_t apiVersion;
 }version;
 struct  {
+	bool pts_timings_tooltips;
 	bool swap_if_A_greater_than_B;
 	bool saveprefsonexit;
 	bool ignoresavedmarkers;

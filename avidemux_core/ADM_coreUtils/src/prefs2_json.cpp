@@ -9,6 +9,7 @@ json.addNode("version");
 json.addUint32("apiVersion",key->version.apiVersion);
 json.endNode();
 json.addNode("features");
+json.addBool("pts_timings_tooltips",key->features.pts_timings_tooltips);
 json.addBool("swap_if_A_greater_than_B",key->features.swap_if_A_greater_than_B);
 json.addBool("saveprefsonexit",key->features.saveprefsonexit);
 json.addBool("ignoresavedmarkers",key->features.ignoresavedmarkers);

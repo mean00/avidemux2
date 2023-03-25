@@ -138,6 +138,10 @@ public:
 
     QString statusBarFrame_Type;
 
+    // Show precision timings in time fields tooltips
+    void updatePTSToolTips(void);
+    bool showPTSToolTips;
+
 #ifdef __APPLE__
     void fileOpenWrapper(QList<QUrl> list) { openFiles(list); }
 #endif

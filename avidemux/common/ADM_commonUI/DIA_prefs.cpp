@@ -48,6 +48,7 @@ uint32_t olddevice,newdevice;
 uint32_t render;
 
 bool     useSwap=0;
+bool     showPTSToolTips=0;
 
 uint32_t lavcThreads=0;
 uint32_t encodePriority=2;
@@ -261,6 +262,8 @@ std::string currentSdlDriver=getSdlDriverName();
         // SWAP A&B if A>B
         if(!prefs->get(FEATURES_SWAP_IF_A_GREATER_THAN_B, &useSwap))
                 useSwap=0;
+        if(!prefs->get(FEATURES_PTS_TIMINGS_TOOLTIPS, &showPTSToolTips))
+                showPTSToolTips=0;
         // Get level of message verbosity
         prefs->get(MESSAGE_LEVEL,&msglevel);
         // Downmix default
@@ -277,6 +280,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle swapUpDownKeys(&swapUpDown,QT_TRANSLATE_NOOP("adm","Re_verse UP and DOWN arrow keys for navigation"));
         diaElemToggle swapMouseWheel(&swapWheel,QT_TRANSLATE_NOOP("adm","Reverse mouse _wheel for navigation"));
         diaElemToggle swapMarkers(&useSwap,QT_TRANSLATE_NOOP("adm","_Swap markers if marker A is set past marker B or marker B before A in video"));
+        diaElemToggle ptsToolTips(&showPTSToolTips,QT_TRANSLATE_NOOP("adm","_Show precision timings in time fields tooltips"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
 
 
@@ -539,7 +543,7 @@ std::string currentSdlDriver=getSdlDriverName();
 //--
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMouseWheel, &swapMarkers, &checkForUpdate};
+        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMouseWheel, &swapMarkers, &ptsToolTips, &checkForUpdate};
         diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),NB_ELEM(diaUser),diaUser);
 
          /* Automation */
@@ -812,6 +816,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
             // Auto swap A/B vs reset the other marker
             prefs->set(FEATURES_SWAP_IF_A_GREATER_THAN_B, useSwap);
+            // Show precision timings in time fields tooltips
+            prefs->set(FEATURES_PTS_TIMINGS_TOOLTIPS, showPTSToolTips);
             //
             prefs->set(MESSAGE_LEVEL,msglevel);
             // Discard changes to output config on video load
