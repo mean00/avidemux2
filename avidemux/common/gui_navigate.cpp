@@ -526,8 +526,12 @@ static int ignore_change=0;
                 video_body->addToUndoQueue();
                 video_body->setMarkerAPts(ptsA);
                 video_body->setMarkerBPts(ptsB);
-                UI_setMarkers(ptsA, ptsB);
             }
+            // Always refresh the time fields text, even if the are no
+            // changes in marker A/B.  The fields may have been edited
+            // directly by changing the text.  Avoiding a refresh will
+            // leave a value that may not match the real position.
+            UI_setMarkers(ptsA, ptsB);
 
             stagedActionSuccess = 0;
         }
