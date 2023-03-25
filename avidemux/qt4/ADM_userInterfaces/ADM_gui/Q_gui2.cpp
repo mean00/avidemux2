@@ -2053,6 +2053,15 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt += SHORTCUT(actForward,Go)
     tt += hint;
     ui.toolButtonForwardOneMinute->setToolTip(tt);
+
+    if(avifileinfo)
+    {
+        ui.currentTime->appendPTSToolTip();
+        ui.totalTime->appendPTSToolTip();
+        ui.selectionMarkerA->appendPTSToolTip();
+        ui.selectionMarkerB->appendPTSToolTip();
+        ui.selectionDuration->appendPTSToolTip();
+    }
 }
 
 /**
@@ -3798,6 +3807,8 @@ bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
 void UI_setCurrentTime(uint64_t curTime)
 {
     WIDGET(currentTime)->setPTS(curTime);
+    if(avifileinfo)
+        WIDGET(currentTime)->appendPTSToolTip();
 }
 
 /**
@@ -3808,6 +3819,8 @@ void UI_setTotalTime(uint64_t curTime)
 {
     WIDGET(totalTime)->setPTS(curTime);
     slider->setTotalDuration(curTime);
+    if(avifileinfo)
+        WIDGET(totalTime)->appendPTSToolTip();
 }
 /**
     \fn UI_setSegments
@@ -3828,6 +3841,12 @@ void UI_setMarkers(uint64_t a, uint64_t b)
     // NOTE: To cut the us use (uint64_t)((uint32_t)(a/1000))*1000
     WIDGET(selectionDuration)->setPTS(b - a);
     slider->setMarkers(a, b);
+    if(avifileinfo)
+    {
+        WIDGET(selectionMarkerA)->appendPTSToolTip();
+        WIDGET(selectionMarkerB)->appendPTSToolTip();
+        WIDGET(selectionDuration)->appendPTSToolTip();
+    }
 }
 
 /**
