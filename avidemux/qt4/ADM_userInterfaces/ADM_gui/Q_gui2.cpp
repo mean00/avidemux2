@@ -475,6 +475,13 @@ void MainWindow::timeChangeFinished(void)
 
 void MainWindow::currentTimeChanged(void)
 {
+    // Workaroud to reject a weird editingFinished event that triggers
+    // even when this element was already readonly.  This happens just
+    // one time when switching focus away from the readonly element or
+    // not readonly.
+    if(WIDGET(currentTime)->isReadOnly())
+        return;
+
     sendAction(ACT_GetTime);
 
     // NOTE: QLineEdit::editingFinished() is emitted when Enter is
@@ -493,21 +500,33 @@ void MainWindow::currentTimeChanged(void)
 
 void MainWindow::markerAChanged(void)
 {
+    // Workaroud: see above.
+    if(WIDGET(selectionMarkerA)->isReadOnly())
+        return;
     sendAction(ACT_GetMarkerA);
 }
 
 void MainWindow::markerBChanged(void)
 {
+    // Workaroud: see above.
+    if(WIDGET(selectionMarkerB)->isReadOnly())
+        return;
     sendAction(ACT_GetMarkerB);
 }
 
 void MainWindow::selectionDurationChanged(void)
 {
+    // Workaroud: see above.
+    if(WIDGET(selectionDuration)->isReadOnly())
+        return;
     sendAction(ACT_GetSelection);
 }
 
 void MainWindow::totalTimeChanged(void)
 {
+    // Workaroud: see above.
+    if(WIDGET(totalTime)->isReadOnly())
+        return;
     sendAction(ACT_GetTotal);
 }
 
