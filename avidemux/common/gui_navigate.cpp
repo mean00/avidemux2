@@ -45,9 +45,10 @@ extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *m
 extern void A_setHDRConfig(void);
 extern void A_setPostproc(void);
 
-static uint32_t jumpTarget[4] = {0};
-static uint32_t jumpMarkerA[4] = {0};
-static uint32_t jumpMarkerB[4] = {0};
+// hh:mm:ss.ms,us
+static uint32_t jumpTarget[5] = {0};
+static uint32_t jumpMarkerA[5] = {0};
+static uint32_t jumpMarkerB[5] = {0};
 
 bool   GUI_infiniteForward(uint64_t pts);
 bool   GUI_lastFrameBeforePts(uint64_t pts);
@@ -75,7 +76,7 @@ void HandleAction_Staged(Action action)
                 stagedActionSuccess = 0;
                 // Read the time set in the UI, not the real PTS
                 uint32_t *t = jumpTarget;
-                if(UI_getCurrentTime(t,t+1,t+2,t+3))
+                if(UI_getCurrentTime(t,t+1,t+2,t+3,t+4))
                     stagedActionSuccess = 1;
             }
             break;
@@ -86,6 +87,7 @@ void HandleAction_Staged(Action action)
                 uint64_t pts = admPreview::getCurrentPts();
                 uint32_t *t = jumpTarget;
                 ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                t[4] = pts - (uint64_t)((uint32_t)(pts/1000))*1000;
                 if (DIA_gotoTime(t,t+1,t+2,t+3))
                     stagedActionSuccess = 1;
             }
@@ -95,12 +97,13 @@ void HandleAction_Staged(Action action)
                 stagedActionSuccess = 0;
                 // Read the time set in the UI, not the real PTS
                 uint32_t *t = jumpMarkerA;
-                if(UI_getMarkerA(t,t+1,t+2,t+3))
+                if(UI_getMarkerA(t,t+1,t+2,t+3,t+4))
                 {
                     // Never leave the other marker uninitialized
                     uint64_t pts = video_body->getMarkerBPts();
                     t = jumpMarkerB;
                     ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                    t[4] = pts - (uint64_t)((uint32_t)(pts/1000))*1000;
                     stagedActionSuccess = 1;
                 }
             }
@@ -110,12 +113,13 @@ void HandleAction_Staged(Action action)
                 stagedActionSuccess = 0;
                 // Read the time set in the UI, not the real PTS
                 uint32_t *t = jumpMarkerB;
-                if(UI_getMarkerB(t,t+1,t+2,t+3))
+                if(UI_getMarkerB(t,t+1,t+2,t+3,t+4))
                 {
                     // Never leave the other marker uninitialized
                     uint64_t pts = video_body->getMarkerAPts();
                     t = jumpMarkerA;
                     ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                    t[4] = pts - (uint64_t)((uint32_t)(pts/1000))*1000;
                     stagedActionSuccess = 1;
                 }
             }
@@ -131,10 +135,12 @@ void HandleAction_Staged(Action action)
                 pts = video_body->getMarkerAPts();
                 t = jumpMarkerA;
                 ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                t[4] = pts - (uint64_t)((uint32_t)(pts/1000))*1000;
                 // Get current marker B time
                 pts = video_body->getMarkerBPts();
                 t = jumpMarkerB;
                 ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
+                t[4] = pts - (uint64_t)((uint32_t)(pts/1000))*1000;
                 // Always initialize both, but select only one
                 if(action == ACT_SelectMarkerA)
                     t = jumpMarkerA;
@@ -148,17 +154,19 @@ void HandleAction_Staged(Action action)
             {
                 stagedActionSuccess = 0;
                 // Read the time set in the UI, not the real PTS
-                uint32_t time[4] = {0}, *t = time;
-                if(UI_getSelectionTime(t,t+1,t+2,t+3))
+                uint32_t time[5] = {0}, *t = time;
+                if(UI_getSelectionTime(t,t+1,t+2,t+3,t+4))
                 {
                     // Never leave the markers uninitialized
                     uint64_t ptsA = video_body->getMarkerAPts();
-                    uint64_t ptsB, delta = (((uint64_t)t[0]*3600+t[1]*60+t[2])*1000+t[3])*1000;
+                    uint64_t ptsB, delta = (((uint64_t)t[0]*3600+t[1]*60+t[2])*1000+t[3])*1000+t[4];
                     t = jumpMarkerA;
                     ms2time((uint32_t)(ptsA/1000),t,t+1,t+2,t+3);
+                    t[4] = ptsA - (uint64_t)((uint32_t)(ptsA/1000))*1000;
                     t = jumpMarkerB;
                     ptsB = ptsA + delta;
                     ms2time((uint32_t)(ptsB/1000),t,t+1,t+2,t+3);
+                    t[4] = ptsB - (uint64_t)((uint32_t)(ptsB/1000))*1000;
                     stagedActionSuccess = 1;
                 }
             }
@@ -167,16 +175,18 @@ void HandleAction_Staged(Action action)
             {
                 stagedActionSuccess = 0;
                 // Read the time set in the UI, not the real PTS
-                uint32_t time[4] = {0}, *t = time;
-                if(UI_getTotalTime(t,t+1,t+2,t+3))
+                uint32_t time[5] = {0}, *t = time;
+                if(UI_getTotalTime(t,t+1,t+2,t+3,t+4))
                 {
                     // Never leave the markers uninitialized
-                    uint64_t ptsA = (((uint64_t)t[0]*3600+t[1]*60+t[2])*1000+t[3])*1000;
+                    uint64_t ptsA = (((uint64_t)t[0]*3600+t[1]*60+t[2])*1000+t[3])*1000+t[4];
                     uint64_t ptsB = video_body->getVideoDuration();
                     t = jumpMarkerA;
                     ms2time((uint32_t)(ptsA/1000),t,t+1,t+2,t+3);
+                    t[4] = ptsA - (uint64_t)((uint32_t)(ptsA/1000))*1000;
                     t = jumpMarkerB;
                     ms2time((uint32_t)(ptsB/1000),t,t+1,t+2,t+3);
+                    t[4] = ptsB - (uint64_t)((uint32_t)(ptsB/1000))*1000;
                     stagedActionSuccess = 1;
                 }
             }
@@ -403,12 +413,13 @@ static int ignore_change=0;
             if(playing) break;
             if(!stagedActionSuccess) break;
             uint32_t *t = jumpTarget;
-            uint32_t hh,mm,ss,ms;
+            uint32_t hh,mm,ss,ms,us;
             hh = *t++;
             mm = *t++;
             ss = *t++;
             ms = *t;
-            A_jumpToTime(hh,mm,ss,ms);
+	    us = *t+1;
+            A_jumpToTime(hh,mm,ss,ms); // FIXME: missing us
             stagedActionSuccess = 0;
       }
       break;
@@ -419,7 +430,7 @@ static int ignore_change=0;
             // Selected marker A/B time
             uint32_t *t = jumpMarkerA;
             uint32_t *tB = jumpMarkerB;
-            uint32_t hh,mm,ss,ms;
+            uint32_t hh,mm,ss,ms,us;
             uint64_t ptsA, ptsB;
 
             // Selected marker A/B time chooser
@@ -433,9 +444,10 @@ static int ignore_change=0;
             uint64_t preB = ptsB = video_body->getMarkerBPts();
 
             // Backup the current time to restore it later
-            uint32_t time[4] = {0};
+            uint32_t time[5] = {0};
             uint64_t pts = admPreview::getCurrentPts();
             ms2time((uint32_t)(pts/1000),time,time+1,time+2,time+3);
+            time[4] = pts - (uint64_t)((uint32_t)(pts/1000))*1000;
 
             // Jump to time to find the correct marker A/B time, then
             // restore the previous current time after procesing.
@@ -445,11 +457,12 @@ static int ignore_change=0;
                 mm = t[1];
                 ss = t[2];
                 ms = t[3];
+                us = t[4];
 
                 // Check if outside boundaries when jumping to A/B
                 if(sel)
                 {
-                    uint64_t x = (((uint64_t)hh*3600+mm*60+ss)*1000+ms)*1000;
+                    uint64_t x = (((uint64_t)hh*3600+mm*60+ss)*1000+ms)*1000+us;
 
                     if(x == 0)
                         *sel = 0;
@@ -465,7 +478,7 @@ static int ignore_change=0;
                     // FIXME: Don't jump to find the correct marker
                     // A/B time, rather find the closest frame then
                     // frame2time.
-                    A_jumpToTime(hh,mm,ss,ms);
+                    A_jumpToTime(hh,mm,ss,ms); // FIXME: missing us
                 }
 
                 // Exit the loop after restoring previous time

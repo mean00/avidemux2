@@ -5,11 +5,11 @@
 void UI_updateFrameCount(uint32_t curFrame);
 void UI_setFrameCount(uint32_t curFrame,uint32_t total);
 
-bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms);
-bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms);
-bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms);
-bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms);
-bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms);
+bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us);
+bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us);
+bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us);
+bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us);
+bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us);
 void UI_setCurrentTime(uint64_t pts);
 void UI_setTotalTime(uint64_t curTime);
 void UI_setSegments(uint32_t numOfSegs, uint64_t * segPts);

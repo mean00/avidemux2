@@ -154,23 +154,23 @@ void UI_SetCurrentFormat( uint32_t f )
 {
 	cliFormat=f;
 }
-bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     return false;
 }
-bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     return false;
 }
-bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     return false;
 }
-bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     return false;
 }
-bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     return false;
 }

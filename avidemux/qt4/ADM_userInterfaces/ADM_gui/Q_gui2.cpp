@@ -3765,12 +3765,11 @@ admUITaskBarProgress *UI_getTaskBarProgress()
     \fn UI_getCurrentTime
     \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
 */
-bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     if(WIDGET(currentTime)->isTextEdited())
     {
-        uint32_t us;
-        WIDGET(currentTime)->PTS(hh, mm, ss, ms, &us);
+        WIDGET(currentTime)->PTS(hh, mm, ss, ms, us);
         return true;
     }
 
@@ -3782,12 +3781,11 @@ bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
     \fn UI_getMarkerA
     \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
 */
-bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     if(WIDGET(selectionMarkerA)->isTextEdited())
     {
-        uint32_t us;
-        WIDGET(selectionMarkerA)->PTS(hh, mm, ss, ms, &us);
+        WIDGET(selectionMarkerA)->PTS(hh, mm, ss, ms, us);
         return true;
     }
 
@@ -3799,12 +3797,11 @@ bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
     \fn UI_getMarkerB
     \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
 */
-bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     if(WIDGET(selectionMarkerB)->isTextEdited())
     {
-        uint32_t us;
-        WIDGET(selectionMarkerB)->PTS(hh, mm, ss, ms, &us);
+        WIDGET(selectionMarkerB)->PTS(hh, mm, ss, ms, us);
         return true;
     }
 
@@ -3816,12 +3813,11 @@ bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
     \fn UI_getSelectionTime
     \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
 */
-bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     if(WIDGET(selectionDuration)->isTextEdited())
     {
-        uint32_t us;
-        WIDGET(selectionDuration)->PTS(hh, mm, ss, ms, &us);
+        WIDGET(selectionDuration)->PTS(hh, mm, ss, ms, us);
         return true;
     }
 
@@ -3833,12 +3829,11 @@ bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
     \fn UI_getTotalTime
     \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
 */
-bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms)
+bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
 {
     if(WIDGET(totalTime)->isTextEdited())
     {
-        uint32_t us;
-        WIDGET(totalTime)->PTS(hh, mm, ss, ms, &us);
+        WIDGET(totalTime)->PTS(hh, mm, ss, ms, us);
         return true;
     }
 
