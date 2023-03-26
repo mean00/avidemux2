@@ -299,17 +299,19 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle swapUpDownKeys(&swapUpDown,QT_TRANSLATE_NOOP("adm","Re_verse UP and DOWN arrow keys for navigation"));
         diaElemToggle swapMouseWheel(&swapWheel,QT_TRANSLATE_NOOP("adm","Reverse mouse _wheel for navigation"));
         diaElemToggle swapMarkers(&useSwap,QT_TRANSLATE_NOOP("adm","_Swap markers if marker A is set past marker B or marker B before A in video"));
-        diaElemToggle extraButtons(&showExtraButtons,QT_TRANSLATE_NOOP("adm","Show e_xtra buttons in time fields"));
-        diaElemToggle ptsToolTips(&showPTSToolTips,QT_TRANSLATE_NOOP("adm","Show _precision timings in time fields tooltips"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
 
         // Time Fields
         diaElemFrame frameTimeFields(QT_TRANSLATE_NOOP("adm","Time Fields"));
+        diaElemToggle extraButtons(&showExtraButtons,QT_TRANSLATE_NOOP("adm","Show e_xtra buttons in time fields"));
+        diaElemToggle ptsToolTips(&showPTSToolTips,QT_TRANSLATE_NOOP("adm","Show _precision timings in time fields tooltips"));
         diaElemToggle currentTimeFieldEdits(&isCurrentTimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the c_urrent time field"));
         diaElemToggle totalTimeFieldEdits(&isTotalTimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the t_otal time field"));
         diaElemToggle selectionTimeFieldEdits(&isSelectionTimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the selection _duration field"));
         diaElemToggle markerATimeFieldEdits(&isMarkerATimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the Marker _A time field"));
         diaElemToggle markerBTimeFieldEdits(&isMarkerBTimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the Marker _B time field"));
+        frameTimeFields.swallow(&extraButtons);
+        frameTimeFields.swallow(&ptsToolTips);
         frameTimeFields.swallow(&currentTimeFieldEdits);
         frameTimeFields.swallow(&totalTimeFieldEdits);
         frameTimeFields.swallow(&selectionTimeFieldEdits);
@@ -575,7 +577,7 @@ std::string currentSdlDriver=getSdlDriverName();
 //--
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMouseWheel, &swapMarkers, &extraButtons, &ptsToolTips, &checkForUpdate, &frameTimeFields};
+        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMouseWheel, &swapMarkers, &checkForUpdate, &frameTimeFields};
         diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),NB_ELEM(diaUser),diaUser);
 
          /* Automation */
