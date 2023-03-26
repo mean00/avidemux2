@@ -13,6 +13,7 @@ typedef struct
 static optionDesc myOptions[]={
 { VERSION_APIVERSION,"version.apiVersion"                             ,ADM_param_uint32_t	,"1",	0,	999},
 { FEATURES_PTS_TIMINGS_TOOLTIPS,"features.pts_timings_tooltips"       ,ADM_param_bool    	,"1",	0,	1},
+{ FEATURES_TIME_FIELDS_EXTRA_BUTTONS,"features.time_fields_extra_buttons",ADM_param_bool    	,"1",	0,	1},
 { FEATURES_SWAP_IF_A_GREATER_THAN_B,"features.swap_if_A_greater_than_B",ADM_param_bool    	,"1",	0,	1},
 { FEATURES_SAVEPREFSONEXIT,"features.saveprefsonexit"                 ,ADM_param_bool    	,"1",	0,	1},
 { FEATURES_IGNORESAVEDMARKERS,"features.ignoresavedmarkers"           ,ADM_param_bool    	,"0",	0,	1},

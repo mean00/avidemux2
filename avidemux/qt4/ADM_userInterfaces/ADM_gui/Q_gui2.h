@@ -133,6 +133,12 @@ public:
     void setLightTheme(void);
     void setDarkTheme(void);
 
+    void currentTimeAddActionButons(bool all);
+    void totalTimeAddActionButons(bool all);
+    void selectionDurationAddActionButons(bool all);
+    void selectionMarkerAAddActionButons(bool all);
+    void selectionMarkerBAddActionButons(bool all);
+
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
 
@@ -141,6 +147,10 @@ public:
     // Show precision timings in time fields tooltips
     void updatePTSToolTips(void);
     bool showPTSToolTips;
+
+    // Show extra buttons in time fields
+    void updateWidgetActionButtons(void);
+    bool showExtraButtons;
 
 #ifdef __APPLE__
     void fileOpenWrapper(QList<QUrl> list) { openFiles(list); }
@@ -245,6 +255,30 @@ protected:
         LAST=10       // end (for iterations)
     };
 
+private:
+    QList<QAction*> currentTimeActionButtons;
+    QList<QAction*> totalTimeActionButtons;
+    QList<QAction*> selectionDurationActionButtons;
+    QList<QAction*> selectionMarkerAActionButtons;
+    QList<QAction*> selectionMarkerBActionButtons;
+
+    QAction *pushButtonTime;
+    QAction *pushButtonSaveScript;
+    QAction *pushButtonRunScript;
+    QAction *pushButtonAppend;
+    QAction *pushButtonUndo;
+    QAction *pushButtonRedo;
+    QAction *pushButtonCut;
+    QAction *pushButtonCopy;
+    QAction *pushButtonPaste;
+    QAction *pushButtonEditMarkerA;
+    QAction *pushButtonEditMarkerB;
+    QAction *pushButtonJumpToMarkerA;
+    QAction *pushButtonJumpToMarkerB;
+    QAction *pushButtonResetMarkerA;
+    QAction *pushButtonResetMarkerB;
+    QAction *pushButtonResetMarkers;
+
 private slots:
     void timeChanged(int);
     void timeChangeFinished(void);
@@ -266,6 +300,7 @@ private slots:
     void gotoMarkerB(void);
     void resetMarkerA(void);
     void resetMarkerB(void);
+    void resetMarkers(void);
 
     void buttonPressed(void);
     void toolButtonPressed(bool z);

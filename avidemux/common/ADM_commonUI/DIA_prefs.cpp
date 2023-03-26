@@ -48,6 +48,7 @@ uint32_t olddevice,newdevice;
 uint32_t render;
 
 bool     useSwap=0;
+bool     showExtraButtons=0;
 bool     showPTSToolTips=0;
 
 uint32_t lavcThreads=0;
@@ -262,6 +263,8 @@ std::string currentSdlDriver=getSdlDriverName();
         // SWAP A&B if A>B
         if(!prefs->get(FEATURES_SWAP_IF_A_GREATER_THAN_B, &useSwap))
                 useSwap=0;
+        if(!prefs->get(FEATURES_TIME_FIELDS_EXTRA_BUTTONS, &showExtraButtons))
+                showExtraButtons=0;
         if(!prefs->get(FEATURES_PTS_TIMINGS_TOOLTIPS, &showPTSToolTips))
                 showPTSToolTips=0;
         // Get level of message verbosity
@@ -280,6 +283,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle swapUpDownKeys(&swapUpDown,QT_TRANSLATE_NOOP("adm","Re_verse UP and DOWN arrow keys for navigation"));
         diaElemToggle swapMouseWheel(&swapWheel,QT_TRANSLATE_NOOP("adm","Reverse mouse _wheel for navigation"));
         diaElemToggle swapMarkers(&useSwap,QT_TRANSLATE_NOOP("adm","_Swap markers if marker A is set past marker B or marker B before A in video"));
+        diaElemToggle extraButtons(&showExtraButtons,QT_TRANSLATE_NOOP("adm","_Show extra buttons in time fields"));
         diaElemToggle ptsToolTips(&showPTSToolTips,QT_TRANSLATE_NOOP("adm","_Show precision timings in time fields tooltips"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
 
@@ -543,7 +547,7 @@ std::string currentSdlDriver=getSdlDriverName();
 //--
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMouseWheel, &swapMarkers, &ptsToolTips, &checkForUpdate};
+        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMouseWheel, &swapMarkers, &extraButtons, &ptsToolTips, &checkForUpdate};
         diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),NB_ELEM(diaUser),diaUser);
 
          /* Automation */
@@ -816,6 +820,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
             // Auto swap A/B vs reset the other marker
             prefs->set(FEATURES_SWAP_IF_A_GREATER_THAN_B, useSwap);
+            // Show extra buttons in time fields
+            prefs->set(FEATURES_TIME_FIELDS_EXTRA_BUTTONS, showExtraButtons);
             // Show precision timings in time fields tooltips
             prefs->set(FEATURES_PTS_TIMINGS_TOOLTIPS, showPTSToolTips);
             //

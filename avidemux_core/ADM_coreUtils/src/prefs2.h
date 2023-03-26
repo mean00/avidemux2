@@ -7,6 +7,7 @@ struct  {
 }version;
 struct  {
 	bool pts_timings_tooltips;
+	bool time_fields_extra_buttons;
 	bool swap_if_A_greater_than_B;
 	bool saveprefsonexit;
 	bool ignoresavedmarkers;

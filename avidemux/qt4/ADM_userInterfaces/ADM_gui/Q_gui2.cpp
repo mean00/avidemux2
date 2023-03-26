@@ -147,22 +147,6 @@ static bool needsResizing=false;
 static QAction *findAction(std::vector<MenuEntry> *list, Action action);
 static QAction *findActionInToolBar(QToolBar *tb, Action action);
 
-static QAction *pushButtonTime;
-static QAction *pushButtonSaveScript;
-static QAction *pushButtonRunScript;
-static QAction *pushButtonAppend;
-static QAction *pushButtonUndo;
-static QAction *pushButtonRedo;
-static QAction *pushButtonCut;
-static QAction *pushButtonCopy;
-static QAction *pushButtonPaste;
-static QAction *pushButtonEditMarkerA;
-static QAction *pushButtonEditMarkerB;
-static QAction *pushButtonJumpToMarkerA;
-static QAction *pushButtonJumpToMarkerB;
-static QAction *pushButtonResetMarkerA;
-static QAction *pushButtonResetMarkerB;
-
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
 #define CONNECT(object,zzz) connect( (ui.object),SIGNAL(triggered()),this,SLOT(buttonPressed()));
@@ -554,6 +538,24 @@ void MainWindow::setRefreshCap(void)
 }
 
 /**
+    \brief Update time fields actions buttons.
+
+    Read preference to add only the default button or all buttons to
+    time fields.
+*/
+void MainWindow::updateWidgetActionButtons(void)
+{
+    showExtraButtons = false;
+    prefs->get(FEATURES_TIME_FIELDS_EXTRA_BUTTONS, &showExtraButtons);
+
+    currentTimeAddActionButons(showExtraButtons);
+    totalTimeAddActionButons(showExtraButtons);
+    selectionDurationAddActionButons(showExtraButtons);
+    selectionMarkerAAddActionButons(showExtraButtons);
+    selectionMarkerBAddActionButons(showExtraButtons);
+}
+
+/**
     \fn updatePTSToolTips
 */
 void MainWindow::updatePTSToolTips(void)
@@ -841,59 +843,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     //QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
     //ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
 
-    // Put an edit time button inside the element
-    pushButtonTime = ui.currentTime->addAction(QIcon(MKICON(time)), QLineEdit::LeadingPosition);
-    connect(pushButtonTime,SIGNAL(triggered()),this,SLOT(seekTime()));
-
-    // Put a save script button inside the element
-    pushButtonSaveScript = ui.currentTime->addAction(QIcon(MKICON(savescript)), QLineEdit::LeadingPosition);
-    connect(pushButtonSaveScript,SIGNAL(triggered()),this,SLOT(saveScriptAction()));
-
-    // Put a run script button inside the element
-    pushButtonRunScript = ui.currentTime->addAction(QIcon(MKICON(runscript)), QLineEdit::LeadingPosition);
-    connect(pushButtonRunScript,SIGNAL(triggered()),this,SLOT(runScriptAction()));
-
-    // Put an append button inside the element
-    pushButtonAppend = ui.totalTime->addAction(QIcon(MKICON(append)), QLineEdit::LeadingPosition);
-    connect(pushButtonAppend,SIGNAL(triggered()),this,SLOT(appendAction()));
-
-    // Put an undo button inside the element
-    pushButtonUndo = ui.totalTime->addAction(QIcon(MKICON(undo)), QLineEdit::LeadingPosition);
-    connect(pushButtonUndo,SIGNAL(triggered()),this,SLOT(undoAction()));
-
-    // Put a redo button inside the element
-    pushButtonRedo = ui.totalTime->addAction(QIcon(MKICON(redo)), QLineEdit::LeadingPosition);
-    connect(pushButtonRedo,SIGNAL(triggered()),this,SLOT(redoAction()));
-
-    // Put a cut button inside the element
-    pushButtonCut = ui.selectionDuration->addAction(QIcon(MKICON(cut)), QLineEdit::LeadingPosition);
-    connect(pushButtonCut,SIGNAL(triggered()),this,SLOT(cutSelection()));
-
-    // Put a copy button inside the text element
-    pushButtonCopy = ui.selectionDuration->addAction(QIcon(MKICON(copy)), QLineEdit::LeadingPosition);
-    connect(pushButtonCopy,SIGNAL(triggered()),this,SLOT(copySelection()));
-
-    // Put a paste button inside the text element
-    pushButtonPaste = ui.selectionDuration->addAction(QIcon(MKICON(paste)), QLineEdit::LeadingPosition);
-    connect(pushButtonPaste,SIGNAL(triggered()),this,SLOT(pasteClipboard()));
-
-    // Put an edit marker button inside the text elements
-    pushButtonEditMarkerA = ui.selectionMarkerA->addAction(QIcon(MKICON(time)), QLineEdit::LeadingPosition);
-    connect(pushButtonEditMarkerA,SIGNAL(triggered()),this,SLOT(editMarkerA()));
-    pushButtonEditMarkerB = ui.selectionMarkerB->addAction(QIcon(MKICON(time)), QLineEdit::LeadingPosition);
-    connect(pushButtonEditMarkerB,SIGNAL(triggered()),this,SLOT(editMarkerB()));
-
-    // Put a jump marker button inside the text elements
-    pushButtonJumpToMarkerA = ui.selectionMarkerA->addAction(QIcon(MKICON(goMarkA)), QLineEdit::LeadingPosition);
-    connect(pushButtonJumpToMarkerA,SIGNAL(triggered()),this,SLOT(gotoMarkerA()));
-    pushButtonJumpToMarkerB = ui.selectionMarkerB->addAction(QIcon(MKICON(goMarkB)), QLineEdit::LeadingPosition);
-    connect(pushButtonJumpToMarkerB,SIGNAL(triggered()),this,SLOT(gotoMarkerB()));
-
-    // Put a reset marker button inside the text elements
-    pushButtonResetMarkerA = ui.selectionMarkerA->addAction(QIcon(MKICON(reset_markA)), QLineEdit::LeadingPosition);
-    connect(pushButtonResetMarkerA,SIGNAL(triggered()),this,SLOT(resetMarkerA()));
-    pushButtonResetMarkerB = ui.selectionMarkerB->addAction(QIcon(MKICON(reset_markB)), QLineEdit::LeadingPosition);
-    connect(pushButtonResetMarkerB,SIGNAL(triggered()),this,SLOT(resetMarkerB()));
+    // initialize time fields action buttons
+    updateWidgetActionButtons();
 
     // Get the time the user sets directly in the text element
     connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
@@ -1568,6 +1519,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         pushButtonJumpToMarkerB->setEnabled(false);
         pushButtonResetMarkerA->setEnabled(false);
         pushButtonResetMarkerB->setEnabled(false);
+        pushButtonResetMarkers->setEnabled(false);
 
         return;
     }
@@ -1655,6 +1607,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     pushButtonJumpToMarkerB->setEnabled(vid);
     pushButtonResetMarkerA->setEnabled(resetA);
     pushButtonResetMarkerB->setEnabled(resetB);
+    pushButtonResetMarkers->setEnabled(resetA || resetB);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1995,6 +1948,10 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt += SHORTCUT(ACT_ResetMarkerB,Edit)
     pushButtonResetMarkerB->setToolTip(tt);
 
+    tt = QT_TRANSLATE_NOOP("qgui2","Reset Markers");
+    tt += SHORTCUT(ACT_ResetMarkers,Edit)
+    pushButtonResetMarkers->setToolTip(tt);
+
     tt = QT_TRANSLATE_NOOP("qgui2","Save tinyPy script");
     pushButtonSaveScript->setToolTip(tt);
 
@@ -2107,6 +2064,179 @@ void MainWindow::widgetsUpdateTooltips(void)
         ui.selectionMarkerB->appendPTSToolTip();
         ui.selectionDuration->appendPTSToolTip();
     }
+}
+
+/**
+    \brief Add actions to a QLineEdit widget.
+    \param[out] widget element where to add actions.
+    \param[in] actions list of actions for the element (can be empty).
+    \param[in] all if true add all actions, otherwise add only the first one.
+    \param[in] first default action to use instead of the first one in actions list (can be NULL).
+    \return true if the widget's actions list has been modified, otherwise false.
+
+    Add the list of actions to the widget when all is true.
+
+    If all is false, add the first in the actions list to the widget,
+    or if the parameter first isn't NULL, add that instead.
+
+    Each call to this function will first remove all actions from the
+    widget.  To leave the widget with no actions, set all to true and
+    give an empty actions list.  If all is set to false, to leave the
+    widget with no actions, in addition to an empty list pass NULL as
+    the parameter first.
+
+    You may want to call adjustSize(), or setTextMargins(), when this
+    function returns true.
+*/
+static bool enableWidgetActionButtons(QLineEdit *widget, const QList<QAction*> &actions, bool all, QAction* first = NULL)
+{
+    if(!widget)
+        return false;
+
+    first = first ? first : actions.first();
+
+    QListIterator<QAction*> a(widget->actions());
+    bool changed = a.hasNext() || (all && actions.first()) || first;
+
+    while(a.hasNext())
+        widget->removeAction(a.next());
+
+    a = actions;
+
+    if(all)
+        while(a.hasNext())
+            widget->addAction(a.next(), QLineEdit::LeadingPosition);
+    else if(first)
+        widget->addAction(first, QLineEdit::LeadingPosition);
+
+    return changed;
+}
+
+/**
+    \brief Add action buttons to the current time field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::currentTimeAddActionButons(bool all)
+{
+    if(currentTimeActionButtons.isEmpty())
+    {
+        pushButtonTime = new QAction(QIcon(MKICON(time)), "Go to Time", ui.currentTime);
+        pushButtonSaveScript = new QAction(QIcon(MKICON(savescript)), "Save tinyPy script", ui.currentTime);
+        pushButtonRunScript = new QAction(QIcon(MKICON(runscript)), "Run script/project", ui.currentTime);
+
+        connect(pushButtonTime,SIGNAL(triggered()),this,SLOT(seekTime()));
+        connect(pushButtonSaveScript,SIGNAL(triggered()),this,SLOT(saveScriptAction()));
+        connect(pushButtonRunScript,SIGNAL(triggered()),this,SLOT(runScriptAction()));
+
+        currentTimeActionButtons.append(pushButtonTime);
+        currentTimeActionButtons.append(pushButtonSaveScript);
+        currentTimeActionButtons.append(pushButtonRunScript);
+    }
+
+    if(enableWidgetActionButtons(ui.currentTime, currentTimeActionButtons, all))
+        ui.currentTime->setTextMargins(0,0,0,0);
+}
+
+/**
+    \brief Add action buttons to the total time field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::totalTimeAddActionButons(bool all)
+{
+    if(totalTimeActionButtons.isEmpty())
+    {
+        pushButtonAppend = new QAction(QIcon(MKICON(append)), "Append media", ui.totalTime);
+        pushButtonUndo = new QAction(QIcon(MKICON(undo)), "Undo action", ui.totalTime);
+        pushButtonRedo = new QAction(QIcon(MKICON(redo)), "Redo action", ui.totalTime);
+
+        connect(pushButtonAppend,SIGNAL(triggered()),this,SLOT(appendAction()));
+        connect(pushButtonUndo,SIGNAL(triggered()),this,SLOT(undoAction()));
+        connect(pushButtonRedo,SIGNAL(triggered()),this,SLOT(redoAction()));
+
+        totalTimeActionButtons.append(pushButtonAppend);
+        totalTimeActionButtons.append(pushButtonUndo);
+        totalTimeActionButtons.append(pushButtonRedo);
+    }
+
+    if(enableWidgetActionButtons(ui.totalTime, totalTimeActionButtons, all))
+        ui.totalTime->setTextMargins(0,0,0,0);
+}
+
+/**
+    \brief Add action buttons to the selection duration field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::selectionDurationAddActionButons(bool all)
+{
+    if(selectionDurationActionButtons.isEmpty())
+    {
+        pushButtonCut = new QAction(QIcon(MKICON(cut)), "Cut selection", ui.selectionDuration);
+        pushButtonCopy = new QAction(QIcon(MKICON(copy)), "Copy selection", ui.selectionDuration);
+        pushButtonPaste = new QAction(QIcon(MKICON(paste)), "Paste clipboard", ui.selectionDuration);
+        pushButtonResetMarkers = new QAction(QApplication::style()->standardIcon(QStyle::SP_TrashIcon), "Reset Markers)", ui.selectionDuration);
+
+        connect(pushButtonCut,SIGNAL(triggered()),this,SLOT(cutSelection()));
+        connect(pushButtonCopy,SIGNAL(triggered()),this,SLOT(copySelection()));
+        connect(pushButtonPaste,SIGNAL(triggered()),this,SLOT(pasteClipboard()));
+        connect(pushButtonResetMarkers,SIGNAL(triggered()),this,SLOT(resetMarkers()));
+
+        selectionDurationActionButtons.append(pushButtonCut);
+        selectionDurationActionButtons.append(pushButtonCopy);
+        selectionDurationActionButtons.append(pushButtonPaste);
+    }
+
+    if(enableWidgetActionButtons(ui.selectionDuration, selectionDurationActionButtons, all, pushButtonResetMarkers))
+        ui.selectionDuration->setTextMargins(0,0,0,0);
+}
+
+/**
+    \brief Add action buttons to the marker A field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::selectionMarkerAAddActionButons(bool all)
+{
+    if(selectionMarkerAActionButtons.isEmpty())
+    {
+        pushButtonEditMarkerA = new QAction(QIcon(MKICON(time)), "Edit Marker A", ui.selectionMarkerA);
+        pushButtonJumpToMarkerA = new QAction(QIcon(MKICON(goMarkA)), "Go to Marker A", ui.selectionMarkerA);
+        pushButtonResetMarkerA = new QAction(QIcon(MKICON(reset_markA)), "Reset Marker A (time 0)", ui.selectionMarkerA);
+
+        connect(pushButtonEditMarkerA,SIGNAL(triggered()),this,SLOT(editMarkerA()));
+        connect(pushButtonJumpToMarkerA,SIGNAL(triggered()),this,SLOT(gotoMarkerA()));
+        connect(pushButtonResetMarkerA,SIGNAL(triggered()),this,SLOT(resetMarkerA()));
+
+        selectionMarkerAActionButtons.append(pushButtonEditMarkerA);
+        selectionMarkerAActionButtons.append(pushButtonJumpToMarkerA);
+        selectionMarkerAActionButtons.append(pushButtonResetMarkerA);
+    }
+
+    if(enableWidgetActionButtons(ui.selectionMarkerA, selectionMarkerAActionButtons, all, pushButtonJumpToMarkerA))
+        ui.selectionMarkerA->setTextMargins(0,0,0,0);
+}
+
+/**
+    \brief Add action buttons to the marker B field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::selectionMarkerBAddActionButons(bool all)
+{
+    if(selectionMarkerBActionButtons.isEmpty())
+    {
+        pushButtonEditMarkerB = new QAction(QIcon(MKICON(time)), "Edit Marker B", ui.selectionMarkerB);
+        pushButtonJumpToMarkerB = new QAction(QIcon(MKICON(goMarkB)), "Go to Marker B", ui.selectionMarkerB);
+        pushButtonResetMarkerB = new QAction(QIcon(MKICON(reset_markB)), "Reset Marker B (total time)", ui.selectionMarkerB);
+
+        connect(pushButtonEditMarkerB,SIGNAL(triggered()),this,SLOT(editMarkerB()));
+        connect(pushButtonJumpToMarkerB,SIGNAL(triggered()),this,SLOT(gotoMarkerB()));
+        connect(pushButtonResetMarkerB,SIGNAL(triggered()),this,SLOT(resetMarkerB()));
+
+        selectionMarkerBActionButtons.append(pushButtonEditMarkerB);
+        selectionMarkerBActionButtons.append(pushButtonJumpToMarkerB);
+        selectionMarkerBActionButtons.append(pushButtonResetMarkerB);
+    }
+
+    if(enableWidgetActionButtons(ui.selectionMarkerB, selectionMarkerBActionButtons, all, pushButtonJumpToMarkerB))
+        ui.selectionMarkerB->setTextMargins(0,0,0,0);
 }
 
 /**
@@ -2543,6 +2673,14 @@ void MainWindow::resetMarkerA(void)
 void MainWindow::resetMarkerB(void)
 {
     sendAction (ACT_ResetMarkerB) ;
+}
+/**
+    \fn resetMarkers
+    \brief Called to reset both marker A and B
+*/
+void MainWindow::resetMarkers(void)
+{
+    sendAction (ACT_ResetMarkers) ;
 }
 /**
     \fn searchMenu
@@ -3428,6 +3566,7 @@ void UI_applySettings(void)
     ((MainWindow *)QuiMainWindows)->updateActionShortcuts();
     ((MainWindow *)QuiMainWindows)->volumeWidgetOperational();
     ((MainWindow *)QuiMainWindows)->setRefreshCap();
+    ((MainWindow *)QuiMainWindows)->updateWidgetActionButtons();
     ((MainWindow *)QuiMainWindows)->updatePTSToolTips();
 }
 /**
