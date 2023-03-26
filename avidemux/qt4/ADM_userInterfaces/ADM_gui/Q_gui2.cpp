@@ -538,6 +538,33 @@ void MainWindow::setRefreshCap(void)
 }
 
 /**
+    \brief Update time fields keyboard editing ability.
+
+    Read preferences to detect which time field accepts direct
+    keyboard editing.
+*/
+void MainWindow::updateTimeFieldsReadOnly(void)
+{
+    isCurrentTimeFieldEditable = false;
+    isTotalTimeFieldEditable = false;
+    isSelectionTimeFieldEditable = false;
+    isMarkerATimeFieldEditable = false;
+    isMarkerBTimeFieldEditable = false;
+
+    prefs->get(FEATURES_CURRENT_TIME_FIELD_EDITABLE, &isCurrentTimeFieldEditable);
+    prefs->get(FEATURES_TOTAL_TIME_FIELD_EDITABLE, &isTotalTimeFieldEditable);
+    prefs->get(FEATURES_SELECTION_TIME_FIELD_EDITABLE, &isSelectionTimeFieldEditable);
+    prefs->get(FEATURES_MARKER_A_TIME_FIELD_EDITABLE, &isMarkerATimeFieldEditable);
+    prefs->get(FEATURES_MARKER_B_TIME_FIELD_EDITABLE, &isMarkerBTimeFieldEditable);
+
+    ui.currentTime->setReadOnly(!isCurrentTimeFieldEditable);
+    ui.totalTime->setReadOnly(!isTotalTimeFieldEditable);
+    ui.selectionDuration->setReadOnly(!isSelectionTimeFieldEditable);
+    ui.selectionMarkerA->setReadOnly(!isMarkerATimeFieldEditable);
+    ui.selectionMarkerB->setReadOnly(!isMarkerBTimeFieldEditable);
+}
+
+/**
     \brief Update time fields actions buttons.
 
     Read preference to add only the default button or all buttons to
@@ -1587,11 +1614,11 @@ void MainWindow::setMenuItemsEnabledState(void)
     ENABLE(Recent, ACT_CLEAR_RECENT, haveRecentItems)
     ENABLE(Recent, ACT_RESTORE_SESSION, A_checkSavedSession(false))
 
-    ui.currentTime->setReadOnly(!vid);
-    ui.selectionMarkerA->setReadOnly(!vid);
-    ui.selectionMarkerB->setReadOnly(!vid);
-    ui.selectionDuration->setReadOnly(!vid);
-    ui.totalTime->setReadOnly(!vid);
+    ui.currentTime->setReadOnly(!vid || !isCurrentTimeFieldEditable);
+    ui.selectionMarkerA->setReadOnly(!vid || !isMarkerATimeFieldEditable);
+    ui.selectionMarkerB->setReadOnly(!vid || !isMarkerBTimeFieldEditable);
+    ui.selectionDuration->setReadOnly(!vid || !isSelectionTimeFieldEditable);
+    ui.totalTime->setReadOnly(!vid || !isTotalTimeFieldEditable);
     pushButtonTime->setEnabled(vid);
     pushButtonSaveScript->setEnabled(vid && tinyPy);
     pushButtonRunScript->setEnabled(engines);
@@ -3566,6 +3593,7 @@ void UI_applySettings(void)
     ((MainWindow *)QuiMainWindows)->updateActionShortcuts();
     ((MainWindow *)QuiMainWindows)->volumeWidgetOperational();
     ((MainWindow *)QuiMainWindows)->setRefreshCap();
+    ((MainWindow *)QuiMainWindows)->updateTimeFieldsReadOnly();
     ((MainWindow *)QuiMainWindows)->updateWidgetActionButtons();
     ((MainWindow *)QuiMainWindows)->updatePTSToolTips();
 }

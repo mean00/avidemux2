@@ -8,6 +8,11 @@ struct  {
 struct  {
 	bool pts_timings_tooltips;
 	bool time_fields_extra_buttons;
+	bool current_time_field_editable;
+	bool total_time_field_editable;
+	bool selection_time_field_editable;
+	bool marker_a_time_field_editable;
+	bool marker_b_time_field_editable;
 	bool swap_if_A_greater_than_B;
 	bool saveprefsonexit;
 	bool ignoresavedmarkers;

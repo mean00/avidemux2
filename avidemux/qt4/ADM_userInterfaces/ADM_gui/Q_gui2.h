@@ -152,6 +152,14 @@ public:
     void updateWidgetActionButtons(void);
     bool showExtraButtons;
 
+    // Allow time fields editing via keyboard
+    void updateTimeFieldsReadOnly(void);
+    bool isCurrentTimeFieldEditable;
+    bool isTotalTimeFieldEditable;
+    bool isSelectionTimeFieldEditable;
+    bool isMarkerATimeFieldEditable;
+    bool isMarkerBTimeFieldEditable;
+
 #ifdef __APPLE__
     void fileOpenWrapper(QList<QUrl> list) { openFiles(list); }
 #endif

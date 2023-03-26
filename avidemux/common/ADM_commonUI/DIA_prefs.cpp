@@ -51,6 +51,12 @@ bool     useSwap=0;
 bool     showExtraButtons=0;
 bool     showPTSToolTips=0;
 
+bool     isCurrentTimeFieldEditable=0;
+bool     isTotalTimeFieldEditable=0;
+bool     isSelectionTimeFieldEditable=0;
+bool     isMarkerATimeFieldEditable=0;
+bool     isMarkerBTimeFieldEditable=0;
+
 uint32_t lavcThreads=0;
 uint32_t encodePriority=2;
 //uint32_t indexPriority=2;
@@ -267,6 +273,16 @@ std::string currentSdlDriver=getSdlDriverName();
                 showExtraButtons=0;
         if(!prefs->get(FEATURES_PTS_TIMINGS_TOOLTIPS, &showPTSToolTips))
                 showPTSToolTips=0;
+        if(!prefs->get(FEATURES_CURRENT_TIME_FIELD_EDITABLE, &isCurrentTimeFieldEditable))
+                isCurrentTimeFieldEditable=0;
+        if(!prefs->get(FEATURES_TOTAL_TIME_FIELD_EDITABLE, &isTotalTimeFieldEditable))
+                isTotalTimeFieldEditable=0;
+        if(!prefs->get(FEATURES_SELECTION_TIME_FIELD_EDITABLE, &isSelectionTimeFieldEditable))
+                isSelectionTimeFieldEditable=0;
+        if(!prefs->get(FEATURES_MARKER_A_TIME_FIELD_EDITABLE, &isMarkerATimeFieldEditable))
+                isMarkerATimeFieldEditable=0;
+        if(!prefs->get(FEATURES_MARKER_B_TIME_FIELD_EDITABLE, &isMarkerBTimeFieldEditable))
+                isMarkerBTimeFieldEditable=0;
         // Get level of message verbosity
         prefs->get(MESSAGE_LEVEL,&msglevel);
         // Downmix default
@@ -287,6 +303,18 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle ptsToolTips(&showPTSToolTips,QT_TRANSLATE_NOOP("adm","Show _precision timings in time fields tooltips"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
 
+        // Time Fields
+        diaElemFrame frameTimeFields(QT_TRANSLATE_NOOP("adm","Time Fields"));
+        diaElemToggle currentTimeFieldEdits(&isCurrentTimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the c_urrent time field"));
+        diaElemToggle totalTimeFieldEdits(&isTotalTimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the t_otal time field"));
+        diaElemToggle selectionTimeFieldEdits(&isSelectionTimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the selection _duration field"));
+        diaElemToggle markerATimeFieldEdits(&isMarkerATimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the Marker _A time field"));
+        diaElemToggle markerBTimeFieldEdits(&isMarkerBTimeFieldEditable,QT_TRANSLATE_NOOP("adm","Allow to keyboard edit the Marker _B time field"));
+        frameTimeFields.swallow(&currentTimeFieldEdits);
+        frameTimeFields.swallow(&totalTimeFieldEdits);
+        frameTimeFields.swallow(&selectionTimeFieldEdits);
+        frameTimeFields.swallow(&markerATimeFieldEdits);
+        frameTimeFields.swallow(&markerBTimeFieldEdits);
 
         diaElemFrame frameSimd(QT_TRANSLATE_NOOP("adm","SIMD"));
 
@@ -547,7 +575,7 @@ std::string currentSdlDriver=getSdlDriverName();
 //--
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMouseWheel, &swapMarkers, &extraButtons, &ptsToolTips, &checkForUpdate};
+        diaElem *diaUser[]={&menuMessage, &menuLanguage, &resetEncoder, &enableAltShortcuts, &swapUpDownKeys, &swapMouseWheel, &swapMarkers, &extraButtons, &ptsToolTips, &checkForUpdate, &frameTimeFields};
         diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),NB_ELEM(diaUser),diaUser);
 
          /* Automation */
@@ -824,6 +852,17 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_TIME_FIELDS_EXTRA_BUTTONS, showExtraButtons);
             // Show precision timings in time fields tooltips
             prefs->set(FEATURES_PTS_TIMINGS_TOOLTIPS, showPTSToolTips);
+            // Allow to keyboard edit the current time field
+            prefs->set(FEATURES_CURRENT_TIME_FIELD_EDITABLE, isCurrentTimeFieldEditable);
+            // Allow to keyboard edit the total time field
+            prefs->set(FEATURES_TOTAL_TIME_FIELD_EDITABLE, isTotalTimeFieldEditable);
+            // Allow to keyboard edit the selection duration field
+            prefs->set(FEATURES_SELECTION_TIME_FIELD_EDITABLE, isSelectionTimeFieldEditable);
+            // Allow to keyboard edit the Marker A time field
+            prefs->set(FEATURES_MARKER_A_TIME_FIELD_EDITABLE, isMarkerATimeFieldEditable);
+            // Allow to keyboard edit the Marker B time field
+            prefs->set(FEATURES_MARKER_B_TIME_FIELD_EDITABLE, isMarkerBTimeFieldEditable);
+
             //
             prefs->set(MESSAGE_LEVEL,msglevel);
             // Discard changes to output config on video load
