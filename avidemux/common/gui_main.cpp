@@ -1078,6 +1078,7 @@ int A_openVideo (const char *name)
     }
 
     delete[] longname;
+    UI_needsAttention();    // loading done, alert the user
     return 1;
 }
 /**
@@ -1169,6 +1170,7 @@ int A_appendVideo (const char *name)
     ReSync();
     GUI_setCurrentFrameAndTime();
     UI_setMarkers (video_body->getMarkerAPts(),video_body->getMarkerBPts());
+    UI_needsAttention();    // loading done, alert the user
     return 1;
 }
 

@@ -101,6 +101,7 @@ int A_Save(const char *name)
     ADM_slaveSendResult(r);
     A_Rewind();
     GUI_GoToTime(current);
+    UI_needsAttention();    // saving done, alert the user
     return (int)r;
 }
 
