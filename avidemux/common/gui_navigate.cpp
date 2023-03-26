@@ -418,7 +418,7 @@ static int ignore_change=0;
             mm = *t++;
             ss = *t++;
             ms = *t;
-	    us = *t+1;
+            us = *t+1;
             A_jumpToTime(hh,mm,ss,ms); // FIXME: missing us
             stagedActionSuccess = 0;
       }
