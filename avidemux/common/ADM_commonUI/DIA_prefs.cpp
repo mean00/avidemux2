@@ -284,7 +284,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle swapMouseWheel(&swapWheel,QT_TRANSLATE_NOOP("adm","Reverse mouse _wheel for navigation"));
         diaElemToggle swapMarkers(&useSwap,QT_TRANSLATE_NOOP("adm","_Swap markers if marker A is set past marker B or marker B before A in video"));
         diaElemToggle extraButtons(&showExtraButtons,QT_TRANSLATE_NOOP("adm","_Show extra buttons in time fields"));
-        diaElemToggle ptsToolTips(&showPTSToolTips,QT_TRANSLATE_NOOP("adm","_Show precision timings in time fields tooltips"));
+        diaElemToggle ptsToolTips(&showPTSToolTips,QT_TRANSLATE_NOOP("adm","Show _precision timings in time fields tooltips"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
 
 
