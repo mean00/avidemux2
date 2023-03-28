@@ -85,6 +85,12 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
       out->_qSize = out->_qStride = 0;
       out->quant = NULL;
     }
+
+    ADM_assert(src->width > 0);
+    out->_width = src->width;
+    ADM_assert(src->height > 0);
+    out->_height = src->height;
+
     uint64_t pts_opaque=(uint64_t)(src->reordered_opaque);
     //printf("[LAVC] Old pts :%"PRId64" new pts :%"PRId64"\n",out->Pts, pts_opaque);
     //printf("[LAVC] pts: %"PRIu64"\n",src->pts);
