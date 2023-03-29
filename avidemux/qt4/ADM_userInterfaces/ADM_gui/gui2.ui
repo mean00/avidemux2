@@ -2092,21 +2092,5 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>actionViewStatusBar</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setStatusBarEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>433</x>
-     <y>368</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
 </ui>

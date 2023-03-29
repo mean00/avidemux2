@@ -645,6 +645,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     statusBarWidget = NULL;
     statusBarInfo = NULL;
 
+    connect(ui.actionViewStatusBar, SIGNAL(toggled(bool)), this, SLOT(setStatusBarEnabled(bool)));
+
 #if defined(__APPLE__) && defined(USE_SDL)
     //ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
     //ui.actionPreferences->setMenuRole(QAction::NoRole);
