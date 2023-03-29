@@ -40,6 +40,8 @@ static ADM_Qvumeter *vuWidget = NULL;
 #define DRED    0xFFBF0000
 #define BLACK   0xFF000000
 
+#define VU_WIDTH     64
+#define VU_HEIGHT   107
 #define VU_BAR_WIDTH  5
 #define VU_PEAK_WIDTH 7
 #define VU_BOTTOM_SCALE -60.0	// dBFS, must be negative
@@ -51,11 +53,11 @@ ADM_Qvumeter::ADM_Qvumeter(QWidget *z, int width, int height) : QWidget(z)
     z->resize(width + 2, height + 2);
 
     rgbDataBuffer = new uint8_t[width * height * 4];
-    for(int i=0;i<88;i++)
+    for(int i=0;i<VU_HEIGHT;i++)
     {
         uint8_t *ptr = rgbDataBuffer + (width * i * 4);
         uint32_t *data = (uint32_t *)ptr;
-        for(int j=0;j<64;j++)
+        for(int j=0;j<VU_WIDTH;j++)
         {
             *data++=BLACK;
         }
@@ -82,7 +84,7 @@ void ADM_Qvumeter::paintEvent(QPaintEvent *ev)
 */
 bool UI_InitVUMeter(QFrame *host)
 {
-    vuWidget = new ADM_Qvumeter(host, 64, 88);
+    vuWidget = new ADM_Qvumeter(host, VU_WIDTH, VU_HEIGHT);
     vuWidget->show();
 
     return true;
@@ -158,11 +160,11 @@ bool UI_vuUpdate(int32_t volume[8])
     
     if (activeChannelCount == 0)	// just clear
     {
-        for(int i=0;i<88;i++)
+        for(int i=0;i<VU_HEIGHT;i++)
         {
             uint8_t *ptr = basePtr + (width * i * 4);
             uint32_t *data = (uint32_t *)ptr;
-            for(int j=0;j<64;j++)
+            for(int j=0;j<VU_WIDTH;j++)
             {
                 *data++=BLACK;
             }
@@ -172,15 +174,15 @@ bool UI_vuUpdate(int32_t volume[8])
     }
 
     // Draw
-    for(int i=0;i<88;i++)
+    for(int i=0;i<VU_HEIGHT;i++)
     {
         uint8_t *ptr = basePtr + (width * i * 4);
         uint32_t *data = (uint32_t *)ptr;
         int h = 87-i;
-        for(int j=0;j<64;j++)
+        for(int j=0;j<VU_WIDTH;j++)
         {
             *data=BLACK;
-            int w = 64/activeChannelCount;
+            int w = VU_WIDTH/activeChannelCount;
             int v = j/w;
             int x = j%w;
             if (v >= activeChannelCount)

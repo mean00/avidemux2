@@ -122,8 +122,8 @@ public:
     void setActZoomCalledFlag(bool called);
     void setZoomToFit(void);
     void updateZoomIndicator(void);
-    void syncToolbarsMenu(void);
-    void addStatusBar(void);
+    void initWidgetsVisibility(void);
+    void initStatusBar(void);
     void updateStatusBarInfo(void);
     void updateStatusBarDisplayInfo(const char * display);
     void updateStatusBarDecoderInfo(const char * decoder);
@@ -133,8 +133,32 @@ public:
     void setLightTheme(void);
     void setDarkTheme(void);
 
+    void currentTimeAddActionButons(bool all);
+    void totalTimeAddActionButons(bool all);
+    void selectionDurationAddActionButons(bool all);
+    void selectionMarkerAAddActionButons(bool all);
+    void selectionMarkerBAddActionButons(bool all);
+
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
+
+    QString statusBarFrame_Type;
+
+    // Show precision timings in time fields tooltips
+    void updatePTSToolTips(void);
+    bool showPTSToolTips;
+
+    // Show extra buttons in time fields
+    void updateWidgetActionButtons(void);
+    bool showExtraButtons;
+
+    // Allow time fields editing via keyboard
+    void updateTimeFieldsReadOnly(void);
+    bool isCurrentTimeFieldEditable;
+    bool isTotalTimeFieldEditable;
+    bool isSelectionTimeFieldEditable;
+    bool isMarkerATimeFieldEditable;
+    bool isMarkerBTimeFieldEditable;
 
 #ifdef __APPLE__
     void fileOpenWrapper(QList<QUrl> list) { openFiles(list); }
@@ -182,6 +206,8 @@ protected:
     QTimer navigateWhilePlayingTimer;
     const  std::vector<IScriptEngine*>& _scriptEngines;
 
+    QMenu *createPopupMenu(void);
+
     void addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts);
     void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
     void addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu);
@@ -219,11 +245,70 @@ protected:
     int statusBarInfo_Zoom;
     QString statusBarInfo_Display, statusBarInfo_Decoder;
 
+    // Reflects the items order set in View->Toolbars
+    enum ADM_Toolbars_Item
+    {
+        FIRST=0,     // begin (for iterations)
+        TOOLBAR=0,    // toolBar
+        STATUSBAR=1,  // statusBarWidget
+        CODEC=2,      // codecWidget
+        NAVIGATION=3, // navigationWidget
+        // separator
+        AUDIOMETER=5, // audioMeterWidget
+        VOLUME=6,     // volumeWidget
+        CONTROLS=7,   // controlsWidget
+        SELECTION=8,  // selectionWidget
+        TIME=9,       // timeWidget
+        SLIDER=10,    // sliderWidget
+        LAST=10       // end (for iterations)
+    };
+
+private:
+    QList<QAction*> currentTimeActionButtons;
+    QList<QAction*> totalTimeActionButtons;
+    QList<QAction*> selectionDurationActionButtons;
+    QList<QAction*> selectionMarkerAActionButtons;
+    QList<QAction*> selectionMarkerBActionButtons;
+
+    QAction *pushButtonTime;
+    QAction *pushButtonSaveScript;
+    QAction *pushButtonRunScript;
+    QAction *pushButtonAppend;
+    QAction *pushButtonUndo;
+    QAction *pushButtonRedo;
+    QAction *pushButtonCut;
+    QAction *pushButtonCopy;
+    QAction *pushButtonPaste;
+    QAction *pushButtonEditMarkerA;
+    QAction *pushButtonEditMarkerB;
+    QAction *pushButtonJumpToMarkerA;
+    QAction *pushButtonJumpToMarkerB;
+    QAction *pushButtonResetMarkerA;
+    QAction *pushButtonResetMarkerB;
+    QAction *pushButtonResetMarkers;
+
 private slots:
     void timeChanged(int);
     void timeChangeFinished(void);
     void checkChanged(int);
     void comboChanged(int z);
+
+    void seekTime(void);
+    void saveScriptAction(void);
+    void runScriptAction(void);
+    void appendAction(void);
+    void undoAction(void);
+    void redoAction(void);
+    void cutSelection(void);
+    void copySelection(void);
+    void pasteClipboard(void);
+    void editMarkerA(void);
+    void editMarkerB(void);
+    void gotoMarkerA(void);
+    void gotoMarkerB(void);
+    void resetMarkerA(void);
+    void resetMarkerB(void);
+    void resetMarkers(void);
 
     void buttonPressed(void);
     void toolButtonPressed(bool z);
@@ -232,6 +317,21 @@ private slots:
     void previewModeChangedFromToolbar(bool status);
 
     void currentTimeChanged(void);
+    void markerAChanged(void);
+    void markerBChanged(void);
+    void selectionDurationChanged(void);
+    void totalTimeChanged(void);
+
+    void toolBarVisibilityChanged(bool);
+    void statusBarVisibilityChanged(bool);
+    void codecVisibilityChanged(bool);
+    void navigationVisibilityChanged(bool);
+    void audioMeterVisibilityChanged(bool);
+    void volumeVisibilityChanged(bool);
+    void controlsVisibilityChanged(bool);
+    void selectionVisibilityChanged(bool);
+    void timeVisibilityChanged(bool);
+    void sliderVisibilityChanged(bool);
 
     void sliderValueChanged(int u);
     void sliderMoved(int value);

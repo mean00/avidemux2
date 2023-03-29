@@ -5,6 +5,10 @@
         <file alias="pics/avidemux-icon.png">pics/avidemux_window_icon_linux.png</file>
         <file>pics/back.png</file>
         <file>pics/calc.png</file>
+        <file>pics/append.png</file>
+        <file>pics/savescript.png</file>
+        <file>pics/runscript.png</file>
+        <file>pics/debugscript.png</file>
         <file>pics/fileopen.png</file>
         <file>pics/filesave.png</file>
         <file>pics/filesaveas.png</file>
@@ -14,6 +18,14 @@
         <file>pics/info.png</file>
         <file>pics/markA.png</file>
         <file>pics/markB.png</file>
+        <file>pics/undo.png</file>
+        <file>pics/redo.png</file>
+        <file>pics/cut.png</file>
+        <file>pics/copy.png</file>
+        <file>pics/paste.png</file>
+        <file>pics/reset_markA.png</file>
+        <file>pics/reset_markB.png</file>
+        <file>pics/time.png</file>
         <file>pics/next.png</file>
         <file>pics/next_black.png</file>
         <file>pics/next_cut.png</file>
@@ -40,6 +52,10 @@
         <file>pics/volume_off.png</file>
         <file>pics/back@2x.png</file>
         <file>pics/backward1mn@2x.png</file>
+        <file>pics/append@2x.png</file>
+        <file>pics/savescript@2x.png</file>
+        <file>pics/runscript@2x.png</file>
+        <file>pics/debugscript@2x.png</file>
         <file>pics/fileopen@2x.png</file>
         <file>pics/filesave@2x.png</file>
         <file>pics/forward1mn@2x.png</file>
@@ -47,6 +63,14 @@
         <file>pics/info@2x.png</file>
         <file>pics/markA@2x.png</file>
         <file>pics/markB@2x.png</file>
+        <file>pics/undo@2x.png</file>
+        <file>pics/redo@2x.png</file>
+        <file>pics/cut@2x.png</file>
+        <file>pics/copy@2x.png</file>
+        <file>pics/paste@2x.png</file>
+        <file>pics/reset_markA@2x.png</file>
+        <file>pics/reset_markB@2x.png</file>
+        <file>pics/time@2x.png</file>
         <file>pics/next_black@2x.png</file>
         <file>pics/next_cut@2x.png</file>
         <file>pics/player_end@2x.png</file>

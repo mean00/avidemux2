@@ -12,6 +12,13 @@ typedef struct
 #endif 
 static optionDesc myOptions[]={
 { VERSION_APIVERSION,"version.apiVersion"                             ,ADM_param_uint32_t	,"1",	0,	999},
+{ FEATURES_PTS_TIMINGS_TOOLTIPS,"features.pts_timings_tooltips"       ,ADM_param_bool    	,"1",	0,	1},
+{ FEATURES_TIME_FIELDS_EXTRA_BUTTONS,"features.time_fields_extra_buttons",ADM_param_bool    	,"1",	0,	1},
+{ FEATURES_CURRENT_TIME_FIELD_EDITABLE,"features.current_time_field_editable",ADM_param_bool    	,"1",	0,	1},
+{ FEATURES_TOTAL_TIME_FIELD_EDITABLE,"features.total_time_field_editable",ADM_param_bool    	,"1",	0,	1},
+{ FEATURES_SELECTION_TIME_FIELD_EDITABLE,"features.selection_time_field_editable",ADM_param_bool    	,"1",	0,	1},
+{ FEATURES_MARKER_A_TIME_FIELD_EDITABLE,"features.marker_a_time_field_editable",ADM_param_bool    	,"1",	0,	1},
+{ FEATURES_MARKER_B_TIME_FIELD_EDITABLE,"features.marker_b_time_field_editable",ADM_param_bool    	,"1",	0,	1},
 { FEATURES_SWAP_IF_A_GREATER_THAN_B,"features.swap_if_A_greater_than_B",ADM_param_bool    	,"1",	0,	1},
 { FEATURES_SAVEPREFSONEXIT,"features.saveprefsonexit"                 ,ADM_param_bool    	,"1",	0,	1},
 { FEATURES_IGNORESAVEDMARKERS,"features.ignoresavedmarkers"           ,ADM_param_bool    	,"0",	0,	1},
@@ -40,6 +47,8 @@ static optionDesc myOptions[]={
 { KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,"keyboard_shortcuts.swap_up_down_keys",ADM_param_bool    	,"0",	0,	1},
 { KEYBOARD_SHORTCUTS_ALT_MARK_A,"keyboard_shortcuts.alt_mark_a"       ,ADM_param_stdstring  	,"I",	0,	0},
 { KEYBOARD_SHORTCUTS_ALT_MARK_B,"keyboard_shortcuts.alt_mark_b"       ,ADM_param_stdstring  	,"O",	0,	0},
+{ KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_A,"keyboard_shortcuts.alt_edit_mark_a",ADM_param_stdstring  	,"Z",	0,	0},
+{ KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_B,"keyboard_shortcuts.alt_edit_mark_b",ADM_param_stdstring  	,"X",	0,	0},
 { KEYBOARD_SHORTCUTS_ALT_RESET_MARK_A,"keyboard_shortcuts.alt_reset_mark_a",ADM_param_stdstring  	,"U",	0,	0},
 { KEYBOARD_SHORTCUTS_ALT_RESET_MARK_B,"keyboard_shortcuts.alt_reset_mark_b",ADM_param_stdstring  	,"P",	0,	0},
 { KEYBOARD_SHORTCUTS_ALT_RESET_MARKERS,"keyboard_shortcuts.alt_reset_markers",ADM_param_stdstring  	,"R",	0,	0},
@@ -85,5 +94,15 @@ static optionDesc myOptions[]={
 { HDR_TONEMAPPING,"hdr.tonemapping"                                   ,ADM_param_uint32_t	,"1",	0,	99},
 { HDR_TARGET_LUMINANCE,"hdr.target_luminance"                         ,ADM_param_float   	,"100.0",	0.0,	1000.0},
 { HDR_OUT_OF_GAMUT_HANDLING,"hdr.out_of_gamut_handling"               ,ADM_param_uint32_t	,"0",	0,	99},
+{ TOOLBARS_TOOLBAR_VISIBLE,"toolbars.toolbar_visible"                 ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_STATUSBAR_VISIBLE,"toolbars.statusbar_visible"             ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_CODEC_VISIBLE,"toolbars.codec_visible"                     ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_NAVIGATION_VISIBLE,"toolbars.navigation_visible"           ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_AUDIOMETER_VISIBLE,"toolbars.audiometer_visible"           ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_VOLUME_VISIBLE,"toolbars.volume_visible"                   ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_CONTROLS_VISIBLE,"toolbars.controls_visible"               ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_SELECTION_VISIBLE,"toolbars.selection_visible"             ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_TIME_VISIBLE,"toolbars.time_visible"                       ,ADM_param_bool    	,"1",	0,	1},
+{ TOOLBARS_SLIDER_VISIBLE,"toolbars.slider_visible"                   ,ADM_param_bool    	,"1",	0,	1},
 };
 

@@ -40,6 +40,8 @@
 #include "ADM_cpp.h"
 #define MENU_DECLARE
 #include "Q_gui2.h"
+#include "Q_titleBar.h"
+#include "ADM_QLineEditPTS.h"
 
 #ifdef BROKEN_PALETTE_PROPAGATION
     #include <QAbstractItemView>
@@ -420,7 +422,7 @@ void MainWindow::volumeChange( int u )
 
     _upd_in_progres++;
 
-    int vol = ui.horizontalSlider_2->value();
+    int vol = ui.volumeSlider->value();
 
     AVDM_setVolume(vol);
     _upd_in_progres--;
@@ -429,7 +431,7 @@ void MainWindow::volumeChange( int u )
 void MainWindow::audioToggled(bool checked)
 {
     if (checked)
-        AVDM_setVolume(ui.horizontalSlider_2->value());
+        AVDM_setVolume(ui.volumeSlider->value());
     else
         AVDM_setVolume(0);
 }
@@ -457,9 +459,59 @@ void MainWindow::timeChangeFinished(void)
 
 void MainWindow::currentTimeChanged(void)
 {
-    sendAction(ACT_GotoTime);
+    // Workaroud to reject a weird editingFinished event that triggers
+    // even when this element was already readonly.  This happens just
+    // one time when switching focus away from the readonly element or
+    // not readonly.
+    if(WIDGET(currentTime)->isReadOnly())
+        return;
 
-    this->setFocus(Qt::OtherFocusReason);
+    sendAction(ACT_GetTime);
+
+    // NOTE: QLineEdit::editingFinished() is emitted when Enter is
+    // pressed or the focus is lost.  Pressing Enter alone doesn't
+    // change focus.  Hence, changing focus programmatically after
+    // pressing Enter will emit the signal one more time.  This is
+    // like pressing Enter followed by pressing Tab (two signals).
+    // Pressing Tab alone will send only one signal while changing
+    // focus.  Keep this in mind when you expect to receive only 1
+    // signal after pressing Enter.
+
+    // Disabling to stay on the field after pressing Enter, the user
+    // may want to try different edits.  To change field use Tab.
+    //this->setFocus(Qt::OtherFocusReason);
+}
+
+void MainWindow::markerAChanged(void)
+{
+    // Workaroud: see above.
+    if(WIDGET(selectionMarkerA)->isReadOnly())
+        return;
+    sendAction(ACT_GetMarkerA);
+}
+
+void MainWindow::markerBChanged(void)
+{
+    // Workaroud: see above.
+    if(WIDGET(selectionMarkerB)->isReadOnly())
+        return;
+    sendAction(ACT_GetMarkerB);
+}
+
+void MainWindow::selectionDurationChanged(void)
+{
+    // Workaroud: see above.
+    if(WIDGET(selectionDuration)->isReadOnly())
+        return;
+    sendAction(ACT_GetSelection);
+}
+
+void MainWindow::totalTimeChanged(void)
+{
+    // Workaroud: see above.
+    if(WIDGET(totalTime)->isReadOnly())
+        return;
+    sendAction(ACT_GetTotal);
 }
 
 /**
@@ -483,6 +535,77 @@ void MainWindow::setRefreshCap(void)
     refreshCapValue=0;
     prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
     prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
+}
+
+/**
+    \brief Update time fields keyboard editing ability.
+
+    Read preferences to detect which time field accepts direct
+    keyboard editing.
+*/
+void MainWindow::updateTimeFieldsReadOnly(void)
+{
+    isCurrentTimeFieldEditable = false;
+    isTotalTimeFieldEditable = false;
+    isSelectionTimeFieldEditable = false;
+    isMarkerATimeFieldEditable = false;
+    isMarkerBTimeFieldEditable = false;
+
+    prefs->get(FEATURES_CURRENT_TIME_FIELD_EDITABLE, &isCurrentTimeFieldEditable);
+    prefs->get(FEATURES_TOTAL_TIME_FIELD_EDITABLE, &isTotalTimeFieldEditable);
+    prefs->get(FEATURES_SELECTION_TIME_FIELD_EDITABLE, &isSelectionTimeFieldEditable);
+    prefs->get(FEATURES_MARKER_A_TIME_FIELD_EDITABLE, &isMarkerATimeFieldEditable);
+    prefs->get(FEATURES_MARKER_B_TIME_FIELD_EDITABLE, &isMarkerBTimeFieldEditable);
+
+    ui.currentTime->setReadOnly(!isCurrentTimeFieldEditable);
+    ui.totalTime->setReadOnly(!isTotalTimeFieldEditable);
+    ui.selectionDuration->setReadOnly(!isSelectionTimeFieldEditable);
+    ui.selectionMarkerA->setReadOnly(!isMarkerATimeFieldEditable);
+    ui.selectionMarkerB->setReadOnly(!isMarkerBTimeFieldEditable);
+}
+
+/**
+    \brief Update time fields actions buttons.
+
+    Read preference to add only the default button or all buttons to
+    time fields.
+*/
+void MainWindow::updateWidgetActionButtons(void)
+{
+    showExtraButtons = false;
+    prefs->get(FEATURES_TIME_FIELDS_EXTRA_BUTTONS, &showExtraButtons);
+
+    currentTimeAddActionButons(showExtraButtons);
+    totalTimeAddActionButons(showExtraButtons);
+    selectionDurationAddActionButons(showExtraButtons);
+    selectionMarkerAAddActionButons(showExtraButtons);
+    selectionMarkerBAddActionButons(showExtraButtons);
+}
+
+/**
+    \fn updatePTSToolTips
+*/
+void MainWindow::updatePTSToolTips(void)
+{
+    showPTSToolTips = false;
+    prefs->get(FEATURES_PTS_TIMINGS_TOOLTIPS,&showPTSToolTips);
+
+    if (!showPTSToolTips)
+    {
+        ui.currentTime->removePTSToolTip();
+        ui.totalTime->removePTSToolTip();
+        ui.selectionMarkerA->removePTSToolTip();
+        ui.selectionMarkerB->removePTSToolTip();
+        ui.selectionDuration->removePTSToolTip();
+    }
+    else if(avifileinfo)
+    {
+        ui.currentTime->appendPTSToolTip();
+        ui.totalTime->appendPTSToolTip();
+        ui.selectionMarkerA->appendPTSToolTip();
+        ui.selectionMarkerB->appendPTSToolTip();
+        ui.selectionDuration->appendPTSToolTip();
+    }
 }
 
 /**
@@ -524,8 +647,19 @@ void MainWindow::actionSlot(Action a)
             case ACT_SetPostProcessing:
                 a = ACT_Refresh;
                 break;
+            case ACT_GetTime:
             case ACT_SelectTime:
                 a = ACT_GotoTime;
+                break;
+            case ACT_GetMarkerA:
+            case ACT_GetTotal:
+            case ACT_SelectMarkerA:
+                a = ACT_ChangeMarkerA;
+                break;
+            case ACT_GetMarkerB:
+            case ACT_GetSelection:
+            case ACT_SelectMarkerB:
+                a = ACT_ChangeMarkerB;
                 break;
             default:break;
         }
@@ -653,7 +787,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 #endif
 
 #ifdef __APPLE__
-    ui.navButtonsLayout->setSpacing(2);
+    ui.controlsWidgetLayout->setSpacing(2);
     // Qt upscales 2x sized icons in the toolbar, making them huge and pixelated in HiDPI conditions, WTF?
     ui.toolBar->setIconSize(QSize(24,24));
 #endif
@@ -674,7 +808,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect( ui.comboBoxAudio,SIGNAL(activated(int)),this,SLOT(comboChanged(int)));
 
     // Slider
-    slider=ui.horizontalSlider;
+    slider=ui.navigationSlider;
         ADM_mwNavSlider *qslider=(ADM_mwNavSlider *)slider;
     slider->setMinimum(0);
     slider->setMaximum(ADM_LARGE_SCALE);
@@ -696,12 +830,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.toolButtonForwardOneMinute->installEventFilter(this);
 
    // Thumb slider
-        ui.sliderPlaceHolder->installEventFilter(this);
-        thumbSlider = new ThumbSlider(ui.sliderPlaceHolder);
+        ui.thumbSliderHolder->installEventFilter(this);
+        thumbSlider = new ThumbSlider(ui.thumbSliderHolder);
         connect(thumbSlider, SIGNAL(valueEmitted(int)), this, SLOT(thumbSlider_valueEmitted(int)));
 
     // Volume slider
-    QSlider *volSlider=ui.horizontalSlider_2;
+    QSlider *volSlider=ui.volumeSlider;
     volSlider->setMinimum(0);
     volSlider->setMaximum(100);
     connect(volSlider,SIGNAL(valueChanged(int)),this,SLOT(volumeChange(int)));
@@ -718,25 +852,39 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(checkChanged(int)));
     connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
     connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
-#if 0 /* it is read-only */
-    QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
-    QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
-    ui.currentTime->setValidator(timeValidator);
-    ui.currentTime->setInputMask("99:99:99.999");
-#endif
-    // set the size of the current time display to fit the content
-    QString text = "00:00:00.000"; // Don't translate this.
+
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
     ui.currentTime->setFont(QFont("ADM7SEG"));
+    ui.totalTime->setFont(QFont("ADM7SEG"));
+    ui.selectionDuration->setFont(QFont("ADM7SEG"));
+    ui.selectionMarkerA->setFont(QFont("ADM7SEG"));
+    ui.selectionMarkerB->setFont(QFont("ADM7SEG"));
 #endif
-    ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
-    QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
-    ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
+    ui.currentTime->setPTS(0);
+    ui.totalTime->setPTS(0);
+    ui.selectionMarkerA->setPTS(0);
+    ui.selectionMarkerB->setPTS(0);
+    ui.selectionDuration->setPTS(0);
 
-    text = QString("/ ") + text;
-    ui.totalTime->setText(text); // Override ui translations here too.
+    // Disabling to not cut off the text when adding action buttons
+    //QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
+    //ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
 
-    //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
+    // initialize time fields action buttons
+    updateWidgetActionButtons();
+
+    // Get the time the user sets directly in the text element
+    connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
+
+    // Get the time the user sets directly in the text elements
+    connect(ui.selectionMarkerA, SIGNAL(editingFinished()), this, SLOT(markerAChanged()));
+    connect(ui.selectionMarkerB, SIGNAL(editingFinished()), this, SLOT(markerBChanged()));
+
+    // Get the time the user sets directly in the text element
+    connect(ui.selectionDuration, SIGNAL(editingFinished()), this, SLOT(selectionDurationChanged()));
+
+    // Get the time the user sets directly in the text element
+    connect(ui.totalTime, SIGNAL(editingFinished()), this, SLOT(totalTimeChanged()));
 
     // Build file,... menu
     addScriptEnginesToFileMenu(myMenuFile);
@@ -779,6 +927,23 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     QAction *restoreDefaults = new QAction(QT_TRANSLATE_NOOP("qgui2","Restore defaults"),this);
     ui.menuToolbars->addSeparator();
     ui.menuToolbars->addAction(restoreDefaults);
+
+    // Workaround to set checkboxes when changing the visibility elsewhere
+    connect(ui.toolBar, SIGNAL(visibilityChanged(bool)), this, SLOT(toolBarVisibilityChanged(bool)));
+    connect(ui.codecWidget, SIGNAL(visibilityChanged(bool)), this, SLOT(codecVisibilityChanged(bool)));
+    connect(ui.navigationWidget, SIGNAL(visibilityChanged(bool)), this, SLOT(navigationVisibilityChanged(bool)));
+
+    // On visibility change by connected checkboxes update preferences
+    connect(ui.actionViewToolBar, SIGNAL(toggled(bool)), this, SLOT(toolBarVisibilityChanged(bool)));
+    connect(ui.actionViewStatusBar, SIGNAL(toggled(bool)), this, SLOT(statusBarVisibilityChanged(bool)));
+    connect(ui.actionViewCodecOptions, SIGNAL(toggled(bool)), this, SLOT(codecVisibilityChanged(bool)));
+    connect(ui.actionViewNavigation, SIGNAL(toggled(bool)), this, SLOT(navigationVisibilityChanged(bool)));
+    connect(ui.actionViewAudioMeter, SIGNAL(toggled(bool)), this, SLOT(audioMeterVisibilityChanged(bool)));
+    connect(ui.actionViewVolume, SIGNAL(toggled(bool)), this, SLOT(volumeVisibilityChanged(bool)));
+    connect(ui.actionViewControls, SIGNAL(toggled(bool)), this, SLOT(controlsVisibilityChanged(bool)));
+    connect(ui.actionViewSelection, SIGNAL(toggled(bool)), this, SLOT(selectionVisibilityChanged(bool)));
+    connect(ui.actionViewTime, SIGNAL(toggled(bool)), this, SLOT(timeVisibilityChanged(bool)));
+    connect(ui.actionViewSlider, SIGNAL(toggled(bool)), this, SLOT(sliderVisibilityChanged(bool)));
 
     connect(ui.menuToolbars->actions().last(),SIGNAL(triggered(bool)),this,SLOT(restoreDefaultWidgetState(bool)));
 
@@ -829,22 +994,20 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.toolBar,  SIGNAL(orientationChanged(Qt::Orientation)),this,SLOT(toolbarOrientationChangedSlot(Qt::Orientation)));
     //connect(ui.toolBar_2,SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
 
-    QWidget* dummy0 = new QWidget();
-    QWidget* dummy1 = new QWidget();
-    QWidget* dummy2 = new QWidget();
-    QWidget* dummy3 = new QWidget();
-    QWidget* dummy4 = new QWidget();
+    TitleBar *codecTitleBar = new TitleBar(ui.codecWidget->windowTitle());
+    ui.codecWidget->setTitleBarWidget(codecTitleBar);
 
-    ui.codecWidget->setTitleBarWidget(dummy0);
-    ui.navigationWidget->setTitleBarWidget(dummy1);
-    ui.selectionWidget->setTitleBarWidget(dummy2);
-    ui.volumeWidget->setTitleBarWidget(dummy3);
-    ui.audioMetreWidget->setTitleBarWidget(dummy4);
+    TitleBar *navigationTitleBar = new TitleBar(ui.navigationWidget->windowTitle());
+    ui.navigationWidget->setTitleBarWidget(navigationTitleBar);
 
     widgetsUpdateTooltips();
 
     this->adjustSize();
     ui.currentTime->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
+    ui.totalTime->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
+    ui.selectionDuration->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
+    ui.selectionMarkerA->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
+    ui.selectionMarkerB->setTextMargins(0,0,0,0); // some Qt themes mess with text margins
 
     threshold = RESIZE_THRESHOLD;
     actZoomCalled = false;
@@ -1040,6 +1203,12 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                                     case ACT_MarkB:
                                         prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_B,sc);
                                         break;
+                                    case ACT_SelectMarkerA:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_A,sc);
+                                        break;
+                                    case ACT_SelectMarkerB:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_B,sc);
+                                        break;
                                     case ACT_ResetMarkerA:
                                         prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARK_A,sc);
                                         break;
@@ -1081,6 +1250,18 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
         }
     }
     return true;
+}
+
+/**
+    \fn createPopupMenu
+    \brief Override the application default context menu.
+*/
+QMenu *MainWindow::createPopupMenu()
+{
+    QMenu *menu = QMainWindow::createPopupMenu();
+    menu->clear();
+    menu->addActions(ui.menuToolbars->actions());
+    return menu;
 }
 
 /**
@@ -1290,14 +1471,6 @@ void MainWindow::buildButtonLists(void)
 #define ADD_PUSHBUTTON_LOADED(x)    PushButtonsAvailableWhenFileLoaded.push_back(ui.x);
 #define ADD_PUSHBUTTON_PLAYBACK(x)    PushButtonsDisabledOnPlayback.push_back(ui.x);
 
-    ADD_PUSHBUTTON_LOADED(pushButtonTime)
-    ADD_PUSHBUTTON_LOADED(pushButtonJumpToMarkerA)
-    ADD_PUSHBUTTON_LOADED(pushButtonJumpToMarkerB)
-
-    ADD_PUSHBUTTON_PLAYBACK(pushButtonTime)
-    ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerA)
-    ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerB)
-
     ADD_PUSHBUTTON_PLAYBACK(pushButtonDecoderConf)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoConf)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoFilter)
@@ -1312,6 +1485,24 @@ void MainWindow::buildButtonLists(void)
 */
 void MainWindow::setMenuItemsEnabledState(void)
 {
+    bool engines = false;
+    bool tinyPy = false;
+
+    // Implementation of getPythonScriptEngine()
+    if(_scriptEngines.size() > 0)
+    {
+        engines = true;
+
+        for(int i = 0; i < _scriptEngines.size(); i++)
+        {
+            if (!_scriptEngines[i]->defaultFileExtension().compare("py"))
+            {
+                tinyPy = true;
+                break;
+            }
+        }
+    }
+
     if(playing || (navigateWhilePlayingState != 0)) // this actually doesn't work as it should
     {
         int n=ActionsDisabledOnPlayback.size();
@@ -1334,6 +1525,28 @@ void MainWindow::setMenuItemsEnabledState(void)
 
         if(ADM_PREVIEW_NONE != admPreview::getPreviewMode())
             slider->setEnabled(false);
+
+        ui.currentTime->setReadOnly(true);
+        ui.selectionMarkerA->setReadOnly(true);
+        ui.selectionMarkerB->setReadOnly(true);
+        ui.selectionDuration->setReadOnly(true);
+        ui.totalTime->setReadOnly(true);
+        pushButtonTime->setEnabled(false);
+        pushButtonSaveScript->setEnabled(false);
+        pushButtonRunScript->setEnabled(false);
+        pushButtonAppend->setEnabled(false);
+        pushButtonUndo->setEnabled(false);
+        pushButtonRedo->setEnabled(false);
+        pushButtonCut->setEnabled(false);
+        pushButtonCopy->setEnabled(false);
+        pushButtonPaste->setEnabled(false);
+        pushButtonEditMarkerA->setEnabled(false);
+        pushButtonEditMarkerB->setEnabled(false);
+        pushButtonJumpToMarkerA->setEnabled(false);
+        pushButtonJumpToMarkerB->setEnabled(false);
+        pushButtonResetMarkerA->setEnabled(false);
+        pushButtonResetMarkerB->setEnabled(false);
+        pushButtonResetMarkers->setEnabled(false);
 
         return;
     }
@@ -1374,6 +1587,8 @@ void MainWindow::setMenuItemsEnabledState(void)
     ENABLE(Edit, ACT_Redo, redo)
     ENABLE(Edit, ACT_ResetSegments, vid)
     // TODO: Detect that segment layout matches the default one and disable "Reset Edit" then too.
+    ENABLE(Edit, ACT_SelectMarkerA, vid)
+    ENABLE(Edit, ACT_SelectMarkerB, vid)
     ENABLE(Edit, ACT_ResetMarkerA, resetA)
     ENABLE(Edit, ACT_ResetMarkerB, resetB)
     ENABLE(Edit, ACT_ResetMarkers, (resetA || resetB))
@@ -1399,7 +1614,27 @@ void MainWindow::setMenuItemsEnabledState(void)
     ENABLE(Recent, ACT_CLEAR_RECENT, haveRecentItems)
     ENABLE(Recent, ACT_RESTORE_SESSION, A_checkSavedSession(false))
 
-    ui.selectionDuration->setEnabled(vid);
+    ui.currentTime->setReadOnly(!vid || !isCurrentTimeFieldEditable);
+    ui.selectionMarkerA->setReadOnly(!vid || !isMarkerATimeFieldEditable);
+    ui.selectionMarkerB->setReadOnly(!vid || !isMarkerBTimeFieldEditable);
+    ui.selectionDuration->setReadOnly(!vid || !isSelectionTimeFieldEditable);
+    ui.totalTime->setReadOnly(!vid || !isTotalTimeFieldEditable);
+    pushButtonTime->setEnabled(vid);
+    pushButtonSaveScript->setEnabled(vid && tinyPy);
+    pushButtonRunScript->setEnabled(engines);
+    pushButtonAppend->setEnabled(vid);
+    pushButtonUndo->setEnabled(undo);
+    pushButtonRedo->setEnabled(redo);
+    pushButtonCut->setEnabled(canDelete);
+    pushButtonCopy->setEnabled(vid);
+    pushButtonPaste->setEnabled(paste);
+    pushButtonEditMarkerA->setEnabled(vid);
+    pushButtonEditMarkerB->setEnabled(vid);
+    pushButtonJumpToMarkerA->setEnabled(vid);
+    pushButtonJumpToMarkerB->setEnabled(vid);
+    pushButtonResetMarkerA->setEnabled(resetA);
+    pushButtonResetMarkerB->setEnabled(resetB);
+    pushButtonResetMarkers->setEnabled(resetA || resetB);
     slider->setEnabled(vid);
 
     updateCodecWidgetControlsState();
@@ -1408,8 +1643,6 @@ void MainWindow::setMenuItemsEnabledState(void)
     // or loading a video with small dimensions, so ignore just this one resize event
     ignoreResizeEvent = true;
     // en passant reset frame type label if no video is loaded
-    if(!vid)
-        ui.label_8->setText(QT_TRANSLATE_NOOP("qgui2","?"));
 }
 
 /**
@@ -1540,6 +1773,8 @@ void MainWindow::updateActionShortcuts(void)
             case ACT_Delete:
             case ACT_MarkA:
             case ACT_MarkB:
+            case ACT_SelectMarkerA:
+            case ACT_SelectMarkerB:
             case ACT_ResetMarkerA:
             case ACT_ResetMarkerB:
             case ACT_ResetMarkers:
@@ -1585,6 +1820,12 @@ void MainWindow::updateActionShortcuts(void)
                     break;
                 case ACT_MarkB:
                     prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_B,sc);
+                    break;
+                case ACT_SelectMarkerA:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_A,sc);
+                    break;
+                case ACT_SelectMarkerB:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_EDIT_MARK_B,sc);
                     break;
                 case ACT_ResetMarkerA:
                     prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARK_A,sc);
@@ -1706,13 +1947,82 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt += SHORTCUT(ACT_End,Go)
     ui.toolButtonLastFrame->setToolTip(tt);
 
-    tt = QT_TRANSLATE_NOOP("qgui2","Go to marker A");
-    tt += SHORTCUT(ACT_GotoMarkA,Go)
-    ui.pushButtonJumpToMarkerA->setToolTip(tt);
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to Time");
+    tt += SHORTCUT(ACT_SelectTime,Go)
+    pushButtonTime->setToolTip(tt);
 
-    tt = QT_TRANSLATE_NOOP("qgui2","Go to marker B");
+    tt = QT_TRANSLATE_NOOP("qgui2","Edit Marker A");
+    tt += SHORTCUT(ACT_SelectMarkerA,Edit)
+    pushButtonEditMarkerA->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Edit Marker B");
+    tt += SHORTCUT(ACT_SelectMarkerB,Edit)
+    pushButtonEditMarkerB->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to Marker A");
+    tt += SHORTCUT(ACT_GotoMarkA,Go)
+    pushButtonJumpToMarkerA->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Go to Marker B");
     tt += SHORTCUT(ACT_GotoMarkB,Go)
-    ui.pushButtonJumpToMarkerB->setToolTip(tt);
+    pushButtonJumpToMarkerB->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Reset Marker A (time 0)");
+    tt += SHORTCUT(ACT_ResetMarkerA,Edit)
+    pushButtonResetMarkerA->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Reset Marker B (total time)");
+    tt += SHORTCUT(ACT_ResetMarkerB,Edit)
+    pushButtonResetMarkerB->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Reset Markers");
+    tt += SHORTCUT(ACT_ResetMarkers,Edit)
+    pushButtonResetMarkers->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Save tinyPy script");
+    pushButtonSaveScript->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Run script/project");
+    pushButtonRunScript->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Append media");
+    tt += SHORTCUT(ACT_APPEND_VIDEO,File)
+    pushButtonAppend->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Undo action");
+    tt += SHORTCUT(ACT_Undo,Edit)
+    pushButtonUndo->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Redo action");
+    tt += SHORTCUT(ACT_Redo,Edit)
+    pushButtonRedo->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Cut selection");
+    tt += SHORTCUT(ACT_Cut,Edit)
+    pushButtonCut->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Copy selection");
+    tt += SHORTCUT(ACT_Copy,Edit)
+    pushButtonCopy->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Paste clipboard");
+    tt += SHORTCUT(ACT_Paste,Edit)
+    pushButtonPaste->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Current time");
+    ui.currentTime->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Total time");
+    ui.totalTime->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Time from Marker A to B");
+    ui.selectionDuration->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Marker A");
+    ui.selectionMarkerA->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2","Marker B");
+    ui.selectionMarkerB->setToolTip(tt);
 
     QString backtext, forwardtext, hint = "\n";
     Action actBack, actForward;
@@ -1772,6 +2082,188 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt += SHORTCUT(actForward,Go)
     tt += hint;
     ui.toolButtonForwardOneMinute->setToolTip(tt);
+
+    if(avifileinfo && showPTSToolTips)
+    {
+        ui.currentTime->appendPTSToolTip();
+        ui.totalTime->appendPTSToolTip();
+        ui.selectionMarkerA->appendPTSToolTip();
+        ui.selectionMarkerB->appendPTSToolTip();
+        ui.selectionDuration->appendPTSToolTip();
+    }
+}
+
+/**
+    \brief Add actions to a QLineEdit widget.
+    \param[out] widget element where to add actions.
+    \param[in] actions list of actions for the element (can be empty).
+    \param[in] all if true add all actions, otherwise add only the first one.
+    \param[in] first default action to use instead of the first one in actions list (can be NULL).
+    \return true if the widget's actions list has been modified, otherwise false.
+
+    Add the list of actions to the widget when all is true.
+
+    If all is false, add the first in the actions list to the widget,
+    or if the parameter first isn't NULL, add that instead.
+
+    Each call to this function will first remove all actions from the
+    widget.  To leave the widget with no actions, set all to true and
+    give an empty actions list.  If all is set to false, to leave the
+    widget with no actions, in addition to an empty list pass NULL as
+    the parameter first.
+
+    You may want to call adjustSize(), or setTextMargins(), when this
+    function returns true.
+*/
+static bool enableWidgetActionButtons(QLineEdit *widget, const QList<QAction*> &actions, bool all, QAction* first = NULL)
+{
+    if(!widget)
+        return false;
+
+    first = first ? first : actions.first();
+
+    QListIterator<QAction*> a(widget->actions());
+    bool changed = a.hasNext() || (all && actions.first()) || first;
+
+    while(a.hasNext())
+        widget->removeAction(a.next());
+
+    a = actions;
+
+    if(all)
+        while(a.hasNext())
+            widget->addAction(a.next(), QLineEdit::LeadingPosition);
+    else if(first)
+        widget->addAction(first, QLineEdit::LeadingPosition);
+
+    return changed;
+}
+
+/**
+    \brief Add action buttons to the current time field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::currentTimeAddActionButons(bool all)
+{
+    if(currentTimeActionButtons.isEmpty())
+    {
+        pushButtonTime = new QAction(QIcon(MKICON(time)), "Go to Time", ui.currentTime);
+        pushButtonSaveScript = new QAction(QIcon(MKICON(savescript)), "Save tinyPy script", ui.currentTime);
+        pushButtonRunScript = new QAction(QIcon(MKICON(runscript)), "Run script/project", ui.currentTime);
+
+        connect(pushButtonTime,SIGNAL(triggered()),this,SLOT(seekTime()));
+        connect(pushButtonSaveScript,SIGNAL(triggered()),this,SLOT(saveScriptAction()));
+        connect(pushButtonRunScript,SIGNAL(triggered()),this,SLOT(runScriptAction()));
+
+        currentTimeActionButtons.append(pushButtonTime);
+        currentTimeActionButtons.append(pushButtonSaveScript);
+        currentTimeActionButtons.append(pushButtonRunScript);
+    }
+
+    if(enableWidgetActionButtons(ui.currentTime, currentTimeActionButtons, all))
+        ui.currentTime->setTextMargins(0,0,0,0);
+}
+
+/**
+    \brief Add action buttons to the total time field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::totalTimeAddActionButons(bool all)
+{
+    if(totalTimeActionButtons.isEmpty())
+    {
+        pushButtonAppend = new QAction(QIcon(MKICON(append)), "Append media", ui.totalTime);
+        pushButtonUndo = new QAction(QIcon(MKICON(undo)), "Undo action", ui.totalTime);
+        pushButtonRedo = new QAction(QIcon(MKICON(redo)), "Redo action", ui.totalTime);
+
+        connect(pushButtonAppend,SIGNAL(triggered()),this,SLOT(appendAction()));
+        connect(pushButtonUndo,SIGNAL(triggered()),this,SLOT(undoAction()));
+        connect(pushButtonRedo,SIGNAL(triggered()),this,SLOT(redoAction()));
+
+        totalTimeActionButtons.append(pushButtonAppend);
+        totalTimeActionButtons.append(pushButtonUndo);
+        totalTimeActionButtons.append(pushButtonRedo);
+    }
+
+    if(enableWidgetActionButtons(ui.totalTime, totalTimeActionButtons, all))
+        ui.totalTime->setTextMargins(0,0,0,0);
+}
+
+/**
+    \brief Add action buttons to the selection duration field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::selectionDurationAddActionButons(bool all)
+{
+    if(selectionDurationActionButtons.isEmpty())
+    {
+        pushButtonCut = new QAction(QIcon(MKICON(cut)), "Cut selection", ui.selectionDuration);
+        pushButtonCopy = new QAction(QIcon(MKICON(copy)), "Copy selection", ui.selectionDuration);
+        pushButtonPaste = new QAction(QIcon(MKICON(paste)), "Paste clipboard", ui.selectionDuration);
+        pushButtonResetMarkers = new QAction(QApplication::style()->standardIcon(QStyle::SP_TrashIcon), "Reset Markers)", ui.selectionDuration);
+
+        connect(pushButtonCut,SIGNAL(triggered()),this,SLOT(cutSelection()));
+        connect(pushButtonCopy,SIGNAL(triggered()),this,SLOT(copySelection()));
+        connect(pushButtonPaste,SIGNAL(triggered()),this,SLOT(pasteClipboard()));
+        connect(pushButtonResetMarkers,SIGNAL(triggered()),this,SLOT(resetMarkers()));
+
+        selectionDurationActionButtons.append(pushButtonCut);
+        selectionDurationActionButtons.append(pushButtonCopy);
+        selectionDurationActionButtons.append(pushButtonPaste);
+    }
+
+    if(enableWidgetActionButtons(ui.selectionDuration, selectionDurationActionButtons, all, pushButtonResetMarkers))
+        ui.selectionDuration->setTextMargins(0,0,0,0);
+}
+
+/**
+    \brief Add action buttons to the marker A field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::selectionMarkerAAddActionButons(bool all)
+{
+    if(selectionMarkerAActionButtons.isEmpty())
+    {
+        pushButtonEditMarkerA = new QAction(QIcon(MKICON(time)), "Edit Marker A", ui.selectionMarkerA);
+        pushButtonJumpToMarkerA = new QAction(QIcon(MKICON(goMarkA)), "Go to Marker A", ui.selectionMarkerA);
+        pushButtonResetMarkerA = new QAction(QIcon(MKICON(reset_markA)), "Reset Marker A (time 0)", ui.selectionMarkerA);
+
+        connect(pushButtonEditMarkerA,SIGNAL(triggered()),this,SLOT(editMarkerA()));
+        connect(pushButtonJumpToMarkerA,SIGNAL(triggered()),this,SLOT(gotoMarkerA()));
+        connect(pushButtonResetMarkerA,SIGNAL(triggered()),this,SLOT(resetMarkerA()));
+
+        selectionMarkerAActionButtons.append(pushButtonEditMarkerA);
+        selectionMarkerAActionButtons.append(pushButtonJumpToMarkerA);
+        selectionMarkerAActionButtons.append(pushButtonResetMarkerA);
+    }
+
+    if(enableWidgetActionButtons(ui.selectionMarkerA, selectionMarkerAActionButtons, all, pushButtonJumpToMarkerA))
+        ui.selectionMarkerA->setTextMargins(0,0,0,0);
+}
+
+/**
+    \brief Add action buttons to the marker B field.
+    \param[in] all if true add all buttons, otherwise add only the default button.
+*/
+void MainWindow::selectionMarkerBAddActionButons(bool all)
+{
+    if(selectionMarkerBActionButtons.isEmpty())
+    {
+        pushButtonEditMarkerB = new QAction(QIcon(MKICON(time)), "Edit Marker B", ui.selectionMarkerB);
+        pushButtonJumpToMarkerB = new QAction(QIcon(MKICON(goMarkB)), "Go to Marker B", ui.selectionMarkerB);
+        pushButtonResetMarkerB = new QAction(QIcon(MKICON(reset_markB)), "Reset Marker B (total time)", ui.selectionMarkerB);
+
+        connect(pushButtonEditMarkerB,SIGNAL(triggered()),this,SLOT(editMarkerB()));
+        connect(pushButtonJumpToMarkerB,SIGNAL(triggered()),this,SLOT(gotoMarkerB()));
+        connect(pushButtonResetMarkerB,SIGNAL(triggered()),this,SLOT(resetMarkerB()));
+
+        selectionMarkerBActionButtons.append(pushButtonEditMarkerB);
+        selectionMarkerBActionButtons.append(pushButtonJumpToMarkerB);
+        selectionMarkerBActionButtons.append(pushButtonResetMarkerB);
+    }
+
+    if(enableWidgetActionButtons(ui.selectionMarkerB, selectionMarkerBActionButtons, all, pushButtonJumpToMarkerB))
+        ui.selectionMarkerB->setTextMargins(0,0,0,0);
 }
 
 /**
@@ -1780,20 +2272,115 @@ void MainWindow::widgetsUpdateTooltips(void)
 */
 void MainWindow::restoreDefaultWidgetState(bool b)
 {
-    ui.codecWidget->setVisible(true);
-    ui.navigationWidget->setVisible(true);
-    ui.selectionWidget->setVisible(true);
-    ui.volumeWidget->setVisible(true);
-    ui.audioMetreWidget->setVisible(true);
-    ui.toolBar->setVisible(true);
+    // Set visibility via connected checkboxes
+    for(int i = ADM_Toolbars_Item::FIRST; i <= ADM_Toolbars_Item::LAST; i++)
+        ui.menuToolbars->actions().at(i)->setChecked(true);
 
-    syncToolbarsMenu();
     updateZoomIndicator();
 
     addToolBar(ui.toolBar);
 
     if(!playing)
         setZoomToFit();
+}
+
+/**
+    \fn     toolBarVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::toolBarVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_TOOLBAR_VISIBLE, checked);
+    // Workaround to set/unset the checkbox when changing the
+    // visibility elsewhere.
+    ui.menuToolbars->actions().at(ADM_Toolbars_Item::TOOLBAR)->setChecked(checked);
+}
+
+/**
+    \fn     statusBarVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::statusBarVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_STATUSBAR_VISIBLE, checked);
+}
+
+/**
+    \fn     codecVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::codecVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_CODEC_VISIBLE, checked);
+    // Workaround to set/unset the checkbox when changing the
+    // visibility elsewhere.
+    ui.menuToolbars->actions().at(ADM_Toolbars_Item::CODEC)->setChecked(checked);
+}
+
+/**
+    \fn     navigationVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::navigationVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_NAVIGATION_VISIBLE, checked);
+    // Workaround to set/unset the checkbox when changing the
+    // visibility elsewhere.
+    ui.menuToolbars->actions().at(ADM_Toolbars_Item::NAVIGATION)->setChecked(checked);
+}
+
+/**
+    \fn     audioMeterVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::audioMeterVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_AUDIOMETER_VISIBLE, checked);
+}
+
+/**
+    \fn     volumeVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::volumeVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_VOLUME_VISIBLE, checked);
+}
+
+/**
+    \fn     controlsVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::controlsVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_CONTROLS_VISIBLE, checked);
+}
+
+/**
+    \fn     selectionVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::selectionVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_SELECTION_VISIBLE, checked);
+}
+
+/**
+    \fn     timeVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::timeVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_TIME_VISIBLE, checked);
+}
+
+/**
+    \fn     sliderVisibilityChanged
+    \brief  On checkbox state change save preferences.
+*/
+void MainWindow::sliderVisibilityChanged(bool checked)
+{
+    prefs->set(TOOLBARS_SLIDER_VISIBLE, checked);
 }
 
 /**
@@ -1808,6 +2395,10 @@ void MainWindow::setDefaultThemeSlot(bool b)
 
     QApplication::setStyle(defaultStyle);
     ui.currentTime->setTextMargins(0,0,0,0);
+    ui.totalTime->setTextMargins(0,0,0,0);
+    ui.selectionDuration->setTextMargins(0,0,0,0);
+    ui.selectionMarkerA->setTextMargins(0,0,0,0);
+    ui.selectionMarkerB->setTextMargins(0,0,0,0);
     QPalette pal = style()->standardPalette();
     qApp->setPalette(pal);
 
@@ -1816,6 +2407,10 @@ void MainWindow::setDefaultThemeSlot(bool b)
     ui.checkBox_TimeShift->setPalette(x); \
     ui.spinBox_TimeValue->setPalette(x); \
     ui.currentTime->setPalette(x); \
+    ui.totalTime->setPalette(x); \
+    ui.selectionDuration->setPalette(x); \
+    ui.selectionMarkerA->setPalette(x); \
+    ui.selectionMarkerB->setPalette(x); \
     ui.menuFile->setPalette(x); \
     ui.menuRecent->setPalette(x); \
     ui.menuEdit->setPalette(x); \
@@ -1866,6 +2461,12 @@ void MainWindow::setLightTheme(void)
 {
     QApplication::setStyle(BASIC_QT_STYLE);
     QPalette pal = style()->standardPalette();
+    // FIXME: This is a hack to have dock widgets' resize handle more
+    // visible on light themes.  A better solution would be to change
+    // the resize handle color directly.  In the meantime, a slightly
+    // darker window's color than that of the standard palette is
+    // applied.
+    pal.setColor(QPalette::Window, QColor(167,167,167));
     qApp->setPalette(pal);
 #ifdef BROKEN_PALETTE_PROPAGATION
     PROPAGATE_PALETTE(pal)
@@ -1979,6 +2580,134 @@ void MainWindow::checkChanged(int state)
 void MainWindow::timeChanged(int)
 {
     sendAction (ACT_TimeShift) ;
+}
+/**
+    \fn seekTime
+    \brief Called to seek a position in the player
+*/
+void MainWindow::seekTime(void)
+{
+    sendAction (ACT_SelectTime) ;
+}
+/**
+    \fn saveScriptAction
+    \brief Called to save the project as a script
+*/
+void MainWindow::saveScriptAction(void)
+{
+    sendAction (ACT_SAVE_PY_SCRIPT) ;
+}
+/**
+    \fn runScriptAction
+    \brief Called to run a script (aka project)
+*/
+void MainWindow::runScriptAction(void)
+{
+    sendAction (ACT_RUN_SCRIPT) ;
+}
+/**
+    \fn appendAction
+    \brief Called to append a mendia
+*/
+void MainWindow::appendAction(void)
+{
+    sendAction (ACT_APPEND_VIDEO) ;
+}
+/**
+    \fn undoAction
+    \brief Called to undo the action
+*/
+void MainWindow::undoAction(void)
+{
+    sendAction (ACT_Undo) ;
+}
+/**
+    \fn redoAction
+    \brief Called to redo the action
+*/
+void MainWindow::redoAction(void)
+{
+    sendAction (ACT_Redo) ;
+}
+/**
+    \fn cutSelection
+    \brief Called to cut the selection
+*/
+void MainWindow::cutSelection(void)
+{
+    sendAction (ACT_Cut) ;
+}
+/**
+    \fn copySelection
+    \brief Called to copy the selection
+*/
+void MainWindow::copySelection(void)
+{
+    sendAction (ACT_Copy) ;
+}
+/**
+    \fn pasteClipboard
+    \brief Called to paste the clipboard
+*/
+void MainWindow::pasteClipboard(void)
+{
+    sendAction (ACT_Paste) ;
+}
+/**
+    \fn editMarkerA
+    \brief Called to edit the marker A
+*/
+void MainWindow::editMarkerA(void)
+{
+    sendAction (ACT_SelectMarkerA) ;
+}
+/**
+    \fn editMarkerB
+    \brief Called to edit the marker B
+*/
+void MainWindow::editMarkerB(void)
+{
+    sendAction (ACT_SelectMarkerB) ;
+}
+/**
+    \fn gotoMarkerA
+    \brief Called to jump to the marker A in the player
+*/
+void MainWindow::gotoMarkerA(void)
+{
+    sendAction (ACT_GotoMarkA) ;
+}
+/**
+    \fn gotoMarkerB
+    \brief Called to jump to the marker B in the player
+*/
+void MainWindow::gotoMarkerB(void)
+{
+    sendAction (ACT_GotoMarkB) ;
+}
+/**
+    \fn resetMarkerA
+    \brief Called to reset the marker A
+*/
+void MainWindow::resetMarkerA(void)
+{
+    sendAction (ACT_ResetMarkerA) ;
+}
+/**
+    \fn resetMarkerB
+    \brief Called to reset the marker B
+*/
+void MainWindow::resetMarkerB(void)
+{
+    sendAction (ACT_ResetMarkerB) ;
+}
+/**
+    \fn resetMarkers
+    \brief Called to reset both marker A and B
+*/
+void MainWindow::resetMarkers(void)
+{
+    sendAction (ACT_ResetMarkers) ;
 }
 /**
     \fn searchMenu
@@ -2157,10 +2886,10 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 adjustZoom(os.width(),os.height());
                 break;
             }
-            if (watched == ui.sliderPlaceHolder)
+            if (watched == ui.thumbSliderHolder)
             {
-                thumbSlider->resize(ui.sliderPlaceHolder->width(), 16);
-                thumbSlider->move(0, (ui.sliderPlaceHolder->height() - thumbSlider->height()) / 2);
+                thumbSlider->resize(ui.thumbSliderHolder->width(), 16);
+                thumbSlider->move(0, (ui.thumbSliderHolder->height() - thumbSlider->height()) / 2);
             }
             break;
 
@@ -2466,7 +3195,7 @@ void MainWindow::calcDockWidgetDimensions(uint32_t &width, uint32_t &height)
         reqh += ui.menubar->height();
     if(ui.toolBar->isVisible() && false==ui.toolBar->isFloating() && ui.toolBar->orientation()==Qt::Horizontal)
         reqh += ui.toolBar->frameSize().height();
-    if(ui.navigationWidget->isVisible() || ui.selectionWidget->isVisible() || ui.volumeWidget->isVisible() || ui.audioMetreWidget->isVisible())
+    if(ui.navigationWidget->isVisible())
        reqh += ui.navigationWidget->frameSize().height();
     height = reqh;
 }
@@ -2521,39 +3250,43 @@ void MainWindow::volumeWidgetOperational(void)
 }
 
 /**
-    \fn syncToolbarsMenu
-    \brief Make sure only visible widgets have check marks
-           in the Toolbars submenu of the View menu.
+    \fn initWidgetsVisibility
+    \brief Initialize widgets visibility from preferences.
 */
-void MainWindow::syncToolbarsMenu(void)
+void MainWindow::initWidgetsVisibility(void)
 {
-#define EXPAND(x) ui.x ## Widget
-#define CHECKMARK(x,y) ui.menuToolbars->actions().at(x)->setChecked(EXPAND(y)->isVisible());
-    CHECKMARK(0,audioMetre)
-    CHECKMARK(1,codec)
-    CHECKMARK(2,navigation)
-    CHECKMARK(3,selection)
-    CHECKMARK(4,volume)
-    ui.menuToolbars->actions().at(5)->setChecked(ui.toolBar->isVisible());
-#undef CHECKMARK
-#undef EXPAND
+    bool visible;
+
+    // Changing checked state automatically shows/hides the widget,
+    // there's no need to explicitly set a widget's visibility.
+#define PREF_SET_VISIBLE(preference)                                    \
+    prefs->get(TOOLBARS_ ## preference ## _VISIBLE, &visible);          \
+    ui.menuToolbars->actions().at(ADM_Toolbars_Item::preference)->setChecked(visible)
+
+    PREF_SET_VISIBLE(TOOLBAR);
+    PREF_SET_VISIBLE(STATUSBAR);
+    PREF_SET_VISIBLE(CODEC);
+    PREF_SET_VISIBLE(NAVIGATION);
+    PREF_SET_VISIBLE(AUDIOMETER);
+    PREF_SET_VISIBLE(VOLUME);
+    PREF_SET_VISIBLE(CONTROLS);
+    PREF_SET_VISIBLE(SELECTION);
+    PREF_SET_VISIBLE(TIME);
+    PREF_SET_VISIBLE(SLIDER);
+
+#undef PREF_SET_VISIBLE
 }
 
 /**
-    \fn addStatusBar
-    \brief Add status bar to the main window
+    \fn initStatusBar
+    \brief Initialize the main window's status bar
 */
-void MainWindow::addStatusBar(void)
+void MainWindow::initStatusBar(void)
 {
-    QStatusBar * statusBar = new QStatusBar(this);
-    statusBar->setSizeGripEnabled(false);
-
     this->statusBarInfo = new QLabel("");
-    statusBar->addWidget(this->statusBarInfo);
-
-    statusBar->setContentsMargins(4,0,4,0);
-
-    this->setStatusBar(statusBar);
+    ui.statusBarWidget->setSizeGripEnabled(false);
+    ui.statusBarWidget->addWidget(this->statusBarInfo);
+    ui.statusBarWidget->setContentsMargins(4,0,4,0);
     updateStatusBarInfo();
 }
 
@@ -2569,6 +3302,8 @@ void MainWindow::updateStatusBarInfo(void)
         s += QString(QT_TRANSLATE_NOOP("qgui2","Input: %1x%2, %3fps  |  Decoder: %4  |  Display: %5  |  Zoom: %6%"))
             .arg(avifileinfo->width).arg(avifileinfo->height).arg(avifileinfo->fps1000/1000.0)
             .arg(statusBarInfo_Decoder).arg(statusBarInfo_Display).arg(statusBarInfo_Zoom);
+        if(!statusBarFrame_Type.isEmpty())
+            s += QString(QT_TRANSLATE_NOOP("qgui2"," | Frame type: %1")).arg(statusBarFrame_Type);
     }
     else
     {
@@ -2734,9 +3469,9 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
                 break;
             default: break;
         }
-        mw->ui.horizontalSlider_2->blockSignals(true);
-        mw->ui.horizontalSlider_2->setValue(qset->value("volume", 100).toInt());
-        mw->ui.horizontalSlider_2->blockSignals(false);
+        mw->ui.volumeSlider->blockSignals(true);
+        mw->ui.volumeSlider->setValue(qset->value("volume", 100).toInt());
+        mw->ui.volumeSlider->blockSignals(false);
         qset->endGroup();
         // Hack: allow to drop other Qt-specific settings on application restart
         char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
@@ -2745,9 +3480,9 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         delete qset;
         qset = NULL;
         // Probing for OpenGL fails if VU meter is hidden, delay hiding it.
-        vuMeterIsHidden = mw->ui.audioMetreWidget->isHidden();
+        vuMeterIsHidden = mw->ui.audioMeterWidget->isHidden();
         if(openglEnabled && vuMeterIsHidden)
-            mw->ui.audioMetreWidget->setVisible(true);
+            mw->ui.audioMeterWidget->setVisible(true);
     }
 
     QuiMainWindows = (QWidget*)mw;
@@ -2794,14 +3529,14 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         openGLStarted=true;
         UI_Qt4InitGl();
         if(vuMeterIsHidden)
-            mw->ui.audioMetreWidget->setVisible(false);
+            mw->ui.audioMeterWidget->setVisible(false);
     }else
     {
         ADM_info("OpenGL not activated, not initialized\n");
     }
 #endif
-    mw->syncToolbarsMenu();
-    mw->addStatusBar();
+    mw->initWidgetsVisibility();
+    mw->initStatusBar();
 
     return 1;
 }
@@ -2819,7 +3554,7 @@ void UI_closeGui(void)
         qset->beginGroup("MainWindow");
         qset->setValue("windowState", ((QMainWindow *)QuiMainWindows)->saveState());
         qset->setValue("showMaximized", QuiMainWindows->isMaximized());
-        qset->setValue("volume", WIDGET(horizontalSlider_2)->value());
+        qset->setValue("volume", WIDGET(volumeSlider)->value());
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -2858,6 +3593,9 @@ void UI_applySettings(void)
     ((MainWindow *)QuiMainWindows)->updateActionShortcuts();
     ((MainWindow *)QuiMainWindows)->volumeWidgetOperational();
     ((MainWindow *)QuiMainWindows)->setRefreshCap();
+    ((MainWindow *)QuiMainWindows)->updateTimeFieldsReadOnly();
+    ((MainWindow *)QuiMainWindows)->updateWidgetActionButtons();
+    ((MainWindow *)QuiMainWindows)->updatePTSToolTips();
 }
 /**
     \fn UI_getCurrentPreview
@@ -3149,7 +3887,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 {
     if(frametype == CLEAR_FRAME_TYPE)
     {
-        WIDGET(label_8)->clear();
+        ((MainWindow *)QuiMainWindows)->statusBarFrame_Type = "";
         return;
     }
 
@@ -3177,8 +3915,9 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
         sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s"),c,f);
     else
         sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s (%02d)"),c,f,qp);
-    WIDGET(label_8)->setText(string);
 
+    ((MainWindow *)QuiMainWindows)->statusBarFrame_Type = QString(string);
+    ((MainWindow *)QuiMainWindows)->updateStatusBarInfo();
 }
 /**
  * 
@@ -3190,19 +3929,96 @@ admUITaskBarProgress *UI_getTaskBarProgress()
 }
 
 /**
+    \fn UI_getCurrentTime
+    \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
+*/
+bool UI_getCurrentTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
+{
+    if(WIDGET(currentTime)->isTextEdited())
+    {
+        WIDGET(currentTime)->PTS(hh, mm, ss, ms, us);
+        return true;
+    }
+
+    WIDGET(currentTime)->resetEdit();
+    return false;
+}
+
+/**
+    \fn UI_getMarkerA
+    \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
+*/
+bool UI_getMarkerA(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
+{
+    if(WIDGET(selectionMarkerA)->isTextEdited())
+    {
+        WIDGET(selectionMarkerA)->PTS(hh, mm, ss, ms, us);
+        return true;
+    }
+
+    WIDGET(selectionMarkerA)->resetEdit();
+    return false;
+}
+
+/**
+    \fn UI_getMarkerB
+    \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
+*/
+bool UI_getMarkerB(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
+{
+    if(WIDGET(selectionMarkerB)->isTextEdited())
+    {
+        WIDGET(selectionMarkerB)->PTS(hh, mm, ss, ms, us);
+        return true;
+    }
+
+    WIDGET(selectionMarkerB)->resetEdit();
+    return false;
+}
+
+/**
+    \fn UI_getSelectionTime
+    \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
+*/
+bool UI_getSelectionTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
+{
+    if(WIDGET(selectionDuration)->isTextEdited())
+    {
+        WIDGET(selectionDuration)->PTS(hh, mm, ss, ms, us);
+        return true;
+    }
+
+    WIDGET(selectionDuration)->resetEdit();
+    return false;
+}
+
+/**
+    \fn UI_getTotalTime
+    \brief Get currently displayed PTS, this may have been edited by the user and it's not the real PTS
+*/
+bool UI_getTotalTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms, uint32_t *us)
+{
+    if(WIDGET(totalTime)->isTextEdited())
+    {
+        WIDGET(totalTime)->PTS(hh, mm, ss, ms, us);
+        return true;
+    }
+
+    WIDGET(totalTime)->resetEdit();
+    return false;
+}
+
+/**
     \fn UI_setCurrentTime
     \brief Set current PTS of displayed video
 */
 void UI_setCurrentTime(uint64_t curTime)
 {
-  char text[80];
- uint32_t mm,hh,ss,ms;
- uint32_t shorty=(uint32_t)(curTime/1000);
-
-    ms2time(shorty,&hh,&mm,&ss,&ms);
-      sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-    WIDGET(currentTime)->setText(text);
-
+    WIDGET(currentTime)->setPTS(curTime);
+    if(!avifileinfo)
+        WIDGET(currentTime)->removePTSToolTip();
+    else if(((MainWindow *)QuiMainWindows)->showPTSToolTips)
+        WIDGET(currentTime)->appendPTSToolTip();
 }
 
 /**
@@ -3211,14 +4027,12 @@ void UI_setCurrentTime(uint64_t curTime)
 */
 void UI_setTotalTime(uint64_t curTime)
 {
-  char text[80];
- uint32_t mm,hh,ss,ms;
- uint32_t shorty=(uint32_t)(curTime/1000);
-
-    ms2time(shorty,&hh,&mm,&ss,&ms);
-      sprintf(text, "/ %02d:%02d:%02d.%03d", hh, mm, ss, ms);
-    WIDGET(totalTime)->setText(text);
+    WIDGET(totalTime)->setPTS(curTime);
     slider->setTotalDuration(curTime);
+    if(!avifileinfo)
+        WIDGET(totalTime)->removePTSToolTip();
+    else if(((MainWindow *)QuiMainWindows)->showPTSToolTips)
+        WIDGET(totalTime)->appendPTSToolTip();
 }
 /**
     \fn UI_setSegments
@@ -3234,30 +4048,23 @@ void UI_setSegments(uint32_t numOfSegs, uint64_t * segPts)
 */
 void UI_setMarkers(uint64_t a, uint64_t b)
 {
-    char text[80];
-    uint64_t absoluteA=a,absoluteB=b;
-    uint32_t hh,mm,ss,ms;
-    uint32_t timems;
-    a/=1000;
-    b/=1000;
-
-    timems=(uint32_t)(a);
-    ms2time(timems,&hh,&mm,&ss,&ms);
-    snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    WIDGET(pushButtonJumpToMarkerA)->setText(text);
-
-    timems=(uint32_t)(b);
-    ms2time(timems,&hh,&mm,&ss,&ms);
-    snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    WIDGET(pushButtonJumpToMarkerB)->setText(text);
-
-    timems=(uint32_t)(b-a);
-    ms2time(timems,&hh,&mm,&ss,&ms);
-    snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
-    QString duration=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Selection: "))+QString(text);
-    WIDGET(selectionDuration)->setText(duration);
-
-    slider->setMarkers(absoluteA, absoluteB);
+    WIDGET(selectionMarkerA)->setPTS(a);
+    WIDGET(selectionMarkerB)->setPTS(b);
+    // NOTE: To cut the us use (uint64_t)((uint32_t)(a/1000))*1000
+    WIDGET(selectionDuration)->setPTS(b - a);
+    slider->setMarkers(a, b);
+    if(!avifileinfo)
+    {
+        WIDGET(selectionMarkerA)->removePTSToolTip();
+        WIDGET(selectionMarkerB)->removePTSToolTip();
+        WIDGET(selectionDuration)->removePTSToolTip();
+    }
+    else if(((MainWindow *)QuiMainWindows)->showPTSToolTips)
+    {
+        WIDGET(selectionMarkerA)->appendPTSToolTip();
+        WIDGET(selectionMarkerB)->appendPTSToolTip();
+        WIDGET(selectionDuration)->appendPTSToolTip();
+    }
 }
 
 /**

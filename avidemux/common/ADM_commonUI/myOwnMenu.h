@@ -34,7 +34,7 @@ typedef struct
 #ifdef MENU_DECLARE
 static const MenuEntry _myMenuFile[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Open"),               NULL,ACT_OPEN_VIDEO,    MKICON(fileopen),"Ctrl+O",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Append"),             NULL,ACT_APPEND_VIDEO,  NULL,"Ctrl+A",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Append"),             NULL,ACT_APPEND_VIDEO,  MKICON(append),"Ctrl+A",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Save"),               NULL,ACT_SAVE_VIDEO,    MKICON(filesave),"Ctrl+S",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Queue"),              NULL,ACT_SAVE_QUEUE,    NULL,"Ctrl+U",0},
             {MENU_SUBMENU,QT_TRANSLATE_NOOP("adm","Save as Image"),     NULL,ACT_DUMMY,         NULL,NULL,0},
@@ -65,22 +65,24 @@ static const MenuEntry _myMenuRecent[] = {
 std::vector<MenuEntry> myMenuRecent(_myMenuRecent, _myMenuRecent + sizeof(_myMenuRecent) / sizeof(_myMenuRecent[0]));
 
 static const MenuEntry _myMenuEdit[] = {
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Undo"),               NULL,ACT_Undo,          NULL,"Ctrl+Z",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Redo"),               NULL,ACT_Redo,          NULL,"Ctrl+Y",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Undo"),               NULL,ACT_Undo,          MKICON(undo),"Ctrl+Z",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Redo"),               NULL,ACT_Redo,          MKICON(redo),"Ctrl+Y",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Edit"),         NULL,ACT_ResetSegments, NULL,NULL,0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Cut"),                NULL,ACT_Cut,           NULL,"Ctrl+X",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Copy"),               NULL,ACT_Copy,          NULL,"Ctrl+C",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Paste"),              NULL,ACT_Paste,         NULL,"Ctrl+V",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Cut"),                NULL,ACT_Cut,           MKICON(cut),"Ctrl+X",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Copy"),               NULL,ACT_Copy,          MKICON(copy),"Ctrl+C",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Paste"),              NULL,ACT_Paste,         MKICON(paste),"Ctrl+V",0},
 #ifdef __APPLE__
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete,        NULL,"Backspace",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete,        MKICON(delete_selection),"Backspace",0},
 #else
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete,        NULL,"Delete",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete,        MKICON(delete_selection),"Delete",0},
 #endif
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker A"),       NULL,ACT_MarkA,         MKICON(markA), "Ctrl+PgUp",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker B"),       NULL,ACT_MarkB,         MKICON(markB), "Ctrl+PgDown",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Marker A"),     NULL,ACT_ResetMarkerA,  NULL,"Ctrl+Shift+PgUp",0},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Marker B"),     NULL,ACT_ResetMarkerB,  NULL,"Ctrl+Shift+PgDown",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Edit Marker A"),      NULL,ACT_SelectMarkerA, MKICON(time), "Ctrl+Alt+PgUp",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Edit Marker B"),      NULL,ACT_SelectMarkerB, MKICON(time), "Ctrl+Alt+PgDown",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Marker A"),     NULL,ACT_ResetMarkerA,  MKICON(reset_markA),"Ctrl+Shift+PgUp",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Marker B"),     NULL,ACT_ResetMarkerB,  MKICON(reset_markB),"Ctrl+Shift+PgDown",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Markers"),      NULL,ACT_ResetMarkers,  NULL,"Ctrl+Home",0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL,1},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Pr&eferences"),       NULL,ACT_PREFERENCES,   NULL,NULL,0},
@@ -146,7 +148,7 @@ static const MenuEntry _myMenuGo[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Marker A"),      NULL,ACT_GotoMarkA,       MKICON(goMarkA),         "PgUp",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Marker B"),      NULL,ACT_GotoMarkB,       MKICON(goMarkB),         "PgDown",0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY, NULL,NULL,1},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Time"),          NULL,ACT_SelectTime,      NULL,                  "Ctrl+T",0},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Go To Time"),          NULL,ACT_SelectTime,      MKICON(time),          "Ctrl+T",0},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY, NULL,NULL,1},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Backward 1 second"),   NULL,ACT_Back1Second,     MKICON(backward1s),    "Shift+Left",0},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Forward 1 second"),    NULL,ACT_Forward1Second,  MKICON(forward1s),     "Shift+Right",0},

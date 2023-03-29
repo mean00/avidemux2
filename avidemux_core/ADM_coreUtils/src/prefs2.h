@@ -6,6 +6,13 @@ struct  {
 	uint32_t apiVersion;
 }version;
 struct  {
+	bool pts_timings_tooltips;
+	bool time_fields_extra_buttons;
+	bool current_time_field_editable;
+	bool total_time_field_editable;
+	bool selection_time_field_editable;
+	bool marker_a_time_field_editable;
+	bool marker_b_time_field_editable;
 	bool swap_if_A_greater_than_B;
 	bool saveprefsonexit;
 	bool ignoresavedmarkers;
@@ -36,6 +43,8 @@ struct  {
 	bool swap_up_down_keys;
 	std::string alt_mark_a;
 	std::string alt_mark_b;
+	std::string alt_edit_mark_a;
+	std::string alt_edit_mark_b;
 	std::string alt_reset_mark_a;
 	std::string alt_reset_mark_b;
 	std::string alt_reset_markers;
@@ -100,4 +109,16 @@ struct  {
 	float target_luminance;
 	uint32_t out_of_gamut_handling;
 }hdr;
+struct  {
+	bool toolbar_visible;
+	bool statusbar_visible;
+	bool codec_visible;
+	bool navigation_visible;
+	bool audiometer_visible;
+	bool volume_visible;
+	bool controls_visible;
+	bool selection_visible;
+	bool time_visible;
+	bool slider_visible;
+}toolbars;
 }my_prefs_struct;
