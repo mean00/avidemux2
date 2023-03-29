@@ -9,6 +9,7 @@
 #include <QSlider>
 #include <QWidget>
 #include <QtCore/QTimer>
+#include <QStatusBar>
 #include <string>
 
 #include "ADM_mwNavSlider.h"
@@ -123,7 +124,9 @@ public:
     void setZoomToFit(void);
     void updateZoomIndicator(void);
     void syncToolbarsMenu(void);
+    bool statusBarEnabled(void);
     void addStatusBar(void);
+    void removeStatusBar(void);
     void updateStatusBarInfo(void);
     void updateStatusBarDisplayInfo(const char * display);
     void updateStatusBarDecoderInfo(const char * decoder);
@@ -149,7 +152,6 @@ protected:
     QAction *recentFileAction[NB_LAST_FILES];
     QAction *recentProjectAction[NB_LAST_FILES];
     QAction *actionHDRSeparator;
-    QAction *displayZoom;
     QAction *defaultThemeAction;
     QAction *lightThemeAction;
     QAction *darkThemeAction;
@@ -215,6 +217,7 @@ protected:
     void currentTimeToClipboard(void);
     bool dragWhilePlay;
     
+    QStatusBar * statusBarWidget;
     QLabel * statusBarInfo;
     int statusBarInfo_Zoom;
     QString statusBarInfo_Display, statusBarInfo_Decoder;
@@ -284,6 +287,8 @@ public slots:
     void audioToggled(bool checked);
 
     void thumbSlider_valueEmitted(int value);
+    
+    void setStatusBarEnabled(bool enabled);
 
 signals:
     void actionSignal(Action a);
