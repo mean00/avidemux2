@@ -2762,6 +2762,8 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
             mw->ui.audioMetreWidget->setVisible(true);
     }
 
+    if (!statusbarHidden)
+        mw->addStatusBar();
     QuiMainWindows = (QWidget*)mw;
 
 #ifdef _WIN32
@@ -2812,8 +2814,6 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         ADM_info("OpenGL not activated, not initialized\n");
     }
 #endif
-    if (!statusbarHidden)
-        mw->addStatusBar();
     mw->syncToolbarsMenu();
 
     return 1;
