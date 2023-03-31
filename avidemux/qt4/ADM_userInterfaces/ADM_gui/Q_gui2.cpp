@@ -2435,6 +2435,8 @@ void MainWindow::calcDockWidgetDimensions(uint32_t &width, uint32_t &height)
         reqh += ui.toolBar->frameSize().height();
     if(ui.navigationWidget->isVisible() || ui.selectionWidget->isVisible() || ui.volumeWidget->isVisible() || ui.audioMetreWidget->isVisible())
        reqh += ui.navigationWidget->frameSize().height();
+    if(statusBarWidget)
+       reqh += statusBarWidget->frameSize().height();
     height = reqh;
 }
 
