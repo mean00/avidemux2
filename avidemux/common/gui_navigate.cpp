@@ -353,7 +353,10 @@ bool GUI_NextFrame(void)
         return false;
 
     if(!admPreview::nextPicture())
+    {
+        UI_notifyError(QT_TRANSLATE_NOOP("navigate","Cannot go to next frame"),2500);        
         return false;
+    }
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
@@ -468,11 +471,12 @@ bool GUI_PrevFrame(void)
         return false;
 
     if (!admPreview::previousPicture())
-      {
+    {
+        UI_notifyError(QT_TRANSLATE_NOOP("navigate","Cannot go to previous frame"),2500);        
 //        We're probably at the beginning of the file ...
 //            GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),    QT_TRANSLATE_NOOP("navigate","Cannot go to previous frame"));
         return false;
-      }
+    }
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
