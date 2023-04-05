@@ -131,7 +131,7 @@ public:
     void updateStatusBarDisplayInfo(const char * display);
     void updateStatusBarDecoderInfo(const char * decoder);
     void updateStatusBarZoomInfo(int zoom);
-    void notifyStatusBar(const char * lead, const char * msg, int timeout = 2500);
+    void notifyStatusBar(int level, const char * lead, const char * msg, int timeout = 2500);
 
     void setLightTheme(void);
     void setDarkTheme(void);
@@ -218,7 +218,9 @@ protected:
     bool dragWhilePlay;
     
     QStatusBar * statusBarWidget;
+    QTimer statusBarTimer;
     QLabel * statusBarInfo;
+    QLabel * statusBarMessage;
     int statusBarInfo_Zoom;
     QString statusBarInfo_Display, statusBarInfo_Decoder;
 
@@ -271,6 +273,8 @@ private slots:
     void setLightThemeSlot(bool b);
     void setDarkThemeSlot(bool b);
 
+    void statusBarTimerTimeout(void);
+    
     void closeEvent(QCloseEvent *event)
     {
         printf("Close event!\n");

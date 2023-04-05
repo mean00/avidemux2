@@ -644,8 +644,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     busyTimer.setSingleShot(true);
     statusBarWidget = NULL;
     statusBarInfo = NULL;
+    statusBarMessage = NULL;
+    statusBarTimer.setSingleShot(true);
+    statusBarTimer.stop();
 
     connect(ui.actionViewStatusBar, SIGNAL(toggled(bool)), this, SLOT(setStatusBarEnabled(bool)));
+    connect( &statusBarTimer, SIGNAL(timeout()), this, SLOT(statusBarTimerTimeout()));
 
 #if defined(__APPLE__) && defined(USE_SDL)
     //ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
@@ -2523,6 +2527,15 @@ void MainWindow::setStatusBarEnabled(bool enabled)
 }
 
 /**
+    \fn statusBarTimerTimeout
+    \brief private slot for statusBarTimerTimeout
+*/
+void MainWindow::statusBarTimerTimeout(void)
+{
+    updateStatusBarInfo();
+}
+
+/**
     \fn statusBarEnabled
 */
 bool MainWindow::statusBarEnabled(void)
@@ -2543,6 +2556,8 @@ void MainWindow::addStatusBar(void)
 
     statusBarInfo = new QLabel("");
     statusBarWidget->addWidget(statusBarInfo);
+    statusBarMessage = new QLabel("");
+    statusBarWidget->addWidget(statusBarMessage);
 
     statusBarWidget->setContentsMargins(4,0,4,0);
 
@@ -2561,8 +2576,10 @@ void MainWindow::removeStatusBar(void)
     
     this->setStatusBar(NULL);   // Qt should take care of deleting nested objects
     
+    statusBarTimer.stop();
     statusBarWidget = NULL;
     statusBarInfo = NULL;
+    statusBarMessage = NULL;
 }
 
 /**
@@ -2586,6 +2603,9 @@ void MainWindow::updateStatusBarInfo(void)
 
     if (statusBarInfo)
         statusBarInfo->setText(s);
+    if (statusBarMessage)
+        statusBarMessage->clear();
+    statusBarTimer.stop();
 }
 
 /**
@@ -2618,13 +2638,36 @@ void MainWindow::updateStatusBarZoomInfo(int zoom)
 /**
     \fn notifyStatusBar
 */
-void MainWindow::notifyStatusBar(const char * lead, const char * msg, int timeout)
+void MainWindow::notifyStatusBar(int level, const char * lead, const char * msg, int timeout)
 {
     if (timeout <= 0)   // prevent permament message
         timeout = 2500;
     QString s = QString(lead).arg(msg);
+#define STATUSBAR_MESSAGE_ICON_SIZE     (12)
+    if (statusBarInfo)
+    {
+        statusBarInfo->clear();
+        switch (level)
+        {
+            case 0:
+                statusBarInfo->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation).pixmap(STATUSBAR_MESSAGE_ICON_SIZE,STATUSBAR_MESSAGE_ICON_SIZE));
+                break;
+            case 1:
+                statusBarInfo->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning).pixmap(STATUSBAR_MESSAGE_ICON_SIZE,STATUSBAR_MESSAGE_ICON_SIZE));
+                break;
+            default:
+            case 2:
+                statusBarInfo->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical).pixmap(STATUSBAR_MESSAGE_ICON_SIZE,STATUSBAR_MESSAGE_ICON_SIZE));
+                break;
+        }
+    }
+#undef STATUSBAR_MESSAGE_ICON_SIZE
+    if (statusBarMessage)
+        statusBarMessage->setText(s);
     if (statusBarWidget)
-        statusBarWidget->showMessage(s, timeout);
+    {
+        statusBarTimer.start(timeout);
+    }
 }
 
 
@@ -3624,21 +3667,21 @@ void UI_setAudioTrackCount( int nb )
 */
 void UI_notifyInfo(const char *message, int timeoutMs)
 {
-    ((MainWindow *)QuiMainWindows)->notifyStatusBar(QT_TRANSLATE_NOOP("qgui2","INFO: %1"), message, timeoutMs);
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(0, QT_TRANSLATE_NOOP("qgui2","INFO: %1"), message, timeoutMs);
 }
 /**
     \fn UI_notifyWarning
 */
 void UI_notifyWarning(const char *message, int timeoutMs)
 {
-    ((MainWindow *)QuiMainWindows)->notifyStatusBar(QT_TRANSLATE_NOOP("qgui2","WARNING: %1"), message, timeoutMs);
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(1, QT_TRANSLATE_NOOP("qgui2","WARNING: %1"), message, timeoutMs);
 }
 /**
     \fn UI_notifyError
 */
 void UI_notifyError(const char *message, int timeoutMs)
 {
-    ((MainWindow *)QuiMainWindows)->notifyStatusBar(QT_TRANSLATE_NOOP("qgui2","ERROR: %1"), message, timeoutMs);
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(2, QT_TRANSLATE_NOOP("qgui2","ERROR: %1"), message, timeoutMs);
 }
 /**
  * \fn dtor
