@@ -218,7 +218,7 @@ protected:
     bool dragWhilePlay;
     
     QStatusBar * statusBarWidget;
-    QTimer statusBarTimer;
+    QTimer statusBarTimer, statusBarFlashTimer;
     QLabel * statusBarInfo;
     QLabel * statusBarMessage;
     int statusBarInfo_Zoom;

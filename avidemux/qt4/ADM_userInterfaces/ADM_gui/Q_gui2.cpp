@@ -647,6 +647,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     statusBarMessage = NULL;
     statusBarTimer.setSingleShot(true);
     statusBarTimer.stop();
+    statusBarFlashTimer.setSingleShot(true);
+    statusBarFlashTimer.stop();
 
     connect(ui.actionViewStatusBar, SIGNAL(toggled(bool)), this, SLOT(setStatusBarEnabled(bool)));
     connect( &statusBarTimer, SIGNAL(timeout()), this, SLOT(statusBarTimerTimeout()));
@@ -2667,6 +2669,12 @@ void MainWindow::notifyStatusBar(int level, const char * lead, const char * msg,
     if (statusBarWidget)
     {
         statusBarTimer.start(timeout);
+        
+        if (statusBarFlashTimer.remainingTime() <= 0)
+        {
+            statusBarFlashTimer.start(200);
+            statusBarWidget->showMessage(" ", 100);
+        }
     }
 }
 
