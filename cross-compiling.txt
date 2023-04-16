@@ -7,7 +7,7 @@
 
 1. Install MXE (M cross environment) dependencies as described in
 
-    http://mxe.cc/#requirements (plus `libpcre3-dev`)
+    http://mxe.cc/#requirements (plus `libpcre3-dev`, `cmake`)
 
 for your respective Linux distribution, then run the script mxe-setup.sh from
 a directory *outside of Avidemux top source directory*. This script will
