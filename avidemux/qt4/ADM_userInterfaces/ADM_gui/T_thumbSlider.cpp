@@ -79,9 +79,9 @@ void ThumbSlider::paintEvent(QPaintEvent *event)
 
 void ThumbSlider::mousePressEvent(QMouseEvent *event)
 {
-    if (stopping) return;
     if (event->buttons() & Qt::LeftButton)
     {
+        stopping = 0;
         int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
 
         setSliderPosition(value);
