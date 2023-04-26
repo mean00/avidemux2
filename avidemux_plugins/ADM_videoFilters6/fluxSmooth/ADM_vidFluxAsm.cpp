@@ -178,7 +178,7 @@ void attribute_used ADMVideoFlux::DoFilter_C(
 	ADM_assert(ycnt == 0);
 
 }
-#ifdef ADM_CPU_X86
+#ifdef ADM_CPU_X86_32
 /*
 	__asm movq mm2, mm0 \
 	__asm movq mm3, mm1 \

@@ -135,7 +135,7 @@ int frame=nextFrame++;
             ADM_assert(prev);
 
 		   	DoFlux *flux=	DoFilter_C;	
-#if defined(ADM_CPU_X86) && defined(ASM_FLUX)
+#if defined(ADM_CPU_X86_32) && defined(ASM_FLUX)
             flux=DoFilter_MMX;
 #endif
 // now we have everything
