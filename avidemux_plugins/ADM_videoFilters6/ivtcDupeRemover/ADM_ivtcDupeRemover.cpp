@@ -22,7 +22,7 @@
 #include "ivtcDupeRemover.h"
 #include "ivtcDupeRemover_desc.cpp"
 
-#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+#if defined( ADM_CPU_X86_32) && !defined(_MSC_VER)
         #define CAN_DO_INLINE_X86_ASM
 #endif
 
