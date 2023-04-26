@@ -28,9 +28,6 @@ private slots:
 	void valueChanged(int foo);
 	void reset(bool f);
 
-private:
-        void showEvent(QShowEvent *event);
-        void resizeEvent(QResizeEvent *event);
 };
 
 #endif	// Q_zoom_h

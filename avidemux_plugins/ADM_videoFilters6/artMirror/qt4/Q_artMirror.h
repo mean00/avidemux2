@@ -27,8 +27,5 @@ class Ui_artMirrorWindow : public QDialog
     void sliderUpdate(int foo);
     void valueChanged(int foo);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_artMirror_h

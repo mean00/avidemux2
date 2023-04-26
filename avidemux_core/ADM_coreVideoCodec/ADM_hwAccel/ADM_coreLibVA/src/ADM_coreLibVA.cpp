@@ -21,7 +21,6 @@
 #include "../include/ADM_coreLibVA_internal.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_windowInfo.h"
-#include "libavcodec/vaapi.h"
 #include "ADM_imageFlags.h"
 
 #include "fourcc.h"
@@ -56,20 +55,28 @@ GUI_WindowInfo      admLibVA::myWindowInfo;
 
 namespace ADM_coreLibVA
 {
+typedef struct {
+    VAConfigID cid;
+    int min_width;
+    int min_height;
+    int max_width;
+    int max_height;
+ } decoderConfig;
  void                   *context;
  VADisplay              display;
- VAConfigID             configH264;
- VAConfigID             configMpeg2;
- VAConfigID             configH265;
- VAConfigID             configH26510Bits;
- VAConfigID             configVC1;
- VAConfigID             configVP9;
+ decoderConfig          configH264;
+ decoderConfig          configMpeg2;
+ decoderConfig          configH265;
+ decoderConfig          configH26510Bits;
+ decoderConfig          configVC1;
+ decoderConfig          configVP9;
  VAImageFormat          imageFormatNV12;
  VAImageFormat          imageFormatYV12;
  bool                   directOperation;
  bool                   indirectOperationYV12;
  bool                   indirectOperationNV12;
 admLibVA::LIBVA_TRANSFER_MODE    transferMode;
+admLibVA::LIBVA_DRIVER_QUIRK     driverQuirks;
 
  namespace decoders
  {
@@ -134,10 +141,10 @@ static bool checkSupportedFunctionsAndImageFormat(void)
     // Check direct upload/Download works
     ADM_info("--Trying direct operations --\n");
     ADM_coreLibVA::directOperation      =tryDirect("direct",admSurface, image1,  image2);
-    ADM_info("-- Trying indirect (YV12) --\nSKIPPED\n");
-    ADM_coreLibVA::indirectOperationYV12=false; //tryIndirect(0,admSurface, image1 ,image2);
-    ADM_info("-- Trying indirect (NV12) --\nSKIPPED\n");
-    ADM_coreLibVA::indirectOperationNV12=false; //tryIndirect(1,admSurface, image1, image2 );
+    ADM_info("-- Trying indirect (YV12) --\n");
+    ADM_coreLibVA::indirectOperationYV12=tryIndirect(0,admSurface, image1 ,image2);
+    ADM_info("-- Trying indirect (NV12) --\n");
+    ADM_coreLibVA::indirectOperationNV12=tryIndirect(1,admSurface, image1, image2 );
 
     ADM_info("Direct           : %d\n",ADM_coreLibVA::directOperation);
     ADM_info("Indirect NV12    : %d\n",ADM_coreLibVA::indirectOperationNV12);
@@ -268,11 +275,15 @@ bool admLibVA::setupEncodingConfig(void)
  * @param name
  * @return
  */
-static bool checkProfile(const VAProfile &profile,VAConfigID *cid,const char *name)
+static bool checkProfile(const VAProfile &profile, ADM_coreLibVA::decoderConfig *dconf, const char *name)
 {
     VAStatus xError;
 
-    *cid=-1;
+    dconf->cid = VA_INVALID;
+    dconf->min_width = -1;
+    dconf->min_height = -1;
+    dconf->max_width = -1;
+    dconf->max_height = -1;
     VAConfigAttrib attrib;
     attrib.type = VAConfigAttribRTFormat;
     ADM_info("--Probing %s ...\n",name);
@@ -287,17 +298,60 @@ static bool checkProfile(const VAProfile &profile,VAConfigID *cid,const char *na
     CHECK_RT(YUV420);
     CHECK_RT(YUV422);
     CHECK_RT(YUV444);
-    CHECK_RT(YUV420_10BPP);
+    CHECK_RT(YUV420_10);
     CHECK_RT(RGB32);
     
-    CHECK_ERROR(vaCreateConfig( ADM_coreLibVA::display, profile, VAEntrypointVLD,&attrib, 1,cid));
+    CHECK_ERROR(vaCreateConfig(ADM_coreLibVA::display, profile, VAEntrypointVLD, &attrib, 1, &dconf->cid))
     if(xError)
     {
         ADM_warning("Cannot create config %s\n",name);
-        *cid=-1;
+        dconf->cid = VA_INVALID;
         return false;
-     }
-    ADM_info("Config created %s \n",name);
+    }
+    ADM_info("Config created %s\n",name);
+
+    unsigned int nb_attr = 0;
+    CHECK_ERROR(vaQuerySurfaceAttributes(ADM_coreLibVA::display, dconf->cid, 0, &nb_attr))
+    if(xError)
+    {
+        ADM_warning("Failed to query number of surface attributes, destroying config.\n");
+        CHECK_ERROR(vaDestroyConfig(ADM_coreLibVA::display, dconf->cid))
+        dconf->cid = VA_INVALID;
+        return false;
+    }
+    VASurfaceAttrib *alist = (VASurfaceAttrib *)admAlloca(nb_attr * sizeof(VASurfaceAttrib));
+    ADM_assert(alist);
+
+    CHECK_ERROR(vaQuerySurfaceAttributes(ADM_coreLibVA::display, dconf->cid, alist, &nb_attr))
+    if(xError)
+    {
+        ADM_warning("Failed to query surface attributes, destroying config.\n");
+        CHECK_ERROR(vaDestroyConfig(ADM_coreLibVA::display, dconf->cid))
+        dconf->cid = VA_INVALID;
+        return false;
+    }
+
+    for (int k = 0; k < nb_attr; k++)
+    {
+        VASurfaceAttrib *a = &(alist[k]);
+        switch (a->type)
+        {
+            case VASurfaceAttribMinWidth:
+                dconf->min_width = a->value.value.i;
+                break;
+            case VASurfaceAttribMinHeight:
+                dconf->min_height = a->value.value.i;
+                break;
+            case VASurfaceAttribMaxWidth:
+                dconf->max_width = a->value.value.i;
+                break;
+            case VASurfaceAttribMaxHeight:
+                dconf->max_height = a->value.value.i;
+                break;
+            default:break;
+        }
+    }
+    ADM_info("Config %s constraints: %d x %d -- %d x %d\n", name, dconf->min_width, dconf->min_height, dconf->max_width, dconf->max_height);
     return true;
 }
 /**
@@ -331,16 +385,16 @@ bool admLibVA::setupConfig(void)
     if(!r)
         return false;
 
-    checkProfile(VAProfileMPEG2Main,    &ADM_coreLibVA::configMpeg2,    "Mpeg 2 Main");
-    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,     "H264 Hight");
+    checkProfile(VAProfileMPEG2Main,    &ADM_coreLibVA::configMpeg2,    "MPEG-2 Main");
+    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,     "H264 High");
     checkProfile(VAProfileVC1Advanced,  &ADM_coreLibVA::configVC1 ,     "VC1");
 #ifdef LIBVA_HEVC_DEC
     checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,     "HEVC Main");
-    checkProfile(VAProfileHEVCMain10,   &ADM_coreLibVA::configH26510Bits,"H265 10Bits");
+    checkProfile(VAProfileHEVCMain10,   &ADM_coreLibVA::configH26510Bits,"HEVC 10Bits");
 #endif
 
 #ifdef LIBVA_VP9_DEC
-    checkProfile(VAProfileVP9Profile3,  &ADM_coreLibVA::configVP9 ,     "VP9");
+    checkProfile(VAProfileVP9Profile0,  &ADM_coreLibVA::configVP9 ,     "VP9");
 #endif
     return true;
 }
@@ -397,12 +451,14 @@ bool admLibVA::setupImageFormat()
                 {
                 case VA_FOURCC_NV12:
                     ADM_coreLibVA::imageFormatNV12=list[i];
-                    r=true;
+                    ADM_info("NV12 is supported\n");
                     break;
                 case VA_FOURCC_YV12:
-                     ADM_coreLibVA::imageFormatYV12=list[i];
-                     r=true;
-                     break;
+                    ADM_coreLibVA::imageFormatYV12=list[i];
+                    ADM_info("YV12 is supported\n");
+                    r=true;
+                    break;
+                default:break;
                 }
             }
 
@@ -414,38 +470,6 @@ bool admLibVA::setupImageFormat()
         delete [] list;
         return r;
 }
-/**
- * \fn fillContext
- * @param c
- * @return
- */
-bool admLibVA::fillContext(VAProfile profile ,vaapi_context *c)
-{
-    CHECK_WORKING(false);
-    VAConfigID cid;
-    switch(profile)
-    {
-       case VAProfileMPEG2Main:     cid=ADM_coreLibVA::configMpeg2;break;
-       case VAProfileH264High:      cid=ADM_coreLibVA::configH264;break;
-       case VAProfileVC1Advanced:   cid=ADM_coreLibVA::configVC1;break;
-#ifdef LIBVA_HEVC_DEC
-       case VAProfileHEVCMain:      cid=ADM_coreLibVA::configH265;break;
-       case VAProfileHEVCMain10:    cid=ADM_coreLibVA::configH26510Bits;break;
-#endif
-
-#ifdef LIBVA_VP9_DEC
-       case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;
-#endif
-       default:
-                ADM_assert(0);
-
-    }
-    c->config_id=cid;
-    c->display=ADM_coreLibVA::display;
-    return true;
-}
-
-
 
 /**
     \fn     init
@@ -462,12 +486,17 @@ bool admLibVA::init(GUI_WindowInfo *x)
     ADM_coreLibVA::decoders::h264=false;
     ADM_coreLibVA::directOperation=true;
     ADM_coreLibVA::transferMode=ADM_LIBVA_NONE;
-    
-    ADM_coreLibVA::configH265=-1;
-    ADM_coreLibVA::configH26510Bits=-1;
-    ADM_coreLibVA::configVP9=-1;
-    
+    ADM_coreLibVA::driverQuirks=ADM_LIBVA_DRIVER_QUIRK_NONE;
+    ADM_coreLibVA::decoderConfig *c;
 
+#define INVALIDATE(x) { c=&ADM_coreLibVA::x; c->cid=VA_INVALID; c->min_width=-1; c->min_height=-1; c->max_width=-1; c->max_height=-1; }
+    INVALIDATE(configH264)
+    INVALIDATE(configMpeg2)
+    INVALIDATE(configH265)
+    INVALIDATE(configH26510Bits)
+    INVALIDATE(configVP9)
+    INVALIDATE(configVC1)
+#undef INVALIDATE
     myWindowInfo=*x;
     VAStatus xError;
     int majv,minv;
@@ -477,7 +506,24 @@ bool admLibVA::init(GUI_WindowInfo *x)
         ADM_warning("VA: init failed\n");
         return false;
     }
-    ADM_info("VA %d.%d, Vendor = %s\n",majv,minv,vaQueryVendorString(ADM_coreLibVA::display));
+
+    const char *vendorString = vaQueryVendorString(ADM_coreLibVA::display);
+    ADM_info("VA %d.%d, Vendor = %s\n",majv,minv,vendorString);
+    if(vendorString)
+    {
+        if(strstr(vendorString, "ubit"))
+        {
+            ADM_coreLibVA::driverQuirks = ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE;
+            ADM_info("Not setting VASurfaceAttribMemoryType attribute when allocating surfaces with this driver.\n");
+        }else if(strstr(vendorString, "Splitted-Desktop Systems VDPAU backend for VA-API"))
+        {
+            ADM_coreLibVA::driverQuirks = ADM_LIBVA_DRIVER_QUIRK_SURFACE_ATTRIBUTES;
+            ADM_info("Not setting any surface attributes with this driver.\n");
+        }else
+        {
+            ADM_info("Using standard behavior with this driver.\n");
+        }
+    }
 
     if(setupConfig() && setupImageFormat())
     {
@@ -520,9 +566,11 @@ bool admLibVA::isOperationnal(void)
  * @param profile
  * @return
  */
-bool        admLibVA::supported(VAProfile profile)
+bool admLibVA::supported(VAProfile profile, int width, int height)
 {
-#define SUPSUP(a,b) case a: if(ADM_coreLibVA::b!=-1) return true;break;
+    bool result = false;
+    ADM_coreLibVA::decoderConfig *c = NULL;
+#define SUPSUP(a,b) case a: c = &ADM_coreLibVA::b; if(c->cid != VA_INVALID) result = true; break;
     switch(profile)
     {
         SUPSUP(VAProfileMPEG2Main,configMpeg2)
@@ -534,17 +582,25 @@ bool        admLibVA::supported(VAProfile profile)
 #endif
 
 #ifdef LIBVA_VP9_DEC
-        SUPSUP(VAProfileVP9Profile3,configVP9)
+        SUPSUP(VAProfileVP9Profile0,configVP9)
 #endif
         default:
-            ADM_info("This profile is not supported by libva\n");
+            ADM_info("Unknown libva profile ID %d\n", profile);
             break;
     }
-    ADM_info("Unknown profile (%d)\n",(int)profile);
-#ifdef LIBVA_VP9_DEC
-    ADM_info("Compiled with vp9 support, library says %d\n",ADM_coreLibVA::configVP9);
-#endif
-    return false;
+    if(result)
+    {
+        ADM_assert(c);
+        if((c->min_width > 0 && width > 0 && width < c->min_width) ||
+           (c->min_height > 0 && height > 0 && height < c->min_height) ||
+           (c->max_width > 0 && width > c->max_width) ||
+           (c->max_height > 0 && height > c->max_height))
+        {
+            ADM_info("Dimensions %d x %d not supported by hw decoder for this profile.\n", width, height);
+            return false;
+        }
+    }
+    return result;
 }
 
 /**
@@ -559,31 +615,58 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
     int xError=1;
     CHECK_WORKING(VA_INVALID);
     VAContextID id;
-    VAConfigID cid;
+    ADM_coreLibVA::decoderConfig *cfg = NULL;
 
     switch(profile)
     {
-       case VAProfileMPEG2Main:   cid=ADM_coreLibVA::configMpeg2;break;
-       case VAProfileH264High:    cid=ADM_coreLibVA::configH264;break;
-       case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
+       case VAProfileMPEG2Main:   cfg = &ADM_coreLibVA::configMpeg2;break;
+       case VAProfileH264High:    cfg = &ADM_coreLibVA::configH264;break;
+       case VAProfileVC1Advanced: cfg = &ADM_coreLibVA::configVC1;break;
 #ifdef LIBVA_HEVC_DEC
-       case VAProfileHEVCMain:    cid=ADM_coreLibVA::configH265;break;
-       case VAProfileHEVCMain10:  cid=ADM_coreLibVA::configH26510Bits;break;
+       case VAProfileHEVCMain:    cfg = &ADM_coreLibVA::configH265;break;
+       case VAProfileHEVCMain10:  cfg = &ADM_coreLibVA::configH26510Bits;break;
 #endif
 #ifdef LIBVA_VP9_DEC
-       case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;
+       case VAProfileVP9Profile0: cfg = &ADM_coreLibVA::configVP9;break;
 #endif
        default:
                 ADM_assert(0);
                 break;
 
     }
-    if(cid==-1)
+
+    ADM_assert(cfg);
+
+    if(cfg->cid == VA_INVALID)
     {
         ADM_warning("No VA support for that\n");
         return VA_INVALID;
     }
-    CHECK_ERROR(vaCreateContext ( ADM_coreLibVA::display, cid,
+    bool failure = false;
+    if(cfg->min_width > 0 && width < cfg->min_width)
+    {
+        ADM_warning("Width %d less than minimum width %d supported by VA-API hw decoder.\n", width, cfg->min_width);
+        failure = true;
+    }
+    if(cfg->min_height > 0 && height < cfg->min_height)
+    {
+        ADM_warning("Height %d less than minimum height %d supported by VA-API hw decoder.\n", height, cfg->min_height);
+        failure = true;
+    }
+    if(cfg->max_width > 0 && width > cfg->max_width)
+    {
+        ADM_warning("Width %d exceeds maximum width %d supported by VA-API hw decoder.\n", width, cfg->max_width);
+        failure = true;
+    }
+    if(cfg->max_height > 0 && height < cfg->max_height)
+    {
+        ADM_warning("Height %d exceeds maximum height %d supported by VA-API hw decoder.\n", height, cfg->max_height);
+        failure = true;
+    }
+    if(failure)
+        return VA_INVALID;
+
+    CHECK_ERROR(vaCreateContext ( ADM_coreLibVA::display, cfg->cid,
                 width,    height,
                 VA_PROGRESSIVE, // ?? NOT SURE ??
                 surfaces,
@@ -721,32 +804,71 @@ bool admLibVA::destroyDecoder(VAContextID session)
  */
 VASurfaceID        admLibVA::allocateSurface(int w, int h, int fmt)
 {
-       int xError;
-       CHECK_WORKING(VA_INVALID);
+    int xError;
+    CHECK_WORKING(VA_INVALID)
 
-       aprintf("Creating surface %d x %d (fmt=%d)\n",w,h,fmt);
-       VASurfaceID s;
-
-        CHECK_ERROR(vaCreateSurfaces(ADM_coreLibVA::display,
-                        fmt,
-                        w,h,
-                        &s,1,
-                        NULL,0));
-
-        if(!xError)
+    aprintf("Creating surface %d x %d (fmt=%d)\n",w,h,fmt);
+    VASurfaceID s;
+    VASurfaceAttrib *attr = NULL;
+    unsigned int nbAttr = 2;
+    switch(ADM_coreLibVA::driverQuirks)
+    {
+        case ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE:
+            nbAttr = 1;
+            break;
+        case ADM_LIBVA_DRIVER_QUIRK_SURFACE_ATTRIBUTES:
+            nbAttr = 0;
+            break;
+        case ADM_LIBVA_DRIVER_QUIRK_NONE:
+        default:break;
+    }
+    if(nbAttr)
+    {
+        int fcc;
+        switch(fmt)
         {
-            surfaceList::iterator already;
-            already=listOfAllocatedSurface.find(s);
-            if(already!=listOfAllocatedSurface.end())
-            {
-                ADM_warning("Doubly allocated va surface\n");
-                ADM_assert(0);
-            }
-            listOfAllocatedSurface[s]=true;
-            return s;
+            case VA_RT_FORMAT_YUV420:    fcc = VA_FOURCC_NV12; break;
+            case VA_RT_FORMAT_YUV420_10: fcc = VA_FOURCC_I010; break; // UV swapped?
+            case VA_RT_FORMAT_YUV422:    fcc = VA_FOURCC_422H; break;
+            case VA_RT_FORMAT_YUV444:    fcc = VA_FOURCC_444P; break;
+            case VA_RT_FORMAT_RGB32:     fcc = VA_FOURCC_BGRX; break;
+            default:
+                ADM_warning("Unsupported format 0x%08x requested\n",fmt);
+                return VA_INVALID;
         }
-        aprintf("Error creating surface\n");
-        return VA_INVALID;
+        attr = (VASurfaceAttrib *)admAlloca(sizeof(VASurfaceAttrib) * nbAttr);
+        attr->type = VASurfaceAttribPixelFormat;
+        attr->flags = VA_SURFACE_ATTRIB_SETTABLE;
+        attr->value.type = VAGenericValueTypeInteger;
+        attr->value.value.i = fcc;
+
+        if(ADM_coreLibVA::driverQuirks != ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE)
+        {
+            attr++;
+            attr->type = VASurfaceAttribMemoryType;
+            attr->flags = VA_SURFACE_ATTRIB_SETTABLE;
+            attr->value.type = VAGenericValueTypeInteger;
+            attr->value.value.i = VA_SURFACE_ATTRIB_MEM_TYPE_VA;
+            attr--;
+        }
+    }
+
+    CHECK_ERROR(vaCreateSurfaces(ADM_coreLibVA::display, fmt, w, h, &s, 1, attr, nbAttr))
+
+    if(!xError)
+    {
+        surfaceList::iterator already;
+        already=listOfAllocatedSurface.find(s);
+        if(already!=listOfAllocatedSurface.end())
+        {
+            ADM_warning("Doubly allocated va surface\n");
+            ADM_assert(0);
+        }
+        listOfAllocatedSurface[s]=true;
+        return s;
+    }
+    aprintf("Error creating surface\n");
+    return VA_INVALID;
 }
 /**
  * \fn destroySurface
@@ -1060,8 +1182,7 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADM_vaSurface *f
                 break;
         case VA_FOURCC_P010: // It is actually NV12 style All Y, then U/V interleaved
                 {
-                    ADM_assert(face);
-                    ADMColorScalerSimple *color=face->color10bits;
+                    ADMColorScalerSimple *color = face ? face->color10bits : NULL;
                     if(!color)
                         color = new ADMColorScalerSimple(src->_width, src->_height, ADM_PIXFRMT_NV12_10BITS, ADM_PIXFRMT_YV12);
                     ADMImageRef ref(src->_width,src->_height);
@@ -1073,16 +1194,19 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADM_vaSurface *f
                     ref._planes[2]=NULL;
                     ref._planeStride[2]=0;
                     color->convertImage(&ref,src);
-                    face->color10bits=color;
+                    if(face)
+                        face->color10bits=color;
+                    else
+                        delete color;
+                    color = NULL;
                     break;
-                }                
+                }
         case VA_FOURCC_NV12:
                 {
 #if 0
                     src->convertFromNV12(  ptr+dest->offsets[0], ptr+dest->offsets[1],dest->pitches[0],dest->pitches[1]);
 #else
-                    ADM_assert(face);
-                    ADMColorScalerSimple *color=face->fromNv12ToYv12;
+                    ADMColorScalerSimple *color = face ? face->fromNv12ToYv12 : NULL;
                     if(!color)
                         color = new ADMColorScalerSimple(src->_width, src->_height, ADM_PIXFRMT_NV12, ADM_PIXFRMT_YV12);
                     ADMImageRef ref(src->_width,src->_height);
@@ -1094,7 +1218,11 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADM_vaSurface *f
                     ref._planes[2]=NULL;
                     ref._planeStride[2]=0;
                     color->convertImage(&ref,src);
-                    face->fromNv12ToYv12=color;
+                    if(face)
+                        face->fromNv12ToYv12=color;
+                    else
+                        delete color;
+                    color = NULL;
 #endif
                     break;
                 }

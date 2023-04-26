@@ -32,14 +32,16 @@ decoderFFVP9::decoderFFVP9 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
     _parserContext=NULL;
     decoderMultiThread();
 
-    if (_context && _usingMT && (codec->capabilities & AV_CODEC_CAP_SLICE_THREADS))
+    if (_context && _usingMT && (_codec->capabilities & AV_CODEC_CAP_SLICE_THREADS))
     {
         _context->thread_count = _threads;
         _context->thread_type = FF_THREAD_SLICE;    // this is important! the default FF_THREAD_FRAME wont work with Avidemux
     }
 
-    if(!finish())
+    if (!lavSetupFinish())
         return;
+
+    _initCompleted = true;
 
     _parserContext=av_parser_init(AV_CODEC_ID_VP9);
     if(!_parserContext)

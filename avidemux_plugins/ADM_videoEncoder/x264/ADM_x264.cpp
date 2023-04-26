@@ -51,6 +51,8 @@ x264Encoder::x264Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreV
     logFile=NULL;
     flush=false;
     firstIdr=true;
+    highBitDepthImage=NULL;
+    outputBitDepth=8;
 }
 
 /**
@@ -135,6 +137,12 @@ x264Encoder::~x264Encoder()
   {
         ADM_dealloc(logFile);
         logFile=NULL;
+  }
+  highBitDepthBuffers.clean();
+  if (highBitDepthImage)
+  {
+      delete highBitDepthImage;
+      highBitDepthImage=NULL;
   }
 }
 /**
@@ -250,17 +258,48 @@ bool         x264Encoder::isDualPass(void)
 bool  x264Encoder::preAmble (ADMImage * in)
 {
     MMSET(pic);
-      pic.img.i_csp = X264_CSP_I420;
-      pic.img.i_plane = 3;
-      pic.img.plane[0] = YPLANE(in);
-      pic.img.plane[1] = UPLANE(in);
-      pic.img.plane[2] = VPLANE(in);
-      pic.img.i_stride[0] = in->GetPitch(PLANAR_Y);
-      pic.img.i_stride[1] = in->GetPitch(PLANAR_U);
-      pic.img.i_stride[2] = in->GetPitch(PLANAR_V);
-      pic.i_type = X264_TYPE_AUTO;
-      pic.i_pts = in->Pts;
-  return true;
+    pic.img.i_csp = X264_CSP_I420;
+    pic.img.i_plane = 3;
+    pic.i_type = X264_TYPE_AUTO;
+    pic.i_pts = in->Pts;
+    ADMImage * srcImg = in;
+    
+#if X264_BUILD >= 153    
+    if (outputBitDepth > 8)
+    {
+        ADM_assert(highBitDepthImage);
+        srcImg = highBitDepthImage;
+        pic.img.i_csp |= X264_CSP_HIGH_DEPTH;
+        int bitShift = outputBitDepth - 8;
+        for (int p=0; p<3; p++)
+        {
+            uint8_t * src = in->GetReadPtr((ADM_PLANE)p);
+            uint8_t * dst = highBitDepthImage->GetWritePtr((ADM_PLANE)p);
+            ADM_assert(in->GetHeight((ADM_PLANE)p) == highBitDepthImage->GetHeight((ADM_PLANE)p));
+            ADM_assert(in->GetWidth((ADM_PLANE)p) == highBitDepthImage->GetWidth((ADM_PLANE)p));
+            int h = in->GetHeight((ADM_PLANE)p);
+            int w = in->GetWidth((ADM_PLANE)p);
+            for (int y=0; y<h; y++)
+            {
+                uint16_t * dst16 = (uint16_t*)dst;
+                for (int x=0; x<w; x++)
+                {
+                    dst16[x] = (((uint16_t)src[x]) << bitShift);
+                }
+                src += in->GetPitch((ADM_PLANE)p);
+                dst += highBitDepthImage->GetPitch((ADM_PLANE)p);
+            }
+        }
+    }
+#endif    
+    pic.img.plane[0] = YPLANE(srcImg);
+    pic.img.plane[1] = UPLANE(srcImg);
+    pic.img.plane[2] = VPLANE(srcImg);
+    pic.img.i_stride[0] = srcImg->GetPitch(PLANAR_Y);
+    pic.img.i_stride[1] = srcImg->GetPitch(PLANAR_U);
+    pic.img.i_stride[2] = srcImg->GetPitch(PLANAR_V);
+
+    return true;
 }
 /**
     \fn postAmble

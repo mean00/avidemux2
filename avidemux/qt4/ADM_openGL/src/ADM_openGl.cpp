@@ -339,6 +339,7 @@ QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h, ADM_pixelFormat 
     pixelFormat = fmt;
     glProgram = NULL;
     operational = false;
+    draw = false;
 }
 /**
         \fn dtor
@@ -358,7 +359,9 @@ QtGlAccelWidget::~QtGlAccelWidget()
 */
 bool QtGlAccelWidget::setDisplaySize(int width,int height)
 {
+    blockSignals(true);
     resize(width,height);
+    blockSignals(false);
     return true;
 }
 
@@ -372,6 +375,7 @@ bool QtGlAccelWidget::setImage(ADMImage *pic)
     imageWidth = pic->_width;
     imageHeight = pic->_height;
     updateTexture(pic);
+    draw = true;
     return true;
 }
 /**
@@ -407,17 +411,6 @@ void QtGlAccelWidget::initializeGL()
         return;
     }
 
-    if (pixelFormat == ADM_PIXFRMT_RGB32A)
-    {
-        glProgram->setUniformValue("texRgb", 0);
-    } else
-    {
-        glProgram->setUniformValue("texY", 0);
-        glProgram->setUniformValue("texU", 2);
-        glProgram->setUniformValue("texV", 1);
-    }
-    glProgram->setUniformValue("height", (float)imageHeight);
-
     ADM_info("[GL Render] Init successful\n");
     operational = true;
 }
@@ -449,6 +442,8 @@ void QtGlAccelWidget::updateTexture(ADMImage *pic)
 */
 void QtGlAccelWidget::paintGL()
 {
+    if(!draw) return;
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBegin(GL_QUADS);
     glTexCoord2i(0, 0);

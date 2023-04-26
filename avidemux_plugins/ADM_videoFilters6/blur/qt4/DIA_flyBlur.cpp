@@ -18,9 +18,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "DIA_flyDialogQt4.h"
+
 #include "ADM_default.h"
-#include "ADM_image.h"
 #include "DIA_flyBlur.h"
 #include "ADM_vidBlur.h"
 
@@ -31,6 +30,7 @@
 flyBlur::flyBlur (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_flyNavSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
   {
+    ADMVideoBlur::BlurCreateBuffers(_w, _h, &rgbBufStride, &rgbBufRaw, &rgbBufImage, &convertYuvToRgb, &convertRgbToYuv);
     rubber=new ADM_rubberControl(this,canvas);
     _ox=0;
     _oy=0;
@@ -42,8 +42,8 @@ flyBlur::flyBlur (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
  */
 flyBlur::~flyBlur()
 {
-    delete rubber;
-    rubber=NULL;
+    ADMVideoBlur::BlurDestroyBuffers(rgbBufRaw, rgbBufImage, convertYuvToRgb, convertRgbToYuv);
+    // rubber will be destroyed with canvas
 }
 
 static int bound(int val, int other, int maxx)
@@ -52,6 +52,36 @@ static int bound(int val, int other, int maxx)
    if(r<0) 
         r=0;
    return r;
+}
+
+/**
+ * \fn adjustRubber
+ */
+void flyBlur::adjustRubber(void)
+{
+    int x=(int)((double)left * _zoom + 0.49);
+    int y=(int)((double)top * _zoom + 0.49);
+    int w = bound(left,right,_w);
+    int h = bound(top,bottom,_h);
+
+    w = (int)((double)w * _zoom + 0.49);
+    h = (int)((double)h * _zoom + 0.49);
+
+    blockChanges(true);
+    rubber->nestedIgnore++;
+    rubber->move(x,y);
+    rubber->resize(w,h);
+    rubber->nestedIgnore--;
+    blockChanges(false);
+}
+
+/**
+ * \fn hideRubber
+ */
+void flyBlur::hideRubber(bool hide)
+{
+    rubber_is_hidden = hide;
+    rubber->rubberband->setVisible(!rubber_is_hidden);
 }
 
 /**

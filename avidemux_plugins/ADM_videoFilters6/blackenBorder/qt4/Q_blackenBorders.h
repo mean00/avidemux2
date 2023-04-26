@@ -26,9 +26,6 @@ private slots:
 	void valueChanged(int foo);
 	void reset(bool f);
 
-private:
-        void resizeEvent(QResizeEvent *event);
-        void showEvent(QShowEvent *event);
 };
 
 

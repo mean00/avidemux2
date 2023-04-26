@@ -28,6 +28,10 @@
 #include "ADM_aacinfo.h"
 #include "ADM_iso639.h"
 
+#define UNSUPPORTED_COMPRESSION   1
+#define UNSUPPORTED_ENCRYPTION    2
+#define UNSUPPORTED_CHECK_PENDING 4
+
 class entryDesc
 {
   public:
@@ -45,7 +49,7 @@ class entryDesc
           uint8_t *extraData;
           std::string codecId;
           std::string language;
-        
+          uint32_t unsupported;
           void dump(void);
           uint32_t   headerRepeatSize;
           uint8_t    headerRepeat[MKV_MAX_REPEAT_HEADER_SIZE];
@@ -59,6 +63,7 @@ class entryDesc
               colprim=coltc=colmcoeff=2;
               trackScale=0;
               extraData=NULL;
+              unsupported=0;
               headerRepeatSize=0;
           }
 
@@ -146,7 +151,7 @@ void entryDesc::dump(void)
           PRINT(h);
           PRINT(fps);
           break;
-        case 2: // Video
+        case 2:
           printf("==>Audio\n");
           PRINT(extraDataLen);
           PRINT(fcc);
@@ -157,6 +162,9 @@ void entryDesc::dump(void)
         default:
           printf("Unkown track type (%d)\n",trackType);
       }
+
+    if(unsupported)
+        printf("*** This track uses unsupported features and will be skipped ***\n");
 }
 
 /**
@@ -173,6 +181,16 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
 
     entryWalk(  (ADM_ebml_file *)head,headlen,&entry);
     entry.dump();
+
+    if(entry.unsupported)
+    {
+        if(entry.extraData)
+        {
+            delete [] entry.extraData;
+            entry.extraData = NULL;
+        }
+        return 0;
+    }
 
     //***************** First video track *****************
     if(entry.trackType==1 &&  !_isvideopresent)
@@ -454,14 +472,41 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
       }
       switch(id)
       {
-        case  MKV_CONTENT_COMPRESSION_SETTINGS: 
-//#warning todo: check it is stripping
-                    if(len<=MKV_MAX_REPEAT_HEADER_SIZE)
-                    {
-                        father.readBin(entry->headerRepeat,len);
-                        entry->headerRepeatSize=len;
-                    };
-                    break;
+        case  MKV_CONTENT_ENCODINGS:
+        case  MKV_CONTENT_ONE_ENCODING:
+        case  MKV_CONTENT_COMPRESSION:
+            // Set unsupported flag proactively as in case of zlib compression, ContentCompression elem. may be empty.
+            entry->unsupported |= UNSUPPORTED_CHECK_PENDING;
+            entryWalk(&father,len,entry);
+            break;
+        case  MKV_CONTENT_ENCODING_TYPE:
+            if(father.readUnsignedInt(len))
+            {
+                ADM_warning("Content encryption is indicated, rejecting the track\n");
+                entry->unsupported |= UNSUPPORTED_ENCRYPTION;
+            }
+            break;
+        case  MKV_CONTENT_COMPRESSION_ALGO:
+            entry->unsupported &= ~UNSUPPORTED_CHECK_PENDING;
+            if(father.readUnsignedInt(len) != 3) // not header stripping
+            {
+                entry->unsupported |= UNSUPPORTED_COMPRESSION;
+                ADM_warning("Unsupported content compression indicated, rejecting the track\n");
+            }
+            break;
+        case  MKV_CONTENT_COMPRESSION_SETTINGS:
+            if(entry->unsupported) break;
+            if(len > MKV_MAX_REPEAT_HEADER_SIZE)
+            {
+                ADM_warning("Header repeat size out of bounds: %" PRIu64" vs %d\n",len,MKV_MAX_REPEAT_HEADER_SIZE);
+                entry->unsupported |= UNSUPPORTED_COMPRESSION;
+            }else
+            {
+                father.readBin(entry->headerRepeat,len);
+                entry->headerRepeatSize=len;
+                printf("[MKV/entryWalk] Header repeat size: %" PRIu64"\n",len);
+            }
+            break;
         case  MKV_TRACK_NUMBER: entry->trackNo=father.readUnsignedInt(len);break;
         case  MKV_TRACK_TYPE: entry->trackType=father.readUnsignedInt(len);break;
 
@@ -661,9 +706,6 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         case  MKV_VIDEO_SETTINGS:
         case  MKV_VIDEO_COLOUR:
         case  MKV_VIDEO_COLOUR_MASTERING_META:
-        case  MKV_CONTENT_ONE_ENCODING:
-        case  MKV_CONTENT_ENCODINGS:
-        case  MKV_CONTENT_COMPRESSION:
                   entryWalk(&father,len,entry);
                   break;
         case MKV_LANGUAGE:

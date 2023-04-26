@@ -9,7 +9,7 @@ IF(USE_NVENC)
    SET(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} nvenc)
    xadd("--enable-nvenc")
    xadd("--extra-cflags=-I${NVENC_INCLUDE_DIR}")
-   set(FFMPEG_ENCODERS  ${FFMPEG_ENCODERS} nvenc_h264 nvenc_hevc)
+   set(FFMPEG_ENCODERS  ${FFMPEG_ENCODERS} h264_nvenc hevc_nvenc)
 ENDIF(USE_NVENC)
 
 #@@
@@ -25,7 +25,6 @@ xadd(--enable-pthreads)
 
 if (USE_VDPAU)
     xadd(--enable-vdpau)
-    set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vdpau  vc1_vdpau  mpeg1_vdpau  mpeg_vdpau  wmv3_vdpau)
 endif (USE_VDPAU)
 
 if (USE_LIBVA)
@@ -87,7 +86,7 @@ FF_ADD_SUBLIB(      "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"     )
 ADM_FF_INSTALL_LIBS_AND_HEADERS()
 
 IF(USE_LIBVA)
-                INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
+                #INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
                 #INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
 ENDIF(USE_LIBVA)
 # EOF

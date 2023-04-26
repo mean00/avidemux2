@@ -54,7 +54,6 @@ Ui_fadeFromImageWindow::Ui_fadeFromImageWindow(QWidget *parent, fadeFromImage *p
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         
@@ -66,6 +65,8 @@ Ui_fadeFromImageWindow::Ui_fadeFromImageWindow(QWidget *parent, fadeFromImage *p
 
         QPushButton *pushButtonReset = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
+
+        QT6_CRASH_WORKAROUND(fadeFromImageWindow)
 
         setModal(true);
 }
@@ -142,22 +143,11 @@ void Ui_fadeFromImageWindow::reset( bool f )
     myFly->sameImage();
     lock--;
 }
-void Ui_fadeFromImageWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
 
 void Ui_fadeFromImageWindow::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
-    
+
     QFontMetrics fm = ui.labelTScope->fontMetrics();
     QString text = QString(QT_TRANSLATE_NOOP("fadeFromImage","Time scope: "));
     text += QString("000:00:00,000 - 000:00:00,000");

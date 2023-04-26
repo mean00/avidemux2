@@ -90,7 +90,7 @@ bool     blibva=false;
 bool     bvideotoolbox=false;
 #endif
 bool     hzd,vzd,dring;
-bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsSSE4,capsSSE42,capsAVX,capsAVX2,capsAll;
+bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsSSE4,capsSSE42,capsAVX,capsAVX2,capsFMA3,capsAll;
 bool     hasOpenGl=false;
 bool     filterPreviewAccel=true;
 
@@ -152,6 +152,7 @@ std::string currentSdlDriver=getSdlDriverName();
     	CPU_CAPS(SSE42);
     	CPU_CAPS(AVX);
     	CPU_CAPS(AVX2);
+        CPU_CAPS(FMA3);
 
     	//Avisynth
     	if(!prefs->get(AVISYNTH_AVISYNTH_ALWAYS_ASK, &askPortAvisynth))
@@ -294,6 +295,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle capsToggleSSE42(&capsSSE42, QT_TRANSLATE_NOOP("adm","Enable SSE4.2"));
         diaElemToggle capsToggleAVX(&capsAVX, QT_TRANSLATE_NOOP("adm","Enable AVX"));
         diaElemToggle capsToggleAVX2(&capsAVX2, QT_TRANSLATE_NOOP("adm","Enable AVX2"));
+        diaElemToggle capsToggleFMA3(&capsFMA3, QT_TRANSLATE_NOOP("adm","Enable FMA3"));
 
 #define CPU_CAP_AVAIL(x) \
     if(cpuCaps & ADM_CPUCAP_##x) \
@@ -311,6 +313,7 @@ std::string currentSdlDriver=getSdlDriverName();
         CPU_CAP_AVAIL(SSE42)
         CPU_CAP_AVAIL(AVX)
         CPU_CAP_AVAIL(AVX2)
+        CPU_CAP_AVAIL(FMA3)
 #undef CPU_CAP_AVAIL
 
         frameSimd.swallow(&capsToggleAll);
@@ -330,6 +333,7 @@ std::string currentSdlDriver=getSdlDriverName();
         CPU_CAP_AVAIL(SSE42)
         CPU_CAP_AVAIL(AVX)
         CPU_CAP_AVAIL(AVX2)
+        CPU_CAP_AVAIL(FMA3)
 #undef CPU_CAP_AVAIL
 
         diaElemThreadCount lavcThreadCount(&lavcThreads, QT_TRANSLATE_NOOP("adm","_lavc threads:"));
@@ -741,6 +745,7 @@ std::string currentSdlDriver=getSdlDriverName();
                     CPU_CAPS(SSE42);
                     CPU_CAPS(AVX);
                     CPU_CAPS(AVX2);
+                    CPU_CAPS(FMA3);
             }
             prefs->set(FEATURES_CPU_CAPS,cpuMaskOut);
             CpuCaps::setMask(cpuMaskOut);

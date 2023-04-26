@@ -28,8 +28,5 @@ class Ui_colorTempWindow : public QDialog
     void valueChangedSpinBox(double foo);
     void reset(void);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_colorTemp_h

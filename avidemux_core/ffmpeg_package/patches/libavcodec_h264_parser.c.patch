@@ -1,6 +1,6 @@
---- libavcodec/h264_parser.c.orig	2020-07-09 11:17:46.000000000 +0200
-+++ libavcodec/h264_parser.c	2020-10-28 00:51:47.874215935 +0100
-@@ -64,6 +64,105 @@
+--- libavcodec/h264_parser.c.orig	2022-07-22 19:58:39.000000000 +0200
++++ libavcodec/h264_parser.c	2022-10-26 12:41:53.000000000 +0200
+@@ -66,6 +66,101 @@
      int last_frame_num, last_picture_structure;
  } H264ParseContext;
  
@@ -10,29 +10,26 @@
 +int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsInfo *info);
 +/**
 +    \fn AVCodecParserContext
-+ *  \brief find a valid sps,take the 1st one that look sok
++    \brief find a valid sps, take the 1st one that looks ok
 +*/
-+
 +static SPS *findValidSPS(H264ParamSets *ps)
-+{  
-+   int i; 
-+    
-+   if(!ps) 
-+   { 
-+       av_log(NULL, AV_LOG_ERROR, "findValidSPS called with invalid data\n");
-+       return NULL;
-+   }
-+   
-+   for (i = 0; i<MAX_SPS_COUNT; i++)
-+   {
++{
++    int i;
++    if(!ps)
++    {
++        av_log(NULL, AV_LOG_ERROR, "findValidSPS called with invalid data\n");
++        return NULL;
++    }
++    for (i = 0; i<MAX_SPS_COUNT; i++)
++    {
 +        AVBufferRef *ref=ps->sps_list[i];
 +        if (ref)
 +        {
-+           SPS   *sps = ( SPS *)ref->data; // actually it's a const
-+           if(sps->mb_width)
-+               return sps;
++            SPS *sps = ( SPS *)ref->data; // actually it's a const
++            if(sps->mb_width)
++                return sps;
 +        }
-+   }
++    }
 +    av_log(NULL, AV_LOG_ERROR, "findValidSPS no valid SPS found\n");
 +    return NULL;
 +}
@@ -44,12 +41,11 @@
 + */
 +int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsInfo *info)
 +{
-+    H264ParseContext *ctx = parser->priv_data;    
-+    int f;   
++    H264ParseContext *ctx = parser->priv_data;
++    int f;
 +    SPS *sps;
 +    memset(info,0,sizeof(*info));
 +    sps=findValidSPS(&(ctx->ps));
-+        
 +    if(!sps)
 +    {
 +        return 0;
@@ -58,17 +54,17 @@
 +    info->height=sps->mb_height * 16;
 +    if(sps->timing_info_present_flag)
 +    {
-+            float scale=sps->time_scale ;
-+            float ticks=sps->num_units_in_tick;
-+            float fps = scale/ticks;
-+            if(ticksPerFrame>1)
-+                fps /= ticksPerFrame;
-+            info->fps1000 = (uint32_t)(fps * 1000.);
++        float scale=sps->time_scale ;
++        float ticks=sps->num_units_in_tick;
++        float fps = scale/ticks;
++        if(ticksPerFrame>1)
++            fps /= ticksPerFrame;
++        info->fps1000 = (uint32_t)(fps * 1000.);
 +#undef printf
-+            printf("Scale : %d, tick=%d, fps=%d\n",(int)scale,(int)ticks,(int)info->fps1000);
++        printf("Scale : %d, tick=%d, fps=%d\n",(int)scale,(int)ticks,(int)info->fps1000);
 +    }else
 +    {
-+            printf("[H264] No timing information\n");
++        printf("[H264] No timing information\n");
 +    }
 +    // D.2.2 SEI Timing present if CpbDbpDelayPresentFlag=1 or pictStructPresent=1
 +    // CpbDbpDelayPresentFlag =1 if nal_hdr or vcl_hrd or ???
@@ -87,7 +83,7 @@
 +    info->log2MaxPocLsb=sps->log2_max_poc_lsb;
 +    // Needed to determine the offset of poc_lsb
 +    info->frameMbsOnlyFlag=sps->frame_mbs_only_flag;
-+//#warning fixme sar vs dar
++    //#warning fixme sar vs dar
 +    info->darNum=sps->sar.num;
 +    info->darDen=sps->sar.den;
 +    if(sps->crop_left || sps->crop_right || sps->crop_top || sps->crop_bottom)
@@ -103,6 +99,6 @@
 +}
 +// /MEANX
 +
- 
- static int h264_find_frame_end(H264ParseContext *p, const uint8_t *buf,
-                                int buf_size, void *logctx)
+ static int find_start_code(const uint8_t *buf, int buf_size,
+                                   int buf_index, int next_avc)
+ {

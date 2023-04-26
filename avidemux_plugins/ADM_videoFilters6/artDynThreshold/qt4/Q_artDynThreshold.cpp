@@ -47,7 +47,6 @@ Ui_artDynThresholdWindow::Ui_artDynThresholdWindow(QWidget *parent, artDynThresh
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
@@ -57,6 +56,8 @@ Ui_artDynThresholdWindow::Ui_artDynThresholdWindow(QWidget *parent, artDynThresh
 
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
+
+        QT6_CRASH_WORKAROUND(artDynThresholdWindow)
 
         setModal(true);
 }
@@ -92,22 +93,6 @@ void Ui_artDynThresholdWindow::reset(void)
     myFly->upload();
     myFly->sameImage();
     lock--;
-}
-void Ui_artDynThresholdWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_artDynThresholdWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYSPIN(x) w->horizontalSlider##x

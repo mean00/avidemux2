@@ -9,7 +9,7 @@ class Ui_analyzerWindow : public QDialog
     Q_OBJECT
 
   protected:
-    bool firstRun;
+    bool shown;
     ADM_coreVideoFilter * _in;
     flyAnalyzer *     myFly;
     ADM_QCanvas *      canvas;

@@ -49,8 +49,6 @@ private slots:
     void resetSlider(QObject *control);
 
 private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
     void setResetSliderEnabledState(void);
 };
 #endif	// Q_eq2_h

@@ -68,7 +68,6 @@ Ui_cubicLUTWindow::Ui_cubicLUTWindow(QWidget *parent, cubicLUT *param,ADM_coreVi
                 }
             }
         }
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 
@@ -76,6 +75,8 @@ Ui_cubicLUTWindow::Ui_cubicLUTWindow(QWidget *parent, cubicLUT *param,ADM_coreVi
         connect( ui.pushButtonLoadCube,SIGNAL(pressed()),this,SLOT(cubeLoad()));
         disconnect( ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
         connect( ui.buttonBox, SIGNAL(accepted()), this, SLOT(okButtonClicked()));
+
+        QT6_CRASH_WORKAROUND(cubicLUTWindow)
 
         setModal(true);
 }
@@ -184,24 +185,6 @@ bool Ui_cubicLUTWindow::tryToLoadCube(const char *filename)
         }
     }
     return status;
-}
-
-
-void Ui_cubicLUTWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_cubicLUTWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 //************************

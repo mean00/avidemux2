@@ -27,8 +27,5 @@ class Ui_flipWindow : public QDialog
     void sliderUpdate(int foo);
     void flipdirChanged(int foo);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_flip_h

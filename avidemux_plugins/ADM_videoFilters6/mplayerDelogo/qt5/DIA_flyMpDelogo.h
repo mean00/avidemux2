@@ -29,7 +29,6 @@ private:
 
     uint8_t     upload(bool update, bool toRubber);
     bool        boundCheck(bool sizeHasPriority);
-    void        adjustRubber(void);
 
 public:
    uint8_t     processYuv(ADMImage* in, ADMImage *out);
@@ -52,8 +51,8 @@ public:
     bool    bandMoved(int x,int y,int w, int h);
 
     bool    blockChanges(bool block);
-    void    initRubber(void);
     int     lockRubber(bool lock);
+    void    adjustRubber(void);
 
     delogo  *getParam(void) { return &param; }
     void    setParam(delogo *ps);

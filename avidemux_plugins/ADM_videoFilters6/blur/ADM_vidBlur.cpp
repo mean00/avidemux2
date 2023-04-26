@@ -92,20 +92,21 @@ static const uint8_t g_stack_blur8_shr[255] =
 void ADMVideoBlur::BlurCreateBuffers(int w, int h, int * rgbBufStride, ADM_byteBuffer ** rgbBufRaw, ADMImageRef ** rgbBufImage, ADMColorScalerFull ** convertYuvToRgb, ADMColorScalerFull ** convertRgbToYuv)
 {
     *rgbBufStride = ADM_IMAGE_ALIGN(w * 4);
-    *rgbBufRaw = new ADM_byteBuffer();
-    if (*rgbBufRaw)
-        (*rgbBufRaw)->setSize(*rgbBufStride * h);
+    ADM_byteBuffer *buf = new ADM_byteBuffer();
+    buf->setSize(*rgbBufStride * h);
+
     *convertYuvToRgb = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_PIXFRMT_YV12,ADM_PIXFRMT_RGB32A);
     *convertRgbToYuv = new ADMColorScalerFull(ADM_CS_BICUBIC,w,h,w,h,ADM_PIXFRMT_RGB32A,ADM_PIXFRMT_YV12);
-    *rgbBufImage = new ADMImageRef(w,h);
-    if (*rgbBufImage)
-    {
-        (*rgbBufImage)->_pixfrmt = ADM_PIXFRMT_RGB32A;
-        (*rgbBufImage)->_planes[0] = (*rgbBufRaw)->at(0);
-        (*rgbBufImage)->_planes[1] = (*rgbBufImage)->_planes[2] = NULL;
-        (*rgbBufImage)->_planeStride[0] = *rgbBufStride;
-        (*rgbBufImage)->_planeStride[1] = (*rgbBufImage)->_planeStride[2] = 0;
-    }
+
+    ADMImageRef *img = new ADMImageRef(w,h);
+    img->_pixfrmt = ADM_PIXFRMT_RGB32A;
+    img->_planes[0] = buf->at(0);
+    img->_planes[1] = img->_planes[2] = NULL;
+    img->_planeStride[0] = *rgbBufStride;
+    img->_planeStride[1] = img->_planeStride[2] = 0;
+
+    *rgbBufRaw = buf;
+    *rgbBufImage = img;
 }
 /**
     \fn BlurDestroyBuffers
@@ -453,7 +454,6 @@ ADMVideoBlur::ADMVideoBlur(  ADM_coreVideoFilter *in,CONFcouple *couples)  :ADM_
         _param.right=0;
         _param.top=0;
         _param.bottom=0;
-        _param.rubber_is_hidden=false;
         _param.algorithm = 0;
         _param.radius = 1;
     }

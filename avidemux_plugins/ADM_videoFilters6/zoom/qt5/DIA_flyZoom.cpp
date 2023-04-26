@@ -43,6 +43,8 @@ flyZoom::flyZoom (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
     _lw=_ow=width;
     _lh=_oh=height;
     ar = (double)width / height;
+    // Remove event filter, we need to handle show and resize events in a different way.
+    clearEventFilter();
 }
 flyZoom::~flyZoom()
 {
@@ -97,16 +99,6 @@ void flyZoom::setZoomMargins(int lf, int rt, int tp, int bt)
     if(rt>=0) right=rt;
     if(tp>=0) top=tp;
     if(bt>=0) bottom=bt;
-}
-/**
- * \fn initRubber
- * \brief To be called on show event
- */
-void flyZoom::initRubber(void)
-{
-    rubber->rubberband->show(); // must be called first
-    rubber->rubberband->setVisible(!rubber_is_hidden);
-    rubber->nestedIgnore = 0;
 }
 /**
  * \fn hideRubber
@@ -532,6 +524,7 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param, bool firstRun, ADM_co
 {
     ui.setupUi(this);
     lock=0;
+    shown = false;
     // Allocate space for green-ised video
     inputWidth = in->getInfo()->width;
     inputHeight = in->getInfo()->height;
@@ -571,8 +564,6 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param, bool firstRun, ADM_co
     ui.comboBoxAspectRatio->setCurrentIndex(param->ar_select);
     if(!param->ar_select)
         myFly->upload(false,true);
-    myFly->refreshImage();
-    myFly->lockRubber(true);
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
@@ -597,6 +588,8 @@ Ui_zoomWindow::Ui_zoomWindow(QWidget* parent, zoom *param, bool firstRun, ADM_co
 #define SPINNER(x) connect(ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(heightChanged(int)));
     SPINNER(Top)
     SPINNER(Bottom)
+
+    QT6_CRASH_WORKAROUND(zoomWindow)
 
     setModal(true);
 }
@@ -905,8 +898,13 @@ void Ui_zoomWindow::resizeEvent(QResizeEvent *event)
  */
 void Ui_zoomWindow::showEvent(QShowEvent *event)
 {
-    myFly->initRubber();
     QDialog::showEvent(event);
+
+    if(shown) return;
+    shown = true;
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
     /* Avoid shifting the layout displaying output aspect ratio
     by setting a sufficient minimum width based on font metrics. */
     QFontMetrics fm = ui.labelSize->fontMetrics(); // we may assume that both labels use the same font
@@ -928,8 +926,11 @@ void Ui_zoomWindow::showEvent(QShowEvent *event)
 
     ui.labelSize->setMinimumWidth(1.05 * fm.boundingRect(text).width());
 
+    myFly->refreshImage();
     myFly->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+
+    QApplication::restoreOverrideCursor();
 }
 
 //EOF

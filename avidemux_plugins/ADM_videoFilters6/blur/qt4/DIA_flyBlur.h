@@ -15,22 +15,34 @@
 #ifndef FLY_BLUR_H
 #define FLY_BLUR_H
 #include "blur.h"
+#include "DIA_flyDialogQt4.h"
 /**
     \class flyBlur
 */
 class flyBlur : public ADM_flyDialogYuv
 {
-  friend class Ui_blurWindow;
-  public:
-    blur         param;
+  private:
     int                    rgbBufStride;
     ADM_byteBuffer *       rgbBufRaw;
     ADMImageRef *          rgbBufImage;
     ADMColorScalerFull *   convertYuvToRgb;
     ADMColorScalerFull *   convertRgbToYuv;
-    uint32_t   left,right,top,bottom;
-    bool       rubber_is_hidden;
+
+    ADM_rubberControl *rubber;
+    bool        rubber_is_hidden;
+    int         _ox,_oy,_ow,_oh;
+
   public:
+    blur        param;
+    uint32_t    left,right,top,bottom;
+
+    bool        blockChanges(bool block);
+    bool        bandResized(int x,int y,int w, int h);
+    bool        bandMoved(int x,int y,int w, int h);
+    bool        rubberIsHidden(void) { return rubber_is_hidden; }
+    void        hideRubber(bool hide);
+    void        adjustRubber(void);
+
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     uint8_t    download(void);
     uint8_t    upload(void) {return upload(true,true);}
@@ -39,12 +51,7 @@ class flyBlur : public ADM_flyDialogYuv
     void       setTabOrder(void);
                flyBlur (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_flyNavSlider *slider);
-              ~flyBlur();
-  protected:
-                ADM_rubberControl *rubber;
-    bool        blockChanges(bool block);
-    bool        bandResized(int x,int y,int w, int h);
-    bool        bandMoved(int x,int y,int w, int h);
-    int         _ox,_oy,_ow,_oh;
+    virtual    ~flyBlur();
+
 };
 #endif

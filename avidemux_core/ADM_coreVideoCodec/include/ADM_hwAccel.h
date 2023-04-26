@@ -34,12 +34,11 @@ public:
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
         virtual bool dontcopy() {return true;} // by default take a ref, dont copy
                 void skipSendFrame(void) {handover=true;}
+        virtual bool isAlive(void) { return true; }
 protected:
         struct AVCodecContext  *_context;
                 decoderFF       *_parent;
                 bool            handover; // taking over from sw decoder, compressed frame has been already sent to hw decoder
-public:                
-  static const AVHWAccel *parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id,AVPixelFormat searchedItem);
 };
 
 /**

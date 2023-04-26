@@ -4,7 +4,6 @@ extern const ADM_paramList blur_param[]={
  {"right",offsetof(blur,right),"uint32_t",ADM_param_uint32_t},
  {"top",offsetof(blur,top),"uint32_t",ADM_param_uint32_t},
  {"bottom",offsetof(blur,bottom),"uint32_t",ADM_param_uint32_t},
- {"rubber_is_hidden",offsetof(blur,rubber_is_hidden),"bool",ADM_param_bool},
  {"algorithm",offsetof(blur,algorithm),"uint32_t",ADM_param_uint32_t},
  {"radius",offsetof(blur,radius),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}

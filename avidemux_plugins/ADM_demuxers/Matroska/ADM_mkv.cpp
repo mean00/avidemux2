@@ -842,7 +842,7 @@ bool mkvHeader::analyzeTracks(ADM_ebml_file *parser)
         father.skip(len);
         continue;
       }
-      if(!analyzeOneTrack(&father,len)) return 0;
+      analyzeOneTrack(&father,len);
     }
  return 1;
 }
@@ -1098,7 +1098,11 @@ uint64_t mkvHeader::getVideoTrackSize(void)
 uint8_t                 mkvHeader::getFrameSize(uint32_t frame,uint32_t *size)
 {
     if(frame>=_tracks[0].index.size()) return 0;
-    *size=_tracks[0].index[frame].size+_tracks[0].headerRepeatSize;
+    uint32_t sz = _tracks[0].index[frame].size;
+    if(sz < 3) return 0;
+    sz -= 3;
+    sz += _tracks[0].headerRepeatSize;
+    *size = sz;
     return 1;
 }
 

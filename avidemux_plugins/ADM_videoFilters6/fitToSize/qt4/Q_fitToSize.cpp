@@ -77,6 +77,13 @@ fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(par
     connect(preferencesButton,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
     
     connectDimensionControls();
+
+#if !(defined(__APPLE__) && QT_VERSION >= QT_VERSION_CHECK(6,3,0))
+    disconnect(ui.buttonBox, &QDialogButtonBox::accepted, this, &fitToSizeWindow::accept);
+    disconnect(ui.buttonBox, &QDialogButtonBox::rejected, this, &fitToSizeWindow::reject);
+    connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(ui.buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+#endif
 }
 
 void fitToSizeWindow::gather(void)

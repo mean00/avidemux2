@@ -4,10 +4,7 @@ include(admFFmpegBuild_helpers)
 ADM_FF_SET_DEFAULT()
 
 IF(USE_NVENC)
-   SET(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} nvenc)
-   xadd("--enable-nonfree")
-   xadd("--enable-nvenc")
-   set(FFMPEG_ENCODERS  ${FFMPEG_ENCODERS} nvenc_h264 nvenc_hevc)
+    set(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} h264_nvenc hevc_nvenc)
 ENDIF(USE_NVENC)
 
 

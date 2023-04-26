@@ -20,7 +20,6 @@
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixfmt.h"
-#include "libavcodec/vaapi.h"
 }
 
 #include "ADM_windowInfo.h"
@@ -43,7 +42,11 @@ class admLibVA
 protected:
     static GUI_WindowInfo      myWindowInfo;
 public:
-    
+    typedef enum {
+        ADM_LIBVA_DRIVER_QUIRK_NONE = 0,
+        ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE = 1,
+        ADM_LIBVA_DRIVER_QUIRK_SURFACE_ATTRIBUTES = 2
+    } LIBVA_DRIVER_QUIRK; // see libavutil/hwcontext_vaapi.h
     typedef enum 
     {
         ADM_LIBVA_NONE,
@@ -75,7 +78,6 @@ static  VAImage    *allocateImage( int w, int h);
 
 
 static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
-static bool        fillContext(VAProfile profile,vaapi_context *c);
 
 // Indirect access through image
 static bool        uploadToImage(ADMImage *src,VAImage *dest );
@@ -93,7 +95,7 @@ static bool        admImageToSurface( ADMImage *src,ADM_vaSurface *dest);
 static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 
 //
-static bool        supported(VAProfile profile);
+static bool        supported(VAProfile profile, int width = -1, int height = -1);
 
 //-- config for filters --
 static VAConfigID  createFilterConfig();

@@ -83,5 +83,6 @@
         <file>pics/fastforward.png</file>
         <file>pics/fastforward@2x.png</file>
         <file>fonts/ADM7SEG.ttf</file>
+        <file>sounds/notify.wav</file>
     </qresource>
 </RCC>

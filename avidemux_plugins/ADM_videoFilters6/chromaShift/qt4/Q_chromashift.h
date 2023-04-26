@@ -25,9 +25,5 @@ class Ui_chromaShiftWindow : public QDialog
  private slots:
    void sliderUpdate(int foo);
    void valueChanged(int foo);
-
- private:
-   void resizeEvent(QResizeEvent *event);
-   void showEvent(QShowEvent *event);
  };
 

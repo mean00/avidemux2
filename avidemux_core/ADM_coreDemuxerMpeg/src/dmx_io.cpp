@@ -85,7 +85,13 @@ uint8_t fileParser::open( const char *filename, int *multi )
             {
                 aprintf("left:<%s>, right=<%s>,base=%" PRIu32",digit=%" PRIu32"\n",left,right,base,decimals);
                 nbFollowUps = ADM_probeSequencedFile(filename,multi);
-                if(nbFollowUps<0) return 0;
+                if(nbFollowUps < 1)
+                {
+                    delete [] left;
+                    delete [] right;
+                    if(nbFollowUps < 0)
+                        return 0;
+                }
             }else
             {
                 aprintf("No.\n");

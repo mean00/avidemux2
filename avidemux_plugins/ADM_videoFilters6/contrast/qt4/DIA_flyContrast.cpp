@@ -95,14 +95,20 @@ uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
         if(sumsum[i]>127) sumsum[i]=127;
     }
     scene->clear();
+    QPen pen;
+    if(_darkMode)
+    {
+        QColor lightColor(Qt::white);
+        pen.setColor(lightColor);
+    }
     for(int i=0;i<256;i++)
     {
         QLineF qline(i,127,i,127-sumsum[i]);
-        scene->addLine(qline);
+        scene->addLine(qline,pen);
     }
     // Draw 16 and 235 line
     QColor color(Qt::red);
-    QPen pen(color);
+    pen.setColor(color);
     QLineF qline(16,100,16,126);
     scene->addLine(qline,pen);
     QLineF qline2(235,100,235,126);

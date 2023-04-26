@@ -55,7 +55,7 @@ flyMpDelogo::flyMpDelogo(
     ADM_flyNavSlider *slider) : ADM_flyDialogYuv(parent,width,height,in,canvas,slider,RESIZE_AUTO)
 {
     rubber=new ADM_rubberControl(this,canvas);
-    rubber->resize(width,height);
+    rubber->rubberband->show();
     _ox=0;
     _oy=0;
     _ow=width/2;
@@ -86,15 +86,6 @@ void flyMpDelogo::setParam(delogo *ps)
     CPY(band)
     CPY(show)
 #undef CPY
-}
-/**
- * \fn initRubber
- * \brief To be called on show event
- */
-void flyMpDelogo::initRubber(void)
-{
-    rubber->rubberband->show(); // must be called first
-    rubber->nestedIgnore = 0;
 }
 /**
  * \fn adjustRubber
@@ -445,8 +436,6 @@ Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVid
 
     aprintf("Uploading\n");
     myCrop->upload();
-    myCrop->refreshImage();
-    myCrop->lockRubber(true);
 
     connect(ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect(ui.spin##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
@@ -476,6 +465,9 @@ Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent, delogo *param, ADM_coreVid
     helpLayout->addWidget(labelHelpPic);
     helpLayout->addStretch();
 #endif
+
+    QT6_CRASH_WORKAROUND(mpdelogoWindow)
+
     setModal(true);
 }
 /**
@@ -495,16 +487,7 @@ Ui_mpdelogoWindow::~Ui_mpdelogoWindow()
  */
 void Ui_mpdelogoWindow::resizeEvent(QResizeEvent *event)
 {
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myCrop->lockRubber(true);
-    myCrop->blockChanges(true);
-    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myCrop->adjustCanvasPosition();
-    myCrop->blockChanges(false);
-    myCrop->lockRubber(false);
+    myCrop->adjustRubber(); // everything else is managed in event filter
 }
 
 /**
@@ -535,16 +518,6 @@ void Ui_mpdelogoWindow::setSpinWidth(int inputWidth, int inputHeight)
     SETME(W)
     SETME(H)
 #endif
-}
-/**
- *  \fn showEvent
- */
-void Ui_mpdelogoWindow::showEvent(QShowEvent *event)
-{
-    myCrop->initRubber();
-    QDialog::showEvent(event);
-    myCrop->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 /**
  *  \fn sliderUpdate

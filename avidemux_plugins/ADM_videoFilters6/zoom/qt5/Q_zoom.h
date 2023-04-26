@@ -17,6 +17,7 @@ class Ui_zoomWindow : public QDialog
     Q_OBJECT
 
 private:
+    bool            shown;
     int             lock;
     int             inputWidth,inputHeight;
     flyZoom         *myFly;

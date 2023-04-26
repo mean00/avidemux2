@@ -44,12 +44,13 @@ Ui_artPixelizeWindow::Ui_artPixelizeWindow(QWidget *parent, artPixelize *param,A
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
         SPINNER(PW);
         SPINNER(PH);
+
+        QT6_CRASH_WORKAROUND(artPixelizeWindow)
 
         ui.spinBoxPW->setFocus();
         setModal(true);
@@ -77,23 +78,6 @@ void Ui_artPixelizeWindow::valueChanged( int f )
     myFly->download();
     myFly->sameImage();
     lock--;
-}
-
-void Ui_artPixelizeWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_artPixelizeWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYSPIN(x) w->spinBox##x

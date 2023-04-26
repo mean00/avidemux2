@@ -30,21 +30,6 @@ uint32_t ref,refOffset;\
         ADM_warning(#func " cannot translate fame %" PRIi32"\n",frame); \
         return false; \
     }
-/**
-    \fn getSpecificMpeg4Info
-	Propagate this hack to the underlying decoder
-*/
-uint32_t ADM_Composer::getSpecificMpeg4Info( void )
-{
-	if(_segments.getNbSegments())
-    {
- //       _VIDEOS *vid=_segments.getRefVideo(0);
-//		if(vid->decoder)
-//	 		return vid->decoder->getSpecificMpeg4Info();
-    }
-	return 0;
-
-}
 
 /**
     \fn updateVideoInfo

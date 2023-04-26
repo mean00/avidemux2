@@ -183,7 +183,8 @@ void * ADMVideoQuadTrans::worker_thread( void *ptr )
     int algo = arg->algo;
     int * integerMap = arg->integerMap;
     int * fractionalMap = arg->fractionalMap;
-    int stride = arg->stride;
+    int istride = arg->istride;
+    int ostride = arg->ostride;
     uint8_t * in = arg->in;
     uint8_t * out = arg->out;
     int * bicubicWeights = arg->bicubicWeights;
@@ -204,14 +205,14 @@ void * ADMVideoQuadTrans::worker_thread( void *ptr )
                     switch(algo) {
                         default:
                         case 0:
-                                bilinear(w, h, stride, in, ix, iy, fx, fy, out + x + y*stride);
+                                bilinear(w, h, istride, in, ix, iy, fx, fy, out + x + y*ostride);
                             break;
                         case 1:
-                                bicubic(w, h, stride, in, ix, iy, fx, fy, bicubicWeights, out + x + y*stride);
+                                bicubic(w, h, istride, in, ix, iy, fx, fy, bicubicWeights, out + x + y*ostride);
                             break;
                     }
                 } else {
-                    out[x + y*stride] =  blackLevel;
+                    out[x + y*ostride] =  blackLevel;
                 }
             }
         }
@@ -486,12 +487,13 @@ void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTran
 
     uint8_t * rplanes[3];
     uint8_t * wplanes[3];
-    int strides[3];
+    int strides[3],imgStrides[3];
 
     buffers->imgCopy->duplicate(img);
     buffers->imgCopy->GetPitches(strides);
     buffers->imgCopy->GetWritePlanes(rplanes);
     img->GetWritePlanes(wplanes);
+    img->GetPitches(imgStrides);
     
     int totaltr = 0;
     
@@ -505,7 +507,8 @@ void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTran
         buffers->worker_thread_args[totaltr].integerMap = buffers->integerMap;
         buffers->worker_thread_args[totaltr].fractionalMap = buffers->fractionalMap;
         buffers->worker_thread_args[totaltr].blackLevel = 0;
-        buffers->worker_thread_args[totaltr].stride = strides[0];
+        buffers->worker_thread_args[totaltr].istride = strides[0];
+        buffers->worker_thread_args[totaltr].ostride = imgStrides[0];
         buffers->worker_thread_args[totaltr].in = rplanes[0];
         buffers->worker_thread_args[totaltr].out = wplanes[0];
         buffers->worker_thread_args[totaltr].bicubicWeights = buffers->bicubicWeights;
@@ -524,7 +527,8 @@ void ADMVideoQuadTrans::QuadTransProcess_C(ADMImage *img, int w, int h, quadTran
             buffers->worker_thread_args[totaltr].integerMap = buffers->integerMapUV;
             buffers->worker_thread_args[totaltr].fractionalMap = buffers->fractionalMapUV;
             buffers->worker_thread_args[totaltr].blackLevel = 128;
-            buffers->worker_thread_args[totaltr].stride = strides[p];
+            buffers->worker_thread_args[totaltr].istride = strides[p];
+            buffers->worker_thread_args[totaltr].ostride = imgStrides[p];
             buffers->worker_thread_args[totaltr].in = rplanes[p];
             buffers->worker_thread_args[totaltr].out = wplanes[p];
             buffers->worker_thread_args[totaltr].bicubicWeights = buffers->bicubicWeights;

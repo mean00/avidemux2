@@ -19,6 +19,7 @@
 #include "ADM_default.h"
 extern "C" {
 #include "libavcodec/avcodec.h"
+#include "libavcodec/bsf.h"
 }
 #include "ADM_aacLatm.h"
 
@@ -518,6 +519,8 @@ ADM_latm2aac::ADM_latm2aac(void)
 
 ADM_latm2aac::~ADM_latm2aac()
 {
+    listOfFreeBuffers.clear();
+    listOfUsedBuffers.clear();
 }
 
 /**

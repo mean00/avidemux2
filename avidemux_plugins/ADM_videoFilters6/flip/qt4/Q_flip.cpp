@@ -42,10 +42,11 @@ Ui_flipWindow::Ui_flipWindow(QWidget *parent, flip *param,ADM_coreVideoFilter *i
         myFly->addControl(ui.toolboxLayout);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect(ui.comboBoxFlipdir, SIGNAL(currentIndexChanged(int)), this, SLOT(flipdirChanged(int)));
+
+        QT6_CRASH_WORKAROUND(flipWindow)
 
         setModal(true);
 }
@@ -72,23 +73,6 @@ void Ui_flipWindow::flipdirChanged( int f )
     myFly->download();
     myFly->sameImage();
     lock--;
-}
-
-void Ui_flipWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_flipWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYCOMBOX(x) w->comboBox##x

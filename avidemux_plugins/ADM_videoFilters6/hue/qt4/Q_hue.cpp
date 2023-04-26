@@ -46,7 +46,6 @@
         myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myCrop->setTabOrder();
         myCrop->upload();
-        myCrop->refreshImage();
 
         ui.horizontalSliderHue->setFocus();
         ui.horizontalSliderSaturation->setScale(1,10,1);
@@ -57,6 +56,8 @@
 
         QPushButton *resetButton = ui.buttonBox->button(QDialogButtonBox::Reset);
         connect(resetButton,SIGNAL(clicked()),this,SLOT(reset()));
+
+        QT6_CRASH_WORKAROUND(hueWindow)
 
         setModal(true);
   }
@@ -93,23 +94,6 @@ void Ui_hueWindow::reset(void)
     myCrop->upload();
     myCrop->sameImage();
     lock--;
-}
-
-void Ui_hueWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myCrop->adjustCanvasPosition();
-}
-
-void Ui_hueWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myCrop->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYSPIN(x) w->horizontalSlider##x

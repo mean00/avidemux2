@@ -645,10 +645,19 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     navigateWhilePlayingState=0;
     recentFiles = NULL;
     recentProjects = NULL;
-    displayZoom = NULL;
     actionLock = 0;
     busyCntr = 0;
     busyTimer.setSingleShot(true);
+    statusBarWidget = NULL;
+    statusBarInfo = NULL;
+    statusBarMessage = NULL;
+    statusBarTimer.setSingleShot(true);
+    statusBarTimer.stop();
+    statusBarFlashTimer.setSingleShot(true);
+    statusBarFlashTimer.stop();
+
+    connect(ui.actionViewStatusBar, SIGNAL(toggled(bool)), this, SLOT(setStatusBarEnabled(bool)));
+    connect( &statusBarTimer, SIGNAL(timeout()), this, SLOT(statusBarTimerTimeout()));
 
 #if defined(__APPLE__) && defined(USE_SDL)
     //ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
@@ -1302,7 +1311,6 @@ void MainWindow::buildButtonLists(void)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerA)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerB)
 
-    ADD_PUSHBUTTON_PLAYBACK(pushButtonDecoderConf)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoConf)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoFilter)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonAudioConf)
@@ -1425,7 +1433,6 @@ void MainWindow::updateCodecWidgetControlsState(void)
     // currently only lavc provides some decoder options
     if(avifileinfo && !strcmp(video_body->getVideoDecoderName(),"Lavcodec"))
         b=true;
-    ui.pushButtonDecoderConf->setEnabled(b);
     // take care of the "Decoder Options" item in the menu "Video"
     ENABLE(Video, ACT_DecoderOption, b)
     // post-processing is available only for software decoding
@@ -1790,6 +1797,7 @@ void MainWindow::restoreDefaultWidgetState(bool b)
     ui.volumeWidget->setVisible(true);
     ui.audioMetreWidget->setVisible(true);
     ui.toolBar->setVisible(true);
+    addStatusBar();
 
     syncToolbarsMenu();
     updateZoomIndicator();
@@ -2227,16 +2235,19 @@ void MainWindow::mousePressEvent(QMouseEvent* event)
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasFormat("text/uri-list"))
-        event->acceptProposedAction();
+    {
+        event->setDropAction(Qt::CopyAction);
+        event->accept();
+    }
 }
 
 void MainWindow::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->hasUrls())
     {
+        event->setDropAction(Qt::CopyAction);
         QCoreApplication::postEvent(this, new FileDropEvent(event->mimeData()->urls()));
-
-        event->acceptProposedAction();
+        event->accept();
     }
 }
 
@@ -2362,49 +2373,19 @@ bool MainWindow::adjustZoom(int oldWidth, int oldHeight)
 
 /**
  *  \fn updateZoomIndicator
- *  \brief Display zoom level in the toolbar.
+ *  \brief Display zoom level in the statusbar.
  */
 void MainWindow::updateZoomIndicator(void)
 {
-    if(!avifileinfo || ui.toolBar->orientation() == Qt::Vertical)
-    {
-        if(displayZoom)
-            displayZoom->setVisible(false);
+    if(!avifileinfo)
         return;
-    }
-    if(false == ui.toolBar->isVisible())
-        return;
+
     float percent = admPreview::getCurrentZoom();
     if(percent < 0)
         return;
     percent *= 100;
     percent += 0.49;
-
-    QString s = QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Zoom: "));
-
-#define ZLEN 64
-    char text[ZLEN];
-    snprintf(text,ZLEN,"%d%%",(int)percent); // Is this viable for RTL locales?
-    text[ZLEN-1] = 0;
-
-    if(!displayZoom)
-    {
-        QLabel *z = new QLabel(s + text);
-        // Try to prevent zoom display from becoming hidden by setting
-        // a sufficient minimum width as no extension popup is created
-        // for added widgets when toolbar is detached.
-        QFontMetrics fm = z->fontMetrics();
-        z->setMinimumWidth(1.15 * fm.boundingRect(s + "00000%").width()); // assumed worst case
-        // Make sure there is some space between separator and text.
-        z->setIndent(fm.boundingRect("0").width());
-        displayZoom = ui.toolBar->addWidget(z);
-    }else
-    {
-        QLabel *z = (QLabel *)ui.toolBar->widgetForAction(displayZoom);
-        z->setText(s + text);
-    }
-    displayZoom->setVisible(true);
-#undef ZLEN
+    updateStatusBarZoomInfo((int)percent);
 }
 
 /**
@@ -2413,7 +2394,6 @@ void MainWindow::updateZoomIndicator(void)
 void MainWindow::toolbarOrientationChangedSlot(Qt::Orientation orientation)
 {
     UNUSED_ARG(orientation);
-    updateZoomIndicator();
 }
 
 /**
@@ -2471,6 +2451,8 @@ void MainWindow::calcDockWidgetDimensions(uint32_t &width, uint32_t &height)
         reqh += ui.toolBar->frameSize().height();
     if(ui.navigationWidget->isVisible() || ui.selectionWidget->isVisible() || ui.volumeWidget->isVisible() || ui.audioMetreWidget->isVisible())
        reqh += ui.navigationWidget->frameSize().height();
+    if(statusBarWidget)
+       reqh += statusBarWidget->frameSize().height();
     height = reqh;
 }
 
@@ -2538,9 +2520,175 @@ void MainWindow::syncToolbarsMenu(void)
     CHECKMARK(3,selection)
     CHECKMARK(4,volume)
     ui.menuToolbars->actions().at(5)->setChecked(ui.toolBar->isVisible());
+    ui.menuToolbars->actions().at(6)->setChecked(statusBarEnabled());
 #undef CHECKMARK
 #undef EXPAND
 }
+
+
+/**
+    \fn setStatusBarEnabled
+    \brief public slot for setStatusBarEnabled
+*/
+void MainWindow::setStatusBarEnabled(bool enabled)
+{
+    if (enabled)
+        addStatusBar();
+    else
+        removeStatusBar();
+}
+
+/**
+    \fn statusBarTimerTimeout
+    \brief private slot for statusBarTimerTimeout
+*/
+void MainWindow::statusBarTimerTimeout(void)
+{
+    updateStatusBarInfo();
+}
+
+/**
+    \fn statusBarEnabled
+*/
+bool MainWindow::statusBarEnabled(void)
+{
+    return (statusBarWidget != NULL);
+}
+
+/**
+    \fn addStatusBar
+    \brief Add status bar to the main window
+*/
+void MainWindow::addStatusBar(void)
+{
+    if (statusBarWidget)
+        return;
+    statusBarWidget = new QStatusBar(this);
+    statusBarWidget->setSizeGripEnabled(false);
+
+    statusBarInfo = new QLabel("");
+    statusBarWidget->addWidget(statusBarInfo);
+    statusBarMessage = new QLabel("");
+    statusBarWidget->addWidget(statusBarMessage);
+
+    statusBarWidget->setContentsMargins(4,0,4,0);
+
+    this->setStatusBar(statusBarWidget);
+    updateStatusBarInfo();
+}
+
+/**
+    \fn removeStatusBar
+    \brief Remove status bar from the main window
+*/
+void MainWindow::removeStatusBar(void)
+{
+    if (!statusBarWidget)
+        return;
+    
+    this->setStatusBar(NULL);   // Qt should take care of deleting nested objects
+    
+    statusBarTimer.stop();
+    statusBarWidget = NULL;
+    statusBarInfo = NULL;
+    statusBarMessage = NULL;
+}
+
+/**
+    \fn updateStatusBarInfo
+*/
+void MainWindow::updateStatusBarInfo(void)
+{
+    if (!statusBarWidget)
+        return;
+    QString s = QString("");
+    if (avifileinfo)
+    {
+        s += QString(QT_TRANSLATE_NOOP("qgui2","Input: %1x%2, %3fps  |  Decoder: %4  |  Display: %5  |  Zoom: %6%"))
+            .arg(avifileinfo->width).arg(avifileinfo->height).arg(avifileinfo->fps1000/1000.0)
+            .arg(statusBarInfo_Decoder).arg(statusBarInfo_Display).arg(statusBarInfo_Zoom);
+    }
+    else
+    {
+        s += QString(QT_TRANSLATE_NOOP("qgui2","No file loaded"));
+    }
+
+    if (statusBarInfo)
+        statusBarInfo->setText(s);
+    if (statusBarMessage)
+        statusBarMessage->clear();
+    statusBarTimer.stop();
+}
+
+/**
+    \fn updateStatusBarDisplayInfo
+*/
+void MainWindow::updateStatusBarDisplayInfo(const char * display)
+{
+    statusBarInfo_Display = QString(display);
+    updateStatusBarInfo();
+}
+
+/**
+    \fn updateStatusBarDecoderInfo
+*/
+void MainWindow::updateStatusBarDecoderInfo(const char * decoder)
+{
+    statusBarInfo_Decoder = QString(decoder);
+    updateStatusBarInfo();
+}
+
+/**
+    \fn updateStatusBarZoomInfo
+*/
+void MainWindow::updateStatusBarZoomInfo(int zoom)
+{
+    statusBarInfo_Zoom = zoom;
+    updateStatusBarInfo();
+}
+
+/**
+    \fn notifyStatusBar
+*/
+void MainWindow::notifyStatusBar(int level, const char * lead, const char * msg, int timeout)
+{
+    if (timeout <= 0)   // prevent permament message
+        timeout = 2500;
+    QString s = QString(lead).arg(msg);
+#define STATUSBAR_MESSAGE_ICON_SIZE     (12)
+    if (statusBarInfo)
+    {
+        statusBarInfo->clear();
+        switch (level)
+        {
+            case 0:
+                statusBarInfo->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation).pixmap(STATUSBAR_MESSAGE_ICON_SIZE,STATUSBAR_MESSAGE_ICON_SIZE));
+                break;
+            case 1:
+                statusBarInfo->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning).pixmap(STATUSBAR_MESSAGE_ICON_SIZE,STATUSBAR_MESSAGE_ICON_SIZE));
+                break;
+            default:
+            case 2:
+                statusBarInfo->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical).pixmap(STATUSBAR_MESSAGE_ICON_SIZE,STATUSBAR_MESSAGE_ICON_SIZE));
+                break;
+        }
+    }
+#undef STATUSBAR_MESSAGE_ICON_SIZE
+    if (statusBarMessage)
+        statusBarMessage->setText(s);
+    if (statusBarWidget)
+    {
+        statusBarTimer.start(timeout);
+        
+        if (statusBarFlashTimer.remainingTime() <= 0)
+        {
+            statusBarFlashTimer.start(200);
+            statusBarWidget->showMessage(" ", 100);
+        }
+    }
+}
+
+
 
 MainWindow::~MainWindow()
 {
@@ -2641,6 +2789,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 #endif
     uiIsMaximized = false;
     bool vuMeterIsHidden = false;
+    bool statusbarHidden = false;
     QSettings *qset = qtSettingsCreate();
     if(qset)
     {
@@ -2660,6 +2809,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         mw->ui.horizontalSlider_2->blockSignals(true);
         mw->ui.horizontalSlider_2->setValue(qset->value("volume", 100).toInt());
         mw->ui.horizontalSlider_2->blockSignals(false);
+        statusbarHidden = qset->value("statusbarHidden", false).toBool();
         qset->endGroup();
         // Hack: allow to drop other Qt-specific settings on application restart
         char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
@@ -2673,6 +2823,8 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
             mw->ui.audioMetreWidget->setVisible(true);
     }
 
+    if (!statusbarHidden)
+        mw->addStatusBar();
     QuiMainWindows = (QWidget*)mw;
 
 #ifdef _WIN32
@@ -2723,7 +2875,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
         ADM_info("OpenGL not activated, not initialized\n");
     }
 #endif
-mw->syncToolbarsMenu();
+    mw->syncToolbarsMenu();
 
     return 1;
 }
@@ -2742,6 +2894,7 @@ void UI_closeGui(void)
         qset->setValue("windowState", ((QMainWindow *)QuiMainWindows)->saveState());
         qset->setValue("showMaximized", QuiMainWindows->isMaximized());
         qset->setValue("volume", WIDGET(horizontalSlider_2)->value());
+        qset->setValue("statusbarHidden", !(((MainWindow*)QuiMainWindows)->statusBarEnabled()));
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -3300,7 +3453,7 @@ bool UI_setVolume(void)
 */
 bool UI_setDecoderName(const char *name)
 {
-    WIDGET(labelVideoDecoder)->setText(name);
+    ((MainWindow *)QuiMainWindows)->updateStatusBarDecoderInfo(name);
     return true;
 }
 /**
@@ -3309,7 +3462,7 @@ bool UI_setDecoderName(const char *name)
  */
 bool UI_setDisplayName(const char *name)
 {
-    WIDGET(labelDisplay)->setText(name);
+    ((MainWindow *)QuiMainWindows)->updateStatusBarDisplayInfo(name);
     return true;
 }
 
@@ -3525,6 +3678,28 @@ void UI_setAudioTrackCount( int nb )
     QString text=QCoreApplication::translate("qgui2"," (%n track(s))",NULL,QCoreApplication::UnicodeUTF8,nb);
 #endif
     WIDGET(TrackCountLabel)->setText(text);
+}
+
+/**
+    \fn UI_notifyInfo
+*/
+void UI_notifyInfo(const char *message, int timeoutMs)
+{
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(0, QT_TRANSLATE_NOOP("qgui2","INFO: %1"), message, timeoutMs);
+}
+/**
+    \fn UI_notifyWarning
+*/
+void UI_notifyWarning(const char *message, int timeoutMs)
+{
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(1, QT_TRANSLATE_NOOP("qgui2","WARNING: %1"), message, timeoutMs);
+}
+/**
+    \fn UI_notifyError
+*/
+void UI_notifyError(const char *message, int timeoutMs)
+{
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(2, QT_TRANSLATE_NOOP("qgui2","ERROR: %1"), message, timeoutMs);
 }
 /**
  * \fn dtor

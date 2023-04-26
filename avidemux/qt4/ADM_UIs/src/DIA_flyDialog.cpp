@@ -20,6 +20,7 @@
 #include <QLineEdit>
 #include <QFontMetrics>
 #include <QRect>
+#include <QColor>
 
 #include <cmath>
 
@@ -33,6 +34,49 @@
 
 #define ACCEL_CANVAS_FLAG_PROBED 1
 #define ACCEL_CANVAS_FLAG_USABLE 2
+
+/**
+ * \fn      FlyDialogEventFilter
+ * \brief   ctor
+ */
+FlyDialogEventFilter::FlyDialogEventFilter(ADM_flyDialog *flyDialog)
+{
+    recomputed = false;
+    this->flyDialog = flyDialog;
+}
+/**
+ * \fn      eventFilter
+ * \brief   Default handling of show and resize events
+ */
+bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
+{
+    switch(event->type())
+    {
+        case QEvent::Show:
+            if (!recomputed)
+            {
+                recomputed = true;
+                QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+                flyDialog->adjustCanvasPosition();
+                QWidget *view = flyDialog->_canvas->parentWidget();
+                view->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+                flyDialog->refreshImage();
+                QApplication::restoreOverrideCursor();
+            }
+            break;
+        case QEvent::Resize:
+            if (flyDialog->_canvas->height() > 0)
+            {
+                QWidget *view = flyDialog->_canvas->parentWidget();
+                flyDialog->fitCanvasIntoView(view->width(), view->height());
+                flyDialog->adjustCanvasPosition();
+            }
+            break;
+        default:break;
+    }
+
+    return QObject::eventFilter(obj, event);
+}
 
 /**
  */
@@ -265,6 +309,7 @@ uint8_t ADM_flyDialog::cleanup(void)
         delete _control;
         _control=NULL;
     }
+    clearEventFilter();
     return 1;
 }
 /**
@@ -383,6 +428,8 @@ bool ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4, ControlOption co
 */
 bool ADM_flyDialog::sameImage(bool reprocess)
 {
+    if(!_gotPic)
+        return true;
     _reprocess = reprocess;
     process();
     return display();
@@ -402,6 +449,7 @@ bool ADM_flyDialog::nextImageInternal(void)
         ADM_warning("[FlyDialog] Cannot get frame %u\n",frameNumber); 
         return 0;
     }
+    _gotPic = true;
     lastPts=_yuvBuffer->Pts;
     setCurrentPts(lastPts);
     uint64_t duration=_in->getInfo()->totalDuration;
@@ -513,6 +561,7 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
 {
     _control=NULL;
     _yuvBufferOut=new ADMImageDefault(_w,_h);
+    yuvInputToRgb = NULL;
     yuvToRgb=NULL;  
     accelCanvasFlags = 0;
     initializeSize();
@@ -521,6 +570,11 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
 }
 void ADM_flyDialogYuv::resetScaler(void)
 {
+    if(yuvInputToRgb) 
+    {
+        delete yuvInputToRgb;
+        yuvInputToRgb=NULL;
+    }    
     if(yuvToRgb) 
     {
         delete yuvToRgb;
@@ -529,7 +583,13 @@ void ADM_flyDialogYuv::resetScaler(void)
     
     uint32_t displayW, displayH;
     _canvas->getDisplaySize(&displayW, &displayH);
-    
+
+    yuvInputToRgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
+                            _inW,
+                            _inH,
+                            displayW,
+                            displayH,
+                            ADM_PIXFRMT_YV12,toRgbPixFrmt());    
     yuvToRgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
                             _w,
                             _h,
@@ -555,6 +615,11 @@ ADM_flyDialogYuv::~ADM_flyDialogYuv()
         delete _control;
         _control=NULL;
     }
+    if (yuvInputToRgb)
+    {
+        delete yuvInputToRgb;
+        yuvInputToRgb = NULL;    
+    }
 }
 bool ADM_flyDialogYuv::process(void)
 {
@@ -568,8 +633,14 @@ bool ADM_flyDialogYuv::process(void)
     }
     if (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE)
         return true;
-
-    yuvToRgb->convertImage(_bypassFilter ? _yuvBuffer : _yuvBufferOut, _rgbByteBufferDisplay.at(0));
+    if (_bypassFilter)
+    {
+        yuvInputToRgb->convertImage(_yuvBuffer, _rgbByteBufferDisplay.at(0));
+    }
+    else
+    {
+        yuvToRgb->convertImage(_yuvBufferOut, _rgbByteBufferDisplay.at(0));
+    }
     return true;
 }
 /**
@@ -577,6 +648,8 @@ bool ADM_flyDialogYuv::process(void)
 */
 bool ADM_flyDialogYuv::display(void)
 {
+    if(!_gotPic)
+        return true;
     ADM_QCanvas *v = _canvas;
     if (!(accelCanvasFlags & ACCEL_CANVAS_FLAG_PROBED) && v->isVisible())
     {
@@ -592,7 +665,14 @@ bool ADM_flyDialogYuv::display(void)
         ADM_warning("Disabling accelerated canvas\n");
         accelCanvasFlags &= ~ACCEL_CANVAS_FLAG_USABLE;
         updateZoom(); // Setup scaler and display buffer, they may be invalid.
-        yuvToRgb->convertImage(_bypassFilter ? _yuvBuffer : _yuvBufferOut, _rgbByteBufferDisplay.at(0));
+        if (_bypassFilter)
+        {
+            yuvInputToRgb->convertImage(_yuvBuffer, _rgbByteBufferDisplay.at(0));
+        }
+        else
+        {
+            yuvToRgb->convertImage(_yuvBufferOut, _rgbByteBufferDisplay.at(0));
+        }
     }
     v->dataBuffer = _rgbByteBufferDisplay.at(0);
     v->repaint();
@@ -624,8 +704,8 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
     _rgbByteBufferOut.setSize(size);
     _algo = ((_h > ADM_FLYRGB_ALGO_CHANGE_THRESHOLD_RESOLUTION) ? ADM_CS_FAST_BILINEAR : ADM_CS_BICUBIC);
      yuv2rgb =  new ADMColorScalerFull(_algo, 
-                            _w,
-                            _h,
+                            _inW,
+                            _inH,
                             _w,
                             _h,
                             ADM_PIXFRMT_YV12,toRgbPixFrmt());
@@ -674,10 +754,11 @@ bool ADM_flyDialogRgb::process(void)
         uint8_t *target = (accelCanvasFlags & ACCEL_CANVAS_FLAG_USABLE) ? _rgbByteBuffer.at(0) : _rgbByteBufferDisplay.at(0);
         yuv2rgb->convertImage(_yuvBuffer, target);
     } else {
-        if (_scaledPts != lastPts)
+        if (_reprocess || _scaledPts != lastPts)
         {
             yuv2rgb->convertImage(_yuvBuffer,_rgbByteBuffer.at(0));
             _scaledPts = lastPts;
+            _reprocess = true;
         }
         if (_resizeMethod != RESIZE_NONE)
         {
@@ -764,7 +845,9 @@ void ADM_flyDialogRgb::updateZoom(void)
     _cookie = NULL;
     _computedZoom=0;
     _resizeMethod = resizeMethod;
-    _yuvBuffer=new ADMImageDefault(_w,_h);
+    _inW = in->getInfo()->width;
+    _inH = in->getInfo()->height;
+    _yuvBuffer=new ADMImageDefault(_inW,_inH);
     _usedWidth= _usedHeight=0;
     _oldViewWidth = _oldViewHeight = 0;
     _nextRdv=0;
@@ -777,6 +860,8 @@ void ADM_flyDialogRgb::updateZoom(void)
     // Seek is delegated to the user
     _bypassFilter=false;
     _reprocess = true;
+    _gotPic = false;
+    _darkMode = _parent->palette().base().color().value() < 128;
 
     QGraphicsScene *sc=new QGraphicsScene(this);
     sc->setBackgroundBrush(QBrush(Qt::darkGray, Qt::SolidPattern));
@@ -800,9 +885,27 @@ void ADM_flyDialogRgb::updateZoom(void)
     prefs->get(FEATURES_SWAP_MOUSE_WHEEL,&swapWheel);
     slider->setInvertedWheel(swapWheel);
     slider->setMarkers(_in->getInfo()->totalDuration,_in->getInfo()->markerA,_in->getInfo()->markerB);
-    
+
+    _eventFilter = new FlyDialogEventFilter(this);
+    _canvas->parentWidget()->parentWidget()->installEventFilter(_eventFilter);
 }
 
+/**
+    \fn clearEventFilter
+    \brief Convenience function for dialogs which need to handle show and resize events in a different way
+*/
+void ADM_flyDialog::clearEventFilter(void)
+{
+    if(!_eventFilter) return;
+
+    _canvas->parentWidget()->parentWidget()->removeEventFilter(_eventFilter);
+
+    if(_eventFilter)
+    {
+        delete _eventFilter;
+        _eventFilter = NULL;
+    }
+}
 /**
     \fn adjustCanvasPosition
     \brief center canvas within the viewport (graphicsView)
@@ -910,8 +1013,10 @@ uint8_t     ADM_flyDialog::sliderSet(uint32_t value)
     ADM_flyNavSlider  *slide=(ADM_flyNavSlider *)_slider;
     ADM_assert(slide);
     if(value>ADM_FLY_SLIDER_MAX) value=ADM_FLY_SLIDER_MAX;
+    slide->blockSignals(true);
     slide->setValue(value);
-    return 1; 
+    slide->blockSignals(false);
+    return 1;
 }
 
 /**

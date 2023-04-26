@@ -82,5 +82,6 @@
         <file>pics/hdr@2x.png</file>
         <file>pics/fastforward.png</file>
         <file>pics/fastforward@2x.png</file>
+        <file>sounds/notify.wav</file>
     </qresource>
 </RCC>

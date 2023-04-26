@@ -46,7 +46,12 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
         if (orientation() == Qt::Horizontal)
         {
             double halfHandleWidth = (0.5 * sr.width()) + 0.5;
-            int adjPosX = e->x();
+            int adjPosX =
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+            e->x();
+#else
+            e->position().x();
+#endif
             if (adjPosX < halfHandleWidth)
                 adjPosX = halfHandleWidth;
             if (adjPosX > width() - halfHandleWidth)
@@ -58,7 +63,12 @@ void ADM_QSlider::mousePressEvent(QMouseEvent *e)
         }else
         {
             double halfHandleHeight = (0.5 * sr.height()) + 0.5;
-            int adjPosY = height() - e->y();
+            int adjPosY = height() -
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+            e->y();
+#else
+            e->position().y();
+#endif
             if (adjPosY < halfHandleHeight)
                 adjPosY = halfHandleHeight;
             if (adjPosY > height() - halfHandleHeight)
@@ -151,6 +161,7 @@ void ADM_SliderIndicator::sliderChange(QAbstractSlider::SliderChange change)
 ADM_flyNavSlider::ADM_flyNavSlider(QWidget *parent) : ADM_QSlider(parent)
 {
     _invertWheel = false;
+    totalDuration = markerATime = markerBTime = 0;
 }
 
 void ADM_flyNavSlider::wheelEvent(QWheelEvent *e)
@@ -185,6 +196,42 @@ void ADM_flyNavSlider::setMarkers(uint64_t totalDuration, uint64_t markerATime, 
     this->totalDuration = totalDuration;
     this->markerATime = markerATime;
     this->markerBTime = markerBTime;
+}
+
+/**
+    \fn drawSelection
+*/
+void ADM_flyNavSlider::drawSelection(void)
+{
+    if (!totalDuration) return;
+
+    uint64_t a = markerATime, b = markerBTime;
+
+    if (markerATime > markerBTime)
+    {
+        b = markerATime;
+        a = markerBTime;
+    }
+
+    if (a == 0 && b >= totalDuration) return;
+
+    int left  = (int)(((double)a * width()) / (double)totalDuration);
+    int right = (int)(((double)b * width()) / (double)totalDuration);
+
+    if (left < 1) left = 1;
+    if (right < 1) right = 1;
+    if (left > width() - 1) left = width() - 1;
+    if (right > width() - 1) right = width() - 1;
+
+    QPainter painter(this);
+    if (this->isDarkMode())
+        painter.setPen(QColor(30,144,255));
+    else
+        painter.setPen(Qt::blue);
+    if (layoutDirection() == Qt::LeftToRight)
+        painter.drawRect(left, 1, right - left, height() - 3);
+    else
+        painter.drawRect(width() - right, 1, right - left, height() - 3);
 }
 
 /**
@@ -223,31 +270,16 @@ void ADM_flyNavSlider::paintEvent(QPaintEvent *event)
 
     QSlider::paintEvent(event);
 
-    uint64_t a = markerATime, b = markerBTime;
-
-    if (markerATime > markerBTime)
-    {
-        b = markerATime;
-        a = markerBTime;
-    }
-
-    if (totalDuration > 0LL && (a != 0 || b != totalDuration))
-    {
-        int left  = (int)(((double)a * width()) / (double)totalDuration);
-        int right = (int)(((double)b * width()) / (double)totalDuration);
-
-        if(left < 1) left = 1;
-        if(right < 1) right = 1;
-        if(left > width() - 1) left = width() - 1;
-        if(right > width() - 1) right = width() - 1;
-
-        QPainter painter(this);
-        painter.setPen(Qt::blue);
-        if(layoutDirection() == Qt::LeftToRight)
-            painter.drawRect(left, 1, right - left, height() - 3);
-        else
-            painter.drawRect(width() - right, 1, right - left, height() - 3);
-        painter.end();
-    }
+    drawSelection();
 }
+
+/**
+    \fn isDarkMode
+*/
+bool ADM_flyNavSlider::isDarkMode()
+{
+    QColor bgColor = this->palette().color(QPalette::Window);
+    return (bgColor.value() < 128);
+}
+
 //EOF

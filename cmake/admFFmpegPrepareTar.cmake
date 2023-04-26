@@ -10,8 +10,12 @@ if (EXISTS "${FFMPEG_ROOT_DIR}/${FFMPEG_SOURCE_ARCHIVE}")
 		MESSAGE(STATUS "Unpacking ffmpeg from ${FFMPEG_ROOT_DIR}/${FFMPEG_SOURCE_ARCHIVE} to ${FFMPEG_BASE_DIR}")        
 
 		execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${FFMPEG_ROOT_DIR}/${FFMPEG_SOURCE_ARCHIVE}" "${FFMPEG_BASE_DIR}")
-
-		execute_process(COMMAND ${TAR_EXECUTABLE} xvfj "${FFMPEG_SOURCE_ARCHIVE}"
+		if (VERBOSE)
+			set(TAR_OPTS "xvfj")
+		else (VERBOSE)
+			set(TAR_OPTS "xfj")
+		endif (VERBOSE)
+		execute_process(COMMAND ${TAR_EXECUTABLE} ${TAR_OPTS} "${FFMPEG_SOURCE_ARCHIVE}"
 			WORKING_DIRECTORY "${FFMPEG_BASE_DIR}"
 			${ffmpegExtractOutput})
 

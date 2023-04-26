@@ -9,6 +9,7 @@
 #include <QSlider>
 #include <QWidget>
 #include <QtCore/QTimer>
+#include <QStatusBar>
 #include <string>
 
 #include "ADM_mwNavSlider.h"
@@ -123,6 +124,14 @@ public:
     void setZoomToFit(void);
     void updateZoomIndicator(void);
     void syncToolbarsMenu(void);
+    bool statusBarEnabled(void);
+    void addStatusBar(void);
+    void removeStatusBar(void);
+    void updateStatusBarInfo(void);
+    void updateStatusBarDisplayInfo(const char * display);
+    void updateStatusBarDecoderInfo(const char * decoder);
+    void updateStatusBarZoomInfo(int zoom);
+    void notifyStatusBar(int level, const char * lead, const char * msg, int timeout = 2500);
 
     void setLightTheme(void);
     void setDarkTheme(void);
@@ -143,7 +152,6 @@ protected:
     QAction *recentFileAction[NB_LAST_FILES];
     QAction *recentProjectAction[NB_LAST_FILES];
     QAction *actionHDRSeparator;
-    QAction *displayZoom;
     QAction *defaultThemeAction;
     QAction *lightThemeAction;
     QAction *darkThemeAction;
@@ -208,6 +216,13 @@ protected:
     /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
     void currentTimeToClipboard(void);
     bool dragWhilePlay;
+    
+    QStatusBar * statusBarWidget;
+    QTimer statusBarTimer, statusBarFlashTimer;
+    QLabel * statusBarInfo;
+    QLabel * statusBarMessage;
+    int statusBarInfo_Zoom;
+    QString statusBarInfo_Display, statusBarInfo_Decoder;
 
 private slots:
     void timeChanged(int);
@@ -258,6 +273,8 @@ private slots:
     void setLightThemeSlot(bool b);
     void setDarkThemeSlot(bool b);
 
+    void statusBarTimerTimeout(void);
+    
     void closeEvent(QCloseEvent *event)
     {
         printf("Close event!\n");
@@ -274,6 +291,8 @@ public slots:
     void audioToggled(bool checked);
 
     void thumbSlider_valueEmitted(int value);
+    
+    void setStatusBarEnabled(bool enabled);
 
 signals:
     void actionSignal(Action a);

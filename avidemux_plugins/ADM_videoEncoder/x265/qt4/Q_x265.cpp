@@ -375,6 +375,7 @@ bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
     SIMPLE(presetComboBox)
     SIMPLE(tuningComboBox)
     SIMPLE(profileComboBox)
+    ADVANCED(comboBoxBitDepth)
     ADVANCED(tabAdvancedRC)
     ADVANCED(tabMotion)
 #ifdef SIMPLE_MODE_EX
@@ -386,7 +387,6 @@ bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
     ADVANCED(limitRefDepthCheckBox)
     ADVANCED(groupBoxBframes)
 #else
-    ADVANCED(comboBoxBitDepth)
     ADVANCED(tabFrame)
 #endif
     ADVANCED(tabAnalysis)

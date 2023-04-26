@@ -28,8 +28,5 @@ class Ui_artCharcoalWindow : public QDialog
     void valueChanged(int foo);
     void reset(void);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_artCharcoal_h

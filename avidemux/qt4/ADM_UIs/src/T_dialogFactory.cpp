@@ -247,7 +247,7 @@ void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs
     cookie->dialog->adjustSize();
     cookie->tabWidget->setUsesScrollButtons(true);
     // Squeeze all the air vertically
-    cookie->dialog->resize(cookie->dialog->width(), cookie->dialog->minimumSizeHint().height());
+    //cookie->dialog->resize(cookie->dialog->width(), cookie->dialog->minimumSizeHint().height()); // breaks labels with wordwrap
 
     return cookie;
 }

@@ -9,4 +9,5 @@ float sceneThreshold;
 float zoom;
 uint32_t algo;
 uint32_t motionEstimation;
+bool pad;
 }imageStab;

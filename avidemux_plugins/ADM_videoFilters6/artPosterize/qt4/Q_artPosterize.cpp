@@ -46,13 +46,14 @@ Ui_artPosterizeWindow::Ui_artPosterizeWindow(QWidget *parent, artPosterize *para
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) \
         connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); \
         connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChangedSpinBox(int)));
         SPINNER(Levels)
+
+        QT6_CRASH_WORKAROUND(artPosterizeWindow)
 
         setModal(true);
 }
@@ -100,22 +101,6 @@ void Ui_artPosterizeWindow::valueChangedSpinBox(int foo)
     myFly->download();
     myFly->sameImage();
     lock--;
-}
-void Ui_artPosterizeWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_artPosterizeWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYCOMBOX(x) w->comboBox##x

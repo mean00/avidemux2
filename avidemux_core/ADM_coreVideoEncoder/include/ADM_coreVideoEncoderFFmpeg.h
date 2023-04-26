@@ -69,7 +69,7 @@ protected:
     virtual		  bool		   configureContext(void);
     virtual               bool             setup(AVCodecID codecId);
     virtual               bool             setupByName(const char *name);
-                          bool             setupInternal(AVCodec *codec);
+                          bool             setupInternal(const AVCodec *codec);
     virtual               bool             getExtraData(uint32_t *l,uint8_t **d) ;
                           bool             presetContext(FFcodecSettings *set);
                           bool             postEncode(ADMBitstream *out, uint32_t size);

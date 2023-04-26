@@ -30,7 +30,6 @@ class Ui_fadeInOutWindow : public QDialog
     void reset(bool f);
 
   private:
-    void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
 };
 #endif    // Q_fadeInOut_h

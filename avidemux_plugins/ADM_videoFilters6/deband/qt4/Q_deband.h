@@ -29,8 +29,5 @@ class Ui_debandWindow : public QDialog
     void valueChangedSpinBox(int foo);
     void reset(void);
 
-  private:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
 };
 #endif    // Q_deband_h

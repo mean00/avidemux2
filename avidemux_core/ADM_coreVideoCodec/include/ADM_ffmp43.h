@@ -68,7 +68,8 @@ protected:
            bool         _endOfStream;
            bool         _setBpp;
            bool         _setFcc;
-           int          codecId;
+           AVCodecID    codecId;
+           const AVCodec *_codec;
            uint8_t      _refCopy;
            uint32_t     _bpp;
            AVCodecContext *_context;
@@ -81,22 +82,21 @@ protected:
            uint32_t     _usingMT;
            uint32_t     _threads;
            ADM_acceleratedDecoderFF *hwDecoder;
+           bool         _blacklistHwDecoder;
            decoderFF_param_t decoderFF_params;
 
 protected:
            uint32_t     frameType (void);
-           uint8_t      clonePic (AVFrame * src, ADMImage * out, bool swap);
            void         decoderMultiThread ();
            uint32_t     admFrameTypeFromLav (AVFrame *pic);
-           ADM_pixelFormat      admPixFrmtFromLav(AVPixelFormat pix_fmt, bool * swap);
-           ADM_colorPrimaries   admColPriFromLav(AVColorPrimaries color_primaries);
-           ADM_colorTrC         admColTrcFromLav(AVColorTransferCharacteristic color_trc);
-           ADM_colorSpace       admColSpcFromLav(AVColorSpace colorspace);
+           bool         lavSetupPrepare(AVCodecID cid);
+           bool         lavSetupFinish(void);
+           void         lavFree(void);
 
 public:
                         decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
         virtual         ~ decoderFF ();
-        virtual bool initialized(void);
+        virtual bool    initialized(void) { return _initCompleted; }
             bool        setHwDecoder(ADM_acceleratedDecoderFF *h)
                         {
                             if(h)
@@ -124,7 +124,6 @@ public:
         }
         virtual bool decodeHeaderOnly (void);
         virtual bool decodeFull (void);
-      //  virtual uint32_t getSpecificMpeg4Info (void);
         virtual uint32_t getPARWidth (void);
         virtual uint32_t getPARHeight (void);
         virtual bool decodeErrorHandler(int code);
@@ -145,6 +144,12 @@ public:
         // for hw accel
         AVFrame *getFramePointer() {return _frame;}
         AVPacket *getPacketPointer(void) { return _packet; }
+        ADM_pixelFormat admPixFrmtFromLav(AVPixelFormat pix_fmt, bool * swap);
+        ADM_colorPrimaries admColPriFromLav(AVColorPrimaries color_primaries);
+        ADM_colorTrC    admColTrcFromLav(AVColorTransferCharacteristic color_trc);
+        ADM_colorSpace  admColSpcFromLav(AVColorSpace colorspace);
+        uint8_t         clonePic(AVFrame *src, ADMImage *out, bool swap);
+        bool            hwDecoderIsBlacklisted(void) { return _blacklistHwDecoder; }
 };
 
 #define FF_SIMPLE_DECLARE(x,y) \
@@ -180,10 +185,10 @@ FF_SIMPLE_DECLARE(decoderFFH265,
                                  virtual bool bFramePossible (void)   {   return true;    }
                                 )
 
-
+/*
 #define WRAP_Open_Template(funcz,argz,display,codecid,extra) \
 {\
-AVCodec *codec=funcz(argz);\
+  const AVCodec *codec=funcz(argz);\
   if(!codec) {GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec" display));return;} \
   if(!_frame) { ADM_error("Could not allocate AVFrame.\n"); return; } \
   codecId=codecid; \
@@ -227,7 +232,9 @@ AVCodec *codec=funcz(argz);\
 
 #define WRAP_Open(x)            {WRAP_Open_Template(avcodec_find_decoder,x,#x,x,;)}
 #define WRAP_OpenByName(x,y)    {WRAP_Open_Template(avcodec_find_decoder_by_name,#x,#x,y,;)}
+*/
 
+#define WRAP_Open(x) if(lavSetupPrepare(x)) { _initCompleted = lavSetupFinish(); }
 
 // EOF
 

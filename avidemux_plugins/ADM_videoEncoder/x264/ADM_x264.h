@@ -19,6 +19,7 @@
 #define ADM_x264_H
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_encoderConf.h"
+#include "ADM_byteBuffer.h"
 #include "x264_encoder.h"
 extern "C"
 {
@@ -138,6 +139,9 @@ protected:
                x264_param_t     param;
                x264_t          *handle;
                x264_picture_t  pic;
+               int             outputBitDepth;
+               ADMImageRefWrittable *highBitDepthImage;
+               ADM_byteBuffer  highBitDepthBuffers;
                int             plane;
                bool            globalHeader;
                bool            flush;

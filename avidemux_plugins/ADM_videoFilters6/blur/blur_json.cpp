@@ -9,7 +9,6 @@ json.addUint32("left",key->left);
 json.addUint32("right",key->right);
 json.addUint32("top",key->top);
 json.addUint32("bottom",key->bottom);
-json.addBool("rubber_is_hidden",key->rubber_is_hidden);
 json.addUint32("algorithm",key->algorithm);
 json.addUint32("radius",key->radius);
 return json.dumpToFile(file);

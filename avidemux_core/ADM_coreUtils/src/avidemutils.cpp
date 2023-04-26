@@ -517,7 +517,11 @@ int ADM_probeSequencedFile(const char *fileName, int *fragmentSize)
     // can we open the file?
     int64_t sz=ADM_fileSize(fileName);
     if(sz<0) // nope
+    {
+        delete [] left;
+        delete [] right;
         return sz;
+    }
 
     bool skipSizeCheck=*fragmentSize<0;
     // check whether the filesize approx. matches 2^n GiB, the usual
@@ -557,7 +561,7 @@ int ADM_probeSequencedFile(const char *fileName, int *fragmentSize)
         for(int i=0;i<rounds;i++)
         {
             if(!i && fileSize < threshold-tolerance)
-                return 0;
+                break;
             if(fileSize >= threshold-tolerance && fileSize <= threshold+tolerance)
             {
                 count=1;
@@ -569,7 +573,11 @@ int ADM_probeSequencedFile(const char *fileName, int *fragmentSize)
                 tolerance<<=3; // 8 MiB starting with 1 GiB fragment size
         }
         if(!count)
+        {
+            delete [] left;
+            delete [] right;
             return 0;
+        }
     }else
     {
         count=1; // the first sequence to check

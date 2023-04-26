@@ -37,7 +37,6 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     myBlacken->_cookie=&ui;
     myBlacken->addControl(ui.toolboxLayout);
     myBlacken->upload();
-    myBlacken->refreshImage();
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
     connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
@@ -90,23 +89,6 @@ void Ui_blackenWindow::reset( bool f )
     myBlacken->upload();
     myBlacken->sameImage();
     lock--;
-}
-
-void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myBlacken->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myBlacken->adjustCanvasPosition();
-}
-
-void Ui_blackenWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myBlacken->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
 }
 
 //************************

@@ -44,13 +44,14 @@ Ui_artMirrorWindow::Ui_artMirrorWindow(QWidget *parent, artMirror *param,ADM_cor
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout);
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect(ui.comboBoxMethod, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
 #define SPINNER(x,y,z) ui.horizontalSlider##x->setScale(1,y,z); \
         connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));
         SPINNER(Displacement,100,2)
+
+        QT6_CRASH_WORKAROUND(artMirrorWindow)
 
         setModal(true);
 }
@@ -77,23 +78,6 @@ void Ui_artMirrorWindow::valueChanged( int f )
     myFly->download();
     myFly->sameImage();
     lock--;
-}
-
-void Ui_artMirrorWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_artMirrorWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYCOMBOX(x) w->comboBox##x

@@ -948,7 +948,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
     // 1-Create parser
     AVCodecParserContext *parser=av_parser_init(AV_CODEC_ID_H264);
     AVCodecContext *ctx=NULL;
-    AVCodec *codec=NULL;
+    const AVCodec *codec=NULL;
     uint8_t *d=NULL;
 
     if(!parser)

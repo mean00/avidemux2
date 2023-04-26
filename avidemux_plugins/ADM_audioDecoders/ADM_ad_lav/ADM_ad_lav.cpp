@@ -43,6 +43,7 @@ typedef enum
 
             ADM_outputFlavor    outputFlavor;
             AVCodecContext      *_context;
+            AVPacket            *_pkt;
             AVFrame             *_frame;
 
             uint8_t     *_paddedExtraData;
@@ -131,7 +132,13 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     _tail=_head=0;
     _paddedExtraData=NULL;
     _blockalign=0;
-    _frame=av_frame_alloc();
+
+    _frame = av_frame_alloc();
+    ADM_assert(_frame);
+
+    _pkt = av_packet_alloc();
+    ADM_assert(_pkt);
+
     AVCodecID codecID = AV_CODEC_ID_NONE;
     outputFrequency=info->frequency;
     channels=info->channels;
@@ -199,8 +206,8 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
              ADM_assert(0);
     }   
 
-    AVCodec *codec=avcodec_find_decoder(codecID);
-    if(!codec) {ADM_assert(0);}
+    const AVCodec *codec = avcodec_find_decoder(codecID);
+    ADM_assert(codec);
 
     _context=avcodec_alloc_context3(codec);
     ADM_assert(_context);
@@ -505,17 +512,16 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
     memcpy(_buffer+_tail,inptr,nbIn);
     _tail+=nbIn;
 
-    AVPacket pkt;
-    av_init_packet(&pkt);
     int nbChunk,res=0;
     bool eof=false;
     while(_tail-_head>=_blockalign && !eof)
     {
         nbChunk=(_tail-_head)/_blockalign;
-        pkt.size=nbChunk*_blockalign;
-        pkt.data=_buffer+_head;
+        av_packet_unref(_pkt);
+        _pkt->size = nbChunk*_blockalign;
+        _pkt->data = _buffer+_head;
 
-        res=avcodec_send_packet(_context, &pkt);
+        res = avcodec_send_packet(_context, _pkt);
         if(res==AVERROR(EAGAIN)) res=0; // we are about to read output anyway
         // Regardless of the outcome, always consume the data.
         _head+=nbChunk*_blockalign;

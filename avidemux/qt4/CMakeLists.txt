@@ -11,8 +11,6 @@ MESSAGE("#########################################")
 MESSAGE("Configure for Avidemux Qt Started")
 MESSAGE("#########################################")
 MESSAGE("")
-#fedora 
-ADD_DEFINITIONS("-std=c++11")
 MESSAGE(STATUS "Checking for avidemux development files ..")
 
 IF(NOT FAKEROOT)

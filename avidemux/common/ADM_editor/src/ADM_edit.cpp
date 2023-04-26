@@ -503,17 +503,20 @@ uint8_t ADM_Composer::addFile (const char *name)
 
    // check opening was successful
    if (ret == 0) {
-     char str[512+1];
-     snprintf(str,512,QT_TRANSLATE_NOOP("ADM_Composer","Attempt to open %s failed!"), name);
-      str[512] = '\0';
-      GUI_Error_HIG(str,NULL);
-      video._aviheader=NULL;
-      return false;
+        delete video._aviheader;
+        video._aviheader = NULL;
+        char str[512];
+        snprintf(str,512,QT_TRANSLATE_NOOP("ADM_Composer","Attempt to open %s failed!"), name);
+        str[511] = '\0';
+        GUI_Error_HIG(str,NULL);
+        return false;
    }
 
     if(ret==ADM_IGN)
     {
         ADM_info("Cancelled by user\n");
+        delete video._aviheader;
+        video._aviheader = NULL;
         return ret;
     }
 

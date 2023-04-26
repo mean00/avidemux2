@@ -23,7 +23,7 @@
 Ui_analyzerWindow::Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in) : QDialog(parent)
 {
     ui.setupUi(this);
-    firstRun = true;
+    shown = false;
     // Allocate space for green-ised video
     uint32_t _width=in->getInfo()->width;
     uint32_t _height=in->getInfo()->height;
@@ -56,9 +56,10 @@ Ui_analyzerWindow::Ui_analyzerWindow(QWidget *parent, ADM_coreVideoFilter *in) :
     myFly->addControl(ui.toolboxLayout);
     myFly->setTabOrder();
     myFly->upload();
-    myFly->refreshImage();
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
+
+    QT6_CRASH_WORKAROUND(analyzerWindow)
 
     setModal(true);
 
@@ -93,25 +94,15 @@ void Ui_analyzerWindow::adjustGraphs(void)
 void Ui_analyzerWindow::resizeEvent(QResizeEvent *event)
 {
     adjustGraphs();
-
-    if(!canvas->height())
-        return;
-    myFly->fitCanvasIntoView(ui.graphicsView->width(), ui.graphicsView->height());
-    myFly->adjustCanvasPosition();
 }
 
 void Ui_analyzerWindow::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
+    if(shown) return;
+    shown = true;
+    adjustSize();
     adjustGraphs();
-
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
-    if (firstRun)
-    {
-        adjustSize();
-        firstRun = false;
-    }
 }
 
 void flyAnalyzer::setTabOrder(void)

@@ -254,11 +254,9 @@ extern "C"
 
 void ADM_lavFormatInit(void)
 {
-	av_register_all();
-
 	// Make sure avformat is correctly configured
 	const char* formats[] = {"mpegts", "dvd", "vcd", "svcd", "mp4", "psp", "flv", "matroska"};
-	AVOutputFormat *avfmt;
+	const AVOutputFormat *avfmt;
 
 	for (int i = 0; i < 8; i++)
 	{

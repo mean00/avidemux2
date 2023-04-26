@@ -18,8 +18,8 @@
 #include "ADM_default.h"
 #include "ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_hwAccel.h"
 #include "prefs.h"
+#include "fourcc.h"
 
 #ifdef ADM_DEBUG
     #define LAV_VERBOSITY_LEVEL AV_LOG_DEBUG
@@ -85,6 +85,12 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
       out->_qSize = out->_qStride = 0;
       out->quant = NULL;
     }
+
+    ADM_assert(src->width > 0);
+    out->_width = src->width;
+    ADM_assert(src->height > 0);
+    out->_height = src->height;
+
     uint64_t pts_opaque=(uint64_t)(src->reordered_opaque);
     //printf("[LAVC] Old pts :%"PRId64" new pts :%"PRId64"\n",out->Pts, pts_opaque);
     //printf("[LAVC] pts: %"PRIu64"\n",src->pts);
@@ -207,6 +213,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
                     //other fields are not implemented as of ATSC S34-301r2 A/341 Amendment – 2094-40 
                 }
                 break;
+            default: break;
         }
     }
 
@@ -314,11 +321,11 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   _endOfStream=false;
   _setBpp=false;
   _setFcc=false;
-  codecId = 0;
-//                              memset(&_context,0,sizeof(_context));
+  codecId = AV_CODEC_ID_NONE;
   _allowNull = 0;
   _gmc = 0;
   _context = NULL;
+  _codec = NULL;
   _frame = NULL;
   _refCopy = 0;
   _usingMT = 0;
@@ -344,7 +351,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
             memcpy(_extraDataCopy,extraData,extraDataLen);
     }
    hwDecoder=NULL;
-
+    _blacklistHwDecoder = false;
 }
 
 //_____________________________________________________
@@ -356,13 +363,7 @@ decoderFF::~decoderFF ()
       printf ("[lavc] Killing decoding threads\n");
       _usingMT = 0;
     }
-  if(_context)
-  {
-        avcodec_close (_context);
-        av_free(_context);
-        _context=NULL;
-        printf ("[lavc] Destroyed\n");
-    }
+  lavFree();
   // NULL-safe and will set the pointer to NULL
   av_frame_free(&_frame);
   av_packet_free(&_packet);
@@ -376,13 +377,81 @@ decoderFF::~decoderFF ()
   hwDecoder=NULL;
 }
 /**
- * \fn initialized
+ * \fn lavSetupPrepare
  */
-bool decoderFF::initialized(void)
+bool decoderFF::lavSetupPrepare(AVCodecID cid)
 {
-    return _initCompleted;
+    _codec = avcodec_find_decoder(cid);
+    if (!_codec)
+    {
+        GUI_Error_HIG(
+            QT_TRANSLATE_NOOP("adm","Codec"),
+            QT_TRANSLATE_NOOP("adm","Internal error finding decoder for %s"), avcodec_get_name(cid));
+        return false;
+    }
+    codecId = cid;
+    ADM_assert(_context == NULL);
+    _context = avcodec_alloc_context3(_codec);
+    if(!_context)
+    {
+        ADM_error("Could not allocate AVCodecContext.\n");
+        return false;
+    }
+    _context->width = _w;
+    _context->height = _h;
+    _context->pix_fmt = AV_PIX_FMT_YUV420P; // will be overridden by lavc if necessary
+    _context->workaround_bugs = FF_BUG_AUTODETECT; // + FF_BUG_NO_PADDING;
+    _context->error_concealment = FF_EC_GUESS_MVS + FF_EC_DEBLOCK;
+    _context->opaque = this;
+    _context->get_format = ADM_FFgetFormat;
+    if (_setBpp)
+        _context->bits_per_coded_sample = _bpp;
+    if (_setFcc)
+        _context->codec_tag = _fcc;
+    if (_extraDataCopy)
+    {
+        _context->extradata = _extraDataCopy;
+        _context->extradata_size = _extraDataLen;
+    }
+    if (_usingMT)
+        _context->thread_count = _threads;
+
+    return true;
 }
 
+/**
+ * \fn lavSetupFinish
+ */
+bool decoderFF::lavSetupFinish(void)
+{
+    if (!_context || !_codec)
+        return false;
+    if (avcodec_open2(_context, _codec, NULL) < 0)
+    {
+        ADM_error("%s video decoder init has failed, fcc: %s = 0x%08x\n", _codec->long_name, fourCC::tostring(_fcc), _fcc);
+        GUI_Error_HIG(
+            QT_TRANSLATE_NOOP("adm","Codec"),
+            QT_TRANSLATE_NOOP("adm","Internal error opening libavcodec %s decoder"),
+            _codec->long_name);
+        return false;
+    }
+     ADM_info("%s video decoder for %s initialized with %d thread(s)\n",
+         _codec->long_name, fourCC::tostring(_fcc), _context->thread_count);
+     return true;
+}
+
+/**
+ * \fn lavFree
+ */
+void decoderFF::lavFree(void)
+{
+    if (!_context) return;
+
+    avcodec_close (_context);
+    av_free(_context);
+    _context = NULL;
+    ADM_info("Codec context freed\n");
+}
 
 ADM_pixelFormat decoderFF::admPixFrmtFromLav(AVPixelFormat pix_fmt, bool * swap)
 {
@@ -415,6 +484,9 @@ ADM_pixelFormat decoderFF::admPixFrmtFromLav(AVPixelFormat pix_fmt, bool * swap)
       if (swap)
           *swap = true;
       return ADM_PIXFRMT_YV12;
+    case AV_PIX_FMT_NV12:
+      aprintf("pixel format is AV_PIX_FMT_NV12 --> ADM_PIXFRMT_NV12\n");
+      return ADM_PIXFRMT_NV12;
     case AV_PIX_FMT_BGR24:
       aprintf("pixel format is AV_PIX_FMT_BGR24 --> ADM_PIXFRMT_BGR24\n");
       return ADM_PIXFRMT_BGR24;
@@ -717,9 +789,21 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   int ret = 0;
   out->_noPicture = 0;
   out->_Qp = ADM_IMAGE_UNKNOWN_QP;
-  if(hwDecoder && !_usingMT)
-        return hwDecoder->uncompress(in,out);
- 
+  if(hwDecoder && !_usingMT && !_blacklistHwDecoder)
+  {
+        if(!hwDecoder->isAlive())
+        {
+            ADM_warning("Hw decoder is not functional!\n");
+            delete hwDecoder;
+            hwDecoder = NULL;
+            _blacklistHwDecoder = true;
+            lavFree();
+            ADM_assert(lavSetupPrepare(codecId) && lavSetupFinish());
+            return uncompress(in,out);
+        }
+        if(hwDecoder)
+            return hwDecoder->uncompress(in,out);
+  }
   //printf("Frame size : %d\n",in->dataLength);
 
     if (!_drain && in->dataLength == 0 && !_allowNull) // Null frame, silently skipped
@@ -765,10 +849,20 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 
         // HW accel may be setup by now if this has been the very first packet. In this case
         // ask the hw decoder to collect the decoded picture.
-        if(hwDecoder)
+        if(hwDecoder && hwDecoder->isAlive() && !_blacklistHwDecoder)
         {
             hwDecoder->skipSendFrame();
-            return hwDecoder->uncompress(in,out);
+            if(hwDecoder->uncompress(in,out))
+                return true;
+            if(hwDecoder->isAlive())
+                return false;
+            ADM_warning("HW decoder failed, blacklisting it\n");
+            delete hwDecoder;
+            hwDecoder = NULL;
+            _blacklistHwDecoder = true;
+            lavFree();
+            ADM_assert(lavSetupPrepare(codecId) && lavSetupFinish());
+            return uncompress(in,out);
         }
     }
 
@@ -938,14 +1032,16 @@ decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_
 decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
         :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _refCopy = 1;			// YUV420 only
-  decoderMultiThread ();
-  ADM_info ("[lavc] Initializing H264 decoder with %d extradata\n", (int)extraDataLen);
-  WRAP_Open(AV_CODEC_ID_H264);
+    _refCopy = 1; // YUV420 only
+    decoderMultiThread();
+    ADM_info ("Initializing H264 decoder with %d bytes of extradata\n", (int)extraDataLen);
+    if(false == lavSetupPrepare(AV_CODEC_ID_H264))
+        return;
 #ifdef ADM_DEBUG
   //_context->debug |= FF_DEBUG_MMCO;
   //_context->debug |= FF_DEBUG_PICT_INFO;
 #endif
+    _initCompleted = lavSetupFinish();
 }
 //*********************
 extern "C" {int av_getAVCStreamInfo(AVCodecContext *avctx, uint32_t  *nalSize, uint32_t *isAvc);}
@@ -988,7 +1084,6 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 
 //***************
 extern void     avcodec_init(void );
-extern  void    avcodec_register_all(void );
 extern "C"
 {
   void adm_lavLogCallback(void  *instance, int level, const char* fmt, va_list list);
@@ -1009,7 +1104,6 @@ static  void ffFatalError(const char *what,int lineno, const char *filez)
 */
 void ADM_lavInit(void)
 {
-    avcodec_register_all();
     av_log_set_callback(adm_lavLogCallback);
     av_setFatalHandler(ffFatalError);
     av_log_set_level(LAV_VERBOSITY_LEVEL);

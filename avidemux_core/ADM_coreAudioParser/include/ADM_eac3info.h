@@ -14,6 +14,7 @@
 
 #define ADM_AC3_HEADER_SIZE 7
 #define ADM_EAC3_FLAG_PKT_COMPLETE 1 /* the header of the next independent frame found in the buffer at the expected location */
+#define ADM_EAC3_FLAG_PKT_DAMAGED  2 /* no sync at the end of a frame */
 
 /**
     \struct ADM_EAC3_INFO

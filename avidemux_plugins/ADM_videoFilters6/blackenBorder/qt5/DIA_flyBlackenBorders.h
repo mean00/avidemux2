@@ -6,7 +6,6 @@ public:
     bool        rubber_is_hidden;
 
     float       getZoomValue(void) { return _zoom; }
-    void        initRubber(void);
     void        adjustRubber(int x, int y, int w, int h);
     void        hideRubber(bool hide);
     int         lockRubber(bool lock);

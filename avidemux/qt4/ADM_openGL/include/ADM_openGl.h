@@ -120,6 +120,7 @@ private:
 
         QOpenGLShaderProgram *glProgram;
         bool            operational;
+        bool            draw;
 
 protected:
         void initializeGL();

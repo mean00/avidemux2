@@ -178,12 +178,15 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
 
     // Probe the real time increment as the value determined from FPS may be incorrect due to interlace
     uint64_t firstNonZeroDts=ADM_NO_PTS,pts,dts;
-    int firstNonZeroDtsFrame;
+    int firstNonZeroDtsFrame, ignored = 0;
     ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
     uint64_t minDelta=100000;
     uint64_t maxDelta=0;
     uint64_t dtsPtsDelta=0;
-    uint32_t frame,flags,fmin=0,fmax=0;
+    uint64_t previousFrameDts = ADM_NO_PTS; // may be estimated, not usable for probing
+    uint64_t minDts = ADM_NO_PTS;
+    uint32_t frame,flags,fmin,fmax,fdlta;
+    fmin = fmax = fdlta = 0;
     for(frame = 0; frame < info.nb_frames; frame++)
     {
         if(!ref->fieldEncoded)
@@ -195,12 +198,34 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
                 ref->fieldEncoded=true;
             }
         }
-        if (demuxer->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
+        if (demuxer->getPtsDts(frame,&pts,&dts))
         {
-            if(pts != ADM_NO_PTS && dts > pts &&
-               dts - pts < 32 * ref->timeIncrementInUs /* a rough sanity check */ &&
-               dts - pts > dtsPtsDelta)
-                dtsPtsDelta = dts - pts;
+            bool estimated = false;
+            if(dts == ADM_NO_PTS)
+            {
+                if (previousFrameDts == ADM_NO_PTS) continue;
+                // Calculated dtsPtsDelta may be too low if we do not fill gaps in DTS.
+                previousFrameDts += ref->timeIncrementInUs;
+                dts = previousFrameDts;
+                estimated = true;
+            }
+            if(dts < minDts) minDts = dts;
+            if(dts == 0) continue;
+            if(pts != ADM_NO_PTS && dts > pts && dts - pts > dtsPtsDelta)
+            {
+                if (dtsPtsDelta && (dts - pts - dtsPtsDelta) > (32 * ref->timeIncrementInUs) /* a coarse sanity check */ && !ignored)
+                { // try to catch isolated implausible values from presumably broken timestamps
+                    ADM_warning("Unexpected increase of DTS relative to PTS at frame %" PRIu32", probably an outlier, ignoring.\n", frame);
+                    ignored++;
+                } else
+                {
+                    dtsPtsDelta = dts - pts;
+                    ignored = 0;
+                    fdlta = frame;
+                }
+            }
+            if(estimated) continue;
+            previousFrameDts = dts;
             if (firstNonZeroDts==ADM_NO_PTS)
             {
                 firstNonZeroDts=dts;
@@ -237,9 +262,34 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     ADM_info("About %" PRIu64" microseconds per frame, %" PRIu32" frames\n",ref->timeIncrementInUs,info.nb_frames);
     ref->_nb_video_frames = info.nb_frames;
 
+    if(dtsPtsDelta && minDts != ADM_NO_PTS && dtsPtsDelta != minDts)
+    {
+        uint64_t dtsShift = minDts;
+        if(minDts > dtsPtsDelta)
+        {
+            minDts -= dtsPtsDelta;
+            dtsPtsDelta = 0;
+            dtsShift -= minDts;
+        }else
+        {
+            dtsPtsDelta -= minDts;
+            minDts = 0;
+        }
+        if(dtsShift)
+        {
+            ADM_warning("We have some DTS > PTS, reducing DTS based on frame %" PRIu32" by %" PRIu64" microseconds (%s)\n", fdlta, dtsShift, ADM_us2plain(dtsShift));
+            for(frame = 0; frame < info.nb_frames; frame++)
+            {
+                if(!demuxer->getPtsDts(frame,&pts,&dts)) continue;
+                if(dts == ADM_NO_PTS) continue;
+                dts -= dtsShift;
+                demuxer->setPtsDts(frame,pts,dts);
+            }
+        }
+    }
     if(dtsPtsDelta)
     {
-        ADM_warning("We have some DTS > PTS, delaying video by %" PRIu64" microseconds\n",dtsPtsDelta);
+        ADM_warning("We have some DTS > PTS, delaying video based on frame %" PRIu32" by %" PRIu64" microseconds (%s)\n", fdlta, dtsPtsDelta, ADM_us2plain(dtsPtsDelta));
         for(frame = 0; frame < info.nb_frames; frame++)
         {
             if(!demuxer->getPtsDts(frame,&pts,&dts)) continue;

@@ -33,9 +33,10 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
     resetVideoStream(videoStream);
 
     seekablePreview->addControl(ui.toolLayout);
-    seekablePreview->refreshImage();
 
     connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
+
+    QT6_CRASH_WORKAROUND(seekablePreviewWindow)
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
@@ -79,17 +80,6 @@ uint32_t Ui_seekablePreviewWindow::frameIndex()
 void Ui_seekablePreviewWindow::sliderChanged(int value)
 {
     seekablePreview->sliderChanged();
-}
-
-
-void Ui_seekablePreviewWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    seekablePreview->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    seekablePreview->adjustCanvasPosition();
 }
 
 // EOF

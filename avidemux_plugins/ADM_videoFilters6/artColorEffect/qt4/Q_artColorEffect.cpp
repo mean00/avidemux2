@@ -44,10 +44,11 @@ Ui_artColorEffectWindow::Ui_artColorEffectWindow(QWidget *parent, artColorEffect
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myFly->setTabOrder();
         myFly->upload();
-        myFly->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
         connect(ui.comboBoxEffect, SIGNAL(currentIndexChanged(int)), this, SLOT(effectChanged(int)));
+
+        QT6_CRASH_WORKAROUND(artColorEffectWindow)
 
         setModal(true);
 }
@@ -74,23 +75,6 @@ void Ui_artColorEffectWindow::effectChanged( int f )
     myFly->download();
     myFly->sameImage();
     lock--;
-}
-
-void Ui_artColorEffectWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myFly->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myFly->adjustCanvasPosition();
-}
-
-void Ui_artColorEffectWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myFly->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYCOMBOX(x) w->comboBox##x

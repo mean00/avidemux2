@@ -764,6 +764,62 @@ uint8_t MP4Header::parseEdts(void *ztom,uint32_t trackType)
     tom->skipAtom();
     return 1;
 }
+
+/*
+    \fn avcCDump
+    \brief Print some info about given AVC extradata
+*/
+static void avcCDump(uint8_t *data, int size)
+{
+    int len,offset;
+
+#define MKD8(x) data[x]
+#define MKD16(x) ((MKD8(x)<<8)+MKD8(x+1))
+/* #define MKD32(x) ((MKD16(x)<<16)+MKD16(x+2)) */
+
+    printf("avcC size                  : %d\n", size);
+    printf("avcC Revision              : 0x%x\n", MKD8(0));
+    printf("avcC AVCProfileIndication  : 0x%x\n", MKD8(1));
+    printf("avcC profile_compatibility : 0x%x\n", MKD8(2));
+    printf("avcC AVCLevelIndication    : 0x%x\n", MKD8(3));
+    printf("avcC NAL length            : %d\n", (MKD8(4) & 3) + 1);
+
+    offset = 5;
+    int numPs = MKD8(offset++) & 0x1F;
+    printf("avcC NumSequenceParSets    : %d\n", numPs);
+
+    for(int i=0; i < numPs; i++)
+    {
+        len = MKD16(offset);
+        offset += 2;
+        printf("avcC SPS (%d) len           : %d\n", i, len);
+        if(offset + len > size)
+        {
+            printf("  SPS length out of bounds, invalid data!\n");
+            return;
+        }
+        mixDump(data + offset, len);
+        offset += len;
+    }
+
+    numPs = MKD8(offset++) & 0x1F;
+    printf("avcC numOfPictureParSets   : %d\n", numPs);
+
+    for(int i=0; i < numPs; i++)
+    {
+        len = MKD16(offset);
+        offset += 2;
+        printf("avcC PPS (%d) len           : %d\n", i, len);
+        if(offset + len > size)
+        {
+            printf("  PPS length out of bounds, invalid data!\n");
+            return;
+        }
+        mixDump(data + offset, len);
+        offset += len;
+    }
+}
+
 /**
         \fn parseStbl
         \brief parse sample table. this is the most important function.
@@ -1167,7 +1223,12 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                             continue;
                                         }
                                         printf("Reading %s, got hvcC of size %" PRId64"\n", hevc, remaining);
-                                        ADM_assert(remaining >= 0 && remaining <= 0xffffffff);
+                                        if(remaining < 0 || remaining > 0xffffffff)
+                                        {
+                                            ADM_warning("Invalid data encountered reading hvcC atom.\n");
+                                            ADM_dealloc(hevc);
+                                            return 0;
+                                        }
                                         VDEO.extraDataSize = remaining;
                                         ADM_info("Found %d bytes of extradata \n",VDEO.extraDataSize);
                                         VDEO.extraData=new uint8_t [VDEO.extraDataSize];
@@ -1188,44 +1249,31 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                     commonPart(H264);
                                     // There is a avcC atom just after
                                     // configuration data for h264
+                                    char *avcName = ADM_strdup(fourCC::tostringBE(entryName));
                                     while(!son.isDone())
                                     {
                                         adm_atom avcc(&son);
-                                        printf("Reading avcC, got %s\n",fourCC::tostringBE(avcc.getFCC()));
-                                        if(avcc.getFCC()!=MKFCCR('a','v','c','C'))
+                                        int64_t remaining = avcc.getRemainingSize();
+                                        uint32_t fcc = avcc.getFCC();
+                                        if(fcc != MKFCCR('a','v','c','C'))
                                         {
+                                            printf("Reading %s, skipping %s of size %" PRId64"\n", avcName, fourCC::tostringBE(fcc), remaining);
                                             avcc.skipAtom();
                                             continue;
                                         }
-
-                                        int len,offset;
-                                        VDEO.extraDataSize=avcc.getRemainingSize();
+                                        printf("Reading %s, got avcC of size %" PRId64"\n", avcName, remaining);
+                                        if(remaining < 7 || remaining > 0xffffffff) // FIXME
+                                        {
+                                            ADM_warning("Invalid data encountered reading avcC atom.\n");
+                                            ADM_dealloc(avcName);
+                                            return 0;
+                                        }
+                                        VDEO.extraDataSize = remaining;
                                         VDEO.extraData=new uint8_t [VDEO.extraDataSize];
                                         avcc.readPayload(VDEO.extraData,VDEO.extraDataSize);
-                                        printf("avcC size:%d\n",VDEO.extraDataSize);
-                                        // Dump some info
-#define MKD8(x) VDEO.extraData[x]
-#define MKD16(x) ((MKD8(x)<<8)+MKD8(x+1))
-#define MKD32(x) ((MKD16(x)<<16)+MKD16(x+2))
 
-                                        printf("avcC Revision             :%x\n", MKD8(0));
-                                        printf("avcC AVCProfileIndication :%x\n", MKD8(1));
-                                        printf("avcC profile_compatibility:%x\n", MKD8(2));
-                                        printf("avcC AVCLevelIndication   :%x\n", MKD8(3));
+                                        avcCDump(VDEO.extraData, VDEO.extraDataSize);
 
-                                        printf("avcC lengthSizeMinusOne   :%x\n", MKD8(4));
-                                        printf("avcC NumSeq               :%x\n", MKD8(5));
-                                        len=MKD16(6);
-                                        printf("avcC sequenceParSetLen    :%x ",len );
-                                        offset=8;
-                                        mixDump(VDEO.extraData+offset,len);
-
-                                        offset=8+len;
-                                        printf("avcC numOfPictureParSets  :%x\n", MKD8(offset++));
-                                        len=MKD16(offset);
-                                        offset++;
-                                        printf("avcC Pic len              :%x\n",len);
-                                        mixDump(VDEO.extraData+offset,len);
                                         // Verify width and height, the values from the container may be wrong.
                                         ADM_SPSInfo sps;
                                         if(false==extractSPSInfo(VDEO.extraData,VDEO.extraDataSize,&sps))
@@ -1262,6 +1310,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                         }
                                         break;
                                     } // while
+                                    ADM_dealloc(avcName);
                                     son.skipAtom();
                                     left=0;
 

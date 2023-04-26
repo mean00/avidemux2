@@ -25,7 +25,4 @@ private slots:
         void reset(bool checked);
 	void valueChangedSlider(int foo);
 
-private:
-        void resizeEvent(QResizeEvent *event);
-        void showEvent(QShowEvent *event);
 };

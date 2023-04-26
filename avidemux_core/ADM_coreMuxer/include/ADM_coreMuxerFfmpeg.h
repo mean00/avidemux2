@@ -26,7 +26,8 @@
 
 extern "C"
 {
-	#include "libavutil/avutil.h"
+    #include "libavutil/avutil.h"
+    #include "libavutil/display.h"
     #include "libavformat/avformat.h"
 };
 #define ADM_MAX_AUDIO_STREAM 10
@@ -65,7 +66,7 @@ protected:
 protected:
         bool saveLoop(const char *title);
 protected:
-        AVOutputFormat *fmt;
+        const AVOutputFormat *fmt;
         AVFormatContext *oc;
         AVStream *audio_st[ADM_MAX_AUDIO_STREAM];
         AVStream *video_st;

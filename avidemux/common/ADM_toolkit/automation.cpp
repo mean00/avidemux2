@@ -254,7 +254,7 @@ void call_scriptEngine(const char *scriptFile)
         if(avifileinfo)
         {
             A_Rewind();
-            UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
+            A_Resync();
         }
         BYE
     }
@@ -265,7 +265,7 @@ void call_scriptEngine(const char *scriptFile)
         {
             A_parseScript(engines[i],fullpath);
             A_Rewind();
-            UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
+            A_Resync();
             BYE
         }
     }

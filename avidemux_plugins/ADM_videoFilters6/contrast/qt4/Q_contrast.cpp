@@ -49,7 +49,6 @@
         myCrop->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
         myCrop->setTabOrder();
         myCrop->upload();
-        myCrop->refreshImage();
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.dial##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
@@ -72,6 +71,8 @@
           connect( ui.checkBoxV,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
           connect( ui.checkBoxY,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));  
           connect( ui.toolButton__DVD2PC,SIGNAL(pressed()),this,SLOT(dvd2PC()));  
+
+        QT6_CRASH_WORKAROUND(contrastWindow)
 
         setModal(true);
   }
@@ -139,29 +140,6 @@ void Ui_contrastWindow::setDialTitles(void)
     QString title2=QString(QT_TRANSLATE_NOOP("contrast","Brightness"))+QString(": %2").arg(myCrop->param.offset);
     ui.labelContrast->setText(title);
     ui.labelBrightness->setText(title2);
-}
-
-/**
-    \fn resizeEvent
-*/
-void Ui_contrastWindow::resizeEvent(QResizeEvent *event)
-{
-    if(!canvas->height())
-        return;
-    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
-    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
-    myCrop->adjustCanvasPosition();
-}
-
-/**
-    \fn showEvent
-*/
-void Ui_contrastWindow::showEvent(QShowEvent *event)
-{
-    QDialog::showEvent(event);
-    myCrop->adjustCanvasPosition();
-    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 #define MYSPIN(x) w->dial##x

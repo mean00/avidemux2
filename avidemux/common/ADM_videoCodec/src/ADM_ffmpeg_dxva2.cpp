@@ -219,7 +219,7 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         char name[300]={0};
         av_get_pix_fmt_string(name,sizeof(name),c);
         ADM_info("[DXVA2]: Evaluating PIX_FMT %d,%s\n",c,name);
-        av_get_codec_tag_string(name,sizeof(name),avctx->codec_id);
+        snprintf(name,300,"%s",avcodec_get_name(avctx->codec_id));
         ADM_info("\t  Evaluating codec %d,%s\n",avctx->codec_id,name);
 
         if(c!=AV_PIX_FMT_DXVA2_VLD) continue;

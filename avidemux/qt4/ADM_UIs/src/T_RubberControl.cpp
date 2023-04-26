@@ -100,7 +100,8 @@ void ADM_QRubberBand::paintEvent(QPaintEvent *event)
 */
 ADM_rubberControl::ADM_rubberControl(ADM_flyDialog *fly, QWidget *parent) : QWidget(parent)
 {
-    nestedIgnore=0;
+#define FIRST_RUN_MARKER (-99)
+    nestedIgnore = FIRST_RUN_MARKER;
     flyParent=fly;
     rubberControlParent = parent;
     // tell QSizeGrip to resize this widget instead of top-level window
@@ -124,14 +125,21 @@ ADM_rubberControl::ADM_rubberControl(ADM_flyDialog *fly, QWidget *parent) : QWid
 */
 void ADM_rubberControl::resizeEvent(QResizeEvent *)
 {
-    int x, y, w, h;
-    x = pos().x();
-    y = pos().y();
-    w = size().width();
-    h = size().height();
     rubberband->resize(size());
-    if(!nestedIgnore)
-        flyParent->bandResized(x, y, w, h);
+    if (nestedIgnore)
+        return;
+    flyParent->bandResized(pos().x(), pos().y(), size().width(), size().height());
+}
+
+/**
+    \fn showEvent
+    \brief Inhibit callback until the dialog has become visible.
+*/
+void ADM_rubberControl::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    if (nestedIgnore == FIRST_RUN_MARKER)
+        nestedIgnore = 0;
 }
 
 /**

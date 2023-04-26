@@ -165,7 +165,39 @@ inline void ADMVideoImageStab::bicubic(int w, int h, int stride, uint8_t * in, i
     out[0] = pp;
 }
 
+/**
+    \fn bicubic
+*/
+void ADMVideoImageStab::padGen(int w, int h, int stride, uint8_t * in, int x, int y, int radius, uint8_t * out)
+{
+    int sum = in[x + stride*y];
+    int sumcnt = 1;
 
+    for (int j=-radius; j<=radius; j++)
+    {
+        int yi = y + j;
+        if (yi < 0) continue;
+        if (yi >= h) continue;
+
+        for (int i=-radius; i<=radius; i++)
+        {
+            int xi = x + i;
+            if (xi < 0) continue;
+            if (xi >= w) continue;
+            sum += in[xi + stride*yi];
+            sumcnt += 1;
+        }
+    }
+
+    sum += (sumcnt/2);
+    sum /= sumcnt;
+
+    if (sum < 0)
+        sum = 0;
+    if (sum > 255)
+        sum = 255;
+    out[0] = sum;    
+}
 
 /**
     \fn worker_thread
@@ -180,13 +212,14 @@ void * ADMVideoImageStab::worker_thread( void *ptr )
     int algo = arg->algo;
     double * xs = arg->xs;
     double * ys = arg->ys;
-    int stride = arg->stride;
+    int istride = arg->istride;
+    int ostride = arg->ostride;
     uint8_t * in = arg->in;
     uint8_t * in2 = arg->in2;
     uint8_t * out = arg->out;
     uint8_t * out2 = arg->out2;
     int * bicubicWeights = arg->bicubicWeights;
-    uint8_t blackLevel = arg->blackLevel;
+    uint8_t blackLevel = (arg->chromaPlanes ? 128:0);
     
     {
         double a,b,c,d,e,f,g,j,a2,b2,c2,u,v,aa,bb,de,sde,v1,v2,u1,u2;
@@ -252,8 +285,24 @@ void * ADMVideoImageStab::worker_thread( void *ptr )
                     }
                     else
                     {
-                        u=1002.0;
-                        v=1002.0;
+                        if (arg->pad)
+                        {
+                            double xr = ((double)x) / ((double)w);
+                            double yr = ((double)y) / ((double)h);
+                            if (fabs(u1-xr) < fabs(u2-xr))
+                                u = u1;
+                            else
+                                u = u2;
+                            if (fabs(v1-yr) < fabs(v2-yr))
+                                v = v1;
+                            else
+                                v = v2;
+                        }
+                        else
+                        {
+                            u=1002.0;
+                            v=1002.0;
+                        }
                     }
                 }
                 
@@ -290,23 +339,73 @@ void * ADMVideoImageStab::worker_thread( void *ptr )
                     switch(algo) {
                         default:
                         case 0:
-                                bilinear(w, h, stride, in, ui, vi, uf, vf, out + x + y*stride);
+                                bilinear(w, h, istride, in, ui, vi, uf, vf, out + x + y*ostride);
                                 if (in2 && out2)
-                                    bilinear(w, h, stride, in2, ui, vi, uf, vf, out2 + x + y*stride);
+                                    bilinear(w, h, istride, in2, ui, vi, uf, vf, out2 + x + y*ostride);
                             break;
                         case 1:
-                                bicubic(w, h, stride, in, ui, vi, uf, vf, bicubicWeights, out + x + y*stride);
+                                bicubic(w, h, istride, in, ui, vi, uf, vf, bicubicWeights, out + x + y*ostride);
                                 if (in2 && out2)
-                                    bicubic(w, h, stride, in2, ui, vi, uf, vf, bicubicWeights, out2 + x + y*stride);
+                                    bicubic(w, h, istride, in2, ui, vi, uf, vf, bicubicWeights, out2 + x + y*ostride);
                             break;
                     }
 
                 }
                 else
                 {
-                    out[x + y*stride] =  blackLevel;
-                    if (in2 && out2)
-                        out2[x + y*stride] =  blackLevel;
+                    if (arg->pad)
+                    {
+                        u *= w;
+                        v *= h;
+                        int ui = std::round(u);
+                        int vi = std::round(v);
+                        
+                        int dx = 0;
+                        int dy = 0;
+
+                        if (ui < 0)
+                        {
+                            dx = 0 - ui;
+                            ui = 0;
+                        }
+                        else
+                        if (ui >= w)
+                        {
+                            dx = ui + 1 - w;
+                            ui = w-1;
+                        }
+
+                        if (vi < 0)
+                        {
+                            dy = 0 - vi;
+                            vi = 0;
+                        }
+                        else
+                        if (vi >= h)
+                        {
+                            dy = vi + 1 - h;
+                            vi = h-1;
+                        }
+                        
+                        if (dy > dx)
+                            dx = dy;
+                        
+                        if (dx > 7)
+                            dx = 7;
+                        
+                        if (arg->chromaPlanes)
+                            dx = (dx+1)/2;
+                        
+                        padGen(w, h, istride, in, ui, vi, dx, out + x + y*ostride);
+                        if (in2 && out2)
+                            padGen(w, h, istride, in2, ui, vi, dx, out2 + x + y*ostride);
+                    }
+                    else
+                    {
+                        out[x + y*ostride] =  blackLevel;
+                        if (in2 && out2)
+                            out2[x + y*ostride] =  blackLevel;
+                    }
                 }
             
             }
@@ -541,12 +640,13 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
 
     uint8_t * rplanes[3];
     uint8_t * wplanes[3];
-    int strides[3];
+    int strides[3], imgStrides[3];
 
     buffers->imgCopy->duplicate(img);
     buffers->imgCopy->GetPitches(strides);
     buffers->imgCopy->GetWritePlanes(rplanes);
     img->GetWritePlanes(wplanes);
+    img->GetPitches(imgStrides);
     
     int totaltr = 0;
     
@@ -559,13 +659,15 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
         buffers->worker_thread_args[totaltr].algo = algo;
         buffers->worker_thread_args[totaltr].xs = xs;
         buffers->worker_thread_args[totaltr].ys = ys;
-        buffers->worker_thread_args[totaltr].blackLevel = 0;
-        buffers->worker_thread_args[totaltr].stride = strides[0];
+        buffers->worker_thread_args[totaltr].chromaPlanes = false;
+        buffers->worker_thread_args[totaltr].istride = strides[0];
+        buffers->worker_thread_args[totaltr].ostride = imgStrides[0];
         buffers->worker_thread_args[totaltr].in = rplanes[0];
         buffers->worker_thread_args[totaltr].in2 = NULL;
         buffers->worker_thread_args[totaltr].out = wplanes[0];
         buffers->worker_thread_args[totaltr].out2 = NULL;
         buffers->worker_thread_args[totaltr].bicubicWeights = buffers->bicubicWeights;
+        buffers->worker_thread_args[totaltr].pad = param.pad;
         totaltr++;
     }
 
@@ -578,13 +680,15 @@ void ADMVideoImageStab::ImageStabProcess_C(ADMImage *img, int w, int h, imageSta
         buffers->worker_thread_args[totaltr].algo = algo;
         buffers->worker_thread_args[totaltr].xs = xsh;
         buffers->worker_thread_args[totaltr].ys = ysh;
-        buffers->worker_thread_args[totaltr].blackLevel = 128;
-        buffers->worker_thread_args[totaltr].stride = strides[1];
+        buffers->worker_thread_args[totaltr].chromaPlanes = true;
+        buffers->worker_thread_args[totaltr].istride = strides[1];
+        buffers->worker_thread_args[totaltr].ostride = imgStrides[1];
         buffers->worker_thread_args[totaltr].in = rplanes[1];
         buffers->worker_thread_args[totaltr].in2 = rplanes[2];
         buffers->worker_thread_args[totaltr].out = wplanes[1];
         buffers->worker_thread_args[totaltr].out2 = wplanes[2];
         buffers->worker_thread_args[totaltr].bicubicWeights = buffers->bicubicWeights;
+        buffers->worker_thread_args[totaltr].pad = param.pad;
         totaltr++;
     }
 
@@ -644,7 +748,7 @@ const char   *ADMVideoImageStab::getConfiguration(void)
     else
         snprintf(grav,15,"%.2f",_param.gravity);
 
-    snprintf(s,511,"Smoothing: %.2f, Gravity: %s, Scene threshold: %.2f, %s interpolation, Zoom: %.02f, %s motion estimation", _param.smoothing, grav, _param.sceneThreshold, algo, _param.zoom, motionEstimation);
+    snprintf(s,511,"Smoothing: %.2f, Gravity: %s, Scene threshold: %.2f, %s interpolation, Zoom: %.02f, %s motion estimation%s", _param.smoothing, grav, _param.sceneThreshold, algo, _param.zoom, motionEstimation, (_param.pad ? ", with padding":""));
 
     return s;
 }
@@ -663,6 +767,7 @@ ADMVideoImageStab::ADMVideoImageStab(  ADM_coreVideoFilter *in,CONFcouple *coupl
         _param.zoom=1;
         _param.algo = 0;
         _param.motionEstimation = 0;
+        _param.pad = false;
     }
     
     ImageStabCreateBuffers(info.width,info.height, &(_buffers));
