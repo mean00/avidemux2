@@ -82,7 +82,13 @@ void ThumbSlider::mousePressEvent(QMouseEvent *event)
     if (event->buttons() & Qt::LeftButton)
     {
         stopping = 0;
-        int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
+        int x =
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+        event->x();
+#else
+        event->position().x();
+#endif
+        int value = QStyle::sliderValueFromPosition(minimum(), maximum(), x, width(), false);
 
         setSliderPosition(value);
         if (!timerId)
@@ -96,7 +102,13 @@ void ThumbSlider::mouseMoveEvent(QMouseEvent *event)
     if (stopping) return;
     if (event->buttons() & Qt::LeftButton)
     {
-        int value = QStyle::sliderValueFromPosition(minimum(), maximum(), event->x(), width(), false);
+        int x =
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+        event->x();
+#else
+        event->position().x();
+#endif
+        int value = QStyle::sliderValueFromPosition(minimum(), maximum(), x, width(), false);
 
         setSliderPosition(value);
         triggerAction(SliderMove);
