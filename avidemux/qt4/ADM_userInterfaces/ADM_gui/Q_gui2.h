@@ -132,6 +132,8 @@ public:
     void updateStatusBarDecoderInfo(const char * decoder);
     void updateStatusBarZoomInfo(int zoom);
     void notifyStatusBar(int level, const char * lead, const char * msg, int timeout = 2500);
+    void enterFullScreen();
+    void leaveFullScreen();
 
     void setLightTheme(void);
     void setDarkTheme(void);
@@ -216,6 +218,10 @@ protected:
     /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
     void currentTimeToClipboard(void);
     bool dragWhilePlay;
+    bool isFullScreen;
+    int restoreFullScreenMargins[4];
+    int restoreFullScreenPlayFiltered;
+    
     
     QStatusBar * statusBarWidget;
     QTimer statusBarTimer, statusBarFlashTimer;

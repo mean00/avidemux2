@@ -859,6 +859,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     blockResizing = false;
     blockZoomChanges = true;
     dragWhilePlay = false;
+    isFullScreen = false;
 
     QuiTaskBarProgress=createADMTaskBarProgress();
 }
@@ -2145,6 +2146,30 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                                                 else
                                                         sendAction(ACT_GotoMarkB);
                                                 return true;
+                    case Qt::Key_F11:
+                        if (playing) return true;
+                        if (isFullScreen)
+                        {
+                            leaveFullScreen();
+                        }
+                        else
+                        {
+                            if (avifileinfo)
+                                enterFullScreen();
+                        }
+                        return true;
+                    case Qt::Key_Escape:
+                        if (isFullScreen)
+                        {
+                            if (playing)
+                            {
+                                sendAction(ACT_PlayAvi);
+                                return true;
+                            }
+                            leaveFullScreen();
+                            return true;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -2427,6 +2452,13 @@ void MainWindow::openFiles(QList<QUrl> urlList)
 */
 void MainWindow::calcDockWidgetDimensions(uint32_t &width, uint32_t &height)
 {
+    if (isFullScreen)
+    {
+        width = 0;
+        height = 0;
+        return;
+    }
+    
     uint32_t reqw=18; // 2 x 9px margin
     if(ui.codecWidget->isVisible())
         reqw += ui.codecWidget->frameSize().width() + 6; // with codec widget visible a small extra margin is necessary
@@ -2678,6 +2710,91 @@ void MainWindow::notifyStatusBar(int level, const char * lead, const char * msg,
     }
 }
 
+/**
+    \fn enterFullScreen
+*/
+void MainWindow::enterFullScreen()
+{
+    if (isFullScreen)
+        return;
+    
+    if (UI_getCurrentPreview())
+    {
+        UI_notifyWarning(QT_TRANSLATE_NOOP("qgui2","Full screen is not available in case of filtered preview"), 2500);
+        return;
+    }
+
+    isFullScreen = true;
+    
+    ui.centralwidget->layout()->getContentsMargins(restoreFullScreenMargins+0, restoreFullScreenMargins+1, restoreFullScreenMargins+2, restoreFullScreenMargins+3);
+    ui.centralwidget->layout()->setContentsMargins(0,0,0,0);
+    ui.frame_video->setFrameStyle(QFrame::NoFrame);
+    ui.menubar->setVisible(false);
+    ui.codecWidget->setVisible(false);
+    if (ui.navigationWidget->isVisible())
+    {
+        //ui.navigationWidget->setVisible(false);
+        ui.navigationWidget->setFloating(true);
+        QWidget * toBeDeleted= ui.navigationWidget->titleBarWidget();
+        ui.navigationWidget->setTitleBarWidget(NULL);   // this will not delete previous TBW
+        if (toBeDeleted)
+            delete toBeDeleted;
+        ui.navigationWidget->setAllowedAreas( Qt::NoDockWidgetArea );
+        ui.navigationWidget->setFeatures(QDockWidget::DockWidgetClosable |QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        ui.navigationWidget->resize(1,1);   // set to minimum size
+    }
+    ui.selectionWidget->setVisible(false);
+    ui.volumeWidget->setVisible(false);
+    ui.audioMetreWidget->setVisible(false);
+    ui.toolBar->setVisible(false);
+    setStatusBarEnabled(false);
+    
+    QuiMainWindows->setWindowState(QuiMainWindows->windowState() | Qt::WindowFullScreen);
+    setZoomToFit();
+}
+
+/**
+    \fn leaveFullScreen
+*/
+void MainWindow::leaveFullScreen()
+{
+    if (!isFullScreen)
+        return;
+
+    isFullScreen = false;
+    ui.centralwidget->layout()->setContentsMargins(restoreFullScreenMargins[0], restoreFullScreenMargins[1], restoreFullScreenMargins[2], restoreFullScreenMargins[3]);
+    ui.frame_video->setFrameStyle(QFrame::Raised);
+    ui.menubar->setVisible(true);
+#define EXPAND(x) ui.x ## Widget    
+#define CHECKMARK(x,y) EXPAND(y)->setVisible(ui.menuToolbars->actions().at(x)->isChecked());
+    CHECKMARK(1,codec)
+    // CHECKMARK(2,navigation)
+    if (ui.menuToolbars->actions().at(2)->isChecked())
+    {
+        ui.navigationWidget->setVisible(true);
+        ui.navigationWidget->setFloating(false);
+        QWidget* dummy = new QWidget();
+        ui.navigationWidget->setTitleBarWidget(dummy);
+        ui.navigationWidget->setAllowedAreas(Qt::BottomDockWidgetArea);
+        ui.navigationWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
+    }
+    CHECKMARK(3,selection)
+    CHECKMARK(4,volume)
+    CHECKMARK(0,audioMetre)     // this must be after navigation & volume widget
+    if (ui.menuToolbars->actions().at(5)->isChecked())
+    {
+        ui.toolBar->setVisible(true);
+    }
+    if (ui.menuToolbars->actions().at(6)->isChecked())
+    {
+        setStatusBarEnabled(true);
+    }
+#undef CHECKMARK
+#undef EXPAND
+
+    QuiMainWindows->setWindowState(QuiMainWindows->windowState() & ~Qt::WindowFullScreen);
+    setZoomToFit();
+}
 
 
 MainWindow::~MainWindow()
@@ -2876,6 +2993,8 @@ void UI_closeGui(void)
 {
     if(!uiRunning) return;
     uiRunning=false;
+    
+    ((MainWindow*)QuiMainWindows)->leaveFullScreen();
 
     QSettings *qset = qtSettingsCreate();
     if(qset)
