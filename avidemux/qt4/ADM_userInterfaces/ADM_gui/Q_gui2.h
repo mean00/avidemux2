@@ -173,6 +173,7 @@ protected:
     std::vector<QAction *>ActionsDisabledOnPlayback;
     std::vector<QAction *>ActionsAlwaysAvailable;
     std::vector<QAction *>ActionsDisabledOnFullScreen;
+    std::vector<QAction *>ActionsRelocatedOnFullScreen;
     std::vector<QToolButton *>ButtonsAvailableWhenFileLoaded;
     std::vector<QToolButton *>ButtonsDisabledOnPlayback;
     std::vector<QPushButton *>PushButtonsAvailableWhenFileLoaded;

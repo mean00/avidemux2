@@ -1143,6 +1143,7 @@ void MainWindow::buildActionLists(void)
     ActionsDisabledOnPlayback.clear();
     ActionsAlwaysAvailable.clear();
     ActionsDisabledOnFullScreen.clear();
+    ActionsRelocatedOnFullScreen.clear();
 
     // Make a list of the items that are enabled/disabled depending if video is loaded or  not
     //-----------------------------------------------------------------------------------
@@ -1269,6 +1270,31 @@ void MainWindow::buildActionLists(void)
 
     ActionsDisabledOnFullScreen.push_back(ui.menuRecent->actions().back());
     
+    // Relocated to main window on Full Screen
+#define PUSH_RELOCATED_FULLSCREEN(x,act) { QAction *a = findAction(&myMenu ##x,act); if(a) ActionsRelocatedOnFullScreen.push_back(a);}
+    PUSH_RELOCATED_FULLSCREEN(File, ACT_SAVE_BMP)
+    PUSH_RELOCATED_FULLSCREEN(File, ACT_SAVE_PNG)
+    PUSH_RELOCATED_FULLSCREEN(File, ACT_SAVE_JPG)
+    
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_Copy)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_Cut)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_Paste)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_Delete)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_Undo)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_Redo)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_MarkA)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_MarkB)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_ResetMarkerA)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_ResetMarkerB)
+    PUSH_RELOCATED_FULLSCREEN(Edit, ACT_ResetMarkers)
+
+    for (int i=ACT_NAVIGATE_BEGIN+1; i<ACT_NAVIGATE_END; i++)
+    {
+        Action aa = static_cast<Action>(i);
+        QAction *a = findAction(&myMenuGo,aa);
+        if (a)
+            ActionsRelocatedOnFullScreen.push_back(a);
+    }
 }
 
 /**
@@ -1369,6 +1395,9 @@ void MainWindow::setMenuItemsEnabledState(void)
             int n=ActionsDisabledOnFullScreen.size();
             for(int i=0;i<n;i++)
                 ActionsDisabledOnFullScreen[i]->setEnabled(false);
+            n=ActionsRelocatedOnFullScreen.size();
+            for(int i=0;i<n;i++)
+                removeAction(ActionsRelocatedOnFullScreen[i]);
         }
         return;
     }
@@ -1451,6 +1480,9 @@ void MainWindow::setMenuItemsEnabledState(void)
         int n=ActionsDisabledOnFullScreen.size();
         for(int i=0;i<n;i++)
             ActionsDisabledOnFullScreen[i]->setEnabled(false);
+        n=ActionsRelocatedOnFullScreen.size();
+        for(int i=0;i<n;i++)
+            addAction(ActionsRelocatedOnFullScreen[i]);
     }
 }
 
@@ -2799,6 +2831,11 @@ void MainWindow::leaveFullScreen()
 
     isFullScreen = false;
     setMenuItemsEnabledState();
+    
+    int n=ActionsRelocatedOnFullScreen.size();
+    for(int i=0;i<n;i++)
+        removeAction(ActionsRelocatedOnFullScreen[i]);
+    
     
     ui.centralwidget->layout()->setContentsMargins(restoreFullScreenMargins[0], restoreFullScreenMargins[1], restoreFullScreenMargins[2], restoreFullScreenMargins[3]);
     ui.frame_video->setFrameStyle(QFrame::Raised);
