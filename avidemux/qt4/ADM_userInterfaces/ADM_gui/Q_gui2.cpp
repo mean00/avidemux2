@@ -1142,6 +1142,7 @@ void MainWindow::buildActionLists(void)
     ActionsAvailableWhenFileLoaded.clear();
     ActionsDisabledOnPlayback.clear();
     ActionsAlwaysAvailable.clear();
+    ActionsDisabledOnFullScreen.clear();
 
     // Make a list of the items that are enabled/disabled depending if video is loaded or  not
     //-----------------------------------------------------------------------------------
@@ -1247,6 +1248,27 @@ void MainWindow::buildActionLists(void)
     if(recentProjects)
         for(int i=0;i<recentProjects->actions().size();i++)
             ActionsAlwaysAvailable.push_back(recentProjects->actions().at(i));
+    
+    // Disabled on Full Screen
+#define PUSH_FULL_MENU_FULLSCREEN(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++) \
+    { QAction *a = ui.x->actions().at(i); if(a->objectName().isEmpty()) continue; ActionsDisabledOnFullScreen.push_back(a); }    
+    PUSH_FULL_MENU_FULLSCREEN(menuFile,1)
+    PUSH_FULL_MENU_FULLSCREEN(menuRecent,0)
+    PUSH_FULL_MENU_FULLSCREEN(menuView,0)
+    PUSH_FULL_MENU_FULLSCREEN(menuVideo,0)
+    PUSH_FULL_MENU_FULLSCREEN(menuAudio,0)
+    PUSH_FULL_MENU_FULLSCREEN(menuAuto,0)
+    PUSH_FULL_MENU_FULLSCREEN(menuHelp,0)
+    PUSH_FULL_MENU_FULLSCREEN(toolBar,0)    
+    if(recentFiles)
+        for(int i=0;i<recentFiles->actions().size();i++)
+            ActionsDisabledOnFullScreen.push_back(recentFiles->actions().at(i));
+    if(recentProjects)
+        for(int i=0;i<recentProjects->actions().size();i++)
+            ActionsDisabledOnFullScreen.push_back(recentProjects->actions().at(i));
+
+    ActionsDisabledOnFullScreen.push_back(ui.menuRecent->actions().back());
+    
 }
 
 /**
@@ -1342,6 +1364,12 @@ void MainWindow::setMenuItemsEnabledState(void)
         if(ADM_PREVIEW_NONE != admPreview::getPreviewMode())
             slider->setEnabled(false);
 
+        if (isFullScreen)
+        {
+            int n=ActionsDisabledOnFullScreen.size();
+            for(int i=0;i<n;i++)
+                ActionsDisabledOnFullScreen[i]->setEnabled(false);
+        }
         return;
     }
 
@@ -1417,6 +1445,13 @@ void MainWindow::setMenuItemsEnabledState(void)
     // en passant reset frame type label if no video is loaded
     if(!vid)
         ui.label_8->setText(QT_TRANSLATE_NOOP("qgui2","?"));
+
+    if (isFullScreen)
+    {
+        int n=ActionsDisabledOnFullScreen.size();
+        for(int i=0;i<n;i++)
+            ActionsDisabledOnFullScreen[i]->setEnabled(false);
+    }
 }
 
 /**
@@ -2725,6 +2760,7 @@ void MainWindow::enterFullScreen()
     }
 
     isFullScreen = true;
+    setMenuItemsEnabledState();
     
     ui.centralwidget->layout()->getContentsMargins(restoreFullScreenMargins+0, restoreFullScreenMargins+1, restoreFullScreenMargins+2, restoreFullScreenMargins+3);
     ui.centralwidget->layout()->setContentsMargins(0,0,0,0);
@@ -2762,6 +2798,8 @@ void MainWindow::leaveFullScreen()
         return;
 
     isFullScreen = false;
+    setMenuItemsEnabledState();
+    
     ui.centralwidget->layout()->setContentsMargins(restoreFullScreenMargins[0], restoreFullScreenMargins[1], restoreFullScreenMargins[2], restoreFullScreenMargins[3]);
     ui.frame_video->setFrameStyle(QFrame::Raised);
     ui.menubar->setVisible(true);
