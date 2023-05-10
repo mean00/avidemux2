@@ -17,7 +17,7 @@ extern "C"
 	typedef void ADM_fatalFunction(const char *title, const char *info);
         typedef void ADM_sigIntFunction(void);
 
-	ADM_CORE6_EXPORT void ADM_backTrack(const char *info, int lineno, const char *file);
+	ADM_CORE6_EXPORT ADM_CORE6_NORETURN void ADM_backTrack(const char *info, int lineno, const char *file);
 	ADM_CORE6_EXPORT void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal,ADM_sigIntFunction *sigint);
 
 #ifdef __cplusplus
