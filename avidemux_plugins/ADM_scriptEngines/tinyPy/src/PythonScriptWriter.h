@@ -35,6 +35,7 @@ public:
     void stretchAudioCustom(int trackIndex, double tempo, double pitch);
     void setAudioDrc(int trackIndex, bool active, int normalize, float nFloor, float attTime, float decTime, float ratio, float thresDB);
     void setAudioEq(int trackIndex, bool active, float lo, float md, float hi, float lmcut, float mhcut);
+    void setAudioFade(int trackIndex, float fadeIn, float fadeOut, bool videoFilterBridge);
     void setAudioChannelGains(int trackIndex, float fL, float fR, float fC, float sL, float sR, float rL, float rR, float rC, float LFE);
     void setAudioChannelDelays(int trackIndex, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);
     void setAudioChannelRemap(int trackIndex, bool active, int fL, int fR, int fC, int sL, int sR, int rL, int rR, int rC, int LFE);

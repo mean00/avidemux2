@@ -115,6 +115,29 @@ bool ADM_AUDIOFILTER_CONFIG::audioFilterGetEqConfig(bool * active, float * lo, f
     return true;
 }
 
+/**
+    \fn audioFilterSetFadeConfig
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterSetFadeConfig(float fadeIn, float fadeOut, bool videoFilterBridge)
+{
+    fadeConf.fadeIn = fadeIn;
+    fadeConf.fadeOut = fadeOut;
+    fadeConf.videoFilterBridge = videoFilterBridge;
+    return true;
+}
+
+/**
+    \fn audioFilterGetFadeConfig
+    \brief
+*/
+bool ADM_AUDIOFILTER_CONFIG::audioFilterGetFadeConfig(float * fadeIn, float * fadeOut, bool * videoFilterBridge)
+{
+    *fadeIn = fadeConf.fadeIn;
+    *fadeOut = fadeConf.fadeOut;
+    *videoFilterBridge = fadeConf.videoFilterBridge;
+    return true;
+}
 
 /**
     \fn audioFilterSetChannelGains

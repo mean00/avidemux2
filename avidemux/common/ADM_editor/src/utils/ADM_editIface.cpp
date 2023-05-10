@@ -337,6 +337,27 @@ bool        ADM_Composer::getAudioEq(int dex, bool * active, float * lo, float *
     return ed->audioEncodingConfig.audioFilterGetEqConfig(active, lo, md, hi, lmcut, mhcut);
 }
 
+/**
+    \fn setAudioFade
+*/
+
+bool        ADM_Composer::setAudioFade(int dex, float fadeIn, float fadeOut, bool videoFilterBridge)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetFadeConfig(fadeIn, fadeOut, videoFilterBridge);
+}
+
+/**
+    \fn getAudioFade
+*/
+
+bool        ADM_Composer::getAudioFade(int dex, float * fadeIn, float * fadeOut, bool * videoFilterBridge)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetFadeConfig(fadeIn, fadeOut, videoFilterBridge);
+}
 
 /**
     \fn setAudioChannelGains

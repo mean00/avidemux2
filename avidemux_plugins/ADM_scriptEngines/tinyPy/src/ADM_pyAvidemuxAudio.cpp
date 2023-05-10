@@ -400,6 +400,28 @@ int pySetEq(IEditor *editor,int track, int active, float lo, float md, float hi,
     \fn
     \brief
 */
+int pyGetFade(IEditor *editor,int track, float * fadeIn, float * fadeOut, int * videoFilterBridge)
+{
+    bool bVFBrdige;
+    editor->getAudioFade(track, fadeIn, fadeOut, &bVFBrdige);
+    *videoFilterBridge = (bVFBrdige?1:0);
+    return true;    
+}
+
+/**
+    \fn
+    \brief
+*/
+int pySetFade(IEditor *editor,int track, float fadeIn, float fadeOut, int videoFilterBridge)
+{
+    editor->setAudioFade(track, fadeIn, fadeOut, videoFilterBridge);
+    return true;    
+}
+
+/**
+    \fn
+    \brief
+*/
 
 int pyGetChGains(IEditor *editor,int track, float * fL, float * fR, float * fC, float * sL, float * sR, float * rL, float * rR, float * rC, float * LFE)
 {

@@ -168,6 +168,23 @@ static tp_obj zzpy_audioSetEq(TP)
   int r = pySetEq(p0, p1, p2, p3, p4, p5, p6, p7);
   return tp_number(r);
 }
+// audioSetEq -> int pySetFade(IEditor int float float int)
+static tp_obj zzpy_audioSetFade(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  double p2 = pm.asDouble();
+  double p3 = pm.asDouble();  
+  int p4 = pm.asInt();
+  int r = pySetFade(p0, p1, p2, p3, p4);
+  return tp_number(r);
+}
 // audioSetChannelGains -> int pySetChGains(IEditor int float float float float float float float float float)
 static tp_obj zzpy_audioSetChannelGains(TP)
 {
@@ -861,6 +878,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_audioSetEq);
   }
+  if (!strcmp(key, "audioSetFade"))
+  {
+    return tp_method(vm, self, zzpy_audioSetFade);
+  }
   if (!strcmp(key, "audioSetChannelGains"))
   {
     return tp_method(vm, self, zzpy_audioSetChannelGains);
@@ -1087,6 +1108,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetDrc(IEditor,int,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetDrc2(IEditor,int,int,int,float,float,float,float,float)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetEq(IEditor,int,int,float,float,float,float,float)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetFade(IEditor,int,float,float,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetChannelGains(IEditor,int,float,float,float,float,float,float,float,float,float)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetChannelDelays(IEditor,int,int,int,int,int,int,int,int,int,int)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetChannelRemap(IEditor,int,int,int,int,int,int,int,int,int,int,int)\n");
