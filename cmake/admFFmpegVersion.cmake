@@ -1,1 +1,1 @@
-set(FFMPEG_VERSION "5.1.2")
+set(FFMPEG_VERSION "6.0")
