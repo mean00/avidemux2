@@ -1,6 +1,6 @@
---- libavformat/mpegtsenc.c.orig	2022-07-22 19:58:39.000000000 +0200
-+++ libavformat/mpegtsenc.c	2022-10-26 11:55:54.000000000 +0200
-@@ -1755,7 +1755,7 @@
+--- libavformat/mpegtsenc.c.orig	2023-02-27 21:43:45.000000000 +0100
++++ libavformat/mpegtsenc.c	2023-05-12 21:26:11.064208679 +0200
+@@ -1760,7 +1760,7 @@
              av_log(s, AV_LOG_ERROR, "H.264 bitstream malformed, "
                     "no startcode found, use the video bitstream filter 'h264_mp4toannexb' to fix it "
                     "('-bsf:v h264_mp4toannexb' option with ffmpeg)\n");
