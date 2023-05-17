@@ -539,21 +539,7 @@ bool admLibVA::init(GUI_WindowInfo *x)
     }
     return checkSupportedFunctionsAndImageFormat();
 }
-/**
-    \fn cleanup
-*/
-bool admLibVA::cleanup(void)
-{
-    VAStatus xError;
-    ADM_info("[LIBVA] De-Initializing LibVA library ...\n");
-    if(true==coreLibVAWorking)
-    {
-         CHECK_ERROR(vaTerminate(ADM_coreLibVA::display));
 
-    }
-    coreLibVAWorking=false;
-    return true;
-}
 /**
     \fn isOperationnal
 */
@@ -1345,7 +1331,7 @@ ADM_vaSurface *ADM_vaSurface::allocateWithSurface(int w,int h,int fmt)
  *
  * @return
  */
-bool ADM_vaSurface_cleanupCheck(void)
+static bool ADM_vaSurface_cleanupCheck(void)
 {
     int n=listOfAllocatedSurface.size();
     if(!n) return true;
@@ -1358,7 +1344,7 @@ bool ADM_vaSurface_cleanupCheck(void)
  *
  * @return
  */
-bool ADM_vaImage_cleanupCheck(void)
+static bool ADM_vaImage_cleanupCheck(void)
 {
     int n=listOfAllocatedVAImage.size();
     if(!n) return true;
@@ -1367,6 +1353,25 @@ bool ADM_vaImage_cleanupCheck(void)
     return true;
 
 }
+/**
+ * \fn cleanup
+ */
+bool admLibVA::cleanup()
+{
+    ADM_info("VA cleanup begin\n");
+    ADM_vaSurface_cleanupCheck();
+    ADM_vaImage_cleanupCheck();
+    if(coreLibVAWorking)
+    {
+        VAStatus xError;
+        ADM_info("[LIBVA] De-Initializing LibVA library...\n");
+        CHECK_ERROR(vaTerminate(ADM_coreLibVA::display))
+    }
+    coreLibVAWorking=false;
+    ADM_info("VA cleanup end\n");
+    return true;
+}
+
 /**
  * 
  * @param w
@@ -1408,19 +1413,6 @@ ADM_vaSurface:: ~ADM_vaSurface()
          color10bits=NULL;
      }
  }
-
-/**
- * \fn admLibVa_exitCleanup
- */
-bool admLibVa_exitCleanup()
-{
-    ADM_info("VA cleanup begin\n");
-    ADM_vaSurface_cleanupCheck();
-    ADM_vaImage_cleanupCheck();
-    admLibVA::cleanup();
-    ADM_info("VA cleanup end\n");
-    return true;
-}
 
 /**
  *

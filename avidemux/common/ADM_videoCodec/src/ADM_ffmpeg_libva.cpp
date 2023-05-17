@@ -42,6 +42,7 @@ extern "C" {
 
 static bool         libvaWorking=true;
 static bool         libvaEncoderWorking=false;
+static bool         libvaDri3Disabled=false;
 static admMutex     imageMutex;
 static int  ADM_LIBVAgetBuffer(AVCodecContext *avctx, AVFrame *pic);
 static void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
@@ -146,7 +147,26 @@ bool libvaProbe(void)
         return false;
     }
 
-    if(false==admLibVA::init(&xinfo)) return false;
+    // Needed to unbreak vaPutSurface() with libva >= 2.17, see https://github.com/intel/libva/pull/679
+    if(!getenv("LIBVA_DRI3_DISABLE"))
+    {
+        ADM_info("LIBVA_DRI3_DISABLE not set yet, doing it now.\n");
+        if(setenv("LIBVA_DRI3_DISABLE", "1", 1))
+            ADM_warning("Cannot set LIBVA_DRI3_DISABLE env var\n");
+        else
+            libvaDri3Disabled = true;
+    }else
+    {
+        ADM_info("LIBVA_DRI3_DISABLE already set.\n");
+    }
+
+    if(false == admLibVA::init(&xinfo))
+    {
+        if(libvaDri3Disabled)
+            unsetenv("LIBVA_DRI3_DISABLE");
+        libvaDri3Disabled = false;
+        return false;
+    }
     libvaWorking=true;
     { // Only check encoder if decoder is working
        libvaEncoderWorking = ADM_initLibVAEncoder();
@@ -267,11 +287,17 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 }
 
 /**
-    \fn libvaCleanup
+    \fn admLibVa_exitCleanup
 */
-bool libvaCleanup(void)
+bool admLibVa_exitCleanup(void)
 {
-   return admLibVA::cleanup();
+    if(libvaDri3Disabled)
+    {
+        ADM_info("LIBVA_DRI3_DISABLE set by us, unsetting\n");
+        unsetenv("LIBVA_DRI3_DISABLE");
+    }
+    libvaDri3Disabled = false;
+    return admLibVA::cleanup();
 }
 
 
