@@ -1,6 +1,6 @@
---- libavformat/file.c.orig	2022-07-22 19:58:39.000000000 +0200
-+++ libavformat/file.c	2022-10-26 10:28:39.000000000 +0200
-@@ -136,11 +136,13 @@
+--- libavformat/file.c.orig	2023-02-27 21:43:45.000000000 +0100
++++ libavformat/file.c	2023-05-12 21:26:11.048208763 +0200
+@@ -163,11 +163,13 @@
      return c->fd;
  }
  
@@ -15,7 +15,7 @@
  
      {
  #if HAVE_ACCESS && defined(R_OK)
-@@ -172,7 +174,7 @@
+@@ -246,7 +248,7 @@
  #if HAVE_UNISTD_H
      int ret;
      const char *filename = h->filename;
@@ -24,7 +24,7 @@
  
      ret = rmdir(filename);
      if (ret < 0 && (errno == ENOTDIR
-@@ -194,8 +196,8 @@
+@@ -268,8 +270,8 @@
  {
      const char *filename_src = h_src->filename;
      const char *filename_dst = h_dst->filename;
@@ -35,7 +35,7 @@
  
      if (rename(filename_src, filename_dst) < 0)
          return AVERROR(errno);
-@@ -210,7 +212,7 @@
+@@ -284,7 +286,7 @@
      int fd;
      struct stat st;
  

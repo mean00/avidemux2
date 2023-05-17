@@ -1,6 +1,6 @@
---- libavutil/file_open.c	2018-12-02 15:01:27.570412023 +0100
-+++ libavutil/file_open.c	2018-12-02 14:59:47.483523875 +0100
-@@ -39,6 +39,10 @@
+--- libavutil/file_open.c.orig	2023-02-27 21:43:45.000000000 +0100
++++ libavutil/file_open.c	2023-05-12 21:26:11.076208615 +0200
+@@ -40,6 +40,10 @@
  #include <errno.h>
  #include "wchar_filename.h"
  

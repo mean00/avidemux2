@@ -1,6 +1,6 @@
---- libavcodec/h264_parser.c.orig	2022-07-22 19:58:39.000000000 +0200
-+++ libavcodec/h264_parser.c	2022-10-26 12:41:53.000000000 +0200
-@@ -66,6 +66,101 @@
+--- libavcodec/h264_parser.c.orig	2023-02-27 21:43:45.000000000 +0100
++++ libavcodec/h264_parser.c	2023-05-12 23:21:38.025609813 +0200
+@@ -66,6 +66,107 @@
      int last_frame_num, last_picture_structure;
  } H264ParseContext;
  
@@ -84,8 +84,14 @@
 +    // Needed to determine the offset of poc_lsb
 +    info->frameMbsOnlyFlag=sps->frame_mbs_only_flag;
 +    //#warning fixme sar vs dar
-+    info->darNum=sps->sar.num;
-+    info->darDen=sps->sar.den;
++    if(sps->vui_parameters_present_flag)
++    {
++        info->darNum = sps->vui.sar.num;
++        info->darDen = sps->vui.sar.den;
++    }else
++    {
++        info->darNum = info->darDen = 1;
++    }
 +    if(sps->crop_left || sps->crop_right || sps->crop_top || sps->crop_bottom)
 +    {
 +        printf("Taking crop into account, left: %u, right: %u, top: %u, bottom: %u\n",

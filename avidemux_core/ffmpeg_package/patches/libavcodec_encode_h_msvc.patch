@@ -1,0 +1,16 @@
+--- libavcodec/encode.h.orig	2023-02-27 21:43:45.000000000 +0100
++++ libavcodec/encode.h	2023-05-12 21:21:59.181534934 +0200
+@@ -90,9 +90,12 @@
+ static av_always_inline int64_t ff_samples_to_time_base(const AVCodecContext *avctx,
+                                                         int64_t samples)
+ {
++    AVRational rat;
+     if (samples == AV_NOPTS_VALUE)
+         return AV_NOPTS_VALUE;
+-    return av_rescale_q(samples, (AVRational){ 1, avctx->sample_rate },
++    rat.num = 1;
++    rat.den = avctx->sample_rate;
++    return av_rescale_q(samples, rat,
+                         avctx->time_base);
+ }
+ 
