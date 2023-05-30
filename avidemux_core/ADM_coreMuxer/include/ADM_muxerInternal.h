@@ -38,6 +38,7 @@ public:
         bool  (*resetConfiguration)();
         bool  (*setConfiguration)(CONFcouple *conf);
         void  (*clearDefaultConfig)(void);
+        const char *(*getDefaultExtension)(void);
 
         ADM_dynMuxer(const char *file) : ADM_LibWrapper()
         {
@@ -45,9 +46,6 @@ public:
         uint32_t     (*getApiVersion)();
         const char  *(*getMuxerName)();
         const char  *(*getDisplayName)();
-        const char  *(*getDefaultExtension)();
-
-
 
 			initialised = (loadLibrary(file) && getSymbols(8+5,
 				&createmuxer, "create",

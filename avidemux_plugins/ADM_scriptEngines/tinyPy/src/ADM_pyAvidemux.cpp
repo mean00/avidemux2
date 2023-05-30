@@ -502,8 +502,8 @@ char *pyGetContainerEx(IEditor *editor)
     ADM_dynMuxer *container = editor->getCurrentMuxer();
     if(!container)
         return NULL;
-    if(!container->defaultExtension)
+    if(!container->getDefaultExtension())
         return NULL;
-    return ADM_strdup(container->defaultExtension);
+    return ADM_strdup(container->getDefaultExtension());
 }
 // EOF

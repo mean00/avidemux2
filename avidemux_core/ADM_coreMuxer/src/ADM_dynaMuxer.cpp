@@ -62,7 +62,7 @@ const char *ADM_mx_getDisplayName(uint32_t i)
 const char *ADM_MuxerGetDefaultExtension(int i)
 {
     ADM_assert(i<ListOfMuxers.size());
-    return ListOfMuxers[i]->defaultExtension;
+    return ListOfMuxers[i]->getDefaultExtension();
 }
 /**
     \fn ADM_mx_getName
