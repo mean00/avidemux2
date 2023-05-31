@@ -78,8 +78,7 @@ public:
         virtual ~ADM_dynMuxer() { if(initialised) clearDefaultConfig(); }
 };
 
-#define ADM_MUXER_BEGIN( Ext,Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar,confSize) \
-extern "C" {\
+#define ADM_MUXER_NOEXT(Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar,confSize) \
 	static void *defaultConfig = NULL; \
 \
 	static void snapshotDefaultConfiguration() \
@@ -98,7 +97,6 @@ ADM_PLUGIN_EXPORT uint32_t     getApiVersion(void) {return ADM_MUXER_API_VERSION
 ADM_PLUGIN_EXPORT const char  *getName(void) {return name;} \
 ADM_PLUGIN_EXPORT const char  *getDescriptor(void) {return desc;} \
 ADM_PLUGIN_EXPORT const char  *getDisplayName(void) { return displayName;} \
-ADM_PLUGIN_EXPORT const char  *getDefaultExtension(void) { return Ext;} \
 ADM_PLUGIN_EXPORT void        clearDefaultConfig(void) { ADM_dealloc(defaultConfig); defaultConfig = NULL; } \
 ADM_PLUGIN_EXPORT bool        getConfiguration(CONFcouple **conf) \
 {\
@@ -120,7 +118,19 @@ ADM_PLUGIN_EXPORT bool        resetConfiguration() \
 { \
 	snapshotDefaultConfiguration(); \
  if(configureFunc==NULL) return true;\
- return configureFunc();}\
+ return configureFunc();\
+}
+
+#define ADM_MUXER_BEGIN(Ext,Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar,confSize) \
+extern "C" { \
+ADM_MUXER_NOEXT(Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar,confSize) \
+ADM_PLUGIN_EXPORT const char *getDefaultExtension(void) { return Ext; } \
+}
+
+#define ADM_MUXER_DYN_EXT(extFunc,Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar,confSize) \
+extern "C" { \
+ADM_MUXER_NOEXT(Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar,confSize) \
+ADM_PLUGIN_EXPORT const char *getDefaultExtension(void) { if (extFunc) return extFunc(); return NULL; } \
 }
 
 #endif
