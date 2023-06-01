@@ -12,8 +12,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef FLY_ARTVHS_H
-#define FLY_ARTVHS_H
+#ifndef FLY_GRAIN_H
+#define FLY_GRAIN_H
 #include "grain.h"
 /**
     \class flyGrain
