@@ -35,6 +35,7 @@ extern "C" {
 static lav_encoder  defaultConfig = LAV_DEFAULT_CONF;
 
 static bool         configure (CONFcouple **setup);
+static bool setOption(CONFcouple **c, const char *paramName, uint32_t value);
 static void getDefaultConfiguration(CONFcouple **c);
 #if 0
 #define cprintf printf
@@ -57,7 +58,7 @@ static ADM_audioEncoder encoderDesc = {
   makeName(WAV),
 
   100,                  // Priority
-  NULL,         //** put your own function here**
+  setOption,            //** put your own function here**
   getDefaultConfiguration,
   NULL
 };
@@ -481,6 +482,25 @@ bool configure (CONFcouple **setup)
         defaultConfig=config;
         return true;
     }
+    return false;
+}
+
+/**
+    \fn setOption
+    \brief Allow giving codec specific options as string+value
+*/
+bool setOption(CONFcouple **c, const char *paramName, uint32_t value)
+{
+    lav_encoder config = LAV_DEFAULT_CONF;
+    if(*c && false == ADM_paramLoad(*c, lav_encoder_param, &config))
+        config = LAV_DEFAULT_CONF;
+    if(!strcasecmp(paramName,"bitrate"))
+    {
+        config.bitrate = value;
+        ADM_paramSave(c, lav_encoder_param, &config);
+        return true;
+    }
+    ADM_error("Unknown lavc encoder parameter %s\n", paramName);
     return false;
 }
 
