@@ -9,4 +9,4 @@ OBJS=adm_gen.cpp  editor_gen.cpp  pyDFInteger_gen.cpp  pyDFToggle_gen.cpp  pyDia
 all: $(OBJS) $(OBJS1)
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(OBJS1)
