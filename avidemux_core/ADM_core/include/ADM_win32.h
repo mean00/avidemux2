@@ -6,7 +6,7 @@
 #include "ADM_inttype.h"
 
 ADM_CORE6_EXPORT uint8_t win32_netInit(void);
-int shutdown_win32(void);
+int shutdown_win32(bool suspend = false);
 ADM_CORE6_EXPORT bool getWindowsVersion(char* version);
 ADM_CORE6_EXPORT void redirectStdoutToFile(const char *filename);
 

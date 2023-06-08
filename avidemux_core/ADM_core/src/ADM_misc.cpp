@@ -300,12 +300,13 @@ extern char *ADM_slashToBackSlash(const char *in)
   * \fn ADM_shutdown
   * @return 
   */
-bool ADM_shutdown(void)
+bool ADM_shutdown(bool suspend)
 {
 #ifdef _WIN32
-	return (shutdown_win32() == 0);
+    return (shutdown_win32(suspend) == 0);
 #else
-	return (system("shutdown -P 0") == 0);
+    UNUSED_ARG(suspend);
+    return (system("shutdown -P 0") == 0);
 #endif
 }
 

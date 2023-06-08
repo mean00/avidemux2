@@ -60,7 +60,6 @@ void DIA_encodingQt4::priorityChanged(int priorityLevel)
 	{
 		ui->comboBoxPriority->disconnect(SIGNAL(currentIndexChanged(int)));
 		ui->comboBoxPriority->setCurrentIndex(2);
-		connect(ui->checkBoxShutdown, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
 
 		GUI_Error_HIG(QT_TRANSLATE_NOOP("qencoding","Privileges Required"), QT_TRANSLATE_NOOP("qencoding","Root privileges are required to perform this operation."));
 
@@ -75,37 +74,7 @@ void DIA_encodingQt4::priorityChanged(int priorityLevel)
 
 void DIA_encodingQt4::shutdownChanged(int state)
 {
-#ifndef _WIN32
-	if (getuid() != 0)
-	{
-		ui->checkBoxShutdown->disconnect(SIGNAL(stateChanged(int)));
-		ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
-		connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
-
-		GUI_Error_HIG(QT_TRANSLATE_NOOP("qencoding","Privileges Required"), QT_TRANSLATE_NOOP("qencoding","Root privileges are required to perform this operation."));
-	}
-#else
-	if(state)
-	{
-		ui->checkBoxKeepOpen->disconnect(SIGNAL(stateChanged(int)));
-		ui->checkBoxKeepOpen->setCheckState(Qt::Unchecked);
-		stayOpen=false;
-		connect(ui->checkBoxKeepOpen, SIGNAL(stateChanged(int)), this, SLOT(keepOpenChanged(int)));
-	}
-#endif
-}
-
-void DIA_encodingQt4::keepOpenChanged(int state)
-{
-    stayOpen=!!state;
-#ifdef _WIN32
-    if(state)
-    {
-        ui->checkBoxShutdown->disconnect(SIGNAL(stateChanged(int)));
-        ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
-        connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
-    }
-#endif
+    stayOpen = (state == 1);
 }
 
 void DIA_encodingQt4::deleteStatsChanged(int state)
@@ -139,15 +108,18 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
             ui->comboBoxPriority->setVisible(false);
             ui->labelPrio->setVisible(false);
         }
-        ui->checkBoxShutdown->setVisible(false);
+        // remove suspend and shutdown options
+        while(ui->comboBoxFinished->count() > 2)
+        {
+            ui->comboBoxFinished->removeItem(2);
+        }
 #endif
 
         if(!prefs->get(DEFAULT_DELETE_FIRST_PASS_LOG_FILES,&deleteStats))
             deleteStats = false;
         ui->checkBoxDeleteStats->setChecked(deleteStats);
 
-	connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
-	connect(ui->checkBoxKeepOpen, SIGNAL(stateChanged(int)), this, SLOT(keepOpenChanged(int)));
+	connect(ui->comboBoxFinished, SIGNAL(currentIndexChanged(int)), this, SLOT(shutdownChanged(int)));
 	connect(ui->checkBoxDeleteStats, SIGNAL(stateChanged(int)), this, SLOT(deleteStatsChanged(int)));
 	connect(ui->pushButton1, SIGNAL(pressed()), this, SLOT(useTrayButtonPressed()));
 	connect(ui->pushButton2, SIGNAL(pressed()), this, SLOT(pauseButtonPressed()));
@@ -199,7 +171,7 @@ DIA_encodingQt4::~DIA_encodingQt4( )
 {
     ADM_info("Destroying encoding qt4\n");
     UI_getTaskBarProgress()->disable();
-    bool shutdownRequested = (ui->checkBoxShutdown->checkState() == Qt::Checked);
+    int ix = ui->comboBoxFinished->currentIndex();
     if(tray)
     {
         UI_deiconify();
@@ -212,12 +184,13 @@ DIA_encodingQt4::~DIA_encodingQt4( )
         delete ui;
         ui=NULL;
     }
-    if(shutdownRequested)
+    if(ix > 1)
     {
         prefs->save(); // won't get another chance
-        ADM_info("Requesting shutdown...\n");
-        if(!ADM_shutdown())
-            ADM_warning("Shutdown request failed\n");
+        bool suspend = (ix == 2);
+        ADM_info("Requesting %s...\n", suspend ? "suspend" : "shutdown");
+        if(!ADM_shutdown(suspend))
+            ADM_warning("%s request failed\n", suspend ? "Suspend" : "Shutdown");
     }
 }
 /**
@@ -481,7 +454,8 @@ bool DIA_encodingQt4::isAlive( void )
         stopRequest=false;
         return true;
     }
-    ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
+    // encoding aborted
+    ui->comboBoxFinished->setCurrentIndex(0);
     return false;
 }
 
@@ -519,8 +493,11 @@ void DIA_encodingQt4::keepOpen(void)
             delete tray;
             tray=NULL;
         }
-        ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
-        ui->checkBoxShutdown->setEnabled(false);
+        // remove suspend and shutdown options, if present
+        while(ui->comboBoxFinished->count() > 2)
+        {
+            ui->comboBoxFinished->removeItem(2);
+        }
         ui->pushButton1->setEnabled(false);
         ui->pushButton2->setEnabled(false);
         ui->comboBoxPriority->setEnabled(false);

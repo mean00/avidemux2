@@ -87,10 +87,37 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout1">
          <item>
-          <widget class="QCheckBox" name="checkBoxShutdown">
+          <widget class="QLabel" name="labelFinished">
            <property name="text">
-            <string>Shut down computer when finished</string>
+            <string>When finished:</string>
            </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBoxFinished">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>Close dialog</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Keep dialog open</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Suspend computer</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Shut down computer</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item>
@@ -144,30 +171,6 @@
             </property>
            </item>
           </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout2">
-         <item>
-          <widget class="QCheckBox" name="checkBoxKeepOpen">
-           <property name="text">
-            <string>Keep dialog open when finished</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>48</width>
-             <height>17</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>

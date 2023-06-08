@@ -40,7 +40,7 @@ ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS} ${asmFiles})
 include_directories("${PTHREAD_INCLUDE_DIR}")
 
 IF (WIN32)
-	target_link_libraries(ADM_core6 imagehlp ws2_32)
+	target_link_libraries(ADM_core6 imagehlp ws2_32 powrprof)
 ELSEIF (APPLE)
 	target_link_libraries(ADM_core6 "-framework Carbon")
 elseif (UNIX)

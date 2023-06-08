@@ -5,6 +5,7 @@
 #include <io.h>
 #include <string>
 #include <winnls.h>
+#include <powrprof.h>
 
 #include "ADM_default.h"
 #include "ADM_win32.h"
@@ -138,7 +139,7 @@ int setpriority(int which, int who, int value)
     return 0;
 }
 
-int shutdown_win32(void)
+int shutdown_win32(bool suspend)
 {
     HANDLE hToken;
     TOKEN_PRIVILEGES tkp;
@@ -163,6 +164,12 @@ int shutdown_win32(void)
         return -1;
     }
 
+    if (suspend)
+    {
+        if (!SetSuspendState(FALSE, FALSE, FALSE))
+            return -1;
+        return 0;
+    }
     // Shut down the system and force all applications to close.
     if (!ExitWindowsEx(EWX_POWEROFF | EWX_FORCE, SHTDN_REASON_FLAG_PLANNED))
     {

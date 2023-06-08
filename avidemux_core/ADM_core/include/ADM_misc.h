@@ -79,7 +79,7 @@ ADM_CORE6_EXPORT const std::string  &ADM_getTimeDateAsString(const char *format=
 	#include <sys/resource.h>
 #endif
 
-ADM_CORE6_EXPORT bool ADM_shutdown(void);
+ADM_CORE6_EXPORT bool ADM_shutdown(bool suspend = false);
 
 #ifdef ADM_BIG_ENDIAN	
 	#define R64 ADM_swap64
