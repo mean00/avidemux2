@@ -24,6 +24,7 @@
 #include "DIA_factory.h"
 #include "ADM_scriptDF.h"
 #include "ADM_scriptDFInteger.h"
+#include "ADM_scriptDFFloat.h"
 #include "ADM_scriptDFTimeStamp.h"
 #include "ADM_scriptDFMenu.h"
 #include "ADM_scriptDFToggle.h"
@@ -37,7 +38,8 @@
 #define ADM_PYID_DIALOGF     200
 #define ADM_PYID_DF_TOGGLE   201
 #define ADM_PYID_DF_INTEGER  202
-#define ADM_PYID_DF_MENU     203
+#define ADM_PYID_DF_FLOAT    203
+#define ADM_PYID_DF_MENU     204
 
 extern void re_init(TP);
 /**
@@ -72,6 +74,7 @@ void pyPrintf(tp_vm *vm, const char *fmt, ...)
 #include "editor_gen.cpp"
 #include "GUI_gen.cpp"
 #include "pyDFInteger_gen.cpp"
+#include "pyDFFloat_gen.cpp"
 #include "pyDFMenu_gen.cpp"
 #include "pyDFToggle_gen.cpp"
 #include "pyDFTimeStamp_gen.cpp"
@@ -151,6 +154,7 @@ void PythonEngine::registerFunctions()
     this->registerClass("Gui", initClasspyGui, "widget, alert boxes,..");
     this->registerClass("DFToggle", initClasspyDFToggle, "UI element : toggle");
     this->registerClass("DFInteger", initClasspyDFInteger, "UI element : integer");
+    this->registerClass("DFFloat", initClasspyDFFloat, "UI element : float");
     this->registerClass("DFMenu", initClasspyDFMenu, "UI element : drop down menu");
     this->registerClass("DFTimeStamp", initClasspyDFTimeStamp, "UI element : timestamp");
     this->registerClass("DialogFactory", initClasspyDialogFactory, "UI manager, handle all UI elements");
