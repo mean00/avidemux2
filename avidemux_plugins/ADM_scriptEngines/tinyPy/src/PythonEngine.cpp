@@ -419,7 +419,7 @@ tp_obj PythonEngine::dumpBuiltin(tp_vm *tp)
 	PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 	int n = engine->_pyClasses.size();
 
-	pyPrintf(tp, "You can get more help using CLASSNAME.help()");
+	pyPrintf(tp, "You can get more help using CLASSNAME.help()\n");
 
 	for (int i = 0; i < n; i++)
 	{
