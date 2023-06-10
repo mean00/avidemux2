@@ -145,6 +145,7 @@ bool            qShell::evaluate(bool x)
     if(indexWrite<1) indexWrite=1;
     indexRead=indexWrite-1; // Points to the last one
 
+    ui.textBrowser->moveCursor(QTextCursor::End);  // go to the end before appending
     ui.textBrowser->setFontItalic(true);
     ui.textBrowser->append(text);
     ui.textBrowser->setFontItalic(false);
