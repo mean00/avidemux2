@@ -326,7 +326,7 @@ sub genGetSet
         print OUTPUT "  TinyParams pm(vm);\n";
         print OUTPUT "  $cookieName *me = ($cookieName *)pm.asThis(&self, $cookieId);\n";
         print OUTPUT "  char const *key = pm.asString();\n";
-        my @k=keys %typeVars;
+        my @k=sort keys %typeVars;
         my $v;
         foreach $v (@k)
         {
@@ -380,7 +380,7 @@ sub genGetSet
         print OUTPUT "  TinyParams pm(vm);\n";
         print OUTPUT "  $cookieName *me = ($cookieName *)pm.asThis(&self, $cookieId);\n";
         print OUTPUT "  char const *key = pm.asString();\n";
-        my @k=keys %typeVars;
+        my @k=sort keys %typeVars;
         my $v;
         foreach $v (@k)
         {
