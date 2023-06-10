@@ -140,6 +140,7 @@ bool            qShell::evaluate(bool x)
     ADM_info("Evaluating...\n");
     // 1 Get text from UI
     QString text=ui.textBrowser_2->toPlainText();
+    if (text.length() == 0) return true; // do not run empty script
     indexWrite+=addToHistory(text);
     if(indexWrite<1) indexWrite=1;
     indexRead=indexWrite-1; // Points to the last one
