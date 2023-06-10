@@ -18,6 +18,7 @@
 #include "ADM_inttype.h"
 #include <QKeyEvent>
 #include <QAction>
+#include <QScrollBar>
 
 #ifdef __APPLE__
 #include <QMenuBar>
@@ -152,6 +153,9 @@ bool            qShell::evaluate(bool x)
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
     dumpHistory();
 #endif
+    // scroll to the bottom
+    QScrollBar *sb = ui.textBrowser->verticalScrollBar();
+    sb->setValue(sb->maximum());
     return true;
 }
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
