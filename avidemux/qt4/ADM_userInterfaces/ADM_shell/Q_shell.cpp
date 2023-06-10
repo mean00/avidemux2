@@ -146,6 +146,7 @@ bool            qShell::evaluate(bool x)
     ui.textBrowser->setFontItalic(true);
     ui.textBrowser->append(text);
     ui.textBrowser->setFontItalic(false);
+    ui.textBrowser->append(QString("")); // add "new line" for readability
     ui.textBrowser_2->setPlainText("");
     _engine->runScript(text.toUtf8().constData(), IScriptEngine::Normal);
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
