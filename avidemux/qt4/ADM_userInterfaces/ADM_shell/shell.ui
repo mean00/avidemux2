@@ -23,7 +23,7 @@
    <item row="0" column="0" colspan="4">
     <widget class="QTextBrowser" name="textBrowser">
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::ClickFocus</enum>
      </property>
      <property name="contextMenuPolicy">
       <enum>Qt::NoContextMenu</enum>
