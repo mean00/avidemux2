@@ -203,6 +203,7 @@ bool qShell::print(IScriptEngine::EventType type,const char *s)
 bool qShell::clear(bool x)
 {
     ui.textBrowser->clear();
+    ui.textBrowser_2->setFocus();
     return true;
 }
 /**
