@@ -60,9 +60,11 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine, std::vector <shellHistory
     //ADM_info("Setting text color to %d %d %d\n",qRed(col.rgb()),qGreen(col.rgb()),qBlue(col.rgb()));
 #ifndef __APPLE__
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or CTRL+ENTER.\n"));
+    print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter help() for more information.\n"));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n"));
 #else
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or ⌘⏎.\n"));
+    print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter help() for more information.\n"));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use ⌥⌘▲ and ⌥⌘▼ to recall previous commands.\nReady.\n"));
 
     /* On macOS, global menus containing actions with keyboard shortcuts assigned
