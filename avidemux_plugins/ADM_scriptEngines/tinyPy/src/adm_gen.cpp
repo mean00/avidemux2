@@ -809,13 +809,13 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   TinyParams pm(vm);
   void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
   char const *key = pm.asString();
-  if (!strcmp(key, "markerB"))
-  {
-     return tp_number(editor->getMarkerBPts());
-  }
   if (!strcmp(key, "markerA"))
   {
      return tp_number(editor->getMarkerAPts());
+  }
+  if (!strcmp(key, "markerB"))
+  {
+     return tp_number(editor->getMarkerBPts());
   }
   if (!strcmp(key, "addSegment"))
   {
@@ -1043,16 +1043,16 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
   TinyParams pm(vm);
   void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
   char const *key = pm.asString();
-  if (!strcmp(key, "markerB"))
-  {
-     double val = pm.asDouble();
-     editor->setMarkerBPts(val);
-     return tp_None;
-  }
   if (!strcmp(key, "markerA"))
   {
      double val = pm.asDouble();
      editor->setMarkerAPts(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "markerB"))
+  {
+     double val = pm.asDouble();
+     editor->setMarkerBPts(val);
      return tp_None;
   }
   return tp_None;

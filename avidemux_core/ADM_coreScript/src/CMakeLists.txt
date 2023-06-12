@@ -1,5 +1,6 @@
 SET(admScript_SRCS
 	ADM_scriptDFInteger.cpp
+	ADM_scriptDFFloat.cpp
 	ADM_scriptDFMenu.cpp
 	ADM_scriptDFToggle.cpp
 	ADM_scriptDialogFactory.cpp

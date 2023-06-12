@@ -18,6 +18,7 @@
 #include "ADM_inttype.h"
 #include <QKeyEvent>
 #include <QAction>
+#include <QScrollBar>
 
 #ifdef __APPLE__
 #include <QMenuBar>
@@ -60,9 +61,11 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine, std::vector <shellHistory
     //ADM_info("Setting text color to %d %d %d\n",qRed(col.rgb()),qGreen(col.rgb()),qBlue(col.rgb()));
 #ifndef __APPLE__
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or CTRL+ENTER.\n"));
+    print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter help() for more information.\n"));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n"));
 #else
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or ⌘⏎.\n"));
+    print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter help() for more information.\n"));
     print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use ⌥⌘▲ and ⌥⌘▼ to recall previous commands.\nReady.\n"));
 
     /* On macOS, global menus containing actions with keyboard shortcuts assigned
@@ -137,18 +140,24 @@ bool            qShell::evaluate(bool x)
     ADM_info("Evaluating...\n");
     // 1 Get text from UI
     QString text=ui.textBrowser_2->toPlainText();
+    if (text.length() == 0) return true; // do not run empty script
     indexWrite+=addToHistory(text);
     if(indexWrite<1) indexWrite=1;
     indexRead=indexWrite-1; // Points to the last one
 
+    ui.textBrowser->moveCursor(QTextCursor::End);  // go to the end before appending
     ui.textBrowser->setFontItalic(true);
     ui.textBrowser->append(text);
     ui.textBrowser->setFontItalic(false);
+    ui.textBrowser->append(QString("")); // add "new line" for readability
     ui.textBrowser_2->setPlainText("");
     _engine->runScript(text.toUtf8().constData(), IScriptEngine::Normal);
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
     dumpHistory();
 #endif
+    // scroll to the bottom
+    QScrollBar *sb = ui.textBrowser->verticalScrollBar();
+    sb->setValue(sb->maximum());
     return true;
 }
 #ifdef SCRIPT_SHELL_HISTORY_VERBOSE
@@ -196,6 +205,7 @@ bool qShell::print(IScriptEngine::EventType type,const char *s)
 bool qShell::clear(bool x)
 {
     ui.textBrowser->clear();
+    ui.textBrowser_2->setFocus();
     return true;
 }
 /**
