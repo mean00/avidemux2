@@ -222,8 +222,10 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
                     reader.read8();	// precision
                     h = reader.read16BE();
                     w = reader.read16BE();
+#ifdef FAKE_EVEN_DIMENSIONS
                     if(w&1) w++;
                     if(h&1) h++;
+#endif
                     ADM_info("Dimension %d x %d\n",(int)w,(int)h);
                     width=w;
                     height=h;
