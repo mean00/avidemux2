@@ -584,11 +584,26 @@ my $pyFunc;
                 print OUTPUT "static tp_obj ".$helpName."(TP)\n{\n";
                 print OUTPUT "  PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n\n";
 
-                foreach $f( sort keys %cFuncs)
+                my @m=sort keys %cFuncs;
+                if (@m > 0)
+                {
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"methods:\\n\");\n";
+                }
+                foreach $f( @m)
                 {
                         my @params=@{$helpParams{$f}};
                         my $ret=$rType{$f};
                         print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$ret\\t $f(".join(",",@params) .")\\n\");\n";
+                }
+                my @v=sort keys %typeVars;
+                if (@v > 0)
+                {
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"variables:\\n\");\n";
+                }
+                foreach $f( @v)
+                {
+                        my $ret=$typeVars{$f};
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$ret\\t $f\\n\");\n";
                 }
                 print OUTPUT "\n  return tp_None;\n";
                 print OUTPUT "}\n";
