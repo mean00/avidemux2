@@ -2,12 +2,12 @@
 /* CLASS */ pyAdm : void : ADM_PYID_AVIDEMUX
 #              cname:pyname
 # Basic action load, handle seg, getInfo
-/* METHOD */ int editor->openFile:loadVideo          (str)
+/* METHOD */ int editor->openFile:loadVideo          (str fileName)
 /* METHOD */ int editor->clearSegment:clearSegments  (void)
-/* METHOD */ int editor->appendFile:appendVideo      (str)
-/* METHOD */ int editor->addSegment:addSegment        (int, double, double)
-/* METHOD */ int editor->setPostProc:setPostProc      (int, int, int)
-/* METHOD */ int editor->setHDRConfig:setHDRConfig    (int, double, double, int, int)
+/* METHOD */ int editor->appendFile:appendVideo      (str fileName)
+/* METHOD */ int editor->addSegment:addSegment        (int ref, double startRef, double duration)
+/* METHOD */ int editor->setPostProc:setPostProc      (int type, int strength, int swapuv)
+/* METHOD */ int editor->setHDRConfig:setHDRConfig    (int toneMappingMethod, double saturationAdjust, double boostAdjust, int adaptiveRGB, int gamutMethod)
 /* METHOD */ int pyGetWidth:getWidth            (void)
 /* METHOD */ int pyGetHeight:getHeight          (void)
 /* METHOD */ int editor->getPARWidth:getPARWidth      (void)
@@ -19,60 +19,60 @@
 #
 # Audio filter and encoding 
 #
-/* METHOD */ void editor->resetAudioFilter:audioResetFilter        (int)
-/* METHOD */ int  editor->setAudioMixer:audioSetMixer        (int,str)
-/* METHOD */ int  pySetResample:audioSetResample             (int,int)
-/* METHOD */ int  pyGetResample:audioGetResample             (int)
-/* METHOD */ int  pyAddAudioTrack:audioAddTrack  (int)
-/* METHOD */ int  pyAddExternal:audioAddExternal (str)
-/* METHOD */ int  editor->audioSetAudioPoolLanguage:setSourceTrackLanguage(int,str)
+/* METHOD */ void editor->resetAudioFilter:audioResetFilter        (int track)
+/* METHOD */ int  editor->setAudioMixer:audioSetMixer        (int track,str channelConfig)
+/* METHOD */ int  pySetResample:audioSetResample             (int track,int freq)
+/* METHOD */ int  pyGetResample:audioGetResample             (int track)
+/* METHOD */ int  pyAddAudioTrack:audioAddTrack  (int track)
+/* METHOD */ int  pyAddExternal:audioAddExternal (str fileName)
+/* METHOD */ int  editor->audioSetAudioPoolLanguage:setSourceTrackLanguage(int track,str language)
 /* METHOD */ int  pyClearAudioTracks:audioClearTracks(void) 
-/* METHOD */ int  pySetPal2Film:audioSetPal2Film(int,int)
-/* METHOD */ int  pySetFilm2Pal:audioSetFilm2Pal(int,int)
-/* METHOD */ int  pySetCustomAudioFrameRate:audioSetCustomFrameRate(int,double,double)
-/* METHOD */ int  pySetNormalize:audioSetNormalize(int,int,int)
-/* METHOD */ int  pySetNormalize2:audioSetNormalize2(int,int,int,int)
-/* METHOD */ int  pySetDrc:audioSetDrc(int,int)
-/* METHOD */ int  pySetDrc2:audioSetDrc2(int,int,int,double,double,double,double,double)
-/* METHOD */ int  pySetEq:audioSetEq(int,int,double,double,double,double,double)
-/* METHOD */ int  pySetChGains:audioSetChannelGains(int,double,double,double,double,double,double,double,double,double)
-/* METHOD */ int  pySetChDelays:audioSetChannelDelays(int,int,int,int,int,int,int,int,int,int)
-/* METHOD */ int  pySetChRemap:audioSetChannelRemap(int,int,int,int,int,int,int,int,int,int,int)
-/* METHOD */ int  pySetAudioShift:audioSetShift(int,int,int)
+/* METHOD */ int  pySetPal2Film:audioSetPal2Film(int track,int enable)
+/* METHOD */ int  pySetFilm2Pal:audioSetFilm2Pal(int track,int enable)
+/* METHOD */ int  pySetCustomAudioFrameRate:audioSetCustomFrameRate(int track,double tempo,double pitch)
+/* METHOD */ int  pySetNormalize:audioSetNormalize(int track,int mode,int value)
+/* METHOD */ int  pySetNormalize2:audioSetNormalize2(int track,int mode,int value,int level)
+/* METHOD */ int  pySetDrc:audioSetDrc(int track,int enable)
+/* METHOD */ int  pySetDrc2:audioSetDrc2(int track,int enable,int normalize,double nFloor,double attTime,double decTime,double ratio,double thresDB)
+/* METHOD */ int  pySetEq:audioSetEq(int track,int enable,double low,double mid,double high,double lowMidCut,double midHighCut)
+/* METHOD */ int  pySetChGains:audioSetChannelGains(int track,double frontLeft,double frontRight,double frontCenter,double sideLeft,double sideRight,double rearLeft,double rearRight,double rearCenter,double LFE)
+/* METHOD */ int  pySetChDelays:audioSetChannelDelays(int track,int frontLeft,int frontRight,int frontCenter,int sideLeft,int sideRight,int rearLeft,int rearRight,int rearCenter,int LFE)
+/* METHOD */ int  pySetChRemap:audioSetChannelRemap(int track,int enable, int frontLeft,int frontRight,int frontCenter,int sideLeft,int sideRight,int rearLeft,int rearRight,int rearCenter,int LFE)
+/* METHOD */ int  pySetAudioShift:audioSetShift(int track,int enable,int value)
 #
 #  Audio info...
 #
 /* METHOD */ int pyGetNumberOfAudioTracks:audioTracksCount(void) 
 /* METHOD */ int pyGetNumberOfAvailableAudioTracks:audioTotalTracksCount(void)
-/* METHOD */ int pyGetAudioFrequency:audioFrequency( int) 
-/* METHOD */ int pyGetAudioChannels:audioChannels( int) 
-/* METHOD */ int pyGetAudioEncoding:audioEncoding( int) 
-/* METHOD */ int pyGetAudioBitrate:audioBitrate( int) 
+/* METHOD */ int pyGetAudioFrequency:audioFrequency( int track) 
+/* METHOD */ int pyGetAudioChannels:audioChannels( int track) 
+/* METHOD */ int pyGetAudioEncoding:audioEncoding( int track) 
+/* METHOD */ int pyGetAudioBitrate:audioBitrate( int track) 
 #
 #
 #              cname:pyname
 #  Codec, container
-/* METHOD */ int editor->setVideoCodec:videoCodec(str, couples) 
+/* METHOD */ int editor->setVideoCodec:videoCodec(str codec, couples) 
 #/* METHOD */ int editor->videoCodecGui:videoCodecGui(str,couples)  # couples is OUT !
-/* METHOD */ int editor->changeVideoParam:videoCodecChangeParam(str, couples) 
-/* METHOD */ int editor->setVideoCodecProfile:videoCodecSetProfile(str, str) 
-/* METHOD */ int editor->setAudioCodec:audioCodec(int,str,  couples) 
-/* METHOD */ int editor->setContainer:setContainer(str, couples) 
-/* METHOD */ int editor->addVideoFilter:addVideoFilter(str, couples) 
+/* METHOD */ int editor->changeVideoParam:videoCodecChangeParam(str codec, couples) 
+/* METHOD */ int editor->setVideoCodecProfile:videoCodecSetProfile(str codec, str profile) 
+/* METHOD */ int editor->setAudioCodec:audioCodec(int track,str codec,  couples) 
+/* METHOD */ int editor->setContainer:setContainer(str container, couples) 
+/* METHOD */ int editor->addVideoFilter:addVideoFilter(str filter, couples) 
 #
 #  Save audio, video, images
 #
-/* METHOD */ int editor->saveAudio:saveAudio(int,str) 
-/* METHOD */ int editor->saveFile:save(str) 
-/* METHOD */ int editor->saveImageJpg:saveJpeg(str) 
-/* METHOD */ int editor->saveImageBmp:saveBmp(str) 
-/* METHOD */ int editor->saveImagePng:savePng(str)
+/* METHOD */ int editor->saveAudio:saveAudio(int track,str fileName) 
+/* METHOD */ int editor->saveFile:save(str fileName) 
+/* METHOD */ int editor->saveImageJpg:saveJpeg(str fileName) 
+/* METHOD */ int editor->saveImageBmp:saveBmp(str fileName) 
+/* METHOD */ int editor->saveImagePng:savePng(str fileName)
 #
 #
 # Seek
-/* METHOD */ int editor->seekKeyFrame:seekKeyFrame(int)
-/* METHOD */ int editor->seekFrame:seekFrame(int)
-/* METHOD */ int editor->setCurrentFramePts:setCurrentPts(double)
+/* METHOD */ int editor->seekKeyFrame:seekKeyFrame(int count)
+/* METHOD */ int editor->seekFrame:seekFrame(int count)
+/* METHOD */ int editor->setCurrentFramePts:setCurrentPts(double pts)
 #
 #       Variables
 #
