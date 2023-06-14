@@ -129,6 +129,10 @@ sub processMETHOD
             unshift @params, "IEditor";
         }
 
+        if (@paramsWithName[0] =~ m/^void$/)
+        {
+            @paramsWithName = ();
+        }
         push @{$funcParams{$pyfunc}}, @params;
         push @{$helpParams{$pyfunc}}, @paramsWithName;
         #print " $pyfunc -> @params \n";
