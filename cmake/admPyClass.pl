@@ -24,6 +24,7 @@ my $staticClass=0;
 my %cFuncs;
 my %rType;
 my %funcParams;
+my %helpParams;
 my @ctorParams;
 #
 # Variables
@@ -110,7 +111,12 @@ sub processMETHOD
             {
                 @params = ();
             }
+        }
 
+        push @{$helpParams{$pyfunc}}, @params;
+
+        if ($staticClass == 1 && $cfunc !~ /editor->/)
+        {
             unshift @params, "IEditor";
         }
 
@@ -580,7 +586,7 @@ my $pyFunc;
 
                 foreach $f( sort keys %cFuncs)
                 {
-                        my @params=@{$funcParams{$f}};
+                        my @params=@{$helpParams{$f}};
                         print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$f(".join(",",@params) .")\\n\");\n";
                 }
                 print OUTPUT "\n  return tp_None;\n";
