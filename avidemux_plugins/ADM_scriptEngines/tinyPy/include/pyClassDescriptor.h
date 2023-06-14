@@ -7,6 +7,7 @@ typedef struct
 {
 	std::string className;
 	std::string desc;
+        bool staticClass;
 } pyClassDescriptor;
 
 #endif
