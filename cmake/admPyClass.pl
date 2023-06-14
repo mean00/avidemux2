@@ -603,7 +603,7 @@ my $pyFunc;
                 {
                         my @params=@{$helpParams{$f}};
                         my $ret=$rType{$f};
-                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$ret\\t $f(".join(",",@params) .")\\n\");\n";
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$ret\\t $f(".join(", ",@params) .")\\n\");\n";
                 }
                 my @v=sort keys %typeVars;
                 if (@v > 0)
