@@ -188,6 +188,7 @@ static tp_obj zzpy__pyGui_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "methods:\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t dirSelect(str)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t displayError(str,str)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t displayInfo(str,str)\n");

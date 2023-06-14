@@ -1076,6 +1076,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "methods:\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t addSegment(int,double,double)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t addVideoFilter(str,couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t appendVideo(str)\n");
@@ -1130,6 +1131,9 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t videoCodec(str,couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t videoCodecChangeParam(str,couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t videoCodecSetProfile(str,str)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "variables:\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t markerA\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t markerB\n");
 
   return tp_None;
 }

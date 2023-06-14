@@ -422,6 +422,7 @@ static tp_obj zzpy__pyEditor_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "methods:\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t dumpAllSegments(void)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t dumpRefVideo(void)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t dumpSegment(int)\n");
