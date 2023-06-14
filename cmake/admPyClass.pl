@@ -86,14 +86,28 @@ sub processMETHOD
         my $proto=shift;
         my $args=$proto;
         my @params;
+        my @paramsWithName;
         my $retType=$proto;;
         my $pyfunc=$proto;;
         my $cfunc;
         $args=~s/^.*\(//g;
         $args=~s/\).*$//g;
-        $args=~s/ *//g;
+        @paramsWithName=split ",",$args;
+        foreach (@paramsWithName)
+        {
+            #remove leading spaces
+            $_=~ s/^\s+//;
+        }
+        foreach my $par (@paramsWithName)
+        {
+            my $par2 = $par;
+            #remove all after first space
+            $par2=~s/ .*//g;
+            push(@params, $par2);
+        }
+        ####$args=~s/ *//g;
         #print "args => $args\n";
-        @params=split ",",$args;
+        ####@params=split ",",$args;
         #print "params -> @params\n";
         # Get return type...
         $retType=~s/^ *//g;
@@ -111,16 +125,12 @@ sub processMETHOD
             {
                 @params = ();
             }
-        }
 
-        push @{$helpParams{$pyfunc}}, @params;
-
-        if ($staticClass == 1 && $cfunc !~ /editor->/)
-        {
             unshift @params, "IEditor";
         }
 
         push @{$funcParams{$pyfunc}}, @params;
+        push @{$helpParams{$pyfunc}}, @paramsWithName;
         #print " $pyfunc -> @params \n";
 }
 
