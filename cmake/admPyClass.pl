@@ -587,7 +587,8 @@ my $pyFunc;
                 foreach $f( sort keys %cFuncs)
                 {
                         my @params=@{$helpParams{$f}};
-                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$f(".join(",",@params) .")\\n\");\n";
+                        my $ret=$rType{$f};
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$ret\\t $f(".join(",",@params) .")\\n\");\n";
                 }
                 print OUTPUT "\n  return tp_None;\n";
                 print OUTPUT "}\n";
